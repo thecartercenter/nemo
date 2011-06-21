@@ -1,21 +1,7 @@
 development:
   adapter: mysql
-  database: tomsmyth_kcca_d
+  database: tomsmyth_cc
   host: localhost
-  username: tomsmyth_kcca_d
-  password: bbqpizza
-
-test:
-  adapter: mysql
-  database: tomsmyth_kcca_t
-  host: localhost
-  username: tomsmyth_kcca_t
-  password: bbqpizza
-
-production:
-  adapter: mysql
-  database: tomsmyth_kcca_p
-  host: localhost
-  username: tomsmyth_kcca_p
-  password: bbqpizza
-
+  username: tomsmyth_cc
+  password: tickleME
+  

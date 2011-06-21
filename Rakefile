@@ -4,4 +4,4 @@
 require File.expand_path('../config/application', __FILE__)
 require 'rake'
 
-KccaRobot::Application.load_tasks
+CommandCenter::Application.load_tasks

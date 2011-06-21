@@ -1,0 +1,15 @@
+<% if flash && !flash.empty? %>
+	<div id="flash" class="<%= flash.keys.first.to_s %>">
+		<%= flash.values.first %>
+	</div>
+<% end %>
+<% if defined?(object) && !object.nil? && object.errors.any? %>
+	<div class="error">
+	  <strong>Please fix the following errors:</strong>
+	  <ul>
+	    <% object.errors.full_messages.each do |msg| %>
+	    <li><%= msg %></li>
+	    <% end %>
+	  </ul>
+	</div>
+<% end %>

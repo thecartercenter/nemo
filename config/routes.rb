@@ -1,4 +1,8 @@
-KccaRobot::Application.routes.draw do
+CommandCenter::Application.routes.draw do
+  resources(:users, :password_resets, :languages)
+  resource(:user_session)
+  root(:to => "welcome#index")
+  
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

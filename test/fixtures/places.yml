@@ -1,0 +1,17 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  name: MyString
+  short_name: MyString
+  place_type_id: 1
+  is_in_id: 1
+  lat: 9.99
+  lng: 9.99
+
+two:
+  name: MyString
+  short_name: MyString
+  place_type_id: 1
+  is_in_id: 1
+  lat: 9.99
+  lng: 9.99

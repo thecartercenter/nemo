@@ -1,0 +1,71 @@
+<% rowbg = 0 %>
+<% form_for(user) do |f| %>
+	<%= show_flash_and_form_errors(user) %>
+	<table class="form">
+		<tr class="rowbg<%= rowbg = 1 - rowbg %>">
+			<td class="name">First Name*</td>
+			<td class="value"><%= f.text_field(:first_name) %></td>
+			<td class="details">The system will automatically generate a login name for this user.</td>
+		</tr>
+		<tr class="rowbg<%= rowbg = 1 - rowbg %>">
+			<td class="name">Last Name*</td>
+			<td class="value"><%= f.text_field(:last_name) %></td>
+			<td class="details"></td>
+		</tr>
+		<tr class="rowbg<%= rowbg = 1 - rowbg %>">
+			<td class="name">Email Address*</td>
+			<td class="value"><%= f.text_field(:email) %></td>
+			<td class="details"></td>
+		</tr>
+		<tr class="rowbg<%= rowbg = 1 - rowbg %>">
+			<td class="name">Role*</td>
+			<td class="value"><%= f.select(:role_id, Role.select_options, :include_blank => true) %></td>
+			<td class="details"></td>
+		</tr>
+		<tr class="rowbg<%= rowbg = 1 - rowbg %>">
+			<td class="name">Base Location</td>
+			<td class="value"><%= f.select(:location_id, []) %></td>
+			<td class="details"></td>
+		</tr>
+		<tr class="rowbg<%= rowbg = 1 - rowbg %>">
+			<td class="name">Phone Number</td>
+			<td class="value">
+				<%= f.text_field(:phone, :size => 20) %><br/>
+				<%= f.check_box(:is_mobile_phone) %> Is this a mobile phone?
+				
+			</td>
+			<td class="details">Phone number should include the country code. Example: +25680344523</td>
+		</tr>
+		<tr class="rowbg<%= rowbg = 1 - rowbg %>">
+			<td class="name">Language*</td>
+			<td class="value"><%= f.select(:language_id, Language.select_options) %></td>
+			<td class="details">This will primarily affect the language of forms for observers.</td>
+		</tr>
+		<% unless user.new_record? %>
+			<tr class="rowbg<%= rowbg = 1 - rowbg %>">
+				<td class="name">Is Active?</td>
+				<td class="value"><%= f.check_box(:is_active) %></td>
+				<td class="details">
+					Is this user active in the mission? 
+					If this box is not checked, the
+					user will not be able to log in or submit forms.
+				</td>
+			</tr>
+		<% end %>
+		<% if user == current_user %>
+		<tr class="rowbg<%= rowbg = 1 - rowbg %>">
+			<td class="name">New Password</td>
+			<td class="value"><%= f.password_field(:password) %></td>
+			<td class="details">
+				Enter a new password here if you'd like to change your existing password.
+			</td>
+		</tr>
+		<tr class="rowbg<%= rowbg = 1 - rowbg %>">
+			<td class="name">Confirm New Password</td>
+			<td class="value"><%= f.password_field(:password_confirmation) %></td>
+			<td class="details"></td>
+		</tr>
+		<% end %>
+	</table>
+	<%= f.submit((user.new_record? ? "Create" : "Update") + " User") %>
+<% end %>

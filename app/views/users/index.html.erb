@@ -1,0 +1,28 @@
+<%= render("layouts/flash", {:flash => flash}) %>
+
+<div class="tip">
+	Found <%= @total_count %> users.
+	<%= link_to("Create new user", new_user_path) %>
+</div>
+
+<% unless @total_count == 0 %>
+	<% fields = %w[last_name first_name login email language role location phone_number is_active? actions] %>
+	<table class="big_list">
+		<tr>
+			<% fields.each do |f| %>
+				<th><%= f.gsub("_", " ").capitalize %></th>
+			<% end %>
+		</tr>
+	<% @users.each do |u| %>
+		<tr>
+			<% fields.each do |f| %>
+				<td>
+					<%= format_user_field(u, f) %>
+				</td>
+			<% end %>
+		</tr>
+	<% end %>
+	</table>
+	<br/>
+	<%= will_paginate(@reports) %>
+<% end %>

@@ -1,0 +1,17 @@
+<% rowbg = 0 %>
+<% form_for(language) do |f| %>
+	<%= show_flash_and_form_errors(language) %>
+	<table class="form">
+		<tr class="rowbg<%= rowbg = 1 - rowbg %>">
+			<td class="name">Language Name*</td>
+			<td class="value"><%= f.text_field(:name) %></td>
+			<td class="details">The common English name of the language (e.g. Spanish, Arabic).</td>
+		</tr>
+		<tr class="rowbg<%= rowbg = 1 - rowbg %>">
+			<td class="name">Is Active*</td>
+			<td class="value"><%= f.check_box(:is_active) %></td>
+			<td class="details">Whether the language should be available for input and editing on the form creation page.</td>
+		</tr>
+	</table>
+	<%= f.submit((language.new_record? ? "Create" : "Update") + " Language") %>
+<% end %>
