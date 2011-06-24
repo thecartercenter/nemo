@@ -1,11 +1,18 @@
+<% rowbg = 0 %>
 <%= form_for @user_session, :url => user_session_path do |f| %>
-  <%= show_flash_and_form_errors %>
-  <%= f.label :login %><br />
-  <%= f.text_field :login %><br />
-  <br />
-  <%= f.label :password %><br />
-  <%= f.password_field :password %><br />
-  <br />
+	<%= show_flash_and_form_errors(@user_session) %>
+	<table class="form">
+		<tr class="rowbg<%= rowbg = 1 - rowbg %>">
+			<td class="name"><%= f.label :login %>*</td>
+			<td class="value"><%= f.text_field :login %></td>
+			<td class="details"></td>
+		</tr>
+		<tr class="rowbg<%= rowbg = 1 - rowbg %>">
+			<td class="name"><%= f.label :password %>*</td>
+			<td class="value"><%= f.password_field :password %></td>
+			<td class="details"></td>
+		</tr>
+	</table>
   <%= f.submit "Login" %>
   <%= link_to("Forgot Password?", new_password_reset_path) %>
 <% end %>

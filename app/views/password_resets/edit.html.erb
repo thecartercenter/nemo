@@ -1,14 +1,20 @@
 <div class="tip">
 	<strong><%= @user.login %></strong>, please enter a new password for your account.
 </div>
-
+<% rowbg = 0 %>
 <% form_for @user, :url => password_reset_path, :method => :put do |f| %>
   <%= show_flash_and_form_errors(@user) %>
-  <%= f.label :password %><br />
-  <%= f.password_field :password %><br />
-  <br />
-  <%= f.label :password_confirmation %><br />
-  <%= f.password_field :password_confirmation %><br />
-  <br />
-  <%= f.submit "Update Password and Login" %>
+	<table class="form">
+		<tr class="rowbg<%= rowbg = 1 - rowbg %>">
+			<td class="name"><%= f.label :password %>*</td>
+			<td class="value"><%= f.password_field :password %></td>
+			<td class="details"></td>
+		</tr>
+		<tr class="rowbg<%= rowbg = 1 - rowbg %>">
+			<td class="name"><%= f.label :password_confirmation %>*</td>
+			<td class="value"><%= f.password_field :password_confirmation %></td>
+			<td class="details"></td>
+		</tr>
+	</table>
+	<%= f.submit "Update Password and Login" %>
 <% end %>

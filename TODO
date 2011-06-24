@@ -3,8 +3,6 @@ refactor views for password retrieval
 user association checks
 convert layout to DIV
 
-loading indicator for places form
-
 FEATURES
 sms broadcast
 
