@@ -70,7 +70,7 @@ class GoogleGeolocation < ActiveRecord::Base
       unless acomp.nil?
         place = Place.find_or_create_by_long_name_and_place_type_id_and_container_id(acomp['long_name'], pt.id, container ? container.id : nil)
         place.short_name = acomp['short_name'] if place.short_name.nil? && acomp['short_name'] != acomp['long_name']
-        place.save(false)
+        place.save(:validate => false)
         places << place
         container = place
       end
@@ -112,7 +112,7 @@ class GoogleGeolocation < ActiveRecord::Base
       end
     end
 
-    # normalize all the components
+    # normalize multibyte strings in all the components
     @addr_components.each do |pt,comp|
       next if comp.nil?
       comp.each do |key, value| 
