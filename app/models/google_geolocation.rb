@@ -10,8 +10,14 @@ class GoogleGeolocation < ActiveRecord::Base
     url = BASE_URL + URI.escape(query)
     
     # run geolocator query
-    Rails.logger.debug("Querying google geolocator with: #{query}")
-    json = open(url){|f| f.read}
+    begin
+      Rails.logger.debug("Querying google geolocator with: #{query}")
+      json = open(url){|f| f.read} 
+    rescue SocketError
+      Rails.logger.debug("Google geolocator failed with: #{$!.to_s}")
+      return []
+    end
+    
     
     # decode JSON
     reply = ActiveSupport::JSON.decode(json)

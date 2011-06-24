@@ -12,7 +12,6 @@ class PlaceLookup < ActiveRecord::Base
     # get the matching places (or empty array if there is an error)
     count = 0
     places = Place.search(query)
-    puts "Place count #{places.size}"
     places.each{|p| count += 1 if obj.add_suggestion(p); break if count >= 5}
     
     # get the google geolocation suggestions

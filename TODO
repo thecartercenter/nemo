@@ -3,7 +3,6 @@ refactor views for password retrieval
 user association checks
 convert layout to DIV
 
-test geoloc with no connection
 scan geoloc carefully for error possibilities
 loading indicator for places form
 clear old suggestions, temp places
