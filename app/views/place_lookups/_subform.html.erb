@@ -1,4 +1,4 @@
 <%= fields_for(place_lookup) do |f| %>
-	<%= f.text_field(:query, :onkeydown => "if (event.keyCode == 13) {$('sugg_btn').click(); return false;}") %>
-	<%= button_to_function('Suggest', "lookup_places($('place_lookup_query').value, 'place_lookup_results');", :id => "sugg_btn") %>
+	<%= f.text_field(:query, :onkeydown => "if (event.keyCode == 13) {$('place_lookup_btn').click(); return false;}") %>
+	<%= button_to_function('Suggest', "lookup_places();", :id => "place_lookup_btn") %>
 <% end %>

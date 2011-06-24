@@ -50,6 +50,7 @@ table#layout td#nav ul li a:hover { text-decoration: none; color: #BEA154; }
 #search { margin-bottom: 10px; }
 #search #query { width: 600px; background-color: #eee; }
 .tip { margin-bottom: 5px; }
+.loader { background: url('/images/loader.gif') no-repeat; padding-left: 20px; }
 
 /* Language listing. */
 #languages_index table td.name_col { width: 150px; }
