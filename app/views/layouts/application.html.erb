@@ -5,6 +5,7 @@
   <title>Command Center</title>
   <%= stylesheet_link_tag :all %>
   <%= javascript_include_tag :defaults %>
+  <%= javascript_include_tag(@js) unless @js.empty? %>
   <%= csrf_meta_tag %>
 </head>
 <body>
@@ -34,6 +35,7 @@
 			<ul>
 				<li><%= link_to("Users", users_path) %></li>
 				<li><%= link_to("Languages", languages_path) %></li>
+				<li><%= link_to("Places", places_path) %></li>
 			</ul>
 		</td>
 

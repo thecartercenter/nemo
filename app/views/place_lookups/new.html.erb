@@ -1,0 +1,22 @@
+<% rowbg = 0 %>
+<%= show_flash_and_form_errors(@place_lookup) %>
+<div class="tip"><%= link_to("Enter place info manually", new_place_path) %></div>
+<% form_for(@place_lookup) do |f| %>
+<table class="form">
+	<tr class="rowbg<%= rowbg = 1 - rowbg %>">
+		<td class="name">Place Name/Address:</td>
+		<td class="value">
+			<%= render('subform', :place_lookup => @place_lookup) %>
+			<div id="place_lookup_results">
+				<%= render('results', :place_lookup => @place_lookup) %>
+			</div>
+		</td>
+		<td class="details">
+			Enter the full address of the place you want to add and click 'Suggest'. 
+			The system will offer some suggestions from Google. If you can't find the desired place,
+			click the link above to enter it manually.
+		</td>
+	</tr>
+</table>
+<%= f.submit("Add Place") %>
+<% end %>

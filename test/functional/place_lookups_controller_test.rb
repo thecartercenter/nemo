@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class SessionTest < ActiveSupport::TestCase
+class PlaceLookupsControllerTest < ActionController::TestCase
   # Replace this with your real tests.
   test "the truth" do
     assert true

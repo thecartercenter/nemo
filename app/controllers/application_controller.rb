@@ -2,10 +2,15 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
   before_filter(:set_default_title)
   before_filter(:mailer_set_url_options)
+  before_filter(:init_js_array)
   
   helper_method :current_user_session, :current_user
 require 'authlogic'
   protected
+    def init_js_array
+      @js = []
+    end
+    
     def current_user_session
       return @current_user_session if defined?(@current_user_session)
       @current_user_session = UserSession.find
@@ -35,7 +40,7 @@ require 'authlogic'
     end
 
     def set_default_title
-      action = {"index" => "", "new" => "Create ", "edit" => "Edit "}[action_name]
+      action = {"index" => "", "new" => "Create ", "edit" => "Edit "}[action_name] || ""
       obj = controller_name.capitalize
       obj = obj.singularize unless action_name == "index"
       @title = action + obj

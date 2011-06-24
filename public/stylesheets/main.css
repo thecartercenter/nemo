@@ -54,6 +54,10 @@ table#layout td#nav ul li a:hover { text-decoration: none; color: #BEA154; }
 /* Language listing. */
 #languages_index table td.name_col { width: 150px; }
 
+/* place form */
+input#place_lookup_query { width: 300px; }
+div#place_lookup_results .place_type { font-size: 75%; color: #666; }
+form.new_place_lookup td.value, form.new_place td.value { min-width: 400px; }
 
 /* Report listing. */
 #reports_index #picker { border: 1px solid #444; position: absolute; background-color: white; padding: 10px; overflow: auto; } 

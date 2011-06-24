@@ -1,5 +1,6 @@
 CommandCenter::Application.routes.draw do
-  resources(:users, :password_resets, :languages)
+  resources(:users, :password_resets, :languages, :places)
+  resources(:place_lookups){collection{get 'suggest'}}
   resource(:user_session)
   root(:to => "welcome#index")
   

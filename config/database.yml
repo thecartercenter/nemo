@@ -5,3 +5,9 @@ development:
   username: tomsmyth_cc
   password: tickleME
   
+test:
+  adapter: mysql
+  database: tomsmyth_cc_t
+  host: localhost
+  username: tomsmyth_cc_t
+  password: tickleME

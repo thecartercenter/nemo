@@ -1,8 +1,13 @@
-authlogic
-stopped at 25 mins for login
-mail settings for production
+MINOR
 refactor views for password retrieval
-fix auto titles
 user association checks
-sms broadcast
 convert layout to DIV
+
+test geoloc with no connection
+scan geoloc carefully for error possibilities
+loading indicator for places form
+clear old suggestions, temp places
+
+FEATURES
+sms broadcast
+

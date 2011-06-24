@@ -10,7 +10,15 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110621231721) do
+ActiveRecord::Schema.define(:version => 20110624133714) do
+
+  create_table "google_geolocations", :force => true do |t|
+    t.string   "full_name"
+    t.text     "json"
+    t.integer  "place_type_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "languages", :force => true do |t|
     t.string   "name"
@@ -27,6 +35,26 @@ ActiveRecord::Schema.define(:version => 20110621231721) do
     t.datetime "updated_at"
   end
 
+  create_table "place_lookups", :force => true do |t|
+    t.string   "query"
+    t.string   "sugg_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "place_sugg_sets", :force => true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "place_suggs", :force => true do |t|
+    t.integer  "place_lookup_id"
+    t.integer  "place_id"
+    t.integer  "google_geolocation_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "place_types", :force => true do |t|
     t.string   "name"
     t.integer  "level"
@@ -35,12 +63,15 @@ ActiveRecord::Schema.define(:version => 20110621231721) do
   end
 
   create_table "places", :force => true do |t|
-    t.string   "name"
+    t.string   "long_name"
     t.string   "short_name"
+    t.string   "full_name"
     t.integer  "place_type_id"
-    t.integer  "is_in_id"
-    t.decimal  "lat",           :precision => 20, :scale => 15
-    t.decimal  "lng",           :precision => 20, :scale => 15
+    t.integer  "container_id"
+    t.decimal  "latitude",        :precision => 20, :scale => 15
+    t.decimal  "longitude",       :precision => 20, :scale => 15
+    t.boolean  "is_temp"
+    t.integer  "place_lookup_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -49,6 +80,13 @@ ActiveRecord::Schema.define(:version => 20110621231721) do
     t.string   "name"
     t.integer  "level"
     t.boolean  "location_required"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "searches", :force => true do |t|
+    t.string   "query"
+    t.string   "class_name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

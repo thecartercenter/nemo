@@ -1,13 +1,16 @@
 class CreatePlaces < ActiveRecord::Migration
   def self.up
     create_table :places do |t|
-      t.string :name
+      t.string :long_name
       t.string :short_name
+      t.string :full_name
       t.integer :place_type_id
-      t.integer :is_in_id
-      t.decimal :lat, :precision => 20, :scale => 15
-      t.decimal :lng, :precision => 20, :scale => 15
-      
+      t.integer :container_id
+      t.decimal :latitude, :precision => 20, :scale => 15
+      t.decimal :longitude, :precision => 20, :scale => 15
+      t.boolean :is_temp
+      t.integer :place_lookup_id
+
       t.timestamps
     end
   end

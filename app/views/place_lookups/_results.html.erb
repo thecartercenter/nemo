@@ -1,0 +1,13 @@
+<% if place_lookup.nil? || place_lookup.suggs.empty? %>
+	<% if defined?(ajax) %>No suggestions.<% end %>
+<% else %>
+	<%= fields_for(place_lookup) do |f| %>
+		<% place_lookup.suggs.each do |ps| %>
+			<%= f.hidden_field(:id) %>
+			<%= f.radio_button(:sugg_id, ps.id) %>
+			<%= f.label(:sugg_id, ps.name) %>&nbsp;
+			<span class="place_type">[<%= ps.place_type.name %><%= ps.source == "google" ? "*" : "" %>]</span>
+			<br/>
+		<% end %>
+	<% end %>
+<% end %>

@@ -7,10 +7,6 @@ class CreateRoles < ActiveRecord::Migration
 
       t.timestamps
     end
-    Role.create(:name => "Observer", :level => 1)
-    Role.create(:name => "Coordinator", :level => 2)
-    Role.create(:name => "Director", :level => 3)
-    Role.create(:name => "Program Staff", :level => 4)
   end
 
   def self.down
