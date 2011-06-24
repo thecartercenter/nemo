@@ -8,8 +8,6 @@ class CreatePlaces < ActiveRecord::Migration
       t.integer :container_id
       t.decimal :latitude, :precision => 20, :scale => 15
       t.decimal :longitude, :precision => 20, :scale => 15
-      t.boolean :is_temp
-      t.integer :place_lookup_id
 
       t.timestamps
     end

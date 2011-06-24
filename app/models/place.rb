@@ -1,5 +1,4 @@
 class Place < ActiveRecord::Base
-  belongs_to(:place_lookup)
   belongs_to(:container, :class_name => "Place")
   has_many(:children, :class_name => "Place", :foreign_key => "container_id")
   before_validation(:set_full_name)
@@ -13,12 +12,6 @@ class Place < ActiveRecord::Base
   validates(:latitude, :numericality => {:less_than => 90, :greater_than => -90}, :if => Proc.new{|p| p.latitude})
   validates(:longitude, :numericality => {:less_than => 180, :greater_than => -180}, :if => Proc.new{|p| p.longitude})
   
-  def self.default
-    place = new(:is_temp => true)
-    place.place_lookup = PlaceLookup.new
-    place
-  end
-
   # gets the list of fields to be searched for this class
   # includes whether they should be included in a default, unqualified search
   # and whether they are searchable by a regular expression

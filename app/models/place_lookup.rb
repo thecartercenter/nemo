@@ -4,7 +4,8 @@ class PlaceLookup < ActiveRecord::Base
   validates(:query, :presence => true)
   
   def self.suggest(query)
-    min_level ||= 0
+    # do this for housekeeping
+    cleanup
     
     # create the object
     obj = create(:query => query)
@@ -20,6 +21,16 @@ class PlaceLookup < ActiveRecord::Base
     return obj
   end
   
+  # removes place lookups and related place_suggs that are more than 1/2 hour old
+  def self.cleanup
+    find(:all, :conditions => ["created_at < ?", Time.now - 30.minutes]).each do |pl|
+      pl.suggs.delete_all
+      pl.delete
+    end
+  end
+  
+  # finds the object with the id given in params and updates it with the rest of the params
+  # if no id is given, or if object is not found, returns a new object
   def self.find_and_update(params)
     pl = params[:id] ? find(params.delete(:id)) : nil
     pl.nil? ? (pl = new(params)) : pl.update_attributes(params)

@@ -4,7 +4,7 @@ class PlacesController < ApplicationController
   end
   def new
     set_title_and_js
-    @place = Place.default
+    @place = Place.new
     @place_lookup = PlaceLookup.new
   end
   def create
