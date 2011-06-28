@@ -114,7 +114,7 @@ class GoogleGeolocation < ActiveRecord::Base
     @addr_components.each do |pt,comp|
       next if comp.nil?
       comp.each do |key, value| 
-        comp[key] = value.mb_chars.normalize(:kd).gsub(/[^\x00-\x7F]/n,'') if value.is_a?(String)
+        comp[key] = value.normalize if value.is_a?(String)
       end
     end
   

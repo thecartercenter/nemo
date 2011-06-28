@@ -39,7 +39,7 @@ module CommandCenter
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password, :password_confirmation]
     
-    configatron.site_name = "Election Monitoring Command Center"
-    configatron.site_email = "#{configatron.site_name} <emcc@cartercenter.org>"
+    configatron.site_name = "CCEOM Command Center"
+    configatron.site_email = "#{configatron.site_name} <info@cceom.org>"
   end
 end
