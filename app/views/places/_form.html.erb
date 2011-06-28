@@ -3,54 +3,54 @@
 
 <% form_for(place) do |f| %>
 <table class="form">
-	<tr class="rowbg<%= rowbg = 1 - rowbg %>">
-		<td class="name">Long Name:*</td>
-		<td class="value"><%= f.text_field(:long_name) %></td>
-		<td class="details">The longer, unabbreviated name of the place, e.g. 'Georgia'; '5th Avenue'; 'Kenya'; 'San Francisco'.</td>
-	</tr>
-	<tr class="rowbg<%= rowbg = 1 - rowbg %>">
-		<td class="name">Short Name:</td>
-		<td class="value"><%= f.text_field(:short_name) %></td>
-		<td class="details">An abbreviated name, if applicable, e.g. 'GA'; 'US'; 'CN'.</td>
-	</tr>
-	<tr class="rowbg<%= rowbg = 1 - rowbg %>">
-		<td class="name">Type*:</td>
-		<td class="value"><%= f.select(:place_type_id, PlaceType.select_options, :include_blank => true) %></td>
-		<td class="details">The type of the place, e.g. 'Country', 'Municipality', etc.</td>
-	</tr>
-	<tr class="rowbg<%= rowbg = 1 - rowbg %>">
-		<td class="name">Latitude:</td>
-		<td class="value"><%= f.text_field(:latitude) %></td>
-		<td class="details">The latitude in decimal format, e.g. 40.7110822</td>
-	</tr>
-	<tr class="rowbg<%= rowbg = 1 - rowbg %>">
-		<td class="name">Longitude:</td>
-		<td class="value"><%= f.text_field(:longitude) %></td>
-		<td class="details">The longitude in decimal format, e.g. 73.9646145</td>
-	</tr>
-	<tr class="rowbg<%= rowbg = 1 - rowbg %>">
-		<td class="name">Container:</td>
-		<td class="value">
-			<%= place.container ? place.container.full_name : "None" %>
-			<small>
-				<%= link_to("[Change]", "#", :onclick => "show_place_lookup_form(); return false") %>
-			</small>
-			<div id="place_lookup_form"<%= (place_lookup.new_record? ? ' style="display:none"' : '').html_safe %>>
-				<%= render('place_lookups/subform', :place_lookup => place_lookup) %>
-				<div id="place_lookup_results">
-					<%= render('place_lookups/results', :place_lookup => place_lookup) %>
-				</div>
-			</div>
-		</td>
-		<td class="details">
-			The place that this place is in.
-			<span id="place_lookup_instructions"<%= (place.new_record? ? ' style="display:none"' : '').html_safe %>>
-				Enter some information about the container and click 'Suggest'. 
-				The system will search for existing places.
-				If you can't find the desired place, you must add it before proceeding with the current place.
-			</span>
-		</td>
-	</tr>
+  <tr class="rowbg<%= rowbg = 1 - rowbg %>">
+    <td class="name">Long Name:*</td>
+    <td class="value"><%= f.text_field(:long_name) %></td>
+    <td class="details">The longer, unabbreviated name of the place, e.g. 'Georgia'; '5th Avenue'; 'Kenya'; 'San Francisco'.</td>
+  </tr>
+  <tr class="rowbg<%= rowbg = 1 - rowbg %>">
+    <td class="name">Short Name:</td>
+    <td class="value"><%= f.text_field(:short_name) %></td>
+    <td class="details">An abbreviated name, if applicable, e.g. 'GA'; 'US'; 'CN'.</td>
+  </tr>
+  <tr class="rowbg<%= rowbg = 1 - rowbg %>">
+    <td class="name">Type*:</td>
+    <td class="value"><%= f.select(:place_type_id, PlaceType.select_options, :include_blank => true) %></td>
+    <td class="details">The type of the place, e.g. 'Country', 'Municipality', etc.</td>
+  </tr>
+  <tr class="rowbg<%= rowbg = 1 - rowbg %>">
+    <td class="name">Latitude:</td>
+    <td class="value"><%= f.text_field(:latitude) %></td>
+    <td class="details">The latitude in decimal format, e.g. 40.7110822</td>
+  </tr>
+  <tr class="rowbg<%= rowbg = 1 - rowbg %>">
+    <td class="name">Longitude:</td>
+    <td class="value"><%= f.text_field(:longitude) %></td>
+    <td class="details">The longitude in decimal format, e.g. 73.9646145</td>
+  </tr>
+  <tr class="rowbg<%= rowbg = 1 - rowbg %>">
+    <td class="name">Container:</td>
+    <td class="value">
+      <%= place.container ? place.container.full_name : "None" %>
+      <small>
+        <%= link_to("[Change]", "#", :onclick => "show_place_lookup_form(); return false") %>
+      </small>
+      <div id="place_lookup_form"<%= (place_lookup.new_record? ? ' style="display:none"' : '').html_safe %>>
+        <%= render('place_lookups/subform', :place_lookup => place_lookup) %>
+        <div id="place_lookup_results">
+          <%= render('place_lookups/results', :place_lookup => place_lookup) %>
+        </div>
+      </div>
+    </td>
+    <td class="details">
+      The place that this place is in.
+      <span id="place_lookup_instructions"<%= (place.new_record? ? ' style="display:none"' : '').html_safe %>>
+        Enter some information about the container and click 'Suggest'. 
+        The system will search for existing places.
+        If you can't find the desired place, you must add it before proceeding with the current place.
+      </span>
+    </td>
+  </tr>
 </table>
 <%= f.submit((place.new_record? ? "Add" : "Update") + " Place") %>
 <% end %>

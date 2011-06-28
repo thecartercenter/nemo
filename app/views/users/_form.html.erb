@@ -1,46 +1,46 @@
 <%= basic_form(user) do |f|
-	fields = [{
-		:col => :first_name,
-		:required => true,
-		:value => f.text_field(:first_name),
-	},{
-		:col => :last_name,	
-		:required => true,
-		:value => f.text_field(:last_name)
-	},{
-		:col => :email,
-		:required => true,
-		:value => f.text_field(:email)
-	},{
-		:col => :role,
-		:required => true,
-		:value => f.select(:role_id, Role.select_options, :include_blank => true)
-	},{
-		:col => :phone,
-		:value => f.text_field(:phone, :size => 20) + "<br/>".html_safe + f.check_box(:is_mobile_phone) + "Is this a mobile phone?",
-		:details => "Phone number should include the country code. Example: +25680344523"
-	},{
-		:col => :language,
-		:required => true,
-		:value => f.select(:language_id, Language.select_options),
-		:details => "This will primarily affect the language of forms for observers."
-	},{
-		:col => :is_active?,
-		:value => f.check_box(:is_active),
-		:details => "Is this user active in the mission? If this box is not checked, the
-			user will not be able to log in or submit forms."
-	}]
-	if user == current_user
-		fields += [{
-			:col => :password,
-			:value => f.password_field(:password),
-			:details => "Enter a new password here if you'd like to change your existing password."
-		},{
-			:col => :password_confirmation,
-			:value => f.password_field(:password_confirmation),
-			:details => "Enter the new password again."
-		}]
-	end
-	fields
+  fields = [{
+    :col => :first_name,
+    :required => true,
+    :value => f.text_field(:first_name),
+  },{
+    :col => :last_name,  
+    :required => true,
+    :value => f.text_field(:last_name)
+  },{
+    :col => :email,
+    :required => true,
+    :value => f.text_field(:email)
+  },{
+    :col => :role,
+    :required => true,
+    :value => f.select(:role_id, Role.select_options, :include_blank => true)
+  },{
+    :col => :phone,
+    :value => f.text_field(:phone, :size => 20) + "<br/>".html_safe + f.check_box(:is_mobile_phone) + "Is this a mobile phone?",
+    :details => "Phone number should include the country code. Example: +25680344523"
+  },{
+    :col => :language,
+    :required => true,
+    :value => f.select(:language_id, Language.select_options),
+    :details => "This will primarily affect the language of forms for observers."
+  },{
+    :col => :is_active?,
+    :value => f.check_box(:is_active),
+    :details => "Is this user active in the mission? If this box is not checked, the
+      user will not be able to log in or submit forms."
+  }]
+  if user == current_user
+    fields += [{
+      :col => :password,
+      :value => f.password_field(:password),
+      :details => "Enter a new password here if you'd like to change your existing password."
+    },{
+      :col => :password_confirmation,
+      :value => f.password_field(:password_confirmation),
+      :details => "Enter the new password again."
+    }]
+  end
+  fields
 end
 %>

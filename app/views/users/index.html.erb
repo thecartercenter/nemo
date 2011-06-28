@@ -1,9 +1,9 @@
 <%= render("layouts/flash", {:flash => flash}) %>
 
 <div class="tip">
-	Found <%= @users.total_entries %> users.
-	<%= link_to_if_auth("Create new user", new_user_path, "users#create") %>
+  Found <%= @users.total_entries %> users.
+  <%= link_to_if_auth("Create new user", new_user_path, "users#create") %>
 </div>
 
 <%= render("layouts/index_table", :objects => @users, 
-	:fields => %w[last_name first_name login email language role location phone_number is_active? actions]) %>
+  :fields => %w[last_name first_name login email language role location phone_number is_active? actions]) %>
