@@ -1,16 +1,13 @@
 MINOR
-standardize tabs
-finish special cases
-email on fail
 
 MAJOR
-refactor geocoding to create temporary places
 
 FEATURES
 sms broadcast
 
 REFACTOR
 stylesheet
+refactor geocoding to create temporary places
 
 DON'T FORGET
 user association checks

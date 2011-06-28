@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
+  rescue_from(Exception, :with => :notify_error)
   before_filter(:set_default_title)
   before_filter(:mailer_set_url_options)
   before_filter(:init_js_array)
@@ -9,6 +10,18 @@ require 'authlogic'
   protected
     def init_js_array
       @js = []
+    end
+    
+    def notify_error(exception)
+      if Rails.env == "production"
+        send_error_alert(exception) rescue logger.error($!)
+        # still show error page
+        raise exception
+      end
+    end
+    
+    def send_error_alert(exception)
+      AdminMailer.error(exception, session.to_hash, params, request.env).deliver
     end
     
     def current_user_session

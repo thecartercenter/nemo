@@ -22,19 +22,5 @@ CommandCenter::Application.configure do
 
   # Only use best-standards-support built into browsers
   config.action_dispatch.best_standards_support = :builtin
-  
-  # Test email for webmaster emails.
-  configatron.webmaster_emails = ["tomsmyth@gmail.com"]
-  
-  # Mail settings for development mode.
-  config.action_mailer.delivery_method = :smtp
-  config.action_mailer.smtp_settings = {
-    :address        => 'smtp.gmail.com',
-    :port           => 587,
-    :domain         => "gmail.com",
-    :authentication => :plain,
-    :user_name      => "tomsmyth@gmail.com",
-    :password       => "zackleys"
-  }
 end
 
