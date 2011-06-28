@@ -50,8 +50,6 @@ class User < ActiveRecord::Base
   private
     def clean_fields
       self.phone = "+" + phone.gsub(/[^0-9]/, "") unless phone.blank?
-      self.first_name.capitalize! unless first_name.blank?
-      self.last_name.capitalize! unless last_name.blank?
     end
     
     def phone_length_or_empty
