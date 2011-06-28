@@ -1,11 +1,12 @@
 class PlaceLookup < ActiveRecord::Base
   has_many(:suggs, :class_name => "PlaceSugg")
   belongs_to(:sugg, :class_name => "PlaceSugg")
-  validates(:query, :presence => true)
   
   def self.suggest(query)
     # do this for housekeeping
     cleanup
+    
+    return nil if query.blank?
     
     # create the object
     obj = create(:query => query)

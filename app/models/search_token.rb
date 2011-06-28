@@ -20,17 +20,17 @@ class SearchToken
     if @str.match(/^(\w+):(.+)$/)
       qualifier, term = $1.to_sym, $2
       # raise an error if the qualifier is invalid
-      raise "Invalid search qualifier '#{qualifier}'" unless field_spec[qualifier]
+      raise SearchError.new("Invalid search qualifier '#{qualifier}'") unless field_spec[qualifier]
       fields = [qualifier]
     else
-      # else, search default fields
+      # else, search default fields (get all fields with default param set to true)
       fields = field_spec.reject{|k,v| !v[:default]}.keys
       term = @str
     end
     
     # if the term is a regular expression, set a flag and remove the /'s
     if term.match(/\/(.+)\//)
-      raise "Regular expressions not allowed for #{fields.first}" unless field_spec[fields.first][:regexp]
+      raise SearchError.new("Regular expressions not allowed for #{fields.first}") unless field_spec[fields.first][:regexp]
       regexp = true
       term = $1
     else

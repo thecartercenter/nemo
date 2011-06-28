@@ -1,5 +1,5 @@
 module LanguagesHelper
-  def format_language_field(language, field)
+  def format_languages_field(language, field)
     case field
     when "actions"
       link_to("Edit", edit_language_path(language)) + " | " + 

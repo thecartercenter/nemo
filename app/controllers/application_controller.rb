@@ -4,7 +4,7 @@ class ApplicationController < ActionController::Base
   before_filter(:mailer_set_url_options)
   before_filter(:init_js_array)
   
-  helper_method :current_user_session, :current_user
+  helper_method :current_user_session, :current_user, :authorized?
 require 'authlogic'
   protected
     def init_js_array
@@ -21,19 +21,29 @@ require 'authlogic'
       @current_user = current_user_session && current_user_session.user
     end
     
-    def require_user 
-      unless current_user 
-        store_location 
-        flash[:error] = "You must be logged in to access this page" 
-        redirect_to new_user_session_path 
-        return false 
-      end 
+    def authorize
+      # make sure user has permissions
+      begin
+        Permission.authorize(:user => current_user, :controller => controller_name, :action => action_name, :request => params)
+        return true
+      rescue PermissionError
+        store_location
+        # if the user needs to login, send them to the login page
+        flash[:error] = $!.to_s
+        redirect_to((flash[:error].match(/must login/) ? new_user_session_path : no_permissions_path))
+        # halt the rest of the action
+        return false
+      end
     end 
+    
+    def authorized?(params)
+      return Permission.authorized?(params.merge(:user => current_user))
+    end
 
     def require_no_user 
       if current_user 
         store_location 
-        flash[:error] = "You must be logged out to access this page" 
+        flash[:error] = "You must be logged out to access that page." 
         redirect_to(root_url)
         return false 
       end 
@@ -48,11 +58,15 @@ require 'authlogic'
     
     def store_location  
       session[:return_to] = request.fullpath  
-    end  
+    end
+    
+    def forget_location
+      session[:return_to] = nil
+    end
   
     def redirect_back_or_default(default)  
       redirect_to(session[:return_to] || default)  
-      session[:return_to] = nil  
+      forget_location
     end
     
     def mailer_set_url_options

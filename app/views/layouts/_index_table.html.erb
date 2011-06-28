@@ -1,16 +1,17 @@
+<% rowbg = 0 %>
 <% unless objects.total_entries == 0 %>
-	<table class="big_list">
-		<tr>
+	<table class="index_table">
+		<tr class="header">
 			<% fields.each do |f| %>
 				<th><%= f.gsub("_", " ").capitalize %></th>
 			<% end %>
 		</tr>
 	<% objects.each do |o| %>
-		<tr>
+		<tr class="rowbg<%= rowbg = 1 - rowbg %>">
 			<% fields.each do |f| %>
 				<% cls = "#{f.gsub(/[^\w\d]/, "")}_col" %>
 				<td class="<%= cls %>">
-					<%= self.send("format_#{o.class.to_s.underscore}_field", o, f) %>
+					<%= self.send("format_#{controller_name}_field", o, f) %>
 				</td>
 			<% end %>
 		</tr>

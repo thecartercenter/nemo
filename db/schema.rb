@@ -16,6 +16,9 @@ ActiveRecord::Schema.define(:version => 20110624133714) do
     t.string   "full_name"
     t.text     "json"
     t.integer  "place_type_id"
+    t.decimal  "latitude",       :precision => 20, :scale => 15
+    t.decimal  "longitude",      :precision => 20, :scale => 15
+    t.string   "formatted_addr"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -68,8 +71,8 @@ ActiveRecord::Schema.define(:version => 20110624133714) do
     t.string   "full_name"
     t.integer  "place_type_id"
     t.integer  "container_id"
-    t.decimal  "latitude",        :precision => 20, :scale => 15
-    t.decimal  "longitude",       :precision => 20, :scale => 15
+    t.decimal  "latitude",      :precision => 20, :scale => 15
+    t.decimal  "longitude",     :precision => 20, :scale => 15
     t.datetime "created_at"
     t.datetime "updated_at"
   end

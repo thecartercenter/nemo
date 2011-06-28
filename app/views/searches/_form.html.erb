@@ -1,0 +1,12 @@
+<% form_for(search) do |f| %>
+	Search: <%= f.text_field(:query) %>
+	<%= f.hidden_field(:class_name) %>
+	<%= f.submit("Search") %>
+	<% unless search.new_record? %>
+		<%= f.submit("Clear", :onclick => "this.form.search_query.value=''") %>
+	<% end %>
+	<br/>
+	<div id="examples">
+		Examples: <%= search.examples.join("&nbsp;&nbsp;|&nbsp;&nbsp;").html_safe %>
+	</div>
+<% end %>

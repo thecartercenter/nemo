@@ -6,11 +6,10 @@
   <%= stylesheet_link_tag :all %>
   <%= javascript_include_tag :defaults %>
   <%= javascript_include_tag(@js) unless @js.empty? %>
+  <%= javascript_include_tag("http://maps.google.com/maps/api/js?sensor=false&key=ABQIAAAA5mPXIIEW9AiuevjQ7iPkrRTtnEapvFzd1q2lLn9v-6g2DPucZhRC1LhOfQFQwoUNHyhenCzfzRz6ZQ") %>
   <%= csrf_meta_tag %>
 </head>
 <body>
-<% if false and Rails.env == "development" %><div id="dev_mode_warning">Development Mode</div><% end %>
-
 <table id="layout">
 	<tr>
 		<td id="banner" colspan="2">
@@ -28,14 +27,19 @@
 					<%= link_to("Login", new_user_session_path) %>
 				<% end %>
 			</div>
+			<% if Rails.env == "development" %>
+				<div id="dev_mode_warning">Development Mode</div>
+			<% end %>
 		</td>
 	</tr>
 	<tr>
 		<td id="nav">
 			<ul>
-				<li><%= link_to("Users", users_path) %></li>
-				<li><%= link_to("Languages", languages_path) %></li>
-				<li><%= link_to("Places", places_path) %></li>
+				<% [:users, :languages, :places].each do |k| %>
+					<% if authorized?(:action => "#{k}#index") %>
+						<li><%= link_to(k.capitalize, send("#{k}_path")) %></li>
+					<% end %>
+				<% end %>
 			</ul>
 		</td>
 

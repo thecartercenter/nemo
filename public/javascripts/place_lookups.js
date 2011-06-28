@@ -10,3 +10,8 @@ function lookup_places() {
     method: "get"
   });
 }
+
+function show_place_lookup_form() {
+  $('place_lookup_form').show();
+  $('place_lookup_instructions').show();
+}

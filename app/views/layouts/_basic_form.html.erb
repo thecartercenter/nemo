@@ -1,0 +1,15 @@
+<% rowbg = 0 %>
+<%= show_flash_and_form_errors(obj) %>
+<table class="form">
+<% fields.each do |field| %>
+	<% action = obj.new_record? ? "create" : "update" %>
+	<% if authorized?(:action => "#{obj.class.table_name}##{action}", :object => obj, :col => field[:col]) %>
+		<tr class="rowbg<%= rowbg = 1 - rowbg %>">
+			<td class="name"><%= field[:col].to_s.gsub("_"," ").capitalize %><% if field[:required] %>*<% end %></td>
+			<td class="value"><%= field[:value].html_safe %></td>
+			<td class="details"><%= (field[:details] || "") %></td>
+		</tr>
+	<% end %>
+<% end %>
+</table>
+<%= f.submit((obj.new_record? ? "Create" : "Update") + " User") %>

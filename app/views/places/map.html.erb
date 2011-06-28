@@ -1,0 +1,18 @@
+<div class="tip">
+	<%= join_links(link_to_if_auth("Add new place", new_place_lookup_path, "places#create"),
+			link_to_if_auth("Back to list", places_path, "places#index")) %>
+</div>
+
+<div id="map_canvas"></div>
+
+<script type="text/javascript">
+var markers = [
+<%= @places.collect do |p|
+	"{id: #{p.id}, latitude: #{p.latitude}, longitude: #{p.longitude},
+	info: #{render('map_marker_info', :place => p).to_json}}"
+   end.join(",").html_safe %>
+];
+draw_map(markers, <%= @bounds.to_json.html_safe %>);
+
+</script>
+

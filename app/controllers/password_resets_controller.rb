@@ -1,6 +1,6 @@
 class PasswordResetsController < ApplicationController
-  before_filter :require_no_user
-  before_filter :load_user_using_perishable_token, :only => [:edit, :update]
+  before_filter(:authorize)
+  before_filter(:load_user_using_perishable_token, :only => [:edit, :update])
 
   def new
     @title = "Reset Password"
@@ -40,7 +40,6 @@ class PasswordResetsController < ApplicationController
 
   private  
     def load_user_using_perishable_token
-      Rails.logger.debug(params.to_yaml)
       @user = User.find_using_perishable_token(params[:id])  
       unless @user
         flash[:error] = "We're sorry, but we could not locate your account. " +  

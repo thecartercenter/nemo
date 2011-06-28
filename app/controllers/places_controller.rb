@@ -1,11 +1,51 @@
 class PlacesController < ApplicationController
-  before_filter :require_user
+  before_filter(:authorize)
   def index
+    # find or create a subindex object
+    @subindex = Subindex.find_and_update(session, "Place", params[:page])
+    # get the places
+    begin
+      @places = Place.sorted(@subindex.params)
+    rescue SearchError
+      flash[:error] = $!.to_s
+      @places = Place.sorted(:page => 1)
+    end
+  end
+  def map
+    @title = "Place Map"
+    @js << "map"
+    @places = Place.all(:conditions => "latitude is not null and longitude is not null")
+    @bounds = Place.bound(@places)
   end
   def new
-    set_title_and_js
+    set_add_title
+    set_js
     @place = Place.new
     @place_lookup = PlaceLookup.new
+  end
+  def edit
+    # lookup the place
+    @place = Place.find(params[:id])
+    # get a fresh place_lookup object
+    @place_lookup = PlaceLookup.new
+    # setup the required js
+    set_js
+  end
+  def update
+    # lookup the place
+    @place = Place.find(params[:id])
+    # update the place lookup
+    @place_lookup = PlaceLookup.find_and_update(params[:place_lookup])
+    # update the container if place_lookup has been used
+    (choice = @place_lookup.choice) ? @place.container = choice : nil
+    # try to update
+    if @place.update_attributes(params[:place])
+      flash[:success] = "Place updated successfully."
+      redirect_to(:action => :index)
+    else
+      set_js
+      render(:action => :edit)
+    end
   end
   def create
     @place = Place.new(params[:place])
@@ -15,13 +55,26 @@ class PlacesController < ApplicationController
       flash[:success] = "Place added successfully."
       redirect_to(:action => :index)
     else
-      set_title_and_js
+      set_add_title
+      set_js
       render(:action => :new)
     end
   end
+  def destroy
+    @place = Place.find(params[:id])
+    begin
+      @place.destroy
+      flash[:success] = "Place deleted successfully" 
+    rescue 
+      flash[:error] = $!.to_s
+    end
+    redirect_to(:action => :index)
+  end
   private
-    def set_title_and_js
+    def set_add_title
       @title = "Add Place: Manual"
+    end
+    def set_js
       @js << 'place_lookups'
     end
 end

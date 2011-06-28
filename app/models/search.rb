@@ -3,6 +3,16 @@ class Search < ActiveRecord::Base
     query
   end
   
+  # if query is empty, returns a new unsaved search
+  # otherwise, finds or creates a search based on the given class_name and query
+  def self.find_or_create(params)
+    if params[:query].blank?
+      new(params)
+    else
+      find_or_create_by_class_name_and_query(params[:class_name], params[:query])
+    end
+  end
+  
   def self.find_or_create_canonicalized(query)
     find_or_create_by_query(canonicalize(query))
   end
@@ -42,6 +52,10 @@ class Search < ActiveRecord::Base
     
     # get sql fragment for each term
     finaltokenlist.collect {|s| SearchToken.new(s, klass).sql}.join(" ")
+  end
+  
+  def examples
+    klass.search_examples
   end
   
   def klass

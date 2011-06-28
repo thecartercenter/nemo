@@ -1,8 +1,7 @@
 class UsersController < ApplicationController
-  before_filter :require_user
+  before_filter(:authorize)
   def index
     @users = User.sorted(params[:page])
-    @total_count = User.count
   end
   def new
     @user = User.default
@@ -14,8 +13,13 @@ class UsersController < ApplicationController
   def update
     @user = User.find(params[:id])
     if @user.update_attributes(params[:user])
-      flash[:success] = "User updated successfully."
-      redirect_to(:action => :index)
+      if @user == current_user
+        flash[:success] = "Profile updated successfully."
+        redirect_to(:action => :edit)
+      else
+        flash[:success] = "User updated successfully."
+        redirect_to(:action => :index)
+      end
     else
       render(:action => :edit)
     end

@@ -1,5 +1,5 @@
 <%= render("layouts/flash", {:flash => flash}) %>
 
-<div class="tip"><%= link_to("Create new language", new_language_path) %></div>
+<div class="tip"><%= link_to_if_auth("Create new language", new_language_path, "languages#create") %></div>
 
 <%= render("layouts/index_table", :objects => @languages, :fields => %w[name is_active? actions]) %>

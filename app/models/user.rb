@@ -29,7 +29,7 @@ class User < ActiveRecord::Base
     (0...size).map{charset.to_a[rand(charset.size)]}.join
   end
   def generate_login!
-    base = "#{first_name[0,1]}#{last_name}"
+    base = "#{first_name[0,1]}#{last_name}".downcase
     try = 1
     until self.class.find_by_login(self.login = base + (try > 1 ? try.to_s : "")).nil?
       try += 1

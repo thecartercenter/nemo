@@ -1,13 +1,13 @@
 class GoogleGeolocation < ActiveRecord::Base
   require 'open-uri'
   BASE_URL = "http://maps.googleapis.com/maps/api/geocode/json?sensor=false&address="
-  
   belongs_to(:place_type)
+  before_create(:parse_result)
   
-  # queries the google geocode api with the given address and returns
-  # the results as Place objects
+  # queries the google geocode api with the given address and returns a bunch of objects
   def self.geolocate(query)
-    url = BASE_URL + URI.escape(query)
+    puts "query: #{query}"
+    url = BASE_URL + CGI::escape(query.to_s)
     
     # run geolocator query
     begin
@@ -18,7 +18,6 @@ class GoogleGeolocation < ActiveRecord::Base
       return []
     end
     
-    
     # decode JSON
     reply = ActiveSupport::JSON.decode(json)
     
@@ -27,18 +26,11 @@ class GoogleGeolocation < ActiveRecord::Base
       Rails.logger.debug("Google geolocator returned #{reply['results'].size} results.")
     
       # parse results and return
-      return reply['results'].collect{|r| create_from_result(r)}.compact
+      return reply['results'].collect{|r| create(:result => r)}.compact
     else
       Rails.logger.debug("Google geolocator failed with status '#{reply['status']}'.")
       return []
     end
-  end
-  
-  def self.create_from_result(result)
-    gg = new(:json => result.to_json)
-    gg.build_full_name_and_type
-    gg.save
-    gg
   end
   
   # reconstructs the result of the query to the API from stored json
@@ -46,30 +38,35 @@ class GoogleGeolocation < ActiveRecord::Base
     @result ||= ActiveSupport::JSON.decode(json)
   end
   
-  # builds the fully qualified name based on the query result
-  # this is part of the process of creating an instance of the class
-  def build_full_name_and_type
-    self.full_name = PlaceType.sorted.reverse.collect do |pt| 
-      if (ac = addr_components[pt])
-        self.place_type_id = pt.id if self.place_type_id.nil?
-        ac['long_name']
-      else
-        nil
-      end
-    end.compact.join(", ")
+  def result=(r)
+    @result = r
+    self.json = r.to_json
   end
   
+  # converts this object into one or more Place objects.
+  # creates parents as necessary
   def create_places
-    # loop over each address component, find_or_creating container. return the immediate container.
+    # temp variable for the immediate container
     container = nil
+    # array to hold all the created places
     places = []
+    # loop over each place type, from country downwards, find_or_creating container. return the immediate container.
     PlaceType.sorted.each do |pt|
-      # get the address component
-      acomp = addr_components[pt]
-      # find or create
-      unless acomp.nil?
-        place = Place.find_or_create_by_long_name_and_place_type_id_and_container_id(acomp['long_name'], pt.id, container ? container.id : nil)
-        place.short_name = acomp['short_name'] if place.short_name.nil? && acomp['short_name'] != acomp['long_name']
+      # get the address component for this place type
+      ac = addr_components[pt]
+      unless ac.nil?
+        # find or create
+        place = Place.find_or_create_by_long_name_and_place_type_id_and_container_id(ac['long_name'], pt.id, container ? container.id : nil)
+        # get the shortname from the address component, if needed
+        place.short_name = ac['short_name'] if place.short_name.nil? && ac['short_name'] != ac['long_name']
+        # if the place is missing latitude or longitude, try to look it up
+        if !place.latitude || !place.longitude
+          puts "geolocating #{place.full_name}"
+          unless (ggs = self.class.geolocate(place.full_name)).empty?
+            place.latitude = ggs.first.latitude
+            place.longitude = ggs.first.longitude
+          end
+        end
         place.save(:validate => false)
         places << place
         container = place
@@ -78,6 +75,7 @@ class GoogleGeolocation < ActiveRecord::Base
     places
   end
   
+  # returns the address components from the query result
   def addr_components
     # if we've already parsed it, return it
     return @addr_components if @addr_components
@@ -126,4 +124,25 @@ class GoogleGeolocation < ActiveRecord::Base
   def to_s
     full_name
   end
+  
+  private
+    # parses several fields out of a result from the google geocoder
+    def parse_result
+      # build full name. #loop over all placetypes, getting address components
+      self.full_name = PlaceType.sorted.reverse.collect do |pt| 
+        if (ac = addr_components[pt])
+          # set the place type
+          self.place_type_id = pt.id if self.place_type_id.nil?
+          # return the long_name from the address component
+          ac['long_name']
+        else
+          nil
+        end
+      end.compact.join(", ")
+      # save the latitude and longitude
+      self.latitude = result['geometry']['location']['lat']
+      self.longitude = result['geometry']['location']['lng']
+      # safe the formatted address
+      self.formatted_addr = result['formatted_address']
+    end
 end
