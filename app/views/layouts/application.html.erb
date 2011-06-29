@@ -6,7 +6,9 @@
   <%= stylesheet_link_tag :all %>
   <%= javascript_include_tag :defaults %>
   <%= javascript_include_tag(@js) unless @js.empty? %>
-  <%= javascript_include_tag("http://maps.google.com/maps/api/js?sensor=false&key=#{configatron.google_maps_key}") %>
+  <% if controller.controller_name == "places" && controller.action_name == "map" %>
+    <%= javascript_include_tag("http://maps.google.com/maps/api/js?sensor=false&key=#{configatron.google_maps_key}") %>
+  <% end %>
   <%= csrf_meta_tag %>
 </head>
 <body>
