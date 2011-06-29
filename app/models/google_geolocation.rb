@@ -111,14 +111,9 @@ class GoogleGeolocation < ActiveRecord::Base
     end
 
     # normalize multibyte strings in all the components
-    @addr_components.each do |pt,comp|
-      next if comp.nil?
-      comp.each do |key, value| 
-        comp[key] = value.normalize if value.is_a?(String)
-      end
-    end
-  
-    @addr_components
+    @addr_components.each{|pt, cmp| cmp.each{|k,v| cmp[k] = v.normalize if v.is_a?(String)} unless cmp.nil?}
+
+    return @addr_components
   end
   
   def to_s

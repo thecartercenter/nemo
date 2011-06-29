@@ -31,7 +31,7 @@ class Language < ActiveRecord::Base
         raise("You can't delete #{name}.") 
       # Can't delete languages with related translations.
       elsif false # Translation.find_by_language_id(id)
-        raise("You can't delete #{name} because it has assocaited translations. Try deactivating it.")
+        raise("You can't delete #{name} because it has associated translations. Try deactivating it.")
       end
     end
     def clean_fields
