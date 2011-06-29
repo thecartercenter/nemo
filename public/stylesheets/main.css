@@ -1,10 +1,11 @@
 /* tag styles */
 html,body { margin: 0; padding: 0 }
-body, td, input, select, textarea { font-family: Helvetica, sans-serif; font-size: 10pt; }
+body, td, input, select, textarea { font-family: Helvetica, sans-serif; font-size: 10pt; color: #222; }
 body { line-height: 1.3; height: 100%; }
 form { margin: 0; }
 input, select, textarea { border: 1px solid #444; }
 a { color: MidnightBlue; }
+h1, h2, h3 { color: black; }
 h1 { margin: 0 0 10px 0; font-size: 17pt; }
 h2 { font-size: 13pt; }
 h3 { font-size: 12pt; }
@@ -52,8 +53,8 @@ div#upper { background-color: #005882; }
 div#banner { padding-left: 125px; height: 79px; color: white; padding-top: 10px; }
 div#banner img { position: absolute; left: 10px; top: 10px; }
 div#banner #title { float: left; font-family: "Lucidia Fax", "Cambria", "Book Antiqua", "Times New Roman", times; }
-div#banner #title h1 { margin-bottom: 3px; }
-div#banner #title h2 { margin-top: 0; font-size: 100%; font-style: italic; }
+div#banner #title h1 { color: white; margin-bottom: 3px; }
+div#banner #title h2 { color: white; margin-top: 0; font-size: 100%; font-style: italic; }
 div#banner #userinfo { float: right; margin-right: 10px; }
 div#banner #userinfo a { color: white; }
 div#banner #dev_mode_warning { color: white; margin: 10px 10px 0 0; padding: 2px; text-align: right; font-weight: bold; background-color: #800000; float: right; clear: right; }
