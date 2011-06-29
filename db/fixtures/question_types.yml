@@ -1,0 +1,14 @@
+text:
+  name: text
+  
+numeric:
+  name: numeric
+
+location:
+  name: location
+
+select_one:
+  name: select_one
+  
+select_multiple:
+  name: select_multiple

@@ -1,0 +1,15 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  question_id: 1
+  form_id: 1
+  order: 1
+  required: false
+  hidden: false
+
+two:
+  question_id: 1
+  form_id: 1
+  order: 1
+  required: false
+  hidden: false

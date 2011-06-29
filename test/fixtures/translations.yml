@@ -1,0 +1,13 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  language_id: 1
+  question_id: 1
+  option_id: 1
+  str: MyText
+
+two:
+  language_id: 1
+  question_id: 1
+  option_id: 1
+  str: MyText
