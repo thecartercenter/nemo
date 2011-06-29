@@ -6,7 +6,7 @@
   <%= stylesheet_link_tag :all %>
   <%= javascript_include_tag :defaults %>
   <%= javascript_include_tag(@js) unless @js.empty? %>
-  <%= javascript_include_tag("http://maps.google.com/maps/api/js?sensor=false&key=ABQIAAAA5mPXIIEW9AiuevjQ7iPkrRTtnEapvFzd1q2lLn9v-6g2DPucZhRC1LhOfQFQwoUNHyhenCzfzRz6ZQ") %>
+  <%= javascript_include_tag("http://maps.google.com/maps/api/js?sensor=false&key=#{configatron.google_maps_key}") %>
   <%= csrf_meta_tag %>
 </head>
 <body>
