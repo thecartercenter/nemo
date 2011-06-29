@@ -2,6 +2,9 @@
 ## Test email for webmaster emails.
 #configatron.webmaster_emails = ["someone@somplace.com"]
 #
+# Whether to use HTTPS in the mailer URLs.
+#configatron.mailer_url_protocol = 'https'
+#
 ## Mail settings for development mode.
 #CommandCenter::Application.config.action_mailer.delivery_method = :smtp
 #CommandCenter::Application.config.action_mailer.smtp_settings = {

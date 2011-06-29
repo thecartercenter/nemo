@@ -15,9 +15,9 @@ require 'authlogic'
     def notify_error(exception)
       if Rails.env == "production"
         send_error_alert(exception) rescue logger.error($!)
-        # still show error page
-        raise exception
       end
+      # still show error page
+      raise exception
     end
     
     def send_error_alert(exception)
