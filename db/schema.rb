@@ -10,7 +10,30 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110624133714) do
+ActiveRecord::Schema.define(:version => 20110629190834) do
+
+  create_table "answers", :force => true do |t|
+    t.integer  "response_id"
+    t.integer  "question_id"
+    t.integer  "option_id"
+    t.text     "value"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "form_types", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "forms", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.boolean  "is_published"
+    t.integer  "form_type_id"
+  end
 
   create_table "google_geolocations", :force => true do |t|
     t.string   "full_name"
@@ -25,7 +48,27 @@ ActiveRecord::Schema.define(:version => 20110624133714) do
 
   create_table "languages", :force => true do |t|
     t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.boolean  "is_active"
+  end
+
+  create_table "option_sets", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "option_settings", :force => true do |t|
+    t.integer  "option_set_id"
+    t.integer  "option_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "options", :force => true do |t|
+    t.string   "name"
+    t.string   "value"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -33,6 +76,11 @@ ActiveRecord::Schema.define(:version => 20110624133714) do
   create_table "place_lookups", :force => true do |t|
     t.string   "query"
     t.string   "sugg_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "place_sugg_sets", :force => true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -64,6 +112,42 @@ ActiveRecord::Schema.define(:version => 20110624133714) do
     t.datetime "updated_at"
   end
 
+  create_table "question_types", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "questionings", :force => true do |t|
+    t.integer  "question_id"
+    t.integer  "form_id"
+    t.integer  "order"
+    t.boolean  "required"
+    t.boolean  "hidden"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "questions", :force => true do |t|
+    t.string   "code"
+    t.integer  "survey_id"
+    t.string   "name"
+    t.string   "kind"
+    t.integer  "option_set_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "question_type_id"
+  end
+
+  create_table "responses", :force => true do |t|
+    t.integer  "form_id"
+    t.integer  "user_id"
+    t.integer  "place_id"
+    t.datetime "observed_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "roles", :force => true do |t|
     t.string   "name"
     t.integer  "level"
@@ -75,6 +159,15 @@ ActiveRecord::Schema.define(:version => 20110624133714) do
   create_table "searches", :force => true do |t|
     t.string   "query"
     t.string   "class_name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "translations", :force => true do |t|
+    t.integer  "language_id"
+    t.integer  "question_id"
+    t.integer  "option_id"
+    t.text     "str"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
