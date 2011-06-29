@@ -1,13 +1,20 @@
 development:
   adapter: mysql
-  database: tomsmyth_cc
+  database: cceom_cc
   host: localhost
-  username: tomsmyth_cc
+  username: cceom_cc
   password: tickleME
   
 test:
   adapter: mysql
-  database: tomsmyth_cc_t
+  database: cceom_cc_t
   host: localhost
-  username: tomsmyth_cc_t
+  username: cceom_cc_t
+  password: tickleME
+
+production:
+  adapter: mysql
+  database: cceom_cc_p
+  host: localhost
+  username: cceom_cc_p
   password: tickleME
