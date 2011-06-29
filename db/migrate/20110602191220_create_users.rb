@@ -27,7 +27,7 @@ class CreateUsers < ActiveRecord::Migration
     
     # Create the administrators.
     u = User.new(:login => "tomsmyth", :first_name => "Thomas", :last_name => "Smyth", 
-      :email => "tomsmyth@gmail.com", :role_id => Role.find(:first, :order => "level desc").id,
+      :email => "tomsmyth@gmail.com", :role_id => Role.find(:first, :order => "level").id,
       :phone => "+14045832505", :is_mobile_phone => true, :is_active => true, 
       :language_id => Language.find_by_name("English").id)
     u.password = u.password_confirmation = 't1ckleME'
