@@ -25,15 +25,7 @@ ActiveRecord::Schema.define(:version => 20110624133714) do
 
   create_table "languages", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
     t.boolean  "is_active"
-  end
-
-  create_table "permissions", :force => true do |t|
-    t.string   "controller"
-    t.string   "action"
-    t.integer  "role_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -41,11 +33,6 @@ ActiveRecord::Schema.define(:version => 20110624133714) do
   create_table "place_lookups", :force => true do |t|
     t.string   "query"
     t.string   "sugg_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "place_sugg_sets", :force => true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
   end

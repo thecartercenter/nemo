@@ -10,7 +10,7 @@ state:
 
 municipality:
   id: 3
-  name: Municipality
+  name: Locality
   level: 3
 
 address:
