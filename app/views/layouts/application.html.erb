@@ -12,45 +12,42 @@
   <%= csrf_meta_tag %>
 </head>
 <body>
-<table id="layout">
-  <tr>
-    <td id="banner" colspan="2">
-      <%= image_tag("eagle-circle.png") %>
-      <div id="title">
-        <h1>Election Observation &amp; Monitoring Command Center</h1>
-        <h2>at The Carter Center</h2>
-      </div>
-      <div id="userinfo">
-        <% if current_user %>
-          Logged in as <strong><%= current_user.login %></strong> |
-          <%= link_to("Edit Profile", edit_user_path(current_user.id)) %> |
-          <%= link_to("Logout", user_session_path, :method => :delete) %>
-        <% else %>
-          <%= link_to("Login", new_user_session_path) %>
-        <% end %>
-      </div>
-      <% if Rails.env == "development" %>
-        <div id="dev_mode_warning">Development Mode</div>
+<div id="upper">
+  <div id="banner">
+    <%= image_tag("eagle-circle.png") %>
+    <div id="title">
+      <h1>Election Observation &amp; Monitoring Command Center</h1>
+      <h2>at The Carter Center</h2>
+    </div>
+    <div id="userinfo">
+      <% if current_user %>
+        Logged in as <strong><%= current_user.login %></strong> |
+        <%= link_to("Edit Profile", edit_user_path(current_user.id)) %> |
+        <%= link_to("Logout", user_session_path, :method => :delete) %>
+      <% else %>
+        <%= link_to("Login", new_user_session_path) %>
       <% end %>
-    </td>
-  </tr>
-  <tr>
-    <td id="nav">
-      <ul>
-        <% [:users, :languages, :places].each do |k| %>
-          <% if authorized?(:action => "#{k}#index") %>
-            <li><%= link_to(k.to_s.capitalize, send("#{k}_path")) %></li>
-          <% end %>
+    </div>
+    <% if Rails.env == "development" %>
+      <div id="dev_mode_warning">Development Mode</div>
+    <% end %>
+  </div>
+  <div id="nav">
+    <ul>
+      <% [:users, :languages, :places].each do |k| %>
+        <% if authorized?(:action => "#{k}#index") %>
+          <li><%= link_to(k.to_s.capitalize, send("#{k}_path")) %></li>
         <% end %>
-      </ul>
-    </td>
-
-    <td class="content" id="<%= "#{controller.controller_name}_#{controller.action_name}" %>">
-      <h1><%= @title %></h1>
-      <%= body %>
-    </td>
-  </tr>
-</table>
-
+      <% end %>
+    </ul>
+  </div>
+  <div id="content">
+    <h1><%= @title %></h1>
+    <%= body %>
+    <br clear="all"/>
+  </div>
+</div>
+<div id="footer">
+</div>
 </body>
 </html>
