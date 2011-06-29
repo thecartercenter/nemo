@@ -37,7 +37,7 @@
       <ul>
         <% [:users, :languages, :places].each do |k| %>
           <% if authorized?(:action => "#{k}#index") %>
-            <li><%= link_to(k.capitalize, send("#{k}_path")) %></li>
+            <li><%= link_to(k.to_s.capitalize, send("#{k}_path")) %></li>
           <% end %>
         <% end %>
       </ul>
