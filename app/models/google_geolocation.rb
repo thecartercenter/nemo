@@ -1,6 +1,6 @@
 class GoogleGeolocation < ActiveRecord::Base
   require 'open-uri'
-  BASE_URL = "http://maps.googleapis.com/maps/api/geocode/json?sensor=false&address="
+  BASE_URL = "https://maps.googleapis.com/maps/api/geocode/json?sensor=false&address="
   belongs_to(:place_type)
   before_create(:parse_result)
   
