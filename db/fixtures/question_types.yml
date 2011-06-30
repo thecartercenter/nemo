@@ -1,14 +1,19 @@
 text:
   name: text
+  odk_name: string
   
 numeric:
   name: numeric
+  odk_name: int
 
 location:
   name: location
+  odk_name: geopoint
 
 select_one:
   name: select_one
+  odk_name: select1
   
 select_multiple:
   name: select_multiple
+  odk_name: select

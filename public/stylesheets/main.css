@@ -51,7 +51,7 @@ div.pagination *.next_page, div.pagination *.previous_page { width: 80px; }
 body { background-color: #888; }
 div#upper { background-color: #005882; }
 div#banner { padding-left: 125px; height: 79px; color: white; padding-top: 10px; }
-div#banner img { position: absolute; left: 10px; top: 10px; }
+div#banner img { position: absolute; left: 10px; top: 10px; border: none; }
 div#banner #title { float: left; font-family: "Lucidia Fax", "Cambria", "Book Antiqua", "Times New Roman", times; }
 div#banner #title h1 { color: white; margin-bottom: 3px; }
 div#banner #title h2 { color: white; margin-top: 0; font-size: 100%; font-style: italic; }

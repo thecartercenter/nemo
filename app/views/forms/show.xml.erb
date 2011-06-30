@@ -3,87 +3,37 @@
     <h:title><%= @form.name %></h:title>
     <model>
       <instance>
-        <data id="<%= @form.response_id %>">
-          <untitled4/>
-          <untitled5/>
-          <untitled6/>
-          <untitled7/>
-          <untitled8/>
-          <untitled9/>
+        <data id="<%= @form.temp_response_id %>">
+          <% @form.questions.each do |q| %>
+            <%= tag(q.code) %>
+          <% end %>
         </data>
       </instance>
       <itext>
-        <translation lang="eng">
-          <text id="/data/untitled4:label">
-            <value>cappy</value>
-          </text>
-          <text id="/data/untitled4:hint">
-            <value/>
-          </text>
-          <text id="/data/untitled5:label">
-            <value>cappy2</value>
-          </text>
-          <text id="/data/untitled5:hint">
-            <value/>
-          </text>
-          <text id="/data/untitled6:label">
-            <value>cappy3</value>
-          </text>
-          <text id="/data/untitled6:hint">
-            <value/>
-          </text>
-          <text id="/data/untitled7:label">
-            <value>cappy4</value>
-          </text>
-          <text id="/data/untitled7:hint">
-            <value>nice hint</value>
-          </text>
-          <text id="/data/untitled8:label">
-            <value>cappy5</value>
-          </text>
-          <text id="/data/untitled8:hint">
-            <value/>
-          </text>
-          <text id="/data/untitled9:label">
-            <value>cappy6</value>
-          </text>
-          <text id="/data/untitled9:hint">
-            <value/>
-          </text>
-        </translation>
+        <% Language.active.each do |lang| %>
+          <translation lang="<%= lang.code %>">
+          <% @form.questions.each do |q| %>
+            <text id="/data/<%= q.code %>:label">
+              <value><%= q.name(lang) %></value>
+            </text>
+            <text id="/data/<%= q.code %>:hint">
+              <value><%= q.hint(lang) %></value>
+            </text>
+          <% end %>
+          </translation>
+        <% end %>
       </itext>
-      <bind nodeset="/data/untitled4" type="string"/>
-      <bind nodeset="/data/untitled5" type="int" required="true()"/>
-      <bind nodeset="/data/untitled6" type="date" required="true()"/>
-      <bind nodeset="/data/untitled7" type="geopoint"/>
-      <bind nodeset="/data/untitled8" type="select1"/>
-      <bind nodeset="/data/untitled9" type="select"/>
+      <% @form.questions.each do |q| %>
+        <bind nodeset="/data/<%= q.code %>" type="<%= q.type.odk_name %>"/>
+      <% end %>
     </model>
   </h:head>
   <h:body>
-    <input ref="/data/untitled4">
-      <label ref="jr:itext('/data/untitled4:label')"/>
-      <hint ref="jr:itext('/data/untitled4:hint')"/>
-    </input>
-    <input ref="/data/untitled5">
-      <label ref="jr:itext('/data/untitled5:label')"/>
-      <hint ref="jr:itext('/data/untitled5:hint')"/>
-    </input>
-    <input ref="/data/untitled6">
-      <label ref="jr:itext('/data/untitled6:label')"/>
-      <hint ref="jr:itext('/data/untitled6:hint')"/>
-    </input>
-    <input ref="/data/untitled7">
-      <label ref="jr:itext('/data/untitled7:label')"/>
-      <hint ref="jr:itext('/data/untitled7:hint')"/>
-    </input>
-    <select1 ref="/data/untitled8">
-      <label ref="jr:itext('/data/untitled8:label')"/>
-      <hint ref="jr:itext('/data/untitled8:hint')"/>
-    </select1>
-    <select ref="/data/untitled9">
-      <label ref="jr:itext('/data/untitled9:label')"/>
-      <hint ref="jr:itext('/data/untitled9:hint')"/>
-    </select>
+    <% @form.questions.each do |q| %>
+      <input ref="/data/<%= q.code %>">
+        <label ref="jr:itext('/data/<%= q.code %>:label')"/>
+        <hint ref="jr:itext('/data/<%= q.code %>:hint')"/>
+      </input>
+    <% end %>
   </h:body>
 </h:html>

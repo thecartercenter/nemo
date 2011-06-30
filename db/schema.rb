@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110630141414) do
+ActiveRecord::Schema.define(:version => 20110630160747) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -67,7 +67,6 @@ ActiveRecord::Schema.define(:version => 20110630141414) do
   end
 
   create_table "options", :force => true do |t|
-    t.string   "name"
     t.string   "value"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -116,6 +115,7 @@ ActiveRecord::Schema.define(:version => 20110630141414) do
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "odk_name"
   end
 
   create_table "questionings", :force => true do |t|
@@ -130,7 +130,6 @@ ActiveRecord::Schema.define(:version => 20110630141414) do
 
   create_table "questions", :force => true do |t|
     t.string   "code"
-    t.string   "name"
     t.integer  "option_set_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -163,11 +162,12 @@ ActiveRecord::Schema.define(:version => 20110630141414) do
 
   create_table "translations", :force => true do |t|
     t.integer  "language_id"
-    t.integer  "question_id"
-    t.integer  "option_id"
     t.text     "str"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "fld"
+    t.string   "class_name"
+    t.integer  "object_id"
   end
 
   create_table "users", :force => true do |t|

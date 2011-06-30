@@ -8,6 +8,10 @@ CommandCenter::Application.routes.draw do
   resource(:user_session)
   root(:to => "welcome#index")
   
+  # redirects for ODK
+  match("/formList" => redirect("/forms.xml"))
+  match("/submission" => redirect("/responses.xml"))
+  
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

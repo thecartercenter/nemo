@@ -8,6 +8,9 @@ class Language < ActiveRecord::Base
     func = params.delete(:paginate) ? "paginate" : "find"
     send(func, :all, params.merge(:order => "code"))
   end
+  def self.active
+    find_all_by_is_active(true)
+  end
   def self.select_options
     sorted.collect{|l| [l.name, l.id]}
   end

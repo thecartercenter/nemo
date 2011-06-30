@@ -1,0 +1,5 @@
+<forms>
+  <% @forms.each do |f| %>
+    <form url="<%= form_url(f, :format => :xml) %>?formId=<%= f.id %>"><%= f.name %></form>
+  <% end %>
+</forms>

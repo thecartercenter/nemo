@@ -15,10 +15,6 @@
 <div id="upper">
   <div id="banner">
     <%= link_to(image_tag("eagle-circle.png"), root_path) %>
-    <div id="title">
-      <h1>Election Observation &amp; Monitoring Command Center</h1>
-      <h2>at The Carter Center</h2>
-    </div>
     <div id="userinfo">
       <% if current_user %>
         Logged in as <strong><%= current_user.login %></strong> |
@@ -27,6 +23,10 @@
       <% else %>
         <%= link_to("Login", new_user_session_path) %>
       <% end %>
+    </div>
+    <div id="title">
+      <h1>Election Observation &amp; Monitoring Command Center</h1>
+      <h2>at The Carter Center</h2>
     </div>
     <% if Rails.env == "development" %>
       <div id="dev_mode_warning">Development Mode</div>

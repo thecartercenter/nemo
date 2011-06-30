@@ -1,4 +1,6 @@
 MINOR
+splash screen image
+ssl issues in test mode
 
 MAJOR
 
@@ -18,5 +20,4 @@ SCRATCH
 - so i've got the questions all ready. what i need to do is write the code the creates the xforms and sends them to odk
 - for starters i could do this without authentication, but i won't be able to connect without SSL...
 - i could still code up the forms though and manually test them
-- 
 - 
