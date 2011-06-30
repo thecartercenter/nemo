@@ -9,8 +9,8 @@ CommandCenter::Application.routes.draw do
   root(:to => "welcome#index")
   
   # redirects for ODK
-  match("/formList" => redirect("/forms.xml"))
-  match("/submission" => redirect("/responses.xml"))
+  match("/formList" => 'forms#index', :format => :xml)
+  match("/submission" => 'forms#create', :format => :xml)
   
   # The priority is based upon order of creation:
   # first created -> highest priority.
