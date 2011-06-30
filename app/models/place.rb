@@ -14,9 +14,7 @@ class Place < ActiveRecord::Base
   validates(:longitude, :numericality => {:less_than => 180, :greater_than => -180}, :if => Proc.new{|p| p.longitude})
   
   def self.sorted(params = {})
-    params.merge!(:joins => "inner join place_types on places.place_type_id=place_types.id left outer join 
-      places container on places.container_id=container.id", 
-      :include => [:place_type, :container],
+    params.merge!(:include => [:place_type, :container],
       :order => "place_types.level, places.long_name")
     paginate(:all, params)
   end
@@ -37,7 +35,7 @@ class Place < ActiveRecord::Base
   def self.search_fields
     {:fullname => {:colname => "places.full_name", :default => true, :regexp => true},
      :shortname => {:colname => "places.short_name", :default => true, :regexp => true},
-     :container => {:colname => "container.full_name", :default => false, :regexp => true},
+     :container => {:colname => "containers_places.full_name", :default => false, :regexp => true},
      :type => {:colname => "place_types.name", :default => false, :regext => false}}
   end
   
