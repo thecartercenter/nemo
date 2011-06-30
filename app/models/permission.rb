@@ -2,7 +2,6 @@ class Permission
   GENERAL = {
     "users#index" => {:group => :logged_in},
     "users#create" => {:min_level => 4},
-    "users#destroy" => {:min_level => 4},
     "user_sessions#create" => {:group => :logged_out},
     "user_sessions#destroy" => {:group => :logged_in},
     "password_resets#create" => {:group => :logged_out},
@@ -20,6 +19,7 @@ class Permission
   }
   SPECIAL = [
     :anyone_can_edit_some_fields_about_herself_but_nobody_can_edit_their_own_role,
+    :program_staff_can_delete_anyone_except_herself,
     :observer_can_edit_delete_own_reports
   ]
   
@@ -99,6 +99,23 @@ class Permission
     
       # if they're not trying to change prohibited fields, they're good
       return !trying_to_change?(params, 'first_name', 'last_name', 'is_active?', 'is_active', 'role', 'role_id')
+    end
+  end
+  
+  def self.program_staff_can_delete_anyone_except_herself(params)
+    # this special permission only valid for users#destroy
+    return false unless params[:controller] == "users" && params[:action] == "destroy"
+    
+    # get the user object being edited, if the :id param is provided
+    params[:object] = User.find(params[:request][:id]) if params[:request]
+    
+    # if this is a program staff
+    if params[:user].role.level >= 4
+      # if she's not deleting herself, she's ok
+      return params[:user] != params[:object]
+    # otherwise, she's not a program staff
+    else
+      return false
     end
   end
   
