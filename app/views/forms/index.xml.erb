@@ -1,5 +1,11 @@
-<forms>
-  <% @forms.each do |f| %>
-    <form url="<%= form_url(f, :format => :xml) %>?formId=<%= f.id %>"><%= f.name %></form>
-  <% end %>
-</forms>
+<?xml version='1.0' encoding='UTF-8' ?>
+<xforms xmlns="http://openrosa.org/xforms/xformsList">
+<% @forms.each do |f| %>
+  <xform>
+    <formID>cceom.org:<%= f.id %></formID>
+    <name><%= f.full_name %></name>
+    <majorMinorVersion><%= f.version %></majorMinorVersion>
+    <downloadUrl><%= form_url(f, :format => :xml) %></downloadUrl>
+  </xform>
+<% end %>
+</xforms>

@@ -1,6 +1,6 @@
-<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:jr="http://openrosa.org/javarosa">
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:jr="http://openrosa.org/javarosa" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <h:head>
-    <h:title><%= @form.name %></h:title>
+    <h:title><%= @form.full_name %></h:title>
     <model>
       <instance>
         <data id="<%= @form.temp_response_id %>">
@@ -12,28 +12,44 @@
       <itext>
         <% Language.active.each do |lang| %>
           <translation lang="<%= lang.code %>">
-          <% @form.questions.each do |q| %>
-            <text id="/data/<%= q.code %>:label">
-              <value><%= q.name(lang) %></value>
-            </text>
-            <text id="/data/<%= q.code %>:hint">
-              <value><%= q.hint(lang) %></value>
-            </text>
-          <% end %>
+            <% @form.visible_questionings.each do |q| %>
+              <text id="<%= q.question.code %>:label">
+                <value><%= q.question.name(lang) %></value>
+              </text>
+              <text id="<%= q.question.code %>:hint">
+                <value><%= q.question.hint(lang) %></value>
+              </text>
+            <% end %>
+            <% @form.option_sets.each do |set| %>
+              <% set.options.each do |opt| %>
+                <text id="option<%= opt.id %>">
+                  <value><%= opt.name(lang) %></value>
+                </text>
+              <% end %>
+            <% end %>
           </translation>
         <% end %>
       </itext>
-      <% @form.questions.each do |q| %>
-        <bind nodeset="/data/<%= q.code %>" type="<%= q.type.odk_name %>"/>
+      <% @form.visible_questionings.each do |q| %>
+        <bind nodeset="/data/<%= q.question.code %>" type="<%= q.question.type.odk_name %>" 
+          <% if q.required? %>required="true()"<% end %> />
       <% end %>
     </model>
   </h:head>
   <h:body>
-    <% @form.questions.each do |q| %>
-      <input ref="/data/<%= q.code %>">
-        <label ref="jr:itext('/data/<%= q.code %>:label')"/>
-        <hint ref="jr:itext('/data/<%= q.code %>:hint')"/>
-      </input>
+    <% @form.visible_questionings.each do |q| %>
+      <%= content_tag(q.question.type.odk_tag, :ref => "/data/#{q.question.code}") do %>
+        <label ref="jr:itext('<%= q.question.code %>:label')"/>
+        <hint ref="jr:itext('<%= q.question.code %>:hint')"/>
+        <% if set = q.question.option_set %>
+          <% set.options.each do |opt| %>
+            <item>
+              <label ref="jr:itext('option<%= opt.id %>')"/>
+              <value><%= opt.id %></value>
+            </item>
+          <% end %>
+        <% end %>
+      <% end %>
     <% end %>
   </h:body>
 </h:html>

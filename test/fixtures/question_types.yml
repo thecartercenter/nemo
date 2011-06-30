@@ -1,14 +1,24 @@
 text:
   name: text
+  odk_name: string
+  odk_tag: input
   
 numeric:
   name: numeric
+  odk_name: int
+  odk_tag: input
 
 location:
   name: location
+  odk_name: geopoint
+  odk_tag: input
 
 select_one:
   name: select_one
+  odk_name: select1
+  odk_tag: select1
   
 select_multiple:
   name: select_multiple
+  odk_name: select
+  odk_tag: select
