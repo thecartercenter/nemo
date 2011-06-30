@@ -5,6 +5,7 @@ class LanguagesController < ApplicationController
   end
   def new
     @language = Language.default
+    @title = "Add Language"
   end
   def edit
     @language = Language.find(params[:id])

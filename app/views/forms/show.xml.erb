@@ -1,0 +1,89 @@
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:jr="http://openrosa.org/javarosa">
+  <h:head>
+    <h:title><%= @form.name %></h:title>
+    <model>
+      <instance>
+        <data id="<%= @form.response_id %>">
+          <untitled4/>
+          <untitled5/>
+          <untitled6/>
+          <untitled7/>
+          <untitled8/>
+          <untitled9/>
+        </data>
+      </instance>
+      <itext>
+        <translation lang="eng">
+          <text id="/data/untitled4:label">
+            <value>cappy</value>
+          </text>
+          <text id="/data/untitled4:hint">
+            <value/>
+          </text>
+          <text id="/data/untitled5:label">
+            <value>cappy2</value>
+          </text>
+          <text id="/data/untitled5:hint">
+            <value/>
+          </text>
+          <text id="/data/untitled6:label">
+            <value>cappy3</value>
+          </text>
+          <text id="/data/untitled6:hint">
+            <value/>
+          </text>
+          <text id="/data/untitled7:label">
+            <value>cappy4</value>
+          </text>
+          <text id="/data/untitled7:hint">
+            <value>nice hint</value>
+          </text>
+          <text id="/data/untitled8:label">
+            <value>cappy5</value>
+          </text>
+          <text id="/data/untitled8:hint">
+            <value/>
+          </text>
+          <text id="/data/untitled9:label">
+            <value>cappy6</value>
+          </text>
+          <text id="/data/untitled9:hint">
+            <value/>
+          </text>
+        </translation>
+      </itext>
+      <bind nodeset="/data/untitled4" type="string"/>
+      <bind nodeset="/data/untitled5" type="int" required="true()"/>
+      <bind nodeset="/data/untitled6" type="date" required="true()"/>
+      <bind nodeset="/data/untitled7" type="geopoint"/>
+      <bind nodeset="/data/untitled8" type="select1"/>
+      <bind nodeset="/data/untitled9" type="select"/>
+    </model>
+  </h:head>
+  <h:body>
+    <input ref="/data/untitled4">
+      <label ref="jr:itext('/data/untitled4:label')"/>
+      <hint ref="jr:itext('/data/untitled4:hint')"/>
+    </input>
+    <input ref="/data/untitled5">
+      <label ref="jr:itext('/data/untitled5:label')"/>
+      <hint ref="jr:itext('/data/untitled5:hint')"/>
+    </input>
+    <input ref="/data/untitled6">
+      <label ref="jr:itext('/data/untitled6:label')"/>
+      <hint ref="jr:itext('/data/untitled6:hint')"/>
+    </input>
+    <input ref="/data/untitled7">
+      <label ref="jr:itext('/data/untitled7:label')"/>
+      <hint ref="jr:itext('/data/untitled7:hint')"/>
+    </input>
+    <select1 ref="/data/untitled8">
+      <label ref="jr:itext('/data/untitled8:label')"/>
+      <hint ref="jr:itext('/data/untitled8:hint')"/>
+    </select1>
+    <select ref="/data/untitled9">
+      <label ref="jr:itext('/data/untitled9:label')"/>
+      <hint ref="jr:itext('/data/untitled9:hint')"/>
+    </select>
+  </h:body>
+</h:html>

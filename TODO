@@ -15,18 +15,8 @@ place association checks
 require login
 
 SCRATCH
-- special cases
-	- user can edit own phone number, etc
-	  - authorize lets them in by a special exception defined in permission
-	  - form only shows certain fields, calls User.authorized?(user, action, object, field, value) for each field
-	  - validate checks that only permitted fields are changed
-	- user can edit users less than their own level
-	  - authorize lets them in by a special exception (only permission in the table is that admins can edit unconditionally)
-	  - once they're in they can do anything except change rank of a user to higher than their own rank
-	  - this is enforced in validate
-	- observer can delete own responses if they haven't been viewed
-	  - Response.authorized?(user, 'delete', object, nil, nil) is called when delete links are being drawn
-	  - also in before_destroy
-	  - if not authorized, 
-- so we have a permissions table that knows about controllers and actions
-- for object level we also have a 'permitted?' method in applicable models that takes user, action, object arguments
+- so i've got the questions all ready. what i need to do is write the code the creates the xforms and sends them to odk
+- for starters i could do this without authentication, but i won't be able to connect without SSL...
+- i could still code up the forms though and manually test them
+- 
+- 

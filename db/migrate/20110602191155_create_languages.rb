@@ -6,8 +6,6 @@ class CreateLanguages < ActiveRecord::Migration
       
       t.timestamps
     end
-    Language.create(:name => "English")
-    Language.create(:name => "French")
   end
 
   def self.down

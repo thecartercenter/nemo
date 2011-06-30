@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110629190834) do
+ActiveRecord::Schema.define(:version => 20110630141414) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -47,10 +47,10 @@ ActiveRecord::Schema.define(:version => 20110629190834) do
   end
 
   create_table "languages", :force => true do |t|
-    t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "is_active"
+    t.string   "code"
   end
 
   create_table "option_sets", :force => true do |t|
@@ -121,7 +121,7 @@ ActiveRecord::Schema.define(:version => 20110629190834) do
   create_table "questionings", :force => true do |t|
     t.integer  "question_id"
     t.integer  "form_id"
-    t.integer  "order"
+    t.integer  "rank"
     t.boolean  "required"
     t.boolean  "hidden"
     t.datetime "created_at"
@@ -130,9 +130,7 @@ ActiveRecord::Schema.define(:version => 20110629190834) do
 
   create_table "questions", :force => true do |t|
     t.string   "code"
-    t.integer  "survey_id"
     t.string   "name"
-    t.string   "kind"
     t.integer  "option_set_id"
     t.datetime "created_at"
     t.datetime "updated_at"
