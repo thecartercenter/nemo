@@ -1,5 +1,5 @@
 class SearchesController < ApplicationController
-  before_filter(:authorize)
+  
   def create
     # find/create the search object from the given params
     search = Search.find_or_create(params[:search])

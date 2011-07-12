@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_filter(:authorize)
+  
   def index
     @users = User.sorted(params[:page])
   end

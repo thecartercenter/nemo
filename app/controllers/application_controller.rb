@@ -4,6 +4,8 @@ class ApplicationController < ActionController::Base
   before_filter(:set_default_title)
   before_filter(:mailer_set_url_options)
   before_filter(:init_js_array)
+  before_filter(:basic_auth_for_xml)
+  before_filter(:authorize)
   
   helper_method :current_user_session, :current_user, :authorized?
 require 'authlogic'
@@ -22,6 +24,15 @@ require 'authlogic'
     
     def send_error_alert(exception)
       AdminMailer.error(exception, session.to_hash, params, request.env).deliver
+    end
+    
+    def basic_auth_for_xml
+      Rails.logger.debug(request.authorization)
+      # if the request format is XML and there is no user, we should require basic auth
+      if request.format == Mime::XML && !current_user
+        user = authenticate_or_request_with_http_basic{|l,p| User.find_by_credentials(l,p)}
+        @current_user = user if user
+      end
     end
     
     def current_user_session
@@ -43,7 +54,11 @@ require 'authlogic'
         store_location
         # if the user needs to login, send them to the login page
         flash[:error] = $!.to_s
-        redirect_to((flash[:error].match(/must login/) ? new_user_session_path : no_permissions_path))
+        if flash[:error].match(/must login/) 
+          redirect_to(new_user_session_path)
+        else
+          render("permissions/no", :status => :unauthorized)
+        end
         # halt the rest of the action
         return false
       end

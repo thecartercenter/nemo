@@ -1,5 +1,5 @@
 class UserSessionsController < ApplicationController
-  before_filter(:authorize)
+  
   
   def new
     @title = "Login"
@@ -12,7 +12,6 @@ class UserSessionsController < ApplicationController
       flash[:success] = "Login successful!"
       redirect_back_or_default(root_path)
     else
-      
       flash[:error] = @user_session.errors.full_messages.join(",")
       redirect_to(:action => :new)
     end

@@ -10,7 +10,7 @@ CommandCenter::Application.routes.draw do
   
   # redirects for ODK
   match("/formList" => 'forms#index', :format => :xml)
-  match("/submission" => 'forms#create', :format => :xml)
+  match("/submission" => 'responses#create', :format => :xml)
   
   # The priority is based upon order of creation:
   # first created -> highest priority.

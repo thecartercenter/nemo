@@ -1,5 +1,5 @@
 class LanguagesController < ApplicationController
-  before_filter(:authorize)
+  
   def index
     @languages = Language.sorted(:paginate => true, :page => params[:page])
   end

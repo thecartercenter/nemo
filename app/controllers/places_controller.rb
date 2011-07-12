@@ -1,5 +1,5 @@
 class PlacesController < ApplicationController
-  before_filter(:authorize)
+  
   def index
     # find or create a subindex object
     @subindex = Subindex.find_and_update(session, "Place", params[:page])

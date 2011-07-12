@@ -28,6 +28,10 @@ class User < ActiveRecord::Base
     charset = %w{2 3 4 6 7 9 a c d e f g h j k m n p q r t v w x y z}
     (0...size).map{charset.to_a[rand(charset.size)]}.join
   end
+  def self.find_by_credentials(login, password)
+    user = find_by_login(login)
+    (user && user.valid_password?(password)) ? user : nil
+  end
   def generate_login!
     base = "#{first_name[0,1]}#{last_name}".downcase.normalize
     try = 1

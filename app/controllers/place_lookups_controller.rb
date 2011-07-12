@@ -1,5 +1,5 @@
 class PlaceLookupsController < ApplicationController
-  before_filter(:authorize)
+  
   def new
     set_title_and_js
     @place_lookup = PlaceLookup.new

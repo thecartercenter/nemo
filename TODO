@@ -1,6 +1,7 @@
 MINOR
 splash screen image
 ssl issues in test mode
+optimize form load
 
 MAJOR
 
@@ -17,7 +18,12 @@ place association checks
 require login
 
 SCRATCH
-- so i've got the questions all ready. what i need to do is write the code the creates the xforms and sends them to odk
-- for starters i could do this without authentication, but i won't be able to connect without SSL...
-- i could still code up the forms though and manually test them
-- 
+- how should versions work?
+  - forms can only be d/l'd with mobile devices once they're 'published'
+  - 
+  - option 1: no versions, just provide a cloning mechanism.
+- on response submission, we should
+  - get the form ID from the submission
+  - create a new response object with the given form ID
+  - for each question in the submission that is also in the form definition, create an answer
+    - but make sure that the given option_ids (if applicable) are actually valid for the given question

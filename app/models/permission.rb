@@ -15,7 +15,10 @@ class Permission
     "place_lookups#*" => {:min_level => 2},
     "searches#*" => {:group => :logged_in},
     "welcome#*" => {:group => :anyone},
-    "permissions#no" => {:group => :anyone}
+    "permissions#no" => {:group => :anyone},
+    "forms#index" => {:group => :logged_in},
+    "forms#show" => {:group => :logged_in},
+    "responses#create" => {:group => :logged_in}
   }
   SPECIAL = [
     :anyone_can_edit_some_fields_about_herself_but_nobody_can_edit_their_own_role,
