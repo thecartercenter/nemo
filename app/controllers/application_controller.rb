@@ -27,11 +27,10 @@ require 'authlogic'
     end
     
     def basic_auth_for_xml
-      Rails.logger.debug(request.authorization)
+      Rails.logger.debug("Basic Auth Header: " + request.authorization.to_s)
       # if the request format is XML and there is no user, we should require basic auth
-      if request.format == Mime::XML && !current_user
-        user = authenticate_or_request_with_http_basic{|l,p| User.find_by_credentials(l,p)}
-        @current_user = user if user
+      if request.format == Mime::XML
+        @current_user = authenticate_or_request_with_http_basic{|l,p| User.find_by_credentials(l,p)}
       end
     end
     

@@ -3,7 +3,7 @@
     <h:title><%= @form.full_name %></h:title>
     <model>
       <instance>
-        <data id="<%= @form.temp_response_id %>">
+        <data id="<%= @form.id %>">
           <% @form.questions.each do |q| %>
             <%= tag(q.code) %>
           <% end %>

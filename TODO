@@ -20,10 +20,19 @@ require login
 SCRATCH
 - how should versions work?
   - forms can only be d/l'd with mobile devices once they're 'published'
-  - 
-  - option 1: no versions, just provide a cloning mechanism.
+  - # of downloads is tracked
+  - can't edit a form if it's published -- have to unpublish first
+  - unpublishing a downloaded form shows a big warning, since making changes could mess things up
+  - but then what if you want to add a new question to a form? remove a question? change some wording? etc.
+  - if you're convinced it won't affect the data, there should be an override
+  - otherwise, you might want to make a new version
+  - option 1: no versions, just provide a copy mechanism, let the user handle the naming conventions
+    - downside here is you can't ask for all questions from all versions of a form, for instance
+    - but perhaps the questions are the most important things..
+  - option 2: each form has version, etc. could implement this later if it turns out to be impt...
 - on response submission, we should
   - get the form ID from the submission
   - create a new response object with the given form ID
   - for each question in the submission that is also in the form definition, create an answer
     - but make sure that the given option_ids (if applicable) are actually valid for the given question
+  - return
