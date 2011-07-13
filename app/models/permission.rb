@@ -50,7 +50,6 @@ class Permission
   def self.select_conditions(params)
     parse_params!(params)
     # observer can only see his/her own responses
-    Rails.logger.debug(params[:user].role.level)
     if params[:key] == "responses#index" && params[:user].role.level <= 1
       "responses.user_id = #{params[:user].id}"
     else

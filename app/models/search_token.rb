@@ -62,6 +62,6 @@ class SearchToken
   end
   # get the eager loaded associations needed for this token
   def eager
-    @used_fields.collect{|f| @field_spec[f][:eager]}.compact.flatten.uniq
+    @used_fields ? @used_fields.collect{|f| @field_spec[f][:eager]}.compact.flatten.uniq : []
   end
 end
