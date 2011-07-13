@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110630195026) do
+ActiveRecord::Schema.define(:version => 20110713174932) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -109,6 +109,7 @@ ActiveRecord::Schema.define(:version => 20110630195026) do
     t.decimal  "longitude",     :precision => 20, :scale => 15
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "is_incomplete"
   end
 
   create_table "question_types", :force => true do |t|
@@ -117,6 +118,8 @@ ActiveRecord::Schema.define(:version => 20110630195026) do
     t.datetime "updated_at"
     t.string   "odk_name"
     t.string   "odk_tag"
+    t.string   "odk_preload"
+    t.string   "odk_preload_params"
   end
 
   create_table "questionings", :force => true do |t|

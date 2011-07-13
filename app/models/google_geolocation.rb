@@ -1,13 +1,12 @@
 class GoogleGeolocation < ActiveRecord::Base
   require 'open-uri'
-  BASE_URL = "https://maps.googleapis.com/maps/api/geocode/json?sensor=false&address="
+  BASE_URL = "http://maps.googleapis.com/maps/api/geocode/json?sensor=false&"
   belongs_to(:place_type)
   before_create(:parse_result)
   
-  # queries the google geocode api with the given address and returns a bunch of objects
+  # queries the google geocode api with the given address and returns a bunch of GoogleGeolocation objects
   def self.geolocate(query)
-    puts "query: #{query}"
-    url = BASE_URL + CGI::escape(query.to_s)
+    url = BASE_URL + "address=" + CGI::escape(query.to_s)
     
     # run geolocator query
     begin
@@ -30,6 +29,38 @@ class GoogleGeolocation < ActiveRecord::Base
     else
       Rails.logger.debug("Google geolocator failed with status '#{reply['status']}'.")
       return []
+    end
+  end
+  
+  # takes an array of [lat, lng] or nil
+  # does a reverse lookup and returns a GoogleGeolocation object for the first hit
+  def self.reverse(coords)
+    return nil if coords.nil?
+    
+    # build url
+    url = BASE_URL + "latlng=" + CGI::escape(coords.join(','))
+    
+    # run geocode query
+    begin
+      Rails.logger.debug("Querying google geocoder: #{url}")
+      json = open(url){|f| f.read} 
+    rescue SocketError
+      Rails.logger.debug("Google geolocator failed with: #{$!.to_s}")
+      return nil
+    end
+    
+    # decode JSON
+    reply = ActiveSupport::JSON.decode(json)
+    
+    # if status is defined OK
+    if reply['status'] == "OK"
+      Rails.logger.debug("Google geolocator returned #{reply['results'].size} results.")
+    
+      # parse results and return
+      return create(:result => reply['results'].first)
+    else
+      Rails.logger.debug("Google geolocator failed with status '#{reply['status']}'.")
+      return nil
     end
   end
   

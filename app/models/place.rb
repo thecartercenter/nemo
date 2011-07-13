@@ -48,11 +48,43 @@ class Place < ActiveRecord::Base
     ["ontario, canada", '"new york"', "california or oregon", "type:state", "container:lebanon"]
   end
   
+  def self.find_or_create_with_bits(bits)
+    # reverse geolocate and (if successful) convert to place
+    gg = GoogleGeolocation.reverse(bits[:coords])
+    geo = gg ? gg.create_places.last : nil
+    
+    # if address is given, override geolocation address value with custom value
+    if bits[:addr].blank?
+      addr = geo
+    else
+      # get container (either geo itself if geo is not an address, or otherwise geo's container)
+      cont = (geo && geo.is_address?) ? geo.container : geo
+      # find/initialize
+      addr = Place.find_or_initialize_by_long_name_and_place_type_id_and_container_id(bits[:addr], PlaceType.address.id, cont ? cont.id : nil)
+      # if container is nil, this is ok, but set incomplete to false
+      addr.is_incomplete = true if addr.no_container?
+      # get longitude & latitude from bits
+      addr.latitude, addr.longitude = bits[:coords]
+      # set full name and save
+      addr.save
+      # TODO: don't create orphan places
+    end
+    addr
+  end
+  
   # returns places matching the given search query
   # raise an error if the query is invalid (see the Search.conditions method)
   def self.search(query)
     query_cond = Search.create(:query => query, :class_name => self.name).conditions
     find(:all, :include => :place_type, :conditions => query_cond)
+  end
+  
+  def is_address?
+    place_type.is_address?
+  end
+  
+  def no_container?
+    place_type && place_type.level > 1 && container.nil?
   end
   
   protected
@@ -73,7 +105,7 @@ class Place < ActiveRecord::Base
     def check_container
       if place_type && place_type.level == 1 && !container.nil?
         errors.add(:container, "must be blank for countries.")
-      elsif place_type && place_type.level > 1 && container.nil?
+      elsif no_container? && !is_incomplete?
         errors.add(:container, "can't be blank for a place with type: #{place_type.name}")
       elsif place_type && container && place_type.level <= container.place_type.level
         errors.add(:container, "must be a higher level than #{place_type.name}")

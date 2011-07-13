@@ -10,6 +10,7 @@ gem 'rake', "0.8.7"
 gem 'mysql'
 gem 'will_paginate', '3.0.pre2'
 gem 'configatron'
+gem 'libxml-ruby'
 
 # Use unicorn as the web server
 # gem 'unicorn'

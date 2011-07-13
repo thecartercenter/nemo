@@ -1,7 +1,8 @@
 MINOR
 splash screen image
-ssl issues in test mode
 optimize form load
+timestamp timezone
+no orphan places in Place.find_or_create_bits
 
 MAJOR
 
@@ -36,3 +37,12 @@ SCRATCH
   - for each question in the submission that is also in the form definition, create an answer
     - but make sure that the given option_ids (if applicable) are actually valid for the given question
   - return
+  
+- need to think about how response creation/editing will work in HTML
+- response create
+  - fields at top
+  - r = Response.new
+  - r.answers = r.form.new_answers
+  - render :partial => :collection
+  - so response should have answers for all questions in form, even if answer is nil
+  - on

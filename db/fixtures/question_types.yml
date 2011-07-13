@@ -13,6 +13,11 @@ location:
   odk_name: geopoint
   odk_tag: input
 
+address:
+  name: address
+  odk_name: string
+  odk_tag: input
+
 select_one:
   name: select_one
   odk_name: select1
@@ -22,3 +27,10 @@ select_multiple:
   name: select_multiple
   odk_name: select
   odk_tag: select
+  
+start_timestamp:
+  name: start_timestamp
+  odk_name: dateTime
+  odk_tag:
+  odk_preload: timestamp
+  odk_preload_params: start
