@@ -8,15 +8,23 @@ class Response < ActiveRecord::Base
   belongs_to(:user)
 
   def self.sorted(params = {})
-    params.merge!(:include => [:reviews, :form, :user], :order => "responses.created_at desc")
+    params.merge!(:order => "responses.created_at desc")
     paginate(:all, params)
+  end
+  
+  def self.default_eager
+    [:reviews, {:form => :type}, :user, :place]
   end
   
   # gets the list of fields to be searched for this class
   # includes whether they should be included in a default, unqualified search
   # and whether they are searchable by a regular expression
   def self.search_fields
-    {}
+    {:formname => {:colname => "forms.name", :default => false, :regexp => true},
+     :formtype => {:colname => "form_types.name", :default => false, :regexp => false},
+     :place => {:colname => "places.full_name", :default => false, :regexp => true},
+     :submitter => {:colname => "concat(users.first_name, ' ', users.last_name)", :default => false, :regexp => true},
+     :answer => {:colname => "answers.value", :default => true, :regexp => true, :eager => [:answers]}}
   end
   
   # gets the lhs, operator, and rhs of a query fragment with the given field and term

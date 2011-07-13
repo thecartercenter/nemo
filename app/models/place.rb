@@ -14,8 +14,7 @@ class Place < ActiveRecord::Base
   validates(:longitude, :numericality => {:less_than => 180, :greater_than => -180}, :if => Proc.new{|p| p.longitude})
   
   def self.sorted(params = {})
-    params.merge!(:include => [:place_type, :container],
-      :order => "place_types.level, places.long_name")
+    params.merge!(:order => "place_types.level, places.long_name")
     paginate(:all, params)
   end
   
@@ -27,6 +26,10 @@ class Place < ActiveRecord::Base
       :lng_min => places.min_by{|p| p.longitude}.longitude,
       :lng_max => places.max_by{|p| p.longitude}.longitude
     }
+  end
+  
+  def self.default_eager
+    [:place_type, :container]
   end
   
   # gets the list of fields to be searched for this class

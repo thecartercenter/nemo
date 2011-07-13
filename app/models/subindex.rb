@@ -10,7 +10,8 @@ class Subindex
   
   # finds or creates a subindex for the given class_name
   def self.find_or_create(session, user, class_name)
-    (session[:subindexes] ||= {})[class_name.underscore.to_sym] ||= new(class_name, user)
+    session[:subindexes] ||= {}
+    session[:subindexes][class_name.underscore.to_sym] ||= new(class_name, user)
   end
   
   def self.clear_all(session)
@@ -30,8 +31,10 @@ class Subindex
     cond << Permission.select_conditions(:user => @user, :controller => @class_name.pluralize.underscore, :action => "index")
     # get search conditions
     cond << (@search ? ((sc = @search.conditions).blank? ? "1" : sc) : "1")
+    # get eager associations
+    eager = klass.default_eager + (@search ? @search.eager : [])
     # build and return params
-    {:page => @page, :conditions => cond.collect{|c| "(#{c})"}.join(" and ")}
+    {:page => @page, :conditions => cond.collect{|c| "(#{c})"}.join(" and "), :include => eager}
   end
   
   def search
@@ -48,6 +51,10 @@ class Subindex
   end
   
   def reset_search
-    @search = Search.new(:class_name => @class_name)
+    @search = Search.find_or_create(:class_name => @class_name)
+  end
+  
+  def klass
+    @klass ||= Kernel.const_get(@class_name)
   end
 end

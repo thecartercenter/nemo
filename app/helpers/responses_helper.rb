@@ -4,6 +4,7 @@ module ResponsesHelper
     when "date_submitted" then resp.created_at && resp.created_at.strftime("%Y-%b-%d %T") || ""
     when "age" then resp.created_at && time_ago_in_words(resp.created_at).gsub("about ", "") || ""
     when "reviewed?" then resp.reviewed? ? "Yes" : "No"
+    when "place" then resp.place ? resp.place.full_name : ""
     when "actions"
       links = []
       links << link_to_if_auth("Edit", edit_response_path(resp), "responses#update", resp)
