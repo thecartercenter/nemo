@@ -34,7 +34,7 @@
   </div>
   <div id="nav">
     <ul>
-      <% [:users, :languages, :places].each do |k| %>
+      <% [:users, :languages, :places, :responses].each do |k| %>
         <% if authorized?(:action => "#{k}#index") %>
           <li><%= link_to(k.to_s.capitalize, send("#{k}_path")) %></li>
         <% end %>

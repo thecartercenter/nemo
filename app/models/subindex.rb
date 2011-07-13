@@ -2,25 +2,36 @@ class Subindex
   attr_accessor(:page)
   
   # finds/creates a subindex for the given class name, and then sets the page number
-  def self.find_and_update(session, class_name, page)
-    si = find_or_create(session, class_name)
+  def self.find_and_update(session, user, class_name, page)
+    si = find_or_create(session, user, class_name)
     si.page = page if page
     si
   end
   
   # finds or creates a subindex for the given class_name
-  def self.find_or_create(session, class_name)
-    session["#{class_name.underscore}_subindex".to_sym] ||= new(class_name)
+  def self.find_or_create(session, user, class_name)
+    (session[:subindexes] ||= {})[class_name.underscore.to_sym] ||= new(class_name, user)
   end
   
-  def initialize(class_name)
+  def self.clear_all(session)
+    session.delete(:subindexes)
+  end
+  
+  def initialize(class_name, user)
     @class_name = class_name
+    @user = user
     @page = 1
     reset_search
   end
   
   def params
-    {:page => @page, :conditions => @search ? @search.conditions : "1"}
+    cond = []
+    # get any permission conditions
+    cond << Permission.select_conditions(:user => @user, :controller => @class_name.pluralize.underscore, :action => "index")
+    # get search conditions
+    cond << (@search ? ((sc = @search.conditions).blank? ? "1" : sc) : "1")
+    # build and return params
+    {:page => @page, :conditions => cond.collect{|c| "(#{c})"}.join(" and ")}
   end
   
   def search

@@ -1,9 +1,32 @@
 require 'xml'
 
 class Response < ActiveRecord::Base
-  belongs_to(:form, :include => :questions)
-  has_many(:answers, :include => {:question => {:option_set => :options}})
+  belongs_to(:form)
+  has_many(:answers)
   belongs_to(:place)
+  has_many(:reviews)
+  belongs_to(:user)
+
+  def self.sorted(params = {})
+    params.merge!(:include => [:reviews, :form, :user], :order => "responses.created_at desc")
+    paginate(:all, params)
+  end
+  
+  # gets the list of fields to be searched for this class
+  # includes whether they should be included in a default, unqualified search
+  # and whether they are searchable by a regular expression
+  def self.search_fields
+    {}
+  end
+  
+  # gets the lhs, operator, and rhs of a query fragment with the given field and term
+  def self.query_fragment(field, term)
+    [search_fields[field][:colname], "like", "%#{term}%"]
+  end
+  
+  def self.search_examples
+    []
+  end
 
   def self.create_from_xml(xml, user)
     # parse xml
@@ -46,4 +69,9 @@ class Response < ActiveRecord::Base
     # save the works
     resp.save
   end
+  
+  def review_count; reviews.count; end
+  def form_name; form ? form.name : nil; end
+  def submitter; user ? user.full_name : nil; end
+  def reviewed?; reviews.size > 0; end
 end

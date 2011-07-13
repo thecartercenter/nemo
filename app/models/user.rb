@@ -50,6 +50,9 @@ class User < ActiveRecord::Base
     reset_perishable_token!
     Notifier.password_reset_instructions(self).deliver  
   end
+  def full_name
+    "#{first_name} #{last_name}"
+  end
   
   private
     def clean_fields

@@ -1,6 +1,5 @@
 class UserSessionsController < ApplicationController
   
-  
   def new
     @title = "Login"
     @user_session = UserSession.new
@@ -9,7 +8,7 @@ class UserSessionsController < ApplicationController
   def create
     @user_session = UserSession.new(params[:user_session])
     if @user_session.save
-      flash[:success] = "Login successful!"
+      flash[:success] = "Login successful"
       redirect_back_or_default(root_path)
     else
       flash[:error] = @user_session.errors.full_messages.join(",")
@@ -18,9 +17,11 @@ class UserSessionsController < ApplicationController
   end
   
   def destroy
-    current_user_session.destroy
-    flash[:success] = "Logout successful!"
+    @user_session = UserSession.find  
+    @user_session.destroy
     forget_location
+    Subindex.clear_all(session)
+    flash[:success] = "Logout successful"
     redirect_to(root_path)
   end
 end

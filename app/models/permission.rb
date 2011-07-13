@@ -18,12 +18,13 @@ class Permission
     "permissions#no" => {:group => :anyone},
     "forms#index" => {:group => :logged_in},
     "forms#show" => {:group => :logged_in},
+    "responses#index" => {:group => :logged_in},
     "responses#create" => {:group => :logged_in}
   }
   SPECIAL = [
     :anyone_can_edit_some_fields_about_herself_but_nobody_can_edit_their_own_role,
     :program_staff_can_delete_anyone_except_herself,
-    :observer_can_edit_delete_own_reports
+    :observer_can_edit_delete_own_responses
   ]
   
   def self.authorized?(params)
@@ -34,14 +35,9 @@ class Permission
       return false
     end
   end
-  
+
   def self.authorize(params)
-    # parse the args
-    params[:controller], params[:action] = params[:action].split("#") if params[:action].match(/#/)
-    
-    # replace edit/new with update/create
-    params[:action] = {"edit" => "update", "new" => "create"}[params[:action]] || params[:action]
-    
+    parse_params!(params)
     # try general permissions
     return if check_permission("#{params[:controller]}##{params[:action]}", params[:user])
     return if check_permission("#{params[:controller]}#*", params[:user])
@@ -49,6 +45,17 @@ class Permission
     SPECIAL.each{|sc| return if send(sc, params)}
     # if we get this far, it didn't work out
     raise PermissionError.new "You don't have permission to do that."
+  end
+  
+  def self.select_conditions(params)
+    parse_params!(params)
+    # observer can only see his/her own responses
+    Rails.logger.debug(params[:user].role.level)
+    if params[:key] == "responses#index" && params[:user].role.level <= 1
+      "responses.user_id = #{params[:user].id}"
+    else
+      "1"
+    end
   end
   
   # checks a general permission. 
@@ -122,7 +129,7 @@ class Permission
     end
   end
   
-  def self.observer_can_edit_delete_own_reports(params)
+  def self.observer_can_edit_delete_own_responses(params)
     false # to implement later
   end
   
@@ -131,5 +138,15 @@ class Permission
     def self.trying_to_change?(params, *fields)
       return params[:col] && fields.include?(params[:col].to_s) ||
          params[:request] && params[:request][:user] && !(fields & params[:request][:user].keys).empty?
+    end
+    
+    def self.parse_params!(params)
+      # parse the args
+      params[:controller], params[:action] = params[:action].split("#") if params[:action].match(/#/)
+
+      # replace edit/new with update/create
+      params[:action] = {"edit" => "update", "new" => "create"}[params[:action]] || params[:action]
+      
+      params[:key] = "#{params[:controller]}##{params[:action]}"
     end
 end

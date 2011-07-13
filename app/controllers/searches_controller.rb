@@ -4,7 +4,7 @@ class SearchesController < ApplicationController
     # find/create the search object from the given params
     search = Search.find_or_create(params[:search])
     # save it in the appropriate subindex object
-    subindex = Subindex.find_or_create(session, search.class_name)
+    subindex = Subindex.find_or_create(session, current_user, search.class_name)
     subindex.search = search
     # redirect to the appropriate index page
     return_to_index(search)

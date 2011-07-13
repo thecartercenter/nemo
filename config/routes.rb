@@ -5,6 +5,7 @@ CommandCenter::Application.routes.draw do
   resources(:places){collection{get 'map'}}
   resources(:place_lookups){collection{get 'suggest'}}
   resources(:forms)
+  resources(:responses)
   resource(:user_session)
   root(:to => "welcome#index")
   
