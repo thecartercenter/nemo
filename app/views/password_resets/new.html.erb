@@ -6,7 +6,7 @@
   <%= show_flash_and_form_errors %>
   <table class="form">
     <tr class="rowbg<%= rowbg = 1 - rowbg %>">
-      <td class="name">Email*</td>
+      <td class="name">Email<%= reqd_sym %></td>
       <td class="value"><%= text_field_tag("email") %></td>
       <td class="details"></td>
     </tr>

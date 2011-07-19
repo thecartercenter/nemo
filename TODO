@@ -1,10 +1,19 @@
 MINOR
+create response
+destroy response
+clean up data and make a nice demo form
+upload and test
+demo plan
+
+only non-hidden questions
 splash screen image
+
 optimize form load
-timestamp timezone
+timezone on ODK timezone
 no orphan places in Place.find_or_create_bits
 
 MAJOR
+options -- timezone display
 
 FEATURES
 sms broadcast
@@ -12,11 +21,28 @@ sms broadcast
 REFACTOR
 stylesheet
 refactor geocoding to create temporary places
+permissions could be a lot cleaner
 
 DON'T FORGET
 user association checks
 place association checks
 require login
+
+THINGS WE HAVE THAT NEPAL DOESN'T
+- mobile submission
+- multi-language
+- automatic DOC generation and parsing
+- robust geo engine
+- roles & permissions
+- questions shared across forms
+- integration with high quality analytics platform
+- inline tagging
+
+THINGS NAPAL HAS THAT WE DON'T
+- hierarchical form design (is this necessary?)
+- richer text reporting
+- customizable meta-data
+- rich text in responses (is this necessary? tables may be nice to have...)
 
 SCRATCH
 - how should versions work?
@@ -38,11 +64,29 @@ SCRATCH
     - but make sure that the given option_ids (if applicable) are actually valid for the given question
   - return
   
-- need to think about how response creation/editing will work in HTML
-- response create
-  - fields at top
-  - r = Response.new
-  - r.answers = r.form.new_answers
-  - render :partial => :collection
-  - so response should have answers for all questions in form, even if answer is nil
-  - on
+- form create/edit -- just the name and the type (published defaults to no)
+  - 2 screen process: after initial form#edit screen, they go to form#add_question (with no create 'new' option)
+  - javascript for arranging the questions. you can type in a new position and press enter and everything adjusts with graceful defaults or you can click an up or down arrow. click 'update form' to save. box warns if you try to leave the page (including deleting or viewing a question) before saving the order.
+- form add_question
+  - 2 options -- add existing or create new, similar to places
+  - on submit they go back to form#edit
+- form destroy
+  - only when unpublished
+  - only if no associations
+- form download
+  - creates a FormDownload record
+- form unpublish
+  - accessed from the main screen via link. if has been downloaded, shows a big box
+  - once unpublished, downloads are erased
+- question create/edit  - question
+    - name, hint in all languages
+    - type
+    - code
+    - option set,  (if applicable--show/hide with ajax)
+  - questioning
+    - req'd
+    - hidden
+  - this will be tricky b/c there are two models here.. question and questioning
+  - so when there is a form being edited, we can include a hint that says (for this form)
+- question destroy
+  - only if nothing associated. otherwise just hide it in all the forms it appears in.

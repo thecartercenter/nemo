@@ -12,6 +12,9 @@ class User < ActiveRecord::Base
   validates(:language_id, :presence => true)
   validate(:phone_length_or_empty)
 
+  def self.select_options
+    find(:all, :order => "first_name, last_name").collect{|u| [u.full_name, u.id]}
+  end
   def self.sorted(page)
     paginate(:all, :order => "last_name, first_name", :page => page)
   end

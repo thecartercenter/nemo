@@ -11,7 +11,7 @@
       <% fields.each do |f| %>
         <% cls = "#{f.gsub(/[^\w\d]/, "")}_col" %>
         <td class="<%= cls %>">
-          <%= self.send("format_#{controller_name}_field", o, f) %>
+          <div><%= self.send("format_#{controller_name}_field", o, f) %></div>
         </td>
       <% end %>
     </tr>

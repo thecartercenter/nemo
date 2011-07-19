@@ -3,13 +3,6 @@
     <%= flash.values.first %>
   </div>
 <% end %>
-<% if defined?(object) && !object.nil? && object.errors.any? %>
-  <div class="error">
-    <strong>Please fix the following errors:</strong>
-    <ul>
-      <% object.errors.full_messages.each do |msg| %>
-      <li><%= msg %></li>
-      <% end %>
-    </ul>
-  </div>
+<% if defined?(object) %>
+  <%= render("layouts/object_errors", :object => object) %>
 <% end %>

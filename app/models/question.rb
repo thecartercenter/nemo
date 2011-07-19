@@ -15,6 +15,9 @@ class Question < ActiveRecord::Base
   def is_select?
     type.name.match(/^select/)
   end
+  def select_options
+    (opt = options) ? opt.collect{|o| [o.name, o.id]} : []
+  end
   def new_answers_from_str(str)
     # if this is a select multiple, split the string on " " and call new_answer for each
     if !str.blank? && type.name == "select_multiple"

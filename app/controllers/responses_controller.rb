@@ -29,4 +29,40 @@ class ResponsesController < ApplicationController
       @responses = Response.sorted(:page => 1)
     end
   end
+  
+  def edit
+    @resp = Response.find(params[:id], :include => {:answers => :questioning})
+    @place_lookup = PlaceLookup.new
+    set_js
+  end
+  
+  def update
+    @resp = Response.find(params[:id])
+
+    # update the response attribs
+    @resp.attributes = params[:response]
+    
+    # update the place lookup
+    @place_lookup = PlaceLookup.find_and_update(params[:place_lookup])
+    # update the response place if place_lookup has been used
+    (choice = @place_lookup.choice) ? @resp.place = choice : nil
+    
+    # reject all answer data with no value or option_id set
+    params[:answers].reject!{|k,v| v[:value].blank? && v[:option_id].blank?}
+
+    # init a bunch of answer objects based on the passed params
+    @resp.update_answers(params[:answers].collect{|k,v| Answer.new(v.merge(:response_id => @resp.id))})
+    
+    # try to save
+    if @resp.save_self_and_answers
+      flash[:success] = "Response updated successfully."
+      redirect_to(:action => :edit)
+    else
+      render(:action => :edit)
+    end
+  end
+  private
+    def set_js
+      @js << 'place_lookups'
+    end
 end

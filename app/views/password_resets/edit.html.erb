@@ -6,12 +6,12 @@
   <%= show_flash_and_form_errors(@user) %>
   <table class="form">
     <tr class="rowbg<%= rowbg = 1 - rowbg %>">
-      <td class="name"><%= f.label :password %>*</td>
+      <td class="name"><%= f.label :password %><%= reqd_sym %></td>
       <td class="value"><%= f.password_field :password %></td>
       <td class="details"></td>
     </tr>
     <tr class="rowbg<%= rowbg = 1 - rowbg %>">
-      <td class="name"><%= f.label :password_confirmation %>*</td>
+      <td class="name"><%= f.label :password_confirmation %><%= reqd_sym %></td>
       <td class="value"><%= f.password_field :password_confirmation %></td>
       <td class="details"></td>
     </tr>

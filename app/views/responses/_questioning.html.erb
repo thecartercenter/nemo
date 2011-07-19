@@ -1,0 +1,34 @@
+<% question = questioning.question %>
+<div class="rowbg<%= (questioning_counter + 1) % 2 %>">
+  <div class="name">
+    <%= questioning.rank %>. 
+    <%= question.name || "[Question #{question.id}]" %>
+    <%= reqd_sym(questioning.required?) %>
+  </div>
+  <div class="hint"><%= question.hint %></div>
+  <div class="field">
+    <% case type = question.type.name %>
+    <% when "text", "numeric", "location", "address", "start_timestamp" %>
+      <%= fields_for('answers[]', resp.find_or_initialize_answer_for(questioning)) do |f| %>
+        <%= render("layouts/object_errors", :object => f.object, :compact => true) %>
+        <%= f.hidden_field(:questioning_id, :index => "#{questioning_counter}") %>
+        <%= f.text_field(:value, :class => "qtype_#{type}", :index => "#{questioning_counter}") %>
+      <% end %>
+    <% when "select_one" %>
+      <%= fields_for('answers[]', resp.find_or_initialize_answer_for(questioning)) do |f| %>
+        <%= render("layouts/object_errors", :object => f.object, :compact => true) %>
+        <%= f.hidden_field(:questioning_id, :index => "#{questioning_counter}") %>
+        <%= f.select(:option_id, question.select_options, {:include_blank => true}, {:index => "#{questioning_counter}"}) %>
+      <% end %>
+    <% when "select_multiple" %>
+      <% question.options.each do |o| %>
+        <%= fields_for('answers[]', resp.find_or_initialize_answer_for(questioning, o)) do |f| %>
+          <%= render("layouts/object_errors", :object => f.object, :compact => true) %>
+          <%= f.hidden_field(:questioning_id, :index => "#{questioning_counter}_#{o.id}") %>
+          <%= f.check_box(:option_id, {:index => "#{questioning_counter}_#{o.id}"}, o.id, nil) %>
+          <%= f.label(:option_id, o.name) %><br/>
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
+</div>

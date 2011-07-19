@@ -1,0 +1,28 @@
+<%= basic_form(resp) do |f|
+  fields = [{
+      :name => "Response Info",
+      :fields => [{
+        :col => :user_id,
+        :label => "Submitter",
+        :required => true,
+        :value => f.select(:user_id, User.select_options, :include_blank => true),
+      },{
+        :col => :observed_at_str,
+        :label => "Observation Time",
+        :required => true,
+        :value => f.text_field(:observed_at_str),
+        :details => "Enter the date and time of the observation. Include the timezone offset if needed.<br/>
+          e.g. 2003-01-24 12:34PM +0300."
+      },{
+        :col => :place_id,
+        :label => "Place",
+        :required => true,
+        :value => place_field(resp.place, place_lookup)
+      }]
+    },{
+      :name => "Answers",
+      :contents => question_fields(resp)
+    }
+  ]
+end
+%>

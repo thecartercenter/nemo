@@ -1,10 +1,12 @@
 <% rowbg = 0 %>
 <%= show_flash_and_form_errors(place) %>
 
+<div class="tip"><%= reqd_sym %> Indicates a required field</div>
+
 <% form_for(place) do |f| %>
 <table class="form">
   <tr class="rowbg<%= rowbg = 1 - rowbg %>">
-    <td class="name">Long Name:*</td>
+    <td class="name">Long Name: <%= reqd_sym %></td>
     <td class="value"><%= f.text_field(:long_name) %></td>
     <td class="details">The longer, unabbreviated name of the place, e.g. 'Georgia'; '5th Avenue'; 'Kenya'; 'San Francisco'.</td>
   </tr>
@@ -14,7 +16,7 @@
     <td class="details">An abbreviated name, if applicable, e.g. 'GA'; 'US'; 'CN'.</td>
   </tr>
   <tr class="rowbg<%= rowbg = 1 - rowbg %>">
-    <td class="name">Type*:</td>
+    <td class="name">Type: <%= reqd_sym %></td>
     <td class="value"><%= f.select(:place_type_id, PlaceType.select_options, :include_blank => true) %></td>
     <td class="details">The type of the place, e.g. 'Country', 'Municipality', etc.</td>
   </tr>

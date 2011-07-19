@@ -5,6 +5,7 @@ module ApplicationHelper
   def link_to_if_auth(label, url, action, object = nil, *args)
     authorized?(:action => action, :object => object) ? link_to(label, url, *args) : ""
   end
+  # draws a basic form for the given object
   def basic_form(obj, &block)
     form_for(obj) do |f|
       fields = block.call(f)
@@ -13,5 +14,11 @@ module ApplicationHelper
   end
   def join_links(*links)
     links.reject{|l| l.blank?}.join(" | ").html_safe
+  end
+  def place_field(place, place_lookup)
+    render("places/place_field", :place => place, :place_lookup => place_lookup)
+  end
+  def reqd_sym(condition = true)
+    (condition ? '<div class="reqd_sym">*</div>' : '').html_safe
   end
 end

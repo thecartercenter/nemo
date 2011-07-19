@@ -1,15 +1,30 @@
 <% rowbg = 0 %>
 <%= show_flash_and_form_errors(obj) %>
-<table class="form">
-<% fields.each do |field| %>
-  <% action = obj.new_record? ? "create" : "update" %>
-  <% if authorized?(:action => "#{obj.class.table_name}##{action}", :object => obj, :col => field[:col]) %>
-    <tr class="rowbg<%= rowbg = 1 - rowbg %>">
-      <td class="name"><%= field[:col].to_s.gsub("_"," ").capitalize %><% if field[:required] %>*<% end %></td>
-      <td class="value"><%= field[:value].html_safe %></td>
-      <td class="details"><%= (field[:details] || "") %></td>
-    </tr>
+<% # if fields doesn't have sections, create one big section 
+fields = [{:fields => fields}] if fields[0] && fields[0][:col] %>
+
+<% fields.each_index do |idx| section = fields[idx] %>
+  <% if section[:name] %><h2><%= section[:name] %></h2><% end %>
+  <% if section[:contents] %>
+    <%= section[:contents] %>
+  <% else %>
+    <div class="tip"><%= reqd_sym %> Indicates a required field</div>
+    <table class="form <%= "section#{idx+1}" %>">
+    <% section[:fields].each do |field| %>
+      <% action = obj.new_record? ? "create" : "update" %>
+      <% if authorized?(:action => "#{obj.class.table_name}##{action}", :object => obj, :col => field[:col]) %>
+        <tr class="rowbg<%= rowbg = 1 - rowbg %>">
+          <td class="name">
+            <%= field[:label] || field[:col].to_s.gsub("_"," ").capitalize %>
+            <%= reqd_sym(field[:required]) %>
+          </td>
+          <td class="value"><%= field[:value].html_safe %></td>
+          <td class="details"><%= (field[:details] || "").html_safe %></td>
+        </tr>
+      <% end %>
+    <% end %>
+    </table>
   <% end %>
 <% end %>
-</table>
-<%= f.submit((obj.new_record? ? "Create" : "Update") + " User") %>
+  
+<%= f.submit((obj.new_record? ? "Create" : "Update") + " #{obj.class}") %>

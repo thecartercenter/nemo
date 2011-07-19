@@ -1,0 +1,10 @@
+<% if !object.nil? && object.errors.any? %>
+<div class="error">
+  <% unless defined?(compact) %><strong>Please fix the following errors:</strong><% end %>
+  <ul>
+    <% object.errors.full_messages.each do |msg| %>
+    <li><%= msg %></li>
+    <% end %>
+  </ul>
+</div>
+<% end %>

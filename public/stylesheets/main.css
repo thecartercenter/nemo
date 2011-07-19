@@ -7,7 +7,7 @@ input, select, textarea { border: 1px solid #444; }
 a { color: MidnightBlue; }
 h1, h2, h3 { color: black; }
 h1 { margin: 0 0 10px 0; font-size: 17pt; }
-h2 { font-size: 13pt; }
+h2 { font-size: 11pt; color: #888; }
 h3 { font-size: 12pt; }
 ul { margin-top: 0; padding-left: 20px; }
 li { margin-bottom: 5px; }
@@ -31,9 +31,10 @@ form.new_search #search_query, form.edit_search #search_query { width: 300px; }
 form.new_search #examples, form.edit_search #examples { font-size: 90%; color: #444; }
 
 /* form */
-table.form { border-bottom: 1px solid #887c5f; border-top: 1px solid #887c5f; margin-bottom: 10px; }
-table.form td { padding: 5px; }
-table.form td.details { width: 250px; }
+div.form, table.form { border-bottom: 1px solid #887c5f; border-top: 1px solid #887c5f; margin-bottom: 10px; }
+div.form > div, table.form td { padding: 5px; }
+div.form div.details, table.form td.details { width: 250px; }
+div.reqd_sym { display: inline; font-weight: bold; color: #800000; font-size: 125%; line-height: 5px; vertical-align: middle; }
 
 /* index table */
 table.index_table th { text-align: left; color: white; background-color: #BEA154; font-size: 80%; }
@@ -70,7 +71,7 @@ div#footer { border-top: 1px solid #444; }
 div#flash { margin-bottom: 10px; }
 div.success { color: #005882; }
 div.error { color: #800000; }
-div.error ul { margin-top: 5px; } 
+div.error ul { margin: 5px 0 0 0; }
 
 /* language listing */
 #languages_index table td.name_col { width: 150px; }
@@ -82,3 +83,10 @@ form.new_place_lookup td.value, form.new_place td.value { min-width: 400px; }
 
 /* place map */
 #map_canvas { width: 600px; height: 400px; }
+
+/* response index */
+.responses_index td.place_col div { width: 200px; overflow: hidden; white-space: nowrap; }
+
+/* response edit */
+.responses_edit input.qtype_numeric, .responses_new input.qtype_numeric { width: 100px; }
+/*.responses_edit div.hint, .responses_new div.hint, .responses_edit div.field, .responses_new div.field { padding-left: 10px; }*/

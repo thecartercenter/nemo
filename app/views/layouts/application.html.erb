@@ -41,7 +41,7 @@
       <% end %>
     </ul>
   </div>
-  <div id="content">
+  <div id="content" class="<%="#{controller.controller_name}_#{controller.action_name}"%>">
     <h1><%= @title %></h1>
     <%= body %>
     <br clear="all"/>
