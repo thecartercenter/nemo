@@ -2,14 +2,16 @@ require 'xml'
 
 class Response < ActiveRecord::Base
   belongs_to(:form)
-  has_many(:answers)
   belongs_to(:place)
+  has_many(:answers, :include => :questioning, :order => "questionings.rank")
   has_many(:reviews)
   belongs_to(:user)
 
+  validates_associated(:answers, :message => "are invalid (see below)")
+  
   validates(:user, :presence => true)
   validates(:observed_at, :presence => true)
-  validate(:required_answers)
+  validate(:no_missing_answers)
   
   def self.sorted(params = {})
     params.merge!(:order => "responses.created_at desc")
@@ -50,26 +52,28 @@ class Response < ActiveRecord::Base
     
     # create response object
     resp = new(:form_id => form_id, :user_id => user ? user.id : nil)
-    qings = begin resp.form.questionings rescue raise ArgumentError.new("Invalid form id.") end
+    qings = resp.form ? resp.form.questionings : (raise ArgumentError.new("Invalid form id."))
     
-    # loop over each child tag and create hash of values
+    # loop over each child tag and create hash of question_code => value
     values = {}; doc.root.children.each{|c| values[c.name] = c.first? ? c.first.content : nil}
     
     # loop over all the questions in the form and create answers
-    # if we find a location question, set the response location
-    # if we find a start_timestamp question, save it also
     place_bits = {}
     start_time = nil
     qings.each do |qing|
       # get value from hash
-      v = values[qing.question.code]
-      # add answers
-      resp.answers += qing.new_answers_from_str(v)
-      # reverse-lookup the first location type question we find
-      place_bits[:coords] = (v ? v.split(" ")[0..1] : false) if place_bits[:coords].nil? && qing.question.is_location?
-      place_bits[:addr] = v || false if place_bits[:addr].nil? && qing.question.is_address?
-      # check for start_timestamp
-      start_time = v ? Time.parse(v) : false if start_time.nil? && qing.question.is_start_timestamp?
+      str = values[qing.question.code]
+      # add answer
+      resp.answers << Answer.new_from_str(:str => str, :questioning => qing)
+      
+      # pull out the place bits and start time as we find them
+      if place_bits[:coords].nil? && qing.question.is_location?
+        place_bits[:coords] = (str ? str.split(" ")[0..1] : false)
+      elsif place_bits[:addr].nil? && qing.question.is_address?
+        place_bits[:addr] = str || false
+      elsif start_time.nil? && qing.question.is_start_timestamp?
+        start_time = str ? Time.parse(str) : false
+      end
     end
     
     # set the observe time
@@ -78,70 +82,47 @@ class Response < ActiveRecord::Base
     # try to get the response's place based on the place bits
     resp.place = Place.find_or_create_with_bits(place_bits)
     
-    # save the works, with no validation, since we don't want to lose the data if something goes wrong
-    resp.save(false)
+    # save the works
+    resp.save
   end
   
-  def save_self_and_answers
-    # TODO maybe could remove some of this and use validates_associated
-    # flag
-    answers_valid = true
-    begin
-      # wrap in a transaction
-      transaction do
-        # save self
-        save
-        # save the answers and maintain the flag
-        answers.each{|a| a.save || (answers_valid = false)}
-        # rollback if self or answers are invalid
-        raise ActiveRecord::RecordInvalid.new(self) unless valid? && answers_valid
-      end
-    # if any validation failed
-    rescue ActiveRecord::RecordInvalid
-      # add special error to self if answers failed
-      errors.add(:base, "One or more answers have errors. Please see below.") unless answers_valid
-      # return false to indicate failure
-      return false
-    end
-    true
+  def all_answers
+    # make sure there is an associated answer object for each questioning in the form
+    form.questionings.collect{|qing| answer_for(qing) || answers.new(:questioning_id => qing.id)}
   end
   
-  def update_answers(submitted)
+  def all_answers=(params)
     # do a match on current and newer ids with the ID as the comparator
-    answers.match(submitted, Proc.new{|a| a.questioning_id}) do |orig, subd|
+    answers.match(params.values, Proc.new{|a| a[:questioning_id].to_i}) do |orig, subd|
       # if both exist, update the original
       if orig && subd
-        orig.copy_data_from(subd)
+        orig.attributes = subd
       # if submitted is nil, destroy the original
       elsif subd.nil?
         answers.delete(orig)
       # if original is nil, add the new one to this response's array
       elsif orig.nil?
-        answers << subd
+        answers << Answer.new(subd)
       end
     end
   end
   
-  # if a matching answer is not found, initialize one
-  def find_or_initialize_answer_for(questioning, option = nil)
-    answer_for(questioning, option) || answers.new(:questioning_id => questioning.id)
+  # updates self and saves, and also saves answers
+  def update_with_answers!(params)
+    transaction do
+      update_attributes!(params)
+      answers.each{|a| a.save!}
+    end
   end
   
-  # returns an answer for the given question
-  # if option is specified, we are specifically looking for an answer with the given option
-  # on first call, we build a hash of answers to speed lookup
-  def answer_for(questioning, option = nil)
-    # build the hash
-    #unless @answer_hash
-      @answer_hash = {}
-      answers.each{|a| (@answer_hash[a.questioning] ||= []) << a}
-    #end
-    
+  def answer_for(questioning)
     # get the matching answer(s)
-    hits = @answer_hash[questioning] || []
-    
-    # if option is specified, look for an answer with that option, else just return the first one
-    option ? hits.detect{|a| a.option == option} : hits.first
+    answer_hash[questioning]
+  end
+  
+  def answer_hash(options = {})
+    @answer_hash = nil if options[:rebuild]
+    @answer_hash ||= Hash[*answers.collect{|a| [a.questioning, a]}.flatten]
   end
   
   def observed_at_str; observed_at ? observed_at.strftime("%F %l:%M%p %z").gsub("  ", " ") : nil; end
@@ -153,12 +134,10 @@ class Response < ActiveRecord::Base
   def reviewed?; reviews.size > 0; end
   
   private
-    def required_answers
-      # add any error for an unanswered questions that require an answer (select_multiples don't count)
-      form.questionings.each do |qing| 
-        if qing.answer_required? && answer_for(qing).nil?
-          errors.add(:base, "Question #{qing.rank} is required.")
-        end
+    def no_missing_answers
+      answer_hash(:rebuild => true)
+      form.questionings.each do |qing|
+        errors.add(:base, "Not all questions have answers") and return false if answer_for(qing).nil?
       end
     end
 end

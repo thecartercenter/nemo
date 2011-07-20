@@ -31,9 +31,6 @@ class ResponsesController < ApplicationController
   end
   
   def new
-    @resp = Response.new(:form_id => 1)
-    @place_lookup = PlaceLookup.new
-    set_js
   end
   
   def edit
@@ -45,25 +42,18 @@ class ResponsesController < ApplicationController
   def update
     @resp = Response.find(params[:id])
 
-    # update the response attribs
-    @resp.attributes = params[:response]
-    
     # update the place lookup
     @place_lookup = PlaceLookup.find_and_update(params[:place_lookup])
     # update the response place if place_lookup has been used
-    (choice = @place_lookup.choice) ? @resp.place = choice : nil
-    
-    # reject all answer data with no value or option_id set
-    params[:answers].reject!{|k,v| v[:value].blank? && v[:option_id].blank?}
-
-    # init a bunch of answer objects based on the passed params
-    @resp.update_answers(params[:answers].collect{|k,v| Answer.new(v.merge(:response_id => @resp.id))})
+    (p = @place_lookup.choice) ? @resp.place = p : nil
     
     # try to save
-    if @resp.save_self_and_answers
+    # @resp.save
+    begin
+      @resp.update_with_answers!(params[:response])
       flash[:success] = "Response updated successfully."
       redirect_to(:action => :edit)
-    else
+    rescue ActiveRecord::RecordInvalid
       render(:action => :edit)
     end
   end

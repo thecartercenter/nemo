@@ -1,0 +1,23 @@
+<div class="rowbg<%= (answer_counter + 1) % 2 %>">
+  <div class="name">
+    <%= answer.rank %>. 
+    <%= answer.question_name || "[No Name]" %>
+    <%= reqd_sym(answer.required?) %>
+  </div>
+  <div class="hint"><%= answer.question_hint %></div>
+  <div class="field">
+    <%= fields_for('response[all_answers][]', answer) do |f| %>
+      <%= render("layouts/object_errors", :object => answer, :compact => true) %>
+      <%= f.hidden_field(:response_id, :index => answer_counter) %>
+      <%= f.hidden_field(:questioning_id, :index => answer_counter) %>
+      <% case type = answer.question_type_name %>
+      <% when "text", "numeric", "location", "address", "start_timestamp" %>
+        <%= f.text_field(:value, :class => "qtype_#{type}", :index => answer_counter) %>
+      <% when "select_one" %>
+        <%= f.select(:option_id, answer.select_options, {:include_blank => true}, :index => answer_counter) %>
+      <% when "select_multiple" %>
+        <%= render(:partial => "choice", :locals => {:answer_counter => answer_counter}, :collection => answer.all_choices) %>
+      <% end %>
+    <% end %>
+  </div>
+</div>
