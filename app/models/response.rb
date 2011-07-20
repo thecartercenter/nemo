@@ -50,7 +50,7 @@ class Response < ActiveRecord::Base
     
     # create response object
     resp = new(:form_id => form_id, :user_id => user ? user.id : nil)
-    qs = begin resp.form.questions rescue raise ArgumentError.new("Invalid form id.") end
+    qings = begin resp.form.questionings rescue raise ArgumentError.new("Invalid form id.") end
     
     # loop over each child tag and create hash of values
     values = {}; doc.root.children.each{|c| values[c.name] = c.first? ? c.first.content : nil}
@@ -60,16 +60,16 @@ class Response < ActiveRecord::Base
     # if we find a start_timestamp question, save it also
     place_bits = {}
     start_time = nil
-    qs.each do |q|
+    qings.each do |qing|
       # get value from hash
-      v = values[q.code]
+      v = values[qing.question.code]
       # add answers
-      resp.answers += q.new_answers_from_str(v)
+      resp.answers += qing.new_answers_from_str(v)
       # reverse-lookup the first location type question we find
-      place_bits[:coords] = (v ? v.split(" ")[0..1] : false) if place_bits[:coords].nil? && q.is_location?
-      place_bits[:addr] = v || false if place_bits[:addr].nil? && q.is_address?
+      place_bits[:coords] = (v ? v.split(" ")[0..1] : false) if place_bits[:coords].nil? && qing.question.is_location?
+      place_bits[:addr] = v || false if place_bits[:addr].nil? && qing.question.is_address?
       # check for start_timestamp
-      start_time = v ? Time.parse(v) : false if start_time.nil? && q.is_start_timestamp?
+      start_time = v ? Time.parse(v) : false if start_time.nil? && qing.question.is_start_timestamp?
     end
     
     # set the observe time
@@ -79,7 +79,7 @@ class Response < ActiveRecord::Base
     resp.place = Place.find_or_create_with_bits(place_bits)
     
     # save the works, with no validation, since we don't want to lose the data if something goes wrong
-    resp.save(:validate => false)
+    resp.save(false)
   end
   
   def save_self_and_answers

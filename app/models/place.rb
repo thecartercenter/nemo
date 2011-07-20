@@ -52,6 +52,8 @@ class Place < ActiveRecord::Base
   end
   
   def self.find_or_create_with_bits(bits)
+    return nil unless bits[:coords]
+    
     # reverse geolocate and (if successful) convert to place
     gg = GoogleGeolocation.reverse(bits[:coords])
     geo = gg ? gg.create_places.last : nil

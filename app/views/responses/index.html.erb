@@ -4,7 +4,7 @@
 
 <div class="tip">
   Found <strong><%= @responses.total_entries %></strong> responses.
-  <%= join_links(link_to_if_auth("Create new response", new_response_path, "responses#create")) %>
+  <%#= join_links(link_to_if_auth("Create new response", new_response_path, "responses#create")) %>
 </div>
 
 <%= render("layouts/index_table", :objects => @responses, 

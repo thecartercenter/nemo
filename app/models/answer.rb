@@ -3,7 +3,7 @@ class Answer < ActiveRecord::Base
   belongs_to(:option)
   belongs_to(:response)
   
-  validates(:value, :numericality => true, :if => Proc.new{|a| a.questioning.question.type.name == "numeric"})
+  validates(:value, :numericality => true, :if => Proc.new{|a| a.questioning && a.questioning.question.type.name == "numeric"})
   
   def copy_data_from(a)
     logger.debug("copied #{a.value} and #{a.option_id}")
@@ -14,5 +14,4 @@ class Answer < ActiveRecord::Base
   def question
     questioning ? questioning.question : nil
   end
-
 end

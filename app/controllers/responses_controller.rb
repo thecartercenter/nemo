@@ -30,6 +30,12 @@ class ResponsesController < ApplicationController
     end
   end
   
+  def new
+    @resp = Response.new(:form_id => 1)
+    @place_lookup = PlaceLookup.new
+    set_js
+  end
+  
   def edit
     @resp = Response.find(params[:id], :include => {:answers => :questioning})
     @place_lookup = PlaceLookup.new

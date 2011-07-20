@@ -1,5 +1,5 @@
 <% question = questioning.question %>
-<div class="rowbg<%= (questioning_counter + 1) % 2 %>">
+<div class="rowbg<%= (questioning_counter + 1) % 2 %>" <% if %w(start_timestamp address location).include?(question.type.name) %>style="display:none;"<% end %>>
   <div class="name">
     <%= questioning.rank %>. 
     <%= question.name || "[Question #{question.id}]" %>
