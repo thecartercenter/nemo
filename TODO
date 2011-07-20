@@ -1,15 +1,18 @@
 MINOR
 create response
 destroy response
-clean up data and make a nice demo form
-upload and test
-demo plan
+response#show
+mark as reviewed
+option for question types to be 'throwaways'
+show only non-hidden questions in odk form def'n and response#edit
 
-only non-hidden questions
+odk success screen error
+odk certificate error
 splash screen image
+user,place association checks
 
-optimize form load
-timezone on ODK timezone
+optimize db calls for form#show, response#edit
+timezone on ODK timestamp
 no orphan places in Place.find_or_create_bits
 
 MAJOR
@@ -20,13 +23,12 @@ sms broadcast
 
 REFACTOR
 stylesheet
-refactor geocoding to create temporary places
+response updating
+geocoding to create temporary places
 permissions could be a lot cleaner
 
 DON'T FORGET
-user association checks
-place association checks
-require login
+
 
 THINGS WE HAVE THAT NEPAL DOESN'T
 - mobile submission
@@ -63,30 +65,3 @@ SCRATCH
   - for each question in the submission that is also in the form definition, create an answer
     - but make sure that the given option_ids (if applicable) are actually valid for the given question
   - return
-  
-- form create/edit -- just the name and the type (published defaults to no)
-  - 2 screen process: after initial form#edit screen, they go to form#add_question (with no create 'new' option)
-  - javascript for arranging the questions. you can type in a new position and press enter and everything adjusts with graceful defaults or you can click an up or down arrow. click 'update form' to save. box warns if you try to leave the page (including deleting or viewing a question) before saving the order.
-- form add_question
-  - 2 options -- add existing or create new, similar to places
-  - on submit they go back to form#edit
-- form destroy
-  - only when unpublished
-  - only if no associations
-- form download
-  - creates a FormDownload record
-- form unpublish
-  - accessed from the main screen via link. if has been downloaded, shows a big box
-  - once unpublished, downloads are erased
-- question create/edit  - question
-    - name, hint in all languages
-    - type
-    - code
-    - option set,  (if applicable--show/hide with ajax)
-  - questioning
-    - req'd
-    - hidden
-  - this will be tricky b/c there are two models here.. question and questioning
-  - so when there is a form being edited, we can include a hint that says (for this form)
-- question destroy
-  - only if nothing associated. otherwise just hide it in all the forms it appears in.
