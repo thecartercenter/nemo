@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110720164304) do
+ActiveRecord::Schema.define(:version => 20110721204754) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -195,7 +195,7 @@ ActiveRecord::Schema.define(:version => 20110720164304) do
     t.datetime "updated_at"
     t.string   "fld"
     t.string   "class_name"
-    t.integer  "object_id"
+    t.integer  "obj_id"
   end
 
   create_table "users", :force => true do |t|

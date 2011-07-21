@@ -22,6 +22,20 @@ class Response < ActiveRecord::Base
     [:reviews, {:form => :type}, :user, :place]
   end
   
+  def self.find_eager(id)
+    find(id, :nclude => [
+      :form, 
+      {:answers => 
+        [{:choices => {:option => :translations}}, 
+         {:option => :translations}, 
+         {:questioning => {:question => 
+           [:type, :translations, {:option_set => {:options => :translations}}]
+         }}
+        ]
+      }
+    ])
+  end
+  
   # gets the list of fields to be searched for this class
   # includes whether they should be included in a default, unqualified search
   # and whether they are searchable by a regular expression

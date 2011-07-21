@@ -1,12 +1,18 @@
+require 'translatable'
+
 class Question < ActiveRecord::Base
+  include Translatable
+  
   belongs_to(:type, :class_name => "QuestionType", :foreign_key => :question_type_id)
   belongs_to(:option_set, :include => :options)
+  has_many(:translations, :class_name => "Translation", :foreign_key => :obj_id, 
+    :conditions => "class_name='Question'")
   
   def name(lang = nil)
-    Translation.lookup(self.class.name, id, 'name', lang)
+    translation_for(:name, lang)
   end
   def hint(lang = nil)
-    Translation.lookup(self.class.name, id, 'hint', lang)
+    translation_for(:hint, lang)
   end
   def options
     option_set ? option_set.options : nil

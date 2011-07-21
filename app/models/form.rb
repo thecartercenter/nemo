@@ -7,6 +7,12 @@ class Form < ActiveRecord::Base
     find(:all, :conditions => "is_published = 1", :order => "name")
   end
   
+  def self.find_eager(id)
+    find(id, :include => [:type, {:questionings => {:question => 
+        [:type, :translations, {:option_set => {:option_settings => {:option => :translations}}}]
+     }}])
+  end
+  
   def temp_response_id
     "#{name}_#{ActiveSupport::SecureRandom.random_number(899999999) + 100000000}"
   end

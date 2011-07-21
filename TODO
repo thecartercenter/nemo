@@ -2,8 +2,9 @@ MINOR
 create response
 destroy response
 response#show
+
 mark as reviewed
-option for question types to be 'throwaways'
+option for question types to be 'phone-only'
 show only non-hidden questions in odk form def'n and response#edit
 
 odk success screen error
@@ -11,7 +12,7 @@ odk certificate error
 splash screen image
 user,place association checks
 
-optimize db calls for form#show, response#edit
+optimize db calls for form#show
 timezone on ODK timestamp
 no orphan places in Place.find_or_create_bits
 

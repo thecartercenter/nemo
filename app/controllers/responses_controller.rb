@@ -34,7 +34,7 @@ class ResponsesController < ApplicationController
   end
   
   def edit
-    @resp = Response.find(params[:id], :include => {:answers => :questioning})
+    @resp = Response.find_eager(params[:id])
     @place_lookup = PlaceLookup.new
     set_js
   end

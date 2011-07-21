@@ -4,7 +4,7 @@ class FormsController < ApplicationController
     render_appropriate_format
   end
   def show
-    @form = Form.find(params[:id])
+    @form = Form.find_eager(params[:id])
     render_appropriate_format
   end
   private
