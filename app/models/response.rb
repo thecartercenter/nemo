@@ -23,7 +23,7 @@ class Response < ActiveRecord::Base
   end
   
   def self.find_eager(id)
-    find(id, :nclude => [
+    find(id, :include => [
       :form,
       {:answers => 
         [{:choices => {:option => :translations}}, 

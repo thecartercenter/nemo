@@ -18,11 +18,7 @@ no orphan places in Place.find_or_create_bits
 MAJOR
 options -- timezone display
 
-FEATURES
-sms broadcast
-
 REFACTOR
-permissions could be a lot cleaner
 
 DON'T FORGET
 
