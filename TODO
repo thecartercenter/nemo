@@ -1,5 +1,4 @@
 MINOR
-create response
 destroy response
 response#show
 
@@ -21,7 +20,7 @@ options -- timezone display
 REFACTOR
 
 DON'T FORGET
-
+test translation deletion association check
 
 THINGS WE HAVE THAT NEPAL DOESN'T
 - mobile submission

@@ -3,14 +3,14 @@ require 'xml'
 class Response < ActiveRecord::Base
   belongs_to(:form)
   belongs_to(:place)
-  has_many(:answers, :include => :questioning, :order => "questionings.rank", :autosave => true, :validate => false)
-  has_many(:reviews)
+  has_many(:answers, :include => :questioning, :order => "questionings.rank", 
+    :autosave => true, :validate => false, :dependent => :destroy)
+  has_many(:reviews, :dependent => :destroy)
   belongs_to(:user)
-
+  
   # we turn off validate above and do it here so we can control the message and have only one message
   # regardless of how many answer errors there are
   validates_associated(:answers, :message => "are invalid (see below)")
-  
   validates(:user, :presence => true)
   validates(:observed_at, :presence => true)
   validate(:no_missing_answers)
@@ -122,15 +122,7 @@ class Response < ActiveRecord::Base
       end
     end
   end
-  
-  # updates self and saves, and also saves answers
-  #def update_with_answers!(params)
-  #  transaction do
-  #    update_attributes!(params)
-  #    #answers.each{|a| a.save!}
-  #  end
-  #end
-  
+
   def answer_for(questioning)
     # get the matching answer(s)
     answer_hash[questioning]

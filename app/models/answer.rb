@@ -2,7 +2,7 @@ class Answer < ActiveRecord::Base
   belongs_to(:questioning)
   belongs_to(:option)
   belongs_to(:response)
-  has_many(:choices)
+  has_many(:choices, :dependent => :destroy)
   
   validates(:value, :numericality => true, :if => Proc.new{|a| a.numeric?})
   validate(:required)

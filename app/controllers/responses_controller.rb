@@ -52,6 +52,12 @@ class ResponsesController < ApplicationController
     crupdate
   end
   
+  def destroy
+    @resp = Response.find(params[:id])
+    @resp.destroy and flash[:success] = "Response deleted successfully" rescue flash[:error] = $!.to_s
+    redirect_to(:action => :index)
+  end
+  
   private
     def crupdate
       action = params[:action]
