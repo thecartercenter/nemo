@@ -30,7 +30,8 @@ module ApplicationHelper
     destroy_warning = options[:destroy_warning] || "Are you sure?"
     klass = obj.class.name.underscore
     links = %w(show edit destroy).collect do |action|
-      next if options[action.to_sym] == :exclude
+      options[:exclude] = [options[:exclude]] unless options[:exclude].is_a?(Array)
+      next if options[:exclude] && options[:exclude].include?(action.to_sym)
       img = image_tag("#{action}.png")
       key = "#{obj.class.table_name}##{action}"
       case action

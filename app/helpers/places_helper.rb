@@ -7,11 +7,7 @@ module PlacesHelper
     when "longitude" then (lng = place.longitude).nil? ? "" : lng.round(6)
     when "container" then (pc = place.container) ? pc.full_name : ""
     when "actions"
-      links = []
-      links << link_to_if_auth("Edit", edit_place_path(place), "places#update", place)
-      links << link_to_if_auth("Delete", place, "places#destroy", place,
-        :method => :delete, :confirm => "Are you sure you want to delete #{place.full_name}?")
-      join_links(links)
+      action_links(place, :exclude => :show, :destroy_warning => "Are you sure you want to delete #{place.full_name}?")
     else place.send(field)
     end
   end
