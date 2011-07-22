@@ -5,7 +5,6 @@ class Response < ActiveRecord::Base
   belongs_to(:place)
   has_many(:answers, :include => :questioning, :order => "questionings.rank", 
     :autosave => true, :validate => false, :dependent => :destroy)
-  has_many(:reviews, :dependent => :destroy)
   belongs_to(:user)
   
   # we turn off validate above and do it here so we can control the message and have only one message
@@ -21,7 +20,7 @@ class Response < ActiveRecord::Base
   end
   
   def self.default_eager
-    [:reviews, {:form => :type}, :user, :place]
+    [{:form => :type}, :user, :place]
   end
   
   def self.find_eager(id)
@@ -136,10 +135,8 @@ class Response < ActiveRecord::Base
   def observed_at_str; observed_at ? observed_at.strftime("%F %l:%M%p %z").gsub("  ", " ") : nil; end
   def observed_at_str=(t); self.observed_at = Time.zone.parse(t); end
   
-  def review_count; reviews.count; end
   def form_name; form ? form.name : nil; end
   def submitter; user ? user.full_name : nil; end
-  def reviewed?; reviews.size > 0; end
   
   private
     def no_missing_answers

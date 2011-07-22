@@ -1,6 +1,6 @@
 <% rowbg = 0 %>
 <%= show_flash_and_form_errors(obj) %>
-<% fields.each_index do |idx| section = fields[idx] %>
+<% spec[:sections].each_index do |idx| section = spec[:sections][idx] %>
   <% if section[:name] %><h2><%= section[:name] %></h2><% end %>
   <% if section[:contents] %>
     <%= section[:contents] %>
@@ -25,5 +25,5 @@
 <% end %>
 
 <% if controller.action_name != "show" %>
-  <%= f.submit((obj.new_record? ? "Create" : "Update") + " #{obj.class}") %>
+  <%= spec[:submit] || f.submit((obj.new_record? ? "Create" : "Update") + " #{obj.class}") %>
 <% end %>

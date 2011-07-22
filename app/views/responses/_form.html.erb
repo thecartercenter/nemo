@@ -1,6 +1,7 @@
 <% place_lookup = nil unless defined?(place_lookup) %>
 <%= basic_form(resp) do |f|
-  fields = [{
+  spec = {
+    :sections => [{
       :name => "Response Info",
       :fields => [{
         :col => :form_id,
@@ -22,11 +23,15 @@
         :col => :place_id,
         :label => "Place",
         :value => place_field(resp.place, place_lookup)
+      },{
+        :col => :reviewed,
+        :label => "Reviewed?",
+        :value => f.check_box(:reviewed?)
       }]
     },{
       :name => "Answers",
       :contents => answers_subform(resp.all_answers)
-    }
-  ]
+    }]
+  }
 end
 %>

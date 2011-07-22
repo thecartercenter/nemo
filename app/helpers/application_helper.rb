@@ -10,11 +10,11 @@ module ApplicationHelper
     form_for(obj) do |f|
       f.mode = controller.action_name.to_sym
       # get the fields spec
-      fields = block.call(f)
+      spec = block.call(f)
       # if fields doesn't have sections, create one big section 
-      fields = [{:fields => fields}] if fields[0] && fields[0][:col]
+      spec[:sections] = [{:fields => spec[:fields]}] unless spec[:sections]
       # render the form and return it
-      render("layouts/basic_form", :f => f, :fields => fields, :obj => obj)
+      render("layouts/basic_form", :f => f, :spec => spec, :obj => obj)
     end
   end
   def join_links(links, separator = " | ")
