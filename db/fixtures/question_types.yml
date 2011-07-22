@@ -12,11 +12,13 @@ location:
   name: location
   odk_name: geopoint
   odk_tag: input
+  phone_only: true
 
 address:
   name: address
   odk_name: string
   odk_tag: input
+  phone_only: true
 
 select_one:
   name: select_one
@@ -34,3 +36,4 @@ start_timestamp:
   odk_tag:
   odk_preload: timestamp
   odk_preload_params: start
+  phone_only: true

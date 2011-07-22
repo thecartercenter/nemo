@@ -17,7 +17,7 @@ module ResponsesHelper
   end
   # calls the answer fields template for the given response
   def answers_subform(answers)
-    content_tag("table", :class => "form") do
+    content_tag("table", :class => "form answers") do
       render(:partial => "answer", :collection => answers)
     end
   end

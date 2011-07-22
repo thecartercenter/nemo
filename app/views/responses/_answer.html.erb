@@ -11,7 +11,9 @@
       <%= f.hidden_field(:response_id, :index => answer_counter) %>
       <%= f.hidden_field(:questioning_id, :index => answer_counter) %>
       <% case type = answer.question_type_name %>
-      <% when "text", "numeric", "location", "address", "start_timestamp" %>
+      <% when "location", "address", "start_timestamp" %>
+        <div class="dummy"><%= answer.value %></div>
+      <% when "text", "numeric" %>
         <%= f.text_field(:value, :class => "qtype_#{type}", :index => answer_counter) %>
       <% when "select_one" %>
         <%= f.select(:option_id, answer.select_options, {:include_blank => true}, :index => answer_counter) %>

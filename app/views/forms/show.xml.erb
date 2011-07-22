@@ -4,8 +4,8 @@
     <model>
       <instance>
         <data id="<%= @form.id %>">
-          <% @form.questions.each do |q| %>
-            <%= tag(q.code) %>
+          <% @form.visible_questionings.each do |q| %>
+            <%= tag(q.question.code) %>
           <% end %>
         </data>
       </instance>

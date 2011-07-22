@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110722194603) do
+ActiveRecord::Schema.define(:version => 20110722200238) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -127,6 +127,7 @@ ActiveRecord::Schema.define(:version => 20110722194603) do
     t.string   "odk_tag"
     t.string   "odk_preload"
     t.string   "odk_preload_params"
+    t.boolean  "phone_only"
   end
 
   create_table "questionings", :force => true do |t|

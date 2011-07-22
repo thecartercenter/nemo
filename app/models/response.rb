@@ -67,7 +67,7 @@ class Response < ActiveRecord::Base
     
     # create response object
     resp = new(:form_id => form_id, :user_id => user ? user.id : nil)
-    qings = resp.form ? resp.form.questionings : (raise ArgumentError.new("Invalid form id."))
+    qings = resp.form ? resp.form.visible_questionings : (raise ArgumentError.new("Invalid form id."))
     
     # loop over each child tag and create hash of question_code => value
     values = {}; doc.root.children.each{|c| values[c.name] = c.first? ? c.first.content : nil}
@@ -103,7 +103,7 @@ class Response < ActiveRecord::Base
   
   def all_answers
     # make sure there is an associated answer object for each questioning in the form
-    form.questionings.collect{|qing| answer_for(qing) || answers.new(:questioning_id => qing.id)}
+    form.visible_questionings.collect{|qing| answer_for(qing) || answers.new(:questioning_id => qing.id)}
   end
   
   def all_answers=(params)
@@ -141,7 +141,7 @@ class Response < ActiveRecord::Base
   private
     def no_missing_answers
       answer_hash(:rebuild => true)
-      form.questionings.each do |qing|
+      form.visible_questionings.each do |qing|
         errors.add(:base, "Not all questions have answers") and return false if answer_for(qing).nil?
       end
     end
