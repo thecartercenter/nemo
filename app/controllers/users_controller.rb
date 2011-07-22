@@ -37,7 +37,7 @@ class UsersController < ApplicationController
   end
   def destroy
     @user = User.find(params[:id])
-    @user.destroy and flash[:success] = "User deleted successfully" rescue flash[:error] = $!.to_s
+    begin flash[:success] = @user.destroy && "User deleted successfully." rescue flash[:error] = $!.to_s end
     redirect_to(:action => :index)
   end
 end

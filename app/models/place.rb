@@ -1,8 +1,10 @@
 class Place < ActiveRecord::Base
   belongs_to(:container, :class_name => "Place")
-  has_many(:children, :class_name => "Place", :foreign_key => "container_id")
-  before_validation(:set_full_name)
   belongs_to(:place_type)
+  has_many(:children, :class_name => "Place", :foreign_key => "container_id")
+  has_many(:responses)
+
+  before_validation(:set_full_name)
   before_destroy(:check_assoc)
   
   validates(:long_name, :presence => true)
@@ -118,8 +120,10 @@ class Place < ActiveRecord::Base
     end
     
     def check_assoc
-      unless children.empty?
-        raise "'#{full_name}' is a container for other places. You must delete those first."
+      if !children.empty?
+        raise "The place '#{full_name}' is a container for other places. You must delete those first."
+      elsif !responses.empty?
+        raise "The place '#{full_name}' is associated with one or more responses. You must edit or delete them first."
       end
     end
 end

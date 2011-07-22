@@ -109,13 +109,13 @@ class Permission
       # if this is a program staff
       if params[:user].is_program_staff?
         # if they're not editing themselves, OR if they're not trying to change their own role or active status, they're ok
-        return params[:user] != params[:object] || !trying_to_change?(params, 'role', 'role_id', 'is_active?', 'is_active')
+        return params[:user] != params[:object] || !trying_to_change?(params, 'role', 'role_id', 'active?', 'active')
       # otherwise, they're not a program staff
       else
         # so object and user must be equal to proceed any further
         return false unless params[:user] == params[:object]
         # if they're not trying to change prohibited fields, they're good
-        return !trying_to_change?(params, 'first_name', 'last_name', 'is_active?', 'is_active', 'role', 'role_id')
+        return !trying_to_change?(params, 'first_name', 'last_name', 'active?', 'active', 'role', 'role_id')
       end
     end
   

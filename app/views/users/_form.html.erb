@@ -26,8 +26,8 @@
       :value => f.select(:language_id, Language.select_options),
       :details => "This will primarily affect the language of forms for observers."
     },{
-      :col => :is_active?,
-      :value => f.check_box(:is_active),
+      :col => :active?,
+      :value => f.check_box(:active),
       :details => "Is this user active in the mission? If this box is not checked, the
         user will not be able to log in or submit forms."
     }]

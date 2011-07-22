@@ -3,6 +3,7 @@ module UsersHelper
     case field
     when "email" then mail_to(user.email)
     when "language" then user.language.name
+    when "active?" then user.active? ? "Yes" : "No"
     when "actions"
       action_links(user, :exclude => :show,
         :destroy_warning => "Are you sure you want to delete #{user.first_name} #{user.last_name}?")

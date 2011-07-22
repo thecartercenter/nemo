@@ -4,6 +4,7 @@ class User < ActiveRecord::Base
   belongs_to(:location)
   before_validation(:clean_fields)
   before_destroy(:check_assoc)
+  has_many(:responses)
   
   acts_as_authentic
   validates(:first_name, :presence => true)
@@ -19,7 +20,7 @@ class User < ActiveRecord::Base
     paginate(:all, :order => "last_name, first_name", :page => page)
   end
   def self.default(params = {})
-    User.new({:is_mobile_phone => true, :is_active => true, :language_id => Language.english.id}.merge(params))
+    User.new({:is_mobile_phone => true, :active => true, :language_id => Language.english.id}.merge(params))
   end
   def self.new_with_login_and_password(params)
     u = new(params)
@@ -70,5 +71,10 @@ class User < ActiveRecord::Base
     end
     
     def check_assoc
+      # Can't delete users with related responses.
+      unless responses.empty?
+        raise("You can't delete #{full_name} because he/she has associated responses." +
+          (active? ? " Try setting him/her to inactive." : ""))
+      end
     end
 end

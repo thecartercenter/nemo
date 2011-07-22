@@ -1,12 +1,9 @@
 MINOR
-show only non-hidden questions in odk form def'n and response#edit
-
 odk success screen error
 odk certificate error
 timezone on ODK timestamp
 
 splash screen image
-user,place association checks
 
 no orphan places in Place.find_or_create_bits
 

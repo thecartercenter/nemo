@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110722200238) do
+ActiveRecord::Schema.define(:version => 20110722205622) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -203,7 +203,7 @@ ActiveRecord::Schema.define(:version => 20110722200238) do
     t.integer  "location_id"
     t.string   "phone"
     t.boolean  "is_mobile_phone"
-    t.boolean  "is_active"
+    t.boolean  "active"
     t.string   "password_salt"
     t.string   "crypted_password"
     t.string   "single_access_token"
