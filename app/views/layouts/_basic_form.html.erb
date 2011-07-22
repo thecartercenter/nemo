@@ -10,10 +10,10 @@ fields = [{:fields => fields}] if fields[0] && fields[0][:col] %>
   <% else %>
     <div class="tip"><%= reqd_sym %> Indicates a required field</div>
     <table class="form <%= "section#{idx+1}" %>">
+    <% action = obj.new_record? ? "create" : "update" %>
     <% section[:fields].each do |field| %>
-      <% action = obj.new_record? ? "create" : "update" %>
       <% if authorized?(:action => "#{obj.class.table_name}##{action}", :object => obj, :col => field[:col]) %>
-        <tr class="rowbg<%= rowbg = 1 - rowbg %>">
+        <tr class="rowbg<%= rowbg = 1 - rowbg %>"<%= field[:hidden] ? ' style="display:none"'.html_safe : '' %>>
           <td class="name">
             <%= field[:label] || field[:col].to_s.gsub("_"," ").capitalize %>
             <%= reqd_sym(field[:required]) %>

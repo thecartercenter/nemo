@@ -31,6 +31,11 @@ class ResponsesController < ApplicationController
   end
   
   def new
+    form = Form.find(params[:form_id]) rescue nil
+    flash[:error] = "You must choose a form to edit." and redirect_to(:action => :index) unless form
+    @resp = Response.new(:form => form)
+    @place_lookup = PlaceLookup.new
+    set_js
   end
   
   def edit
@@ -39,25 +44,36 @@ class ResponsesController < ApplicationController
     set_js
   end
   
-  def update
-    @resp = Response.find(params[:id])
-
-    # update the place lookup
-    @place_lookup = PlaceLookup.find_and_update(params[:place_lookup])
-    # update the response place if place_lookup has been used
-    (p = @place_lookup.choice) ? @resp.place = p : nil
-    
-    # try to save
-    # @resp.save
-    begin
-      @resp.update_with_answers!(params[:response])
-      flash[:success] = "Response updated successfully."
-      redirect_to(:action => :edit)
-    rescue ActiveRecord::RecordInvalid
-      render(:action => :edit)
-    end
+  def create
+    crupdate
   end
+  
+  def update
+    crupdate
+  end
+  
   private
+    def crupdate
+      action = params[:action]
+      # find or create the response
+      @resp = action == "create" ? Response.new : Response.find(params[:id])
+      # set user_id if this is an observer
+      @resp.user = current_user if current_user.is_observer?
+      # update the place lookup
+      @place_lookup = PlaceLookup.find_and_update(params[:place_lookup])
+      # update the response place if place_lookup has been used
+      (p = @place_lookup.choice) ? @resp.place = p : nil
+      # try to save
+      begin
+        @resp.update_attributes!(params[:response])
+        flash[:success] = "Response #{action}d successfully."
+        redirect_to(edit_response_path(@resp))
+      rescue ActiveRecord::RecordInvalid
+        set_js
+        render(:action => action == "create" ? :new : :edit)
+      end
+    end
+    
     def set_js
       @js << 'place_lookups'
     end

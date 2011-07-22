@@ -13,6 +13,10 @@ class Form < ActiveRecord::Base
      }}])
   end
   
+  def self.select_options
+    all(:include => :type, :order => "form_types.name, forms.name").collect{|f| [f.full_name, f.id]}
+  end
+  
   def temp_response_id
     "#{name}_#{ActiveSupport::SecureRandom.random_number(899999999) + 100000000}"
   end

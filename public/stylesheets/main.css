@@ -83,6 +83,7 @@ form.new_place_lookup td.value, form.new_place td.value { min-width: 400px; }
 
 /* response index */
 .responses_index td.place_col div { width: 200px; overflow: hidden; white-space: nowrap; }
+.responses_index form#form_chooser { display: inline; }
 
 /* response edit */
 .responses_edit input.qtype_numeric, .responses_new input.qtype_numeric { width: 100px; }

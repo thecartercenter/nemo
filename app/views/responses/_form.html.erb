@@ -2,6 +2,10 @@
   fields = [{
       :name => "Response Info",
       :fields => [{
+        :col => :form_id,
+        :value => f.hidden_field(:form_id),
+        :hidden => true
+      },{
         :col => :user_id,
         :label => "Submitter",
         :required => true,
@@ -16,7 +20,6 @@
       },{
         :col => :place_id,
         :label => "Place",
-        :required => true,
         :value => place_field(resp.place, place_lookup)
       }]
     },{

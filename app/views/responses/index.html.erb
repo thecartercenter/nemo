@@ -4,7 +4,12 @@
 
 <div class="tip">
   Found <strong><%= @responses.total_entries %></strong> responses.
-  <%#= join_links(link_to_if_auth("Create new response", new_response_path, "responses#create")) %>
+  <%= join_links(link_to_if_auth("Create new response", "#", "responses#create", nil, 
+    :onclick => "$('form_chooser').show(); return false")) %>
+  <form id="form_chooser" action="<%= new_response_url %>" style="display: none">
+    <%= select_tag(:form_id, options_for_select(Form.select_options), :include_blank => "Select a form...") %>
+    <%= submit_tag("Go") %>
+  </form>
 </div>
 
 <%= render("layouts/index_table", :objects => @responses, 

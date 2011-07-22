@@ -27,7 +27,8 @@ class Permission
   SPECIAL = [
     :anyone_can_edit_some_fields_about_herself_but_nobody_can_edit_their_own_role,
     :program_staff_can_delete_anyone_except_herself,
-    :observer_can_edit_delete_own_responses_if_not_reviewed
+    :observer_can_edit_delete_own_responses_if_not_reviewed,
+    :observer_cant_change_user_for_response
   ]
   
   def self.authorized?(params)
@@ -132,16 +133,26 @@ class Permission
       # only valid for responses#update and responses#destroy
       return false unless %w(responses#update responses#destroy).include?(params[:key])
       # only valid for observers
-      return false unless params[:user] && params[:user].role.is_observer?
+      return false unless params[:user] && params[:user].is_observer?
       # get the response object being edited
       params[:object] = Response.find_by_id(params[:request][:id]) if params[:request]
       # require an object
       return false unless params[:object]
+      # make sure they're not trying to change user
+      observer_cant_change_user_for_response(params)
       # make sure the object belongs to the observer 
-      # AND the response hasn't been reviewed AND they're not trying to edit user_id
+      # AND the response hasn't been reviewed
       return params[:object].user_id == params[:user].id &&
-        !params[:object].reviewed? &&
-        !trying_to_change?(params, 'user_id', 'user')
+        !params[:object].reviewed?
+    end
+    
+    def self.observer_cant_change_user_for_response(params)
+      # raise exception if user is an observer AND object is a response AND trying to change user_id
+      if params[:user] && params[:user].is_observer? && 
+        params[:object] && params[:object].is_a?(Response) &&
+        trying_to_change?(params, 'user_id', 'user')
+        raise PermissionError.new "Observers can't change the submitter for responses."
+      end
     end
     
     ###############################################
