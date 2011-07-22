@@ -20,12 +20,14 @@ class Permission
     "forms#index" => {:group => :logged_in},
     "forms#show" => {:group => :logged_in},
     "responses#index" => {:group => :logged_in},
-    "responses#create" => {:group => :logged_in}
+    "responses#create" => {:group => :logged_in},
+    "responses#update" => {:min_level => 2},
+    "responses#destroy" => {:min_level => 2}
   }
   SPECIAL = [
     :anyone_can_edit_some_fields_about_herself_but_nobody_can_edit_their_own_role,
     :program_staff_can_delete_anyone_except_herself,
-    :observer_can_edit_delete_own_responses_and_everyone_else_can_edit_delete_any
+    :observer_can_edit_delete_own_responses_if_not_reviewed
   ]
   
   def self.authorized?(params)
@@ -39,19 +41,21 @@ class Permission
 
   def self.authorize(params)
     parse_params!(params)
+    # try special permissions first
+    SPECIAL.each{|sc| return if send(sc, params)}
     # try general permissions
     return if check_permission("#{params[:controller]}##{params[:action]}", params[:user])
     return if check_permission("#{params[:controller]}#*", params[:user])
-    # try special permissions
-    SPECIAL.each{|sc| return if send(sc, params)}
     # if we get this far, it didn't work out
     raise PermissionError.new "You don't have permission to do that."
   end
   
+  # returns a string containing any select conditions for a select query
+  # the model class must know to include a call to this function when building its query
   def self.select_conditions(params)
     parse_params!(params)
     # observer can only see his/her own responses
-    if params[:key] == "responses#index" && params[:user].role.level <= 1
+    if params[:key] == "responses#index" && params[:user].is_observer?
       "responses.user_id = #{params[:user].id}"
     else
       "1"
@@ -71,8 +75,7 @@ class Permission
       if perm[:group] == :anyone
         return true
       elsif perm[:group] == :logged_in
-        ensure_logged_in({:user => user})
-        return true
+        user ? (return true) : (raise PermissionError.new "You must login to view that page.")
       elsif perm[:group] == :logged_out
         user ? (raise PermissionError.new "You must be logged out to view that page.") : (return true)
       end
@@ -89,76 +92,60 @@ class Permission
     raise PermissionError.new "Error processing permission."
   end
   
-  # special permission
-  # return true (causing immediate success) if it succeeds
-  # return false/nil if it fails
-  def self.anyone_can_edit_some_fields_about_herself_but_nobody_can_edit_their_own_role(params)
-    # this special permission only valid for users#update
-    return false unless params[:controller] == "users" && params[:action] == "update"
-    
-    ensure_logged_in(params)
-    
-    # get the user object being edited, if the :id param is provided
-    params[:object] = User.find_by_id(params[:request][:id]) if params[:request]
-    
-    # if this is a program staff
-    if params[:user].role.level >= 4
-      # if they're not editing themselves, OR if they're not trying to change their own role or active status, they're ok
-      return params[:user] != params[:object] || !trying_to_change?(params, 'role', 'role_id', 'is_active?', 'is_active')
-    # otherwise, they're not a program staff
-    else
-      # so object and user must be equal to proceed any further
-      return false unless params[:user] == params[:object]
-    
-      # if they're not trying to change prohibited fields, they're good
-      return !trying_to_change?(params, 'first_name', 'last_name', 'is_active?', 'is_active', 'role', 'role_id')
+  private
+    ###############################################
+    # SPECIAL PERMISSION FUNCTIONS
+    # return true (causing immediate success) if they succeed
+    # return false/nil if they fail
+    def self.anyone_can_edit_some_fields_about_herself_but_nobody_can_edit_their_own_role(params)
+      # this special permission only valid for users#update
+      return false unless params[:key] == "users#update"
+      # require a user
+      return false unless params[:user]
+      # get the user object being edited, if the :id param is provided
+      params[:object] = User.find_by_id(params[:request][:id]) if params[:request]
+      # if this is a program staff
+      if params[:user].is_program_staff?
+        # if they're not editing themselves, OR if they're not trying to change their own role or active status, they're ok
+        return params[:user] != params[:object] || !trying_to_change?(params, 'role', 'role_id', 'is_active?', 'is_active')
+      # otherwise, they're not a program staff
+      else
+        # so object and user must be equal to proceed any further
+        return false unless params[:user] == params[:object]
+        # if they're not trying to change prohibited fields, they're good
+        return !trying_to_change?(params, 'first_name', 'last_name', 'is_active?', 'is_active', 'role', 'role_id')
+      end
     end
-  end
   
-  def self.program_staff_can_delete_anyone_except_herself(params)
-    # this special permission only valid for users#destroy
-    return false unless params[:controller] == "users" && params[:action] == "destroy"
-    
-    ensure_logged_in(params)
-    
-    # get the user object being edited, if the :id param is provided
-    params[:object] = User.find_by_id(params[:request][:id]) if params[:request]
-    
-    # if this is a program staff
-    if params[:user].role.level >= 4
+    def self.program_staff_can_delete_anyone_except_herself(params)
+      # this special permission only valid for users#destroy
+      return false unless params[:key] == "users#destroy"
+      # require a program staff
+      return false unless params[:user] && params[:user].is_program_staff?
+      # get the user object being edited, if the :id param is provided
+      params[:object] = User.find_by_id(params[:request][:id]) if params[:request]
       # if she's not deleting herself, she's ok
       return params[:user] != params[:object]
-    # otherwise, she's not a program staff
-    else
-      return false
     end
-  end
   
-  def self.observer_can_edit_delete_own_responses_and_everyone_else_can_edit_delete_any(params)
-    # this special permission only valid for responses#update and responses#destroy
-    return false unless params[:controller] == "responses" && %w(update destroy).include?(params[:action])
-
-    # get the user object being edited
-    params[:object] = Response.find_by_id(params[:request][:id]) if params[:request]
-    
-    # require an object
-    return false unless params[:object]
-    
-    ensure_logged_in(params)
-    
-    # if this is an observer, make sure the object belongs to the observer 
-    # AND the response hasn't been reviewed AND they're not trying to edit user_id
-    if params[:user].role.level == 1
+    def self.observer_can_edit_delete_own_responses_if_not_reviewed(params)
+      # only valid for responses#update and responses#destroy
+      return false unless %w(responses#update responses#destroy).include?(params[:key])
+      # only valid for observers
+      return false unless params[:user] && params[:user].role.is_observer?
+      # get the response object being edited
+      params[:object] = Response.find_by_id(params[:request][:id]) if params[:request]
+      # require an object
+      return false unless params[:object]
+      # make sure the object belongs to the observer 
+      # AND the response hasn't been reviewed AND they're not trying to edit user_id
       return params[:object].user_id == params[:user].id &&
         !params[:object].reviewed? &&
         !trying_to_change?(params, 'user_id', 'user')
-    else
-      # otherwise anyone can do it.
-      return true
     end
-  end
-  
-  private
+    
+    ###############################################
+    # OTHER FUNCTIONS
     # returns true if the user is trying to change any of the given fields, according to the given parameters
     def self.trying_to_change?(params, *fields)
       return params[:col] && fields.include?(params[:col].to_s) ||
@@ -172,10 +159,7 @@ class Permission
       # replace edit/new with update/create
       params[:action] = {"edit" => "update", "new" => "create"}[params[:action]] || params[:action]
       
+      # create a shortcut for controller and action
       params[:key] = "#{params[:controller]}##{params[:action]}"
-    end
-    
-    def self.ensure_logged_in(params)
-      raise PermissionError.new "You must login to view that page." unless params[:user]
     end
 end

@@ -57,6 +57,9 @@ class User < ActiveRecord::Base
     "#{first_name} #{last_name}"
   end
   
+  def is_observer?; role ? role.is_observer? : false; end
+  def is_program_staff?; role ? role.is_program_staff? : false; end
+  
   private
     def clean_fields
       self.phone = "+" + phone.gsub(/[^0-9]/, "") unless phone.blank?

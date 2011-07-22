@@ -8,4 +8,6 @@ class Role < ActiveRecord::Base
   def to_s
     name
   end
+  def is_observer?; level == 1; end
+  def is_program_staff?; level == 4; end
 end

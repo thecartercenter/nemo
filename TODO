@@ -12,7 +12,6 @@ odk certificate error
 splash screen image
 user,place association checks
 
-optimize db calls for form#show
 timezone on ODK timestamp
 no orphan places in Place.find_or_create_bits
 
@@ -23,8 +22,6 @@ FEATURES
 sms broadcast
 
 REFACTOR
-stylesheet
-geocoding to create temporary places
 permissions could be a lot cleaner
 
 DON'T FORGET
