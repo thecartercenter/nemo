@@ -1,4 +1,4 @@
-/* tag styles */
+/* tag redefinitions */
 html,body { margin: 0; padding: 0 }
 body, td, input, select, textarea { font-family: Helvetica, sans-serif; font-size: 10pt; color: #222; }
 body { line-height: 1.3; height: 100%; }
@@ -14,16 +14,32 @@ li { margin-bottom: 5px; }
 table { border-collapse: collapse; }
 td { vertical-align: top; }
 
-/* shared styles */
+/* template */
+body { background-color: #888; }
+div#upper { background-color: #005882; }
+div#banner { padding-left: 125px; height: 79px; color: white; padding-top: 10px; }
+div#banner img { position: absolute; left: 10px; top: 10px; border: none; }
+div#banner #title { float: left; font-family: "Lucidia Fax", "Cambria", "Book Antiqua", "Times New Roman", times; }
+div#banner #title h1 { color: white; margin-bottom: 3px; }
+div#banner #title h2 { color: white; margin-top: 0; font-size: 100%; font-style: italic; }
+div#banner #userinfo { float: right; margin-right: 10px; }
+div#banner #userinfo a { color: white; }
+div#banner #dev_mode_warning { color: white; margin: 10px 10px 0 0; padding: 2px; text-align: right; font-weight: bold; background-color: #800000; float: right; clear: right; }
+div#content { padding: 10px; margin-left: 88px; background-color: white; min-height: 500px; }
+div#nav { float: left; width: 88px; padding-top: 20px; color: white; }
+div#nav ul { margin-right: 15px; font-weight: bold; padding: 5px; list-style-type:none; }
+div#nav ul li { white-space: nowrap; }
+div#nav ul li a { text-decoration: none; color: white; }
+div#nav ul li a:hover { text-decoration: none; color: #BEA154; }
+div#footer { border-top: 1px solid #444; }
+
+/* multi-purpose */
 div.tip { margin-bottom: 10px; width: 600px; }
-div.loader { background: rl('/images/loader.gif') no-repeat; padding-left: 20px; }
-.deets { font-size: 80%; margin-bottom: 5px; }
 .rowbg0 { background-color: #f6f6f6; }
 .rowbg1 { background-color: #ded8cb; }
-.ntmarg { margin-top: 0; }
-.nbmarg { margin-bottom: 0; }
-.tmarg { margin-top: 10px; }
-.bmarg { margin-bottom: 10px; }
+
+/* loading indicator */
+div.loader { background: rl('/images/loader.gif') no-repeat; padding-left: 20px; }
 
 /* search form */
 form.new_search, form.edit_search { margin-bottom: 10px; }
@@ -48,25 +64,6 @@ div.pagination *.disabled { display: none; }
 div.pagination em { font-style: normal; font-weight: bold; }
 div.pagination *.next_page, div.pagination *.previous_page { width: 80px; }
 
-/* template */
-body { background-color: #888; }
-div#upper { background-color: #005882; }
-div#banner { padding-left: 125px; height: 79px; color: white; padding-top: 10px; }
-div#banner img { position: absolute; left: 10px; top: 10px; border: none; }
-div#banner #title { float: left; font-family: "Lucidia Fax", "Cambria", "Book Antiqua", "Times New Roman", times; }
-div#banner #title h1 { color: white; margin-bottom: 3px; }
-div#banner #title h2 { color: white; margin-top: 0; font-size: 100%; font-style: italic; }
-div#banner #userinfo { float: right; margin-right: 10px; }
-div#banner #userinfo a { color: white; }
-div#banner #dev_mode_warning { color: white; margin: 10px 10px 0 0; padding: 2px; text-align: right; font-weight: bold; background-color: #800000; float: right; clear: right; }
-div#content { padding: 10px; margin-left: 88px; background-color: white; min-height: 500px; }
-div#nav { float: left; width: 88px; padding-top: 20px; color: white; }
-div#nav ul { margin-right: 15px; font-weight: bold; padding: 5px; list-style-type:none; }
-div#nav ul li { white-space: nowrap; }
-div#nav ul li a { text-decoration: none; color: white; }
-div#nav ul li a:hover { text-decoration: none; color: #BEA154; }
-div#footer { border-top: 1px solid #444; }
-
 /* flash/error messages */
 div#flash { margin-bottom: 10px; }
 div.success { color: #005882; }
@@ -89,4 +86,3 @@ form.new_place_lookup td.value, form.new_place td.value { min-width: 400px; }
 
 /* response edit */
 .responses_edit input.qtype_numeric, .responses_new input.qtype_numeric { width: 100px; }
-/*.responses_edit div.hint, .responses_new div.hint, .responses_edit div.field, .responses_new div.field { padding-left: 10px; }*/
