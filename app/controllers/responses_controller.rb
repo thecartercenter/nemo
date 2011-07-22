@@ -44,6 +44,10 @@ class ResponsesController < ApplicationController
     set_js
   end
   
+  def show
+    @resp = Response.find_eager(params[:id])
+  end
+  
   def create
     crupdate
   end

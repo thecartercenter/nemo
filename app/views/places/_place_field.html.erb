@@ -1,10 +1,12 @@
 <%= place ? place.full_name : "None" %><br/>
-<small>
-  <%= link_to("[Change]", "#", :onclick => "show_place_lookup_form(); return false") %>
-</small>
-<div id="place_lookup_form"<%= (place_lookup.new_record? ? ' style="display:none"' : '').html_safe %>>
-  <%= render('place_lookups/subform', :place_lookup => place_lookup) %>
-  <div id="place_lookup_results">
-    <%= render('place_lookups/results', :place_lookup => place_lookup) %>
+<% if place_lookup %>
+  <small>
+    <%= link_to("[Change]", "#", :onclick => "show_place_lookup_form(); return false") %>
+  </small>
+  <div id="place_lookup_form"<%= (place_lookup.new_record? ? ' style="display:none"' : '').html_safe %>>
+    <%= render('place_lookups/subform', :place_lookup => place_lookup) %>
+    <div id="place_lookup_results">
+      <%= render('place_lookups/results', :place_lookup => place_lookup) %>
+    </div>
   </div>
-</div>
+<% end %>

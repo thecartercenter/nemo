@@ -1,8 +1,5 @@
 <% rowbg = 0 %>
 <%= show_flash_and_form_errors(obj) %>
-<% # if fields doesn't have sections, create one big section 
-fields = [{:fields => fields}] if fields[0] && fields[0][:col] %>
-
 <% fields.each_index do |idx| section = fields[idx] %>
   <% if section[:name] %><h2><%= section[:name] %></h2><% end %>
   <% if section[:contents] %>
@@ -26,5 +23,7 @@ fields = [{:fields => fields}] if fields[0] && fields[0][:col] %>
     </table>
   <% end %>
 <% end %>
-  
-<%= f.submit((obj.new_record? ? "Create" : "Update") + " #{obj.class}") %>
+
+<% if controller.action_name != "show" %>
+  <%= f.submit((obj.new_record? ? "Create" : "Update") + " #{obj.class}") %>
+<% end %>

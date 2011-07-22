@@ -11,7 +11,7 @@ module PlacesHelper
       links << link_to_if_auth("Edit", edit_place_path(place), "places#update", place)
       links << link_to_if_auth("Delete", place, "places#destroy", place,
         :method => :delete, :confirm => "Are you sure you want to delete #{place.full_name}?")
-      join_links(*links)
+      join_links(links)
     else place.send(field)
     end
   end

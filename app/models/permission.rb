@@ -21,13 +21,14 @@ class Permission
     "forms#show" => {:group => :logged_in},
     "responses#index" => {:group => :logged_in},
     "responses#create" => {:group => :logged_in},
+    "responses#show" => {:min_level => 2},
     "responses#update" => {:min_level => 2},
     "responses#destroy" => {:min_level => 2}
   }
   SPECIAL = [
     :anyone_can_edit_some_fields_about_herself_but_nobody_can_edit_their_own_role,
     :program_staff_can_delete_anyone_except_herself,
-    :observer_can_edit_delete_own_responses_if_not_reviewed,
+    :observer_can_view_edit_delete_own_responses_if_not_reviewed,
     :observer_cant_change_user_for_response
   ]
   
@@ -128,10 +129,10 @@ class Permission
       # if she's not deleting herself, she's ok
       return params[:user] != params[:object]
     end
-  
-    def self.observer_can_edit_delete_own_responses_if_not_reviewed(params)
+
+    def self.observer_can_view_edit_delete_own_responses_if_not_reviewed(params)
       # only valid for responses#update and responses#destroy
-      return false unless %w(responses#update responses#destroy).include?(params[:key])
+      return false unless %w(responses#update responses#destroy responses#show).include?(params[:key])
       # only valid for observers
       return false unless params[:user] && params[:user].is_observer?
       # get the response object being edited
@@ -141,9 +142,9 @@ class Permission
       # make sure they're not trying to change user
       observer_cant_change_user_for_response(params)
       # make sure the object belongs to the observer 
-      # AND the response hasn't been reviewed
+      # AND, if update or destroy, the response hasn't been reviewed
       return params[:object].user_id == params[:user].id &&
-        !params[:object].reviewed?
+        (params[:key] == "responses#show" || !params[:object].reviewed?)
     end
     
     def self.observer_cant_change_user_for_response(params)

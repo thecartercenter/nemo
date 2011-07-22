@@ -51,6 +51,8 @@ div.form, table.form { border-bottom: 1px solid #887c5f; border-top: 1px solid #
 div.form > div, table.form td { padding: 5px; }
 div.form div.details, table.form td.details { width: 250px; }
 div.reqd_sym { display: inline; font-weight: bold; color: #800000; font-size: 125%; line-height: 5px; vertical-align: middle; }
+div.dummy { font-weight: bold; }
+div.dummy_checkbox { float: left; width: 15px; font-weight: bold; }
 
 /* index table */
 table.index_table th { text-align: left; color: white; background-color: #BEA154; font-size: 80%; }

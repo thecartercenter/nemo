@@ -7,6 +7,7 @@
   <div class="hint"><%= answer.question_hint %></div>
   <div class="field">
     <%= fields_for('response[all_answers][]', answer) do |f| %>
+      <% f.mode = controller.action_name.to_sym %>
       <%= render("layouts/object_errors", :object => answer, :compact => true) %>
       <%= f.hidden_field(:response_id, :index => answer_counter) %>
       <%= f.hidden_field(:questioning_id, :index => answer_counter) %>

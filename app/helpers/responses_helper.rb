@@ -7,15 +7,11 @@ module ResponsesHelper
     when "reviewed?" then resp.reviewed? ? "Yes" : "No"
     when "place" then resp.place ? resp.place.full_name : ""
     when "actions"
-      links = []
       # we don't need to authorize these links b/c for responses, if you can see it, you can edit it.
       # the controller actions will still be auth'd
       by = resp.user ? " by #{resp.user.full_name}" : ""
       from = resp.place ? " from #{resp.place.long_name}" : ""
-      links << link_to_if_auth("Edit", edit_response_path(resp), "responses#update", resp)
-      links << link_to_if_auth("Delete", resp, "responses#destroy", resp, :method => :delete, 
-        :confirm => "Are you sure you want to delete the response#{by}#{from}? You won't be able to undelete it!")
-      join_links(*links)
+      action_links(resp, :destroy_warning => "Are you sure you want to delete the response#{by}#{from}? You won't be able to undelete it!")
     else resp.send(field)
     end
   end
