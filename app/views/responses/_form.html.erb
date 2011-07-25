@@ -27,8 +27,8 @@
         :col => :reviewed,
         :label => "Reviewed?",
         :value => controller.action_name == "show" ? 
-          content_tag("div", :class => "dummy"){resp.reviewed? ? "Yes" : "No"}
-          : f.check_box(:reviewed?)
+          content_tag("div", :class => "dummy"){resp.reviewed? ? "Yes" : "No"} : 
+          f.check_box(:reviewed?)
       }]
     },{
       :name => "Answers",
