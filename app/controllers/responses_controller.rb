@@ -15,6 +15,8 @@ class ResponsesController < ApplicationController
           render(:nothing => true, :status => 500)
         end
       end
+    else
+      crupdate
     end
   end
   
@@ -46,10 +48,6 @@ class ResponsesController < ApplicationController
   
   def show
     @resp = Response.find_eager(params[:id])
-  end
-  
-  def create
-    crupdate
   end
   
   def update

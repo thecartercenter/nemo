@@ -2,10 +2,7 @@ MINOR
 odk success screen error
 odk certificate error
 timezone on ODK timestamp
-
 splash screen image
-
-no orphan places in Place.find_or_create_bits
 
 MAJOR
 options -- timezone display
@@ -50,3 +47,11 @@ SCRATCH
   - for each question in the submission that is also in the form definition, create an answer
     - but make sure that the given option_ids (if applicable) are actually valid for the given question
   - return
+  
+- stupid certificate issues
+  - option 1: buy a certificate from a different authority, maybe a thawte ssl 123
+  - option 2: try to figure out how to add a certificate on a 1.6 phone
+    - but can't get this stupid cliq to go to 1.6; only 2.1
+    - and doing this still doesn't seem to work on the tablet (2.2)
+    - and probably not on my phone (2.3) (although I thought it worked one time...)
+  - think best to go with option 1. this is taking way too much time
