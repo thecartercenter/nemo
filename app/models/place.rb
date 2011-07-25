@@ -23,10 +23,10 @@ class Place < ActiveRecord::Base
   def self.bound(places)
     return nil if places.empty?
     {
-      :lat_min => places.min_by{|p| p.latitude}.latitude,
-      :lat_max => places.max_by{|p| p.latitude}.latitude,
-      :lng_min => places.min_by{|p| p.longitude}.longitude,
-      :lng_max => places.max_by{|p| p.longitude}.longitude
+      :lat_min => [-89, places.min_by{|p| p.latitude}.latitude].max,
+      :lat_max => [89, places.max_by{|p| p.latitude}.latitude].min,
+      :lng_min => [-180, places.min_by{|p| p.longitude}.longitude].max,
+      :lng_max => [180, places.max_by{|p| p.longitude}.longitude].min
     }
   end
   
