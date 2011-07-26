@@ -1,0 +1,6 @@
+timezone:
+  key: timezone
+  name: Time Zone
+  description: The time zone in which times are displayed throughout the Command Center
+  kind: timezone
+  default: UTC

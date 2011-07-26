@@ -6,10 +6,16 @@ class ApplicationController < ActionController::Base
   before_filter(:init_js_array)
   before_filter(:basic_auth_for_xml)
   before_filter(:authorize)
+  before_filter(:set_timezone)
   
   helper_method :current_user_session, :current_user, :authorized?
 require 'authlogic'
   protected
+    def set_timezone
+      # set the timezone, if there is one in the configatron
+      Time.zone = configatron.timezone.to_s if configatron.timezone
+    end
+  
     def init_js_array
       @js = []
     end

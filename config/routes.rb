@@ -6,6 +6,7 @@ CommandCenter::Application.routes.draw do
   resources(:place_lookups){collection{get 'suggest'}}
   resources(:forms)
   resources(:responses)
+  resources(:settings){collection{post 'update_all'}}
   resource(:user_session)
   root(:to => "welcome#index")
   

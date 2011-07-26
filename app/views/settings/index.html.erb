@@ -1,0 +1,6 @@
+<%= form_tag(update_all_settings_path) do |f| %>
+  <table class="form">
+    <%= render(:partial => "setting", :collection => @settings) %>
+  </table>
+  <%= submit_tag("Update Settings") %>
+<% end %>
