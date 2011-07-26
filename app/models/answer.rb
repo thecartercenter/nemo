@@ -4,7 +4,7 @@ class Answer < ActiveRecord::Base
   belongs_to(:response)
   has_many(:choices, :dependent => :destroy)
   
-  validates(:value, :numericality => true, :if => Proc.new{|a| a.numeric?})
+  validates(:value, :numericality => true, :if => Proc.new{|a| a.numeric? && a.required?})
   validate(:required)
   
   def self.new_from_str(params)

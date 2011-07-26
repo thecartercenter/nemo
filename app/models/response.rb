@@ -98,7 +98,7 @@ class Response < ActiveRecord::Base
     resp.place = Place.find_or_create_with_bits(place_bits)
     
     # save the works
-    resp.save
+    resp.save!
   end
   
   def all_answers
