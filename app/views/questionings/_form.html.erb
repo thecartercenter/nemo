@@ -1,0 +1,28 @@
+<%= show_flash_and_form_errors(qing).gsub("Question base", "Question").gsub("Question C", "Question c") %>
+<% rowbg = 0 %>
+<%= form_for(qing) do |f| %>
+  <h2>Fields about the question on the current form</h2>
+  <table class="form">
+    <tr class="rowbg<%= rowbg = 1 - rowbg %>">
+      <td class="name">Required?</td>
+      <td class="value"><%= f.check_box(:required) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+      <td class="details">
+        Whether this question must be completed on this form or is optional.
+      </td>
+    </tr>
+    <tr class="rowbg<%= rowbg = 1 - rowbg %>">
+      <td class="name">Hidden?</td>
+      <td class="value"><%= f.check_box(:hidden) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+      <td class="details">
+        Whether this question will be shown on this form. Use this to disable a question if you can't delete it.
+      </td>
+    </tr>
+  </table>
+  <% rowbg = 0 %>
+  <h2>Fields about all instances of the question</h2>
+  <%= fields_for("questioning[question]", qing.question) do |f| %>
+    <%= render("questions/subform", :f => f, :question => qing.question) %>
+  <% end %>
+  
+  <%= f.submit((qing.new_record? ? "Create" : "Update") + " Question") %>
+<% end %>

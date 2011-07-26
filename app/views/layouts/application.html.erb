@@ -34,14 +34,14 @@
   </div>
   <div id="nav">
     <ul>
-      <% [:users, :languages, :places, :responses, :settings].each do |k| %>
+      <% [:responses, :questions, :users, :languages, :places, :settings].each do |k| %>
         <% if authorized?(:action => "#{k}#index") %>
           <li><%= link_to(k.to_s.capitalize, send("#{k}_path")) %></li>
         <% end %>
       <% end %>
     </ul>
   </div>
-  <div id="content" class="<%="#{controller.controller_name}_#{controller.action_name}"%>">
+  <div id="content" class="<%="#{controller.controller_name}_#{controller.action_name.gsub('update', 'edit').gsub('create', 'new')}"%>">
     <h1><%= @title %></h1>
     <%= body %>
     <br clear="all"/>

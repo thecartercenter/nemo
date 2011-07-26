@@ -1,0 +1,53 @@
+<% rowbg = 0 %>
+<div class="tip"><%= reqd_sym %> Indicates a required field</div>
+<table class="form">
+  <tr class="rowbg<%= rowbg = 1 - rowbg %>">
+    <td class="name">Code</td>
+    <td class="value"><%= f.text_field(:code) %></td>
+    <td class="details">
+      A short codename (between 2-16 characters) for this question. Should contain only letters and numbers. Can't start with a number.
+    </td>
+  </tr>
+  <tr class="rowbg<%= rowbg = 1 - rowbg %>">
+    <td class="name">Type <%= reqd_sym %></td>
+    <td class="value">
+      <%= f.select(:question_type_id, QuestionType.select_options, {:include_blank => true}, 
+        :onchange => "show_hide_option_set(this.options[this.selectedIndex].text)") %>
+    </td>
+    <td class="details">
+      The kind of information the user will be entering.
+    </td>
+  </tr>
+  <tr class="rowbg<%= rowbg = 1 - rowbg %>">
+    <td class="name">Option Set <%= reqd_sym %></td>
+    <td class="value">
+      <%= f.select(:option_set_id, OptionSet.select_options, {:include_blank => true}, {:id => "option_set"}) %>
+      <div id="option_set_not_applicable" style="display: none">Not applicable</div>
+    </td>
+    <td class="details">
+      The set of options the user will be able to choose from.
+    </td>
+  </tr>
+  <% i = 0; Language.active.each do |lang| %>
+    <tr class="rowbg<%= rowbg = 1 - rowbg %>">
+      <td colspan="3">
+        <h3><%= lang.name %></h3>
+      </td>
+    </tr>
+    <tr class="rowbg<%= rowbg %>">
+      <td class="name">Name <% if lang.is_english? %><%= reqd_sym %><% end %></td>
+      <td class="value"><%= f.text_area("name_#{lang.code}", :class => "name_hint") %></td>
+      <td class="details">
+        <% if i == 0 %>The main question text, e.g. "How many people are in line?"<% end %>
+      </td>
+    </tr>
+    <tr class="rowbg<%= rowbg %>">
+      <td class="name">Hint</td>
+      <td class="value"><%= f.text_area("hint_#{lang.code}", :class => "name_hint") %></td>
+      <td class="details">
+        <% if i == 0 %>Additional instructions, e.g. "Enter an approximate count of the people waiting to vote."<% end %>
+      </td>
+    </tr>
+  <% i += 1; end %>
+</table>
+<script type="text/javascript">show_hide_option_set("<%= question.type ? question.type.long_name : "" %>")</script>

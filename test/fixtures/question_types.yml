@@ -1,37 +1,44 @@
 text:
   name: text
+  long_name: Short Text
   odk_name: string
   odk_tag: input
   
 numeric:
   name: numeric
+  long_name: Number
   odk_name: int
   odk_tag: input
 
 location:
   name: location
+  long_name: GPS Location
   odk_name: geopoint
   odk_tag: input
   phone_only: true
 
 address:
   name: address
+  long_name: Address/Landmark
   odk_name: string
   odk_tag: input
   phone_only: true
 
 select_one:
   name: select_one
+  long_name: Select One
   odk_name: select1
   odk_tag: select1
   
 select_multiple:
   name: select_multiple
+  long_name: Select Multiple
   odk_name: select
   odk_tag: select
   
 start_timestamp:
   name: start_timestamp
+  long_name: Automatic Timestamp
   odk_name: dateTime
   odk_tag:
   odk_preload: timestamp

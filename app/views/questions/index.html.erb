@@ -1,0 +1,9 @@
+<%= render("layouts/flash", {:flash => flash}) %>
+
+<div class="tip">
+  Found <strong><%= @questions.total_entries %></strong> questions.
+  <%= link_to_if_auth("Create new question", new_question_path, "questions#create") %>
+</div>
+
+<%= render("layouts/index_table", :objects => @questions, 
+  :fields => %w[code name type forms answers published? actions]) %>

@@ -25,7 +25,9 @@ class Permission
     "responses#update" => {:min_level => 2},
     "responses#destroy" => {:min_level => 2},
     "settings#index" => {:min_level => 4},
-    "settings#update_all" => {:min_level => 4}
+    "settings#update_all" => {:min_level => 4},
+    "questionings#*" => {:min_level => 4},
+    "questions#*" => {:min_level => 4}
   }
   SPECIAL = [
     :anyone_can_edit_some_fields_about_herself_but_nobody_can_edit_their_own_role,

@@ -1,13 +1,16 @@
 CommandCenter::Application.routes.draw do
-  resources(:users, :password_resets, :languages)
+  resource(:user_session)
+  resources(:forms)
   resources(:permissions){collection{get 'no'}}
-  resources(:searches){member{get 'clear'}}
   resources(:places){collection{get 'map'}}
   resources(:place_lookups){collection{get 'suggest'}}
-  resources(:forms)
+  resources(:questionings)
+  resources(:questions)
   resources(:responses)
+  resources(:searches){member{get 'clear'}}
   resources(:settings){collection{post 'update_all'}}
-  resource(:user_session)
+  resources(:users, :password_resets, :languages)
+
   root(:to => "welcome#index")
   
   # redirects for ODK

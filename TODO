@@ -2,6 +2,7 @@ MINOR
 odk success screen error
 timezone on ODK timestamp
 splash screen image
+new seeding script
 
 MAJOR
 options -- timezone display
@@ -54,3 +55,7 @@ SCRATCH
     - and doing this still doesn't seem to work on the tablet (2.2)
     - and probably not on my phone (2.3) (although I thought it worked one time...)
   - think best to go with option 1. this is taking way too much time
+  
+- can't edit questions that are on ANY published forms
+- can't edit questionings that are on a published form
+- can't edit type or option set for questions that have answers

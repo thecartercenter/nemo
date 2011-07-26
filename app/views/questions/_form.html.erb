@@ -1,0 +1,5 @@
+<%= show_flash_and_form_errors(question) %>
+<%= form_for(@question) do |f| %>
+  <%= render("subform", :f => f, :question => question) %>
+  <%= f.submit((question.new_record? ? "Create" : "Update") + " Question") %>
+<% end %>

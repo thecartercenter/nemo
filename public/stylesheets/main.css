@@ -8,7 +8,7 @@ a { color: MidnightBlue; }
 h1, h2, h3 { color: black; }
 h1 { margin: 0 0 10px 0; font-size: 17pt; }
 h2 { font-size: 11pt; color: #888; }
-h3 { font-size: 12pt; }
+h3 { font-size: 12pt; margin: 0; color: #444; }
 ul { margin-top: 0; padding-left: 20px; }
 li { margin-bottom: 5px; }
 table { border-collapse: collapse; }
@@ -53,6 +53,7 @@ div.form div.details, table.form td.details { width: 250px; }
 div.reqd_sym { display: inline; font-weight: bold; color: #800000; font-size: 125%; line-height: 5px; vertical-align: middle; }
 div.dummy { font-weight: bold; }
 div.dummy_checkbox { float: left; width: 15px; font-weight: bold; }
+table.form td.name { min-width: 75px; }
 
 /* index table */
 table.index_table th { text-align: left; color: white; background-color: #BEA154; font-size: 80%; }
@@ -90,3 +91,11 @@ form.new_place_lookup td.value, form.new_place td.value { min-width: 400px; }
 /* response edit */
 .responses_edit input.qtype_numeric, .responses_new input.qtype_numeric { width: 100px; }
 .responses_edit table.answers td.name, .responses_new table.answers td.name, .responses_show table.answers td.name { width: 300px; }
+
+/* question edit */
+.questionings_edit textarea.name_hint, .questionings_new textarea.name_hint,
+.questions_edit textarea.name_hint, .questions_new textarea.name_hint 
+  { width: 450px; height: 60px; }
+
+/* question index */
+.questions_index .name_col { width: 400px; }
