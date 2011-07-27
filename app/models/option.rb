@@ -7,11 +7,15 @@ class Option < ActiveRecord::Base
   has_many(:option_settings)
   has_many(:translations, :class_name => "Translation", :foreign_key => :obj_id, 
     :conditions => "class_name='Option'", :autosave => true, :dependent => :destroy)
+  has_many(:answers)
+  has_many(:choices)
   
   validates(:value, :presence => true)
   validates(:value, :numericality => true, :if => Proc.new{|o| !o.value.blank?})
   validates(:english_name, :presence => true)
   validate(:integrity)
+  
+  before_destroy(:check_assoc)
   
   def self.sorted(params = {})
     paginate(:all, params)
@@ -56,8 +60,12 @@ class Option < ActiveRecord::Base
       end
     end
     def check_assoc
-      unless questions.empty?
-        raise("You can't delete option '#{name_eng}' because it is included in at least one question.")
+      # could be in a published form but no responses yet
+      if published?
+        raise("You can't delete option '#{name_eng}' because it is included in at least one published form")
+      end
+      unless answers.empty? && choices.empty?
+        raise("You can't delete option '#{name_eng}' because it is included in at least one response")
       end
     end
 end

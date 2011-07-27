@@ -93,7 +93,7 @@ class Question < ActiveRecord::Base
     end
     def check_assoc
       unless questionings.empty?
-        raise("You can't delete question '#{code}' because it is included in at least one form.")
+        raise("You can't delete question '#{code}' because it is included in at least one form")
       end
     end
 end

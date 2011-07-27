@@ -17,6 +17,12 @@ class OptionsController < ApplicationController
   def show
     @option = Option.find(params[:id])
   end
+
+  def destroy
+    @option = Option.find(params[:id])
+    begin flash[:success] = @option.destroy && "Option deleted successfully." rescue flash[:error] = $!.to_s end
+    redirect_to(:action => :index)
+  end
   
   def create; crupdate; end
   def update; crupdate; end
