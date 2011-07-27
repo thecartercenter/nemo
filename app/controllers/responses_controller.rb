@@ -57,7 +57,7 @@ class ResponsesController < ApplicationController
   
   def destroy
     @resp = Response.find(params[:id])
-    @resp.destroy and flash[:success] = "Response deleted successfully" rescue flash[:error] = $!.to_s
+    begin flash[:success] = @resp.destroy && "Response deleted successfully." rescue flash[:error] = $!.to_s end
     redirect_to(:action => :index)
   end
   

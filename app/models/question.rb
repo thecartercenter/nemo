@@ -6,7 +6,7 @@ class Question < ActiveRecord::Base
   belongs_to(:type, :class_name => "QuestionType", :foreign_key => :question_type_id)
   belongs_to(:option_set, :include => :options)
   has_many(:translations, :class_name => "Translation", :foreign_key => :obj_id, 
-    :conditions => "class_name='Question'", :autosave => true)
+    :conditions => "class_name='Question'", :autosave => true, :dependent => :destroy)
   has_many(:questionings)
   has_many(:answers, :through => :questionings)
   has_many(:forms, :through => :questionings)
@@ -19,6 +19,8 @@ class Question < ActiveRecord::Base
   validate(:integrity)
     
   before_validation(:clean)
+  before_destroy(:check_assoc)
+  
   
   def self.sorted(params = {})
     paginate(:all, params.merge(:order => "code"))
@@ -87,6 +89,11 @@ class Question < ActiveRecord::Base
       # error if anything has changed and the question is published
       if published? && (changed? || translations.detect{|t| t.changed?})
         errors.add(:base, "Can't be changed because it appears in at least one published form")
+      end
+    end
+    def check_assoc
+      unless questionings.empty?
+        raise("You can't delete question '#{code}' because it is included in at least one form.")
       end
     end
 end

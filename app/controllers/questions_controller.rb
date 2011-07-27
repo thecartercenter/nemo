@@ -24,6 +24,12 @@ class QuestionsController < ApplicationController
     crupdate
   end
   
+  def destroy
+    @question = Question.find(params[:id])
+    begin flash[:success] = @question.destroy && "Question deleted successfully." rescue flash[:error] = $!.to_s end
+    redirect_to(:action => :index)
+  end
+  
   private
     def crupdate
       action = params[:action]
