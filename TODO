@@ -1,13 +1,9 @@
 MINOR
-odk success screen error
-timezone on ODK timestamp
-splash screen image
-new seeding script
 
 MAJOR
-options -- timezone display
 
 REFACTOR
+new seeding script
 
 DON'T FORGET
 test translation deletion association check

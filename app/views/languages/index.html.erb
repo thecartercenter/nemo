@@ -2,4 +2,4 @@
 
 <div class="tip"><%= link_to_if_auth("Add new language", new_language_path, "languages#create") %></div>
 
-<%= render("layouts/index_table", :objects => @languages, :fields => %w[name code is_active? actions]) %>
+<%= render("layouts/index_table", :objects => @languages, :fields => %w[name code active? actions]) %>
