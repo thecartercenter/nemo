@@ -7,9 +7,8 @@ module QuestionsHelper
     when "answers" then q.answers.size
     when "published?" then q.published? ? "Yes" : "No"
     when "actions"
-      unless q.published?
-        action_links(q, :destroy_warning => "Are you sure you want to delete question '#{q.code}'", :exclude => [:show])
-      end
+      exclude = q.published? ? [:edit, :destroy] : []
+      action_links(q, :destroy_warning => "Are you sure you want to delete question '#{q.code}'", :exclude => exclude)
     else q.send(field)
     end
   end

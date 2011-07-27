@@ -1,5 +1,6 @@
 <%= show_flash_and_form_errors(question) %>
 <%= form_for(@question) do |f| %>
+  <% f.mode = controller.action_name.to_sym %>
   <%= render("subform", :f => f, :question => question) %>
-  <%= f.submit((question.new_record? ? "Create" : "Update") + " Question") %>
+  <%= f.mode == "show" ? '' : f.submit((question.new_record? ? "Create" : "Update") + " Question") %>
 <% end %>

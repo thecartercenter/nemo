@@ -16,6 +16,10 @@ class QuestionsController < ApplicationController
     set_js
   end
   
+  def show
+    @question = Question.find(params[:id])
+  end
+  
   def create
     crupdate
   end

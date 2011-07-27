@@ -21,8 +21,11 @@
   <tr class="rowbg<%= rowbg = 1 - rowbg %>">
     <td class="name">Option Set <%= reqd_sym %></td>
     <td class="value">
-      <%= f.select(:option_set_id, OptionSet.select_options, {:include_blank => true}, {:id => "option_set"}) %>
-      <div id="option_set_not_applicable" style="display: none">Not applicable</div>
+      <%= f.select(:option_set_id, OptionSet.select_options, {:include_blank => true}, 
+        {:id => "option_set", :style => question.is_select? ? '' : 'display: none'}) %>
+      <div id="option_set_not_applicable" <%= question.is_select? ? 'style="display: none"'.html_safe : ''%>>
+        Not applicable
+      </div>
     </td>
     <td class="details">
       The set of options the user will be able to choose from.
@@ -50,4 +53,3 @@
     </tr>
   <% i += 1; end %>
 </table>
-<script type="text/javascript">show_hide_option_set("<%= question.type ? question.type.long_name : "" %>")</script>

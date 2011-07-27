@@ -3,11 +3,17 @@ module ActionView
     class FormBuilder
       attr_accessor :mode
       alias :old_text_field :text_field
+      alias :old_text_area :text_area
       alias :old_select :select
       alias :old_check_box :check_box
+      alias :old_submit :submit
       def text_field(*args)
         html = old_text_field(*args)
         mode == :show ? html.match(/value="(.+?)"/) && dummy_tag($1) : html
+      end
+      def text_area(*args)
+        html = old_text_area(*args)
+        mode == :show ? html.match(/<textarea.+?>(.*?)<\/textarea>/m) && dummy_tag($1) : html
       end
       def select(*args)
         html = old_select(*args)
@@ -20,6 +26,10 @@ module ActionView
         else
           html
         end
+      end
+      def submit(*args)
+        html = old_submit(*args)
+        mode == :show ? '' : html
       end
       private
         def dummy_tag(content, options = {})
