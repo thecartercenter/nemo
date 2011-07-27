@@ -1,0 +1,23 @@
+<%= basic_form(option) do |f|
+  spec = {
+    :fields => [{
+      :col => :value,
+      :required => true,
+      :value => f.text_field(:value),
+      :details => "The numeric value that best represents this option."
+    }]
+  }
+  Language.active.each do |lang| 
+    col = "name_#{lang.code}".to_sym
+    spec[:fields] << {
+      :col => col,
+      :label => "Name (#{lang.name})",
+      :required => lang.is_english?,
+      :value => f.text_field(col),
+      :details => lang.is_english? ? "The textual description of this option that users will see." : ""
+    }
+  end
+  spec
+end
+%>
+    

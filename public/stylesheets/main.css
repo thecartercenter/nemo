@@ -100,3 +100,6 @@ form.new_place_lookup td.value, form.new_place td.value { min-width: 400px; }
 
 /* question index */
 .questions_index .name_col { width: 400px; }
+
+/* option edit */
+.options_edit td.value input#option_value, .options_new td.value input#option_value { width: 100px; }

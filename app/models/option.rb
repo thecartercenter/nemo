@@ -6,16 +6,21 @@ class Option < ActiveRecord::Base
   has_many(:option_sets, :through => :option_settings)
   has_many(:option_settings)
   has_many(:translations, :class_name => "Translation", :foreign_key => :obj_id, 
-    :conditions => "class_name='Option'")
+    :conditions => "class_name='Option'", :autosave => true, :dependent => :destroy)
   
-    def self.sorted(params = {})
-      paginate(:all, params)
-    end
-
-    def self.per_page; 100; end
-
-    def self.default_eager; [:translations, {:option_sets => [:questionings, {:questions => {:questionings => :form}}]}]; end
+  validates(:value, :presence => true)
+  validates(:value, :numericality => true, :if => Proc.new{|o| !o.value.blank?})
+  validates(:english_name, :presence => true)
+  validate(:integrity)
   
+  def self.sorted(params = {})
+    paginate(:all, params)
+  end
+
+  def self.per_page; 100; end
+
+  def self.default_eager; [:translations, {:option_sets => [:questionings, {:questions => {:questionings => :form}}]}]; end
+
   def method_missing(*args)
     # enable methods like name_fra and hint_eng, etc.
     if args[0].match(/^(name)_([a-z]{3})(_before_type_cast)?(=?)$/)
@@ -40,4 +45,19 @@ class Option < ActiveRecord::Base
   def name=(lang = nil, value); set_translation_for(:name, lang, value); end
   
   def published?; !option_sets.detect{|os| os.published?}.nil?; end
+  
+  def questions; option_sets.collect{|os| os.questions}.flatten.uniq; end
+
+  private
+    def integrity
+      # error if anything has changed and the option is published
+      if published? && (changed? || translations.detect{|t| t.changed?})
+        errors.add(:base, "Option can't be changed because it appears in at least one published form")
+      end
+    end
+    def check_assoc
+      unless questions.empty?
+        raise("You can't delete option '#{name_eng}' because it is included in at least one question.")
+      end
+    end
 end
