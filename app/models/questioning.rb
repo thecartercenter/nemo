@@ -7,6 +7,10 @@ class Questioning < ActiveRecord::Base
     required? && question.type.name != "select_multiple"
   end
   
+  def published?
+    form.is_published?
+  end
+  
   def method_missing(*args)
     # pass appropriate methods on to question
     if is_question_method?(args[0])

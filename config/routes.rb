@@ -2,6 +2,7 @@ CommandCenter::Application.routes.draw do
   resource(:user_session)
   resources(:forms)
   resources(:permissions){collection{get 'no'}}
+  resources(:options)
   resources(:places){collection{get 'map'}}
   resources(:place_lookups){collection{get 'suggest'}}
   resources(:questionings)
