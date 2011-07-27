@@ -18,12 +18,20 @@ class OptionSetsController < ApplicationController
     @set = OptionSet.find(params[:id])
   end
 
-#  def destroy
-#    @option = Option.find(params[:id])
-#    begin flash[:success] = @option.destroy && "Option deleted successfully." rescue flash[:error] = $!.to_s end
-#    redirect_to(:action => :index)
-#  end
-#  
+  def destroy
+    @set = OptionSet.find(params[:id])
+    begin 
+      flash[:success] = @set.destroy && "Option set deleted successfully." 
+    rescue
+      if $!.is_a?(InvalidAssociationDeletionError)
+        flash[:error] = "You can't delete option set '#{@set.name}' because one or more responses are associated with it."
+      else
+        flash[:error] = $!.to_s
+      end
+    end
+    redirect_to(:action => :index)
+  end
+  
   def create; crupdate; end
   def update; crupdate; end
 

@@ -4,9 +4,11 @@ class OptionSet < ActiveRecord::Base
   has_many(:questions)
   has_many(:questionings, :through => :questions)
   
-  validates(:name, :presence => true)
+  validates(:name, :presence => true, :uniqueness => true)
   validates_associated(:option_settings)
   validate(:at_least_one_option)
+  
+  before_destroy(:check_assoc)
   
   def self.sorted(params = {})
     paginate(:all, params.merge(:order => "name"))
@@ -61,5 +63,10 @@ class OptionSet < ActiveRecord::Base
   private
     def at_least_one_option
       errors.add(:base, "You must choose at least one option.") if option_settings.empty?
+    end
+    def check_assoc
+      unless questions.empty?
+        raise "You can't delete option set '#{name}' because one or more questions are associated with it."
+      end
     end
 end
