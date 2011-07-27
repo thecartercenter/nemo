@@ -1,0 +1,2 @@
+class InvalidAssociationDeletionError < StandardError
+end

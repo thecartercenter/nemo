@@ -84,7 +84,7 @@ require 'authlogic'
 
     def set_default_title
       action = {"index" => "", "new" => "Create ", "edit" => "Edit "}[action_name] || ""
-      obj = controller_name.capitalize
+      obj = controller_name.gsub("_", " ").ucwords
       obj = obj.singularize unless action_name == "index"
       @title = action + obj
     end

@@ -1,0 +1,23 @@
+<%= basic_form(set) do |f|
+  # figure out how many columns of check boxes
+  nopts = Option.count.to_f
+  ncols = [(nopts / 10).ceil, 4].min
+  per_column = (nopts / ncols).ceil
+  
+  spec = {
+    :fields => [{
+      :col => :name,
+      :required => true,
+      :value => f.text_field(:name),
+      :details => "A name that summarizes this set of options. Normal users will not see this name."
+    },{
+      :col => :options,
+      :value => content_tag("div", :class => "optcol") do 
+        render(:partial => "option_setting", :locals => {:set => set, :per_column => per_column}, 
+          :collection => set.all_option_settings)
+      end,
+      :details => "Check the options that should be included in this set."
+    }]
+  }
+end
+%>

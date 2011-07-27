@@ -105,4 +105,7 @@ form.new_place_lookup td.value, form.new_place td.value { min-width: 400px; }
 .options_edit td.value input#option_value, .options_new td.value input#option_value { width: 100px; }
 
 /* option set index */
-.option_sets_index td.options_col { width: 300px; }
+.option_sets_index td.options_col { width: 400px; }
+
+/* option set new/edit/show */
+.option_sets_edit div.optcol, .option_sets_new div.optcol, .option_sets_show div.optcol { float: left; margin-right: 20px; }

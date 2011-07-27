@@ -1,0 +1,8 @@
+<% if option_setting_counter % per_column == 0 %></div><div class="optcol"><% end %>
+<%= fields_for("option_set[all_option_settings][]", option_setting) do |f| %>
+  <% f.mode = controller.action_name.to_sym %>
+  <%= f.hidden_field(:option_set_id, :index => option_setting_counter) %>
+  <%= f.hidden_field(:option_id, :index => option_setting_counter) %>
+  <%= f.check_box(:included, :index => option_setting_counter) %>
+  <%= f.label(:included, option_setting.option.name, :index => option_setting_counter) %><br/>
+<% end %>

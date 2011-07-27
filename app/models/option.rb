@@ -14,6 +14,7 @@ class Option < ActiveRecord::Base
   validates(:value, :numericality => true, :if => Proc.new{|o| !o.value.blank?})
   validates(:english_name, :presence => true)
   validate(:integrity)
+  validate(:name_lengths)
   
   before_destroy(:check_assoc)
   
@@ -66,6 +67,11 @@ class Option < ActiveRecord::Base
       end
       unless answers.empty? && choices.empty?
         raise("You can't delete option '#{name_eng}' because it is included in at least one response")
+      end
+    end
+    def name_lengths
+      if translations.detect{|t| t.str && t.str.size > 30}
+        errors.add(:base, "Names must be at most 30 characters in length")
       end
     end
 end
