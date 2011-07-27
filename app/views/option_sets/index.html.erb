@@ -1,0 +1,5 @@
+<%= render("layouts/flash", {:flash => flash}) %>
+
+<div class="tip"><%= link_to_if_auth("Add new option set", new_option_set_path, "option_sets#create") %></div>
+
+<%= render("layouts/index_table", :objects => @sets, :fields => %w[name options questions published? actions]) %>

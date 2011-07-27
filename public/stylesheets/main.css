@@ -103,3 +103,6 @@ form.new_place_lookup td.value, form.new_place td.value { min-width: 400px; }
 
 /* option edit */
 .options_edit td.value input#option_value, .options_new td.value input#option_value { width: 100px; }
+
+/* option set index */
+.option_sets_index td.options_col { width: 300px; }
