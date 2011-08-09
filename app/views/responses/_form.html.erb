@@ -26,7 +26,7 @@
       },{
         :col => :reviewed,
         :label => "Reviewed?",
-        :value => controller.action_name == "show" ? 
+        :value => f.mode == :show ? 
           content_tag("div", :class => "dummy"){resp.reviewed? ? "Yes" : "No"} : 
           f.check_box(:reviewed?)
       }]

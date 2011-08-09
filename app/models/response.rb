@@ -101,9 +101,14 @@ class Response < ActiveRecord::Base
     resp.save!
   end
   
+  def visible_questionings
+    # get visible questionings from form, throwing out phone_only's when appropriate
+    form.visible_questionings.reject{|qing| qing.question.type.phone_only? && (new_record? || !answer_for(qing))}
+  end
+  
   def all_answers
     # make sure there is an associated answer object for each questioning in the form
-    form.visible_questionings.collect{|qing| answer_for(qing) || answers.new(:questioning_id => qing.id)}
+    visible_questionings.collect{|qing| answer_for(qing) || answers.new(:questioning_id => qing.id)}
   end
   
   def all_answers=(params)
@@ -141,7 +146,7 @@ class Response < ActiveRecord::Base
   private
     def no_missing_answers
       answer_hash(:rebuild => true)
-      form.visible_questionings.each do |qing|
+      visible_questionings.each do |qing|
         errors.add(:base, "Not all questions have answers") and return false if answer_for(qing).nil?
       end
     end
