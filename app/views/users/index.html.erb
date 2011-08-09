@@ -1,7 +1,9 @@
 <%= render("layouts/flash", {:flash => flash}) %>
 
+<%= render("searches/form", :search => @subindex.search) %>
+
 <div class="tip">
-  Found <%= @users.total_entries %> users.
+  Found <strong><%= @users.total_entries %></strong> users.
   <%= link_to_if_auth("Create new user", new_user_path, "users#create") %>
 </div>
 

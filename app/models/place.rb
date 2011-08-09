@@ -41,7 +41,7 @@ class Place < ActiveRecord::Base
     {:fullname => {:colname => "places.full_name", :default => true, :regexp => true},
      :shortname => {:colname => "places.short_name", :default => true, :regexp => true},
      :container => {:colname => "containers_places.full_name", :default => false, :regexp => true},
-     :type => {:colname => "place_types.name", :default => false, :regext => false}}
+     :type => {:colname => "place_types.name", :default => false, :regexp => false}}
   end
   
   # gets the lhs, operator, and rhs of a query fragment with the given field and term

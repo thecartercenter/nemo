@@ -16,8 +16,9 @@ class User < ActiveRecord::Base
   def self.select_options
     find(:all, :order => "first_name, last_name").collect{|u| [u.full_name, u.id]}
   end
-  def self.sorted(page)
-    paginate(:all, :order => "last_name, first_name", :page => page)
+  def self.sorted(params)
+    params.merge!(:order => "users.last_name, users.first_name")
+    paginate(:all, params)
   end
   def self.default(params = {})
     User.new({:is_mobile_phone => true, :active => true, :language_id => Language.english.id}.merge(params))
@@ -36,6 +37,33 @@ class User < ActiveRecord::Base
     user = find_by_login(login)
     (user && user.valid_password?(password)) ? user : nil
   end
+  
+  def self.default_eager
+    [:language, :role]
+  end
+  
+  # gets the list of fields to be searched for this class
+  # includes whether they should be included in a default, unqualified search
+  # and whether they are searchable by a regular expression
+  def self.search_fields
+    {:firstname => {:colname => "users.firstname", :default => true, :regexp => true},
+     :lastname => {:colname => "users.lastname", :default => true, :regexp => true},
+     :login => {:colname => "users.login", :default => true, :regexp => true},
+     :language => {:colname => "languages.name", :default => false, :regexp => false},
+     :role => {:colname => "roles.name", :default => false, :regexp => false},
+     :email => {:colname => "users.email", :default => false, :regexp => true},
+     :phone => {:colname => "users.phone", :default => false, :regexp => true}}
+  end
+  
+  # returns the lhs, operator, and rhs of a query fragment with the given field and term
+  def self.query_fragment(field, term)
+    [search_fields[field][:colname], "like", "%#{term}%"]
+  end
+  
+  def self.search_examples
+    ["pinchy lombard", 'role:observer', "language:english", "phone:+44"]
+  end
+  
   def generate_login!
     base = "#{first_name[0,1]}#{last_name}".downcase.normalize
     try = 1
