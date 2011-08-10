@@ -10,7 +10,7 @@
     <% action = obj.new_record? ? "create" : "update" %>
     <% section[:fields].each do |field| %>
       <% if authorized?(:action => "#{obj.class.table_name}##{action}", :object => obj, :col => field[:col]) %>
-        <tr class="rowbg<%= rowbg = 1 - rowbg %>"<%= field[:hidden] ? ' style="display:none"'.html_safe : '' %>>
+        <tr class="rowbg<%= rowbg = 1 - rowbg %>" id="<%= field[:col] %>_row"<%= field[:hidden] ? ' style="display:none"'.html_safe : '' %>>
           <td class="name">
             <%= field[:label] || field[:col].to_s.gsub("_"," ").capitalize %>
             <%= reqd_sym(field[:required]) %>

@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::Base
+  include ActionView::Helpers::AssetTagHelper
+  
   protect_from_forgery
   rescue_from(Exception, :with => :notify_error)
   before_filter(:set_default_title)
@@ -18,6 +20,7 @@ require 'authlogic'
   
     def init_js_array
       @js = []
+      @js << controller_name if File.exists?(File.join(Rails.root, "public/javascripts/#{controller_name}.js"))
     end
     
     def notify_error(exception)

@@ -1,9 +1,12 @@
 CommandCenter::Application.routes.draw do
   resource(:user_session)
+  resources(:broadcasts){collection{post 'new_with_users'}}
   resources(:forms)
-  resources(:permissions){collection{get 'no'}}
+  resources(:languages)
   resources(:options)
   resources(:option_sets)
+  resources(:password_resets)
+  resources(:permissions){collection{get 'no'}}
   resources(:places){collection{get 'map'}}
   resources(:place_lookups){collection{get 'suggest'}}
   resources(:questionings)
@@ -11,7 +14,8 @@ CommandCenter::Application.routes.draw do
   resources(:responses)
   resources(:searches){member{get 'clear'}}
   resources(:settings){collection{post 'update_all'}}
-  resources(:users, :password_resets, :languages)
+  resources(:users)
+
 
   root(:to => "welcome#index")
   

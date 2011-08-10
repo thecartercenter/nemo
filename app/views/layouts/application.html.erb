@@ -34,7 +34,7 @@
   </div>
   <div id="nav">
     <ul>
-      <% [:responses, :questions, :options, :option_sets, :users, :languages, :places, :settings].each do |k| %>
+      <% [:responses, :questions, :options, :option_sets, :users, :broadcasts, :languages, :places, :settings].each do |k| %>
         <% if authorized?(:action => "#{k}#index") %>
           <li><%= link_to(k.to_s.gsub("_", " ").ucwords, send("#{k}_path")) %></li>
         <% end %>

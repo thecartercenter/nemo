@@ -1,22 +1,32 @@
 <% rowbg = 0 %>
+<% batch_ops = false unless defined?(batch_ops) %>
 <% unless objects.total_entries == 0 %>
-  <table class="index_table">
-    <tr class="header">
-      <% fields.each do |f| %>
-        <th><%= f.gsub("_", " ").capitalize %></th>
-      <% end %>
-    </tr>
-  <% objects.each do |o| %>
-    <tr class="rowbg<%= rowbg = 1 - rowbg %>">
-      <% fields.each do |f| %>
-        <% cls = "#{f.gsub(/[^\w\d]/, "")}_col" %>
-        <td class="<%= cls %>">
-          <div><%= self.send("format_#{controller_name}_field", o, f) %></div>
-        </td>
-      <% end %>
-    </tr>
+  <%= form_tag("", :method => "post", :id => "batch_form") do %>
+    <table class="index_table">
+      <tr class="header">
+        <% if batch_ops %><th></th><% end %>
+        <% fields.each do |f| %>
+          <th><%= f.gsub("_", " ").capitalize %></th>
+        <% end %>
+      </tr>
+    <% objects.each do |o| %>
+      <tr class="rowbg<%= rowbg = 1 - rowbg %>">
+        <% if batch_ops %>
+          <td>
+            <%= check_box_tag("selected[#{o.id}]", 1, false, :onchange => "batch_cb_changed(this);") %>
+          </td>
+        <% end %>
+        <% fields.each do |f| %>
+          <% cls = "#{f.gsub(/[^\w\d]/, "")}_col" %>
+          <td class="<%= cls %>">
+            <div><%= self.send("format_#{controller_name}_field", o, f) %></div>
+          </td>
+        <% end %>
+      </tr>
+    <% end %>
+    </table>
+    <% if batch_ops %><script type="text/javascript">batch_update_select_all_link()</script><% end %>
   <% end %>
-  </table>
   <br/>
   <%= will_paginate(objects) %>
 <% end %>

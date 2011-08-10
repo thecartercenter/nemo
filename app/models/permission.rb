@@ -29,7 +29,8 @@ class Permission
     "questionings#*" => {:min_level => 4},
     "questions#*" => {:min_level => 4},
     "options#*" => {:min_level => 4},
-    "option_sets#*" => {:min_level => 4}
+    "option_sets#*" => {:min_level => 4},
+    "broadcasts#*" => {:min_level => 2}
   }
   SPECIAL = [
     :anyone_can_edit_some_fields_about_herself_but_nobody_can_edit_their_own_role,

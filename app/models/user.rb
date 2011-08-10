@@ -12,7 +12,11 @@ class User < ActiveRecord::Base
   validates(:role_id, :presence => true)
   validates(:language_id, :presence => true)
   validate(:phone_length_or_empty)
-
+  
+  def self.per_page
+    # we want all of these on one page for now
+    10000000
+  end
   def self.select_options
     find(:all, :order => "first_name, last_name").collect{|u| [u.full_name, u.id]}
   end
@@ -85,6 +89,8 @@ class User < ActiveRecord::Base
   def full_name
     "#{first_name} #{last_name}"
   end
+  
+  def can_get_sms?; !phone.blank? && is_mobile_phone; end
   
   def is_observer?; role ? role.is_observer? : false; end
   def is_program_staff?; role ? role.is_program_staff? : false; end

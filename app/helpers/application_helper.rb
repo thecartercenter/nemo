@@ -45,4 +45,17 @@ module ApplicationHelper
     end.compact
     join_links(links, "&nbsp;&nbsp;")
   end
+  def batch_op_links(*options)
+    links = options.collect{|o| batch_op_link(o)}.reject{|l| l.blank?}
+    links.insert(0, select_all_link) unless links.empty?
+    links
+  end
+  def batch_op_link(options)
+    controller, action = options[:action].split("#")
+    path = url_for(:controller => controller, :action => action)
+    link_to_if_auth(options[:name], "#", options[:action], nil, :onclick => "batch_submit('#{path}'); return false;")
+  end
+  def select_all_link
+    link_to("Select All", "#", :onclick => "batch_select_all(); return false", :id => "select_all_link")
+  end
 end

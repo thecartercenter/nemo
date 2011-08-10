@@ -109,3 +109,8 @@ form.new_place_lookup td.value, form.new_place td.value { min-width: 400px; }
 
 /* option set new/edit/show */
 .option_sets_edit div.optcol, .option_sets_new div.optcol, .option_sets_show div.optcol { float: left; margin-right: 20px; }
+
+/* broadcasts */
+input#broadcast_subject { width: 300px; }
+textarea#broadcast_body { width: 400px; height: 200px; }
+.broadcasts_show #send_errors_row td.value { color: #800000; font-weight: bold; }

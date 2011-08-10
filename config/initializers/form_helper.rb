@@ -13,7 +13,7 @@ module ActionView
       end
       def text_area(*args)
         html = old_text_area(*args)
-        mode == :show ? html.match(/<textarea.+?>(.*?)<\/textarea>/m) && dummy_tag($1) : html
+        mode == :show ? html.match(/<textarea.+?>(.*?)<\/textarea>/m) && dummy_tag($1.gsub("\n", "<br/>")) : html
       end
       def select(*args)
         html = old_select(*args)

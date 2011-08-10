@@ -15,3 +15,7 @@
 #  :user_name      => "who@example.com",
 #  :password       => "password"
 #}
+#
+## Settings for intellisms gateway
+#configatron.intellisms_username = "username"
+#configatron.intellisms_password = "password"

@@ -1,0 +1,33 @@
+<%= basic_form(broadcast) do |f|
+  spec = {
+    :fields => [{
+      :col => :to,
+      :value => content_tag(f.mode == :show ? "strong" : "div"){broadcast.recipients.collect{|u| u.full_name}.join(", ")} + 
+        f.hidden_field(:recipient_ids)
+    },{
+      :col => :medium,
+      :required => true,
+      :value => f.select(:medium, Broadcast.medium_select_options, {:include_blank => true}, 
+        :onchange => "broadcast_medium_changed()")
+    },{
+      :col => :subject,
+      :required => true,
+      :value => f.text_field(:subject)
+    },{
+      :col => :body,
+      :required => true,
+      :value => content_tag("div", "", :id => "char_limit") + 
+        f.text_area(:body, :onkeyup => "broadcast_update_char_limit()")
+    }],
+    :submit => f.submit("Send Broadcast")
+  }
+  if f.mode == :show && broadcast.send_errors
+    spec[:fields] << {
+      :col => :send_errors,
+      :label => "Delivery Errors",
+      :value => broadcast.send_errors.gsub("\n","<br/>") || "[None]"
+    }
+  end
+  spec
+end
+%>

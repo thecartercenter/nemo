@@ -4,8 +4,9 @@
 
 <div class="tip">
   Found <strong><%= @users.total_entries %></strong> users.
-  <%= link_to_if_auth("Create new user", new_user_path, "users#create") %>
+  <% bol = batch_op_links(:name => "Send Broadcast", :action => "broadcasts#new_with_users") %>
+  <%= join_links([link_to_if_auth("Create new user", new_user_path, "users#create")] + bol) %>
 </div>
 
-<%= render("layouts/index_table", :objects => @users, 
+<%= render("layouts/index_table", :objects => @users, :batch_ops => !bol.empty?,
   :fields => %w[last_name first_name login email language role phone_number active? actions]) %>
