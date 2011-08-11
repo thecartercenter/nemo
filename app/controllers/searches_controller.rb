@@ -9,6 +9,12 @@ class SearchesController < ApplicationController
     # redirect to the appropriate index page
     return_to_index(search)
   end
+  # this is a GET method that just copies parameters and calls create
+  def start
+    params[:search] = {}
+    [:query, :class_name].each{|k| params[:search][k] = params.delete(k)}
+    create
+  end
   def update
     create
   end

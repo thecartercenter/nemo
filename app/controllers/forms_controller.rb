@@ -1,6 +1,8 @@
 class FormsController < ApplicationController
   def index
-    @forms = Form.published
+    @subindex = Subindex.find_and_update(session, current_user, "Form", params[:page])
+    # get the options
+    @forms = Form.published(@subindex.params)
     render_appropriate_format
   end
   def show

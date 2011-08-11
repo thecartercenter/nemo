@@ -12,7 +12,7 @@ CommandCenter::Application.routes.draw do
   resources(:questionings)
   resources(:questions)
   resources(:responses)
-  resources(:searches){member{get 'clear'}}
+  resources(:searches){member{get 'clear'}; collection{get 'start'}}
   resources(:settings){collection{post 'update_all'}}
   resources(:users)
 

@@ -19,6 +19,8 @@ class Permission
     "permissions#no" => {:group => :anyone},
     "forms#index" => {:group => :logged_in},
     "forms#show" => {:group => :logged_in},
+    "forms#create" => {:min_level => 4},
+    "forms#update" => {:min_level => 4},
     "responses#index" => {:group => :logged_in},
     "responses#create" => {:group => :logged_in},
     "responses#show" => {:min_level => 2},
