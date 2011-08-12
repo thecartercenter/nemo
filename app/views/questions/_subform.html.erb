@@ -23,7 +23,7 @@
     <td class="value">
       <%= f.select(:option_set_id, OptionSet.select_options, {:include_blank => true}, 
         {:id => "option_set", :style => question.is_select? ? '' : 'display: none'}) %>
-      <div id="option_set_not_applicable" <%= question.is_select? ? 'style="display: none"'.html_safe : ''%>>
+      <div id="option_set_not_applicable" <%= question.is_select? || f.mode == :show ? 'style="display: none"'.html_safe : ''%>>
         Not applicable
       </div>
     </td>

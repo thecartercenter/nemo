@@ -44,13 +44,13 @@ class Broadcast < ActiveRecord::Base
     emailees = recipients unless by_sms?
     # send emails
     begin
-      BroadcastMailer.broadcast(emailees, subject, body).deliver
+      BroadcastMailer.broadcast(emailees, subject, body).deliver unless emailees.empty?
     rescue
       add_send_error("Email Error: #{$!}")
     end
     # send smses
     begin
-      Smser.deliver(smsees, body)
+      Smser.deliver(smsees, "#{configatron.broadcast_tag} #{body}") unless smsees.empty?
     rescue
       # one error per line
       $!.to_s.split("\n").each{|e| add_send_error("SMS Error: #{e}")}

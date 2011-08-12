@@ -1,7 +1,14 @@
 <%= show_flash_and_form_errors(qing).gsub("Question base", "Question").gsub("Question C", "Question c") %>
 <% rowbg = 0 %>
 <%= form_for(qing) do |f| %>
-  <h2>Fields about the question on the current form</h2>
+  <% f.mode = controller.action_name.to_sym %>
+  <%= f.hidden_field(:form_id) %>
+  <h2>Fields about the question on the form: '<%= qing.form.name %>'</h2>
+  <% if f.mode == :edit && qing.question.published? %>
+    <div class="error tip">Note: This question appears on at least one published form, 
+      and thus you can only edit these fields.</div>
+  <% end %>
+  
   <table class="form">
     <tr class="rowbg<%= rowbg = 1 - rowbg %>">
       <td class="name">Required?</td>
@@ -18,10 +25,21 @@
       </td>
     </tr>
   </table>
-  <% rowbg = 0 %>
-  <h2>Fields about all instances of the question</h2>
-  <%= fields_for("questioning[question]", qing.question) do |f| %>
-    <%= render("questions/subform", :f => f, :question => qing.question) %>
+
+  <% unless f.mode == :edit && qing.question.published? %>
+    <h2>Fields about all instances of the question</h2>
+    <% unless (of = qing.other_forms).empty? %>
+      <div class="error tip">
+        Note: This question also appears on the following forms: <%= of.map{|f| f.name}.join(", ") %>.
+        Any changes you make below will also be reflected on those forms.
+      </div>
+    <% end %>
+  
+    <% rowbg = 0 %>
+    <%= fields_for("questioning[question]", qing.question) do |f| %>
+      <% f.mode = controller.action_name.to_sym %>
+      <%= render("questions/subform", :f => f, :question => qing.question) %>
+    <% end %>
   <% end %>
   
   <%= f.submit((qing.new_record? ? "Create" : "Update") + " Question") %>

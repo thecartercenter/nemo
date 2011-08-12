@@ -34,7 +34,7 @@ div#nav ul li a:hover { text-decoration: none; color: #BEA154; }
 div#footer { border-top: 1px solid #444; }
 
 /* multi-purpose */
-div.tip { margin-bottom: 10px; width: 600px; }
+div.tip { margin-bottom: 10px; width: 800px; }
 .rowbg0 { background-color: #f6f6f6; }
 .rowbg1 { background-color: #ded8cb; }
 
@@ -59,6 +59,7 @@ table.form td.name { min-width: 75px; }
 table.index_table th { text-align: left; color: white; background-color: #BEA154; font-size: 80%; }
 table.index_table th, table.index_table td { padding: 3px 10px 3px 3px; font-size: 90%; }
 table.index_table td { color: #444; }
+table.index_table td.actions_col img { margin-right: 5px; }
 
 /* pagination */
 div.pagination * { float: left; display: block; background-color: #eee; padding: 1px; 
@@ -98,8 +99,8 @@ form.new_place_lookup td.value, form.new_place td.value { min-width: 400px; }
   { width: 450px; height: 60px; }
 .questionings_show td.value, .questions_show td.value { width: 300px; }
 
-/* question index */
-.questions_index .name_col { width: 400px; }
+/* question index/choose */
+.questions_index .name_col, .questions_choose .name_col { width: 400px; }
 
 /* option edit */
 .options_edit td.value input#option_value, .options_new td.value input#option_value { width: 100px; }
@@ -114,3 +115,8 @@ form.new_place_lookup td.value, form.new_place td.value { min-width: 400px; }
 input#broadcast_subject { width: 300px; }
 textarea#broadcast_body { width: 400px; height: 200px; }
 .broadcasts_show #send_errors_row td.value { color: #800000; font-weight: bold; }
+
+/* form edit */
+.forms_edit td.name_col, .forms_show td.name_col { width: 500px; }
+.forms_edit td.rank_col input { width: 25px; }
+.forms_edit #save_ranks_button { margin-top: -15px; }

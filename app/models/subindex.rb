@@ -1,17 +1,23 @@
 class Subindex
-  attr_accessor(:page)
+  attr_accessor(:page, :custom_conditions, :extras)
+  attr_reader(:stamp)
   
   # finds/creates a subindex for the given class name, and then sets the page number
-  def self.find_and_update(session, user, class_name, page)
-    si = find_or_create(session, user, class_name)
+  def self.find_and_update(session, user, class_name, page, action = "index")
+    si = find_or_create(session, user, class_name, action)
     si.page = page if page
     si
   end
   
   # finds or creates a subindex for the given class_name
-  def self.find_or_create(session, user, class_name)
+  def self.find_or_create(session, user, class_name, action = "index")
     session[:subindexes] ||= {}
-    session[:subindexes][class_name.underscore.to_sym] ||= new(class_name, user)
+    key = "#{class_name.underscore.to_sym}__#{action}"
+    unless session[:subindexes][key] 
+      si = new(class_name, user)
+      session[:subindexes][key] = si
+    end
+    return session[:subindexes][key]
   end
   
   def self.clear_all(session)
@@ -20,8 +26,11 @@ class Subindex
   
   def initialize(class_name, user)
     @class_name = class_name
+    @custom_conditions = []
+    @extras = {}
     @user = user
     @page = 1
+    @stamp = Time.now.to_i.to_s[-6,6]
     reset_search
   end
   
@@ -31,6 +40,8 @@ class Subindex
     cond << Permission.select_conditions(:user => @user, :controller => @class_name.pluralize.underscore, :action => "index")
     # get search conditions
     cond << (@search ? ((sc = @search.conditions).blank? ? "1" : sc) : "1")
+    # add custom conditions set by user
+    cond += custom_conditions
     # get eager associations
     eager = klass.default_eager + (@search ? @search.eager : [])
     # build and return params

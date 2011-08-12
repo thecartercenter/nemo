@@ -1,6 +1,7 @@
 <% rowbg = 0 %>
 <% batch_ops = false unless defined?(batch_ops) %>
-<% unless objects.total_entries == 0 %>
+<% paginated = objects.is_a?(WillPaginate::Collection) %>
+<% unless (paginated && objects.total_entries == 0) || objects.size == 0 %>
   <%= form_tag("", :method => "post", :id => "batch_form") do %>
     <table class="index_table">
       <tr class="header">
@@ -19,7 +20,7 @@
         <% fields.each do |f| %>
           <% cls = "#{f.gsub(/[^\w\d]/, "")}_col" %>
           <td class="<%= cls %>">
-            <div><%= self.send("format_#{controller_name}_field", o, f) %></div>
+            <div><%= self.send("format_#{o.class.name.underscore}s_field", o, f) %></div>
           </td>
         <% end %>
       </tr>
@@ -28,5 +29,5 @@
     <% if batch_ops %><script type="text/javascript">batch_update_select_all_link()</script><% end %>
   <% end %>
   <br/>
-  <%= will_paginate(objects) %>
+  <%= will_paginate(objects) if paginated %>
 <% end %>

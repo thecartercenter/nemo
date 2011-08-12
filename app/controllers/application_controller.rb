@@ -12,12 +12,17 @@ class ApplicationController < ActionController::Base
   
   helper_method :current_user_session, :current_user, :authorized?
 require 'authlogic'
+  
   protected
     def set_timezone
       # set the timezone, if there is one in the configatron
       Time.zone = configatron.timezone.to_s if configatron.timezone
     end
-  
+    
+    def load_selected_objects(klass)
+      params[:selected].keys.collect{|id| klass.find_by_id(id)}.compact
+    end
+    
     def init_js_array
       @js = []
       @js << controller_name if File.exists?(File.join(Rails.root, "public/javascripts/#{controller_name}.js"))
@@ -36,7 +41,6 @@ require 'authlogic'
     end
     
     def basic_auth_for_xml
-      Rails.logger.debug("Basic Auth Header: " + request.authorization.to_s)
       # if the request format is XML and there is no user, we should require basic auth
       if request.format == Mime::XML
         @current_user = authenticate_or_request_with_http_basic{|l,p| User.find_by_credentials(l,p)}

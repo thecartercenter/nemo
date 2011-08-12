@@ -1,9 +1,15 @@
 <%= render("layouts/flash", {:flash => flash}) %>
+<% choose_mode = controller.action_name == "choose" %>
 
 <div class="tip">
   Found <strong><%= @questions.total_entries %></strong> questions.
-  <%= link_to_if_auth("Create new question", new_question_path, "questions#create") %>
+  <% if choose_mode %>
+    <% bol = batch_op_links(:name => "Add selected questions to form", :action => "forms#add_questions", :id => @form.id) %>
+    <%= join_links(bol + [link_to_if_auth("Create new question", new_questioning_path(:form_id => @form.id), "questionings#create")]) %>
+  <% else %>
+    <%= link_to_if_auth("Create new question", new_question_path, "questions#create") %>
+  <% end %>
 </div>
 
-<%= render("layouts/index_table", :objects => @questions, 
-  :fields => %w[code name type forms answers published? actions]) %>
+<%= render("layouts/index_table", :objects => @questions, :batch_ops => choose_mode,
+  :fields => %w[code name type forms answers] + (choose_mode ? [] : %w[published? actions])) %>

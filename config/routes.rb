@@ -1,7 +1,7 @@
 CommandCenter::Application.routes.draw do
   resource(:user_session)
   resources(:broadcasts){collection{post 'new_with_users'}}
-  resources(:forms)
+  resources(:forms){member{post 'add_questions', 'remove_questions', 'update_ranks'; get 'publish'}}
   resources(:languages)
   resources(:options)
   resources(:option_sets)
@@ -10,7 +10,7 @@ CommandCenter::Application.routes.draw do
   resources(:places){collection{get 'map'}}
   resources(:place_lookups){collection{get 'suggest'}}
   resources(:questionings)
-  resources(:questions)
+  resources(:questions){collection{get 'choose'}}
   resources(:responses)
   resources(:searches){member{get 'clear'}; collection{get 'start'}}
   resources(:settings){collection{post 'update_all'}}

@@ -17,7 +17,7 @@ function batch_select_all() {
 // gets all checkboxes in batch_form
 function batch_get_checkboxes() {
   var cb = [];
-  var els = $('batch_form').elements;
+  var els = $('batch_form') && $('batch_form').elements || [];
   for (var i = 0; i < els.length; i++)
     if (els[i].type == "checkbox") cb.push(els[i]);
   return cb;
@@ -51,6 +51,18 @@ function batch_any_checked(cbs) {
   return any_checked;
 }
 
+// counts how many boxes are checked
+function batch_count_checked(cbs) {
+  if (typeof(cbs) == "undefined")
+    cbs = batch_get_checkboxes();
+ 
+  var count = 0;
+  for (var i = 0; i < cbs.length; i++)
+    if (cbs[i].checked)
+      count++;
+  return count;
+}
+
 // updates the select all link to reflect current state of boxes
 function batch_update_select_all_link(yn) {
   if (typeof(yn) == "undefined") yn = !batch_all_checked();
@@ -64,15 +76,16 @@ function batch_cb_changed(cb) {
 }
 
 // submits the batch form to the given path
-function batch_submit(path) {
+function batch_submit(options) {
   // ensure there is at least one box checked
-  if (!batch_any_checked())
+  var count = batch_count_checked();
+  if (count == 0)
     alert("You haven't selected anything.");
-  else {
+  else if (options.confirm == "" || confirm(options.confirm.gsub(/###/, count))) {
     // get the form
     var f = $('batch_form');
     // set the action attrib
-    f.action = path;
+    f.action = options.path;
     // submit
     f.submit();
   }

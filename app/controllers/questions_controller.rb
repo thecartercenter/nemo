@@ -6,18 +6,28 @@ class QuestionsController < ApplicationController
     @questions = Question.sorted(@subindex.params)
   end
   
+  def choose
+    # find or create a subindex object
+    @subindex = Subindex.find_and_update(session, current_user, "Question", params[:page], "choose")
+    @subindex.extras[:form] = Form.find(params[:form_id]) if params[:form_id]
+    @form = @subindex.extras[:form]
+    @title = "Adding Questions to Form: #{@form.name}"
+    @questions = Question.not_in_form(@form, @subindex.params)
+    render(:action => :index)
+  end
+  
   def edit
     @question = Question.find(params[:id])
-    set_js
+    @title = "Edit Question: #{@question.code}"
   end
   
   def new
     @question = Question.new
-    set_js
   end
   
   def show
     @question = Question.find(params[:id])
+    @title = "Question: #{@question.code}"
   end
   
   def create
@@ -43,12 +53,9 @@ class QuestionsController < ApplicationController
         flash[:success] = "Question #{action}d successfully."
         redirect_to(:action => :index)
       rescue ActiveRecord::RecordInvalid
-        set_js
+        @title = "Edit Question: #{@question.code}" if action == "update"
         render(:action => action == "create" ? :new : :edit)
       end
     end
   
-    def set_js
-      @js << 'questions'
-    end
 end

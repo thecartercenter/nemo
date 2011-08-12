@@ -11,7 +11,7 @@ class Question < ActiveRecord::Base
   has_many(:answers, :through => :questionings)
   has_many(:forms, :through => :questionings)
 
-  validates(:code, :presence => true)
+  validates(:code, :presence => true, :uniqueness => true)
   validates(:code, :format => {:with => /^[a-z][a-z0-9]{1,15}$/}, :if => Proc.new{|q| !q.code.blank?})
   validates(:type, :presence => true)
   validates(:option_set_id, :presence => true, :if => Proc.new{|q| q.is_select?})
@@ -21,6 +21,14 @@ class Question < ActiveRecord::Base
   before_validation(:clean)
   before_destroy(:check_assoc)
   
+  # returns questions that do NOT already appear in the given form
+  def self.not_in_form(form, params)
+    # add the condition
+    params[:conditions] = "(#{params[:conditions] || 1}) and " + 
+      "(questions.id not in (select question_id from questionings where form_id='#{form.id}'))"
+    # pass along to sorted method
+    sorted(params)
+  end
   
   def self.sorted(params = {})
     paginate(:all, params.merge(:order => "code"))
@@ -28,7 +36,7 @@ class Question < ActiveRecord::Base
   
   def self.per_page; 100; end
   
-  def self.default_eager; [:type, :option_set, :translations, :questionings, :answers, :forms]; end
+  def self.default_eager; [:type, :translations, :questionings, :answers, :forms]; end
   
   def method_missing(*args)
     # enable methods like name_fra and hint_eng, etc.

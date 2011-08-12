@@ -36,14 +36,14 @@ module ApplicationHelper
       key = "#{obj.class.table_name}##{action}"
       case action
       when "show"
-        link_to_if_auth(img, send("#{klass}_path", obj), key, obj)
+        link_to_if_auth(img, send("#{klass}_path", obj), key, obj, :title => "View")
       when "edit"
-        link_to_if_auth(img, send("edit_#{klass}_path", obj), key, obj)
+        link_to_if_auth(img, send("edit_#{klass}_path", obj), key, obj, :title => "Edit")
       when "destroy"
-        link_to_if_auth(img, obj, key, obj, :method => :delete, :confirm => destroy_warning)
+        link_to_if_auth(img, obj, key, obj, :method => :delete, :confirm => destroy_warning, :title => "Delete")
       end
     end.compact
-    join_links(links, "&nbsp;&nbsp;")
+    links.join("").html_safe
   end
   def batch_op_links(*options)
     links = options.collect{|o| batch_op_link(o)}.reject{|l| l.blank?}
@@ -51,9 +51,12 @@ module ApplicationHelper
     links
   end
   def batch_op_link(options)
-    controller, action = options[:action].split("#")
-    path = url_for(:controller => controller, :action => action)
-    link_to_if_auth(options[:name], "#", options[:action], nil, :onclick => "batch_submit('#{path}'); return false;")
+    url_bits = {}
+    url_bits[:controller], url_bits[:action] = options[:action].split("#")
+    url_bits[:id] = options[:id] if options[:id]
+    path = url_for(url_bits)
+    link_to_if_auth(options[:name], "#", options[:action], nil, 
+      :onclick => "batch_submit({path: '#{path}', confirm: '#{options[:confirm]}'}); return false;")
   end
   def select_all_link
     link_to("Select All", "#", :onclick => "batch_select_all(); return false", :id => "select_all_link")
