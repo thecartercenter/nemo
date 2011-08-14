@@ -59,9 +59,9 @@ class Question < ActiveRecord::Base
   def english_name; name_eng; end
   
   def name(lang = nil); translation_for(:name, lang); end
-  def name=(lang = nil, value); set_translation_for(:name, lang, value); end
+  def name=(lang, value); set_translation_for(:name, lang, value); end
   def hint(lang = nil); translation_for(:hint, lang); end
-  def hint=(lang = nil, value); set_translation_for(:hint, lang, value); end
+  def hint=(lang, value); set_translation_for(:hint, lang, value); end
 
   def options
     option_set ? option_set.options : nil
