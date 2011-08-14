@@ -47,7 +47,7 @@ class Option < ActiveRecord::Base
   def english_name; name_eng; end
   
   def name(lang = nil); translation_for(:name, lang); end
-  def name=(lang = nil, value); set_translation_for(:name, lang, value); end
+  def name=(lang, value); set_translation_for(:name, lang, value); end
   
   def published?; !option_sets.detect{|os| os.published?}.nil?; end
   
