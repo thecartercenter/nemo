@@ -41,7 +41,7 @@ module CommandCenter
     config.filter_parameters += [:password, :password_confirmation]
     
     configatron.site_name = "CCEOM Command Center"
-    configatron.site_email = "#{configatron.site_name} <info@cceom.org>"
+    configatron.site_email = "#{configatron.site_name} <webmaster@cceom.org>"
     configatron.broadcast_tag = "[TCC-Broadcast]"
     configatron.outgoing_sms_adapter = "IntelliSmsAdapter"
     
