@@ -25,7 +25,7 @@ class Questioning < ActiveRecord::Base
   
   def method_missing(*args)
     # pass appropriate methods on to question
-    if is_question_method?(args[0])
+    if is_question_method?(args[0].to_s)
       question.send(*args)
     else
       super
