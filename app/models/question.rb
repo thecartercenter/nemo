@@ -40,7 +40,7 @@ class Question < ActiveRecord::Base
   
   def method_missing(*args)
     # enable methods like name_fra and hint_eng, etc.
-    if args[0].match(/^(name|hint)_([a-z]{3})(_before_type_cast)?(=?)$/)
+    if args[0].to_s.match(/^(name|hint)_([a-z]{3})(_before_type_cast)?(=?)$/)
       send("#{$1}#{$4}", Language.by_code($2), *args[1..2])
     else
       super
