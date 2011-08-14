@@ -22,7 +22,7 @@ class Form < ActiveRecord::Base
   end
   
   def self.default_eager
-    [:questions, :responses, :type]
+    [:type]
   end
   
   def self.find_eager(id)
@@ -33,6 +33,13 @@ class Form < ActiveRecord::Base
   
   def self.select_options
     all(:include => :type, :order => "form_types.name, forms.name").collect{|f| [f.full_name, f.id]}
+  end
+  
+  # finds the highest 'version' number of all forms with the given base name
+  # returns nil if no forms found
+  def self.max_version(base_name)
+    mv = all.collect{|f| m = f.name.match(/^#{base_name}( v(\d+))?$/); m ? (m[2] ? m[2].to_i : 1) : 0}.max
+    mv == 0 ? nil : mv
   end
   
   def temp_response_id
@@ -82,6 +89,19 @@ class Form < ActiveRecord::Base
   def add_download
     self.downloads += 1
     save
+  end
+  
+  # makes a copy of the form, with a new name and a new set of questionings
+  def clone
+    # get the base name
+    base = name.match(/^(.+?)( v(\d+))?$/)[1]
+    version = (self.class.max_version(base) || 1) + 1
+    # create the new form and set the basic attribs
+    cloned = self.class.new(:name => "#{base} v#{version}", :is_published => false, :form_type_id => form_type_id)
+    # clone all the questionings
+    cloned.questionings = questionings.collect{|qing| qing.clone(cloned)}
+    # done!
+    cloned.save
   end
   
   private

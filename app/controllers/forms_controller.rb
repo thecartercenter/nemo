@@ -87,6 +87,16 @@ class FormsController < ApplicationController
     end
     redirect_to(edit_form_path(@form))
   end
+  def clone
+    @form = Form.find(params[:id])
+    begin
+      @form.clone
+      flash[:success] = "Form '#{@form.name}' cloned successfully."
+    rescue
+      flash[:error] = "There was a problem cloning the form (#{$!.to_s})."
+    end
+    redirect_to(:action => :index)
+  end
   
   def create; crupdate; end
   def update; crupdate; end

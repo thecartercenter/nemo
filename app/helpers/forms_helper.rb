@@ -28,7 +28,10 @@ module FormsHelper
       pl = link_to_if_auth(pl_img, publish_form_path(form), "forms#publish", form, 
         :title => "#{form.is_published? ? 'Unp' : 'P'}ublish", :confirm => pl_confirm)
       
-      (al + pl).html_safe
+      cl = link_to_if_auth(image_tag("clone.png"), clone_form_path(form), "forms#clone", form, 
+        :title => "Clone", :confirm => "Are you sure you want to clone the form '#{form.name}'?")
+      
+      (al + pl + cl).html_safe
     else form.send(field)
     end
   end

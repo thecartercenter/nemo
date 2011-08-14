@@ -26,6 +26,7 @@ class Permission
     "forms#remove_questions" => {:min_level => 4},
     "forms#update_ranks" => {:min_level => 4},
     "forms#publish" => {:min_level => 4},
+    "forms#clone" => {:min_level => 4},
     "responses#index" => {:group => :logged_in},
     "responses#create" => {:group => :logged_in},
     "responses#show" => {:min_level => 2},

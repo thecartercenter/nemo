@@ -45,6 +45,11 @@ class Questioning < ActiveRecord::Base
     save
   end
   
+  def clone(new_form)
+    self.class.new(:form_id => new_form.id, :question_id => question_id, :rank => rank, 
+      :required => required, :hidden => hidden)
+  end
+  
   private
     def set_rank
       self.rank = form.max_rank + 1 if rank.nil?
