@@ -34,7 +34,7 @@ class FormsController < ApplicationController
       dl = verb == "unpublish" ? " The download count has also been reset." : ""
       flash[:success] = "Form #{verb}ed successfully." + dl
     rescue
-      flash[:error] = "There was a problem #{verb}ing the form (#{$!.to_i})."
+      flash[:error] = "There was a problem #{verb}ing the form (#{$!.to_s})."
     end
     # redirect to form edit
     redirect_to(:action => :index)
