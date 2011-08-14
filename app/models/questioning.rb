@@ -1,7 +1,7 @@
 class Questioning < ActiveRecord::Base
   belongs_to(:form)
   belongs_to(:question, :autosave => true)
-  has_many(:answers)
+  has_many(:answers, :dependent => :destroy)
   
   before_create(:set_rank)
   before_destroy(:check_assoc)
