@@ -61,4 +61,7 @@ module ApplicationHelper
   def select_all_link
     link_to("Select All", "#", :onclick => "batch_select_all(); return false", :id => "select_all_link")
   end
+  def fix_error_messages(msgs)
+    msgs.gsub("Answers are invalid", "One or more answers are invalid").gsub("@ please.", "@").gsub("look like an email address.", "look like an email address")
+  end
 end

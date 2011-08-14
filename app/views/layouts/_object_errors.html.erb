@@ -1,10 +1,6 @@
 <% if !object.nil? && object.errors.any? %>
-<div class="error">
-  <% unless defined?(compact) %><strong>Please fix the following errors:</strong><% end %>
-  <ul>
-    <% object.errors.full_messages.each do |msg| %>
-    <li><%= msg %></li>
-    <% end %>
-  </ul>
-</div>
+  <%= content_tag("div", :class => defined?(compact) ? "compact_error" : "error") do %>
+    <%= defined?(compact) ? "" : (object.errors.size > 1 ? "Errors:" : "Error:") %>
+    <%= fix_error_messages(object.errors.full_messages.join(", ")) %>
+  <% end %>
 <% end %>

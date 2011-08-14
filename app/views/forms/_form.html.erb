@@ -11,7 +11,7 @@
       :required => true,
       :value => f.select(:form_type_id, FormType.select_options, {:include_blank => true})
     }],
-    :submit => f.submit(f.mode == :edit ? "Update Basic Form Info" : "Create Form")
+    :submit => f.submit(form.new_record? ? "Create Form" : "Update Basic Form Info")
   }
   if f.mode != :new
     spec[:fields] << {
