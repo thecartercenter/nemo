@@ -35,12 +35,3 @@ select_multiple:
   long_name: Select Multiple
   odk_name: select
   odk_tag: select
-  
-start_timestamp:
-  name: start_timestamp
-  long_name: Automatic Timestamp
-  odk_name: dateTime
-  odk_tag:
-  odk_preload: timestamp
-  odk_preload_params: start
-  phone_only: true

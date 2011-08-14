@@ -76,6 +76,11 @@ class Response < ActiveRecord::Base
     # loop over each child tag and create hash of question_code => value
     values = {}; doc.root.children.each{|c| values[c.name] = c.first? ? c.first.content : nil}
     
+    # set the observe time if it's available
+    if time = values.delete('startstamp')
+      resp.observed_at = Time.parse(time)
+    end
+    
     # loop over all the questions in the form and create answers
     place_bits = {}
     start_time = nil
@@ -90,13 +95,8 @@ class Response < ActiveRecord::Base
         place_bits[:coords] = (str ? str.split(" ")[0..1] : false)
       elsif place_bits[:addr].nil? && qing.question.is_address?
         place_bits[:addr] = str || false
-      elsif start_time.nil? && qing.question.is_start_timestamp?
-        start_time = str ? Time.parse(str) : false
       end
     end
-    
-    # set the observe time
-    resp.observed_at = start_time || nil
     
     # try to get the response's place based on the place bits
     resp.place = Place.find_or_create_with_bits(place_bits)

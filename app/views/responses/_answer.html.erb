@@ -10,7 +10,7 @@
       <%= f.hidden_field(:response_id, :index => answer_counter) %>
       <%= f.hidden_field(:questioning_id, :index => answer_counter) %>
       <% case type = answer.question_type_name %>
-      <% when "location", "address", "start_timestamp" %>
+      <% when "location", "address" %>
         <div class="dummy"><%= answer.value %></div>
       <% when "text", "numeric" %>
         <%= f.text_field(:value, :class => "qtype_#{type}", :index => answer_counter) %>

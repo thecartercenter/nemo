@@ -78,9 +78,6 @@ class Question < ActiveRecord::Base
   def is_address?
     type.name == "address"
   end
-  def is_start_timestamp?
-    type.name == "start_timestamp"
-  end
   def published?
     !forms.detect{|f| f.is_published?}.nil?
   end

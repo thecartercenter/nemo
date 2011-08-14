@@ -46,7 +46,7 @@ div.loader { background: rl('/images/loader.gif') no-repeat; padding-left: 20px;
 /* search form */
 form.new_search, form.edit_search { margin-bottom: 10px; }
 form.new_search #search_query, form.edit_search #search_query { width: 300px; }
-form.new_search #examples, form.edit_search #examples { font-size: 90%; color: #444; }
+form.new_search #examples, form.edit_search #examples { color: #666; }
 
 /* forms and index tables */
 div.form, table.form { border-top: 1px solid #ddd; margin-bottom: 10px; }
