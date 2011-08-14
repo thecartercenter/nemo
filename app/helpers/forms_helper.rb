@@ -15,14 +15,12 @@ module FormsHelper
         :exclude => exclude)
         
       # build confirm message for publish/unpublish link
-      if form.is_published? && (form.downloads || 0) > 0
-        pl_confirm = "Are you sure you want to unpublish form '#{form.name}'? It has already been downloaded " +
-          "and any changes made to the form may cause problems during data submission."
-      elsif !form.is_published?
+      if form.is_published?
+        pl_confirm = "Are you sure you want to unpublish form '#{form.name}'? " + 
+          "Any changes made to the form may cause problems during data submission."
+      else
         pl_confirm = "Are you sure you want to publish form '#{form.name}'? It will immediately be downloadable " + 
           "by all users."
-      else
-        pl_confirm = nil
       end
       pl_img = image_tag(form.is_published? ? "unpublish.png" : "publish.png")
       pl = link_to_if_auth(pl_img, publish_form_path(form), "forms#publish", form, 

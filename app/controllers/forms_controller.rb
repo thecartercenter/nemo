@@ -31,7 +31,8 @@ class FormsController < ApplicationController
     verb = @form.is_published? ? "unpublish" : "publish"
     begin
       @form.toggle_published
-      flash[:success] = "Form #{verb}ed successfully."
+      dl = verb == "unpublish" ? " The download count has also been reset." : ""
+      flash[:success] = "Form #{verb}ed successfully." + dl
     rescue
       flash[:error] = "There was a problem #{verb}ing the form (#{$!.to_i})."
     end

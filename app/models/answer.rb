@@ -10,6 +10,10 @@ class Answer < ActiveRecord::Base
   def self.new_from_str(params)
     str = params.delete(:str)
     ans = new(params)
+
+    # if there was no answer to this question (in the case of a out of sync form) just leave it blank
+    return ans if str.nil?
+
     # set the attributes based on the question type
     case ans.question_type_name
     when "select_one"
@@ -66,6 +70,7 @@ class Answer < ActiveRecord::Base
   def question; questioning ? questioning.question : nil; end
   def rank; questioning.rank; end
   def required?; questioning.required?; end
+  def hidden?; questioning.hidden?; end
   def question_name; question.name; end
   def question_hint; question.hint; end
   def question_type_name; question.type.name; end
@@ -76,6 +81,8 @@ class Answer < ActiveRecord::Base
   
   private
     def required
-      errors.add(:base, "This question is required") if required? && value.nil? && option_id.nil? && choices.empty?
+      if required? && !hidden? && value.nil? && option_id.nil? && !can_have_choices?
+        errors.add(:base, "This question is required")
+      end
     end
 end

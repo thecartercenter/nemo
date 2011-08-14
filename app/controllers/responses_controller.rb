@@ -64,6 +64,9 @@ class ResponsesController < ApplicationController
   private
     def crupdate
       action = params[:action]
+      # source is web, 
+      params[:response][:source] = "web" if action == "create"
+      params[:response][:modifier] = "web"
       # find or create the response
       @resp = action == "create" ? Response.new : Response.find(params[:id])
       # set user_id if this is an observer

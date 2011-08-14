@@ -7,12 +7,16 @@ class Response < ActiveRecord::Base
     :autosave => true, :validate => false, :dependent => :destroy)
   belongs_to(:user)
   
+  attr_accessor(:modifier)
+  
   # we turn off validate above and do it here so we can control the message and have only one message
   # regardless of how many answer errors there are
-  validates_associated(:answers, :message => "are invalid (see below)")
   validates(:user, :presence => true)
   validates(:observed_at, :presence => true)
   validate(:no_missing_answers)
+
+  # only need to validate answers in web mode
+  validates_associated(:answers, :message => "are invalid (see below)", :if => Proc.new{|r| r.modifier == "web"})
   
   def self.sorted(params = {})
     params.merge!(:order => "responses.created_at desc")
@@ -66,7 +70,7 @@ class Response < ActiveRecord::Base
     form_id = form_id.to_i
     
     # create response object
-    resp = new(:form_id => form_id, :user_id => user ? user.id : nil)
+    resp = new(:form_id => form_id, :user_id => user ? user.id : nil, :source => "odk", :modifier => "odk")
     qings = resp.form ? resp.form.visible_questionings : (raise ArgumentError.new("Invalid form id."))
     
     # loop over each child tag and create hash of question_code => value
@@ -80,7 +84,7 @@ class Response < ActiveRecord::Base
       str = values[qing.question.code]
       # add answer
       resp.answers << Answer.new_from_str(:str => str, :questioning => qing)
-      
+    
       # pull out the place bits and start time as we find them
       if place_bits[:coords].nil? && qing.question.is_location?
         place_bits[:coords] = (str ? str.split(" ")[0..1] : false)
