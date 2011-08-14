@@ -1,11 +1,11 @@
 /* tag redefinitions */
 html,body { margin: 0; padding: 0 }
-body, td, input, select, textarea { font-family: Helvetica, sans-serif; font-size: 10pt; color: #222; }
+body, td, input, select, textarea { font-family: Helvetica, sans-serif; font-size: 9pt; color: #222; }
 body { line-height: 1.3; height: 100%; }
 form { margin: 0; }
-input, select, textarea { border: 1px solid #444; }
+input, select, textarea { border: 1px solid #444; background-color: #eee; }
 a { color: MidnightBlue; }
-h1, h2, h3 { color: black; }
+h1, h2, h3 { color: black; font-family: "Lucidia Fax", "Cambria", "Book Antiqua", "Times New Roman", times; }
 h1 { margin: 0 0 10px 0; font-size: 17pt; }
 h2 { font-size: 11pt; color: #888; }
 h3 { font-size: 12pt; margin: 0; color: #444; }
@@ -20,12 +20,14 @@ div#upper { background-color: #005882; }
 div#banner { padding-left: 125px; height: 79px; color: white; padding-top: 10px; }
 div#banner img { position: absolute; left: 10px; top: 10px; border: none; }
 div#banner #title { float: left; font-family: "Lucidia Fax", "Cambria", "Book Antiqua", "Times New Roman", times; }
-div#banner #title h1 { color: white; margin-bottom: 3px; }
+div#banner #title h1 { color: white; margin-bottom: 3px; font-size: 30px; }
+div#banner #title h1 span { color: #BEA154; font-style: italic; }
 div#banner #title h2 { color: white; margin-top: 0; font-size: 100%; font-style: italic; }
 div#banner #userinfo { float: right; margin-right: 10px; }
 div#banner #userinfo a { color: white; }
 div#banner #dev_mode_warning { color: white; margin: 10px 10px 0 0; padding: 2px; text-align: right; font-weight: bold; background-color: #800000; float: right; clear: right; }
-div#content { padding: 10px; margin-left: 88px; background-color: white; min-height: 500px; }
+div#content { padding: 10px 10px 30px 15px; margin-left: 88px; min-height: 500px; 
+    background: white url('/images/watermark.png') no-repeat 80% -20px; }
 div#nav { float: left; width: 88px; padding-top: 20px; color: white; }
 div#nav ul { margin-right: 15px; font-weight: bold; padding: 5px; list-style-type:none; }
 div#nav ul li { white-space: nowrap; }
@@ -35,8 +37,8 @@ div#footer { border-top: 1px solid #444; }
 
 /* multi-purpose */
 div.tip { margin-bottom: 10px; width: 800px; }
-.rowbg0 { background-color: #f6f6f6; }
-.rowbg1 { background-color: #ded8cb; }
+/*.rowbg0 { background-color: #f6f6f6; }
+.rowbg1 { background-color: #ded8cb; }*/
 
 /* loading indicator */
 div.loader { background: rl('/images/loader.gif') no-repeat; padding-left: 20px; }
@@ -46,19 +48,17 @@ form.new_search, form.edit_search { margin-bottom: 10px; }
 form.new_search #search_query, form.edit_search #search_query { width: 300px; }
 form.new_search #examples, form.edit_search #examples { font-size: 90%; color: #444; }
 
-/* form */
-div.form, table.form { border-bottom: 1px solid #887c5f; border-top: 1px solid #887c5f; margin-bottom: 10px; }
-div.form > div, table.form td { padding: 5px; }
+/* forms and index tables */
+div.form, table.form { border-top: 1px solid #ddd; margin-bottom: 10px; }
+div.form > div, table.form td { padding: 5px; border-bottom: 1px solid #ddd; }
 div.form div.details, table.form td.details { width: 250px; }
 div.reqd_sym { display: inline; font-weight: bold; color: #800000; font-size: 125%; line-height: 5px; vertical-align: middle; }
 div.dummy { font-weight: bold; }
 div.dummy_checkbox { float: left; width: 15px; font-weight: bold; }
 table.form td.name { min-width: 75px; }
-
-/* index table */
-table.index_table th { text-align: left; color: white; background-color: #BEA154; font-size: 80%; }
-table.index_table th, table.index_table td { padding: 3px 10px 3px 3px; font-size: 90%; }
-table.index_table td { color: #444; }
+table.index_table th, table.form th { text-align: left; color: #444; background-color: #ddd; 
+    font-size: 90%; padding: 3px 10px 3px 3px; }
+table.index_table td { border-bottom: 1px solid #ddd; padding: 6px 10px 6px 3px; }
 table.index_table td.actions_col img { margin-right: 5px; }
 
 /* pagination */
@@ -86,7 +86,7 @@ form.new_place_lookup td.value, form.new_place td.value { min-width: 400px; }
 #map_canvas { width: 600px; height: 400px; }
 
 /* response index */
-.responses_index td.place_col div { width: 200px; overflow: hidden; white-space: nowrap; }
+.responses_index td.place_col div { width: 250px; overflow: hidden; white-space: nowrap; }
 .responses_index form#form_chooser { display: inline; }
 
 /* response edit */

@@ -31,8 +31,10 @@ class Form < ActiveRecord::Base
     }}])
   end
   
-  def self.select_options
-    all(:include => :type, :order => "form_types.name, forms.name").collect{|f| [f.full_name, f.id]}
+  def self.select_options(options = {})
+    params = {:include => :type, :order => "form_types.name, forms.name"}
+    params[:conditions] = {:is_published => options[:published]} if !options[:published].nil?
+    all(params).collect{|f| [f.full_name, f.id]}
   end
   
   # finds the highest 'version' number of all forms with the given base name

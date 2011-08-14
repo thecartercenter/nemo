@@ -1,13 +1,17 @@
 <% rowbg = 0 %>
 <%= show_flash_and_form_errors(obj) %>
 <% spec[:sections].each_index do |idx| section = spec[:sections][idx] %>
-  <% if section[:name] %><h2><%= section[:name] %></h2><% end %>
   <% if section[:contents] %>
     <%= section[:contents] %>
   <% else %>
     <div class="tip"><%= reqd_sym %> Indicates a required field</div>
     <table class="form <%= "section#{idx+1}" %>">
     <% action = obj.new_record? ? "create" : "update" %>
+      <% if section[:name] %>
+        <tr>
+          <th colspan="3"><%= section[:name] %></th>
+        </tr>
+      <% end %>
     <% section[:fields].each do |field| %>
       <% if authorized?(:action => "#{obj.class.table_name}##{action}", :object => obj, :col => field[:col]) %>
         <tr class="rowbg<%= rowbg = 1 - rowbg %>" id="<%= field[:col] %>_row"<%= field[:hidden] ? ' style="display:none"'.html_safe : '' %>>
