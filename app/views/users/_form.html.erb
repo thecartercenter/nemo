@@ -43,6 +43,24 @@
       :details => "Enter the new password again."
     }]
   end
+  if user != current_user
+    prefix = user.new_record? ? "" : "Reset password and "
+    verb = user.new_record? ? "choose" : "reset"
+    spec[:fields] << {
+      :col => :reset_password_method,
+      :label => user.new_record? ? "Password Creation" : "Reset Password?",
+      :value => 
+        (user.new_record? ? "" : f.radio_button(:reset_password_method, "dont") + "Leave password alone<br/>".html_safe) + 
+        f.radio_button(:reset_password_method, "email") + "#{prefix}send email instructions<br/>".capitalize.html_safe +
+        f.radio_button(:reset_password_method, "print") + "#{prefix}show printable instructions".capitalize.html_safe,
+      :details => (user.new_record? ? 
+          "Choose how this user should get his/her password. " :
+          "Choose whether and how to reset this user's password. ") +
+        "The system can either send him/her " +
+        "an email with instructions on how to #{verb} the password online, or the system display a printable " +
+        "instruction sheet including a randomly generated password." 
+    }
+  end
   spec
 end
 %>

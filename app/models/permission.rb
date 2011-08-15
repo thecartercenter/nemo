@@ -2,6 +2,7 @@ class Permission
   GENERAL = {
     "users#index" => {:group => :logged_in},
     "users#create" => {:min_level => 4},
+    "users#login_instructions" => {:min_level => 4},
     "user_sessions#create" => {:group => :logged_out},
     "user_sessions#destroy" => {:group => :logged_in},
     "password_resets#create" => {:group => :logged_out},

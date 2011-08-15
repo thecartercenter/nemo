@@ -1,0 +1,42 @@
+<%= show_flash_and_form_errors(@user) %>
+
+<div id="preamble">
+  Login instructions are shown below. Please print this page now and ensure the user below receives it.
+  Since the user's password is stored in encrypted format, it will be irretrievable after you leave this page.
+  <p><%= link_to("Back to Users List", users_path) %></p>
+</div>
+
+<div id="instructions">
+  <h1>eDEMOCS Login Instructions</h1>
+  <p>Welcome to the eDEMOCS command center. Your credentials are as follows:</p>
+
+  <table class="form">
+    <tr>
+      <td class="name">Name</td>
+      <td class="value"><%= @user.full_name %></td>
+    </tr>
+    <tr>
+      <td class="name">Email</td>
+      <td class="value"><%= @user.email %></td>
+    </tr>
+    <tr>
+      <td class="name">Role</td>
+      <td class="value"><%= @user.role.name %></td>
+    </tr>
+    <tr>
+      <td class="name">Username</td>
+      <td class="value"><%= @user.login %></td>
+    </tr>
+    <tr>
+      <td class="name">Password</td>
+      <td class="value"><%= flash[:password] %></td>
+    </tr>
+  </table>
+
+  <p>To login to the system online, visit <strong>https://cceom.org</strong> 
+  (note the 's' in 'https'). You can change your password using the web-based system if you like.</p>
+
+  <p>The above credentials will also work on your Android device. To enter your credentials, 
+  start the 'ODK Collect' application, press the 'Menu' button, tap 'Preferences', 
+  and then tap each of 'Username' and 'Password'.</p>
+</div>

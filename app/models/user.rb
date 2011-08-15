@@ -1,4 +1,6 @@
 class User < ActiveRecord::Base
+  attr_writer(:reset_password_method)
+  
   belongs_to(:role)
   belongs_to(:language)
   belongs_to(:location)
@@ -12,6 +14,7 @@ class User < ActiveRecord::Base
   validates(:role_id, :presence => true)
   validates(:language_id, :presence => true)
   validate(:phone_length_or_empty)
+  validate(:must_have_password_reset_on_create)
   
   before_validation(:no_mobile_phone_if_no_phone)
   
@@ -27,15 +30,15 @@ class User < ActiveRecord::Base
     paginate(:all, params)
   end
   def self.default(params = {})
-    User.new({:is_mobile_phone => true, :active => true, :language_id => Language.english.id}.merge(params))
+    User.new({:active => true, :language_id => Language.english.id}.merge(params))
   end
   def self.new_with_login_and_password(params)
     u = new(params)
-    u.password = u.password_confirmation = random_password
+    u.reset_password
     u.generate_login!
     u
   end
-  def self.random_password(size = 8)
+  def self.random_password(size = 6)
     charset = %w{2 3 4 6 7 9 a c d e f g h j k m n p q r t v w x y z}
     (0...size).map{charset.to_a[rand(charset.size)]}.join
   end
@@ -70,8 +73,12 @@ class User < ActiveRecord::Base
     ["pinchy lombard", 'role:observer', "language:english", "phone:+44"]
   end
   
+  def reset_password
+    self.password = self.password_confirmation = self.class.random_password
+  end
+  
   def generate_login!
-    base = "#{first_name[0,1]}#{last_name}".downcase.normalize
+    base = "#{first_name.gsub(/[^A-Za-z]/,'')[0,1]}#{last_name.gsub(/[^A-Za-z]/,'')[0,7]}".downcase.normalize
     try = 1
     until self.class.find_by_login(self.login = base + (try > 1 ? try.to_s : "")).nil?
       try += 1
@@ -91,6 +98,18 @@ class User < ActiveRecord::Base
   def full_name
     "#{first_name} #{last_name}"
   end
+  def reset_password_method
+    @reset_password_method.nil? ? "dont" : @reset_password_method
+  end
+  def reset_password_if_requested
+    if %w[email print].include?(reset_password_method)
+      reset_password and save
+    end
+    if reset_password_method == "email"
+      (login_count || 0) > 0 ? deliver_password_reset_instructions! : deliver_intro!
+    end
+  end
+  
   
   def can_get_sms?; !phone.blank? && is_mobile_phone; end
   
@@ -112,6 +131,10 @@ class User < ActiveRecord::Base
         raise("You can't delete #{full_name} because he/she has associated responses." +
           (active? ? " Try setting him/her to inactive." : ""))
       end
+    end
+    
+    def must_have_password_reset_on_create
+      errors.add(:base, "You must choose a password creation method") if new_record? && reset_password_method == "dont"
     end
     
     def no_mobile_phone_if_no_phone

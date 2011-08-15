@@ -26,7 +26,8 @@ class UsersController < ApplicationController
         redirect_to(:action => :edit)
       else
         flash[:success] = "User updated successfully."
-        redirect_to(:action => :index)
+        @user.reset_password_if_requested
+        handle_printable_instructions
       end
     else
       render(:action => :edit)
@@ -35,10 +36,9 @@ class UsersController < ApplicationController
   def create
     @user = User.new_with_login_and_password(params[:user])
     if @user.save
-      @user.deliver_intro!
-      flash[:success] = "User created successfully. An email containing login instructions " +
-        "has been sent to the address you provided."
-      redirect_to(:action => :index)
+      @user.reset_password_if_requested
+      flash[:success] = "User created successfully."
+      handle_printable_instructions
     else
       render(:action => :new)
     end
@@ -48,4 +48,20 @@ class UsersController < ApplicationController
     begin flash[:success] = @user.destroy && "User deleted successfully." rescue flash[:error] = $!.to_s end
     redirect_to(:action => :index)
   end
+  def login_instructions
+    @user = User.find(params[:id])
+    @title = ""
+  end
+  
+  private
+    def handle_printable_instructions
+      # if we need to print instructions, redirect there. otherwise redirect to index
+      if @user.reset_password_method == "print"
+        # save the password in the flash since we won't be able to get it in the next request
+        flash[:password] = @user.password
+        redirect_to(:action => :login_instructions, :id => @user.id)
+      else
+        redirect_to(:action => :index)
+      end
+    end
 end

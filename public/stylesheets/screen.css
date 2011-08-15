@@ -1,0 +1,25 @@
+/* template */
+body { background-color: #888; }
+div#upper { background-color: #005882; }
+div#banner { padding-left: 125px; height: 79px; color: white; padding-top: 10px; }
+div#banner img { position: absolute; left: 10px; top: 10px; border: none; }
+div#banner #title { float: left; font-family: "Lucidia Fax", "Cambria", "Book Antiqua", "Times New Roman", times; }
+div#banner #title h1 { color: white; margin-bottom: 3px; font-size: 30px; }
+div#banner #title h1 span { color: #BEA154; font-style: italic; }
+div#banner #title h2 { color: white; margin-top: 0; font-size: 100%; font-style: italic; }
+div#banner #userinfo { float: right; margin-right: 10px; }
+div#banner #userinfo a { color: white; }
+div#banner #dev_mode_warning { color: white; margin: 10px 10px 0 0; padding: 2px; text-align: right; font-weight: bold; background-color: #800000; float: right; clear: right; }
+div#content { padding: 10px 10px 30px 15px; margin-left: 88px; min-height: 500px; 
+    background: white url('/images/watermark.png') no-repeat 80% -20px; }
+div#nav { float: left; width: 88px; padding-top: 20px; color: white; }
+div#nav ul { margin-right: 15px; font-weight: bold; padding: 5px; list-style-type:none; }
+div#nav ul li { white-space: nowrap; }
+div#nav ul li a { text-decoration: none; color: white; }
+div#nav ul li a:hover { text-decoration: none; color: #BEA154; }
+div#footer { border-top: 1px solid #444; }
+
+/* login instructions */
+.users_login_instructions #preamble { width: 600px; margin-bottom: 20px; }
+.users_login_instructions #instructions { width: 600px; border: 1px solid #666; padding: 10px; }
+.users_login_instructions #instructions p { margin-top: 0;
