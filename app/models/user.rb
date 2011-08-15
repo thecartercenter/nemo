@@ -6,12 +6,14 @@ class User < ActiveRecord::Base
   before_destroy(:check_assoc)
   has_many(:responses)
   
-  acts_as_authentic
+  acts_as_authentic{|c| c.disable_perishable_token_maintenance = true}
   validates(:first_name, :presence => true)
   validates(:last_name, :presence => true)
   validates(:role_id, :presence => true)
   validates(:language_id, :presence => true)
   validate(:phone_length_or_empty)
+  
+  before_validation(:no_mobile_phone_if_no_phone)
   
   def self.per_page
     # we want all of these on one page for now
@@ -110,5 +112,10 @@ class User < ActiveRecord::Base
         raise("You can't delete #{full_name} because he/she has associated responses." +
           (active? ? " Try setting him/her to inactive." : ""))
       end
+    end
+    
+    def no_mobile_phone_if_no_phone
+      self.is_mobile_phone = false if phone.blank?
+      return true
     end
 end

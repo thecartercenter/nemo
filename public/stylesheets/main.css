@@ -75,6 +75,7 @@ div.success, div.error { position: absolute; left: 25%; top: 89px; background-co
 div.success { background-color: #9bc700; }
 div.error { background-color: #9f0000; }
 div.compact_error { color: #9f0000; font-weight: bold; }
+div.field_with_errors { display: inline; }
 
 /* welcome */
 img#welcome { border: 1px solid #666; }

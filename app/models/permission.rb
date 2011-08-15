@@ -18,7 +18,7 @@ class Permission
     "welcome#*" => {:group => :anyone},
     "permissions#no" => {:group => :anyone},
     "forms#index" => {:group => :logged_in},
-    "forms#show" => {:group => :logged_in},
+    "forms#show" => {:min_level => 2},
     "forms#create" => {:min_level => 4},
     "forms#update" => {:min_level => 4},
     "forms#destroy" => {:min_level => 4},
@@ -44,7 +44,8 @@ class Permission
     :anyone_can_edit_some_fields_about_herself_but_nobody_can_edit_their_own_role,
     :program_staff_can_delete_anyone_except_herself,
     :observer_can_view_edit_delete_own_responses_if_not_reviewed,
-    :observer_cant_change_user_or_reviewed_for_response
+    :observer_cant_change_user_or_reviewed_for_response,
+    :observer_can_show_published_forms
   ]
   
   def self.authorized?(params)
@@ -74,6 +75,8 @@ class Permission
     # observer can only see his/her own responses
     if params[:key] == "responses#index" && params[:user].is_observer?
       "responses.user_id = #{params[:user].id}"
+    elsif params[:key] == "forms#index" && params[:user].is_observer?
+      "forms.is_published = 1"
     else
       "1"
     end
@@ -156,7 +159,7 @@ class Permission
       return false unless params[:object]
       # make sure they're not trying to change user or reviewed
       observer_cant_change_user_or_reviewed_for_response(params)
-      # make sure the object belongs to the observer 
+      # make sure the object belongs to the observer
       # AND, if update or destroy, the response hasn't been reviewed
       return params[:object].user_id == params[:user].id &&
         (params[:key] == "responses#show" || !params[:object].reviewed?)
@@ -169,6 +172,13 @@ class Permission
         trying_to_change?(params, 'user_id', 'user', 'reviewed', 'reviewed?')
         raise PermissionError.new "Observers can't change the submitter for responses."
       end
+    end
+    
+    def self.observer_can_show_published_forms(params)
+      # if index
+      return false unless params[:key] == "forms#show"
+      params[:object] = Form.find_by_id(params[:request][:id]) if params[:request]
+      return params[:object] && params[:object].is_published?
     end
     
     ###############################################
