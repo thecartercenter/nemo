@@ -14,7 +14,7 @@ test:
 
 production:
   adapter: mysql
-  database: cceom_cc_p
+  database: cceom_cc_sb
   host: localhost
-  username: cceom_cc_p
-  password: tickleME
+  username: cceom_cc_sb
+  password: 19c0bb8b

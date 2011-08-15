@@ -4,4 +4,5 @@ db/*.sqlite3
 log/*.log
 tmp/
 config/initializers/local_config.rb
+config/database.yml
 TODO
