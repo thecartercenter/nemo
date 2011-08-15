@@ -109,3 +109,7 @@ textarea#broadcast_body { width: 400px; height: 200px; }
 /* user login instructions */
 .users_login_instructions td.name { width: 100px; }
 .users_login_instructions td.value { font-weight: bold; width: 300px; }
+
+/* user edit */
+.users_edit #user_notes, .users_new #user_notes { width: 300px; height: 100px; }
+.users_edit #user_device, .users_new #user_device { width: 100px; }

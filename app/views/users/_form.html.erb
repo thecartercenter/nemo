@@ -17,6 +17,10 @@
       :required => true,
       :value => f.select(:role_id, Role.select_options, :include_blank => true)
     },{
+      :col => :device,
+      :value => f.text_field(:device),
+      :details => "The ID number of the handheld device (if any) carried by this user. Example: TCC023"
+    },{
       :col => :phone,
       :value => f.text_field(:phone, :size => 20) + "<br/>".html_safe + f.check_box(:is_mobile_phone) + "Is this a mobile phone?",
       :details => "Phone number should include the country code. Example: +25680344523"
@@ -30,6 +34,9 @@
       :value => f.check_box(:active),
       :details => "Is this user active in the mission? If this box is not checked, the
         user will not be able to log in or submit forms."
+    },{
+      :col => :notes,
+      :value => f.text_area(:notes),
     }]
   }
   if user == current_user

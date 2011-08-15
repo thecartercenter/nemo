@@ -19,8 +19,12 @@
             <%= field[:label] || field[:col].to_s.gsub("_"," ").capitalize %>
             <%= reqd_sym(field[:required]) %>
           </td>
-          <td class="value"><%= field[:value].html_safe rescue '' %></td>
-          <td class="details"><%= (field[:details] || "").html_safe %></td>
+          <td class="value" <%= field[:expanded] ? 'colspan="2"'.html_safe : '' %>>
+            <%= field[:value].html_safe rescue '' %>
+          </td>
+          <% unless field[:expanded] %>
+            <td class="details"><%= (field[:details] || "").html_safe %></td>
+          <% end %>
         </tr>
       <% end %>
     <% end %>
