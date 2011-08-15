@@ -31,9 +31,13 @@ class Questioning < ActiveRecord::Base
       super
     end
   end
-  
+ 
+  def respond_to?(symbol, *)
+    is_question_method?(symbol.to_s) || super
+  end
+ 
   def respond_to_missing?(symbol, include_private)
-    is_question_method?(symbol) || super
+    is_question_method?(symbol.to_s) || super
   end
   
   def is_question_method?(symbol)

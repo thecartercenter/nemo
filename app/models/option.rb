@@ -34,9 +34,11 @@ class Option < ActiveRecord::Base
       super
     end
   end
-
+  def respond_to?(symbol, *)
+    is_translation_method?(symbol.to_s) || super
+  end
   def respond_to_missing?(symbol, include_private)
-    is_translation_method?(symbol) || super
+    is_translation_method?(symbol.to_s) || super
   end
   
   def is_translation_method?(symbol)
