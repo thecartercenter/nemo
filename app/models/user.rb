@@ -55,8 +55,8 @@ class User < ActiveRecord::Base
   # includes whether they should be included in a default, unqualified search
   # and whether they are searchable by a regular expression
   def self.search_fields
-    {:firstname => {:colname => "users.firstname", :default => true, :regexp => true},
-     :lastname => {:colname => "users.lastname", :default => true, :regexp => true},
+    {:firstname => {:colname => "users.first_name", :default => true, :regexp => true},
+     :lastname => {:colname => "users.last_name", :default => true, :regexp => true},
      :login => {:colname => "users.login", :default => true, :regexp => true},
      :language => {:colname => "languages.name", :default => false, :regexp => false},
      :role => {:colname => "roles.name", :default => false, :regexp => false},
@@ -109,8 +109,10 @@ class User < ActiveRecord::Base
       (login_count || 0) > 0 ? deliver_password_reset_instructions! : deliver_intro!
     end
   end
-  
-  
+  def to_vcf
+    "BEGIN:VCARD\nVERSION:3.0\nFN:#{full_name}\nN:#{last_name};#{first_name};;;\nEMAIL:#{email}\n" +
+    (phone ? "TEL;TYPE=#{is_mobile_phone? ? 'CELL' : 'WORK'}:#{phone}\n" : "") + "END:VCARD"
+  end
   def can_get_sms?; !phone.blank? && is_mobile_phone; end
   
   def is_observer?; role ? role.is_observer? : false; end

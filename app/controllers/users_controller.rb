@@ -52,6 +52,14 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     @title = ""
   end
+  def export
+    respond_to do |format|
+      format.vcf do
+        @users = params[:selected] ? load_selected_objects(User) : []
+        render(:text => @users.collect{|u| u.to_vcf}.join("\n"))
+      end
+    end
+  end
   
   private
     def handle_printable_instructions

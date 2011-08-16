@@ -14,7 +14,7 @@ CommandCenter::Application.routes.draw do
   resources(:responses)
   resources(:searches){member{get 'clear'}; collection{get 'start'}}
   resources(:settings){collection{post 'update_all'}}
-  resources(:users){member{get 'login_instructions'}}
+  resources(:users){member{get 'login_instructions'}; collection{post 'export'}}
 
 
   root(:to => "welcome#index")

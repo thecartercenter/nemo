@@ -54,6 +54,7 @@ module ApplicationHelper
     url_bits = {}
     url_bits[:controller], url_bits[:action] = options[:action].split("#")
     url_bits[:id] = options[:id] if options[:id]
+    url_bits[:format] = options[:format] if options[:format]
     path = url_for(url_bits)
     link_to_if_auth(options[:name], "#", options[:action], nil, 
       :onclick => "batch_submit({path: '#{path}', confirm: '#{options[:confirm]}'}); return false;")
