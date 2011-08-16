@@ -1,3 +1,5 @@
+<%= show_flash_and_form_errors %>
+
 <%= form_tag(update_all_settings_path) do |f| %>
   <table class="form">
     <%= render(:partial => "setting", :collection => @settings) %>
