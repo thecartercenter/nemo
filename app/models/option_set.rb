@@ -7,6 +7,7 @@ class OptionSet < ActiveRecord::Base
   validates(:name, :presence => true, :uniqueness => true)
   validates_associated(:option_settings)
   validate(:at_least_one_option)
+  validate(:unique_values)
   
   before_destroy(:check_assoc)
   
@@ -67,6 +68,13 @@ class OptionSet < ActiveRecord::Base
     def check_assoc
       unless questions.empty?
         raise "You can't delete option set '#{name}' because one or more questions are associated with it."
+      end
+    end
+    def unique_values
+      values = option_settings.map{|o| o.option.value}
+      Rails.logger.info(values)
+      if values.uniq.size != values.size
+        errors.add(:base, "Two or more of the options you've chosen have the same numeric value.")
       end
     end
 end
