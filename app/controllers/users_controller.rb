@@ -1,15 +1,6 @@
 class UsersController < ApplicationController
-  
   def index
-    # find or create a subindex object
-    @subindex = Subindex.find_and_update(session, current_user, "User", params[:page])
-    # get the users
-    begin
-      @users = User.sorted(@subindex.params)
-    rescue SearchError
-      flash[:error] = $!.to_s
-      @users = Place.sorted(:page => 1)
-    end
+    @users = load_objects_with_subindex(User)
   end
   def new
     @user = User.default

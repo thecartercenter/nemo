@@ -1,9 +1,6 @@
 class OptionSetsController < ApplicationController
   def index
-    # find or create a subindex object
-    @subindex = Subindex.find_and_update(session, current_user, "OptionSet", params[:page])
-    # get the option sets
-    @sets = OptionSet.sorted(@subindex.params)
+    @sets = load_objects_with_subindex(OptionSet)
   end
   
   def new

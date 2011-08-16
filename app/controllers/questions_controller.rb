@@ -1,9 +1,6 @@
 class QuestionsController < ApplicationController
   def index
-    # find or create a subindex object
-    @subindex = Subindex.find_and_update(session, current_user, "Question", params[:page])
-    # get the questions
-    @questions = Question.sorted(@subindex.params)
+    @questions = load_objects_with_subindex(Question)
   end
   
   def choose

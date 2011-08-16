@@ -1,15 +1,7 @@
 class PlacesController < ApplicationController
   
   def index
-    # find or create a subindex object
-    @subindex = Subindex.find_and_update(session, current_user, "Place", params[:page])
-    # get the places
-    begin
-      @places = Place.sorted(@subindex.params)
-    rescue SearchError
-      flash[:error] = $!.to_s
-      @places = Place.sorted(:page => 1)
-    end
+    @places = load_objects_with_subindex(Place)
   end
   def map
     @title = "Place Map"

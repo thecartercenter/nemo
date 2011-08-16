@@ -19,6 +19,23 @@ require 'authlogic'
       Time.zone = configatron.timezone.to_s if configatron.timezone
     end
     
+    def load_objects_with_subindex(klass)
+      # find or create a subindex object
+      @subindex = Subindex.find_and_update(session, current_user, klass.name, params[:page])
+      # get the users
+      begin
+        @objs = klass.sorted(@subindex.params)
+      rescue ActiveRecord::StatementInvalid
+        flash[:error] = "Your search is invalid"
+        @subindex.reset_search
+        @objs = klass.sorted(@subindex.params)
+      rescue SearchError
+        flash[:error] = $!.to_s
+        @objs = klass.sorted(:page => 1)
+      end
+      @objs
+    end
+    
     def load_selected_objects(klass)
       params[:selected].keys.collect{|id| klass.find_by_id(id)}.compact
     end

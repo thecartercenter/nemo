@@ -22,15 +22,7 @@ class ResponsesController < ApplicationController
   end
   
   def index
-    # find or create a subindex object
-    @subindex = Subindex.find_and_update(session, current_user, "Response", params[:page])
-    # get the responses
-    begin
-      @responses = Response.sorted(@subindex.params)
-    rescue SearchError
-      flash[:error] = $!.to_s
-      @responses = Response.sorted(:page => 1)
-    end
+    @responses = load_objects_with_subindex(Response)
   end
   
   def new

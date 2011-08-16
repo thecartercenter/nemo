@@ -3,8 +3,7 @@ class FormsController < ApplicationController
     if request.format.xml?
       @forms = Form.sorted(:conditions => "forms.is_published = 1", :include => [:type])
     else
-      @subindex = Subindex.find_and_update(session, current_user, "Form", params[:page])
-      @forms = Form.sorted(@subindex.params)
+      @forms = load_objects_with_subindex(Form)
     end
     render_appropriate_format
   end

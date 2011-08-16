@@ -1,9 +1,6 @@
 class BroadcastsController < ApplicationController
   def index
-    # find or create a subindex object
-    @subindex = Subindex.find_and_update(session, current_user, "Broadcast", params[:page])
-    # get the broadcasts
-    @broadcasts = Broadcast.sorted(@subindex.params)
+    @broadcasts = load_objects_with_subindex(Broadcast)
   end
   def new
     flash[:success] = "To send a broadcast, first select the recipients below, and then click 'Send Broadcast'."
