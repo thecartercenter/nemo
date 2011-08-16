@@ -13,7 +13,11 @@ class QuestionsController < ApplicationController
     @form = @subindex.extras[:form]
     @title = "Adding Questions to Form: #{@form.name}"
     @questions = Question.not_in_form(@form, @subindex.params)
-    render(:action => :index)
+    if @questions.empty?
+      redirect_to(new_questioning_path(:form_id => @form.id))
+    else
+      render(:action => :index)
+    end
   end
   
   def edit

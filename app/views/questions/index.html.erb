@@ -2,9 +2,14 @@
 <% choose_mode = controller.action_name == "choose" %>
 
 <div class="tip">
-  Found <strong><%= @questions.total_entries %></strong> questions.
+  <% if choose_mode && @questions.total_entries == 0 %>
+    There are no existing questions to add.
+  <% else %>
+    Found <strong><%= @questions.total_entries %></strong> questions.
+  <% end %>
   <% if choose_mode %>
-    <% bol = batch_op_links(:name => "Add selected questions to form", :action => "forms#add_questions", :id => @form.id) %>
+    <% bol = @questions.total_entries == 0 ? [] :
+        batch_op_links(:name => "Add selected questions to form", :action => "forms#add_questions", :id => @form.id) %>
     <%= join_links(bol + [link_to_if_auth("Create new question", new_questioning_path(:form_id => @form.id), "questionings#create")]) %>
   <% else %>
     <%= link_to_if_auth("Create new question", new_question_path, "questions#create") %>
