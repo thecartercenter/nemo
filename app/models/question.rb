@@ -87,6 +87,7 @@ class Question < ActiveRecord::Base
   private
     def clean
       self.code.downcase! if code
+      return true
     end
     def integrity
       # error if type or option set have changed and there are answers

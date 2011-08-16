@@ -4,7 +4,9 @@ class Answer < ActiveRecord::Base
   belongs_to(:response)
   has_many(:choices, :dependent => :destroy)
   
-  validates(:value, :numericality => true, :if => Proc.new{|a| a.numeric? && a.required?})
+  before_validation(:round_ints)
+  
+  validates(:value, :numericality => true, :if => Proc.new{|a| a.numeric? && !a.value.blank?})
   validate(:required)
   
   def self.new_from_str(params)
@@ -75,7 +77,8 @@ class Answer < ActiveRecord::Base
   def question_hint; question.hint; end
   def question_type_name; question.type.name; end
   def can_have_choices?; question_type_name == "select_multiple"; end
-  def numeric?; question_type_name == "numeric"; end
+  def numeric?; question.type.numeric?; end
+  def integer?; question.type.integer?; end
   def options; question.options; end
   def select_options; question.select_options; end
   
@@ -84,5 +87,9 @@ class Answer < ActiveRecord::Base
       if required? && !hidden? && value.nil? && option_id.nil? && !can_have_choices?
         errors.add(:base, "This question is required")
       end
+    end
+    def round_ints
+      self.value = value.to_i if integer? && value
+      return true
     end
 end

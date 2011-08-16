@@ -75,7 +75,8 @@ form.new_place_lookup td.value, form.new_place td.value { min-width: 400px; }
 .responses_index form#form_chooser { display: inline; }
 
 /* response edit */
-.responses_edit input.qtype_numeric, .responses_new input.qtype_numeric { width: 100px; }
+.responses_edit input.qtype_integer, .responses_new input.qtype_integer { width: 100px; }
+.responses_edit input.qtype_decimal, .responses_new input.qtype_decimal { width: 100px; }
 .responses_edit table.answers td.name, .responses_new table.answers td.name, .responses_show table.answers td.name { width: 300px; }
 
 /* question show/edit */

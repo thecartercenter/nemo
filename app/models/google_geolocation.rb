@@ -170,5 +170,6 @@ class GoogleGeolocation < ActiveRecord::Base
       self.longitude = result['geometry']['location']['lng']
       # safe the formatted address
       self.formatted_addr = result['formatted_address']
+      return true
     end
 end

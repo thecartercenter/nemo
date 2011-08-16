@@ -4,10 +4,16 @@ text:
   odk_name: string
   odk_tag: input
   
-numeric:
-  name: numeric
-  long_name: Number
+integer:
+  name: integer
+  long_name: Integer
   odk_name: int
+  odk_tag: input
+
+decimal:
+  name: decimal
+  long_name: Decimal
+  odk_name: decimal
   odk_tag: input
 
 location:

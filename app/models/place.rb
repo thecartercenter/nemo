@@ -107,6 +107,7 @@ class Place < ActiveRecord::Base
         self.full_name = long_name + (container_full_name ? ", " + container_full_name : "")
         children.each{|c| c.set_full_name(full_name); c.save}
       end
+      return true
     end
     
     def check_container

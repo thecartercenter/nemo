@@ -57,6 +57,7 @@ class Questioning < ActiveRecord::Base
   private
     def set_rank
       self.rank = form.max_rank + 1 if rank.nil?
+      return true
     end
     
     def check_assoc

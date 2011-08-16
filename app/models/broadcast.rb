@@ -55,6 +55,7 @@ class Broadcast < ActiveRecord::Base
       # one error per line
       $!.to_s.split("\n").each{|e| add_send_error("SMS Error: #{e}")}
     end
+    return true
   end
   
   def add_send_error(msg)

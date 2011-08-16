@@ -1,4 +1,5 @@
 <% place_lookup = nil unless defined?(place_lookup) %>
+<%= resp.answers.collect{|a| a.errors.full_messages.join(", ")}.join(" ") %>
 <%= basic_form(resp) do |f|
   spec = {
     :sections => [{

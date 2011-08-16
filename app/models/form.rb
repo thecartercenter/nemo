@@ -115,9 +115,11 @@ class Form < ActiveRecord::Base
     end
     def fix_ranks
       questionings.each_index{|i| questionings[i].rank = i + 1}
+      return true
     end
     def init_downloads
       self.downloads = 0
+      return true
     end
     def check_assoc
       if is_published?
