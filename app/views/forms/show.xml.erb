@@ -39,7 +39,7 @@
             'required' => q.required? ? "true()" : nil,
             'jr:preload' => q.question.type.odk_preload,
             'jr:preloadParams' => q.question.type.odk_preload_params
-           }.reject{|k,v| v.nil?}) %>
+           }.reject{|k,v| v.nil?}).gsub(/"required"/, '"true()"') %>
       <% end %>
     </model>
   </h:head>
