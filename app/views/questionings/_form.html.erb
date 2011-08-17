@@ -29,7 +29,7 @@
   <% unless f.mode == :edit && qing.question.published? %>
     <h2>Fields about all instances of the question</h2>
     <% unless (of = qing.other_forms).empty? %>
-      <div class="error tip">
+      <div class="tip important">
         Note: This question also appears on the following forms: <%= of.map{|f| f.name}.join(", ") %>.
         Any changes you make below will also be reflected on those forms.
       </div>

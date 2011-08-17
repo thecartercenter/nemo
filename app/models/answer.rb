@@ -81,15 +81,16 @@ class Answer < ActiveRecord::Base
   def integer?; question.type.integer?; end
   def options; question.options; end
   def select_options; question.select_options; end
+  def phone_only?; question.type.phone_only?; end
   
   private
     def required
-      if required? && !hidden? && value.nil? && option_id.nil? && !can_have_choices?
+      if required? && !hidden? && !phone_only? && value.blank? && option_id.nil? && !can_have_choices?
         errors.add(:base, "This question is required")
       end
     end
     def round_ints
-      self.value = value.to_i if integer? && value
+      self.value = value.to_i if integer? && !value.blank?
       return true
     end
 end
