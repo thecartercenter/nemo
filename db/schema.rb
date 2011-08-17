@@ -10,7 +10,30 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110816185426) do
+ActiveRecord::Schema.define(:version => 20110817184219) do
+
+  create_table "_answers", :id => false, :force => true do |t|
+    t.datetime "observe_time"
+    t.boolean  "is_reviewed"
+    t.string   "form_name"
+    t.string   "form_type"
+    t.string   "question_code"
+    t.text     "question_name"
+    t.string   "question_type"
+    t.string   "observer_name",      :limit => 511
+    t.string   "address_landmark"
+    t.string   "locality"
+    t.string   "state"
+    t.string   "country"
+    t.decimal  "latitude",                                 :precision => 20, :scale => 15
+    t.decimal  "longitude",                                :precision => 20, :scale => 15
+    t.binary   "latitude_longitude", :limit => 45
+    t.integer  "answer_id",                                                                :default => 0, :null => false
+    t.text     "answer_value"
+    t.text     "choice_name",        :limit => 2147483647
+    t.string   "choice_value"
+    t.string   "option_set"
+  end
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -43,6 +66,8 @@ ActiveRecord::Schema.define(:version => 20110816185426) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "choices", ["answer_id"], :name => "index_choices_on_answer_id"
 
   create_table "form_types", :force => true do |t|
     t.string   "name"
@@ -228,6 +253,8 @@ ActiveRecord::Schema.define(:version => 20110816185426) do
     t.string   "class_name"
     t.integer  "obj_id"
   end
+
+  add_index "translations", ["language_id", "class_name", "fld", "obj_id"], :name => "translation_master", :unique => true
 
   create_table "users", :force => true do |t|
     t.string   "login"
