@@ -40,6 +40,9 @@ module CommandCenter
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password, :password_confirmation]
     
+    # read system version as git tag
+    configatron.system_version = `git describe`.strip rescue "?"
+    
     configatron.site_name = "CCEOM Command Center"
     configatron.site_email = "#{configatron.site_name} <webmaster@cceom.org>"
     configatron.broadcast_tag = "[TCC-Broadcast]"
