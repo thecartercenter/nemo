@@ -49,9 +49,8 @@ div.pagination em { font-style: normal; font-weight: bold; }
 div.pagination *.next_page, div.pagination *.previous_page { width: 80px; }
 
 /* flash/error messages */
-div#flash { margin-bottom: 10px; }
 div.success, div.error { position: absolute; left: 25%; top: 89px; background-color: #9bc700; padding: 5px; 
-    color: white; font-weight: bold; width: 600px; }
+    color: white; font-weight: bold; width: 600px; margin-bottom: 10px; }
 div.success { background-color: #9bc700; }
 div.error { background-color: #9f0000; }
 div.compact_error { color: #9f0000; font-weight: bold; }

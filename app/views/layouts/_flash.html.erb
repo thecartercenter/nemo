@@ -1,8 +1,2 @@
-<% if flash && !flash.empty? %>
-  <div id="flash" class="<%= flash.keys.first.to_s %>">
-    <%= flash.values.first %>
-  </div>
-<% end %>
-<% if defined?(object) %>
-  <%= render("layouts/object_errors", :object => object) %>
-<% end %>
+<%= [:success, :error].collect{|k| (flash || {})[k] ? content_tag("div", :class => k){flash[k]} : ""}.join.html_safe %>
+<%= defined?(object) ? render("layouts/object_errors", :object => object) : "" %>
