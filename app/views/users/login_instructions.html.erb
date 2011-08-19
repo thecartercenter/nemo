@@ -24,6 +24,10 @@
       <td class="value"><%= @user.role.name %></td>
     </tr>
     <tr>
+      <td class="name">Site URL</td>
+      <td class="value">https://<%= request.host_with_port %></td>
+    </tr>
+    <tr>
       <td class="name">Username</td>
       <td class="value"><%= @user.login %></td>
     </tr>
@@ -33,8 +37,9 @@
     </tr>
   </table>
 
-  <p>To login to the system online, visit <strong>https://cceom.org</strong> 
-  (note the 's' in 'https'). You can change your password using the web-based system if you like.</p>
+  <p>Please note the 's' in 'https' in the site URL.</p>
+  
+  <p>If you'd like to a more memorable password, you can change your password using the website.</p>
 
   <p>The above credentials will also work on your Android device. To enter your credentials, 
   start the 'ODK Collect' application, press the 'Menu' button, tap 'Preferences', 
