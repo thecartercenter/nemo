@@ -4,7 +4,8 @@ class CreateMainView < ActiveRecord::Migration
     execute("
     CREATE VIEW _answers AS 
       select 
-        r.observed_at AS observe_time,
+        r.id AS response_id,
+        r.observed_at AS observation_time,
         r.reviewed AS is_reviewed,
         f.name AS form_name,
         ft.name AS form_type,
@@ -12,6 +13,7 @@ class CreateMainView < ActiveRecord::Migration
         qtr.str AS question_name,
         qt.name AS question_type,
         concat(u.first_name, ' ', u.last_name) AS observer_name,
+        adr.full_name AS place_full_name,
         adr.long_name AS address_landmark,
         loc.long_name AS locality,
         sta.long_name AS state,
