@@ -19,7 +19,7 @@ class Language < ActiveRecord::Base
     @@code_hash
   end
   def self.active
-    sorted(:conditions => "is_active = 1")
+    sorted(:conditions => "active = 1")
   end
   def self.select_options
     sorted.collect{|l| [l.name, l.id]}
@@ -28,7 +28,7 @@ class Language < ActiveRecord::Base
     LanguageList::LANGS.map{|code, name| [name, code]}.sort_by{|pair| pair[0]}
   end
   def self.default
-    new(:is_active => true)
+    new(:active => true)
   end
   def self.english
     @@english ||= find_by_code("eng")
@@ -46,8 +46,8 @@ class Language < ActiveRecord::Base
         errors.add(:base, "You can't change English because it's the main system language.")
       end
       # English must always be active
-      if self == self.class.english && !is_active
-        errors.add(:is_active, "can't be false since English must always be active")
+      if self == self.class.english && !active
+        errors.add(:active, "can't be false since English must always be active")
       end
     end
     def check_assoc_and_english_mandatory

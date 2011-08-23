@@ -81,7 +81,7 @@ class Question < ActiveRecord::Base
     type.name == "address"
   end
   def published?
-    !forms.detect{|f| f.is_published?}.nil?
+    !forms.detect{|f| f.published?}.nil?
   end
   
   private

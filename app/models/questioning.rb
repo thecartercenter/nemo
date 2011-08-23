@@ -15,7 +15,7 @@ class Questioning < ActiveRecord::Base
   end
   
   def published?
-    form.is_published?
+    form.published?
   end
   
   # returns any forms other than this one on which this questionings question appears

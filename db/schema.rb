@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110823170400) do
+ActiveRecord::Schema.define(:version => 20110823171727) do
 
   create_table "_answers", :id => false, :force => true do |t|
     t.datetime "observe_time"
@@ -79,7 +79,7 @@ ActiveRecord::Schema.define(:version => 20110823170400) do
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "is_published", :default => false
+    t.boolean  "published",    :default => false
     t.integer  "form_type_id"
     t.integer  "downloads"
   end
@@ -98,7 +98,7 @@ ActiveRecord::Schema.define(:version => 20110823170400) do
   create_table "languages", :force => true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "is_active",  :default => false
+    t.boolean  "active",     :default => false
     t.string   "code"
   end
 
@@ -158,7 +158,7 @@ ActiveRecord::Schema.define(:version => 20110823170400) do
     t.decimal  "longitude",     :precision => 20, :scale => 15
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "is_incomplete",                                 :default => false
+    t.boolean  "incomplete",                                    :default => false
   end
 
   create_table "question_types", :force => true do |t|
@@ -265,7 +265,7 @@ ActiveRecord::Schema.define(:version => 20110823170400) do
     t.integer  "role_id"
     t.integer  "location_id"
     t.string   "phone"
-    t.boolean  "is_mobile_phone",     :default => false
+    t.boolean  "phone_is_mobile",     :default => false
     t.boolean  "active",              :default => false
     t.string   "password_salt"
     t.string   "crypted_password"

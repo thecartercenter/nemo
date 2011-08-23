@@ -23,7 +23,7 @@ namespace :db do
       find_or_create(PlaceType, :name, :name => "Locality", :level => "3")
       find_or_create(PlaceType, :name, :name => "Address/Bldg/Landmark", :level => "4")
       # Languages
-      find_or_create(Language, :code, :code => "eng", :is_active => "1")
+      find_or_create(Language, :code, :code => "eng", :active => "1")
       # FormTypes
       find_or_create(FormType, :name, :name => "STO")
       find_or_create(FormType, :name, :name => "LTO")

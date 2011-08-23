@@ -85,7 +85,7 @@ class User < ActiveRecord::Base
     end
   end
   def phone_number
-    phone.blank? ? "" : phone + (is_mobile_phone? ? " [m]" : "")
+    phone.blank? ? "" : phone + (phone_is_mobile? ? " [m]" : "")
   end
   def deliver_intro!
     reset_perishable_token!
@@ -111,9 +111,9 @@ class User < ActiveRecord::Base
   end
   def to_vcf
     "BEGIN:VCARD\nVERSION:3.0\nFN:#{full_name}\nN:#{last_name};#{first_name};;;\nEMAIL:#{email}\n" +
-    (phone ? "TEL;TYPE=#{is_mobile_phone? ? 'CELL' : 'WORK'}:#{phone}\n" : "") + "END:VCARD"
+    (phone ? "TEL;TYPE=#{phone_is_mobile? ? 'CELL' : 'WORK'}:#{phone}\n" : "") + "END:VCARD"
   end
-  def can_get_sms?; !phone.blank? && is_mobile_phone; end
+  def can_get_sms?; !phone.blank? && phone_is_mobile; end
   
   def is_observer?; role ? role.is_observer? : false; end
   def is_program_staff?; role ? role.is_program_staff? : false; end
@@ -141,7 +141,7 @@ class User < ActiveRecord::Base
     end
     
     def no_mobile_phone_if_no_phone
-      self.is_mobile_phone = false if phone.blank?
+      self.phone_is_mobile = false if phone.blank?
       return true
     end
 end

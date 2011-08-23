@@ -22,7 +22,7 @@
       :details => "The ID number of the handheld device (if any) carried by this user. Example: TCC023"
     },{
       :col => :phone,
-      :value => f.text_field(:phone, :size => 20) + "<br/>".html_safe + f.check_box(:is_mobile_phone) + "Is this a mobile phone?",
+      :value => f.text_field(:phone, :size => 20) + "<br/>".html_safe + f.check_box(:phone_is_mobile) + "Is this a mobile phone?",
       :details => "Phone number should include the country code. Example: +25680344523"
     },{
       :col => :language,

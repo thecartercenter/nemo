@@ -69,7 +69,7 @@ class Place < ActiveRecord::Base
       # find/initialize
       addr = Place.find_or_initialize_by_long_name_and_place_type_id_and_container_id(bits[:addr], PlaceType.address.id, cont ? cont.id : nil)
       # if container is nil, this is ok, but set incomplete to false
-      addr.is_incomplete = true if addr.no_container?
+      addr.incomplete = true if addr.no_container?
       # get longitude & latitude from bits
       addr.latitude, addr.longitude = bits[:coords]
       # set full name and save
@@ -113,7 +113,7 @@ class Place < ActiveRecord::Base
     def check_container
       if place_type && place_type.level == 1 && !container.nil?
         errors.add(:container, "must be blank for countries.")
-      elsif no_container? && !is_incomplete?
+      elsif no_container? && !incomplete?
         errors.add(:container, "can't be blank for a place with type: #{place_type.name}")
       elsif place_type && container && place_type.level <= container.place_type.level
         errors.add(:container, "must be a higher level than #{place_type.name}")

@@ -78,7 +78,7 @@ class Permission
     if params[:key] == "responses#index" && params[:user].is_observer?
       "responses.user_id = #{params[:user].id}"
     elsif params[:key] == "forms#index" && params[:user].is_observer?
-      "forms.is_published = 1"
+      "forms.published = 1"
     else
       "1"
     end
@@ -180,7 +180,7 @@ class Permission
       # if index
       return false unless params[:key] == "forms#show"
       params[:object] = Form.find_by_id(params[:request][:id]) if params[:request]
-      return params[:object] && params[:object].is_published?
+      return params[:object] && params[:object].published?
     end
     
     ###############################################

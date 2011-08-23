@@ -1,7 +1,7 @@
 class FormsController < ApplicationController
   def index
     if request.format.xml?
-      @forms = Form.sorted(:conditions => "forms.is_published = 1", :include => [:type])
+      @forms = Form.sorted(:conditions => "forms.published = 1", :include => [:type])
     else
       @forms = load_objects_with_subindex(Form)
     end
@@ -27,7 +27,7 @@ class FormsController < ApplicationController
   end
   def publish
     @form = Form.find(params[:id])
-    verb = @form.is_published? ? "unpublish" : "publish"
+    verb = @form.published? ? "unpublish" : "publish"
     begin
       @form.toggle_published
       dl = verb == "unpublish" ? " The download count has also been reset." : ""

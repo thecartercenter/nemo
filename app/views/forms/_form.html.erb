@@ -15,9 +15,9 @@
   }
   if f.mode != :new
     spec[:fields] << {
-      :col => :is_published,
+      :col => :published,
       :label => "Published?",
-      :value => content_tag("strong"){form.is_published? ? "Yes" : "No"}
+      :value => content_tag("strong"){form.published? ? "Yes" : "No"}
     }
   end
   spec

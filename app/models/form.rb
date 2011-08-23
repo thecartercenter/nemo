@@ -33,7 +33,7 @@ class Form < ActiveRecord::Base
   
   def self.select_options(options = {})
     params = {:include => :type, :order => "form_types.name, forms.name"}
-    params[:conditions] = {:is_published => options[:published]} if !options[:published].nil?
+    params[:conditions] = {:published => options[:published]} if !options[:published].nil?
     all(params).collect{|f| [f.full_name, f.id]}
   end
   
@@ -83,7 +83,7 @@ class Form < ActiveRecord::Base
   end
   
   def toggle_published
-    self.is_published = !self.is_published?
+    self.published = !self.published?
     self.downloads = 0
     save
   end
@@ -99,7 +99,7 @@ class Form < ActiveRecord::Base
     base = name.match(/^(.+?)( v(\d+))?$/)[1]
     version = (self.class.max_version(base) || 1) + 1
     # create the new form and set the basic attribs
-    cloned = self.class.new(:name => "#{base} v#{version}", :is_published => false, :form_type_id => form_type_id)
+    cloned = self.class.new(:name => "#{base} v#{version}", :published => false, :form_type_id => form_type_id)
     # clone all the questionings
     cloned.questionings = questionings.collect{|qing| qing.clone(cloned)}
     # done!
@@ -108,8 +108,8 @@ class Form < ActiveRecord::Base
   
   private
     def cant_change_published
-      # if this is a published form and something other than is_published and downloads changes, wrong!
-      if is_published_was && !(changed - %w[is_published downloads]).empty?
+      # if this is a published form and something other than published and downloads changes, wrong!
+      if published_was && !(changed - %w[published downloads]).empty?
         errors.add(:base, "A published form can't be edited.") 
       end
     end
@@ -122,7 +122,7 @@ class Form < ActiveRecord::Base
       return true
     end
     def check_assoc
-      if is_published?
+      if published?
         raise "You can't delete form '#{name}' because it is published."
       elsif !responses.empty?
         raise "You can't delete form '#{name}' because it has associated responses."
