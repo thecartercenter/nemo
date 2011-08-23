@@ -13,6 +13,7 @@ class Permission
     "places#update" => {:min_level => 2},
     "places#index" => {:group => :logged_in},
     "places#map" => {:group => :logged_in},
+    "places#map_all" => {:group => :logged_in},
     "places#destroy" => {:min_level => 2},
     "place_lookups#*" => {:min_level => 2},
     "place_lookups#suggest" => {:group => :logged_in},

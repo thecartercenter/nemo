@@ -1,5 +1,6 @@
 <%= content_tag("div", :class => controller.action_name == "show" ? "dummy" : "normal") do %>
   <%= place ? place.full_name : "" %>
+  <%= map_link(place) %>
 <% end %>
 <% if place_lookup %>
   <small>

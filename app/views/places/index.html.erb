@@ -4,7 +4,7 @@
 
 <div class="tip">
   Found <strong><%= @places.total_entries %></strong> places.
-  <% map_link = @places.total_entries > 0 ? link_to_if_auth("View places on map", map_places_path, "places#map") : "" %>
+  <% map_link = @places.total_entries > 0 ? link_to_if_auth("View places on map", map_all_places_path, "places#map_all") : "" %>
   <%= join_links([link_to_if_auth("Add new place", new_place_lookup_path, "places#create"), map_link]) %>
 </div>
 

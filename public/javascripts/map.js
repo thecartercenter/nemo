@@ -5,18 +5,8 @@ function draw_map(markers, bounds) {
 
   var map = new google.maps.Map($("map_canvas"), {
     mapTypeId: google.maps.MapTypeId.ROADMAP,
+    zoom: 3
   });
-  
-  map.setCenter(new google.maps.LatLng(
-    ((bounds.lat_max + bounds.lat_min) / 2.0),
-    ((bounds.lng_max + bounds.lng_min) / 2.0)
-  ));
-  map.fitBounds(new google.maps.LatLngBounds(
-    //bottom left
-    new google.maps.LatLng(bounds.lat_min, bounds.lng_min),
-    //top right
-    new google.maps.LatLng(bounds.lat_max, bounds.lng_max)
-  ));
   
   for (var i = 0; i < markers.length; i++) {
     var marker = markers[i];
@@ -34,5 +24,19 @@ function draw_map(markers, bounds) {
         infowindow.open(map, m.ui); 
       });
     }(marker));
+  }  
+  
+  // if bounds argument is given, translate it to google maps speak
+  if (bounds) {
+    map.setCenter(new google.maps.LatLng(
+      ((bounds.lat_max + bounds.lat_min) / 2.0),
+      ((bounds.lng_max + bounds.lng_min) / 2.0)
+    ));
+    map.fitBounds(new google.maps.LatLngBounds(
+      //bottom left
+      new google.maps.LatLng(bounds.lat_min, bounds.lng_min),
+      //top right
+      new google.maps.LatLng(bounds.lat_max, bounds.lng_max)
+    ));
   }
 }

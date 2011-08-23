@@ -4,6 +4,14 @@ class PlacesController < ApplicationController
     @places = load_objects_with_subindex(Place)
   end
   def map
+    @place = Place.find(params[:id])
+    @places = [@place]
+    @bounds = @place.bounds
+    @title = "Map: #{@place.full_name}"
+    @js << "map"
+    render(:action => :map_all)
+  end
+  def map_all
     @title = "Place Map"
     @js << "map"
     @places = Place.all(:conditions => "latitude is not null and longitude is not null")

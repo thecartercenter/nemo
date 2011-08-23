@@ -94,6 +94,19 @@ class Place < ActiveRecord::Base
     place_type && place_type.level > 1 && container.nil?
   end
   
+  def mappable?
+    latitude && longitude
+  end
+  
+  def bounds
+    {
+      :lat_min => [-89, latitude - 5].max,
+      :lat_max => [89, latitude + 5].min,
+      :lng_min => [-180, longitude - 5].max,
+      :lng_max => [180, longitude + 5].min
+    }
+  end
+    
   protected
     def check_uniqueness
       if new_record? && self.class.find_by_long_name_and_container_id(long_name, container_id)

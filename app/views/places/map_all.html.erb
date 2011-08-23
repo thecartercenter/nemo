@@ -1,6 +1,5 @@
 <div class="tip">
-  <%= join_links([link_to_if_auth("Add new place", new_place_lookup_path, "places#create"),
-      link_to_if_auth("Back to list", places_path, "places#index")]) %>
+  <%= controller.action_name == 'map_all' ? link_to_if_auth("Add new place", new_place_lookup_path, "places#create") : "" %>
 </div>
 
 <div id="map_canvas"></div>
