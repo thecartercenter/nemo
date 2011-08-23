@@ -10,11 +10,11 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110817184219) do
+ActiveRecord::Schema.define(:version => 20110823170400) do
 
   create_table "_answers", :id => false, :force => true do |t|
     t.datetime "observe_time"
-    t.boolean  "is_reviewed"
+    t.boolean  "is_reviewed",                                                              :default => false
     t.string   "form_name"
     t.string   "form_type"
     t.string   "question_code"
@@ -28,7 +28,7 @@ ActiveRecord::Schema.define(:version => 20110817184219) do
     t.decimal  "latitude",                                 :precision => 20, :scale => 15
     t.decimal  "longitude",                                :precision => 20, :scale => 15
     t.binary   "latitude_longitude", :limit => 45
-    t.integer  "answer_id",                                                                :default => 0, :null => false
+    t.integer  "answer_id",                                                                :default => 0,     :null => false
     t.text     "answer_value"
     t.text     "choice_name",        :limit => 2147483647
     t.string   "choice_value"
@@ -79,7 +79,7 @@ ActiveRecord::Schema.define(:version => 20110817184219) do
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "is_published"
+    t.boolean  "is_published", :default => false
     t.integer  "form_type_id"
     t.integer  "downloads"
   end
@@ -98,7 +98,7 @@ ActiveRecord::Schema.define(:version => 20110817184219) do
   create_table "languages", :force => true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "is_active"
+    t.boolean  "is_active",  :default => false
     t.string   "code"
   end
 
@@ -158,7 +158,7 @@ ActiveRecord::Schema.define(:version => 20110817184219) do
     t.decimal  "longitude",     :precision => 20, :scale => 15
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "is_incomplete"
+    t.boolean  "is_incomplete",                                 :default => false
   end
 
   create_table "question_types", :force => true do |t|
@@ -169,7 +169,7 @@ ActiveRecord::Schema.define(:version => 20110817184219) do
     t.string   "odk_tag"
     t.string   "odk_preload"
     t.string   "odk_preload_params"
-    t.boolean  "phone_only"
+    t.boolean  "phone_only",         :default => false
     t.string   "long_name"
   end
 
@@ -177,8 +177,8 @@ ActiveRecord::Schema.define(:version => 20110817184219) do
     t.integer  "question_id"
     t.integer  "form_id"
     t.integer  "rank"
-    t.boolean  "required"
-    t.boolean  "hidden"
+    t.boolean  "required",    :default => false
+    t.boolean  "hidden",      :default => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -198,14 +198,14 @@ ActiveRecord::Schema.define(:version => 20110817184219) do
     t.datetime "observed_at"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "reviewed"
+    t.boolean  "reviewed",    :default => false
     t.string   "source"
   end
 
   create_table "roles", :force => true do |t|
     t.string   "name"
     t.integer  "level"
-    t.boolean  "location_required"
+    t.boolean  "location_required", :default => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -265,8 +265,8 @@ ActiveRecord::Schema.define(:version => 20110817184219) do
     t.integer  "role_id"
     t.integer  "location_id"
     t.string   "phone"
-    t.boolean  "is_mobile_phone"
-    t.boolean  "active"
+    t.boolean  "is_mobile_phone",     :default => false
+    t.boolean  "active",              :default => false
     t.string   "password_salt"
     t.string   "crypted_password"
     t.string   "single_access_token"
