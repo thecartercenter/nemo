@@ -6,10 +6,8 @@
   <%= stylesheet_link_tag("main", :media => :all) %>
   <%= stylesheet_link_tag("screen", :media => :screen) %>
   <%= stylesheet_link_tag("print", :media => :print) %>
-  <%= javascript_include_tag("application") %>
-  <%= javascript_include_tag("prototype") %>
-  <%= javascript_include_tag("scriptaculous/effects") %>
-  <%= javascript_include_tag(@js) unless @js.empty? %>
+  <%= javascript_include_tag("prototype", "rails", "application") %>
+  <%= @js.collect{|j| javascript_include_tag("custom/#{j}")}.join unless @js.empty? %>
   <% if controller.controller_name == "places" && %w(map map_all).include?(controller.action_name) %>
     <%= javascript_include_tag("https://maps.google.com/maps/api/js?sensor=false&key=#{configatron.google_maps_key}") %>
   <% end %>
@@ -23,7 +21,7 @@
       <% if current_user %>
         Logged in as <strong><%= current_user.login %></strong> |
         <%= link_to("Edit Profile", edit_user_path(current_user.id)) %> |
-        <%= link_to("Logout", user_session_path, :method => :delete) %>
+        <%= button_to("Logout", user_session_path, :method => :delete) %>
       <% else %>
         <%= link_to("Login", new_user_session_path) %>
       <% end %>

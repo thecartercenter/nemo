@@ -8,7 +8,7 @@ div#banner #title h1 { color: white; margin-bottom: 3px; font-size: 30px; }
 div#banner #title h1 span { color: #BEA154; font-style: italic; }
 div#banner #title h2 { color: white; margin-top: 0; font-size: 100%; font-style: italic; }
 div#banner #userinfo { float: right; margin-right: 10px; }
-div#banner #userinfo a { color: white; }
+div#banner #userinfo a, div#banner #userinfo form.button_to input { color: white; }
 div#banner #dev_mode_warning { color: white; margin: 10px 10px 0 0; padding: 2px; text-align: right; font-weight: bold; background-color: #800000; float: right; clear: right; }
 div#content { padding: 10px 10px 30px 15px; margin-left: 88px; min-height: 500px; 
     background: white url('/images/watermark.png') no-repeat 80% -20px; }

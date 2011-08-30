@@ -5,6 +5,9 @@ module ApplicationHelper
   def link_to_if_auth(label, url, action, object = nil, *args)
     authorized?(:action => action, :object => object) ? link_to(label, url, *args) : ""
   end
+  def button_to_if_auth(label, url, action, object = nil, *args)
+    authorized?(:action => action, :object => object) ? button_to(label, url, *args) : ""
+  end
   # draws a basic form for the given object
   def basic_form(obj, &block)
     form_for(obj) do |f|
@@ -51,12 +54,12 @@ module ApplicationHelper
     url_bits[:id] = options[:id] if options[:id]
     url_bits[:format] = options[:format] if options[:format]
     path = url_for(url_bits)
-    link_to_if_auth(options[:name], "#", options[:action], nil, 
+    button_to_if_auth(options[:name], "#", options[:action], nil, 
       :onclick => "batch_submit({path: '#{path}', confirm: '#{options[:confirm]}'}); return false;",
       :class => "batch_op_link")
   end
   def select_all_link
-    link_to("Select All", "#", :onclick => "batch_select_all(); return false", :id => "select_all_link")
+    button_to("Select All", "#", :onclick => "batch_select_all(); return false", :id => "select_all_link")
   end
   def fix_error_messages(msgs)
     msgs.gsub("Answers are invalid", "One or more answers are invalid").gsub("@ please.", "@").gsub("look like an email address.", "look like an email address")

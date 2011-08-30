@@ -132,7 +132,7 @@ class User < ActiveRecord::Base
       # Can't delete users with related responses.
       unless responses.empty?
         raise("You can't delete #{full_name} because he/she has associated responses." +
-          (active? ? " Try setting him/her to inactive." : ""))
+          (active? ? " You could set him/her to inactive instead." : ""))
       end
     end
     
