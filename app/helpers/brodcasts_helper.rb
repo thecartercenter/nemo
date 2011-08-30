@@ -1,4 +1,12 @@
 module BrodcastsHelper
+  def broadcasts_index_links(broadcasts)
+    [link_to_if_auth("Send Broadcast", new_broadcast_path, "broadcasts#create")]
+  end
+  
+  def broadcasts_index_fields
+    %w[to medium sent_at errors? message actions]
+  end
+    
   def format_broadcasts_field(broadcast, field)
     case field
     when "to" then "#{broadcast.recipients.count} users"

@@ -90,17 +90,3 @@ function batch_submit(options) {
     f.submit();
   }
 }
-
-// shows/hides a table row and fixes the row bg class for all the rows beneath it.
-function toggle_table_row(id, yn) {
-  var tr = $(id);
-  if (yn == tr.visible()) return;
-  // show/hide
-  yn ? tr.show() : tr.hide();
-  // loop over each row beneath, toggling classNames
-  while (tr = tr.nextSibling)
-    if (tr.tagName == "TR") {
-      tr.toggleClassName("rowbg0");
-      tr.toggleClassName("rowbg1");
-    }
-}

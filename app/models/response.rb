@@ -18,9 +18,11 @@ class Response < ActiveRecord::Base
   # only need to validate answers in web mode
   validates_associated(:answers, :message => "are invalid (see below)", :if => Proc.new{|r| r.modifier == "web"})
   
+  def self.per_page; 20; end
+  
   def self.sorted(params = {})
     params.merge!(:order => "responses.created_at desc")
-    paginate(:all, params)
+    send(params.keys.include?(:page) ? "paginate" : "find", :all, params)
   end
   
   def self.default_eager

@@ -1,8 +1,3 @@
-<%= render("layouts/flash", {:flash => flash}) %>
+<%= flash_and_form_errors %>
 
-<div class="tip">
-  Found <strong><%= @broadcasts.total_entries %></strong> broadcasts.
-  <%= link_to_if_auth("Send Broadcast", new_broadcast_path, "broadcasts#create") %>
-</div>
-
-<%= render("layouts/index_table", :objects => @broadcasts, :fields => %w[to medium sent_at errors? message actions]) %>
+<%= index_table(Broadcast, @broadcasts) %>

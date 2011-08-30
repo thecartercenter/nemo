@@ -1,6 +1,6 @@
 <% rowbg = 0 %>
 <%= form_for @user_session, :url => user_session_path do |f| %>
-  <%= show_flash_and_form_errors(@user_session) %>
+  <%= flash_and_form_errors(@user_session) %>
   <table class="form">
     <tr class="rowbg<%= rowbg = 1 - rowbg %>">
       <td class="name"><%= f.label :login %><%= reqd_sym %></td>

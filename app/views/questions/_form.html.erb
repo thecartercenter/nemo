@@ -1,4 +1,4 @@
-<%= show_flash_and_form_errors(question) %>
+<%= flash_and_form_errors(question) %>
 <%= form_for(@question) do |f| %>
   <% f.mode = controller.action_name.to_sym %>
   <%= render("subform", :f => f, :question => question) %>

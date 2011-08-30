@@ -1,5 +1,5 @@
 <% rowbg = 0 %>
-<%= show_flash_and_form_errors(@place_lookup) %>
+<%= flash_and_form_errors(@place_lookup) %>
 <div class="tip"><%= link_to("Enter place info manually", new_place_path) %></div>
 <% form_for(@place_lookup) do |f| %>
 <table class="form">

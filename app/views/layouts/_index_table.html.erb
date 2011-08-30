@@ -1,33 +1,46 @@
-<% rowbg = 0 %>
-<% batch_ops = false unless defined?(batch_ops) %>
-<% paginated = objects.is_a?(WillPaginate::Collection) %>
-<% unless (paginated && objects.total_entries == 0) || objects.size == 0 %>
-  <%= form_tag("", :method => "post", :id => "batch_form") do %>
-    <table class="index_table">
-      <tr class="header">
-        <% if batch_ops %><th></th><% end %>
-        <% fields.each do |f| %>
-          <th><%= f.gsub("_", " ").capitalize %></th>
-        <% end %>
-      </tr>
-    <% objects.each do |o| %>
-      <tr class="rowbg<%= rowbg = 1 - rowbg %>">
-        <% if batch_ops %>
-          <td>
-            <%= check_box_tag("selected[#{o.id}]", 1, false, :onchange => "batch_cb_changed(this);") %>
-          </td>
-        <% end %>
-        <% fields.each do |f| %>
-          <% cls = "#{f.gsub(/[^\w\d]/, "")}_col" %>
-          <td class="<%= cls %>">
-            <div><%= self.send("format_#{o.class.name.underscore}s_field", o, f) %></div>
-          </td>
-        <% end %>
-      </tr>
+<div id="index_table">
+  <div class="tip">
+    <% if paginated %>
+      Found <strong><%= pluralize(objects.total_entries, human_class_name) %></strong> in total. 
+      Showing <%= objects.offset + 1 %>-<%= objects.offset + objects.size %>.
+    <% else %>
+      Found <strong><%= pluralize(objects.size, human_class_name) %></strong>.
+    <% end %>&nbsp;
+    <%= links %>
+  </div>
+  <% unless objects.empty? %>
+    <%= form_tag("", :method => "post", :id => "batch_form") do %>
+      <table class="index_table">
+        <thead>
+          <tr class="header">
+            <% if batch_ops %><th></th><% end %>
+            <% fields.each do |f| %>
+              <th><%= f.humanize.capitalize %></th>
+            <% end %>
+          </tr>
+        </thead>
+        <tbody id="index_table_body">
+          <% objects.each do |o| %>
+            <tr id="<%= "#{o.class.name.underscore}_#{o.id}" %>">
+              <% if batch_ops %>
+                <td>
+                  <%= check_box_tag("selected[#{o.id}]", 1, false, :onchange => "batch_cb_changed(this);") %>
+                </td>
+              <% end %>
+              <% fields.each do |f| %>
+                <td class="<%= "#{f.gsub(/[^\w\d]/, "")}_col" %>">
+                  <div><%= self.send("format_#{klass.table_name}_field", o, f) %></div>
+                </td>
+              <% end %>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+      <% if batch_ops %>
+        <script type="text/javascript">batch_update_select_all_link()</script>
+      <% end %>
     <% end %>
-    </table>
-    <% if batch_ops %><script type="text/javascript">batch_update_select_all_link()</script><% end %>
+    <br/>
+    <%= will_paginate(objects) if paginated %>
   <% end %>
-  <br/>
-  <%= will_paginate(objects) if paginated %>
-<% end %>
+</div>

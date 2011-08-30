@@ -1,4 +1,10 @@
 module OptionSetsHelper
+  def option_sets_index_links(option_sets)
+    [link_to_if_auth("Add new option set", new_option_set_path, "option_sets#create")]
+  end
+  def option_sets_index_fields
+    %w[name options questions published? actions]
+  end
   def format_option_sets_field(option_set, field)
     case field
     when "published?" then option_set.published? ? "Yes" : "No"

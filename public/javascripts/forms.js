@@ -28,11 +28,9 @@ function form_recalc_ranks(box) {
     rows = form_get_rows(tbody);
   }
     
-  // fix numbers and row colors
-  for (var i = 0; i < rows.length; i++) {
-    rows[i].className = "rowbg" + ((i+1) % 2);
+  // fix numbers
+  for (var i = 0; i < rows.length; i++)
     rows[i].firstChild.nextSibling.nextSibling.nextSibling.firstChild.nextSibling.firstChild.value = i + 1;
-  }
   
   // restore the focus
   box.focus()
@@ -43,7 +41,6 @@ function form_get_rows(tbody) {
   for (var i = 0; i < tbody.childNodes.length; i++)
     if (tbody.childNodes[i].tagName == "TR")
       rows.push(tbody.childNodes[i]);
-  rows.splice(0,1);
   return rows;
 }
 

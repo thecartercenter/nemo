@@ -3,7 +3,7 @@
 </div>
 <% rowbg = 0 %>
 <% form_tag password_resets_path do %>
-  <%= show_flash_and_form_errors %>
+  <%= flash_and_form_errors %>
   <table class="form">
     <tr class="rowbg<%= rowbg = 1 - rowbg %>">
       <td class="name">Email<%= reqd_sym %></td>

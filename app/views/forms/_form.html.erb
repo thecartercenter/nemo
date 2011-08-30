@@ -25,20 +25,8 @@ end
 %>
 <% if controller.action_name != "new" %>
   <h2>Questions on this Form</h2>
-  <div class="tip">
-    There are <strong><%= form.questionings.size %></strong> questions on this form.
-    <% if controller.action_name == "edit" %>
-      <%= join_links([link_to("Add questions", choose_questions_path(:form_id => @form.id)),
-          form.questionings.size == 0 ? nil : batch_op_links(:name => "Remove selected",
-            :confirm => "Are you sure you want to remove these ### question(s) from the form?",
-            :action => "forms#remove_questions", :id => @form.id)]) %>
-    <% end %>
-  </div>
-  <%= render("layouts/index_table", :objects => form.questionings, :batch_ops => controller.action_name == "edit",
-    :fields => %w[rank code name type required? hidden? actions]) %>
-
+  <%= index_table(Questioning, form.questionings) %>
   <% if form.questionings.size > 0 && controller.action_name == "edit" %>
     <%= button_to_function("Save Ranks", "form_submit_ranks(#{form.id})", :id => "save_ranks_button") %>
   <% end %>
-  
 <% end %>

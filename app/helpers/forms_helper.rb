@@ -1,4 +1,12 @@
 module FormsHelper
+  def forms_index_links(forms)
+    [link_to_if_auth("Create Form", new_form_path, "forms#create")]
+  end
+  
+  def forms_index_fields
+    %w[type name questions published? last_modified downloads responses actions]
+  end
+    
   def format_forms_field(form, field)
     case field
     when "type" then form.type.name

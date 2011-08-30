@@ -1,4 +1,4 @@
-<%= show_flash_and_form_errors(qing).gsub("Question base", "Question").gsub("Question C", "Question c") %>
+<%= flash_and_form_errors(qing).gsub("Question base", "Question").gsub("Question C", "Question c") %>
 <% rowbg = 0 %>
 <%= form_for(qing) do |f| %>
   <% f.mode = controller.action_name.to_sym %>

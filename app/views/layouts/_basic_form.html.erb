@@ -1,5 +1,5 @@
 <% rowbg = 0 %>
-<%= show_flash_and_form_errors(obj) %>
+<%= flash_and_form_errors(obj) %>
 <% spec[:sections].each_index do |idx| section = spec[:sections][idx] %>
   <% if section[:contents] %>
     <%= section[:contents] %>

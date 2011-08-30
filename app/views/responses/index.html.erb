@@ -1,15 +1,16 @@
-<%= render("layouts/flash", {:flash => flash}) %>
+<%= flash_and_form_errors %>
 
 <%= render("searches/form", :search => @subindex.search) %>
 
-<div class="tip">
-  Found <strong><%= @responses.total_entries %></strong> responses.
-  <%= link_to_if_auth("Create new response", "#", "responses#create", nil, :onclick => "$('form_chooser').show(); return false") %>
-  <form id="form_chooser" action="<%= new_response_url %>" style="display: none">
-    <%= select_tag(:form_id, options_for_select(Form.select_options(:published => true)), :include_blank => "Select a published form...") %>
-    <%= submit_tag("Go") %>
-  </form>
-</div>
+<%= index_table(Response, @responses) %>
 
-<%= render("layouts/index_table", :objects => @responses, 
-  :fields => %w[form_name place submitter observation_time submission_time age reviewed? actions]) %>
+<script type="text/javascript">
+  // set id of latest response
+  var responses_latest_id = <%= (f = @responses.first) ? f.id : "null" %>;
+  var responses_submit_times = {};
+  var responses_per_page = <%= Response.per_page %>;
+  <% @responses.each do |r| %>
+    responses_submit_times[<%= r.id %>] = "<%= r.created_at %>";
+  <% end %>
+  responses_setup_periodic_update();
+</script>

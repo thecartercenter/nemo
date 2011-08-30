@@ -1,9 +1,3 @@
-<%= render("layouts/flash", {:flash => flash}) %>
+<%= flash_and_form_errors %>
 
-<div class="tip">
-  Found <strong><%= @forms.total_entries %></strong> forms.
-  <%= link_to_if_auth("Create Form", new_form_path, "forms#create") %>
-</div>
-
-<%= render("layouts/index_table", :objects => @forms, 
-  :fields => %w[type name questions published? last_modified downloads responses actions]) %>
+<%= index_table(Form, @forms) %>

@@ -23,6 +23,8 @@ class ResponsesController < ApplicationController
   
   def index
     @responses = load_objects_with_subindex(Response)
+    @js << "responses_index"
+    render(:partial => "table_only", :locals => {:responses => @responses}) if params[:table_only]
   end
   
   def new

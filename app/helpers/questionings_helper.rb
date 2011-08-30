@@ -13,4 +13,20 @@ module QuestioningsHelper
     else qing.send(field)
     end
   end
+  
+  def questionings_index_links(qings)
+    links = []
+    if controller.action_name == "edit"
+      links << link_to("Add questions", choose_questions_path(:form_id => @form.id))
+      if qings.size > 0
+        links << batch_op_link(:name => "Remove selected",
+          :confirm => "Are you sure you want to remove these ### question(s) from the form?",
+          :action => "forms#remove_questions", :id => @form.id)
+      end
+    end
+  end
+  
+  def questionings_index_fields
+    %w[rank code name type required? hidden? actions]
+  end
 end

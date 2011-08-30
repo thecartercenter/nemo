@@ -2,15 +2,15 @@ function broadcast_medium_changed() {
   var select = $('broadcast_medium');
   var sms = select.options[select.selectedIndex].value != "email";
 
-  // hide/show char limit
+  // hide/show char limit and subject
   if (sms) {
     $('char_limit').show();
     broadcast_update_char_limit();
-  } else
+    $('subject_row').hide();
+  } else {
     $('char_limit').hide();
-
-  // show/hide subject
-  toggle_table_row('subject_row', !sms);
+    $('subject_row').show();
+  }
 }
 
 function broadcast_update_char_limit() {

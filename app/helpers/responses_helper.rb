@@ -1,4 +1,7 @@
 module ResponsesHelper
+  def responses_index_fields
+    %w[form_name place submitter observation_time submission_time age reviewed? actions]
+  end
   def format_responses_field(resp, field)
     case field
     when "observation_time" then resp.observed_at && resp.observed_at.strftime("%Y-%m-%d %l:%M%p") || ""
@@ -14,6 +17,16 @@ module ResponsesHelper
       action_links(resp, :destroy_warning => "Are you sure you want to delete the response#{by}#{from}? You won't be able to undelete it!")
     else resp.send(field)
     end
+  end
+  def responses_index_links(responses)
+    mini_form = form_tag(new_response_url, {:id => "form_chooser", :style => "display: none"}) do
+      select_tag(:form_id, options_for_select(Form.select_options(:published => true)), 
+        :include_blank => "Select a published form...") +
+        submit_tag("Go")
+    end
+    
+    [link_to_if_auth("Create new response", "#", "responses#create", nil, 
+      :onclick => "$('form_chooser').show(); return false") + mini_form]
   end
   # calls the answer fields template for the given response
   def answers_subform(answers)
