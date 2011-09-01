@@ -19,15 +19,20 @@ module ResponsesHelper
     end
   end
   def responses_index_links(responses)
-    mini_form = form_tag(new_response_url, {:id => "form_chooser", :style => "display: none"}) do
-      select_tag(:form_id, options_for_select(Form.select_options(:published => true)), 
-        :include_blank => "Select a published form...") +
-        submit_tag("Go")
+    links = []
+    # only add the create response link if there are any published forms
+    unless (sel_opt = Form.select_options(:published => true)).empty?
+      mini_form = form_tag(new_response_path, :method => :get, :id => "form_chooser", :style => "display: none") do
+          select_tag(:form_id, options_for_select(sel_opt), :include_blank => "Select a published form...") +
+          submit_tag("Go")
+      end
+      links << link_to_if_auth("Create new response", "#", "responses#create", nil, 
+        :onclick => "$('form_chooser').show(); return false") + mini_form
     end
-    
-    [link_to_if_auth("Create new response", "#", "responses#create", nil, 
-      :onclick => "$('form_chooser').show(); return false") + mini_form,
-     link_to_if_auth("Export all to CSV", responses_path(:format => :csv), "responses#index", nil)]
+    unless responses.empty?
+      links << link_to_if_auth("Export all to CSV", responses_path(:format => :csv), "responses#index", nil)
+    end
+    links
   end
   # calls the answer fields template for the given response
   def answers_subform(answers)
