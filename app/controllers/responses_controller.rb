@@ -22,9 +22,19 @@ class ResponsesController < ApplicationController
   end
   
   def index
-    @responses = load_objects_with_subindex(Response)
-    @js << "responses_index"
-    render(:partial => "table_only", :locals => {:responses => @responses}) if params[:table_only]
+    respond_to do |format|
+      format.html do
+        @responses = load_objects_with_subindex(Response)
+        @js << "responses_index"
+        render(:partial => "table_only", :locals => {:responses => @responses}) if params[:table_only]
+      end
+      format.csv do
+        require 'csv'
+        perm_condition = Permission.select_conditions(:user => current_user, :controller => "responses", :action => "index")
+        @responses = Response.flattened(:conditions => perm_condition)
+        render_csv("responses-#{Time.zone.now.strftime('%Y-%m-%d-%H%M')}")
+      end
+    end
   end
   
   def new

@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
+  require 'authlogic'
   include ActionView::Helpers::AssetTagHelper
   
   protect_from_forgery
@@ -11,9 +12,26 @@ class ApplicationController < ActionController::Base
   before_filter(:set_timezone)
   
   helper_method :current_user_session, :current_user, :authorized?
-require 'authlogic'
   
   protected
+    def render_csv(filename = nil)
+      filename ||= params[:action]
+      filename += '.csv'
+
+      if request.env['HTTP_USER_AGENT'] =~ /msie/i
+        headers['Pragma'] = 'public'
+        headers["Content-type"] = "text/plain" 
+        headers['Cache-Control'] = 'no-cache, must-revalidate, post-check=0, pre-check=0'
+        headers['Content-Disposition'] = "attachment; filename=\"#{filename}\"" 
+        headers['Expires'] = "0" 
+      else
+        headers["Content-Type"] ||= 'text/csv'
+        headers["Content-Disposition"] = "attachment; filename=\"#{filename}\"" 
+      end
+
+      render(:layout => false)
+    end
+    
     def set_timezone
       # set the timezone, if there is one in the configatron
       Time.zone = configatron.timezone.to_s if configatron.timezone

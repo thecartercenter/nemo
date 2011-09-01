@@ -20,6 +20,12 @@ class Response < ActiveRecord::Base
   
   def self.per_page; 20; end
   
+  def self.flattened(params = {})
+    params[:conditions] ||= "1"
+    params[:conditions].gsub!(/responses\./, '')
+    find_by_sql("select * from _answers where (#{params[:conditions]})")
+  end
+  
   def self.sorted(params = {})
     params.merge!(:order => "responses.created_at desc")
     send(params.keys.include?(:page) ? "paginate" : "find", :all, params)

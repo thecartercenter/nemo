@@ -10,30 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110823171727) do
-
-  create_table "_answers", :id => false, :force => true do |t|
-    t.datetime "observe_time"
-    t.boolean  "is_reviewed",                                                              :default => false
-    t.string   "form_name"
-    t.string   "form_type"
-    t.string   "question_code"
-    t.text     "question_name"
-    t.string   "question_type"
-    t.string   "observer_name",      :limit => 511
-    t.string   "address_landmark"
-    t.string   "locality"
-    t.string   "state"
-    t.string   "country"
-    t.decimal  "latitude",                                 :precision => 20, :scale => 15
-    t.decimal  "longitude",                                :precision => 20, :scale => 15
-    t.binary   "latitude_longitude", :limit => 45
-    t.integer  "answer_id",                                                                :default => 0,     :null => false
-    t.text     "answer_value"
-    t.text     "choice_name",        :limit => 2147483647
-    t.string   "choice_value"
-    t.string   "option_set"
-  end
+ActiveRecord::Schema.define(:version => 20110901141457) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -280,5 +257,31 @@ ActiveRecord::Schema.define(:version => 20110823171727) do
   end
 
   add_index "users", ["login"], :name => "index_users_on_login", :unique => true
+
+  create_view "_answers", "select `r`.`id` AS `response_id`,`r`.`observed_at` AS `observation_time`,`r`.`reviewed` AS `is_reviewed`,`f`.`name` AS `form_name`,`ft`.`name` AS `form_type`,`q`.`code` AS `question_code`,`qtr`.`str` AS `question_name`,`qt`.`name` AS `question_type`,`u`.`id` AS `user_id`,concat(`u`.`first_name`,' ',`u`.`last_name`) AS `observer_name`,`adr`.`full_name` AS `place_full_name`,`adr`.`long_name` AS `address_landmark`,`loc`.`long_name` AS `locality`,`sta`.`long_name` AS `state`,`cry`.`long_name` AS `country`,`adr`.`latitude` AS `latitude`,`adr`.`longitude` AS `longitude`,concat(`adr`.`latitude`,',',`adr`.`longitude`) AS `latitude_longitude`,`a`.`id` AS `answer_id`,`a`.`value` AS `answer_value`,ifnull(`aotr`.`str`,`cotr`.`str`) AS `choice_name`,ifnull(`ao`.`value`,`co`.`value`) AS `choice_value`,`os`.`name` AS `option_set` from ((((((((((((((((((`answers` `a` left join `options` `ao` on((`a`.`option_id` = `ao`.`id`))) left join `translations` `aotr` on(((`aotr`.`obj_id` = `ao`.`id`) and (`aotr`.`fld` = 'name') and (`aotr`.`class_name` = 'Option') and (`aotr`.`language_id` = (select `languages`.`id` from `languages` where (`languages`.`code` = 'eng')))))) left join `choices` `c` on((`c`.`answer_id` = `a`.`id`))) left join `options` `co` on((`c`.`option_id` = `co`.`id`))) left join `translations` `cotr` on(((`cotr`.`obj_id` = `co`.`id`) and (`cotr`.`fld` = 'name') and (`cotr`.`class_name` = 'Option') and (`cotr`.`language_id` = (select `languages`.`id` from `languages` where (`languages`.`code` = 'eng')))))) join `responses` `r` on((`a`.`response_id` = `r`.`id`))) join `users` `u` on((`r`.`user_id` = `u`.`id`))) join `forms` `f` on((`r`.`form_id` = `f`.`id`))) join `form_types` `ft` on((`f`.`form_type_id` = `ft`.`id`))) left join `places` `adr` on((`r`.`place_id` = `adr`.`id`))) left join `places` `loc` on((`adr`.`container_id` = `loc`.`id`))) left join `places` `sta` on((`loc`.`container_id` = `sta`.`id`))) left join `places` `cry` on((`sta`.`container_id` = `cry`.`id`))) join `questionings` `qing` on((`a`.`questioning_id` = `qing`.`id`))) join `questions` `q` on((`qing`.`question_id` = `q`.`id`))) join `question_types` `qt` on((`q`.`question_type_id` = `qt`.`id`))) left join `option_sets` `os` on((`q`.`option_set_id` = `os`.`id`))) join `translations` `qtr` on(((`qtr`.`obj_id` = `q`.`id`) and (`qtr`.`fld` = 'name') and (`qtr`.`class_name` = 'Question') and (`qtr`.`language_id` = (select `languages`.`id` from `languages` where (`languages`.`code` = 'eng'))))))", :force => true do |v|
+    v.column :response_id
+    v.column :observation_time
+    v.column :is_reviewed
+    v.column :form_name
+    v.column :form_type
+    v.column :question_code
+    v.column :question_name
+    v.column :question_type
+    v.column :user_id
+    v.column :observer_name
+    v.column :place_full_name
+    v.column :address_landmark
+    v.column :locality
+    v.column :state
+    v.column :country
+    v.column :latitude
+    v.column :longitude
+    v.column :latitude_longitude
+    v.column :answer_id
+    v.column :answer_value
+    v.column :choice_name
+    v.column :choice_value
+    v.column :option_set
+  end
 
 end

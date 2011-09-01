@@ -26,7 +26,8 @@ module ResponsesHelper
     end
     
     [link_to_if_auth("Create new response", "#", "responses#create", nil, 
-      :onclick => "$('form_chooser').show(); return false") + mini_form]
+      :onclick => "$('form_chooser').show(); return false") + mini_form,
+     link_to_if_auth("Export all to CSV", responses_path(:format => :csv), "responses#index", nil)]
   end
   # calls the answer fields template for the given response
   def answers_subform(answers)

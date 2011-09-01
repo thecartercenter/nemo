@@ -11,6 +11,9 @@ gem 'mysql'
 gem 'will_paginate', '3.0.pre2'
 gem 'configatron'
 gem 'libxml-ruby'
+gem 'fastercsv'
+# This is a patched version of rails_sql_views for Rails 3
+gem 'rails_sql_views', :git => 'https://github.com/sspinc/rails_sql_views.git'
 
 # Use unicorn as the web server
 # gem 'unicorn'
