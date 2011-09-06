@@ -9,7 +9,9 @@ module ActionView
       alias :old_submit :submit
       def text_field(*args)
         html = old_text_field(*args)
-        mode == :show ? html.match(/value="(.+?)"/) && dummy_tag($1) : html
+        unless mode == :show && html.match(/display: none/)
+          mode == :show ? html.match(/value="(.+?)"/) && dummy_tag($1) : html
+        end
       end
       def text_area(*args)
         html = old_text_area(*args)
@@ -17,7 +19,9 @@ module ActionView
       end
       def select(*args)
         html = old_select(*args)
-        mode == :show ? html.match(/<option.*?selected="selected".*?>(.*?)<\/option>/) && dummy_tag($1) : html
+        unless mode == :show && html.match(/display: none/)
+          mode == :show ? html.match(/<option.*?selected="selected".*?>(.*?)<\/option>/) && dummy_tag($1) : html
+        end
       end
       def check_box(*args)
         html = old_check_box(*args)

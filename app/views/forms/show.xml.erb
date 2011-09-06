@@ -37,6 +37,7 @@
             'nodeset' => "/data/#{q.question.code}",
             'type' => q.question.type.odk_name,
             'required' => q.required? ? "true()" : nil,
+            'relevant' => q.has_condition? ? q.condition.to_odk : nil,
             'jr:preload' => q.question.type.odk_preload,
             'jr:preloadParams' => q.question.type.odk_preload_params
            }.reject{|k,v| v.nil?}).gsub(/"required"/, '"true()"') %>
@@ -53,7 +54,7 @@
           <% set.options.each do |opt| %>
             <item>
               <label ref="jr:itext('option<%= opt.id %>')"/>
-              <value><%= opt.id %></value>
+              <value><%= opt.value %></value>
             </item>
           <% end %>
         <% end %>

@@ -10,18 +10,27 @@
   <% end %>
   
   <table class="form">
-    <tr class="rowbg<%= rowbg = 1 - rowbg %>">
-      <td class="name">Required?</td>
-      <td class="value"><%= f.check_box(:required) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+    <tr id="condition_row">
+      <td class="name">Condition</td>
+      <td class="value"><%= render("conditions/form", :condition => qing.get_or_init_condition) %></td>
       <td class="details">
-        Whether this question must be completed on this form or is optional.
+        An optional condition which must be met in order for this question to be shown to the user.
       </td>
     </tr>
-    <tr class="rowbg<%= rowbg = 1 - rowbg %>">
+    <tr>
+      <td class="name">Required?</td>
+      <td class="value"><%= f.check_box(:required) %></td>
+      <td class="details">
+        Whether this question must be completed on this form or is optional. 
+        Only enforced if the condition specified above is met.
+      </td>
+    </tr>
+    <tr>
       <td class="name">Hidden?</td>
-      <td class="value"><%= f.check_box(:hidden) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+      <td class="value"><%= f.check_box(:hidden) %></td>
       <td class="details">
         Whether this question will be shown on this form. Use this to disable a question if you can't delete it.
+        This value will override any condition specified above.
       </td>
     </tr>
   </table>

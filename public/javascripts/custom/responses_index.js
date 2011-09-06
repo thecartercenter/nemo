@@ -5,7 +5,6 @@ function responses_setup_periodic_update() {
 }
 
 function responses_update() {
-  console.log("updating")
   // get current list of IDs
   responses_old_ids = responses_get_ids();
   

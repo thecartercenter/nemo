@@ -9,6 +9,7 @@ class Question < ActiveRecord::Base
     :conditions => "class_name='Question'", :autosave => true, :dependent => :destroy)
   has_many(:questionings, :dependent => :destroy)
   has_many(:answers, :through => :questionings)
+  has_many(:conditions, :through => :questionings)
   has_many(:forms, :through => :questionings)
 
   validates(:code, :presence => true, :uniqueness => true)
@@ -37,6 +38,11 @@ class Question < ActiveRecord::Base
   def self.per_page; 100; end
   
   def self.default_eager; [:type, :translations, :questionings, :answers, :forms]; end
+  
+  def self.select_options_by_code(questions = nil)
+    questions ||= all(:order => "code")
+    questions.collect{|q| [q.code, q.id]}
+  end
   
   def method_missing(*args)
     # enable methods like name_fra and hint_eng, etc.
@@ -90,9 +96,13 @@ class Question < ActiveRecord::Base
       return true
     end
     def integrity
-      # error if type or option set have changed and there are answers
-      if (question_type_id_changed? || option_set_id_changed?) && !answers.empty?
-        errors.add(:base, "Type or option set can't be changed because there are already responses for this question")
+      # error if type or option set have changed and there are answers or conditions
+      if (question_type_id_changed? || option_set_id_changed?) 
+        if !answers.empty?
+          errors.add(:base, "Type or option set can't be changed because there are already responses for this question")
+        elsif !conditions.empty?
+          errors.add(:base, "Type or option set can't be changed because there are conditions for this question")
+        end
       end
       # error if anything has changed and the question is published
       if published? && (changed? || translations.detect{|t| t.changed?})

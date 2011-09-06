@@ -75,10 +75,10 @@ class FormsController < ApplicationController
     redirect_to(edit_form_path(@form))
   end
   def update_ranks
-    @form = Form.find(params[:id])
+    @form = Form.find(params[:id], :include => {:questionings => :condition})
     begin
-      # build hash of Questionings to ranks
-      new_ranks = {}; params[:rank].each_pair{|id, rank| new_ranks[Questioning.find(id)] = rank}
+      # build hash of questioning ids to ranks
+      new_ranks = {}; params[:rank].each_pair{|id, rank| new_ranks[id] = rank}
       # update
       @form.update_ranks(new_ranks)
       flash[:success] = "Ranks updated successfully."
@@ -93,6 +93,7 @@ class FormsController < ApplicationController
       @form.clone
       flash[:success] = "Form '#{@form.name}' cloned successfully."
     rescue
+      raise $!
       flash[:error] = "There was a problem cloning the form (#{$!.to_s})."
     end
     redirect_to(:action => :index)

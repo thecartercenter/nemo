@@ -6,6 +6,7 @@ module QuestioningsHelper
         qing.rank : 
         text_field_tag("rank[#{qing.id}]", qing.rank, :onchange => "form_recalc_ranks(this)")
     when "code", "name", "type" then format_questions_field(qing.question, field)
+    when "condition?" then qing.has_condition? ? "Yes" : "No"
     when "required?", "hidden?" then qing.send(field) ? "Yes" : "No"
     when "actions"
       exclude = qing.published? || controller.action_name == "show" ? [:edit, :destroy] : []
@@ -24,9 +25,10 @@ module QuestioningsHelper
           :action => "forms#remove_questions", :id => @form.id)
       end
     end
+    links
   end
   
   def questionings_index_fields
-    %w[rank code name type required? hidden? actions]
+    %w[rank code name type condition? required? hidden? actions]
   end
 end

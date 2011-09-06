@@ -60,7 +60,7 @@ class ApplicationController < ActionController::Base
     
     def init_js_array
       @js = []
-      @js << controller_name if File.exists?(File.join(Rails.root, "public/javascripts/#{controller_name}.js"))
+      @js << controller_name if File.exists?(File.join(Rails.root, "public/javascripts/custom/#{controller_name}.js"))
     end
     
     def notify_error(exception)

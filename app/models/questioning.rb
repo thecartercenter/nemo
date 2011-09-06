@@ -2,10 +2,16 @@ class Questioning < ActiveRecord::Base
   belongs_to(:form)
   belongs_to(:question, :autosave => true)
   has_many(:answers, :dependent => :destroy)
+  has_one(:condition, :autosave => true, :dependent => :destroy, :validate => false)
+  has_many(:referring_conditions, :class_name => "Condition", :foreign_key => "ref_qing_id")
   
   before_create(:set_rank)
   before_destroy(:check_assoc)
 
+  validates_associated(:condition, :message => "is invalid (see below)")
+  
+  alias :old_condition= :condition=
+  
   def self.new_with_question(params = {})
     qing = new(params.merge(:question => Question.new))
   end
@@ -44,14 +50,45 @@ class Questioning < ActiveRecord::Base
     symbol.match(/^((name|hint)_([a-z]{3})(=?)|code=?|option_set_id=?|question_type_id=?)(_before_type_cast)?$/)
   end
   
-  def update_rank(rank)
-    self.rank = rank
+  def update_rank(new_rank)
+    self.rank = new_rank
     save
   end
   
   def clone(new_form)
-    self.class.new(:form_id => new_form.id, :question_id => question_id, :rank => rank, 
+    cloned = self.class.new(:form_id => new_form.id, :question_id => question_id, :rank => rank, 
       :required => required, :hidden => hidden)
+      
+    # clone the condition if necessary
+    cloned.build_condition(condition.attributes) if condition
+    
+    # return the clone
+    cloned
+  end
+  
+  def has_condition?; !condition.nil?; end
+  
+  def condition=(c)
+    return old_condition=(c) unless c.is_a?(Hash)
+    # if all attribs are blank, destroy the condition if it exists
+    if c.reject{|k,v| v.blank?}.empty?
+      condition.destroy if condition
+    # otherwise, set the attribs or build a new condition if none exists
+    else
+      condition ? condition.attributes = c : build_condition(c)
+    end
+  end
+  
+  def get_or_init_condition
+    has_condition? ? condition : build_condition
+  end
+  
+  def previous_qings
+    form.questionings.reject{|q| q == self || q.rank > rank}
+  end
+  
+  def verify_condition_ordering
+    condition.verify_ordering if condition
   end
   
   private
@@ -61,6 +98,9 @@ class Questioning < ActiveRecord::Base
     end
     
     def check_assoc
+      unless referring_conditions.empty?
+        raise("You can't remove question '#{question.code}' because one or more conditions refer to it.")
+      end
       unless answers.empty?
         raise("You can't remove question '#{question.code}' because it has one or more answers for this form.")
       end

@@ -1,0 +1,21 @@
+<%= fields_for("questioning[condition]", condition) do |f| %>
+  <%= render("layouts/object_errors", :object => condition, :compact => true) %>
+  <% f.mode = controller.action_name.to_sym %>
+  <%= f.select(:ref_qing_id, condition.question_code_select_options, {:include_blank => "Select question..."},
+    :onchange => "condition_update_choices(this)") %>&nbsp;
+  <%= f.select(:op, condition.op_select_options, :include_blank => "Select comparison...") %>&nbsp;
+  <%= f.text_field(:value, :id => "questioning_condition_value_box", 
+    :style => condition.has_options? ? "display: none" : "") %>
+  <%= f.select(:value, condition.value_select_options, {:include_blank => "Select value..."}, 
+    :style => condition.has_options? ? "" : "display: none", 
+    :id => "questioning_condition_value_select") %>
+<% end %>
+
+<% if controller.action_name != "show" %>
+  <script type="text/javascript">
+  // specification of the operators and question types
+  var condition_ops = <%= Condition::OPS.to_json.html_safe %>;
+  var condition_q_types = <%= condition.question_code_type_hash.to_json.html_safe %>;
+  var condition_q_options = <%= condition.question_options_hash.to_json.html_safe %>;
+  </script>
+<% end %>

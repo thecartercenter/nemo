@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110901141457) do
+ActiveRecord::Schema.define(:version => 20110901175612) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -45,6 +45,15 @@ ActiveRecord::Schema.define(:version => 20110901141457) do
   end
 
   add_index "choices", ["answer_id"], :name => "index_choices_on_answer_id"
+
+  create_table "conditions", :force => true do |t|
+    t.integer  "questioning_id"
+    t.integer  "ref_qing_id"
+    t.string   "op"
+    t.string   "value"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "form_types", :force => true do |t|
     t.string   "name"

@@ -8,6 +8,8 @@ class Form < ActiveRecord::Base
   validates(:type, :presence => true)
   validate(:cant_change_published)
   
+  validates_associated(:questionings)
+  
   before_save(:fix_ranks)
   before_create(:init_downloads)
   before_destroy(:check_assoc)
@@ -69,7 +71,10 @@ class Form < ActiveRecord::Base
   end
   
   def update_ranks(new_ranks)
-    transaction{new_ranks.each_pair{|qing,rank| qing.update_rank(rank)}}
+    transaction do 
+      questionings.each{|qing| qing.update_rank(new_ranks[qing.id.to_s].to_i) if new_ranks[qing.id.to_s]}
+      questionings.each{|qing| qing.verify_condition_ordering}
+    end
   end
   
   def destroy_questionings(qings)
