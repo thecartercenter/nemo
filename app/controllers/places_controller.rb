@@ -21,23 +21,16 @@ class PlacesController < ApplicationController
     set_add_title
     set_js
     @place = Place.new
-    @place_lookup = PlaceLookup.new
   end
   def edit
     # lookup the place
     @place = Place.find(params[:id])
-    # get a fresh place_lookup object
-    @place_lookup = PlaceLookup.new
     # setup the required js
     set_js
   end
   def update
     # lookup the place
     @place = Place.find(params[:id])
-    # update the place lookup
-    @place_lookup = PlaceLookup.find_and_update(params[:place_lookup])
-    # update the container if place_lookup has been used
-    (choice = @place_lookup.choice) ? @place.container = choice : nil
     # try to update
     if @place.update_attributes(params[:place])
       flash[:success] = "Place updated successfully."
@@ -49,8 +42,6 @@ class PlacesController < ApplicationController
   end
   def create
     @place = Place.new(params[:place])
-    @place_lookup = PlaceLookup.find_and_update(params[:place_lookup])
-    @place.container = @place_lookup.choice
     if @place.save
       flash[:success] = "Place added successfully."
       redirect_to(:action => :index)
@@ -70,11 +61,21 @@ class PlacesController < ApplicationController
     end
     redirect_to(:action => :index)
   end
+  def lookup
+    # get a dummy obj from the class specified in the request
+    @dummy = Kernel.const_get(params[:class_name]).new
+    # make sure it is a valid PlaceLookupable obj
+    raise "Bad class name" unless @dummy.respond_to?(:place_lookup_query)
+    # lookup places
+    @dummy.place_suggestions = Place.lookup(params[:query])
+    # render results partial
+    render(:partial => "lookup_results", :locals => {:obj => @dummy, :ajax => true})
+  end
   private
     def set_add_title
       @title = "Add Place: Manual"
     end
     def set_js
-      @js << 'place_lookups'
+      @js << 'places'
     end
 end

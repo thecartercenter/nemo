@@ -5,6 +5,7 @@ class Answer < ActiveRecord::Base
   has_many(:choices, :dependent => :destroy)
   
   before_validation(:round_ints)
+  before_validation(:clean_locations)
   
   validates(:value, :numericality => true, :if => Proc.new{|a| a.numeric? && !a.value.blank?})
   validate(:required)
@@ -77,20 +78,29 @@ class Answer < ActiveRecord::Base
   def question_hint; question.hint; end
   def question_type_name; question.type.name; end
   def can_have_choices?; question_type_name == "select_multiple"; end
+  def location?; question_type_name == "location"; end
   def numeric?; question.type.numeric?; end
   def integer?; question.type.integer?; end
   def options; question.options; end
   def select_options; question.select_options; end
-  def phone_only?; question.type.phone_only?; end
   
   private
     def required
-      if required? && !hidden? && !phone_only? && value.blank? && option_id.nil? && !can_have_choices?
+      if required? && !hidden? && value.blank? && option_id.nil? && !can_have_choices?
         errors.add(:base, "This question is required")
       end
     end
     def round_ints
       self.value = value.to_i if integer? && !value.blank?
       return true
+    end
+    def clean_locations
+      if location?
+        if value.match(/^(\d+(\.\d+)?)\s*[,;:\s]\s*(\d+(\.\d+)?)/)
+          self.value = "#{$1} #{$3}".strip
+        else
+          self.value = ""
+        end
+      end
     end
 end

@@ -36,7 +36,7 @@ div.form, table.form { border-top: 1px solid #ddd; margin-bottom: 10px; }
 div.form > div, table.form td { padding: 5px; border-bottom: 1px solid #ddd; }
 div.form div.details, table.form td.details { width: 250px; }
 div.reqd_sym { display: inline; font-weight: bold; color: #800000; font-size: 125%; line-height: 5px; vertical-align: middle; }
-div.dummy { font-weight: bold; }
+div.dummy, span.dummy { font-weight: bold; }
 div.dummy_checkbox { float: left; width: 15px; font-weight: bold; }
 table.form td.name { min-width: 75px; }
 table.index_table th, table.form th { text-align: left; color: #444; background-color: #ddd; 
@@ -68,7 +68,7 @@ img#welcome { border: 1px solid #666; }
 /* place form */
 input#place_lookup_query { width: 300px; }
 div#place_lookup_results .place_type { font-size: 75%; color: #666; }
-form.new_place_lookup td.value, form.new_place td.value { min-width: 400px; }
+form.new_place td.value { min-width: 400px; }
 
 /* place map */
 #map_canvas { width: 600px; height: 400px; }

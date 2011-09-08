@@ -43,6 +43,9 @@ module CommandCenter
     # read system version as git tag
     configatron.system_version = `git describe`.strip rescue "?"
     
+    # set up preferred geocoder
+    configatron.geocoder = Configatron::Delayed.new{GoogleGeocoder}
+    
     configatron.site_name = "CCEOM Command Center"
     configatron.site_email = "#{configatron.site_name} <webmaster@cceom.org>"
     configatron.broadcast_tag = "[TCC-Broadcast]"

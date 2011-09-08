@@ -23,8 +23,8 @@ module ApplicationHelper
   def join_links(*links)
     links.reject{|l| l.blank?}.join(" | ").html_safe
   end
-  def place_field(place, place_lookup)
-    render("places/place_field", :place => place, :place_lookup => place_lookup)
+  def place_field(form)
+    render("places/place_field", :form => form)
   end
   def reqd_sym(condition = true)
     (condition ? '<div class="reqd_sym">*</div>' : '').html_safe

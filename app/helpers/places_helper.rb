@@ -2,9 +2,9 @@ module PlacesHelper
   def places_index_links(places)
     links = []
     unless places.total_entries == 0
-      links << link_to_if_auth("View places on map", map_all_places_path, "places#map_all")
+      links << link_to_if_auth("View all on map", map_all_places_path, "places#map_all")
     end
-    links << link_to_if_auth("Add new place", new_place_lookup_path, "places#create")
+    links << link_to_if_auth("Add new place", new_place_path, "places#create")
     links
   end
   def places_index_fields

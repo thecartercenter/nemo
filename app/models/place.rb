@@ -1,4 +1,8 @@
+require 'place_lookupable'
+
 class Place < ActiveRecord::Base
+  include PlaceLookupable
+  
   belongs_to(:container, :class_name => "Place")
   belongs_to(:place_type)
   has_many(:children, :class_name => "Place", :foreign_key => "container_id")
@@ -16,6 +20,7 @@ class Place < ActiveRecord::Base
   validates(:longitude, :numericality => {:less_than => 180, :greater_than => -180}, :if => Proc.new{|p| p.longitude})
   
   def self.sorted(params = {})
+    params[:conditions] = "(#{params[:conditions]}) and places.temporary != 1"
     params.merge!(:order => "place_types.level, places.long_name")
     paginate(:all, params)
   end
@@ -56,34 +61,50 @@ class Place < ActiveRecord::Base
   def self.find_or_create_with_bits(bits)
     return nil unless bits[:coords]
     
-    # reverse geolocate and (if successful) convert to place
-    gg = GoogleGeolocation.reverse(bits[:coords])
-    geo = gg ? gg.create_places.last : nil
+    # reverse geolocate to get container
+    container = GoogleGeocoder.reverse(bits[:coords])
     
-    # if address is given, override geolocation address value with custom value
-    if bits[:addr].blank?
-      addr = geo
-    else
-      # get container (either geo itself if geo is not an address, or otherwise geo's container)
-      cont = (geo && geo.is_address?) ? geo.container : geo
-      # find/initialize
-      addr = Place.find_or_initialize_by_long_name_and_place_type_id_and_container_id(bits[:addr], PlaceType.address.id, cont ? cont.id : nil)
-      # if container is nil, this is ok, but set incomplete to false
-      addr.incomplete = true if addr.no_container?
-      # get longitude & latitude from bits
-      addr.latitude, addr.longitude = bits[:coords]
-      # set full name and save
-      addr.save
-      # TODO: don't create orphan places
-    end
-    addr
+    # if no place name is given, just return the container
+    return container if bits[:place_name].blank?
+
+    # find/init a point place based on place_name
+    point = Place.find_or_initialize_by_long_name_and_place_type_id_and_container_id(
+      bits[:place_name], PlaceType.point.id, container ? container.id : nil)
+    # get longitude & latitude from bits if not already set
+    point.latitude, point.longitude = bits[:coords] unless point.latitude && point.longitude
+    # set full name and save if necessary
+    point.save if point.changed?
+    
+    return point
   end
   
   # returns places matching the given search query
   # raise an error if the query is invalid (see the Search.conditions method)
   def self.search(query)
     query_cond = Search.create(:query => query, :class_name => self.name).conditions
-    find(:all, :include => :place_type, :conditions => query_cond)
+    find(:all, :include => :place_type, :conditions => "(#{query_cond}) and temporary != 1")
+  end
+  
+  # searches existing, non-temporary places and geocoding services for places matching query
+  def self.lookup(query)
+    return [] if query.blank?
+    
+    # clean up old temp places
+    cleanup
+    
+    # get existing places
+    places = search(query)
+    
+    # get places from geocoding service
+    places += configatron.geocoder.search(query)
+    
+    # reject any duplicates
+    places.uniq{|p| p.full_name}
+  end
+  
+  # removes temporary places that are more than 1/2 hour old
+  def self.cleanup
+    delete_all(["temporary = 1 and created_at < ?", Time.now - 30.minutes])
   end
   
   def is_address?
@@ -106,6 +127,8 @@ class Place < ActiveRecord::Base
       :lng_max => [180, longitude + 5].min
     }
   end
+  
+  def place_field_name; "container"; end
     
   protected
     def check_uniqueness
@@ -117,7 +140,7 @@ class Place < ActiveRecord::Base
     def set_full_name(container_full_name = nil)
       if long_name_changed? || container_id_changed? || container_full_name
         container_full_name ||= container ? container.full_name : nil
-        self.full_name = long_name + (container_full_name ? ", " + container_full_name : "")
+        self.full_name = long_name + (!container_full_name.blank? ? ", " + container_full_name : "")
         children.each{|c| c.set_full_name(full_name); c.save}
       end
       return true
@@ -126,7 +149,7 @@ class Place < ActiveRecord::Base
     def check_container
       if place_type && place_type.level == 1 && !container.nil?
         errors.add(:container, "must be blank for countries.")
-      elsif no_container? && !incomplete?
+      elsif no_container?
         errors.add(:container, "can't be blank for a place with type: #{place_type.name}")
       elsif place_type && container && place_type.level <= container.place_type.level
         errors.add(:container, "must be a higher level than #{place_type.name}")

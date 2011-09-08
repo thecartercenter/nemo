@@ -41,13 +41,11 @@ class ResponsesController < ApplicationController
     form = Form.find(params[:form_id]) rescue nil
     flash[:error] = "You must choose a form to edit." and redirect_to(:action => :index) unless form
     @resp = Response.new(:form => form)
-    @place_lookup = PlaceLookup.new
     set_js
   end
   
   def edit
     @resp = Response.find_eager(params[:id])
-    @place_lookup = PlaceLookup.new
     set_js
   end
   
@@ -75,10 +73,6 @@ class ResponsesController < ApplicationController
       @resp = action == "create" ? Response.new : Response.find(params[:id])
       # set user_id if this is an observer
       @resp.user = current_user if current_user.is_observer?
-      # update the place lookup
-      @place_lookup = PlaceLookup.find_and_update(params[:place_lookup])
-      # update the response place if place_lookup has been used
-      (p = @place_lookup.choice) ? @resp.place = p : nil
       # try to save
       begin
         @resp.update_attributes!(params[:response])
@@ -91,6 +85,6 @@ class ResponsesController < ApplicationController
     end
     
     def set_js
-      @js << 'place_lookups'
+      @js << 'places'
     end
 end

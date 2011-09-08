@@ -1,6 +1,9 @@
 require 'xml'
+require 'place_lookupable'
 
 class Response < ActiveRecord::Base
+  include PlaceLookupable
+  
   belongs_to(:form)
   belongs_to(:place)
   has_many(:answers, :include => :questioning, :order => "questionings.rank", 
@@ -17,6 +20,8 @@ class Response < ActiveRecord::Base
 
   # only need to validate answers in web mode
   validates_associated(:answers, :message => "are invalid (see below)", :if => Proc.new{|r| r.modifier == "web"})
+  
+  before_save(:set_place)
   
   def self.per_page; 20; end
   
@@ -97,25 +102,15 @@ class Response < ActiveRecord::Base
       str = values[qing.question.code]
       # add answer
       resp.answers << Answer.new_from_str(:str => str, :questioning => qing)
-    
-      # pull out the place bits and start time as we find them
-      if place_bits[:coords].nil? && qing.question.is_location?
-        place_bits[:coords] = (str ? str.split(" ")[0..1] : false)
-      elsif place_bits[:addr].nil? && qing.question.is_address?
-        place_bits[:addr] = str || false
-      end
     end
-    
-    # try to get the response's place based on the place bits
-    resp.place = Place.find_or_create_with_bits(place_bits)
-    
+
     # save the works
     resp.save!
   end
   
   def visible_questionings
-    # get visible questionings from form, throwing out phone_only's when appropriate
-    form.visible_questionings.reject{|qing| qing.question.type.phone_only? && (new_record? || !answer_for(qing))}
+    # get visible questionings from form
+    form.visible_questionings
   end
   
   def all_answers
@@ -155,11 +150,33 @@ class Response < ActiveRecord::Base
   def form_name; form ? form.name : nil; end
   def submitter; user ? user.full_name : nil; end
   
+  def place_field_name; "place"; end
+  
   private
     def no_missing_answers
       answer_hash(:rebuild => true)
       visible_questionings.each do |qing|
         errors.add(:base, "Not all questions have answers") and return false if answer_for(qing).nil?
       end
+    end
+    
+    def set_place
+      bits = {:changed => false}
+      # loop over answers and find gps coords and/or place name, noting if either has changed      
+      answers.each do |a|
+        if bits[:coords].nil? && a.questioning.question.is_location?
+          # if the gps location was set, split the string into lat/lng
+          bits[:coords] = a.value? ? a.value.split(" ")[0..1] : false
+          # note if the value was changed
+          bits[:changed] = true if a.value_changed?
+        elsif bits[:place_name].nil? && a.questioning.question.is_address?
+          # save the place name
+          bits[:place_name] = a.value || false
+          # note if the value was changed
+          bits[:changed] = true if a.value_changed?
+        end
+      end
+      # find and set the place if either of the bits changed
+      self.place = Place.find_or_create_with_bits(bits) if bits[:changed]
     end
 end

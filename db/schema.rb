@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110901175612) do
+ActiveRecord::Schema.define(:version => 20110908211409) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -107,26 +107,6 @@ ActiveRecord::Schema.define(:version => 20110901175612) do
     t.datetime "updated_at"
   end
 
-  create_table "place_lookups", :force => true do |t|
-    t.string   "query"
-    t.string   "sugg_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "place_sugg_sets", :force => true do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "place_suggs", :force => true do |t|
-    t.integer  "place_lookup_id"
-    t.integer  "place_id"
-    t.integer  "google_geolocation_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "place_types", :force => true do |t|
     t.string   "name"
     t.integer  "level"
@@ -144,7 +124,7 @@ ActiveRecord::Schema.define(:version => 20110901175612) do
     t.decimal  "longitude",     :precision => 20, :scale => 15
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "incomplete",                                    :default => false
+    t.boolean  "temporary",                                     :default => false
   end
 
   create_table "question_types", :force => true do |t|
@@ -153,9 +133,6 @@ ActiveRecord::Schema.define(:version => 20110901175612) do
     t.datetime "updated_at"
     t.string   "odk_name"
     t.string   "odk_tag"
-    t.string   "odk_preload"
-    t.string   "odk_preload_params"
-    t.boolean  "phone_only",         :default => false
     t.string   "long_name"
   end
 

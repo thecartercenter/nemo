@@ -7,8 +7,7 @@ CommandCenter::Application.routes.draw do
   resources(:option_sets)
   resources(:password_resets)
   resources(:permissions){collection{get 'no'}}
-  resources(:places){collection{get 'map_all'}; member{get 'map'}}
-  resources(:place_lookups){collection{get 'suggest'}}
+  resources(:places){collection{get 'map_all', 'lookup'}; member{get 'map'}}
   resources(:questionings)
   resources(:questions){collection{get 'choose'}}
   resources(:responses)
