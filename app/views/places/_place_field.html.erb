@@ -2,20 +2,25 @@
 <% if old_value %>
   <% if form.mode == :show %>
     <span class="dummy"><%= obj.send(field_name).full_name %></span>
+    <%= map_link(obj.send(field_name)) %>
   <% else %>
     <%= form.radio_button("#{field_name}_id", old_value) %>
     <%= form.label("#{field_name}_id", Place.find(old_value).full_name) %>
+    <%= map_link(obj.send(field_name)) %><br/>
+    <%= form.radio_button("#{field_name}_id", "") %>
+    <%= form.label("#{field_name}_id", "None") %>
   <% end %>
-  <%= map_link(obj.send(field_name)) %>
 <% end %>
 
 <% if !obj.place_lookup_query && old_value && form.mode != :show %>
-  &nbsp;<small>
-    <%= link_to("[Change]", "#", :onclick => "show_place_lookup_form(); return false") %>
+  <br/>
+  <small>
+    <%= link_to("[Lookup Places]", "#", :onclick => "show_place_lookup_form(); return false") %>
   </small>
 <% end %>
 
-<%= content_tag("div", :id => "place_lookup_form", :style => !old_value || obj.place_lookup_query ? "" : "display: none") do %>
+<%= content_tag("div", :id => "place_lookup_form", 
+  :style => !old_value || obj.place_lookup_query ? "" : "display: none") do %>
   <%= form.text_field(:place_lookup_query, :id => "place_lookup_query",
     :onkeydown => "if (event.keyCode == 13) {$('place_lookup_btn').click(); return false;}") %>
   <%= button_to_function('Suggest', "lookup_places('#{obj.class.name}');", :id => "place_lookup_btn") %>
