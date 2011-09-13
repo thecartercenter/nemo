@@ -19,8 +19,6 @@ td { vertical-align: top; }
 
 /* multi-purpose */
 div.tip { margin-bottom: 10px; width: 800px; }
-/*.rowbg0 { background-color: #f6f6f6; }
-.rowbg1 { background-color: #ded8cb; }*/
 div.important { font-weight: bold; color: Black; }
 
 /* loading indicator */
