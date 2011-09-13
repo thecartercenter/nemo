@@ -9,6 +9,7 @@ class Place < ActiveRecord::Base
   has_many(:responses)
 
   before_validation(:set_full_name)
+  before_save(:update_container_shortcuts)
   before_destroy(:check_assoc)
   
   validates(:long_name, :presence => true)
@@ -154,6 +155,25 @@ class Place < ActiveRecord::Base
       elsif place_type && container && place_type.level <= container.place_type.level
         errors.add(:container, "must be a higher level than #{place_type.name}")
       end
+    end
+    
+    def update_container_shortcuts(updated_container = nil)
+      # reload relevant associations if necessary
+      container.reload if container_id_changed?
+      place_type.reload if place_type_id_changed?
+      
+      if container_id_changed? || place_type_id_changed? || updated_container
+        # prefer the passed container
+        cnt = updated_container || Place.find_by_id(container_id)
+        # update own shortcuts by copying from new container
+        PlaceType.shortcut_codes.each{|c| self.send("#{c}_id=", cnt ? cnt.send("#{c}_id") : nil)}
+        # set shortcut to container itself
+        self.send("#{cnt.place_type.short_name}_id=", cnt.id) unless cnt.nil?
+        
+        # tell all children to update their redundant links
+        children.each{|c| c.update_container_shortcuts(self); c.save}
+      end
+      return true
     end
     
     def check_assoc

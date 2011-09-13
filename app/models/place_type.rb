@@ -14,7 +14,8 @@ class PlaceType < ActiveRecord::Base
   def self.point
     find_by_level(5)
   end
-  def is_address?
-    level == 4
+  def self.shortcut_codes
+    sorted.collect{|pt| pt.short_name}
   end
+  def is_address?; level == 4; end
 end

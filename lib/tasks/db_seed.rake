@@ -18,11 +18,11 @@ namespace :db do
       find_or_create(QuestionType, :name, :name => "select_one", :long_name => "Select One", :odk_name => "select1", :odk_tag => "select1")
       find_or_create(QuestionType, :name, :name => "select_multiple", :long_name => "Select Multiple", :odk_name => "select", :odk_tag => "select")
       # PlaceTypes
-      find_or_create(PlaceType, :level, :name => "Country", :level => "1")
-      find_or_create(PlaceType, :level, :name => "State/Province", :level => "2")
-      find_or_create(PlaceType, :level, :name => "Locality", :level => "3")
-      find_or_create(PlaceType, :level, :name => "Address/Landmark", :level => "4")
-      find_or_create(PlaceType, :level, :name => "Point", :level => "5")
+      find_or_create(PlaceType, :level, :name => "Country", :short_name => "country", :level => "1")
+      find_or_create(PlaceType, :level, :name => "State/Province", :short_name => "state", :level => "2")
+      find_or_create(PlaceType, :level, :name => "Locality", :short_name => "locality", :level => "3")
+      find_or_create(PlaceType, :level, :name => "Address/Landmark", :short_name => "address", :level => "4")
+      find_or_create(PlaceType, :level, :name => "Point", :short_name => "point", :level => "5")
       # Languages
       find_or_create(Language, :code, :code => "eng", :active => "1")
       # FormTypes
