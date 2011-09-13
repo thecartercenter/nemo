@@ -10,6 +10,7 @@ class Place < ActiveRecord::Base
 
   before_validation(:set_full_name)
   before_save(:update_container_shortcuts)
+  before_save(:check_temporary)
   before_destroy(:check_assoc)
   
   validates(:long_name, :presence => true)
@@ -175,6 +176,12 @@ class Place < ActiveRecord::Base
       end
       return true
     end
+    
+    def check_temporary
+      # if we are non-temporary, ensure all containers are non temporary also
+      container.update_attributes(:temporary => false) if temporary == false && container
+    end
+      
     
     def check_assoc
       if !children.empty?

@@ -161,22 +161,28 @@ class Response < ActiveRecord::Base
     end
     
     def set_place
-      bits = {:changed => false}
-      # loop over answers and find gps coords and/or place name, noting if either has changed      
-      answers.each do |a|
-        if bits[:coords].nil? && a.questioning.question.is_location?
-          # if the gps location was set, split the string into lat/lng
-          bits[:coords] = a.value? ? a.value.split(" ")[0..1] : false
-          # note if the value was changed
-          bits[:changed] = true if a.value_changed?
-        elsif bits[:place_name].nil? && a.questioning.question.is_address?
-          # save the place name
-          bits[:place_name] = a.value || false
-          # note if the value was changed
-          bits[:changed] = true if a.value_changed?
+      # grab place from place bits unless the place has been set using the lookup tool
+      unless place_id_changed?
+        bits = {:changed => false}
+        # loop over answers and find gps coords and/or place name, noting if either has changed      
+        answers.each do |a|
+          if bits[:coords].nil? && a.questioning.question.is_location?
+            # if the gps location was set, split the string into lat/lng
+            bits[:coords] = a.value? ? a.value.split(" ")[0..1] : false
+            # note if the value was changed
+            bits[:changed] = true if a.value_changed?
+          elsif bits[:place_name].nil? && a.questioning.question.is_address?
+            # save the place name
+            bits[:place_name] = a.value || false
+            # note if the value was changed
+            bits[:changed] = true if a.value_changed?
+          end
         end
+        # find and set the place if either of the bits changed
+        self.place = Place.find_or_create_with_bits(bits) if bits[:changed]
       end
-      # find and set the place if either of the bits changed
-      self.place = Place.find_or_create_with_bits(bits) if bits[:changed]
+      
+      # ensure the place is non-temporary
+      place.update_attributes(:temporary => false) if self.place
     end
 end
