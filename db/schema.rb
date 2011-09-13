@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110913162231) do
+ActiveRecord::Schema.define(:version => 20110913202244) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -107,6 +107,12 @@ ActiveRecord::Schema.define(:version => 20110913162231) do
     t.datetime "updated_at"
   end
 
+  create_table "place_creators", :force => true do |t|
+    t.integer  "place_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "place_types", :force => true do |t|
     t.string   "name"
     t.integer  "level"
@@ -131,7 +137,6 @@ ActiveRecord::Schema.define(:version => 20110913162231) do
     t.integer  "locality_id"
     t.integer  "state_id"
     t.integer  "country_id"
-    t.string   "type_code"
   end
 
   create_table "question_types", :force => true do |t|

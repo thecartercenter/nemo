@@ -16,6 +16,7 @@ class Permission
     "places#map" => {:group => :logged_in},
     "places#map_all" => {:group => :logged_in},
     "places#destroy" => {:min_level => 2},
+    "place_creators#create" => {:min_level => 2},
     "searches#*" => {:group => :logged_in},
     "welcome#*" => {:group => :anyone},
     "permissions#no" => {:group => :anyone},
