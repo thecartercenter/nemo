@@ -14,7 +14,7 @@ namespace :db do
       # Initial superuser
       unless User.find_by_role_id(highest_role.id)
         find_or_create(User, :login, :login => "super", :first_name => "Super", :last_name => "User", 
-          :email => "webmaster@cceom.org", :role_id => highest_role.id, :is_active => true, 
+          :email => "webmaster@cceom.org", :role_id => highest_role.id, :active => true, 
           :language_id => english.id, :password => "changeme", :password_confirmation => "changeme")
       end
       # QuestionTypes
