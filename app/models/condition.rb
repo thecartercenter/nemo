@@ -16,7 +16,7 @@ class Condition < ActiveRecord::Base
   }
   
   def conditionable_qings
-    questioning.previous_qings.reject{|qing| %w[location].include?(qing.question.type.name)}
+    questioning ? questioning.previous_qings.reject{|qing| %w[location].include?(qing.question.type.name)} : []
   end
   
   def question_code_select_options
