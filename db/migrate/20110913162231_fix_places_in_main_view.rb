@@ -2,9 +2,8 @@ class FixPlacesInMainView < ActiveRecord::Migration
   def self.up
     # add a type code and container index to make this fast
     
-    execute("DROP VIEW IF EXISTS _answers")
-    execute("
-    CREATE VIEW _answers AS 
+    drop_view :_answers rescue nil
+    create_view(:_answers, "
       select 
         r.id AS response_id,
         r.observed_at AS observation_time,
@@ -53,9 +52,34 @@ class FixPlacesInMainView < ActiveRecord::Migration
             left join option_sets os on q.option_set_id = os.id
               join translations qtr on (qtr.obj_id = q.id and qtr.fld = 'name' and qtr.class_name = 'Question' 
                 and qtr.language_id = (select id from languages where code = 'eng'))
-    ")
+    ") do |t|
+      t.column :response_id
+      t.column :observation_time
+      t.column :is_reviewed
+      t.column :form_name
+      t.column :form_type
+      t.column :question_code
+      t.column :question_name
+      t.column :question_type
+      t.column :observer_name
+      t.column :place_full_name
+      t.column :point
+      t.column :address
+      t.column :locality
+      t.column :state
+      t.column :country
+      t.column :latitude
+      t.column :longitude
+      t.column :latitude_longitude
+      t.column :answer_id
+      t.column :answer_value
+      t.column :choice_name
+      t.column :choice_value
+      t.column :option_set
+    end
   end
 
   def self.down
+    drop_view :_answers
   end
 end
