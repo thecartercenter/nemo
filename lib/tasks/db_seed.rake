@@ -4,11 +4,19 @@ namespace :db do
     ActiveRecord::Base.transaction do
       # Settables
       find_or_create(Settable, :key, :key => "timezone", :name => "Time Zone", :description => "The time zone in which times are displayed throughout the Command Center", :kind => "timezone", :default => "UTC")
+      # Languages
+      english = find_or_create(Language, :code, :code => "eng", :active => "1")
       # Roles
-      find_or_create(Role, :name, :name => "Program Staff", :level => "4")
+      highest_role = find_or_create(Role, :name, :name => "Program Staff", :level => "4")
       find_or_create(Role, :name, :name => "Director", :level => "3")
       find_or_create(Role, :name, :name => "Coordinator", :level => "2")
       find_or_create(Role, :name, :name => "Observer", :level => "1")
+      # Initial superuser
+      unless User.find_by_role_id(highest_role.id)
+        find_or_create(User, :login => "super", :first_name => "Super", :last_name => "User", 
+          :email => "webmaster@cceom.org", :role_id => highest_role.id, :is_active => true, 
+          :language_id => english.id, :password => "changeme", :confirm_password => "changeme")
+      end
       # QuestionTypes
       find_or_create(QuestionType, :name, :name => "text", :long_name => "Short Text", :odk_name => "string", :odk_tag => "input")
       find_or_create(QuestionType, :name, :name => "integer", :long_name => "Integer", :odk_name => "int", :odk_tag => "input")
@@ -23,8 +31,6 @@ namespace :db do
       find_or_create(PlaceType, :level, :name => "Locality", :short_name => "locality", :level => "3")
       find_or_create(PlaceType, :level, :name => "Address/Landmark", :short_name => "address", :level => "4")
       find_or_create(PlaceType, :level, :name => "Point", :short_name => "point", :level => "5")
-      # Languages
-      find_or_create(Language, :code, :code => "eng", :active => "1")
       # FormTypes
       find_or_create(FormType, :name, :name => "STO")
       find_or_create(FormType, :name, :name => "LTO")
@@ -43,8 +49,9 @@ def find_or_create(klass, key_field, attribs)
       puts "Updated #{klass.name} #{key_val} (#{obj.changed.join(', ')})"
       obj.save!
     end
+    return obj
   else
     puts "Created #{klass.name} #{key_val}"
-    klass.create!(attribs)
+    return klass.create!(attribs)
   end
 end
