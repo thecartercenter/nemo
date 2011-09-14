@@ -5,7 +5,7 @@ class Place < ActiveRecord::Base
   
   belongs_to(:container, :class_name => "Place")
   belongs_to(:place_type)
-  has_many(:children, :class_name => "Place", :foreign_key => "container_id")
+  has_many(:children, :class_name => "Place", :foreign_key => "container_id", :dependent => :destroy)
   has_many(:responses)
 
   before_validation(:set_full_name)
@@ -130,6 +130,10 @@ class Place < ActiveRecord::Base
     }
   end
   
+  def type_code
+    place_type ? place_type.short_name : nil
+  end
+  
   def place_field_name; "container"; end
     
   protected
@@ -184,7 +188,7 @@ class Place < ActiveRecord::Base
       
     
     def check_assoc
-      if !children.empty?
+      if type_code && self.class.send("find_by_#{type_code}_id_and_temporary", id, 0)
         raise "The place '#{full_name}' is a container for other places. You must delete those first."
       elsif !responses.empty?
         raise "The place '#{full_name}' is associated with one or more responses. You must edit or delete them first."
