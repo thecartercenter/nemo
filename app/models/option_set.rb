@@ -1,6 +1,6 @@
 class OptionSet < ActiveRecord::Base
   has_many(:option_settings, :dependent => :destroy)
-  has_many(:options, :through => :option_settings)
+  has_many(:options, :through => :option_settings, :include => :option, :order => "options.value desc")
   has_many(:questions)
   has_many(:questionings, :through => :questions)
   
@@ -14,7 +14,7 @@ class OptionSet < ActiveRecord::Base
   def self.sorted(params = {})
     paginate(:all, params.merge(:order => "name"))
   end
-
+  
   def self.per_page; 100; end
 
   def self.default_eager; [{:questionings => :form}, :questions, :options]; end
