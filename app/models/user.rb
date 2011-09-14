@@ -8,7 +8,11 @@ class User < ActiveRecord::Base
   before_destroy(:check_assoc)
   has_many(:responses)
   
-  acts_as_authentic{|c| c.disable_perishable_token_maintenance = true}
+  acts_as_authentic do |c| 
+    c.disable_perishable_token_maintenance = true
+    c.logged_in_timeout(10.minutes)
+  end
+  
   validates(:first_name, :presence => true)
   validates(:last_name, :presence => true)
   validates(:role_id, :presence => true)
