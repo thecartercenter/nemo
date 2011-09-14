@@ -178,6 +178,7 @@ class Response < ActiveRecord::Base
             bits[:changed] = true if a.value_changed?
           end
         end
+        
         # find and set the place if either of the bits changed
         self.place = Place.find_or_create_with_bits(bits) if bits[:changed]
       end

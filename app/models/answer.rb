@@ -96,7 +96,7 @@ class Answer < ActiveRecord::Base
     end
     def clean_locations
       if location?
-        if value.match(/^(\d+(\.\d+)?)\s*[,;:\s]\s*(\d+(\.\d+)?)/)
+        if value.match(/^(-?\d+(\.\d+)?)\s*[,;:\s]\s*(-?\d+(\.\d+)?)/)
           self.value = "#{$1} #{$3}".strip
         else
           self.value = ""
