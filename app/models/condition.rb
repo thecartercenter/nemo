@@ -72,6 +72,9 @@ class Condition < ActiveRecord::Base
     xpath
   end
   
+  def value_dummy; nil; end
+  def value_dummy=(v); nil; end
+  
   private 
     def all_fields_required
       errors.add(:base, "All fields are required.") if ref_qing.blank? || op.blank? || value.blank?
