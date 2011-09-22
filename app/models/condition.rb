@@ -30,7 +30,7 @@ class Condition < ActiveRecord::Base
   def question_options_hash
     hash = {}
     conditionable_qings.each do |qing| 
-      hash[qing.id.to_s] = qing.question.select_options if qing.question.options
+      hash[qing.id.to_s] = qing.question.select_options_with_value if qing.question.options
     end
     hash
   end
@@ -42,7 +42,7 @@ class Condition < ActiveRecord::Base
   end
   
   def value_select_options
-    ref_question ? ref_question.select_options : []
+    ref_question ? ref_question.select_options_with_value : []
   end
   
   def has_options?
@@ -71,6 +71,9 @@ class Condition < ActiveRecord::Base
     end
     xpath
   end
+  
+  def value_dummy; nil; end
+  def value_dummy=(v); nil; end
   
   private 
     def all_fields_required

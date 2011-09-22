@@ -8,7 +8,7 @@ module OptionSetsHelper
   def format_option_sets_field(option_set, field)
     case field
     when "published?" then option_set.published? ? "Yes" : "No"
-    when "options" then option_set.options.collect{|o| o.name_eng}.join(", ")
+    when "options" then option_set.sorted_options.collect{|o| o.name_eng}.join(", ")
     when "questions" then option_set.questions.size
     when "actions"
       exclude = option_set.published? ? [:edit, :destroy] : []

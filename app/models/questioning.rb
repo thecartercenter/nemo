@@ -75,16 +75,16 @@ class Questioning < ActiveRecord::Base
       condition.destroy if condition
     # otherwise, set the attribs or build a new condition if none exists
     else
-      condition ? condition.attributes = c : build_condition(c)
+      condition ? condition.attributes = c : build_condition(c.merge(:questioning => self))
     end
   end
   
   def get_or_init_condition
-    has_condition? ? condition : build_condition
+    has_condition? ? condition : build_condition(:questioning => self)
   end
   
   def previous_qings
-    form.questionings.reject{|q| q == self || q.rank > rank}
+    form.questionings.reject{|q| !rank.nil? && (q == self || q.rank > rank)}
   end
   
   def verify_condition_ordering

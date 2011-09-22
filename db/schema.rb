@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110914144631) do
+ActiveRecord::Schema.define(:version => 20110922181111) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -92,6 +92,7 @@ ActiveRecord::Schema.define(:version => 20110914144631) do
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "ordering"
   end
 
   create_table "option_settings", :force => true do |t|

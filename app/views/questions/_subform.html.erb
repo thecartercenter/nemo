@@ -2,7 +2,7 @@
 <div class="tip"><%= reqd_sym %> Indicates a required field</div>
 <table class="form">
   <tr class="rowbg<%= rowbg = 1 - rowbg %>">
-    <td class="name">Code</td>
+    <td class="name">Code <%= reqd_sym %></td>
     <td class="value"><%= f.text_field(:code) %></td>
     <td class="details">
       A short codename (between 2-16 characters) for this question. Should contain only letters and numbers. Can't start with a number.

@@ -72,13 +72,16 @@ class Question < ActiveRecord::Base
   def hint=(lang, value); set_translation_for(:hint, lang, value); end
 
   def options
-    option_set ? option_set.options : nil
+    option_set ? option_set.sorted_options : nil
   end
   def is_select?
     type && type.name.match(/^select/)
   end
   def select_options
     (opt = options) ? opt.collect{|o| [o.name, o.id]} : []
+  end
+  def select_options_with_value
+    (opt = options) ? opt.collect{|o| [o.name_eng, o.value]} : []
   end
   def is_location?
     type.name == "location"

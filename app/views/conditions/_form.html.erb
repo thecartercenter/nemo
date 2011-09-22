@@ -4,9 +4,11 @@
   <%= f.select(:ref_qing_id, condition.question_code_select_options, {:include_blank => "Select question..."},
     :onchange => "condition_update_choices(this)") %>&nbsp;
   <%= f.select(:op, condition.op_select_options, :include_blank => "Select comparison...") %>&nbsp;
-  <%= f.text_field(:value, :id => "questioning_condition_value_box", 
+  <%= f.text_field(condition.has_options? ? :value_dummy : :value,
+    :id => "questioning_condition_value_box", 
     :style => condition.has_options? ? "display: none" : "") %>
-  <%= f.select(:value, condition.value_select_options, {:include_blank => "Select value..."}, 
+  <%= f.select(condition.has_options? ? :value : :value_dummy, 
+    condition.value_select_options, {:include_blank => "Select value..."}, 
     :style => condition.has_options? ? "" : "display: none", 
     :id => "questioning_condition_value_select") %>
 <% end %>
