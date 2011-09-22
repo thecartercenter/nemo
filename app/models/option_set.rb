@@ -1,10 +1,11 @@
 class OptionSet < ActiveRecord::Base
   has_many(:option_settings, :dependent => :destroy)
-  has_many(:options, :through => :option_settings, :include => :option, :order => "options.value desc")
+  has_many(:options, :through => :option_settings)
   has_many(:questions)
   has_many(:questionings, :through => :questions)
   
   validates(:name, :presence => true, :uniqueness => true)
+  validates(:ordering, :presence => true)
   validates_associated(:option_settings)
   validate(:at_least_one_option)
   validate(:unique_values)
@@ -21,6 +22,15 @@ class OptionSet < ActiveRecord::Base
   
   def self.select_options
     all(:order => "name").collect{|os| [os.name, os.id]}
+  end
+  
+  def self.orderings
+    [{:code => "value_asc", :name => "Value Low to High", :sql => "value asc"},
+     {:code => "value_desc", :name => "Value High to Low", :sql => "value desc"}]
+  end
+  
+  def sorted_options
+    @sorted_options ||= options.sort{|a,b| (a.value.to_i <=> b.value.to_i) * (ordering && ordering.match(/desc/) ? -1 : 1)}
   end
   
   def published?

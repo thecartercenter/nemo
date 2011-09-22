@@ -22,7 +22,7 @@
               </text>
             <% end %>
             <% @form.option_sets.each do |set| %>
-              <% set.options.each do |opt| %>
+              <% set.sorted_options.each do |opt| %>
                 <text id="option<%= opt.id %>">
                   <value><%= opt.name(lang) %></value>
                 </text>
@@ -49,7 +49,7 @@
         <label ref="jr:itext('<%= q.question.code %>:label')"/>
         <hint ref="jr:itext('<%= q.question.code %>:hint')"/>
         <% if set = q.question.option_set %>
-          <% set.options.each do |opt| %>
+          <% set.sorted_options.each do |opt| %>
             <item>
               <label ref="jr:itext('option<%= opt.id %>')"/>
               <value><%= opt.value %></value>

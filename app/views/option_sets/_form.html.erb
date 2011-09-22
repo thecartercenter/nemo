@@ -17,6 +17,11 @@
           :collection => set.all_option_settings)
       end,
       :details => "Check the options that should be included in this set."
+    },{
+      :col => :ordering,
+      :required => true,
+      :value => OptionSet.orderings.collect{|o| f.radio_button(:ordering, o[:code]) + f.label(:ordering, o[:name])}.join("<br/>"),
+      :details => "The order in which you'd like the options to appear."
     }]
   }
 end
