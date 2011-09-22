@@ -9,7 +9,7 @@ class Question < ActiveRecord::Base
     :conditions => "class_name='Question'", :autosave => true, :dependent => :destroy)
   has_many(:questionings, :dependent => :destroy)
   has_many(:answers, :through => :questionings)
-  has_many(:conditions, :through => :questionings)
+  has_many(:referring_conditions, :through => :questionings)
   has_many(:forms, :through => :questionings)
 
   validates(:code, :presence => true, :uniqueness => true)
@@ -103,8 +103,8 @@ class Question < ActiveRecord::Base
       if (question_type_id_changed? || option_set_id_changed?) 
         if !answers.empty?
           errors.add(:base, "Type or option set can't be changed because there are already responses for this question")
-        elsif !conditions.empty?
-          errors.add(:base, "Type or option set can't be changed because there are conditions for this question")
+        elsif !referring_conditions.empty?
+          errors.add(:base, "Type or option set can't be changed because there are conditions that refer to this question")
         end
       end
       # error if anything has changed and the question is published
