@@ -21,12 +21,10 @@
                 <value><%= q.question.hint(lang) %></value>
               </text>
             <% end %>
-            <% @form.option_sets.each do |set| %>
-              <% set.sorted_options.each do |opt| %>
-                <text id="option<%= opt.id %>">
-                  <value><%= opt.name(lang) %></value>
-                </text>
-              <% end %>
+            <% @form.option_sets.collect{|set| set.options}.flatten.uniq{|o| o.id}.each do |opt| %>
+              <text id="option<%= opt.id %>">
+                <value><%= opt.name(lang) %></value>
+              </text>
             <% end %>
           </translation>
         <% end %>
