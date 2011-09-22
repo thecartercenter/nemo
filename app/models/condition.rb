@@ -5,12 +5,12 @@ class Condition < ActiveRecord::Base
   validate(:all_fields_required)
     
   OPS = {
-    "is equal to" => {:types => [:decimal, :integer, :text, :address, :select_one], :code => "="},
+    "is equal to" => {:types => [:decimal, :integer, :text, :long_text, :address, :select_one], :code => "="},
     "is less than" => {:types => [:decimal, :integer], :code => "<"},
     "is greater than" => {:types => [:decimal, :integer], :code => ">"},
     "is less than or equal to" => {:types => [:decimal, :integer], :code => "<="},
     "is greater than or equal to" => {:types => [:decimal, :integer], :code => "="},
-    "is not equal to" => {:types => [:decimal, :integer, :text, :address, :select_one], :code => "!="},
+    "is not equal to" => {:types => [:decimal, :integer, :text, :long_text, :address, :select_one], :code => "!="},
     "includes" => {:types => [:select_multiple], :code => "="},
     "does not include" => {:types => [:select_multiple], :code => "!="}
   }
