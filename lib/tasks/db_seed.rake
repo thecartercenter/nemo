@@ -19,6 +19,7 @@ namespace :db do
       end
       # QuestionTypes
       find_or_create(QuestionType, :name, :name => "text", :long_name => "Short Text", :odk_name => "string", :odk_tag => "input")
+      find_or_create(QuestionType, :name, :name => "long_text", :long_name => "Long Text", :odk_name => "string", :odk_tag => "input")
       find_or_create(QuestionType, :name, :name => "integer", :long_name => "Integer", :odk_name => "int", :odk_tag => "input")
       find_or_create(QuestionType, :name, :name => "decimal", :long_name => "Decimal", :odk_name => "decimal", :odk_tag => "input")
       find_or_create(QuestionType, :name, :name => "location", :long_name => "GPS Location", :odk_name => "geopoint", :odk_tag => "input")
