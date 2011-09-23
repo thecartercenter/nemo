@@ -23,7 +23,9 @@
   :style => !old_value || obj.place_lookup_query ? "" : "display: none") do %>
   <%= form.text_field(:place_lookup_query, :id => "place_lookup_query",
     :onkeydown => "if (event.keyCode == 13) {$('place_lookup_btn').click(); return false;}") %>
-  <%= button_to_function('Suggest', "lookup_places('#{obj.class.name}');", :id => "place_lookup_btn") %>
+  <% unless form.mode == :show %>
+    <%= button_to_function('Suggest', "lookup_places('#{obj.class.name}');", :id => "place_lookup_btn") %>
+  <% end %>
   <div id="place_lookup_results">
     <%= render('places/lookup_results', :obj => obj) %>
   </div>
