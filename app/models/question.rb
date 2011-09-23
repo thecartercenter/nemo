@@ -80,9 +80,6 @@ class Question < ActiveRecord::Base
   def select_options
     (opt = options) ? opt.collect{|o| [o.name, o.id]} : []
   end
-  def select_options_with_value
-    (opt = options) ? opt.collect{|o| [o.name_eng, o.value]} : []
-  end
   def is_location?
     type.name == "location"
   end
