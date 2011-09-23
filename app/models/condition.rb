@@ -1,6 +1,7 @@
 class Condition < ActiveRecord::Base
   belongs_to(:questioning)
   belongs_to(:ref_qing, :class_name => "Questioning", :foreign_key => "ref_qing_id")
+  belongs_to(:option)
   
   validate(:all_fields_required)
     
@@ -30,7 +31,7 @@ class Condition < ActiveRecord::Base
   def question_options_hash
     hash = {}
     conditionable_qings.each do |qing| 
-      hash[qing.id.to_s] = qing.question.select_options_with_value if qing.question.options
+      hash[qing.id.to_s] = qing.question.select_options if qing.question.options
     end
     hash
   end
@@ -41,8 +42,8 @@ class Condition < ActiveRecord::Base
       []
   end
   
-  def value_select_options
-    ref_question ? ref_question.select_options_with_value : []
+  def option_select_options
+    ref_question ? ref_question.select_options : []
   end
   
   def has_options?
@@ -50,7 +51,7 @@ class Condition < ActiveRecord::Base
   end
   
   def clone
-    self.class.new(:ref_qing_id => ref_qing_id, :op => op, :value => value)
+    self.class.new(:ref_qing_id => ref_qing_id, :op => op, :value => value, :option_id => option_id)
   end
   
   def ref_question
@@ -63,7 +64,7 @@ class Condition < ActiveRecord::Base
   
   def to_odk
     if has_options?
-      xpath = "selected(/data/#{ref_question.code}, '#{value}')"
+      xpath = "selected(/data/#{ref_question.code}, '#{option_id}')"
       xpath = "not(#{xpath})" if OPS[op][:code] == "!="
     else
       val_str = ref_question.type.numeric? ? value.to_s : "'#{value}'"
@@ -72,11 +73,10 @@ class Condition < ActiveRecord::Base
     xpath
   end
   
-  def value_dummy; nil; end
-  def value_dummy=(v); nil; end
-  
   private 
     def all_fields_required
-      errors.add(:base, "All fields are required.") if ref_qing.blank? || op.blank? || value.blank?
+      self.value = nil if value.blank?
+      self.option_id = nil if option_id.blank?
+      errors.add(:base, "All fields are required.") if ref_qing.blank? || op.blank? || (value.blank? && option_id.blank?)
     end
 end

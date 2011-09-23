@@ -21,31 +21,29 @@ function condition_update_choices() {
     if (condition_ops[op_name]["types"].indexOf(chosen_type) != -1)
       add_option(op_field, op_name, op_name);
   
-  var value_select = $('questioning_condition_value_select');
-  var value_box = $('questioning_condition_value_box');
+  var value_field = $('questioning_condition_value');
+  var option_id_field = $('questioning_condition_option_id');
   // clear the dropdown
-  clear_select(value_select);
+  clear_select(option_id_field);
   // show the appropriate value field, depepnding on if the chosen question has options
   var opts = condition_q_options[chosen_id];
 
   if (opts) {
     // populate the dropdown
     for (var i = 0; i < opts.length; i++)
-      add_option(value_select, opts[i][0], opts[i][1]);
+      add_option(option_id_field, opts[i][0], opts[i][1]);
     // show the dropdown
-    condition_show_hide_value_fields(value_select, value_box);
+    condition_show_hide_value_fields(option_id_field, value_field);
   } else {
     // clear and show the box
-    value_box.value = "";
-    condition_show_hide_value_fields(value_box, value_select);
+    value_field.value = "";
+    condition_show_hide_value_fields(value_field, option_id_field);
   }
 }
 
 function condition_show_hide_value_fields(show, hide) {
   show.show();
   hide.hide();
-  show.name = "questioning[condition][value]";
-  hide.name = "";
 }
 
 function clear_select(select) {
