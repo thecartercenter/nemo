@@ -3,6 +3,7 @@ class Condition < ActiveRecord::Base
   belongs_to(:ref_qing, :class_name => "Questioning", :foreign_key => "ref_qing_id")
   belongs_to(:option)
   
+  before_validation(:clear_blanks)
   validate(:all_fields_required)
     
   OPS = {
@@ -74,9 +75,14 @@ class Condition < ActiveRecord::Base
   end
   
   private 
+    def clear_blanks
+      begin
+        self.value = nil if value.blank?
+        self.option_id = nil if option_id.blank?
+      rescue
+      end
+    end
     def all_fields_required
-      self.value = nil if value.blank?
-      self.option_id = nil if option_id.blank?
       errors.add(:base, "All fields are required.") if ref_qing.blank? || op.blank? || (value.blank? && option_id.blank?)
     end
 end
