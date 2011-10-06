@@ -41,6 +41,7 @@ table.index_table th, table.form th { text-align: left; color: #444; background-
     font-size: 90%; padding: 3px 10px 3px 3px; }
 table.index_table td { border-bottom: 1px solid #ddd; padding: 6px 10px 6px 3px; }
 table.index_table td.actions_col img { margin-right: 5px; }
+td.actions_col img { border: none; min-width: 11px; min-height: 11px; }
 
 /* pagination */
 div.pagination * { float: left; display: block; background-color: #eee; padding: 1px; 
