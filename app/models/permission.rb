@@ -6,6 +6,7 @@ class Permission
     "users#login_instructions" => {:min_level => 4},
     "user_sessions#create" => {:group => :logged_out},
     "user_sessions#destroy" => {:group => :logged_in},
+    "user_sessions#logged_out" => {:group => :logged_out},
     "password_resets#create" => {:group => :logged_out},
     "password_resets#update" => {:group => :logged_out},
     "languages#*" => {:min_level => 4},

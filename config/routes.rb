@@ -1,5 +1,5 @@
 CommandCenter::Application.routes.draw do
-  resource(:user_session)
+  resource(:user_session){collection{get 'logged_out'}}
   resources(:broadcasts){collection{post 'new_with_users'}}
   resources(:forms){member{post 'add_questions', 'remove_questions', 'update_ranks'; get 'publish', 'clone'}}
   resources(:languages)

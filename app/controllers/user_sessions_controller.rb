@@ -23,7 +23,10 @@ class UserSessionsController < ApplicationController
     @user_session.destroy
     forget_location
     Subindex.clear_all(session)
-    flash[:success] = "Logout successful"
-    redirect_to(root_path)
+    redirect_to(:action => :logged_out)
+  end
+  
+  def logged_out
+    @title = "Logged Out"
   end
 end
