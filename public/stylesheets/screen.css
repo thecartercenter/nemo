@@ -22,4 +22,10 @@ div#footer { border-top: 1px solid #444; padding: 5px; color: #ddd; }
 /* login instructions */
 .users_login_instructions #preamble { width: 600px; margin-bottom: 20px; }
 .users_login_instructions #instructions { width: 600px; border: 1px solid #666; padding: 10px; }
-.users_login_instructions #instructions p { margin-top: 0;
+.users_login_instructions #instructions p { margin-top: 0; }
+  
+/* flash and error messages */
+div.success, div.error { position: absolute; left: 25%; top: 89px; background-color: #9bc700; padding: 5px; 
+    color: white; font-weight: bold; width: 600px; margin-bottom: 10px; }
+div.success { background-color: #9bc700; }
+div.error { background-color: #9f0000; }

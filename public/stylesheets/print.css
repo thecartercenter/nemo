@@ -2,3 +2,6 @@ div#banner, div#footer, div#nav { display: none; }
 
 /* login instructions */
 .users_login_instructions #preamble { display: none; }
+
+/* flash and error messages */
+div.success, div.error { display: none; }
