@@ -27,7 +27,7 @@ class User < ActiveRecord::Base
     10000000
   end
   def self.select_options
-    find(:all, :order => "first_name, last_name").collect{|u| [u.full_name, u.id]}
+    find(:all, :order => "first_name, last_name").collect{|u| [u.full_name_with_team, u.id]}
   end
   def self.sorted(params)
     params.merge!(:order => "users.last_name, users.first_name")
@@ -101,6 +101,9 @@ class User < ActiveRecord::Base
   end
   def full_name
     "#{first_name} #{last_name}"
+  end
+  def full_name_with_team
+    "#{full_name}" + (team_number.blank? ? "" : " (Team #{team_number})")
   end
   def reset_password_method
     @reset_password_method.nil? ? "dont" : @reset_password_method
