@@ -91,7 +91,7 @@ class Response < ActiveRecord::Base
     
     # set the observe time if it's available
     if time = values.delete('startstamp')
-      resp.observed_at = Time.parse(time)
+      resp.observed_at = Time.zone.parse(time)
     end
     
     # loop over all the questions in the form and create answers
