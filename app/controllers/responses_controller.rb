@@ -77,7 +77,7 @@ class ResponsesController < ApplicationController
       begin
         @resp.update_attributes!(params[:response])
         flash[:success] = "Response #{action}d successfully."
-        redirect_to(edit_response_path(@resp))
+        redirect_to(:action => :index)
       rescue ActiveRecord::RecordInvalid
         set_js
         render(:action => action == "create" ? :new : :edit)
