@@ -173,7 +173,7 @@ class Response < ActiveRecord::Base
             bits[:changed] = true if a.value_changed?
           elsif bits[:place_name].nil? && a.questioning.question.is_address?
             # save the place name
-            bits[:place_name] = a.value || false
+            bits[:place_name] = (a.value ? a.value[0..254] : "") || false
             # note if the value was changed
             bits[:changed] = true if a.value_changed?
           end
