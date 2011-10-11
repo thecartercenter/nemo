@@ -8,6 +8,7 @@ class Place < ActiveRecord::Base
   has_many(:children, :class_name => "Place", :foreign_key => "container_id", :dependent => :destroy)
   has_many(:responses)
 
+  before_validation(:clean_commas)
   before_validation(:set_full_name)
   before_save(:update_container_shortcuts)
   before_save(:check_temporary)
@@ -179,6 +180,10 @@ class Place < ActiveRecord::Base
         children.each{|c| c.update_container_shortcuts(self); c.save}
       end
       return true
+    end
+    
+    def clean_commas
+      self.long_name.gsub!(",", "") if long_name
     end
     
     def check_temporary
