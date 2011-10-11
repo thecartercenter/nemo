@@ -26,7 +26,7 @@ class ResponsesController < ApplicationController
       format.html do
         @responses = load_objects_with_subindex(Response)
         @js << "responses_index"
-        render(:partial => "table_only", :locals => {:responses => @responses}) if params[:table_only]
+        render(:partial => "table_only", :locals => {:responses => @responses}) if ajax_request?
       end
       format.csv do
         require 'csv'
