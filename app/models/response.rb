@@ -60,6 +60,7 @@ class Response < ActiveRecord::Base
   def self.search_fields
     {:formname => {:colname => "forms.name", :default => false, :regexp => true},
      :formtype => {:colname => "form_types.name", :default => false, :regexp => false},
+     :reviewed => {:colname => "responses.reviewed", :default => false, :regexp => false},
      :place => {:colname => "places.full_name", :default => false, :regexp => true},
      :submitter => {:colname => "concat(users.first_name, ' ', users.last_name)", :default => false, :regexp => true},
      :answer => {:colname => "answers.value", :default => true, :regexp => true, :eager => [:answers]}}
@@ -67,7 +68,14 @@ class Response < ActiveRecord::Base
   
   # gets the lhs, operator, and rhs of a query fragment with the given field and term
   def self.query_fragment(field, term)
-    [search_fields[field][:colname], "like", "%#{term}%"]
+    case field
+    when :formname, :formtype
+      [search_fields[field][:colname], "=", "#{term}"]
+    when :reviewed
+      [search_fields[field][:colname], "=", {'yes' => '1', 'no' => '0'}[term.downcase] || '']
+    else
+      [search_fields[field][:colname], "like", "%#{term}%"]
+    end
   end
   
   def self.search_examples
