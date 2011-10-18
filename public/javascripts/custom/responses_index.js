@@ -8,8 +8,8 @@ function responses_update() {
   // get current list of IDs
   responses_old_ids = responses_get_ids();
   
-  // run the ajax request, passing the latest_id
-  new Ajax.Updater($('index_table'), "/responses?table_only=1", {
+  // run the ajax request
+  new Ajax.Updater($('index_table'), "/responses", {
     method: 'get',
     onComplete: responses_flash_new
   });
