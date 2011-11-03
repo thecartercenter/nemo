@@ -3,7 +3,7 @@ class Questioning < ActiveRecord::Base
   belongs_to(:question, :autosave => true)
   has_many(:answers, :dependent => :destroy)
   has_one(:condition, :autosave => true, :dependent => :destroy, :validate => false)
-  has_many(:referring_conditions, :class_name => "Condition", :foreign_key => "ref_qing_id")
+  has_many(:referring_conditions, :class_name => "Condition", :foreign_key => "ref_qing_id", :dependent => :destroy)
   
   before_create(:set_rank)
   before_destroy(:check_assoc)
@@ -16,6 +16,26 @@ class Questioning < ActiveRecord::Base
     qing = new(params.merge(:question => Question.new))
   end
 
+  # clones a set of questionings, including their conditions
+  # assumes qings are in order in which they appear on the form
+  # does not save qings and conditions, just initializes them
+  def self.duplicate(qings)
+    # create basic clones and store cleverly
+    qid_hash = {}; new_qings = []
+    qings.each do |qing|
+      # create the basis clone
+      new_qing = new(:question_id => qing.question_id, :rank => qing.rank, :required => qing.required, :hidden => qing.hidden)
+      # store in the hash (in case it's needed during condition cloning for later qings)
+      qid_hash[qing.question_id] = new_qing
+      # clone the condition if necessary
+      qing.condition.duplicate(new_qing, qid_hash) if qing.condition
+      # store in the array
+      new_qings << new_qing
+    end
+    # return the cloned qings
+    new_qings
+  end
+  
   def answer_required?
     required? && question.type.name != "select_multiple"
   end
@@ -55,17 +75,6 @@ class Questioning < ActiveRecord::Base
     save
   end
   
-  def clone(new_form)
-    cloned = self.class.new(:form_id => new_form.id, :question_id => question_id, :rank => rank, 
-      :required => required, :hidden => hidden)
-      
-    # clone the condition if necessary
-    cloned.build_condition(condition.attributes) if condition
-    
-    # return the clone
-    cloned
-  end
-  
   def has_condition?; !condition.nil?; end
   
   def condition=(c)
@@ -98,9 +107,6 @@ class Questioning < ActiveRecord::Base
     end
     
     def check_assoc
-      unless referring_conditions.empty?
-        raise("You can't remove question '#{question.code}' because one or more conditions refer to it.")
-      end
       unless answers.empty?
         raise("You can't remove question '#{question.code}' because it has one or more answers for this form.")
       end

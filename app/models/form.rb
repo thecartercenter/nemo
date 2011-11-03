@@ -99,14 +99,14 @@ class Form < ActiveRecord::Base
   end
   
   # makes a copy of the form, with a new name and a new set of questionings
-  def clone
+  def duplicate
     # get the base name
     base = name.match(/^(.+?)( v(\d+))?$/)[1]
     version = (self.class.max_version(base) || 1) + 1
     # create the new form and set the basic attribs
     cloned = self.class.new(:name => "#{base} v#{version}", :published => false, :form_type_id => form_type_id)
     # clone all the questionings
-    cloned.questionings = questionings.collect{|qing| qing.clone(cloned)}
+    cloned.questionings = Questioning.duplicate(questionings)
     # done!
     cloned.save
   end

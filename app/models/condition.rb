@@ -51,8 +51,11 @@ class Condition < ActiveRecord::Base
     ref_question && !ref_question.options.nil?
   end
   
-  def clone
-    self.class.new(:ref_qing_id => ref_qing_id, :op => op, :value => value, :option_id => option_id)
+  def duplicate(new_qing, qid_hash)
+    # look up the new ref_qing_id
+    new_ref_qing = qid_hash[ref_qing.question_id]
+    # initialize and return
+    new_qing.build_condition(:ref_qing => new_ref_qing, :op => op, :value => value, :option_id => option_id)
   end
   
   def ref_question

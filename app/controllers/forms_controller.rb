@@ -90,7 +90,7 @@ class FormsController < ApplicationController
   def clone
     @form = Form.find(params[:id])
     begin
-      @form.clone
+      @form.duplicate
       flash[:success] = "Form '#{@form.name}' cloned successfully."
     rescue
       raise $!
