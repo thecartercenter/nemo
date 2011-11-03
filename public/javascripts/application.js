@@ -104,3 +104,8 @@ function suggest_login() {
 		
 	$('user_login').value = login.substr(0,16).toLowerCase();
 }
+
+function logout() {
+  // click the logout button
+  if ($('logout_button')) $('logout_button').click();
+}

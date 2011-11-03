@@ -98,13 +98,21 @@ class ApplicationController < ActionController::Base
         Permission.authorize(:user => current_user, :controller => controller_name, :action => action_name, :request => params)
         return true
       rescue PermissionError
-        store_location
-        # if the user needs to login, send them to the login page
-        flash[:error] = $!.to_s
-        if flash[:error].match(/must login/) 
+        # if request is for the login page, just go to welcome page with no flash
+        if controller_name == "user_sessions" && action_name == "new"
+          redirect_to("/")
+        # if request is for the logout page, just go to the login page with no flash
+        elsif controller_name == "user_sessions" && action_name == "destroy"
           redirect_to(new_user_session_path)
         else
-          render("permissions/no", :status => :unauthorized)
+          store_location
+          # if the user needs to login, send them to the login page
+          flash[:error] = $!.to_s
+          if flash[:error].match(/must login/)
+            ajax_request? ? render(:text => "LOGIN_REQUIRED", :status => 401) : redirect_to(new_user_session_path)
+          else
+            render("permissions/no", :status => :unauthorized)
+          end
         end
         # halt the rest of the action
         return false

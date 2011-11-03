@@ -1,17 +1,18 @@
 var responses_old_ids;
 
 function responses_setup_periodic_update() {
-  setInterval(responses_update, 30000);
+  setInterval(responses_fetch, 30000);
 }
 
-function responses_update() {
+function responses_fetch() {
   // get current list of IDs
   responses_old_ids = responses_get_ids();
   
   // run the ajax request
-  new Ajax.Updater($('index_table'), "/responses", {
+  new Ajax.Request("/responses", {
     method: 'get',
-    onComplete: responses_flash_new
+    onSuccess: responses_update,
+    onFailure: logout
   });
 }
 
@@ -25,7 +26,8 @@ function responses_get_ids() {
   return ids;
 }
 
-function responses_flash_new(transport) {
+function responses_update(response) {
+  $('index_table').innerHTML = response.responseText;
   var new_ids = responses_get_ids();
   for (var i = 0; i < new_ids.length; i++) {
     if (responses_old_ids.indexOf(new_ids[i]) == -1)

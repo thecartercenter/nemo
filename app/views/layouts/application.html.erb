@@ -22,7 +22,7 @@
       <% if current_user %>
         Logged in as <strong><%= current_user.login %></strong> |
         <%= link_to("Edit Profile", edit_user_path(current_user.id)) %> |
-        <%= button_to("Logout", user_session_path, :method => :delete) %>
+        <%= button_to("Logout", user_session_path, :method => :delete, :id => "logout_button") %>
       <% else %>
         <%= link_to("Login", new_user_session_path) %>
       <% end %>
