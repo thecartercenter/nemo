@@ -2,7 +2,7 @@
   spec = {
     :fields => [{
       :col => :to,
-      :value => content_tag(f.mode == :show ? "strong" : "div"){broadcast.recipients.collect{|u| u.full_name}.join(", ")} + 
+      :value => content_tag(f.mode == :show ? "strong" : "div"){broadcast.recipients.collect{|u| u.name}.join(", ")} + 
         f.hidden_field(:recipient_ids)
     },{
       :col => :medium,

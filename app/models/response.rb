@@ -62,7 +62,7 @@ class Response < ActiveRecord::Base
      :formtype => {:colname => "form_types.name", :default => false, :regexp => false},
      :reviewed => {:colname => "responses.reviewed", :default => false, :regexp => false},
      :place => {:colname => "places.full_name", :default => false, :regexp => true},
-     :submitter => {:colname => "concat(users.first_name, ' ', users.last_name)", :default => false, :regexp => true},
+     :submitter => {:colname => "users.name", :default => false, :regexp => true},
      :answer => {:colname => "answers.value", :default => true, :regexp => true, :eager => [:answers]}}
   end
   
@@ -156,7 +156,7 @@ class Response < ActiveRecord::Base
   def observed_at_str=(t); self.observed_at = Time.zone.parse(t); end
   
   def form_name; form ? form.name : nil; end
-  def submitter; user ? user.full_name : nil; end
+  def submitter; user ? user.name : nil; end
   
   def place_field_name; "place"; end
   

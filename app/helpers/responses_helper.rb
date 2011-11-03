@@ -1,19 +1,18 @@
 module ResponsesHelper
   def responses_index_fields
-    %w[form_name place submitter team_num observation_time submission_time age reviewed? actions]
+    %w[form_name place submitter observation_time submission_time age reviewed? actions]
   end
   def format_responses_field(resp, field)
     case field
     when "observation_time" then resp.observed_at && resp.observed_at.strftime("%Y-%m-%d %l:%M%p") || ""
     when "submission_time" then resp.created_at && resp.created_at.strftime("%Y-%m-%d %l:%M%p") || ""
     when "age" then resp.created_at && time_ago_in_words(resp.created_at).gsub("about ", "") || ""
-    when "team_num" then resp.user.team_number
     when "reviewed?" then resp.reviewed? ? "Yes" : "No"
     when "place" then resp.place ? truncate(resp.place.full_name, :length => 40) : ""
     when "actions"
       # we don't need to authorize these links b/c for responses, if you can see it, you can edit it.
       # the controller actions will still be auth'd
-      by = resp.user ? " by #{resp.user.full_name}" : ""
+      by = resp.user ? " by #{resp.user.name}" : ""
       from = resp.place ? " from #{resp.place.long_name}" : ""
       action_links(resp, :destroy_warning => "Are you sure you want to delete the response#{by}#{from}? You won't be able to undelete it!")
     else resp.send(field)

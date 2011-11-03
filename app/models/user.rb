@@ -11,10 +11,10 @@ class User < ActiveRecord::Base
   acts_as_authentic do |c| 
     c.disable_perishable_token_maintenance = true
     c.logged_in_timeout(60.minutes)
+    c.validates_format_of_login_field_options = {:with => /[\a-zA-Z0-9\.]+/, :message => "can only contain letters, numbers, or '.'"}
   end
   
-  validates(:first_name, :presence => true)
-  validates(:last_name, :presence => true)
+  validates(:name, :presence => true)
   validates(:role_id, :presence => true)
   validates(:language_id, :presence => true)
   validate(:phone_length_or_empty)
@@ -27,10 +27,10 @@ class User < ActiveRecord::Base
     10000000
   end
   def self.select_options
-    find(:all, :order => "first_name, last_name").collect{|u| [u.full_name_with_team, u.id]}
+    find(:all, :order => "name").collect{|u| [u.name, u.id]}
   end
   def self.sorted(params)
-    params.merge!(:order => "users.last_name, users.first_name")
+    params.merge!(:order => "users.name")
     paginate(:all, params)
   end
   def self.default(params = {})
@@ -39,7 +39,6 @@ class User < ActiveRecord::Base
   def self.new_with_login_and_password(params)
     u = new(params)
     u.reset_password
-    u.generate_login!
     u
   end
   def self.random_password(size = 6)
@@ -59,8 +58,7 @@ class User < ActiveRecord::Base
   # includes whether they should be included in a default, unqualified search
   # and whether they are searchable by a regular expression
   def self.search_fields
-    {:firstname => {:colname => "users.first_name", :default => true, :regexp => true},
-     :lastname => {:colname => "users.last_name", :default => true, :regexp => true},
+    {:name => {:colname => "users.name", :default => true, :regexp => true},
      :login => {:colname => "users.login", :default => true, :regexp => true},
      :language => {:colname => "languages.name", :default => false, :regexp => false},
      :role => {:colname => "roles.name", :default => false, :regexp => false},
@@ -81,13 +79,13 @@ class User < ActiveRecord::Base
     self.password = self.password_confirmation = self.class.random_password
   end
   
-  def generate_login!
-    base = "#{first_name.gsub(/[^A-Za-z]/,'')[0,1]}#{last_name.gsub(/[^A-Za-z]/,'')[0,7]}".downcase.normalize
-    try = 1
-    until self.class.find_by_login(self.login = base + (try > 1 ? try.to_s : "")).nil?
-      try += 1
-    end
-  end
+#  def generate_login!
+#    base = "#{name.gsub(/[^A-Za-z]/,'')[0,1]}#{last_name.gsub(/[^A-Za-z]/,'')[0,7]}".downcase.normalize
+#    try = 1
+#    until self.class.find_by_login(self.login = base + (try > 1 ? try.to_s : "")).nil?
+#      try += 1
+#    end
+#  end
   def phone_number
     phone.blank? ? "" : phone + (phone_is_mobile? ? " [m]" : "")
   end
@@ -100,10 +98,7 @@ class User < ActiveRecord::Base
     Notifier.password_reset_instructions(self).deliver  
   end
   def full_name
-    "#{first_name} #{last_name}"
-  end
-  def full_name_with_team
-    "#{full_name}" + (team_number.blank? ? "" : " (Team #{team_number})")
+    name
   end
   def reset_password_method
     @reset_password_method.nil? ? "dont" : @reset_password_method
@@ -117,7 +112,7 @@ class User < ActiveRecord::Base
     end
   end
   def to_vcf
-    "BEGIN:VCARD\nVERSION:3.0\nFN:#{full_name}\nN:#{last_name};#{first_name};;;\nEMAIL:#{email}\n" +
+    "BEGIN:VCARD\nVERSION:3.0\nFN:#{name}\nEMAIL:#{email}\n" +
     (phone ? "TEL;TYPE=#{phone_is_mobile? ? 'CELL' : 'WORK'}:#{phone}\n" : "") + "END:VCARD"
   end
   def can_get_sms?; !phone.blank? && phone_is_mobile; end
@@ -128,6 +123,7 @@ class User < ActiveRecord::Base
   private
     def clean_fields
       self.phone = "+" + phone.gsub(/[^0-9]/, "") unless phone.blank?
+      self.login = login.downcase
       return true
     end
     
@@ -138,7 +134,7 @@ class User < ActiveRecord::Base
     def check_assoc
       # Can't delete users with related responses.
       unless responses.empty?
-        raise("You can't delete #{full_name} because he/she has associated responses." +
+        raise("You can't delete #{name} because he/she has associated responses." +
           (active? ? " You could set him/her to inactive instead." : ""))
       end
     end

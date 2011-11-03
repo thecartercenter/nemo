@@ -1,5 +1,5 @@
 <div class="tip">
-  <strong><%= @user.first_name %></strong>, please enter a new password for your account.
+  <strong><%= @user.name %></strong>, please enter a new password for your account.
 </div>
 <% rowbg = 0 %>
 <% form_for @user, :url => password_reset_path, :method => :put do |f| %>

@@ -13,7 +13,7 @@ namespace :db do
       find_or_create(Role, :name, :name => "Observer", :level => "1")
       # Initial superuser
       unless User.find_by_role_id(highest_role.id)
-        find_or_create(User, :login, :login => "super", :first_name => "Super", :last_name => "User", 
+        find_or_create(User, :login, :login => "super", :name => "Super User", :login => "super",
           :email => "webmaster@cceom.org", :role_id => highest_role.id, :active => true, 
           :language_id => english.id, :password => "changeme", :password_confirmation => "changeme")
       end

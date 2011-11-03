@@ -1,6 +1,6 @@
 module UsersHelper
   def users_index_fields
-    %w[last_name first_name login email language role team_number device phone_number active? actions]
+    %w[name login email language role device phone_number active? actions]
   end
   def format_users_field(user, field)
     case field
@@ -9,7 +9,7 @@ module UsersHelper
     when "active?" then user.active? ? "Yes" : "No"
     when "actions"
       action_links(user, :exclude => :show,
-        :destroy_warning => "Are you sure you want to delete #{user.first_name} #{user.last_name}?")
+        :destroy_warning => "Are you sure you want to delete #{user.name}?")
     else user.send(field)
     end
   end

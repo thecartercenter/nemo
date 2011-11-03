@@ -1,28 +1,29 @@
 <%= basic_form(user) do |f|
   spec = {
     :fields => [{
-      :col => :first_name,
+      :col => :name,
+      :label => "Full Name",
       :required => true,
-      :value => f.text_field(:first_name)
+      :value => f.text_field(:name),
+      :details => "The user's full name. Example: 'John Doe' or 'Team 1.1'"
     },{
-      :col => :last_name,  
+      :col => :login,
+      :label => "Login Name",
       :required => true,
-      :value => f.text_field(:last_name)
-    },{
-      :col => :email,
-      :required => true,
-      :value => f.text_field(:email)
+      :value => f.text_field(:login) + button_to_function("Suggest", "suggest_login(this)"),
+      :details => "The login name will be used to log in. Click the suggest button to suggest a login name."
     },{
       :col => :role,
       :required => true,
       :value => f.select(:role_id, Role.select_options, :include_blank => true)
     },{
+      :col => :email,
+      :required => true,
+      :value => f.text_field(:email)
+    },{
       :col => :device,
       :value => f.text_field(:device),
       :details => "The ID number of the handheld device (if any) carried by this user. Example: TCC023"
-    },{
-      :col => :team_number,
-      :value => f.text_field(:team_number)
     },{
       :col => :phone,
       :value => f.text_field(:phone, :size => 20) + "<br/>".html_safe + f.check_box(:phone_is_mobile) + "Is this a mobile phone?",
