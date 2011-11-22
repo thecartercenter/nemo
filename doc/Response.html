@@ -1,0 +1,1359 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Class: Response
+  
+    &mdash; Documentation by YARD 0.7.3
+  
+</title>
+
+  <link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+  <link rel="stylesheet" href="css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  relpath = '';
+  if (relpath != '') relpath += '/';
+</script>
+
+  <script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+
+  </head>
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      if (window.top.frames.main) document.body.className = 'frames';
+    </script>
+    
+    <div id="header">
+      <div id="menu">
+  
+    <a href="_index.html">Index (R)</a> &raquo; 
+    
+    
+    <span class="title">Response</span>
+  
+  
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  
+    <a id="class_list_link" href="#">Class List</a>
+  
+    <a id="method_list_link" href="#">Method List</a>
+  
+    <a id="file_list_link" href="#">File List</a>
+  
+</div>
+      <div class="clear"></div>
+    </div>
+    
+    <iframe id="search_frame"></iframe>
+    
+    <div id="content"><h1>Class: Response
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+    <dt class="r1">Inherits:</dt>
+    <dd class="r1">
+      <span class="inheritName">ActiveRecord::Base</span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next">ActiveRecord::Base</li>
+          
+            <li class="next">Response</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+      </dd>
+    
+  
+  
+    
+  
+    
+      <dt class="r2">Includes:</dt>
+      <dd class="r2"><span class='object_link'><a href="PlaceLookupable.html" title="PlaceLookupable (module)">PlaceLookupable</a></span></dd>
+      
+    
+  
+  
+  
+    <dt class="r1 last">Defined in:</dt>
+    <dd class="r1 last">app/models/response.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+
+
+  
+  
+  
+  
+  
+  <h2>Instance Attribute Summary <small>(<a href="#" class="summary_toggle">collapse</a>)</small></h2>
+  <ul class="summary">
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#modifier-instance_method" title="#modifier (instance method)">- (Object) <strong>modifier</strong> </a>
+    
+
+    
+  </span>
+  
+  
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+Returns the value of attribute modifier.
+</p>
+</div></span>
+  
+</li>
+
+    
+  </ul>
+
+
+
+  
+  
+  
+  
+  
+  <h3 class="inherited">Attributes included from <span class='object_link'><a href="PlaceLookupable.html" title="PlaceLookupable (module)">PlaceLookupable</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="PlaceLookupable.html#place_lookup_query-instance_method" title="PlaceLookupable#place_lookup_query (method)">place_lookup_query</a></span></p>
+
+  
+
+  
+    <h2>
+      Class Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#create_from_xml-class_method" title="create_from_xml (class method)">+ (Object) <strong>create_from_xml</strong>(xml, user) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#default_eager-class_method" title="default_eager (class method)">+ (Object) <strong>default_eager</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#find_eager-class_method" title="find_eager (class method)">+ (Object) <strong>find_eager</strong>(id) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#flattened-class_method" title="flattened (class method)">+ (Object) <strong>flattened</strong>(params = {}) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#per_page-class_method" title="per_page (class method)">+ (Object) <strong>per_page</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#query_fragment-class_method" title="query_fragment (class method)">+ (Object) <strong>query_fragment</strong>(field, term) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+gets the lhs, operator, and rhs of a query fragment with the given field
+and term.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#search_examples-class_method" title="search_examples (class method)">+ (Object) <strong>search_examples</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#search_fields-class_method" title="search_fields (class method)">+ (Object) <strong>search_fields</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+gets the list of fields to be searched for this class includes whether they
+should be included in a default, unqualified search and whether they are
+searchable by a regular expression.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#sorted-class_method" title="sorted (class method)">+ (Object) <strong>sorted</strong>(params = {}) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+    </ul>
+  
+    <h2>
+      Instance Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#all_answers-instance_method" title="#all_answers (instance method)">- (Object) <strong>all_answers</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#all_answers%3D-instance_method" title="#all_answers= (instance method)">- (Object) <strong>all_answers=</strong>(params) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#answer_for-instance_method" title="#answer_for (instance method)">- (Object) <strong>answer_for</strong>(questioning) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#answer_hash-instance_method" title="#answer_hash (instance method)">- (Object) <strong>answer_hash</strong>(options = {}) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#form_name-instance_method" title="#form_name (instance method)">- (Object) <strong>form_name</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#observed_at_str-instance_method" title="#observed_at_str (instance method)">- (Object) <strong>observed_at_str</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#observed_at_str%3D-instance_method" title="#observed_at_str= (instance method)">- (Object) <strong>observed_at_str=</strong>(t) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#place_field_name-instance_method" title="#place_field_name (instance method)">- (Object) <strong>place_field_name</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#submitter-instance_method" title="#submitter (instance method)">- (Object) <strong>submitter</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#visible_questionings-instance_method" title="#visible_questionings (instance method)">- (Object) <strong>visible_questionings</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+  
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods included from <span class='object_link'><a href="PlaceLookupable.html" title="PlaceLookupable (module)">PlaceLookupable</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="PlaceLookupable.html#place_suggestion_ids-instance_method" title="PlaceLookupable#place_suggestion_ids (method)">#place_suggestion_ids</a></span>, <span class='object_link'><a href="PlaceLookupable.html#place_suggestion_ids%3D-instance_method" title="PlaceLookupable#place_suggestion_ids= (method)">#place_suggestion_ids=</a></span>, <span class='object_link'><a href="PlaceLookupable.html#place_suggestions-instance_method" title="PlaceLookupable#place_suggestions (method)">#place_suggestions</a></span>, <span class='object_link'><a href="PlaceLookupable.html#place_suggestions%3D-instance_method" title="PlaceLookupable#place_suggestions= (method)">#place_suggestions=</a></span></p>
+
+  
+  <div id="instance_attr_details" class="attr_details">
+    <h2>Instance Attribute Details</h2>
+    
+      
+      <span id="modifier=-instance_method"></span>
+      <span id="modifier-instance_method"></span>
+      <div class="method_details first">
+  <p class="signature first" id="modifier-instance_method">
+  
+    - (<tt>Object</tt>) <strong>modifier</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+Returns the value of attribute modifier
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+13
+14
+15</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/response.rb', line 13</span>
+
+<span class='def def kw'>def</span> <span class='modifier identifier id'>modifier</span>
+  <span class='@modifier ivar id'>@modifier</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+
+  <div id="class_method_details" class="method_details_list">
+    <h2>Class Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="create_from_xml-class_method">
+  
+    + (<tt>Object</tt>) <strong>create_from_xml</strong>(xml, user) 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/response.rb', line 85</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='create_from_xml identifier id'>create_from_xml</span><span class='lparen token'>(</span><span class='xml identifier id'>xml</span><span class='comma token'>,</span> <span class='user identifier id'>user</span><span class='rparen token'>)</span>
+  <span class='comment val'># parse xml</span>
+  <span class='doc identifier id'>doc</span> <span class='assign token'>=</span> <span class='XML constant id'>XML</span><span class='colon2 op'>::</span><span class='Parser constant id'>Parser</span><span class='dot token'>.</span><span class='string identifier id'>string</span><span class='lparen token'>(</span><span class='xml identifier id'>xml</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='parse identifier id'>parse</span>
+
+  <span class='comment val'># get form id</span>
+  <span class='form_id identifier id'>form_id</span> <span class='assign token'>=</span> <span class='doc identifier id'>doc</span><span class='dot token'>.</span><span class='root identifier id'>root</span><span class='lbrack token'>[</span><span class='string val'>&quot;id&quot;</span><span class='rbrack token'>]</span> <span class='or or kw'>or</span> <span class='raise identifier id'>raise</span> <span class='ArgumentError constant id'>ArgumentError</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='string val'>&quot;No form id.&quot;</span><span class='rparen token'>)</span>
+  <span class='form_id identifier id'>form_id</span> <span class='assign token'>=</span> <span class='form_id identifier id'>form_id</span><span class='dot token'>.</span><span class='to_i identifier id'>to_i</span>
+  
+  <span class='comment val'># create response object</span>
+  <span class='resp identifier id'>resp</span> <span class='assign token'>=</span> <span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='symbol val'>:form_id</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='form_id identifier id'>form_id</span><span class='comma token'>,</span> <span class='symbol val'>:user_id</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='user identifier id'>user</span> <span class='integer val'>? </span><span class='user identifier id'>user</span><span class='dot token'>.</span><span class='id identifier id'>id</span> <span class='colon op'>:</span> <span class='nil nil kw'>nil</span><span class='comma token'>,</span> <span class='symbol val'>:source</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>&quot;odk&quot;</span><span class='comma token'>,</span> <span class='symbol val'>:modifier</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>&quot;odk&quot;</span><span class='rparen token'>)</span>
+  <span class='qings identifier id'>qings</span> <span class='assign token'>=</span> <span class='resp identifier id'>resp</span><span class='dot token'>.</span><span class='form identifier id'>form</span> <span class='integer val'>? </span><span class='resp identifier id'>resp</span><span class='dot token'>.</span><span class='form identifier id'>form</span><span class='dot token'>.</span><span class='visible_questionings identifier id'>visible_questionings</span> <span class='colon op'>:</span> <span class='lparen token'>(</span><span class='raise identifier id'>raise</span> <span class='ArgumentError constant id'>ArgumentError</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='string val'>&quot;Invalid form id.&quot;</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
+  
+  <span class='comment val'># loop over each child tag and create hash of question_code =&gt; value</span>
+  <span class='values identifier id'>values</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span><span class='semicolon token'>;</span> <span class='doc identifier id'>doc</span><span class='dot token'>.</span><span class='root identifier id'>root</span><span class='dot token'>.</span><span class='children identifier id'>children</span><span class='dot token'>.</span><span class='each identifier id'>each</span><span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='c identifier id'>c</span><span class='bitor op'>|</span> <span class='values identifier id'>values</span><span class='lbrack token'>[</span><span class='c identifier id'>c</span><span class='dot token'>.</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='c identifier id'>c</span><span class='dot token'>.</span><span class='first? fid id'>first?</span> <span class='integer val'>? </span><span class='c identifier id'>c</span><span class='dot token'>.</span><span class='first identifier id'>first</span><span class='dot token'>.</span><span class='content identifier id'>content</span> <span class='colon op'>:</span> <span class='nil nil kw'>nil</span><span class='rbrace token'>}</span>
+  
+  <span class='comment val'># set the observe time if it's available</span>
+  <span class='if if kw'>if</span> <span class='time identifier id'>time</span> <span class='assign token'>=</span> <span class='values identifier id'>values</span><span class='dot token'>.</span><span class='delete identifier id'>delete</span><span class='lparen token'>(</span><span class='string val'>'startstamp'</span><span class='rparen token'>)</span>
+    <span class='resp identifier id'>resp</span><span class='dot token'>.</span><span class='observed_at identifier id'>observed_at</span> <span class='assign token'>=</span> <span class='Time constant id'>Time</span><span class='dot token'>.</span><span class='zone identifier id'>zone</span><span class='dot token'>.</span><span class='parse identifier id'>parse</span><span class='lparen token'>(</span><span class='time identifier id'>time</span><span class='rparen token'>)</span>
+  <span class='end end kw'>end</span>
+  
+  <span class='comment val'># loop over all the questions in the form and create answers</span>
+  <span class='place_bits identifier id'>place_bits</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
+  <span class='start_time identifier id'>start_time</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span>
+  <span class='qings identifier id'>qings</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='qing identifier id'>qing</span><span class='bitor op'>|</span>
+    <span class='comment val'># get value from hash</span>
+    <span class='str identifier id'>str</span> <span class='assign token'>=</span> <span class='values identifier id'>values</span><span class='lbrack token'>[</span><span class='qing identifier id'>qing</span><span class='dot token'>.</span><span class='question identifier id'>question</span><span class='dot token'>.</span><span class='code identifier id'>code</span><span class='rbrack token'>]</span>
+    <span class='comment val'># add answer</span>
+    <span class='resp identifier id'>resp</span><span class='dot token'>.</span><span class='answers identifier id'>answers</span> <span class='lshft op'>&lt;&lt;</span> <span class='Answer constant id'>Answer</span><span class='dot token'>.</span><span class='new_from_str identifier id'>new_from_str</span><span class='lparen token'>(</span><span class='symbol val'>:str</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='str identifier id'>str</span><span class='comma token'>,</span> <span class='symbol val'>:questioning</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='qing identifier id'>qing</span><span class='rparen token'>)</span>
+  <span class='end end kw'>end</span>
+
+  <span class='comment val'># save the works</span>
+  <span class='resp identifier id'>resp</span><span class='dot token'>.</span><span class='save! fid id'>save!</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="default_eager-class_method">
+  
+    + (<tt>Object</tt>) <strong>default_eager</strong> 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+39
+40
+41</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/response.rb', line 39</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='default_eager identifier id'>default_eager</span>
+  <span class='lbrack token'>[</span><span class='lbrace token'>{</span><span class='symbol val'>:form</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='symbol val'>:type</span><span class='rbrace token'>}</span><span class='comma token'>,</span> <span class='symbol val'>:user</span><span class='comma token'>,</span> <span class='symbol val'>:place</span><span class='rbrack token'>]</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="find_eager-class_method">
+  
+    + (<tt>Object</tt>) <strong>find_eager</strong>(id) 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/response.rb', line 43</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='find_eager identifier id'>find_eager</span><span class='lparen token'>(</span><span class='id identifier id'>id</span><span class='rparen token'>)</span>
+  <span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='id identifier id'>id</span><span class='comma token'>,</span> <span class='symbol val'>:include</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrack token'>[</span>
+    <span class='symbol val'>:form</span><span class='comma token'>,</span>
+    <span class='lbrace token'>{</span><span class='symbol val'>:answers</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> 
+      <span class='lbrack token'>[</span><span class='lbrace token'>{</span><span class='symbol val'>:choices</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:option</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='symbol val'>:translations</span><span class='rbrace token'>}</span><span class='rbrace token'>}</span><span class='comma token'>,</span>
+       <span class='lbrace token'>{</span><span class='symbol val'>:option</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='symbol val'>:translations</span><span class='rbrace token'>}</span><span class='comma token'>,</span> 
+       <span class='lbrace token'>{</span><span class='symbol val'>:questioning</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:question</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> 
+         <span class='lbrack token'>[</span><span class='symbol val'>:type</span><span class='comma token'>,</span> <span class='symbol val'>:translations</span><span class='comma token'>,</span> <span class='lbrace token'>{</span><span class='symbol val'>:option_set</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:options</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='symbol val'>:translations</span><span class='rbrace token'>}</span><span class='rbrace token'>}</span><span class='rbrack token'>]</span>
+       <span class='rbrace token'>}</span><span class='rbrace token'>}</span>
+      <span class='rbrack token'>]</span>
+    <span class='rbrace token'>}</span>
+  <span class='rbrack token'>]</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="flattened-class_method">
+  
+    + (<tt>Object</tt>) <strong>flattened</strong>(params = {}) 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+28
+29
+30
+31
+32</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/response.rb', line 28</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='flattened identifier id'>flattened</span><span class='lparen token'>(</span><span class='params identifier id'>params</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span><span class='rparen token'>)</span>
+  <span class='params identifier id'>params</span><span class='lbrack token'>[</span><span class='symbol val'>:conditions</span><span class='rbrack token'>]</span> <span class='opasgn op'>||=</span> <span class='string val'>&quot;1&quot;</span>
+  <span class='params identifier id'>params</span><span class='lbrack token'>[</span><span class='symbol val'>:conditions</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='gsub! fid id'>gsub!</span><span class='lparen token'>(</span><span class='regexp val'>/responses\./</span><span class='comma token'>,</span> <span class='string val'>''</span><span class='rparen token'>)</span>
+  <span class='find_by_sql identifier id'>find_by_sql</span><span class='lparen token'>(</span><span class='dstring node'>&quot;select * from _answers where (#{params[:conditions]})&quot;</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="per_page-class_method">
+  
+    + (<tt>Object</tt>) <strong>per_page</strong> 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+26</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/response.rb', line 26</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='per_page identifier id'>per_page</span><span class='semicolon token'>;</span> <span class='integer val'>20</span> <span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="query_fragment-class_method">
+  
+    + (<tt>Object</tt>) <strong>query_fragment</strong>(field, term) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+gets the lhs, operator, and rhs of a query fragment with the given field
+and term
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/response.rb', line 70</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='query_fragment identifier id'>query_fragment</span><span class='lparen token'>(</span><span class='field identifier id'>field</span><span class='comma token'>,</span> <span class='term identifier id'>term</span><span class='rparen token'>)</span>
+  <span class='case case kw'>case</span> <span class='field identifier id'>field</span>
+  <span class='when when kw'>when</span> <span class='symbol val'>:formname</span><span class='comma token'>,</span> <span class='symbol val'>:formtype</span>
+    <span class='lbrack token'>[</span><span class='search_fields identifier id'>search_fields</span><span class='lbrack token'>[</span><span class='field identifier id'>field</span><span class='rbrack token'>]</span><span class='lbrack token'>[</span><span class='symbol val'>:colname</span><span class='rbrack token'>]</span><span class='comma token'>,</span> <span class='string val'>&quot;=&quot;</span><span class='comma token'>,</span> <span class='dstring node'>&quot;#{term}&quot;</span><span class='rbrack token'>]</span>
+  <span class='when when kw'>when</span> <span class='symbol val'>:reviewed</span>
+    <span class='lbrack token'>[</span><span class='search_fields identifier id'>search_fields</span><span class='lbrack token'>[</span><span class='field identifier id'>field</span><span class='rbrack token'>]</span><span class='lbrack token'>[</span><span class='symbol val'>:colname</span><span class='rbrack token'>]</span><span class='comma token'>,</span> <span class='string val'>&quot;=&quot;</span><span class='comma token'>,</span> <span class='lbrace token'>{</span><span class='string val'>'yes'</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>'1'</span><span class='comma token'>,</span> <span class='string val'>'no'</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>'0'</span><span class='rbrace token'>}</span><span class='lbrack token'>[</span><span class='term identifier id'>term</span><span class='dot token'>.</span><span class='downcase identifier id'>downcase</span><span class='rbrack token'>]</span> <span class='orop op'>||</span> <span class='string val'>''</span><span class='rbrack token'>]</span>
+  <span class='else else kw'>else</span>
+    <span class='lbrack token'>[</span><span class='search_fields identifier id'>search_fields</span><span class='lbrack token'>[</span><span class='field identifier id'>field</span><span class='rbrack token'>]</span><span class='lbrack token'>[</span><span class='symbol val'>:colname</span><span class='rbrack token'>]</span><span class='comma token'>,</span> <span class='string val'>&quot;like&quot;</span><span class='comma token'>,</span> <span class='dstring node'>&quot;%#{term}%&quot;</span><span class='rbrack token'>]</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="search_examples-class_method">
+  
+    + (<tt>Object</tt>) <strong>search_examples</strong> 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+81
+82
+83</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/response.rb', line 81</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='search_examples identifier id'>search_examples</span>
+  <span class='lbrack token'>[</span><span class='string val'>'submitter:&quot;john smith&quot;'</span><span class='comma token'>,</span> <span class='string val'>'formname:polling'</span><span class='comma token'>,</span> <span class='string val'>'formtype:sto'</span><span class='comma token'>,</span> <span class='string val'>'place:beirut'</span><span class='rbrack token'>]</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="search_fields-class_method">
+  
+    + (<tt>Object</tt>) <strong>search_fields</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+gets the list of fields to be searched for this class includes whether they
+should be included in a default, unqualified search and whether they are
+searchable by a regular expression
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+60
+61
+62
+63
+64
+65
+66
+67</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/response.rb', line 60</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='search_fields identifier id'>search_fields</span>
+  <span class='lbrace token'>{</span><span class='symbol val'>:formname</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:colname</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>&quot;forms.name&quot;</span><span class='comma token'>,</span> <span class='symbol val'>:default</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='false false kw'>false</span><span class='comma token'>,</span> <span class='symbol val'>:regexp</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='true true kw'>true</span><span class='rbrace token'>}</span><span class='comma token'>,</span>
+   <span class='symbol val'>:formtype</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:colname</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>&quot;form_types.name&quot;</span><span class='comma token'>,</span> <span class='symbol val'>:default</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='false false kw'>false</span><span class='comma token'>,</span> <span class='symbol val'>:regexp</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='false false kw'>false</span><span class='rbrace token'>}</span><span class='comma token'>,</span>
+   <span class='symbol val'>:reviewed</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:colname</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>&quot;responses.reviewed&quot;</span><span class='comma token'>,</span> <span class='symbol val'>:default</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='false false kw'>false</span><span class='comma token'>,</span> <span class='symbol val'>:regexp</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='false false kw'>false</span><span class='rbrace token'>}</span><span class='comma token'>,</span>
+   <span class='symbol val'>:place</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:colname</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>&quot;places.full_name&quot;</span><span class='comma token'>,</span> <span class='symbol val'>:default</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='false false kw'>false</span><span class='comma token'>,</span> <span class='symbol val'>:regexp</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='true true kw'>true</span><span class='rbrace token'>}</span><span class='comma token'>,</span>
+   <span class='symbol val'>:submitter</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:colname</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>&quot;users.name&quot;</span><span class='comma token'>,</span> <span class='symbol val'>:default</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='false false kw'>false</span><span class='comma token'>,</span> <span class='symbol val'>:regexp</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='true true kw'>true</span><span class='rbrace token'>}</span><span class='comma token'>,</span>
+   <span class='symbol val'>:answer</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:colname</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>&quot;answers.value&quot;</span><span class='comma token'>,</span> <span class='symbol val'>:default</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='true true kw'>true</span><span class='comma token'>,</span> <span class='symbol val'>:regexp</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='true true kw'>true</span><span class='comma token'>,</span> <span class='symbol val'>:eager</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrack token'>[</span><span class='symbol val'>:answers</span><span class='rbrack token'>]</span><span class='rbrace token'>}</span><span class='rbrace token'>}</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="sorted-class_method">
+  
+    + (<tt>Object</tt>) <strong>sorted</strong>(params = {}) 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+34
+35
+36
+37</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/response.rb', line 34</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='sorted identifier id'>sorted</span><span class='lparen token'>(</span><span class='params identifier id'>params</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span><span class='rparen token'>)</span>
+  <span class='params identifier id'>params</span><span class='dot token'>.</span><span class='merge! fid id'>merge!</span><span class='lparen token'>(</span><span class='symbol val'>:order</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>&quot;responses.created_at desc&quot;</span><span class='rparen token'>)</span>
+  <span class='send identifier id'>send</span><span class='lparen token'>(</span><span class='params identifier id'>params</span><span class='dot token'>.</span><span class='keys identifier id'>keys</span><span class='dot token'>.</span><span class='include? fid id'>include?</span><span class='lparen token'>(</span><span class='symbol val'>:page</span><span class='rparen token'>)</span> <span class='question op'>?</span> <span class='string val'>&quot;paginate&quot;</span> <span class='colon op'>:</span> <span class='string val'>&quot;find&quot;</span><span class='comma token'>,</span> <span class='symbol val'>:all</span><span class='comma token'>,</span> <span class='params identifier id'>params</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="all_answers-instance_method">
+  
+    - (<tt>Object</tt>) <strong>all_answers</strong> 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+124
+125
+126
+127</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/response.rb', line 124</span>
+
+<span class='def def kw'>def</span> <span class='all_answers identifier id'>all_answers</span>
+  <span class='comment val'># make sure there is an associated answer object for each questioning in the form</span>
+  <span class='visible_questionings identifier id'>visible_questionings</span><span class='dot token'>.</span><span class='collect identifier id'>collect</span><span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='qing identifier id'>qing</span><span class='bitor op'>|</span> <span class='answer_for identifier id'>answer_for</span><span class='lparen token'>(</span><span class='qing identifier id'>qing</span><span class='rparen token'>)</span> <span class='orop op'>||</span> <span class='answers identifier id'>answers</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='symbol val'>:questioning_id</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='qing identifier id'>qing</span><span class='dot token'>.</span><span class='id identifier id'>id</span><span class='rparen token'>)</span><span class='rbrace token'>}</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="all_answers=-instance_method">
+  
+    - (<tt>Object</tt>) <strong>all_answers=</strong>(params) 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/response.rb', line 129</span>
+
+<span class='def def kw'>def</span> <span class='all_answers= identifier id'>all_answers=</span><span class='lparen token'>(</span><span class='params identifier id'>params</span><span class='rparen token'>)</span>
+  <span class='comment val'># do a match on current and newer ids with the ID as the comparator</span>
+  <span class='answers identifier id'>answers</span><span class='dot token'>.</span><span class='match identifier id'>match</span><span class='lparen token'>(</span><span class='params identifier id'>params</span><span class='dot token'>.</span><span class='values identifier id'>values</span><span class='comma token'>,</span> <span class='Proc constant id'>Proc</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='a identifier id'>a</span><span class='bitor op'>|</span> <span class='a identifier id'>a</span><span class='lbrack token'>[</span><span class='symbol val'>:questioning_id</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='to_i identifier id'>to_i</span><span class='rbrace token'>}</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='orig identifier id'>orig</span><span class='comma token'>,</span> <span class='subd identifier id'>subd</span><span class='bitor op'>|</span>
+    <span class='comment val'># if both exist, update the original</span>
+    <span class='if if kw'>if</span> <span class='orig identifier id'>orig</span> <span class='andop op'>&amp;&amp;</span> <span class='subd identifier id'>subd</span>
+      <span class='orig identifier id'>orig</span><span class='dot token'>.</span><span class='attributes identifier id'>attributes</span> <span class='assign token'>=</span> <span class='subd identifier id'>subd</span>
+    <span class='comment val'># if submitted is nil, destroy the original</span>
+    <span class='elsif elsif kw'>elsif</span> <span class='subd identifier id'>subd</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
+      <span class='answers identifier id'>answers</span><span class='dot token'>.</span><span class='delete identifier id'>delete</span><span class='lparen token'>(</span><span class='orig identifier id'>orig</span><span class='rparen token'>)</span>
+    <span class='comment val'># if original is nil, add the new one to this response's array</span>
+    <span class='elsif elsif kw'>elsif</span> <span class='orig identifier id'>orig</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
+      <span class='answers identifier id'>answers</span> <span class='lshft op'>&lt;&lt;</span> <span class='Answer constant id'>Answer</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='subd identifier id'>subd</span><span class='rparen token'>)</span>
+    <span class='end end kw'>end</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="answer_for-instance_method">
+  
+    - (<tt>Object</tt>) <strong>answer_for</strong>(questioning) 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+145
+146
+147
+148</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/response.rb', line 145</span>
+
+<span class='def def kw'>def</span> <span class='answer_for identifier id'>answer_for</span><span class='lparen token'>(</span><span class='questioning identifier id'>questioning</span><span class='rparen token'>)</span>
+  <span class='comment val'># get the matching answer(s)</span>
+  <span class='answer_hash identifier id'>answer_hash</span><span class='lbrack token'>[</span><span class='questioning identifier id'>questioning</span><span class='rbrack token'>]</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="answer_hash-instance_method">
+  
+    - (<tt>Object</tt>) <strong>answer_hash</strong>(options = {}) 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+150
+151
+152
+153</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/response.rb', line 150</span>
+
+<span class='def def kw'>def</span> <span class='answer_hash identifier id'>answer_hash</span><span class='lparen token'>(</span><span class='options identifier id'>options</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span><span class='rparen token'>)</span>
+  <span class='@answer_hash ivar id'>@answer_hash</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span> <span class='if if_mod kw'>if</span> <span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:rebuild</span><span class='rbrack token'>]</span>
+  <span class='@answer_hash ivar id'>@answer_hash</span> <span class='opasgn op'>||=</span> <span class='Hash constant id'>Hash</span><span class='lbrack token'>[</span><span class='mult op'>*</span><span class='answers identifier id'>answers</span><span class='dot token'>.</span><span class='collect identifier id'>collect</span><span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='a identifier id'>a</span><span class='bitor op'>|</span> <span class='lbrack token'>[</span><span class='a identifier id'>a</span><span class='dot token'>.</span><span class='questioning identifier id'>questioning</span><span class='comma token'>,</span> <span class='a identifier id'>a</span><span class='rbrack token'>]</span><span class='rbrace token'>}</span><span class='dot token'>.</span><span class='flatten identifier id'>flatten</span><span class='rbrack token'>]</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="form_name-instance_method">
+  
+    - (<tt>Object</tt>) <strong>form_name</strong> 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+158</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/response.rb', line 158</span>
+
+<span class='def def kw'>def</span> <span class='form_name identifier id'>form_name</span><span class='semicolon token'>;</span> <span class='form identifier id'>form</span> <span class='integer val'>? </span><span class='form identifier id'>form</span><span class='dot token'>.</span><span class='name identifier id'>name</span> <span class='colon op'>:</span> <span class='nil nil kw'>nil</span> <span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="observed_at_str-instance_method">
+  
+    - (<tt>Object</tt>) <strong>observed_at_str</strong> 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+155</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/response.rb', line 155</span>
+
+<span class='def def kw'>def</span> <span class='observed_at_str identifier id'>observed_at_str</span><span class='semicolon token'>;</span> <span class='observed_at identifier id'>observed_at</span> <span class='integer val'>? </span><span class='observed_at identifier id'>observed_at</span><span class='dot token'>.</span><span class='strftime identifier id'>strftime</span><span class='lparen token'>(</span><span class='string val'>&quot;%F %l:%M%p %z&quot;</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='gsub identifier id'>gsub</span><span class='lparen token'>(</span><span class='string val'>&quot;  &quot;</span><span class='comma token'>,</span> <span class='string val'>&quot; &quot;</span><span class='rparen token'>)</span> <span class='colon op'>:</span> <span class='nil nil kw'>nil</span> <span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="observed_at_str=-instance_method">
+  
+    - (<tt>Object</tt>) <strong>observed_at_str=</strong>(t) 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+156</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/response.rb', line 156</span>
+
+<span class='def def kw'>def</span> <span class='observed_at_str= identifier id'>observed_at_str=</span><span class='lparen token'>(</span><span class='t identifier id'>t</span><span class='rparen token'>)</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='observed_at identifier id'>observed_at</span> <span class='assign token'>=</span> <span class='Time constant id'>Time</span><span class='dot token'>.</span><span class='zone identifier id'>zone</span><span class='dot token'>.</span><span class='parse identifier id'>parse</span><span class='lparen token'>(</span><span class='t identifier id'>t</span><span class='rparen token'>)</span> <span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="place_field_name-instance_method">
+  
+    - (<tt>Object</tt>) <strong>place_field_name</strong> 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+161</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/response.rb', line 161</span>
+
+<span class='def def kw'>def</span> <span class='place_field_name identifier id'>place_field_name</span><span class='semicolon token'>;</span> <span class='string val'>&quot;place&quot;</span> <span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="submitter-instance_method">
+  
+    - (<tt>Object</tt>) <strong>submitter</strong> 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+159</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/response.rb', line 159</span>
+
+<span class='def def kw'>def</span> <span class='submitter identifier id'>submitter</span><span class='semicolon token'>;</span> <span class='user identifier id'>user</span> <span class='integer val'>? </span><span class='user identifier id'>user</span><span class='dot token'>.</span><span class='name identifier id'>name</span> <span class='colon op'>:</span> <span class='nil nil kw'>nil</span> <span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="visible_questionings-instance_method">
+  
+    - (<tt>Object</tt>) <strong>visible_questionings</strong> 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+119
+120
+121
+122</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/response.rb', line 119</span>
+
+<span class='def def kw'>def</span> <span class='visible_questionings identifier id'>visible_questionings</span>
+  <span class='comment val'># get visible questionings from form</span>
+  <span class='form identifier id'>form</span><span class='dot token'>.</span><span class='visible_questionings identifier id'>visible_questionings</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+    
+    <div id="footer">
+  Generated on Tue Nov 22 14:47:44 2011 by 
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.7.3 (ruby-1.8.7).
+</div>
+
+  </body>
+</html>

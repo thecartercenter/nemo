@@ -1,0 +1,503 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Class: SearchToken
+  
+    &mdash; Documentation by YARD 0.7.3
+  
+</title>
+
+  <link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+  <link rel="stylesheet" href="css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  relpath = '';
+  if (relpath != '') relpath += '/';
+</script>
+
+  <script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+
+  </head>
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      if (window.top.frames.main) document.body.className = 'frames';
+    </script>
+    
+    <div id="header">
+      <div id="menu">
+  
+    <a href="_index.html">Index (S)</a> &raquo; 
+    
+    
+    <span class="title">SearchToken</span>
+  
+  
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  
+    <a id="class_list_link" href="#">Class List</a>
+  
+    <a id="method_list_link" href="#">Method List</a>
+  
+    <a id="file_list_link" href="#">File List</a>
+  
+</div>
+      <div class="clear"></div>
+    </div>
+    
+    <iframe id="search_frame"></iframe>
+    
+    <div id="content"><h1>Class: SearchToken
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+    <dt class="r1">Inherits:</dt>
+    <dd class="r1">
+      <span class="inheritName">Object</span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next">SearchToken</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+      </dd>
+    
+  
+  
+    
+  
+    
+  
+  
+  
+    <dt class="r2 last">Defined in:</dt>
+    <dd class="r2 last">app/models/search_token.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+
+
+  <h2>Instance Attribute Summary <small>(<a href="#" class="summary_toggle">collapse</a>)</small></h2>
+  <ul class="summary">
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#sql-instance_method" title="#sql (instance method)">- (Object) <strong>sql</strong> </a>
+    
+
+    
+  </span>
+  
+  
+    <span class="note title readonly">readonly</span>
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+Returns the value of attribute sql.
+</p>
+</div></span>
+  
+</li>
+
+    
+  </ul>
+
+
+
+
+  
+    <h2>
+      Instance Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#eager-instance_method" title="#eager (instance method)">- (Object) <strong>eager</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+get the eager loaded associations needed for this token.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#initialize-instance_method" title="#initialize (instance method)">- (SearchToken) <strong>initialize</strong>(str, klass) </a>
+    
+
+    
+  </span>
+  
+    <span class="note title constructor">constructor</span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+A new instance of SearchToken.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#sanitize-instance_method" title="#sanitize (instance method)">- (Object) <strong>sanitize</strong>(*args) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+<div id="constructor_details" class="method_details_list">
+  <h2>Constructor Details</h2>
+  
+    <div class="method_details first">
+  <p class="signature first" id="initialize-instance_method">
+  
+    - (<tt><span class='object_link'><a href="" title="SearchToken (class)">SearchToken</a></span></tt>) <strong>initialize</strong>(str, klass) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+A new instance of SearchToken
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/search_token.rb', line 3</span>
+
+<span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span><span class='lparen token'>(</span><span class='str identifier id'>str</span><span class='comma token'>,</span> <span class='klass identifier id'>klass</span><span class='rparen token'>)</span>
+  <span class='@str ivar id'>@str</span> <span class='assign token'>=</span> <span class='str identifier id'>str</span>
+  <span class='@klass ivar id'>@klass</span> <span class='assign token'>=</span> <span class='klass identifier id'>klass</span>
+
+  <span class='comment val'># if this token is a boolean operator, just echo it back</span>
+  <span class='if if kw'>if</span> <span class='dstring node'>%w[and or not]</span><span class='dot token'>.</span><span class='include? fid id'>include?</span><span class='lparen token'>(</span><span class='@str ivar id'>@str</span><span class='rparen token'>)</span>
+    <span class='@sql ivar id'>@sql</span> <span class='assign token'>=</span> <span class='@str ivar id'>@str</span> 
+    <span class='return return kw'>return</span> 
+  <span class='end end kw'>end</span>
+  
+  <span class='comment val'># get the field spec from the target class</span>
+  <span class='@field_spec ivar id'>@field_spec</span> <span class='assign token'>=</span> <span class='@klass ivar id'>@klass</span><span class='dot token'>.</span><span class='search_fields identifier id'>search_fields</span>
+  
+  <span class='comment val'># if this token begins or ends with a parenth, save it.</span>
+  <span class='@str ivar id'>@str</span><span class='dot token'>.</span><span class='gsub! fid id'>gsub!</span><span class='lparen token'>(</span><span class='regexp val'>/^(\()/</span><span class='comma token'>,</span> <span class='string val'>&quot;&quot;</span><span class='rparen token'>)</span>
+  <span class='oparenth identifier id'>oparenth</span> <span class='assign token'>=</span> <span class='$1 nth_ref id'>$1</span> <span class='orop op'>||</span> <span class='string val'>&quot;&quot;</span>
+  <span class='@str ivar id'>@str</span><span class='dot token'>.</span><span class='gsub! fid id'>gsub!</span><span class='lparen token'>(</span><span class='regexp val'>/(\))$/</span><span class='comma token'>,</span> <span class='string val'>&quot;&quot;</span><span class='rparen token'>)</span>
+  <span class='cparenth identifier id'>cparenth</span> <span class='assign token'>=</span> <span class='$1 nth_ref id'>$1</span> <span class='orop op'>||</span> <span class='string val'>&quot;&quot;</span>
+  
+  <span class='comment val'># if this token contains a qualifier</span>
+  <span class='if if kw'>if</span> <span class='@str ivar id'>@str</span><span class='dot token'>.</span><span class='match identifier id'>match</span><span class='lparen token'>(</span><span class='regexp val'>/^(\w+):(.+)$/</span><span class='rparen token'>)</span>
+    <span class='qualifier identifier id'>qualifier</span><span class='comma token'>,</span> <span class='term identifier id'>term</span> <span class='assign token'>=</span> <span class='$1 nth_ref id'>$1</span><span class='dot token'>.</span><span class='to_sym identifier id'>to_sym</span><span class='comma token'>,</span> <span class='$2 nth_ref id'>$2</span>
+    <span class='comment val'># raise an error if the qualifier is invalid</span>
+    <span class='raise identifier id'>raise</span> <span class='SearchError constant id'>SearchError</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='dstring node'>&quot;Invalid search qualifier '#{qualifier}'&quot;</span><span class='rparen token'>)</span> <span class='unless unless_mod kw'>unless</span> <span class='@field_spec ivar id'>@field_spec</span><span class='lbrack token'>[</span><span class='qualifier identifier id'>qualifier</span><span class='rbrack token'>]</span>
+    <span class='@used_fields ivar id'>@used_fields</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='qualifier identifier id'>qualifier</span><span class='rbrack token'>]</span>
+  <span class='else else kw'>else</span>
+    <span class='comment val'># else, search default fields (get all fields with default param set to true)</span>
+    <span class='@used_fields ivar id'>@used_fields</span> <span class='assign token'>=</span> <span class='@field_spec ivar id'>@field_spec</span><span class='dot token'>.</span><span class='reject identifier id'>reject</span><span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='k identifier id'>k</span><span class='comma token'>,</span><span class='v identifier id'>v</span><span class='bitor op'>|</span> <span class='notop op'>!</span><span class='v identifier id'>v</span><span class='lbrack token'>[</span><span class='symbol val'>:default</span><span class='rbrack token'>]</span><span class='rbrace token'>}</span><span class='dot token'>.</span><span class='keys identifier id'>keys</span>
+    <span class='term identifier id'>term</span> <span class='assign token'>=</span> <span class='@str ivar id'>@str</span>
+  <span class='end end kw'>end</span>
+  
+  <span class='comment val'># if the term is a regular expression, set a flag and remove the /'s</span>
+  <span class='if if kw'>if</span> <span class='term identifier id'>term</span><span class='dot token'>.</span><span class='match identifier id'>match</span><span class='lparen token'>(</span><span class='regexp val'>/\/(.+)\//</span><span class='rparen token'>)</span>
+    <span class='raise identifier id'>raise</span> <span class='SearchError constant id'>SearchError</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='dstring node'>&quot;Regular expressions not allowed for #{@used_fields.first}&quot;</span><span class='rparen token'>)</span> <span class='unless unless_mod kw'>unless</span> <span class='@field_spec ivar id'>@field_spec</span><span class='lbrack token'>[</span><span class='@used_fields ivar id'>@used_fields</span><span class='dot token'>.</span><span class='first identifier id'>first</span><span class='rbrack token'>]</span><span class='lbrack token'>[</span><span class='symbol val'>:regexp</span><span class='rbrack token'>]</span>
+    <span class='regexp identifier id'>regexp</span> <span class='assign token'>=</span> <span class='true true kw'>true</span>
+    <span class='term identifier id'>term</span> <span class='assign token'>=</span> <span class='$1 nth_ref id'>$1</span>
+  <span class='else else kw'>else</span>
+    <span class='regexp identifier id'>regexp</span> <span class='assign token'>=</span> <span class='false false kw'>false</span>
+  <span class='end end kw'>end</span>
+  
+  <span class='comment val'># for each field, create a fragment</span>
+  <span class='fragments identifier id'>fragments</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
+  <span class='@used_fields ivar id'>@used_fields</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='field identifier id'>field</span><span class='bitor op'>|</span>
+    <span class='lhs identifier id'>lhs</span><span class='comma token'>,</span> <span class='op identifier id'>op</span><span class='comma token'>,</span> <span class='rhs identifier id'>rhs</span> <span class='assign token'>=</span> <span class='@klass ivar id'>@klass</span><span class='dot token'>.</span><span class='query_fragment identifier id'>query_fragment</span><span class='lparen token'>(</span><span class='field identifier id'>field</span><span class='comma token'>,</span> <span class='term identifier id'>term</span><span class='rparen token'>)</span>
+    <span class='comment val'># if the term is a regexp, the op must be 'rlike', so override it</span>
+    <span class='if if kw'>if</span> <span class='regexp identifier id'>regexp</span>
+      <span class='comment val'># get rid of the %'s if the op was 'like'</span>
+      <span class='rhs identifier id'>rhs</span><span class='dot token'>.</span><span class='gsub! fid id'>gsub!</span><span class='lparen token'>(</span><span class='regexp val'>/(^%|%$)/</span><span class='comma token'>,</span> <span class='string val'>&quot;&quot;</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='op identifier id'>op</span> <span class='eq op'>==</span> <span class='string val'>&quot;like&quot;</span>
+      <span class='op identifier id'>op</span> <span class='assign token'>=</span> <span class='string val'>&quot;rlike&quot;</span>
+    <span class='end end kw'>end</span>
+    
+    <span class='fragments identifier id'>fragments</span> <span class='lshft op'>&lt;&lt;</span> <span class='sanitize identifier id'>sanitize</span><span class='lparen token'>(</span><span class='dstring node'>&quot;#{lhs} #{op} ?&quot;</span><span class='comma token'>,</span> <span class='rhs identifier id'>rhs</span><span class='rparen token'>)</span>
+  <span class='end end kw'>end</span>
+  
+  <span class='comment val'># join fragments with 'or' (note this is only for one token.. actual boolean operators are separate)</span>
+  <span class='@sql ivar id'>@sql</span> <span class='assign token'>=</span> <span class='oparenth identifier id'>oparenth</span> <span class='plus op'>+</span> <span class='string val'>&quot;(&quot;</span> <span class='plus op'>+</span> <span class='fragments identifier id'>fragments</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='string val'>' or '</span><span class='rparen token'>)</span> <span class='plus op'>+</span> <span class='string val'>&quot;)&quot;</span> <span class='plus op'>+</span> <span class='cparenth identifier id'>cparenth</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+  
+</div>
+
+  <div id="instance_attr_details" class="attr_details">
+    <h2>Instance Attribute Details</h2>
+    
+      
+      <span id=""></span>
+      <span id="sql-instance_method"></span>
+      <div class="method_details first">
+  <p class="signature first" id="sql-instance_method">
+  
+    - (<tt>Object</tt>) <strong>sql</strong>  <span class="extras">(readonly)</span>
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+Returns the value of attribute sql
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+2
+3
+4</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/search_token.rb', line 2</span>
+
+<span class='def def kw'>def</span> <span class='sql identifier id'>sql</span>
+  <span class='@sql ivar id'>@sql</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="eager-instance_method">
+  
+    - (<tt>Object</tt>) <strong>eager</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+get the eager loaded associations needed for this token
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+64
+65
+66</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/search_token.rb', line 64</span>
+
+<span class='def def kw'>def</span> <span class='eager identifier id'>eager</span>
+  <span class='@used_fields ivar id'>@used_fields</span> <span class='question op'>?</span> <span class='@used_fields ivar id'>@used_fields</span><span class='dot token'>.</span><span class='collect identifier id'>collect</span><span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='f identifier id'>f</span><span class='bitor op'>|</span> <span class='@field_spec ivar id'>@field_spec</span><span class='lbrack token'>[</span><span class='f identifier id'>f</span><span class='rbrack token'>]</span><span class='lbrack token'>[</span><span class='symbol val'>:eager</span><span class='rbrack token'>]</span><span class='rbrace token'>}</span><span class='dot token'>.</span><span class='compact identifier id'>compact</span><span class='dot token'>.</span><span class='flatten identifier id'>flatten</span><span class='dot token'>.</span><span class='uniq identifier id'>uniq</span> <span class='colon op'>:</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="sanitize-instance_method">
+  
+    - (<tt>Object</tt>) <strong>sanitize</strong>(*args) 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+60
+61
+62</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/search_token.rb', line 60</span>
+
+<span class='def def kw'>def</span> <span class='sanitize identifier id'>sanitize</span><span class='lparen token'>(</span><span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
+  <span class='ActiveRecord constant id'>ActiveRecord</span><span class='colon2 op'>::</span><span class='Base constant id'>Base</span><span class='dot token'>.</span><span class='__send__ identifier id'>__send__</span><span class='lparen token'>(</span><span class='symbol val'>:sanitize_sql</span><span class='comma token'>,</span> <span class='args identifier id'>args</span><span class='comma token'>,</span> <span class='string val'>''</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+    
+    <div id="footer">
+  Generated on Tue Nov 22 14:47:35 2011 by 
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.7.3 (ruby-1.8.7).
+</div>
+
+  </body>
+</html>

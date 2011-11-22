@@ -1,0 +1,998 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Class: Subindex
+  
+    &mdash; Documentation by YARD 0.7.3
+  
+</title>
+
+  <link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+  <link rel="stylesheet" href="css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  relpath = '';
+  if (relpath != '') relpath += '/';
+</script>
+
+  <script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+
+  </head>
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      if (window.top.frames.main) document.body.className = 'frames';
+    </script>
+    
+    <div id="header">
+      <div id="menu">
+  
+    <a href="_index.html">Index (S)</a> &raquo; 
+    
+    
+    <span class="title">Subindex</span>
+  
+  
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  
+    <a id="class_list_link" href="#">Class List</a>
+  
+    <a id="method_list_link" href="#">Method List</a>
+  
+    <a id="file_list_link" href="#">File List</a>
+  
+</div>
+      <div class="clear"></div>
+    </div>
+    
+    <iframe id="search_frame"></iframe>
+    
+    <div id="content"><h1>Class: Subindex
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+    <dt class="r1">Inherits:</dt>
+    <dd class="r1">
+      <span class="inheritName">Object</span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next">Subindex</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+      </dd>
+    
+  
+  
+    
+  
+    
+  
+  
+  
+    <dt class="r2 last">Defined in:</dt>
+    <dd class="r2 last">app/models/subindex.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+
+
+  <h2>Instance Attribute Summary <small>(<a href="#" class="summary_toggle">collapse</a>)</small></h2>
+  <ul class="summary">
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#custom_conditions-instance_method" title="#custom_conditions (instance method)">- (Object) <strong>custom_conditions</strong> </a>
+    
+
+    
+  </span>
+  
+  
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+Returns the value of attribute custom_conditions.
+</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#extras-instance_method" title="#extras (instance method)">- (Object) <strong>extras</strong> </a>
+    
+
+    
+  </span>
+  
+  
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+Returns the value of attribute extras.
+</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#page-instance_method" title="#page (instance method)">- (Object) <strong>page</strong> </a>
+    
+
+    
+  </span>
+  
+  
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+Returns the value of attribute page.
+</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#stamp-instance_method" title="#stamp (instance method)">- (Object) <strong>stamp</strong> </a>
+    
+
+    
+  </span>
+  
+  
+    <span class="note title readonly">readonly</span>
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+Returns the value of attribute stamp.
+</p>
+</div></span>
+  
+</li>
+
+    
+  </ul>
+
+
+
+
+  
+    <h2>
+      Class Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#clear_all-class_method" title="clear_all (class method)">+ (Object) <strong>clear_all</strong>(session) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#find_and_update-class_method" title="find_and_update (class method)">+ (Object) <strong>find_and_update</strong>(session, user, class_name, page, action = &quot;index&quot;) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+finds/creates a subindex for the given class name, and then sets the page
+number.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#find_or_create-class_method" title="find_or_create (class method)">+ (Object) <strong>find_or_create</strong>(session, user, class_name, action = &quot;index&quot;) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+finds or creates a subindex for the given class_name.
+</p>
+</div></span>
+  
+</li>
+
+      
+    </ul>
+  
+    <h2>
+      Instance Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#initialize-instance_method" title="#initialize (instance method)">- (Subindex) <strong>initialize</strong>(class_name, user) </a>
+    
+
+    
+  </span>
+  
+    <span class="note title constructor">constructor</span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+A new instance of Subindex.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#klass-instance_method" title="#klass (instance method)">- (Object) <strong>klass</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#params-instance_method" title="#params (instance method)">- (Object) <strong>params</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#reset_search-instance_method" title="#reset_search (instance method)">- (Object) <strong>reset_search</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#search-instance_method" title="#search (instance method)">- (Object) <strong>search</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#search%3D-instance_method" title="#search= (instance method)">- (Object) <strong>search=</strong>(s) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+<div id="constructor_details" class="method_details_list">
+  <h2>Constructor Details</h2>
+  
+    <div class="method_details first">
+  <p class="signature first" id="initialize-instance_method">
+  
+    - (<tt><span class='object_link'><a href="" title="Subindex (class)">Subindex</a></span></tt>) <strong>initialize</strong>(class_name, user) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+A new instance of Subindex
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+27
+28
+29
+30
+31
+32
+33
+34
+35</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/subindex.rb', line 27</span>
+
+<span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span><span class='lparen token'>(</span><span class='class_name identifier id'>class_name</span><span class='comma token'>,</span> <span class='user identifier id'>user</span><span class='rparen token'>)</span>
+  <span class='@class_name ivar id'>@class_name</span> <span class='assign token'>=</span> <span class='class_name identifier id'>class_name</span>
+  <span class='@custom_conditions ivar id'>@custom_conditions</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
+  <span class='@extras ivar id'>@extras</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
+  <span class='@user ivar id'>@user</span> <span class='assign token'>=</span> <span class='user identifier id'>user</span>
+  <span class='@page ivar id'>@page</span> <span class='assign token'>=</span> <span class='integer val'>1</span>
+  <span class='@stamp ivar id'>@stamp</span> <span class='assign token'>=</span> <span class='Time constant id'>Time</span><span class='dot token'>.</span><span class='now identifier id'>now</span><span class='dot token'>.</span><span class='to_i identifier id'>to_i</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span><span class='lbrack token'>[</span><span class='integer val'>-6</span><span class='comma token'>,</span><span class='integer val'>6</span><span class='rbrack token'>]</span>
+  <span class='reset_search identifier id'>reset_search</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+  
+</div>
+
+  <div id="instance_attr_details" class="attr_details">
+    <h2>Instance Attribute Details</h2>
+    
+      
+      <span id="custom_conditions=-instance_method"></span>
+      <span id="custom_conditions-instance_method"></span>
+      <div class="method_details first">
+  <p class="signature first" id="custom_conditions-instance_method">
+  
+    - (<tt>Object</tt>) <strong>custom_conditions</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+Returns the value of attribute custom_conditions
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+2
+3
+4</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/subindex.rb', line 2</span>
+
+<span class='def def kw'>def</span> <span class='custom_conditions identifier id'>custom_conditions</span>
+  <span class='@custom_conditions ivar id'>@custom_conditions</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id="extras=-instance_method"></span>
+      <span id="extras-instance_method"></span>
+      <div class="method_details ">
+  <p class="signature " id="extras-instance_method">
+  
+    - (<tt>Object</tt>) <strong>extras</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+Returns the value of attribute extras
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+2
+3
+4</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/subindex.rb', line 2</span>
+
+<span class='def def kw'>def</span> <span class='extras identifier id'>extras</span>
+  <span class='@extras ivar id'>@extras</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id="page=-instance_method"></span>
+      <span id="page-instance_method"></span>
+      <div class="method_details ">
+  <p class="signature " id="page-instance_method">
+  
+    - (<tt>Object</tt>) <strong>page</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+Returns the value of attribute page
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+2
+3
+4</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/subindex.rb', line 2</span>
+
+<span class='def def kw'>def</span> <span class='page identifier id'>page</span>
+  <span class='@page ivar id'>@page</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id=""></span>
+      <span id="stamp-instance_method"></span>
+      <div class="method_details ">
+  <p class="signature " id="stamp-instance_method">
+  
+    - (<tt>Object</tt>) <strong>stamp</strong>  <span class="extras">(readonly)</span>
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+Returns the value of attribute stamp
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+3
+4
+5</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/subindex.rb', line 3</span>
+
+<span class='def def kw'>def</span> <span class='stamp identifier id'>stamp</span>
+  <span class='@stamp ivar id'>@stamp</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+
+  <div id="class_method_details" class="method_details_list">
+    <h2>Class Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="clear_all-class_method">
+  
+    + (<tt>Object</tt>) <strong>clear_all</strong>(session) 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+23
+24
+25</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/subindex.rb', line 23</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='clear_all identifier id'>clear_all</span><span class='lparen token'>(</span><span class='session identifier id'>session</span><span class='rparen token'>)</span>
+  <span class='session identifier id'>session</span><span class='dot token'>.</span><span class='delete identifier id'>delete</span><span class='lparen token'>(</span><span class='symbol val'>:subindexes</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="find_and_update-class_method">
+  
+    + (<tt>Object</tt>) <strong>find_and_update</strong>(session, user, class_name, page, action = &quot;index&quot;) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+finds/creates a subindex for the given class name, and then sets the page
+number
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+6
+7
+8
+9
+10</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/subindex.rb', line 6</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='find_and_update identifier id'>find_and_update</span><span class='lparen token'>(</span><span class='session identifier id'>session</span><span class='comma token'>,</span> <span class='user identifier id'>user</span><span class='comma token'>,</span> <span class='class_name identifier id'>class_name</span><span class='comma token'>,</span> <span class='page identifier id'>page</span><span class='comma token'>,</span> <span class='action identifier id'>action</span> <span class='assign token'>=</span> <span class='string val'>&quot;index&quot;</span><span class='rparen token'>)</span>
+  <span class='si identifier id'>si</span> <span class='assign token'>=</span> <span class='find_or_create identifier id'>find_or_create</span><span class='lparen token'>(</span><span class='session identifier id'>session</span><span class='comma token'>,</span> <span class='user identifier id'>user</span><span class='comma token'>,</span> <span class='class_name identifier id'>class_name</span><span class='comma token'>,</span> <span class='action identifier id'>action</span><span class='rparen token'>)</span>
+  <span class='si identifier id'>si</span><span class='dot token'>.</span><span class='page identifier id'>page</span> <span class='assign token'>=</span> <span class='page identifier id'>page</span> <span class='if if_mod kw'>if</span> <span class='page identifier id'>page</span>
+  <span class='si identifier id'>si</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="find_or_create-class_method">
+  
+    + (<tt>Object</tt>) <strong>find_or_create</strong>(session, user, class_name, action = &quot;index&quot;) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+finds or creates a subindex for the given class_name
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+13
+14
+15
+16
+17
+18
+19
+20
+21</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/subindex.rb', line 13</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='find_or_create identifier id'>find_or_create</span><span class='lparen token'>(</span><span class='session identifier id'>session</span><span class='comma token'>,</span> <span class='user identifier id'>user</span><span class='comma token'>,</span> <span class='class_name identifier id'>class_name</span><span class='comma token'>,</span> <span class='action identifier id'>action</span> <span class='assign token'>=</span> <span class='string val'>&quot;index&quot;</span><span class='rparen token'>)</span>
+  <span class='session identifier id'>session</span><span class='lbrack token'>[</span><span class='symbol val'>:subindexes</span><span class='rbrack token'>]</span> <span class='opasgn op'>||=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
+  <span class='key identifier id'>key</span> <span class='assign token'>=</span> <span class='dstring node'>&quot;#{class_name.underscore.to_sym}__#{action}&quot;</span>
+  <span class='unless unless kw'>unless</span> <span class='session identifier id'>session</span><span class='lbrack token'>[</span><span class='symbol val'>:subindexes</span><span class='rbrack token'>]</span><span class='lbrack token'>[</span><span class='key identifier id'>key</span><span class='rbrack token'>]</span> 
+    <span class='si identifier id'>si</span> <span class='assign token'>=</span> <span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='class_name identifier id'>class_name</span><span class='comma token'>,</span> <span class='user identifier id'>user</span><span class='rparen token'>)</span>
+    <span class='session identifier id'>session</span><span class='lbrack token'>[</span><span class='symbol val'>:subindexes</span><span class='rbrack token'>]</span><span class='lbrack token'>[</span><span class='key identifier id'>key</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='si identifier id'>si</span>
+  <span class='end end kw'>end</span>
+  <span class='return return kw'>return</span> <span class='session identifier id'>session</span><span class='lbrack token'>[</span><span class='symbol val'>:subindexes</span><span class='rbrack token'>]</span><span class='lbrack token'>[</span><span class='key identifier id'>key</span><span class='rbrack token'>]</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="klass-instance_method">
+  
+    - (<tt>Object</tt>) <strong>klass</strong> 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+68
+69
+70</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/subindex.rb', line 68</span>
+
+<span class='def def kw'>def</span> <span class='klass identifier id'>klass</span>
+  <span class='@klass ivar id'>@klass</span> <span class='opasgn op'>||=</span> <span class='Kernel constant id'>Kernel</span><span class='dot token'>.</span><span class='const_get identifier id'>const_get</span><span class='lparen token'>(</span><span class='@class_name ivar id'>@class_name</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="params-instance_method">
+  
+    - (<tt>Object</tt>) <strong>params</strong> 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/subindex.rb', line 37</span>
+
+<span class='def def kw'>def</span> <span class='params identifier id'>params</span>
+  <span class='cond identifier id'>cond</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
+  <span class='comment val'># get any permission conditions</span>
+  <span class='cond identifier id'>cond</span> <span class='lshft op'>&lt;&lt;</span> <span class='Permission constant id'>Permission</span><span class='dot token'>.</span><span class='select_conditions identifier id'>select_conditions</span><span class='lparen token'>(</span><span class='symbol val'>:user</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='@user ivar id'>@user</span><span class='comma token'>,</span> <span class='symbol val'>:controller</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='@class_name ivar id'>@class_name</span><span class='dot token'>.</span><span class='pluralize identifier id'>pluralize</span><span class='dot token'>.</span><span class='underscore identifier id'>underscore</span><span class='comma token'>,</span> <span class='symbol val'>:action</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>&quot;index&quot;</span><span class='rparen token'>)</span>
+  <span class='comment val'># get search conditions</span>
+  <span class='cond identifier id'>cond</span> <span class='lshft op'>&lt;&lt;</span> <span class='lparen token'>(</span><span class='@search ivar id'>@search</span> <span class='question op'>?</span> <span class='lparen token'>(</span><span class='lparen token'>(</span><span class='sc identifier id'>sc</span> <span class='assign token'>=</span> <span class='@search ivar id'>@search</span><span class='dot token'>.</span><span class='conditions identifier id'>conditions</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='blank? fid id'>blank?</span> <span class='integer val'>? </span><span class='string val'>&quot;1&quot;</span> <span class='colon op'>:</span> <span class='sc identifier id'>sc</span><span class='rparen token'>)</span> <span class='colon op'>:</span> <span class='string val'>&quot;1&quot;</span><span class='rparen token'>)</span>
+  <span class='comment val'># add custom conditions set by user</span>
+  <span class='cond identifier id'>cond</span> <span class='opasgn op'>+=</span> <span class='custom_conditions identifier id'>custom_conditions</span>
+  <span class='comment val'># get eager associations</span>
+  <span class='eager identifier id'>eager</span> <span class='assign token'>=</span> <span class='klass identifier id'>klass</span><span class='dot token'>.</span><span class='default_eager identifier id'>default_eager</span> <span class='plus op'>+</span> <span class='lparen token'>(</span><span class='@search ivar id'>@search</span> <span class='question op'>?</span> <span class='@search ivar id'>@search</span><span class='dot token'>.</span><span class='eager identifier id'>eager</span> <span class='colon op'>:</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
+  <span class='comment val'># build and return params</span>
+  <span class='lbrace token'>{</span><span class='symbol val'>:page</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='@page ivar id'>@page</span><span class='comma token'>,</span> <span class='symbol val'>:conditions</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='cond identifier id'>cond</span><span class='dot token'>.</span><span class='collect identifier id'>collect</span><span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='c identifier id'>c</span><span class='bitor op'>|</span> <span class='dstring node'>&quot;(#{c})&quot;</span><span class='rbrace token'>}</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='string val'>&quot; and &quot;</span><span class='rparen token'>)</span><span class='comma token'>,</span> <span class='symbol val'>:include</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='eager identifier id'>eager</span><span class='rbrace token'>}</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="reset_search-instance_method">
+  
+    - (<tt>Object</tt>) <strong>reset_search</strong> 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+64
+65
+66</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/subindex.rb', line 64</span>
+
+<span class='def def kw'>def</span> <span class='reset_search identifier id'>reset_search</span>
+  <span class='@search ivar id'>@search</span> <span class='assign token'>=</span> <span class='Search constant id'>Search</span><span class='dot token'>.</span><span class='find_or_create identifier id'>find_or_create</span><span class='lparen token'>(</span><span class='symbol val'>:class_name</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='@class_name ivar id'>@class_name</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="search-instance_method">
+  
+    - (<tt>Object</tt>) <strong>search</strong> 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+51
+52
+53
+54</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/subindex.rb', line 51</span>
+
+<span class='def def kw'>def</span> <span class='search identifier id'>search</span>
+  <span class='reset_search identifier id'>reset_search</span> <span class='if if_mod kw'>if</span> <span class='@search ivar id'>@search</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
+  <span class='@search ivar id'>@search</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="search=-instance_method">
+  
+    - (<tt>Object</tt>) <strong>search=</strong>(s) 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+56
+57
+58
+59
+60
+61
+62</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/subindex.rb', line 56</span>
+
+<span class='def def kw'>def</span> <span class='search= identifier id'>search=</span><span class='lparen token'>(</span><span class='s identifier id'>s</span><span class='rparen token'>)</span>
+  <span class='if if kw'>if</span> <span class='@search ivar id'>@search</span> <span class='neq op'>!=</span> <span class='s identifier id'>s</span>
+    <span class='@page ivar id'>@page</span> <span class='assign token'>=</span> <span class='integer val'>1</span>
+    <span class='@search ivar id'>@search</span> <span class='assign token'>=</span> <span class='s identifier id'>s</span>
+  <span class='end end kw'>end</span>
+  <span class='reset_search identifier id'>reset_search</span> <span class='if if_mod kw'>if</span> <span class='@search ivar id'>@search</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+    
+    <div id="footer">
+  Generated on Tue Nov 22 14:47:35 2011 by 
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.7.3 (ruby-1.8.7).
+</div>
+
+  </body>
+</html>

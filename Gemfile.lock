@@ -73,6 +73,7 @@ GEM
       rake (>= 0.8.7)
       thor (~> 0.14.4)
     rake (0.8.7)
+    rdiscount (1.6.8)
     thor (0.14.6)
     treetop (1.4.10)
       polyglot
@@ -80,6 +81,7 @@ GEM
     tzinfo (0.3.29)
     will_paginate (3.0.pre2)
     yamler (0.1.0)
+    yard (0.7.3)
 
 PLATFORMS
   ruby
@@ -93,4 +95,6 @@ DEPENDENCIES
   rails (= 3.0.5)
   rails_sql_views!
   rake (= 0.8.7)
+  rdiscount
   will_paginate (= 3.0.pre2)
+  yard

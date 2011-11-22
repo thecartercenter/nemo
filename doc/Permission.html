@@ -1,0 +1,574 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Class: Permission
+  
+    &mdash; Documentation by YARD 0.7.3
+  
+</title>
+
+  <link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+  <link rel="stylesheet" href="css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  relpath = '';
+  if (relpath != '') relpath += '/';
+</script>
+
+  <script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+
+  </head>
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      if (window.top.frames.main) document.body.className = 'frames';
+    </script>
+    
+    <div id="header">
+      <div id="menu">
+  
+    <a href="_index.html">Index (P)</a> &raquo; 
+    
+    
+    <span class="title">Permission</span>
+  
+  
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  
+    <a id="class_list_link" href="#">Class List</a>
+  
+    <a id="method_list_link" href="#">Method List</a>
+  
+    <a id="file_list_link" href="#">File List</a>
+  
+</div>
+      <div class="clear"></div>
+    </div>
+    
+    <iframe id="search_frame"></iframe>
+    
+    <div id="content"><h1>Class: Permission
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+    <dt class="r1">Inherits:</dt>
+    <dd class="r1">
+      <span class="inheritName">Object</span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next">Permission</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+      </dd>
+    
+  
+  
+    
+  
+    
+  
+  
+  
+    <dt class="r2 last">Defined in:</dt>
+    <dd class="r2 last">app/models/permission.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+
+  <h2>Constant Summary</h2>
+  
+    <dl class="constants">
+      
+        <dt id="GENERAL-constant" class="">GENERAL =
+          
+        </dt>
+        <dd><pre class="code"><span class='lbrace token'>{</span>
+  <span class='string val'>&quot;users#index&quot;</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:group</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='symbol val'>:logged_in</span><span class='rbrace token'>}</span><span class='comma token'>,</span>
+  <span class='string val'>&quot;users#export&quot;</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:group</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='symbol val'>:logged_in</span><span class='rbrace token'>}</span><span class='comma token'>,</span>
+  <span class='string val'>&quot;users#create&quot;</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:min_level</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='integer val'>4</span><span class='rbrace token'>}</span><span class='comma token'>,</span>
+  <span class='string val'>&quot;users#login_instructions&quot;</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:min_level</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='integer val'>4</span><span class='rbrace token'>}</span><span class='comma token'>,</span>
+  <span class='string val'>&quot;user_sessions#create&quot;</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:group</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='symbol val'>:logged_out</span><span class='rbrace token'>}</span><span class='comma token'>,</span>
+  <span class='string val'>&quot;user_sessions#destroy&quot;</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:group</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='symbol val'>:logged_in</span><span class='rbrace token'>}</span><span class='comma token'>,</span>
+  <span class='string val'>&quot;user_sessions#logged_out&quot;</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:group</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='symbol val'>:logged_out</span><span class='rbrace token'>}</span><span class='comma token'>,</span>
+  <span class='string val'>&quot;password_resets#create&quot;</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:group</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='symbol val'>:logged_out</span><span class='rbrace token'>}</span><span class='comma token'>,</span>
+  <span class='string val'>&quot;password_resets#update&quot;</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:group</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='symbol val'>:logged_out</span><span class='rbrace token'>}</span><span class='comma token'>,</span>
+  <span class='string val'>&quot;languages#*&quot;</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:min_level</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='integer val'>4</span><span class='rbrace token'>}</span><span class='comma token'>,</span>
+  <span class='string val'>&quot;places#create&quot;</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:min_level</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='integer val'>2</span><span class='rbrace token'>}</span><span class='comma token'>,</span>
+  <span class='string val'>&quot;places#update&quot;</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:min_level</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='integer val'>2</span><span class='rbrace token'>}</span><span class='comma token'>,</span>
+  <span class='string val'>&quot;places#index&quot;</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:group</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='symbol val'>:logged_in</span><span class='rbrace token'>}</span><span class='comma token'>,</span>
+  <span class='string val'>&quot;places#lookup&quot;</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:group</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='symbol val'>:logged_in</span><span class='rbrace token'>}</span><span class='comma token'>,</span>
+  <span class='string val'>&quot;places#map&quot;</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:group</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='symbol val'>:logged_in</span><span class='rbrace token'>}</span><span class='comma token'>,</span>
+  <span class='string val'>&quot;places#map_all&quot;</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:group</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='symbol val'>:logged_in</span><span class='rbrace token'>}</span><span class='comma token'>,</span>
+  <span class='string val'>&quot;places#destroy&quot;</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:min_level</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='integer val'>2</span><span class='rbrace token'>}</span><span class='comma token'>,</span>
+  <span class='string val'>&quot;place_creators#create&quot;</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:min_level</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='integer val'>2</span><span class='rbrace token'>}</span><span class='comma token'>,</span>
+  <span class='string val'>&quot;searches#*&quot;</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:group</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='symbol val'>:logged_in</span><span class='rbrace token'>}</span><span class='comma token'>,</span>
+  <span class='string val'>&quot;welcome#*&quot;</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:group</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='symbol val'>:anyone</span><span class='rbrace token'>}</span><span class='comma token'>,</span>
+  <span class='string val'>&quot;permissions#no&quot;</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:group</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='symbol val'>:anyone</span><span class='rbrace token'>}</span><span class='comma token'>,</span>
+  <span class='string val'>&quot;forms#index&quot;</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:group</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='symbol val'>:logged_in</span><span class='rbrace token'>}</span><span class='comma token'>,</span>
+  <span class='string val'>&quot;forms#show&quot;</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:min_level</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='integer val'>2</span><span class='rbrace token'>}</span><span class='comma token'>,</span>
+  <span class='string val'>&quot;forms#create&quot;</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:min_level</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='integer val'>4</span><span class='rbrace token'>}</span><span class='comma token'>,</span>
+  <span class='string val'>&quot;forms#update&quot;</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:min_level</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='integer val'>4</span><span class='rbrace token'>}</span><span class='comma token'>,</span>
+  <span class='string val'>&quot;forms#destroy&quot;</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:min_level</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='integer val'>4</span><span class='rbrace token'>}</span><span class='comma token'>,</span>
+  <span class='string val'>&quot;forms#add_questions&quot;</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:min_level</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='integer val'>4</span><span class='rbrace token'>}</span><span class='comma token'>,</span>
+  <span class='string val'>&quot;forms#remove_questions&quot;</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:min_level</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='integer val'>4</span><span class='rbrace token'>}</span><span class='comma token'>,</span>
+  <span class='string val'>&quot;forms#update_ranks&quot;</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:min_level</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='integer val'>4</span><span class='rbrace token'>}</span><span class='comma token'>,</span>
+  <span class='string val'>&quot;forms#publish&quot;</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:min_level</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='integer val'>4</span><span class='rbrace token'>}</span><span class='comma token'>,</span>
+  <span class='string val'>&quot;forms#clone&quot;</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:min_level</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='integer val'>4</span><span class='rbrace token'>}</span><span class='comma token'>,</span>
+  <span class='string val'>&quot;responses#index&quot;</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:group</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='symbol val'>:logged_in</span><span class='rbrace token'>}</span><span class='comma token'>,</span>
+  <span class='string val'>&quot;responses#create&quot;</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:group</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='symbol val'>:logged_in</span><span class='rbrace token'>}</span><span class='comma token'>,</span>
+  <span class='string val'>&quot;responses#show&quot;</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:min_level</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='integer val'>2</span><span class='rbrace token'>}</span><span class='comma token'>,</span>
+  <span class='string val'>&quot;responses#update&quot;</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:min_level</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='integer val'>2</span><span class='rbrace token'>}</span><span class='comma token'>,</span>
+  <span class='string val'>&quot;responses#destroy&quot;</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:min_level</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='integer val'>2</span><span class='rbrace token'>}</span><span class='comma token'>,</span>
+  <span class='string val'>&quot;settings#index&quot;</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:min_level</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='integer val'>4</span><span class='rbrace token'>}</span><span class='comma token'>,</span>
+  <span class='string val'>&quot;settings#update_all&quot;</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:min_level</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='integer val'>4</span><span class='rbrace token'>}</span><span class='comma token'>,</span>
+  <span class='string val'>&quot;questionings#*&quot;</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:min_level</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='integer val'>4</span><span class='rbrace token'>}</span><span class='comma token'>,</span>
+  <span class='string val'>&quot;questions#*&quot;</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:min_level</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='integer val'>4</span><span class='rbrace token'>}</span><span class='comma token'>,</span>
+  <span class='string val'>&quot;options#*&quot;</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:min_level</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='integer val'>4</span><span class='rbrace token'>}</span><span class='comma token'>,</span>
+  <span class='string val'>&quot;option_sets#*&quot;</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:min_level</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='integer val'>4</span><span class='rbrace token'>}</span><span class='comma token'>,</span>
+  <span class='string val'>&quot;broadcasts#*&quot;</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:min_level</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='integer val'>2</span><span class='rbrace token'>}</span>
+<span class='rbrace token'>}</span>
+</pre></dd>
+      
+        <dt id="SPECIAL-constant" class="">SPECIAL =
+          
+        </dt>
+        <dd><pre class="code"><span class='lbrack token'>[</span>
+  <span class='symbol val'>:anyone_can_edit_some_fields_about_herself_but_nobody_can_edit_their_own_role</span><span class='comma token'>,</span>
+  <span class='symbol val'>:program_staff_can_delete_anyone_except_herself</span><span class='comma token'>,</span>
+  <span class='symbol val'>:observer_can_view_edit_delete_own_responses_if_not_reviewed</span><span class='comma token'>,</span>
+  <span class='symbol val'>:observer_cant_change_user_or_reviewed_for_response</span><span class='comma token'>,</span>
+  <span class='symbol val'>:observer_can_show_published_forms</span>
+<span class='rbrack token'>]</span>
+</pre></dd>
+      
+    </dl>
+  
+
+
+
+
+
+  
+    <h2>
+      Class Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#authorize-class_method" title="authorize (class method)">+ (Object) <strong>authorize</strong>(params) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#authorized%3F-class_method" title="authorized? (class method)">+ (Boolean) <strong>authorized?</strong>(params) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#check_permission-class_method" title="check_permission (class method)">+ (Object) <strong>check_permission</strong>(key, user) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+checks a general permission.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#select_conditions-class_method" title="select_conditions (class method)">+ (Object) <strong>select_conditions</strong>(params) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+returns a string containing any select conditions for a select query the
+model class must know to include a call to this function when building its
+query.
+</p>
+</div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+
+  <div id="class_method_details" class="method_details_list">
+    <h2>Class Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="authorize-class_method">
+  
+    + (<tt>Object</tt>) <strong>authorize</strong>(params) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  
+<h3>Raises:</h3>
+<ul class="raise">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="PermissionError.html" title="PermissionError (class)">PermissionError</a></span></tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/permission.rb', line 64</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='authorize identifier id'>authorize</span><span class='lparen token'>(</span><span class='params identifier id'>params</span><span class='rparen token'>)</span>
+  <span class='parse_params! fid id'>parse_params!</span><span class='lparen token'>(</span><span class='params identifier id'>params</span><span class='rparen token'>)</span>
+  <span class='comment val'># try special permissions first</span>
+  <span class='SPECIAL constant id'>SPECIAL</span><span class='dot token'>.</span><span class='each identifier id'>each</span><span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='sc identifier id'>sc</span><span class='bitor op'>|</span> <span class='return return kw'>return</span> <span class='if if_mod kw'>if</span> <span class='send identifier id'>send</span><span class='lparen token'>(</span><span class='sc identifier id'>sc</span><span class='comma token'>,</span> <span class='params identifier id'>params</span><span class='rparen token'>)</span><span class='rbrace token'>}</span>
+  <span class='comment val'># try general permissions</span>
+  <span class='return return kw'>return</span> <span class='if if_mod kw'>if</span> <span class='check_permission identifier id'>check_permission</span><span class='lparen token'>(</span><span class='dstring node'>&quot;#{params[:controller]}##{params[:action]}&quot;</span><span class='comma token'>,</span> <span class='params identifier id'>params</span><span class='lbrack token'>[</span><span class='symbol val'>:user</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
+  <span class='return return kw'>return</span> <span class='if if_mod kw'>if</span> <span class='check_permission identifier id'>check_permission</span><span class='lparen token'>(</span><span class='dstring node'>&quot;#{params[:controller]}#*&quot;</span><span class='comma token'>,</span> <span class='params identifier id'>params</span><span class='lbrack token'>[</span><span class='symbol val'>:user</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
+  <span class='comment val'># if we get this far, it didn't work out</span>
+  <span class='raise identifier id'>raise</span> <span class='PermissionError constant id'>PermissionError</span><span class='dot token'>.</span><span class='new identifier id'>new</span> <span class='string val'>&quot;You don't have permission to do that.&quot;</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="authorized?-class_method">
+  
+    + (<tt>Boolean</tt>) <strong>authorized?</strong>(params) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+55
+56
+57
+58
+59
+60
+61
+62</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/permission.rb', line 55</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='authorized? fid id'>authorized?</span><span class='lparen token'>(</span><span class='params identifier id'>params</span><span class='rparen token'>)</span>
+  <span class='begin begin kw'>begin</span>
+    <span class='authorize identifier id'>authorize</span><span class='lparen token'>(</span><span class='params identifier id'>params</span><span class='rparen token'>)</span>
+    <span class='return return kw'>return</span> <span class='true true kw'>true</span>
+  <span class='rescue rescue kw'>rescue</span> <span class='PermissionError constant id'>PermissionError</span>
+    <span class='return return kw'>return</span> <span class='false false kw'>false</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="check_permission-class_method">
+  
+    + (<tt>Object</tt>) <strong>check_permission</strong>(key, user) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+checks a general permission. raises an error (immediate failure) if a
+matching permission is found and fails returns true if succeeds. returns
+false if no matching permission is found
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<h3>Raises:</h3>
+<ul class="raise">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="PermissionError.html" title="PermissionError (class)">PermissionError</a></span></tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/permission.rb', line 93</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='check_permission identifier id'>check_permission</span><span class='lparen token'>(</span><span class='key identifier id'>key</span><span class='comma token'>,</span> <span class='user identifier id'>user</span><span class='rparen token'>)</span>
+  <span class='Rails constant id'>Rails</span><span class='dot token'>.</span><span class='logger identifier id'>logger</span><span class='dot token'>.</span><span class='debug identifier id'>debug</span><span class='lparen token'>(</span><span class='dstring node'>&quot;Checking general permission #{key} for #{user ? user.login : 'no user'}&quot;</span><span class='rparen token'>)</span>
+  <span class='comment val'># fail if it doesn't exist</span>
+  <span class='return return kw'>return</span> <span class='false false kw'>false</span> <span class='unless unless_mod kw'>unless</span> <span class='perm identifier id'>perm</span> <span class='assign token'>=</span> <span class='GENERAL constant id'>GENERAL</span><span class='lbrack token'>[</span><span class='key identifier id'>key</span><span class='rbrack token'>]</span>
+  <span class='comment val'># check the various kinds of permission</span>
+  <span class='if if kw'>if</span> <span class='perm identifier id'>perm</span><span class='lbrack token'>[</span><span class='symbol val'>:group</span><span class='rbrack token'>]</span>
+    <span class='if if kw'>if</span> <span class='perm identifier id'>perm</span><span class='lbrack token'>[</span><span class='symbol val'>:group</span><span class='rbrack token'>]</span> <span class='eq op'>==</span> <span class='symbol val'>:anyone</span>
+      <span class='return return kw'>return</span> <span class='true true kw'>true</span>
+    <span class='elsif elsif kw'>elsif</span> <span class='perm identifier id'>perm</span><span class='lbrack token'>[</span><span class='symbol val'>:group</span><span class='rbrack token'>]</span> <span class='eq op'>==</span> <span class='symbol val'>:logged_in</span>
+      <span class='user identifier id'>user</span> <span class='integer val'>? </span><span class='lparen token'>(</span><span class='return return kw'>return</span> <span class='true true kw'>true</span><span class='rparen token'>)</span> <span class='colon op'>:</span> <span class='lparen token'>(</span><span class='raise identifier id'>raise</span> <span class='PermissionError constant id'>PermissionError</span><span class='dot token'>.</span><span class='new identifier id'>new</span> <span class='string val'>&quot;You must login to view that page.&quot;</span><span class='rparen token'>)</span>
+    <span class='elsif elsif kw'>elsif</span> <span class='perm identifier id'>perm</span><span class='lbrack token'>[</span><span class='symbol val'>:group</span><span class='rbrack token'>]</span> <span class='eq op'>==</span> <span class='symbol val'>:logged_out</span>
+      <span class='user identifier id'>user</span> <span class='integer val'>? </span><span class='lparen token'>(</span><span class='raise identifier id'>raise</span> <span class='PermissionError constant id'>PermissionError</span><span class='dot token'>.</span><span class='new identifier id'>new</span> <span class='string val'>&quot;You must be logged out to view that page.&quot;</span><span class='rparen token'>)</span> <span class='colon op'>:</span> <span class='lparen token'>(</span><span class='return return kw'>return</span> <span class='true true kw'>true</span><span class='rparen token'>)</span>
+    <span class='end end kw'>end</span>
+  <span class='elsif elsif kw'>elsif</span> <span class='perm identifier id'>perm</span><span class='lbrack token'>[</span><span class='symbol val'>:min_level</span><span class='rbrack token'>]</span>
+    <span class='if if kw'>if</span> <span class='notop op'>!</span><span class='user identifier id'>user</span>
+      <span class='raise identifier id'>raise</span> <span class='PermissionError constant id'>PermissionError</span><span class='dot token'>.</span><span class='new identifier id'>new</span> <span class='string val'>&quot;You must login to view that page.&quot;</span> 
+    <span class='elsif elsif kw'>elsif</span> <span class='user identifier id'>user</span><span class='dot token'>.</span><span class='role identifier id'>role</span><span class='dot token'>.</span><span class='level identifier id'>level</span> <span class='lt op'>&lt;</span> <span class='perm identifier id'>perm</span><span class='lbrack token'>[</span><span class='symbol val'>:min_level</span><span class='rbrack token'>]</span>
+      <span class='raise identifier id'>raise</span> <span class='PermissionError constant id'>PermissionError</span><span class='dot token'>.</span><span class='new identifier id'>new</span> <span class='string val'>&quot;You don't have enough permissions to view that page.&quot;</span>
+    <span class='else else kw'>else</span>
+      <span class='return return kw'>return</span> <span class='true true kw'>true</span>
+    <span class='end end kw'>end</span>
+  <span class='end end kw'>end</span>
+  <span class='comment val'># if we get this far, we don't know how to process the permission, so we had better fail</span>
+  <span class='raise identifier id'>raise</span> <span class='PermissionError constant id'>PermissionError</span><span class='dot token'>.</span><span class='new identifier id'>new</span> <span class='string val'>&quot;Error processing permission.&quot;</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="select_conditions-class_method">
+  
+    + (<tt>Object</tt>) <strong>select_conditions</strong>(params) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+returns a string containing any select conditions for a select query the
+model class must know to include a call to this function when building its
+query
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/permission.rb', line 77</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='select_conditions identifier id'>select_conditions</span><span class='lparen token'>(</span><span class='params identifier id'>params</span><span class='rparen token'>)</span>
+  <span class='parse_params! fid id'>parse_params!</span><span class='lparen token'>(</span><span class='params identifier id'>params</span><span class='rparen token'>)</span>
+  <span class='comment val'># observer can only see his/her own responses</span>
+  <span class='if if kw'>if</span> <span class='params identifier id'>params</span><span class='lbrack token'>[</span><span class='symbol val'>:key</span><span class='rbrack token'>]</span> <span class='eq op'>==</span> <span class='string val'>&quot;responses#index&quot;</span> <span class='andop op'>&amp;&amp;</span> <span class='params identifier id'>params</span><span class='lbrack token'>[</span><span class='symbol val'>:user</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='is_observer? fid id'>is_observer?</span>
+    <span class='dstring node'>&quot;responses.user_id = #{params[:user].id}&quot;</span>
+  <span class='elsif elsif kw'>elsif</span> <span class='params identifier id'>params</span><span class='lbrack token'>[</span><span class='symbol val'>:key</span><span class='rbrack token'>]</span> <span class='eq op'>==</span> <span class='string val'>&quot;forms#index&quot;</span> <span class='andop op'>&amp;&amp;</span> <span class='params identifier id'>params</span><span class='lbrack token'>[</span><span class='symbol val'>:user</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='is_observer? fid id'>is_observer?</span>
+    <span class='string val'>&quot;forms.published = 1&quot;</span>
+  <span class='else else kw'>else</span>
+    <span class='string val'>&quot;1&quot;</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+    
+    <div id="footer">
+  Generated on Tue Nov 22 14:47:45 2011 by 
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.7.3 (ruby-1.8.7).
+</div>
+
+  </body>
+</html>

@@ -1,0 +1,1211 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Class: Place
+  
+    &mdash; Documentation by YARD 0.7.3
+  
+</title>
+
+  <link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+  <link rel="stylesheet" href="css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  relpath = '';
+  if (relpath != '') relpath += '/';
+</script>
+
+  <script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+
+  </head>
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      if (window.top.frames.main) document.body.className = 'frames';
+    </script>
+    
+    <div id="header">
+      <div id="menu">
+  
+    <a href="_index.html">Index (P)</a> &raquo; 
+    
+    
+    <span class="title">Place</span>
+  
+  
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  
+    <a id="class_list_link" href="#">Class List</a>
+  
+    <a id="method_list_link" href="#">Method List</a>
+  
+    <a id="file_list_link" href="#">File List</a>
+  
+</div>
+      <div class="clear"></div>
+    </div>
+    
+    <iframe id="search_frame"></iframe>
+    
+    <div id="content"><h1>Class: Place
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+    <dt class="r1">Inherits:</dt>
+    <dd class="r1">
+      <span class="inheritName">ActiveRecord::Base</span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next">ActiveRecord::Base</li>
+          
+            <li class="next">Place</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+      </dd>
+    
+  
+  
+    
+  
+    
+      <dt class="r2">Includes:</dt>
+      <dd class="r2"><span class='object_link'><a href="PlaceLookupable.html" title="PlaceLookupable (module)">PlaceLookupable</a></span></dd>
+      
+    
+  
+  
+  
+    <dt class="r1 last">Defined in:</dt>
+    <dd class="r1 last">app/models/place.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+
+
+  
+  
+  
+  
+  
+
+
+  
+  
+  
+  <h2>Instance Attribute Summary</h2>
+  
+  <h3 class="inherited">Attributes included from <span class='object_link'><a href="PlaceLookupable.html" title="PlaceLookupable (module)">PlaceLookupable</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="PlaceLookupable.html#place_lookup_query-instance_method" title="PlaceLookupable#place_lookup_query (method)">place_lookup_query</a></span></p>
+
+  
+
+  
+    <h2>
+      Class Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#bound-class_method" title="bound (class method)">+ (Object) <strong>bound</strong>(places) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#cleanup-class_method" title="cleanup (class method)">+ (Object) <strong>cleanup</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+removes temporary places that are more than 1/2 hour old.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#default_eager-class_method" title="default_eager (class method)">+ (Object) <strong>default_eager</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#find_or_create_with_bits-class_method" title="find_or_create_with_bits (class method)">+ (Object) <strong>find_or_create_with_bits</strong>(bits) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#lookup-class_method" title="lookup (class method)">+ (Object) <strong>lookup</strong>(query) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+searches existing, non-temporary places and geocoding services for places
+matching query.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#query_fragment-class_method" title="query_fragment (class method)">+ (Object) <strong>query_fragment</strong>(field, term) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+gets the lhs, operator, and rhs of a query fragment with the given field
+and term.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#search-class_method" title="search (class method)">+ (Object) <strong>search</strong>(query) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+returns places matching the given search query raise an error if the query
+is invalid (see the Search.conditions method).
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#search_examples-class_method" title="search_examples (class method)">+ (Object) <strong>search_examples</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#search_fields-class_method" title="search_fields (class method)">+ (Object) <strong>search_fields</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+gets the list of fields to be searched for this class includes whether they
+should be included in a default, unqualified search and whether they are
+searchable by a regular expression.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#sorted-class_method" title="sorted (class method)">+ (Object) <strong>sorted</strong>(params = {}) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+    </ul>
+  
+    <h2>
+      Instance Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#bounds-instance_method" title="#bounds (instance method)">- (Object) <strong>bounds</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#is_address%3F-instance_method" title="#is_address? (instance method)">- (Boolean) <strong>is_address?</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#mappable%3F-instance_method" title="#mappable? (instance method)">- (Boolean) <strong>mappable?</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#no_container%3F-instance_method" title="#no_container? (instance method)">- (Boolean) <strong>no_container?</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#place_field_name-instance_method" title="#place_field_name (instance method)">- (Object) <strong>place_field_name</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#type_code-instance_method" title="#type_code (instance method)">- (Object) <strong>type_code</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+  
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods included from <span class='object_link'><a href="PlaceLookupable.html" title="PlaceLookupable (module)">PlaceLookupable</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="PlaceLookupable.html#place_suggestion_ids-instance_method" title="PlaceLookupable#place_suggestion_ids (method)">#place_suggestion_ids</a></span>, <span class='object_link'><a href="PlaceLookupable.html#place_suggestion_ids%3D-instance_method" title="PlaceLookupable#place_suggestion_ids= (method)">#place_suggestion_ids=</a></span>, <span class='object_link'><a href="PlaceLookupable.html#place_suggestions-instance_method" title="PlaceLookupable#place_suggestions (method)">#place_suggestions</a></span>, <span class='object_link'><a href="PlaceLookupable.html#place_suggestions%3D-instance_method" title="PlaceLookupable#place_suggestions= (method)">#place_suggestions=</a></span></p>
+
+  
+
+  <div id="class_method_details" class="method_details_list">
+    <h2>Class Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="bound-class_method">
+  
+    + (<tt>Object</tt>) <strong>bound</strong>(places) 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+32
+33
+34
+35
+36
+37
+38
+39
+40</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/place.rb', line 32</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='bound identifier id'>bound</span><span class='lparen token'>(</span><span class='places identifier id'>places</span><span class='rparen token'>)</span>
+  <span class='return return kw'>return</span> <span class='nil nil kw'>nil</span> <span class='if if_mod kw'>if</span> <span class='places identifier id'>places</span><span class='dot token'>.</span><span class='empty? fid id'>empty?</span>
+  <span class='lbrace token'>{</span>
+    <span class='symbol val'>:lat_min</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrack token'>[</span><span class='integer val'>-89</span><span class='comma token'>,</span> <span class='places identifier id'>places</span><span class='dot token'>.</span><span class='min_by identifier id'>min_by</span><span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='p identifier id'>p</span><span class='bitor op'>|</span> <span class='p identifier id'>p</span><span class='dot token'>.</span><span class='latitude identifier id'>latitude</span><span class='rbrace token'>}</span><span class='dot token'>.</span><span class='latitude identifier id'>latitude</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='max identifier id'>max</span><span class='comma token'>,</span>
+    <span class='symbol val'>:lat_max</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrack token'>[</span><span class='integer val'>89</span><span class='comma token'>,</span> <span class='places identifier id'>places</span><span class='dot token'>.</span><span class='max_by identifier id'>max_by</span><span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='p identifier id'>p</span><span class='bitor op'>|</span> <span class='p identifier id'>p</span><span class='dot token'>.</span><span class='latitude identifier id'>latitude</span><span class='rbrace token'>}</span><span class='dot token'>.</span><span class='latitude identifier id'>latitude</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='min identifier id'>min</span><span class='comma token'>,</span>
+    <span class='symbol val'>:lng_min</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrack token'>[</span><span class='integer val'>-180</span><span class='comma token'>,</span> <span class='places identifier id'>places</span><span class='dot token'>.</span><span class='min_by identifier id'>min_by</span><span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='p identifier id'>p</span><span class='bitor op'>|</span> <span class='p identifier id'>p</span><span class='dot token'>.</span><span class='longitude identifier id'>longitude</span><span class='rbrace token'>}</span><span class='dot token'>.</span><span class='longitude identifier id'>longitude</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='max identifier id'>max</span><span class='comma token'>,</span>
+    <span class='symbol val'>:lng_max</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrack token'>[</span><span class='integer val'>180</span><span class='comma token'>,</span> <span class='places identifier id'>places</span><span class='dot token'>.</span><span class='max_by identifier id'>max_by</span><span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='p identifier id'>p</span><span class='bitor op'>|</span> <span class='p identifier id'>p</span><span class='dot token'>.</span><span class='longitude identifier id'>longitude</span><span class='rbrace token'>}</span><span class='dot token'>.</span><span class='longitude identifier id'>longitude</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='min identifier id'>min</span>
+  <span class='rbrace token'>}</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="cleanup-class_method">
+  
+    + (<tt>Object</tt>) <strong>cleanup</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+removes temporary places that are more than 1/2 hour old
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+110
+111
+112</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/place.rb', line 110</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='cleanup identifier id'>cleanup</span>
+  <span class='delete_all identifier id'>delete_all</span><span class='lparen token'>(</span><span class='lbrack token'>[</span><span class='string val'>&quot;temporary = 1 and created_at &lt; ?&quot;</span><span class='comma token'>,</span> <span class='Time constant id'>Time</span><span class='dot token'>.</span><span class='now identifier id'>now</span> <span class='minus op'>-</span> <span class='float val'>30</span><span class='dot token'>.</span><span class='minutes identifier id'>minutes</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="default_eager-class_method">
+  
+    + (<tt>Object</tt>) <strong>default_eager</strong> 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+42
+43
+44</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/place.rb', line 42</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='default_eager identifier id'>default_eager</span>
+  <span class='lbrack token'>[</span><span class='symbol val'>:place_type</span><span class='comma token'>,</span> <span class='symbol val'>:container</span><span class='rbrack token'>]</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="find_or_create_with_bits-class_method">
+  
+    + (<tt>Object</tt>) <strong>find_or_create_with_bits</strong>(bits) 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/place.rb', line 65</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='find_or_create_with_bits identifier id'>find_or_create_with_bits</span><span class='lparen token'>(</span><span class='bits identifier id'>bits</span><span class='rparen token'>)</span>
+  <span class='return return kw'>return</span> <span class='nil nil kw'>nil</span> <span class='unless unless_mod kw'>unless</span> <span class='bits identifier id'>bits</span><span class='lbrack token'>[</span><span class='symbol val'>:coords</span><span class='rbrack token'>]</span>
+  
+  <span class='comment val'># reverse geolocate to get container</span>
+  <span class='container identifier id'>container</span> <span class='assign token'>=</span> <span class='GoogleGeocoder constant id'>GoogleGeocoder</span><span class='dot token'>.</span><span class='reverse identifier id'>reverse</span><span class='lparen token'>(</span><span class='bits identifier id'>bits</span><span class='lbrack token'>[</span><span class='symbol val'>:coords</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
+  
+  <span class='comment val'># if no place name is given, just return the container</span>
+  <span class='return return kw'>return</span> <span class='container identifier id'>container</span> <span class='if if_mod kw'>if</span> <span class='bits identifier id'>bits</span><span class='lbrack token'>[</span><span class='symbol val'>:place_name</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='blank? fid id'>blank?</span>
+
+  <span class='comment val'># find/init a point place based on place_name</span>
+  <span class='point identifier id'>point</span> <span class='assign token'>=</span> <span class='Place constant id'>Place</span><span class='dot token'>.</span><span class='find_or_initialize_by_long_name_and_place_type_id_and_container_id identifier id'>find_or_initialize_by_long_name_and_place_type_id_and_container_id</span><span class='lparen token'>(</span>
+    <span class='bits identifier id'>bits</span><span class='lbrack token'>[</span><span class='symbol val'>:place_name</span><span class='rbrack token'>]</span><span class='comma token'>,</span> <span class='PlaceType constant id'>PlaceType</span><span class='dot token'>.</span><span class='point identifier id'>point</span><span class='dot token'>.</span><span class='id identifier id'>id</span><span class='comma token'>,</span> <span class='container identifier id'>container</span> <span class='integer val'>? </span><span class='container identifier id'>container</span><span class='dot token'>.</span><span class='id identifier id'>id</span> <span class='colon op'>:</span> <span class='nil nil kw'>nil</span><span class='rparen token'>)</span>
+  <span class='comment val'># get longitude &amp; latitude from bits if not already set</span>
+  <span class='point identifier id'>point</span><span class='dot token'>.</span><span class='latitude identifier id'>latitude</span><span class='comma token'>,</span> <span class='point identifier id'>point</span><span class='dot token'>.</span><span class='longitude identifier id'>longitude</span> <span class='assign token'>=</span> <span class='bits identifier id'>bits</span><span class='lbrack token'>[</span><span class='symbol val'>:coords</span><span class='rbrack token'>]</span> <span class='unless unless_mod kw'>unless</span> <span class='point identifier id'>point</span><span class='dot token'>.</span><span class='latitude identifier id'>latitude</span> <span class='andop op'>&amp;&amp;</span> <span class='point identifier id'>point</span><span class='dot token'>.</span><span class='longitude identifier id'>longitude</span>
+  <span class='comment val'># set full name and save if necessary</span>
+  <span class='point identifier id'>point</span><span class='dot token'>.</span><span class='save identifier id'>save</span> <span class='if if_mod kw'>if</span> <span class='point identifier id'>point</span><span class='dot token'>.</span><span class='changed? fid id'>changed?</span>
+  
+  <span class='return return kw'>return</span> <span class='point identifier id'>point</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="lookup-class_method">
+  
+    + (<tt>Object</tt>) <strong>lookup</strong>(query) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+searches existing, non-temporary places and geocoding services for places
+matching query
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/place.rb', line 93</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='lookup identifier id'>lookup</span><span class='lparen token'>(</span><span class='query identifier id'>query</span><span class='rparen token'>)</span>
+  <span class='return return kw'>return</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span> <span class='if if_mod kw'>if</span> <span class='query identifier id'>query</span><span class='dot token'>.</span><span class='blank? fid id'>blank?</span>
+  
+  <span class='comment val'># clean up old temp places</span>
+  <span class='cleanup identifier id'>cleanup</span>
+  
+  <span class='comment val'># get existing places</span>
+  <span class='places identifier id'>places</span> <span class='assign token'>=</span> <span class='search identifier id'>search</span><span class='lparen token'>(</span><span class='query identifier id'>query</span><span class='rparen token'>)</span>
+  
+  <span class='comment val'># get places from geocoding service</span>
+  <span class='places identifier id'>places</span> <span class='opasgn op'>+=</span> <span class='configatron identifier id'>configatron</span><span class='dot token'>.</span><span class='geocoder identifier id'>geocoder</span><span class='dot token'>.</span><span class='search identifier id'>search</span><span class='lparen token'>(</span><span class='query identifier id'>query</span><span class='rparen token'>)</span>
+  
+  <span class='comment val'># reject any duplicates</span>
+  <span class='places identifier id'>places</span><span class='dot token'>.</span><span class='uniq identifier id'>uniq</span><span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='p identifier id'>p</span><span class='bitor op'>|</span> <span class='p identifier id'>p</span><span class='dot token'>.</span><span class='full_name identifier id'>full_name</span><span class='rbrace token'>}</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="query_fragment-class_method">
+  
+    + (<tt>Object</tt>) <strong>query_fragment</strong>(field, term) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+gets the lhs, operator, and rhs of a query fragment with the given field
+and term
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+57
+58
+59</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/place.rb', line 57</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='query_fragment identifier id'>query_fragment</span><span class='lparen token'>(</span><span class='field identifier id'>field</span><span class='comma token'>,</span> <span class='term identifier id'>term</span><span class='rparen token'>)</span>
+  <span class='lbrack token'>[</span><span class='search_fields identifier id'>search_fields</span><span class='lbrack token'>[</span><span class='field identifier id'>field</span><span class='rbrack token'>]</span><span class='lbrack token'>[</span><span class='symbol val'>:colname</span><span class='rbrack token'>]</span><span class='comma token'>,</span> <span class='string val'>&quot;like&quot;</span><span class='comma token'>,</span> <span class='dstring node'>&quot;%#{term}%&quot;</span><span class='rbrack token'>]</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="search-class_method">
+  
+    + (<tt>Object</tt>) <strong>search</strong>(query) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+returns places matching the given search query raise an error if the query
+is invalid (see the Search.conditions method)
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+87
+88
+89
+90</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/place.rb', line 87</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='search identifier id'>search</span><span class='lparen token'>(</span><span class='query identifier id'>query</span><span class='rparen token'>)</span>
+  <span class='query_cond identifier id'>query_cond</span> <span class='assign token'>=</span> <span class='Search constant id'>Search</span><span class='dot token'>.</span><span class='create identifier id'>create</span><span class='lparen token'>(</span><span class='symbol val'>:query</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='query identifier id'>query</span><span class='comma token'>,</span> <span class='symbol val'>:class_name</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='name identifier id'>name</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='conditions identifier id'>conditions</span>
+  <span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='symbol val'>:all</span><span class='comma token'>,</span> <span class='symbol val'>:include</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='symbol val'>:place_type</span><span class='comma token'>,</span> <span class='symbol val'>:conditions</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='dstring node'>&quot;(#{query_cond}) and temporary != 1&quot;</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="search_examples-class_method">
+  
+    + (<tt>Object</tt>) <strong>search_examples</strong> 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+61
+62
+63</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/place.rb', line 61</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='search_examples identifier id'>search_examples</span>
+  <span class='lbrack token'>[</span><span class='string val'>&quot;ontario, canada&quot;</span><span class='comma token'>,</span> <span class='string val'>'&quot;new york&quot;'</span><span class='comma token'>,</span> <span class='string val'>&quot;california or oregon&quot;</span><span class='comma token'>,</span> <span class='string val'>&quot;type:state&quot;</span><span class='comma token'>,</span> <span class='string val'>&quot;container:lebanon&quot;</span><span class='rbrack token'>]</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="search_fields-class_method">
+  
+    + (<tt>Object</tt>) <strong>search_fields</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+gets the list of fields to be searched for this class includes whether they
+should be included in a default, unqualified search and whether they are
+searchable by a regular expression
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+49
+50
+51
+52
+53
+54</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/place.rb', line 49</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='search_fields identifier id'>search_fields</span>
+  <span class='lbrace token'>{</span><span class='symbol val'>:fullname</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:colname</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>&quot;places.full_name&quot;</span><span class='comma token'>,</span> <span class='symbol val'>:default</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='true true kw'>true</span><span class='comma token'>,</span> <span class='symbol val'>:regexp</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='true true kw'>true</span><span class='rbrace token'>}</span><span class='comma token'>,</span>
+   <span class='symbol val'>:shortname</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:colname</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>&quot;places.short_name&quot;</span><span class='comma token'>,</span> <span class='symbol val'>:default</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='true true kw'>true</span><span class='comma token'>,</span> <span class='symbol val'>:regexp</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='true true kw'>true</span><span class='rbrace token'>}</span><span class='comma token'>,</span>
+   <span class='symbol val'>:container</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:colname</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>&quot;containers_places.full_name&quot;</span><span class='comma token'>,</span> <span class='symbol val'>:default</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='false false kw'>false</span><span class='comma token'>,</span> <span class='symbol val'>:regexp</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='true true kw'>true</span><span class='rbrace token'>}</span><span class='comma token'>,</span>
+   <span class='symbol val'>:type</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:colname</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>&quot;place_types.name&quot;</span><span class='comma token'>,</span> <span class='symbol val'>:default</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='false false kw'>false</span><span class='comma token'>,</span> <span class='symbol val'>:regexp</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='false false kw'>false</span><span class='rbrace token'>}</span><span class='rbrace token'>}</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="sorted-class_method">
+  
+    + (<tt>Object</tt>) <strong>sorted</strong>(params = {}) 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+26
+27
+28
+29
+30</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/place.rb', line 26</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='sorted identifier id'>sorted</span><span class='lparen token'>(</span><span class='params identifier id'>params</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span><span class='rparen token'>)</span>
+  <span class='params identifier id'>params</span><span class='lbrack token'>[</span><span class='symbol val'>:conditions</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='dstring node'>&quot;(#{params[:conditions]}) and places.temporary != 1&quot;</span>
+  <span class='params identifier id'>params</span><span class='dot token'>.</span><span class='merge! fid id'>merge!</span><span class='lparen token'>(</span><span class='symbol val'>:order</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>&quot;place_types.level, places.long_name&quot;</span><span class='rparen token'>)</span>
+  <span class='paginate identifier id'>paginate</span><span class='lparen token'>(</span><span class='symbol val'>:all</span><span class='comma token'>,</span> <span class='params identifier id'>params</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="bounds-instance_method">
+  
+    - (<tt>Object</tt>) <strong>bounds</strong> 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+126
+127
+128
+129
+130
+131
+132
+133</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/place.rb', line 126</span>
+
+<span class='def def kw'>def</span> <span class='bounds identifier id'>bounds</span>
+  <span class='lbrace token'>{</span>
+    <span class='symbol val'>:lat_min</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrack token'>[</span><span class='integer val'>-89</span><span class='comma token'>,</span> <span class='latitude identifier id'>latitude</span> <span class='minus op'>-</span> <span class='integer val'>5</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='max identifier id'>max</span><span class='comma token'>,</span>
+    <span class='symbol val'>:lat_max</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrack token'>[</span><span class='integer val'>89</span><span class='comma token'>,</span> <span class='latitude identifier id'>latitude</span> <span class='plus op'>+</span> <span class='integer val'>5</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='min identifier id'>min</span><span class='comma token'>,</span>
+    <span class='symbol val'>:lng_min</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrack token'>[</span><span class='integer val'>-180</span><span class='comma token'>,</span> <span class='longitude identifier id'>longitude</span> <span class='minus op'>-</span> <span class='integer val'>5</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='max identifier id'>max</span><span class='comma token'>,</span>
+    <span class='symbol val'>:lng_max</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrack token'>[</span><span class='integer val'>180</span><span class='comma token'>,</span> <span class='longitude identifier id'>longitude</span> <span class='plus op'>+</span> <span class='integer val'>5</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='min identifier id'>min</span>
+  <span class='rbrace token'>}</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="is_address?-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>is_address?</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+114
+115
+116</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/place.rb', line 114</span>
+
+<span class='def def kw'>def</span> <span class='is_address? fid id'>is_address?</span>
+  <span class='place_type identifier id'>place_type</span><span class='dot token'>.</span><span class='is_address? fid id'>is_address?</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="mappable?-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>mappable?</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+122
+123
+124</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/place.rb', line 122</span>
+
+<span class='def def kw'>def</span> <span class='mappable? fid id'>mappable?</span>
+  <span class='latitude identifier id'>latitude</span> <span class='andop op'>&amp;&amp;</span> <span class='longitude identifier id'>longitude</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="no_container?-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>no_container?</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+118
+119
+120</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/place.rb', line 118</span>
+
+<span class='def def kw'>def</span> <span class='no_container? fid id'>no_container?</span>
+  <span class='place_type identifier id'>place_type</span> <span class='andop op'>&amp;&amp;</span> <span class='place_type identifier id'>place_type</span><span class='dot token'>.</span><span class='level identifier id'>level</span> <span class='gt op'>&gt;</span> <span class='integer val'>1</span> <span class='andop op'>&amp;&amp;</span> <span class='container identifier id'>container</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="place_field_name-instance_method">
+  
+    - (<tt>Object</tt>) <strong>place_field_name</strong> 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+139</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/place.rb', line 139</span>
+
+<span class='def def kw'>def</span> <span class='place_field_name identifier id'>place_field_name</span><span class='semicolon token'>;</span> <span class='string val'>&quot;container&quot;</span> <span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="type_code-instance_method">
+  
+    - (<tt>Object</tt>) <strong>type_code</strong> 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+135
+136
+137</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/place.rb', line 135</span>
+
+<span class='def def kw'>def</span> <span class='type_code identifier id'>type_code</span>
+  <span class='place_type identifier id'>place_type</span> <span class='integer val'>? </span><span class='place_type identifier id'>place_type</span><span class='dot token'>.</span><span class='short_name identifier id'>short_name</span> <span class='colon op'>:</span> <span class='nil nil kw'>nil</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+    
+    <div id="footer">
+  Generated on Tue Nov 22 14:47:38 2011 by 
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.7.3 (ruby-1.8.7).
+</div>
+
+  </body>
+</html>
