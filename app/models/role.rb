@@ -1,4 +1,6 @@
 class Role < ActiveRecord::Base
+  has_many(:users)
+  
   def self.sorted
     find(:all, :order => "level")
   end

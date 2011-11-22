@@ -7,6 +7,7 @@ class User < ActiveRecord::Base
   before_validation(:clean_fields)
   before_destroy(:check_assoc)
   has_many(:responses)
+  has_many(:broadcast_addressings)
   
   acts_as_authentic do |c| 
     c.disable_perishable_token_maintenance = true

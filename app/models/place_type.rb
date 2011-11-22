@@ -1,4 +1,6 @@
 class PlaceType < ActiveRecord::Base
+  has_many(:places)
+  
   def self.sorted
     all(:order => "level")
   end

@@ -5,6 +5,9 @@ class Language < ActiveRecord::Base
   before_destroy(:check_assoc_and_english_mandatory)
   after_save(:rebuild_hash)
   
+  has_many(:translations)
+  has_many(:users)
+  
   def self.sorted(params = {})
     func = params.delete(:paginate) ? "paginate" : "find"
     send(func, :all, params.merge(:order => "code = 'eng' desc, code"))

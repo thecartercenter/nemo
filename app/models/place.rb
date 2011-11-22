@@ -7,6 +7,7 @@ class Place < ActiveRecord::Base
   belongs_to(:place_type)
   has_many(:children, :class_name => "Place", :foreign_key => "container_id", :dependent => :destroy)
   has_many(:responses)
+  has_one(:place_creator)
 
   before_validation(:clean_commas)
   before_validation(:set_full_name)

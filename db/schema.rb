@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111103153031) do
+ActiveRecord::Schema.define(:version => 20111122190536) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -69,17 +69,6 @@ ActiveRecord::Schema.define(:version => 20111103153031) do
     t.boolean  "published",    :default => false
     t.integer  "form_type_id"
     t.integer  "downloads"
-  end
-
-  create_table "google_geolocations", :force => true do |t|
-    t.string   "full_name"
-    t.text     "json"
-    t.integer  "place_type_id"
-    t.decimal  "latitude",       :precision => 20, :scale => 15
-    t.decimal  "longitude",      :precision => 20, :scale => 15
-    t.string   "formatted_addr"
-    t.datetime "created_at"
-    t.datetime "updated_at"
   end
 
   create_table "languages", :force => true do |t|
