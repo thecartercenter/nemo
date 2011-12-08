@@ -2,7 +2,7 @@
 configatron.webmaster_emails = ["someone@somplace.com"]
 
 # site email from address
-configatron.site_email = "#{configatron.site_name} <webmaster@cceom.org>"
+configatron.site_email = "#{configatron.site_name} <someone@someplace.com>"
 
 # whether to use HTTPS in the mailer URLs.
 configatron.mailer_url_protocol = 'https'
