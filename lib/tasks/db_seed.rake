@@ -32,8 +32,8 @@ namespace :db do
       find_or_create(PlaceType, :level, :name => "Address/Landmark", :short_name => "address", :level => "4")
       find_or_create(PlaceType, :level, :name => "Point", :short_name => "point", :level => "5")
       # FormTypes
-      find_or_create(FormType, :name, :name => "STO")
-      find_or_create(FormType, :name, :name => "LTO")
+      find_or_create(FormType, :name, :name => "Type 1")
+      find_or_create(FormType, :name, :name => "Type 2")
     end
   end
 end
