@@ -1,7 +1,20 @@
 production:
   adapter: mysql
-  database: elmo
+  database: elmo_p
   host: localhost
   username: elmo
   password: xxx
 
+test:
+  adapter: mysql
+  database: elmo_t
+  host: localhost
+  username: elmo
+  password: xxx
+
+development:
+  adapter: mysql
+  database: elmo_d
+  host: localhost
+  username: elmo
+  password: xxx
