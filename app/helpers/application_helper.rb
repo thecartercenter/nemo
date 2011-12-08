@@ -27,6 +27,7 @@ module ApplicationHelper
     msgs.gsub!("Answers are invalid", "One or more answers are invalid")
     msgs.gsub!("@ please.", "@")
     msgs.gsub!("look like an email address.", "look like an email address")
+    msgs
   end
   
   # renders a link only if the current user is authorized for the specified action
