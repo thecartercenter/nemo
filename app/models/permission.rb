@@ -153,7 +153,7 @@ class Permission
         # so object and user must be equal to proceed any further
         return false unless params[:user] == params[:object]
         # if they're not trying to change prohibited fields, they're good
-        return !trying_to_change?(params, 'name', 'login', 'active?', 'active', 'role', 'role_id')
+        return !trying_to_change?(params, 'active?', 'active', 'role', 'role_id')
       end
     end
   
