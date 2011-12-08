@@ -46,12 +46,11 @@ module CommandCenter
     # set up preferred geocoder
     configatron.geocoder = Configatron::Delayed.new{GoogleGeocoder}
     
-    configatron.site_name = "CCEOM Command Center"
-    configatron.site_email = "#{configatron.site_name} <webmaster@cceom.org>"
+    # site name
+    configatron.site_name = "ELMO"
+    
+    # SMS broadcast settings
     configatron.broadcast_tag = "[TCC-Broadcast]"
     configatron.outgoing_sms_adapter = "IntelliSmsAdapter"
-    
-    # Google maps API key.
-    configatron.google_maps_key = "ABQIAAAA5mPXIIEW9AiuevjQ7iPkrRTfCSFMyO6Lv5-2JcxmVssaU3PL7RQ7C8xjq83COppEuFJhmTtKcWpctw"
   end
 end

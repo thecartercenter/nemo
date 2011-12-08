@@ -1,5 +1,6 @@
 class ResponsesController < ApplicationController
   def create
+    # if this is a submission from ODK collect
     if request.format == Mime::XML
       if request.method == "HEAD"
         # just render the 'no content' status since that's what odk wants!

@@ -1,11 +1,16 @@
 class BroadcastsController < ApplicationController
+  
   def index
     @broadcasts = load_objects_with_subindex(Broadcast)
   end
+  
   def new
     flash[:success] = "To send a broadcast, first select the recipients below, and then click 'Send Broadcast'."
     redirect_to(users_path)
   end
+  
+  # Displays a new broadcast form with the given recipients.
+  # @param [Hash] selected A Hash user ids as keys, referring to recipients of the broadcast.
   def new_with_users
     # load the user objects
     users = params[:selected].keys.collect{|id| User.find_by_id(id)}.compact
@@ -19,9 +24,11 @@ class BroadcastsController < ApplicationController
     # render new action
     render_new
   end
+  
   def show
     @broadcast = Broadcast.find(params[:id])
   end
+  
   def create
     @broadcast = Broadcast.new(params[:broadcast])
     if @broadcast.save

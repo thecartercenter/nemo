@@ -1,6 +1,7 @@
 class AdminMailer < ActionMailer::Base
   default :from => configatron.site_email
   
+  # mails an error report to the webmaster
   def error(exception, session = nil, params = nil, env = nil)
     @exception = exception
     @session = session

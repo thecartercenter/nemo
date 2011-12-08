@@ -125,7 +125,10 @@
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'><p>
+mails an error report to the webmaster.
+</p>
+</div></span>
   
 </li>
 
@@ -147,23 +150,35 @@
   
 
   
-</p><table class="source_code">
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+mails an error report to the webmaster
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-4
 5
 6
 7
 8
 9
 10
-11</pre>
+11
+12</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/mailers/admin_mailer.rb', line 4</span>
+      <pre class="code"><span class="info file"># File 'app/mailers/admin_mailer.rb', line 5</span>
 
 <span class='def def kw'>def</span> <span class='error identifier id'>error</span><span class='lparen token'>(</span><span class='exception identifier id'>exception</span><span class='comma token'>,</span> <span class='session identifier id'>session</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span><span class='comma token'>,</span> <span class='params identifier id'>params</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span><span class='comma token'>,</span> <span class='env identifier id'>env</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span><span class='rparen token'>)</span>
   <span class='@exception ivar id'>@exception</span> <span class='assign token'>=</span> <span class='exception identifier id'>exception</span>
@@ -184,7 +199,7 @@
 </div>
     
     <div id="footer">
-  Generated on Tue Nov 22 14:47:43 2011 by 
+  Generated on Thu Dec  8 10:56:39 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.7.3 (ruby-1.8.7).
 </div>

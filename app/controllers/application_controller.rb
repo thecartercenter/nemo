@@ -14,6 +14,9 @@ class ApplicationController < ActionController::Base
   helper_method :current_user_session, :current_user, :authorized?
   
   protected
+    
+    # Renders a file with the browser-appropriate MIME type for CSV data.
+    # @param [String] filename The filename to render. If not specified, the contents of params[:action] is used.
     def render_csv(filename = nil)
       filename ||= params[:action]
       filename += '.csv'
@@ -32,8 +35,8 @@ class ApplicationController < ActionController::Base
       render(:layout => false)
     end
     
+    # Loads the user-specified timezone from configatron, if one exists.
     def set_timezone
-      # set the timezone, if there is one in the configatron
       Time.zone = configatron.timezone.to_s if configatron.timezone
     end
     

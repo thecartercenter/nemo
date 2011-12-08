@@ -199,7 +199,10 @@
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'><p>
+Displays a new broadcast form with the given recipients.
+</p>
+</div></span>
   
 </li>
 
@@ -254,22 +257,22 @@
       <pre class="lines">
 
 
-25
-26
-27
-28
-29
-30
-31
 32
 33
 34
 35
 36
-37</pre>
+37
+38
+39
+40
+41
+42
+43
+44</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/controllers/broadcasts_controller.rb', line 25</span>
+      <pre class="code"><span class="info file"># File 'app/controllers/broadcasts_controller.rb', line 32</span>
 
 <span class='def def kw'>def</span> <span class='create identifier id'>create</span>
   <span class='@broadcast ivar id'>@broadcast</span> <span class='assign token'>=</span> <span class='Broadcast constant id'>Broadcast</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='params identifier id'>params</span><span class='lbrack token'>[</span><span class='symbol val'>:broadcast</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
@@ -303,12 +306,12 @@
       <pre class="lines">
 
 
-2
 3
-4</pre>
+4
+5</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/controllers/broadcasts_controller.rb', line 2</span>
+      <pre class="code"><span class="info file"># File 'app/controllers/broadcasts_controller.rb', line 3</span>
 
 <span class='def def kw'>def</span> <span class='index identifier id'>index</span>
   <span class='@broadcasts ivar id'>@broadcasts</span> <span class='assign token'>=</span> <span class='load_objects_with_subindex identifier id'>load_objects_with_subindex</span><span class='lparen token'>(</span><span class='Broadcast constant id'>Broadcast</span><span class='rparen token'>)</span>
@@ -332,13 +335,13 @@
       <pre class="lines">
 
 
-5
-6
 7
-8</pre>
+8
+9
+10</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/controllers/broadcasts_controller.rb', line 5</span>
+      <pre class="code"><span class="info file"># File 'app/controllers/broadcasts_controller.rb', line 7</span>
 
 <span class='def def kw'>def</span> <span class='new identifier id'>new</span>
   <span class='flash identifier id'>flash</span><span class='lbrack token'>[</span><span class='symbol val'>:success</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='string val'>&quot;To send a broadcast, first select the recipients below, and then click 'Send Broadcast'.&quot;</span>
@@ -357,17 +360,45 @@
   
 
   
-</p><table class="source_code">
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+Displays a new broadcast form with the given recipients.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>selected</span>
+      
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>
+A Hash user ids as keys, referring to recipients of the broadcast.
+</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-9
-10
-11
-12
-13
 14
 15
 16
@@ -375,10 +406,15 @@
 18
 19
 20
-21</pre>
+21
+22
+23
+24
+25
+26</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/controllers/broadcasts_controller.rb', line 9</span>
+      <pre class="code"><span class="info file"># File 'app/controllers/broadcasts_controller.rb', line 14</span>
 
 <span class='def def kw'>def</span> <span class='new_with_users identifier id'>new_with_users</span>
   <span class='comment val'># load the user objects</span>
@@ -412,12 +448,12 @@
       <pre class="lines">
 
 
-22
-23
-24</pre>
+28
+29
+30</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/controllers/broadcasts_controller.rb', line 22</span>
+      <pre class="code"><span class="info file"># File 'app/controllers/broadcasts_controller.rb', line 28</span>
 
 <span class='def def kw'>def</span> <span class='show identifier id'>show</span>
   <span class='@broadcast ivar id'>@broadcast</span> <span class='assign token'>=</span> <span class='Broadcast constant id'>Broadcast</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='params identifier id'>params</span><span class='lbrack token'>[</span><span class='symbol val'>:id</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
@@ -433,7 +469,7 @@
 </div>
     
     <div id="footer">
-  Generated on Tue Nov 22 14:47:37 2011 by 
+  Generated on Thu Dec  8 10:56:30 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.7.3 (ruby-1.8.7).
 </div>

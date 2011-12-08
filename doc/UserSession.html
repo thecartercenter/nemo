@@ -161,7 +161,7 @@
       <pre class="code"><span class="info file"># File 'app/models/user_session.rb', line 5</span>
 
 <span class='def def kw'>def</span> <span class='to_key identifier id'>to_key</span>
-    <span class='new_record? fid id'>new_record?</span> <span class='integer val'>? </span><span class='nil nil kw'>nil</span> <span class='colon op'>:</span> <span class='lbrack token'>[</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='send identifier id'>send</span><span class='lparen token'>(</span><span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='primary_key identifier id'>primary_key</span><span class='rparen token'>)</span> <span class='rbrack token'>]</span>
+  <span class='self self kw'>self</span><span class='dot token'>.</span><span class='keys identifier id'>keys</span><span class='dot token'>.</span><span class='to_a identifier id'>to_a</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -174,7 +174,7 @@
 </div>
     
     <div id="footer">
-  Generated on Tue Nov 22 14:47:46 2011 by 
+  Generated on Thu Dec  8 10:56:31 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.7.3 (ruby-1.8.7).
 </div>
