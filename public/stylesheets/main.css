@@ -4,9 +4,9 @@ body, td, input, select, textarea { font-family: Helvetica, sans-serif; font-siz
 body { line-height: 1.3; height: 100%; }
 form { margin: 0; }
 input, select, textarea { border: 1px solid #444; background-color: #eee; margin: 2px; }
-a { color: MidnightBlue; }
+a { color: #0065d1; }
 form.button_to, form.button_to div { display: inline; }
-form.button_to input { background-color: transparent; border: none; color: MidnightBlue; 
+form.button_to input { background-color: transparent; border: none; color: #0065d1; 
   text-decoration: underline; padding: 0; margin: 0; cursor: pointer; }
 h1, h2, h3 { color: black; font-family: Helvetica; }
 h1 { margin: 0 0 10px 0; font-size: 17pt; }
@@ -28,7 +28,7 @@ div.loader { background: rl('/images/loader.gif') no-repeat; padding-left: 20px;
 div.form, table.form { border-top: 1px solid #ddd; margin-bottom: 10px; }
 div.form > div, table.form td { padding: 5px; border-bottom: 1px solid #ddd; }
 div.form div.details, table.form td.details { width: 250px; }
-div.reqd_sym { display: inline; font-weight: bold; color: #800000; font-size: 125%; line-height: 5px; vertical-align: middle; }
+div.reqd_sym { display: inline; font-weight: bold; color: #d02000; font-size: 125%; line-height: 5px; vertical-align: middle; }
 div.dummy, span.dummy { font-weight: bold; }
 div.dummy_checkbox { float: left; width: 15px; font-weight: bold; }
 table.form td.name { min-width: 75px; }
@@ -46,7 +46,7 @@ div.pagination em { font-style: normal; font-weight: bold; }
 div.pagination *.next_page, div.pagination *.previous_page { width: 80px; }
 
 /* flash/error messages */
-div.compact_error { color: #9f0000; font-weight: bold; }
+div.compact_error { color: #d02000; font-weight: bold; }
 div.field_with_errors { display: inline; }
 
 /* search form */
@@ -101,7 +101,7 @@ form.new_place td.value { min-width: 400px; }
 /* broadcasts */
 input#broadcast_subject { width: 300px; }
 textarea#broadcast_body { width: 400px; height: 200px; }
-.broadcasts_show #send_errors_row td.value { color: #800000; font-weight: bold; }
+.broadcasts_show #send_errors_row td.value { color: #d02000; font-weight: bold; }
 
 /* form edit */
 .forms_edit td.name_col, .forms_show td.name_col { width: 500px; }
