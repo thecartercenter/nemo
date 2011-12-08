@@ -135,7 +135,7 @@ class User < ActiveRecord::Base
   def can_get_sms?; !phone.blank? && phone_is_mobile; end
   
   def is_observer?; role ? role.is_observer? : false; end
-  def is_program_staff?; role ? role.is_program_staff? : false; end
+  def is_admin?; role ? role.is_admin? : false; end
   
   private
     def clean_fields

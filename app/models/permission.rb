@@ -18,14 +18,14 @@ class Permission
   GENERAL = {
     "users#index" => {:group => :logged_in},
     "users#export" => {:group => :logged_in},
-    "users#create" => {:min_level => 4},
-    "users#login_instructions" => {:min_level => 4},
+    "users#create" => {:min_level => 3},
+    "users#login_instructions" => {:min_level => 3},
     "user_sessions#create" => {:group => :logged_out},
     "user_sessions#destroy" => {:group => :logged_in},
     "user_sessions#logged_out" => {:group => :logged_out},
     "password_resets#create" => {:group => :logged_out},
     "password_resets#update" => {:group => :logged_out},
-    "languages#*" => {:min_level => 4},
+    "languages#*" => {:min_level => 3},
     "places#create" => {:min_level => 2},
     "places#update" => {:min_level => 2},
     "places#index" => {:group => :logged_in},
@@ -39,30 +39,30 @@ class Permission
     "permissions#no" => {:group => :anyone},
     "forms#index" => {:group => :logged_in},
     "forms#show" => {:min_level => 2},
-    "forms#create" => {:min_level => 4},
-    "forms#update" => {:min_level => 4},
-    "forms#destroy" => {:min_level => 4},
-    "forms#add_questions" => {:min_level => 4},
-    "forms#remove_questions" => {:min_level => 4},
-    "forms#update_ranks" => {:min_level => 4},
-    "forms#publish" => {:min_level => 4},
-    "forms#clone" => {:min_level => 4},
+    "forms#create" => {:min_level => 3},
+    "forms#update" => {:min_level => 3},
+    "forms#destroy" => {:min_level => 3},
+    "forms#add_questions" => {:min_level => 3},
+    "forms#remove_questions" => {:min_level => 3},
+    "forms#update_ranks" => {:min_level => 3},
+    "forms#publish" => {:min_level => 3},
+    "forms#clone" => {:min_level => 3},
     "responses#index" => {:group => :logged_in},
     "responses#create" => {:group => :logged_in},
     "responses#show" => {:min_level => 2},
     "responses#update" => {:min_level => 2},
     "responses#destroy" => {:min_level => 2},
-    "settings#index" => {:min_level => 4},
-    "settings#update_all" => {:min_level => 4},
-    "questionings#*" => {:min_level => 4},
-    "questions#*" => {:min_level => 4},
-    "options#*" => {:min_level => 4},
-    "option_sets#*" => {:min_level => 4},
+    "settings#index" => {:min_level => 3},
+    "settings#update_all" => {:min_level => 3},
+    "questionings#*" => {:min_level => 3},
+    "questions#*" => {:min_level => 3},
+    "options#*" => {:min_level => 3},
+    "option_sets#*" => {:min_level => 3},
     "broadcasts#*" => {:min_level => 2}
   }
   SPECIAL = [
     :anyone_can_edit_some_fields_about_herself_but_nobody_can_edit_their_own_role,
-    :program_staff_can_delete_anyone_except_herself,
+    :admin_can_delete_anyone_except_herself,
     :observer_can_view_edit_delete_own_responses_if_not_reviewed,
     :observer_cant_change_user_or_reviewed_for_response,
     :observer_can_show_published_forms
@@ -144,11 +144,11 @@ class Permission
       return false unless params[:user]
       # get the user object being edited, if the :id param is provided
       params[:object] = User.find_by_id(params[:request][:id]) if params[:request]
-      # if this is a program staff
-      if params[:user].is_program_staff?
+      # if this is a admin
+      if params[:user].is_admin?
         # if they're not editing themselves, OR if they're not trying to change their own role or active status, they're ok
         return params[:user] != params[:object] || !trying_to_change?(params, 'role', 'role_id', 'active?', 'active')
-      # otherwise, they're not a program staff
+      # otherwise, they're not a admin
       else
         # so object and user must be equal to proceed any further
         return false unless params[:user] == params[:object]
@@ -157,11 +157,11 @@ class Permission
       end
     end
   
-    def self.program_staff_can_delete_anyone_except_herself(params)
+    def self.admin_can_delete_anyone_except_herself(params)
       # this special permission only valid for users#destroy
       return false unless params[:key] == "users#destroy"
-      # require a program staff
-      return false unless params[:user] && params[:user].is_program_staff?
+      # require a admin
+      return false unless params[:user] && params[:user].is_admin?
       # get the user object being edited, if the :id param is provided
       params[:object] = User.find_by_id(params[:request][:id]) if params[:request]
       # if she's not deleting herself, she's ok

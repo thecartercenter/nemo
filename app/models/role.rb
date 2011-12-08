@@ -27,5 +27,5 @@ class Role < ActiveRecord::Base
     name
   end
   def is_observer?; level == 1; end
-  def is_program_staff?; level == 4; end
+  def is_admin?; level == 3; end
 end

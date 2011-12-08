@@ -7,8 +7,7 @@ namespace :db do
       # Languages
       english = find_or_create(Language, :code, :code => "eng", :active => "1")
       # Roles
-      highest_role = find_or_create(Role, :name, :name => "Program Staff", :level => "4")
-      find_or_create(Role, :name, :name => "Director", :level => "3")
+      highest_role = find_or_create(Role, :name, :name => "Admin", :level => "3")
       find_or_create(Role, :name, :name => "Coordinator", :level => "2")
       find_or_create(Role, :name, :name => "Observer", :level => "1")
       # Initial superuser
