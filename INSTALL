@@ -1,7 +1,1 @@
-Things you might need to do to get things working:
-
-bundle check and bundle install if necessary
-rake db:migrate
-rake cron:print
-ensure all settings in config/conf-local-EXAMPLE.rb are also set in config/conf-local.rb (create if necessary)
-
+Installation instructions available at http://code.google.com/p/elmo/

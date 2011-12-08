@@ -94,7 +94,36 @@
 </dl>
 <div class="clear"></div>
 
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    <p>
+Elmo - Secure, robust, and versatile data collection. Copyright 2011 The
+Carter Center
+</p>
+<p>
+Elmo is free software: you can redistribute it and/or modify it under the
+terms of the GNU General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version.
+</p>
+<p>
+Elmo is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+details.
+</p>
+<p>
+You should have received a copy of the GNU General Public License along
+with Elmo. If not, see &lt;http://www.gnu.org/licenses/&gt;.
+</p>
 
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
 
   
 
@@ -487,17 +516,17 @@ appears.
       <pre class="lines">
 
 
-52
-53
-54
-55
-56
-57
-58
-59</pre>
+68
+69
+70
+71
+72
+73
+74
+75</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/questioning.rb', line 52</span>
+      <pre class="code"><span class="info file"># File 'app/models/questioning.rb', line 68</span>
 
 <span class='def def kw'>def</span> <span class='method_missing identifier id'>method_missing</span><span class='lparen token'>(</span><span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
   <span class='comment val'># pass appropriate methods on to question</span>
@@ -547,25 +576,25 @@ conditions, just initializes them
       <pre class="lines">
 
 
-22
-23
-24
-25
-26
-27
-28
-29
-30
-31
-32
-33
-34
-35
-36
-37</pre>
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/questioning.rb', line 22</span>
+      <pre class="code"><span class="info file"># File 'app/models/questioning.rb', line 38</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='duplicate identifier id'>duplicate</span><span class='lparen token'>(</span><span class='qings identifier id'>qings</span><span class='rparen token'>)</span>
   <span class='comment val'># create basic clones and store cleverly</span>
@@ -602,12 +631,12 @@ conditions, just initializes them
       <pre class="lines">
 
 
-15
-16
-17</pre>
+31
+32
+33</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/questioning.rb', line 15</span>
+      <pre class="code"><span class="info file"># File 'app/models/questioning.rb', line 31</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='new_with_question identifier id'>new_with_question</span><span class='lparen token'>(</span><span class='params identifier id'>params</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span><span class='rparen token'>)</span>
   <span class='qing identifier id'>qing</span> <span class='assign token'>=</span> <span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='params identifier id'>params</span><span class='dot token'>.</span><span class='merge identifier id'>merge</span><span class='lparen token'>(</span><span class='symbol val'>:question</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='Question constant id'>Question</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
@@ -659,12 +688,12 @@ conditions, just initializes them
       <pre class="lines">
 
 
-39
-40
-41</pre>
+55
+56
+57</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/questioning.rb', line 39</span>
+      <pre class="code"><span class="info file"># File 'app/models/questioning.rb', line 55</span>
 
 <span class='def def kw'>def</span> <span class='answer_required? fid id'>answer_required?</span>
   <span class='required? fid id'>required?</span> <span class='andop op'>&amp;&amp;</span> <span class='question identifier id'>question</span><span class='dot token'>.</span><span class='type identifier id'>type</span><span class='dot token'>.</span><span class='name identifier id'>name</span> <span class='neq op'>!=</span> <span class='string val'>&quot;select_multiple&quot;</span>
@@ -688,19 +717,19 @@ conditions, just initializes them
       <pre class="lines">
 
 
-80
-81
-82
-83
-84
-85
-86
-87
-88
-89</pre>
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/questioning.rb', line 80</span>
+      <pre class="code"><span class="info file"># File 'app/models/questioning.rb', line 96</span>
 
 <span class='def def kw'>def</span> <span class='condition= identifier id'>condition=</span><span class='lparen token'>(</span><span class='c identifier id'>c</span><span class='rparen token'>)</span>
   <span class='return return kw'>return</span> <span class='old_condition identifier id'>old_condition</span><span class='assign token'>=</span><span class='lparen token'>(</span><span class='c identifier id'>c</span><span class='rparen token'>)</span> <span class='unless unless_mod kw'>unless</span> <span class='c identifier id'>c</span><span class='dot token'>.</span><span class='is_a? fid id'>is_a?</span><span class='lparen token'>(</span><span class='Hash constant id'>Hash</span><span class='rparen token'>)</span>
@@ -731,12 +760,12 @@ conditions, just initializes them
       <pre class="lines">
 
 
-91
-92
-93</pre>
+107
+108
+109</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/questioning.rb', line 91</span>
+      <pre class="code"><span class="info file"># File 'app/models/questioning.rb', line 107</span>
 
 <span class='def def kw'>def</span> <span class='get_or_init_condition identifier id'>get_or_init_condition</span>
   <span class='has_condition? fid id'>has_condition?</span> <span class='integer val'>? </span><span class='condition identifier id'>condition</span> <span class='colon op'>:</span> <span class='build_condition identifier id'>build_condition</span><span class='lparen token'>(</span><span class='symbol val'>:questioning</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='self self kw'>self</span><span class='rparen token'>)</span>
@@ -782,10 +811,10 @@ conditions, just initializes them
       <pre class="lines">
 
 
-78</pre>
+94</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/questioning.rb', line 78</span>
+      <pre class="code"><span class="info file"># File 'app/models/questioning.rb', line 94</span>
 
 <span class='def def kw'>def</span> <span class='has_condition? fid id'>has_condition?</span><span class='semicolon token'>;</span> <span class='notop op'>!</span><span class='condition identifier id'>condition</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span> <span class='end end kw'>end</span>
 </pre>
@@ -829,12 +858,12 @@ conditions, just initializes them
       <pre class="lines">
 
 
-69
-70
-71</pre>
+85
+86
+87</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/questioning.rb', line 69</span>
+      <pre class="code"><span class="info file"># File 'app/models/questioning.rb', line 85</span>
 
 <span class='def def kw'>def</span> <span class='is_question_method? fid id'>is_question_method?</span><span class='lparen token'>(</span><span class='symbol identifier id'>symbol</span><span class='rparen token'>)</span>
   <span class='symbol identifier id'>symbol</span><span class='dot token'>.</span><span class='match identifier id'>match</span><span class='lparen token'>(</span><span class='regexp val'>/^((name|hint)_([a-z]{3})(=?)|code=?|option_set_id=?|question_type_id=?)(_before_type_cast)?$/</span><span class='rparen token'>)</span>
@@ -858,10 +887,10 @@ conditions, just initializes them
       <pre class="lines">
 
 
-13</pre>
+29</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/questioning.rb', line 13</span>
+      <pre class="code"><span class="info file"># File 'app/models/questioning.rb', line 29</span>
 
 <span class='alias alias kw'>alias</span> <span class='symbol val'>:old_condition=</span> <span class='symbol val'>:condition=</span>
 </pre>
@@ -896,12 +925,12 @@ appears
       <pre class="lines">
 
 
-48
-49
-50</pre>
+64
+65
+66</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/questioning.rb', line 48</span>
+      <pre class="code"><span class="info file"># File 'app/models/questioning.rb', line 64</span>
 
 <span class='def def kw'>def</span> <span class='other_forms identifier id'>other_forms</span>
   <span class='question identifier id'>question</span><span class='dot token'>.</span><span class='forms identifier id'>forms</span><span class='dot token'>.</span><span class='reject identifier id'>reject</span><span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='f identifier id'>f</span><span class='bitor op'>|</span> <span class='f identifier id'>f</span> <span class='eq op'>==</span> <span class='form identifier id'>form</span><span class='rbrace token'>}</span>
@@ -925,12 +954,12 @@ appears
       <pre class="lines">
 
 
-95
-96
-97</pre>
+111
+112
+113</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/questioning.rb', line 95</span>
+      <pre class="code"><span class="info file"># File 'app/models/questioning.rb', line 111</span>
 
 <span class='def def kw'>def</span> <span class='previous_qings identifier id'>previous_qings</span>
   <span class='form identifier id'>form</span><span class='dot token'>.</span><span class='questionings identifier id'>questionings</span><span class='dot token'>.</span><span class='reject identifier id'>reject</span><span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='q identifier id'>q</span><span class='bitor op'>|</span> <span class='notop op'>!</span><span class='rank identifier id'>rank</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span> <span class='andop op'>&amp;&amp;</span> <span class='lparen token'>(</span><span class='q identifier id'>q</span> <span class='eq op'>==</span> <span class='self self kw'>self</span> <span class='orop op'>||</span> <span class='q identifier id'>q</span><span class='dot token'>.</span><span class='rank identifier id'>rank</span> <span class='gt op'>&gt;</span> <span class='rank identifier id'>rank</span><span class='rparen token'>)</span><span class='rbrace token'>}</span>
@@ -976,12 +1005,12 @@ appears
       <pre class="lines">
 
 
-43
-44
-45</pre>
+59
+60
+61</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/questioning.rb', line 43</span>
+      <pre class="code"><span class="info file"># File 'app/models/questioning.rb', line 59</span>
 
 <span class='def def kw'>def</span> <span class='published? fid id'>published?</span>
   <span class='form identifier id'>form</span><span class='dot token'>.</span><span class='published? fid id'>published?</span>
@@ -1027,12 +1056,12 @@ appears
       <pre class="lines">
 
 
-61
-62
-63</pre>
+77
+78
+79</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/questioning.rb', line 61</span>
+      <pre class="code"><span class="info file"># File 'app/models/questioning.rb', line 77</span>
 
 <span class='def def kw'>def</span> <span class='respond_to? fid id'>respond_to?</span><span class='lparen token'>(</span><span class='symbol identifier id'>symbol</span><span class='comma token'>,</span> <span class='mult op'>*</span><span class='rparen token'>)</span>
   <span class='is_question_method? fid id'>is_question_method?</span><span class='lparen token'>(</span><span class='symbol identifier id'>symbol</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span><span class='rparen token'>)</span> <span class='orop op'>||</span> <span class='super super kw'>super</span>
@@ -1078,12 +1107,12 @@ appears
       <pre class="lines">
 
 
-65
-66
-67</pre>
+81
+82
+83</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/questioning.rb', line 65</span>
+      <pre class="code"><span class="info file"># File 'app/models/questioning.rb', line 81</span>
 
 <span class='def def kw'>def</span> <span class='respond_to_missing? fid id'>respond_to_missing?</span><span class='lparen token'>(</span><span class='symbol identifier id'>symbol</span><span class='comma token'>,</span> <span class='include_private identifier id'>include_private</span><span class='rparen token'>)</span>
   <span class='is_question_method? fid id'>is_question_method?</span><span class='lparen token'>(</span><span class='symbol identifier id'>symbol</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span><span class='rparen token'>)</span> <span class='orop op'>||</span> <span class='super super kw'>super</span>
@@ -1107,13 +1136,13 @@ appears
       <pre class="lines">
 
 
-73
-74
-75
-76</pre>
+89
+90
+91
+92</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/questioning.rb', line 73</span>
+      <pre class="code"><span class="info file"># File 'app/models/questioning.rb', line 89</span>
 
 <span class='def def kw'>def</span> <span class='update_rank identifier id'>update_rank</span><span class='lparen token'>(</span><span class='new_rank identifier id'>new_rank</span><span class='rparen token'>)</span>
   <span class='self self kw'>self</span><span class='dot token'>.</span><span class='rank identifier id'>rank</span> <span class='assign token'>=</span> <span class='new_rank identifier id'>new_rank</span>
@@ -1138,12 +1167,12 @@ appears
       <pre class="lines">
 
 
-99
-100
-101</pre>
+115
+116
+117</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/questioning.rb', line 99</span>
+      <pre class="code"><span class="info file"># File 'app/models/questioning.rb', line 115</span>
 
 <span class='def def kw'>def</span> <span class='verify_condition_ordering identifier id'>verify_condition_ordering</span>
   <span class='condition identifier id'>condition</span><span class='dot token'>.</span><span class='verify_ordering identifier id'>verify_ordering</span> <span class='if if_mod kw'>if</span> <span class='condition identifier id'>condition</span>
@@ -1159,7 +1188,7 @@ appears
 </div>
     
     <div id="footer">
-  Generated on Thu Dec  8 10:56:34 2011 by 
+  Generated on Thu Dec  8 13:43:21 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.7.3 (ruby-1.8.7).
 </div>

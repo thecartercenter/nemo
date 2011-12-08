@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>
-  File: README
+  File: INSTALL
   
     &mdash; Documentation by YARD 0.7.3
   
@@ -34,7 +34,7 @@
       <div id="menu">
   
     <a href="_index.html" title="Index">Index</a> &raquo; 
-    <span class="title">File: README</span>
+    <span class="title">File: INSTALL</span>
   
   
   <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
@@ -54,15 +54,37 @@
     
     <iframe id="search_frame"></iframe>
     
-    <div id="content"><div id='filecontents'><h1>ELMO</h1>
+    <div id="content"><div id='filecontents'><h1>Installing Elmo</h1>
 
-<p>Below is a diagram of Elmo's data model. You can click on it load the full size image.</p>
+<p>Ensure you have the following dependencies installed:</p>
 
-<p><a href="models.png"><img src="models.png" width="800" /></a></p>
+<ul>
+<li>Ruby version 1.8.7</li>
+<li>MySQL 5.0 or higher</li>
+</ul>
+
+
+<p>Then follow these steps:</p>
+
+<ol>
+<li>Get the source code from <a href="http://code.google.com/p/elmo/source/checkout">http://code.google.com/p/elmo/source/checkout</a></li>
+<li>Install the required gems by running <code>bundle install</code></li>
+<li>Create an empty database and accompanying user for use by the app.</li>
+<li>Copy <code>config/database.yml.example</code> to <code>config/database.yml</code> and edit this file in order to configure your database settings.</li>
+<li>Create the database structure by running <code>rake db:schema:load RAILS_ENV=production</code></li>
+<li>Seed the database by running <code>rake db:seed RAILS_ENV=production</code></li>
+<li>Copy <code>config/initializers/local_config.rb.example</code> to <code>config/initializers/local_config.rb</code> and edit this file in order to configure some important app settings specific to your setup.</li>
+<li>Start the server (you can run <code>rails server</code> to use the built-in WEBrick test server).</li>
+<li>Open the app in a browser and login using username: super password: changeme</li>
+<li>Change the 'super' account password to something more secure.</li>
+</ol>
+
+
+<p><a href="index.html" title="Back to README">Back to README</a></p>
 </div></div>
     
     <div id="footer">
-  Generated on Thu Dec  8 13:43:16 2011 by 
+  Generated on Thu Dec  8 13:35:28 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.7.3 (ruby-1.8.7).
 </div>

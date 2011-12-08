@@ -77,7 +77,36 @@
 </dl>
 <div class="clear"></div>
 
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    <p>
+Elmo - Secure, robust, and versatile data collection. Copyright 2011 The
+Carter Center
+</p>
+<p>
+Elmo is free software: you can redistribute it and/or modify it under the
+terms of the GNU General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version.
+</p>
+<p>
+Elmo is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+details.
+</p>
+<p>
+You should have received a copy of the GNU General Public License along
+with Elmo. If not, see &lt;http://www.gnu.org/licenses/&gt;.
+</p>
 
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
 
 
 
@@ -175,18 +204,18 @@
       <pre class="lines">
 
 
-8
-9
-10
-11
-12
-13
-14
-15
-16</pre>
+24
+25
+26
+27
+28
+29
+30
+31
+32</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/helpers/languages_helper.rb', line 8</span>
+      <pre class="code"><span class="info file"># File 'app/helpers/languages_helper.rb', line 24</span>
 
 <span class='def def kw'>def</span> <span class='format_languages_field identifier id'>format_languages_field</span><span class='lparen token'>(</span><span class='language identifier id'>language</span><span class='comma token'>,</span> <span class='field identifier id'>field</span><span class='rparen token'>)</span>
   <span class='case case kw'>case</span> <span class='field identifier id'>field</span>
@@ -216,12 +245,12 @@
       <pre class="lines">
 
 
-2
-3
-4</pre>
+18
+19
+20</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/helpers/languages_helper.rb', line 2</span>
+      <pre class="code"><span class="info file"># File 'app/helpers/languages_helper.rb', line 18</span>
 
 <span class='def def kw'>def</span> <span class='languages_index_fields identifier id'>languages_index_fields</span>
   <span class='dstring node'>%w[name code active? actions]</span>
@@ -245,12 +274,12 @@
       <pre class="lines">
 
 
-5
-6
-7</pre>
+21
+22
+23</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/helpers/languages_helper.rb', line 5</span>
+      <pre class="code"><span class="info file"># File 'app/helpers/languages_helper.rb', line 21</span>
 
 <span class='def def kw'>def</span> <span class='languages_index_links identifier id'>languages_index_links</span><span class='lparen token'>(</span><span class='languages identifier id'>languages</span><span class='rparen token'>)</span>
   <span class='lbrack token'>[</span><span class='link_to_if_auth identifier id'>link_to_if_auth</span><span class='lparen token'>(</span><span class='string val'>&quot;Add new language&quot;</span><span class='comma token'>,</span> <span class='new_language_path identifier id'>new_language_path</span><span class='comma token'>,</span> <span class='string val'>&quot;languages#create&quot;</span><span class='rparen token'>)</span><span class='rbrack token'>]</span>
@@ -266,7 +295,7 @@
 </div>
     
     <div id="footer">
-  Generated on Thu Dec  8 10:56:34 2011 by 
+  Generated on Thu Dec  8 13:43:20 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.7.3 (ruby-1.8.7).
 </div>

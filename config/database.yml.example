@@ -1,0 +1,7 @@
+production:
+  adapter: mysql
+  database: elmo
+  host: localhost
+  username: elmo
+  password: xxx
+

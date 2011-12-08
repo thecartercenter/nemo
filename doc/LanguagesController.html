@@ -96,7 +96,36 @@
 </dl>
 <div class="clear"></div>
 
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    <p>
+Elmo - Secure, robust, and versatile data collection. Copyright 2011 The
+Carter Center
+</p>
+<p>
+Elmo is free software: you can redistribute it and/or modify it under the
+terms of the GNU General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version.
+</p>
+<p>
+Elmo is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+details.
+</p>
+<p>
+You should have received a copy of the GNU General Public License along
+with Elmo. If not, see &lt;http://www.gnu.org/licenses/&gt;.
+</p>
 
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
 
   
   
@@ -275,18 +304,18 @@
       <pre class="lines">
 
 
-13
-14
-15
-16
-17
-18
-19
-20
-21</pre>
+29
+30
+31
+32
+33
+34
+35
+36
+37</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/controllers/languages_controller.rb', line 13</span>
+      <pre class="code"><span class="info file"># File 'app/controllers/languages_controller.rb', line 29</span>
 
 <span class='def def kw'>def</span> <span class='create identifier id'>create</span>
   <span class='@language ivar id'>@language</span> <span class='assign token'>=</span> <span class='Language constant id'>Language</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='params identifier id'>params</span><span class='lbrack token'>[</span><span class='symbol val'>:language</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
@@ -316,14 +345,14 @@
       <pre class="lines">
 
 
-31
-32
-33
-34
-35</pre>
+47
+48
+49
+50
+51</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/controllers/languages_controller.rb', line 31</span>
+      <pre class="code"><span class="info file"># File 'app/controllers/languages_controller.rb', line 47</span>
 
 <span class='def def kw'>def</span> <span class='destroy identifier id'>destroy</span>
   <span class='@language ivar id'>@language</span> <span class='assign token'>=</span> <span class='Language constant id'>Language</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='params identifier id'>params</span><span class='lbrack token'>[</span><span class='symbol val'>:id</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
@@ -349,12 +378,12 @@
       <pre class="lines">
 
 
-10
-11
-12</pre>
+26
+27
+28</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/controllers/languages_controller.rb', line 10</span>
+      <pre class="code"><span class="info file"># File 'app/controllers/languages_controller.rb', line 26</span>
 
 <span class='def def kw'>def</span> <span class='edit identifier id'>edit</span>
   <span class='@language ivar id'>@language</span> <span class='assign token'>=</span> <span class='Language constant id'>Language</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='params identifier id'>params</span><span class='lbrack token'>[</span><span class='symbol val'>:id</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
@@ -378,12 +407,12 @@
       <pre class="lines">
 
 
-3
-4
-5</pre>
+19
+20
+21</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/controllers/languages_controller.rb', line 3</span>
+      <pre class="code"><span class="info file"># File 'app/controllers/languages_controller.rb', line 19</span>
 
 <span class='def def kw'>def</span> <span class='index identifier id'>index</span>
   <span class='@languages ivar id'>@languages</span> <span class='assign token'>=</span> <span class='Language constant id'>Language</span><span class='dot token'>.</span><span class='sorted identifier id'>sorted</span><span class='lparen token'>(</span><span class='symbol val'>:paginate</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='true true kw'>true</span><span class='comma token'>,</span> <span class='symbol val'>:page</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='params identifier id'>params</span><span class='lbrack token'>[</span><span class='symbol val'>:page</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
@@ -407,13 +436,13 @@
       <pre class="lines">
 
 
-6
-7
-8
-9</pre>
+22
+23
+24
+25</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/controllers/languages_controller.rb', line 6</span>
+      <pre class="code"><span class="info file"># File 'app/controllers/languages_controller.rb', line 22</span>
 
 <span class='def def kw'>def</span> <span class='new identifier id'>new</span>
   <span class='@language ivar id'>@language</span> <span class='assign token'>=</span> <span class='Language constant id'>Language</span><span class='dot token'>.</span><span class='default identifier id'>default</span>
@@ -438,18 +467,18 @@
       <pre class="lines">
 
 
-22
-23
-24
-25
-26
-27
-28
-29
-30</pre>
+38
+39
+40
+41
+42
+43
+44
+45
+46</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/controllers/languages_controller.rb', line 22</span>
+      <pre class="code"><span class="info file"># File 'app/controllers/languages_controller.rb', line 38</span>
 
 <span class='def def kw'>def</span> <span class='update identifier id'>update</span>
   <span class='@language ivar id'>@language</span> <span class='assign token'>=</span> <span class='Language constant id'>Language</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='params identifier id'>params</span><span class='lbrack token'>[</span><span class='symbol val'>:id</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
@@ -471,7 +500,7 @@
 </div>
     
     <div id="footer">
-  Generated on Thu Dec  8 10:56:33 2011 by 
+  Generated on Thu Dec  8 13:43:20 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.7.3 (ruby-1.8.7).
 </div>

@@ -94,7 +94,36 @@
 </dl>
 <div class="clear"></div>
 
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    <p>
+Elmo - Secure, robust, and versatile data collection. Copyright 2011 The
+Carter Center
+</p>
+<p>
+Elmo is free software: you can redistribute it and/or modify it under the
+terms of the GNU General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version.
+</p>
+<p>
+Elmo is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+details.
+</p>
+<p>
+You should have received a copy of the GNU General Public License along
+with Elmo. If not, see &lt;http://www.gnu.org/licenses/&gt;.
+</p>
 
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
 
   
   <h2>Instance Attribute Summary <small>(<a href="#" class="summary_toggle">collapse</a>)</small></h2>
@@ -186,13 +215,13 @@ looks for answers and choices related to this option setting.
       <pre class="lines">
 
 
-10
-11
-12
-13</pre>
+26
+27
+28
+29</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/option_setting.rb', line 10</span>
+      <pre class="code"><span class="info file"># File 'app/models/option_setting.rb', line 26</span>
 
 <span class='def def kw'>def</span> <span class='included identifier id'>included</span>
   <span class='comment val'># default to true</span>
@@ -249,12 +278,12 @@ looks for answers and choices related to this option setting
       <pre class="lines">
 
 
-16
-17
-18</pre>
+32
+33
+34</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/option_setting.rb', line 16</span>
+      <pre class="code"><span class="info file"># File 'app/models/option_setting.rb', line 32</span>
 
 <span class='def def kw'>def</span> <span class='has_answers_or_choices? fid id'>has_answers_or_choices?</span>
   <span class='notop op'>!</span><span class='option_set identifier id'>option_set</span><span class='dot token'>.</span><span class='questions identifier id'>questions</span><span class='dot token'>.</span><span class='detect identifier id'>detect</span><span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='q identifier id'>q</span><span class='bitor op'>|</span> <span class='q identifier id'>q</span><span class='dot token'>.</span><span class='questionings identifier id'>questionings</span><span class='dot token'>.</span><span class='detect identifier id'>detect</span><span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='qing identifier id'>qing</span><span class='bitor op'>|</span> <span class='qing identifier id'>qing</span><span class='dot token'>.</span><span class='answers identifier id'>answers</span><span class='dot token'>.</span><span class='detect identifier id'>detect</span><span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='a identifier id'>a</span><span class='bitor op'>|</span> <span class='a identifier id'>a</span><span class='dot token'>.</span><span class='option_id identifier id'>option_id</span> <span class='eq op'>==</span> <span class='option_id identifier id'>option_id</span> <span class='orop op'>||</span> <span class='a identifier id'>a</span><span class='dot token'>.</span><span class='choices identifier id'>choices</span><span class='dot token'>.</span><span class='detect identifier id'>detect</span><span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='c identifier id'>c</span><span class='bitor op'>|</span> <span class='c identifier id'>c</span><span class='dot token'>.</span><span class='option_id identifier id'>option_id</span> <span class='eq op'>==</span> <span class='option_id identifier id'>option_id</span><span class='rbrace token'>}</span><span class='rbrace token'>}</span><span class='rbrace token'>}</span><span class='rbrace token'>}</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
@@ -270,7 +299,7 @@ looks for answers and choices related to this option setting
 </div>
     
     <div id="footer">
-  Generated on Thu Dec  8 10:56:31 2011 by 
+  Generated on Thu Dec  8 13:43:18 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.7.3 (ruby-1.8.7).
 </div>

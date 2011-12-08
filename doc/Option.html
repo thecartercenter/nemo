@@ -98,7 +98,36 @@
 </dl>
 <div class="clear"></div>
 
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    <p>
+Elmo - Secure, robust, and versatile data collection. Copyright 2011 The
+Carter Center
+</p>
+<p>
+Elmo is free software: you can redistribute it and/or modify it under the
+terms of the GNU General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version.
+</p>
+<p>
+Elmo is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+details.
+</p>
+<p>
+You should have received a copy of the GNU General Public License along
+with Elmo. If not, see &lt;http://www.gnu.org/licenses/&gt;.
+</p>
 
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
 
   
   
@@ -418,17 +447,17 @@ hack so the validation message will look right.
       <pre class="lines">
 
 
-29
-30
-31
-32
-33
-34
-35
-36</pre>
+45
+46
+47
+48
+49
+50
+51
+52</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/option.rb', line 29</span>
+      <pre class="code"><span class="info file"># File 'app/models/option.rb', line 45</span>
 
 <span class='def def kw'>def</span> <span class='method_missing identifier id'>method_missing</span><span class='lparen token'>(</span><span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
   <span class='comment val'># enable methods like name_fra and hint_eng, etc.</span>
@@ -464,10 +493,10 @@ hack so the validation message will look right.
       <pre class="lines">
 
 
-27</pre>
+43</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/option.rb', line 27</span>
+      <pre class="code"><span class="info file"># File 'app/models/option.rb', line 43</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='default_eager identifier id'>default_eager</span><span class='semicolon token'>;</span> <span class='lbrack token'>[</span><span class='symbol val'>:translations</span><span class='comma token'>,</span> <span class='lbrace token'>{</span><span class='symbol val'>:option_sets</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrack token'>[</span><span class='symbol val'>:questionings</span><span class='comma token'>,</span> <span class='lbrace token'>{</span><span class='symbol val'>:questions</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:questionings</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='symbol val'>:form</span><span class='rbrace token'>}</span><span class='rbrace token'>}</span><span class='rbrack token'>]</span><span class='rbrace token'>}</span><span class='rbrack token'>]</span> <span class='end end kw'>end</span>
 </pre>
@@ -489,10 +518,10 @@ hack so the validation message will look right.
       <pre class="lines">
 
 
-25</pre>
+41</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/option.rb', line 25</span>
+      <pre class="code"><span class="info file"># File 'app/models/option.rb', line 41</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='per_page identifier id'>per_page</span><span class='semicolon token'>;</span> <span class='integer val'>100</span> <span class='end end kw'>end</span>
 </pre>
@@ -514,12 +543,12 @@ hack so the validation message will look right.
       <pre class="lines">
 
 
-21
-22
-23</pre>
+37
+38
+39</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/option.rb', line 21</span>
+      <pre class="code"><span class="info file"># File 'app/models/option.rb', line 37</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='sorted identifier id'>sorted</span><span class='lparen token'>(</span><span class='params identifier id'>params</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span><span class='rparen token'>)</span>
   <span class='paginate identifier id'>paginate</span><span class='lparen token'>(</span><span class='symbol val'>:all</span><span class='comma token'>,</span> <span class='params identifier id'>params</span><span class='rparen token'>)</span>
@@ -561,10 +590,10 @@ hack so the validation message will look right
       <pre class="lines">
 
 
-49</pre>
+65</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/option.rb', line 49</span>
+      <pre class="code"><span class="info file"># File 'app/models/option.rb', line 65</span>
 
 <span class='def def kw'>def</span> <span class='english_name identifier id'>english_name</span><span class='semicolon token'>;</span> <span class='name_eng identifier id'>name_eng</span> <span class='end end kw'>end</span>
 </pre>
@@ -608,12 +637,12 @@ hack so the validation message will look right
       <pre class="lines">
 
 
-44
-45
-46</pre>
+60
+61
+62</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/option.rb', line 44</span>
+      <pre class="code"><span class="info file"># File 'app/models/option.rb', line 60</span>
 
 <span class='def def kw'>def</span> <span class='is_translation_method? fid id'>is_translation_method?</span><span class='lparen token'>(</span><span class='symbol identifier id'>symbol</span><span class='rparen token'>)</span>
   <span class='symbol identifier id'>symbol</span><span class='dot token'>.</span><span class='match identifier id'>match</span><span class='lparen token'>(</span><span class='regexp val'>/^(name)_([a-z]{3})(_before_type_cast)?(=?)$/</span><span class='rparen token'>)</span>
@@ -637,10 +666,10 @@ hack so the validation message will look right
       <pre class="lines">
 
 
-51</pre>
+67</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/option.rb', line 51</span>
+      <pre class="code"><span class="info file"># File 'app/models/option.rb', line 67</span>
 
 <span class='def def kw'>def</span> <span class='name identifier id'>name</span><span class='lparen token'>(</span><span class='lang identifier id'>lang</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span><span class='rparen token'>)</span> <span class='translation_for identifier id'>translation_for</span><span class='lparen token'>(</span><span class='symbol val'>:name</span><span class='comma token'>,</span> <span class='lang identifier id'>lang</span><span class='rparen token'>)</span> <span class='end end kw'>end</span>
 </pre>
@@ -662,10 +691,10 @@ hack so the validation message will look right
       <pre class="lines">
 
 
-52</pre>
+68</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/option.rb', line 52</span>
+      <pre class="code"><span class="info file"># File 'app/models/option.rb', line 68</span>
 
 <span class='def def kw'>def</span> <span class='name= identifier id'>name=</span><span class='lparen token'>(</span><span class='lang identifier id'>lang</span><span class='comma token'>,</span> <span class='value identifier id'>value</span><span class='rparen token'>)</span> <span class='set_translation_for identifier id'>set_translation_for</span><span class='lparen token'>(</span><span class='symbol val'>:name</span><span class='comma token'>,</span> <span class='lang identifier id'>lang</span><span class='comma token'>,</span> <span class='value identifier id'>value</span><span class='rparen token'>)</span> <span class='end end kw'>end</span>
 </pre>
@@ -709,10 +738,10 @@ hack so the validation message will look right
       <pre class="lines">
 
 
-54</pre>
+70</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/option.rb', line 54</span>
+      <pre class="code"><span class="info file"># File 'app/models/option.rb', line 70</span>
 
 <span class='def def kw'>def</span> <span class='published? fid id'>published?</span><span class='semicolon token'>;</span> <span class='notop op'>!</span><span class='option_sets identifier id'>option_sets</span><span class='dot token'>.</span><span class='detect identifier id'>detect</span><span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='os identifier id'>os</span><span class='bitor op'>|</span> <span class='os identifier id'>os</span><span class='dot token'>.</span><span class='published? fid id'>published?</span><span class='rbrace token'>}</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span> <span class='end end kw'>end</span>
 </pre>
@@ -734,10 +763,10 @@ hack so the validation message will look right
       <pre class="lines">
 
 
-56</pre>
+72</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/option.rb', line 56</span>
+      <pre class="code"><span class="info file"># File 'app/models/option.rb', line 72</span>
 
 <span class='def def kw'>def</span> <span class='questions identifier id'>questions</span><span class='semicolon token'>;</span> <span class='option_sets identifier id'>option_sets</span><span class='dot token'>.</span><span class='collect identifier id'>collect</span><span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='os identifier id'>os</span><span class='bitor op'>|</span> <span class='os identifier id'>os</span><span class='dot token'>.</span><span class='questions identifier id'>questions</span><span class='rbrace token'>}</span><span class='dot token'>.</span><span class='flatten identifier id'>flatten</span><span class='dot token'>.</span><span class='uniq identifier id'>uniq</span> <span class='end end kw'>end</span>
 </pre>
@@ -781,12 +810,12 @@ hack so the validation message will look right
       <pre class="lines">
 
 
-37
-38
-39</pre>
+53
+54
+55</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/option.rb', line 37</span>
+      <pre class="code"><span class="info file"># File 'app/models/option.rb', line 53</span>
 
 <span class='def def kw'>def</span> <span class='respond_to? fid id'>respond_to?</span><span class='lparen token'>(</span><span class='symbol identifier id'>symbol</span><span class='comma token'>,</span> <span class='mult op'>*</span><span class='rparen token'>)</span>
   <span class='is_translation_method? fid id'>is_translation_method?</span><span class='lparen token'>(</span><span class='symbol identifier id'>symbol</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span><span class='rparen token'>)</span> <span class='orop op'>||</span> <span class='super super kw'>super</span>
@@ -832,12 +861,12 @@ hack so the validation message will look right
       <pre class="lines">
 
 
-40
-41
-42</pre>
+56
+57
+58</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/option.rb', line 40</span>
+      <pre class="code"><span class="info file"># File 'app/models/option.rb', line 56</span>
 
 <span class='def def kw'>def</span> <span class='respond_to_missing? fid id'>respond_to_missing?</span><span class='lparen token'>(</span><span class='symbol identifier id'>symbol</span><span class='comma token'>,</span> <span class='include_private identifier id'>include_private</span><span class='rparen token'>)</span>
   <span class='is_translation_method? fid id'>is_translation_method?</span><span class='lparen token'>(</span><span class='symbol identifier id'>symbol</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span><span class='rparen token'>)</span> <span class='orop op'>||</span> <span class='super super kw'>super</span>
@@ -853,7 +882,7 @@ hack so the validation message will look right
 </div>
     
     <div id="footer">
-  Generated on Thu Dec  8 10:56:33 2011 by 
+  Generated on Thu Dec  8 13:43:20 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.7.3 (ruby-1.8.7).
 </div>

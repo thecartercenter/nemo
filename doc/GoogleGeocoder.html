@@ -92,7 +92,36 @@
 </dl>
 <div class="clear"></div>
 
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    <p>
+Elmo - Secure, robust, and versatile data collection. Copyright 2011 The
+Carter Center
+</p>
+<p>
+Elmo is free software: you can redistribute it and/or modify it under the
+terms of the GNU General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version.
+</p>
+<p>
+Elmo is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+details.
+</p>
+<p>
+You should have received a copy of the GNU General Public License along
+with Elmo. If not, see &lt;http://www.gnu.org/licenses/&gt;.
+</p>
 
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
   <h2>Constant Summary</h2>
   
     <dl class="constants">
@@ -226,19 +255,19 @@ looks up and sets the lat/lng of the given place
       <pre class="lines">
 
 
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26</pre>
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/google_geocoder.rb', line 17</span>
+      <pre class="code"><span class="info file"># File 'app/models/google_geocoder.rb', line 33</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='lookup_coords identifier id'>lookup_coords</span><span class='lparen token'>(</span><span class='place identifier id'>place</span><span class='rparen token'>)</span>
   <span class='Rails constant id'>Rails</span><span class='dot token'>.</span><span class='logger identifier id'>logger</span><span class='dot token'>.</span><span class='debug identifier id'>debug</span><span class='lparen token'>(</span><span class='dstring node'>&quot;Looking up lat/lng for place: #{place.full_name}&quot;</span><span class='rparen token'>)</span>
@@ -282,13 +311,13 @@ matches (place is temporary)
       <pre class="lines">
 
 
-11
-12
-13
-14</pre>
+27
+28
+29
+30</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/google_geocoder.rb', line 11</span>
+      <pre class="code"><span class="info file"># File 'app/models/google_geocoder.rb', line 27</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='reverse identifier id'>reverse</span><span class='lparen token'>(</span><span class='coords identifier id'>coords</span><span class='rparen token'>)</span>
   <span class='return return kw'>return</span> <span class='nil nil kw'>nil</span> <span class='if if_mod kw'>if</span> <span class='coords identifier id'>coords</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
@@ -326,12 +355,12 @@ places
       <pre class="lines">
 
 
-6
-7
-8</pre>
+22
+23
+24</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/google_geocoder.rb', line 6</span>
+      <pre class="code"><span class="info file"># File 'app/models/google_geocoder.rb', line 22</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='search identifier id'>search</span><span class='lparen token'>(</span><span class='address identifier id'>address</span><span class='rparen token'>)</span>
   <span class='send_query identifier id'>send_query</span><span class='lparen token'>(</span><span class='symbol val'>:address</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='address identifier id'>address</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='collect identifier id'>collect</span><span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='r identifier id'>r</span><span class='bitor op'>|</span> <span class='create_place_from_result identifier id'>create_place_from_result</span><span class='lparen token'>(</span><span class='r identifier id'>r</span><span class='rparen token'>)</span><span class='rbrace token'>}</span><span class='dot token'>.</span><span class='compact identifier id'>compact</span>
@@ -347,7 +376,7 @@ places
 </div>
     
     <div id="footer">
-  Generated on Thu Dec  8 10:56:37 2011 by 
+  Generated on Thu Dec  8 13:43:24 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.7.3 (ruby-1.8.7).
 </div>

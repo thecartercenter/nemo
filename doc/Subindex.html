@@ -92,7 +92,36 @@
 </dl>
 <div class="clear"></div>
 
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    <p>
+Elmo - Secure, robust, and versatile data collection. Copyright 2011 The
+Carter Center
+</p>
+<p>
+Elmo is free software: you can redistribute it and/or modify it under the
+terms of the GNU General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version.
+</p>
+<p>
+Elmo is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+details.
+</p>
+<p>
+You should have received a copy of the GNU General Public License along
+with Elmo. If not, see &lt;http://www.gnu.org/licenses/&gt;.
+</p>
 
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
 
   <h2>Instance Attribute Summary <small>(<a href="#" class="summary_toggle">collapse</a>)</small></h2>
   <ul class="summary">
@@ -459,18 +488,18 @@ A new instance of Subindex
       <pre class="lines">
 
 
-27
-28
-29
-30
-31
-32
-33
-34
-35</pre>
+43
+44
+45
+46
+47
+48
+49
+50
+51</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/subindex.rb', line 27</span>
+      <pre class="code"><span class="info file"># File 'app/models/subindex.rb', line 43</span>
 
 <span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span><span class='lparen token'>(</span><span class='class_name identifier id'>class_name</span><span class='comma token'>,</span> <span class='user identifier id'>user</span><span class='rparen token'>)</span>
   <span class='@class_name ivar id'>@class_name</span> <span class='assign token'>=</span> <span class='class_name identifier id'>class_name</span>
@@ -520,12 +549,12 @@ Returns the value of attribute custom_conditions
       <pre class="lines">
 
 
-2
-3
-4</pre>
+18
+19
+20</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/subindex.rb', line 2</span>
+      <pre class="code"><span class="info file"># File 'app/models/subindex.rb', line 18</span>
 
 <span class='def def kw'>def</span> <span class='custom_conditions identifier id'>custom_conditions</span>
   <span class='@custom_conditions ivar id'>@custom_conditions</span>
@@ -564,12 +593,12 @@ Returns the value of attribute extras
       <pre class="lines">
 
 
-2
-3
-4</pre>
+18
+19
+20</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/subindex.rb', line 2</span>
+      <pre class="code"><span class="info file"># File 'app/models/subindex.rb', line 18</span>
 
 <span class='def def kw'>def</span> <span class='extras identifier id'>extras</span>
   <span class='@extras ivar id'>@extras</span>
@@ -608,12 +637,12 @@ Returns the value of attribute page
       <pre class="lines">
 
 
-2
-3
-4</pre>
+18
+19
+20</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/subindex.rb', line 2</span>
+      <pre class="code"><span class="info file"># File 'app/models/subindex.rb', line 18</span>
 
 <span class='def def kw'>def</span> <span class='page identifier id'>page</span>
   <span class='@page ivar id'>@page</span>
@@ -652,12 +681,12 @@ Returns the value of attribute stamp
       <pre class="lines">
 
 
-3
-4
-5</pre>
+19
+20
+21</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/subindex.rb', line 3</span>
+      <pre class="code"><span class="info file"># File 'app/models/subindex.rb', line 19</span>
 
 <span class='def def kw'>def</span> <span class='stamp identifier id'>stamp</span>
   <span class='@stamp ivar id'>@stamp</span>
@@ -688,12 +717,12 @@ Returns the value of attribute stamp
       <pre class="lines">
 
 
-23
-24
-25</pre>
+39
+40
+41</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/subindex.rb', line 23</span>
+      <pre class="code"><span class="info file"># File 'app/models/subindex.rb', line 39</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='clear_all identifier id'>clear_all</span><span class='lparen token'>(</span><span class='session identifier id'>session</span><span class='rparen token'>)</span>
   <span class='session identifier id'>session</span><span class='dot token'>.</span><span class='delete identifier id'>delete</span><span class='lparen token'>(</span><span class='symbol val'>:subindexes</span><span class='rparen token'>)</span>
@@ -730,14 +759,14 @@ number
       <pre class="lines">
 
 
-6
-7
-8
-9
-10</pre>
+22
+23
+24
+25
+26</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/subindex.rb', line 6</span>
+      <pre class="code"><span class="info file"># File 'app/models/subindex.rb', line 22</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='find_and_update identifier id'>find_and_update</span><span class='lparen token'>(</span><span class='session identifier id'>session</span><span class='comma token'>,</span> <span class='user identifier id'>user</span><span class='comma token'>,</span> <span class='class_name identifier id'>class_name</span><span class='comma token'>,</span> <span class='page identifier id'>page</span><span class='comma token'>,</span> <span class='action identifier id'>action</span> <span class='assign token'>=</span> <span class='string val'>&quot;index&quot;</span><span class='rparen token'>)</span>
   <span class='si identifier id'>si</span> <span class='assign token'>=</span> <span class='find_or_create identifier id'>find_or_create</span><span class='lparen token'>(</span><span class='session identifier id'>session</span><span class='comma token'>,</span> <span class='user identifier id'>user</span><span class='comma token'>,</span> <span class='class_name identifier id'>class_name</span><span class='comma token'>,</span> <span class='action identifier id'>action</span><span class='rparen token'>)</span>
@@ -775,18 +804,18 @@ finds or creates a subindex for the given class_name
       <pre class="lines">
 
 
-13
-14
-15
-16
-17
-18
-19
-20
-21</pre>
+29
+30
+31
+32
+33
+34
+35
+36
+37</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/subindex.rb', line 13</span>
+      <pre class="code"><span class="info file"># File 'app/models/subindex.rb', line 29</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='find_or_create identifier id'>find_or_create</span><span class='lparen token'>(</span><span class='session identifier id'>session</span><span class='comma token'>,</span> <span class='user identifier id'>user</span><span class='comma token'>,</span> <span class='class_name identifier id'>class_name</span><span class='comma token'>,</span> <span class='action identifier id'>action</span> <span class='assign token'>=</span> <span class='string val'>&quot;index&quot;</span><span class='rparen token'>)</span>
   <span class='session identifier id'>session</span><span class='lbrack token'>[</span><span class='symbol val'>:subindexes</span><span class='rbrack token'>]</span> <span class='opasgn op'>||=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
@@ -822,12 +851,12 @@ finds or creates a subindex for the given class_name
       <pre class="lines">
 
 
-68
-69
-70</pre>
+84
+85
+86</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/subindex.rb', line 68</span>
+      <pre class="code"><span class="info file"># File 'app/models/subindex.rb', line 84</span>
 
 <span class='def def kw'>def</span> <span class='klass identifier id'>klass</span>
   <span class='@klass ivar id'>@klass</span> <span class='opasgn op'>||=</span> <span class='Kernel constant id'>Kernel</span><span class='dot token'>.</span><span class='const_get identifier id'>const_get</span><span class='lparen token'>(</span><span class='@class_name ivar id'>@class_name</span><span class='rparen token'>)</span>
@@ -851,22 +880,22 @@ finds or creates a subindex for the given class_name
       <pre class="lines">
 
 
-37
-38
-39
-40
-41
-42
-43
-44
-45
-46
-47
-48
-49</pre>
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/subindex.rb', line 37</span>
+      <pre class="code"><span class="info file"># File 'app/models/subindex.rb', line 53</span>
 
 <span class='def def kw'>def</span> <span class='params identifier id'>params</span>
   <span class='cond identifier id'>cond</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
@@ -900,12 +929,12 @@ finds or creates a subindex for the given class_name
       <pre class="lines">
 
 
-64
-65
-66</pre>
+80
+81
+82</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/subindex.rb', line 64</span>
+      <pre class="code"><span class="info file"># File 'app/models/subindex.rb', line 80</span>
 
 <span class='def def kw'>def</span> <span class='reset_search identifier id'>reset_search</span>
   <span class='@search ivar id'>@search</span> <span class='assign token'>=</span> <span class='Search constant id'>Search</span><span class='dot token'>.</span><span class='find_or_create identifier id'>find_or_create</span><span class='lparen token'>(</span><span class='symbol val'>:class_name</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='@class_name ivar id'>@class_name</span><span class='rparen token'>)</span>
@@ -929,13 +958,13 @@ finds or creates a subindex for the given class_name
       <pre class="lines">
 
 
-51
-52
-53
-54</pre>
+67
+68
+69
+70</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/subindex.rb', line 51</span>
+      <pre class="code"><span class="info file"># File 'app/models/subindex.rb', line 67</span>
 
 <span class='def def kw'>def</span> <span class='search identifier id'>search</span>
   <span class='reset_search identifier id'>reset_search</span> <span class='if if_mod kw'>if</span> <span class='@search ivar id'>@search</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
@@ -960,16 +989,16 @@ finds or creates a subindex for the given class_name
       <pre class="lines">
 
 
-56
-57
-58
-59
-60
-61
-62</pre>
+72
+73
+74
+75
+76
+77
+78</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/subindex.rb', line 56</span>
+      <pre class="code"><span class="info file"># File 'app/models/subindex.rb', line 72</span>
 
 <span class='def def kw'>def</span> <span class='search= identifier id'>search=</span><span class='lparen token'>(</span><span class='s identifier id'>s</span><span class='rparen token'>)</span>
   <span class='if if kw'>if</span> <span class='@search ivar id'>@search</span> <span class='neq op'>!=</span> <span class='s identifier id'>s</span>
@@ -989,7 +1018,7 @@ finds or creates a subindex for the given class_name
 </div>
     
     <div id="footer">
-  Generated on Thu Dec  8 10:56:35 2011 by 
+  Generated on Thu Dec  8 13:43:21 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.7.3 (ruby-1.8.7).
 </div>

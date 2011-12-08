@@ -92,7 +92,36 @@
 </dl>
 <div class="clear"></div>
 
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    <p>
+Elmo - Secure, robust, and versatile data collection. Copyright 2011 The
+Carter Center
+</p>
+<p>
+Elmo is free software: you can redistribute it and/or modify it under the
+terms of the GNU General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version.
+</p>
+<p>
+Elmo is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+details.
+</p>
+<p>
+You should have received a copy of the GNU General Public License along
+with Elmo. If not, see &lt;http://www.gnu.org/licenses/&gt;.
+</p>
 
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
   <h2>Constant Summary</h2>
   
     <dl class="constants">
@@ -310,19 +339,19 @@ query.
       <pre class="lines">
 
 
-64
-65
-66
-67
-68
-69
-70
-71
-72
-73</pre>
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/permission.rb', line 64</span>
+      <pre class="code"><span class="info file"># File 'app/models/permission.rb', line 80</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='authorize identifier id'>authorize</span><span class='lparen token'>(</span><span class='params identifier id'>params</span><span class='rparen token'>)</span>
   <span class='parse_params! fid id'>parse_params!</span><span class='lparen token'>(</span><span class='params identifier id'>params</span><span class='rparen token'>)</span>
@@ -375,17 +404,17 @@ query.
       <pre class="lines">
 
 
-55
-56
-57
-58
-59
-60
-61
-62</pre>
+71
+72
+73
+74
+75
+76
+77
+78</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/permission.rb', line 55</span>
+      <pre class="code"><span class="info file"># File 'app/models/permission.rb', line 71</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='authorized? fid id'>authorized?</span><span class='lparen token'>(</span><span class='params identifier id'>params</span><span class='rparen token'>)</span>
   <span class='begin begin kw'>begin</span>
@@ -441,22 +470,6 @@ false if no matching permission is found
       <pre class="lines">
 
 
-93
-94
-95
-96
-97
-98
-99
-100
-101
-102
-103
-104
-105
-106
-107
-108
 109
 110
 111
@@ -465,10 +478,26 @@ false if no matching permission is found
 114
 115
 116
-117</pre>
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/permission.rb', line 93</span>
+      <pre class="code"><span class="info file"># File 'app/models/permission.rb', line 109</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='check_permission identifier id'>check_permission</span><span class='lparen token'>(</span><span class='key identifier id'>key</span><span class='comma token'>,</span> <span class='user identifier id'>user</span><span class='rparen token'>)</span>
   <span class='Rails constant id'>Rails</span><span class='dot token'>.</span><span class='logger identifier id'>logger</span><span class='dot token'>.</span><span class='debug identifier id'>debug</span><span class='lparen token'>(</span><span class='dstring node'>&quot;Checking general permission #{key} for #{user ? user.login : 'no user'}&quot;</span><span class='rparen token'>)</span>
@@ -528,20 +557,20 @@ query
       <pre class="lines">
 
 
-77
-78
-79
-80
-81
-82
-83
-84
-85
-86
-87</pre>
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/permission.rb', line 77</span>
+      <pre class="code"><span class="info file"># File 'app/models/permission.rb', line 93</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='select_conditions identifier id'>select_conditions</span><span class='lparen token'>(</span><span class='params identifier id'>params</span><span class='rparen token'>)</span>
   <span class='parse_params! fid id'>parse_params!</span><span class='lparen token'>(</span><span class='params identifier id'>params</span><span class='rparen token'>)</span>
@@ -565,7 +594,7 @@ query
 </div>
     
     <div id="footer">
-  Generated on Thu Dec  8 10:56:40 2011 by 
+  Generated on Thu Dec  8 13:43:28 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.7.3 (ruby-1.8.7).
 </div>

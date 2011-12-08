@@ -94,7 +94,36 @@
 </dl>
 <div class="clear"></div>
 
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    <p>
+Elmo - Secure, robust, and versatile data collection. Copyright 2011 The
+Carter Center
+</p>
+<p>
+Elmo is free software: you can redistribute it and/or modify it under the
+terms of the GNU General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version.
+</p>
+<p>
+Elmo is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+details.
+</p>
+<p>
+You should have received a copy of the GNU General Public License along
+with Elmo. If not, see &lt;http://www.gnu.org/licenses/&gt;.
+</p>
 
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
 
   
 
@@ -376,10 +405,10 @@ finds or initializes an option_setting for every option in the database
       <pre class="lines">
 
 
-21</pre>
+37</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/option_set.rb', line 21</span>
+      <pre class="code"><span class="info file"># File 'app/models/option_set.rb', line 37</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='default_eager identifier id'>default_eager</span><span class='semicolon token'>;</span> <span class='lbrack token'>[</span><span class='lbrace token'>{</span><span class='symbol val'>:questionings</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='symbol val'>:form</span><span class='rbrace token'>}</span><span class='comma token'>,</span> <span class='symbol val'>:questions</span><span class='comma token'>,</span> <span class='symbol val'>:options</span><span class='rbrack token'>]</span> <span class='end end kw'>end</span>
 </pre>
@@ -401,13 +430,13 @@ finds or initializes an option_setting for every option in the database
       <pre class="lines">
 
 
-27
-28
-29
-30</pre>
+43
+44
+45
+46</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/option_set.rb', line 27</span>
+      <pre class="code"><span class="info file"># File 'app/models/option_set.rb', line 43</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='orderings identifier id'>orderings</span>
   <span class='lbrack token'>[</span><span class='lbrace token'>{</span><span class='symbol val'>:code</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>&quot;value_asc&quot;</span><span class='comma token'>,</span> <span class='symbol val'>:name</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>&quot;Value Low to High&quot;</span><span class='comma token'>,</span> <span class='symbol val'>:sql</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>&quot;value asc&quot;</span><span class='rbrace token'>}</span><span class='comma token'>,</span>
@@ -432,10 +461,10 @@ finds or initializes an option_setting for every option in the database
       <pre class="lines">
 
 
-19</pre>
+35</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/option_set.rb', line 19</span>
+      <pre class="code"><span class="info file"># File 'app/models/option_set.rb', line 35</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='per_page identifier id'>per_page</span><span class='semicolon token'>;</span> <span class='integer val'>100</span> <span class='end end kw'>end</span>
 </pre>
@@ -457,12 +486,12 @@ finds or initializes an option_setting for every option in the database
       <pre class="lines">
 
 
-23
-24
-25</pre>
+39
+40
+41</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/option_set.rb', line 23</span>
+      <pre class="code"><span class="info file"># File 'app/models/option_set.rb', line 39</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='select_options identifier id'>select_options</span>
   <span class='all identifier id'>all</span><span class='lparen token'>(</span><span class='symbol val'>:order</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>&quot;name&quot;</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='collect identifier id'>collect</span><span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='os identifier id'>os</span><span class='bitor op'>|</span> <span class='lbrack token'>[</span><span class='os identifier id'>os</span><span class='dot token'>.</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='os identifier id'>os</span><span class='dot token'>.</span><span class='id identifier id'>id</span><span class='rbrack token'>]</span><span class='rbrace token'>}</span>
@@ -486,12 +515,12 @@ finds or initializes an option_setting for every option in the database
       <pre class="lines">
 
 
-15
-16
-17</pre>
+31
+32
+33</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/option_set.rb', line 15</span>
+      <pre class="code"><span class="info file"># File 'app/models/option_set.rb', line 31</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='sorted identifier id'>sorted</span><span class='lparen token'>(</span><span class='params identifier id'>params</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span><span class='rparen token'>)</span>
   <span class='paginate identifier id'>paginate</span><span class='lparen token'>(</span><span class='symbol val'>:all</span><span class='comma token'>,</span> <span class='params identifier id'>params</span><span class='dot token'>.</span><span class='merge identifier id'>merge</span><span class='lparen token'>(</span><span class='symbol val'>:order</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>&quot;name&quot;</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
@@ -534,13 +563,13 @@ finds or initializes an option_setting for every option in the database
       <pre class="lines">
 
 
-42
-43
-44
-45</pre>
+58
+59
+60
+61</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/option_set.rb', line 42</span>
+      <pre class="code"><span class="info file"># File 'app/models/option_set.rb', line 58</span>
 
 <span class='def def kw'>def</span> <span class='all_option_settings identifier id'>all_option_settings</span>
   <span class='comment val'># make sure there is an associated answer object for each questioning in the form</span>
@@ -565,25 +594,25 @@ finds or initializes an option_setting for every option in the database
       <pre class="lines">
 
 
-47
-48
-49
-50
-51
-52
-53
-54
-55
-56
-57
-58
-59
-60
-61
-62</pre>
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/option_set.rb', line 47</span>
+      <pre class="code"><span class="info file"># File 'app/models/option_set.rb', line 63</span>
 
 <span class='def def kw'>def</span> <span class='all_option_settings= identifier id'>all_option_settings=</span><span class='lparen token'>(</span><span class='params identifier id'>params</span><span class='rparen token'>)</span>
   <span class='comment val'># create a bunch of temp objects, discarding any unchecked options</span>
@@ -620,13 +649,13 @@ finds or initializes an option_setting for every option in the database
       <pre class="lines">
 
 
-64
-65
-66
-67</pre>
+80
+81
+82
+83</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/option_set.rb', line 64</span>
+      <pre class="code"><span class="info file"># File 'app/models/option_set.rb', line 80</span>
 
 <span class='def def kw'>def</span> <span class='option_setting_for identifier id'>option_setting_for</span><span class='lparen token'>(</span><span class='option identifier id'>option</span><span class='rparen token'>)</span>
   <span class='comment val'># get the matching option_setting</span>
@@ -651,13 +680,13 @@ finds or initializes an option_setting for every option in the database
       <pre class="lines">
 
 
-69
-70
-71
-72</pre>
+85
+86
+87
+88</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/option_set.rb', line 69</span>
+      <pre class="code"><span class="info file"># File 'app/models/option_set.rb', line 85</span>
 
 <span class='def def kw'>def</span> <span class='option_setting_hash identifier id'>option_setting_hash</span><span class='lparen token'>(</span><span class='options identifier id'>options</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span><span class='rparen token'>)</span>
   <span class='@option_setting_hash ivar id'>@option_setting_hash</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span> <span class='if if_mod kw'>if</span> <span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:rebuild</span><span class='rbrack token'>]</span>
@@ -704,13 +733,13 @@ finds or initializes an option_setting for every option in the database
       <pre class="lines">
 
 
-36
-37
-38
-39</pre>
+52
+53
+54
+55</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/option_set.rb', line 36</span>
+      <pre class="code"><span class="info file"># File 'app/models/option_set.rb', line 52</span>
 
 <span class='def def kw'>def</span> <span class='published? fid id'>published?</span>
   <span class='comment val'># check for any published questionings</span>
@@ -735,12 +764,12 @@ finds or initializes an option_setting for every option in the database
       <pre class="lines">
 
 
-32
-33
-34</pre>
+48
+49
+50</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/option_set.rb', line 32</span>
+      <pre class="code"><span class="info file"># File 'app/models/option_set.rb', line 48</span>
 
 <span class='def def kw'>def</span> <span class='sorted_options identifier id'>sorted_options</span>
   <span class='@sorted_options ivar id'>@sorted_options</span> <span class='opasgn op'>||=</span> <span class='options identifier id'>options</span><span class='dot token'>.</span><span class='sort identifier id'>sort</span><span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='a identifier id'>a</span><span class='comma token'>,</span><span class='b identifier id'>b</span><span class='bitor op'>|</span> <span class='lparen token'>(</span><span class='a identifier id'>a</span><span class='dot token'>.</span><span class='value identifier id'>value</span><span class='dot token'>.</span><span class='to_i identifier id'>to_i</span> <span class='cmp op'>&lt;=&gt;</span> <span class='b identifier id'>b</span><span class='dot token'>.</span><span class='value identifier id'>value</span><span class='dot token'>.</span><span class='to_i identifier id'>to_i</span><span class='rparen token'>)</span> <span class='mult op'>*</span> <span class='lparen token'>(</span><span class='ordering identifier id'>ordering</span> <span class='andop op'>&amp;&amp;</span> <span class='ordering identifier id'>ordering</span><span class='dot token'>.</span><span class='match identifier id'>match</span><span class='lparen token'>(</span><span class='regexp val'>/desc/</span><span class='rparen token'>)</span> <span class='question op'>?</span> <span class='integer val'>-1</span> <span class='colon op'>:</span> <span class='integer val'>1</span><span class='rparen token'>)</span><span class='rbrace token'>}</span>
@@ -756,7 +785,7 @@ finds or initializes an option_setting for every option in the database
 </div>
     
     <div id="footer">
-  Generated on Thu Dec  8 10:56:37 2011 by 
+  Generated on Thu Dec  8 13:43:25 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.7.3 (ruby-1.8.7).
 </div>

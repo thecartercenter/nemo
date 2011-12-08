@@ -94,7 +94,36 @@
 </dl>
 <div class="clear"></div>
 
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    <p>
+Elmo - Secure, robust, and versatile data collection. Copyright 2011 The
+Carter Center
+</p>
+<p>
+Elmo is free software: you can redistribute it and/or modify it under the
+terms of the GNU General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version.
+</p>
+<p>
+Elmo is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+details.
+</p>
+<p>
+You should have received a copy of the GNU General Public License along
+with Elmo. If not, see &lt;http://www.gnu.org/licenses/&gt;.
+</p>
 
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
 
   
 
@@ -505,12 +534,12 @@ makes a copy of the form, with a new name and a new set of questionings.
       <pre class="lines">
 
 
-26
-27
-28</pre>
+42
+43
+44</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/form.rb', line 26</span>
+      <pre class="code"><span class="info file"># File 'app/models/form.rb', line 42</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='default_eager identifier id'>default_eager</span>
   <span class='lbrack token'>[</span><span class='symbol val'>:type</span><span class='rbrack token'>]</span>
@@ -534,14 +563,14 @@ makes a copy of the form, with a new name and a new set of questionings.
       <pre class="lines">
 
 
-30
-31
-32
-33
-34</pre>
+46
+47
+48
+49
+50</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/form.rb', line 30</span>
+      <pre class="code"><span class="info file"># File 'app/models/form.rb', line 46</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='find_eager identifier id'>find_eager</span><span class='lparen token'>(</span><span class='id identifier id'>id</span><span class='rparen token'>)</span>
   <span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='id identifier id'>id</span><span class='comma token'>,</span> <span class='symbol val'>:include</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrack token'>[</span><span class='symbol val'>:type</span><span class='comma token'>,</span> <span class='lbrace token'>{</span><span class='symbol val'>:questionings</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:question</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> 
@@ -580,13 +609,13 @@ base name returns nil if no forms found
       <pre class="lines">
 
 
-44
-45
-46
-47</pre>
+60
+61
+62
+63</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/form.rb', line 44</span>
+      <pre class="code"><span class="info file"># File 'app/models/form.rb', line 60</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='max_version identifier id'>max_version</span><span class='lparen token'>(</span><span class='base_name identifier id'>base_name</span><span class='rparen token'>)</span>
   <span class='mv identifier id'>mv</span> <span class='assign token'>=</span> <span class='all identifier id'>all</span><span class='dot token'>.</span><span class='collect identifier id'>collect</span><span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='f identifier id'>f</span><span class='bitor op'>|</span> <span class='m identifier id'>m</span> <span class='assign token'>=</span> <span class='f identifier id'>f</span><span class='dot token'>.</span><span class='name identifier id'>name</span><span class='dot token'>.</span><span class='match identifier id'>match</span><span class='lparen token'>(</span><span class='dregexp node'>/^#{base_name}( v(\d+))?$/</span><span class='rparen token'>)</span><span class='semicolon token'>;</span> <span class='m identifier id'>m</span> <span class='integer val'>? </span><span class='lparen token'>(</span><span class='m identifier id'>m</span><span class='lbrack token'>[</span><span class='integer val'>2</span><span class='rbrack token'>]</span> <span class='question op'>?</span> <span class='m identifier id'>m</span><span class='lbrack token'>[</span><span class='integer val'>2</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='to_i identifier id'>to_i</span> <span class='colon op'>:</span> <span class='integer val'>1</span><span class='rparen token'>)</span> <span class='colon op'>:</span> <span class='integer val'>0</span><span class='rbrace token'>}</span><span class='dot token'>.</span><span class='max identifier id'>max</span>
@@ -611,12 +640,12 @@ base name returns nil if no forms found
       <pre class="lines">
 
 
-17
-18
-19</pre>
+33
+34
+35</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/form.rb', line 17</span>
+      <pre class="code"><span class="info file"># File 'app/models/form.rb', line 33</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='per_page identifier id'>per_page</span>
   <span class='integer val'>1000000</span>
@@ -640,14 +669,14 @@ base name returns nil if no forms found
       <pre class="lines">
 
 
-36
-37
-38
-39
-40</pre>
+52
+53
+54
+55
+56</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/form.rb', line 36</span>
+      <pre class="code"><span class="info file"># File 'app/models/form.rb', line 52</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='select_options identifier id'>select_options</span><span class='lparen token'>(</span><span class='options identifier id'>options</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span><span class='rparen token'>)</span>
   <span class='params identifier id'>params</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='symbol val'>:include</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='symbol val'>:type</span><span class='comma token'>,</span> <span class='symbol val'>:order</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>&quot;form_types.name, forms.name&quot;</span><span class='rbrace token'>}</span>
@@ -673,13 +702,13 @@ base name returns nil if no forms found
       <pre class="lines">
 
 
-21
-22
-23
-24</pre>
+37
+38
+39
+40</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/form.rb', line 21</span>
+      <pre class="code"><span class="info file"># File 'app/models/form.rb', line 37</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='sorted identifier id'>sorted</span><span class='lparen token'>(</span><span class='params identifier id'>params</span><span class='rparen token'>)</span>
   <span class='params identifier id'>params</span><span class='dot token'>.</span><span class='merge! fid id'>merge!</span><span class='lparen token'>(</span><span class='symbol val'>:order</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>&quot;form_types.name, forms.name&quot;</span><span class='rparen token'>)</span>
@@ -710,13 +739,13 @@ base name returns nil if no forms found
       <pre class="lines">
 
 
-96
-97
-98
-99</pre>
+112
+113
+114
+115</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/form.rb', line 96</span>
+      <pre class="code"><span class="info file"># File 'app/models/form.rb', line 112</span>
 
 <span class='def def kw'>def</span> <span class='add_download identifier id'>add_download</span>
   <span class='self self kw'>self</span><span class='dot token'>.</span><span class='downloads identifier id'>downloads</span> <span class='opasgn op'>+=</span> <span class='integer val'>1</span>
@@ -741,18 +770,18 @@ base name returns nil if no forms found
       <pre class="lines">
 
 
-80
-81
-82
-83
-84
-85
-86
-87
-88</pre>
+96
+97
+98
+99
+100
+101
+102
+103
+104</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/form.rb', line 80</span>
+      <pre class="code"><span class="info file"># File 'app/models/form.rb', line 96</span>
 
 <span class='def def kw'>def</span> <span class='destroy_questionings identifier id'>destroy_questionings</span><span class='lparen token'>(</span><span class='qings identifier id'>qings</span><span class='rparen token'>)</span>
   <span class='transaction identifier id'>transaction</span> <span class='do do kw'>do</span>
@@ -794,20 +823,20 @@ makes a copy of the form, with a new name and a new set of questionings
       <pre class="lines">
 
 
-102
-103
-104
-105
-106
-107
-108
-109
-110
-111
-112</pre>
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/form.rb', line 102</span>
+      <pre class="code"><span class="info file"># File 'app/models/form.rb', line 118</span>
 
 <span class='def def kw'>def</span> <span class='duplicate identifier id'>duplicate</span>
   <span class='comment val'># get the base name</span>
@@ -839,12 +868,12 @@ makes a copy of the form, with a new name and a new set of questionings
       <pre class="lines">
 
 
-57
-58
-59</pre>
+73
+74
+75</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/form.rb', line 57</span>
+      <pre class="code"><span class="info file"># File 'app/models/form.rb', line 73</span>
 
 <span class='def def kw'>def</span> <span class='full_name identifier id'>full_name</span>
   <span class='dstring node'>&quot;#{type.name}: #{name}&quot;</span>
@@ -868,12 +897,12 @@ makes a copy of the form, with a new name and a new set of questionings
       <pre class="lines">
 
 
-69
-70
-71</pre>
+85
+86
+87</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/form.rb', line 69</span>
+      <pre class="code"><span class="info file"># File 'app/models/form.rb', line 85</span>
 
 <span class='def def kw'>def</span> <span class='max_rank identifier id'>max_rank</span>
   <span class='questionings identifier id'>questionings</span><span class='dot token'>.</span><span class='map identifier id'>map</span><span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='qing identifier id'>qing</span><span class='bitor op'>|</span> <span class='qing identifier id'>qing</span><span class='dot token'>.</span><span class='rank identifier id'>rank</span><span class='rbrace token'>}</span><span class='dot token'>.</span><span class='max identifier id'>max</span> <span class='orop op'>||</span> <span class='integer val'>0</span>
@@ -897,12 +926,12 @@ makes a copy of the form, with a new name and a new set of questionings
       <pre class="lines">
 
 
-61
-62
-63</pre>
+77
+78
+79</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/form.rb', line 61</span>
+      <pre class="code"><span class="info file"># File 'app/models/form.rb', line 77</span>
 
 <span class='def def kw'>def</span> <span class='option_sets identifier id'>option_sets</span>
   <span class='questions identifier id'>questions</span><span class='dot token'>.</span><span class='collect identifier id'>collect</span><span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='q identifier id'>q</span><span class='bitor op'>|</span> <span class='q identifier id'>q</span><span class='dot token'>.</span><span class='option_set identifier id'>option_set</span><span class='rbrace token'>}</span><span class='dot token'>.</span><span class='compact identifier id'>compact</span><span class='dot token'>.</span><span class='uniq identifier id'>uniq</span>
@@ -926,12 +955,12 @@ makes a copy of the form, with a new name and a new set of questionings
       <pre class="lines">
 
 
-49
-50
-51</pre>
+65
+66
+67</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/form.rb', line 49</span>
+      <pre class="code"><span class="info file"># File 'app/models/form.rb', line 65</span>
 
 <span class='def def kw'>def</span> <span class='temp_response_id identifier id'>temp_response_id</span>
   <span class='dstring node'>&quot;#{name}_#{ActiveSupport::SecureRandom.random_number(899999999) + 100000000}&quot;</span>
@@ -955,14 +984,14 @@ makes a copy of the form, with a new name and a new set of questionings
       <pre class="lines">
 
 
-90
-91
-92
-93
-94</pre>
+106
+107
+108
+109
+110</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/form.rb', line 90</span>
+      <pre class="code"><span class="info file"># File 'app/models/form.rb', line 106</span>
 
 <span class='def def kw'>def</span> <span class='toggle_published identifier id'>toggle_published</span>
   <span class='self self kw'>self</span><span class='dot token'>.</span><span class='published identifier id'>published</span> <span class='assign token'>=</span> <span class='notop op'>!</span><span class='self self kw'>self</span><span class='dot token'>.</span><span class='published? fid id'>published?</span>
@@ -988,15 +1017,15 @@ makes a copy of the form, with a new name and a new set of questionings
       <pre class="lines">
 
 
-73
-74
-75
-76
-77
-78</pre>
+89
+90
+91
+92
+93
+94</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/form.rb', line 73</span>
+      <pre class="code"><span class="info file"># File 'app/models/form.rb', line 89</span>
 
 <span class='def def kw'>def</span> <span class='update_ranks identifier id'>update_ranks</span><span class='lparen token'>(</span><span class='new_ranks identifier id'>new_ranks</span><span class='rparen token'>)</span>
   <span class='transaction identifier id'>transaction</span> <span class='do do kw'>do</span> 
@@ -1023,12 +1052,12 @@ makes a copy of the form, with a new name and a new set of questionings
       <pre class="lines">
 
 
-53
-54
-55</pre>
+69
+70
+71</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/form.rb', line 53</span>
+      <pre class="code"><span class="info file"># File 'app/models/form.rb', line 69</span>
 
 <span class='def def kw'>def</span> <span class='version identifier id'>version</span>
   <span class='string val'>&quot;1.0&quot;</span> <span class='comment val'># this isn't implemented yet</span>
@@ -1052,12 +1081,12 @@ makes a copy of the form, with a new name and a new set of questionings
       <pre class="lines">
 
 
-65
-66
-67</pre>
+81
+82
+83</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/form.rb', line 65</span>
+      <pre class="code"><span class="info file"># File 'app/models/form.rb', line 81</span>
 
 <span class='def def kw'>def</span> <span class='visible_questionings identifier id'>visible_questionings</span>
   <span class='questionings identifier id'>questionings</span><span class='dot token'>.</span><span class='reject identifier id'>reject</span><span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='q identifier id'>q</span><span class='bitor op'>|</span> <span class='q identifier id'>q</span><span class='dot token'>.</span><span class='hidden identifier id'>hidden</span><span class='rbrace token'>}</span>
@@ -1073,7 +1102,7 @@ makes a copy of the form, with a new name and a new set of questionings
 </div>
     
     <div id="footer">
-  Generated on Thu Dec  8 10:56:39 2011 by 
+  Generated on Thu Dec  8 13:43:26 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.7.3 (ruby-1.8.7).
 </div>

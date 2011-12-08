@@ -94,7 +94,36 @@
 </dl>
 <div class="clear"></div>
 
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    <p>
+Elmo - Secure, robust, and versatile data collection. Copyright 2011 The
+Carter Center
+</p>
+<p>
+Elmo is free software: you can redistribute it and/or modify it under the
+terms of the GNU General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version.
+</p>
+<p>
+Elmo is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+details.
+</p>
+<p>
+You should have received a copy of the GNU General Public License along
+with Elmo. If not, see &lt;http://www.gnu.org/licenses/&gt;.
+</p>
 
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
 
   
 
@@ -372,12 +401,12 @@
       <pre class="lines">
 
 
-18
-19
-20</pre>
+34
+35
+36</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/broadcast.rb', line 18</span>
+      <pre class="code"><span class="info file"># File 'app/models/broadcast.rb', line 34</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='default_eager identifier id'>default_eager</span>
   <span class='lbrack token'>[</span><span class='symbol val'>:recipients</span><span class='rbrack token'>]</span>
@@ -401,14 +430,14 @@
       <pre class="lines">
 
 
-22
-23
-24
-25
-26</pre>
+38
+39
+40
+41
+42</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/broadcast.rb', line 22</span>
+      <pre class="code"><span class="info file"># File 'app/models/broadcast.rb', line 38</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='medium_select_options identifier id'>medium_select_options</span>
   <span class='lbrack token'>[</span><span class='lbrack token'>[</span><span class='string val'>&quot;SMS preferred (email if no mobile phone)&quot;</span><span class='comma token'>,</span> <span class='string val'>&quot;sms&quot;</span><span class='rbrack token'>]</span><span class='comma token'>,</span>
@@ -434,13 +463,13 @@
       <pre class="lines">
 
 
-13
-14
-15
-16</pre>
+29
+30
+31
+32</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/broadcast.rb', line 13</span>
+      <pre class="code"><span class="info file"># File 'app/models/broadcast.rb', line 29</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='sorted identifier id'>sorted</span><span class='lparen token'>(</span><span class='params identifier id'>params</span><span class='rparen token'>)</span>
   <span class='params identifier id'>params</span><span class='dot token'>.</span><span class='merge! fid id'>merge!</span><span class='lparen token'>(</span><span class='symbol val'>:order</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>&quot;created_at desc&quot;</span><span class='rparen token'>)</span>
@@ -471,12 +500,12 @@
       <pre class="lines">
 
 
-61
-62
-63</pre>
+77
+78
+79</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/broadcast.rb', line 61</span>
+      <pre class="code"><span class="info file"># File 'app/models/broadcast.rb', line 77</span>
 
 <span class='def def kw'>def</span> <span class='add_send_error identifier id'>add_send_error</span><span class='lparen token'>(</span><span class='msg identifier id'>msg</span><span class='rparen token'>)</span>
   <span class='self self kw'>self</span><span class='dot token'>.</span><span class='send_errors identifier id'>send_errors</span> <span class='assign token'>=</span> <span class='lparen token'>(</span><span class='send_errors identifier id'>send_errors</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span> <span class='integer val'>? </span><span class='string val'>&quot;&quot;</span> <span class='colon op'>:</span> <span class='send_errors identifier id'>send_errors</span><span class='rparen token'>)</span> <span class='plus op'>+</span> <span class='msg identifier id'>msg</span> <span class='plus op'>+</span> <span class='string val'>&quot;\n&quot;</span>
@@ -522,10 +551,10 @@
       <pre class="lines">
 
 
-36</pre>
+52</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/broadcast.rb', line 36</span>
+      <pre class="code"><span class="info file"># File 'app/models/broadcast.rb', line 52</span>
 
 <span class='def def kw'>def</span> <span class='by_both? fid id'>by_both?</span><span class='semicolon token'>;</span> <span class='medium identifier id'>medium</span> <span class='eq op'>==</span> <span class='string val'>&quot;both&quot;</span> <span class='end end kw'>end</span>
 </pre>
@@ -569,10 +598,10 @@
       <pre class="lines">
 
 
-35</pre>
+51</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/broadcast.rb', line 35</span>
+      <pre class="code"><span class="info file"># File 'app/models/broadcast.rb', line 51</span>
 
 <span class='def def kw'>def</span> <span class='by_email? fid id'>by_email?</span><span class='semicolon token'>;</span> <span class='medium identifier id'>medium</span> <span class='eq op'>==</span> <span class='string val'>&quot;email&quot;</span> <span class='end end kw'>end</span>
 </pre>
@@ -616,10 +645,10 @@
       <pre class="lines">
 
 
-34</pre>
+50</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/broadcast.rb', line 34</span>
+      <pre class="code"><span class="info file"># File 'app/models/broadcast.rb', line 50</span>
 
 <span class='def def kw'>def</span> <span class='by_sms? fid id'>by_sms?</span><span class='semicolon token'>;</span> <span class='medium identifier id'>medium</span> <span class='eq op'>==</span> <span class='string val'>&quot;sms&quot;</span> <span class='end end kw'>end</span>
 </pre>
@@ -641,31 +670,31 @@
       <pre class="lines">
 
 
-38
-39
-40
-41
-42
-43
-44
-45
-46
-47
-48
-49
-50
-51
-52
-53
 54
 55
 56
 57
 58
-59</pre>
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/broadcast.rb', line 38</span>
+      <pre class="code"><span class="info file"># File 'app/models/broadcast.rb', line 54</span>
 
 <span class='def def kw'>def</span> <span class='deliver identifier id'>deliver</span>
   <span class='comment val'># sort recipients into email and sms</span>
@@ -708,12 +737,12 @@
       <pre class="lines">
 
 
-28
-29
-30</pre>
+44
+45
+46</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/broadcast.rb', line 28</span>
+      <pre class="code"><span class="info file"># File 'app/models/broadcast.rb', line 44</span>
 
 <span class='def def kw'>def</span> <span class='recipient_ids identifier id'>recipient_ids</span>
   <span class='recipients identifier id'>recipients</span><span class='dot token'>.</span><span class='collect identifier id'>collect</span><span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='r identifier id'>r</span><span class='bitor op'>|</span> <span class='r identifier id'>r</span><span class='dot token'>.</span><span class='id identifier id'>id</span><span class='rbrace token'>}</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='string val'>&quot;,&quot;</span><span class='rparen token'>)</span>
@@ -737,12 +766,12 @@
       <pre class="lines">
 
 
-31
-32
-33</pre>
+47
+48
+49</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/broadcast.rb', line 31</span>
+      <pre class="code"><span class="info file"># File 'app/models/broadcast.rb', line 47</span>
 
 <span class='def def kw'>def</span> <span class='recipient_ids= identifier id'>recipient_ids=</span><span class='lparen token'>(</span><span class='ids identifier id'>ids</span><span class='rparen token'>)</span>
   <span class='self self kw'>self</span><span class='dot token'>.</span><span class='recipients identifier id'>recipients</span> <span class='assign token'>=</span> <span class='ids identifier id'>ids</span><span class='dot token'>.</span><span class='split identifier id'>split</span><span class='lparen token'>(</span><span class='string val'>&quot;,&quot;</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='collect identifier id'>collect</span><span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='id identifier id'>id</span><span class='bitor op'>|</span> <span class='User constant id'>User</span><span class='dot token'>.</span><span class='find_by_id identifier id'>find_by_id</span><span class='lparen token'>(</span><span class='id identifier id'>id</span><span class='rparen token'>)</span><span class='rbrace token'>}</span><span class='dot token'>.</span><span class='compact identifier id'>compact</span>
@@ -766,15 +795,15 @@
       <pre class="lines">
 
 
-65
-66
-67
-68
-69
-70</pre>
+81
+82
+83
+84
+85
+86</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/broadcast.rb', line 65</span>
+      <pre class="code"><span class="info file"># File 'app/models/broadcast.rb', line 81</span>
 
 <span class='def def kw'>def</span> <span class='sort_recipients identifier id'>sort_recipients</span>
   <span class='sms identifier id'>sms</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
@@ -793,7 +822,7 @@
 </div>
     
     <div id="footer">
-  Generated on Thu Dec  8 10:56:35 2011 by 
+  Generated on Thu Dec  8 13:43:22 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.7.3 (ruby-1.8.7).
 </div>

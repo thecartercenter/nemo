@@ -1,6 +1,5 @@
-# ELMO
-
-Elmo is a Web-based data collection and analysis system that integrates with ODK Collect.
+ELMO
+=========
 
 Below is a diagram of Elmo's data model. You can click on it load the full size image.
 

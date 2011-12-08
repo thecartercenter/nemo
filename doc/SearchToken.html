@@ -92,7 +92,36 @@
 </dl>
 <div class="clear"></div>
 
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    <p>
+Elmo - Secure, robust, and versatile data collection. Copyright 2011 The
+Carter Center
+</p>
+<p>
+Elmo is free software: you can redistribute it and/or modify it under the
+terms of the GNU General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version.
+</p>
+<p>
+Elmo is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+details.
+</p>
+<p>
+You should have received a copy of the GNU General Public License along
+with Elmo. If not, see &lt;http://www.gnu.org/licenses/&gt;.
+</p>
 
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
 
   <h2>Instance Attribute Summary <small>(<a href="#" class="summary_toggle">collapse</a>)</small></h2>
   <ul class="summary">
@@ -239,22 +268,6 @@ A new instance of SearchToken
       <pre class="lines">
 
 
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
 19
 20
 21
@@ -295,10 +308,26 @@ A new instance of SearchToken
 56
 57
 58
-59</pre>
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/search_token.rb', line 3</span>
+      <pre class="code"><span class="info file"># File 'app/models/search_token.rb', line 19</span>
 
 <span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span><span class='lparen token'>(</span><span class='str identifier id'>str</span><span class='comma token'>,</span> <span class='klass identifier id'>klass</span><span class='rparen token'>)</span>
   <span class='@str ivar id'>@str</span> <span class='assign token'>=</span> <span class='str identifier id'>str</span>
@@ -396,12 +425,12 @@ Returns the value of attribute sql
       <pre class="lines">
 
 
-2
-3
-4</pre>
+18
+19
+20</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/search_token.rb', line 2</span>
+      <pre class="code"><span class="info file"># File 'app/models/search_token.rb', line 18</span>
 
 <span class='def def kw'>def</span> <span class='sql identifier id'>sql</span>
   <span class='@sql ivar id'>@sql</span>
@@ -444,12 +473,12 @@ get the eager loaded associations needed for this token
       <pre class="lines">
 
 
-64
-65
-66</pre>
+80
+81
+82</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/search_token.rb', line 64</span>
+      <pre class="code"><span class="info file"># File 'app/models/search_token.rb', line 80</span>
 
 <span class='def def kw'>def</span> <span class='eager identifier id'>eager</span>
   <span class='@used_fields ivar id'>@used_fields</span> <span class='question op'>?</span> <span class='@used_fields ivar id'>@used_fields</span><span class='dot token'>.</span><span class='collect identifier id'>collect</span><span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='f identifier id'>f</span><span class='bitor op'>|</span> <span class='@field_spec ivar id'>@field_spec</span><span class='lbrack token'>[</span><span class='f identifier id'>f</span><span class='rbrack token'>]</span><span class='lbrack token'>[</span><span class='symbol val'>:eager</span><span class='rbrack token'>]</span><span class='rbrace token'>}</span><span class='dot token'>.</span><span class='compact identifier id'>compact</span><span class='dot token'>.</span><span class='flatten identifier id'>flatten</span><span class='dot token'>.</span><span class='uniq identifier id'>uniq</span> <span class='colon op'>:</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
@@ -473,12 +502,12 @@ get the eager loaded associations needed for this token
       <pre class="lines">
 
 
-60
-61
-62</pre>
+76
+77
+78</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/search_token.rb', line 60</span>
+      <pre class="code"><span class="info file"># File 'app/models/search_token.rb', line 76</span>
 
 <span class='def def kw'>def</span> <span class='sanitize identifier id'>sanitize</span><span class='lparen token'>(</span><span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
   <span class='ActiveRecord constant id'>ActiveRecord</span><span class='colon2 op'>::</span><span class='Base constant id'>Base</span><span class='dot token'>.</span><span class='__send__ identifier id'>__send__</span><span class='lparen token'>(</span><span class='symbol val'>:sanitize_sql</span><span class='comma token'>,</span> <span class='args identifier id'>args</span><span class='comma token'>,</span> <span class='string val'>''</span><span class='rparen token'>)</span>
@@ -494,7 +523,7 @@ get the eager loaded associations needed for this token
 </div>
     
     <div id="footer">
-  Generated on Thu Dec  8 10:56:34 2011 by 
+  Generated on Thu Dec  8 13:43:21 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.7.3 (ruby-1.8.7).
 </div>

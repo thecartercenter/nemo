@@ -94,7 +94,36 @@
 </dl>
 <div class="clear"></div>
 
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    <p>
+Elmo - Secure, robust, and versatile data collection. Copyright 2011 The
+Carter Center
+</p>
+<p>
+Elmo is free software: you can redistribute it and/or modify it under the
+terms of the GNU General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version.
+</p>
+<p>
+Elmo is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+details.
+</p>
+<p>
+You should have received a copy of the GNU General Public License along
+with Elmo. If not, see &lt;http://www.gnu.org/licenses/&gt;.
+</p>
 
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
 
   
   <h2>Instance Attribute Summary <small>(<a href="#" class="summary_toggle">collapse</a>)</small></h2>
@@ -624,12 +653,12 @@ def generate_login!.
       <pre class="lines">
 
 
-104
-105
-106</pre>
+120
+121
+122</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/user.rb', line 104</span>
+      <pre class="code"><span class="info file"># File 'app/models/user.rb', line 120</span>
 
 <span class='def def kw'>def</span> <span class='reset_password_method identifier id'>reset_password_method</span>
   <span class='@reset_password_method ivar id'>@reset_password_method</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span> <span class='integer val'>? </span><span class='string val'>&quot;dont&quot;</span> <span class='colon op'>:</span> <span class='@reset_password_method ivar id'>@reset_password_method</span>
@@ -660,12 +689,12 @@ def generate_login!.
       <pre class="lines">
 
 
-37
-38
-39</pre>
+53
+54
+55</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/user.rb', line 37</span>
+      <pre class="code"><span class="info file"># File 'app/models/user.rb', line 53</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='default identifier id'>default</span><span class='lparen token'>(</span><span class='params identifier id'>params</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span><span class='rparen token'>)</span>
   <span class='User constant id'>User</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='lbrace token'>{</span><span class='symbol val'>:active</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='true true kw'>true</span><span class='comma token'>,</span> <span class='symbol val'>:language_id</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='Language constant id'>Language</span><span class='dot token'>.</span><span class='english identifier id'>english</span><span class='dot token'>.</span><span class='id identifier id'>id</span><span class='rbrace token'>}</span><span class='dot token'>.</span><span class='merge identifier id'>merge</span><span class='lparen token'>(</span><span class='params identifier id'>params</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
@@ -689,12 +718,12 @@ def generate_login!.
       <pre class="lines">
 
 
-54
-55
-56</pre>
+70
+71
+72</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/user.rb', line 54</span>
+      <pre class="code"><span class="info file"># File 'app/models/user.rb', line 70</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='default_eager identifier id'>default_eager</span>
   <span class='lbrack token'>[</span><span class='symbol val'>:language</span><span class='comma token'>,</span> <span class='symbol val'>:role</span><span class='rbrack token'>]</span>
@@ -718,13 +747,13 @@ def generate_login!.
       <pre class="lines">
 
 
-49
-50
-51
-52</pre>
+65
+66
+67
+68</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/user.rb', line 49</span>
+      <pre class="code"><span class="info file"># File 'app/models/user.rb', line 65</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='find_by_credentials identifier id'>find_by_credentials</span><span class='lparen token'>(</span><span class='login identifier id'>login</span><span class='comma token'>,</span> <span class='password identifier id'>password</span><span class='rparen token'>)</span>
   <span class='user identifier id'>user</span> <span class='assign token'>=</span> <span class='find_by_login identifier id'>find_by_login</span><span class='lparen token'>(</span><span class='login identifier id'>login</span><span class='rparen token'>)</span>
@@ -749,14 +778,14 @@ def generate_login!.
       <pre class="lines">
 
 
-40
-41
-42
-43
-44</pre>
+56
+57
+58
+59
+60</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/user.rb', line 40</span>
+      <pre class="code"><span class="info file"># File 'app/models/user.rb', line 56</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='new_with_login_and_password identifier id'>new_with_login_and_password</span><span class='lparen token'>(</span><span class='params identifier id'>params</span><span class='rparen token'>)</span>
   <span class='u identifier id'>u</span> <span class='assign token'>=</span> <span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='params identifier id'>params</span><span class='rparen token'>)</span>
@@ -782,13 +811,13 @@ def generate_login!.
       <pre class="lines">
 
 
-26
-27
-28
-29</pre>
+42
+43
+44
+45</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/user.rb', line 26</span>
+      <pre class="code"><span class="info file"># File 'app/models/user.rb', line 42</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='per_page identifier id'>per_page</span>
   <span class='comment val'># we want all of these on one page for now</span>
@@ -826,12 +855,12 @@ and term
       <pre class="lines">
 
 
-71
-72
-73</pre>
+87
+88
+89</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/user.rb', line 71</span>
+      <pre class="code"><span class="info file"># File 'app/models/user.rb', line 87</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='query_fragment identifier id'>query_fragment</span><span class='lparen token'>(</span><span class='field identifier id'>field</span><span class='comma token'>,</span> <span class='term identifier id'>term</span><span class='rparen token'>)</span>
   <span class='lbrack token'>[</span><span class='search_fields identifier id'>search_fields</span><span class='lbrack token'>[</span><span class='field identifier id'>field</span><span class='rbrack token'>]</span><span class='lbrack token'>[</span><span class='symbol val'>:colname</span><span class='rbrack token'>]</span><span class='comma token'>,</span> <span class='string val'>&quot;like&quot;</span><span class='comma token'>,</span> <span class='dstring node'>&quot;%#{term}%&quot;</span><span class='rbrack token'>]</span>
@@ -855,13 +884,13 @@ and term
       <pre class="lines">
 
 
-45
-46
-47
-48</pre>
+61
+62
+63
+64</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/user.rb', line 45</span>
+      <pre class="code"><span class="info file"># File 'app/models/user.rb', line 61</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='random_password identifier id'>random_password</span><span class='lparen token'>(</span><span class='size identifier id'>size</span> <span class='assign token'>=</span> <span class='integer val'>6</span><span class='rparen token'>)</span>
   <span class='charset identifier id'>charset</span> <span class='assign token'>=</span> <span class='dstring node'>%w{2 3 4 6 7 9 a c d e f g h j k m n p q r t v w x y z}</span>
@@ -886,12 +915,12 @@ and term
       <pre class="lines">
 
 
-75
-76
-77</pre>
+91
+92
+93</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/user.rb', line 75</span>
+      <pre class="code"><span class="info file"># File 'app/models/user.rb', line 91</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='search_examples identifier id'>search_examples</span>
   <span class='lbrack token'>[</span><span class='string val'>&quot;pinchy lombard&quot;</span><span class='comma token'>,</span> <span class='string val'>'role:observer'</span><span class='comma token'>,</span> <span class='string val'>&quot;language:english&quot;</span><span class='comma token'>,</span> <span class='string val'>&quot;phone:+44&quot;</span><span class='rbrack token'>]</span>
@@ -929,17 +958,17 @@ searchable by a regular expression
       <pre class="lines">
 
 
-61
-62
-63
-64
-65
-66
-67
-68</pre>
+77
+78
+79
+80
+81
+82
+83
+84</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/user.rb', line 61</span>
+      <pre class="code"><span class="info file"># File 'app/models/user.rb', line 77</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='search_fields identifier id'>search_fields</span>
   <span class='lbrace token'>{</span><span class='symbol val'>:name</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:colname</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>&quot;users.name&quot;</span><span class='comma token'>,</span> <span class='symbol val'>:default</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='true true kw'>true</span><span class='comma token'>,</span> <span class='symbol val'>:regexp</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='true true kw'>true</span><span class='rbrace token'>}</span><span class='comma token'>,</span>
@@ -968,12 +997,12 @@ searchable by a regular expression
       <pre class="lines">
 
 
-30
-31
-32</pre>
+46
+47
+48</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/user.rb', line 30</span>
+      <pre class="code"><span class="info file"># File 'app/models/user.rb', line 46</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='select_options identifier id'>select_options</span>
   <span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='symbol val'>:all</span><span class='comma token'>,</span> <span class='symbol val'>:order</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>&quot;name&quot;</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='collect identifier id'>collect</span><span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='u identifier id'>u</span><span class='bitor op'>|</span> <span class='lbrack token'>[</span><span class='u identifier id'>u</span><span class='dot token'>.</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='u identifier id'>u</span><span class='dot token'>.</span><span class='id identifier id'>id</span><span class='rbrack token'>]</span><span class='rbrace token'>}</span>
@@ -997,13 +1026,13 @@ searchable by a regular expression
       <pre class="lines">
 
 
-33
-34
-35
-36</pre>
+49
+50
+51
+52</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/user.rb', line 33</span>
+      <pre class="code"><span class="info file"># File 'app/models/user.rb', line 49</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='sorted identifier id'>sorted</span><span class='lparen token'>(</span><span class='params identifier id'>params</span><span class='rparen token'>)</span>
   <span class='params identifier id'>params</span><span class='dot token'>.</span><span class='merge! fid id'>merge!</span><span class='lparen token'>(</span><span class='symbol val'>:order</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>&quot;users.name&quot;</span><span class='rparen token'>)</span>
@@ -1056,10 +1085,10 @@ searchable by a regular expression
       <pre class="lines">
 
 
-119</pre>
+135</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/user.rb', line 119</span>
+      <pre class="code"><span class="info file"># File 'app/models/user.rb', line 135</span>
 
 <span class='def def kw'>def</span> <span class='can_get_sms? fid id'>can_get_sms?</span><span class='semicolon token'>;</span> <span class='notop op'>!</span><span class='phone identifier id'>phone</span><span class='dot token'>.</span><span class='blank? fid id'>blank?</span> <span class='andop op'>&amp;&amp;</span> <span class='phone_is_mobile identifier id'>phone_is_mobile</span> <span class='end end kw'>end</span>
 </pre>
@@ -1081,13 +1110,13 @@ searchable by a regular expression
       <pre class="lines">
 
 
-93
-94
-95
-96</pre>
+109
+110
+111
+112</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/user.rb', line 93</span>
+      <pre class="code"><span class="info file"># File 'app/models/user.rb', line 109</span>
 
 <span class='def def kw'>def</span> <span class='deliver_intro! fid id'>deliver_intro!</span>
   <span class='reset_perishable_token! fid id'>reset_perishable_token!</span>
@@ -1112,13 +1141,13 @@ searchable by a regular expression
       <pre class="lines">
 
 
-97
-98
-99
-100</pre>
+113
+114
+115
+116</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/user.rb', line 97</span>
+      <pre class="code"><span class="info file"># File 'app/models/user.rb', line 113</span>
 
 <span class='def def kw'>def</span> <span class='deliver_password_reset_instructions! fid id'>deliver_password_reset_instructions!</span>
   <span class='reset_perishable_token! fid id'>reset_perishable_token!</span>
@@ -1143,12 +1172,12 @@ searchable by a regular expression
       <pre class="lines">
 
 
-101
-102
-103</pre>
+117
+118
+119</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/user.rb', line 101</span>
+      <pre class="code"><span class="info file"># File 'app/models/user.rb', line 117</span>
 
 <span class='def def kw'>def</span> <span class='full_name identifier id'>full_name</span>
   <span class='name identifier id'>name</span>
@@ -1194,10 +1223,10 @@ searchable by a regular expression
       <pre class="lines">
 
 
-121</pre>
+137</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/user.rb', line 121</span>
+      <pre class="code"><span class="info file"># File 'app/models/user.rb', line 137</span>
 
 <span class='def def kw'>def</span> <span class='is_observer? fid id'>is_observer?</span><span class='semicolon token'>;</span> <span class='role identifier id'>role</span> <span class='integer val'>? </span><span class='role identifier id'>role</span><span class='dot token'>.</span><span class='is_observer? fid id'>is_observer?</span> <span class='colon op'>:</span> <span class='false false kw'>false</span> <span class='end end kw'>end</span>
 </pre>
@@ -1241,10 +1270,10 @@ searchable by a regular expression
       <pre class="lines">
 
 
-122</pre>
+138</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/user.rb', line 122</span>
+      <pre class="code"><span class="info file"># File 'app/models/user.rb', line 138</span>
 
 <span class='def def kw'>def</span> <span class='is_program_staff? fid id'>is_program_staff?</span><span class='semicolon token'>;</span> <span class='role identifier id'>role</span> <span class='integer val'>? </span><span class='role identifier id'>role</span><span class='dot token'>.</span><span class='is_program_staff? fid id'>is_program_staff?</span> <span class='colon op'>:</span> <span class='false false kw'>false</span> <span class='end end kw'>end</span>
 </pre>
@@ -1286,12 +1315,12 @@ def generate_login!
       <pre class="lines">
 
 
-90
-91
-92</pre>
+106
+107
+108</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/user.rb', line 90</span>
+      <pre class="code"><span class="info file"># File 'app/models/user.rb', line 106</span>
 
 <span class='def def kw'>def</span> <span class='phone_number identifier id'>phone_number</span>
   <span class='phone identifier id'>phone</span><span class='dot token'>.</span><span class='blank? fid id'>blank?</span> <span class='integer val'>? </span><span class='string val'>&quot;&quot;</span> <span class='colon op'>:</span> <span class='phone identifier id'>phone</span> <span class='plus op'>+</span> <span class='lparen token'>(</span><span class='phone_is_mobile? fid id'>phone_is_mobile?</span> <span class='integer val'>? </span><span class='string val'>&quot; [m]&quot;</span> <span class='colon op'>:</span> <span class='string val'>&quot;&quot;</span><span class='rparen token'>)</span>
@@ -1315,12 +1344,12 @@ def generate_login!
       <pre class="lines">
 
 
-79
-80
-81</pre>
+95
+96
+97</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/user.rb', line 79</span>
+      <pre class="code"><span class="info file"># File 'app/models/user.rb', line 95</span>
 
 <span class='def def kw'>def</span> <span class='reset_password identifier id'>reset_password</span>
   <span class='self self kw'>self</span><span class='dot token'>.</span><span class='password identifier id'>password</span> <span class='assign token'>=</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='password_confirmation identifier id'>password_confirmation</span> <span class='assign token'>=</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='random_password identifier id'>random_password</span>
@@ -1344,17 +1373,17 @@ def generate_login!
       <pre class="lines">
 
 
-107
-108
-109
-110
-111
-112
-113
-114</pre>
+123
+124
+125
+126
+127
+128
+129
+130</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/user.rb', line 107</span>
+      <pre class="code"><span class="info file"># File 'app/models/user.rb', line 123</span>
 
 <span class='def def kw'>def</span> <span class='reset_password_if_requested identifier id'>reset_password_if_requested</span>
   <span class='if if kw'>if</span> <span class='dstring node'>%w[email print]</span><span class='dot token'>.</span><span class='include? fid id'>include?</span><span class='lparen token'>(</span><span class='reset_password_method identifier id'>reset_password_method</span><span class='rparen token'>)</span>
@@ -1383,13 +1412,13 @@ def generate_login!
       <pre class="lines">
 
 
-115
-116
-117
-118</pre>
+131
+132
+133
+134</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/user.rb', line 115</span>
+      <pre class="code"><span class="info file"># File 'app/models/user.rb', line 131</span>
 
 <span class='def def kw'>def</span> <span class='to_vcf identifier id'>to_vcf</span>
   <span class='dstring node'>&quot;BEGIN:VCARD\nVERSION:3.0\nFN:#{name}\nEMAIL:#{email}\n&quot;</span> <span class='plus op'>+</span>
@@ -1406,7 +1435,7 @@ def generate_login!
 </div>
     
     <div id="footer">
-  Generated on Thu Dec  8 10:56:32 2011 by 
+  Generated on Thu Dec  8 13:43:18 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.7.3 (ruby-1.8.7).
 </div>
