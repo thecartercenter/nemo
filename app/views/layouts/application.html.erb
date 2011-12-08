@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>eDemocs Command Center</title>
+  <title><%= configatron.site_name %></title>
   <%= stylesheet_link_tag("main", :media => :all) %>
   <%= stylesheet_link_tag("screen", :media => :screen) %>
   <%= stylesheet_link_tag("print", :media => :print) %>
@@ -17,7 +17,6 @@
 <body>
 <div id="upper">
   <div id="banner">
-    <%= link_to(image_tag("eagle-circle.png"), root_path) %>
     <div id="userinfo">
       <% if current_user %>
         Logged in as <strong><%= current_user.login %></strong> |
@@ -28,12 +27,9 @@
       <% end %>
     </div>
     <div id="title">
-      <h1><span>eDEMOCS</span> Command Center</h1>
-      <h2>at The Carter Center</h2>
+      <h1><%= link_to(configatron.site_name, root_path) %></h1>
+      <%= image_tag("four-dots.png") %>
     </div>
-    <% if Rails.env == "development" %>
-      <div id="dev_mode_warning">Development Mode</div>
-    <% end %>
   </div>
   <div id="nav">
     <ul>
@@ -52,6 +48,9 @@
 </div>
 <div id="footer">
   System Version: <%= configatron.system_version %>
+  <% if Rails.env == "development" %>
+    <div id="dev_mode_warning">Development Mode</div>
+  <% end %>
 </div>
 </body>
 </html>

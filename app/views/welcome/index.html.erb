@@ -1,6 +1,10 @@
 <%= flash_and_form_errors %>
 
-Welcome to the eDEMOCS Command Center.
+<p>Welcome to <%= configatron.site_name %>.</p>
+
+<p>You might want to start by checking for new <%= link_to("Responses", responses_path) %>.</p>
+
+<p>Or if you haven't already done so, you should create a new <%= link_to("Form", forms_path) %> or two.</p>
 
 <% unless current_user %>
   <p><%= link_to("Click here", new_user_session_path) %> to login to the system.</p>

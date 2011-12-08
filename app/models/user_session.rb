@@ -19,6 +19,6 @@ class UserSession < Authlogic::Session::Base
   # other config goes in acts_as block
   logout_on_timeout(true)
   def to_key
-    self.keys.to_a
+    new_record? ? nil : [ self.send(self.class.primary_key) ]
   end
 end
