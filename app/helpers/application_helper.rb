@@ -53,12 +53,6 @@ module ApplicationHelper
     end
   end
   
-  # joins a set of links together with pipe characters, ignoring any blank ones
-  # for use with link_to_if_auth
-  def join_links(*links)
-    links.reject{|l| l.blank?}.join(" | ").html_safe
-  end
-  
   # renders a place field in a form
   def place_field(form)
     render("places/place_field", :form => form)
@@ -88,6 +82,12 @@ module ApplicationHelper
       end
     end.compact
     links.join("").html_safe
+  end
+  
+  # joins a set of links together with pipe characters, ignoring any blank ones
+  # for use with link_to_if_auth
+  def join_links(*links)
+    links.reject{|l| l.blank?}.join(" | ").html_safe
   end
   
   # creates a link to a batch operation

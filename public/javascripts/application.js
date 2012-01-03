@@ -17,7 +17,7 @@ function batch_select_all() {
 // gets all checkboxes in batch_form
 function batch_get_checkboxes() {
   var cb = [];
-  var els = $('batch_form') && $('batch_form').elements || [];
+  var els = $('#batch_form') && $('#batch_form').elements || [];
   for (var i = 0; i < els.length; i++)
     if (els[i].type == "checkbox") cb.push(els[i]);
   return cb;
@@ -83,7 +83,7 @@ function batch_submit(options) {
     alert("You haven't selected anything.");
   else if (options.confirm == "" || confirm(options.confirm.gsub(/###/, count))) {
     // get the form
-    var f = $('batch_form');
+    var f = $('#batch_form');
     // set the action attrib
     f.action = options.path;
     // submit
