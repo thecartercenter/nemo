@@ -50,7 +50,7 @@ module CommandCenter
     configatron.site_name = "ELMO"
     
     # SMS broadcast settings
+    configatron.outgoing_sms_adapter = Configatron::Delayed.new{IntelliSmsAdapter}
     configatron.broadcast_tag = "[TCC-Broadcast]"
-    configatron.outgoing_sms_adapter = "IntelliSmsAdapter"
   end
 end
