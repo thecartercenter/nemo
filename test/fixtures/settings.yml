@@ -1,9 +1,0 @@
-# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
-
-one:
-  settable_id: 1
-  value: MyString
-
-two:
-  settable_id: 1
-  value: MyString

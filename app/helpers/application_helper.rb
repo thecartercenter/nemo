@@ -110,10 +110,6 @@ module ApplicationHelper
   
   # renders an index table for the given class and list of objects
   def index_table(klass, objects)
-    # figure out of we're dealing with a pagination collection or just a normal array
-    paginated = objects.is_a?(WillPaginate::Collection) && 
-      objects.total_entries != 0 && objects.total_entries > objects.size
-    
     # get links from class' helper
     links = send("#{klass.table_name}_index_links", objects)
     # if there are any batch links, insert the 'select all' link
@@ -125,7 +121,6 @@ module ApplicationHelper
       :klass => klass,
       :objects => objects,
       :links => join_links(*links.flatten),
-      :paginated => paginated,
       :human_class_name => klass.name.underscore.humanize.downcase,
       :fields => send("#{klass.table_name}_index_fields"),
       :batch_ops => batch_ops

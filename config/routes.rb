@@ -11,7 +11,7 @@ CommandCenter::Application.routes.draw do
   resources(:questionings)
   resources(:questions){collection{get 'choose'}}
   resources(:responses)
-  resources(:searches){member{get 'clear'}; collection{get 'start'}}
+  resources(:search_searches){member{get 'clear'}; collection{get 'start'}}
   resources(:settings){collection{post 'update_all'}}
   resource(:user_session){collection{get 'logged_out'}}
   resources(:users){member{get 'login_instructions'}; collection{post 'export'}}

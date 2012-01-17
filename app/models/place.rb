@@ -59,19 +59,13 @@ class Place < ActiveRecord::Base
     [:place_type, :container]
   end
   
-  # gets the list of fields to be searched for this class
-  # includes whether they should be included in a default, unqualified search
-  # and whether they are searchable by a regular expression
-  def self.search_fields
-    {:fullname => {:colname => "places.full_name", :default => true, :regexp => true},
-     :shortname => {:colname => "places.short_name", :default => true, :regexp => true},
-     :container => {:colname => "containers_places.full_name", :default => false, :regexp => true},
-     :type => {:colname => "place_types.name", :default => false, :regexp => false}}
-  end
-  
-  # gets the lhs, operator, and rhs of a query fragment with the given field and term
-  def self.query_fragment(field, term)
-    [search_fields[field][:colname], "like", "%#{term}%"]
+  def self.search_qualifiers
+    [
+      Search::Qualifier.new(:label => "fullname", :col => "places.full_name", :default => true, :partials => true),
+      Search::Qualifier.new(:label => "shortname", :col => "places.short_name", :default => true, :partials => true),
+      Search::Qualifier.new(:label => "container", :col => "containers_places.full_name", :assoc => :container, :partials => true),
+      Search::Qualifier.new(:label => "type", :col => "place_types.name", :assoc => :place_type)
+    ]
   end
   
   def self.search_examples
@@ -101,7 +95,7 @@ class Place < ActiveRecord::Base
   # returns places matching the given search query
   # raise an error if the query is invalid (see the Search.conditions method)
   def self.search(query)
-    query_cond = Search.create(:query => query, :class_name => self.name).conditions
+    query_cond = Search::Search.find_or_create(:str => query, :class_name => self.name).conditions
     find(:all, :include => :place_type, :conditions => "(#{query_cond}) and temporary != 1")
   end
   

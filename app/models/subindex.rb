@@ -15,7 +15,7 @@
 # along with ELMO.  If not, see <http://www.gnu.org/licenses/>.
 # 
 class Subindex
-  attr_accessor(:page, :custom_conditions, :extras)
+  attr_accessor(:page, :extras)
   attr_reader(:stamp)
   
   # finds/creates a subindex for the given class name, and then sets the page number
@@ -41,27 +41,16 @@ class Subindex
   end
   
   def initialize(class_name, user)
-    @class_name = class_name
-    @custom_conditions = []
-    @extras = {}
-    @user = user
-    @page = 1
+    @class_name, @extras, @user, @page = class_name, {}, user, 1
     @stamp = Time.now.to_i.to_s[-6,6]
     reset_search
   end
   
-  def params
-    cond = []
-    # get any permission conditions
-    cond << Permission.select_conditions(:user => @user, :controller => @class_name.pluralize.underscore, :action => "index")
-    # get search conditions
-    cond << (@search ? ((sc = @search.conditions).blank? ? "1" : sc) : "1")
-    # add custom conditions set by user
-    cond += custom_conditions
-    # get eager associations
-    eager = klass.default_eager + (@search ? @search.eager : [])
-    # build and return params
-    {:page => @page, :conditions => cond.collect{|c| "(#{c})"}.join(" and "), :include => eager}
+  def load
+    r = klass
+    r = Permission.restrict(r, :user => @user, :controller => @class_name.pluralize.underscore, :action => "index")
+    r = @search.apply(r) if @search
+    r.paginate(:page => @page)
   end
   
   def search
@@ -70,15 +59,17 @@ class Subindex
   end
   
   def search=(s)
-    if @search != s
-      @page = 1
-      @search = s
-    end
+    # if this is a new Search object, reset the page number
+    @page = 1 if @search != s
+    # save the new Search
+    @search = s
+    # reset the search to an unsaved, blank Search if the given argument was nil
     reset_search if @search.nil?
   end
   
   def reset_search
-    @search = Search.find_or_create(:class_name => @class_name)
+    @search = Search::Search.new(:class_name => @class_name)
+    @page = 1
   end
   
   def klass

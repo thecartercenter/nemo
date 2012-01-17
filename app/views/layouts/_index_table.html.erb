@@ -1,11 +1,8 @@
 <div id="index_table">
   <div class="tip">
-    <% if paginated %>
-      Found <strong><%= pluralize(objects.total_entries, human_class_name) %></strong> in total. 
-      Showing <%= objects.offset + 1 %>-<%= objects.offset + objects.size %>.
-    <% else %>
-      Found <strong><%= pluralize(objects.size, human_class_name) %></strong>.
-    <% end %>&nbsp;
+    Found <strong><%= pluralize(objects.total_entries, human_class_name) %></strong> in total. 
+    Showing <%= objects.offset + 1 %>-<%= objects.offset + objects.size %>.
+    &nbsp;
     <%= links %>
   </div>
   <% unless objects.empty? %>
@@ -41,6 +38,6 @@
       <% end %>
     <% end %>
     <br/>
-    <%= will_paginate(objects) if paginated %>
+    <%= will_paginate(objects) %>
   <% end %>
 </div>

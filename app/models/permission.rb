@@ -34,7 +34,7 @@ class Permission
     "places#map_all" => {:group => :logged_in},
     "places#destroy" => {:min_level => 2},
     "place_creators#create" => {:min_level => 2},
-    "searches#*" => {:group => :logged_in},
+    "search_searches#*" => {:group => :logged_in},
     "welcome#*" => {:group => :anyone},
     "permissions#no" => {:group => :anyone},
     "forms#index" => {:group => :logged_in},
@@ -88,17 +88,17 @@ class Permission
     raise PermissionError.new "You don't have permission to do that."
   end
   
-  # returns a string containing any select conditions for a select query
+  # applies appropriate functions to the given relation and returns a new relation (or the old one if unchanged)
   # the model class must know to include a call to this function when building its query
-  def self.select_conditions(params)
+  def self.restrict(relation, params)
     parse_params!(params)
     # observer can only see his/her own responses
     if params[:key] == "responses#index" && params[:user].is_observer?
-      "responses.user_id = #{params[:user].id}"
+      relation.where("responses.user_id" => params[:user].id)
     elsif params[:key] == "forms#index" && params[:user].is_observer?
-      "forms.published = 1"
+      relation.where("forms.published" => 1)
     else
-      "1"
+      relation
     end
   end
   

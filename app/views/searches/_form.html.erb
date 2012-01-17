@@ -1,9 +1,9 @@
 <% form_for(search) do |f| %>
-  Search: <%= f.text_field(:query) %>
+  Search: <%= f.text_field(:str) %>
   <%= f.hidden_field(:class_name) %>
   <%= f.submit("Search") %>
   <% unless search.new_record? %>
-    <%= f.submit("Clear", :onclick => "this.form.search_query.value=''") %>
+    <%= f.submit("Clear", :onclick => "this.form.search_search_str.value=''") %>
   <% end %>
   <br/>
   <div id="examples">

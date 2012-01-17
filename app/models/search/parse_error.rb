@@ -14,5 +14,5 @@
 # You should have received a copy of the GNU General Public License
 # along with ELMO.  If not, see <http://www.gnu.org/licenses/>.
 # 
-class SearchError < StandardError
+class Search::ParseError < StandardError
 end

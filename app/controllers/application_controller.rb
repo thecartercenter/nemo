@@ -61,14 +61,11 @@ class ApplicationController < ActionController::Base
       @subindex = Subindex.find_and_update(session, current_user, klass.name, params[:page])
       # get the users
       begin
-        @objs = klass.sorted(@subindex.params)
-      rescue ActiveRecord::StatementInvalid
-        flash[:error] = "Your search is invalid"
+        @objs = @subindex.load
+      rescue ActiveRecord::StatementInvalid, Search::ParseError
+        flash[:error] = $!.is_a?(ActiveRecord::StatementInvalid) ? "Your search is invalid" : $!.to_s
         @subindex.reset_search
-        @objs = klass.sorted(@subindex.params)
-      rescue SearchError
-        flash[:error] = $!.to_s
-        @objs = klass.sorted(:page => 1)
+        @objs = @subindex.load
       end
       @objs
     end

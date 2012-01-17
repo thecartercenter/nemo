@@ -71,23 +71,17 @@ class User < ActiveRecord::Base
     [:language, :role]
   end
   
-  # gets the list of fields to be searched for this class
-  # includes whether they should be included in a default, unqualified search
-  # and whether they are searchable by a regular expression
-  def self.search_fields
-    {:name => {:colname => "users.name", :default => true, :regexp => true},
-     :login => {:colname => "users.login", :default => true, :regexp => true},
-     :language => {:colname => "languages.name", :default => false, :regexp => false},
-     :role => {:colname => "roles.name", :default => false, :regexp => false},
-     :email => {:colname => "users.email", :default => false, :regexp => true},
-     :phone => {:colname => "users.phone", :default => false, :regexp => true}}
+  def self.search_qualifiers
+    [
+      Search::Qualifier.new(:label => "name", :col => "users.name", :default => true, :partials => true),
+      Search::Qualifier.new(:label => "login", :col => "users.login", :default => true),
+      Search::Qualifier.new(:label => "language", :col => "languages.code", :assoc => :language),
+      Search::Qualifier.new(:label => "role", :col => "roles.name", :assoc => :role),
+      Search::Qualifier.new(:label => "email", :col => "users.email", :partials => true),
+      Search::Qualifier.new(:label => "phone", :col => "users.phone", :partials => true)
+    ]
   end
-  
-  # returns the lhs, operator, and rhs of a query fragment with the given field and term
-  def self.query_fragment(field, term)
-    [search_fields[field][:colname], "like", "%#{term}%"]
-  end
-  
+
   def self.search_examples
     ["pinchy lombard", 'role:observer', "language:english", "phone:+44"]
   end

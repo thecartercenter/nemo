@@ -39,7 +39,7 @@ class Response < ActiveRecord::Base
   
   before_save(:set_place)
   
-  def self.per_page; 20; end
+  self.per_page = 20
   
   def self.flattened(params = {})
     params[:conditions] ||= "1"
@@ -73,25 +73,15 @@ class Response < ActiveRecord::Base
   # gets the list of fields to be searched for this class
   # includes whether they should be included in a default, unqualified search
   # and whether they are searchable by a regular expression
-  def self.search_fields
-    {:formname => {:colname => "forms.name", :default => false, :regexp => true},
-     :formtype => {:colname => "form_types.name", :default => false, :regexp => false},
-     :reviewed => {:colname => "responses.reviewed", :default => false, :regexp => false},
-     :place => {:colname => "places.full_name", :default => false, :regexp => true},
-     :submitter => {:colname => "users.name", :default => false, :regexp => true},
-     :answer => {:colname => "answers.value", :default => true, :regexp => true, :eager => [:answers]}}
-  end
-  
-  # gets the lhs, operator, and rhs of a query fragment with the given field and term
-  def self.query_fragment(field, term)
-    case field
-    when :formname, :formtype
-      [search_fields[field][:colname], "=", "#{term}"]
-    when :reviewed
-      [search_fields[field][:colname], "=", {'yes' => '1', 'no' => '0'}[term.downcase] || '']
-    else
-      [search_fields[field][:colname], "like", "%#{term}%"]
-    end
+  def self.search_qualifiers
+    [
+      Search::Qualifier.new(:label => "formname", :col => "forms.name", :assoc => :form),
+      Search::Qualifier.new(:label => "formtype", :col => "form_types.name", :assoc => {:form => :type}),
+      Search::Qualifier.new(:label => "reviewed", :col => "responses.reviewed", :subst => {"yes" => "1", "no" => "0"}),
+      Search::Qualifier.new(:label => "place", :col => "places.full_name", :assoc => :place, :partials => true),
+      Search::Qualifier.new(:label => "submitter", :col => "users.name", :assoc => :user, :partials => true),
+      Search::Qualifier.new(:label => "answer", :col => "answers.value", :assoc => :answers, :partials => true, :default => true)
+    ]
   end
   
   def self.search_examples

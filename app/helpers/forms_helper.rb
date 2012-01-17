@@ -30,7 +30,7 @@ module FormsHelper
     when "last_modified" then form.updated_at.strftime("%Y-%m-%d %l:%M%p")
     when "responses"
       form.responses.size == 0 ? 0 :
-        link_to(form.responses.size, start_searches_path(:query => "formname:\"#{form.name}\"", :class_name => "Response"))
+        link_to(form.responses.size, start_search_searches_path(:str => "formname:\"#{form.name}\"", :class_name => "Response"))
     when "downloads" then form.downloads || 0
     when "published?" then form.published? ? "Yes" : "No"
     when "actions"

@@ -50,9 +50,9 @@ div.compact_error { color: #d02000; font-weight: bold; }
 div.field_with_errors { display: inline; }
 
 /* search form */
-form.new_search, form.edit_search { margin-bottom: 10px; }
-form.new_search #search_query, form.edit_search #search_query { width: 300px; }
-form.new_search #examples, form.edit_search #examples { color: #666; }
+form.new_search_search, form.edit_search_search { margin-bottom: 10px; }
+form.new_search_search #search_search_str, form.edit_search_search #search_search_str { width: 300px; }
+form.new_search_search #examples, form.edit_search_search #examples { color: #666; }
 
 /* welcome */
 img#welcome { border: 1px solid #666; }
