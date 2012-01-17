@@ -30,29 +30,19 @@ class Form < ActiveRecord::Base
   before_create(:init_downloads)
   before_destroy(:check_assoc)
   
-  def self.per_page
-    1000000
-  end
+  # no pagination
+  self.per_page = 1000000
   
-  def self.sorted(params)
-    params.merge!(:order => "form_types.name, forms.name")
-    params[:page] ? paginate(:all, params) : find(:all, params)
-  end
-  
-  def self.default_eager
-    [:type]
-  end
+  default_scope(order("form_types.name, forms.name").includes(:type))
+  scope(:published, where(:published => true))
   
   def self.find_eager(id)
-    find(id, :include => [:type, {:questionings => {:question => 
-        [:type, :translations, {:option_set => {:option_settings => {:option => :translations}}}]
-    }}])
+    includes(:type, {:questionings => {:question => 
+        [:type, :translations, {:option_set => {:option_settings => {:option => :translations}}}]}}).find(id)
   end
   
-  def self.select_options(options = {})
-    params = {:include => :type, :order => "form_types.name, forms.name"}
-    params[:conditions] = {:published => options[:published]} if !options[:published].nil?
-    all(params).collect{|f| [f.full_name, f.id]}
+  def self.select_options
+    published.collect{|f| [f.full_name, f.id]}
   end
   
   # finds the highest 'version' number of all forms with the given base name

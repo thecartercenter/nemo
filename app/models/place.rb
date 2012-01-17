@@ -39,11 +39,8 @@ class Place < ActiveRecord::Base
   validates(:latitude, :numericality => {:less_than => 90, :greater_than => -90}, :if => Proc.new{|p| p.latitude})
   validates(:longitude, :numericality => {:less_than => 180, :greater_than => -180}, :if => Proc.new{|p| p.longitude})
   
-  def self.sorted(params = {})
-    params[:conditions] = "(#{params[:conditions]}) and places.temporary != 1"
-    params.merge!(:order => "place_types.level, places.long_name")
-    paginate(:all, params)
-  end
+  default_scope(includes(:place_type, :container).order("place_types.level, places.long_name"))
+  scope(:permanent, where(:temporary => false))
   
   def self.bound(places)
     return nil if places.empty?
@@ -53,10 +50,6 @@ class Place < ActiveRecord::Base
       :lng_min => [-180, places.min_by{|p| p.longitude}.longitude].max,
       :lng_max => [180, places.max_by{|p| p.longitude}.longitude].min
     }
-  end
-  
-  def self.default_eager
-    [:place_type, :container]
   end
   
   def self.search_qualifiers
@@ -94,9 +87,8 @@ class Place < ActiveRecord::Base
   
   # returns places matching the given search query
   # raise an error if the query is invalid (see the Search.conditions method)
-  def self.search(query)
-    query_cond = Search::Search.find_or_create(:str => query, :class_name => self.name).conditions
-    find(:all, :include => :place_type, :conditions => "(#{query_cond}) and temporary != 1")
+  def self.search(str)
+    Search::Search.find_or_create(:str => str, :class_name => self.name).apply(permanent)
   end
   
   # searches existing, non-temporary places and geocoding services for places matching query

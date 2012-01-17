@@ -51,7 +51,7 @@ class OptionSetsController < ApplicationController
   private
     def crupdate
       action = params[:action]
-      @set = action == "create" ? OptionSet.new : OptionSet.find(params[:id], :include => OptionSet.default_eager)
+      @set = action == "create" ? OptionSet.new : OptionSet.find(params[:id])
       begin
         @set.update_attributes!(params[:option_set])
         flash[:success] = "Option set #{action}d successfully."

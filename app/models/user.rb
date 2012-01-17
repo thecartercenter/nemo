@@ -39,20 +39,16 @@ class User < ActiveRecord::Base
   
   before_validation(:no_mobile_phone_if_no_phone)
   
-  def self.per_page
-    # we want all of these on one page for now
-    10000000
-  end
+  default_scope(includes(:language, :role).order("name"))
+  scope(:active_english, where(:active => true).where(:language_id => Language.english.id))
+  
+  # we want all of these on one page for now
+  self.per_page = 1000000
+
   def self.select_options
-    find(:all, :order => "name").collect{|u| [u.name, u.id]}
+    all.collect{|u| [u.name, u.id]}
   end
-  def self.sorted(params)
-    params.merge!(:order => "users.name")
-    paginate(:all, params)
-  end
-  def self.default(params = {})
-    User.new({:active => true, :language_id => Language.english.id}.merge(params))
-  end
+  
   def self.new_with_login_and_password(params)
     u = new(params)
     u.reset_password
@@ -65,10 +61,6 @@ class User < ActiveRecord::Base
   def self.find_by_credentials(login, password)
     user = find_by_login(login)
     (user && user.valid_password?(password)) ? user : nil
-  end
-  
-  def self.default_eager
-    [:language, :role]
   end
   
   def self.search_qualifiers

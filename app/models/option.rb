@@ -22,7 +22,7 @@ class Option < ActiveRecord::Base
   has_many(:option_sets, :through => :option_settings)
   has_many(:option_settings)
   has_many(:translations, :class_name => "Translation", :foreign_key => :obj_id, 
-    :conditions => "class_name='Option'", :autosave => true, :dependent => :destroy)
+    :conditions => "translations.class_name='Option'", :autosave => true, :dependent => :destroy)
   has_many(:answers)
   has_many(:choices)
   
@@ -33,14 +33,10 @@ class Option < ActiveRecord::Base
   validate(:name_lengths)
   
   before_destroy(:check_assoc)
+
+  default_scope(includes([:translations, {:option_sets => [:questionings, {:questions => {:questionings => :form}}]}]))
   
-  def self.sorted(params = {})
-    paginate(:all, params)
-  end
-
-  def self.per_page; 100; end
-
-  def self.default_eager; [:translations, {:option_sets => [:questionings, {:questions => {:questionings => :form}}]}]; end
+  self.per_page = 100
 
   def method_missing(*args)
     # enable methods like name_fra and hint_eng, etc.

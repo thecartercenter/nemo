@@ -17,10 +17,10 @@
 class LanguagesController < ApplicationController
   
   def index
-    @languages = Language.sorted(:paginate => true, :page => params[:page])
+    @languages = Language.all
   end
   def new
-    @language = Language.default
+    @language = Language.active.new
     @title = "Add Language"
   end
   def edit

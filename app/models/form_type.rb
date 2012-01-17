@@ -17,7 +17,9 @@
 class FormType < ActiveRecord::Base
   has_many(:forms)
   
+  default_scope(order("name"))
+  
   def self.select_options
-    all(:order => "name").collect{|ft| [ft.name, ft.id]}
+    all.collect{|ft| [ft.name, ft.id]}
   end
 end

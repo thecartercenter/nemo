@@ -17,8 +17,10 @@
 class QuestionType < ActiveRecord::Base
   has_many(:questions)
   
+  default_scope(order("long_name"))
+  
   def self.select_options
-    all(:order => "long_name").collect{|qt| [qt.long_name, qt.id]}
+    all.collect{|qt| [qt.long_name, qt.id]}
   end
   def numeric?
     name == "integer" || name == "decimal"

@@ -39,6 +39,8 @@ class Response < ActiveRecord::Base
   
   before_save(:set_place)
   
+  default_scope(includes({:form => :type}, :user, :place).order("responses.created_at DESC"))
+  
   self.per_page = 20
   
   def self.flattened(params = {})
@@ -47,27 +49,14 @@ class Response < ActiveRecord::Base
     find_by_sql("select * from _answers where (#{params[:conditions]})")
   end
   
-  def self.sorted(params = {})
-    params.merge!(:order => "responses.created_at desc")
-    send(params.keys.include?(:page) ? "paginate" : "find", :all, params)
-  end
-  
-  def self.default_eager
-    [{:form => :type}, :user, :place]
-  end
-  
   def self.find_eager(id)
-    find(id, :include => [
-      :form,
-      {:answers => 
-        [{:choices => {:option => :translations}},
-         {:option => :translations}, 
-         {:questioning => {:question => 
-           [:type, :translations, {:option_set => {:options => :translations}}]
-         }}
-        ]
+    includes([:form, {:answers => 
+      {
+        :choices => {:option => :translations}, 
+        :option => :translations, 
+        :questioning => {:question => [:type, :translations, {:option_set => {:options => :translations}}]}
       }
-    ])
+    }]).find(id)
   end
   
   # gets the list of fields to be searched for this class

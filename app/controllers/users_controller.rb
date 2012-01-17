@@ -19,7 +19,7 @@ class UsersController < ApplicationController
     @users = load_objects_with_subindex(User)
   end
   def new
-    @user = User.default
+    @user = User.active_english.new
   end
   def edit
     @user = User.find(params[:id])

@@ -20,7 +20,7 @@ class PlacesController < ApplicationController
     @places = load_objects_with_subindex(Place)
   end
   def map
-    @place = Place.find(params[:id])
+    @place = Place.permanent.find(params[:id])
     @places = [@place]
     @bounds = @place.bounds
     @title = "Map: #{@place.full_name}"
@@ -30,13 +30,13 @@ class PlacesController < ApplicationController
   def map_all
     @title = "Place Map"
     @js << "map"
-    @places = Place.all(:conditions => "latitude is not null and longitude is not null")
+    @places = Place.permanent.where("latitude is not null and longitude is not null")
     @bounds = Place.bound(@places)
   end
   def new
     set_add_title
     set_js
-    @place = Place.new
+    @place = Place.permanent.new
   end
   def edit
     # lookup the place

@@ -24,10 +24,9 @@ class Language < ActiveRecord::Base
   has_many(:translations)
   has_many(:users)
   
-  def self.sorted(params = {})
-    func = params.delete(:paginate) ? "paginate" : "find"
-    send(func, :all, params.merge(:order => "code = 'eng' desc, code"))
-  end
+  default_scope(order("code = 'eng' desc, code"))
+  scope(:active, where(:active => true))
+  
   def self.by_code(code)
     code_hash[code]
   end
@@ -37,17 +36,11 @@ class Language < ActiveRecord::Base
     end
     @@code_hash
   end
-  def self.active
-    sorted(:conditions => "active = 1")
-  end
   def self.select_options
-    sorted.collect{|l| [l.name, l.id]}
+    all.collect{|l| [l.name, l.id]}
   end
   def self.add_select_options
     LanguageList::LANGS.map{|code, name| [name, code]}.sort_by{|pair| pair[0]}
-  end
-  def self.default
-    new(:active => true)
   end
   def self.english
     @@english ||= find_by_code("eng")

@@ -28,16 +28,12 @@ class OptionSet < ActiveRecord::Base
   
   before_destroy(:check_assoc)
   
-  def self.sorted(params = {})
-    paginate(:all, params.merge(:order => "name"))
-  end
+  default_scope(includes({:questionings => :form}, :questions, :options).order("name"))
   
-  def self.per_page; 100; end
+  self.per_page = 100
 
-  def self.default_eager; [{:questionings => :form}, :questions, :options]; end
-  
   def self.select_options
-    all(:order => "name").collect{|os| [os.name, os.id]}
+    all.collect{|os| [os.name, os.id]}
   end
   
   def self.orderings

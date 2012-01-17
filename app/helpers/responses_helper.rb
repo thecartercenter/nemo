@@ -37,7 +37,7 @@ module ResponsesHelper
   def responses_index_links(responses)
     links = []
     # only add the create response link if there are any published forms
-    unless (sel_opt = Form.select_options(:published => true)).empty?
+    unless (sel_opt = Form.select_options).empty?
       mini_form = form_tag(new_response_path, :method => :get, :id => "form_chooser", :style => "display: none") do
           select_tag(:form_id, options_for_select(sel_opt), :include_blank => "Select a published form...") +
           submit_tag("Go")

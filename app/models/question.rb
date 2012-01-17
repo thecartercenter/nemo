@@ -22,7 +22,7 @@ class Question < ActiveRecord::Base
   belongs_to(:type, :class_name => "QuestionType", :foreign_key => :question_type_id)
   belongs_to(:option_set, :include => :options)
   has_many(:translations, :class_name => "Translation", :foreign_key => :obj_id, 
-    :conditions => "class_name='Question'", :autosave => true, :dependent => :destroy)
+    :conditions => "translations.class_name='Question'", :autosave => true, :dependent => :destroy)
   has_many(:questionings, :dependent => :destroy)
   has_many(:answers, :through => :questionings)
   has_many(:referring_conditions, :through => :questionings)
@@ -38,25 +38,17 @@ class Question < ActiveRecord::Base
   before_validation(:clean)
   before_destroy(:check_assoc)
   
+  default_scope(includes(:type, :translations, :questionings, :answers, :forms).order("code"))
+  
+  self.per_page = 100
+  
   # returns questions that do NOT already appear in the given form
-  def self.not_in_form(form, params)
-    # add the condition
-    params[:conditions] = "(#{params[:conditions] || 1}) and " + 
-      "(questions.id not in (select question_id from questionings where form_id='#{form.id}'))"
-    # pass along to sorted method
-    sorted(params)
+  def self.not_in_form(form)
+    scoped.where("(questions.id not in (select question_id from questionings where form_id='#{form.id}'))")
   end
-  
-  def self.sorted(params = {})
-    paginate(:all, params.merge(:order => "code"))
-  end
-  
-  def self.per_page; 100; end
-  
-  def self.default_eager; [:type, :translations, :questionings, :answers, :forms]; end
   
   def self.select_options_by_code(questions = nil)
-    questions ||= all(:order => "code")
+    questions ||= all
     questions.collect{|q| [q.code, q.id]}
   end
   

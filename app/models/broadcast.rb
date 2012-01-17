@@ -26,15 +26,8 @@ class Broadcast < ActiveRecord::Base
   
   before_create(:deliver)
   
-  def self.sorted(params)
-    params.merge!(:order => "created_at desc")
-    paginate(:all, params)
-  end
-  
-  def self.default_eager
-    [:recipients]
-  end
-  
+  default_scope(includes(:recipients).order("created_at DESC"))
+    
   def self.medium_select_options
     [["SMS preferred (email if no mobile phone)", "sms"],
      ["Email only", "email"],

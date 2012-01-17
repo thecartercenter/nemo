@@ -17,11 +17,10 @@
 class Role < ActiveRecord::Base
   has_many(:users)
   
-  def self.sorted
-    find(:all, :order => "level")
-  end
+  default_scope(order("level"))
+
   def self.select_options
-    sorted.collect{|r| [r.name, r.id]}
+    all.collect{|r| [r.name, r.id]}
   end
   def to_s
     name

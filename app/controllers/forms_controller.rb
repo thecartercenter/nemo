@@ -17,7 +17,7 @@
 class FormsController < ApplicationController
   def index
     if request.format.xml?
-      @forms = Form.sorted(:conditions => "forms.published = 1", :include => [:type])
+      @forms = Form.published
     else
       @forms = load_objects_with_subindex(Form)
     end

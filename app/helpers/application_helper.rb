@@ -112,6 +112,7 @@ module ApplicationHelper
   def index_table(klass, objects)
     # get links from class' helper
     links = send("#{klass.table_name}_index_links", objects)
+
     # if there are any batch links, insert the 'select all' link
     batch_ops = !links.reject{|l| !l.match(/class="batch_op_link"/)}.empty?
     links.insert(0, select_all_link) if batch_ops
@@ -120,6 +121,7 @@ module ApplicationHelper
     render("layouts/index_table",
       :klass => klass,
       :objects => objects,
+      :paginated => objects.respond_to?(:total_entries),
       :links => join_links(*links.flatten),
       :human_class_name => klass.name.underscore.humanize.downcase,
       :fields => send("#{klass.table_name}_index_fields"),
