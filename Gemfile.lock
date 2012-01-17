@@ -79,7 +79,7 @@ GEM
       polyglot
       polyglot (>= 0.3.1)
     tzinfo (0.3.29)
-    will_paginate (3.0.pre2)
+    will_paginate (3.0.2)
     yamler (0.1.0)
     yard (0.7.3)
 
@@ -96,5 +96,5 @@ DEPENDENCIES
   rails_sql_views!
   rake (= 0.8.7)
   rdiscount
-  will_paginate (= 3.0.pre2)
+  will_paginate
   yard
