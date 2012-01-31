@@ -24,6 +24,11 @@ class Place < ActiveRecord::Base
   has_many(:children, :class_name => "Place", :foreign_key => "container_id", :dependent => :destroy)
   has_many(:responses)
   has_one(:place_creator)
+  belongs_to(:point, :class_name => "Place")
+  belongs_to(:address, :class_name => "Place")
+  belongs_to(:locality, :class_name => "Place")
+  belongs_to(:state, :class_name => "Place")
+  belongs_to(:country, :class_name => "Place")
 
   before_validation(:clean_commas)
   before_validation(:set_full_name)
