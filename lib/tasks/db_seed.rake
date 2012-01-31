@@ -12,9 +12,11 @@ namespace :db do
       find_or_create(Role, :name, :name => "Observer", :level => "1")
       # Initial superuser
       unless User.find_by_role_id(highest_role.id)
+        User.ignore_blank_passwords = true
         find_or_create(User, :login, :login => "super", :name => "Super User", :login => "super",
           :email => "webmaster@cceom.org", :role_id => highest_role.id, :active => true, 
           :language_id => english.id, :password => "changeme", :password_confirmation => "changeme")
+        User.ignore_blank_passwords = false
       end
       # QuestionTypes
       find_or_create(QuestionType, :name, :name => "text", :long_name => "Short Text", :odk_name => "string", :odk_tag => "input")
@@ -34,6 +36,19 @@ namespace :db do
       # FormTypes
       find_or_create(FormType, :name, :name => "Type 1")
       find_or_create(FormType, :name, :name => "Type 2")
+      
+      # Report Calculations
+      calc1 = find_or_create(Report::Calculation, :name, :name => "Zero/Nonzero", :code => "IF(? > 0, 1, 0)")
+      
+      # Report Groupings
+      find_or_create(Report::ByAttribGrouping, :name, :name => "Form", :code => "forms.name", :join_tables => "forms")
+      find_or_create(Report::ByAttribGrouping, :name, :name => "State", :code => "states.long_name", :join_tables => "states")
+      find_or_create(Report::ByAttribGrouping, :name, :name => "Country", :code => "countries.long_name", :join_tables => "countries")
+      
+      # Report Aggregations
+      find_or_create(Report::Aggregation, :name, :name => "Average", :code => "AVG(?)")
+      find_or_create(Report::Aggregation, :name, :name => "Minimum", :code => "MIN(?)")
+      find_or_create(Report::Aggregation, :name, :name => "Maximum", :code => "MAX(?)")
     end
   end
 end
@@ -43,7 +58,7 @@ def find_or_create(klass, key_field, attribs)
   # try to find the object
   if obj = klass.send("find_by_#{key_field.to_s}", key_val)
     # update its attributes
-    obj.attributes.each{|k,v| next if %w(id created_at updated_at).include?(k); obj.send("#{k}=", attribs[k.to_sym])}
+    obj.attributes.each{|k,v| next if %w(id created_at updated_at).include?(k); obj.send("#{k}=", attribs[k.to_sym]) if attribs.keys.include?(k.to_sym)}
     # if it changed, say so and save it
     if obj.changed?
       puts "Updated #{klass.name} #{key_val} (#{obj.changed.join(', ')})"
@@ -53,5 +68,12 @@ def find_or_create(klass, key_field, attribs)
   else
     puts "Created #{klass.name} #{key_val}"
     return klass.create!(attribs)
+  end
+end
+
+def remove(klass, key_field, key_value)
+  if found = klass.send("find_by_#{key_field}", key_value)
+    found.destroy
+    puts "Deleted #{klass.name} #{key_value}"
   end
 end

@@ -30,7 +30,7 @@ class Search::Search < ActiveRecord::Base
   def apply(relation)
     parse unless @parser
     # apply the needed associations
-    @parser.assoc.each{|a| relation = relation.includes(a) unless a.nil?}
+    relation = relation.joins(Report::Join.list_to_sql(@parser.assoc))
     # apply the conditions
     relation.where(@parser.sql)
   end

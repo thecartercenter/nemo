@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120110163625) do
+ActiveRecord::Schema.define(:version => 20120131161053) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -155,6 +155,56 @@ ActiveRecord::Schema.define(:version => 20120110163625) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "question_type_id"
+  end
+
+  create_table "report_aggregations", :force => true do |t|
+    t.string   "name"
+    t.string   "code"
+    t.string   "constraints"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "report_calculations", :force => true do |t|
+    t.string   "name"
+    t.string   "code"
+    t.string   "constraints"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "report_fields", :force => true do |t|
+    t.integer  "report_report_id"
+    t.string   "attrib_name"
+    t.integer  "question_id"
+    t.integer  "question_type_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "report_groupings", :force => true do |t|
+    t.string   "type"
+    t.string   "name"
+    t.string   "code"
+    t.string   "join_tables"
+    t.integer  "question_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "report_reports", :force => true do |t|
+    t.string   "type"
+    t.string   "name"
+    t.boolean  "saved",           :default => false
+    t.integer  "filter_id"
+    t.integer  "pri_grouping_id"
+    t.integer  "sec_grouping_id"
+    t.integer  "calculation_id"
+    t.integer  "aggregation_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.datetime "viewed_at"
+    t.integer  "view_count",      :default => 0
   end
 
   create_table "responses", :force => true do |t|

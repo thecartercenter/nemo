@@ -64,11 +64,11 @@ class Response < ActiveRecord::Base
   # and whether they are searchable by a regular expression
   def self.search_qualifiers
     [
-      Search::Qualifier.new(:label => "formname", :col => "forms.name", :assoc => :form),
-      Search::Qualifier.new(:label => "formtype", :col => "form_types.name", :assoc => {:form => :type}),
+      Search::Qualifier.new(:label => "formname", :col => "forms.name", :assoc => :forms),
+      Search::Qualifier.new(:label => "formtype", :col => "form_types.name", :assoc => :form_types),
       Search::Qualifier.new(:label => "reviewed", :col => "responses.reviewed", :subst => {"yes" => "1", "no" => "0"}),
-      Search::Qualifier.new(:label => "place", :col => "places.full_name", :assoc => :place, :partials => true),
-      Search::Qualifier.new(:label => "submitter", :col => "users.name", :assoc => :user, :partials => true),
+      Search::Qualifier.new(:label => "place", :col => "places.full_name", :assoc => :places, :partials => true),
+      Search::Qualifier.new(:label => "submitter", :col => "users.name", :assoc => :users, :partials => true),
       Search::Qualifier.new(:label => "answer", :col => "answers.value", :assoc => :answers, :partials => true, :default => true)
     ]
   end
