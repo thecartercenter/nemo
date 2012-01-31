@@ -16,7 +16,7 @@
 # 
 class OptionSetting < ActiveRecord::Base
   belongs_to(:option)
-  belongs_to(:option_set)
+  belongs_to(:option_set, :autosave => true)
   
   before_destroy(:no_answers_or_choices)
   

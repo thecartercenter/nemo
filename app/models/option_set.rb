@@ -15,7 +15,7 @@
 # along with ELMO.  If not, see <http://www.gnu.org/licenses/>.
 # 
 class OptionSet < ActiveRecord::Base
-  has_many(:option_settings, :dependent => :destroy)
+  has_many(:option_settings, :dependent => :destroy, :autosave => true)
   has_many(:options, :through => :option_settings)
   has_many(:questions)
   has_many(:questionings, :through => :questions)
@@ -28,7 +28,7 @@ class OptionSet < ActiveRecord::Base
   
   before_destroy(:check_assoc)
   
-  default_scope(includes({:questionings => :form}, :questions, :options).order("name"))
+  default_scope(order("name"))
   
   self.per_page = 100
 
