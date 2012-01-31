@@ -24,14 +24,26 @@ div.important { font-weight: bold; color: Black; }
 /* loading indicator */
 div.loader { background: rl('/images/loader.gif') no-repeat; padding-left: 20px; }
 
-/* forms and index tables */
+/* forms (older) */
 div.form, table.form { border-top: 1px solid #ddd; margin-bottom: 10px; }
 div.form > div, table.form td { padding: 5px; border-bottom: 1px solid #ddd; }
 div.form div.details, table.form td.details { width: 250px; }
 div.reqd_sym { display: inline; font-weight: bold; color: #d02000; font-size: 125%; line-height: 5px; vertical-align: middle; }
+table.form td.name { min-width: 75px; }
+
+/* forms (newer) */
+div.form_field { width: 800px; border-top: 1px solid #ddd; padding: 5px 0 5px 0; }
+div.form_field label { float: left; width: 200px; }
+div.form_field div.form_field_control { float: left; width: 300px; min-height: 26px; position: relative; }
+div.form_field div.form_field_control input { width: 240px; }
+div.form_field div.form_field_details { float: right; width: 300px; position: relative; font-size: 90%; }
+div.form_field div.space_line { clear: both; margin: 0; padding: 0; width: auto; }
 div.dummy, span.dummy { font-weight: bold; }
 div.dummy_checkbox { float: left; width: 15px; font-weight: bold; }
-table.form td.name { min-width: 75px; }
+input.submit { font-weight: bold; font-size: 120%; padding: 5px 15px; margin: 0; }
+label.required { font-weight: bold; }
+
+/* index tables */
 table.index_table th, table.form th { text-align: left; color: #444; background-color: #ddd; 
     font-size: 90%; padding: 3px 10px 3px 3px; }
 table.index_table td { border-bottom: 1px solid #ddd; padding: 6px 10px 6px 3px; }

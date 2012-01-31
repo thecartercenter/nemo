@@ -41,6 +41,7 @@ module ApplicationHelper
   end
   
   # draws a basic form for the given object
+  # THIS IS THE OLD WAY
   def basic_form(obj, &block)
     form_for(obj) do |f|
       f.mode = controller.action_name.to_sym
@@ -50,6 +51,34 @@ module ApplicationHelper
       spec[:sections] = [{:fields => spec[:fields]}] unless spec[:sections]
       # render the form and return it
       render("layouts/basic_form", :f => f, :spec => spec, :obj => obj)
+    end
+  end
+  
+  # THIS IS THE NEW WAY
+  def form_field(f, method, options = {})
+    if options[:type] == :hidden
+      f.hidden_field(method)
+    elsif options[:type] == :submit
+      f.submit(f.object.class.human_attribute_name("submit_" + (f.object.new_record? ? "new" : "edit")), :class => "submit")
+    else
+      content_tag("div", :class => "form_field", :id => "#{f.object.class.model_name.singular}_#{method}") do
+        label = f.label(method, nil, :class => options[:required] ? "required" : "")
+        field = content_tag("div", :class => "form_field_control") do
+          case options[:type]
+          when nil, :text then f.text_field(method)
+          when :check_box then f.check_box(method)
+          when :textarea then f.text_area(method)
+          when :password then f.password_field(method)
+          when :country then country_select(f.object.class.name.downcase, method, nil)
+          when :select then f.select(method, options[:options], :include_blank => options[:blank_text] || true)
+          when :datetime then f.datetime_select(method, :ampm => true, :order => [:month, :day, :year], :default => options[:default])
+          when :birthdate then f.date_select(method, :start_year => Time.now.year - 110, :end_year => Time.now.year - 18, 
+            :include_blank => true, :order => [:month, :day, :year], :default => nil)
+          end
+        end
+        details = content_tag("div", :class => "form_field_details"){options[:details]}
+        label + field + details + "<div class=\"space_line\"></div>".html_safe
+      end
     end
   end
   

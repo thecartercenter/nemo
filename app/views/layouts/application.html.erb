@@ -15,36 +15,35 @@
   <%= csrf_meta_tag %>
 </head>
 <body>
-<div id="upper">
-  <div id="banner">
-    <div id="userinfo">
-      <% if current_user %>
-        Logged in as <strong><%= current_user.login %></strong> |
-        <%= link_to("Edit Profile", edit_user_path(current_user.id)) %> |
-        <%= button_to("Logout", user_session_path, :method => :delete, :id => "logout_button") %>
-      <% else %>
-        <%= link_to("Login", new_user_session_path) %>
-      <% end %>
-    </div>
-    <div id="title">
-      <h1><%= link_to(configatron.site_name, root_path) %></h1>
-      <%= image_tag("four-dots.png") %>
-    </div>
+<div id="banner">
+  <div id="userinfo">
+    <% if current_user %>
+      Logged in as <strong><%= current_user.login %></strong> |
+      <%= link_to("Edit Profile", edit_user_path(current_user.id)) %> |
+      <%= button_to("Logout", user_session_path, :method => :delete, :id => "logout_button") %>
+    <% else %>
+      <%= link_to("Login", new_user_session_path) %>
+    <% end %>
   </div>
-  <div id="nav">
-    <ul>
-      <% [:responses, :forms, :questions, :options, :option_sets, :users, :broadcasts, :languages, :places, :settings].each do |k| %>
-        <% if authorized?(:action => "#{k}#index") %>
-          <li><%= link_to(k.to_s.gsub("_", " ").ucwords, send("#{k}_path")) %></li>
-        <% end %>
-      <% end %>
-    </ul>
+  <div id="title">
+    <h1><%= link_to(configatron.site_name, root_path) %></h1>
+    <%= image_tag("four-dots.png") %>
   </div>
+</div>
+<div id="content_wrapper">
   <div id="content" class="<%= ctlr_action_name %>">
     <h1><%= @title %></h1>
     <%= body %>
-    <br clear="all"/>
   </div>
+</div>
+<div id="nav">
+  <ul>
+    <% [:responses, :forms, :questions, :options, :option_sets, :users, :broadcasts, :languages, :places, :settings].each do |k| %>
+      <% if authorized?(:action => "#{k}#index") %>
+        <li><%= link_to(k.to_s.gsub("_", " ").ucwords, send("#{k}_path")) %></li>
+      <% end %>
+    <% end %>
+  </ul>
 </div>
 <div id="footer">
   System Version: <%= configatron.system_version %>

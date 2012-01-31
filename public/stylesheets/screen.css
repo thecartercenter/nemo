@@ -7,13 +7,14 @@ div#banner #title a { color: white; text-decoration: none; }
 div#banner #title img { float: left; display: block; margin: 0px 0 0 0px; }
 div#banner #userinfo { float: right; margin-right: 10px; }
 div#banner #userinfo a, div#banner #userinfo form.button_to input { color: white; }
+div#content_wrapper { float: left; width: 100%; }
 div#content { padding: 10px 10px 30px 15px; margin-left: 88px; min-height: 500px; background-color: white; }
-div#nav { float: left; width: 88px; color: white; }
+div#nav { float: left; width: 88px; margin-left: -100%; color: white; }
 div#nav ul { margin-right: 15px; font-weight: bold; padding: 5px; list-style-type:none; }
 div#nav ul li { white-space: nowrap; }
 div#nav ul li a { text-decoration: none; color: white; }
 div#nav ul li a:hover { text-decoration: none; color: #0065d1; }
-div#footer { padding: 5px; color: #ddd; text-align: right; }
+div#footer { clear: left; padding: 5px; color: #ddd; text-align: right; }
 div#footer #dev_mode_warning { color: white; padding: 2px; margin: 0 0 0 5px; text-align: right; font-weight: bold; 
   background-color: #d02000; float: right; clear: right; }
 
