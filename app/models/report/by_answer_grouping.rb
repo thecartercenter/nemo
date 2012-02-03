@@ -2,7 +2,11 @@ class Report::ByAnswerGrouping < Report::Grouping
   belongs_to(:question)
   
   def self.select_options
-    Question.includes(:type).where(:"question_types.name" => "select_one").all.collect{|q| ["Answer For: #{q.code}", "by_answer_#{q.id}"]}
+    Question.includes(:type).where(:"question_types.name" => "select_one").all.collect{|q| [human_name(q), "by_answer_#{q.id}"]}
+  end
+  
+  def self.human_name(question)
+    "Answer For '#{question.code}'"
   end
   
   def apply(rel)
@@ -34,6 +38,10 @@ class Report::ByAnswerGrouping < Report::Grouping
   
   def assoc_id=(id)
     self.question_id = id
+  end
+  
+  def to_s
+    self.class.human_name(question)
   end
   
   private

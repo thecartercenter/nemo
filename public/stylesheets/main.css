@@ -136,6 +136,6 @@ form.new_report_report div.form_field_control, form.edit_report_report div.form_
 #report_report_filter_attributes_str { width: 435px; }
 
 /* report table */
-table.report { border-collapse: separate; }
+table.report { border-collapse: separate; margin-left: -2px; }
 table.report td, table.report th { padding: 2px 10px 2px 2px; background-color: #eee; }
 table.report th { text-align: left; background-color: #ddd; }

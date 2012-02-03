@@ -1,4 +1,10 @@
 <div class="tip">
+  <strong><%= @report.kind.downcase.capitalize %>s</strong> 
+  grouped by 
+  <%= @report.groupings.collect{|g| "<strong>#{g.to_s.downcase}</strong>"}.join(" and ").html_safe %>,
+  <%= @report.filter ? "filtered by <strong>#{@report.filter.str}</strong>".html_safe : "not filtered" %>
+</div>
+<div class="tip">
   <%= join_links(
     link_to("Back to Report Listing", report_reports_path),
     link_to_if_auth("Edit This Report", edit_report_report_path(@report), "report_reports#update")

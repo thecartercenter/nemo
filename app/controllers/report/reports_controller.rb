@@ -11,11 +11,13 @@ class Report::ReportsController < ApplicationController
   
   def edit
     @report = Report::Report.find(params[:id])
+    @report.build_filter(:class_name => "Response") unless @report.filter
     render(:form)
   end
   
   def show
     @report = Report::Report.find(params[:id])
+    @title = @report.name
     @report.record_viewing
     @report.run
   end

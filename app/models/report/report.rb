@@ -7,7 +7,6 @@ class Report::Report < ActiveRecord::Base
   has_many(:fields, :class_name => "Report::Field", :foreign_key => "report_report_id")
   
   attr_reader(:headers, :data)
-  accepts_nested_attributes_for(:filter)
   scope(:by_viewed_at, order("viewed_at desc"))
   
   validates(:kind, :presence => true)
@@ -18,7 +17,11 @@ class Report::Report < ActiveRecord::Base
   def self.type_select_options
     KINDS
   end
-
+  
+  def filter_attributes=(attribs)
+    self.filter = attribs[:str].blank? ? nil : Search::Search.new(attribs)
+  end
+  
   def pri_grouping_attributes=(attribs)
     self.pri_grouping = Report::Grouping.construct(attribs)
   end
@@ -67,8 +70,7 @@ class Report::Report < ActiveRecord::Base
     save(:validate => false)
   end
   
-  protected
-    def groupings
-      [pri_grouping, sec_grouping].compact
-    end
+  def groupings
+    [pri_grouping, sec_grouping].compact
+  end
 end

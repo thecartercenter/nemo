@@ -22,4 +22,8 @@ class Report::ByAttribGrouping < Report::Grouping
   def assoc_id=(id)
     self.attrib_id = id
   end
+  
+  def to_s
+    attrib.name
+  end
 end
