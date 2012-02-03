@@ -4,7 +4,7 @@
 en:
   activerecord:
     models:
-      report/report: Bar
+      report/report: Report
     attributes:
       question:
         name_eng: "English name"

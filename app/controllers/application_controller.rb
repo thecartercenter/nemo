@@ -29,6 +29,11 @@ class ApplicationController < ActionController::Base
   
   helper_method :current_user_session, :current_user, :authorized?
   
+  # hackish way of getting the route key identical to what would be returned by model_name.route_key on a model
+  def route_key
+    self.class.name.underscore.gsub("/", "_").gsub(/_controller$/, "")
+  end
+  
   protected
     
     # Renders a file with the browser-appropriate MIME type for CSV data.
@@ -111,7 +116,7 @@ class ApplicationController < ActionController::Base
     def authorize
       # make sure user has permissions
       begin
-        Permission.authorize(:user => current_user, :controller => controller_name, :action => action_name, :request => params)
+        Permission.authorize(:user => current_user, :controller => route_key, :action => action_name, :request => params)
         return true
       rescue PermissionError
         # if request is for the login page, just go to welcome page with no flash
