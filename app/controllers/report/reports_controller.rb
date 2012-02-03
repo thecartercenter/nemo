@@ -1,6 +1,6 @@
 class Report::ReportsController < ApplicationController
   def index
-    @reports = Report::Report.all
+    @reports = Report::Report.by_viewed_at
   end
   
   def new
@@ -16,8 +16,15 @@ class Report::ReportsController < ApplicationController
   
   def show
     @report = Report::Report.find(params[:id])
+    @report.record_viewing
     @report.run
   end
+  
+  def destroy
+    @report = Report::Report.find(params[:id])
+    begin flash[:success] = @report.destroy && "Report deleted successfully." rescue flash[:error] = $!.to_s end
+    redirect_to(:action => :index)
+  end    
   
   def create; crupdate; end
   def update; crupdate; end

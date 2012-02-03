@@ -128,9 +128,12 @@ textarea#broadcast_body { width: 400px; height: 200px; }
 .users_edit #user_notes, .users_new #user_notes { width: 300px; height: 100px; }
 .users_edit #user_device, .users_new #user_device { width: 100px; }
 
+/* report index */
+.report_reports_index .name_col { min-width: 200px; }
+
 /* report form */
 form#new_report_report div.form_field_control, form#edit_report_report div.form_field_control { width: 450px; }
-#report_report_filter_attributes_str { width: 400px; }
+#report_report_filter_attributes_str { width: 435px; }
 
 /* report table */
 table.report { border-collapse: separate; }

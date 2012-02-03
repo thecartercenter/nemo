@@ -1,10 +1,10 @@
 <div id="index_table">
   <div class="tip">
     <% if paginated %>
-      Found <strong><%= pluralize(objects.total_entries, human_class_name) %></strong> in total. 
+      Found <strong><%= pluralize(objects.total_entries, klass.model_name.human.downcase) %></strong> in total. 
       Showing <%= objects.offset + 1 %>-<%= objects.offset + objects.size %>.
     <% else %>
-      Found <strong><%= pluralize(objects.size, human_class_name) %></strong> in total. 
+      Found <strong><%= pluralize(objects.size, klass.model_name.human.downcase) %></strong> in total. 
     <% end %>&nbsp;
     <%= links %>
   </div>

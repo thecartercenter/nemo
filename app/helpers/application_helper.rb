@@ -99,7 +99,7 @@ module ApplicationHelper
   # assembles links for the basic actions in an index table (show edit and destroy)
   def action_links(obj, options)
     destroy_warning = options[:destroy_warning] || "Are you sure?"
-    klass = obj.class.name.underscore
+    route_key = obj.class.model_name.route_key.singularize
     links = %w(show edit destroy).collect do |action|
       options[:exclude] = [options[:exclude]] unless options[:exclude].is_a?(Array)
       next if options[:exclude] && options[:exclude].include?(action.to_sym)
@@ -107,9 +107,9 @@ module ApplicationHelper
       key = "#{obj.class.table_name}##{action}"
       case action
       when "show"
-        link_to_if_auth(img, send("#{klass}_path", obj), key, obj, :title => "View")
+        link_to_if_auth(img, send("#{route_key}_path", obj), key, obj, :title => "View")
       when "edit"
-        link_to_if_auth(img, send("edit_#{klass}_path", obj), key, obj, :title => "Edit")
+        link_to_if_auth(img, send("edit_#{route_key}_path", obj), key, obj, :title => "Edit")
       when "destroy"
         link_to_if_auth(img, obj, key, obj, :method => :delete, :confirm => destroy_warning, :title => "Delete")
       end
@@ -156,7 +156,6 @@ module ApplicationHelper
       :objects => objects,
       :paginated => objects.respond_to?(:total_entries),
       :links => join_links(*links.flatten),
-      :human_class_name => klass.name.underscore.humanize.downcase,
       :fields => send("#{klass.table_name}_index_fields"),
       :batch_ops => batch_ops
     )

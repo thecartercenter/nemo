@@ -7,14 +7,12 @@ class Report::Report < ActiveRecord::Base
   has_many(:fields, :class_name => "Report::Field", :foreign_key => "report_report_id")
   
   attr_reader(:headers, :data)
-  # NEED TO CONVERT THESE TO HAS_ONE RELATIONS
-  # (ADD REPORT_REPORT_ID FIELDS TO SEARCH AND GROUPING)
-  # OR MAYBE ONLY DO THIS WITH GROUPING
   accepts_nested_attributes_for(:filter)
-
+  scope(:by_viewed_at, order("viewed_at desc"))
+  
   validates(:kind, :presence => true)
   validates(:name, :presence => true, :uniqueness => true)
-
+  
   KINDS = ["Response Count"]
   
   def self.type_select_options
@@ -61,6 +59,12 @@ class Report::Report < ActiveRecord::Base
         @data[r][c] = row["Count"]
       end
     end
+  end
+  
+  def record_viewing
+    self.viewed_at = Time.now
+    self.view_count += 1
+    save(:validate => false)
   end
   
   protected

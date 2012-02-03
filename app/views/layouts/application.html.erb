@@ -1,5 +1,5 @@
 <% body = yield %>
-<% ctlr_action_name = "#{controller.controller_name}_#{controller.action_name.gsub('update', 'edit').gsub('create', 'new')}" %>
+<% ctlr_action_name = "#{controller.route_key}_#{controller.action_name.gsub('update', 'edit').gsub('create', 'new')}" %>
 <!DOCTYPE html>
 <html>
 <head>
