@@ -32,15 +32,15 @@ div.reqd_sym { display: inline; font-weight: bold; color: #d02000; font-size: 12
 table.form td.name { min-width: 75px; }
 
 /* forms (newer) */
-div.form_field { width: 800px; border-top: 1px solid #ddd; padding: 5px 0 5px 0; }
-div.form_field label { float: left; width: 200px; }
-div.form_field div.form_field_control { float: left; width: 300px; min-height: 26px; position: relative; }
+div.form_field { float: left; clear: left; border-top: 1px solid #ddd; padding: 5px 0 5px 0; }
+div.form_field label { float: left; width: 150px; }
+div.form_field div.form_field_control { float: left; min-width: 300px; min-height: 26px; position: relative; }
 div.form_field div.form_field_control input { width: 240px; }
 div.form_field div.form_field_details { float: right; width: 300px; position: relative; font-size: 90%; }
 div.form_field div.space_line { clear: both; margin: 0; padding: 0; width: auto; }
 div.dummy, span.dummy { font-weight: bold; }
 div.dummy_checkbox { float: left; width: 15px; font-weight: bold; }
-input.submit { font-weight: bold; font-size: 120%; padding: 5px 15px; margin: 0; }
+input.submit { float: left; clear: left; font-weight: bold; font-size: 120%; padding: 5px 15px; margin: 0; }
 label.required { font-weight: bold; }
 
 /* index tables */
@@ -64,7 +64,7 @@ div.field_with_errors { display: inline; }
 /* search form */
 form.new_search_search, form.edit_search_search { margin-bottom: 10px; }
 form.new_search_search #search_search_str, form.edit_search_search #search_search_str { width: 300px; }
-form.new_search_search #examples, form.edit_search_search #examples { color: #666; }
+#search_examples { margin-top: 2px; color: #666; }
 
 /* welcome */
 img#welcome { border: 1px solid #666; }
@@ -127,6 +127,10 @@ textarea#broadcast_body { width: 400px; height: 200px; }
 /* user edit */
 .users_edit #user_notes, .users_new #user_notes { width: 300px; height: 100px; }
 .users_edit #user_device, .users_new #user_device { width: 100px; }
+
+/* report form */
+form#new_report_report div.form_field_control, form#edit_report_report div.form_field_control { width: 450px; }
+#report_report_filter_attributes_str { width: 400px; }
 
 /* report table */
 table.report { border-collapse: separate; }

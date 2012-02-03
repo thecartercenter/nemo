@@ -74,7 +74,7 @@ class Response < ActiveRecord::Base
   end
   
   def self.search_examples
-    ['submitter:"john smith"', 'formname:polling', 'formtype:sto', 'place:beirut']
+    ['submitter:"john smith"', 'formname:polling', 'place:beirut', 'reviewed:yes']
   end
 
   def self.create_from_xml(xml, user)

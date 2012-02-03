@@ -1,4 +1,5 @@
 <%= fields_for("report_report[filter_attributes]", report_form.object.filter) do |f| %>
   <%= f.hidden_field(:class_name) %>
   <%= f.text_field(:str) %>
+  <%= search_examples(report_form.object.filter) %>
 <% end %>

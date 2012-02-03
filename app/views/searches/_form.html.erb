@@ -6,7 +6,5 @@
     <%= f.submit("Clear", :onclick => "this.form.search_search_str.value=''") %>
   <% end %>
   <br/>
-  <div id="examples">
-    Examples: <%= search.examples.join("&nbsp;&nbsp;|&nbsp;&nbsp;").html_safe %>
-  </div>
+  <%= search_examples(search) %>
 <% end %>
