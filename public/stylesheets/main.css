@@ -132,7 +132,7 @@ textarea#broadcast_body { width: 400px; height: 200px; }
 .report_reports_index .name_col { min-width: 200px; }
 
 /* report form */
-form#new_report_report div.form_field_control, form#edit_report_report div.form_field_control { width: 450px; }
+form.new_report_report div.form_field_control, form.edit_report_report div.form_field_control { width: 450px; }
 #report_report_filter_attributes_str { width: 435px; }
 
 /* report table */
