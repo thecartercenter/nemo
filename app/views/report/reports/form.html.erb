@@ -1,0 +1,10 @@
+<%= flash_and_form_errors(@report) %>
+<%= form_for(@report) do |f| %>
+  <div class="tip">Required fields shown in <strong>bold</strong>.</div>
+  <%= form_field(f, :kind, :type => :select, :options => Report::Report.type_select_options, :required => true) %>
+  <%= form_field(f, :name, :required => true, :details => "A descriptive name for this report.") %>
+  <%= form_field(f, :filter, :partial => "filter") %>
+  <%= form_field(f, :pri_grouping, :partial => "grouping") %>
+  <%= form_field(f, :sec_grouping, :partial => "grouping") %>
+  <%= form_field(f, nil, :type => :submit) %>
+<% end %>

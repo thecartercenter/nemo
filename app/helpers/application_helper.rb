@@ -64,16 +64,20 @@ module ApplicationHelper
       content_tag("div", :class => "form_field", :id => "#{f.object.class.model_name.singular}_#{method}") do
         label = f.label(method, nil, :class => options[:required] ? "required" : "")
         field = content_tag("div", :class => "form_field_control") do
-          case options[:type]
-          when nil, :text then f.text_field(method)
-          when :check_box then f.check_box(method)
-          when :textarea then f.text_area(method)
-          when :password then f.password_field(method)
-          when :country then country_select(f.object.class.name.downcase, method, nil)
-          when :select then f.select(method, options[:options], :include_blank => options[:blank_text] || true)
-          when :datetime then f.datetime_select(method, :ampm => true, :order => [:month, :day, :year], :default => options[:default])
-          when :birthdate then f.date_select(method, :start_year => Time.now.year - 110, :end_year => Time.now.year - 18, 
-            :include_blank => true, :order => [:month, :day, :year], :default => nil)
+          if options[:partial]
+            render(options[:partial], :report_form => f, :method => method)
+          else
+            case options[:type]
+            when nil, :text then f.text_field(method)
+            when :check_box then f.check_box(method)
+            when :textarea then f.text_area(method)
+            when :password then f.password_field(method)
+            when :country then country_select(f.object.class.name.downcase, method, nil)
+            when :select then f.select(method, options[:options], :include_blank => options[:blank_text] || true)
+            when :datetime then f.datetime_select(method, :ampm => true, :order => [:month, :day, :year], :default => options[:default])
+            when :birthdate then f.date_select(method, :start_year => Time.now.year - 110, :end_year => Time.now.year - 18, 
+              :include_blank => true, :order => [:month, :day, :year], :default => nil)
+            end
           end
         end
         details = content_tag("div", :class => "form_field_details"){options[:details]}

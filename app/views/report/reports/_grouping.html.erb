@@ -1,0 +1,3 @@
+<%= fields_for("report_report[#{method}_attributes]", report_form.object.send(method)) do |f| %>
+  <%= f.select(:form_choice, Report::Grouping.select_options, :include_blank => true) %>
+<% end %>

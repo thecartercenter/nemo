@@ -1,6 +1,10 @@
 class Report::ByAnswerGrouping < Report::Grouping
   belongs_to(:question)
   
+  def self.select_options
+    Question.includes(:type).where(:"question_types.name" => "select_one").all.collect{|q| [q.code, "by_answer_#{q.id}"]}
+  end
+  
   def apply(rel)
     case question.type.name
     when "select_one"
@@ -22,6 +26,14 @@ class Report::ByAnswerGrouping < Report::Grouping
   
   def col_name
     question.code
+  end
+  
+  def form_choice
+    "by_answer_#{question_id}"
+  end
+  
+  def assoc_id=(id)
+    self.question_id = id
   end
   
   private

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120131161053) do
+ActiveRecord::Schema.define(:version => 20120203164645) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -182,18 +182,24 @@ ActiveRecord::Schema.define(:version => 20120131161053) do
     t.datetime "updated_at"
   end
 
-  create_table "report_groupings", :force => true do |t|
-    t.string   "type"
+  create_table "report_grouping_attributes", :force => true do |t|
     t.string   "name"
     t.string   "code"
     t.string   "join_tables"
-    t.integer  "question_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "report_reports", :force => true do |t|
+  create_table "report_groupings", :force => true do |t|
     t.string   "type"
+    t.integer  "question_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "attrib_id"
+  end
+
+  create_table "report_reports", :force => true do |t|
+    t.string   "kind"
     t.string   "name"
     t.boolean  "saved",           :default => false
     t.integer  "filter_id"
@@ -297,7 +303,7 @@ ActiveRecord::Schema.define(:version => 20120131161053) do
 
   add_index "users", ["login"], :name => "index_users_on_login", :unique => true
 
-  create_view "_answers", "select `r`.`id` AS `response_id`,`r`.`observed_at` AS `observation_time`,`r`.`reviewed` AS `is_reviewed`,`f`.`name` AS `form_name`,`ft`.`name` AS `form_type`,`q`.`code` AS `question_code`,`qtr`.`str` AS `question_name`,`qt`.`name` AS `question_type`,`u`.`name` AS `observer_name`,`plc`.`full_name` AS `place_full_name`,`pnt`.`long_name` AS `point`,`adr`.`long_name` AS `address`,`loc`.`long_name` AS `locality`,`sta`.`long_name` AS `state`,`cry`.`long_name` AS `country`,`plc`.`latitude` AS `latitude`,`plc`.`longitude` AS `longitude`,concat(`plc`.`latitude`,',',`plc`.`longitude`) AS `latitude_longitude`,`a`.`id` AS `answer_id`,`a`.`value` AS `answer_value`,ifnull(`aotr`.`str`,`cotr`.`str`) AS `choice_name`,ifnull(`ao`.`value`,`co`.`value`) AS `choice_value`,`os`.`name` AS `option_set` from ((((((((((((((((((((`answers` `a` left join `options` `ao` on((`a`.`option_id` = `ao`.`id`))) left join `translations` `aotr` on(((`aotr`.`obj_id` = `ao`.`id`) and (`aotr`.`fld` = 'name') and (`aotr`.`class_name` = 'Option') and (`aotr`.`language_id` = (select `languages`.`id` from `languages` where (`languages`.`code` = 'eng')))))) left join `choices` `c` on((`c`.`answer_id` = `a`.`id`))) left join `options` `co` on((`c`.`option_id` = `co`.`id`))) left join `translations` `cotr` on(((`cotr`.`obj_id` = `co`.`id`) and (`cotr`.`fld` = 'name') and (`cotr`.`class_name` = 'Option') and (`cotr`.`language_id` = (select `languages`.`id` from `languages` where (`languages`.`code` = 'eng')))))) join `responses` `r` on((`a`.`response_id` = `r`.`id`))) join `users` `u` on((`r`.`user_id` = `u`.`id`))) join `forms` `f` on((`r`.`form_id` = `f`.`id`))) join `form_types` `ft` on((`f`.`form_type_id` = `ft`.`id`))) left join `places` `plc` on((`r`.`place_id` = `plc`.`id`))) left join `places` `pnt` on((`plc`.`point_id` = `pnt`.`id`))) left join `places` `adr` on((`plc`.`address_id` = `adr`.`id`))) left join `places` `loc` on((`plc`.`locality_id` = `loc`.`id`))) left join `places` `sta` on((`plc`.`state_id` = `sta`.`id`))) left join `places` `cry` on((`plc`.`country_id` = `cry`.`id`))) join `questionings` `qing` on((`a`.`questioning_id` = `qing`.`id`))) join `questions` `q` on((`qing`.`question_id` = `q`.`id`))) join `question_types` `qt` on((`q`.`question_type_id` = `qt`.`id`))) left join `option_sets` `os` on((`q`.`option_set_id` = `os`.`id`))) join `translations` `qtr` on(((`qtr`.`obj_id` = `q`.`id`) and (`qtr`.`fld` = 'name') and (`qtr`.`class_name` = 'Question') and (`qtr`.`language_id` = (select `languages`.`id` from `languages` where (`languages`.`code` = 'eng'))))))", :force => true do |v|
+  create_view "_answers", "select `r`.`id` AS `response_id`,`r`.`observed_at` AS `observation_time`,`r`.`reviewed` AS `is_reviewed`,`f`.`name` AS `form_name`,`ft`.`name` AS `form_type`,`q`.`code` AS `question_code`,`qtr`.`str` AS `question_name`,`qt`.`name` AS `question_type`,`u`.`name` AS `observer_name`,`plc`.`full_name` AS `place_full_name`,`pnt`.`long_name` AS `point`,`adr`.`long_name` AS `address`,`loc`.`long_name` AS `locality`,`sta`.`long_name` AS `state`,`cry`.`long_name` AS `country`,`plc`.`latitude` AS `latitude`,`plc`.`longitude` AS `longitude`,concat(`plc`.`latitude`,_latin1',',`plc`.`longitude`) AS `latitude_longitude`,`a`.`id` AS `answer_id`,`a`.`value` AS `answer_value`,ifnull(`aotr`.`str`,`cotr`.`str`) AS `choice_name`,ifnull(`ao`.`value`,`co`.`value`) AS `choice_value`,`os`.`name` AS `option_set` from ((((((((((((((((((((`answers` `a` left join `options` `ao` on((`a`.`option_id` = `ao`.`id`))) left join `translations` `aotr` on(((`aotr`.`obj_id` = `ao`.`id`) and (`aotr`.`fld` = _latin1'name') and (`aotr`.`class_name` = _latin1'Option') and (`aotr`.`language_id` = (select `languages`.`id` AS `id` from `languages` where (`languages`.`code` = _latin1'eng')))))) left join `choices` `c` on((`c`.`answer_id` = `a`.`id`))) left join `options` `co` on((`c`.`option_id` = `co`.`id`))) left join `translations` `cotr` on(((`cotr`.`obj_id` = `co`.`id`) and (`cotr`.`fld` = _latin1'name') and (`cotr`.`class_name` = _latin1'Option') and (`cotr`.`language_id` = (select `languages`.`id` AS `id` from `languages` where (`languages`.`code` = _latin1'eng')))))) join `responses` `r` on((`a`.`response_id` = `r`.`id`))) join `users` `u` on((`r`.`user_id` = `u`.`id`))) join `forms` `f` on((`r`.`form_id` = `f`.`id`))) join `form_types` `ft` on((`f`.`form_type_id` = `ft`.`id`))) left join `places` `plc` on((`r`.`place_id` = `plc`.`id`))) left join `places` `pnt` on((`plc`.`point_id` = `pnt`.`id`))) left join `places` `adr` on((`plc`.`address_id` = `adr`.`id`))) left join `places` `loc` on((`plc`.`locality_id` = `loc`.`id`))) left join `places` `sta` on((`plc`.`state_id` = `sta`.`id`))) left join `places` `cry` on((`plc`.`country_id` = `cry`.`id`))) join `questionings` `qing` on((`a`.`questioning_id` = `qing`.`id`))) join `questions` `q` on((`qing`.`question_id` = `q`.`id`))) join `question_types` `qt` on((`q`.`question_type_id` = `qt`.`id`))) left join `option_sets` `os` on((`q`.`option_set_id` = `os`.`id`))) join `translations` `qtr` on(((`qtr`.`obj_id` = `q`.`id`) and (`qtr`.`fld` = _latin1'name') and (`qtr`.`class_name` = _latin1'Question') and (`qtr`.`language_id` = (select `languages`.`id` AS `id` from `languages` where (`languages`.`code` = _latin1'eng'))))))", :force => true do |v|
     v.column :response_id
     v.column :observation_time
     v.column :is_reviewed

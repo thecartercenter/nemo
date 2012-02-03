@@ -127,3 +127,8 @@ textarea#broadcast_body { width: 400px; height: 200px; }
 /* user edit */
 .users_edit #user_notes, .users_new #user_notes { width: 300px; height: 100px; }
 .users_edit #user_device, .users_new #user_device { width: 100px; }
+
+/* report table */
+table.report { border-collapse: separate; }
+table.report td, table.report th { padding: 2px 10px 2px 2px; background-color: #eee; }
+table.report th { text-align: left; background-color: #ddd; }

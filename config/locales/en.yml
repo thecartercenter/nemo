@@ -3,6 +3,14 @@
 
 en:
   activerecord:
+    models:
+      report/report: Bar
     attributes:
       question:
         name_eng: "English name"
+      report/report:
+        kind: Report Type
+        pri_grouping: Main Grouping
+        sec_grouping: Secondary Grouping
+        submit_new: Generate Report
+        submit_edit: Save Changes        

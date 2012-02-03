@@ -38,7 +38,7 @@ class Question < ActiveRecord::Base
   before_validation(:clean)
   before_destroy(:check_assoc)
   
-  default_scope(includes(:type, :translations, :questionings, :answers, :forms).order("code"))
+  default_scope(order("code"))
   
   self.per_page = 100
   

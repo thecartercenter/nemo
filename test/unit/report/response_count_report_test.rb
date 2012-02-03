@@ -14,9 +14,9 @@ class Report::ResponseCountReportTest < ActiveSupport::TestCase
     create_response(:answers => {:num0 => 3})
     
     # create report
-    r = Report::ResponseCountReport.create
+    r = Report::Report.create(:kind => "Response Count")
     
-    assert_report(r, [], %w(2))
+    assert_report(r, %w(Count), ["", "2"])
   end
   
   test "grouped by state" do
@@ -26,8 +26,8 @@ class Report::ResponseCountReportTest < ActiveSupport::TestCase
     create_response(:place => @places["Atlanta"])
     create_response(:place => @places["Augusta"])
 
-    r = Report::ResponseCountReport.create
-    r.pri_grouping = Report::ByAttribGrouping.find_by_name("State")
+    r = Report::Report.create(:kind => "Response Count")
+    r.pri_grouping = Report::ByAttribGrouping.create(:attrib => Report::GroupingAttribute.find_by_name("State"))
     
     assert_report(r, %w(Count), %w(Alabama 1), %w(Georgia 2))
   end
@@ -41,8 +41,8 @@ class Report::ResponseCountReportTest < ActiveSupport::TestCase
     create_response(:place => @places["Atlanta"], :answers => {:satisfactory => "No"})
     create_response(:place => @places["Augusta"], :answers => {:satisfactory => "Yes"})
 
-    r = Report::ResponseCountReport.create
-    r.pri_grouping = Report::ByAttribGrouping.find_by_name("State")
+    r = Report::Report.create(:kind => "Response Count")
+    r.pri_grouping = Report::ByAttribGrouping.create(:attrib => Report::GroupingAttribute.find_by_name("State"))
     r.sec_grouping = Report::ByAnswerGrouping.create(:question => q)
     r.filter = Search::Search.create(:class_name => "Response", :str => "place != Atlanta")
     
@@ -58,9 +58,9 @@ class Report::ResponseCountReportTest < ActiveSupport::TestCase
     3.times{create_response(:place => @places["USA"], :form => @forms[:f0])}
     2.times{create_response(:place => @places["USA"], :form => @forms[:f1])}
     
-    r = Report::ResponseCountReport.create
-    r.pri_grouping = Report::ByAttribGrouping.find_by_name("Form")
-    r.sec_grouping = Report::ByAttribGrouping.find_by_name("Country")
+    r = Report::Report.create(:kind => "Response Count")
+    r.pri_grouping = Report::ByAttribGrouping.create(:attrib => Report::GroupingAttribute.find_by_name("Form"))
+    r.sec_grouping = Report::ByAttribGrouping.create(:attrib => Report::GroupingAttribute.find_by_name("Country"))
     
     assert_report(r, %w(Canada USA), %w(f0 1 3), %w(f1 5 2))
   end
@@ -75,7 +75,7 @@ class Report::ResponseCountReportTest < ActiveSupport::TestCase
     3.times{create_response(:answers => {:satisfactory => "No", :openontime => "Yes"})}
     2.times{create_response(:answers => {:satisfactory => "No", :openontime => "No"})}
     
-    r = Report::ResponseCountReport.create
+    r = Report::Report.create(:kind => "Response Count")
     r.pri_grouping = Report::ByAnswerGrouping.create(:question => q1)
     r.sec_grouping = Report::ByAnswerGrouping.create(:question => q2)
     
@@ -89,7 +89,7 @@ class Report::ResponseCountReportTest < ActiveSupport::TestCase
     q = create_question(:code => "satisfactory", :type => "select_one")
     q.questionings.destroy_all
     
-    r = Report::ResponseCountReport.create
+    r = Report::Report.create(:kind => "Response Count")
     r.pri_grouping = Report::ByAnswerGrouping.create(:question => q)
     
     assert_raise(Report::ReportError){r.run}
@@ -106,7 +106,7 @@ class Report::ResponseCountReportTest < ActiveSupport::TestCase
 #    @rs.each{|resp| resp.reload}
 #    
 #    # create report
-#    r = Report::Report.create
+#    r = Report::Report.create(:kind => "Response Count")
 #    r.fields.create(:report => r, :attrib_name => "observed_at")
 #    r.fields.create(:report => r, :question => @qs[:num])
 #    r.run
@@ -120,7 +120,7 @@ class Report::ResponseCountReportTest < ActiveSupport::TestCase
 #    @qs[:num].questionings.delete_all
 #    
 #    # create report
-#    r = Report::Report.create(:aggregation => Report::Aggregation.find_by_name("Average"))
+#    r = Report::Report.create(:kind => "Response Count")(:aggregation => Report::Aggregation.find_by_name("Average"))
 #    r.fields.create(:question => @qs[:num])
 #    
 #    assert_raise(Report::ReportError){r.run}
@@ -133,7 +133,7 @@ class Report::ResponseCountReportTest < ActiveSupport::TestCase
 #    create_response(:answers => {:num => 4})
 #    
 #    # create report
-#    r = Report::Report.create(:aggregation => Report::Aggregation.find_by_name("Average"))
+#    r = Report::Report.create(:kind => "Response Count")(:aggregation => Report::Aggregation.find_by_name("Average"))
 #    f = r.fields.create(:question => @qs[:num])
 #    
 #    # assert
@@ -158,7 +158,7 @@ class Report::ResponseCountReportTest < ActiveSupport::TestCase
 #    create_response(:place => @places["USA"], :form => @forms[:f1], :answers => {:num => 11.5})
 #
 #    # create report with field as average num, grouped by country, form
-#    r = Report::Report.create(:aggregation => Report::Aggregation.find_by_name("Average"))
+#    r = Report::Report.create(:kind => "Response Count")(:aggregation => Report::Aggregation.find_by_name("Average"))
 #    r.fields.create(:question => @qs[:num])
 #    r.pri_grouping = Report::Grouping.find_by_name("Form")
 #    r.sec_grouping = Report::Grouping.find_by_name("Country")
@@ -179,7 +179,7 @@ class Report::ResponseCountReportTest < ActiveSupport::TestCase
 #    5.times{create_response(:answers => {:sel1 => "Yes"})}
 #    6.times{create_response(:answers => {:sel1 => "No"})}
 #    
-#    r = Report::Report.create(:aggregation => Report::Aggregation.find_by_name("Answer Count"))
+#    r = Report::Report.create(:kind => "Response Count")(:aggregation => Report::Aggregation.find_by_name("Answer Count"))
 #    r.fields.create(:question_type => QuestionType.find_by_name("select_one"))
 #    r.pri_grouping = Report::Grouping.find_by_name("Questions")
 #    r.sec_grouping = Report::Grouping.find_by_name("Answers")
@@ -195,7 +195,7 @@ class Report::ResponseCountReportTest < ActiveSupport::TestCase
 #    create_response(:answers => {:num0 => 4, :num1 => 12})
 #
 #    # create report
-#    r = Report::Report.create(:aggregation => Report::Aggregation.find_by_name("Average"))
+#    r = Report::Report.create(:kind => "Response Count")(:aggregation => Report::Aggregation.find_by_name("Average"))
 #    f = r.fields.create(:question_type => QuestionType.find_by_name("integer"))
 #    r.pri_grouping = Report::Grouping.find_by_name("Questions")
 #    
@@ -275,7 +275,7 @@ class Report::ResponseCountReportTest < ActiveSupport::TestCase
       raise "Missing headers" if report.headers.nil? || report.headers[:col].nil? || report.headers[:row].nil?
       raise "Bad data array" if report.data.nil? || report.data.empty?
       actual = [report.headers[:col]]
-      report.data.each_with_index{|row, i| actual += [Array.wrap(report.headers[:row][i]) + row]}
+      report.data.each_with_index{|row, i| actual += [Array.wrap(report.headers[:row][i]) + row.collect{|x| x.to_s}]}
       assert_equal(expected, actual)
     end
 end

@@ -16,6 +16,8 @@ CommandCenter::Application.routes.draw do
   resource(:user_session){collection{get 'logged_out'}}
   resources(:users){member{get 'login_instructions'}; collection{post 'export'}}
 
+  namespace(:report){resources(:reports)}
+
   root(:to => "welcome#index")
   
   # redirects for ODK

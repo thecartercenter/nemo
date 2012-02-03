@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/Fixtures.html
+
+one:
+  name: MyString
+  code: MyString
+  join_tables: MyString
+
+two:
+  name: MyString
+  code: MyString
+  join_tables: MyString
