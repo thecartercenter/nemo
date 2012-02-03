@@ -5,14 +5,12 @@ class Report::ReportsController < ApplicationController
   
   def new
     @report = Report::Report.new
-    @report.build_filter(:class_name => "Response")
-    render(:form)
+    build_filter_and_render_form  
   end
   
   def edit
     @report = Report::Report.find(params[:id])
-    @report.build_filter(:class_name => "Response") unless @report.filter
-    render(:form)
+    build_filter_and_render_form
   end
   
   def show
@@ -39,7 +37,12 @@ class Report::ReportsController < ApplicationController
         @report.update_attributes!(params[:report_report])
         redirect_to(:action => :show, :id => @report.id)
       rescue ActiveRecord::RecordInvalid
-        render(:action => :form)
+        build_filter_and_render_form
       end
+    end
+    
+    def build_filter_and_render_form
+      @report.build_filter(:class_name => "Response") unless @report.filter
+      render(:action => :form)
     end
 end
