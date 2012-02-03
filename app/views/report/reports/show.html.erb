@@ -1,4 +1,9 @@
-<div class="tip"><%= link_to("Back to Report Listing", report_reports_path) %></div>
+<div class="tip">
+  <%= join_links(
+    link_to("Back to Report Listing", report_reports_path),
+    link_to_if_auth("Edit This Report", edit_report_report_path(@report), "report_reports#update")
+  ) %>
+</div>
 <table class="report">
   <thead>
     <tr>
