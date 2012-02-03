@@ -7,7 +7,7 @@
     :details => "A search string to filter the responses used in the report. You can try out your
       searches on the #{link_to('Responses page', responses_path())}.".html_safe) %>
   <%= form_field(f, :pri_grouping, :partial => "grouping", 
-    :details => "An attribute or question by which the response count should be grouped (e.g. per state, per overall rating).") %>
+    :details => "An attribute or question by which the response count should be grouped (e.g. state, overall rating).") %>
   <%= form_field(f, :sec_grouping, :partial => "grouping", :details => "A second grouping.") %>
   <%= form_field(f, nil, :type => :submit) %>
 <% end %>

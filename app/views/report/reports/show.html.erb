@@ -5,22 +5,18 @@
   ) %>
 </div>
 <table class="report">
-  <thead>
+  <tr>
+    <th></th>
+    <% @report.headers[:col].each do |ch| %>
+      <th><%= ch %></th>
+    <% end %>
+  </th>
+  <% @report.headers[:row].each_with_index do |rh, r| %>
     <tr>
-      <th></th>
-      <% @report.headers[:col].each do |ch| %>
-        <th><%= ch %></th>
+      <th><%= rh %></th>
+      <% @report.headers[:col].each_with_index do |ch, c| %>
+        <td><%= @report.data[r][c] %></td>
       <% end %>
     </th>
-  </thead>
-  <tbody>
-    <% @report.headers[:row].each_with_index do |rh, r| %>
-      <tr>
-        <th><%= rh %></th>
-        <% @report.headers[:col].each_with_index do |ch, c| %>
-          <td><%= @report.data[r][c] %></td>
-        <% end %>
-      </th>
-    <% end %>
-  </tbody>
+  <% end %>
 </table>

@@ -2,7 +2,7 @@ class Report::ByAttribGrouping < Report::Grouping
   belongs_to(:attrib, :class_name => "Report::GroupingAttribute")
   
   def self.select_options
-    Report::GroupingAttribute.all.collect{|g| [g.name, "by_attrib_#{g.id}"]}
+    Report::GroupingAttribute.all.collect{|g| ["#{g.name}", "by_attrib_#{g.id}"]}
   end
   
   # applies this grouping to the given relation
