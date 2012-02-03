@@ -1,6 +1,6 @@
 namespace :db do
   desc "Seed the current environment's database." 
-  task :seed => :environment do
+  task :seedy => :environment do
     ActiveRecord::Base.transaction do
       # Settables
       find_or_create(Settable, :key, :key => "timezone", :name => "Time Zone", :description => "The time zone in which times are displayed throughout the Command Center", :kind => "timezone", :default => "UTC")
@@ -41,9 +41,9 @@ namespace :db do
       calc1 = find_or_create(Report::Calculation, :name, :name => "Zero/Nonzero", :code => "IF(? > 0, 1, 0)")
       
       # Report Groupings
-      find_or_create(Report::ByAttribGrouping, :name, :name => "Form", :code => "forms.name", :join_tables => "forms")
-      find_or_create(Report::ByAttribGrouping, :name, :name => "State", :code => "states.long_name", :join_tables => "states")
-      find_or_create(Report::ByAttribGrouping, :name, :name => "Country", :code => "countries.long_name", :join_tables => "countries")
+      find_or_create(Report::GroupingAttribute, :name, :name => "Form", :code => "forms.name", :join_tables => "forms")
+      find_or_create(Report::GroupingAttribute, :name, :name => "State", :code => "states.long_name", :join_tables => "states")
+      find_or_create(Report::GroupingAttribute, :name, :name => "Country", :code => "countries.long_name", :join_tables => "countries")
       
       # Report Aggregations
       find_or_create(Report::Aggregation, :name, :name => "Average", :code => "AVG(?)")
