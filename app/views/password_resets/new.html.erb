@@ -2,7 +2,7 @@
   Fill out the form below and instructions to reset your password will be emailed to you:
 </div>
 <% rowbg = 0 %>
-<% form_tag password_resets_path do %>
+<%= form_tag password_resets_path do %>
   <%= flash_and_form_errors %>
   <table class="form">
     <tr class="rowbg<%= rowbg = 1 - rowbg %>">

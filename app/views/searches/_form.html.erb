@@ -1,4 +1,4 @@
-<% form_for(search) do |f| %>
+<%= form_for(search) do |f| %>
   Search: <%= f.text_field(:str) %>
   <%= f.hidden_field(:class_name) %>
   <%= f.submit("Search") %>
