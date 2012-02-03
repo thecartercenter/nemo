@@ -6,7 +6,7 @@ class Report::Report < ActiveRecord::Base
   belongs_to(:filter, :class_name => "Search::Search", :autosave => true, :dependent => :destroy)
   has_many(:fields, :class_name => "Report::Field", :foreign_key => "report_report_id")
   
-  attr_reader(:headers, :data)
+  attr_reader(:headers, :data, :totals, :grand_total)
   scope(:by_viewed_at, order("viewed_at desc"))
   
   validates(:kind, :presence => true)
@@ -29,7 +29,11 @@ class Report::Report < ActiveRecord::Base
   def sec_grouping_attributes=(attribs)
     self.sec_grouping = Report::Grouping.construct(attribs)
   end
-
+  
+  def show_totals?(row_or_col)
+    row_or_col == :row ? !sec_grouping.nil? : !pri_grouping.nil?
+  end
+  
   def run
     @rel = Response.unscoped
     
@@ -44,23 +48,34 @@ class Report::Report < ActiveRecord::Base
     
     # get data and headers
     results = @rel.all
-    if groupings.empty?
-      @headers = {:row => [""], :col => ["# Reports"]}
-      @data = [results.first.attributes.values]
-    else
-      @headers = {
-        :row => results.collect{|row| row[pri_grouping.col_name]}.uniq,
-        :col => sec_grouping ? results.collect{|row| row[sec_grouping.col_name]}.uniq : ["# Reports"]
-      }
-      # create blank data table
-      @data = @headers[:row].collect{|r| Array.new(@headers[:col].size)}
+    
+    # get headers
+    @headers = {
+      :row => pri_grouping ? results.collect{|row| row[pri_grouping.col_name]}.uniq : ["# Responses"],
+      :col => sec_grouping ? results.collect{|row| row[sec_grouping.col_name]}.uniq : ["# Responses"]
+    }
+    @headers[:row] = [""] if groupings.empty?
+    
+    # initialize totals
+    @totals = {:row => Array.new(@headers[:row].size, 0), :col => Array.new(@headers[:col].size, 0)}
+    @grand_total = 0
 
-      # populate data table
-      results.each do |row|
-        r = @headers[:row].index(row[pri_grouping.col_name])
-        c = sec_grouping ? @headers[:col].index(row[sec_grouping.col_name]) : 0
-        @data[r][c] = row["Count"]
-      end
+    # create blank data table
+    @data = @headers[:row].collect{|r| Array.new(@headers[:col].size)}
+
+    # populate data table
+    results.each do |row|
+      # get row and column indices
+      r = pri_grouping ? @headers[:row].index(row[pri_grouping.col_name]) : 0
+      c = sec_grouping ? @headers[:col].index(row[sec_grouping.col_name]) : 0
+      
+      # set the cell value
+      @data[r][c] = row["Count"].to_i
+
+      # add to totals
+      @totals[:row][r] += @data[r][c]
+      @totals[:col][c] += @data[r][c]
+      @grand_total += @data[r][c]
     end
   end
   

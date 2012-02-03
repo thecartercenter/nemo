@@ -1,8 +1,7 @@
-<div class="tip">
-  <strong><%= @report.kind.downcase.capitalize %>s</strong> 
-  grouped by 
-  <%= @report.groupings.collect{|g| "<strong>#{g.to_s.downcase}</strong>"}.join(" and ").html_safe %>,
-  <%= @report.filter ? "filtered by <strong>#{@report.filter.str}</strong>".html_safe : "not filtered" %>
+<div class="subtitle">
+  <%= @report.kind.downcase.capitalize %><%= @report.groupings.empty? ? " with no groupings" : "s grouped by" %> 
+  <%= @report.groupings.collect{|g| g.to_s.downcase}.join(" and ").html_safe %>
+  <%= @report.filter ? ", filtered by #{@report.filter.str}".html_safe : "" %>
 </div>
 <div class="tip">
   <%= join_links(
@@ -14,15 +13,33 @@
   <tr>
     <th></th>
     <% @report.headers[:col].each do |ch| %>
-      <th><%= ch %></th>
+      <th class="col"><%= ch %></th>
+    <% end %>
+    <% if @report.show_totals?(:row) %>
+      <th class="row_total">Total</th>
     <% end %>
   </th>
   <% @report.headers[:row].each_with_index do |rh, r| %>
     <tr>
-      <th><%= rh %></th>
+      <th class="row"><%= rh %></th>
       <% @report.headers[:col].each_with_index do |ch, c| %>
         <td><%= @report.data[r][c] %></td>
       <% end %>
+      <% if @report.show_totals?(:row) %>
+        <td class="row_total"><%= @report.totals[:row][r] %></td>
+      <% end %>
     </th>
   <% end %>
+  <% if @report.show_totals?(:col) %>
+    <tr>
+      <th class="row col_total">Total</th>
+      <% @report.totals[:col].each do |ct| %>
+        <td class="col_total"><%= ct > 0 ? ct : "" %></td>
+      <% end %>
+      <% if @report.show_totals?(:row) %>
+        <td class="row_total col_total"><%= @report.grand_total %></td>
+      <% end %>
+    </th>
+  <% end %>
+  
 </table>

@@ -18,6 +18,7 @@ table { border-collapse: collapse; }
 td { vertical-align: top; }
 
 /* multi-purpose */
+div.subtitle { margin: -10px 0 10px 0; color: #888; }
 div.tip { margin-bottom: 10px; width: 800px; }
 div.important { font-weight: bold; color: Black; }
 
@@ -138,4 +139,8 @@ form.new_report_report div.form_field_control, form.edit_report_report div.form_
 /* report table */
 table.report { border-collapse: separate; margin-left: -2px; }
 table.report td, table.report th { padding: 2px 10px 2px 2px; background-color: #eee; }
-table.report th { text-align: left; background-color: #ddd; }
+table.report td { background-color: #ddd; }
+table.report th { font-size: 90%; }
+table.report th.col { text-align: left;  }
+table.report th.row { text-align: left; white-space: nowrap; }
+table.report td.row_total, table.report td.col_total { background-color: #eee; }
