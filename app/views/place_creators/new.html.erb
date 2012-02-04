@@ -1,7 +1,7 @@
 <% rowbg = 0 %>
 <%= flash_and_form_errors(@place_creator) %>
 <div class="tip"><%= link_to("Enter place info manually", new_place_path) %></div>
-<% form_for(@place_creator) do |f| %>
+<%= form_for(@place_creator) do |f| %>
 <table class="form">
   <tr>
     <td class="name">Place Name/Address:</td>

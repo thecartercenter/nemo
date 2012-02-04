@@ -1,6 +1,6 @@
 <% rowbg = 0 %>
 <div class="tip"><%= reqd_sym %> Indicates a required field</div>
-<% form_for(language) do |f| %>
+<%= form_for(language) do |f| %>
   <%= flash_and_form_errors(language) %>
   <table class="form">
     <tr class="rowbg<%= rowbg = 1 - rowbg %>">

@@ -3,7 +3,7 @@
 
 <div class="tip"><%= reqd_sym %> Indicates a required field</div>
 
-<% form_for(place) do |f| %>
+<%= form_for(place) do |f| %>
 <table class="form">
   <tr class="rowbg<%= rowbg = 1 - rowbg %>">
     <td class="name">Long Name: <%= reqd_sym %></td>
