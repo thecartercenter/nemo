@@ -86,6 +86,10 @@ class Report::Join
       :name => :countries,
       :dependencies => :place_types, 
       :sql => "LEFT JOIN places countries ON IF(place_types.short_name = 'country', places.id, places.country_id) = countries.id"
+    ),
+    :users => new(
+      :name => :users,
+      :sql => "LEFT JOIN users ON responses.user_id = users.id"
     )
   }       
 end         
