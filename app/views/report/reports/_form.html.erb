@@ -9,11 +9,12 @@
   <%= form_field(f, :pri_grouping, :partial => "grouping", 
     :details => "An attribute or question by which the response count should be grouped (e.g. state, overall rating).") %>
   <%= form_field(f, :sec_grouping, :partial => "grouping", :details => "A second grouping.") %>
-  <% if inline %>
+  <% if defined?(inline) %>
     <%= f.submit("Run & Save", :class => "submit") %>
     <%= f.submit("Run Only", :class => "submit") %>
     <%= f.submit("Discard Edits", :class => "submit") %>
   <% else %>
+    <br clear="all"/>
     <%= form_field(f, nil, :type => :submit) %>
   <% end %>
 <% end %>

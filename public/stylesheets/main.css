@@ -150,10 +150,10 @@ form.new_report_report div.form_field_control, form.edit_report_report div.form_
 	width: 14px; height: 14px; padding: 0; text-align: center; padding-top: -5px; border: 1px solid black; font-size: 8pt; }
 
 /* report table */
-table.report { }
-table.report td, table.report th { padding: 2px; border: 1px solid #ddd; }
-table.report td { text-align: right; }
-table.report th { font-size: 90%; background-color: #eee; }
-table.report th.col { text-align: left;  }
-table.report th.row { text-align: left; white-space: nowrap; }
-table.report td.row_total, table.report td.col_total { background-color: #eee; }
+div.report table { }
+div.report table td, table.report th { padding: 2px; border: 1px solid #ddd; }
+div.report table td { text-align: right; }
+div.report table th { font-size: 90%; background-color: #eee; }
+div.report table th.col { text-align: left;  }
+div.report table th.row { text-align: left; white-space: nowrap; }
+div.report table td.row_total, table.report td.col_total { background-color: #eee; }

@@ -15,6 +15,9 @@
     link_to_if_auth("Edit This Report", edit_report_report_path(@report), "report_reports#update")
   ) %>
 </div>
+
+<div id="report_body"></div>
+
 <table class="report">
   <tr>
     <th></th>
@@ -24,7 +27,7 @@
     <% if @report.show_totals?(:row) %>
       <th class="row_total">Total</th>
     <% end %>
-  </th>
+  </tr>
   <% @report.headers[:row].each_with_index do |rh, r| %>
     <tr>
       <th class="row"><%= rh || "[Null]" %></th>
@@ -34,7 +37,7 @@
       <% if @report.show_totals?(:row) %>
         <td class="row_total"><%= @report.totals[:row][r] %></td>
       <% end %>
-    </th>
+    </tr>
   <% end %>
   <% if @report.show_totals?(:col) %>
     <tr>
@@ -45,7 +48,9 @@
       <% if @report.show_totals?(:row) %>
         <td class="row_total col_total"><%= @report.grand_total %></td>
       <% end %>
-    </th>
+    </tr>
   <% end %>
-  
 </table>
+
+
+<script type="text/javascript">report.data = <%= @report.to_json.html_safe %></script>

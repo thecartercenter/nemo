@@ -19,6 +19,7 @@ class Report::ReportsController < ApplicationController
     @dont_print_title = true
     @report.record_viewing
     @report.run
+    @js << "report_reports_show"
   end
   
   def destroy
@@ -44,6 +45,6 @@ class Report::ReportsController < ApplicationController
     
     def build_filter_and_render_form
       @report.build_filter(:class_name => "Response") unless @report.filter
-      render("form")
+      render(:form)
     end
 end

@@ -88,4 +88,8 @@ class Report::Report < ActiveRecord::Base
   def groupings
     [pri_grouping, sec_grouping].compact
   end
+  
+  def to_json
+    {:headers => headers, :data => data}.to_json
+  end
 end
