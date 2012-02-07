@@ -13,7 +13,7 @@
   <tr>
     <th></th>
     <% @report.headers[:col].each do |ch| %>
-      <th class="col"><%= ch %></th>
+      <th class="col"><%= ch || "[Null]" %></th>
     <% end %>
     <% if @report.show_totals?(:row) %>
       <th class="row_total">Total</th>
@@ -21,7 +21,7 @@
   </th>
   <% @report.headers[:row].each_with_index do |rh, r| %>
     <tr>
-      <th class="row"><%= rh %></th>
+      <th class="row"><%= rh || "[Null]" %></th>
       <% @report.headers[:col].each_with_index do |ch, c| %>
         <td><%= @report.data[r][c] %></td>
       <% end %>
