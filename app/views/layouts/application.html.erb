@@ -32,7 +32,9 @@
 </div>
 <div id="content_wrapper">
   <div id="content" class="<%= ctlr_action_name %>">
-    <h1><%= @title %></h1>
+    <% unless @dont_print_title %>
+      <h1><%= @title %></h1>
+    <% end %>
     <%= body %>
   </div>
 </div>

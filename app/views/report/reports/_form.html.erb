@@ -1,6 +1,6 @@
 <%= flash_and_form_errors(@report) %>
 <%= form_for(@report) do |f| %>
-  <div class="tip">Required fields shown in <strong>bold</strong>.</div>
+  <div class="tip" id="required_tip">Required fields shown in <strong>bold</strong>.</div>
   <%= form_field(f, :kind, :type => :select, :options => Report::Report.type_select_options, :required => true) %>
   <%= form_field(f, :name, :required => true, :details => "A descriptive name for this report.") %>
   <%= form_field(f, :filter, :partial => "filter",
@@ -9,5 +9,11 @@
   <%= form_field(f, :pri_grouping, :partial => "grouping", 
     :details => "An attribute or question by which the response count should be grouped (e.g. state, overall rating).") %>
   <%= form_field(f, :sec_grouping, :partial => "grouping", :details => "A second grouping.") %>
-  <%= form_field(f, nil, :type => :submit) %>
+  <% if inline %>
+    <%= f.submit("Run & Save", :class => "submit") %>
+    <%= f.submit("Run Only", :class => "submit") %>
+    <%= f.submit("Discard Edits", :class => "submit") %>
+  <% else %>
+    <%= form_field(f, nil, :type => :submit) %>
+  <% end %>
 <% end %>

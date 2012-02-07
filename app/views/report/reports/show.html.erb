@@ -1,3 +1,9 @@
+<div id="popout_form">
+  <a id="close" href="#">x</a>
+  <h3>Edit Report</h3>
+  <%= render("form", :inline => true) %>
+</div>
+<h1><%= @title %></h1>
 <div class="subtitle">
   <%= @report.kind.downcase.capitalize %><%= @report.groupings.empty? ? " with no groupings" : "s grouped by" %> 
   <%= @report.groupings.collect{|g| g.to_s.downcase}.join(" and ").html_safe %>

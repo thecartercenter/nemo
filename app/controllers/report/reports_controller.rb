@@ -16,6 +16,7 @@ class Report::ReportsController < ApplicationController
   def show
     @report = Report::Report.find(params[:id])
     @title = @report.name
+    @dont_print_title = true
     @report.record_viewing
     @report.run
   end
@@ -43,6 +44,6 @@ class Report::ReportsController < ApplicationController
     
     def build_filter_and_render_form
       @report.build_filter(:class_name => "Response") unless @report.filter
-      render(:action => :form)
+      render("form")
     end
 end
