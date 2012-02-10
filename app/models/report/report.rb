@@ -18,6 +18,10 @@ class Report::Report < ActiveRecord::Base
     KINDS
   end
   
+  def has_run?
+    @has_run ||= !new_record?
+  end
+  
   def filter_attributes=(attribs)
     self.filter = attribs[:str].blank? ? nil : Search::Search.new(attribs)
   end
@@ -35,46 +39,52 @@ class Report::Report < ActiveRecord::Base
   end
   
   def run
-    @rel = Response.unscoped
+    @has_run = true
+    begin
+      @rel = Response.unscoped
     
-    # add groupings
-    groupings.each{|g| @rel = g.apply(@rel)}
+      # add groupings
+      groupings.each{|g| @rel = g.apply(@rel)}
     
-    # add count
-    @rel = @rel.select("COUNT(responses.id) as `Count`")
+      # add count
+      @rel = @rel.select("COUNT(responses.id) as `Count`")
     
-    # apply filter
-    @rel = filter.apply(@rel) unless filter.nil?
+      # apply filter
+      @rel = filter.apply(@rel) unless filter.nil?
     
-    # get data and headers
-    results = @rel.all
+      # get data and headers
+      results = @rel.all
     
-    # get headers
-    @headers = {
-      :row => pri_grouping ? results.collect{|row| row[pri_grouping.col_name]}.uniq : ["# Responses"],
-      :col => sec_grouping ? results.collect{|row| row[sec_grouping.col_name]}.uniq : ["# Responses"]
-    }
+      # get headers
+      @headers = {
+        :row => pri_grouping ? results.collect{|row| row[pri_grouping.col_name]}.uniq : ["# Responses"],
+        :col => sec_grouping ? results.collect{|row| row[sec_grouping.col_name]}.uniq : ["# Responses"]
+      }
     
-    # initialize totals
-    @totals = {:row => Array.new(@headers[:row].size, 0), :col => Array.new(@headers[:col].size, 0)}
-    @grand_total = 0
+      # initialize totals
+      @totals = {:row => Array.new(@headers[:row].size, 0), :col => Array.new(@headers[:col].size, 0)}
+      @grand_total = 0
 
-    # create blank data table
-    @data = @headers[:row].collect{|r| Array.new(@headers[:col].size)}
+      # create blank data table
+      @data = @headers[:row].collect{|r| Array.new(@headers[:col].size)}
 
-    # populate data table
-    results.each do |row|
-      # get row and column indices
-      r = pri_grouping ? @headers[:row].index(row[pri_grouping.col_name]) : 0
-      c = sec_grouping ? @headers[:col].index(row[sec_grouping.col_name]) : 0
+      # populate data table
+      results.each do |row|
+        # get row and column indices
+        r = pri_grouping ? @headers[:row].index(row[pri_grouping.col_name]) : 0
+        c = sec_grouping ? @headers[:col].index(row[sec_grouping.col_name]) : 0
       
-      # set the cell value
-      @data[r][c] = row["Count"].to_i
+        # set the cell value
+        @data[r][c] = row["Count"].to_i
 
-      # add to totals
-      @totals[:row][r] += @data[r][c]
-      @totals[:col][c] += @data[r][c]
-      @grand_total += @data[r][c]
+        # add to totals
+        @totals[:row][r] += @data[r][c]
+        @totals[:col][c] += @data[r][c]
+        @grand_total += @data[r][c]
+      end
+    rescue Search::ParseError, Report::ReportError
+      Rails.logger.debug("RUN ERROR!")
+      errors.add(:base, "Couldn't run report: #{$!.to_s}")
     end
   end
   
@@ -89,6 +99,7 @@ class Report::Report < ActiveRecord::Base
   end
   
   def to_json
-    {:headers => headers, :data => data, :totals => totals, :grand_total => grand_total}.to_json
+    {:headers => headers, :data => data, :totals => totals, :has_run => has_run?, :id => id, :name => name, :kind => kind,
+      :grand_total => grand_total, :errors => errors.full_messages.join(", ")}.to_json
   end
 end

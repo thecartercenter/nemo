@@ -117,7 +117,7 @@ function logout() {
   // === PUBLIC ===
   
   Utils.show_flash = function(params) {
-    console.log(params.msg)
+    Utils.clear_flash();
     $j("#content").prepend($j("<div>").addClass(params.type).text(params.msg));
     if (params.hide_after)
       setTimeout(Utils.clear_flash, params.hide_after * 1000);
@@ -130,6 +130,3 @@ function logout() {
   // === PRIVATE ===
   
 }(Utils = {}));
-
-// on page load
-$j(document).ready(report.init);

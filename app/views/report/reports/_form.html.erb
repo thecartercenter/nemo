@@ -9,12 +9,7 @@
   <%= form_field(f, :pri_grouping, :partial => "grouping", 
     :details => "An attribute or question by which the response count should be grouped (e.g. state, overall rating).") %>
   <%= form_field(f, :sec_grouping, :partial => "grouping", :details => "A second grouping.") %>
-  <% if defined?(inline) %>
-    <%= f.submit("View & Save", :id => "report_report_view_and_save", :class => "submit") %>
-    <%= f.submit("View", :id => "report_report_view", :class => "submit") %>
-    <%= f.submit("Discard Edits", :id => "report_report_discard", :class => "submit") %>
-  <% else %>
-    <br clear="all"/>
-    <%= form_field(f, nil, :type => :submit) %>
-  <% end %>
+  <%= f.submit("Save & View", :id => "report_report_view_and_save", :class => "submit") %>
+  <%= f.submit("View", :id => "report_report_view", :class => "submit") %>
+  <div class="loader" style="display: none">&nbsp;</div>
 <% end %>

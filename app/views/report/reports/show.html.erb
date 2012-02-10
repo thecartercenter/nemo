@@ -1,21 +1,21 @@
-<div id="popout_form">
-  <a id="close" href="#">x</a>
-  <h3>Edit Report</h3>
-  <%= render("form", :inline => true) %>
+<div id="report_form" style="display: none">
+  <%= render("form") %>
 </div>
-<h1><%= @title %></h1>
-<div class="subtitle">
-  <%= @report.kind.downcase.capitalize %><%= @report.groupings.empty? ? " with no groupings" : "s grouped by" %> 
-  <%= @report.groupings.collect{|g| g.to_s.downcase}.join(" and ").html_safe %>
-  <%= @report.filter ? ", filtered by #{@report.filter.str}".html_safe : "" %>
-</div>
+<h1></h1>
 <div class="tip">
   <%= join_links(
-    link_to("Back to Report Listing", report_reports_path),
-    link_to_if_auth("Edit This Report", edit_report_report_path(@report), "report_reports#update")
+    link_to_if_auth("Edit This Report", "#", "report_reports#update", nil, :id => "edit_form_link"),
+    link_to("Back to Report Listing", report_reports_path)
   ) %>
 </div>
 
-<div id="report_body">Loading...</div>
+<div id="report_body"></div>
 
-<script type="text/javascript">report.obj = <%= @report.to_json.html_safe %></script>
+<script type="text/javascript">
+  $j(document).ready(function(){
+    report.obj = <%= @report.to_json.html_safe %>;
+    report.init();
+    <% if @show_form %> report.toggle_form(); <% end %>
+    <% if params[:show_success] %> report.show_success(); <% end %>
+  })
+</script>
