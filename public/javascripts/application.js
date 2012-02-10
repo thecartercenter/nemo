@@ -109,3 +109,27 @@ function logout() {
   // click the logout button
   if ($('logout_button')) $('logout_button').click();
 }
+
+
+(function (Utils, undefined) {
+  // === PRIVATE ===
+  
+  // === PUBLIC ===
+  
+  Utils.show_flash = function(params) {
+    console.log(params.msg)
+    $j("#content").prepend($j("<div>").addClass(params.type).text(params.msg));
+    if (params.hide_after)
+      setTimeout(Utils.clear_flash, params.hide_after * 1000);
+  }
+
+  Utils.clear_flash = function(params) {
+    $j(".success").remove();
+    $j(".error").remove();
+  }
+  // === PRIVATE ===
+  
+}(Utils = {}));
+
+// on page load
+$j(document).ready(report.init);
