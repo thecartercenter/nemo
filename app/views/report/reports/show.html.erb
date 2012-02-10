@@ -16,41 +16,6 @@
   ) %>
 </div>
 
-<div id="report_body"></div>
+<div id="report_body">Loading...</div>
 
-<table class="report">
-  <tr>
-    <th></th>
-    <% @report.headers[:col].each do |ch| %>
-      <th class="col"><%= ch || "[Null]" %></th>
-    <% end %>
-    <% if @report.show_totals?(:row) %>
-      <th class="row_total">Total</th>
-    <% end %>
-  </tr>
-  <% @report.headers[:row].each_with_index do |rh, r| %>
-    <tr>
-      <th class="row"><%= rh || "[Null]" %></th>
-      <% @report.headers[:col].each_with_index do |ch, c| %>
-        <td><%= @report.data[r][c] %></td>
-      <% end %>
-      <% if @report.show_totals?(:row) %>
-        <td class="row_total"><%= @report.totals[:row][r] %></td>
-      <% end %>
-    </tr>
-  <% end %>
-  <% if @report.show_totals?(:col) %>
-    <tr>
-      <th class="row col_total">Total</th>
-      <% @report.totals[:col].each do |ct| %>
-        <td class="col_total"><%= ct > 0 ? ct : "" %></td>
-      <% end %>
-      <% if @report.show_totals?(:row) %>
-        <td class="row_total col_total"><%= @report.grand_total %></td>
-      <% end %>
-    </tr>
-  <% end %>
-</table>
-
-
-<script type="text/javascript">report.data = <%= @report.to_json.html_safe %></script>
+<script type="text/javascript">report.obj = <%= @report.to_json.html_safe %></script>

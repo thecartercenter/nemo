@@ -54,7 +54,6 @@ class Report::Report < ActiveRecord::Base
       :row => pri_grouping ? results.collect{|row| row[pri_grouping.col_name]}.uniq : ["# Responses"],
       :col => sec_grouping ? results.collect{|row| row[sec_grouping.col_name]}.uniq : ["# Responses"]
     }
-    @headers[:row] = [""] if groupings.empty?
     
     # initialize totals
     @totals = {:row => Array.new(@headers[:row].size, 0), :col => Array.new(@headers[:col].size, 0)}
@@ -90,6 +89,6 @@ class Report::Report < ActiveRecord::Base
   end
   
   def to_json
-    {:headers => headers, :data => data}.to_json
+    {:headers => headers, :data => data, :totals => totals, :grand_total => grand_total}.to_json
   end
 end
