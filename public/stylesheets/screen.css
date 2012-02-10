@@ -8,7 +8,7 @@ div#banner #title img { float: left; display: block; margin: 0px 0 0 0px; }
 div#banner #userinfo { float: right; margin-right: 10px; }
 div#banner #userinfo a, div#banner #userinfo form.button_to input { color: white; }
 div#content_wrapper { float: left; width: 100%; }
-div#content { padding: 10px 10px 30px 10px; margin-left: 88px; min-height: 500px; background-color: white; }
+div#content { padding: 15px 15px 30px 15px; margin-left: 88px; min-height: 500px; background-color: white; }
 div#nav { float: left; width: 88px; margin-left: -100%; color: white; }
 div#nav ul { margin-right: 15px; font-weight: bold; padding: 5px; list-style-type:none; }
 div#nav ul li { white-space: nowrap; }
@@ -24,7 +24,7 @@ div#footer #dev_mode_warning { color: white; padding: 2px; margin: 0 0 0 5px; te
 .users_login_instructions #instructions p { margin-top: 0; }
   
 /* flash and error messages */
-div.success, div.error { position: absolute; left: 25%; top: 89px; padding: 5px; 
-    color: white; font-weight: bold; width: 600px; margin-bottom: 10px; }
+div.success, div.error { position: absolute; left: 25%; top: 78px; padding: 3px; 
+    color: white; font-weight: bold; width: 600px; margin-bottom: 10px; text-align: center; }
 div.success { background-color: #9dc400; }
 div.error { background-color: #d02000; }
