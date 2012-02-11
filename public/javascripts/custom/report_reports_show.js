@@ -90,15 +90,17 @@
 
   // redraws the report
   function redraw() {
+    // load current settings from form
+    load_current_params();
+  
     // if report has errors, don't show anything
     if (report.obj.errors) {
       $j('#report_body').empty().text("Could not display report.")
+
     } else if (!report.obj.has_run) {
       $j('#report_body').empty().text("Please use the controls on the left to create this report.");
+
     } else {
-    
-      // load current settings from form
-      load_current_params();
     
       var tbl = $j("<table>");
     
@@ -174,12 +176,6 @@
   function set_title() {
     // set title
     $j("#content h1").text(report.form.name);
-  }
-  
-  function groupings() {
-    var g = [];
-    g.push(report.obj.pri_grouping)
-    
   }
   
   function load_current_params() {
