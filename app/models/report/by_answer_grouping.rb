@@ -5,8 +5,10 @@ class Report::ByAnswerGrouping < Report::Grouping
     Question.includes(:type).where(:"question_types.name" => "select_one").all.collect{|q| [human_name(q), "by_answer_#{q.id}"]}
   end
   
+  def self.select_group_name; "Questions"; end
+  
   def self.human_name(question)
-    "Answer For '#{question.code}'"
+    "#{question.code}"
   end
   
   def apply(rel)

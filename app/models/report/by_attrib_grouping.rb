@@ -5,6 +5,8 @@ class Report::ByAttribGrouping < Report::Grouping
     Report::GroupingAttribute.all.collect{|g| ["#{g.name}", "by_attrib_#{g.id}"]}
   end
   
+  def self.select_group_name; "Attributes"; end
+  
   # applies this grouping to the given relation
   def apply(rel)
     rel = rel.select("#{attrib.code} as `#{attrib.name}`").
