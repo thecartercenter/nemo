@@ -47,6 +47,7 @@ class ResponsesController < ApplicationController
       end
       format.csv do
         require 'csv'
+        # need to use the new 'restrict' function in permission model
         perm_condition = Permission.select_conditions(:user => current_user, :controller => "responses", :action => "index")
         @responses = Response.flattened(:conditions => perm_condition)
         render_csv("responses-#{Time.zone.now.strftime('%Y-%m-%d-%H%M')}")
