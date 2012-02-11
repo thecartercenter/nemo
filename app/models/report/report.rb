@@ -12,7 +12,7 @@ class Report::Report < ActiveRecord::Base
   validates(:kind, :presence => true)
   validates(:name, :presence => true, :uniqueness => true)
   
-  KINDS = ["Response Count"]
+  KINDS = ["Tally"]
   
   def self.type_select_options
     KINDS
