@@ -30,7 +30,7 @@ class PlacesController < ApplicationController
   def map_all
     @title = "Place Map"
     @js << "map"
-    @places = Place.permanent.where("latitude is not null and longitude is not null")
+    @places = Place.permanent.where("places.latitude is not null and places.longitude is not null")
     @bounds = Place.bound(@places)
   end
   def new

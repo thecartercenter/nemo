@@ -1,3 +1,5 @@
+<% content_for(:per_page_js){javascript_include_tag("forms_edit")} %>
+
 <h2>Basic Form Info</h2>
 <%= basic_form(form) do |f|
   spec = {

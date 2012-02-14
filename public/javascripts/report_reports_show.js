@@ -11,9 +11,9 @@
   // initializes things
   report.init = function() {
     // hook up buttons
-    $j('#report_report_view_and_save').click(function(){view(true); return false;});
-    $j('#report_report_view').click(function(){view(false); return false;});
-    $j('#edit_form_link').click(function(){report.toggle_form(); return false;});
+    $('#report_report_view_and_save').click(function(){view(true); return false;});
+    $('#report_report_view').click(function(){view(false); return false;});
+    $('#edit_form_link').click(function(){report.toggle_form(); return false;});
     
     // redraw report
     redraw();
@@ -21,8 +21,8 @@
   
   // shows/hides the edit form
   report.toggle_form = function() {
-    $j('#report_form').toggle();
-    $j('#edit_form_link').text($j('#report_form').is(":visible") ? "Hide Edit Controls" : "Edit This Report")
+    $('#report_form').toggle();
+    $('#edit_form_link').text($('#report_form').is(":visible") ? "Hide Edit Controls" : "Edit This Report")
   }
   
   report.show_success = function() {
@@ -47,19 +47,19 @@
   // options include:
   //   save: whether the parameters should be saved or not
   function submit_to_server(options) {
-    var form = $j('#report_form form')[0];
+    var form = $('#report_form form')[0];
     
     // show the loading indicator
-    $j("#report_form div.loader").show();
+    $("#report_form div.loader").show();
     
-    $j.ajax({
+    $.ajax({
       type: 'POST',
       url: form.action,
       data: form.serialize() + "&save=" + !!options.save,
       success: function(data, status, jqxhr) {
         // show message if saved
         // if new data returned, save it
-        if ($j.type(data) == "object") report.obj = data;
+        if ($.type(data) == "object") report.obj = data;
         
         // show success or error message
         if (report.obj.errors)
@@ -79,7 +79,7 @@
         redraw();
         
         // hide the loading indicator
-        $j("#report_form div.loader").hide();
+        $("#report_form div.loader").hide();
       },
       error: function(jqxhr, status, error) {
         // display error
@@ -95,72 +95,72 @@
   
     // if report has errors, don't show anything
     if (report.obj.errors) {
-      $j('#report_body').empty().text("Could not display report.")
+      $('#report_body').empty().text("Could not display report.")
 
     } else if (!report.obj.has_run) {
-      $j('#report_body').empty().text("Please use the controls on the left to create this report.");
+      $('#report_body').empty().text("Please use the controls on the left to create this report.");
 
     } else {
     
-      var tbl = $j("<table>");
+      var tbl = $("<table>");
     
       // header row (only print if is at least one grouping)
       if (has_groupings()) {
-        var trow = $j("<tr>");
+        var trow = $("<tr>");
     
         // blank cell in corner
-        $j("<th>").appendTo(trow);
+        $("<th>").appendTo(trow);
     
         // rest of header cells
-        $j(report.obj.headers.col).each(function(idx, ch) {
-          $j("<th>").addClass("col").text(ch || "[Null]").appendTo(trow);
+        $(report.obj.headers.col).each(function(idx, ch) {
+          $("<th>").addClass("col").text(ch || "[Null]").appendTo(trow);
         });
         tbl.append(trow);
       }
     
       // row total header
       if (show_totals("row"))
-        $j("<th>").addClass("row_total").text("Total").appendTo(trow);
+        $("<th>").addClass("row_total").text("Total").appendTo(trow);
       
       // body
-      $j(report.obj.headers.row).each(function(r, rh) {
-        trow = $j("<tr>");
+      $(report.obj.headers.row).each(function(r, rh) {
+        trow = $("<tr>");
       
         // row header
-        $j("<th>").addClass("row").text(rh || "[Null]").appendTo(trow);
+        $("<th>").addClass("row").text(rh || "[Null]").appendTo(trow);
       
         // row cells
-        $j(report.obj.headers.col).each(function(c, ch) {
-          $j("<td>").text(report.obj.data[r][c] || "").appendTo(trow);
+        $(report.obj.headers.col).each(function(c, ch) {
+          $("<td>").text(report.obj.data[r][c] || "").appendTo(trow);
         });
       
         // row total
         if (show_totals("row"))
-          $j("<td>").addClass("row_total").text(report.obj.totals["row"][r]).appendTo(trow);
+          $("<td>").addClass("row_total").text(report.obj.totals["row"][r]).appendTo(trow);
 
         tbl.append(trow);
       });
     
       // footer
       if (show_totals("col")) {
-        trow = $j("<tr>");
+        trow = $("<tr>");
       
         // row header
-        $j("<th>").addClass("row").addClass("col_total").text("Total").appendTo(trow);
+        $("<th>").addClass("row").addClass("col_total").text("Total").appendTo(trow);
       
         // row cells
-        $j(report.obj.totals.col).each(function(c, ct) {
-          $j("<td>").addClass("col_total").text(ct > 0 ? ct : "").appendTo(trow);
+        $(report.obj.totals.col).each(function(c, ct) {
+          $("<td>").addClass("col_total").text(ct > 0 ? ct : "").appendTo(trow);
         });
       
         // row total
         if (show_totals("row"))
-          $j("<td>").addClass("row_total").addClass("col_total").text((gt = report.obj.grand_total) > 0 ? gt : "").appendTo(trow);
+          $("<td>").addClass("row_total").addClass("col_total").text((gt = report.obj.grand_total) > 0 ? gt : "").appendTo(trow);
 
         tbl.append(trow);
       }
     
-      $j('#report_body').empty().append(tbl);
+      $('#report_body').empty().append(tbl);
     }
 
     // update the title
@@ -175,7 +175,7 @@
   // updates the title of the report
   function set_title() {
     // set title
-    $j("#content h1").text(report.form.name);
+    $("#content h1").text(report.form.name);
   }
   
   function load_current_params() {
@@ -186,14 +186,14 @@
       sec_grouping: "sec_grouping_attributes_form_choice", 
       filter: "filter_attributes_str"
     }
-    $j.each(fields, function(attr, id){report.form[attr] = $j("#report_report_" + fields[attr]).val();});
+    $.each(fields, function(attr, id){report.form[attr] = $("#report_report_" + fields[attr]).val();});
   }
   
   // loads current paramteres from form
   // checks if the new values necessitate a re-run of the report
   function rerun_required() {
     // save old params
-    var old_params = $j.extend({}, report.form);
+    var old_params = $.extend({}, report.form);
     
     // load current paramters from form
     load_current_params();

@@ -1,3 +1,5 @@
+<% content_for(:per_page_js){javascript_include_tag("places")} %>
+
 <%= resp.answers.collect{|a| a.errors.full_messages.join(", ")}.join(" ") %>
 <%= basic_form(resp) do |f|
   spec = {

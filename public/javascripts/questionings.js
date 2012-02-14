@@ -1,17 +1,17 @@
 function show_hide_option_set(question_type) {
   show = question_type.match(/^Select/)
-  $('option_set')[show ? 'show' : 'hide']()
-  $('option_set_not_applicable')[!show ? 'show' : 'hide']()
-  if (!show) $('option_set').selectedIndex = 0
+  $('#option_set')[show ? 'show' : 'hide']()
+  $('#option_set_not_applicable')[!show ? 'show' : 'hide']()
+  if (!show) $('#option_set')[0].selectedIndex = 0
 }
 
 function condition_update_choices() {
   // get the op dropdown and clear it out
-  var op_field = $('questioning_condition_op')
+  var op_field = $('#questioning_condition_op')[0]
   clear_select(op_field);
   
   // get the chosen question id and type
-  var question_field = $('questioning_condition_ref_qing_id');
+  var question_field = $('#questioning_condition_ref_qing_id')[0];
   var chosen_id = question_field.options[question_field.selectedIndex].value;
   if (chosen_id == "") return;
   var chosen_type = condition_q_types[chosen_id];
@@ -21,8 +21,8 @@ function condition_update_choices() {
     if (condition_ops[op_name]["types"].indexOf(chosen_type) != -1)
       add_option(op_field, op_name, op_name);
   
-  var value_field = $('questioning_condition_value');
-  var option_id_field = $('questioning_condition_option_id');
+  var value_field = $('#questioning_condition_value')[0];
+  var option_id_field = $('#questioning_condition_option_id')[0];
   // clear the dropdown
   clear_select(option_id_field);
   // show the appropriate value field, depepnding on if the chosen question has options
@@ -42,8 +42,8 @@ function condition_update_choices() {
 }
 
 function condition_show_hide_value_fields(show, hide) {
-  show.show();
-  hide.hide();
+  $(show).show();
+  $(hide).hide();
 }
 
 function clear_select(select) {

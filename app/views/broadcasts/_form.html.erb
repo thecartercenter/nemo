@@ -1,3 +1,5 @@
+<% content_for(:per_page_js){javascript_include_tag("broadcasts")} %>
+
 <%= basic_form(broadcast) do |f|
   spec = {
     :fields => [{

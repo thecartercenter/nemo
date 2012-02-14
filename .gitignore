@@ -6,3 +6,4 @@ tmp/
 config/initializers/local_config.rb
 config/database.yml
 TODO
+.sass-cache/

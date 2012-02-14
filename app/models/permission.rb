@@ -108,7 +108,7 @@ class Permission
   # returns true if succeeds.
   # returns false if no matching permission is found
   def self.check_permission(key, user)
-    Rails.logger.debug("Checking general permission #{key} for #{user ? user.login : 'no user'}")
+    #Rails.logger.debug("Checking general permission #{key} for #{user ? user.login : 'no user'}")
     # fail if it doesn't exist
     return false unless perm = GENERAL[key]
     # check the various kinds of permission

@@ -9,27 +9,30 @@ function responses_fetch() {
   responses_old_ids = responses_get_ids();
   
   // run the ajax request
-  new Ajax.Request("/responses", {
-    method: 'get',
-    onSuccess: responses_update,
-    onFailure: logout
+  $.ajax({
+    url: "/responses",
+    method: "get",
+    success: responses_update,
+    error: logout
   });
 }
 
 // gets IDs of each row in index table
 function responses_get_ids() {
   var ids = [];
-  if ($('index_table_body')) {
-    var rows = $('index_table_body').getElementsByTagName('tr');
+  if ($('#index_table_body')) {
+    var rows = $('#index_table_body tr');
     for (var i = 0; i < rows.length; i++) ids.push(rows[i].id);
   }
   return ids;
 }
 
-function responses_update(response) {
-  $('index_table').innerHTML = response.responseText;
+function responses_update(data) {
+  responses_old_ids.shift();
+  $('#index_table').html(data);
   var new_ids = responses_get_ids();
   for (var i = 0; i < new_ids.length; i++) {
     if (responses_old_ids.indexOf(new_ids[i]) == -1)
-      setTimeout(function(id){new Effect.Highlight(id);}.curry(new_ids[i]), 100);}
+      $("#" + new_ids[i]).effect("highlight", {}, 1000);
+  }
 }

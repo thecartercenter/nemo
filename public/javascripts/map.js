@@ -3,7 +3,7 @@ var map_marker_info = {};
 var icons = {}
 function draw_map(markers, bounds) {
 
-  var map = new google.maps.Map($("map_canvas"), {
+  var map = new google.maps.Map($("#map_canvas")[0], {
     mapTypeId: google.maps.MapTypeId.ROADMAP,
     zoom: 3
   });

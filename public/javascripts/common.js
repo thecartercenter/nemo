@@ -1,3 +1,5 @@
+// TODO move batch stuff to own file
+
 // selects/deselcts all boxes
 function batch_select_all() {
   // get checkboxes
@@ -16,11 +18,7 @@ function batch_select_all() {
 
 // gets all checkboxes in batch_form
 function batch_get_checkboxes() {
-  var cb = [];
-  var els = $('#batch_form') && $('#batch_form').elements || [];
-  for (var i = 0; i < els.length; i++)
-    if (els[i].type == "checkbox") cb.push(els[i]);
-  return cb;
+  return $('#batch_form input[type=checkbox]');
 }
 
 // tests if all boxes are checked
@@ -66,7 +64,7 @@ function batch_count_checked(cbs) {
 // updates the select all link to reflect current state of boxes
 function batch_update_select_all_link(yn) {
   if (typeof(yn) == "undefined") yn = !batch_all_checked();
-  $('select_all_link').innerHTML = (yn ? "S" : "Des") + "elect all";
+  $('#select_all_link').attr("value", (yn ? "S" : "Des") + "elect all");
 }
 
 // event handler for when a checkbox is clicked
@@ -81,9 +79,9 @@ function batch_submit(options) {
   var count = batch_count_checked();
   if (count == 0)
     alert("You haven't selected anything.");
-  else if (options.confirm == "" || confirm(options.confirm.gsub(/###/, count))) {
+  else if (options.confirm == "" || confirm(options.confirm.replace(/###/, count))) {
     // get the form
-    var f = $('#batch_form');
+    var f = $('#batch_form')[0];
     // set the action attrib
     f.action = options.path;
     // submit
@@ -91,8 +89,9 @@ function batch_submit(options) {
   }
 }
 
+// TODO: MOVE TO PROPER FILE
 function suggest_login() {
-	var name = $('user_name').value;
+	var name = $('#user_name').val();
 	var m, login;
 	
 	// if it looks like a person's name, suggest f. initial + l. name
@@ -102,31 +101,25 @@ function suggest_login() {
 	else
 		login = name.replace(/[^a-z0-9\.]/ig, "");
 		
-	$('user_login').value = login.substr(0,16).toLowerCase();
+	$('#user_login').val(login.substr(0,16).toLowerCase());
 }
 
 function logout() {
   // click the logout button
-  if ($('logout_button')) $('logout_button').click();
+  if ($('#logout_button')) $('#logout_button').click();
 }
 
-
+// UTILITIES
 (function (Utils, undefined) {
-  // === PRIVATE ===
-  
-  // === PUBLIC ===
-  
   Utils.show_flash = function(params) {
     Utils.clear_flash();
-    $j("#content").prepend($j("<div>").addClass(params.type).text(params.msg));
+    $("#content").prepend($("<div>").addClass(params.type).text(params.msg));
     if (params.hide_after)
       setTimeout(Utils.clear_flash, params.hide_after * 1000);
   }
 
   Utils.clear_flash = function(params) {
-    $j(".success").remove();
-    $j(".error").remove();
+    $(".success").remove();
+    $(".error").remove();
   }
-  // === PRIVATE ===
-  
 }(Utils = {}));

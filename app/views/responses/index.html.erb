@@ -1,3 +1,5 @@
+<% content_for(:per_page_js){javascript_include_tag("responses_index")} %>
+
 <%= flash_and_form_errors %>
 
 <%= render("searches/form", :search => @subindex.search) %>

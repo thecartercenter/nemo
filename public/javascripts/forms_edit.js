@@ -45,6 +45,6 @@ function form_get_rows(tbody) {
 }
 
 function form_submit_ranks(form_id) {
-  $('batch_form').action = "/forms/" + form_id + "/update_ranks";
-  $('batch_form').submit();
+  $('#batch_form')[0].action = "/forms/" + form_id + "/update_ranks";
+  $('#batch_form')[0].submit();
 }
