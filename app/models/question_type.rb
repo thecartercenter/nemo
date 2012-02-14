@@ -14,10 +14,24 @@
 # You should have received a copy of the GNU General Public License
 # along with ELMO.  If not, see <http://www.gnu.org/licenses/>.
 # 
+require 'seedable'
 class QuestionType < ActiveRecord::Base
+  include Seedable
+  
   has_many(:questions)
   
   default_scope(order("long_name"))
+  
+  def self.generate
+    seed(:name, :name => "text", :long_name => "Short Text", :odk_name => "string", :odk_tag => "input")
+    seed(:name, :name => "long_text", :long_name => "Long Text", :odk_name => "string", :odk_tag => "input")
+    seed(:name, :name => "integer", :long_name => "Integer", :odk_name => "int", :odk_tag => "input")
+    seed(:name, :name => "decimal", :long_name => "Decimal", :odk_name => "decimal", :odk_tag => "input")
+    seed(:name, :name => "location", :long_name => "GPS Location", :odk_name => "geopoint", :odk_tag => "input")
+    seed(:name, :name => "address", :long_name => "Address/Landmark", :odk_name => "string", :odk_tag => "input")
+    seed(:name, :name => "select_one", :long_name => "Select One", :odk_name => "select1", :odk_tag => "select1")
+    seed(:name, :name => "select_multiple", :long_name => "Select Multiple", :odk_name => "select", :odk_tag => "select")
+  end
   
   def self.select_options
     all.collect{|qt| [qt.long_name, qt.id]}

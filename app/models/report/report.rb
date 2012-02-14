@@ -57,8 +57,8 @@ class Report::Report < ActiveRecord::Base
     
       # get headers
       @headers = {
-        :row => pri_grouping ? results.collect{|row| row[pri_grouping.col_name]}.uniq : ["# Responses"],
-        :col => sec_grouping ? results.collect{|row| row[sec_grouping.col_name]}.uniq : ["# Responses"]
+        :row => pri_grouping ? results.collect{|row| row[pri_grouping.col_name]}.uniq : ["Tally"],
+        :col => sec_grouping ? results.collect{|row| row[sec_grouping.col_name]}.uniq : ["Tally"]
       }
     
       # initialize totals
@@ -83,7 +83,6 @@ class Report::Report < ActiveRecord::Base
         @grand_total += @data[r][c]
       end
     rescue Search::ParseError, Report::ReportError
-      Rails.logger.debug("RUN ERROR!")
       errors.add(:base, "Couldn't run report: #{$!.to_s}")
     end
   end

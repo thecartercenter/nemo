@@ -1,9 +1,8 @@
 class Report::Grouping < ActiveRecord::Base
-  SUBCLASSES = [Report::ByAttribGrouping, Report::ByAnswerGrouping]
   
   # returns a combined set of select options for both answer and attrib groupings
   def self.select_options
-    SUBCLASSES.map{|k| [k.select_group_name, k.select_options]}
+    [Report::ByAttribGrouping, Report::ByAnswerGrouping].map{|k| [k.select_group_name, k.select_options]}
   end
   
   def self.construct(attribs)

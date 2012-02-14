@@ -14,8 +14,11 @@
 # You should have received a copy of the GNU General Public License
 # along with ELMO.  If not, see <http://www.gnu.org/licenses/>.
 # 
+require 'seedable'
+require 'language_list'
 class Language < ActiveRecord::Base
-  require 'language_list'
+  include Seedable
+  
   validates(:code, :presence => true, :uniqueness => true)
   validate(:english_mandatory)
   before_destroy(:check_assoc_and_english_mandatory)
@@ -26,6 +29,10 @@ class Language < ActiveRecord::Base
   
   default_scope(order("code = 'eng' desc, code"))
   scope(:active, where(:active => true))
+  
+  def self.generate
+    seed(:code, :code => "eng", :active => true)
+  end
   
   def self.by_code(code)
     code_hash[code]

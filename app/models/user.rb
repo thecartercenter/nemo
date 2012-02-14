@@ -40,7 +40,7 @@ class User < ActiveRecord::Base
   before_validation(:no_mobile_phone_if_no_phone)
   
   default_scope(includes(:language, :role).order("name"))
-  scope(:active_english, where(:active => true).where(:language_id => Language.english.id))
+  scope(:active_english, includes(:language).where(:active => true).where("languages.code" => "eng"))
   
   # we want all of these on one page for now
   self.per_page = 1000000

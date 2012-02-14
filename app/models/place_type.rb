@@ -14,11 +14,22 @@
 # You should have received a copy of the GNU General Public License
 # along with ELMO.  If not, see <http://www.gnu.org/licenses/>.
 # 
+require 'seedable'
 class PlaceType < ActiveRecord::Base
+  include Seedable
+  
   has_many(:places)
   
   default_scope(order("level"))
   scope(:except_point, where("level <= 4"))
+
+  def self.generate
+    seed(:level, :name => "Country", :short_name => "country", :level => "1")
+    seed(:level, :name => "State/Province", :short_name => "state", :level => "2")
+    seed(:level, :name => "Locality", :short_name => "locality", :level => "3")
+    seed(:level, :name => "Address/Landmark", :short_name => "address", :level => "4")
+    seed(:level, :name => "Point", :short_name => "point", :level => "5")
+  end
 
   def self.select_options
     all.reverse.collect{|pt| [pt.name, pt.id]}

@@ -14,10 +14,18 @@
 # You should have received a copy of the GNU General Public License
 # along with ELMO.  If not, see <http://www.gnu.org/licenses/>.
 # 
+require 'seedable'
 class FormType < ActiveRecord::Base
+  include Seedable
+  
   has_many(:forms)
   
   default_scope(order("name"))
+  
+  def self.generate
+    seed(:name, :name => "Type 1")
+    seed(:name, :name => "Type 2")
+  end
   
   def self.select_options
     all.collect{|ft| [ft.name, ft.id]}

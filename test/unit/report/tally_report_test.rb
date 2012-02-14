@@ -1,8 +1,10 @@
 require 'test_helper'
 
-class Report::ResponseCountReportTest < ActiveSupport::TestCase
+class Report::TallyReportTest < ActiveSupport::TestCase
 
   setup do
+    Language.generate
+    Report::GroupingAttribute.generate
     [Question, Questioning, Answer, Place, Form].each{|k| k.delete_all}
     @qs = {}; @rs = []; @places = {}; @forms = {}; @opt_sets = {}
   end
@@ -14,9 +16,9 @@ class Report::ResponseCountReportTest < ActiveSupport::TestCase
     create_response(:answers => {:num0 => 3})
     
     # create report
-    r = Report::Report.create(:kind => "Response Count")
+    r = Report::Report.create(:kind => "Tally")
     
-    assert_report(r, %w(Count), ["", "2"])
+    assert_report(r, %w(Tally), ["Tally", "2"])
   end
   
   test "grouped by state" do
@@ -26,10 +28,10 @@ class Report::ResponseCountReportTest < ActiveSupport::TestCase
     create_response(:place => @places["Atlanta"])
     create_response(:place => @places["Augusta"])
 
-    r = Report::Report.create(:kind => "Response Count")
+    r = Report::Report.create(:kind => "Tally")
     r.pri_grouping = Report::ByAttribGrouping.create(:attrib => Report::GroupingAttribute.find_by_name("State"))
     
-    assert_report(r, %w(Count), %w(Alabama 1), %w(Georgia 2))
+    assert_report(r, %w(Tally), %w(Alabama 1), %w(Georgia 2))
   end
 
   test "grouped by attrib and question with filter" do
@@ -41,7 +43,7 @@ class Report::ResponseCountReportTest < ActiveSupport::TestCase
     create_response(:place => @places["Atlanta"], :answers => {:satisfactory => "No"})
     create_response(:place => @places["Augusta"], :answers => {:satisfactory => "Yes"})
 
-    r = Report::Report.create(:kind => "Response Count")
+    r = Report::Report.create(:kind => "Tally")
     r.pri_grouping = Report::ByAttribGrouping.create(:attrib => Report::GroupingAttribute.find_by_name("State"))
     r.sec_grouping = Report::ByAnswerGrouping.create(:question => q)
     r.filter = Search::Search.create(:class_name => "Response", :str => "place != Atlanta")
@@ -58,7 +60,7 @@ class Report::ResponseCountReportTest < ActiveSupport::TestCase
     3.times{create_response(:place => @places["USA"], :form => @forms[:f0])}
     2.times{create_response(:place => @places["USA"], :form => @forms[:f1])}
     
-    r = Report::Report.create(:kind => "Response Count")
+    r = Report::Report.create(:kind => "Tally")
     r.pri_grouping = Report::ByAttribGrouping.create(:attrib => Report::GroupingAttribute.find_by_name("Form"))
     r.sec_grouping = Report::ByAttribGrouping.create(:attrib => Report::GroupingAttribute.find_by_name("Country"))
     
@@ -75,7 +77,7 @@ class Report::ResponseCountReportTest < ActiveSupport::TestCase
     3.times{create_response(:answers => {:satisfactory => "No", :openontime => "Yes"})}
     2.times{create_response(:answers => {:satisfactory => "No", :openontime => "No"})}
     
-    r = Report::Report.create(:kind => "Response Count")
+    r = Report::Report.create(:kind => "Tally")
     r.pri_grouping = Report::ByAnswerGrouping.create(:question => q1)
     r.sec_grouping = Report::ByAnswerGrouping.create(:question => q2)
     
@@ -89,123 +91,17 @@ class Report::ResponseCountReportTest < ActiveSupport::TestCase
     q = create_question(:code => "satisfactory", :type => "select_one")
     q.questionings.destroy_all
     
-    r = Report::Report.create(:kind => "Response Count")
+    r = Report::Report.create(:kind => "Tally")
     r.pri_grouping = Report::ByAnswerGrouping.create(:question => q)
+    r.run
     
-    assert_raise(Report::ReportError){r.run}
+    assert(!r.errors.empty?, "Error should be added")
   end
-  
-#  test "no aggregation" do
-#    # create question and two responses
-#    t1 = Time.now; t2 = Time.now - 1.minute
-#    create_question(:code => "num", :type => "integer")
-#    create_response(:observed_at => t1, :answers => {:num => 2})
-#    create_response(:observed_at => t2, :answers => {:num => 5})
-#    
-#    # reload responses so Times compare properly
-#    @rs.each{|resp| resp.reload}
-#    
-#    # create report
-#    r = Report::Report.create(:kind => "Response Count")
-#    r.fields.create(:report => r, :attrib_name => "observed_at")
-#    r.fields.create(:report => r, :question => @qs[:num])
-#    r.run
-#    
-#    assert_report(r, %w(observed_at num), [@rs[0].observed_at, "2"], [@rs[1].observed_at, "5"])
-#  end
-#  
-#  test "average of numerical question with no questionings" do
-#    # create question with no questionings
-#    create_question(:code => "num", :type => "integer")
-#    @qs[:num].questionings.delete_all
-#    
-#    # create report
-#    r = Report::Report.create(:kind => "Response Count")(:aggregation => Report::Aggregation.find_by_name("Average"))
-#    r.fields.create(:question => @qs[:num])
-#    
-#    assert_raise(Report::ReportError){r.run}
-#  end  
-#  
-#  test "average of numerical question" do
-#    # create question and responses
-#    create_question(:code => "num", :type => "integer")
-#    create_response(:answers => {:num => 1})
-#    create_response(:answers => {:num => 4})
-#    
-#    # create report
-#    r = Report::Report.create(:kind => "Response Count")(:aggregation => Report::Aggregation.find_by_name("Average"))
-#    f = r.fields.create(:question => @qs[:num])
-#    
-#    # assert
-#    assert_report(r, [], %w(num 2.5))
-#  end
-#  
-#  test "average with nulls grouped by country, form" do
-#    # create places and responses
-#    create_places
-#    create_form(:name => "f0")
-#    create_form(:name => "f1")
-#    create_question(:code => "num", :forms => [@forms[:f0], @forms[:f1]], :type => "decimal")
-#    create_response(:place => @places["Canada"], :form => @forms[:f0], :answers => {:num => 1.5})
-#    create_response(:place => @places["Canada"], :form => @forms[:f0], :answers => {:num => 2})
-#    create_response(:place => @places["Canada"], :form => @forms[:f1], :answers => {:num => 3.5})
-#    create_response(:place => @places["Canada"], :form => @forms[:f1], :answers => {:num => 4})
-#    create_response(:place => @places["USA"], :form => @forms[:f0], :answers => {:num => 5.5})
-#    create_response(:place => @places["USA"], :form => @forms[:f0], :answers => {:num => 6})
-#    create_response(:place => @places["USA"], :form => @forms[:f0], :answers => {:num => nil})
-#    create_response(:place => @places["USA"], :form => @forms[:f1], :answers => {:num => 7.5})
-#    create_response(:place => @places["USA"], :form => @forms[:f1], :answers => {:num => 8})
-#    create_response(:place => @places["USA"], :form => @forms[:f1], :answers => {:num => 11.5})
-#
-#    # create report with field as average num, grouped by country, form
-#    r = Report::Report.create(:kind => "Response Count")(:aggregation => Report::Aggregation.find_by_name("Average"))
-#    r.fields.create(:question => @qs[:num])
-#    r.pri_grouping = Report::Grouping.find_by_name("Form")
-#    r.sec_grouping = Report::Grouping.find_by_name("Country")
-#    
-#    assert_report(r, %w(Canada USA), %w(f0 1.75 5.75), %w(f1 3.75 9))
-#  end
-#  
-#  test "answer counts per option per all select_one questions" do
-#    # select questions.code, options.name, count(answers.id) 
-#    # from answers join questionings join questions join question_types join options join translations
-#    # where question_types.id = X
-#    # group by questions.code, options.name
-#    create_opt_set(%w(Yes No))
-#    create_question(:code => "sel1", :type => "select_one")
-#    4.times{create_response(:answers => {:sel1 => "Yes"})}
-#    2.times{create_response(:answers => {:sel1 => "No"})}
-#    create_question(:code => "sel2", :type => "select_one")
-#    5.times{create_response(:answers => {:sel1 => "Yes"})}
-#    6.times{create_response(:answers => {:sel1 => "No"})}
-#    
-#    r = Report::Report.create(:kind => "Response Count")(:aggregation => Report::Aggregation.find_by_name("Answer Count"))
-#    r.fields.create(:question_type => QuestionType.find_by_name("select_one"))
-#    r.pri_grouping = Report::Grouping.find_by_name("Questions")
-#    r.sec_grouping = Report::Grouping.find_by_name("Answers")
-#    
-#    assert_report(r, %w(Yes No), %w(sel1 4 2), %w(sel2 5 6))
-#  end
-#
-#  test "averages of all numerical questions" do
-#    # create two integer questions and responses
-#    create_question(:code => "num0", :type => "integer")
-#    create_question(:code => "num1", :type => "integer")
-#    create_response(:answers => {:num0 => 1, :num1 => 9})
-#    create_response(:answers => {:num0 => 4, :num1 => 12})
-#
-#    # create report
-#    r = Report::Report.create(:kind => "Response Count")(:aggregation => Report::Aggregation.find_by_name("Average"))
-#    f = r.fields.create(:question_type => QuestionType.find_by_name("integer"))
-#    r.pri_grouping = Report::Grouping.find_by_name("Questions")
-#    
-#    # assert
-#    assert_report(r, [], %w(num1 10.5), %w(num0 2.5))
-#  end
   
   private
     # creates a small set of localities and states
     def create_places
+      PlaceType.generate
       create_place(:type => :country, :name => "Canada")
       create_place(:type => :country, :name => "USA")
       create_place(:type => :state, :name => "Alabama", :container => "USA")
@@ -238,6 +134,8 @@ class Report::ResponseCountReportTest < ActiveSupport::TestCase
     end
   
     def create_question(params)
+      QuestionType.generate
+      
       q = Question.new(:code => params[:code], :question_type_id => QuestionType.find_by_name(params[:type]).id)
       
       # set the option set if type is select_one

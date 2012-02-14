@@ -14,14 +14,28 @@
 # You should have received a copy of the GNU General Public License
 # along with ELMO.  If not, see <http://www.gnu.org/licenses/>.
 # 
+require 'seedable'
 class Role < ActiveRecord::Base
+  include Seedable
+  
   has_many(:users)
   
   default_scope(order("level"))
 
+  def self.generate
+    seed(:name, :name => "Admin", :level => "3")
+    seed(:name, :name => "Coordinator", :level => "2")
+    seed(:name, :name => "Observer", :level => "1")
+  end
+  
   def self.select_options
     all.collect{|r| [r.name, r.id]}
   end
+
+  def self.highest
+    order("level DESC").first
+  end
+    
   def to_s
     name
   end
