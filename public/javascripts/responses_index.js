@@ -28,7 +28,6 @@ function responses_get_ids() {
 }
 
 function responses_update(data) {
-  responses_old_ids.shift();
   $('#index_table').html(data);
   var new_ids = responses_get_ids();
   for (var i = 0; i < new_ids.length; i++) {
