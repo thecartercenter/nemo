@@ -43,7 +43,7 @@ module ResponsesHelper
           submit_tag("Go")
       end
       links << link_to_if_auth("Create new response", "#", "responses#create", nil, 
-        :onclick => "$('form_chooser').show(); return false") + mini_form
+        :onclick => "$('#form_chooser').show(); return false") + mini_form
     end
     unless responses.empty?
       #links << link_to_if_auth("Export all to CSV", responses_path(:format => :csv), "responses#index", nil)

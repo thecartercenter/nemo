@@ -148,7 +148,9 @@ class Response < ActiveRecord::Base
   end
   
   def observed_at_str; observed_at ? observed_at.strftime("%F %l:%M%p %z").gsub("  ", " ") : nil; end
-  def observed_at_str=(t); self.observed_at = Time.zone.parse(t); end
+  def observed_at_str=(t)
+    self.observed_at = begin Time.zone.parse(t) rescue nil end
+  end
   
   def form_name; form ? form.name : nil; end
   def submitter; user ? user.name : nil; end
