@@ -10,7 +10,7 @@ function responses_fetch() {
   
   // run the ajax request
   $.ajax({
-    url: "/responses",
+    url: "/responses?ajax=1",
     method: "get",
     success: responses_update,
     error: logout
