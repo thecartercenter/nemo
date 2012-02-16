@@ -1,6 +1,8 @@
 (function (report, undefined) {
   // === PRIVATE ===
   var RERUN_FIELDS = ["kind", "filter", "pri_grouping", "sec_grouping"];
+  var params_at_last_save = {};
+  var params_at_last_submit = {};
   
   // === PUBLIC ===
   
@@ -10,10 +12,20 @@
 
   // initializes things
   report.init = function() {
+    // save params
+    load_current_params(params_at_last_save);
+    load_current_params(params_at_last_submit);
+    
     // hook up buttons
     $('#report_report_view_and_save').click(function(){view(true); return false;});
     $('#report_report_view').click(function(){view(false); return false;});
     $('#edit_form_link').click(function(){report.toggle_form(); return false;});
+    
+    // hook up unsaved check
+    $(window).bind('beforeunload', function() {
+      if (save_required())
+        return 'This report has unsaved changes. Are you sure you want to go to another page without saving?';
+    });
     
     // redraw report
     redraw();
@@ -49,6 +61,9 @@
   function submit_to_server(options) {
     var form = $('#report_form form');
     
+    // save the current parameters
+    load_current_params(params_at_last_submit);
+    
     // show the loading indicator
     $("#report_form div.loader").show();
     
@@ -57,7 +72,6 @@
       url: form.attr("action"),
       data: form.serialize() + "&save=" + !!options.save,
       success: function(data, status, jqxhr) {
-        // show message if saved
         // if new data returned, save it
         if ($.type(data) == "object") report.obj = data;
         
@@ -70,6 +84,10 @@
             window.location.href = "/report/reports/" + report.obj.id + "/edit?show_success=1";
             return;
           } else {
+            // save the params
+            params_at_last_save = $.extend({}, params_at_last_submit);
+            
+            // show the successful save message
             report.show_success();
           }
         } else
@@ -94,7 +112,7 @@
   // redraws the report
   function redraw() {
     // load current settings from form
-    load_current_params();
+    load_current_params(report.form);
   
     // if report has errors, don't show anything
     if (report.obj.errors) {
@@ -121,7 +139,6 @@
     
         // rest of header cells
         $(report.obj.headers.col).each(function(idx, ch) {
-          console.log(ch)
           $("<th>").addClass("col").text(ch || "[Null]").appendTo(trow);
         });
         tbl.append(trow);
@@ -187,7 +204,7 @@
     $("#content h1").text(report.form.name);
   }
   
-  function load_current_params() {
+  function load_current_params(target) {
     var fields = {
       kind: "kind", 
       name: "name",
@@ -195,25 +212,42 @@
       sec_grouping: "sec_grouping_attributes_form_choice", 
       filter: "filter_attributes_str"
     }
-    $.each(fields, function(attr, id){report.form[attr] = $("#report_report_" + fields[attr]).val();});
+    $.each(fields, function(attr, id){target[attr] = $("#report_report_" + fields[attr]).val();});
   }
   
-  // loads current paramteres from form
-  // checks if the new values necessitate a re-run of the report
+  // checks if a re-run of the report is needed
   function rerun_required() {
-    // save old params
-    var old_params = $.extend({}, report.form);
+    var cur_params = {};
+    load_current_params(cur_params);
     
-    // load current paramters from form
-    load_current_params();
+    var cp = param_diff(params_at_last_submit, cur_params);
     
-    // for each parameter, if it has changed and changes require rerun, return true
-    for (var k in old_params)
-      if (old_params[k] != report.form[k] && RERUN_FIELDS.indexOf(k) != -1) 
-        return true;
+    // check all changed params to see if any is in rerun_fields list
+    for (var i = 0; i < cp.length; i++) 
+      if (RERUN_FIELDS.indexOf(cp[i]) != -1)
+          return true;
     
     // return false if get to this point
     return false;
+  }
+  
+  // checks if any params have changed since last save
+  function save_required() {
+    var cur_params = {};
+    load_current_params(cur_params);
+    return param_diff(params_at_last_save, cur_params).length != 0;
+  }
+  
+  // compares two sets of parameters
+  function param_diff(a,b) {
+    var changed_keys = [];
+    
+    // for each parameter, if it has changed, add it to array
+    for (var k in a)
+      if (a[k] != b[k])
+        changed_keys.push(k);
+    
+    return changed_keys;
   }
   
   // checks if the report has no groupings
