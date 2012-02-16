@@ -9,8 +9,9 @@ class Report::ByAttribGrouping < Report::Grouping
   
   # applies this grouping to the given relation
   def apply(rel)
-    rel = rel.select("#{attrib.code} as `#{attrib.name}`").
-      joins(Report::Join.list_to_sql(attrib.join_tables.split(","))).group(attrib.code)
+    rel = rel.select("#{attrib.code} as `#{attrib.name}`")
+    rel = rel.joins(Report::Join.list_to_sql(attrib.join_tables.split(","))) if attrib.join_tables
+    rel = rel.group(attrib.code)
   end
   
   def col_name
@@ -27,5 +28,13 @@ class Report::ByAttribGrouping < Report::Grouping
   
   def to_s
     attrib.name
+  end
+  
+  def process_results(results)
+    # if this is a date grouping, change the date objects into nice date strings
+    if col_name =~ /^Date/
+      results.each{|r| r[col_name] = r[col_name].to_s.gsub(" 00:00:00", "")}
+    end
+    results
   end
 end

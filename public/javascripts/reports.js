@@ -84,6 +84,9 @@
       error: function(jqxhr, status, error) {
         // display error
         Utils.show_flash({type: "error", msg: "Unknown error."})
+
+        // hide the loading indicator
+        $("#report_form div.loader").hide();
       }
     })
   }
@@ -95,10 +98,15 @@
   
     // if report has errors, don't show anything
     if (report.obj.errors) {
-      $('#report_body').empty().text("Could not display report.")
+      $('#report_body').empty().text("Could not display report due to an error.")
 
+    // if report has never been successfully run, direct user to controls
     } else if (!report.obj.has_run) {
       $('#report_body').empty().text("Please use the controls on the left to create this report.");
+      
+    // if no data, say so
+    } else if (report.obj.data == null) {
+      $('#report_body').empty().text("No matching data were found. Try adjusting the filter parameter.");
 
     } else {
     
@@ -113,6 +121,7 @@
     
         // rest of header cells
         $(report.obj.headers.col).each(function(idx, ch) {
+          console.log(ch)
           $("<th>").addClass("col").text(ch || "[Null]").appendTo(trow);
         });
         tbl.append(trow);

@@ -54,33 +54,41 @@ class Report::Report < ActiveRecord::Base
     
       # get data and headers
       results = @rel.all
-    
-      # get headers
-      @headers = {
-        :row => pri_grouping ? results.collect{|row| row[pri_grouping.col_name]}.uniq : ["Tally"],
-        :col => sec_grouping ? results.collect{|row| row[sec_grouping.col_name]}.uniq : ["Tally"]
-      }
-    
-      # initialize totals
-      @totals = {:row => Array.new(@headers[:row].size, 0), :col => Array.new(@headers[:col].size, 0)}
-      @grand_total = 0
-
-      # create blank data table
-      @data = @headers[:row].collect{|r| Array.new(@headers[:col].size)}
-
-      # populate data table
-      results.each do |row|
-        # get row and column indices
-        r = pri_grouping ? @headers[:row].index(row[pri_grouping.col_name]) : 0
-        c = sec_grouping ? @headers[:col].index(row[sec_grouping.col_name]) : 0
       
-        # set the cell value
-        @data[r][c] = row["Count"].to_i
+      # if no results, set data to nil and quit
+      if results.empty?
+        @data = nil
+      else
+        # allow groupings to reformat results as needed
+        groupings.each{|g| g.process_results(results)}
+        
+        # get and sort headers
+        @headers = {
+          :row => pri_grouping ? results.collect{|row| row[pri_grouping.col_name]}.uniq.sort : ["Tally"],
+          :col => sec_grouping ? results.collect{|row| row[sec_grouping.col_name]}.uniq.sort : ["Tally"]
+        }
+    
+        # initialize totals
+        @totals = {:row => Array.new(@headers[:row].size, 0), :col => Array.new(@headers[:col].size, 0)}
+        @grand_total = 0
 
-        # add to totals
-        @totals[:row][r] += @data[r][c]
-        @totals[:col][c] += @data[r][c]
-        @grand_total += @data[r][c]
+        # create blank data table
+        @data = @headers[:row].collect{|r| Array.new(@headers[:col].size)}
+
+        # populate data table
+        results.each do |row|
+          # get row and column indices
+          r = pri_grouping ? @headers[:row].index(row[pri_grouping.col_name]) : 0
+          c = sec_grouping ? @headers[:col].index(row[sec_grouping.col_name]) : 0
+      
+          # set the cell value
+          @data[r][c] = row["Count"].to_i
+
+          # add to totals
+          @totals[:row][r] += @data[r][c]
+          @totals[:col][c] += @data[r][c]
+          @grand_total += @data[r][c]
+        end
       end
     rescue Search::ParseError, Report::ReportError
       errors.add(:base, "Couldn't run report: #{$!.to_s}")
