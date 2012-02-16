@@ -78,23 +78,34 @@ class Search::Token
       qual = lookup_qualifier(qual.content) if qual.is_a?(Search::LexToken)
       raise Search::ParseError.new("The operator '#{op.content}' is not valid for the qualifier '#{qual.name}'.") unless qual.op_valid?(op.to_sql)
       
+      # sanitize by default
+      sanitize_rhs = true
+      
       # perform substitution if specified
       rhs = qual.subst[rhs] || rhs
 
       # get the op sql
       op_sql = op.to_sql
-
-      # if partial matches are allowed and the operator is equals, change to LIKE
-      if qual.partials? && ["=", "!="].include?(op_sql)
-        op_sql = op_sql == "=" ? "LIKE" : "NOT LIKE"
-        rhs = "%#{rhs}%"
+      
+      # if the operator is equal/not-equal
+      if ["=", "!="].include?(op_sql)
+        # if rhs is [null], act accordingly
+        if rhs =~ /\[null\]/i
+          op_sql = (op_sql == "=" ? "IS" : "IS NOT")
+          rhs = "NULL"
+          sanitize_rhs = false
+        # if partial matches are allowed, change to LIKE
+        elsif qual.partials?
+          op_sql = op_sql == "=" ? "LIKE" : "NOT LIKE"
+          rhs = "%#{rhs}%"
+        end
       end
       
       # save the associations needed for this comparison
       @assoc = (@assoc || []) + Array.wrap(qual.assoc)
         
       # generate the string
-      sanitize("#{qual.col} #{op_sql} ?", rhs)
+      sanitize_rhs ? sanitize("#{qual.col} #{op_sql} ?", rhs) : sanitize("#{qual.col} #{op_sql} #{rhs}")
     end
     
     # looks up all the default qualifiers for the Search's class
