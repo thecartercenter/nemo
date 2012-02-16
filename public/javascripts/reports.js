@@ -47,14 +47,14 @@
   // options include:
   //   save: whether the parameters should be saved or not
   function submit_to_server(options) {
-    var form = $('#report_form form')[0];
+    var form = $('#report_form form');
     
     // show the loading indicator
     $("#report_form div.loader").show();
     
     $.ajax({
       type: 'POST',
-      url: form.action,
+      url: form.attr("action"),
       data: form.serialize() + "&save=" + !!options.save,
       success: function(data, status, jqxhr) {
         // show message if saved
