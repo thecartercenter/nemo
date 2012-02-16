@@ -19,8 +19,6 @@ module QuestionsHelper
     case field
     when "name" then q.name_eng
     when "type" then q.type.long_name
-    when "forms" then q.forms.size
-    when "answers" then q.answers.size
     when "published?" then q.published? ? "Yes" : "No"
     when "actions"
       exclude = q.published? ? [:edit, :destroy] : []
@@ -31,14 +29,14 @@ module QuestionsHelper
   
   def questions_index_fields
     choose_mode = controller.action_name == "choose"
-    %w[code name type forms answers] + (choose_mode ? [] : %w[published? actions])
+    %w[code name type] + (choose_mode ? [] : %w[published? actions])
   end
   
   def questions_index_links(questions)
     choose_mode = controller.action_name == "choose"
     links = []
     if choose_mode
-      unless @questions.total_entries == 0
+      unless @questions.empty?
         links << batch_op_link(:name => "Add selected questions to form", :action => "forms#add_questions", :id => @form.id)
       end
       links << link_to_if_auth("Create new question", new_questioning_path(:form_id => @form.id), "questionings#create")

@@ -35,11 +35,8 @@ class Form < ActiveRecord::Base
   
   default_scope(order("form_types.name, forms.name").includes(:type))
   scope(:published, where(:published => true))
-  
-  def self.find_eager(id)
-    includes(:type, {:questionings => {:question => 
-        [:type, :translations, {:option_set => {:option_settings => {:option => :translations}}}]}}).find(id)
-  end
+  scope(:with_questions, includes(:type, {:questionings => [:form, :condition, {:question => 
+    [:type, :translations, :option_set]}]}).order("questionings.rank"))
   
   def self.select_options
     published.collect{|f| [f.full_name, f.id]}

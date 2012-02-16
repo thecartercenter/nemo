@@ -101,7 +101,7 @@ function suggest_login() {
 	else
 		login = name.replace(/[^a-z0-9\.]/ig, "");
 		
-	$('#user_login').val(login.substr(0,16).toLowerCase());
+	$('#user_login').val(login.substr(0,10).toLowerCase());
 }
 
 function logout() {

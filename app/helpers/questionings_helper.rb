@@ -26,6 +26,7 @@ module QuestioningsHelper
     when "required?", "hidden?" then qing.send(field) ? "Yes" : "No"
     when "actions"
       exclude = qing.published? || controller.action_name == "show" ? [:edit, :destroy] : []
+      exclude = []
       action_links(qing, :destroy_warning => "Are you sure you want to remove question '#{qing.code}' from this form", :exclude => exclude)
     else qing.send(field)
     end

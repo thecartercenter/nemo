@@ -44,7 +44,8 @@ class Question < ActiveRecord::Base
   
   # returns questions that do NOT already appear in the given form
   def self.not_in_form(form)
-    scoped.where("(questions.id not in (select question_id from questionings where form_id='#{form.id}'))")
+    scoped.includes([:translations, :type]).
+      where("(questions.id not in (select question_id from questionings where form_id='#{form.id}'))")
   end
   
   def self.select_options_by_code(questions = nil)

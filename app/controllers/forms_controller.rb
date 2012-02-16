@@ -28,11 +28,11 @@ class FormsController < ApplicationController
     render_and_setup("create")
   end
   def edit
-    @form = Form.find(params[:id])
+    @form = Form.with_questions.find(params[:id])
     render_and_setup("update")
   end
   def show
-    @form = Form.find_eager(params[:id])
+    @form = Form.with_questions.find(params[:id])
     @form.add_download if request.format.xml? 
     render_appropriate_format
   end
