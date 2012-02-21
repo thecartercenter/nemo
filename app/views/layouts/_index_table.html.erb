@@ -2,7 +2,9 @@
   <div class="tip">
     <% if paginated %>
       Found <strong><%= pluralize(objects.total_entries, klass.model_name.human.downcase) %></strong> in total. 
-      Showing <%= objects.offset + 1 %>-<%= objects.offset + objects.size %>.
+      <% unless objects.empty? %>
+        Showing <%= objects.offset + 1 %>-<%= objects.offset + objects.size %>.
+      <% end %>
     <% else %>
       Found <strong><%= pluralize(objects.size, klass.model_name.human.downcase) %></strong> in total. 
     <% end %>&nbsp;
