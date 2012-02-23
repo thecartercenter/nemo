@@ -1,4 +1,9 @@
-<% content_for(:per_page_js){javascript_include_tag("reports")} %>
+<% content_for(:per_page_js) do 
+     javascript_include_tag("reports", "https://www.google.com/jsapi") +
+     # special google load thing
+     javascript_tag('google.load("visualization", "1", {packages:["corechart"]});')
+   end
+%>
 
 <div id="report_form" style="display: none">
   <%= render("form") %>

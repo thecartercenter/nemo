@@ -9,8 +9,9 @@ en:
       question:
         name_eng: "English name"
       report/report:
-        kind: Report Type
+        kind: Data Type
+        display_type: Display Type
         pri_grouping: Rows
         sec_grouping: Columns
         submit_new: Generate Report
-        submit_edit: Save Changes        
+        submit_edit: Save Changes

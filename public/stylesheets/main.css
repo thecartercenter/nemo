@@ -133,7 +133,7 @@ textarea#broadcast_body { width: 400px; height: 200px; }
 .report_reports_index .name_col { min-width: 200px; }
 
 /* report show */
-div#report_form { float: left; width: 260px; margin: 5px 10px 0 0; }
+div#report_form { float: left; width: 260px; margin: 5px 10px 0 0; position: relative; z-index: 2; }
 div#report_form div.form_field_details { display: none; }
 div#report_form #report_report_filter_attributes_str { width: 240px; }
 div#report_form div#search_examples { display: none; }

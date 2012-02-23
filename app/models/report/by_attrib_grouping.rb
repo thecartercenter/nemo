@@ -9,13 +9,13 @@ class Report::ByAttribGrouping < Report::Grouping
   
   # applies this grouping to the given relation
   def apply(rel)
-    rel = rel.select("#{attrib.code} as `#{attrib.name}`")
+    rel = rel.select("#{attrib.code} as `#{col_name}`")
     rel = rel.joins(Report::Join.list_to_sql(attrib.join_tables.split(","))) if attrib.join_tables
     rel = rel.group(attrib.code)
   end
   
   def col_name
-    attrib.name
+    "attrib_#{attrib.name.downcase}"
   end
   
   def form_choice

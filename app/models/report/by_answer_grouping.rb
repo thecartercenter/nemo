@@ -20,7 +20,7 @@ class Report::ByAnswerGrouping < Report::Grouping
       
       # do it!
       expr = "aotr#{uid}.str"
-      rel.select("#{expr} as `#{col_name}`").
+      rel.select("#{expr} as `#{col_name}`, ao#{uid}.value as `#{value_col_name}`").
         joins("LEFT JOIN answers a#{uid} ON responses.id = a#{uid}.response_id").
         joins("LEFT JOIN options ao#{uid} ON a#{uid}.option_id = ao#{uid}.id").
         joins("LEFT JOIN translations aotr#{uid} ON " +
@@ -32,7 +32,7 @@ class Report::ByAnswerGrouping < Report::Grouping
   end
   
   def col_name
-    question.code
+    "answer_#{question.code}"
   end
   
   def form_choice

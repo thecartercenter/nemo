@@ -1,8 +1,9 @@
 <%= flash_and_form_errors(@report) %>
 <%= form_for(@report, {:id => "report_form"}) do |f| %>
   <div class="tip" id="required_tip">Required fields shown in <strong>bold</strong>.</div>
-  <%= form_field(f, :kind, :type => :select, :options => Report::Report.type_select_options, :required => true) %>
   <%= form_field(f, :name, :required => true, :details => "A descriptive name for this report.") %>
+  <%= form_field(f, :kind, :type => :select, :options => Report::Report.type_select_options, :required => true) %>
+  <%= form_field(f, :display_type, :type => :select, :options => Report::Report.display_type_select_options, :required => true) %>
   <%= form_field(f, :filter, :partial => "filter",
     :details => "A search string to filter the responses used in the report. You can try out your
       searches on the #{link_to('Responses page', responses_path())}.".html_safe) %>

@@ -12,4 +12,12 @@ class Report::Grouping < ActiveRecord::Base
     id = $2
     eval(class_name).new(:assoc_id => id)
   end
+  
+  def headers(results)
+    results.collect{|row| {:name => row[col_name], :value => row[value_col_name] || row[col_name]}}.uniq.sort_by{|x| x[:value] || ""}
+  end
+  
+  def value_col_name
+    "#{col_name}_value"
+  end
 end

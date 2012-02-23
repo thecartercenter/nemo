@@ -13,19 +13,25 @@
   // initializes things
   report.init = function() {
     // save params
-    load_current_params(params_at_last_save);
-    load_current_params(params_at_last_submit);
+    load_params_from_form(params_at_last_save);
+    load_params_from_form(params_at_last_submit);
     
     // hook up buttons
     $('#report_report_view_and_save').click(function(){view(true); return false;});
     $('#report_report_view').click(function(){view(false); return false;});
     $('#edit_form_link').click(function(){report.toggle_form(); return false;});
     
+    // hook up important form controls to watch for changes
+    $('#report_report_display_type').change(display_type_changed);
+    
     // hook up unsaved check
     $(window).bind('beforeunload', function() {
       if (save_required())
         return 'This report has unsaved changes. Are you sure you want to go to another page without saving?';
     });
+    
+    // ensure the correct labels per display type
+    display_type_changed();
     
     // redraw report
     redraw();
@@ -42,6 +48,23 @@
   }
   
   // === PRIVATE ===
+  
+  function display_type_changed() {
+    // get new display type
+    var new_type = $('#report_report_display_type').val();
+    
+    // change things accordingly
+    switch (new_type) {
+      case 'Table':
+        $('label[for=report_report_pri_grouping]').text("Rows");
+        $('label[for=report_report_sec_grouping]').text("Columns");
+        break;
+      case 'Bar Chart':
+        $('label[for=report_report_pri_grouping]').text("Main Grouping");
+        $('label[for=report_report_sec_grouping]').text("Secondary Grouping");
+        break;
+    }
+  }
   
   // decides whether to contact the server and redraws the report
   // save - whether the changes should be saved or only displayed
@@ -62,7 +85,7 @@
     var form = $('#report_form form');
     
     // save the current parameters
-    load_current_params(params_at_last_submit);
+    load_params_from_form(params_at_last_submit);
     
     // show the loading indicator
     $("#report_form div.loader").show();
@@ -114,7 +137,7 @@
   // redraws the report
   function redraw() {
     // load current settings from form
-    load_current_params(report.form);
+    load_params_from_form(report.form);
   
     // if report has errors, don't show anything
     if (report.obj.errors) {
@@ -129,70 +152,111 @@
       $('#report_body').empty().text("No matching data were found. Try adjusting the filter parameter.");
 
     } else {
-    
-      var tbl = $("<table>");
-    
-      // header row (only print if is at least one grouping)
-      if (has_groupings()) {
-        var trow = $("<tr>");
-    
-        // blank cell in corner
-        $("<th>").appendTo(trow);
-    
-        // rest of header cells
-        $(report.obj.headers.col).each(function(idx, ch) {
-          $("<th>").addClass("col").text(ch || "[Null]").appendTo(trow);
-        });
-        tbl.append(trow);
+      // draw the appropriate report type
+      switch (report.form.display_type) {
+        case "Table": draw_table(); break;
+        case "Bar Chart": draw_bar_chart(); break;
       }
-    
-      // row total header
-      if (show_totals("row"))
-        $("<th>").addClass("row_total").text("Total").appendTo(trow);
-      
-      // body
-      $(report.obj.headers.row).each(function(r, rh) {
-        trow = $("<tr>");
-      
-        // row header
-        $("<th>").addClass("row").text(rh || "[Null]").appendTo(trow);
-      
-        // row cells
-        $(report.obj.headers.col).each(function(c, ch) {
-          $("<td>").text(report.obj.data[r][c] || "").appendTo(trow);
-        });
-      
-        // row total
-        if (show_totals("row"))
-          $("<td>").addClass("row_total").text(report.obj.totals["row"][r]).appendTo(trow);
-
-        tbl.append(trow);
-      });
-    
-      // footer
-      if (show_totals("col")) {
-        trow = $("<tr>");
-      
-        // row header
-        $("<th>").addClass("row").addClass("col_total").text("Total").appendTo(trow);
-      
-        // row cells
-        $(report.obj.totals.col).each(function(c, ct) {
-          $("<td>").addClass("col_total").text(ct > 0 ? ct : "").appendTo(trow);
-        });
-      
-        // row total
-        if (show_totals("row"))
-          $("<td>").addClass("row_total").addClass("col_total").text((gt = report.obj.grand_total) > 0 ? gt : "").appendTo(trow);
-
-        tbl.append(trow);
-      }
-    
-      $('#report_body').empty().append(tbl);
     }
 
     // update the title
     set_title();
+  }
+  
+  // draws the report as a bar chart (uses google viz api)
+  function draw_bar_chart() {
+    
+    // set up data
+    var data = new google.visualization.DataTable();
+    
+    // add first column (pri_grouping)
+    data.addColumn('string', 'main');
+    
+    // add rest of columns (sec_grouping)
+    $(report.obj.headers.col).each(function(idx, ch){data.addColumn('number', ch.name || "[Null]");})
+    
+    $(report.obj.headers.row).each(function(r, rh){
+      // build the row
+      var row = [rh.name || "[Null]"];
+      $(report.obj.headers.col).each(function(c, ch) {row.push(report.obj.data[r][c] || 0);});
+      // add it
+      data.addRow(row)
+    });
+
+    var cont_height = Math.max(200, Math.min(800, report.obj.headers.row.length * 40));
+
+    var options = {
+      width: $("#content").width() - $("#report_form").width() - 60, 
+      height: cont_height,
+      vAxis: {title: (g = report.form.pri_grouping) ? g.name : ''},
+      hAxis: {title: "# of Responses"},
+      chartArea: {top: 0, height: cont_height - 50}
+    };
+
+    var chart = new google.visualization.BarChart($('#report_body')[0]);
+    chart.draw(data, options);
+  }
+  
+  function draw_table() {
+    var tbl = $("<table>");
+  
+    // header row (only print if is at least one grouping)
+    if (has_groupings()) {
+      var trow = $("<tr>");
+  
+      // blank cell in corner
+      $("<th>").appendTo(trow);
+  
+      // rest of header cells
+      $(report.obj.headers.col).each(function(idx, ch) {
+        $("<th>").addClass("col").text(ch.name || "[Null]").appendTo(trow);
+      });
+      tbl.append(trow);
+    }
+  
+    // row total header
+    if (show_totals("row"))
+      $("<th>").addClass("row_total").text("Total").appendTo(trow);
+    
+    // body
+    $(report.obj.headers.row).each(function(r, rh) {
+      trow = $("<tr>");
+    
+      // row header
+      $("<th>").addClass("row").text(rh.name || "[Null]").appendTo(trow);
+    
+      // row cells
+      $(report.obj.headers.col).each(function(c, ch) {
+        $("<td>").text(report.obj.data[r][c] || "").appendTo(trow);
+      });
+    
+      // row total
+      if (show_totals("row"))
+        $("<td>").addClass("row_total").text(report.obj.totals["row"][r]).appendTo(trow);
+
+      tbl.append(trow);
+    });
+  
+    // footer
+    if (show_totals("col")) {
+      trow = $("<tr>");
+    
+      // row header
+      $("<th>").addClass("row").addClass("col_total").text("Total").appendTo(trow);
+    
+      // row cells
+      $(report.obj.totals.col).each(function(c, ct) {
+        $("<td>").addClass("col_total").text(ct > 0 ? ct : "").appendTo(trow);
+      });
+    
+      // row total
+      if (show_totals("row"))
+        $("<td>").addClass("row_total").addClass("col_total").text((gt = report.obj.grand_total) > 0 ? gt : "").appendTo(trow);
+
+      tbl.append(trow);
+    }
+  
+    $('#report_body').empty().append(tbl);
   }
   
   // checks whether total rows should be shown for a table report
@@ -206,21 +270,37 @@
     $("#content h1").text(report.form.name);
   }
   
-  function load_current_params(target) {
+  function load_params_from_form(target) {
     var fields = {
-      kind: "kind", 
+      kind: "kind",
       name: "name",
+      display_type: "display_type",
+      filter: "filter_attributes_str",
       pri_grouping: "pri_grouping_attributes_form_choice",
-      sec_grouping: "sec_grouping_attributes_form_choice", 
-      filter: "filter_attributes_str"
+      sec_grouping: "sec_grouping_attributes_form_choice"
     }
-    $.each(fields, function(attr, id){target[attr] = $("#report_report_" + fields[attr]).val();});
+    $.each(fields, function(attr, id){
+      // get the form field
+      var ff_id = "#report_report_" + fields[attr]
+      var ff = $(ff_id);
+      // if field is a grouping, get both name and value
+      if (attr.match(/_grouping$/)) {
+        // if value is null/none, just set to null
+        if (ff.val() == "")
+          target[attr] = null;
+        else
+          target[attr] = {name: $(ff_id + " :selected").text(), id: ff.val()};
+      }
+      // else just get the value
+      else
+        target[attr] = ff.val();
+    });
   }
   
   // checks if a re-run of the report is needed
   function rerun_required() {
     var cur_params = {};
-    load_current_params(cur_params);
+    load_params_from_form(cur_params);
     
     var cp = param_diff(params_at_last_submit, cur_params);
     
@@ -236,7 +316,7 @@
   // checks if any params have changed since last save
   function save_required() {
     var cur_params = {};
-    load_current_params(cur_params);
+    load_params_from_form(cur_params);
     return param_diff(params_at_last_save, cur_params).length != 0;
   }
   
@@ -246,7 +326,7 @@
     
     // for each parameter, if it has changed, add it to array
     for (var k in a)
-      if (a[k] != b[k])
+      if (!((typeof(a[k]) == "object" && a[k] != null && b[k] != null && a[k].id == b[k].id) || a[k] == b[k]))
         changed_keys.push(k);
     
     return changed_keys;

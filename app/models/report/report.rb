@@ -13,9 +13,14 @@ class Report::Report < ActiveRecord::Base
   validates(:name, :presence => true, :uniqueness => true)
   
   KINDS = ["Tally"]
+  DISPLAY_TYPES = ["Table", "Bar Chart"]
   
   def self.type_select_options
     KINDS
+  end
+
+  def self.display_type_select_options
+    DISPLAY_TYPES
   end
   
   def has_run?
@@ -63,11 +68,11 @@ class Report::Report < ActiveRecord::Base
         groupings.each{|g| g.process_results(results)}
         
         # get and sort headers
+        sorter = Proc.new{|x| x || ""}
         @headers = {
-          :row => pri_grouping ? results.collect{|row| row[pri_grouping.col_name]}.uniq.sort : ["Tally"],
-          :col => sec_grouping ? results.collect{|row| row[sec_grouping.col_name]}.uniq.sort : ["Tally"]
+          :row => pri_grouping ? pri_grouping.headers(results) : ["Tally"],
+          :col => sec_grouping ? sec_grouping.headers(results) : ["Tally"]
         }
-    
         # initialize totals
         @totals = {:row => Array.new(@headers[:row].size, 0), :col => Array.new(@headers[:col].size, 0)}
         @grand_total = 0
@@ -78,8 +83,8 @@ class Report::Report < ActiveRecord::Base
         # populate data table
         results.each do |row|
           # get row and column indices
-          r = pri_grouping ? @headers[:row].index(row[pri_grouping.col_name]) : 0
-          c = sec_grouping ? @headers[:col].index(row[sec_grouping.col_name]) : 0
+          r = pri_grouping ? @headers[:row].index{|h| h[:name] == row[pri_grouping.col_name]} : 0
+          c = sec_grouping ? @headers[:col].index{|h| h[:name] == row[sec_grouping.col_name]} : 0
       
           # set the cell value
           @data[r][c] = row["Count"].to_i
