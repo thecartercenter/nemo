@@ -37,6 +37,7 @@ div.form_field { float: left; clear: left; border-top: 1px solid #ddd; padding: 
 div.form_field label { float: left; width: 150px; }
 div.form_field div.form_field_control { float: left; min-width: 300px; min-height: 26px; position: relative; }
 div.form_field div.form_field_control input { width: 240px; }
+div.form_field div.form_field_control input.radio { width: 15px; }
 div.form_field div.form_field_details { float: right; width: 300px; position: relative; font-size: 90%; }
 div.form_field div.space_line { clear: both; margin: 0; padding: 0; width: auto; }
 div.dummy, span.dummy { font-weight: bold; }

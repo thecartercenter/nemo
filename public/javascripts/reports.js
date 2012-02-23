@@ -22,7 +22,8 @@
     $('#edit_form_link').click(function(){report.toggle_form(); return false;});
     
     // hook up important form controls to watch for changes
-    $('#report_report_display_type').change(display_type_changed);
+    $('#report_report_display_type').change(function(){form_changed("display_type")});
+    $('#report_report_sec_grouping_attributes_form_choice').change(function(){form_changed("sec_grouping")});
     
     // hook up unsaved check
     $(window).bind('beforeunload', function() {
@@ -31,7 +32,7 @@
     });
     
     // ensure the correct labels per display type
-    display_type_changed();
+    form_changed("_all");
     
     // redraw report
     redraw();
@@ -49,21 +50,26 @@
   
   // === PRIVATE ===
   
-  function display_type_changed() {
-    // get new display type
-    var new_type = $('#report_report_display_type').val();
+  function form_changed(src) {
+    load_params_from_form(report.form);
     
-    // change things accordingly
-    switch (new_type) {
-      case 'Table':
-        $('label[for=report_report_pri_grouping]').text("Rows");
-        $('label[for=report_report_sec_grouping]').text("Columns");
-        break;
-      case 'Bar Chart':
-        $('label[for=report_report_pri_grouping]').text("Main Grouping");
-        $('label[for=report_report_sec_grouping]').text("Secondary Grouping");
-        break;
+    if (src == "display_type" || src == "_all") {
+      // change grouping labels
+      switch (report.form.display_type) {
+        case 'Table':
+          $('label[for=report_report_pri_grouping]').text("Rows");
+          $('label[for=report_report_sec_grouping]').text("Columns");
+          break;
+        case 'Bar Chart':
+          $('label[for=report_report_pri_grouping]').text("Main Grouping");
+          $('label[for=report_report_sec_grouping]').text("Secondary Grouping");
+          break;
+      }
     }
+    
+    // show/hide bar style
+    if (src == "display_type" || src == "sec_grouping" || src == "_all")
+      $('div#bar_style')[report.form.display_type == "Bar Chart" && report.form.sec_grouping ? "show" : "hide"]();
   }
   
   // decides whether to contact the server and redraws the report
@@ -190,7 +196,8 @@
       height: cont_height,
       vAxis: {title: (g = report.form.pri_grouping) ? g.name : ''},
       hAxis: {title: "# of Responses"},
-      chartArea: {top: 0, height: cont_height - 50}
+      chartArea: {top: 0, height: cont_height - 50},
+      isStacked: !!$('#report_report_bar_style_stacked').attr("checked")
     };
 
     var chart = new google.visualization.BarChart($('#report_body')[0]);
@@ -277,7 +284,8 @@
       display_type: "display_type",
       filter: "filter_attributes_str",
       pri_grouping: "pri_grouping_attributes_form_choice",
-      sec_grouping: "sec_grouping_attributes_form_choice"
+      sec_grouping: "sec_grouping_attributes_form_choice",
+      bar_style: "bar_style"
     }
     $.each(fields, function(attr, id){
       // get the form field
@@ -291,6 +299,8 @@
         else
           target[attr] = {name: $(ff_id + " :selected").text(), id: ff.val()};
       }
+      else if (attr == "bar_style")
+        target[attr] = !!$("#report_report_bar_style_stacked").attr("checked");
       // else just get the value
       else
         target[attr] = ff.val();

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120221210027) do
+ActiveRecord::Schema.define(:version => 20120223201044) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -212,6 +212,7 @@ ActiveRecord::Schema.define(:version => 20120221210027) do
     t.datetime "viewed_at"
     t.integer  "view_count",      :default => 0
     t.string   "display_type",    :default => "Table"
+    t.string   "bar_style",       :default => "Side By Side"
   end
 
   create_table "responses", :force => true do |t|

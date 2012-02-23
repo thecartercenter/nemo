@@ -10,6 +10,7 @@
   <%= form_field(f, :pri_grouping, :partial => "grouping", 
     :details => "An attribute or question by which the response count should be grouped (e.g. state, overall rating).") %>
   <%= form_field(f, :sec_grouping, :partial => "grouping", :details => "A second grouping.") %>
+  <%= form_field(f, :bar_style, :type => :radio_buttons, :options => Report::Report.bar_style_select_options) %>
   <%= f.submit("Save & View", :id => "report_report_view_and_save", :class => "submit") %>
   <%= f.submit("View", :id => "report_report_view", :class => "submit") %>
   <div class="loader" style="display: none">&nbsp;</div>

@@ -13,5 +13,6 @@ en:
         display_type: Display Type
         pri_grouping: Rows
         sec_grouping: Columns
+        bar_style: Bar Style
         submit_new: Generate Report
         submit_edit: Save Changes

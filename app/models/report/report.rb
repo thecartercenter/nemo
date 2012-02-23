@@ -14,14 +14,11 @@ class Report::Report < ActiveRecord::Base
   
   KINDS = ["Tally"]
   DISPLAY_TYPES = ["Table", "Bar Chart"]
+  BAR_STYLES = ["Side By Side", "Stacked"]
   
-  def self.type_select_options
-    KINDS
-  end
-
-  def self.display_type_select_options
-    DISPLAY_TYPES
-  end
+  def self.type_select_options; KINDS; end
+  def self.display_type_select_options; DISPLAY_TYPES; end
+  def self.bar_style_select_options; BAR_STYLES; end
   
   def has_run?
     @has_run ||= !new_record?
@@ -70,8 +67,8 @@ class Report::Report < ActiveRecord::Base
         # get and sort headers
         sorter = Proc.new{|x| x || ""}
         @headers = {
-          :row => pri_grouping ? pri_grouping.headers(results) : ["Tally"],
-          :col => sec_grouping ? sec_grouping.headers(results) : ["Tally"]
+          :row => pri_grouping ? pri_grouping.headers(results) : [{:name => "Tally", :value => 0}],
+          :col => sec_grouping ? sec_grouping.headers(results) : [{:name => "Tally", :value => 0}]
         }
         # initialize totals
         @totals = {:row => Array.new(@headers[:row].size, 0), :col => Array.new(@headers[:col].size, 0)}

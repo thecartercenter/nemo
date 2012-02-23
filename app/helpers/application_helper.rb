@@ -61,7 +61,7 @@ module ApplicationHelper
     elsif options[:type] == :submit
       f.submit(f.object.class.human_attribute_name("submit_" + (f.object.new_record? ? "new" : "edit")), :class => "submit")
     else
-      content_tag("div", :class => "form_field") do
+      content_tag("div", :class => "form_field", :id => method) do
         label = f.label(method, nil, :class => options[:required] ? "required" : "")
         field = content_tag("div", :class => "form_field_control") do
           if options[:partial]
@@ -70,6 +70,7 @@ module ApplicationHelper
             case options[:type]
             when nil, :text then f.text_field(method)
             when :check_box then f.check_box(method)
+            when :radio_buttons then options[:options].collect{|o| f.radio_button(method, o, :class => "radio") + o}.join("&nbsp;&nbsp;").html_safe
             when :textarea then f.text_area(method)
             when :password then f.password_field(method)
             when :country then country_select(f.object.class.name.downcase, method, nil)
