@@ -37,13 +37,9 @@ module ResponsesHelper
   def responses_index_links(responses)
     links = []
     # only add the create response link if there are any published forms
-    unless (sel_opt = Form.select_options).empty?
-      mini_form = form_tag(new_response_path, :method => :get, :id => "form_chooser", :style => "display: none") do
-          select_tag(:form_id, options_for_select(sel_opt), :include_blank => "Select a published form...") +
-          submit_tag("Go")
-      end
+    unless Form.select_options.empty?
       links << link_to_if_auth("Create new response", "#", "responses#create", nil, 
-        :onclick => "$('#form_chooser').show(); return false") + mini_form
+        :onclick => "$('#form_chooser').show(); return false") + new_response_mini_form(false)
     end
     unless responses.empty?
       #links << link_to_if_auth("Export all to CSV", responses_path(:format => :csv), "responses#index", nil)
@@ -55,6 +51,12 @@ module ResponsesHelper
     content_tag("table", :class => "form answers") do
       content_tag("tr"){content_tag("th", :colspan => 3){"Answers"}} +
         render(:partial => "answer", :collection => answers)
+    end
+  end
+  def new_response_mini_form(visible = true)
+    form_tag(new_response_path, :method => :get, :id => "form_chooser", :style => visible ? "" : "display: none") do
+      select_tag(:form_id, options_for_select(Form.select_options), :include_blank => true) +
+      submit_tag("Go")
     end
   end
 end

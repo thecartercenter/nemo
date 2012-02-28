@@ -41,6 +41,7 @@ class User < ActiveRecord::Base
   
   default_scope(includes(:language, :role).order("name"))
   scope(:active_english, includes(:language).where(:active => true).where("languages.code" => "eng"))
+  scope(:observers, includes(:role).where("roles.name = 'observer'"))
   
   # we want all of these on one page for now
   self.per_page = 1000000

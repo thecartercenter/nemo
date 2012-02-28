@@ -40,6 +40,8 @@ class Response < ActiveRecord::Base
   before_save(:set_place)
   
   default_scope(includes({:form => :type}, :user, :place).order("responses.created_at DESC"))
+  scope(:unreviewed, where(:reviewed => false))
+  scope(:by, lambda{|user| where(:user_id => user.id)})
   
   self.per_page = 20
   
@@ -110,6 +112,16 @@ class Response < ActiveRecord::Base
 
     # save the works
     resp.save!
+  end
+  
+  # returns a human-readable description of how many responses have arrived recently
+  def self.recent_count
+    %w(hour day week month).each do |p|
+      if (x = where("created_at > ?", 1.send(p).ago).count) > 0 
+        return "#{x} in the Past #{p.capitalize}"
+      end
+    end
+    "No recent reports"
   end
   
   def visible_questionings

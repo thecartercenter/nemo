@@ -1,6 +1,6 @@
 class Report::ReportsController < ApplicationController
   def index
-    @reports = Report::Report.by_viewed_at
+    @reports = Report::Report.by_popularity
   end
   
   def new

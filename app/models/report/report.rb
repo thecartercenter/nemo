@@ -8,6 +8,7 @@ class Report::Report < ActiveRecord::Base
   
   attr_reader(:headers, :data, :totals, :grand_total)
   scope(:by_viewed_at, order("viewed_at desc"))
+  scope(:by_popularity, order("view_count desc"))
   
   validates(:kind, :presence => true)
   validates(:name, :presence => true, :uniqueness => true)
@@ -19,7 +20,11 @@ class Report::Report < ActiveRecord::Base
   def self.type_select_options; KINDS; end
   def self.display_type_select_options; DISPLAY_TYPES; end
   def self.bar_style_select_options; BAR_STYLES; end
-  
+
+  def self.select_options
+    by_popularity.collect{|r| [r.name, r.id]}
+  end
+    
   def has_run?
     @has_run ||= !new_record?
   end

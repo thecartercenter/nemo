@@ -17,5 +17,15 @@
 class WelcomeController < ApplicationController
   def index
     redirect_to(new_user_session_path) unless current_user
+    @dont_print_title = true
+    
+    @user_count = User.count
+    @observer_count = User.observers.count
+    @pub_form_count = Form.published.count
+    @unpub_form_count = Form.count - @pub_form_count
+    @self_response_count = Response.by(current_user).count
+    @total_response_count = Response.count
+    @recent_responses_count = Response.recent_count
+    @unreviewed_response_count = Response.unreviewed.count
   end
 end

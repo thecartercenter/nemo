@@ -1,11 +1,57 @@
 <%= flash_and_form_errors %>
 
-<p>Welcome to <%= configatron.site_name %>.</p>
+<div class="block">
+  <%= link_to("Manage", users_path, :class => "title") %>
+  <%= link_to("Users", users_path, :class => "subtitle") %>
+  <%= link_to(image_tag("blocks/block_manage.png"), users_path) %>
+  <ul>
+    <li><%= link_to("<em>#{@user_count}</em> Total Users".html_safe, users_path) %></li>
+    <li><%= link_to("<em>#{@observer_count}</em> Observers".html_safe, 
+      search_searches_path(:search_search => {:class_name => "User", :str => "role:observer"}), :method => :post) %></li>
+    <li><%= link_to("Create a User", new_user_path) %></li>
+  </ul>
+</div>
 
-<p>You might want to start by checking for new <%= link_to("Responses", responses_path) %>.</p>
+<div class="block">
+  <%= link_to("Design", forms_path, :class => "title") %>
+  <%= link_to("Forms", forms_path, :class => "subtitle") %>
+  <%= link_to(image_tag("blocks/block_design.png"), forms_path) %>
+  <ul>
+    <li><%= link_to("<em>#{@pub_form_count}</em> Published Forms".html_safe, forms_path) %></li>
+    <li><%= link_to("<em>#{@unpub_form_count}</em> Unpublished Forms".html_safe, forms_path) %></li>
+    <li><%= link_to("Create a Form", new_form_path) %></li>
+  </ul>
+</div>
 
-<p>Or if you haven't already done so, you should create a new <%= link_to("Form", forms_path) %> or two.</p>
+<div class="block">
+  <%= link_to("Submit", responses_path, :class => "title") %>
+  <%= link_to("Data", responses_path, :class => "subtitle") %>
+  <%= link_to(image_tag("blocks/block_submit.png"), responses_path) %>
+  <ul>
+    <li><small>Select a Form To Submit</small><%= new_response_mini_form %></li>
+    <li><%= link_to("<em>#{@self_response_count}</em> Submissions by You".html_safe, 
+      search_searches_path(:search_search => {:class_name => "Response", :str => "submitter:\"#{current_user.name}\""}), :method => :post) %></li>
+  </ul>
+</div>
 
-<% unless current_user %>
-  <p><%= link_to("Click here", new_user_session_path) %> to login to the system.</p>
-<% end %>
+<div class="block">
+  <%= link_to("Review", responses_path, :class => "title") %>
+  <%= link_to("Responses", responses_path, :class => "subtitle") %>
+  <%= link_to(image_tag("blocks/block_review.png"), responses_path) %>
+  <ul>
+    <li><%= link_to("<em>#{@total_response_count}</em> Total Responses".html_safe, responses_path) %></li>
+    <li><%= link_to("<em>#{@unreviewed_response_count}</em> Awaiting Review".html_safe, 
+      search_searches_path(:search_search => {:class_name => "Response", :str => "reviewed:no"}), :method => :post) %></li>
+    <li><%= link_to(@recent_responses_count.gsub(/^(\d+)/){"<em>#{$1}</em>"}.html_safe, responses_path) %></li>
+  </ul>
+</div>
+
+<div class="block">
+  <%= link_to("Report", report_reports_path, :class => "title") %>
+  <%= link_to("Results", report_reports_path, :class => "subtitle") %>
+  <%= link_to(image_tag("blocks/block_report.png"), report_reports_path) %>
+  <ul>
+    <li><small>Select a Report To View</small><%= view_report_report_mini_form %></li>
+    <li><%= link_to("Create a Report", new_report_report_path) %></li>
+  </ul>
+</div>

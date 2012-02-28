@@ -69,7 +69,19 @@ form.new_search_search #search_search_str, form.edit_search_search #search_searc
 #search_examples { margin-top: 2px; color: #666; }
 
 /* welcome */
-img#welcome { border: 1px solid #666; }
+.welcome_index div.block { float: left; background-color: #eee; width: 150px; height: 225px; padding: 10px; margin: 0 20px 20px 0; }
+.welcome_index div.block img { display: block; }
+.welcome_index div.block a { text-decoration: none; }
+.welcome_index div.block a.title, .welcome_index div.block a.subtitle { display: block; color: #666; 
+  font-weight: bold; text-transform: uppercase; }
+.welcome_index div.block a.title { font-size: 18pt; }
+.welcome_index div.block a.subtitle { font-size: 10pt; }
+.welcome_index div.block ul { list-style-type: none; padding: 0; }
+.welcome_index div.block li { line-height: 17px; }
+.welcome_index div.block li small { color: #888; font-size: 8pt; }
+.welcome_index div.block li em { font-style: normal; font-size: 12pt; font-weight: bold; }
+.welcome_index div.block select { width: 110px;  }
+.welcome_index div.block input { font-size: 8pt; width: 30px; }
 
 /* language listing */
 #languages_index table td.name_col { width: 150px; }
