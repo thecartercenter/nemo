@@ -190,13 +190,13 @@
     });
 
     var cont_height = Math.max(200, Math.min(800, report.obj.headers.row.length * 40));
-
+    var cont_width = $("#content").width() - $("#report_form").width() - 50;
     var options = {
-      width: $("#content").width() - $("#report_form").width() - 50, 
+      width: cont_width, 
       height: cont_height,
       vAxis: {title: (g = report.form.pri_grouping) ? g.name : ''},
       hAxis: {title: "# of Responses"},
-      chartArea: {top: 0, left: 150, height: cont_height - 50, width: "65%"},
+      chartArea: {top: 0, left: 150, height: cont_height - 50, width: cont_width - 300},
       isStacked: !!$('#report_report_bar_style_stacked').attr("checked")
     };
 
