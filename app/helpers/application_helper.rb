@@ -62,7 +62,8 @@ module ApplicationHelper
       f.submit(f.object.class.human_attribute_name("submit_" + (f.object.new_record? ? "new" : "edit")), :class => "submit")
     else
       content_tag("div", :class => "form_field", :id => method) do
-        label = f.label(method, nil, :class => options[:required] ? "required" : "")
+        label_txt = (f.object.class.human_attribute_name(method) + (options[:required] ? " #{reqd_sym}" : "")).html_safe
+        label = f.label(method, label_txt)
         field = content_tag("div", :class => "form_field_control") do
           if options[:partial]
             render(options[:partial], :report_form => f, :method => method)

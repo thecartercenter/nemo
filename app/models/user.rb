@@ -68,8 +68,8 @@ class User < ActiveRecord::Base
     [
       Search::Qualifier.new(:label => "name", :col => "users.name", :default => true, :partials => true),
       Search::Qualifier.new(:label => "login", :col => "users.login", :default => true),
-      Search::Qualifier.new(:label => "language", :col => "languages.code", :assoc => :language),
-      Search::Qualifier.new(:label => "role", :col => "roles.name", :assoc => :role),
+      Search::Qualifier.new(:label => "language", :col => "languages.code", :assoc => :languages),
+      Search::Qualifier.new(:label => "role", :col => "roles.name", :assoc => :roles),
       Search::Qualifier.new(:label => "email", :col => "users.email", :partials => true),
       Search::Qualifier.new(:label => "phone", :col => "users.phone", :partials => true)
     ]

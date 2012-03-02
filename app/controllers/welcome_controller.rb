@@ -16,9 +16,9 @@
 # 
 class WelcomeController < ApplicationController
   def index
-    redirect_to(new_user_session_path) unless current_user
+    return redirect_to(new_user_session_path) unless current_user
+
     @dont_print_title = true
-    
     @user_count = User.count
     @observer_count = User.observers.count
     @pub_form_count = Form.published.count
