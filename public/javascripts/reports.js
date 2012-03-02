@@ -17,8 +17,8 @@
     load_params_from_form(params_at_last_submit);
     
     // hook up buttons
-    $('#report_report_view_and_save').click(function(){view(true); return false;});
-    $('#report_report_view').click(function(){view(false); return false;});
+    $('#report_report_save').click(function(){view(true); return false;});
+    $('#report_report_preview').click(function(){view(false); return false;});
     $('#edit_form_link').click(function(){report.toggle_form(); return false;});
     
     // hook up important form controls to watch for changes
