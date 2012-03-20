@@ -22,6 +22,7 @@ class UserSessionsController < ApplicationController
   end
   
   def create
+    reset_session
     @user_session = UserSession.new(params[:user_session])
     if @user_session.save
       # reset the perishable token for security's sake
