@@ -13,8 +13,13 @@ class Report::Grouping < ActiveRecord::Base
     eval(class_name).new(:assoc_id => id)
   end
   
+  # gets and sorts the full set header hashes based on the returned report results
   def headers(results)
-    results.collect{|row| {:name => row[col_name], :value => row[value_col_name] || row[col_name]}}.uniq.sort_by{|x| x[:value] || ""}
+    results.collect do |row|
+      name = row[col_name]
+      value = row[value_col_name] || row[col_name]
+      {:name => name, :value => value}
+    end.uniq.sort_by{|x| x[:value] || ""}
   end
   
   def value_col_name

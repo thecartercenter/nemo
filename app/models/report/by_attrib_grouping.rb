@@ -15,7 +15,7 @@ class Report::ByAttribGrouping < Report::Grouping
   end
   
   def col_name
-    "attrib_#{attrib.name.downcase}"
+    "attrib_#{attrib.name.gsub(' ','').underscore}"
   end
   
   def form_choice
@@ -26,13 +26,17 @@ class Report::ByAttribGrouping < Report::Grouping
     self.attrib_id = id
   end
   
+  def attrib_is_date?
+    attrib.name =~ /^Date/
+  end
+  
   def to_s
     attrib.name
   end
   
   def process_results(results)
     # if this is a date grouping, change the date objects into nice date strings
-    if col_name =~ /^Date/
+    if attrib_is_date?
       results.each{|r| r[col_name] = r[col_name].to_s.gsub(" 00:00:00", "")}
     end
     results

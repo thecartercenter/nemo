@@ -81,9 +81,9 @@ class Report::TallyReportTest < ActiveSupport::TestCase
     r.pri_grouping = Report::ByAnswerGrouping.create(:question => q1)
     r.sec_grouping = Report::ByAnswerGrouping.create(:question => q2)
     
-    assert_report(r, %w(    No Yes), 
-                     %w(No  2  3  ), 
-                     %w(Yes 5  1  ))
+    assert_report(r, %w(    Yes No), 
+                     %w(Yes 1  5  ), 
+                     %w(No  3  2  ))
   end 
   
   test "group by question with no questionings" do
@@ -172,8 +172,8 @@ class Report::TallyReportTest < ActiveSupport::TestCase
       report.run
       raise "Missing headers" if report.headers.nil? || report.headers[:col].nil? || report.headers[:row].nil?
       raise "Bad data array" if report.data.nil? || report.data.empty?
-      actual = [report.headers[:col]]
-      report.data.each_with_index{|row, i| actual += [Array.wrap(report.headers[:row][i]) + row.collect{|x| x.to_s}]}
+      actual = [report.headers[:col].collect{|h| h[:name]}]
+      report.data.each_with_index{|row, i| actual += [Array.wrap(report.headers[:row][i][:name]) + row.collect{|x| x.to_s}]}
       assert_equal(expected, actual)
     end
 end
