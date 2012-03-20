@@ -58,6 +58,9 @@ class Report::Report < ActiveRecord::Base
     
       # apply filter
       @rel = filter.apply(@rel) unless filter.nil?
+      
+      # apply reviewed filter unless told not to
+      @rel = @rel.where("responses.reviewed = 1") unless unreviewed?
     
       # get data and headers
       results = @rel.all

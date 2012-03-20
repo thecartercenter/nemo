@@ -11,6 +11,7 @@ en:
       report/report:
         kind: Data Type
         display_type: Display Type
+        unreviewed: Allow Unreviewed Responses
         pri_grouping: Rows
         sec_grouping: Columns
         bar_style: Bar Style

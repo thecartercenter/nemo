@@ -3,7 +3,7 @@ html,body { margin: 0; padding: 0 }
 body, td, input, select, textarea { font-family: Helvetica, sans-serif; font-size: 9pt; color: #222; }
 body { line-height: 1.3; height: 100%; }
 form { margin: 0; }
-input, select, textarea { border: 1px solid #444; background-color: #eee; margin: 2px; }
+input, select, textarea { border: 1px solid #444; background-color: #eee; margin: 2px 0; }
 a { color: #0065d1; }
 form.button_to, form.button_to div { display: inline; }
 form.button_to input { background-color: transparent; border: none; color: #0065d1; 
@@ -155,6 +155,7 @@ div#report_form div#required_tip { display: none; }
 div#report_form h3 { margin-bottom: 10px; }
 div#report_form input.submit { font-size: 8pt; padding: 4px; margin-top: 5px; }
 div#report_form div.loader { float: left; margin-top: 8px; }
+div#report_form div.form_field_control { min-height: 0; }
 
 /* report table */
 div#report_body table { }

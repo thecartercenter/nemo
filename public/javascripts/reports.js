@@ -1,6 +1,6 @@
 (function (report, undefined) {
   // === PRIVATE ===
-  var RERUN_FIELDS = ["kind", "filter", "pri_grouping", "sec_grouping"];
+  var RERUN_FIELDS = ["kind", "filter", "unreviewed", "pri_grouping", "sec_grouping"];
   var params_at_last_save = {};
   var params_at_last_submit = {};
   
@@ -283,6 +283,7 @@
       name: "name",
       display_type: "display_type",
       filter: "filter_attributes_str",
+      unreviewed: "unreviewed",
       pri_grouping: "pri_grouping_attributes_form_choice",
       sec_grouping: "sec_grouping_attributes_form_choice",
       bar_style: "bar_style"
@@ -301,6 +302,9 @@
       }
       else if (attr == "bar_style")
         target[attr] = !!$("#report_report_bar_style_stacked").attr("checked");
+      // if it's a checkbox, get whether it's checked or not
+      else if (ff.attr("type") == "checkbox")
+        target[attr] = ff.is(':checked');
       // else just get the value
       else
         target[attr] = ff.val();
