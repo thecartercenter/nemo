@@ -1,18 +1,27 @@
 <%= flash_and_form_errors(@report) %>
 <%= form_for(@report, {:id => "report_form"}) do |f| %>
   <div class="tip" id="required_tip">Required fields shown in <strong>bold</strong>.</div>
-  <%= form_field(f, :name, :required => true, :details => "A descriptive name for this report.") %>
+  <a href="#" id="show_help">Show Help</a>
+  <div class="help" id="top_help">
+    Fill out the parameters below. Those marked <%= reqd_sym %> are required.
+  </div>
+  <%= form_field(f, :name, :required => true) %>
   <%= form_field(f, :kind, :type => :select, :options => Report::Report.type_select_options, :required => true) %>
   <%= form_field(f, :display_type, :type => :select, :options => Report::Report.display_type_select_options, :required => true) %>
   <%= form_field(f, :filter, :partial => "filter",
     :details => "A search string to filter the responses used in the report. You can try out your
       searches on the #{link_to('Responses page', responses_path())}.".html_safe) %>
   <%= form_field(f, :unreviewed, :type => :check_box) %>
-  <%= form_field(f, :pri_grouping, :partial => "grouping", 
-    :details => "An attribute or question by which the response count should be grouped (e.g. state, overall rating).") %>
+  <%= form_field(f, :pri_grouping, :partial => "grouping") %>
   <%= form_field(f, :sec_grouping, :partial => "grouping", :details => "A second grouping.") %>
   <%= form_field(f, :bar_style, :type => :radio_buttons, :options => Report::Report.bar_style_select_options) %>
-  <%= f.submit("Save", :id => "report_report_save", :class => "submit") %>
-  <%= f.submit("Preview", :id => "report_report_preview", :class => "submit") %>
-  <div class="loader" style="display: none">&nbsp;</div>
+  <div class="button_row">
+    <%= f.submit("Save", :id => "report_report_save", :class => "submit") %>
+    <%= f.submit("Preview", :id => "report_report_preview", :class => "submit") %>
+    <div class="loader" style="display: none">&nbsp;</div>
+  </div>
+  <div class="help" id="bottom_help">
+    Click <strong>Save</strong> to save the report for future use. Click <strong>Preview</strong> 
+    to try out new parameters without saving.
+  </div>
 <% end %>

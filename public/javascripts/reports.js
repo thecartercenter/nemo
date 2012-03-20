@@ -1,6 +1,7 @@
 (function (report, undefined) {
   // === PRIVATE ===
   var RERUN_FIELDS = ["kind", "filter", "unreviewed", "pri_grouping", "sec_grouping"];
+  var HELP_WIDTH = 200;
   var params_at_last_save = {};
   var params_at_last_submit = {};
   
@@ -16,10 +17,11 @@
     load_params_from_form(params_at_last_save);
     load_params_from_form(params_at_last_submit);
     
-    // hook up buttons
+    // hook up buttons and links
     $('#report_report_save').click(function(){view(true); return false;});
     $('#report_report_preview').click(function(){view(false); return false;});
     $('#edit_form_link').click(function(){report.toggle_form(); return false;});
+    $('a#show_help').click(function(){report.toggle_help(); return false;});
     
     // hook up important form controls to watch for changes
     $('#report_report_display_type').change(function(){form_changed("display_type")});
@@ -42,6 +44,22 @@
   report.toggle_form = function() {
     $('#report_form').toggle();
     $('#edit_form_link').text($('#report_form').is(":visible") ? "Hide Edit Controls" : "Edit This Report")
+  }
+  
+  // shows/hides the help text
+  report.toggle_help = function() {
+    // determine if showing or hiding
+    var showing = !!$('a#show_help').text().match(/Show/);
+
+    // adjust width
+    var w = $('div.form_field').width();
+    $('div.form_field').width(w + (showing ? 1 : -1) * HELP_WIDTH);
+
+    // show/hide text
+    $('div.form_field_details, div.help')[showing ? "show" : "hide"]();
+    
+    // change link text
+    $('a#show_help').text((showing ? "Hide" : "Show") + " Help")
   }
   
   report.show_success = function() {

@@ -9,6 +9,7 @@ en:
       question:
         name_eng: "English name"
       report/report:
+        name: Title
         kind: Data Type
         display_type: Display Type
         unreviewed: Allow Unreviewed Responses
@@ -17,3 +18,10 @@ en:
         bar_style: Bar Style
         submit_new: Generate Report
         submit_edit: Save Changes
+    tips:
+      report/report:
+        name: A descriptive title for this report.
+        kind: The type of data you want to work with.
+        display_type: The way you want the results to be presented.
+        unreviewed: Whether unreviewed responses should be included in the report.
+        pri_grouping: An attribute or question by which the response count should be grouped (e.g. state, overall rating).
