@@ -154,7 +154,7 @@ class Report::TallyReportTest < ActiveSupport::TestCase
     
     def create_response(params)
       ans = params.delete(:answers) || {}
-      r = Response.new(params)
+      r = Response.new(params.merge(:reviewed => true))
       ans.each_pair do |code,value|
         qing = @qs[code].questionings.first
         case qing.question.type.name
