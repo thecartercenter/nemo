@@ -171,3 +171,7 @@ div#report_body table th { font-size: 90%; background-color: #eee; padding: 2px 
 div#report_body table th.col { text-align: left;  }
 div#report_body table th.row { text-align: left; white-space: nowrap; }
 div#report_body table td.row_total, div#report_body table td.col_total { background-color: #eee; }
+div#report_body th.row_grouping_label, div#report_body th.col_grouping_label { color: #888; font-weight: normal; }
+div#report_body th.row_grouping_label > div { writing-mode: tb-rl; white-space: nowrap; width: 10px; margin-left: 3px;
+  -webkit-transform: rotate(270deg); -moz-transform: rotate(270deg); -o-transform: rotate(270deg); }
+div#report_body th.col_grouping_label { text-align: center; }

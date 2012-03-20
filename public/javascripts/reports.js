@@ -225,27 +225,64 @@
   function draw_table() {
     var tbl = $("<table>");
   
+    // column label row (only print if there is a secondary grouping)
+    if (report.form.sec_grouping) {
+      var trow = $("<tr>");
+      
+      // blank cell for row grouping label
+      if (report.form.pri_grouping) $("<th>").appendTo(trow);
+      
+      // blank cell for row labels
+      $("<th>").appendTo(trow);
+
+      // col grouping label
+      $("<th>").addClass("col_grouping_label").attr("colspan", report.obj.headers.col.length).
+        text(report.form.sec_grouping.name).appendTo(trow);
+      
+      // row total cell
+      if (show_totals("row")) $("<th>").appendTo(trow);
+      
+      tbl.append(trow);
+    }
+    
     // header row (only print if is at least one grouping)
     if (has_groupings()) {
       var trow = $("<tr>");
-  
-      // blank cell in corner
+      
+      // blank cell for row grouping label
+      if (report.form.pri_grouping) $("<th>").appendTo(trow);
+      
+      // blank cell for row labels
       $("<th>").appendTo(trow);
-  
+
       // rest of header cells
       $(report.obj.headers.col).each(function(idx, ch) {
         $("<th>").addClass("col").text(ch.name || "[Null]").appendTo(trow);
       });
+
+      // row total header
+      if (show_totals("row"))
+        $("<th>").addClass("row_total").text("Total").appendTo(trow);
+
       tbl.append(trow);
     }
-  
-    // row total header
-    if (show_totals("row"))
-      $("<th>").addClass("row_total").text("Total").appendTo(trow);
     
+    // create the row grouping label
+    var row_grouping_label;
+    if (report.form.pri_grouping) {
+      row_grouping_label = $("<th>").addClass("row_grouping_label").attr("rowspan", report.obj.headers.row.length);
+      row_grouping_label.append($("<div>").text(report.form.pri_grouping.name));
+    }
+  
     // body
     $(report.obj.headers.row).each(function(r, rh) {
       trow = $("<tr>");
+    
+      // add the row grouping label if it is defined (also delete it so it doesn't get added again)
+      if (row_grouping_label) {
+        trow.append(row_grouping_label);
+        row_grouping_label = null;
+      }
     
       // row header
       $("<th>").addClass("row").text(rh.name || "[Null]").appendTo(trow);
@@ -266,6 +303,9 @@
     if (show_totals("col")) {
       trow = $("<tr>");
     
+      // blank cell for row grouping label
+      if (report.form.pri_grouping) $("<th>").appendTo(trow);
+      
       // row header
       $("<th>").addClass("row").addClass("col_total").text("Total").appendTo(trow);
     
