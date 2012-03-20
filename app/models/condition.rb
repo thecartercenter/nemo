@@ -84,11 +84,11 @@ class Condition < ActiveRecord::Base
   
   def to_odk
     if has_options?
-      xpath = "selected(/data/#{ref_question.code}, '#{option_id}')"
+      xpath = "selected(/data/#{ref_question.odk_code}, '#{option_id}')"
       xpath = "not(#{xpath})" if OPS[op][:code] == "!="
     else
       val_str = ref_question.type.numeric? ? value.to_s : "'#{value}'"
-      xpath = "/data/#{ref_question.code} #{OPS[op][:code]} #{val_str}"
+      xpath = "/data/#{ref_question.odk_code} #{OPS[op][:code]} #{val_str}"
     end
     xpath
   end

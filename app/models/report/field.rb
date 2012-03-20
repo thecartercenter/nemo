@@ -19,7 +19,7 @@ class Report::Field < ActiveRecord::Base
       elsif question
         return rel if question.questionings.empty?
         qing_ids = question.questionings.collect{|qing| qing.id}.join(",")
-        rel.select("#{full_expr} AS #{question.code}").
+        rel.select("#{full_expr} AS '#{question.code}'").
           joins("LEFT OUTER JOIN answers #{ans_tbl} ON responses.id = #{ans_tbl}.response_id").
           where("#{ans_tbl}.questioning_id IN (#{qing_ids})")
       elsif question_type

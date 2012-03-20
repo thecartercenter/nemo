@@ -15,7 +15,7 @@ class Report::ByAttribGrouping < Report::Grouping
   end
   
   def col_name
-    "attrib_#{attrib.name.gsub(' ','').underscore}"
+    "attrib_#{attrib.name.gsub(' ','_').downcase}"
   end
   
   def form_choice

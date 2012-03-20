@@ -6,7 +6,7 @@
         <data id="<%= @form.id %>">
           <startstamp/>
           <% @form.visible_questionings.each do |q| %>
-            <%= tag(q.question.code) %>
+            <%= tag(q.question.odk_code) %>
           <% end %>
         </data>
       </instance>
@@ -14,10 +14,10 @@
         <% Language.active.each do |lang| %>
           <translation lang="<%= lang.code %>">
             <% @form.visible_questionings.each do |q| %>
-              <text id="<%= q.question.code %>:label">
+              <text id="<%= q.question.odk_code %>:label">
                 <value><%= q.question.name(lang) %></value>
               </text>
-              <text id="<%= q.question.code %>:hint">
+              <text id="<%= q.question.odk_code %>:hint">
                 <value><%= q.question.hint(lang) %></value>
               </text>
             <% end %>
@@ -32,7 +32,7 @@
       <bind nodeset="/data/startstamp" type="dateTime" jr:preload="timestamp" jr:preloadParams="start"/>
       <% @form.visible_questionings.each do |q| %>
         <%= tag("bind", {
-            'nodeset' => "/data/#{q.question.code}",
+            'nodeset' => "/data/#{q.question.odk_code}",
             'type' => q.question.type.odk_name,
             'required' => q.required? ? "true()" : nil,
             'relevant' => q.has_condition? ? q.condition.to_odk : nil,
@@ -43,9 +43,9 @@
   <h:body>
     <% @form.visible_questionings.each do |q| %>
       <% next if q.question.type.odk_tag.nil? %>
-      <%= content_tag(q.question.type.odk_tag, :ref => "/data/#{q.question.code}") do %>
-        <label ref="jr:itext('<%= q.question.code %>:label')"/>
-        <hint ref="jr:itext('<%= q.question.code %>:hint')"/>
+      <%= content_tag(q.question.type.odk_tag, :ref => "/data/#{q.question.odk_code}") do %>
+        <label ref="jr:itext('<%= q.question.odk_code %>:label')"/>
+        <hint ref="jr:itext('<%= q.question.odk_code %>:hint')"/>
         <% if set = q.question.option_set %>
           <% set.sorted_options.each do |opt| %>
             <item>

@@ -32,7 +32,7 @@ class Report::ByAnswerGrouping < Report::Grouping
   end
   
   def col_name
-    "answer_#{question.code}"
+    "answer_#{question.code.gsub(' ', '_').downcase}"
   end
   
   def form_choice

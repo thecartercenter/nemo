@@ -29,13 +29,12 @@ class Question < ActiveRecord::Base
   has_many(:forms, :through => :questionings)
 
   validates(:code, :presence => true, :uniqueness => true)
-  validates(:code, :format => {:with => /^[a-z][a-z0-9]{1,15}$/}, :if => Proc.new{|q| !q.code.blank?})
+  validates(:code, :format => {:with => /^[a-z][a-z0-9 ]{1,19}$/i}, :if => Proc.new{|q| !q.code.blank?})
   validates(:type, :presence => true)
   validates(:option_set_id, :presence => true, :if => Proc.new{|q| q.is_select?})
   validates(:english_name, :presence => true)
   validate(:integrity)
     
-  before_validation(:clean)
   before_destroy(:check_assoc)
   
   default_scope(order("code"))
@@ -99,16 +98,17 @@ class Question < ActiveRecord::Base
     !forms.detect{|f| f.published?}.nil?
   end
   
+  # an odk-friendly unique code
+  def odk_code
+    "q#{id}"
+  end
+  
   # shortcut method for tests
   def qing_ids
     questionings.collect{|qing| qing.id}.join(",")
   end
   
   private
-    def clean
-      self.code.downcase! if code
-      return true
-    end
     def integrity
       # error if type or option set have changed and there are answers or conditions
       if (question_type_id_changed? || option_set_id_changed?) 

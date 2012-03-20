@@ -105,7 +105,7 @@ class Response < ActiveRecord::Base
     start_time = nil
     qings.each do |qing|
       # get value from hash
-      str = values[qing.question.code]
+      str = values[qing.question.odk_code]
       # add answer
       resp.answers << Answer.new_from_str(:str => str, :questioning => qing)
     end
