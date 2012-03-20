@@ -27,5 +27,7 @@ class WelcomeController < ApplicationController
     @total_response_count = Response.count
     @recent_responses_count = Response.recent_count
     @unreviewed_response_count = Response.unreviewed.count
+    
+    render(:partial => "blocks") if ajax_request?
   end
 end
