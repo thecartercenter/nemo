@@ -16,11 +16,13 @@ class Report::Report < ActiveRecord::Base
   KINDS = ["Tally"]
   DISPLAY_TYPES = ["Table", "Bar Chart"]
   BAR_STYLES = ["Side By Side", "Stacked"]
+  PERCENT_TYPES = ["Percentage Overall"]
   
   def self.type_select_options; KINDS; end
   def self.display_type_select_options; DISPLAY_TYPES; end
   def self.bar_style_select_options; BAR_STYLES; end
-
+  def self.percent_type_select_options; PERCENT_TYPES; end
+  
   def self.select_options
     by_popularity.collect{|r| [r.name, r.id]}
   end

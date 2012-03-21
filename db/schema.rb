@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120320153040) do
+ActiveRecord::Schema.define(:version => 20120321155330) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -214,6 +214,7 @@ ActiveRecord::Schema.define(:version => 20120320153040) do
     t.string   "display_type",    :default => "Table"
     t.string   "bar_style",       :default => "Side By Side"
     t.boolean  "unreviewed",      :default => false
+    t.string   "percent_type"
   end
 
   create_table "responses", :force => true do |t|

@@ -1,6 +1,7 @@
 (function (report, undefined) {
   // === PRIVATE ===
   var RERUN_FIELDS = ["kind", "filter", "unreviewed", "pri_grouping", "sec_grouping"];
+  var ROW_COL_PERCENT_TYPE_OPTIONS = ["Percentage By Row", "Percentage By Column"];
   var HELP_WIDTH = 200;
   var params_at_last_save = {};
   var params_at_last_submit = {};
@@ -25,6 +26,7 @@
     
     // hook up important form controls to watch for changes
     $('#report_report_display_type').change(function(){form_changed("display_type")});
+    $('#report_report_pri_grouping_attributes_form_choice').change(function(){form_changed("pri_grouping")});
     $('#report_report_sec_grouping_attributes_form_choice').change(function(){form_changed("sec_grouping")});
     
     // hook up unsaved check
@@ -71,8 +73,8 @@
   function form_changed(src) {
     load_params_from_form(report.form);
     
+    // change grouping labels
     if (src == "display_type" || src == "_all") {
-      // change grouping labels
       switch (report.form.display_type) {
         case 'Table':
           $('label[for=report_report_pri_grouping]').text("Rows");
@@ -82,6 +84,31 @@
           $('label[for=report_report_pri_grouping]').text("Main Grouping");
           $('label[for=report_report_sec_grouping]').text("Secondary Grouping");
           break;
+      }
+    }
+
+    // show/hide percent type
+    if (src == "display_type" || src == "_all")
+      $('div#percent_type')[report.form.display_type == "Table" ? "show" : "hide"]();
+    
+    // show/hide by col/row percent types
+    if (src == "pri_grouping" || src == "sec_grouping" || src == "_all") {
+      
+      // save reference to the select field
+      var sel = $('#report_report_percent_type');
+
+      // if report has two groupings, show, else hide
+      if (report.form.pri_grouping && report.form.sec_grouping) {
+        
+        // only add if they're not there already
+        if (sel[0].length < 4)
+          for (var i = 0; i < 2; i++) sel.append("<option value=\"" + ROW_COL_PERCENT_TYPE_OPTIONS[i] + "\">" + 
+            ROW_COL_PERCENT_TYPE_OPTIONS[i] + "</option>");
+      
+      } else {
+        // remove the last two items
+        if (sel[0].length == 4) 
+          for (var i = 0; i < 2; i++) $("#report_report_percent_type option:last").remove();
       }
     }
     
@@ -222,7 +249,7 @@
     chart.draw(data, options);
   }
   
-  function draw_table() {
+  function draw_table() {    
     var tbl = $("<table>");
   
     // column label row (only print if there is a secondary grouping)
@@ -289,13 +316,36 @@
     
       // row cells
       $(report.obj.headers.col).each(function(c, ch) {
-        $("<td>").text(report.obj.data[r][c] || "").appendTo(trow);
+        var val = report.obj.data[r][c] || "";
+        
+        // calculate percentage if necessary
+        if (val != "" && report.form.percent_type != "") {
+          switch (report.form.percent_type) {
+            case "Percentage Overall": val /= report.obj.grand_total; break;
+            case "Percentage By Row": val /= report.obj.totals["row"][r]; break;
+            case "Percentage By Column": val /= report.obj.totals["col"][c]; break;
+          }
+          val = format_percent(val);
+        }
+        
+        $("<td>").text(val).appendTo(trow);
       });
     
       // row total
-      if (show_totals("row"))
-        $("<td>").addClass("row_total").text(report.obj.totals["row"][r]).appendTo(trow);
+      if (show_totals("row")) {
+        var val = report.obj.totals["row"][r];
+        
+        // don't display 0s
+        if (val == 0) val = "";
 
+        // calculate percentage if necessary
+        if (report.form.percent_type != "" && val != "") 
+          val = format_percent(val / report.obj.grand_total);
+        
+        // add the cell
+        $("<td>").addClass("row_total").text(val).appendTo(trow);
+      }
+      
       tbl.append(trow);
     });
   
@@ -311,12 +361,29 @@
     
       // row cells
       $(report.obj.totals.col).each(function(c, ct) {
-        $("<td>").addClass("col_total").text(ct > 0 ? ct : "").appendTo(trow);
+        var val = ct;
+        
+        // don't display 0s
+        if (val == 0) val = "";
+
+        // calculate percentage if necessary
+        if (report.form.percent_type != "" && val != "")
+          val = format_percent(val / report.obj.grand_total);
+        
+        // add cell
+        $("<td>").addClass("col_total").text(val).appendTo(trow);
       });
     
-      // row total
-      if (show_totals("row"))
-        $("<td>").addClass("row_total").addClass("col_total").text((gt = report.obj.grand_total) > 0 ? gt : "").appendTo(trow);
+      // grand total
+      if (show_totals("row")) {
+        var val = (gt = report.obj.grand_total) > 0 ? gt : "";
+        
+        // calculate percentage if necessary
+        if (report.form.percent_type != "" && val != "") 
+          val = format_percent(1);
+          
+        $("<td>").addClass("row_total").addClass("col_total").text(val).appendTo(trow);
+      }
 
       tbl.append(trow);
     }
@@ -326,13 +393,20 @@
   
   // checks whether total rows should be shown for a table report
   function show_totals(row_or_col) {
-    return (row_or_col == "row") ? report.form.sec_grouping : report.form.pri_grouping
+    return (row_or_col == "row") ? 
+      report.form.sec_grouping && report.form.percent_type != "Percentage By Row" : 
+      report.form.pri_grouping && report.form.percent_type != "Percentage By Column"
   }
   
   // updates the title of the report
   function set_title() {
     // set title
     $("#content h1").text(report.form.name);
+  }
+  
+  // formats a given fraction as a percentage
+  function format_percent(frac) {
+    return (frac * 100).toFixed(1) + "%";
   }
   
   function load_params_from_form(target) {
@@ -344,6 +418,7 @@
       unreviewed: "unreviewed",
       pri_grouping: "pri_grouping_attributes_form_choice",
       sec_grouping: "sec_grouping_attributes_form_choice",
+      percent_type: "percent_type",
       bar_style: "bar_style"
     }
     $.each(fields, function(attr, id){

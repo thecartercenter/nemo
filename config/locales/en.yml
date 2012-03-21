@@ -15,6 +15,7 @@ en:
         unreviewed: Allow Unreviewed Responses
         pri_grouping: Rows
         sec_grouping: Columns
+        percent_type: Percent Type
         bar_style: Bar Style
         submit_new: Generate Report
         submit_edit: Save Changes

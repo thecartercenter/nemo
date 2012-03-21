@@ -15,6 +15,7 @@
   <%= form_field(f, :pri_grouping, :partial => "grouping") %>
   <%= form_field(f, :sec_grouping, :partial => "grouping", :details => "A second grouping.") %>
   <%= form_field(f, :bar_style, :type => :radio_buttons, :options => Report::Report.bar_style_select_options) %>
+  <%= form_field(f, :percent_type, :type => :select, :options => Report::Report.percent_type_select_options, :blank_text => "No Percentage") %>
   <div class="button_row">
     <%= f.submit("Save", :id => "report_report_save", :class => "submit") %>
     <%= f.submit("Preview", :id => "report_report_preview", :class => "submit") %>
