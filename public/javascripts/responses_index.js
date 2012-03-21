@@ -10,10 +10,10 @@ function responses_fetch() {
   
   // run the ajax request
   $.ajax({
-    url: "/responses?ajax=1",
+    url: "/responses?auto=1",
     method: "get",
     success: responses_update,
-    error: logout
+    error: function(jqXHR) { check_login_required(jqXHR.responseText); }
   });
 }
 

@@ -1,4 +1,4 @@
-// TODO move batch stuff to own file
+var LOGIN_PATH = "/user_session/new";
 
 // selects/deselcts all boxes
 function batch_select_all() {
@@ -107,6 +107,21 @@ function suggest_login() {
 function logout() {
   // click the logout button
   if ($('#logout_button')) $('#logout_button').click();
+}
+
+// checks if the given response text is LOGIN_REQUIRED and redirects appropriately if so
+// returns whether a login required message was found
+function check_login_required(response) { 
+  if (response == "LOGIN_REQUIRED") {
+    redirect_to_login(); 
+    return true;
+  } else
+    return false;
+}
+
+// redirects to the login page
+function redirect_to_login() {
+  window.location.href = LOGIN_PATH;
 }
 
 // UTILITIES

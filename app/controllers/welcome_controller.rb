@@ -16,7 +16,8 @@
 # 
 class WelcomeController < ApplicationController
   def index
-    return redirect_to(new_user_session_path) unless current_user
+    # this page is not permission controlled since we don't want the "must login" error message to show up
+    return redirect_to_login unless current_user
 
     @dont_print_title = true
     @user_count = User.count

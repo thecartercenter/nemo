@@ -129,11 +129,7 @@ class ApplicationController < ActionController::Base
           store_location
           # if the user needs to login, send them to the login page
           flash[:error] = $!.to_s
-          if flash[:error].match(/must login/)
-            ajax_request? ? render(:text => "LOGIN_REQUIRED", :status => 401) : redirect_to(new_user_session_path)
-          else
-            render("permissions/no", :status => :unauthorized)
-          end
+          flash[:error].match(/must login/) ? redirect_to_login : render("permissions/no", :status => :unauthorized)
         end
         # halt the rest of the action
         return false
@@ -142,6 +138,19 @@ class ApplicationController < ActionController::Base
     
     def authorized?(params)
       return Permission.authorized?(params.merge(:user => current_user))
+    end
+    
+    # redirects to the login page
+    # or if this is an ajax request, returns a 401 unauthorized error
+    # in the latter case, the script should catch this error and redirect to the login page itself
+    def redirect_to_login
+      ajax_request? ? render(:text => "LOGIN_REQUIRED", :status => 401) : redirect_to(new_user_session_path)
+    end
+    
+    # don't count automatic timer-based requests for resetting the logout timer
+    # all automatic timer-based should set the 'auto' parameter
+    def last_request_update_allowed?
+      params[:auto].nil?
     end
 
     def require_no_user 
