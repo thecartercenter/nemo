@@ -6,6 +6,7 @@ class Report::Aggregation < ActiveRecord::Base
   
   def self.generate
     seed(:name, :name => "Average", :code => "AVG(?)")
+    seed(:name, :name => "Sum", :code => "SUM(?)")
     seed(:name, :name => "Minimum", :code => "MIN(?)")
     seed(:name, :name => "Maximum", :code => "MAX(?)")
   end
