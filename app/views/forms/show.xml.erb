@@ -12,7 +12,7 @@
       </instance>
       <itext>
         <% Language.active.each do |lang| %>
-          <translation lang="<%= lang.code %>">
+          <translation lang="<%= lang.name %>">
             <% @form.visible_questionings.each do |q| %>
               <text id="<%= q.question.odk_code %>:label">
                 <value><%= q.question.name(lang) %></value>
