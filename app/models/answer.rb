@@ -20,8 +20,9 @@ class Answer < ActiveRecord::Base
   belongs_to(:response)
   has_many(:choices, :dependent => :destroy)
   
-  before_validation(:round_ints)
   before_validation(:clean_locations)
+  before_save(:round_ints)
+  before_save(:blanks_to_nulls)
   
   validates(:value, :numericality => true, :if => Proc.new{|a| a.numeric? && !a.value.blank?})
   validate(:required)
@@ -108,6 +109,10 @@ class Answer < ActiveRecord::Base
     end
     def round_ints
       self.value = value.to_i if integer? && !value.blank?
+      return true
+    end
+    def blanks_to_nulls
+      self.value = nil if value.blank?
       return true
     end
     def clean_locations

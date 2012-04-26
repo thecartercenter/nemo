@@ -5,11 +5,7 @@ class Report::AverageReportTest < ActiveSupport::TestCase
   include ReportTestHelper
   
   setup do
-    Language.generate
-    Report::ResponseAttribute.generate
-    Report::Aggregation.generate
-    [Question, Questioning, Answer, Place, Form].each{|k| k.delete_all}
-    @qs = {}; @rs = []; @places = {}; @forms = {}; @opt_sets = {}
+    prep_objects
   end
   
   test "question field with no groupings" do
@@ -22,6 +18,21 @@ class Report::AverageReportTest < ActiveSupport::TestCase
     r = create_report(:agg => "Average", :fields => [Report::Field.new(:question => q)])
     
     assert_report(r, %w(Average), ["Average", "2.5"])
+  end
+  
+  test "question field with blanks" do
+    # create question and two responses
+    q = create_question(:code => "num0", :type => "integer")
+    create_response(:answers => {:num0 => 1})
+    create_response(:answers => {:num0 => 2})
+    create_response(:answers => {:num0 => " "})
+    create_response(:answers => {:num0 => ""})
+    create_response(:answers => {:num0 => nil})
+    
+    # create report and set to average
+    r = create_report(:agg => "Average", :fields => [Report::Field.new(:question => q)])
+    
+    assert_report(r, %w(Average), ["Average", "1.5"])
   end
   
   test "single question field grouped by state" do

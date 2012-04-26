@@ -1,4 +1,12 @@
 module ReportTestHelper
+
+  def prep_objects
+    Language.generate
+    Report::ResponseAttribute.generate
+    Report::Aggregation.generate
+    [Question, Questioning, Answer, Place, Form, User].each{|k| k.delete_all}
+    @qs = {}; @rs = []; @places = {}; @forms = {}; @opt_sets = {}; @users = {}
+  end
   
   def create_report(options)
     agg = Report::Aggregation.find_by_name(options.delete(:agg))
@@ -38,29 +46,37 @@ module ReportTestHelper
     f.save(:validate => false)
     @forms[params[:name].to_sym] = f
   end
+  
+  def user
+    @users[:test] ||= User.create!(:login => "test", :name => "Test",
+      :email => "test@example.com", :role_id => 1, :active => true, 
+      :language => Language.english, :password => "changeme", :password_confirmation => "changeme")
+  end
 
   def create_question(params)
     QuestionType.generate
+    
+    # create default form if necessary
+    params[:forms] ||= [create_form(:name => "f")]  
   
-    q = Question.new(:code => params[:code], :question_type_id => QuestionType.find_by_name(params[:type]).id)
+    q = Question.new(:name_eng => params[:code], :code => params[:code], 
+      :question_type_id => QuestionType.find_by_name(params[:type]).id)
   
     # set the option set if type is select_one
     q.option_set = params[:option_set] || @opt_sets.first[1] if params[:type] == "select_one"
-  
-    # create default form if necessary
-    params[:forms] ||= [create_form(:name => "f")]
   
     # create questionings for each form
     params[:forms].each{|f| q.questionings.build(:form => f)}
   
     # save and store in hash
-    q.save(:validate => false)
+    q.save!
     @qs[params[:code].to_sym] = q
   end
 
   def create_response(params)
     ans = params.delete(:answers) || {}
-    r = Response.new(params.merge(:reviewed => true))
+    r = Response.new({:reviewed => true, :form => @forms[:f] || create_form(:name => "f"), 
+      :observed_at => Time.now, :user => user}.merge(params))
     ans.each_pair do |code,value|
       qing = @qs[code].questionings.first
       case qing.question.type.name
@@ -70,7 +86,7 @@ module ReportTestHelper
         r.answers.build(:questioning_id => qing.id, :value => value)
       end
     end
-    r.save(:validate => false)
+    r.save!
     @rs << r
     r
   end

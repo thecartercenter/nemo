@@ -5,11 +5,7 @@ class Report::ListReportTest < ActiveSupport::TestCase
   include ReportTestHelper
   
   setup do
-    Language.generate
-    Report::ResponseAttribute.generate
-    Report::Aggregation.generate
-    [Question, Questioning, Answer, Place, Form].each{|k| k.delete_all}
-    @qs = {}; @rs = []; @places = {}; @forms = {}; @opt_sets = {}
+    prep_objects
   end
   
   test "one attrib only" do

@@ -5,11 +5,7 @@ class Report::TallyReportTest < ActiveSupport::TestCase
   include ReportTestHelper
   
   setup do
-    Language.generate
-    Report::Aggregation.generate
-    Report::ResponseAttribute.generate
-    [Question, Questioning, Answer, Place, Form].each{|k| k.delete_all}
-    @qs = {}; @rs = []; @places = {}; @forms = {}; @opt_sets = {}
+    prep_objects
   end
   
   test "no groupings" do
