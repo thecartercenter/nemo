@@ -105,7 +105,7 @@ class Question < ActiveRecord::Base
   
   # shortcut method for tests
   def qing_ids
-    questionings.collect{|qing| qing.id}.join(",")
+    questionings.collect{|qing| qing.id}
   end
   
   private

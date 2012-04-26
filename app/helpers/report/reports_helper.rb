@@ -19,7 +19,7 @@ module Report::ReportsHelper
     links = [link_to_if_auth("Create new report", new_report_report_path, "report_reports#create")]
   end
   def report_reports_index_fields
-    %w[title kind last_viewed views actions]
+    %w[title display_type last_viewed views actions]
   end
   def format_report_reports_field(report, field)
     case field

@@ -40,4 +40,8 @@ class QuestionType < ActiveRecord::Base
     name == "integer" || name == "decimal"
   end
   def integer?; name == "integer"; end
+  
+  def qing_ids
+    questions.collect{|q| q.qing_ids}.flatten
+  end
 end

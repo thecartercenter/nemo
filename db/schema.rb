@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120321155330) do
+ActiveRecord::Schema.define(:version => 20120426154100) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -20,6 +20,8 @@ ActiveRecord::Schema.define(:version => 20120321155330) do
     t.datetime "updated_at"
     t.integer  "questioning_id"
   end
+
+  add_index "answers", ["questioning_id"], :name => "index_answers_on_questioning_id"
 
   create_table "broadcast_addressings", :force => true do |t|
     t.integer  "broadcast_id"
@@ -175,19 +177,11 @@ ActiveRecord::Schema.define(:version => 20120321155330) do
 
   create_table "report_fields", :force => true do |t|
     t.integer  "report_report_id"
-    t.string   "attrib_name"
     t.integer  "question_id"
     t.integer  "question_type_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-  end
-
-  create_table "report_grouping_attributes", :force => true do |t|
-    t.string   "name"
-    t.string   "code"
-    t.string   "join_tables"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.integer  "attrib_id"
   end
 
   create_table "report_groupings", :force => true do |t|
@@ -199,7 +193,6 @@ ActiveRecord::Schema.define(:version => 20120321155330) do
   end
 
   create_table "report_reports", :force => true do |t|
-    t.string   "kind"
     t.string   "name"
     t.boolean  "saved",           :default => false
     t.integer  "filter_id"
@@ -215,6 +208,16 @@ ActiveRecord::Schema.define(:version => 20120321155330) do
     t.string   "bar_style",       :default => "Side By Side"
     t.boolean  "unreviewed",      :default => false
     t.string   "percent_type"
+  end
+
+  create_table "report_response_attributes", :force => true do |t|
+    t.string   "name"
+    t.string   "code"
+    t.string   "join_tables"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.boolean  "groupable",   :default => false
+    t.string   "data_type"
   end
 
   create_table "responses", :force => true do |t|

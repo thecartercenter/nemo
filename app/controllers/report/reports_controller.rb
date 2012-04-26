@@ -4,20 +4,21 @@ class Report::ReportsController < ApplicationController
   end
   
   def new
-    @report = Report::Report.new(:name => "New Report")
+    @report = Report::Report.new_with_default_name
     @show_form = true
-    build_filter_and_render_form  
+    init_obj_and_render_form
   end
   
   def edit
+    flash[:saved] = true and return redirect_to(:action => :edit) if params[:show_success]
     @report = Report::Report.find(params[:id])
     @show_form = true
-    build_filter_and_render_form  
+    init_obj_and_render_form
   end
   
   def show
     @report = Report::Report.find(params[:id])
-    build_filter_and_render_form  
+    init_obj_and_render_form
   end
   
   def destroy
@@ -46,8 +47,9 @@ class Report::ReportsController < ApplicationController
       render(:json => @report.to_json)
     end
     
-    def build_filter_and_render_form
+    def init_obj_and_render_form
       @report.build_filter(:class_name => "Response") unless @report.filter
+      @report.fields.build(:full_id => nil) if @report.fields.empty?
       @dont_print_title = true
       unless @report.new_record?
         @report.record_viewing

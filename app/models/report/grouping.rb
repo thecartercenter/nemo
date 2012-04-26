@@ -16,13 +16,32 @@ class Report::Grouping < ActiveRecord::Base
   # gets and sorts the full set header hashes based on the returned report results
   def headers(results)
     results.collect do |row|
-      name = row[col_name]
-      value = row[value_col_name] || row[col_name]
-      {:name => name, :value => value}
+      name = cast_header(row[sql_col_name])
+      {
+        :name => name,
+        :value => row[value_col_name] || name,
+        :key => name
+      }
     end.uniq.sort_by{|x| x[:value] || ""}
   end
   
   def value_col_name
-    "#{col_name}_value"
+    "#{sql_col_name}_value"
+  end
+  
+  def key(result_row)
+    cast_header(result_row[sql_col_name])
+  end
+  
+  def title
+    to_s
+  end
+  
+  def cast_header(value)
+    if value.is_a?(Mysql::Time)
+      value.to_s.gsub(" 00:00:00", "") 
+    else
+      value
+    end
   end
 end

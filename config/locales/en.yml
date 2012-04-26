@@ -10,11 +10,13 @@ en:
         name_eng: "English name"
       report/report:
         name: Title
-        kind: Data Type
+        aggregation: Operation
+        aggregation_id: Operation
+        fields: Attributes/Questions
         display_type: Display Type
         unreviewed: Allow Unreviewed Responses
-        pri_grouping: Rows
-        sec_grouping: Columns
+        pri_grouping: Grouping 1
+        sec_grouping: Grouping 2
         percent_type: Percent Type
         bar_style: Bar Style
         submit_new: Generate Report
@@ -22,6 +24,7 @@ en:
     tips:
       report/report:
         name: A descriptive title for this report.
+        aggregation_id: The operation you want to perform on the combined data.
         kind: The type of data you want to work with.
         display_type: The way you want the results to be presented.
         unreviewed: Whether unreviewed responses should be included in the report.

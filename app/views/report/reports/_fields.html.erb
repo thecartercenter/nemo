@@ -1,0 +1,11 @@
+<div id="field_dropdowns">
+  <% @report.fields.each do |field| %>
+    <%= fields_for("report_report[fields_attributes][]", Report::Field.new) do |f| %>
+      <div>
+        <%= f.select(:full_id, grouped_options_for_select(Report::Field.select_options, field.full_id), :include_blank => true) %>
+        <a href="#" class="remove_field">Remove</a>
+      </div>
+    <% end %>
+  <% end %>
+</div>
+<a href="#" class="add_field">Add</a>

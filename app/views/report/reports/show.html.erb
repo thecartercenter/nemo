@@ -5,24 +5,30 @@
    end
 %>
 
-<div id="report_form" style="display: none">
-  <%= render("form") %>
-</div>
-<h1></h1>
-<div class="tip">
-  <%= join_links(
-    link_to_if_auth("Edit This Report", "#", "report_reports#update", nil, :id => "edit_form_link"),
-    link_to("Back to Report Listing", report_reports_path)
-  ) %>
-</div>
+<table>
+  <tr>
+    <td id="report_form" style="display: none">
+      <%= render("form") %>
+    </td>
+    <td>
+      <h1></h1>
+      <div class="tip">
+        <%= join_links(
+          link_to_if_auth("Edit This Report", "#", "report_reports#update", nil, :id => "edit_form_link"),
+          link_to("Back to Report Listing", report_reports_path)
+        ) %>
+      </div>
 
-<div id="report_body"></div>
+      <div id="report_body"></div>
+    </td>
+  </tr>
+</table>
 
 <script type="text/javascript">
   $(document).ready(function(){
     report.obj = <%= @report.to_json.html_safe %>;
     report.init();
     <% if @show_form %> report.toggle_form(); <% end %>
-    <% if params[:show_success] %> report.show_success(); <% end %>
+    <% if flash[:saved] %> report.show_success(); <% end %>
   })
 </script>

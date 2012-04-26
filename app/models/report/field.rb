@@ -1,74 +1,70 @@
 class Report::Field < ActiveRecord::Base
   belongs_to(:report, :class_name => "Report::Report", :foreign_key => :report_report_id)
+  belongs_to(:attrib, :class_name => "Report::ResponseAttribute")
   belongs_to(:question)
   belongs_to(:question_type)
   
-  attr_accessor :subfields
+  def self.select_options
+    [
+      ["Attributes", Report::ResponseAttribute.all.collect{|ra| [ra.name, "attrib_#{ra.id}"]}],
+      ["Question Types", QuestionType.all.collect{|qt| [qt.long_name, "qtype_#{qt.id}"]}],
+      ["Questions", Question.all.collect{|q| [q.code, "question_#{q.id}"]}]
+    ]
+  end
   
+  def self.choices
+    [
+      {:name => "Attributes", :choices => Report::ResponseAttribute.all.collect{|ra| 
+        {:name => ra.name, :full_id => "attrib_#{ra.id}", :data_type => ra.data_type}}},
+      {:name => "Question Types", :choices => QuestionType.all.collect{|qt| 
+        {:name => qt.long_name, :full_id => "qtype_#{qt.id}", :data_type => qt.name}}},
+      {:name => "Questions", :choices => Question.includes(:type).all.collect{|q| 
+        {:name => q.code, :full_id => "question_#{q.id}", :data_type => q.type.name}}}
+    ]
+  end
+  
+  # the header labels for this field
+  def headers
+    fieldlets.collect{|fl| fl.header}
+  end
+  
+  # apply this field to the relation with no grouping
   def apply(rel)
-    # if report is answer mode, the meaning of fields is different
-    if report.mode == :answers
-      if question
-        rel.where("questions.id = #{question.id}")
-      elsif question_type
-        rel.where("question_types.id = #{question_type.id}")
-      end
-    else
-      if attrib_name
-        rel.select(full_expr)
-      elsif question
-        return rel if question.questionings.empty?
-        qing_ids = question.questionings.collect{|qing| qing.id}.join(",")
-        rel.select("#{full_expr} AS '#{question.code}'").
-          joins("LEFT OUTER JOIN answers #{ans_tbl} ON responses.id = #{ans_tbl}.response_id").
-          where("#{ans_tbl}.questioning_id IN (#{qing_ids})")
-      elsif question_type
-        return rel if question_type.questions.empty?
-        @subfields = []
-        question_type.questions.each do |q| 
-          @subfields << (f = Report::Field.new(:report => report, :question => q))
-          rel = f.apply(rel)
-        end
-        rel
-      # else this is just a response count
-      else
-        rel.select("COUNT(responses.id) AS count")
-      end
+    fieldlets.inject(rel){|rel, fl| rel = fl.apply(rel, :group => false)}
+  end
+  
+  # returns a string identifying this field including whether its an attrib, question, or question_type
+  def full_id
+    if attrib then "attrib_#{attrib.id}"
+    elsif question then "question_#{question.id}"
+    elsif question_type then "qtype_#{question_type.id}"
     end
   end
   
-  def name
-    attrib_name || question.code
+  # sets up this field based on the given full_id
+  def full_id=(fi)
+    return if fi.nil?
+    raise "Invalid field full_id" unless fi.match(/^([a-z]+)_(\d+)/)
+    pfx = $1
+    sub_id = $2
+    self.attrib = self.question = self.question_type = nil
+    case pfx
+    when "attrib" then self.attrib = Report::ResponseAttribute.find(sub_id)
+    when "question" then self.question = Question.find(sub_id)
+    when "qtype" then self.question_type = QuestionType.find(sub_id)
+    end
   end
-  
-  def expr
-    attrib_name || question && "#{ans_tbl}.value"
-  end
-  
-  def idx
-    @idx ||= 1000 + rand(8999)
-  end
-
-  def ans_tbl
-    @ans_tbl ||= "a#{idx}"
-  end
-  
-  private
     
-    # gets the full select expression by applying the reports calculation and aggregation
-    def full_expr
-      return @full_expr if @full_expr
-
-      # start with the basic
-      @full_expr = expr
-
-      # apply the calculation
-      @full_expr = report.calculation.apply(self, @full_expr) if report.calculation
-
-      # apply the aggregation
-      @full_expr = report.aggregation.apply(self, @full_expr) if report.aggregation
-
-      # return
-      @full_expr
+  
+  # a fieldlet is an object that represents an attrib or an individual question
+  # ResponseAttributes and QuestionWrappers are fieldlets
+  def fieldlets
+    @fieldlets ||= if attrib
+      [attrib]
+    elsif question
+      [Report::QuestionWrapper.new(question)] 
+    elsif question_type
+      question_type.questions.collect{|q| Report::QuestionWrapper.new(q) unless q.forms.empty?}.compact
     end
+  end
 end

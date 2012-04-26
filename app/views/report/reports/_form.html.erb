@@ -6,14 +6,15 @@
     Fill out the parameters below. Those marked <%= reqd_sym %> are required.
   </div>
   <%= form_field(f, :name, :required => true) %>
-  <%= form_field(f, :kind, :type => :select, :options => Report::Report.type_select_options, :required => true) %>
-  <%= form_field(f, :display_type, :type => :select, :options => Report::Report.display_type_select_options, :required => true) %>
+  <%= form_field(f, :aggregation_id, :type => :select, :options => Report::Aggregation.select_options, :required => true) %>
+  <%= form_field(f, :fields, :partial => "fields", :required => true) %>
   <%= form_field(f, :filter, :partial => "filter",
     :details => "A search string to filter the responses used in the report. You can try out your
       searches on the #{link_to('Responses page', responses_path())}.".html_safe) %>
   <%= form_field(f, :unreviewed, :type => :check_box) %>
   <%= form_field(f, :pri_grouping, :partial => "grouping") %>
   <%= form_field(f, :sec_grouping, :partial => "grouping", :details => "A second grouping.") %>
+  <%= form_field(f, :display_type, :type => :select, :options => Report::Report.display_type_select_options, :required => true) %>
   <%= form_field(f, :bar_style, :type => :radio_buttons, :options => Report::Report.bar_style_select_options) %>
   <%= form_field(f, :percent_type, :type => :select, :options => Report::Report.percent_type_select_options, :blank_text => "No Percentage") %>
   <div class="button_row">
