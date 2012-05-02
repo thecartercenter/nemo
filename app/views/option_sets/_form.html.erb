@@ -1,7 +1,7 @@
 <%= basic_form(set) do |f|
   # figure out how many columns of check boxes
   nopts = Option.count.to_f
-  ncols = [(nopts / 10).ceil, 4].min
+  ncols = [[(nopts / 10).ceil, 1].max, 4].min
   per_column = (nopts / ncols).ceil
   
   spec = {
