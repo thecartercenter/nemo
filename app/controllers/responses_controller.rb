@@ -18,7 +18,7 @@ class ResponsesController < ApplicationController
   def create
     # if this is a submission from ODK collect
     if request.format == Mime::XML
-      if request.method == "HEAD"
+      if %w(HEAD GET).include?(request.method)
         # just render the 'no content' status since that's what odk wants!
         render(:nothing => true, :status => 204)
       elsif upfile = params[:xml_submission_file]
