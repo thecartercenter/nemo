@@ -15,6 +15,8 @@
 # along with ELMO.  If not, see <http://www.gnu.org/licenses/>.
 # 
 class User < ActiveRecord::Base
+  include Seedable
+
   attr_writer(:reset_password_method)
   
   belongs_to(:role)
