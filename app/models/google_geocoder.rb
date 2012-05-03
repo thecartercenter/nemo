@@ -81,10 +81,13 @@ class GoogleGeocoder
     end
     
     # creates place object (and objects for its containers, if neccessary) based on a geocoding result
+    # returns nil if the result is invalid
     def self.create_place_from_result(result)
       return nil if result.nil?
       # get the address components
       acomps = parse_address_components(result)
+      # return nil if there is no country component
+      return nil unless acomps[PlaceType.country]
       # loop variable
       container = nil
       # loop over each place type, from country downwards, find_or_creating container.
@@ -97,7 +100,7 @@ class GoogleGeocoder
           # make it a temporary place if it's new
           place.temporary = true if place.new_record?
           # save to set full_name
-          place.save if place.new_record?
+          place.save! if place.new_record?
           # get the shortname from the address component, if needed
           place.short_name = acomp['short_name'] if place.short_name.nil? && acomp['short_name'] != acomp['long_name']
           # if the place is missing latitude or longitude, try to look it up
@@ -106,13 +109,12 @@ class GoogleGeocoder
             acomp['coords'] ? (place.latitude, place.longitude = acomp['coords']) : lookup_coords(place)
           end
           # save the place if we changed it
-          place.save if place.changed?
+          place.save! if place.changed?
           # save this place as the container for the next place we find/create
           container = place
         end
       end
       # reload the place from the DB in case any weird characters...
-      Rails.logger.debug("Reloading place")
       container.reload
       
       # return the last place we found/created

@@ -34,6 +34,9 @@ class PlaceType < ActiveRecord::Base
   def self.select_options
     all.reverse.collect{|pt| [pt.name, pt.id]}
   end
+  def self.country
+    find_by_level(1)
+  end
   def self.address
     find_by_level(4)
   end
