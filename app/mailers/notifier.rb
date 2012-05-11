@@ -25,6 +25,6 @@ class Notifier < ActionMailer::Base
   def intro(user)
     @user = user
     @reset_url = edit_password_reset_url(user.perishable_token, :protocol => configatron.mailer_url_protocol)
-    mail(:to => user.email, :subject => "Welcome to the #{configatron.site_name}")
+    mail(:to => user.email, :subject => "Welcome to #{configatron.site_name}")
   end    
 end
