@@ -144,7 +144,12 @@ class ApplicationController < ActionController::Base
     # or if this is an ajax request, returns a 401 unauthorized error
     # in the latter case, the script should catch this error and redirect to the login page itself
     def redirect_to_login
-      ajax_request? ? render(:text => "LOGIN_REQUIRED", :status => 401) : redirect_to(new_user_session_path)
+      if ajax_request? 
+        flash[:error] = nil
+        render(:text => "LOGIN_REQUIRED", :status => 401)
+      else
+        redirect_to(new_user_session_path)
+      end
     end
     
     # don't count automatic timer-based requests for resetting the logout timer

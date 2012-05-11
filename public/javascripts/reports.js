@@ -293,7 +293,7 @@
     // show the loading indicator
     $("#report_form div.loader").show();
     
-    $.ajax({
+    Utils.ajax_with_session_timeout_check({
       type: 'POST',
       url: form.attr("action"),
       data: form.serialize() + "&save=" + !!options.save,

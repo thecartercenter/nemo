@@ -109,6 +109,7 @@ function logout() {
   if ($('#logout_button')) $('#logout_button').click();
 }
 
+
 // checks if the given response text is LOGIN_REQUIRED and redirects appropriately if so
 // returns whether a login required message was found
 function check_login_required(response) { 
@@ -121,6 +122,7 @@ function check_login_required(response) {
 
 // redirects to the login page
 function redirect_to_login() {
+  window.onbeforeunload = null;
   window.location.href = LOGIN_PATH;
 }
 
@@ -144,4 +146,12 @@ function redirect_to_login() {
     for (var i = 0; i < a.length; i++) if (a[i] != b[i]) return false;
     return true;
   }
+  
+  // runs a jquery ajax request but substitutes a method that checks for session timeout
+  Utils.ajax_with_session_timeout_check = function(params) {
+    var old_error_func = params.error;
+    params.error = function(jqXHR) { check_login_required(jqXHR.responseText) || old_error_func(); };
+    $.ajax(params);
+  }
+  
 }(Utils = {}));

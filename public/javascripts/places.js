@@ -3,8 +3,12 @@ function lookup_places(class_name) {
   $('#place_lookup_results').html("<div class=\"loader\">Loading suggestions...</div>");
 
   // send ajax request
-  $.get('/places/lookup', {query: $('#place_lookup_query').val(), class_name: class_name }, function(data) {
-    $('#place_lookup_results').html(data);
+  // run the ajax request
+  Utils.ajax_with_session_timeout_check({
+    url: "/places/lookup",
+    data: {query: $('#place_lookup_query').val(), class_name: class_name },
+    method: "get",
+    success: function(data) { $('#place_lookup_results').html(data); }
   });
 }
 
