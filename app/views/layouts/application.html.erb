@@ -17,42 +17,51 @@
   <%= csrf_meta_tag %>
 </head>
 <body>
-<div id="banner">
-  <div id="userinfo">
-    <% if current_user %>
-      Logged in as <strong><%= current_user.login %></strong> |
-      <%= link_to("Edit Profile", edit_user_path(current_user.id)) %> |
-      <%= button_to("Logout", user_session_path, :method => :delete, :id => "logout_button") %>
-    <% else %>
-      <%= link_to("Login", new_user_session_path) %>
-    <% end %>
-  </div>
-  <div id="title">
-    <h1><%= link_to(configatron.site_name, root_path) %></h1>
-    <%= image_tag("four-dots.png") %>
-  </div>
-</div>
-<div id="nav">
-  <ul>
-    <% [Response, Form, Report::Report, Option, OptionSet, User, Broadcast, Language, Place, Setting].each do |k| %>
-      <% if authorized?(:action => "#{k.model_name.route_key}#index") %>
-        <li><%= link_to(k.model_name.human.ucwords.pluralize, send("#{k.model_name.route_key}_path")) %></li>
-      <% end %>
-    <% end %>
-  </ul>
-</div>
-<div id="content" class="<%= ctlr_action_name %>">
-  <% unless @dont_print_title %>
-    <h1><%= @title %></h1>
-  <% end %>
-  <%= body %>
-</div>
-</div>
-<div id="footer">
-  System Version: <%= configatron.system_version %>
-  <% if Rails.env == "development" %>
-    <div id="dev_mode_warning">Development Mode</div>
-  <% end %>
-</div>
+  <table id="layout">
+    <tr>
+      <td id="banner" colspan="2">
+        <div id="userinfo">
+          <% if current_user %>
+            Logged in as <strong><%= current_user.login %></strong> |
+            <%= link_to("Edit Profile", edit_user_path(current_user.id)) %> |
+            <%= button_to("Logout", user_session_path, :method => :delete, :id => "logout_button") %>
+          <% else %>
+            <%= link_to("Login", new_user_session_path) %>
+          <% end %>
+        </div>
+        <div id="title">
+          <h1><%= link_to(configatron.site_name, root_path) %></h1>
+          <%= image_tag("four-dots.png") %>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td id="nav">
+        <ul>
+          <% [Response, Form, Report::Report, Option, OptionSet, FormType, User, Broadcast, Language, Place, Setting].each do |k| %>
+            <% if authorized?(:action => "#{k.model_name.route_key}#index") %>
+              <li><%= link_to(k.model_name.human.ucwords.pluralize, send("#{k.model_name.route_key}_path")) %></li>
+            <% end %>
+          <% end %>
+        </ul>
+      </td>
+      <td>
+        <div id="content" class="<%= ctlr_action_name %>">
+          <% unless @dont_print_title %>
+            <h1><%= @title %></h1>
+          <% end %>
+          <%= body %>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td id="footer" colspan="2">
+        System Version: <%= configatron.system_version %>
+        <% if Rails.env == "development" %>
+          <div id="dev_mode_warning">Development Mode</div>
+        <% end %>
+      </td>
+    </tr>
+  </table>
 </body>
 </html>

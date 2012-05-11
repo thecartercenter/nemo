@@ -1,6 +1,7 @@
 CommandCenter::Application.routes.draw do
   resources(:broadcasts){collection{post 'new_with_users'}}
   resources(:forms){member{post 'add_questions', 'remove_questions', 'update_ranks'; get 'publish', 'clone'}}
+  resources(:form_types)
   resources(:languages)
   resources(:options)
   resources(:option_sets)

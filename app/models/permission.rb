@@ -48,6 +48,7 @@ class Permission
     "forms#update_ranks" => {:min_level => 3},
     "forms#publish" => {:min_level => 3},
     "forms#clone" => {:min_level => 3},
+    "form_types#*" => {:min_level => 3},
     "report_reports#*" => {:min_level => 2},
     "responses#index" => {:group => :logged_in},
     "responses#create" => {:group => :logged_in},

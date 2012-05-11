@@ -1,7 +1,7 @@
-div#banner, div#footer, div#nav { display: none; }
+td#banner, td#footer, td#nav { display: none; }
 
 /* login instructions */
 .users_login_instructions #preamble { display: none; }
 
 /* flash and error messages */
-div.notices { display: none; }
+div.success, div.failure { display: none; }

@@ -14,31 +14,18 @@
 # You should have received a copy of the GNU General Public License
 # along with ELMO.  If not, see <http://www.gnu.org/licenses/>.
 # 
-require 'seedable'
-class FormType < ActiveRecord::Base
-  include Seedable
-  
-  has_many(:forms)
-  
-  before_destroy(:check_assoc)
-  
-  validates(:name, :presence => :true, :length => {:maximum => 16})
-  
-  default_scope(order("name"))
-  
-  def self.generate
-    seed(:name, :name => "Type 1")
-    seed(:name, :name => "Type 2")
+module FormTypesHelper
+  def form_types_index_links(form_types)
+    [link_to_if_auth("Add new Form Type", new_form_type_path, "form_types#create")]
   end
-  
-  def self.select_options
-    all.collect{|ft| [ft.name, ft.id]}
+  def form_types_index_fields
+    %w[name actions]
   end
-  
-  private
-    def check_assoc
-      unless forms.empty?
-        raise "You can't delete Form Type '#{name}' because one or more forms are associated with it."
-      end
+  def format_form_types_field(form_type, field)
+    case field
+    when "actions"
+      action_links(form_type, :destroy_warning => "Are you sure you want to delete Form Type '#{form_type.name}'?")
+    else form_type.send(field)
     end
+  end
 end

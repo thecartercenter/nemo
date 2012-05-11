@@ -163,7 +163,7 @@ class ApplicationController < ActionController::Base
     end
 
     def set_default_title
-      action = {"index" => "", "new" => "Create ", "edit" => "Edit "}[action_name] || ""
+      action = {"index" => "", "new" => "Create ", "create" => "Create ", "edit" => "Edit ", "update" => "Edit "}[action_name] || ""
       obj = controller_name.gsub("_", " ").ucwords
       obj = obj.singularize unless action_name == "index"
       @title = action + obj

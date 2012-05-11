@@ -33,7 +33,7 @@ div.reqd_sym { display: inline; font-weight: bold; color: #d02000; font-size: 12
 table.form td.name { min-width: 75px; }
 
 /* forms (newer) */
-div.form_field { float: left; clear: left; border-top: 1px solid #ddd; padding: 5px 0 5px 0; }
+div.form_field { float: left; border-top: 1px solid #ddd; padding: 5px 0 5px 0; }
 div.form_field label { float: left; width: 150px; }
 div.form_field div.form_field_control { float: left; min-width: 300px; min-height: 26px; position: relative; }
 div.form_field div.form_field_control input { width: 240px; }
@@ -152,7 +152,7 @@ td#report_form div#search_examples { display: none; }
 td#report_form div.help { float: left; width: 260px; clear: left; color: #666; line-height: 12pt; display: none; }
 td#report_form div#top_help { margin-bottom: 3px; }
 td#report_form div#bottom_help { margin-top: 6px; }
-td#report_form div.form_field { width: 260px; }
+td#report_form div.form_field { width: 260px; clear: left; }
 td#report_form label { display: block; color: #666; font-size: 8pt; float: none; }
 td#report_form div.form_field_control { min-height: 0; float: none; }
 td#report_form div.form_field_details { float: right; width: 200px; display: none; color: #666; }
@@ -177,3 +177,6 @@ div#report_body table td.row_total, div#report_body table td.col_total { backgro
 div#report_body th.row_grouping_label, div#report_body th.col_grouping_label { color: #888; font-weight: normal; }
 div#report_body th.row_grouping_label > div { margin-left: 3px; overflow: hidden; }
 div#report_body th.col_grouping_label { text-align: center; }
+
+/* form type index */
+.form_types_index .name_col { min-width: 100px; }

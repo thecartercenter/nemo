@@ -31,3 +31,5 @@ en:
         pri_grouping: An attribute or question by which the response count should be grouped (e.g. state, overall rating).
         percent_type: Whether and how percentages should be calculated for the report.
         bar_style: Whether bars should be stacked or side-by-side. 
+      form_type:
+        name: A short name for this Form Type. Maximum 16 characters.
