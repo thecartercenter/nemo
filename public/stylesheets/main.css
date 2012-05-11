@@ -143,7 +143,7 @@ textarea#broadcast_body { width: 400px; height: 200px; }
 .users_edit #user_device, .users_new #user_device { width: 100px; }
 
 /* report index */
-.report_reports_index .name_col { min-width: 200px; }
+.report_reports_index .title_col { min-width: 200px; }
 
 /* report form */
 td#report_form { position: relative; z-index: 2; padding-right: 10px; }

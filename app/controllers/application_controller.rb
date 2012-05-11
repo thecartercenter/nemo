@@ -126,7 +126,7 @@ class ApplicationController < ActionController::Base
         elsif controller_name == "user_sessions" && action_name == "destroy"
           redirect_to(new_user_session_path)
         else
-          store_location
+          store_location unless ajax_request?
           # if the user needs to login, send them to the login page
           flash[:error] = $!.to_s
           flash[:error].match(/must login/) ? redirect_to_login : render("permissions/no", :status => :unauthorized)
