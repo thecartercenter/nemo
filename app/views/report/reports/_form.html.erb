@@ -1,6 +1,5 @@
 <%= flash_and_form_errors(@report) %>
 <%= form_for(@report, {:id => "report_form"}) do |f| %>
-  <div class="tip" id="required_tip">Required fields shown in <strong>bold</strong>.</div>
   <a href="#" id="show_help">Show Help</a>
   <div class="help" id="top_help">
     Fill out the parameters below. Those marked <%= reqd_sym %> are required.
