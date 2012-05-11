@@ -2,7 +2,7 @@ class Report::ByAnswerGrouping < Report::Grouping
   belongs_to(:question)
   
   def self.select_options
-    Question.includes(:type).where(:"question_types.name" => "select_one").all.collect{|q| [human_name(q), "by_answer_#{q.id}"]}
+    Question.includes(:type).where(:"question_types.name" => %w(select_one select_multiple)).all.collect{|q| [human_name(q), "by_answer_#{q.id}"]}
   end
   
   def self.select_group_name; "Questions"; end

@@ -109,5 +109,39 @@ class Report::TallyReportTest < ActiveSupport::TestCase
     
     assert(!r.errors.empty?, "Error should be added")
   end
+  
+  
+  test "group by select multiple question" do
+    create_opt_set(%w(Opt1 Opt2 Opt3))
+    q = create_question(:code => "multi", :type => "select_multiple")
+    create_response(:answers => {:multi => %w(Opt1 Opt2)})
+    create_response(:answers => {:multi => %w(Opt2)})
+    create_response(:answers => {:multi => %w(Opt1 Opt2 Opt3)})
+    create_response(:answers => {:multi => []})
+    
+    r = create_report(:agg => "Tally")
+    r.pri_grouping = Report::ByAnswerGrouping.create(:question => q)
+    
+    assert_report(r, %w(Tally), %w(Opt1 2), %w(Opt2 3), %w(Opt3 1))
+  end
+
+  test "group by source and select multiple question" do
+    create_opt_set(%w(Opt1 Opt2 Opt3))
+    q = create_question(:code => "multi", :type => "select_multiple")
+    create_response(:answers => {:multi => %w(Opt1 Opt2)}, :source => "web")
+    create_response(:answers => {:multi => %w(Opt2)}, :source => "web")
+    create_response(:answers => {:multi => %w(Opt1 Opt2 Opt3)}, :source => "odk")
+    create_response(:answers => {:multi => []}, :source => "odk")
+    
+    r = create_report(:agg => "Tally")
+    r.pri_grouping = Report::ByAnswerGrouping.create(:question => q)
+    r.sec_grouping = Report::ByAttribGrouping.create(:attrib => Report::ResponseAttribute.find_by_name("Source"))
+    
+    assert_report(r, %w(    odk web), 
+                     %w(Opt1  1   1), 
+                     %w(Opt2  1   2),
+                     %w(Opt3  1   ) + [""])
+  end
+
 
 end

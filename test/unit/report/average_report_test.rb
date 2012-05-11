@@ -53,6 +53,21 @@ class Report::AverageReportTest < ActiveSupport::TestCase
     assert_report(r, %w(Average), %w(Alabama 2.5), %w(Georgia 7.5))
   end
   
+  test "single question field grouped by select multiple" do
+    # create questions and responses
+    q1 = create_question(:code => "num0", :type => "integer")
+    create_opt_set(%w(Opt1 Opt2 Opt3))
+    q2 = create_question(:code => "multi", :type => "select_multiple")
+    create_response(:answers => {:multi => %w(Opt1 Opt2), :num0 => 1})
+    create_response(:answers => {:multi => %w(Opt2), :num0 => 2})
+    create_response(:answers => {:multi => %w(Opt1 Opt2 Opt3), :num0 => 4})
+    
+    r = create_report(:agg => "Average", :fields => [Report::Field.new(:question => q1)])
+    r.pri_grouping = Report::ByAnswerGrouping.create(:question => q2)
+    
+    assert_report(r, %w(Average), %w(Opt1 2.5), %w(Opt2 2.3), %w(Opt3 4.0))
+  end
+  
   test "single question field grouped by state and source" do
     # create places, question and responses
     create_places

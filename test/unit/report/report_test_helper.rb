@@ -62,8 +62,8 @@ module ReportTestHelper
     q = Question.new(:name_eng => params[:code], :code => params[:code], 
       :question_type_id => QuestionType.find_by_name(params[:type]).id)
   
-    # set the option set if type is select_one
-    q.option_set = params[:option_set] || @opt_sets.first[1] if params[:type] == "select_one"
+    # set the option set if type is select_one or select_multiple
+    q.option_set = params[:option_set] || @opt_sets.first[1] if %w(select_one select_multiple).include?(params[:type])
   
     # create questionings for each form
     params[:forms].each{|f| q.questionings.build(:form => f)}
@@ -81,7 +81,12 @@ module ReportTestHelper
       qing = @qs[code].questionings.first
       case qing.question.type.name
       when "select_one"
+        # create answer with option_id
         r.answers.build(:questioning_id => qing.id, :option => qing.question.options.find{|o| o.name_eng == value})
+      when "select_multiple"
+        # create answer with several choices
+        a = r.answers.build(:questioning_id => qing.id)
+        value.each{|opt| a.choices.build(:option => qing.question.options.find{|o| o.name_eng == opt})}
       else
         r.answers.build(:questioning_id => qing.id, :value => value)
       end
