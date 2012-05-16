@@ -1,11 +1,11 @@
 /* template */
 body { background-color: #888; }
 table#layout { width: 100%; }
-td#banner { padding-left: 95px; height: 79px; color: white; padding-top: 10px; }
+td#banner { color: white; padding: 5px 0 0 88px; }
 td#banner #title { float: left; }
-td#banner #title h1 { margin-bottom: 0; font-size: 40px; }
+td#banner #title h1 { margin-bottom: 5px; font-size: 40px; line-height: 1; }
 td#banner #title a { color: white; text-decoration: none; }
-td#banner #title img { float: left; display: block; margin: 0; }
+td#banner #title img { float: left; display: block; margin: 0 0 10px 3px; }
 td#banner #userinfo { float: right; margin-right: 10px; }
 td#banner #userinfo a, td#banner #userinfo form.button_to input { color: white; }
 div#content { padding: 15px 15px 30px 15px; min-height: 400px; background-color: white; }
