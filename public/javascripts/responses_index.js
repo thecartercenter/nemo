@@ -12,8 +12,7 @@ function responses_fetch() {
   Utils.ajax_with_session_timeout_check({
     url: "/responses?auto=1",
     method: "get",
-    success: responses_update,
-    error: function(jqXHR) { check_login_required(jqXHR.responseText); }
+    success: responses_update
   });
 }
 
