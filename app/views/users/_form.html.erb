@@ -10,7 +10,7 @@
       :col => :login,
       :label => "Login Name",
       :required => true,
-      :value => f.text_field(:login) + button_to_function("Suggest", "suggest_login(this)"),
+      :value => f.text_field(:login) + " " + button_to_function("Suggest", "suggest_login(this)"),
       :details => "The login name will be used to log in. Click the suggest button to suggest a login name."
     },{
       :col => :role,
