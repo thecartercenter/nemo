@@ -24,7 +24,7 @@ td#footer #dev_mode_warning { color: white; padding: 2px; margin: 0 0 0 5px; tex
 .users_login_instructions #instructions p { margin-top: 0; }
   
 /* flash and error messages */
-div.success, div.error { position: absolute; left: 25%; top: 78px; padding: 3px; 
+div.success, div.error { position: absolute; left: 25%; top: 76px; padding: 3px; 
     color: white; font-weight: bold; width: 600px; margin-bottom: 10px; text-align: center; }
 div.success { background-color: #9dc400; }
 div.error { background-color: #d02000; }

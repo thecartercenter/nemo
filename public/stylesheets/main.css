@@ -50,6 +50,7 @@ table.index_table th, table.form th { text-align: left; color: #444; background-
     font-size: 90%; padding: 3px 10px 3px 3px; }
 table.index_table td { border-bottom: 1px solid #ddd; padding: 6px 10px 6px 3px; }
 table.index_table td.actions_col img { margin-right: 5px; }
+td.actions_col { white-space: nowrap; }
 td.actions_col img { border: none; min-width: 11px; min-height: 11px; float: left; }
 div.index_table_loading_indicator { width: 16px; float: left; }
 
@@ -96,7 +97,7 @@ form.new_place td.value { min-width: 400px; }
 #map_canvas { width: 600px; height: 400px; }
 
 /* response index */
-.responses_index td.place_col div { width: 250px; overflow: hidden; white-space: nowrap; }
+.responses_index td.place_col div { width: 250px; overflow: hidden; white-space: normal; }
 .responses_index form#form_chooser { display: inline; }
 
 /* response edit */
