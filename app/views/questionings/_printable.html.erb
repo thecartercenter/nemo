@@ -1,0 +1,31 @@
+<% if qing.condition %>
+  <tr>
+    <td class="condition" colspan="2">
+      <div class="condition">ANSWER ONLY IF <%= qing.condition.to_s(lang) %></div>
+    </td>
+  <tr>
+  <tr class="noborder">
+<% else %>
+  <tr>
+<% end %>
+  <td class="name">
+    <div class="name">
+      <%= qing.rank %>. <%= qing.question.name(lang) %>
+      <%= reqd_sym if qing.answer_required? %>
+    </div>
+    <div class="hint"><%= qing.question.hint(lang) %></div>
+  </td>
+  <td class="answer <%= qing.question.type.name %>_answer">
+    <% # print options if necessary %>
+    <% if qing.question.is_select? %>
+      <% qing.question.options.each do |opt| %>
+        <div class="option">
+          <div class="option_box"></div>
+          <%= opt.name(lang) %>
+        </div>
+      <% end %>
+    <% else %>
+      <div class="answer_box"></div>
+    <% end %>
+  </td>
+</tr>

@@ -163,4 +163,10 @@ module ApplicationHelper
       :batch_ops => batch_ops
     )
   end
+  
+  def index_table_loading_indicator(id)
+    content_tag("div", :class => "index_table_loading_indicator") do
+      image_tag("load-ind-small.gif", :style => "display: none", :id => "index_table_loading_indicator_#{id}")
+    end
+  end
 end

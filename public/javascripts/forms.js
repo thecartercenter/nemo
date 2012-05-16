@@ -48,3 +48,28 @@ function form_submit_ranks(form_id) {
   $('#batch_form')[0].action = "/forms/" + form_id + "/update_ranks";
   $('#batch_form')[0].submit();
 }
+
+(function (Form, undefined) {
+  Form.print = function(form_id) {
+    // show appropriate loading indicator
+    $('#index_table_loading_indicator_' + form_id).show();
+
+    // load form show page into div
+    Utils.ajax_with_session_timeout_check({
+      url: "/forms/" + form_id,
+      method: "get",
+      data: {print: 1},
+      success: function(data) {
+        // replace div contents
+        $('#form_to_print').html(data);
+        
+        // hide loading indicator
+        $('#index_table_loading_indicator_' + form_id).hide();
+        
+        // show print dialog
+        window.print();
+      }
+    });
+
+  }
+}(Form = {}));

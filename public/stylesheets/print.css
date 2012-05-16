@@ -1,3 +1,4 @@
+table#layout { width: 100%; }
 td#banner, td#footer, td#nav { display: none; }
 
 /* login instructions */
@@ -5,3 +6,24 @@ td#banner, td#footer, td#nav { display: none; }
 
 /* flash and error messages */
 div.success, div.failure { display: none; }
+
+/* hide screen-only things */
+.screen { display: none; }
+
+/* printable form */
+#printable_form, #printable_form td { font-size: 120%; }
+#printable_form table { width: 100%; page-break-after: auto; }
+#printable_form table tr { page-break-inside: avoid; page-break-after: auto; }
+#printable_form table td { border-top: thin solid #ccc; padding: 4px; }
+#printable_form table tr.noborder td { border-top: none; padding: 4px; }
+#printable_form table td.name { width: 50%; }
+#printable_form table td.answer { width: 50%; }
+#printable_form div.condition { font-weight: bold; }
+#printable_form .option { float: left; margin-right: 20px; }
+#printable_form .option_box, #printable_form .answer_box { background-color: #eee; }
+#printable_form .option_box { float: left; width: 0.2in; height: 0.2in; margin-right: 2px; }
+#printable_form .answer_box { height: 0.3in; }
+#printable_form td.integer_answer .answer_box, #printable_form td.decimal_answer .answer_box { width: 1in; }
+#printable_form td.long_text_answer .answer_box { height: 1in; }
+#printable_form .hint { font-size: 90%; color: #888; }
+.forms_index h1#title { display: none; }

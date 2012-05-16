@@ -131,7 +131,11 @@ class FormsController < ApplicationController
     end
     def render_appropriate_format
       respond_to do |format|
-        format.html
+        format.html do
+          if params[:print]
+            render(:partial => "printable", :layout => false, :locals => {:form => @form})
+          end
+        end
         format.xml do
           render(:content_type => "text/xml")
           response.headers['X-OpenRosa-Version'] = "1.0"

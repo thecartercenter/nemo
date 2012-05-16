@@ -1,0 +1,18 @@
+<div id="printable_form" class="printable">
+  <h1><%= form.name %></h1>
+  <div class="tip"> Required questions are marked with a <%= reqd_sym %>.</div>
+  <table>
+    <tr>
+      <td class="name">Submitter/Team Name</td>
+      <td class="answer text_answer"><div class="answer_box"></div></td>
+    </tr>
+    <tr>
+      <td class="name">Observation Time</td>
+      <td class="answer text_answer"><div class="answer_box"></div></td>
+    </tr>
+    <% form.questionings.each do |qing| %>
+      <% next unless qing.question.type.printable? # only print printable questions %>
+      <%= render("questionings/printable", :qing => qing, :lang => Language.english) %>
+    <% end %>
+  </table>
+</div>

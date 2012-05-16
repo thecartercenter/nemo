@@ -150,7 +150,7 @@ function redirect_to_login() {
   // runs a jquery ajax request but substitutes a method that checks for session timeout
   Utils.ajax_with_session_timeout_check = function(params) {
     var old_error_func = params.error;
-    params.error = function(jqXHR) { check_login_required(jqXHR.responseText) || old_error_func(); };
+    params.error = function(jqXHR) { check_login_required(jqXHR.responseText) || old_error_func && old_error_func(); };
     $.ajax(params);
   }
   

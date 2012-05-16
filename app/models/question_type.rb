@@ -41,6 +41,8 @@ class QuestionType < ActiveRecord::Base
   end
   def integer?; name == "integer"; end
   
+  def printable?; name != "location"; end
+  
   def qing_ids
     questions.collect{|q| q.qing_ids}.flatten
   end

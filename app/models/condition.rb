@@ -93,6 +93,10 @@ class Condition < ActiveRecord::Base
     xpath
   end
   
+  def to_s(lang)
+    "Question ##{ref_qing.rank} #{op} \"#{option ? option.name(lang) : value}\""
+  end
+  
   private 
     def clear_blanks
       begin

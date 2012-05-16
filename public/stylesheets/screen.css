@@ -28,3 +28,6 @@ div.success, div.error { position: absolute; left: 25%; top: 78px; padding: 3px;
     color: white; font-weight: bold; width: 600px; margin-bottom: 10px; text-align: center; }
 div.success { background-color: #9dc400; }
 div.error { background-color: #d02000; }
+
+/* hide printable things */
+.printable { display: none; }
