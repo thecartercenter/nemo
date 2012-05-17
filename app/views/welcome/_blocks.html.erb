@@ -38,7 +38,7 @@
   </div>
 <% end %>
 
-<% if authorized?(:action => "responses#update") %>
+<% if authorized?(:action => "responses#index") %>
   <div class="block">
     <%= link_to("Review", responses_path, :class => "title") %>
     <%= link_to("Responses", responses_path, :class => "subtitle") %>

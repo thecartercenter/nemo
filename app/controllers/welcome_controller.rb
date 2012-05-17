@@ -24,10 +24,11 @@ class WelcomeController < ApplicationController
     @observer_count = User.observers.count
     @pub_form_count = Form.published.count
     @unpub_form_count = Form.count - @pub_form_count
-    @self_response_count = Response.by(current_user).count
-    @total_response_count = Response.count
-    @recent_responses_count = Response.recent_count
-    @unreviewed_response_count = Response.unreviewed.count
+    restricted_responses = Permission.restrict(Response, :user => current_user, :controller => "responses", :action => "index")
+    @self_response_count = restricted_responses.by(current_user).count
+    @total_response_count = restricted_responses.count
+    @recent_responses_count = Response.recent_count(restricted_responses)
+    @unreviewed_response_count = restricted_responses.unreviewed.count
     
     render(:partial => "blocks") if ajax_request?
   end
