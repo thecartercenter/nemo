@@ -22,7 +22,7 @@ class Report::Join
   @@joins = {
     :answers => new(
       :name => :answers,
-      :sql => "LEFT OUTER JOIN answers ON answers.response_id = responses.id"
+      :sql => "LEFT JOIN answers ON answers.response_id = responses.id"
     ),
     :questionings => new(
       :dependencies => :answers,
@@ -57,12 +57,24 @@ class Report::Join
       :name => :questions,
       :dependencies => :questionings,
       :sql => "INNER JOIN questions ON questionings.question_id = questions.id"
-    ),      
+    ),
+    :question_trans => new(
+      :name => :question_trans,
+      :dependencies => :questions,
+      :sql => "JOIN translations question_trans ON (question_trans.obj_id = questions.id 
+        AND question_trans.fld = 'name' AND question_trans.class_name = 'Question' 
+        AND question_trans.language_id = (SELECT id FROM languages WHERE code = 'eng'))"
+    ),
     :question_types => new( 
       :name => :question_types,
       :dependencies => :questions, 
       :sql => "INNER JOIN question_types ON questions.question_type_id = question_types.id"
     ),      
+    :option_sets => new( 
+      :name => :option_sets,
+      :dependencies => :questions, 
+      :sql => "LEFT JOIN option_sets ON questions.option_set_id = option_sets.id"
+    ),
     :places => new(
       :name => :places, 
       :sql => "LEFT JOIN places ON responses.place_id = places.id"
@@ -71,6 +83,16 @@ class Report::Join
       :name => :place_types,
       :dependencies => :places,
       :sql => "LEFT JOIN place_types ON places.place_type_id = place_types.id"
+    ),
+    :points => new(
+      :name => :points,
+      :dependencies => :place_types, 
+      :sql => "LEFT JOIN places points ON IF(place_types.short_name = 'point', places.id, places.point_id) = points.id"
+    ),
+    :addresses => new(
+      :name => :addresses,
+      :dependencies => :place_types, 
+      :sql => "LEFT JOIN places addresses ON IF(place_types.short_name = 'address', places.id, places.address_id) = addresses.id"
     ),
     :localities => new(
       :name => :localities,

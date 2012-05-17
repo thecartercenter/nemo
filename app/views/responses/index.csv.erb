@@ -1,4 +1,4 @@
 <% if @responses.size > 0 %>
-<%= @responses.first.attributes.keys.join(",") %>
-<% @responses.each do |r| %><%= (CSV.generate_line(r.attributes.values).strip + "\n").html_safe %><% end %>
+  <%= @responses.first.attributes.keys.join(",") %>
+  <%= FasterCSV.generate{|csv| @responses.each{|r| csv << r.attributes.values}}.html_safe %>
 <% end %>

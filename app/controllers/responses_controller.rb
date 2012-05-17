@@ -46,10 +46,19 @@ class ResponsesController < ApplicationController
         render(:partial => "table_only", :locals => {:responses => @responses}) if ajax_request?
       end
       format.csv do
-        require 'csv'
-        # need to use the new 'restrict' function in permission model
-        perm_condition = Permission.select_conditions(:user => current_user, :controller => "responses", :action => "index")
-        @responses = Response.flattened(:conditions => perm_condition)
+        require 'fastercsv'
+        @subindex = Subindex.find_and_update(session, current_user, "Response", nil)
+
+        rel = Response
+        
+        # apply search (if any)
+        rel = @subindex.search.apply(rel)
+        
+        # restrict permissions
+        rel = Permission.restrict(rel, :user => current_user, :controller => "responses", :action => "index")
+        
+        @responses = Response.for_export(rel)
+        # render the csv
         render_csv("responses-#{Time.zone.now.strftime('%Y-%m-%d-%H%M')}")
       end
     end

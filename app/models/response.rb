@@ -45,12 +45,6 @@ class Response < ActiveRecord::Base
   
   self.per_page = 20
   
-  def self.flattened(params = {})
-    params[:conditions] ||= "1"
-    params[:conditions].gsub!(/responses\./, '')
-    find_by_sql("select * from _answers where (#{params[:conditions]})")
-  end
-  
   def self.find_eager(id)
     includes([:form, {:answers => 
       {
@@ -59,6 +53,10 @@ class Response < ActiveRecord::Base
         :questioning => {:question => [:type, :translations, {:option_set => {:options => :translations}}]}
       }
     }]).find(id)
+  end
+  
+  def self.for_export(rel)
+    find_by_sql(export_sql(rel))
   end
   
   # gets the list of fields to be searched for this class
@@ -115,9 +113,9 @@ class Response < ActiveRecord::Base
   end
   
   # returns a human-readable description of how many responses have arrived recently
-  def self.recent_count
+  def self.recent_count(rel)
     %w(hour day week month).each do |p|
-      if (x = where("created_at > ?", 1.send(p).ago).count) > 0 
+      if (x = rel.where("created_at > ?", 1.send(p).ago).count) > 0 
         return "#{x} in the Past #{p.capitalize}"
       end
     end
@@ -204,5 +202,39 @@ class Response < ActiveRecord::Base
       
       # ensure the place is non-temporary
       place.update_attributes(:temporary => false) if self.place
+    end
+    
+    def self.export_sql(rel)
+      # add all the selects
+      rel = rel.select("responses.id AS response_id")
+      rel = rel.select("responses.observed_at AS observation_time")
+      rel = rel.select("responses.reviewed AS is_reviewed")
+      rel = rel.select("forms.name AS form_name")
+      rel = rel.select("form_types.name AS form_type")
+      rel = rel.select("questions.code AS question_code")
+      rel = rel.select("question_trans.str AS question_name")
+      rel = rel.select("question_types.name AS question_type")
+      rel = rel.select("users.name AS submitter_name")
+      rel = rel.select("places.full_name AS place_full_name")
+      rel = rel.select("points.long_name AS point")
+      rel = rel.select("addresses.long_name AS address")
+      rel = rel.select("localities.long_name AS locality")
+      rel = rel.select("states.long_name AS state")
+      rel = rel.select("countries.long_name AS country")
+      rel = rel.select("places.latitude AS latitude")
+      rel = rel.select("places.longitude AS longitude")
+      rel = rel.select("concat(places.latitude, ',', places.longitude) AS latitude_longitude")
+      rel = rel.select("answers.id AS answer_id")
+      rel = rel.select("answers.value AS answer_value")
+      rel = rel.select("IFNULL(aotr.str, cotr.str) AS choice_name")
+      rel = rel.select("IFNULL(ao.value, co.value) AS choice_value")
+      rel = rel.select("option_sets.name AS option_set")
+
+      # add all the joins
+      rel = rel.joins(Report::Join.list_to_sql([:users, :forms, :form_types, 
+        :answers, :questionings, :questions, :question_types, :question_trans, :option_sets, :options, :choices,
+        :places, :points, :addresses, :localities, :states, :countries]))
+        
+      rel.to_sql
     end
 end

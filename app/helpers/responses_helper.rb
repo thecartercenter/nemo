@@ -42,7 +42,7 @@ module ResponsesHelper
         :onclick => "$('#form_chooser').show(); return false") + new_response_mini_form(false)
     end
     unless responses.empty?
-      #links << link_to_if_auth("Export all to CSV", responses_path(:format => :csv), "responses#index", nil)
+      links << link_to_if_auth("Export to CSV", responses_path(:format => :csv), "responses#index", nil)
     end
     links
   end
