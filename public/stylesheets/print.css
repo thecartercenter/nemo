@@ -22,7 +22,7 @@ div.success, div.failure { display: none; }
 #printable_form .option { float: left; margin-right: 20px; }
 #printable_form .option_box, #printable_form .answer_box { background-color: #eee; border: 0.1pt solid #aaa; }
 #printable_form .option_box { float: left; width: 0.15in; height: 0.15in; margin-right: 2px; }
-#printable_form .answer_box { height: 0.15in; }
+#printable_form .answer_box { height: 0.20in; }
 #printable_form td.integer_answer .answer_box, #printable_form td.decimal_answer .answer_box { width: .75in; }
 #printable_form td.long_text_answer .answer_box { height: .75in; }
 #printable_form .hint { font-size: 90%; color: #888; }
