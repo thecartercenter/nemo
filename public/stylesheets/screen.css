@@ -19,9 +19,9 @@ td#footer #dev_mode_warning { color: white; padding: 2px; margin: 0 0 0 5px; tex
   background-color: #d02000; float: right; clear: right; }
 
 /* login instructions */
-.users_login_instructions #preamble { width: 600px; margin-bottom: 20px; }
-.users_login_instructions #instructions { width: 600px; border: 1px solid #888; padding: 10px; }
-.users_login_instructions #instructions p { margin-top: 0; }
+#login_instructions #preamble { width: 600px; margin-bottom: 20px; }
+#login_instructions #instructions { width: 600px; border: 1px solid #888; padding: 10px; }
+#login_instructions #instructions p { margin-top: 0; }
   
 /* flash and error messages */
 div.success, div.error { position: absolute; left: 25%; top: 76px; padding: 3px; 

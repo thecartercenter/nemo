@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120426182952) do
+ActiveRecord::Schema.define(:version => 20120519202915) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -284,6 +284,12 @@ ActiveRecord::Schema.define(:version => 20120426182952) do
   end
 
   add_index "translations", ["language_id", "class_name", "fld", "obj_id"], :name => "translation_master", :unique => true
+
+  create_table "user_batches", :force => true do |t|
+    t.text     "users"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "users", :force => true do |t|
     t.string   "login"

@@ -1,47 +1,11 @@
 <%= flash_and_form_errors(@user) %>
 
-<div id="preamble">
-  Login instructions are shown below. Please print this page now and ensure the user below receives it.
-  Since the user's password is stored in encrypted format, it will be irretrievable after you leave this page.
-  <p><%= link_to("Back to Users List", users_path) %></p>
-</div>
+<div id="login_instructions">
+  <div id="preamble">
+    Login instructions are shown below. Please print this page now and ensure the user below receives it.
+    Since the user's password is stored in encrypted format, it will be irretrievable after you leave this page.
+    <p><%= link_to("Back to Users List", users_path) %></p>
+  </div>
 
-<div id="instructions">
-  <h1><%= configatron.site_name %> Login Instructions</h1>
-  <p>Welcome to <%= configatron.site_name %>. Your credentials are as follows:</p>
-
-  <table class="form">
-    <tr>
-      <td class="name">Name</td>
-      <td class="value"><%= @user.full_name %></td>
-    </tr>
-    <tr>
-      <td class="name">Email</td>
-      <td class="value"><%= @user.email %></td>
-    </tr>
-    <tr>
-      <td class="name">Role</td>
-      <td class="value"><%= @user.role.name %></td>
-    </tr>
-    <tr>
-      <td class="name">Site URL</td>
-      <td class="value">https://<%= request.host_with_port %></td>
-    </tr>
-    <tr>
-      <td class="name">Username</td>
-      <td class="value"><%= @user.login %></td>
-    </tr>
-    <tr>
-      <td class="name">Password</td>
-      <td class="value"><%= flash[:password] %></td>
-    </tr>
-  </table>
-
-  <p>Please note the 's' in 'https' in the site URL.</p>
-  
-  <p>If you'd like to choose a more memorable password, you can change your password using the website.</p>
-
-  <p>The above credentials will also work on your Android device. To enter your credentials, 
-  start the 'ODK Collect' application, press the 'Menu' button, tap 'Preferences', 
-  and then tap each of 'Username' and 'Password'.</p>
+  <%= render("login_instruction_box", :user => @user, :password => flash[:password]) %>
 </div>

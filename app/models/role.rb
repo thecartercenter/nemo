@@ -35,7 +35,11 @@ class Role < ActiveRecord::Base
   def self.highest
     unscoped.order("level DESC").first
   end
-    
+
+  def self.lowest
+    unscoped.order("level").first
+  end
+        
   def to_s
     name
   end

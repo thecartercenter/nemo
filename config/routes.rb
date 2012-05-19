@@ -16,7 +16,8 @@ CommandCenter::Application.routes.draw do
   resources(:settings){collection{post 'update_all'}}
   resource(:user_session){collection{get 'logged_out'}}
   resources(:users){member{get 'login_instructions'}; collection{post 'export'}}
-
+  resources(:user_batches)
+  
   namespace(:report){resources(:reports)}
 
   root(:to => "welcome#index")

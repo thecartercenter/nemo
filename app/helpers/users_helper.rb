@@ -33,7 +33,8 @@ module UsersHelper
     [
       batch_op_link(:name => "Send Broadcast", :action => "broadcasts#new_with_users"),
       batch_op_link(:name => "Export as vCard", :action => "users#export", :format => :vcf),
-      link_to_if_auth("Create new user", new_user_path, "users#create")
+      link_to_if_auth("Create New User", new_user_path, "users#create"),
+      link_to_if_auth("Create Multiple Users", new_user_batch_path, "users#create")
     ]
   end
 end

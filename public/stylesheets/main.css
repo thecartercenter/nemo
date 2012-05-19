@@ -137,12 +137,16 @@ textarea#broadcast_body { width: 400px; height: 200px; }
 .forms_edit #save_ranks_button { margin-top: -15px; }
 
 /* user login instructions */
-.users_login_instructions td.name { width: 100px; }
-.users_login_instructions td.value { font-weight: bold; width: 300px; }
+#login_instructions td.name { width: 100px; }
+#login_instructions td.value { font-weight: bold; width: 300px; }
 
 /* user edit */
 .users_edit #user_notes, .users_new #user_notes { width: 300px; height: 100px; }
 .users_edit #user_device, .users_new #user_device { width: 100px; }
+
+/* user batches */
+.user_batches_new #user_batch_users { width: 350px; height: 200px; margin-right: 20px; }
+.user_batches_new div.form_field label { width: 75px; }
 
 /* report index */
 .report_reports_index .title_col { min-width: 200px; }
@@ -157,7 +161,7 @@ td#report_form div#bottom_help { margin-top: 6px; }
 td#report_form div.form_field { width: 260px; clear: left; }
 td#report_form label { display: block; color: #666; font-size: 8pt; float: none; }
 td#report_form div.form_field_control { min-height: 0; float: none; }
-td#report_form div.form_field_details { float: right; width: 200px; display: none; color: #666; }
+td#report_form div.form_field_control { float: right; width: 200px; display: none; color: #666; }
 td#report_form div#required_tip { display: none; }
 td#report_form h3 { margin-bottom: 10px; }
 td#report_form input.submit { font-size: 8pt; padding: 4px; margin-top: 5px; display: block; float: left;  }

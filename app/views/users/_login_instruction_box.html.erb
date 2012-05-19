@@ -1,0 +1,39 @@
+<div id="instructions">
+  <h1><%= configatron.site_name %> Login Instructions</h1>
+  <p>Welcome to <%= configatron.site_name %>. Your credentials are as follows:</p>
+
+  <table class="form">
+    <tr>
+      <td class="name">Name</td>
+      <td class="value"><%= user.full_name %></td>
+    </tr>
+    <tr>
+      <td class="name">Email</td>
+      <td class="value"><%= user.email %></td>
+    </tr>
+    <tr>
+      <td class="name">Role</td>
+      <td class="value"><%= user.role.name %></td>
+    </tr>
+    <tr>
+      <td class="name">Site URL</td>
+      <td class="value">https://<%= request.host_with_port %></td>
+    </tr>
+    <tr>
+      <td class="name">Username</td>
+      <td class="value"><%= user.login %></td>
+    </tr>
+    <tr>
+      <td class="name">Password</td>
+      <td class="value"><%= password %></td>
+    </tr>
+  </table>
+
+  <p>Please note the 's' in 'https' in the site URL.</p>
+  
+  <p>If you'd like to choose a more memorable password, you can change your password using the website.</p>
+
+  <p>The above credentials will also work on your Android device. To enter your credentials, 
+  start the 'ODK Collect' application, press the 'Menu' button, tap 'Preferences', 
+  and then tap each of 'Username' and 'Password'.</p>
+</div>

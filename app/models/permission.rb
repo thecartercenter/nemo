@@ -19,6 +19,7 @@ class Permission
     "users#index" => {:group => :logged_in},
     "users#export" => {:group => :logged_in},
     "users#create" => {:min_level => 3},
+    "user_batches#*" => {:min_level => 3},
     "users#*" => {:min_level => 3},
     "users#login_instructions" => {:min_level => 3},
     "user_sessions#create" => {:group => :logged_out},

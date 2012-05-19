@@ -66,6 +66,17 @@ class User < ActiveRecord::Base
     (user && user.valid_password?(password)) ? user : nil
   end
   
+  def self.suggest_login(name)
+    # if it looks like a person's name, suggest f. initial + l. name
+    if m = name.match(/^([a-z][a-z']+) ([a-z'\- ]+)$/i)
+      l = $1[0,1] + $2.gsub(/[^a-z]/i, "")
+    # otherwise just use the whole thing and strip out weird chars
+    else
+      l = name.gsub(/[^a-z0-9\.]/i, "")
+    end
+    l[0,10].downcase
+  end
+  
   def self.search_qualifiers
     [
       Search::Qualifier.new(:label => "name", :col => "users.name", :default => true, :partials => true),

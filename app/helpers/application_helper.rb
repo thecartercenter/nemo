@@ -82,7 +82,7 @@ module ApplicationHelper
             end
           end
         end
-        tip = t(method, :scope => [:activerecord, :tips, f.object.class.model_name.i18n_key])
+        tip = t(method, :scope => [:activerecord, :tips, f.object.class.model_name.i18n_key]).gsub("\n", "<br/>").html_safe
         details = content_tag("div", :class => "form_field_details"){options[:details] || tip}
         details + label + field + "<div class=\"space_line\"></div>".html_safe
       end
