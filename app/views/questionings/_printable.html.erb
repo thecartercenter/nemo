@@ -1,19 +1,13 @@
-<% if qing.condition %>
-  <tr>
-    <td class="condition" colspan="2">
-      <div class="condition">ANSWER ONLY IF <%= qing.condition.to_s(lang) %></div>
-    </td>
-  <tr>
-  <tr class="noborder">
-<% else %>
-  <tr>
-<% end %>
+<tr>
   <td class="name">
+    <% if qing.condition %>
+      <div class="condition">ANSWER ONLY IF <%= qing.condition.to_s(lang) %></div>
+    <% end %>
     <div class="name">
       <%= qing.rank %>. <%= qing.question.name(lang) %>
       <%= reqd_sym if qing.answer_required? %>
     </div>
-    <div class="hint"><%= qing.question.hint(lang) %></div>
+    <!--<div class="hint"><%= qing.question.hint(lang) %></div>-->
   </td>
   <td class="answer <%= qing.question.type.name %>_answer">
     <% # print options if necessary %>
