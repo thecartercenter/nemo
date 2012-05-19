@@ -46,8 +46,6 @@ class Answer < ActiveRecord::Base
     ans
   end
   
-  def self.for_export
-
   def choice_for(option)
     choice_hash[option]
   end
