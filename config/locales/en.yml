@@ -35,8 +35,8 @@ en:
         name: A short name for this Form Type. Maximum 16 characters.
       user_batch:
         users: |-
-          Enter the user names and email addresses, one per line, e.g.:
+          Enter the user names, email addresses, and phone numbers (WITH country codes), one per line, separated by commas. Phone numbers are optional. For example:
             
-          Alice Merrywinkle alice@winkle.org
-          Chung Li cli@gmail.com
-          Stewbuilder Dennis chowtime@yahoo.co.uk
+          Alice Merrywinkle, alice@winkle.org, +20112313411
+          Chung Li, cli@gmail.com
+          Stewbuilder Dennis, chowtime@yahoo.co.uk, +20923187493
