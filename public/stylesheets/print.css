@@ -16,6 +16,7 @@ div.success, div.failure { display: none; }
 #printable_form, #printable_form td { font-size: 8pt; line-height: 12pt; }
 #printable_form table { width: 100%; page-break-after: auto; }
 #printable_form table tr { page-break-inside: avoid; page-break-after: auto; }
+#printable_form table tr.conditional td { color: #999; }
 #printable_form table td { border-top: 0.1pt solid #ccc; padding: 0; }
 #printable_form table td.name { width: 60%; }
 #printable_form table td.answer { width: 40%; vertical-align: middle; }

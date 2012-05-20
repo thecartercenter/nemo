@@ -1,4 +1,4 @@
-<tr>
+<tr<%= qing.condition ? " class=\"conditional\"".html_safe : "" %>>
   <td class="name">
     <% if qing.condition %>
       <div class="condition">ANSWER ONLY IF <%= qing.condition.to_s(lang) %></div>
