@@ -16,7 +16,7 @@
 # 
 module UsersHelper
   def users_index_fields
-    %w[name login email language role device phone_number active? actions]
+    %w[name login email language role device phone active? actions]
   end
   def format_users_field(user, field)
     case field

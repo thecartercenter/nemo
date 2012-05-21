@@ -39,8 +39,6 @@ class User < ActiveRecord::Base
   validate(:phone_length_or_empty)
   validate(:must_have_password_reset_on_create)
   
-  before_validation(:no_mobile_phone_if_no_phone)
-  
   default_scope(includes(:language, :role).order("name"))
   scope(:active_english, includes(:language).where(:active => true).where("languages.code" => "eng"))
   scope(:observers, includes(:role).where("roles.name = 'observer'"))
@@ -103,9 +101,6 @@ class User < ActiveRecord::Base
 #      try += 1
 #    end
 #  end
-  def phone_number
-    phone.blank? ? "" : phone + (phone_is_mobile? ? " [m]" : "")
-  end
   def deliver_intro!
     reset_perishable_token!
     Notifier.intro(self).deliver
@@ -130,9 +125,9 @@ class User < ActiveRecord::Base
   end
   def to_vcf
     "BEGIN:VCARD\nVERSION:3.0\nFN:#{name}\nEMAIL:#{email}\n" +
-    (phone ? "TEL;TYPE=#{phone_is_mobile? ? 'CELL' : 'WORK'}:#{phone}\n" : "") + "END:VCARD"
+    (phone ? "TEL;TYPE=CELL:#{phone}\n" : "") + "END:VCARD"
   end
-  def can_get_sms?; !phone.blank? && phone_is_mobile; end
+  def can_get_sms?; !phone.blank? end
   
   def is_observer?; role ? role.is_observer? : false; end
   def is_admin?; role ? role.is_admin? : false; end
@@ -160,10 +155,5 @@ class User < ActiveRecord::Base
       if new_record? && password.blank? && reset_password_method == "dont"
         errors.add(:base, "You must choose a password creation method")
       end
-    end
-    
-    def no_mobile_phone_if_no_phone
-      self.phone_is_mobile = false if phone.blank?
-      return true
     end
 end
