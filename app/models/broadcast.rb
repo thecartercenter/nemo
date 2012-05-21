@@ -21,6 +21,7 @@ class Broadcast < ActiveRecord::Base
   validates(:recipients, :presence => true)
   validates(:medium, :presence => true)
   validates(:subject, :presence => true, :if => Proc.new{|b| b.by_email?})
+  validates(:which_phone, :presence => true, :if => Proc.new{|b| b.by_sms? || by_both?})
   validates(:body, :presence => true)
   validates(:body, :length => {:maximum => 140}, :if => Proc.new{|b| !b.by_email?})
   
@@ -29,9 +30,15 @@ class Broadcast < ActiveRecord::Base
   default_scope(includes(:recipients).order("created_at DESC"))
     
   def self.medium_select_options
-    [["SMS preferred (email if no mobile phone)", "sms"],
+    [["SMS preferred (email if user has no phone)", "sms"],
      ["Email only", "email"],
      ["Both SMS and email", "both"]]
+  end
+
+  def self.which_phone_select_options
+    [["Main phone only", "main_only"],
+     ["Alternate phone only", "alternate_only"],
+     ["Both phones", "both"]]
   end
   
   def recipient_ids
@@ -59,7 +66,7 @@ class Broadcast < ActiveRecord::Base
     end
     # send smses
     begin
-      Smser.deliver(smsees, "#{configatron.broadcast_tag} #{body}") unless smsees.empty?
+      Smser.deliver(smsees, which_phone, "#{configatron.broadcast_tag} #{body}") unless smsees.empty?
     rescue
       # one error per line
       $!.to_s.split("\n").each{|e| add_send_error("SMS Error: #{e}")}

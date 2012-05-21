@@ -12,6 +12,11 @@
       :value => f.select(:medium, Broadcast.medium_select_options, {:include_blank => true}, 
         :onchange => "broadcast_medium_changed()")
     },{
+      :col => :which_phone,
+      :label => "Which Phone(s)",
+      :required => true,
+      :value => f.select(:which_phone, Broadcast.which_phone_select_options, {:include_blank => true})
+    },{
       :col => :subject,
       :required => true,
       :value => f.text_field(:subject)

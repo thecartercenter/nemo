@@ -26,7 +26,13 @@
       :details => "The ID number of the handheld device (if any) carried by this user. Example: TCC023"
     },{
       :col => :phone,
+      :label => "Main Phone",
       :value => f.text_field(:phone, :size => 20),
+      :details => "Phone number should include the country code. Example: +25680344523"
+    },{
+      :col => :phone2,
+      :label => "Alternate Phone",
+      :value => f.text_field(:phone2, :size => 20),
       :details => "Phone number should include the country code. Example: +25680344523"
     },{
       :col => :language,
@@ -61,9 +67,9 @@
       :col => :reset_password_method,
       :label => user.new_record? ? "Password Creation" : "Reset Password?",
       :value => 
-        (user.new_record? ? "" : f.radio_button(:reset_password_method, "dont") + "Leave password alone<br/>".html_safe) + 
-        f.radio_button(:reset_password_method, "email") + "#{prefix}send email instructions<br/>".capitalize.html_safe +
-        f.radio_button(:reset_password_method, "print") + "#{prefix}show printable instructions".capitalize.html_safe,
+        (user.new_record? ? "" : f.radio_button(:reset_password_method, "dont") + " Leave password alone<br/>".html_safe) + 
+        f.radio_button(:reset_password_method, "email") + " " + "#{prefix}send email instructions<br/>".capitalize.html_safe +
+        f.radio_button(:reset_password_method, "print") + " " + "#{prefix}show printable instructions".capitalize.html_safe,
       :details => (user.new_record? ? 
           "Choose how this user should get his/her password. " :
           "Choose whether and how to reset this user's password. ") +

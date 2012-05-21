@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120521191051) do
+ActiveRecord::Schema.define(:version => 20120521221511) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -37,6 +37,7 @@ ActiveRecord::Schema.define(:version => 20120521191051) do
     t.text     "send_errors"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "which_phone"
   end
 
   create_table "choices", :force => true do |t|
@@ -311,6 +312,7 @@ ActiveRecord::Schema.define(:version => 20120521191051) do
     t.text     "notes"
     t.datetime "last_request_at"
     t.string   "name"
+    t.string   "phone2"
   end
 
   add_index "users", ["login"], :name => "index_users_on_login", :unique => true

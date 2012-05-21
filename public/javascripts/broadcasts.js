@@ -5,9 +5,11 @@ function broadcast_medium_changed() {
   // hide/show char limit and subject
   if (sms) {
     $('#char_limit').show();
+    $('#which_phone_row').show();
     broadcast_update_char_limit();
     $('#subject_row').hide();
   } else {
+    $('#which_phone_row').hide();
     $('#char_limit').hide();
     $('#subject_row').show();
   }
@@ -20,3 +22,5 @@ function broadcast_update_char_limit() {
     $('#char_limit').css("color", diff >= 0 ? "black" : "#d02000");
   }
 }
+
+$.ready(function() { broadcast_medium_changed(); })

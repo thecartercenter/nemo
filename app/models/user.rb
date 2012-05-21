@@ -127,20 +127,22 @@ class User < ActiveRecord::Base
     "BEGIN:VCARD\nVERSION:3.0\nFN:#{name}\nEMAIL:#{email}\n" +
     (phone ? "TEL;TYPE=CELL:#{phone}\n" : "") + "END:VCARD"
   end
-  def can_get_sms?; !phone.blank? end
+  def can_get_sms?; !(phone.blank? && phone2.blank?) end
   
   def is_observer?; role ? role.is_observer? : false; end
   def is_admin?; role ? role.is_admin? : false; end
   
   private
     def clean_fields
-      self.phone = "+" + phone.gsub(/[^0-9]/, "") unless phone.blank?
+      self.phone = phone.blank? ? nil : "+" + phone.gsub(/[^0-9]/, "")
+      self.phone2 = phone2.blank? ? nil : "+" + phone2.gsub(/[^0-9]/, "")
       self.login = login.downcase
       return true
     end
     
     def phone_length_or_empty
       errors.add(:phone, "must be at least 9 digits.") unless phone.blank? || phone.size >= 10
+      errors.add(:phone2, "must be at least 9 digits.") unless phone2.blank? || phone2.size >= 10
     end
     
     def check_assoc

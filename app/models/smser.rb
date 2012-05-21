@@ -15,8 +15,17 @@
 # along with ELMO.  If not, see <http://www.gnu.org/licenses/>.
 # 
 class Smser
-  def self.deliver(recips, msg)
+  def self.deliver(recips, which_phone, msg)
+    # get adapter from settings
     adapter = configatron.outgoing_sms_adapter
-    adapter.deliver(recips.collect{|r| r.phone.gsub(/[^\d]/, "")}, msg)
+    
+    # get numbers
+    numbers = []
+    numbers += recips.collect{|u| u.phone} if %w(main_only both).include?(which_phone)
+    numbers += recips.collect{|u| u.phone2} if %w(alternate_only both).include?(which_phone)
+    numbers.compact!
+    
+    # deliver
+    adapter.deliver(numbers, msg)
   end
 end
