@@ -161,7 +161,7 @@ td#report_form div#bottom_help { margin-top: 6px; }
 td#report_form div.form_field { width: 260px; clear: left; }
 td#report_form label { display: block; color: #666; font-size: 8pt; float: none; }
 td#report_form div.form_field_control { min-height: 0; float: none; }
-td#report_form div.form_field_control { float: right; width: 200px; display: none; color: #666; }
+td#report_form div.form_field_details { float: right; width: 200px; display: none; color: #666; }
 td#report_form div#required_tip { display: none; }
 td#report_form h3 { margin-bottom: 10px; }
 td#report_form input.submit { font-size: 8pt; padding: 4px; margin-top: 5px; display: block; float: left;  }

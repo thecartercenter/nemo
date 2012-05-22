@@ -69,6 +69,7 @@
   
   // shows/hides the help text
   report.toggle_help = function() {
+    console.log("toggling help")
     // determine if showing or hiding
     var showing = !!$('a#show_help').text().match(/Show/);
 
