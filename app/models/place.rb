@@ -93,7 +93,7 @@ class Place < ActiveRecord::Base
   # returns places matching the given search query
   # raise an error if the query is invalid (see the Search.conditions method)
   def self.search(str)
-    Search::Search.find_or_create(:str => str, :class_name => self.name).apply(permanent)
+    Search::Search.find_or_create(:str => "\"#{str}\"", :class_name => self.name).apply(permanent)
   end
   
   # searches existing, non-temporary places and geocoding services for places matching query
