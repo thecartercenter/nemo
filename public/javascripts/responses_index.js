@@ -28,9 +28,15 @@ function responses_get_ids() {
 
 function responses_update(data) {
   $('#index_table').html(data);
+  var new_arrival = false;
   var new_ids = responses_get_ids();
   for (var i = 0; i < new_ids.length; i++) {
-    if (responses_old_ids.indexOf(new_ids[i]) == -1)
+    if (responses_old_ids.indexOf(new_ids[i]) == -1) {
       $("#" + new_ids[i]).effect("highlight", {}, 1000);
+      new_arrival = true;
+    }
   }
+  
+  // play sound if new arrival
+  if (new_arrival) $("#new_arrival_sound")[0].play()
 }
