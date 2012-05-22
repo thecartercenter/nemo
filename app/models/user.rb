@@ -39,7 +39,7 @@ class User < ActiveRecord::Base
   validate(:phone_length_or_empty)
   validate(:must_have_password_reset_on_create)
   
-  default_scope(includes(:language, :role).order("name"))
+  default_scope(includes(:language, :role).order("users.name"))
   scope(:active_english, includes(:language).where(:active => true).where("languages.code" => "eng"))
   scope(:observers, includes(:role).where("roles.name = 'observer'"))
   
