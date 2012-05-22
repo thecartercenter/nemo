@@ -70,7 +70,8 @@ class Response < ActiveRecord::Base
       Search::Qualifier.new(:label => "place", :col => "places.full_name", :assoc => :places, :partials => true),
       Search::Qualifier.new(:label => "submitter", :col => "users.name", :assoc => :users, :partials => true),
       Search::Qualifier.new(:label => "answer", :col => "answers.value", :assoc => :answers, :partials => true, :default => true),
-      Search::Qualifier.new(:label => "source", :col => "responses.source")
+      Search::Qualifier.new(:label => "source", :col => "responses.source"),
+      Search::Qualifier.new(:label => "date", :col => "DATE(responses.observed_at)")
     ]
   end
   
