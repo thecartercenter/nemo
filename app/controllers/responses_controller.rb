@@ -96,6 +96,10 @@ class ResponsesController < ApplicationController
       # source is web, 
       params[:response][:source] = "web" if action == "create"
       params[:response][:modifier] = "web"
+
+      # check for "update and mark as reviewed"
+      params[:response][:reviewed] = true if params[:commit_and_mark_reviewed]
+      
       # find or create the response
       @resp = action == "create" ? Response.new : Response.find(params[:id])
       # set user_id if this is an observer

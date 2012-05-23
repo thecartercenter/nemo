@@ -105,6 +105,7 @@ form.new_place td.value { min-width: 400px; }
 .responses_edit input.qtype_decimal, .responses_new input.qtype_decimal { width: 100px; }
 .responses_edit textarea.qtype_long_text, .responses_new textarea.qtype_long_text { width: 400px; height: 100px; }
 .responses_edit table.answers td.name, .responses_new table.answers td.name, .responses_show table.answers td.name { width: 300px; }
+.responses_edit input.submit { float: left; margin-right: 10px; }
 
 /* question show/edit */
 .questionings_edit textarea.name_hint, .questionings_new textarea.name_hint,

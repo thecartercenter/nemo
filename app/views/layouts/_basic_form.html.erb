@@ -33,5 +33,7 @@
 <% end %>
 
 <% if controller.action_name != "show" %>
-  <%= spec[:submit] || f.submit((obj.new_record? ? "Create" : "Update") + " #{obj.class.name.underscore.gsub('_', ' ').ucwords}") %>
+  <%= spec[:submit] || f.submit((obj.new_record? ? "Create" : "Update") + " #{obj.class.name.underscore.gsub('_', ' ').ucwords}", :class => "submit") %>
 <% end %>
+
+<%= spec[:footer].html_safe %>

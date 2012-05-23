@@ -40,7 +40,12 @@
       }]
     },{
       :contents => answers_subform(resp.all_answers)
-    }]
+    }],
+    # hackish fix until i refactor this code to the newer form style
+    :footer => '<input name="commit_and_mark_reviewed" type="submit" value="Update and Mark as Reviewed" class="submit">'
   }
 end
 %>
+<div style="float: left; color: pink; padding-top: 6px;">&lt;-- This is for you Sherif.</div>
+
+<br><br>
