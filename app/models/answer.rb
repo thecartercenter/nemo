@@ -103,7 +103,7 @@ class Answer < ActiveRecord::Base
   
   private
     def required
-      if required? && !hidden? && value.blank? && option_id.nil? && !can_have_choices?
+      if required? && !hidden? && value.blank? && option_id.nil? && !can_have_choices? && questioning.condition.nil?
         errors.add(:base, "This question is required")
       end
     end
