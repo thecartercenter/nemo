@@ -147,7 +147,7 @@ class Place < ActiveRecord::Base
     
   protected
     def check_uniqueness
-      if new_record? && self.class.find_by_long_name_and_container_id(long_name, container_id)
+      if new_record? && self.class.find_by_long_name_and_container_id_and_temporary(long_name, container_id, false)
         errors.add(:base, "A place with the same name and container already exists.")
       end
     end
