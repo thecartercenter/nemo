@@ -101,7 +101,7 @@ class Place < ActiveRecord::Base
     return [] if query.blank?
     
     # clean up old temp places
-    cleanup
+    #cleanup
     
     # get existing places
     places = search(query)
