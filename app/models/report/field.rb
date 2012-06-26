@@ -30,6 +30,7 @@ class Report::Field < ActiveRecord::Base
   
   # apply this field to the relation with no grouping
   def apply(rel)
+    raise Report::ReportError.new("You must choose at least one Attribute or Question.") if fieldlets.empty?
     fieldlets.inject(rel){|rel, fl| rel = fl.apply(rel, :group => false)}
   end
   
@@ -65,6 +66,8 @@ class Report::Field < ActiveRecord::Base
       [Report::QuestionWrapper.new(question)] 
     elsif question_type
       question_type.questions.collect{|q| Report::QuestionWrapper.new(q) unless q.forms.empty?}.compact
+    else
+      []
     end
   end
 end

@@ -100,7 +100,7 @@
   function remove_field(e) {
     var existing = $(FIELD_SELECTS_SELECTOR + " select");
     // don't remove the last field
-	if (existing.length == 1)
+    if (existing.length == 1)
       existing.val("");
     else
       $(e.target).parent().remove();
@@ -109,7 +109,9 @@
   
   // ensures the appropriate events are hooked up for all field dropdowns
   function hookup_field_events() {
-    $(FIELD_SELECTS_SELECTOR + ' a.remove_field').click(function(e) {remove_field(e); return false;});
+    $(FIELD_SELECTS_SELECTOR + ' a.remove_field').unbind('click');
+    $(FIELD_SELECTS_SELECTOR + ' a.remove_field').click(function(e) {console.log("CLICKED"); remove_field(e); return false;});
+    $(FIELD_SELECTS_SELECTOR + ' select').unbind('change');
     $(FIELD_SELECTS_SELECTOR + ' select').change(function(){form_changed("fields");})
   }
   
@@ -131,7 +133,7 @@
     
     if (src == "aggregation" || src == "fields" || src == "_all") {
       
-      // remove other boxes if not an list and first box is attrib or qtype
+      // remove other boxes if not a list and first box is attrib or qtype
       var not_list_and_first_is_attrib_or_qtype = agg != "List" && $(FIELD_SELECTS_SELECTOR + " select").val().match(/^(attrib|qtype)_/)
       if (not_list_and_first_is_attrib_or_qtype)
         $(FIELD_SELECTS_SELECTOR + " div").each(function (i, div){if (i != 0) $(div).remove()});

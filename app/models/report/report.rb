@@ -72,7 +72,7 @@ class Report::Report < ActiveRecord::Base
         fields.build(subd)
       # if subd isn't there, delete the original
       elsif subd.nil?
-        fields.delete(orig)
+        fields.destroy(orig)
       end
       # (if both exist, we don't need to do anything)
     end

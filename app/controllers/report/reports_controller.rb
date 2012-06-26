@@ -53,7 +53,11 @@ class Report::ReportsController < ApplicationController
       @dont_print_title = true
       unless @report.new_record?
         @report.record_viewing
-        @report.run
+        begin
+          @report.run
+        rescue Report::ReportError
+          @report.errors.add(:base, $!.to_s)
+        end
       end
       @js << "report_reports_show"
       render(:show)
