@@ -110,7 +110,7 @@
   // ensures the appropriate events are hooked up for all field dropdowns
   function hookup_field_events() {
     $(FIELD_SELECTS_SELECTOR + ' a.remove_field').unbind('click');
-    $(FIELD_SELECTS_SELECTOR + ' a.remove_field').click(function(e) {console.log("CLICKED"); remove_field(e); return false;});
+    $(FIELD_SELECTS_SELECTOR + ' a.remove_field').click(function(e) {remove_field(e); return false;});
     $(FIELD_SELECTS_SELECTOR + ' select').unbind('change');
     $(FIELD_SELECTS_SELECTOR + ' select').change(function(){form_changed("fields");})
   }

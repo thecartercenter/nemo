@@ -131,6 +131,7 @@ class Report::Report < ActiveRecord::Base
             @data[r][c] = aggregation.cast_result_value(value, fieldlet)
           end
         end
+        Rails.logger.debug(@data[0][0].class)
     
       # all other reports
       else

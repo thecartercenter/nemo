@@ -22,9 +22,9 @@ class Report::ResponseAttribute < ActiveRecord::Base
       :data_type => "text", :join_tables => "localities", :groupable => true)
     seed(:name, :name => "Time Observed", :code => "responses.observed_at",
       :data_type => "datetime")
-    seed(:name, :name => "Date Observed", :code => "DATE(responses.observed_at)", 
+    seed(:name, :name => "Date Observed", :code => "DATE_FORMAT(DATE(responses.observed_at), '%Y-%m-%d')", 
       :data_type => "date", :groupable => true)
-    seed(:name, :name => "Date Submitted", :code => "DATE(responses.created_at)", 
+    seed(:name, :name => "Date Submitted", :code => "DATE_FORMAT(DATE(responses.created_at), '%Y-%m-%d')", 
       :data_type => "date", :groupable => true)
     seed(:name, :name => "Reviewed", :code => "if(responses.reviewed, 'Yes', 'No')", 
       :data_type => "text", :groupable => true)

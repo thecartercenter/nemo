@@ -42,7 +42,7 @@ class Report::Aggregation < ActiveRecord::Base
       obj
     # for sum, min, and max, it depends on the field type
     else
-      # for attrib type fields, it should already be casted properly
+      # for attrib type fields, it should already be casted properly, unless it's a time/date
       if fieldlet.is_a?(Report::ResponseAttribute)
         obj
       # for question type fields, it depends on the question type
