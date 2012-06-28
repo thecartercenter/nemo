@@ -134,6 +134,10 @@ function redirect_to_login() {
     if (params.hide_after)
       setTimeout(Utils.clear_flash, params.hide_after * 1000);
   }
+  
+  Utils.clear_success_flash_after_delay = function() {
+    setTimeout(function(){$(".success").remove();}, 5000);
+  }
 
   Utils.clear_flash = function(params) {
     $(".success").remove();
