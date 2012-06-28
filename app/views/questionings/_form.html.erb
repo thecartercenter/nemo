@@ -1,6 +1,6 @@
 <% content_for(:per_page_js){javascript_include_tag("questionings")} %>
 
-<%= flash_and_form_errors(qing).gsub("Question base", "Question").gsub("Question C", "Question c") %>
+<%= flash_and_form_errors(qing).gsub("Question base", "Question").gsub("Question C", "Question c").html_safe %>
 <%= form_for(qing) do |f| %>
   <% f.mode = controller.action_name.to_sym %>
   <%= f.hidden_field(:form_id) %>
