@@ -29,7 +29,7 @@ class Question < ActiveRecord::Base
   has_many(:forms, :through => :questionings)
 
   validates(:code, :presence => true, :uniqueness => true)
-  validates(:code, :format => {:with => /^[a-z][a-z0-9 ]{1,19}$/i}, :if => Proc.new{|q| !q.code.blank?})
+  validates(:code, :format => {:with => /^[a-z][a-z0-9]{1,19}$/i}, :if => Proc.new{|q| !q.code.blank?})
   validates(:type, :presence => true)
   validates(:option_set_id, :presence => true, :if => Proc.new{|q| q.is_select?})
   validates(:english_name, :presence => true)
