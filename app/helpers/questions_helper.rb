@@ -17,7 +17,7 @@
 module QuestionsHelper
   def format_questions_field(q, field)
     case field
-    when "name" then q.name_eng
+    when "title" then q.name_eng
     when "type" then q.type.long_name
     when "published?" then q.published? ? "Yes" : "No"
     when "actions"
@@ -29,7 +29,7 @@ module QuestionsHelper
   
   def questions_index_fields
     choose_mode = controller.action_name == "choose"
-    %w[code name type] + (choose_mode ? [] : %w[published? actions])
+    %w[code title type] + (choose_mode ? [] : %w[published? actions])
   end
   
   def questions_index_links(questions)

@@ -110,7 +110,7 @@ form.new_place td.value { min-width: 400px; }
 /* question show/edit */
 .questionings_edit textarea.name_hint, .questionings_new textarea.name_hint,
 .questions_edit textarea.name_hint, .questions_new textarea.name_hint 
-  { width: 450px; height: 60px; }
+  { width: 450px; height: 30px; }
 .questionings_show td.value, .questions_show td.value { width: 300px; }
 .questionings_edit #questioning_condition_value_box, .questionings_new #questioning_condition_value_box { width: 150px; }
 .questionings_show tr#condition_row td.value .dummy { display: inline; }

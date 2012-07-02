@@ -1,0 +1,21 @@
+<% unless lang.is_english? %>
+  <tr>
+    <td colspan="3">
+      <h3><%= lang.name %> Title &amp; Hint</h3>
+    </td>
+  </tr>
+<% end %>
+<tr>
+  <td class="name">Title <% if lang.is_english? %><%= reqd_sym %><% end %></td>
+  <td class="value"><%= f.text_area("name_#{lang.code}", :class => "name_hint") %></td>
+  <td class="details">
+    <% if lang.is_english? %>The main question text, e.g. "How many people are in line?"<% end %>
+  </td>
+</tr>
+<tr>
+  <td class="name">Hint</td>
+  <td class="value"><%= f.text_area("hint_#{lang.code}", :class => "name_hint") %></td>
+  <td class="details">
+    <% if lang.is_english? %>Additional instructions, e.g. "Enter an approximate count of the people waiting to vote."<% end %>
+  </td>
+</tr>
