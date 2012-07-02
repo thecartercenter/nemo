@@ -6,15 +6,6 @@ namespace :db do
       # generate all permanent, mandatory seeds
       to_seed = [Language, Role, Settable, FormType, QuestionType, PlaceType, Report::ResponseAttribute, Report::Aggregation]
       to_seed.each{|c| c.generate}
-      
-      # generate initial superuser
-      unless User.find_by_role_id(Role.highest.id)
-        User.ignore_blank_passwords = true
-        User.seed(:login, :login => "super", :name => "Super User", :login => "super",
-          :email => "webmaster@cceom.org", :role => Role.highest, :active => true, 
-          :language => Language.english, :password => "changeme", :password_confirmation => "changeme")
-        User.ignore_blank_passwords = false
-      end
     end
   end
 end
