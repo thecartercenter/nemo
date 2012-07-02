@@ -1,55 +1,76 @@
-function form_recalc_ranks(box) {
-  // get the clicked row and table body
-  var clicked_row = box.parentNode.parentNode.parentNode;
-  var tbody = clicked_row.parentNode;
-  
-  // get all the rows
-  var rows = form_get_rows(tbody);
-  
-  // get the new and old ranks
-  var old_rank = rows.indexOf(clicked_row) + 1;
-  var new_rank = isNaN(parseInt(box.value)) ? old_rank : Math.max(1, Math.min(rows.length, parseInt(box.value)));
-
-  // if ranks have changed, move rows
-  if (old_rank != new_rank) {
-    // get the new_rankth row in the table
-    var target_row = rows[new_rank-1];
-    
-    // remove the clicked row
-    tbody.removeChild(clicked_row);
-  
-    // insert the row above/beneath the target row
-    if (new_rank < old_rank)
-      tbody.insertBefore(clicked_row, target_row);
-    else
-      tbody.insertBefore(clicked_row, target_row.nextSibling);
-    
-    // get the updated rows
-    rows = form_get_rows(tbody);
-  }
-    
-  // fix numbers
-  for (var i = 0; i < rows.length; i++)
-    rows[i].firstChild.nextSibling.nextSibling.nextSibling.firstChild.nextSibling.firstChild.value = i + 1;
-  
-  // restore the focus
-  box.focus()
-}
-
-function form_get_rows(tbody) {
-  var rows = [];
-  for (var i = 0; i < tbody.childNodes.length; i++)
-    if (tbody.childNodes[i].tagName == "TR")
-      rows.push(tbody.childNodes[i]);
-  return rows;
-}
-
-function form_submit_ranks(form_id) {
-  $('#batch_form')[0].action = "/forms/" + form_id + "/update_ranks";
-  $('#batch_form')[0].submit();
-}
-
 (function (Form, undefined) {
+  
+  // private flag var for reminding to save
+  var ranks_changed = false;
+  
+  Form.hookup_rank_boxes = function() {
+    // hookup boxes themselves
+    $("input.rank_box").change(Form.recalc_ranks);
+    
+    // hookup save button
+    $("input#save_ranks_button").click(Form.submit_ranks);
+    
+    // hookup unsaved check
+    $(window).bind('beforeunload', function() {
+      if (ranks_changed)
+        return 'You have not yet saved the changes you made to the question order. ' + 
+          'You should click the \'Save Ranks\' button if you want to save these changes.';
+    });
+  }
+  
+  Form.recalc_ranks = function(e) {
+    // get the clicked row and table body
+    var changed_box = e.target;
+    var clicked_row = e.target.parentNode.parentNode.parentNode;
+    var tbody = clicked_row.parentNode;
+
+    // get all the rows
+    var rows = $(tbody).children("tr");
+
+    // get the new and old ranks
+    var old_rank = $.inArray(clicked_row, rows) + 1;
+    var new_rank = isNaN(parseInt(changed_box.value)) ? old_rank : Math.max(1, Math.min(rows.length, parseInt(changed_box.value)));
+    
+    // if ranks have changed, move rows
+    if (old_rank != new_rank) {
+      
+      // set flag
+      ranks_changed = true;
+      
+      // get the new_rankth row in the table
+      var target_row = rows[new_rank-1];
+
+      // remove the clicked row
+      tbody.removeChild(clicked_row);
+
+      // insert the row above/beneath the target row
+      if (new_rank < old_rank)
+        tbody.insertBefore(clicked_row, target_row);
+      else
+        tbody.insertBefore(clicked_row, target_row.nextSibling);
+
+      // get the updated rows
+      rows = $(tbody).children("tr");
+    }
+
+    // update numbers
+    var boxes = $("input.rank_box");
+    for (var i = 0; i < boxes.length; i++) boxes[i].value = i + 1;
+
+    // restore the focus
+    changed_box.focus()
+  }
+  
+  Form.submit_ranks = function(form_id) {
+    // unset flag so that beforeunload event is not triggered
+    ranks_changed = false;
+    
+    // set batch form path and submit
+    var batch_form = $('#batch_form')[0]
+    batch_form.action = window.location.href.replace(/\/edit$/, "/update_ranks")
+    batch_form.submit();
+  }
+  
   Form.print = function(form_id) {
     // show appropriate loading indicator
     $('#index_table_loading_indicator_' + form_id).show();
@@ -73,3 +94,5 @@ function form_submit_ranks(form_id) {
 
   }
 }(Form = {}));
+
+$(document).ready(Form.hookup_rank_boxes);

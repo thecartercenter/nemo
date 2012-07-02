@@ -30,6 +30,6 @@ end
   <h2>Questions on this Form</h2>
   <%= index_table(Questioning, form.questionings) %>
   <% if form.questionings.size > 0 && controller.action_name == "edit" %>
-    <%= button_to_function("Save Ranks", "form_submit_ranks(#{form.id})", :id => "save_ranks_button") %>
+    <%= button_to_function("Save Ranks", "null", :id => "save_ranks_button") %>
   <% end %>
 <% end %>

@@ -17,10 +17,7 @@
 module QuestioningsHelper
   def format_questionings_field(qing, field)
     case field
-    when "rank"
-      controller.action_name == "show" ? 
-        qing.rank : 
-        text_field_tag("rank[#{qing.id}]", qing.rank, :onchange => "form_recalc_ranks(this)")
+    when "rank" then controller.action_name == "show" ? qing.rank : text_field_tag("rank[#{qing.id}]", qing.rank, :class => "rank_box")
     when "code", "title", "type" then format_questions_field(qing.question, field)
     when "condition?" then qing.has_condition? ? "Yes" : "No"
     when "required?", "hidden?" then qing.send(field) ? "Yes" : "No"
