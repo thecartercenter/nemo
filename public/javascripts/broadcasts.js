@@ -1,9 +1,9 @@
 function broadcast_medium_changed() {
   var select = $('#broadcast_medium')[0];
-  var sms = select.options[select.selectedIndex].value != "email";
+  var sms_possible = select.options[select.selectedIndex].value != "email_only";
 
   // hide/show char limit and subject
-  if (sms) {
+  if (sms_possible) {
     $('#char_limit').show();
     $('#which_phone_row').show();
     broadcast_update_char_limit();

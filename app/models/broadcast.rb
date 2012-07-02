@@ -20,18 +20,20 @@ class Broadcast < ActiveRecord::Base
   
   validates(:recipients, :presence => true)
   validates(:medium, :presence => true)
-  validates(:subject, :presence => true, :if => Proc.new{|b| b.by_email?})
-  validates(:which_phone, :presence => true, :if => Proc.new{|b| b.by_sms? || by_both?})
+  validates(:subject, :presence => true, :if => Proc.new{|b| !b.sms_possible?})
+  validates(:which_phone, :presence => true, :if => Proc.new{|b| b.sms_possible?})
   validates(:body, :presence => true)
-  validates(:body, :length => {:maximum => 140}, :if => Proc.new{|b| !b.by_email?})
+  validates(:body, :length => {:maximum => 140}, :if => Proc.new{|b| b.sms_possible?})
   
   before_create(:deliver)
   
   default_scope(includes(:recipients).order("created_at DESC"))
     
   def self.medium_select_options
-    [["SMS preferred (email if user has no phone)", "sms"],
-     ["Email only", "email"],
+    [["SMS preferred (use email if a recipient has no phone)", "sms"],
+     ["Email preferred (use SMS if a recipient has no email)", "email"],
+     ["SMS only (don't send any emails)", "sms_only"],
+     ["Email only (don't send any SMSes)", "email_only"],
      ["Both SMS and email", "both"]]
   end
 
@@ -47,17 +49,19 @@ class Broadcast < ActiveRecord::Base
   def recipient_ids=(ids)
     self.recipients = ids.split(",").collect{|id| User.find_by_id(id)}.compact
   end
-  def by_sms?; medium == "sms"; end
-  def by_email?; medium == "email"; end
-  def by_both?; medium == "both"; end
+  
+  def sms_possible?
+    medium != "email_only"
+  end
+  
+  def email_possible?
+    medium != "sms_only"
+  end
   
   def deliver
     # sort recipients into email and sms
     smsees, emailees = sort_recipients
-    # no sms recipients if email only
-    smsees = [] if by_email?
-    # everyone gets an email if email or both
-    emailees = recipients unless by_sms?
+    
     # send emails
     begin
       BroadcastMailer.broadcast(emailees, subject, body).deliver unless emailees.empty?
@@ -81,7 +85,13 @@ class Broadcast < ActiveRecord::Base
   def sort_recipients
     sms = []
     email = []
-    recipients.each{|r| r.can_get_sms? ? sms << r : email << r}
+    recipients.each do |r| 
+      # send sms if recipient can get sms, medium is not email_only, and medium is not email (if r can get email)
+      sms << r if r.can_get_sms? && medium != "email_only" && !(medium == "email" && r.can_get_email?)
+      
+      # same logic for email
+      email << r if r.can_get_email? && medium != "sms_only" && !(medium == "sms" && r.can_get_sms?)
+    end
     [sms, email]
   end
       

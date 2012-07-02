@@ -31,6 +31,10 @@ class User < ActiveRecord::Base
     c.disable_perishable_token_maintenance = true
     c.logged_in_timeout(60.minutes)
     c.validates_format_of_login_field_options = {:with => /[\a-zA-Z0-9\.]+/, :message => "can only contain letters, numbers, or '.'"}
+    
+    # email is not mandatory, but must be valid if given
+    c.merge_validates_format_of_email_field_options(:allow_blank => true)
+    c.merge_validates_uniqueness_of_email_field_options(:unless => Proc.new{|u| u.email.blank?})
   end
   
   validates(:name, :presence => true)
@@ -38,6 +42,7 @@ class User < ActiveRecord::Base
   validates(:language_id, :presence => true)
   validate(:phone_length_or_empty)
   validate(:must_have_password_reset_on_create)
+  validate(:password_reset_cant_be_email_if_no_email)
   
   default_scope(includes(:language, :role).order("users.name"))
   scope(:active_english, includes(:language).where(:active => true).where("languages.code" => "eng"))
@@ -124,10 +129,14 @@ class User < ActiveRecord::Base
     end
   end
   def to_vcf
-    "BEGIN:VCARD\nVERSION:3.0\nFN:#{name}\nEMAIL:#{email}\n" +
-    (phone ? "TEL;TYPE=CELL:#{phone}\n" : "") + "END:VCARD"
+    "BEGIN:VCARD\nVERSION:3.0\nFN:#{name}\n" + 
+    (email ? "EMAIL:#{email}\n" : "") +
+    (phone ? "TEL;TYPE=CELL:#{phone}\n" : "") + 
+    (phone2 ? "TEL;TYPE=CELL:#{phone2}\n" : "") + 
+    "END:VCARD"
   end
   def can_get_sms?; !(phone.blank? && phone2.blank?) end
+  def can_get_email?; !email.blank?; end
   
   def is_observer?; role ? role.is_observer? : false; end
   def is_admin?; role ? role.is_admin? : false; end
@@ -156,6 +165,13 @@ class User < ActiveRecord::Base
     def must_have_password_reset_on_create
       if new_record? && password.blank? && reset_password_method == "dont"
         errors.add(:base, "You must choose a password creation method")
+      end
+    end
+    
+    def password_reset_cant_be_email_if_no_email
+      if reset_password_method == "email" && email.blank?
+        verb = new_record? ? "send" : "reset"
+        errors.add(:base, "You can't #{verb} password by email because you didn't specify an email address.")
       end
     end
 end

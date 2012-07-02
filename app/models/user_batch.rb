@@ -6,7 +6,6 @@ class UserBatch < ActiveRecord::Base
     transaction do
       users.each do |u|
         name, email, phone = u.split(",").collect{|x| x.strip}
-        Rails.logger.debug("***" + email)
         user = User.new_with_login_and_password(:name => name, :email => email, :phone => phone,
           :role_id => Role.lowest.id, :language_id => Language.english.id, :login => User.suggest_login(name),
           :active => true)

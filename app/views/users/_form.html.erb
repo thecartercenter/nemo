@@ -18,7 +18,6 @@
       :value => f.select(:role_id, Role.select_options, :include_blank => true)
     },{
       :col => :email,
-      :required => true,
       :value => f.text_field(:email)
     },{
       :col => :device,
@@ -81,3 +80,4 @@
   spec
 end
 %>
+<br/>
