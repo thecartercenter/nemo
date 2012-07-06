@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120706193519) do
+ActiveRecord::Schema.define(:version => 20120706201054) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -310,7 +310,6 @@ ActiveRecord::Schema.define(:version => 20120706193519) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "login_count",         :default => 0
-    t.string   "device"
     t.text     "notes"
     t.datetime "last_request_at"
     t.string   "name"
