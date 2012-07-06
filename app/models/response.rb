@@ -71,7 +71,7 @@ class Response < ActiveRecord::Base
       Search::Qualifier.new(:label => "submitter", :col => "users.name", :assoc => :users, :partials => true),
       Search::Qualifier.new(:label => "answer", :col => "answers.value", :assoc => :answers, :partials => true, :default => true),
       Search::Qualifier.new(:label => "source", :col => "responses.source"),
-      Search::Qualifier.new(:label => "date", :col => "DATE(responses.observed_at)")
+      Search::Qualifier.new(:label => "date", :col => "DATE(CONVERT_TZ(responses.observed_at, 'UTC', '#{Time.zone.mysql_name}'))")
     ]
   end
   

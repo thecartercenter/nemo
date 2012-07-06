@@ -90,8 +90,8 @@ class Report::MaxReportTest < ActiveSupport::TestCase
     set_eastern_timezone
     
     # create question and two responses
-    create_response(:observed_at => Time.parse("2012-01-01 17:00:00 UTC"))
-    create_response(:observed_at => Time.parse("2012-01-01 18:30:00 UTC"))
+    create_response(:observed_at => Time.zone.parse("2012-01-01 12:00:00"))
+    create_response(:observed_at => Time.zone.parse("2012-01-01 13:30:00"))
     
     # create report and set to average
     r = create_report(:agg => "Maximum",

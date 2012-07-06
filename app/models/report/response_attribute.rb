@@ -22,9 +22,9 @@ class Report::ResponseAttribute < ActiveRecord::Base
       :data_type => "text", :join_tables => "localities", :groupable => true)
     seed(:name, :name => "Time Observed", :code => "responses.observed_at",
       :data_type => "datetime")
-    seed(:name, :name => "Date Observed", :code => "DATE_FORMAT(DATE(responses.observed_at), '%Y-%m-%d')", 
+    seed(:name, :name => "Date Observed", :code => "DATE(CONVERT_TZ(responses.observed_at, 'UTC', '%CURRENT_TIMEZONE%'))", 
       :data_type => "date", :groupable => true)
-    seed(:name, :name => "Date Submitted", :code => "DATE_FORMAT(DATE(responses.created_at), '%Y-%m-%d')", 
+    seed(:name, :name => "Date Submitted", :code => "DATE(CONVERT_TZ(responses.created_at, 'UTC', '%CURRENT_TIMEZONE%'))", 
       :data_type => "date", :groupable => true)
     seed(:name, :name => "Reviewed", :code => "if(responses.reviewed, 'Yes', 'No')", 
       :data_type => "text", :groupable => true)
@@ -32,7 +32,8 @@ class Report::ResponseAttribute < ActiveRecord::Base
   
   # returns the sql fragment for the select clause
   def to_sql
-    code
+    # we must convert the timezone before using the DATE function
+    code.gsub("%CURRENT_TIMEZONE%", Time.zone.mysql_name)
   end
   
   def has_timezone?
