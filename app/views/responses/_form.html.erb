@@ -14,11 +14,9 @@
         :label => "Submitter",
         :required => true,
         :value => f.select(:user_id, User.select_options, :include_blank => true),
-      },{
-        :col => :source,
-        :label => "Source",
-        :value => content_tag("strong"){resp.source},
-      },{
+      },
+      (f.mode == :show ? {:col => :source, :label => "Source", :value => content_tag("strong"){resp.source}} : nil),
+      {
         :col => :observed_at_str,
         :label => "Observation Time",
         :required => true,
@@ -37,7 +35,7 @@
         :value => f.mode == :show ? 
           content_tag("div", :class => "dummy"){resp.reviewed? ? "Yes" : "No"} : 
           f.check_box(:reviewed?)
-      }]
+      }].compact
     },{
       :contents => answers_subform(resp.all_answers)
     }],
