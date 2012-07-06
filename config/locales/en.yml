@@ -2,17 +2,6 @@
 # See http://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
 
 en:
-  time:
-    formats:
-      std_datetime: %Y-%m-%d %H:%M
-      std_date: %Y-%m-%d
-      std_time: %H:%M
-      db_datetime: %Y-%m-%d %T
-      db_date: %Y-%m-%d
-      db_time: %T
-      javarosa_datetime: %Y-%m-%dT%H:%M:%S
-      javarosa_date: %Y-%m-%d
-      javarosa_time: %H:%M:%S
   activerecord:
     models:
       report/report: Report

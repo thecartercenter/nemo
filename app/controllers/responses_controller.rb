@@ -59,7 +59,7 @@ class ResponsesController < ApplicationController
         
         @responses = Response.for_export(rel)
         # render the csv
-        render_csv("responses-#{Time.zone.now.strftime('%Y-%m-%d-%H%M')}")
+        render_csv("responses-#{Time.zone.now.to_s(:filename_datetime)}")
       end
     end
   end

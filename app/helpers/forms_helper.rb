@@ -27,7 +27,7 @@ module FormsHelper
     case field
     when "type" then form.type.name
     when "questions" then form.questions.size
-    when "last_modified" then form.updated_at.strftime("%Y-%m-%d %l:%M%p")
+    when "last_modified" then form.updated_at.to_s(:std_datetime)
     when "responses"
       form.responses.size == 0 ? 0 :
         link_to(form.responses.size, start_search_searches_path(:str => "formname:\"#{form.name}\"", :class_name => "Response"))

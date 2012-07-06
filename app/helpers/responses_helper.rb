@@ -20,8 +20,8 @@ module ResponsesHelper
   end
   def format_responses_field(resp, field)
     case field
-    when "observation_time" then resp.observed_at && resp.observed_at.strftime("%Y-%m-%d %l:%M%p") || ""
-    when "submission_time" then resp.created_at && resp.created_at.strftime("%Y-%m-%d %l:%M%p") || ""
+    when "observation_time" then resp.observed_at && resp.observed_at.to_s(:std_datetime) || ""
+    when "submission_time" then resp.created_at && resp.created_at.to_s(:std_datetime) || ""
     when "age" then resp.created_at && time_ago_in_words(resp.created_at).gsub("about ", "") || ""
     when "reviewed?" then resp.reviewed? ? "Yes" : "No"
     when "place" then resp.place ? truncate(resp.place.full_name, :length => 40) : ""

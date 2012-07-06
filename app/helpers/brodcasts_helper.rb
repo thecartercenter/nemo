@@ -28,7 +28,7 @@ module BrodcastsHelper
     when "to" then "#{broadcast.recipients.count} users"
     when "medium" then broadcast.medium.capitalize
     when "message" then truncate(broadcast.body, :length => 100)
-    when "sent_at" then broadcast.created_at.strftime("%Y-%m-%d %l:%M%p")
+    when "sent_at" then broadcast.created_at.to_s(:std_datetime)
     when "errors?" then broadcast.send_errors.blank? ? "No" : "Yes"
     when "actions" then action_links(broadcast, :exclude => [:edit, :destroy])
     else broadcast.send(field)

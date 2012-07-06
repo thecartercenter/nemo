@@ -34,7 +34,7 @@ class Report::Aggregation < ActiveRecord::Base
     # if fieldlet is a datetime, need to adjust timezone
     if fieldlet && fieldlet.temporal?
       t = Time.zone.parse(obj.to_s + (fieldlet.has_timezone? ? " UTC" : ""))
-      obj = I18n.l(t, :format => :"std_#{fieldlet.data_type}")
+      obj = t.to_s(:"std_#{fieldlet.data_type}")
     else
       # for a tally report, the result will be a string and should be an integer
       if is_tally?

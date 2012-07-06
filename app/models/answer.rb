@@ -45,7 +45,7 @@ class Answer < ActiveRecord::Base
       val = Time.zone.parse(str)
       
       # convert the parsed time to the appropriate database format unless question is timezone sensitive
-      val = I18n.l(val, :format => :"db_#{ans.question_type_name}") unless ans.question.type.has_timezone?
+      val = val.to_s(:"db_#{ans.question_type_name}") unless ans.question.type.has_timezone?
       
       # assign the value
       ans.send("#{ans.question_type_name}_value=", val)
