@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120702172029) do
+ActiveRecord::Schema.define(:version => 20120706193519) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -228,10 +228,9 @@ ActiveRecord::Schema.define(:version => 20120702172029) do
     t.integer  "form_id"
     t.integer  "user_id"
     t.integer  "place_id"
-    t.datetime "observed_at"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "reviewed",    :default => false
+    t.boolean  "reviewed",   :default => false
     t.string   "source"
   end
 

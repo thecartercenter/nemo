@@ -17,13 +17,6 @@
       },
       (f.mode == :show ? {:col => :source, :label => "Source", :value => content_tag("strong"){resp.source}} : nil),
       {
-        :col => :observed_at_str,
-        :label => "Observation Time",
-        :required => true,
-        :value => f.text_field(:observed_at_str),
-        :details => "Enter the date and time of the observation. Include the timezone offset if needed.<br/>
-          e.g. 2003-01-24 12:34PM +0300."
-      },{
         :col => :place_id,
         :label => "Place",
         :value => place_field(f),

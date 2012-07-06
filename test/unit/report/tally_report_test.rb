@@ -36,11 +36,11 @@ class Report::TallyReportTest < ActiveSupport::TestCase
   test "grouped by date" do
     set_eastern_timezone
     # create responses so that the day of some of them will change across timezones
-    2.times{create_response(:observed_at => Time.parse("2012-01-02 2:00:00 UTC"))}
-    create_response(:observed_at => Time.parse("2012-01-02 6:00:00 UTC"))
+    2.times{create_response(:created_at => Time.parse("2012-01-02 2:00:00 UTC"))}
+    create_response(:created_at => Time.parse("2012-01-02 6:00:00 UTC"))
 
     r = create_report(:agg => "Tally")
-    r.pri_grouping = Report::ByAttribGrouping.create(:attrib => Report::ResponseAttribute.find_by_name("Date Observed"))
+    r.pri_grouping = Report::ByAttribGrouping.create(:attrib => Report::ResponseAttribute.find_by_name("Date Submitted"))
     
     # results should be split across two days
     assert_report(r, %w(Tally), %w(2012-01-01 2), %w(2012-01-02 1))

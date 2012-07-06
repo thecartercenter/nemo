@@ -90,12 +90,12 @@ class Report::MaxReportTest < ActiveSupport::TestCase
     set_eastern_timezone
     
     # create question and two responses
-    create_response(:observed_at => Time.zone.parse("2012-01-01 12:00:00"))
-    create_response(:observed_at => Time.zone.parse("2012-01-01 13:30:00"))
+    create_response(:created_at => Time.zone.parse("2012-01-01 12:00:00"))
+    create_response(:created_at => Time.zone.parse("2012-01-01 13:30:00"))
     
     # create report and set to average
     r = create_report(:agg => "Maximum",
-     :fields => [Report::Field.new(:attrib => Report::ResponseAttribute.find_by_name("Time Observed"))])
+     :fields => [Report::Field.new(:attrib => Report::ResponseAttribute.find_by_name("Time Submitted"))])
     
     # date should be in string format in the correct timezone
     assert_report(r, %w(Maximum), ["Maximum", "2012-01-01 13:30"])

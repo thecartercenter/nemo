@@ -4,7 +4,6 @@
     <model>
       <instance>
         <data id="<%= @form.id %>">
-          <startstamp/>
           <% @form.visible_questionings.each do |q| %>
             <%= tag(q.question.odk_code) %>
           <% end %>
@@ -29,7 +28,6 @@
           </translation>
         <% end %>
       </itext>
-      <bind nodeset="/data/startstamp" type="dateTime" jr:preload="timestamp" jr:preloadParams="start"/>
       <% @form.visible_questionings.each do |q| %>
         <%= tag("bind", {
             'nodeset' => "/data/#{q.question.odk_code}",

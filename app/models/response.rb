@@ -31,7 +31,6 @@ class Response < ActiveRecord::Base
   # we turn off validate above and do it here so we can control the message and have only one message
   # regardless of how many answer errors there are
   validates(:user, :presence => true)
-  validates(:observed_at, :presence => true)
   validate(:no_missing_answers)
 
   # only need to validate answers in web mode
@@ -71,7 +70,7 @@ class Response < ActiveRecord::Base
       Search::Qualifier.new(:label => "submitter", :col => "users.name", :assoc => :users, :partials => true),
       Search::Qualifier.new(:label => "answer", :col => "answers.value", :assoc => :answers, :partials => true, :default => true),
       Search::Qualifier.new(:label => "source", :col => "responses.source"),
-      Search::Qualifier.new(:label => "date", :col => "DATE(CONVERT_TZ(responses.observed_at, 'UTC', '#{Time.zone.mysql_name}'))")
+      Search::Qualifier.new(:label => "date", :col => "DATE(CONVERT_TZ(responses.created_at, 'UTC', '#{Time.zone.mysql_name}'))")
     ]
   end
   
@@ -94,14 +93,8 @@ class Response < ActiveRecord::Base
     # loop over each child tag and create hash of question_code => value
     values = {}; doc.root.children.each{|c| values[c.name] = c.first? ? c.first.content : nil}
     
-    # set the observe time if it's available
-    if time = values.delete('startstamp')
-      resp.observed_at = Time.zone.parse(time)
-    end
-    
     # loop over all the questions in the form and create answers
     place_bits = {}
-    start_time = nil
     qings.each do |qing|
       # get value from hash
       str = values[qing.question.odk_code]
@@ -159,11 +152,6 @@ class Response < ActiveRecord::Base
     @answer_hash ||= Hash[*answers.collect{|a| [a.questioning, a]}.flatten]
   end
   
-  def observed_at_str; observed_at ? observed_at.strftime("%F %l:%M%p %z").gsub("  ", " ") : nil; end
-  def observed_at_str=(t)
-    self.observed_at = begin Time.zone.parse(t) rescue nil end
-  end
-  
   def form_name; form ? form.name : nil; end
   def submitter; user ? user.name : nil; end
   
@@ -208,7 +196,7 @@ class Response < ActiveRecord::Base
     def self.export_sql(rel)
       # add all the selects
       rel = rel.select("responses.id AS response_id")
-      rel = rel.select("responses.observed_at AS observation_time")
+      rel = rel.select("responses.created_at AS submission_time")
       rel = rel.select("responses.reviewed AS is_reviewed")
       rel = rel.select("forms.name AS form_name")
       rel = rel.select("form_types.name AS form_type")

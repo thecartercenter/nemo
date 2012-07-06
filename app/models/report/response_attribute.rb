@@ -20,14 +20,15 @@ class Report::ResponseAttribute < ActiveRecord::Base
       :data_type => "text", :groupable => true)
     seed(:name, :name => "Locality", :code => "localities.long_name", 
       :data_type => "text", :join_tables => "localities", :groupable => true)
-    seed(:name, :name => "Time Observed", :code => "responses.observed_at",
+    seed(:name, :name => "Time Submitted", :code => "responses.created_at",
       :data_type => "datetime")
-    seed(:name, :name => "Date Observed", :code => "DATE(CONVERT_TZ(responses.observed_at, 'UTC', '%CURRENT_TIMEZONE%'))", 
-      :data_type => "date", :groupable => true)
     seed(:name, :name => "Date Submitted", :code => "DATE(CONVERT_TZ(responses.created_at, 'UTC', '%CURRENT_TIMEZONE%'))", 
       :data_type => "date", :groupable => true)
     seed(:name, :name => "Reviewed", :code => "if(responses.reviewed, 'Yes', 'No')", 
       :data_type => "text", :groupable => true)
+
+    unseed(:name, "Date Observed")
+    unseed(:name, "Time Observed")
   end
   
   # returns the sql fragment for the select clause
