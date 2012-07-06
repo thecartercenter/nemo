@@ -5,8 +5,8 @@
   var FIELD_SELECTS_SELECTOR = "#report_form #fields #field_dropdowns"
   var ALLOWED_DATA_TYPES_PER_AGGREGATION = {
     "Average": ["integer", "decimal"],
-    "Minimum": ["integer", "decimal", "text"],
-    "Maximum": ["integer", "decimal", "text"],
+    "Minimum": ["integer", "decimal", "text", "datetime", "date", "time"],
+    "Maximum": ["integer", "decimal", "text", "datetime", "date", "time"],
     "Sum": ["integer", "decimal"]
   }
   var HELP_WIDTH = 200;

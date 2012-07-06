@@ -34,7 +34,7 @@ class Report::QuestionWrapper
       # add the group by if necessary
       rel = rel.group(expr) if options[:group]
     else
-      rel = rel.select("a#{sfx}.value AS `#{sql_col_name}`").
+      rel = rel.select("IFNULL(a#{sfx}.value, IFNULL(a#{sfx}.datetime_value, IFNULL(a#{sfx}.date_value, a#{sfx}.time_value))) AS `#{sql_col_name}`").
         joins("LEFT JOIN answers a#{sfx} ON responses.id = a#{sfx}.response_id AND a#{sfx}.questioning_id IN (#{qing_ids})")
     end
     rel
@@ -46,6 +46,18 @@ class Report::QuestionWrapper
   
   def header
     {:name => @question.code, :value => @question.code, :key => sql_col_name, :fieldlet => self}
+  end
+  
+  def has_timezone?
+    question.type.has_timezone?
+  end
+  
+  def temporal?
+    question.type.temporal?
+  end
+  
+  def data_type
+    question.type.name
   end
   
   private

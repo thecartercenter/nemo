@@ -31,6 +31,9 @@ class QuestionType < ActiveRecord::Base
     seed(:name, :name => "address", :long_name => "Address/Landmark", :odk_name => "string", :odk_tag => "input")
     seed(:name, :name => "select_one", :long_name => "Select One", :odk_name => "select1", :odk_tag => "select1")
     seed(:name, :name => "select_multiple", :long_name => "Select Multiple", :odk_name => "select", :odk_tag => "select")
+    seed(:name, :name => "datetime", :long_name => "Date+Time", :odk_name => "dateTime", :odk_tag => "input")
+    seed(:name, :name => "date", :long_name => "Date", :odk_name => "date", :odk_tag => "input")
+    seed(:name, :name => "time", :long_name => "Time", :odk_name => "time", :odk_tag => "input")
   end
   
   def self.select_options
@@ -45,5 +48,13 @@ class QuestionType < ActiveRecord::Base
   
   def qing_ids
     questions.collect{|q| q.qing_ids}.flatten
+  end
+  
+  def has_timezone?
+    name == "datetime"
+  end
+  
+  def temporal?
+    %w(datetime date time).include?(name)
   end
 end

@@ -71,7 +71,7 @@ class Response < ActiveRecord::Base
       Search::Qualifier.new(:label => "submitter", :col => "users.name", :assoc => :users, :partials => true),
       Search::Qualifier.new(:label => "answer", :col => "answers.value", :assoc => :answers, :partials => true, :default => true),
       Search::Qualifier.new(:label => "source", :col => "responses.source"),
-      Search::Qualifier.new(:label => "date", :col => "DATE(responses.observed_at + INTERVAL #{Time.zone.utc_offset} SECOND)")
+      Search::Qualifier.new(:label => "date", :col => "DATE(responses.observed_at)")
     ]
   end
   
@@ -227,6 +227,9 @@ class Response < ActiveRecord::Base
       rel = rel.select("concat(places.latitude, ',', places.longitude) AS latitude_longitude")
       rel = rel.select("answers.id AS answer_id")
       rel = rel.select("answers.value AS answer_value")
+      rel = rel.select("answers.datetime_value AS answer_datetime_value")
+      rel = rel.select("answers.date_value AS answer_date_value")
+      rel = rel.select("answers.time_value AS answer_time_value")
       rel = rel.select("IFNULL(aotr.str, cotr.str) AS choice_name")
       rel = rel.select("IFNULL(ao.value, co.value) AS choice_value")
       rel = rel.select("option_sets.name AS option_set")

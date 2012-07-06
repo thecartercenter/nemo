@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120626184028) do
+ActiveRecord::Schema.define(:version => 20120702172029) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -19,6 +19,9 @@ ActiveRecord::Schema.define(:version => 20120626184028) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "questioning_id"
+    t.time     "time_value"
+    t.date     "date_value"
+    t.datetime "datetime_value"
   end
 
   add_index "answers", ["questioning_id"], :name => "index_answers_on_questioning_id"

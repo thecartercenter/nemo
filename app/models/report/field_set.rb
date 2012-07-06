@@ -31,11 +31,11 @@ class Report::FieldSet
   
   def title
     if kinds[:attrib] && (kinds[:question] || kinds[:question_type])
-      "Attribs, Qstns"
+      "Attribs, Questions"
     elsif kinds[:attrib]
       "Attribs"
     else
-      "Qstns"
+      "Questions"
     end
   end
   
@@ -79,7 +79,7 @@ class Report::FieldSet
         end
               
         # add the question code and answer value to select
-        expr = aggregation.encode("answers.value") + " AS `Value`"
+        expr = aggregation.encode("IFNULL(answers.value, IFNULL(answers.datetime_value, IFNULL(answers.date_value, answers.time_value)))") + " AS `Value`"
         return rel.select(expr).from("answers").
           joins("INNER JOIN responses ON responses.id = answers.response_id AND answers.questioning_id IN (#{qing_ids})")
       end

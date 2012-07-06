@@ -31,26 +31,32 @@ class Report::Aggregation < ActiveRecord::Base
   
   # converts a result returned from the database to an appropriate object
   def cast_result_value(obj, fieldlet = nil)
-    # for a tally report, the result will be a string and should be an integer
-    if is_tally?
-      obj.to_i
-    # for average reports, it should always be float
-    elsif name == "Average"
-      obj.to_f.round(1)
-    # for list reports, should already be casted properly
-    elsif name == "List"
-      obj
-    # for sum, min, and max, it depends on the field type
+    # if fieldlet is a datetime, need to adjust timezone
+    if fieldlet && fieldlet.temporal?
+      t = Time.zone.parse(obj.to_s + (fieldlet.has_timezone? ? " UTC" : ""))
+      obj = I18n.l(t, :format => :"std_#{fieldlet.data_type}")
     else
-      # for attrib type fields, it should already be casted properly, unless it's a time/date
-      if fieldlet.is_a?(Report::ResponseAttribute)
+      # for a tally report, the result will be a string and should be an integer
+      if is_tally?
+        obj.to_i
+      # for average reports, it should always be float
+      elsif name == "Average"
+        obj.to_f.round(1)
+      # for list reports, should already be casted properly
+      elsif name == "List"
         obj
-      # for question type fields, it depends on the question type
+      # for sum, min, and max, it depends on the field type
       else
-        case fieldlet.question.type.name
-        when "integer" then obj.to_i
-        when "decimal" then obj.to_f.round(1)
-        else obj.to_s
+        # for attrib type fields, it should already be casted properly, unless it's a time/date
+        if fieldlet.is_a?(Report::ResponseAttribute)
+          obj
+        # for question type fields, it depends on the question type
+        else
+          case fieldlet.question.type.name
+          when "integer" then obj.to_i
+          when "decimal" then obj.to_f.round(1)
+          else obj.to_s
+          end
         end
       end
     end

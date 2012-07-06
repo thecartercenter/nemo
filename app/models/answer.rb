@@ -26,7 +26,8 @@ class Answer < ActiveRecord::Base
   
   validates(:value, :numericality => true, :if => Proc.new{|a| a.numeric? && !a.value.blank?})
   validate(:required)
-  
+
+  # creates a new answer from a string from odk
   def self.new_from_str(params)
     str = params.delete(:str)
     ans = new(params)
@@ -35,11 +36,19 @@ class Answer < ActiveRecord::Base
     return ans if str.nil?
 
     # set the attributes based on the question type
-    case ans.question_type_name
-    when "select_one"
+    if ans.question_type_name == "select_one"
       ans.option_id = str.to_i
-    when "select_multiple"
+    elsif ans.question_type_name == "select_multiple"
       str.split(" ").each{|oid| ans.choices.build(:option_id => oid.to_i)}
+    elsif ans.question.type.temporal?
+      # parse the string into a time
+      val = Time.zone.parse(str)
+      
+      # convert the parsed time to the appropriate database format unless question is timezone sensitive
+      val = I18n.l(val, :format => :"db_#{ans.question_type_name}") unless ans.question.type.has_timezone?
+      
+      # assign the value
+      ans.send("#{ans.question_type_name}_value=", val)
     else
       ans.value = str
     end
@@ -103,8 +112,9 @@ class Answer < ActiveRecord::Base
   
   private
     def required
-      if required? && !hidden? && value.blank? && option_id.nil? && !can_have_choices? && questioning.condition.nil?
-        errors.add(:base, "This question is required")
+      if required? && !hidden? && value.blank? && time_value.blank? && date_value.blank? && datetime_value.blank? && 
+        option_id.nil? && !can_have_choices? && questioning.condition.nil?
+          errors.add(:base, "This question is required")
       end
     end
     def round_ints

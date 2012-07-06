@@ -18,6 +18,8 @@
         <%= f.select(:option_id, answer.select_options, {:include_blank => true}, :index => answer_counter) %>
       <% when "select_multiple" %>
         <%= render(:partial => "choice", :locals => {:answer_counter => answer_counter}, :collection => answer.all_choices) %>
+      <% when "datetime", "date", "time" %>
+        <%= f.send("#{type}_select", :"#{type}_value", :include_blank => true, :index => answer_counter) %>
       <% end %>
     <% end %>
   </td>

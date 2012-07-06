@@ -87,6 +87,8 @@ module ReportTestHelper
         # create answer with several choices
         a = r.answers.build(:questioning_id => qing.id)
         value.each{|opt| a.choices.build(:option => qing.question.options.find{|o| o.name_eng == opt})}
+      when "datetime", "date", "time"
+        a = r.answers.build(:questioning_id => qing.id, :"#{qing.question.type.name}_value" => value)
       else
         r.answers.build(:questioning_id => qing.id, :value => value)
       end

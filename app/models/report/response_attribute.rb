@@ -32,8 +32,15 @@ class Report::ResponseAttribute < ActiveRecord::Base
   
   # returns the sql fragment for the select clause
   def to_sql
-    # apply timezone adjustment to dates
-    code.gsub(/(\.\w+_at\b)/){"#{$1} + INTERVAL #{Time.zone.utc_offset} SECOND"}
+    code
+  end
+  
+  def has_timezone?
+    data_type == "datetime"
+  end
+  
+  def temporal?
+    %w(datetime date time).include?(data_type)
   end
   
   def apply(rel, options = {})
