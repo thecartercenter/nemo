@@ -29,4 +29,4 @@ div.success, div.failure { display: none; }
 #printable_form td.integer_answer .answer_box, #printable_form td.decimal_answer .answer_box { width: .75in; }
 #printable_form td.long_text_answer .answer_box { height: .75in; }
 #printable_form .hint { font-size: 90%; color: #888; }
-.forms_index h1#title { display: none; }
+.forms_index h1#title, .forms_edit h1#title, .forms_show h1#title { display: none; }

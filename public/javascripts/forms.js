@@ -73,7 +73,7 @@
   
   Form.print = function(form_id) {
     // show appropriate loading indicator
-    $('#index_table_loading_indicator_' + form_id).show();
+    $('#loading_indicator_' + form_id).show();
 
     // load form show page into div
     Utils.ajax_with_session_timeout_check({
@@ -85,7 +85,7 @@
         $('#form_to_print').html(data);
         
         // hide loading indicator
-        $('#index_table_loading_indicator_' + form_id).hide();
+        $('#loading_indicator_' + form_id).hide();
         
         // show print dialog
         window.print();

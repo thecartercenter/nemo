@@ -52,7 +52,8 @@ table.index_table td { border-bottom: 1px solid #ddd; padding: 6px 10px 6px 3px;
 table.index_table td.actions_col img { margin-right: 5px; }
 td.actions_col { white-space: nowrap; }
 td.actions_col img { border: none; min-width: 11px; min-height: 11px; float: left; margin: -2px 0 -2px 0; }
-div.index_table_loading_indicator { width: 16px; float: left; }
+div.loading_indicator_inline { width: 16px; display: inline; }
+div.loading_indicator_floating { width: 16px; float: left; }
 
 /* pagination */
 div.pagination * { float: left; display: block; background-color: #eee; padding: 1px; 

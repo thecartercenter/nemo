@@ -38,25 +38,17 @@ module FormsHelper
       action_links = action_links(form, :destroy_warning => "Are you sure you want to delete form '#{form.name}'?", 
         :exclude => exclude)
         
-      # build confirm message for publish/unpublish link
-      if form.published?
-        pl_confirm = "Are you sure you want to unpublish form '#{form.name}'? " + 
-          "Any changes made to the form may cause problems during data submission."
-      else
-        pl_confirm = "Are you sure you want to publish form '#{form.name}'? It will immediately be downloadable " + 
-          "by all users."
-      end
       pl_img = action_icon(form.published? ? "unpublish" : "publish")
       publish_link = link_to_if_auth(pl_img, publish_form_path(form), "forms#publish", form, 
-        :title => "#{form.published? ? 'Unp' : 'P'}ublish", :confirm => pl_confirm)
+        :title => "#{form.published? ? 'Unp' : 'P'}ublish")
       
       clone_link = link_to_if_auth(action_icon("clone"), clone_form_path(form), "forms#clone", form, 
-        :title => "Clone", :confirm => "Are you sure you want to clone the form '#{form.name}'?")
+        :title => "Clone", :confirm => "Are you sure you want to make a copy of the form '#{form.name}'?")
 
       print_link = link_to_if_auth(action_icon("print"), "#", "forms#show", form, :title => "Print",
         :onclick => "Form.print(#{form.id}); return false;")
       
-      (action_links + publish_link + clone_link + print_link + index_table_loading_indicator(form.id)).html_safe
+      (action_links + publish_link + clone_link + print_link + loading_indicator(:id => form.id, :floating => true)).html_safe
     else form.send(field)
     end
   end

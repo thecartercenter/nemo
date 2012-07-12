@@ -168,9 +168,10 @@ module ApplicationHelper
     )
   end
   
-  def index_table_loading_indicator(id)
-    content_tag("div", :class => "index_table_loading_indicator") do
-      image_tag("load-ind-small.gif", :style => "display: none", :id => "index_table_loading_indicator_#{id}")
+  def loading_indicator(options = {})
+    content_tag("div", :class => "loading_indicator#{options[:floating] ? '_floating' : '_inline'}") do
+      image_tag("load-ind-small.gif", :style => "display: none", :id => "loading_indicator" + 
+        (options[:id] ? "_#{options[:id]}" : ""))
     end
   end
 end

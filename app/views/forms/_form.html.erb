@@ -1,35 +1,37 @@
 <% content_for(:per_page_js){javascript_include_tag("forms")} %>
 <% @title = "#{form.name} Form"%>
-
-<h2>Basic Form Info</h2>
-<%= basic_form(form) do |f|
-  spec = {
-    :fields => [{
-      :col => :name,
-      :required => true,
-      :value => f.text_field(:name)
-    },{
-      :col => :form_type_id,
-      :label => "Type",
-      :required => true,
-      :value => f.select(:form_type_id, FormType.select_options, {:include_blank => true})
-    }],
-    :submit => f.submit(form.new_record? ? "Create Form" : "Update Basic Form Info")
-  }
-  if f.mode != :new
-    spec[:fields] << {
-      :col => :published,
-      :label => "Published?",
-      :value => content_tag("strong"){form.published? ? "Yes" : "No"}
+<div class="screen">
+  <h2>Basic Form Info</h2>
+  <%= basic_form(form) do |f|
+    spec = {
+      :fields => [{
+        :col => :name,
+        :required => true,
+        :value => f.text_field(:name)
+      },{
+        :col => :form_type_id,
+        :label => "Type",
+        :required => true,
+        :value => f.select(:form_type_id, FormType.select_options, {:include_blank => true})
+      }],
+      :submit => f.submit(form.new_record? ? "Create Form" : "Update Basic Form Info")
     }
+    if f.mode != :new
+      spec[:fields] << {
+        :col => :published,
+        :label => "Published?",
+        :value => content_tag("strong"){form.published? ? "Yes" : "No"}
+      }
+    end
+    spec
   end
-  spec
-end
-%>
-<% if controller.action_name != "new" %>
-  <h2>Questions on this Form</h2>
-  <%= index_table(Questioning, form.questionings) %>
-  <% if form.questionings.size > 0 && controller.action_name == "edit" %>
-    <%= button_to_function("Save Ranks", "null", :id => "save_ranks_button") %>
+  %>
+  <% if controller.action_name != "new" %>
+    <h2>Questions on this Form</h2>
+    <%= index_table(Questioning, form.questionings) %>
+    <% if form.questionings.size > 0 && controller.action_name == "edit" %>
+      <%= button_to_function("Save Ranks", "null", :id => "save_ranks_button") %>
+    <% end %>
   <% end %>
-<% end %>
+</div>
+<div id="form_to_print"></div>
