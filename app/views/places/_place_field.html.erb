@@ -2,11 +2,11 @@
 <% if old_value %>
   <% if form.mode == :show %>
     <span class="dummy"><%= obj.send(field_name).full_name %></span>
-    <%= map_link(obj.send(field_name)) %>
+    <%= map_link(obj.send(field_name), :small_icon => true) %>
   <% else %>
     <%= form.radio_button("#{field_name}_id", old_value) %>
     <%= form.label("#{field_name}_id", Place.find(old_value).full_name) %>
-    <%= map_link(obj.send(field_name)) %><br/>
+    <%= map_link(obj.send(field_name), :small_icon => true) %><br/>
     <%= form.radio_button("#{field_name}_id", "") %>
     <%= form.label("#{field_name}_id", "None") %>
   <% end %>

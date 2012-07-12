@@ -46,14 +46,14 @@ module FormsHelper
         pl_confirm = "Are you sure you want to publish form '#{form.name}'? It will immediately be downloadable " + 
           "by all users."
       end
-      pl_img = image_tag(form.published? ? "unpublish.png" : "publish.png")
+      pl_img = action_icon(form.published? ? "unpublish" : "publish")
       publish_link = link_to_if_auth(pl_img, publish_form_path(form), "forms#publish", form, 
         :title => "#{form.published? ? 'Unp' : 'P'}ublish", :confirm => pl_confirm)
       
-      clone_link = link_to_if_auth(image_tag("clone.png"), clone_form_path(form), "forms#clone", form, 
+      clone_link = link_to_if_auth(action_icon("clone"), clone_form_path(form), "forms#clone", form, 
         :title => "Clone", :confirm => "Are you sure you want to clone the form '#{form.name}'?")
 
-      print_link = link_to_if_auth(image_tag("print.png"), "#", "forms#show", form, :title => "Print",
+      print_link = link_to_if_auth(action_icon("print"), "#", "forms#show", form, :title => "Print",
         :onclick => "Form.print(#{form.id}); return false;")
       
       (action_links + publish_link + clone_link + print_link + index_table_loading_indicator(form.id)).html_safe

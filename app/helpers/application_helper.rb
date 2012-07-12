@@ -99,6 +99,10 @@ module ApplicationHelper
     (condition ? '<div class="reqd_sym">*</div>' : '').html_safe
   end
   
+  def action_icon(action)
+    image_tag("action-icons/#{action}.png")
+  end
+  
   # assembles links for the basic actions in an index table (show edit and destroy)
   def action_links(obj, options)
     destroy_warning = options[:destroy_warning] || "Are you sure?"
@@ -106,7 +110,7 @@ module ApplicationHelper
     links = %w(show edit destroy).collect do |action|
       options[:exclude] = [options[:exclude]] unless options[:exclude].is_a?(Array)
       next if options[:exclude] && options[:exclude].include?(action.to_sym)
-      img = image_tag("#{action}.png")
+      img = action_icon(action)
       key = "#{obj.class.table_name}##{action}"
       case action
       when "show"

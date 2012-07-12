@@ -41,8 +41,9 @@ module PlacesHelper
     else place.send(field)
     end
   end
-  def map_link(place)
+  def map_link(place, options = {})
+    icon = options[:small_icon] ? image_tag("small-globe.png") : action_icon("map")
     place && place.mappable? ? 
-      link_to_if_auth(image_tag("map.png"), map_place_path(place), "places#map", place, :title => "Show on Map") : ""
+      link_to_if_auth(icon, map_place_path(place), "places#map", place, :title => "Show on Map") : ""
   end
 end
