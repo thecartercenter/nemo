@@ -20,15 +20,16 @@ class Condition < ActiveRecord::Base
   belongs_to(:option)
   
   before_validation(:clear_blanks)
+  before_validation(:clean_times)
   validate(:all_fields_required)
     
   OPS = {
-    "is equal to" => {:types => [:decimal, :integer, :text, :long_text, :address, :select_one], :code => "="},
-    "is less than" => {:types => [:decimal, :integer], :code => "<"},
-    "is greater than" => {:types => [:decimal, :integer], :code => ">"},
-    "is less than or equal to" => {:types => [:decimal, :integer], :code => "<="},
-    "is greater than or equal to" => {:types => [:decimal, :integer], :code => "="},
-    "is not equal to" => {:types => [:decimal, :integer, :text, :long_text, :address, :select_one], :code => "!="},
+    "is equal to" => {:types => [:decimal, :integer, :text, :long_text, :address, :select_one, :datetime, :date, :time], :code => "="},
+    "is less than" => {:types => [:decimal, :integer, :datetime, :date, :time], :code => "<"},
+    "is greater than" => {:types => [:decimal, :integer, :datetime, :date, :time], :code => ">"},
+    "is less than or equal to" => {:types => [:decimal, :integer, :datetime, :date, :time], :code => "<="},
+    "is greater than or equal to" => {:types => [:decimal, :integer, :datetime, :date, :time], :code => "="},
+    "is not equal to" => {:types => [:decimal, :integer, :text, :long_text, :address, :select_one, :datetime, :date, :time], :code => "!="},
     "includes" => {:types => [:select_multiple], :code => "="},
     "does not include" => {:types => [:select_multiple], :code => "!="}
   }
@@ -83,12 +84,33 @@ class Condition < ActiveRecord::Base
   end
   
   def to_odk
+    # set default lhs
+    lhs = "/data/#{ref_question.odk_code}"
     if has_options?
-      xpath = "selected(/data/#{ref_question.odk_code}, '#{option_id}')"
+      xpath = "selected(#{lhs}, '#{option_id}')"
       xpath = "not(#{xpath})" if OPS[op][:code] == "!="
     else
-      val_str = ref_question.type.numeric? ? value.to_s : "'#{value}'"
-      xpath = "/data/#{ref_question.odk_code} #{OPS[op][:code]} #{val_str}"
+      
+      # for numeric ref. questions, just convert value to string to get rhs
+      if ref_question.type.numeric? 
+        rhs = value.to_s
+      
+      # for temporal ref. questions, need to convert dates to appropriate format
+      elsif ref_question.type.temporal?
+        # get xpath compatible date type name
+        date_type = ref_question.type.name.gsub("datetime", "dateTime")
+        format = :"javarosa_#{date_type.downcase}"
+        formatted = Time.zone.parse(value).to_s(format)
+        lhs = "format-date(#{lhs}, '#{Time::DATE_FORMATS[format]}')"
+        rhs = "'#{formatted}'"
+        
+      # otherwise just quoted string
+      else
+        rhs = "'#{value}'"
+      end
+      
+      # build the final xpath expression
+      xpath = "#{lhs} #{OPS[op][:code]} #{rhs}"
     end
     xpath
   end
@@ -105,6 +127,24 @@ class Condition < ActiveRecord::Base
       rescue
       end
     end
+    
+    # parses and reformats time strings given as conditions
+    def clean_times
+      if ref_qing && !value.blank?
+        # get the question type
+        qtype = ref_qing.question.type
+        
+        begin
+          # reformat only if it's a temporal question
+          self.value = Time.zone.parse(value).to_s(:"std_#{qtype.name}") if qtype.temporal? 
+        rescue
+          # reset to nil if error in parsing
+          # catch additional error incase frozen hash
+          (self.value = nil) rescue nil
+        end
+      end
+    end
+    
     def all_fields_required
       errors.add(:base, "All fields are required.") if ref_qing.blank? || op.blank? || (value.blank? && option_id.blank?)
     end
