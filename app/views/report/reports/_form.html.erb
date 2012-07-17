@@ -10,6 +10,7 @@
     :details => "A search string to filter the responses used in the report. You can try out your
       searches on the #{link_to('Responses page', responses_path())}.".html_safe) %>
   <%= form_field(f, :unreviewed, :type => :check_box) %>
+  <%= form_field(f, :unique_rows, :type => :check_box) %>
   <%= form_field(f, :pri_grouping, :partial => "grouping") %>
   <%= form_field(f, :sec_grouping, :partial => "grouping", :details => "A second grouping.") %>
   <%= form_field(f, :display_type, :type => :select, :options => Report::Report.display_type_select_options, :required => true) %>

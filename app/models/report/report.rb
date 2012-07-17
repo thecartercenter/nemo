@@ -155,6 +155,7 @@ class Report::Report < ActiveRecord::Base
       end
       
       remove_blank_rows_and_columns
+      remove_duplicates if unique_rows
       
     rescue Search::ParseError, Report::ReportError
       errors.add(:base, "Couldn't run report: #{$!.to_s}")
@@ -206,7 +207,27 @@ class Report::Report < ActiveRecord::Base
       # loop by row
       rows_to_kill = []
       @data.each_with_index{|row, i| rows_to_kill << i if row.reject{|c| c.blank?}.empty?}
-      rows_to_kill.reverse.each do |r| 
+      remove_rows_by_indices(rows_to_kill)
+    end
+    
+    def remove_duplicates
+      rows_to_kill = []
+      
+      # generate and sort row signatures, maintaining row indices
+      signatures = []
+      @data.each_with_index{|row, i| signatures << {:idx => i, :sig => row.join("#&#&#")}}
+      signatures.sort_by{|s| s[:sig]}
+      
+      # collect indices of duplicates
+      signatures.inject{|prev, cur| rows_to_kill << cur[:idx] if cur[:sig] == prev[:sig]; prev = cur}
+      
+      # delete rows
+      remove_rows_by_indices(rows_to_kill)
+    end
+    
+    # given a sorted array of row indices, removes the rows from the data and headers safely
+    def remove_rows_by_indices(indices)
+      indices.reverse.each do |r|
         @data.delete_at(r)
         @header_set.delete(:row, r)
       end

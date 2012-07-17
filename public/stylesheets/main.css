@@ -167,6 +167,7 @@ td#report_form div.submit_row { clear: left; }
 td#report_form #fields div.form_field_control a { font-size: 90%; }
 
 /* report table */
+div#report_body div#row_count { margin-bottom: 5px; }
 div#report_body table { }
 div#report_body table td, div#report_body table th { padding: 2px; border: 1px solid #ddd; }
 div#report_body table td.string { text-align: left; }

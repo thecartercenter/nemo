@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120717162456) do
+ActiveRecord::Schema.define(:version => 20120717182055) do
 
   create_table "#Tableau_sid_00485CC8_4_none_form_name_nk", :id => false, :force => true do |t|
     t.string  "none_form_name_nk"
@@ -185,6 +185,7 @@ ActiveRecord::Schema.define(:version => 20120717162456) do
     t.string   "bar_style",       :default => "Side By Side"
     t.boolean  "unreviewed",      :default => false
     t.string   "percent_type"
+    t.boolean  "unique_rows"
   end
 
   create_table "report_response_attributes", :force => true do |t|

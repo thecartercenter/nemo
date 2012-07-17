@@ -1,6 +1,6 @@
 (function (report, undefined) {
   // === PRIVATE ===
-  var RERUN_FIELDS = ["aggregation", "fields", "filter", "unreviewed", "pri_grouping", "sec_grouping"];
+  var RERUN_FIELDS = ["aggregation", "fields", "filter", "unreviewed", "unique_rows", "pri_grouping", "sec_grouping"];
   var ROW_COL_PERCENT_TYPE_OPTIONS = ["Percentage By Row", "Percentage By Column"];
   var FIELD_SELECTS_SELECTOR = "#report_form #fields #field_dropdowns"
   var ALLOWED_DATA_TYPES_PER_AGGREGATION = {
@@ -150,6 +150,10 @@
       show_hide_display_type_option("Bar Chart", (agg != "" && agg != "List") && fields_are_numeric());
     }
     
+    // unique row checkbox only visible if list
+    if (src == "aggregation" || src == "_all")
+      show_or_hide_and_clear_checkbox_field("div#unique_rows", agg == "List")
+    
     // percent field only visible if tally && table
     if (src == "display_type" || src == "aggregation" || src == "_all")
       show_or_hide_and_clear_select_field("div#percent_type", disp_type == "Table" && agg == "Tally");
@@ -180,9 +184,16 @@
       $('div#bar_style')[report.form.display_type == "Bar Chart" && report.form.sec_grouping ? "show" : "hide"]();
   }
   
+  // shows/hides a select box and clears its value if hiding
   function show_or_hide_and_clear_select_field(selector, show_or_hide) {
     $(selector)[show_or_hide ? "show" : "hide"]();
     if (!show_or_hide) $(selector + " select").val("");
+  }
+
+  // shows/hides a checkbox and clears its value if hiding
+  function show_or_hide_and_clear_checkbox_field(selector, show_or_hide) {
+    $(selector)[show_or_hide ? "show" : "hide"]();
+    if (!show_or_hide) $(selector + " input").removeAttr("checked");
   }
   
   // checks if there is only one effective field (one field that is not a question type)
@@ -540,7 +551,15 @@
 
       tbl.append(trow);
     }
-    $('#report_body').empty().append(tbl);
+    
+    // clear any old stuff
+    $('#report_body').empty()
+    
+    // add a row count
+    $('#report_body').append($("<div>").attr("id", "row_count").text("Total Rows: " + report.obj.data.length));
+    
+    // add the table
+    $('#report_body').append(tbl);
   }
   
   // checks whether total rows should be shown for a table report
@@ -570,6 +589,7 @@
       name: "name",
       filter: "filter_attributes_str",
       unreviewed: "unreviewed",
+      unique_rows: "unique_rows",
       pri_grouping: "pri_grouping_attributes_form_choice",
       sec_grouping: "sec_grouping_attributes_form_choice",
       display_type: "display_type",

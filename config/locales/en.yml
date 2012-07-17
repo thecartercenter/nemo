@@ -15,6 +15,7 @@ en:
         fields: Attributes/Questions
         display_type: Display Type
         unreviewed: Allow Unreviewed Responses
+        unique_rows: Hide Duplicate Rows
         pri_grouping: Grouping 1
         sec_grouping: Grouping 2
         percent_type: Percent Type
@@ -28,6 +29,7 @@ en:
         kind: The type of data you want to work with.
         display_type: The way you want the results to be presented.
         unreviewed: Whether unreviewed responses should be included in the report.
+        unique_rows: Whether duplicate rows should be omitted in the report.
         pri_grouping: An attribute or question by which the response count should be grouped (e.g. state, overall rating).
         percent_type: Whether and how percentages should be calculated for the report.
         bar_style: Whether bars should be stacked or side-by-side. 
