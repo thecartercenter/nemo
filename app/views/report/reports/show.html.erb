@@ -14,7 +14,7 @@
     </td>
     <td>
       <h1></h1>
-      <div class="tip">
+      <div class="tip" id="report_nav_links">
         <%= join_links(
           link_to_if_auth("Edit This Report", "#", "report_reports#update", nil, :id => "edit_form_link"),
           link_to("Back to Report Listing", report_reports_path)
