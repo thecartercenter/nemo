@@ -18,7 +18,9 @@ class RemoveObservedAtFromResponses < ActiveRecord::Migration
         
           # for each response, copy the value of observed_at to the new question
           form.responses.each do |resp|
-            resp.answers.create!(:questioning => qing, :datetime_value => resp.observed_at)
+            if resp.respond_to?(:answers)
+              resp.answers.create!(:questioning => qing, :datetime_value => resp.observed_at)
+            end
           end
         end
       end
