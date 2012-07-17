@@ -4,7 +4,7 @@ namespace :db do
     ActiveRecord::Base.transaction do
 
       # generate all permanent, mandatory seeds
-      to_seed = [Language, Role, Settable, FormType, QuestionType, PlaceType, Report::ResponseAttribute, Report::Aggregation]
+      to_seed = [Language, Role, Settable, FormType, QuestionType, Report::ResponseAttribute, Report::Aggregation]
       to_seed.each{|c| c.generate}
       
       # check for mysql timezone info

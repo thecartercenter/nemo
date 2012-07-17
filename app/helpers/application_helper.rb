@@ -89,11 +89,6 @@ module ApplicationHelper
     end
   end
   
-  # renders a place field in a form
-  def place_field(form)
-    render("places/place_field", :form => form)
-  end
-  
   # renders the standard 'required' symbol, which is an asterisk
   def reqd_sym(condition = true)
     (condition ? '<div class="reqd_sym">*</div>' : '').html_safe

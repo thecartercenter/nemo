@@ -38,7 +38,7 @@
     <tr>
       <td id="nav">
         <ul>
-          <% [Response, Form, Report::Report, Option, OptionSet, FormType, User, Broadcast, Language, Place, Setting].each do |k| %>
+          <% [Response, Form, Report::Report, Option, OptionSet, FormType, User, Broadcast, Language, Setting].each do |k| %>
             <% if authorized?(:action => "#{k.model_name.route_key}#index") %>
               <li><%= link_to(k.model_name.human.ucwords.pluralize, send("#{k.model_name.route_key}_path")) %></li>
             <% end %>

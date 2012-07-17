@@ -4,26 +4,13 @@ module ReportTestHelper
     Language.generate
     Report::ResponseAttribute.generate
     Report::Aggregation.generate
-    [Question, Questioning, Answer, Place, Form, User].each{|k| k.delete_all}
-    @qs = {}; @rs = []; @places = {}; @forms = {}; @opt_sets = {}; @users = {}
+    [Question, Questioning, Answer, Form, User].each{|k| k.delete_all}
+    @qs = {}; @rs = []; @forms = {}; @opt_sets = {}; @users = {}
   end
   
   def create_report(options)
     agg = Report::Aggregation.find_by_name(options.delete(:agg))
     Report::Report.create!(options.merge(:name => "TheReport", :aggregation => agg))
-  end
-  
-  # creates a small set of localities and states
-  def create_places
-    PlaceType.generate
-    create_place(:type => :country, :name => "Canada")
-    create_place(:type => :country, :name => "USA")
-    create_place(:type => :state, :name => "Alabama", :container => "USA")
-    create_place(:type => :locality, :name => "Auburn", :container => "Alabama")
-    create_place(:type => :locality, :name => "Montgomery", :container => "Alabama")
-    create_place(:type => :state, :name => "Georgia", :container => "USA")
-    create_place(:type => :locality, :name => "Atlanta", :container => "Georgia")
-    create_place(:type => :locality, :name => "Augusta", :container => "Georgia")
   end
 
   def create_opt_set(options)
@@ -31,14 +18,6 @@ module ReportTestHelper
     options.each_with_index{|o,i| os.option_settings.build(:option => Option.new(:value => i+1, :name_eng => o))}
     os.save!
     @opt_sets[options.join("_").downcase.to_sym] = os
-  end
-
-  def create_place(params)
-    params[:place_type] = PlaceType.find_by_short_name(params.delete(:type))
-    params[:long_name] = params.delete(:name)
-    params[:container] = @places[params[:container]]
-    p = Place.create!(params)
-    @places[params[:long_name]] = p
   end
 
   def create_form(params)

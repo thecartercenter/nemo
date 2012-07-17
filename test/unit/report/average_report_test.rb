@@ -35,24 +35,6 @@ class Report::AverageReportTest < ActiveSupport::TestCase
     assert_report(r, %w(Average), ["Average", "1.5"])
   end
   
-  test "single question field grouped by state" do
-    # create places, question and responses
-    create_places
-    q = create_question(:code => "num0", :type => "integer")
-    
-    # alabama
-    create_response(:place => @places["Auburn"], :answers => {:num0 => 1})
-    create_response(:place => @places["Auburn"], :answers => {:num0 => 4})
-    # georgia
-    create_response(:place => @places["Atlanta"], :answers => {:num0 => 7})
-    create_response(:place => @places["Augusta"], :answers => {:num0 => 8})
-
-    r = create_report(:agg => "Average", :fields => [Report::Field.new(:question => q)])
-    r.pri_grouping = Report::ByAttribGrouping.create(:attrib => Report::ResponseAttribute.find_by_name("State"))
-    
-    assert_report(r, %w(Average), %w(Alabama 2.5), %w(Georgia 7.5))
-  end
-  
   test "single question field grouped by select multiple" do
     # create questions and responses
     q1 = create_question(:code => "num0", :type => "integer")
@@ -67,30 +49,6 @@ class Report::AverageReportTest < ActiveSupport::TestCase
     
     assert_report(r, %w(Average), %w(Opt1 2.5), %w(Opt2 2.3), %w(Opt3 4.0))
   end
-  
-  test "single question field grouped by state and source" do
-    # create places, question and responses
-    create_places
-    q = create_question(:code => "num0", :type => "integer")
-    
-    # alabama
-    create_response(:place => @places["Auburn"], :source => "odk", :answers => {:num0 => 2})
-    create_response(:place => @places["Auburn"], :source => "odk", :answers => {:num0 => 4})
-    create_response(:place => @places["Auburn"], :source => "odk", :answers => {:num0 => 3})
-    create_response(:place => @places["Auburn"], :source => "web", :answers => {:num0 => 5})
-    # georgia
-    create_response(:place => @places["Atlanta"], :source => "odk", :answers => {:num0 => 7})
-    create_response(:place => @places["Augusta"], :source => "odk", :answers => {:num0 => 8})
-    create_response(:place => @places["Atlanta"], :source => "web", :answers => {:num0 => 9})
-    create_response(:place => @places["Augusta"], :source => "web", :answers => {:num0 => 11})
-
-    r = create_report(:agg => "Average", :fields => [Report::Field.new(:question => q)])
-    r.pri_grouping = Report::ByAttribGrouping.create(:attrib => Report::ResponseAttribute.find_by_name("State"))
-    r.sec_grouping = Report::ByAttribGrouping.create(:attrib => Report::ResponseAttribute.find_by_name("Source"))
-    
-    assert_report(r, %w(odk web), %w(Alabama 3.0 5.0), %w(Georgia 7.5 10.0))
-  end
-  
 
   test "multiple question fields with no groupings" do
     # create two questions and two responses

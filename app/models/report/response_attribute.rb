@@ -10,16 +10,10 @@ class Report::ResponseAttribute < ActiveRecord::Base
       :data_type => "text", :groupable => true)
     seed(:name, :name => "Form Type", :code => "form_types.name", :join_tables => "form_types", 
       :data_type => "text", :groupable => true)
-    seed(:name, :name => "State", :code => "states.long_name", :join_tables => "states", 
-      :data_type => "text", :groupable => true)
-    seed(:name, :name => "Country", :code => "countries.long_name", :join_tables => "countries", 
-      :data_type => "text", :groupable => true)
     seed(:name, :name => "Submitter", :code => "users.name", :join_tables => "users", 
       :data_type => "text", :groupable => true)
     seed(:name, :name => "Source", :code => "responses.source", 
       :data_type => "text", :groupable => true)
-    seed(:name, :name => "Locality", :code => "localities.long_name", 
-      :data_type => "text", :join_tables => "localities", :groupable => true)
     seed(:name, :name => "Time Submitted", :code => "responses.created_at",
       :data_type => "datetime")
     seed(:name, :name => "Date Submitted", :code => "DATE(CONVERT_TZ(responses.created_at, 'UTC', '%CURRENT_TIMEZONE%'))", 
@@ -29,6 +23,11 @@ class Report::ResponseAttribute < ActiveRecord::Base
 
     unseed(:name, "Date Observed")
     unseed(:name, "Time Observed")
+    
+    # these are no longer special fields
+    unseed(:name, "Locality")
+    unseed(:name, "State")
+    unseed(:name, "Country")
   end
   
   # returns the sql fragment for the select clause

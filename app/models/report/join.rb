@@ -75,40 +75,6 @@ class Report::Join
       :dependencies => :questions, 
       :sql => "LEFT JOIN option_sets ON questions.option_set_id = option_sets.id"
     ),
-    :places => new(
-      :name => :places, 
-      :sql => "LEFT JOIN places ON responses.place_id = places.id"
-    ),
-    :place_types => new(
-      :name => :place_types,
-      :dependencies => :places,
-      :sql => "LEFT JOIN place_types ON places.place_type_id = place_types.id"
-    ),
-    :points => new(
-      :name => :points,
-      :dependencies => :place_types, 
-      :sql => "LEFT JOIN places points ON IF(place_types.short_name = 'point', places.id, places.point_id) = points.id"
-    ),
-    :addresses => new(
-      :name => :addresses,
-      :dependencies => :place_types, 
-      :sql => "LEFT JOIN places addresses ON IF(place_types.short_name = 'address', places.id, places.address_id) = addresses.id"
-    ),
-    :localities => new(
-      :name => :localities,
-      :dependencies => :place_types, 
-      :sql => "LEFT JOIN places localities ON IF(place_types.short_name = 'locality', places.id, places.locality_id) = localities.id"
-    ),
-    :states => new(
-      :name => :states,
-      :dependencies => :place_types, 
-      :sql => "LEFT JOIN places states ON IF(place_types.short_name = 'state', places.id, places.state_id) = states.id"
-    ),
-    :countries => new(
-      :name => :countries,
-      :dependencies => :place_types, 
-      :sql => "LEFT JOIN places countries ON IF(place_types.short_name = 'country', places.id, places.country_id) = countries.id"
-    ),
     :users => new(
       :name => :users,
       :sql => "LEFT JOIN users ON responses.user_id = users.id"

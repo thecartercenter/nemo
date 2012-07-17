@@ -20,19 +20,6 @@ class Report::TallyReportTest < ActiveSupport::TestCase
     assert_report(r, %w(Tally), ["Tally", "2"])
   end
   
-  test "grouped by state" do
-    # create places and responses
-    create_places
-    create_response(:place => @places["Auburn"])
-    create_response(:place => @places["Atlanta"])
-    create_response(:place => @places["Augusta"])
-
-    r = create_report(:agg => "Tally")
-    r.pri_grouping = Report::ByAttribGrouping.create(:attrib => Report::ResponseAttribute.find_by_name("State"))
-    
-    assert_report(r, %w(Tally), %w(Alabama 1), %w(Georgia 2))
-  end
-
   test "grouped by date" do
     set_eastern_timezone
     # create responses so that the day of some of them will change across timezones
@@ -46,41 +33,7 @@ class Report::TallyReportTest < ActiveSupport::TestCase
     assert_report(r, %w(Tally), %w(2012-01-01 2), %w(2012-01-02 1))
   end
 
-  test "grouped by attrib and question with filter" do
-    # create places and responses
-    create_places
-    create_opt_set(%w(Yes No))
-    q = create_question(:code => "satisfactory", :type => "select_one")
-    2.times{create_response(:place => @places["Auburn"], :answers => {:satisfactory => "Yes"})}
-    create_response(:place => @places["Atlanta"], :answers => {:satisfactory => "No"})
-    create_response(:place => @places["Augusta"], :answers => {:satisfactory => "Yes"})
-
-    r = create_report(:agg => "Tally")
-    r.pri_grouping = Report::ByAttribGrouping.create(:attrib => Report::ResponseAttribute.find_by_name("State"))
-    r.sec_grouping = Report::ByAnswerGrouping.create(:question => q)
-    r.filter = Search::Search.create(:class_name => "Response", :str => "place != Atlanta")
-    
-    assert_report(r, %w(Yes), %w(Alabama 2), %w(Georgia 1))
-  end
-  
-  test "grouped by two attributes" do
-    create_places
-    create_form(:name => "f0")
-    create_form(:name => "f1")
-    1.times{create_response(:place => @places["Canada"], :form => @forms[:f0])}
-    5.times{create_response(:place => @places["Canada"], :form => @forms[:f1])}
-    3.times{create_response(:place => @places["USA"], :form => @forms[:f0])}
-    2.times{create_response(:place => @places["USA"], :form => @forms[:f1])}
-    
-    r = create_report(:agg => "Tally")
-    r.pri_grouping = Report::ByAttribGrouping.create(:attrib => Report::ResponseAttribute.find_by_name("Form"))
-    r.sec_grouping = Report::ByAttribGrouping.create(:attrib => Report::ResponseAttribute.find_by_name("Country"))
-    
-    assert_report(r, %w(Canada USA), %w(f0 1 3), %w(f1 5 2))
-  end
-  
   test "grouped by two questions" do
-    create_places
     create_opt_set(%w(Yes No))
     q1 = create_question(:code => "satisfactory", :type => "select_one")
     q2 = create_question(:code => "openontime", :type => "select_one")

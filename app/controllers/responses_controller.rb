@@ -68,12 +68,10 @@ class ResponsesController < ApplicationController
     form = Form.find(params[:form_id]) rescue nil
     flash[:error] = "You must choose a form to edit." and redirect_to(:action => :index) unless form
     @resp = Response.new(:form => form)
-    set_js
   end
   
   def edit
     @resp = Response.find_eager(params[:id])
-    set_js
   end
   
   def show
@@ -110,12 +108,7 @@ class ResponsesController < ApplicationController
         flash[:success] = "Response #{action}d successfully."
         redirect_to(:action => :index)
       rescue ActiveRecord::RecordInvalid
-        set_js
         render(:action => action == "create" ? :new : :edit)
       end
-    end
-    
-    def set_js
-      @js << 'places'
     end
 end

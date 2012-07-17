@@ -89,16 +89,10 @@ form.new_search_search #search_search_str, form.edit_search_search #search_searc
 /* language listing */
 #languages_index table td.name_col { width: 150px; }
 
-/* place form */
-input#place_lookup_query { width: 300px; }
-div#place_lookup_results .place_type { font-size: 75%; color: #666; }
-form.new_place td.value { min-width: 400px; }
-
 /* place map */
 #map_canvas { width: 600px; height: 400px; }
 
 /* response index */
-.responses_index td.place_col div { width: 250px; overflow: hidden; white-space: normal; }
 .responses_index form#form_chooser { display: inline; }
 
 /* response edit */

@@ -1,5 +1,3 @@
-<% content_for(:per_page_js){javascript_include_tag("places")} %>
-
 <%= resp.answers.collect{|a| a.errors.full_messages.join(", ")}.join(" ") %>
 <%= basic_form(resp) do |f|
   spec = {
@@ -17,12 +15,6 @@
       },
       (f.mode == :show ? {:col => :source, :label => "Source", :value => content_tag("strong"){resp.source}} : nil),
       {
-        :col => :place_id,
-        :label => "Place",
-        :value => place_field(f),
-        :details => "You can search for a place, or you can enter a values the location and address questions
-          below (if available) and the system will find the address based on what you enter."
-      },{
         :col => :reviewed,
         :label => "Reviewed?",
         :value => f.mode == :show ? 

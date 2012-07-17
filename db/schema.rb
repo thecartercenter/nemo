@@ -10,7 +10,12 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120706201054) do
+ActiveRecord::Schema.define(:version => 20120717162456) do
+
+  create_table "#Tableau_sid_00485CC8_4_none_form_name_nk", :id => false, :force => true do |t|
+    t.string  "none_form_name_nk"
+    t.integer "_Tableau_join_flag", :limit => 8, :default => 0, :null => false
+  end
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -104,38 +109,6 @@ ActiveRecord::Schema.define(:version => 20120706201054) do
     t.datetime "updated_at"
   end
 
-  create_table "place_creators", :force => true do |t|
-    t.integer  "place_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "place_types", :force => true do |t|
-    t.string   "name"
-    t.integer  "level"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "short_name"
-  end
-
-  create_table "places", :force => true do |t|
-    t.string   "long_name"
-    t.string   "short_name"
-    t.string   "full_name"
-    t.integer  "place_type_id"
-    t.integer  "container_id"
-    t.decimal  "latitude",      :precision => 20, :scale => 15
-    t.decimal  "longitude",     :precision => 20, :scale => 15
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.boolean  "temporary",                                     :default => false
-    t.integer  "point_id"
-    t.integer  "address_id"
-    t.integer  "locality_id"
-    t.integer  "state_id"
-    t.integer  "country_id"
-  end
-
   create_table "question_types", :force => true do |t|
     t.string   "name"
     t.datetime "created_at"
@@ -227,7 +200,6 @@ ActiveRecord::Schema.define(:version => 20120706201054) do
   create_table "responses", :force => true do |t|
     t.integer  "form_id"
     t.integer  "user_id"
-    t.integer  "place_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "reviewed",   :default => false

@@ -1,6 +1,6 @@
 class DropViews < ActiveRecord::Migration
   def up
-    drop_view :_answers
+    #drop_view :_answers
   end
 
   def down
