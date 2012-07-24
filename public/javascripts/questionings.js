@@ -20,7 +20,7 @@ function condition_update_choices() {
   for (var op_name in condition_ops)
     if (condition_ops[op_name]["types"].indexOf(chosen_type) != -1)
       add_option(op_field, op_name, op_name);
-  
+
   var value_field = $('#questioning_condition_value')[0];
   var option_id_field = $('#questioning_condition_option_id')[0];
   // clear the dropdown
@@ -58,3 +58,20 @@ function add_option(select, text, value, selected) {
   try {select.add(opt, null);} // standards compliant; doesn't work in IE
   catch(ex) {select.add(opt);} // IE only
 }
+
+(function (Questioning, undefined) {
+  Questioning.show_or_hide_max_min = function() {
+    var sel = $('tr#type_row option:selected, tr#type_row td.value div.dummy').text(); 
+    if(sel == "Decimal" || sel == "Integer")
+      $('tr#max, tr#min').show();
+    else
+      $('tr#max, tr#min').hide();
+  }
+  Questioning.init = function() {
+    // hookup type change event
+    $('tr#type_row select').change(Questioning.show_or_hide_max_min);
+    Questioning.show_or_hide_max_min();
+  }
+}(Questioning = {}));
+
+$(document).ready(Questioning.init);

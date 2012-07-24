@@ -25,6 +25,7 @@ class Answer < ActiveRecord::Base
   before_save(:blanks_to_nulls)
   
   validates(:value, :numericality => true, :if => Proc.new{|a| a.numeric? && !a.value.blank?})
+  validate(:min_max)
   validate(:required)
 
   # creates a new answer from a string from odk
@@ -58,7 +59,7 @@ class Answer < ActiveRecord::Base
   def choice_for(option)
     choice_hash[option]
   end
-    
+  
   def choice_hash(options = {})
     if !@choice_hash || options[:rebuild]
       @choice_hash = {}; choices.each{|c| @choice_hash[c.option] = c}
@@ -125,6 +126,13 @@ class Answer < ActiveRecord::Base
       self.value = nil if value.blank?
       return true
     end
+    def min_max
+      val_f = value.to_f
+      if question.maximum && (val_f > question.maximum || question.maxstrictly && val_f == question.maximum) ||
+         question.minimum && (val_f < question.minimum || question.minstrictly && val_f == question.minimum)
+           errors.add(:base, question.min_max_error_msg)
+      end
+    end                 
     def clean_locations
       if location?
         if value.match(/^(-?\d+(\.\d+)?)\s*[,;:\s]\s*(-?\d+(\.\d+)?)/)

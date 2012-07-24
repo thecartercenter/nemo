@@ -26,7 +26,7 @@ module ActionView
       def check_box(*args)
         html = old_check_box(*args)
         if mode == :show
-          dummy_tag(html.match(/checked="checked"/) ? "x" : "&nbsp;", :style => :dummy_checkbox)
+          dummy_tag(html.match(/checked="checked"/) ? "&nbsp;x&nbsp;" : "&nbsp;&nbsp;&nbsp;&nbsp;", :style => :dummy_checkbox)
         else
           html
         end

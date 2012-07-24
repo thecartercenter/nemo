@@ -41,8 +41,8 @@ div.form_field div.form_field_control input.radio { width: 15px; }
 div.form_field div.form_field_details { float: right; width: 300px; position: relative; font-size: 90%; }
 div.form_field div.form_field_details span.translation_missing { display: none; }
 div.form_field div.space_line { clear: both; margin: 0; padding: 0; width: auto; }
-div.dummy, span.dummy { font-weight: bold; }
-div.dummy_checkbox { float: left; width: 15px; font-weight: bold; }
+div.dummy, span.dummy { font-weight: bold; display: inline; }
+div.dummy_checkbox { height: 12px; width: 12px; text-align: center; font-weight: bold; border: 1px solid #888; display: inline; }
 input.submit { float: left; font-weight: bold; font-size: 120%; padding: 5px 15px; margin: 0 5px 0 0; }
 
 /* index tables */
@@ -109,6 +109,8 @@ form.new_search_search #search_search_str, form.edit_search_search #search_searc
 .questionings_show td.value, .questions_show td.value { width: 300px; }
 .questionings_edit #questioning_condition_value_box, .questionings_new #questioning_condition_value_box { width: 150px; }
 .questionings_show tr#condition_row td.value .dummy { display: inline; }
+input#questioning_question_minimum{ width: 100px; }
+input#questioning_question_maximum{ width: 100px; }
 
 /* question index/choose */
 .questions_index .name_col, .questions_choose .name_col { width: 400px; }

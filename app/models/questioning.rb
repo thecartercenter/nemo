@@ -104,6 +104,13 @@ class Questioning < ActiveRecord::Base
     end
   end
   
+  def odk_constraint
+    exps = []
+    exps << ". #{question.minstrictly ? '>' : '>='} #{question.minimum}" if question.minimum
+    exps << ". #{question.maxstrictly ? '<' : '<='} #{question.maximum}" if question.maximum
+    "(" + exps.join(" and ") + ")"
+  end
+  
   def get_or_init_condition
     has_condition? ? condition : build_condition(:questioning => self)
   end

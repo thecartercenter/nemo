@@ -9,7 +9,7 @@
       A short codename (between 2-20 characters). Should contain only letters and numbers, e.g. BallotBoxSealed, DepartTime.
     </td>
   </tr>
-  <tr class="rowbg<%= rowbg = 1 - rowbg %>">
+  <tr id="type_row" class="rowbg<%= rowbg = 1 - rowbg %>">
     <td class="name">Type <%= reqd_sym %></td>
     <td class="value">
       <%= f.select(:question_type_id, QuestionType.select_options, {:include_blank => true}, 
@@ -32,7 +32,27 @@
       The set of options the user will be able to choose from.
     </td>
   </tr>
+  <tr id="min">
+    <td>Minimum</td>
+    <td>
+      <%= f.text_field(:minimum)  %> 
+      &nbsp; &nbsp; &nbsp; <%= f.check_box(:minstrictly) %> Strictly greater than
+    </td>
+    <td>
+      The minimum value for the response. Check the box if the minimum itself is not acceptable.
+    </td>
+  </tr>
+  <tr id="max">
+    <td>Maximum</td>
+    <td>
+      <%= f.text_field(:maximum)  %>
+      &nbsp; &nbsp; &nbsp; <%= f.check_box(:maxstrictly) %> Strictly less than
+    </td>
+    <td>
+      The maximum value for the response. Check the box if the maximum itself is not acceptable.
+    </td>
+  </tr>
   <% (Language.active - [Language.english]).each do |lang| %>
     <%= render("questions/title_and_hint", :lang => lang, :f => f) %>
   <% end %>
-</table>
+</table>      

@@ -1,3 +1,5 @@
+<% content_for(:per_page_js){javascript_include_tag("questionings")} %>
+
 <%= flash_and_form_errors(question) %>
 <%= form_for(@question) do |f| %>
   <% f.mode = controller.action_name.to_sym %>

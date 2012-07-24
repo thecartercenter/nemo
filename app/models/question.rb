@@ -108,6 +108,14 @@ class Question < ActiveRecord::Base
     questionings.collect{|qing| qing.id}
   end
   
+  def min_max_error_msg
+    return nil unless minimum || maximum
+    clauses = []
+    clauses << "greater than #{minstrictly ? '' : 'or equal to '}#{minimum}" if minimum
+    clauses << "less than #{maxstrictly ? '' : 'or equal to '}#{maximum}" if maximum
+    "This answer must be #{clauses.join(' and ')}."
+  end
+  
   private
     def integrity
       # error if type or option set have changed and there are answers or conditions
