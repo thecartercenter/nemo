@@ -15,6 +15,8 @@
 # along with ELMO.  If not, see <http://www.gnu.org/licenses/>.
 # 
 class Answer < ActiveRecord::Base
+  include ActionView::Helpers::NumberHelper
+
   belongs_to(:questioning)
   belongs_to(:option)
   belongs_to(:response)
@@ -135,8 +137,10 @@ class Answer < ActiveRecord::Base
     end                 
     def clean_locations
       if location?
-        if value.match(/^(-?\d+(\.\d+)?)\s*[,;:\s]\s*(-?\d+(\.\d+)?)/)
-          self.value = "#{$1} #{$3}".strip
+        if value.match(configatron.lat_lng_regexp)
+          lat = number_with_precision($1.to_f, :precision => 6)
+          lng = number_with_precision($3.to_f, :precision => 6)
+          self.value = "#{lat} #{lng}"
         else
           self.value = ""
         end

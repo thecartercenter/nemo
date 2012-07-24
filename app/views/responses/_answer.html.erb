@@ -10,8 +10,11 @@
       <%= f.hidden_field(:response_id, :index => answer_counter) %>
       <%= f.hidden_field(:questioning_id, :index => answer_counter) %>
       <% case type = answer.question_type_name %>
-      <% when "location", "address", "text", "integer", "decimal" %>
+      <% when "address", "text", "integer", "decimal" %>
         <%= f.text_field(:value, :class => "qtype_#{type}", :index => answer_counter) %>
+      <% when "location" %>
+        <%= f.text_field(:value, :class => "qtype_location", :index => answer_counter) %>
+        <%= link_to(action_icon("edit"), "#", :class => "edit_location_link") if f.mode != :show %>
       <% when "long_text" %>
         <%= f.text_area(:value, :class => "qtype_#{type}", :index => answer_counter) %>
       <% when "select_one" %>

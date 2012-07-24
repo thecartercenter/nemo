@@ -21,6 +21,9 @@ td { vertical-align: top; }
 div.subtitle { margin: -10px 0 10px 0; color: #888; }
 div.tip { margin-bottom: 10px; width: 800px; }
 div.important { font-weight: bold; color: Black; }
+div.boilerplate { display: none; }
+div.dialog { position: absolute; background-color: white; border: 1px solid #555; padding: 10px; }
+div.dialog h2 { margin: 0 0 10px 0; }
 
 /* loading indicator */
 div.loader { background: url('/images/loader.gif') no-repeat; padding-left: 20px; }
@@ -99,8 +102,10 @@ form.new_search_search #search_search_str, form.edit_search_search #search_searc
 .responses_edit input.qtype_integer, .responses_new input.qtype_integer { width: 100px; }
 .responses_edit input.qtype_decimal, .responses_new input.qtype_decimal { width: 100px; }
 .responses_edit textarea.qtype_long_text, .responses_new textarea.qtype_long_text { width: 400px; height: 100px; }
+.responses_edit input.qtype_location, .responses_new input.qtype_location { width: 200px; }
 .responses_edit table.answers td.name, .responses_new table.answers td.name, .responses_show table.answers td.name { width: 300px; }
 .responses_edit input.submit { float: left; margin-right: 10px; }
+a.edit_location_link img { vertical-align: bottom; }
 
 /* question show/edit */
 .questionings_edit textarea.name_hint, .questionings_new textarea.name_hint,
@@ -185,3 +190,8 @@ div#report_body th.col_grouping_label { text-align: center; }
 
 /* form type index */
 .form_types_index .name_col { min-width: 100px; }
+
+/* location picker */
+div.location_picker { width: 650px; height: 500px; }
+div.location_picker div.map_canvas { width: 600px; height: 440px; border: 1px solid #ccc; float: left; margin-right: 10px; }
+div.location_picker span.cur_lat_lng { font-weight: bold; }

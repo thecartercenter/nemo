@@ -53,6 +53,12 @@ module CommandCenter
     # site name
     configatron.site_name = "ELMO"
     
+    # regular expressions
+    configatron.lat_lng_regexp = /^(-?\d+(\.\d+)?)\s*[,;:\s]\s*(-?\d+(\.\d+)?)/
+    
+    # google map api
+    configatron.map_api_url = "https://maps.googleapis.com/maps/api/js?sensor=false"
+    
     # SMS broadcast settings
     configatron.outgoing_sms_adapter = Configatron::Delayed.new{IntelliSmsAdapter}
     configatron.broadcast_tag = "[TCC-Broadcast]"
