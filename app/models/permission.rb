@@ -55,7 +55,8 @@ class Permission
     "options#*" => {:min_level => 3},
     "option_sets#*" => {:min_level => 3},
     "broadcasts#*" => {:min_level => 2},
-    "markers#*" => {:group => :logged_in}
+    "markers#*" => {:group => :logged_in},
+    "proxies#geocoder" => {:group => :logged_in}
   }
   SPECIAL = [
     :anyone_can_edit_some_fields_about_herself_but_nobody_can_edit_their_own_role,

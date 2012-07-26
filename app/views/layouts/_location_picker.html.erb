@@ -7,5 +7,12 @@
       <%= link_to("Cancel", "#", :class => "cancel_link") %> 
     </div>
     <div class="map_canvas"></div>
+    <form class="location_search">
+      <input type="text" class="query" name="query" value=""/>
+      <%= loading_indicator %>
+      <div class="results">
+        Enter a query into the box above to search for a location in Google's geo-database.
+      </div>
+    </form>
   </div>
 </div>

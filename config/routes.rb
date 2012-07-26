@@ -19,6 +19,9 @@ CommandCenter::Application.routes.draw do
   
   namespace(:report){resources(:reports)}
 
+  # proxies for ajax
+  match("proxies/:action", :controller => "proxies")
+  
   root(:to => "welcome#index")
   
   # redirects for ODK

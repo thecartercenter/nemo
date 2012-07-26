@@ -1,4 +1,5 @@
-<% content_for(:per_page_js){javascript_include_tag("response", "location_picker", "dialog", configatron.map_api_url)} %>
+<% content_for(:per_page_js){javascript_include_tag("response", "location_picker", "google_geocoder", 
+  "dialog", configatron.map_api_url)} %>
 <%= render("layouts/location_picker") %>
 
 <%= resp.answers.collect{|a| a.errors.full_messages.join(", ")}.join(" ") %>

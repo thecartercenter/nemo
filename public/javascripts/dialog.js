@@ -1,5 +1,5 @@
 // ELMO.Dialog
-(function(ns) {
+(function(ns, klass) {
   
   // constructor
   ns.Dialog = klass = function(contents) {
@@ -7,7 +7,10 @@
     // create and add div
     this.bg = $("<div>").addClass("dialog_bg");
     this.bg.appendTo($("body")).after(this.contents.addClass("dialog"));
-    $(window).resize(this.redraw);
+    
+    // hookup redraw event using currying
+    (function(_this){ $(window).resize(function(){_this.redraw()}); })(this);
+
     this.redraw();
   }
   
