@@ -52,7 +52,7 @@ module ResponsesHelper
   end
   def new_response_mini_form(visible = true)
     form_tag(new_response_path, :method => :get, :id => "form_chooser", :style => visible ? "" : "display: none") do
-      select_tag(:form_id, options_for_select(Form.select_options), :include_blank => true) +
+      select_tag(:form_id, options_for_select(Form.select_options), :prompt => "Choose a Form...") +
       submit_tag("Go")
     end
   end
