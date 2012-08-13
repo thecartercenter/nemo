@@ -1,16 +1,25 @@
-(function (Response, undefined) {
+(function (ns, klass) {
   
-  Response.init = function() {
+  ns.Response = klass = {}
+  
+  // conditions array
+  klass.conditions = [];
+  
+  klass.init = function() {
     // hookup edit location links
-    $("a.edit_location_link").click(function(e){ show_location_picker(e); return false; })
+    $("a.edit_location_link").click(function(e){ klass.show_location_picker(e); return false; }) 
+    
+    // initialize conditions
+    $.each(klass.conditions, function(i, cond){ cond.init(); })
   }
   
   // shows the map and location search box
-  function show_location_picker(event) {
+  klass.show_location_picker = function(event) {
     var location_box = $(event.target).parents("td.value").find("input.qtype_location")[0];
     new ELMO.LocationPicker(location_box);
   }
+  
 
-}(Response = {}));
+}(ELMO));
 
-$(document).ready(Response.init);
+$(document).ready(ELMO.Response.init);

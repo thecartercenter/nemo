@@ -17,6 +17,9 @@
 class Answer < ActiveRecord::Base
   include ActionView::Helpers::NumberHelper
 
+  # a flag set by javascript on the client side indicating whether the answer is relevant based on any conditions
+  attr_writer(:relevant)
+
   belongs_to(:questioning)
   belongs_to(:option)
   belongs_to(:response)
@@ -113,10 +116,23 @@ class Answer < ActiveRecord::Base
   def options; question.options; end
   def select_options; question.select_options; end
   
+  # relevant defaults to true until set otherwise
+  def relevant?
+    @relevant.nil? ? true : @relevant
+  end
+  
+  # convert to boolean
+  def relevant=(r)
+    @relevant = (r == "true")
+  end
+
+  # alias
+  def relevant; relevant?; end
+  
   private
     def required
-      if required? && !hidden? && value.blank? && time_value.blank? && date_value.blank? && datetime_value.blank? && 
-        option_id.nil? && !can_have_choices? && questioning.condition.nil?
+      if required? && !hidden? && relevant? && !can_have_choices? &&
+        value.blank? && time_value.blank? && date_value.blank? && datetime_value.blank? && option_id.nil? 
           errors.add(:base, "This question is required")
       end
     end

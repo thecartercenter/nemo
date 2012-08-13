@@ -119,6 +119,10 @@ class Condition < ActiveRecord::Base
     "Question ##{ref_qing.rank} #{op} \"#{option ? option.name(lang) : value}\""
   end
   
+  def to_json
+    Hash[[:questioning_id, :ref_qing_id, :op, :value, :option_id].collect{|k| [k, send(k)]}].to_json
+  end
+  
   private 
     def clear_blanks
       begin
