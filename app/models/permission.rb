@@ -16,22 +16,22 @@
 # 
 class Permission
   GENERAL = {
-    "users#index" => {:group => :logged_in},
-    "users#export" => {:group => :logged_in},
+    "users#index" => {:min_level => 1},
+    "users#export" => {:min_level => 1},
     "users#create" => {:min_level => 3},
     "user_batches#*" => {:min_level => 3},
     "users#*" => {:min_level => 3},
     "users#login_instructions" => {:min_level => 3},
     "user_sessions#create" => {:group => :logged_out},
-    "user_sessions#destroy" => {:group => :logged_in},
+    "user_sessions#destroy" => {:min_level => 1},
     "user_sessions#logged_out" => {:group => :logged_out},
     "password_resets#create" => {:group => :logged_out},
     "password_resets#update" => {:group => :logged_out},
     "languages#*" => {:min_level => 3},
-    "search_searches#*" => {:group => :logged_in},
+    "search_searches#*" => {:min_level => 1},
     "welcome#*" => {:group => :anyone},
     "permissions#no" => {:group => :anyone},
-    "forms#index" => {:group => :logged_in},
+    "forms#index" => {:min_level => 1},
     "forms#show" => {:min_level => 2},
     "forms#create" => {:min_level => 3},
     "forms#update" => {:min_level => 3},
@@ -43,8 +43,8 @@ class Permission
     "forms#clone" => {:min_level => 3},
     "form_types#*" => {:min_level => 3},
     "report_reports#*" => {:min_level => 2},
-    "responses#index" => {:group => :logged_in},
-    "responses#create" => {:group => :logged_in},
+    "responses#index" => {:min_level => 1},
+    "responses#create" => {:min_level => 1},
     "responses#show" => {:min_level => 2},
     "responses#update" => {:min_level => 2},
     "responses#destroy" => {:min_level => 2},
@@ -55,8 +55,8 @@ class Permission
     "options#*" => {:min_level => 3},
     "option_sets#*" => {:min_level => 3},
     "broadcasts#*" => {:min_level => 2},
-    "markers#*" => {:group => :logged_in},
-    "proxies#geocoder" => {:group => :logged_in}
+    "markers#*" => {:min_level => 1},
+    "proxies#geocoder" => {:min_level => 1}
   }
   SPECIAL = [
     :anyone_can_edit_some_fields_about_herself_but_nobody_can_edit_their_own_role,
@@ -105,15 +105,12 @@ class Permission
   # returns true if succeeds.
   # returns false if no matching permission is found
   def self.check_permission(key, user)
-    #Rails.logger.debug("Checking general permission #{key} for #{user ? user.login : 'no user'}")
     # fail if it doesn't exist
     return false unless perm = GENERAL[key]
     # check the various kinds of permission
     if perm[:group]
       if perm[:group] == :anyone
         return true
-      elsif perm[:group] == :logged_in
-        user ? (return true) : (raise PermissionError.new "You must login to view that page.")
       elsif perm[:group] == :logged_out
         user ? (raise PermissionError.new "You must be logged out to view that page.") : (return true)
       end
