@@ -10,7 +10,12 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120717182055) do
+ActiveRecord::Schema.define(:version => 20120820145220) do
+
+  create_table "#Tableau_sid_00485CC8_4_none_form_name_nk", :id => false, :force => true do |t|
+    t.string  "none_form_name_nk"
+    t.integer "_Tableau_join_flag", :limit => 8, :default => 0, :null => false
+  end
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -84,6 +89,12 @@ ActiveRecord::Schema.define(:version => 20120717182055) do
     t.string   "code"
   end
 
+  create_table "missions", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "option_sets", :force => true do |t|
     t.string   "name"
     t.datetime "created_at"
@@ -96,6 +107,7 @@ ActiveRecord::Schema.define(:version => 20120717182055) do
     t.integer  "option_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "rank"
   end
 
   create_table "options", :force => true do |t|

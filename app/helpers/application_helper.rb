@@ -89,6 +89,10 @@ module ApplicationHelper
     end
   end
   
+  def form_submit_button(f, label)
+    f.submit(label, :class => "submit")
+  end
+  
   # renders the standard 'required' symbol, which is an asterisk
   def reqd_sym(condition = true)
     (condition ? '<div class="reqd_sym">*</div>' : '').html_safe

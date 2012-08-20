@@ -4,6 +4,7 @@ CommandCenter::Application.routes.draw do
   resources(:form_types)
   resources(:languages)
   resources(:markers)
+  resources(:missions)
   resources(:options)
   resources(:option_sets)
   resources(:password_resets)

@@ -23,6 +23,10 @@ en:
         submit_new: Generate Report
         submit_edit: Save Changes
     tips:
+      form_type:
+        name: A short name for this Form Type. Maximum 16 characters.
+      mission:
+        name: A name for this Mission. Maximum 16 characters. Must be unique. Think about including the year if there will be future missions with the same name.
       report/report:
         name: A descriptive title for this report.
         aggregation_id: The operation you want to perform on the combined data.
@@ -33,8 +37,6 @@ en:
         pri_grouping: An attribute or question by which the response count should be grouped (e.g. state, overall rating).
         percent_type: Whether and how percentages should be calculated for the report.
         bar_style: Whether bars should be stacked or side-by-side. 
-      form_type:
-        name: A short name for this Form Type. Maximum 16 characters.
       user_batch:
         users: |-
           Enter the user names, email addresses, and phone numbers (WITH country codes), one per line, separated by commas. For example:
