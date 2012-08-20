@@ -23,9 +23,10 @@ class Role < ActiveRecord::Base
   default_scope(order("level"))
 
   def self.generate
-    seed(:name, :name => "Admin", :level => "3")
-    seed(:name, :name => "Coordinator", :level => "2")
-    seed(:name, :name => "Observer", :level => "1")
+    seed(:level, :name => "Admin", :level => "4")
+    seed(:level, :name => "Coordinator", :level => "3")
+    seed(:level, :name => "Staffer", :level => "2")
+    seed(:level, :name => "Observer", :level => "1")
   end
   
   def self.select_options
@@ -44,5 +45,5 @@ class Role < ActiveRecord::Base
     name
   end
   def is_observer?; level == 1; end
-  def is_admin?; level == 3; end
+  def is_admin?; level == 4; end
 end
