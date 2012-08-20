@@ -60,7 +60,7 @@ class Permission
     "missions#*" => {:group => :admin}
   }
   SPECIAL = [
-    :anyone_can_edit_some_fields_about_herself_but_nobody_can_edit_their_own_role,
+    :anyone_can_edit_some_fields_about_herself,
     :admin_can_delete_anyone_except_herself,
     :observer_can_view_edit_delete_own_responses_if_not_reviewed,
     :observer_cant_change_user_or_reviewed_for_response,
@@ -81,8 +81,8 @@ class Permission
     # try special permissions first
     SPECIAL.each{|sc| return if send(sc, params)}
     # try general permissions
-    return if check_permission("#{params[:controller]}##{params[:action]}", params[:user])
-    return if check_permission("#{params[:controller]}#*", params[:user])
+    return if check_permission("#{params[:controller]}##{params[:action]}", params[:user], params[:mission])
+    return if check_permission("#{params[:controller]}#*", params[:user], params[:mission])
     # if we get this far, it didn't work out
     raise PermissionError.new "You don't have permission to do that."
   end
@@ -92,9 +92,9 @@ class Permission
   def self.restrict(relation, params)
     parse_params!(params)
     # observer can only see his/her own responses
-    if params[:key] == "responses#index" && params[:user].is_observer?
+    if params[:key] == "responses#index" && params[:user].is_observer?(params[:mission])
       relation.where("responses.user_id" => params[:user].id)
-    elsif params[:key] == "forms#index" && params[:user].is_observer?
+    elsif params[:key] == "forms#index" && params[:user].is_observer?(params[:mission])
       relation.where("forms.published" => 1)
     else
       relation
@@ -105,7 +105,7 @@ class Permission
   # raises an error (immediate failure) if a matching permission is found and fails
   # returns true if succeeds.
   # returns false if no matching permission is found
-  def self.check_permission(key, user)
+  def self.check_permission(key, user, mission)
     # fail if it doesn't exist
     return false unless perm = GENERAL[key]
     # check the various kinds of permission
@@ -113,14 +113,14 @@ class Permission
       if perm[:group] == :anyone
         return true
       elsif perm[:group] == :admin
-        user.admin? ? (return true) : (raise PermissionError.new "You must be an administrator to view that page.")
+        (user && user.admin?) ? (return true) : (raise PermissionError.new "You must be an administrator to view that page.")
       elsif perm[:group] == :logged_out
         user ? (raise PermissionError.new "You must be logged out to view that page.") : (return true)
       end
     elsif perm[:min_level]
       if !user
         raise PermissionError.new "You must login to view that page." 
-      elsif user.role.level < perm[:min_level]
+      elsif user.role(mission).level < perm[:min_level]
         raise PermissionError.new "You don't have enough permissions to view that page."
       else
         return true
@@ -135,23 +135,21 @@ class Permission
     # SPECIAL PERMISSION FUNCTIONS
     # return true (causing immediate success) if they succeed
     # return false/nil if they fail
-    def self.anyone_can_edit_some_fields_about_herself_but_nobody_can_edit_their_own_role(params)
+    def self.anyone_can_edit_some_fields_about_herself(params)
       # this special permission only valid for users#update
       return false unless params[:key] == "users#update"
       # require a user
       return false unless params[:user]
       # get the user object being edited, if the :id param is provided
       params[:object] = User.find_by_id(params[:request][:id]) if params[:request]
-      # if this is a admin
+      # if this is an admin
       if params[:user].admin?
-        # if they're not editing themselves, OR if they're not trying to change their own role or active status, they're ok
-        return params[:user] != params[:object] || !trying_to_change?(params, 'role', 'role_id', 'active?', 'active')
+        # if they're not editing themselves they're ok
+        return params[:user] != params[:object]
       # otherwise, they're not a admin
       else
         # so object and user must be equal to proceed any further
-        return false unless params[:user] == params[:object]
-        # if they're not trying to change prohibited fields, they're good
-        return !trying_to_change?(params, 'active?', 'active', 'role', 'role_id')
+        return params[:user] == params[:object]
       end
     end
   
@@ -170,7 +168,7 @@ class Permission
       # only valid for responses#update and responses#destroy
       return false unless %w(responses#update responses#destroy responses#show).include?(params[:key])
       # only valid for observers
-      return false unless params[:user] && params[:user].is_observer?
+      return false unless params[:user] && params[:user].is_observer?(params[:mission])
       # get the response object being edited
       params[:object] = Response.find_by_id(params[:request][:id]) if params[:request]
       # require an object
@@ -185,7 +183,7 @@ class Permission
     
     def self.observer_cant_change_user_or_reviewed_for_response(params)
       # raise exception if user is an observer AND object is a response AND trying to change user_id
-      if params[:user] && params[:user].is_observer? && 
+      if params[:user] && params[:user].is_observer?(params[:mission]) && 
         params[:object] && params[:object].is_a?(Response) &&
         trying_to_change?(params, 'user_id', 'user', 'reviewed', 'reviewed?')
         raise PermissionError.new "Observers can't change the submitter for responses."

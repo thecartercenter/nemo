@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120820181620) do
+ActiveRecord::Schema.define(:version => 20120820182538) do
 
   create_table "#Tableau_sid_00485CC8_4_none_form_name_nk", :id => false, :force => true do |t|
     t.string  "none_form_name_nk"
@@ -292,10 +292,7 @@ ActiveRecord::Schema.define(:version => 20120820181620) do
     t.string   "login"
     t.string   "email"
     t.integer  "language_id"
-    t.integer  "role_id"
-    t.integer  "location_id"
     t.string   "phone"
-    t.boolean  "active",              :default => false
     t.string   "password_salt"
     t.string   "crypted_password"
     t.string   "single_access_token"

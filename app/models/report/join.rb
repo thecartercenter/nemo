@@ -79,10 +79,6 @@ class Report::Join
       :name => :users,
       :sql => "LEFT JOIN users ON responses.user_id = users.id"
     ),
-    :roles => new(
-      :name => :roles,
-      :sql => "LEFT JOIN roles ON users.role_id = roles.id"
-    ),
     :languages => new(
       :name => :languages,
       :sql => "LEFT JOIN languages ON users.language_id = languages.id"

@@ -16,7 +16,7 @@
 # 
 module UsersHelper
   def users_index_fields
-    %w[name login email language role main_phone alternate_phone active? actions]
+    %w[name login email language main_phone alternate_phone actions]
   end
   def format_users_field(user, field)
     case field
@@ -24,7 +24,6 @@ module UsersHelper
     when "main_phone" then user.phone
     when "alternate_phone" then user.phone2
     when "language" then user.language.name
-    when "active?" then user.active? ? "Yes" : "No"
     when "actions"
       action_links(user, :exclude => :show,
         :destroy_warning => "Are you sure you want to delete #{user.name}?")

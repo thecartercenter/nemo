@@ -101,7 +101,7 @@ class ResponsesController < ApplicationController
       # find or create the response
       @resp = action == "create" ? Response.new : Response.find(params[:id])
       # set user_id if this is an observer
-      @resp.user = current_user if current_user.is_observer?
+      @resp.user = current_user if current_user.is_observer?(current_mission)
       # try to save
       begin
         @resp.update_attributes!(params[:response])

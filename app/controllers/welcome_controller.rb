@@ -21,7 +21,6 @@ class WelcomeController < ApplicationController
 
     @dont_print_title = true
     @user_count = User.count
-    @observer_count = User.observers.count
     @pub_form_count = Form.published.count
     @unpub_form_count = Form.count - @pub_form_count
     restricted_responses = Permission.restrict(Response, :user => current_user, :controller => "responses", :action => "index")

@@ -28,7 +28,7 @@ module ReportTestHelper
   
   def user
     @users[:test] ||= User.create!(:login => "test", :name => "Test",
-      :email => "test@example.com", :role_id => 1, :active => true, 
+      :email => "test@example.com",
       :language => Language.english, :password => "changeme", :password_confirmation => "changeme")
   end
 

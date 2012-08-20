@@ -26,6 +26,7 @@ class User < ActiveRecord::Base
   before_destroy(:check_assoc)
   has_many(:responses)
   has_many(:broadcast_addressings)
+  has_many(:mission_assignments)
   
   acts_as_authentic do |c| 
     c.disable_perishable_token_maintenance = true
@@ -38,15 +39,13 @@ class User < ActiveRecord::Base
   end
   
   validates(:name, :presence => true)
-  validates(:role_id, :presence => true)
   validates(:language_id, :presence => true)
   validate(:phone_length_or_empty)
   validate(:must_have_password_reset_on_create)
   validate(:password_reset_cant_be_email_if_no_email)
   
-  default_scope(includes(:language, :role).order("users.name"))
+  default_scope(includes(:language).order("users.name"))
   scope(:active_english, includes(:language).where(:active => true).where("languages.code" => "eng"))
-  scope(:observers, includes(:role).where("roles.name = 'observer'"))
   
   # we want all of these on one page for now
   self.per_page = 1000000
@@ -85,14 +84,13 @@ class User < ActiveRecord::Base
       Search::Qualifier.new(:label => "name", :col => "users.name", :default => true, :partials => true),
       Search::Qualifier.new(:label => "login", :col => "users.login", :default => true),
       Search::Qualifier.new(:label => "language", :col => "languages.code", :assoc => :languages),
-      Search::Qualifier.new(:label => "role", :col => "roles.name", :assoc => :roles),
       Search::Qualifier.new(:label => "email", :col => "users.email", :partials => true),
       Search::Qualifier.new(:label => "phone", :col => "users.phone", :partials => true)
     ]
   end
 
   def self.search_examples
-    ["pinchy lombard", 'role:observer', "language:english", "phone:+44"]
+    ["pinchy lombard", "language:english", "phone:+44"]
   end
   
   def reset_password
@@ -138,7 +136,16 @@ class User < ActiveRecord::Base
   def can_get_sms?; !(phone.blank? && phone2.blank?) end
   def can_get_email?; !email.blank?; end
   
-  def is_observer?; role ? role.is_observer? : false; end
+  # gets the user's role for the given mission
+  # returns nil if the user is not assigned to the mission
+  def role(mission)
+    nn(mission_assignments.find_by_mission_id(mission.id)).role
+  end
+  
+  # determines if the user's role for the given mission is as an observer
+  def is_observer?(mission)
+    (r = role(mission)) ? r.is_observer? : false
+  end
   
   private
     def clean_fields
@@ -156,8 +163,7 @@ class User < ActiveRecord::Base
     def check_assoc
       # Can't delete users with related responses.
       unless responses.empty?
-        raise("You can't delete #{name} because he/she has associated responses." +
-          (active? ? " You could set him/her to inactive instead." : ""))
+        raise "You can't delete #{name} because he/she has associated responses."
       end
     end
     
