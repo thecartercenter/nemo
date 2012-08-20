@@ -57,7 +57,7 @@ class Permission
     "broadcasts#*" => {:min_level => 2},
     "markers#*" => {:min_level => 1},
     "proxies#geocoder" => {:min_level => 1},
-    "missions#*" => {:min_level => 4}
+    "missions#*" => {:group => :admin}
   }
   SPECIAL = [
     :anyone_can_edit_some_fields_about_herself_but_nobody_can_edit_their_own_role,
@@ -112,6 +112,8 @@ class Permission
     if perm[:group]
       if perm[:group] == :anyone
         return true
+      elsif perm[:group] == :admin
+        user.admin? ? (return true) : (raise PermissionError.new "You must be an administrator to view that page.")
       elsif perm[:group] == :logged_out
         user ? (raise PermissionError.new "You must be logged out to view that page.") : (return true)
       end
@@ -141,7 +143,7 @@ class Permission
       # get the user object being edited, if the :id param is provided
       params[:object] = User.find_by_id(params[:request][:id]) if params[:request]
       # if this is a admin
-      if params[:user].is_admin?
+      if params[:user].admin?
         # if they're not editing themselves, OR if they're not trying to change their own role or active status, they're ok
         return params[:user] != params[:object] || !trying_to_change?(params, 'role', 'role_id', 'active?', 'active')
       # otherwise, they're not a admin
@@ -157,7 +159,7 @@ class Permission
       # this special permission only valid for users#destroy
       return false unless params[:key] == "users#destroy"
       # require a admin
-      return false unless params[:user] && params[:user].is_admin?
+      return false unless params[:user] && params[:user].admin?
       # get the user object being edited, if the :id param is provided
       params[:object] = User.find_by_id(params[:request][:id]) if params[:request]
       # if she's not deleting herself, she's ok

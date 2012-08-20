@@ -39,7 +39,7 @@ table.form td.name { min-width: 75px; }
 div.form_field { float: left; border-top: 1px solid #ddd; padding: 5px 0 5px 0; }
 div.form_field label { float: left; width: 150px; }
 div.form_field div.form_field_control { float: left; min-width: 300px; min-height: 26px; position: relative; }
-div.form_field div.form_field_control input { width: 240px; }
+div.form_field div.form_field_control input.text { width: 240px; }
 div.form_field div.form_field_control input.radio { width: 15px; }
 div.form_field div.form_field_details { float: right; width: 300px; position: relative; font-size: 90%; }
 div.form_field div.form_field_details span.translation_missing { display: none; }
@@ -145,8 +145,9 @@ textarea#broadcast_body { width: 400px; height: 200px; }
 #login_instructions td.value { font-weight: bold; width: 300px; }
 
 /* user edit */
-.users_edit #user_notes, .users_new #user_notes { width: 300px; height: 100px; }
-.users_edit #user_device, .users_new #user_device { width: 100px; }
+.users_edit input#user_login, .users_new input#user_login { width: 150px; }
+.users_edit input#login_suggest_button, .users_new input#login_suggest_button  { width: 75px; }
+.users_edit textarea#user_notes, .users_new textarea#user_notes { width: 240px; height: 100px; }
 
 /* user batches */
 .user_batches_new #user_batch_users { width: 350px; height: 200px; margin-right: 20px; }

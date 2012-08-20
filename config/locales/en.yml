@@ -22,6 +22,12 @@ en:
         bar_style: Bar Style
         submit_new: Generate Report
         submit_edit: Save Changes
+      user:
+        name: Full Name
+        phone: Main Phone
+        admin: Is Administrator?
+        phone2: Alternate Phone
+        password_confirmation: Re-type Password
     tips:
       form_type:
         name: A short name for this Form Type. Maximum 16 characters.
@@ -37,6 +43,15 @@ en:
         pri_grouping: An attribute or question by which the response count should be grouped (e.g. state, overall rating).
         percent_type: Whether and how percentages should be calculated for the report.
         bar_style: Whether bars should be stacked or side-by-side. 
+      user:
+        name: "The user's full name. Example: 'John Doe' or 'Team 1.1'"
+        login: The login name will be used to log in. Click the suggest button to suggest a login name.
+        phone: "Phone number should include the country code. Example: +25680344523"
+        phone2: "Phone number should include the country code. Example: +25680344523"
+        language: The user's preferred language.
+        admin: Whether this user is a system-wide administrator. You can control per-mission permissions using the fields below.
+        password: Enter a new password here if you'd like to change your existing password.
+        password_confirmation: Enter the new password again.
       user_batch:
         users: |-
           Enter the user names, email addresses, and phone numbers (WITH country codes), one per line, separated by commas. For example:

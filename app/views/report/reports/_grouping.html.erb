@@ -1,4 +1,4 @@
-<%= fields_for("report_report[#{method}_attributes]", report_form.object.send(method)) do |f| %>
+<%= fields_for("report_report[#{method}_attributes]", form.object.send(method)) do |f| %>
   <%= f.select(:form_choice, grouped_options_for_select(Report::Grouping.select_options, 
-    (report_form.object.send(method).form_choice rescue nil)), :include_blank => true) %>
+    (form.object.send(method).form_choice rescue nil)), :include_blank => true) %>
 <% end %>

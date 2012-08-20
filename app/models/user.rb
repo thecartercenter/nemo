@@ -139,7 +139,6 @@ class User < ActiveRecord::Base
   def can_get_email?; !email.blank?; end
   
   def is_observer?; role ? role.is_observer? : false; end
-  def is_admin?; role ? role.is_admin? : false; end
   
   private
     def clean_fields

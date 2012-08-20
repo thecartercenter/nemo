@@ -23,7 +23,6 @@ class Role < ActiveRecord::Base
   default_scope(order("level"))
 
   def self.generate
-    seed(:level, :name => "Admin", :level => "4")
     seed(:level, :name => "Coordinator", :level => "3")
     seed(:level, :name => "Staffer", :level => "2")
     seed(:level, :name => "Observer", :level => "1")
@@ -45,5 +44,4 @@ class Role < ActiveRecord::Base
     name
   end
   def is_observer?; level == 1; end
-  def is_admin?; level == 4; end
 end

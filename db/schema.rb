@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120820145220) do
+ActiveRecord::Schema.define(:version => 20120820165013) do
 
   create_table "#Tableau_sid_00485CC8_4_none_form_name_nk", :id => false, :force => true do |t|
     t.string  "none_form_name_nk"
@@ -93,6 +93,7 @@ ActiveRecord::Schema.define(:version => 20120820145220) do
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "compact_name"
   end
 
   create_table "option_sets", :force => true do |t|
@@ -298,6 +299,7 @@ ActiveRecord::Schema.define(:version => 20120820145220) do
     t.datetime "last_request_at"
     t.string   "name"
     t.string   "phone2"
+    t.boolean  "admin"
   end
 
   add_index "users", ["login"], :name => "index_users_on_login", :unique => true

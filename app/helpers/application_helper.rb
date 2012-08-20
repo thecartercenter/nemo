@@ -62,14 +62,15 @@ module ApplicationHelper
       f.submit(f.object.class.human_attribute_name("submit_" + (f.object.new_record? ? "new" : "edit")), :class => "submit")
     else
       content_tag("div", :class => "form_field", :id => method) do
-        label_txt = (f.object.class.human_attribute_name(method) + (options[:required] ? " #{reqd_sym}" : "")).html_safe
-        label = f.label(method, label_txt)
+        label_str = options[:label] || f.object.class.human_attribute_name(method)
+        label_html = (label_str + (options[:required] ? " #{reqd_sym}" : "")).html_safe
+        label = f.label(method, label_html)
         field = content_tag("div", :class => "form_field_control") do
           if options[:partial]
-            render(options[:partial], :report_form => f, :method => method)
+            render(options[:partial], (options[:locals] || {}).merge({:form => f, :method => method}))
           else
             case options[:type]
-            when nil, :text then f.text_field(method)
+            when nil, :text then f.text_field(method, {:class => "text"}.merge(options[:size] ? {:size => options[:size]} : {}))
             when :check_box then f.check_box(method)
             when :radio_buttons then options[:options].collect{|o| f.radio_button(method, o, :class => "radio") + o}.join("&nbsp;&nbsp;").html_safe
             when :textarea then f.text_area(method)
@@ -90,7 +91,7 @@ module ApplicationHelper
   end
   
   def form_submit_button(f, label)
-    f.submit(label, :class => "submit")
+    f.submit(label, :class => "submit") + tag("br", :clear => "both")
   end
   
   # renders the standard 'required' symbol, which is an asterisk
