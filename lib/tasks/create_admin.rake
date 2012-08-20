@@ -3,7 +3,7 @@ namespace :db do
   task :create_admin => :environment do
 
     u = User.new(:login => "admin", :name => "Super User", :login => "super",
-      :email => "webmaster@cceom.org", :role_id => Role.find(:first, :order => "level DESC").id,
+      :email => "webmaster@cceom.org", :role => Role.highest,
       :active => true, :language_id => Language.english.id)
     u.password = u.password_confirmation = 'changeme'
     u.save
