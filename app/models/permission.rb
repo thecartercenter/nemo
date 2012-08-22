@@ -23,7 +23,7 @@ class Permission
     "users#*" => {:min_level => 3},
     "users#login_instructions" => {:min_level => 3},
     "user_sessions#create" => {:group => :logged_out},
-    "user_sessions#destroy" => {:min_level => 1},
+    "user_sessions#destroy" => {:group => :anyone},
     "user_sessions#logged_out" => {:group => :logged_out},
     "password_resets#create" => {:group => :logged_out},
     "password_resets#update" => {:group => :logged_out},
@@ -62,6 +62,7 @@ class Permission
   SPECIAL = [
     :anyone_can_edit_some_fields_about_herself,
     :admin_can_delete_anyone_except_herself,
+    :admins_can_always_edit_users,
     :observer_can_view_edit_delete_own_responses_if_not_reviewed,
     :observer_cant_change_user_or_reviewed_for_response,
     :observer_can_show_published_forms
@@ -120,8 +121,8 @@ class Permission
     elsif perm[:min_level]
       if !user
         raise PermissionError.new "You must login to view that page." 
-      elsif user.role(mission).level < perm[:min_level]
-        raise PermissionError.new "You don't have enough permissions to view that page."
+      elsif !(role = user.role(mission)) || role.level < perm[:min_level]
+        raise PermissionError.new "You don't have permission to view that page."
       else
         return true
       end
@@ -195,6 +196,12 @@ class Permission
       return false unless params[:key] == "forms#show"
       params[:object] = Form.find_by_id(params[:request][:id]) if params[:request]
       return params[:object] && params[:object].published?
+    end
+    
+    def self.admins_can_always_edit_users(params)
+      return false unless params[:controller] == "users"
+      return true if params[:user] && params[:user].admin?
+      return false
     end
     
     ###############################################

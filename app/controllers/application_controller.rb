@@ -27,7 +27,7 @@ class ApplicationController < ActionController::Base
   before_filter(:authorize)
   before_filter(:set_timezone)
   
-  helper_method :current_user_session, :current_user, :authorized?
+  helper_method :current_user_session, :current_user, :current_mission, :authorized?
   
   # hackish way of getting the route key identical to what would be returned by model_name.route_key on a model
   def route_key
@@ -113,10 +113,14 @@ class ApplicationController < ActionController::Base
       @current_user = current_user_session && current_user_session.user
     end
     
+    def current_mission
+      current_user ? current_user.current_mission : nil
+    end
+    
     def authorize
       # make sure user has permissions
       begin
-        Permission.authorize(:user => current_user, :controller => route_key, :action => action_name, :request => params)
+        Permission.authorize(:user => current_user, :mission => current_mission, :controller => route_key, :action => action_name, :request => params)
         return true
       rescue PermissionError
         # if request is for the login page, just go to welcome page with no flash
@@ -137,7 +141,7 @@ class ApplicationController < ActionController::Base
     end 
     
     def authorized?(params)
-      return Permission.authorized?(params.merge(:user => current_user))
+      return Permission.authorized?(params.merge(:user => current_user, :mission => current_mission))
     end
     
     # redirects to the login page

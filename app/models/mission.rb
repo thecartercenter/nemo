@@ -7,7 +7,12 @@ class Mission < ActiveRecord::Base
                    :if => Proc.new{|m| !m.name.blank?})
   validate(:compact_name_unique)
   
-  default_scope(order("name"))
+  scope(:sorted_by_name, order("name"))
+  scope(:sorted_recent_first, order("created_at DESC"))
+  
+  def self.select_options(list = nil)
+    (list || all).collect{|m| [m.name, m.id]}
+  end
   
   private
     def create_compact_name

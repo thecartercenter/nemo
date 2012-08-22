@@ -14,3 +14,6 @@ String.prototype.rpad = function(pad_str, length) {
   while (str.length < length) str = str + pad_str;
   return str;
 }
+
+// hookup mission dropdown box to submit form
+$(document).ready(function(){ $("select#user_current_mission_id").change(function(e){ $(e.target).parents("form").submit(); }) });

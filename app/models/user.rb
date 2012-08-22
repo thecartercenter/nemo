@@ -27,6 +27,8 @@ class User < ActiveRecord::Base
   has_many(:responses)
   has_many(:broadcast_addressings)
   has_many(:mission_assignments)
+  has_many(:missions, :through => :mission_assignments)
+  belongs_to(:current_mission, :class_name => "Mission")
   
   acts_as_authentic do |c| 
     c.disable_perishable_token_maintenance = true
@@ -139,12 +141,23 @@ class User < ActiveRecord::Base
   # gets the user's role for the given mission
   # returns nil if the user is not assigned to the mission
   def role(mission)
+    return nil if mission.nil?
     nn(mission_assignments.find_by_mission_id(mission.id)).role
   end
   
   # determines if the user's role for the given mission is as an observer
   def is_observer?(mission)
     (r = role(mission)) ? r.is_observer? : false
+  end
+  
+  # if user has no mission, choose one (if assigned to any)
+  def choose_a_mission_if_none
+    update_attributes(:current_mission => missions.sorted_recent_first.first) if current_mission.nil? && !missions.empty?
+  end
+  
+  # returns all allowed missions, including assigned missions, and all missions if admin
+  def allowed_missions
+    admin? ? Mission.all : missions
   end
   
   private

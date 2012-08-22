@@ -91,7 +91,7 @@ module ApplicationHelper
   end
   
   def form_submit_button(f, label)
-    f.submit(label, :class => "submit") + tag("br", :clear => "both")
+    tag("br", :clear => "left") + f.submit(label, :class => "submit") + tag("br", :clear => "left")
   end
   
   # renders the standard 'required' symbol, which is an asterisk

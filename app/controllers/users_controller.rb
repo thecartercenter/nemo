@@ -27,17 +27,24 @@ class UsersController < ApplicationController
   end
   def update
     @user = User.find(params[:id])
-    if @user.update_attributes(params[:user])
-      if @user == current_user
-        flash[:success] = "Profile updated successfully."
-        redirect_to(:action => :edit)
-      else
-        flash[:success] = "User updated successfully."
-        @user.reset_password_if_requested
-        handle_printable_instructions
-      end
+    
+    # if this was just the current_mission form, update and redirect back to referrer
+    if params[:changing_current_mission]
+      @user.update_attributes(params[:user])
+      redirect_to(request.referrer)
     else
-      render(:action => :edit)
+      if @user.update_attributes(params[:user])
+        if @user == current_user
+          flash[:success] = "Profile updated successfully."
+          redirect_to(:action => :edit)
+        else
+          flash[:success] = "User updated successfully."
+          @user.reset_password_if_requested
+          handle_printable_instructions
+        end
+      else
+        render(:action => :edit)
+      end
     end
   end
   def create

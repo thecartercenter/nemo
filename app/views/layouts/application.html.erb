@@ -23,6 +23,19 @@
         <div id="userinfo">
           <% if current_user %>
             Logged in as <strong><%= current_user.login %></strong> |
+            
+            Mission: 
+            <% if current_user.missions.size > 1 %>
+              <%= form_for(current_user) do |f| %>
+                <%= f.select(:current_mission_id, Mission.select_options(current_user.allowed_missions), 
+                  :include_blank => "[None]") %>
+                <%= hidden_field_tag(:changing_current_mission, 1) %>
+              <% end %>
+            <% else %>
+              <strong><%= current_mission ? current_mission.name : "None" %></strong>
+            <% end %>
+            |
+            
             <%= link_to("Edit Profile", edit_user_path(current_user.id)) %> |
             <%= button_to("Logout", user_session_path, :method => :delete, :id => "logout_button") %>
           <% else %>
