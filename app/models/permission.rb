@@ -121,7 +121,7 @@ class Permission
     elsif perm[:min_level]
       if !user
         raise PermissionError.new "You must login to view that page." 
-      elsif !(role = user.role(mission)) || role.level < perm[:min_level]
+      elsif !user.admin? && (!(role = user.role(mission)) || role.level < perm[:min_level])
         raise PermissionError.new "You don't have permission to view that page."
       else
         return true
