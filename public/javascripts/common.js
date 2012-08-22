@@ -158,4 +158,9 @@ function redirect_to_login() {
     $.ajax(params);
   }
   
+  // adds a name/value pair (e.g. "foo=bar") to a url; checks if there is already a query string
+  Utils.add_url_param = function(url, param) {
+    return url + (url.indexOf("?") == "-1" ? "?" : "&") + param;
+  }
+  
 }(Utils = {}));

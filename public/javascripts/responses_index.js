@@ -10,7 +10,7 @@ function responses_fetch() {
   
   // run the ajax request
   Utils.ajax_with_session_timeout_check({
-    url: window.location.href + "&auto=1",
+    url: Utils.add_url_param(window.location.href, "auto=1"),
     method: "get",
     success: responses_update
   });
