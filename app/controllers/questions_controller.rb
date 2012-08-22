@@ -16,14 +16,11 @@
 # 
 class QuestionsController < ApplicationController
   def index
-    @questions = load_objects_with_subindex(Question)
+    @questions = apply_filters(Question)
   end
   
   def choose
-    # find or create a subindex object
-    @subindex = Subindex.find_and_update(session, current_user, "Question", params[:page], "choose")
-    @subindex.extras[:form] = Form.find(params[:form_id]) if params[:form_id]
-    @form = @subindex.extras[:form]
+    @form = Form.find(params[:form_id])
     @title = "Adding Questions to Form: #{@form.name}"
     @questions = Question.not_in_form(@form)
     if @questions.empty?

@@ -70,9 +70,9 @@ div.compact_error { color: #d02000; font-weight: bold; }
 div.field_with_errors { display: inline; }
 
 /* search form */
-form.new_search_search, form.edit_search_search { margin-bottom: 10px; }
-form.new_search_search #search_search_str, form.edit_search_search #search_search_str { width: 300px; }
-#search_examples { margin-top: 2px; color: #666; }
+form.search_form { margin-bottom: 10px; }
+form.search_form input#search_str { width: 300px; }
+form.search_form #search_examples { margin-top: 2px; color: #666; }
 
 /* welcome */
 .welcome_index div.block { float: left; background-color: #eee; width: 150px; height: 225px; padding: 10px; margin: 0 20px 20px 0; }

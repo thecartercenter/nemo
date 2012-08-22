@@ -19,7 +19,7 @@ class FormsController < ApplicationController
     if request.format.xml?
       @forms = Form.published
     else
-      @forms = load_objects_with_subindex(Form)
+      @forms = apply_filters(Form)
     end
     render_appropriate_format
   end

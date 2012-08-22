@@ -37,6 +37,7 @@ class Form < ActiveRecord::Base
   scope(:published, where(:published => true))
   scope(:with_questions, includes(:type, {:questionings => [:form, :condition, {:question => 
     [:type, :translations, :option_set]}]}).order("questionings.rank"))
+  scope(:by_mission, lambda{|m| where(:mission_id => m.id)})
   
   def self.select_options
     published.collect{|f| [f.full_name, f.id]}

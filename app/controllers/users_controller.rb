@@ -16,7 +16,7 @@
 # 
 class UsersController < ApplicationController
   def index
-    @users = load_objects_with_subindex(User)
+    @users = apply_filters(User)
   end
   def new
     @user = User.active_english.new

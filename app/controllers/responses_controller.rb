@@ -41,23 +41,16 @@ class ResponsesController < ApplicationController
   def index
     respond_to do |format|
       format.html do
-        @responses = load_objects_with_subindex(Response)
+        @responses = apply_filters(Response)
         @js << "responses_index"
         render(:partial => "table_only", :locals => {:responses => @responses}) if ajax_request?
       end
       format.csv do
         require 'fastercsv'
-        @subindex = Subindex.find_and_update(session, current_user, "Response", nil)
+        
+        # get the response, for export, but not paginated
+        @responses = Response.for_export(apply_filters(Response, :pagination => false))
 
-        rel = Response
-        
-        # apply search (if any)
-        rel = @subindex.search.apply(rel)
-        
-        # restrict permissions
-        rel = Permission.restrict(rel, :user => current_user, :controller => "responses", :action => "index")
-        
-        @responses = Response.for_export(rel)
         # render the csv
         render_csv("responses-#{Time.zone.now.to_s(:filename_datetime)}")
       end

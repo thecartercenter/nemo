@@ -1,10 +1,9 @@
-<%= form_for(search) do |f| %>
-  Search: <%= f.text_field(:str) %>
-  <%= f.hidden_field(:class_name) %>
-  <%= f.submit("Search") %>
-  <% unless search.new_record? %>
-    <%= f.submit("Clear", :onclick => "this.form.search_search_str.value=''") %>
+<form class="search_form">
+  Search: <input type="text" name="search" value="<%= search.str %>" id="search_str">
+  <input type="submit" value="Search">
+  <% unless search.str.blank? %>
+    <input type="button" value="Clear" id="clear_button">
   <% end %>
   <br/>
   <%= search_examples(search) %>
-<% end %>
+</form>

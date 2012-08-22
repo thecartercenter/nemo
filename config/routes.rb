@@ -23,6 +23,9 @@ CommandCenter::Application.routes.draw do
   # proxies for ajax
   match("proxies/:action", :controller => "proxies")
   
+  # logout shortcut
+  match("/logout" => "user_sessions#destroy")
+  
   root(:to => "welcome#index")
   
   # redirects for ODK

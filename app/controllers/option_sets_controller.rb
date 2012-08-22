@@ -16,7 +16,7 @@
 # 
 class OptionSetsController < ApplicationController
   def index
-    @sets = load_objects_with_subindex(OptionSet)
+    @sets = apply_filters(OptionSet)
   end
   
   def new

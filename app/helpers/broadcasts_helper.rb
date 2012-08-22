@@ -16,7 +16,7 @@
 # 
 module BroadcastsHelper
   def broadcasts_index_links(broadcasts)
-    [link_to_if_auth("Send Broadcast", new_mission_broadcast_path(cur_mission), "broadcasts#create")]
+    [link_to_if_auth("Send Broadcast", new_broadcast_path, "broadcasts#create")]
   end
   
   def broadcasts_index_fields

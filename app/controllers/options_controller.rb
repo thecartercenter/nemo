@@ -16,7 +16,7 @@
 # 
 class OptionsController < ApplicationController
   def index
-    @options = load_objects_with_subindex(Option)
+    @options = apply_filters(Option)
   end
   
   def new

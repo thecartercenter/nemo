@@ -61,22 +61,29 @@ class ApplicationController < ActionController::Base
       Time.zone = configatron.timezone.to_s if configatron.timezone
     end
     
-    def load_objects_with_subindex(klass)
-      # find or create a subindex object
-      @subindex = Subindex.find_and_update(session, current_user, klass.name, params[:page])
-      # get the users
-      begin
-        @objs = @subindex.load
-      rescue ActiveRecord::StatementInvalid, Search::ParseError
-        flash[:error] = $!.is_a?(ActiveRecord::StatementInvalid) ? "Your search is invalid" : $!.to_s
-        @subindex.reset_search
-        @objs = @subindex.load
-      end
-      @objs
-    end
-    
     def load_selected_objects(klass)
       params[:selected].keys.collect{|id| klass.find_by_id(id)}.compact
+    end
+    
+    # applies search, permissions, and pagination
+    # each of these can be turned off by specifying e.g. :pagination => false in the options array
+    def apply_filters(klass, options = {})
+      # start relation object
+      rel = klass
+
+      # apply search
+      @search = Search::Search.new(:class_name => klass.name, :str => params[:search])
+      rel = @search.apply(rel) unless options[:search] == false
+      
+      # apply permissions
+      rel = Permission.restrict(rel, :user => current_user, :controller => klass.name.pluralize.underscore, 
+        :action => "index") unless options[:permissions] == false
+
+      # apply pagination and return
+      rel.paginate(:page => params[:page]) unless options[:pagination] == false
+      
+      # return the relation
+      rel
     end
     
     def init_js_array

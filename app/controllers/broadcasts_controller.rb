@@ -17,7 +17,7 @@
 class BroadcastsController < ApplicationController
   
   def index
-    @broadcasts = load_objects_with_subindex(Broadcast)
+    @broadcasts = apply_filters(Broadcast)
   end
   
   def new

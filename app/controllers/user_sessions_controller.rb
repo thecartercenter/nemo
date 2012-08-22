@@ -43,7 +43,6 @@ class UserSessionsController < ApplicationController
     @user_session = UserSession.find  
     @user_session.destroy
     forget_location
-    Subindex.clear_all(session)
     redirect_to(:action => :logged_out)
   end
   

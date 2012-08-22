@@ -16,7 +16,7 @@
 # 
 class FormTypesController < ApplicationController
   def index
-    @form_types = load_objects_with_subindex(FormType)
+    @form_types = apply_filters(FormType)
   end
   
   def new
