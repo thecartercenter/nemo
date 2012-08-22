@@ -6,8 +6,6 @@
 
 <%= index_table(Response, @responses) %>
 
-<audio id="new_arrival_sound" src="/sounds/ship-bell.mp3"></audio>
-
 <script type="text/javascript">
   // set id of latest response
   var responses_latest_id = <%= (f = @responses.first) ? f.id : "null" %>;
