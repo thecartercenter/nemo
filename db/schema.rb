@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120820193330) do
+ActiveRecord::Schema.define(:version => 20120822152209) do
 
   create_table "#Tableau_sid_00485CC8_4_none_form_name_nk", :id => false, :force => true do |t|
     t.string  "none_form_name_nk"
@@ -46,7 +46,10 @@ ActiveRecord::Schema.define(:version => 20120820193330) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "which_phone"
+    t.integer  "mission_id"
   end
+
+  add_index "broadcasts", ["mission_id"], :name => "index_broadcasts_on_mission_id"
 
   create_table "choices", :force => true do |t|
     t.integer  "answer_id"
@@ -71,7 +74,10 @@ ActiveRecord::Schema.define(:version => 20120820193330) do
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "mission_id"
   end
+
+  add_index "form_types", ["mission_id"], :name => "index_form_types_on_mission_id"
 
   create_table "forms", :force => true do |t|
     t.string   "name"
@@ -80,14 +86,20 @@ ActiveRecord::Schema.define(:version => 20120820193330) do
     t.boolean  "published",    :default => false
     t.integer  "form_type_id"
     t.integer  "downloads"
+    t.integer  "mission_id"
   end
+
+  add_index "forms", ["mission_id"], :name => "index_forms_on_mission_id"
 
   create_table "languages", :force => true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "active",     :default => false
     t.string   "code"
+    t.integer  "mission_id"
   end
+
+  add_index "languages", ["mission_id"], :name => "index_languages_on_mission_id"
 
   create_table "mission_assignments", :force => true do |t|
     t.integer  "mission_id"
@@ -110,7 +122,10 @@ ActiveRecord::Schema.define(:version => 20120820193330) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "ordering"
+    t.integer  "mission_id"
   end
+
+  add_index "option_sets", ["mission_id"], :name => "index_option_sets_on_mission_id"
 
   create_table "option_settings", :force => true do |t|
     t.integer  "option_set_id"
@@ -124,7 +139,10 @@ ActiveRecord::Schema.define(:version => 20120820193330) do
     t.string   "value"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "mission_id"
   end
+
+  add_index "options", ["mission_id"], :name => "index_options_on_mission_id"
 
   create_table "question_types", :force => true do |t|
     t.string   "name"
@@ -155,7 +173,10 @@ ActiveRecord::Schema.define(:version => 20120820193330) do
     t.integer  "maximum"
     t.boolean  "maxstrictly"
     t.boolean  "minstrictly"
+    t.integer  "mission_id"
   end
+
+  add_index "questions", ["mission_id"], :name => "index_questions_on_mission_id"
 
   create_table "report_aggregations", :force => true do |t|
     t.string   "name"
@@ -207,7 +228,10 @@ ActiveRecord::Schema.define(:version => 20120820193330) do
     t.boolean  "unreviewed",      :default => false
     t.string   "percent_type"
     t.boolean  "unique_rows"
+    t.integer  "mission_id"
   end
+
+  add_index "report_reports", ["mission_id"], :name => "index_report_reports_on_mission_id"
 
   create_table "report_response_attributes", :force => true do |t|
     t.string   "name"
@@ -226,7 +250,10 @@ ActiveRecord::Schema.define(:version => 20120820193330) do
     t.datetime "updated_at"
     t.boolean  "reviewed",   :default => false
     t.string   "source"
+    t.integer  "mission_id"
   end
+
+  add_index "responses", ["mission_id"], :name => "index_responses_on_mission_id"
 
   create_table "roles", :force => true do |t|
     t.string   "name"
@@ -268,7 +295,10 @@ ActiveRecord::Schema.define(:version => 20120820193330) do
     t.string   "value"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "mission_id"
   end
+
+  add_index "settings", ["mission_id"], :name => "index_settings_on_mission_id"
 
   create_table "translations", :force => true do |t|
     t.integer  "language_id"
