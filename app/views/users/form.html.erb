@@ -4,7 +4,7 @@
   <%= form_field(f, :email) %>
   <%= form_field(f, :phone, :size => 20) %>
   <%= form_field(f, :phone2, :size => 20) %>
-  <%= form_field(f, :language_id, :type => :select, :options => sel_opts_for_objs(@languages)) %>
+  <%= form_field(f, :language_id, :type => :select, :options => sel_opts_from_objs(@languages)) %>
   <% if current_user.admin? && @user != current_user %>
     <%= form_field(f, :admin, :type => :check_box) %>
   <% end %>
@@ -22,5 +22,5 @@
     <%= form_field(f, :reset_password_method, :label => label, :details => details, :partial => "reset_password_method") %>
   <% end %>
   
-  <%= form_submit_button(f, "Save") %>
+  <%= form_submit_button(f, :label => "Save") %>
 <% end %>
