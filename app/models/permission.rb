@@ -103,8 +103,8 @@ class Permission
     # restrict missions based on admin status
     rel = rel.for_user(params[:user]) if rel.klass == Mission
     
-    # if user is observer for the current mission
-    if params[:user].is_observer?(params[:mission])
+    # if user is observer for the current mission and is not a system-wide admin
+    if params[:user].is_observer?(params[:mission]) && !params[:user].admin?
     
       # observer can only see his/her own responses
       rel = rel.where("responses.user_id" => params[:user].id) if rel.klass == Response
