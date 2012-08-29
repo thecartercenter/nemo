@@ -4,7 +4,7 @@ class Report::ReportsController < ApplicationController
   end
   
   def new
-    @report = Report::Report.new_with_default_name
+    @report = Report::Report.new_with_default_name(current_mission)
     @show_form = true
     init_obj_and_render_form
   end
@@ -33,7 +33,7 @@ class Report::ReportsController < ApplicationController
   private
     def crupdate
       # get/create the report
-      @report = params[:action] == "create" ? Report::Report.new : Report::Report.find(params[:id])
+      @report = params[:action] == "create" ? Report::Report.for_mission(current_mission).new : Report::Report.find(params[:id])
       # update the attribs
       @report.attributes = params[:report_report]
       # check validity (setting errors if fail)

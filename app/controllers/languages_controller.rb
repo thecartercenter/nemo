@@ -20,14 +20,14 @@ class LanguagesController < ApplicationController
     @languages = apply_filters(Language)
   end
   def new
-    @language = Language.active.new
+    @language = Language.for_mission(current_mission).active.new
     @title = "Add Language"
   end
   def edit
     @language = Language.find(params[:id])
   end
   def create
-    @language = Language.new(params[:language])
+    @language = Language.for_mission(current_mission).new(params[:language])
     if @language.save
       flash[:success] = "Language created successfully."
       redirect_to(:action => :index)

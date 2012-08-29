@@ -50,7 +50,7 @@ class FormTypesController < ApplicationController
   private
     def crupdate
       action = params[:action]
-      @form_type = action == "create" ? FormType.new : FormType.find(params[:id])
+      @form_type = action == "create" ? FormType.for_mission(current_mission).new : FormType.find(params[:id])
       begin
         @form_type.update_attributes!(params[:form_type])
         flash[:success] = "Form Type #{action}d successfully."

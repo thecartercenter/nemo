@@ -31,7 +31,7 @@ class QuestionsController < ApplicationController
   end
   
   def new
-    @question = Question.new
+    @question = Question.for_mission(current_mission).new
     render_form
   end
   
@@ -64,7 +64,7 @@ class QuestionsController < ApplicationController
   private
     def crupdate
       action = params[:action]
-      @question = action == "create" ? Question.new : Question.find(params[:id])
+      @question = action == "create" ? Question.for_mission(current_mission).new : Question.find(params[:id])
       begin
         @question.update_attributes!(params[:question])
         flash[:success] = "Question #{action}d successfully."

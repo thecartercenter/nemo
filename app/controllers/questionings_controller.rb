@@ -16,7 +16,7 @@
 # 
 class QuestioningsController < ApplicationController
   def new
-    @qing = Questioning.new_with_question(:form_id => params[:form_id])
+    @qing = Questioning.new_with_question(current_mission, :form_id => params[:form_id])
     render_and_setup("create")
   end
   
@@ -50,7 +50,7 @@ class QuestioningsController < ApplicationController
     def crupdate
       action = params[:action]
       # find or create the questioning
-      @qing = action == "create" ? Questioning.new_with_question : Questioning.find(params[:id])
+      @qing = action == "create" ? Questioning.new_with_question(current_mission) : Questioning.find(params[:id])
       @qing.question.attributes = params[:questioning].delete(:question)
       # try to save
       begin

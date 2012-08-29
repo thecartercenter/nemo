@@ -20,7 +20,7 @@ class OptionSetsController < ApplicationController
   end
   
   def new
-    @set = OptionSet.new
+    @set = OptionSet.for_mission(current_mission).new
   end
   
   def edit
@@ -51,7 +51,7 @@ class OptionSetsController < ApplicationController
   private
     def crupdate
       action = params[:action]
-      @set = action == "create" ? OptionSet.new : OptionSet.find(params[:id])
+      @set = action == "create" ? OptionSet.for_mission(current_mission).new : OptionSet.find(params[:id])
       begin
         @set.update_attributes!(params[:option_set])
         flash[:success] = "Option set #{action}d successfully."

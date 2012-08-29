@@ -29,9 +29,11 @@ class Report::Report < ActiveRecord::Base
   def self.bar_style_select_options; BAR_STYLES; end
   def self.percent_type_select_options; PERCENT_TYPES; end
   
-  def self.new_with_default_name
+  def self.new_with_default_name(mission)
     prefix = "New Report"
-    suffix = nn(where("name LIKE '#{prefix}%'").collect{|r| nn(nn(r.name.match(/^#{prefix}(\s+\d+$|$)/))[1]).to_i}.compact.max) + 1
+    suffix = nn(for_mission(mission).where("name LIKE '#{prefix}%'").collect do |r| 
+      nn(nn(r.name.match(/^#{prefix}(\s+\d+$|$)/))[1]).to_i
+    end.compact.max) + 1
     new(:name => "#{prefix} #{suffix == 1 ? 2 : suffix}")
   end
   

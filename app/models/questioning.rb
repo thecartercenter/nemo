@@ -28,8 +28,8 @@ class Questioning < ActiveRecord::Base
   
   alias :old_condition= :condition=
   
-  def self.new_with_question(params = {})
-    qing = new(params.merge(:question => Question.new))
+  def self.new_with_question(mission, params = {})
+    qing = new(params.merge(:question => Question.for_mission(mission).new))
   end
 
   # clones a set of questionings, including their conditions

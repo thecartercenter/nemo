@@ -35,7 +35,7 @@ class BroadcastsController < ApplicationController
     raise "No valid users given." if users.empty?
     
     # create a new Broadcast
-    @broadcast = Broadcast.new(:recipients => users)
+    @broadcast = Broadcast.for_mission(current_mission).new(:recipients => users)
     
     # render new action
     render_new
@@ -46,7 +46,7 @@ class BroadcastsController < ApplicationController
   end
   
   def create
-    @broadcast = Broadcast.new(params[:broadcast])
+    @broadcast = Broadcast.for_mission(current_mission).new(params[:broadcast])
     if @broadcast.save
       if @broadcast.send_errors
         flash[:error] = "Broadcast was sent, but with some errors (see below)."

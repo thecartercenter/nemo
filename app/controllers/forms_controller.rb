@@ -122,7 +122,7 @@ class FormsController < ApplicationController
   private
     def crupdate
       action = params[:action]
-      @form = action == "create" ? Form.new : Form.find(params[:id])
+      @form = action == "create" ? Form.for_mission(current_mission).new : Form.find(params[:id])
       begin
         @form.update_attributes!(params[:form])
         flash[:success] = "Form #{action}d successfully."
