@@ -22,23 +22,37 @@
       <td id="banner" colspan="2">
         <div id="userinfo">
           <% if current_user %>
-            Logged in as <strong><%= current_user.login %></strong> |
+            <%# username %>
+            Logged in as <strong><%= current_user.login %></strong> &nbsp;&bull;&nbsp;
             
+            <%# current mission and dropdown, if there are choices %>
             Mission: 
             <% if current_user.missions.size > 1 %>
               <%= form_for(current_user) do |f| %>
-                <%= f.select(:current_mission_id, sel_opts_from_objs(@user_missions), 
-                  :include_blank => "[None]") %>
+                <%= f.select(:current_mission_id, sel_opts_from_objs(@user_missions), :include_blank => "[None]") %>
                 <%= hidden_field_tag(:changing_current_mission, 1) %>
               <% end %>
             <% else %>
               <strong><%= current_mission ? current_mission.name : "None" %></strong>
             <% end %>
-            |
+            &nbsp;&bull;&nbsp;
             
-            <%= link_to("Edit Profile", edit_user_path(current_user.id)) %> |
+            <%# role %>
+            <% if current_mission %>
+              Role: <%= current_user.role(current_mission).name %>
+              &nbsp;&bull;&nbsp;
+            <% end %>
+            
+            <%# link to edit profile %>
+            <%= link_to("Edit Profile", edit_user_path(current_user.id)) %>
+            &nbsp;&bull;&nbsp;
+
+            <%# logout button %>
             <%= button_to("Logout", user_session_path, :method => :delete, :id => "logout_button") %>
+            
           <% else %>
+            
+            <%# login link %>
             <%= link_to("Login", new_user_session_path) %>
           <% end %>
         </div>
