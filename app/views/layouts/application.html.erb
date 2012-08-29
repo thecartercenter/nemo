@@ -27,7 +27,7 @@
             Mission: 
             <% if current_user.missions.size > 1 %>
               <%= form_for(current_user) do |f| %>
-                <%= f.select(:current_mission_id, Mission.select_options(current_user.allowed_missions), 
+                <%= f.select(:current_mission_id, sel_opts_from_objs(@user_missions), 
                   :include_blank => "[None]") %>
                 <%= hidden_field_tag(:changing_current_mission, 1) %>
               <% end %>

@@ -1,5 +1,3 @@
-require 'translatable'
-
 # ELMO - Secure, robust, and versatile data collection.
 # Copyright 2011 The Carter Center
 #
@@ -16,7 +14,10 @@ require 'translatable'
 # You should have received a copy of the GNU General Public License
 # along with ELMO.  If not, see <http://www.gnu.org/licenses/>.
 # 
+require 'mission_based'
+require 'translatable'
 class Question < ActiveRecord::Base
+  include MissionBased
   include Translatable
   
   belongs_to(:type, :class_name => "QuestionType", :foreign_key => :question_type_id)
@@ -38,6 +39,7 @@ class Question < ActiveRecord::Base
   before_destroy(:check_assoc)
   
   default_scope(order("code"))
+  scope(:select_types, includes(:type).where(:"question_types.name" => %w(select_one select_multiple)))
   
   self.per_page = 100
   
@@ -45,11 +47,6 @@ class Question < ActiveRecord::Base
   def self.not_in_form(form)
     scoped.includes([:translations, :type]).
       where("(questions.id not in (select question_id from questionings where form_id='#{form.id}'))")
-  end
-  
-  def self.select_options_by_code(questions = nil)
-    questions ||= all
-    questions.collect{|q| [q.code, q.id]}
   end
   
   def method_missing(*args)

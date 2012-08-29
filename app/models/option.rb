@@ -1,5 +1,3 @@
-require 'translatable'
-
 # ELMO - Secure, robust, and versatile data collection.
 # Copyright 2011 The Carter Center
 #
@@ -16,7 +14,10 @@ require 'translatable'
 # You should have received a copy of the GNU General Public License
 # along with ELMO.  If not, see <http://www.gnu.org/licenses/>.
 # 
+require 'mission_based'
+require 'translatable'
 class Option < ActiveRecord::Base
+  include MissionBased
   include Translatable
   
   has_many(:option_sets, :through => :option_settings)

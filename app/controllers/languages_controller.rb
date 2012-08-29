@@ -17,7 +17,7 @@
 class LanguagesController < ApplicationController
   
   def index
-    @languages = Language.all
+    @languages = apply_filters(Language)
   end
   def new
     @language = Language.active.new

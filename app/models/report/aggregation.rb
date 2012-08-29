@@ -13,10 +13,6 @@ class Report::Aggregation < ActiveRecord::Base
     seed(:name, :name => "List", :code => "?")
   end
   
-  def self.select_options
-    all.collect{|a| [a.name, a.id]}
-  end
-  
   def encode(expr)
     code.gsub("?", expr)
   end

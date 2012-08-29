@@ -21,14 +21,17 @@ class OptionsController < ApplicationController
   
   def new
     @option = Option.new
+    render_form
   end
   
   def edit
     @option = Option.find(params[:id])
+    render_form
   end
 
   def show
     @option = Option.find(params[:id])
+    render_form
   end
 
   def destroy
@@ -49,7 +52,12 @@ class OptionsController < ApplicationController
         flash[:success] = "Option #{action}d successfully."
         redirect_to(:action => :index)
       rescue ActiveRecord::RecordInvalid
-        render(:action => action == "create" ? :new : :edit)
+        render_form
       end
+    end
+    
+    def render_form
+      @languages = Language.for_mission(current_mission).active
+      render(:form)
     end
 end

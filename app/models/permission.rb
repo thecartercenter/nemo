@@ -90,16 +90,30 @@ class Permission
   
   # applies appropriate functions to the given relation and returns a new relation (or the old one if unchanged)
   # the model class must know to include a call to this function when building its query
-  def self.restrict(relation, params)
+  def self.restrict(rel, params)
+    # parse the params nicely
     parse_params!(params)
-    # observer can only see his/her own responses
-    if params[:key] == "responses#index" && params[:user].is_observer?(params[:mission])
-      relation.where("responses.user_id" => params[:user].id)
-    elsif params[:key] == "forms#index" && params[:user].is_observer?(params[:mission])
-      relation.where("forms.published" => 1)
-    else
-      relation
+    
+    # if rel is actually a class, call a trivial where on it to get a Relation
+    rel = rel.where(1) unless rel.is_a?(ActiveRecord::Relation)
+    
+    # if klass is a per-mission class, restrict it based on the current mission
+    rel = rel.for_mission(params[:mission]) if rel.klass.respond_to?(:mission_based?)
+    
+    # restrict missions based on admin status
+    rel = rel.for_user(params[:user]) if rel.klass == Mission
+    
+    # if user is observer for the current mission
+    if params[:user].is_observer?(params[:mission])
+    
+      # observer can only see his/her own responses
+      rel = rel.where("responses.user_id" => params[:user].id) if rel.klass == Response
+    
+      # observer can only see published forms
+      rel = rel.where("forms.published" => 1) if rel.klass == Form
     end
+    
+    rel
   end
   
   # checks a general permission. 
@@ -213,13 +227,15 @@ class Permission
     end
     
     def self.parse_params!(params)
-      # parse the args
-      params[:controller], params[:action] = params[:action].split("#") if params[:action].match(/#/)
+      if params[:action]
+        # parse the args
+        params[:controller], params[:action] = params[:action].split("#") if params[:action].match(/#/)
 
-      # replace edit/new with update/create
-      params[:action] = {"edit" => "update", "new" => "create"}[params[:action]] || params[:action]
+        # replace edit/new with update/create
+        params[:action] = {"edit" => "update", "new" => "create"}[params[:action]] || params[:action]
       
-      # create a shortcut for controller and action
-      params[:key] = "#{params[:controller]}##{params[:action]}"
+        # create a shortcut for controller and action
+        params[:key] = "#{params[:controller]}##{params[:action]}"
+      end
     end
 end

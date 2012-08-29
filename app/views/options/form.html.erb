@@ -7,7 +7,7 @@
       :details => "The numeric value that best represents this option."
     }]
   }
-  Language.active.each do |lang| 
+  @languages.each do |lang| 
     col = "name_#{lang.code}".to_sym
     spec[:fields] << {
       :col => col,

@@ -15,8 +15,10 @@
 # along with ELMO.  If not, see <http://www.gnu.org/licenses/>.
 # 
 require 'seedable'
+require 'mission_based'
 class FormType < ActiveRecord::Base
   include Seedable
+  include MissionBased
   
   has_many(:forms)
   
@@ -29,10 +31,6 @@ class FormType < ActiveRecord::Base
   def self.generate
     seed(:name, :name => "Type 1")
     seed(:name, :name => "Type 2")
-  end
-  
-  def self.select_options
-    all.collect{|ft| [ft.name, ft.id]}
   end
   
   private

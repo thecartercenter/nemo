@@ -41,7 +41,9 @@ class ResponsesController < ApplicationController
   def index
     respond_to do |format|
       format.html do
+        params[:page] ||= 1
         @responses = apply_filters(Response)
+        @pubd_forms = restrict(Form).published
         @js << "responses_index"
         render(:partial => "table_only", :locals => {:responses => @responses}) if ajax_request?
       end
@@ -60,15 +62,18 @@ class ResponsesController < ApplicationController
   def new
     form = Form.find(params[:form_id]) rescue nil
     flash[:error] = "You must choose a form to edit." and redirect_to(:action => :index) unless form
-    @resp = Response.new(:form => form)
+    @response = Response.new(:form => form)
+    render_form
   end
   
   def edit
-    @resp = Response.find_eager(params[:id])
+    @response = Response.find_eager(params[:id])
+    render_form
   end
   
   def show
-    @resp = Response.find_eager(params[:id])
+    @response = Response.find_eager(params[:id])
+    render_form
   end
   
   def update
@@ -76,8 +81,8 @@ class ResponsesController < ApplicationController
   end
   
   def destroy
-    @resp = Response.find(params[:id])
-    begin flash[:success] = @resp.destroy && "Response deleted successfully." rescue flash[:error] = $!.to_s end
+    @response = Response.find(params[:id])
+    begin flash[:success] = @response.destroy && "Response deleted successfully." rescue flash[:error] = $!.to_s end
     redirect_to(:action => :index)
   end
   
@@ -92,16 +97,21 @@ class ResponsesController < ApplicationController
       params[:response][:reviewed] = true if params[:commit_and_mark_reviewed]
       
       # find or create the response
-      @resp = action == "create" ? Response.new : Response.find(params[:id])
+      @response = action == "create" ? Response.new : Response.find(params[:id])
       # set user_id if this is an observer
-      @resp.user = current_user if current_user.is_observer?(current_mission)
+      @response.user = current_user if current_user.is_observer?(current_mission)
       # try to save
       begin
-        @resp.update_attributes!(params[:response])
+        @response.update_attributes!(params[:response])
         flash[:success] = "Response #{action}d successfully."
         redirect_to(:action => :index)
       rescue ActiveRecord::RecordInvalid
-        render(:action => action == "create" ? :new : :edit)
+        render_form
       end
+    end
+    
+    def render_form
+      @possible_submitters = restrict(User.assigned_to(current_mission))
+      render(:form)
     end
 end

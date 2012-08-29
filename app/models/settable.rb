@@ -18,13 +18,29 @@ require 'seedable'
 class Settable < ActiveRecord::Base
   include Seedable
   
-  has_one(:setting)
+  has_many(:settings)
   
   def self.generate
     seed(:key, :key => "timezone", :name => "Time Zone", :description => "The time zone in which times are displayed throughout the site.", :kind => "timezone", :default => "UTC")
   end
   
-  def setting_or_default
-    setting || Setting.create(:settable_id => id, :value => default)
+  # gets the current setting value for the given mission
+  # if no mission is provided and the current settable is mission specific, return nil
+  def setting_or_default(mission = nil)
+    # must have a mission unless the setting is mission_independent
+    return nil unless mission_independent? || mission
+    
+    if mission_independent?
+      # return the first setting (there should only be one) or create one
+      settings.first || settings.create(:value => default)
+    else
+      # return the mission specific setting or create one
+      settings.for_mission(mission).first || settings.for_mission(mission).create(:value => default)
+    end
+  end
+  
+  # not implemented yet
+  def mission_independent?
+    false
   end
 end

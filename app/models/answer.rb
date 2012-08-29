@@ -114,7 +114,6 @@ class Answer < ActiveRecord::Base
   def numeric?; question.type.numeric?; end
   def integer?; question.type.integer?; end
   def options; question.options; end
-  def select_options; question.select_options; end
   
   # relevant defaults to true until set otherwise
   def relevant?

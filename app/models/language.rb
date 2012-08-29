@@ -16,7 +16,9 @@
 # 
 require 'seedable'
 require 'language_list'
+require 'mission_based'
 class Language < ActiveRecord::Base
+  include MissionBased
   include Seedable
   
   validates(:code, :presence => true, :uniqueness => true)
@@ -42,9 +44,6 @@ class Language < ActiveRecord::Base
       @@code_hash = Hash[*all.collect{|l| [l.code, l]}.flatten]
     end
     @@code_hash
-  end
-  def self.select_options
-    all.collect{|l| [l.name, l.id]}
   end
   def self.add_select_options
     LanguageList::LANGS.map{|code, name| [name, code]}.sort_by{|pair| pair[0]}

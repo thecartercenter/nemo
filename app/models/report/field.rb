@@ -4,21 +4,13 @@ class Report::Field < ActiveRecord::Base
   belongs_to(:question)
   belongs_to(:question_type)
   
-  def self.select_options
-    [
-      ["Attributes", Report::ResponseAttribute.all.collect{|ra| [ra.name, "attrib_#{ra.id}"]}],
-      ["Question Types", QuestionType.all.collect{|qt| [qt.long_name, "qtype_#{qt.id}"]}],
-      ["Questions", Question.all.collect{|q| [q.code, "question_#{q.id}"]}]
-    ]
-  end
-  
-  def self.choices
+  def self.choices(mission)
     [
       {:name => "Attributes", :choices => Report::ResponseAttribute.all.collect{|ra| 
         {:name => ra.name, :full_id => "attrib_#{ra.id}", :data_type => ra.data_type}}},
       {:name => "Question Types", :choices => QuestionType.all.collect{|qt| 
         {:name => qt.long_name, :full_id => "qtype_#{qt.id}", :data_type => qt.name}}},
-      {:name => "Questions", :choices => Question.includes(:type).all.collect{|q| 
+      {:name => "Questions", :choices => Question.for_mission(mission).includes(:type).all.collect{|q| 
         {:name => q.code, :full_id => "question_#{q.id}", :data_type => q.type.name}}}
     ]
   end

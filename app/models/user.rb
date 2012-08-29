@@ -48,14 +48,11 @@ class User < ActiveRecord::Base
   
   default_scope(includes(:language).order("users.name"))
   scope(:active_english, includes(:language).where(:active => true).where("languages.code" => "eng"))
+  scope(:assigned_to, lambda{|m| where("users.id IN (SELECT user_id FROM mission_assignments WHERE mission_id = ?)", m.id)})
   
   # we want all of these on one page for now
   self.per_page = 1000000
 
-  def self.select_options
-    all.collect{|u| [u.name, u.id]}
-  end
-  
   def self.new_with_login_and_password(params)
     u = new(params)
     u.reset_password
@@ -153,11 +150,6 @@ class User < ActiveRecord::Base
   # if user has no mission, choose one (if assigned to any)
   def choose_a_mission_if_none
     update_attributes(:current_mission => missions.sorted_recent_first.first) if current_mission.nil? && !missions.empty?
-  end
-  
-  # returns all allowed missions, including assigned missions, and all missions if admin
-  def allowed_missions
-    admin? ? Mission.all : missions
   end
   
   private

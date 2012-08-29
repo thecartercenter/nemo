@@ -22,7 +22,7 @@ class QuestionsController < ApplicationController
   def choose
     @form = Form.find(params[:form_id])
     @title = "Adding Questions to Form: #{@form.name}"
-    @questions = Question.not_in_form(@form)
+    @questions = apply_filters(Question.not_in_form(@form))
     if @questions.empty?
       redirect_to(new_questioning_path(:form_id => @form.id))
     else
@@ -30,18 +30,21 @@ class QuestionsController < ApplicationController
     end
   end
   
+  def new
+    @question = Question.new
+    render_form
+  end
+  
   def edit
     @question = Question.find(params[:id])
     @title = "Edit Question: #{@question.code}"
-  end
-  
-  def new
-    @question = Question.new
+    render_form
   end
   
   def show
     @question = Question.find(params[:id])
     @title = "Question: #{@question.code}"
+    render_form
   end
   
   def create
@@ -68,8 +71,13 @@ class QuestionsController < ApplicationController
         redirect_to(:action => :index)
       rescue ActiveRecord::RecordInvalid
         @title = "Edit Question: #{@question.code}" if action == "update"
-        render(:action => action == "create" ? :new : :edit)
+        render_form
       end
     end
   
+    def render_form
+      @option_sets = restrict(OptionSet)
+      @question_types = restrict(QuestionType)
+      render(:form)
+    end
 end

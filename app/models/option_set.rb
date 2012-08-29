@@ -14,7 +14,10 @@
 # You should have received a copy of the GNU General Public License
 # along with ELMO.  If not, see <http://www.gnu.org/licenses/>.
 # 
+require 'mission_based'
 class OptionSet < ActiveRecord::Base
+  include MissionBased
+
   has_many(:option_settings, :dependent => :destroy, :autosave => true)
   has_many(:options, :through => :option_settings)
   has_many(:questions)
@@ -32,10 +35,6 @@ class OptionSet < ActiveRecord::Base
   
   self.per_page = 100
 
-  def self.select_options
-    all.collect{|os| [os.name, os.id]}
-  end
-  
   def self.orderings
     [{:code => "value_asc", :name => "Value Low to High", :sql => "value asc"},
      {:code => "value_desc", :name => "Value High to Low", :sql => "value desc"}]

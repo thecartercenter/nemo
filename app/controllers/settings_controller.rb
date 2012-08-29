@@ -17,7 +17,7 @@
 class SettingsController < ApplicationController
   def index
     # load all settings
-    @settings = Setting.load_and_create
+    @settings = Setting.load_and_create(current_mission)
   end
   
   def update_all

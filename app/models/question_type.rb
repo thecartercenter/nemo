@@ -35,10 +35,7 @@ class QuestionType < ActiveRecord::Base
     seed(:name, :name => "date", :long_name => "Date", :odk_name => "date", :odk_tag => "input")
     seed(:name, :name => "time", :long_name => "Time", :odk_name => "time", :odk_tag => "input")
   end
-  
-  def self.select_options
-    all.collect{|qt| [qt.long_name, qt.id]}
-  end
+
   def numeric?
     name == "integer" || name == "decimal"
   end

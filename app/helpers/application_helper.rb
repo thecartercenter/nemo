@@ -174,4 +174,24 @@ module ApplicationHelper
         (options[:id] ? "_#{options[:id]}" : ""))
     end
   end
+  
+  # returns a set of [name, id] pairs for the given objects
+  # defaults to using .name and .id, but other methods can be specified, including Procs
+  # if :tags is set, returns the <option> tags instead of just the array
+  def sel_opts_from_objs(objs, options = {})
+    # set default method names
+    id_m = options[:id_method] ||= "id"
+    name_m = options[:name_method] ||= "name"
+    
+    # get array of arrays
+    arr = objs.collect do |o| 
+      # get id and name array
+      id = id_m.is_a?(Proc) ? id_m.call(o) : o.send(id_m)
+      name = name_m.is_a?(Proc) ? name_m.call(o) : o.send(name_m)
+      [name, id]
+    end
+    
+    # wrap in tags if requested
+    options[:tags] ? options_for_select(arr) : arr
+  end
 end

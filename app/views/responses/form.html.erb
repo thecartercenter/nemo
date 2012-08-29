@@ -2,8 +2,8 @@
   "dialog", "condition", "time_form_field", configatron.map_api_url)} %>
 <%= render("layouts/location_picker") %>
 
-<%= resp.answers.collect{|a| a.errors.full_messages.join(", ")}.join(" ") %>
-<%= basic_form(resp) do |f|
+<%= @response.answers.collect{|a| a.errors.full_messages.join(", ")}.join(" ") %>
+<%= basic_form(@response) do |f|
   spec = {
     :sections => [{
       :name => "Response Info",
@@ -15,18 +15,18 @@
         :col => :user_id,
         :label => "Submitter",
         :required => true,
-        :value => f.select(:user_id, User.select_options, :include_blank => true),
+        :value => f.select(:user_id, @possible_submitters, :include_blank => true),
       },
-      (f.mode == :show ? {:col => :source, :label => "Source", :value => content_tag("strong"){resp.source}} : nil),
+      (f.mode == :show ? {:col => :source, :label => "Source", :value => content_tag("strong"){@response.source}} : nil),
       {
         :col => :reviewed,
         :label => "Reviewed?",
         :value => f.mode == :show ? 
-          content_tag("div", :class => "dummy"){resp.reviewed? ? "Yes" : "No"} : 
+          content_tag("div", :class => "dummy"){@response.reviewed? ? "Yes" : "No"} : 
           f.check_box(:reviewed?)
       }].compact
     },{
-      :contents => answers_subform(resp.all_answers)
+      :contents => answers_subform(@response.all_answers)
     }],
     # hackish fix until i refactor this code to the newer form style
     :footer => '<input name="commit_and_mark_reviewed" type="submit" value="Update and Mark as Reviewed" class="submit">'.html_safe

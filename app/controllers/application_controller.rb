@@ -26,6 +26,7 @@ class ApplicationController < ActionController::Base
   before_filter(:basic_auth_for_xml)
   before_filter(:authorize)
   before_filter(:set_timezone)
+  before_filter(:get_user_missions)
   
   helper_method :current_user_session, :current_user, :current_mission, :authorized?
   
@@ -67,23 +68,25 @@ class ApplicationController < ActionController::Base
     
     # applies search, permissions, and pagination
     # each of these can be turned off by specifying e.g. :pagination => false in the options array
-    def apply_filters(klass, options = {})
-      # start relation object
-      rel = klass
+    def apply_filters(rel, options = {})
+      klass = rel.respond_to?(:klass) ? rel.klass : rel
 
       # apply search
       @search = Search::Search.new(:class_name => klass.name, :str => params[:search])
       rel = @search.apply(rel) unless options[:search] == false
       
       # apply permissions
-      rel = Permission.restrict(rel, :user => current_user, :controller => klass.name.pluralize.underscore, 
-        :action => "index") unless options[:permissions] == false
+      rel = restrict(rel) unless options[:permissions] == false
 
       # apply pagination and return
-      rel.paginate(:page => params[:page]) unless options[:pagination] == false
+      rel = rel.paginate(:page => params[:page]) unless params[:page].nil? || options[:pagination] == false
       
       # return the relation
       rel
+    end
+    
+    def restrict(rel)
+      Permission.restrict(rel, :user => current_user, :mission => current_mission)
     end
     
     def init_js_array
@@ -204,5 +207,9 @@ class ApplicationController < ActionController::Base
     
     def ajax_request?
       request.env['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest' || params[:ajax]
+    end
+    
+    def get_user_missions
+      @user_missions = restrict(Mission) if current_user
     end
 end

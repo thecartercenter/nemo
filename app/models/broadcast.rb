@@ -14,7 +14,10 @@
 # You should have received a copy of the GNU General Public License
 # along with ELMO.  If not, see <http://www.gnu.org/licenses/>.
 # 
+require 'mission_based'
 class Broadcast < ActiveRecord::Base
+  include MissionBased
+
   has_many(:broadcast_addressings)
   has_many(:recipients, :through => :broadcast_addressings, :source => :user)
   

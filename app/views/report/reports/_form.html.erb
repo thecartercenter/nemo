@@ -4,7 +4,7 @@
     Fill out the parameters below. Those marked <%= reqd_sym %> are required.
   </div>
   <%= form_field(f, :name, :required => true) %>
-  <%= form_field(f, :aggregation_id, :type => :select, :options => Report::Aggregation.select_options, :required => true) %>
+  <%= form_field(f, :aggregation_id, :type => :select, :options => sel_opts_from_objs(@aggregations), :required => true) %>
   <%= form_field(f, :fields, :partial => "fields", :required => true) %>
   <%= form_field(f, :filter, :partial => "filter",
     :details => "A search string to filter the responses used in the report. You can try out your

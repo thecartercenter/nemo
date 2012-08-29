@@ -25,10 +25,12 @@ class FormsController < ApplicationController
   end
   def new
     @form = Form.new
+    @form_types = apply_filters(FormType)
     render_and_setup("create")
   end
   def edit
     @form = Form.with_questions.find(params[:id])
+    @form_types = apply_filters(FormType)
     render_and_setup("update")
   end
   def show

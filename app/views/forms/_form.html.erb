@@ -12,7 +12,7 @@
         :col => :form_type_id,
         :label => "Type",
         :required => true,
-        :value => f.select(:form_type_id, FormType.select_options, {:include_blank => true})
+        :value => f.select(:form_type_id, sel_opts_from_objs(@form_types), {:include_blank => true})
       }],
       :submit => f.submit(form.new_record? ? "Create Form" : "Update Basic Form Info")
     }

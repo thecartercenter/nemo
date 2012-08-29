@@ -1,6 +1,6 @@
 class Report::ReportsController < ApplicationController
   def index
-    @reports = Report::Report.by_popularity
+    @reports = apply_filters(Report::Report.by_popularity)
   end
   
   def new
@@ -50,6 +50,10 @@ class Report::ReportsController < ApplicationController
     def init_obj_and_render_form
       @report.build_filter(:class_name => "Response") unless @report.filter
       @report.fields.build(:full_id => nil) if @report.fields.empty?
+      @question_types = QuestionType.all
+      @aggregations = Report::Aggregation.all
+      @groupable_response_attributes = Report::ResponseAttribute.groupable
+      @questions = restrict(Question)
       @dont_print_title = true
       unless @report.new_record?
         @report.record_viewing

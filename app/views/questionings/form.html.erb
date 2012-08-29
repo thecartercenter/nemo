@@ -1,27 +1,27 @@
 <% content_for(:per_page_js){javascript_include_tag("questionings")} %>
 
-<%= flash_and_form_errors(qing).gsub("Question base", "Question").gsub("Question C", "Question c").html_safe %>
-<%= form_for(qing) do |f| %>
+<%= flash_and_form_errors(@qing).gsub("Question base", "Question").gsub("Question C", "Question c").html_safe %>
+<%= form_for(@qing) do |f| %>
   <% f.mode = controller.action_name.to_sym %>
   <%= f.hidden_field(:form_id) %>
   
-  <% unless f.mode == :edit && qing.question.published? %>
+  <% unless f.mode == :edit && @qing.question.published? %>
     <h2>Fields about all instances of the question</h2>
-    <% if f.mode == :edit && !(other_forms = qing.other_forms).empty? %>
+    <% if f.mode == :edit && !(other_forms = @qing.other_forms).empty? %>
       <div class="tip important">
         Note: This question also appears on the following forms: <%= other_forms.map{|of| of.name}.join(", ") %>.
         Any changes you make below will also be reflected on those forms.
       </div>
     <% end %>
   
-    <%= fields_for("questioning[question]", qing.question) do |f2| %>
+    <%= fields_for("questioning[question]", @qing.question) do |f2| %>
       <% f2.mode = controller.action_name.to_sym %>
-      <%= render("questions/subform", :f => f2, :question => qing.question) %>
+      <%= render("questions/subform", :f => f2, :question => @qing.question) %>
     <% end %>
   <% end %>
   
-  <h2>Fields about the question on the form: '<%= qing.form.name %>'</h2>
-  <% if f.mode == :edit && qing.question.published? %>
+  <h2>Fields about the question on the form: '<%= @qing.form.name %>'</h2>
+  <% if f.mode == :edit && @qing.question.published? %>
     <div class="error tip">Note: This question appears on at least one published form, 
       and thus you can only edit these fields.</div>
   <% end %>
@@ -29,7 +29,7 @@
   <table class="form">
     <tr id="condition_row">
       <td class="name">Condition</td>
-      <td class="value"><%= render("conditions/form", :condition => qing.get_or_init_condition) %></td>
+      <td class="value"><%= render("conditions/form", :condition => @qing.get_or_init_condition) %></td>
       <td class="details">
         An optional condition which must be met in order for this question to be shown to the user.
       </td>
@@ -52,5 +52,5 @@
     </tr>
   </table>
 
-  <%= f.submit((qing.new_record? ? "Create" : "Update") + " Question") %>
+  <%= f.submit((@qing.new_record? ? "Create" : "Update") + " Question") %>
 <% end %>

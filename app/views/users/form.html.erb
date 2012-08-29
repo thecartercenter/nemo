@@ -1,22 +1,22 @@
-<%= form_for(user) do |f| %>
+<%= form_for(@user) do |f| %>
   <%= form_field(f, :name, :required => true) %>
   <%= form_field(f, :login, :required => true, :partial => "login_name_field") %>
   <%= form_field(f, :email) %>
   <%= form_field(f, :phone, :size => 20) %>
   <%= form_field(f, :phone2, :size => 20) %>
-  <%= form_field(f, :language_id, :type => :select, :options => Language.select_options) %>
-  <% if current_user.admin? && user != current_user %>
+  <%= form_field(f, :language_id, :type => :select, :options => sel_opts_for_objs(@languages)) %>
+  <% if current_user.admin? && @user != current_user %>
     <%= form_field(f, :admin, :type => :check_box) %>
   <% end %>
   <%= form_field(f, :notes, :type => :textarea) %>
 
-  <% if user == current_user %>
+  <% if @user == current_user %>
     <%= form_field(f, :password, :type => :password) %>
     <%= form_field(f, :password_confirmation, :type => :password) %>
   <% else %>
-    <% verb = user.new_record? ? "choose" : "reset" %>
-    <% label = user.new_record? ? "Password Creation" : "Reset Password?" %>
-    <% details = (user.new_record? ? "Choose how this user should get his/her password. " : "Choose whether and how to reset this user's password. ") +
+    <% verb = @user.new_record? ? "choose" : "reset" %>
+    <% label = @user.new_record? ? "Password Creation" : "Reset Password?" %>
+    <% details = (@user.new_record? ? "Choose how this user should get his/her password. " : "Choose whether and how to reset this user's password. ") +
         "The system can either send him/her an email with instructions on how to #{verb} the password online, or the system display a printable " +
         "instruction sheet including a randomly generated password." %>
     <%= form_field(f, :reset_password_method, :label => label, :details => details, :partial => "reset_password_method") %>

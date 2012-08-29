@@ -64,7 +64,8 @@ class QuestioningsController < ApplicationController
     
     def render_and_setup(action)
       @title = action == "create" ? "Create Question" : "Edit Question: #{@qing.question.code}"
-      @js << 'questions'
-      render(:action => action == "create" ? :new : :edit)
+      @option_sets = restrict(OptionSet)
+      @question_types = restrict(QuestionType)
+      render(:form)
     end
 end

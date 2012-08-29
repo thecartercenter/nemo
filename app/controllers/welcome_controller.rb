@@ -19,15 +19,18 @@ class WelcomeController < ApplicationController
     # this page is not permission controlled since we don't want the "must login" error message to show up
     return redirect_to_login unless current_user
 
+    @reports = Report::Report.for_mission(current_mission).by_popularity
+    @pubd_forms = restrict(Form).published
+    
     @dont_print_title = true
-    @user_count = User.count
-    @pub_form_count = Form.published.count
-    @unpub_form_count = Form.count - @pub_form_count
-    restricted_responses = Permission.restrict(Response, :user => current_user, :controller => "responses", :action => "index")
-    @self_response_count = restricted_responses.by(current_user).count
-    @total_response_count = restricted_responses.count
-    @recent_responses_count = Response.recent_count(restricted_responses)
-    @unreviewed_response_count = restricted_responses.unreviewed.count
+    @user_count = User.assigned_to(current_mission).count
+    @pub_form_count = restrict(Form).published.count
+    @unpub_form_count = restrict(Form).count - @pub_form_count
+    @responses = restrict(Response)
+    @self_response_count = @responses.by(current_user).count
+    @total_response_count = @responses.count
+    @recent_responses_count = Response.recent_count(@responses)
+    @unreviewed_response_count = @responses.unreviewed.count
     
     render(:partial => "blocks") if ajax_request?
   end

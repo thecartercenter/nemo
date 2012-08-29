@@ -14,7 +14,10 @@
 # You should have received a copy of the GNU General Public License
 # along with ELMO.  If not, see <http://www.gnu.org/licenses/>.
 # 
+require 'mission_based'
 class Form < ActiveRecord::Base
+  include MissionBased
+
   has_many(:questions, :through => :questionings)
   has_many(:questionings, :order => "rank", :autosave => true, :dependent => :destroy)
   has_many(:responses)
@@ -37,11 +40,6 @@ class Form < ActiveRecord::Base
   scope(:published, where(:published => true))
   scope(:with_questions, includes(:type, {:questionings => [:form, :condition, {:question => 
     [:type, :translations, :option_set]}]}).order("questionings.rank"))
-  scope(:by_mission, lambda{|m| where(:mission_id => m.id)})
-  
-  def self.select_options
-    published.collect{|f| [f.full_name, f.id]}
-  end
   
   # finds the highest 'version' number of all forms with the given base name
   # returns nil if no forms found

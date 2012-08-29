@@ -20,17 +20,25 @@ class UsersController < ApplicationController
   end
   def new
     @user = User.active_english.new
+    render_form
   end
   def edit
     @user = User.find(params[:id])
     @title = "Edit Profile" if @user == current_user
+    render_form
   end
   def update
     @user = User.find(params[:id])
     
     # if this was just the current_mission form, update and redirect back to referrer
     if params[:changing_current_mission]
+      # update the user's mission
       @user.update_attributes(params[:user])
+      
+      # update the settings using the new mission
+      Setting.copy_all_to_config(@user.current_mission)
+      
+      # redirect back to the referrer
       redirect_to(request.referrer)
     else
       if @user.update_attributes(params[:user])
@@ -43,7 +51,7 @@ class UsersController < ApplicationController
           handle_printable_instructions
         end
       else
-        render(:action => :edit)
+        render_form
       end
     end
   end
@@ -54,7 +62,7 @@ class UsersController < ApplicationController
       flash[:success] = "User created successfully."
       handle_printable_instructions
     else
-      render(:action => :new)
+      render_form
     end
   end
   def destroy
@@ -85,5 +93,11 @@ class UsersController < ApplicationController
       else
         redirect_to(:action => :index)
       end
+    end
+    
+    def render_form
+      # get language choices
+      @languages = restrict(Language)
+      render(:form)
     end
 end

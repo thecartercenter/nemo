@@ -34,7 +34,7 @@ module ResponsesHelper
   def responses_index_links(responses)
     links = []
     # only add the create response link if there are any published forms
-    unless Form.select_options.empty?
+    unless @pubd_forms.empty?
       links << link_to_if_auth("Create new response", "#", "responses#create", nil, 
         :onclick => "$('#form_chooser').show(); return false") + new_response_mini_form(false)
     end
@@ -52,7 +52,7 @@ module ResponsesHelper
   end
   def new_response_mini_form(visible = true)
     form_tag(new_response_path, :method => :get, :id => "form_chooser", :style => visible ? "" : "display: none") do
-      select_tag(:form_id, options_for_select(Form.select_options), :prompt => "Choose a Form...") +
+      select_tag(:form_id, sel_opts_from_objs(@pubd_forms, :name_method => :full_name, :tags => true), :prompt => "Choose a Form...") +
       submit_tag("Go")
     end
   end

@@ -28,10 +28,6 @@ class Role < ActiveRecord::Base
     seed(:level, :name => "Observer", :level => "1")
   end
   
-  def self.select_options
-    all.collect{|r| [r.name, r.id]}
-  end
-
   def self.highest
     unscoped.order("level DESC").first
   end

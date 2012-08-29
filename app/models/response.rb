@@ -1,4 +1,3 @@
-require 'xml'
 
 # ELMO - Secure, robust, and versatile data collection.
 # Copyright 2011 The Carter Center
@@ -16,7 +15,11 @@ require 'xml'
 # You should have received a copy of the GNU General Public License
 # along with ELMO.  If not, see <http://www.gnu.org/licenses/>.
 # 
+require 'mission_based'
+require 'xml'
 class Response < ActiveRecord::Base
+  include MissionBased
+
   belongs_to(:form)
   has_many(:answers, :include => :questioning, :order => "questionings.rank", 
     :autosave => true, :validate => false, :dependent => :destroy)

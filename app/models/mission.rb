@@ -21,10 +21,7 @@ class Mission < ActiveRecord::Base
   
   scope(:sorted_by_name, order("name"))
   scope(:sorted_recent_first, order("created_at DESC"))
-  
-  def self.select_options(list = nil)
-    (list || all).collect{|m| [m.name, m.id]}
-  end
+  scope(:for_user, lambda{|u| where("missions.id IN (SELECT mission_id FROM mission_assignments WHERE user_id = ?)", u.id)})
   
   private
     def create_compact_name

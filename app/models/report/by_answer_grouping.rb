@@ -1,16 +1,6 @@
 class Report::ByAnswerGrouping < Report::Grouping
   belongs_to(:question)
   
-  def self.select_options
-    Question.includes(:type).where(:"question_types.name" => %w(select_one select_multiple)).all.collect{|q| [human_name(q), "by_answer_#{q.id}"]}
-  end
-  
-  def self.select_group_name; "Questions"; end
-  
-  def self.human_name(question)
-    "#{question.code}"
-  end
-  
   def apply(rel)
     wrapper.apply(rel, :group => true)
   end
@@ -32,6 +22,6 @@ class Report::ByAnswerGrouping < Report::Grouping
   end
   
   def to_s
-    self.class.human_name(question)
+    question.code
   end
 end

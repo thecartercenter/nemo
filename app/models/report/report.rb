@@ -1,4 +1,7 @@
+require 'mission_based'
 class Report::Report < ActiveRecord::Base
+  include MissionBased
+
   belongs_to(:pri_grouping, :class_name => "Report::Grouping", :autosave => true, :dependent => :destroy)
   belongs_to(:sec_grouping, :class_name => "Report::Grouping", :autosave => true, :dependent => :destroy)
   belongs_to(:aggregation)
@@ -18,15 +21,13 @@ class Report::Report < ActiveRecord::Base
   BAR_STYLES = ["Side By Side", "Stacked"]
   PERCENT_TYPES = ["Percentage Overall"]
   
+  @@per_page = 20
+  
   attr_reader :data
   
   def self.display_type_select_options; DISPLAY_TYPES; end
   def self.bar_style_select_options; BAR_STYLES; end
   def self.percent_type_select_options; PERCENT_TYPES; end
-  
-  def self.select_options
-    by_popularity.collect{|r| [r.name, r.id]}
-  end
   
   def self.new_with_default_name
     prefix = "New Report"
@@ -182,7 +183,7 @@ class Report::Report < ActiveRecord::Base
      :name => name, 
      :aggregation => aggregation ? aggregation.name : nil,
      :grand_total => @grand_total,
-     :field_choices => Report::Field.choices,
+     :field_choices => Report::Field.choices(mission),
      :errors => errors.full_messages.join(", ")
     }.to_json
   end
