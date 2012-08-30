@@ -21,7 +21,7 @@ class Language < ActiveRecord::Base
   include MissionBased
   include Seedable
   
-  validates(:code, :presence => true, :uniqueness => true)
+  validates(:code, :presence => true)
   validate(:english_mandatory)
   before_destroy(:check_assoc_and_english_mandatory)
   after_save(:rebuild_hash)
