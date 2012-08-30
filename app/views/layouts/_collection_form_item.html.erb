@@ -1,0 +1,10 @@
+<div class="item">
+  <%# render the main partial %>
+  <%= render(:partial => partial, :locals => {
+        :"#{obj_name}" => collection_form_item, 
+        :parent_form => parent_form
+      }) %>
+
+  <%# add a delete link %>
+  &nbsp;<%= link_to(action_icon("destroy", :no_label => true), "#", :class => "delete_item_link") %>
+</div>

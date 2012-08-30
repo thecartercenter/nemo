@@ -98,6 +98,14 @@ class UsersController < ApplicationController
     def render_form
       # get language choices
       @languages = restrict(Language)
+      
+      # create a blank mission assignment with the appropriate user_id for the boilerplate, but don't add it to the collection
+      @blank_assignment = Assignment.new(:active => true, :user_id => current_user.id)
+      
+      # get assignable missons and roles for this user
+      @assignable_missions = Permission.assignable_missions(current_user)
+      @assignable_roles = Permission.assignable_roles(current_user)
+      
       render(:form)
     end
 end

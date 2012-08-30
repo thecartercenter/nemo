@@ -1,0 +1,4 @@
+<%= fields.select(:mission_id, sel_opts_from_objs(@assignable_missions), :prompt => "[Mission]") %>&nbsp;&nbsp;
+<%= fields.select(:role_id, sel_opts_from_objs(@assignable_roles), :prompt => "[Role]") %>&nbsp;&nbsp;
+<%= fields.check_box(:active) %>
+<%= fields.label(:active, "Active?") %>

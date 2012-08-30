@@ -24,9 +24,9 @@ class ApplicationController < ActionController::Base
   before_filter(:mailer_set_url_options)
   before_filter(:init_js_array)
   before_filter(:basic_auth_for_xml)
+  before_filter(:get_user_missions)
   before_filter(:authorize)
   before_filter(:set_timezone)
-  before_filter(:get_user_missions)
   
   helper_method :current_user_session, :current_user, :current_mission, :authorized?
   

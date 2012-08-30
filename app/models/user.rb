@@ -27,9 +27,11 @@ class User < ActiveRecord::Base
   before_destroy(:check_assoc)
   has_many(:responses)
   has_many(:broadcast_addressings)
-  has_many(:mission_assignments)
-  has_many(:missions, :through => :mission_assignments)
+  has_many(:assignments, :autosave => true, :dependent => :destroy)
+  has_many(:missions, :through => :assignments)
   belongs_to(:current_mission, :class_name => "Mission")
+  
+  accepts_nested_attributes_for(:assignments, :allow_destroy => true)
   
   acts_as_authentic do |c| 
     c.disable_perishable_token_maintenance = true
@@ -49,7 +51,7 @@ class User < ActiveRecord::Base
   
   default_scope(includes(:language).order("users.name"))
   scope(:active_english, includes(:language).where(:active => true).where("languages.code" => "eng"))
-  scope(:assigned_to, lambda{|m| where("users.id IN (SELECT user_id FROM mission_assignments WHERE mission_id = ?)", m.id)})
+  scope(:assigned_to, lambda{|m| where("users.id IN (SELECT user_id FROM assignments WHERE mission_id = ?)", m.id)})
   
   # we want all of these on one page for now
   self.per_page = 1000000
@@ -140,12 +142,12 @@ class User < ActiveRecord::Base
   # returns nil if the user is not assigned to the mission
   def role(mission)
     return nil if mission.nil?
-    nn(mission_assignments.find_by_mission_id(mission.id)).role
+    nn(assignments.find_by_mission_id(mission.id)).role
   end
   
   # determines if the user's role for the given mission is as an observer
-  def is_observer?(mission)
-    (r = role(mission)) ? r.is_observer? : false
+  def observer?(mission)
+    (r = role(mission)) ? r.observer? : false
   end
   
   # if user has no mission, choose one (if assigned to any)

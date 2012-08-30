@@ -101,7 +101,7 @@ ActiveRecord::Schema.define(:version => 20120822161441) do
 
   add_index "languages", ["mission_id"], :name => "index_languages_on_mission_id"
 
-  create_table "mission_assignments", :force => true do |t|
+  create_table "assignments", :force => true do |t|
     t.integer  "mission_id"
     t.integer  "user_id"
     t.integer  "role_id"

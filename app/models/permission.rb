@@ -104,7 +104,7 @@ class Permission
     rel = rel.for_user(params[:user]) if rel.klass == Mission
     
     # if user is observer for the current mission and is not a system-wide admin
-    if params[:user].is_observer?(params[:mission]) && !params[:user].admin?
+    if params[:user].observer?(params[:mission]) && !params[:user].admin?
     
       # observer can only see his/her own responses
       rel = rel.where("responses.user_id" => params[:user].id) if rel.klass == Response
@@ -155,8 +155,36 @@ class Permission
     is_admin_or_not_observer?(user, mission)
   end
   
+  def self.can_give_admin_to?(user, other_user)
+    user && user.admin? && other_user != user
+  end
+  
+  def self.can_edit_assignments_for?(user, other_user, mission)
+    user && user != other_user && (user.admin? || user.role(mission).level >= 3)
+  end
+  
   def self.is_admin_or_not_observer?(user, mission)
-    return user && (user.admin? || !user.is_observer?(mission))
+    return user && (user.admin? || !user.observer?(mission))
+  end
+  
+  def self.assignable_missions(user)
+    # admins can assign any mission to anyone
+    if user.admin?
+      Mission.all 
+    # coordinators can assign missions for which they are coordinators
+    else
+      Mission.all.reject{|m| user.role(m).level < 3}
+    end
+  end
+  
+  def self.assignable_roles(user)
+    # admins can assign any role
+    if user.admin?
+      Role.all
+    # otherwise return everything below coordinator (this function won't be called for anyone less than coordinator)
+    else
+      Role.all.reject{|r| r.level >= 3}
+    end
   end
   
   private
@@ -197,7 +225,7 @@ class Permission
       # only valid for responses#update and responses#destroy
       return false unless %w(responses#update responses#destroy responses#show).include?(params[:key])
       # only valid for observers
-      return false unless params[:user] && params[:user].is_observer?(params[:mission])
+      return false unless params[:user] && params[:user].observer?(params[:mission])
       # get the response object being edited
       params[:object] = Response.find_by_id(params[:request][:id]) if params[:request]
       # require an object
@@ -212,7 +240,7 @@ class Permission
     
     def self.observer_cant_change_user_or_reviewed_for_response(params)
       # raise exception if user is an observer AND object is a response AND trying to change user_id
-      if params[:user] && params[:user].is_observer?(params[:mission]) && 
+      if params[:user] && params[:user].observer?(params[:mission]) && 
         params[:object] && params[:object].is_a?(Response) &&
         trying_to_change?(params, 'user_id', 'user', 'reviewed', 'reviewed?')
         raise PermissionError.new "Observers can't change the submitter for responses."

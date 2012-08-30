@@ -21,7 +21,7 @@ class Mission < ActiveRecord::Base
   
   scope(:sorted_by_name, order("name"))
   scope(:sorted_recent_first, order("created_at DESC"))
-  scope(:for_user, lambda{|u| where("missions.id IN (SELECT mission_id FROM mission_assignments WHERE user_id = ?)", u.id)})
+  scope(:for_user, lambda{|u| where("missions.id IN (SELECT mission_id FROM assignments WHERE user_id = ?)", u.id)})
   
   private
     def create_compact_name

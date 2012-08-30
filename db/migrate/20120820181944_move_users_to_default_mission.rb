@@ -6,7 +6,7 @@ class MoveUsersToDefaultMission < ActiveRecord::Migration
     
       # add users, copying the requisite fields
       User.all.each do |u|
-        u.mission_assignments.create!(:mission_id => dm.id, :role_id => u.role_id, :active => u.active?)
+        u.assignments.create!(:mission_id => dm.id, :role_id => u.role_id, :active => u.active?)
       end
     end
   end

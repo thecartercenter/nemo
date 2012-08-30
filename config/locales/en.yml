@@ -52,6 +52,7 @@ en:
         phone2: "Phone number should include the country code. Example: +25680344523"
         language: The user's preferred language.
         admin: Whether this user is a system-wide administrator. You can control per-mission permissions using the fields below.
+        assignments: The missions this user is assigned to.
         password: Enter a new password here if you'd like to change your existing password.
         password_confirmation: Enter the new password again.
       user_batch:

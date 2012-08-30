@@ -71,7 +71,7 @@ module ApplicationHelper
       content_tag("div", :class => "form_field", :id => method) do
         label_str = options[:label] || f.object.class.human_attribute_name(method)
         label_html = (label_str + (options[:required] ? " #{reqd_sym}" : "")).html_safe
-        label = f.label(method, label_html)
+        label = f.label(method, label_html, :class => "main")
         
         # temporarily force show mode if requested
         old_f_mode = f.mode
@@ -144,8 +144,9 @@ module ApplicationHelper
     (condition ? '<div class="reqd_sym">*</div>' : '').html_safe
   end
   
-  def action_icon(action)
-    image_tag("action-icons/#{action}.png")
+  def action_icon(action, options = {})
+    suffix = options[:no_label] ? "-no-label" : ""
+    image_tag("action-icons/#{action}#{suffix}.png")
   end
   
   # assembles links for the basic actions in an index table (show edit and destroy)
@@ -238,5 +239,10 @@ module ApplicationHelper
     
     # wrap in tags if requested
     options[:tags] ? options_for_select(arr) : arr
+  end
+  
+  # renders a collection of objects, including a boilerplate form and calls to the appropriate JS
+  def collection_form(params)
+    render(:partial => "layouts/collection_form", :locals => params)
   end
 end

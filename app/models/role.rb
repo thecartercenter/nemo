@@ -20,7 +20,7 @@ class Role < ActiveRecord::Base
   
   has_many(:users)
   
-  default_scope(order("level"))
+  default_scope(order("level DESC"))
 
   def self.generate
     seed(:level, :name => "Coordinator", :level => "3")
@@ -39,5 +39,6 @@ class Role < ActiveRecord::Base
   def to_s
     name
   end
-  def is_observer?; level == 1; end
+  def observer?; level == 1; end
+  def coordinator?; level == 3; end
 end

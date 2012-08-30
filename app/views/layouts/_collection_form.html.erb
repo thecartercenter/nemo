@@ -1,0 +1,13 @@
+<div class="collection_form">
+  <div class="items">
+    <%= parent_form.fields_for(collection_name, [blank_obj] + parent_form.object.send(collection_name)) do |fields| %>
+      <div class="item">
+        <%= fields.hidden_field(:id) %>
+        <%= fields.hidden_field(:_destroy) %>
+        <%= render(:partial => collection_name.to_s.singularize, :locals => {:fields => fields}) %>
+        &nbsp;<%= link_to(action_icon("destroy", :no_label => true), "#", :class => "delete_item_link") %>
+      </div>
+    <% end %>
+  </div>
+  <%= link_to("Add Assignment", "#", :class => "add_item_link")%>
+</div>

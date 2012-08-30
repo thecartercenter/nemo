@@ -37,7 +37,7 @@ table.form td.name { min-width: 75px; }
 
 /* forms (newer) */
 div.form_field { float: left; border-top: 1px solid #ddd; padding: 5px 0 5px 0; }
-div.form_field > label { float: left; width: 150px; padding-right: 10px; }
+div.form_field label.main { float: left; width: 150px; padding-right: 10px; }
 div.form_field div.form_field_control { float: left; width: 350px; min-height: 26px; position: relative; }
 div.form_field div.form_field_control input.text { width: 240px; }
 div.form_field div.form_field_control input.radio { width: 15px; }
@@ -50,6 +50,9 @@ div.form_buttons { clear: both; padding-top: 10px; }
 div.form_buttons br { clear: both; }
 div.form_buttons input.submit { float: left; font-weight: bold; font-size: 120%; padding: 5px 15px; margin: 0 5px 0 0; }
 div.form_subheading { clear: both; background-color: #ddd; font-weight: bold; width: 944px; padding: 3px; }
+
+/* collection form */
+div.collection_form div.item { margin-bottom: 3px; }
 
 /* index tables */
 table.index_table th, table.form th { text-align: left; color: #444; background-color: #ddd; 

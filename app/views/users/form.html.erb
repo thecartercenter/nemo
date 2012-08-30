@@ -1,3 +1,7 @@
+<% content_for(:per_page_js){javascript_include_tag("collection_form")} %>
+
+<%= flash_and_form_errors(@user) %>
+
 <%= form_for(@user) do |f| %>
   <%= form_field(f, :name, :required => true) %>
   <%= form_field(f, :login, :required => true, :partial => "login_name_field") %>
@@ -5,9 +9,9 @@
   <%= form_field(f, :phone, :size => 20) %>
   <%= form_field(f, :phone2, :size => 20) %>
   <%= form_field(f, :language_id, :type => :select, :options => sel_opts_from_objs(@languages)) %>
-  <% if current_user.admin? && @user != current_user %>
-    <%= form_field(f, :admin, :type => :check_box) %>
-  <% end %>
+  <%= form_field(f, :admin, :type => :check_box) if Permission.can_give_admin_to?(current_user, @user) %>
+  <%= form_field(f, :assignments, :partial => "assignments") if Permission.can_edit_assignments_for?(current_user, @user, current_mission) %>
+
   <%= form_field(f, :notes, :type => :textarea) %>
 
   <% if @user == current_user %>
