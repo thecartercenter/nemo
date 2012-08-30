@@ -123,6 +123,10 @@ class FormsController < ApplicationController
     def crupdate
       action = params[:action]
       @form = action == "create" ? Form.for_mission(current_mission).new : Form.find(params[:id])
+      
+      # set submitter if user doesn't have permission to do so
+      @form.user_id = current_user.id unless Permission.can_choose_form_submitter(current_user)
+      
       begin
         @form.update_attributes!(params[:form])
         flash[:success] = "Form #{action}d successfully."
@@ -146,6 +150,7 @@ class FormsController < ApplicationController
     end
     def render_and_setup(action)
       @title = action == "create" ? "Create Form" : "Edit Form: #{@form.name}"
+      
       render(:action => action == "create" ? :new : :edit)
     end
 end

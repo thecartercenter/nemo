@@ -112,6 +112,8 @@ class ResponsesController < ApplicationController
     
     def render_form
       @possible_submitters = restrict(User.assigned_to(current_mission))
+      @can_mark_reviewed = Permission.can_mark_form_reviewed?(current_user, current_mission)
+      @can_choose_submitter = Permission.can_choose_form_submitter?(current_user, current_mission)
       render(:form)
     end
 end

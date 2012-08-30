@@ -2,5 +2,5 @@
 <%= form_for(@mission) do |f| %>
   <div class="tip">Required fields are marked with a <%= reqd_sym %>.</div>
   <%= form_field(f, :name, :required => true) %>
-  <%= form_submit_button(f, "Save") %>
+  <%= form_submit_button(f, :label => "Save") %>
 <% end %>

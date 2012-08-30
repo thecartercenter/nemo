@@ -15,7 +15,7 @@
   
   // shows the map and location search box
   klass.show_location_picker = function(event) {
-    var location_box = $(event.target).parents("td.value").find("input.qtype_location")[0];
+    var location_box = $(event.target).parents("div.form_field_control").find("input.qtype_location")[0];
     new ELMO.LocationPicker(location_box);
   }
   

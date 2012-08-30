@@ -43,13 +43,6 @@ module ResponsesHelper
     end
     links
   end
-  # calls the answer fields template for the given response
-  def answers_subform(answers)
-    content_tag("table", :class => "form answers") do
-      content_tag("tr"){content_tag("th", :colspan => 3){"Answers"}} +
-        render(:partial => "answer", :collection => answers)
-    end
-  end
   def new_response_mini_form(visible = true)
     form_tag(new_response_path, :method => :get, :id => "form_chooser", :style => visible ? "" : "display: none") do
       select_tag(:form_id, sel_opts_from_objs(@pubd_forms, :name_method => :full_name, :tags => true), :prompt => "Choose a Form...") +

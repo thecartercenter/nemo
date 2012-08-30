@@ -55,6 +55,13 @@ module ApplicationHelper
   end
   
   # THIS IS THE NEW WAY
+  def ss_form(obj)
+    form_for(obj) do |f|
+      f.mode = {:new => :new, :create => :new, :edit => :edit, :update => :edit, :show => :show}[controller.action_name.to_sym]
+      yield(f)
+    end
+  end
+  
   def form_field(f, method, options = {})
     if options[:type] == :hidden
       f.hidden_field(method)
@@ -65,24 +72,50 @@ module ApplicationHelper
         label_str = options[:label] || f.object.class.human_attribute_name(method)
         label_html = (label_str + (options[:required] ? " #{reqd_sym}" : "")).html_safe
         label = f.label(method, label_html)
+        
+        # temporarily force show mode if requested
+        old_f_mode = f.mode
+        f.mode = :show if options[:force_show_mode]
+        
         field = content_tag("div", :class => "form_field_control") do
+          
+          # if this is a partial
           if options[:partial]
             render(options[:partial], (options[:locals] || {}).merge({:form => f, :method => method}))
           else
             case options[:type]
-            when nil, :text then f.text_field(method, {:class => "text"}.merge(options[:size] ? {:size => options[:size]} : {}))
-            when :check_box then f.check_box(method)
-            when :radio_buttons then options[:options].collect{|o| f.radio_button(method, o, :class => "radio") + o}.join("&nbsp;&nbsp;").html_safe
-            when :textarea then f.text_area(method)
-            when :password then f.password_field(method)
-            when :country then country_select(f.object.class.name.downcase, method, nil)
-            when :select then f.select(method, options[:options], :include_blank => options[:blank_text] || true)
-            when :datetime then f.datetime_select(method, :ampm => true, :order => [:month, :day, :year], :default => options[:default])
-            when :birthdate then f.date_select(method, :start_year => Time.now.year - 110, :end_year => Time.now.year - 18, 
-              :include_blank => true, :order => [:month, :day, :year], :default => nil)
+            when nil, :text
+              f.text_field(method, {:class => "text"}.merge(options[:size] ? {:size => options[:size]} : {}))
+            when :check_box
+              # if we are in show mode, show 'yes' or 'no' instead of checkbox
+              if f.mode == :show
+                content_tag("strong"){f.object.send(method) ? "Yes" : "No"}
+              else
+                f.check_box(method)
+              end
+            when :radio_buttons
+              options[:options].collect{|o| f.radio_button(method, o, :class => "radio") + o}.join("&nbsp;&nbsp;").html_safe
+            when :textarea 
+              f.text_area(method)
+            when :password
+              f.password_field(method)
+            when :country
+              country_select(f.object.class.name.downcase, method, nil)
+            when :select
+              f.select(method, options[:options], :include_blank => options[:blank_text] || true)
+            when :datetime
+              f.datetime_select(method, :ampm => true, :order => [:month, :day, :year], :default => options[:default])
+            when :birthdate
+              f.date_select(method, :start_year => Time.now.year - 110, :end_year => Time.now.year - 18, 
+                :include_blank => true, :order => [:month, :day, :year], :default => nil)
             end
           end
+          
         end
+        
+        # revert to old form mode
+        f.mode = old_f_mode
+        
         tip = t(method, :scope => [:activerecord, :tips, f.object.class.model_name.i18n_key]).gsub("\n", "<br/>").html_safe
         details = content_tag("div", :class => "form_field_details"){options[:details] || tip}
         details + label + field + "<div class=\"space_line\"></div>".html_safe
@@ -90,8 +123,20 @@ module ApplicationHelper
     end
   end
   
-  def form_submit_button(f, label)
-    tag("br", :clear => "left") + f.submit(label, :class => "submit") + tag("br", :clear => "left")
+  def form_submit_button(f, options = {})
+    # wrap in form_buttons if not wrapped
+    return form_buttons{form_submit_button(f, options.merge(:multiple => true))} unless options[:multiple]
+    label = options.delete(:label) || "Submit"
+    f.submit(label, options.merge(:class => "submit"))
+  end
+  
+  def form_buttons(&block)
+    buttons = capture{block.call}
+    content_tag("div", :class => "form_buttons"){buttons + tag("br")}
+  end
+  
+  def form_subheading(label)
+    content_tag("div", :class => "form_subheading"){label}
   end
   
   # renders the standard 'required' symbol, which is an asterisk

@@ -8,6 +8,8 @@ en:
     attributes:
       question:
         name_eng: "English name"
+      response:
+        user_id: Submitter
       report/report:
         name: Title
         aggregation: Operation
@@ -60,3 +62,8 @@ en:
           Chung Li, cli@gmail.com
           Forgo Niambot, , +203300303
           Stewbuilder Dennis, chowtime@yahoo.co.uk, +20923187493
+    boolean_labels:
+      response:
+        reviewed:
+          true: Yes
+          false: No

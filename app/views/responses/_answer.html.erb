@@ -1,9 +1,7 @@
-<tr id="qing_<%= answer.questioning_id %>" class="qtype_<%= answer.question_type_name %>">
-  <td class="name">
-    <%= answer.question_name || "[No Name]" %>
-    <%= reqd_sym(answer.required?) %>
-  </td>
-  <td class="value">
+<div class="form_field qtype_<%= answer.question_type_name %>" id="qing_<%= answer.questioning_id %>">
+  <div class="form_field_details"><%= answer.question_hint %></div>
+  <label><%= answer.question_name || "[No Name]" %> <%= reqd_sym(answer.required?) %></label>
+  <div class="form_field_control">
     <%= fields_for('response[all_answers][]', answer) do |f| %>
       <% f.mode = controller.action_name.to_sym %>
       <%= render("layouts/object_errors", :object => answer, :compact => true) %>
@@ -31,6 +29,5 @@
         ELMO.Response.conditions.push(new ELMO.Condition(<%= cond.to_json.html_safe %>));
       </script>
     <% end %>
-  </td>
-  <td class="details"><%= answer.question_hint %></div>
-</tr>
+  </div>
+</div>

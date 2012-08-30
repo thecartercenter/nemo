@@ -1,37 +1,36 @@
+
 <% content_for(:per_page_js){javascript_include_tag("response", "location_picker", "google_geocoder", 
   "dialog", "condition", "time_form_field", configatron.map_api_url)} %>
 <%= render("layouts/location_picker") %>
 
-<%= @response.answers.collect{|a| a.errors.full_messages.join(", ")}.join(" ") %>
-<%= basic_form(@response) do |f|
-  spec = {
-    :sections => [{
-      :name => "Response Info",
-      :fields => [{
-        :col => :form_id,
-        :value => f.hidden_field(:form_id),
-        :hidden => true
-      },{
-        :col => :user_id,
-        :label => "Submitter",
-        :required => true,
-        :value => f.select(:user_id, @possible_submitters, :include_blank => true),
-      },
-      (f.mode == :show ? {:col => :source, :label => "Source", :value => content_tag("strong"){@response.source}} : nil),
-      {
-        :col => :reviewed,
-        :label => "Reviewed?",
-        :value => f.mode == :show ? 
-          content_tag("div", :class => "dummy"){@response.reviewed? ? "Yes" : "No"} : 
-          f.check_box(:reviewed?)
-      }].compact
-    },{
-      :contents => answers_subform(@response.all_answers)
-    }],
-    # hackish fix until i refactor this code to the newer form style
-    :footer => '<input name="commit_and_mark_reviewed" type="submit" value="Update and Mark as Reviewed" class="submit">'.html_safe
-  }
-end
-%>
+<% @response.answers.collect{|a| a.errors.full_messages.join(", ")}.join(" ") %>
 
-<br><br>
+<%= ss_form(@response) do |f| %>
+
+  <%= form_field(f, :form_id, :type => :hidden) %>
+  
+  <% unless f.mode == :new %>
+  
+    <%= form_subheading("Response Info") %>
+
+    <%# determine whether/how to show the user box %>
+    <%= form_field(f, :user_id, :type => :select, :options => sel_opts_from_objs(@possible_submitters), 
+      :force_show_mode => !@can_choose_submitter) %>
+
+    <%= form_field(f, :source) if f.mode == :show %>
+
+    <%# determine whether/how to show the reviewed box %>
+    <%= form_field(f, :reviewed, :type => :check_box, :force_show_mode => !@can_mark_reviewed) %>
+
+  <% end %>  
+  
+  <%= form_subheading("Answers") %>
+  <%= render(:partial => "answer", :collection => @response.all_answers) %>
+  
+  <%= form_buttons do %>
+    <%= form_submit_button(f, :label => "Save", :multiple => true) %>
+    <%= form_submit_button(f, :label => "Save and Mark as Reviewed", :name => "commit_and_mark_reviewed", 
+      :multiple => true) if @can_mark_reviewed %>
+  <% end %>
+  
+<% end %>

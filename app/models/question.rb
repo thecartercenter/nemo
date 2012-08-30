@@ -110,7 +110,7 @@ class Question < ActiveRecord::Base
     clauses = []
     clauses << "greater than #{minstrictly ? '' : 'or equal to '}#{minimum}" if minimum
     clauses << "less than #{maxstrictly ? '' : 'or equal to '}#{maximum}" if maximum
-    "This answer must be #{clauses.join(' and ')}."
+    "Value must be #{clauses.join(' and ')}."
   end
   
   private

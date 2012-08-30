@@ -145,6 +145,20 @@ class Permission
     raise PermissionError.new "Error processing permission."
   end
   
+  ###############################################
+  # PUBLIC SPECIAL PERMISSION FUNCTIONS
+  def self.can_mark_form_reviewed?(user, mission)
+    is_admin_or_not_observer?(user, mission)
+  end
+  
+  def self.can_choose_form_submitter?(user, mission)
+    is_admin_or_not_observer?(user, mission)
+  end
+  
+  def self.is_admin_or_not_observer?(user, mission)
+    return user && (user.admin? || !user.is_observer?(mission))
+  end
+  
   private
     ###############################################
     # SPECIAL PERMISSION FUNCTIONS
