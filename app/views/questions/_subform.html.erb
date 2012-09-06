@@ -2,7 +2,7 @@
 <div class="tip"><%= reqd_sym %> Indicates a required field</div>
 <table class="form">
   <%= render("questions/title_and_hint", :lang => :eng, :f => f) %>
-  <tr class="rowbg<%= rowbg = 1 - rowbg %>">
+  <tr>
     <td class="name">Code <%= reqd_sym %></td>
     <td class="value"><%= f.text_field(:code, :maxlength => 20) %></td>
     <td class="details">
