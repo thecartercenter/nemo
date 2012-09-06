@@ -101,7 +101,9 @@ class Permission
     rel = rel.for_mission(params[:mission]) if rel.klass.respond_to?(:mission_based?)
     
     # restrict missions based on admin status
-    rel = rel.for_user(params[:user]) if rel.klass == Mission
+    if rel.klass == Mission
+      rel = params[:user].admin? ? rel : rel.for_user(params[:user])
+    end
     
     # if user is observer for the current mission and is not a system-wide admin
     if params[:user].observer?(params[:mission]) && !params[:user].admin?
