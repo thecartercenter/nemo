@@ -15,7 +15,7 @@ class Mission < ActiveRecord::Base
   
   validates(:name, :presence => true)
   validates(:name, :format => {:with => /^[a-z][a-z0-9 ]*$/i, :message => "can only contain letters, numbers, and spaces"},
-                   :length => {:minimum => 3, :maximum => 16},
+                   :length => {:minimum => 3, :maximum => 32},
                    :if => Proc.new{|m| !m.name.blank?})
   validate(:compact_name_unique)
   

@@ -34,7 +34,7 @@ en:
       form_type:
         name: A short name for this Form Type. Maximum 16 characters.
       mission:
-        name: A name for this Mission. Maximum 16 characters. Must be unique. Think about including the year if there will be future missions with the same name.
+        name: A name for this Mission. Maximum 32 characters. Must be unique. Think about including the year if there will be future missions with the same name.
       report/report:
         name: A descriptive title for this report.
         aggregation_id: The operation you want to perform on the combined data.
