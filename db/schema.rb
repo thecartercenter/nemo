@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120906150610) do
+ActiveRecord::Schema.define(:version => 20120906155118) do
 
   create_table "#Tableau_sid_00485CC8_4_none_form_name_nk", :id => false, :force => true do |t|
     t.string  "none_form_name_nk"
@@ -283,11 +283,10 @@ ActiveRecord::Schema.define(:version => 20120906150610) do
   add_index "sessions", ["updated_at"], :name => "index_sessions_on_updated_at"
 
   create_table "settings", :force => true do |t|
-    t.string   "value"
+    t.string   "timezone"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "mission_id"
-    t.string   "key"
   end
 
   add_index "settings", ["mission_id"], :name => "index_settings_on_mission_id"

@@ -24,6 +24,8 @@ en:
         bar_style: Bar Style
         submit_new: Generate Report
         submit_edit: Save Changes
+      setting:
+        timezone: Time Zone
       user:
         name: Full Name
         phone: Main Phone
@@ -45,6 +47,9 @@ en:
         pri_grouping: An attribute or question by which the response count should be grouped (e.g. state, overall rating).
         percent_type: Whether and how percentages should be calculated for the report.
         bar_style: Whether bars should be stacked or side-by-side. 
+      setting:
+        languages: Enter the two-letter codes for the languages in which you want to allow questions to be defined.
+        timezone: The time zone in which times are displayed throughout the site.
       user:
         name: "The user's full name. Example: 'John Doe' or 'Team 1.1'"
         login: The login name will be used to log in. Click the suggest button to suggest a login name.
@@ -68,9 +73,3 @@ en:
         reviewed:
           true: Yes
           false: No
-  settings:
-    names:
-      timezone: Time Zone
-    tips:
-      timezone: The time zone in which times are displayed throughout the site.
-    

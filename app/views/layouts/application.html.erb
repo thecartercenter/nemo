@@ -83,8 +83,10 @@
     </tr>
     <tr>
       <td id="footer" colspan="2">
+        Time Zone: <%= Time.zone.to_s %> &nbsp;|&nbsp;
         System Version: <%= configatron.system_version %>
         <% if Rails.env == "development" %>
+          &nbsp;&nbsp;
           <div id="dev_mode_warning">Development Mode</div>
         <% end %>
       </td>

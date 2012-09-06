@@ -36,7 +36,7 @@ class UsersController < ApplicationController
       @user.update_attributes(params[:user])
       
       # update the settings using the new mission
-      Setting.copy_all_to_config(@user.current_mission)
+      Setting.copy_to_config(@user.current_mission)
       
       # redirect back to the referrer
       redirect_to(request.referrer)

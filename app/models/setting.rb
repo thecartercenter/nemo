@@ -18,66 +18,41 @@ require 'mission_based'
 class Setting < ActiveRecord::Base
   include MissionBased
 
-  SETTABLES = {
-    :timezone => {
-      :key => "timezone",
-      :kind => "timezone",
-      :default => "UTC",
-      :mission_independent? => false
-    }
-  }
+  scope(:by_mission, lambda{|m| where(:mission_id => m ? m.id : nil)})
+  scope(:default, where(:timezone => "UTC"))
   
   def self.table_exists?
     ActiveRecord::Base.connection.tables.include?("settings")
   end
   
-  # loads or creates one setting (for the given mission) for each settable in the database
-  # if mission is nil, only loads/creates mission independent settings
-  def self.load_and_create(mission)
-    return [] unless table_exists?
-    
-    # for each settable, get the existing setting, or the default (which is defined in settable)
-    SETTABLES.collect do |key, sb| 
-      
-      # must have a mission unless the setting is mission_independent
-      if !mission && !sb[:mission_independent?]
-        nil
-      elsif sb[:mission_independent?]
-        # return the first setting (there should only be one) or create one
-        where(:key => sb[:key]).first || create(:key => sb[:key], :value => sb[:default])
-      else
-        # return the mission specific setting or create one
-        for_mission(mission).where(:key => sb[:key]).first || for_mission(mission).create(:key => sb[:key], :value => sb[:default])
-      end
-    end.compact
+  # gets called each time the current_mission is set by the application controller
+  # checks if the settings have been copied to configatron since the *app* (not the request) was started
+  def self.mission_was_set(mission)
+    unless configatron.settings_copied?
+      configatron.settings_copied = true
+      copy_to_config(mission)
+    end
   end
   
-  # called by the controller; updates settings with the given values
-  # accepts an array of hashes of the format {:id => id, :value => value}
-  def self.find_and_update_all(params)
-    return [] unless table_exists?
-    
-    # save new values to database and get updated settings objects
-    updated = params.collect{|p| s = find(p[:id]); s.update_attributes(:value => p[:value]); s}
-    
-    # copy the update values to the config
-    copy_all_to_config
-    
-    # return the updated settings objects
-    updated
+  # loads or creates a setting for the given mission
+  def self.find_or_create(mission)
+    return nil unless table_exists?
+    by_mission(mission).first || by_mission(mission).default.create
   end
   
   # copies all settings for the given mission to configatron
-  def self.copy_all_to_config(mission = nil)
-    return unless table_exists?
-    configatron.configure_from_hash(Hash[*load_and_create(mission).collect{|s| [s.key, s.value]}.flatten])
+  def self.copy_to_config(mission)
+    return if !table_exists?
+    
+    # get the setting or default
+    find_or_create(mission).copy_to_config
   end
   
-  def name
-    SETTABLES[key.to_sym][:name]
-  end
-  
-  def kind
-    SETTABLES[key.to_sym][:kind]
+  def copy_to_config
+    # build hash
+    hsh = Hash[*%w(timezone).collect{|k| [k, send(k)]}.flatten]
+    
+    # copy to configatron
+    configatron.configure_from_hash(hsh)
   end
 end

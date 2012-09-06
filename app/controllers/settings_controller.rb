@@ -16,19 +16,21 @@
 # 
 class SettingsController < ApplicationController
   def index
-    # load all settings
-    @settings = Setting.load_and_create(current_mission)
+    # load setting for current mission (create with defaults if doesn't exist)
+    @setting = Setting.find_or_create(current_mission)
   end
   
-  def update_all
-    @settings = Setting.find_and_update_all(params[:settings].values)
-    # for each setting, update
-    unless @settings.detect{|s| !s.valid?}
+  def update
+    begin
+      (@setting = Setting.find(params[:id])).update_attributes!(params[:setting])
+      
+      # copy the updated settings to the config
+      @setting.copy_to_config
+      
       flash[:success] = "Settings updated successfully."
       redirect_to(:action => :index)
-    else
-      flash[:error] = "Settings have errors. Please see below."
-      render(:action => :index)
+    rescue ActiveRecord::RecordInvalid
+      render(:form)
     end
   end
 end

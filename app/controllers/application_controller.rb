@@ -24,11 +24,14 @@ class ApplicationController < ActionController::Base
   before_filter(:mailer_set_url_options)
   before_filter(:init_js_array)
   before_filter(:basic_auth_for_xml)
+  before_filter(:get_session_user_mission)
   before_filter(:get_user_missions)
   before_filter(:authorize)
   before_filter(:set_timezone)
   
-  helper_method :current_user_session, :current_user, :current_mission, :authorized?
+  helper_method :current_user, :current_mission, :authorized?
+
+  attr_reader :current_user, :current_mission
   
   # hackish way of getting the route key identical to what would be returned by model_name.route_key on a model
   def route_key
@@ -59,7 +62,7 @@ class ApplicationController < ActionController::Base
     
     # Loads the user-specified timezone from configatron, if one exists.
     def set_timezone
-      Time.zone = configatron.timezone.to_s if configatron.timezone
+      Time.zone = configatron.timezone.to_s if configatron.timezone?
     end
     
     def load_selected_objects(klass)
@@ -111,20 +114,6 @@ class ApplicationController < ActionController::Base
       if request.format == Mime::XML
         @current_user = authenticate_or_request_with_http_basic{|l,p| User.find_by_credentials(l,p)}
       end
-    end
-    
-    def current_user_session
-      return @current_user_session if defined?(@current_user_session)
-      @current_user_session = UserSession.find
-    end
-
-    def current_user
-      return @current_user if defined?(@current_user)
-      @current_user = current_user_session && current_user_session.user
-    end
-    
-    def current_mission
-      current_user ? current_user.current_mission : nil
     end
     
     def authorize
@@ -211,5 +200,19 @@ class ApplicationController < ActionController::Base
     
     def get_user_missions
       @user_missions = restrict(Mission) if current_user
+    end
+    
+    def get_session_user_mission
+      # get the current user session from authlogic
+      @current_user_session = UserSession.find
+
+      # look up the current user from the user session
+      @current_user = @current_user_session && @current_user_session.user
+    
+      # look up the current mission based on the current user
+      @current_mission = @current_user ? @current_user.current_mission : nil
+      
+      # if a mission was found, notify the settings class
+      Setting.mission_was_set(@current_mission) if @current_mission
     end
 end

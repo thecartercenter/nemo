@@ -108,6 +108,8 @@ module ApplicationHelper
             when :birthdate
               f.date_select(method, :start_year => Time.now.year - 110, :end_year => Time.now.year - 18, 
                 :include_blank => true, :order => [:month, :day, :year], :default => nil)
+            when :timezone
+              f.time_zone_select(method)
             end
           end
           

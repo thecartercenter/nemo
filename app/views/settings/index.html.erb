@@ -1,8 +1,7 @@
 <%= flash_and_form_errors %>
 
-<%= form_tag(update_all_settings_path) do |f| %>
-  <table class="form">
-    <%= render(:partial => "setting", :collection => @settings) %>
-  </table>
-  <%= submit_tag("Update Settings") %>
+<%= form_for(@setting) do |f| %>
+  <%= form_field(f, :mission_id, :type => :hidden) %>
+  <%= form_field(f, :timezone, :type => :timezone, :required => true) %>
+  <%= form_submit_button(f) %>
 <% end %>
