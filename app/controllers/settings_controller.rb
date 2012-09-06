@@ -30,7 +30,7 @@ class SettingsController < ApplicationController
       flash[:success] = "Settings updated successfully."
       redirect_to(:action => :index)
     rescue ActiveRecord::RecordInvalid
-      render(:form)
+      render(:index)
     end
   end
 end

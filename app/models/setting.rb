@@ -15,11 +15,21 @@
 # along with ELMO.  If not, see <http://www.gnu.org/licenses/>.
 # 
 require 'mission_based'
+require 'language_list'
 class Setting < ActiveRecord::Base
   include MissionBased
+  include LanguageList
+
+  KEYS = %w(timezone languages)
+  DEFAULTS = {:timezone => "UTC", :languages => "eng"}
 
   scope(:by_mission, lambda{|m| where(:mission_id => m ? m.id : nil)})
-  scope(:default, where(:timezone => "UTC"))
+  scope(:default, where(DEFAULTS))
+  
+  before_validation(:cleanup_languages)
+  before_validation(:ensure_english)
+  validate(:lang_codes_are_valid)
+  
   
   def self.table_exists?
     ActiveRecord::Base.connection.tables.include?("settings")
@@ -37,7 +47,7 @@ class Setting < ActiveRecord::Base
   # loads or creates a setting for the given mission
   def self.find_or_create(mission)
     return nil unless table_exists?
-    by_mission(mission).first || by_mission(mission).default.create
+    setting = by_mission(mission).first || by_mission(mission).default.create
   end
   
   # copies all settings for the given mission to configatron
@@ -50,9 +60,36 @@ class Setting < ActiveRecord::Base
   
   def copy_to_config
     # build hash
-    hsh = Hash[*%w(timezone).collect{|k| [k, send(k)]}.flatten]
+    hsh = Hash[*KEYS.collect{|k| [k, send(k)]}.flatten]
+    hsh[:languages] = lang_codes
     
     # copy to configatron
     configatron.configure_from_hash(hsh)
   end
+  
+  def lang_codes
+    (languages || "").split(",").collect{|c| c.to_sym}
+  end
+  
+  def lang_codes=(codes)
+    self.languages = codes.join(",")
+  end
+  
+  private
+    def ensure_english
+      # make sure english exists and is at the front
+      self.lang_codes = (lang_codes - [:eng]).insert(0, :eng)
+      return true
+    end
+    
+    def cleanup_languages
+      self.lang_codes = lang_codes.collect{|c| c.to_s.downcase.gsub(/[^a-z]/, "").to_sym}
+      return true
+    end
+    
+    def lang_codes_are_valid
+      lang_codes.each do |lc|
+        errors.add(:languages, "code #{lc} is invalid") unless LANGS.keys.include?(lc)
+      end
+    end
 end

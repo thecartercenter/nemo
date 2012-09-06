@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120906155118) do
+ActiveRecord::Schema.define(:version => 20120906170242) do
 
   create_table "#Tableau_sid_00485CC8_4_none_form_name_nk", :id => false, :force => true do |t|
     t.string  "none_form_name_nk"
@@ -287,6 +287,8 @@ ActiveRecord::Schema.define(:version => 20120906155118) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "mission_id"
+    t.string   "languages"
+    t.string   "key"
   end
 
   add_index "settings", ["mission_id"], :name => "index_settings_on_mission_id"
