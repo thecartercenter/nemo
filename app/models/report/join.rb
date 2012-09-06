@@ -34,7 +34,7 @@ class Report::Join
       :name => :options,
       :sql => ["LEFT JOIN options ao ON answers.option_id = ao.id",
         "LEFT JOIN translations aotr ON (aotr.obj_id = ao.id and aotr.fld = 'name' and aotr.class_name = 'Option' " +
-          "AND aotr.language_id = (SELECT id FROM languages WHERE code = 'eng'))"]
+          "AND aotr.language = 'eng')"]
     ),      
     :choices => new(
       :dependencies => :answers,
@@ -42,7 +42,7 @@ class Report::Join
       :sql => ["LEFT JOIN choices ON choices.answer_id = answers.id",
         "LEFT JOIN options co ON choices.option_id = co.id",
         "LEFT JOIN translations cotr ON (cotr.obj_id = co.id and cotr.fld = 'name' and cotr.class_name = 'Option' " + 
-            "AND cotr.language_id = (SELECT id FROM languages WHERE code = 'eng'))"]
+            "AND cotr.language = 'eng')"]
     ),      
     :forms => new(
       :name => :forms,
@@ -63,7 +63,7 @@ class Report::Join
       :dependencies => :questions,
       :sql => "JOIN translations question_trans ON (question_trans.obj_id = questions.id 
         AND question_trans.fld = 'name' AND question_trans.class_name = 'Question' 
-        AND question_trans.language_id = (SELECT id FROM languages WHERE code = 'eng'))"
+        AND question_trans.language = 'eng')"
     ),
     :question_types => new( 
       :name => :question_types,
@@ -78,10 +78,6 @@ class Report::Join
     :users => new(
       :name => :users,
       :sql => "LEFT JOIN users ON responses.user_id = users.id"
-    ),
-    :languages => new(
-      :name => :languages,
-      :sql => "LEFT JOIN languages ON users.language_id = languages.id"
     )
   }       
 end         

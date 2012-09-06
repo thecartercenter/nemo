@@ -95,9 +95,6 @@ form.search_form #search_examples { margin-top: 2px; color: #666; }
 .welcome_index div.block select { width: 110px;  }
 .welcome_index div.block input { font-size: 8pt; width: 30px; }
 
-/* language listing */
-#languages_index table td.name_col { width: 150px; }
-
 /* place map */
 #map_canvas { width: 600px; height: 400px; }
 

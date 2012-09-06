@@ -21,7 +21,6 @@ class User < ActiveRecord::Base
   attr_writer(:reset_password_method)
   
   belongs_to(:role)
-  belongs_to(:language)
   belongs_to(:location)
   before_validation(:clean_fields)
   before_destroy(:check_assoc)
@@ -44,14 +43,12 @@ class User < ActiveRecord::Base
   end
   
   validates(:name, :presence => true)
-  validates(:language_id, :presence => true)
   validate(:phone_length_or_empty)
   validate(:must_have_password_reset_on_create)
   validate(:password_reset_cant_be_email_if_no_email)
   validate(:no_duplicate_assignments)
   
-  default_scope(includes(:language).order("users.name"))
-  scope(:active_english, includes(:language).where(:active => true).where("languages.code" => "eng"))
+  default_scope(order("users.name"))
   scope(:assigned_to, lambda{|m| where("users.id IN (SELECT user_id FROM assignments WHERE mission_id = ?)", m.id)})
   
   # we want all of these on one page for now
@@ -86,14 +83,13 @@ class User < ActiveRecord::Base
     [
       Search::Qualifier.new(:label => "name", :col => "users.name", :default => true, :partials => true),
       Search::Qualifier.new(:label => "login", :col => "users.login", :default => true),
-      Search::Qualifier.new(:label => "language", :col => "languages.code", :assoc => :languages),
       Search::Qualifier.new(:label => "email", :col => "users.email", :partials => true),
       Search::Qualifier.new(:label => "phone", :col => "users.phone", :partials => true)
     ]
   end
 
   def self.search_examples
-    ["pinchy lombard", "language:english", "phone:+44"]
+    ["pinchy lombard", "phone:+44"]
   end
   
   def reset_password

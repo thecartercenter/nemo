@@ -57,7 +57,6 @@ class OptionsController < ApplicationController
     end
     
     def render_form
-      @languages = Language.for_mission(current_mission).active
       render(:form)
     end
 end

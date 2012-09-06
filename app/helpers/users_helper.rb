@@ -16,14 +16,13 @@
 # 
 module UsersHelper
   def users_index_fields
-    %w[name login email language main_phone alternate_phone actions]
+    %w[name login email main_phone alternate_phone actions]
   end
   def format_users_field(user, field)
     case field
     when "email" then mail_to(user.email)
     when "main_phone" then user.phone
     when "alternate_phone" then user.phone2
-    when "language" then user.language.name
     when "actions"
       action_links(user, :exclude => :show,
         :destroy_warning => "Are you sure you want to delete #{user.name}?")

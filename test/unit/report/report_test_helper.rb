@@ -29,7 +29,7 @@ module ReportTestHelper
   def user
     @users[:test] ||= User.create!(:login => "test", :name => "Test",
       :email => "test@example.com",
-      :language => Language.english, :password => "changeme", :password_confirmation => "changeme")
+      :password => "changeme", :password_confirmation => "changeme")
   end
 
   def create_question(params)

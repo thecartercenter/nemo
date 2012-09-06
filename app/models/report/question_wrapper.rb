@@ -29,7 +29,7 @@ class Report::QuestionWrapper
       # add the translations join
       rel = rel.joins("LEFT JOIN translations aotr#{sfx} ON " +
           "(aotr#{sfx}.obj_id = ao#{sfx}.id and aotr#{sfx}.fld = 'name' and aotr#{sfx}.class_name = 'Option' " +
-            "AND aotr#{sfx}.language_id = (SELECT id FROM languages WHERE code = 'eng'))")        
+            "AND aotr#{sfx}.language = 'eng')")        
       
       # add the group by if necessary
       rel = rel.group(expr) if options[:group]

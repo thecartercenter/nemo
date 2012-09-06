@@ -14,8 +14,10 @@
 # You should have received a copy of the GNU General Public License
 # along with ELMO.  If not, see <http://www.gnu.org/licenses/>.
 # 
+require 'language_list'
 module ApplicationHelper
-
+  include LanguageList
+   
   # renders the flash message and any form errors for the given activerecord object
   def flash_and_form_errors(object = nil)
     render("layouts/flash", :flash => flash, :object => object)
@@ -246,5 +248,9 @@ module ApplicationHelper
   # renders a collection of objects, including a boilerplate form and calls to the appropriate JS
   def collection_form(params)
     render(:partial => "layouts/collection_form", :locals => params)
+  end
+  
+  def language_name(code)
+    LANGS[code]
   end
 end

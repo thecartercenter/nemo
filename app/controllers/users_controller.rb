@@ -19,7 +19,7 @@ class UsersController < ApplicationController
     @users = apply_filters(User)
   end
   def new
-    @user = User.active_english.new
+    @user = User.new
     render_form
   end
   def edit
@@ -96,9 +96,6 @@ class UsersController < ApplicationController
     end
     
     def render_form
-      # get language choices
-      @languages = restrict(Language)
-      
       # create a blank mission assignment with the appropriate user_id for the boilerplate, but don't add it to the collection
       @blank_assignment = Assignment.new(:active => true, :user_id => current_user.id)
       

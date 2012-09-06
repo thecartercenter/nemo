@@ -27,7 +27,6 @@ class Permission
     "user_sessions#logged_out" => {:group => :logged_out},
     "password_resets#create" => {:group => :logged_out},
     "password_resets#update" => {:group => :logged_out},
-    "languages#*" => {:min_level => 3},
     "search_searches#*" => {:min_level => 1},
     "welcome#*" => {:group => :anyone},
     "permissions#no" => {:group => :anyone},

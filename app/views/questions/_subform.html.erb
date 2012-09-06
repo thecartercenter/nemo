@@ -1,7 +1,7 @@
 <% rowbg = 0 %>
 <div class="tip"><%= reqd_sym %> Indicates a required field</div>
 <table class="form">
-  <%= render("questions/title_and_hint", :lang => Language.english, :f => f) %>
+  <%= render("questions/title_and_hint", :lang => :eng, :f => f) %>
   <tr class="rowbg<%= rowbg = 1 - rowbg %>">
     <td class="name">Code <%= reqd_sym %></td>
     <td class="value"><%= f.text_field(:code, :maxlength => 20) %></td>
@@ -52,7 +52,7 @@
       The maximum value for the response. Check the box if the maximum itself is not acceptable.
     </td>
   </tr>
-  <% (Language.active - [Language.english]).each do |lang| %>
+  <% (configatron.languages - [:eng]).each do |lang| %>
     <%= render("questions/title_and_hint", :lang => lang, :f => f) %>
   <% end %>
 </table>      

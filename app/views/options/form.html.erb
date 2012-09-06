@@ -1,4 +1,4 @@
-<%= basic_form(option) do |f|
+<%= basic_form(@option) do |f|
   spec = {
     :fields => [{
       :col => :value,
@@ -7,14 +7,14 @@
       :details => "The numeric value that best represents this option."
     }]
   }
-  @languages.each do |lang| 
-    col = "name_#{lang.code}".to_sym
+  configatron.languages.each do |lang| 
+    col = "name_#{lang}".to_sym
     spec[:fields] << {
       :col => col,
-      :label => "Name (#{lang.name})",
-      :required => lang.is_english?,
+      :label => "Name (#{language_name(lang)})",
+      :required => lang == :eng,
       :value => f.text_field(col),
-      :details => lang.is_english? ? "The textual description of this option that users will see." : ""
+      :details => lang == :eng ? "The textual description of this option that users will see." : ""
     }
   end
   spec

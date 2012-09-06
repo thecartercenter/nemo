@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120906170242) do
+ActiveRecord::Schema.define(:version => 20120906184149) do
 
   create_table "#Tableau_sid_00485CC8_4_none_form_name_nk", :id => false, :force => true do |t|
     t.string  "none_form_name_nk"
@@ -294,16 +294,16 @@ ActiveRecord::Schema.define(:version => 20120906170242) do
   add_index "settings", ["mission_id"], :name => "index_settings_on_mission_id"
 
   create_table "translations", :force => true do |t|
-    t.integer  "language_id"
     t.text     "str"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "fld"
     t.string   "class_name"
     t.integer  "obj_id"
+    t.string   "language"
   end
 
-  add_index "translations", ["language_id", "class_name", "fld", "obj_id"], :name => "translation_master", :unique => true
+  add_index "translations", ["language", "class_name", "fld", "obj_id"], :name => "translation_master", :unique => true
 
   create_table "user_batches", :force => true do |t|
     t.text     "users"
@@ -314,7 +314,6 @@ ActiveRecord::Schema.define(:version => 20120906170242) do
   create_table "users", :force => true do |t|
     t.string   "login"
     t.string   "email"
-    t.integer  "language_id"
     t.string   "phone"
     t.string   "password_salt"
     t.string   "crypted_password"

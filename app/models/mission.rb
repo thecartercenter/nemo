@@ -7,7 +7,6 @@ class Mission < ActiveRecord::Base
   has_many(:questions)
   has_many(:form_types)
   has_many(:broadcasts)
-  has_many(:languages)
   has_many(:settings)
   
   before_validation(:create_compact_name)
@@ -35,7 +34,7 @@ class Mission < ActiveRecord::Base
     end
     
     def check_assoc
-      to_check = [:responses, :forms, :reports, :options, :option_sets, :questions, :form_types, :broadcasts, :languages, :settings]
+      to_check = [:responses, :forms, :reports, :options, :option_sets, :questions, :form_types, :broadcasts, :settings]
       to_check.each{|a| raise "This mission has associated objects and can't be deleted." unless self.send(a).empty?}
     end
 end
