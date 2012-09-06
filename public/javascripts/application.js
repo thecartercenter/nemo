@@ -16,4 +16,10 @@ String.prototype.rpad = function(pad_str, length) {
 }
 
 // hookup mission dropdown box to submit form
-$(document).ready(function(){ $("select#user_current_mission_id").change(function(e){ $(e.target).parents("form").submit(); }) });
+$(document).ready(function(){ $("select#user_current_mission_id").change(function(e){ 
+  // show loading indicator
+  $(e.target).parents("form").find("div.loading_indicator img").show();
+  
+  // submit form
+  $(e.target).parents("form").submit(); 
+}) });
