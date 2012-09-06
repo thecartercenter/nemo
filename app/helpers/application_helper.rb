@@ -46,7 +46,7 @@ module ApplicationHelper
   # THIS IS THE OLD WAY
   def basic_form(obj, &block)
     form_for(obj) do |f|
-      f.mode = controller.action_name.to_sym
+      f.mode = form_mode
       # get the fields spec
       spec = block.call(f)
       # if fields doesn't have sections, create one big section 
@@ -57,11 +57,17 @@ module ApplicationHelper
   end
   
   # THIS IS THE NEW WAY
-  def ss_form(obj)
+  def nice_form_for(obj)
     form_for(obj) do |f|
-      f.mode = {:new => :new, :create => :new, :edit => :edit, :update => :edit, :show => :show}[controller.action_name.to_sym]
+      # set form mode
+      f.mode = form_mode
       yield(f)
     end
+  end
+  
+  # gets the mode a form should be displayed in: one of new, edit, or show
+  def form_mode
+    {:new => :new, :create => :new, :edit => :edit, :update => :edit, :show => :show}[controller.action_name.to_sym]
   end
   
   def form_field(f, method, options = {})

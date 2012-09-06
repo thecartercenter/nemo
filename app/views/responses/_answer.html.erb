@@ -3,7 +3,7 @@
   <label><%= answer.question_name || "[No Name]" %> <%= reqd_sym(answer.required?) %></label>
   <div class="form_field_control">
     <%= fields_for('response[all_answers][]', answer) do |f| %>
-      <% f.mode = controller.action_name.to_sym %>
+      <% f.mode = form_mode %>
       <%= render("layouts/object_errors", :object => answer, :compact => true) %>
       <%= f.hidden_field(:response_id, :index => answer_counter) %>
       <%= f.hidden_field(:questioning_id, :index => answer_counter) %>

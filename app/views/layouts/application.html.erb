@@ -28,7 +28,7 @@
             <%# current mission and dropdown, if there are choices %>
             Mission: 
             <% if current_user.missions.size > 1 %>
-              <%= form_for(current_user) do |f| %>
+              <%= nice_form_for(current_user) do |f| %>
                 <%= f.select(:current_mission_id, sel_opts_from_objs(@user_missions), :include_blank => "[None]") %>
                 <%= loading_indicator(:header => true) %>
                 <%= hidden_field_tag(:changing_current_mission, 1) %>

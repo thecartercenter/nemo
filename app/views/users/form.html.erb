@@ -2,7 +2,7 @@
 
 <%= flash_and_form_errors(@user) %>
 
-<%= form_for(@user) do |f| %>
+<%= nice_form_for(@user) do |f| %>
   <%= form_field(f, :name, :required => true) %>
   <%= form_field(f, :login, :required => true, :partial => "login_name_field") %>
   <%= form_field(f, :email) %>

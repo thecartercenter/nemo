@@ -1,6 +1,6 @@
 <% @title = "Create Multiple Users" %>
 <%= flash_and_form_errors(@batch) %>
-<%= form_for(@batch) do |f| %>
+<%= nice_form_for(@batch) do |f| %>
   <%= form_field(f, :users, :type => :textarea, :required => true) %>
   <%= f.submit("Create", :style => "float: left; clear: left;") %>
 <% end %>

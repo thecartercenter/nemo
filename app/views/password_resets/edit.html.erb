@@ -2,7 +2,7 @@
   <strong><%= @user.name %></strong>, please enter a new password for your account.
 </div>
 <% rowbg = 0 %>
-<%= form_for @user, :url => password_reset_path, :method => :put do |f| %>
+<%= nice_form_for @user, :url => password_reset_path, :method => :put do |f| %>
   <%= flash_and_form_errors(@user) %>
   <table class="form">
     <tr class="rowbg<%= rowbg = 1 - rowbg %>">

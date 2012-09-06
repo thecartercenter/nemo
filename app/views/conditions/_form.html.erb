@@ -1,6 +1,6 @@
 <%= fields_for("questioning[condition]", condition) do |f| %>
   <%= render("layouts/object_errors", :object => condition, :compact => true) %>
-  <% f.mode = controller.action_name.to_sym %>
+  <% f.mode = form_mode %>
   <%= f.select(:ref_qing_id, condition.question_code_select_options, {:include_blank => "Select question..."},
     :onchange => "condition_update_choices(this)") %>&nbsp;
   <%= f.select(:op, condition.op_select_options, :include_blank => "Select comparison...") %>&nbsp;

@@ -1,6 +1,6 @@
 <%= flash_and_form_errors(@setting) %>
 
-<%= form_for(@setting) do |f| %>
+<%= nice_form_for(@setting) do |f| %>
   <%= form_field(f, :mission_id, :type => :hidden) %>
   <%= form_field(f, :timezone, :type => :timezone, :required => true) %>
   <%= form_field(f, :languages, :required => true) %>

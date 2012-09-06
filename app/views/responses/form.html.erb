@@ -5,7 +5,7 @@
 
 <% @response.answers.collect{|a| a.errors.full_messages.join(", ")}.join(" ") %>
 
-<%= ss_form(@response) do |f| %>
+<%= nice_form_for(@response) do |f| %>
 
   <%= form_field(f, :form_id, :type => :hidden) %>
   

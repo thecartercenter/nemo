@@ -1,8 +1,8 @@
 <% content_for(:per_page_js){javascript_include_tag("questionings")} %>
 
 <%= flash_and_form_errors(@qing).gsub("Question base", "Question").gsub("Question C", "Question c").html_safe %>
-<%= form_for(@qing) do |f| %>
-  <% f.mode = controller.action_name.to_sym %>
+<%= nice_form_for(@qing) do |f| %>
+  <% f.mode = form_mode %>
   <%= f.hidden_field(:form_id) %>
   
   <% unless f.mode == :edit && @qing.question.published? %>
@@ -15,7 +15,7 @@
     <% end %>
   
     <%= fields_for("questioning[question]", @qing.question) do |f2| %>
-      <% f2.mode = controller.action_name.to_sym %>
+      <% f2.mode = form_mode %>
       <%= render("questions/subform", :f => f2, :question => @qing.question) %>
     <% end %>
   <% end %>

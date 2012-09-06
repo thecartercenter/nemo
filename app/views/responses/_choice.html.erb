@@ -1,5 +1,5 @@
 <%= fields_for("response[all_answers][#{answer_counter}][all_choices][]", choice) do |f| %>
-  <% f.mode = controller.action_name.to_sym %>
+  <% f.mode = form_mode %>
   <%= f.hidden_field(:answer_id, :index => choice_counter) %>
   <%= f.hidden_field(:option_id, :index => choice_counter) %>
   <%= f.check_box(:checked, {:index => choice_counter}) %>
