@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120822161441) do
+ActiveRecord::Schema.define(:version => 20120906150610) do
 
   create_table "#Tableau_sid_00485CC8_4_none_form_name_nk", :id => false, :force => true do |t|
     t.string  "none_form_name_nk"
@@ -30,6 +30,15 @@ ActiveRecord::Schema.define(:version => 20120822161441) do
   end
 
   add_index "answers", ["questioning_id"], :name => "index_answers_on_questioning_id"
+
+  create_table "assignments", :force => true do |t|
+    t.integer  "mission_id"
+    t.integer  "user_id"
+    t.integer  "role_id"
+    t.boolean  "active"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "broadcast_addressings", :force => true do |t|
     t.integer  "broadcast_id"
@@ -100,15 +109,6 @@ ActiveRecord::Schema.define(:version => 20120822161441) do
   end
 
   add_index "languages", ["mission_id"], :name => "index_languages_on_mission_id"
-
-  create_table "assignments", :force => true do |t|
-    t.integer  "mission_id"
-    t.integer  "user_id"
-    t.integer  "role_id"
-    t.boolean  "active"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
 
   create_table "missions", :force => true do |t|
     t.string   "name"
@@ -282,22 +282,12 @@ ActiveRecord::Schema.define(:version => 20120822161441) do
   add_index "sessions", ["session_id"], :name => "index_sessions_on_session_id"
   add_index "sessions", ["updated_at"], :name => "index_sessions_on_updated_at"
 
-  create_table "settables", :force => true do |t|
-    t.string   "key"
-    t.string   "name"
-    t.string   "description"
-    t.string   "default"
-    t.string   "kind"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "settings", :force => true do |t|
-    t.integer  "settable_id"
     t.string   "value"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "mission_id"
+    t.string   "key"
   end
 
   add_index "settings", ["mission_id"], :name => "index_settings_on_mission_id"

@@ -68,3 +68,9 @@ en:
         reviewed:
           true: Yes
           false: No
+  settings:
+    names:
+      timezone: Time Zone
+    tips:
+      timezone: The time zone in which times are displayed throughout the site.
+    

@@ -1,16 +1,16 @@
 <tr class="rowbg<%= (setting_counter + 1) % 2 %>">
   <td class="name">
-    <%= setting.settable.name %>
+    <%= t(setting.key, :scope => [:settings, :names]) %>
   </td>
   <td class="value">
     <%= fields_for('settings[]', setting) do |f| %>
       <%= render("layouts/object_errors", :object => setting, :compact => true) %>
       <%= f.hidden_field(:id, :index => setting_counter) %>
-      <% case kind = setting.settable.kind %>
+      <% case kind = setting.kind %>
       <% when "timezone" %>
         <%= f.time_zone_select(:value, nil, {}, :index => setting_counter) %>
       <% end %>
     <% end %>
   </td>
-  <td class="details"><%= setting.settable.description %></div>
+  <td class="details"><%= t(setting.key, :scope => [:settings, :tips]) %></div>
 </tr>

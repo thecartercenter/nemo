@@ -39,7 +39,7 @@
             
             <%# role %>
             <% if current_mission %>
-              Role: <%= current_user.role(current_mission).name %>
+              Role: <%= nn(current_user.role(current_mission)).name || "[None]" %>
               &nbsp;&bull;&nbsp;
             <% end %>
             

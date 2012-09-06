@@ -18,7 +18,14 @@ require 'mission_based'
 class Setting < ActiveRecord::Base
   include MissionBased
 
-  belongs_to(:settable)
+  SETTABLES = {
+    :timezone => {
+      :key => "timezone",
+      :kind => "timezone",
+      :default => "UTC",
+      :mission_independent? => false
+    }
+  }
   
   def self.table_exists?
     ActiveRecord::Base.connection.tables.include?("settings")
@@ -30,7 +37,19 @@ class Setting < ActiveRecord::Base
     return [] unless table_exists?
     
     # for each settable, get the existing setting, or the default (which is defined in settable)
-    Settable.all.collect{|sb| sb.setting_or_default(mission)}.compact
+    SETTABLES.collect do |key, sb| 
+      
+      # must have a mission unless the setting is mission_independent
+      if !mission && !sb[:mission_independent?]
+        nil
+      elsif sb[:mission_independent?]
+        # return the first setting (there should only be one) or create one
+        where(:key => sb[:key]).first || create(:key => sb[:key], :value => sb[:default])
+      else
+        # return the mission specific setting or create one
+        for_mission(mission).where(:key => sb[:key]).first || for_mission(mission).create(:key => sb[:key], :value => sb[:default])
+      end
+    end.compact
   end
   
   # called by the controller; updates settings with the given values
@@ -51,6 +70,14 @@ class Setting < ActiveRecord::Base
   # copies all settings for the given mission to configatron
   def self.copy_all_to_config(mission = nil)
     return unless table_exists?
-    configatron.configure_from_hash(Hash[*load_and_create(mission).collect{|s| [s.settable.key, s.value]}.flatten])
+    configatron.configure_from_hash(Hash[*load_and_create(mission).collect{|s| [s.key, s.value]}.flatten])
+  end
+  
+  def name
+    SETTABLES[key.to_sym][:name]
+  end
+  
+  def kind
+    SETTABLES[key.to_sym][:kind]
   end
 end
