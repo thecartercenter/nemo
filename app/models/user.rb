@@ -27,7 +27,7 @@ class User < ActiveRecord::Base
   before_destroy(:check_assoc)
   has_many(:responses)
   has_many(:broadcast_addressings)
-  has_many(:assignments, :autosave => true, :dependent => :destroy)
+  has_many(:assignments, :autosave => true, :dependent => :destroy, :validate => true)
   has_many(:missions, :through => :assignments)
   belongs_to(:current_mission, :class_name => "Mission")
   
@@ -48,6 +48,7 @@ class User < ActiveRecord::Base
   validate(:phone_length_or_empty)
   validate(:must_have_password_reset_on_create)
   validate(:password_reset_cant_be_email_if_no_email)
+  validate(:no_duplicate_assignments)
   
   default_scope(includes(:language).order("users.name"))
   scope(:active_english, includes(:language).where(:active => true).where("languages.code" => "eng"))
@@ -186,5 +187,9 @@ class User < ActiveRecord::Base
         verb = new_record? ? "send" : "reset"
         errors.add(:base, "You can't #{verb} password by email because you didn't specify an email address.")
       end
+    end
+    
+    def no_duplicate_assignments
+      errors.add(:base, "There are duplicate assignments.") if Assignment.duplicates?(assignments)
     end
 end
