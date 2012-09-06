@@ -20,7 +20,7 @@ class OptionsController < ApplicationController
   end
   
   def new
-    @option = Option.new
+    @option = Option.for_mission(current_mission).new
     render_form
   end
   
@@ -46,7 +46,7 @@ class OptionsController < ApplicationController
   private
     def crupdate
       action = params[:action]
-      @option = action == "create" ? Option.new : Option.find(params[:id])
+      @option = action == "create" ? Option.for_mission(current_mission).new : Option.find(params[:id])
       begin
         @option.update_attributes!(params[:option])
         flash[:success] = "Option #{action}d successfully."
