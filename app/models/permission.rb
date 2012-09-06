@@ -173,7 +173,7 @@ class Permission
       Mission.all 
     # coordinators can assign missions for which they are coordinators
     else
-      Mission.all.reject{|m| user.role(m).level < 3}
+      Mission.all.reject{|m| !(r = user.role(m)) || r.level < 3}
     end
   end
   
