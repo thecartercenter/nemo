@@ -174,7 +174,7 @@ class User < ActiveRecord::Base
     end
     
     def must_have_password_reset_on_create
-      if new_record? && password.blank? && reset_password_method == "dont"
+      if new_record? && reset_password_method == "dont"
         errors.add(:base, "You must choose a password creation method")
       end
     end
