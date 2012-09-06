@@ -43,6 +43,7 @@ class User < ActiveRecord::Base
   end
   
   validates(:name, :presence => true)
+  validates(:assignments, :presence => true)
   validate(:phone_length_or_empty)
   validate(:must_have_password_reset_on_create)
   validate(:password_reset_cant_be_email_if_no_email)
