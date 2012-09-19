@@ -21,14 +21,17 @@ class OptionSetsController < ApplicationController
   
   def new
     @set = OptionSet.for_mission(current_mission).new
+    render(:form)
   end
   
   def edit
     @set = OptionSet.find(params[:id])
+    render(:form)
   end
 
   def show
     @set = OptionSet.find(params[:id])
+    render(:form)
   end
 
   def destroy
@@ -58,7 +61,7 @@ class OptionSetsController < ApplicationController
         redirect_to(:action => :index)
       rescue ActiveRecord::RecordInvalid, InvalidAssociationDeletionError
         @set.errors.add(:base, $!.to_s) if $!.is_a?(InvalidAssociationDeletionError)
-        render(:action => action == "create" ? :new : :edit)
+        render(:form)
       end
     end
 end

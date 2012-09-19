@@ -6,6 +6,9 @@ en:
     models:
       report/report: Report
     attributes:
+      broadcast:
+        which_phone: Which Phone(s)
+        send_errors: Delivery Errors
       question:
         name_eng: "English name"
       response:

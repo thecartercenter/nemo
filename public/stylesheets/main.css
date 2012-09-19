@@ -135,8 +135,9 @@ input#questioning_question_maximum{ width: 100px; }
 
 /* broadcasts */
 input#broadcast_subject { width: 300px; }
-textarea#broadcast_body { width: 400px; height: 200px; }
-.broadcasts_show #send_errors_row td.value { color: #d02000; font-weight: bold; }
+textarea#broadcast_body { width: 300px; height: 170px; }
+.broadcasts_show #send_errors div.form_field_control { color: #d02000; font-weight: bold; }
+.broadcasts_show #send_errors div.form_field_control p { margin: 0; }
 
 /* form edit */
 .forms_edit td.name_col, .forms_show td.name_col { width: 500px; }

@@ -89,7 +89,10 @@ module ApplicationHelper
           
           # if this is a partial
           if options[:partial]
-            render(:partial => options[:partial], :locals => (options[:locals] || {}).merge({:form => f, :method => method}), :collection => options[:collection])
+            render_options = {:partial => options[:partial]}
+            render_options[:locals] = (options[:locals] || {}).merge({:form => f, :method => method})
+            render_options[:collection] = options[:collection] if options[:collection]
+            render(render_options)
           else
             case options[:type]
             when nil, :text

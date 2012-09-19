@@ -5,13 +5,13 @@ function broadcast_medium_changed() {
   // hide/show char limit and subject
   if (sms_possible) {
     $('#char_limit').show();
-    $('#which_phone_row').show();
+    $('div#which_phone').show();
     broadcast_update_char_limit();
-    $('#subject_row').hide();
+    $('div#subject').hide();
   } else {
-    $('#which_phone_row').hide();
+    $('div#which_phone').hide();
     $('#char_limit').hide();
-    $('#subject_row').show();
+    $('div#subject').show();
   }
 }
 
@@ -23,4 +23,4 @@ function broadcast_update_char_limit() {
   }
 }
 
-$.ready(function() { broadcast_medium_changed(); })
+$(document).ready(function() { $("#broadcast_medium").change(broadcast_medium_changed); broadcast_medium_changed(); })
