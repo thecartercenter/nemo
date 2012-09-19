@@ -17,8 +17,10 @@
   <%= form_field(f, :bar_style, :type => :radio_buttons, :options => Report::Report.bar_style_select_options) %>
   <%= form_field(f, :percent_type, :type => :select, :options => Report::Report.percent_type_select_options, :blank_text => "No Percentage") %>
   <div class="button_row">
-    <%= f.submit("Save", :id => "report_report_save", :class => "submit") %>
-    <%= f.submit("Preview", :id => "report_report_preview", :class => "submit") %>
+    <%= form_buttons do %>
+      <%= form_submit_button(f, :label => "Save", :id => "report_report_save", :multiple => true) %>
+      <%= form_submit_button(f, :label => "Preview", :id => "report_report_preview", :multiple => true) %>
+    <% end %>
     <div class="loader" style="display: none">&nbsp;</div>
   </div>
   <div class="help" id="bottom_help">
