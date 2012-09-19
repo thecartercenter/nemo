@@ -49,7 +49,8 @@ div.dummy_checkbox { height: 12px; width: 12px; text-align: center; font-weight:
 div.form_buttons { clear: both; padding-top: 10px; }
 div.form_buttons br { clear: both; }
 div.form_buttons input.submit { float: left; font-weight: bold; font-size: 120%; padding: 5px 15px; margin: 0 5px 0 0; }
-div.form_subheading { clear: both; background-color: #ddd; font-weight: bold; width: 944px; padding: 3px; }
+div.form_subheading { clear: both; border-top: 1px dashed #aaa; text-transform: uppercase; letter-spacing: 1px;
+  margin-bottom: 5px; font-weight: bold; padding: 3px 0; color: #444; }
 
 /* collection form */
 div.collection_form div.item { margin-bottom: 3px; }

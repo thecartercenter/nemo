@@ -15,34 +15,54 @@
 # along with ELMO.  If not, see <http://www.gnu.org/licenses/>.
 # 
 class FormsController < ApplicationController
+  
   def index
-    if request.format.xml?
-      @forms = Form.published
-    else
-      @forms = apply_filters(Form)
+    respond_to do |format|
+      # render normally if html
+      format.html do 
+        @forms = apply_filters(Form)
+        render(:index)
+      end
+      
+      # get only published forms and render openrosa if xml requested
+      format.xml do
+        @forms = Form.published
+        render_openrosa
+      end
     end
-    render_appropriate_format
   end
+  
   def new
-    @form = Form.new
-    @form_types = apply_filters(FormType)
-    render_and_setup("create")
+    @form = Form.for_mission(current_mission).new
+    render_form
   end
+  
   def edit
     @form = Form.with_questions.find(params[:id])
-    @form_types = apply_filters(FormType)
-    render_and_setup("update")
+    render_form
   end
+  
   def show
     @form = Form.with_questions.find(params[:id])
+
+    # add to download count if xml
     @form.add_download if request.format.xml? 
-    render_appropriate_format
+    
+    respond_to do |format|
+      # for html, render the printable partial if requested, otherwise render the form
+      format.html{params[:print] ? render_printable : render_form}
+      
+      # for xml, render openrosa
+      format.xml{render_openrosa}
+    end
   end
+  
   def destroy
     @form = Form.find(params[:id])
     begin flash[:success] = @form.destroy && "Form deleted successfully." rescue flash[:error] = $!.to_s end
     redirect_to(:action => :index)
   end
+  
   def publish
     @form = Form.find(params[:id])
     verb = @form.published? ? "unpublish" : "publish"
@@ -56,6 +76,7 @@ class FormsController < ApplicationController
     # redirect to form edit
     redirect_to(:action => :index)
   end
+  
   def add_questions
     # load the form
     @form = Form.find(params[:id])
@@ -77,6 +98,8 @@ class FormsController < ApplicationController
     # redirect to form edit
     redirect_to(edit_form_path(@form))
   end
+  
+  
   def remove_questions
     # load the form
     @form = Form.find(params[:id])
@@ -92,19 +115,11 @@ class FormsController < ApplicationController
     # redirect to form edit
     redirect_to(edit_form_path(@form))
   end
+  
   def update_ranks
-    @form = Form.find(params[:id], :include => {:questionings => :condition})
-    begin
-      # build hash of questioning ids to ranks
-      new_ranks = {}; params[:rank].each_pair{|id, rank| new_ranks[id] = rank}
-      # update
-      @form.update_ranks(new_ranks)
-      flash[:success] = "Ranks updated successfully."
-    rescue
-      flash[:error] = "There was a problem updating the ranks (#{$!.to_s})."
-    end
     redirect_to(edit_form_path(@form))
   end
+  
   def clone
     @form = Form.find(params[:id])
     begin
@@ -118,39 +133,60 @@ class FormsController < ApplicationController
   end
   
   def create; crupdate; end
+  
   def update; crupdate; end
+  
   private
+  
     def crupdate
       action = params[:action]
-      @form = action == "create" ? Form.for_mission(current_mission).new : Form.find(params[:id])
+      @form = action == "create" ? Form.for_mission(current_mission).new : Form.find(params[:id], :include => {:questionings => :condition})
       
       # set submitter if user doesn't have permission to do so
       @form.user_id = current_user.id unless Permission.can_choose_form_submitter?(current_user, current_mission)
       
       begin
-        @form.update_attributes!(params[:form])
+        # save basic attribs
+        @form.attributes = params[:form]
+        
+        # update ranks if provided
+        if params[:rank]
+          # build hash of questioning ids to ranks
+          new_ranks = {}; params[:rank].each_pair{|id, rank| new_ranks[id] = rank}
+          
+          # update (possibly raising condition ordering error)
+          @form.update_ranks(new_ranks)
+        end
+        
+        # save everything and redirect
+        @form.save!
         flash[:success] = "Form #{action}d successfully."
         redirect_to(edit_form_path(@form))
-      rescue ActiveRecord::RecordInvalid
-        render_and_setup(action)
-      end
-    end
-    def render_appropriate_format
-      respond_to do |format|
-        format.html do
-          if params[:print]
-            render(:partial => "printable", :layout => false, :locals => {:form => @form})
-          end
-        end
-        format.xml do
-          render(:content_type => "text/xml")
-          response.headers['X-OpenRosa-Version'] = "1.0"
-        end
-      end
-    end
-    def render_and_setup(action)
-      @title = action == "create" ? "Create Form" : "Edit Form: #{@form.name}"
+
+      # handle problem with conditions
+      rescue ConditionOrderingError
+        @form.errors.add(:base, "The new rankings invalidate one or more conditions")
+        render_form
       
-      render(:action => action == "create" ? :new : :edit)
+      # handle other validation errors  
+      rescue ActiveRecord::RecordInvalid
+        render_form
+      end
+    end
+    
+    # adds the appropriate headers for openrosa content
+    def render_openrosa
+      render(:content_type => "text/xml")
+      response.headers['X-OpenRosa-Version'] = "1.0"
+    end
+    
+    # renders the printable partial
+    def render_printable
+      render(:partial => "printable", :layout => false, :locals => {:form => @form})
+    end
+    
+    def render_form
+      @form_types = apply_filters(FormType)
+      render(:form)
     end
 end

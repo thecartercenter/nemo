@@ -7,8 +7,12 @@
     // hookup boxes themselves
     $("input.rank_box").change(Form.recalc_ranks);
     
-    // hookup save button
-    $("input#save_ranks_button").click(Form.submit_ranks);
+    // hookup submit button
+    $("input.submit").click(Form.submit_form);
+
+    // hookup before submit event
+    $("form.new_form, form.edit_form").submit(Form.before_submit);
+
     
     // hookup unsaved check
     $(window).bind('beforeunload', function() {
@@ -61,14 +65,22 @@
     changed_box.focus()
   }
   
-  Form.submit_ranks = function(form_id) {
+  // submits the form when the submit button is clicked
+  Form.submit_form = function() {
+    $("form.new_form, form.edit_form").submit();
+  }
+  
+  Form.before_submit = function() {
     // unset flag so that beforeunload event is not triggered
     ranks_changed = false;
     
-    // set batch form path and submit
-    var batch_form = $('#batch_form')[0]
-    batch_form.action = window.location.href.replace(/\/edit$/, "/update_ranks")
-    batch_form.submit();
+    // copy ranks into main form
+    var hidden_div = $("<div>").hide();                     // this bit makes sure the updated values get copied
+    $("input.rank_box").each(function(){ hidden_div.append($(this.outerHTML).val($(this).val())); });
+    $("form.new_form, form.edit_form").append(hidden_div);
+    
+    // allow submission to proceed
+    return true;
   }
   
   Form.print = function(form_id) {

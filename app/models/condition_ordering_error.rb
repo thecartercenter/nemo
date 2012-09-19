@@ -1,0 +1,2 @@
+class ConditionOrderingError < StandardError
+end

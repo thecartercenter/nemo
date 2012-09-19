@@ -1,0 +1,21 @@
+<% content_for(:per_page_js){javascript_include_tag("forms")} %>
+
+<%= flash_and_form_errors %>
+
+<% @title = "#{@form.name} Form"%>
+<div class="screen">
+  <%= nice_form_for(@form) do |f| %>
+  
+    <%= form_field(f, :name, :required => true) %>
+    <%= form_field(f, :form_type_id, :type => :select, :options => sel_opts_from_objs(@form_types), :required => true) %>
+    <%= form_field(f, :published, :type => :check_box, :force_show_mode => true) unless f.mode == :new %>
+  <% end %>
+
+  <%# questions on the form %>
+  <%= index_table(Questioning, @form.questionings) if form_mode != :new %>
+
+  <%# the submit button is down here because there are two forms on the page. JS makes it work properly %>
+  <%= form_submit_button %>
+  
+</div>
+<div id="form_to_print"></div>

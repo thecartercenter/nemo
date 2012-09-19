@@ -29,7 +29,6 @@ class Form < ActiveRecord::Base
   
   validates_associated(:questionings)
   
-  before_save(:fix_ranks)
   before_create(:init_downloads)
   before_destroy(:check_assoc)
   
@@ -73,18 +72,28 @@ class Form < ActiveRecord::Base
   end
   
   def update_ranks(new_ranks)
-    transaction do 
-      questionings.each{|qing| qing.update_rank(new_ranks[qing.id.to_s].to_i) if new_ranks[qing.id.to_s]}
-      questionings.each{|qing| qing.verify_condition_ordering}
+    # set but don't save the new orderings
+    questionings.each_index do |i| 
+      if new_ranks[questionings[i].id.to_s]
+        questionings[i].rank = new_ranks[questionings[i].id.to_s].to_i
+      end
     end
+    
+    # validate the condition orderings (raises an error if they're invalid)
+    questionings.each{|qing| qing.verify_condition_ordering}
   end
   
   def destroy_questionings(qings)
     transaction do
+      # delete the qings
       qings.each do |qing|
         questionings.delete(qing)
         qing.destroy
       end
+      
+      # fix the ranks
+      questionings.each_with_index{|q, i| q.rank = i + 1}
+      
       save
     end
   end
@@ -119,10 +128,6 @@ class Form < ActiveRecord::Base
       if published_was && !(changed - %w[published downloads]).empty?
         errors.add(:base, "A published form can't be edited.") 
       end
-    end
-    def fix_ranks
-      questionings.each_index{|i| questionings[i].rank = i + 1}
-      return true
     end
     def init_downloads
       self.downloads = 0

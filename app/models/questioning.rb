@@ -86,11 +86,6 @@ class Questioning < ActiveRecord::Base
     symbol.match(/^((name|hint)_([a-z]{3})(=?)|code=?|option_set_id=?|question_type_id=?)(_before_type_cast)?$/)
   end
   
-  def update_rank(new_rank)
-    self.rank = new_rank
-    save
-  end
-  
   def has_condition?; !condition.nil?; end
   
   def condition=(c)

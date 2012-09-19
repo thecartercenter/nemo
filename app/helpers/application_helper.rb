@@ -57,8 +57,8 @@ module ApplicationHelper
   end
   
   # THIS IS THE NEW WAY
-  def nice_form_for(obj)
-    form_for(obj) do |f|
+  def nice_form_for(obj, *args)
+    form_for(obj, *args) do |f|
       # set form mode
       f.mode = form_mode
       yield(f)
@@ -133,11 +133,13 @@ module ApplicationHelper
     end
   end
   
-  def form_submit_button(f, options = {})
+  def form_submit_button(f = nil, options = {})
     # wrap in form_buttons if not wrapped
     return form_buttons{form_submit_button(f, options.merge(:multiple => true))} unless options[:multiple]
     label = options.delete(:label) || "Submit"
-    f.submit(label, options.merge(:class => "submit"))
+    options.merge!(:class => "submit")
+    options.delete(:multiple)
+    f ? f.submit(label, option) : submit_tag(label, options)
   end
   
   def form_buttons(&block)

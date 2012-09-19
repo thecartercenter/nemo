@@ -80,7 +80,7 @@ class Condition < ActiveRecord::Base
   end
   
   def verify_ordering
-    raise "The new rankings invalidate one or more conditions" if questioning.rank <= ref_qing.rank
+    raise ConditionOrderingError.new if questioning.rank <= ref_qing.rank
   end
   
   def to_odk
@@ -130,6 +130,7 @@ class Condition < ActiveRecord::Base
         self.option_id = nil if option_id.blank?
       rescue
       end
+      return true
     end
     
     # parses and reformats time strings given as conditions
@@ -147,6 +148,7 @@ class Condition < ActiveRecord::Base
           (self.value = nil) rescue nil
         end
       end
+      return true
     end
     
     def all_fields_required
