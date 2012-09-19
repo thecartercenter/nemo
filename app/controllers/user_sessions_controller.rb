@@ -29,7 +29,7 @@ class UserSessionsController < ApplicationController
       @user_session.user.reset_perishable_token!
       
       # pick a mission
-      @user_session.user.choose_a_mission_if_none
+      @user_session.user.set_current_mission
       
       flash[:success] = "Login successful"
       redirect_back_or_default(root_path)

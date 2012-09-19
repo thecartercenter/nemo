@@ -22,8 +22,6 @@ class User < ActiveRecord::Base
   
   belongs_to(:role)
   belongs_to(:location)
-  before_validation(:clean_fields)
-  before_destroy(:check_assoc)
   has_many(:responses)
   has_many(:broadcast_addressings)
   has_many(:assignments, :autosave => true, :dependent => :destroy, :validate => true)
@@ -41,13 +39,17 @@ class User < ActiveRecord::Base
     c.merge_validates_format_of_email_field_options(:allow_blank => true)
     c.merge_validates_uniqueness_of_email_field_options(:unless => Proc.new{|u| u.email.blank?})
   end
+
+  before_validation(:clean_fields)
+  before_destroy(:check_assoc)
   
   validates(:name, :presence => true)
-  validates(:assignments, :presence => true)
   validate(:phone_length_or_empty)
   validate(:must_have_password_reset_on_create)
   validate(:password_reset_cant_be_email_if_no_email)
   validate(:no_duplicate_assignments)
+  validate(:must_have_assignments)
+  validate(:ensure_current_mission_is_valid)
   
   default_scope(order("users.name"))
   scope(:assigned_to, lambda{|m| where("users.id IN (SELECT user_id FROM assignments WHERE mission_id = ?)", m.id)})
@@ -148,9 +150,15 @@ class User < ActiveRecord::Base
     (r = role(mission)) ? r.observer? : false
   end
   
-  # if user has no mission, choose one (if assigned to any)
-  def choose_a_mission_if_none
-    update_attributes(:current_mission => missions.sorted_recent_first.first) if current_mission.nil? && !missions.empty?
+  # if user has no current mission, choose one (if assigned to any)
+  def set_current_mission
+    # ensure no current mission set if the user has no assignments
+    if missions.empty?
+      update_attributes(:current_mission_id => nil) 
+    # else if user has no current mission, pick one
+    elsif current_mission.nil?
+      update_attributes(:current_mission_id => missions.sorted_recent_first.first.id)
+    end
   end
   
   private
@@ -188,5 +196,18 @@ class User < ActiveRecord::Base
     
     def no_duplicate_assignments
       errors.add(:base, "There are duplicate assignments.") if Assignment.duplicates?(assignments)
+    end
+    
+    def must_have_assignments
+      if assignments.reject{|a| a.marked_for_destruction?}.empty?
+        errors.add(:assignments, "can't be empty")
+      end
+    end
+    
+    # if current mission is no longer assigned, set to nil
+    def ensure_current_mission_is_valid
+      if !current_mission_id.nil? && assignments.collect{|a| (a.mission_id == current_mission_id && !a.marked_for_destruction?) ? a : nil}.compact.empty?
+        self.current_mission_id = nil 
+      end
     end
 end
