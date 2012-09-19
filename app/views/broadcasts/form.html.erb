@@ -1,6 +1,6 @@
 <% content_for(:per_page_js){javascript_include_tag("broadcasts")} %>
 
-<%= flash_and_form_errors %>
+<%= flash_and_form_errors(@broadcast) %>
 
 <%= nice_form_for(@broadcast) do |f| %>
   

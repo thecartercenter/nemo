@@ -37,12 +37,12 @@ class BroadcastsController < ApplicationController
     # create a new Broadcast
     @broadcast = Broadcast.for_mission(current_mission).new(:recipients => users)
     
-    # render new action
-    render_new
+    render(:form)
   end
   
   def show
     @broadcast = Broadcast.find(params[:id])
+    render(:form)
   end
   
   def create
@@ -55,13 +55,7 @@ class BroadcastsController < ApplicationController
       end
       redirect_to(broadcast_path(@broadcast))
     else
-      render_new
+      render(:form)
     end
   end
-  
-  private
-    def render_new
-      @title = "Send Broadcast"
-      render(:action => :new)
-    end
 end

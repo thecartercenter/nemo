@@ -23,4 +23,4 @@ function broadcast_update_char_limit() {
   }
 }
 
-$(document).ready(function() { $("#broadcast_medium").change(broadcast_medium_changed); broadcast_medium_changed(); })
+$(document).ready(function() { $("#broadcast_medium").change(broadcast_medium_changed); $("#broadcast_medium").trigger("change"); })
