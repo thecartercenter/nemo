@@ -3,18 +3,20 @@
 
 <%= render("layouts/location_picker") %>
 
+<%= flash_and_form_errors(@response) %>
+
 <% @response.answers.collect{|a| a.errors.full_messages.join(", ")}.join(" ") %>
 
 <%= nice_form_for(@response) do |f| %>
 
   <%= form_field(f, :form_id, :type => :hidden) %>
   
+  <%# determine whether/how to show the user box %>
+  <%= form_field(f, :user_id, :type => :select, :required => true, :options => sel_opts_from_objs(@possible_submitters), 
+    :force_show_mode => !@can_choose_submitter) %>
+
   <% unless f.mode == :new %>
   
-    <%# determine whether/how to show the user box %>
-    <%= form_field(f, :user_id, :type => :select, :required => true, :options => sel_opts_from_objs(@possible_submitters), 
-      :force_show_mode => !@can_choose_submitter) %>
-
     <%= form_field(f, :source) if f.mode == :show %>
 
     <%# determine whether/how to show the reviewed box %>
