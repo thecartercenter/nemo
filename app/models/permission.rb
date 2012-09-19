@@ -100,7 +100,7 @@ class Permission
     
     # restrict missions based on admin status
     if rel.klass == Mission
-      rel = params[:user].admin? ? rel : rel.for_user(params[:user])
+      rel = params[:user].admin? ? rel : rel.active_for_user(params[:user])
     end
     
     # restrict users based on mission unless user is admin

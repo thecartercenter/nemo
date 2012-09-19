@@ -31,6 +31,14 @@ class UserSessionsController < ApplicationController
       # pick a mission
       @user_session.user.set_current_mission
       
+      # if no mission, error
+      if @user_session.user.current_mission.nil?
+        flash[:error] = "You are not assigned to any missions."
+        @user_session.destroy
+        redirect_to(:action => :new)
+        return
+      end
+      
       flash[:success] = "Login successful"
       redirect_back_or_default(root_path)
     else

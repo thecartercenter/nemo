@@ -153,11 +153,11 @@ class User < ActiveRecord::Base
   # if user has no current mission, choose one (if assigned to any)
   def set_current_mission
     # ensure no current mission set if the user has no assignments
-    if missions.empty?
+    if assignments.active.empty?
       update_attributes(:current_mission_id => nil) 
     # else if user has no current mission, pick one
     elsif current_mission.nil?
-      update_attributes(:current_mission_id => missions.sorted_recent_first.first.id)
+      update_attributes(:current_mission_id => assignments.active.sorted_recent_first.first.mission_id)
     end
   end
   
@@ -206,7 +206,7 @@ class User < ActiveRecord::Base
     
     # if current mission is no longer assigned, set to nil
     def ensure_current_mission_is_valid
-      if !current_mission_id.nil? && assignments.collect{|a| (a.mission_id == current_mission_id && !a.marked_for_destruction?) ? a : nil}.compact.empty?
+      if !current_mission_id.nil? && assignments.collect{|a| (a.mission_id == current_mission_id && a.active? && !a.marked_for_destruction?) ? a : nil}.compact.empty?
         self.current_mission_id = nil 
       end
     end

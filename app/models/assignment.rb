@@ -5,6 +5,9 @@ class Assignment < ActiveRecord::Base
 
   validates(:mission, :presence => true)
   validates(:role, :presence => true)
+
+  scope(:sorted_recent_first, order("created_at DESC"))
+  scope(:active, where(:active => true))
   
   # checks if there are any duplicates in the given set of assignments
   def self.duplicates?(assignments)
