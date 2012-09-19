@@ -36,21 +36,21 @@ div.reqd_sym { display: inline; font-weight: bold; color: #d02000; font-size: 12
 table.form td.name { min-width: 75px; }
 
 /* forms (newer) */
-div.form_field { float: left; border-top: 1px solid #ddd; padding: 5px 0 5px 0; }
-div.form_field label.main { float: left; width: 150px; padding-right: 10px; }
-div.form_field div.form_field_control { float: left; width: 350px; min-height: 26px; position: relative; }
+div.form_field > * { vertical-align: top; padding: 5px 0; }
+div.form_field label.main, div.form_field div.form_field_control { border-top: 1px solid #ddd; }
+div.form_field label.main { display: inline-block; width: 150px; padding-right: 10px; }
+div.form_field div.form_field_control { display: inline-block; width: 350px; min-height: 26px; position: relative; }
 div.form_field div.form_field_control input.text { width: 240px; }
 div.form_field div.form_field_control input.radio { width: 15px; }
-div.form_field div.form_field_details { float: right; width: 290px; position: relative; font-size: 90%; padding-left: 10px; }
-div.form_field div.form_field_details span.translation_missing { display: none; }
+div.form_field div.form_field_details { display: inline-block; width: 290px; position: relative; font-size: 90%; 
+  background-color: #e4eeff; padding: 5px; margin: 0 0 5px 5px; }
+div.form_field div.form_field_details p { padding: 0; margin: 0; }
 div.form_field div.space_line { clear: both; margin: 0; padding: 0; width: auto; }
 div.dummy, span.dummy { font-weight: bold; display: inline; }
 div.dummy_checkbox { height: 12px; width: 12px; text-align: center; font-weight: bold; border: 1px solid #888; display: inline; }
 div.form_buttons { clear: both; padding-top: 10px; }
 div.form_buttons br { clear: both; }
 div.form_buttons input.submit { float: left; font-weight: bold; font-size: 120%; padding: 5px 15px; margin: 0 5px 0 0; }
-div.form_subheading { clear: both; border-top: 1px dashed #aaa; text-transform: uppercase; letter-spacing: 1px;
-  margin-bottom: 5px; font-weight: bold; padding: 3px 0; color: #444; }
 
 /* collection form */
 div.collection_form div.item { margin-bottom: 3px; }
@@ -108,7 +108,7 @@ form.search_form #search_examples { margin-top: 2px; color: #666; }
 .responses_edit input.qtype_decimal, .responses_new input.qtype_decimal { width: 100px; }
 .responses_edit textarea.qtype_long_text, .responses_new textarea.qtype_long_text { width: 340px; height: 100px; }
 .responses_edit input.qtype_location, .responses_new input.qtype_location { width: 200px; }
-.responses_edit label, .responses_new label, .responses_show label { width: 300px !important; }
+.responses_edit label.main, .responses_new label.main, .responses_show label.main { width: 300px !important; }
 a.edit_location_link img { vertical-align: bottom; }
 
 /* question show/edit */

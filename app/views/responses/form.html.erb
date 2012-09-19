@@ -11,10 +11,8 @@
   
   <% unless f.mode == :new %>
   
-    <%= form_subheading("Response Info") %>
-
     <%# determine whether/how to show the user box %>
-    <%= form_field(f, :user_id, :type => :select, :options => sel_opts_from_objs(@possible_submitters), 
+    <%= form_field(f, :user_id, :type => :select, :required => true, :options => sel_opts_from_objs(@possible_submitters), 
       :force_show_mode => !@can_choose_submitter) %>
 
     <%= form_field(f, :source) if f.mode == :show %>
@@ -24,7 +22,6 @@
 
   <% end %>  
   
-  <%= form_subheading("Answers") %>
   <%= render(:partial => "answer", :collection => @response.all_answers) %>
   
   <%= form_buttons do %>

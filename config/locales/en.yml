@@ -10,6 +10,7 @@ en:
         name_eng: "English name"
       response:
         user_id: Submitter
+        reviewed: Reviewed?
       report/report:
         name: Title
         aggregation: Operation

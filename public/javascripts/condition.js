@@ -9,11 +9,11 @@
     this.params = params;
 
     // get refs to main row and ref'd question row
-    this.row = $("tr#qing_" + this.params.questioning_id);
-    this.rq_row = $("tr#qing_" + this.params.ref_qing_id);
+    this.row = $("#qing_" + this.params.questioning_id);
+    this.rq_row = $("#qing_" + this.params.ref_qing_id);
 
     // get question type
-    this.rq_type = this.rq_row.attr("class").substring(6);
+    this.rq_type = this.rq_row.attr("class").substring(17);
     
     // default to relevant
     this.eval_result = true;
@@ -22,9 +22,9 @@
   // hooks up controls and performs an immediate refresh
   klass.prototype.init = function() {
     // hookup controls
-    (function(_this){ _this.rq_row.find("td.value input, td.value select, td.value textarea").change(
+    (function(_this){ _this.rq_row.find("div.form_field_control").find("input, select, textarea").change(
       function(){ _this.refresh(); }) })(this);
-    (function(_this){ _this.rq_row.find("td.value input[type='text']").keyup(
+    (function(_this){ _this.rq_row.find("div.form_field_control input[type='text']").keyup(
       function(){ _this.refresh(); }) })(this);
       
     // hookup form submit to clear irrelevant fields
@@ -44,7 +44,7 @@
     this.row.find("input.relevant").val(this.eval_result ? "true" : "false");
     
     // simulate a change event on the control in the tr
-    this.row.find("td.value input, td.value select, td.value textarea").first().trigger("change");
+    this.row.find("div.form_field_control").find("input, select, textarea").first().trigger("change");
   }
   
   // evaluates the referred question and shows/hides the question
@@ -75,26 +75,26 @@
   klass.prototype.lhs = function() {
     switch (this.rq_type) {
       case "address": case "text": case "location":
-        return this.rq_row.find("td.value input[type='text']").val();
+        return this.rq_row.find("div.form_field_control input[type='text']").val();
 
       case "long_text":
-        return this.rq_row.find("td.value textarea").val();
+        return this.rq_row.find("div.form_field_control textarea").val();
       
       case "integer": 
-        return parseInt(this.rq_row.find("td.value input[type='text']").val());
+        return parseInt(this.rq_row.find("div.form_field_control input[type='text']").val());
         
       case "decimal":
-        return parseFloat(this.rq_row.find("td.value input[type='text']").val());
+        return parseFloat(this.rq_row.find("div.form_field_control input[type='text']").val());
       
       case "select_one":
         return parseInt(this.rq_row.find("select").val());
       
       case "datetime": case "date": case "time":
-        return (new ELMO.TimeFormField(this.rq_row.find("td.value"))).extract_str();
+        return (new ELMO.TimeFormField(this.rq_row.find("div.form_field_control"))).extract_str();
       
       case "select_multiple":
         // use prev sibling call to get to rails gen'd hidden field that holds the id
-        return this.rq_row.find("td.value input:checked").prev().prev().map(
+        return this.rq_row.find("div.form_field_control input:checked").prev().prev().map(
           function(){ return parseInt(this.value); }).get();
     }
   }

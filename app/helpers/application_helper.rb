@@ -126,9 +126,12 @@ module ApplicationHelper
         # revert to old form mode
         f.mode = old_f_mode
         
-        tip = t(method, :scope => [:activerecord, :tips, f.object.class.model_name.i18n_key]).gsub("\n", "<br/>").html_safe
-        details = content_tag("div", :class => "form_field_details"){options[:details] || tip}
-        details + label + field + "<div class=\"space_line\"></div>".html_safe
+        tip = t(method, :scope => [:activerecord, :tips, f.object.class.model_name.i18n_key], :default => "")
+
+        details_txt = options[:details] || tip
+        details = details_txt.blank? ? "" : content_tag("div", :class => "form_field_details"){simple_format(details_txt)}
+
+        label + field + details + content_tag("div", :class => "space_line"){}
       end
     end
   end
@@ -139,16 +142,12 @@ module ApplicationHelper
     label = options.delete(:label) || "Submit"
     options.merge!(:class => "submit")
     options.delete(:multiple)
-    f ? f.submit(label, option) : submit_tag(label, options)
+    f ? f.submit(label, options) : submit_tag(label, options)
   end
   
   def form_buttons(&block)
     buttons = capture{block.call}
     content_tag("div", :class => "form_buttons"){buttons + tag("br")}
-  end
-  
-  def form_subheading(label)
-    content_tag("div", :class => "form_subheading"){label}
   end
   
   # renders the standard 'required' symbol, which is an asterisk
