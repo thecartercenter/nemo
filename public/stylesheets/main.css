@@ -155,6 +155,7 @@ textarea#broadcast_body { width: 300px; height: 170px; }
 
 /* user batches */
 .user_batches_new #user_batch_users { width: 350px; height: 200px; margin-right: 20px; }
+.user_batches_new div.form_field_control { width: 375px !important; }
 .user_batches_new div.form_field label { width: 75px; }
 
 /* report index */

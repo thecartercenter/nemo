@@ -7,7 +7,7 @@ class UserBatchesController < ApplicationController
     @batch = UserBatch.new
     begin
       @batch.attributes = params[:user_batch]
-      @batch.create_users
+      @batch.create_users(current_mission)
       flash[:success] = "Users created successfully."
       session[:new_user_batch] = @batch
       redirect_to(:action => :show, :id => 1)
