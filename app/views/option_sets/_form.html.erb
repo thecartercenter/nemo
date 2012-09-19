@@ -1,28 +1,7 @@
-<%= basic_form(set) do |f|
-  # figure out how many columns of check boxes
-  nopts = Option.count.to_f
-  ncols = [[(nopts / 10).ceil, 1].max, 4].min
-  per_column = (nopts / ncols).ceil
+<%= nice_form_for(set) do |f| %>
   
-  spec = {
-    :fields => [{
-      :col => :name,
-      :required => true,
-      :value => f.text_field(:name),
-      :details => "A name that summarizes this set of options. Normal users will not see this name."
-    },{
-      :col => :options,
-      :value => content_tag("div", :class => "optcol") do 
-        render(:partial => "option_setting", :locals => {:set => set, :per_column => per_column}, 
-          :collection => set.all_option_settings)
-      end,
-      :details => "Check the options that should be included in this set."
-    },{
-      :col => :ordering,
-      :required => true,
-      :value => OptionSet.orderings.collect{|o| f.radio_button(:ordering, o[:code]) + f.label(:ordering, o[:name])}.join("<br/>"),
-      :details => "The order in which you'd like the options to appear."
-    }]
-  }
-end
-%>
+  <%= form_field(f, :name, :required => true) %>
+  <%= form_field(f, :options, :partial => "option_setting", :collection => set.all_option_settings) %>
+  <%= form_field(f, :ordering, :type => :select, :options => OptionSet.ordering_select_options, :required => true) %>
+  <%= form_submit_button(f) %> 
+<% end %>

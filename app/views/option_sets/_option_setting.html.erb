@@ -1,4 +1,3 @@
-<% if option_setting_counter % per_column == 0 %></div><div class="optcol"><% end %>
 <%= fields_for("option_set[all_option_settings][]", option_setting) do |f| %>
   <% f.mode = form_mode %>
   <%= f.hidden_field(:option_set_id, :index => option_setting_counter) %>

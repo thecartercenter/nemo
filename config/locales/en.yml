@@ -41,6 +41,10 @@ en:
       option:
         value: The numeric value that best represents this option.
         name_eng: The textual description of this option that users will see.
+      option_set:
+        name: A name that summarizes this set of options. Normal users will not see this name.
+        options: Check the options that should be included in this set.
+        ordering: The order in which you'd like the options to appear.
       report/report:
         name: A descriptive title for this report.
         aggregation_id: The operation you want to perform on the combined data.

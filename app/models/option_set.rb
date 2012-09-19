@@ -40,6 +40,10 @@ class OptionSet < ActiveRecord::Base
      {:code => "value_desc", :name => "Value High to Low", :sql => "value desc"}]
   end
   
+  def self.ordering_select_options
+    orderings.collect{|o| [o[:name], o[:code]]}
+  end
+  
   def sorted_options
     @sorted_options ||= options.sort{|a,b| (a.value.to_i <=> b.value.to_i) * (ordering && ordering.match(/desc/) ? -1 : 1)}
   end
