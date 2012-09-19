@@ -12,10 +12,11 @@ class Report::Report < ActiveRecord::Base
   scope(:by_viewed_at, order("viewed_at desc"))
   scope(:by_popularity, order("view_count desc"))
   
-  validates(:name, :presence => true, :uniqueness => true)
+  validates(:name, :presence => true)
   validates(:aggregation, :presence => true)
   validates(:display_type, :presence => true)
   validate(:must_have_fields_unless_tally)
+  validate(:name_unique_within_mission)
   
   DISPLAY_TYPES = ["Table"]
   BAR_STYLES = ["Side By Side", "Stacked"]
@@ -266,5 +267,9 @@ class Report::Report < ActiveRecord::Base
           end
         end
       end
+    end
+    
+    def name_unique_within_mission
+      errors.add(:name, "must be unique") unless (self.class.find_all_by_mission_id_and_name(mission_id, name) - [self]).empty?
     end
 end
