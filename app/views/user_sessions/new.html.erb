@@ -1,5 +1,5 @@
 <% rowbg = 0 %>
-<%= nice_form_for @user_session, :url => user_session_path do |f| %>
+<%= nice_form_for(@user_session, :url => user_session_path) do |f| %>
   <%= flash_and_form_errors(@user_session) %>
   <table class="form">
     <tr class="rowbg<%= rowbg = 1 - rowbg %>">
