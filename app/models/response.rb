@@ -108,7 +108,7 @@ class Response < ActiveRecord::Base
         return "#{x} in the Past #{p.capitalize}"
       end
     end
-    "No recent reports"
+    "No recent responses"
   end
   
   def visible_questionings

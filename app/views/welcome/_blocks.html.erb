@@ -29,7 +29,9 @@
     <%= link_to("Data", responses_path, :class => "subtitle") %>
     <%= link_to(image_tag("blocks/block_submit.png"), responses_path) %>
     <ul>
-      <li><small>Select a Form To Submit</small><%= new_response_mini_form %></li>
+      <% if @pub_form_count > 0 %>
+        <li><small>Select a Form To Submit</small><%= new_response_mini_form %></li>
+      <% end %>
       <li><%= link_to("<em>#{@self_response_count}</em> Submissions by You".html_safe, 
         search_searches_path(:search_search => {:class_name => "Response", :str => "submitter:\"#{current_user.name}\""}), :method => :post) %></li>
     </ul>
@@ -45,7 +47,9 @@
       <li><%= link_to("<em>#{@total_response_count}</em> Total Responses".html_safe, responses_path) %></li>
       <li><%= link_to("<em>#{@unreviewed_response_count}</em> Awaiting Review".html_safe, 
         search_searches_path(:search_search => {:class_name => "Response", :str => "reviewed:no"}), :method => :post) %></li>
-      <li><%= link_to(@recent_responses_count.gsub(/^(\d+)/){"<em>#{$1}</em>"}.html_safe, responses_path) %></li>
+      <% if @total_response_count > 0 %>
+        <li><%= link_to(@recent_responses_count.gsub(/^(\d+)/){"<em>#{$1}</em>"}.html_safe, responses_path) %></li>
+      <% end %>
     </ul>
   </div>
 <% end %>
@@ -56,7 +60,9 @@
     <%= link_to("Results", report_reports_path, :class => "subtitle") %>
     <%= link_to(image_tag("blocks/block_report.png"), report_reports_path) %>
     <ul>
-      <li><small>Select a Report To View</small><%= view_report_report_mini_form %></li>
+      <% unless @reports.empty? %>
+        <li><small>Select a Report To View</small><%= view_report_report_mini_form %></li>
+      <% end %>
       <li><%= link_to_if_auth("Create a Report", new_report_report_path, "report_reports#create") %></li>
     </ul>
   </div>

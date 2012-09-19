@@ -32,9 +32,9 @@ module Report::ReportsHelper
     end
   end
   def view_report_report_mini_form
-    form_tag("/", :onsubmit => "window.location.href = '/report/reports/' + this.rid.options[this.rid.selectedIndex].value; return false;") do
-      select_tag(:rid, sel_opts_from_objs(@reports, :tags => true), :include_blank => true) + submit_tag("Go")
+    form_tag("/") do
+      select_tag(:rid, sel_opts_from_objs(@reports, :tags => true), :include_blank => true, 
+        :onchange => "window.location.href = '/report/reports/' + this.options[this.selectedIndex].value")
     end
   end
-  
 end

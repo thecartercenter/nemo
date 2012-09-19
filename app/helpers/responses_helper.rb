@@ -45,8 +45,8 @@ module ResponsesHelper
   end
   def new_response_mini_form(visible = true)
     form_tag(new_response_path, :method => :get, :id => "form_chooser", :style => visible ? "" : "display: none") do
-      select_tag(:form_id, sel_opts_from_objs(@pubd_forms, :name_method => :full_name, :tags => true), :prompt => "Choose a Form...") +
-      submit_tag("Go")
+      select_tag(:form_id, sel_opts_from_objs(@pubd_forms, :name_method => :full_name, :tags => true), 
+        :prompt => "Choose a Form...", :onchange => "this.form.submit()")
     end
   end
 end
