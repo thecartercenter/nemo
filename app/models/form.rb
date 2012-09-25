@@ -68,7 +68,7 @@ class Form < ActiveRecord::Base
   end
   
   def max_rank
-    questionings.map{|qing| qing.rank}.max || 0
+    questionings.map{|qing| qing.rank || 0}.max || 0
   end
   
   def update_ranks(new_ranks)
