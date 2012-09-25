@@ -204,10 +204,8 @@ class User < ActiveRecord::Base
       end
     end
     
-    # if current mission is no longer assigned, set to nil
+    # if current mission is not accessible, set to nil
     def ensure_current_mission_is_valid
-      if !current_mission_id.nil? && assignments.collect{|a| (a.mission_id == current_mission_id && a.active? && !a.marked_for_destruction?) ? a : nil}.compact.empty?
-        self.current_mission_id = nil 
-      end
+      self.current_mission_id = nil if !current_mission_id.nil? && !Permission.user_can_access_mission(self, current_mission)
     end
 end

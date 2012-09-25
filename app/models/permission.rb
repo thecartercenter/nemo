@@ -190,6 +190,22 @@ class Permission
     end
   end
   
+  # checks if the user can access the given mission
+  def self.user_can_access_mission(user, mission)
+    return false if mission.nil? || user.nil?
+    
+    # admins can access all missions
+    return true if user.admin?
+    
+    # look for an active assignment to the mission
+    user.assignments.each do |a|
+      return true if a.mission_id == mission.id && a.active? && !a.marked_for_destruction?
+    end
+    
+    # false if we get this far
+    return false
+  end
+  
   private
     ###############################################
     # SPECIAL PERMISSION FUNCTIONS
