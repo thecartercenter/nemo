@@ -6,7 +6,7 @@ td#banner #title { float: left; padding-top: 10px; }
 td#banner #title h1 { margin-bottom: 5px; font-size: 40px; line-height: 1; display: inline-block; }
 td#banner #title h2 { font-size: 22px; margin: 0 10px; color: white; display: inline-block; text-transform: uppercase; vertical-align: top; }
 td#banner #title a { color: white; text-decoration: none; }
-td#banner #title img { float: left; display: block; margin: 0 0 10px 3px; }
+td#banner #title img { display: block; margin: 0 0 10px 3px; }
 td#banner #userinfo { float: right; margin-right: 10px; }
 td#banner #userinfo a, td#banner #userinfo form.button_to input { color: white; }
 div#content { padding: 15px 15px 30px 15px; min-height: 400px; background-color: white; }

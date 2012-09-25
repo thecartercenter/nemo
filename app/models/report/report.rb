@@ -32,10 +32,21 @@ class Report::Report < ActiveRecord::Base
   
   def self.new_with_default_name(mission)
     prefix = "New Report"
-    suffix = nn(for_mission(mission).where("name LIKE '#{prefix}%'").collect do |r| 
-      nn(nn(r.name.match(/^#{prefix}(\s+\d+$|$)/))[1]).to_i
-    end.compact.max) + 1
-    new(:name => "#{prefix} #{suffix == 1 ? 2 : suffix}")
+    
+    # get next number
+    nums = for_mission(mission).where("name LIKE '#{prefix}%'").collect do |r| 
+      # get suffix
+      if r.name.match(/^#{prefix}(\s+\d+$|$)/)
+        [$1.to_i, 1].max # must be at least one if found
+      else
+        1
+      end
+    end
+    next_num = (nums.compact.max || 0) + 1
+    Rails.logger.debug("#{next_num} #{nums.compact.max}")
+    suffix = next_num == 1 ? "" : " #{next_num}"
+
+    new(:name => "#{prefix}#{suffix}")
   end
   
   # generates/returns a FieldSet object for this report
