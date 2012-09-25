@@ -60,17 +60,19 @@ class Setting < ActiveRecord::Base
   
   def copy_to_config
     # build hash
-    hsh = Hash[*KEYS.collect{|k| [k, send(k)]}.flatten]
+    hsh = Hash[*KEYS.collect{|k| [k.to_sym, send(k)]}.flatten]
     hsh[:languages] = lang_codes
     
     # copy to configatron
     configatron.configure_from_hash(hsh)
   end
   
+  # converts a comma-delimited string of languages to an array of symbols
   def lang_codes
     (languages || "").split(",").collect{|c| c.to_sym}
   end
   
+  # reverse of self.lang_codes
   def lang_codes=(codes)
     self.languages = codes.join(",")
   end
