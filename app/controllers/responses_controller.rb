@@ -24,12 +24,10 @@ class ResponsesController < ApplicationController
       elsif upfile = params[:xml_submission_file]
         begin
           contents = upfile.read
-          Rails.logger.debug("Form data: " + contents)
           Response.create_from_xml(contents, current_user)
           render(:nothing => true, :status => 201)
         rescue ArgumentError, ActiveRecord::RecordInvalid
           msg = "Form submission error: #{$!.to_s}"
-          Rails.logger.error(msg)
           render(:nothing => true, :status => 500)
         end
       end

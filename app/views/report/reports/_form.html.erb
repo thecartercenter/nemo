@@ -1,4 +1,5 @@
 <%= nice_form_for(@report, {:id => "report_form"}) do |f| %>
+  <% f.mode = :edit if f.mode == :show  # form mode should never be show %>
   <a href="#" id="show_help">Show Help</a>
   <div class="help" id="top_help">
     Fill out the parameters below. Those marked <%= reqd_sym %> are required.

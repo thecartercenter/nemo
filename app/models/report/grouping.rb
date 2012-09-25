@@ -1,6 +1,5 @@
 class Report::Grouping < ActiveRecord::Base
   
-  # returns a combined set of select options for both answer and attrib groupings
   def self.construct(attribs)
     return nil if attribs[:form_choice].blank?
     raise "Invalid grouping choice" unless attribs[:form_choice].match(/(by_answer|by_attrib)_(\d+)/)

@@ -1,35 +1,41 @@
 module ReportTestHelper
 
   def prep_objects
-    Language.generate
     Report::ResponseAttribute.generate
     Report::Aggregation.generate
-    [Question, Questioning, Answer, Form, User].each{|k| k.delete_all}
-    @qs = {}; @rs = []; @forms = {}; @opt_sets = {}; @users = {}
+    Role.generate
+    [Question, Questioning, Answer, Form, User, Mission].each{|k| k.delete_all}
+    @qs = {}; @rs = []; @forms = {}; @opt_sets = {}; @users = {}; @missions = {}
   end
   
   def create_report(options)
     agg = Report::Aggregation.find_by_name(options.delete(:agg))
-    Report::Report.create!(options.merge(:name => "TheReport", :aggregation => agg))
+    Report::Report.create!(options.merge(:name => "TheReport", :aggregation => agg, :mission => mission))
   end
 
   def create_opt_set(options)
-    os = OptionSet.new(:name => options.join, :ordering => "value_asc")
+    os = OptionSet.new(:name => options.join, :ordering => "value_asc", :mission => mission)
     options.each_with_index{|o,i| os.option_settings.build(:option => Option.new(:value => i+1, :name_eng => o))}
     os.save!
     @opt_sets[options.join("_").downcase.to_sym] = os
   end
 
   def create_form(params)
-    f = Form.new(params)
+    f = Form.new(params.merge(:mission => mission))
     f.save(:validate => false)
     @forms[params[:name].to_sym] = f
   end
   
+  def mission
+    @missions[:test] ||= Mission.create!(:name => "test")
+  end
+  
   def user
-    @users[:test] ||= User.create!(:login => "test", :name => "Test",
-      :email => "test@example.com",
-      :password => "changeme", :password_confirmation => "changeme")
+    return @users[:test] if @users[:test]
+    @users[:test] = User.new_with_login_and_password(:login => "test", :name => "Test", :reset_password_method => "print")
+    @users[:test].assignments.build(:mission => mission, :active => true, :role => Role.highest)
+    @users[:test].save!
+    @users[:test]
   end
 
   def create_question(params)
@@ -38,7 +44,7 @@ module ReportTestHelper
     # create default form if necessary
     params[:forms] ||= [create_form(:name => "f")]  
   
-    q = Question.new(:name_eng => params[:code], :code => params[:code], 
+    q = Question.new(:name_eng => params[:code], :code => params[:code], :mission => mission,
       :question_type_id => QuestionType.find_by_name(params[:type]).id)
   
     # set the option set if type is select_one or select_multiple
@@ -54,7 +60,7 @@ module ReportTestHelper
 
   def create_response(params)
     ans = params.delete(:answers) || {}
-    r = Response.new({:reviewed => true, :form => @forms[:f] || create_form(:name => "f"), :user => user}.merge(params))
+    r = Response.new({:reviewed => true, :form => @forms[:f] || create_form(:name => "f"), :user => user, :mission => mission}.merge(params))
     ans.each_pair do |code,value|
       qing = @qs[code].questionings.first
       case qing.question.type.name

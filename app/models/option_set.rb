@@ -97,7 +97,6 @@ class OptionSet < ActiveRecord::Base
     end
     def unique_values
       values = option_settings.map{|o| o.option.value}
-      Rails.logger.info(values)
       if values.uniq.size != values.size
         errors.add(:base, "Two or more of the options you've chosen have the same numeric value.")
       end

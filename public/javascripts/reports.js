@@ -339,7 +339,6 @@
         $("#report_form div.loader").hide();
       },
       error: function(jqxhr, status, error) {
-        
         // display error
         Utils.show_flash({type: "error", msg: "Error: " + error})
 

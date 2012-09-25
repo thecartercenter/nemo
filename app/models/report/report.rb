@@ -43,7 +43,6 @@ class Report::Report < ActiveRecord::Base
       end
     end
     next_num = (nums.compact.max || 0) + 1
-    Rails.logger.debug("#{next_num} #{nums.compact.max}")
     suffix = next_num == 1 ? "" : " #{next_num}"
 
     new(:name => "#{prefix}#{suffix}")
@@ -146,7 +145,6 @@ class Report::Report < ActiveRecord::Base
             @data[r][c] = aggregation.cast_result_value(value, fieldlet)
           end
         end
-        Rails.logger.debug(@data[0][0].class)
     
       # all other reports
       else
@@ -231,8 +229,8 @@ class Report::Report < ActiveRecord::Base
       # generate and sort row signatures, maintaining row indices
       signatures = []
       @data.each_with_index{|row, i| signatures << {:idx => i, :sig => row.join("#&#&#")}}
-      signatures.sort_by{|s| s[:sig]}
-      
+      signatures = signatures.sort_by{|s| s[:sig]}
+
       # collect indices of duplicates
       signatures.inject{|prev, cur| rows_to_kill << cur[:idx] if cur[:sig] == prev[:sig]; prev = cur}
       

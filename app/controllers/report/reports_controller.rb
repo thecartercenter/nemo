@@ -53,7 +53,7 @@ class Report::ReportsController < ApplicationController
       @question_types = QuestionType.all
       @aggregations = Report::Aggregation.all
       @groupable_response_attributes = Report::ResponseAttribute.groupable
-      @questions = restrict(Question)
+      @groupable_questions = restrict(Question).select_types
       @dont_print_title = true
       unless @report.new_record?
         @report.record_viewing
