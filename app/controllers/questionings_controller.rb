@@ -17,17 +17,17 @@
 class QuestioningsController < ApplicationController
   def new
     @qing = Questioning.new_with_question(current_mission, :form_id => params[:form_id])
-    render_and_setup("create")
+    render_and_setup
   end
   
   def edit
     @qing = Questioning.find(params[:id])
-    render_and_setup("update")
+    render_and_setup
   end
   
   def show
     @qing = Questioning.find(params[:id])
-    @title = "Question: #{@qing.question.code}"
+    render_and_setup
   end
   
   def destroy
@@ -62,8 +62,9 @@ class QuestioningsController < ApplicationController
       end
     end
     
-    def render_and_setup(action)
-      @title = action == "create" ? "Create Question" : "Edit Question: #{@qing.question.code}"
+    def render_and_setup
+      @title = @qing.question.code
+      @title = "New Question" if @title.blank?
       @option_sets = restrict(OptionSet)
       @question_types = restrict(QuestionType)
       render(:form)

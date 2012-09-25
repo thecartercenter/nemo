@@ -76,6 +76,8 @@ class QuestionsController < ApplicationController
     end
   
     def render_form
+      @title = @question.code
+      @title = "New Question" if @title.blank?
       @option_sets = restrict(OptionSet)
       @question_types = restrict(QuestionType)
       render(:form)
