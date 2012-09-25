@@ -35,11 +35,11 @@ class Form < ActiveRecord::Base
   # no pagination
   self.per_page = 1000000
   
-  default_scope(order("form_types.name, forms.name").includes(:type))
+  scope(:with_form_type, order("form_types.name, forms.name").includes(:type))
   scope(:published, where(:published => true))
   scope(:with_questions, includes(:type, {:questionings => [:form, :condition, {:question => 
     [:type, :translations, :option_set]}]}).order("questionings.rank"))
-  
+    
   # finds the highest 'version' number of all forms with the given base name
   # returns nil if no forms found
   def self.max_version(base_name)

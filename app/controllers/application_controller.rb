@@ -25,7 +25,6 @@ class ApplicationController < ActionController::Base
   before_filter(:init_js_array)
   before_filter(:basic_auth_for_xml)
   before_filter(:get_session_user_mission)
-  before_filter(:get_user_missions)
   before_filter(:authorize)
   before_filter(:set_timezone)
   
@@ -198,16 +197,12 @@ class ApplicationController < ActionController::Base
       request.env['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest' || params[:ajax]
     end
     
-    def get_user_missions
-      @user_missions = restrict(Mission) if current_user
-    end
-    
     def get_session_user_mission
       # get the current user session from authlogic
       @current_user_session = UserSession.find
 
       # look up the current user from the user session
-      @current_user = @current_user_session && @current_user_session.user
+      @current_user = @current_user_session && User.includes(:assignments).find(@current_user_session.user.id)
     
       # look up the current mission based on the current user
       @current_mission = @current_user ? @current_user.current_mission : nil

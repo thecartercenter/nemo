@@ -20,7 +20,7 @@ class WelcomeController < ApplicationController
     return redirect_to_login unless current_user
 
     @reports = Report::Report.for_mission(current_mission).by_popularity
-    @pubd_forms = restrict(Form).published
+    @pubd_forms = restrict(Form).published.with_form_type
     
     @dont_print_title = true
     @user_count = User.assigned_to(current_mission).count

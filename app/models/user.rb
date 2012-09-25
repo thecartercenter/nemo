@@ -138,11 +138,19 @@ class User < ActiveRecord::Base
   def can_get_sms?; !(phone.blank? && phone2.blank?) end
   def can_get_email?; !email.blank?; end
   
+  def assignments_by_mission
+    @assignments_by_mission ||= Hash[*assignments.collect{|a| [a.mission, a]}.flatten]
+  end
+  
   # gets the user's role for the given mission
   # returns nil if the user is not assigned to the mission
   def role(mission)
-    return nil if mission.nil?
-    nn(assignments.find_by_mission_id(mission.id)).role
+    nn(assignments_by_mission[mission]).role
+  end
+  
+  # returns all missions that the user has access to
+  def accessible_missions
+    @accessible_missions ||= Permission.restrict(Mission, :user => self)
   end
   
   # determines if the user's role for the given mission is as an observer

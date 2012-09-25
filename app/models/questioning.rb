@@ -15,7 +15,7 @@
 # along with ELMO.  If not, see <http://www.gnu.org/licenses/>.
 # 
 class Questioning < ActiveRecord::Base
-  belongs_to(:form)
+  belongs_to(:form, :counter_cache => true)
   belongs_to(:question, :autosave => true)
   has_many(:answers, :dependent => :destroy)
   has_one(:condition, :autosave => true, :dependent => :destroy, :validate => false)

@@ -6,6 +6,7 @@ class Assignment < ActiveRecord::Base
   validates(:mission, :presence => true)
   validates(:role, :presence => true)
 
+  default_scope(includes(:mission, :role))
   scope(:sorted_recent_first, order("created_at DESC"))
   scope(:active, where(:active => true))
   

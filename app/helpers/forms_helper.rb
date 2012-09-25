@@ -26,11 +26,11 @@ module FormsHelper
   def format_forms_field(form, field)
     case field
     when "type" then form.type.name
-    when "questions" then form.questions.size
+    when "questions" then form.questionings_count
     when "last_modified" then form.updated_at.to_s(:std_datetime)
     when "responses"
-      form.responses.size == 0 ? 0 :
-        link_to(form.responses.size, start_search_searches_path(:str => "formname:\"#{form.name}\"", :class_name => "Response"))
+      form.responses_count == 0 ? 0 :
+        link_to(form.responses_count, start_search_searches_path(:str => "formname:\"#{form.name}\"", :class_name => "Response"))
     when "downloads" then form.downloads || 0
     when "published?" then form.published? ? "Yes" : "No"
     when "actions"

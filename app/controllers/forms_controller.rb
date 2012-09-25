@@ -19,14 +19,14 @@ class FormsController < ApplicationController
   def index
     respond_to do |format|
       # render normally if html
-      format.html do 
-        @forms = apply_filters(Form)
+      format.html do
+        @forms = apply_filters(Form).with_form_type.all
         render(:index)
       end
       
       # get only published forms and render openrosa if xml requested
       format.xml do
-        @forms = Form.published
+        @forms = Form.published.with_form_type
         render_openrosa
       end
     end

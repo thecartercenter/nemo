@@ -20,7 +20,7 @@ require 'xml'
 class Response < ActiveRecord::Base
   include MissionBased
 
-  belongs_to(:form)
+  belongs_to(:form, :counter_cache => true)
   has_many(:answers, :include => :questioning, :order => "questionings.rank", 
     :autosave => true, :validate => false, :dependent => :destroy)
   belongs_to(:user)

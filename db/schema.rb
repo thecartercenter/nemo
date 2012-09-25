@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120906184149) do
+ActiveRecord::Schema.define(:version => 20120925152429) do
 
   create_table "#Tableau_sid_00485CC8_4_none_form_name_nk", :id => false, :force => true do |t|
     t.string  "none_form_name_nk"
@@ -92,10 +92,12 @@ ActiveRecord::Schema.define(:version => 20120906184149) do
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "published",    :default => false
+    t.boolean  "published",          :default => false
     t.integer  "form_type_id"
     t.integer  "downloads"
     t.integer  "mission_id"
+    t.integer  "questionings_count", :default => 0
+    t.integer  "responses_count",    :default => 0
   end
 
   add_index "forms", ["mission_id"], :name => "index_forms_on_mission_id"
@@ -164,6 +166,9 @@ ActiveRecord::Schema.define(:version => 20120906184149) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "questionings", ["form_id"], :name => "index_questionings_on_form_id"
+  add_index "questionings", ["question_id"], :name => "index_questionings_on_question_id"
 
   create_table "questions", :force => true do |t|
     t.string   "code"
@@ -255,6 +260,7 @@ ActiveRecord::Schema.define(:version => 20120906184149) do
     t.integer  "mission_id"
   end
 
+  add_index "responses", ["form_id"], :name => "index_responses_on_form_id"
   add_index "responses", ["mission_id"], :name => "index_responses_on_mission_id"
 
   create_table "roles", :force => true do |t|
