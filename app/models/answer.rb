@@ -20,10 +20,10 @@ class Answer < ActiveRecord::Base
   # a flag set by javascript on the client side indicating whether the answer is relevant based on any conditions
   attr_writer(:relevant)
 
-  belongs_to(:questioning)
-  belongs_to(:option)
-  belongs_to(:response)
-  has_many(:choices, :dependent => :destroy)
+  belongs_to(:questioning, :inverse_of => :answers)
+  belongs_to(:option, :inverse_of => :answers)
+  belongs_to(:response, :inverse_of => :answers)
+  has_many(:choices, :dependent => :destroy, :inverse_of => :answer)
   
   before_validation(:clean_locations)
   before_save(:round_ints)
@@ -79,7 +79,7 @@ class Answer < ActiveRecord::Base
       if c = choice_for(o)
         c.checked = true
       else
-        c = choices.new(:option_id => o.id, :checked => false)
+        c = choices.new(:option => o, :checked => false)
       end
       c
     end

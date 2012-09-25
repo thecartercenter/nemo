@@ -15,11 +15,11 @@
 # along with ELMO.  If not, see <http://www.gnu.org/licenses/>.
 # 
 class Questioning < ActiveRecord::Base
-  belongs_to(:form, :counter_cache => true)
-  belongs_to(:question, :autosave => true)
-  has_many(:answers, :dependent => :destroy)
-  has_one(:condition, :autosave => true, :dependent => :destroy, :validate => false)
-  has_many(:referring_conditions, :class_name => "Condition", :foreign_key => "ref_qing_id", :dependent => :destroy)
+  belongs_to(:form, :inverse_of => :questionings, :counter_cache => true)
+  belongs_to(:question, :autosave => true, :inverse_of => :questionings)
+  has_many(:answers, :dependent => :destroy, :inverse_of => :questioning)
+  has_one(:condition, :autosave => true, :dependent => :destroy, :validate => false, :inverse_of => :questioning)
+  has_many(:referring_conditions, :class_name => "Condition", :foreign_key => "ref_qing_id", :dependent => :destroy, :inverse_of => :ref_qing)
   
   before_create(:set_rank)
   before_destroy(:check_assoc)

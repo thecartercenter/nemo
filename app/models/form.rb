@@ -19,9 +19,9 @@ class Form < ActiveRecord::Base
   include MissionBased
 
   has_many(:questions, :through => :questionings)
-  has_many(:questionings, :order => "rank", :autosave => true, :dependent => :destroy)
-  has_many(:responses)
-  belongs_to(:type, :class_name => "FormType", :foreign_key => :form_type_id)
+  has_many(:questionings, :order => "rank", :autosave => true, :dependent => :destroy, :inverse_of => :form)
+  has_many(:responses, :inverse_of => :form)
+  belongs_to(:type, :class_name => "FormType", :foreign_key => :form_type_id, :inverse_of => :forms)
   
   validates(:name, :presence => true, :uniqueness => true, :length => {:maximum => 32})
   validates(:type, :presence => true)
@@ -38,7 +38,7 @@ class Form < ActiveRecord::Base
   scope(:with_form_type, order("form_types.name, forms.name").includes(:type))
   scope(:published, where(:published => true))
   scope(:with_questions, includes(:type, {:questionings => [:form, :condition, {:question => 
-    [:type, :translations, :option_set]}]}).order("questionings.rank"))
+    [:type, :translations, {:option_set => {:options => :translations}}]}]}).order("questionings.rank"))
     
   # finds the highest 'version' number of all forms with the given base name
   # returns nil if no forms found

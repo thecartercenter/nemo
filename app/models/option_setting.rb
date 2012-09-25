@@ -15,8 +15,8 @@
 # along with ELMO.  If not, see <http://www.gnu.org/licenses/>.
 # 
 class OptionSetting < ActiveRecord::Base
-  belongs_to(:option)
-  belongs_to(:option_set, :autosave => true)
+  belongs_to(:option, :inverse_of => :option_settings)
+  belongs_to(:option_set, :autosave => true, :inverse_of => :option_settings)
   
   before_destroy(:no_answers_or_choices)
   

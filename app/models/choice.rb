@@ -15,8 +15,8 @@
 # along with ELMO.  If not, see <http://www.gnu.org/licenses/>.
 # 
 class Choice < ActiveRecord::Base
-  belongs_to(:answer)
-  belongs_to(:option)
+  belongs_to(:answer, :inverse_of => :choices)
+  belongs_to(:option, :inverse_of => :choices)
   
   def option_name; option.name; end
   def checked; @checked; end

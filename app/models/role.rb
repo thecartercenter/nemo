@@ -18,7 +18,7 @@ require 'seedable'
 class Role < ActiveRecord::Base
   include Seedable
   
-  has_many(:users)
+  has_many(:assignments, :inverse_of => :role)
   
   default_scope(order("level DESC"))
 

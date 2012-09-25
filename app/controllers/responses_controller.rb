@@ -60,8 +60,8 @@ class ResponsesController < ApplicationController
   end
   
   def new
-    form = Form.find(params[:form_id]) rescue nil
-    flash[:error] = "You must choose a form to edit." and redirect_to(:action => :index) unless form
+    form = Form.with_questions.find(params[:form_id])
+    flash[:error] = "You must choose a form to edit." and return redirect_to(:action => :index) unless form
     @response = Response.for_mission(current_mission).new(:form => form)
     render_form
   end
@@ -97,7 +97,7 @@ class ResponsesController < ApplicationController
       params[:response][:reviewed] = true if params[:commit_and_mark_reviewed]
       
       # find or create the response
-      @response = action == "create" ? Response.for_mission(current_mission).new : Response.find(params[:id])
+      @response = action == "create" ? Response.for_mission(current_mission).new : Response.find_eager(params[:id])
       # set user_id if this is an observer
       @response.user = current_user if current_user.observer?(current_mission)
       # try to save

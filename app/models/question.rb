@@ -20,11 +20,11 @@ class Question < ActiveRecord::Base
   include MissionBased
   include Translatable
   
-  belongs_to(:type, :class_name => "QuestionType", :foreign_key => :question_type_id)
-  belongs_to(:option_set, :include => :options)
+  belongs_to(:type, :class_name => "QuestionType", :foreign_key => :question_type_id, :inverse_of => :questions)
+  belongs_to(:option_set, :include => :options, :inverse_of => :questions)
   has_many(:translations, :class_name => "Translation", :foreign_key => :obj_id, 
-    :conditions => "translations.class_name='Question'", :autosave => true, :dependent => :destroy)
-  has_many(:questionings, :dependent => :destroy, :autosave => true)
+    :conditions => {:class_name => "Question"}, :autosave => true, :dependent => :destroy)
+  has_many(:questionings, :dependent => :destroy, :autosave => true, :inverse_of => :question)
   has_many(:answers, :through => :questionings)
   has_many(:referring_conditions, :through => :questionings)
   has_many(:forms, :through => :questionings)

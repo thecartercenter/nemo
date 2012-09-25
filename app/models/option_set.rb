@@ -18,9 +18,9 @@ require 'mission_based'
 class OptionSet < ActiveRecord::Base
   include MissionBased
 
-  has_many(:option_settings, :dependent => :destroy, :autosave => true)
+  has_many(:option_settings, :dependent => :destroy, :autosave => true, :inverse_of => :option_set)
   has_many(:options, :through => :option_settings)
-  has_many(:questions)
+  has_many(:questions, :inverse_of => :option_set)
   has_many(:questionings, :through => :questions)
   
   validates(:name, :presence => true, :uniqueness => true)

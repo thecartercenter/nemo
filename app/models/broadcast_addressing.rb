@@ -15,6 +15,6 @@
 # along with ELMO.  If not, see <http://www.gnu.org/licenses/>.
 # 
 class BroadcastAddressing < ActiveRecord::Base
-  belongs_to(:broadcast)
-  belongs_to(:user)
+  belongs_to(:broadcast, :inverse_of => :broadcast_addressings)
+  belongs_to(:user, :inverse_of => :broadcast_addressings)
 end

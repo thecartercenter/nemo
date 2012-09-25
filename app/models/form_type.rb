@@ -20,7 +20,7 @@ class FormType < ActiveRecord::Base
   include Seedable
   include MissionBased
   
-  has_many(:forms)
+  has_many(:forms, :inverse_of => :type)
   
   before_destroy(:check_assoc)
   

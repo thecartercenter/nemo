@@ -20,10 +20,10 @@ require 'xml'
 class Response < ActiveRecord::Base
   include MissionBased
 
-  belongs_to(:form, :counter_cache => true)
+  belongs_to(:form, :inverse_of => :responses, :counter_cache => true)
   has_many(:answers, :include => :questioning, :order => "questionings.rank", 
-    :autosave => true, :validate => false, :dependent => :destroy)
-  belongs_to(:user)
+    :autosave => true, :validate => false, :dependent => :destroy, :inverse_of => :response)
+  belongs_to(:user, :inverse_of => :responses)
   
   attr_accessor(:modifier)
   
@@ -44,9 +44,9 @@ class Response < ActiveRecord::Base
   def self.find_eager(id)
     includes([:form, {:answers => 
       {
-        :choices => {:option => :translations}, 
+        :choices => {:option => :translations},
         :option => :translations, 
-        :questioning => {:question => [:type, :translations, {:option_set => {:options => :translations}}]}
+        :questioning => [:condition, {:question => [:type, :translations, {:option_set => {:options => :translations}}]}]
       }
     }]).find(id)
   end
@@ -118,7 +118,7 @@ class Response < ActiveRecord::Base
   
   def all_answers
     # make sure there is an associated answer object for each questioning in the form
-    visible_questionings.collect{|qing| answer_for(qing) || answers.new(:questioning_id => qing.id)}
+    visible_questionings.collect{|qing| answer_for(qing) || answers.new(:questioning => qing)}
   end
   
   def all_answers=(params)

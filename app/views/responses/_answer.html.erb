@@ -3,7 +3,7 @@
   </label><div class="form_field_control">
     <%= fields_for('response[all_answers][]', answer) do |f| %>
       <% f.mode = form_mode %>
-      <%= render("layouts/object_errors", :object => answer, :compact => true) %>
+      <%= render("layouts/object_errors", :object => answer, :compact => true) unless answer.errors.empty? %>
       <%= f.hidden_field(:response_id, :index => answer_counter) %>
       <%= f.hidden_field(:questioning_id, :index => answer_counter) %>
       <%= f.hidden_field(:relevant, :class => "relevant", :index => answer_counter) %>

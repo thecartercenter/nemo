@@ -21,11 +21,11 @@ class Option < ActiveRecord::Base
   include Translatable
   
   has_many(:option_sets, :through => :option_settings)
-  has_many(:option_settings)
+  has_many(:option_settings, :inverse_of => :option)
   has_many(:translations, :class_name => "Translation", :foreign_key => :obj_id, 
-    :conditions => "translations.class_name='Option'", :autosave => true, :dependent => :destroy)
-  has_many(:answers)
-  has_many(:choices)
+    :conditions => {:class_name => "Option"}, :autosave => true, :dependent => :destroy)
+  has_many(:answers, :inverse_of => :option)
+  has_many(:choices, :inverse_of => :option)
   
   validates(:value, :presence => true)
   validates(:value, :numericality => true, :if => Proc.new{|o| !o.value.blank?})

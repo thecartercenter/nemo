@@ -20,11 +20,9 @@ class User < ActiveRecord::Base
 
   attr_writer(:reset_password_method)
   
-  belongs_to(:role)
-  belongs_to(:location)
-  has_many(:responses)
-  has_many(:broadcast_addressings)
-  has_many(:assignments, :autosave => true, :dependent => :destroy, :validate => true)
+  has_many(:responses, :inverse_of => :user)
+  has_many(:broadcast_addressings, :inverse_of => :user)
+  has_many(:assignments, :autosave => true, :dependent => :destroy, :validate => true, :inverse_of => :user)
   has_many(:missions, :through => :assignments)
   belongs_to(:current_mission, :class_name => "Mission")
   

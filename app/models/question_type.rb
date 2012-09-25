@@ -18,7 +18,7 @@ require 'seedable'
 class QuestionType < ActiveRecord::Base
   include Seedable
   
-  has_many(:questions)
+  has_many(:questions, :inverse_of => :type)
   
   default_scope(order("long_name"))
   
