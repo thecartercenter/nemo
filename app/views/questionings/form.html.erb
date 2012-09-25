@@ -2,7 +2,6 @@
 
 <%= flash_and_form_errors(@qing).gsub("Question base", "Question").gsub("Question C", "Question c").html_safe %>
 <%= nice_form_for(@qing) do |f| %>
-  <% f.mode = form_mode %>
   <%= f.hidden_field(:form_id) %>
   
   <% unless f.mode == :edit && @qing.question.published? %>
@@ -52,5 +51,5 @@
     </tr>
   </table>
 
-  <%= f.submit((@qing.new_record? ? "Create" : "Update") + " Question") %>
+  <%= form_submit_button(f) %>
 <% end %>
