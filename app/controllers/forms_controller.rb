@@ -26,7 +26,7 @@ class FormsController < ApplicationController
       
       # get only published forms and render openrosa if xml requested
       format.xml do
-        @forms = Form.published.with_form_type
+        @forms = restrict(Form).published.with_form_type
         render_openrosa
       end
     end

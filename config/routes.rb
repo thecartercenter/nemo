@@ -1,4 +1,9 @@
 CommandCenter::Application.routes.draw do
+
+  # redirects for ODK
+  match("/missions/:mission_compact_name/formList" => 'forms#index', :format => :xml)
+  match("/missions/:mission_compact_name/submission" => 'responses#create', :format => :xml)
+
   resources(:broadcasts){collection{post 'new_with_users'}}
   resources(:forms){member{post 'add_questions', 'remove_questions', 'update_ranks'; get 'publish', 'clone'}}
   resources(:form_types)
@@ -26,7 +31,4 @@ CommandCenter::Application.routes.draw do
   
   root(:to => "welcome#index")
   
-  # redirects for ODK
-  match("/:mission_compact_name/formList" => 'forms#index', :format => :xml)
-  match("/:mission_compact_name/submission" => 'responses#create', :format => :xml)
 end

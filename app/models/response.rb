@@ -74,17 +74,23 @@ class Response < ActiveRecord::Base
     ['submitter:"john smith"', 'formname:polling', 'reviewed:yes']
   end
 
-  def self.create_from_xml(xml, user)
+  def self.create_from_xml(xml, user, mission)
     # parse xml
     doc = XML::Parser.string(xml).parse
 
     # get form id
-    form_id = doc.root["id"] or raise ArgumentError.new("No form id.")
-    form_id = form_id.to_i
+    form_id = doc.root["id"] or raise ArgumentError.new("No form id was given.")
+    
+    # check if the form is associated with the mission
+    unless mission && form = Form.for_mission(mission).find_by_id(form_id)
+      raise ArgumentError.new("Could not find the specified form.")
+    end
     
     # create response object
-    resp = new(:form_id => form_id, :user_id => user ? user.id : nil, :source => "odk", :modifier => "odk")
-    qings = resp.form ? resp.form.visible_questionings : (raise ArgumentError.new("Invalid form id."))
+    resp = new(:form => form, :user => user, :mission => mission, :source => "odk", :modifier => "odk")
+    
+    # get the visible questionings
+    qings = resp.form.visible_questionings
     
     # loop over each child tag and create hash of question_code => value
     values = {}; doc.root.children.each{|c| values[c.name] = c.first? ? c.first.content : nil}
