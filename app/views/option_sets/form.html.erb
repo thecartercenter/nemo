@@ -1,7 +1,11 @@
 <%= flash_and_form_errors %>
-<%= nice_form_for(@set) do |f| %>
-  <%= form_field(f, :name, :required => true) %>
-  <%= form_field(f, :options, :partial => "option_setting", :collection => @set.all_option_settings) %>
-  <%= form_field(f, :ordering, :type => :select, :options => OptionSet.ordering_select_options, :required => true) %>
-  <%= form_submit_button(f) %> 
+<% if @options.empty? %>
+  You need to <%= link_to("create some options", options_path) %> before you can create option sets.
+<% else %>
+  <%= nice_form_for(@set) do |f| %>
+    <%= form_field(f, :name, :required => true) %>
+    <%= form_field(f, :options, :partial => "option_setting", :collection => @set.all_option_settings(@options)) %>
+    <%= form_field(f, :ordering, :type => :select, :options => OptionSet.ordering_select_options, :required => true) %>
+    <%= form_submit_button(f) %> 
+  <% end %>
 <% end %>

@@ -54,10 +54,10 @@ class OptionSet < ActiveRecord::Base
     !questionings.detect{|qing| qing.published?}.nil?
   end
   
-  # finds or initializes an option_setting for every option in the database (never meant to be saved)
-  def all_option_settings
+  # finds or initializes an option_setting for every option in the database for current mission (never meant to be saved)
+  def all_option_settings(options)
     # make sure there is an associated answer object for each questioning in the form
-    Option.all.collect{|o| option_setting_for(o) || option_settings.new(:option_id => o.id, :included => false)}
+    options.collect{|o| option_setting_for(o) || option_settings.new(:option_id => o.id, :included => false)}
   end
   
   def all_option_settings=(params)
