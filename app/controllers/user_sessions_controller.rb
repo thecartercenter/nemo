@@ -24,20 +24,12 @@ class UserSessionsController < ApplicationController
   def create
     reset_session
     @user_session = UserSession.new(params[:user_session])
+    
+    # if the save is successful, the user is logged in automatically
     if @user_session.save
-      # reset the perishable token for security's sake
-      @user_session.user.reset_perishable_token!
       
-      # pick a mission
-      @user_session.user.set_current_mission
-      
-      # if no mission, error
-      if @user_session.user.current_mission.nil?
-        flash[:error] = "You are not assigned to any missions."
-        @user_session.destroy
-        redirect_to(:action => :new)
-        return
-      end
+      # do post login housekeeping
+      return unless post_login_housekeeping
       
       flash[:success] = "Login successful"
       redirect_back_or_default(root_path)

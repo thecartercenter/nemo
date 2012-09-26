@@ -154,6 +154,29 @@ class ApplicationController < ActionController::Base
       end
     end
     
+    # tasks that should be run after the user successfully logs in OR successfully resets their password
+    # returns false if no further stuff should happen (redirect), true otherwise
+    def post_login_housekeeping
+      # get the session
+      @user_session = UserSession.find
+      
+      # reset the perishable token for security's sake
+      @user_session.user.reset_perishable_token!
+      
+      # pick a mission
+      @user_session.user.set_current_mission
+      
+      # if no mission, error
+      if @user_session.user.current_mission.nil?
+        flash[:error] = "You are not assigned to any missions."
+        @user_session.destroy
+        redirect_to(new_user_session_path)
+        return false
+      end
+      
+      return true
+    end 
+    
     # don't count automatic timer-based requests for resetting the logout timer
     # all automatic timer-based should set the 'auto' parameter
     def last_request_update_allowed?

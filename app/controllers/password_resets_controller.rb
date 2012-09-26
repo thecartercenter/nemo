@@ -22,6 +22,7 @@ class PasswordResetsController < ApplicationController
     @title = "Reset Password"
   end  
 
+  # when the user returns and enters their new password
   def edit
     @title = "Reset Password"
   end
@@ -42,9 +43,15 @@ class PasswordResetsController < ApplicationController
     User.ignore_blank_passwords = false
     @user.password = params[:user][:password]
     @user.password_confirmation = params[:user][:password_confirmation]
+    
     if @user.save
-      flash[:success] = "Password successfully updated"  
       User.ignore_blank_passwords = true
+
+      # if we get this far, the user has been logged in
+      # so do post login housekeeping
+      return unless post_login_housekeeping
+
+      flash[:success] = "Password successfully updated."
       redirect_to(root_url)
     else
       @title = "Reset Password"
@@ -56,7 +63,7 @@ class PasswordResetsController < ApplicationController
 
   private  
     def load_user_using_perishable_token
-      @user = User.find_by_perishable_token(params[:id])  
+      @user = User.find_using_perishable_token(params[:id])  
       unless @user
         flash[:error] = "We're sorry, but we could not locate your account. " +  
           "If you are having issues try copying and pasting the URL " +  

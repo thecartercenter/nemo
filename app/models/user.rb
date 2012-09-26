@@ -123,6 +123,7 @@ class User < ActiveRecord::Base
       reset_password and save
     end
     if reset_password_method == "email"
+      # only send intro if he/she has never logged in
       (login_count || 0) > 0 ? deliver_password_reset_instructions! : deliver_intro!
     end
   end
