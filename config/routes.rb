@@ -27,6 +27,6 @@ CommandCenter::Application.routes.draw do
   root(:to => "welcome#index")
   
   # redirects for ODK
-  match("/formList" => 'forms#index', :format => :xml)
-  match("/submission" => 'responses#create', :format => :xml)
+  match("/:mission_compact_name/formList" => 'forms#index', :format => :xml)
+  match("/:mission_compact_name/submission" => 'responses#create', :format => :xml)
 end

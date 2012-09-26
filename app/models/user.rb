@@ -152,6 +152,11 @@ class User < ActiveRecord::Base
     @accessible_missions ||= Permission.restrict(Mission, :user => self)
   end
   
+  # tests if user can access the given mission
+  def can_access_mission?(mission)
+    accessible_missions.include?(mission)
+  end
+  
   # determines if the user's role for the given mission is as an observer
   def observer?(mission)
     (r = role(mission)) ? r.observer? : false

@@ -25,7 +25,7 @@ class ApplicationController < ActionController::Base
 
   # user/user_session stuff
   before_filter(:basic_auth_for_xml)
-  before_filter(:get_session_user_mission)
+  before_filter(:get_user_and_mission)
   before_filter(:authorize)
   
   # this goes last as the timezone can depend on the user
@@ -115,27 +115,59 @@ class ApplicationController < ActionController::Base
     # AUTHENTICATION AND USER SESSION METHODS
     ##############################################################################
     
+    # if the request format is XML we should require basic auth
+    # this just sets the current user for this one request. no user session is created.
     def basic_auth_for_xml
-      # if the request format is XML and there is no user, we should require basic auth
-      # this just sets the current user for this one request. no user session is created.
-      if request.format == Mime::XML
-        @current_user = authenticate_or_request_with_http_basic{|login, password| User.find_by_credentials(login, password)}
+
+      return unless request.format == Mime::XML
+
+      # authenticate with basic 
+      user = authenticate_with_http_basic do |login, password|
+        # use eager loading to optimize things a bit
+        User.includes(:assignments).find_by_credentials(login, password)
+      end
+      
+      # if authentication not successful, fail
+      return request_http_basic_authentication if !user
+
+      # save the user
+      @current_user = user
+
+      # if a mission compact name is set
+      if params[:mission_compact_name]
+        # lookup the mission
+        mission = Mission.find_by_compact_name(params[:mission_compact_name])
+        
+        # if the mission wasnt found, fail
+        return request_http_basic_authentication if !mission
+          
+        # if user can't access the mission, fail
+        return request_http_basic_authentication if !user.can_access_mission?(mission)
+          
+        # if we get this far, we can set the current mission
+        @current_mission = mission
+        Setting.mission_was_set(@current_mission)
       end
     end
     
-    def get_session_user_mission
-      # get the current user session from authlogic
-      @current_user_session = UserSession.find
-
-      # look up the current user from the user session
-      # we use a find call to the User class so that we can do eager loading
-      @current_user = (sess = @current_user_session) && (user = sess.user) && User.includes(:assignments).find(user.id)
-    
-      # look up the current mission based on the current user
-      @current_mission = @current_user ? @current_user.current_mission : nil
+    # gets the user and mission from the user session if they're not already set
+    def get_user_and_mission
+      # don't do this for XML requests
+      return if request.format == Mime::XML
       
-      # if a mission was found, notify the settings class
-      Setting.mission_was_set(@current_mission) if @current_mission
+      # get the current user session from authlogic
+      if user_session = UserSession.find
+
+        # look up the current user from the user session
+        # we use a find call to the User class so that we can do eager loading
+        @current_user = (user = user_session.user) && User.includes(:assignments).find(user.id)
+    
+        # look up the current mission based on the current user
+        @current_mission = @current_user ? @current_user.current_mission : nil
+      
+        # if a mission was found, notify the settings class
+        Setting.mission_was_set(@current_mission) if @current_mission
+      end
     end
     
     # tasks that should be run after the user successfully logs in OR successfully resets their password
