@@ -48,7 +48,7 @@ class RemovePlaces < ActiveRecord::Migration
               gps_ans = resp.answers.find_by_questioning_id(gps_qing.id)
               gps_ans = resp.answers.build(:questioning => gps_qing) if gps_ans.nil?
               gps_ans.value = p['lat_lng']
-              gps_ans.save!
+              gps_ans.save(:validate => false)
             end
           end
         end
