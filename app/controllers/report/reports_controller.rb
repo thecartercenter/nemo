@@ -63,7 +63,6 @@ class Report::ReportsController < ApplicationController
           @report.errors.add(:base, $!.to_s)
         end
       end
-      @js << "report_reports_show"
       render(:show)
     end
 end

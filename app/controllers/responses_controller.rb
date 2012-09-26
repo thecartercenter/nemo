@@ -42,7 +42,6 @@ class ResponsesController < ApplicationController
         params[:page] ||= 1
         @responses = apply_filters(Response).all
         @pubd_forms = restrict(Form).published.with_form_type
-        @js << "responses_index"
         render(:partial => "table_only", :locals => {:responses => @responses}) if ajax_request?
       end
       format.csv do
