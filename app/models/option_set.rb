@@ -32,6 +32,7 @@ class OptionSet < ActiveRecord::Base
   before_destroy(:check_assoc)
   
   default_scope(order("name"))
+  scope(:for_index, includes(:questions, :options, {:questionings => :form}))
   
   self.per_page = 100
 

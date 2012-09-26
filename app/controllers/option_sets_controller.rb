@@ -16,7 +16,7 @@
 # 
 class OptionSetsController < ApplicationController
   def index
-    @sets = apply_filters(OptionSet)
+    @sets = apply_filters(OptionSet).for_index
   end
   
   def new
