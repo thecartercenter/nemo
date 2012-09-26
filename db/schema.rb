@@ -12,11 +12,6 @@
 
 ActiveRecord::Schema.define(:version => 20120925152429) do
 
-  create_table "#Tableau_sid_00485CC8_4_none_form_name_nk", :id => false, :force => true do |t|
-    t.string  "none_form_name_nk"
-    t.integer "_Tableau_join_flag", :limit => 8, :default => 0, :null => false
-  end
-
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
     t.integer  "option_id"
