@@ -10,7 +10,7 @@
   <%= form_field(f, :which_phone, :type => :select, :options => Broadcast.which_phone_select_options, :required => true) %>
   <%= form_field(f, :subject, :required => true) %>
   <%= form_field(f, :body, :required => true, :partial => "body") %>
-  <% if f.mode == :show && broadcast.send_errors %>
+  <% if f.mode == :show && @broadcast.send_errors %>
     <%= form_field(f, :send_errors, :partial => "send_errors") %>
   <% end %>
   
