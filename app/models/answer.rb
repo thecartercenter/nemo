@@ -151,7 +151,7 @@ class Answer < ActiveRecord::Base
       end
     end                 
     def clean_locations
-      if location?
+      if location? && !value.blank?
         if value.match(configatron.lat_lng_regexp)
           lat = number_with_precision($1.to_f, :precision => 6)
           lng = number_with_precision($3.to_f, :precision => 6)
