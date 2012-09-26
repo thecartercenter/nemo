@@ -202,7 +202,8 @@ class ApplicationController < ActionController::Base
       @current_user_session = UserSession.find
 
       # look up the current user from the user session
-      @current_user = @current_user_session && User.includes(:assignments).find(@current_user_session.user.id)
+      # we use a find call to the User class so that we can do eager loading
+      @current_user = (sess = @current_user_session) && (user = sess.user) && User.includes(:assignments).find(user.id)
     
       # look up the current mission based on the current user
       @current_mission = @current_user ? @current_user.current_mission : nil
