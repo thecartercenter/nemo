@@ -1,6 +1,6 @@
 class AddLanguagesToSettings < ActiveRecord::Migration
   def up
-    #add_column :settings, :languages, :string
+    add_column :settings, :languages, :string
     
     # setup defaults
     execute("UPDATE settings s SET s.languages = (SELECT GROUP_CONCAT(l.code) FROM languages l WHERE s.mission_id = l.mission_id GROUP BY l.mission_id)")
