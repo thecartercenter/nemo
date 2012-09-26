@@ -59,7 +59,7 @@ en:
         percent_type: Whether and how percentages should be calculated for the report.
         bar_style: Whether bars should be stacked or side-by-side. 
       setting:
-        languages: Enter the <a href="http://www.loc.gov/standards/iso639-2/php/code_list.php" target="_new">two-letter codes</a>, separated by commas, for the languages in which you want to allow questions to be defined.
+        languages: Enter the <a href="http://www.loc.gov/standards/iso639-2/php/code_list.php">three-letter codes</a>, separated by commas, for the languages in which you want to allow questions to be defined.
         timezone: The time zone in which times are displayed throughout the site.
       user:
         name: "The user's full name. Example: 'John Doe' or 'Team 1.1'"
