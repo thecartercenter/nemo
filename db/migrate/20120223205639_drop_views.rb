@@ -1,6 +1,6 @@
 class DropViews < ActiveRecord::Migration
   def up
-    #drop_view :_answers
+    execute("DROP VIEW _answers") rescue nil
   end
 
   def down
