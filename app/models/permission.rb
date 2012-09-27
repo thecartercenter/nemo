@@ -79,7 +79,7 @@ class Permission
     # try special permissions first
     SPECIAL.each{|sc| return if send(sc, params)}
     # require mission for most controllers
-    raise PermissionError.new "You can't view this without selecting a mission" if !params[:mission] && !%w(users missions).include?(params[:controller])
+    raise PermissionError.new "You can't view this without selecting a mission" if !params[:mission] && !%w(users user_sessions missions password_resets welcome permission).include?(params[:controller])
     # try general permissions
     return if check_permission("#{params[:controller]}##{params[:action]}", params[:user], params[:mission])
     return if check_permission("#{params[:controller]}#*", params[:user], params[:mission])
