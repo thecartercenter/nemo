@@ -46,7 +46,7 @@ class User < ActiveRecord::Base
   validate(:must_have_password_reset_on_create)
   validate(:password_reset_cant_be_email_if_no_email)
   validate(:no_duplicate_assignments)
-  validate(:must_have_assignments)
+  validate(:must_have_assignments_if_not_admin)
   validate(:ensure_current_mission_is_valid)
   
   default_scope(order("users.name"))
@@ -210,9 +210,9 @@ class User < ActiveRecord::Base
       errors.add(:base, "There are duplicate assignments.") if Assignment.duplicates?(assignments)
     end
     
-    def must_have_assignments
-      if assignments.reject{|a| a.marked_for_destruction?}.empty?
-        errors.add(:assignments, "can't be empty")
+    def must_have_assignments_if_not_admin
+      if !admin? && assignments.reject{|a| a.marked_for_destruction?}.empty?
+        errors.add(:assignments, "can't be empty if not admin")
       end
     end
     

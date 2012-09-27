@@ -183,7 +183,7 @@ class ApplicationController < ActionController::Base
       @user_session.user.set_current_mission
       
       # if no mission, error
-      if @user_session.user.current_mission.nil?
+      if @user_session.user.current_mission.nil? && !@user_session.user.admin?
         flash[:error] = "You are not assigned to any missions."
         @user_session.destroy
         redirect_to(new_user_session_path)

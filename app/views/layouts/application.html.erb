@@ -27,7 +27,7 @@
             
             <%# current mission and dropdown, if there are choices %>
             Mission: 
-            <% if current_user.accessible_missions.size > 1 %>
+            <% if current_user.accessible_missions.size > 0 %>
               <%= nice_form_for(current_user) do |f| %>
                 <%= f.select(:current_mission_id, sel_opts_from_objs(current_user.accessible_missions), :include_blank => "[None]") %>
                 <%= loading_indicator(:header => true) %>
