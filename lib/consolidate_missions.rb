@@ -44,11 +44,31 @@ TABLES_TO_LOOKUP_IN_MAIN = {
   :roles => ["users.role_id"]
 }
 
-# for each db
+def connect(params)
+  Mysql.connect('localhost', params[:username], params[:password], params[:database])
+end
 
-  # connect to dbs
+def clear_tables(dbname, con)
+  res = con.query("show tables")
+  while row = res.fetch_hash do
+    unless TABLES_NOT_TO_COPY.include?(row[0])
+      puts "Deleting from table #{dbname}.#{row[0]}"
+      con.query("DELETE FROM #{row[0]}") 
+    end
+  end
+end
+
+# for each db
+MISSION_DBS.each_with_index do |mission_db_params, mission_db_idx|
+
+  # connect to mission, temp, and main dbs
+  temp_db = connect(TEMP_DB)
+  mission_db = connect(mission_db_params)
+  main_db = connect(MAIN_DB)
   
   # delete all rows in appropriate tables from main db and temp db
+  clear_tables(MAIN_DB[:database], main_db)
+  clear_tables(TEMP_DB[:database], temp_db)
 
   # copy everything from old mission db to the temp db
 
@@ -74,4 +94,4 @@ TABLES_TO_LOOKUP_IN_MAIN = {
   # copy all rows in appropriate tables to the main table -- everything should match by now
   
   # update auto increment counters in all appropriate tables to appropriate values
-  
+end
