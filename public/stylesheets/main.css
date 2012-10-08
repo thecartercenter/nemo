@@ -146,9 +146,10 @@ textarea#broadcast_body { width: 300px; height: 170px; }
 #login_instructions td.value { font-weight: bold; width: 300px; }
 
 /* user edit */
-.users_edit input#user_login, .users_new input#user_login { width: 150px; }
-.users_edit input#login_suggest_button, .users_new input#login_suggest_button  { width: 75px; }
-.users_edit textarea#user_notes, .users_new textarea#user_notes { width: 240px; height: 100px; }
+form.user_form div.form_field_control { width: 410px !important; }
+form.user_form input#user_login { width: 150px; }
+form.user_form input#login_suggest_button { width: 75px; }
+form.user_form textarea#user_notes { width: 240px; height: 100px; }
 
 /* user batches */
 .user_batches_new #user_batch_users { width: 350px; height: 200px; margin-right: 20px; }
@@ -202,4 +203,4 @@ div.location_picker form.location_search input.query { width: 250px; margin-bott
 div.location_picker form.location_search div.results a { display: block; margin-bottom: 8px; }
 
 /* missions */
-.missions_index .name_col { width: 150px; }
+.missions_index .name_col { width: 225px; }

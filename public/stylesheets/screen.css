@@ -1,12 +1,12 @@
 /* template */
 body { background-color: #888; }
 table#layout { width: 100%; }
-td#banner { color: white; padding: 5px 0 0 88px; }
-td#banner #title { float: left; padding-top: 10px; }
-td#banner #title h1 { margin-bottom: 5px; font-size: 40px; line-height: 1; display: inline-block; }
-td#banner #title h2 { font-size: 22px; margin: 0 10px; color: white; display: inline-block; text-transform: uppercase; vertical-align: top; }
+td#banner { color: white; padding: 5px 0 0 88px; height: 75px; }
+td#banner #title { float: left; padding-top: 5px; }
+td#banner #title h1 { font-size: 40px; line-height: 1; display: inline-block; }
+td#banner #title h2 { font-size: 22px; width: 300px; margin: 0; color: white; display: inline-block; text-transform: uppercase; vertical-align: top; }
 td#banner #title a { color: white; text-decoration: none; }
-td#banner #title img { display: block; margin: 0 0 10px 3px; }
+td#banner #title img { display: block; margin: 5px 0 0 3px; }
 td#banner #userinfo { float: right; margin-right: 10px; }
 td#banner #userinfo a, td#banner #userinfo form.button_to input { color: white; }
 div#content { padding: 15px 15px 30px 15px; min-height: 400px; background-color: white; }
@@ -29,7 +29,7 @@ div#userinfo form select { font-size: 9pt; }
 #login_instructions #instructions p { margin-top: 0; }
   
 /* flash and error messages */
-div.success, div.error { position: absolute; left: 25%; top: 76px; padding: 3px; 
+div.success, div.error { position: absolute; left: 25%; top: 71px; padding: 3px; 
     color: white; font-weight: bold; width: 600px; margin-bottom: 10px; text-align: center; }
 div.success { background-color: #9dc400; }
 div.error { background-color: #d02000; }

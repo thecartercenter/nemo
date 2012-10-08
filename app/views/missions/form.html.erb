@@ -1,6 +1,6 @@
 <%= flash_and_form_errors(@mission) %>
 <%= nice_form_for(@mission) do |f| %>
   <div class="tip">Required fields are marked with a <%= reqd_sym %>.</div>
-  <%= form_field(f, :name, :required => true) %>
+  <%= form_field(f, :name, :required => true, :maxlength => 32) %>
   <%= form_submit_button(f, :label => "Save") %>
 <% end %>
