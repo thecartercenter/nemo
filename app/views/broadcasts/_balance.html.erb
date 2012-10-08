@@ -1,0 +1,4 @@
+You have <strong><%= @balance %></strong> SMS credits in your <%= Smser.outgoing_service_name %> account.
+<% if @broadcast.recipients.size > @balance %>
+  <br/><strong>This may not be enough.</strong>
+<% end %>

@@ -14,12 +14,23 @@ class BroadcastsController < ApplicationController
   def new_with_users
     # load the user objects
     users = params[:selected].keys.collect{|id| User.find_by_id(id)}.compact
-
+        
     # raise error if no valid users (this should be impossible)
     raise "No valid users given." if users.empty?
     
     # create a new Broadcast
     @broadcast = Broadcast.for_mission(current_mission).new(:recipients => users)
+
+    begin
+      # get credit balance
+      @balance = Smser.check_balance  
+    rescue
+      # log all errors
+      logger.error("SMS balance request error: #{$!}")
+      
+      # set @balance to nil if error
+      @balance = nil
+    end
     
     render(:form)
   end

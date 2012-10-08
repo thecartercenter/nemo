@@ -7,6 +7,11 @@
   <%= form_field(f, :recipient_ids, :type => :hidden) %>
   <%= form_field(f, :to, :partial => "recipients") %>
   <%= form_field(f, :medium, :type => :select, :options => Broadcast.medium_select_options, :required => true) %>
+  
+  <% if !@balance.nil? && f.mode != :show %>
+    <%= form_field(f, :balance, :partial => "balance") %>
+  <% end %>
+  
   <%= form_field(f, :which_phone, :type => :select, :options => Broadcast.which_phone_select_options, :required => true) %>
   <%= form_field(f, :subject, :required => true) %>
   <%= form_field(f, :body, :required => true, :partial => "body") %>
