@@ -2,16 +2,19 @@ class Mission < ActiveRecord::Base
   has_many(:responses, :inverse_of => :mission)
   has_many(:forms, :inverse_of => :mission)
   has_many(:report_reports, :class_name => "Report::Report", :inverse_of => :mission)
-  has_many(:options, :inverse_of => :mission)
-  has_many(:option_sets, :inverse_of => :mission)
-  has_many(:questions, :inverse_of => :mission)
-  has_many(:form_types, :inverse_of => :mission)
   has_many(:broadcasts, :inverse_of => :mission)
-  has_many(:settings, :inverse_of => :mission, :dependent => :destroy)
   has_many(:assignments, :inverse_of => :mission)
+  has_many(:questions, :inverse_of => :mission)
+
+  # these associations are set to :delete_all since we do our own dependency check below and will catch the things they catch
+  has_many(:options, :inverse_of => :mission, :dependent => :delete_all)
+  has_many(:option_sets, :inverse_of => :mission, :dependent => :delete_all)
+  has_many(:form_types, :inverse_of => :mission, :dependent => :delete_all)
+  has_many(:settings, :inverse_of => :mission, :dependent => :delete_all)
   
   before_validation(:create_compact_name)
   before_destroy(:check_assoc)
+  after_create(:seed)
   
   validates(:name, :presence => true)
   validates(:name, :format => {:with => /^[a-z][a-z0-9 ]*$/i, :message => "can only contain letters, numbers, and spaces"},
@@ -35,7 +38,13 @@ class Mission < ActiveRecord::Base
     end
     
     def check_assoc
-      to_check = [:assignments, :responses, :forms, :report_reports, :options, :option_sets, :questions, :form_types, :broadcasts]
+      to_check = [:assignments, :responses, :forms, :report_reports, :questions, :broadcasts]
       to_check.each{|a| raise "This mission has associated objects and can't be deleted." unless self.send(a).empty?}
+    end
+    
+    # creates some default seed objects for the mission
+    def seed
+      FormType.create_default(self)
+      OptionSet.create_default(self)
     end
 end

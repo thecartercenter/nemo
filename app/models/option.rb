@@ -23,6 +23,13 @@ class Option < ActiveRecord::Base
   
   self.per_page = 100
 
+  # creates a set of options with the given English names and mission
+  def self.create_simple_set(names, mission)
+    options = []
+    names.each_with_index{|n, idx| options << create(:name_eng => n, :mission => mission, :value => idx + 1)}
+    options
+  end
+  
   def method_missing(*args)
     # enable methods like name_fra and hint_eng, etc.
     if args[0].to_s.match(/^(name)_([a-z]{3})(_before_type_cast)?(=?)$/)

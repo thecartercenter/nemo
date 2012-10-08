@@ -20,6 +20,14 @@ class OptionSet < ActiveRecord::Base
   
   self.per_page = 100
 
+  # creates a simple yes/no/na option set
+  def self.create_default(mission)
+    options = Option.create_simple_set(%w(Yes No N/A), mission)
+    set = OptionSet.new(:name => "Yes/No/NA", :ordering => "value_asc", :mission => mission)
+    options.each{|o| set.option_settings.build(:option_id => o.id)}
+    set.save!
+  end
+
   def self.orderings
     [{:code => "value_asc", :name => "Value Low to High", :sql => "value asc"},
      {:code => "value_desc", :name => "Value High to Low", :sql => "value desc"}]

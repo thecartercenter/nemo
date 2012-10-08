@@ -1,7 +1,6 @@
 require 'seedable'
 require 'mission_based'
 class FormType < ActiveRecord::Base
-  include Seedable
   include MissionBased
   
   has_many(:forms, :inverse_of => :type)
@@ -12,9 +11,9 @@ class FormType < ActiveRecord::Base
   
   default_scope(order("name"))
   
-  def self.generate
-    seed(:name, :name => "Type 1")
-    seed(:name, :name => "Type 2")
+  # creates and returns a default set of form types for the given mission
+  def self.create_default(mission)
+    ["Short Term", "Long Term", "Security"].collect{|n| create(:name => n, :mission => mission)}
   end
   
   private
