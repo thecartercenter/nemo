@@ -11,7 +11,7 @@
     $("input.submit").click(Form.submit_form);
 
     // hookup before submit event
-    $("form.new_form, form.edit_form").submit(Form.before_submit);
+    $("form.form_form").submit(Form.before_submit);
 
     
     // hookup unsaved check
@@ -67,7 +67,7 @@
   
   // submits the form when the submit button is clicked
   Form.submit_form = function() {
-    $("form.new_form, form.edit_form").submit();
+    $("form.form_form").submit();
   }
   
   Form.before_submit = function() {
@@ -77,7 +77,7 @@
     // copy ranks into main form
     var hidden_div = $("<div>").hide();                     // this bit makes sure the updated values get copied
     $("input.rank_box").each(function(){ hidden_div.append($(this.outerHTML).val($(this).val())); });
-    $("form.new_form, form.edit_form").append(hidden_div);
+    $("form.form_form").append(hidden_div);
     
     // allow submission to proceed
     return true;

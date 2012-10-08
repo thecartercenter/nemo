@@ -10,7 +10,12 @@ en:
         which_phone: Which Phone(s)
         send_errors: Delivery Errors
       question:
-        name_eng: "English name"
+        name_eng: "English Name"
+        option_set_id: Option Set
+        question_type_id: Type
+      questioning:
+        hidden: Hidden?
+        required: Required?
       response:
         user_id: Submitter
         reviewed: Reviewed?
@@ -48,6 +53,18 @@ en:
         name: A name that summarizes this set of options. Normal users will not see this name.
         options: Check the options that should be included in this set.
         ordering: The order in which you'd like the options to appear.
+      question:
+        code: A short codename (between 2-20 characters). Should contain only letters and numbers, e.g. BallotBoxSealed, DepartTime.
+        hint_eng: Additional instructions, e.g. 'Enter an approximate count of the people waiting to vote.'
+        minimum: The minimum value for the response. Check the box if the minimum itself is not valid.
+        maximum: The maximum value for the response. Check the box if the maximum itself is not valid.
+        name_eng: The main question text, e.g. 'How many people are in line?'
+        option_set_id: The set of options the user will be able to choose from.
+        question_type_id: The kind of information the user will be entering.
+      questioning:
+        condition: An optional condition which must be met in order for this question to be shown to the user.
+        hidden: Whether this question will be shown on this form. Use this to disable a question if you can't delete it. This value will override any condition specified above.
+        required: Whether this question must be completed on this form or is optional. Only enforced if the condition specified above is met.
       report/report:
         name: A descriptive title for this report.
         aggregation_id: The operation you want to perform on the combined data.

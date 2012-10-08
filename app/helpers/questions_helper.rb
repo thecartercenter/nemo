@@ -28,21 +28,15 @@ module QuestionsHelper
   end
   
   def questions_index_fields
-    choose_mode = controller.action_name == "choose"
-    %w[code title type] + (choose_mode ? [] : %w[published? actions])
+    %w[code title type]
   end
   
   def questions_index_links(questions)
-    choose_mode = controller.action_name == "choose"
     links = []
-    if choose_mode
-      unless @questions.empty?
-        links << batch_op_link(:name => "Add selected questions to form", :action => "forms#add_questions", :id => @form.id)
-      end
-      links << link_to_if_auth("Create new question", new_questioning_path(:form_id => @form.id), "questionings#create")
-    else
-      links << link_to_if_auth("Create new question", new_question_path, "questions#create")
+    unless @questions.empty?
+      links << batch_op_link(:name => "Add selected questions to form", :action => "forms#add_questions", :id => @form.id)
     end
+    links << link_to_if_auth("Create new question", new_questioning_path(:form_id => @form.id), "questionings#create")
     links
   end
 end

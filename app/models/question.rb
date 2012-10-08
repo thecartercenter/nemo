@@ -35,7 +35,7 @@ class Question < ActiveRecord::Base
   validates(:option_set_id, :presence => true, :if => Proc.new{|q| q.is_select?})
   validates(:english_name, :presence => true)
   validate(:integrity)
-    
+
   before_destroy(:check_assoc)
   
   default_scope(order("code"))

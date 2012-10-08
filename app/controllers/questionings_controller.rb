@@ -58,7 +58,7 @@ class QuestioningsController < ApplicationController
         flash[:success] = "Question #{action}d successfully."
         redirect_to(edit_form_path(@qing.form))
       rescue ActiveRecord::RecordInvalid
-        render_and_setup(action)
+        render_and_setup
       end
     end
     

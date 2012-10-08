@@ -57,8 +57,10 @@ module ApplicationHelper
   end
   
   # THIS IS THE NEW WAY
-  def nice_form_for(obj, *args)
-    form_for(obj, *args) do |f|
+  def nice_form_for(obj, options = {})
+    options[:html] ||= {}
+    options[:html][:class] = "#{obj.class.model_name.singular}_form"
+    form_for(obj, options) do |f|
       # set form mode
       f.mode = form_mode
       yield(f)
@@ -76,7 +78,8 @@ module ApplicationHelper
     elsif options[:type] == :submit
       f.submit(f.object.class.human_attribute_name("submit_" + (f.object.new_record? ? "new" : "edit")), :class => "submit")
     else
-      content_tag("div", :class => "form_field", :id => method) do
+      cls = ["form_field", options[:class]].compact.join(" ")
+      content_tag("div", :class => cls, :id => method) do
         label_str = options[:label] || f.object.class.human_attribute_name(method)
         label_html = (label_str + (options[:required] ? " #{reqd_sym}" : "")).html_safe
         label = f.label(method, label_html, :class => "main")
@@ -96,7 +99,7 @@ module ApplicationHelper
           else
             case options[:type]
             when nil, :text
-              f.text_field(method, {:class => "text"}.merge(options[:size] ? {:size => options[:size]} : {}))
+              f.text_field(method, {:class => "text"}.merge(options.reject{|k,v| ![:size, :maxlength].include?(k)}))
             when :check_box
               # if we are in show mode, show 'yes' or 'no' instead of checkbox
               if f.mode == :show

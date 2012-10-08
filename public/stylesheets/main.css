@@ -112,17 +112,14 @@ form.search_form #search_examples { margin-top: 2px; color: #666; }
 a.edit_location_link img { vertical-align: bottom; }
 
 /* question show/edit */
-.questionings_edit textarea.name_hint, .questionings_new textarea.name_hint,
-.questions_edit textarea.name_hint, .questions_new textarea.name_hint 
-  { width: 450px; height: 30px; }
-.questionings_show td.value, .questions_show td.value { width: 300px; }
-.questionings_edit #questioning_condition_value_box, .questionings_new #questioning_condition_value_box { width: 150px; }
-.questionings_show tr#condition_row td.value .dummy { display: inline; }
-input#questioning_question_minimum{ width: 100px; }
-input#questioning_question_maximum{ width: 100px; }
+form.questioning_form .form_field_control { width: 475px !important; }
+form.questioning_form .form_field.name_hint textarea { width: 400px; height: 30px; }
+form.questioning_form .form_field#condition #questioning_condition_value { width: 110px; }
+form.questioning_form .form_field#condition_row .dummy { display: inline; }
+form.questioning_form input#questioning_question_minimum, form.questioning_form input#questioning_question_maximum { width: 100px; } 
 
 /* question index/choose */
-.questions_index .name_col, .questions_choose .name_col { width: 400px; }
+.questions_choose .name_col { width: 400px; }
 
 /* option edit */
 .options_edit td.value input#option_value, .options_new td.value input#option_value { width: 100px; }
