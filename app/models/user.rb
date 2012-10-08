@@ -77,7 +77,25 @@ class User < ActiveRecord::Base
     else
       l = name.gsub(/[^a-z0-9\.]/i, "")
     end
-    l[0,10].downcase
+
+    # convert to lowercase
+    suggestion = l[0,10].downcase
+    
+    # if this login is taken, add a number to the end
+    if find_by_login(suggestion)
+      
+      # get suffixes of all logins with same prefix
+      suffixes = where("login LIKE '#{suggestion}%'").all.collect{|u| u.login[suggestion.length..-1].to_i}
+      
+      # get max suffix (skip 1 if necessary)
+      suffix = suffixes.max + 1
+      suffix = 2 if suffix <= 1
+      
+      # apply suffix
+      suggestion += suffix.to_s
+    end
+    
+    suggestion
   end
   
   def self.search_qualifiers
