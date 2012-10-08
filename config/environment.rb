@@ -17,3 +17,6 @@ Time::DATE_FORMATS[:db_time] = "%T"
 Time::DATE_FORMATS[:javarosa_datetime] = "%Y%m%d%H%M"
 Time::DATE_FORMATS[:javarosa_date] = "%Y%m%d"
 Time::DATE_FORMATS[:javarosa_time] = "%H%M"
+
+# ignore Tableau temp tables when dumping schema
+ActiveRecord::SchemaDumper.ignore_tables = [/^#Tableau/]
