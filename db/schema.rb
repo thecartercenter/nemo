@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121008152421) do
+ActiveRecord::Schema.define(:version => 20121008153636) do
 
   create_table "#Tableau_sid_00485CC8_4_none_form_name_nk", :id => false, :force => true do |t|
     t.string  "none_form_name_nk"
@@ -39,6 +39,9 @@ ActiveRecord::Schema.define(:version => 20121008152421) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "assignments", ["mission_id"], :name => "index_assignments_on_mission_id"
+  add_index "assignments", ["user_id"], :name => "index_assignments_on_user_id"
 
   create_table "broadcast_addressings", :force => true do |t|
     t.integer  "broadcast_id"
