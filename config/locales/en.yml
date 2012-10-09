@@ -35,6 +35,7 @@ en:
         submit_new: Generate Report
         submit_edit: Save Changes
       setting:
+        tableau_sql: Tableau SQL
         timezone: Time Zone
       user:
         name: Full Name
@@ -78,6 +79,7 @@ en:
         bar_style: Whether bars should be stacked or side-by-side. 
       setting:
         languages: Enter the <a href="http://www.loc.gov/standards/iso639-2/php/code_list.php">three-letter codes</a>, separated by commas, for the languages in which you want to allow questions to be defined.
+        tableau_sql: The SQL code used to extract data for use in Tableau. Click 'Select All' and then press Ctrl-C to copy.
         timezone: The time zone in which times are displayed throughout the site.
       user:
         name: "The user's full name. Example: 'John Doe' or 'Team 1.1'"
