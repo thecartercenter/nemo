@@ -7,7 +7,7 @@ class WelcomeController < ApplicationController
     @pubd_forms = restrict(Form).published.with_form_type
     
     @dont_print_title = true
-    @user_count = User.assigned_to(current_mission).count
+    @user_count = User.assigned_to(current_mission).count if current_mission
     @pub_form_count = restrict(Form).published.count
     @unpub_form_count = restrict(Form).count - @pub_form_count
     @responses = restrict(Response)
