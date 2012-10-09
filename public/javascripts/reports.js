@@ -52,7 +52,7 @@
     });
     
     // ensure the correct labels per display type
-    //form_changed();
+    form_changed();
     
     // redraw report
     redraw();
@@ -211,7 +211,7 @@
           for (var i = 0; i < 2; i++) $("#report_report_percent_type option:last").remove();
       }
     }
-    
+
     // show/hide bar style
     if (src == "display_type" || src == "sec_grouping" || src == "_all")
       $('div#bar_style')[report.form.display_type == "Bar Chart" && report.form.sec_grouping ? "show" : "hide"]();

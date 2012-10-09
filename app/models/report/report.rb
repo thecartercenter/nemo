@@ -19,9 +19,9 @@ class Report::Report < ActiveRecord::Base
   validate(:name_unique_within_mission)
   validate(:must_have_pri_grouping_if_sec_grouping)
   
-  DISPLAY_TYPES = ["Table"]
+  DISPLAY_TYPES = ["Table", "Bar Chart"]
   BAR_STYLES = ["Side By Side", "Stacked"]
-  PERCENT_TYPES = ["Percentage Overall"]
+  PERCENT_TYPES = ["Percentage Overall", "Percentage By Row", "Percentage By Column"]
   
   @@per_page = 20
   
