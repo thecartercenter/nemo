@@ -93,7 +93,7 @@ form.search_form #search_examples { margin-top: 2px; color: #666; }
 .welcome_index div.block li { line-height: 17px; }
 .welcome_index div.block li small { color: #888; font-size: 8pt; }
 .welcome_index div.block li em { font-style: normal; font-size: 12pt; font-weight: bold; }
-.welcome_index div.block select { width: 110px;  }
+.welcome_index div.block select { width: 140px; }
 .welcome_index div.block input { font-size: 8pt; width: 30px; }
 
 /* place map */

@@ -17,7 +17,7 @@ module Report::ReportsHelper
   end
   def view_report_report_mini_form
     form_tag("/") do
-      select_tag(:rid, sel_opts_from_objs(@reports, :tags => true), :include_blank => true, 
+      select_tag(:rid, sel_opts_from_objs(@reports, :tags => true), :prompt => "Choose a Report...",
         :onchange => "window.location.href = '/report/reports/' + this.options[this.selectedIndex].value")
     end
   end
