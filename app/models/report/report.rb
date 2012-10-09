@@ -17,6 +17,7 @@ class Report::Report < ActiveRecord::Base
   validates(:display_type, :presence => true)
   validate(:must_have_fields_unless_tally)
   validate(:name_unique_within_mission)
+  validate(:must_have_pri_grouping_if_sec_grouping)
   
   DISPLAY_TYPES = ["Table"]
   BAR_STYLES = ["Side By Side", "Stacked"]
@@ -280,5 +281,9 @@ class Report::Report < ActiveRecord::Base
     
     def name_unique_within_mission
       errors.add(:name, "must be unique") unless (self.class.find_all_by_mission_id_and_name(mission_id, name) - [self]).empty?
+    end
+    
+    def must_have_pri_grouping_if_sec_grouping
+      errors.add(:pri_grouping, "can't be blank if Grouping 2 is set.") if !pri_grouping && sec_grouping
     end
 end
