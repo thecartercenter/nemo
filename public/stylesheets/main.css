@@ -175,6 +175,7 @@ td#report_form h3 { margin-bottom: 10px; }
 td#report_form div.loader { float: left; margin-top: 8px; }
 td#report_form a#show_help { display: block; margin-bottom: 3px; float: left; }
 td#report_form #fields div.form_field_control a { font-size: 90%; }
+td#report_form div.loading_indicator img { margin-top: 8px; }
 
 /* report table */
 div#report_body div#row_count { margin-bottom: 5px; }

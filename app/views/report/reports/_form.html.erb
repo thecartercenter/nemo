@@ -18,11 +18,10 @@
   <%= form_field(f, :bar_style, :type => :radio_buttons, :options => Report::Report.bar_style_select_options) %>
   <%= form_field(f, :percent_type, :type => :select, :options => Report::Report.percent_type_select_options, :blank_text => "No Percentage") %>
   <div class="button_row">
-    <%= form_buttons do %>
-      <%= form_submit_button(f, :label => "Save", :id => "report_report_save", :multiple => true) %>
-      <%= form_submit_button(f, :label => "Preview", :id => "report_report_preview", :multiple => true) %>
+    <%= form_buttons(:loading_indicator => true) do %>
+      <%= form_submit_button(f, :label => "Run", :id => "report_report_run", :multiple => true) %>
+      <%= form_submit_button(f, :label => "Save Changes & Run", :id => "report_report_save", :multiple => true) %>
     <% end %>
-    <div class="loader" style="display: none">&nbsp;</div>
   </div>
   <div class="help" id="bottom_help">
     Click <strong>Save</strong> to save the report for future use. Click <strong>Preview</strong> 

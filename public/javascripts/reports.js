@@ -32,17 +32,16 @@
     });
     
     // hook up buttons and links
-    $('#report_report_save').click(function(){view(true); return false;});
-    $('#report_report_preview').click(function(){view(false); return false;});
+    $('#report_report_save').click(function(){submit_to_server({save: true}); return false;});
+    $('#report_report_run').click(function(){submit_to_server({save: false}); return false;});
     $('#edit_form_link').click(function(){report.toggle_form(); return false;});
     $('a#show_help').click(function(){report.toggle_help(); return false;});
     $('a.add_field').click(function(){add_field(); return false;});
     
-    // hook up important form controls to watch for changes
-    $('#report_report_aggregation_id').change(function(){form_changed("aggregation")});
-    $('#report_report_pri_grouping_attributes_form_choice').change(function(){form_changed("pri_grouping")});
-    $('#report_report_sec_grouping_attributes_form_choice').change(function(){form_changed("sec_grouping")});
-    $('#report_report_display_type').change(function(){form_changed("display_type")});
+    // hook up form controls to watch for changes
+    $('#report_form select').change(form_changed);
+    $("#report_form input[type='text']").keyup(form_changed);
+    $("#report_form input[type='checkbox'], #report_form input[type='radio']").click(form_changed);
 
     hookup_field_events();
     
@@ -53,7 +52,7 @@
     });
     
     // ensure the correct labels per display type
-    form_changed("_all");
+    //form_changed();
     
     // redraw report
     redraw();
@@ -92,19 +91,26 @@
   function add_field() {
     // copy the existing box and select the appropriate record
     $(FIELD_SELECTS_SELECTOR + ' > div:first').clone().appendTo(FIELD_SELECTS_SELECTOR);
-    $(FIELD_SELECTS_SELECTOR + ' > div:last select').val("");
+    var new_box = $(FIELD_SELECTS_SELECTOR + ' > div:last select');
+    
+    // blank out new box
+    new_box.val("");
+    
+    // hookup the events and trigger a change event on the new box
     hookup_field_events();
-    form_changed("fields");
+    new_box.trigger("change");
   }
   
   function remove_field(e) {
     var existing = $(FIELD_SELECTS_SELECTOR + " select");
-    // don't remove the last field
+    // don't remove the last field, just zero it out
     if (existing.length == 1)
       existing.val("");
     else
       $(e.target).parent().remove();
-    form_changed("fields");
+    
+    // trigger a change event on an existing field to keep things updated
+    existing.first().trigger("change");
   }
   
   // ensures the appropriate events are hooked up for all field dropdowns
@@ -112,10 +118,37 @@
     $(FIELD_SELECTS_SELECTOR + ' a.remove_field').unbind('click');
     $(FIELD_SELECTS_SELECTOR + ' a.remove_field').click(function(e) {remove_field(e); return false;});
     $(FIELD_SELECTS_SELECTOR + ' select').unbind('change');
-    $(FIELD_SELECTS_SELECTOR + ' select').change(function(){form_changed("fields");})
+    $(FIELD_SELECTS_SELECTOR + ' select').change(form_changed)
   }
   
-  function form_changed(src) {
+  // handles a change in the report form
+  // receives an optional jquery event object
+  // if no event object is given, assumes everything changed
+  function form_changed(event) {
+    
+    // define event sources that need special attention
+    var important_sources = ["aggregation", "fields", "pri_grouping", "sec_grouping", "display_type"];
+    
+    var src;
+    
+    // determine the source of the event by looking at the ID of the element
+    if (event) {
+      // check for important sources in the id
+      $.each(important_sources, function(i, cur_src) {
+        // if the current source matches the target element ID, we can set src and break out of the loop
+        if (event.target.id.match(new RegExp("_report_" + cur_src))) {
+          src = cur_src;
+          return false; // breaks the loop
+        }
+      })
+      
+      // if no important source match, use "other"
+      if (!src) src = "other";
+    
+    // if event wasn't passed in, we use the special src "_all"
+    } else
+      src = "_all";
+    
     // get the latest form params
     load_params_from_form(report.form);
     
@@ -182,6 +215,9 @@
     // show/hide bar style
     if (src == "display_type" || src == "sec_grouping" || src == "_all")
       $('div#bar_style')[report.form.display_type == "Bar Chart" && report.form.sec_grouping ? "show" : "hide"]();
+      
+    // show/hide save button
+    $('input#report_report_save')[save_required() ? "show" : "hide"]();
   }
   
   // shows/hides a select box and clears its value if hiding
@@ -282,6 +318,7 @@
     load_params_from_form(report.form);
   }
   
+  // DEPRECATED FOR NOW - going to try always sending to server
   // decides whether to contact the server and redraws the report
   // save - whether the changes should be saved or only displayed
   function view(save) {
@@ -304,7 +341,7 @@
     load_params_from_form(params_at_last_submit);
     
     // show the loading indicator
-    $("#report_form div.loader").show();
+    $("#report_form div.loading_indicator img").show();
     
     Utils.ajax_with_session_timeout_check({
       type: 'POST',
@@ -336,14 +373,14 @@
         redraw();
         
         // hide the loading indicator
-        $("#report_form div.loader").hide();
+        $("#report_form div.loading_indicator img").hide();
       },
       error: function(jqxhr, status, error) {
         // display error
         Utils.show_flash({type: "error", msg: "Error: " + error})
 
         // hide the loading indicator
-        $("#report_form div.loader").hide();
+        $("#report_form div.loading_indicator img").hide();
       }
     })
   }

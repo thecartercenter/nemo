@@ -135,9 +135,10 @@ module ApplicationHelper
     f ? f.submit(label, options) : submit_tag(label, options)
   end
   
-  def form_buttons(&block)
+  def form_buttons(options = {}, &block)
     buttons = capture{block.call}
-    content_tag("div", :class => "form_buttons"){buttons + tag("br")}
+    load_ind = options[:loading_indicator] ? capture{loading_indicator} : ''
+    content_tag("div", :class => "form_buttons"){buttons + load_ind + tag("br")}
   end
   
   # renders the standard 'required' symbol, which is an asterisk
