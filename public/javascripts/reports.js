@@ -369,8 +369,9 @@
         } else
           Utils.clear_flash()
         
-        // always redraw on successful server request
+        // always redraw report and update form on successful server request
         redraw();
+        form_changed();
         
         // hide the loading indicator
         $("#report_form div.loading_indicator img").hide();
