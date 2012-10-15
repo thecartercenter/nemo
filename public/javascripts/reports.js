@@ -9,6 +9,8 @@
     "Maximum": ["integer", "decimal", "text", "datetime", "date", "time"],
     "Sum": ["integer", "decimal"]
   }
+  var DEFAULT_BAR_COLORS = ["Green", "Gold", "DarkOrange", "Red", "Blue", "Indigo", "Bisque", "LightGreen", "Sienna", "LightBlue"];
+  var NULL_BAR_COLOR = "Silver";
   var HELP_WIDTH = 200;
   var params_at_last_save = {};
   var params_at_last_submit = {};
@@ -428,15 +430,27 @@
     // add first column (pri_grouping)
     data.addColumn('string', 'main');
     
+    // make empty series array to hold colors
+    var series = [];
+    var color_counter = 0;
+    
     // add rest of columns (sec_grouping)
-    $(report.obj.headers.col).each(function(idx, ch){data.addColumn('number', ch.name || "[Null]");})
+    $(report.obj.headers.col).each(function(idx, ch){
+      
+      // add the next default color, or gray if ch is blank
+      series.push({color: ch.name ? DEFAULT_BAR_COLORS[color_counter++] : NULL_BAR_COLOR});
+      
+      // add the column header
+      data.addColumn('number', ch.name || "[Null]");
+    })
     
     $(report.obj.headers.row).each(function(r, rh){
       // build the row
       var row = [rh.name || "[Null]"];
+
+      // add cells to row and add row to obj
       $(report.obj.headers.col).each(function(c, ch) {row.push(report.obj.data[r][c] || 0);});
-      // add it
-      data.addRow(row)
+      data.addRow(row);
     });
 
     var cont_height = Math.max(200, Math.min(800, report.obj.headers.row.length * 40));
@@ -447,7 +461,8 @@
       vAxis: {title: report.obj.header_titles.row},
       hAxis: {title: report.form.aggregation},
       chartArea: {top: 0, left: 150, height: cont_height - 50, width: cont_width - 300},
-      isStacked: !!$('#report_report_bar_style_stacked').attr("checked")
+      isStacked: !!$('#report_report_bar_style_stacked').attr("checked"),
+      series: series
     };
 
     var chart = new google.visualization.BarChart($('#report_body')[0]);
