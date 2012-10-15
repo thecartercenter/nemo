@@ -49,7 +49,10 @@ class Response < ActiveRecord::Base
       Search::Qualifier.new(:label => "submitter", :col => "users.name", :assoc => :users, :partials => true),
       Search::Qualifier.new(:label => "answer", :col => "answers.value", :assoc => :answers, :partials => true, :default => true),
       Search::Qualifier.new(:label => "source", :col => "responses.source"),
-      Search::Qualifier.new(:label => "date", :col => "DATE(CONVERT_TZ(responses.created_at, 'UTC', '#{Time.zone.mysql_name}'))")
+      Search::Qualifier.new(:label => "date", :col => "DATE(CONVERT_TZ(responses.created_at, 'UTC', '#{Time.zone.mysql_name}'))"),
+
+      # this qualifier matches responses that have answers to questions with the given option set
+      Search::Qualifier.new(:label => "option-set", :col => "option_sets.name", :assoc => :option_sets),
     ]
   end
   
