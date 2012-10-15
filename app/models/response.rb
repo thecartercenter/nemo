@@ -55,8 +55,10 @@ class Response < ActiveRecord::Base
       Search::Qualifier.new(:label => "option-set", :col => "option_sets.name", :assoc => :option_sets),
 
       # this qualifier matces responses that have answers to questions with the given type
-      Search::Qualifier.new(:label => "question-type", :col => "question_types.long_name", :assoc => :question_types)
+      Search::Qualifier.new(:label => "question-type", :col => "question_types.long_name", :assoc => :question_types),
 
+      # this qualifier matces responses that have answers to the given question
+      Search::Qualifier.new(:label => "question", :col => "questions.code", :assoc => :questions)
     ]
   end
   
