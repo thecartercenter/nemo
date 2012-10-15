@@ -43,8 +43,8 @@ class Response < ActiveRecord::Base
   # and whether they are searchable by a regular expression
   def self.search_qualifiers
     [
-      Search::Qualifier.new(:label => "formname", :col => "forms.name", :assoc => :forms),
-      Search::Qualifier.new(:label => "formtype", :col => "form_types.name", :assoc => :form_types),
+      Search::Qualifier.new(:label => "form", :col => "forms.name", :assoc => :forms),
+      Search::Qualifier.new(:label => "form-type", :col => "form_types.name", :assoc => :form_types),
       Search::Qualifier.new(:label => "reviewed", :col => "responses.reviewed", :subst => {"yes" => "1", "no" => "0"}),
       Search::Qualifier.new(:label => "submitter", :col => "users.name", :assoc => :users, :partials => true),
       Search::Qualifier.new(:label => "answer", :col => "answers.value", :assoc => :answers, :partials => true, :default => true),
@@ -53,11 +53,15 @@ class Response < ActiveRecord::Base
 
       # this qualifier matches responses that have answers to questions with the given option set
       Search::Qualifier.new(:label => "option-set", :col => "option_sets.name", :assoc => :option_sets),
+
+      # this qualifier matces responses that have answers to questions with the given type
+      Search::Qualifier.new(:label => "question-type", :col => "question_types.long_name", :assoc => :question_types)
+
     ]
   end
   
   def self.search_examples
-    ['submitter:"john smith"', 'formname:polling', 'reviewed:yes']
+    ['submitter:"john smith"', 'form:polling', 'reviewed:yes', 'date < 2010-03-15']
   end
 
   def self.create_from_xml(xml, user, mission)
