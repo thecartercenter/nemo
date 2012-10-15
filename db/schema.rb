@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121008153636) do
+ActiveRecord::Schema.define(:version => 20121015164830) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -24,7 +24,9 @@ ActiveRecord::Schema.define(:version => 20121008153636) do
     t.datetime "datetime_value"
   end
 
+  add_index "answers", ["option_id"], :name => "index_answers_on_option_id"
   add_index "answers", ["questioning_id"], :name => "index_answers_on_questioning_id"
+  add_index "answers", ["response_id"], :name => "index_answers_on_response_id"
 
   create_table "assignments", :force => true do |t|
     t.integer  "mission_id"
@@ -66,6 +68,7 @@ ActiveRecord::Schema.define(:version => 20121008153636) do
   end
 
   add_index "choices", ["answer_id"], :name => "index_choices_on_answer_id"
+  add_index "choices", ["option_id"], :name => "index_choices_on_option_id"
 
   create_table "conditions", :force => true do |t|
     t.integer  "questioning_id"
@@ -98,6 +101,7 @@ ActiveRecord::Schema.define(:version => 20121008153636) do
     t.integer  "responses_count",    :default => 0
   end
 
+  add_index "forms", ["form_type_id"], :name => "index_forms_on_form_type_id"
   add_index "forms", ["mission_id"], :name => "index_forms_on_mission_id"
 
   create_table "missions", :force => true do |t|
@@ -172,6 +176,8 @@ ActiveRecord::Schema.define(:version => 20121008153636) do
   end
 
   add_index "questions", ["mission_id"], :name => "index_questions_on_mission_id"
+  add_index "questions", ["option_set_id"], :name => "index_questions_on_option_set_id"
+  add_index "questions", ["question_type_id"], :name => "index_questions_on_question_type_id"
 
   create_table "report_aggregations", :force => true do |t|
     t.string   "name"
@@ -236,6 +242,7 @@ ActiveRecord::Schema.define(:version => 20121008153636) do
     t.datetime "updated_at"
     t.boolean  "groupable",   :default => false
     t.string   "data_type"
+    t.string   "value_code"
   end
 
   create_table "responses", :force => true do |t|
@@ -250,6 +257,7 @@ ActiveRecord::Schema.define(:version => 20121008153636) do
 
   add_index "responses", ["form_id"], :name => "index_responses_on_form_id"
   add_index "responses", ["mission_id"], :name => "index_responses_on_mission_id"
+  add_index "responses", ["user_id"], :name => "index_responses_on_user_id"
 
   create_table "roles", :force => true do |t|
     t.string   "name"
@@ -296,6 +304,8 @@ ActiveRecord::Schema.define(:version => 20121008153636) do
     t.integer  "obj_id"
     t.string   "language"
   end
+
+  add_index "translations", ["fld", "class_name", "obj_id", "language"], :name => "index_translations_on_fld_and_class_name_and_obj_id_and_language"
 
   create_table "user_batches", :force => true do |t|
     t.text     "users"

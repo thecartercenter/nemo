@@ -60,7 +60,8 @@ module ReportTestHelper
 
   def create_response(params)
     ans = params.delete(:answers) || {}
-    r = Response.new({:reviewed => true, :form => @forms[:f] || create_form(:name => "f"), :user => user, :mission => mission}.merge(params))
+    params[:form] ||= @forms[:f] || create_form(:name => "f")
+    r = Response.new({:reviewed => true, :user => user, :mission => mission}.merge(params))
     ans.each_pair do |code,value|
       qing = @qs[code].questionings.first
       case qing.question.type.name

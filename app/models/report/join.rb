@@ -61,7 +61,7 @@ class Report::Join
     :question_trans => new(
       :name => :question_trans,
       :dependencies => :questions,
-      :sql => "JOIN translations question_trans ON (question_trans.obj_id = questions.id 
+      :sql => "INNER JOIN translations question_trans ON (question_trans.obj_id = questions.id 
         AND question_trans.fld = 'name' AND question_trans.class_name = 'Question' 
         AND question_trans.language = 'eng')"
     ),

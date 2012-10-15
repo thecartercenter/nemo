@@ -95,6 +95,40 @@ class Report::TallyReportTest < ActiveSupport::TestCase
                      %w(Opt2  1   2),
                      %w(Opt3  1   ) + [""])
   end
+  
+  test "group by question and answer with form and option_set filter" do
+    yes_no = create_opt_set(%w(Yes No))
+    good_bad = create_opt_set(%w(Good Bad))
 
+    form1 = create_form(:name => "Form 1")
+    q1 = create_question(:code => "satisfactory", :type => "select_one", :forms => [form1])
+    q2 = create_question(:code => "openontime", :type => "select_one", :forms => [form1])
+    q3 = create_question(:code => "hotdogs", :type => "integer", :forms => [form1])
+    1.times{create_response(:form => form1, :answers => {:satisfactory => "Yes", :openontime => "Yes", :hotdogs => "2"})}
+    5.times{create_response(:form => form1, :answers => {:satisfactory => "Yes", :openontime => "No", :hotdogs => "2"})}
+    3.times{create_response(:form => form1, :answers => {:satisfactory => "No", :openontime => "Yes", :hotdogs => "2"})}
+    2.times{create_response(:form => form1, :answers => {:satisfactory => "No", :openontime => "No", :hotdogs => "2"})}
+
+    form2 = create_form(:name => "Form 2")
+    q4 = create_question(:code => "awesome", :type => "select_one")
+    3.times{create_response(:form => form2, :answers => {:awesome => "Yes"})}
+    2.times{create_response(:form => form2, :answers => {:awesome => "No"})}
+
+    form3 = create_form(:name => "Form 3")
+    q4 = create_question(:code => "happy", :type => "select_one")
+    3.times{create_response(:form => form3, :answers => {:happy => "Yes"})}
+    2.times{create_response(:form => form3, :answers => {:happy => "No"})}
+
+    r = create_report(:agg => "Tally")
+    r.filter = Search::Search.new(:class_name => "Response", :str => "option-set:YesNo formname:\"Form 1\", \"Form 2\"")
+    r.pri_grouping = Report::ByAttribGrouping.create(:attrib => Report::ResponseAttribute.find_by_name("Question Title"))
+    r.sec_grouping = Report::ByAttribGrouping.create(:attrib => Report::ResponseAttribute.find_by_name("Answer (Option Name)"))
+    
+    assert_report(r, %w(             Yes No ), 
+                     %w(awesome        3  2 ), 
+                     %w(openontime     4  7 ),
+                     %w(satisfactory   6  5 )) 
+  end
+  
 
 end
