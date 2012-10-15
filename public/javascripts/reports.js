@@ -389,7 +389,11 @@
   function redraw() {
     // load current settings from form
     load_params_from_form(report.form);
-  
+    
+    // update the title and time
+    set_title();
+    clear_info();
+    
     // if report has errors, don't show anything
     if (report.obj.errors) {
       $('#report_body').empty().text("Could not display report due to an error.")
@@ -403,15 +407,15 @@
       $('#report_body').empty().text("No matching data were found. Try adjusting the filter parameter.");
 
     } else {
+      
+      set_time();
+      
       // draw the appropriate report type
       switch (report.form.display_type) {
         case "Table": draw_table(); break;
         case "Bar Chart": draw_bar_chart(); break;
       }
     }
-
-    // update the title
-    set_title();
   }
   
   // draws the report as a bar chart (uses google viz api)
@@ -592,7 +596,7 @@
     $('#report_body').empty()
     
     // add a row count
-    $('#report_body').append($("<div>").attr("id", "row_count").text("Total Rows: " + report.obj.data.length));
+    $('#report_info').append($("<div>").attr("id", "row_count").text("Total Rows: " + report.obj.data.length));
     
     // add the table
     $('#report_body').append(tbl);
@@ -613,6 +617,16 @@
   function set_title() {
     // set title
     $("#content h1").text(report.form.name);
+  }
+  
+  // clears the info row
+  function clear_info() {
+    $("#report_info").html("");
+  }
+  
+  // updates the last run time
+  function set_time() {
+    $("#report_info").append($("<div>").attr("id", "last_run_time").text("Time: " + report.obj.last_run_time));
   }
   
   // formats a given fraction as a percentage

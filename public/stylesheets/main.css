@@ -177,7 +177,9 @@ td#report_form a#show_help { display: block; margin-bottom: 3px; float: left; }
 td#report_form #fields div.form_field_control a { font-size: 90%; }
 td#report_form div.loading_indicator img { margin-top: 8px; }
 
-/* report table */
+/* report info & body */
+div#report_info div { display: inline-block; border-left: 1px solid #ccc; padding: 0 10px; }
+div#report_info div:first-child { border: none; padding-left: 0; }
 div#report_body div#row_count { margin-bottom: 5px; }
 div#report_body table { }
 div#report_body table td, div#report_body table th { padding: 2px; border: 1px solid #ddd; }

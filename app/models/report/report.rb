@@ -197,7 +197,8 @@ class Report::Report < ActiveRecord::Base
      :aggregation => aggregation ? aggregation.name : nil,
      :grand_total => @grand_total,
      :field_choices => Report::Field.choices(mission),
-     :errors => errors.full_messages.join(", ")
+     :errors => errors.full_messages.join(", "),
+     :last_run_time => Time.zone.now.to_s(:std_datetime)
     }.to_json
   end
   
