@@ -1,23 +1,24 @@
 module ReportTestHelper
 
   def prep_objects
-    Report::ResponseAttribute.generate
-    Report::Aggregation.generate
     Role.generate
+    
+    # clear out tables
     [Question, Questioning, Answer, Form, User, Mission].each{|k| k.delete_all}
-    @qs = {}; @rs = []; @forms = {}; @opt_sets = {}; @users = {}; @missions = {}
+    
+    # create hashes to store generated objs
+    @questions, @forms, @option_sets, @users, @missions = {}, {}, {}, {}, {}
   end
   
   def create_report(options)
-    agg = Report::Aggregation.find_by_name(options.delete(:agg))
-    Report::Report.create!(options.merge(:name => "TheReport", :aggregation => agg, :mission => mission))
+    Report::Report.create!({:name => "TheReport", :mission => mission, :question_labels => :codes}.merge(options))
   end
 
   def create_opt_set(options)
     os = OptionSet.new(:name => options.join, :ordering => "value_asc", :mission => mission)
     options.each_with_index{|o,i| os.option_settings.build(:option => Option.new(:value => i+1, :name_eng => o))}
     os.save!
-    @opt_sets[options.join("_").downcase.to_sym] = os
+    @option_sets[options.join("_").downcase.to_sym] = os
   end
 
   def create_form(params)
@@ -48,14 +49,14 @@ module ReportTestHelper
       :question_type_id => QuestionType.find_by_name(params[:type]).id)
   
     # set the option set if type is select_one or select_multiple
-    q.option_set = params[:option_set] || @opt_sets.first[1] if %w(select_one select_multiple).include?(params[:type])
+    q.option_set = params[:option_set] || @option_sets.first[1] if %w(select_one select_multiple).include?(params[:type])
   
     # create questionings for each form
     params[:forms].each{|f| q.questionings.build(:form => f)}
   
     # save and store in hash
     q.save!
-    @qs[params[:code].to_sym] = q
+    @questions[params[:code].to_sym] = q
   end
 
   def create_response(params)
@@ -79,7 +80,6 @@ module ReportTestHelper
       end
     end
     r.save!
-    @rs << r
     r
   end
 

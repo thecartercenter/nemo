@@ -7,7 +7,7 @@ class Report::TallyReportTest < ActiveSupport::TestCase
   setup do
     prep_objects
   end
-  
+    
   test "no groupings" do
     # create question and two responses
     create_question(:code => "num0", :type => "integer")
