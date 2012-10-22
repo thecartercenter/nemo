@@ -138,7 +138,7 @@ module ReportTestHelper
     # add the column total row if applicable
     actual += [["TTL"] + report.data.totals[:col] + [report.data.totals[:grand]]] if report.data.totals
     
-    # convert everything to string
-    actual.collect{|row| row.collect{|cell| cell.to_s}}
+    # convert everything to string, except convert "" to "_"
+    actual.collect{|row| row.collect{|cell| cell.to_s == "" ? "_" : cell.to_s}}
   end
 end
