@@ -10,8 +10,10 @@ module ReportTestHelper
     @questions, @forms, @option_sets, @users, @missions = {}, {}, {}, {}, {}
   end
   
-  def create_report(options)
-    Report::Report.create!({:name => "TheReport", :mission => mission, :question_labels => :codes}.merge(options))
+  def create_report(klass, options)
+    report = "Report::#{klass}Report".constantize.new_with_default_name(mission)
+    report.update_attributes!({:name => "TheReport"}.merge(options))
+    return report
   end
 
   def create_opt_set(options)
@@ -64,7 +66,7 @@ module ReportTestHelper
     params[:form] ||= @forms[:f] || create_form(:name => "f")
     r = Response.new({:reviewed => true, :user => user, :mission => mission}.merge(params))
     ans.each_pair do |code,value|
-      qing = @qs[code].questionings.first
+      qing = @questions[code].questionings.first
       case qing.question.type.name
       when "select_one"
         # create answer with option_id
@@ -88,20 +90,55 @@ module ReportTestHelper
   end
 
   def assert_report(report, *expected)
+    # reload the report so we know it's saving properly
+    report.reload
+    
+    # run it
     report.run
+
+    # check for report errors
+    raise "Report errors: " + report.errors.full_messages.join(", ") unless report.errors.empty?
+
+    # get the actual
+    actual = get_actual(report)
+
+    # if nil is expected, compute the right expected value
     if expected.first.nil?
-      assert_nil(report.data) 
-    else
-      raise "Report errors: " + report.errors.full_messages.join(", ") unless report.errors.empty?
-      raise "Missing headers" if report.headers.nil? || report.headers[:col].nil? || report.headers[:row].nil?
-      raise "Bad data array" if report.data.nil? || report.data.empty?
-      actual = [report.headers[:col].collect{|h| h[:name]}]
-      # generate the expected value
-      report.data.each_with_index do |row, i| 
-        rh = report.headers[:row][i] ? Array.wrap(report.headers[:row][i][:name]) : []
-        actual += [rh + row.collect{|x| x.to_s}]
-      end
-      assert_equal(expected, actual)
+      expected = report.data.totals ? [["TTL"], ["TTL", "0"]] : []
     end
+
+    # sort and compare
+    assert_equal(expected, actual)
+  end
+  
+  def assert_report_empty(report)
+    assert_report(report, *expected)
+  end
+  
+  def get_actual(report)
+    # get the first row of the 'actual' table
+    actual = [report.header_set[:col].collect{|cell| cell.name}]
+    
+    # add the row total column if applicable
+    actual[0] << "TTL" if report.data.totals
+    
+    # get the rest of the 'actual' table
+    report.data.rows.each_with_index do |row, i|
+      header_cell = report.header_set[:row].cells[i]
+      rh = header_cell ? [header_cell.name] : []
+      actual_row = rh + row
+      
+      # add the row total if applicable
+      actual_row << report.data.totals[:row][i] if report.data.totals
+      
+      # add to row to the matrix
+      actual += [actual_row]
+    end
+
+    # add the column total row if applicable
+    actual += [["TTL"] + report.data.totals[:col] + [report.data.totals[:grand]]] if report.data.totals
+    
+    # convert everything to string
+    actual.collect{|row| row.collect{|cell| cell.to_s}}
   end
 end

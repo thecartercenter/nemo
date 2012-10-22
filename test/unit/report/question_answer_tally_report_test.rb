@@ -8,7 +8,7 @@ class Report::QuestionAnswerTallyReportTest < ActiveSupport::TestCase
     prep_objects
   end
 
-  test "Percentages of Yes and No for all Yes-No questions" do
+  test "Counts of Yes and No for all Yes-No questions" do
     # create several yes/no questions and responses for them
     create_opt_set(%w(Yes No))
     3.times{|i| create_question(:code => "yn#{i}", :name_eng => "Yes No Question #{i+1}", :type => "select_one")}
@@ -18,17 +18,32 @@ class Report::QuestionAnswerTallyReportTest < ActiveSupport::TestCase
     4.times{create_response(:answers => {:yn0 => "No", :yn1 => "Yes", :yn2 => "Yes"})}
     
     # create report with question label 'code'
-    report = create_report(QuestionAnswerTallyReport, :option_set => @option_sets[:Yes_No], :question_labels => :codes)
+    report = create_report("QuestionAnswerTally", :option_set => @option_sets[:yes_no], :question_labels => :codes)
     
-    # test
-    assert_report(report, %w(Yes No),
-                    %w(   yn0  6  4),
-                    %w(   yn1  7  3),
-                    %w(   yn2  8  2))
+    # test                   
+    assert_report(report, %w(     Yes No TTL ),
+                          %w( yn0   6  4  10 ),
+                          %w( yn1   7  3  10 ),
+                          %w( yn2   8  2  10 ),
+                          %w( TTL  21  9  30 ))
   end
-
+  
+  test "Counts of Yes and No for empty result" do
+    # create several option sets but only responses for the last one
+    create_opt_set(%w(Yes No))
+    create_opt_set(%w(Low High))
+    create_question(:code => "yn", :type => "select_one", :option_set => @option_sets[:yes_no])
+    create_question(:code => "lh", :type => "select_one", :option_set => @option_sets[:low_high])
+    4.times{create_response(:answers => {:lh => "Low"})}
+    
+    # create report
+    report = create_report("QuestionAnswerTally", :option_set => @option_sets[:yes_no])
+    
+    # ensure no data
+    assert_report(report, nil)
+  end
+      
   # try it with specific questions instead of option set
-  # try it with the zero/nonzero calculation
   # try it with filter
-  # try it with missions
+  # try it with the zero/nonzero calculation
 end

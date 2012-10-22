@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121018183850) do
+ActiveRecord::Schema.define(:version => 20121018184503) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -178,6 +178,30 @@ ActiveRecord::Schema.define(:version => 20121018183850) do
   add_index "questions", ["mission_id"], :name => "index_questions_on_mission_id"
   add_index "questions", ["option_set_id"], :name => "index_questions_on_option_set_id"
   add_index "questions", ["question_type_id"], :name => "index_questions_on_question_type_id"
+
+  create_table "report_reports", :force => true do |t|
+    t.integer  "mission_id"
+    t.string   "type"
+    t.string   "name"
+    t.boolean  "saved",                :default => false
+    t.integer  "filter_id"
+    t.integer  "grouping1_id"
+    t.integer  "grouping2_id"
+    t.integer  "aggregation_id"
+    t.string   "omnibus_calculation"
+    t.integer  "option_set_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.datetime "viewed_at"
+    t.integer  "view_count",           :default => 0
+    t.string   "display_type",         :default => "Table"
+    t.string   "bar_style",            :default => "Side By Side"
+    t.boolean  "unreviewed",           :default => false
+    t.string   "question_labels",      :default => "Code"
+    t.boolean  "show_question_labels", :default => true
+    t.string   "percent_type"
+    t.boolean  "unique_rows"
+  end
 
   create_table "responses", :force => true do |t|
     t.integer  "form_id"
