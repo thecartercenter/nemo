@@ -7,11 +7,12 @@ class OptionSet < ActiveRecord::Base
   has_many(:questions, :inverse_of => :option_set)
   has_many(:questionings, :through => :questions)
   
-  validates(:name, :presence => true, :uniqueness => true)
+  validates(:name, :presence => true)
   validates(:ordering, :presence => true)
   validates_associated(:option_settings)
   validate(:at_least_one_option)
   validate(:unique_values)
+  validate(:name_unique_per_mission)
   
   before_destroy(:check_assoc)
   
@@ -93,5 +94,8 @@ class OptionSet < ActiveRecord::Base
       if values.uniq.size != values.size
         errors.add(:base, "Two or more of the options you've chosen have the same numeric value.")
       end
+    end
+    def name_unique_per_mission
+      errors.add(:name, "must be unique") if self.class.for_mission(mission).where(:name => name).count > 0
     end
 end
