@@ -36,4 +36,8 @@ class Report::Data
       end
     end
   end
+  
+  def as_json(options = {})
+    {:rows => rows, :totals => @totals}
+  end 
 end

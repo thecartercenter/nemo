@@ -4,13 +4,13 @@ class Report::TallyReport < Report::Report
     # extracts the row header values from the db_result object
     def get_row_header
       hashes = @db_result.extract_unique_tuples("question").collect{|tuple| {:name => tuple[0]}}
-      Report::Header.new(hashes)
+      Report::Header.new(:title => header_title(:row), :cells => hashes)
     end
   
     # extracts the col header values from the db_result object
     def get_col_header
       hashes = @db_result.extract_unique_tuples("answer_name", "answer_value").collect{|tuple| {:name => tuple[0], :sort_value => tuple[1]}}
-      Report::Header.new(hashes)
+      Report::Header.new(:title => header_title(:col), :cells => hashes)
     end
 
     # processes a row from the db_result by adding the contained data to the result

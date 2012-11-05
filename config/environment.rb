@@ -20,3 +20,6 @@ Time::DATE_FORMATS[:javarosa_time] = "%H%M"
 
 # ignore Tableau temp tables when dumping schema
 ActiveRecord::SchemaDumper.ignore_tables = [/^#Tableau/]
+
+# don't put obj name in json dumps
+ActiveRecord::Base.include_root_in_json = false

@@ -36,3 +36,33 @@ div.error { background-color: #d02000; }
 
 /* hide printable things */
 .printable { display: none; }
+
+/* report view */
+.report_reports_new h1#title, .report_reports_show h1#title { float: left; }
+#report_load_ind { float: left; margin: 10px 0 0 10px; }
+#report_top_links { clear: both; }
+#report_body { float: left; clear: both; }
+#report_links { float: left; background-color: #eee; padding: 10px; margin: 0 0 0 10px; border: 1px solid #ddd; }
+#report_links a { display: block; }
+
+/* report form */
+div.report_edit_dialog { width: 600px; height: 451px; }
+div.report_edit_pane { width: 600px; height: 400px; }
+div.report_edit_pane div#question_select { height: 200px; width: 300px; overflow: auto; margin-left: 25px; background-color: #ddd; border: 1px solid #888; padding: 5px; }
+div.report_edit_pane label { display: inline-block; }
+div.report_edit_pane input { display: inline-block; vertical-align: top; }
+div.report_edit_pane#report_type_pane label { margin: 0 0 0 10px; }
+div.report_edit_pane#report_type_pane ul, div.report_edit_pane#report_type_pane .ex_lbl { color: #888; }
+div.report_edit_pane#report_type_pane ul { line-height: 100%; }
+div.report_edit_dialog .buttons { text-align: right; border-top: 1px solid #888; padding-top: 10px; }
+div.report_edit_dialog .buttons a { display: inline-block; margin: 0 0 0 10px; padding: 10px; font-size: 120%; font-weight: bold; width: 75px; text-align: center; 
+    background-color: #ddd; border: 1px solid #888; color: #444; text-decoration: none; }
+
+#omnibus_calculation_wrp { margin-bottom: 5px; }
+#q_sel_type_questions_wrp { margin: 5px 0 0 0; }
+#q_sel_type_option_set_wrp { margin: 10px 0 0 0; }
+label[for='q_sel_type_questions'] { margin-left: 10px; }
+label[for='q_sel_type_option_set'] { margin-left: 10px; }
+select#option_set { margin-left: 25px; }
+#report_title { margin-top: 10px; width: 300px; }
+.error_box { margin: 0 0 10px 0; color: White; background-color: #d02000; padding: 3px; display: none; font-weight: bold; }

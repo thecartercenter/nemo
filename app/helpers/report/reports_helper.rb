@@ -3,7 +3,7 @@ module Report::ReportsHelper
     links = [link_to_if_auth("Create new report", new_report_report_path, "report_reports#create")]
   end
   def report_reports_index_fields
-    %w[title display_type last_viewed views actions]
+    %w[title last_viewed views actions]
   end
   def format_report_reports_field(report, field)
     case field
@@ -11,7 +11,7 @@ module Report::ReportsHelper
     when "last_viewed" then report.viewed_at && time_ago_in_words(report.viewed_at) + " ago"
     when "views" then report.view_count
     when "actions"
-      action_links(report, :destroy_warning => "Are you sure you want to delete the report '#{report.name}'?")
+      action_links(report, :destroy_warning => "Are you sure you want to delete the report '#{report.name}'?", :exclude => [:edit])
     else report.send(field)
     end
   end

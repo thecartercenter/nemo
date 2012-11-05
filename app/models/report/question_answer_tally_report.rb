@@ -2,6 +2,14 @@ class Report::QuestionAnswerTallyReport < Report::TallyReport
   belongs_to(:option_set)
   has_many(:calculations, :class_name => "Report::Calculation", :foreign_key => "report_report_id", :dependent => :destroy, :autosave => true)
 
+  accepts_nested_attributes_for(:calculations, :allow_destroy => true)
+
+  def as_json(options = {})
+    h = super(options)
+    h[:calculations] = calculations
+    h
+  end
+
   protected
   
     def prep_relation(rel)
@@ -63,6 +71,10 @@ class Report::QuestionAnswerTallyReport < Report::TallyReport
       rel = add_joins_to_relation(rel, joins)
       
       return rel
+    end
+    
+    def header_title(which)
+      which == :row ? "Questions" : "Answers"
     end
     
   private

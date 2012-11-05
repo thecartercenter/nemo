@@ -1,17 +1,41 @@
 require 'mission_based'
 class Report::Report < ActiveRecord::Base
   include MissionBased
-
+  
+  attr_accessible :type, :name, :omnibus_calculation, :option_set_id, :display_type, :bar_style, :unreviewed, 
+    :question_labels, :show_question_labels, :percent_type, :unique_rows, :calculations_attributes, :calculations, :option_set, :mission_id, :mission
+  
   belongs_to(:filter, :class_name => "Search::Search", :autosave => true, :dependent => :destroy)
 
   scope(:by_viewed_at, order("viewed_at desc"))
   scope(:by_popularity, order("view_count desc"))
 
+  attr_accessor :just_created
   attr_reader :header_set, :data, :totals
 
   # validation is all handled client-side
   
   @@per_page = 20
+  
+  PERCENT_TYPES = [
+    {:name => "", :label => "No Percentage"}, 
+    {:name => :overall, :label => "Percentage Overall"}, 
+    {:name => :by_row, :label => "Percentage By Row"},
+    {:name => :by_col, :label => "Percentage By Column"}
+  ]
+  
+  # HACK TO GET STI TO WORK WITH ACCEPTS_NESTED_ATTRIBUTES_FOR
+  class << self
+    def new_with_cast(*a, &b)
+      if (h = a.first).is_a? Hash and (type = h[:type] || h['type']) and (klass = type.constantize) != self
+        raise "wtF hax!!"  unless klass < self  # klass should be a descendant of us
+        return klass.new(*a, &b)
+      end
+
+      new_without_cast(*a, &b)
+    end
+    alias_method_chain :new, :cast
+  end
   
   # generates a new report with a default name that won't collide with any existing names, 
   # in case the user decides not to choose a descriptive name
@@ -31,11 +55,6 @@ class Report::Report < ActiveRecord::Base
     suffix = next_num == 1 ? "" : " #{next_num}"
 
     for_mission(mission).new(:name => "#{prefix}#{suffix}")
-  end
-
-  # whether or not the report has been run yet
-  def has_run?
-    @has_run ||= !new_record?
   end
   
   # runs the report by populating header_set, data, and totals objects
@@ -72,6 +91,16 @@ class Report::Report < ActiveRecord::Base
     self.viewed_at = Time.now
     self.view_count += 1
     save(:validate => false)
+  end
+  
+  def as_json(options = {})
+    h = super(options)
+    h[:new_record] = new_record?
+    h[:just_created] = just_created
+    h[:type] = type
+    h[:data] = @data
+    h[:headers] = @header_set ? @header_set.headers : {}
+    h
   end
   
   protected

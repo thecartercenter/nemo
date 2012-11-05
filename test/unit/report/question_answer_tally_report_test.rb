@@ -49,7 +49,7 @@ class Report::QuestionAnswerTallyReportTest < ActiveSupport::TestCase
                           %w( hl1    4   6   _  _  10 ),
                           %w( yn0    _   _   6  4  10 ),
                           %w( yn1    _   _   7  3  10 ),
-                          %w( TTL    4   6  13  7  40 ))
+                          %w( TTL    4   6  13  7  30 ))
   end
   
   test "Counts of Yes and No for empty result" do
@@ -84,7 +84,7 @@ class Report::QuestionAnswerTallyReportTest < ActiveSupport::TestCase
       Report::ZeroNonzeroCalculation.new(:arg1 => @questions[:int]),
       Report::ZeroNonzeroCalculation.new(:arg1 => @questions[:dec])
     ])
-
+    
     # test                   
     assert_report(report, %w(     Zero Non-Zero Yes No TTL ),
                           %w( dec    6        4   _  _  10 ),

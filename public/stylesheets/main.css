@@ -24,6 +24,7 @@ div.important { font-weight: bold; color: Black; }
 div.boilerplate { display: none; }
 div.dialog { position: absolute; background-color: white; border: 1px solid #555; padding: 10px; }
 div.dialog h2 { margin: 0 0 10px 0; }
+br.clearer { clear: both; }
 
 /* loading indicator */
 div.loader { background: url('/images/loader.gif') no-repeat; padding-left: 20px; }
@@ -158,24 +159,6 @@ form.user_form textarea#user_notes { width: 240px; height: 100px; }
 
 /* report index */
 .report_reports_index .title_col { min-width: 200px; }
-
-/* report form */
-td#report_form { position: relative; z-index: 2; padding-right: 10px; }
-td#report_form #report_report_filter_attributes_str { width: 240px; }
-td#report_form div#search_examples { display: none; }
-td#report_form div.help { float: left; width: 260px; clear: left; color: #666; line-height: 12pt; display: none; }
-td#report_form div#top_help { margin-bottom: 3px; }
-td#report_form div#bottom_help { margin-top: 6px; }
-td#report_form div.form_field { width: 260px; clear: left; }
-td#report_form label.main { display: block; color: #666; font-size: 8pt; float: none; width: 240px; }
-td#report_form div.form_field_control { min-height: 0; float: none; border: none; padding-top: 0; width: 240px; }
-td#report_form div.form_field_details { float: right; width: 200px; display: none; color: #666; margin-top: -20px; }
-td#report_form div#required_tip { display: none; }
-td#report_form h3 { margin-bottom: 10px; }
-td#report_form div.loader { float: left; margin-top: 8px; }
-td#report_form a#show_help { display: block; margin-bottom: 3px; float: left; }
-td#report_form #fields div.form_field_control a { font-size: 90%; }
-td#report_form div.loading_indicator img { margin-top: 8px; }
 
 /* report info & body */
 div#report_info div { display: inline-block; border-left: 1px solid #ccc; padding: 0 10px; }

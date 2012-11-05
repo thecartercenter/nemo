@@ -1,4 +1,7 @@
-var ELMO = {};
+// namespaces
+var ELMO = {Report: {}, Control: {}};
+var Sassafras = {};
+
 ELMO.LAT_LNG_REGEXP = /^(-?\d+(\.\d+)?)\s*[,;:\s]\s*(-?\d+(\.\d+)?)/
 
 // pads strings to the left
@@ -23,3 +26,23 @@ $(document).ready(function(){ $("select#user_current_mission_id").change(functio
   // submit form
   $(e.target).parents("form").submit(); 
 }) });
+
+// ruby-like collect
+(function($) {
+    $.fn.collect = function(callback) {
+        if (typeof(callback) == "function") {
+            var collection = [];
+
+            $(this).each(function() {
+                var item = callback.apply(this);
+
+                if (item)
+                    collection.push(item);
+            });
+
+            return collection;
+        }
+
+        return this;
+    }
+})(jQuery);

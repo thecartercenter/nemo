@@ -97,6 +97,10 @@ class Question < ActiveRecord::Base
     "Value must be #{clauses.join(' and ')}."
   end
   
+  def as_json(options = {})
+    {:id => id, :code => code, :type => type.name}
+  end
+  
   private
     def integrity
       # error if type or option set have changed and there are answers or conditions

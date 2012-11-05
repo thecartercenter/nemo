@@ -1,9 +1,10 @@
 # models a row/column of headers
 class Report::Header
-  attr_accessor :cells
+  attr_accessor :cells, :title
   
-  def initialize(cell_params = [])
-    @cells = cell_params.collect{|cp| Report::HeaderCell.new(cp)}
+  def initialize(params)
+    @cells = params[:cells].collect{|c| Report::HeaderCell.new(c)}
+    @title = params[:title]
   end
   
   # looks for a header cell with a matching key and returns its index; returns nil if not found
@@ -17,5 +18,9 @@ class Report::Header
   
   def size
     @cells.size
+  end
+  
+  def as_json(options = {})
+    {:title => title, :cells => cells}
   end
 end
