@@ -1,36 +1,54 @@
 <% content_for(:per_page_js) do 
-     javascript_include_tag("reports", "https://www.google.com/jsapi") +
-     # special google load thing
-     javascript_tag('google.load("visualization", "1", {packages:["corechart"]});')
-   end
+    javascript_include_tag(%w(
+      dialog
+      control/control
+      control/radio
+      control/radio_group
+      control/select
+      control/multiselect
+      report/controllers/report_controller
+      report/models/errors
+      report/models/report
+      report/models/object_menu
+      report/models/calc_type_menu
+      report/models/option_set_menu
+      report/models/question_menu
+      report/views/display
+      report/views/table_display
+      report/views/report_view
+      report/views/edit_view
+      report/views/edit_pane
+      report/views/display_options_edit_pane
+      report/views/form_selection_edit_pane
+      report/views/report_title_edit_pane
+      report/views/filters_edit_pane
+      report/views/question_selection_edit_pane
+      report/views/report_type_edit_pane
+      sassafras/utils
+      https://www.google.com/jsapi
+    )) +
+    # special google load thing
+    javascript_tag('google.load("visualization", "1", {packages:["corechart"]});')
+  end
 %>
 
-<%= flash_and_form_errors(@report) %>
+<%= loading_indicator(:id => "report_load_ind") %>
 
-<table>
-  <tr>
-    <td id="report_form" style="display: none">
-      <%= render("form") %>
-    </td>
-    <td>
-      <h1></h1>
-      <div class="tip" id="report_nav_links">
-        <%= join_links(
-          link_to_if_auth("Edit This Report", "#", "report_reports#update", nil, :id => "edit_form_link"),
-          link_to("Back to Report Listing", report_reports_path)
-        ) %>
-      </div>
-
-      <div id="report_body"></div>
-    </td>
-  </tr>
-</table>
+<div class="tip" id="report_top_links">
+  <%= join_links(
+    link_to_if_auth("Create new Report", new_report_report_path, "report_reports#create"),
+    link_to_if_auth("Back to Report List", report_reports_path, "report_reports#index")
+  ) %>
+</div>
+<div class="tip" id="report_info"></div>
+<div id="report_body"></div>
+<div id="report_links">
+  <strong>Edit</strong>
+</div>
+<br class="clearer"/>
 
 <script type="text/javascript">
   $(document).ready(function(){
-    report.obj = <%= @report.to_json.html_safe %>;
-    report.init();
-    <% if @show_form %> report.toggle_form(); <% end %>
-    <% if flash[:saved] %> report.show_success(); <% end %>
+    var report = new ELMO.Report.ReportController(<%=j @report_json.html_safe %>);
   })
 </script>

@@ -1,0 +1,3 @@
+class Report::Attribute
+  
+end

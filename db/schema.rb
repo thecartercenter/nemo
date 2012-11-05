@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120925145245) do
+ActiveRecord::Schema.define(:version => 20121022153208) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -24,7 +24,9 @@ ActiveRecord::Schema.define(:version => 20120925145245) do
     t.datetime "datetime_value"
   end
 
+  add_index "answers", ["option_id"], :name => "index_answers_on_option_id"
   add_index "answers", ["questioning_id"], :name => "index_answers_on_questioning_id"
+  add_index "answers", ["response_id"], :name => "index_answers_on_response_id"
 
   create_table "assignments", :force => true do |t|
     t.integer  "mission_id"
@@ -34,6 +36,9 @@ ActiveRecord::Schema.define(:version => 20120925145245) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "assignments", ["mission_id"], :name => "index_assignments_on_mission_id"
+  add_index "assignments", ["user_id"], :name => "index_assignments_on_user_id"
 
   create_table "broadcast_addressings", :force => true do |t|
     t.integer  "broadcast_id"
@@ -63,6 +68,7 @@ ActiveRecord::Schema.define(:version => 20120925145245) do
   end
 
   add_index "choices", ["answer_id"], :name => "index_choices_on_answer_id"
+  add_index "choices", ["option_id"], :name => "index_choices_on_option_id"
 
   create_table "conditions", :force => true do |t|
     t.integer  "questioning_id"
@@ -90,28 +96,19 @@ ActiveRecord::Schema.define(:version => 20120925145245) do
     t.boolean  "published",          :default => false
     t.integer  "form_type_id"
     t.integer  "downloads"
+    t.integer  "mission_id"
     t.integer  "questionings_count", :default => 0
     t.integer  "responses_count",    :default => 0
-    t.integer  "mission_id"
   end
 
+  add_index "forms", ["form_type_id"], :name => "index_forms_on_form_type_id"
   add_index "forms", ["mission_id"], :name => "index_forms_on_mission_id"
-
-  create_table "languages", :force => true do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.boolean  "active",     :default => false
-    t.string   "code"
-    t.integer  "mission_id"
-  end
-
-  add_index "languages", ["mission_id"], :name => "index_languages_on_mission_id"
 
   create_table "missions", :force => true do |t|
     t.string   "name"
-    t.string   "compact_name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "compact_name"
   end
 
   add_index "missions", ["compact_name"], :name => "index_missions_on_compact_name"
@@ -131,6 +128,7 @@ ActiveRecord::Schema.define(:version => 20120925145245) do
     t.integer  "option_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "rank"
   end
 
   create_table "options", :force => true do |t|
@@ -178,70 +176,42 @@ ActiveRecord::Schema.define(:version => 20120925145245) do
   end
 
   add_index "questions", ["mission_id"], :name => "index_questions_on_mission_id"
-
-  create_table "report_aggregations", :force => true do |t|
-    t.string   "name"
-    t.string   "code"
-    t.string   "constraints"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
+  add_index "questions", ["option_set_id"], :name => "index_questions_on_option_set_id"
+  add_index "questions", ["question_type_id"], :name => "index_questions_on_question_type_id"
 
   create_table "report_calculations", :force => true do |t|
-    t.string   "name"
-    t.string   "code"
-    t.string   "constraints"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "report_fields", :force => true do |t|
-    t.integer  "report_report_id"
-    t.integer  "question_id"
-    t.integer  "question_type_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "attrib_id"
-  end
-
-  create_table "report_groupings", :force => true do |t|
     t.string   "type"
-    t.integer  "question_id"
+    t.integer  "report_report_id"
+    t.integer  "question1_id"
+    t.integer  "question2_id"
+    t.string   "attrib1_name"
+    t.string   "attrib2_name"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "attrib_id"
   end
 
   create_table "report_reports", :force => true do |t|
+    t.integer  "mission_id"
+    t.string   "type"
     t.string   "name"
-    t.boolean  "saved",           :default => false
+    t.boolean  "saved",                :default => false
     t.integer  "filter_id"
-    t.integer  "pri_grouping_id"
-    t.integer  "sec_grouping_id"
-    t.integer  "calculation_id"
+    t.integer  "grouping1_id"
+    t.integer  "grouping2_id"
     t.integer  "aggregation_id"
+    t.string   "omnibus_calculation"
+    t.integer  "option_set_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "viewed_at"
-    t.integer  "view_count",      :default => 0
-    t.string   "display_type",    :default => "Table"
-    t.string   "bar_style",       :default => "Side By Side"
-    t.boolean  "unreviewed",      :default => false
+    t.integer  "view_count",           :default => 0
+    t.string   "display_type",         :default => "Table"
+    t.string   "bar_style",            :default => "Side By Side"
+    t.boolean  "unreviewed",           :default => false
+    t.string   "question_labels",      :default => "Code"
+    t.boolean  "show_question_labels", :default => true
     t.string   "percent_type"
     t.boolean  "unique_rows"
-    t.integer  "mission_id"
-  end
-
-  add_index "report_reports", ["mission_id"], :name => "index_report_reports_on_mission_id"
-
-  create_table "report_response_attributes", :force => true do |t|
-    t.string   "name"
-    t.string   "code"
-    t.string   "join_tables"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.boolean  "groupable",   :default => false
-    t.string   "data_type"
   end
 
   create_table "responses", :force => true do |t|
@@ -256,6 +226,7 @@ ActiveRecord::Schema.define(:version => 20120925145245) do
 
   add_index "responses", ["form_id"], :name => "index_responses_on_form_id"
   add_index "responses", ["mission_id"], :name => "index_responses_on_mission_id"
+  add_index "responses", ["user_id"], :name => "index_responses_on_user_id"
 
   create_table "roles", :force => true do |t|
     t.string   "name"
@@ -288,6 +259,7 @@ ActiveRecord::Schema.define(:version => 20120925145245) do
     t.datetime "updated_at"
     t.integer  "mission_id"
     t.string   "languages"
+    t.string   "key"
   end
 
   add_index "settings", ["mission_id"], :name => "index_settings_on_mission_id"
@@ -302,7 +274,7 @@ ActiveRecord::Schema.define(:version => 20120925145245) do
     t.string   "language"
   end
 
-  add_index "translations", ["language", "class_name", "fld", "obj_id"], :name => "translation_master", :unique => true
+  add_index "translations", ["fld", "class_name", "obj_id", "language"], :name => "index_translations_on_fld_and_class_name_and_obj_id_and_language"
 
   create_table "user_batches", :force => true do |t|
     t.text     "users"

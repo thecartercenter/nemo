@@ -1,12 +1,12 @@
 /* template */
 body { background-color: #888; }
 table#layout { width: 100%; }
-td#banner { color: white; padding: 5px 0 0 88px; }
-td#banner #title { float: left; padding-top: 10px; }
-td#banner #title h1 { margin-bottom: 5px; font-size: 40px; line-height: 1; display: inline-block; }
-td#banner #title h2 { font-size: 22px; margin: 0 10px; color: white; display: inline-block; text-transform: uppercase; vertical-align: top; }
+td#banner { color: white; padding: 5px 0 0 88px; height: 75px; }
+td#banner #title { float: left; padding-top: 5px; }
+td#banner #title h1 { font-size: 40px; line-height: 1; display: inline-block; }
+td#banner #title h2 { font-size: 22px; width: 300px; margin: 0; color: white; display: inline-block; text-transform: uppercase; vertical-align: top; }
 td#banner #title a { color: white; text-decoration: none; }
-td#banner #title img { display: block; margin: 0 0 10px 3px; }
+td#banner #title img { display: block; margin: 5px 0 0 3px; }
 td#banner #userinfo { float: right; margin-right: 10px; }
 td#banner #userinfo a, td#banner #userinfo form.button_to input { color: white; }
 div#content { padding: 15px 15px 30px 15px; min-height: 400px; background-color: white; }
@@ -29,10 +29,40 @@ div#userinfo form select { font-size: 9pt; }
 #login_instructions #instructions p { margin-top: 0; }
   
 /* flash and error messages */
-div.success, div.error { position: absolute; left: 25%; top: 76px; padding: 3px; 
+div.success, div.error { position: absolute; left: 25%; top: 71px; padding: 3px; 
     color: white; font-weight: bold; width: 600px; margin-bottom: 10px; text-align: center; }
 div.success { background-color: #9dc400; }
 div.error { background-color: #d02000; }
 
 /* hide printable things */
 .printable { display: none; }
+
+/* report view */
+.report_reports_new h1#title, .report_reports_show h1#title { float: left; }
+#report_load_ind { float: left; margin: 10px 0 0 10px; }
+#report_top_links { clear: both; }
+#report_body { float: left; clear: both; }
+#report_links { float: left; background-color: #eee; padding: 10px; margin: 0 0 0 10px; border: 1px solid #ddd; }
+#report_links a { display: block; }
+
+/* report form */
+div.report_edit_dialog { width: 600px; height: 451px; }
+div.report_edit_pane { width: 600px; height: 400px; }
+div.report_edit_pane div#question_select { height: 200px; width: 300px; overflow: auto; margin-left: 25px; background-color: #ddd; border: 1px solid #888; padding: 5px; }
+div.report_edit_pane label { display: inline-block; }
+div.report_edit_pane input { display: inline-block; vertical-align: top; }
+div.report_edit_pane#report_type_pane label { margin: 0 0 0 10px; }
+div.report_edit_pane#report_type_pane ul, div.report_edit_pane#report_type_pane .ex_lbl { color: #888; }
+div.report_edit_pane#report_type_pane ul { line-height: 100%; }
+div.report_edit_dialog .buttons { text-align: right; border-top: 1px solid #888; padding-top: 10px; }
+div.report_edit_dialog .buttons a { display: inline-block; margin: 0 0 0 10px; padding: 10px; font-size: 120%; font-weight: bold; width: 75px; text-align: center; 
+    background-color: #ddd; border: 1px solid #888; color: #444; text-decoration: none; }
+
+#omnibus_calculation_wrp { margin-bottom: 5px; }
+#q_sel_type_questions_wrp { margin: 5px 0 0 0; }
+#q_sel_type_option_set_wrp { margin: 10px 0 0 0; }
+label[for='q_sel_type_questions'] { margin-left: 10px; }
+label[for='q_sel_type_option_set'] { margin-left: 10px; }
+select#option_set { margin-left: 25px; }
+#report_title { margin-top: 10px; width: 300px; }
+.error_box { margin: 0 0 10px 0; color: White; background-color: #d02000; padding: 3px; display: none; font-weight: bold; }

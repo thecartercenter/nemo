@@ -1,0 +1,23 @@
+/* report form */
+td#report_form { position: relative; z-index: 2; padding-right: 10px; }
+td#report_form #report_report_filter_attributes_str { width: 240px; }
+td#report_form div#search_examples { display: none; }
+td#report_form div.help { float: left; width: 260px; clear: left; color: #666; line-height: 12pt; display: none; }
+td#report_form div#top_help { margin-bottom: 3px; }
+td#report_form div#bottom_help { margin-top: 6px; }
+td#report_form div.form_field { width: 260px; clear: left; }
+td#report_form label.main { display: block; color: #666; font-size: 8pt; float: none; width: 240px; }
+td#report_form div.form_field_control { min-height: 0; float: none; border: none; padding-top: 0; width: 240px; }
+td#report_form div.form_field_details { float: right; width: 200px; display: none; color: #666; margin-top: -20px; }
+td#report_form div#required_tip { display: none; }
+td#report_form h3 { margin-bottom: 10px; }
+td#report_form div.loader { float: left; margin-top: 8px; }
+td#report_form a#show_help { display: block; margin-bottom: 3px; float: left; }
+td#report_form #fields div.form_field_control a { font-size: 90%; }
+td#report_form div.loading_indicator img { margin-top: 8px; }
+
+
+/* report */
+div#report_nav_links { display: none; }
+td#report_form { display: none; }
+

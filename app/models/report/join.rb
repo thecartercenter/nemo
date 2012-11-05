@@ -1,3 +1,4 @@
+# models the various joins in the Response/Answer db structure
 class Report::Join
   
   attr_reader :name, :sql, :dependencies
@@ -14,7 +15,8 @@ class Report::Join
     @name = params[:name]
     @dependencies = params[:dependencies] ? (params[:dependencies].is_a?(Symbol) ? [params[:dependencies]] : params[:dependencies]) : []
   end
-
+  
+  # expands dependencies to find all necessary joins
   def expand
     (dependencies ? dependencies.collect{|dep| @@joins[dep].expand}.flatten : []) + [self]
   end
@@ -61,7 +63,7 @@ class Report::Join
     :question_trans => new(
       :name => :question_trans,
       :dependencies => :questions,
-      :sql => "JOIN translations question_trans ON (question_trans.obj_id = questions.id 
+      :sql => "INNER JOIN translations question_trans ON (question_trans.obj_id = questions.id 
         AND question_trans.fld = 'name' AND question_trans.class_name = 'Question' 
         AND question_trans.language = 'eng')"
     ),
@@ -80,4 +82,4 @@ class Report::Join
       :sql => "LEFT JOIN users ON responses.user_id = users.id"
     )
   }       
-end         
+end

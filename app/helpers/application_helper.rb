@@ -1,19 +1,3 @@
-# ELMO - Secure, robust, and versatile data collection.
-# Copyright 2011 The Carter Center
-#
-# ELMO is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-# 
-# ELMO is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-# 
-# You should have received a copy of the GNU General Public License
-# along with ELMO.  If not, see <http://www.gnu.org/licenses/>.
-# 
 require 'language_list'
 module ApplicationHelper
   include LanguageList
@@ -57,8 +41,10 @@ module ApplicationHelper
   end
   
   # THIS IS THE NEW WAY
-  def nice_form_for(obj, *args)
-    form_for(obj, *args) do |f|
+  def nice_form_for(obj, options = {})
+    options[:html] ||= {}
+    options[:html][:class] = "#{obj.class.model_name.singular}_form"
+    form_for(obj, options) do |f|
       # set form mode
       f.mode = form_mode
       yield(f)
@@ -76,7 +62,8 @@ module ApplicationHelper
     elsif options[:type] == :submit
       f.submit(f.object.class.human_attribute_name("submit_" + (f.object.new_record? ? "new" : "edit")), :class => "submit")
     else
-      content_tag("div", :class => "form_field", :id => method) do
+      cls = ["form_field", options[:class]].compact.join(" ")
+      content_tag("div", :class => cls, :id => method) do
         label_str = options[:label] || f.object.class.human_attribute_name(method)
         label_html = (label_str + (options[:required] ? " #{reqd_sym}" : "")).html_safe
         label = f.label(method, label_html, :class => "main")
@@ -96,7 +83,7 @@ module ApplicationHelper
           else
             case options[:type]
             when nil, :text
-              f.text_field(method, {:class => "text"}.merge(options[:size] ? {:size => options[:size]} : {}))
+              f.text_field(method, {:class => "text"}.merge(options.reject{|k,v| ![:size, :maxlength].include?(k)}))
             when :check_box
               # if we are in show mode, show 'yes' or 'no' instead of checkbox
               if f.mode == :show
@@ -148,9 +135,10 @@ module ApplicationHelper
     f ? f.submit(label, options) : submit_tag(label, options)
   end
   
-  def form_buttons(&block)
+  def form_buttons(options = {}, &block)
     buttons = capture{block.call}
-    content_tag("div", :class => "form_buttons"){buttons + tag("br")}
+    load_ind = options[:loading_indicator] ? capture{loading_indicator} : ''
+    content_tag("div", :class => "form_buttons"){buttons + load_ind + tag("br")}
   end
   
   # renders the standard 'required' symbol, which is an asterisk
@@ -187,7 +175,7 @@ module ApplicationHelper
   # joins a set of links together with pipe characters, ignoring any blank ones
   # for use with link_to_if_auth
   def join_links(*links)
-    links.reject{|l| l.blank?}.join(" | ").html_safe
+    links.reject{|l| l.blank?}.join("&nbsp; | &nbsp;").html_safe
   end
   
   # creates a link to a batch operation
@@ -229,7 +217,7 @@ module ApplicationHelper
   end
   
   def loading_indicator(options = {})
-    content_tag("div", :class => "loading_indicator loading_indicator#{options[:floating] ? '_floating' : '_inline'}") do
+    content_tag("div", :class => "loading_indicator loading_indicator#{options[:floating] ? '_floating' : '_inline'}", :id => options[:id]) do
       image_tag("load-ind-small#{options[:header] ? '-header' : ''}.gif", :style => "display: none", :id => "loading_indicator" + 
         (options[:id] ? "_#{options[:id]}" : ""))
     end

@@ -12,10 +12,6 @@ div.success, div.failure { display: none; }
 /* hide screen-only things */
 .screen { display: none; }
 
-/* report */
-div#report_nav_links { display: none; }
-td#report_form { display: none; }
-
 /* printable form */
 #printable_form, #printable_form td { font-size: 8pt; line-height: 12pt; }
 #printable_form table { width: 100%; page-break-after: auto; }
@@ -34,3 +30,9 @@ td#report_form { display: none; }
 #printable_form td.long_text_answer .answer_box { height: .75in; }
 #printable_form .hint { font-size: 90%; color: #888; }
 .forms_index h1#title, .forms_edit h1#title, .forms_show h1#title { display: none; }
+
+/* reports */
+#report_top_links { display: none; }
+#report_links { display: none; }
+div.report_edit_dialog { display: none; }
+div.report_edit_pane { display: none; }

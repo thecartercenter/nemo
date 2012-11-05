@@ -24,6 +24,7 @@ div.important { font-weight: bold; color: Black; }
 div.boilerplate { display: none; }
 div.dialog { position: absolute; background-color: white; border: 1px solid #555; padding: 10px; }
 div.dialog h2 { margin: 0 0 10px 0; }
+br.clearer { clear: both; }
 
 /* loading indicator */
 div.loader { background: url('/images/loader.gif') no-repeat; padding-left: 20px; }
@@ -93,7 +94,7 @@ form.search_form #search_examples { margin-top: 2px; color: #666; }
 .welcome_index div.block li { line-height: 17px; }
 .welcome_index div.block li small { color: #888; font-size: 8pt; }
 .welcome_index div.block li em { font-style: normal; font-size: 12pt; font-weight: bold; }
-.welcome_index div.block select { width: 110px;  }
+.welcome_index div.block select { width: 140px; }
 .welcome_index div.block input { font-size: 8pt; width: 30px; }
 
 /* place map */
@@ -112,17 +113,14 @@ form.search_form #search_examples { margin-top: 2px; color: #666; }
 a.edit_location_link img { vertical-align: bottom; }
 
 /* question show/edit */
-.questionings_edit textarea.name_hint, .questionings_new textarea.name_hint,
-.questions_edit textarea.name_hint, .questions_new textarea.name_hint 
-  { width: 450px; height: 30px; }
-.questionings_show td.value, .questions_show td.value { width: 300px; }
-.questionings_edit #questioning_condition_value_box, .questionings_new #questioning_condition_value_box { width: 150px; }
-.questionings_show tr#condition_row td.value .dummy { display: inline; }
-input#questioning_question_minimum{ width: 100px; }
-input#questioning_question_maximum{ width: 100px; }
+form.questioning_form .form_field_control { width: 475px !important; }
+form.questioning_form .form_field.name_hint textarea { width: 400px; height: 30px; }
+form.questioning_form .form_field#condition #questioning_condition_value { width: 110px; }
+form.questioning_form .form_field#condition_row .dummy { display: inline; }
+form.questioning_form input#questioning_question_minimum, form.questioning_form input#questioning_question_maximum { width: 100px; } 
 
 /* question index/choose */
-.questions_index .name_col, .questions_choose .name_col { width: 400px; }
+.questions_choose .name_col { width: 400px; }
 
 /* option edit */
 .options_edit td.value input#option_value, .options_new td.value input#option_value { width: 100px; }
@@ -149,9 +147,10 @@ textarea#broadcast_body { width: 300px; height: 170px; }
 #login_instructions td.value { font-weight: bold; width: 300px; }
 
 /* user edit */
-.users_edit input#user_login, .users_new input#user_login { width: 150px; }
-.users_edit input#login_suggest_button, .users_new input#login_suggest_button  { width: 75px; }
-.users_edit textarea#user_notes, .users_new textarea#user_notes { width: 240px; height: 100px; }
+form.user_form div.form_field_control { width: 410px !important; }
+form.user_form input#user_login { width: 150px; }
+form.user_form input#login_suggest_button { width: 75px; }
+form.user_form textarea#user_notes { width: 240px; height: 100px; }
 
 /* user batches */
 .user_batches_new #user_batch_users { width: 350px; height: 200px; margin-right: 20px; }
@@ -161,24 +160,9 @@ textarea#broadcast_body { width: 300px; height: 170px; }
 /* report index */
 .report_reports_index .title_col { min-width: 200px; }
 
-/* report form */
-td#report_form { position: relative; z-index: 2; padding-right: 10px; }
-td#report_form #report_report_filter_attributes_str { width: 240px; }
-td#report_form div#search_examples { display: none; }
-td#report_form div.help { float: left; width: 260px; clear: left; color: #666; line-height: 12pt; display: none; }
-td#report_form div#top_help { margin-bottom: 3px; }
-td#report_form div#bottom_help { margin-top: 6px; }
-td#report_form div.form_field { width: 260px; clear: left; }
-td#report_form label.main { display: block; color: #666; font-size: 8pt; float: none; width: 240px; }
-td#report_form div.form_field_control { min-height: 0; float: none; border: none; padding-top: 0; width: 240px; }
-td#report_form div.form_field_details { float: right; width: 200px; display: none; color: #666; margin-top: -20px; }
-td#report_form div#required_tip { display: none; }
-td#report_form h3 { margin-bottom: 10px; }
-td#report_form div.loader { float: left; margin-top: 8px; }
-td#report_form a#show_help { display: block; margin-bottom: 3px; float: left; }
-td#report_form #fields div.form_field_control a { font-size: 90%; }
-
-/* report table */
+/* report info & body */
+div#report_info div { display: inline-block; border-left: 1px solid #ccc; padding: 0 10px; }
+div#report_info div:first-child { border: none; padding-left: 0; }
 div#report_body div#row_count { margin-bottom: 5px; }
 div#report_body table { }
 div#report_body table td, div#report_body table th { padding: 2px; border: 1px solid #ddd; }
@@ -205,4 +189,8 @@ div.location_picker form.location_search input.query { width: 250px; margin-bott
 div.location_picker form.location_search div.results a { display: block; margin-bottom: 8px; }
 
 /* missions */
-.missions_index .name_col { width: 150px; }
+.missions_index .name_col { width: 225px; }
+
+/* settings */
+form.setting_form #tableau_sql .form_field_control pre { width: 325px; height: 70px; overflow: auto; border: 1px solid #ccc; margin: 0 0 3px 0; }
+form.setting_form #tableau_sql .form_field_control a { font-size: 9pt; }

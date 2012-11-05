@@ -27,6 +27,7 @@
     this.map = new google.maps.Map(canvas_dom, {
       mapTypeId: google.maps.MapTypeId.ROADMAP, 
       zoom: this.location ? 7 : 1,
+      streetViewControl: false,
       draggableCursor: 'pointer'
     });
     

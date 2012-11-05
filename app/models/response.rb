@@ -1,20 +1,3 @@
-
-# ELMO - Secure, robust, and versatile data collection.
-# Copyright 2011 The Carter Center
-#
-# ELMO is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-# 
-# ELMO is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-# 
-# You should have received a copy of the GNU General Public License
-# along with ELMO.  If not, see <http://www.gnu.org/licenses/>.
-# 
 require 'mission_based'
 require 'xml'
 class Response < ActiveRecord::Base
@@ -60,18 +43,27 @@ class Response < ActiveRecord::Base
   # and whether they are searchable by a regular expression
   def self.search_qualifiers
     [
-      Search::Qualifier.new(:label => "formname", :col => "forms.name", :assoc => :forms),
-      Search::Qualifier.new(:label => "formtype", :col => "form_types.name", :assoc => :form_types),
+      Search::Qualifier.new(:label => "form", :col => "forms.name", :assoc => :forms),
+      Search::Qualifier.new(:label => "form-type", :col => "form_types.name", :assoc => :form_types),
       Search::Qualifier.new(:label => "reviewed", :col => "responses.reviewed", :subst => {"yes" => "1", "no" => "0"}),
       Search::Qualifier.new(:label => "submitter", :col => "users.name", :assoc => :users, :partials => true),
       Search::Qualifier.new(:label => "answer", :col => "answers.value", :assoc => :answers, :partials => true, :default => true),
       Search::Qualifier.new(:label => "source", :col => "responses.source"),
-      Search::Qualifier.new(:label => "date", :col => "DATE(CONVERT_TZ(responses.created_at, 'UTC', '#{Time.zone.mysql_name}'))")
+      Search::Qualifier.new(:label => "date", :col => "DATE(CONVERT_TZ(responses.created_at, 'UTC', '#{Time.zone.mysql_name}'))"),
+
+      # this qualifier matches responses that have answers to questions with the given option set
+      Search::Qualifier.new(:label => "option-set", :col => "option_sets.name", :assoc => :option_sets),
+
+      # this qualifier matces responses that have answers to questions with the given type
+      Search::Qualifier.new(:label => "question-type", :col => "question_types.long_name", :assoc => :question_types),
+
+      # this qualifier matces responses that have answers to the given question
+      Search::Qualifier.new(:label => "question", :col => "questions.code", :assoc => :questions)
     ]
   end
   
   def self.search_examples
-    ['submitter:"john smith"', 'formname:polling', 'reviewed:yes']
+    ['submitter:"john smith"', 'form:polling', 'reviewed:yes', 'date < 2010-03-15']
   end
 
   def self.create_from_xml(xml, user, mission)

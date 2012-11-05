@@ -1,19 +1,3 @@
-# ELMO - Secure, robust, and versatile data collection.
-# Copyright 2011 The Carter Center
-#
-# ELMO is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-# 
-# ELMO is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-# 
-# You should have received a copy of the GNU General Public License
-# along with ELMO.  If not, see <http://www.gnu.org/licenses/>.
-# 
 require 'seedable'
 class User < ActiveRecord::Base
   include Seedable
@@ -77,7 +61,25 @@ class User < ActiveRecord::Base
     else
       l = name.gsub(/[^a-z0-9\.]/i, "")
     end
-    l[0,10].downcase
+
+    # convert to lowercase
+    suggestion = l[0,10].downcase
+    
+    # if this login is taken, add a number to the end
+    if find_by_login(suggestion)
+      
+      # get suffixes of all logins with same prefix
+      suffixes = where("login LIKE '#{suggestion}%'").all.collect{|u| u.login[suggestion.length..-1].to_i}
+      
+      # get max suffix (skip 1 if necessary)
+      suffix = suffixes.max + 1
+      suffix = 2 if suffix <= 1
+      
+      # apply suffix
+      suggestion += suffix.to_s
+    end
+    
+    suggestion
   end
   
   def self.search_qualifiers

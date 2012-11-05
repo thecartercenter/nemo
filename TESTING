@@ -1,0 +1,111 @@
+LOGIN
+login with inactive account
+
+SETTINGS
+add a language
+
+RESPONSES
+all search examples
+clear search
+csv export with search
+create new response with conditions; save and check values
+test validation of numbers, required, min/max constraints
+save and mark as reviewed
+edit GPS with tool
+view response
+
+FORM TYPES
+create new
+edit
+delete
+
+FORMS
+create
+add new questions
+add questions from other forms
+change ranks
+show question
+edit question
+delete question and check ranks
+publish form from show page
+print form from show (using firefox)
+print form from index
+
+REPORTS
+new report name numbering
+multiple fields
+multiple groupings
+filtering
+duplicates for list reports
+run unit tests
+
+OPTIONS
+index
+creation and validations
+update and validations
+show
+destroy and association checks
+
+OPTION SETS
+index
+creation and validations
+update and validations
+show
+destroy and association checks
+
+FORM TYPES
+index
+creation and validations
+update and validations
+show
+destroy and association checks
+
+BROADCAST
+index
+creation and validations (try multiple users and a user without a phone number)
+different mediums and multiple phone numbers
+display of error messages (temporarily change login)
+show
+
+SETTINGS
+timezone change is implemented immediately
+timezone changes when mission changes
+language validation
+can't delete english
+
+USERS
+index
+creation and validations
+update and validations
+assignment add/remove/edit
+show
+destroy and association checks
+vCard (single, multiple)
+batch create and validations
+edit profile
+ability to change password
+forgot password
+admin reset password by screen
+admin reset password by email
+batch ops
+
+MISSIONS
+index
+creation and validations
+update and validations
+show
+destroy and association checks
+
+BASIC AUTH
+bad mission compact name
+bad mission permissions
+bad username
+bad password
+if successful, authentication should persist as long as stuff is permitted
+
+
+ODK
+
+
+
+PERMISSIONS

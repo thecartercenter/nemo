@@ -1,19 +1,3 @@
-# ELMO - Secure, robust, and versatile data collection.
-# Copyright 2011 The Carter Center
-#
-# ELMO is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-# 
-# ELMO is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-# 
-# You should have received a copy of the GNU General Public License
-# along with ELMO.  If not, see <http://www.gnu.org/licenses/>.
-# 
 class Permission
   GENERAL = {
     "users#index" => {:min_level => 1},
@@ -78,11 +62,9 @@ class Permission
     parse_params!(params)
     # try special permissions first
     SPECIAL.each{|sc| return if send(sc, params)}
-    # require mission for most controllers
-    raise PermissionError.new "You can't view this without selecting a mission" if !params[:mission] && !%w(users user_sessions missions password_resets welcome permission).include?(params[:controller])
     # try general permissions
-    return if check_permission("#{params[:controller]}##{params[:action]}", params[:user], params[:mission])
-    return if check_permission("#{params[:controller]}#*", params[:user], params[:mission])
+    return if check_permission("#{params[:controller]}##{params[:action]}", params)
+    return if check_permission("#{params[:controller]}#*", params)
     # if we get this far, it didn't work out
     raise PermissionError.new "You don't have permission to do that."
   end
@@ -124,7 +106,7 @@ class Permission
   # raises an error (immediate failure) if a matching permission is found and fails
   # returns true if succeeds.
   # returns false if no matching permission is found
-  def self.check_permission(key, user, mission)
+  def self.check_permission(key, params)
     # fail if it doesn't exist
     return false unless perm = GENERAL[key]
     # check the various kinds of permission
@@ -132,17 +114,25 @@ class Permission
       if perm[:group] == :anyone
         return true
       elsif perm[:group] == :admin
-        (user && user.admin?) ? (return true) : (raise PermissionError.new "You must be an administrator to view that page.")
+        (params[:user] && params[:user].admin?) ? (return true) : (raise PermissionError.new "You must be an administrator to view that page.")
       elsif perm[:group] == :logged_out
-        user ? (raise PermissionError.new "You must be logged out to view that page.") : (return true)
+        params[:user] ? (raise PermissionError.new "You must be logged out to view that page.") : (return true)
       end
     elsif perm[:min_level]
-      if !user
+      # kick out if no user
+      if !params[:user]
         raise PermissionError.new "You must login to view that page." 
-      elsif !user.admin? && (!(role = user.role(mission)) || role.level < perm[:min_level])
-        raise PermissionError.new "You don't have permission to view that page."
       else
-        return true
+        # make sure we have a mission if we need one
+        if !params[:mission] && !%w(users user_sessions missions password_resets welcome permission).include?(params[:controller])
+          raise PermissionError.new "You can't view this without selecting a mission" 
+        end
+        
+        if !params[:user].admin? && (!(role = params[:user].role(params[:mission])) || role.level < perm[:min_level])
+          raise PermissionError.new "You don't have permission to view that page."
+        else
+          return true
+        end
       end
     end
     # if we get this far, we don't know how to process the permission, so we had better fail

@@ -5,6 +5,7 @@ function draw_map(markers, bounds) {
 
   var map = new google.maps.Map($("#map_canvas")[0], {
     mapTypeId: google.maps.MapTypeId.ROADMAP,
+    streetViewControl: false,
     zoom: 3
   });
   

@@ -1,19 +1,3 @@
-# ELMO - Secure, robust, and versatile data collection.
-# Copyright 2011 The Carter Center
-#
-# ELMO is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-# 
-# ELMO is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-# 
-# You should have received a copy of the GNU General Public License
-# along with ELMO.  If not, see <http://www.gnu.org/licenses/>.
-# 
 class BroadcastsController < ApplicationController
   
   def index
@@ -30,12 +14,23 @@ class BroadcastsController < ApplicationController
   def new_with_users
     # load the user objects
     users = params[:selected].keys.collect{|id| User.find_by_id(id)}.compact
-
+        
     # raise error if no valid users (this should be impossible)
     raise "No valid users given." if users.empty?
     
     # create a new Broadcast
     @broadcast = Broadcast.for_mission(current_mission).new(:recipients => users)
+
+    begin
+      # get credit balance
+      @balance = Smser.check_balance  
+    rescue
+      # log all errors
+      logger.error("SMS balance request error: #{$!}")
+      
+      # set @balance to nil if error
+      @balance = nil
+    end
     
     render(:form)
   end

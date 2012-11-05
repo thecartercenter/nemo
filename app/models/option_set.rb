@@ -1,19 +1,3 @@
-# ELMO - Secure, robust, and versatile data collection.
-# Copyright 2011 The Carter Center
-#
-# ELMO is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-# 
-# ELMO is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-# 
-# You should have received a copy of the GNU General Public License
-# along with ELMO.  If not, see <http://www.gnu.org/licenses/>.
-# 
 require 'mission_based'
 class OptionSet < ActiveRecord::Base
   include MissionBased
@@ -35,6 +19,14 @@ class OptionSet < ActiveRecord::Base
   scope(:for_index, includes(:questions, :options, {:questionings => :form}))
   
   self.per_page = 100
+
+  # creates a simple yes/no/na option set
+  def self.create_default(mission)
+    options = Option.create_simple_set(%w(Yes No N/A), mission)
+    set = OptionSet.new(:name => "Yes/No/NA", :ordering => "value_asc", :mission => mission)
+    options.each{|o| set.option_settings.build(:option_id => o.id)}
+    set.save!
+  end
 
   def self.orderings
     [{:code => "value_asc", :name => "Value Low to High", :sql => "value asc"},
