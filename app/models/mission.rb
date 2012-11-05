@@ -29,6 +29,7 @@ class Mission < ActiveRecord::Base
   private
     def create_compact_name
       self.compact_name = name.gsub(" ", "").downcase
+      return true
     end
     
     def compact_name_unique

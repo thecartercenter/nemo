@@ -13,7 +13,7 @@ class Question < ActiveRecord::Base
   has_many(:referring_conditions, :through => :questionings)
   has_many(:forms, :through => :questionings)
 
-  validates(:code, :presence => true, :uniqueness => true)
+  validates(:code, :presence => true)
   validates(:code, :format => {:with => /^[a-z][a-z0-9]{1,19}$/i}, :if => Proc.new{|q| !q.code.blank?})
   validates(:type, :presence => true)
   validates(:option_set_id, :presence => true, :if => Proc.new{|q| q.is_select?})
@@ -120,5 +120,8 @@ class Question < ActiveRecord::Base
       unless questionings.empty?
         raise("You can't delete question '#{code}' because it is included in at least one form")
       end
+    end
+    def name_unique_per_mission
+      errors.add(:code, "must be unique") if self.class.for_mission(mission).where(:code => code).count > 0
     end
 end

@@ -7,9 +7,10 @@ class Form < ActiveRecord::Base
   has_many(:responses, :inverse_of => :form)
   belongs_to(:type, :class_name => "FormType", :foreign_key => :form_type_id, :inverse_of => :forms)
   
-  validates(:name, :presence => true, :uniqueness => true, :length => {:maximum => 32})
+  validates(:name, :presence => true, :length => {:maximum => 32})
   validates(:type, :presence => true)
   validate(:cant_change_published)
+  validate(:name_unique_per_mission)
   
   validates_associated(:questionings)
   
@@ -123,5 +124,9 @@ class Form < ActiveRecord::Base
       elsif !responses.empty?
         raise "You can't delete form '#{name}' because it has associated responses."
       end
+    end
+    
+    def name_unique_per_mission
+      errors.add(:name, "must be unique") if self.class.for_mission(mission).where(:name => name).count > 0
     end
 end

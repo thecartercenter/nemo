@@ -1,4 +1,4 @@
-<%= flash_and_form_errors %>
+<%= flash_and_form_errors(@set) %>
 <% if @options.empty? %>
   You need to <%= link_to("create some options", options_path) %> before you can create option sets.
 <% else %>
