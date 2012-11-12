@@ -122,6 +122,6 @@ class Question < ActiveRecord::Base
       end
     end
     def name_unique_per_mission
-      errors.add(:code, "must be unique") if self.class.for_mission(mission).where(:code => code).count > 0
+      errors.add(:name, "must be unique") if self.class.for_mission(mission).where("code = ? AND id != ?", code, id).count > 0
     end
 end

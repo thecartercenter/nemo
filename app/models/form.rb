@@ -127,6 +127,6 @@ class Form < ActiveRecord::Base
     end
     
     def name_unique_per_mission
-      errors.add(:name, "must be unique") if self.class.for_mission(mission).where(:name => name).count > 0
+      errors.add(:name, "must be unique") if self.class.for_mission(mission).where("name = ? AND id != ?", name, id).count > 0
     end
 end
