@@ -19,25 +19,29 @@ class Report::QuestionAnswerTallyReport < Report::TallyReport
       rel = rel.select("COUNT(responses.id) AS tally")
     
       # add question grouping
-      expr = "questions.code"
-      rel = rel.select("#{expr} AS question")
+      expr = question_labels == "Titles" ? "question_trans.str" : "questions.code"
+      rel = rel.select("#{expr} AS pri_name, #{expr} AS pri_value, 'text' AS pri_type")
       joins << :questions
+      joins << :question_trans if question_labels == "Titles"
       rel = rel.group(expr)
     
       # add answer grouping
       # if we have an option set, we don't use calculation objects
       if option_set
         expr = "IFNULL(aotr.str, cotr.str)"
-        rel = rel.select("#{expr} AS answer_name")
+        rel = rel.select("#{expr} AS sec_name")
         rel = rel.group(expr)
         expr = "IFNULL(ao.value, co.value)"
-        rel = rel.select("#{expr} AS answer_value")
+        rel = rel.select("#{expr} AS sec_value")
         rel = rel.group(expr)
         rel = rel.where("option_sets.id" => option_set.id)
         
+        # type is just text
+        rel = rel.select("'text' AS sec_type")
+        
         # default sort by option value and then by question
         opt_value_sort_order = option_set.ordering == "value_asc" ? "" : "DESC"
-        rel = rel.order("answer_value #{opt_value_sort_order}, question")
+        rel = rel.order("sec_value #{opt_value_sort_order}, pri_value")
 
       # we don't have an option set, so expect calculation objects
       else
@@ -56,19 +60,22 @@ class Report::QuestionAnswerTallyReport < Report::TallyReport
         sort_expr = build_nested_if(sort_exprs, where_exprs)
         
         # add the selects and groups
-        rel = rel.select("#{name_expr} AS answer_name, #{value_expr} AS answer_value, #{sort_expr} AS sort_value")
+        rel = rel.select("#{name_expr} AS sec_name, #{value_expr} AS sec_value, #{sort_expr} AS sec_sort_value, 'text' AS sec_type")
         rel = rel.group(name_expr).group(value_expr).group(sort_expr)
         
         # add the unified wheres
         rel = rel.where("(" + where_exprs.join(" OR ") + ")")
         
         # sort by sort expression
-        rel = rel.order("option_sets.name, sort_value, question")
+        rel = rel.order("option_sets.name, sec_sort_value, pri_value")
       end
 
       # add joins to relation
       joins << :options << :choices << :option_sets
       rel = add_joins_to_relation(rel, joins)
+      
+      # apply filter
+      rel = filter.apply(rel) unless filter.nil?
       
       return rel
     end

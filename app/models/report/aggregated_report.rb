@@ -1,12 +1,14 @@
-# contains methods common to all tally reports
-class Report::TallyReport < Report::Report
+class Report::AggregatedReport < Report::Report
+  
+  attr_accessible :aggregation_name
+  
   protected
     # extracts the row header values from the db_result object
     def get_row_header
-      hashes = @db_result.extract_unique_tuples("pri_name", "pri_type").collect do |tuple| 
-        {:name => Report::Formatter.format(tuple[0], tuple[1]), :key => tuple[0]}
+      hashes = @db_result.extract_unique_tuples("pri_name", "pri_value", "pri_type").collect do |tuple| 
+        {:name => Report::Formatter.format(tuple[0], tuple[2]), :key => tuple[0], :sort_value => tuple[1]}
       end
-      Report::Header.new(:title => header_title(:row), :cells => hashes)
+      Report::Header.new(:title => header_title(:col), :cells => hashes)
     end
   
     # extracts the col header values from the db_result object
@@ -26,14 +28,14 @@ class Report::TallyReport < Report::Report
       @data.set_cell(r, c, get_result_value(db_row))
     end
   
-    # extracts and casts the result value from the given result row
-    def get_result_value(row)
-      # counts will always be integers so we just cast to integer
-      row["tally"].to_i
-    end
-    
     # totaling is appropriate
     def can_total?
-      return true
+      return false
     end
+    
+    def aggregation
+      raise Report::ReportError.new("Aggregated report must have aggregation_name") if aggregation_name.nil?
+      @aggregation ||= Report::Aggregation.get(aggregation_name)
+    end
+  
 end

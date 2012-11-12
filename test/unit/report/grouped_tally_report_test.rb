@@ -1,0 +1,115 @@
+require 'test/test_helper'
+require 'test/unit/report/report_test_helper'
+
+class Report::GroupedTallyReportTest < ActiveSupport::TestCase
+  include ReportTestHelper
+  
+  setup do
+    prep_objects
+  end
+
+  test "counts of yes, no per day for a given question" do
+    # create several yes/no questions and responses for them
+    create_opt_set(%w(Yes No))
+    create_question(:code => "yn", :type => "select_one")
+    1.times{create_response(:created_at => Time.zone.parse("2012-01-01 1:00:00"), :answers => {:yn => "Yes"})}
+    2.times{create_response(:created_at => Time.zone.parse("2012-01-05 1:00:00"), :answers => {:yn => "Yes"})}
+    6.times{create_response(:created_at => Time.zone.parse("2012-01-05 1:00:00"), :answers => {:yn => "No"})}
+    
+    # create report with question label 'code'
+    report = create_report("GroupedTally", :pri_group_by => Report::IdentityCalculation.new(:attrib1_name => :date_submitted),
+      :sec_group_by => Report::IdentityCalculation.new(:question1 => @questions[:yn]))
+    
+    # test                   
+    assert_report(report, %w(            Yes No TTL ),
+                          %w( 2012-01-01   1  _   1 ),
+                          %w( 2012-01-05   2  6   8 ),
+                          %w( TTL          3  6   9 ))
+  end
+  
+  test "total number of responses per form per source" do
+    create_form(:name => "f0")
+    create_form(:name => "f1")
+    2.times{create_response(:form => @forms[:f0], :source => "odk")}
+    5.times{create_response(:form => @forms[:f0], :source => "web")}
+    8.times{create_response(:form => @forms[:f1], :source => "odk")}
+    3.times{create_response(:form => @forms[:f1], :source => "web")}
+    
+    report = create_report("GroupedTally", :pri_group_by => Report::IdentityCalculation.new(:attrib1_name => :form))
+    assert_report(report, %w(      _ TTL ),
+                          %w(  f0  7   7 ),
+                          %w(  f1 11  11 ),
+                          %w( TTL 18  18 ))
+    
+    report = create_report("GroupedTally", :pri_group_by => Report::IdentityCalculation.new(:attrib1_name => :form),
+      :sec_group_by => Report::IdentityCalculation.new(:attrib1_name => :source))
+    assert_report(report, %w(     odk web TTL ),
+                          %w(  f0   2   5   7 ),
+                          %w(  f1   8   3  11 ),
+                          %w( TTL  10   8  18 ))
+  end
+  
+  test "total number of responses per source per answer" do
+    create_opt_set(%w(Yes No))
+    create_question(:code => "yn", :type => "select_one")
+    2.times{create_response(:source => "odk", :answers => {:yn => "Yes"})}
+    5.times{create_response(:source => "web", :answers => {:yn => "Yes"})}
+    8.times{create_response(:source => "odk", :answers => {:yn => "No"})}
+    3.times{create_response(:source => "web", :answers => {:yn => "No"})}
+
+    report = create_report("GroupedTally", :pri_group_by => Report::IdentityCalculation.new(:attrib1_name => :source),
+      :sec_group_by => Report::IdentityCalculation.new(:question1 => @questions[:yn]))
+    assert_report(report, %w(     Yes  No TTL ),
+                          %w( odk   2   8  10 ),
+                          %w( web   5   3   8 ),
+                          %w( TTL   7  11  18 ))
+  end
+
+  test "total number of responses per source per zero-nonzero answer" do
+    create_question(:code => "int", :type => "integer")
+    2.times{create_response(:source => "odk", :answers => {:int => 4})}
+    5.times{create_response(:source => "web", :answers => {:int => 9})}
+    8.times{create_response(:source => "odk", :answers => {:int => 0})}
+    3.times{create_response(:source => "web", :answers => {:int => 0})}
+
+    report = create_report("GroupedTally", :pri_group_by => Report::IdentityCalculation.new(:attrib1_name => :source),
+      :sec_group_by => Report::ZeroNonzeroCalculation.new(:question1 => @questions[:int]))
+    assert_report(report, %w(     Zero Non-Zero TTL ),
+                          %w( odk    8        2  10 ),
+                          %w( web    3        5   8 ),
+                          %w( TTL   11        7  18 ))
+  end
+  
+  test "total number of responses per two different answers" do
+    create_opt_set(%w(Yes No))
+    create_opt_set(%w(Hi Lo))
+    forms = [create_form(:name => "form0"), create_form(:name => "form1")]
+    create_question(:code => "yn", :type => "select_one", :option_set => @option_sets[:yes_no], :forms => forms)
+    create_question(:code => "hl", :type => "select_one", :option_set => @option_sets[:hi_lo], :forms => forms)
+    2.times{create_response(:form => @forms[:form0], :answers => {:yn => "Yes", :hl => "Hi"})}
+    5.times{create_response(:form => @forms[:form0], :answers => {:yn => "No", :hl => "Hi"})}
+    8.times{create_response(:form => @forms[:form0], :answers => {:yn => "Yes", :hl => "Lo"})}
+    3.times{create_response(:form => @forms[:form0], :answers => {:yn => "No", :hl => "Lo"})}
+    2.times{create_response(:form => @forms[:form1], :answers => {:yn => "Yes", :hl => "Hi"})}
+
+    report = create_report("GroupedTally", :pri_group_by => Report::IdentityCalculation.new(:question1 => @questions[:yn]),
+      :sec_group_by => Report::IdentityCalculation.new(:question1 => @questions[:hl]))
+    assert_report(report, %w(      Hi  Lo TTL ),
+                          %w( Yes   4   8  12 ),
+                          %w( No    5   3   8 ),
+                          %w( TTL   9  11  20 ))
+                          
+    # try with joined-attrib filter
+    report = create_report("GroupedTally", :pri_group_by => Report::IdentityCalculation.new(:question1 => @questions[:yn]),
+      :sec_group_by => Report::IdentityCalculation.new(:question1 => @questions[:hl]),
+      :filter_attributes => {:str => "form: form0", :class_name => "Response"})
+    assert_report(report, %w(      Hi  Lo TTL ),
+                          %w( Yes   2   8  10 ),
+                          %w( No    5   3   8 ),
+                          %w( TTL   7  11  18 ))
+
+    # try with joined-attrib filter
+    
+  end
+  
+end

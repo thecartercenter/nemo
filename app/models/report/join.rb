@@ -3,11 +3,11 @@ class Report::Join
   
   attr_reader :name, :sql, :dependencies
 
-  def self.list_to_sql(list)
+  def self.list_to_sql(list, prefix = "")
     expanded = []
     list.each{|j| expanded += @@joins[j.to_sym].expand}
     expanded = expanded.flatten.uniq
-    expanded.collect{|join| join.sql}
+    expanded.collect{|join| join.to_sql(prefix)}
   end
   
   def initialize(params)
@@ -21,65 +21,71 @@ class Report::Join
     (dependencies ? dependencies.collect{|dep| @@joins[dep].expand}.flatten : []) + [self]
   end
   
+  # returns the appropriate sql for the given join, adding the optional prefix to all table names
+  def to_sql(prefix = "")
+    prefix += "_" unless prefix.blank?
+    Array.wrap(sql).join(" ").gsub(/__/, prefix)
+  end
+  
   @@joins = {
     :answers => new(
-      :name => :answers,
-      :sql => "LEFT JOIN answers ON answers.response_id = responses.id"
+      :name => :answers,                                              # no __ here b/c responses never needs to be prefixed
+      :sql => "LEFT JOIN answers __answers ON __answers.response_id = responses.id"
     ),
     :questionings => new(
       :dependencies => :answers,
       :name => :questionings, 
-      :sql => "INNER JOIN questionings ON answers.questioning_id = questionings.id"
+      :sql => "INNER JOIN questionings __questionings ON __answers.questioning_id = __questionings.id"
     ),      
     :options => new(
       :dependencies => :answers,
       :name => :options,
-      :sql => ["LEFT JOIN options ao ON answers.option_id = ao.id",
-        "LEFT JOIN translations aotr ON (aotr.obj_id = ao.id and aotr.fld = 'name' and aotr.class_name = 'Option' " +
-          "AND aotr.language = 'eng')"]
+      :sql => ["LEFT JOIN options __ao ON __answers.option_id = __ao.id",
+        "LEFT JOIN translations __aotr ON (__aotr.obj_id = __ao.id and __aotr.fld = 'name' and __aotr.class_name = 'Option' " +
+          "AND __aotr.language = 'eng')"]
     ),      
     :choices => new(
       :dependencies => :answers,
       :name => :choices,
-      :sql => ["LEFT JOIN choices ON choices.answer_id = answers.id",
-        "LEFT JOIN options co ON choices.option_id = co.id",
-        "LEFT JOIN translations cotr ON (cotr.obj_id = co.id and cotr.fld = 'name' and cotr.class_name = 'Option' " + 
-            "AND cotr.language = 'eng')"]
+      :sql => ["LEFT JOIN choices __choices ON __choices.answer_id = __answers.id",
+        "LEFT JOIN options __co ON __choices.option_id = __co.id",
+        "LEFT JOIN translations __cotr ON (__cotr.obj_id = __co.id and __cotr.fld = 'name' and __cotr.class_name = 'Option' " + 
+            "AND __cotr.language = 'eng')"]
     ),      
     :forms => new(
       :name => :forms,
-      :sql => "INNER JOIN forms ON responses.form_id = forms.id"
+      :sql => "INNER JOIN forms __forms ON responses.form_id = __forms.id"
     ),      
     :form_types => new(
       :name => :form_types,
       :dependencies => :forms, 
-      :sql => "INNER JOIN form_types ON forms.form_type_id = form_types.id"
+      :sql => "INNER JOIN form_types __form_types ON __forms.form_type_id = __form_types.id"
     ),      
     :questions => new(
       :name => :questions,
       :dependencies => :questionings,
-      :sql => "INNER JOIN questions ON questionings.question_id = questions.id"
+      :sql => "INNER JOIN questions __questions ON __questionings.question_id = __questions.id"
     ),
     :question_trans => new(
       :name => :question_trans,
       :dependencies => :questions,
-      :sql => "INNER JOIN translations question_trans ON (question_trans.obj_id = questions.id 
-        AND question_trans.fld = 'name' AND question_trans.class_name = 'Question' 
-        AND question_trans.language = 'eng')"
+      :sql => "INNER JOIN translations __question_trans ON (__question_trans.obj_id = __questions.id 
+        AND __question_trans.fld = 'name' AND __question_trans.class_name = 'Question' 
+        AND __question_trans.language = 'eng')"
     ),
     :question_types => new( 
       :name => :question_types,
       :dependencies => :questions, 
-      :sql => "INNER JOIN question_types ON questions.question_type_id = question_types.id"
+      :sql => "INNER JOIN question_types __question_types ON __questions.question_type_id = __question_types.id"
     ),      
     :option_sets => new( 
       :name => :option_sets,
       :dependencies => :questions, 
-      :sql => "LEFT JOIN option_sets ON questions.option_set_id = option_sets.id"
+      :sql => "LEFT JOIN option_sets __option_sets ON __questions.option_set_id = __option_sets.id"
     ),
     :users => new(
       :name => :users,
-      :sql => "LEFT JOIN users ON responses.user_id = users.id"
+      :sql => "LEFT JOIN users __users ON responses.user_id = __users.id"
     )
   }       
 end

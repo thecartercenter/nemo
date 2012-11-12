@@ -46,19 +46,19 @@ module ReportTestHelper
     
     # create default form if necessary
     params[:forms] ||= [create_form(:name => "f")]  
-  
-    q = Question.new(:name_eng => params[:code], :code => params[:code], :mission => mission,
+    
+    q = Question.new(:name_eng => params[:name_eng] || params[:code], :code => params[:code], :mission => mission,
       :question_type_id => QuestionType.find_by_name(params[:type]).id)
   
     # set the option set if type is select_one or select_multiple
     q.option_set = params[:option_set] || @option_sets.first[1] if %w(select_one select_multiple).include?(params[:type])
   
-    # create questionings for each form
-    params[:forms].each{|f| q.questionings.build(:form => f)}
-  
     # save and store in hash
     q.save!
     @questions[params[:code].to_sym] = q
+    
+    # create questionings for each form
+    params[:forms].each{|f| q.questionings.create(:form => f)}
   end
 
   def create_response(params)
@@ -82,6 +82,10 @@ module ReportTestHelper
       end
     end
     r.save!
+    
+    # set created_at if needed
+    r.update_attributes(:created_at => params[:created_at]) if params[:created_at]
+    
     r
   end
 

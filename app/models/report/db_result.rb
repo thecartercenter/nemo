@@ -4,6 +4,15 @@ class Report::DbResult
   
   def initialize(rows)
     @rows = rows
+
+    # Mysql::Date doesn't seem to implement == properly so convert to string if we see one
+    rows.each_with_index do |row, r|
+      row.attributes.each do |key, value|
+        if value.is_a?(Mysql::Time)
+          rows[r][key] = value.to_s
+        end
+      end
+    end
     
     # debug print rows
     #rows.each{|row| pp row.attributes}
