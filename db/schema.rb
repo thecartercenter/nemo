@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121022153208) do
+ActiveRecord::Schema.define(:version => 20121112143800) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -183,9 +183,7 @@ ActiveRecord::Schema.define(:version => 20121022153208) do
     t.string   "type"
     t.integer  "report_report_id"
     t.integer  "question1_id"
-    t.integer  "question2_id"
     t.string   "attrib1_name"
-    t.string   "attrib2_name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -196,9 +194,9 @@ ActiveRecord::Schema.define(:version => 20121022153208) do
     t.string   "name"
     t.boolean  "saved",                :default => false
     t.integer  "filter_id"
-    t.integer  "grouping1_id"
-    t.integer  "grouping2_id"
-    t.integer  "aggregation_id"
+    t.integer  "pri_group_by_id"
+    t.integer  "sec_group_by_id"
+    t.string   "aggregation_name"
     t.string   "omnibus_calculation"
     t.integer  "option_set_id"
     t.datetime "created_at"
