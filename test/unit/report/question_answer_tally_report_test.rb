@@ -8,24 +8,46 @@ class Report::QuestionAnswerTallyReportTest < ActiveSupport::TestCase
     prep_objects
   end
 
-  test "Counts of Yes and No for all Yes-No questions" do
+  test "counts of yes and no for all yes-no questions" do
     # create several yes/no questions and responses for them
     create_opt_set(%w(Yes No))
-    3.times{|i| create_question(:code => "yn#{i}", :name_eng => "Yes No Question #{i+1}", :type => "select_one")}
-    1.times{create_response(:answers => {:yn0 => "Yes", :yn1 => "Yes", :yn2 => "Yes"})}
-    2.times{create_response(:answers => {:yn0 => "Yes", :yn1 => "Yes", :yn2 => "No"})}
-    3.times{create_response(:answers => {:yn0 => "Yes", :yn1 => "No", :yn2 => "Yes"})}
-    4.times{create_response(:answers => {:yn0 => "No", :yn1 => "Yes", :yn2 => "Yes"})}
+    forms = [create_form(:name => "form0"), create_form(:name => "form1")]
+    3.times{|i| create_question(:code => "yn#{i}", :name_eng => "Yes No Question #{i}", :type => "select_one", :forms => forms)}
+    1.times{create_response(:form => @forms[:form0], :answers => {:yn0 => "Yes", :yn1 => "Yes", :yn2 => "Yes"})}
+    2.times{create_response(:form => @forms[:form0], :answers => {:yn0 => "Yes", :yn1 => "Yes", :yn2 => "No"})}
+    3.times{create_response(:form => @forms[:form0], :answers => {:yn0 => "Yes", :yn1 => "No", :yn2 => "Yes"})}
+    4.times{create_response(:form => @forms[:form0], :answers => {:yn0 => "No", :yn1 => "Yes", :yn2 => "Yes"})}
+    9.times{create_response(:form => @forms[:form1], :answers => {:yn0 => "No", :yn1 => "Yes"})}
     
     # create report with question label 'code'
     report = create_report("QuestionAnswerTally", :option_set => @option_sets[:yes_no])
     
     # test                   
     assert_report(report, %w(     Yes No TTL ),
+                          %w( yn0   6 13  19 ),
+                          %w( yn1  16  3  19 ),
+                          %w( yn2   8  2  10 ),
+                          %w( TTL  30 18  48 ))
+
+                          
+    # try question label 'title'
+    report = create_report("QuestionAnswerTally", :option_set => @option_sets[:yes_no], :question_labels => "Titles")
+
+    assert_report(report,                         %w( Yes No TTL ),
+                          ["Yes No Question 0"] + %w(   6 13  19 ),
+                          ["Yes No Question 1"] + %w(  16  3  19 ),
+                          ["Yes No Question 2"] + %w(   8  2  10 ),
+                                              %w( TTL  30 18  48 ))
+    
+    # try with joined-attrib filter
+    report = create_report("QuestionAnswerTally", :option_set => @option_sets[:yes_no],
+      :filter_attributes => {:str => "form: form0", :class_name => "Response"})
+    assert_report(report, %w(     Yes No TTL ),
                           %w( yn0   6  4  10 ),
                           %w( yn1   7  3  10 ),
                           %w( yn2   8  2  10 ),
                           %w( TTL  21  9  30 ))
+
   end
   
   test "Counts of Yes and No for specific questions" do
@@ -41,7 +63,7 @@ class Report::QuestionAnswerTallyReportTest < ActiveSupport::TestCase
     
     # create report naming only three questions
     report = create_report("QuestionAnswerTally", 
-      :calculations => [:yn0, :yn1, :hl1].collect{|code| Report::IdentityCalculation.new(:arg1 => @questions[code])}
+      :calculations => [:yn0, :yn1, :hl1].collect{|code| Report::IdentityCalculation.new(:question1 => @questions[code])}
     )
     
     # test                   
@@ -80,9 +102,9 @@ class Report::QuestionAnswerTallyReportTest < ActiveSupport::TestCase
 
     # create report naming only three questions
     report = create_report("QuestionAnswerTally", :calculations => [
-      Report::IdentityCalculation.new(:arg1 => @questions[:yn0]),
-      Report::ZeroNonzeroCalculation.new(:arg1 => @questions[:int]),
-      Report::ZeroNonzeroCalculation.new(:arg1 => @questions[:dec])
+      Report::IdentityCalculation.new(:question1 => @questions[:yn0]),
+      Report::ZeroNonzeroCalculation.new(:question1 => @questions[:int]),
+      Report::ZeroNonzeroCalculation.new(:question1 => @questions[:dec])
     ])
     
     # test                   

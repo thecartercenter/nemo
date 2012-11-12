@@ -3,7 +3,8 @@ class Report::Report < ActiveRecord::Base
   include MissionBased
   
   attr_accessible :type, :name, :omnibus_calculation, :option_set_id, :display_type, :bar_style, :unreviewed, 
-    :question_labels, :show_question_labels, :percent_type, :unique_rows, :calculations_attributes, :calculations, :option_set, :mission_id, :mission
+    :question_labels, :show_question_labels, :percent_type, :unique_rows, :calculations_attributes, :calculations, 
+    :option_set, :filter_attributes, :mission_id, :mission
   
   belongs_to(:filter, :class_name => "Search::Search", :autosave => true, :dependent => :destroy)
 
@@ -107,5 +108,32 @@ class Report::Report < ActiveRecord::Base
     # adds the given array of joins to the given relation by using the Join class
     def add_joins_to_relation(rel, joins)
       return rel.joins(Report::Join.list_to_sql(joins))
+    end
+    
+    # builds a nested SQL IF statement of the form IF(a, x, IF(b, y, IF(c, z, ...)))
+    def build_nested_if(exprs, conds, options = {})\
+      unless options[:dont_optimize]
+        # optimize by joining conditions for identical expressions
+        # first build a hash
+        expr_hash = {}
+        exprs.each_with_index do |expr, i|
+          expr_hash[expr] ||= []
+          expr_hash[expr] << conds[i]
+        end
+      
+        # rebuild condensed exprs and conds arrays
+        exprs, conds = [], []
+        expr_hash.each do |expr, cond_set|
+          exprs << expr
+          conds << cond_set.join(" OR ")
+        end
+      end
+      
+      if exprs.size == 1
+        return exprs.first 
+      else
+        rest = build_nested_if(exprs[1..-1], conds[1..-1], :dont_optimize => true)
+        "IF(#{conds.first}, #{exprs.first}, #{rest})"
+      end
     end
 end
