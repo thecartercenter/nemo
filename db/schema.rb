@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121112143800) do
+ActiveRecord::Schema.define(:version => 20121112174623) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -197,7 +197,6 @@ ActiveRecord::Schema.define(:version => 20121112143800) do
     t.integer  "pri_group_by_id"
     t.integer  "sec_group_by_id"
     t.string   "aggregation_name"
-    t.string   "omnibus_calculation"
     t.integer  "option_set_id"
     t.datetime "created_at"
     t.datetime "updated_at"
