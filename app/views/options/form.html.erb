@@ -1,4 +1,4 @@
-<%= flash_and_form_errors %>
+<%= flash_and_form_errors(@option) %>
 <%= nice_form_for(@option) do |f| %>
   <% configatron.languages.each do |lang| %>
     <%= form_field(f, :"name_#{lang}", :label => "Name (#{language_name(lang)})", :required => lang == :eng) %>
