@@ -24,7 +24,7 @@
     var _this = this;
     var data = this.report.attribs.data;
     var headers = this.report.attribs.headers;
-    var tbl = $("<table>");
+    var tbl = this.tbl = $("<table>");
 
     // column label row
     if (headers.col) {
@@ -165,6 +165,36 @@
     
     // add the table
     $('#report_body').empty().append(tbl);
+    
+    this.equalize_col_widths();
+  }
+  
+  klass.prototype.equalize_col_widths = function() {
+    // get the available extra space
+    var extra_spc = $("#report_body").position().left + $("#report_body").width() - this.tbl.position().left - this.tbl.width();
+    
+    // get the current column widths
+    var cur_widths = []
+    this.tbl.find("th.col").each(function() { cur_widths.push($(this).width()); });
+    
+    // bail if no find columns
+    if (cur_widths.length == 0) return;
+    
+    // get largest current
+    var largest_current = Math.max.apply(null, cur_widths);
+    
+    // get sum of current column widths
+    var cur_sum = 0;
+    $.each(cur_widths, function() { cur_sum += this; });
+
+    // get the largest allowable column width
+    var largest_allowable = (cur_sum + extra_spc) / cur_widths.length;
+    
+    // optimal column width is min(largest current, largest allowable)
+    var optimal = Math.min(largest_current, largest_allowable) + 1;
+    
+    // set widths
+    this.tbl.find("th.col").width(optimal);
   }
   
 }(ELMO.Report));

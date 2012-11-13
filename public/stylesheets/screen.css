@@ -41,7 +41,7 @@ div.error { background-color: #d02000; }
 .report_reports_new h1#title, .report_reports_show h1#title { float: left; }
 #report_load_ind { float: left; margin: 10px 0 0 10px; }
 #report_top_links { clear: both; }
-#report_body { float: left; }
+#report_body { }
 #report_links { float: left; margin: 0 15px 0 0; line-height: 150%; }
 #report_links a { display: block; }
 
