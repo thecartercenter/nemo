@@ -62,6 +62,7 @@
     to_serialize.type = this.attribs.type;
     to_serialize.name = this.attribs.name;
     to_serialize.percent_type = this.attribs.percent_type;
+    to_serialize.question_labels = this.attribs.question_labels;
     to_serialize.option_set_id = this.attribs.option_set_id == null ? "" : this.attribs.option_set_id;
     to_serialize.calculations_attributes = [];
     for (var i = 0; i < this.attribs.calculations.length; i++) {

@@ -13,7 +13,7 @@
   
   klass.prototype.update = function(selected_value) {
     var selected_idx = this.values.indexOf(selected_value);
-    
+
     // if value not found, uncheck all
     if (selected_idx == -1)
       for (var i = 0; i < this.inputs.length; i++)

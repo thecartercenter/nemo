@@ -19,10 +19,10 @@ class Report::QuestionAnswerTallyReport < Report::TallyReport
       rel = rel.select("COUNT(responses.id) AS tally")
     
       # add question grouping
-      expr = question_labels == "Titles" ? "question_trans.str" : "questions.code"
+      expr = question_labels == "Title" ? "question_trans.str" : "questions.code"
       rel = rel.select("#{expr} AS pri_name, #{expr} AS pri_value, 'text' AS pri_type")
       joins << :questions
-      joins << :question_trans if question_labels == "Titles"
+      joins << :question_trans if question_labels == "Title"
       rel = rel.group(expr)
     
       # add answer grouping

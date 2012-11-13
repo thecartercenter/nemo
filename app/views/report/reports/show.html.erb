@@ -72,9 +72,16 @@
     <div class="report_edit_pane display_options">
       <h2>Display Options</h2>
       <div class="error_box"></div>
-      <div>
-        <label for="percent_style">What percentage style would you like?</label>
+      <div class="section">
+        <div class="section_name">What percentage style would you like?</div>
         <select id="percent_style"></select>
+      </div>
+      <div class="section">
+        <div class="section_name">How should questions be displayed?</div>
+        <input type="radio" name="question_labels" id="question_labels_1" value="Code" />
+        <label for="question_labels_1">Codes Only (Saves Space)</label>
+        <input type="radio" name="question_labels" id="question_labels_2" value="Title" />
+        <label for="question_labels_2">Full Titles (Easier to Read)</label>
       </div>
     </div>
     

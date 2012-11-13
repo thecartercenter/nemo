@@ -54,6 +54,9 @@ div.report_edit_pane.report_type label { margin: 0 0 0 10px; }
 div.report_edit_pane.report_type input { vertical-align: top; }
 div.report_edit_pane.report_type ul, div.report_edit_pane.report_type .ex_lbl { color: #888; }
 div.report_edit_pane.report_type ul { line-height: 100%; }
+div.report_edit_pane.display_options div.section { margin-bottom: 10px; vertical-align: top; }
+div.report_edit_pane.display_options div.section_name { display: inline-block; width: 225px; }
+div.report_edit_pane.display_options div.section label { margin-right: 10px; }
 div.report_edit_pane.question_choices div.q_sel_section_lbl { margin-bottom: 5px; }
 div.report_edit_pane.question_choices div#question_select { height: 200px; width: 300px; overflow: auto; margin: 5px 0 0 25px; background-color: #ddd; border: 1px solid #888; padding: 5px; }
 div.report_edit_pane.question_choices div.q_sel_type { margin-bottom: 10px; vertical-align: bottom; }
