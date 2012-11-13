@@ -6,14 +6,9 @@
   }
   
   klass.prototype.build = function() {
-    this.cont = $("<div>").addClass("report_edit_pane").attr("id", this.title.replace(" ", "_").toLowerCase() + "_pane").hide();
-
-    // add title
-    $("<h2>").text(this.title).appendTo(this.cont);
-
-    // add error box
-    this.error_box = $("<div>").addClass("error_box");
-    this.cont.append(this.error_box);
+    // get refs
+    this.cont = $("div.report_edit_pane." + this.title.replace(" ", "_").toLowerCase());
+    this.error_box = this.cont.find("div.error_box")
   }
   
   klass.prototype.show = function() {

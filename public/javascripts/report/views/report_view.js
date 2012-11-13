@@ -11,7 +11,7 @@
     this.show_title();
     
     // show links
-    this.create_links();
+    this.hookup_links();
   }
   
   klass.prototype.update = function(report) {
@@ -59,20 +59,10 @@
     Utils.show_flash({type: "error", msg: msg});
   }
 
-  // add the link elements to the report_links div
-  klass.prototype.create_links = function() {
-    // create edit link
-    var titles = klass.EDIT_LINK_TITLES;
-    for (var i = 0; i < titles.length; i++) {
-      // curry to preserve link index
-      (function(link_idx, _this){
-        // create link and append to link div
-        var link = $("<a>").attr("id", "edit_link_" + link_idx).attr("href", "#").text(titles[link_idx]).click(function() { _this.controller.show_edit_view(link_idx+1); return false; });
-        link.appendTo($("div#report_links"));
-      })(i, this);
-    }
+  // hookup link events
+  klass.prototype.hookup_links = function() {
+    var _this = this;
+    $("#report_links a").click(function() { _this.controller.show_edit_view(parseInt(this.id.match(/_(\d+)$/)[1])); return false; })
   }
-  
-  klass.EDIT_LINK_TITLES = ["Display Options", "Question Choices", "Title"]
   
 }(ELMO.Report));

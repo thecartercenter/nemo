@@ -21,50 +21,32 @@
     // call super first
     this.parent.build.call(this);
     
-    // add calculation chooser
+    // build calculation chooser
     this.calc_chooser = new ELMO.Control.Select({
-      name: "omnibus_calculation",
+      el: this.cont.find("select#omnibus_calculation"),
       objs: this.menus.calc_type.objs,
       id_key: "name",
-      txt_key: "title",
-      label_html: "Which calculation (if any) would you like to apply?&nbsp;"
-    })
-    this.calc_chooser.appendTo(this.cont);
+      txt_key: "title"
+    });
     
-    $("<div>").html("Which question(s) would you like to include?").appendTo(this.cont);
+    // build radio group
+    this.q_sel_type_radio = new ELMO.Control.RadioGroup({inputs: this.cont.find("input[name='q_sel_type']")});
     
-    // add first q sel type radio button
-    this.q_sel_type_radio = new ELMO.Control.RadioGroup({
-      name: "q_sel_type",
-      values: ["questions", "option_set"],
-      labels_html: ["These specific questions:", "Questions with this option set:"],
-      field_before_label: true
-    })
-    
-    this.q_sel_type_radio.members[0].appendTo(this.cont);
-    
-    // add question selector
+    // build question selector
     this.q_chooser = new ELMO.Control.Multiselect({
-      name: "question_select",
+      el: this.cont.find("div#question_select"),
       objs: this.menus.question.objs,
       id_key: "id",
       txt_key: "code"
     });
-    this.q_chooser.appendTo(this.cont);
     
-    // add second q sel type radio button
-    this.q_sel_type_radio.members[1].appendTo(this.cont);
-    
-    // add option set chooser
+    // build option set chooser
     this.opt_set_chooser = new ELMO.Control.Select({
-      name: "option_set",
+      el: this.cont.find("select#option_set"),
       objs: this.menus.option_set.objs,
       id_key: "id",
-      txt_key: "name",
-      prompt: "Choose an option set..."
-    })
-    this.opt_set_chooser.appendTo(this.cont);
-    
+      txt_key: "name"
+    });
     
     // setup event handlers
     (function(_this){
@@ -105,6 +87,7 @@
   
   klass.prototype.handle_q_sel_type_change = function() {
     // disable the appropriate control
+    console.log(this.q_sel_type_radio.get())
     this.opt_set_chooser.enable(this.q_sel_type_radio.get() == "option_set");
     this.q_chooser.enable(this.q_sel_type_radio.get() == "questions");
   }

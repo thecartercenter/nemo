@@ -19,8 +19,7 @@
     // call super first
     this.parent.build.call(this);
     
-    this.cont.append($("<div>").text("Enter a short descriptive name for the report."));
-    this.title = $("<input>").attr("type", "text").attr("id", "report_title").appendTo(this.cont);
+    this.title = this.cont.find("input#report_title");
   }
   
   klass.prototype.update = function(report) {

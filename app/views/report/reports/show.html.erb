@@ -2,7 +2,6 @@
     javascript_include_tag(%w(
       dialog
       control/control
-      control/radio
       control/radio_group
       control/select
       control/multiselect
@@ -44,8 +43,82 @@
 <div id="report_body"></div>
 <div id="report_links">
   <strong>Edit</strong>
+  <a id="edit_link_1" href="#">Display Options</a>
+  <a id="edit_link_2" href="#">Question Choices</a>
+  <a id="edit_link_3" href="#">Title</a>
 </div>
 <br class="clearer"/>
+
+<div class="report_edit_dialog">
+  <form class="report_form">
+    
+    <div class="report_edit_pane report_type">
+      <h2>Report Type</h2>
+      <div class="error_box"></div>
+      <div class="tip">What type of report would you like?</div>
+      <div>
+        <input type="radio" name="report_type" id="report_type_1" value="Report::QuestionAnswerTallyReport">
+        <label for="report_type_1">
+          <h3>Tally or percentage of answers per question</h3>
+          <div class="ex_lbl">Examples:</div>
+          <ul>
+            <li>Percentages of Yes, No, ... for all Yes-No questions</li>
+            <li>Tally of zero and non-zero answers for questions about observers</li>
+          </ul>
+        </label>
+      </div>
+    </div>
+        
+    <div class="report_edit_pane display_options">
+      <h2>Display Options</h2>
+      <div class="error_box"></div>
+      <div>
+        <label for="percent_style">What percentage style would you like?</label>
+        <select id="percent_style"></select>
+      </div>
+    </div>
+    
+    <div class="report_edit_pane question_choices">
+      <h2>Question Choices</h2>
+      <div class="error_box"></div>
+      
+      <label for="omnibus_calculation">Which calculation (if any) would you like to apply?&nbsp;</label>
+      <select id="omnibus_calculation"></select>
+      
+      <div class="q_sel_section_lbl">Which question(s) would you like to include?</div>
+      
+      <div class="q_sel_type">
+        <input type="radio" name="q_sel_type" id="q_sel_type_questions" value="questions">
+        <label for="q_sel_type_questions">These specific questions:</label>
+        <div id="question_select"></div>
+      </div>
+      
+      <div class="q_sel_type">
+        <input type="radio" name="q_sel_type" id="q_sel_type_option_set" value="option_set">
+        <label for="q_sel_type_option_set">Questions with this option set:</label>
+        <select id="option_set">
+          <option>Choose an option set...</option>
+        </select>
+      </div>
+    </div>
+    
+    <div class="report_edit_pane title">
+      <h2>Title</h2>
+      <div class="error_box"></div>
+      <label for="report_title">Enter a short descriptive name for the report.</label>
+      <input type="text" id="report_title">
+    </div>
+    
+    
+    <div class="buttons">
+      <a href="#" class="cancel">Cancel</a>
+      <a href="#" class="prev">&lt; Previous</a>
+      <a href="#" class="next">Next &gt;</a>
+      <a href="#" class="run">Run</a>
+    </div>
+    
+  </form>
+</div>
 
 <script type="text/javascript">
   $(document).ready(function(){

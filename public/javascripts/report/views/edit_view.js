@@ -12,12 +12,11 @@
     this.options = options;
     
     // create the container div and dialog
-    this.cont = $("<div>").addClass("report_edit_dialog");
+    this.cont = $("div.report_edit_dialog");
     this.dialog = new ELMO.Dialog(this.cont, {dont_show: true});
 
     // create the form
-    this.form = $("<form>");
-    this.cont.append(this.form);
+    this.form = $("form.report_form");
 
     // create the panes
     this.panes = [
@@ -32,19 +31,13 @@
     // pane pointer
     this.current_pane_idx = 0;
     
-    // add panes to form
-    for (var i = 0; i < this.panes.length; i++)
-      this.form.append(this.panes[i].cont);
-      
-    // add buttons
-    var button_div = $("<div>").addClass("buttons");
+    // get buttons and hook up click events
     this.buttons = {
-      cancel: $("<a>").attr("href", "#").text("Cancel").click(function() { _this.cancel(); return false; }).appendTo(button_div),
-      prev: $("<a>").attr("href", "#").text("<  Previous").click(function() { _this.change_pane(-1); return false; }).appendTo(button_div),
-      next: $("<a>").attr("href", "#").text("Next  >").click(function() { _this.change_pane(1); return false; }).appendTo(button_div),
-      run: $("<a>").attr("href", "#").text("Run").click(function() { _this.run(); return false; }).appendTo(button_div)
+      cancel: this.form.find("a.cancel").click(function() { _this.cancel(); return false; }),
+      prev: this.form.find("a.prev").click(function() { _this.change_pane(-1); return false; }),
+      next: this.form.find("a.next").click(function() { _this.change_pane(1); return false; }),
+      run: this.form.find("a.run").click(function() { _this.run(); return false; })
     }
-    this.cont.append(button_div);
   }
   
   klass.prototype.show = function(report, idx) {
@@ -68,7 +61,7 @@
   klass.prototype.show_pane = function(idx) {
     // hide current pane
     this.panes[this.current_pane_idx].hide();
-    
+
     // show new pane and store ref
     this.panes[idx].show();
     this.current_pane_idx = idx;

@@ -4,47 +4,34 @@
   // constructor
   ns.RadioGroup = klass = function(params) {
     this.params = params;
-    this.members = [];
+    this.inputs = params.inputs;
+    this.values = []
     
-    for (var i = 0; i < params.values.length; i++) {
-      this.members.push(new ns.Radio({
-        name: params.name,
-        value: params.values[i],
-        label_html: params.labels_html[i],
-        click: function() { params.click(params.values[i]) },
-        field_before_label: params.field_before_label
-      }));
-    }
+    for (var i = 0; i < this.inputs.size(); i++)
+      this.values.push(this.inputs[i].value);
   }
   
   klass.prototype.update = function(selected_value) {
-    var selected_idx = this.params.values.indexOf(selected_value);
+    var selected_idx = this.values.indexOf(selected_value);
     
     // if value not found, uncheck all
     if (selected_idx == -1)
-      for (var i = 0; i < this.members.length; i++)
-        this.members[i].checked(false)
+      for (var i = 0; i < this.inputs.length; i++)
+        $(this.inputs[i]).prop("checked", false)
     else
-      this.members[selected_idx].checked(true);
+      $(this.inputs[selected_idx]).prop("checked", true);
     
     // trigger change handler
     if (this.change_handler) this.change_handler();
   }
   
   klass.prototype.get = function() {
-    for (var i = 0; i < this.members.length; i++)
-      if (this.members[i].checked())
-        return this.members[i].value();
+    return this.inputs.filter(":checked").val();
   }
   
   klass.prototype.change = function(func) {
     this.change_handler = func;
-    for (var i = 0; i < this.members.length; i++)
-      this.members[i].change(func);
-  }
-  
-  klass.prototype.append_all_to = function(cont) {
-    for (var i = 0; i < this.members.length; i++)
-      this.members[i].appendTo(cont);
+    for (var i = 0; i < this.inputs.length; i++)
+      $(this.inputs[i]).bind("change", func);
   }
 }(ELMO.Control));

@@ -3,7 +3,7 @@
   
   // constructor
   ns.ReportTypeEditPane = klass = function() {
-    this.build()
+    this.build();
   }
 
   // inherit from EditPane
@@ -16,28 +16,12 @@
   // builds controls
   klass.prototype.build = function() {
     var _this = this;
-    
+
     // call super first
     this.parent.build.call(this);
-    
-    this.cont.append($("<div>").addClass("tip").text("What type of report would you like?"));
-    
-    this.type_chooser = new ELMO.Control.RadioGroup({
-      name: "report_type",
-      values: $(klass.TYPES).collect(function(){ return this.name }),
-      labels_html: $(klass.TYPES).collect(function(){ return _this.build_label(this) }),
-      field_before_label: true
-    })
-    this.type_chooser.append_all_to(this.cont);
-  }
-  
-  // build html for a label
-  klass.prototype.build_label = function(type) {
-    var title = $("<h3>").text(type.title);
-    var ex_lbl = $("<div>").addClass("ex_lbl").text("Examples:");
-    var examples = $("<ul>");
-    $.each(type.examples, function(i, ex) { examples.append($("<li>").text(ex)); })
-    return title.after(ex_lbl).after(examples);
+
+    // make type chooser
+    this.type_chooser = new ELMO.Control.RadioGroup({inputs: this.cont.find("input[name='report_type']")});
   }
   
   klass.prototype.update = function(report) {

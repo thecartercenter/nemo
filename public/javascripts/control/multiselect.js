@@ -4,7 +4,10 @@
   // constructor
   ns.Multiselect = klass = function(params) {
     this.params = params;
-    this.build();
+
+    this.fld = params.el;
+    this.rebuild_options();
+    this.dom_id = parseInt(Math.random() * 1000000);
   }
   
   // inherit from Control
@@ -14,9 +17,6 @@
   
   klass.prototype.build_field = function () {
     
-    this.fld = $("<div>").attr("id", this.id());
-    this.rebuild_options();
-    return this.fld;
   }
   
   klass.prototype.rebuild_options = function() {
@@ -29,7 +29,7 @@
       var id = this.params.objs[i][this.params.id_key];
       var txt = this.params.objs[i][this.params.txt_key];
       var row = $("<div>");
-      var dom_id = this.id() + "_" + i;
+      var dom_id = this.dom_id + "_" + i;
       
       $("<input>").attr("type", "checkbox").attr("value", id).attr("id", dom_id).appendTo(row);
       $("<label>").attr("for", dom_id).html("&nbsp;" + txt).appendTo(row);
