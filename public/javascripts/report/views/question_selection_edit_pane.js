@@ -87,7 +87,6 @@
   
   klass.prototype.handle_q_sel_type_change = function() {
     // disable the appropriate control
-    console.log(this.q_sel_type_radio.get())
     this.opt_set_chooser.enable(this.q_sel_type_radio.get() == "option_set");
     this.q_chooser.enable(this.q_sel_type_radio.get() == "questions");
   }

@@ -34,15 +34,6 @@
     this.report.attribs.type = this.type_chooser.get();
   }
   
-  klass.TYPES = [{
-    name: "Report::QuestionAnswerTallyReport",
-    title: "Tally or percentage of answers per question",
-    examples: [
-      "Percentages of Yes, No, ... for all Yes-No questions",
-      "Tally of zero and non-zero answers for questions about observers"
-    ]
-  }]           
-  
   klass.prototype.fields_for_validation_errors = function() {
     return ["type"];
   }
