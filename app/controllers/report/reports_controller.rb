@@ -22,7 +22,6 @@ class Report::ReportsController < ApplicationController
   # only exec'd through json
   def create
     # attempt create the report
-    Rails.logger.debug("******* #{current_mission}")
     @report = Report::Report.for_mission(current_mission).create(params[:report].merge(:mission_id => current_mission.id))
 
     # if report is valid, save it set flag (no need to run it b/c it will be redirected)
@@ -41,10 +40,10 @@ class Report::ReportsController < ApplicationController
     
     # if report is not valid, can't run it
     if @report.valid?
-      # re-run the report, handling errors
-      run_and_handle_errors
       # save
       @report.save
+      # re-run the report, handling errors
+      run_and_handle_errors
     end
     
     # return data in json format
