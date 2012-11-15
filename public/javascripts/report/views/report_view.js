@@ -39,6 +39,9 @@
         case "Table":
           this.display = new ns.TableDisplay(this.report);
           break;
+        case "BarChart":
+          this.display = new ns.BarChartDisplay(this.report);
+          break;
       }
     
       this.display.render();

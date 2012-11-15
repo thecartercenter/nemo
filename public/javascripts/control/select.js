@@ -51,4 +51,12 @@
     this.fld.css("color", which ? "" : "#888");
   }
   
+  klass.prototype.closest = function(sel) {
+    return this.fld.closest(sel);
+  }
+  
+  klass.prototype.clear = function() {
+    this.update(null);
+  }
+  
 }(ELMO.Control));

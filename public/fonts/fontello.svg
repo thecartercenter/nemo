@@ -1,0 +1,41 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" >
+<svg xmlns="http://www.w3.org/2000/svg">
+<metadata>
+Created by FontForge 20100429 at Thu Nov 15 15:11:44 2012
+ By root
+Copyright (C) 2012 by original authors @ fontello.com
+</metadata>
+<defs>
+<font id="fontello" horiz-adv-x="364" >
+  <font-face 
+    font-family="fontello"
+    font-weight="500"
+    font-stretch="normal"
+    units-per-em="1000"
+    panose-1="2 0 6 3 0 0 0 0 0 0"
+    ascent="850"
+    descent="-150"
+    bbox="16 -45 989 745"
+    underline-thickness="50"
+    underline-position="-100"
+    unicode-range="U+E7B4-F0CE"
+  />
+<missing-glyph 
+d="M33 0v666h265v-666h-265zM66 33h199v600h-199v-600z" />
+    <glyph glyph-name=".notdef" 
+d="M33 0v666h265v-666h-265zM66 33h199v600h-199v-600z" />
+    <glyph glyph-name=".null" horiz-adv-x="0" 
+ />
+    <glyph glyph-name="nonmarkingreturn" horiz-adv-x="333" 
+ />
+    <glyph glyph-name="uniE7B4" unicode="&#xe7b4;" horiz-adv-x="1007" 
+d="M19 722h970v-744h-970v744zM538 270h158v160h-158v-160zM696 45v157h-158v-157h158zM538 655v-157h158v157h-158zM921 430h-157v-160h157v160zM921 45v157h-157v-157h157zM921 655h-157v-157h157v157zM86 270h159v160h-159v-160zM245 45v157h-159v-157h159zM86 655v-157
+h159v157h-159zM470 430h-158v-160h158v160zM470 45v157h-158v-157h158zM470 498v157h-158v-157h158z" />
+    <glyph glyph-name="uniE800" unicode="&#xe800;" horiz-adv-x="735" 
+d="M18 300h200v-300h-200v300zM268 700h200v-696h-200v696zM518 4v496h200v-496h-200z" />
+    <glyph glyph-name="uniF0CE" unicode="&#xf0ce;" horiz-adv-x="979" 
+d="M75 -45q-24 0 -41.5 17.5t-17.5 41.5v672q0 24 17.5 41.5t41.5 17.5h830q24 0 41 -17.5t17 -41.5v-672q0 -24 -17 -41.5t-41 -17.5h-830zM332 34v173h-237v-173h237zM332 246v170h-237v-170h237zM332 456v171h-237v-171h237zM609 34v173h-237v-173h237zM609 246v170h-237
+v-170h237zM609 456v171h-237v-171h237zM885 34v173h-237v-173h237zM885 246v170h-237v-170h237zM648 456h237v171h-237v-171z" />
+  </font>
+</defs></svg>

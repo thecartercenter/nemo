@@ -56,12 +56,18 @@
     return count;
   }
   
+  klass.prototype.aggregation = function() {
+    return this.attribs.aggregation_name || "Tally";
+  }
+  
   klass.prototype.to_hash = function() {
     var to_serialize = {}
     // later should replace this with better serialization method?
     to_serialize.type = this.attribs.type;
     to_serialize.name = this.attribs.name;
+    to_serialize.display_type = this.attribs.display_type;
     to_serialize.percent_type = this.attribs.percent_type;
+    to_serialize.bar_style = this.attribs.bar_style;
     to_serialize.question_labels = this.attribs.question_labels;
     to_serialize.option_set_id = this.attribs.option_set_id == null ? "" : this.attribs.option_set_id;
     to_serialize.calculations_attributes = [];

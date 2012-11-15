@@ -14,6 +14,7 @@
       report/models/question_menu
       report/views/display
       report/views/table_display
+      report/views/bar_chart_display
       report/views/report_view
       report/views/edit_view
       report/views/edit_pane
@@ -45,8 +46,10 @@
   <a id="edit_link_2" href="#">Question Choices</a>
   <a id="edit_link_3" href="#">Title</a>
 </div>
-<div class="tip" id="report_info"></div>
-<div id="report_body"></div>
+<div id="report_main">
+  <div class="tip" id="report_info"></div>
+  <div id="report_body"></div>
+</div>
 <br class="clearer"/>
 
 <div class="report_edit_dialog">
@@ -72,16 +75,42 @@
     <div class="report_edit_pane display_options">
       <h2>Display Options</h2>
       <div class="error_box"></div>
-      <div class="section">
-        <div class="section_name">What percentage style would you like?</div>
-        <select id="percent_style"></select>
+      <div class="section display_type">
+        <div class="name">How would you like to display the results?</div>
+        <div class="controls">
+          <input type="radio" name="display_type" id="display_type_1" value="Table" />
+          <label for="display_type_1">
+            <div></div> Table
+          </label>
+          <input type="radio" name="display_type" id="display_type_2" value="BarChart" />
+          <label for="display_type_2">
+            <div></div> Bar Chart
+          </label>
+        </div>
+      </div>
+      <div class="section percent_style">
+        <div class="name">What percentage style would you like?</div>
+        <div class="controls">
+          <select id="percent_style"></select>
+        </div>
       </div>
       <div class="section">
-        <div class="section_name">How should questions be displayed?</div>
-        <input type="radio" name="question_labels" id="question_labels_1" value="Code" />
-        <label for="question_labels_1">Codes Only (Saves Space)</label>
-        <input type="radio" name="question_labels" id="question_labels_2" value="Title" />
-        <label for="question_labels_2">Full Titles (Easier to Read)</label>
+        <div class="name">What bar style would you like?</div>
+        <div class="controls">
+          <input type="radio" name="bar_style" id="bar_style_1" value="Side By Side" />
+          <label for="bar_style_1">Side by Side</label>
+          <input type="radio" name="bar_style" id="bar_style_2" value="Stacked" />
+          <label for="bar_style_2">Stacked</label>
+        </div>
+      </div>
+      <div class="section">
+        <div class="name">How should questions be displayed?</div>
+        <div class="controls">
+          <input type="radio" name="question_labels" id="question_labels_1" value="Code" />
+          <label for="question_labels_1">Codes Only (Saves Space)</label>
+          <input type="radio" name="question_labels" id="question_labels_2" value="Title" />
+          <label for="question_labels_2">Full Titles (Easier to Read)</label>
+        </div>
       </div>
     </div>
     

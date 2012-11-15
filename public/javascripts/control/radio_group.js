@@ -34,4 +34,12 @@
     for (var i = 0; i < this.inputs.length; i++)
       $(this.inputs[i]).bind("change", func);
   }
+  
+  klass.prototype.closest = function(sel) {
+    return $(this.inputs[0]).closest(sel);
+  }
+  
+  klass.prototype.clear = function() {
+    this.update(null);
+  }
 }(ELMO.Control));
