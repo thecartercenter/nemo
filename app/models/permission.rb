@@ -1,20 +1,10 @@
 class Permission
   GENERAL = {
-    "users#index" => {:min_level => 1},
-    "users#export" => {:min_level => 1},
+    "missions#*" => {:group => :admin},
+
     "users#create" => {:min_level => 3},
     "user_batches#*" => {:min_level => 3},
     "users#*" => {:min_level => 3},
-    "users#login_instructions" => {:min_level => 3},
-    "user_sessions#create" => {:group => :logged_out},
-    "user_sessions#destroy" => {:group => :anyone},
-    "user_sessions#logged_out" => {:group => :logged_out},
-    "password_resets#create" => {:group => :logged_out},
-    "password_resets#update" => {:group => :logged_out},
-    "welcome#*" => {:group => :anyone},
-    "permissions#no" => {:group => :anyone},
-    "forms#index" => {:min_level => 1},
-    "forms#show" => {:min_level => 2},
     "forms#create" => {:min_level => 3},
     "forms#update" => {:min_level => 3},
     "forms#destroy" => {:min_level => 3},
@@ -24,21 +14,36 @@ class Permission
     "forms#publish" => {:min_level => 3},
     "forms#clone" => {:min_level => 3},
     "form_types#*" => {:min_level => 3},
-    "report_reports#*" => {:min_level => 2},
-    "responses#index" => {:min_level => 1},
-    "responses#create" => {:min_level => 1},
-    "responses#show" => {:min_level => 2},
-    "responses#update" => {:min_level => 2},
-    "responses#destroy" => {:min_level => 2},
+    "users#login_instructions" => {:min_level => 3},
     "settings#*" => {:min_level => 3},
     "questionings#*" => {:min_level => 3},
     "questions#*" => {:min_level => 3},
     "options#*" => {:min_level => 3},
     "option_sets#*" => {:min_level => 3},
+
+    "forms#show" => {:min_level => 2},
+    "report_reports#*" => {:min_level => 2},
+    "responses#show" => {:min_level => 2},
+    "responses#update" => {:min_level => 2},
+    "responses#destroy" => {:min_level => 2},
     "broadcasts#*" => {:min_level => 2},
+
+    "forms#index" => {:min_level => 1},
+    "users#index" => {:min_level => 1},
+    "users#export" => {:min_level => 1},
+    "responses#index" => {:min_level => 1},
+    "responses#create" => {:min_level => 1},
     "markers#*" => {:min_level => 1},
     "proxies#geocoder" => {:min_level => 1},
-    "missions#*" => {:group => :admin}
+
+    "user_sessions#destroy" => {:group => :anyone},
+    "welcome#*" => {:group => :anyone},
+    "permissions#no" => {:group => :anyone},
+
+    "user_sessions#create" => {:group => :logged_out},
+    "user_sessions#logged_out" => {:group => :logged_out},
+    "password_resets#create" => {:group => :logged_out},
+    "password_resets#update" => {:group => :logged_out}
   }
   SPECIAL = [
     :anyone_can_edit_some_fields_about_herself,

@@ -66,10 +66,10 @@ class Report::ReportsController < ApplicationController
         run_and_handle_errors
       end
       
-      # set json instance variable to be used in template
+      @can_edit = authorized?(:action => "report_reports#update")
       
+      # set json instance variable to be used in template
       @report_json = build_hash.merge({
-        :can_edit => authorized?(:action => "report_reports#update"),
         :options => {
           :forms => Form.for_mission(current_mission).with_form_type.all,
           :calculation_types => Report::Calculation.types,
