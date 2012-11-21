@@ -1,6 +1,6 @@
 // ELMO.Report.EditView
 (function(ns, klass) {
-  
+
   // constructor
   ns.EditView = klass = function(menus, options, controller) {
     var _this = this;
@@ -71,7 +71,7 @@
     this.current_pane_idx = idx;
     
     // show/hide prev/next/run
-    this.show_hide_buttons();
+    this.update_buttons();
   }
   
   // go to the next/previous pane
@@ -109,12 +109,6 @@
     $(document).unbind("keyup", this.esc_handler);
   }
   
-  klass.prototype.show_hide_buttons = function() {
-    this.buttons.prev[this.current_pane_idx > 0 ? "show" : "hide"]();
-    this.buttons.next[this.current_pane_idx < this.panes.length - 1 ? "show" : "hide"]();
-    this.buttons.run[this.report.has_run() || this.current_pane_idx == this.panes.length - 1 ? "show" : "hide"]();
-  }
-  
   klass.prototype.hide = function() {
     this.dialog.hide();
   }
@@ -123,5 +117,17 @@
     for (var i = 0; i < this.panes.length; i++)
       if (this.panes[i][func_name]) this.panes[i][func_name](Array.prototype.slice.call(arguments, 1));
   } 
+
+  klass.prototype.update_buttons = function() {
+    this.enable_button(this.buttons.prev, this.current_pane_idx > 0);
+    this.enable_button(this.buttons.next, this.current_pane_idx < this.panes.length - 1);
+    this.enable_button(this.buttons.run, this.report.has_run() || this.current_pane_idx == this.panes.length - 1);
+  }
   
+  klass.prototype.enable_button = function(button, which) {
+    button.css("color", which ? "" : "#888");
+    button.css("cursor", which ? "" : "default");
+    button.attr("href", which ? "#" : "");
+  }
+
 }(ELMO.Report));
