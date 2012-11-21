@@ -25,6 +25,11 @@
     if (this.change_handler) this.change_handler();
   }
   
+  klass.prototype.enable = function(which) {
+    for (var i = 0; i < this.inputs.length; i++)
+      $(this.inputs[i]).attr("disabled", !which);
+  }
+  
   klass.prototype.get = function() {
     return this.inputs.filter(":checked").val();
   }

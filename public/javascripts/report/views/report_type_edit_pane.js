@@ -27,6 +27,7 @@
   klass.prototype.update = function(report) {
     this.report = report;
     this.type_chooser.update(this.report.attribs.type);
+    this.type_chooser.enable(!this.report.has_run());
   }
 
   // extracts data from the view into the model
