@@ -60,17 +60,19 @@
     <div class="report_edit_pane report_type">
       <h2>Report Type</h2>
       <div class="error_box"></div>
-      <div class="tip">What type of report would you like?</div>
-      <div>
-        <input type="radio" name="report_type" id="report_type_1" value="Report::QuestionAnswerTallyReport">
-        <label for="report_type_1">
-          <h3>Tally or percentage of answers per question</h3>
-          <div class="ex_lbl">Examples:</div>
-          <ul>
-            <li>Percentages of Yes, No, ... for all Yes-No questions</li>
-            <li>Tally of zero and non-zero answers for questions about observers</li>
-          </ul>
-        </label>
+      <div class="section">
+        <div class="name vert">What type of report would you like?</div>
+        <div class="controls vert">
+          <input type="radio" name="report_type" id="report_type_1" value="Report::QuestionAnswerTallyReport">
+          <label for="report_type_1">
+            <h3>Tally or percentage of answers per question</h3>
+            <div class="ex_lbl">Examples:</div>
+            <ul>
+              <li>Percentages of Yes and No for all Yes-No questions</li>
+              <li>Tally of zero and non-zero answers for questions about observers</li>
+            </ul>
+          </label>
+        </div>
       </div>
     </div>
         
@@ -78,8 +80,8 @@
       <h2>Display Options</h2>
       <div class="error_box"></div>
       <div class="section display_type">
-        <div class="name">How would you like to display the results?</div>
-        <div class="controls">
+        <div class="name horiz">How would you like to display the results?</div>
+        <div class="controls horiz">
           <input type="radio" name="display_type" id="display_type_1" value="Table" />
           <label for="display_type_1">
             <div></div> Table
@@ -91,14 +93,14 @@
         </div>
       </div>
       <div class="section percent_style">
-        <div class="name">What percentage style would you like?</div>
-        <div class="controls">
+        <div class="name horiz">What percentage style would you like?</div>
+        <div class="controls horiz">
           <select id="percent_style"></select>
         </div>
       </div>
       <div class="section">
-        <div class="name">What bar style would you like?</div>
-        <div class="controls">
+        <div class="name horiz">What bar style would you like?</div>
+        <div class="controls horiz">
           <input type="radio" name="bar_style" id="bar_style_1" value="Side By Side" />
           <label for="bar_style_1">Side by Side</label>
           <input type="radio" name="bar_style" id="bar_style_2" value="Stacked" />
@@ -106,8 +108,8 @@
         </div>
       </div>
       <div class="section">
-        <div class="name">How should questions be displayed?</div>
-        <div class="controls">
+        <div class="name horiz">How should questions be displayed?</div>
+        <div class="controls horiz">
           <input type="radio" name="question_labels" id="question_labels_1" value="Code" />
           <label for="question_labels_1">Codes Only (Saves Space)</label>
           <input type="radio" name="question_labels" id="question_labels_2" value="Title" />
@@ -121,13 +123,13 @@
       <div class="error_box"></div>
       
       <div class="section">
-        <div class="name">Which forms are you interested in?</div>
-        <div class="controls">
+        <div class="name horiz">Which forms are you interested in?</div>
+        <div class="controls horiz">
           <div id="form_select" class="multiselect">
             <div class="choices"></div>
             <div class="links">
-              <a href="#" class="select_all">Select all</a>
-              <a href="#" class="deselect_all">Deselect all</a>
+              <a href="#" class="select_all">Select All</a>
+              <a href="#" class="deselect_all">Deselect All</a>
             </div>
           </div>
         </div>
@@ -138,33 +140,49 @@
       <h2>Questions Included</h2>
       <div class="error_box"></div>
       
-      <label for="omnibus_calculation">Which calculation (if any) would you like to apply?&nbsp;</label>
-      <select id="omnibus_calculation"></select>
-      
-      <div class="q_sel_section_lbl">Which question(s) would you like to include?</div>
-      
-      <div class="q_sel_type">
-        <input type="radio" name="q_sel_type" id="q_sel_type_questions" value="questions">
-        <label for="q_sel_type_questions">These specific questions:</label>
-        <div id="question_select" class="multiselect">
-          <div class="choices"></div>
+      <div class="section">
+        <div class="name horiz">Which calculation (if any) would you like to apply?</div>
+        <div class="controls horiz">
+          <select id="omnibus_calculation"></select>
         </div>
       </div>
       
-      <div class="q_sel_type">
-        <input type="radio" name="q_sel_type" id="q_sel_type_option_set" value="option_set">
-        <label for="q_sel_type_option_set">Questions with this option set:</label>
-        <select id="option_set">
-          <option>Choose an option set...</option>
-        </select>
+      <div class="section">
+        <div class="name vert">Which question(s) would you like to include?</div>
+        <div class="controls vert">
+      
+          <div class="q_sel_type">
+            <input type="radio" name="q_sel_type" id="q_sel_type_questions" value="questions">
+            <label for="q_sel_type_questions">These specific questions:</label>
+            <div id="question_select" class="multiselect">
+              <div class="choices"></div>
+            </div>
+          </div>
+      
+          <div class="q_sel_type">
+            <input type="radio" name="q_sel_type" id="q_sel_type_option_set" value="option_set">
+            <label for="q_sel_type_option_set">Questions with this option set:</label>
+            <select id="option_set">
+              <option>Choose an option set...</option>
+            </select>
+          </div>
+        </div>
       </div>
     </div>
     
     <div class="report_edit_pane report_title">
       <h2>Report Title</h2>
       <div class="error_box"></div>
-      <label for="report_title">Enter a short descriptive name for the report.</label>
-      <input type="text" id="report_title">
+      
+      <div class="section">
+        <div class="name vert">
+          <label for="report_title">Enter a descriptive name for the report.</label>
+        </div>
+        <div class="controls vert">
+          <input type="text" id="report_title"/>
+        </div>
+      </div>
+      
     </div>
     
     <div class="buttons">

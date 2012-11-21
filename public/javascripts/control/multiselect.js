@@ -104,19 +104,24 @@
     if (this.change_callback) this.change_callback(this);
   }
   
-  // checks if select all link should be toggled, and toggles it
+  // checks if select all links should be toggled, and toggles them
   klass.prototype.toggle_select_all = function() {
+    // check if the links are enabled at all
     if (this.fld.find(".links a.select_all")) {
+      var all_checked = true;
       var any_checked = false;
       for (var i = 0; i < this.rows.length; i++) {
-        if (this.rows[i].find("input").prop("checked")) {
+        if (this.rows[i].find("input").prop("checked"))
           any_checked = true;
+        else
+          all_checked = false;
+          
+        if (!all_checked && any_checked)
           break;
-        }
       }
     
       // show/hide select all links
-      this.fld.find(".links a.select_all")[any_checked ? "hide" : "show"]();
+      this.fld.find(".links a.select_all")[!all_checked ? "show" : "hide"]();
       this.fld.find(".links a.deselect_all")[any_checked ? "show" : "hide"]();
     }
   }

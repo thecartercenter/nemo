@@ -46,45 +46,41 @@ div.error { background-color: #d02000; }
 #report_links a { display: block; }
 
 /* report form */
-div.report_edit_dialog { width: 600px; height: 451px; }
-div.report_edit_pane { width: 600px; height: 400px; display: none; }
+div.report_edit_dialog { width: 650px; height: 451px; }
+div.report_edit_pane { width: 650px; height: 400px; display: none; }
 div.report_edit_pane label { display: inline-block; }
 div.report_edit_pane input { display: inline-block; }
+div.report_edit_pane input[type='radio'] { margin-right: 4px; }
+div.report_edit_pane input[type='text'] { padding: 4px; }
+div.report_edit_pane .error_box { margin: 0 0 10px 0; color: white; background-color: #d02000; padding: 3px; display: none; font-weight: bold; }
 div.report_edit_pane div.section { margin-bottom: 15px; border-top: 1px solid #ddd; padding-top: 5px; }
-div.report_edit_pane div.section div.name { display: inline-block; width: 225px; }
-div.report_edit_pane div.section div.controls { display: inline-block; vertical-align: top; }
+div.report_edit_pane div.section div.name { font-weight: bold; }
+div.report_edit_pane div.section div.name.horiz { display: inline-block; width: 250px; }
+div.report_edit_pane div.section div.controls.horiz { display: inline-block; vertical-align: top; }
+div.report_edit_pane div.section div.name.vert { display: block; margin-bottom: 10px; }
+div.report_edit_pane div.section div.controls.vert { display: block; }
 div.report_edit_pane div.section label { margin-right: 10px; }
 div.report_edit_pane div.multiselect div.choices { overflow: auto; background-color: #e6e6e6; border: 1px solid #888; padding: 5px; }
 div.report_edit_pane div.multiselect div.links { margin-top: 5px; }
- 
-div.report_edit_pane.report_type label { margin: 0 0 0 10px; }
+div.report_edit_pane div.multiselect div.links a { display: inline-block; margin-right: 5px; }
+
 div.report_edit_pane.report_type input { vertical-align: top; }
-div.report_edit_pane.report_type ul, div.report_edit_pane.report_type .ex_lbl { color: #888; }
-div.report_edit_pane.report_type ul { line-height: 100%; }
+div.report_edit_pane.report_type h3 { font-size: 11pt; margin-bottom: 5px; color: #0065d1; }
+div.report_edit_pane.report_type .ex_lbl { display: inline-block; vertical-align: top; margin-right: 10px; }
+div.report_edit_pane.report_type ul { line-height: 100%; display: inline-block; }
 
 div.report_edit_pane.display_options div.section.display_type input { vertical-align: middle; }
 div.report_edit_pane.display_options div.section.display_type label { margin-right: 15px; }
 div.report_edit_pane.display_options div.section.display_type label > * { vertical-align: middle; }
-div.report_edit_pane.display_options div.section.display_type label > div { font-family: fontello; font-size: 24pt; color: #0065d1; display: inline-block; margin: 0 5px; padding: 0; line-height: 90%; }
+div.report_edit_pane.display_options div.section.display_type label > div { font-family: fontello; font-size: 24pt; color: #0065d1; display: inline-block; margin-right: 5px; padding: 0; line-height: 90%; }
 
 div.report_edit_pane.form_selection div#form_select div.choices { height: 300px; width: 250px; }
 
-div.report_edit_pane.question_selection div.q_sel_section_lbl { margin-bottom: 5px; }
-div.report_edit_pane.question_selection div#question_select div.choices { height: 200px; width: 250px; }
+div.report_edit_pane.question_selection div#question_select div.choices { height: 200px; width: 250px; margin: 5px 0 0 20px; }
 div.report_edit_pane.question_selection div.q_sel_type { margin-bottom: 10px; vertical-align: bottom; }
 
-div.report_edit_pane.report_title label { display: block; }
+div.report_edit_pane.report_title input { width: 400px; font-size: 11pt;  }
 
 div.report_edit_dialog .buttons { text-align: right; border-top: 1px solid #888; padding-top: 10px; }
 div.report_edit_dialog .buttons a { display: inline-block; margin: 0 0 0 10px; padding: 10px; font-size: 120%; font-weight: bold; width: 75px; text-align: center; 
     background-color: #ddd; border: 1px solid #888; color: #444; text-decoration: none; }
-
-
-#omnibus_calculation_wrp { margin-bottom: 5px; }
-#q_sel_type_questions_wrp { margin: 5px 0 0 0; }
-#q_sel_type_option_set_wrp { margin: 10px 0 0 0; }
-label[for='q_sel_type_questions'] { margin-left: 10px; }
-label[for='q_sel_type_option_set'] { margin-left: 10px; }
-select#option_set { margin-left: 25px; }
-#report_title { margin-top: 10px; width: 300px; }
-.error_box { margin: 0 0 10px 0; color: White; background-color: #d02000; padding: 3px; display: none; font-weight: bold; }
