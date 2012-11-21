@@ -7,7 +7,7 @@
   
   klass.prototype.build = function() {
     // get refs
-    this.cont = $("div.report_edit_pane." + this.title.replace(" ", "_").toLowerCase());
+    this.cont = $("div.report_edit_pane." + this.id);
     this.error_box = this.cont.find("div.error_box")
   }
   

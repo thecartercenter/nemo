@@ -98,7 +98,7 @@ class Question < ActiveRecord::Base
   end
   
   def as_json(options = {})
-    {:id => id, :code => code, :type => type.name}
+    {:id => id, :code => code, :type => type.name, :form_ids => forms.collect{|f| f.id}.sort}
   end
   
   private

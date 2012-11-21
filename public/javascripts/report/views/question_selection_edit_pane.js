@@ -12,7 +12,7 @@
   klass.prototype.constructor = klass;
   klass.prototype.parent = ns.EditPane.prototype;
   
-  klass.prototype.title = "Question Choices";
+  klass.prototype.id = "question_selection";
 
   // builds controls
   klass.prototype.build = function() {
@@ -48,11 +48,6 @@
       txt_key: "name"
     });
     
-    // setup event handlers
-    (function(_this){
-      _this.calc_chooser.change(function(){ _this.handle_calculation_change(); })
-      _this.q_sel_type_radio.change(function() { _this.handle_q_sel_type_change(); })
-    })(this);
   }
   
   klass.prototype.update = function(report) {
@@ -82,7 +77,7 @@
   }
   
   klass.prototype.handle_calculation_change = function() {
-    this.q_chooser.update_objs(this.menus.question.for_calc_type(this.calc_chooser.get()));
+    this.update_questions();
   }
   
   klass.prototype.handle_q_sel_type_change = function() {
@@ -91,8 +86,17 @@
     this.q_chooser.enable(this.q_sel_type_radio.get() == "questions");
   }
   
+  klass.prototype.handle_form_selection_change = function(src) {
+    this.selected_forms = Sassafras.Utils.array_to_ints(src.get());
+    this.update_questions();
+  }
+  
   klass.prototype.fields_for_validation_errors = function() {
     return ["questions", "option_set_id"];
+  }
+  
+  klass.prototype.update_questions = function() {
+    this.q_chooser.update_objs(this.menus.question.for_forms_and_calc_type(this.selected_forms, this.calc_chooser.get()));
   }
   
 }(ELMO.Report));

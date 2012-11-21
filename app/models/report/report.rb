@@ -101,6 +101,7 @@ class Report::Report < ActiveRecord::Base
     h[:type] = type
     h[:data] = @data
     h[:headers] = @header_set ? @header_set.headers : {}
+    h[:filter_str] = filter ? filter.str : ""
     h
   end
   

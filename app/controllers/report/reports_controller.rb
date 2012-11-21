@@ -71,8 +71,9 @@ class Report::ReportsController < ApplicationController
       @report_json = build_hash.merge({
         :can_edit => authorized?(:action => "report_reports#update"),
         :options => {
+          :forms => Form.for_mission(current_mission).with_form_type.all,
           :calculation_types => Report::Calculation.types,
-          :questions => Question.for_mission(current_mission).all,
+          :questions => Question.for_mission(current_mission).includes(:forms, :type).all,
           :option_sets => OptionSet.for_mission(current_mission).all,
           :percent_types => Report::Report::PERCENT_TYPES
         }

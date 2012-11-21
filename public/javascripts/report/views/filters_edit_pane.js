@@ -11,7 +11,7 @@
   klass.prototype.constructor = klass;
   klass.prototype.parent = ns.EditPane.prototype;
     
-  klass.prototype.title = "Filters";
+  klass.prototype.id = "filters";
 
   // builds controls
   klass.prototype.build = function() {

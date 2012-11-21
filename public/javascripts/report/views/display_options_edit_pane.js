@@ -12,7 +12,7 @@
   klass.prototype.constructor = klass;
   klass.prototype.parent = ns.EditPane.prototype;
   
-  klass.prototype.title = "Display Options";
+  klass.prototype.id = "display_options";
 
   // builds controls
   klass.prototype.build = function() {

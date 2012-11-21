@@ -20,14 +20,13 @@
 
     // create the panes
     this.panes = [
-      new ns.ReportTypeEditPane(menus),
-      new ns.DisplayOptionsEditPane(menus, options),
-      //new ns.FormSelectionEditPane(menus),
-      new ns.QuestionSelectionEditPane(menus),
-      //new ns.FiltersEditPane(menus),
-      new ns.ReportTitleEditPane(menus)
+      this.report_type_pane = new ns.ReportTypeEditPane(menus),
+      this.display_options_pane = new ns.DisplayOptionsEditPane(menus, options),
+      this.form_selection_pane = new ns.FormSelectionEditPane(menus),
+      this.question_selection_pane = new ns.QuestionSelectionEditPane(menus),
+      this.report_title_pane = new ns.ReportTitleEditPane(menus)
     ];
-    
+
     // pane pointer
     this.current_pane_idx = 0;
     
@@ -38,6 +37,11 @@
       next: this.form.find("a.next").click(function() { _this.change_pane(1); return false; }),
       run: this.form.find("a.run").click(function() { _this.run(); return false; })
     }
+    
+    // setup event handlers
+    this.question_selection_pane.calc_chooser.change(function(){ _this.question_selection_pane.handle_calculation_change(); })
+    this.question_selection_pane.q_sel_type_radio.change(function() { _this.question_selection_pane.handle_q_sel_type_change(); })
+    this.form_selection_pane.form_chooser.change(function(src){ _this.question_selection_pane.handle_form_selection_change(src); })
   }
   
   klass.prototype.show = function(report, idx) {

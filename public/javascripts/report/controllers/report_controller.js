@@ -3,18 +3,20 @@
   
   // constructor
   ns.ReportController = klass = function(init_data) {
-    this.report_in_db = new ns.Report(init_data.report);
-    
-    // create copy of report to be referenced each run
-    this.report_last_run = this.report_in_db.clone();
-    
     // create supporting models
     this.options = init_data.options;
     this.menus = {
+      form: new ns.FormMenu(this.options.forms),
       calc_type: new ns.CalcTypeMenu(this.options.calculation_types),
       question: new ns.QuestionMenu(this.options.questions),
       option_set: new ns.OptionSetMenu(this.options.option_sets)
     }
+
+    this.report_in_db = new ns.Report(init_data.report, this.menus);
+    this.report_in_db.prepare();
+    
+    // create copy of report to be referenced each run
+    this.report_last_run = this.report_in_db.clone();
     
     // create report view
     this.report_view = new ns.ReportView(this, this.report_in_db);
@@ -83,7 +85,8 @@
       
     // otherwise we can process the updated report object
     } else {
-      this.report_last_run = new ns.Report(data.report);
+      this.report_last_run = new ns.Report(data.report, this.menus);
+      this.report_last_run.prepare();
       this.display_report(this.report_last_run);
     }
   }

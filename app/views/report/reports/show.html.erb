@@ -10,6 +10,7 @@
       report/models/report
       report/models/object_menu
       report/models/calc_type_menu
+      report/models/form_menu
       report/models/option_set_menu
       report/models/question_menu
       report/views/display
@@ -43,8 +44,9 @@
 <div id="report_links">
   <strong>Edit Report</strong>
   <a id="edit_link_1" href="#">Display Options</a>
-  <a id="edit_link_2" href="#">Question Choices</a>
-  <a id="edit_link_3" href="#">Title</a>
+  <a id="edit_link_2" href="#">Included Forms</a>
+  <a id="edit_link_3" href="#">Included Questions</a>
+  <a id="edit_link_4" href="#">Title</a>
 </div>
 <div id="report_main">
   <div class="tip" id="report_info"></div>
@@ -114,8 +116,26 @@
       </div>
     </div>
     
-    <div class="report_edit_pane question_choices">
-      <h2>Question Choices</h2>
+    <div class="report_edit_pane form_selection">
+      <h2>Forms Included</h2>
+      <div class="error_box"></div>
+      
+      <div class="section">
+        <div class="name">Which forms are you interested in?</div>
+        <div class="controls">
+          <div id="form_select" class="multiselect">
+            <div class="choices"></div>
+            <div class="links">
+              <a href="#" class="select_all">Select all</a>
+              <a href="#" class="deselect_all">Deselect all</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="report_edit_pane question_selection">
+      <h2>Questions Included</h2>
       <div class="error_box"></div>
       
       <label for="omnibus_calculation">Which calculation (if any) would you like to apply?&nbsp;</label>
@@ -126,7 +146,9 @@
       <div class="q_sel_type">
         <input type="radio" name="q_sel_type" id="q_sel_type_questions" value="questions">
         <label for="q_sel_type_questions">These specific questions:</label>
-        <div id="question_select"></div>
+        <div id="question_select" class="multiselect">
+          <div class="choices"></div>
+        </div>
       </div>
       
       <div class="q_sel_type">
@@ -138,13 +160,12 @@
       </div>
     </div>
     
-    <div class="report_edit_pane title">
-      <h2>Title</h2>
+    <div class="report_edit_pane report_title">
+      <h2>Report Title</h2>
       <div class="error_box"></div>
       <label for="report_title">Enter a short descriptive name for the report.</label>
       <input type="text" id="report_title">
     </div>
-    
     
     <div class="buttons">
       <a href="#" class="cancel">Cancel</a>

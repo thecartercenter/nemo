@@ -2,13 +2,19 @@
 (function(ns, klass) {
   
   // constructor
-  ns.Report = klass = function(attribs) {
+  ns.Report = klass = function(attribs, menus) {
     this.attribs = attribs;
+    this.menus = menus;
+  }
+  
+  // called when data first received
+  klass.prototype.prepare = function() {
+    this.extract_form_ids_from_filter_str();
   }
   
   klass.prototype.clone = function() {
     var new_attribs = $.extend(true, {}, this.attribs);
-    return new klass(new_attribs);
+    return new klass(new_attribs, this.menus);
   }
   
   klass.prototype.has_run = function() {
@@ -60,6 +66,30 @@
     return this.attribs.aggregation_name || "Tally";
   }
   
+  // returns a filter string fragment for the selected form ids
+  klass.prototype.form_filter_str = function() {
+    if (this.attribs.form_ids == "ALL")
+      return null;
+    else
+      return "form:\"" + this.menus.form.get_names(this.attribs.form_ids).join("\",\"") + "\"";
+  }
+  
+  klass.prototype.extract_form_ids_from_filter_str = function() {
+    var m;
+    if (m = this.attribs.filter_str.match(/^\(form:(.*)\)( and \((.+)\))?/)) {
+      this.attribs.filter_str = m[3] || "";
+      
+      // split name str and strip quotes
+      var names = m[1].split(",");
+      $(names).each(function(i){ names[i] = names[i].substring(1, names[i].length - 1); });
+      
+      // get ids from form menu
+      this.attribs.form_ids = this.menus.form.get_ids_from_names(names);
+    } else {
+      this.attribs.form_ids = "ALL";
+    }
+  }
+  
   klass.prototype.to_hash = function() {
     var to_serialize = {}
     // later should replace this with better serialization method?
@@ -79,6 +109,19 @@
       if (this.attribs.calculations[i]._destroy) calc._destroy = this.attribs.calculations[i]._destroy;
       to_serialize.calculations_attributes.push(calc);
     }
+    
+    // filter params
+    to_serialize.filter_attributes = {}
+    to_serialize.filter_attributes.class_name = "Response"
+
+    // include the form id spec in the filter string
+    var filter_clauses = []
+    var form_str = this.form_filter_str();
+    if (form_str) filter_clauses.push("(" + form_str + ")");
+    if (this.attribs.filter_str.length > 0) filter_clauses.push("(" + this.attribs.filter_str + ")");
+    
+    to_serialize.filter_attributes.str = filter_clauses.join(" and ")
+    
     return to_serialize;
   }
   

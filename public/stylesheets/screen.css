@@ -50,11 +50,13 @@ div.report_edit_dialog { width: 600px; height: 451px; }
 div.report_edit_pane { width: 600px; height: 400px; display: none; }
 div.report_edit_pane label { display: inline-block; }
 div.report_edit_pane input { display: inline-block; }
-div.report_edit_pane div.section { margin-bottom: 10px; }
+div.report_edit_pane div.section { margin-bottom: 15px; border-top: 1px solid #ddd; padding-top: 5px; }
 div.report_edit_pane div.section div.name { display: inline-block; width: 225px; }
 div.report_edit_pane div.section div.controls { display: inline-block; vertical-align: top; }
 div.report_edit_pane div.section label { margin-right: 10px; }
-
+div.report_edit_pane div.multiselect div.choices { overflow: auto; background-color: #e6e6e6; border: 1px solid #888; padding: 5px; }
+div.report_edit_pane div.multiselect div.links { margin-top: 5px; }
+ 
 div.report_edit_pane.report_type label { margin: 0 0 0 10px; }
 div.report_edit_pane.report_type input { vertical-align: top; }
 div.report_edit_pane.report_type ul, div.report_edit_pane.report_type .ex_lbl { color: #888; }
@@ -65,11 +67,13 @@ div.report_edit_pane.display_options div.section.display_type label { margin-rig
 div.report_edit_pane.display_options div.section.display_type label > * { vertical-align: middle; }
 div.report_edit_pane.display_options div.section.display_type label > div { font-family: fontello; font-size: 24pt; color: #0065d1; display: inline-block; margin: 0 5px; padding: 0; line-height: 90%; }
 
-div.report_edit_pane.question_choices div.q_sel_section_lbl { margin-bottom: 5px; }
-div.report_edit_pane.question_choices div#question_select { height: 200px; width: 300px; overflow: auto; margin: 5px 0 0 25px; background-color: #ddd; border: 1px solid #888; padding: 5px; }
-div.report_edit_pane.question_choices div.q_sel_type { margin-bottom: 10px; vertical-align: bottom; }
+div.report_edit_pane.form_selection div#form_select div.choices { height: 300px; width: 250px; }
 
-div.report_edit_pane.title label { display: block; }
+div.report_edit_pane.question_selection div.q_sel_section_lbl { margin-bottom: 5px; }
+div.report_edit_pane.question_selection div#question_select div.choices { height: 200px; width: 250px; }
+div.report_edit_pane.question_selection div.q_sel_type { margin-bottom: 10px; vertical-align: bottom; }
+
+div.report_edit_pane.report_title label { display: block; }
 
 div.report_edit_dialog .buttons { text-align: right; border-top: 1px solid #888; padding-top: 10px; }
 div.report_edit_dialog .buttons a { display: inline-block; margin: 0 0 0 10px; padding: 10px; font-size: 120%; font-weight: bold; width: 75px; text-align: center; 

@@ -11,25 +11,24 @@
   klass.prototype.constructor = klass;
   klass.prototype.parent = ns.EditPane.prototype;
   
-  // title
-  klass.prototype.title = "Title";
+  klass.prototype.id = "report_title";
   
   // builds controls
   klass.prototype.build = function() {
     // call super first
     this.parent.build.call(this);
     
-    this.title = this.cont.find("input#report_title");
+    this.title_fld = this.cont.find("input#report_title");
   }
   
   klass.prototype.update = function(report) {
     this.report = report;
-    this.title.val(report.attribs.name);
+    this.title_fld.val(report.attribs.name);
   }
 
   // extracts data from the view into the model
   klass.prototype.extract = function() {
-    this.report.attribs.name = this.title.val();
+    this.report.attribs.name = this.title_fld.val();
   }
   
   klass.prototype.fields_for_validation_errors = function() {

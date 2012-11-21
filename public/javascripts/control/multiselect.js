@@ -3,11 +3,16 @@
   
   // constructor
   ns.Multiselect = klass = function(params) {
+    var _this = this;
     this.params = params;
 
     this.fld = params.el;
     this.rebuild_options();
     this.dom_id = parseInt(Math.random() * 1000000);
+    
+    // hookup events
+    this.fld.find(".links a.select_all").click(function() { _this.set_all(true); });
+    this.fld.find(".links a.deselect_all").click(function() { _this.set_all(false); });
   }
   
   // inherit from Control
@@ -20,8 +25,10 @@
   }
   
   klass.prototype.rebuild_options = function() {
+    var _this = this;
+    
     // empty old rows
-    this.fld.empty();
+    this.fld.find(".choices").empty();
     this.rows = [];
     
     // add new rows
@@ -31,11 +38,12 @@
       var row = $("<div>");
       var dom_id = this.dom_id + "_" + i;
       
-      $("<input>").attr("type", "checkbox").attr("value", id).attr("id", dom_id).appendTo(row);
+      $("<input>").attr("type", "checkbox").attr("value", id).attr("id", dom_id).click(function(){ _this.handle_change(this); }).appendTo(row);
       $("<label>").attr("for", dom_id).html("&nbsp;" + txt).appendTo(row);
       
       this.rows.push(row);
-      this.fld.append(row);
+
+      this.fld.find(".choices").append(row);
     }
   }
   
@@ -45,11 +53,20 @@
       selected_ids[i] = selected_ids[i].toString();
       
     this.update_without_triggering(selected_ids);
+    
+    this.handle_change();
   }
   
+  klass.prototype.change = function(func) {
+    this.change_callback = func;
+  }
+
+  
   klass.prototype.update_without_triggering = function(selected_ids) {
-    for (var i = 0; i < this.rows.length; i++)
-      this.rows[i].find("input").prop("checked", selected_ids.indexOf(this.rows[i].find("input").attr("value")) != -1);
+    for (var i = 0; i < this.rows.length; i++) {
+      var checked = selected_ids.indexOf(this.rows[i].find("input").attr("value")) != -1;
+      this.rows[i].find("input").prop("checked", checked);
+    }
   }
   
   klass.prototype.update_objs = function(objs) {
@@ -73,6 +90,42 @@
     else
       this.fld.find("input[type='checkbox']").attr("disabled", "disabled");
     this.fld.css("color", which ? "" : "#888");
+  }
+  
+  klass.prototype.set_all = function(which) {
+    for (var i = 0; i < this.rows.length; i++)
+      this.rows[i].find("input").prop("checked", which);
+    
+    this.handle_change();
+  }
+  
+  klass.prototype.handle_change = function() {
+    this.toggle_select_all();
+    if (this.change_callback) this.change_callback(this);
+  }
+  
+  // checks if select all link should be toggled, and toggles it
+  klass.prototype.toggle_select_all = function() {
+    if (this.fld.find(".links a.select_all")) {
+      var any_checked = false;
+      for (var i = 0; i < this.rows.length; i++) {
+        if (this.rows[i].find("input").prop("checked")) {
+          any_checked = true;
+          break;
+        }
+      }
+    
+      // show/hide select all links
+      this.fld.find(".links a.select_all")[any_checked ? "hide" : "show"]();
+      this.fld.find(".links a.deselect_all")[any_checked ? "show" : "hide"]();
+    }
+  }
+  
+  klass.prototype.all_selected = function() {
+    for (var i = 0; i < this.rows.length; i++)
+      if (!this.rows[i].find("input").prop("checked"))
+        return false;
+    return true;
   }
   
 }(ELMO.Control));
