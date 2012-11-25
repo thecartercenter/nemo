@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   def index
-    @users = apply_filters(User)
+    @users = apply_filters(User.includes(:missions))
   end
   def new
     @user = User.new

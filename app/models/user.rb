@@ -7,7 +7,7 @@ class User < ActiveRecord::Base
   has_many(:responses, :inverse_of => :user)
   has_many(:broadcast_addressings, :inverse_of => :user)
   has_many(:assignments, :autosave => true, :dependent => :destroy, :validate => true, :inverse_of => :user)
-  has_many(:missions, :through => :assignments)
+  has_many(:missions, :through => :assignments, :order => "missions.created_at DESC")
   belongs_to(:current_mission, :class_name => "Mission")
   
   accepts_nested_attributes_for(:assignments, :allow_destroy => true)
@@ -141,6 +141,10 @@ class User < ActiveRecord::Base
   
   def assignments_by_mission
     @assignments_by_mission ||= Hash[*assignments.collect{|a| [a.mission, a]}.flatten]
+  end
+  
+  def latest_mission
+    missions.first
   end
   
   # gets the user's role for the given mission
