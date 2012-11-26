@@ -7,16 +7,8 @@
 
     this.fld = params.el;
     
-    this.opts = [];
+    this.rebuild_options();
 
-    // add options
-    for (var i = 0; i < this.params.objs.length; i++) {
-      var id = this.params.objs[i][this.params.id_key];
-      var txt = this.params.objs[i][this.params.txt_key];
-      var opt = $("<option>").text(txt).attr("value", id);
-      this.opts.push(opt);
-      this.fld.append(opt);
-    }
   }
   
   // inherit from Control
@@ -27,11 +19,57 @@
   klass.prototype.update = function(selected_id) {
     for (var i = 0; i < this.opts.length; i++)
       this.opts[i].prop("selected", selected_id == null ? false : (selected_id.toString() == this.opts[i].attr("value")));
-
-    // trigger change event
-    this.fld.trigger("change");
   }
   
+  klass.prototype.rebuild_options = function() {
+    var _this = this;
+    
+    // save the prompt option if necessary
+    if (this.params.prompt)
+      var prompt = this.fld.find("option:first")[0].outerHTML;
+    
+    // empty old rows
+    this.fld.empty();
+    this.opts = [];
+    
+    // re-add the prompt if appropriate
+    if (this.params.prompt)
+      this.fld.append(prompt);
+
+    // if this is a grouped select, add the option sets one by one
+    if (this.params.grouped) {
+      $(this.params.objs).each(function() { 
+        // create the optgroup tag
+        var grp = $("<optgroup>").attr("label", this.label);
+        _this.build_option_group(grp, this);
+        _this.fld.append(grp);
+      });
+    } else
+      this.build_option_group(this.fld, this.params);
+  }  
+  
+  klass.prototype.build_option_group = function(parent, spec) {
+    for (var i = 0; i < spec.objs.length; i++) {
+      var id = typeof(spec.id_key) == "function" ? spec.id_key(spec.objs[i]) : spec.objs[i][spec.id_key];
+      var txt = typeof(spec.txt_key) == "function" ? spec.txt_key(spec.objs[i]) : spec.objs[i][spec.txt_key];
+      var opt = $("<option>").text(txt).attr("value", id);
+      this.opts.push(opt);
+      parent.append(opt);
+    }
+  }
+  
+  klass.prototype.update_objs = function(objs) {
+    // save new object set and old selection
+    this.params.objs = objs;
+    var seld = this.get();
+    
+    // make the new option tags
+    this.rebuild_options();
+    
+    // select the proper option again
+    this.update(seld);
+  }
+    
   klass.prototype.get = function() {
     for (var i = 0; i < this.opts.length; i++)
       if (this.opts[i].prop("selected"))

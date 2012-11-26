@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121112174623) do
+ActiveRecord::Schema.define(:version => 20121126153456) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -186,6 +186,7 @@ ActiveRecord::Schema.define(:version => 20121112174623) do
     t.string   "attrib1_name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "rank"
   end
 
   create_table "report_reports", :force => true do |t|

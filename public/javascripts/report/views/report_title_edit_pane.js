@@ -2,7 +2,8 @@
 (function(ns, klass) {
 
   // constructor
-  klass = ns.ReportTitleEditPane = function() {
+  klass = ns.ReportTitleEditPane = function(parent_view) {
+    this.parent_view = parent_view;
     this.build()
   };
   
@@ -22,7 +23,10 @@
   }
   
   klass.prototype.update = function(report) {
+    // store report reference
     this.report = report;
+    
+    // update controls
     this.title_fld.val(report.attribs.name);
   }
 

@@ -6,6 +6,7 @@
     // create supporting models
     this.options = init_data.options;
     this.menus = {
+      attrib: new ns.AttribMenu(this.options.attribs),
       form: new ns.FormMenu(this.options.forms),
       calc_type: new ns.CalcTypeMenu(this.options.calculation_types),
       question: new ns.QuestionMenu(this.options.questions),
@@ -24,6 +25,9 @@
     // create edit view
     this.edit_view = new ns.EditView(this.menus, this.options, this);
     
+    // update the links
+    this.edit_view.show_hide_edit_links(this.report_in_db);
+    
     // show unhandled error if exists
     if (init_data.unhandled_error)
       this.report_view.show_error("System Error: " + init_data.unhandled_error);
@@ -38,17 +42,14 @@
   }
 
   klass.prototype.show_edit_view = function(idx) {
-    //$("#report_body, #report_links").hide();
+    $("#report_links, #report_main").hide();
     this.edit_view.show(this.report_last_run.clone(), idx);
   }
   
   // sends an ajax request to server
   klass.prototype.run_report = function(report) {
-    
-    // hide dialog and show loading indicator
-    this.edit_view.hide();
     this.report_view.show_loading_indicator(true);
-  
+    
     // get hash from report
     var to_serialize = {}
     to_serialize["report"] = report.to_hash();
@@ -71,20 +72,20 @@
   }
   
   klass.prototype.run_success = function(data, status, jqxhr) {
-    // hide load ind
-    this.report_view.show_loading_indicator(false);
-
+    
     // if unhandled error in report run process display it
-    if (data.unhandled_error)
+    if (data.unhandled_error) {
+      this.restore_view();
       this.report_view.show_error("System Error: " + data.unhandled_error);
       
     // otherwise, if the 'just created' flag is set, redirect to the show action so that links, etc., will work
-    else if (data.report.just_created) {
+    } else if (data.report.just_created) {
       this.report_view.show_loading_indicator(true);
       window.location.href = "/report/reports/" + data.report.id
       
     // otherwise we can process the updated report object
     } else {
+      this.restore_view();
       this.report_last_run = new ns.Report(data.report, this.menus);
       this.report_last_run.prepare();
       this.display_report(this.report_last_run);
@@ -92,15 +93,24 @@
   }
   
   klass.prototype.run_error = function(jqxhr, status, error) {
-    // hide load ind
-    this.report_view.show_loading_indicator(false);
-    
+    this.restore_view();  
     // show error
     var msg = error == "" ? "Error contacting server" : "System Error: " + error;
     this.report_view.show_error(msg);
   }
   
+  klass.prototype.edit_cancelled = function() {
+    this.restore_view();
+  }
+  
   klass.prototype.display_report = function(report) {
     this.report_view.update(report);
+  }
+  
+  klass.prototype.restore_view = function() {
+    // hide load ind
+    this.report_view.show_loading_indicator(false);
+    // show links and body
+    $("#report_links, #report_main").show();
   }
 }(ELMO.Report));

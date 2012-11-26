@@ -2,7 +2,8 @@
 (function(ns, klass) {
   
   // constructor
-  ns.FormSelectionEditPane = klass = function(menus) {
+  ns.FormSelectionEditPane = klass = function(parent_view, menus) {
+    this.parent_view = parent_view;
     this.menus = menus;
     this.build()
   }
@@ -16,6 +17,8 @@
 
   // builds controls
   klass.prototype.build = function() {
+    var _this = this;
+    
     // call super first
     this.parent.build.call(this);
     
@@ -26,13 +29,17 @@
       id_key: "id",
       txt_key: "full_name"
     });
+    this.form_chooser.change(function() { _this.broadcast_change("form_selection"); });
   }
 
   klass.prototype.update = function(report) {
+    // store report reference
     this.report = report;
+    
+    // update controls
     // get selected IDs from model
     if (this.report.attribs.form_ids == "ALL")
-      this.form_chooser.set_all(true)
+      this.form_chooser.set_all(true);
     else
       this.form_chooser.update(this.report.attribs.form_ids);
   }

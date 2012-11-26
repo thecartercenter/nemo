@@ -19,6 +19,11 @@
     this.cont.hide();
   }
   
+  klass.prototype.broadcast_change = function(attrib) {
+    this.extract();
+    this.parent_view.broadcast_change(attrib);
+  }
+  
   klass.prototype.show_validation_errors = function() {
     var fields = this.fields_for_validation_errors ? this.fields_for_validation_errors() : [];
     var errors = [];

@@ -2,7 +2,8 @@
 (function(ns, klass) {
   
   // constructor
-  ns.FiltersEditPane = klass = function() {
+  ns.FiltersEditPane = klass = function(parent_view) {
+    this.parent_view = parent_view;
     this.build()
   }
 

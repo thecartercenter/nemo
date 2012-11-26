@@ -34,6 +34,8 @@
   klass.prototype.set_calculations_by_question_ids = function(qids) {
     var _this = this;
     
+    if (this.attribs.type != "Report::QuestionAnswerTallyReport") return;
+    
     // calculations to empty array if not exist
     this.attribs.calculations = this.attribs.calculations || [];
     
@@ -100,19 +102,35 @@
     to_serialize.bar_style = this.attribs.bar_style;
     to_serialize.question_labels = this.attribs.question_labels;
     to_serialize.option_set_id = this.attribs.option_set_id == null ? "" : this.attribs.option_set_id;
-    to_serialize.calculations_attributes = [];
-    for (var i = 0; i < this.attribs.calculations.length; i++) {
-      var calc = {};
-      calc.question1_id = this.attribs.calculations[i].question1_id;
-      if (this.attribs.calculations[i].type) calc.type = this.attribs.calculations[i].type;
-      if (this.attribs.calculations[i].id) calc.id = this.attribs.calculations[i].id;
-      if (this.attribs.calculations[i]._destroy) calc._destroy = this.attribs.calculations[i]._destroy;
-      to_serialize.calculations_attributes.push(calc);
+    if (this.attribs.type == "Report::QuestionAnswerTallyReport") {
+      to_serialize.calculations_attributes = [];
+      for (var i = 0; i < this.attribs.calculations.length; i++) {
+        var calc = {};
+        calc.question1_id = this.attribs.calculations[i].question1_id;
+        if (this.attribs.calculations[i].type) calc.type = this.attribs.calculations[i].type;
+        if (this.attribs.calculations[i].id) calc.id = this.attribs.calculations[i].id;
+        if (this.attribs.calculations[i]._destroy) calc._destroy = this.attribs.calculations[i]._destroy;
+        to_serialize.calculations_attributes.push(calc);
+      }
+    } else {
+      to_serialize.calculations_attributes = this.attribs.calculations_attributes;
     }
     
     // filter params
     to_serialize.filter_attributes = {}
     to_serialize.filter_attributes.class_name = "Response"
+
+    // groupings
+    if (this.attribs.pri_group_by_attributes) {
+      to_serialize.pri_group_by_attributes = this.attribs.pri_group_by_attributes;
+      if (this.attribs.pri_group_by_attributes._destroy)
+        ;//to_serialize.pri_group_by_id = "";
+    }
+    if (this.attribs.sec_group_by_attributes) {
+      to_serialize.sec_group_by_attributes = this.attribs.sec_group_by_attributes;
+      if (this.attribs.sec_group_by_attributes._destroy)
+        ;//to_serialize.sec_group_by_id = "";
+    }
 
     // include the form id spec in the filter string
     var filter_clauses = []
@@ -123,6 +141,16 @@
     to_serialize.filter_attributes.str = filter_clauses.join(" and ")
     
     return to_serialize;
+  }
+  
+  klass.prototype.calculation_by_rank = function(rank) {
+    if (!this.attribs.calculations)
+      return null;
+      
+    for (var i = 0; i < this.attribs.calculations.length; i++)
+      if (this.attribs.calculations[i].rank == rank)
+        return this.attribs.calculations[i];
+    return null;
   }
   
   // checks that all attributes are valid. 
@@ -140,7 +168,7 @@
       this.errors.add("name", "You must enter a report title.");
 
     // question/option_set
-    if (this.calculation_count() == 0 && this.attribs.option_set_id == null)
+    if (this.attribs.type == "Report::QuestionAnswerTallyReport" && this.calculation_count() == 0 && this.attribs.option_set_id == null)
       this.errors.add("questions", "You must choose at least one question or one option set.");
     return this.errors.empty();
   }

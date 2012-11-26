@@ -76,7 +76,7 @@ div.report_edit_pane.display_options div.section.display_type label > div { font
 
 div.report_edit_pane.form_selection div#form_select div.choices { height: 300px; width: 250px; }
 
-div.report_edit_pane.question_selection div#question_select div.choices { height: 200px; width: 250px; margin: 5px 0 0 20px; }
+div.report_edit_pane.question_selection div#question_select div.choices { height: 150px; width: 250px; margin: 5px 0 0 20px; }
 div.report_edit_pane.question_selection div.q_sel_type { margin-bottom: 10px; vertical-align: bottom; }
 
 div.report_edit_pane.report_title input { width: 400px; font-size: 11pt;  }

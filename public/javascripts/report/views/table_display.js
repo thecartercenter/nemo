@@ -12,7 +12,8 @@
   klass.prototype.parent = ns.Display.prototype;
   
   klass.prototype.show_totals = function(row_or_col) {
-    return true;
+    // show totals if the opposite header is defined
+    return !!this.report.attribs.headers[row_or_col == "row" ? "col" : "row"].title;
   }
 
   // formats a given fraction as a percentage
@@ -27,11 +28,12 @@
     var tbl = this.tbl = $("<table>");
 
     // column label row
-    if (headers.col) {
+    if (headers.col.title) {
       var trow = $("<tr>");
       
       // blank cells for row grouping label and row header, if necessary
-      if (headers.row) { $("<th>").appendTo(trow); $("<th>").appendTo(trow); }
+      if (headers.row.title) { $("<th>").appendTo(trow); }
+      $("<th>").appendTo(trow);
      
       // col grouping label
       $("<th>").addClass("col_grouping_label").attr("colspan", headers.col.cells.length).text(headers.col.title).appendTo(trow);
@@ -47,8 +49,9 @@
       var trow = $("<tr>");
     
       // blank cells for row grouping label and row header, if necessary
-      if (headers.row) { $("<th>").appendTo(trow); $("<th>").appendTo(trow); }
-    
+      if (headers.row.title) { $("<th>").appendTo(trow); }
+      $("<th>").appendTo(trow); 
+      
       // rest of header cells
       $(headers.col.cells).each(function(idx, ch) {
         $("<th>").addClass("col").text(ch.name || "[Null]").appendTo(trow);
@@ -63,7 +66,7 @@
     
     // create the row grouping label
     var row_grouping_label;
-    if (headers.row) {
+    if (headers.row.title) {
       var txt = headers.row.title.replace(/\s+/g, "<br/>")
       row_grouping_label = $("<th>").addClass("row_grouping_label").attr("rowspan", headers.row.cells.length);
       row_grouping_label.append($("<div>").html(txt));
@@ -125,8 +128,8 @@
     if (_this.show_totals("col")) {
       trow = $("<tr>");
     
-      // blank cells for row grouping label and row header, if necessary
-      if (headers.row) { $("<th>").appendTo(trow); }
+      // blank cells for row grouping label, if necessary
+      if (headers.row.title) { $("<th>").appendTo(trow); }
      
       // row header
       $("<th>").addClass("row").addClass("col_total").text("Total").appendTo(trow);

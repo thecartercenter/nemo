@@ -6,6 +6,10 @@ class Report::AttribField < Report::Field
   def self.get(name)
     @@ATTRIBS[name.to_sym]
   end
+  
+  def self.all
+    @@ATTRIBS.values
+  end
 
   def name_expr(table_prefix)
     name_expr_template.gsub("__", table_prefix).gsub("_CURRENT_TIMEZONE_", Time.zone.mysql_name)
@@ -25,6 +29,10 @@ class Report::AttribField < Report::Field
   
   def joins
     @joins || []
+  end
+  
+  def as_json(options = {})
+    {:name => name, :title => name.to_s.gsub("_", " ").ucwords}
   end
     
   private 

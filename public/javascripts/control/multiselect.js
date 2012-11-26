@@ -10,9 +10,12 @@
     this.rebuild_options();
     this.dom_id = parseInt(Math.random() * 1000000);
     
+    // initialize callback to empty function
+    this.change_callback = function(){}
+    
     // hookup events
-    this.fld.find(".links a.select_all").click(function() { _this.set_all(true); });
-    this.fld.find(".links a.deselect_all").click(function() { _this.set_all(false); });
+    this.fld.find(".links a.select_all").click(function() { _this.set_all(true); _this.change_callback(); });
+    this.fld.find(".links a.deselect_all").click(function() { _this.set_all(false); _this.change_callback(); });
   }
   
   // inherit from Control
@@ -38,7 +41,7 @@
       var row = $("<div>");
       var dom_id = this.dom_id + "_" + i;
       
-      $("<input>").attr("type", "checkbox").attr("value", id).attr("id", dom_id).click(function(){ _this.handle_change(this); }).appendTo(row);
+      $("<input>").attr("type", "checkbox").attr("value", id).attr("id", dom_id).click(function(){ _this.change_callback(); }).appendTo(row);
       $("<label>").attr("for", dom_id).html("&nbsp;" + txt).appendTo(row);
       
       this.rows.push(row);
@@ -52,9 +55,12 @@
     for (var i = 0; i < selected_ids.length; i++)
       selected_ids[i] = selected_ids[i].toString();
       
-    this.update_without_triggering(selected_ids);
-    
-    this.handle_change();
+    for (var i = 0; i < this.rows.length; i++) {
+      var checked = selected_ids.indexOf(this.rows[i].find("input").attr("value")) != -1;
+      this.rows[i].find("input").prop("checked", checked);
+    }
+
+    this.toggle_select_all();
   }
   
   klass.prototype.change = function(func) {
@@ -62,18 +68,11 @@
   }
 
   
-  klass.prototype.update_without_triggering = function(selected_ids) {
-    for (var i = 0; i < this.rows.length; i++) {
-      var checked = selected_ids.indexOf(this.rows[i].find("input").attr("value")) != -1;
-      this.rows[i].find("input").prop("checked", checked);
-    }
-  }
-  
   klass.prototype.update_objs = function(objs) {
     this.params.objs = objs;
     var seld = this.get();
     this.rebuild_options();
-    this.update_without_triggering(seld);
+    this.update(seld);
   }
   
   klass.prototype.get = function() {
@@ -95,13 +94,6 @@
   klass.prototype.set_all = function(which) {
     for (var i = 0; i < this.rows.length; i++)
       this.rows[i].find("input").prop("checked", which);
-    
-    this.handle_change();
-  }
-  
-  klass.prototype.handle_change = function() {
-    this.toggle_select_all();
-    if (this.change_callback) this.change_callback(this);
   }
   
   // checks if select all links should be toggled, and toggles them

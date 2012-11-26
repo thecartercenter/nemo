@@ -2,7 +2,8 @@
 (function(ns, klass) {
   
   // constructor
-  ns.ReportTypeEditPane = klass = function() {
+  ns.ReportTypeEditPane = klass = function(parent_view) {
+    this.parent_view = parent_view;
     this.build();
   }
 
@@ -22,10 +23,14 @@
 
     // make type chooser
     this.type_chooser = new ELMO.Control.RadioGroup({inputs: this.cont.find("input[name='report_type']")});
+    this.type_chooser.change(function() { _this.broadcast_change("report_type"); });
   }
   
   klass.prototype.update = function(report) {
+    // store report reference
     this.report = report;
+    
+    // update controls
     this.type_chooser.update(this.report.attribs.type);
     this.type_chooser.enable(!this.report.has_run());
   }

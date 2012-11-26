@@ -8,9 +8,9 @@ module Report::Groupable
     
     # add scope
     base.class_eval do
-      attr_accessible :pri_group_by, :sec_group_by, :pri_group_by_attributes, :sec_group_by_attributes
-      belongs_to(:pri_group_by, :class_name => "Report::Calculation")
-      belongs_to(:sec_group_by, :class_name => "Report::Calculation")
+      attr_accessible :calculations_attributes
+      has_many(:calculations, :class_name => "Report::Calculation", :foreign_key => "report_report_id")
+      accepts_nested_attributes_for(:calculations, :allow_destroy => true)
     end
   end
   
@@ -23,15 +23,31 @@ module Report::Groupable
   end
   
   def pri_grouping
-    @pri_grouping ||= (pri_group_by ? Report::Grouping.new(pri_group_by, :primary) : nil)
+    @pri_grouping ||= grouping(1)
   end
 
   def sec_grouping
-    @sec_grouping ||= (sec_group_by ? Report::Grouping.new(sec_group_by, :secondary) : nil)
+    @sec_grouping ||= grouping(2)
+  end
+  
+  def grouping(rank)
+    c = calculations.find_by_rank(rank)
+    c.nil? ? nil : Report::Grouping.new(c, [:primary, :secondary][rank-1])
+  end
+  
+  def has_grouping(which)
+    grouping = which == :row ? pri_grouping : sec_grouping
+    !grouping.nil?
   end
   
   def header_title(which)
     grouping = which == :row ? pri_grouping : sec_grouping
-    grouping ? grouping.header_title : ""
+    grouping ? grouping.header_title : nil
+  end
+  
+  def as_json(options = {})
+    h = super(options)
+    h[:calculations] = calculations
+    h
   end
 end

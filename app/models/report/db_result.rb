@@ -18,6 +18,10 @@ class Report::DbResult
     #rows.each{|row| pp row.attributes}
   end
   
+  def has_col?(col)
+    return !@rows.empty? && @rows.first.attributes.keys.include?(col)
+  end
+  
   # extracts unique tuples defined by the col names given in cols
   def extract_unique_tuples(*cols)
     # use a hash to make it fast

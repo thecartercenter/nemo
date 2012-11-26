@@ -16,7 +16,8 @@
     var o = [];
     
     // sort the form_id array for fast comparison
-    form_ids = form_ids.sort();
+    if (form_ids != "ALL")
+      form_ids = form_ids.sort();
     
     for (var i = 0; i < this.objs.length; i++) {
       var type = this.objs[i].type;
@@ -29,7 +30,7 @@
         continue;
         
       // question must appear on one of the given forms
-      if (Sassafras.Utils.intersect(this.objs[i].form_ids, form_ids).length == 0)
+      if (form_ids != "ALL" && Sassafras.Utils.intersect(this.objs[i].form_ids, form_ids).length == 0)
         continue;
       
       // if we get this far, we can push  

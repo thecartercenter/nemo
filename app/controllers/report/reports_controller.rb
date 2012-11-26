@@ -71,6 +71,7 @@ class Report::ReportsController < ApplicationController
       # set json instance variable to be used in template
       @report_json = build_hash.merge({
         :options => {
+          :attribs => Report::AttribField.all,
           :forms => Form.for_mission(current_mission).with_form_type.all,
           :calculation_types => Report::Calculation.types,
           :questions => Question.for_mission(current_mission).includes(:forms, :type).all,

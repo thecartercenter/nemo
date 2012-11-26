@@ -84,6 +84,10 @@ class Report::QuestionAnswerTallyReport < Report::TallyReport
       which == :row ? "Questions" : "Answers"
     end
     
+    def has_grouping(which)
+      return true
+    end
+    
   private
     # builds a nested SQL IF statement of the form IF(a, x, IF(b, y, IF(c, z, ...)))
     def build_nested_if(exprs, conds)

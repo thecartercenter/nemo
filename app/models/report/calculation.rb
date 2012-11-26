@@ -1,9 +1,11 @@
 class Report::Calculation < ActiveRecord::Base
-  attr_accessible :type, :report_report_id, :attrib1_name, :question1_id, :arg1, :attrib1, :question1
+  attr_accessible :type, :report_report_id, :attrib1_name, :question1_id, :arg1, :attrib1, :question1, :rank
   attr_writer :table_prefix
   
   belongs_to :report, :class_name => "Report::Report", :foreign_key => "report_report_id"
   belongs_to :question1, :class_name => "Question"
+  
+  before_save :normalize_values
   
   # HACK TO GET STI TO WORK WITH ACCEPTS_NESTED_ATTRIBUTES_FOR
   class << self
@@ -64,10 +66,15 @@ class Report::Calculation < ActiveRecord::Base
   end
   
   def header_title
-    attrib1 ? attrib1.name : question1.code
+    attrib1 ? attrib1.name.to_s.capitalize : (report.question_labels == "Title" ? question1.name_eng : question1.code)
   end
   
   def table_prefix
     @table_prefix.blank? ? "" : (@table_prefix + "_")
   end
+  
+  private
+    def normalize_values
+      self.attrib1_name = nil if self.attrib1_name.blank?
+    end
 end

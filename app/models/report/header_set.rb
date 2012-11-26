@@ -25,6 +25,8 @@ class Report::HeaderSet
   
   # constructs a blank array of arrays matching the size of the headers
   def blank_data_table
+    Rails.logger.debug("******* #{@headers[:row].inspect}")
+    Rails.logger.debug("******* #{@headers[:col].inspect}")
     @headers[:row].collect{|h| Array.new(@headers[:col].size)}
   end
 end

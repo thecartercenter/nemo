@@ -20,9 +20,6 @@
         $(this.inputs[i]).prop("checked", false)
     else
       $(this.inputs[selected_idx]).prop("checked", true);
-    
-    // trigger change handler
-    if (this.change_handler) this.change_handler();
   }
   
   klass.prototype.enable = function(which) {
