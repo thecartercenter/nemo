@@ -128,9 +128,13 @@ module ReportTestHelper
     
     # get the rest of the 'actual' table
     report.data.rows.each_with_index do |row, i|
-      header_cell = report.header_set[:row].cells[i]
-      rh = header_cell ? [header_cell.name] : []
-      actual_row = rh + row
+      actual_row = []
+
+      if report.header_set[:row] && report.header_set[:row].cells[i]
+        actual_row << report.header_set[:row].cells[i].name
+      end
+      
+      actual_row += row
       
       # add the row total if applicable
       actual_row << report.data.totals[:row][i] if report.data.totals

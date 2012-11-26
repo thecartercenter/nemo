@@ -44,4 +44,9 @@ class Report::TallyReport < Report::Report
     def can_total?
       return true
     end
+    
+    # constructs a blank array of arrays matching the size of the headers
+    def blank_data_table(db_result)
+      @header_set[:row].collect{|h| Array.new(@header_set[:col].size)}
+    end
 end

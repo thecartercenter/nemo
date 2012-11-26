@@ -4,9 +4,6 @@ class Report::HeaderSet
   
   # constructs a header_set object with the given row and col sources
   def initialize(headers)
-    # do nil check
-    [:row, :col].each{|which| raise Report::ReportError.new("Missing #{which} header") if headers[which].nil?}
-
     @headers = headers
   end
   
@@ -21,12 +18,5 @@ class Report::HeaderSet
     [:row, :col].collect do |which|
       @headers[which].find_key_idx(keys[which]) or raise Report::ReportError.new("Couldn't find matching #{which} header key for '#{keys[which]}'")
     end 
-  end
-  
-  # constructs a blank array of arrays matching the size of the headers
-  def blank_data_table
-    Rails.logger.debug("******* #{@headers[:row].inspect}")
-    Rails.logger.debug("******* #{@headers[:col].inspect}")
-    @headers[:row].collect{|h| Array.new(@headers[:col].size)}
   end
 end

@@ -73,7 +73,7 @@ class Report::Report < ActiveRecord::Base
     @header_set = Report::HeaderSet.new(:row => get_row_header, :col => get_col_header)
     
     # extract data
-    @data = Report::Data.new(@header_set.blank_data_table)
+    @data = Report::Data.new(blank_data_table(@db_result))
     @db_result.rows.each_with_index do |row, row_idx|
       extract_data_from_row(row, row_idx)
     end
