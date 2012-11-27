@@ -25,6 +25,7 @@
       this.form_selection_pane = new ns.FormSelectionEditPane(this, menus),
       this.question_selection_pane = new ns.QuestionSelectionEditPane(this, menus),
       this.grouping_pane = new ns.GroupingEditPane(this, menus),
+      this.field_pane = new ns.FieldsEditPane(this, menus),
       this.report_title_pane = new ns.ReportTitleEditPane(this, menus)
     ];
 
@@ -52,8 +53,10 @@
     this.report = report;
     
     // update panes
+    var enabled = this.enabled_panes();
     for (var i = 0; i < this.panes.length; i++)
-      this.panes[i].update(report);
+      if (enabled[this.panes[i].id])
+        this.panes[i].update(report, true);
     
     this.show_hide_edit_links(this.report);
 
@@ -97,9 +100,12 @@
     this.show_pane(idx);
   }
   
-  klass.prototype.run = function() {
-    // tell panes to update model
-    this.pane_do("extract");
+  klass.prototype.run = function() { var self = this;
+    // tell panes to update model, and let them know if they're currently enabled or not
+    var enabled = self.enabled_panes();
+    $(self.panes).each(function(){
+      this.extract(enabled[this.id]);
+    });
     
     // validate
     var is_valid = this.report.validate();
@@ -113,12 +119,13 @@
       this.dialog.hide();
 
     // else show the first pane that has errors
-    } else
+    } else {
       for (var i = 0; i < this.panes.length; i++)
         if (this.panes[i].has_errors) {
           this.show_pane(i);
           return;
         }
+    }
   }
   
   klass.prototype.cancel = function() {
@@ -164,7 +171,7 @@
     // update panes if requested
     for (var i = 0; i < this.panes.length; i++)
       if (this.panes[i].attribs_to_watch && this.panes[i].attribs_to_watch[src])
-        this.panes[i].update(this.report);
+        this.panes[i].update(this.report, false);
         
     this.show_hide_edit_links(this.report);
   }
@@ -177,12 +184,14 @@
   
   // returns a hash indicating which panes should be enabled based on the given report
   klass.prototype.enabled_panes = function(report) {
+    if (!report) report = this.report;
     return {
       report_type: true,
       display_options: true,
       form_selection: true,
       question_selection: report.attribs.type == "Report::QuestionAnswerTallyReport",
       grouping: report.attribs.type == "Report::GroupedTallyReport",
+      fields: report.attribs.type == "Report::ListReport",
       report_title: true
     }
   }

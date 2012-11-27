@@ -27,13 +27,9 @@
     
     // update the links
     this.edit_view.show_hide_edit_links(this.report_in_db);
-    
-    // show unhandled error if exists
-    if (init_data.unhandled_error)
-      this.report_view.show_error("System Error: " + init_data.unhandled_error);
-    
+        
     // otherwise, if is new record, show dialog first page
-    else if (!this.report_in_db.has_run())
+    if (!this.report_in_db.has_run())
       this.show_edit_view(0);
       
     // otherwise, the report must have already run, so update the view
@@ -73,13 +69,8 @@
   
   klass.prototype.run_success = function(data, status, jqxhr) {
     
-    // if unhandled error in report run process display it
-    if (data.unhandled_error) {
-      this.restore_view();
-      this.report_view.show_error("System Error: " + data.unhandled_error);
-      
-    // otherwise, if the 'just created' flag is set, redirect to the show action so that links, etc., will work
-    } else if (data.report.just_created) {
+    // if the 'just created' flag is set, redirect to the show action so that links, etc., will work
+    if (data.report.just_created) {
       this.report_view.show_loading_indicator(true);
       window.location.href = "/report/reports/" + data.report.id
       
@@ -95,7 +86,7 @@
   klass.prototype.run_error = function(jqxhr, status, error) {
     this.restore_view();  
     // show error
-    var msg = error == "" ? "Error contacting server" : "System Error: " + error;
+    var msg = error == "" ? "Error contacting server" : "System error. Administrator has been notified.";
     this.report_view.show_error(msg);
   }
   
@@ -113,4 +104,5 @@
     // show links and body
     $("#report_links, #report_main").show();
   }
+  
 }(ELMO.Report));

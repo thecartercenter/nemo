@@ -14,10 +14,9 @@
     });
   }
 
-  klass.prototype.update = function(report, rank) {
+  klass.prototype.update = function(report, calc_attribs) {
     this.report = report;
-    this.rank = rank;
-    this.calc = report.calculation_by_rank(rank);
+    this.calc = calc_attribs;
     
     this.field.update_objs([
       {
@@ -66,7 +65,6 @@
       
       // build the attrib obj
       field_params.type = "Report::IdentityCalculation";
-      field_params.rank = this.rank;
       field_params[field_val[0]] = field_val[1];
     }
 

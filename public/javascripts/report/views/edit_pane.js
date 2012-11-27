@@ -27,8 +27,9 @@
   klass.prototype.show_validation_errors = function() {
     var fields = this.fields_for_validation_errors ? this.fields_for_validation_errors() : [];
     var errors = [];
-    for (var i = 0; i < fields.length; i++)
-      errors = errors.concat(this.report.errors.get(fields[i]));
+    if (this.report)
+      for (var i = 0; i < fields.length; i++)
+        errors = errors.concat(this.report.errors.get(fields[i]));
     this.has_errors = errors.length > 0;
     this.error_box.html(errors.join("<br/>"));
     this.error_box[this.has_errors ? "show" : "hide"]();

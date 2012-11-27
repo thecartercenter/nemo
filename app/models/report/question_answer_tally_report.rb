@@ -41,7 +41,7 @@ class Report::QuestionAnswerTallyReport < Report::TallyReport
         
         # default sort by option value and then by question
         opt_value_sort_order = option_set.ordering == "value_asc" ? "" : "DESC"
-        rel = rel.order("sec_value #{opt_value_sort_order}, pri_value")
+        rel = rel.order("pri_value, sec_value #{opt_value_sort_order}")
 
       # we don't have an option set, so expect calculation objects
       else

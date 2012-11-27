@@ -89,10 +89,6 @@ class Report::ReportsController < ApplicationController
       rescue Report::ReportError, Search::ParseError
         @report.errors.add(:base, $!.to_s)
         return false
-      rescue
-        @unhandled_error = $!.to_s
-        Rails.logger.debug("#{$!.message}\n#{$!.backtrace.join("\n")}")
-        return false
       end
       return true
     end
@@ -100,7 +96,6 @@ class Report::ReportsController < ApplicationController
     def build_hash
       {
         :report => @report,
-        :unhandled_error => @unhandled_error
       }
     end
 end

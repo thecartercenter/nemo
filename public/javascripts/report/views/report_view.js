@@ -61,7 +61,7 @@
   klass.prototype.show_error = function(msg) {
     Utils.show_flash({type: "error", msg: msg});
   }
-
+  
   // hookup link events
   klass.prototype.hookup_links = function() {
     var _this = this;

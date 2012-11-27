@@ -1,8 +1,8 @@
-// ELMO.Report.GroupingEditPane < ELMO.Report.EditPane
+// ELMO.Report.FieldsEditPane < ELMO.Report.EditPane
 (function(ns, klass) {
   
   // constructor
-  ns.GroupingEditPane = klass = function(parent_view, menus, options) {
+  ns.FieldsEditPane = klass = function(parent_view, menus, options) {
     this.parent_view = parent_view;
     this.menus = menus;
     this.options = options;
@@ -14,15 +14,14 @@
   klass.prototype.constructor = klass;
   klass.prototype.parent = ns.EditPane.prototype;
   
-  klass.prototype.id = "grouping";
+  klass.prototype.id = "fields";
 
   // builds controls
   klass.prototype.build = function() {
     // call super first
     this.parent.build.call(this);
     
-    this.pri = new ns.FieldSelector($(".primary.field_selector"), this.menus);
-    this.sec = new ns.FieldSelector($(".secondary.field_selector"), this.menus);
+    this.fields = new ns.FieldSelectorSet($(".report_edit_pane.fields .field_selector_set"), this.menus);
     
     this.attribs_to_watch = {report_type: true, form_selection: true};
   }
@@ -31,14 +30,12 @@
     // store report reference
     this.report = report;
     
-    // update controls
-    this.pri.update(report, this.report.calculation_by_rank(1));
-    this.sec.update(report, this.report.calculation_by_rank(2));
+    this.fields.update(this.report);
   }
 
   klass.prototype.extract = function(enabled) {
     if (enabled) {
-      this.report.attribs.calculations_attributes = [this.pri.get(), this.sec.get()];
+      this.report.attribs.calculations_attributes = this.fields.get();
     }
   }
   

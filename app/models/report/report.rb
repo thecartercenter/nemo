@@ -11,6 +11,8 @@ class Report::Report < ActiveRecord::Base
   scope(:by_viewed_at, order("viewed_at desc"))
   scope(:by_popularity, order("view_count desc"))
 
+  before_save(:normalize_attribs)
+
   attr_accessor :just_created
   attr_reader :header_set, :data, :totals
 
@@ -102,7 +104,13 @@ class Report::Report < ActiveRecord::Base
     h[:data] = @data
     h[:headers] = @header_set ? @header_set.headers : {}
     h[:filter_str] = filter ? filter.str : ""
+    h[:can_total] = can_total?
     h
+  end
+  
+  def can_total?
+    # default to false, should be overridden
+    false
   end
   
   protected
@@ -136,5 +144,9 @@ class Report::Report < ActiveRecord::Base
         rest = build_nested_if(exprs[1..-1], conds[1..-1], :dont_optimize => true)
         "IF(#{conds.first}, #{exprs.first}, #{rest})"
       end
+    end
+    
+    def normalize_attribs
+      self.option_set_id = nil if option_set_id.blank?
     end
 end

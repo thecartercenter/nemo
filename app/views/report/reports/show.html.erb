@@ -26,13 +26,15 @@
       report/views/filters_edit_pane
       report/views/question_selection_edit_pane
       report/views/grouping_edit_pane
+      report/views/fields_edit_pane
       report/views/report_type_edit_pane
       report/views/field_selector
+      report/views/field_selector_set
       sassafras/utils
-      
-    )) #https://www.google.com/jsapi+ 
+      https://www.google.com/jsapi
+    )) + 
     # special google load thing
-    #javascript_tag('google.load("visualization", "1", {packages:["corechart"]});')
+    javascript_tag('google.load("visualization", "1", {packages:["corechart"]});')
   end
 %>
 
@@ -51,10 +53,11 @@
       <a id="edit_link_0" href="#">Report Type</a>
     <% end %>
     <a id="edit_link_1" href="#">Display Options</a>
-    <a id="edit_link_2" href="#">Included Forms</a>
-    <a id="edit_link_3" href="#">Included Questions</a>
+    <a id="edit_link_2" href="#">Forms</a>
+    <a id="edit_link_3" href="#">Questions</a>
     <a id="edit_link_4" href="#">Groupings</a>
-    <a id="edit_link_5" href="#">Report Title</a>
+    <a id="edit_link_5" href="#">Questions/Attributes</a>
+    <a id="edit_link_6" href="#">Report Title</a>
   </div>
 <% end %>
 <div id="report_main">
@@ -75,24 +78,36 @@
           <div>
             <input type="radio" name="report_type" id="report_type_0" value="Report::QuestionAnswerTallyReport">
             <label for="report_type_0">
-              <h3>Tally or percentage of <em>answers</em> per question</h3>
+              <h3>Tally of Answers per Question</h3>
               <div class="ex_lbl">Examples:</div>
               <ul>
-                <li>Percentages of Yes and No for all Yes-No questions</li>
-                <li>Tally of zero and non-zero answers for questions about observers</li>
+                <li>Number of Very Good, Good, etc. answers for the Overall question</li>
+                <li>Percentage of Yes and No for all Yes-No questions</li>
+                <li>Number of Zero and Non-zero answers for questions about observers</li>
               </ul>
             </label>
           </div>
           <div>
             <input type="radio" name="report_type" id="report_type_1" value="Report::GroupedTallyReport">
             <label for="report_type_1">
-              <h3>Tally or percentage of <em>responses</em> per answer or attribute value</h3>
+              <h3>Tally of Responses per Answer/Attribute</h3>
               <div class="ex_lbl">Examples:</div>
               <ul>
-                <li>Total number of responses per form</li>
-                <li>Total number of responses per form for each team</li>
-                <li>Percentages of Yes and No per day for the PeacefulEnvironment question</li>
-                <li>Percentages of zero and non-zero answers per state for the DomesticObservers question</li>
+                <li>Number of responses per form for each team</li>
+                <li>Percentage of Yes and No per day for the PeacefulEnvironment question</li>
+                <li>Percentage of Zero and Non-zero answers per State for the DomesticObservers question</li>
+              </ul>
+            </label>
+          </div>
+          <div>
+            <input type="radio" name="report_type" id="report_type_2" value="Report::ListReport">
+            <label for="report_type_2">
+              <h3>List of Answers/Attributes</h3>
+              <div class="ex_lbl">Examples:</div>
+              <ul>
+                <li>List of answers to the Complaints and OtherIrreg questions along with the polling place number</li>
+                <li>List of all polling place numbers, with no duplicates</li>
+                <li>List of submitter name, date, and answer to the NeedSecurityContact question</li>
               </ul>
             </label>
           </div>
@@ -160,33 +175,6 @@
       </div>
     </div>
 
-    <div class="report_edit_pane grouping">
-      <h2>Groupings</h2>
-      <div class="error_box"></div>
-      
-      <div class="section">
-        <div class="name vert">What attribute or question would you like for the row headers?</div>
-        <div class="controls vert">
-          <div class="primary field_selector">
-            <select class="field">
-              <option>Choose an attribute or question...</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      <div class="section">
-        <div class="name vert">What attribute or question would you like for the column headers (optional)?</div>
-        <div class="controls vert">
-          <div class="secondary field_selector">
-            <select class="field">
-              <option>Choose an attribute or question...</option>
-            </select>
-          </div>
-        </div>
-      </div>
-    </div>
-    
     <div class="report_edit_pane question_selection">
       <h2>Questions Included</h2>
       <div class="error_box"></div>
@@ -216,6 +204,55 @@
             <select id="option_set">
               <option>Choose an option set...</option>
             </select>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="report_edit_pane grouping">
+      <h2>Groupings</h2>
+      <div class="error_box"></div>
+      
+      <div class="section">
+        <div class="name vert">What attribute or question would you like for the row headers?</div>
+        <div class="controls vert">
+          <div class="primary field_selector">
+            <select class="field">
+              <option>Choose an attribute or question...</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="name vert">What attribute or question would you like for the column headers (optional)?</div>
+        <div class="controls vert">
+          <div class="secondary field_selector">
+            <select class="field">
+              <option>Choose an attribute or question...</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="report_edit_pane fields">
+      <h2>Questions and Attributes</h2>
+      <div class="error_box"></div>
+      
+      <div class="section">
+        <div class="name vert">What questions and/or attributes would you like to see in the list?</div>
+        <div class="controls vert">
+          <div class="field_selector_set">
+            <div class="selectors">
+              <div>
+                <select class="field">
+                  <option>Choose an attribute or question...</option>
+                </select>
+                <a href="#" class="remove">Remove</a>
+              </div>
+            </div>
+            <a href="#" class="add">Add Question/Attribute</a>
           </div>
         </div>
       </div>

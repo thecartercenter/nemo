@@ -58,25 +58,27 @@
     this.attribs_to_watch = {omnibus_calculation: true, q_sel_type: true, form_selection: true, report_type: true};
   }
   
-  klass.prototype.update = function(report) {
+  klass.prototype.update = function(report, on_show) {
     // store report reference
     this.report = report;
 
     // update controls
     // the omnibus calculation should be the type of the first calculation in the model since they're all the same
-    if (this.report.attribs.omnibus_calculation)
-      this.calc_chooser.update(this.report.attribs.omnibus_calculation);
-    else if (this.report.attribs.calculations && this.report.attribs.calculations.length > 0)
-      this.calc_chooser.update(this.report.attribs.calculations[0].type);
-    else
-      this.calc_chooser.update("Report::IdentityCalculation");
-      
-    this.q_chooser.update(this.report.get_calculation_question_ids());
+    if (on_show) {
+      if (this.report.attribs.omnibus_calculation)
+        this.calc_chooser.update(this.report.attribs.omnibus_calculation);
+      else if (this.report.attribs.calculations && this.report.attribs.calculations.length > 0)
+        this.calc_chooser.update(this.report.attribs.calculations[0].type);
+      else
+        this.calc_chooser.update("Report::IdentityCalculation");
     
-    if (!this.q_sel_type_radio.get())
-      this.q_sel_type_radio.update(this.report.attribs.option_set_id == null ? "questions" : "option_set");
+      this.q_chooser.update(this.report.get_calculation_question_ids());
     
-    this.opt_set_chooser.update(this.report.attribs.option_set_id);
+      if (!this.q_sel_type_radio.get())
+        this.q_sel_type_radio.update(this.report.attribs.option_set_id == null ? "questions" : "option_set");
+    
+      this.opt_set_chooser.update(this.report.attribs.option_set_id);
+    }
     
     // update question choices
     this.q_chooser.update_objs(this.menus.question.for_forms_and_calc_type(this.report.attribs.form_ids, this.calc_chooser.get()));
@@ -85,10 +87,15 @@
   }
   
   // extracts data from the view into the model
-  klass.prototype.extract = function() {
-    this.report.attribs.omnibus_calculation = this.calc_chooser.get();
-    this.report.set_calculations_by_question_ids(this.q_chooser.get());
-    this.report.attribs.option_set_id = this.opt_set_chooser.get();
+  klass.prototype.extract = function(enabled) {
+    if (enabled) {
+      this.report.attribs.omnibus_calculation = this.calc_chooser.get();
+      this.report.set_calculations_by_question_ids(this.q_chooser.get());
+      this.report.attribs.option_set_id = this.opt_set_chooser.get();
+    } else if (this.report) {
+      this.report.attribs.option_set_id = "";
+      this.report.attribs.omnibus_calculation = null;
+    }
   }
   
   klass.prototype.fields_for_validation_errors = function() {

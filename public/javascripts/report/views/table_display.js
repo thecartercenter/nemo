@@ -13,7 +13,7 @@
   
   klass.prototype.show_totals = function(row_or_col) {
     // show totals if the opposite header is defined
-    return !!this.report.attribs.headers[row_or_col == "row" ? "col" : "row"].title;
+    return this.report.attribs.type.match(/TallyReport/) && this.report.attribs.headers[row_or_col == "row" ? "col" : "row"].title;
   }
 
   // formats a given fraction as a percentage
@@ -28,13 +28,16 @@
     var tbl = this.tbl = $("<table>");
 
     // column label row
-    if (headers.col.title) {
+    if (headers.col && headers.col.title) {
       var trow = $("<tr>");
       
       // blank cells for row grouping label and row header, if necessary
-      if (headers.row.title) { $("<th>").appendTo(trow); }
-      $("<th>").appendTo(trow);
-     
+      if (headers.row) {
+        if (headers.row.title)
+          $("<th>").appendTo(trow);
+        $("<th>").appendTo(trow);
+      }
+      
       // col grouping label
       $("<th>").addClass("col_grouping_label").attr("colspan", headers.col.cells.length).text(headers.col.title).appendTo(trow);
       
@@ -45,18 +48,23 @@
     }
     
     // header row
-    if (headers.col.cells.length > 1 || headers.row.cells.length > 1) {
+    if (headers.col && headers.col.cells.length > 1 || headers.row && headers.row.cells.length > 1) {
       var trow = $("<tr>");
     
       // blank cells for row grouping label and row header, if necessary
-      if (headers.row.title) { $("<th>").appendTo(trow); }
-      $("<th>").appendTo(trow); 
+      if (headers.row) {
+        if (headers.row.title)
+          $("<th>").appendTo(trow);
+        $("<th>").appendTo(trow);
+      }
       
       // rest of header cells
-      $(headers.col.cells).each(function(idx, ch) {
-        $("<th>").addClass("col").text(ch.name || "[Null]").appendTo(trow);
-      });
-
+      if (headers.col) {
+        $(headers.col.cells).each(function(idx, ch) {
+          $("<th>").addClass("col").text(ch.name || "[Null]").appendTo(trow);
+        });
+      }
+      
       // row total header
       if (_this.show_totals("row"))
         $("<th>").addClass("row_total").text("Total").appendTo(trow);
@@ -64,16 +72,16 @@
       tbl.append(trow);
     }
     
-    // create the row grouping label
+    // create (but don't insert yet) the row grouping label
     var row_grouping_label;
-    if (headers.row.title) {
+    if (headers.row && headers.row.title) {
       var txt = headers.row.title.replace(/\s+/g, "<br/>")
       row_grouping_label = $("<th>").addClass("row_grouping_label").attr("rowspan", headers.row.cells.length);
       row_grouping_label.append($("<div>").html(txt));
     }
   
     // body
-    $(headers.row.cells).each(function(r, rh) {
+    $(data.rows).each(function(r, data_row) {
       trow = $("<tr>");
     
       // add the row grouping label if it is defined (also delete it so it doesn't get added again)
@@ -83,15 +91,16 @@
       }
     
       // row header
-      if (rh != null) $("<th>").addClass("row").text(rh.name || "[Null]").appendTo(trow);
+      if (headers.row) 
+        $("<th>").addClass("row").text(headers.row.cells[r].name || "[Null]").appendTo(trow);
     
       // row cells
-      $(headers.col.cells).each(function(c, ch) {
+      $(data_row).each(function(c, cell) {
         // get cell type
-        var typ = typeof(data.rows[r][c]);
+        var typ = typeof(cell);
         
         // get cell value
-        var val = data.rows[r][c];
+        var val = cell;
         if (val == null) val = "";
         
         // calculate percentage if necessary
@@ -129,11 +138,12 @@
       trow = $("<tr>");
     
       // blank cells for row grouping label, if necessary
-      if (headers.row.title) { $("<th>").appendTo(trow); }
+      if (headers.row && headers.row.title) { $("<th>").appendTo(trow); }
      
       // row header
-      $("<th>").addClass("row").addClass("col_total").text("Total").appendTo(trow);
-    
+      if (headers.row)
+        $("<th>").addClass("row").addClass("col_total").text("Total").appendTo(trow);
+      
       // row cells
       $(data.totals.col).each(function(c, ct) {
         var val = ct;

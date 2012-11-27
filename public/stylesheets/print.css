@@ -32,7 +32,4 @@ div.success, div.failure { display: none; }
 .forms_index h1#title, .forms_edit h1#title, .forms_show h1#title { display: none; }
 
 /* reports */
-#report_top_links { display: none; }
-#report_links { display: none; }
-div.report_edit_dialog { display: none; }
-div.report_edit_pane { display: none; }
+#report_top_links, #report_links, div.report_edit_dialog, div.report_edit_pane { display: none !important; }

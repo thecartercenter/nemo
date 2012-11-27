@@ -1,6 +1,6 @@
 class Report::ListReport < Report::Report
   
-  has_many(:calculations, :class_name => "Report::Calculation", :foreign_key => "report_report_id", :dependent => :destroy, :autosave => true)
+  has_many(:calculations, :class_name => "Report::Calculation", :foreign_key => "report_report_id", :order => "rank", :dependent => :destroy, :autosave => true)
   accepts_nested_attributes_for(:calculations, :allow_destroy => true)
   
   def as_json(options = {})
@@ -16,11 +16,13 @@ class Report::ListReport < Report::Report
       
       # add each calculation
       calculations.each_with_index do |c, idx|
-        # if calculation is question type, we need to add a join
+        # if calculation is question type, we need to add joins with a prefix
         if c.question1
           prefix = "#{idx}"
           c.table_prefix = prefix
           rel = rel.joins(Report::Join.list_to_sql(c.joins, prefix))
+        else
+          rel = rel.joins(Report::Join.list_to_sql(c.joins))
         end
         rel = rel.select("#{c.name_expr} AS #{idx}_name, #{c.value_expr} AS #{idx}_value, #{c.data_type_expr} AS #{idx}_type") 
         rel = rel.where(c.where_expr)

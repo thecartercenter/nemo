@@ -114,23 +114,17 @@
       }
     } else {
       to_serialize.calculations_attributes = this.attribs.calculations_attributes;
+
+      // fix ranks
+      if (this.attribs.calculations_attributes)
+        for (var i = 0; i < this.attribs.calculations_attributes.length; i++)
+          if (this.attribs.calculations_attributes[i].type)
+            this.attribs.calculations_attributes[i].rank = i + 1;
     }
     
     // filter params
     to_serialize.filter_attributes = {}
     to_serialize.filter_attributes.class_name = "Response"
-
-    // groupings
-    if (this.attribs.pri_group_by_attributes) {
-      to_serialize.pri_group_by_attributes = this.attribs.pri_group_by_attributes;
-      if (this.attribs.pri_group_by_attributes._destroy)
-        ;//to_serialize.pri_group_by_id = "";
-    }
-    if (this.attribs.sec_group_by_attributes) {
-      to_serialize.sec_group_by_attributes = this.attribs.sec_group_by_attributes;
-      if (this.attribs.sec_group_by_attributes._destroy)
-        ;//to_serialize.sec_group_by_id = "";
-    }
 
     // include the form id spec in the filter string
     var filter_clauses = []
