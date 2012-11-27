@@ -96,9 +96,9 @@ ActiveRecord::Schema.define(:version => 20121126153456) do
     t.boolean  "published",          :default => false
     t.integer  "form_type_id"
     t.integer  "downloads"
-    t.integer  "mission_id"
     t.integer  "questionings_count", :default => 0
     t.integer  "responses_count",    :default => 0
+    t.integer  "mission_id"
   end
 
   add_index "forms", ["form_type_id"], :name => "index_forms_on_form_type_id"
@@ -106,9 +106,9 @@ ActiveRecord::Schema.define(:version => 20121126153456) do
 
   create_table "missions", :force => true do |t|
     t.string   "name"
+    t.string   "compact_name"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "compact_name"
   end
 
   add_index "missions", ["compact_name"], :name => "index_missions_on_compact_name"
@@ -128,7 +128,6 @@ ActiveRecord::Schema.define(:version => 20121126153456) do
     t.integer  "option_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "rank"
   end
 
   create_table "options", :force => true do |t|
@@ -197,7 +196,6 @@ ActiveRecord::Schema.define(:version => 20121126153456) do
     t.integer  "filter_id"
     t.integer  "pri_group_by_id"
     t.integer  "sec_group_by_id"
-    t.string   "aggregation_name"
     t.integer  "option_set_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -210,6 +208,7 @@ ActiveRecord::Schema.define(:version => 20121126153456) do
     t.boolean  "show_question_labels", :default => true
     t.string   "percent_type"
     t.boolean  "unique_rows"
+    t.string   "aggregation_name"
   end
 
   create_table "responses", :force => true do |t|
@@ -257,7 +256,6 @@ ActiveRecord::Schema.define(:version => 20121126153456) do
     t.datetime "updated_at"
     t.integer  "mission_id"
     t.string   "languages"
-    t.string   "key"
   end
 
   add_index "settings", ["mission_id"], :name => "index_settings_on_mission_id"
@@ -273,6 +271,7 @@ ActiveRecord::Schema.define(:version => 20121126153456) do
   end
 
   add_index "translations", ["fld", "class_name", "obj_id", "language"], :name => "index_translations_on_fld_and_class_name_and_obj_id_and_language"
+  add_index "translations", ["language", "class_name", "fld", "obj_id"], :name => "translation_master", :unique => true
 
   create_table "user_batches", :force => true do |t|
     t.text     "users"
