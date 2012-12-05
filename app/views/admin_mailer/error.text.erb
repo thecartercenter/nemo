@@ -10,6 +10,7 @@ Query: <%= raw @env['QUERY_STRING'] %>
 Method: <%= @env['REQUEST_METHOD'] %>
 SSL: <%= @env['SERVER_PORT'].to_i == 443 ? "true" : "false" %>
 Agent: <%= raw @env['HTTP_USER_AGENT'] %>
+User: <%= @user ? "#{@user.login} <#{@user.email}>".html_safe : "None" %>
 <% end %>
 
 ----------------------------

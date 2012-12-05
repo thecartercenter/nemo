@@ -74,9 +74,9 @@ class ApplicationController < ActionController::Base
     def notify_error(exception)
       if Rails.env == "production"
         begin
-          AdminMailer.error(exception, session.to_hash, params, request.env).deliver 
+          AdminMailer.error(exception, session.to_hash, params, request.env, current_user).deliver 
         rescue 
-          logger.error("ERROR SENDING ERROR NOTIFICATION: #{$!.to_s}")
+          logger.error("ERROR SENDING ERROR NOTIFICATION: #{$!.to_s}: #{$!.message}\n#{$!.backtrace.to_a.join("\n")}")
         end
       end
       # still show error page
