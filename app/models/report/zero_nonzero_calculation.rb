@@ -1,7 +1,7 @@
 # A calculation that returns 0 if the answer value is 0 and 1 otherwise
 class Report::ZeroNonzeroCalculation < Report::Calculation
   def name_expr
-    "IF(#{table_prefix}answers.value > 0, 'Non-Zero', 'Zero')"
+    "IF(#{table_prefix}answers.value > 0, 'One or More', 'Zero')"
   end
 
   def value_expr

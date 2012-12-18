@@ -108,7 +108,7 @@
           switch (_this.report.attribs.percent_type) {
             case "overall": val /= data.totals.grand; break;
             case "by_row": val /= data.totals.row[r]; break;
-            case "by_column": val /= data.totals.col[c]; break;
+            case "by_col": val /= data.totals.col[c]; break;
           }
           val = _this.format_percent(val);
         }
@@ -185,7 +185,7 @@
   klass.prototype.equalize_col_widths = function() {
     // get the available extra space
     var extra_spc = $("#report_body").position().left + $("#report_body").width() - this.tbl.position().left - this.tbl.width();
-    
+
     // get the current column widths
     var cur_widths = []
     this.tbl.find("th.col").each(function() { cur_widths.push($(this).width()); });

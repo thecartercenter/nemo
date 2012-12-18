@@ -41,9 +41,10 @@ div.error { background-color: #d02000; }
 .report_reports_new h1#title, .report_reports_show h1#title { float: left; }
 #report_load_ind { float: left; margin: 10px 0 0 10px; }
 #report_top_links { clear: both; }
-#report_body { }
-#report_links { display: inline-block; margin: 0 15px 0 0; line-height: 150%; vertical-align: top; }
-#report_links a { display: block; }
+.report_view { display: table-row; }
+#report_main { display: table-cell; }
+#report_links { display: table-cell; padding: 0 15px 0 0; line-height: 150%; vertical-align: top; }
+#report_links a { display: block; white-space: nowrap; }
 
 /* report form */
 div.report_edit_dialog { width: 650px; height: 451px; }

@@ -44,21 +44,28 @@
     this.question_labels.change(function() { _this.broadcast_change("question_labels"); });
     
     // register fields to watch for changes
-    this.attribs_to_watch = {display_type: true};
+    this.attribs_to_watch = {display_type: true, report_type: true};
   }
   
   klass.prototype.update = function(report) {
     // store report reference
     this.report = report;
-    
+        console.log(this.report)
+
     // update controls
     this.display_type.update(report.attribs.display_type);
     this.percent_type.update(report.attribs.percent_type);
     this.bar_style.update(report.attribs.bar_style);
     this.question_labels.update(report.attribs.question_labels);
     
+    var is_tally = this.report.attribs.type && this.report.attribs.type.match(/TallyReport/);
+    
     var show;
-    show = this.report.attribs.display_type == "Table";
+    show = is_tally;
+    this.display_type.closest(".section")[show ? "show" : "hide"]();
+    if (!show) this.display_type.clear();
+    
+    show = this.report.attribs.display_type == "Table" && is_tally;
     this.percent_type.closest(".section")[show ? "show" : "hide"]();
     if (!show) this.percent_type.clear();
 

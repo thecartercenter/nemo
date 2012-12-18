@@ -153,8 +153,8 @@ form.user_form input#login_suggest_button { width: 75px; }
 form.user_form textarea#user_notes { width: 240px; height: 100px; }
 
 /* user batches */
-.user_batches_new #user_batch_users { width: 350px; height: 200px; margin-right: 20px; }
-.user_batches_new div.form_field_control { width: 375px !important; }
+.user_batches_new #user_batch_users { width: 500px; height: 200px; margin-right: 20px; }
+.user_batches_new div.form_field_control { width: 525px !important; }
 .user_batches_new div.form_field label { width: 75px; }
 
 /* report index */

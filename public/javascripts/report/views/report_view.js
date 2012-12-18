@@ -36,11 +36,11 @@
     } else {
       // create an appropriate Display class based on the display_type
       switch (this.report.attribs.display_type) {
-        case "Table":
-          this.display = new ns.TableDisplay(this.report);
-          break;
         case "BarChart":
           this.display = new ns.BarChartDisplay(this.report);
+          break;
+        default:
+          this.display = new ns.TableDisplay(this.report);
           break;
       }
     

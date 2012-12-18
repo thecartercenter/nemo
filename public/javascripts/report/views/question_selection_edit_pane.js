@@ -90,8 +90,13 @@
   klass.prototype.extract = function(enabled) {
     if (enabled) {
       this.report.attribs.omnibus_calculation = this.calc_chooser.get();
-      this.report.set_calculations_by_question_ids(this.q_chooser.get());
-      this.report.attribs.option_set_id = this.opt_set_chooser.get();
+      if (this.q_sel_type_radio.get() == "questions") {
+        this.report.set_calculations_by_question_ids(this.q_chooser.get());
+        this.report.attribs.option_set_id = null;
+      } else {
+        this.report.set_calculations_by_question_ids([]);
+        this.report.attribs.option_set_id = this.opt_set_chooser.get();
+      }
     } else if (this.report) {
       this.report.attribs.option_set_id = "";
       this.report.attribs.omnibus_calculation = null;

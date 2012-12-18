@@ -46,23 +46,25 @@
     link_to_if_auth("Back To Report List", report_reports_path, "report_reports#index")
   ) %>
 </div>
-<% if @can_edit %>
-  <div id="report_links">
-    <strong>Edit Report</strong>
-    <% if @report.new_record? %>
-      <a id="edit_link_0" href="#">Report Type</a>
-    <% end %>
-    <a id="edit_link_1" href="#">Display Options</a>
-    <a id="edit_link_2" href="#">Forms</a>
-    <a id="edit_link_3" href="#">Questions</a>
-    <a id="edit_link_4" href="#">Groupings</a>
-    <a id="edit_link_5" href="#">Questions/Attributes</a>
-    <a id="edit_link_6" href="#">Report Title</a>
+<div class="report_view">
+  <% if @can_edit %>
+    <div id="report_links">
+      <strong>Edit Report</strong>
+      <% if @report.new_record? %>
+        <a id="edit_link_0" href="#">Report Type</a>
+      <% end %>
+      <a id="edit_link_1" href="#">Display Options</a>
+      <a id="edit_link_2" href="#">Forms</a>
+      <a id="edit_link_3" href="#">Questions</a>
+      <a id="edit_link_4" href="#">Groupings</a>
+      <a id="edit_link_5" href="#">Questions/Attributes</a>
+      <a id="edit_link_6" href="#">Report Title</a>
+    </div>
+  <% end %>
+  <div id="report_main">
+    <div class="tip" id="report_info"></div>
+    <div id="report_body"></div>
   </div>
-<% end %>
-<div id="report_main">
-  <div class="tip" id="report_info"></div>
-  <div id="report_body"></div>
 </div>
 <br class="clearer"/>
 

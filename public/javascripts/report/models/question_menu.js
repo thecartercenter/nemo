@@ -26,7 +26,7 @@
         continue;
       
       // IdentityCalculation must have select type
-      if (calc_type == "Report::IdentityCalculation" && !(type == "select_one" || type == "select_multiple"))
+      if (calc_type == "Report::IdentityCalculation" && !(type == "select_one" || type == "select_multiple" || type == "long_text"))
         continue;
         
       // question must appear on one of the given forms
