@@ -1,9 +1,6 @@
-require 'test/test_helper'
-require 'test/unit/report/report_test_helper'
+require 'test_helper'
 
 class Report::GroupedTallyReportTest < ActiveSupport::TestCase
-  include ReportTestHelper
-  
   setup do
     prep_objects
   end
