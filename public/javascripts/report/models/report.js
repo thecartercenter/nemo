@@ -147,6 +147,13 @@
     return null;
   }
   
+  // counts the number of objects in the given array that don't have _destroy = true
+  klass.prototype.count_not_to_be_destroyed = function(arr) {
+    var count = 0;
+    $(arr).each(function(){ if (!this._destroy) count++; });
+    return count;
+  }
+  
   // checks that all attributes are valid. 
   // returns true if valid.
   // returns false if invalid and sets validation errors.
@@ -157,13 +164,19 @@
     if (!this.attribs.type)
       this.errors.add("type", "You must choose a report type.");
 
-    // type
+    // title
     if (!this.attribs.name.match(/\w+/))
       this.errors.add("name", "You must enter a report title.");
 
     // question/option_set
     if (this.attribs.type == "Report::QuestionAnswerTallyReport" && this.calculation_count() == 0 && this.attribs.option_set_id == null)
       this.errors.add("questions", "You must choose at least one question or one option set.");
+      
+    // fields
+    if (this.attribs.type == "Report::ListReport" && this.count_not_to_be_destroyed(this.attribs.calculations_attributes) == 0)
+      this.errors.add("fields", "You must choose at least one question or attribute.");
+    
+    // report is valid if errors are empty
     return this.errors.empty();
   }
   

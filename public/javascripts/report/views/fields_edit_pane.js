@@ -39,4 +39,12 @@
     }
   }
   
+  // before validation handler; removes any fields in the set with nothing selected
+  klass.prototype.before_validation = function() { 
+    this.fields.remove_unselected();
+  }
+  
+  klass.prototype.fields_for_validation_errors = function() {
+    return ["fields"];
+  }
 }(ELMO.Report));

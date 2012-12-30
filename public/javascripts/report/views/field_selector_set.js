@@ -12,52 +12,38 @@
     this.cont.find(".selectors").children().remove();
     
     this.selectors = [];
-    this.deleted = [];
     
     // hookup add link
     this.cont.find("a.add").click(function(){ _this.add_selectors(1); return false; });
   }
 
-  klass.prototype.update = function(report) {
-    var _this = this;
+  // updates the set of selectors to match the given report model
+  klass.prototype.update = function(report) { var self = this;
 
-    // save refs
+    // save ref to report
     this.report = report;
-    var calcs = $.extend(true, [], this.report.attribs.calculations);
-    
-    // remove any calculations that we've already marked deleted
-    for (var i = calcs.length - 1; i >= 0; i--)
-      if (this.deleted.indexOf(calcs[i].id) != -1)
-        calcs.splice(i, 1);
-    
-    // get diff between num of calculations in report and cur number of selectors
-    var diff = calcs.length - this.selectors.length;
 
-    // add/delete any field_selectors if necessary
-    if (diff < 0)
-      this.remove_selectors(-diff);
-    else if (diff > 0)
-      this.add_selectors(diff);
+    // remove all existing selectors
+    $(self.selectors).each(function(){ this.remove(); })
+    self.selectors = []
     
-    // update existing field_selectors to match report calculations
-    $(calcs).each(function(idx, calc) {
-      _this.selectors[idx].update(_this.report, calc);
-    });
+    // add new ones and update them with current values
+    self.add_selectors(this.report.attribs.calculations.length);
+    $(this.report.attribs.calculations).each(function(idx){ self.selectors[idx].update(self.report, this); })
   }
   
   klass.prototype.get = function() { var self = this;
     var ret = [];
     
-    // build array of calculation objects, excepting deleted objects
+    // build array of calculation objects
     $(self.selectors).each(function(){
-      if (!this.calc || !this.calc.id || self.deleted.indexOf(this.calc.id) == -1)
-        ret.push(this.get());
+      ret.push(this.get());
     });
     return ret;
   }
   
-  klass.prototype.add_selectors = function(how_many) {
-    var _this = this;
+  // adds the given number of selectors to the set
+  klass.prototype.add_selectors = function(how_many) { var self = this;
     
     for (var i = 0; i < how_many; i++) {
       // create the element
@@ -73,17 +59,10 @@
       this.selectors.push(selector);
       
       // hookup the remove link
-      (function(_selector){
-        el.find("a.remove").click(function(){ _this.remove_selector(_selector); return false; })
+      (function(selector){
+        el.find("a.remove").click(function(){ self.remove_selector(selector); return false; })
       })(selector);
     }
-  }
-  
-  klass.prototype.remove_selectors = function(how_many) {
-    // remove elements
-    var old_num = this.selectors.length;
-    for (var i = old_num - 1; i >= old_num - how_many; i--)
-      this.remove_selector(this.selectors[i]);
   }
   
   klass.prototype.remove_selector = function(selector) {
@@ -91,15 +70,18 @@
     var idx = this.selectors.indexOf(selector);
     
     // remove the element
-    this.selectors[idx].cont.remove();
+    this.selectors[idx].remove();
     
-    // save the ID (for deletion purposes) if it exists
-    if (this.selectors[idx].calc && this.selectors[idx].calc.id)
-      this.deleted.push(this.selectors[idx].calc.id);
-    console.log("deleted", this.deleted)
-    
-    // remove from the array
-    this.selectors.splice(idx, 1);
+    // remove from the array if the selector does not exist in db
+    if (!this.selectors[idx].exists_in_db())
+      this.selectors.splice(idx, 1);
+  }
+  
+  // removes any visible field selectors with nothing selected
+  klass.prototype.remove_unselected = function() { var self = this;
+    for (var i = self.selectors.length - 1; i >= 0; i--)
+      if (self.selectors[i].visible && self.selectors[i].unselected())
+        this.remove_selector(self.selectors[i]);
   }
 
 }(ELMO.Report));

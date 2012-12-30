@@ -108,6 +108,9 @@
       this.extract(enabled[this.id]);
     });
     
+    // show/clear validation errors
+    this.pane_do("before_validation");
+    
     // validate
     var is_valid = this.report.validate();
 

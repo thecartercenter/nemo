@@ -6,6 +6,7 @@
     this.cont = cont;
     this.menus = menus;
     this.question_types = question_types;
+    this.visible = true;
     
     // create the select object
     this.field = new ELMO.Control.Select({
@@ -44,11 +45,27 @@
     this.field.update(key);
   }
   
+  // removes the DOM object, sets visible to false, and sets the selected value to nil
+  klass.prototype.remove = function() { var self = this;
+    self.cont.remove();
+    self.visible = false;
+    self.field.clear();
+  }
+  
+  // returns whether this selector represents a field that exists in the database
+  klass.prototype.exists_in_db = function() {
+    return this.calc && this.calc.id;
+  }
+  
+  klass.prototype.unselected = function() {
+    return !this.field.get();
+  }
+  
   klass.prototype.get = function() {
     var field_val = this.field.get();
     var field_params = {};
 
-    if (this.calc && this.calc.id)
+    if (this.exists_in_db())
       field_params.id = this.calc.id;
     
     if (!field_val) {
@@ -71,5 +88,5 @@
 
     return field_params;
   }
-
+  
 }(ELMO.Report));
