@@ -67,4 +67,11 @@ class Report::ListReport < Report::Report
       # one row per result row
       db_result.rows.collect{Array.new(@header_set[:col].size)}
     end
+     
+    def remove_blank_rows
+      # remove any blank rows from the data; don't have to worry about row headers as there are none
+      (@data.rows.size-1).downto(0) do |i|
+        @data.rows.delete_at(i) if @data.empty_row?(i)
+      end
+    end
 end

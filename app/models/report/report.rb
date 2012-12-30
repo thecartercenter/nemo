@@ -80,6 +80,9 @@ class Report::Report < ActiveRecord::Base
       extract_data_from_row(row, row_idx)
     end
     
+    # clean out blank rows
+    remove_blank_rows
+    
     # compute totals if appropriate
     @data.compute_totals if can_total?
   end
@@ -148,5 +151,9 @@ class Report::Report < ActiveRecord::Base
     
     def normalize_attribs
       self.option_set_id = nil if option_set_id.blank?
+    end
+    
+    # by default we don't have to worry about blank rows
+    def remove_blank_rows
     end
 end
