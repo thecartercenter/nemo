@@ -17,6 +17,11 @@ li { margin-bottom: 5px; }
 table { border-collapse: collapse; }
 td { vertical-align: top; }
 
+input[type="radio"], input[type="checkbox"] {                         
+  border: 0px !important;
+  background-color: transparent;
+}
+
 /* multi-purpose */
 div.subtitle { margin: -10px 0 10px 0; color: #888; }
 div.tip { margin-bottom: 10px; width: 800px; }
