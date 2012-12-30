@@ -197,10 +197,11 @@ form.setting_form #tableau_sql .form_field_control pre { width: 325px; height: 7
 form.setting_form #tableau_sql .form_field_control a { font-size: 9pt; }
 
 /* embedded fonts */
-@font-face { 
-  font-family: 'fontello'; 
-  src: font-url('/fonts/fontello.eot'); 
-  src: local(fontello), font-url('/fonts/fontello.eot?#iefix') format('embedded-opentype'), font-url('/fonts/fontello.woff') format('woff'), font-url('/fonts/fontello.ttf') format('truetype'), font-url('/fonts/fontello.svg#fontello') format('svg'); 
-  font-weight: normal; 
-  font-style: normal; 
+@charset "UTF-8";
+@font-face {
+  font-family: 'fontello';
+  src: url("/fonts/fontello.eot");
+  src: url("/fonts/fontello.eot?#iefix") format('embedded-opentype'), url("/fonts/fontello.woff") format('woff'), url("/fonts/fontello.ttf") format('truetype'), url("/fonts/fontello.svg#fontello") format('svg');
+  font-weight: normal;
+  font-style: normal;
 }
