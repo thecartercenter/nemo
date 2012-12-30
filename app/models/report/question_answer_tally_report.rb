@@ -9,8 +9,8 @@ class Report::QuestionAnswerTallyReport < Report::TallyReport
   
   def as_json(options = {})
     h = super(options)
-    h[:calculations] = calculations
-    h[:option_set_choices] = option_set_choices
+    h[:calculations_attributes] = calculations
+    h[:option_set_choices_attributes] = option_set_choices
     h
   end
 

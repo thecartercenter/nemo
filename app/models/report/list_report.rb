@@ -5,7 +5,7 @@ class Report::ListReport < Report::Report
   
   def as_json(options = {})
     h = super(options)
-    h[:calculations] = calculations
+    h[:calculations_attributes] = calculations
     h
   end
 

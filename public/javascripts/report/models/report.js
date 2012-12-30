@@ -24,10 +24,10 @@
   // scans through all calculations and returns an array of question ids
   klass.prototype.get_calculation_question_ids = function() {
     var qids = [];
-    if (this.attribs.calculations)
-      for (var i = 0; i < this.attribs.calculations.length; i++)
-        if (this.attribs.calculations[i].question1_id)
-          qids.push(this.attribs.calculations[i].question1_id);
+    if (this.attribs.calculations_attributes)
+      for (var i = 0; i < this.attribs.calculations_attributes.length; i++)
+        if (this.attribs.calculations_attributes[i].question1_id)
+          qids.push(this.attribs.calculations_attributes[i].question1_id);
     return qids;
   }
   
@@ -37,16 +37,16 @@
     if (this.attribs.type != "Report::QuestionAnswerTallyReport") return;
     
     // calculations to empty array if not exist
-    this.attribs.calculations = this.attribs.calculations || [];
+    this.attribs.calculations_attributes = this.attribs.calculations_attributes || [];
     
     // do a match thing: if found, leave; if not found, set _destroy; if new, create new with no id
     Sassafras.Utils.match_lists(
-      {list: this.attribs.calculations, comparator: function(c){ return c.question1_id.toString() + ":" + c.type; }}, 
+      {list: this.attribs.calculations_attributes, comparator: function(c){ return c.question1_id.toString() + ":" + c.type; }}, 
       {list: qids, comparator: function(id){ return id + ":" + _this.attribs.omnibus_calculation; }},
       function(current_calc, new_id) {
         // if new_id has no accompanying current_calc, create a new one
         if (current_calc == null)
-          _this.attribs.calculations.push({question1_id: new_id, type: _this.attribs.omnibus_calculation});
+          _this.attribs.calculations_attributes.push({question1_id: new_id, type: _this.attribs.omnibus_calculation});
       
         // if current_calc is not in the given qids, mark it for destruction
         else if (new_id == null)
@@ -62,23 +62,23 @@
   klass.prototype.get_option_set_ids = function() { var self = this;
     var osids = [];
     // gather id's from the option_set_choices array
-    if (self.attribs.option_set_choices)
-      $(self.attribs.option_set_choices).each(function(){ osids.push(this.option_set_id); });
+    if (self.attribs.option_set_choices_attributes)
+      $(self.attribs.option_set_choices_attributes).each(function(){ osids.push(this.option_set_id); });
     return osids;
   }
   
   klass.prototype.set_option_set_ids = function(ids) { var self = this;
     // option_set_choices to empty array if not exist
-    self.attribs.option_set_choices = self.attribs.option_set_choices || [];
+    self.attribs.option_set_choices_attributes = self.attribs.option_set_choices_attributes || [];
     
     // do a match thing: if found, leave; if not found, set _destroy; if new, create new with no id
     Sassafras.Utils.match_lists(
-      {list: self.attribs.option_set_choices, comparator: function(osc){ return osc.option_set_id; }}, 
+      {list: self.attribs.option_set_choices_attributes, comparator: function(osc){ return osc.option_set_id; }}, 
       {list: ids},
       function(current_osc, new_id) {
         // if new_id has no accompanying osc, create a new one
         if (current_osc == null)
-          self.attribs.option_set_choices.push({option_set_id: new_id});
+          self.attribs.option_set_choices_attributes.push({option_set_id: new_id});
       
         // if current_osc is not in the given ids, mark it for destruction
         else if (new_id == null)
@@ -119,36 +119,23 @@
     }
   }
   
-  klass.prototype.to_hash = function() {
+  // ensures calculation ranks match array indices
+  klass.prototype.fix_calculation_ranks = function() {
+    if (this.attribs.calculations_attributes)
+      for (var i = 0; i < this.attribs.calculations_attributes.length; i++)
+        // don't count 'to be destroyed' calculations
+        if (this.attribs.calculations_attributes[i].type)
+          this.attribs.calculations_attributes[i].rank = i + 1;
+  }
+  
+  klass.prototype.to_hash = function() { var self = this;
+    // fix calculation ranks
+    self.fix_calculation_ranks();
+
     var to_serialize = {}
-    // later should replace this with better serialization method?
-    to_serialize.type = this.attribs.type;
-    to_serialize.name = this.attribs.name;
-    to_serialize.display_type = this.attribs.display_type;
-    to_serialize.percent_type = this.attribs.percent_type;
-    to_serialize.bar_style = this.attribs.bar_style;
-    to_serialize.question_labels = this.attribs.question_labels;
-    to_serialize.option_set_choices_attributes = this.attribs.option_set_choices;
-
-    if (this.attribs.type == "Report::QuestionAnswerTallyReport") {
-      to_serialize.calculations_attributes = [];
-      for (var i = 0; i < this.attribs.calculations.length; i++) {
-        var calc = {};
-        calc.question1_id = this.attribs.calculations[i].question1_id;
-        if (this.attribs.calculations[i].type) calc.type = this.attribs.calculations[i].type;
-        if (this.attribs.calculations[i].id) calc.id = this.attribs.calculations[i].id;
-        if (this.attribs.calculations[i]._destroy) calc._destroy = this.attribs.calculations[i]._destroy;
-        to_serialize.calculations_attributes.push(calc);
-      }
-    } else {
-      to_serialize.calculations_attributes = this.attribs.calculations_attributes;
-
-      // fix ranks
-      if (this.attribs.calculations_attributes)
-        for (var i = 0; i < this.attribs.calculations_attributes.length; i++)
-          if (this.attribs.calculations_attributes[i].type)
-            this.attribs.calculations_attributes[i].rank = i + 1;
-    }
+    $(["type", "name", "display_type", "percent_type", "bar_style", "question_labels", "option_set_choices_attributes", "calculations_attributes"]).each(function(){
+      to_serialize[this] = self.attribs[this];
+    });
     
     // filter params
     to_serialize.filter_attributes = {}
@@ -166,12 +153,12 @@
   }
   
   klass.prototype.calculation_by_rank = function(rank) {
-    if (!this.attribs.calculations)
+    if (!this.attribs.calculations_attributes)
       return null;
       
-    for (var i = 0; i < this.attribs.calculations.length; i++)
-      if (this.attribs.calculations[i].rank == rank)
-        return this.attribs.calculations[i];
+    for (var i = 0; i < this.attribs.calculations_attributes.length; i++)
+      if (this.attribs.calculations_attributes[i].rank == rank)
+        return this.attribs.calculations_attributes[i];
     return null;
   }
   
@@ -198,8 +185,8 @@
 
     // question/option_set
     if (this.attribs.type == "Report::QuestionAnswerTallyReport" 
-      && this.count_not_to_be_destroyed(this.attribs.calculations) == 0 
-      && this.count_not_to_be_destroyed(this.attribs.option_set_choices) == 0)
+      && this.count_not_to_be_destroyed(this.attribs.calculations_attributes) == 0 
+      && this.count_not_to_be_destroyed(this.attribs.option_set_choices_attributes) == 0)
         this.errors.add("questions", "You must choose at least one question or one option set.");
       
     // fields

@@ -28,8 +28,10 @@
     self.selectors = []
     
     // add new ones and update them with current values
-    self.add_selectors(this.report.attribs.calculations.length);
-    $(this.report.attribs.calculations).each(function(idx){ self.selectors[idx].update(self.report, this); })
+    if (this.report.attribs.calculations_attributes) {
+      self.add_selectors(this.report.attribs.calculations_attributes.length);
+      $(this.report.attribs.calculations_attributes).each(function(idx){ self.selectors[idx].update(self.report, this); })
+    }
   }
   
   klass.prototype.get = function() { var self = this;

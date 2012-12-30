@@ -65,12 +65,12 @@
     if (on_show) {
       if (this.report.attribs.omnibus_calculation)
         this.calc_chooser.update(this.report.attribs.omnibus_calculation);
-      else if (this.report.attribs.calculations && this.report.attribs.calculations.length > 0)
-        this.calc_chooser.update(this.report.attribs.calculations[0].type);
+      else if (this.report.attribs.calculations_attributes && this.report.attribs.calculations_attributes.length > 0)
+        this.calc_chooser.update(this.report.attribs.calculations_attributes[0].type);
       else
         this.calc_chooser.update("Report::IdentityCalculation");
     
-      var question_ids = this.report.get_calculation_question_ids()
+      var question_ids = this.report.get_calculation_question_ids();
       this.q_chooser.update(question_ids);
     
       if (!this.q_sel_type_radio.get())
