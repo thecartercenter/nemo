@@ -53,8 +53,6 @@
       if (!this.calc || !this.calc.id || self.deleted.indexOf(this.calc.id) == -1)
         ret.push(this.get());
     });
-    
-    console.log(ret)
     return ret;
   }
   

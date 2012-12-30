@@ -2,9 +2,10 @@
 (function(ns, klass) {
   
   // constructor
-  ns.FieldSelector = klass = function(cont, menus) {
+  ns.FieldSelector = klass = function(cont, menus, question_types) {
     this.cont = cont;
     this.menus = menus;
+    this.question_types = question_types;
     
     // create the select object
     this.field = new ELMO.Control.Select({
@@ -26,7 +27,7 @@
         txt_key: "title"
       },{
         label: "Questions",
-        objs: this.menus.question.for_forms_and_calc_type(this.report.attribs.form_ids, "Report::IdentityCalculation"),
+        objs: this.menus.question.filter({form_ids: this.report.attribs.form_ids}),
         id_key: function(obj) { return "question1_id:" + obj.id; },
         txt_key: "code"
       }

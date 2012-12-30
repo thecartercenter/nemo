@@ -81,7 +81,8 @@
     }
     
     // update question choices
-    this.q_chooser.update_objs(this.menus.question.for_forms_and_calc_type(this.report.attribs.form_ids, this.calc_chooser.get()));
+    var filter_options = {form_ids: this.report.attribs.form_ids, calc_type: this.calc_chooser.get(), question_types: ["select_one", "select_multiple"]};
+    this.q_chooser.update_objs(this.menus.question.filter(filter_options));
     
     this.enable_questions_or_option_sets();
   }
