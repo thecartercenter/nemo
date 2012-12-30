@@ -15,7 +15,7 @@
 
     // hide any items with _destroy flag set
     (function(_this){ _this.div.find('input[id$="__destroy"][value="true"]').closest("div.item").each(
-      function(){ console.log(this); _this.delete_item($(this)); })})(this);
+      function(){ _this.delete_item($(this)); })})(this);
     
     // hookup add link
     (function(_this){ _this.div.find("a.add_item_link").click(function(){ _this.add_item(); return false; }); })(this);

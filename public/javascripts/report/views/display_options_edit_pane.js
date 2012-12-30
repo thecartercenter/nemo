@@ -50,7 +50,6 @@
   klass.prototype.update = function(report) {
     // store report reference
     this.report = report;
-        console.log(this.report)
 
     // update controls
     this.display_type.update(report.attribs.display_type);
