@@ -15,8 +15,9 @@
     this.cont = $("div.report_edit_dialog");
     this.dialog = new ELMO.Dialog(this.cont, {dont_show: true});
 
-    // create the form
+    // create the form and disable submit
     this.form = $("form.report_form");
+    this.form.submit(function(){ return false; });
 
     // create the panes
     this.panes = [
