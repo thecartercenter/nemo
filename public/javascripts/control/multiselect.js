@@ -6,10 +6,10 @@
     var _this = this;
     this.params = params;
 
+    this.dom_id = parseInt(Math.random() * 1000000);
     this.fld = params.el;
     this.rebuild_options();
-    this.dom_id = parseInt(Math.random() * 1000000);
-    
+
     // initialize callback to empty function
     this.change_callback = function(){}
     
@@ -29,7 +29,7 @@
   
   klass.prototype.rebuild_options = function() {
     var _this = this;
-    
+
     // empty old rows
     this.fld.find(".choices").empty();
     this.rows = [];

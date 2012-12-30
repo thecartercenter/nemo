@@ -1,3 +1,4 @@
+# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -10,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121126153456) do
+ActiveRecord::Schema.define(:version => 20121230200218) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -187,6 +188,14 @@ ActiveRecord::Schema.define(:version => 20121126153456) do
     t.datetime "updated_at"
     t.integer  "rank"
   end
+
+  create_table "report_option_set_choices", :force => true do |t|
+    t.integer "report_report_id"
+    t.integer "option_set_id"
+  end
+
+  add_index "report_option_set_choices", ["option_set_id"], :name => "index_report_option_set_choices_on_option_set_id"
+  add_index "report_option_set_choices", ["report_report_id"], :name => "index_report_option_set_choices_on_report_report_id"
 
   create_table "report_reports", :force => true do |t|
     t.integer  "mission_id"

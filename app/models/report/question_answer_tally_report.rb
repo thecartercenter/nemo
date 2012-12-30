@@ -1,12 +1,16 @@
 class Report::QuestionAnswerTallyReport < Report::TallyReport
-  belongs_to(:option_set)
+  has_many(:option_set_choices, :class_name => "Report::OptionSetChoice", :foreign_key => "report_report_id", :dependent => :destroy, :autosave => true)
+  has_many(:option_sets, :through => :option_set_choices)
   has_many(:calculations, :class_name => "Report::Calculation", :foreign_key => "report_report_id", :dependent => :destroy, :autosave => true)
 
   accepts_nested_attributes_for(:calculations, :allow_destroy => true)
-
+  accepts_nested_attributes_for(:option_set_choices, :allow_destroy => true)
+  attr_accessible(:option_set_choices_attributes)
+  
   def as_json(options = {})
     h = super(options)
     h[:calculations] = calculations
+    h[:option_set_choices] = option_set_choices
     h
   end
 
@@ -27,21 +31,22 @@ class Report::QuestionAnswerTallyReport < Report::TallyReport
     
       # add answer grouping
       # if we have an option set, we don't use calculation objects
-      if option_set
+      unless option_sets.empty?
         expr = "IFNULL(aotr.str, cotr.str)"
         rel = rel.select("#{expr} AS sec_name")
         rel = rel.group(expr)
         expr = "IFNULL(ao.value, co.value)"
         rel = rel.select("#{expr} AS sec_value")
         rel = rel.group(expr)
-        rel = rel.where("option_sets.id" => option_set.id)
+        rel = rel.where("option_sets.id" => option_sets.collect{|os| os.id})
         
         # type is just text
         rel = rel.select("'text' AS sec_type")
         
         # default sort by option value and then by question
-        opt_value_sort_order = option_set.ordering == "value_asc" ? "" : "DESC"
-        rel = rel.order("pri_value, sec_value #{opt_value_sort_order}")
+        # if only one option set then use its ordering 
+        opt_value_sort_order = (option_sets.size == 1 && option_sets.first.ordering == "value_desc") ? " DESC" : ""
+        rel = rel.order("pri_value, sec_value#{opt_value_sort_order}")
 
       # we don't have an option set, so expect calculation objects
       else

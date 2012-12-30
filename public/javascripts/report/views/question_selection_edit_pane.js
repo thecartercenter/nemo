@@ -44,16 +44,14 @@
     });
     this.q_chooser.change(function() { _this.broadcast_change("question_selection"); });
     
-    // build option set chooser
-    this.opt_set_chooser = new ELMO.Control.Select({
-      el: this.cont.find("select#option_set"),
+    // build option set selector
+    this.opt_set_chooser = new ELMO.Control.Multiselect({
+      el: this.cont.find("div#option_set_select"),
       objs: this.menus.option_set.objs,
       id_key: "id",
-      txt_key: "name",
-      prompt: true
+      txt_key: "name"
     });
     this.opt_set_chooser.change(function() { _this.broadcast_change("option_set"); });
-
     
     this.attribs_to_watch = {omnibus_calculation: true, q_sel_type: true, form_selection: true, report_type: true};
   }
@@ -72,15 +70,16 @@
       else
         this.calc_chooser.update("Report::IdentityCalculation");
     
-      this.q_chooser.update(this.report.get_calculation_question_ids());
+      var question_ids = this.report.get_calculation_question_ids()
+      this.q_chooser.update(question_ids);
     
       if (!this.q_sel_type_radio.get())
-        this.q_sel_type_radio.update(this.report.attribs.option_set_id == null ? "questions" : "option_set");
+        this.q_sel_type_radio.update(question_ids.length > 0 ? "questions" : "option_set");
     
-      this.opt_set_chooser.update(this.report.attribs.option_set_id);
+      this.opt_set_chooser.update(this.report.get_option_set_ids());
     }
     
-    // update question choices
+    // update question choices depending on selected forms
     var filter_options = {form_ids: this.report.attribs.form_ids, calc_type: this.calc_chooser.get(), question_types: ["select_one", "select_multiple"]};
     this.q_chooser.update_objs(this.menus.question.filter(filter_options));
     
@@ -93,19 +92,18 @@
       this.report.attribs.omnibus_calculation = this.calc_chooser.get();
       if (this.q_sel_type_radio.get() == "questions") {
         this.report.set_calculations_by_question_ids(this.q_chooser.get());
-        this.report.attribs.option_set_id = null;
+        this.report.set_option_set_ids([]);
       } else {
         this.report.set_calculations_by_question_ids([]);
-        this.report.attribs.option_set_id = this.opt_set_chooser.get();
+        this.report.set_option_set_ids(this.opt_set_chooser.get());
       }
     } else if (this.report) {
-      this.report.attribs.option_set_id = "";
       this.report.attribs.omnibus_calculation = null;
     }
   }
   
   klass.prototype.fields_for_validation_errors = function() {
-    return ["questions", "option_set_id"];
+    return ["questions", "option_sets"];
   }
   
   klass.prototype.enable_questions_or_option_sets = function() {

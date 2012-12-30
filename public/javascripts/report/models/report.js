@@ -49,19 +49,46 @@
           _this.attribs.calculations.push({question1_id: new_id, type: _this.attribs.omnibus_calculation});
       
         // if current_calc is not in the given qids, mark it for destruction
-        if (new_id == null)
+        else if (new_id == null)
           current_calc._destroy = "true";
+          
+        // if both found, make sure the current is not marked for destruction
+        else if (current_calc._destroy)
+          delete current_calc._destroy;
       }
     )
   }
   
-  // counts non-destroyed calculations
-  klass.prototype.calculation_count = function() {
-    var count = 0;
-    for (var i = 0; i < this.attribs.calculations.length; i++)
-      if (!this.attribs.calculations[i]._destroy)
-        count++;
-    return count;
+  klass.prototype.get_option_set_ids = function() { var self = this;
+    var osids = [];
+    // gather id's from the option_set_choices array
+    if (self.attribs.option_set_choices)
+      $(self.attribs.option_set_choices).each(function(){ osids.push(this.option_set_id); });
+    return osids;
+  }
+  
+  klass.prototype.set_option_set_ids = function(ids) { var self = this;
+    // option_set_choices to empty array if not exist
+    self.attribs.option_set_choices = self.attribs.option_set_choices || [];
+    
+    // do a match thing: if found, leave; if not found, set _destroy; if new, create new with no id
+    Sassafras.Utils.match_lists(
+      {list: self.attribs.option_set_choices, comparator: function(osc){ return osc.option_set_id; }}, 
+      {list: ids},
+      function(current_osc, new_id) {
+        // if new_id has no accompanying osc, create a new one
+        if (current_osc == null)
+          self.attribs.option_set_choices.push({option_set_id: new_id});
+      
+        // if current_osc is not in the given ids, mark it for destruction
+        else if (new_id == null)
+          current_osc._destroy = "true";
+          
+        // if both found, make sure the current_osc is not marked for destruction
+        else if (current_osc._destroy)
+          delete current_osc._destroy;
+      }
+    )
   }
   
   klass.prototype.aggregation = function() {
@@ -101,7 +128,8 @@
     to_serialize.percent_type = this.attribs.percent_type;
     to_serialize.bar_style = this.attribs.bar_style;
     to_serialize.question_labels = this.attribs.question_labels;
-    to_serialize.option_set_id = this.attribs.option_set_id == null ? "" : this.attribs.option_set_id;
+    to_serialize.option_set_choices_attributes = this.attribs.option_set_choices;
+
     if (this.attribs.type == "Report::QuestionAnswerTallyReport") {
       to_serialize.calculations_attributes = [];
       for (var i = 0; i < this.attribs.calculations.length; i++) {
@@ -169,8 +197,10 @@
       this.errors.add("name", "You must enter a report title.");
 
     // question/option_set
-    if (this.attribs.type == "Report::QuestionAnswerTallyReport" && this.calculation_count() == 0 && this.attribs.option_set_id == null)
-      this.errors.add("questions", "You must choose at least one question or one option set.");
+    if (this.attribs.type == "Report::QuestionAnswerTallyReport" 
+      && this.count_not_to_be_destroyed(this.attribs.calculations) == 0 
+      && this.count_not_to_be_destroyed(this.attribs.option_set_choices) == 0)
+        this.errors.add("questions", "You must choose at least one question or one option set.");
       
     // fields
     if (this.attribs.type == "Report::ListReport" && this.count_not_to_be_destroyed(this.attribs.calculations_attributes) == 0)
