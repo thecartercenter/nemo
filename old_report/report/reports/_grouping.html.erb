@@ -1,8 +1,0 @@
-<%= fields_for("report_report[#{method}_attributes]", form.object.send(method)) do |f| %>
-  <%= f.select(:form_choice, 
-        grouped_options_for_select([
-          ["Attributes", sel_opts_from_objs(@groupable_response_attributes, :id_method => lambda{|a| "by_attrib_#{a.id}"})],
-          ["Questions", sel_opts_from_objs(@groupable_questions, :id_method => lambda{|q| "by_answer_#{q.id}"}, :name_method => :code)]
-          ], (form.object.send(method).form_choice rescue nil)
-        ), :include_blank => true) %>
-<% end %>

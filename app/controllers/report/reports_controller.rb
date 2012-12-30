@@ -52,14 +52,6 @@ class Report::ReportsController < ApplicationController
 
   private
     def init_obj_and_render_form
-      #@report.build_filter(:class_name => "Response") unless @report.filter
-      #@report.fields.build(:full_id => nil) if @report.fields.empty?
-      #@question_types = QuestionType.all
-      #@aggregations = Report::Aggregation.all
-      #@groupable_response_attributes = Report::ResponseAttribute.groupable
-      #@groupable_questions = restrict(Question).select_types
-      #@dont_print_title = true
-      
       # if not a new record, run it and record viewing
       unless @report.new_record?
         @report.record_viewing
