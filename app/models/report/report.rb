@@ -2,7 +2,7 @@ require 'mission_based'
 class Report::Report < ActiveRecord::Base
   include MissionBased
   
-  attr_accessible :type, :name, :omnibus_calculation, :option_set_id, :display_type, :bar_style, :unreviewed, 
+  attr_accessible :type, :name, :option_set_id, :display_type, :bar_style, :unreviewed, 
     :question_labels, :show_question_labels, :percent_type, :unique_rows, :calculations_attributes, :calculations, 
     :option_set, :filter_attributes, :mission_id, :mission
   
