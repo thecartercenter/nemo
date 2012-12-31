@@ -133,9 +133,12 @@
     self.fix_calculation_ranks();
 
     var to_serialize = {}
-    $(["type", "name", "display_type", "percent_type", "bar_style", "question_labels", "option_set_choices_attributes", "calculations_attributes"]).each(function(){
+    $(["type", "name", "display_type", "percent_type", "bar_style", "question_labels", "calculations_attributes"]).each(function(){
       to_serialize[this] = self.attribs[this];
     });
+    
+    if (this.attribs.type == "Report::QuestionAnswerTallyReport")
+      to_serialize.option_set_choices_attributes = self.attribs.option_set_choices_attributes;
     
     // filter params
     to_serialize.filter_attributes = {}

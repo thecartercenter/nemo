@@ -80,6 +80,10 @@ class OptionSet < ActiveRecord::Base
     @option_setting_hash ||= Hash[*option_settings.collect{|os| [os.option, os]}.flatten]
   end
   
+  def as_json(options = {})
+    Hash[*%w(id name ordering).collect{|k| [k, self.send(k)]}.flatten]
+  end
+  
   private
     def at_least_one_option
       errors.add(:base, "You must choose at least one option.") if option_settings.empty?

@@ -31,9 +31,7 @@ class Report::Calculation < ActiveRecord::Base
   end
   
   def as_json(options = {})
-    h = super(options)
-    h[:type] = type
-    return h
+    Hash[*%w(id type attrib1_name question1_id rank).collect{|k| [k, self.send(k)]}.flatten]
   end
   
   def arg1
