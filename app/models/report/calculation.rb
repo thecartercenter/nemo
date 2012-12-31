@@ -64,7 +64,7 @@ class Report::Calculation < ActiveRecord::Base
   end
   
   def header_title
-    attrib1 ? attrib1.name.to_s.capitalize : (report.question_labels == "Title" ? question1.name_eng : question1.code)
+    attrib1 ? attrib1.name.to_s.gsub("_", " ").ucwords : (report.question_labels == "Title" ? question1.name_eng : question1.code)
   end
   
   def table_prefix

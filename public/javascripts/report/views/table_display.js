@@ -48,7 +48,8 @@
     }
     
     // header row
-    if (headers.col && headers.col.cells.length > 1 || headers.row && headers.row.cells.length > 1) {
+    // we need a header row if there are any col headers or if there is more than one row
+    if (headers.col || headers.row && headers.row.cells.length > 1) {
       var trow = $("<tr>");
     
       // blank cells for row grouping label and row header, if necessary
