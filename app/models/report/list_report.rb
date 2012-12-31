@@ -54,7 +54,7 @@ class Report::ListReport < Report::Report
     def extract_data_from_row(db_row, db_row_idx)
       calculations.each_with_index do |c, idx|
         col_idx = @header_set[:col].find_key_idx(idx) or raise Report::ReportError.new("Couldn't find matching header for calculation #{idx}.")
-        @data.set_cell(db_row_idx, col_idx, db_row["#{idx}_name"])
+        @data.set_cell(db_row_idx, col_idx, Report::Formatter.format(db_row["#{idx}_name"], db_row["#{idx}_type"], :cell))
       end 
     end
   
