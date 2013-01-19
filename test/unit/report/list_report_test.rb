@@ -2,26 +2,51 @@ require 'test_helper'
 
 class Report::ListReportTest < ActiveSupport::TestCase
   setup do
-    #prep_objects
+    prep_objects
   end
 
   test "basic list" do
     
-    #create_question(:code => "Inty", :type => "integer")
-    #create_question(:code => "State", :type => "text")
-    #create_response(:source => "odk", :answers => {:State => "ga", :Inty => 10})
-    #create_response(:source => "web", :answers => {:State => "ga", :Inty => 3})
-    #create_response(:source => "web", :answers => {:State => "al", :Inty => 5})
-    #
-    #report = create_report("List", :calculations_attributes => [
-    #  {:rank => 1, :type => "Report::IdentityCalculation", :question1_id => @questions[:Inty].id},
-    #  {:rank => 2, :type => "Report::IdentityCalculation", :question1_id => @questions[:State].id},
-    #  {:rank => 3, :type => "Report::IdentityCalculation", :attrib1_name => "source"}
-    #])        
-    #
-    #assert_report(report, %w( Inty  State   Source ),
-    #                      %w( 10    ga      odk    ),
-    #                      %w( 3     ga      web    ),
-    #                      %w( 5     al      web    ))
+    create_question(:code => "Inty", :type => "integer")
+    create_question(:code => "State", :type => "text")
+    create_response(:source => "odk", :answers => {:State => "ga", :Inty => 10})
+    create_response(:source => "web", :answers => {:State => "ga", :Inty => 3})
+    create_response(:source => "web", :answers => {:State => "al", :Inty => 5})
+    
+    report = create_report("List", :calculations_attributes => [
+      {:rank => 1, :type => "Report::IdentityCalculation", :attrib1_name => "submitter"},
+      {:rank => 2, :type => "Report::IdentityCalculation", :question1_id => @questions[:Inty].id},
+      {:rank => 3, :type => "Report::IdentityCalculation", :question1_id => @questions[:State].id},
+      {:rank => 4, :type => "Report::IdentityCalculation", :attrib1_name => "source"}
+    ])        
+    
+    assert_report(report, %w( Submitter  Inty  State   Source ),
+                          %w( Test       10    ga      odk    ),
+                          %w( Test       3     ga      web    ),
+                          %w( Test       5     al      web    ))
+  end
+  
+  test "list with select one" do
+
+    create_opt_set(%w(Yes No))
+    create_question(:code => "Inty", :type => "integer")
+    create_question(:code => "State", :type => "text")
+    create_question(:code => "Happy", :type => "select_one")
+    create_response(:source => "odk", :answers => {:State => "ga", :Inty => 10, :Happy => "Yes"})
+    create_response(:source => "web", :answers => {:State => "ga", :Inty => 3, :Happy => "No"})
+    create_response(:source => "web", :answers => {:State => "al", :Inty => 5, :Happy => "No"})
+    
+    report = create_report("List", :calculations_attributes => [
+      {:rank => 1, :type => "Report::IdentityCalculation", :attrib1_name => "submitter"},
+      {:rank => 2, :type => "Report::IdentityCalculation", :question1_id => @questions[:Inty].id},
+      {:rank => 3, :type => "Report::IdentityCalculation", :question1_id => @questions[:State].id},
+      {:rank => 4, :type => "Report::IdentityCalculation", :attrib1_name => "source"},
+      {:rank => 5, :type => "Report::IdentityCalculation", :question1_id => @questions[:Happy].id}
+    ])        
+    
+    assert_report(report, %w( Submitter  Inty  State   Source  Happy ),
+                          %w( Test       10    ga      odk     Yes   ),
+                          %w( Test       3     ga      web     No    ),
+                          %w( Test       5     al      web     No    ))
   end
 end

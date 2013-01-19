@@ -4,10 +4,13 @@ class Report::Join
   attr_reader :name, :sql, :dependencies
 
   def self.list_to_sql(list, prefix = "")
+    expand(list).collect{|join| join.to_sql(prefix)}
+  end
+  
+  def self.expand(list)
     expanded = []
     list.each{|j| expanded += @@joins[j.to_sym].expand}
-    expanded = expanded.flatten.uniq
-    expanded.collect{|join| join.to_sql(prefix)}
+    expanded.flatten.uniq
   end
   
   def initialize(params)

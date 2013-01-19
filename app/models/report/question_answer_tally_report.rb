@@ -60,16 +60,16 @@ class Report::QuestionAnswerTallyReport < Report::TallyReport
         where_exprs = calculations.collect{|c| c.where_expr}
         
         # build full expressions
-        name_expr = build_nested_if(name_exprs, where_exprs)
-        value_expr = build_nested_if(value_exprs, where_exprs)
-        sort_expr = build_nested_if(sort_exprs, where_exprs)
+        name_expr_sql = build_nested_if(name_exprs, where_exprs)
+        value_expr_sql = build_nested_if(value_exprs, where_exprs)
+        sort_expr_sql = build_nested_if(sort_exprs, where_exprs)
         
         # add the selects and groups
-        rel = rel.select("#{name_expr} AS sec_name, #{value_expr} AS sec_value, #{sort_expr} AS sec_sort_value, 'text' AS sec_type")
-        rel = rel.group(name_expr).group(value_expr).group(sort_expr)
+        rel = rel.select("#{name_expr_sql} AS sec_name, #{value_expr_sql} AS sec_value, #{sort_expr_sql} AS sec_sort_value, 'text' AS sec_type")
+        rel = rel.group(name_expr_sql).group(value_expr_sql).group(sort_expr_sql)
         
         # add the unified wheres
-        rel = rel.where("(" + where_exprs.join(" OR ") + ")")
+        rel = rel.where("(" + where_exprs.collect{|e| e.sql}.join(" OR ") + ")")
         
         # sort by sort expression
         rel = rel.order("option_sets.name, sec_sort_value, pri_value")
@@ -97,10 +97,10 @@ class Report::QuestionAnswerTallyReport < Report::TallyReport
     # builds a nested SQL IF statement of the form IF(a, x, IF(b, y, IF(c, z, ...)))
     def build_nested_if(exprs, conds)
       if exprs.size == 1
-        return exprs.first 
+        return exprs.first.sql
       else
         rest = build_nested_if(exprs[1..-1], conds[1..-1])
-        "IF(#{conds.first}, #{exprs.first}, #{rest})"
+        "IF(#{conds.first.sql}, #{exprs.first.sql}, #{rest})"
       end
     end
 end

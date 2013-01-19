@@ -1,3 +1,2 @@
 class Report::Field
-  
 end

@@ -71,6 +71,10 @@ class Report::Calculation < ActiveRecord::Base
     @table_prefix.blank? ? "" : (@table_prefix + "_")
   end
   
+  def select_expressions
+    [name_expr, value_expr, sort_expr, data_type_expr]
+  end
+  
   private
     def normalize_values
       self.attrib1_name = nil if self.attrib1_name.blank?

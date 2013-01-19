@@ -17,16 +17,16 @@ class Report::Grouping
     sort_expr = @calculation.sort_expr
     
     # add select, where, and group
-    rel = rel.select("#{name_expr} AS #{prefix}_name")
-    rel = rel.select("#{value_expr} AS #{prefix}_value")
-    rel = rel.select("#{type_expr} AS #{prefix}_type")
-    rel = rel.where(where_expr)
-    rel = rel.group(name_expr)
-    rel = rel.group(value_expr)
-    rel = rel.group(type_expr)
+    rel = rel.select("#{name_expr.sql} AS #{prefix}_name")
+    rel = rel.select("#{value_expr.sql} AS #{prefix}_value")
+    rel = rel.select("#{type_expr.sql} AS #{prefix}_type")
+    rel = rel.where(where_expr.sql)
+    rel = rel.group(name_expr.sql)
+    rel = rel.group(value_expr.sql)
+    rel = rel.group(type_expr.sql)
     
     # add order
-    rel = rel.order(sort_expr) if sort_expr
+    rel = rel.order(sort_expr.sql) if sort_expr
     
     # add joins, with label as prefix
     rel = rel.joins(Report::Join.list_to_sql(@calculation.joins, prefix))
