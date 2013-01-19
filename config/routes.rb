@@ -1,4 +1,4 @@
-CommandCenter::Application.routes.draw do
+ELMO::Application.routes.draw do
 
   # redirects for ODK
   match("/missions/:mission_compact_name/formList" => 'forms#index', :format => :xml)

@@ -8,8 +8,8 @@ configatron.site_email = "#{configatron.site_name} <someone@someplace.com>"
 configatron.mailer_url_protocol = 'https'
 
 # mailer settings
-CommandCenter::Application.config.action_mailer.delivery_method = :smtp
-CommandCenter::Application.config.action_mailer.smtp_settings = {
+ELMO::Application.config.action_mailer.delivery_method = :smtp
+ELMO::Application.config.action_mailer.smtp_settings = {
   :address        => 'smtp.example.com',
   :port           => 587,
   :domain         => "example.com",

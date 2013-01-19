@@ -2,7 +2,7 @@
 require File.expand_path('../application', __FILE__)
 
 # Initialize the rails application
-CommandCenter::Application.initialize!
+ELMO::Application.initialize!
 
 # Standard date-time format
 Time::DATE_FORMATS[:std_datetime] = "%Y-%m-%d %H:%M"
