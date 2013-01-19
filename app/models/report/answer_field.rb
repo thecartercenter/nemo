@@ -58,6 +58,7 @@ class Report::AnswerField < Report::Field
   
   def where_expr(chunks)
     @where_expr ||= self.class.expression(:name => "where_expr", :chunks => chunks.merge(:question_id => @question.id))
+    @where_expr
   end
   
   def sort_expr(chunks)

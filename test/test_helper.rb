@@ -18,6 +18,12 @@ class ActiveSupport::TestCase
   end
   
   def create_report(klass, options)
+    
+    # handle option_set parameter
+    if option_set = options.delete(:option_set)
+      options[:option_set_choices_attributes] = [{:option_set_id => option_set.id}]
+    end
+    
     report = "Report::#{klass}Report".constantize.new_with_default_name(mission)
     report.update_attributes!({:name => "TheReport"}.merge(options))
     return report

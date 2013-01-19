@@ -58,7 +58,7 @@ class Report::QuestionAnswerTallyReport < Report::TallyReport
         value_exprs = calculations.collect{|c| c.value_expr}
         sort_exprs = calculations.collect{|c| c.sort_expr}
         where_exprs = calculations.collect{|c| c.where_expr}
-        
+
         # build full expressions
         name_expr_sql = build_nested_if(name_exprs, where_exprs)
         value_expr_sql = build_nested_if(value_exprs, where_exprs)

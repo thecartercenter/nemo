@@ -11,6 +11,6 @@ class Report::Expression
     
     # build sql fragment by substituting chunks for their placeholders
     @sql = sql_tplt
-    chunks.each{|k,v| @sql.gsub!("__#{k.to_s.upcase}__", v)} if chunks
+    chunks.each{|k,v| @sql = @sql.gsub("__#{k.to_s.upcase}__", v.to_s)} if chunks
   end
 end

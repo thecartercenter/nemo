@@ -63,6 +63,7 @@ class Report::QuestionAnswerTallyReportTest < ActiveSupport::TestCase
       :calculations => [:yn0, :yn1, :hl1].collect{|code| Report::IdentityCalculation.new(:question1 => @questions[code])}
     )
     
+    
     # test                   
     assert_report(report, %w(     High Low Yes No TTL ),
                           %w( hl1    4   6   _  _  10 ),
@@ -71,7 +72,7 @@ class Report::QuestionAnswerTallyReportTest < ActiveSupport::TestCase
                           %w( TTL    4   6  13  7  30 ))
   end
   
-  test "Counts of Yes and No for empty result" do
+  test "counts of yes and no for empty result" do
     # create several option sets but only responses for the last one
     create_opt_set(%w(Yes No))
     create_opt_set(%w(Low High))
@@ -86,7 +87,7 @@ class Report::QuestionAnswerTallyReportTest < ActiveSupport::TestCase
     assert_report(report, nil)
   end
 
-  test "Counts of Yes and No and Zero/Nonzero" do
+  test "counts of yes and no and zero/nonzero" do
     # create several questions and responses for them
     create_opt_set(%w(Yes No))
     2.times{|i| create_question(:code => "yn#{i}", :name_eng => "Yes No Question #{i+1}", :type => "select_one", :option_set => @option_sets[:yes_no])}
@@ -105,11 +106,11 @@ class Report::QuestionAnswerTallyReportTest < ActiveSupport::TestCase
     ])
     
     # test                   
-    assert_report(report, %w(     Zero Non-Zero Yes No TTL ),
-                          %w( dec    6        4   _  _  10 ),
-                          %w( int    7        3   _  _  10 ),
-                          %w( yn0    _        _   6  4  10 ),
-                          %w( TTL   13        7   6  4  30 ))
+    assert_report(report, %w(     Zero) + ["One or More"] + %w(Yes No TTL ),
+                          %w( dec    6                4          _  _  10 ),
+                          %w( int    7                3          _  _  10 ),
+                          %w( yn0    _                _          6  4  10 ),
+                          %w( TTL   13                7          6  4  30 ))
    end
    
   # try it with multiselect
