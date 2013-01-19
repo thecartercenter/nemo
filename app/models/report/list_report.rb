@@ -121,7 +121,7 @@ class Report::ListReport < Report::Report
       rows = db_result.rows.collect{|r| r["response_id"]}.uniq.size
       cols = @header_set[:col].size
       tbl = []
-      rows.times{tbl << Array.new(cols, 0)}
+      rows.times{tbl << Array.new(cols)}
       return tbl
     end
      
