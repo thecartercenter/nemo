@@ -2,7 +2,7 @@ class Array
   # Matches elements of a to elements of b and passes each pair to a block.
   # If an element of a has no match in b or vice versa, nil is passed.
   # Assumes no duplicates in either array.
-  def match(arr, hashfunc = nil, &block)
+  def compare_by_element(arr, hashfunc = nil, &block)
     hashfunc ||= Proc.new{|x| x}
     
     # create hashes from a and b. can have multiple elements per key

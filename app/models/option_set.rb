@@ -58,7 +58,7 @@ class OptionSet < ActiveRecord::Base
     submitted = params.values.collect{|p| p[:included] == '1' ? OptionSetting.new(p) : nil}.compact
     
     # copy new choices into old objects, creating or deleting if necessary
-    option_settings.match(submitted, Proc.new{|os| os.option_id}) do |orig, subd|
+    option_settings.compare_by_element(submitted, Proc.new{|os| os.option_id}) do |orig, subd|
       # if both exist, do nothing
       # if submitted is nil, destroy the original
       if subd.nil?

@@ -74,7 +74,7 @@ class Answer < ActiveRecord::Base
     submitted = params.values.collect{|p| p[:checked] == '1' ? Choice.new(p) : nil}.compact
     
     # copy new choices into old objects, creating or deleting if necessary
-    choices.match(submitted, Proc.new{|c| c.option_id}) do |orig, subd|
+    choices.compare_by_element(submitted, Proc.new{|c| c.option_id}) do |orig, subd|
       # if both exist, do nothing
       # if submitted is nil, destroy the original
       if subd.nil?
