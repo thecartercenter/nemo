@@ -126,9 +126,6 @@ class FormsController < ApplicationController
       action = params[:action]
       @form = action == "create" ? Form.for_mission(current_mission).new : Form.find(params[:id], :include => {:questionings => :condition})
       
-      # set submitter if user doesn't have permission to do so
-      @form.user_id = current_user.id unless Permission.can_choose_form_submitter?(current_user, current_mission)
-      
       begin
         # save basic attribs
         @form.attributes = params[:form]

@@ -94,6 +94,7 @@ class ResponsesController < ApplicationController
       @possible_submitters = restrict(User.assigned_to(current_mission))
       @can_mark_reviewed = Permission.can_mark_form_reviewed?(current_user, current_mission)
       @can_choose_submitter = Permission.can_choose_form_submitter?(current_user, current_mission)
+      @response.user_id = current_user.id unless @can_choose_submitter || params[:action] != "new"
       render(:form)
     end
 end

@@ -120,7 +120,7 @@ class Response < ActiveRecord::Base
   
   def all_answers=(params)
     # do a match on current and newer ids with the ID as the comparator
-    answers.match(params.values, Proc.new{|a| a[:questioning_id].to_i}) do |orig, subd|
+    answers.compare_by_element(params.values, Proc.new{|a| a[:questioning_id].to_i}) do |orig, subd|
       # if both exist, update the original
       if orig && subd
         orig.attributes = subd
