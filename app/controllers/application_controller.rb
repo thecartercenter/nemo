@@ -219,8 +219,12 @@ class ApplicationController < ActionController::Base
       klass = rel.respond_to?(:klass) ? rel.klass : rel
 
       # apply search
-      @search = Search::Search.new(:class_name => klass.name, :str => params[:search])
-      rel = @search.apply(rel) unless options[:search] == false
+      begin
+        @search = Search::Search.new(:class_name => klass.name, :str => params[:search])
+        rel = @search.apply(rel) unless options[:search] == false
+      rescue Search::ParseError
+        @error_msg = "Search Error: #{$!}"
+      end
       
       # apply permissions
       rel = restrict(rel) unless options[:permissions] == false

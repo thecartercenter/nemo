@@ -1,3 +1,4 @@
+<%= [:success, :error].collect{|k| (msg = instance_variable_get("@#{k}_msg")) ? content_tag("div", :class => k){msg} : ""}.join.html_safe %>
 <%= [:success, :error].collect{|k| (flash || {})[k] ? content_tag("div", :class => k){flash[k]} : ""}.join.html_safe %>
 <%= defined?(object) ? render("layouts/object_errors", :object => object) : "" %>
 <script type="text/javascript">Utils.clear_success_flash_after_delay();</script>
