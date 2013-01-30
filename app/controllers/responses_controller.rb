@@ -28,13 +28,11 @@ class ResponsesController < ApplicationController
         render(:partial => "table_only", :locals => {:responses => @responses}) if ajax_request?
       end
       format.csv do
-        require 'fastercsv'
-        
         # get the response, for export, but not paginated
         @responses = Response.for_export(apply_filters(Response, :pagination => false))
 
         # render the csv
-        render_csv("responses-#{Time.zone.now.to_s(:filename_datetime)}")
+        render_csv("Responses")
       end
     end
   end

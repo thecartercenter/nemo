@@ -2,6 +2,7 @@ module ResponsesHelper
   def responses_index_fields
     %w[form_name submitter submission_time age reviewed? actions]
   end
+  
   def format_responses_field(resp, field)
     case field
     when "submission_time" then resp.created_at && resp.created_at.to_s(:std_datetime) || ""
@@ -15,6 +16,7 @@ module ResponsesHelper
     else resp.send(field)
     end
   end
+  
   def responses_index_links(responses)
     links = []
     # only add the create response link if there are any published forms
@@ -27,10 +29,26 @@ module ResponsesHelper
     end
     links
   end
+  
   def new_response_mini_form(visible = true)
     form_tag(new_response_path, :method => :get, :id => "form_chooser", :style => visible ? "" : "display: none") do
       select_tag(:form_id, sel_opts_from_objs(@pubd_forms, :name_method => :full_name, :tags => true), 
         :prompt => "Choose a Form...", :onchange => "this.form.submit()")
+    end
+  end
+  
+  # converts the given responses to csv
+  def responses_to_csv(responses)
+    if responses.empty?
+      ""
+    else
+      CSV.generate do |csv|
+        # add header row
+        csv << responses.first.attributes.keys
+        
+        # add rest of rows
+        responses.each{|r| csv << r.attributes.values}
+      end
     end
   end
 end

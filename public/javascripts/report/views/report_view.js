@@ -30,7 +30,7 @@
   
   klass.prototype.render = function() {
     // if no matching data, show message
-    if (this.report.attribs.data.rows.length == 0) {
+    if (this.report.no_data()) {
       $("#report_info").empty();
       $("#report_body").html("No matching data were found.")
     } else {
@@ -45,7 +45,6 @@
       }
     
       this.display.render();
-      //$("#report_body, #report_links").show();
     }
   }
   

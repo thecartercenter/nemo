@@ -49,6 +49,15 @@ class ApplicationController < ActionController::Base
       render(:layout => false)
     end
     
+    # removes any non-filename-safe characters from a string so that it can be used in a filename
+    def sanitize_filename(filename)
+      sanitized = filename.strip
+      sanitized.gsub!(/^.*(\\|\/)/, '')
+      # strip out non-ascii characters
+      sanitized.gsub!(/[^0-9A-Za-z.\-]/, '_')
+      sanitized
+    end
+    
     # Loads the user-specified timezone from configatron, if one exists
     def set_timezone
       Time.zone = configatron.timezone.to_s if configatron.timezone?

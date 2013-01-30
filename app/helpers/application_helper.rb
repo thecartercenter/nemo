@@ -172,12 +172,6 @@ module ApplicationHelper
     links.join("").html_safe
   end
   
-  # joins a set of links together with pipe characters, ignoring any blank ones
-  # for use with link_to_if_auth
-  def join_links(*links)
-    links.reject{|l| l.blank?}.join("&nbsp; | &nbsp;").html_safe
-  end
-  
   # creates a link to a batch operation
   # options include :action (e.g. forms#add_questions), :id, :format, :name (name of the link)
   def batch_op_link(options)
@@ -210,7 +204,7 @@ module ApplicationHelper
       :klass => klass,
       :objects => objects,
       :paginated => objects.respond_to?(:total_entries),
-      :links => join_links(*links.flatten),
+      :links => links.flatten.join.html_safe,
       :fields => send("#{klass.table_name}_index_fields"),
       :batch_ops => batch_ops
     )

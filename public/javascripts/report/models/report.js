@@ -21,6 +21,16 @@
     return !this.attribs.new_record;
   }
   
+  // checks if the report has data or not
+  klass.prototype.no_data = function() {
+    return this.attribs.data.rows.length == 0;
+  }
+
+  // checks if the report has errors or not
+  klass.prototype.has_errors = function() {
+    return !!this.attribs.errors;
+  }
+  
   // scans through all calculations and returns an array of question ids
   klass.prototype.get_calculation_question_ids = function() {
     var qids = [];

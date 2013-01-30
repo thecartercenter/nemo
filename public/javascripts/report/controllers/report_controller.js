@@ -34,7 +34,7 @@
       
     // otherwise, the report must have already run, so update the view
     else
-      this.report_view.update(this.report_last_run);
+      this.display_report(this.report_last_run);
   }
 
   klass.prototype.show_edit_view = function(idx) {
@@ -101,7 +101,11 @@
   }
   
   klass.prototype.display_report = function(report) {
+    // update the report view
     this.report_view.update(report);
+    
+    // show/hide the export link if there is no data or an error
+    $("a#csv_link")[report.no_data() || report.has_errors() ? "hide" : "show"]();
   }
   
   klass.prototype.restore_view = function() {

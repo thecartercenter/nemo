@@ -61,6 +61,12 @@ div.form_buttons input.submit { float: left; font-weight: bold; font-size: 120%;
 /* collection form */
 div.collection_form div.item { margin-bottom: 3px; }
 
+/* top links */
+div.tip a, div.tip input[type='submit'] {
+  display: inline-block;
+  padding-right: 10px;
+}
+
 /* index tables */
 table.index_table th, table.form th { text-align: left; color: #444; background-color: #ddd; 
     font-size: 90%; padding: 3px 10px 3px 3px; }

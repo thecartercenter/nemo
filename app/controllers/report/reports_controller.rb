@@ -5,12 +5,23 @@ class Report::ReportsController < ApplicationController
   
   def new
     @report = Report::Report.new_with_default_name(current_mission)
-    init_obj_and_render_form
+    render_show
   end
   
   def show
     @report = Report::Report.find(params[:id])
-    init_obj_and_render_form
+    init_report
+    respond_to do |format|
+      # for html, render the show action
+      format.html{render_show}
+      
+      # for csv, just render the csv template
+      format.csv do 
+        # build a nice filename
+        title = sanitize_filename(@report.name.gsub(" ", ""))
+        render_csv(title)
+      end
+    end
   end
   
   def destroy
@@ -28,7 +39,7 @@ class Report::ReportsController < ApplicationController
     @report.just_created = true if @report.errors.empty?
     
     # return data in json format
-    render(:json => build_hash.to_json)
+    render(:json => ajax_return_data.to_json)
   end
 
   # only exec'd through json
@@ -47,21 +58,42 @@ class Report::ReportsController < ApplicationController
     end
     
     # return data in json format
-    render(:json => build_hash.to_json)
+    render(:json => ajax_return_data.to_json)
   end
 
   private
-    def init_obj_and_render_form
-      # if not a new record, run it and record viewing
-      unless @report.new_record?
-        @report.record_viewing
-        run_and_handle_errors
-      end
+    # sets up the report object by recording a viewing and running
+    # returns true if report ran with no errors, false otherwise
+    # should only be run if @report is not a new record
+    def init_report
+      raise if @report.new_record?
       
+      # if not a new record, run it and record viewing
+      @report.record_viewing
+      
+      return run_and_handle_errors
+    end
+    
+    # runs the report and handles any errors, adding them to the report errors array
+    # returns true if no errors, false otherwise
+    def run_and_handle_errors
+      begin
+        @report.run
+        return true
+      rescue Report::ReportError, Search::ParseError
+        @report.errors.add(:base, $!.to_s)
+        return false
+      end
+    end
+  
+    # prepares and renders the show template, which is used for new and show actions
+    def render_show
+      # determine if user can edit form and save a flag
       @can_edit = authorized?(:action => "report_reports#update")
       
       # set json instance variable to be used in template
-      @report_json = build_hash.merge({
+      @report_json = {
+        :report => @report,
         :options => {
           :attribs => Report::AttribField.all,
           :forms => Form.for_mission(current_mission).with_form_type.all,
@@ -70,24 +102,12 @@ class Report::ReportsController < ApplicationController
           :option_sets => OptionSet.for_mission(current_mission).all,
           :percent_types => Report::Report::PERCENT_TYPES
         }
-      }).to_json
+      }.to_json
       
       render(:show)
     end
     
-    def run_and_handle_errors
-      begin
-        @report.run
-      rescue Report::ReportError, Search::ParseError
-        @report.errors.add(:base, $!.to_s)
-        return false
-      end
-      return true
-    end
-    
-    def build_hash
-      {
-        :report => @report,
-      }
+    def ajax_return_data
+      {:report => @report}
     end
 end
