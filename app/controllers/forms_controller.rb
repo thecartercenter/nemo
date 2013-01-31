@@ -1,4 +1,6 @@
 class FormsController < ApplicationController
+  # in the choose_questions action we have a question form so we need this
+  include QuestionFormable  
   
   def index
     respond_to do |format|
@@ -59,6 +61,20 @@ class FormsController < ApplicationController
     end
     # redirect to form edit
     redirect_to(:action => :index)
+  end
+  
+  # GET /forms/:id/choose_questions
+  # show the form to either choose existing questions or create a new one to add
+  def choose_questions
+    @form = Form.find(params[:id])
+    @title = "Adding Questions to Form: #{@form.name}"
+    
+    # get questions for choice list
+    @questions = apply_filters(Question.not_in_form(@form))
+    
+    # setup new questioning for use with the questioning form
+    @qing = init_qing(:form_id => @form.id)
+    setup_qing_form_support_objs
   end
   
   def add_questions

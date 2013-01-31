@@ -15,7 +15,7 @@ module QuestioningsHelper
   def questionings_index_links(qings)
     links = []
     if controller.action_name == "edit"
-      links << link_to("Add questions", choose_questions_path(:form_id => @form.id))
+      links << link_to("Add questions", choose_questions_form_path(@form))
       if qings.size > 0
         links << batch_op_link(:name => "Remove selected",
           :confirm => "Are you sure you want to remove these ### question(s) from the form?",

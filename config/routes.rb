@@ -5,7 +5,7 @@ ELMO::Application.routes.draw do
   match("/missions/:mission_compact_name/submission" => 'responses#create', :format => :xml)
 
   resources(:broadcasts){collection{post 'new_with_users'}}
-  resources(:forms){member{post 'add_questions', 'remove_questions', 'update_ranks'; get 'publish', 'clone'}}
+  resources(:forms){member{post *%w(add_questions remove_questions update_ranks); get *%w(publish clone choose_questions)}}
   resources(:form_types)
   resources(:markers)
   resources(:missions)
@@ -14,7 +14,6 @@ ELMO::Application.routes.draw do
   resources(:password_resets)
   resources(:permissions){collection{get 'no'}}
   resources(:questionings)
-  resources(:questions){collection{get 'choose'}}
   resources(:responses)
   resources(:settings)
   resource(:user_session){collection{get 'logged_out'}}

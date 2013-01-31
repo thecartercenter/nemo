@@ -1,6 +1,8 @@
 class QuestioningsController < ApplicationController
+  include QuestionFormable
+  
   def new
-    @qing = Questioning.new_with_question(current_mission, :form_id => params[:form_id])
+    @qing = init_qing(:form_id => params[:form_id])
     render_and_setup
   end
   
@@ -49,8 +51,7 @@ class QuestioningsController < ApplicationController
     def render_and_setup
       @title = @qing.question.code
       @title = "New Question" if @title.blank?
-      @option_sets = restrict(OptionSet)
-      @question_types = restrict(QuestionType)
+      setup_qing_form_support_objs
       render(:form)
     end
 end

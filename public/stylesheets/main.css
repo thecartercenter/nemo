@@ -153,6 +153,9 @@ textarea#broadcast_body { width: 300px; height: 170px; }
 .forms_edit td.rank_col input { width: 25px; }
 .forms_edit #save_ranks_button { margin-top: -15px; }
 
+/* form choose questions */
+.forms_choose_questions div.question_form { display: none; }
+
 /* user login instructions */
 #login_instructions td.name { width: 100px; }
 #login_instructions td.value { font-weight: bold; width: 300px; }

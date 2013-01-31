@@ -1,0 +1,22 @@
+<% content_for(:per_page_js){javascript_include_tag("form_question_chooser")} %>
+  
+<%= flash_and_form_errors %>
+
+<% unless @questions.empty? %>
+  <div class="question_list">
+    <%= index_table(Question, @questions) %>
+  </div>
+<% end %>
+
+<div class="question_form">
+  <% unless @questions.empty? %>
+    <div class="tip">
+      <%= link_to("Back to Questions List", "#", :class => "question_list") %>
+    </div>
+  <% end %>
+  <%= render("questionings/form") %>
+</div>
+
+<%= javascript_doc_ready do %>
+  new ELMO.FormQuestionChooser();
+<% end %>

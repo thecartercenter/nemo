@@ -245,4 +245,10 @@ module ApplicationHelper
   def language_name(code)
     LANGS[code]
   end
+  
+  # wraps the given content in a js tag and a jquery ready handler
+  def javascript_doc_ready(&block)
+    content = capture(&block)
+    javascript_tag("$(document).ready(function(){#{content}});")
+  end
 end

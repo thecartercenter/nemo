@@ -89,7 +89,6 @@ function batch_submit(options) {
   }
 }
 
-// TODO: MOVE TO PROPER FILE
 function suggest_login() {
 	var name = $('#user_name').val();
 	var m, login;

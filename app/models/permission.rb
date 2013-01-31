@@ -9,6 +9,7 @@ class Permission
     "forms#update" => {:min_level => 3},
     "forms#destroy" => {:min_level => 3},
     "forms#add_questions" => {:min_level => 3},
+    "forms#choose_questions" => {:min_level => 3},
     "forms#remove_questions" => {:min_level => 3},
     "forms#update_ranks" => {:min_level => 3},
     "forms#publish" => {:min_level => 3},
@@ -17,7 +18,6 @@ class Permission
     "users#login_instructions" => {:min_level => 3},
     "settings#*" => {:min_level => 3},
     "questionings#*" => {:min_level => 3},
-    "questions#*" => {:min_level => 3},
     "options#*" => {:min_level => 3},
     "option_sets#*" => {:min_level => 3},
 
