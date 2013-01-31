@@ -6,7 +6,9 @@ class UserSessionsController < ApplicationController
   end
   
   def create
-    reset_session
+    # reset the session for security purposes
+    reset_session_preserving_return_to
+    
     @user_session = UserSession.new(params[:user_session])
     
     # if the save is successful, the user is logged in automatically
@@ -27,7 +29,7 @@ class UserSessionsController < ApplicationController
     @user_session = UserSession.find  
     @user_session.destroy
     forget_location
-    redirect_to(:action => :logged_out)
+    redirect_to(logged_out_path)
   end
   
   def logged_out

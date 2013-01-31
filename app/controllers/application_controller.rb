@@ -163,6 +163,14 @@ class ApplicationController < ActionController::Base
       end
     end
     
+    # resets the Rails session but preserves the :return_to key
+    # used for security purposes
+    def reset_session_preserving_return_to
+      tmp = session[:return_to]
+      reset_session
+      session[:return_to] = tmp
+    end
+    
     # tasks that should be run after the user successfully logs in OR successfully resets their password
     # returns false if no further stuff should happen (redirect), true otherwise
     def post_login_housekeeping
@@ -179,7 +187,7 @@ class ApplicationController < ActionController::Base
       if @user_session.user.current_mission.nil? && !@user_session.user.admin?
         flash[:error] = "You are not assigned to any missions."
         @user_session.destroy
-        redirect_to(new_user_session_path)
+        redirect_to(login_path)
         return false
       end
       
@@ -199,10 +207,10 @@ class ApplicationController < ActionController::Base
       rescue PermissionError
         # if request is for the login page, just go to welcome page with no flash
         if controller_name == "user_sessions" && action_name == "new"
-          redirect_to("/")
+          redirect_to(root_path)
         # if request is for the logout page, just go to the login page with no flash
         elsif controller_name == "user_sessions" && action_name == "destroy"
-          redirect_to(new_user_session_path)
+          redirect_to(login_path)
         else
           store_location unless ajax_request?
           # if the user needs to login, send them to the login page
@@ -258,11 +266,11 @@ class ApplicationController < ActionController::Base
         flash[:error] = nil
         render(:text => "LOGIN_REQUIRED", :status => 401)
       else
-        redirect_to(new_user_session_path)
+        redirect_to(login_path)
       end
     end
     
-    def store_location  
+    def store_location
       session[:return_to] = request.fullpath  
     end
     

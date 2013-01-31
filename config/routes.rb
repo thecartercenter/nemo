@@ -21,12 +21,14 @@ ELMO::Application.routes.draw do
   resources(:user_batches)
   
   namespace(:report){resources(:reports)}
-
+  
   # proxies for ajax
   match("proxies/:action", :controller => "proxies")
   
-  # logout shortcut
-  match("/logout" => "user_sessions#destroy")
+  # login/logout shortcut
+  match("/logged_out" => "user_sessions#logged_out", :as => :logged_out)
+  match("/logout" => "user_sessions#destroy", :as => :logout)
+  match("/login" => "user_sessions#new", :as => :login)
   
   root(:to => "welcome#index")
   

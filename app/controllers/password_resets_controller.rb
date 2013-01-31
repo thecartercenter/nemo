@@ -16,7 +16,7 @@ class PasswordResetsController < ApplicationController
     if @user  
       @user.deliver_password_reset_instructions!  
       flash[:success] = "Instructions to reset your password have been emailed to you. Please check your email."  
-      redirect_to(root_url)
+      redirect_to(login_path)
     else  
       flash[:error] = "No user was found with that email address"  
       redirect_to(:action => :new)
@@ -36,7 +36,9 @@ class PasswordResetsController < ApplicationController
       return unless post_login_housekeeping
 
       flash[:success] = "Password successfully updated."
-      redirect_to(root_url)
+      
+      # use redirect_back_or_default to preserve the original path, if appropriate
+      redirect_back_or_default(root_url)
     else
       @title = "Reset Password"
       @user.password = nil
@@ -53,7 +55,7 @@ class PasswordResetsController < ApplicationController
           "If you are having issues try copying and pasting the URL " +  
           "from your email into your browser or restarting the " +  
           "reset password process."  
-        redirect_to(root_url)
+        redirect_to(login_url)
       end
     end
 end
