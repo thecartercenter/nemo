@@ -18,10 +18,10 @@
     // default to identity calculation
     if (!options.calc_type) options.calc_type = "Report::IdentityCalculation";
     
-    // sort the form_id array for fast comparison
+    // sort the form_id array and convert all form_ids to integers for fast comparison
     if (options.form_ids && options.form_ids != "ALL")
-      options.form_ids = options.form_ids.sort();
-    
+      options.form_ids = Sassafras.Utils.array_to_ints(options.form_ids).sort(function(a,b){return a-b});
+      
     for (var i = 0; i < this.objs.length; i++) {
       var type = this.objs[i].type;
       // ZeroNonzeroCalculations must have integer or decimal questions
