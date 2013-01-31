@@ -4,6 +4,7 @@
   // constructor
   klass = ns.QuestionMenu = function(questions) {
     this.objs = questions;
+    this.cache = {};
   };
   
   // inherit
@@ -22,6 +23,10 @@
     if (options.form_ids && options.form_ids != "ALL")
       options.form_ids = Sassafras.Utils.array_to_ints(options.form_ids).sort(function(a,b){return a-b});
       
+    // try the cache
+    if (this.cache[options.form_ids])
+      return this.cache[options.form_ids];
+    
     for (var i = 0; i < this.objs.length; i++) {
       var type = this.objs[i].type;
       // ZeroNonzeroCalculations must have integer or decimal questions
@@ -39,6 +44,10 @@
       // if we get this far, we can push  
       o.push(this.objs[i]);
     }
+    
+    // save the matching questions for the given form_ids to the cache as this method is likely to be called in bursts
+    this.cache[options.form_ids] = o;
+    
     return o;
   }
   
