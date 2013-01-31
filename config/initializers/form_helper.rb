@@ -5,37 +5,72 @@ module ActionView
       alias :old_text_field :text_field
       alias :old_text_area :text_area
       alias :old_select :select
+      alias :old_datetime_select :datetime_select
+      alias :old_date_select :date_select
+      alias :old_time_select :time_select
       alias :old_check_box :check_box
       alias :old_submit :submit
+
       def text_field(*args)
-        html = old_text_field(*args)
-        unless mode == :show && html.match(/display: none/)
-          mode == :show ? html.match(/value="(.+?)"/) && dummy_tag($1) : html
-        end
+        rewrite_if_show_mode(:text_field, *args)
       end
+      
       def text_area(*args)
-        html = old_text_area(*args)
-        mode == :show ? html.match(/<textarea.+?>(.*?)<\/textarea>/m) && dummy_tag($1.gsub("\n", "<br/>")) : html
+        rewrite_if_show_mode(:text_area, *args)
       end
+      
       def select(*args)
-        html = old_select(*args)
-        unless mode == :show && html.match(/display: none/)
-          mode == :show ? html.match(/<option.*?selected="selected".*?>(.*?)<\/option>/) && dummy_tag($1) : html
-        end
+        rewrite_if_show_mode(:select, *args)
       end
+      
+      def datetime_select(*args)
+        rewrite_if_show_mode(:datetime_select, *args)
+      end
+      
+      def date_select(*args)
+        rewrite_if_show_mode(:date_select, *args)
+      end
+      
+      def time_select(*args)
+        rewrite_if_show_mode(:time_select, *args)
+      end
+      
       def check_box(*args)
-        html = old_check_box(*args)
-        if mode == :show
-          dummy_tag(html.match(/checked="checked"/) ? "&nbsp;x&nbsp;" : "&nbsp;&nbsp;&nbsp;&nbsp;", :style => :dummy_checkbox)
-        else
-          html
-        end
+        rewrite_if_show_mode(:check_box, *args)
       end
+      
       def submit(*args)
-        html = old_submit(*args)
-        mode == :show ? '' : html
+        rewrite_if_show_mode(:submit, *args)
       end
+      
       private
+      
+        # rewrites the output for the given field_type if the form is in show mode
+        def rewrite_if_show_mode(field_type, *args)
+          html = send("old_#{field_type}", *args)
+        
+          # if not show mode, or field hidden, just return straight html
+          if mode != :show || html.match(/display: none/)
+            html
+          else
+            case field_type
+            when :text_field
+              # if value is defined, wrap in dummy tag, else return empty string
+              html.match(/^<input.*?value="(.*)".*?>$/) ? dummy_tag($1) : ""
+            when :text_area
+              html.match(/<textarea.+?>(.*?)<\/textarea>/m) ? dummy_tag($1.gsub("\n", "<br/>")) : html
+            when :select, :datetime_select, :date_select, :time_select
+              dummy_tag(html.gsub(/<select.*?<option.*?selected="selected".*?>(.*?)<\/option>.*?<\/select>/mi, '\1'))
+            when :check_box
+              dummy_tag(html.match(/checked="checked"/) ? "&nbsp;x&nbsp;" : "&nbsp;&nbsp;&nbsp;&nbsp;", :style => :dummy_checkbox)
+            when :submit
+              ''
+            else
+              html
+            end
+          end
+        end
+        
         def dummy_tag(content, options = {})
           options[:style] ||= "dummy"
           "<div class=\"#{options[:style]}\">#{content}</div>".html_safe
