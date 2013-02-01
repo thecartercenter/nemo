@@ -1,6 +1,8 @@
 module ActionView
   module Helpers
     class FormBuilder
+      include ActionView::Helpers::TagHelper
+      
       attr_accessor :mode
       alias :old_text_field :text_field
       alias :old_text_area :text_area
@@ -53,21 +55,26 @@ module ActionView
           if mode != :show || html.match(/display: none/)
             html
           else
-            case field_type
+            # get the dummy representation
+            dummy = case field_type
             when :text_field
               # if value is defined, wrap in dummy tag, else return empty string
-              html.match(/^<input.*?value="(.*)".*?>$/) ? dummy_tag($1) : ""
+              dummy_tag(html.match(/^<input.*?value="(.*)".*?>$/) ? $1 : "")
             when :text_area
-              html.match(/<textarea.+?>(.*?)<\/textarea>/m) ? dummy_tag($1.gsub("\n", "<br/>")) : html
+              dummy_tag(html.match(/<textarea.+?>(.*?)<\/textarea>/m) ? $1.gsub("\n", "<br/>") : "")
             when :select, :datetime_select, :date_select, :time_select
               dummy_tag(html.gsub(/<select.*?<option.*?selected="selected".*?>(.*?)<\/option>.*?<\/select>/mi, '\1'))
             when :check_box
               dummy_tag(html.match(/checked="checked"/) ? "&nbsp;x&nbsp;" : "&nbsp;&nbsp;&nbsp;&nbsp;", :style => :dummy_checkbox)
             when :submit
-              ''
+              dummy_tag("")
+            # should never get to this point so if we do, print an error
             else
-              html
+              dummy_tag("[Rendering Error]")
             end
+            
+            # return the dummy tag plus the original html hidden
+            (dummy + content_tag(:div, html, :style => "display: none")).html_safe
           end
         end
         
