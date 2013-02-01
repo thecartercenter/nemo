@@ -74,7 +74,7 @@ module ActionView
             end
             
             # return the dummy tag plus the original html hidden
-            (dummy + content_tag(:div, html, :style => "display: none")).html_safe
+            (html.gsub(/(<\w+ )/, '\1style="display: none" ') + dummy).html_safe
           end
         end
         

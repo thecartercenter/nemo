@@ -94,8 +94,11 @@
       
       case "select_multiple":
         // use prev sibling call to get to rails gen'd hidden field that holds the id
-        return this.rq_row.find("div.form_field_control input:checked").prev().prev().map(
-          function(){ return parseInt(this.value); }).get();
+        return this.rq_row.find("div.form_field_control input:checked").map(function(){ 
+          // given a checkbox, get the value of the associated option_id hidden field made by rails
+          // this field is the nearest prior sibling input tag with name attribute ending in [option_id]
+          return parseInt($(this).prevAll("input[name$='[option_id]']").first().val()); 
+        }).get();
     }
   }
   
