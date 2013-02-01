@@ -36,4 +36,13 @@ module FormsHelper
     else form.send(field)
     end
   end
+  
+  # given a Questioning object, builds an odk <input> tag
+  # calls the provided block to get the tag content
+  def odk_input_tag(qing, &block)
+    opts = {}
+    opts[:ref] = "/data/#{qing.question.odk_code}"
+    opts[:appearance] = "tall" if qing.question.type.name == "long_text"
+    content_tag(qing.question.type.odk_tag, opts, &block)
+  end
 end
