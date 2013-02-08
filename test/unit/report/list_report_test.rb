@@ -49,4 +49,28 @@ class Report::ListReportTest < ActiveSupport::TestCase
                           %w( Test       3     ga      web     No    ),
                           %w( Test       5     al      web     No    ))
   end
+  
+  test "grouped and list reports using same attrib" do
+    
+    create_question(:code => "Inty", :type => "integer")
+    create_response(:answers => {:Inty => 10})
+    create_response(:answers => {:Inty => 3})
+    
+    report = create_report("List", :calculations_attributes => [
+      {:rank => 1, :type => "Report::IdentityCalculation", :attrib1_name => "submitter"},
+    ])        
+    
+    assert_report(report, %w( Submitter ),
+                          %w( Test      ),
+                          %w( Test      ))
+                          
+    report = create_report("GroupedTally", :calculations_attributes => [
+      {:rank => 1, :type => "Report::IdentityCalculation", :attrib1_name => "submitter"}
+    ])
+    
+    assert_report(report, %w(      Tally TTL ),
+                          %w( Test     2   2 ),
+                          %w( TTL      2   2 ))
+    
+  end
 end

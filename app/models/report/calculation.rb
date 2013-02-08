@@ -40,7 +40,7 @@ class Report::Calculation < ActiveRecord::Base
   
   def attrib1
     key = self.attrib1_name
-    return key ? Report::AttribField.get(key) : nil
+    return key ? Report::AttribField.new(key) : nil
   end
 
   def answer1
