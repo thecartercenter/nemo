@@ -78,7 +78,6 @@ GEM
     rdiscount (1.6.8)
     rdoc (3.12)
       json (~> 1.4)
-    rmagick (2.13.1)
     sprockets (2.2.2)
       hike (~> 1.2)
       multi_json (~> 1.0)
@@ -105,5 +104,4 @@ DEPENDENCIES
   rails (= 3.2.11)
   rake
   rdiscount
-  rmagick
   will_paginate
