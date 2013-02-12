@@ -144,7 +144,7 @@
 
     var to_serialize = {}
     $(["type", "name", "display_type", "percent_type", "bar_style", "question_labels", "calculations_attributes"]).each(function(){
-      to_serialize[this] = typeof(self.attribs[this]) == "undefined" ? "" : self.attribs[this];
+      to_serialize[this] = (typeof(self.attribs[this]) == "undefined" || self.attribs[this] == null) ? "" : self.attribs[this];
     });
     
     if (this.attribs.type == "Report::QuestionAnswerTallyReport")
