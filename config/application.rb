@@ -60,7 +60,6 @@ module ELMO
     configatron.map_api_url = "https://maps.googleapis.com/maps/api/js?sensor=false"
     
     # SMS broadcast settings
-    configatron.outgoing_sms_adapter = Configatron::Delayed.new{IntelliSmsAdapter}
     configatron.broadcast_tag = "[TCC-Broadcast]"
   end
 end

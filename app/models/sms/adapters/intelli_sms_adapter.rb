@@ -1,4 +1,4 @@
-class IntelliSmsAdapter
+class Sms::Adapters::IntelliSmsAdapter < Sms::Adapters::Adapter
   require 'open-uri'
   require 'uri'
   
@@ -11,7 +11,7 @@ class IntelliSmsAdapter
     result = make_request("sendmsg", "to=#{numbers.join(',')}&text=#{URI.encode(msg)}")
     errors = result.split("\n").reject{|l| !l.match(/ERR:/)}.join("\n")
     raise errors unless errors.blank?
-  end 
+  end
   
   # check_balance returns the balance string
   def self.check_balance

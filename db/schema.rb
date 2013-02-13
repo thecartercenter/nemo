@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121230200218) do
+ActiveRecord::Schema.define(:version => 20130213223146) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -79,6 +79,12 @@ ActiveRecord::Schema.define(:version => 20121230200218) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "option_id"
+  end
+
+  create_table "foos", :force => true do |t|
+    t.string   "whut"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "form_types", :force => true do |t|
@@ -265,6 +271,7 @@ ActiveRecord::Schema.define(:version => 20121230200218) do
     t.datetime "updated_at"
     t.integer  "mission_id"
     t.string   "languages"
+    t.string   "outgoing_sms_adapter"
   end
 
   add_index "settings", ["mission_id"], :name => "index_settings_on_mission_id"

@@ -90,6 +90,7 @@
     <tr>
       <td id="footer" colspan="2">
         Time Zone: <%= Time.zone.to_s %> &nbsp;|&nbsp;
+        Outgoing SMS Provider: <%= configatron.outgoing_sms_adapter ? configatron.outgoing_sms_adapter.service_name : "[None]" %> &nbsp;|&nbsp;
         System Version: <%= configatron.system_version %>
         <% if Rails.env == "development" %>
           &nbsp;&nbsp;

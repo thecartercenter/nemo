@@ -13,6 +13,7 @@ class Setting < ActiveRecord::Base
   before_validation(:cleanup_languages)
   before_validation(:ensure_english)
   validate(:lang_codes_are_valid)
+  validate(:sms_adapter_is_valid)
   
   
   def self.table_exists?
@@ -45,7 +46,16 @@ class Setting < ActiveRecord::Base
   def copy_to_config
     # build hash
     hsh = Hash[*KEYS.collect{|k| [k.to_sym, send(k)]}.flatten]
+    
+    # split languages into array
     hsh[:languages] = lang_codes
+    
+    # get class based on sms adapter setting; default to nil if setting is invalid
+    hsh[:outgoing_sms_adapter] = begin
+      Sms::Adapters::Factory.new.create(outgoing_sms_adapter)
+    rescue ArgumentError
+      nil
+    end
     
     # copy to configatron
     configatron.configure_from_hash(hsh)
@@ -77,5 +87,9 @@ class Setting < ActiveRecord::Base
       lang_codes.each do |lc|
         errors.add(:languages, "code #{lc} is invalid") unless LANGS.keys.include?(lc)
       end
+    end
+    
+    def sms_adapter_is_valid
+      errors.add(:outgoing_sms_adapter, "is invalid") unless Sms::Adapters::Factory.name_is_valid?(outgoing_sms_adapter)
     end
 end

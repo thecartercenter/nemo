@@ -12,7 +12,7 @@ class Smser
     configatron.outgoing_sms_adapter.deliver(numbers, msg)
   end
   
-  # check_balance uses the Intellisms adapter to retrieve the SMS balance
+  # check_balance uses the outgoing adapter to retrieve the SMS balance
   def self.check_balance
     configatron.outgoing_sms_adapter.check_balance
   end
