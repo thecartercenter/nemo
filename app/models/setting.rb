@@ -36,7 +36,7 @@ class Setting < ActiveRecord::Base
   # loads or creates a setting for the given mission
   def self.find_or_create(mission)
     return nil unless table_exists?
-    setting = by_mission(mission).first || by_mission(mission).default.create
+    setting = by_mission(mission).first || create_default(mission)
   end
   
   # copies all settings for the given mission to configatron
@@ -45,6 +45,19 @@ class Setting < ActiveRecord::Base
     
     # get the setting or default
     find_or_create(mission).copy_to_config
+  end
+  
+  # creates a default Setting by using the defaults specified in this file and those specified in the local config
+  def self.create_default(mission)
+    setting = by_mission(mission).default.new
+    
+    # copy default_settings from configatron
+    configatron.default_settings.configatron_keys.each do |k| 
+      setting.send("#{k}=", configatron.default_settings.send(k)) if setting.respond_to?("#{k}=")
+    end
+    
+    setting.save!
+    return setting
   end
   
   def copy_to_config
