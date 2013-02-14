@@ -58,7 +58,7 @@ class Broadcast < ActiveRecord::Base
     # send smses
     begin
       Smser.deliver(smsees, which_phone, "#{configatron.broadcast_tag} #{body}") unless smsees.empty?
-    rescue
+    rescue Sms::Error
       # one error per line
       $!.to_s.split("\n").each{|e| add_send_error("SMS Error: #{e}")}
     end

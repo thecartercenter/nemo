@@ -8,8 +8,11 @@ class Smser
     numbers += recips.collect{|u| u.phone2} if %w(alternate_only both).include?(which_phone)
     numbers.compact!
     
+    # build the sms
+    message = Sms::Message.new(:direction => :outgoing, :to => numbers, :body => msg)
+    
     # deliver
-    configatron.outgoing_sms_adapter.deliver(numbers, msg)
+    configatron.outgoing_sms_adapter.deliver(message)
   end
   
   # check_balance uses the outgoing adapter to retrieve the SMS balance

@@ -2,27 +2,43 @@ class Sms::Adapters::IntelliSmsAdapter < Sms::Adapters::Adapter
   require 'open-uri'
   require 'uri'
   
-  def self.service_name
-    "IntelliSMS"
+  def service_name
+    @service_name ||= "IntelliSMS"
   end
   
-  def self.deliver(numbers, msg)
-    raise "No numbers given" if numbers.empty?
-    result = make_request("sendmsg", "to=#{numbers.join(',')}&text=#{URI.encode(msg)}")
-    errors = result.split("\n").reject{|l| !l.match(/ERR:/)}.join("\n")
-    raise errors unless errors.blank?
+  def deliver(message, options = {})
+    super
+    
+    # build the URI the request
+    uri = build_uri("sendmsg", "to=#{message.to.join(',')}&text=#{URI.encode(message.body)}")
+    
+    # honor the dont_send option
+    unless options[:dont_send]
+      response = send_request(uri)
+      
+      # get any errors that the service returned
+      errors = response.split("\n").reject{|l| !l.match(/ERR:/)}.join("\n")
+      raise Sms::Error.new(errors) unless errors.blank?
+    end
+    
+    # if we get to this point, it worked
+    return true
   end
   
   # check_balance returns the balance string
-  def self.check_balance
-    make_request("getbalance").split(":")[1].to_i
+  def check_balance
+    send_request(build_uri("getbalance")).split(":")[1].to_i
   end
   
   private
-    # builds uri based on given action and query string params and returns the response
-    def self.make_request(action, params = "") 
-      uri = "http://www.intellisoftware.co.uk/smsgateway/#{action}.aspx?" +
-         "username=#{configatron.intellisms_username}&password=#{configatron.intellisms_password}&#{params}"
+    # builds uri based on given action and query string params
+    def build_uri(action, params = "") 
+      "http://www.intellisoftware.co.uk/smsgateway/#{action}.aspx?" +
+        "username=#{configatron.intellisms_username}&password=#{configatron.intellisms_password}&#{params}"
+    end
+    
+    # sends request to given uri and returns response
+    def send_request(uri)
       open(uri){|f| f.read}
     end
 end

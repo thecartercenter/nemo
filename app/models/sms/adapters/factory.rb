@@ -8,6 +8,6 @@ class Sms::Adapters::Factory
   # creates an instance of the specified adapter
   def create(name)
     raise ArgumentError.new("Invalid adapter name") unless self.class.name_is_valid?(name)
-    Sms::Adapters.const_get("#{name}Adapter")
+    Sms::Adapters.const_get("#{name}Adapter").new
   end
 end
