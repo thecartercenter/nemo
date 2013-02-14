@@ -35,11 +35,11 @@ eng:
         submit_new: Generate Report
         submit_edit: Save Changes
       setting:
-        outgoing_sms_adapter: Outgoing SMS Provider
-        outgoing_sms_username: SMS Provider Username
-        outgoing_sms_password1: SMS Provider Password
-        outgoing_sms_password2: Re-type Password 
-        outgoing_sms_extra: Other SMS Provider Settings 
+        outgoing_sms_adapter: Provider
+        outgoing_sms_username: Username
+        outgoing_sms_password1: Password
+        outgoing_sms_password2: Password Confirmation
+        outgoing_sms_extra: Other Settings 
         tableau_sql: Tableau SQL
         timezone: Time Zone
       user:

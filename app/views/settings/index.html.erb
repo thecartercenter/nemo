@@ -3,14 +3,20 @@
 <%= flash_and_form_errors(@setting) %>
 
 <%= nice_form_for(@setting) do |f| %>
+
+  <h2>General Settings</h2>
   <%= form_field(f, :mission_id, :type => :hidden) %>
   <%= form_field(f, :timezone, :type => :timezone, :required => true) %>
   <%= form_field(f, :languages, :required => true) %>
+  
+  <h2>Outgoing SMS Settings</h2>
   <%= form_field(f, :outgoing_sms_adapter) %>
   <%= form_field(f, :outgoing_sms_username) %>
   <%= form_field(f, :outgoing_sms_password1, :type => :password) %>
   <%= form_field(f, :outgoing_sms_password2, :type => :password) %>
   <%= form_field(f, :outgoing_sms_extra) %>
+  
+  <h2>Tableau</h2>
   <%= form_field(f, :tableau_sql, :partial => "tableau_sql") %>
   <%= form_submit_button(f) %>
 <% end %>
