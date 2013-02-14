@@ -4,7 +4,7 @@ class Setting < ActiveRecord::Base
   include MissionBased
   include LanguageList
 
-  KEYS = %w(timezone languages outgoing_sms_username outgoing_sms_password outgoing_sms_extra)
+  KEYS = %w(timezone languages outgoing_sms_username outgoing_sms_password outgoing_sms_extra outgoing_sms_language)
   DEFAULTS = {:timezone => "UTC", :languages => "eng"}
 
   scope(:by_mission, lambda{|m| where(:mission_id => m ? m.id : nil)})
@@ -16,7 +16,6 @@ class Setting < ActiveRecord::Base
   validate(:lang_codes_are_valid)
   validate(:sms_adapter_is_valid)
   validate(:sms_passwords_match)
-  
   
   attr_accessor :outgoing_sms_password1, :outgoing_sms_password2
   
