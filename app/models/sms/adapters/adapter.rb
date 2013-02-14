@@ -14,4 +14,10 @@ class Sms::Adapters::Adapter
     raise Sms::Error.new("Message should have direction :outgoing") if message.direction != :outgoing
     raise Sms::Error.new("Message body is empty") if message.body.empty?
   end
+  
+  # returns the number of sms credits available in the provider account
+  # should be overridden if this feature is available
+  def check_balance
+    raise NotImplementedError
+  end
 end

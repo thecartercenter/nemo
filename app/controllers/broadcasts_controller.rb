@@ -23,13 +23,12 @@ class BroadcastsController < ApplicationController
 
     begin
       # get credit balance
-      @balance = Smser.check_balance  
+      @balance = Smser.check_balance
+    rescue NotImplementedError
+      # don't need to do anything here
     rescue
-      # log all errors
+      # log all other errors
       logger.error("SMS balance request error: #{$!}")
-      
-      # set @balance to nil if error
-      @balance = nil
     end
     
     render(:form)
