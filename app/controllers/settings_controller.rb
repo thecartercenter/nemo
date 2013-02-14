@@ -5,7 +5,7 @@ class SettingsController < ApplicationController
   end
   
   def update
-    begin
+    begin      
       (@setting = Setting.find(params[:id])).update_attributes!(params[:setting])
       
       # copy the updated settings to the config

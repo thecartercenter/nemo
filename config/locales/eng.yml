@@ -36,6 +36,10 @@ eng:
         submit_edit: Save Changes
       setting:
         outgoing_sms_adapter: Outgoing SMS Provider
+        outgoing_sms_username: SMS Provider Username
+        outgoing_sms_password1: SMS Provider Password
+        outgoing_sms_password2: Re-type Password 
+        outgoing_sms_extra: Other SMS Provider Settings 
         tableau_sql: Tableau SQL
         timezone: Time Zone
       user:
@@ -81,6 +85,9 @@ eng:
       setting:
         languages: Enter the <a href="http://www.loc.gov/standards/iso639-2/php/code_list.php">three-letter codes</a>, separated by commas, for the languages in which you want to allow questions to be defined.
         outgoing_sms_adapter: The adapter used to send outgoing smses. Should match the name of the adapter class in the system.
+        outgoing_sms_username: The username for the SMS provider account, if applicable.
+        outgoing_sms_password1: Enter and re-enter a password to change the password for the SMS provider account.
+        outgoing_sms_extra: Other information used by the outgoing SMS adapter.
         tableau_sql: The SQL code used to extract data for use in Tableau. Click 'Select All' and then press Ctrl-C to copy.
         timezone: The time zone in which times are displayed throughout the site.
       user:

@@ -96,7 +96,7 @@ module ApplicationHelper
             when :textarea 
               f.text_area(method)
             when :password
-              f.password_field(method)
+              f.password_field(method, :class => "text")
             when :country
               country_select(f.object.class.name.downcase, method, nil)
             when :select

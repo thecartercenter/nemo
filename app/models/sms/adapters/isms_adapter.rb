@@ -1,6 +1,6 @@
 class Sms::Adapters::ISMSAdapter < Sms::Adapters::Adapter
   
-  def self.service_name
+  def service_name
     "ISMS"
   end
   

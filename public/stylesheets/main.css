@@ -42,7 +42,7 @@ div.reqd_sym { display: inline; font-weight: bold; color: #d02000; font-size: 12
 table.form td.name { min-width: 75px; }
 
 /* forms (newer) */
-div.form_field > * { vertical-align: top; padding: 5px 0; }
+div.form_field > *, div.form_field > .field_with_errors > * { vertical-align: top; padding: 5px 0; }
 div.form_field label.main, div.form_field div.form_field_control { border-top: 1px solid #ddd; }
 div.form_field label.main { display: inline-block; width: 150px; padding-right: 10px; }
 div.form_field div.form_field_control { display: inline-block; width: 350px; min-height: 26px; position: relative; }

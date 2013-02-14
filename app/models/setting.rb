@@ -4,7 +4,7 @@ class Setting < ActiveRecord::Base
   include MissionBased
   include LanguageList
 
-  KEYS = %w(timezone languages)
+  KEYS = %w(timezone languages outgoing_sms_username outgoing_sms_password outgoing_sms_extra)
   DEFAULTS = {:timezone => "UTC", :languages => "eng"}
 
   scope(:by_mission, lambda{|m| where(:mission_id => m ? m.id : nil)})
@@ -12,9 +12,13 @@ class Setting < ActiveRecord::Base
   
   before_validation(:cleanup_languages)
   before_validation(:ensure_english)
+  before_save(:save_sms_password)
   validate(:lang_codes_are_valid)
   validate(:sms_adapter_is_valid)
+  validate(:sms_passwords_match)
   
+  
+  attr_accessor :outgoing_sms_password1, :outgoing_sms_password2
   
   def self.table_exists?
     ActiveRecord::Base.connection.tables.include?("settings")
@@ -91,5 +95,13 @@ class Setting < ActiveRecord::Base
     
     def sms_adapter_is_valid
       errors.add(:outgoing_sms_adapter, "is invalid") unless Sms::Adapters::Factory.name_is_valid?(outgoing_sms_adapter)
+    end
+    
+    def sms_passwords_match
+      errors.add(:outgoing_sms_password1, "does not match") unless outgoing_sms_password1 == outgoing_sms_password2
+    end
+    
+    def save_sms_password
+      self.outgoing_sms_password = outgoing_sms_password1 unless outgoing_sms_password1.blank?
     end
 end

@@ -6,7 +6,11 @@
   <%= form_field(f, :mission_id, :type => :hidden) %>
   <%= form_field(f, :timezone, :type => :timezone, :required => true) %>
   <%= form_field(f, :languages, :required => true) %>
-  <%= form_field(f, :outgoing_sms_adapter, :required => true) %>
+  <%= form_field(f, :outgoing_sms_adapter) %>
+  <%= form_field(f, :outgoing_sms_username) %>
+  <%= form_field(f, :outgoing_sms_password1, :type => :password) %>
+  <%= form_field(f, :outgoing_sms_password2, :type => :password) %>
+  <%= form_field(f, :outgoing_sms_extra) %>
   <%= form_field(f, :tableau_sql, :partial => "tableau_sql") %>
   <%= form_submit_button(f) %>
 <% end %>
