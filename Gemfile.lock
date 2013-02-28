@@ -98,6 +98,7 @@ PLATFORMS
 DEPENDENCIES
   authlogic
   configatron
+  i18n
   jquery-rails
   libxml-ruby
   mysql2

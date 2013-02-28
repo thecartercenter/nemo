@@ -6,6 +6,14 @@ ELMO::Application.routes.draw do
   match("/missions/:mission_compact_name/submission" => 'responses#create', :format => :xml)
   match("/m/:mission_compact_name/submission" => 'responses#create', :format => :xml)
 
+  # TOM this should probably be a GET action in the forms controller instead of in its own controller
+  match("sms_codes/show/:form_id" => "sms_codes#show")
+  
+  # TOM this should probably be a create action on the sms_responses controller
+  # e.g. resources(:sms_responses, :only => :create)
+  # please read up on resourceful routing in Rails. 
+  match("sms_responses/incoming" => "sms_responses#incoming")
+
   resources(:broadcasts){collection{post 'new_with_users'}}
   resources(:forms){member{post *%w(add_questions remove_questions update_ranks); get *%w(publish clone choose_questions)}}
   resources(:form_types)

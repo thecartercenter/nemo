@@ -52,6 +52,13 @@ class FormsController < ApplicationController
   def publish
     @form = Form.find(params[:id])
     verb = @form.published? ? "unpublish" : "publish"
+    
+    # if form is being published, need to create its sms code
+    if verb == 'publish'
+    # TOM please replace all tab characters with '  ', (two spaces)
+    	create_sms_code
+    end
+    
     begin
       @form.toggle_published
       dl = verb == "unpublish" ? " The download count has also been reset." : ""
@@ -186,4 +193,20 @@ class FormsController < ApplicationController
       @form_types = apply_filters(FormType)
       render(:form)
     end
+    
+    # TOM this seems like model code to me
+    def create_sms_code	
+		# clears sms_codes of old data for form_id
+		SmsCode.delete_all(:form_id => @form.id)				
+		
+		# only prints qings that are not hidden, not conditional, and are of the type (select_one, select_multiple or integer)
+		qings = @form.questionings.select { |q| q.hidden == false && q.condition == nil && (q.question.type.name == 'select_one' || q.question.type.name == 'select_multiple' || q.question.type.name == 'integer')}	   
+		
+		qings.each_with_index do |qing, n|
+			# not a zero based index for question numbers!
+			nn = n + 1	
+			SmsCode.load_sms_code(qing, nn)	
+		end
+	end
+    
 end

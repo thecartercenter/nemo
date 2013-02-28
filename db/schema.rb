@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130214040034) do
+ActiveRecord::Schema.define(:version => 20130226161123) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -142,6 +142,7 @@ ActiveRecord::Schema.define(:version => 20130214040034) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "mission_id"
+    t.string   "sms_code"
   end
 
   add_index "options", ["mission_id"], :name => "index_options_on_mission_id"
@@ -179,6 +180,7 @@ ActiveRecord::Schema.define(:version => 20130214040034) do
     t.boolean  "maxstrictly"
     t.boolean  "minstrictly"
     t.integer  "mission_id"
+    t.integer  "sms_question_no"
   end
 
   add_index "questions", ["mission_id"], :name => "index_questions_on_mission_id"
@@ -279,6 +281,23 @@ ActiveRecord::Schema.define(:version => 20130214040034) do
   end
 
   add_index "settings", ["mission_id"], :name => "index_settings_on_mission_id"
+
+  create_table "sms_codes", :force => true do |t|
+    t.string   "code"
+    t.integer  "questioning_id"
+    t.integer  "option_id"
+    t.integer  "form_id"
+    t.integer  "question_number"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+  end
+
+  create_table "sms_responses", :force => true do |t|
+    t.string   "message"
+    t.integer  "response_id"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
 
   create_table "translations", :force => true do |t|
     t.text     "str"

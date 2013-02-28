@@ -4,7 +4,8 @@ class Questioning < ActiveRecord::Base
   has_many(:answers, :dependent => :destroy, :inverse_of => :questioning)
   has_one(:condition, :autosave => true, :dependent => :destroy, :validate => false, :inverse_of => :questioning)
   has_many(:referring_conditions, :class_name => "Condition", :foreign_key => "ref_qing_id", :dependent => :destroy, :inverse_of => :ref_qing)
-  
+  # TOM this is not a valid use of :through. please read up on ActiveRecord associations.
+  has_many(:sms_codes, :through => :sms_codes)
   before_create(:set_rank)
   before_destroy(:check_assoc)
 
