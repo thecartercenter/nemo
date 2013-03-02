@@ -35,8 +35,7 @@ module FormsHelper
       # need to make accessible only if form is published and matches question_type format
       # TOM please use link_to helper as is standard for Rails development. also single quotes in HTML tags is not standard.
       # TOM please also use resourceful path helpers (e.g. sms_codes_for_form_path(form.id); see comments in routes.rb for more on this.)
-      # TOM also, why the new window?
-      sms_link = (form.published? ? "<a href='sms_codes/show/#{form.id}' target='_blank'>SMS</a>" : '')
+      sms_link = (form.published? ? "<a href='sms_codes/show/#{form.id}'>SMS</a>" : '')
                                                                         
       (action_links + publish_link + clone_link + print_link + sms_link.html_safe + loading_indicator(:id => form.id, :floating => true)).html_safe
     else form.send(field)

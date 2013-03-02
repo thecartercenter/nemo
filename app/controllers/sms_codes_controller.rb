@@ -1,18 +1,12 @@
 class SmsCodesController < ApplicationController
-  # TOM what is this? please don't leave commented code lying around like this
-  # render :text => n, :status => 200
-  def show
-  	
-  	# this may be different that the language setting for the website
+  
+  def show  	
+  	# this may be different than the language setting for the website
   	I18n.locale = configatron.outgoing_sms_language
   	
-  	# TOM be careful with style. space before the = sign is the usual convention.
-  	@form_id= params[:form_id]
-    get_codes
-    
-    # TOM you don't need the :template argument. please read the docs on Rails rendering.
-    # TOM also why are you rendering with no layout? i'm confused about this.
-    render :template => 'sms_codes/show.html', :layout => false
+  	@form_id = params[:form_id]
+    get_codes    
+    render
   end
  
   # TOM this definitely looks like model code. please read up on the MVC design pattern.
