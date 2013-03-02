@@ -34,7 +34,7 @@ class Sms::Adapters::IntelliSmsAdapter < Sms::Adapters::Adapter
     # builds uri based on given action and query string params
     def build_uri(action, params = "") 
       "http://www.intellisoftware.co.uk/smsgateway/#{action}.aspx?" +
-        "username=#{configatron.intellisms_username}&password=#{configatron.intellisms_password}&#{params}"
+        "username=#{configatron.outgoing_sms_username}&password=#{configatron.outgoing_sms_password}&#{params}"
     end
     
     # sends request to given uri and returns response
