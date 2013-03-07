@@ -70,7 +70,7 @@ class Sms::Adapters::ISMSAdapter < Sms::Adapters::Adapter
 				deliver(m)
 			}
 		end
-		{:template => "sms_responses/ok.txt", :layout => false}
+		{:output => '', :format=>'txt'}	
 	end
 	
 	# since the system may receive a batch, 
@@ -95,7 +95,6 @@ class Sms::Adapters::ISMSAdapter < Sms::Adapters::Adapter
     # sends request to given uri and returns response
     def send_request(uri)
        open(uri){|f| f.read}
-       Rails.logger.debug(uri)
     end
   
 end

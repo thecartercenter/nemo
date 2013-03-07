@@ -2,7 +2,7 @@
   <!-- TOM: never use inline styles, ever. all these need to be moved to a css file. please read up on CSS and separation of content from styling -->
 	<body style="width:800px;">
 		<h3><%= t 'sms.instructions.form_name', :form_name => @form.name, :form_id => @form.id %></h3>
-		<div><b><%= t 'sms.instructions.title' %></b></div>
+		<div><%= t 'sms.instructions.title' %></div>
 		<div><%= t 'sms.instructions.message_start', :form_id => @form.id %></div>
 		<br>
 		<!-- TOM <strong> is preferred over <b> -->

@@ -1,21 +1,25 @@
 class SmsResponsesController < ApplicationController
 	
 	def incoming				
-		# set adapter according to provider param.
+	  # TOM space after #. please fix all of these, there are a lot of them.
+		#set adapter according to provider param.
 		@adapter = Sms::Adapters::Factory.new.create(params[:provider])
 		
 		# return hash with phone number and message
-		# may include more than one message, if a batch is delivered from adapter
+		# may include more than one message, 
+		# if a batch is delivered from adapter
 		# TOM should be using the Message class here, not hashes
 		smses = @adapter.receive(params) 
 
-		# set locale based on lng param
+
+    # TOM extra line break?
+		#set locale based on lng param
 		I18n.locale = params[:lng]
-		
-		# empty messages are returned as empty arrays
-		# single message are returned as array of count 1
+
+		# TOM if the adapter just returns one message, this will fail
 		smses.each do |sms|
-			# looks up user based on phone
+		# TOM indentation
+		# looks up user based on phone
 			sender_info = User.where('phone = ? || phone2 = ?', sms[:phone], sms[:phone])
 			
 			# if a user exists
@@ -23,21 +27,26 @@ class SmsResponsesController < ApplicationController
 				# if there's only one user with that number
 				if sender_info.count == 1
 					sender = sender_info.first	
-					# need to reset message - if we're looping over a batch
+					#need to reset message - if we're looping over a batch
 					@message = nil
 					
 					# did SmsResponse recognize the code format; find the given form; 
 					# did number of responses match number of questions?
 					# extracts responses
 					# TOM why are you using a class method here?
-					if SmsResponse.message_loaded?(sms[:message])						
+					if SmsResponse.message_loaded?(sms[:message])
+						
 						mission = SmsResponse.get_mission
+						# sets configs for given mission
+						# TOM you shouldn't need to call this. settings will already be loaded into configatron
+						Setting.find_or_create(mission)
+						
 						if sender.can_access_mission?(mission)
 							#saves responses
 							# TOM why is this a class method? this is not good object oriented design
 							SmsResponse.save_answers(sender)									
-						else                                                                                    
-							@message = t 'sms.form.permission_denied', :form_id => sms_response.get_form_id, :message => sms[:message]
+						else                                                                                    # TOM spacing. please fix all of these.
+							@message = t 'sms.form.permission_denied', :form_id => sms_response.get_form_id, :message=>sms[:message]
 						end						
 					end
 				else
@@ -61,8 +70,13 @@ class SmsResponsesController < ApplicationController
 		end
 		
 		# iterate over every outgoing message to be delivered
-		@output = @adapter.get_reply
-
-		render @output
+		# TOM don't need ()
+		@output = @adapter.get_reply()
+		
+		# TOM why are you rendering these if they're already delivered?
+		# TOM also no need to worry about other formats. just use whatever you need now.
+		# output could be in xml, json (depending on future adapters) in addition to txt, html 
+		# those templates not added yet!!!
+		render :template => "sms_responses/ok.#{@output[:format]}", :layout => false
   	end
 end
