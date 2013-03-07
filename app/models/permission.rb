@@ -20,7 +20,6 @@ class Permission
     "questionings#*" => {:min_level => 3},
     "options#*" => {:min_level => 3},
     "option_sets#*" => {:min_level => 3},
-    "sms_codes#show" => {:min_level => 3},
 
     "forms#show" => {:min_level => 2},
     "report_reports#*" => {:min_level => 2},
@@ -40,7 +39,6 @@ class Permission
     "user_sessions#destroy" => {:group => :anyone},
     "welcome#*" => {:group => :anyone},
     "permissions#no" => {:group => :anyone},
-	"sms_responses#incoming" => {:group => :anyone},
 
     "user_sessions#create" => {:group => :logged_out},
     "user_sessions#logged_out" => {:group => :logged_out},

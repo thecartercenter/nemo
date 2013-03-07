@@ -9,5 +9,3 @@ gem 'configatron'
 gem 'libxml-ruby'
 gem 'rdiscount'
 gem 'jquery-rails'
-# TOM pretty sure this is built into rails, no?
-gem 'i18n'
