@@ -49,9 +49,6 @@ module ELMO
     # set up preferred geocoder
     configatron.geocoder = Configatron::Delayed.new{GoogleGeocoder}
     
-    # site name
-    configatron.site_name = "ELMO"
-    
     # regular expressions
     configatron.lat_lng_regexp = /^(-?\d+(\.\d+)?)\s*[,;:\s]\s*(-?\d+(\.\d+)?)/
     

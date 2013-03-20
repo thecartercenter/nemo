@@ -1,3 +1,6 @@
+# site name (shows up in banner and page title)
+configatron.site_name = "ELMO"
+
 # address for webmaster emails
 configatron.webmaster_emails = ["someone@somplace.com"]
 
