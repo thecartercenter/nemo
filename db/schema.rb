@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130214040034) do
+ActiveRecord::Schema.define(:version => 20130417025133) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -284,6 +284,8 @@ ActiveRecord::Schema.define(:version => 20130214040034) do
     t.boolean  "reviewed",   :default => false
     t.string   "source"
     t.integer  "mission_id"
+    t.string   "hash"
+    t.boolean  "duplicate"
   end
 
   add_index "responses", ["form_id"], :name => "index_responses_on_form_id"
