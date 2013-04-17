@@ -1,4 +1,3 @@
-# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -111,6 +110,21 @@ ActiveRecord::Schema.define(:version => 20130214040034) do
   add_index "forms", ["form_type_id"], :name => "index_forms_on_form_type_id"
   add_index "forms", ["mission_id"], :name => "index_forms_on_mission_id"
 
+  create_table "icons", :force => true do |t|
+    t.string   "name"
+    t.text     "content"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "ip_logins", :force => true do |t|
+    t.string   "ip_address"
+    t.integer  "login_attempts"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.datetime "time_locked"
+  end
+
   create_table "missions", :force => true do |t|
     t.string   "name"
     t.string   "compact_name"
@@ -185,6 +199,14 @@ ActiveRecord::Schema.define(:version => 20130214040034) do
   add_index "questions", ["option_set_id"], :name => "index_questions_on_option_set_id"
   add_index "questions", ["question_type_id"], :name => "index_questions_on_question_type_id"
 
+  create_table "report_aggregations", :force => true do |t|
+    t.string   "name"
+    t.string   "code"
+    t.string   "constraints"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "report_calculations", :force => true do |t|
     t.string   "type"
     t.integer  "report_report_id"
@@ -193,6 +215,23 @@ ActiveRecord::Schema.define(:version => 20130214040034) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "rank"
+  end
+
+  create_table "report_fields", :force => true do |t|
+    t.integer  "report_report_id"
+    t.integer  "question_id"
+    t.integer  "question_type_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "attrib_id"
+  end
+
+  create_table "report_groupings", :force => true do |t|
+    t.string   "type"
+    t.integer  "question_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "attrib_id"
   end
 
   create_table "report_option_set_choices", :force => true do |t|
@@ -224,6 +263,17 @@ ActiveRecord::Schema.define(:version => 20130214040034) do
     t.string   "percent_type"
     t.boolean  "unique_rows"
     t.string   "aggregation_name"
+  end
+
+  create_table "report_response_attributes", :force => true do |t|
+    t.string   "name"
+    t.string   "code"
+    t.string   "join_tables"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.boolean  "groupable",   :default => false
+    t.string   "data_type"
+    t.string   "value_code"
   end
 
   create_table "responses", :force => true do |t|
@@ -265,6 +315,16 @@ ActiveRecord::Schema.define(:version => 20130214040034) do
   add_index "sessions", ["session_id"], :name => "index_sessions_on_session_id"
   add_index "sessions", ["updated_at"], :name => "index_sessions_on_updated_at"
 
+  create_table "settables", :force => true do |t|
+    t.string   "key"
+    t.string   "name"
+    t.string   "description"
+    t.string   "default"
+    t.string   "kind"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "settings", :force => true do |t|
     t.string   "timezone"
     t.datetime "created_at"
@@ -279,6 +339,15 @@ ActiveRecord::Schema.define(:version => 20130214040034) do
   end
 
   add_index "settings", ["mission_id"], :name => "index_settings_on_mission_id"
+
+  create_table "simple_captcha_data", :force => true do |t|
+    t.string   "key",        :limit => 40
+    t.string   "value",      :limit => 6
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "simple_captcha_data", ["key"], :name => "idx_key"
 
   create_table "translations", :force => true do |t|
     t.text     "str"
