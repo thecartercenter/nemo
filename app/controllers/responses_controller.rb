@@ -46,6 +46,12 @@ class ResponsesController < ApplicationController
   
   def edit
     @response = Response.find_eager(params[:id])
+    
+    # using the signature of the response found with the given id, pull up 
+    # all possible duplicates 
+    @possible_duplicates = Response.find_duplicates(@response.signature)
+    
+    @response[:possible_duplicates] = @possible_duplicates    
     render_form
   end
   
@@ -76,10 +82,18 @@ class ResponsesController < ApplicationController
       
       # find or create the response
       @response = action == "create" ? Response.for_mission(current_mission).new : Response.find_eager(params[:id])
+      
+      puts(@response)
       # set user_id if this is an observer
       @response.user = current_user if current_user.observer?(current_mission)
       # try to save
       begin
+        @response.update_attributes!(params[:response])
+        
+        # if no possible duplicates are found, update response object with 0 for duplicate column
+        # otherwise, update response object with 1 for duplicat ecolumn
+        Response.find_duplicates(@response.signature).nil? ? @response.update_attributes!("duplicate" => 0) : @response.update_attributes!("duplicate" => 1)
+        
         @response.update_attributes!(params[:response])
         flash[:success] = "Response #{action}d successfully."
         redirect_to(:action => :index)

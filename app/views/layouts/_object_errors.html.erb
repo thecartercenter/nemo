@@ -1,3 +1,5 @@
+<%= content_tag("div", object[:possible_duplicates].object_id, :class => "duplicates") if defined?(object[:possible_duplicates]) %>
+
 <% if !object.nil? && object.errors.any? %>
   <%= content_tag("div", :class => defined?(compact) ? "compact_error" : "error") do %>
     <%= defined?(compact) ? "" : (object.errors.size > 1 ? "Errors:" : "Error:") %>
