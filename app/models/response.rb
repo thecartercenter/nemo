@@ -49,6 +49,7 @@ class Response < ActiveRecord::Base
       Search::Qualifier.new(:label => "form", :col => "forms.name", :assoc => :forms),
       Search::Qualifier.new(:label => "form-type", :col => "form_types.name", :assoc => :form_types),
       Search::Qualifier.new(:label => "reviewed", :col => "responses.reviewed", :subst => {"yes" => "1", "no" => "0"}),
+      Search::Qualifier.new(:label => "duplicate", :col => "responses.duplicate", :subst => {"yes" => "1", "no" => "0"}),
       Search::Qualifier.new(:label => "signature", :col => "responses.signature"),
       Search::Qualifier.new(:label => "submitter", :col => "users.name", :assoc => :users, :partials => true),
       Search::Qualifier.new(:label => "source", :col => "responses.source"),
@@ -118,7 +119,6 @@ class Response < ActiveRecord::Base
     end
     signature = Digest::SHA1.hexdigest(answers_digest)
     self.signature = signature
-    puts("signature hashed as " + self.signature)
   end
   
   # returns a human-readable description of how many responses have arrived recently

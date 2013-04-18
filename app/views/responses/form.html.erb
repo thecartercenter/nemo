@@ -1,6 +1,13 @@
 <% content_for(:per_page_js){javascript_include_tag("response", "location_picker", "google_geocoder", 
   "dialog", "condition", "time_form_field", configatron.map_api_url)} %>
 
+<%= content_tag(
+      :div,
+        ( "Possible duplicate responses: " + @duplicates.collect {
+          |d|  content_tag(:a, "Response " + d.id.to_s, :href => "../" + d.id.to_s + "/edit ") 
+          }.join(" ") ).html_safe,
+  	    :class => "error", :style => "background-color: #ffcc33; color: #000000") if !@duplicates.nil? && !@duplicates.empty? %>
+	  
 <%= render("layouts/location_picker") %>
 
 <%= flash_and_form_errors(@response) %>
@@ -21,6 +28,9 @@
 
     <%# determine whether/how to show the reviewed box %>
     <%= form_field(f, :reviewed, :type => :check_box, :force_show_mode => !@can_mark_reviewed) %>
+	
+    <%= form_field(f, :duplicate, :type => :check_box) %>
+	
 
   <% end %>  
   
