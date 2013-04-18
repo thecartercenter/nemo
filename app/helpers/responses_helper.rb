@@ -8,7 +8,7 @@ module ResponsesHelper
     when "submission_time" then resp.created_at && resp.created_at.to_s(:std_datetime) || ""
     when "age" then resp.created_at && time_ago_in_words(resp.created_at).gsub("about ", "") || ""
     when "reviewed?" then resp.reviewed? ? "Yes" : "No"
-    when "duplicate" then resp.duplicate? ? "Yes" : "No"
+    when "duplicate" then resp.duplicate? ? "<img src='/images/alert.jpeg'>".html_safe : ""
     when "actions"
       # we don't need to authorize these links b/c for responses, if you can see it, you can edit it.
       # the controller actions will still be auth'd
