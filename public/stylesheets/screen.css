@@ -29,7 +29,7 @@ div#userinfo form select { font-size: 9pt; }
 #login_instructions #instructions p { margin-top: 0; }
   
 /* flash and error messages */
-div.error { position: relative; left: 25%; top: -55px; padding: 3px; color: white; font-weight: bold; width: 600px; margin-bottom: 0px; text-align: center }
+div.error { position: relative; left: 25%; top: -55px; padding: 3px; color: white; font-weight: bold; width: 600px; margin-bottom: 0px; text-align: center; background-color: #d02000; }
 div.success { position: absolute; left: 25%; top: 71px; padding: 3px; color: white; font-weight: bold; width: 600px; margin-bottom: 10px; text-align: center; background-color: #9dc400; }
 
 /* hide printable things */
