@@ -104,8 +104,8 @@ class Response < ActiveRecord::Base
   end
   
   # finds all responses with duplicate hashes
-  def self.find_duplicates(signature)
-    possible_duplicates = self.where("signature = '" + signature + "' AND id != " + self.id.to_s + " ")
+  def find_duplicates
+    possible_duplicates = Response.where("signature = '" + signature + "' AND id != " + id.to_s + " ")
     return possible_duplicates
   end
   

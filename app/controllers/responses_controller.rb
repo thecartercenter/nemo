@@ -49,7 +49,7 @@ class ResponsesController < ApplicationController
     
     # using the signature of the response found with the given id, pull up 
     # all possible duplicates 
-    @duplicates = Response.find_duplicates(@response.signature)
+    @duplicates = @response.find_duplicates
     
     render_form
   end
@@ -90,7 +90,7 @@ class ResponsesController < ApplicationController
         
         # if no possible duplicates are found, update response object with 0 for duplicate column
         # otherwise, update response object with 1 for duplicat ecolumn
-        Response.find_duplicates(@response.signature).nil? ? @response.update_attributes!("duplicate" => 0) : @response.update_attributes!("duplicate" => 1)
+        @response.find_duplicates.empty? ? @response.update_attributes!("duplicate" => 0) : @response.update_attributes!("duplicate" => 1)
         
         @response.update_attributes!(params[:response])
         flash[:success] = "Response #{action}d successfully."
