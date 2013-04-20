@@ -21,19 +21,19 @@ class Response::DuplicatesTest < ActiveSupport::TestCase
     # create_question(:code => "int ", :type => "integer")
     
     # create a response using question
-    @first_response = create_response({ :form_id => @forms[:form1].id, :answers => { :ee => "Yes" }})
+    first_response = create_response(:form => @forms[:form1], :answers => { :ee => "Yes" })
     
     # create a duplicate response
-    @duplicate_response = create_response({ :form_id => @forms[:form1].id, :answers => { :ee => "Yes" }})
+    duplicate_response = create_response(:form => @forms[:form1], :answers => { :ee => "Yes" })
     
     # create a different response
-    @different_response = create_response({ :form_id => @forms[:form1].id, :answers => { :ee => "Maybe" }})
+    different_response = create_response(:form => @forms[:form1], :answers => { :ee => "Maybe" })
     
     # assert the two duplicate response signatures are equal
-    assert_equal(@first_response.signature,@duplicate_response.signature)
+    assert_equal(first_response.signature,duplicate_response.signature)
     
     # assert the different response signature is not equal to the first response signature
-    assert_not_equal(@different_response.signature,@first_response.signature)
+    assert_not_equal(different_response.signature,first_response.signature)
     
   end
 

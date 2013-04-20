@@ -111,9 +111,9 @@ class Response < ActiveRecord::Base
   
   # hashes all the answer values of the response
   def hash_answers
-    answers = self.all_answers
     answers_digest = ""
-    answers.each do |a|
+    all_answers.each do |a|
+      puts("option id " + a.option_id)
       answer_value = a.value || a.option_id || a.time_value || a.date_value || a.datetime_value
       answers_digest = answers_digest + answer_value.to_s
     end
