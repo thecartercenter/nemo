@@ -87,12 +87,12 @@ class ResponsesController < ApplicationController
       # try to save
       begin
         @response.update_attributes!(params[:response])
+        puts("params " + params[:response].to_s)
         
         # if no possible duplicates are found, update response object with 0 for duplicate column
         # otherwise, update response object with 1 for duplicat ecolumn
         @response.find_duplicates.empty? ? @response.update_attributes!("duplicate" => 0) : @response.update_attributes!("duplicate" => 1)
         
-        @response.update_attributes!(params[:response])
         flash[:success] = "Response #{action}d successfully."
         redirect_to(:action => :index)
       rescue ActiveRecord::RecordInvalid
