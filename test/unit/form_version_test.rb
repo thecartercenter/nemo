@@ -21,4 +21,14 @@ class FormVersionTest < ActiveSupport::TestCase
     assert(fv2.save)
     assert_not_equal(fv1.code, fv2.code)
   end
+  
+  test "upgrade" do
+    fv1 = FormVersion.create(:form_id => 99)
+    fv2 = fv1.upgrade
+    assert_equal(2, fv2.sequence)
+    assert_equal(99, fv2.form_id)
+    assert_not_equal(fv1.code, fv2.code)
+    assert(!fv1.is_current)
+    assert(fv2.is_current)
+  end
 end

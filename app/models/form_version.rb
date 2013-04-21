@@ -9,6 +9,16 @@ class FormVersion < ActiveRecord::Base
   
   CODE_LENGTH = 3
   
+  # inits a new FormVersion with same form_id
+  # increments sequence
+  # sets self.is_current = false
+  def upgrade
+    upgraded = self.class.new(:form_id => form_id, :sequence => sequence + 1)
+    self.is_current = false
+    save
+    return upgraded
+  end
+  
   private
   
     # generates the unique random code
