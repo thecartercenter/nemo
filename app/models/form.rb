@@ -140,6 +140,10 @@ class Form < ActiveRecord::Base
     else
       self.build_current_version
     end
+    
+    # since we've upgraded, we can lower the upgrade flag
+    self.upgrade_needed = false
+    
     save(:validate => false)
   end
   

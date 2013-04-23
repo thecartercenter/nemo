@@ -29,5 +29,12 @@ class FormTest < ActiveSupport::TestCase
     f.publish!
     f.reload
     assert_not_equal(old, f.current_version.code)
+    
+    # unpublish and publish (shouldn't change)
+    old = f.current_version.code
+    f.unpublish!
+    f.publish!
+    f.reload
+    assert_equal(old, f.current_version.code)
   end
 end
