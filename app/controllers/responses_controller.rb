@@ -88,11 +88,12 @@ class ResponsesController < ApplicationController
       begin
         @response.update_attributes!(params[:response])
         
-        if params[:response][:duplicate] != "0"
+        if params[:response][:duplicate].nil?
           
           # if no possible duplicates are found, update response object with 0 for duplicate column
           # otherwise, update response object with 1 for duplicat ecolumn
           @response.find_duplicates.empty? ? @response.update_attributes!("duplicate" => 0) : @response.update_attributes!("duplicate" => 1)
+          
         end
         
         flash[:success] = "Response #{action}d successfully."

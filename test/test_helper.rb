@@ -14,7 +14,7 @@ class ActiveSupport::TestCase
     [Question, Questioning, Answer, Form, User, Mission].each{|k| k.delete_all}
     
     # create hashes to store generated objs
-    @questions, @forms, @option_sets, @users, @missions = {}, {}, {}, {}, {}
+    @questions, @forms, @option_sets, @users, @missions = {}, {}, {}, {}, {}, {}
   end
   
   def create_report(klass, options)
@@ -38,6 +38,7 @@ class ActiveSupport::TestCase
 
   def create_form(params)
     f = Form.new(params.merge(:mission => mission))
+    
     f.save(:validate => false)
     @forms[params[:name].to_sym] = f
   end
@@ -55,6 +56,7 @@ class ActiveSupport::TestCase
   end
 
   def create_question(params)
+    puts "create question"
     QuestionType.generate
     
     # create default form if necessary
@@ -68,15 +70,24 @@ class ActiveSupport::TestCase
   
     # save and store in hash
     q.save!
-    @questions[params[:code].to_sym] = q
     
+    @questions[params[:code].to_sym] = q
+    puts "SHIIIIT"
     # create questionings for each form
-    params[:forms].each{|f| q.questionings.create(:form => f)}
+    params[:forms].each{ |f|
+      
+      # add new questionings to the form
+      f.questionings << q.questionings.create(:form => f)
+      
+      # save form
+      f.save(:validate => false)
+    }
   end
 
   def create_response(params)
     ans = params.delete(:answers) || {}
     params[:form] ||= @forms[:f] || create_form(:name => "f")
+    
     r = Response.new({:reviewed => true, :user => user, :mission => mission}.merge(params))
     ans.each_pair do |code,value|
       qing = @questions[code].questionings.first
@@ -94,7 +105,7 @@ class ActiveSupport::TestCase
         r.answers.build(:questioning_id => qing.id, :value => value)
       end
     end
-    r.save!
+    r.save(:validate => false)
     
     # set created_at if needed
     r.update_attributes(:created_at => params[:created_at]) if params[:created_at]
