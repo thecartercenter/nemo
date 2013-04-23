@@ -53,7 +53,7 @@ class FormsController < ApplicationController
     @form = Form.find(params[:id])
     verb = @form.published? ? "unpublish" : "publish"
     begin
-      @form.toggle_published
+      @form.send("#{verb}!")
       dl = verb == "unpublish" ? " The download count has also been reset." : ""
       flash[:success] = "Form #{verb}ed successfully." + dl
     rescue

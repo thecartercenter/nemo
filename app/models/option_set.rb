@@ -1,6 +1,8 @@
 require 'mission_based'
+require 'form_versionable'
 class OptionSet < ActiveRecord::Base
   include MissionBased
+  include FormVersionable
 
   has_many(:option_settings, :dependent => :destroy, :autosave => true, :inverse_of => :option_set)
   has_many(:options, :through => :option_settings)
@@ -15,6 +17,7 @@ class OptionSet < ActiveRecord::Base
   validate(:name_unique_per_mission)
   
   before_destroy(:check_assoc)
+  before_save(:notify_form_versioning_policy_of_update)
   
   default_scope(order("name"))
   scope(:for_index, includes(:questions, :options, {:questionings => :form}))
@@ -82,6 +85,11 @@ class OptionSet < ActiveRecord::Base
   
   def as_json(options = {})
     Hash[*%w(id name ordering).collect{|k| [k, self.send(k)]}.flatten]
+  end
+  
+  # gets all forms to which this option set is linked (through questionings)
+  def forms
+    questionings.collect(&:form).uniq
   end
   
   private

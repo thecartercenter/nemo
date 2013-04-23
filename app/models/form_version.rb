@@ -33,5 +33,6 @@ class FormVersion < ActiveRecord::Base
     def ensure_unique_code
       # keep trying new random codes until no match
       while self.class.find_by_code(self.code = Random.letters(CODE_LENGTH)); end
+      return true
     end
 end

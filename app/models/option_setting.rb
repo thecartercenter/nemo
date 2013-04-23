@@ -1,8 +1,12 @@
+require 'form_versionable'
 class OptionSetting < ActiveRecord::Base
+  include FormVersionable
+
   belongs_to(:option, :inverse_of => :option_settings)
   belongs_to(:option_set, :inverse_of => :option_settings)
   
   before_destroy(:no_answers_or_choices)
+  after_destroy(:notify_form_versioning_policy_of_destroy)
   
   # temp var used in the option_set form
   attr_writer :included

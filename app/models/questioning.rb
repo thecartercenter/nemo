@@ -1,4 +1,7 @@
+require 'form_versionable'
 class Questioning < ActiveRecord::Base
+  include FormVersionable
+
   belongs_to(:form, :inverse_of => :questionings, :counter_cache => true)
   belongs_to(:question, :autosave => true, :inverse_of => :questionings)
   has_many(:answers, :dependent => :destroy, :inverse_of => :questioning)
@@ -7,6 +10,9 @@ class Questioning < ActiveRecord::Base
   
   before_create(:set_rank)
   before_destroy(:check_assoc)
+  after_create(:notify_form_versioning_policy_of_create)
+  before_save(:notify_form_versioning_policy_of_update)
+  after_destroy(:notify_form_versioning_policy_of_destroy)
 
   validates_associated(:condition, :message => "is invalid (see below)")
   

@@ -1,11 +1,13 @@
 require 'mission_based'
 require 'translatable'
+require 'form_versionable'
 class Option < ActiveRecord::Base
   include MissionBased
   include Translatable
+  include FormVersionable
   
   has_many(:option_sets, :through => :option_settings)
-  has_many(:option_settings, :inverse_of => :option)
+  has_many(:option_settings, :inverse_of => :option, :dependent => :destroy, :autosave => true)
   has_many(:translations, :class_name => "Translation", :foreign_key => :obj_id, 
     :conditions => {:class_name => "Option"}, :autosave => true, :dependent => :destroy)
   has_many(:answers, :inverse_of => :option)
@@ -18,7 +20,8 @@ class Option < ActiveRecord::Base
   validate(:name_lengths)
   
   before_destroy(:check_assoc)
-
+  after_destroy(:notify_form_versioning_policy_of_destroy)
+  
   default_scope(includes([:translations, {:option_sets => [:questionings, {:questions => {:questionings => :form}}]}]))
   
   self.per_page = 100
@@ -58,6 +61,11 @@ class Option < ActiveRecord::Base
   def published?; !option_sets.detect{|os| os.published?}.nil?; end
   
   def questions; option_sets.collect{|os| os.questions}.flatten.uniq; end
+  
+  # returns all forms on which this option appears
+  def forms
+    option_sets.collect{|os| os.questionings.collect(&:form)}.flatten.uniq
+  end
 
   private
     def integrity

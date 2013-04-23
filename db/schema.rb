@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130421181048) do
+ActiveRecord::Schema.define(:version => 20130423154043) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -117,6 +117,8 @@ ActiveRecord::Schema.define(:version => 20130421181048) do
     t.integer  "questionings_count", :default => 0
     t.integer  "responses_count",    :default => 0
     t.integer  "mission_id"
+    t.integer  "current_version_id"
+    t.boolean  "upgrade_needed",     :default => false
   end
 
   add_index "forms", ["form_type_id"], :name => "index_forms_on_form_type_id"
