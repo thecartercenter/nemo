@@ -4,12 +4,13 @@ module FormsHelper
   end
   
   def forms_index_fields
-    %w[type name questions published? last_modified downloads responses actions]
+    %w[type version name questions published? last_modified downloads responses actions]
   end
     
   def format_forms_field(form, field)
     case field
     when "type" then form.type.name
+    when "version" then form.current_version ? form.current_version.sequence : ""
     when "questions" then form.questionings_count
     when "last_modified" then form.updated_at.to_s(:std_datetime)
     when "responses"
