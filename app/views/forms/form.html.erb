@@ -8,6 +8,7 @@
   
     <%= form_field(f, :name, :required => true) %>
     <%= form_field(f, :form_type_id, :type => :select, :options => sel_opts_from_objs(@form_types), :required => true) %>
+    <%= form_field(f, :smsable, :type => :check_box) %>
     <%= form_field(f, :published, :type => :check_box, :force_show_mode => true) unless f.mode == :new %>
   <% end %>
 

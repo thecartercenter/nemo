@@ -4,7 +4,7 @@ module FormsHelper
   end
   
   def forms_index_fields
-    %w[type version name questions published? last_modified downloads responses actions]
+    %w[type version name questions published? smsable? last_modified downloads responses actions]
   end
     
   def format_forms_field(form, field)
@@ -18,6 +18,7 @@ module FormsHelper
         link_to(form.responses_count, responses_path(:search => "formname:\"#{form.name}\""))
     when "downloads" then form.downloads || 0
     when "published?" then form.published? ? "Yes" : "No"
+    when "smsable?" then form.smsable? ? "Yes" : "No"
     when "actions"
       exclude = form.published? ? [:edit, :destroy] : []
       action_links = action_links(form, :destroy_warning => "Are you sure you want to delete form '#{form.name}'?", 

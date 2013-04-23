@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130423154043) do
+ActiveRecord::Schema.define(:version => 20130423194832) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -81,12 +81,6 @@ ActiveRecord::Schema.define(:version => 20130423154043) do
     t.integer  "option_id"
   end
 
-  create_table "foos", :force => true do |t|
-    t.string   "whut"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
-
   create_table "form_types", :force => true do |t|
     t.string   "name"
     t.datetime "created_at"
@@ -119,6 +113,7 @@ ActiveRecord::Schema.define(:version => 20130423154043) do
     t.integer  "mission_id"
     t.integer  "current_version_id"
     t.boolean  "upgrade_needed",     :default => false
+    t.boolean  "smsable",            :default => false
   end
 
   add_index "forms", ["form_type_id"], :name => "index_forms_on_form_type_id"
