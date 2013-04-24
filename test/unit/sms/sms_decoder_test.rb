@@ -26,7 +26,7 @@ class SmsDecoderTest < ActiveSupport::TestCase
     assert_decoding_fail(:body => "#{form_code} 1.15", :error => "form_not_published")
   end
   
-  test "submitting to non-existant form should produce appropriate error" do
+  test "submitting to non-existent form should produce appropriate error" do
     assert_decoding_fail(:body => "abc 1.15", :error => "form_not_found")
   end
   
@@ -64,8 +64,25 @@ class SmsDecoderTest < ActiveSupport::TestCase
     assert(!Permission.user_can_submit_to_form(other_user, @form), "User test2 shouldn't be able to access form.")
     
     # ensure decoding fails due to no permission
-    assert_decoding_fail(:body => "#{form_code} 1.15", :error => "form_not_permitted")
+    assert_decoding_fail(:body => "#{form_code} 1.15", :user => other_user, :error => "form_not_permitted")
   end
+  
+  test "submitting from unrecognized phone number should error" do
+    setup_form(:questions => %w(integer))
+    assert_decoding_fail(:body => "#{form_code} 1.15", :from => "+12737272722", :error => "user_not_found")
+  end
+
+  test "submitting from second phone number should work" do
+    setup_form(:questions => %w(integer))
+    
+    # setup second phone for user
+    second_phone = "+12342342342"
+    @user.phone2 = second_phone
+    @user.save(:validate => false)
+    
+    # submit using second number
+    assert_decoding(:body => "#{form_code} 1.15", :from => second_phone, :answers => [15])
+  end  
 
   test "form code should be case insensitive" do
     setup_form(:questions => %w(integer))
@@ -82,19 +99,63 @@ class SmsDecoderTest < ActiveSupport::TestCase
     assert_decoding_fail(:body => "#{form_code} 1.15 2.8", :error => "question_doesnt_exist", :rank => 2)
   end
   
-  test "option codes should be case insensitive" do
-    # TODO THIS
+  test "select_one question should work" do
+    setup_form(:questions => %w(integer select_one))
+    assert_decoding(:body => "#{form_code} 1.15 2.b", :answers => [15, "B"])
+  end
+
+  test "select_one question with numeric option should error" do
+    setup_form(:questions => %w(integer select_one))
+    assert_decoding_fail(:body => "#{form_code} 1.15 2.6", :error => "answer_not_option_letter", :rank => 2, :value => "6")
   end
   
+  test "select_one question with non-existent option should error" do
+    setup_form(:questions => %w(integer select_one))
+    assert_decoding_fail(:body => "#{form_code} 1.15 2.h", :error => "answer_not_valid_option", :rank => 2, :value => "h")
+  end
+  
+  test "option codes should be case insensitive" do
+    setup_form(:questions => %w(integer select_one))
+    assert_decoding(:body => "#{form_code} 1.15 2.B", :answers => [15, "B"])
+  end
+  
+  test "select_multiple question should work" do
+    setup_form(:questions => %w(integer select_multiple))
+    assert_decoding(:body => "#{form_code} 1.15 2.bd", :answers => [15, %w(B D)])
+  end
+
+  test "select_multiple question with one numeric option should error" do
+    setup_form(:questions => %w(integer select_multiple))
+    assert_decoding_fail(:body => "#{form_code} 1.15 2.b3d", :error => "answer_not_option_letter_multi", :rank => 2, :value => "b3d")
+  end
+
+  test "select_multiple question with one non-existent option should error" do
+    setup_form(:questions => %w(integer select_multiple))
+    assert_decoding_fail(:body => "#{form_code} 1.15 2.abh", :error => "answer_not_valid_option_multi", :rank => 2, :value => "h")
+  end
+  
+  test "decimal question should work" do
+    setup_form(:questions => %w(decimal))
+    assert_decoding(:body => "#{form_code} 1.1.15", :answers => [1.15])
+  end
+
+  test "decimal question without decimal point should work" do
+    setup_form(:questions => %w(decimal))
+    assert_decoding(:body => "#{form_code} 1.15", :answers => [15])
+  end
+
+  test "decimal question with invalid answer should error" do
+    setup_form(:questions => %w(decimal))
+    assert_decoding_fail(:body => "#{form_code} 1.15.2.2", :error => "answer_not_decimal", :rank => 1, :value => "15.2.2")
+  end
+
+  
+  
+  # test weird stuff
   # date types with separators should work
   # date types without separators should work
   # tiny text question should work
   # tiny text question followed by another question should work
-  # decimal question should work
-  # select_one question should work
-  # select_multiple question should work
-  # either phone number should work
-  # multiple messages should work
 
   private
     # helper that sets up a new form with the given parameters
@@ -102,7 +163,14 @@ class SmsDecoderTest < ActiveSupport::TestCase
       @form = FactoryGirl.create(:form, :smsable => true)
       options[:questions].each do |type|
         # create the question
-        q = FactoryGirl.create(:question, :question_type_id => QuestionType.find_by_name(type).id)
+        q = FactoryGirl.build(:question, :question_type_id => QuestionType.find_by_name(type).id)
+        
+        # add an option set if required
+        if %w(select_one select_multiple).include?(type)
+          q.option_set = FactoryGirl.create(:option_set, :name => "Options", :option_names => %w(A B C D E))
+        end
+
+        q.save!
         
         # add it to the form
         @form.questionings.create(:question => q)
@@ -116,7 +184,7 @@ class SmsDecoderTest < ActiveSupport::TestCase
       options[:user] ||= @user
 
       # create the Sms object
-      msg = Sms::Message.new(:direction => :incoming, :from => options[:user].phone, :body => options[:body])
+      msg = Sms::Message.new(:direction => :incoming, :from => options[:from] || options[:user].phone, :body => options[:body])
       
       # perform the deocding
       response = Sms::Decoder.new(msg).decode
@@ -130,14 +198,34 @@ class SmsDecoderTest < ActiveSupport::TestCase
       # ensure the answers match the expected ones
       response.answers.each do |ans|
         # ensure an expected answer was given for this question
-        assert(options[:answers].size >= ans.questioning.rank, "No expected answer given for question #{ans.questioning.rank}")
-
+        assert(options[:answers].size >= ans.questioning.rank, "No expected answer was given for question #{ans.questioning.rank}")
+        
+        # copy the expected value
+        expected = options[:answers][ans.questioning.rank - 1]
+        
+        # replace the array index with nil so that we know this one has been looked at
+        options[:answers][ans.questioning.rank - 1] = nil
+        
         # ensure answer matches
         case ans.questioning.question.type.name
         when "integer"
-          assert_equal(options[:answers][ans.questioning.rank - 1], ans.value.to_i)
+          assert_equal(expected, ans.value.to_i)
+        when "select_one"
+          # for select one, the expected value is the english translation of the desired option
+          assert_equal(expected, ans.option.name_eng)
+        when "select_multiple"
+          # for select multiple, the expected value is an array of the english translations of the desired options
+          assert_equal(expected, ans.choices.collect{|c| c.option.name_eng})
         end
       end
+      
+      # check that all expected answers have been looked at (they should all be nil)
+      options[:answers].each_with_index do |a, i|
+        assert_nil(a, "No answer was given for question #{i+1}")
+      end
+      
+      # ensure that saving the response works
+      response.save!
     end
     
     # tests that a decoding fails

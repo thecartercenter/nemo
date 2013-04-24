@@ -24,7 +24,7 @@ class Sms::Decoder
     check_permission
     
     # create a blank response
-    @response = Response.new(:user => @user, :form => @form, :source => "sms", :mission => @form.mission_id)
+    @response = Response.new(:user => @user, :form => @form, :source => "sms", :mission => @form.mission)
     
     # decode each token after the first
     @tokens[1..-1].each do |tok|
@@ -109,15 +109,74 @@ class Sms::Decoder
         raise_answer_error("answer_not_integer") unless @value =~ /^\d+$/
         
         # add to response
-        @response.answers.build(:questioning_id => @qing.id, :value => @value)
+        build_answer(:value => @value)
+
+      when "decimal"
+        # for integer question, make sure the value looks like a number
+        raise_answer_error("answer_not_decimal") unless @value =~ /^[\d]+(\.[\d]+)?$/
+        
+        # add to response
+        build_answer(:value => @value)
+
+      when "select_one"
+        # case insensitive
+        @value.downcase!
+        
+        # make sure the value is a letter(s)
+        raise_answer_error("answer_not_option_letter") unless @value =~ /^[a-z]+$/
+        
+        # convert to number (1-based)
+        idx = letters_to_index(@value)
+        
+        # make sure it makes sense for the option set
+        raise_answer_error("answer_not_valid_option") if idx > @qing.question.option_set.options.size
+        
+        # if we get to here, we're good, so add
+        build_answer(:option => @qing.question.option_set.options[idx-1])
+
+      when "select_multiple"
+        # case insensitive
+        @value.downcase!
+
+        # make sure the value is all letters
+        raise_answer_error("answer_not_option_letter_multi") unless @value =~ /^[a-z]+$/
+        
+        # split and convert each to an index
+        idxs = @value.split("").map do |l| 
+          idx = letters_to_index(l)
+
+          # make this index makes sense for the option set
+          raise_answer_error("answer_not_valid_option_multi", :value => l) if idx > @qing.question.option_set.options.size
+          
+          idx
+        end
+        
+        # if we get to here, we're good, so add
+        build_answer(:choices => idxs.map{|idx| Choice.new(:option => @qing.question.option_set.options[idx-1])})
       end
+      
+      # TODO adding options shouldn't be allowed under form versioning policy
       
       # reset the lookahead flag
       @lookahead = false
     end
     
+    # builds an answer object within the response
+    def build_answer(attribs)
+      @response.answers.build(attribs.merge(:questioning_id => @qing.id))
+    end
+    
     # raises an sms error with the given type and includes the current rank and value
-    def raise_answer_error(type)
-      raise Sms::Error.new(type, :rank => @rank, :value => @value)
+    def raise_answer_error(type, options = {})
+      raise Sms::Error.new(type, {:rank => @rank, :value => @value}.merge(options))
+    end
+    
+    # converts a series of letters to the corresponding index, e.g. a => 1, b => 2, z => 26, aa => 27, etc.
+    def letters_to_index(letters)
+      sum = 0
+      letters.split("").each_with_index do |letter, i|
+        sum += (letter.ord - 96) * (26 ** (letters.size - i - 1))
+      end
+      sum
     end
 end
