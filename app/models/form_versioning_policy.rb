@@ -13,7 +13,7 @@ class FormVersioningPolicy
     when "Option"
       case action
       when :destroy
-        # changing an option is fine
+        # changing an option is fine, but destroying an option is a trigger
         triggers << {:reason => :destroyed_option, :forms => obj.forms}
       end
       

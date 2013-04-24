@@ -138,7 +138,7 @@ class Form < ActiveRecord::Base
     if current_version
       self.current_version = current_version.upgrade
     else
-      self.build_current_version
+      self.build_current_version(:form_id => id)
     end
     
     # since we've upgraded, we can lower the upgrade flag

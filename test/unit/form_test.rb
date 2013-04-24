@@ -10,6 +10,9 @@ class FormTest < ActiveSupport::TestCase
     f.reload
     assert_equal(1, f.current_version.sequence)
     
+    # ensure form_id is set properly on version object
+    assert_equal(f.id, f.current_version.form_id)
+    
     # unpublish (shouldn't change)
     old = f.current_version.code
     f.unpublish!

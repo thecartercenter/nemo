@@ -5,7 +5,7 @@ class FormVersion < ActiveRecord::Base
   belongs_to :form
   
   after_initialize :generate_code
-  before_save :ensure_unique_code
+  before_create :ensure_unique_code
   
   CODE_LENGTH = 3
   

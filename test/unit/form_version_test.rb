@@ -24,10 +24,22 @@ class FormVersionTest < ActiveSupport::TestCase
   
   test "upgrade" do
     fv1 = FormVersion.create(:form_id => 99)
+    old_v1_code = fv1.code
+    
+    # do the upgrade and save both forms
     fv2 = fv1.upgrade
+    fv1.save!; fv1.reload
+    fv2.save!; fv2.reload
+    
+    # make sure values are updated properly
     assert_equal(2, fv2.sequence)
     assert_equal(99, fv2.form_id)
     assert_not_equal(fv1.code, fv2.code)
+    
+    # make sure old v1 code didnt change
+    assert_equal(old_v1_code, fv1.code)
+    
+    # make sure current flags are set properly
     assert(!fv1.is_current)
     assert(fv2.is_current)
   end
