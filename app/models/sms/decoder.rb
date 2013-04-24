@@ -8,7 +8,7 @@ class Sms::Decoder
   
   # main method called to do the decoding
   # returns an unsaved Response object on success
-  # raises an Sms::Error on error
+  # raises an Sms::DecodingError on error
   def decode
     
     # try to get user
@@ -28,20 +28,38 @@ class Sms::Decoder
     
     # decode each token after the first
     @tokens[1..-1].each do |tok|
-      if tok =~ /^(\d+)\.(.+)$/
-        @rank = $1.to_i
-        @value = $2
+      # if this looks like a regular answer token, treat it as such
+      if tok =~ /^(\d+)\.(.*)$/
+        # save the rank and values to temporary variables for a moment
+        r = $1.to_i
+        v = $2
+        
+        # if the lookahead flag is set, we are now done grabbing tokens for the last tinytext, 
+        # so we need to add the answer before proceeding (this also resets the flag)
+        add_answer if @lookahead
+        
+        # now we can assign these instance variables
+        @rank = r
+        @value = v
         
         # look up the questioning object for the specified rank
         find_qing
         
+        # if the question type is tiny_text, we need to keep grabbing tokens until we hit another answer
+        # otherwise just add like normal
         if @qing.question.type.name == "tiny_text"
           @lookahead = true
         else
           add_answer
         end
+        
+      # otherwise, if it's a non-normal chunk but the lookahead flag is set, add it to the value
       elsif @lookahead
-        @value += " #{tok}"
+        @value = @value.empty? ? tok : @value + " #{tok}"
+        
+      # otherwise, it's an error
+      else
+        raise Sms::DecodingError.new("invalid_token", :value => tok)
       end
     end
     
@@ -57,7 +75,7 @@ class Sms::Decoder
     # raises an error if not found
     def find_user
       @user = User.where(["phone = ? OR phone2 = ?", @msg.from, @msg.from]).first
-      raise Sms::Error.new("user_not_found") unless @user
+      raise Sms::DecodingError.new("user_not_found") unless @user
     end
     
     # attempts to find the form matching the code in the message
@@ -66,22 +84,22 @@ class Sms::Decoder
       code = @tokens[0].downcase
       
       # check that the form code looks right
-      raise Sms::Error.new("invalid_form_code") unless code.match(/^[a-z]{#{FormVersion::CODE_LENGTH}}$/)
+      raise Sms::DecodingError.new("invalid_form_code") unless code.match(/^[a-z]{#{FormVersion::CODE_LENGTH}}$/)
       
       # attempt to find form version by the given code
       v = FormVersion.find_by_code(@tokens[0].downcase)
       
       # if version not found, raise error
-      raise Sms::Error.new("form_not_found") unless v
+      raise Sms::DecodingError.new("form_not_found") unless v
       
       # if version outdated, raise error
-      raise Sms::Error.new("form_version_outdated") unless v.is_current?
+      raise Sms::DecodingError.new("form_version_outdated") unless v.is_current?
       
       # check that form is published
-      raise Sms::Error.new("form_not_published") unless v.form.published?
+      raise Sms::DecodingError.new("form_not_published") unless v.form.published?
 
       # check that form is smsable
-      raise Sms::Error.new("form_not_smsable") unless v.form.smsable?
+      raise Sms::DecodingError.new("form_not_smsable") unless v.form.smsable?
       
       # otherwise, we it's cool, store it in the instance, and also store an indexed list of questionings
       @form = v.form
@@ -90,14 +108,14 @@ class Sms::Decoder
     
     # checks if the current @user has permission to submit to form @form, raises an error if not
     def check_permission
-      raise Sms::Error.new("form_not_permitted") unless Permission.user_can_submit_to_form(@user, @form)
+      raise Sms::DecodingError.new("form_not_permitted") unless Permission.user_can_submit_to_form(@user, @form)
     end
     
     # finds the Questioning object specified by the current value of @rank
     # raises an error if no such question exists
     def find_qing
       @qing = @questionings[@rank]
-      raise Sms::Error.new("question_doesnt_exist", :rank => @rank) unless @qing
+      raise Sms::DecodingError.new("question_doesnt_exist", :rank => @rank) unless @qing
     end
     
     # adds the answer contained in @value to the @response for the questioning in @qing
@@ -150,9 +168,12 @@ class Sms::Decoder
           
           idx
         end
-        
         # if we get to here, we're good, so add
         build_answer(:choices => idxs.map{|idx| Choice.new(:option => @qing.question.option_set.options[idx-1])})
+
+      when "tiny_text"
+        # this one is simple
+        build_answer(:value => @value)
       end
       
       # TODO adding options shouldn't be allowed under form versioning policy
@@ -168,7 +189,7 @@ class Sms::Decoder
     
     # raises an sms error with the given type and includes the current rank and value
     def raise_answer_error(type, options = {})
-      raise Sms::Error.new(type, {:rank => @rank, :value => @value}.merge(options))
+      raise Sms::DecodingError.new(type, {:rank => @rank, :value => @value}.merge(options))
     end
     
     # converts a series of letters to the corresponding index, e.g. a => 1, b => 2, z => 26, aa => 27, etc.

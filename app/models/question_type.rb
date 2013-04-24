@@ -18,6 +18,7 @@ class QuestionType < ActiveRecord::Base
     seed(:name, :name => "datetime", :long_name => "Date+Time", :odk_name => "dateTime", :odk_tag => "input")
     seed(:name, :name => "date", :long_name => "Date", :odk_name => "date", :odk_tag => "input")
     seed(:name, :name => "time", :long_name => "Time", :odk_name => "time", :odk_tag => "input")
+    seed(:name, :name => "tiny_text", :long_name => "Tiny Text", :odk_name => "string", :odk_tag => "input")
   end
 
   def numeric?

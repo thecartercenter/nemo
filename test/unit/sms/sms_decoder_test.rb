@@ -149,13 +149,33 @@ class SmsDecoderTest < ActiveSupport::TestCase
     assert_decoding_fail(:body => "#{form_code} 1.15.2.2", :error => "answer_not_decimal", :rank => 1, :value => "15.2.2")
   end
 
+  test "tiny text question at beginning of message should work" do
+    setup_form(:questions => %w(tiny_text integer))
+    assert_decoding(:body => "#{form_code} 1.foo bar 2.15", :answers => ["foo bar", 15])
+  end
   
+  test "tiny text question in middle of message should work" do
+    setup_form(:questions => %w(select_one tiny_text integer))
+    assert_decoding(:body => "#{form_code} 1.a 2.foo bar 3.15", :answers => ["A", "foo bar", 15])
+  end
+
+  test "tiny text question at end of message should work" do
+    setup_form(:questions => %w(select_one integer tiny_text))
+    assert_decoding(:body => "#{form_code} 1.a 2.15 3.foo bar", :answers => ["A", 15, "foo bar"])
+  end
   
-  # test weird stuff
+  test "tiny text question with space after decimal should work" do
+    setup_form(:questions => %w(select_one tiny_text integer))
+    assert_decoding(:body => "#{form_code} 1.a 2. foo bar 3.15", :answers => ["A", "foo bar", 15])
+  end
+  
+  test "weird chunk should error" do 
+    setup_form(:questions => %w(select_one tiny_text integer))
+    assert_decoding_fail(:body => "#{form_code} 1.a 2. foo bar 3.15 baz", :error => "invalid_token", :value => "baz")
+  end
+  
   # date types with separators should work
   # date types without separators should work
-  # tiny text question should work
-  # tiny text question followed by another question should work
 
   private
     # helper that sets up a new form with the given parameters
@@ -233,7 +253,7 @@ class SmsDecoderTest < ActiveSupport::TestCase
       error = nil
       begin
         assert_decoding(options.merge(:expecting_fail => true))
-      rescue Sms::Error
+      rescue Sms::DecodingError
         error = $!
       end
       
@@ -241,7 +261,7 @@ class SmsDecoderTest < ActiveSupport::TestCase
       assert_not_nil(error, "No error was raised")
       
       # ensure error params are correct
-      assert_equal(options[:error], error.message)
+      assert_equal(options[:error], error.type)
       assert_equal(options[:rank], error.params[:rank]) if options[:rank]
       assert_equal(options[:value], error.params[:value]) if options[:value]
     end
