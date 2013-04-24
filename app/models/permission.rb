@@ -202,6 +202,11 @@ class Permission
     return false
   end
   
+  # checks if the user can submit responses for the given form
+  def self.user_can_submit_to_form(user, form)
+    user_can_access_mission(user, form.mission)
+  end
+  
   private
     ###############################################
     # SPECIAL PERMISSION FUNCTIONS

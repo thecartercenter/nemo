@@ -51,7 +51,21 @@ class SmsDecoderTest < ActiveSupport::TestCase
     assert_decoding_fail(:body => "#{form_code} 1.15", :error => "form_not_smsable")
   end
   
-  # TODO submitting to form without permission should produce appropriate error
+  test "submitting to form without permission should produce appropriate error" do
+    setup_form(:questions => %w(integer))
+    
+    # create user with permissions on different mission
+    other_mission = FactoryGirl.create(:mission, :name => "OtherMission")
+    other_user = FactoryGirl.create(:user, :login => "test2", :phone => "+15556667778")
+    other_user.assignments.first.update_attributes(:mission_id => other_mission.id)
+    other_user.reload
+    
+    # ensure user doesn't have permission on form
+    assert(!Permission.user_can_submit_to_form(other_user, @form), "User test2 shouldn't be able to access form.")
+    
+    # ensure decoding fails due to no permission
+    assert_decoding_fail(:body => "#{form_code} 1.15", :error => "form_not_permitted")
+  end
 
   test "form code should be case insensitive" do
     setup_form(:questions => %w(integer))
@@ -72,16 +86,15 @@ class SmsDecoderTest < ActiveSupport::TestCase
     # TODO THIS
   end
   
-  # multiple messages should work
   # date types with separators should work
   # date types without separators should work
   # tiny text question should work
   # tiny text question followed by another question should work
-  # integer question should work
   # decimal question should work
   # select_one question should work
   # select_multiple question should work
   # either phone number should work
+  # multiple messages should work
 
   private
     # helper that sets up a new form with the given parameters
@@ -108,6 +121,9 @@ class SmsDecoderTest < ActiveSupport::TestCase
       # perform the deocding
       response = Sms::Decoder.new(msg).decode
       
+      # if we get this far and were expecting a failure, we didn't get one, so just return
+      return if options[:expecting_fail]
+      
       # ensure the form is correct
       assert_equal(@form.id, response.form_id)
       
@@ -128,13 +144,13 @@ class SmsDecoderTest < ActiveSupport::TestCase
     def assert_decoding_fail(options)
       error = nil
       begin
-        assert_decoding(options)
+        assert_decoding(options.merge(:expecting_fail => true))
       rescue Sms::Error
         error = $!
       end
       
       # ensure error of appropriate type was raised
-      assert_not_nil(error, "No error was raised.")
+      assert_not_nil(error, "No error was raised")
       
       # ensure error params are correct
       assert_equal(options[:error], error.message)

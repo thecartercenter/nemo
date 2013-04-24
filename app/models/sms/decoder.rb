@@ -21,6 +21,7 @@ class Sms::Decoder
     find_form
     
     # check user permissions for form, if not permitted, error
+    check_permission
     
     # create a blank response
     @response = Response.new(:user => @user, :form => @form, :source => "sms", :mission => @form.mission_id)
@@ -85,6 +86,11 @@ class Sms::Decoder
       # otherwise, we it's cool, store it in the instance, and also store an indexed list of questionings
       @form = v.form
       @questionings = @form.questionings.index_by(&:rank)
+    end
+    
+    # checks if the current @user has permission to submit to form @form, raises an error if not
+    def check_permission
+      raise Sms::Error.new("form_not_permitted") unless Permission.user_can_submit_to_form(@user, @form)
     end
     
     # finds the Questioning object specified by the current value of @rank
