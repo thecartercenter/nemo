@@ -56,6 +56,7 @@ class ActiveSupport::TestCase
   end
 
   def create_question(params)
+    puts "create question"
     QuestionType.generate
     
     # create default form if necessary
@@ -73,13 +74,7 @@ class ActiveSupport::TestCase
     @questions[params[:code].to_sym] = q
 
     # create questionings for each form
-    params[:forms].each{ |f|
-            
-      # add new questionings to the form
-      f.questionings << q.questionings.new
-
-      f.save
-    }
+    params[:forms].each{ |f| f.questionings << q.questionings.new }
     
   end
 
