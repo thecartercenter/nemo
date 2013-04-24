@@ -228,14 +228,20 @@ class SmsDecoderTest < ActiveSupport::TestCase
         
         # ensure answer matches
         case ans.questioning.question.type.name
-        when "integer"
+        when "integer" 
           assert_equal(expected, ans.value.to_i)
+        when "decimal"
+          assert_equal(expected, ans.value.to_f)
         when "select_one"
           # for select one, the expected value is the english translation of the desired option
           assert_equal(expected, ans.option.name_eng)
         when "select_multiple"
           # for select multiple, the expected value is an array of the english translations of the desired options
           assert_equal(expected, ans.choices.collect{|c| c.option.name_eng})
+        when "tiny_text"
+          assert_equal(expected, ans.value)
+        else
+          raise "Unexpected type"
         end
       end
       
