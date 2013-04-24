@@ -33,7 +33,7 @@ class Response::DuplicatesTest < ActiveSupport::TestCase
     different_response = create_response(:form => form1, :answers => { :ee => "Yes", :fb => "No", :val => "value" })
     
     # create a response with a user input value
-    value_response = create_response(:answers => { :val => "tits" })
+    value_response = create_response(:form => form1, :answers => { :ee => "Yes", :fb => "No", :val => "different value" })
     
     
     # assert the two duplicate response signatures are equal
@@ -41,10 +41,7 @@ class Response::DuplicatesTest < ActiveSupport::TestCase
     
     # assert the different response signature is not equal to the first response signature
     assert_not_equal(different_response.signature,duplicate_response.signature)
-    
-    assert_not_equal(different_response.signature,value_response.signature)
-    
-    
+        
   end
 
 
