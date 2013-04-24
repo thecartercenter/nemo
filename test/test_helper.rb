@@ -72,8 +72,8 @@ class ActiveSupport::TestCase
     q.save!
     
     @questions[params[:code].to_sym] = q
-    puts "SHIIIIT"
-    # create questionings for each form
+
+# create questionings for each form
     params[:forms].each{ |f|
       
       # add new questionings to the form
