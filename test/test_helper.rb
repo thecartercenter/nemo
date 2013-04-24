@@ -56,7 +56,6 @@ class ActiveSupport::TestCase
   end
 
   def create_question(params)
-    puts "create question"
     QuestionType.generate
     
     # create default form if necessary
@@ -69,19 +68,19 @@ class ActiveSupport::TestCase
     q.option_set = params[:option_set] || @option_sets.first[1] if %w(select_one select_multiple).include?(params[:type])
   
     # save and store in hash
-    q.save!
+    q.save(:validate => false)
     
     @questions[params[:code].to_sym] = q
-    puts "SHIIIIT"
+
     # create questionings for each form
     params[:forms].each{ |f|
-      
+            
       # add new questionings to the form
-      f.questionings << q.questionings.create(:form => f)
-      
-      # save form
-      f.save(:validate => false)
+      f.questionings << q.questionings.new
+
+      f.save
     }
+    
   end
 
   def create_response(params)
