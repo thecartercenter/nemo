@@ -1,12 +1,12 @@
 FactoryGirl.define do
   factory :option_set do
     ignore do
-      option_names true
+      option_names %w(Yes No)
     end
     
     name "YesNo"
     options {
-      opt = option_names || %w(Yes No)
+      opt = option_names
       opt.each_with_index.map{|o,i| Option.create(:value => i+1, :name_eng => o, :mission => get_mission)}
     }
     ordering "value_asc"

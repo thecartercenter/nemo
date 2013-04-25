@@ -217,8 +217,6 @@ class Sms::Decoder
         
       end
       
-      # TODO adding options shouldn't be allowed under form versioning policy
-      
       # reset the qing variable flag
       @qing = nil
     end

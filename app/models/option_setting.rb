@@ -6,6 +6,7 @@ class OptionSetting < ActiveRecord::Base
   belongs_to(:option_set, :inverse_of => :option_settings)
   
   before_destroy(:no_answers_or_choices)
+  after_create(:notify_form_versioning_policy_of_create)
   after_destroy(:notify_form_versioning_policy_of_destroy)
   
   # temp var used in the option_set form

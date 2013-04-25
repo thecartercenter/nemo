@@ -26,6 +26,9 @@ class FormVersioningPolicy
       
     when "OptionSetting"
       case action
+      when :create
+        # adding an option to an option set is a trigger
+        triggers << {:reason => :option_added_to_set, :forms => obj.option_set.forms}
       when :destroy
         # removing an option from an option set is a trigger
         triggers << {:reason => :option_removed_from_set, :forms => obj.option_set.forms}
