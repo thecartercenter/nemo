@@ -99,6 +99,11 @@ class SmsDecoderTest < ActiveSupport::TestCase
     assert_decoding_fail(:body => "#{form_code} 1.15 2.8", :error => "question_doesnt_exist", :rank => 2)
   end
   
+  test "spaces after decimal points should not cause error" do
+    setup_form(:questions => %w(integer integer))
+    assert_decoding(:body => "#{form_code} 1. 15 2. 8", :answers => [15, 8])
+  end
+  
   test "select_one question should work" do
     setup_form(:questions => %w(integer select_one))
     assert_decoding(:body => "#{form_code} 1.15 2.b", :answers => [15, "B"])
@@ -171,7 +176,7 @@ class SmsDecoderTest < ActiveSupport::TestCase
   
   test "weird chunk should error" do 
     setup_form(:questions => %w(select_one tiny_text integer))
-    assert_decoding_fail(:body => "#{form_code} 1.a 2. foo bar 3.15 baz", :error => "invalid_token", :value => "baz")
+    assert_decoding_fail(:body => "#{form_code} 1.a 2. foo bar 3.15 baz", :error => "answer_not_integer", :rank => 3, :value => "15 baz")
   end
   
   test "date question should work" do
@@ -259,8 +264,6 @@ class SmsDecoderTest < ActiveSupport::TestCase
     end
   end
   
-  # test space after decimal
-
   private
     # helper that sets up a new form with the given parameters
     def setup_form(options)

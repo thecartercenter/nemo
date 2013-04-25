@@ -28,43 +28,29 @@ class Sms::Decoder
     
     # decode each token after the first
     @tokens[1..-1].each do |tok|
-      # if this looks like a regular answer token, treat it as such
+      # if this looks like the start of an answer, treat it as such
       if tok =~ /^(\d+)\.(.*)$/
         # save the rank and values to temporary variables for a moment
-        r = $1.to_i
-        v = $2
+        r, v = $1.to_i, $2
         
-        # if the lookahead flag is set, we are now done grabbing tokens for the last tinytext, 
-        # so we need to add the answer before proceeding (this also resets the flag)
-        add_answer if @lookahead
+        # if the @qing variable is set it means there is an answer waiting to be added
+        # so we need to add the answer before proceeding
+        add_answer if @qing
         
         # now we can assign these instance variables
-        @rank = r
-        @value = v
+        @rank, @value = r, v
         
-        # look up the questioning object for the specified rank
+        # look up the questioning object for the specified rank and store it in the @qing instance variable
         find_qing
         
-        # if the question type is lookaheadable, we need to keep grabbing tokens until we hit another answer
-        # otherwise just add like normal
-        if %w(tiny_text datetime).include?(@qing.question.type.name)
-          @lookahead = true
-        else
-          add_answer
-        end
-        
-      # otherwise, if it's a non-normal chunk but the lookahead flag is set, add it to the value
-      elsif @lookahead
-        @value = @value.empty? ? tok : @value + " #{tok}"
-        
-      # otherwise, it's an error
+      # otherwise, we add the token to the value variable and proceed
       else
-        raise Sms::DecodingError.new("invalid_token", :value => tok)
+        @value = @value.empty? ? tok : @value + " #{tok}"
       end
     end
     
-    # if we get to this point and the lookahead flag is still up, add the answer
-    add_answer if @lookahead
+    # if we get to this point and there is still something in @qing, add the answer
+    add_answer if @qing
     
     # if we get to this point everything went nicely, so we can return the response
     return @response
@@ -233,8 +219,8 @@ class Sms::Decoder
       
       # TODO adding options shouldn't be allowed under form versioning policy
       
-      # reset the lookahead flag
-      @lookahead = false
+      # reset the qing variable flag
+      @qing = nil
     end
     
     # builds an answer object within the response
