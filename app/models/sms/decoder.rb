@@ -45,9 +45,9 @@ class Sms::Decoder
         # look up the questioning object for the specified rank
         find_qing
         
-        # if the question type is tiny_text, we need to keep grabbing tokens until we hit another answer
+        # if the question type is lookaheadable, we need to keep grabbing tokens until we hit another answer
         # otherwise just add like normal
-        if @qing.question.type.name == "tiny_text"
+        if %w(tiny_text datetime).include?(@qing.question.type.name)
           @lookahead = true
         else
           add_answer
@@ -170,10 +170,65 @@ class Sms::Decoder
         end
         # if we get to here, we're good, so add
         build_answer(:choices => idxs.map{|idx| Choice.new(:option => @qing.question.option_set.options[idx-1])})
-
+      
       when "tiny_text"
         # this one is simple
         build_answer(:value => @value)
+
+      when "date"
+        # error if too short (must be at least 8 chars)
+        raise_answer_error("answer_not_date", :value => @value) if @value.size < 8
+        
+        # try to parse date
+        begin
+          @value = Date.parse(@value)
+        rescue ArgumentError
+          raise_answer_error("answer_not_date", :value => @value)
+        end
+        
+        # if we get to here, we're good, so add
+        build_answer(:date_value => @value)
+      
+      when "time"
+        # error if too long or too short (must be 3 or 4 digits)
+        digits = @value.gsub(/[^\d]/, "")
+        raise_answer_error("answer_not_time", :value => @value) if digits.size < 3 || digits.size > 4
+
+        # try to parse time
+        begin
+          # add a colon before the last two digits (if needed) and add UTC so timezone doesn't mess things up
+          with_colon = @value.gsub(/(\d{1,2})[\.,]?(\d{2})/){"#{$1}:#{$2}"}
+          @value = Time.parse(with_colon + " UTC")
+        rescue ArgumentError
+          raise_answer_error("answer_not_time", :value => @value)
+        end
+
+        # if we get to here, we're good, so add
+        build_answer(:time_value => @value)
+
+      when "datetime"
+        # error if too long or too short (must be between 9 and 12 digits)
+        digits = @value.gsub(/[^\d]/, "")
+        raise_answer_error("answer_not_datetime", :value => @value) if digits.size < 9 || digits.size > 12
+
+        # try to parse datetime
+        begin
+          # if we have a string of 12 straight digits, leave it alone
+          if @value =~ /^\d{12}$/
+            to_parse = @value
+          else
+            # otherwise add a colon before the last two digits of the time (if needed) to help with parsing
+            # also replace any .'s or ,'s or ;'s as they don't work so well
+            to_parse = @value.gsub(/(\d{1,2})[\.,;]?(\d{2})[a-z\s]*$/){"#{$1}:#{$2}"}
+          end
+          @value = Time.zone.parse(to_parse)
+        rescue ArgumentError
+          raise_answer_error("answer_not_time", :value => @value)
+        end
+
+        # if we get to here, we're good, so add
+        build_answer(:datetime_value => @value)
+        
       end
       
       # TODO adding options shouldn't be allowed under form versioning policy

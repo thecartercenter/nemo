@@ -174,8 +174,92 @@ class SmsDecoderTest < ActiveSupport::TestCase
     assert_decoding_fail(:body => "#{form_code} 1.a 2. foo bar 3.15 baz", :error => "invalid_token", :value => "baz")
   end
   
-  # date types with separators should work
-  # date types without separators should work
+  test "date question should work" do
+    setup_form(:questions => %w(integer date))
+    assert_decoding(:body => "#{form_code} 1.4 2.20120229", :answers => [4, Date.new(2012, 2, 29)])
+    
+    # check other formats
+    assert_decoding(:body => "#{form_code} 1.4 2.2012/02/29", :answers => [4, Date.new(2012, 2, 29)])
+    assert_decoding(:body => "#{form_code} 1.4 2.2012.02.29", :answers => [4, Date.new(2012, 2, 29)])
+    assert_decoding(:body => "#{form_code} 1.4 2.2012.2.29", :answers => [4, Date.new(2012, 2, 29)])
+  end
+
+  test "date question with invalid date should error" do
+    setup_form(:questions => %w(integer date))
+    assert_decoding_fail(:body => "#{form_code} 1.4 2.20120230", :error => "answer_not_date", :value => "20120230")
+  end
+  
+  test "date question with too short date should error" do
+    setup_form(:questions => %w(integer date))
+    assert_decoding_fail(:body => "#{form_code} 1.4 2.2012230", :error => "answer_not_date", :value => "2012230")
+  end
+
+  test "date question with junk should error" do
+    setup_form(:questions => %w(integer date))
+    assert_decoding_fail(:body => "#{form_code} 1.4 2.foobarbaz", :error => "answer_not_date", :value => "foobarbaz")
+  end
+
+  test "time question should work" do
+    setup_form(:questions => %w(integer time))
+    response = assert_decoding(:body => "#{form_code} 1.4 2.1230", :answers => [4, Time.parse("12:30 UTC")])
+
+    # make sure time gets saved properly and zone doesn't mess up
+    response.reload
+    assert_equal(12, response.answers.last.time_value.hour)
+    
+    # check other formats
+    assert_decoding(:body => "#{form_code} 1.4 2.12:30", :answers => [4, Time.parse("12:30 UTC")])
+    assert_decoding(:body => "#{form_code} 1.4 2.12:30pm", :answers => [4, Time.parse("12:30 UTC")])
+    assert_decoding(:body => "#{form_code} 1.4 2.12:30PM", :answers => [4, Time.parse("12:30 UTC")])
+    assert_decoding(:body => "#{form_code} 1.4 2.12.30pm", :answers => [4, Time.parse("12:30 UTC")])
+    assert_decoding(:body => "#{form_code} 1.4 2.130", :answers => [4, Time.parse("1:30 UTC")])
+    assert_decoding(:body => "#{form_code} 1.4 2.0130", :answers => [4, Time.parse("1:30 UTC")])
+    assert_decoding(:body => "#{form_code} 1.4 2.1:30", :answers => [4, Time.parse("1:30 UTC")])
+    assert_decoding(:body => "#{form_code} 1.4 2.1:30am", :answers => [4, Time.parse("1:30 UTC")])
+    assert_decoding(:body => "#{form_code} 1.4 2.1:30pm", :answers => [4, Time.parse("13:30 UTC")])
+  end
+  
+  test "invalid times should error" do
+    setup_form(:questions => %w(integer time))
+    ["12:300", "25:00", "00000", "12", "abc"].each do |str|
+      assert_decoding_fail(:body => "#{form_code} 1.4 2.#{str}", :error => "answer_not_time", :value => str)
+    end
+  end
+  
+  test "datetime question should work" do 
+    setup_form(:questions => %w(integer datetime))
+    
+    # use sask b/c no daylight savings
+    Time.zone = ActiveSupport::TimeZone["Saskatchewan"]
+    
+    response = assert_decoding(:body => "#{form_code} 1.4 2.20120229 1230", :answers => [4, Time.zone.parse("2012-02-29 12:30")])
+    
+    # make sure time gets saved properly and zone doesn't mess up
+    response.reload
+    assert_equal(12, response.answers.last.datetime_value.hour)
+    
+    # make sure timezone gets set properly (Saskatchewan is CST)
+    assert_equal("CST", response.answers.last.datetime_value.zone.to_s)
+    
+    # check other formats
+    assert_decoding(:body => "#{form_code} 1.4 2.20120229 230", :answers => [4, Time.zone.parse("2012-02-29 2:30")])
+    assert_decoding(:body => "#{form_code} 1.4 2.20120229 12:30pm", :answers => [4, Time.zone.parse("2012-02-29 12:30")])
+    assert_decoding(:body => "#{form_code} 1.4 2.20120229 1:30", :answers => [4, Time.zone.parse("2012-02-29 1:30")])
+    assert_decoding(:body => "#{form_code} 1.4 2.2012/02/29 12:30pm", :answers => [4, Time.zone.parse("2012-02-29 12:30")])
+    assert_decoding(:body => "#{form_code} 1.4 2.2012-02-29 12:30pm", :answers => [4, Time.zone.parse("2012-02-29 12:30")])
+    assert_decoding(:body => "#{form_code} 1.4 2.2012-11-1 12:30pm", :answers => [4, Time.zone.parse("2012-11-01 12:30")])
+    assert_decoding(:body => "#{form_code} 1.4 2.201211011230", :answers => [4, Time.zone.parse("2012-11-01 12:30")])
+    assert_decoding(:body => "#{form_code} 1.4 2.201211010230", :answers => [4, Time.zone.parse("2012-11-01 2:30")])
+  end
+  
+  test "invalid datetimes should error" do 
+    setup_form(:questions => %w(integer datetime))
+    ["2012121212300", "mar 1 2012 2:30", "201212", "891015 12pm", "2-2-2012 5pm"].each do |str|
+      assert_decoding_fail(:body => "#{form_code} 1.4 2.#{str}", :error => "answer_not_datetime", :value => str)
+    end
+  end
+  
+  # test space after decimal
 
   private
     # helper that sets up a new form with the given parameters
@@ -240,6 +324,12 @@ class SmsDecoderTest < ActiveSupport::TestCase
           assert_equal(expected, ans.choices.collect{|c| c.option.name_eng})
         when "tiny_text"
           assert_equal(expected, ans.value)
+        when "date"
+          assert_equal(expected, ans.date_value)
+        when "time"
+          assert_equal(expected, ans.time_value)
+        when "datetime"
+          assert_equal(expected, ans.datetime_value)
         else
           raise "Unexpected type"
         end
@@ -252,6 +342,8 @@ class SmsDecoderTest < ActiveSupport::TestCase
       
       # ensure that saving the response works
       response.save!
+      
+      return response
     end
     
     # tests that a decoding fails
