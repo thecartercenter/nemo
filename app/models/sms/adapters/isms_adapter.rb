@@ -1,7 +1,7 @@
-class Sms::Adapters::ISMSAdapter < Sms::Adapters::Adapter
+class Sms::Adapters::IsmsAdapter < Sms::Adapters::Adapter
   
   def service_name
-    "ISMS"
+    "Isms"
   end
   
 end

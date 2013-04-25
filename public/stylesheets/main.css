@@ -207,6 +207,8 @@ div.location_picker form.location_search div.results a { display: block; margin-
 .missions_index .name_col { width: 225px; }
 
 /* settings */
+form.setting_form .adapter_settings { display: none; }
+form.setting_form .adapter_settings .password_fields { display: none; }
 form.setting_form #tableau_sql .form_field_control pre { width: 325px; height: 70px; overflow: auto; border: 1px solid #ccc; margin: 0 0 3px 0; }
 form.setting_form #tableau_sql .form_field_control a { font-size: 9pt; }
 

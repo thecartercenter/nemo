@@ -4,7 +4,7 @@ class Setting < ActiveRecord::Base
   include MissionBased
   include LanguageList
 
-  KEYS = %w(timezone languages outgoing_sms_username outgoing_sms_password outgoing_sms_extra outgoing_sms_language)
+  KEYS_TO_COPY = %w(timezone languages intellisms_username intellisms_password isms_hostname isms_username isms_password outgoing_sms_language)
   DEFAULTS = {:timezone => "UTC", :languages => "eng"}
 
   scope(:by_mission, lambda{|m| where(:mission_id => m ? m.id : nil)})
@@ -12,12 +12,13 @@ class Setting < ActiveRecord::Base
   
   before_validation(:cleanup_languages)
   before_validation(:ensure_english)
-  before_save(:save_sms_password)
   validate(:lang_codes_are_valid)
   validate(:sms_adapter_is_valid)
-  validate(:sms_passwords_match)
+  validate(:sms_credentials_are_valid)
+  before_save(:save_sms_passwords)
   
-  attr_accessor :outgoing_sms_password1, :outgoing_sms_password2
+  # accessors for password/password confirm fields
+  attr_accessor :intellisms_password1, :intellisms_password2, :isms_password1, :isms_password2
   
   def self.table_exists?
     ActiveRecord::Base.connection.tables.include?("settings")
@@ -61,7 +62,7 @@ class Setting < ActiveRecord::Base
   
   def copy_to_config
     # build hash
-    hsh = Hash[*KEYS.collect{|k| [k.to_sym, send(k)]}.flatten]
+    hsh = Hash[*KEYS_TO_COPY.collect{|k| [k.to_sym, send(k)]}.flatten]
     
     # split languages into array
     hsh[:languages] = lang_codes
@@ -105,15 +106,33 @@ class Setting < ActiveRecord::Base
       end
     end
     
+    # sms adapter can be blank or must be valid according to the Factory
     def sms_adapter_is_valid
-      errors.add(:outgoing_sms_adapter, "is invalid") unless Sms::Adapters::Factory.name_is_valid?(outgoing_sms_adapter)
+      errors.add(:outgoing_sms_adapter, "is invalid") unless outgoing_sms_adapter.blank? || Sms::Adapters::Factory.name_is_valid?(outgoing_sms_adapter)
     end
     
-    def sms_passwords_match
-      errors.add(:outgoing_sms_password1, "does not match") unless outgoing_sms_password1 == outgoing_sms_password2
+    # checks that the provided credentials are valid
+    def sms_credentials_are_valid
+      case outgoing_sms_adapter
+      when "IntelliSms"
+        errors.add(:intellisms_username, "can't be blank") if intellisms_username.blank?
+        errors.add(:intellisms_password1, "did not match") unless intellisms_password1 == intellisms_password2
+      when "Isms"
+        errors.add(:isms_hostname, "can't be blank") if isms_hostname.blank?
+        errors.add(:isms_username, "can't be blank") if isms_username.blank?
+        errors.add(:isms_password1, "did not match") unless isms_password1 == isms_password2
+      else
+        # if there is no adapter then don't need to check anything
+      end
     end
     
-    def save_sms_password
-      self.outgoing_sms_password = outgoing_sms_password1 unless outgoing_sms_password1.blank?
+    # if the sms password temp fields are set (and they match, which is checked above), copy the value to the real field
+    def save_sms_passwords
+      unless outgoing_sms_adapter.blank?
+        adapter = outgoing_sms_adapter.downcase
+        input = send("#{adapter}_password1")
+        send("#{adapter}_password=", input) unless input.blank?
+      end
+      return true
     end
 end
