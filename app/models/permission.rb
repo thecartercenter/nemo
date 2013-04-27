@@ -43,7 +43,10 @@ class Permission
     "user_sessions#create" => {:group => :logged_out},
     "user_sessions#logged_out" => {:group => :logged_out},
     "password_resets#create" => {:group => :logged_out},
-    "password_resets#update" => {:group => :logged_out}
+    "password_resets#update" => {:group => :logged_out},
+    
+    # sms controller permissions are handled by the adapter
+    "sms#create" => {:group => :anyone}
   }
   SPECIAL = [
     :anyone_can_edit_some_fields_about_herself,

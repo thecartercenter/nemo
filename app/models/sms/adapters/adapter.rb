@@ -13,12 +13,11 @@ class Sms::Adapters::Adapter
   # returns true if all goes well
   # 
   # message   the message to be sent
-  # options   if options[:dont_send] is specified, external communication shouldn't be sent (for testing purposes)
-  def deliver(message, options = {})
+  def deliver(message)
     # error if no recipients or direction is wrong or message empty
-    raise Sms::Error.new("Message has no recipients") if message.to.empty?
+    raise Sms::Error.new("Message has no recipients") if message.to.blank?
     raise Sms::Error.new("Message should have direction :outgoing") if message.direction != :outgoing
-    raise Sms::Error.new("Message body is empty") if message.body.empty?
+    raise Sms::Error.new("Message body is empty") if message.body.blank?
   end
   
   # recieves one or more sms messages

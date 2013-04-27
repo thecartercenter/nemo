@@ -1,4 +1,5 @@
 require 'test_helper'
+require 'sms_forms_test_helper'
 
 class SmsDecoderTest < ActiveSupport::TestCase
   
@@ -271,26 +272,6 @@ class SmsDecoderTest < ActiveSupport::TestCase
   end
   
   private
-    # helper that sets up a new form with the given parameters
-    def setup_form(options)
-      @form = FactoryGirl.create(:form, :smsable => true)
-      options[:questions].each do |type|
-        # create the question
-        q = FactoryGirl.build(:question, :question_type_id => QuestionType.find_by_name(type).id)
-        
-        # add an option set if required
-        if %w(select_one select_multiple).include?(type)
-          q.option_set = FactoryGirl.create(:option_set, :name => "Options", :option_names => %w(A B C D E))
-        end
-
-        q.save!
-        
-        # add it to the form
-        @form.questionings.create(:question => q)
-      end
-      @form.publish!
-      @form.reload
-    end
     
     # tests that a decoding was successful
     def assert_decoding(options)
@@ -371,10 +352,5 @@ class SmsDecoderTest < ActiveSupport::TestCase
       assert_equal(options[:error], error.type)
       assert_equal(options[:rank], error.params[:rank]) if options[:rank]
       assert_equal(options[:value], error.params[:value]) if options[:value]
-    end
-    
-    # gets the version code for the current form
-    def form_code
-      @form.current_version.code
     end
 end

@@ -61,7 +61,7 @@ class Sms::Decoder
     # raises an error if not found
     def find_user
       @user = User.where(["phone = ? OR phone2 = ?", @msg.from, @msg.from]).first
-      raise Sms::DecodingError.new("user_not_found") unless @user
+      raise_decoding_error("user_not_found") unless @user
     end
     
     # attempts to find the form matching the code in the message
@@ -70,22 +70,22 @@ class Sms::Decoder
       code = @tokens[0].downcase
       
       # check that the form code looks right
-      raise Sms::DecodingError.new("invalid_form_code") unless code.match(/^[a-z]{#{FormVersion::CODE_LENGTH}}$/)
+      raise_decoding_error("invalid_form_code", :form_code => code) unless code.match(/^[a-z]{#{FormVersion::CODE_LENGTH}}$/)
       
       # attempt to find form version by the given code
-      v = FormVersion.find_by_code(@tokens[0].downcase)
+      v = FormVersion.find_by_code(code)
       
       # if version not found, raise error
-      raise Sms::DecodingError.new("form_not_found") unless v
+      raise_decoding_error("form_not_found", :form_code => code) unless v
       
       # if version outdated, raise error
-      raise Sms::DecodingError.new("form_version_outdated") unless v.is_current?
+      raise_decoding_error("form_version_outdated", :form_code => code) unless v.is_current?
       
       # check that form is published
-      raise Sms::DecodingError.new("form_not_published") unless v.form.published?
+      raise_decoding_error("form_not_published", :form_code => code) unless v.form.published?
 
       # check that form is smsable
-      raise Sms::DecodingError.new("form_not_smsable") unless v.form.smsable?
+      raise_decoding_error("form_not_smsable", :form_code => code) unless v.form.smsable?
       
       # otherwise, we it's cool, store it in the instance, and also store an indexed list of questionings
       @form = v.form
@@ -94,14 +94,14 @@ class Sms::Decoder
     
     # checks if the current @user has permission to submit to form @form, raises an error if not
     def check_permission
-      raise Sms::DecodingError.new("form_not_permitted") unless Permission.user_can_submit_to_form(@user, @form)
+      raise_decoding_error("form_not_permitted") unless Permission.user_can_submit_to_form(@user, @form)
     end
     
     # finds the Questioning object specified by the current value of @rank
     # raises an error if no such question exists
     def find_qing
       @qing = @questionings[@rank]
-      raise Sms::DecodingError.new("question_doesnt_exist", :rank => @rank) unless @qing
+      raise_decoding_error("question_doesnt_exist", :rank => @rank) unless @qing
     end
     
     # adds the answer contained in @value to the @response for the questioning in @qing
@@ -209,7 +209,7 @@ class Sms::Decoder
           end
           @value = Time.zone.parse(to_parse)
         rescue ArgumentError
-          raise_answer_error("answer_not_time", :value => @value)
+          raise_answer_error("answer_not_datetime", :value => @value)
         end
 
         # if we get to here, we're good, so add
@@ -226,10 +226,18 @@ class Sms::Decoder
       @response.answers.build(attribs.merge(:questioning_id => @qing.id))
     end
     
-    # raises an sms error with the given type and includes the current rank and value
-    def raise_answer_error(type, options = {})
-      raise Sms::DecodingError.new(type, {:rank => @rank, :value => @value}.merge(options))
+    # raises an sms decoding error with the given type and includes the form_code if available
+    def raise_decoding_error(type, options = {})
+      options[:form_code] ||= @form.current_version.code unless @form.nil?
+      
+      raise Sms::DecodingError.new(type, options)
     end
+    
+    # raises an sms decoding error with the given type and includes the current rank and value
+    def raise_answer_error(type, options = {})
+      raise_decoding_error(type, {:rank => @rank, :value => @value}.merge(options))
+    end
+    
     
     # converts a series of letters to the corresponding index, e.g. a => 1, b => 2, z => 26, aa => 27, etc.
     def letters_to_index(letters)

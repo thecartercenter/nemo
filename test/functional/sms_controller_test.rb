@@ -1,0 +1,115 @@
+require 'test_helper'
+require 'sms_forms_test_helper'
+
+class SmsControllerTest < ActionController::TestCase
+
+  setup do
+    QuestionType.generate
+    [Form, Question, Questioning, Option, OptionSet, OptionSetting, Response].each{|k| k.delete_all}
+    @user = get_user
+    
+    # load settings for the missionWithSettings mission so that we get the isms adapter, which we will use to craft the test messages
+    Setting.mission_was_set(get_mission)
+    
+    # we only need one form for all these tests, with two integer questions, both required
+    setup_form(:questions => %w(integer integer), :required => true)
+  end
+
+  test "correct message should get congrats" do
+    # response should include the form code
+    assert_sms_response(:incoming => "#{form_code} 1.15 2.20", :outgoing => /#{form_code}.+thank you/i)
+  end
+  
+  test "message from robot should get no response" do
+    assert_sms_response(:from => "VODAFONE", :incoming => "blah blah junk", :outgoing => [])
+  end
+
+  test "message from unrecognized normal number should get error" do
+    assert_sms_response(:from => "+737377373773", :incoming => "blah blah junk", :outgoing => /couldn't find you/)
+  end
+
+  test "message with invalid answer should get error" do
+    # this tests invalid answers that are caught by the decoder
+    assert_sms_response(:incoming => "#{form_code} 1.xx 2.20", :outgoing => /Sorry.+answer 'xx'.+question 1.+form '#{form_code}'.+not a valid/)
+  end
+  
+  test "bad encoding should get error" do
+    # for instance, try to submit with bad form code
+    # we don't have to try all the encoding errors b/c that's covered in the decoder test
+    assert_sms_response(:incoming => "123", :outgoing => /not a valid form code/i)
+  end
+  
+  test "missing answer should get error" do
+    assert_sms_response(:incoming => "#{form_code} 2.20", :outgoing => /answer.+required question 1 was.+#{form_code}/)
+    assert_sms_response(:incoming => "#{form_code}", :outgoing => /answers.+required questions 1,2 were.+#{form_code}/)
+  end
+  
+  test "too high numeric answer should get error" do
+    # add a maximum constraint to the first question
+    @form.unpublish!
+    @form.questions.first.update_attributes!(:maximum => 20)
+    @form.publish!
+    
+    # check that it works
+    assert_sms_response(:incoming => "#{form_code} 1.21 2.21", :outgoing => /question 1 must be less than or equal to 20/)
+  end
+  
+  test "multiple incoming messages should work" do
+    assert_sms_response(:incoming => ["#{form_code} 1.15 2.20", "#{form_code} 1.19 2.21"], 
+      :outgoing => [/#{form_code}.+thank you/i, /#{form_code}.+thank you/i])
+  end
+  
+  private
+    # simulates the reception of an incoming sms by the SmsController and tests the response(s) that is (are) sent back
+    def assert_sms_response(params)
+      # default to user phone
+      params[:from] ||= @user.phone
+      
+      # ensure :incoming and :outgoing are arrays
+      params[:incoming] = Array.wrap(params[:incoming])
+      params[:outgoing] = Array.wrap(params[:outgoing])
+
+      # get the request params to match what iSMS would send
+      req_params = build_request_params(params)
+    
+      # set the appropriate user agent header (needed)
+      @request.env["User-Agent"] = "MultiModem iSMS/1.41"
+      
+      # do the post request
+      post(:create, req_params)
+      
+      # number of sms responses should equal the expected number
+      assert_equal(params[:outgoing].size, assigns(:sms_responses).size)
+      
+      # for each sms_response set in the controller, compare it to the outgoing spec
+      assigns(:sms_responses).each_with_index do |sms, i|
+        # ensure the to matches the from
+        assert_equal(params[:from], sms.to.first)
+        
+        # ensure the body is as expected
+        assert_match(params[:outgoing][i], sms.body)
+        
+        # ensure the body is not missing translations
+        assert_no_match(/%\{|translation missing/, sms.body)
+      end
+    end
+    
+    # builds the HTTP request parameters to mimic iSMS
+    def build_request_params(params)
+      # isms doesn't use the + sign
+      from = params[:from].gsub("+", "")
+      
+      # get the xml for the messages
+      message_xml = params[:incoming].collect do |body|
+        "<MessageNotification><ModemNumber>2:19525945092</ModemNumber><SenderNumber>#{from}</SenderNumber><Date>08/03/07</Date><Time>08:07:20</Time>
+          <Message>#{body}</Message></MessageNotification>"
+      end.join
+      
+      # build and return
+      {
+        "username" => configatron.isms_username,
+        "password" => configatron.isms_password,
+        "XMLDATA" => "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?><Response>#{message_xml}</Response>"
+      }
+    end
+end

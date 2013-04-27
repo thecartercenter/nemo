@@ -13,7 +13,7 @@ class Sms::Adapters::IsmsAdapter < Sms::Adapters::Adapter
     "Isms"
   end
   
-  def deliver(sms, options = {})
+  def deliver(sms)
     # let the superclass do the sanity checks
     super
     
@@ -26,8 +26,8 @@ class Sms::Adapters::IsmsAdapter < Sms::Adapters::Adapter
     # build the URI for the request (numbers must be enclosed in double quotes for some reason)
     uri = build_uri(:deliver, :to => numbers, :text => sms.body)
     
-    # honor the dont_send option
-    unless options[:dont_send]
+    # don't send in test mode
+    unless Rails.env == "test"
       response = send_request(uri)
 
       # if response looks like an error, try to decipher it

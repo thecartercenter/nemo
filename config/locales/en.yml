@@ -2,6 +2,8 @@
 # See http://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
 
 en:
+  common:
+  
   activerecord:
     models:
       report/report: Report
@@ -117,8 +119,42 @@ en:
           Chung Li, cli@gmail.com
           Forgo Niambot, , +203300303
           Stewbuilder Dennis, chow@yahoo.co.uk, +20923187493
+    
+    errors:
+      models:
+        response:
+          invalid_answers: "are invalid (see below)"
+          missing_answers: "Not all questions have answers"
+          
     boolean_labels:
       response:
         reviewed:
           true: Yes
           false: No
+          
+  sms_forms:
+    decoding:
+      answer_error_intro: "Sorry, your answer '%{value}' for question %{rank} on form '%{form_code}'"
+      answer_not_date: "was not a valid date"
+      answer_not_datetime: "was not a valid datetime"
+      answer_not_decimal: "was not a valid number"
+      answer_not_integer: "was not a valid integer number"
+      answer_not_option_letter: "was not a valid option"
+      answer_not_option_letter_multi: "was not a valid option"
+      answer_not_time: "was not a valid time"
+      answer_not_valid_option: "was not a valid option"
+      answer_not_valid_option_multi: "was not a valid option"
+      congrats: "Your response to form '%{form_code}' was received. Thank you!"
+      form_not_found: "Sorry, there is no form with code '%{form_code}'."
+      form_not_permitted: "Sorry, you don't have permission to submit to form '%{form_code}'."
+      form_not_published: "Sorry, form '%{form_code}' is not currently available for submissions."
+      form_not_smsable: "Sorry, form '%{form_code}' is not currently available for SMS submissions."
+      form_version_outdated: "Sorry, the form code '%{form_code}' refers to an old version. Please obtain an updated submission guide."
+      invalid_form_code: "Sorry, '%{form_code}' is not a valid form code."
+      question_doesnt_exist: "Sorry, question %{rank} doesn't exist on form '%{form_code}'."
+      user_not_found: "Sorry, we couldn't find you in the system."
+
+    validation:
+      invalid_answer: "Sorry, the answer to question %{rank} %{error}."
+      missing_answer: "Sorry, the answer to the required question %{ranks} was missing from your response to form '%{form_code}'."
+      missing_answers: "Sorry, the answers to the required questions %{ranks} were missing from your response to form '%{form_code}'."

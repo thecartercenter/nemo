@@ -97,7 +97,7 @@ class Question < ActiveRecord::Base
     clauses = []
     clauses << "greater than #{minstrictly ? '' : 'or equal to '}#{minimum}" if minimum
     clauses << "less than #{maxstrictly ? '' : 'or equal to '}#{maximum}" if maximum
-    "Value must be #{clauses.join(' and ')}."
+    "must be #{clauses.join(' and ')}"
   end
   
   def as_json(options = {})

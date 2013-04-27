@@ -6,15 +6,15 @@ class Sms::Adapters::IntelliSmsAdapter < Sms::Adapters::Adapter
     @service_name ||= "IntelliSMS"
   end
   
-  def deliver(message, options = {})
+  def deliver(message)
     # let the superclass do the sanity checks
     super
     
     # build the URI the request
     uri = build_uri(:deliver, :to => message.to.join(','), :text => message.body)
     
-    # honor the dont_send option
-    unless options[:dont_send]
+    # don't send in test mode
+    unless Rails.env == "test"
       response = send_request(uri)
       
       # get any errors that the service returned
