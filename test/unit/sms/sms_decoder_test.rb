@@ -67,6 +67,12 @@ class SmsDecoderTest < ActiveSupport::TestCase
     assert_decoding_fail(:body => "#{form_code} 1.15", :user => other_user, :error => "form_not_permitted")
   end
   
+  test "submitting from phone number without plus sign should work" do
+    setup_form(:questions => %w(integer))
+    phone = @user.phone.gsub("+", "")
+    assert_decoding(:body => "#{form_code} 1.15", :from => phone, :answers => [15])
+  end
+
   test "submitting from unrecognized phone number should error" do
     setup_form(:questions => %w(integer))
     assert_decoding_fail(:body => "#{form_code} 1.15", :from => "+12737272722", :error => "user_not_found")

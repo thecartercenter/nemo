@@ -12,6 +12,14 @@ class Sms::Message
   
   def initialize(attribs)
     attribs.each{|k,v| instance_variable_set("@#{k}", v)}
+    
+    # check for direction attrib
     raise ArgumentError.new("An SMS message must have a direction") unless direction
+    
+    # normalize phone numbers if not in ITU E.123 format
+    [:to, :from].each do |field|
+      # remove all non-digit chars and add a plus at the front
+      self.send("#{field}=", "+" + send(field).gsub(/[^\d]/, "")) unless send(field).nil?
+    end
   end
 end
