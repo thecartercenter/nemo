@@ -43,7 +43,7 @@ class BroadcastsController < ApplicationController
     @broadcast = Broadcast.for_mission(current_mission).new(params[:broadcast])
     if @broadcast.save
       if @broadcast.send_errors
-        flash[:error] = "Broadcast was sent, but with some errors (see below)."
+        flash[:error] = "Error sending broadcast (see below)."
       else
         flash[:success] = "Broadcast sent successfully."
       end
