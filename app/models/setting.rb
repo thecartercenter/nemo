@@ -2,7 +2,8 @@ require 'mission_based'
 class Setting < ActiveRecord::Base
   include MissionBased
 
-  KEYS_TO_COPY = %w(timezone languages intellisms_username intellisms_password isms_hostname isms_username isms_password outgoing_sms_language)
+  KEYS_TO_COPY = %w(timezone languages intellisms_username intellisms_password isms_hostname isms_username isms_password 
+    outgoing_sms_language incoming_sms_number)
   DEFAULTS = {:timezone => "UTC", :languages => "en"}
 
   scope(:by_mission, lambda{|m| where(:mission_id => m ? m.id : nil)})

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130425153308) do
+ActiveRecord::Schema.define(:version => 20130428154325) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -288,6 +288,7 @@ ActiveRecord::Schema.define(:version => 20130425153308) do
     t.string   "isms_hostname"
     t.string   "isms_username"
     t.string   "isms_password"
+    t.string   "incoming_sms_number"
   end
 
   add_index "settings", ["mission_id"], :name => "index_settings_on_mission_id"

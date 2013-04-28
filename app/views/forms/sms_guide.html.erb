@@ -74,7 +74,7 @@
         <strong><%= t("common.step") %> 2:</strong> <%= t("sms_forms.guide.step2") %>
         <ol>
           <% t("sms_forms.guide.step2_substeps").each do |ss| %>
-            <li><%= ss.gsub("%{submit_number}", "foo") %></li>
+            <li><%= ss.gsub("%{submit_number}", submit_number).html_safe %></li>
           <% end %>
         </ol>
         <%= t("common.thank_you") %>

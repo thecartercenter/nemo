@@ -118,4 +118,9 @@ module FormsHelper
     
     answer_space(" " * size, :show_spc_glyph => false)
   end
+  
+  # returns the sms submit number or an indicator that it's not set up
+  def submit_number
+    content_tag("strong", configatron.incoming_sms_number.blank? ? "[" + t("sms_forms.guide.unknown_number") + "]" : configatron.incoming_sms_number)
+  end
 end
