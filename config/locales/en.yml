@@ -55,6 +55,9 @@ en:
         isms_username: Username
         tableau_sql: Tableau SQL
         timezone: Time Zone
+      sms/test:
+        from: From
+        body: Body
       user:
         name: Full Name
         phone: Main Phone
@@ -107,6 +110,9 @@ en:
         isms_username: The API username for the iSMS device.
         tableau_sql: The SQL code used to extract data for use in Tableau. Click 'Select All' and then press Ctrl-C to copy.
         timezone: The time zone in which times are displayed throughout the site.
+      sms/test:
+        from: Enter the phone number from which this SMS should appear to originate.
+        body: Enter the body of the message.
       user:
         name: "The user's full name. Example: 'John Doe' or 'Team 1.1'"
         login: The login name will be used to log in. Click the suggest button to suggest a login name.

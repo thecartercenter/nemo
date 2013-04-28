@@ -12,6 +12,8 @@
             {:value => l}.merge(@lang.to_s == l.to_s ? {:selected => "selected"} : {}))}.join.html_safe %>
       </select>
     </form>
+    
+    <%= link_to_if_auth("SMS Test Console", new_sms_test_path, "sms_tests#create") %>
   </div>
   <table>
     <tr>

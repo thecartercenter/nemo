@@ -46,7 +46,9 @@ class Permission
     "password_resets#update" => {:group => :logged_out},
     
     # sms controller permissions are handled by the adapter
-    "sms#create" => {:group => :anyone}
+    "sms#create" => {:group => :anyone},
+    
+    "sms_tests#create" => {:min_level => 2}
   }
   SPECIAL = [
     :anyone_can_edit_some_fields_about_herself,

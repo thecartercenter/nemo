@@ -1,6 +1,7 @@
 module FormsHelper
   def forms_index_links(forms)
-    [link_to_if_auth("Create Form", new_form_path, "forms#create")]
+    [link_to_if_auth("Create Form", new_form_path, "forms#create"),
+      link_to_if_auth("SMS Test Console", new_sms_test_path, "sms_tests#create")]
   end
   
   def forms_index_fields

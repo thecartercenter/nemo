@@ -67,7 +67,7 @@ class Sms::Decoder
     # attempts to find the form matching the code in the message
     def find_form
       # the form code is the first token
-      code = @tokens[0].downcase
+      code = @tokens[0] ? @tokens[0].downcase : ""
       
       # check that the form code looks right
       raise_decoding_error("invalid_form_code", :form_code => code) unless code.match(/^[a-z]{#{FormVersion::CODE_LENGTH}}$/)
