@@ -271,8 +271,8 @@ class Permission
     end
     
     def self.observer_can_show_published_forms(params)
-      # if index
       return false unless params[:key] == "forms#show"
+      return false unless params[:user] && params[:mission] && params[:user].observer?(params[:mission])
       params[:object] = Form.find_by_id(params[:request][:id]) if params[:request]
       return params[:object] && params[:object].published?
     end
