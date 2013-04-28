@@ -16,6 +16,7 @@ class ActiveSupport::TestCase
     
       # add an option set if required
       if %w(select_one select_multiple).include?(type)
+        # put options in weird order to ensure the order stuff works ok
         q.option_set = FactoryGirl.create(:option_set, :name => "Options", :option_names => %w(A B C D E))
       end
 

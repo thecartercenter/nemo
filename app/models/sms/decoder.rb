@@ -133,7 +133,7 @@ class Sms::Decoder
         idx = letters_to_index(@value)
         
         # make sure it makes sense for the option set
-        raise_answer_error("answer_not_valid_option") if idx > @qing.question.option_set.options.size
+        raise_answer_error("answer_not_valid_option") if idx > @qing.question.options.size
         
         # if we get to here, we're good, so add
         build_answer(:option => @qing.question.options[idx-1])
@@ -150,12 +150,12 @@ class Sms::Decoder
           idx = letters_to_index(l)
 
           # make this index makes sense for the option set
-          raise_answer_error("answer_not_valid_option_multi", :value => l) if idx > @qing.question.option_set.options.size
+          raise_answer_error("answer_not_valid_option_multi", :value => l) if idx > @qing.question.options.size
           
           idx
         end
         # if we get to here, we're good, so add
-        build_answer(:choices => idxs.map{|idx| Choice.new(:option => @qing.question.option_set.options[idx-1])})
+        build_answer(:choices => idxs.map{|idx| Choice.new(:option => @qing.question.options[idx-1])})
       
       when "tiny_text"
         # this one is simple
