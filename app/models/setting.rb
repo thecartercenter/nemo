@@ -1,11 +1,9 @@
 require 'mission_based'
-require 'language_list'
 class Setting < ActiveRecord::Base
   include MissionBased
-  include LanguageList
 
   KEYS_TO_COPY = %w(timezone languages intellisms_username intellisms_password isms_hostname isms_username isms_password outgoing_sms_language)
-  DEFAULTS = {:timezone => "UTC", :languages => "eng"}
+  DEFAULTS = {:timezone => "UTC", :languages => "en"}
 
   scope(:by_mission, lambda{|m| where(:mission_id => m ? m.id : nil)})
   scope(:default, where(DEFAULTS))
@@ -91,18 +89,18 @@ class Setting < ActiveRecord::Base
   private
     def ensure_english
       # make sure english exists and is at the front
-      self.lang_codes = (lang_codes - [:eng]).insert(0, :eng)
+      self.lang_codes = (lang_codes - [:en]).insert(0, :en)
       return true
     end
     
     def cleanup_languages
-      self.lang_codes = lang_codes.collect{|c| c.to_s.downcase.gsub(/[^a-z]/, "").to_sym}
+      self.lang_codes = lang_codes.collect{|c| c.to_s.downcase.gsub(/[^a-z]/, "")[0,2].to_sym}
       return true
     end
     
     def lang_codes_are_valid
       lang_codes.each do |lc|
-        errors.add(:languages, "code #{lc} is invalid") unless LANGS.keys.include?(lc)
+        errors.add(:languages, "code #{lc} is invalid") unless ISO_639.find(lc.to_s)
       end
     end
     

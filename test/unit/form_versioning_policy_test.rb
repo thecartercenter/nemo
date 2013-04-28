@@ -22,7 +22,7 @@ class FormVersioningPolicyTest < ActiveSupport::TestCase
     save_old_version_codes
     
     # add an option
-    @os.options << Option.new(:value => "3", :name_eng => "Troublemaker", :mission => get_mission)
+    @os.options << Option.new(:value => "3", :name_en => "Troublemaker", :mission => get_mission)
     @os.save!
     
     publish_and_check_versions(:should_change => true)
@@ -34,7 +34,7 @@ class FormVersioningPolicyTest < ActiveSupport::TestCase
     save_old_version_codes
     
     # change the option
-    @os.options.first.update_attributes!(:name_eng => "New name")
+    @os.options.first.update_attributes!(:name_en => "New name")
     
     publish_and_check_versions(:should_change => false)
   end

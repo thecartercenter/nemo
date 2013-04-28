@@ -1,3 +1,3 @@
-<% lang_prefix = lang == :eng ? "" : language_name(lang) + ' ' %>
-<%= form_field(f, :"name_#{lang}", :type => :textarea, :label => "#{lang_prefix}Title", :required => (lang == :eng), :class => "name_hint") %>
+<% lang_prefix = lang == :en ? "" : language_name(lang) + ' ' %>
+<%= form_field(f, :"name_#{lang}", :type => :textarea, :label => "#{lang_prefix}Title", :required => (lang == :en), :class => "name_hint") %>
 <%= form_field(f, :"hint_#{lang}", :type => :textarea, :label => "#{lang_prefix}Hint", :class => "name_hint") %>

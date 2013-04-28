@@ -5,13 +5,13 @@ class RemovePlaces < ActiveRecord::Migration
       short_txt_type = QuestionType.find_by_name("text")
       long_txt_type = QuestionType.find_by_name("long_text")
       loc = Question.create!(:code => "oldLocality", :question_type_id => short_txt_type.id,
-        :name_eng => "Old Locality", :hint_eng => "Locality from the old place object.")
+        :name_en => "Old Locality", :hint_en => "Locality from the old place object.")
       sta = Question.create!(:code => "oldState", :question_type_id => short_txt_type.id,
-        :name_eng => "Old State", :hint_eng => "State from the old place object.")
+        :name_en => "Old State", :hint_en => "State from the old place object.")
       cry = Question.create!(:code => "oldCountry", :question_type_id => short_txt_type.id,
-        :name_eng => "Old Country", :hint_eng => "Country from the old place object.")
+        :name_en => "Old Country", :hint_en => "Country from the old place object.")
       adr = Question.create!(:code => "oldFullAddr", :question_type_id => long_txt_type.id,
-        :name_eng => "Old Full Address", :hint_eng => "Full address from the old place object.")
+        :name_en => "Old Full Address", :hint_en => "Full address from the old place object.")
       
       # for each form
       Form.all.each do |form|

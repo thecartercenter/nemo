@@ -31,7 +31,7 @@ class ActiveSupport::TestCase
 
   def create_opt_set(options)
     os = OptionSet.new(:name => options.join, :ordering => "value_asc", :mission => mission)
-    options.each_with_index{|o,i| os.option_settings.build(:option => Option.new(:value => i+1, :name_eng => o))}
+    options.each_with_index{|o,i| os.option_settings.build(:option => Option.new(:value => i+1, :name_en => o))}
     os.save!
     @option_sets[options.join("_").downcase.to_sym] = os
   end
@@ -60,7 +60,7 @@ class ActiveSupport::TestCase
     # create default form if necessary
     params[:forms] ||= [create_form(:name => "f")]  
     
-    q = Question.new(:name_eng => params[:name_eng] || params[:code], :code => params[:code], :mission => mission,
+    q = Question.new(:name_en => params[:name_en] || params[:code], :code => params[:code], :mission => mission,
       :question_type_id => QuestionType.find_by_name(params[:type]).id)
   
     # set the option set if type is select_one or select_multiple
@@ -83,11 +83,11 @@ class ActiveSupport::TestCase
       case qing.question.type.name
       when "select_one"
         # create answer with option_id
-        r.answers.build(:questioning_id => qing.id, :option => qing.question.options.find{|o| o.name_eng == value})
+        r.answers.build(:questioning_id => qing.id, :option => qing.question.options.find{|o| o.name_en == value})
       when "select_multiple"
         # create answer with several choices
         a = r.answers.build(:questioning_id => qing.id)
-        value.each{|opt| a.choices.build(:option => qing.question.options.find{|o| o.name_eng == opt})}
+        value.each{|opt| a.choices.build(:option => qing.question.options.find{|o| o.name_en == opt})}
       when "datetime", "date", "time"
         a = r.answers.build(:questioning_id => qing.id, :"#{qing.question.type.name}_value" => value)
       else

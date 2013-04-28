@@ -43,6 +43,7 @@ GEM
       railties (>= 3.0.0)
     hike (1.2.1)
     i18n (0.6.1)
+    iso-639 (0.1.0)
     journey (1.0.4)
     jquery-rails (2.1.4)
       railties (>= 3.0, < 5.0)
@@ -105,6 +106,7 @@ DEPENDENCIES
   authlogic
   configatron
   factory_girl_rails (~> 4.0)
+  iso-639
   jquery-rails
   libxml-ruby
   mysql2

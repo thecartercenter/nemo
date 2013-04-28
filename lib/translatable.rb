@@ -1,6 +1,6 @@
 module Translatable
   def translation_obj_for(field, lang)
-    lang ||= :eng
+    lang ||= :en
     trans = translation_hash["#{field.to_s}__#{lang}"]
   end
   def translation_for(field, lang)

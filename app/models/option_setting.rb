@@ -26,7 +26,7 @@ class OptionSetting < ActiveRecord::Base
     def no_answers_or_choices
       if has_answers_or_choices?
         raise InvalidAssociationDeletionError.new(
-          "You can't remove the option '#{option.name_eng}' because some responses are using it.")
+          "You can't remove the option '#{option.name_en}' because some responses are using it.")
       end
     end
 end

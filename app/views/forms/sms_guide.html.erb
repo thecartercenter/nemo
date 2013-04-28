@@ -23,7 +23,7 @@
     <% @form.smsable_questionings.each do |qing| %>
       <tr>
         <td class="rank"><%= qing.rank %>.</td>
-        <td class="question"><%= qing.question.name_eng %></td>
+        <td class="question"><%= qing.question.name_en %></td>
         <td class="answers">
           <%= answer_space(" #{qing.rank}.") %>
         </td>
@@ -35,7 +35,7 @@
           <td class="rank"></td>
           <td class="options">
             <% qing.question.options.each_with_index do |opt, idx| %>
-              <span><%= index_to_letter(idx + 1) %>) <%= opt.name_eng %></span>
+              <span><%= index_to_letter(idx + 1) %>) <%= opt.name_en %></span>
             <% end %>
           </td>
           <td class="answers"></td>

@@ -31,11 +31,11 @@ class FixPlacesInMainView < ActiveRecord::Migration
       from answers a
         left join options ao on a.option_id = ao.id
           left join translations aotr on (aotr.obj_id = ao.id and aotr.fld = 'name' and aotr.class_name = 'Option' 
-            and aotr.language_id = (select id from languages where code = 'eng'))
+            and aotr.language_id = (select id from languages where code = 'en'))
         left join choices c on c.answer_id = a.id
           left join options co on c.option_id = co.id
             left join translations cotr on (cotr.obj_id = co.id and cotr.fld = 'name' and cotr.class_name = 'Option' 
-              and cotr.language_id = (select id from languages where code = 'eng'))
+              and cotr.language_id = (select id from languages where code = 'en'))
         join responses r on a.response_id = r.id
           join users u on r.user_id = u.id
           join forms f on r.form_id = f.id 
@@ -51,7 +51,7 @@ class FixPlacesInMainView < ActiveRecord::Migration
             join question_types qt on q.question_type_id = qt.id 
             left join option_sets os on q.option_set_id = os.id
               join translations qtr on (qtr.obj_id = q.id and qtr.fld = 'name' and qtr.class_name = 'Question' 
-                and qtr.language_id = (select id from languages where code = 'eng'))
+                and qtr.language_id = (select id from languages where code = 'en'))
     ") do |t|
       t.column :response_id
       t.column :observation_time
