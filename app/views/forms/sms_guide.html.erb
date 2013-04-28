@@ -1,7 +1,18 @@
 <% @title = "#{@form.name}" %>
+<% locale_was = I18n.locale; I18n.locale = @lang %>
 <div class="sms_guide">
   <div class="header"><%= t("sms_forms.guide.header") %></div>
   <h1 class="printable"><%= @title %></h1>
+  <div class="controls">
+    <form>
+      <input type="hidden" name="sms_guide" value="1">
+      Language: 
+      <select name="lang" onchange="this.form.submit();">
+        <%= I18n.available_locales.collect{|l| content_tag(:option, language_name(l), 
+            {:value => l}.merge(@lang.to_s == l.to_s ? {:selected => "selected"} : {}))}.join.html_safe %>
+      </select>
+    </form>
+  </div>
   <table>
     <tr>
       <td colspan="2" class="step1">
@@ -23,7 +34,7 @@
     <% @form.smsable_questionings.each do |qing| %>
       <tr>
         <td class="rank"><%= qing.rank %>.</td>
-        <td class="question"><%= qing.question.name_en %></td>
+        <td class="question"><%= qing.question.send("name_#{@lang}") %></td>
         <td class="answers">
           <%= answer_space(" #{qing.rank}.") %>
         </td>
@@ -35,7 +46,7 @@
           <td class="rank"></td>
           <td class="options">
             <% qing.question.options.each_with_index do |opt, idx| %>
-              <span><%= index_to_letter(idx + 1) %>) <%= opt.name_en %></span>
+              <span><%= index_to_letter(idx + 1) %>) <%= opt.send("name_#{@lang}") %></span>
             <% end %>
           </td>
           <td class="answers"></td>
@@ -73,3 +84,4 @@
     
   </table>
 </div>
+<% I18n.locale = locale_was %>

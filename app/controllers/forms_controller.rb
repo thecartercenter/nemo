@@ -42,6 +42,7 @@ class FormsController < ApplicationController
           # here we only render a partial since this is coming from an ajax request
           render(:partial => "printable", :layout => false, :locals => {:form => @form})
         elsif params[:sms_guide]
+          @lang = params[:lang] || "en"
           render("sms_guide")
         else
           render_form

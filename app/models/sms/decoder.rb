@@ -117,7 +117,7 @@ class Sms::Decoder
 
       when "decimal"
         # for integer question, make sure the value looks like a number
-        raise_answer_error("answer_not_decimal") unless @value =~ /^[\d]+(\.[\d]+)?$/
+        raise_answer_error("answer_not_decimal") unless @value =~ /^[\d]+([\.,][\d]+)?$/
         
         # add to response
         build_answer(:value => @value)

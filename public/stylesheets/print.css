@@ -33,3 +33,6 @@ div.success, div.failure { display: none; }
 
 /* reports */
 #report_top_links, #report_links, div.report_edit_dialog, div.report_edit_pane { display: none !important; }
+
+/* sms form guide */
+div.sms_guide div.controls { display: none; }
