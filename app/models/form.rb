@@ -62,6 +62,11 @@ class Form < ActiveRecord::Base
     questionings.reject{|q| q.hidden}
   end
   
+  # returns questionings that work with sms forms and are not hidden
+  def smsable_questionings
+    questionings.reject{|q| q.hidden || !q.question.type.smsable?}
+  end
+  
   def max_rank
     questionings.map{|qing| qing.rank || 0}.max || 0
   end

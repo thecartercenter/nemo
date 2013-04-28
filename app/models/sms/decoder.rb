@@ -136,7 +136,7 @@ class Sms::Decoder
         raise_answer_error("answer_not_valid_option") if idx > @qing.question.option_set.options.size
         
         # if we get to here, we're good, so add
-        build_answer(:option => @qing.question.option_set.options[idx-1])
+        build_answer(:option => @qing.question.options[idx-1])
 
       when "select_multiple"
         # case insensitive
@@ -237,7 +237,6 @@ class Sms::Decoder
     def raise_answer_error(type, options = {})
       raise_decoding_error(type, {:rank => @rank, :value => @value}.merge(options))
     end
-    
     
     # converts a series of letters to the corresponding index, e.g. a => 1, b => 2, z => 26, aa => 27, etc.
     def letters_to_index(letters)

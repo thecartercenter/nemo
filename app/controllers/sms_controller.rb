@@ -73,20 +73,11 @@ class SmsController < ApplicationController
                 invalid_answer = @elmo_response.answers.detect(&:errors)
                 t("sms_forms.validation.invalid_answer", :rank => invalid_answer.questioning.rank, 
                   :error => invalid_answer.errors.full_messages.join(", "))
-                
-              end
               
-
-              # if we found the key, now lookup the sms-style message using the same key
-              # else just fall back on the old one (this shouldn't happen in practice)
-              #key ? t("sms_forms.validation.#{key}") : error_msg
-
-              # if it's the missing_answers error, we need to find the first Answer that's missing
-              #if key == :missing_answers
-              #  @elmo_response.answers.each do |a|
-              #    puts a.errors.inspect && break if a.errors
-              #  end
-              #end
+              else
+                # if we don't recognize the key, just use the regular message. it may not be pretty but it's better than nothing.  
+                error_msg
+              end
             end
             
             unless reply_body.nil?

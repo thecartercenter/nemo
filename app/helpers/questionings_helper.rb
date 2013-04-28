@@ -31,7 +31,10 @@ module QuestioningsHelper
       links << link_to("Print form", "#", :onclick => "Form.print(#{qings.first.form.id}); return false;") + " " +
         loading_indicator(:id => qings.first.form.id)
     end
-      
+    
+    if qings.size > 0 && qings.first.form.smsable? && qings.first.form.published?
+      links << link_to_if_auth("View SMS Guide", form_path(qings.first.form, :sms_guide => 1), "forms#show", qings.first.form)      
+    end
     links
   end
   
