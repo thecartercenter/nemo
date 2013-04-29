@@ -25,7 +25,7 @@ class Sms::Adapters::IsmsAdapter < Sms::Adapters::Adapter
     
     # build the URI for the request (numbers must be enclosed in double quotes for some reason)
     uri = build_uri(:deliver, :to => numbers, :text => sms.body)
-    
+
     # don't send in test mode
     unless Rails.env == "test"
       response = send_request(uri)
@@ -94,6 +94,7 @@ class Sms::Adapters::IsmsAdapter < Sms::Adapters::Adapter
       params[:cat] = 1
       
       uri = URI("http://#{configatron.isms_hostname}/#{page}.html")
+      uri.query = URI.encode_www_form(params)
       return uri
     end
 end
