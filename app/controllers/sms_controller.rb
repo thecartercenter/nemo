@@ -99,9 +99,6 @@ class SmsController < ApplicationController
           # send the responses
           @sms_responses.each{|r| configatron.outgoing_sms_adapter.deliver(r)}
           
-          # render something nice for the robot
-          render :text => "OK"
-          
         # if we get an error
         rescue Sms::Error
           # notify the admin (if production) but don't re-raise it so that we can keep processing other msgs
@@ -120,5 +117,8 @@ class SmsController < ApplicationController
     end
     
     raise Sms::Error.new("No adapters recognized this receive request") unless handled
+    
+    # render something nice for the robot
+    render :text => "OK"
   end
 end
