@@ -23,11 +23,14 @@ class SmsController < ApplicationController
       if $!.type == "user_not_found" && sms.from =~ /[a-z]/i
         nil
       else
-        # if this is an answer format error, add an intro to the beginning
-        intro = $!.type =~ /^answer_not_/ ? I18n.t("sms_forms.decoding.answer_error_intro", $!.params) + " " : ""
+        msg = I18n.t("sms_forms.decoding.#{$!.type}", $!.params)
         
-        # return the intro plus the main message
-        intro + I18n.t("sms_forms.decoding.#{$!.type}", $!.params)
+        # if this is an answer format error, add an intro to the beginning and add a period
+        if $!.type =~ /^answer_not_/ 
+          I18n.t("sms_forms.decoding.answer_error_intro", $!.params) + " " + msg
+        else
+          msg
+        end
       end
       
     # if there is a validation error, respond accordingly
