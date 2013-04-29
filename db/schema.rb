@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130423192101) do
+ActiveRecord::Schema.define(:version => 20130428154325) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -113,6 +113,7 @@ ActiveRecord::Schema.define(:version => 20130423192101) do
     t.integer  "mission_id"
     t.integer  "current_version_id"
     t.boolean  "upgrade_needed",     :default => false
+    t.boolean  "smsable",            :default => false
   end
 
   add_index "forms", ["form_type_id"], :name => "index_forms_on_form_type_id"
@@ -281,10 +282,13 @@ ActiveRecord::Schema.define(:version => 20130423192101) do
     t.integer  "mission_id"
     t.string   "languages"
     t.string   "outgoing_sms_adapter"
-    t.string   "outgoing_sms_username"
-    t.string   "outgoing_sms_password"
-    t.string   "outgoing_sms_extra"
+    t.string   "intellisms_username"
+    t.string   "intellisms_password"
     t.string   "outgoing_sms_language"
+    t.string   "isms_hostname"
+    t.string   "isms_username"
+    t.string   "isms_password"
+    t.string   "incoming_sms_number"
   end
 
   add_index "settings", ["mission_id"], :name => "index_settings_on_mission_id"

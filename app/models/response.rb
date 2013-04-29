@@ -15,8 +15,8 @@ class Response < ActiveRecord::Base
   validates(:user, :presence => true)
   validate(:no_missing_answers)
 
-  # only need to validate answers in web mode
-  validates_associated(:answers, :message => "are invalid (see below)", :if => Proc.new{|r| r.modifier == "web"})
+  # don't need to validate answers in odk mode
+  validates_associated(:answers, :message => :invalid_answers, :if => Proc.new{|r| r.modifier != "odk"})
   
   default_scope(includes({:form => :type}, :user).order("responses.created_at DESC"))
   scope(:unreviewed, where(:reviewed => false))
@@ -144,15 +144,21 @@ class Response < ActiveRecord::Base
     @answer_hash ||= Hash[*answers.collect{|a| [a.questioning, a]}.flatten]
   end
   
+  # returns an array of required questionings for which answers are missing
+  def missing_answers
+    return @missing_answers if @missing_answers
+    answer_hash(:rebuild => true)
+    @missing_answers = visible_questionings.collect do |qing|
+      (answer_for(qing).nil? && qing.required?) ? qing : nil
+    end.compact
+  end
+  
   def form_name; form ? form.name : nil; end
   def submitter; user ? user.name : nil; end
   
   private
     def no_missing_answers
-      answer_hash(:rebuild => true)
-      visible_questionings.each do |qing|
-        errors.add(:base, "Not all questions have answers") and return false if answer_for(qing).nil?
-      end
+      errors.add(:base, :missing_answers) unless missing_answers.empty?
     end
     
     def self.export_sql(rel)

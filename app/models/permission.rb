@@ -43,7 +43,12 @@ class Permission
     "user_sessions#create" => {:group => :logged_out},
     "user_sessions#logged_out" => {:group => :logged_out},
     "password_resets#create" => {:group => :logged_out},
-    "password_resets#update" => {:group => :logged_out}
+    "password_resets#update" => {:group => :logged_out},
+    
+    # sms controller permissions are handled by the adapter
+    "sms#create" => {:group => :anyone},
+    
+    "sms_tests#create" => {:min_level => 2}
   }
   SPECIAL = [
     :anyone_can_edit_some_fields_about_herself,
@@ -202,6 +207,11 @@ class Permission
     return false
   end
   
+  # checks if the user can submit responses for the given form
+  def self.user_can_submit_to_form(user, form)
+    user_can_access_mission(user, form.mission)
+  end
+  
   private
     ###############################################
     # SPECIAL PERMISSION FUNCTIONS
@@ -263,8 +273,8 @@ class Permission
     end
     
     def self.observer_can_show_published_forms(params)
-      # if index
       return false unless params[:key] == "forms#show"
+      return false unless params[:user]
       params[:object] = Form.find_by_id(params[:request][:id]) if params[:request]
       return params[:object] && params[:object].published?
     end

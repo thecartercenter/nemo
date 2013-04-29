@@ -10,14 +10,37 @@
   <%= form_field(f, :languages, :required => true) %>
   
   <h2>Outgoing SMS Settings</h2>
-  <%= form_field(f, :outgoing_sms_adapter) %>
-  <%= form_field(f, :outgoing_sms_username) %>
-  <%= form_field(f, :outgoing_sms_password1, :type => :password) %>
-  <%= form_field(f, :outgoing_sms_password2, :type => :password) %>
-  <%= form_field(f, :outgoing_sms_language) %>
-  <%= form_field(f, :outgoing_sms_extra) %>
+  <%= form_field(f, :outgoing_sms_language, :type => :select, :options => I18n.available_locales) %>
+  <%= form_field(f, :outgoing_sms_adapter, :type => :select, :options => Sms::Adapters::Factory::VALID_ADAPTERS, :blank_text => "None") %>
+  
+  <div class="adapter_settings" data-adapter="IntelliSms">
+    <%= form_field(f, :intellisms_username) %>
+    <%= link_to("Change SMS Password", "#") %>
+    <div class="password_fields">
+      <%= form_field(f, :intellisms_password1, :type => :password) %>
+      <%= form_field(f, :intellisms_password2, :type => :password) %>
+    </div>
+  </div>
+
+  <div class="adapter_settings" data-adapter="Isms">
+    <%= form_field(f, :isms_hostname) %>
+    <%= form_field(f, :isms_username) %>
+    <%= link_to("Change SMS Password", "#") %>
+    <div class="password_fields">
+      <%= form_field(f, :isms_password1, :type => :password) %>
+      <%= form_field(f, :isms_password2, :type => :password) %>
+    </div>
+  </div>
+  
+  <h2>Incoming SMS Settings</h2>
+  <%= form_field(f, :incoming_sms_number) %>
   
   <h2>Tableau</h2>
   <%= form_field(f, :tableau_sql, :partial => "tableau_sql") %>
   <%= form_submit_button(f) %>
+<% end %>
+
+<%= javascript_doc_ready do %>
+  // instantiate the frontend view object to handle the interactive stuff
+  new ELMO.Settings();
 <% end %>

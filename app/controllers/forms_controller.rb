@@ -32,11 +32,22 @@ class FormsController < ApplicationController
     @form = Form.with_questions.find(params[:id])
 
     # add to download count if xml
-    @form.add_download if request.format.xml? 
+    @form.add_download if request.format && request.format.xml? 
     
     respond_to do |format|
-      # for html, render the printable partial if requested, otherwise render the form
-      format.html{params[:print] ? render_printable : render_form}
+      
+      # for html, render the printable or sms_guide styles if requested, otherwise render the form
+      format.html do 
+        if params[:print]
+          # here we only render a partial since this is coming from an ajax request
+          render(:partial => "printable", :layout => false, :locals => {:form => @form})
+        elsif params[:sms_guide]
+          @lang = params[:lang] || "en"
+          render("sms_guide")
+        else
+          render_form
+        end
+      end
       
       # for xml, render openrosa
       format.xml{render_openrosa}
@@ -53,7 +64,7 @@ class FormsController < ApplicationController
     @form = Form.find(params[:id])
     verb = @form.published? ? "unpublish" : "publish"
     begin
-      @form.toggle_published
+      @form.send("#{verb}!")
       dl = verb == "unpublish" ? " The download count has also been reset." : ""
       flash[:success] = "Form #{verb}ed successfully." + dl
     rescue
@@ -175,11 +186,6 @@ class FormsController < ApplicationController
     def render_openrosa
       render(:content_type => "text/xml")
       response.headers['X-OpenRosa-Version'] = "1.0"
-    end
-    
-    # renders the printable partial
-    def render_printable
-      render(:partial => "printable", :layout => false, :locals => {:form => @form})
     end
     
     def render_form

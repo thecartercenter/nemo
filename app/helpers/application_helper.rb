@@ -1,7 +1,4 @@
-require 'language_list'
 module ApplicationHelper
-  include LanguageList
-   
   # renders the flash message and any form errors for the given activerecord object
   def flash_and_form_errors(object = nil)
     render("layouts/flash", :flash => flash, :object => object)
@@ -243,7 +240,7 @@ module ApplicationHelper
   end
   
   def language_name(code)
-    LANGS[code]
+    (entry = ISO_639.find(code.to_s)) ? entry.english_name : ""
   end
   
   # wraps the given content in a js tag and a jquery ready handler

@@ -55,7 +55,7 @@ module ELMO
     # google map api
     configatron.map_api_url = "https://maps.googleapis.com/maps/api/js?sensor=false"
     
-    # SMS broadcast settings
-    configatron.broadcast_tag = "[TCC-Broadcast]"
+    # SMS broadcast settings (used to be [TCC] but the [ was getting corrupted on IntelliSms)
+    configatron.broadcast_tag = "|TCC|"
   end
 end

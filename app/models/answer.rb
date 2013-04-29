@@ -14,6 +14,9 @@ class Answer < ActiveRecord::Base
   before_save(:blanks_to_nulls)
   
   validates(:value, :numericality => true, :if => Proc.new{|a| a.numeric? && !a.value.blank?})
+  
+  # in these custom validations, we add errors to the base, but we don't use full sentences (e.g. we use 'is required')
+  # since this class really just represents one value
   validate(:min_max)
   validate(:required)
 
@@ -116,7 +119,7 @@ class Answer < ActiveRecord::Base
     def required
       if required? && !hidden? && relevant? && !can_have_choices? &&
         value.blank? && time_value.blank? && date_value.blank? && datetime_value.blank? && option_id.nil? 
-          errors.add(:base, "This question is required")
+          errors.add(:base, "is required")
       end
     end
     def round_ints

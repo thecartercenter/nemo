@@ -1,0 +1,23 @@
+<% content_for(:per_page_js){javascript_include_tag("sms_test_console")} %>
+
+<% @title = "SMS Test Console" %>
+
+<div class="tip">
+  <%= link_to("Back to Forms", forms_path) %>
+</div>
+
+<%= nice_form_for(@sms_test) do |f| %>
+  <%= form_field(f, :from) %>
+  <%= form_field(f, :body, :type => :textarea) %>
+
+  <%= form_submit_button(f) %>
+  <%= loading_indicator %>
+<% end %>
+
+<h2>Result</h2>
+<div class="sms_test_result">
+</div>
+
+<%= javascript_doc_ready do %>
+  new ELMO.SmsTestConsole();
+<% end %>

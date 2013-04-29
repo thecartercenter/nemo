@@ -45,7 +45,7 @@ class Report::Join
       :name => :options,
       :sql => ["LEFT JOIN options __ao ON __answers.option_id = __ao.id",
         "LEFT JOIN translations __aotr ON (__aotr.obj_id = __ao.id and __aotr.fld = 'name' and __aotr.class_name = 'Option' " +
-          "AND __aotr.language = 'eng')"]
+          "AND __aotr.language = 'en')"]
     ),      
     :choices => new(
       :dependencies => :answers,
@@ -53,7 +53,7 @@ class Report::Join
       :sql => ["LEFT JOIN choices __choices ON __choices.answer_id = __answers.id",
         "LEFT JOIN options __co ON __choices.option_id = __co.id",
         "LEFT JOIN translations __cotr ON (__cotr.obj_id = __co.id and __cotr.fld = 'name' and __cotr.class_name = 'Option' " + 
-            "AND __cotr.language = 'eng')"]
+            "AND __cotr.language = 'en')"]
     ),      
     :forms => new(
       :name => :forms,
@@ -74,7 +74,7 @@ class Report::Join
       :dependencies => :questions,
       :sql => "INNER JOIN translations __question_trans ON (__question_trans.obj_id = __questions.id 
         AND __question_trans.fld = 'name' AND __question_trans.class_name = 'Question' 
-        AND __question_trans.language = 'eng')"
+        AND __question_trans.language = 'en')"
     ),
     :question_types => new( 
       :name => :question_types,

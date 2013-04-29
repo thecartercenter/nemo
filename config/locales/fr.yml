@@ -1,0 +1,186 @@
+# Sample localization file for English. Add more files in this directory for other locales.
+# See http://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
+
+fr:
+  common:
+    example_abbr: "e.g."
+    step: "Etape"
+    thank_you: "Merci"
+    
+  activerecord:
+    models:
+      report/report: Report
+    attributes:
+      broadcast:
+        balance: SMS Balance
+        which_phone: Which Phone(s)
+        send_errors: Delivery Errors
+      form:
+        smsable: "Can Submit Via Sms?"
+      question:
+        name_en: "English Name"
+        option_set_id: Option Set
+        question_type_id: Type
+      questioning:
+        hidden: Hidden?
+        required: Required?
+      response:
+        user_id: Submitter
+        reviewed: Reviewed?
+      report/report:
+        name: Title
+        aggregation: Operation
+        aggregation_id: Operation
+        fields: Attributes/Questions
+        display_type: Display Type
+        unreviewed: Allow Unreviewed Responses
+        unique_rows: Hide Duplicate Rows
+        pri_grouping: Grouping 1
+        sec_grouping: Grouping 2
+        percent_type: Percent Type
+        bar_style: Bar Style
+        submit_new: Generate Report
+        submit_edit: Save Changes
+      setting:
+        languages: Form Languages
+        outgoing_sms_adapter: Provider
+        outgoing_sms_language: Language
+        intellisms_password1: Password
+        intellisms_password2: Password Confirmation
+        intellisms_username: Username
+        isms_hostname: Host
+        isms_password1: Password
+        isms_password2: Password Confirmation
+        isms_username: Username
+        tableau_sql: Tableau SQL
+        timezone: Time Zone
+      user:
+        name: Full Name
+        phone: Main Phone
+        admin: Is Administrator?
+        phone2: Alternate Phone
+        password_confirmation: Re-type Password
+    tips:
+      form_type:
+        name: A short name for this Form Type. Maximum 16 characters.
+      mission:
+        name: A name for this Mission. Maximum 32 characters. Must be unique. Think about including the year if there will be future missions with the same name.
+      option:
+        value: The numeric value that best represents this option.
+        name_en: The textual description of this option that users will see.
+      option_set:
+        name: A name that summarizes this set of options. Normal users will not see this name.
+        options: Check the options that should be included in this set.
+        ordering: The order in which you'd like the options to appear.
+      question:
+        code: A short codename (between 2-20 characters). Should contain only letters and numbers, e.g. BallotBoxSealed, DepartTime.
+        hint_en: Additional instructions, e.g. 'Enter an approximate count of the people waiting to vote.'
+        minimum: The minimum value for the response. Check the box if the minimum itself is not valid.
+        maximum: The maximum value for the response. Check the box if the maximum itself is not valid.
+        name_en: The main question text, e.g. 'How many people are in line?'
+        option_set_id: The set of options the user will be able to choose from.
+        question_type_id: The kind of information the user will be entering.
+      questioning:
+        condition: An optional condition which must be met in order for this question to be shown to the user.
+        hidden: Whether this question will be shown on this form. Use this to disable a question if you can't delete it. This value will override any condition specified above.
+        required: Whether this question must be completed on this form or is optional. Only enforced if the condition specified above is met.
+      report/report:
+        name: A descriptive title for this report.
+        aggregation_id: The operation you want to perform on the combined data.
+        kind: The type of data you want to work with.
+        display_type: The way you want the results to be presented.
+        unreviewed: Whether unreviewed responses should be included in the report.
+        unique_rows: Whether duplicate rows should be omitted in the report.
+        pri_grouping: An attribute or question by which the response count should be grouped (e.g. state, overall rating).
+        percent_type: Whether and how percentages should be calculated for the report.
+        bar_style: Whether bars should be stacked or side-by-side. 
+      setting:
+        languages: Enter the <a href="http://www.loc.gov/standards/iso639-2/php/code_list.php">two-letter codes</a>, separated by commas, for the languages in which you want to allow questions to be defined.
+        outgoing_sms_adapter: The adapter used to send outgoing smses.
+        outgoing_sms_language: The code for the language in which system-generated SMSes should be sent. English is assumed if blank.
+        intellisms_username: The username for the IntelliSMS account.
+        intellisms_password1: Enter and re-enter a password to change the password for the IntelliSMS account.
+        isms_hostname: The IP or domain name for the iSMS device. Can include port (e.g. 10.20.30.40:8081). Don't include http://.
+        isms_password1: Enter and re-enter a password to change the API password for the iSMS device.
+        isms_username: The API username for the iSMS device.
+        tableau_sql: The SQL code used to extract data for use in Tableau. Click 'Select All' and then press Ctrl-C to copy.
+        timezone: The time zone in which times are displayed throughout the site.
+      user:
+        name: "The user's full name. Example: 'John Doe' or 'Team 1.1'"
+        login: The login name will be used to log in. Click the suggest button to suggest a login name.
+        phone: "Phone number should include the country code. Example: +25680344523"
+        phone2: "Phone number should include the country code. Example: +25680344523"
+        admin: Whether this user is a system-wide administrator. You can control per-mission permissions using the fields below.
+        assignments: The missions this user is assigned to.
+        password: Enter a new password here if you'd like to change your existing password.
+        password_confirmation: Enter the new password again.
+      user_batch:
+        users: |-
+          Enter the user names, email addresses, and phone numbers (WITH country codes), one per line, separated by commas or tabs. For example:
+            
+          Alice Merrywinkle, alice@winkle.org, +20112313411
+          Chung Li, cli@gmail.com
+          Forgo Niambot, , +203300303
+          Stewbuilder Dennis, chow@yahoo.co.uk, +20923187493
+    
+    errors:
+      models:
+        response:
+          invalid_answers: "are invalid (see below)"
+          missing_answers: "Not all questions have answers"
+          
+    boolean_labels:
+      response:
+        reviewed:
+          true: Yes
+          false: No
+          
+  sms_forms:
+    decoding:
+      answer_error_intro: "Sorry, your answer '%{value}' for question %{rank} on form '%{form_code}'"
+      answer_not_date: "was not a valid date"
+      answer_not_datetime: "was not a valid datetime"
+      answer_not_decimal: "was not a valid number"
+      answer_not_integer: "was not a valid integer number"
+      answer_not_option_letter: "was not a valid option"
+      answer_not_option_letter_multi: "was not a valid option"
+      answer_not_time: "was not a valid time"
+      answer_not_valid_option: "was not a valid option"
+      answer_not_valid_option_multi: "was not a valid option"
+      congrats: "Your response to form '%{form_code}' was received. Thank you!"
+      form_not_found: "Sorry, there is no form with code '%{form_code}'."
+      form_not_permitted: "Sorry, you don't have permission to submit to form '%{form_code}'."
+      form_not_published: "Sorry, form '%{form_code}' is not currently available for submissions."
+      form_not_smsable: "Sorry, form '%{form_code}' is not currently available for SMS submissions."
+      form_version_outdated: "Sorry, the form code '%{form_code}' refers to an old version. Please obtain an updated submission guide."
+      invalid_form_code: "Sorry, '%{form_code}' is not a valid form code."
+      question_doesnt_exist: "Sorry, question %{rank} doesn't exist on form '%{form_code}'."
+      user_not_found: "Sorry, we couldn't find you in the system."
+    
+    guide:
+      header: "ELMO SMS Composition Guide"
+      step1: "SVP answer all the questions below and follow the instructions at the end of the form to send in your data. You can use lower or UPPER case letters."
+      step2: "Maintnenant please do the following to send in your data:"
+      step2_substeps:
+        - "With your phone, begin an SMS to %{submit_number}."
+        - "Enter the contents of each line on the right side of each page, going from top to bottom."
+        - "Be careful that you enter each line exactly. Each line is important."
+        - "Notice that each answer is separated by a 'SPC'. Enter a space for each time you see 'SPC'. Do not add any extra spaces."
+        - "When you have finished entering, double-check your message to make sure it matches the form."
+        - "Send the message and wait for a response with further instructions."
+        - "If you do not receive a response within 5 minutes, please send the message again."
+          
+      pointers:
+        tiny_text: "Write your answer here. Abbreviate if necessary."
+        integer: "Write your answer here."
+        decimal: "Write your answer here."
+        select_one: "Write the letter for your choice here. Write only one letter."
+        select_multiple: "Write the letter for each choice here with no spaces."
+        datetime: "Write your answer here in YYYYMMDD HHMM format."
+        date: "Write your answer here in YYYYMMDD format."
+        time: "Write your answer here in HHMM format."
+          
+    validation:
+      invalid_answer: "Sorry, the answer to question %{rank} %{error}."
+      missing_answer: "Sorry, the answer to the required question %{ranks} was missing from your response to form '%{form_code}'."
+      missing_answers: "Sorry, the answers to the required questions %{ranks} were missing from your response to form '%{form_code}'."

@@ -1,8 +1,10 @@
 require 'mission_based'
 require 'translatable'
+require 'form_versionable'
 class Question < ActiveRecord::Base
   include MissionBased
   include Translatable
+  include FormVersionable
   
   belongs_to(:type, :class_name => "QuestionType", :foreign_key => :question_type_id, :inverse_of => :questions)
   belongs_to(:option_set, :include => :options, :inverse_of => :questions)
@@ -21,6 +23,7 @@ class Question < ActiveRecord::Base
   validate(:integrity)
 
   before_destroy(:check_assoc)
+  before_save(:notify_form_versioning_policy_of_update)
   
   default_scope(order("code"))
   scope(:select_types, includes(:type).where(:"question_types.name" => %w(select_one select_multiple)))
@@ -34,8 +37,8 @@ class Question < ActiveRecord::Base
   end
   
   def method_missing(*args)
-    # enable methods like name_fra and hint_eng, etc.
-    if args[0].to_s.match(/^(name|hint)_([a-z]{3})(_before_type_cast)?(=?)$/)
+    # enable methods like name_fra and hint_en, etc.
+    if args[0].to_s.match(/^(name|hint)_([a-z]{2})(_before_type_cast)?(=?)$/)
       send("#{$1}#{$4}", $2, *args[1..2])
     else
       super
@@ -49,11 +52,11 @@ class Question < ActiveRecord::Base
   end
   
   def is_translation_method?(symbol)
-    symbol.match(/^(name|hint)_([a-z]{3})(_before_type_cast)?(=?)$/)
+    symbol.match(/^(name|hint)_([a-z]{2})(_before_type_cast)?(=?)$/)
   end
   
   # hack so the validation message will look right
-  def english_name; name_eng; end
+  def english_name; name_en; end
   
   def name(lang = nil); translation_for(:name, lang); end
   def name=(lang, value); set_translation_for(:name, lang, value); end
@@ -94,7 +97,7 @@ class Question < ActiveRecord::Base
     clauses = []
     clauses << "greater than #{minstrictly ? '' : 'or equal to '}#{minimum}" if minimum
     clauses << "less than #{maxstrictly ? '' : 'or equal to '}#{maximum}" if maximum
-    "Value must be #{clauses.join(' and ')}."
+    "must be #{clauses.join(' and ')}"
   end
   
   def as_json(options = {})
@@ -102,6 +105,7 @@ class Question < ActiveRecord::Base
   end
   
   private
+
     def integrity
       # error if type or option set have changed and there are answers or conditions
       if (question_type_id_changed? || option_set_id_changed?) 
@@ -116,11 +120,13 @@ class Question < ActiveRecord::Base
         errors.add(:base, "Can't be changed because it appears in at least one published form")
       end
     end
+
     def check_assoc
       unless questionings.empty?
         raise("You can't delete question '#{code}' because it is included in at least one form")
       end
     end
+
     def name_unique_per_mission
       errors.add(:name, "must be unique") if self.class.for_mission(mission).where("code = ? AND id != ?", code, id).count > 0
     end

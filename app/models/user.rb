@@ -32,6 +32,7 @@ class User < ActiveRecord::Base
   validate(:no_duplicate_assignments)
   validate(:must_have_assignments_if_not_admin)
   validate(:ensure_current_mission_is_valid)
+  validate(:phone_should_be_unique)
   
   default_scope(order("users.name"))
   scope(:assigned_to, lambda{|m| where("users.id IN (SELECT user_id FROM assignments WHERE mission_id = ?)", m.id)})
@@ -225,5 +226,21 @@ class User < ActiveRecord::Base
     # if current mission is not accessible, set to nil
     def ensure_current_mission_is_valid
       self.current_mission_id = nil if !current_mission_id.nil? && !Permission.user_can_access_mission(self, current_mission)
+    end
+    
+    # ensures phone and phone2 are unique
+    def phone_should_be_unique
+      [:phone, :phone2].each do |field|
+        val = send(field)
+        # if phone/phone2 is not nil and we can find a user with a different ID from ours that has a matching phone OR phone2
+        # then it's not unique
+        # start building relation
+        rel = User.where("phone = ? OR phone2 = ?", val, val)
+        # add ID clause if this is not a new record
+        rel = rel.where("id != ?", id) unless new_record?
+        if !val.nil? && rel.count > 0
+          errors.add(field, "must be unique")
+        end
+      end
     end
 end

@@ -2,6 +2,8 @@ require 'seedable'
 class QuestionType < ActiveRecord::Base
   include Seedable
   
+  SMSABLE = %w(integer decimal select_one select_multiple datetime date time tiny_text)
+  
   has_many(:questions, :inverse_of => :type)
   
   default_scope(order("long_name"))
@@ -18,6 +20,7 @@ class QuestionType < ActiveRecord::Base
     seed(:name, :name => "datetime", :long_name => "Date+Time", :odk_name => "dateTime", :odk_tag => "input")
     seed(:name, :name => "date", :long_name => "Date", :odk_name => "date", :odk_tag => "input")
     seed(:name, :name => "time", :long_name => "Time", :odk_name => "time", :odk_tag => "input")
+    seed(:name, :name => "tiny_text", :long_name => "Tiny Text", :odk_name => "string", :odk_tag => "input")
   end
 
   def numeric?
@@ -25,7 +28,15 @@ class QuestionType < ActiveRecord::Base
   end
   def integer?; name == "integer"; end
   
+  def smsable?
+    SMSABLE.include?(name)
+  end
+  
   def printable?; name != "location"; end
+  
+  def has_options?
+    name == "select_one" || name == "select_multiple"
+  end
   
   def qing_ids
     questions.collect{|q| q.qing_ids}.flatten
