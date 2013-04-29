@@ -27,7 +27,7 @@ class SmsController < ApplicationController
         
         # if this is an answer format error, add an intro to the beginning and add a period
         if $!.type =~ /^answer_not_/ 
-          I18n.t("sms_forms.decoding.answer_error_intro", $!.params) + " " + msg
+          I18n.t("sms_forms.decoding.answer_error_intro", $!.params) + " " + msg + "."
         else
           msg
         end
@@ -102,9 +102,15 @@ class SmsController < ApplicationController
           # render something nice for the robot
           render :text => "OK"
           
-        # if we get an error, just log it, or re-throw it if in test mode
+        # if we get an error
         rescue Sms::Error
-          Rails.env == "test" ? (raise $!) : (Rails.logger.error("SMS Error: #{$!.to_s}"))
+          # notify the admin (if production) but don't re-raise it so that we can keep processing other msgs
+          if Rails.env == "production"
+            notify_error($!, :dont_re_raise => true)
+          # if not in production, re-raise it
+          else
+            raise $!
+          end
         end
         
         # we can now exit the loop

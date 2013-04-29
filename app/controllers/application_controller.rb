@@ -80,7 +80,7 @@ class ApplicationController < ActionController::Base
     end
 
     # notifies the webmaster of an error in production mode
-    def notify_error(exception)
+    def notify_error(exception, options = {})
       if Rails.env == "production"
         begin
           AdminMailer.error(exception, session.to_hash, params, request.env, current_user).deliver 
@@ -88,8 +88,8 @@ class ApplicationController < ActionController::Base
           logger.error("ERROR SENDING ERROR NOTIFICATION: #{$!.to_s}: #{$!.message}\n#{$!.backtrace.to_a.join("\n")}")
         end
       end
-      # still show error page
-      raise exception
+      # still show error page unless requested not to
+      raise exception unless options[:dont_re_raise]
     end
     
     # don't count automatic timer-based requests for resetting the logout timer
