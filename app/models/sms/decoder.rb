@@ -45,7 +45,7 @@ class Sms::Decoder
         
       # otherwise, we add the token to the value variable and proceed
       else
-        @value = @value.empty? ? tok : @value + " #{tok}"
+        @value = @value.blank? ? tok : @value + " #{tok}"
       end
     end
     
