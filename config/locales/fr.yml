@@ -1,11 +1,8 @@
-# Sample localization file for English. Add more files in this directory for other locales.
-# See http://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
-
 fr:
   common:
     example_abbr: "e.g."
-    step: "Etape"
-    thank_you: "Merci"
+    step: "Step"
+    thank_you_with_exclamation: "Thank You!"
     
   activerecord:
     models:
@@ -45,6 +42,7 @@ fr:
         languages: Form Languages
         outgoing_sms_adapter: Provider
         outgoing_sms_language: Language
+        incoming_sms_number: Incoming Sms Number
         intellisms_password1: Password
         intellisms_password2: Password Confirmation
         intellisms_username: Username
@@ -54,6 +52,9 @@ fr:
         isms_username: Username
         tableau_sql: Tableau SQL
         timezone: Time Zone
+      sms/test:
+        from: From
+        body: Body
       user:
         name: Full Name
         phone: Main Phone
@@ -96,7 +97,8 @@ fr:
         bar_style: Whether bars should be stacked or side-by-side. 
       setting:
         languages: Enter the <a href="http://www.loc.gov/standards/iso639-2/php/code_list.php">two-letter codes</a>, separated by commas, for the languages in which you want to allow questions to be defined.
-        outgoing_sms_adapter: The adapter used to send outgoing smses.
+        incoming_sms_number: Enter the phone number to which incoming SMSes for SMS forms should be sent. This will be displayed on the SMS guide.
+        outgoing_sms_adapter: The adapter used to send outgoing SMSes.
         outgoing_sms_language: The code for the language in which system-generated SMSes should be sent. English is assumed if blank.
         intellisms_username: The username for the IntelliSMS account.
         intellisms_password1: Enter and re-enter a password to change the password for the IntelliSMS account.
@@ -105,6 +107,9 @@ fr:
         isms_username: The API username for the iSMS device.
         tableau_sql: The SQL code used to extract data for use in Tableau. Click 'Select All' and then press Ctrl-C to copy.
         timezone: The time zone in which times are displayed throughout the site.
+      sms/test:
+        from: Enter the phone number from which this SMS should appear to originate.
+        body: Enter the body of the message.
       user:
         name: "The user's full name. Example: 'John Doe' or 'Team 1.1'"
         login: The login name will be used to log in. Click the suggest button to suggest a login name.
@@ -159,8 +164,8 @@ fr:
     
     guide:
       header: "ELMO SMS Composition Guide"
-      step1: "SVP answer all the questions below and follow the instructions at the end of the form to send in your data. You can use lower or UPPER case letters."
-      step2: "Maintnenant please do the following to send in your data:"
+      step1: "Please answer all the questions below and follow the instructions at the end of the form to send in your data. You can use lower or UPPER case letters."
+      step2: "Now please do the following to send in your data:"
       step2_substeps:
         - "With your phone, begin an SMS to %{submit_number}."
         - "Enter the contents of each line on the right side of each page, going from top to bottom."
@@ -169,6 +174,8 @@ fr:
         - "When you have finished entering, double-check your message to make sure it matches the form."
         - "Send the message and wait for a response with further instructions."
         - "If you do not receive a response within 5 minutes, please send the message again."
+      unique_code: "This is the unique code for the form"
+      unknown_number: "Unknown Number"
           
       pointers:
         tiny_text: "Write your answer here. Abbreviate if necessary."

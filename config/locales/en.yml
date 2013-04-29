@@ -1,11 +1,8 @@
-# Sample localization file for English. Add more files in this directory for other locales.
-# See http://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
-
 en:
   common:
     example_abbr: "e.g."
     step: "Step"
-    thank_you: "Thank You!"
+    thank_you_with_exclamation: "Thank You!"
     
   activerecord:
     models:
@@ -177,7 +174,8 @@ en:
         - "When you have finished entering, double-check your message to make sure it matches the form."
         - "Send the message and wait for a response with further instructions."
         - "If you do not receive a response within 5 minutes, please send the message again."
-      unknown_number: Unknown Number
+      unique_code: "This is the unique code for the form"
+      unknown_number: "Unknown Number"
           
       pointers:
         tiny_text: "Write your answer here. Abbreviate if necessary."

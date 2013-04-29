@@ -25,7 +25,7 @@
     <tr>
       <td class="rank"></td>
       <td class="pointer">
-        <em>This is the unique code for the form</em>
+        <em><%= t("sms_forms.guide.unique_code") %> </em>
       </td>
       <td class="answers">
         <%= answer_space(@form.current_version.code) %>
@@ -79,7 +79,7 @@
             <li><%= ss.gsub("%{submit_number}", submit_number).html_safe %></li>
           <% end %>
         </ol>
-        <%= t("common.thank_you") %>
+        <%= t("common.thank_you_with_exclamation") %>
       </td>
       <td></td>
     </tr>
