@@ -11,7 +11,7 @@ class Smser
     numbers.compact!
     
     # build the sms
-    message = Sms::Message.create(:to => numbers, :body => msg)
+    message = Sms::Message.new(:to => numbers, :body => msg)
     
     # deliver
     configatron.outgoing_sms_adapter.deliver(message)

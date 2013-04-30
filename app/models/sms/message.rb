@@ -10,7 +10,7 @@
 class Sms::Message < ActiveRecord::Base
   serialize :to, JSON
   after_initialize :arrayify_to
-  after_initialize :default_sent_at
+  before_create :default_sent_at
   after_initialize :normalize_numbers
   
   private

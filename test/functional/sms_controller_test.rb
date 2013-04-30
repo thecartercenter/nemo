@@ -59,6 +59,13 @@ class SmsControllerTest < ActionController::TestCase
       :outgoing => [/#{form_code}.+thank you/i, /#{form_code}.+thank you/i])
   end
   
+  test "date and time should be picked from xml" do
+    assert_sms_response(:incoming => "#{form_code} 1.15 2.20", :outgoing => /#{form_code}.+thank you/i)
+    # our timezone is -6 and the ISMS is UTC, so adjust accordingly
+    assert_equal(Time.zone.parse("2008 Mar 7 2:07:20"), assigns(:incomings).first.sent_at)
+  end
+  
+  
   private
     # simulates the reception of an incoming sms by the SmsController and tests the response(s) that is (are) sent back
     def assert_sms_response(params)

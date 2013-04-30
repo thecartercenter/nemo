@@ -17,6 +17,9 @@ class Sms::Adapters::Adapter
     # error if no recipients or message empty
     raise Sms::Error.new("Message has no recipients") if message.to.blank?
     raise Sms::Error.new("Message body is empty") if message.body.blank?
+    
+    # save the message now, which sets the sent_at
+    message.save
   end
   
   # recieves one or more sms messages

@@ -11,17 +11,17 @@ class Sms::MessageTest < ActiveSupport::TestCase
   end
   
   test "a message with several to numbers should work" do
-    m = Sms::Message.create!(:to => ["14045551212", "14045551213"], :body => "blah")
+    m = Sms::Message.new(:to => ["14045551212", "14045551213"], :body => "blah")
     assert_equal(["+14045551212", "+14045551213"], m.to)
   end
   
-  test "a message with no sent_at should default to now" do
-    m = Sms::Message.create!(:to => "14045551212", :body => "blah")
+  test "a message with no sent_at should default to now, but only when saved" do
+    m = Sms::Message.create(:to => "14045551212", :body => "blah")
     assert(Time.zone.now - m.sent_at < 5.seconds)
   end
   
   test "a textual from field should be preserved" do
-    m = Sms::Message.create!(:from => "foo", :body => "blah")
+    m = Sms::Message.new(:from => "foo", :body => "blah")
     assert_equal("foo", m.from)
   end
 end

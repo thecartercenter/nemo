@@ -72,7 +72,7 @@ class SmsController < ApplicationController
       return nil
     else
       # build the reply message
-      reply = Sms::Message.create(:to => sms.from, :body => reply_body)
+      reply = Sms::Message.new(:to => sms.from, :body => reply_body)
     
       # add to the array
       return reply
@@ -90,11 +90,11 @@ class SmsController < ApplicationController
         # go ahead with processing, catching any errors
         begin
           # do the receive
-          incomings = klass.new.receive(request)
+          @incomings = klass.new.receive(request)
           
           # for each sms, decode it and issue a response (using the outgoing adapter)
           # store the sms responses in an instance variable so the functional test can access them
-          @sms_responses = incomings.map{|sms| self.class.handle_sms(sms)}.compact
+          @sms_responses = @incomings.map{|sms| self.class.handle_sms(sms)}.compact
           
           # send the responses
           @sms_responses.each{|r| configatron.outgoing_sms_adapter.deliver(r)}

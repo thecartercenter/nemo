@@ -25,7 +25,7 @@ class Sms::Adapters::IsmsAdapter < Sms::Adapters::Adapter
     
     # build the URI for the request (numbers must be enclosed in double quotes for some reason)
     uri = build_uri(:deliver, :to => numbers, :text => sms.body)
-
+    
     # don't send in test mode
     unless Rails.env == "test"
       response = send_request(uri)
@@ -68,7 +68,13 @@ class Sms::Adapters::IsmsAdapter < Sms::Adapters::Adapter
       messages.each do |message|
         from = message.find_first("SenderNumber").content
         body = message.find_first("Message").content
-        smses << Sms::Message.create(:from => from, :body => body)
+        date = message.find_first("Date").content
+        time = message.find_first("Time").content
+        
+        # isms should be in UTC. date format is YY/MM/DD. we add 20 to be safe. time is HH:MM:SS.
+        sent_at = Time.zone.parse("20#{date} #{time} UTC")
+        
+        smses << Sms::Message.create(:from => from, :body => body, :sent_at => sent_at)
       end
       
     rescue XML::Parser::ParseError
