@@ -6,9 +6,9 @@
   <div class="controls">
     <form>
       <input type="hidden" name="sms_guide" value="1">
-      Language: 
+      <%= t("common.language") %>:
       <select name="lang" onchange="this.form.submit();">
-        <%= I18n.available_locales.collect{|l| content_tag(:option, language_name(l), 
+        <%= I18n.available_locales.collect{|l| content_tag(:option, t("locale_name", :locale => l), 
             {:value => l}.merge(@lang.to_s == l.to_s ? {:selected => "selected"} : {}))}.join.html_safe %>
       </select>
     </form>

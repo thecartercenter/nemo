@@ -1,8 +1,11 @@
 fr:
+  locale_name: Français
+  
   common:
-    example_abbr: "e.g."
-    step: "Step"
-    thank_you_with_exclamation: "Thank You!"
+    example_abbr: "p. ex."
+    language: "Langue"
+    step: "Etape"
+    thank_you_with_exclamation: "Merci!"
     
   activerecord:
     models:
@@ -94,7 +97,7 @@ fr:
         unique_rows: Whether duplicate rows should be omitted in the report.
         pri_grouping: An attribute or question by which the response count should be grouped (e.g. state, overall rating).
         percent_type: Whether and how percentages should be calculated for the report.
-        bar_style: Whether bars should be stacked or side-by-side. 
+        bar_style: Whether bars should be stacked or side-by-side.
       setting:
         languages: Enter the <a href="http://www.loc.gov/standards/iso639-2/php/code_list.php">two-letter codes</a>, separated by commas, for the languages in which you want to allow questions to be defined.
         incoming_sms_number: Enter the phone number to which incoming SMSes for SMS forms should be sent. This will be displayed on the SMS guide.
@@ -142,52 +145,52 @@ fr:
           
   sms_forms:
     decoding:
-      answer_error_intro: "Sorry, your answer '%{value}' for question %{rank} on form '%{form_code}'"
-      answer_not_date: "was not a valid date"
-      answer_not_datetime: "was not a valid datetime"
-      answer_not_decimal: "was not a valid number"
+      answer_error_intro: "Désolé, votre reponse '%{value}' pour question %{rank} dans la fiche '%{form_code}'"
+      answer_not_date: "n'etait pas un date valable"
+      answer_not_datetime: "n'etait pas un date ou temp valable"
+      answer_not_decimal: "n'etait pas un nombre valable"
       answer_not_integer: "was not a valid integer number"
       answer_not_option_letter: "was not a valid option"
-      answer_not_option_letter_multi: "was not a valid option"
-      answer_not_time: "was not a valid time"
-      answer_not_valid_option: "was not a valid option"
-      answer_not_valid_option_multi: "was not a valid option"
-      congrats: "Your response to form '%{form_code}' was received. Thank you!"
-      form_not_found: "Sorry, there is no form with code '%{form_code}'."
-      form_not_permitted: "Sorry, you don't have permission to submit to form '%{form_code}'."
-      form_not_published: "Sorry, form '%{form_code}' is not currently available for submissions."
-      form_not_smsable: "Sorry, form '%{form_code}' is not currently available for SMS submissions."
-      form_version_outdated: "Sorry, the form code '%{form_code}' refers to an old version. Please obtain an updated submission guide."
-      invalid_form_code: "Sorry, '%{form_code}' is not a valid form code."
-      question_doesnt_exist: "Sorry, question %{rank} doesn't exist on form '%{form_code}'."
-      user_not_found: "Sorry, we couldn't find you in the system."
+      answer_not_option_letter_multi: "n'etait pas un option valable"
+      answer_not_time: "n'etait pas un temp valable"
+      answer_not_valid_option: "n'etait pas un option valable"
+      answer_not_valid_option_multi: "n'etait pas un option valable"
+      congrats: "Votre reponse pour form '%{form_code}' a été reçue. Merci!"
+      form_not_found: "Désolé, il n'y a pas un fiche avec le code '%{form_code}'."
+      form_not_permitted: "Désolé, vous n'avez pas la permission pour soumettre le fiche '%{form_code}'."
+      form_not_published: "Désolé, fiche '%{form_code}' n'est pas disponible pour les présentations."
+      form_not_smsable: "Désolé, fiche '%{form_code}' n'est pas disponible pour les présentations du SMS."
+      form_version_outdated: "Désolé, le fiche '%{form_code}' concerner une version ancienne. Obtenir un guide de présentation mis à jour, s'il vous plait."
+      invalid_form_code: "Désolé, '%{form_code}' n'est pas un code valable pour le fiche."
+      question_doesnt_exist: "Désolé, question %{rank} n'existe pas dans la fiche '%{form_code}'."
+      user_not_found: "Désolé, nous ne pouvons pas trouvez vous au systeme."
     
     guide:
-      header: "ELMO SMS Composition Guide"
-      step1: "Please answer all the questions below and follow the instructions at the end of the form to send in your data. You can use lower or UPPER case letters."
-      step2: "Now please do the following to send in your data:"
+      header: "ELMO SMS Guide de Composition"
+      step1: "Repondre tous des questions que suivre et utiliser les instructions a la fin dela fiche à envoyer votre données."
+      step2: "Maintenant, faites les étapes suivant pour envoyer votre données:"
       step2_substeps:
-        - "With your phone, begin an SMS to %{submit_number}."
-        - "Enter the contents of each line on the right side of each page, going from top to bottom."
-        - "Be careful that you enter each line exactly. Each line is important."
-        - "Notice that each answer is separated by a 'SPC'. Enter a space for each time you see 'SPC'. Do not add any extra spaces."
-        - "When you have finished entering, double-check your message to make sure it matches the form."
-        - "Send the message and wait for a response with further instructions."
-        - "If you do not receive a response within 5 minutes, please send the message again."
-      unique_code: "This is the unique code for the form"
-      unknown_number: "Unknown Number"
+        - "Avec votre téléphone, commencer un SMS à %{submit_number}."
+        - "Mettre les contents de chaque ligne sur le droite de chaque page, aller haute à bas."
+        - "Faites attention que vous mettre vos reponses exactement. Chaque ligne est important."
+        - "Notez chaque reponse est separu par un 'SPC'. Mis un epace pour chaque fois que vous voirez 'SPC'. N'ajoute pas plus des epaces."
+        - "Quand vous avez fini de taper, confirmez que votre message correspond à la fiche."
+        - "Envoyez le message et attendez pour une réponse avec plus d'instructions."
+        - "Si vous ne recevez pas une reponse au sein du 5 minutes, envoyer le message encore s'il vous plait."
+      unique_code: "C'est l'ID unique de form."
+      unknown_number: "Numéro de téléphone inconnu"
           
       pointers:
-        tiny_text: "Write your answer here. Abbreviate if necessary."
-        integer: "Write your answer here."
-        decimal: "Write your answer here."
-        select_one: "Write the letter for your choice here. Write only one letter."
-        select_multiple: "Write the letter for each choice here with no spaces."
-        datetime: "Write your answer here in YYYYMMDD HHMM format."
-        date: "Write your answer here in YYYYMMDD format."
-        time: "Write your answer here in HHMM format."
+        tiny_text: "Ecrivez votre reponse ici. Abréger si necessaire."
+        integer: "Ecrivez votre reponse ici."
+        decimal: "Ecrivez votre reponse ici."
+        select_one: "Ecrivez la lettre de votre choix ici. Ecrivez seulement un lettre."
+        select_multiple: "Ecrivez la lettre pour chaque choix ici sans epaces."
+        datetime: "Ecrivez votre reponse ici dans AAAAMMJJ HHMM (ans/mois/jours heures/minutes) format."
+        date: "Ecrivez votre reponse ici dans AAAAMMDD (ans/mois/jours) format."
+        time: "Ecrivez votre reponse ici dans HHMM (heures/minutes) format."
           
     validation:
-      invalid_answer: "Sorry, the answer to question %{rank} %{error}."
-      missing_answer: "Sorry, the answer to the required question %{ranks} was missing from your response to form '%{form_code}'."
-      missing_answers: "Sorry, the answers to the required questions %{ranks} were missing from your response to form '%{form_code}'."
+      invalid_answer: "Désolé, le reponse pour question %{rank} %{error}."
+      missing_answer: "Désolé, le reponse pour question necessaire %{ranks} ...was missing from your response to form '%{form_code}'."
+      missing_answers: "Désolé, les reponses pour question necessaire %{ranks} ...were missing from your response to form '%{form_code}'."

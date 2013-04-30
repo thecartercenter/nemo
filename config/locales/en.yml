@@ -1,6 +1,9 @@
 en:
+  locale_name: English
+  
   common:
     example_abbr: "e.g."
+    language: "Language"
     step: "Step"
     thank_you_with_exclamation: "Thank You!"
     

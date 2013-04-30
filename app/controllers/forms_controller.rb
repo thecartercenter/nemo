@@ -42,7 +42,18 @@ class FormsController < ApplicationController
           # here we only render a partial since this is coming from an ajax request
           render(:partial => "printable", :layout => false, :locals => {:form => @form})
         elsif params[:sms_guide]
-          @lang = params[:lang] || "en"
+          # determine the most appropriate language to show the form in
+          # if params[:lang] is set, use that
+          @lang = if params[:lang]
+            params[:lang]
+          # otherwise try to use the outgoing sms language (if available)
+          elsif I18n.available_locales.include?(configatron.outgoing_sms_language.to_sym)
+            configatron.outgoing_sms_language.to_s
+          # finally default to english
+          else
+            "en"
+          end
+
           render("sms_guide")
         else
           render_form
