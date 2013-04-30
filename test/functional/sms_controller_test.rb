@@ -32,6 +32,13 @@ class SmsControllerTest < ActionController::TestCase
     # this tests invalid answers that are caught by the decoder
     assert_sms_response(:incoming => "#{form_code} 1.xx 2.20", :outgoing => /Sorry.+answer 'xx'.+question 1.+form '#{form_code}'.+not a valid/)
   end
+
+  test "message with invalid options should get error" do
+    # override the default form
+    setup_form(:questions => %w(select_multiple))
+    assert_sms_response(:incoming => "#{form_code} 1.abhk", :outgoing => /Sorry.+answer 'abhk'.+contained invalid options 'h, k'/)
+    assert_sms_response(:incoming => "#{form_code} 1.abh", :outgoing => /Sorry.+answer 'abh'.+contained the invalid option 'h'/)
+  end
   
   test "bad encoding should get error" do
     # for instance, try to submit with bad form code

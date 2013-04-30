@@ -148,18 +148,37 @@ class Sms::Decoder
         # case insensitive
         @value.downcase!
 
-        # make sure the value is all letters
-        raise_answer_error("answer_not_option_letter_multi") unless @value =~ /^[a-z]+$/
+        # hopefully this stays empty!
+        invalid = []
         
-        # split and convert each to an index
-        idxs = @value.split("").map do |l| 
-          idx = letters_to_index(l)
-
-          # make this index makes sense for the option set
-          raise_answer_error("answer_not_valid_option_multi", :value => l) if idx > @qing.question.options.size
+        # split and deal with each option, accumulating a list of indices
+        idxs = @value.split("").map do |l|
           
-          idx
+          # make sure it's a letter
+          if l =~ /[a-z]/
+          
+            # convert to an index
+            idx = letters_to_index(l)
+
+            # make sure this index makes sense for the option set
+            invalid << l if idx > @qing.question.options.size
+            
+            idx
+          
+          # otherwise add to invalid and return a nonsense index
+          else
+            invalid << l
+            -1
+          end
         end
+        
+        # raise appropriate error if we found invalid answer(s)
+        if invalid.size > 1
+          raise_answer_error("answer_not_valid_options_multi", :value => @value, :invalid_options => invalid.join(", ")) 
+        elsif invalid.size == 1
+          raise_answer_error("answer_not_valid_option_multi", :value => @value, :invalid_options => invalid.first)
+        end
+
         # if we get to here, we're good, so add
         build_answer(:choices => idxs.map{|idx| Choice.new(:option => @qing.question.options[idx-1])})
       

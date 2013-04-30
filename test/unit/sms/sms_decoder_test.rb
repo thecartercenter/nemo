@@ -138,12 +138,20 @@ class SmsDecoderTest < ActiveSupport::TestCase
 
   test "select_multiple question with one numeric option should error" do
     setup_form(:questions => %w(integer select_multiple))
-    assert_decoding_fail(:body => "#{form_code} 1.15 2.b3d", :error => "answer_not_option_letter_multi", :rank => 2, :value => "b3d")
+    assert_decoding_fail(:body => "#{form_code} 1.15 2.b3d", :error => "answer_not_valid_option_multi", 
+      :rank => 2, :value => "b3d", :invalid_options => "3")
   end
 
   test "select_multiple question with one non-existent option should error" do
     setup_form(:questions => %w(integer select_multiple))
-    assert_decoding_fail(:body => "#{form_code} 1.15 2.abh", :error => "answer_not_valid_option_multi", :rank => 2, :value => "h")
+    assert_decoding_fail(:body => "#{form_code} 1.15 2.abh", :error => "answer_not_valid_option_multi", 
+      :rank => 2, :value => "abh", :invalid_options => "h")
+  end
+  
+  test "select_multiple question with several non-existent options should error" do
+    setup_form(:questions => %w(integer select_multiple))
+    assert_decoding_fail(:body => "#{form_code} 1.15 2.abhk", :error => "answer_not_valid_options_multi", 
+      :rank => 2, :value => "abhk", :invalid_options => "h, k")
   end
   
   test "decimal question should work" do
