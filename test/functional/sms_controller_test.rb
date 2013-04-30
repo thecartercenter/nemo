@@ -60,17 +60,26 @@ class SmsControllerTest < ActionController::TestCase
   end
   
   test "date and time should be picked from xml" do
-    assert_sms_response(:incoming => "#{form_code} 1.15 2.20", :outgoing => /#{form_code}.+thank you/i)
+    assert_sms_response(:incoming => "#{form_code} 1.15 2.20", :outgoing => /#{form_code}.+thank you/i, 
+      :sent_at => Time.parse("2012 Mar 7 8:07:20 UTC"))
+      
     # our timezone is -6 and the ISMS is UTC, so adjust accordingly
-    assert_equal(Time.zone.parse("2008 Mar 7 2:07:20"), assigns(:incomings).first.sent_at)
+    assert_equal(Time.zone.parse("2012 Mar 7 2:07:20"), assigns(:incomings).first.sent_at)
   end
   
+  test "duplicate should result in no reply" do
+    assert_sms_response(:incoming => "#{form_code} 1.15 2.20", :outgoing => /#{form_code}.+thank you/i)
+    Timecop.travel(10.minutes) do
+      assert_sms_response(:incoming => "#{form_code} 1.15 2.20", :outgoing => [])
+    end
+  end
   
   private
     # simulates the reception of an incoming sms by the SmsController and tests the response(s) that is (are) sent back
     def assert_sms_response(params)
-      # default to user phone
+      # default to user phone and time of now
       params[:from] ||= @user.phone
+      params[:sent_at] ||= Time.now
       
       # ensure :incoming and :outgoing are arrays
       params[:incoming] = Array.wrap(params[:incoming])
@@ -84,7 +93,7 @@ class SmsControllerTest < ActionController::TestCase
       
       # do the post request
       post(:create, req_params)
-      
+
       # number of sms responses should equal the expected number
       assert_equal(params[:outgoing].size, assigns(:sms_responses).size)
       
@@ -108,7 +117,10 @@ class SmsControllerTest < ActionController::TestCase
       
       # get the xml for the messages
       message_xml = params[:incoming].collect do |body|
-        "<MessageNotification><ModemNumber>2:19525945092</ModemNumber><SenderNumber>#{from}</SenderNumber><Date>08/03/07</Date><Time>08:07:20</Time>
+        # get time and date in isms style
+        date = params[:sent_at].utc.strftime("%y/%m/%d")
+        time = params[:sent_at].utc.strftime("%H:%M:%S")
+        "<MessageNotification><ModemNumber>2:19525945092</ModemNumber><SenderNumber>#{from}</SenderNumber><Date>#{date}</Date><Time>#{time}</Time>
           <Message>#{body}</Message></MessageNotification>"
       end.join
       

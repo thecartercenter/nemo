@@ -22,6 +22,11 @@ class SmsController < ApplicationController
       # if it's a user not found and the from number is a string, don't reply at all, b/c it's probably some robot
       if $!.type == "user_not_found" && sms.from =~ /[a-z]/i
         nil
+        
+      # if it's a duplicate error, don't reply, because the user probably didn't mean to or could be a network issue
+      elsif $!.type == "duplicate_submission"
+        nil
+        
       else
         msg = I18n.t("sms_forms.decoding.#{$!.type}", $!.params)
         

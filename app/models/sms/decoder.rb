@@ -1,5 +1,8 @@
 # decodes a coded sms containing an elmo responses
 class Sms::Decoder
+  # window in which identical message is considered duplicate and discarded
+  DUPLICATE_WINDOW = 12.hours
+  
   # sets up a decoder
   # sms - an Sms::Message object
   def initialize(msg)
@@ -10,6 +13,9 @@ class Sms::Decoder
   # returns an unsaved Response object on success
   # raises an Sms::DecodingError on error
   def decode
+    
+    # ignore duplicates
+    check_for_duplicate
     
     # try to get user
     find_user
@@ -245,5 +251,20 @@ class Sms::Decoder
         sum += (letter.ord - 96) * (26 ** (letters.size - i - 1))
       end
       sum
+    end
+    
+    # looks for identical messages within window. raises error if found
+    def check_for_duplicate
+      # build relation
+      rel = Sms::Message.where(:from => @msg.from).where(:body => @msg.body)
+      
+      # if @msg is saved, don't match it!
+      rel = rel.where("id != ?", @msg.id) unless @msg.new_record?
+      
+      # include the date condition
+      rel = rel.where("sent_at > ?", Time.now - DUPLICATE_WINDOW)
+      
+      # now we can run the query
+      raise_decoding_error("duplicate_submission") if rel.count > 0
     end
 end

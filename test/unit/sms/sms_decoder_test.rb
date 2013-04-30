@@ -222,7 +222,7 @@ class SmsDecoderTest < ActiveSupport::TestCase
     # check other formats
     assert_decoding(:body => "#{form_code} 1.4 2.12:30", :answers => [4, Time.parse("12:30 UTC")])
     assert_decoding(:body => "#{form_code} 1.4 2.12:30pm", :answers => [4, Time.parse("12:30 UTC")])
-    assert_decoding(:body => "#{form_code} 1.4 2.12:30PM", :answers => [4, Time.parse("12:30 UTC")])
+    assert_decoding(:body => "#{form_code} 1.4 2.12:45PM", :answers => [4, Time.parse("12:45 UTC")])
     assert_decoding(:body => "#{form_code} 1.4 2.12.30pm", :answers => [4, Time.parse("12:30 UTC")])
     assert_decoding(:body => "#{form_code} 1.4 2.130", :answers => [4, Time.parse("1:30 UTC")])
     assert_decoding(:body => "#{form_code} 1.4 2.0130", :answers => [4, Time.parse("1:30 UTC")])
@@ -268,6 +268,22 @@ class SmsDecoderTest < ActiveSupport::TestCase
     setup_form(:questions => %w(integer datetime))
     ["2012121212300", "mar 1 2012 2:30", "201212", "891015 12pm", "2-2-2012 5pm"].each do |str|
       assert_decoding_fail(:body => "#{form_code} 1.4 2.#{str}", :error => "answer_not_datetime", :value => str)
+    end
+  end
+  
+  test "duplicate sent within timeframe should error" do
+    setup_form(:questions => %w(integer))
+    assert_decoding(:body => "#{form_code} 1.4", :answers => [4])
+    Timecop.travel(Sms::Decoder::DUPLICATE_WINDOW - 1.minute) do
+      assert_decoding_fail(:body => "#{form_code} 1.4", :error => "duplicate_submission")
+    end
+  end
+
+  test "duplicate sent outside timeframe should not error" do
+    setup_form(:questions => %w(integer))
+    assert_decoding(:body => "#{form_code} 1.4", :answers => [4])
+    Timecop.travel(Sms::Decoder::DUPLICATE_WINDOW + 1.minute) do
+      assert_decoding(:body => "#{form_code} 1.4", :answers => [4])
     end
   end
   

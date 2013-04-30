@@ -24,4 +24,12 @@ class Sms::MessageTest < ActiveSupport::TestCase
     m = Sms::Message.new(:from => "foo", :body => "blah")
     assert_equal("foo", m.from)
   end
+  
+  test "long messages with slight difference at end should not be returned as equal" do
+    # this is just to be sure the index of length 160 doesn't mess anything up
+    long = "laksdjf alsdkjf lasdfkjaf laskdsf aslkfsjflsakfda lsakl fakjsdlkfaj lskjf alksj " + 
+      "dfalkj sdlfaks asdaksjdafa alaskdfal alkajdasfa alsjd alasksdjf alks alfdsafdslf l lajslfdjfalsdkf dslads"
+    Sms::Message.create(:from => "foo", :body => long)
+    assert_nil(Sms::Message.find_by_body(long + "a"))
+  end
 end

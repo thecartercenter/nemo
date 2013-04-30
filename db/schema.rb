@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130430125200) do
+ActiveRecord::Schema.define(:version => 20130430135749) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -302,6 +302,8 @@ ActiveRecord::Schema.define(:version => 20130430125200) do
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
+
+  add_index "sms_messages", ["body"], :name => "index_sms_messages_on_body", :length => {"body"=>160}
 
   create_table "translations", :force => true do |t|
     t.text     "str"

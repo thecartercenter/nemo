@@ -15,3 +15,6 @@ gem 'random_data'
 gem "factory_girl_rails", "~> 4.0"
 
 gem "iso-639"
+
+# helps simulate time changes when testing
+gem 'timecop'
