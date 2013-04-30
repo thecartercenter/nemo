@@ -12,6 +12,6 @@ class SmsTestsController < ApplicationController
     reply = SmsController.handle_sms(sms)
     
     # render the body of the reply
-    render :text => reply.body
+    render :text => reply ? reply.body : "<em>No reply.</em>".html_safe
   end
 end
