@@ -16,7 +16,7 @@ en:
         which_phone: Which Phone(s)
         send_errors: Delivery Errors
       form:
-        smsable: "Can Submit Via Sms?"
+        smsable: "SMSable?"
       question:
         name_en: "English Name"
         option_set_id: Option Set

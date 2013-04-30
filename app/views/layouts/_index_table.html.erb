@@ -17,7 +17,7 @@
           <tr class="header">
             <% if batch_ops %><th></th><% end %>
             <% fields.each do |f| %>
-              <th><%= f.humanize.capitalize %></th>
+              <th><%= objects.first.class.human_attribute_name(f) %></th>
             <% end %>
           </tr>
         </thead>

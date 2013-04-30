@@ -5,7 +5,7 @@ module FormsHelper
   end
   
   def forms_index_fields
-    %w[type version name questions published? smsable? last_modified downloads responses actions]
+    %w[type version name questions published? smsable last_modified downloads responses actions]
   end
     
   def format_forms_field(form, field)
