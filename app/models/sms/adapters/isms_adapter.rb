@@ -18,10 +18,8 @@ class Sms::Adapters::IsmsAdapter < Sms::Adapters::Adapter
     super
     
     # get list of numbers
-    numbers = sms.to.map do |num| 
-      # isms doesn't like the plus sign
-      '"' + num.gsub(/^\+/, "") + '"'
-    end.join(",")
+    # isms wants numbers wrapped in quotes
+    numbers = sms.to.map{|num| "\"num\""}.join(",")
     
     # build the URI for the request (numbers must be enclosed in double quotes for some reason)
     uri = build_uri(:deliver, :to => numbers, :text => sms.body)
