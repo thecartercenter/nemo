@@ -16,7 +16,7 @@ module FormsHelper
     when "last_modified" then form.updated_at.to_s(:std_datetime)
     when "responses"
       form.responses_count == 0 ? 0 :
-        link_to(form.responses_count, responses_path(:search => "formname:\"#{form.name}\""))
+        link_to(form.responses_count, responses_path(:search => "form:\"#{form.name}\""))
     when "downloads" then form.downloads || 0
     when "published?" then form.published? ? "Yes" : "No"
     when "smsable?" then form.smsable? ? "Yes" : "No"
