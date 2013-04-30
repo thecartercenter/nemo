@@ -69,8 +69,8 @@ class Option < ActiveRecord::Base
 
   private
     def integrity
-      # error if anything has changed and the option is published
-      if published? && (changed? || translations.detect{|t| t.changed?})
+      # error if anything has changed (except names) and the option is published
+      if published? && (changed? && !changed.reject{|f| f =~ /^name_/}.empty?)
         errors.add(:base, "Option can't be changed because it appears in at least one published form")
       end
     end

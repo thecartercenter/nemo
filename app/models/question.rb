@@ -115,8 +115,8 @@ class Question < ActiveRecord::Base
           errors.add(:base, "Type or option set can't be changed because there are conditions that refer to this question")
         end
       end
-      # error if anything has changed and the question is published
-      if published? && (changed? || translations.detect{|t| t.changed?})
+      # error if anything (except name/hint) has changed and the question is published
+      if published? && (changed? && !changed.reject{|f| f =~ /^(name|hint)_/}.empty?)
         errors.add(:base, "Can't be changed because it appears in at least one published form")
       end
     end

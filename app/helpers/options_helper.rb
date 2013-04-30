@@ -10,7 +10,7 @@ module OptionsHelper
     when "name" then option.name_en
     when "published?" then option.published? ? "Yes" : "No"
     when "actions"
-      exclude = option.published? ? [:edit, :destroy] : []
+      exclude = option.published? ? [:destroy] : []
       action_links(option, :destroy_warning => "Are you sure you want to delete option '#{option.name_en}'?", 
         :exclude => exclude)
     else option.send(field)
