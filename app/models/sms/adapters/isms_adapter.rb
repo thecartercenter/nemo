@@ -48,8 +48,7 @@ class Sms::Adapters::IsmsAdapter < Sms::Adapters::Adapter
   # receives message params and turns into an array of messages
   def receive(params)
     # first authenticate the request so that not just anybody can send messages to our API
-    # the username/password are the same as the outgoing one
-    unless params["username"] == configatron.isms_username && params["password"] == configatron.isms_password
+    unless params["username"] == configatron.isms_incoming_username && params["password"] == configatron.isms_incoming_password
       raise Sms::Error.new("Authentication error receiving from #{service_name}") 
     end
     

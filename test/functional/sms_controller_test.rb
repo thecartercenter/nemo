@@ -133,8 +133,8 @@ class SmsControllerTest < ActionController::TestCase
       
       # build and return
       {
-        "username" => configatron.isms_username,
-        "password" => configatron.isms_password,
+        "username" => configatron.isms_incoming_username,
+        "password" => configatron.isms_incoming_password,
         "XMLDATA" => "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?><Response>#{message_xml}</Response>"
       }
     end
