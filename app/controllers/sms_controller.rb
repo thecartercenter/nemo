@@ -72,7 +72,7 @@ class SmsController < ApplicationController
       return nil
     else
       # build the reply message
-      reply = Sms::Message.new(:direction => :outgoing, :to => sms.from, :body => reply_body)
+      reply = Sms::Message.create(:to => sms.from, :body => reply_body)
     
       # add to the array
       return reply

@@ -278,7 +278,7 @@ class SmsDecoderTest < ActiveSupport::TestCase
       options[:user] ||= @user
 
       # create the Sms object
-      msg = Sms::Message.new(:direction => :incoming, :from => options[:from] || options[:user].phone, :body => options[:body])
+      msg = Sms::Message.create(:from => options[:from] || options[:user].phone, :body => options[:body])
       
       # perform the deocding
       response = Sms::Decoder.new(msg).decode

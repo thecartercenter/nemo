@@ -14,9 +14,8 @@ class Sms::Adapters::Adapter
   # 
   # message   the message to be sent
   def deliver(message)
-    # error if no recipients or direction is wrong or message empty
+    # error if no recipients or message empty
     raise Sms::Error.new("Message has no recipients") if message.to.blank?
-    raise Sms::Error.new("Message should have direction :outgoing") if message.direction != :outgoing
     raise Sms::Error.new("Message body is empty") if message.body.blank?
   end
   

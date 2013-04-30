@@ -68,7 +68,7 @@ class Sms::Adapters::IsmsAdapter < Sms::Adapters::Adapter
       messages.each do |message|
         from = message.find_first("SenderNumber").content
         body = message.find_first("Message").content
-        smses << Sms::Message.new(:direction => :incoming, :from => from, :body => body)
+        smses << Sms::Message.create(:from => from, :body => body)
       end
       
     rescue XML::Parser::ParseError
