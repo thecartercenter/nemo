@@ -12,7 +12,7 @@ class SmsTestsController < ApplicationController
     reply = SmsController.handle_sms(sms)
     
     # save the reply and let the sent_at default to now
-    reply.save
+    reply.save if reply
     
     # render the body of the reply
     render :text => reply ? reply.body : "<em>No reply.</em>".html_safe
