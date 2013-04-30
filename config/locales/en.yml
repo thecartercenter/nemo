@@ -108,7 +108,7 @@ en:
         tableau_sql: The SQL code used to extract data for use in Tableau. Click 'Select All' and then press Ctrl-C to copy.
         timezone: The time zone in which times are displayed throughout the site.
       sms/test:
-        from: Enter the phone number from which this SMS should appear to originate.
+        from: "Enter the phone number from which this SMS should appear to originate. This number must include the country code (e.g. +1 404 555 1212, +23476543212)."
         body: Enter the body of the message.
       user:
         name: "The user's full name. Example: 'John Doe' or 'Team 1.1'"
