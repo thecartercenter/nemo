@@ -158,6 +158,12 @@ class Form < ActiveRecord::Base
     save(:validate => false)
   end
   
+  # checks if this form doesn't have any non-required questions
+  # if options[:smsable] is set, specifically looks for non-required questions that are smsable
+  def all_required?(options = {})
+    @all_required ||= visible_questionings.reject{|qing| qing.required? || (options[:smsable] ? !qing.question.smsable? : false)}.empty?
+  end
+  
   private
     def cant_change_published
       # if this is a published form and something other than published and downloads changes, wrong!

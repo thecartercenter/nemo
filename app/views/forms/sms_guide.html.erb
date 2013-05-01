@@ -19,6 +19,7 @@
     <tr>
       <td colspan="2" class="step1">
         <strong><%= t("common.step") %> 1:</strong> <%= t("sms_forms.guide.step1") %>
+        <%= t(@form.all_required? ? "sms_forms.guide.all_required" : "sms_forms.guide.not_all_required") %>
       </td>
       <td class="answers"></td>
     </tr>
@@ -36,7 +37,10 @@
     <% @form.smsable_questionings.each do |qing| %>
       <tr>
         <td class="rank"><%= qing.rank %>.</td>
-        <td class="question"><%= qing.question.send("name_#{@lang}") %></td>
+        <td class="question">
+          <%= qing.question.send("name_#{@lang}") %>
+          <%= reqd_sym(qing.required?) %>
+        </td>
         <td class="answers">
           <%= answer_space(" #{qing.rank}.") %>
         </td>

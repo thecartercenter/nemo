@@ -19,7 +19,7 @@ module FormsHelper
         link_to(form.responses_count, responses_path(:search => "form:\"#{form.name}\""))
     when "downloads" then form.downloads || 0
     when "published?" then form.published? ? "Yes" : "No"
-    when "smsable?" then form.smsable? ? "Yes" : "No"
+    when "smsable" then form.smsable? ? "Yes" : "No"
     when "actions"
       exclude = form.published? ? [:edit, :destroy] : []
       action_links = action_links(form, :destroy_warning => "Are you sure you want to delete form '#{form.name}'?", 

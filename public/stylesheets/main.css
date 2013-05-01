@@ -221,6 +221,7 @@ div.sms_guide td.step2 { padding-top: 10px; }
 div.sms_guide td.step2 ol { padding-left: 18px; }
 div.sms_guide td.rank { font-weight: bold; width: 20px; }
 div.sms_guide td.question { font-weight: bold; }
+div.sms_guide td.question .reqd_sym { color: black; font-size: 18px; }
 div.sms_guide td.options { padding-bottom: 10px; }
 div.sms_guide td.options span { display: inline-block; margin-right: 8px; }
 div.sms_guide td.pointer { background: url('/images/long-arrow.png') no-repeat right top; padding: 0 5px 0 0; }

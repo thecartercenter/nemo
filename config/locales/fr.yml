@@ -165,7 +165,9 @@ fr:
       user_not_found: "Désolé, nous ne pouvons pas trouvez vous au systeme."
     
     guide:
+      all_required: "S'il vous plait, répondez a toutes les questions."
       header: "ELMO SMS Guide de Composition"
+      not_all_required: "Les questions indiquées avec un astérisque (*) sont obligatoires."
       step1: "Repondre tous des questions que suivre et utiliser les instructions a la fin dela fiche à envoyer votre données."
       step2: "Maintenant, faites les étapes suivant pour envoyer votre données:"
       step2_substeps:

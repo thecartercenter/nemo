@@ -165,7 +165,9 @@ en:
       user_not_found: "Sorry, we couldn't find you in the system."
     
     guide:
+      all_required: "Please answer all questions."
       header: "ELMO SMS Composition Guide"
+      not_all_required: "Questions marked with an asterisk (*) are required."
       step1: "Please answer all the questions below and follow the instructions at the end of the form to send in your data. You can use lower or UPPER case letters."
       step2: "Now please do the following to send in your data:"
       step2_substeps:

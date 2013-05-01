@@ -104,6 +104,12 @@ class Question < ActiveRecord::Base
     {:id => id, :code => code, :type => type.name, :form_ids => forms.collect{|f| f.id}.sort}
   end
   
+  # checks if this question can be submitted to via sms
+  def smsable?
+    # this is just if the type is smsable
+    type.smsable?
+  end
+  
   private
 
     def integrity
