@@ -25,7 +25,7 @@ class SmsControllerTest < ActionController::TestCase
   end
 
   test "message from unrecognized normal number should get error" do
-    assert_sms_response(:from => "+737377373773", :incoming => "blah blah junk", :outgoing => /couldn't find you/)
+    assert_sms_response(:from => "+737377373773", :incoming => "#{form_code} 1.x 2.x", :outgoing => /couldn't find you/)
   end
 
   test "message with invalid answer should get error" do
@@ -80,6 +80,23 @@ class SmsControllerTest < ActionController::TestCase
       assert_sms_response(:incoming => "#{form_code} 1.15 2.20", :outgoing => [])
     end
   end
+
+  test "reply should be in correct language" do
+    # create another mission with a different outgoing sms language
+    m = FactoryGirl.create(:mission, :name => "francais", :outgoing_lang => "fr")
+
+    # now create a form in that mission
+    setup_form(:questions => %w(integer select_one), :required => true, :mission => m)
+    
+    # now try to send to the new form (won't work b/c no permission)
+    assert_sms_response(:incoming => "#{form_code} 1.15 2.b", :outgoing => /permission.+soumettre.+#{form_code}/i)
+    
+    # add the user to the mission
+    @user.assignments.create(:mission => m, :active => true, :role => Role.highest)
+    
+    # try again -- should get merci (need different answers else ignored as duplciate)
+    assert_sms_response(:incoming => "#{form_code} 1.15 2.c", :outgoing => /#{form_code}.+merci/i)
+  end
   
   private
     # simulates the reception of an incoming sms by the SmsController and tests the response(s) that is (are) sent back
@@ -100,7 +117,7 @@ class SmsControllerTest < ActionController::TestCase
       
       # do the post request
       post(:create, req_params)
-
+      
       # number of sms responses should equal the expected number
       assert_equal(params[:outgoing].size, assigns(:sms_responses).size)
       

@@ -10,7 +10,7 @@ class Mission < ActiveRecord::Base
   has_many(:options, :inverse_of => :mission, :dependent => :delete_all)
   has_many(:option_sets, :inverse_of => :mission, :dependent => :delete_all)
   has_many(:form_types, :inverse_of => :mission, :dependent => :delete_all)
-  has_many(:settings, :inverse_of => :mission, :dependent => :delete_all)
+  has_one(:setting, :dependent => :delete)
   
   before_validation(:create_compact_name)
   before_destroy(:check_assoc)

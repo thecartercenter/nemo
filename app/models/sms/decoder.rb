@@ -16,15 +16,19 @@ class Sms::Decoder
     
     # ignore duplicates
     check_for_duplicate
-    
-    # try to get user
-    find_user
-    
+
     # tokenize the message by spaces
     @tokens = @msg.body.split(" ")
     
+    # if the @msg from field has letters in it, reject immediately, as it's a robot
+    raise_decoding_error("user_not_found") if @msg.from =~ /[a-z]/i
+    
     # try to get form
+    # we do this first because it tells us what language to send errors in (if any)
     find_form
+    
+    # try to get user
+    find_user
     
     # check user permissions for form, if not permitted, error
     check_permission
@@ -63,13 +67,6 @@ class Sms::Decoder
   end
   
   private
-    # attempts to find and return the user for the given msg
-    # raises an error if not found
-    def find_user
-      @user = User.where(["phone = ? OR phone2 = ?", @msg.from, @msg.from]).first
-      raise_decoding_error("user_not_found") unless @user
-    end
-    
     # attempts to find the form matching the code in the message
     def find_form
       # the form code is the first token
@@ -85,17 +82,25 @@ class Sms::Decoder
       raise_decoding_error("form_not_found", :form_code => code) unless v
       
       # if version outdated, raise error
-      raise_decoding_error("form_version_outdated", :form_code => code) unless v.is_current?
+      # here we must specify the form AND form_code since they are different
+      raise_decoding_error("form_version_outdated", :form => v.form, :form_code => code) unless v.is_current?
       
       # check that form is published
-      raise_decoding_error("form_not_published", :form_code => code) unless v.form.published?
+      raise_decoding_error("form_not_published", :form => v.form) unless v.form.published?
 
       # check that form is smsable
-      raise_decoding_error("form_not_smsable", :form_code => code) unless v.form.smsable?
+      raise_decoding_error("form_not_smsable", :form => v.form) unless v.form.smsable?
       
       # otherwise, we it's cool, store it in the instance, and also store an indexed list of questionings
       @form = v.form
       @questionings = @form.questionings.index_by(&:rank)
+    end
+    
+    # attempts to find and return the user for the given msg
+    # raises an error if not found
+    def find_user
+      @user = User.where(["phone = ? OR phone2 = ?", @msg.from, @msg.from]).first
+      raise_decoding_error("user_not_found") unless @user
     end
     
     # checks if the current @user has permission to submit to form @form, raises an error if not
@@ -253,7 +258,11 @@ class Sms::Decoder
     
     # raises an sms decoding error with the given type and includes the form_code if available
     def raise_decoding_error(type, options = {})
-      options[:form_code] ||= @form.current_version.code unless @form.nil?
+      # add in the form and form_code if it's set, since it's needed to figure out the reply language
+      if @form
+        options[:form] ||= @form 
+        options[:form_code] ||= @form.current_version.code
+      end
       
       raise Sms::DecodingError.new(type, options)
     end

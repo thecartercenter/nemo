@@ -11,7 +11,9 @@ module MissionBased
     
     # add scope
     base.class_eval do
-      belongs_to(:mission, :inverse_of => base.model_name.plural.to_sym)
+      # only Setting has a has_one association, so don't pluralize
+      inverse = (base.model_name == "Setting" ? base.model_name : base.model_name.plural).to_sym
+      belongs_to(:mission, :inverse_of => inverse)
       scope(:for_mission, lambda{|m| m.nil? ? where("0") : where(:mission_id => m.id)})
     end
   end

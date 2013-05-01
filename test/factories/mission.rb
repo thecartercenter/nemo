@@ -4,19 +4,24 @@ end
 
 FactoryGirl.define do
   factory :mission do
+    ignore do
+      outgoing_lang "en"
+    end
+    
     name "MissionWithSettings"
-    settings {
+    setting {
       # use Saskatchewan timezone b/c no DST
-      [Setting.new(
+      Setting.new(
         :timezone => "Saskatchewan", 
         :languages => "en", 
         :outgoing_sms_adapter => "IntelliSms",
+        :outgoing_sms_language => outgoing_lang,
         :intellisms_username => "user",
         :intellisms_password => "pass",
         :isms_hostname => "example.com:8080",
         :isms_username => "user",
         :isms_password => "pass"
-      )]
+      )
     }
   end
 end

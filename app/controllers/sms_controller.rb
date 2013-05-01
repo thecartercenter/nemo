@@ -15,7 +15,7 @@ class SmsController < ApplicationController
       @elmo_response.save!
     
       # send congrats!
-      I18n.t("sms_forms.decoding.congrats", :form_code => @elmo_response.form.current_version.code)
+      t_sms_msg("sms_forms.decoding.congrats", :form => @elmo_response.form)
     
     # if there is a decoding error, respond accordingly
     rescue Sms::DecodingError
@@ -28,11 +28,11 @@ class SmsController < ApplicationController
         nil
         
       else
-        msg = I18n.t("sms_forms.decoding.#{$!.type}", $!.params)
+        msg = t_sms_msg("sms_forms.decoding.#{$!.type}", $!.params)
         
         # if this is an answer format error, add an intro to the beginning and add a period
         if $!.type =~ /^answer_not_/ 
-          I18n.t("sms_forms.decoding.answer_error_intro", $!.params) + " " + msg + "."
+          t_sms_msg("sms_forms.decoding.answer_error_intro", $!.params) + " " + msg + "."
         else
           msg
         end
@@ -45,6 +45,7 @@ class SmsController < ApplicationController
       error_msg = error_msgs.first
       
       # get the orignal error key by inverting the dictionary
+      # we use the system-wide locale since that's what the model would have used when generating the error
       dict = I18n.t("activerecord.errors.models.response")
       key = dict ? dict.invert[error_msg] : nil
       
@@ -59,13 +60,13 @@ class SmsController < ApplicationController
         key += "s" if @elmo_response.missing_answers.size > 1
         
         # translate
-        I18n.t(key, :ranks => ranks, :form_code => @elmo_response.form.current_version.code)
+        t_sms_msg(key, :ranks => ranks, :form => @elmo_response.form)
       
       when :invalid_answers
         # if it's the invalid_answers error, we need to find the first answer that's invalid and report its error
         invalid_answer = @elmo_response.answers.detect(&:errors)
-        I18n.t("sms_forms.validation.invalid_answer", :rank => invalid_answer.questioning.rank, 
-          :error => invalid_answer.errors.full_messages.join(", "))
+        t_sms_msg("sms_forms.validation.invalid_answer", :rank => invalid_answer.questioning.rank, 
+          :error => invalid_answer.errors.full_messages.join(", "), :form => @elmo_response.form)
       
       else
         # if we don't recognize the key, just use the regular message. it may not be pretty but it's better than nothing.  
@@ -126,4 +127,33 @@ class SmsController < ApplicationController
     # render something nice for the robot
     render :text => "OK"
   end
+  
+  private
+    # translates a message for the sms reply using the appropriate locale
+    # uses the :form option to get the mission, and then to get the outgoing_sms_language
+    # if options don't include :form, then English is assumed
+    def self.t_sms_msg(key, options = {})
+      # throw in the form_code if it's not there already and we have the form
+      options[:form_code] ||= options[:form].current_version.code if options[:form]
+      
+      # get the reply language (if we have the form, use its mission; if not, use english)
+      # handle errors appropriately depending on env
+      lang = if options[:form]
+        begin
+          options[:form].mission.setting.outgoing_sms_language
+        rescue
+          if Rails.env == "production"
+            Rails.logger.error("Error getting outgoing language (#{$!.class}: #{$!.to_s})")
+            nil
+          else
+            raise $!
+          end
+        end
+      end
+      
+      # if we still dont have an outgoing language, just do english, and convert to symbol
+      lang = lang ? lang.to_sym : :en
+      
+      I18n.t(key, options.merge(:locale => lang, :raise => true))
+    end
 end
