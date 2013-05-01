@@ -138,7 +138,7 @@ class Sms::Decoder
         @value.downcase!
         
         # make sure the value is a letter(s)
-        raise_answer_error("answer_not_option_letter") unless @value =~ /^[a-z]+$/
+        raise_answer_error("answer_not_valid_option") unless @value =~ /^[a-z]+$/
         
         # convert to number (1-based)
         idx = letters_to_index(@value)

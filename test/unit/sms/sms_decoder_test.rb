@@ -118,7 +118,7 @@ class SmsDecoderTest < ActiveSupport::TestCase
 
   test "select_one question with numeric option should error" do
     setup_form(:questions => %w(integer select_one))
-    assert_decoding_fail(:body => "#{form_code} 1.15 2.6", :error => "answer_not_option_letter", :rank => 2, :value => "6")
+    assert_decoding_fail(:body => "#{form_code} 1.15 2.6", :error => "answer_not_valid_option", :rank => 2, :value => "6")
   end
   
   test "select_one question with non-existent option should error" do
