@@ -66,6 +66,9 @@ class Setting < ActiveRecord::Base
     # split languages into array
     hsh[:languages] = lang_codes
     
+    # default outgoing language
+    hsh[:outgoing_sms_language] ||= "en"
+    
     # get class based on sms adapter setting; default to nil if setting is invalid
     hsh[:outgoing_sms_adapter] = begin
       Sms::Adapters::Factory.new.create(outgoing_sms_adapter)
