@@ -165,19 +165,19 @@ fr:
       user_not_found: "Désolé, nous ne pouvons pas trouvez vous au systeme."
     
     guide:
-      all_required: "S'il vous plait, répondez a toutes les questions."
+      all_required: "S'il vous plaît, répondez a toutes les questions."
       header: "ELMO SMS Guide de Composition"
       not_all_required: "Les questions indiquées avec un astérisque (*) sont obligatoires."
-      step1: "Repondre tous des questions que suivre et utiliser les instructions a la fin dela fiche à envoyer votre données."
-      step2: "Maintenant, faites les étapes suivant pour envoyer votre données:"
+      step1: "Répondre à toutes les questions qui suivent et utiliser les instructions a la fin de la fiche pour envoyer vos reports."
+      step2: "Maintenant, suivez les étapes suivants pour envoyer votre données:"
       step2_substeps:
         - "Avec votre téléphone, commencer un SMS à %{submit_number}."
-        - "Mettre les contents de chaque ligne sur le droite de chaque page, aller haute à bas."
-        - "Faites attention que vous mettre vos reponses exactement. Chaque ligne est important."
-        - "Notez chaque reponse est separu par un 'SPC'. Mis un epace pour chaque fois que vous voirez 'SPC'. N'ajoute pas plus des epaces."
-        - "Quand vous avez fini de taper, confirmez que votre message correspond à la fiche."
-        - "Envoyez le message et attendez pour une réponse avec plus d'instructions."
-        - "Si vous ne recevez pas une reponse au sein du 5 minutes, envoyer le message encore s'il vous plait."
+        - "Mettez les contenus de chaque ligne sur la droite de chaque page, aller de haut en bas."
+        - "Attention! Vérifiez que vous placez correctement vos réponses la ou il faut. Chaque ligne est importante. "
+        - "Notez que chaque réponse est séparée pour un espace (SPC). Mettez un espace chaque fois que vous verrez 'SPC'. N’ajoutez pas plus d’espaces. "
+        - "Quand vous avez fini d’écrire, vérifiez attentivement si votre message correspond au formulaire. "
+        - "Veuillez envoyer votre SMS et attendre une réponse contenant des instructions supplémentaires."
+        - "Si vous ne recevez pas une réponse après 5 minutes, envoyez le message encore s’il vous plaît."
       unique_code: "C'est l'ID unique de form."
       unknown_number: "Numéro de téléphone inconnu"
           
