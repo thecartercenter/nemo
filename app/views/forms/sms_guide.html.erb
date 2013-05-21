@@ -13,7 +13,7 @@
       </select>
     </form>
     
-    <%= link_to_if_auth("SMS Test Console", new_sms_test_path, "sms_tests#create") %>
+    <%= link_to("SMS Test Console", new_sms_test_path) if can?(:create, Sms::Test) %>
   </div>
   <table>
     <tr>

@@ -62,7 +62,7 @@ class SmsDecoderTest < ActiveSupport::TestCase
     other_user.reload
     
     # ensure user doesn't have permission on form
-    assert(!Permission.user_can_submit_to_form(other_user, @form), "User test2 shouldn't be able to access form.")
+    assert(!other_user.can?(:submit_to, @form), "User test2 shouldn't be able to access form.")
     
     # ensure decoding fails due to no permission
     assert_decoding_fail(:body => "#{form_code} 1.15", :user => other_user, :error => "form_not_permitted")

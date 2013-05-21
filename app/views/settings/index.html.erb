@@ -11,7 +11,7 @@
   
   <h2>Outgoing SMS Settings</h2>
   <%= form_field(f, :outgoing_sms_language, :type => :select, :options => I18n.available_locales) %>
-  <%= form_field(f, :outgoing_sms_adapter, :type => :select, :options => Sms::Adapters::Factory::VALID_ADAPTERS, :blank_text => "None") %>
+  <%= form_field(f, :outgoing_sms_adapter, :type => :select, :options => @adapter_options, :blank_text => "None") %>
   
   <div class="adapter_settings" data-adapter="IntelliSms">
     <%= form_field(f, :intellisms_username) %>

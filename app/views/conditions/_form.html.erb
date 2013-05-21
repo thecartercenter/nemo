@@ -1,3 +1,4 @@
+<%# TODO refactor to use nested_attributes %>
 <%= fields_for("questioning[condition]", condition) do |f| %>
   <%= render("layouts/object_errors", :object => condition, :compact => true) %>
   <% f.mode = form_mode %>

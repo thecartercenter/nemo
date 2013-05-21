@@ -113,7 +113,7 @@ form.search_form #search_examples { margin-top: 2px; color: #666; }
 
 /* response index */
 .responses_index form#form_chooser { display: inline; }
-.responses_index form#form_chooser input, .responses_index form#form_chooser select { margin-left: 5px; }
+.responses_index form#form_chooser input, .responses_index form#form_chooser select { margin-right: 10px; }
 
 /* response edit */
 .responses_edit input.qtype_integer, .responses_new input.qtype_integer { width: 100px; }

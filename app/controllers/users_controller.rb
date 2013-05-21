@@ -1,20 +1,38 @@
 class UsersController < ApplicationController
+  # authorization via CanCan
+  load_and_authorize_resource
+  
   def index
-    @users = apply_filters(User.includes(:missions))
+    # apply pagination and search, and include mission association
+    @users = apply_filters(@users.includes(:missions))
   end
+  
   def new
-    @user = User.new
-    render_form
+    prepare_and_render_form
   end
+  
   def edit
-    @user = User.find(params[:id])
+    # special title if user is editing self
     @title = "Edit Profile" if @user == current_user
-    render_form
+    prepare_and_render_form
   end
-  def update
-    @user = User.find(params[:id])
+  
+  def create
+    if @user.save
+      @user.reset_password_if_requested
+      flash[:success] = "User created successfully."
+      
+      # render printable instructions if requested
+      handle_printable_instructions
     
-    # if this was just the current_mission form, update and redirect back to referrer
+    # if create failed, render the form again
+    else
+      prepare_and_render_form
+    end
+  end
+
+  def update
+    # if this was just the current_mission form (in the banner), update and redirect back to referrer
     if params[:changing_current_mission]
       # update the user's mission
       @user.current_mission_id = params[:user][:current_mission_id]
@@ -23,42 +41,46 @@ class UsersController < ApplicationController
       # update the settings using the new mission
       Setting.copy_to_config(@user.current_mission)
       
-      # redirect back to the referrer
+      # redirect back to the referrer, and set a flag
+      flash[:mission_changed] = true
       redirect_to(request.referrer)
+    
+    # otherwise this is a normal update
     else
+      # try to save
       if @user.update_attributes(params[:user])
+
+        # redirect and message depend on if this was user editing self or not
         if @user == current_user
           flash[:success] = "Profile updated successfully."
           redirect_to(:action => :edit)
         else
           flash[:success] = "User updated successfully."
+
+          # if the user's password was reset, do it, and show instructions if requested
           @user.reset_password_if_requested
           handle_printable_instructions
         end
+      
+      # if save failed, render the form again
       else
-        render_form
+        prepare_and_render_form
       end
     end
   end
-  def create
-    @user = User.new_with_login_and_password(params[:user])
-    if @user.save
-      @user.reset_password_if_requested
-      flash[:success] = "User created successfully."
-      handle_printable_instructions
-    else
-      render_form
-    end
-  end
+  
   def destroy
-    @user = User.find(params[:id])
     begin flash[:success] = @user.destroy && "User deleted successfully." rescue flash[:error] = $!.to_s end
     redirect_to(:action => :index)
   end
+  
+  # shows printable login instructions for the user
   def login_instructions
-    @user = User.find(params[:id])
+    # no title because the title is incorporated into the login instructions box
     @title = ""
   end
+  
+  # exports the selected users to VCF format
   def export
     respond_to do |format|
       format.vcf do
@@ -69,10 +91,11 @@ class UsersController < ApplicationController
   end
   
   private
+    
+    # if we need to print instructions, redirects to the instructions action. otherwise redirects to index.
     def handle_printable_instructions
-      # if we need to print instructions, redirect there. otherwise redirect to index
       if @user.reset_password_method == "print"
-        # save the password in the flash since we won't be able to get it in the next request
+        # save the password in the flash since we won't be able to get it once it's crypted
         flash[:password] = @user.password
         redirect_to(:action => :login_instructions, :id => @user.id)
       else
@@ -80,13 +103,14 @@ class UsersController < ApplicationController
       end
     end
     
-    def render_form
+    # prepares objects and renders the form template
+    def prepare_and_render_form
       # create a blank mission assignment with the appropriate user_id for the boilerplate, but don't add it to the collection
       @blank_assignment = Assignment.new(:active => true, :user_id => current_user.id)
       
       # get assignable missons and roles for this user
-      @assignable_missions = Permission.assignable_missions(current_user)
-      @assignable_roles = Permission.assignable_roles(current_user)
+      @assignable_missions = Mission.accessible_by(current_ability)
+      @assignable_roles = Ability.assignable_roles(current_user)
       
       render(:form)
     end

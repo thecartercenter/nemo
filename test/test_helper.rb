@@ -8,8 +8,6 @@ class ActiveSupport::TestCase
   # REPORT TEST HELPERS
   
   def prep_objects
-    Role.generate
-    
     # clear out tables
     [Question, Questioning, Answer, Form, User, Mission].each{|k| k.delete_all}
     
@@ -24,7 +22,8 @@ class ActiveSupport::TestCase
       options[:option_set_choices_attributes] = [{:option_set_id => option_set.id}]
     end
     
-    report = "Report::#{klass}Report".constantize.new_with_default_name(mission)
+    report = "Report::#{klass}Report".constantize.new(:mission_id => mission.id)
+    report.generate_default_name
     report.update_attributes!({:name => "TheReport"}.merge(options))
     return report
   end
@@ -48,8 +47,8 @@ class ActiveSupport::TestCase
   
   def user
     return @users[:test] if @users[:test]
-    @users[:test] = User.new_with_login_and_password(:login => "test", :name => "Test", :reset_password_method => "print")
-    @users[:test].assignments.build(:mission => mission, :active => true, :role => Role.highest)
+    @users[:test] = User.new(:login => "test", :name => "Test", :reset_password_method => "print")
+    @users[:test].assignments.build(:mission => mission, :active => true, :role => User::ROLES.last)
     @users[:test].save!
     @users[:test]
   end
@@ -161,5 +160,11 @@ class ActiveSupport::TestCase
     
     # convert everything to string, except convert "" to "_"
     actual.collect{|row| row.collect{|cell| cell.to_s == "" ? "_" : cell.to_s}}
+  end
+  
+  # logs in the given user
+  # we assume that the password is 'password'
+  def login(user)
+    post_via_redirect(user_session_path, :user_session => {:login => user.login, :password => "password"})
   end
 end

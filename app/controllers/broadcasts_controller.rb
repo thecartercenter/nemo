@@ -1,7 +1,13 @@
 class BroadcastsController < ApplicationController
+  # authorization via cancan
+  load_and_authorize_resource
+  
+  # this method is special
+  skip_load_and_authorize_resource :only => :new_with_users
   
   def index
-    @broadcasts = apply_filters(Broadcast)
+    # apply pagination
+    @broadcasts = @broadcasts.paginate(:page => params[:page], :per_page => 50)
   end
   
   def new
@@ -13,14 +19,17 @@ class BroadcastsController < ApplicationController
   # @param [Hash] selected A Hash user ids as keys, referring to recipients of the broadcast.
   def new_with_users
     # load the user objects
-    users = params[:selected].keys.collect{|id| User.find_by_id(id)}.compact
+    users = User.accessible_by(current_ability).where(:id => params[:selected].keys).all
         
     # raise error if no valid users (this should be impossible)
     raise "No valid users given." if users.empty?
     
     # create a new Broadcast
-    @broadcast = Broadcast.for_mission(current_mission).new(:recipients => users)
+    @broadcast = Broadcast.accessible_by(current_ability).new(:recipients => users)
 
+    # call authorize so no error
+    authorize!(:create, @broadcast)
+    
     begin
       # get credit balance
       @balance = Smser.check_balance
@@ -35,13 +44,11 @@ class BroadcastsController < ApplicationController
   end
   
   def show
-    @broadcast = Broadcast.find(params[:id])
     render(:form)
   end
   
   def create
-    @broadcast = Broadcast.for_mission(current_mission).new(params[:broadcast])
-    if @broadcast.save
+    if @broadcast.update_attributes(params[:broadcast])
       if @broadcast.send_errors
         flash[:error] = "Error sending broadcast (see below)."
       else

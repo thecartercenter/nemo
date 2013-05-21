@@ -1,18 +1,28 @@
 class Report::ReportsController < ApplicationController
+  # need to do special load for new/create/update because CanCan won't work with the STI hack in report.rb
+  before_filter :custom_load, :only => [:create]
+  
+  # authorization via cancan
+  load_and_authorize_resource
+  
   def index
-    @reports = apply_filters(Report::Report.by_popularity).all.collect{|r| r.becomes(Report::Report)}
+    # order by popularity and use 'becomes' to deal with inheritance
+    @reports = @reports.by_popularity.all.collect{|r| r.becomes(Report::Report)}
   end
   
   def new
-    @report = Report::Report.new_with_default_name(current_mission)
+    # make a default name in case the user wants to be lazy
+    @report.generate_default_name
     render_show
   end
   
   def show
-    @report = Report::Report.find(params[:id])
+    # prep the report for viewing
     init_report
+    
+    # handle different formats
     respond_to do |format|
-      # for html, render the show action
+      # for html, use the render_show function below
       format.html{render_show}
       
       # for csv, just render the csv template
@@ -25,29 +35,23 @@ class Report::ReportsController < ApplicationController
   end
   
   def destroy
-    @report = Report::Report.find(params[:id])
     begin flash[:success] = @report.destroy && "Report deleted successfully." rescue flash[:error] = $!.to_s end
     redirect_to(:action => :index)
   end    
   
-  # only exec'd through json
+  # this method only reached through ajax
   def create
-    # attempt create the report
-    @report = Report::Report.for_mission(current_mission).create(params[:report].merge(:mission_id => current_mission.id))
-
-    # if report is valid, save it set flag (no need to run it b/c it will be redirected)
+    # if report is valid, save it and set flag (no need to run it b/c it will be redirected)
     @report.just_created = true if @report.errors.empty?
     
     # return data in json format
-    render(:json => ajax_return_data.to_json)
+    render(:json => {:report => @report}.to_json)
   end
 
-  # only exec'd through json
+  # this method only reached through ajax
   def update
-    # get/create the report
-    @report = Report::Report.find(params[:id])
     # update the attribs
-    @report.attributes = params[:report]
+    @report.assign_attributes(params[:report])
     
     # if report is not valid, can't run it
     if @report.valid?
@@ -58,10 +62,15 @@ class Report::ReportsController < ApplicationController
     end
     
     # return data in json format
-    render(:json => ajax_return_data.to_json)
+    render(:json => {:report => @report}.to_json)
   end
 
   private
+    # custom load method because CanCan won't work with STI hack in report.rb
+    def custom_load
+      @report = Report::Report.create(params[:report].merge(:mission_id => current_mission.id))
+    end
+  
     # sets up the report object by recording a viewing and running
     # returns true if report ran with no errors, false otherwise
     # should only be run if @report is not a new record
@@ -88,10 +97,7 @@ class Report::ReportsController < ApplicationController
   
     # prepares and renders the show template, which is used for new and show actions
     def render_show
-      # determine if user can edit form and save a flag
-      @can_edit = authorized?(:action => "report_reports#update")
-      
-      # set json instance variable to be used in template
+      # setup json data to be used on client side
       @report_json = {
         :report => @report,
         :options => {
@@ -105,9 +111,5 @@ class Report::ReportsController < ApplicationController
       }.to_json
       
       render(:show)
-    end
-    
-    def ajax_return_data
-      {:report => @report}
     end
 end

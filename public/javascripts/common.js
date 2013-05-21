@@ -64,7 +64,7 @@ function batch_count_checked(cbs) {
 // updates the select all link to reflect current state of boxes
 function batch_update_select_all_link(yn) {
   if (typeof(yn) == "undefined") yn = !batch_all_checked();
-  $('#select_all_link').attr("value", (yn ? "S" : "Des") + "elect all");
+  $('#select_all_link').attr("value", (yn ? "S" : "Des") + "elect All");
 }
 
 // event handler for when a checkbox is clicked

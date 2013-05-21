@@ -1,6 +1,8 @@
 class SmsTestsController < ApplicationController
+  # authorization via CanCan
+  load_and_authorize_resource :class => "Sms::Test"
+  
   def new
-    @sms_test = Sms::Test.new
   end
   
   # handles a request for a test. this will be an AJAX call so we only return the message body

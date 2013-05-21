@@ -1,16 +1,34 @@
 class ApplicationController < ActionController::Base
   require 'authlogic'
   include ActionView::Helpers::AssetTagHelper
+
+  # makes sure authorization is performed in each controller
+  check_authorization
+  
+  # handle general errors nicely
+  rescue_from(Exception, :with => :notify_error)
+  
+  # handle authorization errors nicely
+  rescue_from CanCan::AccessDenied do |exception|
+    Rails.logger.debug("ACCESS DENIED on #{exception.action} #{exception.subject.inspect}")
+    # if not logged in, offer a login page
+    if !current_user
+      # don't put an error message if the request was for the home page
+      flash[:error] = I18n.t("unauthorized.must_login") unless request.path == "/"
+      redirect_to_login
+    # else redirect to welcome page with error
+    else
+      redirect_to root_path, :flash => { :error => exception.message }
+    end
+  end
   
   protect_from_forgery
-  rescue_from(Exception, :with => :notify_error)
   before_filter(:set_default_title)
   before_filter(:mailer_set_url_options)
 
   # user/user_session stuff
   before_filter(:basic_auth_for_xml)
   before_filter(:get_user_and_mission)
-  before_filter(:authorize)
   
   # this goes last as the timezone can depend on the user
   before_filter(:set_timezone)
@@ -19,8 +37,7 @@ class ApplicationController < ActionController::Base
   attr_reader :current_user, :current_mission
   
   # make these methods visible in the view
-  helper_method :current_user, :current_mission, :authorized?
-  
+  helper_method :current_user, :current_mission
   
   # hackish way of getting the route key identical to what would be returned by model_name.route_key on a model
   def route_key
@@ -103,6 +120,25 @@ class ApplicationController < ActionController::Base
       request.env['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest' || params[:ajax]
     end
     
+    # applies search and pagination
+    # each of these can be turned off by specifying e.g. :pagination => false in the options array
+    def apply_filters(rel, options = {})
+      klass = rel.respond_to?(:klass) ? rel.klass : rel
+
+      # apply search
+      begin
+        @search = Search::Search.new(:class_name => klass.name, :str => params[:search])
+        rel = @search.apply(rel) unless options[:search] == false
+      rescue Search::ParseError
+        @error_msg = "Search Error: #{$!}"
+      end
+      
+      # apply pagination and return
+      rel = rel.paginate(:page => params[:page]) unless params[:page].nil? || options[:pagination] == false
+      
+      # return the relation
+      rel
+    end
 
     ##############################################################################
     # AUTHENTICATION AND USER SESSION METHODS
@@ -135,16 +171,19 @@ class ApplicationController < ActionController::Base
         return request_http_basic_authentication if !mission
           
         # if user can't access the mission, fail
-        return request_http_basic_authentication if !user.can_access_mission?(mission)
+        return request_http_basic_authentication if !can?(:read, mission)
           
         # if we get this far, we can set the current mission
         @current_mission = mission
+        @current_user.current_mission = mission
+        @current_user.save(:validate => false)
         Setting.mission_was_set(@current_mission)
       end
     end
     
     # gets the user and mission from the user session if they're not already set
     def get_user_and_mission
+      
       # don't do this for XML requests
       return if request.format == Mime::XML
       
@@ -161,6 +200,11 @@ class ApplicationController < ActionController::Base
         # if a mission was found, notify the settings class
         Setting.mission_was_set(@current_mission) if @current_mission
       end
+    end
+    
+    # override CanCan's current_ability method to use the user ability method
+    def current_ability
+      current_user ? current_user.ability : Ability.new(nil)
     end
     
     # resets the Rails session but preserves the :return_to key
@@ -194,66 +238,6 @@ class ApplicationController < ActionController::Base
       return true
     end
     
-    
-    ##############################################################################
-    # AUTHORIZATION METHODS
-    ##############################################################################
-    
-    def authorize
-      # make sure user has permissions
-      begin
-        Permission.authorize(:user => current_user, :mission => current_mission, :controller => route_key, :action => action_name, :request => params)
-        return true
-      rescue PermissionError
-        # if request is for the login page, just go to welcome page with no flash
-        if controller_name == "user_sessions" && action_name == "new"
-          redirect_to(root_path)
-        # if request is for the logout page, just go to the login page with no flash
-        elsif controller_name == "user_sessions" && action_name == "destroy"
-          redirect_to(login_path)
-        else
-          store_location unless ajax_request?
-          # if the user needs to login, send them to the login page
-          flash[:error] = $!.to_s
-          flash[:error].match(/must login/) ? redirect_to_login : render("permissions/no", :status => :unauthorized)
-        end
-        # halt the rest of the action
-        return false
-      end
-    end 
-    
-    def authorized?(params)
-      return Permission.authorized?(params.merge(:user => current_user, :mission => current_mission))
-    end
-    
-    def restrict(rel)
-      Permission.restrict(rel, :user => current_user, :mission => current_mission)
-    end
-    
-    # applies search, permissions, and pagination
-    # each of these can be turned off by specifying e.g. :pagination => false in the options array
-    def apply_filters(rel, options = {})
-      klass = rel.respond_to?(:klass) ? rel.klass : rel
-
-      # apply search
-      begin
-        @search = Search::Search.new(:class_name => klass.name, :str => params[:search])
-        rel = @search.apply(rel) unless options[:search] == false
-      rescue Search::ParseError
-        @error_msg = "Search Error: #{$!}"
-      end
-      
-      # apply permissions
-      rel = restrict(rel) unless options[:permissions] == false
-
-      # apply pagination and return
-      rel = rel.paginate(:page => params[:page]) unless params[:page].nil? || options[:pagination] == false
-      
-      # return the relation
-      rel
-    end
-    
-    
     ##############################################################################
     # METHODS FOR REDIRECTING THE USER
     ##############################################################################
@@ -262,10 +246,11 @@ class ApplicationController < ActionController::Base
     # or if this is an ajax request, returns a 401 unauthorized error
     # in the latter case, the script should catch this error and redirect to the login page itself
     def redirect_to_login
-      if ajax_request? 
+      if ajax_request?
         flash[:error] = nil
         render(:text => "LOGIN_REQUIRED", :status => 401)
       else
+        store_location
         redirect_to(login_path)
       end
     end

@@ -41,12 +41,12 @@
 <%= loading_indicator(:id => "report_load_ind") %>
 
 <div class="tip" id="report_top_links">
-  <%= link_to_if_auth("Create New Report", new_report_report_path, "report_reports#create") %>
-  <%= link_to_if_auth("Back To Report List", report_reports_path, "report_reports#index") %>
+  <%= link_to("Create New Report", new_report_report_path) if can?(:create, Report::Report) %>
+  <%= link_to("Back To Report List", report_reports_path) if can?(:index, Report::Report) %>
   <%= link_to("Export Data To CSV Format", report_report_path(@report, :format => :csv), :id => "csv_link") unless @report.new_record? %>
 </div>
 <div class="report_view">
-  <% if @can_edit %>
+  <% if can?(:update, @report) %>
     <div id="report_links">
       <strong>Edit Report</strong>
       <% if @report.new_record? %>

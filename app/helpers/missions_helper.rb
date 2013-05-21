@@ -1,10 +1,12 @@
 module MissionsHelper
   def missions_index_links(missions)
-    [link_to_if_auth("Add new Mission", new_mission_path, "missions#create")]
+    [can?(:create, Mission) ? link_to("Add new Mission", new_mission_path) : nil]
   end
+  
   def missions_index_fields
     %w[name created actions]
   end
+  
   def format_missions_field(mission, field)
     case field
     when "created"

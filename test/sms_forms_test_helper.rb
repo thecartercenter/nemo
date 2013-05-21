@@ -14,15 +14,15 @@ class ActiveSupport::TestCase
     options[:questions].each do |type|
       # create the question
       q = FactoryGirl.build(:question, :question_type_id => QuestionType.find_by_name(type).id, :mission => options[:mission])
-    
+      
       # add an option set if required
       if %w(select_one select_multiple).include?(type)
         # put options in weird order to ensure the order stuff works ok
         q.option_set = FactoryGirl.create(:option_set, :name => "Options", :option_names => %w(A B C D E), :mission => options[:mission])
       end
-
+      
       q.save!
-    
+      
       # add it to the form
       @form.questionings.create(:question => q, :required => options[:required])
     end

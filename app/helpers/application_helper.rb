@@ -13,31 +13,7 @@ module ApplicationHelper
     msgs
   end
   
-  # renders a link only if the current user is authorized for the specified action
-  def link_to_if_auth(label, url, action, object = nil, *args)
-    authorized?(:action => action, :object => object) ? link_to(label, url, *args) : ""
-  end
-  
-  # same as link_to_if_auth but for button_to
-  def button_to_if_auth(label, url, action, object = nil, *args)
-    authorized?(:action => action, :object => object) ? button_to(label, url, *args) : ""
-  end
-  
-  # draws a basic form for the given object
-  # THIS IS THE OLD WAY
-  def basic_form(obj, &block)
-    form_for(obj) do |f|
-      f.mode = form_mode
-      # get the fields spec
-      spec = block.call(f)
-      # if fields doesn't have sections, create one big section 
-      spec[:sections] = [{:fields => spec[:fields]}] unless spec[:sections]
-      # render the form and return it
-      render("layouts/basic_form", :f => f, :spec => spec, :obj => obj)
-    end
-  end
-  
-  # THIS IS THE NEW WAY
+  # makes a standard looking form
   def nice_form_for(obj, options = {})
     options[:html] ||= {}
     options[:html][:class] = "#{obj.class.model_name.singular}_form"
@@ -159,26 +135,20 @@ module ApplicationHelper
       key = "#{obj.class.table_name}##{action}"
       case action
       when "show"
-        link_to_if_auth(img, send("#{route_key}_path", obj), key, obj, :title => "View")
+        can?(:read, obj) ? link_to(img, send("#{route_key}_path", obj), :title => "View") : nil
       when "edit"
-        link_to_if_auth(img, send("edit_#{route_key}_path", obj), key, obj, :title => "Edit")
+        can?(:update, obj) ? link_to(img, send("edit_#{route_key}_path", obj), :title => "Edit") : nil
       when "destroy"
-        link_to_if_auth(img, obj, key, obj, :method => :delete, :confirm => destroy_warning, :title => "Delete")
+        can?(:destroy, obj) ? link_to(img, send("#{route_key}_path", obj), :method => :delete, :confirm => destroy_warning, :title => "Edit") : nil
       end
     end.compact
     links.join("").html_safe
   end
   
   # creates a link to a batch operation
-  # options include :action (e.g. forms#add_questions), :id, :format, :name (name of the link)
   def batch_op_link(options)
-    url_bits = {}
-    url_bits[:controller], url_bits[:action] = options[:action].split("#")
-    url_bits[:id] = options[:id] if options[:id]
-    url_bits[:format] = options[:format] if options[:format]
-    path = url_for(url_bits)
-    button_to_if_auth(options[:name], "#", options[:action], nil, 
-      :onclick => "batch_submit({path: '#{path}', confirm: '#{options[:confirm]}'}); return false;",
+    button_to(options[:name], "#", 
+    :onclick => "batch_submit({path: '#{options[:path]}', confirm: '#{options[:confirm]}'}); return false;",
       :class => "batch_op_link")
   end
   
@@ -190,7 +160,7 @@ module ApplicationHelper
   # renders an index table for the given class and list of objects
   def index_table(klass, objects)
     # get links from class' helper
-    links = send("#{klass.table_name}_index_links", objects)
+    links = send("#{klass.table_name}_index_links", objects).compact
 
     # if there are any batch links, insert the 'select all' link
     batch_ops = !links.reject{|l| !l.match(/class="batch_op_link"/)}.empty?
@@ -207,6 +177,7 @@ module ApplicationHelper
     )
   end
   
+  # renders a loading indicator image wrapped in a wrapper
   def loading_indicator(options = {})
     content_tag("div", :class => "loading_indicator loading_indicator#{options[:floating] ? '_floating' : '_inline'}", :id => options[:id]) do
       image_tag("load-ind-small#{options[:header] ? '-header' : ''}.gif", :style => "display: none", :id => "loading_indicator" + 
@@ -239,6 +210,8 @@ module ApplicationHelper
     render(:partial => "layouts/collection_form", :locals => params)
   end
   
+  # finds the english name of the language with the given code (e.g. 'French' for 'fr')
+  # returns empty string if code not found
   def language_name(code)
     (entry = ISO_639.find(code.to_s)) ? entry.english_name : ""
   end

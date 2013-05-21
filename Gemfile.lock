@@ -33,6 +33,7 @@ GEM
       activerecord (>= 3.0.0)
       activesupport (>= 3.0.0)
     builder (3.0.4)
+    cancan (1.6.10)
     configatron (2.9.1)
       yamler (>= 0.1.0)
     erubis (2.7.0)
@@ -105,6 +106,7 @@ PLATFORMS
 
 DEPENDENCIES
   authlogic
+  cancan
   configatron
   factory_girl_rails (~> 4.0)
   iso-639

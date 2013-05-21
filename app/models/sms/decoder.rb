@@ -105,7 +105,7 @@ class Sms::Decoder
     
     # checks if the current @user has permission to submit to form @form, raises an error if not
     def check_permission
-      raise_decoding_error("form_not_permitted") unless Permission.user_can_submit_to_form(@user, @form)
+      raise_decoding_error("form_not_permitted") unless @user.can?(:submit_to, @form)
     end
     
     # finds the Questioning object specified by the current value of @rank

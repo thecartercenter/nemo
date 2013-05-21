@@ -1,36 +1,39 @@
 class FormsController < ApplicationController
-  # in the choose_questions action we have a question form so we need this
-  include QuestionFormable  
+  # special find method before load_resource
+  before_filter :find_form_with_questions, :only => [:show, :edit, :update]
+  
+  # authorization via cancan
+  load_and_authorize_resource
+
+  # in the choose_questions action we have a question form so we need this Concern
+  include QuestionFormable
   
   def index
+    # handle different formats
     respond_to do |format|
       # render normally if html
       format.html do
-        @forms = apply_filters(Form).with_form_type.all
-        render(:index)
+        @forms = apply_filters(@forms).with_form_type.all
+        render(:index)  
       end
       
       # get only published forms and render openrosa if xml requested
       format.xml do
-        @forms = restrict(Form).published.with_form_type
+        @forms = @forms.published.with_form_type
         render_openrosa
       end
     end
   end
   
   def new
-    @form = Form.for_mission(current_mission).new
-    render_form
+    prepare_and_render_form
   end
   
   def edit
-    @form = Form.with_questions.find(params[:id])
-    render_form
+    prepare_and_render_form
   end
   
   def show
-    @form = Form.with_questions.find(params[:id])
-
     # add to download count if xml
     @form.add_download if request.format && request.format.xml? 
     
@@ -38,9 +41,12 @@ class FormsController < ApplicationController
       
       # for html, render the printable or sms_guide styles if requested, otherwise render the form
       format.html do 
+        # printable style
         if params[:print]
           # here we only render a partial since this is coming from an ajax request
           render(:partial => "printable", :layout => false, :locals => {:form => @form})
+          
+        # sms guide style
         elsif params[:sms_guide]
           # determine the most appropriate language to show the form in
           # if params[:lang] is set, use that
@@ -53,10 +59,11 @@ class FormsController < ApplicationController
           else
             "en"
           end
-
           render("sms_guide")
+
+        # otherwise just normal!
         else
-          render_form
+          prepare_and_render_form
         end
       end
       
@@ -65,14 +72,46 @@ class FormsController < ApplicationController
     end
   end
   
+  def create
+    if @form.update_attributes(params[:form])
+      flash[:success] = "Form created successfully."
+      redirect_to(edit_form_path(@form))
+    else
+      prepare_and_render_form
+    end
+  end
+  
+  def update
+    begin
+      # save basic attribs
+      @form.assign_attributes(params[:form])
+      
+      # update ranks if provided (possibly raising condition ordering error)
+      @form.update_ranks(params[:rank]) if params[:rank]
+
+      # save everything and redirect
+      @form.save!
+      flash[:success] = "Form updated successfully."
+      redirect_to(edit_form_path(@form))
+
+    # handle problem with conditions
+    rescue ConditionOrderingError
+      @form.errors.add(:base, "The new rankings invalidate one or more conditions")
+      prepare_and_render_form
+    
+    # handle other validation errors  
+    rescue ActiveRecord::RecordInvalid
+      prepare_and_render_form
+    end
+  end
+  
   def destroy
-    @form = Form.find(params[:id])
     begin flash[:success] = @form.destroy && "Form deleted successfully." rescue flash[:error] = $!.to_s end
     redirect_to(:action => :index)
   end
   
+  # publishes/unpublishes a form
   def publish
-    @form = Form.find(params[:id])
     verb = @form.published? ? "unpublish" : "publish"
     begin
       @form.send("#{verb}!")
@@ -85,24 +124,20 @@ class FormsController < ApplicationController
     redirect_to(:action => :index)
   end
   
-  # GET /forms/:id/choose_questions
-  # show the form to either choose existing questions or create a new one to add
+  # shows the form to either choose existing questions or create a new one to add
   def choose_questions
-    @form = Form.find(params[:id])
     @title = "Adding Questions to Form: #{@form.name}"
     
     # get questions for choice list
-    @questions = apply_filters(Question.not_in_form(@form))
+    @questions = Question.accessible_by(current_ability).not_in_form(@form)
     
     # setup new questioning for use with the questioning form
-    @qing = init_qing(:form_id => @form.id)
+    init_qing(:form_id => @form.id, :question_attributes => {})
     setup_qing_form_support_objs
   end
   
+  # adds questions selected in the big list to the form
   def add_questions
-    # load the form
-    @form = Form.find(params[:id])
-    
     # load the question objects
     questions = load_selected_objects(Question)
 
@@ -121,10 +156,8 @@ class FormsController < ApplicationController
     redirect_to(edit_form_path(@form))
   end
   
-  
+  # removes selected questions from the form
   def remove_questions
-    # load the form
-    @form = Form.find(params[:id])
     # get the selected questionings
     qings = load_selected_objects(Questioning)
     # destroy
@@ -138,60 +171,18 @@ class FormsController < ApplicationController
     redirect_to(edit_form_path(@form))
   end
   
-  def update_ranks
-    redirect_to(edit_form_path(@form))
-  end
-  
+  # makes an unpublished copy of the form that can be edited without affecting the original
   def clone
-    @form = Form.find(params[:id])
     begin
       @form.duplicate
       flash[:success] = "Form '#{@form.name}' cloned successfully."
     rescue
-      raise $!
       flash[:error] = "There was a problem cloning the form (#{$!.to_s})."
     end
     redirect_to(:action => :index)
   end
   
-  def create; crupdate; end
-  
-  def update; crupdate; end
-  
   private
-  
-    def crupdate
-      action = params[:action]
-      @form = action == "create" ? Form.for_mission(current_mission).new : Form.find(params[:id], :include => {:questionings => :condition})
-      
-      begin
-        # save basic attribs
-        @form.attributes = params[:form]
-        
-        # update ranks if provided
-        if params[:rank]
-          # build hash of questioning ids to ranks
-          new_ranks = {}; params[:rank].each_pair{|id, rank| new_ranks[id] = rank}
-          
-          # update (possibly raising condition ordering error)
-          @form.update_ranks(new_ranks)
-        end
-        
-        # save everything and redirect
-        @form.save!
-        flash[:success] = "Form #{action}d successfully."
-        redirect_to(edit_form_path(@form))
-
-      # handle problem with conditions
-      rescue ConditionOrderingError
-        @form.errors.add(:base, "The new rankings invalidate one or more conditions")
-        render_form
-      
-      # handle other validation errors  
-      rescue ActiveRecord::RecordInvalid
-        render_form
-      end
-    end
     
     # adds the appropriate headers for openrosa content
     def render_openrosa
@@ -199,8 +190,17 @@ class FormsController < ApplicationController
       response.headers['X-OpenRosa-Version'] = "1.0"
     end
     
-    def render_form
-      @form_types = apply_filters(FormType)
+    # prepares objects and renders the form template
+    def prepare_and_render_form
+      # load the form types available to this user
+      @form_types = FormType.accessible_by(current_ability)
+      
+      # render the form template
       render(:form)
+    end
+    
+    # loads the form object including a bunch of joins for questions
+    def find_form_with_questions
+      @form = Form.with_questions.find(params[:id])
     end
 end

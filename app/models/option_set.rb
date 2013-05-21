@@ -20,7 +20,7 @@ class OptionSet < ActiveRecord::Base
   before_save(:notify_form_versioning_policy_of_update)
   
   default_scope(order("name"))
-  scope(:for_index, includes(:questions, :options, {:questionings => :form}))
+  scope(:with_associations, includes(:questions, :options, {:questionings => :form}))
   
   self.per_page = 100
 

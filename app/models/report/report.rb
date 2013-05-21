@@ -40,13 +40,12 @@ class Report::Report < ActiveRecord::Base
     alias_method_chain :new, :cast
   end
   
-  # generates a new report with a default name that won't collide with any existing names, 
-  # in case the user decides not to choose a descriptive name
-  def self.new_with_default_name(mission)
+  # generates a default name that won't collide with any existing names
+  def generate_default_name
     prefix = "New Report"
     
     # get next number
-    nums = for_mission(mission).where("name LIKE '#{prefix}%'").collect do |r| 
+    nums = self.class.for_mission(mission).where("name LIKE '#{prefix}%'").collect do |r| 
       # get suffix
       if r.name.match(/^#{prefix}(\s+\d+$|$)/)
         [$1.to_i, 1].max # must be at least one if found
@@ -56,8 +55,9 @@ class Report::Report < ActiveRecord::Base
     end
     next_num = (nums.compact.max || 0) + 1
     suffix = next_num == 1 ? "" : " #{next_num}"
-
-    for_mission(mission).new(:name => "#{prefix}#{suffix}")
+    
+    # set to attrib
+    self.name = "#{prefix}#{suffix}"
   end
   
   # runs the report by populating header_set, data, and totals objects

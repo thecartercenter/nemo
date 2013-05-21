@@ -4,6 +4,7 @@ en:
   common:
     example_abbr: "e.g."
     language: "Language"
+    none: "None"
     step: "Step"
     thank_you_with_exclamation: "Thank You!"
     
@@ -195,3 +196,21 @@ en:
       invalid_answer: "Sorry, the answer to question %{rank} %{error}."
       missing_answer: "Sorry, the answer to the required question %{ranks} was missing from your response to form '%{form_code}'."
       missing_answers: "Sorry, the answers to the required questions %{ranks} were missing from your response to form '%{form_code}'."
+  
+  permission_errors:
+    need_mission: "You can't view this without selecting a mission"
+    need_login: "You must login to view that page."
+    no_permission: "You don't have permission to view that page."
+    processing_error: "Error processing permission."
+    observers_cant_change_submitter: "Observers can't change the submitter for responses."
+    must_be_admin: "You must be an administrator to view that page."
+    must_be_logged_out: "You must be logged out to view that page."
+    
+  unauthorized:
+    default: "You are not authorized to access that page."
+    must_login: "You must login to access that page."
+    
+  roles:
+    observer: Observer
+    staffer: Staffer
+    coordinator: Coordinator

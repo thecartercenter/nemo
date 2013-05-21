@@ -1,4 +1,6 @@
 class MarkersController < ApplicationController
+  # authorization via cancan
+  load_and_authorize_resource
 
   def show
     # generate (or locate in the cache) the image and get its path

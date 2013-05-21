@@ -19,17 +19,22 @@ module ResponsesHelper
   
   def responses_index_links(responses)
     links = []
-    # only add the create response link if there are any published forms
-    unless @pubd_forms.empty?
-      links << link_to_if_auth("Create new response", "#", "responses#create", nil, 
-        :onclick => "$('#form_chooser').show(); return false") + new_response_mini_form(false)
+    
+    # only add the create response link if there are any published forms and the user is auth'd to create
+    if !@pubd_forms.empty? && can?(:create, Response)
+      links << link_to("Create new response", "#", :onclick => "$('#form_chooser').show(); return false") + new_response_mini_form(false)
     end
-    unless responses.empty?
-      links << link_to_if_auth("Export to CSV", responses_path(:format => :csv, :search => params[:search]), "responses#index", nil)
+    
+    # only add the export link if there are responses and the user is auth'd to export
+    if !responses.empty? && can?(:export, Response)
+      links << link_to("Export to CSV", responses_path(:format => :csv, :search => params[:search]))
     end
+    
+    # return the assembled list of links
     links
   end
   
+  # builds a small inline form consisting of a dropdown for choosing a Form to which to submit a new response
   def new_response_mini_form(visible = true)
     form_tag(new_response_path, :method => :get, :id => "form_chooser", :style => visible ? "" : "display: none") do
       select_tag(:form_id, sel_opts_from_objs(@pubd_forms, :name_method => :full_name, :tags => true), 

@@ -1,12 +1,11 @@
 class Assignment < ActiveRecord::Base
   belongs_to(:mission)
-  belongs_to(:role, :inverse_of => :assignments)
   belongs_to(:user, :inverse_of => :assignments)
 
   validates(:mission, :presence => true)
   validates(:role, :presence => true)
 
-  default_scope(includes(:mission, :role))
+  default_scope(includes(:mission))
   scope(:sorted_recent_first, order("created_at DESC"))
   scope(:active, where(:active => true))
   

@@ -1,7 +1,11 @@
 class PasswordResetsController < ApplicationController
+  # don't need to authorize for any of these because they're for logged out users
+  skip_authorization_check
   
+  # load the user using the perishable token rather than session
   before_filter(:load_user_using_perishable_token, :only => [:edit, :update])
-
+  
+  # when the user requests a password reset
   def new
     @title = "Reset Password"
   end  
@@ -10,7 +14,8 @@ class PasswordResetsController < ApplicationController
   def edit
     @title = "Reset Password"
   end
-
+  
+  # sends the password reset instructions
   def create  
     @user = User.find_by_email(params[:email])  
     if @user  
@@ -23,6 +28,7 @@ class PasswordResetsController < ApplicationController
     end
   end
   
+  # changes the password
   def update
     User.ignore_blank_passwords = false
     @user.password = params[:user][:password]
@@ -47,7 +53,8 @@ class PasswordResetsController < ApplicationController
     end  
   end  
 
-  private  
+  private
+    # loads a user using a perishable token stored in params[:id]
     def load_user_using_perishable_token
       @user = User.find_using_perishable_token(params[:id])  
       unless @user

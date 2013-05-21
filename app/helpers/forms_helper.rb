@@ -1,7 +1,13 @@
 module FormsHelper
   def forms_index_links(forms)
-    [link_to_if_auth("Create Form", new_form_path, "forms#create"),
-      link_to_if_auth("SMS Test Console", new_sms_test_path, "sms_tests#create")]
+    links = []
+    
+    # add links based on authorization
+    links << link_to("Create Form", new_form_path) if can?(:create, Form)
+    links << link_to("SMS Test Console", new_sms_test_path) if can?(:create, Sms::Test)
+    
+    # return links
+    links
   end
   
   def forms_index_fields
@@ -21,27 +27,38 @@ module FormsHelper
     when "published?" then form.published? ? "Yes" : "No"
     when "smsable" then form.smsable? ? "Yes" : "No"
     when "actions"
-      exclude = form.published? ? [:edit, :destroy] : []
-      action_links = action_links(form, :destroy_warning => "Are you sure you want to delete form '#{form.name}'?", 
-        :exclude => exclude)
-        
-      pl_img = action_icon(form.published? ? "unpublish" : "publish")
-      publish_link = link_to_if_auth(pl_img, publish_form_path(form), "forms#publish", form, 
-        :title => "#{form.published? ? 'Unp' : 'P'}ublish")
+      # get standard action links
+      links = action_links(form, :destroy_warning => "Are you sure you want to delete form '#{form.name}'?", 
+        :exclude => form.published? ? [:edit, :destroy] : [])
       
-      clone_link = link_to_if_auth(action_icon("clone"), clone_form_path(form), "forms#clone", form, 
-        :title => "Clone", :confirm => "Are you sure you want to make a copy of the form '#{form.name}'?")
-
-      print_link = link_to_if_auth(action_icon("print"), "#", "forms#show", form, :title => "Print",
-        :onclick => "Form.print(#{form.id}); return false;")
-        
-      sms_link = if form.smsable? && form.published?
-        link_to_if_auth(action_icon("sms"), form_path(form, :sms_guide => 1), "forms#show", form, :title => "Sms Guide")
-      else
-        ""
+      # get the appropriate publish icon and add link, if auth'd
+      if can?(:publish, form)
+        icon = action_icon(form.published? ? "unpublish" : "publish")
+        links += link_to(icon, publish_form_path(form), :title => "#{form.published? ? 'Unp' : 'P'}ublish")
       end
       
-      (action_links + publish_link + clone_link + print_link + sms_link + loading_indicator(:id => form.id, :floating => true)).html_safe
+      # add a clone link if auth'd
+      if can?(:clone, form)
+        links += link_to(action_icon("clone"), clone_form_path(form),
+          :title => "Clone", :confirm => "Are you sure you want to make a copy of the form '#{form.name}'?")
+      end
+
+      # add a print link if auth'd
+      if can?(:print, form)
+        links += link_to(action_icon("print"), "#", :title => "Print", :onclick => "Form.print(#{form.id}); return false;")
+      end
+      
+      # add an sms template link if appropriate
+      if form.smsable? && form.published?
+        links += link_to(action_icon("sms"), form_path(form, :sms_guide => 1), :title => "Sms Guide")
+      end
+      
+      # add a loading indicator
+      links += loading_indicator(:id => form.id, :floating => true)
+      
+      # return the links
+      links.html_safe
+      
     else form.send(field)
     end
   end

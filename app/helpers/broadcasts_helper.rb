@@ -1,6 +1,6 @@
 module BroadcastsHelper
   def broadcasts_index_links(broadcasts)
-    [link_to_if_auth("Send Broadcast", new_broadcast_path, "broadcasts#create")]
+    can?(:create, Broadcast) ? [link_to("Send Broadcast", new_broadcast_path)] : ""
   end
   
   def broadcasts_index_fields

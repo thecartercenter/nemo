@@ -2,7 +2,12 @@ require 'seedable'
 class User < ActiveRecord::Base
   include Seedable
 
+  ROLES = %w[observer staffer coordinator]
+  
   attr_writer(:reset_password_method)
+  
+  # allow can? and cannot? to be called directly on user
+  delegate :can?, :cannot?, :to => :ability
   
   has_many(:responses, :inverse_of => :user)
   has_many(:broadcast_addressings, :inverse_of => :user)
@@ -24,6 +29,7 @@ class User < ActiveRecord::Base
 
   before_validation(:clean_fields)
   before_destroy(:check_assoc)
+  before_validation(:generate_password_if_none)
   
   validates(:name, :presence => true)
   validate(:phone_length_or_empty)
@@ -40,15 +46,11 @@ class User < ActiveRecord::Base
   # we want all of these on one page for now
   self.per_page = 1000000
 
-  def self.new_with_login_and_password(params)
-    u = new(params)
-    u.reset_password
-    u
-  end
   def self.random_password(size = 6)
     charset = %w{2 3 4 6 7 9 a c d e f g h j k m n p q r t v w x y z}
     (0...size).map{charset.to_a[rand(charset.size)]}.join
   end
+  
   def self.find_by_credentials(login, password)
     user = find_by_login(login)
     (user && user.valid_password?(password)) ? user : nil
@@ -107,20 +109,26 @@ class User < ActiveRecord::Base
 #      try += 1
 #    end
 #  end
+
   def deliver_intro!
     reset_perishable_token!
     Notifier.intro(self).deliver
   end
+  
+  # sends password reset instructions to the user's email
   def deliver_password_reset_instructions!
     reset_perishable_token!
-    Notifier.password_reset_instructions(self).deliver  
+    Notifier.password_reset_instructions(self).deliver
   end
+  
   def full_name
     name
   end
+  
   def reset_password_method
     @reset_password_method.nil? ? "dont" : @reset_password_method
   end
+  
   def reset_password_if_requested
     if %w[email print].include?(reset_password_method)
       reset_password and save
@@ -130,6 +138,7 @@ class User < ActiveRecord::Base
       (login_count || 0) > 0 ? deliver_password_reset_instructions! : deliver_intro!
     end
   end
+  
   def to_vcf
     "BEGIN:VCARD\nVERSION:3.0\nFN:#{name}\n" + 
     (email ? "EMAIL:#{email}\n" : "") +
@@ -137,8 +146,14 @@ class User < ActiveRecord::Base
     (phone2 ? "TEL;TYPE=CELL:#{phone2}\n" : "") + 
     "END:VCARD"
   end
-  def can_get_sms?; !(phone.blank? && phone2.blank?) end
-  def can_get_email?; !email.blank?; end
+  
+  def can_get_sms?
+    !(phone.blank? && phone2.blank?) 
+  end
+  
+  def can_get_email?
+    !email.blank?
+  end
   
   def assignments_by_mission
     @assignments_by_mission ||= Hash[*assignments.collect{|a| [a.mission, a]}.flatten]
@@ -154,19 +169,18 @@ class User < ActiveRecord::Base
     nn(assignments_by_mission[mission]).role
   end
   
+  # checks if the user can perform the given role for the given mission
+  # mission defaults to user's current mission
+  def role?(base_role, mission = nil)
+    return true if admin?
+    mission ||= current_mission
+    return false if mission.nil?
+    ROLES.index(base_role.to_s) <= ROLES.index(role(mission))
+  end
+  
   # returns all missions that the user has access to
   def accessible_missions
-    @accessible_missions ||= Permission.restrict(Mission, :user => self)
-  end
-  
-  # tests if user can access the given mission
-  def can_access_mission?(mission)
-    accessible_missions.include?(mission)
-  end
-  
-  # determines if the user's role for the given mission is as an observer
-  def observer?(mission)
-    (r = role(mission)) ? r.observer? : false
+    @accessible_missions ||= Mission.accessible_by(ability)
   end
   
   # if user has no current mission, choose one (if assigned to any)
@@ -178,6 +192,11 @@ class User < ActiveRecord::Base
     elsif current_mission.nil?
       update_attributes(:current_mission_id => assignments.active.sorted_recent_first.first.mission_id)
     end
+  end
+  
+  # builds and returns a CanCan ability class for this user
+  def ability
+    @ability ||= Ability.new(self)
   end
   
   private
@@ -225,7 +244,10 @@ class User < ActiveRecord::Base
     
     # if current mission is not accessible, set to nil
     def ensure_current_mission_is_valid
-      self.current_mission_id = nil if !current_mission_id.nil? && !Permission.user_can_access_mission(self, current_mission)
+      if !current_mission_id.nil?
+        raise "Current mission can't be set on new user" if new_record?
+        self.current_mission_id = nil unless can?(:read, current_mission)
+      end
     end
     
     # ensures phone and phone2 are unique
@@ -242,5 +264,10 @@ class User < ActiveRecord::Base
           errors.add(field, "must be unique")
         end
       end
+    end
+    
+    # generates a random password before validation if this is a new record, unless one is already set
+    def generate_password_if_none
+      reset_password if new_record? && password.blank? && password_confirmation.blank?
     end
 end

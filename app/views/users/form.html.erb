@@ -8,8 +8,8 @@
   <%= form_field(f, :email) %>
   <%= form_field(f, :phone, :size => 20) %>
   <%= form_field(f, :phone2, :size => 20) %>
-  <%= form_field(f, :admin, :type => :check_box) if Permission.can_give_admin_to?(current_user, @user) %>
-  <%= form_field(f, :assignments, :partial => "assignments") if Permission.can_edit_assignments_for?(current_user, @user, current_mission) %>
+  <%= form_field(f, :admin, :type => :check_box) if can?(:adminify, @user) %>
+  <%= form_field(f, :assignments, :partial => "assignments") if can?(:manage, @user) && can?(:manage, Assignment) %>
 
   <%= form_field(f, :notes, :type => :textarea) %>
 

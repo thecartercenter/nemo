@@ -1,15 +1,22 @@
 class UserBatchesController < ApplicationController
+  # special load technique for show
+  before_filter :load_batch_from_session, :only => :show
+
+  # authorization via cancan
+  load_and_authorize_resource
+  
   def new
-    @batch = UserBatch.new
+  end
+  
+  def show
   end
   
   def create
-    @batch = UserBatch.new
     begin
-      @batch.attributes = params[:user_batch]
-      @batch.create_users(current_mission)
+      @user_batch.attributes = params[:user_batch]
+      @user_batch.create_users(current_mission)
       flash[:success] = "Users created successfully."
-      session[:new_user_batch] = @batch
+      session[:new_user_batch] = @user_batch
       redirect_to(:action => :show, :id => 1)
     rescue ActiveRecord::RecordInvalid
       flash[:error] = $!.to_s
@@ -17,7 +24,8 @@ class UserBatchesController < ApplicationController
     end
   end
   
-  def show
-    @batch = session[:new_user_batch]
-  end
+  private
+    def load_batch_from_session
+      @user_batch = session[:new_user_batch]
+    end
 end

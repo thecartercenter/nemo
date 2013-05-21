@@ -5,7 +5,7 @@
     <p><%= link_to("Back to Users List", users_path) %></p>
   </div>
 
-  <% @batch.created_users.each do |u| %>
+  <% @user_batch.created_users.each do |u| %>
     <%= render("users/login_instruction_box", :user => u, :password => u.password) %>
   <% end %>
 </div>

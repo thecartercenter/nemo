@@ -2,7 +2,7 @@ module Report::ReportsHelper
   require 'csv'
   
   def report_reports_index_links(reports)
-    links = [link_to_if_auth("Create new report", new_report_report_path, "report_reports#create")]
+    can?(:create, Report::Report) ? [link_to("Create new report", new_report_report_path)] : []
   end
   
   def report_reports_index_fields

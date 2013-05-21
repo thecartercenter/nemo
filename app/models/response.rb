@@ -22,18 +22,21 @@ class Response < ActiveRecord::Base
   scope(:unreviewed, where(:reviewed => false))
   scope(:by, lambda{|user| where(:user_id => user.id)})
   
-  self.per_page = 20
-  
-  def self.find_eager(id)
-    includes([:form, {:answers => 
-      {
+  # loads all the associations required for show, edit, etc.
+  scope(:with_associations, includes([
+    :form, {
+      :answers => {
         :choices => {:option => :translations},
         :option => :translations, 
         :questioning => [:condition, {:question => [:type, :translations, {:option_set => {:options => :translations}}]}]
       }
-    }]).find(id)
-  end
+    }
+  ]))
   
+  self.per_page = 20
+  
+  # takes a Relation, adds a bunch of selects and joins, and uses find_by_sql to do the actual finding
+  # this technique is due to limitations (at the time of dev) in the Relation system
   def self.for_export(rel)
     find_by_sql(export_sql(rel))
   end
@@ -65,23 +68,37 @@ class Response < ActiveRecord::Base
     ['submitter:"john smith"', 'form:polling', 'reviewed:yes', 'date < 2010-03-15']
   end
 
-  def self.create_from_xml(xml, user, mission)
+  # returns a human-readable description of how many responses have arrived recently
+  def self.recent_count(rel)
+    %w(hour day week month).each do |p|
+      if (x = rel.where("created_at > ?", 1.send(p).ago).count) > 0 
+        return "#{x} in the Past #{p.capitalize}"
+      end
+    end
+    "No recent responses"
+  end
+  
+  def populate_from_xml(xml)
     # parse xml
     doc = XML::Parser.string(xml).parse
+    
+    # set the source/modifier values to odk
+    self.source = self.modifier = "odk"
 
     # get form id
-    form_id = doc.root["id"] or raise ArgumentError.new("No form id was given.")
+    if doc.root["id"]
+      self.form_id = doc.root["id"].to_i
+    else
+      raise ArgumentError.new("No form id was given.")
+    end
     
-    # check if the form is associated with the mission
+    # check if the form is associated with this response's mission
     unless mission && form = Form.for_mission(mission).find_by_id(form_id)
       raise ArgumentError.new("Could not find the specified form.")
     end
     
-    # create response object
-    resp = new(:form => form, :user => user, :mission => mission, :source => "odk", :modifier => "odk")
-    
     # get the visible questionings
-    qings = resp.form.visible_questionings
+    qings = form.visible_questionings
     
     # loop over each child tag and create hash of question_code => value
     values = {}; doc.root.children.each{|c| values[c.name] = c.first? ? c.first.content : nil}
@@ -91,21 +108,8 @@ class Response < ActiveRecord::Base
       # get value from hash
       str = values[qing.question.odk_code]
       # add answer
-      resp.answers << Answer.new_from_str(:str => str, :questioning => qing)
+      self.answers << Answer.new_from_str(:str => str, :questioning => qing)
     end
-
-    # save the works
-    resp.save!
-  end
-  
-  # returns a human-readable description of how many responses have arrived recently
-  def self.recent_count(rel)
-    %w(hour day week month).each do |p|
-      if (x = rel.where("created_at > ?", 1.send(p).ago).count) > 0 
-        return "#{x} in the Past #{p.capitalize}"
-      end
-    end
-    "No recent responses"
   end
   
   def visible_questionings

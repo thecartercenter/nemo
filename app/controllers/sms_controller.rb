@@ -1,5 +1,7 @@
 # handles incoming sms messages from various providers
 class SmsController < ApplicationController
+  # don't need authorize for this controller. authorization is handled inside the sms processing machinery.
+  skip_authorization_check
   
   # disable csrf protection for this stuff
   protect_from_forgery :except => :create 

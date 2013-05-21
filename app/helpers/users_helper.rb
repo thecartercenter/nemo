@@ -16,10 +16,10 @@ module UsersHelper
   end
   def users_index_links(users)
     [
-      batch_op_link(:name => "Send Broadcast", :action => "broadcasts#new_with_users"),
-      batch_op_link(:name => "Export as vCard", :action => "users#export", :format => :vcf),
-      link_to_if_auth("Create New User", new_user_path, "users#create"),
-      link_to_if_auth("Create Multiple Users", new_user_batch_path, "users#create")
+      can?(:create, Broadcast) ? batch_op_link(:name => "Send Broadcast", :path => new_with_users_broadcasts_path) : nil,
+      can?(:export, User) ? batch_op_link(:name => "Export as vCard", :path => export_users_path(:format => :vcf)) : nil,
+      can?(:create, User) ? link_to("Create New User", new_user_path) : nil,
+      can?(:create, User) ? link_to("Create Multiple Users", new_user_batch_path) : nil
     ]
   end
 end

@@ -6,11 +6,10 @@ class Mission < ActiveRecord::Base
   has_many(:assignments, :inverse_of => :mission)
   has_many(:questions, :inverse_of => :mission)
 
-  # these associations are set to :delete_all since we do our own dependency check below and will catch the things they catch
-  has_many(:options, :inverse_of => :mission, :dependent => :delete_all)
-  has_many(:option_sets, :inverse_of => :mission, :dependent => :delete_all)
-  has_many(:form_types, :inverse_of => :mission, :dependent => :delete_all)
-  has_one(:setting, :dependent => :delete)
+  has_many(:options, :inverse_of => :mission, :dependent => :destroy)
+  has_many(:option_sets, :inverse_of => :mission, :dependent => :destroy)
+  has_many(:form_types, :inverse_of => :mission, :dependent => :destroy)
+  has_one(:setting, :dependent => :destroy)
   
   before_validation(:create_compact_name)
   before_destroy(:check_assoc)

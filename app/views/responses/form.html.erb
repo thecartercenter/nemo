@@ -11,16 +11,16 @@
 
   <%= form_field(f, :form_id, :type => :hidden) %>
   
-  <%# determine whether/how to show the user box %>
+  <%# if the user can't manage the response, then don't show the submitter box as a dropdown %>
   <%= form_field(f, :user_id, :type => :select, :required => true, :options => sel_opts_from_objs(@possible_submitters), 
-    :force_show_mode => !@can_choose_submitter) %>
+    :force_show_mode => !can?(:manage, @response)) %>
 
   <% unless f.mode == :new %>
   
     <%= form_field(f, :source) if f.mode == :show %>
 
-    <%# determine whether/how to show the reviewed box %>
-    <%= form_field(f, :reviewed, :type => :check_box, :force_show_mode => !@can_mark_reviewed) %>
+    <%# only show the reviewed checkbox as editable if the user can review the response %>
+    <%= form_field(f, :reviewed, :type => :check_box, :force_show_mode => !can?(:review, @response)) %>
 
   <% end %>  
   
@@ -29,7 +29,7 @@
   <%= form_buttons do %>
     <%= form_submit_button(f, :label => "Save", :multiple => true) %>
     <%= form_submit_button(f, :label => "Save and Mark as Reviewed", :name => "commit_and_mark_reviewed", 
-      :multiple => true) if @can_mark_reviewed %>
+      :multiple => true) if can?(:review, @response) %>
   <% end %>
   
 <% end %>

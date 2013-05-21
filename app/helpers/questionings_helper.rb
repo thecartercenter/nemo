@@ -6,7 +6,8 @@ module QuestioningsHelper
     when "condition?" then qing.has_condition? ? "Yes" : "No"
     when "required?", "hidden?" then qing.send(field) ? "Yes" : "No"
     when "actions"
-      exclude = ((qing.published? || controller.action_name == "show") ? [:edit, :destroy] : [])
+      exclude = [:destroy]
+      exclude << :edit if qing.published? || controller.action_name == "show"
       action_links(qing, :destroy_warning => "Are you sure you want to remove question '#{qing.code}' from this form", :exclude => exclude)
     else qing.send(field)
     end
@@ -14,27 +15,35 @@ module QuestioningsHelper
   
   def questionings_index_links(qings)
     links = []
+    
+    # these links only make sense if we're editing
     if controller.action_name == "edit"
-      links << link_to("Add questions", choose_questions_form_path(@form))
+      # add questions link
+      links << link_to("Add Questions", choose_questions_form_path(@form))
+      
+      # these links only make sense if there are questions
       if qings.size > 0
-        links << batch_op_link(:name => "Remove selected",
-          :confirm => "Are you sure you want to remove these ### question(s) from the form?",
-          :action => "forms#remove_questions", :id => @form.id)
+        # add remove questions link
+        links << batch_op_link(:name => "Remove Selected", :path => remove_questions_form_path(@form),
+          :confirm => "Are you sure you want to remove these ### question(s) from the form?")
         
-        # add publish and print links
-        links << link_to("Publish form", publish_form_path(qings.first.form))
+        # add publish link
+        links << link_to("Publish Form", publish_form_path(@form))
       end
     end
     
-    # can print from show action
+    # can print from show action, if there are questions
     if qings.size > 0
-      links << link_to("Print form", "#", :onclick => "Form.print(#{qings.first.form.id}); return false;") + " " +
+      links << link_to("Print Form", "#", :onclick => "Form.print(#{qings.first.form.id}); return false;") + " " +
         loading_indicator(:id => qings.first.form.id)
     end
     
+    # add the sms guide link if appropriate
     if qings.size > 0 && qings.first.form.smsable? && qings.first.form.published?
-      links << link_to_if_auth("View SMS Guide", form_path(qings.first.form, :sms_guide => 1), "forms#show", qings.first.form)      
+      links << link_to("View SMS Guide", form_path(qings.first.form, :sms_guide => 1))
     end
+    
+    # return the array of links we built
     links
   end
   

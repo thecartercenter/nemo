@@ -17,10 +17,16 @@ module QuestionsHelper
   
   def questions_index_links(questions)
     links = []
+    
+    # add the 'add questions to form' link if there are some questions
     unless @questions.empty?
-      links << batch_op_link(:name => "Add Selected Questions to Form", :action => "forms#add_questions", :id => @form.id)
+      links << batch_op_link(:name => "Add Selected Questions to Form", :path => add_questions_form_path(@form))
     end
-    links << link_to_if_auth("Create a New Question", "#", "questionings#create", {}, :class => "create_question")
+    
+    # add the create new questions link
+    links << link_to("Create a New Question", "#", :class => "create_question") if can?(:create, Question)
+    
+    # return the link set
     links
   end
 end

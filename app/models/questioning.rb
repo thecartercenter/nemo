@@ -18,10 +18,8 @@ class Questioning < ActiveRecord::Base
   
   alias :old_condition= :condition=
   
-  def self.new_with_question(mission, params = {})
-    qing = new(params.merge(:question => Question.for_mission(mission).new))
-  end
-
+  accepts_nested_attributes_for(:question)
+  
   # clones a set of questionings, including their conditions
   # assumes qings are in order in which they appear on the form
   # does not save qings and conditions, just initializes them

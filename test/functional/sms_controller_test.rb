@@ -92,7 +92,7 @@ class SmsControllerTest < ActionController::TestCase
     assert_sms_response(:incoming => "#{form_code} 1.15 2.b", :outgoing => /permission.+soumettre.+#{form_code}/i)
     
     # add the user to the mission
-    @user.assignments.create(:mission => m, :active => true, :role => Role.highest)
+    @user.assignments.create(:mission => m, :active => true, :role => User::ROLES.last)
     
     # try again -- should get merci (need different answers else ignored as duplciate)
     assert_sms_response(:incoming => "#{form_code} 1.15 2.c", :outgoing => /#{form_code}.+merci/i)

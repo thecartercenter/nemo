@@ -1,10 +1,12 @@
 module FormTypesHelper
   def form_types_index_links(form_types)
-    [link_to_if_auth("Add new Form Type", new_form_type_path, "form_types#create")]
+    [can?(:create, FormType) ? link_to("Add new Form Type", new_form_type_path) : nil]
   end
+  
   def form_types_index_fields
     %w[name actions]
   end
+  
   def format_form_types_field(form_type, field)
     case field
     when "actions"

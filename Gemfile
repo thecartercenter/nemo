@@ -18,3 +18,6 @@ gem "iso-639"
 
 # helps simulate time changes when testing
 gem 'timecop'
+
+# authorization
+gem 'cancan'
