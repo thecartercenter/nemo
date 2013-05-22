@@ -160,8 +160,10 @@ class User < ActiveRecord::Base
     @assignments_by_mission ||= Hash[*assignments.collect{|a| [a.mission, a]}.flatten]
   end
   
+  # returns the last mission with which this user is associated
   def latest_mission
-    missions.first
+    # the mission association is already sorted by date so we just take the last one
+    missions.last
   end
   
   # gets the user's role for the given mission
