@@ -8,8 +8,20 @@ class Report::Data
     @rows = rows
   end
   
-  def set_cell(row, col, value)
-    @rows[row][col] = value unless row.nil? || col.nil?
+  # sets the value of the cell given by row, col to value
+  # if options[:append] is true and the cell already has a value, the new value is appended. otherwise it overwrites.
+  def set_cell(row, col, value, options = {})
+    # make sure row and col indices are set
+    return if row.nil? || col.nil?
+    
+    # handle the append option if given
+    @rows[row][col] = if !@rows[row][col].blank? && options[:append]
+      @rows[row][col] + ", " + value
+      
+    # otherwise just set to value
+    else
+      value
+    end
   end
   
   def empty?
