@@ -48,13 +48,15 @@ div.error { background-color: #d02000; }
 
 /* report form */
 div.report_edit_dialog { width: 650px; height: 451px; }
-div.report_edit_pane { width: 650px; height: 400px; display: none; }
+div.report_edit_pane { width: 650px; display: none; }
+div.report_edit_pane div.pane_body { overflow-y: auto; height: 370px; border-top: 1px solid #ddd; }
 div.report_edit_pane label { display: inline-block; }
 div.report_edit_pane input { display: inline-block; }
 div.report_edit_pane input[type='radio'] { margin-right: 4px; }
 div.report_edit_pane input[type='text'] { padding: 4px; }
 div.report_edit_pane .error_box { margin: 0 0 10px 0; color: white; background-color: #d02000; padding: 3px; display: none; font-weight: bold; }
-div.report_edit_pane div.section { margin-bottom: 15px; border-top: 1px solid #ddd; padding-top: 5px; }
+div.report_edit_pane div.section { border-bottom: 1px solid #ddd; padding: 10px 0; }
+div.report_edit_pane div.section:only-child { border-bottom: none; }
 div.report_edit_pane div.section div.name { font-weight: bold; }
 div.report_edit_pane div.section div.name.horiz { display: inline-block; width: 250px; }
 div.report_edit_pane div.section div.controls.horiz { display: inline-block; vertical-align: top; }
@@ -66,6 +68,7 @@ div.report_edit_pane div.multiselect div.links { margin-top: 5px; }
 div.report_edit_pane div.multiselect div.links a { display: inline-block; margin-right: 5px; }
 
 div.report_edit_pane.report_type input { vertical-align: top; }
+div.report_edit_pane.report_type input[type='radio'] { margin-left: 3px; }
 div.report_edit_pane.report_type h3 { font-size: 11pt; margin-bottom: 5px; color: #0065d1; }
 div.report_edit_pane.report_type .ex_lbl { display: inline-block; vertical-align: top; margin-right: 10px; }
 div.report_edit_pane.report_type ul { line-height: 100%; display: inline-block; }
@@ -82,7 +85,7 @@ div.report_edit_pane.question_selection div.multiselect div.choices { height: 15
 
 div.report_edit_pane.report_title input { width: 400px; font-size: 11pt;  }
 
-div.report_edit_dialog .buttons { text-align: right; border-top: 1px solid #888; padding-top: 10px; }
+div.report_edit_dialog .buttons { text-align: right; border-top: 1px solid #ddd; padding-top: 10px; }
 div.report_edit_dialog .buttons a { display: inline-block; margin: 0 0 0 10px; padding: 10px; font-size: 120%; font-weight: bold; width: 75px; text-align: center; 
     background-color: #ddd; border: 1px solid #888; color: #444; text-decoration: none; }
 

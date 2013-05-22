@@ -73,44 +73,46 @@
     <div class="report_edit_pane report_type">
       <h2>Report Type</h2>
       <div class="error_box"></div>
-      <div class="section">
-        <div class="name vert">What type of report would you like?</div>
-        <div class="controls vert">
-          <div>
-            <input type="radio" name="report_type" id="report_type_0" value="Report::QuestionAnswerTallyReport">
-            <label for="report_type_0">
-              <h3>Tally of Answers per Question</h3>
-              <div class="ex_lbl">Examples:</div>
-              <ul>
-                <li>Number of Very Good, Good, etc. answers for the Overall question</li>
-                <li>Percentage of Yes and No for all Yes-No questions</li>
-                <li>Number of Zero and Non-zero answers for questions about observers</li>
-              </ul>
-            </label>
-          </div>
-          <div>
-            <input type="radio" name="report_type" id="report_type_1" value="Report::GroupedTallyReport">
-            <label for="report_type_1">
-              <h3>Tally of Responses per Answer/Attribute</h3>
-              <div class="ex_lbl">Examples:</div>
-              <ul>
-                <li>Number of responses per form for each team</li>
-                <li>Percentage of Yes and No per day for the PeacefulEnvironment question</li>
-                <li>Percentage of Zero and Non-zero answers per State for the DomesticObservers question</li>
-              </ul>
-            </label>
-          </div>
-          <div>
-            <input type="radio" name="report_type" id="report_type_2" value="Report::ListReport">
-            <label for="report_type_2">
-              <h3>List of Answers/Attributes</h3>
-              <div class="ex_lbl">Examples:</div>
-              <ul>
-                <li>List of answers to the Complaints and OtherIrreg questions along with the polling place number</li>
-                <li>List of all polling place numbers, with no duplicates</li>
-                <li>List of submitter name, date, and answer to the NeedSecurityContact question</li>
-              </ul>
-            </label>
+      <div class="pane_body">
+        <div class="section">
+          <div class="name vert">What type of report would you like?</div>
+          <div class="controls vert">
+            <div>
+              <input type="radio" name="report_type" id="report_type_0" value="Report::QuestionAnswerTallyReport">
+              <label for="report_type_0">
+                <h3>Tally of Answers per Question</h3>
+                <div class="ex_lbl">Examples:</div>
+                <ul>
+                  <li>Number of Very Good, Good, etc. answers for the Overall question</li>
+                  <li>Percentage of Yes and No for all Yes-No questions</li>
+                  <li>Number of Zero and Non-zero answers for questions about observers</li>
+                </ul>
+              </label>
+            </div>
+            <div>
+              <input type="radio" name="report_type" id="report_type_1" value="Report::GroupedTallyReport">
+              <label for="report_type_1">
+                <h3>Tally of Responses per Answer/Attribute</h3>
+                <div class="ex_lbl">Examples:</div>
+                <ul>
+                  <li>Number of responses per form for each team</li>
+                  <li>Percentage of Yes and No per day for the PeacefulEnvironment question</li>
+                  <li>Percentage of Zero and Non-zero answers per State for the DomesticObservers question</li>
+                </ul>
+              </label>
+            </div>
+            <div>
+              <input type="radio" name="report_type" id="report_type_2" value="Report::ListReport">
+              <label for="report_type_2">
+                <h3>List of Answers/Attributes</h3>
+                <div class="ex_lbl">Examples:</div>
+                <ul>
+                  <li>List of answers to the Complaints and OtherIrreg questions along with the polling place number</li>
+                  <li>List of all polling place numbers, with no duplicates</li>
+                  <li>List of submitter name, date, and answer to the NeedSecurityContact question</li>
+                </ul>
+              </label>
+            </div>
           </div>
         </div>
       </div>
@@ -119,41 +121,43 @@
     <div class="report_edit_pane display_options">
       <h2>Display Options</h2>
       <div class="error_box"></div>
-      <div class="section display_type">
-        <div class="name horiz">How would you like to display the results?</div>
-        <div class="controls horiz">
-          <input type="radio" name="display_type" id="display_type_1" value="Table" />
-          <label for="display_type_1">
-            <div></div> Table
-          </label>
-          <input type="radio" name="display_type" id="display_type_2" value="BarChart" />
-          <label for="display_type_2">
-            <div></div> Bar Chart
-          </label>
+      <div class="pane_body">
+        <div class="section display_type">
+          <div class="name horiz">How would you like to display the results?</div>
+          <div class="controls horiz">
+            <input type="radio" name="display_type" id="display_type_1" value="Table" />
+            <label for="display_type_1">
+              <div></div> Table
+            </label>
+            <input type="radio" name="display_type" id="display_type_2" value="BarChart" />
+            <label for="display_type_2">
+              <div></div> Bar Chart
+            </label>
+          </div>
         </div>
-      </div>
-      <div class="section percent_style">
-        <div class="name horiz">What percentage style would you like?</div>
-        <div class="controls horiz">
-          <select id="percent_style"></select>
+        <div class="section percent_style">
+          <div class="name horiz">What percentage style would you like?</div>
+          <div class="controls horiz">
+            <select id="percent_style"></select>
+          </div>
         </div>
-      </div>
-      <div class="section">
-        <div class="name horiz">What bar style would you like?</div>
-        <div class="controls horiz">
-          <input type="radio" name="bar_style" id="bar_style_1" value="Side By Side" />
-          <label for="bar_style_1">Side by Side</label>
-          <input type="radio" name="bar_style" id="bar_style_2" value="Stacked" />
-          <label for="bar_style_2">Stacked</label>
+        <div class="section">
+          <div class="name horiz">What bar style would you like?</div>
+          <div class="controls horiz">
+            <input type="radio" name="bar_style" id="bar_style_1" value="Side By Side" />
+            <label for="bar_style_1">Side by Side</label>
+            <input type="radio" name="bar_style" id="bar_style_2" value="Stacked" />
+            <label for="bar_style_2">Stacked</label>
+          </div>
         </div>
-      </div>
-      <div class="section">
-        <div class="name horiz">How should questions be displayed?</div>
-        <div class="controls horiz">
-          <input type="radio" name="question_labels" id="question_labels_1" value="Code" />
-          <label for="question_labels_1">Codes Only (Saves Space)</label>
-          <input type="radio" name="question_labels" id="question_labels_2" value="Title" />
-          <label for="question_labels_2">Full Titles (Easier to Read)</label>
+        <div class="section">
+          <div class="name horiz">How should questions be displayed?</div>
+          <div class="controls horiz">
+            <input type="radio" name="question_labels" id="question_labels_1" value="Code" />
+            <label for="question_labels_1">Codes Only (Saves Space)</label>
+            <input type="radio" name="question_labels" id="question_labels_2" value="Title" />
+            <label for="question_labels_2">Full Titles (Easier to Read)</label>
+          </div>
         </div>
       </div>
     </div>
@@ -161,15 +165,16 @@
     <div class="report_edit_pane form_selection">
       <h2>Forms Included</h2>
       <div class="error_box"></div>
-      
-      <div class="section">
-        <div class="name horiz">Which forms are you interested in?</div>
-        <div class="controls horiz">
-          <div id="form_select" class="multiselect">
-            <div class="choices"></div>
-            <div class="links">
-              <a href="#" class="select_all">Select All</a>
-              <a href="#" class="deselect_all">Deselect All</a>
+      <div class="pane_body">
+        <div class="section">
+          <div class="name horiz">Which forms are you interested in?</div>
+          <div class="controls horiz">
+            <div id="form_select" class="multiselect">
+              <div class="choices"></div>
+              <div class="links">
+                <a href="#" class="select_all">Select All</a>
+                <a href="#" class="deselect_all">Deselect All</a>
+              </div>
             </div>
           </div>
         </div>
@@ -179,31 +184,32 @@
     <div class="report_edit_pane question_selection">
       <h2>Questions Included</h2>
       <div class="error_box"></div>
-      
-      <div class="section">
-        <div class="name horiz">Which calculation (if any) would you like to apply?</div>
-        <div class="controls horiz">
-          <select id="omnibus_calculation"></select>
-        </div>
-      </div>
-      
-      <div class="section">
-        <div class="name vert">Which question(s) would you like to include?</div>
-        <div class="controls vert">
-      
-          <div class="q_sel_type">
-            <input type="radio" name="q_sel_type" id="q_sel_type_questions" value="questions">
-            <label for="q_sel_type_questions">These specific questions:</label>
-            <div id="question_select" class="multiselect">
-              <div class="choices"></div>
-            </div>
+      <div class="pane_body">
+        <div class="section">
+          <div class="name horiz">Which calculation (if any) would you like to apply?</div>
+          <div class="controls horiz">
+            <select id="omnibus_calculation"></select>
           </div>
+        </div>
       
-          <div class="q_sel_type">
-            <input type="radio" name="q_sel_type" id="q_sel_type_option_set" value="option_set">
-            <label for="q_sel_type_option_set">Questions with these option sets:</label>
-            <div id="option_set_select" class="multiselect">
-              <div class="choices"></div>
+        <div class="section">
+          <div class="name vert">Which question(s) would you like to include?</div>
+          <div class="controls vert">
+      
+            <div class="q_sel_type">
+              <input type="radio" name="q_sel_type" id="q_sel_type_questions" value="questions">
+              <label for="q_sel_type_questions">These specific questions:</label>
+              <div id="question_select" class="multiselect">
+                <div class="choices"></div>
+              </div>
+            </div>
+      
+            <div class="q_sel_type">
+              <input type="radio" name="q_sel_type" id="q_sel_type_option_set" value="option_set">
+              <label for="q_sel_type_option_set">Questions with these option sets:</label>
+              <div id="option_set_select" class="multiselect">
+                <div class="choices"></div>
+              </div>
             </div>
           </div>
         </div>
@@ -213,25 +219,26 @@
     <div class="report_edit_pane grouping">
       <h2>Groupings</h2>
       <div class="error_box"></div>
-      
-      <div class="section">
-        <div class="name vert">What attribute or question would you like for the row headers?</div>
-        <div class="controls vert">
-          <div class="primary field_selector">
-            <select class="field">
-              <option>Choose an attribute or question...</option>
-            </select>
+      <div class="pane_body">
+        <div class="section">
+          <div class="name vert">What attribute or question would you like for the row headers?</div>
+          <div class="controls vert">
+            <div class="primary field_selector">
+              <select class="field">
+                <option>Choose an attribute or question...</option>
+              </select>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="section">
-        <div class="name vert">What attribute or question would you like for the column headers (optional)?</div>
-        <div class="controls vert">
-          <div class="secondary field_selector">
-            <select class="field">
-              <option>Choose an attribute or question...</option>
-            </select>
+        <div class="section">
+          <div class="name vert">What attribute or question would you like for the column headers (optional)?</div>
+          <div class="controls vert">
+            <div class="secondary field_selector">
+              <select class="field">
+                <option>Choose an attribute or question...</option>
+              </select>
+            </div>
           </div>
         </div>
       </div>
@@ -240,20 +247,21 @@
     <div class="report_edit_pane fields">
       <h2>Questions and Attributes</h2>
       <div class="error_box"></div>
-      
-      <div class="section">
-        <div class="name vert">What questions and/or attributes would you like to see in the list?</div>
-        <div class="controls vert">
-          <div class="field_selector_set">
-            <div class="selectors">
-              <div>
-                <select class="field">
-                  <option>Choose an attribute or question...</option>
-                </select>
-                <a href="#" class="remove">Remove</a>
+      <div class="pane_body">
+        <div class="section">
+          <div class="name vert">What questions and/or attributes would you like to see in the list?</div>
+          <div class="controls vert">
+            <div class="field_selector_set">
+              <div class="selectors">
+                <div>
+                  <select class="field">
+                    <option>Choose an attribute or question...</option>
+                  </select>
+                  <a href="#" class="remove">Remove</a>
+                </div>
               </div>
+              <a href="#" class="add">Add Question/Attribute</a>
             </div>
-            <a href="#" class="add">Add Question/Attribute</a>
           </div>
         </div>
       </div>
@@ -262,16 +270,16 @@
     <div class="report_edit_pane report_title">
       <h2>Report Title</h2>
       <div class="error_box"></div>
-      
-      <div class="section">
-        <div class="name vert">
-          <label for="report_title">Enter a descriptive name for the report.</label>
-        </div>
-        <div class="controls vert">
-          <input type="text" id="report_title"/>
+      <div class="pane_body">
+        <div class="section">
+          <div class="name vert">
+            <label for="report_title">Enter a descriptive name for the report.</label>
+          </div>
+          <div class="controls vert">
+            <input type="text" id="report_title"/>
+          </div>
         </div>
       </div>
-      
     </div>
     
     <div class="buttons">
