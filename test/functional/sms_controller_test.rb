@@ -4,7 +4,6 @@ require 'sms_forms_test_helper'
 class SmsControllerTest < ActionController::TestCase
 
   setup do
-    QuestionType.generate
     [Form, Question, Questioning, Option, OptionSet, OptionSetting, Response].each{|k| k.delete_all}
     @user = get_user
     

@@ -31,7 +31,7 @@
       <% @form.visible_questionings.each do |q| %>
         <%= tag("bind", {
             'nodeset' => "/data/#{q.question.odk_code}",
-            'type' => q.question.type.odk_name,
+            'type' => q.question.qtype.odk_name,
             'required' => q.required? ? "true()" : nil,
             'relevant' => q.has_condition? ? q.condition.to_odk : nil,
             'constraint' => q.odk_constraint,
@@ -42,7 +42,7 @@
   </h:head>
   <h:body>
     <% @form.visible_questionings.each do |q| %>
-      <% next if q.question.type.odk_tag.nil? %>
+      <% next if q.question.qtype.odk_tag.nil? %>
       <%= odk_input_tag(q) do %>
         <label ref="jr:itext('<%= q.question.odk_code %>:label')"/>
         <hint ref="jr:itext('<%= q.question.odk_code %>:hint')"/>

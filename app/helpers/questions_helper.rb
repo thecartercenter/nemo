@@ -2,7 +2,7 @@ module QuestionsHelper
   def format_questions_field(q, field)
     case field
     when "title" then q.name_en
-    when "type" then q.type.long_name
+    when "type" then t(q.qtype_name, :scope => :question_types)
     when "published?" then q.published? ? "Yes" : "No"
     when "actions"
       exclude = q.published? ? [:edit, :destroy] : []

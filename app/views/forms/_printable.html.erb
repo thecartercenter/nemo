@@ -11,7 +11,7 @@
       <td class="answer text_answer"><div class="answer_box"></div></td>
     </tr>
     <% form.questionings.each do |qing| %>
-      <% next unless qing.question.type.printable? # only print printable questions %>
+      <% next unless qing.question.qtype.form_printable? # only print printable questions %>
       <%= render("questionings/printable", :qing => qing, :lang => :en) %>
     <% end %>
   </table>

@@ -13,7 +13,7 @@ class ActiveSupport::TestCase
     @form = FactoryGirl.create(:form, :smsable => true, :mission => options[:mission])
     options[:questions].each do |type|
       # create the question
-      q = FactoryGirl.build(:question, :question_type_id => QuestionType.find_by_name(type).id, :mission => options[:mission])
+      q = FactoryGirl.build(:question, :qtype_name => type, :mission => options[:mission])
       
       # add an option set if required
       if %w(select_one select_multiple).include?(type)

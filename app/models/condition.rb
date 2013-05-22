@@ -19,7 +19,7 @@ class Condition < ActiveRecord::Base
   }
   
   def conditionable_qings
-    questioning ? questioning.previous_qings.reject{|qing| %w[location].include?(qing.question.type.name)} : []
+    questioning ? questioning.previous_qings.reject{|qing| %w[location].include?(qing.question.qtype.name)} : []
   end
   
   def question_code_select_options
@@ -27,7 +27,7 @@ class Condition < ActiveRecord::Base
   end
   
   def question_code_type_hash
-    Hash[*conditionable_qings.collect{|qing| [qing.id.to_s, qing.question.type.name]}.flatten]
+    Hash[*conditionable_qings.collect{|qing| [qing.id.to_s, qing.question.qtype.name]}.flatten]
   end
   
   def question_options_hash
@@ -40,7 +40,7 @@ class Condition < ActiveRecord::Base
   
   def op_select_options
     ref_question ? 
-      OPS.reject{|op, attribs| !attribs[:types].include?(ref_question.type.name.to_sym)}.collect{|op, attribs| [op,op]} :
+      OPS.reject{|op, attribs| !attribs[:types].include?(ref_question.qtype.name.to_sym)}.collect{|op, attribs| [op,op]} :
       []
   end
   
@@ -76,13 +76,13 @@ class Condition < ActiveRecord::Base
     else
       
       # for numeric ref. questions, just convert value to string to get rhs
-      if ref_question.type.numeric? 
+      if ref_question.qtype.numeric? 
         rhs = value.to_s
       
       # for temporal ref. questions, need to convert dates to appropriate format
-      elsif ref_question.type.temporal?
+      elsif ref_question.qtype.temporal?
         # get xpath compatible date type name
-        date_type = ref_question.type.name.gsub("datetime", "dateTime")
+        date_type = ref_question.qtype.name.gsub("datetime", "dateTime")
         format = :"javarosa_#{date_type.downcase}"
         formatted = Time.zone.parse(value).to_s(format)
         lhs = "format-date(#{lhs}, '#{Time::DATE_FORMATS[format]}')"
@@ -121,7 +121,7 @@ class Condition < ActiveRecord::Base
     def clean_times
       if ref_qing && !value.blank?
         # get the question type
-        qtype = ref_qing.question.type
+        qtype = ref_qing.question.qtype
         
         begin
           # reformat only if it's a temporal question

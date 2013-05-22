@@ -6,7 +6,7 @@
     ft.name AS form_type,
     q.code AS question_code,
     qtr.str AS question_name,
-    qt.name AS question_type,
+    q.qtype_name AS question_type,
     u.name AS observer_name,
     a.id AS answer_id,
     a.value AS answer_value,
@@ -30,7 +30,6 @@
         join form_types ft on f.form_type_id = ft.id
     join questionings qing on a.questioning_id = qing.id
       join questions q on qing.question_id = q.id
-        join question_types qt on q.question_type_id = qt.id
         left join option_sets os on q.option_set_id = os.id
           join translations qtr on (qtr.obj_id = q.id and qtr.fld = 'name' and qtr.class_name = 'Question'
             and qtr.language = 'en')

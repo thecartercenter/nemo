@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130515183455) do
+ActiveRecord::Schema.define(:version => 20130522230727) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -181,17 +181,16 @@ ActiveRecord::Schema.define(:version => 20130515183455) do
     t.integer  "option_set_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "question_type_id"
     t.integer  "minimum"
     t.integer  "maximum"
     t.boolean  "maxstrictly"
     t.boolean  "minstrictly"
     t.integer  "mission_id"
+    t.string   "qtype_name"
   end
 
   add_index "questions", ["mission_id"], :name => "index_questions_on_mission_id"
   add_index "questions", ["option_set_id"], :name => "index_questions_on_option_set_id"
-  add_index "questions", ["question_type_id"], :name => "index_questions_on_question_type_id"
 
   create_table "report_calculations", :force => true do |t|
     t.string   "type"

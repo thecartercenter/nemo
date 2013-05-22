@@ -104,7 +104,7 @@ class Report::ReportsController < ApplicationController
           :attribs => Report::AttribField.all,
           :forms => Form.for_mission(current_mission).with_form_type.all,
           :calculation_types => Report::Calculation.types,
-          :questions => Question.for_mission(current_mission).includes(:forms, :type).all,
+          :questions => Question.for_mission(current_mission).includes(:forms).all,
           :option_sets => OptionSet.for_mission(current_mission).all,
           :percent_types => Report::Report::PERCENT_TYPES
         }

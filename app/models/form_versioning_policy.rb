@@ -51,7 +51,7 @@ class FormVersioningPolicy
       case action
       when :update
         # changing question type is a trigger
-        triggers << {:reason => :question_type_changed, :forms => obj.forms} if obj.question_type_id_changed?
+        triggers << {:reason => :question_type_changed, :forms => obj.forms} if obj.qtype_name_changed?
       end
     end
     return triggers

@@ -41,13 +41,13 @@
       return this.cache[cache_key];
     
     for (var i = 0; i < this.objs.length; i++) {
-      var type = this.objs[i].type;
+      var type = this.objs[i].qtype_name;
       // ZeroNonzeroCalculations must have integer or decimal questions
       if (options.calc_type == "Report::ZeroNonzeroCalculation" && !(type == "integer" || type == "decimal"))
         continue;
       
       // IdentityCalculation can have any type given in question_types
-      if (options.calc_type == "Report::IdentityCalculation" && options.question_types.length > 0 && options.question_types.indexOf(this.objs[i].type) == -1)
+      if (options.calc_type == "Report::IdentityCalculation" && options.question_types.length > 0 && options.question_types.indexOf(this.objs[i].qtype_name) == -1)
         continue;
         
       // question must appear on one of the given forms

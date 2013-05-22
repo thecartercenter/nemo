@@ -20,7 +20,7 @@ fr:
       question:
         name_en: "English Name"
         option_set_id: Option Set
-        question_type_id: Type
+        qtype_name: Type
       questioning:
         hidden: Hidden?
         required: Required?
@@ -83,7 +83,7 @@ fr:
         maximum: The maximum value for the response. Check the box if the maximum itself is not valid.
         name_en: The main question text, e.g. 'How many people are in line?'
         option_set_id: The set of options the user will be able to choose from.
-        question_type_id: The kind of information the user will be entering.
+        qtype_name: The kind of information the user will be entering.
       questioning:
         condition: An optional condition which must be met in order for this question to be shown to the user.
         hidden: Whether this question will be shown on this form. Use this to disable a question if you can't delete it. This value will override any condition specified above.

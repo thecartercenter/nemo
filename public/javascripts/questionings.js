@@ -58,16 +58,17 @@ function add_option(select, text, value, selected) {
   // constructor
   ns.Questioning = klass = function() {
     // hookup type change event and trigger immediately
-    var type_box = $('form.questioning_form .form_field#question_type_id .form_field_control select');
+    var type_box = $('form.questioning_form .form_field#qtype_name .form_field_control select');
     (function(_this){ type_box.change(function(e){_this.question_type_changed(e)}); })(this);
     type_box.trigger("change");
   }
   
   klass.prototype.question_type_changed = function(event) {
-    var selected_type = $(event.target).find("option:selected").text();
+    var selected_type = $(event.target).find("option:selected").val();
+    console.log(selected_type)
     
     // show/hide option set
-    var show_opt_set = (selected_type == "Select One" || selected_type == "Select Multiple");
+    var show_opt_set = (selected_type == "select_one" || selected_type == "select_multiple");
     $("form.questioning_form .form_field#option_set_id")[show_opt_set ? 'show' : 'hide']();
 
     // reset select if hiding
@@ -75,7 +76,7 @@ function add_option(select, text, value, selected) {
       $("form.questioning_form .form_field#option_set_id .form_field_control select")[0].selectedIndex = 0;
     
     // show/hide max/min
-    var show_max_min = (selected_type == "Decimal" || selected_type == "Integer");
+    var show_max_min = (selected_type == "decimal" || selected_type == "integer");
     $("form.questioning_form .form_field#minimum")[show_max_min ? 'show' : 'hide']();
     $("form.questioning_form .form_field#maximum")[show_max_min ? 'show' : 'hide']();
     

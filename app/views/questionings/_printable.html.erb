@@ -9,9 +9,9 @@
     </div>
     <!--<div class="hint"><%= qing.question.hint(lang) %></div>-->
   </td>
-  <td class="answer <%= qing.question.type.name %>_answer">
+  <td class="answer <%= qing.question.qtype.name %>_answer">
     <% # print options if necessary %>
-    <% if qing.question.is_select? %>
+    <% if qing.question.qtype.has_options? %>
       <% qing.question.options.each do |opt| %>
         <div class="option">
           <div class="option_box"></div>

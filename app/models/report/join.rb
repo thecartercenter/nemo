@@ -76,11 +76,6 @@ class Report::Join
         AND __question_trans.fld = 'name' AND __question_trans.class_name = 'Question' 
         AND __question_trans.language = 'en')"
     ),
-    :question_types => new( 
-      :name => :question_types,
-      :dependencies => :questions, 
-      :sql => "INNER JOIN question_types __question_types ON __questions.question_type_id = __question_types.id"
-    ),      
     :option_sets => new( 
       :name => :option_sets,
       :dependencies => :questions, 

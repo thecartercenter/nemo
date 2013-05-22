@@ -4,7 +4,6 @@ require 'sms_forms_test_helper'
 class SmsDecoderTest < ActiveSupport::TestCase
   
   setup do
-    QuestionType.generate
     [Form, Question, Questioning, Option, OptionSet, OptionSetting, Response].each{|k| k.delete_all}
     @user = get_user
   end
@@ -325,7 +324,7 @@ class SmsDecoderTest < ActiveSupport::TestCase
         options[:answers][ans.questioning.rank - 1] = nil
         
         # ensure answer matches
-        case ans.questioning.question.type.name
+        case ans.questioning.question.qtype.name
         when "integer" 
           assert_equal(expected, ans.value.to_i)
         when "decimal"

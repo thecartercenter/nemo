@@ -54,13 +54,10 @@ class ActiveSupport::TestCase
   end
 
   def create_question(params)
-    QuestionType.generate
-    
     # create default form if necessary
     params[:forms] ||= [create_form(:name => "f")]  
     
-    q = Question.new(:name_en => params[:name_en] || params[:code], :code => params[:code], :mission => mission,
-      :question_type_id => QuestionType.find_by_name(params[:type]).id)
+    q = Question.new(:name_en => params[:name_en] || params[:code], :code => params[:code], :mission => mission, :qtype_name => params[:type])
   
     # set the option set if type is select_one or select_multiple
     q.option_set = params[:option_set] || @option_sets.first[1] if %w(select_one select_multiple).include?(params[:type])
@@ -79,7 +76,7 @@ class ActiveSupport::TestCase
     r = Response.new({:reviewed => true, :user => user, :mission => mission}.merge(params))
     ans.each_pair do |code,value|
       qing = @questions[code].questionings.first
-      case qing.question.type.name
+      case qing.question.qtype.name
       when "select_one"
         # create answer with option_id
         r.answers.build(:questioning_id => qing.id, :option => qing.question.options.find{|o| o.name_en == value})
@@ -88,7 +85,7 @@ class ActiveSupport::TestCase
         a = r.answers.build(:questioning_id => qing.id)
         value.each{|opt| a.choices.build(:option => qing.question.options.find{|o| o.name_en == opt})}
       when "datetime", "date", "time"
-        a = r.answers.build(:questioning_id => qing.id, :"#{qing.question.type.name}_value" => value)
+        a = r.answers.build(:questioning_id => qing.id, :"#{qing.question.qtype.name}_value" => value)
       else
         r.answers.build(:questioning_id => qing.id, :value => value)
       end

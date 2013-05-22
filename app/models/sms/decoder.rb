@@ -118,7 +118,7 @@ class Sms::Decoder
     # adds the answer contained in @value to the @response for the questioning in @qing
     # raises an error if the answer doesn't make sense
     def add_answer
-      case @qing.question.type.name
+      case @qing.question.qtype.name
       when "integer"
         # for integer question, make sure the value looks like a number
         raise_answer_error("answer_not_integer") unless @value =~ /^\d+$/

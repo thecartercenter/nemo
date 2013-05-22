@@ -13,12 +13,15 @@ class Answer < ActiveRecord::Base
   before_save(:round_ints)
   before_save(:blanks_to_nulls)
   
-  validates(:value, :numericality => true, :if => Proc.new{|a| a.numeric? && !a.value.blank?})
+  validates(:value, :numericality => true, :if => Proc.new{|a| a.qtype.numeric? && !a.value.blank?})
   
   # in these custom validations, we add errors to the base, but we don't use full sentences (e.g. we use 'is required')
   # since this class really just represents one value
   validate(:min_max)
   validate(:required)
+  
+  delegate :question, :to => :questioning
+  delegate :qtype, :to => :question
 
   # creates a new answer from a string from odk
   def self.new_from_str(params)
@@ -29,19 +32,19 @@ class Answer < ActiveRecord::Base
     return ans if str.nil?
 
     # set the attributes based on the question type
-    if ans.question_type_name == "select_one"
+    if ans.qtype.name == "select_one"
       ans.option_id = str.to_i
-    elsif ans.question_type_name == "select_multiple"
+    elsif ans.qtype.name == "select_multiple"
       str.split(" ").each{|oid| ans.choices.build(:option_id => oid.to_i)}
-    elsif ans.question.type.temporal?
+    elsif ans.qtype.temporal?
       # parse the string into a time
       val = Time.zone.parse(str)
       
       # convert the parsed time to the appropriate database format unless question is timezone sensitive
-      val = val.to_s(:"db_#{ans.question_type_name}") unless ans.question.type.has_timezone?
+      val = val.to_s(:"db_#{ans.qtype.name}") unless ans.qtype.has_timezone?
       
       # assign the value
-      ans.send("#{ans.question_type_name}_value=", val)
+      ans.send("#{ans.qtype.name}_value=", val)
     else
       ans.value = str
     end
@@ -95,11 +98,6 @@ class Answer < ActiveRecord::Base
   def hidden?; questioning.hidden?; end
   def question_name; question.name; end
   def question_hint; question.hint; end
-  def question_type_name; question.type.name; end
-  def can_have_choices?; question_type_name == "select_multiple"; end
-  def location?; question_type_name == "location"; end
-  def numeric?; question.type.numeric?; end
-  def integer?; question.type.integer?; end
   def options; question.options; end
   
   # relevant defaults to true until set otherwise
@@ -117,28 +115,32 @@ class Answer < ActiveRecord::Base
   
   private
     def required
-      if required? && !hidden? && relevant? && !can_have_choices? &&
+      if required? && !hidden? && relevant? && qtype.name == "select_multiple" &&
         value.blank? && time_value.blank? && date_value.blank? && datetime_value.blank? && option_id.nil? 
           errors.add(:base, "is required")
       end
     end
+    
     def round_ints
-      self.value = value.to_i if integer? && !value.blank?
+      self.value = value.to_i if qtype.name == "integer" && !value.blank?
       return true
     end
+    
     def blanks_to_nulls
       self.value = nil if value.blank?
       return true
     end
+    
     def min_max
       val_f = value.to_f
       if question.maximum && (val_f > question.maximum || question.maxstrictly && val_f == question.maximum) ||
          question.minimum && (val_f < question.minimum || question.minstrictly && val_f == question.minimum)
            errors.add(:base, question.min_max_error_msg)
       end
-    end                 
+    end
+    
     def clean_locations
-      if location? && !value.blank?
+      if qtype.name == "location" && !value.blank?
         if value.match(configatron.lat_lng_regexp)
           lat = number_with_precision($1.to_f, :precision => 6)
           lng = number_with_precision($3.to_f, :precision => 6)

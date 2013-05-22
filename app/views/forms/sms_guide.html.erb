@@ -47,7 +47,7 @@
       </tr>
       
       <%# options area, for select_* questions %>
-      <% if qing.question.type.has_options? %>
+      <% if qing.question.qtype.has_options? %>
         <tr>
           <td class="rank"></td>
           <td class="options">
@@ -64,7 +64,7 @@
         <td class="rank"></td>
         <td class="pointer">
           <em>
-            <%= t("sms_forms.guide.pointers.#{qing.question.type.name}") %>
+            <%= t("sms_forms.guide.pointers.#{qing.question.qtype.name}") %>
             <%= sms_example_for_question(qing) %>
           </em>
         </td>

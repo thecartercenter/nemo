@@ -41,7 +41,7 @@ class Questioning < ActiveRecord::Base
   end
   
   def answer_required?
-    required? && question.type.name != "select_multiple"
+    required? && question.qtype.name != "select_multiple"
   end
   
   def published?
@@ -71,7 +71,7 @@ class Questioning < ActiveRecord::Base
   end
   
   def is_question_method?(symbol)
-    symbol.match(/^((name|hint)_([a-z]{2})(=?)|code=?|option_set_id=?|question_type_id=?)(_before_type_cast)?$/)
+    symbol.match(/^((name|hint)_([a-z]{2})(=?)|code=?|option_set_id=?|qtype_name=?)(_before_type_cast)?$/)
   end
   
   def has_condition?; !condition.nil?; end

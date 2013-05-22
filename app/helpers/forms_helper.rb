@@ -68,8 +68,8 @@ module FormsHelper
   def odk_input_tag(qing, &block)
     opts = {}
     opts[:ref] = "/data/#{qing.question.odk_code}"
-    opts[:appearance] = "tall" if qing.question.type.name == "long_text"
-    content_tag(qing.question.type.odk_tag, opts, &block)
+    opts[:appearance] = "tall" if qing.question.qtype.name == "long_text"
+    content_tag(qing.question.qtype.odk_tag, opts, &block)
   end
   
   # returns a set of divs making up an answer space for the given text for use in the sms guide
@@ -108,7 +108,7 @@ module FormsHelper
   
   # returns an example answer based on the question type, to be used in the sms guide
   def sms_example_for_question(qing)
-    content = case qing.question.type.name
+    content = case qing.question.qtype.name
     when "integer" then "3"
     when "decimal" then "12.5"
     when "select_one" then "b"
@@ -125,7 +125,7 @@ module FormsHelper
   # returns a set of answer spaces for the given question type
   def answer_space_for_question(qing)
     # determine the number of spaces
-    size = case qing.question.type.name
+    size = case qing.question.qtype.name
     when "integer", "select_one" then 1
     when "decimal" then 2
     when "time", "select_multiple" then 4

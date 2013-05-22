@@ -25,7 +25,8 @@
     
     <% unless @question_pubd %>
       <%= form_field(f2, :code, :required => true, :maxlength => 20) %>
-      <%= form_field(f2, :question_type_id, :type => :select, :required => true, :options => sel_opts_from_objs(@question_types, :name_method => :long_name)) %>
+      <%= form_field(f2, :qtype_name, :type => :select, :required => true, 
+        :options => @question_types.map{|qt| [t(qt.name, :scope => :question_types), qt.name]}) %>
       <%= form_field(f2, :option_set_id, :type => :select, :options => sel_opts_from_objs(@option_sets)) %>
       <%= form_field(f2, :minimum, :partial => "questions/min_max_condition") %>
       <%= form_field(f2, :maximum, :partial => "questions/min_max_condition") %>

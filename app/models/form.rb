@@ -29,7 +29,7 @@ class Form < ActiveRecord::Base
   scope(:with_form_type, order("form_types.name, forms.name").includes(:type))
   scope(:published, where(:published => true))
   scope(:with_questions, includes(:type, {:questionings => [:form, :condition, {:question => 
-    [:type, :translations, {:option_set => {:options => :translations}}]}]}).order("questionings.rank"))
+    [:translations, {:option_set => {:options => :translations}}]}]}).order("questionings.rank"))
     
   # finds the highest 'version' number of all forms with the given base name
   # returns nil if no forms found
@@ -64,7 +64,7 @@ class Form < ActiveRecord::Base
   
   # returns questionings that work with sms forms and are not hidden
   def smsable_questionings
-    questionings.reject{|q| q.hidden || !q.question.type.smsable?}
+    questionings.reject{|q| q.hidden || !q.question.qtype.smsable?}
   end
   
   def max_rank

@@ -28,7 +28,7 @@ class Response < ActiveRecord::Base
       :answers => {
         :choices => {:option => :translations},
         :option => :translations, 
-        :questioning => [:condition, {:question => [:type, :translations, {:option_set => {:options => :translations}}]}]
+        :questioning => [:condition, {:question => [:translations, {:option_set => {:options => :translations}}]}]
       }
     }
   ]))
@@ -57,7 +57,7 @@ class Response < ActiveRecord::Base
       Search::Qualifier.new(:label => "option-set", :col => "option_sets.name", :assoc => :option_sets),
 
       # this qualifier matces responses that have answers to questions with the given type
-      Search::Qualifier.new(:label => "question-type", :col => "question_types.long_name", :assoc => :question_types),
+      Search::Qualifier.new(:label => "question-type", :col => "questions.qtype_name", :assoc => :questions),
 
       # this qualifier matces responses that have answers to the given question
       Search::Qualifier.new(:label => "question", :col => "questions.code", :assoc => :questions)
@@ -174,7 +174,7 @@ class Response < ActiveRecord::Base
       rel = rel.select("form_types.name AS form_type")
       rel = rel.select("questions.code AS question_code")
       rel = rel.select("question_trans.str AS question_name")
-      rel = rel.select("question_types.name AS question_type")
+      rel = rel.select("questions.qtype_name AS question_type")
       rel = rel.select("users.name AS submitter_name")
       rel = rel.select("answers.id AS answer_id")
       rel = rel.select("answers.value AS answer_value")
@@ -187,7 +187,7 @@ class Response < ActiveRecord::Base
 
       # add all the joins
       rel = rel.joins(Report::Join.list_to_sql([:users, :forms, :form_types, 
-        :answers, :questionings, :questions, :question_types, :question_trans, :option_sets, :options, :choices]))
+        :answers, :questionings, :questions, :question_trans, :option_sets, :options, :choices]))
         
       rel.to_sql
     end

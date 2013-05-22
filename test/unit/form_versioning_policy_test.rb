@@ -2,8 +2,6 @@ require 'test_helper'
 
 class FormVersioningPolicyTest < ActiveSupport::TestCase
   setup do
-    QuestionType.generate
-    
     [Form, Question, Questioning, Option, OptionSet, OptionSetting].each{|k| k.delete_all}
 
     # create three forms
@@ -152,7 +150,7 @@ class FormVersioningPolicyTest < ActiveSupport::TestCase
     save_old_version_codes
     
     # now change question type to decimal
-    q.update_attributes(:question_type_id => QuestionType.find_by_name("decimal").id)
+    q.update_attributes(:qtype_name => "decimal")
     
     publish_and_check_versions(:should_change => true)
   end
@@ -182,7 +180,7 @@ class FormVersioningPolicyTest < ActiveSupport::TestCase
     # creates an option set, and a question that has the option set, and adds it to first two forms
     def setup_option_set
       @os = FactoryGirl.create(:option_set, :ordering => "value_asc")
-      @q = FactoryGirl.create(:question, :type => QuestionType.find_by_name("select_one"), :option_set => @os)
+      @q = FactoryGirl.create(:question, :qtype_name => "select_one", :option_set => @os)
       @forms[0...2].each do |f|
         f.questions << @q
         f.save!

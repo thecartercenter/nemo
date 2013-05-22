@@ -71,11 +71,11 @@ class Report::AnswerField < Report::Field
   end
   
   def data_type
-    question.type.name
+    question.qtype.name
   end
   
   def joins
-    case question.type.name
+    case question.qtype.name
     when "select_one", "select_multiple"
       [:options, :choices, :option_sets]
     else

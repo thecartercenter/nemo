@@ -1,4 +1,4 @@
-<div class="form_field qtype_<%= answer.question_type_name %>" id="qing_<%= answer.questioning_id %>">
+<div class="form_field qtype_<%= answer.qtype.name %>" id="qing_<%= answer.questioning_id %>">
   <label class="main"><%= answer.question_name || "[No Name]" %> <%= reqd_sym(answer.required?) %>
   </label><div class="form_field_control">
     <%= fields_for('response[all_answers][]', answer) do |f| %>
@@ -7,7 +7,7 @@
       <%= f.hidden_field(:response_id, :index => answer_counter) %>
       <%= f.hidden_field(:questioning_id, :index => answer_counter) %>
       <%= f.hidden_field(:relevant, :class => "relevant", :index => answer_counter) %>
-      <% case type = answer.question_type_name %>
+      <% case type = answer.qtype.name %>
       <% when "address", "text", "integer", "decimal", "tiny_text" %>
         <%= f.text_field(:value, :class => "qtype_#{type}", :index => answer_counter) %>
       <% when "location" %>
