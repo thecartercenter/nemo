@@ -35,8 +35,7 @@ class UsersController < ApplicationController
     # if this was just the current_mission form (in the banner), update and redirect back to referrer
     if params[:changing_current_mission]
       # update the user's mission
-      @user.current_mission_id = params[:user][:current_mission_id]
-      @user.save(:validate => false)
+      @user.change_mission!(Mission.find(params[:user][:current_mission_id]))
 
       # update the settings using the new mission
       Setting.copy_to_config(@user.current_mission)

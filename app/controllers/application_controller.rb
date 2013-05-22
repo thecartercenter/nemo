@@ -16,6 +16,13 @@ class ApplicationController < ActionController::Base
       # don't put an error message if the request was for the home page
       flash[:error] = I18n.t("unauthorized.must_login") unless request.path == "/"
       redirect_to_login
+    # else if the request was a CRUD, try redirecting to the index, or root if no permission
+    elsif [:new, :show, :edit, :create, :update, :destroy].include?(exception.action)
+      if current_user.can?(:index, exception.subject.class)
+        redirect_to :controller => controller_name, :action => :index
+      else
+        redirect_to root_path
+      end
     # else redirect to welcome page with error
     else
       redirect_to root_path, :flash => { :error => exception.message }

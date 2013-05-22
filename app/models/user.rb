@@ -30,6 +30,7 @@ class User < ActiveRecord::Base
   before_validation(:clean_fields)
   before_destroy(:check_assoc)
   before_validation(:generate_password_if_none)
+  after_save(:rebuild_ability)
   
   validates(:name, :presence => true)
   validate(:phone_length_or_empty)
@@ -172,10 +173,25 @@ class User < ActiveRecord::Base
   # checks if the user can perform the given role for the given mission
   # mission defaults to user's current mission
   def role?(base_role, mission = nil)
+    # admins can do anything
     return true if admin?
+    
+    # default to the current mission if none given
     mission ||= current_mission
+    
+    # if no mission then the answer is trivially false
     return false if mission.nil?
-    ROLES.index(base_role.to_s) <= ROLES.index(role(mission))
+    
+    # get the user's role for the specified mission
+    mission_role = role(mission)
+    
+    # if the role is nil, we can return false
+    if mission_role.nil?
+      return false
+    # otherwise we compare the role indices
+    else
+      ROLES.index(base_role.to_s) <= ROLES.index(mission_role)
+    end
   end
   
   # returns all missions that the user has access to
@@ -187,16 +203,23 @@ class User < ActiveRecord::Base
   def set_current_mission
     # ensure no current mission set if the user has no assignments
     if assignments.active.empty?
-      update_attributes(:current_mission_id => nil) 
+      change_mission!(nil) 
     # else if user has no current mission, pick one
     elsif current_mission.nil?
-      update_attributes(:current_mission_id => assignments.active.sorted_recent_first.first.mission_id)
+      change_mission!(assignments.active.sorted_recent_first.first.mission)
     end
+  end
+  
+  # changes the user's current mission to the given mission. saves without validating.
+  def change_mission!(mission)
+    self.current_mission = mission
+    save(:validate => false)
   end
   
   # builds and returns a CanCan ability class for this user
   def ability
-    @ability ||= Ability.new(self)
+    rebuild_ability unless @ability
+    return @ability
   end
   
   private
@@ -269,5 +292,11 @@ class User < ActiveRecord::Base
     # generates a random password before validation if this is a new record, unless one is already set
     def generate_password_if_none
       reset_password if new_record? && password.blank? && password_confirmation.blank?
+    end
+    
+    # the ability object must be rebuilt after saves in case something relevant to abilities changed
+    def rebuild_ability
+      @ability = Ability.new(self)
+      return true
     end
 end
