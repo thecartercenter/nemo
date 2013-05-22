@@ -57,6 +57,9 @@ class MissionChangeRedirectTest < ActionDispatch::IntegrationTest
       
       # follow the first redirect, which should lead to another redirect to the :to
       follow_redirect!
+
+      # there should never be an error message
+      assert_nil(flash[:error], "Should be no error message for mission change redirects")
       
       # if no_redirect is set then we should expect success right now
       if params[:no_redirect]

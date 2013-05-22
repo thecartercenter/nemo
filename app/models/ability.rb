@@ -3,7 +3,9 @@ require 'mission_based'
 # defines all user abilities/permissions
 class Ability
   include CanCan::Ability
-
+  
+  CRUD = [:new, :show, :edit, :create, :update, :destroy]
+  
   # returns a list of roles that can be assigned by the given user
   def self.assignable_roles(user)
     # admins can assign any role
