@@ -22,7 +22,8 @@ class Sms::Adapters::IsmsAdapter < Sms::Adapters::Adapter
     numbers = sms.to.map{|num| "\"#{num}\""}.join(",")
     
     # build the URI for the request (numbers must be enclosed in double quotes for some reason)
-    uri = build_uri(:deliver, :to => numbers, :text => sms.body)
+    # TEMPORARY added .parameterize to sms.body to remove accents
+    uri = build_uri(:deliver, :to => numbers, :text => sms.body.parameterize)
     
     # don't send in test mode
     unless Rails.env == "test"
