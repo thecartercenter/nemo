@@ -18,7 +18,7 @@ ELMO::Application.routes.draw do
   resources(:questionings)
   resources(:responses)
   resources(:settings)
-  resources(:sms, :only => :create)
+  resources(:sms, :only => [:index, :create])
   resources(:sms_tests)
   resource(:user_session){collection{get 'logged_out'}}
   resources(:users){member{get 'login_instructions'}; collection{post 'export'}}

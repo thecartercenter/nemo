@@ -93,6 +93,9 @@
         <% if current_mission %>
           Outgoing SMS Provider: <%= configatron.outgoing_sms_adapter ? configatron.outgoing_sms_adapter.service_name : "[None]" %> &nbsp;|&nbsp;
         <% end %>
+        <% if current_user %>
+          <%= link_to("SMS Log", sms_path) %> &nbsp;|&nbsp;
+        <% end %>
         System Version: <%= configatron.system_version %>
         <% if Rails.env == "development" %>
           &nbsp;&nbsp;

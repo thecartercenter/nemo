@@ -84,6 +84,10 @@ class SmsController < ApplicationController
       return reply
     end
   end
+
+  def index
+    @smses = Sms::Message.order("sent_at DESC").all
+  end
   
   def create
     # first we need to figure out which provider sent this message, so we shop it around to all the adapters and see if any recognize it

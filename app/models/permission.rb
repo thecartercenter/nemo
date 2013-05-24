@@ -47,6 +47,7 @@ class Permission
     
     # sms controller permissions are handled by the adapter
     "sms#create" => {:group => :anyone},
+    "sms#index" => {:min_level => 3},
     
     "sms_tests#create" => {:min_level => 2}
   }
