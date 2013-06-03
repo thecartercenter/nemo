@@ -23,10 +23,6 @@ class SmsController < ApplicationController
       if $!.type == "user_not_found" && sms.from =~ /[a-z]/i
         nil
         
-      # if it's a duplicate error, don't reply, because the user probably didn't mean to or could be a network issue
-      elsif $!.type == "duplicate_submission"
-        nil
-        
       else
         msg = t_sms_msg("sms_forms.decoding.#{$!.type}", $!.params)
         

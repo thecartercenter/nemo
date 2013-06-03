@@ -155,6 +155,7 @@ fr:
       answer_not_valid_option_multi: "contenait l'option non-valable '%{invalid_options}'"
       answer_not_valid_options_multi: "contenait les options non-valables '%{invalid_options}'"
       congrats: "Votre reponse pour form '%{form_code}' a été reçue. Merci!"
+      duplicate_submission: "Desole, votre reponse etait identique a une qui a ete recue recemment."
       form_not_found: "Désolé, il n'y a pas un fiche avec le code '%{form_code}'."
       form_not_permitted: "Désolé, vous n'avez pas la permission pour soumettre le fiche '%{form_code}'."
       form_not_published: "Désolé, fiche '%{form_code}' n'est pas disponible pour les présentations."
