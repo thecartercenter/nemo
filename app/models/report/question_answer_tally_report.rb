@@ -23,16 +23,15 @@ class Report::QuestionAnswerTallyReport < Report::TallyReport
       rel = rel.select("COUNT(responses.id) AS tally")
     
       # add question grouping
-      expr = question_labels == "Title" ? "question_trans.str" : "questions.code"
+      expr = question_labels == "Title" ? "questions.name" : "questions.code"
       rel = rel.select("#{expr} AS pri_name, #{expr} AS pri_value, 'text' AS pri_type")
       joins << :questions
-      joins << :question_trans if question_labels == "Title"
       rel = rel.group(expr)
     
       # add answer grouping
       # if we have an option set, we don't use calculation objects
       unless option_sets.empty?
-        expr = "IFNULL(aotr.str, cotr.str)"
+        expr = "IFNULL(ao.name, co.name)"
         rel = rel.select("#{expr} AS sec_name")
         rel = rel.group(expr)
         expr = "IFNULL(ao.value, co.value)"

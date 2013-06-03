@@ -19,7 +19,8 @@ en:
       form:
         smsable: "SMSable?"
       question:
-        name_en: "English Name"
+        name: "Title"
+        name_en: "English Title"
         option_set_id: Option Set
         qtype_name: Type
       questioning:

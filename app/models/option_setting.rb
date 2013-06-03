@@ -1,4 +1,3 @@
-require 'form_versionable'
 class OptionSetting < ActiveRecord::Base
   include FormVersionable
 

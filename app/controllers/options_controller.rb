@@ -37,7 +37,7 @@ class OptionsController < ApplicationController
         flash[:success] = "Option #{params[:action]}d successfully."
         redirect_to(:action => :index)
       else
-        prepare_and_render_form
+        render(:form)
       end
     end
 end

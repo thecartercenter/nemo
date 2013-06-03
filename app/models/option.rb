@@ -1,62 +1,30 @@
-require 'mission_based'
-require 'translatable'
-require 'form_versionable'
 class Option < ActiveRecord::Base
-  include MissionBased
-  include Translatable
-  include FormVersionable
+  include MissionBased, FormVersionable, Translatable
   
   has_many(:option_sets, :through => :option_settings)
   has_many(:option_settings, :inverse_of => :option, :dependent => :destroy, :autosave => true)
-  has_many(:translations, :class_name => "Translation", :foreign_key => :obj_id, 
-    :conditions => {:class_name => "Option"}, :autosave => true, :dependent => :destroy)
   has_many(:answers, :inverse_of => :option)
   has_many(:choices, :inverse_of => :option)
   
+  validates(:name, :presence => true)
   validates(:value, :presence => true)
   validates(:value, :numericality => true, :if => Proc.new{|o| !o.value.blank?})
-  validates(:english_name, :presence => true)
   validate(:integrity)
   validate(:name_lengths)
   
   before_destroy(:check_assoc)
   after_destroy(:notify_form_versioning_policy_of_destroy)
   
-  default_scope(includes([:translations, {:option_sets => [:questionings, {:questions => {:questionings => :form}}]}]))
+  default_scope(includes(:option_sets => [:questionings, {:questions => {:questionings => :form}}]))
   
-  self.per_page = 100
-
+  translates :name, :hint
+  
   # creates a set of options with the given English names and mission
   def self.create_simple_set(names, mission)
     options = []
     names.each_with_index{|n, idx| options << create(:name_en => n, :mission => mission, :value => idx + 1)}
     options
   end
-  
-  def method_missing(*args)
-    # enable methods like name_fra and hint_en, etc.
-    if args[0].to_s.match(/^(name)_([a-z]{2})(_before_type_cast)?(=?)$/)
-      send("#{$1}#{$4}", $2, *args[1..2])
-    else
-      super
-    end
-  end
-  def respond_to?(symbol, *)
-    is_translation_method?(symbol.to_s) || super
-  end
-  def respond_to_missing?(symbol, include_private)
-    is_translation_method?(symbol.to_s) || super
-  end
-  
-  def is_translation_method?(symbol)
-    symbol.match(/^(name)_([a-z]{2})(_before_type_cast)?(=?)$/)
-  end
-  
-  # hack so the validation message will look right
-  def english_name; name_en; end
-  
-  def name(lang = nil); translation_for(:name, lang); end
-  def name=(lang, value); set_translation_for(:name, lang, value); end
   
   def published?; !option_sets.detect{|os| os.published?}.nil?; end
   
@@ -69,11 +37,12 @@ class Option < ActiveRecord::Base
 
   private
     def integrity
-      # error if anything has changed (except names) and the option is published
-      if published? && (changed? && !changed.reject{|f| f =~ /^name_/}.empty?)
+      # error if anything has changed (except names/hints) and the option is published
+      if published? && (changed? && !changed.reject{|f| f =~ /^(name|hint)/}.empty?)
         errors.add(:base, "Option can't be changed because it appears in at least one published form")
       end
     end
+
     def check_assoc
       # could be in a published form but no responses yet
       if published?
@@ -83,9 +52,9 @@ class Option < ActiveRecord::Base
         raise("You can't delete option '#{name_en}' because it is included in at least one response")
       end
     end
+    
+    # checks that all name fields have lengths at most 30 chars
     def name_lengths
-      if translations.detect{|t| t.str && t.str.size > 30}
-        errors.add(:base, "Names must be at most 30 characters in length")
-      end
+      errors.add(:base, "Names must be at most 30 characters in length") if name_translations.detect{|l,t| !t.nil? && t.size > 30}
     end
 end

@@ -1,7 +1,4 @@
-require 'seedable'
 class User < ActiveRecord::Base
-  include Seedable
-
   ROLES = %w[observer staffer coordinator]
   
   attr_writer(:reset_password_method)

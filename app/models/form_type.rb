@@ -1,5 +1,3 @@
-require 'seedable'
-require 'mission_based'
 class FormType < ActiveRecord::Base
   include MissionBased
   

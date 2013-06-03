@@ -1,4 +1,3 @@
-require 'mission_based'
 class Setting < ActiveRecord::Base
   include MissionBased
 

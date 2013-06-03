@@ -1,4 +1,3 @@
-require 'mission_based'
 require 'xml'
 class Response < ActiveRecord::Base
   include MissionBased
@@ -23,15 +22,15 @@ class Response < ActiveRecord::Base
   scope(:by, lambda{|user| where(:user_id => user.id)})
   
   # loads all the associations required for show, edit, etc.
-  scope(:with_associations, includes([
+  scope(:with_associations, includes(
     :form, {
-      :answers => {
-        :choices => {:option => :translations},
-        :option => :translations, 
-        :questioning => [:condition, {:question => [:translations, {:option_set => {:options => :translations}}]}]
-      }
+      :answers => [
+        {:choices => :option},
+        :option, 
+        {:questioning => [:condition, {:question => {:option_set => :options}}]}
+      ]
     }
-  ]))
+  ))
   
   self.per_page = 20
   
@@ -173,7 +172,7 @@ class Response < ActiveRecord::Base
       rel = rel.select("forms.name AS form_name")
       rel = rel.select("form_types.name AS form_type")
       rel = rel.select("questions.code AS question_code")
-      rel = rel.select("question_trans.str AS question_name")
+      rel = rel.select("questions.name AS question_name")
       rel = rel.select("questions.qtype_name AS question_type")
       rel = rel.select("users.name AS submitter_name")
       rel = rel.select("answers.id AS answer_id")
@@ -181,13 +180,13 @@ class Response < ActiveRecord::Base
       rel = rel.select("answers.datetime_value AS answer_datetime_value")
       rel = rel.select("answers.date_value AS answer_date_value")
       rel = rel.select("answers.time_value AS answer_time_value")
-      rel = rel.select("IFNULL(aotr.str, cotr.str) AS choice_name")
+      rel = rel.select("IFNULL(ao.name, co.name) AS choice_name")
       rel = rel.select("IFNULL(ao.value, co.value) AS choice_value")
       rel = rel.select("option_sets.name AS option_set")
 
       # add all the joins
       rel = rel.joins(Report::Join.list_to_sql([:users, :forms, :form_types, 
-        :answers, :questionings, :questions, :question_trans, :option_sets, :options, :choices]))
+        :answers, :questionings, :questions, :option_sets, :options, :choices]))
         
       rel.to_sql
     end

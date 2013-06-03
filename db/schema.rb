@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130522230727) do
+ActiveRecord::Schema.define(:version => 20130523143757) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -150,6 +150,10 @@ ActiveRecord::Schema.define(:version => 20130522230727) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "mission_id"
+    t.string   "name"
+    t.text     "hint"
+    t.text     "name_translations"
+    t.text     "hint_translations"
   end
 
   add_index "options", ["mission_id"], :name => "index_options_on_mission_id"
@@ -187,6 +191,10 @@ ActiveRecord::Schema.define(:version => 20130522230727) do
     t.boolean  "minstrictly"
     t.integer  "mission_id"
     t.string   "qtype_name"
+    t.text     "name"
+    t.text     "hint"
+    t.text     "name_translations"
+    t.text     "hint_translations"
   end
 
   add_index "questions", ["mission_id"], :name => "index_questions_on_mission_id"
@@ -241,13 +249,19 @@ ActiveRecord::Schema.define(:version => 20130522230727) do
     t.boolean  "reviewed",   :default => false
     t.string   "source"
     t.integer  "mission_id"
-    t.string   "signature"
-    t.boolean  "duplicate"
   end
 
   add_index "responses", ["form_id"], :name => "index_responses_on_form_id"
   add_index "responses", ["mission_id"], :name => "index_responses_on_mission_id"
   add_index "responses", ["user_id"], :name => "index_responses_on_user_id"
+
+  create_table "roles", :force => true do |t|
+    t.string   "name"
+    t.integer  "level"
+    t.boolean  "location_required", :default => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "search_searches", :force => true do |t|
     t.text     "str"
@@ -295,19 +309,6 @@ ActiveRecord::Schema.define(:version => 20130522230727) do
   end
 
   add_index "sms_messages", ["body"], :name => "index_sms_messages_on_body", :length => {"body"=>160}
-
-  create_table "translations", :force => true do |t|
-    t.text     "str"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "fld"
-    t.string   "class_name"
-    t.integer  "obj_id"
-    t.string   "language"
-  end
-
-  add_index "translations", ["fld", "class_name", "obj_id", "language"], :name => "index_translations_on_fld_and_class_name_and_obj_id_and_language"
-  add_index "translations", ["language", "class_name", "fld", "obj_id"], :name => "translation_master", :unique => true
 
   create_table "user_batches", :force => true do |t|
     t.text     "users"

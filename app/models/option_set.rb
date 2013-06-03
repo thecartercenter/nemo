@@ -1,8 +1,5 @@
-require 'mission_based'
-require 'form_versionable'
 class OptionSet < ActiveRecord::Base
-  include MissionBased
-  include FormVersionable
+  include MissionBased, FormVersionable
 
   has_many(:option_settings, :dependent => :destroy, :autosave => true, :inverse_of => :option_set)
   has_many(:options, :through => :option_settings)

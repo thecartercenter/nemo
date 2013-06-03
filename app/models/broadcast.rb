@@ -1,4 +1,3 @@
-require 'mission_based'
 class Broadcast < ActiveRecord::Base
   include MissionBased
 

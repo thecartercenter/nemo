@@ -1,5 +1,3 @@
-require 'mission_based'
-
 # defines all user abilities/permissions
 class Ability
   include CanCan::Ability

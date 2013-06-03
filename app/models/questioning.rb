@@ -1,4 +1,3 @@
-require 'form_versionable'
 class Questioning < ActiveRecord::Base
   include FormVersionable
 

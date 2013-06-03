@@ -1,4 +1,3 @@
-require 'mission_based'
 class Form < ActiveRecord::Base
   include MissionBased
 
@@ -29,7 +28,7 @@ class Form < ActiveRecord::Base
   scope(:with_form_type, order("form_types.name, forms.name").includes(:type))
   scope(:published, where(:published => true))
   scope(:with_questions, includes(:type, {:questionings => [:form, :condition, {:question => 
-    [:translations, {:option_set => {:options => :translations}}]}]}).order("questionings.rank"))
+    {:option_set => :options}}]}).order("questionings.rank"))
     
   # finds the highest 'version' number of all forms with the given base name
   # returns nil if no forms found
