@@ -69,6 +69,9 @@ class Sms::Adapters::IsmsAdapter < Sms::Adapters::Adapter
         date = message.find_first("Date").content
         time = message.find_first("Time").content
         
+        # throw out pesky TIMESETTINGS_LOOP_BACK_MSGs
+        next if body =~ /TIMESETTINGS_LOOP_BACK_MSG/i
+        
         # isms should be in UTC. date format is YY/MM/DD. we add 20 to be safe. time is HH:MM:SS.
         sent_at = Time.zone.parse("20#{date} #{time} UTC")
         
