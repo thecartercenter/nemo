@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130430135749) do
+ActiveRecord::Schema.define(:version => 20130605152216) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -242,8 +242,6 @@ ActiveRecord::Schema.define(:version => 20130430135749) do
     t.boolean  "reviewed",   :default => false
     t.string   "source"
     t.integer  "mission_id"
-    t.string   "signature"
-    t.boolean  "duplicate"
   end
 
   add_index "responses", ["form_id"], :name => "index_responses_on_form_id"
@@ -299,8 +297,10 @@ ActiveRecord::Schema.define(:version => 20130430135749) do
     t.string   "from"
     t.text     "body"
     t.datetime "sent_at"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+    t.integer  "mission_id"
+    t.string   "adapter_name"
   end
 
   add_index "sms_messages", ["body"], :name => "index_sms_messages_on_body", :length => {"body"=>160}

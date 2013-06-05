@@ -1,9 +1,15 @@
 require 'open-uri'
 require 'uri'
 class Sms::Adapters::IntelliSmsAdapter < Sms::Adapters::Adapter
+
+  # checks if this adapter recognizes an incoming http receive request
+  def self.recognize_receive_request?(request)
+    # if the params from, text, msgid, and sent are all in the request params, its ours!
+    %w(from text msgid sent) - request.request_parameters.keys == []
+  end
   
   def service_name
-    @service_name ||= "IntelliSMS"
+    @service_name ||= "IntelliSms"
   end
   
   def deliver(message)
@@ -26,9 +32,8 @@ class Sms::Adapters::IntelliSmsAdapter < Sms::Adapters::Adapter
     return true
   end
   
-  # we don't currently use intellisms for receiving
   def receive(params)
-    raise NotImplementedError
+    [Sms::Message.create(:from => "+#{params['from']}", :body => params["text"], :sent_at => Time.zone.parse(params["sent"], :adapter_name => service_name))]
   end
   
   # check_balance returns the balance string

@@ -30,7 +30,7 @@ class Sms::Decoder
     # try to get user
     find_user
     
-    # check user permissions for form, if not permitted, error
+    # check user permissions for form and message mission, if not permitted, error
     check_permission
     
     # create a blank response
@@ -103,9 +103,9 @@ class Sms::Decoder
       raise_decoding_error("user_not_found") unless @user
     end
     
-    # checks if the current @user has permission to submit to form @form, raises an error if not
+    # checks if the current @user has permission to submit to form @form and the form mission matches the msg mission, raises an error if not
     def check_permission
-      raise_decoding_error("form_not_permitted") unless Permission.user_can_submit_to_form(@user, @form)
+      raise_decoding_error("form_not_permitted") unless Permission.user_can_submit_to_form(@user, @form) && @form.mission == @msg.mission
     end
     
     # finds the Questioning object specified by the current value of @rank
@@ -258,6 +258,9 @@ class Sms::Decoder
     
     # raises an sms decoding error with the given type and includes the form_code if available
     def raise_decoding_error(type, options = {})
+      # add the mission since we know it from the @msg
+      options[:mission] = @msg.mission
+      
       # add in the form and form_code if it's set, since it's needed to figure out the reply language
       if @form
         options[:form] ||= @form 
