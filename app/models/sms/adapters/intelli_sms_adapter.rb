@@ -17,7 +17,7 @@ class Sms::Adapters::IntelliSmsAdapter < Sms::Adapters::Adapter
     super
     
     # build the URI the request
-    uri = build_uri(:deliver, :to => message.to.join(','), :text => message.body)
+    uri = build_uri(:deliver, :to => message.to.join(','), :text => ActiveSupport::Inflector.transliterate(message.body))
     
     # don't send in test mode
     unless Rails.env == "test"
