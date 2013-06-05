@@ -118,6 +118,9 @@ class SmsController < ApplicationController
             # copy the settings for the message's mission
             Setting.copy_to_config(r.mission)
             
+            # copy the incoming sms number to the 'from' field if it exists
+            r.update_attributes(:from => configatron.incoming_sms_number) if configatron.incoming_sms_number
+            
             # send the message using the mission's outgoing adapter
             configatron.outgoing_sms_adapter.deliver(r)
           end

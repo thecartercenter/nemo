@@ -16,8 +16,10 @@ class Sms::Adapters::IntelliSmsAdapter < Sms::Adapters::Adapter
     # let the superclass do the sanity checks
     super
     
-    # build the URI the request
-    uri = build_uri(:deliver, :to => message.to.join(','), :text => ActiveSupport::Inflector.transliterate(message.body))
+    # build the URI the request. include the from number if it is set
+    params = {:to => message.to.join(','), :text => ActiveSupport::Inflector.transliterate(message.body)}
+    params[:from] = message.from if message.from
+    uri = build_uri(:deliver, params)
     
     # don't send in test mode
     unless Rails.env == "test"
