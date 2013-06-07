@@ -16,8 +16,9 @@ class Sms::Adapters::IntelliSmsAdapter < Sms::Adapters::Adapter
     # let the superclass do the sanity checks
     super
     
-    # build the URI the request
-    uri = build_uri(:deliver, :to => message.to.join(','), :text => ActiveSupport::Inflector.transliterate(message.body))
+    # build the URI the request (intellisms expects iso-8859-1 encoding)
+    uri = build_uri(:deliver, :to => message.to.join(','), :from => message.from.gsub(/^\+/, ""), :text => message.body.encode("iso-8859-1"))
+    Rails.logger.info("Sending IntelliSMS request: #{uri}")
     
     # don't send in test mode
     unless Rails.env == "test"
@@ -33,6 +34,10 @@ class Sms::Adapters::IntelliSmsAdapter < Sms::Adapters::Adapter
   end
   
   def receive(params)
+    # strip leading zeroes from the from number (intellisms pads the country code with 0s)
+    params['from'].gsub!(/^0+/, "")
+
+    # create and return the message
     [Sms::Message.create(:from => "+#{params['from']}", :body => params["text"], :sent_at => Time.zone.parse(params["sent"], :adapter_name => service_name))]
   end
   
