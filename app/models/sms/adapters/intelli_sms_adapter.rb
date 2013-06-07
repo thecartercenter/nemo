@@ -17,7 +17,12 @@ class Sms::Adapters::IntelliSmsAdapter < Sms::Adapters::Adapter
     super
     
     # build the URI the request (intellisms expects iso-8859-1 encoding)
-    uri = build_uri(:deliver, :to => message.to.join(','), :from => message.from.gsub(/^\+/, ""), :text => message.body.encode("iso-8859-1"))
+    params = {:to => message.to.join(','), :text => message.body.encode("iso-8859-1")}
+
+    # include the from number if it is set
+    params[:from] = message.from.gsub(/^\+/, "") if message.from
+
+    uri = build_uri(:deliver, params)
     Rails.logger.info("Sending IntelliSMS request: #{uri}")
     
     # don't send in test mode
