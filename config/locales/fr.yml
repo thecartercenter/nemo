@@ -193,6 +193,6 @@ fr:
         time: "Ecrivez votre reponse ici dans HHMM (heures/minutes) format."
           
     validation:
-      invalid_answer: "Désolé, le reponse pour question %{rank} %{error}."
-      missing_answer: "Désolé, le reponse pour question necessaire %{ranks} ...was missing from your response to form '%{form_code}'."
-      missing_answers: "Désolé, les reponses pour question necessaire %{ranks} ...were missing from your response to form '%{form_code}'."
+      invalid_answer: "Désolé, votre réponse pour question %{rank} %{error}."
+      missing_answer: "Désolé, votre réplique pour fiche '%{form_code}' manquait un réponse pour question obligatoire %{ranks}."
+      missing_answers: "Désolé, votre réplique pour fiche '%{form_code}' manquait des réponses pour questions obligatoires %{ranks}."
