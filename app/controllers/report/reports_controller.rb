@@ -16,6 +16,10 @@ class Report::ReportsController < ApplicationController
     render_show
   end
   
+  def edit
+    redirect_to(:action => :show)
+  end
+  
   def show
     # prep the report for viewing
     init_report
@@ -35,7 +39,7 @@ class Report::ReportsController < ApplicationController
   end
   
   def destroy
-    begin flash[:success] = @report.destroy && "Report deleted successfully." rescue flash[:error] = $!.to_s end
+    destroy_and_handle_errors(@report)
     redirect_to(:action => :index)
   end    
   
@@ -103,7 +107,7 @@ class Report::ReportsController < ApplicationController
         :options => {
           :attribs => Report::AttribField.all,
           :forms => Form.for_mission(current_mission).with_form_type.all,
-          :calculation_types => Report::Calculation.types,
+          :calculation_types => Report::Calculation::TYPES,
           :questions => Question.for_mission(current_mission).includes(:forms).all,
           :option_sets => OptionSet.for_mission(current_mission).all,
           :percent_types => Report::Report::PERCENT_TYPES

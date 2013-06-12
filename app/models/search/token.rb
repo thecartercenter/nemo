@@ -60,7 +60,7 @@ class Search::Token
     # rhs is an sql fragment that serves as the right hand side of the comparison
     def comparison(qual, op, rhs)
       qual = lookup_qualifier(qual.content) if qual.is_a?(Search::LexToken)
-      raise Search::ParseError.new("The operator '#{op.content}' is not valid for the qualifier '#{qual.name}'.") unless qual.op_valid?(op.to_sql)
+      raise Search::ParseError.new(I18n.t("searches.invalid_op", :op => op.content, :qualifier => qual.name)) unless qual.op_valid?(op.to_sql)
       
       # sanitize by default
       sanitize_rhs = true
@@ -96,13 +96,13 @@ class Search::Token
     # raises an error if there are none
     def default_quals
       dq = @search.klass.search_qualifiers.select{|q| q.default?}
-      raise Search::ParseError.new("You must use a qualifier for all search terms") if dq.empty?
+      raise Search::ParseError.new(I18n.t("searches.must_use_qualifier")) if dq.empty?
       dq
     end
     
     # looks up the qualifier for the given chunk, or raises an error
     def lookup_qualifier(chunk)
-      @search.klass.search_qualifiers.find{|q| q.label == chunk} or raise Search::ParseError.new("'#{chunk}' is not a valid search qualifier")
+      @search.klass.search_qualifiers.find{|q| q.label == chunk} or raise Search::ParseError.new(I18n.t("searches.invalid_qualifier", :chunk => chunk))
     end
     
     def child(num); @children[num]; end

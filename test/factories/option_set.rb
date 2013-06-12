@@ -19,6 +19,7 @@ FactoryGirl.define do
       
       options
     }
+    
     ordering "value_asc"
     mission { get_mission }
   end

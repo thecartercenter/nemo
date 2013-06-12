@@ -1,13 +1,13 @@
 <div id="printable_form" class="printable">
-  <div id="reqd_message">Required questions are marked with a <%= reqd_sym %>.</div>
+  <div id="reqd_message"><%= t("forms.reqd_sym_definition") %> <%= reqd_sym %>.</div>
   <h1><%= form.name %></h1>
   <table>
     <tr>
-      <td class="name">Submitter/Team Name</td>
+      <td class="name"><%= Response.human_attribute_name("user_id") %></td>
       <td class="answer text_answer"><div class="answer_box"></div></td>
     </tr>
     <tr>
-      <td class="name">Observation Time</td>
+      <td class="name"><%= t("responses.observation_time") %></td>
       <td class="answer text_answer"><div class="answer_box"></div></td>
     </tr>
     <% form.questionings.each do |qing| %>

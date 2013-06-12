@@ -18,7 +18,7 @@ class OptionsController < ApplicationController
   end
 
   def destroy
-    begin flash[:success] = @option.destroy && "Option deleted successfully." rescue flash[:error] = $!.to_s end
+    destroy_and_handle_errors(@option)
     redirect_to(:action => :index)
   end
   
@@ -34,8 +34,7 @@ class OptionsController < ApplicationController
     # creates/updates the option
     def create_or_update
       if @option.update_attributes(params[:option])
-        flash[:success] = "Option #{params[:action]}d successfully."
-        redirect_to(:action => :index)
+        set_success_and_redirect(@option)
       else
         render(:form)
       end

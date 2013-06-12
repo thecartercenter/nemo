@@ -28,15 +28,7 @@ class OptionSetsController < ApplicationController
   end
 
   def destroy
-    begin 
-      flash[:success] = @option_set.destroy && "Option set deleted successfully." 
-    rescue
-      if $!.is_a?(InvalidAssociationDeletionError)
-        flash[:error] = "You can't delete option set '#{@option_set.name}' because one or more responses are associated with it."
-      else
-        flash[:error] = $!.to_s
-      end
-    end
+    destroy_and_handle_errors(@option_set, :but_first => :check_associations)
     redirect_to(:action => :index)
   end
 
@@ -45,10 +37,9 @@ class OptionSetsController < ApplicationController
     def create_or_update
       begin
         @option_set.update_attributes!(params[:option_set])
-        flash[:success] = "Option set #{params[:action]}d successfully."
-        redirect_to(:action => :index)
-      rescue ActiveRecord::RecordInvalid, InvalidAssociationDeletionError
-        @option_set.errors.add(:base, $!.to_s) if $!.is_a?(InvalidAssociationDeletionError)
+        set_success_and_redirect(@option_set)
+      rescue ActiveRecord::RecordInvalid, DeletionError
+        @option_set.errors.add(:base, $!.to_s) if $!.is_a?(DeletionError)
         prepare_and_render_form
       end
     end

@@ -2,28 +2,26 @@ module Report::ReportsHelper
   require 'csv'
   
   def report_reports_index_links(reports)
-    can?(:create, Report::Report) ? [link_to("Create new report", new_report_report_path)] : []
+    can?(:create, Report::Report) ? [create_link(Report::Report)] : []
   end
   
   def report_reports_index_fields
-    %w[title last_viewed views actions]
+    %w(name viewed_at view_count actions)
   end
   
   def format_report_reports_field(report, field)
     case field
-    when "title" then link_to(report.name, report_report_path(report))
-    when "last_viewed" then report.viewed_at && time_ago_in_words(report.viewed_at) + " ago"
-    when "views" then report.view_count
-    when "actions"
-      action_links(report, :destroy_warning => "Are you sure you want to delete the report '#{report.name}'?", :exclude => [:edit])
+    when "name" then link_to(report.name, report_report_path(report), :title => t("common.view"))
+    when "viewed_at" then report.viewed_at && time_ago_in_words(report.viewed_at) + " ago"
+    when "actions" then action_links(report, :obj_name => report.name)
     else report.send(field)
     end
   end
   
   def view_report_report_mini_form
     form_tag("/") do
-      select_tag(:rid, sel_opts_from_objs(@reports, :tags => true), :prompt => "Choose a Report...",
-        :onchange => "window.location.href = '/report/reports/' + this.options[this.selectedIndex].value")
+      select_tag(:rid, sel_opts_from_objs(@reports, :tags => true), :prompt => t("reports.choose_report"),
+        :onchange => "window.location.href = Utils.build_url('report', 'reports', this.options[this.selectedIndex].value)")
     end
   end
   

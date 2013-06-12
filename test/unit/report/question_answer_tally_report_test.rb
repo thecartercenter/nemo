@@ -28,7 +28,7 @@ class Report::QuestionAnswerTallyReportTest < ActiveSupport::TestCase
 
                           
     # try question label 'title'
-    report = create_report("QuestionAnswerTally", :option_set => @option_sets[:yes_no], :question_labels => "Title")
+    report = create_report("QuestionAnswerTally", :option_set => @option_sets[:yes_no], :question_labels => "title")
 
     assert_report(report,                         %w( Yes No TTL ),
                           ["Yes No Question 0"] + %w(   6 13  19 ),

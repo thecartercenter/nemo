@@ -34,9 +34,9 @@ class Sms::Adapters::IsmsAdapter < Sms::Adapters::Adapter
         
         case code
         when "601"
-          raise Sms::Error.new("Authentication error connecting to #{service_name}")
+          raise Sms::Error.new("authentication error connecting to #{service_name}")
         else 
-          raise Sms::Error.new("Error sending message using #{service_name} (Code #{code})")
+          raise Sms::Error.new("error sending message using #{service_name} (code #{code})")
         end
       end
     end

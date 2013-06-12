@@ -7,44 +7,38 @@ class Condition < ActiveRecord::Base
   before_validation(:clean_times)
   validate(:all_fields_required)
     
-  OPS = {
-    "is equal to" => {:types => [:decimal, :integer, :text, :long_text, :address, :select_one, :datetime, :date, :time], :code => "="},
-    "is less than" => {:types => [:decimal, :integer, :datetime, :date, :time], :code => "<"},
-    "is greater than" => {:types => [:decimal, :integer, :datetime, :date, :time], :code => ">"},
-    "is less than or equal to" => {:types => [:decimal, :integer, :datetime, :date, :time], :code => "<="},
-    "is greater than or equal to" => {:types => [:decimal, :integer, :datetime, :date, :time], :code => "="},
-    "is not equal to" => {:types => [:decimal, :integer, :text, :long_text, :address, :select_one, :datetime, :date, :time], :code => "!="},
-    "includes" => {:types => [:select_multiple], :code => "="},
-    "does not include" => {:types => [:select_multiple], :code => "!="}
-  }
+  OPS = [
+    {:name => :eq, :types => [:decimal, :integer, :text, :long_text, :address, :select_one, :datetime, :date, :time], :code => "="},
+    {:name => :lt, :types => [:decimal, :integer, :datetime, :date, :time], :code => "<"},
+    {:name => :gt, :types => [:decimal, :integer, :datetime, :date, :time], :code => ">"},
+    {:name => :leq, :types => [:decimal, :integer, :datetime, :date, :time], :code => "<="},
+    {:name => :geq, :types => [:decimal, :integer, :datetime, :date, :time], :code => "="},
+    {:name => :neq, :types => [:decimal, :integer, :text, :long_text, :address, :select_one, :datetime, :date, :time], :code => "!="},
+    {:name => :inc, :types => [:select_multiple], :code => "="},
+    {:name => :ninc, :types => [:select_multiple], :code => "!="}
+  ]
   
-  def conditionable_qings
+  # all questionings that can be referred to by this condition
+  def refable_qings
     questioning ? questioning.previous_qings.reject{|qing| %w[location].include?(qing.question.qtype.name)} : []
   end
   
-  def question_code_select_options
-    conditionable_qings.collect{|qing| ["#{qing.rank}. #{qing.question.code}", qing.id]}
+  # returns a hash mapping ids for conditionable questionings to their types
+  def refable_qing_types
+    Hash[*refable_qings.map{|qing| [qing.id, qing.question.qtype.name]}.flatten]
   end
   
-  def question_code_type_hash
-    Hash[*conditionable_qings.collect{|qing| [qing.id.to_s, qing.question.qtype.name]}.flatten]
+  # returns a hash mapping qing IDs to arrays of options (for select questions only), for use when choosing an option for the condition.
+  def refable_qing_option_lists
+    Hash[*refable_qings.reject{|qing| !qing.question.options}.map{|qing| [qing.id, qing.question.select_options]}.flatten(1)]
+  end
+
+  # returns names of all operators that are applicable to this condition based on its referred question
+  def applicable_operator_names
+    ref_question ? OPS.reject{|o| !o[:types].include?(ref_question.qtype.name.to_sym)}.map{|o| o[:name]} : []
   end
   
-  def question_options_hash
-    hash = {}
-    conditionable_qings.each do |qing| 
-      hash[qing.id.to_s] = qing.question.select_options if qing.question.options
-    end
-    hash
-  end
-  
-  def op_select_options
-    ref_question ? 
-      OPS.reject{|op, attribs| !attribs[:types].include?(ref_question.qtype.name.to_sym)}.collect{|op, attribs| [op,op]} :
-      []
-  end
-  
-  def option_select_options
+  def ref_question_select_options
     ref_question ? ref_question.select_options : []
   end
   
@@ -67,12 +61,22 @@ class Condition < ActiveRecord::Base
     raise ConditionOrderingError.new if questioning.rank <= ref_qing.rank
   end
   
+  # gets the hash from the OPS array corresponding to this conditions operator
+  def operator
+    @operator ||= OPS.index_by(&:name)[op.to_sym]
+  end
+  
+  # returns all known operators
+  def operators
+    OPS
+  end
+  
   def to_odk
     # set default lhs
     lhs = "/data/#{ref_question.odk_code}"
     if has_options?
       xpath = "selected(#{lhs}, '#{option_id}')"
-      xpath = "not(#{xpath})" if OPS[op][:code] == "!="
+      xpath = "not(#{xpath})" if operator[:name] == :neq
     else
       
       # for numeric ref. questions, just convert value to string to get rhs
@@ -94,17 +98,21 @@ class Condition < ActiveRecord::Base
       end
       
       # build the final xpath expression
-      xpath = "#{lhs} #{OPS[op][:code]} #{rhs}"
+      xpath = "#{lhs} #{operator[:code]} #{rhs}"
     end
     xpath
   end
   
-  def to_s(lang)
-    "Question ##{ref_qing.rank} #{op} \"#{option ? option.name(lang) : value}\""
+  def to_s
+    words = I18n.t(op, :scope => [:conditions, :operators])
+    "#{Question.model_name.human} ##{ref_qing.rank} #{words} \"#{option ? option.name : value}\""
   end
   
-  def to_json
-    Hash[[:questioning_id, :ref_qing_id, :op, :value, :option_id].collect{|k| [k, send(k)]}].to_json
+  # if options[:dropdown_values] is included, adds a series of lists of values for use with form dropdowns
+  def as_json(options = {})
+    fields = %w(questioning_id ref_qing_id op value option_id)
+    fields += %w(refable_qing_types refable_qing_option_lists operators) if options[:dropdown_values]
+    Hash[*fields.map{|k| [k, send(k)]}.flatten(1)]
   end
   
   private 
@@ -136,6 +144,6 @@ class Condition < ActiveRecord::Base
     end
     
     def all_fields_required
-      errors.add(:base, "All fields are required.") if ref_qing.blank? || op.blank? || (value.blank? && option_id.blank?)
+      errors.add(:base, :all_required) if ref_qing.blank? || op.blank? || (value.blank? && option_id.blank?)
     end
 end

@@ -1,0 +1,2 @@
+class DeletionError < StandardError
+end

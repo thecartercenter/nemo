@@ -93,7 +93,7 @@ class User < ActiveRecord::Base
   end
 
   def self.search_examples
-    ["pinchy lombard", "phone:+44"]
+    ["john smith", "phone:+44"]
   end
   
   def reset_password
@@ -230,44 +230,43 @@ class User < ActiveRecord::Base
     end
     
     def phone_length_or_empty
-      errors.add(:phone, "must be at least 9 digits.") unless phone.blank? || phone.size >= 10
-      errors.add(:phone2, "must be at least 9 digits.") unless phone2.blank? || phone2.size >= 10
+      errors.add(:phone, :at_least_digits, :num => 9) unless phone.blank? || phone.size >= 10
+      errors.add(:phone2, :at_least_digits, :num => 9) unless phone2.blank? || phone2.size >= 10
     end
     
     def check_assoc
-      # Can't delete users with related responses.
-      unless responses.empty?
-        raise "You can't delete #{name} because he/she has associated responses."
-      end
+      # can't delete users with related responses.
+      raise DeletionError.new(:cant_delete_if_responses) unless responses.empty?
     end
     
     def must_have_password_reset_on_create
       if new_record? && reset_password_method == "dont"
-        errors.add(:base, "You must choose a password creation method")
+        errors.add(:base, :must_choose_passwd_method)
       end
     end
     
     def password_reset_cant_be_email_if_no_email
       if reset_password_method == "email" && email.blank?
         verb = new_record? ? "send" : "reset"
-        errors.add(:base, "You can't #{verb} password by email because you didn't specify an email address.")
+        errors.add(:base, :cant_passwd_email, :verb => verb)
       end
     end
     
     def no_duplicate_assignments
-      errors.add(:base, "There are duplicate assignments.") if Assignment.duplicates?(assignments)
+      errors.add(:base, :duplicate_assignments) if Assignment.duplicates?(assignments)
     end
     
     def must_have_assignments_if_not_admin
       if !admin? && assignments.reject{|a| a.marked_for_destruction?}.empty?
-        errors.add(:assignments, "can't be empty if not admin")
+        errors.add(:assignments, :cant_be_empty_if_not_admin)
       end
     end
     
     # if current mission is not accessible, set to nil
     def ensure_current_mission_is_valid
       if !current_mission_id.nil?
-        raise "Current mission can't be set on new user" if new_record?
+        # this shouldn't happen
+        raise "current mission can't be set on new user" if new_record?
         self.current_mission_id = nil unless can?(:read, current_mission)
       end
     end
@@ -283,7 +282,7 @@ class User < ActiveRecord::Base
         # add ID clause if this is not a new record
         rel = rel.where("id != ?", id) unless new_record?
         if !val.nil? && rel.count > 0
-          errors.add(field, "must be unique")
+          errors.add(field, :phone_assigned_to_other)
         end
       end
     end

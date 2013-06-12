@@ -1,11 +1,11 @@
-Welcome to <%= configatron.site_name %>!
+<%= t("notifier.welcome", :site => configatron.site_name) %>
 
-Your login name is <%= @user.login %>.
+<%= t("notifier.login_name", :login => @user.login) %>
 
-To choose a password, please go here:
+<%= t("notifier.to_choose") %>
 
 <%= @reset_url %>
 
-You MUST choose a password before you can use any election monitoring systems, including mobile phone based systems.
+<%= t("notifier.must_choose") %>
 
-Thanks!
+<%= t("common.thank_you_excl").ucwords %>

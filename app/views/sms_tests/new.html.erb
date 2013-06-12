@@ -1,6 +1,4 @@
-<% content_for(:per_page_js){javascript_include_tag("sms_test_console")} %>
-
-<% @title = "SMS Test Console" %>
+<% @title = t("sms_console.title") %>
 
 <div class="tip">
   <%= link_to("Back to Forms", forms_path) %>
@@ -10,11 +8,11 @@
   <%= form_field(f, :from) %>
   <%= form_field(f, :body, :type => :textarea) %>
 
-  <%= form_submit_button(f) %>
+  <%= form_submit_button(f, :label => :submit) %>
   <%= loading_indicator %>
 <% end %>
 
-<h2>Result</h2>
+<h2><%= t("common.result") %></h2>
 <div class="sms_test_result">
 </div>
 

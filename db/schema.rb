@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130523143757) do
+ActiveRecord::Schema.define(:version => 20130607135946) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -150,8 +150,8 @@ ActiveRecord::Schema.define(:version => 20130523143757) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "mission_id"
-    t.string   "name"
-    t.text     "hint"
+    t.string   "_name"
+    t.text     "_hint"
     t.text     "name_translations"
     t.text     "hint_translations"
   end
@@ -191,8 +191,8 @@ ActiveRecord::Schema.define(:version => 20130523143757) do
     t.boolean  "minstrictly"
     t.integer  "mission_id"
     t.string   "qtype_name"
-    t.text     "name"
-    t.text     "hint"
+    t.text     "_name"
+    t.text     "_hint"
     t.text     "name_translations"
     t.text     "hint_translations"
   end
@@ -231,12 +231,12 @@ ActiveRecord::Schema.define(:version => 20130523143757) do
     t.datetime "updated_at"
     t.datetime "viewed_at"
     t.integer  "view_count",           :default => 0
-    t.string   "display_type",         :default => "Table"
-    t.string   "bar_style",            :default => "Side By Side"
+    t.string   "display_type",         :default => "table"
+    t.string   "bar_style",            :default => "side_by_side"
     t.boolean  "unreviewed",           :default => false
-    t.string   "question_labels",      :default => "Code"
+    t.string   "question_labels",      :default => "code"
     t.boolean  "show_question_labels", :default => true
-    t.string   "percent_type"
+    t.string   "percent_type",         :default => "none"
     t.boolean  "unique_rows"
     t.string   "aggregation_name"
   end

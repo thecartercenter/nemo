@@ -1,22 +1,18 @@
 <%# TODO refactor to use nested_attributes %>
-<%= fields_for("questioning[condition]", condition) do |f| %>
-  <%= render("layouts/object_errors", :object => condition, :compact => true) %>
+<%= fields_for("questioning[condition]", @condition) do |f| %>
+  <%= render("layouts/object_errors", :object => @condition, :compact => true) %>
   <% f.mode = form_mode %>
-  <%= f.select(:ref_qing_id, condition.question_code_select_options, {:include_blank => "Select question..."},
-    :onchange => "condition_update_choices(this)") %>&nbsp;
-  <%= f.select(:op, condition.op_select_options, :include_blank => "Select comparison...") %>&nbsp;
-  <%= f.text_field(:value, :id => "questioning_condition_value", 
-    :style => condition.has_options? ? "display: none" : "") %>
-  <%= f.select(:option_id, condition.option_select_options, {:include_blank => "Select value..."}, 
-    :style => condition.has_options? ? "" : "display: none", 
+  <%= f.select(:ref_qing_id, @condition.refable_qings.map{|q| ["#{q.rank}. #{q.question.code}", q.id]}, {:include_blank => t("conditions.question_prompt")}) %>&nbsp;
+  <%= f.select(:op, translate_options(@condition.applicable_operator_names, [:conditions, :operators]), :include_blank => t("conditions.op_prompt")) %>&nbsp;
+  <%= f.text_field(:value, :id => "questioning_condition_value",
+    :style => @condition.has_options? ? "display: none" : "") %>
+  <%= f.select(:option_id, @condition.ref_question_select_options, {:include_blank => "Select value..."}, 
+    :style => @condition.has_options? ? "" : "display: none", 
     :id => "questioning_condition_option_id") %>
 <% end %>
 
 <% if controller.action_name != "show" %>
   <script type="text/javascript">
-  // specification of the operators and question types
-  var condition_ops = <%= Condition::OPS.to_json.html_safe %>;
-  var condition_q_types = <%= condition.question_code_type_hash.to_json.html_safe %>;
-  var condition_q_options = <%= condition.question_options_hash.to_json.html_safe %>;
+    new ELMO.ConditionForm(<%= @condition.to_json(:dropdown_values => true).html_safe %>);
   </script>
 <% end %>

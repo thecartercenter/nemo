@@ -5,16 +5,19 @@
 <head>
   <title><%= configatron.site_name %></title>
 
-  <%= stylesheet_link_tag("main", :media => :all) %>
-  <%= stylesheet_link_tag("screen", :media => :screen) %>
-  <%= stylesheet_link_tag("print", :media => :print) %>
+  <%= stylesheet_link_tag "application", :media => "all" %>
+  <%= stylesheet_link_tag "screen", :media => "screen" %>
+  <%= stylesheet_link_tag "print", :media => "print" %>
+  <%= javascript_include_tag "application" %>
+  <%= csrf_meta_tags %>
 
-  <%= javascript_include_tag(:defaults, "jquery-ui-1.8.17.custom.min") %>
-  <%= javascript_include_tag("common") %>
+  <script type="text/javascript">
+    // copy i18n settings to javascript i18n
+    I18n.defaultLocale = "<%= I18n.default_locale %>";
+    I18n.locale = "<%= I18n.locale %>";
+  </script>
   
   <%= yield(:per_page_js) %>
-  
-  <%= csrf_meta_tag %>
 </head>
 <body>
   <table id="layout">
@@ -23,39 +26,39 @@
         <div id="userinfo">
           <% if current_user %>
             <%# username %>
-            Logged in as <strong><%= current_user.login %></strong> &nbsp;&bull;&nbsp;
+            <%= t("layout.logged_in_as") %> <strong><%= current_user.login %></strong> &nbsp;&bull;&nbsp;
             
             <%# current mission and dropdown, if there are choices %>
-            Mission:
+            <%= Mission.model_name.human %>:
             <% if current_user.accessible_missions.size > 0 %>
               <%= nice_form_for(current_user) do |f| %>
                 <% f.mode = :edit %>
-                <%= f.select(:current_mission_id, sel_opts_from_objs(current_user.accessible_missions), :include_blank => "[None]") %>
+                <%= f.select(:current_mission_id, sel_opts_from_objs(current_user.accessible_missions), :include_blank => "[#{t('common.none').capitalize}]") %>
                 <%= loading_indicator(:header => true) %>
                 <%= hidden_field_tag(:changing_current_mission, 1) %>
               <% end %>
             <% else %>
-              <strong><%= current_mission ? current_mission.name : "None" %></strong>
+              <strong><%= current_mission ? current_mission.name : t("common.none") %></strong>
             <% end %>
             &nbsp;&bull;&nbsp;
             
             <%# role %>
             <% if current_mission %>
-              Role: <%= t(current_user.role(current_mission), :scope => :roles, :default => "[#{t("common.none")}]") %>
+              <%= t("roles.role") %>: <%= t(current_user.role(current_mission), :scope => :roles, :default => "[#{t("common.none")}]") %>
               &nbsp;&bull;&nbsp;
             <% end %>
             
             <%# link to edit profile %>
-            <%= link_to("Edit Profile", edit_user_path(current_user.id)) %>
+            <%= link_to(t("users.edit_profile"), edit_user_path(current_user.id)) %>
             &nbsp;&bull;&nbsp;
 
             <%# logout button %>
-            <%= button_to("Logout", user_session_path, :method => :delete, :id => "logout_button") %>
+            <%= button_to(t("common.logout"), user_session_path, :method => :delete, :id => "logout_button") %>
             
           <% else %>
             
             <%# login link %>
-            <%= link_to("Login", login_path) %>
+            <%= link_to(t("common.login"), login_path) %>
           <% end %>
         </div>
         <div id="title">
@@ -89,17 +92,22 @@
     </tr>
     <tr>
       <td id="footer" colspan="2">
-        Time Zone: <%= Time.zone.to_s %> &nbsp;|&nbsp;
+        <%= t("layout.time_zone") %>: <%= Time.zone.to_s %> &nbsp;|&nbsp;
         <% if current_mission %>
-          Outgoing SMS Provider: <%= configatron.outgoing_sms_adapter ? configatron.outgoing_sms_adapter.service_name : "[None]" %> &nbsp;|&nbsp;
+          <%= t("sms.outgoing_provider") %>:
+          <%= configatron.outgoing_sms_adapter ? configatron.outgoing_sms_adapter.service_name : "[#{t('common.none').capitalize}]" %> &nbsp;|&nbsp;
         <% end %>
         System Version: <%= configatron.system_version %>
         <% if Rails.env == "development" %>
           &nbsp;&nbsp;
-          <div id="dev_mode_warning">Development Mode</div>
+          <div id="dev_mode_warning"><%= t("layout.dev_mode") %></div>
         <% end %>
       </td>
     </tr>
   </table>
+  
+  <%= javascript_tag do %>
+    var LOGIN_PATH = <%= login_path.to_json.html_safe %>;
+  <% end %>
 </body>
 </html>

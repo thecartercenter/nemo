@@ -8,12 +8,11 @@ class Questioning < ActiveRecord::Base
   has_many(:referring_conditions, :class_name => "Condition", :foreign_key => "ref_qing_id", :dependent => :destroy, :inverse_of => :ref_qing)
   
   before_create(:set_rank)
-  before_destroy(:check_assoc)
   after_create(:notify_form_versioning_policy_of_create)
   before_save(:notify_form_versioning_policy_of_update)
   after_destroy(:notify_form_versioning_policy_of_destroy)
 
-  validates_associated(:condition, :message => "is invalid (see below)")
+  validates_associated(:condition, :message => :invalid_condition)
   
   alias :old_condition= :condition=
   
@@ -93,10 +92,6 @@ class Questioning < ActiveRecord::Base
     "(" + exps.join(" and ") + ")"
   end
   
-  def get_or_init_condition
-    has_condition? ? condition : build_condition(:questioning => self)
-  end
-  
   def previous_qings
     form.questionings.reject{|q| !rank.nil? && (q == self || q.rank > rank)}
   end
@@ -105,15 +100,13 @@ class Questioning < ActiveRecord::Base
     condition.verify_ordering if condition
   end
   
+  def check_assoc
+    raise DeletionError.new(:cant_delete_if_has_answers) unless answers.empty?
+  end
+  
   private
     def set_rank
       self.rank = form.max_rank + 1 if rank.nil?
       return true
-    end
-    
-    def check_assoc
-      unless answers.empty?
-        raise("You can't remove question '#{question.code}' because it has one or more answers for this form.")
-      end
     end
 end

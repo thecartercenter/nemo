@@ -1,6 +1,9 @@
-<% content_for(:per_page_js){javascript_include_tag("welcome")} %>
-
 <%= flash_and_form_errors %>
 
 <%# use a partial so that just the blocks can be rendered on ajax request %>
 <div id="blocks"><%= render("blocks") %></div>
+
+<%= javascript_doc_ready do %>
+  // setup minute reloading of page
+  setInterval(function() { $('#blocks').load('/', 'auto=1', function(response, status) {check_login_required(response)}); }, 60000);
+<% end %>  

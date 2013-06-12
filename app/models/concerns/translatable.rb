@@ -25,23 +25,35 @@ module Translatable
   # define methods like name_en, etc.
   def method_missing(*args)
     # check if this is a translation method and get the pieces
-    field, locale, is_setter = is_translation_method?(args[0])
+    field, locale, is_setter = parse_method(args[0], args[1])
+    
     if field
+      # if locale is not set, default to current locale, but remember that we did this
+      if locale.blank?
+        locale = I18n.locale.to_s
+        implicit_locale = true
+      else
+        implicit_locale = false
+      end
+
       # if we're setting the value
       if is_setter
         # init the empty hash if it's nil
         send("#{field}_translations=", {}) if send("#{field}_translations").nil?
-      
+        
         # set the value in the appropriate translation hash
         # we use the merge method because otherwise the _changed? method doesn't work right
         send("#{field}_translations=", send("#{field}_translations").merge(locale => args[1]))
         
-        # if the locale is the default locale, also put the value in the vanilla attribute
-        send("#{field}=", args[1]) if locale.to_sym == I18n.default_locale
+        # if the locale is the default locale, also cache the value in the _ attribute
+        send("_#{field}=", args[1]) if locale.to_sym == I18n.default_locale
         
       # otherwise just return what we have
       else
-        send("#{field}_translations").nil? ? nil : send("#{field}_translations")[locale]
+        str = send("#{field}_translations").nil? ? nil : send("#{field}_translations")[locale]
+        
+        # if the translation is blank and the locale was implicit, return the default one (cached)
+        (str.blank? && implicit_locale) ? send("_#{field}") : str
       end
     else
       super
@@ -49,26 +61,26 @@ module Translatable
   end
   
   def respond_to?(symbol, *)
-    is_translation_method?(symbol) || super
+    parse_method(symbol) || super
   end
   
   def respond_to_missing?(symbol, include_private)
-    is_translation_method?(symbol) || super
+    parse_method(symbol) || super
   end
   
-  def is_translation_method?(symbol)
-    # check the general format
-    return false unless symbol.to_s.match(/^(\w+)_([a-z]{2})(_before_type_cast)?(=?)$/)
+  def parse_method(symbol, arg1 = nil)
+    fields = self.class.translated_fields.join("|")
+    if symbol.to_s.match(/^(#{fields})(_([a-z]{2}))?(_before_type_cast)?(=?)$/) 
     
-    # get bits
-    field = $1
-    locale = $2
-    is_setter = $4 == "="
-    
-    # make sure the field matches one of the translated fields
-    return false unless self.class.translated_fields.include?(field.to_sym)
-    
-    # if we get this far, return the bits
-    [field, locale, is_setter]
+      # get bits
+      field = $1
+      locale = $3 || arg1.to_s
+      is_setter = $5 == "="
+      
+      # if we get this far, return the bits
+      [field, locale, is_setter]
+    else
+      nil
+    end
   end  
 end

@@ -11,16 +11,19 @@ class UsersController < ApplicationController
     prepare_and_render_form
   end
   
+  def show
+    prepare_and_render_form
+  end
+  
   def edit
-    # special title if user is editing self
-    @title = "Edit Profile" if @user == current_user
     prepare_and_render_form
   end
   
   def create
     if @user.save
       @user.reset_password_if_requested
-      flash[:success] = "User created successfully."
+
+      set_success(@user)
       
       # render printable instructions if requested
       handle_printable_instructions
@@ -51,13 +54,14 @@ class UsersController < ApplicationController
 
         # redirect and message depend on if this was user editing self or not
         if @user == current_user
-          flash[:success] = "Profile updated successfully."
+          flash[:success] = t("users.profile_updated")
           redirect_to(:action => :edit)
         else
-          flash[:success] = "User updated successfully."
+          set_success(@user)
 
           # if the user's password was reset, do it, and show instructions if requested
           @user.reset_password_if_requested
+          
           handle_printable_instructions
         end
       
@@ -69,14 +73,12 @@ class UsersController < ApplicationController
   end
   
   def destroy
-    begin flash[:success] = @user.destroy && "User deleted successfully." rescue flash[:error] = $!.to_s end
+    destroy_and_handle_errors(@user)
     redirect_to(:action => :index)
   end
   
   # shows printable login instructions for the user
   def login_instructions
-    # no title because the title is incorporated into the login instructions box
-    @title = ""
   end
   
   # exports the selected users to VCF format

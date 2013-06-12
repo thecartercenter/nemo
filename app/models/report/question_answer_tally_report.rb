@@ -23,7 +23,7 @@ class Report::QuestionAnswerTallyReport < Report::TallyReport
       rel = rel.select("COUNT(responses.id) AS tally")
     
       # add question grouping
-      expr = question_labels == "Title" ? "questions.name" : "questions.code"
+      expr = question_labels == "title" ? "questions.name_translations" : "questions.code"
       rel = rel.select("#{expr} AS pri_name, #{expr} AS pri_value, 'text' AS pri_type")
       joins << :questions
       rel = rel.group(expr)
@@ -31,7 +31,7 @@ class Report::QuestionAnswerTallyReport < Report::TallyReport
       # add answer grouping
       # if we have an option set, we don't use calculation objects
       unless option_sets.empty?
-        expr = "IFNULL(ao.name, co.name)"
+        expr = "IFNULL(ao.name_translations, co.name_translations)"
         rel = rel.select("#{expr} AS sec_name")
         rel = rel.group(expr)
         expr = "IFNULL(ao.value, co.value)"
@@ -49,7 +49,7 @@ class Report::QuestionAnswerTallyReport < Report::TallyReport
 
       # we don't have an option set, so expect calculation objects
       else
-        raise Report::ReportError.new("Report has no calculations") if calculations.empty?
+        raise Report::ReportError.new("no calculations") if calculations.empty?
         
         # get expression fragments
         # this could be optimized by grouping name/value/sort for each calculation type, but i don't think it will impact performance much

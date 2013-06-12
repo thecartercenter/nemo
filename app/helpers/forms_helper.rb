@@ -3,54 +3,54 @@ module FormsHelper
     links = []
     
     # add links based on authorization
-    links << link_to("Create Form", new_form_path) if can?(:create, Form)
-    links << link_to("SMS Test Console", new_sms_test_path) if can?(:create, Sms::Test)
+    links << create_link(Form) if can?(:create, Form)
+    links << link_to(t("sms_console.title"), new_sms_test_path) if can?(:create, Sms::Test)
     
     # return links
     links
   end
   
   def forms_index_fields
-    %w[type version name questions published? smsable last_modified downloads responses actions]
+    %w[type version name questions published smsable updated_at downloads responses actions]
   end
     
   def format_forms_field(form, field)
     case field
     when "type" then form.type.name
     when "version" then form.current_version ? form.current_version.sequence : ""
+    when "name" then link_to(form.name, form_path(form), :title => t("common.view"))
     when "questions" then form.questionings_count
-    when "last_modified" then form.updated_at.to_s(:std_datetime)
+    when "updated_at" then form.updated_at.to_s(:std_datetime)
     when "responses"
       form.responses_count == 0 ? 0 :
         link_to(form.responses_count, responses_path(:search => "form:\"#{form.name}\""))
     when "downloads" then form.downloads || 0
-    when "published?" then form.published? ? "Yes" : "No"
-    when "smsable" then form.smsable? ? "Yes" : "No"
+    when "published" then tbool(form.published?)
+    when "smsable" then tbool(form.smsable?)
     when "actions"
       # get standard action links
-      links = action_links(form, :destroy_warning => "Are you sure you want to delete form '#{form.name}'?", 
-        :exclude => form.published? ? [:edit, :destroy] : [])
+      links = action_links(form, :obj_name => form.name, :exclude => (form.published? ? [:edit, :destroy] : []))
       
       # get the appropriate publish icon and add link, if auth'd
       if can?(:publish, form)
-        icon = action_icon(form.published? ? "unpublish" : "publish")
-        links += link_to(icon, publish_form_path(form), :title => "#{form.published? ? 'Unp' : 'P'}ublish")
+        verb = form.published? ? "unpublish" : "publish"
+        links += action_link(verb, publish_form_path(form), :title => t("forms.#{verb}"))
       end
       
       # add a clone link if auth'd
       if can?(:clone, form)
-        links += link_to(action_icon("clone"), clone_form_path(form),
-          :title => "Clone", :confirm => "Are you sure you want to make a copy of the form '#{form.name}'?")
+        links += action_link("clone", clone_form_path(form),
+          :title => t("common.clone"), :confirm => t("forms.clone_confirm", :form_name => form.name))
       end
 
       # add a print link if auth'd
       if can?(:print, form)
-        links += link_to(action_icon("print"), "#", :title => "Print", :onclick => "Form.print(#{form.id}); return false;")
+        links += action_link("print", "#", :title => t("common.print"), :onclick => "Form.print(#{form.id}); return false;")
       end
       
       # add an sms template link if appropriate
       if form.smsable? && form.published?
-        links += link_to(action_icon("sms"), form_path(form, :sms_guide => 1), :title => "Sms Guide")
+        links += action_link("sms", form_path(form, :sms_guide => 1), :title => "Sms Guide")
       end
       
       # add a loading indicator

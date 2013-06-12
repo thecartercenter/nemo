@@ -1,129 +1,259 @@
 en:
-  locale_name: English
+  locale_name: "English"
   
+  # common words (should be capitalized except for those that obviously shouldn't like and, or, e.g., etc.)
   common:
+    accept: "Accept"
+    active: "Active"
+    add: "Add"
+    and: "and"
+    by: "By"
+    cancel: "Cancel"
+    choose: "Choose"
+    clear: "Clear"
+    clone: "Clone"
+    contact: "Contact"
+    create: "Create"
+    created: "Created"
+    data: "Data"
+    day: "Day"
+    delete: "Delete"
+    design: "Design"
+    edit: "Edit"
+    error: "Error"
+    example: "Example"
     example_abbr: "e.g."
+    found: "Found"
+    hour: "Hour"
     language: "Language"
+    login: "Login"
+    logout: "Logout"
+    manage: "Manage"
+    month: "Month"
+    near: "Near"
+    next: "Next"
+    _no: "No" # using 'no' by itself as a key causes an error in i18n-js
     none: "None"
+    _null: "Null" # using 'null' by itself as a key causes an error in i18n-js
+    or: "or"
+    previous: "Previous"
+    print: "Print"
+    remove: "Remove"
+    report: "Report"
+    reset: "Reset"
+    result: "Result"
+    review: "Review"
+    run: "Run"
+    save: "Save"
+    search: "Search"
+    send: "Send"
+    showing: "Showing"
     step: "Step"
-    thank_you_with_exclamation: "Thank You!"
-    
+    suggest: "Suggest"
+    submit: "Submit"
+    successfully: "Successfully"
+    thanks_excl: "Thank You!"
+    this: "This"
+    total: "Total"
+    updated: "Updated"
+    view: "View"
+    week: "Week"
+    _yes: "Yes" # using 'yes' by itself as a key causes an error in i18n-js
+
+  # general attribute names
+  attributes:
+    name: "Name"
+    code: "Code"
+    created_at: "Creation Time"
+    email: "Email"
+    hint: "Hint"
+    password: "Password"
+    published: "Published?"
+    questions: "Questions"
+    title: "Title"
+    type: "Type"
+    value: "Value"
+
+  # general error messages
+  errors:
+    messages:
+      deleted_successfully: "deleted successfully"
+      generic_delete_error: "Error during deletion."
+      must_be_unique: "must be unique"
+      is_invalid: "is invalid"
+      did_not_match: "did not match"
+  
+  # model names, attrib names, tips, and errors for activerecord models
   activerecord:
     models:
-      report/report: Report
+      answer: "Answer"
+      assignment: "Assignment"
+      broadcast: "Broadcast"
+      choice: "Choice"
+      condition: "Condition"
+      form: "Form"
+      form_type: "Form Type"
+      mission: "Mission"
+      option: "Option"
+      option_set: "Option Set"
+      password_reset: "Password Reset"
+      question: "Question"
+      questioning: "Question" # should be same as question
+      report/calculation: "Calculation"
+      report/report: "Report"
+      report/question_answer_tally_report: "Tally of Answers per Question"
+      report/grouped_tally_report: "Tally of Responses per Answer/Attribute"
+      report/list_report: "List of Answers/Attributes"
+      response: "Response"
+      search/search: "Search"
+      setting: "Settings" # should be plural
+      sms/message: "SMS Message"
+      user: "User"
     attributes:
       broadcast:
-        balance: SMS Balance
-        which_phone: Which Phone(s)
-        send_errors: Delivery Errors
+        balance: "SMS Balance"
+        body: "Message"
+        created_at: "Send Time"
+        errors: "Errors?" 
+        medium: "Medium"
+        send_errors: "Delivery Errors"
+        subject: "Subject"
+        to: "To"
+        which_phone: "Which Phone(s)"
       form:
+        downloads: "Downloads"
+        form_type_id: "Form Type"
+        responses: "Responses"
         smsable: "SMSable?"
+        updated_at: "Last Modified"
+        version: "Version"
+      option_set:
+        options: "Options"
+        ordering: "Ordering"
       question:
+        base: "" # this is a sort of hack to get error msg to display properly
+        minimum: "Minimum"
+        maximum: "Maximum"
         name: "Title"
         name_en: "English Title"
-        option_set_id: Option Set
-        qtype_name: Type
+        option_set_id: "Option Set"
+        qtype_name: "Type"
       questioning:
-        hidden: Hidden?
-        required: Required?
+        condition: "Condition?"
+        hidden: "Hidden?"
+        rank: "Rank"
+        required: "Required?"
       response:
-        user_id: Submitter
-        reviewed: Reviewed?
+        id: "Response ID"
+        age: "Age"
+        created_at: "Submission Time"
+        form_id: "Form"
+        reviewed: "Reviewed?"
+        source: "Source"
+        user_id: "Submitter/Team Name"
       report/report:
-        name: Title
-        aggregation: Operation
-        aggregation_id: Operation
-        fields: Attributes/Questions
-        display_type: Display Type
-        unreviewed: Allow Unreviewed Responses
-        unique_rows: Hide Duplicate Rows
-        pri_grouping: Grouping 1
-        sec_grouping: Grouping 2
-        percent_type: Percent Type
-        bar_style: Bar Style
-        submit_new: Generate Report
-        submit_edit: Save Changes
+        aggregation: "Operation"
+        aggregation_id: "Operation"
+        bar_style: "Bar Style"
+        display_type: "Display Type"
+        fields: "Attributes/Questions"
+        name: "Title"
+        percent_type: "Percent Type"
+        pri_grouping: "Grouping 1"
+        sec_grouping: "Grouping 2"
+        submit_edit: "Save Changes"
+        submit_new: "Generate Report"
+        unique_rows: "Hide Duplicate Rows"
+        unreviewed: "Allow Unreviewed Responses"
+        view_count: "Views"
+        viewed_at: "Last Viewed"
       setting:
-        languages: Form Languages
-        outgoing_sms_adapter: Provider
-        outgoing_sms_language: Language
-        incoming_sms_number: Incoming Sms Number
-        intellisms_password1: Password
-        intellisms_password2: Password Confirmation
-        intellisms_username: Username
-        isms_hostname: Host
-        isms_password1: Password
-        isms_password2: Password Confirmation
-        isms_username: Username
-        tableau_sql: Tableau SQL
-        timezone: Time Zone
+        incoming_sms_number: "Incoming SMS Number"
+        intellisms_password1: "Password"
+        intellisms_password2: "Password Confirmation"
+        intellisms_username: "Username"
+        isms_hostname: "Host"
+        isms_password1: "Password"
+        isms_password2: "Password Confirmation"
+        isms_username: "Username"
+        languages: "Form Languages"
+        outgoing_sms_adapter: "Provider"
+        outgoing_sms_language: "Language"
+        tableau_sql: "Tableau SQL" # Tableau is a software product name and shouldn't be translated
+        timezone: "Time Zone"
       sms/test:
-        from: From
-        body: Body
+        from: "From"
+        body: "Body"
       user:
-        name: Full Name
-        phone: Main Phone
-        admin: Is Administrator?
-        phone2: Alternate Phone
-        password_confirmation: Re-type Password
+        admin: "Is Administrator?"
+        assignments: "Assignments"
+        latest_mission: "Latest Mission"
+        login: "Username"
+        name: "Full Name"
+        notes: "Notes"
+        password_confirmation: "Retype Password"
+        phone: "Main Phone"
+        phone2: "Alternate Phone"
+      user_batch:
+        users: "Users"
     tips:
       form_type:
-        name: A short name for this Form Type. Maximum 16 characters.
+        name: "A short name for this Form Type. Maximum 16 characters."
       mission:
-        name: A name for this Mission. Maximum 32 characters. Must be unique. Think about including the year if there will be future missions with the same name.
+        name: "A name for this Mission. Maximum 32 characters. Must be unique. Think about including the year if there will be future missions with the same name."
       option:
-        value: The numeric value that best represents this option.
-        name_en: The textual description of this option that users will see.
+        value: "The numeric value that best represents this option."
+        name_en: "The textual description of this option that users will see."
       option_set:
-        name: A name that summarizes this set of options. Normal users will not see this name.
-        options: Check the options that should be included in this set.
-        ordering: The order in which you'd like the options to appear.
+        name: "A name that summarizes this set of options. Normal users will not see this name."
+        options: "Check the options that should be included in this set."
+        ordering: "The order in which you'd like the options to appear."
       question:
-        code: A short codename (between 2-20 characters). Should contain only letters and numbers, e.g. BallotBoxSealed, DepartTime.
-        hint_en: Additional instructions, e.g. 'Enter an approximate count of the people waiting to vote.'
-        minimum: The minimum value for the response. Check the box if the minimum itself is not valid.
-        maximum: The maximum value for the response. Check the box if the maximum itself is not valid.
-        name_en: The main question text, e.g. 'How many people are in line?'
-        option_set_id: The set of options the user will be able to choose from.
-        qtype_name: The kind of information the user will be entering.
+        code: "A short codename (between 2-20 characters). Should contain only letters and numbers, e.g. BallotBoxSealed, DepartTime."
+        hint_en: "Additional instructions, e.g. 'Enter an approximate count of the people waiting to vote.'"
+        minimum: "The minimum value for the response. Check the box if the minimum itself is not valid."
+        maximum: "The maximum value for the response. Check the box if the maximum itself is not valid."
+        name_en: "The main question text, e.g. 'How many people are in line?'"
+        option_set_id: "The set of options the user will be able to choose from."
+        qtype_name: "The kind of information the user will be entering."
       questioning:
-        condition: An optional condition which must be met in order for this question to be shown to the user.
-        hidden: Whether this question will be shown on this form. Use this to disable a question if you can't delete it. This value will override any condition specified above.
-        required: Whether this question must be completed on this form or is optional. Only enforced if the condition specified above is met.
+        condition: "An optional condition which must be met in order for this question to be shown to the user."
+        hidden: "Whether this question will be shown on this form. Use this to disable a question if you can't delete it. This value will override any condition specified above."
+        required: "Whether this question must be completed on this form or is optional. Only enforced if the condition specified above is met."
       report/report:
-        name: A descriptive title for this report.
-        aggregation_id: The operation you want to perform on the combined data.
-        kind: The type of data you want to work with.
-        display_type: The way you want the results to be presented.
-        unreviewed: Whether unreviewed responses should be included in the report.
-        unique_rows: Whether duplicate rows should be omitted in the report.
-        pri_grouping: An attribute or question by which the response count should be grouped (e.g. state, overall rating).
-        percent_type: Whether and how percentages should be calculated for the report.
-        bar_style: Whether bars should be stacked or side-by-side. 
+        name: "A descriptive title for this report."
+        aggregation_id: "The operation you want to perform on the combined data."
+        kind: "The type of data you want to work with."
+        display_type: "The way you want the results to be presented."
+        unreviewed: "Whether unreviewed responses should be included in the report."
+        unique_rows: "Whether duplicate rows should be omitted in the report."
+        pri_grouping: "An attribute or question by which the response count should be grouped (e.g. state, overall rating)."
+        percent_type: "Whether and how percentages should be calculated for the report."
+        bar_style: "Whether bars should be stacked or side-by-side."
       setting:
-        languages: Enter the <a href="http://www.loc.gov/standards/iso639-2/php/code_list.php">two-letter codes</a>, separated by commas, for the languages in which you want to allow questions to be defined.
-        incoming_sms_number: Enter the phone number to which incoming SMSes for SMS forms should be sent. This will be displayed on the SMS guide.
-        outgoing_sms_adapter: The adapter used to send outgoing SMSes.
-        outgoing_sms_language: The code for the language in which system-generated SMSes should be sent. English is assumed if blank.
-        intellisms_username: The username for the IntelliSMS account.
-        intellisms_password1: Enter and re-enter a password to change the password for the IntelliSMS account.
-        isms_hostname: The IP or domain name for the iSMS device. Can include port (e.g. 10.20.30.40:8081). Don't include http://.
-        isms_password1: Enter and re-enter a password to change the API password for the iSMS device.
-        isms_username: The API username for the iSMS device.
-        tableau_sql: The SQL code used to extract data for use in Tableau. Click 'Select All' and then press Ctrl-C to copy.
-        timezone: The time zone in which times are displayed throughout the site.
+        languages: "Enter the <a href=\"http://www.loc.gov/standards/iso639-2/php/code_list.php\">two-letter codes</a>, separated by commas, for the languages in which you want to allow questions to be defined."
+        incoming_sms_number: "Enter the phone number to which incoming SMSes for SMS forms should be sent. This will be displayed on the SMS guide."
+        outgoing_sms_adapter: "The adapter used to send outgoing SMSes."
+        outgoing_sms_language: "The code for the language in which system-generated SMSes should be sent. English is assumed if blank."
+        intellisms_username: "The username for the IntelliSMS account."
+        intellisms_password1: "Enter and re-enter a password to change the password for the IntelliSMS account."
+        isms_hostname: "The IP or domain name for the iSMS device. Can include port (e.g. 10.20.30.40:8081). Don't include http://."
+        isms_password1: "Enter and re-enter a password to change the API password for the iSMS device."
+        isms_username: "The API username for the iSMS device."
+        tableau_sql: "The SQL code used to extract data for use in Tableau. Click 'Select All' and then press Ctrl-C to copy."
+        timezone: "The time zone in which times are displayed throughout the site."
       sms/test:
         from: "Enter the phone number from which this SMS should appear to originate. This number must include the country code (e.g. +1 404 555 1212, +23476543212)."
-        body: Enter the body of the message.
+        body: "Enter the body of the message."
       user:
         name: "The user's full name. Example: 'John Doe' or 'Team 1.1'"
-        login: The login name will be used to log in. Click the suggest button to suggest a login name.
+        login: "The username will be used to log in. Click the suggest button to suggest a login name."
         phone: "Phone number should include the country code. Example: +25680344523"
         phone2: "Phone number should include the country code. Example: +25680344523"
-        admin: Whether this user is a system-wide administrator. You can control per-mission permissions using the fields below.
-        assignments: The missions this user is assigned to.
-        password: Enter a new password here if you'd like to change your existing password.
-        password_confirmation: Enter the new password again.
+        admin: "Whether this user is a system-wide administrator. You can control per-mission permissions using the fields below."
+        assignments: "The missions this user is assigned to."
+        password: "Enter a new password here if you'd like to change your existing password."
+        password_confirmation: "Enter the new password again."
       user_batch:
         users: |-
           Enter the user names, email addresses, and phone numbers (WITH country codes), one per line, separated by commas or tabs. For example:
@@ -132,19 +262,364 @@ en:
           Chung Li, cli@gmail.com
           Forgo Niambot, , +203300303
           Stewbuilder Dennis, chow@yahoo.co.uk, +20923187493
-    
     errors:
       models:
+        answer:
+          required: "is required"
+        condition:
+          all_required: "All fields are required."
+        form:
+          cant_delete_if_has_responses: "You can't delete this Form because it has associated responses."
+          cant_delete_published: "A published Form can't be deleted."
+          cant_edit_published: "A published Form can't be edited."
+          ranks_break_conditions: "The new rankings invalidate one or more conditions"
+        form_type:
+          cant_delete_if_has_forms: "You can't delete this Form Type because one or more Forms are associated with it."
+        mission:
+          cant_delete_if_assoc: "You can't delete this Mission because it has associated Forms, Responses, or other objects."
+          let_num_spc_only: "can only contain letters, numbers, and spaces"
+          not_unique: "is too much like the existing Mission '%{existing}'"
+        option:
+          cant_delete_if_has_response: "You can't delete this Option because it is included in at least one Response."
+          cant_change_if_published: "You can't change this Option because it appears in at least one published Form."
+          cant_delete_if_published: "You can't delete this Option because it appears in at least one published Form."
+          names_too_long: "Names must be at most 30 characters in length."
+        option_set:
+          at_least_one: "You must choose at least one option."
+          cant_delete_if_has_questions: "You can't delete this Option Set because one or more Questions are associated with it."
+          cant_delete_if_has_response: "You can't delete this Option Set because it is included in at least one Response."
+          non_unique_values: "Two or more of the options you've chosen have the same numeric value."
+        question:
+          cant_change_if_conditions: "You can't change the Type or Option Set because there are Conditions that refer to this Question."
+          cant_change_if_published: "You can't change this Question because it appears in at least one published Form."
+          cant_change_if_responses: "You can't change the Type or Option Set because there are already Responses for this Question."
+          cant_delete_if_in_form: "You can't delete this Question because it is included in at least one Form."
+        questioning:
+          cant_delete_if_has_answers: "You can't remove this Question because it has one or more answers for this Form."
+          invalid_condition: "is invalid (see below)"
+          question: "Question"
+        report/report:
+          attributes:
+            fields:
+              blank: "You must choose at least one question or attribute."
+            name:
+              blank: "You must enter a report title."
+            questions:
+              blank: "You must choose at least one question or one option set."
+            type:
+              blank: "You must choose a report type."
         response:
           invalid_answers: "are invalid (see below)"
-          missing_answers: "Not all questions have answers"
-          
-    boolean_labels:
-      response:
-        reviewed:
-          true: Yes
-          false: No
-          
+          missing_answers: "Not all questions have answers."
+        setting:
+          attributes:
+            languages:
+              invalid_code: "code %{code} is invalid"
+        user:
+          at_least_digits: "must be at least %{num} digits"
+          cant_delete_if_responses: "You can't delete this user because they have associated responses."
+          cant_passwd_email: "You can't %{verb} password by email because you didn't specify an email address."
+          duplicate_assignments: "There are duplicate assignments."
+          must_choose_passwd_method: "You must choose a password creation method."
+          no_missions: "You are not assigned to any missions."
+          phone_assigned_to_other: "has already been assigned to another user"
+          attributes:
+            assignments:
+              cant_be_empty_if_not_admin: "can't be empty if not admin"
+  
+  # application-wide strings
+  layout:
+    actions: "Actions"
+    are_you_sure: "Are you sure?"
+    create_link: "Create New %{obj}"
+    delete_warning: "Are you sure you want to permanently delete the %{obj_description}?"
+    deselect_all: "Deselect All"
+    dev_mode: "Development Mode"
+    in_total: "in total"
+    logged_in_as: "Logged in as"
+    must_be: "must be"
+    new_obj: "New %{obj}"
+    no_selection: "You haven't selected anything."
+    reqd_sym_definition: "Required fields are marked with a %{reqd_sym}."
+    select_all: "Select All"
+    server_contact_error: "Error contacting server"
+    system_error: "System error. Administrator has been notified."
+    time_zone: "Time Zone"
+  
+  # pagination translations
+  will_paginate:
+    previous_label: "&#8592; Previous"
+    next_label: "Next &#8594;"
+    page_gap: "&hellip;" # this entry should be the same for all languages
+  
+  # authlogic translations
+  authlogic:
+    error_messages:
+      consecutive_failed_logins_limit_exceeded: "You have exceeded the consecutive failed login limit. Your account has been disabled."
+      email_invalid: "should look like an email address"
+      general_credentials_error: "The Login/Password combination you entered is not valid."
+      login_blank: "can't be blank"
+      login_invalid: "should use only letters, numbers, spaces, and .-_@"
+      login_not_found: "is not valid"
+      no_authentication_details: "You did not provide any details for authentication."
+      not_active: "Your account is not active."
+      not_approved: "Your account is not approved."
+      not_confirmed: "Your account is not confirmed."
+      password_blank: "can't be blank"
+      password_invalid: "is not valid"
+    models:
+      user_session: "User Session"
+    attributes:
+      user_session:
+        login: "Username"
+        password: "Password"
+        remember_me: "Remember Me"
+  
+  ##############################
+  # the rest of these string groups should be kept in alphabetical order by key
+  
+  answers:
+    no_name: "No Name"
+    this_answer: "This answer"
+  
+  broadcasts:
+    balance_notice: "You have %{balance} SMS credits in your %{account_type} account."
+    chars: # these are for informing the user how many chars they have left in their sms
+      remaining: "characters remaining"
+      too_many: "characters too many"
+    email_intro: "This is a broadcast message from"
+    email_error: "Email Error"
+    instructions: "To send a broadcast, first select the recipients below, and then click 'Send Broadcast'."
+    may_not_be_enough: "This may not be enough."
+    mediums:
+      names:
+        sms: "SMS"
+        email: "Email"
+        sms_only: "SMS Only"
+        email_only: "Email Only"
+        both: "Both SMS and Email"
+      options:
+        sms: "SMS preferred (use email if a recipient has no phone)"
+        email: "Email preferred (use SMS if a recipient has no email)"
+        sms_only: "SMS only (don't send any emails)"
+        email_only: "Email only (don't send any SMSes)"
+        both: "Both SMS and email"
+    send_broadcast: "Send Broadcast"
+    send_success: "Broadcast sent successfully."
+    send_error: "Error sending broadcast (see below)."
+    sms_error: "SMS Error"
+    which_phone_options:
+      main_only: "Main phone only"
+      alternate_only: "Alternate phone only"
+      both: "Both phones"
+      
+  conditions:
+    operators:
+      eq: "is equal to"
+      lt: "is less than"
+      gt: "is greater than"
+      leq: "is less than or equal to"
+      geq: "is greater than or equal to"
+      neq: "is not equal to"
+      inc: "includes"
+      ninc: "does not include"
+    question_prompt: "Select question..."
+    op_prompt: "Select comparison..."
+
+  forms:
+    add_questions: "Add Questions"
+    add_selected: "Add Selected Questions to Form"
+    adding_questions: "Adding Questions to Form: %{form_name}"
+    back_to_questions: "Back to Questions List"
+    choose_form: "Choose a Form..."
+    clone_confirm: "Are you sure you want to make a copy of the form '%{form_name}'?"
+    clone_error: "There was a problem cloning the form (%{msg})."    
+    clone_success: "Form '%{form_name}' cloned successfully."
+    publish_error: "There was a problem publishing the form (%{msg})."
+    publish_success: "Form published successfully."
+    publish: "Publish"
+    published: "Published"
+    question_remove_error: "There was a problem removing the questions (%{msg})."
+    questions_add_error: "There was a problem adding the questions (%{msg})."
+    questions_add_success: "Questions added successfully."
+    questions_remove_success: "Questions removed successfully."
+    remove_selected: "Remove Selected"
+    remove_question_confirm: "Are you sure you want to remove these ### question(s) from the form?"
+    reqd_sym_definition: "Required questions are marked with a"
+    unpublish_error: "There was a problem unpublishing the form (%{msg})."
+    unpublish_success: "Form unpublished successfully. The download count has also been reset."
+    unpublish: "Unpublish"
+    unpublished: "Unpublished"
+    unsaved_rank_notice: "You have not yet saved the changes you made to the Question order. You should click the 'Save' button if you want to save these changes."
+    view_sms_guide: "View SMS Guide"
+  
+  location_picker:
+    choose_location: "Choose Location"
+    current_location: "Current Location"
+    enter_query: "Enter a query into the box above to search for a location in Google's geo-database."
+    search_locations: "Search Locations..."
+  
+  notifier:
+    if_link_doesnt_work: "If the above link does not work try copying and pasting it into your browser."
+    if_you_made_it: "If you did make this request just click the link below:"
+    login_name: "Your login name is %{login}."
+    to_choose: "To choose a password, please go here:"
+    must_choose: "You MUST choose a password before you can use any election monitoring systems, including mobile phone based systems."
+    password_reset_instructions: "Password Reset Instructions"
+    request_made: "A request to reset your %{site} password has been made. If you did not make this request, simply ignore this email."
+    welcome: "Welcome to %{site}!"
+  
+  options:
+    appears_elsewhere: "Note: This option appears on the following forms: %{forms}. Any changes you make below will be reflected on those forms."
+    other_forms_published: "At least one of those forms is also published, so only names can be edited. You should also take care to not change the meaning of the option if editing the names."
+  
+  option_sets:
+    create_options: "create some Options"
+    options_before_sets: "You need to %{link} before you can create Option Sets."
+    orderings:
+      value_asc: "Value Low to High"
+      value_desc: "Value High to Low"
+
+  password_resets:
+    check_email: "Instructions to reset your password have been emailed to you. Please check your email."
+    enter_new_pass: "%{name}, please enter a new password for your account."
+    fill_out_form: "Fill out the form below and instructions to reset your password will be emailed to you. If there is no email address associated with your account your password will have to reset by an administrator."
+    success: "Password updated successfully."
+    token_not_found: |-
+      We're sorry, but we could not locate your account. If you are having issues try copying and pasting the URL 
+      from your email into your browser or restarting the reset password process.
+    user_not_found: "No user was found with that email address."
+    
+  permission_errors:
+    need_mission: "You can't view this without selecting a mission"
+    need_login: "You must login to view that page."
+    no_permission: "You don't have permission to view that page."
+    processing_error: "Error processing permission."
+    observers_cant_change_submitter: "Observers can't change the submitter for responses."
+    must_be_admin: "You must be an administrator to view that page."
+    must_be_logged_out: "You must be logged out to view that page."
+    
+  questions:
+    answer_only_caps: "ANSWER ONLY IF"
+    appears_elsewhere: "Note: This question also appears on the following forms: %{forms}. Any changes you make below will also be reflected on those forms."
+    maxmin:
+      gt: "greater than"
+      lt: "less than"
+      or_eq: "or equal to"
+      strictly_lt: "Strictly less than"
+      strictly_gt: "Strictly greater than"
+    other_forms_published: "At least one of those forms is also published, so not all fields can be edited."
+   
+  question_types:
+    text: "Text"
+    long_text: "Long Text"
+    tiny_text: "Tiny Text"
+    integer: "Integer"
+    decimal: "Decimal"
+    location: "Location"
+    select_one: "Select One"
+    select_multiple: "Select Multiple"
+    datetime: "Date/Time"
+    date: "Date"
+    time: "Time"
+    
+  reports:
+    add_question_attribute: "Add Question/Attribute"
+    back_to_list: "Back To Report List"
+    choose_attrib_question: "Choose an attribute or question"
+    choose_report: "Choose a Report..."
+    create_new: "Create New Report"
+    display_options: "Display Options"
+    enter_name: "Enter a descriptive name for the report."
+    export_to_csv: "Export Data To CSV Format"
+    groupings: "Groupings"
+    how_to_display_questions: "How should questions be displayed?"
+    how_to_display_results: "How would you like to display the results?"
+    questions_attributes: "Questions/Attributes"
+    questions_with_option_sets: "Questions with these option sets"
+    no_match: "No matching data were found."
+    report_title: "Report Title"
+    report_type: "Report Type"
+    these_questions: "These specific questions"
+    total_rows: "Total Rows"
+    what_attrib_col_headers: "What attribute or question would you like for the column headers (optional)?"
+    what_attrib_row_headers: "What attribute or question would you like for the row headers?"
+    what_bar_style: "What bar style would you like?"
+    what_percent_style: "What percentage style would you like?"
+    what_questions_in_list: "What questions and/or attributes would you like to see in the list?"
+    what_type: "What type of report would you like?"
+    which_calculation: "Which calculation (if any) would you like to apply?"
+    which_forms: "Which forms are you interested in?"
+    which_questions: "Which question(s) would you like to include?"
+    bar_styles:
+      side_by_side: "Side By Side"
+      stacked: "Stacked"
+    calculation_descriptions:
+      identity: "None"
+      zero_nonzero: "Whether an answer is 0 or greater than 0"
+    display_types:
+      table: "Table"
+      bar_chart: "Bar Chart"
+    examples:
+      question_answer_tally_report:
+        - "Number of Very Good, Good, etc. answers for the Overall question"
+        - "Percentage of Yes and No for all Yes-No questions"
+        - "Number of Zero and Non-zero answers for questions about observers"
+      grouped_tally_report:
+        - "Number of responses per form for each team"
+        - "Percentage of Yes and No per day for the PeacefulEnvironment question"
+        - "Percentage of Zero and Non-zero answers per State for the DomesticObservers question"
+      list_report:
+        - "List of answers to the Complaints and OtherIrreg questions along with the polling place number"
+        - "List of all polling place numbers, with no duplicates"
+        - "List of submitter name, date, and answer to the NeedSecurityContact question"
+    percent_types:
+      none: "No Percentage"
+      overall: "Percentage Overall"
+      by_row: "Percentage By Row"
+      by_col: "Percentage By Column"
+    question_labels:
+      code: "Codes Only (Saves Space)"
+      title: "Full Titles (Easier to Read)"
+      
+  responses:
+    export_to_csv: "Export to CSV Format"
+    in_the_past: "in the Past"
+    no_recent: "No recent responses"
+    observation_time: "Observation Time"
+    save_and_mark_reviewed: "Save and Mark as Reviewed"
+
+  roles:
+    role: "Role"
+    observer: "Observer"
+    staffer: "Staffer"
+    coordinator: "Coordinator"
+    
+  searches:
+    at_end_of_query: "at end of query"
+    expected: "Expected"
+    invalid_op: "The operator '%{op}' is not valid for the qualifier '%{qualifier}'."
+    must_use_qualifier: "You must use a qualifier for all search terms."
+    invalid_qualifier: "'%{chunk}' is not a valid search qualifier."
+    unexpected: "Unexpected text near '%{str}'"
+    search_error: "Search Error"
+  
+  settings:
+    change_sms_password: "Change SMS Password"
+    headings:
+      general: "General Settings"
+      incoming_sms: "Incoming SMS Settings"
+      outgoing_sms: "Outgoing SMS Settings"
+      
+  sms:
+    no_valid_adapter: "There is no valid outgoing SMS adapter. Please check the settings."
+    outgoing_provider: "Outgoing SMS Provider"
+    
+  sms_console:
+    no_reply: "No reply."
+    submit_error: "There was an error submitting your test."
+    title: "SMS Test Console"
+    
   sms_forms:
     decoding:
       answer_error_intro: "Sorry, your answer '%{value}' for question %{rank} on form '%{form_code}'"
@@ -165,11 +640,19 @@ en:
       invalid_form_code: "Sorry, '%{form_code}' is not a valid form code."
       question_doesnt_exist: "Sorry, question %{rank} doesn't exist on form '%{form_code}'."
       user_not_found: "Sorry, we couldn't find you in the system."
-    
     guide:
       all_required: "Please answer all questions."
       header: "ELMO SMS Composition Guide"
       not_all_required: "Questions marked with an asterisk (*) are required."
+      pointers:
+        tiny_text: "Write your answer here. Abbreviate if necessary."
+        integer: "Write your answer here."
+        decimal: "Write your answer here."
+        select_one: "Write the letter for your choice here. Write only one letter."
+        select_multiple: "Write the letter for each choice here with no spaces."
+        datetime: "Write your answer here in YYYYMMDD HHMM format."
+        date: "Write your answer here in YYYYMMDD format."
+        time: "Write your answer here in HHMM format."
       step1: "Please answer all the questions below and follow the instructions at the end of the form to send in your data. You can use lower or UPPER case letters."
       step2: "Now please do the following to send in your data:"
       step2_substeps:
@@ -182,49 +665,56 @@ en:
         - "If you do not receive a response within 5 minutes, please send the message again."
       unique_code: "This is the unique code for the form"
       unknown_number: "Unknown Number"
-          
-      pointers:
-        tiny_text: "Write your answer here. Abbreviate if necessary."
-        integer: "Write your answer here."
-        decimal: "Write your answer here."
-        select_one: "Write the letter for your choice here. Write only one letter."
-        select_multiple: "Write the letter for each choice here with no spaces."
-        datetime: "Write your answer here in YYYYMMDD HHMM format."
-        date: "Write your answer here in YYYYMMDD format."
-        time: "Write your answer here in HHMM format."
-          
     validation:
       invalid_answer: "Sorry, the answer to question %{rank} %{error}."
       missing_answer: "Sorry, the answer to the required question %{ranks} was missing from your response to form '%{form_code}'."
       missing_answers: "Sorry, the answers to the required questions %{ranks} were missing from your response to form '%{form_code}'."
-  
-  permission_errors:
-    need_mission: "You can't view this without selecting a mission"
-    need_login: "You must login to view that page."
-    no_permission: "You don't have permission to view that page."
-    processing_error: "Error processing permission."
-    observers_cant_change_submitter: "Observers can't change the submitter for responses."
-    must_be_admin: "You must be an administrator to view that page."
-    must_be_logged_out: "You must be logged out to view that page."
-    
+
   unauthorized:
     default: "You are not authorized to access that page."
     must_login: "You must login to access that page."
+  
+  user_batches:
+    success: "Users created successfully."
+    title: "Create Multiple Users"
     
-  roles:
-    observer: Observer
-    staffer: Staffer
-    coordinator: Coordinator
-    
-  question_types:
-    text: Text
-    long_text: Long Text
-    tiny_text: Tiny Text
-    integer: Integer
-    decimal: Decimal
-    location: Location
-    select_one: Select One
-    select_multiple: Select Multiple
-    datetime: Date/Time
-    date: Date
-    time: Time
+  users:
+    back_to_index: "Back to Users List"
+    edit_profile: "Edit Profile"
+    export_vcard: "Export as vCard"
+    forgot_password: "Forgot Password?"
+    leave_password_alone: "Leave password alone"
+    login_instructions:
+      closing:
+        - "Please note the 's' in 'https' in the site URL."
+        - "If you'd like to choose a more memorable password, you can change your password using the website."
+        - |-
+          The above credentials will also work on your Android device. To enter your credentials, 
+          start the 'ODK Collect' application, press the 'Menu' button, tap 'Preferences', 
+          and then tap each of 'Username' and 'Password'.
+      preamble_singular: |-
+        Login instructions are shown below. Please print this page now and ensure the user below receives it.
+        Since the user's password is stored in encrypted format, it will be irretrievable after you leave this page.
+      preamble_plural: |-
+        Login instructions are shown below. Please print these pages now and ensure the users below receive their instructions.
+        Since the users' passwords are stored in encrypted format, they will be irretrievable after you leave this page.
+      site_url: "Site URL"
+      title: "Login Instructions"
+      welcome: "Welcome to %{site}. Your credentials are as follows:"
+    logged_out: "Logged Out"
+    logout_success: "You have logged out successfully."
+    profile_updated: "Profile updated successfully."
+    reset_password_and: "Reset password and"
+    reset_password_details_choose: "Choose how this user should get their password."
+    reset_password_details_ending: "The system can either send them an email with instructions on how to %{verb} the password online, or display a printable instruction sheet including a randomly generated password."
+    reset_password_details_reset: "Choose whether and how to reset this user's password."
+    reset_password_label_choose: "Password Creation"
+    reset_password_label_reset: "Reset Password?"
+    send_email_instructions: "send email instructions"
+    show_printable_instructions: "show printable instructions"
+  
+  welcome:
+    awaiting_review: "Awaiting Review"
+    select_a_form: "Select a Form To Submit"
+    select_a_report: "Select a Report To View"
+    submissions_by_you: "Submissions by You"

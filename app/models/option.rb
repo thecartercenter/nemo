@@ -38,23 +38,16 @@ class Option < ActiveRecord::Base
   private
     def integrity
       # error if anything has changed (except names/hints) and the option is published
-      if published? && (changed? && !changed.reject{|f| f =~ /^(name|hint)/}.empty?)
-        errors.add(:base, "Option can't be changed because it appears in at least one published form")
-      end
+      errors.add(:base, :cant_change_if_published) if published? && (changed? && !changed.reject{|f| f =~ /^_?(name|hint)/}.empty?)
     end
 
     def check_assoc
       # could be in a published form but no responses yet
-      if published?
-        raise("You can't delete option '#{name_en}' because it is included in at least one published form")
-      end
-      unless answers.empty? && choices.empty?
-        raise("You can't delete option '#{name_en}' because it is included in at least one response")
-      end
+      raise DeletionError.new(:cant_delete_if_published) if published?
     end
     
     # checks that all name fields have lengths at most 30 chars
     def name_lengths
-      errors.add(:base, "Names must be at most 30 characters in length") if name_translations.detect{|l,t| !t.nil? && t.size > 30}
+      errors.add(:base, :names_too_long) if name_translations.detect{|l,t| !t.nil? && t.size > 30}
     end
 end

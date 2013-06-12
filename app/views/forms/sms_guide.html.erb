@@ -13,7 +13,7 @@
       </select>
     </form>
     
-    <%= link_to("SMS Test Console", new_sms_test_path) if can?(:create, Sms::Test) %>
+    <%= link_to(t("sms_console.title"), new_sms_test_path) if can?(:create, Sms::Test) %>
   </div>
   <table>
     <tr>
@@ -83,7 +83,7 @@
             <li><%= ss.gsub("%{submit_number}", submit_number).html_safe %></li>
           <% end %>
         </ol>
-        <%= t("common.thank_you_with_exclamation") %>
+        <%= t("common.thank_you_excl") %>
       </td>
       <td></td>
     </tr>

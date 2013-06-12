@@ -98,8 +98,8 @@ class FormVersioningPolicyTest < ActiveSupport::TestCase
   
   test "changing question rank status should cause upgrade" do
     # add two question to first two forms
-    q1 = FactoryGirl.create(:question)
-    q2 = FactoryGirl.create(:question)
+    q1 = FactoryGirl.create(:question, :code => "q1")
+    q2 = FactoryGirl.create(:question, :code => "q2")
     @forms[0...2].each do |f|
       Questioning.create(:form_id => f.id, :question_id => q1.id)
       Questioning.create(:form_id => f.id, :question_id => q2.id)
@@ -120,8 +120,8 @@ class FormVersioningPolicyTest < ActiveSupport::TestCase
   
   test "removing question from form should NOT cause upgrade if no questions after it" do
     # add 2 questions to all three forms
-    q1 = FactoryGirl.create(:question)
-    q2 = FactoryGirl.create(:question)
+    q1 = FactoryGirl.create(:question, :code => "q1")
+    q2 = FactoryGirl.create(:question, :code => "q2")
     @forms.each do |f|
       Questioning.create(:form_id => f.id, :question_id => q1.id)
       Questioning.create(:form_id => f.id, :question_id => q2.id)

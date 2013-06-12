@@ -1,3 +1,7 @@
+<%# get a language prefix string to append to the field names %>
 <% lang_prefix = lang == :en ? "" : language_name(lang) + ' ' %>
-<%= form_field(f, :"name_#{lang}", :type => :textarea, :label => "#{lang_prefix}Title", :required => (lang == :en), :class => "name_hint") %>
-<%= form_field(f, :"hint_#{lang}", :type => :textarea, :label => "#{lang_prefix}Hint", :class => "name_hint") %>
+
+<%= form_field(f, :"name_#{lang}", :type => :textarea, :label => lang_prefix + Question.human_attribute_name("name"), 
+  :required => (lang == :en), :class => "name_hint") %>
+
+<%= form_field(f, :"hint_#{lang}", :type => :textarea, :label => lang_prefix + Question.human_attribute_name("hint"), :class => "name_hint") %>

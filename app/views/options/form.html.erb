@@ -3,21 +3,16 @@
 
   <% if f.mode == :edit && !@option.forms.empty? %>
     <div class="tip important">
-      Note: This question appears on the following forms: <%= @option.forms.map{|f| f.name}.join(", ") %>.
-      Any changes you make below will be reflected on those forms.
-    
-      <% if @option.published? %>
-        At least one of those forms is also published, so only names can be edited. 
-        You should also take care to not change the meaning of the option if editing the names.
-      <% end %>
+      <%= t("options.appears_elsewhere", :forms => @option.forms.map{|f| f.name}.join(", ")) %>
+      <%= t("options.other_forms_published") if @option.published? %>
     </div>
   <% end %>
 
   <% configatron.languages.each do |lang| %>
-    <%= form_field(f, :"name_#{lang}", :label => "Name (#{language_name(lang)})", :required => lang == :en) %>
+    <%= form_field(f, :"name_#{lang}", :label => Option.human_attribute_name("name") + " (#{language_name(lang)})", :required => lang == :en) %>
   <% end %>
   <% unless @option.published? %>
     <%= form_field(f, :value, :required => true) %>
   <% end %>
-  <%= form_submit_button(f) %>
+  <%= form_submit_button(f, :label => :save) %>
 <% end %>

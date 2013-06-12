@@ -47,7 +47,7 @@ class Response < ActiveRecord::Base
     [
       Search::Qualifier.new(:label => "form", :col => "forms.name", :assoc => :forms),
       Search::Qualifier.new(:label => "form-type", :col => "form_types.name", :assoc => :form_types),
-      Search::Qualifier.new(:label => "reviewed", :col => "responses.reviewed", :subst => {"yes" => "1", "no" => "0"}),
+      Search::Qualifier.new(:label => "reviewed", :col => "responses.reviewed"),
       Search::Qualifier.new(:label => "submitter", :col => "users.name", :assoc => :users, :partials => true),
       Search::Qualifier.new(:label => "source", :col => "responses.source"),
       Search::Qualifier.new(:label => "date", :col => "DATE(CONVERT_TZ(responses.created_at, 'UTC', '#{Time.zone.mysql_name}'))"),
@@ -64,17 +64,17 @@ class Response < ActiveRecord::Base
   end
   
   def self.search_examples
-    ['submitter:"john smith"', 'form:polling', 'reviewed:yes', 'date < 2010-03-15']
+    ['submitter:"john smith"', 'form:polling', 'reviewed:1', 'date < 2010-03-15']
   end
 
   # returns a human-readable description of how many responses have arrived recently
   def self.recent_count(rel)
     %w(hour day week month).each do |p|
       if (x = rel.where("created_at > ?", 1.send(p).ago).count) > 0 
-        return "#{x} in the Past #{p.capitalize}"
+        return [x, I18n.t("responses.in_the_past"), I18n.t("common.#{p}")].join(" ")
       end
     end
-    "No recent responses"
+    I18n.t("responses.no_recent")
   end
   
   def populate_from_xml(xml)
@@ -88,12 +88,12 @@ class Response < ActiveRecord::Base
     if doc.root["id"]
       self.form_id = doc.root["id"].to_i
     else
-      raise ArgumentError.new("No form id was given.")
+      raise ArgumentError.new("no form id was given")
     end
     
     # check if the form is associated with this response's mission
     unless mission && form = Form.for_mission(mission).find_by_id(form_id)
-      raise ArgumentError.new("Could not find the specified form.")
+      raise ArgumentError.new("form not found")
     end
     
     # get the visible questionings
@@ -172,7 +172,7 @@ class Response < ActiveRecord::Base
       rel = rel.select("forms.name AS form_name")
       rel = rel.select("form_types.name AS form_type")
       rel = rel.select("questions.code AS question_code")
-      rel = rel.select("questions.name AS question_name")
+      rel = rel.select("questions._name AS question_name")
       rel = rel.select("questions.qtype_name AS question_type")
       rel = rel.select("users.name AS submitter_name")
       rel = rel.select("answers.id AS answer_id")
@@ -180,7 +180,7 @@ class Response < ActiveRecord::Base
       rel = rel.select("answers.datetime_value AS answer_datetime_value")
       rel = rel.select("answers.date_value AS answer_date_value")
       rel = rel.select("answers.time_value AS answer_time_value")
-      rel = rel.select("IFNULL(ao.name, co.name) AS choice_name")
+      rel = rel.select("IFNULL(ao._name, co._name) AS choice_name")
       rel = rel.select("IFNULL(ao.value, co.value) AS choice_value")
       rel = rel.select("option_sets.name AS option_set")
 

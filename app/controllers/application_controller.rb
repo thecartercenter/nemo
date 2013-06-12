@@ -10,7 +10,9 @@ class ApplicationController < ActionController::Base
   
   # handle authorization errors nicely
   rescue_from CanCan::AccessDenied do |exception|
+    # log to debug log
     Rails.logger.debug("ACCESS DENIED on #{exception.action} #{exception.subject.inspect}")
+    
     # if not logged in, offer a login page
     if !current_user
       # don't put an error message if the request was for the home page
@@ -31,9 +33,10 @@ class ApplicationController < ActionController::Base
   end
   
   protect_from_forgery
+  before_filter(:set_locale)
   before_filter(:set_default_title)
   before_filter(:mailer_set_url_options)
-
+  
   # user/user_session stuff
   before_filter(:basic_auth_for_xml)
   before_filter(:get_user_and_mission)
@@ -52,7 +55,16 @@ class ApplicationController < ActionController::Base
     self.class.name.underscore.gsub("/", "_").gsub(/_controller$/, "")
   end
   
+  def default_url_options(options={})
+    { :locale => I18n.locale }
+  end
+  
   protected
+    
+    # sets the locale based on the locale param (grabbed from the path by the router)
+    def set_locale
+      I18n.locale = params[:locale] || I18n.default_locale
+    end
     
     # Renders a file with the browser-appropriate MIME type for CSV data.
     # @param [String] filename The filename to render. If not specified, the contents of params[:action] is used.
@@ -90,13 +102,23 @@ class ApplicationController < ActionController::Base
     
     def mailer_set_url_options
       ActionMailer::Base.default_url_options[:host] = request.host_with_port
+      ActionMailer::Base.default_url_options[:locale] = I18n.locale
     end
     
     def set_default_title
-      action = {"index" => "", "new" => "Create ", "create" => "Create ", "edit" => "Edit ", "update" => "Edit "}[action_name] || ""
+      # get the verb
+      verb = case action_name
+        when "new", "create" then t("common.create")
+        when "edit", "update" then t("common.edit")
+        else ""
+      end
+      
+      # get the object name
       obj = controller_name.gsub("_", " ").ucwords
       obj = obj.singularize unless action_name == "index"
-      @title = action + obj
+      
+      # build the title
+      @title = "#{verb} #{obj}"
     end
     
     # loads objects selected with a batch form
@@ -138,7 +160,7 @@ class ApplicationController < ActionController::Base
         @search = Search::Search.new(:class_name => klass.name, :str => params[:search])
         rel = @search.apply(rel) unless options[:search] == false
       rescue Search::ParseError
-        @error_msg = "Search Error: #{$!}"
+        @error_msg = "#{t('searches.search_error')}: #{$!}"
       end
       
       # apply pagination and return
@@ -237,7 +259,7 @@ class ApplicationController < ActionController::Base
       
       # if no mission, error
       if @user_session.user.current_mission.nil? && !@user_session.user.admin?
-        flash[:error] = "You are not assigned to any missions."
+        flash[:error] = t("activerecord.errors.models.user.no_missions")
         @user_session.destroy
         redirect_to(login_path)
         return false
@@ -264,7 +286,16 @@ class ApplicationController < ActionController::Base
     end
     
     def store_location
-      session[:return_to] = request.fullpath  
+      # if the request is a GET, then store as normal
+      session[:return_to] = if request.get?
+        request.fullpath  
+      # otherwise, store the referrer (if defined), since it doesn't make sense to store a URL for a different method
+      elsif request.referrer
+        request.referrer
+      # otherwise store nothing
+      else
+        nil
+      end
     end
     
     def forget_location
@@ -274,5 +305,44 @@ class ApplicationController < ActionController::Base
     def redirect_back_or_default(default)  
       redirect_to(session[:return_to] || default)  
       forget_location
+    end
+    
+    ##############################################################################
+    # METHODS FOR ASSISTING BASIC CRUD OPERATIONS IN DESCENDANT CONTROLLERS
+    ##############################################################################
+    
+    # attempts to destroy obj and add an i18n'd success message to flash
+    # on error, translates the error message and adds that to flash
+    def destroy_and_handle_errors(obj, options = {})
+      begin
+        obj.send(options[:but_first]) if options[:but_first]
+        obj.destroy
+        flash[:success] = "#{obj.class.model_name.human} #{t('errors.messages.deleted_successfully')}"
+      rescue DeletionError
+        flash[:error] = t($!.to_s, :scope => [:activerecord, :errors, :models, obj.class.model_name.i18n_key], :default => t("errors.messages.generic_delete_error"))
+      end
+    end
+    
+    # sets a success message based on the given object
+    def set_success(obj)
+      # get verb (past tense) based on action
+      verb = t("common.#{params[:action]}d").downcase
+      
+      # build and set the message
+      flash[:success] = "#{obj.class.model_name.human.ucwords} #{verb} #{t('common.successfully').downcase}."
+    end
+    
+    # sets a success message and redirects
+    def set_success_and_redirect(obj, options = {})
+      # redirect to index by default
+      options[:to] ||= :index
+      
+      # if options[:to] is a symbol, we really mean :action => xxx
+      options[:to] = {:action => options[:to]} if options[:to].is_a?(Symbol)
+      
+      set_success(obj)
+      
+      # do the redirect
+      redirect_to(options[:to])
     end
 end

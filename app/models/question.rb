@@ -11,8 +11,9 @@ class Question < ActiveRecord::Base
   validates(:code, :presence => true)
   validates(:code, :format => {:with => /^[a-z][a-z0-9]{1,19}$/i}, :if => Proc.new{|q| !q.code.blank?})
   validates(:qtype_name, :presence => true)
-  validates(:option_set_id, :presence => true, :if => Proc.new{|q| q.has_options?})
+  validates(:option_set_id, :presence => true, :if => Proc.new{|q| q.qtype && q.has_options?})
   validate(:integrity)
+  validate(:code_unique_per_mission)
 
   before_destroy(:check_assoc)
   before_save(:notify_form_versioning_policy_of_update)
@@ -60,9 +61,9 @@ class Question < ActiveRecord::Base
   def min_max_error_msg
     return nil unless minimum || maximum
     clauses = []
-    clauses << "greater than #{minstrictly ? '' : 'or equal to '}#{minimum}" if minimum
-    clauses << "less than #{maxstrictly ? '' : 'or equal to '}#{maximum}" if maximum
-    "must be #{clauses.join(' and ')}"
+    clauses << I18n.t("questions.maxmin.gt") + " " + (minstrictly ? "" : I18n.t("questions.maxmin.or_eq") + " " ) + minimum.to_s if minimum
+    clauses << I18n.t("questions.maxmin.lt") + " " + (maxstrictly ? "" : I18n.t("questions.maxmin.or_eq") + " " ) + maximum.to_s if maximum
+    I18n.t("layout.must_be") + " " + clauses.join(" " + I18n.t("common.and") + " ")
   end
   
   def as_json(options = {})
@@ -75,25 +76,21 @@ class Question < ActiveRecord::Base
       # error if type or option set have changed and there are answers or conditions
       if (qtype_name_changed? || option_set_id_changed?) 
         if !answers.empty?
-          errors.add(:base, "Type or option set can't be changed because there are already responses for this question")
+          errors.add(:base, :cant_change_if_responses)
         elsif !referring_conditions.empty?
-          errors.add(:base, "Type or option set can't be changed because there are conditions that refer to this question")
+          errors.add(:base, :cant_change_if_conditions)
         end
       end
       
       # error if anything (except name/hint) has changed and the question is published
-      if published? && (changed? && !changed.reject{|f| f =~ /^(name|hint)/}.empty?)
-        errors.add(:base, "Can't be changed because it appears in at least one published form")
-      end
+      errors.add(:base, :cant_change_if_published) if published? && (changed? && !changed.reject{|f| f =~ /^_?(name|hint)/}.empty?)
     end
 
     def check_assoc
-      unless questionings.empty?
-        raise("You can't delete question '#{code}' because it is included in at least one form")
-      end
+      raise DeletionError.new(:cant_delete_if_in_form) unless questionings.empty?
     end
 
-    def name_unique_per_mission
-      errors.add(:name, "must be unique") if self.class.for_mission(mission).where("code = ? AND id != ?", code, id).count > 0
+    def code_unique_per_mission
+      errors.add(:code, :must_be_unique) unless unique_in_mission?(:code)
     end
 end

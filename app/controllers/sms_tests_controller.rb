@@ -17,6 +17,6 @@ class SmsTestsController < ApplicationController
     reply.save if reply
     
     # render the body of the reply
-    render :text => reply ? reply.body : "<em>No reply.</em>".html_safe
+    render :text => reply ? reply.body : "<em>#{t('sms_console.no_reply')}</em>".html_safe
   end
 end

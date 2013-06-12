@@ -11,7 +11,7 @@ class BroadcastsController < ApplicationController
   end
   
   def new
-    flash[:success] = "To send a broadcast, first select the recipients below, and then click 'Send Broadcast'."
+    flash[:success] = t("broadcasts.instructions")
     redirect_to(users_path)
   end
   
@@ -22,7 +22,7 @@ class BroadcastsController < ApplicationController
     users = User.accessible_by(current_ability).where(:id => params[:selected].keys).all
         
     # raise error if no valid users (this should be impossible)
-    raise "No valid users given." if users.empty?
+    raise "no users given" if users.empty?
     
     # create a new Broadcast
     @broadcast = Broadcast.accessible_by(current_ability).new(:recipients => users)
@@ -50,9 +50,9 @@ class BroadcastsController < ApplicationController
   def create
     if @broadcast.update_attributes(params[:broadcast])
       if @broadcast.send_errors
-        flash[:error] = "Error sending broadcast (see below)."
+        flash[:error] = t("broadcasts.send_error")
       else
-        flash[:success] = "Broadcast sent successfully."
+        flash[:success] = t("broadcasts.send_success")
       end
       redirect_to(broadcast_path(@broadcast))
     else

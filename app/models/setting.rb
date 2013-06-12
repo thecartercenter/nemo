@@ -103,25 +103,25 @@ class Setting < ActiveRecord::Base
     
     def lang_codes_are_valid
       lang_codes.each do |lc|
-        errors.add(:languages, "code #{lc} is invalid") unless ISO_639.find(lc.to_s)
+        errors.add(:languages, :invalid_code, :code => lc) unless ISO_639.find(lc.to_s)
       end
     end
     
     # sms adapter can be blank or must be valid according to the Factory
     def sms_adapter_is_valid
-      errors.add(:outgoing_sms_adapter, "is invalid") unless outgoing_sms_adapter.blank? || Sms::Adapters::Factory.name_is_valid?(outgoing_sms_adapter)
+      errors.add(:outgoing_sms_adapter, :is_invalid) unless outgoing_sms_adapter.blank? || Sms::Adapters::Factory.name_is_valid?(outgoing_sms_adapter)
     end
     
     # checks that the provided credentials are valid
     def sms_credentials_are_valid
       case outgoing_sms_adapter
       when "IntelliSms"
-        errors.add(:intellisms_username, "can't be blank") if intellisms_username.blank?
-        errors.add(:intellisms_password1, "did not match") unless intellisms_password1 == intellisms_password2
+        errors.add(:intellisms_username, :blank) if intellisms_username.blank?
+        errors.add(:intellisms_password1, :did_not_match) unless intellisms_password1 == intellisms_password2
       when "Isms"
-        errors.add(:isms_hostname, "can't be blank") if isms_hostname.blank?
-        errors.add(:isms_username, "can't be blank") if isms_username.blank?
-        errors.add(:isms_password1, "did not match") unless isms_password1 == isms_password2
+        errors.add(:isms_hostname, :blank) if isms_hostname.blank?
+        errors.add(:isms_username, :blank) if isms_username.blank?
+        errors.add(:isms_password1, :did_not_match) unless isms_password1 == isms_password2
       else
         # if there is no adapter then don't need to check anything
       end

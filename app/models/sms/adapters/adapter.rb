@@ -15,8 +15,8 @@ class Sms::Adapters::Adapter
   # message   the message to be sent
   def deliver(message)
     # error if no recipients or message empty
-    raise Sms::Error.new("Message has no recipients") if message.to.blank?
-    raise Sms::Error.new("Message body is empty") if message.body.blank?
+    raise Sms::Error.new("message has no recipients") if message.to.blank?
+    raise Sms::Error.new("message body is empty") if message.body.blank?
     
     # save the message now, which sets the sent_at
     message.save
@@ -52,16 +52,16 @@ class Sms::Adapters::Adapter
       begin
         response = http.request(request)
       rescue Timeout::Error
-        raise Sms::Error.new("Error contacting #{service_name} (Timeout)")
+        raise Sms::Error.new("error contacting #{service_name} (timeout)")
       rescue
-        raise Sms::Error.new("Error contacting #{service_name} (#{$!.class.name}: #{$!.to_s})")
+        raise Sms::Error.new("error contacting #{service_name} (#{$!.class.name}: #{$!.to_s})")
       end
       
       # return body if it's a clean success, else error
       if response.is_a?(Net::HTTPSuccess)
         return response.body
       else
-        raise Sms::Error.new("Error contacting #{service_name} (#{response.class.name})")
+        raise Sms::Error.new("error contacting #{service_name} (#{response.class.name})")
       end
     end
 end

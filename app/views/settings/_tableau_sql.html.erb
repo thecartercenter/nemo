@@ -5,7 +5,7 @@
     f.name AS form_name,
     ft.name AS form_type,
     q.code AS question_code,
-    q.name AS question_name,
+    q._name AS question_name,
     q.qtype_name AS question_type,
     u.name AS observer_name,
     a.id AS answer_id,
@@ -13,7 +13,7 @@
     a.date_value AS date_value,
     a.time_value AS time_value,
     a.datetime_value AS datetime_value,
-    IFNULL(ao.name, co.name) AS choice_name,
+    IFNULL(ao._name, co._name) AS choice_name,
     IFNULL(ao.value, co.value) AS choice_value,
     os.name AS option_set
   from answers a

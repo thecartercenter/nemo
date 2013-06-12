@@ -167,7 +167,7 @@ class Form < ActiveRecord::Base
     def cant_change_published
       # if this is a published form and something other than published and downloads changes, wrong!
       if published_was && !(changed - %w[published downloads]).empty?
-        errors.add(:base, "A published form can't be edited.") 
+        errors.add(:base, :cant_edit_published) 
       end
     end
     
@@ -178,13 +178,13 @@ class Form < ActiveRecord::Base
     
     def check_assoc
       if published?
-        raise "You can't delete form '#{name}' because it is published."
+        raise DeletionError.new(:cant_delete_published)
       elsif !responses.empty?
-        raise "You can't delete form '#{name}' because it has associated responses."
+        raise DeletionError.new(:cant_delete_if_has_responses)
       end
     end
     
     def name_unique_per_mission
-      errors.add(:name, "must be unique") if self.class.for_mission(mission).where("name = ? AND id != ?", name, id).count > 0
+      errors.add(:name, :must_be_unique) unless unique_in_mission?(:name)
     end
 end

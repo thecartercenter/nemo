@@ -18,18 +18,13 @@ class FormTypesController < ApplicationController
   end
 
   def destroy
-    begin 
-      flash[:success] = @form_type.destroy && "Form Type deleted successfully." 
-    rescue
-      flash[:error] = $!.to_s
-    end
+    destroy_and_handle_errors(@form_type)
     redirect_to(:action => :index)
   end
   
   def create
     if @form_type.update_attributes(params[:form_type])
-      flash[:success] = "Form Type created successfully."
-      redirect_to(:action => :index)
+      set_success_and_redirect(@form_type)
     else
       render(:form)
     end
@@ -37,8 +32,7 @@ class FormTypesController < ApplicationController
   
   def update
     if @form_type.update_attributes(params[:form_type])
-      flash[:success] = "Form Type updated successfully."
-      redirect_to(:action => :index)
+      set_success_and_redirect(@form_type)
     else
       render(:form)
     end

@@ -35,6 +35,6 @@ class Smser
   private
     # checks for a valid adapter and raises an error it there is none
     def self.ensure_adapter
-      raise Sms::Error.new("There is no valid outgoing SMS adapter. Please check the settings.") unless configatron.outgoing_sms_adapter
+      raise Sms::Error.new(I18n.t("sms.no_valid_adapter")) unless configatron.outgoing_sms_adapter
     end
 end

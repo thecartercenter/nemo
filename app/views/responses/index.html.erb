@@ -1,5 +1,3 @@
-<% content_for(:per_page_js){javascript_include_tag("responses", "search_form")} %>
-
 <%= flash_and_form_errors %>
 
 <%= render("searches/form", :search => @search) %>
@@ -16,3 +14,7 @@
   <% end %>
   responses_setup_periodic_update();
 </script>
+
+<%= javascript_doc_ready do %>
+  new ELMO.SearchForm();
+<% end %>

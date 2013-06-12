@@ -1,7 +1,9 @@
-<% content_for(:per_page_js){javascript_include_tag("search_form")} %>
-
 <%= flash_and_form_errors %>
 
 <%= render("searches/form", :search => @search) %>
 
 <%= index_table(User, @users) %>
+
+<%= javascript_doc_ready do %>
+  new ELMO.SearchForm();
+<% end %>

@@ -1,8 +1,7 @@
 <div id="login_instructions">
   <div id="preamble">
-    Login instructions are shown below. Please print these page(s) now and ensure the user(s) below receives them.
-    Since the user's password is stored in encrypted format, it will be irretrievable after you leave this page.
-    <p><%= link_to("Back to Users List", users_path) %></p>
+    <%= t("users.login_instructions.preamble_plural") %>
+    <p><%= link_to(t("users.back_to_index"), users_path) %></p>
   </div>
 
   <% @user_batch.created_users.each do |u| %>

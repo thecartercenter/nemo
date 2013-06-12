@@ -1,6 +1,11 @@
-<% content_for(:per_page_js){javascript_include_tag("questionings")} %>
+<% # set title %>
+<% if @questioning.new_record? %>
+  <% @title = t("layout.new_obj", :obj => Question.model_name.human) %>
+<% else %>
+  <% @title = "#{Question.model_name.human}: #{@questioning.question.code}" %>
+<% end %>
 
-<%= flash_and_form_errors(@questioning).gsub("Question base", "Question").gsub("Question C", "Question c").html_safe %>
+<%= flash_and_form_errors(@questioning) %>
 
 <%= nice_form_for(@questioning) do |f| %>
   <%= f.hidden_field(:form_id) %>
@@ -9,12 +14,8 @@
   
   <% if f.mode == :edit && !(other_forms = @questioning.other_forms).empty? %>
     <div class="tip important">
-      Note: This question also appears on the following forms: <%= other_forms.map{|of| of.name}.join(", ") %>.
-      Any changes you make below will also be reflected on those forms.
-      
-      <% if @question_pubd %>
-        At least one of those forms is also published, so not all fields can be edited.
-      <% end %>
+      <%= t("questions.appears_elsewhere", :forms => other_forms.map{|f| f.name}.join(", ")) %>
+      <%= t("questions.other_forms_published") if @question_pubd %>
     </div>
   <% end %>
 
@@ -37,9 +38,9 @@
     <% end %>
   <% end %>
   
-  <%= form_field(f, :condition, :partial => "conditions/form", :locals => { :condition => @questioning.get_or_init_condition }) %>
+  <%= form_field(f, :condition, :partial => "conditions/form") %>
   <%= form_field(f, :required, :type => :check_box) %>
   <%= form_field(f, :hidden, :type => :check_box) %>
 
-  <%= form_submit_button(f) %>
+  <%= form_submit_button(f, :label => :save) %>
 <% end %>

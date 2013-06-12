@@ -74,8 +74,7 @@ class FormsController < ApplicationController
   
   def create
     if @form.update_attributes(params[:form])
-      flash[:success] = "Form created successfully."
-      redirect_to(edit_form_path(@form))
+      set_success_and_redirect(@form, :to => edit_form_path(@form))
     else
       prepare_and_render_form
     end
@@ -91,12 +90,11 @@ class FormsController < ApplicationController
 
       # save everything and redirect
       @form.save!
-      flash[:success] = "Form updated successfully."
-      redirect_to(edit_form_path(@form))
-
+      set_success_and_redirect(@form, :to => edit_form_path(@form))
+      
     # handle problem with conditions
     rescue ConditionOrderingError
-      @form.errors.add(:base, "The new rankings invalidate one or more conditions")
+      @form.errors.add(:base, :ranks_break_conditions)
       prepare_and_render_form
     
     # handle other validation errors  
@@ -106,28 +104,26 @@ class FormsController < ApplicationController
   end
   
   def destroy
-    begin flash[:success] = @form.destroy && "Form deleted successfully." rescue flash[:error] = $!.to_s end
+    destroy_and_handle_errors(@form)
     redirect_to(:action => :index)
   end
   
   # publishes/unpublishes a form
   def publish
-    verb = @form.published? ? "unpublish" : "publish"
+    verb = @form.published? ? :unpublish : :publish
     begin
       @form.send("#{verb}!")
-      dl = verb == "unpublish" ? " The download count has also been reset." : ""
-      flash[:success] = "Form #{verb}ed successfully." + dl
+      flash[:success] = t("forms.#{verb}_success")
     rescue
-      flash[:error] = "There was a problem #{verb}ing the form (#{$!.to_s})."
+      flash[:error] = t("forms.#{verb}_error", :msg => $!.to_s)
     end
-    # redirect to form edit
+    
+    # redirect to form index
     redirect_to(:action => :index)
   end
   
   # shows the form to either choose existing questions or create a new one to add
   def choose_questions
-    @title = "Adding Questions to Form: #{@form.name}"
-    
     # get questions for choice list
     @questions = Question.accessible_by(current_ability).not_in_form(@form)
     
@@ -142,14 +138,14 @@ class FormsController < ApplicationController
     questions = load_selected_objects(Question)
 
     # raise error if no valid questions (this should be impossible)
-    raise "No valid questions given." if questions.empty?
+    raise "no valid questions given" if questions.empty?
     
     # add questions to form and try to save
     @form.questions += questions
     if @form.save
-      flash[:success] = "Questions added successfully"
+      flash[:success] = t("forms.questions_add_success")
     else
-      flash[:error] = "There was a problem adding the questions (#{@form.errors.full_messages.join(';')})"
+      flash[:error] = t("forms.questions_add_error", :msg => @form.errors.full_messages.join(';'))
     end
     
     # redirect to form edit
@@ -162,10 +158,11 @@ class FormsController < ApplicationController
     qings = load_selected_objects(Questioning)
     # destroy
     begin
+      qings.each{|q| q.check_assoc}
       @form.destroy_questionings(qings)
-      flash[:success] = "Questions removed successfully."
+      flash[:success] = t("forms.questions_remove_success")
     rescue
-      flash[:error] = "There was a problem removing the questions (#{$!.to_s})."
+      flash[:error] = t("forms.question_remove_error", :msg => $!.to_s)
     end
     # redirect to form edit
     redirect_to(edit_form_path(@form))
@@ -175,9 +172,9 @@ class FormsController < ApplicationController
   def clone
     begin
       @form.duplicate
-      flash[:success] = "Form '#{@form.name}' cloned successfully."
+      flash[:success] = t("forms.clone_success", :form_name => @form.name)
     rescue
-      flash[:error] = "There was a problem cloning the form (#{$!.to_s})."
+      flash[:error] = t("forms.clone_error", :msg => $!.to_s)
     end
     redirect_to(:action => :index)
   end

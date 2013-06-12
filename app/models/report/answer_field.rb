@@ -3,8 +3,8 @@ class Report::AnswerField < Report::Field
   attr_reader :question
  
   @@expression_params = [
-    {:sql_tplt => "__TBL_PFX__ao.name", :name => "select_one_name", :clause => :select, :join => :options},
-    {:sql_tplt => "__TBL_PFX__co.name", :name => "select_multiple_name", :clause => :select, :join => :choices},
+    {:sql_tplt => "__TBL_PFX__ao.name_translations", :name => "select_one_name", :clause => :select, :join => :options},
+    {:sql_tplt => "__TBL_PFX__co.name_translations", :name => "select_multiple_name", :clause => :select, :join => :choices},
     {:sql_tplt => "__TBL_PFX__ao.value", :name => "select_one_value", :clause => :select, :join => :options},
     {:sql_tplt => "__TBL_PFX__co.value", :name => "select_multiple_value", :clause => :select, :join => :choices},
     {:sql_tplt => "CONVERT(__TBL_PFX__answers.value, SIGNED INTEGER)", :name => "integer_value", :clause => :select, :join => :answers},

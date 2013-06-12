@@ -21,11 +21,7 @@ class OptionSetting < ActiveRecord::Base
     !option_set.questions.detect{|q| q.questionings.detect{|qing| qing.answers.detect{|a| a.option_id == option_id || a.choices.detect{|c| c.option_id == option_id}}}}.nil?
   end
   
-  private
-    def no_answers_or_choices
-      if has_answers_or_choices?
-        raise InvalidAssociationDeletionError.new(
-          "You can't remove the option '#{option.name_en}' because some responses are using it.")
-      end
-    end
+  def no_answers_or_choices
+    raise DeletionError.new(:cant_delete_if_has_response) if has_answers_or_choices?
+  end
 end

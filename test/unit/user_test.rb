@@ -40,7 +40,7 @@ class UserTest < ActiveSupport::TestCase
       begin
         user.save!
       rescue ActiveRecord::RecordInvalid
-        assert_match(/phone.+unique/i, $!.to_s)
+        assert_match(/phone.+assigned/i, $!.to_s)
       else
         fail("Validation error should have been raised")
       end

@@ -1,16 +1,19 @@
 module ApplicationHelper
+  
+  FONT_AWESOME_ICON_MAPPINGS = {
+    :clone => "copy",
+    :destroy => "trash",
+    :edit => "edit",
+    :map => "globe",
+    :print => "print",
+    :publish => "arrow-up",
+    :sms => "comment",
+    :unpublish => "arrow-down"
+  }
+  
   # renders the flash message and any form errors for the given activerecord object
   def flash_and_form_errors(object = nil)
     render("layouts/flash", :flash => flash, :object => object)
-  end
-  
-  # applies any customizations to automatically generated form error messages
-  # called from layouts/flash
-  def fix_error_messages(msgs)
-    msgs.gsub!("Answers are invalid", "One or more answers are invalid")
-    msgs.gsub!("@ please.", "@")
-    msgs.gsub!("look like an email address.", "look like an email address")
-    msgs
   end
   
   # makes a standard looking form
@@ -60,7 +63,7 @@ module ApplicationHelper
             when :check_box
               # if we are in show mode, show 'yes' or 'no' instead of checkbox
               if f.mode == :show
-                content_tag("strong"){f.object.send(method) ? "Yes" : "No"}
+                content_tag("strong"){tbool(f.object.send(method))}
               else
                 f.check_box(method)
               end
@@ -102,7 +105,11 @@ module ApplicationHelper
   def form_submit_button(f = nil, options = {})
     # wrap in form_buttons if not wrapped
     return form_buttons{form_submit_button(f, options.merge(:multiple => true))} unless options[:multiple]
-    label = options.delete(:label) || "Submit"
+    label = options.delete(:label) || :submit
+    
+    # if label is a symbol, translate it
+    label = t("common.#{label}") if label.is_a?(Symbol)
+    
     options.merge!(:class => "submit")
     options.delete(:multiple)
     f ? f.submit(label, options) : submit_tag(label, options)
@@ -119,27 +126,33 @@ module ApplicationHelper
     (condition ? '<div class="reqd_sym">*</div>' : '').html_safe
   end
   
-  def action_icon(action, options = {})
-    suffix = options[:no_label] ? "-no-label" : ""
-    image_tag("action-icons/#{action}#{suffix}.png")
+  # prints a notice describing what indicates a required field
+  def reqd_sym_definition
+    content_tag(:div, t("layout.reqd_sym_definition", :reqd_sym => reqd_sym).html_safe, :class => "tip")
+  end
+  
+  # returns the html for an action icon using font awesome and the mappings defined above
+  def action_link(action, href, html_options)
+    link_to(content_tag(:i, "", :class => "icon-" + FONT_AWESOME_ICON_MAPPINGS[action.to_sym]), href, html_options.merge(:class => "action_link"))
   end
   
   # assembles links for the basic actions in an index table (show edit and destroy)
   def action_links(obj, options)
-    destroy_warning = options[:destroy_warning] || "Are you sure?"
-    route_key = obj.class.model_name.route_key.singularize
-    links = %w(show edit destroy).collect do |action|
+    route_key = obj.class.model_name.singular_route_key
+    links = %w(edit destroy).collect do |action|
       options[:exclude] = [options[:exclude]] unless options[:exclude].is_a?(Array)
       next if options[:exclude] && options[:exclude].include?(action.to_sym)
-      img = action_icon(action)
       key = "#{obj.class.table_name}##{action}"
       case action
-      when "show"
-        can?(:read, obj) ? link_to(img, send("#{route_key}_path", obj), :title => "View") : nil
       when "edit"
-        can?(:update, obj) ? link_to(img, send("edit_#{route_key}_path", obj), :title => "Edit") : nil
+        can?(:update, obj) ? action_link(action, send("edit_#{route_key}_path", obj), :title => t("common.edit")) : nil
       when "destroy"
-        can?(:destroy, obj) ? link_to(img, send("#{route_key}_path", obj), :method => :delete, :confirm => destroy_warning, :title => "Edit") : nil
+        # build a delete warning
+        obj_description = options[:obj_name] ? "#{obj.class.model_name.human} '#{options[:obj_name]}'" : options[:obj_description]
+        warning = t("layout.delete_warning", :obj_description => obj_description)
+        
+        can?(:destroy, obj) ? action_link(action, send("#{route_key}_path", obj), :method => :delete, 
+          :confirm => warning, :title => t("common.delete")) : nil
       end
     end.compact
     links.join("").html_safe
@@ -148,13 +161,13 @@ module ApplicationHelper
   # creates a link to a batch operation
   def batch_op_link(options)
     button_to(options[:name], "#", 
-    :onclick => "batch_submit({path: '#{options[:path]}', confirm: '#{options[:confirm]}'}); return false;",
+      :onclick => "batch_submit({path: '#{options[:path]}', confirm: '#{options[:confirm]}'}); return false;",
       :class => "batch_op_link")
   end
   
   # creates a link to select all the checkboxes in an index table
   def select_all_link
-    button_to("Select All", "#", :onclick => "batch_select_all(); return false", :id => "select_all_link")
+    button_to(t("layout.select_all"), "#", :onclick => "batch_select_all(); return false", :id => "select_all_link")
   end
   
   # renders an index table for the given class and list of objects
@@ -220,5 +233,24 @@ module ApplicationHelper
   def javascript_doc_ready(&block)
     content = capture(&block)
     javascript_tag("$(document).ready(function(){#{content}});")
+  end
+  
+  # takes an array of keys and a scope and builds an options array (e.g. [["Option 1", "opt1"], ["Option 2", "opt2"], ...])
+  def translate_options(keys, scope)
+    keys.map{|k| [t(k, :scope => scope), k]}
+  end
+  
+  # generates a link like "Create New Option Set" given a klass
+  # options[:js] - if true, the link just points to # with expectation that js will bind to it
+  def create_link(klass, options = {})
+    # get the link target path. honor the js option.
+    href = options[:js] ? "#" : send("new_#{klass.model_name.singular_route_key}_path")
+    link_to(t("layout.create_link", :obj => klass.model_name.human), href,
+      :class => "create_#{klass.model_name.param_key}")
+  end
+  
+  # translates a boolean value
+  def tbool(b)
+    t(b ? "common._yes" : "common._no")
   end
 end

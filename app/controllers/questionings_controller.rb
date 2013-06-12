@@ -18,8 +18,7 @@ class QuestioningsController < ApplicationController
   
   def create
     if @questioning.save
-      flash[:success] = "Question created successfully."
-      redirect_to(edit_form_path(@questioning.form))
+      set_success_and_redirect(@questioning.question, :to => edit_form_path(@questioning.form))
     else
       prepare_and_render_form
     end
@@ -27,8 +26,7 @@ class QuestioningsController < ApplicationController
   
   def update
     if @questioning.update_attributes(params[:questioning])
-      flash[:success] = "Question updated successfully."
-      redirect_to(edit_form_path(@questioning.form))
+      set_success_and_redirect(@questioning.question, :to => edit_form_path(@questioning.form))
     else
       prepare_and_render_form
     end
@@ -37,9 +35,6 @@ class QuestioningsController < ApplicationController
   private
     # prepares objects for and renders the form template
     def prepare_and_render_form
-      @title = @questioning.question.code
-      @title = "New Question" if @title.blank?
-      
       # this method lives in the QuestionFormable concern
       setup_qing_form_support_objs
       render(:form)

@@ -1,5 +1,8 @@
-<% content_for(:per_page_js){javascript_include_tag("response", "location_picker", "google_geocoder", 
-  "dialog", "condition", "time_form_field", configatron.map_api_url)} %>
+<%# load the mapping API %>
+<% content_for(:per_page_js){ javascript_include_tag(configatron.map_api_url) } %>
+
+<%# title includes ID if defined %>
+<% @title = "#{Response.model_name.human} ##{@response.id}" unless @response.new_record? %>
 
 <%= render("layouts/location_picker") %>
 
@@ -27,9 +30,13 @@
   <%= render(:partial => "answer", :collection => @response.all_answers) %>
   
   <%= form_buttons do %>
-    <%= form_submit_button(f, :label => "Save", :multiple => true) %>
-    <%= form_submit_button(f, :label => "Save and Mark as Reviewed", :name => "commit_and_mark_reviewed", 
+    <%= form_submit_button(f, :label => :save, :multiple => true) %>
+    <%= form_submit_button(f, :label => t("responses.save_and_mark_reviewed"), :name => "commit_and_mark_reviewed", 
       :multiple => true) if can?(:review, @response) %>
   <% end %>
   
+<% end %>
+
+<%= javascript_doc_ready do %>
+  ELMO.Response.init();
 <% end %>

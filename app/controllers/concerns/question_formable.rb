@@ -16,5 +16,6 @@ module QuestionFormable
   def setup_qing_form_support_objs
     @option_sets = OptionSet.accessible_by(current_ability).all
     @question_types = QuestionType.all
+    @condition = @questioning.condition || @questioning.build_condition
   end
 end

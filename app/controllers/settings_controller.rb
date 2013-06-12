@@ -22,8 +22,7 @@ class SettingsController < ApplicationController
       # copy the updated settings to the config
       @setting.copy_to_config
       
-      flash[:success] = "Settings updated successfully."
-      redirect_to(:action => :index)
+      set_success_and_redirect(@setting)
     rescue ActiveRecord::RecordInvalid
       prepare_and_render_form
     end

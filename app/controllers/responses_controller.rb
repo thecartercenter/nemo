@@ -41,7 +41,8 @@ class ResponsesController < ApplicationController
     begin
       @response.form = Form.with_questions.find(params[:form_id])
     rescue ActiveRecord::RecordNotFound
-      flash[:error] = "You must choose a form to edit."
+      # this should not be possible
+      flash[:error] = "no form selected"
       return redirect_to(:action => :index)
     end
     
@@ -94,7 +95,7 @@ class ResponsesController < ApplicationController
   end
   
   def destroy
-    begin flash[:success] = @response.destroy && "Response deleted successfully." rescue flash[:error] = $!.to_s end
+    destroy_and_handle_errors(@response)
     redirect_to(:action => :index)
   end
   
@@ -116,8 +117,7 @@ class ResponsesController < ApplicationController
       # try to save
       begin
         @response.update_attributes!(params[:response])
-        flash[:success] = "Response #{params[:action]}d successfully."
-        redirect_to(:action => :index)
+        set_success_and_redirect(@response)
       rescue ActiveRecord::RecordInvalid
         prepare_and_render_form
       end

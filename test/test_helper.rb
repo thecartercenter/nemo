@@ -4,6 +4,14 @@ require 'rails/test_help'
 
 class ActiveSupport::TestCase
   
+  setup :set_locale_in_url_options
+
+  # sets the locale in the url options to the current locale for integration tests
+  # this is also done in application_controller but needs to be done here too for some reason
+  def set_locale_in_url_options
+    app.default_url_options = { :locale => I18n.locale } if defined?(app)
+  end
+
   #####################################################
   # REPORT TEST HELPERS
   
@@ -30,7 +38,7 @@ class ActiveSupport::TestCase
 
   def create_opt_set(options)
     os = OptionSet.new(:name => options.join, :ordering => "value_asc", :mission => mission)
-    options.each_with_index{|o,i| os.option_settings.build(:option => Option.new(:value => i+1, :name_en => o))}
+    options.each_with_index{|o,i| os.options << Option.new(:value => i+1, :name_en => o)}
     os.save!
     @option_sets[options.join("_").downcase.to_sym] = os
   end

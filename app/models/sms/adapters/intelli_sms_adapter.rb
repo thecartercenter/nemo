@@ -39,8 +39,8 @@ class Sms::Adapters::IntelliSmsAdapter < Sms::Adapters::Adapter
   private
     # builds uri based on given action and query string params. returns URI object.
     def build_uri(action, params = {})
-      raise Sms::Error.new("No username is configured for the IntelliSms adapter") if configatron.intellisms_username.blank?
-      raise Sms::Error.new("No password is configured for the IntelliSms adapter") if configatron.intellisms_password.blank?
+      raise Sms::Error.new("no username is configured for the IntelliSms adapter") if configatron.intellisms_username.blank?
+      raise Sms::Error.new("no password is configured for the IntelliSms adapter") if configatron.intellisms_password.blank?
     
       page = case action
       when :deliver then "sendmsg"

@@ -97,7 +97,7 @@ class Answer < ActiveRecord::Base
   def required?; questioning.required?; end
   def hidden?; questioning.hidden?; end
   def question_name; question.name; end
-  def question_hint; question.hint; end
+  def question_hint; question.hint || ""; end
   def options; question.options; end
   
   # relevant defaults to true until set otherwise
@@ -115,9 +115,9 @@ class Answer < ActiveRecord::Base
   
   private
     def required
-      if required? && !hidden? && relevant? && qtype.name == "select_multiple" &&
+      if required? && !hidden? && relevant? && qtype.name != "select_multiple" &&
         value.blank? && time_value.blank? && date_value.blank? && datetime_value.blank? && option_id.nil? 
-          errors.add(:base, "is required")
+          errors.add(:base, :required)
       end
     end
     
@@ -135,7 +135,7 @@ class Answer < ActiveRecord::Base
       val_f = value.to_f
       if question.maximum && (val_f > question.maximum || question.maxstrictly && val_f == question.maximum) ||
          question.minimum && (val_f < question.minimum || question.minstrictly && val_f == question.minimum)
-           errors.add(:base, question.min_max_error_msg)
+        errors.add(:base, question.min_max_error_msg)
       end
     end
     

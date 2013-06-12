@@ -92,6 +92,8 @@ class Ability
         
         # coord can also manage Questionings (they don't have missions, only their parent questions/forms do)
         can :manage, Questioning, :question => {:mission_id => user.current_mission_id}
+        # there is no Questioning index though
+        cannot :index, Questioning
       end
       
       # admin abilities

@@ -16,8 +16,7 @@ class MissionsController < ApplicationController
   def create
     begin
       @mission.update_attributes!(params[:mission])
-      flash[:success] = "Mission created successfully."
-      redirect_to(:action => :index)
+      set_success_and_redirect(@mission)
     rescue ActiveRecord::RecordInvalid
       render(:form)
     end
@@ -26,20 +25,14 @@ class MissionsController < ApplicationController
   def update
     begin
       @mission.update_attributes!(params[:mission])
-      flash[:success] = "Mission updated successfully."
-      redirect_to(:action => :index)
+      set_success_and_redirect(@mission)
     rescue ActiveRecord::RecordInvalid
       render(:form)
     end
   end
 
   def destroy
-    begin
-      @mission.destroy
-      flash[:success] = "Mission deleted successfully." 
-    rescue
-      flash[:error] = $!.to_s
-    end
+    destroy_and_handle_errors(@mission, :but_first => :check_associations)
     redirect_to(:action => :index)
   end
 end

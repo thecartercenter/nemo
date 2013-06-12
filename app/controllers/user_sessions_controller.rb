@@ -3,7 +3,6 @@ class UserSessionsController < ApplicationController
   skip_authorization_check
   
   def new
-    @title = "Login"
     @user_session = UserSession.new
   end
   
@@ -18,8 +17,7 @@ class UserSessionsController < ApplicationController
       
       # do post login housekeeping
       return unless post_login_housekeeping
-      
-      flash[:success] = "Login successful"
+
       redirect_back_or_default(root_path)
     else
       flash[:error] = @user_session.errors.full_messages.join(",")
@@ -36,6 +34,5 @@ class UserSessionsController < ApplicationController
   
   # shows a simple 'you are logged out' page
   def logged_out
-    @title = "Logged Out"
   end
 end

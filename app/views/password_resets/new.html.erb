@@ -1,15 +1,11 @@
+<% @title = "Reset Password" %>
+<%= flash_and_form_errors %>
+
 <div class="tip">
-  Fill out the form below and instructions to reset your password will be emailed to you. If there is no email address associated with your account your password will have to reset by an administrator.
+  <%= t("password_resets.fill_out_form") %>
 </div>
-<% rowbg = 0 %>
-<%= form_tag password_resets_path do %>
-  <%= flash_and_form_errors %>
-  <table class="form">
-    <tr class="rowbg<%= rowbg = 1 - rowbg %>">
-      <td class="name">Email<%= reqd_sym %></td>
-      <td class="value"><%= text_field_tag("email") %></td>
-      <td class="details"></td>
-    </tr>
-  </table>
-  <%= submit_tag "Reset Password" %>
- <% end %>
+
+<%= nice_form_for(@password_reset) do |f| %>
+  <%= form_field(f, :email) %>
+  <%= form_submit_button(f, :label => :send) %>
+<% end %>
