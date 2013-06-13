@@ -7,7 +7,6 @@ class Question < ActiveRecord::Base
   has_many(:referring_conditions, :through => :questionings)
   has_many(:forms, :through => :questionings)
 
-  validates(:name, :presence => true)
   validates(:code, :presence => true)
   validates(:code, :format => {:with => /^[a-z][a-z0-9]{1,19}$/i}, :if => Proc.new{|q| !q.code.blank?})
   validates(:qtype_name, :presence => true)

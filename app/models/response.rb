@@ -166,6 +166,7 @@ class Response < ActiveRecord::Base
     
     def self.export_sql(rel)
       # add all the selects
+      # assumes the language desired is English. currently does not respect the locale
       rel = rel.select("responses.id AS response_id")
       rel = rel.select("responses.created_at AS submission_time")
       rel = rel.select("responses.reviewed AS is_reviewed")

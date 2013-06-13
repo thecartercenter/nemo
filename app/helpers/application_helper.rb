@@ -224,9 +224,14 @@ module ApplicationHelper
   end
   
   # finds the english name of the language with the given code (e.g. 'French' for 'fr')
-  # returns empty string if code not found
+  # tries to use the translated locale name if it exists, otherwise use english language name from the iso639 gem
+  # returns code itself if code not found
   def language_name(code)
-    (entry = ISO_639.find(code.to_s)) ? entry.english_name : ""
+    if I18n.available_locales.include?(code)
+      t(:locale_name, :locale => code)
+    else
+      (entry = ISO_639.find(code.to_s)) ? entry.english_name : code.to_s
+    end
   end
   
   # wraps the given content in a js tag and a jquery ready handler

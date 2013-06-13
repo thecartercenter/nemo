@@ -8,11 +8,16 @@
     </div>
   <% end %>
 
-  <% configatron.languages.each do |lang| %>
-    <%= form_field(f, :"name_#{lang}", :label => Option.human_attribute_name("name") + " (#{language_name(lang)})", :required => lang == :en) %>
+  <% configatron.languages.each_with_index do |lang, rank| %>
+    <%= form_field(f, :"name_#{lang}",
+      :label => Option.human_attribute_name("name") + " (#{language_name(lang)})",
+      :details => rank == 0 ? t("activerecord.tips.option.name") : nil,
+      :required => lang == :en) %>
   <% end %>
+  
   <% unless @option.published? %>
     <%= form_field(f, :value, :required => true) %>
   <% end %>
+  
   <%= form_submit_button(f, :label => :save) %>
 <% end %>

@@ -6,7 +6,6 @@ class Option < ActiveRecord::Base
   has_many(:answers, :inverse_of => :option)
   has_many(:choices, :inverse_of => :option)
   
-  validates(:name, :presence => true)
   validates(:value, :presence => true)
   validates(:value, :numericality => true, :if => Proc.new{|o| !o.value.blank?})
   validate(:integrity)
