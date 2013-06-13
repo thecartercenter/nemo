@@ -81,20 +81,12 @@ class SmsControllerTest < ActionController::TestCase
   end
 
   test "reply should be in correct language" do
-    # create another mission with a different outgoing sms language
-    m = FactoryGirl.create(:mission, :name => "francais", :outgoing_lang => "fr")
+    # set user lang pref to french
+    @user.pref_lang = "fr"
+    @user.save(:validate => false)
 
-    # now create a form in that mission
-    setup_form(:questions => %w(integer select_one), :required => true, :mission => m)
-    
     # now try to send to the new form (won't work b/c no permission)
-    assert_sms_response(:incoming => "#{form_code} 1.15 2.b", :outgoing => /permission.+soumettre.+#{form_code}/i)
-    
-    # add the user to the mission
-    @user.assignments.create(:mission => m, :active => true, :role => User::ROLES.last)
-    
-    # try again -- should get merci (need different answers else ignored as duplciate)
-    assert_sms_response(:incoming => "#{form_code} 1.15 2.c", :outgoing => /#{form_code}.+merci/i)
+    assert_sms_response(:incoming => "#{form_code} 1.15 2.b", :outgoing => /votre.+#{form_code}/i)
   end
   
   private

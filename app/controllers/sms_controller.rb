@@ -17,7 +17,7 @@ class SmsController < ApplicationController
       @elmo_response.save!
     
       # send congrats!
-      t_sms_msg("sms_forms.decoding.congrats", :form => @elmo_response.form)
+      t_sms_msg("sms_forms.decoding.congrats", :user => @elmo_response.user, :form => @elmo_response.form)
     
     # if there is a decoding error, respond accordingly
     rescue Sms::DecodingError
@@ -62,13 +62,13 @@ class SmsController < ApplicationController
         key += "s" if @elmo_response.missing_answers.size > 1
         
         # translate
-        t_sms_msg(key, :ranks => ranks, :form => @elmo_response.form)
+        t_sms_msg(key, :ranks => ranks, :user => @elmo_response.user, :form => @elmo_response.form)
       
       when :invalid_answers
         # if it's the invalid_answers error, we need to find the first answer that's invalid and report its error
         invalid_answer = @elmo_response.answers.detect{|a| a.errors.messages.count > 0}
         t_sms_msg("sms_forms.validation.invalid_answer", :rank => invalid_answer.questioning.rank, 
-          :error => invalid_answer.errors.full_messages.join(", "), :form => @elmo_response.form)
+          :error => invalid_answer.errors.full_messages.join(", "), :user => @elmo_response.user, :form => @elmo_response.form)
       
       else
         # if we don't recognize the key, just use the regular message. it may not be pretty but it's better than nothing.  
@@ -138,23 +138,8 @@ class SmsController < ApplicationController
       # throw in the form_code if it's not there already and we have the form
       options[:form_code] ||= options[:form].current_version.code if options[:form]
       
-      # get the reply language (if we have the form, use its mission; if not, use english)
-      # handle errors appropriately depending on env
-      lang = if options[:form]
-        begin
-          options[:form].mission.setting.outgoing_sms_language
-        rescue
-          if Rails.env == "production"
-            Rails.logger.error("error getting outgoing language (#{$!.class}: #{$!.to_s})")
-            nil
-          else
-            raise $!
-          end
-        end
-      end
-      
-      # if we still dont have an outgoing language, just do english, and convert to symbol
-      lang = lang ? lang.to_sym : :en
+      # get the reply language (if we have the user, use their pref_lang; if not, use default)
+      lang = options[:user] && options[:user].pref_lang ? options[:user].pref_lang.to_sym : I18n.default_locale
       
       I18n.t(key, options.merge(:locale => lang, :raise => true))
     end

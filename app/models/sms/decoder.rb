@@ -23,12 +23,12 @@ class Sms::Decoder
     # if the @msg from field has letters in it, reject immediately, as it's a robot
     raise_decoding_error("user_not_found") if @msg.from =~ /[a-z]/i
     
-    # try to get form
-    # we do this first because it tells us what language to send errors in (if any)
-    find_form
-    
     # try to get user
+    # we do this first because it tells us what language to send errors in (if any)
     find_user
+    
+    # try to get form
+    find_form
     
     # check user permissions for form, if not permitted, error
     check_permission
@@ -258,11 +258,13 @@ class Sms::Decoder
     
     # raises an sms decoding error with the given type and includes the form_code if available
     def raise_decoding_error(type, options = {})
-      # add in the form and form_code if it's set, since it's needed to figure out the reply language
+      # add in stuff that might be useful in building the reply
       if @form
         options[:form] ||= @form 
         options[:form_code] ||= @form.current_version.code
       end
+      
+      options[:user] ||= @user if @user
       
       raise Sms::DecodingError.new(type, options)
     end
