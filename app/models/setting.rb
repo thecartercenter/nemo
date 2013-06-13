@@ -9,8 +9,8 @@ class Setting < ActiveRecord::Base
   scope(:default, where(DEFAULTS))
   
   before_validation(:cleanup_languages)
-  before_validation(:ensure_english)
   validate(:lang_codes_are_valid)
+  validate(:one_lang_must_have_translations)
   validate(:sms_adapter_is_valid)
   validate(:sms_credentials_are_valid)
   before_save(:save_sms_passwords)
@@ -96,14 +96,23 @@ class Setting < ActiveRecord::Base
       return true
     end
     
+    # gets rid of any junk chars in lang codes field and converts all to sym
     def cleanup_languages
       self.lang_codes = lang_codes.collect{|c| c.to_s.downcase.gsub(/[^a-z]/, "")[0,2].to_sym}
       return true
     end
     
+    # makes sure all language codes are valid ISO639 codes
     def lang_codes_are_valid
       lang_codes.each do |lc|
         errors.add(:languages, :invalid_code, :code => lc) unless ISO_639.find(lc.to_s)
+      end
+    end
+    
+    # makes sure at least one of the chosen languages is an available locale
+    def one_lang_must_have_translations
+      if (lang_codes & configatron.locales).empty?
+        errors.add(:languages, :one_must_have_translations, :locales => configatron.locales.join(","))
       end
     end
     

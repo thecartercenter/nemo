@@ -176,7 +176,7 @@ en:
         isms_password1: "Password"
         isms_password2: "Password Confirmation"
         isms_username: "Username"
-        languages: "Form Languages"
+        languages: "Preferred Languages"
         outgoing_sms_adapter: "Provider"
         outgoing_sms_language: "Language"
         tableau_sql: "Tableau SQL" # Tableau is a software product name and shouldn't be translated
@@ -231,7 +231,13 @@ en:
         percent_type: "Whether and how percentages should be calculated for the report."
         bar_style: "Whether bars should be stacked or side-by-side."
       setting:
-        languages: "Enter the <a href=\"http://www.loc.gov/standards/iso639-2/php/code_list.php\">two-letter codes</a>, separated by commas, for the languages in which you want to allow questions to be defined."
+        languages: |- 
+          Enter the <a href=\"http://www.loc.gov/standards/iso639-2/php/code_list.php\">two-letter codes</a>, separated by commas, for the languages for this mission, in order of preference.
+          
+          This setting determines:
+          * The default language preference for new users
+          * The default language for SMS replies
+          * The languages for Questions and Options
         incoming_sms_number: "Enter the phone number to which incoming SMSes for SMS forms should be sent. This will be displayed on the SMS guide."
         outgoing_sms_adapter: "The adapter used to send outgoing SMSes."
         outgoing_sms_language: "The code for the language in which system-generated SMSes should be sent. English is assumed if blank."
@@ -314,7 +320,8 @@ en:
         setting:
           attributes:
             languages:
-              invalid_code: "code %{code} is invalid"
+              invalid_code: "code '%{code}' is invalid"
+              one_must_have_translations: "must contain at least one language that has translations (%{locales})"
         user:
           at_least_digits: "must be at least %{num} digits"
           cant_delete_if_responses: "You can't delete this user because they have associated responses."
