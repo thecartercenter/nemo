@@ -8,7 +8,6 @@
   <%= form_field(f, :languages, :required => true) %>
   
   <h2><%= t("settings.headings.outgoing_sms") %></h2>
-  <%= form_field(f, :outgoing_sms_language, :type => :select, :options => configatron.locales) %>
   <%= form_field(f, :outgoing_sms_adapter, :type => :select, :options => @adapter_options, :blank_text => t("common.none")) %>
   
   <div class="adapter_settings" data-adapter="IntelliSms">

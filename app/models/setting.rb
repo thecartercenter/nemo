@@ -1,8 +1,7 @@
 class Setting < ActiveRecord::Base
   include MissionBased
 
-  KEYS_TO_COPY = %w(timezone languages intellisms_username intellisms_password isms_hostname isms_username isms_password 
-    outgoing_sms_language incoming_sms_number)
+  KEYS_TO_COPY = %w(timezone languages intellisms_username intellisms_password isms_hostname isms_username isms_password incoming_sms_number)
   DEFAULTS = {:timezone => "UTC", :languages => "en"}
 
   scope(:by_mission, lambda{|m| where(:mission_id => m ? m.id : nil)})
@@ -64,9 +63,6 @@ class Setting < ActiveRecord::Base
     
     # split languages into array
     hsh[:languages] = lang_codes
-    
-    # default outgoing language
-    hsh[:outgoing_sms_language] ||= "en"
     
     # get class based on sms adapter setting; default to nil if setting is invalid
     hsh[:outgoing_sms_adapter] = begin

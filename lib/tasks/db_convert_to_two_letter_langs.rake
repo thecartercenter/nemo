@@ -5,7 +5,7 @@ namespace :db do
     conv = {:eng => :en, :ara => :ar, :fra => :fr}
     conv.each_pair do |three, two|
       Translation.update_all("language = '#{two}'", "language = '#{three}'")
-      Setting.update_all("outgoing_sms_language = '#{two}'", "outgoing_sms_language = '#{three}'")
+      #Setting.update_all("outgoing_sms_language = '#{two}'", "outgoing_sms_language = '#{three}'")
     end
     
     Setting.all.each do |setting|

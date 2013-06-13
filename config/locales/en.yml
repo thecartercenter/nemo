@@ -178,7 +178,6 @@ en:
         isms_username: "Username"
         languages: "Preferred Languages"
         outgoing_sms_adapter: "Provider"
-        outgoing_sms_language: "Language"
         tableau_sql: "Tableau SQL" # Tableau is a software product name and shouldn't be translated
         timezone: "Time Zone"
       sms/test:
@@ -241,7 +240,6 @@ en:
           * The languages for Questions and Options
         incoming_sms_number: "Enter the phone number to which incoming SMSes for SMS forms should be sent. This will be displayed on the SMS guide."
         outgoing_sms_adapter: "The adapter used to send outgoing SMSes."
-        outgoing_sms_language: "The code for the language in which system-generated SMSes should be sent. English is assumed if blank."
         intellisms_username: "The username for the IntelliSMS account."
         intellisms_password1: "Enter and re-enter a password to change the password for the IntelliSMS account."
         isms_hostname: "The IP or domain name for the iSMS device. Can include port (e.g. 10.20.30.40:8081). Don't include http://."

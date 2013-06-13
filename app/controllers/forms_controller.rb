@@ -52,13 +52,9 @@ class FormsController < ApplicationController
           # if params[:lang] is set, use that
           @lang = if params[:lang]
             params[:lang]
-          # otherwise try to use the outgoing sms language (if available)
-          # TODO fix this
-          elsif I18n.available_locales.include?((configatron.outgoing_sms_language || "en").to_sym)
-            configatron.outgoing_sms_language.to_s
-          # finally default to english
-          else
-            "en"
+          # otherwise try to use the user's lang pref or the default
+          else 
+            current_user.pref_lang.to_sym || I18n.default_locale
           end
           render("sms_guide")
 

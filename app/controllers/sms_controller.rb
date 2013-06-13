@@ -132,8 +132,6 @@ class SmsController < ApplicationController
   
   private
     # translates a message for the sms reply using the appropriate locale
-    # uses the :form option to get the mission, and then to get the outgoing_sms_language
-    # if options don't include :form, then English is assumed
     def self.t_sms_msg(key, options = {})
       # throw in the form_code if it's not there already and we have the form
       options[:form_code] ||= options[:form].current_version.code if options[:form]
