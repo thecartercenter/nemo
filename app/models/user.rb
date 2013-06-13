@@ -23,13 +23,14 @@ class User < ActiveRecord::Base
     c.merge_validates_format_of_email_field_options(:allow_blank => true)
     c.merge_validates_uniqueness_of_email_field_options(:unless => Proc.new{|u| u.email.blank?})
   end
-
+  
   before_validation(:clean_fields)
   before_destroy(:check_assoc)
   before_validation(:generate_password_if_none)
   after_save(:rebuild_ability)
   
   validates(:name, :presence => true)
+  validates(:pref_lang, :presence => true)
   validate(:phone_length_or_empty)
   validate(:must_have_password_reset_on_create)
   validate(:password_reset_cant_be_email_if_no_email)

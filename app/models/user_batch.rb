@@ -2,11 +2,14 @@ class UserBatch < ActiveRecord::Base
   attr_reader :created_users
   
   def create_users(mission)
+    # get the default language for the new users
+    pref_lang = (mission.setting && mission.setting.lang_codes) ? mission.setting.lang_codes.first : I18n.default_locale
+    
     @created_users = []
     transaction do
       users.split("\n").each do |u|
         name, email, phone = u.split(/,|\t/).collect{|x| x.strip}
-        user = User.new(:name => name, :email => email, :phone => phone, 
+        user = User.new(:name => name, :email => email, :phone => phone, :pref_lang => pref_lang,
           :login => User.suggest_login(name), :reset_password_method => "print")
         user.assignments.build(:mission_id => mission.id, :role => User::ROLES.first, :active => true)
         user.save!

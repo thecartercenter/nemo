@@ -8,16 +8,12 @@ class UserBatchesController < ApplicationController
   def new
   end
   
-  def show
-  end
-  
   def create
     begin
       @user_batch.attributes = params[:user_batch]
       @user_batch.create_users(current_mission)
-      flash[:success] = t("user_batches.success")
-      session[:new_user_batch] = @user_batch
-      redirect_to(:action => :show, :id => 1)
+      @success_msg = t("user_batches.success")
+      render(:show)
     rescue ActiveRecord::RecordInvalid
       flash[:error] = $!.to_s
       render(:new)

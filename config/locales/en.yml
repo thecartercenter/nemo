@@ -194,6 +194,7 @@ en:
         password_confirmation: "Retype Password"
         phone: "Main Phone"
         phone2: "Alternate Phone"
+        pref_lang: "Preferred Language"
       user_batch:
         users: "Users"
     tips:
@@ -260,6 +261,7 @@ en:
         assignments: "The missions this user is assigned to."
         password: "Enter a new password here if you'd like to change your existing password."
         password_confirmation: "Enter the new password again."
+        pref_lang: "The language in which you would like to use the system."
       user_batch:
         users: |-
           Enter the user names, email addresses, and phone numbers (WITH country codes), one per line, separated by commas or tabs. For example:

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130607135946) do
+ActiveRecord::Schema.define(:version => 20130613215128) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -334,6 +334,7 @@ ActiveRecord::Schema.define(:version => 20130607135946) do
     t.string   "phone2"
     t.boolean  "admin"
     t.integer  "current_mission_id"
+    t.string   "pref_lang"
   end
 
   add_index "users", ["login"], :name => "index_users_on_login", :unique => true

@@ -20,6 +20,7 @@ FactoryGirl.define do
     password "password"
     password_confirmation "password"
     phone "+15558881212"
+    pref_lang "en"
     
     persistence_token { Authlogic::Random.hex_token }
     single_access_token { Authlogic::Random.friendly_token }
