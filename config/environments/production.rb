@@ -40,6 +40,9 @@ ELMO::Application.configure do
   # Generate digests for assets URLs
   config.assets.digest = true
   
+  # add special CSS files to compile
+  config.assets.precompile += %w( application-screen.css application-print.css )
+  
   # Disable delivery errors, bad email addresses will be ignored
   config.action_mailer.raise_delivery_errors = true
 
