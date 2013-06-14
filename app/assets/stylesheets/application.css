@@ -9,6 +9,6 @@
  * compiled file, but it's generally better to create a new file per style scope.
  *
  *= require_self
- *= require main
+ *= require_tree ./all
  *= require font-awesome
  */
