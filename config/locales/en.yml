@@ -338,6 +338,7 @@ en:
   layout:
     actions: "Actions"
     are_you_sure: "Are you sure?"
+    change_language: "Change Language"
     create_link: "Create New %{obj}"
     delete_warning: "Are you sure you want to permanently delete the %{obj_description}?"
     deselect_all: "Deselect All"
@@ -351,6 +352,7 @@ en:
     select_all: "Select All"
     server_contact_error: "Error contacting server"
     system_error: "System error. Administrator has been notified."
+    system_version: "System Version"
     time_zone: "Time Zone"
   
   # pagination translations

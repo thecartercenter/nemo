@@ -15,7 +15,10 @@ td#nav ul { font-weight: bold; padding: 5px; list-style-type:none; }
 td#nav ul li { white-space: nowrap; }
 td#nav ul li a { text-decoration: none; color: white; }
 td#nav ul li a:hover { text-decoration: none; color: #0065d1; }
-td#footer { padding: 5px; color: #ddd; text-align: right; }
+td#footer { padding: 5px; color: #ddd; text-align: right; height: 25px; }
+td#footer * { vertical-align: top; }
+td#footer a { color: #ddd; }
+td#footer #locale_form { display: none; }
 td#footer #dev_mode_warning { color: white; padding: 2px; margin: 0 0 0 5px; text-align: right; font-weight: bold; 
   background-color: #d02000; float: right; clear: right; }
 div.dialog_bg { background-color: black; opacity: 0.6; filter: alpha(opacity=60); left: 0; top: 0; position: absolute; }
