@@ -13,7 +13,7 @@ class WelcomeController < ApplicationController
       
       # published forms
       @pubd_forms = Form.accessible_by(current_ability).published.with_form_type
-      @pub_form_count = @pubd_forms.size
+      @pub_form_count = @pubd_forms.count
       
       # total unpublished forms
       @unpub_form_count = Form.accessible_by(current_ability).count - @pub_form_count
