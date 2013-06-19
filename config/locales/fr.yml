@@ -580,7 +580,7 @@ fr:
       list_report:
         - "liste des réponses pour LesPlaintes et AutreQuestionsIrrégulaire avec la numéro de bureau de vote"
         - "liste de toutes les numéros de bureau de votres, pas de copies"
-        - "Liste de nom d'expéditeur, date, et répondre à la question NeedSecurityContact""
+        - "Liste de nom d'expéditeur, date, et répondre à la question NeedSecurityContact"
     percent_types:
       none: "Pas de Pourcentage"
       overall: "Pourcentage en Général"
