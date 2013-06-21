@@ -92,10 +92,25 @@ div.dialog_bg * { opacity: 1; filter: alpha(opacity=100); }
 #login_instructions #instructions p { margin-top: 0; }
   
 /* flash and error messages */
-div.success, div.error { position: absolute; left: 25%; top: 71px; padding: 3px; 
-    color: white; font-weight: bold; width: 600px; margin-bottom: 10px; text-align: center; }
-div.success { background-color: #9dc400; }
-div.error { background-color: #d02000; }
+div.success, div.error { 
+  position: absolute; 
+  left: 27%; 
+  top: 102px; 
+  padding: 3px; 
+  color: white; 
+  font-weight: bold; 
+  width: 600px; 
+  margin-bottom: 10px; 
+  text-align: center;
+}
+
+div.success { 
+  background-color: #9dc400; 
+}
+
+div.error { 
+  background-color: #d02000; 
+}
 
 /* hide printable things */
 .printable { display: none; }
