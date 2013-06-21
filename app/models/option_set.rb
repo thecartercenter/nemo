@@ -55,10 +55,10 @@ class OptionSet < ActiveRecord::Base
       # if both exist, do nothing
       # if submitted is nil, destroy the original
       if subd.nil?
-        option_settings.delete(orig)
+        options.delete(orig.option)
       # if original is nil, add the new one to this option_set's array
       elsif orig.nil?
-        option_settings << subd
+        options << subd.option
       end
     end
   end
