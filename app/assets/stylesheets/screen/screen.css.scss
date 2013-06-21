@@ -116,9 +116,9 @@ div.error {
 .printable { display: none; }
 
 /* report view */
-.report_reports_new h1.title, .report_reports_show h1.title { float: left; }
-#report_load_ind { float: left; margin: 10px 0 0 10px; }
-#report_top_links { clear: both; }
+.report_reports_new h1.title, .report_reports_show h1.title { display: inline-block; }
+#report_load_ind { margin: 10px 0 0 10px; }
+#report_top_links { margin-bottom: 10px; }
 .report_view { display: table-row; }
 #report_main { display: table-cell; }
 #report_links { display: table-cell; padding: 0 15px 0 0; line-height: 150%; vertical-align: top; }
@@ -135,9 +135,10 @@ div.report_edit_pane input[type='text'] { padding: 4px; }
 div.report_edit_pane .error_box { margin-top: 5px; color: white; background-color: #d02000; padding: 3px; display: none; font-weight: bold; }
 div.report_edit_pane div.section { border-bottom: 1px solid #ddd; padding: 10px 0; }
 div.report_edit_pane div.section:only-child { border-bottom: none; }
+div.report_edit_pane div.section div.choice { display: inline-block; }
 div.report_edit_pane div.section div.name { font-weight: bold; }
-div.report_edit_pane div.section div.name.horiz { display: inline-block; width: 250px; }
-div.report_edit_pane div.section div.controls.horiz { display: inline-block; vertical-align: top; }
+div.report_edit_pane div.section div.name.horiz { float: left; width: 250px; }
+div.report_edit_pane div.section div.controls.horiz { margin-left: 250px; }
 div.report_edit_pane div.section div.name.vert { display: block; margin-bottom: 10px; }
 div.report_edit_pane div.section div.controls.vert { display: block; }
 div.report_edit_pane div.section label { margin-right: 10px; }
@@ -146,10 +147,11 @@ div.report_edit_pane div.multiselect div.links { margin-top: 5px; }
 div.report_edit_pane div.multiselect div.links a { display: inline-block; margin-right: 5px; }
 
 div.report_edit_pane.report_type input { vertical-align: top; }
-div.report_edit_pane.report_type input[type='radio'] { margin-left: 3px; }
+div.report_edit_pane.report_type input[type='radio'] { margin-left: 3px; float: left; }
+div.report_edit_pane.report_type label { display: block; margin-left: 30px; }
 div.report_edit_pane.report_type h3 { font-size: 11pt; margin-bottom: 5px; color: #0065d1; }
-div.report_edit_pane.report_type .ex_lbl { display: inline-block; vertical-align: top; margin-right: 10px; }
-div.report_edit_pane.report_type ul { line-height: 100%; display: inline-block; }
+div.report_edit_pane.report_type .ex_lbl { vertical-align: top; margin-bottom: 5px; font-size: 90%; }
+div.report_edit_pane.report_type ul { line-height: 100%; }
 
 div.report_edit_pane.display_options div.section.display_type input { vertical-align: middle; }
 div.report_edit_pane.display_options div.section.display_type label { margin-right: 15px; }
@@ -166,7 +168,7 @@ div.report_edit_pane.question_selection div.multiselect div.choices { height: 15
 div.report_edit_pane.report_title input { width: 400px; font-size: 11pt;  }
 
 div.report_edit_dialog .buttons { text-align: right; border-top: 1px solid #ddd; padding-top: 10px; }
-div.report_edit_dialog .buttons a { display: inline-block; margin: 0 0 0 10px; padding: 10px; font-size: 120%; font-weight: bold; width: 75px; text-align: center; 
+div.report_edit_dialog .buttons a { display: inline-block; margin: 0 0 0 10px; padding: 10px; font-size: 120%; font-weight: bold; width: 110px; text-align: center; 
     background-color: #ddd; border: 1px solid #888; color: #444; text-decoration: none; }
 
 /* dont show the printable title */

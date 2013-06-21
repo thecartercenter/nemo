@@ -1,5 +1,5 @@
 <div id="index_table">
-  <div class="header">
+  <div class="header link_set">
     <% if paginated %>
       <%= t("common.found") %> <strong><%= pluralize(objects.total_entries, klass.model_name.human.downcase) %></strong> <%= t("layout.in_total") %>.
       <% unless objects.empty? %>

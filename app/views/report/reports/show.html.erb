@@ -6,7 +6,7 @@
 
 <%= loading_indicator(:id => "report_load_ind") %>
 
-<div class="tip" id="report_top_links">
+<div class="link_set" id="report_top_links">
   <%= link_to(t("reports.create_new"), new_report_report_path) if can?(:create, Report::Report) %>
   <%= link_to(t("reports.back_to_list"), report_reports_path) if can?(:index, Report::Report) %>
   <%= link_to(t("reports.export_to_csv"), report_report_path(@report, :format => :csv), :id => "csv_link") unless @report.new_record? %>
@@ -72,14 +72,18 @@
           <div class="section display_type">
             <div class="name horiz"><%= t("reports.how_to_display_results") %></div>
             <div class="controls horiz">
-              <input type="radio" name="display_type" id="display_type_1" value="table" />
-              <label for="display_type_1">
-                <i class="icon-table"></i> <%= t("reports.display_types.table") %>
-              </label>
-              <input type="radio" name="display_type" id="display_type_2" value="bar_chart" />
-              <label for="display_type_2">
-                <i class="icon-bar-chart"></i> <%= t("reports.display_types.bar_chart") %>
-              </label>
+              <div class="choice">
+                <input type="radio" name="display_type" id="display_type_1" value="table" />
+                <label for="display_type_1">
+                  <i class="icon-table"></i> <%= t("reports.display_types.table") %>
+                </label>
+              </div>
+              <div class="choice">
+                <input type="radio" name="display_type" id="display_type_2" value="bar_chart" />
+                <label for="display_type_2">
+                  <i class="icon-bar-chart"></i> <%= t("reports.display_types.bar_chart") %>
+                </label>
+              </div>
             </div>
           </div>
           <div class="section percent_style">
@@ -91,19 +95,27 @@
           <div class="section">
             <div class="name horiz"><%= t("reports.what_bar_style") %></div>
             <div class="controls horiz">
-              <input type="radio" name="bar_style" id="bar_style_1" value="side_by_side" />
-              <label for="bar_style_1"><%= t("reports.bar_styles.side_by_side") %></label>
-              <input type="radio" name="bar_style" id="bar_style_2" value="stacked" />
-              <label for="bar_style_2"><%= t("reports.bar_styles.stacked") %></label>
+              <div class="choice">
+                <input type="radio" name="bar_style" id="bar_style_1" value="side_by_side" />
+                <label for="bar_style_1"><%= t("reports.bar_styles.side_by_side") %></label>
+              </div>
+              <div class="choice">
+                <input type="radio" name="bar_style" id="bar_style_2" value="stacked" />
+                <label for="bar_style_2"><%= t("reports.bar_styles.stacked") %></label>
+              </div>
             </div>
           </div>
           <div class="section">
             <div class="name horiz"><%= t("reports.how_to_display_questions") %></div>
             <div class="controls horiz">
-              <input type="radio" name="question_labels" id="question_labels_1" value="code" />
-              <label for="question_labels_1"><%= t("reports.question_labels.code") %></label>
-              <input type="radio" name="question_labels" id="question_labels_2" value="title" />
-              <label for="question_labels_2"><%= t("reports.question_labels.title") %></label>
+              <div class="choice">
+                <input type="radio" name="question_labels" id="question_labels_1" value="code" />
+                <label for="question_labels_1"><%= t("reports.question_labels.code") %></label>
+              </div>
+              <div class="choice">
+                <input type="radio" name="question_labels" id="question_labels_2" value="title" />
+                <label for="question_labels_2"><%= t("reports.question_labels.title") %></label>
+              </div>
             </div>
           </div>
         </div>
@@ -148,16 +160,20 @@
             <div class="controls vert">
       
               <div class="q_sel_type">
-                <input type="radio" name="q_sel_type" id="q_sel_type_questions" value="questions">
-                <label for="q_sel_type_questions"><%= t("reports.these_questions") %>:</label>
+                <div class="choice">
+                  <input type="radio" name="q_sel_type" id="q_sel_type_questions" value="questions">
+                  <label for="q_sel_type_questions"><%= t("reports.these_questions") %>:</label>
+                </div>
                 <div id="question_select" class="multiselect">
                   <div class="choices"></div>
                 </div>
               </div>
       
               <div class="q_sel_type">
-                <input type="radio" name="q_sel_type" id="q_sel_type_option_set" value="option_set">
-                <label for="q_sel_type_option_set"><%= t("reports.questions_with_option_sets") %>:</label>
+                <div class="choice">
+                  <input type="radio" name="q_sel_type" id="q_sel_type_option_set" value="option_set">
+                  <label for="q_sel_type_option_set"><%= t("reports.questions_with_option_sets") %>:</label>
+                </div>
                 <div id="option_set_select" class="multiselect">
                   <div class="choices"></div>
                 </div>
