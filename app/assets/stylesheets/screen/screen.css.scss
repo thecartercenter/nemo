@@ -1,30 +1,90 @@
-/* template */
-body { background-color: #888; }
-table#layout { width: 100%; }
-td#banner { color: white; padding: 5px 0 0 88px; height: 75px; }
-td#banner #title { float: left; padding-top: 5px; }
-td#banner #title h1 { font-size: 40px; line-height: 1; display: inline-block; }
-td#banner #title h2 { font-size: 22px; width: 300px; margin: 0; color: white; display: inline-block; text-transform: uppercase; vertical-align: top; }
-td#banner #title a { color: white; text-decoration: none; }
-td#banner #title img { display: block; margin: 5px 0 0 3px; }
-td#banner #userinfo { float: right; margin-right: 10px; }
-td#banner #userinfo a, td#banner #userinfo form.button_to input { color: white; }
-div#content { padding: 15px 15px 30px 15px; min-height: 400px; background-color: white; }
-td#nav { width: 88px; color: white; }
-td#nav ul { font-weight: bold; padding: 5px; list-style-type:none; }
-td#nav ul li { white-space: nowrap; }
-td#nav ul li a { text-decoration: none; color: white; }
-td#nav ul li a:hover { text-decoration: none; color: #0065d1; }
-td#footer { padding: 5px; color: #ddd; text-align: right; height: 25px; }
-td#footer * { vertical-align: top; }
-td#footer a { color: #ddd; }
-td#footer #locale_form { display: none; }
-td#footer #dev_mode_warning { color: white; padding: 2px; margin: 0 0 0 5px; text-align: right; font-weight: bold; 
-  background-color: #d02000; float: right; clear: right; }
+/* general layout styles */
+$nav_width: 125px;
+
+body { 
+  background-color: #888; 
+}
+
+#userinfo { 
+  color: white;
+  text-align: right;
+  padding-right: 5px;
+  
+  a, form.button_to input { 
+    color: white; 
+  }
+  
+  form { 
+    display: inline;
+    
+    select { 
+      font-size: 9pt; 
+    }
+  }
+}
+
+#title {
+  color: white;
+  margin: 10px 0 20px $nav_width;
+  
+  img {
+    display: block;
+  }
+  
+  a { color: white; text-decoration: none; }
+  h1 { font-size: 40px; line-height: 1; display: inline-block; margin: 0 10px 5px 0; }
+  h2 { font-size: 22px; width: 300px; margin: 0; color: white; display: inline-block; text-transform: uppercase; vertical-align: top; }
+}
+
+#nav {
+  width: $nav_width;
+  color: white;
+  float: left;
+  
+  ul { font-weight: bold; padding: 5px; list-style-type:none; }
+  ul li a { text-decoration: none; color: white; }
+  ul li a:hover { text-decoration: none; color: #0065d1; }
+}
+
+#content {
+  margin-left: $nav_width;
+  padding: 15px 15px 30px 15px; 
+  min-height: 400px; 
+  background-color: white; 
+}
+
+#footer {
+  padding: 5px; 
+  color: #ddd; 
+  text-align: right; 
+  height: 25px;
+  
+  * { 
+    vertical-align: top;
+  }
+  
+  a { 
+    color: #ddd; 
+  }
+  
+  #locale_form { 
+    display: none; 
+  }
+  
+  #dev_mode_warning { 
+    color: white; 
+    padding: 2px; 
+    margin: 0 0 0 5px; 
+    text-align: right; 
+    font-weight: bold; 
+    background-color: #d02000; 
+    float: right; 
+    clear: right; 
+  }
+}
+
 div.dialog_bg { background-color: black; opacity: 0.6; filter: alpha(opacity=60); left: 0; top: 0; position: absolute; }
 div.dialog_bg * { opacity: 1; filter: alpha(opacity=100); }
-div#userinfo form { display: inline; }
-div#userinfo form select { font-size: 9pt; }
 
 /* login instructions */
 #login_instructions #preamble { width: 600px; margin-bottom: 20px; }
@@ -41,7 +101,7 @@ div.error { background-color: #d02000; }
 .printable { display: none; }
 
 /* report view */
-.report_reports_new h1#title, .report_reports_show h1#title { float: left; }
+.report_reports_new h1.title, .report_reports_show h1.title { float: left; }
 #report_load_ind { float: left; margin: 10px 0 0 10px; }
 #report_top_links { clear: both; }
 .report_view { display: table-row; }

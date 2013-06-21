@@ -1,8 +1,7 @@
-table#layout { width: 100%; }
-td#banner, td#footer, td#nav { display: none; }
+#userinfo, #title, #footer, #nav { display: none; }
 
 /* login instructions */
-.user_batches_show h1#title { display: none; }
+.user_batches_show h1.title { display: none; }
 #login_instructions #preamble { display: none; }
 #login_instructions #instructions { page-break-after: always; }
 
@@ -29,7 +28,7 @@ div.success, div.failure { display: none; }
 #printable_form td.integer_answer .answer_box, #printable_form td.decimal_answer .answer_box { width: .75in; }
 #printable_form td.long_text_answer .answer_box { height: .75in; }
 #printable_form .hint { font-size: 90%; color: #888; }
-.forms_index h1#title, .forms_edit h1#title, .forms_show h1#title { display: none; }
+.forms_index h1.title, .forms_edit h1.title, .forms_show h1.title { display: none; }
 
 /* reports */
 #report_top_links, #report_links, div.report_edit_dialog, div.report_edit_pane { display: none !important; }
