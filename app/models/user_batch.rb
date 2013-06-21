@@ -4,7 +4,7 @@ class UserBatch < ActiveRecord::Base
   def create_users(mission)
     @created_users = []
     transaction do
-      users.each do |u|
+      users.split("\n").each do |u|
         name, email, phone = u.split(/,|\t/).collect{|x| x.strip}
         user = User.new_with_login_and_password(:name => name, :email => email, :phone => phone, 
           :login => User.suggest_login(name), :reset_password_method => "print")
