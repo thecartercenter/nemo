@@ -39,8 +39,9 @@ class UsersController < ApplicationController
   def update
     # if this was just the current_mission form (in the banner), update and redirect back to referrer
     if params[:changing_current_mission]
-      # update the user's mission
-      @user.change_mission!(Mission.find(params[:user][:current_mission_id]))
+      # update the user's mission. a blank mission_id means set mission to nil
+      new_mission = params[:user][:current_mission_id].blank? ? nil : Mission.find(params[:user][:current_mission_id])
+      @user.change_mission!(new_mission)
 
       # update the settings using the new mission
       Setting.copy_to_config(@user.current_mission)
