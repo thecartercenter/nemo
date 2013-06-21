@@ -79,7 +79,9 @@ div.report_edit_pane.report_type ul { line-height: 100%; display: inline-block; 
 div.report_edit_pane.display_options div.section.display_type input { vertical-align: middle; }
 div.report_edit_pane.display_options div.section.display_type label { margin-right: 15px; }
 div.report_edit_pane.display_options div.section.display_type label > * { vertical-align: middle; }
-div.report_edit_pane.display_options div.section.display_type label > div { font-family: fontello; font-size: 24pt; color: #0065d1; display: inline-block; margin-right: 5px; padding: 0; line-height: 90%; }
+div.report_edit_pane.display_options div.section.display_type label > i { font-size: 24pt; color: #0065d1; display: inline-block; margin-right: 5px; padding: 0; line-height: 90%; }
+/* this icon is a bit bigger than the other one */
+div.report_edit_pane.display_options div.section.display_type label > i.icon-bar-chart { font-size: 22pt; }
 
 div.report_edit_pane.form_selection div#form_select div.choices { height: 300px; width: 250px; }
 
