@@ -631,6 +631,7 @@ en:
     outgoing_provider: "Outgoing SMS Provider"
     
   sms_console:
+    back_to_forms: "Back to Forms"
     no_reply: "No reply."
     submit_error: "There was an error submitting your test."
     title: "SMS Test Console"

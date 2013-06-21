@@ -63,10 +63,6 @@ div.collection_form div.item { margin-bottom: 3px; }
 a.action_link { font-size: 14px; text-decoration: none; display: inline-block; margin: -2px 5px; }
 
 /* index tables */
-div#index_table .header { 
-  margin-bottom: 10px; 
-}
-
 table.index_table th, table.form th { text-align: left; color: #444; background-color: #ddd; 
     font-size: 90%; padding: 3px 10px 3px 3px; }
 table.index_table td { border-bottom: 1px solid #ddd; padding: 6px 10px 6px 3px; }
@@ -77,6 +73,8 @@ div.loading_indicator_floating { width: 16px; float: left; }
 
 /* set of links */
 .link_set {
+  margin-bottom: 10px;
+  
   a, input[type='submit'] {
     display: inline-block;
     padding-right: 10px;

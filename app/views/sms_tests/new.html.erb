@@ -1,7 +1,7 @@
 <% @title = t("sms_console.title") %>
 
-<div class="tip">
-  <%= link_to("Back to Forms", forms_path) %>
+<div class="link_set">
+  <%= link_to(t("sms_console.back_to_forms"), forms_path) %>
 </div>
 
 <%= nice_form_for(@sms_test) do |f| %>
