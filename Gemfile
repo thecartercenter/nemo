@@ -31,7 +31,8 @@ gem 'timecop'
 gem 'cancan'
 
 # i18n for js
-gem 'i18n-js'
+# temporary change to deal with rails 3.2.13 bug
+gem 'i18n-js', :git => 'https://github.com/fnando/i18n-js.git', :branch => 'master'
 
 # i18n locale data
 gem 'rails-i18n'

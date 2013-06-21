@@ -1,3 +1,11 @@
+GIT
+  remote: https://github.com/fnando/i18n-js.git
+  revision: eeec14066b50f72876aa789c9b1f226172452798
+  branch: master
+  specs:
+    i18n-js (2.1.2)
+      i18n
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -46,8 +54,6 @@ GEM
       railties (>= 3.0.0)
     hike (1.2.2)
     i18n (0.6.1)
-    i18n-js (2.1.2)
-      i18n
     iso-639 (0.1.0)
     journey (1.0.4)
     jquery-rails (3.0.0)
@@ -122,7 +128,7 @@ DEPENDENCIES
   cancan
   configatron
   factory_girl_rails (~> 4.0)
-  i18n-js
+  i18n-js!
   iso-639
   jquery-rails
   libxml-ruby
