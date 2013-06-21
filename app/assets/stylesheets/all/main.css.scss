@@ -61,16 +61,19 @@ div.form_buttons input.submit { float: left; font-weight: bold; font-size: 120%;
 /* collection form */
 div.collection_form div.item { margin-bottom: 3px; }
 
-/* top links */
-div.tip a, div.tip input[type='submit'] {
-  display: inline-block;
-  padding-right: 10px;
-}
-
 /* action links/icons */
 a.action_link { font-size: 14px; text-decoration: none; display: inline-block; margin: -2px 5px; }
 
 /* index tables */
+div#index_table .header { 
+  margin-bottom: 10px; 
+
+  /* header links */
+  a, input[type='submit'] {
+    display: inline-block;
+    padding-right: 10px;
+  }
+}
 table.index_table th, table.form th { text-align: left; color: #444; background-color: #ddd; 
     font-size: 90%; padding: 3px 10px 3px 3px; }
 table.index_table td { border-bottom: 1px solid #ddd; padding: 6px 10px 6px 3px; }
