@@ -94,7 +94,7 @@
     // if report is new, go back to report index
     if (!this.report_in_db.has_run()) {
       this.report_view.show_loading_indicator(true);
-      window.location.href = "/report/reports";
+      window.location.href = Utils.build_url("report/reports");
     // else restore the view
     } else
       this.restore_view();

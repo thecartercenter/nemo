@@ -212,6 +212,7 @@ function redirect_to_login() {
   // builds a URL by adding the locale
   // last arg can optionally specify the locale, e.g. {locale: "fr"}
   Utils.build_url = function() {
+    // we need some funky magic to turn the arguments object into an array
     var args = Array.prototype.slice.call(arguments, 0);
     var options = {};
     
@@ -224,8 +225,8 @@ function redirect_to_login() {
     // default to the current locale
     if (!options.locale) options.locale = I18n.locale;
     
-    // we need some funky magic to turn the arguments object into an array
-    return "/" + options.locale + "/" + args.join("/")
+    // return, fixing any double slashes
+    return ("/" + options.locale + "/" + args.join("/")).replace(/[\/]{2,}/g, "/");
   }
   
 }(Utils = {}));
