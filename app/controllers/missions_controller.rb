@@ -9,10 +9,14 @@ class MissionsController < ApplicationController
     render(:form)
   end
   
-  def edit
+  def show
     render(:form)
   end
 
+  def edit
+    render(:form)
+  end
+  
   def create
     begin
       @mission.update_attributes!(params[:mission])
