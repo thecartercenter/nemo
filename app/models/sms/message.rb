@@ -9,6 +9,9 @@
 # sent_at     the time the message was sent/received
 class Sms::Message < ActiveRecord::Base
   serialize :to, JSON
+  
+  belongs_to :mission
+  
   after_initialize :arrayify_to
   before_create :default_sent_at
   after_initialize :normalize_numbers

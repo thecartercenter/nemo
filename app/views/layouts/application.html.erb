@@ -107,6 +107,10 @@
           <%= configatron.outgoing_sms_adapter ? configatron.outgoing_sms_adapter.service_name : "[#{t('common.none').capitalize}]" %> &nbsp;|&nbsp;
         <% end %>
         
+        <% if current_user %>
+          <%= link_to("SMS Log", sms_path) %> &nbsp;|&nbsp;
+        <% end %>
+
         <%= t("layout.system_version") %>: <%= configatron.system_version %>
         
         <% if Rails.env == "development" %>

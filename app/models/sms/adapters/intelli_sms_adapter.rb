@@ -1,17 +1,29 @@
 require 'open-uri'
 require 'uri'
 class Sms::Adapters::IntelliSmsAdapter < Sms::Adapters::Adapter
+
+  # checks if this adapter recognizes an incoming http receive request
+  def self.recognize_receive_request?(request)
+    # if the params from, text, msgid, and sent are all in the request params, its ours!
+    %w(from text msgid sent) - request.request_parameters.keys == []
+  end
   
   def service_name
-    @service_name ||= "IntelliSMS"
+    @service_name ||= "IntelliSms"
   end
   
   def deliver(message)
     # let the superclass do the sanity checks
     super
     
-    # build the URI the request
-    uri = build_uri(:deliver, :to => message.to.join(','), :text => message.body)
+    # build the URI the request (intellisms expects iso-8859-1 encoding)
+    params = {:to => message.to.join(','), :text => message.body.encode("iso-8859-1")}
+
+    # include the from number if it is set
+    params[:from] = message.from.gsub(/^\+/, "") if message.from
+
+    uri = build_uri(:deliver, params)
+    Rails.logger.info("Sending IntelliSMS request: #{uri}")
     
     # don't send in test mode
     unless Rails.env == "test"
@@ -26,9 +38,12 @@ class Sms::Adapters::IntelliSmsAdapter < Sms::Adapters::Adapter
     return true
   end
   
-  # we don't currently use intellisms for receiving
   def receive(params)
-    raise NotImplementedError
+    # strip leading zeroes from the from number (intellisms pads the country code with 0s)
+    params['from'].gsub!(/^0+/, "")
+
+    # create and return the message
+    [Sms::Message.create(:from => "+#{params['from']}", :body => params["text"], :sent_at => Time.zone.parse(params["sent"], :adapter_name => service_name))]
   end
   
   # check_balance returns the balance string

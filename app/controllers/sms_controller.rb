@@ -9,26 +9,24 @@ class SmsController < ApplicationController
   # takes an incoming sms and returns an outgoing one
   # may return nil if no response is appropriate
   def self.handle_sms(sms)
+    elmo_response = nil
+    
     reply_body = begin
       # decode and get the (ELMO) response
-      @elmo_response = Sms::Decoder.new(sms).decode
+      elmo_response = Sms::Decoder.new(sms).decode
       
       # attempt to save it
-      @elmo_response.save!
-    
+      elmo_response.save!
+      
       # send congrats!
-      t_sms_msg("sms_forms.decoding.congrats", :user => @elmo_response.user, :form => @elmo_response.form)
+      t_sms_msg("sms_forms.decoding.congrats", :user => elmo_response.user, :form => elmo_response.form, :mission => sms.mission)
     
     # if there is a decoding error, respond accordingly
     rescue Sms::DecodingError
+      
       # if it's a user not found and the from number is a string, don't reply at all, b/c it's probably some robot
       if $!.type == "user_not_found" && sms.from =~ /[a-z]/i
         nil
-        
-      # if it's a duplicate error, don't reply, because the user probably didn't mean to or could be a network issue
-      elsif $!.type == "duplicate_submission"
-        nil
-        
       else
         msg = t_sms_msg("sms_forms.decoding.#{$!.type}", $!.params)
         
@@ -43,7 +41,7 @@ class SmsController < ApplicationController
     # if there is a validation error, respond accordingly
     rescue ActiveRecord::RecordInvalid
       # we only need to handle the first error
-      field, error_msgs = @elmo_response.errors.messages.first
+      field, error_msgs = elmo_response.errors.messages.first
       error_msg = error_msgs.first
       
       # get the orignal error key by inverting the dictionary
@@ -55,20 +53,20 @@ class SmsController < ApplicationController
       when :missing_answers
         # if it's the missing_answers error, we need to include which answers are missing
         # get the ranks
-        ranks = @elmo_response.missing_answers.map(&:rank).sort.join(",")
+        ranks = elmo_response.missing_answers.map(&:rank).sort.join(",")
         
         # pluralize the translation key if appropriate
         key = "sms_forms.validation.missing_answer"
-        key += "s" if @elmo_response.missing_answers.size > 1
+        key += "s" if elmo_response.missing_answers.size > 1
         
         # translate
-        t_sms_msg(key, :ranks => ranks, :user => @elmo_response.user, :form => @elmo_response.form)
+        t_sms_msg(key, :ranks => ranks, :user => elmo_response.user, :form => elmo_response.form, :mission => sms.mission)
       
       when :invalid_answers
         # if it's the invalid_answers error, we need to find the first answer that's invalid and report its error
-        invalid_answer = @elmo_response.answers.detect{|a| a.errors.messages.count > 0}
+        invalid_answer = elmo_response.answers.detect(&:errors)
         t_sms_msg("sms_forms.validation.invalid_answer", :rank => invalid_answer.questioning.rank, 
-          :error => invalid_answer.errors.full_messages.join(", "), :user => @elmo_response.user, :form => @elmo_response.form)
+          :error => invalid_answer.errors.full_messages.join(", "), :user => elmo_response.user, :form => elmo_response.form, :mission => sms.mission)
       
       else
         # if we don't recognize the key, just use the regular message. it may not be pretty but it's better than nothing.  
@@ -80,14 +78,22 @@ class SmsController < ApplicationController
       return nil
     else
       # build the reply message
-      reply = Sms::Message.new(:to => sms.from, :body => reply_body)
+      reply = Sms::Message.new(:to => sms.from, :body => reply_body, :mission => sms.mission)
     
       # add to the array
       return reply
     end
   end
+
+  def index
+    @smses = Sms::Message.order("sent_at DESC").all
+  end
   
   def create
+    # get the mission from the params. if not found raise an error (we need the mission)
+    @mission = Mission.find_by_compact_name(params[:mission])
+    raise Sms::Error.new("Mission not specified") if @mission.nil?
+
     # first we need to figure out which provider sent this message, so we shop it around to all the adapters and see if any recognize it
     handled = false
     Sms::Adapters::Factory.products.each do |klass|
@@ -95,17 +101,31 @@ class SmsController < ApplicationController
       # if we get a match
       if klass.recognize_receive_request?(request)
         
+        @adapter = klass.new
+        
         # go ahead with processing, catching any errors
         begin
           # do the receive
-          @incomings = klass.new.receive(request)
+          @incomings = @adapter.receive(request)
           
-          # for each sms, decode it and issue a response (using the outgoing adapter)
+          # we should set the mission parameter in the incoming messages
+          @incomings.each{|m| m.update_attributes(:mission => @mission)}
+          
+          # for each sms, decode it and 
           # store the sms responses in an instance variable so the functional test can access them
-          @sms_responses = @incomings.map{|sms| self.class.handle_sms(sms)}.compact
+          @sms_replies = @incomings.map{|sms| self.class.handle_sms(sms)}.compact
           
           # send the responses
-          @sms_responses.each{|r| configatron.outgoing_sms_adapter.deliver(r)}
+          @sms_replies.each do |r|
+            # copy the settings for the message's mission
+            Setting.copy_to_config(r.mission)
+            
+            # set the incoming_sms_number as the from number, if we have one
+            r.update_attributes(:from => configatron.incoming_sms_number) unless configatron.incoming_sms_number.blank?
+
+            # send the message using the mission's outgoing adapter
+            configatron.outgoing_sms_adapter.deliver(r)
+          end
           
         # if we get an error
         rescue Sms::Error
@@ -139,6 +159,7 @@ class SmsController < ApplicationController
       # get the reply language (if we have the user, use their pref_lang; if not, use default)
       lang = options[:user] && options[:user].pref_lang ? options[:user].pref_lang.to_sym : I18n.default_locale
       
+      # do the translation, raising error on failure
       I18n.t(key, options.merge(:locale => lang, :raise => true))
     end
 end

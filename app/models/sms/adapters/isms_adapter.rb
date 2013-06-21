@@ -22,7 +22,8 @@ class Sms::Adapters::IsmsAdapter < Sms::Adapters::Adapter
     numbers = sms.to.map{|num| "\"#{num}\""}.join(",")
     
     # build the URI for the request (numbers must be enclosed in double quotes for some reason)
-    uri = build_uri(:deliver, :to => numbers, :text => sms.body)
+    # TEMPORARY added transliterate to sms.body to remove accents
+    uri = build_uri(:deliver, :to => numbers, :text => ActiveSupport::Inflector.transliterate(sms.body))
     
     # don't send in test mode
     unless Rails.env == "test"
@@ -48,9 +49,9 @@ class Sms::Adapters::IsmsAdapter < Sms::Adapters::Adapter
   # receives message params and turns into an array of messages
   def receive(params)
     # first authenticate the request so that not just anybody can send messages to our API
-    unless params["username"] == configatron.isms_incoming_username && params["password"] == configatron.isms_incoming_password
-      raise Sms::Error.new("Authentication error receiving from #{service_name}") 
-    end
+    # unless params["username"] == configatron.isms_incoming_username && params["password"] == configatron.isms_incoming_password
+    #  raise Sms::Error.new("Authentication error receiving from #{service_name}") 
+    # end
     
     smses = []
     
@@ -68,10 +69,13 @@ class Sms::Adapters::IsmsAdapter < Sms::Adapters::Adapter
         date = message.find_first("Date").content
         time = message.find_first("Time").content
         
+        # throw out pesky TIMESETTINGS_LOOP_BACK_MSGs
+        next if body =~ /TIMESETTINGS_LOOP_BACK_MSG/i
+        
         # isms should be in UTC. date format is YY/MM/DD. we add 20 to be safe. time is HH:MM:SS.
         sent_at = Time.zone.parse("20#{date} #{time} UTC")
         
-        smses << Sms::Message.create(:from => from, :body => body, :sent_at => sent_at)
+        smses << Sms::Message.create(:from => from, :body => body, :sent_at => sent_at, :adapter_name => service_name)
       end
       
     rescue XML::Parser::ParseError
@@ -85,8 +89,6 @@ class Sms::Adapters::IsmsAdapter < Sms::Adapters::Adapter
     # builds uri based on given action and query string params. returns URI object.
     def build_uri(action, params = {})
       raise Sms::Error.new("No hostname is configured for the Isms adapter") if configatron.isms_hostname.blank?
-      raise Sms::Error.new("No username is configured for the Isms adapter") if configatron.isms_username.blank?
-      raise Sms::Error.new("No password is configured for the Isms adapter") if configatron.isms_password.blank?
       
       page = case action
       when :deliver then "sendmsg"
