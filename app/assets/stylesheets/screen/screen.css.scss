@@ -54,10 +54,11 @@ body {
 }
 
 #footer {
-  padding: 5px; 
-  color: #ddd; 
-  text-align: right; 
+  padding: 5px;
+  color: #ddd;
+  text-align: right;
   height: 25px;
+  margin-left: $nav_width;
   
   * { 
     vertical-align: top;
@@ -74,12 +75,9 @@ body {
   #dev_mode_warning { 
     color: white; 
     padding: 2px; 
-    margin: 0 0 0 5px; 
-    text-align: right; 
     font-weight: bold; 
     background-color: #d02000; 
-    float: right; 
-    clear: right; 
+    display: inline-block;
   }
 }
 

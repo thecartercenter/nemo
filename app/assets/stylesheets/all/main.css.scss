@@ -29,7 +29,6 @@ div.important { font-weight: bold; color: Black; }
 div.boilerplate { display: none; }
 div.dialog { position: absolute; background-color: white; border: 1px solid #555; padding: 10px; }
 div.dialog h2 { margin: 0 0 10px 0; }
-br.clearer { clear: both; }
 
 /* loading indicator */
 div.loader { background: image-url('loader.gif') no-repeat; padding-left: 20px; }
@@ -51,11 +50,10 @@ div.form_field div.form_field_control input.radio { width: 15px; }
 div.form_field div.form_field_details { display: inline-block; width: 290px; position: relative; font-size: 90%; 
   background-color: #e4eeff; padding: 5px; margin: 0 0 5px 5px; }
 div.form_field div.form_field_details p { padding: 0; margin: 0; }
-div.form_field div.space_line { clear: both; margin: 0; padding: 0; width: auto; }
+div.form_field div.space_line { margin: 0; padding: 0; width: auto; }
 div.dummy, span.dummy { font-weight: bold; display: inline; }
 div.dummy_checkbox { height: 12px; width: 12px; text-align: center; font-weight: bold; border: 1px solid #888; display: inline; }
-div.form_buttons { clear: both; padding-top: 10px; }
-div.form_buttons br { clear: both; }
+div.form_buttons { padding-top: 10px; }
 div.form_buttons input.submit { float: left; font-weight: bold; font-size: 120%; padding: 5px 15px; margin: 0 5px 0 0; }
 
 /* collection form */
@@ -105,7 +103,7 @@ form.search_form #search_examples { margin-top: 2px; color: #666; }
 .user_sessions_new .form_buttons { margin-bottom: 10px; }
 
 /* welcome */
-.welcome_index div.block { float: left; background-color: #eee; width: 150px; height: 225px; padding: 10px; margin: 0 20px 20px 0; }
+.welcome_index div.block { display: inline-block; background-color: #eee; width: 150px; height: 225px; padding: 10px; margin: 0 15px 15px 0; vertical-align: top; }
 .welcome_index div.block img { display: block; border: none; }
 .welcome_index div.block a { text-decoration: none; }
 .welcome_index div.block a.title, .welcome_index div.block a.subtitle { display: block; color: #666; 
