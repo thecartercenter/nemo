@@ -16,6 +16,8 @@ class Sms::Message < ActiveRecord::Base
   before_create :default_sent_at
   after_initialize :normalize_numbers
   
+  scope(:newest_first, order("sent_at DESC"))
+  
   private
   
     # sets sent_at to now unless it's already set

@@ -180,6 +180,12 @@ en:
         outgoing_sms_adapter: "Provider"
         tableau_sql: "Tableau SQL" # Tableau is a software product name and shouldn't be translated
         timezone: "Time Zone"
+      sms/message:
+        adapter_name: "Adapter"
+        body: "Body"
+        from: "From"
+        sent_at: "Time Sent"
+        to: "To"
       sms/test:
         from: "From"
         body: "Body"

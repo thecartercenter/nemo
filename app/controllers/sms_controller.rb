@@ -1,7 +1,9 @@
 # handles incoming sms messages from various providers
 class SmsController < ApplicationController
+  load_and_authorize_resource :class => "Sms::Message"
+  
   # don't need authorize for this controller. authorization is handled inside the sms processing machinery.
-  skip_authorization_check
+  skip_authorization_check :only => :create
   
   # disable csrf protection for this stuff
   protect_from_forgery :except => :create 
@@ -86,7 +88,8 @@ class SmsController < ApplicationController
   end
 
   def index
-    @smses = Sms::Message.order("sent_at DESC").all
+    # cancan load_resource messes up the inflection so we need to create smses from sms
+    @smses = @sms.newest_first.paginate(:page => params[:page], :per_page => 50)
   end
   
   def create

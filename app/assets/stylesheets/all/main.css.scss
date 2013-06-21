@@ -239,7 +239,11 @@ div.sms_guide span.sms_example { display: inline-block; font-style: normal; font
   border-bottom: 1px solid black; }
 
 /* sms log */
-.sms_index td.body_col > div { width: 400px; overflow: hidden; }
+.sms_index {
+  td.to_col { width: 225px; }
+  td.from_col { width: 125px; }
+  td.body_col > div { width: 400px; overflow: hidden; }
+}
 
 /* sms test console */
 form#new_sms_test input#sms_test_from { width: 150px; }
