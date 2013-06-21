@@ -54,7 +54,7 @@ div.form_field div.space_line { margin: 0; padding: 0; width: auto; }
 div.dummy, span.dummy { font-weight: bold; display: inline; }
 div.dummy_checkbox { height: 12px; width: 12px; text-align: center; font-weight: bold; border: 1px solid #888; display: inline; }
 div.form_buttons { padding-top: 10px; }
-div.form_buttons input.submit { float: left; font-weight: bold; font-size: 120%; padding: 5px 15px; margin: 0 5px 0 0; }
+div.form_buttons input.submit { display: inline-block; font-weight: bold; font-size: 120%; padding: 5px 15px; margin: 0 5px 0 0; }
 
 /* collection form */
 div.collection_form div.item { margin-bottom: 3px; }
