@@ -1,6 +1,7 @@
 # handles incoming sms messages from various providers
 class SmsController < ApplicationController
-  load_and_authorize_resource :class => "Sms::Message"
+  # load resource for index
+  load_and_authorize_resource :class => "Sms::Message", :only => :index
   
   # don't need authorize for this controller. authorization is handled inside the sms processing machinery.
   skip_authorization_check :only => :create
