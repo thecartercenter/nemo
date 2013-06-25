@@ -63,7 +63,7 @@ class Condition < ActiveRecord::Base
   
   # gets the hash from the OPS array corresponding to this conditions operator
   def operator
-    @operator ||= OPS.index_by(&:name)[op.to_sym]
+    @operator ||= OPS.index_by{|o| o[:name]}[op.to_sym]
   end
   
   # returns all known operators
