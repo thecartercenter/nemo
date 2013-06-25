@@ -36,3 +36,6 @@ gem 'i18n-js', :git => 'https://github.com/fnando/i18n-js.git', :branch => 'mast
 
 # i18n locale data
 gem 'rails-i18n'
+
+# for deployment
+gem 'capistrano', :group => :development
