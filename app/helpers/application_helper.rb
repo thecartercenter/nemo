@@ -258,4 +258,29 @@ module ApplicationHelper
   def tbool(b)
     t(b ? "common._yes" : "common._no")
   end
+  
+  # returns a i18n'd string like "15 Total Users" or "1 published Form".
+  # obj - the object name (singular string, e.g. "Submission") or class. if nil, no object name is printed.
+  # adj - the adjective to use. the i18n file is searched for this value with the suffix '_adj'. e.g. :total => "total_adj"
+  # options
+  #   :count - the number of objects. if nil, 1 is assumed for pluralization purposes, but no count is printed.
+  #   :titleize - whether to titleize the resulting string
+  #   :scope - the i18n scope in which to look
+  def obj_with_adj(obj, adj, options = {})
+    
+    str = t("#{adj}_adj", 
+      :count => content_tag(:strong, options[:count] || ""),
+      :objs => obj ? pluralize_without_count(options[:count] || 1, obj.is_a?(String) ? obj : obj.model_name.human) : "",
+      :scope => options[:scope] || "layout")
+    
+    str = str.titleize if options[:titleize]
+    
+    # remove extraneous spaces
+    str.gsub(/\s\s+/, " ").html_safe
+  end
+  
+  # pluralizes a word based on count but doesn't print count
+  def pluralize_without_count(count, noun, text = nil)
+    count == 1 ? "#{noun}#{text}" : "#{noun.pluralize}#{text}"
+  end
 end

@@ -1,12 +1,12 @@
 <div id="index_table">
   <div class="header link_set">
     <% if paginated %>
-      <%= t("common.found") %> <strong><%= pluralize(objects.total_entries, klass.model_name.human.downcase) %></strong> <%= t("layout.in_total") %>.
+      <%= t("common.found") %> <%= obj_with_adj(klass, :total, :count => objects.total_entries) %>.
       <% unless objects.empty? %>
         <%= t("common.showing") %> <%= objects.offset + 1 %>-<%= objects.offset + objects.size %>.
       <% end %>
     <% else %>
-      <%= t("common.found") %> <strong><%= pluralize(objects.size, klass.model_name.human.downcase) %></strong> <%= t("layout.in_total") %>.
+      <%= t("common.found") %> <%= obj_with_adj(klass, :total, :count => objects.size) %>.
     <% end %>&nbsp;
     <%= links %>
   </div>

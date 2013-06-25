@@ -8,7 +8,7 @@
       <%= link_to(User.model_name.human.pluralize, users_path, :class => "subtitle") %>
       <%= link_to(image_tag("blocks/block_manage.png"), users_path) %>
       <ul>
-        <li><%= link_to("<em>#{@user_count}</em> #{t('common.total')} #{User.model_name.human.pluralize}".html_safe, users_path) %></li>
+        <li><%= link_to(obj_with_adj(User, :total, :count => @user_count, :titleize => true), users_path) %></li>
         <li><%= create_link(User) if can?(:create, User) %></li>
       </ul>
     </div>
@@ -21,11 +21,11 @@
       <%= link_to(Form.model_name.human.pluralize, forms_path, :class => "subtitle") %>
       <%= link_to(image_tag("blocks/block_design.png"), forms_path) %>
       <ul>
-        <li><%= link_to("<em>#{@pub_form_count}</em> #{t('forms.published')} #{Form.model_name.human.pluralize}".html_safe, forms_path) %></li>
+        <li><%= link_to(obj_with_adj(Form, :published, :count => @pub_form_count, :titleize => true, :scope => "forms"), forms_path) %></li>
       
         <%# these links are only for form mgmt %>
         <% if can?(:manage, Form) %>
-          <li><%= link_to("<em>#{@unpub_form_count}</em> #{t('forms.unpublished')} #{Form.model_name.human.pluralize}".html_safe, forms_path) %></li>
+          <li><%= link_to(obj_with_adj(Form, :published, :count => @unpub_form_count, :titleize => true, :scope => "forms"), forms_path) %></li>
           <li><%= create_link(Form) %></li>
         <% end %>
       </ul>
@@ -42,7 +42,7 @@
         <% if @pub_form_count > 0 %>
           <li><small><%= t("welcome.select_a_form") %></small><%= new_response_mini_form %></li>
         <% end %>
-        <li><%= link_to(content_tag(:em, @self_response_count) + " " + t("welcome.submissions_by_you"), 
+        <li><%= link_to(obj_with_adj(t("responses.submission"), :by_you, :count => @self_response_count, :titleize => true, :scope => "responses"),
           responses_path(:search => "submitter:\"#{current_user.name}\"")) %></li>
       </ul>
     </div>
@@ -55,12 +55,13 @@
       <%= link_to(Response.model_name.human.pluralize, responses_path, :class => "subtitle") %>
       <%= link_to(image_tag("blocks/block_review.png"), responses_path) %>
       <ul>
-        <li><%= link_to(content_tag(:em, @total_response_count) + " #{t('common.total').capitalize} #{Response.model_name.human.pluralize}", responses_path) %></li>
-        <li><%= link_to(content_tag(:em, @unreviewed_response_count) + " " + t("welcome.awaiting_review"), responses_path(:search => "reviewed:no")) %></li>
+        <li><%= link_to(obj_with_adj(Response, :total, :count => @total_response_count, :titleize => true), responses_path) %></li>
+        <li><%= link_to(obj_with_adj(nil, :awaiting_review, :count => @unreviewed_response_count, :titleize => true, :scope => "responses"),
+                  responses_path(:search => "reviewed:no")) %></li>
       
         <%# only show the total response count if it's nonzero %>
         <% if @total_response_count > 0 %>
-          <li><%= link_to(@recent_responses_count.gsub(/^(\d+)/){"<em>#{$1}</em>"}.html_safe, responses_path) %></li>
+          <li><%= link_to(@recent_responses_count.gsub(/^(\d+)/){"<strong>#{$1}</strong>"}.html_safe, responses_path) %></li>
         <% end %>
       </ul>
     </div>

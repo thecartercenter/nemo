@@ -349,7 +349,6 @@ en:
     delete_warning: "Are you sure you want to permanently delete the %{obj_description}?"
     deselect_all: "Deselect All"
     dev_mode: "Development Mode"
-    in_total: "in total"
     logged_in_as: "Logged in as"
     must_be: "must be"
     new_obj: "New %{obj}"
@@ -360,6 +359,7 @@ en:
     system_error: "System error. Administrator has been notified."
     system_version: "System Version"
     time_zone: "Time Zone"
+    total_adj: "%{count} total %{objs}"
   
   # pagination translations
   will_paginate:
@@ -454,6 +454,7 @@ en:
     publish_success: "Form published successfully."
     publish: "Publish"
     published: "Published"
+    published_adj: "%{count} published %{objs}"
     question_remove_error: "There was a problem removing the questions (%{msg})."
     questions_add_error: "There was a problem adding the questions (%{msg})."
     questions_add_success: "Questions added successfully."
@@ -598,11 +599,14 @@ en:
       title: "Full Titles (Easier to Read)"
       
   responses:
+    awaiting_review_adj: "%{count} awaiting review"
+    by_you_adj: "%{count} %{objs} by you"
     export_to_csv: "Export to CSV Format"
     in_the_past: "in the Past"
     no_recent: "No recent responses"
     observation_time: "Observation Time"
     save_and_mark_reviewed: "Save and Mark as Reviewed"
+    submission: "Submission"
 
   roles:
     role: "Role"
