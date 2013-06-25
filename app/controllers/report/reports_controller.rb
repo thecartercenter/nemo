@@ -6,8 +6,7 @@ class Report::ReportsController < ApplicationController
   load_and_authorize_resource
   
   def index
-    # order by popularity and use 'becomes' to deal with inheritance
-    @reports = @reports.by_popularity.all.collect{|r| r.becomes(Report::Report)}
+    @reports = @reports.by_popularity
   end
   
   def new

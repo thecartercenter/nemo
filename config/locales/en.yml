@@ -86,29 +86,75 @@ en:
   # model names, attrib names, tips, and errors for activerecord models
   activerecord:
     models:
-      answer: "Answer"
-      assignment: "Assignment"
-      broadcast: "Broadcast"
-      choice: "Choice"
-      condition: "Condition"
-      form: "Form"
-      form_type: "Form Type"
-      mission: "Mission"
-      option: "Option"
-      option_set: "Option Set"
-      password_reset: "Password Reset"
-      question: "Question"
-      questioning: "Question" # should be same as question
-      report/calculation: "Calculation"
-      report/report: "Report"
-      report/question_answer_tally_report: "Tally of Answers per Question"
-      report/grouped_tally_report: "Tally of Responses per Answer/Attribute"
-      report/list_report: "List of Answers/Attributes"
-      response: "Response"
-      search/search: "Search"
-      setting: "Settings" # should be plural
-      sms/message: "SMS Message"
-      user: "User"
+      answer:
+        one: "Answer"
+        other: "Answers"
+      assignment:
+        one: "Assignment"
+        other: "Assignments"
+      broadcast: 
+        one: "Broadcast"
+        other: "Broadcasts"
+      choice:
+        one: "Choice"
+        other: "Choice"
+      condition:
+        one: "Condition"
+        other: "Conditions"
+      form:
+        one: "Form"
+        other: "Forms"
+      form_type:
+        one: "Form Type"
+        other: "Form Types"
+      mission:
+        one: "Mission"
+        other: "Missions"
+      option:
+        one: "Option"
+        other: "Options"
+      option_set:
+        one: "Option Set"
+        other: "Option Sets"
+      password_reset:
+        one: "Password Reset"
+        other: "Password Resets"
+      question:
+        one: "Question"
+        other: "Questions"
+      questioning: # should be same as question
+        one: "Question"
+        other: "Questions"
+      report/calculation:
+        one: "Calculation"
+        other: "Calculations"
+      report/report:
+        one: "Report"
+        other: "Reports"
+      report/question_answer_tally_report:
+        one: "Tally of Answers per Question"
+        other: "Tallies of Answers per Question"
+      report/grouped_tally_report:
+        one: "Tally of Responses per Answer/Attribute"
+        other: "Tallies of Responses per Answer/Attribute"
+      report/list_report:
+        one: "List of Answers/Attributes"
+        other: "Lists of Answers/Attributes"
+      response: 
+        one: "Response"
+        other: "Responses"
+      search/search:
+        one: "Search"
+        other: "Searches"
+      setting: # should always be plural
+        one: "Settings"
+        other: "Settings"
+      sms/message:
+        one: "SMS Message"
+        other: "SMS Messages"
+      user:
+        one: "User"
+        other: "Users"
     attributes:
       broadcast:
         balance: "SMS Balance"
@@ -365,6 +411,12 @@ en:
   will_paginate:
     previous_label: "&#8592; Previous"
     next_label: "Next &#8594;"
+    page_entries_info: # please preserve <b> and </b> tags in the below
+      single_page_html:
+        zero:  "No %{model} found"
+        one:   "Displaying <b>1</b> %{model}"
+        other: "Displaying <b>all %{count}</b> %{model}"
+      multi_page_html: "Displaying %{model} <b>%{from} - %{to}</b> of <b>%{count}</b> in total"
     page_gap: "&hellip;" # this entry should be the same for all languages
   
   # authlogic translations

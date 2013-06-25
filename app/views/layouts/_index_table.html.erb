@@ -1,13 +1,7 @@
 <div id="index_table">
   <div class="header link_set">
-    <% if paginated %>
-      <%= t("common.found") %> <%= obj_with_adj(klass, :total, :count => objects.total_entries) %>.
-      <% unless objects.empty? %>
-        <%= t("common.showing") %> <%= objects.offset + 1 %>-<%= objects.offset + objects.size %>.
-      <% end %>
-    <% else %>
-      <%= t("common.found") %> <%= obj_with_adj(klass, :total, :count => objects.size) %>.
-    <% end %>&nbsp;
+    <%= page_entries_info(ensure_paginated(objects), :model => klass) %>.
+    &nbsp;
     <%= links %>
   </div>
   <% unless objects.empty? %>

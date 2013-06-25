@@ -283,4 +283,13 @@ module ApplicationHelper
   def pluralize_without_count(count, noun, text = nil)
     count == 1 ? "#{noun}#{text}" : "#{noun.pluralize}#{text}"
   end
+  
+  # if the given array is not paginated, apply an infinite pagination so the will_paginate methods will still work
+  def ensure_paginated(objs)
+    if !objs.respond_to?(:total_entries) && objs.respond_to?(:paginate)
+      objs.paginate(:page => 1, :per_page => 1000000)
+    else
+      objs
+    end
+  end
 end

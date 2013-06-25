@@ -13,7 +13,7 @@ class FormsController < ApplicationController
     respond_to do |format|
       # render normally if html
       format.html do
-        @forms = apply_filters(@forms).with_form_type.all
+        @forms = apply_filters(@forms).with_form_type
         render(:index)  
       end
       
