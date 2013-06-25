@@ -19,8 +19,8 @@
         <a id="edit_link_0" href="#"><%= t("reports.report_type") %></a>
       <% end %>
       <a id="edit_link_1" href="#"><%= t("reports.display_options") %></a>
-      <a id="edit_link_2" href="#"><%= Form.model_name.human.pluralize %></a>
-      <a id="edit_link_3" href="#"><%= Question.model_name.human.pluralize %></a>
+      <a id="edit_link_2" href="#"><%= pluralize_model(Form) %></a>
+      <a id="edit_link_3" href="#"><%= pluralize_model(Question) %></a>
       <a id="edit_link_4" href="#"><%= t("reports.groupings") %></a>
       <a id="edit_link_5" href="#"><%= t("reports.questions_attributes") %></a>
       <a id="edit_link_6" href="#"><%= t("reports.report_title") %></a>
@@ -48,7 +48,7 @@
                   <input type="radio" name="report_type" id="report_type_<%= i %>" value="<%= klass.name %>">
                   <label for="report_type_<%= i %>">
                     <h3><%= klass.model_name.human %></h3>
-                    <div class="ex_lbl"><%= t("common.example").pluralize %>:</div>
+                    <div class="ex_lbl"><%= t("common.example", :count => 2) %>:</div>
                     <ul>
                       <% t("reports.examples.#{klass.name.demodulize.underscore}").each do |ex| %>
                         <li><%= ex %></li>
@@ -122,7 +122,7 @@
     </div>
     
     <div class="report_edit_pane form_selection">
-      <h2><%= Form.model_name.human.pluralize %></h2>
+      <h2><%= pluralize_model(Form) %></h2>
       <div class="pane_scroll">
         <div class="error_box"></div>
         <div class="pane_body">
@@ -143,7 +143,7 @@
     </div>
 
     <div class="report_edit_pane question_selection">
-      <h2><%= Question.model_name.human.pluralize %></h2>
+      <h2><%= pluralize_model(Question) %></h2>
       <div class="pane_scroll">
         <div class="error_box"></div>
         <div class="pane_body">

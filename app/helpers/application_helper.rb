@@ -267,10 +267,23 @@ module ApplicationHelper
   #   :titleize - whether to titleize the resulting string
   #   :scope - the i18n scope in which to look
   def obj_with_adj(obj, adj, options = {})
+    # assume 1 if no count given
+    options[:count] ||= 1
+    
+    # get the appropriate object name string
+    # if it's already a string, pluralize it using the inflector
+    objs = if obj.is_a?(String)
+      pluralize_without_count(options[:count], obj)
+    # if we have an activerecord class, pluralize it using the :count mechanism
+    elsif obj.respond_to?(:model_name)
+      t("activerecord.models.#{obj.model_name.i18n_key}", :count => options[:count])
+    else
+      ""
+    end
     
     str = t("#{adj}_adj", 
-      :count => content_tag(:strong, options[:count] || ""),
-      :objs => obj ? pluralize_without_count(options[:count] || 1, obj.is_a?(String) ? obj : obj.model_name.human) : "",
+      :count => content_tag(:strong, options[:count]),
+      :objs => objs,
       :scope => options[:scope] || "layout")
     
     str = str.titleize if options[:titleize]
@@ -291,5 +304,11 @@ module ApplicationHelper
     else
       objs
     end
+  end
+  
+  # pluralizes an activerecord model name
+  # assumes 2 if count not given in options
+  def pluralize_model(klass, options = {})
+    t("activerecord.models.#{klass.model_name.i18n_key}", :count => options[:count] || 2)
   end
 end

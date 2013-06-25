@@ -20,8 +20,12 @@ en:
     delete: "Delete"
     design: "Design"
     edit: "Edit"
-    error: "Error"
-    example: "Example"
+    error:
+      one: "Error"
+      other: "Errors"
+    example:
+      one: "Example"
+      other: "Examples"
     example_abbr: "e.g."
     found: "Found"
     hour: "Hour"
@@ -41,7 +45,9 @@ en:
     remove: "Remove"
     report: "Report"
     reset: "Reset"
-    result: "Result"
+    result: 
+      one: "Result"
+      other: "Results"
     review: "Review"
     run: "Run"
     save: "Save"

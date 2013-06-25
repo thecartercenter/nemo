@@ -5,7 +5,7 @@
   <% if can?(:index, User) %>
     <div class="block">
       <%= link_to(t("common." + (can?(:create, User) ? "manage" : "contact")), users_path, :class => "title") %>
-      <%= link_to(User.model_name.human.pluralize, users_path, :class => "subtitle") %>
+      <%= link_to(pluralize_model(User), users_path, :class => "subtitle") %>
       <%= link_to(image_tag("blocks/block_manage.png"), users_path) %>
       <ul>
         <li><%= link_to(obj_with_adj(User, :total, :count => @user_count, :titleize => true), users_path) %></li>
@@ -18,7 +18,7 @@
   <% if can?(:index, Form) %>
     <div class="block">
       <%= link_to(t("common." + (can?(:manage, Form) ? "design" : "view")), forms_path, :class => "title") %>
-      <%= link_to(Form.model_name.human.pluralize, forms_path, :class => "subtitle") %>
+      <%= link_to(pluralize_model(Form), forms_path, :class => "subtitle") %>
       <%= link_to(image_tag("blocks/block_design.png"), forms_path) %>
       <ul>
         <li><%= link_to(obj_with_adj(Form, :published, :count => @pub_form_count, :titleize => true, :scope => "forms"), forms_path) %></li>
@@ -52,7 +52,7 @@
   <% if can?(:review, Response) %>
     <div class="block">
       <%= link_to(t("common.review"), responses_path, :class => "title") %>
-      <%= link_to(Response.model_name.human.pluralize, responses_path, :class => "subtitle") %>
+      <%= link_to(pluralize_model(Response), responses_path, :class => "subtitle") %>
       <%= link_to(image_tag("blocks/block_review.png"), responses_path) %>
       <ul>
         <li><%= link_to(obj_with_adj(Response, :total, :count => @total_response_count, :titleize => true), responses_path) %></li>
@@ -71,7 +71,7 @@
   <% if can?(:index, Report::Report) %>
     <div class="block">
       <%= link_to(t("common.report"), report_reports_path, :class => "title") %>
-      <%= link_to(t("common.result").pluralize, report_reports_path, :class => "subtitle") %>
+      <%= link_to(t("common.result", :count => 2), report_reports_path, :class => "subtitle") %>
       <%= link_to(image_tag("blocks/block_report.png"), report_reports_path) %>
       <ul>
         <% unless @reports.empty? %>

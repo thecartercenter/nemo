@@ -69,7 +69,7 @@
     <ul>
       <% [Response, Form, Report::Report, Option, OptionSet, FormType, Broadcast, Setting, User, Mission].each do |k| %>
         <% if can?(:index, k) %>
-          <li><%= link_to(k.model_name.human.ucwords.pluralize, send("#{k.model_name.route_key}_path")) %></li>
+          <li><%= link_to(pluralize_model(k), send("#{k.model_name.route_key}_path")) %></li>
         <% end %>
       <% end %>
     </ul>
