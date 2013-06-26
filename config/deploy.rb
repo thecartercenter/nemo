@@ -68,7 +68,7 @@ namespace :deploy do
   
   desc "ping the server so that it connects to db"
   task :ping, roles: :web do
-    run "wget #{ping_url}"
+    run "curl -s #{ping_url} > /dev/null"
   end
   after "deploy:restart", "deploy:ping"
 end
