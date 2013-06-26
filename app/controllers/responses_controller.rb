@@ -91,6 +91,7 @@ class ResponsesController < ApplicationController
   end
   
   def update
+    @response.assign_attributes(params[:response])
     web_create_or_update
   end
   
@@ -116,7 +117,7 @@ class ResponsesController < ApplicationController
       
       # try to save
       begin
-        @response.update_attributes!(params[:response])
+        @response.save!
         set_success_and_redirect(@response)
       rescue ActiveRecord::RecordInvalid
         prepare_and_render_form

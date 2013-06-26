@@ -70,7 +70,7 @@ class FormsController < ApplicationController
   end
   
   def create
-    if @form.update_attributes(params[:form])
+    if @form.save
       set_success_and_redirect(@form, :to => edit_form_path(@form))
     else
       prepare_and_render_form

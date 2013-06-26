@@ -23,7 +23,7 @@ class FormTypesController < ApplicationController
   end
   
   def create
-    if @form_type.update_attributes(params[:form_type])
+    if @form_type.save
       set_success_and_redirect(@form_type)
     else
       render(:form)

@@ -10,7 +10,6 @@ class UserBatchesController < ApplicationController
   
   def create
     begin
-      @user_batch.attributes = params[:user_batch]
       @user_batch.create_users(current_mission)
       @success_msg = t("user_batches.success")
       render(:show)

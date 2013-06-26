@@ -27,13 +27,14 @@ class OptionsController < ApplicationController
   end
   
   def update
+    @option.assign_attributes(params[:option_set])
     create_or_update
   end
   
   private
     # creates/updates the option
     def create_or_update
-      if @option.update_attributes(params[:option])
+      if @option.save
         set_success_and_redirect(@option)
       else
         render(:form)

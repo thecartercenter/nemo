@@ -48,7 +48,7 @@ class BroadcastsController < ApplicationController
   end
   
   def create
-    if @broadcast.update_attributes(params[:broadcast])
+    if @broadcast.save
       if @broadcast.send_errors
         flash[:error] = t("broadcasts.send_error")
       else

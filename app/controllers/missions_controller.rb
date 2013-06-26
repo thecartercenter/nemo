@@ -19,7 +19,7 @@ class MissionsController < ApplicationController
   
   def create
     begin
-      @mission.update_attributes!(params[:mission])
+      @mission.save!
       set_success_and_redirect(@mission)
     rescue ActiveRecord::RecordInvalid
       render(:form)

@@ -24,6 +24,7 @@ class OptionSetsController < ApplicationController
   end
   
   def update
+    @option_set.assign_attributes(params[:option_set])
     create_or_update
   end
 
@@ -36,7 +37,7 @@ class OptionSetsController < ApplicationController
     # creates/updates the option set
     def create_or_update
       begin
-        @option_set.update_attributes!(params[:option_set])
+        @option_set.save!
         set_success_and_redirect(@option_set)
       rescue ActiveRecord::RecordInvalid, DeletionError
         @option_set.errors.add(:base, $!.to_s) if $!.is_a?(DeletionError)
