@@ -50,10 +50,28 @@ module Translatable
         
       # otherwise just return what we have
       else
-        str = send("#{field}_translations").nil? ? nil : send("#{field}_translations")[locale]
+        if send("#{field}_translations").nil?
+          str = nil
+        else
+          # try the specified locale
+          str = send("#{field}_translations")[locale]
         
-        # if the translation is blank and the locale was implicit, return the default one (cached)
-        (str.blank? && implicit_locale) ? send("_#{field}") : str
+          # if the translation is blank and the locale was implicit
+          if str.blank? && implicit_locale
+            # try the default locale
+            str = send("#{field}_translations")[I18n.default_locale.to_s]
+          
+            # if str is still blank, search the translations for /any/ non-blank string
+            if str.blank?
+              if (non_blank_pair = send("#{field}_translations").find{|locale, value| !value.blank?})
+                str = non_blank_pair[1]
+              end
+            end
+          end
+        end
+        
+        # return whatever we have at this point, could be nil
+        return str
       end
     else
       super
