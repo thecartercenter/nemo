@@ -12,7 +12,7 @@
     </tr>
     <% form.questionings.each do |qing| %>
       <% next unless qing.question.qtype.form_printable? # only print printable questions %>
-      <%= render("questionings/printable", :qing => qing, :lang => :en) %>
+      <%= render("questionings/printable", :qing => qing) %>
     <% end %>
   </table>
 </div>

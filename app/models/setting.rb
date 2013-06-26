@@ -86,12 +86,6 @@ class Setting < ActiveRecord::Base
   end
   
   private
-    def ensure_english
-      # make sure english exists and is at the front
-      self.lang_codes = (lang_codes - [:en]).insert(0, :en)
-      return true
-    end
-    
     # gets rid of any junk chars in lang codes field and converts all to sym
     def cleanup_languages
       self.lang_codes = lang_codes.collect{|c| c.to_s.downcase.gsub(/[^a-z]/, "")[0,2].to_sym}
