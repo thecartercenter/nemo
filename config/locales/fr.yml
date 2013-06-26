@@ -21,11 +21,11 @@ fr:
     design: "Concevoir"
     edit: "Modifier"
     error:
-   	  one: "Erreur"
-   	  other: "Erreurs"
-   	example:
-   	  one: "Exemple"
-   	  other: "Exemples"
+      one: "Erreur"
+      other: "Erreurs"
+    example:
+      one: "Exemple"
+      other: "Exemples"
     example_abbr: "p. ex."
     found: "Trouvé"
     hour: "Heure"
@@ -46,8 +46,8 @@ fr:
     report: "Rapport"
     reset: "Réinstalisation"
     result: 
-		one: "Résultat"
-		other: "Résultats"
+      one: "Résultat"
+      other: "Résultats"
     review: "Examenier"
     run: "Marcher"
     save: "Enregistrer"
@@ -405,7 +405,7 @@ fr:
     system_error: "Erreur de système. L'administrateur a été notifié."
     system_version: "Version de système"
     time_zone: "Fuseau horaire"
-	total_adj: "%{count} %{objs} totale"
+    total_adj: "%{count} %{objs} totale"
   
   # pagination translations
   will_paginate:
@@ -650,15 +650,15 @@ fr:
       title: "Titres Rempli (plus facile à lire)"
       
   responses:
-	awaiting_review_adj: "%{count} awaiting review"
-	by_you_adj: "%{count} %{objs} by you"
+    awaiting_review_adj: "%{count} awaiting review"
+    by_you_adj: "%{count} %{objs} by you"
     export_to_csv: "Exporter dans le Format CSV"
     in_the_past: "autrefois"
     no_recent: "Pas de responses recents"
     observation_time: "L'heure d'Observation"
     save_and_mark_reviewed: "Enregistrer et Marquer comme Examiné"
     submission: "Submission"
-	
+
   roles:
     role: "Rôle"
     observer: "Observateur/Observatrice"
