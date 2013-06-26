@@ -70,4 +70,5 @@ namespace :deploy do
   task :ping, roles: :web do
     run "wget #{ping_url}"
   end
+  after "deploy:restart", "deploy:ping"
 end
