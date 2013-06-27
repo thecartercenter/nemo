@@ -21,11 +21,11 @@ fr:
     design: "Concevoir"
     edit: "Modifier"
     error:
-      one: "Erreur"
-      other: "Erreurs"
-    example:
-      one: "Exemple"
-      other: "Exemples"
+   	  one: "Erreur"
+   	  other: "Erreurs"
+   	example:
+   	  one: "Exemple"
+   	  other: "Exemples"
     example_abbr: "p. ex."
     found: "Trouvé"
     hour: "Heure"
@@ -43,12 +43,12 @@ fr:
     previous: "Précédent"
     print: "Imprimer"
     remove: "Retirer"
-    report: "Rapport"
+    report: "Rapporter"
     reset: "Réinstalisation"
     result: 
-      one: "Résultat"
-      other: "Résultats"
-    review: "Examenier"
+		one: "Résultat"
+		other: "Résultats"
+    review: "Examiner"
     run: "Marcher"
     save: "Enregistrer"
     search: "Recherche"
@@ -94,25 +94,25 @@ fr:
     models:
       answer:
         one: "Réponse"
-        other: "Answers"
+        other: "Réponses"
       assignment:
-        one: "tâche"
-        other: "Assignments"
+        one: "une tâche"
+        other: "des tâches"
       broadcast:
         one: "Diffusion"
-        other: "Broadcasts"
+        other: "Diffusions"
       choice:
         one: "Choix"
-        other: "Choice"
+        other: "Choix"
       condition:
         one: "Condition"
         other: "Conditions"
       form:
         one: "Fiche"
-        other: "Forms"
+        other: "Fiches"
       form_type:
         one: "Type de fiche"
-        other: "Form Types"
+        other: "Types de Fich"
       mission:
         one: "Mission"
         other: "Missions"
@@ -151,7 +151,7 @@ fr:
         other: "Réponses"
       search/search:
         one: "Rechercher"
-        other: "Searches"
+        other: "Recherche"
       setting: # should always be plural
         one: "Paramètre"
         other: "Paramètres"
@@ -287,8 +287,8 @@ fr:
           Entrez le <a href=\"http://www.loc.gov/standards/iso639-2/php/code_list.php\">code à deux lettres</a>, séparé par des virgules, pour les langues dans lesquelles vous voulez autoriser des questions à définir.
           
           Ce code determines:
-          * Le langue préférée pour nouveau utilisateurs
-          * Le langue préférée pour les réponses SMS
+          * La langue préférée pour nouveau utilisateurs
+          * La langue préférée pour les réponses SMS
           * La langue pour questions et options
         incoming_sms_number: "Entrez le numéro de téléphone vers lequel les SMS entrants pour les formes SMS doivent être envoyés. Il sera affiché sur le guide du SMS."
         outgoing_sms_adapter: "L'adaptateur utilisé d'envoyer les SMS en partance."
@@ -390,7 +390,7 @@ fr:
   layout:
     actions: "Actions"
     are_you_sure: "Êtes-vous sur?"
-    change_language: "Changer le langue"
+    change_language: "Changer la langue"
     create_link: "Créer un nouveau %{obj}"
     delete_warning: "Êtes-vous sur que vous voulez supprimer définitivement le %{obj_description}?"
     deselect_all: "Désélectionner tous"
@@ -405,7 +405,7 @@ fr:
     system_error: "Erreur de système. L'administrateur a été notifié."
     system_version: "Version de système"
     time_zone: "Fuseau horaire"
-    total_adj: "%{count} %{objs} totale"
+	total_adj: "%{count} %{objs} totale"
   
   # pagination translations
   will_paginate:
@@ -413,10 +413,10 @@ fr:
     next_label: "Suivant &#8594;"
     page_entries_info: # please preserve <b> and </b> tags in the below
       single_page_html:
-        zero:  "No %{model} found"
-        one:   "Displaying <b>1</b> %{model}"
-        other: "Displaying <b>all %{count}</b> %{model}"
-      multi_page_html: "Displaying %{model} <b>%{from} - %{to}</b> of <b>%{count}</b> in total"
+        zero:  "%{model} n'est pas trouvé"
+        one:   "<b>1</b> %{model}"
+        other: "<b>all %{count}</b> %{model}"
+      multi_page_html: "%{model} <b>%{from} - %{to}</b> of <b>%{count}</b> au total"
     page_gap: "&hellip;" # this entry should be the same for all languages
   
   # authlogic translations
@@ -462,8 +462,8 @@ fr:
       names:
         sms: "SMS"
         email: "E-mail"
-        sms_only: "seulement SMS"
-        email_only: "seulement Email"
+        sms_only: "uniquement SMS"
+        email_only: "uniquement Email"
         both: "SMS et Email"
       options:
         sms: "SMS préferé (utiliser email quand un recipient n'a pas de téléphone)"
@@ -506,7 +506,7 @@ fr:
     publish_success: "Fiche publié avec succès."
     publish: "Publie"
     published: "Publié"
-    published_adj: "%{count} %{objs} Publié"
+    published_adj: "%{count} %{objs} Publié(s)"
     question_remove_error: "Il y avait une problème enlevant les questions (%{msg})."
     questions_add_error: "Il y avait une problème ajoutant les questions (%{msg})."
     questions_add_success: "Questions ajouté avec succès."
@@ -650,15 +650,15 @@ fr:
       title: "Titres Rempli (plus facile à lire)"
       
   responses:
-    awaiting_review_adj: "%{count} awaiting review"
-    by_you_adj: "%{count} %{objs} by you"
+	awaiting_review_adj: "%{count} awaiting review"
+	by_you_adj: "%{count} %{objs} by you"
     export_to_csv: "Exporter dans le Format CSV"
     in_the_past: "autrefois"
     no_recent: "Pas de responses recents"
     observation_time: "L'heure d'Observation"
     save_and_mark_reviewed: "Enregistrer et Marquer comme Examiné"
     submission: "Submission"
-
+	
   roles:
     role: "Rôle"
     observer: "Observateur/Observatrice"
