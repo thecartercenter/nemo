@@ -12,7 +12,7 @@ module Report::ReportsHelper
   def format_report_reports_field(report, field)
     case field
     when "name" then link_to(report.name, report_report_path(report), :title => t("common.view"))
-    when "viewed_at" then report.viewed_at && time_ago_in_words(report.viewed_at) + " ago"
+    when "viewed_at" then report.viewed_at && t("layout.time_ago", :time => time_ago_in_words(report.viewed_at))
     when "actions" then action_links(report.becomes(Report::Report), :obj_name => report.name)
     else report.send(field)
     end

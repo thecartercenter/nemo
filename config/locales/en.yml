@@ -410,6 +410,7 @@ en:
     server_contact_error: "Error contacting server"
     system_error: "System error. Administrator has been notified."
     system_version: "System Version"
+    time_ago: "%{time} ago"
     time_zone: "Time Zone"
     total_adj: "%{count} total %{objs}"
   
