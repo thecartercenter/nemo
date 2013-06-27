@@ -132,8 +132,11 @@ module ApplicationHelper
   end
   
   # returns the html for an action icon using font awesome and the mappings defined above
-  def action_link(action, href, html_options)
-    link_to(content_tag(:i, "", :class => "icon-" + FONT_AWESOME_ICON_MAPPINGS[action.to_sym]), href, html_options.merge(:class => "action_link"))
+  def action_link(action, href, html_options = {})
+    # join passed html class (if any) with the default class
+    html_options[:class] = [html_options[:class], "action_link"].compact.join(" ")
+    
+    link_to(content_tag(:i, "", :class => "icon-" + FONT_AWESOME_ICON_MAPPINGS[action.to_sym]), href, html_options)
   end
   
   # assembles links for the basic actions in an index table (show edit and destroy)
