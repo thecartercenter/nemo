@@ -19,4 +19,10 @@ class SmsTestsController < ApplicationController
     # render the body of the reply
     render :text => reply ? reply.body : "<em>#{t('sms_console.no_reply')}</em>".html_safe
   end
+  
+  protected
+    # specify the class the this controller controls, since it's not easily guessed
+    def model_class
+      Sms::Test
+    end
 end

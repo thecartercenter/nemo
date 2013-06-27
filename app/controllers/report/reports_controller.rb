@@ -67,6 +67,12 @@ class Report::ReportsController < ApplicationController
     # return data in json format
     render(:json => {:report => @report}.to_json)
   end
+  
+  protected
+    # specify the class the this controller controls, since it's not easily guessed
+    def model_class
+      Report::Report
+    end
 
   private
     # custom load method because CanCan won't work with STI hack in report.rb

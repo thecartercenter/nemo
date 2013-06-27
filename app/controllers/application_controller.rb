@@ -48,7 +48,7 @@ class ApplicationController < ActionController::Base
   attr_reader :current_user, :current_mission
   
   # make these methods visible in the view
-  helper_method :current_user, :current_mission
+  helper_method :current_user, :current_mission, :pluralize_model
   
   # hackish way of getting the route key identical to what would be returned by model_name.route_key on a model
   def route_key
@@ -114,11 +114,26 @@ class ApplicationController < ActionController::Base
       end
       
       # get the object name
-      obj = controller_name.gsub("_", " ").ucwords
-      obj = obj.singularize unless action_name == "index"
+      begin
+        # first try to get the model class
+        mc = respond_to?(:model_class) ? model_class : controller_name.classify.constantize
+
+        # try to pluralize the current model name depending on if it's index (plural) or other action (singlular)
+        obj_name = pluralize_model(mc, :count => action_name == "index" ? 2 : 1)
+      
+      rescue
+        # if the above didn't work for some reason, just use the controller name untranslated
+        obj_name = controller_name.humanize.titleize
+      end
       
       # build the title
-      @title = "#{verb} #{obj}"
+      @title = "#{verb} #{obj_name}".strip
+    end
+    
+    # pluralizes an activerecord model name
+    # assumes 2 if count not given in options
+    def pluralize_model(klass, options = {})
+      t("activerecord.models.#{klass.model_name.i18n_key}", :count => options[:count] || 2)
     end
     
     # loads objects selected with a batch form
