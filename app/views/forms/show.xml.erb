@@ -14,15 +14,15 @@
           <translation lang="<%= language_name(lang) %>">
             <% @form.visible_questionings.each do |q| %>
               <text id="<%= q.question.odk_code %>:label">
-                <value><%= q.question.name(lang) %></value>
+                <value><%= q.question.name(lang, :strict => false) %></value>
               </text>
               <text id="<%= q.question.odk_code %>:hint">
-                <value><%= q.question.hint(lang) %></value>
+                <value><%= q.question.hint(lang, :strict => false) %></value>
               </text>
             <% end %>
             <% @form.option_sets.collect{|set| set.options}.flatten.uniq{|o| o.id}.each do |opt| %>
               <text id="option<%= opt.id %>">
-                <value><%= opt.name(lang) %></value>
+                <value><%= opt.name(lang, :strict => false) %></value>
               </text>
             <% end %>
           </translation>
