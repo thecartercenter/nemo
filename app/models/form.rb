@@ -27,8 +27,13 @@ class Form < ActiveRecord::Base
   
   scope(:with_form_type, order("form_types.name, forms.name").includes(:type))
   scope(:published, where(:published => true))
-  scope(:with_questions, includes(:type, {:questionings => [:form, :condition, {:question => 
-    {:option_set => :options}}]}).order("questionings.rank"))
+  scope(:with_questionings, includes(:type, {
+    :questionings => [
+      :form, 
+      {:question => {:option_set => :options}},
+      {:condition => [:option, :ref_qing]}
+    ]
+  }).order("questionings.rank"))
     
   # finds the highest 'version' number of all forms with the given base name
   # returns nil if no forms found
@@ -54,7 +59,8 @@ class Form < ActiveRecord::Base
   end
   
   def option_sets
-    questions.collect{|q| q.option_set}.compact.uniq
+    # going through the questionings model as that's the one that is eager-loaded in .with_questionings
+    questionings.map(&:question).map(&:option_set).compact.uniq
   end
   
   def visible_questionings

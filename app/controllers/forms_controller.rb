@@ -1,6 +1,6 @@
 class FormsController < ApplicationController
   # special find method before load_resource
-  before_filter :find_form_with_questions, :only => [:show, :edit, :update]
+  before_filter :find_form_with_questionings, :only => [:show, :edit, :update]
   
   # authorization via cancan
   load_and_authorize_resource
@@ -194,7 +194,7 @@ class FormsController < ApplicationController
     end
     
     # loads the form object including a bunch of joins for questions
-    def find_form_with_questions
-      @form = Form.with_questions.find(params[:id])
+    def find_form_with_questionings
+      @form = Form.with_questionings.find(params[:id])
     end
 end
