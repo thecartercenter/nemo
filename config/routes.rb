@@ -1,10 +1,14 @@
 ELMO::Application.routes.draw do
 
   # redirects for ODK
-  match("/missions/:mission_compact_name/formList" => 'forms#index', :format => :xml)
+  # shortened (/m)
   match("/m/:mission_compact_name/formList" => 'forms#index', :format => :xml)
-  match("/missions/:mission_compact_name/submission" => 'responses#create', :format => :xml)
+  match("/m/:mission_compact_name/forms/:id" => 'forms#show', :format => :xml, :as => :form_with_mission)
   match("/m/:mission_compact_name/submission" => 'responses#create', :format => :xml)
+  # full (/missions)
+  match("/missions/:mission_compact_name/formList" => 'forms#index', :format => :xml)
+  match("/missions/:mission_compact_name/forms/:id" => 'forms#show', :format => :xml)
+  match("/missions/:mission_compact_name/submission" => 'responses#create', :format => :xml)
 
   scope "(:locale)", :locale => /[a-z]{2}/ do
     resources(:broadcasts){collection{post 'new_with_users'}}

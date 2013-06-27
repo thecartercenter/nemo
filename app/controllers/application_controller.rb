@@ -192,23 +192,23 @@ class ApplicationController < ActionController::Base
       # save the user
       @current_user = user
 
-      # if a mission compact name is set
-      if params[:mission_compact_name]
-        # lookup the mission
-        mission = Mission.find_by_compact_name(params[:mission_compact_name])
-        
-        # if the mission wasnt found, fail
-        return request_http_basic_authentication if !mission
-          
-        # if user can't access the mission, fail
-        return request_http_basic_authentication if !can?(:read, mission)
-          
-        # if we get this far, we can set the current mission
-        @current_mission = mission
-        @current_user.current_mission = mission
-        @current_user.save(:validate => false)
-        Setting.mission_was_set(@current_mission)
-      end
+      # mission compact name must be set for all ODK/XML requests
+      raise "mission not specified" if params[:mission_compact_name].blank?
+      
+      # lookup the mission
+      mission = Mission.find_by_compact_name(params[:mission_compact_name])
+      
+      # if the mission wasnt found, raise error
+      raise "mission not found" if !mission
+      
+      # if user can't access the mission, force re-authentication
+      return request_http_basic_authentication if !can?(:read, mission)
+      
+      # if we get this far, we can set the current mission
+      @current_mission = mission
+      @current_user.current_mission = mission
+      @current_user.save(:validate => false)
+      Setting.mission_was_set(@current_mission)
     end
     
     # gets the user and mission from the user session if they're not already set
