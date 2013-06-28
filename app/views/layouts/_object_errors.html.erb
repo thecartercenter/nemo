@@ -1,13 +1,15 @@
 <% if !object.nil? && object.errors.any? %>
   <%= content_tag("div", :class => defined?(compact) ? "compact_error" : "error") do %>
 
-    <%# print a prefix (Error:) unless in compact mode%>
+    <%# print a prefix (Error:) unless in compact mode %>
     <%= t("common.error", :count => object.errors.size) + ":" unless defined?(compact) %>
     
     <%# print a custom prefix if defined %>
     <%= prefix if defined?(prefix) %>
     
-    <%# print the errors %>
-    <%= object.errors.full_messages.join(", ") %>
+    <%# print the errors (downcase the first char if we did a prefix) %>
+    <% errors = object.errors.full_messages.join(", ") %>
+    <% errors.gsub!(/^([A-Z])/){$1.downcase} if defined?(prefix) %>
+    <%= errors %>
   <% end %>
 <% end %>
