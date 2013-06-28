@@ -133,8 +133,11 @@ a.edit_location_link img { vertical-align: bottom; }
 /* question show/edit */
 form.questioning_form .form_field_control { width: 475px !important; }
 form.questioning_form .form_field.name_hint textarea { width: 400px; height: 30px; }
-form.questioning_form .form_field#condition #questioning_condition_value { width: 110px; }
-form.questioning_form .form_field#condition_row .dummy { display: inline; }
+form.questioning_form .form_field#condition select { min-width: 125px; }
+form.questioning_form .form_field#condition input { width: 120px; }
+form.questioning_form .form_field#condition div.row { margin-bottom: 4px; }
+form.questioning_form .form_field#condition div.row > div { display: inline-block; }
+form.questioning_form .form_field#condition div.row > div:first-child { width: 100px; }
 form.questioning_form input#questioning_question_minimum, form.questioning_form input#questioning_question_maximum { width: 100px; } 
 
 /* question index/choose */

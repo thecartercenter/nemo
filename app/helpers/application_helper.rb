@@ -308,4 +308,8 @@ module ApplicationHelper
       objs
     end
   end
+  
+  def translate_model(model)
+    pluralize_model(model, :count => 1)
+  end
 end

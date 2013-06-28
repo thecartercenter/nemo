@@ -63,7 +63,11 @@ module ActionView
             when :text_area
               dummy_tag(html.match(/<textarea.+?>(.*?)<\/textarea>/m) ? $1.gsub("\n", "<br/>") : "")
             when :select, :datetime_select, :date_select, :time_select
-              dummy_tag(html.gsub(/<select.*?<option.*?selected="selected".*?>(.*?)<\/option>.*?<\/select>/mi, '\1'))
+              # replace the whole select tag with the text of the selected element
+              stripped = html.gsub(/<select.*?<option.*?selected="selected".*?>(.*?)<\/option>.*?<\/select>/mi, '\1')
+              # if there was no selected element then replace the select with nothing
+              stripped = stripped.gsub(/<select.*?<\/select>/mi, "")
+              dummy_tag(stripped)
             when :check_box
               dummy_tag(html.match(/checked="checked"/) ? "&nbsp;x&nbsp;" : "&nbsp;&nbsp;&nbsp;&nbsp;", :style => :dummy_checkbox)
             when :submit

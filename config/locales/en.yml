@@ -510,9 +510,9 @@ en:
       neq: "is not equal to"
       inc: "includes"
       ninc: "does not include"
-    question_prompt: "Select question..."
-    op_prompt: "Select comparison..."
-
+    op: "Comparison"
+    value: "Value"
+  
   forms:
     add_questions: "Add Questions"
     add_selected: "Add Selected Questions to Form"
