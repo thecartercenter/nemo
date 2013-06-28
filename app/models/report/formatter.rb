@@ -3,9 +3,12 @@ class Report::Formatter
   def self.format(value, type, context)
     value = translate(value)
     case type
+    when "datetime"
+      I18n.l(value.is_a?(Time) ? value : Time.parse(value.to_s))
     when "date"
-      # cast mysql date to nice string
-      value.to_s.gsub(" 00:00:00", "")
+      I18n.l(value.is_a?(Date) ? value : Date.parse(value.to_s))
+    when "time"
+      I18n.l(value.is_a?(Time) ? value : Time.parse(value.to_s), :format => :time_only)
     when "decimal"
       "%.2f" % value
     when "long_text"

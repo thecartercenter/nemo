@@ -20,7 +20,7 @@ module FormsHelper
     when "version" then form.current_version ? form.current_version.sequence : ""
     when "name" then link_to(form.name, form_path(form), :title => t("common.view"))
     when "questions" then form.questionings_count
-    when "updated_at" then form.updated_at.to_s(:std_datetime)
+    when "updated_at" then l(form.updated_at)
     when "responses"
       form.responses_count == 0 ? 0 :
         link_to(form.responses_count, responses_path(:search => "form:\"#{form.name}\""))

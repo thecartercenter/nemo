@@ -20,10 +20,18 @@
       <% when "select_multiple" %>
         <%= render(:partial => "choice", :locals => {:answer_counter => answer_counter}, :collection => answer.all_choices) %>
       <% when "datetime", "date", "time" %>
-        <%= f.send("#{type}_select", :"#{type}_value", :include_blank => true, :index => answer_counter) %>
+        <%# special handling for date/time types in show mode, so we can apply localization %>
+        <% if f.mode == :show %>
+          <% format = type == "time" ? :time_only : :default %>
+          <strong><%= (val = answer.send("#{type}_value")).nil? ? "" : l(val, :format => format) %></strong>
+        <% else %>
+          <%= f.send("#{type}_select", :"#{type}_value", :include_blank => true, :index => answer_counter) %>
+        <% end %>
       <% end %>
     <% end %>
-    <% if cond = answer.questioning.condition %>
+    
+    <%# setup condition js object unless in show mode %>
+    <% if form_mode != :show && (cond = answer.questioning.condition) %>
       <script type="text/javascript">
         ELMO.Response.conditions.push(new ELMO.Condition(<%= cond.to_json.html_safe %>));
       </script>

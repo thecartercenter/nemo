@@ -12,7 +12,7 @@ module BroadcastsHelper
     when "to" then "#{broadcast.recipients.count} users"
     when "medium" then t("broadcasts.mediums.names." + broadcast.medium)
     when "body" then link_to(truncate(broadcast.body, :length => 100), broadcast_path(broadcast), :title => t("common.view"))
-    when "created_at" then broadcast.created_at.to_s(:std_datetime)
+    when "created_at" then l(broadcast.created_at)
     when "errors" then tbool(!broadcast.send_errors.blank?)
     else broadcast.send(field)
     end

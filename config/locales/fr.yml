@@ -442,6 +442,19 @@ fr:
         password: "Mot de passe"
         remember_me: "Rester connecté"
   
+  # time/date formats (see http://www.ruby-doc.org/core-2.0/Time.html#method-i-strftime for code meanings)
+  date:
+    formats:
+      default: "%d %b %Y"
+      short: "%d %b"
+      long: "%d %B %Y"
+  time:
+    formats:
+      default: "%d %b %Y %H:%M"
+      short: "%d %b %H:%M"
+      long: "%A, %d %B %Y %H:%M"
+      time_only: "%H:%M"
+
   ##############################
   # the rest of these string groups should be kept in alphabetical order by key
   
