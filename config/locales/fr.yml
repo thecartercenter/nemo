@@ -537,7 +537,7 @@ fr:
       too_many: "trop de caractères"
     email_intro: "C'est un message diffusé à partir de"
     email_error: "Erreur d'E-mail"
-    instructions: "Pour envoyer une émission, sélectionnez d'abord les destinaires ci-dessous, puis cliquez sur 'envoyez une émission'."
+    instructions: "Pour envoyer une diffusion, sélectionnez d'abord les destinaires ci-dessous, puis cliquez sur 'Envoyez une diffusion'."
     may_not_be_enough: "Cela pourrait ne pas être suffisant."
     mediums:
       names:
@@ -552,9 +552,9 @@ fr:
         sms_only: "Seulement SMS (n'envoyer pas d'emails)"
         email_only: "Seulement E-mail (n'envoyer de SMS)"
         both: "SMS et E-mail"
-    send_broadcast: "Envoyer l'émission"
-    send_success: "L'émission envoyé avec succès."
-    send_error: "Erreur envoyant l'émission (voir dessous)."
+    send_broadcast: "Envoyer une diffusion"
+    send_success: "La diffusion envoyé avec succès."
+    send_error: "Erreur en envoyant la diffusion (voir dessous)."
     sms_error: "Erreur de SMS"
     which_phone_options:
       main_only: "Seulement téléphone principale "
