@@ -1,13 +1,13 @@
 fr:
   locale_name: Français
-
+  
   i18n:
     inflections:
       gender:
-        m:          "male"
-        f:          "female"
-        default:    m
-
+        m: "male"
+        f: "female"
+        default: m
+  
   # common words (should be capitalized except for those that obviously shouldn't like and, or, e.g., etc.)
   common:
     accept: "Accepter"
@@ -28,9 +28,11 @@ fr:
     design: "Concevoir"
     edit: "Modifier"
     error:
+      zero: "Erreurs" 
       one: "Erreur"
       other: "Erreurs"
     example:
+      zero: "Examples"
       one: "Exemple"
       other: "Exemples"
     example_abbr: "p. ex."
@@ -52,11 +54,12 @@ fr:
     remove: "Retirer"
     report: "Rapporter"
     reset: "Réinstalisation"
-    result: 
+    result:
+      zero: "Résultats" 
       one: "Résultat"
       other: "Résultats"
     review: "Examiner"
-    run: "Marcher"
+    run: "Executer"
     save: "Enregistrer"
     search: "Recherche"
     send: "Envoyer"
@@ -100,73 +103,104 @@ fr:
   activerecord:
     models:
       answer:
+        zero: "Réponses"
         one: "Réponse"
         other: "Réponses"
+        gender: f
       assignment:
+        zero: "des tâches"
         one: "une tâche"
         other: "des tâches"
       broadcast:
+        zero: "Diffusions"
         one: "Diffusion"
         other: "Diffusions"
+        gender: f
       choice:
+        zero: "Choix"
         one: "Choix"
         other: "Choix"
       condition:
+        zero: "Conditions"
         one: "Condition"
         other: "Conditions"
       form:
+        zero: "Fiches"
         one: "Fiche"
         other: "Fiches"
       form_type:
+        zero: "Types de Fiche"
         one: "Type de fiche"
-        other: "Types de Fich"
+        other: "Types de Fiche"
       mission:
+        zero: "Missions"
         one: "Mission"
         other: "Missions"
         gender: f
       option:
+        zero: "Options"
         one: "Option"
         other: "Options"
       option_set:
+        zero: "Collections des options"
         one: "Collection des options"
         other: "Collections des options"
+        gender: f
       password_reset:
+        zero: "Réinitialisations du mot de passe"
         one: "Réinitialisation du mot de passe"
         other: "Réinitialisations du mot de passe"
       question:
+        zero: "Questions"
         one: "Question"
         other: "Questions"
+        gender: f
       questioning: # should be same as question
+        zero: "Questions"
         one: "Question"
         other: "Questions"
+        gender: f
       report/calculation:
+        zero: "Calculs"
         one: "Calcul"
         other: "Calculs"
       report/report:
+        zero: "Rapports"
         one: "Rapport"
         other: "Rapports"
       report/question_answer_tally_report:
+        zero: "Compilations de réponses par question"
         one: "Compilation de réponses par question"
         other: "Compilations de réponses par question"
       report/grouped_tally_report:
+        zero: "Compilations de réponses par réponse/attribut"
         one: "Compilation de réponses par réponse/attribut"
         other: "Compilations de réponses par réponse/attribut"
+        gender: f
       report/list_report:
+        zero: "Listes des réponses/attributs"
         one: "Liste des réponses/attributs"
         other: "Listes des réponses/attributs"
+        gender: f
       response:
+        zero: "Réponses"
         one: "Réponse"
         other: "Réponses"
+        gender: f
       search/search:
+        zero: "Recherche"
         one: "Rechercher"
         other: "Recherche"
       setting: # should always be plural
+        zero: "Paramètres"
         one: "Paramètre"
         other: "Paramètres"
       sms/message:
+        zero: "Messages de SMS" 
         one: "Message de SMS"
         other: "Messages de SMS"
       user:
+        zero: "Utilisateurs" 
         one: "Utilisateur"
         other: "Utilisateurs"
     attributes:
@@ -240,9 +274,15 @@ fr:
         outgoing_sms_adapter: "Fournisseur"
         tableau_sql: "Tableau SQL" # Tableau is a software product name and shouldn't be translated
         timezone: "Fuseau horaire"
-      sms/test:
+      sms/message:
+        adapter_name: "Adaptateur" 
         from: "de"
         body: "texte"
+        sent_at: "l'heure d'envoi"
+        to: "à" 
+      sms/test:
+        from: "de"
+        body: "texte" 
       user:
         admin: "Administrateur?"
         assignments: "Tâches"
@@ -297,7 +337,7 @@ fr:
           Ce code determines:
           * La langue préférée pour nouveau utilisateurs
           * La langue préférée pour les réponses SMS
-          * La langue pour questions et options
+          * La langue pour les questions et les options
         incoming_sms_number: "Entrez le numéro de téléphone vers lequel les SMS entrants pour les formes SMS doivent être envoyés. Il sera affiché sur le guide du SMS."
         outgoing_sms_adapter: "L'adaptateur utilisé d'envoyer les SMS en partance."
         intellisms_username: "Le nom d'utilisateur pour le compte IntelliSMS."
@@ -412,8 +452,12 @@ fr:
     server_contact_error: "Erreur de communication avec le serveur"
     system_error: "Erreur de système. L'administrateur a été notifié."
     system_version: "Version de système"
+    time_ago: "%{time}"
     time_zone: "Fuseau horaire"
-    total_adj: "%{count} %{objs} totale"
+    total_adj:
+      zero: "%{count} %{objs} totale"
+      one: "%{count} %{objs} totale"
+      other: "%{count} %{objs} totale"
   
   # pagination translations
   will_paginate:
@@ -423,8 +467,8 @@ fr:
       single_page_html:
         zero:  "%{model} n'est pas trouvé"
         one:   "<b>1</b> %{model}"
-        other: "<b>all %{count}</b> %{model}"
-      multi_page_html: "%{model} <b>%{from} - %{to}</b> of <b>%{count}</b> au total"
+        other: "<b> %{count}</b> %{model}"
+      multi_page_html: "%{model} <b>%{from} - %{to}</b> de <b>%{count}</b> au total"
     page_gap: "&hellip;" # this entry should be the same for all languages
   
   # authlogic translations
@@ -453,14 +497,14 @@ fr:
   # time/date formats (see http://www.ruby-doc.org/core-2.0/Time.html#method-i-strftime for code meanings)
   date:
     formats:
-      default: "%d %b %Y"
-      short: "%d %b"
-      long: "%d %B %Y"
+      default: "%b %d %Y"
+      short: "%b %d"
+      long: "%B %d %Y"
   time:
     formats:
-      default: "%d %b %Y %H:%M"
-      short: "%d %b %H:%M"
-      long: "%A, %d %B %Y %H:%M"
+      default: "%b %d %Y %H:%M"
+      short: "%b %d %H:%M"
+      long: "%A, %B %d %Y %H:%M"
       time_only: "%H:%M"
 
   ##############################
@@ -511,8 +555,8 @@ fr:
       neq: "n'est pas égal"
       inc: "inclure"
       ninc: "n'est pas inclure"
-    question_prompt: "Sélectionner une question..."
-    op_prompt: "Sélectionner une comparaison..."
+    op: "Comparaison" 
+    value: "Valeur"
 
   forms:
     add_questions: "Ajouter des questions"
@@ -527,7 +571,10 @@ fr:
     publish_success: "Fiche publié avec succès."
     publish: "Publie"
     published: "Publié"
-    published_adj: "%{count} %{objs} Publié(s)"
+    published_adj: 
+      zero: "%{count} %{objs} publié(s)"
+      one: "%{count} %{objs} publié(s)"
+      other: "%{count} %{objs} publié(s)"
     question_remove_error: "Il y avait une problème enlevant les questions (%{msg})."
     questions_add_error: "Il y avait une problème ajoutant les questions (%{msg})."
     questions_add_success: "Questions ajouté avec succès."
@@ -539,6 +586,10 @@ fr:
     unpublish_success: "Fiche non publié avec succès.  Le téléchargement total était rerégler."
     unpublish: "Non Publie"
     unpublished: "Non Publié"
+    unpublished_adj: 
+      zero: "%{count} %{objs} non publié(s)"
+      one: "%{count} %{objs} non publié(s)"
+      other: "%{count} %{objs} non publié(s)"
     unsaved_rank_notice: "Vous n'avez pas encore enregistrer les changements vous avez fait à l'ordre des questions.  Vous devriez poussez 'enregistrer' si vous voulez sauver les changements."
     view_sms_guide: "Voir le guide de SMS"
   
@@ -573,6 +624,7 @@ fr:
     check_email: "Instructions pour changer votre mot de passe était envoyer par email à vous.  S'il vous plait, verifié votre e-mail."
     enter_new_pass: "%{name}, s'il vous plait entrer un nouveau mot de passe pour votre compte."
     fill_out_form: "Compléter la fiche au-dessus et les instructions pour remettre votre mot de passe seront vous envoyé. S'il n'y a pas une adresse du courriel associée a votre compte votre mot de passe devra être remis par un administrateur."
+    success: "Mot de passe mis à jour avec succès"
     token_not_found: |-
       Nous sommes désolés, mais ne pouvons pas trouver votre compte. Si vous avez des problèmes, essayez de recopier et coller l'URL. 
       de votre courriel dans votre navigateur ou recommencer le procès de remettre le mot de passe.
@@ -671,8 +723,14 @@ fr:
       title: "Titres Rempli (plus facile à lire)"
       
   responses:
-    awaiting_review_adj: "%{count} awaiting review"
-    by_you_adj: "%{count} %{objs} by you"
+    awaiting_review_adj: 
+      zero: "%{count} en attente de révision"
+      one: "%{count} en attente de révision"
+      other: "%{count} en attente de révision"
+    by_you_adj: 
+      zero: "%{count} %{objs} par vous"
+      one: "%{count} %{objs} par vous"
+      other: "%{count} %{objs} par vous"
     export_to_csv: "Exporter dans le Format CSV"
     in_the_past: "autrefois"
     no_recent: "Pas de responses recents"
@@ -707,6 +765,7 @@ fr:
     outgoing_provider: "Fournisseur de SMS en partance"
     
   sms_console:
+    back_to_forms: "Retour au fiches"
     no_reply: "Aucune réponse."
     submit_error: "Il y avait un erreur pendant la soumission de votre examen."
     title: "Console de Contrôle de SMS"
@@ -776,6 +835,7 @@ fr:
     export_vcard: "Exporter comme vCard"
     forgot_password: "Oublier mot de passe?"
     leave_password_alone: ":aisser seul le mot de passe"
+    create_multiple: "Créer plusieurs utilisateurs"
     login_instructions:
       closing:
         - "Si vous plait (SVP) noté le 's' en 'https' sur le URL."
