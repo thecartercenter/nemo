@@ -21,9 +21,11 @@ en:
     design: "Design"
     edit: "Edit"
     error:
+      zero: "Errors"
       one: "Error"
       other: "Errors"
     example:
+      zero: "Examples"
       one: "Example"
       other: "Examples"
     example_abbr: "e.g."
@@ -46,6 +48,7 @@ en:
     report: "Report"
     reset: "Reset"
     result: 
+      zero: "Results"
       one: "Result"
       other: "Results"
     review: "Review"
@@ -93,72 +96,95 @@ en:
   activerecord:
     models:
       answer:
+        zero: "Answers"
         one: "Answer"
         other: "Answers"
       assignment:
+        zero: "Assignments"
         one: "Assignment"
         other: "Assignments"
       broadcast: 
+        zero: "Broadcasts"
         one: "Broadcast"
         other: "Broadcasts"
       choice:
+        zero: "Choices"
         one: "Choice"
-        other: "Choice"
+        other: "Choices"
       condition:
+        zero: "Conditions"
         one: "Condition"
         other: "Conditions"
       form:
+        zero: "Forms"
         one: "Form"
         other: "Forms"
       form_type:
+        zero: "Form Types"
         one: "Form Type"
         other: "Form Types"
       mission:
+        zero: "Missions"
         one: "Mission"
         other: "Missions"
       option:
+        zero: "Options"
         one: "Option"
         other: "Options"
       option_set:
+        zero: "Option Sets"
         one: "Option Set"
         other: "Option Sets"
       password_reset:
+        zero: "Password Resets"
         one: "Password Reset"
         other: "Password Resets"
       question:
+        zero: "Questions"
         one: "Question"
         other: "Questions"
       questioning: # should be same as question
+        zero: "Questions"
         one: "Question"
         other: "Questions"
       report/calculation:
+        zero: "Calculations"
         one: "Calculation"
         other: "Calculations"
       report/report:
+        zero: "Reports"
         one: "Report"
         other: "Reports"
       report/question_answer_tally_report:
+        zero: "Tallies of Answers per Question"
         one: "Tally of Answers per Question"
         other: "Tallies of Answers per Question"
       report/grouped_tally_report:
+        zero: "Tallies of Responses per Answer/Attribute"
         one: "Tally of Responses per Answer/Attribute"
         other: "Tallies of Responses per Answer/Attribute"
       report/list_report:
+        zero: "Lists of Answers/Attributes"
         one: "List of Answers/Attributes"
         other: "Lists of Answers/Attributes"
       response: 
+        zero: "Responses"
         one: "Response"
         other: "Responses"
       search/search:
+        zero: "Searches"
         one: "Search"
         other: "Searches"
       setting: # should always be plural
+        zero: "Settings"
         one: "Settings"
         other: "Settings"
       sms/message:
+        zero: "SMS Messages"
         one: "SMS Message"
         other: "SMS Messages"
       user:
+        zero: "Users"
         one: "User"
         other: "Users"
     attributes:
