@@ -31,6 +31,8 @@ module ApplicationHelper
     if form =~ /"reqd_sym"/
       form = (content_tag(:div, t("layout.reqd_sym_definition", :reqd_sym => reqd_sym).html_safe, :class => "tip") + form).html_safe
     end
+    
+    form
   end
   
   # gets the mode a form should be displayed in: one of new, edit, or show
