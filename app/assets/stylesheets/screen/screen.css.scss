@@ -10,6 +10,7 @@ body {
   text-align: right;
   padding-right: 5px;
   margin-top: 2px;
+  height: 25px;
   
   a, form.button_to input { 
     color: white; 
@@ -30,6 +31,7 @@ body {
   
   img {
     display: block;
+    height: 15px; /* explicit height to prevent shifting during load */
   }
   
   a { color: white; text-decoration: none; }
@@ -94,7 +96,7 @@ div.dialog_bg * { opacity: 1; filter: alpha(opacity=100); }
 div.success, div.error { 
   position: absolute; 
   left: 27%; 
-  top: 102px; 
+  top: 106px; 
   padding: 3px; 
   color: white; 
   font-weight: bold; 
