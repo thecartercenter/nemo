@@ -254,7 +254,8 @@ module ApplicationHelper
   def create_link(klass, options = {})
     # get the link target path. honor the js option.
     href = options[:js] ? "#" : send("new_#{klass.model_name.singular_route_key}_path")
-    link_to(t("layout.create_link", :obj => klass.model_name.human), href,
+    
+    link_to(t("layout.create_link", :obj => klass.model_name.human, :gender => model_gender(klass)), href,
       :class => "create_#{klass.model_name.param_key}")
   end
   
@@ -316,5 +317,10 @@ module ApplicationHelper
   
   def translate_model(model)
     pluralize_model(model, :count => 1)
+  end
+  
+  # looks up a model's gender. may be nil
+  def model_gender(klass)
+    t("activerecord.models.#{klass.model_name.param_key}.gender", :default => nil)
   end
 end

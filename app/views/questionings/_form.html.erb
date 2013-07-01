@@ -1,6 +1,6 @@
 <% # set title %>
 <% if @questioning.new_record? %>
-  <% @title = t("layout.new_obj", :obj => Question.model_name.human) %>
+  <% @title = t("layout.new_obj", :obj => translate_model(Question), :gender => model_gender(Question)) %>
 <% else %>
   <% @title = "#{Question.model_name.human}: #{@questioning.question.code}" %>
 <% end %>

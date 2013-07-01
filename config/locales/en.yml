@@ -716,7 +716,7 @@ en:
       one: "%{count} %{objs} by you"
       other: "%{count} %{objs} by you"
     export_to_csv: "Export to CSV Format"
-    in_the_past: "in the Past"
+    in_the_past: "in the Past" # as in, "10 Responses in the Past 5 Hours"
     no_recent: "No recent responses"
     observation_time: "Observation Time"
     save_and_mark_reviewed: "Save and Mark as Reviewed"

@@ -1,6 +1,13 @@
 fr:
   locale_name: Français
-  
+
+  i18n:
+    inflections:
+      gender:
+        m:          "male"
+        f:          "female"
+        default:    m
+
   # common words (should be capitalized except for those that obviously shouldn't like and, or, e.g., etc.)
   common:
     accept: "Accepter"
@@ -116,6 +123,7 @@ fr:
       mission:
         one: "Mission"
         other: "Missions"
+        gender: f
       option:
         one: "Option"
         other: "Options"
@@ -391,13 +399,13 @@ fr:
     actions: "Actions"
     are_you_sure: "Êtes-vous sur?"
     change_language: "Changer la langue"
-    create_link: "Créer un nouveau %{obj}"
+    create_link: "Créer @{m:un|f:une} @{m:nouveau|f:nouvelle} %{obj}"
     delete_warning: "Êtes-vous sur que vous voulez supprimer définitivement le %{obj_description}?"
     deselect_all: "Désélectionner tous"
     dev_mode: "Mode de développement"
     logged_in_as: "Connecté en tant que"
     must_be: "Doit être"
-    new_obj: "Nouveau %{obj}"
+    new_obj: "@{m:Nouveau|f:Nouvelle} %{obj}"
     no_selection: "Vous n'avez rien sélectionné."
     reqd_sym_definition: "Les réponses obligatoires sont marqués avec un %{reqd_sym}."
     select_all: "Sélectionner tous"
