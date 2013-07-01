@@ -1,6 +1,5 @@
 <%= flash_and_form_errors(@form_type) %>
 <%= nice_form_for(@form_type) do |f| %>
-  <%= reqd_sym_definition %>
   <%= form_field(f, :name, :required => true) %>
   <%= form_submit_button(f, :label => :save) %>
 <% end %>

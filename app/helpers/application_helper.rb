@@ -20,10 +20,16 @@ module ApplicationHelper
   def nice_form_for(obj, options = {})
     options[:html] ||= {}
     options[:html][:class] = "#{obj.class.model_name.singular}_form"
-    form_for(obj, options) do |f|
+    form = form_for(obj, options) do |f|
+      
       # set form mode
       f.mode = form_mode
       yield(f)
+    end
+    
+    # add required * def'n
+    if form =~ /"reqd_sym"/
+      form = (content_tag(:div, t("layout.reqd_sym_definition", :reqd_sym => reqd_sym).html_safe, :class => "tip") + form).html_safe
     end
   end
   
@@ -124,11 +130,6 @@ module ApplicationHelper
   # renders the standard 'required' symbol, which is an asterisk
   def reqd_sym(condition = true)
     (condition ? '<div class="reqd_sym">*</div>' : '').html_safe
-  end
-  
-  # prints a notice describing what indicates a required field
-  def reqd_sym_definition
-    content_tag(:div, t("layout.reqd_sym_definition", :reqd_sym => reqd_sym).html_safe, :class => "tip")
   end
   
   # returns the html for an action icon using font awesome and the mappings defined above
