@@ -67,7 +67,7 @@ class SmsController < ApplicationController
       
       when :invalid_answers
         # if it's the invalid_answers error, we need to find the first answer that's invalid and report its error
-        invalid_answer = elmo_response.answers.detect(&:errors)
+        invalid_answer = elmo_response.answers.detect{|a| a.errors && a.errors.messages.size > 0}
         t_sms_msg("sms_forms.validation.invalid_answer", :rank => invalid_answer.questioning.rank, 
           :error => invalid_answer.errors.full_messages.join(", "), :user => elmo_response.user, :form => elmo_response.form, :mission => sms.mission)
       
