@@ -25,7 +25,7 @@
       
         <%# these links are only for form mgmt %>
         <% if can?(:manage, Form) %>
-          <li><%= link_to(obj_with_adj(Form, :published, :count => @unpub_form_count, :titleize => true, :scope => "forms"), forms_path) %></li>
+          <li><%= link_to(obj_with_adj(Form, :unpublished, :count => @unpub_form_count, :titleize => true, :scope => "forms"), forms_path) %></li>
           <li><%= create_link(Form) %></li>
         <% end %>
       </ul>

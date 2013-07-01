@@ -284,11 +284,15 @@ module ApplicationHelper
       ""
     end
     
-    str = t("#{adj}_adj", 
-      :count => content_tag(:strong, options[:count]),
+    str = t("#{adj}_adj",
+      :count => options[:count],
       :objs => objs,
       :scope => options[:scope] || "layout")
+      
+    # add the <strong> tag
+    str.gsub!(/\b(\d+)\b/, "<strong>\\1</strong>")
     
+    # titleize if requested
     str = str.titleize if options[:titleize]
     
     # remove extraneous spaces

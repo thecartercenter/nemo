@@ -412,7 +412,10 @@ en:
     system_version: "System Version"
     time_ago: "%{time} ago"
     time_zone: "Time Zone"
-    total_adj: "%{count} total %{objs}"
+    total_adj: 
+      zero: "%{count} total %{objs}"
+      one: "%{count} total %{objs}"
+      other: "%{count} total %{objs}"
   
   # pagination translations
   will_paginate:
@@ -526,7 +529,10 @@ en:
     publish_success: "Form published successfully."
     publish: "Publish"
     published: "Published"
-    published_adj: "%{count} published %{objs}"
+    published_adj: 
+      zero: "%{count} published %{objs}"
+      one: "%{count} published %{objs}"
+      other: "%{count} published %{objs}"
     question_remove_error: "There was a problem removing the questions (%{msg})."
     questions_add_error: "There was a problem adding the questions (%{msg})."
     questions_add_success: "Questions added successfully."
@@ -538,6 +544,10 @@ en:
     unpublish_success: "Form unpublished successfully. The download count has also been reset."
     unpublish: "Unpublish"
     unpublished: "Unpublished"
+    unpublished_adj: 
+      zero: "%{count} unpublished %{objs}"
+      one: "%{count} unpublished %{objs}"
+      other: "%{count} unpublished %{objs}"
     unsaved_rank_notice: "You have not yet saved the changes you made to the Question order. You should click the 'Save' button if you want to save these changes."
     view_sms_guide: "View SMS Guide"
   
@@ -671,8 +681,14 @@ en:
       title: "Full Titles (Easier to Read)"
       
   responses:
-    awaiting_review_adj: "%{count} awaiting review"
-    by_you_adj: "%{count} %{objs} by you"
+    awaiting_review_adj: 
+      zero: "%{count} awaiting review"
+      one: "%{count} awaiting review"
+      other: "%{count} awaiting review"
+    by_you_adj: 
+      zero: "%{count} %{objs} by you"
+      one: "%{count} %{objs} by you"
+      other: "%{count} %{objs} by you"
     export_to_csv: "Export to CSV Format"
     in_the_past: "in the Past"
     no_recent: "No recent responses"
