@@ -102,7 +102,30 @@ class Search::Token
     
     # looks up the qualifier for the given chunk, or raises an error
     def lookup_qualifier(chunk)
-      @search.klass.search_qualifiers.find{|q| q.label == chunk} or raise Search::ParseError.new(I18n.t("searches.invalid_qualifier", :chunk => chunk))
+      qualifier = nil
+      
+      # get the qualifier translations for current locale and reverse them
+      trans = I18n.t("search_qualifiers").invert
+      
+      # add a bunch of entries with accents removed
+      normalized = {}
+      trans.each do |k,v|
+        k_normalized = ActiveSupport::Inflector.transliterate(k)
+        normalized[k_normalized] = v if k != k_normalized
+      end
+      trans.merge!(normalized)
+      
+      # try looking up the chunk. this should now work even the user didn't put in the accents
+      qualifier_name = trans[chunk].to_s
+
+      # if qualifier_name is not nil, try to find the qualifier object
+      unless qualifier_name.nil?
+        qualifier = @search.klass.search_qualifiers.detect{|q| q.name == qualifier_name}
+      end
+      
+      raise Search::ParseError.new(I18n.t("searches.invalid_qualifier", :chunk => chunk)) if qualifier.nil?
+      
+      qualifier
     end
     
     def child(num); @children[num]; end

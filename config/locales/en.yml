@@ -490,6 +490,22 @@ en:
       short: "%b %d %H:%M"
       long: "%A, %B %d %Y %H:%M"
       time_only: "%H:%M"
+      
+  # all search qualifier translations should have NO SPACES and NO CAPS. use '-'s instead
+  search_qualifiers:
+    date: "date"
+    email: "email"
+    form: "form"
+    form_type: "form-type"
+    login: "login"
+    name: "name"
+    option_set: "option-set"
+    phone: "phone"
+    question: "question"
+    question_type: "question-type"
+    reviewed: "reviewed"
+    source: "source"
+    submitter: "submitter"
   
   ##############################
   # the rest of these string groups should be kept in alphabetical order by key

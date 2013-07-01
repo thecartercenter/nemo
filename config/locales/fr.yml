@@ -507,6 +507,22 @@ fr:
       long: "%A, %B %d %Y %H:%M"
       time_only: "%H:%M"
 
+  # all search qualifier translations should have NO spaces (use '-'), capital letters, or any of these chars: : = < > ! , )
+  search_qualifiers:
+    date: "date"
+    email: "email"
+    form: "fiche"
+    form_type: "type-de-fiche"
+    login: "nom-d'utilisateur"
+    name: "nom"
+    option_set: "collection-d'options"
+    phone: "téléphone"
+    question: "question"
+    question_type: "type-de-question"
+    reviewed: "revu"
+    source: "source"
+    submitter: "émetteur"
+
   ##############################
   # the rest of these string groups should be kept in alphabetical order by key
   

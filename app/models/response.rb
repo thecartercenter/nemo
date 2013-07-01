@@ -45,26 +45,29 @@ class Response < ActiveRecord::Base
   # and whether they are searchable by a regular expression
   def self.search_qualifiers
     [
-      Search::Qualifier.new(:label => "form", :col => "forms.name", :assoc => :forms),
-      Search::Qualifier.new(:label => "form-type", :col => "form_types.name", :assoc => :form_types),
-      Search::Qualifier.new(:label => "reviewed", :col => "responses.reviewed"),
-      Search::Qualifier.new(:label => "submitter", :col => "users.name", :assoc => :users, :partials => true),
-      Search::Qualifier.new(:label => "source", :col => "responses.source"),
-      Search::Qualifier.new(:label => "date", :col => "DATE(CONVERT_TZ(responses.created_at, 'UTC', '#{Time.zone.mysql_name}'))"),
+      Search::Qualifier.new(:name => "form", :col => "forms.name", :assoc => :forms),
+      Search::Qualifier.new(:name => "form_type", :col => "form_types.name", :assoc => :form_types),
+      Search::Qualifier.new(:name => "reviewed", :col => "responses.reviewed"),
+      Search::Qualifier.new(:name => "submitter", :col => "users.name", :assoc => :users, :partials => true),
+      Search::Qualifier.new(:name => "source", :col => "responses.source"),
+      Search::Qualifier.new(:name => "date", :col => "DATE(CONVERT_TZ(responses.created_at, 'UTC', '#{Time.zone.mysql_name}'))"),
 
       # this qualifier matches responses that have answers to questions with the given option set
-      Search::Qualifier.new(:label => "option-set", :col => "option_sets.name", :assoc => :option_sets),
+      Search::Qualifier.new(:name => "option_set", :col => "option_sets.name", :assoc => :option_sets),
 
       # this qualifier matces responses that have answers to questions with the given type
-      Search::Qualifier.new(:label => "question-type", :col => "questions.qtype_name", :assoc => :questions),
+      Search::Qualifier.new(:name => "question_type", :col => "questions.qtype_name", :assoc => :questions),
 
       # this qualifier matces responses that have answers to the given question
-      Search::Qualifier.new(:label => "question", :col => "questions.code", :assoc => :questions)
+      Search::Qualifier.new(:name => "question", :col => "questions.code", :assoc => :questions)
     ]
   end
   
   def self.search_examples
-    ['submitter:"john smith"', 'form:polling', 'reviewed:1', 'date < 2010-03-15']
+    ["#{I18n.t('search_qualifiers.submitter')}:\"john smith\"", 
+      "#{I18n.t('search_qualifiers.form')}:polling", 
+      "#{I18n.t('search_qualifiers.reviewed')}:1", 
+      "#{I18n.t('search_qualifiers.date')} < 2010-03-15"]
   end
 
   # returns a human-readable description of how many responses have arrived recently

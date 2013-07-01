@@ -86,15 +86,15 @@ class User < ActiveRecord::Base
   
   def self.search_qualifiers
     [
-      Search::Qualifier.new(:label => "name", :col => "users.name", :default => true, :partials => true),
-      Search::Qualifier.new(:label => "login", :col => "users.login", :default => true),
-      Search::Qualifier.new(:label => "email", :col => "users.email", :partials => true),
-      Search::Qualifier.new(:label => "phone", :col => "users.phone", :partials => true)
+      Search::Qualifier.new(:name => "name", :col => "users.name", :default => true, :partials => true),
+      Search::Qualifier.new(:name => "login", :col => "users.login", :default => true),
+      Search::Qualifier.new(:name => "email", :col => "users.email", :partials => true),
+      Search::Qualifier.new(:name => "phone", :col => "users.phone", :partials => true)
     ]
   end
 
   def self.search_examples
-    ["john smith", "phone:+44"]
+    ["john smith", "#{I18n.t('search_qualifiers.phone')}:+44"]
   end
   
   def reset_password
