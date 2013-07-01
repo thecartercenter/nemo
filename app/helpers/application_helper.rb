@@ -321,6 +321,45 @@ module ApplicationHelper
     pluralize_model(model, :count => 1)
   end
   
+  def title
+    return @title unless @title.nil?
+    
+    # get the verb
+    verb = case action_name
+      when "new", "create" then t("common.create")
+      when "edit", "update" then t("common.edit")
+      else ""
+    end
+    
+    # get the object name
+    begin
+      # first try to get the model class
+      mc = respond_to?(:model_class) ? model_class : controller_name.classify.constantize
+
+      # try to pluralize the current model name depending on if it's index (plural) or other action (singlular)
+      obj_name = pluralize_model(mc, :count => action_name == "index" ? 2 : 1)
+      gender = model_gender(mc)
+    
+    rescue
+      # if the above didn't work for some reason, just use the controller name untranslated
+      obj_name = controller_name.humanize.titleize
+      gender = "m"
+    end
+    
+    # try to translate with the action name, and just default to plain obj_name if can't find action name
+    @title = case action_name
+      when "new", "create" then t("layout.titles.new", :obj => obj_name, :gender => gender)
+      when "edit", "update" then t("layout.titles.edit", :obj => obj_name, :gender => gender)
+      else obj_name
+    end
+  end
+  
+  # pluralizes an activerecord model name
+  # assumes 2 if count not given in options
+  def pluralize_model(klass, options = {})
+    t("activerecord.models.#{klass.model_name.i18n_key}", :count => options[:count] || 2)
+  end
+  
   # looks up a model's gender. may be nil
   def model_gender(klass)
     t("activerecord.models.#{klass.model_name.param_key}.gender", :default => nil)

@@ -454,6 +454,9 @@ fr:
     system_version: "Version de système"
     time_ago: "%{time}"
     time_zone: "Fuseau horaire"
+    titles:
+      edit: "Modifier %{obj}"
+      new: "@{m:Nouveau|f:Nouvelle} %{obj}"
     total_adj:
       zero: "%{count} %{objs} totale"
       one: "%{count} %{objs} totale"
