@@ -1,0 +1,5 @@
+# Used with rake i18n:missing_keys
+
+en:
+- "\.gender$"
+- "^i18n\.inflections\.gender\..*"
