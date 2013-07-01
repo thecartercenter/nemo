@@ -21,9 +21,9 @@ class Report::GroupedTallyReportTest < ActiveSupport::TestCase
     
     # test                   
     assert_report(report, %w(            Yes No TTL ),
-                          %w( 2012-01-01   1  _   1 ),
-                          %w( 2012-01-05   2  6   8 ),
-                          %w( TTL          3  6   9 ))
+                          ["Jan 01 2012"] + %w( 1  _   1 ),
+                          ["Jan 05 2012"] + %w( 2  6   8 ),
+                          %w( TTL               3  6   9 ))
   end
   
   test "total number of responses per form per source" do
