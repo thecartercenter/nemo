@@ -4,7 +4,7 @@ module UsersHelper
     links << batch_op_link(:name => t("broadcasts.send_broadcast"), :path => new_with_users_broadcasts_path) if can?(:create, Broadcast)
     links << batch_op_link(:name => t("users.export_vcard"), :path => export_users_path(:format => :vcf)) if can?(:export, User)
     links << create_link(User) if can?(:create, User)
-    links << link_to("Create Multiple Users", new_user_batch_path) if can?(:create, User)
+    links << link_to(t("users.create_multiple"), new_user_batch_path) if can?(:create, User)
     links
   end
 

@@ -815,6 +815,7 @@ en:
     
   users:
     back_to_index: "Back to Users List"
+    create_multiple: "Create Multiple Users"
     edit_profile: "Edit Profile"
     export_vcard: "Export as vCard"
     forgot_password: "Forgot Password?"
