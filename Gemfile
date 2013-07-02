@@ -40,5 +40,5 @@ gem 'rails-i18n'
 # for deployment
 gem 'capistrano', :group => :development
 
-# for french genders and other tricky inflections
-gem 'i18n-inflector'
+# markdown support
+gem 'bluecloth'

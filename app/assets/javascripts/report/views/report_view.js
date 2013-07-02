@@ -32,7 +32,7 @@
     // if no matching data, show message
     if (this.report.no_data()) {
       $("#report_info").empty();
-      $("#report_body").html(I18n.t("reports.no_match"))
+      $("#report_body").html(I18n.t("report/report.no_match"))
     } else {
       // create an appropriate Display class based on the display_type
       switch (this.report.attribs.display_type) {

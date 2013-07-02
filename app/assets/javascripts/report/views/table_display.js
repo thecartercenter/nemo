@@ -175,7 +175,7 @@
     }
     
     // add a row count
-    $('#report_info').empty().append($("<div>").attr("id", "row_count").text(I18n.t("reports.total_rows") + ": " + data.rows.length));
+    $('#report_info').empty().append($("<div>").attr("id", "row_count").text(I18n.t("report/report.total_rows") + ": " + data.rows.length));
     
     // add the table
     $('#report_body').empty().append(tbl);

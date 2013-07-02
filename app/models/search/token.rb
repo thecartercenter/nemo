@@ -60,7 +60,7 @@ class Search::Token
     # rhs is an sql fragment that serves as the right hand side of the comparison
     def comparison(qual, op, rhs)
       qual = lookup_qualifier(qual.content) if qual.is_a?(Search::LexToken)
-      raise Search::ParseError.new(I18n.t("searches.invalid_op", :op => op.content, :qualifier => qual.name)) unless qual.op_valid?(op.to_sql)
+      raise Search::ParseError.new(I18n.t("search.invalid_op", :op => op.content, :qualifier => qual.name)) unless qual.op_valid?(op.to_sql)
       
       # sanitize by default
       sanitize_rhs = true
@@ -96,7 +96,7 @@ class Search::Token
     # raises an error if there are none
     def default_quals
       dq = @search.klass.search_qualifiers.select{|q| q.default?}
-      raise Search::ParseError.new(I18n.t("searches.must_use_qualifier")) if dq.empty?
+      raise Search::ParseError.new(I18n.t("search.must_use_qualifier")) if dq.empty?
       dq
     end
     
@@ -123,7 +123,7 @@ class Search::Token
         qualifier = @search.klass.search_qualifiers.detect{|q| q.name == qualifier_name}
       end
       
-      raise Search::ParseError.new(I18n.t("searches.invalid_qualifier", :chunk => chunk)) if qualifier.nil?
+      raise Search::ParseError.new(I18n.t("search.invalid_qualifier", :chunk => chunk)) if qualifier.nil?
       
       qualifier
     end

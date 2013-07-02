@@ -4,7 +4,7 @@ module FormsHelper
     
     # add links based on authorization
     links << create_link(Form) if can?(:create, Form)
-    links << link_to(t("sms_console.title"), new_sms_test_path) if can?(:create, Sms::Test)
+    links << link_to(t("page_titles.sms_tests.all"), new_sms_test_path) if can?(:create, Sms::Test)
     
     # return links
     links
@@ -34,13 +34,13 @@ module FormsHelper
       # get the appropriate publish icon and add link, if auth'd
       if can?(:publish, form)
         verb = form.published? ? "unpublish" : "publish"
-        links += action_link(verb, publish_form_path(form), :title => t("forms.#{verb}"))
+        links += action_link(verb, publish_form_path(form), :title => t("form.#{verb}"))
       end
       
       # add a clone link if auth'd
       if can?(:clone, form)
         links += action_link("clone", clone_form_path(form),
-          :title => t("common.clone"), :confirm => t("forms.clone_confirm", :form_name => form.name))
+          :title => t("common.clone"), :confirm => t("form.clone_confirm", :form_name => form.name))
       end
 
       # add a print link if auth'd
@@ -139,6 +139,6 @@ module FormsHelper
   
   # returns the sms submit number or an indicator that it's not set up
   def submit_number
-    content_tag("strong", configatron.incoming_sms_number.blank? ? "[" + t("sms_forms.guide.unknown_number") + "]" : configatron.incoming_sms_number)
+    content_tag("strong", configatron.incoming_sms_number.blank? ? "[" + t("sms_form.guide.unknown_number") + "]" : configatron.incoming_sms_number)
   end
 end

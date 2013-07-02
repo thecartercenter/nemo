@@ -44,14 +44,14 @@ class Broadcast < ActiveRecord::Base
     begin
       BroadcastMailer.broadcast(emailees, subject, body).deliver unless emailees.empty?
     rescue
-      add_send_error(I18n.t("broadcasts.email_error") + ": #{$!}")
+      add_send_error(I18n.t("broadcast.email_error") + ": #{$!}")
     end
     # send smses
     begin
       Smser.deliver(smsees, which_phone, "#{configatron.broadcast_tag} #{body}") unless smsees.empty?
     rescue Sms::Error
       # one error per line
-      $!.to_s.split("\n").each{|e| add_send_error(I18n.t("broadcasts.sms_error") + ": #{e}")}
+      $!.to_s.split("\n").each{|e| add_send_error(I18n.t("broadcast.sms_error") + ": #{e}")}
     end
     return true
   end

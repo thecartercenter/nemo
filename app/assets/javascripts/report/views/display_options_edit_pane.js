@@ -29,7 +29,7 @@
     // build option set chooser
     this.percent_type = new ELMO.Control.Select({
       el: this.cont.find("select#percent_style"),
-      objs: this.options.percent_types.map(function(pt){ return {name: pt, label: I18n.t("reports.percent_types." + pt)}; }),
+      objs: this.options.percent_types.map(function(pt){ return {name: pt, label: I18n.t("report/report.percent_types." + pt)}; }),
       id_key: "name",
       txt_key: "label"
     })

@@ -1,13 +1,6 @@
 fr:
   locale_name: Français
   
-  i18n:
-    inflections:
-      gender:
-        m: "male"
-        f: "female"
-        default: m
-  
   # common words (should be capitalized except for those that obviously shouldn't like and, or, e.g., etc.)
   common:
     accept: "Accepter"
@@ -23,7 +16,6 @@ fr:
     create: "Créer"
     created: "Créé"
     data: "Données"
-    day: "Jour"
     delete: "Supprimer"
     design: "Concevoir"
     edit: "Modifier"
@@ -37,12 +29,10 @@ fr:
       other: "Exemples"
     example_abbr: "p. ex."
     found: "Trouvé"
-    hour: "Heure"
     language: "Langue"
     login: "Connexion"
     logout: "Déconnexion"
     manage: "Gérer"
-    month: "Mois"
     near: "Proche"
     next: "Suivant"
     _no: "Non" # using 'no' by itself as a key causes an error in i18n-js
@@ -73,7 +63,6 @@ fr:
     total: "Totale"
     updated: "Mis à jour"
     view: "Vue"
-    week: "Semaine"
     _yes: "Oui" # using 'yes' by itself as a key causes an error in i18n-js
 
   # general attribute names
@@ -106,7 +95,6 @@ fr:
         zero: "Réponses"
         one: "Réponse"
         other: "Réponses"
-        gender: f
       assignment:
         zero: "des tâches"
         one: "une tâche"
@@ -115,7 +103,6 @@ fr:
         zero: "Diffusions"
         one: "Diffusion"
         other: "Diffusions"
-        gender: f
       choice:
         zero: "Choix"
         one: "Choix"
@@ -129,23 +116,21 @@ fr:
         one: "Fiche"
         other: "Fiches"
       form_type:
-        zero: "Types de Fiche"
+        zero: "Types de fiche"
         one: "Type de fiche"
-        other: "Types de Fiche"
+        other: "Types de fiche"
       mission:
         zero: "Missions"
         one: "Mission"
         other: "Missions"
-        gender: f
       option:
         zero: "Options"
         one: "Option"
         other: "Options"
       option_set:
-        zero: "Collections des options"
-        one: "Collection des options"
-        other: "Collections des options"
-        gender: f
+        zero: "Collections d'options"
+        one: "Collection d'options"
+        other: "Collections d'options"
       password_reset:
         zero: "Réinitialisations du mot de passe"
         one: "Réinitialisation du mot de passe"
@@ -154,12 +139,10 @@ fr:
         zero: "Questions"
         one: "Question"
         other: "Questions"
-        gender: f
       questioning: # should be same as question
         zero: "Questions"
         one: "Question"
         other: "Questions"
-        gender: f
       report/calculation:
         zero: "Calculs"
         one: "Calcul"
@@ -176,17 +159,14 @@ fr:
         zero: "Compilations de réponses par réponse/attribut"
         one: "Compilation de réponses par réponse/attribut"
         other: "Compilations de réponses par réponse/attribut"
-        gender: f
       report/list_report:
         zero: "Listes des réponses/attributs"
         one: "Liste des réponses/attributs"
         other: "Listes des réponses/attributs"
-        gender: f
       response:
         zero: "Réponses"
         one: "Réponse"
         other: "Réponses"
-        gender: f
       search/search:
         zero: "Recherche"
         one: "Rechercher"
@@ -439,7 +419,6 @@ fr:
     actions: "Actions"
     are_you_sure: "Êtes-vous sur?"
     change_language: "Changer la langue"
-    create_link: "Créer @{m:un|f:une} @{m:nouveau|f:nouvelle} %{obj}"
     delete_warning: "Êtes-vous sur que vous voulez supprimer définitivement le %{obj_description}?"
     deselect_all: "Désélectionner tous"
     dev_mode: "Mode de développement"
@@ -454,26 +433,90 @@ fr:
     system_version: "Version de système"
     time_ago: "%{time}"
     time_zone: "Fuseau horaire"
-    titles:
-      edit: "Modifier %{obj}"
-      new: "@{m:Nouveau|f:Nouvelle} %{obj}"
-    total_adj:
-      zero: "%{count} %{objs} totale"
-      one: "%{count} %{objs} totale"
-      other: "%{count} %{objs} totale"
   
   # pagination translations
   will_paginate:
     previous_label: "&#8592; Précédent"
     next_label: "Suivant &#8594;"
-    page_entries_info: # please preserve <b> and </b> tags in the below
-      single_page_html:
-        zero:  "%{model} n'est pas trouvé"
-        one:   "<b>1</b> %{model}"
-        other: "<b> %{count}</b> %{model}"
-      multi_page_html: "%{model} <b>%{from} - %{to}</b> de <b>%{count}</b> au total"
     page_gap: "&hellip;" # this entry should be the same for all languages
-  
+    # please preserve <b> and </b> tags in the below
+    broadcast:
+      page_entries_info: 
+        single_page_html:
+          zero:  "Pas de diffusions trouvées"
+          one:   "Montrant <b>1</b> diffusion"
+          other: "Montrant <b>all %{count}</b> diffusions"
+        multi_page_html: "Montrant les diffusions <b>%{from} - %{to}</b> de <b>%{count}</b> au total"
+    form:
+      page_entries_info: 
+        single_page_html:
+          zero:  "Pas de fiches trouvées"
+          one:   "Montrant <b>1</b> fiche"
+          other: "Montrant <b>toutes les %{count}</b> fiches"
+    form_type:
+      page_entries_info: 
+        single_page_html:
+          zero:  "Pas de types de fiche trouvés"
+          one:   "Montrant <b>1</b> type de fiche"
+          other: "Montrant <b>tous les %{count}</b> types de fiche"
+    mission:
+      page_entries_info: 
+        single_page_html:
+          zero:  "Pas de missions trouvées"
+          one:   "Montrant <b>1</b> mission"
+          other: "Montrant <b>toutes les %{count}</b> missions"
+    option:
+      page_entries_info: 
+        single_page_html:
+          zero:  "Pas d'options trouvées"
+          one:   "Montrant <b>1</b> option"
+          other: "Montrant <b>toutes les %{count}</b> options"
+    option_set:
+      page_entries_info: 
+        single_page_html:
+          zero:  "Pas de collections d'options trouvées"
+          one:   "Montrant <b>1</b> collection d'options"
+          other: "Montrant <b>toutes les %{count}</b> collections d'options"
+    question:
+      page_entries_info: 
+        single_page_html:
+          zero:  "Pas de questions trouvées"
+          one:   "Montrant <b>1</b> question"
+          other: "Montrant <b>toutes les %{count}</b> questions"
+    questioning: # should be same as question
+      page_entries_info: 
+        single_page_html:
+          zero:  "Pas de questions trouvées"
+          one:   "Montrant <b>1</b> question"
+          other: "Montrant <b>toutes les %{count}</b> questions"
+    report/report:
+      page_entries_info: 
+        single_page_html:
+          zero:  "Pas de rapports trouvés"
+          one:   "Montrant <b>1</b> rapport"
+          other: "Montrant <b>tous les %{count}</b> rapports"
+    response:
+      page_entries_info: 
+        single_page_html:
+          zero:  "Pas de réponses trouvées"
+          one:   "Montrant <b>1</b> résponse"
+          other: "Montrant <b>toutes les %{count}</b> résponses"
+        multi_page_html: "Montrant les résponses <b>%{from} - %{to}</b> de <b>%{count}</b> au total"
+    sms/message:
+      page_entries_info: 
+        single_page_html:
+          zero:  "Pas de SMSes trouvés"
+          one:   "Montrant <b>1</b> SMS"
+          other: "Montrant <b>tous les %{count}</b> SMS"
+        multi_page_html: "Montrant les SMS <b>%{from} - %{to}</b> de <b>%{count}</b> au total"
+    user:
+      page_entries_info: 
+        single_page_html:
+          zero:  "Pas d'utilisateurs trouvés"
+          one:   "Montrant <b>1</b> utilisateur"
+          other: "Montrant <b>tous les %{count}</b> utilisateurs"
+        multi_page_html: "Montrant les utilisateurs <b>%{from} - %{to}</b> de <b>%{count}</b> au total"
+          
   # authlogic translations
   authlogic:
     error_messages:
@@ -526,14 +569,77 @@ fr:
     source: "source"
     submitter: "émetteur"
 
+  page_titles:
+    broadcasts:
+      index: "Diffusions"
+      new: "Envoyer un diffusion"
+      show: "Diffusion"
+    form_types:
+      edit: "Type de fiche: %{name}"
+      index: "Types de fiche"
+      new: "Nouveau type to fiche"
+      show: "Type de fiche: %{name}"
+    forms:
+      choose_questions: "Ajoutant des questions au fiche: %{name}"
+      edit: "Modifier le fiche: %{name}"
+      index: "Fiches"
+      new: "Nouveau fiche"
+      show: "Fiche: %{name}"
+    missions:
+      edit: "Modifier la mission: %{name}"
+      index: "Missions"
+      new: "Nouvelle mission"
+      show: "Mission: %{name}"
+    option_sets:
+      edit: "Modifier la collection d'options: %{name}"
+      index: "Collections d'options"
+      new: "Nouvelle collection d'options"
+      show: "Collection d'options: %{name}"
+    options:
+      edit: "Option: %{name}"
+      index: "Options"
+      new: "Nouvelle option"
+      show: "Option: %{name}"
+    password_resets: 
+      all: "Réinitialiser le mot de passe"
+    questions:
+      edit: "Modifier la question: %{name}"
+    responses:
+      edit: "Modifier la réponse: #%{id}"
+      index: "Réponses"
+      new: "Nouvelle réponse"
+      show: "Réponse: #%{id}"
+    reports:
+      index: "Rapports"
+    settings:
+      all: "Paramètres"
+    sms:
+      index: "Log de SMS"
+    sms_tests:
+      all: "Console de contrôle de SMS"
+    user_batches:
+      all: "Créer plusieurs utilisateurs"
+    user_sessions:
+      new: "Connexion"
+      logged_out: "Déconnecté"
+    users:
+      edit: "Modifier l'utilisateur: %{name}"
+      edit_profile: "Modifier le profil"
+      index: "Utilisateurs"
+      login_instructions: "Instructions de connexion"
+      new: "Nouveaur utilisateur"
+      show: "Utilisateur: %{name}"
+    welcome:
+      index: "Accueil"
+
   ##############################
   # the rest of these string groups should be kept in alphabetical order by key
   
-  answers:
+  answer:
     no_name: "Pas de nom"
     this_answer: "Cette réponse"
   
-  broadcasts:
+  broadcast:
     balance_notice: "Vous avez %{balance} solde créditeur de SMS dans votre %{account_type} compte."
     chars: # these are for informing the user how many chars they have left in their sms
       remaining: "caractères restants"
@@ -564,7 +670,7 @@ fr:
       alternate_only: "Seulement téléphone alterné"
       both: "Les deux portables"
       
-  conditions:
+  condition:
     operators:
       eq: "égal à"
       lt: "moins que"
@@ -577,23 +683,18 @@ fr:
     op: "Comparaison" 
     value: "Valeur"
 
-  forms:
+  form:
     add_questions: "Ajouter des questions"
     add_selected: "Ajouter des questions sélectionner sur la fiche"
-    adding_questions: "Ajouter les questions sur la fiche: %{form_name}"
     back_to_questions: "Retourner à la liste des questions"
     choose_form: "Choisissez une fiche..."
     clone_confirm: "Vous êtes sûr que vous voulez faire un copie de la fiche '%{form_name}'?"
     clone_error: "Il y avait un problème avec le clonage de la fiche (%{msg})."    
     clone_success: "Fiche '%{form_name}' cloné avec succès."
+    create_link: "Créer une nouvelle fiche"
     publish_error: "Il y avait un problème avec l'édition de la Fiche (%{msg})."
     publish_success: "Fiche publié avec succès."
     publish: "Publie"
-    published: "Publié"
-    published_adj: 
-      zero: "%{count} %{objs} publié(s)"
-      one: "%{count} %{objs} publié(s)"
-      other: "%{count} %{objs} publié(s)"
     question_remove_error: "Il y avait une problème enlevant les questions (%{msg})."
     questions_add_error: "Il y avait une problème ajoutant les questions (%{msg})."
     questions_add_success: "Questions ajouté avec succès."
@@ -604,13 +705,11 @@ fr:
     unpublish_error: "Il y avait un problème avec la fiche non publié (%{msg})."
     unpublish_success: "Fiche non publié avec succès.  Le téléchargement total était rerégler."
     unpublish: "Non Publie"
-    unpublished: "Non Publié"
-    unpublished_adj: 
-      zero: "%{count} %{objs} non publié(s)"
-      one: "%{count} %{objs} non publié(s)"
-      other: "%{count} %{objs} non publié(s)"
     unsaved_rank_notice: "Vous n'avez pas encore enregistrer les changements vous avez fait à l'ordre des questions.  Vous devriez poussez 'enregistrer' si vous voulez sauver les changements."
     view_sms_guide: "Voir le guide de SMS"
+  
+  form_type:
+    create_link: "Créer un nouveau type de fiche"
   
   location_picker:
     choose_location: "Choisissez l'emplacement"
@@ -628,18 +727,20 @@ fr:
     request_made: "Une sollicitation pour remettre votre %{site} mot de passe a été fait. Si vous n'avez pas faites cette sollicitation, seulement ignorez cette courriel."
     welcome: "Bienvenue à %{site}!"
   
-  options:
-    appears_elsewhere: "Noter : Cette option apparaît dans les fiches suivantes %{forms}. Quelque changement fait au-dessus va être réfléchi dans ces fiches."
+  option:
+    appears_elsewhere: "Noter: Cette option apparaît dans les fiches suivantes %{forms}. Quelque changement fait au-dessus va être réfléchi dans ces fiches."
+    create_link: "Créer une nouvelle option"
     other_forms_published: "Au moins un de ces fiches est aussi publiée, donc seulement les noms peuvent être édité. Vous devez aussi faire attention de non changer pas le nom des options si vous éditez les noms."
   
-  option_sets:
-    create_options: "Créer des options"
+  option_set:
+    create_link: "Créer une nouvelle collection d'options"
+    create_options: "créer des options"
     options_before_sets: "Vous avez besoin de %{link} avant vous pouvez créer des options."
     orderings:
       value_asc: "Valeur bas à haut"
       value_desc: "Valeur haut à bas"
 
-  password_resets:
+  password_reset:
     check_email: "Instructions pour changer votre mot de passe était envoyer par email à vous.  S'il vous plait, verifié votre e-mail."
     enter_new_pass: "%{name}, s'il vous plait entrer un nouveau mot de passe pour votre compte."
     fill_out_form: "Compléter la fiche au-dessus et les instructions pour remettre votre mot de passe seront vous envoyé. S'il n'y a pas une adresse du courriel associée a votre compte votre mot de passe devra être remis par un administrateur."
@@ -649,7 +750,7 @@ fr:
       de votre courriel dans votre navigateur ou recommencer le procès de remettre le mot de passe.
     user_not_found: "Pas d'utilisatuer était trouver à cet adresse d'e-mail."
     
-  permission_errors:
+  permission_error:
     need_mission: "Vous ne pouvez pas voir ceci sans sélectionner une mission."
     need_login: "Vous devez connecter pour voir ça page."
     no_permission: "Vous n'a pas permission pour vour ça page."
@@ -658,9 +759,10 @@ fr:
     must_be_admin: "Vous devez être administrateur de vue cette page."
     must_be_logged_out: "Vous devez déconnecté de vue cette page."
     
-  questions:
+  question:
     answer_only_caps: "REPONDEZ SEULEMENT SI"
     appears_elsewhere: "Cette question apparaitre aussi dans les fiches suivants: %{forms}. Les changements que vous faites suivant sont réfleter sur les fiches aussi."
+    create_link: "Créer une nouvelle question"
     maxmin:
       gt: "plus grand que"
       lt: "moins que"
@@ -669,7 +771,7 @@ fr:
       strictly_gt: "strictement plus grand que"
     other_forms_published: "Au moins d'une fiche est aussi publié, pas tout les domaine peuvent etre modifier."
    
-  question_types:
+  question_type:
     text: "Texte"
     long_text: "Texte Longue"
     tiny_text: "Texte Court"
@@ -682,12 +784,12 @@ fr:
     date: "Date"
     time: "L'heure"
     
-  reports:
+  report/report:
     add_question_attribute: "Ajouter question/attribut"
     back_to_list: "Retourner à list des rapports"
     choose_attrib_question: "Choisissez un attribut ou question"
     choose_report: "Choisissez un rapport..."
-    create_new: "Créer un nouveau rapport"
+    create_link: "Créer un nouveau rapport"
     display_options: "Options d'affichage"
     enter_name: "Entrer un nom descriptif pour le rapport."
     export_to_csv: "Export le data à format CSV"
@@ -697,8 +799,8 @@ fr:
     questions_attributes: "Questions/Attributs"
     questions_with_option_sets: "Questions avec ces options"
     no_match: "Pas de donnés correspondants ont été trouvée."
-    report_title: "Titre de Rapport"
-    report_type: "Type de Rapport"
+    report_title: "Titre de rapport"
+    report_type: "Type de rapport"
     these_questions: "Ces questions spécifique"
     total_rows: "Rangée Totale"
     what_attrib_col_headers: "Quel attribut ou question aimez-vous pour les titre des colonnes (optional)?"
@@ -711,7 +813,7 @@ fr:
     which_forms: "Quel calcul vous interessé?"
     which_questions: "Quel question(s) aimeriez-vous inclure?"
     bar_styles:
-      side_by_side: "Côte à Côte"
+      side_by_side: "Côté à côté"
       stacked: "Empilé"
     calculation_descriptions:
       identity: "Aucune"
@@ -738,32 +840,22 @@ fr:
       by_row: "Pourcentage par Rangée"
       by_col: "Pourcentage par Colonne"
     question_labels:
-      code: "Seulement les Codes (économise de l'espace)"
-      title: "Titres Rempli (plus facile à lire)"
+      code: "Seulement les codes (économise de l'espace)"
+      title: "Titres remplis (plus facile à lire)"
       
-  responses:
-    awaiting_review_adj: 
-      zero: "%{count} en attente de révision"
-      one: "%{count} en attente de révision"
-      other: "%{count} en attente de révision"
-    by_you_adj: 
-      zero: "%{count} %{objs} par vous"
-      one: "%{count} %{objs} par vous"
-      other: "%{count} %{objs} par vous"
-    export_to_csv: "Exporter dans le Format CSV"
-    in_the_past: "autrefois"
-    no_recent: "Pas de responses recents"
+  response:
+    create_link: "Créer un nouveau response"
+    export_to_csv: "Exporter à format CSV"
     observation_time: "L'heure d'Observation"
     save_and_mark_reviewed: "Enregistrer et Marquer comme Examiné"
-    submission: "Submission"
     
-  roles:
+  role:
     role: "Rôle"
     observer: "Observateur/Observatrice"
     staffer: "Membre du Personnel"
     coordinator: "Coodinateur/Coordinatrice"
     
-  searches:
+  search:
     at_end_of_query: "à la fin de recherche"
     expected: "Attendu"
     invalid_op: "L'opérateur '%{op}' isnon est pas valide pour le qualificatif '%{qualifier}'."
@@ -772,7 +864,7 @@ fr:
     unexpected: "Texte inattendu près '%{str}'"
     search_error: "Erreur de Recherche"
   
-  settings:
+  setting:
     change_sms_password: "Changez mot de passe pour SMS"
     headings:
       general: "Paramètres généraux"
@@ -787,9 +879,8 @@ fr:
     back_to_forms: "Retour au fiches"
     no_reply: "Aucune réponse."
     submit_error: "Il y avait un erreur pendant la soumission de votre examen."
-    title: "Console de Contrôle de SMS"
     
-  sms_forms:
+  sms_form:
     decoding:
       answer_error_intro: "Désolé, votre reponse '%{value}' pour question %{rank} dans la fiche '%{form_code}'"
       answer_not_date: "n'etait pas un date valable"
@@ -802,7 +893,7 @@ fr:
       answer_not_valid_options_multi: "contenait les options non-valables '%{invalid_options}'"
       congrats: "Votre reponse pour form '%{form_code}' a été reçue. Merci!"
       duplicate_submission: "Desole, votre reponse etait identique a une qui a ete recue recemment."
-      form_not_found: "Désolé, il n'y a pas un fiche avec le code '%{form_code}'."
+      form_not_found: "Désolé, il n'y a pas une fiche avec le code '%{form_code}'."
       form_not_permitted: "Désolé, vous n'avez pas la permission pour soumettre le fiche '%{form_code}'."
       form_not_published: "Désolé, fiche '%{form_code}' n'est pas disponible pour les présentations."
       form_not_smsable: "Désolé, fiche '%{form_code}' n'est pas disponible pour les présentations du SMS."
@@ -844,13 +935,13 @@ fr:
     default: "Vous n'avez pas l'authorisation pour accès à la page."
     must_login: "Vous devez login pour accès à la page."
   
-  user_batches:
-    success: "Utilisateur créé avec succès."
-    title: "Créer plusieurs utilisateurs"
+  user_batch:
+    success: "Utilisateurs créés avec succès."
     
-  users:
+  user:
     back_to_index: "Retourner à liste d'utilisateurs"
-    edit_profile: "Modifier le Profil"
+    create_link: "Créer un nouveau utilisateur"
+    edit_profile: "Modifier le profil"
     export_vcard: "Exporter comme vCard"
     forgot_password: "Oublier mot de passe?"
     leave_password_alone: ":aisser seul le mot de passe"
@@ -872,7 +963,6 @@ fr:
       site_url: "Site URL"
       title: "Overture de Session"
       welcome: "Bienvenue à %{site}. Votre titres sont les suivants:"
-    logged_out: "Déconnecté"
     logout_success: "Vous avez déconnecté avec succès."
     profile_updated: "Profil modifié avec succès."
     reset_password_and: "Réinstaliser mot de passe et"
@@ -885,7 +975,16 @@ fr:
     show_printable_instructions: "Montrer instructions imprimable"
   
   welcome:
-    awaiting_review: "En attente d'examen"
-    select_a_form: "Selectionner un fiche pour soumettre"
-    select_a_report: "Selectionner un rapport pour voir"
-    submissions_by_you: "Soumissions par vous"
+    awaiting_review: "**%{count}** En attentes de révision"
+    by_you: "**%{count}** Soumissions par vous"
+    in_the_past_hour: "**%{count}** Pendant l'heure passé"
+    in_the_past_day: "**%{count}** Pendant la journée passé"
+    in_the_past_week: "**%{count}** Pendant la semaine passé"
+    in_the_past_month: "**%{count}** Pendant le mois passé"
+    published_form_count: "**%{count}** Fiches publiés"
+    no_recent: "Pas de réponses recents"
+    select_a_form: "Soumettre une fiche"
+    select_a_report: "Soumettre un rapport"
+    total_responses: "**%{count}** Réponses au total"
+    total_users: "**%{count}** Utilisateurs au total"
+    unpublished_form_count: "**%{count}** Fiches non-publiés"

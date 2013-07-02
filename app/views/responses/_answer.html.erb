@@ -1,9 +1,9 @@
 <div class="form_field qtype_<%= answer.qtype.name %>" id="qing_<%= answer.questioning_id %>">
-  <label class="main"><%= answer.question_name || "[#{t('answers.no_name')}]" %> <%= reqd_sym(answer.required?) %>
+  <label class="main"><%= answer.question_name || "[#{t('answer.no_name')}]" %> <%= reqd_sym(answer.required?) %>
   </label><div class="form_field_control">
     <%= fields_for('response[all_answers][]', answer) do |f| %>
       <% f.mode = form_mode %>
-      <%= render("layouts/object_errors", :object => answer, :compact => true, :prefix => t("answers.this_answer")) unless answer.errors.empty? %>
+      <%= render("layouts/object_errors", :object => answer, :compact => true, :prefix => t("answer.this_answer")) unless answer.errors.empty? %>
       <%= f.hidden_field(:response_id, :index => answer_counter) %>
       <%= f.hidden_field(:questioning_id, :index => answer_counter) %>
       <%= f.hidden_field(:relevant, :class => "relevant", :index => answer_counter) %>

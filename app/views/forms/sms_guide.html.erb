@@ -1,7 +1,8 @@
-<% @title = "#{@form.name}" %>
+<% @title = @form.name %>
+
 <% locale_was = I18n.locale; I18n.locale = @lang %>
 <div class="sms_guide">
-  <div class="header"><%= t("sms_forms.guide.header") %></div>
+  <div class="header"><%= t("sms_form.guide.header") %></div>
   <h1 class="printable"><%= title %></h1>
   <div class="controls">
     <form>
@@ -13,12 +14,12 @@
       </select>
     </form>
     
-    <%= link_to(t("sms_console.title"), new_sms_test_path) if can?(:create, Sms::Test) %>
+    <%= link_to(t("page_titles.sms_tests.all"), new_sms_test_path) if can?(:create, Sms::Test) %>
   </div>
   <table>
     <tr>
       <td colspan="2" class="step1">
-        <strong><%= t("common.step") %> 1:</strong> <%= t("sms_forms.guide.step1") %>
+        <strong><%= t("common.step") %> 1:</strong> <%= t("sms_form.guide.step1") %>
         <%= t(@form.all_required? ? "sms_forms.guide.all_required" : "sms_forms.guide.not_all_required") %>
       </td>
       <td class="answers"></td>
@@ -26,7 +27,7 @@
     <tr>
       <td class="rank"></td>
       <td class="pointer">
-        <em><%= t("sms_forms.guide.unique_code") %> </em>
+        <em><%= t("sms_form.guide.unique_code") %> </em>
       </td>
       <td class="answers">
         <%= answer_space(@form.current_version.code) %>
@@ -64,7 +65,7 @@
         <td class="rank"></td>
         <td class="pointer">
           <em>
-            <%= t("sms_forms.guide.pointers.#{qing.question.qtype.name}") %>
+            <%= t("sms_form.guide.pointers.#{qing.question.qtype.name}") %>
             <%= sms_example_for_question(qing) %>
           </em>
         </td>
@@ -77,9 +78,9 @@
     <%# final instructions %>
     <tr>
       <td colspan="3" class="step2">
-        <strong><%= t("common.step") %> 2:</strong> <%= t("sms_forms.guide.step2") %>
+        <strong><%= t("common.step") %> 2:</strong> <%= t("sms_form.guide.step2") %>
         <ol>
-          <% t("sms_forms.guide.step2_substeps").each do |ss| %>
+          <% t("sms_form.guide.step2_substeps").each do |ss| %>
             <li><%= ss.gsub("%{submit_number}", submit_number).html_safe %></li>
           <% end %>
         </ol>

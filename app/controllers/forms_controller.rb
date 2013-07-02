@@ -110,9 +110,9 @@ class FormsController < ApplicationController
     verb = @form.published? ? :unpublish : :publish
     begin
       @form.send("#{verb}!")
-      flash[:success] = t("forms.#{verb}_success")
+      flash[:success] = t("form.#{verb}_success")
     rescue
-      flash[:error] = t("forms.#{verb}_error", :msg => $!.to_s)
+      flash[:error] = t("form.#{verb}_error", :msg => $!.to_s)
     end
     
     # redirect to form index
@@ -140,9 +140,9 @@ class FormsController < ApplicationController
     # add questions to form and try to save
     @form.questions += questions
     if @form.save
-      flash[:success] = t("forms.questions_add_success")
+      flash[:success] = t("form.questions_add_success")
     else
-      flash[:error] = t("forms.questions_add_error", :msg => @form.errors.full_messages.join(';'))
+      flash[:error] = t("form.questions_add_error", :msg => @form.errors.full_messages.join(';'))
     end
     
     # redirect to form edit
@@ -157,9 +157,9 @@ class FormsController < ApplicationController
     begin
       qings.each{|q| q.check_assoc}
       @form.destroy_questionings(qings)
-      flash[:success] = t("forms.questions_remove_success")
+      flash[:success] = t("form.questions_remove_success")
     rescue
-      flash[:error] = t("forms.question_remove_error", :msg => $!.to_s)
+      flash[:error] = t("form.question_remove_error", :msg => $!.to_s)
     end
     # redirect to form edit
     redirect_to(edit_form_path(@form))
@@ -169,9 +169,9 @@ class FormsController < ApplicationController
   def clone
     begin
       @form.duplicate
-      flash[:success] = t("forms.clone_success", :form_name => @form.name)
+      flash[:success] = t("form.clone_success", :form_name => @form.name)
     rescue
-      flash[:error] = t("forms.clone_error", :msg => $!.to_s)
+      flash[:error] = t("form.clone_error", :msg => $!.to_s)
     end
     redirect_to(:action => :index)
   end

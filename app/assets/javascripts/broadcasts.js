@@ -21,7 +21,7 @@ function broadcast_medium_changed() {
 function broadcast_update_char_limit() {
   if ($('#char_limit').is(":visible")) {
     var diff = 140 - $('#broadcast_body').val().length;
-    $('#char_limit').text(Math.abs(diff) + " " + I18n.t("broadcasts.chars." + (diff >= 0 ? "remaining" : "too_many")));
+    $('#char_limit').text(Math.abs(diff) + " " + I18n.t("broadcast.chars." + (diff >= 0 ? "remaining" : "too_many")));
     $('#char_limit').css("color", diff >= 0 ? "black" : "#d02000");
   }
 }

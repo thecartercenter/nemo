@@ -104,7 +104,7 @@ class Condition < ActiveRecord::Base
   end
   
   def to_s
-    words = I18n.t(op, :scope => [:conditions, :operators])
+    words = I18n.t(op, :scope => [:condition, :operators])
     "#{Question.model_name.human} ##{ref_qing.rank} #{words} \"#{option ? option.name : value}\""
   end
   

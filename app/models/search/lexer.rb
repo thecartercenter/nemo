@@ -37,7 +37,7 @@ class Search::Lexer
       end
       # if no token found, raise error
       if token.nil?
-        raise Search::ParseError.new(I18n.t("searches.unexpected", :str => @str))
+        raise Search::ParseError.new(I18n.t("search.unexpected", :str => @str))
       # otherwise, add to token list and delete from the front
       else
         @tokens << token

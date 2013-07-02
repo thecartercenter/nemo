@@ -17,7 +17,7 @@
     // hookup unsaved check
     $(window).bind('beforeunload', function() {
       if (ranks_changed)
-        return I18n.t("forms.unsaved_rank_notice");
+        return I18n.t("form.unsaved_rank_notice");
     });
   }
   

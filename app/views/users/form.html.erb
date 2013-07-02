@@ -1,5 +1,9 @@
 <%# special title if user is editing self %>
-<% @title = t("users.edit_profile") if @user == current_user %>
+<% if @user == current_user %>
+  <% @title = t("page_titles.users.edit_profile") %>
+<% else %>
+  <% @title_args = {:name => @user.name} %>
+<% end %>
 
 <%= flash_and_form_errors(@user) %>
 
@@ -21,8 +25,8 @@
       <%= form_field(f, :password_confirmation, :type => :password) %>
     <% else %>
       <% verb = @user.new_record? ? "choose" : "reset" %>
-      <% label = t("users.reset_password_label_" + verb) %>
-      <% details = t("users.reset_password_details_" + verb) + " " + t("users.reset_password_details_ending", :verb => t("common." + verb).downcase) %>
+      <% label = t("user.reset_password_label_" + verb) %>
+      <% details = t("user.reset_password_details_" + verb) + " " + t("user.reset_password_details_ending", :verb => t("common." + verb).downcase) %>
       <%= form_field(f, :reset_password_method, :label => label, :details => details, :partial => "reset_password_method") %>
     <% end %>
   <% end %>

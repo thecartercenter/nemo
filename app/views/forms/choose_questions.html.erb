@@ -1,4 +1,5 @@
-<% @title = t("forms.adding_questions", :form_name => @form.name) %>
+<% @title_args = {:name => @form.name} %>
+
 <%= flash_and_form_errors %>
 
 <% unless @questions.empty? %>
@@ -10,7 +11,7 @@
 <div class="question_form">
   <% unless @questions.empty? %>
     <div class="link_set">
-      <%= link_to(t("forms.back_to_questions"), "#", :class => "question_list") %>
+      <%= link_to(t("form.back_to_questions"), "#", :class => "question_list") %>
     </div>
   <% end %>
   <%= render("questionings/form") %>

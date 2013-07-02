@@ -257,57 +257,14 @@ module ApplicationHelper
     # get the link target path. honor the js option.
     href = options[:js] ? "#" : send("new_#{klass.model_name.singular_route_key}_path")
     
-    link_to(t("layout.create_link", :obj => klass.model_name.human, :gender => model_gender(klass)), href,
-      :class => "create_#{klass.model_name.param_key}")
+    link_to(t("#{klass.model_name.i18n_key}.create_link"), href, :class => "create_#{klass.model_name.param_key}")
   end
   
   # translates a boolean value
   def tbool(b)
     t(b ? "common._yes" : "common._no")
   end
-  
-  # returns a i18n'd string like "15 Total Users" or "1 published Form".
-  # obj - the object name (singular string, e.g. "Submission") or class. if nil, no object name is printed.
-  # adj - the adjective to use. the i18n file is searched for this value with the suffix '_adj'. e.g. :total => "total_adj"
-  # options
-  #   :count - the number of objects. if nil, 1 is assumed for pluralization purposes, but no count is printed.
-  #   :titleize - whether to titleize the resulting string
-  #   :scope - the i18n scope in which to look
-  def obj_with_adj(obj, adj, options = {})
-    # assume 1 if no count given
-    options[:count] ||= 1
-    
-    # get the appropriate object name string
-    # if it's already a string, pluralize it using the inflector
-    objs = if obj.is_a?(String)
-      pluralize_without_count(options[:count], obj)
-    # if we have an activerecord class, pluralize it using the :count mechanism
-    elsif obj.respond_to?(:model_name)
-      t("activerecord.models.#{obj.model_name.i18n_key}", :count => options[:count])
-    else
-      ""
-    end
-    
-    str = t("#{adj}_adj",
-      :count => options[:count],
-      :objs => objs,
-      :scope => options[:scope] || "layout")
-      
-    # add the <strong> tag
-    str.gsub!(/\b(\d+)\b/, "<strong>\\1</strong>")
-    
-    # titleize if requested
-    str = str.titleize if options[:titleize]
-    
-    # remove extraneous spaces
-    str.gsub(/\s\s+/, " ").html_safe
-  end
-  
-  # pluralizes a word based on count but doesn't print count
-  def pluralize_without_count(count, noun, text = nil)
-    count == 1 ? "#{noun}#{text}" : "#{noun.pluralize}#{text}"
-  end
-  
+
   # if the given array is not paginated, apply an infinite pagination so the will_paginate methods will still work
   def ensure_paginated(objs)
     if !objs.respond_to?(:total_entries) && objs.respond_to?(:paginate)
@@ -322,36 +279,22 @@ module ApplicationHelper
   end
   
   def title
+    # use explicit title if given
     return @title unless @title.nil?
-    
-    # get the verb
-    verb = case action_name
-      when "new", "create" then t("common.create")
-      when "edit", "update" then t("common.edit")
-      else ""
-    end
-    
-    # get the object name
-    begin
-      # first try to get the model class
-      mc = respond_to?(:model_class) ? model_class : controller_name.classify.constantize
 
-      # try to pluralize the current model name depending on if it's index (plural) or other action (singlular)
-      obj_name = pluralize_model(mc, :count => action_name == "index" ? 2 : 1)
-      gender = model_gender(mc)
-    
-    rescue
-      # if the above didn't work for some reason, just use the controller name untranslated
-      obj_name = controller_name.humanize.titleize
-      gender = "m"
+    # if action specified outright, use that
+    action = if @title_action
+      @title_action
+    else
+      # use 'new' and 'edit' for 'update' and 'create', respectively
+      case action_name
+      when "update" then "edit"
+      when "create" then "new"
+      else action_name
+      end
     end
-    
-    # try to translate with the action name, and just default to plain obj_name if can't find action name
-    @title = case action_name
-      when "new", "create" then t("layout.titles.new", :obj => obj_name, :gender => gender)
-      when "edit", "update" then t("layout.titles.edit", :obj => obj_name, :gender => gender)
-      else obj_name
-    end
+
+    @title = t(action, {:scope => "page_titles.#{controller_name}", :default => :all}.merge(@title_args || {}))
   end
   
   # pluralizes an activerecord model name
@@ -360,8 +303,9 @@ module ApplicationHelper
     t("activerecord.models.#{klass.model_name.i18n_key}", :count => options[:count] || 2)
   end
   
-  # looks up a model's gender. may be nil
-  def model_gender(klass)
-    t("activerecord.models.#{klass.model_name.param_key}.gender", :default => nil)
+  # translates and interprets markdown markup
+  def tmd(*args)
+    # strip the outer <p> </p> tags
+    BlueCloth.new(t(*args)).to_html[3..-5].html_safe
   end
 end

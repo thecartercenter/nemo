@@ -2,7 +2,7 @@
 <% content_for(:per_page_js){ javascript_include_tag(configatron.map_api_url) } %>
 
 <%# title includes ID if defined %>
-<% @title = "#{Response.model_name.human} ##{@response.id}" unless @response.new_record? %>
+<% @title_args = {:id => @response.id} %>
 
 <%= render("layouts/location_picker") %>
 
@@ -31,7 +31,7 @@
   
   <%= form_buttons do %>
     <%= form_submit_button(f, :label => :save, :multiple => true) %>
-    <%= form_submit_button(f, :label => t("responses.save_and_mark_reviewed"), :name => "commit_and_mark_reviewed", 
+    <%= form_submit_button(f, :label => t("response.save_and_mark_reviewed"), :name => "commit_and_mark_reviewed", 
       :multiple => true) if can?(:review, @response) %>
   <% end %>
   

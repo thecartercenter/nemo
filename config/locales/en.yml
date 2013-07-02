@@ -16,7 +16,6 @@ en:
     create: "Create"
     created: "Created"
     data: "Data"
-    day: "Day"
     delete: "Delete"
     design: "Design"
     edit: "Edit"
@@ -30,12 +29,10 @@ en:
       other: "Examples"
     example_abbr: "e.g."
     found: "Found"
-    hour: "Hour"
     language: "Language"
     login: "Login"
     logout: "Logout"
     manage: "Manage"
-    month: "Month"
     near: "Near"
     next: "Next"
     _no: "No" # using 'no' by itself as a key causes an error in i18n-js
@@ -66,7 +63,6 @@ en:
     total: "Total"
     updated: "Updated"
     view: "View"
-    week: "Week"
     _yes: "Yes" # using 'yes' by itself as a key causes an error in i18n-js
 
   # general attribute names
@@ -423,13 +419,11 @@ en:
     actions: "Actions"
     are_you_sure: "Are you sure?"
     change_language: "Change Language"
-    create_link: "Create New %{obj}"
     delete_warning: "Are you sure you want to permanently delete the %{obj_description}?"
     deselect_all: "Deselect All"
     dev_mode: "Development Mode"
     logged_in_as: "Logged in as"
     must_be: "must be"
-    new_obj: "New %{obj}"
     no_selection: "You haven't selected anything."
     reqd_sym_definition: "Required fields are marked with a %{reqd_sym}."
     select_all: "Select All"
@@ -438,25 +432,89 @@ en:
     system_version: "System Version"
     time_ago: "%{time} ago"
     time_zone: "Time Zone"
-    titles:
-      edit: "Edit %{obj}"
-      new: "New %{obj}"
-    total_adj: 
-      zero: "%{count} total %{objs}"
-      one: "%{count} total %{objs}"
-      other: "%{count} total %{objs}"
   
   # pagination translations
   will_paginate:
     previous_label: "&#8592; Previous"
     next_label: "Next &#8594;"
-    page_entries_info: # please preserve <b> and </b> tags in the below
-      single_page_html:
-        zero:  "No %{model} found"
-        one:   "Displaying <b>1</b> %{model}"
-        other: "Displaying <b>all %{count}</b> %{model}"
-      multi_page_html: "Displaying %{model} <b>%{from} - %{to}</b> of <b>%{count}</b> in total"
     page_gap: "&hellip;" # this entry should be the same for all languages
+    # please preserve <b> and </b> tags in the below
+    broadcast:
+      page_entries_info: 
+        single_page_html:
+          zero:  "No Broadcasts found"
+          one:   "Displaying <b>1</b> Broadcast"
+          other: "Displaying <b>all %{count}</b> Broadcasts"
+        multi_page_html: "Displaying Broadcasts <b>%{from} - %{to}</b> of <b>%{count}</b> in total"
+    form:
+      page_entries_info: 
+        single_page_html:
+          zero:  "No Forms found"
+          one:   "Displaying <b>1</b> Form"
+          other: "Displaying <b>all %{count}</b> Forms"
+    form_type:
+      page_entries_info: 
+        single_page_html:
+          zero:  "No Form Types found"
+          one:   "Displaying <b>1</b> Form Type"
+          other: "Displaying <b>all %{count}</b> Form Types"
+    mission:
+      page_entries_info: 
+        single_page_html:
+          zero:  "No Missions found"
+          one:   "Displaying <b>1</b> Mission"
+          other: "Displaying <b>all %{count}</b> Missions"
+    option:
+      page_entries_info: 
+        single_page_html:
+          zero:  "No Options found"
+          one:   "Displaying <b>1</b> Option"
+          other: "Displaying <b>all %{count}</b> Options"
+    option_set:
+      page_entries_info: 
+        single_page_html:
+          zero:  "No Option Sets found"
+          one:   "Displaying <b>1</b> Option Set"
+          other: "Displaying <b>all %{count}</b> Option Sets"
+    question:
+      page_entries_info: 
+        single_page_html:
+          zero:  "No Questions found"
+          one:   "Displaying <b>1</b> Question"
+          other: "Displaying <b>all %{count}</b> Questions"
+    questioning: # should be same as question
+      page_entries_info: 
+        single_page_html:
+          zero:  "No Questions found"
+          one:   "Displaying <b>1</b> Question"
+          other: "Displaying <b>all %{count}</b> Questions"
+    report/report:
+      page_entries_info: 
+        single_page_html:
+          zero:  "No Reports found"
+          one:   "Displaying <b>1</b> Report"
+          other: "Displaying <b>all %{count}</b> Reports"
+    response:
+      page_entries_info: 
+        single_page_html:
+          zero:  "No Responses found"
+          one:   "Displaying <b>1</b> Response"
+          other: "Displaying <b>all %{count}</b> Responses"
+        multi_page_html: "Displaying Responses <b>%{from} - %{to}</b> of <b>%{count}</b> in total"
+    sms/message:
+      page_entries_info: 
+        single_page_html:
+          zero:  "No SMSes found"
+          one:   "Displaying <b>1</b> SMS"
+          other: "Displaying <b>all %{count}</b> SMSes"
+        multi_page_html: "Displaying SMSes <b>%{from} - %{to}</b> of <b>%{count}</b> in total"
+    user:
+      page_entries_info: 
+        single_page_html:
+          zero:  "No Users found"
+          one:   "Displaying <b>1</b> User"
+          other: "Displaying <b>all %{count}</b> Users"
+        multi_page_html: "Displaying Users <b>%{from} - %{to}</b> of <b>%{count}</b> in total"
   
   # authlogic translations
   authlogic:
@@ -510,14 +568,79 @@ en:
     source: "source"
     submitter: "submitter"
   
+  # all page titles by controller and action
+  # controller names are usually plural (rails convention)
+  page_titles:
+    broadcasts:
+      index: "Broadcasts"
+      new: "Send Broadcast"
+      show: "Broadcast"
+    form_types:
+      edit: "Form Type: %{name}"
+      index: "Form Types"
+      new: "New Form Type"
+      show: "Form Type: %{name}"
+    forms:
+      choose_questions: "Adding Questions to Form: %{name}"
+      edit: "Edit Form: %{name}"
+      index: "Forms"
+      new: "New Form"
+      show: "Form: %{name}"
+    missions:
+      edit: "Edit Mission: %{name}"
+      index: "Missions"
+      new: "New Mission"
+      show: "Mission: %{name}"
+    option_sets:
+      edit: "Edit Option Set: %{name}"
+      index: "Option Sets"
+      new: "New Option Set"
+      show: "Option Set: %{name}"
+    options:
+      edit: "Edit Option: %{name}"
+      index: "Options"
+      new: "New Option"
+      show: "Option: %{name}"
+    password_resets: 
+      all: "Reset Password"
+    questions:
+      edit: "Edit Question: %{name}"
+    responses:
+      edit: "Edit Response: #%{id}"
+      index: "Responses"
+      new: "New Response"
+      show: "Response: #%{id}"
+    reports:
+      index: "Reports"
+    settings:
+      all: "Settings"
+    sms:
+      index: "SMS Log"
+    sms_tests:
+      all: "SMS Test Console"
+    user_batches:
+      all: "Create Multiple Users"
+    user_sessions:
+      new: "Login"
+      logged_out: "Logged Out"
+    users:
+      edit: "Edit User: %{name}"
+      edit_profile: "Edit Profile"
+      index: "Users"
+      login_instructions: "Login Instructions"
+      new: "New User"
+      show: "User: %{name}"
+    welcome:
+      index: "Home"
+      
   ##############################
   # the rest of these string groups should be kept in alphabetical order by key
   
-  answers:
+  answer:
     no_name: "No Name"
     this_answer: "This answer"
   
-  broadcasts:
+  broadcast:
     balance_notice: "You have %{balance} SMS credits in your %{account_type} account."
     chars: # these are for informing the user how many chars they have left in their sms
       remaining: "characters remaining"
@@ -548,7 +671,7 @@ en:
       alternate_only: "Alternate phone only"
       both: "Both phones"
       
-  conditions:
+  condition:
     operators:
       eq: "is equal to"
       lt: "is less than"
@@ -561,23 +684,18 @@ en:
     op: "Comparison"
     value: "Value"
   
-  forms:
+  form:
     add_questions: "Add Questions"
     add_selected: "Add Selected Questions to Form"
-    adding_questions: "Adding Questions to Form: %{form_name}"
     back_to_questions: "Back to Questions List"
     choose_form: "Choose a Form..."
     clone_confirm: "Are you sure you want to make a copy of the form '%{form_name}'?"
     clone_error: "There was a problem cloning the form (%{msg})."    
     clone_success: "Form '%{form_name}' cloned successfully."
+    create_link: "Create Form"
     publish_error: "There was a problem publishing the form (%{msg})."
     publish_success: "Form published successfully."
     publish: "Publish"
-    published: "Published"
-    published_adj: 
-      zero: "%{count} published %{objs}"
-      one: "%{count} published %{objs}"
-      other: "%{count} published %{objs}"
     question_remove_error: "There was a problem removing the questions (%{msg})."
     questions_add_error: "There was a problem adding the questions (%{msg})."
     questions_add_success: "Questions added successfully."
@@ -588,14 +706,12 @@ en:
     unpublish_error: "There was a problem unpublishing the form (%{msg})."
     unpublish_success: "Form unpublished successfully. The download count has also been reset."
     unpublish: "Unpublish"
-    unpublished: "Unpublished"
-    unpublished_adj: 
-      zero: "%{count} unpublished %{objs}"
-      one: "%{count} unpublished %{objs}"
-      other: "%{count} unpublished %{objs}"
     unsaved_rank_notice: "You have not yet saved the changes you made to the Question order. You should click the 'Save' button if you want to save these changes."
     view_sms_guide: "View SMS Guide"
   
+  form_type:
+    create_link: "Create Form Type"
+    
   location_picker:
     choose_location: "Choose Location"
     current_location: "Current Location"
@@ -612,18 +728,20 @@ en:
     request_made: "A request to reset your %{site} password has been made. If you did not make this request, simply ignore this email."
     welcome: "Welcome to %{site}!"
   
-  options:
+  option:
     appears_elsewhere: "Note: This option appears on the following forms: %{forms}. Any changes you make below will be reflected on those forms."
+    create_link: "Create Option"
     other_forms_published: "At least one of those forms is also published, so only names can be edited. You should also take care to not change the meaning of the option if editing the names."
   
-  option_sets:
+  option_set:
+    create_link: "Create Option Set"
     create_options: "create some Options"
     options_before_sets: "You need to %{link} before you can create Option Sets."
     orderings:
       value_asc: "Value Low to High"
       value_desc: "Value High to Low"
 
-  password_resets:
+  password_reset:
     check_email: "Instructions to reset your password have been emailed to you. Please check your email."
     enter_new_pass: "%{name}, please enter a new password for your account."
     fill_out_form: "Fill out the form below and instructions to reset your password will be emailed to you. If there is no email address associated with your account your password will have to reset by an administrator."
@@ -633,7 +751,7 @@ en:
       from your email into your browser or restarting the reset password process.
     user_not_found: "No user was found with that email address."
     
-  permission_errors:
+  permission_error:
     need_mission: "You can't view this without selecting a mission"
     need_login: "You must login to view that page."
     no_permission: "You don't have permission to view that page."
@@ -642,9 +760,10 @@ en:
     must_be_admin: "You must be an administrator to view that page."
     must_be_logged_out: "You must be logged out to view that page."
     
-  questions:
+  question:
     answer_only_caps: "ANSWER ONLY IF"
     appears_elsewhere: "Note: This question also appears on the following forms: %{forms}. Any changes you make below will also be reflected on those forms."
+    create_link: "Create Question"
     maxmin:
       gt: "greater than"
       lt: "less than"
@@ -653,7 +772,7 @@ en:
       strictly_gt: "Strictly greater than"
     other_forms_published: "At least one of those forms is also published, so not all fields can be edited."
    
-  question_types:
+  question_type:
     text: "Text"
     long_text: "Long Text"
     tiny_text: "Tiny Text"
@@ -666,12 +785,12 @@ en:
     date: "Date"
     time: "Time"
     
-  reports:
+  report/report:
     add_question_attribute: "Add Question/Attribute"
     back_to_list: "Back To Report List"
     choose_attrib_question: "Choose an attribute or question"
     choose_report: "Choose a Report..."
-    create_new: "Create New Report"
+    create_link: "Create Report"
     display_options: "Display Options"
     enter_name: "Enter a descriptive name for the report."
     export_to_csv: "Export Data To CSV Format"
@@ -725,29 +844,19 @@ en:
       code: "Codes Only (Saves Space)"
       title: "Full Titles (Easier to Read)"
       
-  responses:
-    awaiting_review_adj: 
-      zero: "%{count} awaiting review"
-      one: "%{count} awaiting review"
-      other: "%{count} awaiting review"
-    by_you_adj: 
-      zero: "%{count} %{objs} by you"
-      one: "%{count} %{objs} by you"
-      other: "%{count} %{objs} by you"
+  response:
+    create_link: "Create Response"
     export_to_csv: "Export to CSV Format"
-    in_the_past: "in the Past" # as in, "10 Responses in the Past 5 Hours"
-    no_recent: "No recent responses"
     observation_time: "Observation Time"
     save_and_mark_reviewed: "Save and Mark as Reviewed"
-    submission: "Submission"
-
-  roles:
+    
+  role:
     role: "Role"
     observer: "Observer"
     staffer: "Staffer"
     coordinator: "Coordinator"
     
-  searches:
+  search:
     at_end_of_query: "at end of query"
     expected: "Expected"
     invalid_op: "The operator '%{op}' is not valid for the qualifier '%{qualifier}'."
@@ -756,7 +865,7 @@ en:
     unexpected: "Unexpected text near '%{str}'"
     search_error: "Search Error"
   
-  settings:
+  setting:
     change_sms_password: "Change SMS Password"
     headings:
       general: "General Settings"
@@ -771,9 +880,8 @@ en:
     back_to_forms: "Back to Forms"
     no_reply: "No reply."
     submit_error: "There was an error submitting your test."
-    title: "SMS Test Console"
     
-  sms_forms:
+  sms_form:
     decoding:
       answer_error_intro: "Sorry, your answer '%{value}' for question %{rank} on form '%{form_code}'"
       answer_not_date: "was not a valid date"
@@ -828,12 +936,12 @@ en:
     default: "You are not authorized to access that page."
     must_login: "You must login to access that page."
   
-  user_batches:
+  user_batch:
     success: "Users created successfully."
-    title: "Create Multiple Users"
     
-  users:
+  user:
     back_to_index: "Back to Users List"
+    create_link: "Create User"
     create_multiple: "Create Multiple Users"
     edit_profile: "Edit Profile"
     export_vcard: "Export as vCard"
@@ -856,7 +964,6 @@ en:
       site_url: "Site URL"
       title: "Login Instructions"
       welcome: "Welcome to %{site}. Your credentials are as follows:"
-    logged_out: "Logged Out"
     logout_success: "You have logged out successfully."
     profile_updated: "Profile updated successfully."
     reset_password_and: "Reset password and"
@@ -869,7 +976,16 @@ en:
     show_printable_instructions: "show printable instructions"
   
   welcome:
-    awaiting_review: "Awaiting Review"
+    awaiting_review: "**%{count}** Awaiting Review"
+    by_you: "**%{count}** Submissions By You"
+    in_the_past_day: "**%{count}** in the Past Day"
+    in_the_past_hour: "**%{count}** in the Past Hour"
+    in_the_past_month: "**%{count}** in the Past Month"
+    in_the_past_week: "**%{count}** in the Past Week"
+    no_recent: "No recent responses"
+    published_form_count: "**%{count}** Published Forms"
     select_a_form: "Select a Form To Submit"
     select_a_report: "Select a Report To View"
-    submissions_by_you: "Submissions by You"
+    total_responses: "**%{count}** Total Responses"
+    total_users: "**%{count}** Total Users"    
+    unpublished_form_count: "**%{count}** Unpublished Forms"

@@ -19,10 +19,10 @@ class PasswordResetsController < ApplicationController
     @user = User.find_by_email(params[:password_reset][:email])  
     if @user  
       @user.deliver_password_reset_instructions!  
-      flash[:success] = t("password_resets.check_email")
+      flash[:success] = t("password_reset.check_email")
       redirect_to(login_path)
     else  
-      flash[:error] = t("password_resets.user_not_found")
+      flash[:error] = t("password_reset.user_not_found")
       redirect_to(:action => :new)
     end
   end
@@ -40,7 +40,7 @@ class PasswordResetsController < ApplicationController
       # so do post login housekeeping
       return unless post_login_housekeeping
 
-      flash[:success] = t("password_resets.success")
+      flash[:success] = t("password_reset.success")
       
       # use redirect_back_or_default to preserve the original path, if appropriate
       redirect_back_or_default(root_url)
@@ -56,7 +56,7 @@ class PasswordResetsController < ApplicationController
     def load_user_using_perishable_token
       @user = User.find_using_perishable_token(params[:id])  
       unless @user
-        flash[:error] = t("password_resets.token_not_found")
+        flash[:error] = t("password_reset.token_not_found")
         redirect_to(login_url)
       end
     end

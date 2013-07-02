@@ -3,7 +3,7 @@
 
   // constructor
   klass = ns.CalcTypeMenu = function(calc_types) {
-    this.objs = calc_types.map(function(name){ return {name: name, description: I18n.t("reports.calculation_descriptions." + name)}; });
+    this.objs = calc_types.map(function(name){ return {name: name, description: I18n.t("report/report.calculation_descriptions." + name)}; });
   };
   
   // inherit

@@ -1,10 +1,12 @@
+<% @title_args = {:name => @option.name} %>
+
 <%= flash_and_form_errors(@option) %>
 <%= nice_form_for(@option) do |f| %>
 
   <% if f.mode == :edit && !@option.forms.empty? %>
     <div class="tip important">
-      <%= t("options.appears_elsewhere", :forms => @option.forms.map{|f| f.name}.join(", ")) %>
-      <%= t("options.other_forms_published") if @option.published? %>
+      <%= t("option.appears_elsewhere", :forms => @option.forms.map{|f| f.name}.join(", ")) %>
+      <%= t("option.other_forms_published") if @option.published? %>
     </div>
   <% end %>
 

@@ -143,7 +143,7 @@ class ApplicationController < ActionController::Base
         @search = Search::Search.new(:class_name => klass.name, :str => params[:search])
         rel = @search.apply(rel) unless options[:search] == false
       rescue Search::ParseError
-        @error_msg = "#{t('searches.search_error')}: #{$!}"
+        @error_msg = "#{t('search.search_error')}: #{$!}"
       end
       
       # apply pagination and return

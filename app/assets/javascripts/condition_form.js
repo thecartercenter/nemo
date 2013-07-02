@@ -31,7 +31,7 @@
       var ops = self.condition.operators.filter(function(o){ return o.types.indexOf(ref_qtype) != -1; });
     
       // get a [name, value] style array based on the ops
-      var op_dropdowns = ops.map(function(o){ return [I18n.t("conditions.operators." + o.name), o.name]; });
+      var op_dropdowns = ops.map(function(o){ return [I18n.t("condition.operators." + o.name), o.name]; });
     
       // load the op dropdown with the appropriate operators and their translations
       $("#questioning_condition_op").emptyExceptFirst().addOptions(op_dropdowns);

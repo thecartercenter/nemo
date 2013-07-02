@@ -57,7 +57,7 @@ class UsersController < ApplicationController
 
         # redirect and message depend on if this was user editing self or not
         if @user == current_user
-          flash[:success] = t("users.profile_updated")
+          flash[:success] = t("user.profile_updated")
           redirect_to(:action => :edit)
         else
           set_success(@user)

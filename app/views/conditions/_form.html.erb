@@ -13,7 +13,7 @@
   <div class="row">
     <div><%=t "conditions.op" %></div>
     <div>
-      <%= f.select(:op, translate_options(@condition.applicable_operator_names, [:conditions, :operators]), 
+      <%= f.select(:op, translate_options(@condition.applicable_operator_names, [:condition, :operators]), 
         :include_blank => true) %>
     </div>
   </div>

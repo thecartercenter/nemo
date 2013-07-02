@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title><%= configatron.site_name %></title>
+  <title><%= configatron.site_name %>: <%= title %></title>
 
   <%= stylesheet_link_tag "application", :media => "all" %>
   <%= stylesheet_link_tag "application-screen", :media => "screen" %>
@@ -41,12 +41,12 @@
       
       <%# role %>
       <% if current_mission %>
-        <%= t("roles.role") %>: <%= t(current_user.role(current_mission), :scope => :roles, :default => "[#{t("common.none")}]") %>
+        <%= t("role.role") %>: <%= t(current_user.role(current_mission), :scope => :role, :default => "[#{t("common.none")}]") %>
         &nbsp;&bull;&nbsp;
       <% end %>
       
       <%# link to edit profile %>
-      <%= link_to(t("users.edit_profile"), edit_user_path(current_user.id)) %>
+      <%= link_to(t("user.edit_profile"), edit_user_path(current_user.id)) %>
       &nbsp;&bull;&nbsp;
 
       <%# logout button %>
@@ -99,7 +99,7 @@
     <% end %>
     
     <% if can?(:index, Sms::Message) %>
-      <%= link_to("SMS Log", sms_path) %> &nbsp;|&nbsp;
+      <%= link_to(t("page_titles.sms.index"), sms_path) %> &nbsp;|&nbsp;
     <% end %>
 
     <%= t("layout.system_version") %>: <%= configatron.system_version %>

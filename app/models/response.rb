@@ -70,14 +70,16 @@ class Response < ActiveRecord::Base
       "#{I18n.t('search_qualifiers.date')} < 2010-03-15"]
   end
 
-  # returns a human-readable description of how many responses have arrived recently
+  # returns a count how many responses have arrived recently
+  # format e.g. [5, "week"] (5 in the last week)
+  # nil means no recent responses
   def self.recent_count(rel)
     %w(hour day week month).each do |p|
-      if (x = rel.where("created_at > ?", 1.send(p).ago).count) > 0 
-        return [x, I18n.t("responses.in_the_past"), I18n.t("common.#{p}")].join(" ")
+      if (count = rel.where("created_at > ?", 1.send(p).ago).count) > 0
+        return [count, p]
       end
     end
-    I18n.t("responses.no_recent")
+    nil
   end
   
   def populate_from_xml(xml)

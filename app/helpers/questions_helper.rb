@@ -4,7 +4,7 @@ module QuestionsHelper
     
     # add the 'add questions to form' link if there are some questions
     unless @questions.empty?
-      links << batch_op_link(:name => t("forms.add_selected"), :path => add_questions_form_path(@form))
+      links << batch_op_link(:name => t("form.add_selected"), :path => add_questions_form_path(@form))
     end
     
     # add the create new questions link
@@ -20,7 +20,7 @@ module QuestionsHelper
 
   def format_questions_field(q, field)
     case field
-    when "type" then t(q.qtype_name, :scope => :question_types)
+    when "type" then t(q.qtype_name, :scope => :question_type)
     when "published?" then tbool(q.published?)
     when "actions" then action_links(q, :obj_name => q.code, :exclude => (q.published? ? [:edit, :destroy] : []))
     else q.send(field)

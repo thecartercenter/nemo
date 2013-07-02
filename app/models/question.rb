@@ -60,8 +60,8 @@ class Question < ActiveRecord::Base
   def min_max_error_msg
     return nil unless minimum || maximum
     clauses = []
-    clauses << I18n.t("questions.maxmin.gt") + " " + (minstrictly ? "" : I18n.t("questions.maxmin.or_eq") + " " ) + minimum.to_s if minimum
-    clauses << I18n.t("questions.maxmin.lt") + " " + (maxstrictly ? "" : I18n.t("questions.maxmin.or_eq") + " " ) + maximum.to_s if maximum
+    clauses << I18n.t("question.maxmin.gt") + " " + (minstrictly ? "" : I18n.t("question.maxmin.or_eq") + " " ) + minimum.to_s if minimum
+    clauses << I18n.t("question.maxmin.lt") + " " + (maxstrictly ? "" : I18n.t("question.maxmin.or_eq") + " " ) + maximum.to_s if maximum
     I18n.t("layout.must_be") + " " + clauses.join(" " + I18n.t("common.and") + " ")
   end
   

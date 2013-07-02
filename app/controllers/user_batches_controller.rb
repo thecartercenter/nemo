@@ -11,7 +11,7 @@ class UserBatchesController < ApplicationController
   def create
     begin
       @user_batch.create_users(current_mission)
-      @success_msg = t("user_batches.success")
+      @success_msg = t("user_batch.success")
       render(:show)
     rescue ActiveRecord::RecordInvalid
       flash[:error] = $!.to_s

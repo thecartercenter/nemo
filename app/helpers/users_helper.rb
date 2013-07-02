@@ -1,10 +1,10 @@
 module UsersHelper
   def users_index_links(users)
     links = []
-    links << batch_op_link(:name => t("broadcasts.send_broadcast"), :path => new_with_users_broadcasts_path) if can?(:create, Broadcast)
-    links << batch_op_link(:name => t("users.export_vcard"), :path => export_users_path(:format => :vcf)) if can?(:export, User)
+    links << batch_op_link(:name => t("broadcast.send_broadcast"), :path => new_with_users_broadcasts_path) if can?(:create, Broadcast)
+    links << batch_op_link(:name => t("user.export_vcard"), :path => export_users_path(:format => :vcf)) if can?(:export, User)
     links << create_link(User) if can?(:create, User)
-    links << link_to(t("users.create_multiple"), new_user_batch_path) if can?(:create, User)
+    links << link_to(t("user.create_multiple"), new_user_batch_path) if can?(:create, User)
     links
   end
 

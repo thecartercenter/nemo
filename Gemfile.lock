@@ -40,6 +40,7 @@ GEM
     authlogic (3.3.0)
       activerecord (>= 3.2)
       activesupport (>= 3.2)
+    bluecloth (2.2.0)
     builder (3.0.4)
     cancan (1.6.10)
     capistrano (2.15.4)
@@ -141,6 +142,7 @@ PLATFORMS
 
 DEPENDENCIES
   authlogic
+  bluecloth
   cancan
   capistrano
   configatron

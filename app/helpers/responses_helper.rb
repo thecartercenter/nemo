@@ -32,7 +32,7 @@ module ResponsesHelper
     
     # only add the export link if there are responses and the user is auth'd to export
     if !responses.empty? && can?(:export, Response)
-      links << link_to(t("responses.export_to_csv"), responses_path(:format => :csv, :search => params[:search]))
+      links << link_to(t("response.export_to_csv"), responses_path(:format => :csv, :search => params[:search]))
     end
     
     # return the assembled list of links
@@ -43,7 +43,7 @@ module ResponsesHelper
   def new_response_mini_form(visible = true)
     form_tag(new_response_path, :method => :get, :id => "form_chooser", :style => visible ? "" : "display: none") do
       select_tag(:form_id, sel_opts_from_objs(@pubd_forms, :name_method => :full_name, :tags => true), 
-        :prompt => t("forms.choose_form"), :onchange => "this.form.submit()")
+        :prompt => t("form.choose_form"), :onchange => "this.form.submit()")
     end
   end
   
@@ -59,6 +59,15 @@ module ResponsesHelper
         # add rest of rows
         responses.each{|r| csv << r.attributes.values}
       end
+    end
+  end
+  
+  # takes a recent count (e.g. [5, "week"]) and translates it
+  def translate_recent_responses(count)
+    if count.nil?
+      t("welcome.no_recent")
+    else
+      tmd("welcome.in_the_past_#{count[1]}", :count => count[0])
     end
   end
 end

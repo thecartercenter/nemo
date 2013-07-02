@@ -1,10 +1,3 @@
-<% # set title %>
-<% if @questioning.new_record? %>
-  <% @title = t("layout.new_obj", :obj => translate_model(Question), :gender => model_gender(Question)) %>
-<% else %>
-  <% @title = "#{Question.model_name.human}: #{@questioning.question.code}" %>
-<% end %>
-
 <%= flash_and_form_errors(@questioning) %>
 
 <%= nice_form_for(@questioning) do |f| %>
@@ -14,8 +7,8 @@
   
   <% if f.mode == :edit && !(other_forms = @questioning.other_forms).empty? %>
     <div class="tip important">
-      <%= t("questions.appears_elsewhere", :forms => other_forms.map{|f| f.name}.join(", ")) %>
-      <%= t("questions.other_forms_published") if @question_pubd %>
+      <%= t("question.appears_elsewhere", :forms => other_forms.map{|f| f.name}.join(", ")) %>
+      <%= t("question.other_forms_published") if @question_pubd %>
     </div>
   <% end %>
 
@@ -25,7 +18,7 @@
     <% unless @question_pubd %>
       <%= form_field(f2, :code, :required => true, :maxlength => 20) %>
       <%= form_field(f2, :qtype_name, :type => :select, :required => true, 
-        :options => @question_types.map{|qt| [t(qt.name, :scope => :question_types), qt.name]}) %>
+        :options => @question_types.map{|qt| [t(qt.name, :scope => :question_type), qt.name]}) %>
       <%= form_field(f2, :option_set_id, :type => :select, :options => sel_opts_from_objs(@option_sets)) %>
       <%= form_field(f2, :minimum, :partial => "questions/min_max_condition") %>
       <%= form_field(f2, :maximum, :partial => "questions/min_max_condition") %>

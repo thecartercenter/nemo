@@ -1,6 +1,6 @@
 <div id="instructions">
-  <h1><%= configatron.site_name %> <%= t("users.login_instructions.title") %></h1>
-  <p><%= t("users.login_instructions.welcome", :site => configatron.site_name) %></p>
+  <h1><%= configatron.site_name %> <%= t("user.login_instructions.title") %></h1>
+  <p><%= t("user.login_instructions.welcome", :site => configatron.site_name) %></p>
 
   <table class="form">
     <tr>
@@ -8,7 +8,7 @@
       <td class="value"><%= user.full_name %></td>
     </tr>
     <tr>
-      <td class="name"><%= t("users.login_instructions.site_url") %></td>
+      <td class="name"><%= t("user.login_instructions.site_url") %></td>
       <td class="value">https://<%= request.host_with_port %></td>
     </tr>
     <tr>
@@ -21,7 +21,7 @@
     </tr>
   </table>
 
-  <% t("users.login_instructions.closing").each do |para| %>
+  <% t("user.login_instructions.closing").each do |para| %>
     <p><%= para %></p>
   <% end %>
 </div>

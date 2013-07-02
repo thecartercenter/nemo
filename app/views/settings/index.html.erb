@@ -2,17 +2,17 @@
 
 <%= nice_form_for(@setting) do |f| %>
 
-  <h2><%= t("settings.headings.general") %></h2>
+  <h2><%= t("setting.headings.general") %></h2>
   <%= form_field(f, :mission_id, :type => :hidden) %>
   <%= form_field(f, :timezone, :type => :timezone, :required => true) %>
   <%= form_field(f, :languages, :required => true) %>
   
-  <h2><%= t("settings.headings.outgoing_sms") %></h2>
+  <h2><%= t("setting.headings.outgoing_sms") %></h2>
   <%= form_field(f, :outgoing_sms_adapter, :type => :select, :options => @adapter_options, :blank_text => t("common.none")) %>
   
   <div class="adapter_settings" data-adapter="IntelliSms">
     <%= form_field(f, :intellisms_username) %>
-    <%= link_to(t("settings.change_sms_password"), "#") %>
+    <%= link_to(t("setting.change_sms_password"), "#") %>
     <div class="password_fields">
       <%= form_field(f, :intellisms_password1, :type => :password) %>
       <%= form_field(f, :intellisms_password2, :type => :password) %>
@@ -22,14 +22,14 @@
   <div class="adapter_settings" data-adapter="Isms">
     <%= form_field(f, :isms_hostname) %>
     <%= form_field(f, :isms_username) %>
-    <%= link_to(t("settings.change_sms_password"), "#") %>
+    <%= link_to(t("setting.change_sms_password"), "#") %>
     <div class="password_fields">
       <%= form_field(f, :isms_password1, :type => :password) %>
       <%= form_field(f, :isms_password2, :type => :password) %>
     </div>
   </div>
   
-  <h2><%= t("settings.headings.incoming_sms") %></h2>
+  <h2><%= t("setting.headings.incoming_sms") %></h2>
   <%= form_field(f, :incoming_sms_number) %>
   
   <h2>Tableau</h2><!-- not i18n'd b/c it's a product name -->

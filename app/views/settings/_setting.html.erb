@@ -1,6 +1,6 @@
 <tr class="rowbg<%= (setting_counter + 1) % 2 %>">
   <td class="name">
-    <%= t(setting.key, :scope => [:settings, :names]) %>
+    <%= t(setting.key, :scope => [:setting, :names]) %>
   </td>
   <td class="value">
     <%= fields_for('settings[]', setting) do |f| %>
@@ -12,5 +12,5 @@
       <% end %>
     <% end %>
   </td>
-  <td class="details"><%= t(setting.key, :scope => [:settings, :tips]) %></div>
+  <td class="details"><%= t(setting.key, :scope => [:setting, :tips]) %></div>
 </tr>

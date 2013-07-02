@@ -5,16 +5,16 @@ module QuestioningsHelper
     # these links only make sense if we're editing
     if controller.action_name == "edit"
       # add questions link
-      links << link_to(t("forms.add_questions"), choose_questions_form_path(@form))
+      links << link_to(t("form.add_questions"), choose_questions_form_path(@form))
       
       # these links only make sense if there are questions
       if qings.size > 0
         # add remove questions link
-        links << batch_op_link(:name => t("forms.remove_selected"), :path => remove_questions_form_path(@form),
-          :confirm => t("forms.remove_question_confirm"))
+        links << batch_op_link(:name => t("form.remove_selected"), :path => remove_questions_form_path(@form),
+          :confirm => t("form.remove_question_confirm"))
         
         # add publish link
-        links << link_to("#{t('forms.publish')} #{Form.model_name.human}", publish_form_path(@form))
+        links << link_to("#{t('form.publish')} #{Form.model_name.human}", publish_form_path(@form))
       end
     end
     
@@ -26,7 +26,7 @@ module QuestioningsHelper
     
     # add the sms guide link if appropriate
     if qings.size > 0 && qings.first.form.smsable? && qings.first.form.published?
-      links << link_to(t("forms.view_sms_guide"), form_path(qings.first.form, :sms_guide => 1))
+      links << link_to(t("form.view_sms_guide"), form_path(qings.first.form, :sms_guide => 1))
     end
     
     # return the array of links we built

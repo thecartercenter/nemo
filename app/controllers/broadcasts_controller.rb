@@ -11,7 +11,7 @@ class BroadcastsController < ApplicationController
   end
   
   def new
-    flash[:success] = t("broadcasts.instructions")
+    flash[:success] = t("broadcast.instructions")
     redirect_to(users_path)
   end
   
@@ -50,9 +50,9 @@ class BroadcastsController < ApplicationController
   def create
     if @broadcast.save
       if @broadcast.send_errors
-        flash[:error] = t("broadcasts.send_error")
+        flash[:error] = t("broadcast.send_error")
       else
-        flash[:success] = t("broadcasts.send_success")
+        flash[:success] = t("broadcast.send_success")
       end
       redirect_to(broadcast_path(@broadcast))
     else
