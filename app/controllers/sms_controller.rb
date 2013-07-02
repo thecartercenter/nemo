@@ -22,7 +22,7 @@ class SmsController < ApplicationController
       elmo_response.save!
       
       # send congrats!
-      t_sms_msg("sms_forms.decoding.congrats", :user => elmo_response.user, :form => elmo_response.form, :mission => sms.mission)
+      t_sms_msg("sms_form.decoding.congrats", :user => elmo_response.user, :form => elmo_response.form, :mission => sms.mission)
     
     # if there is a decoding error, respond accordingly
     rescue Sms::DecodingError
@@ -31,11 +31,11 @@ class SmsController < ApplicationController
       if $!.type == "user_not_found" && sms.from =~ /[a-z]/i
         nil
       else
-        msg = t_sms_msg("sms_forms.decoding.#{$!.type}", $!.params)
+        msg = t_sms_msg("sms_form.decoding.#{$!.type}", $!.params)
         
         # if this is an answer format error, add an intro to the beginning and add a period
         if $!.type =~ /^answer_not_/ 
-          t_sms_msg("sms_forms.decoding.answer_error_intro", $!.params) + " " + msg + "."
+          t_sms_msg("sms_form.decoding.answer_error_intro", $!.params) + " " + msg + "."
         else
           msg
         end
@@ -59,7 +59,7 @@ class SmsController < ApplicationController
         ranks = elmo_response.missing_answers.map(&:rank).sort.join(",")
         
         # pluralize the translation key if appropriate
-        key = "sms_forms.validation.missing_answer"
+        key = "sms_form.validation.missing_answer"
         key += "s" if elmo_response.missing_answers.size > 1
         
         # translate
@@ -68,7 +68,7 @@ class SmsController < ApplicationController
       when :invalid_answers
         # if it's the invalid_answers error, we need to find the first answer that's invalid and report its error
         invalid_answer = elmo_response.answers.detect{|a| a.errors && a.errors.messages.size > 0}
-        t_sms_msg("sms_forms.validation.invalid_answer", :rank => invalid_answer.questioning.rank, 
+        t_sms_msg("sms_form.validation.invalid_answer", :rank => invalid_answer.questioning.rank, 
           :error => invalid_answer.errors.full_messages.join(", "), :user => elmo_response.user, :form => elmo_response.form, :mission => sms.mission)
       
       else
