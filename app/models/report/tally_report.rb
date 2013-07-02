@@ -18,7 +18,7 @@ class Report::TallyReport < Report::Report
           {:name => Report::Formatter.format(tuple[0], tuple[2], :header), :key => tuple[0], :sort_value => tuple[1]}
         end
       else
-        hashes = [{:name => "Tally", :key => "Tally", :sort_value => 0}]
+        hashes = [{:name => I18n.t("report/report.tally"), :key => "tally", :sort_value => 0}]
       end
       Report::Header.new(:title => header_title(type), :cells => hashes)
     end
@@ -26,8 +26,8 @@ class Report::TallyReport < Report::Report
     # processes a row from the db_result by adding the contained data to the result
     def extract_data_from_row(db_row, db_row_idx)
       # get row and column indices (for result table) by looking them up in the header list
-      row_key = has_grouping(:row) ? db_row["pri_name"] : "Tally"
-      col_key = has_grouping(:col) ? db_row["sec_name"] : "Tally"
+      row_key = has_grouping(:row) ? db_row["pri_name"] : "tally"
+      col_key = has_grouping(:col) ? db_row["sec_name"] : "tally"
       r, c = @header_set.find_indices(:row => row_key, :col => col_key)
 
       # set the matching cell value

@@ -155,17 +155,17 @@ fr:
         one: "Compilation de réponses par question"
         other: "Compilations de réponses par question"
       report/grouped_tally_report:
-        zero: "Compilations de réponses par réponse/attribut"
-        one: "Compilation de réponses par réponse/attribut"
-        other: "Compilations de réponses par réponse/attribut"
+        zero: "Compilations de soumissions par réponse/attribut"
+        one: "Compilation de soumissions par réponse/attribut"
+        other: "Compilations de soumissions par réponse/attribut"
       report/list_report:
         zero: "Listes des réponses/attributs"
         one: "Liste des réponses/attributs"
         other: "Listes des réponses/attributs"
       response:
-        zero: "Réponses"
-        one: "Réponse"
-        other: "Réponses"
+        zero: "Soumissions"
+        one: "Soumission"
+        other: "Soumissions"
       search/search:
         zero: "Recherche"
         one: "Rechercher"
@@ -196,7 +196,7 @@ fr:
       form:
         downloads: "Téléchargements"
         form_type_id: "Type de fiche"
-        responses: "Réponses"
+        responses: "Soumissions"
         smsable: "Utilisable par SMS"
         updated_at: "Dernière modification"
         version: "Version"
@@ -217,9 +217,10 @@ fr:
         rank: "Rangée"
         required: "Requis?"
       response:
-        id: "Identification de réponse"
         age: "Âge"
-        created_at: "Délai de soumission"
+        answers: "Réponses"
+        id: "Numero de la soumission"
+        created_at: "Date de soumission"
         form_id: "Fiche"
         reviewed: "Revue?"
         source: "Origine"
@@ -237,7 +238,7 @@ fr:
         submit_edit: "Enregistrer les modifications"
         submit_new: "Générer rapport"
         unique_rows: "Masquer lignes dupliquées"
-        unreviewed: "Permettre prépublication réponses"
+        unreviewed: "Permettre soumissions non-examinés"
         view_count: "Vues"
         viewed_at: "Dernière consultation"
       setting:
@@ -255,13 +256,13 @@ fr:
         timezone: "Fuseau horaire"
       sms/message:
         adapter_name: "Adaptateur" 
-        from: "de"
-        body: "texte"
-        sent_at: "l'heure d'envoi"
-        to: "à" 
+        from: "De"
+        body: "Texte"
+        sent_at: "L'heure d'envoi"
+        to: "À" 
       sms/test:
-        from: "de"
-        body: "texte" 
+        from: "De"
+        body: "Texte" 
       user:
         admin: "Administrateur?"
         assignments: "Tâches"
@@ -290,8 +291,8 @@ fr:
       question:
         code: "Un nom de code court (entre 2-20 caractères). Devrait contenir seulement des lettres et des chiffres, par ex. UrneClos, HeureDeDepart."
         hint: "Instructions additionnels, par ex. 'Entrez un compte approximatif de personnes qui attendent pour voter.'"
-        minimum: "Le valeur minimum pour le réponse. Cochez la boîte s'il minimum non est valable."
-        maximum: "Le valeur maximum pour le réponse. Cochez la boîte s'il minimum non est valable."
+        minimum: "Le valeur minimum pour la réponse. Cochez la boîte s'il minimum non est valable."
+        maximum: "Le valeur maximum pour la réponse. Cochez la boîte s'il minimum non est valable."
         name: "Le texte de la question principale, par ex. 'Combien de personnes sont dans la ligne?'"
         option_set_id: "Le groupe d'options l'utilisateur pourra choisir."
         qtype_name: "Le type d'information l'utilisateur inscrira."
@@ -304,9 +305,9 @@ fr:
         aggregation_id: "L'opération vous voulez accomplir sur les données conjugé."
         kind: "Le type de données avec qui vous voulez travailler."
         display_type: "Le méthode dans lequel vous voulez les résultats de se présenter."
-        unreviewed: "Si les réponses non révisées devraient être inclus dans le rapport."
+        unreviewed: "Si les soumissions non révisées devraient être inclus dans le rapport."
         unique_rows: "Si les rangées en double devraient être omis du rapport."
-        pri_grouping: "Un attribut ou une question à laquelle le nombre de réponses devraient être grouper (par ex. état, note globale)."
+        pri_grouping: "Un attribut ou une question à laquelle le nombre de soumissions devraient être grouper (par ex. état, note globale)."
         percent_type: "Si et comment les pourcentages doivent être calculés pour la rapport."
         bar_style: "Si les bandes doivent être empilés ou côte-à-côte."
       setting:
@@ -354,30 +355,30 @@ fr:
         condition:
           all_required: "Tous le domaines sont nécessaire."
         form:
-          cant_delete_if_has_responses: "Non pouvez supprimer ce fiche parce que a réponses associés."
+          cant_delete_if_has_responses: "Non pouvez supprimer ce fiche parce que a soumissions associés."
           cant_delete_published: "Une Fiche publié non peut être supprimer."
           cant_edit_published: "Une Fiche publié non peut être révisé."
           ranks_break_conditions: "Les nouveaux classements invalident un ou plus conditions."
         form_type:
           cant_delete_if_has_forms: "Vous ne pouvez pas supprimer ce type de fiche parce qu'un ou plus Fiches y sont associés."
         mission:
-          cant_delete_if_assoc: "Non pouvez supprimer cette Mission parce que lui est associée à fiches, réponses, ou plus d'objets."
+          cant_delete_if_assoc: "Non pouvez supprimer cette Mission parce que lui est associée à fiches, soumissions, ou plus d'objets."
           let_num_spc_only: "peut seulement contenir lettres, numéros et espaces."
           not_unique: "est trop comme la mission actuel '%{existing}'"
         option:
-          cant_delete_if_has_response: "Vous ne pouvez pas supprimer cette option parce qu'elle est comprise dans au moins une Réponse."
+          cant_delete_if_has_response: "Vous ne pouvez pas supprimer cette option parce qu'elle est comprise dans au moins une soumission."
           cant_change_if_published: "Ne pouvez pas changer cette option parce qu'apparaît dans a moins une fiche publié."
           cant_delete_if_published: "Ne pouvez pas changer cette option parce qu'apparaît dans a moins une fiche publié."
           names_too_long: "Noms doivent être au plus 30 caractères de longueur."
         option_set:
           at_least_one: "Devez choisir au moins une option."
           cant_delete_if_has_questions: "Ne pouvez pas supprimer ce collection des options parce qu'une ou plus questions y sont associées."
-          cant_delete_if_has_response: "Ne pouvez pas supprimer ce collection des options parce qu'est inclus dans a moins une Réponse."
+          cant_delete_if_has_response: "Ne pouvez pas supprimer ce collection des options parce qu'est inclus dans a moins une soumission."
           non_unique_values: "Deux ou plus des options que vous avez choisi ont le même valeur numérique."
         question:
           cant_change_if_conditions: "Vous ne pouvez pas changer le type ou le collection des options parce qu'il y a des conditions que concernent cette question."
           cant_change_if_published: "Vous ne pouvez pas changer cette question parce qu'apparaît dans a moins une fiche publié."
-          cant_change_if_responses: "Vous ne pouvez pas changer le Type ou le collection des options parce qu'il y a déjà Réponses pour cette question."
+          cant_change_if_responses: "Vous ne pouvez pas changer le Type ou le collection des options parce qu'il y a déjà soumissions pour cette question."
           cant_delete_if_in_form: "Vous ne pouvez pas supprimer cette question parce qu'elle est comprise dans au moins une fiche."
         questioning:
           cant_delete_if_has_answers: "Vous ne pouvez pas éliminer cette question parce que a un ou plus réponses pour cette fiche."
@@ -394,8 +395,10 @@ fr:
             type:
               blank: "Vous devez choisir un titre du rapport."
         response:
-          invalid_answers: "sont invalide (voyez sous)"
-          missing_answers: "Toutes les questions non ont des réponses."
+          attributes:
+            answers:
+              invalid: "sont invalides (voyez ci-dessous)"
+          missing_answers: "Au moins une question manque de réponse."
         setting:
           attributes:
             languages:
@@ -496,10 +499,10 @@ fr:
     response:
       page_entries_info: 
         single_page_html:
-          zero:  "Pas de réponses trouvées"
-          one:   "Montrant <b>1</b> résponse"
-          other: "Montrant <b>toutes les %{count}</b> résponses"
-        multi_page_html: "Montrant les résponses <b>%{from} - %{to}</b> de <b>%{count}</b> au total"
+          zero:  "Pas de soumissions trouvées"
+          one:   "Montrant <b>1</b> soumission"
+          other: "Montrant <b>toutes les %{count}</b> soumissions"
+        multi_page_html: "Montrant les soumissions <b>%{from} - %{to}</b> de <b>%{count}</b> au total"
     sms/message:
       page_entries_info: 
         single_page_html:
@@ -603,10 +606,10 @@ fr:
     questions:
       edit: "Modifier la question: %{name}"
     responses:
-      edit: "Modifier la réponse: #%{id}"
-      index: "Réponses"
-      new: "Nouvelle réponse"
-      show: "Réponse: #%{id}"
+      edit: "Modifier la soumission: #%{id}"
+      index: "Soumissions"
+      new: "Nouvelle soumission"
+      show: "Soumission: #%{id}"
     reports:
       index: "Rapports"
     settings:
@@ -690,9 +693,10 @@ fr:
     clone_error: "Il y avait un problème avec le clonage de la fiche (%{msg})."    
     clone_success: "Fiche '%{form_name}' cloné avec succès."
     create_link: "Créer une nouvelle fiche"
+    print_form: "Imprimer la fiche"
     publish_error: "Il y avait un problème avec l'édition de la Fiche (%{msg})."
     publish_success: "Fiche publié avec succès."
-    publish: "Publie"
+    publish_form: "Publier la fiche"
     question_remove_error: "Il y avait une problème enlevant les questions (%{msg})."
     questions_add_error: "Il y avait une problème ajoutant les questions (%{msg})."
     questions_add_success: "Questions ajouté avec succès."
@@ -756,7 +760,7 @@ fr:
     need_login: "Vous devez connecter pour voir ça page."
     no_permission: "Vous n'a pas permission pour vour ça page."
     processing_error: "Erreur avec la permission de la traitement."
-    observers_cant_change_submitter: "Les observateurs ne peuvent pas changer l'expéditeur des réponses."
+    observers_cant_change_submitter: "Les observateurs ne peuvent pas changer l'expéditeur des soumissions."
     must_be_admin: "Vous devez être administrateur de vue cette page."
     must_be_logged_out: "Vous devez déconnecté de vue cette page."
     
@@ -787,6 +791,10 @@ fr:
     
   report/report:
     add_question_attribute: "Ajouter question/attribut"
+    attribute:
+      zero: "Attributs"
+      one: "Attribut"
+      other: "Attributs"
     back_to_list: "Retourner à list des rapports"
     blank: "Vide" # should be very short
     choose_attrib_question: "Choisissez un attribut ou question"
@@ -794,7 +802,7 @@ fr:
     create_link: "Créer un nouveau rapport"
     display_options: "Options d'affichage"
     enter_name: "Entrer un nom descriptif pour le rapport."
-    export_to_csv: "Export le data à format CSV"
+    export_to_csv: "Export les données à format CSV"
     groupings: "Collections"
     how_to_display_questions: "Comment montreriez des questions?"
     how_to_display_results: "Comment vous aimeriez montrer des questions?"
@@ -803,6 +811,7 @@ fr:
     no_match: "Pas de donnés correspondants ont été trouvée."
     report_title: "Titre de rapport"
     report_type: "Type de rapport"
+    tally: "Compte"
     these_questions: "Ces questions spécifique"
     total_rows: "Nombre de rangées"
     what_attrib_col_headers: "Quel attribut ou question aimez-vous pour les titre des colonnes (optional)?"
@@ -819,19 +828,19 @@ fr:
       stacked: "Empilé"
     calculation_descriptions:
       identity: "Aucune"
-      zero_nonzero: "Si un réponse est zéro ou plus que zéro"
+      zero_nonzero: "Si une réponse est zéro ou plus que zéro"
     display_types:
       table: "Table"
       bar_chart: "Histogramme"
     examples:
       question_answer_tally_report:
-        - "Numéro de Très Bien, Bien, etc. réponses pour la question total"
+        - "Numéro de Très Bien, Bien, etc. soumissions pour la question total"
         - "Pourcentage de Oui ou Non pour tout les Oui-Non questions"
         - "Numéro de Zéro et Non-Zéro pour les questions de observateurs"
       grouped_tally_report:
-        - "Numéro des réponses pour chaque fiche pour chaque equipe"
+        - "Numéro des soumissions pour chaque fiche pour chaque equipe"
         - "Pourcentage de Oui ou Non chaque jour pour la question de CalmeEtEnvironnement"
-        - "Pourcentage de Zéro ou Non-zéro réponses pour chaque état pour les question ObservateursDomestiques"
+        - "Pourcentage de Zéro ou Non-zéro soumissions pour chaque état pour les question ObservateursDomestiques"
       list_report:
         - "liste des réponses pour LesPlaintes et AutreQuestionsIrrégulaire avec la numéro de bureau de vote"
         - "liste de toutes les numéros de bureau de votres, pas de copies"
@@ -884,7 +893,7 @@ fr:
     
   sms_form:
     decoding:
-      answer_error_intro: "Désolé, votre reponse '%{value}' pour question %{rank} dans la fiche '%{form_code}'"
+      answer_error_intro: "Désolé, votre réponse '%{value}' pour question %{rank} dans la fiche '%{form_code}'"
       answer_not_date: "n'etait pas un date valable"
       answer_not_datetime: "n'etait pas un date ou temp valable"
       answer_not_decimal: "n'etait pas un nombre valable"
@@ -893,8 +902,8 @@ fr:
       answer_not_valid_option: "n'etait pas un option valable"
       answer_not_valid_option_multi: "contenait l'option non-valable '%{invalid_options}'"
       answer_not_valid_options_multi: "contenait les options non-valables '%{invalid_options}'"
-      congrats: "Votre reponse pour form '%{form_code}' a été reçue. Merci!"
-      duplicate_submission: "Desole, votre reponse etait identique a une qui a ete recue recemment."
+      congrats: "Votre soumission pour fiche '%{form_code}' a été reçue. Merci!"
+      duplicate_submission: "Desole, votre soumission était identique a une qui a ete recue recemment."
       form_not_found: "Désolé, il n'y a pas une fiche avec le code '%{form_code}'."
       form_not_permitted: "Désolé, vous n'avez pas la permission pour soumettre le fiche '%{form_code}'."
       form_not_published: "Désolé, fiche '%{form_code}' n'est pas disponible pour les présentations."
@@ -908,14 +917,14 @@ fr:
       header: "ELMO SMS Guide de Composition"
       not_all_required: "Les questions indiquées avec un astérisque (*) sont obligatoires."
       pointers:
-        tiny_text: "Ecrivez votre reponse ici. Abréger si necessaire."
-        integer: "Ecrivez votre reponse ici."
-        decimal: "Ecrivez votre reponse ici."
+        tiny_text: "Ecrivez votre réponse ici. Abréger si necessaire."
+        integer: "Ecrivez votre réponse ici."
+        decimal: "Ecrivez votre réponse ici."
         select_one: "Ecrivez la lettre de votre choix ici. Ecrivez seulement un lettre."
         select_multiple: "Ecrivez la lettre pour chaque choix ici sans epaces."
-        datetime: "Ecrivez votre reponse ici dans AAAAMMJJ HHMM (ans/mois/jours heures/minutes) format."
-        date: "Ecrivez votre reponse ici dans AAAAMMDD (ans/mois/jours) format."
-        time: "Ecrivez votre reponse ici dans HHMM (heures/minutes) format."
+        datetime: "Ecrivez votre réponse ici dans AAAAMMJJ HHMM (ans/mois/jours heures/minutes) format."
+        date: "Ecrivez votre réponse ici dans AAAAMMDD (ans/mois/jours) format."
+        time: "Ecrivez votre réponse ici dans HHMM (heures/minutes) format."
       step1: "Répondre à toutes les questions qui suivent et utiliser les instructions a la fin de la fiche pour envoyer vos reports."
       step2: "Maintenant, suivez les étapes suivants pour envoyer votre données:"
       step2_substeps:
@@ -930,8 +939,8 @@ fr:
       unknown_number: "Numéro de téléphone inconnu"
     validation:
       invalid_answer: "Désolé, votre réponse pour question %{rank} %{error}."
-      missing_answer: "Désolé, votre réplique pour fiche '%{form_code}' manquait un réponse pour question obligatoire %{ranks}."
-      missing_answers: "Désolé, votre réplique pour fiche '%{form_code}' manquait des réponses pour questions obligatoires %{ranks}."
+      missing_answer: "Désolé, votre soumission pour fiche '%{form_code}' manquait un réponse pour question obligatoire %{ranks}."
+      missing_answers: "Désolé, votre soumission pour fiche '%{form_code}' manquait des réponses pour questions obligatoires %{ranks}."
 
   unauthorized:
     default: "Vous n'avez pas l'authorisation pour accès à la page."
@@ -984,9 +993,9 @@ fr:
     in_the_past_week: "**%{count}** Pendant la semaine passé"
     in_the_past_month: "**%{count}** Pendant le mois passé"
     published_form_count: "**%{count}** Fiches publiés"
-    no_recent: "Pas de réponses recents"
+    no_recent: "Pas de soumissions recents"
     select_a_form: "Soumettre une fiche"
     select_a_report: "Soumettre un rapport"
-    total_responses: "**%{count}** Réponses au total"
+    total_responses: "**%{count}** Soumissions au total"
     total_users: "**%{count}** Utilisateurs au total"
     unpublished_form_count: "**%{count}** Fiches non-publiés"

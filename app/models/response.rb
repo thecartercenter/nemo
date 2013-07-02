@@ -15,7 +15,7 @@ class Response < ActiveRecord::Base
   validate(:no_missing_answers)
 
   # don't need to validate answers in odk mode
-  validates_associated(:answers, :message => :invalid_answers, :if => Proc.new{|r| r.modifier != "odk"})
+  validates_associated(:answers, :message => :invalid, :if => Proc.new{|r| r.modifier != "odk"})
   
   default_scope(includes({:form => :type}, :user).order("responses.created_at DESC"))
   scope(:unreviewed, where(:reviewed => false))

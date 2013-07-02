@@ -85,7 +85,7 @@ class Report::QuestionAnswerTallyReport < Report::TallyReport
     end
     
     def header_title(which)
-      which == :row ? "Questions" : "Answers"
+      I18n.t("activerecord.models." + (which == :row ? "question" : "answer"), :count => 2)
     end
     
     def has_grouping(which)

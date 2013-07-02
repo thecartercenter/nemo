@@ -217,8 +217,9 @@ en:
         rank: "Rank"
         required: "Required?"
       response:
-        id: "Response ID"
         age: "Age"
+        answers: "Answers"
+        id: "Response ID"
         created_at: "Submission Time"
         form_id: "Form"
         reviewed: "Reviewed?"
@@ -394,7 +395,9 @@ en:
             type:
               blank: "You must choose a report type."
         response:
-          invalid_answers: "are invalid (see below)"
+          attributes:
+            answers:
+              invalid: "are invalid (see below)"
           missing_answers: "Not all questions have answers."
         setting:
           attributes:
@@ -692,9 +695,10 @@ en:
     clone_error: "There was a problem cloning the form (%{msg})."    
     clone_success: "Form '%{form_name}' cloned successfully."
     create_link: "Create Form"
+    print_form: "Print Form"
     publish_error: "There was a problem publishing the form (%{msg})."
     publish_success: "Form published successfully."
-    publish: "Publish"
+    publish_form: "Publish Form"
     question_remove_error: "There was a problem removing the questions (%{msg})."
     questions_add_error: "There was a problem adding the questions (%{msg})."
     questions_add_success: "Questions added successfully."
@@ -789,6 +793,10 @@ en:
     
   report/report:
     add_question_attribute: "Add Question/Attribute"
+    attribute:
+      zero: "Attributes"
+      one: "Attribute"
+      other: "Attributes"
     back_to_list: "Back To Report List"
     blank: "Blank" # should be very short
     choose_attrib_question: "Choose an attribute or question"
@@ -805,6 +813,7 @@ en:
     no_match: "No matching data were found."
     report_title: "Report Title"
     report_type: "Report Type"
+    tally: "Tally"
     these_questions: "These specific questions"
     total_rows: "Total Rows"
     what_attrib_col_headers: "What attribute or question would you like for the column headers (optional)?"

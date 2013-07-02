@@ -14,13 +14,13 @@ module QuestioningsHelper
           :confirm => t("form.remove_question_confirm"))
         
         # add publish link
-        links << link_to("#{t('form.publish')} #{Form.model_name.human}", publish_form_path(@form))
+        links << link_to("#{t('form.publish_form')}", publish_form_path(@form))
       end
     end
     
     # can print from show action, if there are questions
     if qings.size > 0
-      links << link_to("#{t('common.print')} #{Form.model_name.human}", "#", :onclick => "Form.print(#{qings.first.form.id}); return false;") + " " +
+      links << link_to("#{t('form.print_form')}", "#", :onclick => "Form.print(#{qings.first.form.id}); return false;") + " " +
         loading_indicator(:id => qings.first.form.id)
     end
     

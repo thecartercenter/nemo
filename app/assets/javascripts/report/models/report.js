@@ -102,7 +102,7 @@
   }
   
   klass.prototype.aggregation = function() {
-    return this.attribs.aggregation_name || "Tally";
+    return this.attribs.aggregation_name || I18n.t("report/report.tally");
   }
   
   // returns a filter string fragment for the selected form ids

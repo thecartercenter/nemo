@@ -22,12 +22,12 @@
     
     this.field.update_objs([
       {
-        label: "Attributes",
+        label: I18n.t("report/report.attribute.other"),
         objs: this.menus.attrib.objs,
         id_key: function(obj) { return "attrib1_name:" + obj.name; },
         txt_key: "title"
       },{
-        label: "Questions",
+        label: I18n.t("activerecord.models.question.other"),
         objs: this.menus.question.filter({form_ids: this.report.attribs.form_ids}),
         id_key: function(obj) { return "question1_id:" + obj.id; },
         txt_key: "code"
