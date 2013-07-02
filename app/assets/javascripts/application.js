@@ -14,7 +14,7 @@
 //= require core_ext/string
 //= require jquery
 //= require jquery_ujs
-//= require jquery-ui-1.8.17.custom.min
+//= require jquery-ui-1.10.3.custom.min
 //= require core_ext/jquery_ext
 //= require common
 //= require sassafras/utils
