@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title><%= configatron.site_name %>: <%= title %></title>
+  <title><%= configatron.site_name %><%= title.blank? ? "" : ": #{title}" %></title>
 
   <%= stylesheet_link_tag "application", :media => "all" %>
   <%= stylesheet_link_tag "application-screen", :media => "screen" %>
@@ -16,6 +16,12 @@
     I18n.defaultLocale = "<%= I18n.default_locale %>";
     I18n.locale = "<%= I18n.locale %>";
   </script>
+  
+  <%= javascript_doc_ready do %>
+    // handles general client side stuff that appears in the template (e.g. language chooser form)
+    // appears at top of file because it needs to be loaded first
+    ELMO.app = new ELMO.App({site_name: <%= configatron.site_name.to_json.html_safe %>});
+  <% end %>
   
   <%= yield(:per_page_js) %>
 </head>
@@ -112,11 +118,6 @@
   
   <%= javascript_tag do %>
     var LOGIN_PATH = <%= login_path.to_json.html_safe %>;
-  <% end %>
-  
-  <%= javascript_doc_ready do %>
-    // handles general client side stuff that appears in the template (e.g. language chooser form)
-    new ELMO.App();
   <% end %>
 </body>
 </html>

@@ -37,7 +37,6 @@ fr:
     next: "Suivant"
     _no: "Non" # using 'no' by itself as a key causes an error in i18n-js
     none: "Aucun"
-    _null: "Null" # using 'null' by itself as a key causes an error in i18n-js
     or: "ou"
     previous: "Précédent"
     print: "Imprimer"
@@ -60,7 +59,7 @@ fr:
     successfully: "Avec succès"
     thanks_excl: "Merci!"
     this: "Ce(tte)"
-    total: "Totale"
+    total: "Total"
     updated: "Mis à jour"
     view: "Vue"
     _yes: "Oui" # using 'yes' by itself as a key causes an error in i18n-js
@@ -444,7 +443,7 @@ fr:
         single_page_html:
           zero:  "Pas de diffusions trouvées"
           one:   "Montrant <b>1</b> diffusion"
-          other: "Montrant <b>all %{count}</b> diffusions"
+          other: "Montrant <b>toutes les %{count}</b> diffusions"
         multi_page_html: "Montrant les diffusions <b>%{from} - %{to}</b> de <b>%{count}</b> au total"
     form:
       page_entries_info: 
@@ -542,14 +541,14 @@ fr:
   # time/date formats (see http://www.ruby-doc.org/core-2.0/Time.html#method-i-strftime for code meanings)
   date:
     formats:
-      default: "%b %d %Y"
-      short: "%b %d"
-      long: "%B %d %Y"
+      default: "%d %b %Y"
+      short: "%d %b"
+      long: "%d %B %Y"
   time:
     formats:
-      default: "%b %d %Y %H:%M"
-      short: "%b %d %H:%M"
-      long: "%A, %B %d %Y %H:%M"
+      default: "%d %b %Y %H:%M"
+      short: "%d %b %H:%M"
+      long: "%A, %d %B %Y %H:%M"
       time_only: "%H:%M"
 
   # all search qualifier translations should have NO spaces (use '-'), capital letters, or any of these chars: : = < > ! , )
@@ -626,7 +625,7 @@ fr:
       edit_profile: "Modifier le profil"
       index: "Utilisateurs"
       login_instructions: "Instructions de connexion"
-      new: "Nouveaur utilisateur"
+      new: "Nouveau utilisateur"
       show: "Utilisateur: %{name}"
     welcome:
       index: "Accueil"
@@ -716,6 +715,9 @@ fr:
     enter_query: "Entrer une question dans la boîte au-dessus pour chercher un emplacement dans la base de données du Google."
     search_locations: "Recherche les emplacements..."
   
+  mission:
+    create_link: "Créer une nouvelle mission"
+  
   notifier:
     if_link_doesnt_work: "Si le lien au-dessus ne marche pas, essayer de copier et coller dans le navigateur."
     if_you_made_it: "Si vous avez fait cette sollicitation seulement cliquer le lien au-dessus:"
@@ -786,6 +788,7 @@ fr:
   report/report:
     add_question_attribute: "Ajouter question/attribut"
     back_to_list: "Retourner à list des rapports"
+    blank: "Vide" # should be very short
     choose_attrib_question: "Choisissez un attribut ou question"
     choose_report: "Choisissez un rapport..."
     create_link: "Créer un nouveau rapport"
@@ -801,7 +804,7 @@ fr:
     report_title: "Titre de rapport"
     report_type: "Type de rapport"
     these_questions: "Ces questions spécifique"
-    total_rows: "Rangée Totale"
+    total_rows: "Nombre de rangées"
     what_attrib_col_headers: "Quel attribut ou question aimez-vous pour les titre des colonnes (optional)?"
     what_attrib_row_headers: "Quel attribut ou question aimez-vous pour les titres des rangées?"
     what_bar_style: "Quel histogramme aimez-vous??"

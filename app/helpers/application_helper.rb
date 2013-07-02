@@ -278,6 +278,8 @@ module ApplicationHelper
     pluralize_model(model, :count => 1)
   end
   
+  # gets or constructs the page title from the translation file or from an explicitly set @title
+  # returns empty string if no translation found and no explicit title set
   def title
     # use explicit title if given
     return @title unless @title.nil?
@@ -294,7 +296,7 @@ module ApplicationHelper
       end
     end
 
-    @title = t(action, {:scope => "page_titles.#{controller_name}", :default => :all}.merge(@title_args || {}))
+    @title = t(action, {:scope => "page_titles.#{controller_name}", :default => [:all, ""]}.merge(@title_args || {}))
   end
   
   # pluralizes an activerecord model name

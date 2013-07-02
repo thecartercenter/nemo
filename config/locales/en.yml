@@ -37,7 +37,6 @@ en:
     next: "Next"
     _no: "No" # using 'no' by itself as a key causes an error in i18n-js
     none: "None"
-    _null: "Null" # using 'null' by itself as a key causes an error in i18n-js
     or: "or"
     previous: "Previous"
     print: "Print"
@@ -717,6 +716,9 @@ en:
     current_location: "Current Location"
     enter_query: "Enter a query into the box above to search for a location in Google's geo-database."
     search_locations: "Search Locations..."
+
+  mission:
+    create_link: "Create Mission"
   
   notifier:
     if_link_doesnt_work: "If the above link does not work try copying and pasting it into your browser."
@@ -788,6 +790,7 @@ en:
   report/report:
     add_question_attribute: "Add Question/Attribute"
     back_to_list: "Back To Report List"
+    blank: "Blank" # should be very short
     choose_attrib_question: "Choose an attribute or question"
     choose_report: "Choose a Report..."
     create_link: "Create Report"

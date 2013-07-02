@@ -49,8 +49,7 @@
   }
   
   klass.prototype.show_title = function() {
-    // update the title
-    $("h1.title").text(I18n.t("activerecord.models.report/report.one") + ": " + this.report.attribs.name);
+    ELMO.app.set_title(I18n.t("activerecord.models.report/report.one") + ": " + this.report.attribs.name);
   }
   
   klass.prototype.show_loading_indicator = function(yn) {

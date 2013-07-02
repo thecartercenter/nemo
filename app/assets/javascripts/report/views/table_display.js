@@ -62,7 +62,7 @@
       // rest of header cells
       if (headers.col) {
         $(headers.col.cells).each(function(idx, ch) {
-          $("<th>").addClass("col").text(ch.name || "[" + I18n.t("common._null") + "]").appendTo(trow);
+          $("<th>").addClass("col").text(ch.name || "[" + I18n.t("report/report.blank") + "]").appendTo(trow);
         });
       }
       
@@ -93,7 +93,7 @@
     
       // row header
       if (headers.row) 
-        $("<th>").addClass("row").text(headers.row.cells[r].name || "[" + I18n.t("common._null") + "]").appendTo(trow);
+        $("<th>").addClass("row").text(headers.row.cells[r].name || "[" + I18n.t("report/report.blank") + "]").appendTo(trow);
     
       // row cells
       $(data_row).each(function(c, cell) {
