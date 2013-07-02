@@ -692,6 +692,7 @@ fr:
     clone_success: "Fiche '%{form_name}' cloné avec succès."
     create_link: "Créer une nouvelle fiche"
     print_form: "Imprimer la fiche"
+    publish: "Publier"
     publish_error: "Il y avait un problème avec l'édition de la Fiche (%{msg})."
     publish_success: "Fiche publié avec succès."
     publish_form: "Publier la fiche"
@@ -704,7 +705,7 @@ fr:
     reqd_sym_definition: "Questions obligatoire sont marquer avec un"
     unpublish_error: "Il y avait un problème avec la fiche non publié (%{msg})."
     unpublish_success: "Fiche non publié avec succès.  Le téléchargement total était rerégler."
-    unpublish: "Non Publie"
+    unpublish: "Depublier"
     unsaved_rank_notice: "Vous n'avez pas encore enregistrer les changements vous avez fait à l'ordre des questions.  Vous devriez poussez 'enregistrer' si vous voulez sauver les changements."
     view_sms_guide: "Voir le guide de SMS"
   

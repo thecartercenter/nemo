@@ -694,6 +694,7 @@ en:
     clone_success: "Form '%{form_name}' cloned successfully."
     create_link: "Create Form"
     print_form: "Print Form"
+    publish: "Publish"
     publish_error: "There was a problem publishing the form (%{msg})."
     publish_success: "Form published successfully."
     publish_form: "Publish Form"
