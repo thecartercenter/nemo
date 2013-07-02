@@ -395,9 +395,7 @@ en:
             type:
               blank: "You must choose a report type."
         response:
-          attributes:
-            answers:
-              invalid: "are invalid (see below)"
+          invalid_answers: "are invalid (see below)"
           missing_answers: "Not all questions have answers."
         setting:
           attributes:
