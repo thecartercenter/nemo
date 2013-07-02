@@ -1,23 +1,30 @@
+# this deploy file makes use of the multistage facility of capistrano
+# there are two stages:
+# master - https://cceom.org; master branch; the main ELMO
+# demo - https://secure1.cceom.org; demo branch; the staging environment and demo sandbox
+# to deploy, e.g.:
+#   cap demo deploy
+
 require "bundler/capistrano" 
 
-set :application, "elmo_staging"
-set :repository,  "https://code.google.com/p/elmo"
+set :stages, %w(master demo)
+set :default_stage, "demo"
+require "capistrano/ext/multistage"
 
-# set :scm, :git # You can set :scm explicitly or Capistrano will make an intelligent guess based on known version control directory names
-# Or: `accurev`, `bzr`, `cvs`, `darcs`, `git`, `mercurial`, `perforce`, `subversion` or `none`
-
-set :branch, "sprint06"
-set :deploy_via, :remote_cache
-set :deploy_to, "/home/cceom/webapps/rails2/#{application}"
+set :application, "elmo"
 set :user, "cceom"
+set :repository,  "https://code.google.com/p/elmo"
+set(:deploy_to) {"/home/cceom/webapps/rails2/#{application}_#{stage}"}
+set :deploy_via, :remote_cache
 set :use_sudo, false
 set :default_environment, {
   "PATH" => "$PATH:/home/cceom/bin:$HOME/webapps/rails2/bin",
   "GEM_HOME" => "$HOME/webapps/rails2/gems"
 }
-set :ping_url, "https://secure1.cceom.org"
-
 default_run_options[:pty] = true
+
+# rails env is production for all stages
+set :rails_env, 'production'
 
 desc "Echo environment vars"
 namespace :env do
