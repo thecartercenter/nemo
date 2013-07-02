@@ -424,7 +424,6 @@ fr:
     dev_mode: "Mode de développement"
     logged_in_as: "Connecté en tant que"
     must_be: "Doit être"
-    new_obj: "@{m:Nouveau|f:Nouvelle} %{obj}"
     no_selection: "Vous n'avez rien sélectionné."
     reqd_sym_definition: "Les réponses obligatoires sont marqués avec un %{reqd_sym}."
     select_all: "Sélectionner tous"
