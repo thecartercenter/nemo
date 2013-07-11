@@ -9,7 +9,7 @@ FactoryGirl.define do
       opt = option_names
       
       # get the option objects
-      options = opt.each_with_index.map{|o,i| Option.new(:value => i+1, :name_en => o, :mission => get_mission)}
+      options = opt.each_with_index.map{|o,i| Option.new(:name_en => o, :mission => get_mission)}
       
       # randomize the array to make sure things get sorted properly later
       options = options.shuffle

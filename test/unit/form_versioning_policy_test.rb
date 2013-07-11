@@ -20,7 +20,7 @@ class FormVersioningPolicyTest < ActiveSupport::TestCase
     save_old_version_codes
     
     # add an option
-    @os.options << Option.new(:value => "3", :name_en => "Troublemaker", :mission => get_mission)
+    @os.options << Option.new(:name_en => "Troublemaker", :mission => get_mission)
     @os.save!
     
     publish_and_check_versions(:should_change => true)
@@ -179,7 +179,7 @@ class FormVersioningPolicyTest < ActiveSupport::TestCase
   private
     # creates an option set, and a question that has the option set, and adds it to first two forms
     def setup_option_set
-      @os = FactoryGirl.create(:option_set, :ordering => "value_asc")
+      @os = FactoryGirl.create(:option_set)
       @q = FactoryGirl.create(:question, :qtype_name => "select_one", :option_set => @os)
       @forms[0...2].each do |f|
         f.questions << @q

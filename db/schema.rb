@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130613225417) do
+ActiveRecord::Schema.define(:version => 20130711201223) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -132,7 +132,6 @@ ActiveRecord::Schema.define(:version => 20130613225417) do
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "ordering"
     t.integer  "mission_id"
   end
 
@@ -143,10 +142,10 @@ ActiveRecord::Schema.define(:version => 20130613225417) do
     t.integer  "option_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "rank"
   end
 
   create_table "options", :force => true do |t|
-    t.string   "value"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "mission_id"

@@ -6,8 +6,6 @@ class Option < ActiveRecord::Base
   has_many(:answers, :inverse_of => :option)
   has_many(:choices, :inverse_of => :option)
   
-  validates(:value, :presence => true)
-  validates(:value, :numericality => true, :if => Proc.new{|o| !o.value.blank?})
   validate(:integrity)
   validate(:name_lengths)
   
@@ -21,7 +19,7 @@ class Option < ActiveRecord::Base
   # creates a set of options with the given English names and mission
   def self.create_simple_set(names, mission)
     options = []
-    names.each_with_index{|n, idx| options << create(:name_en => n, :mission => mission, :value => idx + 1)}
+    names.each_with_index{|n, idx| options << create(:name_en => n, :mission => mission)}
     options
   end
   

@@ -7,18 +7,15 @@ class OptionSet < ActiveRecord::Base
   has_many(:questionings, :through => :questions)
   
   validates(:name, :presence => true)
-  validates(:ordering, :presence => true)
   validates_associated(:option_settings)
   validate(:at_least_one_option)
-  validate(:unique_values)
   validate(:name_unique_per_mission)
   
+  before_validation(:ensure_ranks)
   before_save(:notify_form_versioning_policy_of_update)
   
   default_scope(order("name"))
   scope(:with_associations, includes(:questions, :options, {:questionings => :form}))
-  
-  ORDERINGS = [{:code => "value_asc", :sql => "value asc"}, {:code => "value_desc", :sql => "value desc"}]
   
   self.per_page = 100
 
@@ -26,13 +23,9 @@ class OptionSet < ActiveRecord::Base
   # don't need to translate since default mission language is english
   def self.create_default(mission)
     options = Option.create_simple_set(%w(Yes No N/A), mission)
-    set = OptionSet.new(:name => "Yes/No/NA", :ordering => "value_asc", :mission => mission)
+    set = OptionSet.new(:name => "Yes/No/NA", :mission => mission)
     options.each{|o| set.options << options}
     set.save!
-  end
-  
-  def sorted_options
-    @sorted_options ||= options.sort{|a,b| (a.value.to_i <=> b.value.to_i) * (ordering && ordering.match(/desc/) ? -1 : 1)}
   end
   
   def published?
@@ -74,7 +67,7 @@ class OptionSet < ActiveRecord::Base
   end
   
   def as_json(options = {})
-    Hash[*%w(id name ordering).collect{|k| [k, self.send(k)]}.flatten]
+    Hash[*%w(id name).collect{|k| [k, self.send(k)]}.flatten]
   end
   
   # gets all forms to which this option set is linked (through questionings)
@@ -91,13 +84,17 @@ class OptionSet < ActiveRecord::Base
   end
   
   private
-    def at_least_one_option
-      errors.add(:base, :at_least_one) if options.empty?
+    # makes sure that the options in the set have sequential ranks starting at 1. 
+    # if not, fixes them.
+    def ensure_ranks
+      # sort the option settings by existing rank and then re-assign to ensure sequentialness
+      # if the options are already sorted this way, nothing will change
+      # if a rank is null, we sort it to the end
+      option_settings.sort_by{|o| o.rank || 10000000}.each_with_index{|o, idx| o.rank = idx + 1}
     end
     
-    def unique_values
-      values = option_settings.map{|o| o.option.value}
-      errors.add(:base, :non_unique_values) if values.uniq.size != values.size
+    def at_least_one_option
+      errors.add(:base, :at_least_one) if option_settings.empty?
     end
     
     def name_unique_per_mission
