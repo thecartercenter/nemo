@@ -5,8 +5,12 @@ log/*.log
 tmp/
 config/initializers/local_config.rb
 config/database.yml
-vendor/
+db/schema.rb
 TODO
 .sass-cache/
 TESTING
 railsenv
+NOTES
+
+# compiled assets
+public/assets

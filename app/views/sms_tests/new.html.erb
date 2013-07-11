@@ -1,0 +1,19 @@
+<div class="link_set">
+  <%= link_to(t("sms_console.back_to_forms"), forms_path) %>
+</div>
+
+<%= nice_form_for(@sms_test) do |f| %>
+  <%= form_field(f, :from) %>
+  <%= form_field(f, :body, :type => :textarea) %>
+
+  <%= form_submit_button(f, :label => :submit) %>
+  <%= loading_indicator %>
+<% end %>
+
+<h2><%= t("common.result") %></h2>
+<div class="sms_test_result">
+</div>
+
+<%= javascript_doc_ready do %>
+  new ELMO.SmsTestConsole();
+<% end %>

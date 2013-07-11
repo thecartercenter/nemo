@@ -1,3 +1,3 @@
 <%= form.text_field(method) %>
 &nbsp; &nbsp; &nbsp;
-<%= form.check_box(:"#{method.to_s[0,3]}strictly") %> Strictly <%= method == "minimum" ? "greater" : "less" %> than
+<%= form.check_box(:"#{method.to_s[0,3]}strictly") %> <%= t("question.maxmin.strictly_" + (method == :minimum ? "gt" : "lt")) %>

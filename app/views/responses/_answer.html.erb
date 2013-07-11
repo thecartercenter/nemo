@@ -1,18 +1,18 @@
-<div class="form_field qtype_<%= answer.question_type_name %>" id="qing_<%= answer.questioning_id %>">
-  <label class="main"><%= answer.question_name || "[No Name]" %> <%= reqd_sym(answer.required?) %>
+<div class="form_field qtype_<%= answer.qtype.name %>" id="qing_<%= answer.questioning_id %>">
+  <label class="main"><%= answer.question_name || "[#{t('answer.no_name')}]" %> <%= reqd_sym(answer.required?) %>
   </label><div class="form_field_control">
     <%= fields_for('response[all_answers][]', answer) do |f| %>
       <% f.mode = form_mode %>
-      <%= render("layouts/object_errors", :object => answer, :compact => true) unless answer.errors.empty? %>
+      <%= render("layouts/object_errors", :object => answer, :compact => true, :prefix => t("answer.this_answer")) unless answer.errors.empty? %>
       <%= f.hidden_field(:response_id, :index => answer_counter) %>
       <%= f.hidden_field(:questioning_id, :index => answer_counter) %>
       <%= f.hidden_field(:relevant, :class => "relevant", :index => answer_counter) %>
-      <% case type = answer.question_type_name %>
-      <% when "address", "text", "integer", "decimal" %>
+      <% case type = answer.qtype.name %>
+      <% when "address", "text", "integer", "decimal", "tiny_text" %>
         <%= f.text_field(:value, :class => "qtype_#{type}", :index => answer_counter) %>
       <% when "location" %>
         <%= f.text_field(:value, :class => "qtype_location", :index => answer_counter) %>
-        <%= link_to(action_icon("edit"), "#", :class => "edit_location_link") if f.mode != :show %>
+        <%= action_link("edit", "#", :class => "edit_location_link") if f.mode != :show %>
       <% when "long_text" %>
         <%= f.text_area(:value, :class => "qtype_#{type}", :index => answer_counter) %>
       <% when "select_one" %>
@@ -20,10 +20,18 @@
       <% when "select_multiple" %>
         <%= render(:partial => "choice", :locals => {:answer_counter => answer_counter}, :collection => answer.all_choices) %>
       <% when "datetime", "date", "time" %>
-        <%= f.send("#{type}_select", :"#{type}_value", :include_blank => true, :index => answer_counter) %>
+        <%# special handling for date/time types in show mode, so we can apply localization %>
+        <% if f.mode == :show %>
+          <% format = type == "time" ? :time_only : :default %>
+          <strong><%= (val = answer.send("#{type}_value")).nil? ? "" : l(val, :format => format) %></strong>
+        <% else %>
+          <%= f.send("#{type}_select", :"#{type}_value", :include_blank => true, :index => answer_counter) %>
+        <% end %>
       <% end %>
     <% end %>
-    <% if cond = answer.questioning.condition %>
+    
+    <%# setup condition js object unless in show mode %>
+    <% if form_mode != :show && (cond = answer.questioning.condition) %>
       <script type="text/javascript">
         ELMO.Response.conditions.push(new ELMO.Condition(<%= cond.to_json.html_safe %>));
       </script>

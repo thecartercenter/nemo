@@ -1,2 +1,0 @@
-class InvalidAssociationDeletionError < StandardError
-end

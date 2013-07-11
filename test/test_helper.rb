@@ -4,12 +4,18 @@ require 'rails/test_help'
 
 class ActiveSupport::TestCase
   
+  setup :set_locale_in_url_options
+
+  # sets the locale in the url options to the current locale for integration tests
+  # this is also done in application_controller but needs to be done here too for some reason
+  def set_locale_in_url_options
+    app.default_url_options = { :locale => I18n.locale } if defined?(app)
+  end
+
   #####################################################
   # REPORT TEST HELPERS
   
   def prep_objects
-    Role.generate
-    
     # clear out tables
     [Question, Questioning, Answer, Form, User, Mission].each{|k| k.delete_all}
     
@@ -24,14 +30,15 @@ class ActiveSupport::TestCase
       options[:option_set_choices_attributes] = [{:option_set_id => option_set.id}]
     end
     
-    report = "Report::#{klass}Report".constantize.new_with_default_name(mission)
+    report = "Report::#{klass}Report".constantize.new(:mission_id => mission.id)
+    report.generate_default_name
     report.update_attributes!({:name => "TheReport"}.merge(options))
     return report
   end
 
   def create_opt_set(options)
     os = OptionSet.new(:name => options.join, :ordering => "value_asc", :mission => mission)
-    options.each_with_index{|o,i| os.option_settings.build(:option => Option.new(:value => i+1, :name_eng => o))}
+    options.each_with_index{|o,i| os.options << Option.new(:value => i+1, :name_en => o)}
     os.save!
     @option_sets[options.join("_").downcase.to_sym] = os
   end
@@ -49,21 +56,18 @@ class ActiveSupport::TestCase
   
   def user
     return @users[:test] if @users[:test]
-    @users[:test] = User.new_with_login_and_password(:login => "test", :name => "Test", :reset_password_method => "print")
-    @users[:test].assignments.build(:mission => mission, :active => true, :role => Role.highest)
+    @users[:test] = User.new(:login => "test", :name => "Test", :reset_password_method => "print", :pref_lang => "en")
+    @users[:test].assignments.build(:mission => mission, :active => true, :role => User::ROLES.last)
     @users[:test].save!
     @users[:test]
   end
 
   def create_question(params)
-    puts "create question"
-    QuestionType.generate
-    
+
     # create default form if necessary
     params[:forms] ||= [create_form(:name => "f")]  
     
-    q = Question.new(:name_eng => params[:name_eng] || params[:code], :code => params[:code], :mission => mission,
-      :question_type_id => QuestionType.find_by_name(params[:type]).id)
+    q = Question.new(:name_en => params[:name_en] || params[:code], :code => params[:code], :mission => mission, :qtype_name => params[:type])
   
     # set the option set if type is select_one or select_multiple
     q.option_set = params[:option_set] || @option_sets.first[1] if %w(select_one select_multiple).include?(params[:type])
@@ -84,16 +88,16 @@ class ActiveSupport::TestCase
     r = Response.new({:reviewed => true, :user => user, :mission => mission}.merge(params))
     ans.each_pair do |code,value|
       qing = @questions[code].questionings.first
-      case qing.question.type.name
+      case qing.question.qtype.name
       when "select_one"
         # create answer with option_id
-        r.answers.build(:questioning_id => qing.id, :option => qing.question.options.find{|o| o.name_eng == value})
+        r.answers.build(:questioning_id => qing.id, :option => qing.question.options.find{|o| o.name_en == value})
       when "select_multiple"
         # create answer with several choices
         a = r.answers.build(:questioning_id => qing.id)
-        value.each{|opt| a.choices.build(:option => qing.question.options.find{|o| o.name_eng == opt})}
+        value.each{|opt| a.choices.build(:option => qing.question.options.find{|o| o.name_en == opt})}
       when "datetime", "date", "time"
-        a = r.answers.build(:questioning_id => qing.id, :"#{qing.question.type.name}_value" => value)
+        a = r.answers.build(:questioning_id => qing.id, :"#{qing.question.qtype.name}_value" => value)
       else
         r.answers.build(:questioning_id => qing.id, :value => value)
       end
@@ -165,5 +169,11 @@ class ActiveSupport::TestCase
     
     # convert everything to string, except convert "" to "_"
     actual.collect{|row| row.collect{|cell| cell.to_s == "" ? "_" : cell.to_s}}
+  end
+  
+  # logs in the given user
+  # we assume that the password is 'password'
+  def login(user)
+    post_via_redirect(user_session_path, :user_session => {:login => user.login, :password => "password"})
   end
 end

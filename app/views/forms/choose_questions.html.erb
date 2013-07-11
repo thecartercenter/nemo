@@ -1,5 +1,5 @@
-<% content_for(:per_page_js){javascript_include_tag("form_question_chooser")} %>
-  
+<% @title_args = {:name => @form.name} %>
+
 <%= flash_and_form_errors %>
 
 <% unless @questions.empty? %>
@@ -10,8 +10,8 @@
 
 <div class="question_form">
   <% unless @questions.empty? %>
-    <div class="tip">
-      <%= link_to("Back to Questions List", "#", :class => "question_list") %>
+    <div class="link_set">
+      <%= link_to(t("form.back_to_questions"), "#", :class => "question_list") %>
     </div>
   <% end %>
   <%= render("questionings/form") %>

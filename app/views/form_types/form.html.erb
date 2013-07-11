@@ -1,6 +1,7 @@
+<% @title_args = {:name => @form_type.name} %>
+
 <%= flash_and_form_errors(@form_type) %>
 <%= nice_form_for(@form_type) do |f| %>
-  <div class="tip">Required fields are marked with a <%= reqd_sym %>.</div>
   <%= form_field(f, :name, :required => true) %>
-  <%= f.submit("Save", :style => "float: left; clear: left;") %>
+  <%= form_submit_button(f, :label => :save) %>
 <% end %>

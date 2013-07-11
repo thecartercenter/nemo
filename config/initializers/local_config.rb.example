@@ -5,7 +5,7 @@ configatron.site_name = "ELMO"
 configatron.webmaster_emails = ["someone@somplace.com"]
 
 # site email from address
-configatron.site_email = "#{configatron.site_name} <someone@someplace.com>"
+configatron.site_email = "\"#{configatron.site_name}\" <someone@someplace.com>"
 
 # whether to use HTTPS in the mailer URLs.
 configatron.mailer_url_protocol = 'https'
@@ -23,8 +23,8 @@ ELMO::Application.config.action_mailer.smtp_settings = {
 
 # default settings for outgoing sms adapter when new mission is created
 configatron.default_settings.outgoing_sms_adapter = "IntelliSms"
-configatron.default_settings.outgoing_sms_username = "username"
-configatron.default_settings.outgoing_sms_password = "password"
+configatron.default_settings.intellisms_username = "username"
+configatron.default_settings.intellisms_password = "password"
 
 # google maps API key
 configatron.google_maps_key = "xxx"

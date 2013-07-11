@@ -9,7 +9,7 @@ class Report::QuestionAnswerTallyReportTest < ActiveSupport::TestCase
     # create several yes/no questions and responses for them
     create_opt_set(%w(Yes No))
     forms = [create_form(:name => "form0"), create_form(:name => "form1")]
-    3.times{|i| create_question(:code => "yn#{i}", :name_eng => "Yes No Question #{i}", :type => "select_one", :forms => forms)}
+    3.times{|i| create_question(:code => "yn#{i}", :name_en => "Yes No Question #{i}", :type => "select_one", :forms => forms)}
     1.times{create_response(:form => @forms[:form0], :answers => {:yn0 => "Yes", :yn1 => "Yes", :yn2 => "Yes"})}
     2.times{create_response(:form => @forms[:form0], :answers => {:yn0 => "Yes", :yn1 => "Yes", :yn2 => "No"})}
     3.times{create_response(:form => @forms[:form0], :answers => {:yn0 => "Yes", :yn1 => "No", :yn2 => "Yes"})}
@@ -28,7 +28,7 @@ class Report::QuestionAnswerTallyReportTest < ActiveSupport::TestCase
 
                           
     # try question label 'title'
-    report = create_report("QuestionAnswerTally", :option_set => @option_sets[:yes_no], :question_labels => "Title")
+    report = create_report("QuestionAnswerTally", :option_set => @option_sets[:yes_no], :question_labels => "title")
 
     assert_report(report,                         %w( Yes No TTL ),
                           ["Yes No Question 0"] + %w(   6 13  19 ),
@@ -51,8 +51,8 @@ class Report::QuestionAnswerTallyReportTest < ActiveSupport::TestCase
     # create several questions and responses for them
     create_opt_set(%w(Yes No))
     create_opt_set(%w(High Low))
-    2.times{|i| create_question(:code => "yn#{i}", :name_eng => "Yes No Question #{i+1}", :type => "select_one", :option_set => @option_sets[:yes_no])}
-    2.times{|i| create_question(:code => "hl#{i}", :name_eng => "High Low Question #{i+1}", :type => "select_one", :option_set => @option_sets[:high_low])}
+    2.times{|i| create_question(:code => "yn#{i}", :name_en => "Yes No Question #{i+1}", :type => "select_one", :option_set => @option_sets[:yes_no])}
+    2.times{|i| create_question(:code => "hl#{i}", :name_en => "High Low Question #{i+1}", :type => "select_one", :option_set => @option_sets[:high_low])}
     1.times{create_response(:answers => {:yn0 => "Yes", :yn1 => "Yes", :hl0 => "High", :hl1 => "High"})}
     2.times{create_response(:answers => {:yn0 => "Yes", :yn1 => "Yes", :hl0 => "Low", :hl1 => "Low"})}
     3.times{create_response(:answers => {:yn0 => "Yes", :yn1 => "No", :hl0 => "Low", :hl1 => "High"})}
@@ -90,7 +90,7 @@ class Report::QuestionAnswerTallyReportTest < ActiveSupport::TestCase
   test "counts of yes and no and zero/nonzero" do
     # create several questions and responses for them
     create_opt_set(%w(Yes No))
-    2.times{|i| create_question(:code => "yn#{i}", :name_eng => "Yes No Question #{i+1}", :type => "select_one", :option_set => @option_sets[:yes_no])}
+    2.times{|i| create_question(:code => "yn#{i}", :name_en => "Yes No Question #{i+1}", :type => "select_one", :option_set => @option_sets[:yes_no])}
     create_question(:code => "int", :type => "integer")
     create_question(:code => "dec", :type => "decimal")
     1.times{create_response(:answers => {:yn0 => "Yes", :yn1 => "Yes", :int => 3, :dec => 1.5})}

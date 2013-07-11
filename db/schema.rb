@@ -10,7 +10,11 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema.define(:version => 20130417031422) do
+=======
+ActiveRecord::Schema.define(:version => 20130613225417) do
+>>>>>>> master
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -31,10 +35,10 @@ ActiveRecord::Schema.define(:version => 20130417031422) do
   create_table "assignments", :force => true do |t|
     t.integer  "mission_id"
     t.integer  "user_id"
-    t.integer  "role_id"
     t.boolean  "active"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "role"
   end
 
   add_index "assignments", ["mission_id"], :name => "index_assignments_on_mission_id"
@@ -80,12 +84,6 @@ ActiveRecord::Schema.define(:version => 20130417031422) do
     t.integer  "option_id"
   end
 
-  create_table "foos", :force => true do |t|
-    t.string   "whut"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
-
   create_table "form_types", :force => true do |t|
     t.string   "name"
     t.datetime "created_at"
@@ -94,6 +92,17 @@ ActiveRecord::Schema.define(:version => 20130417031422) do
   end
 
   add_index "form_types", ["mission_id"], :name => "index_form_types_on_mission_id"
+
+  create_table "form_versions", :force => true do |t|
+    t.integer  "form_id"
+    t.integer  "sequence",   :default => 1
+    t.string   "code"
+    t.boolean  "is_current", :default => true
+    t.datetime "created_at",                   :null => false
+    t.datetime "updated_at",                   :null => false
+  end
+
+  add_index "form_versions", ["code"], :name => "index_form_versions_on_code", :unique => true
 
   create_table "forms", :force => true do |t|
     t.string   "name"
@@ -105,6 +114,9 @@ ActiveRecord::Schema.define(:version => 20130417031422) do
     t.integer  "questionings_count", :default => 0
     t.integer  "responses_count",    :default => 0
     t.integer  "mission_id"
+    t.integer  "current_version_id"
+    t.boolean  "upgrade_needed",     :default => false
+    t.boolean  "smsable",            :default => false
   end
 
   add_index "forms", ["form_type_id"], :name => "index_forms_on_form_type_id"
@@ -156,6 +168,10 @@ ActiveRecord::Schema.define(:version => 20130417031422) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "mission_id"
+    t.string   "_name"
+    t.text     "_hint"
+    t.text     "name_translations"
+    t.text     "hint_translations"
   end
 
   add_index "options", ["mission_id"], :name => "index_options_on_mission_id"
@@ -187,17 +203,20 @@ ActiveRecord::Schema.define(:version => 20130417031422) do
     t.integer  "option_set_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "question_type_id"
     t.integer  "minimum"
     t.integer  "maximum"
     t.boolean  "maxstrictly"
     t.boolean  "minstrictly"
     t.integer  "mission_id"
+    t.string   "qtype_name"
+    t.text     "_name"
+    t.text     "_hint"
+    t.text     "name_translations"
+    t.text     "hint_translations"
   end
 
   add_index "questions", ["mission_id"], :name => "index_questions_on_mission_id"
   add_index "questions", ["option_set_id"], :name => "index_questions_on_option_set_id"
-  add_index "questions", ["question_type_id"], :name => "index_questions_on_question_type_id"
 
   create_table "report_aggregations", :force => true do |t|
     t.string   "name"
@@ -255,12 +274,12 @@ ActiveRecord::Schema.define(:version => 20130417031422) do
     t.datetime "updated_at"
     t.datetime "viewed_at"
     t.integer  "view_count",           :default => 0
-    t.string   "display_type",         :default => "Table"
-    t.string   "bar_style",            :default => "Side By Side"
+    t.string   "display_type",         :default => "table"
+    t.string   "bar_style",            :default => "side_by_side"
     t.boolean  "unreviewed",           :default => false
-    t.string   "question_labels",      :default => "Code"
+    t.string   "question_labels",      :default => "code"
     t.boolean  "show_question_labels", :default => true
-    t.string   "percent_type"
+    t.string   "percent_type",         :default => "none"
     t.boolean  "unique_rows"
     t.string   "aggregation_name"
   end
@@ -334,14 +353,17 @@ ActiveRecord::Schema.define(:version => 20130417031422) do
     t.integer  "mission_id"
     t.string   "languages"
     t.string   "outgoing_sms_adapter"
-    t.string   "outgoing_sms_username"
-    t.string   "outgoing_sms_password"
-    t.string   "outgoing_sms_extra"
-    t.string   "outgoing_sms_language"
+    t.string   "intellisms_username"
+    t.string   "intellisms_password"
+    t.string   "isms_hostname"
+    t.string   "isms_username"
+    t.string   "isms_password"
+    t.string   "incoming_sms_number"
   end
 
   add_index "settings", ["mission_id"], :name => "index_settings_on_mission_id"
 
+<<<<<<< HEAD
   create_table "simple_captcha_data", :force => true do |t|
     t.string   "key",        :limit => 40
     t.string   "value",      :limit => 6
@@ -359,10 +381,21 @@ ActiveRecord::Schema.define(:version => 20130417031422) do
     t.string   "class_name"
     t.integer  "obj_id"
     t.string   "language"
+=======
+  create_table "sms_messages", :force => true do |t|
+    t.string   "direction"
+    t.text     "to"
+    t.string   "from"
+    t.text     "body"
+    t.datetime "sent_at"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+    t.integer  "mission_id"
+    t.string   "adapter_name"
+>>>>>>> master
   end
 
-  add_index "translations", ["fld", "class_name", "obj_id", "language"], :name => "index_translations_on_fld_and_class_name_and_obj_id_and_language"
-  add_index "translations", ["language", "class_name", "fld", "obj_id"], :name => "translation_master", :unique => true
+  add_index "sms_messages", ["body"], :name => "index_sms_messages_on_body", :length => {"body"=>160}
 
   create_table "user_batches", :force => true do |t|
     t.text     "users"
@@ -388,6 +421,7 @@ ActiveRecord::Schema.define(:version => 20130417031422) do
     t.string   "phone2"
     t.boolean  "admin"
     t.integer  "current_mission_id"
+    t.string   "pref_lang"
   end
 
   add_index "users", ["login"], :name => "index_users_on_login", :unique => true

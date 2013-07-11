@@ -60,7 +60,7 @@ class Search::Token
     # rhs is an sql fragment that serves as the right hand side of the comparison
     def comparison(qual, op, rhs)
       qual = lookup_qualifier(qual.content) if qual.is_a?(Search::LexToken)
-      raise Search::ParseError.new("The operator '#{op.content}' is not valid for the qualifier '#{qual.name}'.") unless qual.op_valid?(op.to_sql)
+      raise Search::ParseError.new(I18n.t("search.invalid_op", :op => op.content, :qualifier => qual.name)) unless qual.op_valid?(op.to_sql)
       
       # sanitize by default
       sanitize_rhs = true
@@ -96,13 +96,36 @@ class Search::Token
     # raises an error if there are none
     def default_quals
       dq = @search.klass.search_qualifiers.select{|q| q.default?}
-      raise Search::ParseError.new("You must use a qualifier for all search terms") if dq.empty?
+      raise Search::ParseError.new(I18n.t("search.must_use_qualifier")) if dq.empty?
       dq
     end
     
     # looks up the qualifier for the given chunk, or raises an error
     def lookup_qualifier(chunk)
-      @search.klass.search_qualifiers.find{|q| q.label == chunk} or raise Search::ParseError.new("'#{chunk}' is not a valid search qualifier")
+      qualifier = nil
+      
+      # get the qualifier translations for current locale and reverse them
+      trans = I18n.t("search_qualifiers").invert
+      
+      # add a bunch of entries with accents removed
+      normalized = {}
+      trans.each do |k,v|
+        k_normalized = ActiveSupport::Inflector.transliterate(k)
+        normalized[k_normalized] = v if k != k_normalized
+      end
+      trans.merge!(normalized)
+      
+      # try looking up the chunk. this should now work even the user didn't put in the accents
+      qualifier_name = trans[chunk].to_s
+
+      # if qualifier_name is not nil, try to find the qualifier object
+      unless qualifier_name.nil?
+        qualifier = @search.klass.search_qualifiers.detect{|q| q.name == qualifier_name}
+      end
+      
+      raise Search::ParseError.new(I18n.t("search.invalid_qualifier", :chunk => chunk)) if qualifier.nil?
+      
+      qualifier
     end
     
     def child(num); @children[num]; end

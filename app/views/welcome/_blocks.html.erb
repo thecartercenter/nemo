@@ -1,68 +1,86 @@
-<% if (can_create = authorized?(:action => "users#create")) || authorized?(:action => "users#index") %>
-  <div class="block">
-    <%= link_to(can_create ? "Manage" : "Contact", users_path, :class => "title") %>
-    <%= link_to("Users", users_path, :class => "subtitle") %>
-    <%= link_to(image_tag("blocks/block_manage.png"), users_path) %>
-    <ul>
-      <li><%= link_to("<em>#{@user_count}</em> Total Users".html_safe, users_path) %></li>
-      <li><%= link_to("Create a User", new_user_path) if can_create %></li>
-    </ul>
-  </div>
-<% end %>
+<%# no need to show anything if no mission %>
+<% if current_mission %>
 
-<% if authorized?(:action => "forms#create") %>
-  <div class="block">
-    <%= link_to("Design", forms_path, :class => "title") %>
-    <%= link_to("Forms", forms_path, :class => "subtitle") %>
-    <%= link_to(image_tag("blocks/block_design.png"), forms_path) %>
-    <ul>
-      <li><%= link_to("<em>#{@pub_form_count}</em> Published Forms".html_safe, forms_path) %></li>
-      <li><%= link_to("<em>#{@unpub_form_count}</em> Unpublished Forms".html_safe, forms_path) %></li>
-      <li><%= link_to("Create a Form", new_form_path) %></li>
-    </ul>
-  </div>
-<% end %>
+  <%# user block %>
+  <% if can?(:index, User) %>
+    <div class="block">
+      <%= link_to(t("common." + (can?(:create, User) ? "manage" : "contact")), users_path, :class => "title") %>
+      <%= link_to(pluralize_model(User), users_path, :class => "subtitle") %>
+      <%= link_to(image_tag("blocks/block_manage.png"), users_path) %>
+      <ul>
+        <li><%= link_to(tmd("welcome.total_users", :count => @user_count), users_path) %></li>
+        <li><%= create_link(User) if can?(:create, User) %></li>
+      </ul>
+    </div>
+  <% end %>
 
-<% if authorized?(:action => "responses#create") %>
-  <div class="block">
-    <%= link_to("Submit", responses_path, :class => "title") %>
-    <%= link_to("Data", responses_path, :class => "subtitle") %>
-    <%= link_to(image_tag("blocks/block_submit.png"), responses_path) %>
-    <ul>
-      <% if @pub_form_count > 0 %>
-        <li><small>Select a Form To Submit</small><%= new_response_mini_form %></li>
-      <% end %>
-      <li><%= link_to(content_tag(:em, @self_response_count) + " Submissions by You", 
-        responses_path(:search => "submitter:\"#{current_user.name}\"")) %></li>
-    </ul>
-  </div>
-<% end %>
+  <%# form block %>
+  <% if can?(:index, Form) %>
+    <div class="block">
+      <%= link_to(t("common." + (can?(:manage, Form) ? "design" : "view")), forms_path, :class => "title") %>
+      <%= link_to(pluralize_model(Form), forms_path, :class => "subtitle") %>
+      <%= link_to(image_tag("blocks/block_design.png"), forms_path) %>
+      <ul>
+        <li><%= link_to(tmd("welcome.published_form_count", :count => @pub_form_count), forms_path) %></li>
+      
+        <%# these links are only for form mgmt %>
+        <% if can?(:manage, Form) %>
+          <li><%= link_to(tmd("welcome.unpublished_form_count", :count => @unpub_form_count), forms_path) %></li>
+          <li><%= create_link(Form) %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
 
-<% if authorized?(:action => "responses#index") %>
-  <div class="block">
-    <%= link_to("Review", responses_path, :class => "title") %>
-    <%= link_to("Responses", responses_path, :class => "subtitle") %>
-    <%= link_to(image_tag("blocks/block_review.png"), responses_path) %>
-    <ul>
-      <li><%= link_to(content_tag(:em, @total_response_count) + " Total Responses", responses_path) %></li>
-      <li><%= link_to(content_tag(:em, @unreviewed_response_count) + " Awaiting Review", responses_path(:search => "reviewed:no")) %></li>
-      <% if @total_response_count > 0 %>
-        <li><%= link_to(@recent_responses_count.gsub(/^(\d+)/){"<em>#{$1}</em>"}.html_safe, responses_path) %></li>
-      <% end %>
-    </ul>
-  </div>
-<% end %>
+  <%# response submission block %>
+  <% if can?(:create, Response) %>
+    <div class="block">
+      <%= link_to(t("common.submit"), responses_path, :class => "title") %>
+      <%= link_to(t("common.data"), responses_path, :class => "subtitle") %>
+      <%= link_to(image_tag("blocks/block_submit.png"), responses_path) %>
+      <ul>
+        <% if @pub_form_count > 0 %>
+          <li><small><%= t("welcome.select_a_form") %></small><%= new_response_mini_form %></li>
+        <% end %>
+        <li><%= link_to(tmd("welcome.by_you", :count => @self_response_count),
+          responses_path(:search => "submitter:\"#{current_user.name}\"")) %></li>
+      </ul>
+    </div>
+  <% end %>
 
-<% if authorized?(:action => "report_reports#show") %>
-  <div class="block">
-    <%= link_to("Report", report_reports_path, :class => "title") %>
-    <%= link_to("Results", report_reports_path, :class => "subtitle") %>
-    <%= link_to(image_tag("blocks/block_report.png"), report_reports_path) %>
-    <ul>
-      <% unless @reports.empty? %>
-        <li><small>Select a Report To View</small><%= view_report_report_mini_form %></li>
-      <% end %>
-      <li><%= link_to_if_auth("Create a Report", new_report_report_path, "report_reports#create") %></li>
-    </ul>
-  </div>
+  <%# response review block %>
+  <% if can?(:review, Response) %>
+    <div class="block">
+      <%= link_to(t("common.review"), responses_path, :class => "title") %>
+      <%= link_to(pluralize_model(Response), responses_path, :class => "subtitle") %>
+      <%= link_to(image_tag("blocks/block_review.png"), responses_path) %>
+      <ul>
+        <li><%= link_to(tmd("welcome.total_responses", :count => @total_response_count), responses_path) %></li>
+        <li><%= link_to(tmd("welcome.awaiting_review", :count => @unreviewed_response_count),
+                  responses_path(:search => "reviewed:no")) %></li>
+      
+        <%# only show the total response count if it's nonzero %>
+        <% if @total_response_count > 0 %>
+          <li><%= link_to(translate_recent_responses(@recent_responses_count), responses_path) %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%# report block %>
+  <% if can?(:index, Report::Report) %>
+    <div class="block">
+      <%= link_to(t("common.report"), report_reports_path, :class => "title") %>
+      <%= link_to(t("common.result", :count => 2), report_reports_path, :class => "subtitle") %>
+      <%= link_to(image_tag("blocks/block_report.png"), report_reports_path) %>
+      <ul>
+        <% unless @reports.empty? %>
+          <li><small><%= t("welcome.select_a_report") %></small><%= view_report_report_mini_form %></li>
+        <% end %>
+        <% if can?(:create, Report::Report) %>
+          <li><%= create_link(Report::Report) %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
 <% end %>

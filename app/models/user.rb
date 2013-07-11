@@ -1,8 +1,10 @@
-require 'seedable'
 class User < ActiveRecord::Base
-  include Seedable
-
+  ROLES = %w[observer staffer coordinator]
+  
   attr_writer(:reset_password_method)
+  
+  # allow can? and cannot? to be called directly on user
+  delegate :can?, :cannot?, :to => :ability
   
   has_many(:responses, :inverse_of => :user)
   has_many(:broadcast_addressings, :inverse_of => :user)
@@ -21,17 +23,21 @@ class User < ActiveRecord::Base
     c.merge_validates_format_of_email_field_options(:allow_blank => true)
     c.merge_validates_uniqueness_of_email_field_options(:unless => Proc.new{|u| u.email.blank?})
   end
-
+  
   before_validation(:clean_fields)
   before_destroy(:check_assoc)
+  before_validation(:generate_password_if_none)
+  after_save(:rebuild_ability)
   
   validates(:name, :presence => true)
+  validates(:pref_lang, :presence => true)
   validate(:phone_length_or_empty)
   validate(:must_have_password_reset_on_create)
   validate(:password_reset_cant_be_email_if_no_email)
   validate(:no_duplicate_assignments)
   validate(:must_have_assignments_if_not_admin)
   validate(:ensure_current_mission_is_valid)
+  validate(:phone_should_be_unique)
   
   default_scope(order("users.name"))
   scope(:assigned_to, lambda{|m| where("users.id IN (SELECT user_id FROM assignments WHERE mission_id = ?)", m.id)})
@@ -39,15 +45,11 @@ class User < ActiveRecord::Base
   # we want all of these on one page for now
   self.per_page = 1000000
 
-  def self.new_with_login_and_password(params)
-    u = new(params)
-    u.reset_password
-    u
-  end
   def self.random_password(size = 6)
     charset = %w{2 3 4 6 7 9 a c d e f g h j k m n p q r t v w x y z}
     (0...size).map{charset.to_a[rand(charset.size)]}.join
   end
+  
   def self.find_by_credentials(login, password)
     user = find_by_login(login)
     (user && user.valid_password?(password)) ? user : nil
@@ -84,15 +86,15 @@ class User < ActiveRecord::Base
   
   def self.search_qualifiers
     [
-      Search::Qualifier.new(:label => "name", :col => "users.name", :default => true, :partials => true),
-      Search::Qualifier.new(:label => "login", :col => "users.login", :default => true),
-      Search::Qualifier.new(:label => "email", :col => "users.email", :partials => true),
-      Search::Qualifier.new(:label => "phone", :col => "users.phone", :partials => true)
+      Search::Qualifier.new(:name => "name", :col => "users.name", :default => true, :partials => true),
+      Search::Qualifier.new(:name => "login", :col => "users.login", :default => true),
+      Search::Qualifier.new(:name => "email", :col => "users.email", :partials => true),
+      Search::Qualifier.new(:name => "phone", :col => "users.phone", :partials => true)
     ]
   end
 
   def self.search_examples
-    ["pinchy lombard", "phone:+44"]
+    ["john smith", "#{I18n.t('search_qualifiers.phone')}:+44"]
   end
   
   def reset_password
@@ -106,20 +108,26 @@ class User < ActiveRecord::Base
 #      try += 1
 #    end
 #  end
+
   def deliver_intro!
     reset_perishable_token!
     Notifier.intro(self).deliver
   end
+  
+  # sends password reset instructions to the user's email
   def deliver_password_reset_instructions!
     reset_perishable_token!
-    Notifier.password_reset_instructions(self).deliver  
+    Notifier.password_reset_instructions(self).deliver
   end
+  
   def full_name
     name
   end
+  
   def reset_password_method
     @reset_password_method.nil? ? "dont" : @reset_password_method
   end
+  
   def reset_password_if_requested
     if %w[email print].include?(reset_password_method)
       reset_password and save
@@ -129,6 +137,7 @@ class User < ActiveRecord::Base
       (login_count || 0) > 0 ? deliver_password_reset_instructions! : deliver_intro!
     end
   end
+  
   def to_vcf
     "BEGIN:VCARD\nVERSION:3.0\nFN:#{name}\n" + 
     (email ? "EMAIL:#{email}\n" : "") +
@@ -136,15 +145,23 @@ class User < ActiveRecord::Base
     (phone2 ? "TEL;TYPE=CELL:#{phone2}\n" : "") + 
     "END:VCARD"
   end
-  def can_get_sms?; !(phone.blank? && phone2.blank?) end
-  def can_get_email?; !email.blank?; end
+  
+  def can_get_sms?
+    !(phone.blank? && phone2.blank?) 
+  end
+  
+  def can_get_email?
+    !email.blank?
+  end
   
   def assignments_by_mission
     @assignments_by_mission ||= Hash[*assignments.collect{|a| [a.mission, a]}.flatten]
   end
   
+  # returns the last mission with which this user is associated
   def latest_mission
-    missions.first
+    # the mission association is already sorted by date so we just take the last one
+    missions.last
   end
   
   # gets the user's role for the given mission
@@ -153,30 +170,56 @@ class User < ActiveRecord::Base
     nn(assignments_by_mission[mission]).role
   end
   
+  # checks if the user can perform the given role for the given mission
+  # mission defaults to user's current mission
+  def role?(base_role, mission = nil)
+    # admins can do anything
+    return true if admin?
+    
+    # default to the current mission if none given
+    mission ||= current_mission
+    
+    # if no mission then the answer is trivially false
+    return false if mission.nil?
+    
+    # get the user's role for the specified mission
+    mission_role = role(mission)
+    
+    # if the role is nil, we can return false
+    if mission_role.nil?
+      return false
+    # otherwise we compare the role indices
+    else
+      ROLES.index(base_role.to_s) <= ROLES.index(mission_role)
+    end
+  end
+  
   # returns all missions that the user has access to
   def accessible_missions
-    @accessible_missions ||= Permission.restrict(Mission, :user => self)
-  end
-  
-  # tests if user can access the given mission
-  def can_access_mission?(mission)
-    accessible_missions.include?(mission)
-  end
-  
-  # determines if the user's role for the given mission is as an observer
-  def observer?(mission)
-    (r = role(mission)) ? r.observer? : false
+    @accessible_missions ||= Mission.accessible_by(ability)
   end
   
   # if user has no current mission, choose one (if assigned to any)
   def set_current_mission
     # ensure no current mission set if the user has no assignments
     if assignments.active.empty?
-      update_attributes(:current_mission_id => nil) 
+      change_mission!(nil) 
     # else if user has no current mission, pick one
     elsif current_mission.nil?
-      update_attributes(:current_mission_id => assignments.active.sorted_recent_first.first.mission_id)
+      change_mission!(assignments.active.sorted_recent_first.first.mission)
     end
+  end
+  
+  # changes the user's current mission to the given mission. saves without validating.
+  def change_mission!(mission)
+    self.current_mission = mission
+    save(:validate => false)
+  end
+  
+  # builds and returns a CanCan ability class for this user
+  def ability
+    rebuild_ability unless @ability
+    return @ability
   end
   
   private
@@ -188,42 +231,71 @@ class User < ActiveRecord::Base
     end
     
     def phone_length_or_empty
-      errors.add(:phone, "must be at least 9 digits.") unless phone.blank? || phone.size >= 10
-      errors.add(:phone2, "must be at least 9 digits.") unless phone2.blank? || phone2.size >= 10
+      errors.add(:phone, :at_least_digits, :num => 9) unless phone.blank? || phone.size >= 10
+      errors.add(:phone2, :at_least_digits, :num => 9) unless phone2.blank? || phone2.size >= 10
     end
     
     def check_assoc
-      # Can't delete users with related responses.
-      unless responses.empty?
-        raise "You can't delete #{name} because he/she has associated responses."
-      end
+      # can't delete users with related responses.
+      raise DeletionError.new(:cant_delete_if_responses) unless responses.empty?
     end
     
     def must_have_password_reset_on_create
       if new_record? && reset_password_method == "dont"
-        errors.add(:base, "You must choose a password creation method")
+        errors.add(:base, :must_choose_passwd_method)
       end
     end
     
     def password_reset_cant_be_email_if_no_email
       if reset_password_method == "email" && email.blank?
         verb = new_record? ? "send" : "reset"
-        errors.add(:base, "You can't #{verb} password by email because you didn't specify an email address.")
+        errors.add(:base, :cant_passwd_email, :verb => verb)
       end
     end
     
     def no_duplicate_assignments
-      errors.add(:base, "There are duplicate assignments.") if Assignment.duplicates?(assignments)
+      errors.add(:base, :duplicate_assignments) if Assignment.duplicates?(assignments)
     end
     
     def must_have_assignments_if_not_admin
       if !admin? && assignments.reject{|a| a.marked_for_destruction?}.empty?
-        errors.add(:assignments, "can't be empty if not admin")
+        errors.add(:assignments, :cant_be_empty_if_not_admin)
       end
     end
     
     # if current mission is not accessible, set to nil
     def ensure_current_mission_is_valid
-      self.current_mission_id = nil if !current_mission_id.nil? && !Permission.user_can_access_mission(self, current_mission)
+      if !current_mission_id.nil?
+        # this shouldn't happen
+        raise "current mission can't be set on new user" if new_record?
+        self.current_mission_id = nil unless can?(:read, current_mission)
+      end
+    end
+    
+    # ensures phone and phone2 are unique
+    def phone_should_be_unique
+      [:phone, :phone2].each do |field|
+        val = send(field)
+        # if phone/phone2 is not nil and we can find a user with a different ID from ours that has a matching phone OR phone2
+        # then it's not unique
+        # start building relation
+        rel = User.where("phone = ? OR phone2 = ?", val, val)
+        # add ID clause if this is not a new record
+        rel = rel.where("id != ?", id) unless new_record?
+        if !val.nil? && rel.count > 0
+          errors.add(field, :phone_assigned_to_other)
+        end
+      end
+    end
+    
+    # generates a random password before validation if this is a new record, unless one is already set
+    def generate_password_if_none
+      reset_password if new_record? && password.blank? && password_confirmation.blank?
+    end
+    
+    # the ability object must be rebuilt after saves in case something relevant to abilities changed
+    def rebuild_ability
+      @ability = Ability.new(self)
+      return true
     end
 end

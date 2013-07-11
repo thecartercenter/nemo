@@ -103,7 +103,7 @@ class Report::ListReport < Report::Report
           cell = Report::Formatter.format(name, type, :cell)
           
           # enter the cell value
-          @data.set_cell(@cur_row, col, cell)
+          @data.set_cell(@cur_row, col, cell, :append => true)
         end
       end
       

@@ -1,4 +1,6 @@
 class Report::Calculation < ActiveRecord::Base
+  TYPES = %w(identity zero_nonzero)
+  
   attr_accessible :type, :report_report_id, :attrib1_name, :question1_id, :arg1, :attrib1, :question1, :rank
   attr_writer :table_prefix
   
@@ -20,16 +22,6 @@ class Report::Calculation < ActiveRecord::Base
     alias_method_chain :new, :cast
   end
 
-  def self.types
-    [{
-      :name => "Report::IdentityCalculation",
-      :title => "None"
-    },{
-      :name => "Report::ZeroNonzeroCalculation",
-      :title => "Whether an answer is 0 or greater than 0"
-    }]
-  end
-  
   def as_json(options = {})
     Hash[*%w(id type attrib1_name question1_id rank).collect{|k| [k, self.send(k)]}.flatten]
   end
@@ -64,7 +56,7 @@ class Report::Calculation < ActiveRecord::Base
   end
   
   def header_title
-    attrib1 ? attrib1.name.to_s.gsub("_", " ").ucwords : (report.question_labels == "Title" ? question1.name_eng : question1.code)
+    attrib1 ? attrib1.name.to_s.gsub("_", " ").ucwords : (report.question_labels == "title" ? question1.name_en : question1.code)
   end
   
   def table_prefix

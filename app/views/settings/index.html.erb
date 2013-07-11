@@ -1,23 +1,43 @@
-<% content_for(:per_page_js){javascript_include_tag("settings")} %>
-
 <%= flash_and_form_errors(@setting) %>
 
 <%= nice_form_for(@setting) do |f| %>
 
-  <h2>General Settings</h2>
+  <h2><%= t("setting.headings.general") %></h2>
   <%= form_field(f, :mission_id, :type => :hidden) %>
   <%= form_field(f, :timezone, :type => :timezone, :required => true) %>
   <%= form_field(f, :languages, :required => true) %>
   
-  <h2>Outgoing SMS Settings</h2>
-  <%= form_field(f, :outgoing_sms_adapter) %>
-  <%= form_field(f, :outgoing_sms_username) %>
-  <%= form_field(f, :outgoing_sms_password1, :type => :password) %>
-  <%= form_field(f, :outgoing_sms_password2, :type => :password) %>
-  <%= form_field(f, :outgoing_sms_language) %>
-  <%= form_field(f, :outgoing_sms_extra) %>
+  <h2><%= t("setting.headings.outgoing_sms") %></h2>
+  <%= form_field(f, :outgoing_sms_adapter, :type => :select, :options => @adapter_options, :blank_text => t("common.none")) %>
   
-  <h2>Tableau</h2>
+  <div class="adapter_settings" data-adapter="IntelliSms">
+    <%= form_field(f, :intellisms_username) %>
+    <%= link_to(t("setting.change_sms_password"), "#") %>
+    <div class="password_fields">
+      <%= form_field(f, :intellisms_password1, :type => :password) %>
+      <%= form_field(f, :intellisms_password2, :type => :password) %>
+    </div>
+  </div>
+
+  <div class="adapter_settings" data-adapter="Isms">
+    <%= form_field(f, :isms_hostname) %>
+    <%= form_field(f, :isms_username) %>
+    <%= link_to(t("setting.change_sms_password"), "#") %>
+    <div class="password_fields">
+      <%= form_field(f, :isms_password1, :type => :password) %>
+      <%= form_field(f, :isms_password2, :type => :password) %>
+    </div>
+  </div>
+  
+  <h2><%= t("setting.headings.incoming_sms") %></h2>
+  <%= form_field(f, :incoming_sms_number) %>
+  
+  <h2>Tableau</h2><!-- not i18n'd b/c it's a product name -->
   <%= form_field(f, :tableau_sql, :partial => "tableau_sql") %>
-  <%= form_submit_button(f) %>
+  <%= form_submit_button(f, :label => :save) %>
+<% end %>
+
+<%= javascript_doc_ready do %>
+  // instantiate the frontend view object to handle the interactive stuff
+  new ELMO.Settings();
 <% end %>

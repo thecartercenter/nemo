@@ -1,0 +1,259 @@
+/* tag redefinitions */
+html,body { margin: 0; padding: 0 }
+body, td, input, select, textarea { font-family: Helvetica, sans-serif; font-size: 9pt; color: #222; }
+body { line-height: 1.3; height: 100%; }
+form { margin: 0; }
+input, select, textarea { border: 1px solid #444; background-color: #eee; margin: 2px 0; }
+a { color: #0065d1; }
+form.button_to, form.button_to div { display: inline; }
+form.button_to input { background-color: transparent; border: none; color: #0065d1; 
+  text-decoration: underline; padding: 0; margin: 0; cursor: pointer; }
+h1, h2, h3 { color: black; font-family: Helvetica; }
+h1 { margin: 0 0 10px 0; font-size: 17pt; }
+h2 { font-size: 11pt; color: #888; }
+h3 { font-size: 12pt; margin: 0; color: #444; }
+ul { margin-top: 0; padding-left: 20px; }
+li { margin-bottom: 5px; }
+table { border-collapse: collapse; }
+td { vertical-align: top; }
+
+input[type="radio"], input[type="checkbox"] {                         
+  border: 0px !important;
+  background-color: transparent;
+}
+
+/* multi-purpose */
+div.subtitle { margin: -10px 0 10px 0; color: #888; }
+div.tip { margin-bottom: 10px; width: 800px; }
+div.important { font-weight: bold; color: Black; }
+div.boilerplate { display: none; }
+div.dialog { position: absolute; background-color: white; border: 1px solid #555; padding: 10px; }
+div.dialog h2 { margin: 0 0 10px 0; }
+
+/* loading indicator */
+div.loader { background: image-url('loader.gif') no-repeat; padding-left: 20px; }
+
+/* forms (older) */
+div.form, table.form { border-top: 1px solid #ddd; margin-bottom: 10px; }
+div.form > div, table.form td { padding: 5px; border-bottom: 1px solid #ddd; }
+div.form div.details, table.form td.details { width: 250px; }
+div.reqd_sym { display: inline; font-weight: bold; color: #d02000; font-size: 125%; line-height: 5px; vertical-align: middle; }
+table.form td.name { min-width: 75px; }
+
+/* forms (newer) */
+div.form_field > *, div.form_field > .field_with_errors > * { vertical-align: top; padding: 5px 0; }
+div.form_field label.main, div.form_field div.form_field_control { border-top: 1px solid #ddd; }
+div.form_field label.main { display: inline-block; width: 150px; padding-right: 10px; }
+div.form_field div.form_field_control { display: inline-block; width: 350px; min-height: 26px; position: relative; }
+div.form_field div.form_field_control input.text { width: 240px; }
+div.form_field div.form_field_control input.radio { width: 15px; }
+div.form_field div.form_field_details { display: inline-block; width: 290px; position: relative; font-size: 90%; 
+  background-color: #e4eeff; padding: 5px; margin: 0 0 5px 5px; }
+div.form_field div.form_field_details p { padding: 0; margin: 0; }
+div.form_field div.space_line { margin: 0; padding: 0; width: auto; }
+div.dummy, span.dummy { font-weight: bold; display: inline; }
+div.dummy_checkbox { height: 12px; width: 12px; text-align: center; font-weight: bold; border: 1px solid #888; display: inline; }
+div.form_buttons { padding-top: 10px; }
+div.form_buttons input.submit { display: inline-block; font-weight: bold; font-size: 120%; padding: 5px 15px; margin: 0 5px 0 0; }
+
+/* collection form */
+div.collection_form div.item { margin-bottom: 3px; }
+
+/* action links/icons */
+a.action_link { font-size: 14px; text-decoration: none; display: inline-block; margin: -2px 5px; }
+
+/* index tables */
+table.index_table th, table.form th { text-align: left; color: #444; background-color: #ddd; 
+    font-size: 90%; padding: 3px 10px 3px 3px; }
+table.index_table td { border-bottom: 1px solid #ddd; padding: 6px 10px 6px 3px; }
+table.index_table td.actions_col img { margin-right: 5px; }
+td.actions_col { white-space: nowrap; }
+div.loading_indicator_inline { width: 16px; display: inline; }
+div.loading_indicator_floating { width: 16px; float: left; }
+
+/* set of links */
+.link_set {
+  margin-bottom: 10px;
+  
+  a, input[type='submit'] {
+    display: inline-block;
+    padding-right: 10px;
+  }
+}
+
+/* pagination */
+div.pagination * { float: left; display: block; background-color: #eee; padding: 1px; 
+  margin-right: 4px; text-align: center; width: 20px; text-decoration: none; }
+div.pagination *.disabled { display: none; }
+div.pagination em { font-style: normal; font-weight: bold; }
+div.pagination *.next_page, div.pagination *.previous_page { width: 80px; }
+
+/* flash/error messages */
+div.compact_error { color: #d02000; font-weight: bold; }
+div.field_with_errors { display: inline; }
+
+/* search form */
+form.search_form { margin-bottom: 10px; }
+form.search_form input#search_str { width: 300px; }
+form.search_form #search_examples { margin-top: 2px; color: #666; }
+
+/* login form */
+.user_sessions_new .form_buttons { margin-bottom: 10px; }
+
+/* welcome */
+.welcome_index div.block { display: inline-block; background-color: #eee; width: 150px; height: 225px; padding: 10px; margin: 0 15px 15px 0; vertical-align: top; }
+.welcome_index div.block img { display: block; border: none; }
+.welcome_index div.block a { text-decoration: none; }
+.welcome_index div.block a.title, .welcome_index div.block a.subtitle { display: block; color: #666; 
+  font-weight: bold; text-transform: uppercase; }
+.welcome_index div.block a.title { font-size: 18pt; }
+.welcome_index div.block a.subtitle { font-size: 10pt; }
+.welcome_index div.block ul { list-style-type: none; padding: 0; }
+.welcome_index div.block li { line-height: 17px; }
+.welcome_index div.block li small { color: #888; font-size: 8pt; }
+.welcome_index div.block li strong { font-style: normal; font-size: 12pt; font-weight: bold; }
+.welcome_index div.block select { width: 140px; }
+.welcome_index div.block input { font-size: 8pt; width: 30px; }
+
+/* place map */
+#map_canvas { width: 600px; height: 400px; }
+
+/* response index */
+.responses_index form#form_chooser { display: inline; }
+.responses_index form#form_chooser input, .responses_index form#form_chooser select { margin-right: 10px; }
+
+/* response edit */
+.responses_edit input.qtype_integer, .responses_new input.qtype_integer { width: 100px; }
+.responses_edit input.qtype_decimal, .responses_new input.qtype_decimal { width: 100px; }
+.responses_edit textarea.qtype_long_text, .responses_new textarea.qtype_long_text { width: 340px; height: 100px; }
+.responses_edit input.qtype_location, .responses_new input.qtype_location { width: 200px; }
+.responses_edit label.main, .responses_new label.main, .responses_show label.main { width: 300px !important; }
+a.edit_location_link img { vertical-align: bottom; }
+
+/* question show/edit */
+form.questioning_form .form_field_control { width: 475px !important; }
+form.questioning_form .form_field.name_hint textarea { width: 400px; height: 30px; }
+form.questioning_form .form_field#condition select { min-width: 125px; }
+form.questioning_form .form_field#condition input { width: 120px; }
+form.questioning_form .form_field#condition div.row { margin-bottom: 4px; }
+form.questioning_form .form_field#condition div.row > div { display: inline-block; }
+form.questioning_form .form_field#condition div.row > div:first-child { width: 100px; }
+form.questioning_form input#questioning_question_minimum, form.questioning_form input#questioning_question_maximum { width: 100px; } 
+
+/* question index/choose */
+.questions_choose .name_col { width: 400px; }
+
+/* option edit */
+.options_edit td.value input#option_value, .options_new td.value input#option_value { width: 100px; }
+
+/* option set index */
+.option_sets_index td.options_col { width: 400px; }
+
+/* option set new/edit/show */
+.option_sets_edit div.optcol, .option_sets_new div.optcol, .option_sets_show div.optcol { float: left; margin-right: 20px; }
+
+/* broadcasts */
+input#broadcast_subject { width: 300px; }
+textarea#broadcast_body { width: 300px; height: 170px; }
+.broadcasts_show #send_errors div.form_field_control { color: #d02000; font-weight: bold; }
+.broadcasts_show #send_errors div.form_field_control p { margin: 0; }
+
+/* form edit */
+.forms_edit td.name_col, .forms_show td.name_col { width: 500px; }
+.forms_edit td.rank_col input { width: 25px; }
+.forms_edit #save_ranks_button { margin-top: -15px; }
+
+/* form choose questions */
+.forms_choose_questions div.question_form { display: none; }
+
+/* user login instructions */
+#login_instructions td.name { width: 100px; }
+#login_instructions td.value { font-weight: bold; width: 300px; }
+
+/* user edit */
+form.user_form div.form_field_control { width: 410px !important; }
+form.user_form input#user_login { width: 150px; }
+form.user_form input#login_suggest_button { width: 75px; }
+form.user_form textarea#user_notes { width: 240px; height: 100px; }
+
+/* user batches */
+.user_batches_new #user_batch_users { width: 500px; height: 200px; margin-right: 20px; }
+.user_batches_new div.form_field_control { width: 525px !important; }
+.user_batches_new div.form_field label { width: 75px; }
+
+/* report index */
+.report_reports_index .title_col { min-width: 200px; }
+
+/* report info & body */
+div#report_info div { display: inline-block; border-left: 1px solid #ccc; padding: 0 10px; }
+div#report_info div:first-child { border: none; padding-left: 0; }
+div#report_main { display: inline-block; }
+div#report_body div#row_count { margin-bottom: 5px; }
+div#report_body table { }
+div#report_body table td, div#report_body table th { padding: 2px; border: 1px solid #ddd; }
+div#report_body table td.string { text-align: left; }
+div#report_body table td.number { text-align: right; }
+div#report_body table th { font-size: 90%; background-color: #eee; padding: 2px 5px 2px 2px; }
+div#report_body table td { background-color: white; }
+div#report_body table th.col { text-align: left;  }
+div#report_body table th.row { text-align: left; white-space: nowrap; }
+div#report_body table td.row_total, div#report_body table td.col_total { background-color: #eee; }
+div#report_body th.row_grouping_label, div#report_body th.col_grouping_label { color: #888; font-weight: normal; }
+div#report_body th.row_grouping_label > div { margin-left: 3px; overflow: hidden; }
+div#report_body th.col_grouping_label { text-align: center; }
+
+/* form type index */
+.form_types_index .name_col { min-width: 100px; }
+
+/* location picker */
+div.location_picker { width: 900px; height: 500px; }
+div.location_picker div.map_canvas { width: 600px; height: 440px; border: 1px solid #ccc; float: left; margin-right: 10px; }
+div.location_picker span.cur_lat_lng { font-weight: bold; }
+div.location_picker form.location_search { float: left; width: 275px; }
+div.location_picker form.location_search input.query { width: 250px; margin-bottom: 10px; color: #888; font-style: italic; }
+div.location_picker form.location_search div.results a { display: block; margin-bottom: 8px; }
+
+/* missions */
+.missions_index .name_col { width: 225px; }
+
+/* settings */
+form.setting_form .adapter_settings { display: none; }
+form.setting_form .adapter_settings .password_fields { display: none; }
+form.setting_form #tableau_sql .form_field_control pre { width: 325px; height: 70px; overflow: auto; border: 1px solid #ccc; margin: 0 0 3px 0; }
+form.setting_form #tableau_sql .form_field_control a { font-size: 9pt; }
+
+/* sms guide */
+div.sms_guide div.header { float: right; color: #888; font-size: 15px; }
+div.sms_guide table { width: 100%; }
+div.sms_guide table td { vertical-align: top; }
+div.sms_guide td.step1 { padding-bottom: 10px; }
+div.sms_guide td.step2 { padding-top: 10px; }
+div.sms_guide td.step2 ol { padding-left: 18px; }
+div.sms_guide td.rank { font-weight: bold; width: 20px; }
+div.sms_guide td.question { font-weight: bold; }
+div.sms_guide td.question .reqd_sym { color: black; font-size: 18px; }
+div.sms_guide td.options { padding-bottom: 10px; }
+div.sms_guide td.options span { display: inline-block; margin-right: 8px; }
+div.sms_guide td.pointer { background: image-url('long-arrow.png') no-repeat right top; padding: 0 5px 0 0; }
+div.sms_guide td.pointer em { display: inline-block; background-color: white; margin-right: 30px; padding: 0 5px 10px 0; }
+div.sms_guide td.answers { width: 160px; padding-left: 10px; }
+div.sms_guide span.answer_space { display: inline-block; width: 20px; height: 20px; text-align: center; border-bottom: 2px solid black; 
+  font-weight: bold; font-size: 14px; }
+div.sms_guide span.spc_glyph { font-size: 7px; }
+div.sms_guide span.sms_example { display: inline-block; font-style: normal; font-weight: bold; padding: 0 5px; 
+  border-bottom: 1px solid black; }
+
+/* sms log */
+.sms_index {
+  td.to_col { width: 225px; }
+  td.from_col { width: 125px; }
+  td.body_col > div { width: 400px; overflow: hidden; }
+}
+
+/* sms test console */
+form#new_sms_test input#sms_test_from { width: 150px; }
+form#new_sms_test textarea { height: 75px; }
+form#new_sms_test .form_buttons, form#new_sms_test .loading_indicator { display: inline-block; }
+form#new_sms_test .loading_indicator { vertical-align: bottom; margin-bottom: 6px; }
+.sms_tests_new h2 { display: none; }
+.sms_test_result { font-family: "courier new", monospace; }

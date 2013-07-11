@@ -16,7 +16,7 @@ module Report::Groupable
   
   # applys both groupings
   def apply_groupings(rel, options = {})
-    raise Report::ReportError.new("Primary groupings are not allowed for this report type") if pri_grouping && options[:secondary_only]
+    raise Report::ReportError.new("primary groupings not allowed for this report type") if pri_grouping && options[:secondary_only]
     rel = pri_grouping.apply(rel) if pri_grouping
     rel = sec_grouping.apply(rel) if sec_grouping
     return rel

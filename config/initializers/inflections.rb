@@ -2,9 +2,13 @@
 
 # Add new inflection rules using the following format
 # (all these examples are active by default):
-# ActiveSupport::Inflector.inflections do |inflect|
-#   inflect.plural /^(ox)$/i, '\1en'
+ActiveSupport::Inflector.inflections do |inflect|
+
+  inflect.plural /^(sms)$/i, '\1es'
+  inflect.singular /^(sms)es$/i, '\1'
+
 #   inflect.singular /^(ox)en/i, '\1'
 #   inflect.irregular 'person', 'people'
 #   inflect.uncountable %w( fish sheep )
-# end
+end
+

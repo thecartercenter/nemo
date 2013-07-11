@@ -1,4 +1,3 @@
-require 'mission_based'
 require 'xml'
 class Response < ActiveRecord::Base
   include MissionBased
@@ -18,25 +17,28 @@ class Response < ActiveRecord::Base
   validates(:user, :presence => true)
   validate(:no_missing_answers)
 
-  # only need to validate answers in web mode
-  validates_associated(:answers, :message => "are invalid (see below)", :if => Proc.new{|r| r.modifier == "web"})
+  # don't need to validate answers in odk mode
+  validates_associated(:answers, :message => :invalid_answers, :if => Proc.new{|r| r.modifier != "odk"})
   
   default_scope(includes({:form => :type}, :user).order("responses.created_at DESC"))
   scope(:unreviewed, where(:reviewed => false))
   scope(:by, lambda{|user| where(:user_id => user.id)})
   
+  # loads all the associations required for show, edit, etc.
+  scope(:with_associations, includes(
+    :form, {
+      :answers => [
+        {:choices => :option},
+        :option, 
+        {:questioning => [:condition, {:question => {:option_set => :options}}]}
+      ]
+    }
+  ))
+  
   self.per_page = 20
   
-  def self.find_eager(id)
-    includes([:form, {:answers => 
-      {
-        :choices => {:option => :translations},
-        :option => :translations, 
-        :questioning => [:condition, {:question => [:type, :translations, {:option_set => {:options => :translations}}]}]
-      }
-    }]).find(id)
-  end
-  
+  # takes a Relation, adds a bunch of selects and joins, and uses find_by_sql to do the actual finding
+  # this technique is due to limitations (at the time of dev) in the Relation system
   def self.for_export(rel)
     find_by_sql(export_sql(rel))
   end
@@ -46,47 +48,66 @@ class Response < ActiveRecord::Base
   # and whether they are searchable by a regular expression
   def self.search_qualifiers
     [
-      Search::Qualifier.new(:label => "form", :col => "forms.name", :assoc => :forms),
-      Search::Qualifier.new(:label => "form-type", :col => "form_types.name", :assoc => :form_types),
-      Search::Qualifier.new(:label => "reviewed", :col => "responses.reviewed", :subst => {"yes" => "1", "no" => "0"}),
-      Search::Qualifier.new(:label => "duplicate", :col => "responses.duplicate", :subst => {"yes" => "1", "no" => "0"}),
+      Search::Qualifier.new(:name => "form", :col => "forms.name", :assoc => :forms),
+      Search::Qualifier.new(:name => "form_type", :col => "form_types.name", :assoc => :form_types),
+      Search::Qualifier.new(:name => "reviewed", :col => "responses.reviewed"),
       Search::Qualifier.new(:label => "signature", :col => "responses.signature"),
-      Search::Qualifier.new(:label => "submitter", :col => "users.name", :assoc => :users, :partials => true),
-      Search::Qualifier.new(:label => "source", :col => "responses.source"),
-      Search::Qualifier.new(:label => "date", :col => "DATE(CONVERT_TZ(responses.created_at, 'UTC', '#{Time.zone.mysql_name}'))"),
+      Search::Qualifier.new(:label => "duplicate", :col => "responses.duplicate", :subst => {"yes" => "1", "no" => "0"}),
+      Search::Qualifier.new(:name => "submitter", :col => "users.name", :assoc => :users, :partials => true),
+      Search::Qualifier.new(:name => "source", :col => "responses.source"),
+      Search::Qualifier.new(:name => "date", :col => "DATE(CONVERT_TZ(responses.created_at, 'UTC', '#{Time.zone.mysql_name}'))"),
 
       # this qualifier matches responses that have answers to questions with the given option set
-      Search::Qualifier.new(:label => "option-set", :col => "option_sets.name", :assoc => :option_sets),
+      Search::Qualifier.new(:name => "option_set", :col => "option_sets.name", :assoc => :option_sets),
 
       # this qualifier matces responses that have answers to questions with the given type
-      Search::Qualifier.new(:label => "question-type", :col => "question_types.long_name", :assoc => :question_types),
+      Search::Qualifier.new(:name => "question_type", :col => "questions.qtype_name", :assoc => :questions),
 
       # this qualifier matces responses that have answers to the given question
-      Search::Qualifier.new(:label => "question", :col => "questions.code", :assoc => :questions)
+      Search::Qualifier.new(:name => "question", :col => "questions.code", :assoc => :questions)
     ]
   end
   
   def self.search_examples
-    ['submitter:"john smith"', 'form:polling', 'reviewed:yes', 'date < 2010-03-15']
+    ["#{I18n.t('search_qualifiers.submitter')}:\"john smith\"", 
+      "#{I18n.t('search_qualifiers.form')}:polling", 
+      "#{I18n.t('search_qualifiers.reviewed')}:1", 
+      "#{I18n.t('search_qualifiers.date')} < 2010-03-15"]
   end
 
-  def self.create_from_xml(xml, user, mission)
+  # returns a count how many responses have arrived recently
+  # format e.g. [5, "week"] (5 in the last week)
+  # nil means no recent responses
+  def self.recent_count(rel)
+    %w(hour day week month).each do |p|
+      if (count = rel.where("created_at > ?", 1.send(p).ago).count) > 0
+        return [count, p]
+      end
+    end
+    nil
+  end
+  
+  def populate_from_xml(xml)
     # parse xml
     doc = XML::Parser.string(xml).parse
+    
+    # set the source/modifier values to odk
+    self.source = self.modifier = "odk"
 
     # get form id
-    form_id = doc.root["id"] or raise ArgumentError.new("No form id was given.")
-    
-    # check if the form is associated with the mission
-    unless mission && form = Form.for_mission(mission).find_by_id(form_id)
-      raise ArgumentError.new("Could not find the specified form.")
+    if doc.root["id"]
+      self.form_id = doc.root["id"].to_i
+    else
+      raise ArgumentError.new("no form id was given")
     end
     
-    # create response object
-    resp = new(:form => form, :user => user, :mission => mission, :source => "odk", :modifier => "odk")
+    # check if the form is associated with this response's mission
+    unless mission && form = Form.for_mission(mission).find_by_id(form_id)
+      raise ArgumentError.new("form not found")
+    end
     
     # get the visible questionings
-    qings = resp.form.visible_questionings
+    qings = form.visible_questionings
     
     # loop over each child tag and create hash of question_code => value
     values = {}; doc.root.children.each{|c| values[c.name] = c.first? ? c.first.content : nil}
@@ -96,11 +117,8 @@ class Response < ActiveRecord::Base
       # get value from hash
       str = values[qing.question.odk_code]
       # add answer
-      resp.answers << Answer.new_from_str(:str => str, :questioning => qing)
+      self.answers << Answer.new_from_str(:str => str, :questioning => qing)
     end
-
-    # save the works
-    resp.save!
   end
   
   # finds all responses with duplicate hashes
@@ -119,16 +137,6 @@ class Response < ActiveRecord::Base
     end
     signature = Digest::SHA1.hexdigest(answers_digest)
     self.signature = signature
-  end
-  
-  # returns a human-readable description of how many responses have arrived recently
-  def self.recent_count(rel)
-    %w(hour day week month).each do |p|
-      if (x = rel.where("created_at > ?", 1.send(p).ago).count) > 0 
-        return "#{x} in the Past #{p.capitalize}"
-      end
-    end
-    "No recent responses"
   end
   
   def visible_questionings
@@ -167,40 +175,47 @@ class Response < ActiveRecord::Base
     @answer_hash ||= Hash[*answers.collect{|a| [a.questioning, a]}.flatten]
   end
   
+  # returns an array of required questionings for which answers are missing
+  def missing_answers
+    return @missing_answers if @missing_answers
+    answer_hash(:rebuild => true)
+    @missing_answers = visible_questionings.collect do |qing|
+      (answer_for(qing).nil? && qing.required?) ? qing : nil
+    end.compact
+  end
+  
   def form_name; form ? form.name : nil; end
   def submitter; user ? user.name : nil; end
   
   private
     def no_missing_answers
-      answer_hash(:rebuild => true)
-      visible_questionings.each do |qing|
-        errors.add(:base, "Not all questions have answers") and return false if answer_for(qing).nil?
-      end
+      errors.add(:base, :missing_answers) unless missing_answers.empty?
     end
     
     def self.export_sql(rel)
       # add all the selects
+      # assumes the language desired is English. currently does not respect the locale
       rel = rel.select("responses.id AS response_id")
       rel = rel.select("responses.created_at AS submission_time")
       rel = rel.select("responses.reviewed AS is_reviewed")
       rel = rel.select("forms.name AS form_name")
       rel = rel.select("form_types.name AS form_type")
       rel = rel.select("questions.code AS question_code")
-      rel = rel.select("question_trans.str AS question_name")
-      rel = rel.select("question_types.name AS question_type")
+      rel = rel.select("questions._name AS question_name")
+      rel = rel.select("questions.qtype_name AS question_type")
       rel = rel.select("users.name AS submitter_name")
       rel = rel.select("answers.id AS answer_id")
       rel = rel.select("answers.value AS answer_value")
       rel = rel.select("answers.datetime_value AS answer_datetime_value")
       rel = rel.select("answers.date_value AS answer_date_value")
       rel = rel.select("answers.time_value AS answer_time_value")
-      rel = rel.select("IFNULL(aotr.str, cotr.str) AS choice_name")
+      rel = rel.select("IFNULL(ao._name, co._name) AS choice_name")
       rel = rel.select("IFNULL(ao.value, co.value) AS choice_value")
       rel = rel.select("option_sets.name AS option_set")
 
       # add all the joins
       rel = rel.joins(Report::Join.list_to_sql([:users, :forms, :form_types, 
-        :answers, :questionings, :questions, :question_types, :question_trans, :option_sets, :options, :choices]))
+        :answers, :questionings, :questions, :option_sets, :options, :choices]))
         
       rel.to_sql
     end

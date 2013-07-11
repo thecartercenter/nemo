@@ -42,6 +42,16 @@ module ELMO
 
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password, :password_confirmation]
+
+    # Enable the asset pipeline
+    config.assets.enabled = true
+    
+    # Version of your assets, change this if you want to expire all your assets
+    config.assets.version = '1.0'
+
+    ####################################
+    # CUSTOM SETTINGS
+    ####################################
     
     # read system version as git tag
     configatron.system_version = `git describe`.strip rescue "?"
@@ -55,7 +65,10 @@ module ELMO
     # google map api
     configatron.map_api_url = "https://maps.googleapis.com/maps/api/js?sensor=false"
     
-    # SMS broadcast settings
-    configatron.broadcast_tag = "[TCC-Broadcast]"
+    # SMS broadcast settings (used to be [TCC] but the [ was getting corrupted on IntelliSms)
+    configatron.broadcast_tag = "|TCC|"
+    
+    # locales with full translations (I18n.available_locales returns a whole bunch more defined by i18n-js)
+    configatron.locales = [:en, :fr]
   end
 end

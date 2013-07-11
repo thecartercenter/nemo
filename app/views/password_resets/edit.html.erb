@@ -1,20 +1,11 @@
+<%= flash_and_form_errors(@user) %>
+
 <div class="tip">
-  <strong><%= @user.name %></strong>, please enter a new password for your account.
+  <%= t("password_reset.enter_new_pass", :name => content_tag(:strong, @user.name)).html_safe %>
 </div>
-<% rowbg = 0 %>
-<%= nice_form_for @user, :url => password_reset_path, :method => :put do |f| %>
-  <%= flash_and_form_errors(@user) %>
-  <table class="form">
-    <tr class="rowbg<%= rowbg = 1 - rowbg %>">
-      <td class="name"><%= f.label :password %><%= reqd_sym %></td>
-      <td class="value"><%= f.password_field :password %></td>
-      <td class="details"></td>
-    </tr>
-    <tr class="rowbg<%= rowbg = 1 - rowbg %>">
-      <td class="name"><%= f.label :password_confirmation %><%= reqd_sym %></td>
-      <td class="value"><%= f.password_field :password_confirmation %></td>
-      <td class="details"></td>
-    </tr>
-  </table>
-  <%= f.submit "Update Password and Login" %>
+
+<%= nice_form_for(@user, :url => password_reset_path, :method => :put) do |f| %>
+  <%= form_field(f, :password, :type => :password) %>
+  <%= form_field(f, :password_confirmation, :type => :password) %>
+  <%= form_submit_button(f, :label => :save) %>
 <% end %>

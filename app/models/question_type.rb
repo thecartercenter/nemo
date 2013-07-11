@@ -1,41 +1,66 @@
-require 'seedable'
 class QuestionType < ActiveRecord::Base
-  include Seedable
   
-  has_many(:questions, :inverse_of => :type)
+  attr_reader :name, :odk_name, :odk_tag, :properties
   
-  default_scope(order("long_name"))
+  @@attributes = [
+    {:name => "text", :odk_name => "string", :odk_tag => "input", :properties => %w(form_printable)},
+    {:name => "long_text", :odk_name => "string", :odk_tag => "input", :properties => %w(form_printable)},
+    {:name => "tiny_text", :odk_name => "string", :odk_tag => "input", :properties => %w(form_printable smsable)},
+    {:name => "integer", :odk_name => "int", :odk_tag => "input", :properties => %w(form_printable smsable numeric)},
+    {:name => "decimal", :odk_name => "decimal", :odk_tag => "input", :properties => %w(form_printable smsable numeric)},
+    {:name => "location", :odk_name => "geopoint", :odk_tag => "input", :properties => %w()},
+    {:name => "select_one", :odk_name => "select1", :odk_tag => "select1", :properties => %w(form_printable has_options smsable)},
+    {:name => "select_multiple", :odk_name => "select", :odk_tag => "select", :properties => %w(form_printable has_options smsable)},
+    {:name => "datetime", :odk_name => "dateTime", :odk_tag => "input", :properties => %w(form_printable temporal has_timezone smsable)},
+    {:name => "date", :odk_name => "date", :odk_tag => "input", :properties => %w(form_printable temporal smsable)},
+    {:name => "time", :odk_name => "time", :odk_tag => "input", :properties => %w(form_printable temporal smsable)}
+  ]
   
-  def self.generate
-    seed(:name, :name => "text", :long_name => "Short Text", :odk_name => "string", :odk_tag => "input")
-    seed(:name, :name => "long_text", :long_name => "Long Text", :odk_name => "string", :odk_tag => "input")
-    seed(:name, :name => "integer", :long_name => "Integer", :odk_name => "int", :odk_tag => "input")
-    seed(:name, :name => "decimal", :long_name => "Decimal", :odk_name => "decimal", :odk_tag => "input")
-    seed(:name, :name => "location", :long_name => "GPS Location", :odk_name => "geopoint", :odk_tag => "input")
-    seed(:name, :name => "address", :long_name => "Address/Landmark", :odk_name => "string", :odk_tag => "input")
-    seed(:name, :name => "select_one", :long_name => "Select One", :odk_name => "select1", :odk_tag => "select1")
-    seed(:name, :name => "select_multiple", :long_name => "Select Multiple", :odk_name => "select", :odk_tag => "select")
-    seed(:name, :name => "datetime", :long_name => "Date+Time", :odk_name => "dateTime", :odk_tag => "input")
-    seed(:name, :name => "date", :long_name => "Date", :odk_name => "date", :odk_tag => "input")
-    seed(:name, :name => "time", :long_name => "Time", :odk_name => "time", :odk_tag => "input")
+  # looks up a question type by name
+  def self.[](name)
+    # build and index the objects if necessary
+    @@by_name ||= all.index_by(&:name)
+    
+    # return the requested object
+    @@by_name[name]
   end
-
+  
+  # returns all question types
+  def self.all
+    @@all ||= @@attributes.map{|a| new(a)}
+  end
+  
+  def initialize(attribs)
+    attribs.each{|k,v| instance_variable_set("@#{k}", v)}
+  end
+  
+  # returns whether this is a numeric type
   def numeric?
-    name == "integer" || name == "decimal"
-  end
-  def integer?; name == "integer"; end
-  
-  def printable?; name != "location"; end
-  
-  def qing_ids
-    questions.collect{|q| q.qing_ids}.flatten
+    properties.include?("numeric")
   end
   
+  # returns whether this is an SMSable type
+  def smsable?
+    properties.include?("smsable")
+  end
+  
+  # returns whether this question type makes sense to be printable on a form
+  def form_printable?
+    properties.include?("form_printable")
+  end
+  
+  # returns whether this question type has options
+  def has_options?
+    properties.include?("has_options")
+  end
+  
+  # returns whether this type has a timezone
   def has_timezone?
-    name == "datetime"
+    properties.include?("has_timezone")
   end
   
+  # returns whether this type is temporal
   def temporal?
-    %w(datetime date time).include?(name)
+    properties.include?("temporal")
   end
 end

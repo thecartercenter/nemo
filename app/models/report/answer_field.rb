@@ -3,8 +3,8 @@ class Report::AnswerField < Report::Field
   attr_reader :question
  
   @@expression_params = [
-    {:sql_tplt => "__TBL_PFX__aotr.str", :name => "select_one_name", :clause => :select, :join => :options},
-    {:sql_tplt => "__TBL_PFX__cotr.str", :name => "select_multiple_name", :clause => :select, :join => :choices},
+    {:sql_tplt => "__TBL_PFX__ao.name_translations", :name => "select_one_name", :clause => :select, :join => :options},
+    {:sql_tplt => "__TBL_PFX__co.name_translations", :name => "select_multiple_name", :clause => :select, :join => :choices},
     {:sql_tplt => "__TBL_PFX__ao.value", :name => "select_one_value", :clause => :select, :join => :options},
     {:sql_tplt => "__TBL_PFX__co.value", :name => "select_multiple_value", :clause => :select, :join => :choices},
     {:sql_tplt => "CONVERT(__TBL_PFX__answers.value, SIGNED INTEGER)", :name => "integer_value", :clause => :select, :join => :answers},
@@ -71,11 +71,11 @@ class Report::AnswerField < Report::Field
   end
   
   def data_type
-    question.type.name
+    question.qtype.name
   end
   
   def joins
-    case question.type.name
+    case question.qtype.name
     when "select_one", "select_multiple"
       [:options, :choices, :option_sets]
     else

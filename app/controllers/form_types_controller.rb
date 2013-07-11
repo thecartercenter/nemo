@@ -1,46 +1,40 @@
 class FormTypesController < ApplicationController
+  # authorization via cancan
+  load_and_authorize_resource
+  
   def index
-    @form_types = apply_filters(FormType)
   end
   
   def new
-    @form_type = FormType.new
     render(:form)
   end
   
   def edit
-    @form_type = FormType.find(params[:id])
     render(:form)
   end
 
   def show
-    @form_type = FormType.find(params[:id])
     render(:form)
   end
 
   def destroy
-    @form_type = FormType.find(params[:id])
-    begin 
-      flash[:success] = @form_type.destroy && "Form Type deleted successfully." 
-    rescue
-      flash[:error] = $!.to_s
-    end
+    destroy_and_handle_errors(@form_type)
     redirect_to(:action => :index)
   end
   
-  def create; crupdate; end
-  def update; crupdate; end
-
-  private
-    def crupdate
-      action = params[:action]
-      @form_type = action == "create" ? FormType.for_mission(current_mission).new : FormType.find(params[:id])
-      begin
-        @form_type.update_attributes!(params[:form_type])
-        flash[:success] = "Form Type #{action}d successfully."
-        redirect_to(:action => :index)
-      rescue ActiveRecord::RecordInvalid
-        render(:form)
-      end
+  def create
+    if @form_type.save
+      set_success_and_redirect(@form_type)
+    else
+      render(:form)
     end
+  end
+  
+  def update
+    if @form_type.update_attributes(params[:form_type])
+      set_success_and_redirect(@form_type)
+    else
+      render(:form)
+    end
+  end
 end

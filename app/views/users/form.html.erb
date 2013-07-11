@@ -1,4 +1,9 @@
-<% content_for(:per_page_js){javascript_include_tag("collection_form")} %>
+<%# special title if user is editing self %>
+<% if @user == current_user %>
+  <% @title = t("page_titles.users.edit_profile") %>
+<% else %>
+  <% @title_args = {:name => @user.name} %>
+<% end %>
 
 <%= flash_and_form_errors(@user) %>
 
@@ -8,22 +13,23 @@
   <%= form_field(f, :email) %>
   <%= form_field(f, :phone, :size => 20) %>
   <%= form_field(f, :phone2, :size => 20) %>
-  <%= form_field(f, :admin, :type => :check_box) if Permission.can_give_admin_to?(current_user, @user) %>
-  <%= form_field(f, :assignments, :partial => "assignments") if Permission.can_edit_assignments_for?(current_user, @user, current_mission) %>
+  <%= form_field(f, :admin, :type => :check_box) if can?(:adminify, @user) %>
+  <%= form_field(f, :assignments, :partial => "assignments") if can?(:manage, @user) && can?(:manage, Assignment) %>
+  <%= form_field(f, :pref_lang, :type => :select, :options => configatron.locales.map{|l| [language_name(l), l]}) %>
 
   <%= form_field(f, :notes, :type => :textarea) %>
-
-  <% if @user == current_user %>
-    <%= form_field(f, :password, :type => :password) %>
-    <%= form_field(f, :password_confirmation, :type => :password) %>
-  <% else %>
-    <% verb = @user.new_record? ? "choose" : "reset" %>
-    <% label = @user.new_record? ? "Password Creation" : "Reset Password?" %>
-    <% details = (@user.new_record? ? "Choose how this user should get his/her password. " : "Choose whether and how to reset this user's password. ") +
-        "The system can either send him/her an email with instructions on how to #{verb} the password online, or the system display a printable " +
-        "instruction sheet including a randomly generated password." %>
-    <%= form_field(f, :reset_password_method, :label => label, :details => details, :partial => "reset_password_method") %>
+  
+  <% unless f.mode == :show %>
+    <% if @user == current_user %>
+      <%= form_field(f, :password, :type => :password) %>
+      <%= form_field(f, :password_confirmation, :type => :password) %>
+    <% else %>
+      <% verb = @user.new_record? ? "choose" : "reset" %>
+      <% label = t("user.reset_password_label_" + verb) %>
+      <% details = t("user.reset_password_details_" + verb) + " " + t("user.reset_password_details_ending", :verb => t("common." + verb).downcase) %>
+      <%= form_field(f, :reset_password_method, :label => label, :details => details, :partial => "reset_password_method") %>
+    <% end %>
   <% end %>
   
-  <%= form_submit_button(f, :label => "Save") %>
+  <%= form_submit_button(f, :label => :save) %>
 <% end %>

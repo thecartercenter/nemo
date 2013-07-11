@@ -20,12 +20,10 @@ class Report::Report < ActiveRecord::Base
   
   @@per_page = 20
   
-  PERCENT_TYPES = [
-    {:name => "", :label => "No Percentage"}, 
-    {:name => :overall, :label => "Percentage Overall"}, 
-    {:name => :by_row, :label => "Percentage By Row"},
-    {:name => :by_col, :label => "Percentage By Column"}
-  ]
+  PERCENT_TYPES = %w(none overall by_row by_col)
+  
+  # list of all subclasses in the order they should be shown in the new report form
+  SUBCLASSES = [Report::QuestionAnswerTallyReport, Report::GroupedTallyReport, Report::ListReport]
   
   # HACK TO GET STI TO WORK WITH ACCEPTS_NESTED_ATTRIBUTES_FOR
   class << self
@@ -40,13 +38,12 @@ class Report::Report < ActiveRecord::Base
     alias_method_chain :new, :cast
   end
   
-  # generates a new report with a default name that won't collide with any existing names, 
-  # in case the user decides not to choose a descriptive name
-  def self.new_with_default_name(mission)
+  # generates a default name that won't collide with any existing names
+  def generate_default_name
     prefix = "New Report"
     
     # get next number
-    nums = for_mission(mission).where("name LIKE '#{prefix}%'").collect do |r| 
+    nums = self.class.for_mission(mission).where("name LIKE '#{prefix}%'").collect do |r| 
       # get suffix
       if r.name.match(/^#{prefix}(\s+\d+$|$)/)
         [$1.to_i, 1].max # must be at least one if found
@@ -56,8 +53,9 @@ class Report::Report < ActiveRecord::Base
     end
     next_num = (nums.compact.max || 0) + 1
     suffix = next_num == 1 ? "" : " #{next_num}"
-
-    for_mission(mission).new(:name => "#{prefix}#{suffix}")
+    
+    # set to attrib
+    self.name = "#{prefix}#{suffix}"
   end
   
   # runs the report by populating header_set, data, and totals objects
@@ -153,9 +151,9 @@ class Report::Report < ActiveRecord::Base
       # we now do default values here as well as changing blanks to nils. 
       # the AR default stuff doesn't work b/c the blank from the client side overwrites the default and there's no easy way to get it back
       self.option_set_id = nil if option_set_id.blank?
-      self.bar_style = "Side By Side" if bar_style.blank?
-      self.display_type = "Table" if display_type.blank?
-      self.percent_type = "" if percent_type.blank?
+      self.bar_style = "side_by_side" if bar_style.blank?
+      self.display_type = "table" if display_type.blank?
+      self.percent_type = "none" if percent_type.blank?
     end
     
     # by default we don't have to worry about blank rows

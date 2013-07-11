@@ -82,10 +82,10 @@ class Search::Parser
       if next_is(*options)
         @lexer.tokens.shift
       else
-        expected = options.collect{|o| o.to_s.upcase}.compact.join("' or '")
+        expected = options.collect{|o| o.to_s.upcase}.compact.join("' #{I18n.t('common.or')} '")
         near = @lexer.tokens[0].fragment
-        near = near.empty? ? "at end of query" : "near '#{near}'"
-        raise Search::ParseError.new("Expected '#{expected}' #{near}")
+        near = near.empty? ? I18n.("searches.at_end_of_query") : "#{I18n.t('common.near').downcase} '#{near}'"
+        raise Search::ParseError.new("#{I18n.t('search.expected')} '#{expected}' #{near}")
       end 
     end
   

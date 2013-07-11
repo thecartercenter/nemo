@@ -3,101 +3,121 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title><%= configatron.site_name %></title>
+  <title><%= configatron.site_name %><%= title.blank? ? "" : ": #{title}" %></title>
 
-  <%= stylesheet_link_tag("main", :media => :all) %>
-  <%= stylesheet_link_tag("screen", :media => :screen) %>
-  <%= stylesheet_link_tag("print", :media => :print) %>
+  <%= stylesheet_link_tag "application", :media => "all" %>
+  <%= stylesheet_link_tag "application-screen", :media => "screen" %>
+  <%= stylesheet_link_tag "application-print", :media => "print" %>
+  <%= javascript_include_tag "application" %>
+  <%= csrf_meta_tags %>
 
-  <%= javascript_include_tag(:defaults, "jquery-ui-1.8.17.custom.min") %>
-  <%= javascript_include_tag("common") %>
+  <script type="text/javascript">
+    // copy i18n settings to javascript i18n
+    I18n.defaultLocale = "<%= I18n.default_locale %>";
+    I18n.locale = "<%= I18n.locale %>";
+  </script>
+  
+  <%= javascript_doc_ready do %>
+    // handles general client side stuff that appears in the template (e.g. language chooser form)
+    // appears at top of file because it needs to be loaded first
+    ELMO.app = new ELMO.App({site_name: <%= configatron.site_name.to_json.html_safe %>});
+  <% end %>
   
   <%= yield(:per_page_js) %>
-  
-  <%= csrf_meta_tag %>
 </head>
 <body>
-  <table id="layout">
-    <tr>
-      <td id="banner" colspan="2">
-        <div id="userinfo">
-          <% if current_user %>
-            <%# username %>
-            Logged in as <strong><%= current_user.login %></strong> &nbsp;&bull;&nbsp;
-            
-            <%# current mission and dropdown, if there are choices %>
-            Mission:
-            <% if current_user.accessible_missions.size > 0 %>
-              <%= nice_form_for(current_user) do |f| %>
-                <% f.mode = :edit %>
-                <%= f.select(:current_mission_id, sel_opts_from_objs(current_user.accessible_missions), :include_blank => "[None]") %>
-                <%= loading_indicator(:header => true) %>
-                <%= hidden_field_tag(:changing_current_mission, 1) %>
-              <% end %>
-            <% else %>
-              <strong><%= current_mission ? current_mission.name : "None" %></strong>
-            <% end %>
-            &nbsp;&bull;&nbsp;
-            
-            <%# role %>
-            <% if current_mission %>
-              Role: <%= nn(current_user.role(current_mission)).name || "[None]" %>
-              &nbsp;&bull;&nbsp;
-            <% end %>
-            
-            <%# link to edit profile %>
-            <%= link_to("Edit Profile", edit_user_path(current_user.id)) %>
-            &nbsp;&bull;&nbsp;
-
-            <%# logout button %>
-            <%= button_to("Logout", user_session_path, :method => :delete, :id => "logout_button") %>
-            
-          <% else %>
-            
-            <%# login link %>
-            <%= link_to("Login", login_path) %>
-          <% end %>
-        </div>
-        <div id="title">
-          <h1>
-            <%= link_to(configatron.site_name, root_path) %>
-            <br/>
-            <%= image_tag("four-dots.png") %>
-          </h1>
-          <h2><%= nn(current_mission).name %></h2>
-        </div>
-      </td>
-    </tr>
-    <tr>
-      <td id="nav">
-        <ul>
-          <% [Response, Form, Report::Report, Option, OptionSet, FormType, Broadcast, Setting, User, Mission].each do |k| %>
-            <% if authorized?(:action => "#{k.model_name.route_key}#index") %>
-              <li><%= link_to(k.model_name.human.ucwords.pluralize, send("#{k.model_name.route_key}_path")) %></li>
-            <% end %>
-          <% end %>
-        </ul>
-      </td>
-      <td>
-        <div id="content" class="<%= ctlr_action_name %>">
-          <% unless @dont_print_title %>
-            <h1 id="title"><%= @title %></h1>
-          <% end %>
-          <%= body %>
-        </div>
-      </td>
-    </tr>
-    <tr>
-      <td id="footer" colspan="2">
-        Time Zone: <%= Time.zone.to_s %> &nbsp;|&nbsp;
-        Outgoing SMS Provider: <%= configatron.outgoing_sms_adapter ? configatron.outgoing_sms_adapter.service_name : "[None]" %> &nbsp;|&nbsp;
-        System Version: <%= configatron.system_version %>
-        <% if Rails.env == "development" %>
-          &nbsp;&nbsp;
-          <div id="dev_mode_warning">Development Mode</div>
+  <div id="userinfo">
+    <% if current_user %>
+      <%# username %>
+      <%= t("layout.logged_in_as") %> <strong><%= current_user.login %></strong> &nbsp;&bull;&nbsp;
+      
+      <%# current mission and dropdown, if there are choices %>
+      <%= Mission.model_name.human %>:
+      <% if current_user.accessible_missions.size > 0 %>
+        <%= nice_form_for(current_user) do |f| %>
+          <% f.mode = :edit %>
+          <%= f.select(:current_mission_id, sel_opts_from_objs(current_user.accessible_missions), :include_blank => "[#{t('common.none').capitalize}]") %>
+          <%= loading_indicator(:header => true) %>
+          <%= hidden_field_tag(:changing_current_mission, 1) %>
         <% end %>
-      </td>
-    </tr>
-  </table>
+      <% else %>
+        <strong><%= current_mission ? current_mission.name : t("common.none") %></strong>
+      <% end %>
+      &nbsp;&bull;&nbsp;
+      
+      <%# role %>
+      <% if current_mission %>
+        <%= t("role.role") %>: <%= t(current_user.role(current_mission), :scope => :role, :default => "[#{t("common.none")}]") %>
+        &nbsp;&bull;&nbsp;
+      <% end %>
+      
+      <%# link to edit profile %>
+      <%= link_to(t("user.edit_profile"), edit_user_path(current_user.id)) %>
+      &nbsp;&bull;&nbsp;
+
+      <%# logout button %>
+      <%= button_to(t("common.logout"), user_session_path, :method => :delete, :id => "logout_button") %>
+      
+    <% else %>
+      
+      <%# login link %>
+      <%= link_to(t("common.login"), login_path) %>
+    <% end %>
+  </div>
+  
+  <div id="title">
+    <h1><%= link_to(configatron.site_name, root_path) %></h1>
+    <h2><%= nn(current_mission).name %></h2>
+    <%= image_tag("four-dots.png") %>
+  </div>
+  
+  <div id="nav">
+    <ul>
+      <% [Response, Form, Report::Report, Option, OptionSet, FormType, Broadcast, Setting, User, Mission].each do |k| %>
+        <% if can?(:index, k) %>
+          <li><%= link_to(pluralize_model(k), send("#{k.model_name.route_key}_path")) %></li>
+        <% end %>
+      <% end %>
+    </ul>
+  </div>
+  
+  <div id="content" class="<%= ctlr_action_name %>">
+    <% unless @dont_print_title %>
+      <h1 class="title"><%= title %></h1>
+    <% end %>
+    <%= body %>
+  </div>
+  
+  <div id="footer">
+    <%= link_to(t("layout.change_language"), "#", :id => "locale_form_link") %> 
+    
+    <%= form_tag(nil, :id => "locale_form") do %>
+      <%= select_tag(:locale, options_for_select(configatron.locales.map{|l| [t(:locale_name, :locale => l), l]}, I18n.locale)) %>
+    <% end %>
+    
+    &nbsp;|&nbsp;
+    
+    <%= t("layout.time_zone") %>: <%= Time.zone.to_s %> &nbsp;|&nbsp;
+    
+    <% if current_mission %>
+      <%= t("sms.outgoing_provider") %>:
+      <%= configatron.outgoing_sms_adapter ? configatron.outgoing_sms_adapter.service_name : "[#{t('common.none').capitalize}]" %> &nbsp;|&nbsp;
+    <% end %>
+    
+    <% if can?(:index, Sms::Message) %>
+      <%= link_to(t("page_titles.sms.index"), sms_path) %> &nbsp;|&nbsp;
+    <% end %>
+
+    <%= t("layout.system_version") %>: <%= configatron.system_version %>
+    
+    <% if Rails.env == "development" %>
+      &nbsp;&nbsp;
+      <div id="dev_mode_warning"><%= t("layout.dev_mode") %></div>
+    <% end %>
+  </div>
+  
+  <%= javascript_tag do %>
+    var LOGIN_PATH = <%= login_path.to_json.html_safe %>;
+  <% end %>
 </body>
 </html>

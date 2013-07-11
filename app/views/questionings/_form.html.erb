@@ -1,42 +1,37 @@
-<% content_for(:per_page_js){javascript_include_tag("questionings")} %>
+<%= flash_and_form_errors(@questioning) %>
 
-<%= flash_and_form_errors(@qing).gsub("Question base", "Question").gsub("Question C", "Question c").html_safe %>
-
-<%= nice_form_for(@qing) do |f| %>
+<%= nice_form_for(@questioning) do |f| %>
   <%= f.hidden_field(:form_id) %>
   
-  <% unless f.mode == :edit && @qing.question.published? %>
-    
-    <% if f.mode == :edit && !(other_forms = @qing.other_forms).empty? %>
-      <div class="tip important">
-        Note: This question also appears on the following forms: <%= other_forms.map{|of| of.name}.join(", ") %>.
-        Any changes you make below will also be reflected on those forms.
-      </div>
-    <% end %>
+  <% @question_pubd = f.mode == :edit && @questioning.question.published? %>
   
-    <%= fields_for("questioning[question]", @qing.question) do |f2| %>
-      <% f2.mode = form_mode %>
-      
-      <%= render("questions/title_and_hint", :lang => :eng, :f => f2) %>
+  <% if f.mode == :edit && !(other_forms = @questioning.other_forms).empty? %>
+    <div class="tip important">
+      <%= t("question.appears_elsewhere", :forms => other_forms.map{|f| f.name}.join(", ")) %>
+      <%= t("question.other_forms_published") if @question_pubd %>
+    </div>
+  <% end %>
+
+  <%= f.fields_for(:question) do |f2| %>
+    <% f2.mode = form_mode %>
+    
+    <% unless @question_pubd %>
       <%= form_field(f2, :code, :required => true, :maxlength => 20) %>
-      <%= form_field(f2, :question_type_id, :type => :select, :required => true, :options => sel_opts_from_objs(@question_types, :name_method => :long_name)) %>
+      <%= form_field(f2, :qtype_name, :type => :select, :required => true, 
+        :options => @question_types.map{|qt| [t(qt.name, :scope => :question_type), qt.name]}) %>
       <%= form_field(f2, :option_set_id, :type => :select, :options => sel_opts_from_objs(@option_sets)) %>
       <%= form_field(f2, :minimum, :partial => "questions/min_max_condition") %>
       <%= form_field(f2, :maximum, :partial => "questions/min_max_condition") %>
-
-      <% (configatron.languages - [:eng]).each do |lang| %>
-        <%= render("questions/title_and_hint", :lang => lang, :f => f2) %>
-      <% end %>
     <% end %>
-  
-  <% else %>
-    <div class="error tip">Note: This question appears on at least one published form, 
-      and thus you can only edit these fields.</div>
+
+    <% (configatron.languages).each_with_index do |lang, rank| %>
+      <%= render("questions/title_and_hint", :lang => lang, :f => f2, :rank => rank) %>
+    <% end %>
   <% end %>
   
-  <%= form_field(f, :condition, :partial => "conditions/form", :locals => { :condition => @qing.get_or_init_condition }) %>
+  <%= form_field(f, :condition, :partial => "conditions/form") %>
   <%= form_field(f, :required, :type => :check_box) %>
   <%= form_field(f, :hidden, :type => :check_box) %>
 
-  <%= form_submit_button(f) %>
+  <%= form_submit_button(f, :label => :save) %>
 <% end %>

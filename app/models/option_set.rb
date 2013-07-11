@@ -1,6 +1,5 @@
-require 'mission_based'
 class OptionSet < ActiveRecord::Base
-  include MissionBased
+  include MissionBased, FormVersionable
 
   has_many(:option_settings, :dependent => :destroy, :autosave => true, :inverse_of => :option_set)
   has_many(:options, :through => :option_settings)
@@ -14,28 +13,22 @@ class OptionSet < ActiveRecord::Base
   validate(:unique_values)
   validate(:name_unique_per_mission)
   
-  before_destroy(:check_assoc)
+  before_save(:notify_form_versioning_policy_of_update)
   
   default_scope(order("name"))
-  scope(:for_index, includes(:questions, :options, {:questionings => :form}))
+  scope(:with_associations, includes(:questions, :options, {:questionings => :form}))
+  
+  ORDERINGS = [{:code => "value_asc", :sql => "value asc"}, {:code => "value_desc", :sql => "value desc"}]
   
   self.per_page = 100
 
   # creates a simple yes/no/na option set
+  # don't need to translate since default mission language is english
   def self.create_default(mission)
     options = Option.create_simple_set(%w(Yes No N/A), mission)
     set = OptionSet.new(:name => "Yes/No/NA", :ordering => "value_asc", :mission => mission)
-    options.each{|o| set.option_settings.build(:option_id => o.id)}
+    options.each{|o| set.options << options}
     set.save!
-  end
-
-  def self.orderings
-    [{:code => "value_asc", :name => "Value Low to High", :sql => "value asc"},
-     {:code => "value_desc", :name => "Value High to Low", :sql => "value desc"}]
-  end
-  
-  def self.ordering_select_options
-    orderings.collect{|o| [o[:name], o[:code]]}
   end
   
   def sorted_options
@@ -62,10 +55,10 @@ class OptionSet < ActiveRecord::Base
       # if both exist, do nothing
       # if submitted is nil, destroy the original
       if subd.nil?
-        option_settings.delete(orig)
+        options.delete(orig.option)
       # if original is nil, add the new one to this option_set's array
       elsif orig.nil?
-        option_settings << subd
+        options << subd.option
       end
     end
   end
@@ -84,22 +77,30 @@ class OptionSet < ActiveRecord::Base
     Hash[*%w(id name ordering).collect{|k| [k, self.send(k)]}.flatten]
   end
   
+  # gets all forms to which this option set is linked (through questionings)
+  def forms
+    questionings.collect(&:form).uniq
+  end
+  
+  def check_associations
+    # make sure not associated with any questions
+    raise DeletionError.new(:cant_delete_if_has_questions) unless questions.empty?
+    
+    # make sure not associated with any existing answers/choices
+    option_settings.each{|os| os.no_answers_or_choices}
+  end
+  
   private
     def at_least_one_option
-      errors.add(:base, "You must choose at least one option.") if option_settings.empty?
+      errors.add(:base, :at_least_one) if options.empty?
     end
-    def check_assoc
-      unless questions.empty?
-        raise "You can't delete option set '#{name}' because one or more questions are associated with it."
-      end
-    end
+    
     def unique_values
       values = option_settings.map{|o| o.option.value}
-      if values.uniq.size != values.size
-        errors.add(:base, "Two or more of the options you've chosen have the same numeric value.")
-      end
+      errors.add(:base, :non_unique_values) if values.uniq.size != values.size
     end
+    
     def name_unique_per_mission
-      errors.add(:name, "must be unique") if self.class.for_mission(mission).where("name = ? AND id != ?", name, id).count > 0
+      errors.add(:name, :must_be_unique) unless unique_in_mission?(:name)
     end
 end

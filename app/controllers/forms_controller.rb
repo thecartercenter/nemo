@@ -1,175 +1,182 @@
 class FormsController < ApplicationController
-  # in the choose_questions action we have a question form so we need this
-  include QuestionFormable  
+  # special find method before load_resource
+  before_filter :find_form_with_questionings, :only => [:show, :edit, :update]
+  
+  # authorization via cancan
+  load_and_authorize_resource
+
+  # in the choose_questions action we have a question form so we need this Concern
+  include QuestionFormable
   
   def index
+    # handle different formats
     respond_to do |format|
       # render normally if html
       format.html do
-        @forms = apply_filters(Form).with_form_type.all
-        render(:index)
+        @forms = apply_filters(@forms).with_form_type
+        render(:index)  
       end
       
       # get only published forms and render openrosa if xml requested
       format.xml do
-        @forms = restrict(Form).published.with_form_type
+        @forms = @forms.published.with_form_type
         render_openrosa
       end
     end
   end
   
   def new
-    @form = Form.for_mission(current_mission).new
-    render_form
+    prepare_and_render_form
   end
   
   def edit
-    @form = Form.with_questions.find(params[:id])
-    render_form
+    prepare_and_render_form
   end
   
   def show
-    @form = Form.with_questions.find(params[:id])
-
     # add to download count if xml
-    @form.add_download if request.format.xml? 
+    @form.add_download if request.format && request.format.xml? 
     
     respond_to do |format|
-      # for html, render the printable partial if requested, otherwise render the form
-      format.html{params[:print] ? render_printable : render_form}
+      
+      # for html, render the printable or sms_guide styles if requested, otherwise render the form
+      format.html do 
+        # printable style
+        if params[:print]
+          # here we only render a partial since this is coming from an ajax request
+          render(:partial => "printable", :layout => false, :locals => {:form => @form})
+          
+        # sms guide style
+        elsif params[:sms_guide]
+          # determine the most appropriate language to show the form in
+          # if params[:lang] is set, use that
+          @lang = if params[:lang]
+            params[:lang]
+          # otherwise try to use the user's lang pref or the default
+          else 
+            current_user.pref_lang.to_sym || I18n.default_locale
+          end
+          render("sms_guide")
+
+        # otherwise just normal!
+        else
+          prepare_and_render_form
+        end
+      end
       
       # for xml, render openrosa
       format.xml{render_openrosa}
     end
   end
   
-  def destroy
-    @form = Form.find(params[:id])
-    begin flash[:success] = @form.destroy && "Form deleted successfully." rescue flash[:error] = $!.to_s end
-    redirect_to(:action => :index)
-  end
-  
-  def publish
-    @form = Form.find(params[:id])
-    verb = @form.published? ? "unpublish" : "publish"
-    begin
-      @form.toggle_published
-      dl = verb == "unpublish" ? " The download count has also been reset." : ""
-      flash[:success] = "Form #{verb}ed successfully." + dl
-    rescue
-      flash[:error] = "There was a problem #{verb}ing the form (#{$!.to_s})."
+  def create
+    if @form.save
+      set_success_and_redirect(@form, :to => edit_form_path(@form))
+    else
+      prepare_and_render_form
     end
-    # redirect to form edit
+  end
+  
+  def update
+    begin
+      # save basic attribs
+      @form.assign_attributes(params[:form])
+      
+      # update ranks if provided (possibly raising condition ordering error)
+      @form.update_ranks(params[:rank]) if params[:rank]
+
+      # save everything and redirect
+      @form.save!
+      set_success_and_redirect(@form, :to => edit_form_path(@form))
+      
+    # handle problem with conditions
+    rescue ConditionOrderingError
+      @form.errors.add(:base, :ranks_break_conditions)
+      prepare_and_render_form
+    
+    # handle other validation errors  
+    rescue ActiveRecord::RecordInvalid
+      prepare_and_render_form
+    end
+  end
+  
+  def destroy
+    destroy_and_handle_errors(@form)
     redirect_to(:action => :index)
   end
   
-  # GET /forms/:id/choose_questions
-  # show the form to either choose existing questions or create a new one to add
-  def choose_questions
-    @form = Form.find(params[:id])
-    @title = "Adding Questions to Form: #{@form.name}"
+  # publishes/unpublishes a form
+  def publish
+    verb = @form.published? ? :unpublish : :publish
+    begin
+      @form.send("#{verb}!")
+      flash[:success] = t("form.#{verb}_success")
+    rescue
+      flash[:error] = t("form.#{verb}_error", :msg => $!.to_s)
+    end
     
+    # redirect to form index
+    redirect_to(:action => :index)
+  end
+  
+  # shows the form to either choose existing questions or create a new one to add
+  def choose_questions
     # get questions for choice list
-    @questions = apply_filters(Question.not_in_form(@form))
+    @questions = Question.accessible_by(current_ability).not_in_form(@form)
     
     # setup new questioning for use with the questioning form
-    @qing = init_qing(:form_id => @form.id)
+    init_qing(:form_id => @form.id, :question_attributes => {})
     setup_qing_form_support_objs
   end
   
+  # adds questions selected in the big list to the form
   def add_questions
-    # load the form
-    @form = Form.find(params[:id])
-    
     # load the question objects
     questions = load_selected_objects(Question)
 
     # raise error if no valid questions (this should be impossible)
-    raise "No valid questions given." if questions.empty?
+    raise "no valid questions given" if questions.empty?
     
     # add questions to form and try to save
     @form.questions += questions
     if @form.save
-      flash[:success] = "Questions added successfully"
+      flash[:success] = t("form.questions_add_success")
     else
-      flash[:error] = "There was a problem adding the questions (#{@form.errors.full_messages.join(';')})"
+      flash[:error] = t("form.questions_add_error", :msg => @form.errors.full_messages.join(';'))
     end
     
     # redirect to form edit
     redirect_to(edit_form_path(@form))
   end
   
-  
+  # removes selected questions from the form
   def remove_questions
-    # load the form
-    @form = Form.find(params[:id])
     # get the selected questionings
     qings = load_selected_objects(Questioning)
     # destroy
     begin
+      qings.each{|q| q.check_assoc}
       @form.destroy_questionings(qings)
-      flash[:success] = "Questions removed successfully."
+      flash[:success] = t("form.questions_remove_success")
     rescue
-      flash[:error] = "There was a problem removing the questions (#{$!.to_s})."
+      flash[:error] = t("form.question_remove_error", :msg => $!.to_s)
     end
     # redirect to form edit
     redirect_to(edit_form_path(@form))
   end
   
-  def update_ranks
-    redirect_to(edit_form_path(@form))
-  end
-  
+  # makes an unpublished copy of the form that can be edited without affecting the original
   def clone
-    @form = Form.find(params[:id])
     begin
       @form.duplicate
-      flash[:success] = "Form '#{@form.name}' cloned successfully."
+      flash[:success] = t("form.clone_success", :form_name => @form.name)
     rescue
-      raise $!
-      flash[:error] = "There was a problem cloning the form (#{$!.to_s})."
+      flash[:error] = t("form.clone_error", :msg => $!.to_s)
     end
     redirect_to(:action => :index)
   end
   
-  def create; crupdate; end
-  
-  def update; crupdate; end
-  
   private
-  
-    def crupdate
-      action = params[:action]
-      @form = action == "create" ? Form.for_mission(current_mission).new : Form.find(params[:id], :include => {:questionings => :condition})
-      
-      begin
-        # save basic attribs
-        @form.attributes = params[:form]
-        
-        # update ranks if provided
-        if params[:rank]
-          # build hash of questioning ids to ranks
-          new_ranks = {}; params[:rank].each_pair{|id, rank| new_ranks[id] = rank}
-          
-          # update (possibly raising condition ordering error)
-          @form.update_ranks(new_ranks)
-        end
-        
-        # save everything and redirect
-        @form.save!
-        flash[:success] = "Form #{action}d successfully."
-        redirect_to(edit_form_path(@form))
-
-      # handle problem with conditions
-      rescue ConditionOrderingError
-        @form.errors.add(:base, "The new rankings invalidate one or more conditions")
-        render_form
-      
-      # handle other validation errors  
-      rescue ActiveRecord::RecordInvalid
-        render_form
-      end
-    end
     
     # adds the appropriate headers for openrosa content
     def render_openrosa
@@ -177,13 +184,17 @@ class FormsController < ApplicationController
       response.headers['X-OpenRosa-Version'] = "1.0"
     end
     
-    # renders the printable partial
-    def render_printable
-      render(:partial => "printable", :layout => false, :locals => {:form => @form})
+    # prepares objects and renders the form template
+    def prepare_and_render_form
+      # load the form types available to this user
+      @form_types = FormType.accessible_by(current_ability)
+      
+      # render the form template
+      render(:form)
     end
     
-    def render_form
-      @form_types = apply_filters(FormType)
-      render(:form)
+    # loads the form object including a bunch of joins for questions
+    def find_form_with_questionings
+      @form = Form.with_questionings.find(params[:id])
     end
 end

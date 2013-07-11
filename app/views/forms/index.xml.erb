@@ -5,7 +5,10 @@
     <formID>cceom.org:<%= f.id %></formID>
     <name><%= f.full_name %></name>
     <majorMinorVersion><%= f.version %></majorMinorVersion>
-    <downloadUrl><%= form_url(f, :format => :xml) %></downloadUrl>
+    <downloadUrl>
+      <%# special URL that includes mission; locale is not necessary %>
+      <%= form_with_mission_url(:mission_compact_name => f.mission.compact_name, :id => f.id, :locale => nil) %>
+    </downloadUrl>
   </xform>
 <% end %>
 </xforms>

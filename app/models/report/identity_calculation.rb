@@ -13,7 +13,7 @@ class Report::IdentityCalculation < Report::Calculation
   end
   
   def where_expr
-    raise Report::ReportError.new("An identity calculation must specify question1 or attrib1.") if arg1.nil?
+    raise Report::ReportError.new("identity calc must specify question1 or attrib1") if arg1.nil?
     arg1.where_expr(:tbl_pfx => table_prefix)
   end
   

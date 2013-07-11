@@ -7,8 +7,8 @@ class RemoveObservedAtFromResponses < ActiveRecord::Migration
         # add a new question called Form Start Time
         puts "Creating new FormStartTime question"
         datetime_type = QuestionType.find_by_name("datetime")
-        newq = Question.create!(:code => "FormStartTime", :question_type_id => datetime_type.id, :name_eng => "Form Start Time", 
-          :hint_eng => "The time at which the form was started. Copied from the old 'Observation Time' field.")
+        newq = Question.create!(:code => "FormStartTime", :question_type_id => datetime_type.id, :name_en => "Form Start Time", 
+          :hint_en => "The time at which the form was started. Copied from the old 'Observation Time' field.")
       
         # for each form
         Form.all.each do |form|

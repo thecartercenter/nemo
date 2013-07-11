@@ -1,4 +1,3 @@
-require 'mission_based'
 class Broadcast < ActiveRecord::Base
   include MissionBased
 
@@ -15,20 +14,12 @@ class Broadcast < ActiveRecord::Base
   before_create(:deliver)
   
   default_scope(includes(:recipients).order("created_at DESC"))
-    
-  def self.medium_select_options
-    [["SMS preferred (use email if a recipient has no phone)", "sms"],
-     ["Email preferred (use SMS if a recipient has no email)", "email"],
-     ["SMS only (don't send any emails)", "sms_only"],
-     ["Email only (don't send any SMSes)", "email_only"],
-     ["Both SMS and email", "both"]]
-  end
-
-  def self.which_phone_select_options
-    [["Main phone only", "main_only"],
-     ["Alternate phone only", "alternate_only"],
-     ["Both phones", "both"]]
-  end
+  
+  # options for the medium used for the broadcast
+  MEDIUM_OPTIONS = %w(sms email sms_only email_only both)
+  
+  # options for which phone numbers the broadcast should be sent to
+  WHICH_PHONE_OPTIONS = %w(main_only alternate_only both)
   
   def recipient_ids
     recipients.collect{|r| r.id}.join(",")
@@ -53,14 +44,14 @@ class Broadcast < ActiveRecord::Base
     begin
       BroadcastMailer.broadcast(emailees, subject, body).deliver unless emailees.empty?
     rescue
-      add_send_error("Email Error: #{$!}")
+      add_send_error(I18n.t("broadcast.email_error") + ": #{$!}")
     end
     # send smses
     begin
       Smser.deliver(smsees, which_phone, "#{configatron.broadcast_tag} #{body}") unless smsees.empty?
     rescue Sms::Error
       # one error per line
-      $!.to_s.split("\n").each{|e| add_send_error("SMS Error: #{e}")}
+      $!.to_s.split("\n").each{|e| add_send_error(I18n.t("broadcast.sms_error") + ": #{e}")}
     end
     return true
   end

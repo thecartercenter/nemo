@@ -1,54 +1,38 @@
-require 'language_list'
 module ApplicationHelper
-  include LanguageList
-   
+  
+  FONT_AWESOME_ICON_MAPPINGS = {
+    :clone => "copy",
+    :destroy => "trash",
+    :edit => "edit",
+    :map => "globe",
+    :print => "print",
+    :publish => "arrow-up",
+    :sms => "comment",
+    :unpublish => "arrow-down"
+  }
+  
   # renders the flash message and any form errors for the given activerecord object
   def flash_and_form_errors(object = nil)
     render("layouts/flash", :flash => flash, :object => object)
   end
   
-  # applies any customizations to automatically generated form error messages
-  # called from layouts/flash
-  def fix_error_messages(msgs)
-    msgs.gsub!("Answers are invalid", "One or more answers are invalid")
-    msgs.gsub!("@ please.", "@")
-    msgs.gsub!("look like an email address.", "look like an email address")
-    msgs
-  end
-  
-  # renders a link only if the current user is authorized for the specified action
-  def link_to_if_auth(label, url, action, object = nil, *args)
-    authorized?(:action => action, :object => object) ? link_to(label, url, *args) : ""
-  end
-  
-  # same as link_to_if_auth but for button_to
-  def button_to_if_auth(label, url, action, object = nil, *args)
-    authorized?(:action => action, :object => object) ? button_to(label, url, *args) : ""
-  end
-  
-  # draws a basic form for the given object
-  # THIS IS THE OLD WAY
-  def basic_form(obj, &block)
-    form_for(obj) do |f|
-      f.mode = form_mode
-      # get the fields spec
-      spec = block.call(f)
-      # if fields doesn't have sections, create one big section 
-      spec[:sections] = [{:fields => spec[:fields]}] unless spec[:sections]
-      # render the form and return it
-      render("layouts/basic_form", :f => f, :spec => spec, :obj => obj)
-    end
-  end
-  
-  # THIS IS THE NEW WAY
+  # makes a standard looking form
   def nice_form_for(obj, options = {})
     options[:html] ||= {}
     options[:html][:class] = "#{obj.class.model_name.singular}_form"
-    form_for(obj, options) do |f|
+    form = form_for(obj, options) do |f|
+      
       # set form mode
       f.mode = form_mode
       yield(f)
     end
+    
+    # add required * def'n
+    if form =~ /"reqd_sym"/
+      form = (content_tag(:div, t("layout.reqd_sym_definition", :reqd_sym => reqd_sym).html_safe, :class => "tip") + form).html_safe
+    end
+    
+    form
   end
   
   # gets the mode a form should be displayed in: one of new, edit, or show
@@ -87,7 +71,7 @@ module ApplicationHelper
             when :check_box
               # if we are in show mode, show 'yes' or 'no' instead of checkbox
               if f.mode == :show
-                content_tag("strong"){f.object.send(method) ? "Yes" : "No"}
+                content_tag("strong"){tbool(f.object.send(method))}
               else
                 f.check_box(method)
               end
@@ -129,7 +113,11 @@ module ApplicationHelper
   def form_submit_button(f = nil, options = {})
     # wrap in form_buttons if not wrapped
     return form_buttons{form_submit_button(f, options.merge(:multiple => true))} unless options[:multiple]
-    label = options.delete(:label) || "Submit"
+    label = options.delete(:label) || :submit
+    
+    # if label is a symbol, translate it
+    label = t("common.#{label}") if label.is_a?(Symbol)
+    
     options.merge!(:class => "submit")
     options.delete(:multiple)
     f ? f.submit(label, options) : submit_tag(label, options)
@@ -146,54 +134,52 @@ module ApplicationHelper
     (condition ? '<div class="reqd_sym">*</div>' : '').html_safe
   end
   
-  def action_icon(action, options = {})
-    suffix = options[:no_label] ? "-no-label" : ""
-    image_tag("action-icons/#{action}#{suffix}.png")
+  # returns the html for an action icon using font awesome and the mappings defined above
+  def action_link(action, href, html_options = {})
+    # join passed html class (if any) with the default class
+    html_options[:class] = [html_options[:class], "action_link"].compact.join(" ")
+    
+    link_to(content_tag(:i, "", :class => "icon-" + FONT_AWESOME_ICON_MAPPINGS[action.to_sym]), href, html_options)
   end
   
   # assembles links for the basic actions in an index table (show edit and destroy)
   def action_links(obj, options)
-    destroy_warning = options[:destroy_warning] || "Are you sure?"
-    route_key = obj.class.model_name.route_key.singularize
-    links = %w(show edit destroy).collect do |action|
+    route_key = obj.class.model_name.singular_route_key
+    links = %w(edit destroy).collect do |action|
       options[:exclude] = [options[:exclude]] unless options[:exclude].is_a?(Array)
       next if options[:exclude] && options[:exclude].include?(action.to_sym)
-      img = action_icon(action)
       key = "#{obj.class.table_name}##{action}"
       case action
-      when "show"
-        link_to_if_auth(img, send("#{route_key}_path", obj), key, obj, :title => "View")
       when "edit"
-        link_to_if_auth(img, send("edit_#{route_key}_path", obj), key, obj, :title => "Edit")
+        can?(:update, obj) ? action_link(action, send("edit_#{route_key}_path", obj), :title => t("common.edit")) : nil
       when "destroy"
-        link_to_if_auth(img, obj, key, obj, :method => :delete, :confirm => destroy_warning, :title => "Delete")
+        # build a delete warning
+        obj_description = options[:obj_name] ? "#{obj.class.model_name.human} '#{options[:obj_name]}'" : options[:obj_description]
+        warning = t("layout.delete_warning", :obj_description => obj_description)
+        
+        can?(:destroy, obj) ? action_link(action, send("#{route_key}_path", obj), :method => :delete, 
+          :confirm => warning, :title => t("common.delete")) : nil
       end
     end.compact
     links.join("").html_safe
   end
   
   # creates a link to a batch operation
-  # options include :action (e.g. forms#add_questions), :id, :format, :name (name of the link)
   def batch_op_link(options)
-    url_bits = {}
-    url_bits[:controller], url_bits[:action] = options[:action].split("#")
-    url_bits[:id] = options[:id] if options[:id]
-    url_bits[:format] = options[:format] if options[:format]
-    path = url_for(url_bits)
-    button_to_if_auth(options[:name], "#", options[:action], nil, 
-      :onclick => "batch_submit({path: '#{path}', confirm: '#{options[:confirm]}'}); return false;",
+    button_to(options[:name], "#", 
+      :onclick => "batch_submit({path: '#{options[:path]}', confirm: '#{options[:confirm]}'}); return false;",
       :class => "batch_op_link")
   end
   
   # creates a link to select all the checkboxes in an index table
   def select_all_link
-    button_to("Select All", "#", :onclick => "batch_select_all(); return false", :id => "select_all_link")
+    button_to(t("layout.select_all"), "#", :onclick => "batch_select_all(); return false", :id => "select_all_link")
   end
   
   # renders an index table for the given class and list of objects
   def index_table(klass, objects)
     # get links from class' helper
-    links = send("#{klass.table_name}_index_links", objects)
+    links = send("#{klass.table_name}_index_links", objects).compact
 
     # if there are any batch links, insert the 'select all' link
     batch_ops = !links.reject{|l| !l.match(/class="batch_op_link"/)}.empty?
@@ -210,6 +196,7 @@ module ApplicationHelper
     )
   end
   
+  # renders a loading indicator image wrapped in a wrapper
   def loading_indicator(options = {})
     content_tag("div", :class => "loading_indicator loading_indicator#{options[:floating] ? '_floating' : '_inline'}", :id => options[:id]) do
       image_tag("load-ind-small#{options[:header] ? '-header' : ''}.gif", :style => "display: none", :id => "loading_indicator" + 
@@ -242,13 +229,85 @@ module ApplicationHelper
     render(:partial => "layouts/collection_form", :locals => params)
   end
   
+  # finds the english name of the language with the given code (e.g. 'French' for 'fr')
+  # tries to use the translated locale name if it exists, otherwise use english language name from the iso639 gem
+  # returns code itself if code not found
   def language_name(code)
-    LANGS[code]
+    if configatron.locales.include?(code)
+      t(:locale_name, :locale => code)
+    else
+      (entry = ISO_639.find(code.to_s)) ? entry.english_name : code.to_s
+    end
   end
   
   # wraps the given content in a js tag and a jquery ready handler
   def javascript_doc_ready(&block)
     content = capture(&block)
     javascript_tag("$(document).ready(function(){#{content}});")
+  end
+  
+  # takes an array of keys and a scope and builds an options array (e.g. [["Option 1", "opt1"], ["Option 2", "opt2"], ...])
+  def translate_options(keys, scope)
+    keys.map{|k| [t(k, :scope => scope), k]}
+  end
+  
+  # generates a link like "Create New Option Set" given a klass
+  # options[:js] - if true, the link just points to # with expectation that js will bind to it
+  def create_link(klass, options = {})
+    # get the link target path. honor the js option.
+    href = options[:js] ? "#" : send("new_#{klass.model_name.singular_route_key}_path")
+    
+    link_to(t("#{klass.model_name.i18n_key}.create_link"), href, :class => "create_#{klass.model_name.param_key}")
+  end
+  
+  # translates a boolean value
+  def tbool(b)
+    t(b ? "common._yes" : "common._no")
+  end
+
+  # if the given array is not paginated, apply an infinite pagination so the will_paginate methods will still work
+  def ensure_paginated(objs)
+    if !objs.respond_to?(:total_entries) && objs.respond_to?(:paginate)
+      objs.paginate(:page => 1, :per_page => 1000000)
+    else
+      objs
+    end
+  end
+  
+  def translate_model(model)
+    pluralize_model(model, :count => 1)
+  end
+  
+  # gets or constructs the page title from the translation file or from an explicitly set @title
+  # returns empty string if no translation found and no explicit title set
+  def title
+    # use explicit title if given
+    return @title unless @title.nil?
+
+    # if action specified outright, use that
+    action = if @title_action
+      @title_action
+    else
+      # use 'new' and 'edit' for 'update' and 'create', respectively
+      case action_name
+      when "update" then "edit"
+      when "create" then "new"
+      else action_name
+      end
+    end
+
+    @title = t(action, {:scope => "page_titles.#{controller_name}", :default => [:all, ""]}.merge(@title_args || {}))
+  end
+  
+  # pluralizes an activerecord model name
+  # assumes 2 if count not given in options
+  def pluralize_model(klass, options = {})
+    t("activerecord.models.#{klass.model_name.i18n_key}", :count => options[:count] || 2)
+  end
+  
+  # translates and interprets markdown markup
+  def tmd(*args)
+    # strip the outer <p> </p> tags
+    BlueCloth.new(t(*args)).to_html[3..-5].html_safe
   end
 end

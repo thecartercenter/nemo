@@ -1,6 +1,6 @@
 class Search::Qualifier
   
-  # required params - :label, :col
+  # required params - :name, :col
   def initialize(params)
     @params = params
     

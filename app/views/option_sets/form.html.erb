@@ -1,11 +1,14 @@
-<%= flash_and_form_errors(@set) %>
+<% @title_args = {:name => @option_set.name} %>
+
+<%= flash_and_form_errors(@option_set) %>
 <% if @options.empty? %>
-  You need to <%= link_to("create some options", options_path) %> before you can create option sets.
+  <%= t("option_set.options_before_sets", :link => link_to(t("option_set.create_options"), options_path)).html_safe %>
 <% else %>
-  <%= nice_form_for(@set) do |f| %>
+  <%= nice_form_for(@option_set) do |f| %>
     <%= form_field(f, :name, :required => true) %>
-    <%= form_field(f, :options, :partial => "option_setting", :collection => @set.all_option_settings(@options)) %>
-    <%= form_field(f, :ordering, :type => :select, :options => OptionSet.ordering_select_options, :required => true) %>
-    <%= form_submit_button(f) %> 
+    <%= form_field(f, :options, :partial => "option_setting", :collection => @option_set.all_option_settings(@options)) %>
+    <%= form_field(f, :ordering, :type => :select, :required => true,
+      :options => translate_options(OptionSet::ORDERINGS.map{|o| o[:code]}, [:option_set, :orderings])) %>
+    <%= form_submit_button(f, :label => :save) %> 
   <% end %>
 <% end %>
