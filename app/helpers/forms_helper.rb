@@ -68,7 +68,7 @@ module FormsHelper
   def odk_input_tag(qing, &block)
     opts = {}
     opts[:ref] = "/data/#{qing.question.odk_code}"
-    opts[:appearance] = "tall" if qing.question.qtype.name == "long_text"
+    opts[:rows] = 5 if qing.question.qtype.name == "long_text"
     content_tag(qing.question.qtype.odk_tag, opts, &block)
   end
   
