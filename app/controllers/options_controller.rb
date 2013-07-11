@@ -27,7 +27,7 @@ class OptionsController < ApplicationController
   end
   
   def update
-    @option.assign_attributes(params[:option_set])
+    @option.assign_attributes(params[:option])
     create_or_update
   end
   
