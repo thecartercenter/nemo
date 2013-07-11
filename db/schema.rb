@@ -10,11 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-<<<<<<< HEAD
 ActiveRecord::Schema.define(:version => 20130417031422) do
-=======
-ActiveRecord::Schema.define(:version => 20130613225417) do
->>>>>>> master
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -363,7 +359,6 @@ ActiveRecord::Schema.define(:version => 20130613225417) do
 
   add_index "settings", ["mission_id"], :name => "index_settings_on_mission_id"
 
-<<<<<<< HEAD
   create_table "simple_captcha_data", :force => true do |t|
     t.string   "key",        :limit => 40
     t.string   "value",      :limit => 6
@@ -381,7 +376,8 @@ ActiveRecord::Schema.define(:version => 20130613225417) do
     t.string   "class_name"
     t.integer  "obj_id"
     t.string   "language"
-=======
+  end
+
   create_table "sms_messages", :force => true do |t|
     t.string   "direction"
     t.text     "to"
@@ -392,7 +388,6 @@ ActiveRecord::Schema.define(:version => 20130613225417) do
     t.datetime "updated_at",   :null => false
     t.integer  "mission_id"
     t.string   "adapter_name"
->>>>>>> master
   end
 
   add_index "sms_messages", ["body"], :name => "index_sms_messages_on_body", :length => {"body"=>160}

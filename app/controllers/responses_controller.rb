@@ -51,6 +51,12 @@ class ResponsesController < ApplicationController
   end
   
   def edit
+    @response = Response.find(params[:id])
+    
+    # using the signature of the response found with the given id, pull up 
+    # all possible duplicates 
+    @duplicates = @response.find_duplicates
+    
     prepare_and_render_form
   end
   
@@ -115,11 +121,6 @@ class ResponsesController < ApplicationController
       # check for "update and mark as reviewed"
       params[:response][:reviewed] = true if params[:commit_and_mark_reviewed]
       
-      # find or create the response
-      @response = action == "create" ? Response.for_mission(current_mission).new : Response.find_eager(params[:id])
-      
-      # set user_id if this is an observer
-      @response.user = current_user if current_user.observer?(current_mission)
       # try to save
       begin
         @response.update_attributes!(params[:response])
@@ -131,10 +132,6 @@ class ResponsesController < ApplicationController
           @response.find_duplicates.empty? ? @response.update_attributes!("duplicate" => 0) : @response.update_attributes!("duplicate" => 1)
           
         end
-        
-        flash[:success] = "Response #{action}d successfully."
-        redirect_to(:action => :index)
-        @response.save!
         set_success_and_redirect(@response)
       rescue ActiveRecord::RecordInvalid
         prepare_and_render_form

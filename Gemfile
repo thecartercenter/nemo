@@ -25,9 +25,6 @@ gem "factory_girl_rails", "~> 4.0"
 gem "iso-639"
 
 # helps simulate time changes when testing
-<<<<<<< HEAD
-gem 'timecop'
-=======
 gem 'timecop'
 
 # authorization
@@ -45,4 +42,3 @@ gem 'capistrano', :group => :development
 
 # markdown support
 gem 'bluecloth'
->>>>>>> master
