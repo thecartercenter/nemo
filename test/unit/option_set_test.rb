@@ -42,6 +42,19 @@ class OptionSetTest < ActiveSupport::TestCase
     assert_equal("X", os.options[2].name_en)
   end
   
+  test "ranks changed method should work" do
+    os = create_option_set({"S" => 2, "V" => 1, "X" => 3})
+    os.reload
+    
+    # make sure no false positive
+    os.option_settings[0].rank = 1
+    assert_equal(false, os.ranks_changed?)
+    
+    # make sure no false negative
+    os.option_settings[0].rank = 50
+    assert_equal(true, os.ranks_changed?)
+  end
+  
   private
     def create_option_set(options)
       os = OptionSet.new(:name => "test")

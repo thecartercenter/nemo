@@ -1,7 +1,7 @@
 class OptionSet < ActiveRecord::Base
   include MissionBased, FormVersionable
 
-  has_many(:option_settings, :dependent => :destroy, :autosave => true, :inverse_of => :option_set)
+  has_many(:option_settings, :order => "rank", :dependent => :destroy, :autosave => true, :inverse_of => :option_set)
   has_many(:options, :through => :option_settings, :order => "option_settings.rank")
   has_many(:questions, :inverse_of => :option_set)
   has_many(:questionings, :through => :questions)
@@ -72,6 +72,11 @@ class OptionSet < ActiveRecord::Base
     
     # make sure not associated with any existing answers/choices
     option_settings.each{|os| os.no_answers_or_choices}
+  end
+  
+  # checks if any of the option ranks have changed since last save
+  def ranks_changed?
+    option_settings.map(&:rank_was) != option_settings.map(&:rank)
   end
   
   private

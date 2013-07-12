@@ -155,12 +155,18 @@ class FormVersioningPolicyTest < ActiveSupport::TestCase
     publish_and_check_versions(:should_change => true)
   end
   
-  test "changing option_set order should cause upgrade" do
+  test "changing option order should cause upgrade" do
     setup_option_set
     save_old_version_codes
     
-    # now change the option set order
-    @os.update_attributes(:ordering => "value_desc")
+    # now change the option order (we move the first option_setting to the back)
+    opt_stg = @os.option_settings[0]
+    old_rank = opt_stg.rank
+    opt_stg.rank = 10000 # this will automatically be trimmed
+    @os.save!
+    
+    # verify the rank changed
+    assert_not_equal(old_rank, opt_stg.reload.rank)
     
     publish_and_check_versions(:should_change => true)
   end

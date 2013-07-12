@@ -21,7 +21,7 @@ class FormVersioningPolicy
       case action
       when :update
         # changing the option order is a trigger
-        #triggers << {:reason => :option_order_changed, :forms => obj.forms} if obj.ordering_changed?
+        triggers << {:reason => :option_order_changed, :forms => obj.forms} if obj.ranks_changed?
       end
       
     when "OptionSetting"
