@@ -185,7 +185,6 @@ class Response < ActiveRecord::Base
       rel = rel.select("answers.date_value AS answer_date_value")
       rel = rel.select("answers.time_value AS answer_time_value")
       rel = rel.select("IFNULL(ao._name, co._name) AS choice_name")
-      rel = rel.select("IFNULL(ao.value, co.value) AS choice_value")
       rel = rel.select("option_sets.name AS option_set")
 
       # add all the joins

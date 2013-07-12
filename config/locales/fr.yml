@@ -197,7 +197,6 @@ fr:
         version: "Version"
       option_set:
         options: "Options"
-        ordering: "Ordre"
       question:
         base: "" # this is a sort of hack to get error msg to display properly
         minimum: "Minimum"
@@ -275,12 +274,10 @@ fr:
       mission:
         name: "Un nom pour cette mission. Un maximum de 32 caractères. Il faut être unique. Considérez l'inclusion de l'année s'il sera des missions futures avec le même nom."
       option:
-        value: "Le valeur numérique qui répresenter cet option."
         name: "La description textuelle de cet option."
       option_set:
         name: "Un nom qui résume cet ensemble des options. Les utilisateurs normaux ne verront pas ce nom."
         options: "Verifiez les options que devraient être inclus dans cet ensemble."
-        ordering: "L'ordre dans lequel vous aimeriez que les options d'apparaître."
       question:
         code: "Un nom de code court (entre 2-20 caractères). Devrait contenir seulement des lettres et des chiffres, par ex. UrneClos, HeureDeDepart."
         hint: "Instructions additionnels, par ex. 'Entrez un compte approximatif de personnes qui attendent pour voter.'"
@@ -716,9 +713,6 @@ fr:
     create_link: "Créer une nouvelle collection d'options"
     create_options: "créer des options"
     options_before_sets: "Vous avez besoin de %{link} avant vous pouvez créer des options."
-    orderings:
-      value_asc: "Valeur bas à haut"
-      value_desc: "Valeur haut à bas"
 
   password_reset:
     check_email: "Instructions pour changer votre mot de passe était envoyer par email à vous.  S'il vous plait, verifié votre e-mail."

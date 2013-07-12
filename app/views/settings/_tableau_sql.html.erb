@@ -14,7 +14,6 @@
     a.time_value AS time_value,
     a.datetime_value AS datetime_value,
     IFNULL(ao._name, co._name) AS choice_name,
-    IFNULL(ao.value, co.value) AS choice_value,
     os.name AS option_set
   from answers a
     left join options ao on a.option_id = ao.id

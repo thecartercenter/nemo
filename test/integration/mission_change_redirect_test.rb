@@ -25,7 +25,7 @@ class MissionChangeRedirectTest < ActionDispatch::IntegrationTest
   end
 
   test "user should be redirected to home screen if was viewing object but redirect to object listing is not permitted" do
-    @option = Option.create!(:name_en => "Foo", :value => 1, :mission => get_mission)
+    @option = FactoryGirl.create(:option)
     
     # add the user to the other mission as an observer so that the Options listing won't be allowed
     @user.assignments.create!(:mission_id => @other_mission.id, :role => "observer")
@@ -34,7 +34,7 @@ class MissionChangeRedirectTest < ActionDispatch::IntegrationTest
   end
 
   test "user should be redirected to home screen if current screen not permitted under new mission" do
-    @option = Option.create!(:name_en => "Foo", :value => 1, :mission => get_mission)
+    @option = FactoryGirl.create(:option)
     
     # add the user to the other mission as an observer so that the Options listing won't be allowed
     @user.assignments.create!(:mission_id => @other_mission.id, :role => "observer")

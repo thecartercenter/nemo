@@ -197,7 +197,6 @@ en:
         version: "Version"
       option_set:
         options: "Options"
-        ordering: "Ordering"
       question:
         base: "" # this is a sort of hack to get error msg to display properly
         minimum: "Minimum"
@@ -275,12 +274,10 @@ en:
       mission:
         name: "A name for this Mission. Maximum 32 characters. Must be unique. Think about including the year if there will be future missions with the same name."
       option:
-        value: "The numeric value that best represents this option."
         name: "The textual description of this option that users will see."
       option_set:
         name: "A name that summarizes this set of options. Normal users will not see this name."
         options: "Check the options that should be included in this set."
-        ordering: "The order in which you'd like the options to appear."
       question:
         code: "A short codename (between 2-20 characters). Should contain only letters and numbers, e.g. BallotBoxSealed, DepartTime."
         hint: "Additional instructions, e.g. 'Enter an approximate count of the people waiting to vote.'"
@@ -718,9 +715,6 @@ en:
     create_link: "Create Option Set"
     create_options: "create some Options"
     options_before_sets: "You need to %{link} before you can create Option Sets."
-    orderings:
-      value_asc: "Value Low to High"
-      value_desc: "Value High to Low"
 
   password_reset:
     check_email: "Instructions to reset your password have been emailed to you. Please check your email."
