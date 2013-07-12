@@ -17,7 +17,7 @@ class Response < ActiveRecord::Base
   # don't need to validate answers in odk mode
   validates_associated(:answers, :message => :invalid_answers, :if => Proc.new{|r| r.modifier != "odk"})
   
-  default_scope(includes({:form => :type}, :user).order("responses.created_at DESC"))
+  default_scope(includes(:form, :user).order("responses.created_at DESC"))
   scope(:unreviewed, where(:reviewed => false))
   scope(:by, lambda{|user| where(:user_id => user.id)})
   
