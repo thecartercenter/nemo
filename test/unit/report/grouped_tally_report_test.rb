@@ -1,4 +1,5 @@
 require 'test_helper'
+require 'unit/report/report_test_helper'
 
 class Report::GroupedTallyReportTest < ActiveSupport::TestCase
   setup do
@@ -7,8 +8,8 @@ class Report::GroupedTallyReportTest < ActiveSupport::TestCase
 
   test "counts of yes, no per day for a given question" do
     # create several yes/no questions and responses for them
-    create_opt_set(%w(Yes No))
-    create_question(:code => "yn", :type => "select_one")
+    @yes_no = FactoryGirl.create(:option_set, :option_names => %w(Yes No))
+    create_question(:code => "yn", :type => "select_one", :option_set => @yes_no)
     1.times{create_response(:created_at => Time.zone.parse("2012-01-01 1:00:00"), :answers => {:yn => "Yes"})}
     2.times{create_response(:created_at => Time.zone.parse("2012-01-05 1:00:00"), :answers => {:yn => "Yes"})}
     6.times{create_response(:created_at => Time.zone.parse("2012-01-05 1:00:00"), :answers => {:yn => "No"})}
@@ -52,8 +53,8 @@ class Report::GroupedTallyReportTest < ActiveSupport::TestCase
   end
   
   test "total number of responses per source per answer" do
-    create_opt_set(%w(Yes No))
-    create_question(:code => "yn", :type => "select_one")
+    @yes_no = FactoryGirl.create(:option_set, :option_names => %w(Yes No))
+    create_question(:code => "yn", :type => "select_one", :option_set => @yes_no)
     2.times{create_response(:source => "odk", :answers => {:yn => "Yes"})}
     5.times{create_response(:source => "web", :answers => {:yn => "Yes"})}
     8.times{create_response(:source => "odk", :answers => {:yn => "No"})}
@@ -88,22 +89,22 @@ class Report::GroupedTallyReportTest < ActiveSupport::TestCase
   end
   
   test "total number of responses per two different answers" do
-    create_opt_set(%w(Yes No))
-    create_opt_set(%w(Hi Lo))
+    @yes_no = FactoryGirl.create(:option_set, :option_names => %w(Yes No))
+    @high_low = FactoryGirl.create(:option_set, :option_names => %w(High Low))
     forms = [create_form(:name => "form0"), create_form(:name => "form1")]
-    create_question(:code => "yn", :type => "select_one", :option_set => @option_sets[:yes_no], :forms => forms)
-    create_question(:code => "hl", :type => "select_one", :option_set => @option_sets[:hi_lo], :forms => forms)
-    2.times{create_response(:form => @forms[:form0], :answers => {:yn => "Yes", :hl => "Hi"})}
-    5.times{create_response(:form => @forms[:form0], :answers => {:yn => "No", :hl => "Hi"})}
-    8.times{create_response(:form => @forms[:form0], :answers => {:yn => "Yes", :hl => "Lo"})}
-    3.times{create_response(:form => @forms[:form0], :answers => {:yn => "No", :hl => "Lo"})}
-    2.times{create_response(:form => @forms[:form1], :answers => {:yn => "Yes", :hl => "Hi"})}
+    create_question(:code => "yn", :type => "select_one", :option_set => @yes_no, :forms => forms)
+    create_question(:code => "hl", :type => "select_one", :option_set => @high_low, :forms => forms)
+    2.times{create_response(:form => @forms[:form0], :answers => {:yn => "Yes", :hl => "High"})}
+    5.times{create_response(:form => @forms[:form0], :answers => {:yn => "No", :hl => "High"})}
+    8.times{create_response(:form => @forms[:form0], :answers => {:yn => "Yes", :hl => "Low"})}
+    3.times{create_response(:form => @forms[:form0], :answers => {:yn => "No", :hl => "Low"})}
+    2.times{create_response(:form => @forms[:form1], :answers => {:yn => "Yes", :hl => "High"})}
 
     report = create_report("GroupedTally", :calculations => [
       Report::IdentityCalculation.new(:rank => 1, :question1 => @questions[:yn]),
       Report::IdentityCalculation.new(:rank => 2, :question1 => @questions[:hl])
     ])
-    assert_report(report, %w(      Hi  Lo TTL ),
+    assert_report(report, %w(    High Low TTL ),
                           %w( Yes   4   8  12 ),
                           %w( No    5   3   8 ),
                           %w( TTL   9  11  20 ))
@@ -113,7 +114,7 @@ class Report::GroupedTallyReportTest < ActiveSupport::TestCase
       Report::IdentityCalculation.new(:rank => 2, :question1 => @questions[:hl])
     ], :filter_attributes => {:str => "form: form0", :class_name => "Response"})
     
-    assert_report(report, %w(      Hi  Lo TTL ),
+    assert_report(report, %w(    High Low TTL ),
                           %w( Yes   2   8  10 ),
                           %w( No    5   3   8 ),
                           %w( TTL   7  11  18 ))

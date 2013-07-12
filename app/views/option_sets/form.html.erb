@@ -7,8 +7,6 @@
   <%= nice_form_for(@option_set) do |f| %>
     <%= form_field(f, :name, :required => true) %>
     <%= form_field(f, :options, :partial => "option_setting", :collection => @option_set.all_option_settings(@options)) %>
-    <%= form_field(f, :ordering, :type => :select, :required => true,
-      :options => translate_options(OptionSet::ORDERINGS.map{|o| o[:code]}, [:option_set, :orderings])) %>
     <%= form_submit_button(f, :label => :save) %> 
   <% end %>
 <% end %>

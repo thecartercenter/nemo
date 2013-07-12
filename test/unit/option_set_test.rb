@@ -34,6 +34,13 @@ class OptionSetTest < ActiveSupport::TestCase
     assert_ranks(os, {"S" => 1, "X" => 2, "V" => 3})
   end
   
+  test "options method should return properly sorted options" do
+    os = create_option_set({"S" => 2, "V" => 1, "X" => 3})
+    os.reload
+    assert_equal("V", os.options[0].name_en)
+    assert_equal("S", os.options[1].name_en)
+    assert_equal("X", os.options[2].name_en)
+  end
   
   private
     def create_option_set(options)

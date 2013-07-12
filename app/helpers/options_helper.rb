@@ -4,7 +4,7 @@ module OptionsHelper
   end
   
   def options_index_fields
-    %w(name value published actions)
+    %w(name published actions)
   end
   
   def format_options_field(option, field)

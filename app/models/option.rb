@@ -38,6 +38,6 @@ class Option < ActiveRecord::Base
     
     # checks that all name fields have lengths at most 30 chars
     def name_lengths
-      errors.add(:base, :names_too_long) if name_translations.detect{|l,t| !t.nil? && t.size > 30}
+      errors.add(:base, :names_too_long) if name_translations && name_translations.detect{|l,t| !t.nil? && t.size > 30}
     end
 end
