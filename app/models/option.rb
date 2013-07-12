@@ -16,13 +16,6 @@ class Option < ActiveRecord::Base
   
   translates :name, :hint
   
-  # creates a set of options with the given English names and mission
-  def self.create_simple_set(names, mission)
-    options = []
-    names.each_with_index{|n, idx| options << create(:name_en => n, :mission => mission)}
-    options
-  end
-  
   def published?; !option_sets.detect{|os| os.published?}.nil?; end
   
   def questions; option_sets.collect{|os| os.questions}.flatten.uniq; end

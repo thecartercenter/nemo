@@ -18,15 +18,6 @@ class OptionSet < ActiveRecord::Base
   scope(:with_associations, includes(:questions, :options, {:questionings => :form}))
   
   self.per_page = 100
-
-  # creates a simple yes/no/na option set
-  # don't need to translate since default mission language is english
-  def self.create_default(mission)
-    options = Option.create_simple_set(%w(Yes No N/A), mission)
-    set = OptionSet.new(:name => "Yes/No/NA", :mission => mission)
-    options.each{|o| set.options << options}
-    set.save!
-  end
   
   def published?
     # check for any published questionings
