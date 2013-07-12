@@ -13,13 +13,13 @@ class FormsController < ApplicationController
     respond_to do |format|
       # render normally if html
       format.html do
-        @forms = apply_filters(@forms).with_form_type
+        @forms = apply_filters(@forms)
         render(:index)  
       end
       
       # get only published forms and render openrosa if xml requested
       format.xml do
-        @forms = @forms.published.with_form_type
+        @forms = @forms.published
         render_openrosa
       end
     end
@@ -186,9 +186,6 @@ class FormsController < ApplicationController
     
     # prepares objects and renders the form template
     def prepare_and_render_form
-      # load the form types available to this user
-      @form_types = FormType.accessible_by(current_ability)
-      
       # render the form template
       render(:form)
     end

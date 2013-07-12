@@ -2,7 +2,7 @@ require 'test_helper'
  
 class MissionChangeRedirectTest < ActionDispatch::IntegrationTest
   setup do
-    [User, Mission, Form, FormType, Option].each(&:delete_all)
+    [User, Mission, Form, Option].each(&:delete_all)
     @other_mission = FactoryGirl.create(:mission, :name => "Other")
     @user = FactoryGirl.create(:user, :role_name => :coordinator)
     @user.change_mission!(get_mission)

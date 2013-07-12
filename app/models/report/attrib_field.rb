@@ -51,13 +51,6 @@ class Report::AttribField < Report::Field
         :joins => [:forms],
         :data_type => :text,
         :groupable => true},
-      :form_type => {
-        :name => :form_type,
-        :name_expr_params => {:sql_tplt => "__TBL_PFX__form_types.name", :name => "name", :clause => :select},
-        :value_expr_params => {:sql_tplt => "__TBL_PFX__form_types.name", :name => "value", :clause => :select},
-        :joins => [:form_types],
-        :data_type => :text,
-        :groupable => true},
       :submitter => {
         :name => :submitter,
         :name_expr_params => {:sql_tplt => "__TBL_PFX__users.name", :name => "name", :clause => :select},

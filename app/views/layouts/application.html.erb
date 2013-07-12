@@ -73,7 +73,7 @@
   
   <div id="nav">
     <ul>
-      <% [Response, Form, Report::Report, Option, OptionSet, FormType, Broadcast, Setting, User, Mission].each do |k| %>
+      <% [Response, Form, Report::Report, Option, OptionSet, Broadcast, Setting, User, Mission].each do |k| %>
         <% if can?(:index, k) %>
           <li><%= link_to(pluralize_model(k), send("#{k.model_name.route_key}_path")) %></li>
         <% end %>

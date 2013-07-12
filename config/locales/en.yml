@@ -114,10 +114,6 @@ en:
         zero: "Forms"
         one: "Form"
         other: "Forms"
-      form_type:
-        zero: "Form Types"
-        one: "Form Type"
-        other: "Form Types"
       mission:
         zero: "Missions"
         one: "Mission"
@@ -195,7 +191,6 @@ en:
         which_phone: "Which Phone(s)"
       form:
         downloads: "Downloads"
-        form_type_id: "Form Type"
         responses: "Responses"
         smsable: "SMSable?"
         updated_at: "Last Modified"
@@ -277,8 +272,6 @@ en:
       user_batch:
         users: "Users"
     tips:
-      form_type:
-        name: "A short name for this Form Type. Maximum 16 characters."
       mission:
         name: "A name for this Mission. Maximum 32 characters. Must be unique. Think about including the year if there will be future missions with the same name."
       option:
@@ -359,8 +352,6 @@ en:
           cant_delete_published: "A published Form can't be deleted."
           cant_edit_published: "A published Form can't be edited."
           ranks_break_conditions: "The new rankings invalidate one or more conditions"
-        form_type:
-          cant_delete_if_has_forms: "You can't delete this Form Type because one or more Forms are associated with it."
         mission:
           cant_delete_if_assoc: "You can't delete this Mission because it has associated Forms, Responses, or other objects."
           let_num_spc_only: "can only contain letters, numbers, and spaces"
@@ -452,12 +443,6 @@ en:
           zero:  "No Forms found"
           one:   "Displaying <b>1</b> Form"
           other: "Displaying <b>all %{count}</b> Forms"
-    form_type:
-      page_entries_info: 
-        single_page_html:
-          zero:  "No Form Types found"
-          one:   "Displaying <b>1</b> Form Type"
-          other: "Displaying <b>all %{count}</b> Form Types"
     mission:
       page_entries_info: 
         single_page_html:
@@ -557,7 +542,6 @@ en:
     date: "date"
     email: "email"
     form: "form"
-    form_type: "form-type"
     login: "login"
     name: "name"
     option_set: "option-set"
@@ -575,11 +559,6 @@ en:
       index: "Broadcasts"
       new: "Send Broadcast"
       show: "Broadcast"
-    form_types:
-      edit: "Form Type: %{name}"
-      index: "Form Types"
-      new: "New Form Type"
-      show: "Form Type: %{name}"
     forms:
       choose_questions: "Adding Questions to Form: %{name}"
       edit: "Edit Form: %{name}"
@@ -711,9 +690,6 @@ en:
     unsaved_rank_notice: "You have not yet saved the changes you made to the Question order. You should click the 'Save' button if you want to save these changes."
     view_sms_guide: "View SMS Guide"
   
-  form_type:
-    create_link: "Create Form Type"
-    
   location_picker:
     choose_location: "Choose Location"
     current_location: "Current Location"

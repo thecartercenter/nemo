@@ -55,11 +55,6 @@ class Report::Join
       :name => :forms,
       :sql => "INNER JOIN forms __forms ON responses.form_id = __forms.id"
     ),      
-    :form_types => new(
-      :name => :form_types,
-      :dependencies => :forms, 
-      :sql => "INNER JOIN form_types __form_types ON __forms.form_type_id = __form_types.id"
-    ),      
     :questions => new(
       :name => :questions,
       :dependencies => :questionings,

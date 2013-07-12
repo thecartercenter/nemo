@@ -8,7 +8,6 @@ class Mission < ActiveRecord::Base
 
   has_many(:options, :inverse_of => :mission, :dependent => :destroy)
   has_many(:option_sets, :inverse_of => :mission, :dependent => :destroy)
-  has_many(:form_types, :inverse_of => :mission, :dependent => :destroy)
   has_one(:setting, :dependent => :destroy)
   
   before_validation(:create_compact_name)
@@ -45,7 +44,6 @@ class Mission < ActiveRecord::Base
     
     # creates some default seed objects for the mission
     def seed
-      FormType.create_default(self)
       OptionSet.create_default(self)
     end
 end

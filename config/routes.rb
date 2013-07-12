@@ -13,7 +13,6 @@ ELMO::Application.routes.draw do
   scope "(:locale)", :locale => /[a-z]{2}/ do
     resources(:broadcasts){collection{post 'new_with_users'}}
     resources(:forms){member{post *%w(add_questions remove_questions); get *%w(publish clone choose_questions)}}
-    resources(:form_types)
     resources(:markers)
     resources(:missions)
     resources(:options)

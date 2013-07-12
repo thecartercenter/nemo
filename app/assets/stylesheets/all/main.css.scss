@@ -202,9 +202,6 @@ div#report_body th.row_grouping_label, div#report_body th.col_grouping_label { c
 div#report_body th.row_grouping_label > div { margin-left: 3px; overflow: hidden; }
 div#report_body th.col_grouping_label { text-align: center; }
 
-/* form type index */
-.form_types_index .name_col { min-width: 100px; }
-
 /* location picker */
 div.location_picker { width: 900px; height: 500px; }
 div.location_picker div.map_canvas { width: 600px; height: 440px; border: 1px solid #ccc; float: left; margin-right: 10px; }
