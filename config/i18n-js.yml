@@ -27,5 +27,6 @@ translations:
       "*.form.unsaved_rank_notice",
       "*.location_picker.*",
       "*.layout.*",
+      "*.option_set.*",
       "*.report/report.*"
     ]

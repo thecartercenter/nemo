@@ -11,10 +11,52 @@ class Option < ActiveRecord::Base
   
   before_destroy(:check_assoc)
   after_destroy(:notify_form_versioning_policy_of_destroy)
+  after_save(:invalidate_cache)
+  after_destroy(:invalidate_cache)
   
   default_scope(includes(:option_sets => [:questionings, {:questions => {:questionings => :form}}]))
   
   translates :name, :hint
+  
+  # the max number of suggestion matches to return
+  MAX_SUGGESTIONS = 5
+
+  # returns an array of hashes representing suggested options matching the given mission and textual query
+  def self.suggestions(mission, query)
+    # fetch all mission options from the cache
+    options = Rails.cache.fetch("mission_options/#{mission.id}", :expires_in => 2.minutes) do
+      Option.unscoped.includes(:option_sets).for_mission(mission).all
+    end
+
+    # scan for options matching query
+    matches = []; exact_match = false
+    for i in 0...options.size
+      # if we have a a partial match
+      if options[i].name && options[i].name =~ /#{query}/i
+        # if also an exact match, set a flag and put it at the top
+        if options[i].name =~ /^#{query}$/i
+          matches.insert(0, options[i])
+          exact_match = true
+        # otherwise just insert at the end
+        else
+          matches << options[i]
+        end
+      end
+    end
+    
+    # trim results to max size (couldn't do this earlier b/c had to search whole list for exact match)
+    matches = matches[0...MAX_SUGGESTIONS]
+    
+    # convert to hashes for json
+    hashes = matches.map{|o| {:id => o.id, :name => o.name, :sets => o.option_sets.map{|os| os.name}.join(', ')}}
+    
+    # if there was no exact match, we append a 'new option' placeholder
+    unless exact_match
+      hashes << {:id => "", :name => query}
+    end
+    
+    hashes
+  end
   
   def published?; !option_sets.detect{|os| os.published?}.nil?; end
   
@@ -39,5 +81,10 @@ class Option < ActiveRecord::Base
     # checks that all name fields have lengths at most 30 chars
     def name_lengths
       errors.add(:base, :names_too_long) if name_translations && name_translations.detect{|l,t| !t.nil? && t.size > 30}
+    end
+    
+    # invalidate the mission option cache after save, destroy
+    def invalidate_cache
+      Rails.cache.delete("mission_options/#{mission_id}")
     end
 end

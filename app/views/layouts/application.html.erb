@@ -25,7 +25,7 @@
   
   <%= yield(:per_page_js) %>
 </head>
-<body>
+<body class="<%= controller_name %>">
   <div id="userinfo">
     <% if current_user %>
       <%# username %>

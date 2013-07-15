@@ -26,7 +26,12 @@ div.form_field {
   }
   
   div.control input.text { 
-    width: 240px; 
+    padding: 3px;
+  }
+  
+  /* nice kooshy padding */
+  input[type=text], input[type=password], textarea, select {
+    padding: 3px;
   }
   
   div.control input.radio { 
@@ -69,25 +74,19 @@ div.form_field {
   }
 }
 
-div.form_field.stacked {
-  label.main, div.control {
-    display: block;
-    width: 500px;
-  }
-  
-  div.control {
-    border-top: none;
-  }
-}
-
 div.form_buttons { 
   padding-top: 10px; 
 }
 
-div.form_buttons input.submit { 
-  display: inline-block; 
+div.form_buttons input.submit, input[type=button] { 
+  display: inline-block;
   font-weight: bold; 
   font-size: 120%; 
-  padding: 5px 15px; 
+  padding: 2px 15px; 
   margin: 0 5px 0 0; 
+  height: 26px;
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  cursor: pointer;
 }

@@ -15,7 +15,7 @@ ELMO::Application.routes.draw do
     resources(:forms){member{post *%w(add_questions remove_questions); get *%w(publish clone choose_questions)}}
     resources(:markers)
     resources(:missions)
-    resources(:options)
+    resources(:options, :only => [:create, :update]){collection{get 'suggest'}}
     resources(:option_sets)
     resources(:password_resets)
     resources(:questionings)

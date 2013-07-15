@@ -277,7 +277,7 @@ en:
         name: "The textual description of this option that users will see."
       option_set:
         name: "A name that summarizes this set of options. Normal users will not see this name."
-        options: "Check the options that should be included in this set."
+        options: "Add existing options by typing them and clicking 'Add'. If you do not see an option in the drop down, you can add a new one by clicking 'Add New Option'."
       question:
         code: "A short codename (between 2-20 characters). Should contain only letters and numbers, e.g. BallotBoxSealed, DepartTime."
         hint: "Additional instructions, e.g. 'Enter an approximate count of the people waiting to vote.'"
@@ -712,9 +712,13 @@ en:
     other_forms_published: "At least one of those forms is also published, so only names can be edited. You should also take care to not change the meaning of the option if editing the names."
   
   option_set:
+    create_new: "[Create New Option]"
     create_link: "Create Option Set"
     create_options: "create some Options"
+    none_found: "No matching options found"
     options_before_sets: "You need to %{link} before you can create Option Sets."
+    searching: "Searching..."
+    type_to_add_new: "Type an option name"
 
   password_reset:
     check_email: "Instructions to reset your password have been emailed to you. Please check your email."

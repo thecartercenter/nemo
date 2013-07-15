@@ -1,0 +1,8 @@
+<input type="text" class="add_options" placeholder="<%= t("option_set.type_to_add_new") %>">
+<input type="button" value="<%= t('common.add') %>" class="add_options" />
+
+<%= javascript_doc_ready do %>
+  new ELMO.OptionSetsFormView({
+    suggest_path: '<%= suggest_options_path %>'
+  });
+<% end %>

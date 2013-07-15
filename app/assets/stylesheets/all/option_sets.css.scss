@@ -1,0 +1,24 @@
+body.option_sets {
+
+  form.option_set_form {
+    /* narrower labels and wider controls */
+    label.main {
+      width: 75px;
+    }
+    
+    div.control {
+      width: 500px;
+    }
+    
+    input[type=text].add_options {
+      width: 350px;
+    }
+
+    input[type=button].add_options {
+      vertical-align: top;
+      margin-left: 5px;
+      display: inline-block;
+    }
+  }
+  
+}
