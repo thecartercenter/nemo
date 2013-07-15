@@ -40,22 +40,6 @@ div.form div.details, table.form td.details { width: 250px; }
 div.reqd_sym { display: inline; font-weight: bold; color: #d02000; font-size: 125%; line-height: 5px; vertical-align: middle; }
 table.form td.name { min-width: 75px; }
 
-/* forms (newer) */
-div.form_field > *, div.form_field > .field_with_errors > * { vertical-align: top; padding: 5px 0; }
-div.form_field label.main, div.form_field div.form_field_control { border-top: 1px solid #ddd; }
-div.form_field label.main { display: inline-block; width: 150px; padding-right: 10px; }
-div.form_field div.form_field_control { display: inline-block; width: 350px; min-height: 26px; position: relative; }
-div.form_field div.form_field_control input.text { width: 240px; }
-div.form_field div.form_field_control input.radio { width: 15px; }
-div.form_field div.form_field_details { display: inline-block; width: 290px; position: relative; font-size: 90%; 
-  background-color: #e4eeff; padding: 5px; margin: 0 0 5px 5px; }
-div.form_field div.form_field_details p { padding: 0; margin: 0; }
-div.form_field div.space_line { margin: 0; padding: 0; width: auto; }
-div.dummy, span.dummy { font-weight: bold; display: inline; }
-div.dummy_checkbox { height: 12px; width: 12px; text-align: center; font-weight: bold; border: 1px solid #888; display: inline; }
-div.form_buttons { padding-top: 10px; }
-div.form_buttons input.submit { display: inline-block; font-weight: bold; font-size: 120%; padding: 5px 15px; margin: 0 5px 0 0; }
-
 /* collection form */
 div.collection_form div.item { margin-bottom: 3px; }
 
@@ -131,7 +115,7 @@ form.search_form #search_examples { margin-top: 2px; color: #666; }
 a.edit_location_link img { vertical-align: bottom; }
 
 /* question show/edit */
-form.questioning_form .form_field_control { width: 475px !important; }
+form.questioning_form .control { width: 475px !important; }
 form.questioning_form .form_field.name_hint textarea { width: 400px; height: 30px; }
 form.questioning_form .form_field#condition select { min-width: 125px; }
 form.questioning_form .form_field#condition input { width: 120px; }
@@ -155,8 +139,8 @@ form.questioning_form input#questioning_question_minimum, form.questioning_form 
 /* broadcasts */
 input#broadcast_subject { width: 300px; }
 textarea#broadcast_body { width: 300px; height: 170px; }
-.broadcasts_show #send_errors div.form_field_control { color: #d02000; font-weight: bold; }
-.broadcasts_show #send_errors div.form_field_control p { margin: 0; }
+.broadcasts_show #send_errors div.control { color: #d02000; font-weight: bold; }
+.broadcasts_show #send_errors div.control p { margin: 0; }
 
 /* form edit */
 .forms_edit td.name_col, .forms_show td.name_col { width: 500px; }
@@ -171,14 +155,14 @@ textarea#broadcast_body { width: 300px; height: 170px; }
 #login_instructions td.value { font-weight: bold; width: 300px; }
 
 /* user edit */
-form.user_form div.form_field_control { width: 410px !important; }
+form.user_form div.control { width: 410px !important; }
 form.user_form input#user_login { width: 150px; }
 form.user_form input#login_suggest_button { width: 75px; }
 form.user_form textarea#user_notes { width: 240px; height: 100px; }
 
 /* user batches */
 .user_batches_new #user_batch_users { width: 500px; height: 200px; margin-right: 20px; }
-.user_batches_new div.form_field_control { width: 525px !important; }
+.user_batches_new div.control { width: 525px !important; }
 .user_batches_new div.form_field label { width: 75px; }
 
 /* report index */
@@ -216,8 +200,8 @@ div.location_picker form.location_search div.results a { display: block; margin-
 /* settings */
 form.setting_form .adapter_settings { display: none; }
 form.setting_form .adapter_settings .password_fields { display: none; }
-form.setting_form #tableau_sql .form_field_control pre { width: 325px; height: 70px; overflow: auto; border: 1px solid #ccc; margin: 0 0 3px 0; }
-form.setting_form #tableau_sql .form_field_control a { font-size: 9pt; }
+form.setting_form #tableau_sql .control pre { width: 325px; height: 70px; overflow: auto; border: 1px solid #ccc; margin: 0 0 3px 0; }
+form.setting_form #tableau_sql .control a { font-size: 9pt; }
 
 /* sms guide */
 div.sms_guide div.header { float: right; color: #888; font-size: 15px; }

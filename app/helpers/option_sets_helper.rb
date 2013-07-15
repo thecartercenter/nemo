@@ -13,7 +13,7 @@ module OptionSetsHelper
     when "published" then tbool(option_set.published?)
     when "options" then option_set.options.collect{|o| o.name}.join(", ")
     when "questions" then option_set.questions.size
-    when "actions" then action_links(option_set, :obj_name => option_set.name, :exclude => (option_set.published? ? [:edit, :destroy] : []))
+    when "actions" then action_links(option_set, :obj_name => option_set.name, :exclude => (option_set.published? ? [:destroy] : []))
     else option_set.send(field)
     end
   end

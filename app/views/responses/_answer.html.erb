@@ -1,6 +1,6 @@
 <div class="form_field qtype_<%= answer.qtype.name %>" id="qing_<%= answer.questioning_id %>">
   <label class="main"><%= answer.question_name || "[#{t('answer.no_name')}]" %> <%= reqd_sym(answer.required?) %>
-  </label><div class="form_field_control">
+  </label><div class="control">
     <%= fields_for('response[all_answers][]', answer) do |f| %>
       <% f.mode = form_mode %>
       <%= render("layouts/object_errors", :object => answer, :compact => true, :prefix => t("answer.this_answer")) unless answer.errors.empty? %>
@@ -38,6 +38,6 @@
     <% end %>
   </div>
   <% unless answer.question_hint.empty? %>
-    <div class="form_field_details"><%= answer.question_hint %></div>
+    <div class="details"><%= answer.question_hint %></div>
   <% end %>
 </div>

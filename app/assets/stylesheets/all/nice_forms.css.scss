@@ -1,0 +1,93 @@
+div.form_field {
+  label, .control, .details {
+    vertical-align: top; 
+    padding: 5px 0;
+  }
+  
+  .label_and_control {
+    display: inline-block;
+  }
+  
+  label.main, .control { 
+    border-top: 1px solid #ddd; 
+  }
+  
+  label.main { 
+    display: inline-block; 
+    width: 150px; 
+    padding-right: 10px;
+  }
+  
+  div.control { 
+    display: inline-block; 
+    width: 350px; 
+    min-height: 26px; 
+    position: relative; 
+  }
+  
+  div.control input.text { 
+    width: 240px; 
+  }
+  
+  div.control input.radio { 
+    width: 15px; 
+  }
+  
+  div.details { 
+    display: inline-block; 
+    width: 290px; 
+    position: relative; 
+    font-size: 90%; 
+    background-color: #e4eeff; 
+    padding: 5px; 
+    margin: 0 0 5px 5px; 
+    
+    p { 
+      padding: 0; 
+      margin: 0; 
+    }
+  }
+  
+  div.space_line { 
+    margin: 0; 
+    padding: 0; 
+    width: auto; 
+  }
+  
+  div.dummy, span.dummy { 
+    font-weight: bold; 
+    display: inline; 
+  }
+  
+  div.dummy_checkbox { 
+    height: 12px; 
+    width: 12px; 
+    text-align: center; 
+    font-weight: bold; 
+    border: 1px solid #888; 
+    display: inline; 
+  }
+}
+
+div.form_field.stacked {
+  label.main, div.control {
+    display: block;
+    width: 500px;
+  }
+  
+  div.control {
+    border-top: none;
+  }
+}
+
+div.form_buttons { 
+  padding-top: 10px; 
+}
+
+div.form_buttons input.submit { 
+  display: inline-block; 
+  font-weight: bold; 
+  font-size: 120%; 
+  padding: 5px 15px; 
+  margin: 0 5px 0 0; 
+}

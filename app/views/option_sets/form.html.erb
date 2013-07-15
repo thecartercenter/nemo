@@ -6,7 +6,7 @@
 <% else %>
   <%= nice_form_for(@option_set) do |f| %>
     <%= form_field(f, :name, :required => true) %>
-    <%= form_field(f, :options, :partial => "option_setting", :collection => @option_set.all_option_settings(@options)) %>
+    <%= form_field(f, :options, :required => true, :stacked => true, :partial => "options") %>
     <%= form_submit_button(f, :label => :save) %> 
   <% end %>
 <% end %>
