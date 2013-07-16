@@ -52,4 +52,16 @@ class TranslatableTest < ActiveSupport::TestCase
 
     assert_equal("bar", o.name)
   end
+  
+  test "available locales" do
+    o = Option.new
+    I18n.locale = :en
+    
+    assert_equal([], o.available_locales)
+    o.name_en = "foo"
+    assert_equal([:en], o.available_locales)
+    o.hint_fr = "foo"
+    assert_equal([:en, :fr], o.available_locales)
+    assert_equal([:fr], o.available_locales(:except_current => true))
+  end
 end
