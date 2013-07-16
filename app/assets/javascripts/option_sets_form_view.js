@@ -109,6 +109,9 @@
       // add to view
       self.add_option_to_view(oing);
     });
+    
+    // clear out the add box
+    $('input[type=text].add_options').tokenInput('clear');
   };
   
   // removes an option from the view
