@@ -67,6 +67,10 @@ class Option < ActiveRecord::Base
     option_sets.collect{|os| os.questionings.collect(&:form)}.flatten.uniq
   end
 
+  def as_json(options = {})
+    {:id => id, :name => name, :locales => available_locales(:except_current => true)}
+  end
+
   private
     def integrity
       # error if anything has changed (except names/hints) and the option is published

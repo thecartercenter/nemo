@@ -1,3 +1,7 @@
+/* variables */
+$theme_red: #d02000;
+$theme_green: #9dc400;
+
 body.option_sets {
 
   form.option_set_form {
@@ -21,4 +25,41 @@ body.option_sets {
     }
   }
   
+  /* FOR THE SORTABLE/DRAGGABLE LIST */
+  
+  body.dragging, body.dragging * {
+    cursor: move !important;
+  }
+
+  #options_wrapper ol {
+    padding-left: 0;
+    
+    li {
+      display: block;
+      margin: 5px 0;
+      padding: 5px;
+      border: 1px solid #CCC;
+      background: #eee;
+      cursor: default;
+      
+      & * {
+        cursor: default;
+      }
+      
+      &:last-child {
+        margin-bottom: 0;
+      }
+      
+      div {
+        /* locales */
+        em {
+          display: inline-block;
+          font-style: normal;
+          font-size: 11px;
+          margin-left: 10px;
+          color: $theme_green;
+        }
+      }
+    }
+  }
 }
