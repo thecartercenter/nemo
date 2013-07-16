@@ -202,7 +202,7 @@ class ApplicationController < ActionController::Base
       
       # get the current user session from authlogic
       if user_session = UserSession.find
-
+        
         # look up the current user from the user session
         # we use a find call to the User class so that we can do eager loading
         @current_user = (user = user_session.user) && User.includes(:assignments).find(user.id)
@@ -212,6 +212,18 @@ class ApplicationController < ActionController::Base
       
         # if a mission was found, notify the settings class
         Setting.mission_was_set(@current_mission) if @current_mission
+      end
+    end
+    
+    # logs out user if not already logged out
+    # might be called /after/ get_user_and_mission due to filter order
+    # so should undo that method's changes
+    def ensure_logged_out
+      if user_session = UserSession.find
+        user_session.destroy
+        @current_user = nil
+        @current_mission = nil
+        Setting.set_defaults
       end
     end
     

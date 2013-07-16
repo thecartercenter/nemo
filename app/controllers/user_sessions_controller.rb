@@ -2,6 +2,8 @@ class UserSessionsController < ApplicationController
   # don't need to authorize here (except for destroy action) because anyone can see log in page
   skip_authorization_check
   
+  before_filter(:ensure_logged_out, :only => [:new, :destroy, :logged_out])
+  
   def new
     @user_session = UserSession.new
   end
@@ -30,8 +32,6 @@ class UserSessionsController < ApplicationController
   end
   
   def destroy
-    @user_session = UserSession.find  
-    @user_session.destroy if @user_session
     forget_location
     redirect_to(logged_out_path)
   end
