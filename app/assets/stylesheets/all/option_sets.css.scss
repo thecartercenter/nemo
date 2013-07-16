@@ -51,7 +51,8 @@ body.option_sets {
         em {
           display: block;
           float: right;
-          text-align: right;
+          min-width: 40px;
+          text-align: left;
           font-style: normal;
           font-size: 11px;
           margin-left: 10px;
@@ -62,7 +63,7 @@ body.option_sets {
         div.links {
           float: right;
           text-align: right;
-          width: 60px;
+          width: 50px;
         }
       }
     }

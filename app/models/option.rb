@@ -71,7 +71,7 @@ class Option < ActiveRecord::Base
     { 
       :id => id,
       :name => name,
-      :locales => available_locales(:except_current => true),
+      :locales => available_locales.sort,
       :set_names => option_sets.map{|os| os.name}.join(', ')
     }
   end
