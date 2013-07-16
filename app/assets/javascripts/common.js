@@ -156,22 +156,6 @@ function logout() {
 }
 
 
-// checks if the given response text is LOGIN_REQUIRED and redirects appropriately if so
-// returns whether a login required message was found
-function check_login_required(response) { 
-  if (response == "LOGIN_REQUIRED") {
-    redirect_to_login(); 
-    return true;
-  } else
-    return false;
-}
-
-// redirects to the login page
-function redirect_to_login() {
-  window.onbeforeunload = null;
-  window.location.href = LOGIN_PATH;
-}
-
 // UTILITIES
 (function (Utils, undefined) {
   Utils.show_flash = function(params) {
@@ -195,13 +179,6 @@ function redirect_to_login() {
     if (a.length != b.length) return false;
     for (var i = 0; i < a.length; i++) if (a[i] != b[i]) return false;
     return true;
-  }
-  
-  // runs a jquery ajax request but substitutes a method that checks for session timeout
-  Utils.ajax_with_session_timeout_check = function(params) {
-    var old_error_func = params.error;
-    params.error = function(jqXHR, status, error) { check_login_required(jqXHR.responseText) || old_error_func && old_error_func(jqXHR, status, error); };
-    $.ajax(params);
   }
   
   // adds a name/value pair (e.g. "foo=bar") to a url; checks if there is already a query string

@@ -1,5 +1,6 @@
 class User < ActiveRecord::Base
   ROLES = %w[observer staffer coordinator]
+  SESSION_TIMEOUT = 60.minutes
   
   attr_writer(:reset_password_method)
   
@@ -16,7 +17,7 @@ class User < ActiveRecord::Base
   
   acts_as_authentic do |c| 
     c.disable_perishable_token_maintenance = true
-    c.logged_in_timeout(60.minutes)
+    c.logged_in_timeout(SESSION_TIMEOUT)
     c.validates_format_of_login_field_options = {:with => /[\a-zA-Z0-9\.]+/, :message => "can only contain letters, numbers, or '.'"}
     
     # email is not mandatory, but must be valid if given
@@ -41,6 +42,7 @@ class User < ActiveRecord::Base
   
   default_scope(order("users.name"))
   scope(:assigned_to, lambda{|m| where("users.id IN (SELECT user_id FROM assignments WHERE mission_id = ?)", m.id)})
+  scope(:with_assoc, includes(:missions, {:assignments => :mission}))
   
   # we want all of these on one page for now
   self.per_page = 1000000
@@ -161,7 +163,7 @@ class User < ActiveRecord::Base
   # returns the last mission with which this user is associated
   def latest_mission
     # the mission association is already sorted by date so we just take the last one
-    missions.last
+    missions[missions.size-1]
   end
   
   # gets the user's role for the given mission
@@ -220,6 +222,10 @@ class User < ActiveRecord::Base
   def ability
     rebuild_ability unless @ability
     return @ability
+  end
+  
+  def session_time_left
+    SESSION_TIMEOUT - (Time.now - last_request_at)
   end
   
   private

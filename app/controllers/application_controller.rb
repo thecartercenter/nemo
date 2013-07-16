@@ -256,7 +256,7 @@ class ApplicationController < ActionController::Base
     ##############################################################################
     
     # redirects to the login page
-    # or if this is an ajax request, returns a 401 unauthorized error
+    # or if this is an ajax request, returns a 401 unauthorized error (but this should never happen)
     # in the latter case, the script should catch this error and redirect to the login page itself
     def redirect_to_login
       if ajax_request?
