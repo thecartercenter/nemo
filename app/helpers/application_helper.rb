@@ -7,6 +7,7 @@ module ApplicationHelper
     :map => "globe",
     :print => "print",
     :publish => "arrow-up",
+    :remove => "remove",
     :sms => "comment",
     :unpublish => "arrow-down"
   }
@@ -19,7 +20,7 @@ module ApplicationHelper
   # returns the html for an action icon using font awesome and the mappings defined above
   def action_link(action, href, html_options = {})
     # join passed html class (if any) with the default class
-    html_options[:class] = [html_options[:class], "action_link"].compact.join(" ")
+    html_options[:class] = [html_options[:class], "action_link", "action_link_#{action}"].compact.join(" ")
     
     link_to(content_tag(:i, "", :class => "icon-" + FONT_AWESOME_ICON_MAPPINGS[action.to_sym]), href, html_options)
   end

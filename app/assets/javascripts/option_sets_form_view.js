@@ -11,6 +11,10 @@
     // render the options
     self.render_options();
     
+    // setup edit/remove link handlers
+    $('div#options_wrapper').on('click', 'a.action_link_edit', function(){ self.edit_option($(this)); return false; });
+    $('div#options_wrapper').on('click', 'a.action_link_remove', function(){ self.remove_option($(this)); return false; });
+    
     // setup the tokenInput control
     $("input[type=text].add_options").tokenInput(params.suggest_path, {
       theme: 'elmo',
@@ -48,8 +52,18 @@
     self.option_settings.forEach(function(oing){
       // make inner option tag
       var inner = $('<div>').append(oing.option.name);
+      
+      // add edit/remove
+      var links = $('<div>').attr('class', 'links').append(self.params.edit_link);
+      if (oing.option.removable) links.append(self.params.remove_link);
+      links.appendTo(inner);
+      
+      // add locales
       if (oing.option.locales.length > 0)
-        inner.append($('<em>').html(oing.option.locales.join(', ')))
+        inner.append($('<em>').html(oing.option.locales.join(' ')));
+        
+      // save oing_id in element for later
+      inner.data('oing_id', oing.id);
 
       $('<li>').html(inner).appendTo(ol);
     });
@@ -62,8 +76,14 @@
       handle: 'div',
       items: 'li',
       toleranceElement: '> div',
-      maxLevels: 2
+      maxLevels: 1
     });
+  };
+  
+  // removes an option from the view
+  // does not remove from the data model -- this is done on submit
+  klass.prototype.remove_option = function(link) { var self = this;
+    link.closest('li').remove();
   };
   
 })(ELMO);

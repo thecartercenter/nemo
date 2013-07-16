@@ -66,9 +66,13 @@ class Option < ActiveRecord::Base
   def forms
     option_sets.collect{|os| os.questionings.collect(&:form)}.flatten.uniq
   end
-
+  
+  def removable?
+    answers.empty? && choices.empty?
+  end
+  
   def as_json(options = {})
-    {:id => id, :name => name, :locales => available_locales(:except_current => true)}
+    {:id => id, :name => name, :locales => available_locales(:except_current => true), :removable => removable?}
   end
 
   private

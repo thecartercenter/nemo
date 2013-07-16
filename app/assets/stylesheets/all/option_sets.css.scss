@@ -42,10 +42,6 @@ body.option_sets {
       background: #eee;
       cursor: default;
       
-      & * {
-        cursor: default;
-      }
-      
       &:last-child {
         margin-bottom: 0;
       }
@@ -53,11 +49,20 @@ body.option_sets {
       div {
         /* locales */
         em {
-          display: inline-block;
+          display: block;
+          float: right;
+          text-align: right;
           font-style: normal;
           font-size: 11px;
           margin-left: 10px;
           color: $theme_green;
+        }
+        
+        /* edit/remove links */
+        div.links {
+          float: right;
+          text-align: right;
+          width: 60px;
         }
       }
     }
