@@ -25,7 +25,11 @@ class OptionSetting < ActiveRecord::Base
     raise DeletionError.new(:cant_delete_if_has_response) if has_answers_or_choices?
   end
   
+  def removable?
+    !has_answers_or_choices?
+  end
+  
   def as_json(options = {})
-    {:id => id, :rank => rank, :option => option}
+    {:id => id, :option => option, :removable => removable?}
   end
 end

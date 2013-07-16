@@ -48,11 +48,11 @@ class Option < ActiveRecord::Base
     matches = matches[0...MAX_SUGGESTIONS]
     
     # convert to hashes for json
-    hashes = matches.map{|o| {:id => o.id, :name => o.name, :sets => o.option_sets.map{|os| os.name}.join(', ')}}
+    hashes = matches.map{|o| o.as_json}
     
     # if there was no exact match, we append a 'new option' placeholder
     unless exact_match
-      hashes << {:id => "", :name => query}
+      hashes << Option.new(:name => query).as_json
     end
     
     hashes
@@ -67,12 +67,13 @@ class Option < ActiveRecord::Base
     option_sets.collect{|os| os.questionings.collect(&:form)}.flatten.uniq
   end
   
-  def removable?
-    answers.empty? && choices.empty?
-  end
-  
   def as_json(options = {})
-    {:id => id, :name => name, :locales => available_locales(:except_current => true), :removable => removable?}
+    { 
+      :id => id,
+      :name => name,
+      :locales => available_locales(:except_current => true),
+      :set_names => option_sets.map{|os| os.name}.join(', ')
+    }
   end
 
   private
