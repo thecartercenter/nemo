@@ -6,7 +6,8 @@
   // constructor
   ns.OptionSetsFormView = klass = function(params) { var self = this;
     self.params = params;
-    self.option_settings = params.option_settings;
+    self.option_set = new ELMO.OptionSet(params.option_settings);
+    console.log(self.option_set.optionings)
     
     // render the options
     self.render_options();
@@ -28,6 +29,9 @@
       preventDuplicates: true,
       tokenValue: 'name'
     });
+    
+    // hookup form submit
+    $('form.option_set_form').on('submit', function(){ self.form_submitted(); })
   };
   
   // returns the html to insert in the token input result list
@@ -53,7 +57,7 @@
     var ol = $("<ol>");
     
     // add li tags
-    self.option_settings.forEach(function(oing, idx){
+    self.option_set.optionings.forEach(function(oing, idx){
       $('<li>').html(self.render_option(oing)).appendTo(ol);
     });
     
@@ -72,24 +76,21 @@
   // builds the inner div tag for an option
   klass.prototype.render_option = function(optioning) { var self = this;
     // make inner option tag
-    optioning.div = $('<div>').attr('class', 'inner').append(optioning.option.name);
+    var inner = $('<div>').attr('class', 'inner').append(optioning.option.name);
     
     // add edit/remove
     var links = $('<div>').attr('class', 'links').append(self.params.edit_link);
     if (optioning.removable) links.append(self.params.remove_link);
-    links.appendTo(optioning.div);
+    links.appendTo(inner);
     
     // add locales
-    var locales = Object.keys(optioning.option.name_translations).filter(function(l){ 
-      return optioning.option.name_translations[l] && optioning.option.name_translations[l] != ''; 
-    });
-    if (locales.length > 0)
-      optioning.div.append($('<em>').html(locales.join(' ')));
+    inner.append($('<em>').html(optioning.locale_str()));
       
-    // associate optioning with element
-    optioning.div.data('optioning', optioning);
+    // associate optioning with data model bidirectionally
+    inner.data('optioning', optioning);
+    optioning.div = inner;
 
-    return optioning.div;
+    return inner;
   };
   
   
@@ -101,10 +102,10 @@
     // loop over chosen options
     chosen.forEach(function(opt){
       // create optioning
-      var oing = {id: null, removable: true, option: opt};
+      var oing = new ELMO.Optioning({id: null, removable: true, option: opt});
       
       // add to data model
-      self.option_settings.push(oing);
+      self.option_set.add_optioning(oing);
 
       // wrap in li and add to view
       $('<li>').html(self.render_option(oing)).appendTo(ol);
@@ -116,8 +117,8 @@
   
   // removes an option from the view
   klass.prototype.remove_option = function(link) { var self = this;
-    // remove from data model
-    self.option_settings.splice(self.option_settings.indexOf(link.closest('div.inner').data('optioning')), 1);
+    // lookup optioning object remove from option set
+    self.option_set.remove_optioning(link.closest('div.inner').data('optioning'));
 
     // remove from view
     link.closest('li').remove();
@@ -125,8 +126,8 @@
 
   // shows the edit dialog
   klass.prototype.edit_option = function(link) { var self = this;
-    // get the oing model object
-    var oing = link.closest('div.inner').data('optioning');
+    // get the optioning
+    var optioning = link.closest('div.inner').data('optioning');
     
     // clear the text boxes
     ELMO.app.params.mission_locales.forEach(function(locale){
@@ -134,15 +135,15 @@
     });
 
     // then populate text boxes
-    for (var locale in oing.option.name_translations)
-      $('div.edit_option_form input#name_' + locale).val(oing.option.name_translations[locale]);
+    for (var locale in optioning.option.name_translations)
+      $('div.edit_option_form input#name_' + locale).val(optioning.option.name_translations[locale]);
 
     // create the dialog
     $("div.edit_option_form").dialog({
       dialogClass: "no-close edit_option_modal",
       buttons: [
         {text: I18n.t('common.cancel'), click: function() { $(this).dialog('close'); }},
-        {text: I18n.t('common.save'), click: function() { self.save_option(oing); }}
+        {text: I18n.t('common.save'), click: function() { self.save_option(optioning); }}
       ],
       modal: true,
       autoOpen: true,
@@ -154,12 +155,7 @@
   // saves entered translations to data model
   klass.prototype.save_option = function(optioning) { var self = this;
     $('div.edit_option_form input[type=text]').each(function(){
-      // save the data
-      var new_val = $(this).val().trim();
-      var locale = $(this).data('locale');
-      optioning.option.name_translations[locale] = new_val;
-      if (locale == I18n.locale)
-        optioning.option.name = new_val;
+      optioning.update_translation({field: 'name', locale: $(this).data('locale'), value: $(this).val()});
     });
 
     // re-render the option in the view
@@ -167,6 +163,11 @@
     old_div.replaceWith(self.render_option(optioning));
     
     $('div.edit_option_form').dialog('close');
-  }
+  };
+  
+  klass.prototype.form_submitted = function() { var self = this;
+    // for each option setting, add
+  };
+  
   
 })(ELMO);

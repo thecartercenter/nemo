@@ -5,14 +5,12 @@
 </div>
 
 <div class="edit_option_form" title="<%= t("option_set.edit_option") %>">
-  <form>
-    <% configatron.languages.each do |locale| %>
-      <div class="translation">
-        <label for="<%= locale %>"><%= t(:locale_name, :locale => locale) %></label>
-        <input type="text" id="name_<%= locale %>" data-locale="<%= locale %>" maxlength="30">
-      </div>
-    <% end %>
-  </form>
+  <% configatron.languages.each do |locale| %>
+    <div class="translation">
+      <label for="<%= locale %>"><%= t(:locale_name, :locale => locale) %></label>
+      <input type="text" id="name_<%= locale %>" data-locale="<%= locale %>" maxlength="30">
+    </div>
+  <% end %>
 </div>
 
 <%= javascript_doc_ready do %>
