@@ -14,9 +14,6 @@ FactoryGirl.define do
       # get the option setting objects, respecting the order they came in
       osg = opt.each_with_index.map{|o,i| OptionSetting.new(:rank => i+1, 
         :option => Option.new(:name_en => o, :mission => get_mission))}
-      
-      # perturb the array to make sure things get sorted properly later
-      osg.rotate!
     }
     
     mission { get_mission }

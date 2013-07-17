@@ -7,7 +7,6 @@ class OptionSet < ActiveRecord::Base
   has_many(:questionings, :through => :questions)
   
   validates(:name, :presence => true)
-  validates_associated(:option_settings)
   validate(:at_least_one_option)
   validate(:name_unique_per_mission)
   
@@ -16,6 +15,8 @@ class OptionSet < ActiveRecord::Base
   
   default_scope(order("name"))
   scope(:with_associations, includes(:questions, :options, {:questionings => :form}))
+  
+  accepts_nested_attributes_for(:option_settings, :allow_destroy => true)
   
   self.per_page = 100
   
@@ -70,8 +71,8 @@ class OptionSet < ActiveRecord::Base
     # make sure not associated with any questions
     raise DeletionError.new(:cant_delete_if_has_questions) unless questions.empty?
     
-    # make sure not associated with any existing answers/choices
-    option_settings.each{|os| os.no_answers_or_choices}
+    # don't need to check if associated with any existing answers/choices
+    # since questions can't be deleted if there are existing responses, so the first check above is sufficient
   end
   
   # checks if any of the option ranks have changed since last save
@@ -90,7 +91,7 @@ class OptionSet < ActiveRecord::Base
     end
     
     def at_least_one_option
-      errors.add(:base, :at_least_one) if option_settings.empty?
+      errors.add(:base, :at_least_one) if option_settings.reject{|a| a.marked_for_destruction?}.empty?
     end
     
     def name_unique_per_mission

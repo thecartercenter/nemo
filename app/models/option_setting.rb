@@ -8,6 +8,8 @@ class OptionSetting < ActiveRecord::Base
   after_create(:notify_form_versioning_policy_of_create)
   after_destroy(:notify_form_versioning_policy_of_destroy)
   
+  accepts_nested_attributes_for(:option)
+  
   # temp var used in the option_set form
   attr_writer :included
   

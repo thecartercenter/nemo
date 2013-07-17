@@ -55,6 +55,118 @@ class OptionSetTest < ActiveSupport::TestCase
     assert_equal(true, os.ranks_changed?)
   end
   
+  test "checking associations for an option set that is presently used in a question should raise deletion error" do
+    os = FactoryGirl.create(:option_set)
+    q = FactoryGirl.create(:question, :qtype_name => 'select_one', :option_set => os)
+    assert_raise(DeletionError){os.check_associations}
+  end
+
+  test "creating an option set with nested paramters and a mix of new and existing options should work" do
+    # create first option set so we can reuse options
+    yn = FactoryGirl.create(:option_set)
+    
+    # submit with nested parameters
+    os = OptionSet.create!(:mission => get_mission, :name => 'foo', :option_settings_attributes => [
+      {:rank => 2, :option_id => yn.options.first.id},
+      {:rank => 1, :option_attributes => {:mission_id => get_mission.id, :name_en => "foo", :name_fr => "bar"}}
+    ])
+    
+    # reload and test saved attributes of associations
+    os.reload
+    assert_equal('bar', os.options.first.name_fr)
+    assert_equal('Yes', os.options.last.name_en)
+    assert_equal(get_mission, os.options.last.mission)
+  end
+  
+  test "updating an option set with nested paramters and adding a new option should work" do
+    yn = FactoryGirl.create(:option_set)
+    
+    # update option set, changing ranks, and adding new option
+    yn.update_attributes!(:option_settings_attributes => [
+      {:id => yn.option_settings.last.id, :rank => 1, :option_id => yn.options.last.id},
+      {:id => yn.option_settings.first.id, :rank => 2, :option_id => yn.options.first.id},
+      {:rank => 100, :option_attributes => {:mission_id => get_mission.id, :name_en => "foo", :name_fr => "bar"}}
+    ])
+    
+    # test that option was added and rank was corrected
+    yn.reload
+    assert_equal(3, yn.option_settings.size)
+    assert_equal('No', yn.options[0].name_en)
+    assert_equal('Yes', yn.options[1].name_en)
+    assert_equal('foo', yn.options[2].name_en)
+    assert_equal(3, yn.option_settings[2].rank)
+  end
+
+  test "updating an option set with nested parameters and removing an option should work only if the option is unused" do
+    os = FactoryGirl.create(:option_set)
+    q = FactoryGirl.create(:question, :qtype_name => 'select_one', :option_set => os)
+    
+    # create published form with option set in it
+    f = FactoryGirl.create(:form, :questions => [q], :published => true)
+    
+    # create a response that only uses the 'yes' option
+    r = FactoryGirl.create(:response, :answers => [Answer.new(:questioning => f.questionings.first, :option => os.options.first)])
+    
+    # deleting the 'yes' option from the option set should raise a deletion error
+    os.reload
+    assert_raise(DeletionError){os.option_settings.first.destroy}
+    
+    # deleting the unused 'no' option should not raise anything
+    os.option_settings.last.destroy
+  end
+  
+  test "removing an option from an option set using nested paramters should work" do
+    os = FactoryGirl.create(:option_set)
+
+    # save the option that will be removed
+    yes = os.options.first
+
+    # remove it
+    os.update_attributes!(:option_settings_attributes => [
+      {:id => os.option_settings.first.id, :_destroy => true}
+    ])
+    
+    # should only now be one option in set
+    os.reload
+    assert_equal(1, os.options.size)
+    assert_equal('No', os.options.first.name_en)
+    
+    # yes option should still exist
+    assert_not_nil(Option.find(yes.id))
+  end
+
+  test "creating an option set with no options should not validate" do
+    assert_raise(ActiveRecord::RecordInvalid){OptionSet.create!(:mission => get_mission, :name => 'foo', :option_settings_attributes => [])}
+  end
+
+  test "update an option set and removing all no options should not validate" do
+    os = FactoryGirl.create(:option_set)
+    
+    # attempt to delete both option settings
+    assert_raise(ActiveRecord::RecordInvalid) do
+      os.update_attributes!(:option_settings_attributes => [
+        {:id => os.option_settings.first.id, :_destroy => true},
+        {:id => os.option_settings.last.id, :_destroy => true}
+      ])
+    end
+  end
+
+  test "updating an option with all blank name translations should not validate" do
+    os = FactoryGirl.create(:option_set)
+    
+    # attempt to blank out all name translations of the first option
+    assert_raise(ActiveRecord::RecordInvalid) do
+      os.update_attributes!(:option_settings_attributes => [
+        {:id => os.option_settings[0].id, :rank => 1, :option_attributes => {:name_en => ''}}
+      ])
+    end
+    
+    # check that we get the right error msg (there should only be one entry in os.errors.messages)
+    assert_equal(1, os.errors.messages.size)
+    assert_equal(I18n.t('activerecord.errors.models.option.names_cant_be_all_blank'), os.errors.messages[:'option_settings.option.base'].join)
+  end
+  
+  
   private
     def create_option_set(options)
       os = OptionSet.new(:name => "test")

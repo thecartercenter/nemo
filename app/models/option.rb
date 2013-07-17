@@ -8,6 +8,7 @@ class Option < ActiveRecord::Base
   
   validate(:integrity)
   validate(:name_lengths)
+  validate(:not_all_blank_name_translations)
   
   before_destroy(:check_assoc)
   after_destroy(:notify_form_versioning_policy_of_destroy)
@@ -95,5 +96,10 @@ class Option < ActiveRecord::Base
     # invalidate the mission option cache after save, destroy
     def invalidate_cache
       Rails.cache.delete("mission_options/#{mission_id}")
+    end
+    
+    # checks that at least one name translation is not blank
+    def not_all_blank_name_translations
+      errors.add(:base, :names_cant_be_all_blank) if name_translations.nil? || !name_translations.detect{|l,t| !t.blank?}
     end
 end
