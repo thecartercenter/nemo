@@ -28,9 +28,6 @@ class Ability
       # anybody can generate map markers
       can :read, Marker
 
-      # observers can access missions to which assigned (but don't need this permission if admin)
-      can :read, Mission, :assignments => {:user_id => user.id} if user.role?(:observer) && !user.admin?
-      
       # admin abilities that don't depend on a mission being set
       if user.admin?
         can :manage, User
@@ -42,6 +39,18 @@ class Ability
         can :adminify, User, ["id != ?", user.id] do |other_user|
           user.id != other_user.id
         end
+      end
+      
+      # anybody can access missions to which assigned (but don't need this permission if admin)
+      if !user.admin?
+        can :read, Mission, Mission.active_for_user(user) do |mission|
+          user.assignments.detect{|a| a.mission == mission}
+        end
+      end
+      
+      # user can submit to any form if they can access the form's mission
+      can :submit_to, Form do |form|
+        user.accessible_missions.include?(form.mission)
       end
       
       # all the rest of the permissions require a current mission to be set
@@ -68,10 +77,6 @@ class Ability
             can [:index, :read], Form, :mission_id => user.current_mission_id, :published => true
           end
         
-          # can submit to any form with an authorized mission, regardless of the current_mission
-          can :submit_to, Form do |form|
-            user.accessible_missions.include?(form.mission)
-          end
         end
       
         # staffer abilities

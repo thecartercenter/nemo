@@ -294,6 +294,12 @@ class SmsDecoderTest < ActiveSupport::TestCase
     end
   end
   
+  test "user submitting without active mission should still work" do
+    @user.update_attributes!(:current_mission => nil)
+    setup_form(:questions => %w(integer))
+    assert_decoding(:body => "#{form_code} 1.15", :answers => [15])
+  end
+  
   private
     
     # tests that a decoding was successful
