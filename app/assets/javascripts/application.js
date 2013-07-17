@@ -12,6 +12,7 @@
 //
 //= require core_ext/array
 //= require core_ext/string
+//= require core_ext/object
 //= require jquery
 //= require jquery_ujs
 //= require jquery-ui-1.10.3.custom

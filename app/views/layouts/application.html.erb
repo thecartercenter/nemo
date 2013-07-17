@@ -21,6 +21,7 @@
     // handles general client side stuff that appears in the template (e.g. language chooser form)
     // appears at top of file because it needs to be loaded first
     ELMO.app = new ELMO.App({
+      mission_locales: <%= configatron.languages.to_json.html_safe %>,
       logged_in: <%= (!current_user.nil?).to_json %>,
       site_name: <%= configatron.site_name.to_json.html_safe %>,
       session_timeout: <%= User::SESSION_TIMEOUT %>,

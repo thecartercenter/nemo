@@ -37,6 +37,10 @@ body.option_sets {
     li {
       display: block;
       margin: 5px 0;
+      min-height: 15px;
+      border-radius: 5px;
+      -moz-border-radius: 5px;
+      -webkit-border-radius: 5px;
       padding: 5px;
       border: 1px solid #CCC;
       background: #eee;
@@ -65,6 +69,34 @@ body.option_sets {
           text-align: right;
           width: 50px;
         }
+      }
+    }
+  }
+  
+  /* EDIT OPTION MODAL WINDOW */
+  
+  div.edit_option_form {
+    display: none;
+  }
+  
+  div.edit_option_modal {
+    
+    div.translation {
+      height: 40px;
+      
+      &:first-child {
+        margin-top: 10px;
+      }
+      
+      label {
+        width: 125px;
+        display: inline-block;
+      }
+      
+      input[type=text] {
+        padding: 3px;
+        display: inline-block;
+        width: 250px;
       }
     }
   }

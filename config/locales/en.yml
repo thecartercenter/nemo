@@ -714,6 +714,7 @@ en:
   option_set:
     create_new: "[Create New Option]"
     create_link: "Create Option Set"
+    edit_option: "Edit Option"
     none_found: "No matching options found"
     searching: "Searching..."
     type_to_add_new: "Type an option name"
