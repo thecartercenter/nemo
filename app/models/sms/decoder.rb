@@ -14,9 +14,6 @@ class Sms::Decoder
   # raises an Sms::DecodingError on error
   def decode
     
-    # ignore duplicates
-    check_for_duplicate
-
     # tokenize the message by spaces
     @tokens = @msg.body.split(" ")
     
@@ -26,6 +23,9 @@ class Sms::Decoder
     # try to get user
     # we do this first because it tells us what language to send errors in (if any)
     find_user
+
+    # ignore duplicates (we do this after find user so that the reply will be in the right language)
+    check_for_duplicate
     
     # try to get form
     find_form
