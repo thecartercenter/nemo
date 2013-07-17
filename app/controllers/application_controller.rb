@@ -260,6 +260,9 @@ class ApplicationController < ActionController::Base
         return false
       end
       
+      # update the settings using the new mission
+      Setting.copy_to_config(@user_session.user.current_mission)
+      
       return true
     end
     
