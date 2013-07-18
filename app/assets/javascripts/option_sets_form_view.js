@@ -11,6 +11,9 @@
     // render the options
     self.render_options();
     
+    // setup a dirty flag
+    self.dirty = false;
+    
     // hookup add button
     $('div.add_options input[type=button]').on('click', function() { self.add_options(); });
     
@@ -33,6 +36,12 @@
     
     // hookup form submit
     $('form.option_set_form').on('submit', function(){ self.form_submitted(); })
+    
+    // hookup leave page warning
+    window.onbeforeunload = function(){ 
+      if (self.dirty)
+        return I18n.t('option_set.leave_page_warning');
+    }
   };
   
   // returns the html to insert in the token input result list
@@ -79,13 +88,17 @@
     
     
     // setup the sortable plugin unless in show mode
-    if (self.params.form_mode != 'show')
+    if (self.params.form_mode != 'show') {
       ol.nestedSortable({
         handle: 'div',
         items: 'li',
         toleranceElement: '> div',
-        maxLevels: 1
+        maxLevels: 1,
+        
+        // set dirty flag when positions change
+        change: function(){ self.dirty = true; }
       });
+    }
   };
   
   // builds the inner div tag for an option
@@ -121,6 +134,9 @@
       // don't add if it's a duplicate
       if (self.option_set.has_option_with_name(opt.name)) return false;
       
+      // dirty!
+      self.dirty = true;
+      
       // add to data model (returns new optioning)
       var oing = self.option_set.add_option(opt);
 
@@ -139,6 +155,9 @@
 
     // remove from view
     link.closest('li').remove();
+
+    // dirty!
+    self.dirty = true;
   };
 
   // shows the edit dialog
@@ -181,6 +200,9 @@
       optioning.update_translation({field: 'name', locale: $(this).data('locale'), value: $(this).val()});
     });
 
+    // dirty!
+    self.dirty = true;
+    
     // re-render the option in the view
     var old_div = optioning.div;
     old_div.replaceWith(self.render_option(optioning));
@@ -206,7 +228,10 @@
     self.option_set.removed_optionings.forEach(function(optioning, idx){
       self.add_form_field('option_set[optionings_attributes][_' + idx + '][id]', optioning.id);
       self.add_form_field('option_set[optionings_attributes][_' + idx + '][_destroy]', 'true');
-    })
+    });
+    
+    // cancel the dirty flag so no warning
+    self.dirty = false;
   };
   
   // adds a hidden form field with the given name and value
