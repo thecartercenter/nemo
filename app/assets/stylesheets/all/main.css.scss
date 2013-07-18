@@ -81,7 +81,7 @@ div.field_with_errors { display: inline; }
 
 /* search form */
 form.search_form { margin-bottom: 10px; }
-form.search_form input#search_str { width: 300px; }
+form.search_form input#search_str { width: 300px; margin-right: 5px; }
 form.search_form #search_examples { margin-top: 2px; color: #666; }
 
 /* login form */
@@ -160,7 +160,7 @@ textarea#broadcast_body { width: 300px; height: 170px; }
 /* user edit */
 form.user_form div.control { width: 410px !important; }
 form.user_form input#user_login { width: 150px; }
-form.user_form input#login_suggest_button { width: 75px; }
+form.user_form input#login_suggest_button { margin-left: 10px; display: inline-block; }
 form.user_form textarea#user_notes { width: 240px; height: 100px; }
 
 /* user batches */
