@@ -2,7 +2,7 @@ require 'test_helper'
  
 class MissionChangeRedirectTest < ActionDispatch::IntegrationTest
   setup do
-    [User, Mission, Form, Option].each(&:delete_all)
+    [User, Mission, Form, OptionSet].each(&:delete_all)
     @other_mission = FactoryGirl.create(:mission, :name => "Other")
     @user = FactoryGirl.create(:user, :role_name => :coordinator)
     @user.change_mission!(get_mission)
@@ -25,21 +25,21 @@ class MissionChangeRedirectTest < ActionDispatch::IntegrationTest
   end
 
   test "user should be redirected to home screen if was viewing object but redirect to object listing is not permitted" do
-    @option = FactoryGirl.create(:option)
+    @option_set = FactoryGirl.create(:option_set)
     
-    # add the user to the other mission as an observer so that the Options listing won't be allowed
+    # add the user to the other mission as an observer so that the option_sets listing won't be allowed
     @user.assignments.create!(:mission_id => @other_mission.id, :role => "observer")
     
-    assert_redirect_after_mission_change_from(:from => option_path(@option), :to => root_path)
+    assert_redirect_after_mission_change_from(:from => option_set_path(@option_set), :to => root_path)
   end
 
   test "user should be redirected to home screen if current screen not permitted under new mission" do
-    @option = FactoryGirl.create(:option)
+    @option_set = FactoryGirl.create(:option_set)
     
-    # add the user to the other mission as an observer so that the Options listing won't be allowed
+    # add the user to the other mission as an observer so that the option_sets listing won't be allowed
     @user.assignments.create!(:mission_id => @other_mission.id, :role => "observer")
     
-    assert_redirect_after_mission_change_from(:from => options_path, :to => root_path)
+    assert_redirect_after_mission_change_from(:from => option_sets_path, :to => root_path)
   end
   
   private
