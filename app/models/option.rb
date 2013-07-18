@@ -68,12 +68,18 @@ class Option < ActiveRecord::Base
     option_sets.collect{|os| os.questionings.collect(&:form)}.flatten.uniq
   end
   
+  # returns whether this option is in use -- is referenced in any answers/choices AND/OR is published
+  def in_use?
+    published? || !answers.empty? || !choices.empty?
+  end
+  
   def as_json(options = {})
     { 
       :id => id,
       :name => name,
       :name_translations => name_translations,
-      :set_names => option_sets.map{|os| os.name}.join(', ')
+      :set_names => option_sets.map{|os| os.name}.join(', '),
+      :in_use => in_use?
     }
   end
 

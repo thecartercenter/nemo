@@ -5,6 +5,7 @@
 </div>
 
 <div class="edit_option_form" title="<%= t("option_set.edit_option") %>">
+  <div class="in_use_warning"><%= t('option.in_use_warning') %></div>
   <% configatron.languages.each do |locale| %>
     <div class="translation">
       <label for="<%= locale %>"><%= t(:locale_name, :locale => locale) %></label>

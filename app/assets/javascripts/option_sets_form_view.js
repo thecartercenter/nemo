@@ -132,6 +132,9 @@
     ELMO.app.params.mission_locales.forEach(function(locale){
       $('div.edit_option_form input#name_' + locale).val("");
     });
+    
+    // hide the in_use_warning
+    $('div.edit_option_form div.in_use_warning').hide();
 
     // then populate text boxes
     for (var locale in optioning.option.name_translations)
@@ -149,6 +152,9 @@
       width: 500,
       height: 150 + (ELMO.app.params.mission_locales.length * 40)
     });
+
+    // show the in_use_warning if appopriate
+    if (optioning.option.in_use) $('div.edit_option_form div.in_use_warning').show();
   };
   
   // saves entered translations to data model

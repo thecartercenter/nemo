@@ -712,6 +712,7 @@ en:
   option:
     appears_elsewhere: "Note: This option appears on the following forms: %{forms}. Any changes you make below will be reflected on those forms."
     create_link: "Create Option"
+    in_use_warning: "This Option is in use in other published Forms or is referenced in existing Responses. You should therefore be careful not to change the meaning of the Option in your edits."
     other_forms_published: "At least one of those forms is also published, so only names can be edited. You should also take care to not change the meaning of the option if editing the names."
   
   option_set:
