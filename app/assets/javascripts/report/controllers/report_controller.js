@@ -57,7 +57,7 @@
   
     // send ajax (use currying for event handlers)
     (function(_this) {
-      Utils.ajax_with_session_timeout_check({
+      $.ajax({
         type: 'POST',
         url: url,
         data: $.param(to_serialize),

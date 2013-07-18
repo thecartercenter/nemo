@@ -87,7 +87,7 @@
     $('#loading_indicator_' + form_id).show();
 
     // load form show page into div
-    Utils.ajax_with_session_timeout_check({
+    $.ajax({
       url: Utils.build_url("forms", form_id),
       method: "get",
       data: {print: 1},

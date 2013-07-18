@@ -8,7 +8,7 @@
     
     // run the search (curry for callbacks)
     (function(_this){
-      Utils.ajax_with_session_timeout_check({url: klass.geocoder_url, method: "get", data: {address: _this.query}, 
+      $.ajax({url: klass.geocoder_url, method: "get", data: {address: _this.query}, 
         success: function(data){_this.search_done(data)}, error: function(data){_this.search_error(data)}});
     })(this);
   };
