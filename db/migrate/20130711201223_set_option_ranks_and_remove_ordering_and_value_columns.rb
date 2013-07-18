@@ -29,7 +29,7 @@ class SetOptionRanksAndRemoveOrderingAndValueColumns < ActiveRecord::Migration
       end
       
       # purge any option settings with no ranks
-      count = OptionSetting.where(:rank => nil).delete_all
+      count = Optioning.where(:rank => nil).delete_all
       puts "purged #{count} option settings with no rank"
       
       rank_assignment_succeeded = true
