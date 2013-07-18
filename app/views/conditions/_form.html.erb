@@ -32,6 +32,6 @@
 
 <% if controller.action_name != "show" %>
   <script type="text/javascript">
-    new ELMO.ConditionForm(<%= @condition.to_json(:dropdown_values => true).html_safe %>);
+    new ELMO.Views.ConditionForm(<%= @condition.to_json(:dropdown_values => true).html_safe %>);
   </script>
 <% end %>

@@ -1,4 +1,4 @@
-// ELMO.Optioning
+// ELMO.Models.Optioning
 //
 // Client side model for Optioning
 (function(ns, klass) {
@@ -35,4 +35,4 @@
       self.option.name = params.value;
   };
 
-})(ELMO);
+})(ELMO.Models);

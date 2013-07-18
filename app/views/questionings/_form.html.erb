@@ -35,3 +35,7 @@
 
   <%= form_submit_button(f, :label => :save) %>
 <% end %>
+
+<%= javascript_doc_ready do %>
+  new ELMO.Views.QuestioningForm();
+<% end %>

@@ -1,12 +1,15 @@
-// ELMO.Questioning
+// ELMO.Views.QuestioningForm
+//
+// View model for the Questioning form
 (function(ns, klass) {
   
   // constructor
-  ns.Questioning = klass = function() {
+  ns.QuestioningForm = klass = function() {
     // hookup type change event and trigger immediately
     var type_box = $('form.questioning_form .form_field#qtype_name .control select');
     (function(_this){ type_box.change(function(e){_this.question_type_changed(e)}); })(this);
     type_box.trigger("change");
+    console.log('new questioning')
   }
   
   klass.prototype.question_type_changed = function(event) {
@@ -33,6 +36,4 @@
       $(".form_field#maximum input[id$='_maxstrictly']").prop("checked", false);
     }
   }
-}(ELMO));
-
-$(document).ready(function() { new ELMO.Questioning(); });
+}(ELMO.Views));

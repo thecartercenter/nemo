@@ -1,12 +1,12 @@
-// ELMO.OptionSetsFormView
+// ELMO.Views.OptionSetForm
 //
 // View model for the option sets form.
 (function(ns, klass) {
 
   // constructor
-  ns.OptionSetsFormView = klass = function(params) { var self = this;
+  ns.OptionSetForm = klass = function(params) { var self = this;
     self.params = params;
-    self.option_set = new ELMO.OptionSet(params.optionings);
+    self.option_set = new ELMO.Models.OptionSet(params.optionings);
     
     // render the options
     self.render_options();
@@ -247,4 +247,4 @@
   };
   
   
-})(ELMO);
+})(ELMO.Views);

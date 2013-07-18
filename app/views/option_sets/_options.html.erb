@@ -21,7 +21,7 @@
 <% end %>
 
 <%= javascript_doc_ready do %>
-  new ELMO.OptionSetsFormView({
+  new ELMO.Views.OptionSetForm({
     edit_link: <%= action_link(:edit, '#').to_json.html_safe %>,
     remove_link: <%= action_link(:remove, '#').to_json.html_safe %>,
     optionings: <%= @option_set.optionings.to_json.html_safe %>,

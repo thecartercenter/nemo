@@ -1,4 +1,4 @@
-// ELMO.ConditionForm
+// ELMO.Views.ConditionForm
 //
 // Models the Condition section of the Questioning form.
 (function(ns, klass) {
@@ -56,4 +56,4 @@
     }
   }
   
-})(ELMO);
+})(ELMO.Views);
