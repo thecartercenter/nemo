@@ -15,7 +15,11 @@
     self.reset_session_countdown();
     
     // listen for any ajax calls so we can update the session countdown
-    $(document).bind("ajaxComplete", function(){ self.reset_session_countdown(); });
+    // but don't update the countdown if the auto param is set, because those don't count
+    $(document).bind("ajaxComplete", function(event, xhr, ajaxopts){ 
+      if (!ajaxopts.url.match(/\bauto=1\b/))
+        self.reset_session_countdown(); 
+    });
   }
   
   // sets a countdown to session timeout
