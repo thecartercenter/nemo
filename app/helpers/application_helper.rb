@@ -12,6 +12,10 @@ module ApplicationHelper
     :unpublish => "arrow-down"
   }
   
+  ERROR_MESSAGE_KEYS_TO_HIDE = {
+    :'optionings.option.base' => true
+  }
+  
   # renders the flash message and any form errors for the given activerecord object
   def flash_and_form_errors(object = nil)
     render("layouts/flash", :flash => flash, :object => object)
@@ -192,5 +196,29 @@ module ApplicationHelper
   def tmd(*args)
     # strip the outer <p> </p> tags
     BlueCloth.new(t(*args)).to_html[3..-5].html_safe
+  end
+  
+  # makes sure error messages look right
+  def format_validation_error_messages(obj, options = {})
+    messages = obj.errors.map do |attrib, message|
+      # if error message key is in special list, don't show full message
+      ERROR_MESSAGE_KEYS_TO_HIDE[attrib] ? message : obj.errors.full_message(attrib, message)
+    end
+    
+    # join all messages into one string
+    message = messages.join(', ')
+    
+    # add a custom prefix if given
+    if options[:prefix]
+      # remove the inital cap also
+      message = options[:prefix] + ' ' + message.gsub(/^([A-Z])/){$1.downcase}
+    end
+    
+    # add Error: unless in compact mode
+    unless options[:compact]
+      message = t("common.error", :count => obj.errors.size) + ": " + message 
+    end
+    
+    message
   end
 end
