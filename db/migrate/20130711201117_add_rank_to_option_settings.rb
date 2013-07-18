@@ -1,5 +1,5 @@
 class AddRankToOptionSettings < ActiveRecord::Migration
   def change
-    add_column :option_settings, :rank, :integer
+    add_column :optionings, :rank, :integer
   end
 end
