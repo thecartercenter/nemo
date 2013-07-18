@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130712183705) do
+ActiveRecord::Schema.define(:version => 20130718122835) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -126,7 +126,7 @@ ActiveRecord::Schema.define(:version => 20130712183705) do
 
   add_index "option_sets", ["mission_id"], :name => "index_option_sets_on_mission_id"
 
-  create_table "option_settings", :force => true do |t|
+  create_table "optionings", :force => true do |t|
     t.integer  "option_set_id"
     t.integer  "option_id"
     t.datetime "created_at"

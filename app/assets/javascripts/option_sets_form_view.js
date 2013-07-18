@@ -6,7 +6,7 @@
   // constructor
   ns.OptionSetsFormView = klass = function(params) { var self = this;
     self.params = params;
-    self.option_set = new ELMO.OptionSet(params.option_settings);
+    self.option_set = new ELMO.OptionSet(params.optionings);
     
     // render the options
     self.render_options();
@@ -169,19 +169,19 @@
     var form = $('form.option_set_form');
     self.option_set.optionings.forEach(function(optioning, idx){
       if (optioning.id)
-        self.add_form_field('option_set[option_settings_attributes][' + idx + '][id]', optioning.id);
-      self.add_form_field('option_set[option_settings_attributes][' + idx + '][rank]', optioning.div.closest('li').index() + 1);
+        self.add_form_field('option_set[optionings_attributes][' + idx + '][id]', optioning.id);
+      self.add_form_field('option_set[optionings_attributes][' + idx + '][rank]', optioning.div.closest('li').index() + 1);
       if (optioning.option.id)
-        self.add_form_field('option_set[option_settings_attributes][' + idx + '][option_id]', optioning.option.id);
+        self.add_form_field('option_set[optionings_attributes][' + idx + '][option_id]', optioning.option.id);
       else
         for (var locale in optioning.option.name_translations)
-          self.add_form_field('option_set[option_settings_attributes][' + idx + '][option_attributes][name_' + locale + ']', optioning.option.name_translations[locale]);
+          self.add_form_field('option_set[optionings_attributes][' + idx + '][option_attributes][name_' + locale + ']', optioning.option.name_translations[locale]);
     });
     
     // add removed optionings
     self.option_set.removed_optionings.forEach(function(optioning, idx){
-      self.add_form_field('option_set[option_settings_attributes][_' + idx + '][id]', optioning.id);
-      self.add_form_field('option_set[option_settings_attributes][_' + idx + '][_destroy]', 'true');
+      self.add_form_field('option_set[optionings_attributes][_' + idx + '][id]', optioning.id);
+      self.add_form_field('option_set[optionings_attributes][_' + idx + '][_destroy]', 'true');
     })
   };
   

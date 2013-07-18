@@ -2,7 +2,7 @@ require 'test_helper'
 
 class FormVersioningPolicyTest < ActiveSupport::TestCase
   setup do
-    [Form, Question, Questioning, Option, OptionSet, OptionSetting].each{|k| k.delete_all}
+    [Form, Question, Questioning, Option, OptionSet, Optioning].each{|k| k.delete_all}
 
     # create three forms
     @forms = (0...3).collect{ FactoryGirl.create(:form, :published => false) }
@@ -159,8 +159,8 @@ class FormVersioningPolicyTest < ActiveSupport::TestCase
     setup_option_set
     save_old_version_codes
     
-    # now change the option order (we move the first option_setting to the back)
-    opt_stg = @os.option_settings[0]
+    # now change the option order (we move the first optioning to the back)
+    opt_stg = @os.optionings[0]
     old_rank = opt_stg.rank
     opt_stg.rank = 10000 # this will automatically be trimmed
     @os.save!
@@ -176,7 +176,7 @@ class FormVersioningPolicyTest < ActiveSupport::TestCase
     save_old_version_codes
     
     # now remove an option from the set the option set order
-    @os.option_settings.delete(@os.option_settings.last)
+    @os.optionings.delete(@os.optionings.last)
     @os.save
     
     publish_and_check_versions(:should_change => true)

@@ -2,7 +2,7 @@ class ActiveSupport::TestCase
 
   def prep_objects
     # clear out tables
-    [Question, Questioning, Answer, Form, User, Mission, OptionSet, OptionSetting, Option].each{|k| k.delete_all}
+    [Question, Questioning, Answer, Form, User, Mission, OptionSet, Optioning, Option].each{|k| k.delete_all}
   
     # create hashes to store generated objs
     @questions, @forms, @option_sets, @users, @missions = {}, {}, {}, {}, {}

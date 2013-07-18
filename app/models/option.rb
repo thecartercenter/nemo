@@ -1,8 +1,8 @@
 class Option < ActiveRecord::Base
   include MissionBased, FormVersionable, Translatable
   
-  has_many(:option_sets, :through => :option_settings)
-  has_many(:option_settings, :inverse_of => :option, :dependent => :destroy, :autosave => true)
+  has_many(:option_sets, :through => :optionings)
+  has_many(:optionings, :inverse_of => :option, :dependent => :destroy, :autosave => true)
   has_many(:answers, :inverse_of => :option)
   has_many(:choices, :inverse_of => :option)
   

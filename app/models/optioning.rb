@@ -1,8 +1,8 @@
-class OptionSetting < ActiveRecord::Base
+class Optioning < ActiveRecord::Base
   include FormVersionable
 
-  belongs_to(:option, :inverse_of => :option_settings)
-  belongs_to(:option_set, :inverse_of => :option_settings)
+  belongs_to(:option, :inverse_of => :optionings)
+  belongs_to(:option_set, :inverse_of => :optionings)
   
   before_destroy(:no_answers_or_choices)
   after_create(:notify_form_versioning_policy_of_create)

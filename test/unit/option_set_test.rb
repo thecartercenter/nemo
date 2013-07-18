@@ -16,7 +16,7 @@ class OptionSetTest < ActiveSupport::TestCase
     os = create_option_set({"S" => 1, "V" => 2, "X" => 3})
     
     # change the rank of 'V' to a too-high number
-    os.option_settings[1].rank = 9
+    os.optionings[1].rank = 9
     os.save!
     
     # the rank of 'V' should have been repaired down to 3, and 'X' should shift to 2
@@ -27,7 +27,7 @@ class OptionSetTest < ActiveSupport::TestCase
     os = create_option_set({"S" => 1, "V" => 2, "X" => 3})
     
     # change the rank of 'V' to nil
-    os.option_settings[1].rank = nil
+    os.optionings[1].rank = nil
     os.save!
     
     # 'V' should move to the end
@@ -47,11 +47,11 @@ class OptionSetTest < ActiveSupport::TestCase
     os.reload
     
     # make sure no false positive
-    os.option_settings[0].rank = 1
+    os.optionings[0].rank = 1
     assert_equal(false, os.ranks_changed?)
     
     # make sure no false negative
-    os.option_settings[0].rank = 50
+    os.optionings[0].rank = 50
     assert_equal(true, os.ranks_changed?)
   end
   
@@ -66,7 +66,7 @@ class OptionSetTest < ActiveSupport::TestCase
     yn = FactoryGirl.create(:option_set)
     
     # submit with nested parameters
-    os = OptionSet.create!(:mission => get_mission, :name => 'foo', :option_settings_attributes => [
+    os = OptionSet.create!(:mission => get_mission, :name => 'foo', :optionings_attributes => [
       {:rank => 2, :option_id => yn.options.first.id},
       {:rank => 1, :option_attributes => {:mission_id => get_mission.id, :name_en => "foo", :name_fr => "bar"}}
     ])
@@ -82,19 +82,19 @@ class OptionSetTest < ActiveSupport::TestCase
     yn = FactoryGirl.create(:option_set)
     
     # update option set, changing ranks, and adding new option
-    yn.update_attributes!(:option_settings_attributes => [
-      {:id => yn.option_settings.last.id, :rank => 1, :option_id => yn.options.last.id},
-      {:id => yn.option_settings.first.id, :rank => 2, :option_id => yn.options.first.id},
+    yn.update_attributes!(:optionings_attributes => [
+      {:id => yn.optionings.last.id, :rank => 1, :option_id => yn.options.last.id},
+      {:id => yn.optionings.first.id, :rank => 2, :option_id => yn.options.first.id},
       {:rank => 100, :option_attributes => {:mission_id => get_mission.id, :name_en => "foo", :name_fr => "bar"}}
     ])
     
     # test that option was added and rank was corrected
     yn.reload
-    assert_equal(3, yn.option_settings.size)
+    assert_equal(3, yn.optionings.size)
     assert_equal('No', yn.options[0].name_en)
     assert_equal('Yes', yn.options[1].name_en)
     assert_equal('foo', yn.options[2].name_en)
-    assert_equal(3, yn.option_settings[2].rank)
+    assert_equal(3, yn.optionings[2].rank)
   end
 
   test "updating an option set with nested parameters and removing an option should work only if the option is unused" do
@@ -109,10 +109,10 @@ class OptionSetTest < ActiveSupport::TestCase
     
     # deleting the 'yes' option from the option set should raise a deletion error
     os.reload
-    assert_raise(DeletionError){os.option_settings.first.destroy}
+    assert_raise(DeletionError){os.optionings.first.destroy}
     
     # deleting the unused 'no' option should not raise anything
-    os.option_settings.last.destroy
+    os.optionings.last.destroy
   end
   
   test "removing an option from an option set using nested paramters should work" do
@@ -122,8 +122,8 @@ class OptionSetTest < ActiveSupport::TestCase
     yes = os.options.first
 
     # remove it
-    os.update_attributes!(:option_settings_attributes => [
-      {:id => os.option_settings.first.id, :_destroy => true}
+    os.update_attributes!(:optionings_attributes => [
+      {:id => os.optionings.first.id, :_destroy => true}
     ])
     
     # should only now be one option in set
@@ -136,7 +136,7 @@ class OptionSetTest < ActiveSupport::TestCase
   end
 
   test "creating an option set with no options should not validate" do
-    assert_raise(ActiveRecord::RecordInvalid){OptionSet.create!(:mission => get_mission, :name => 'foo', :option_settings_attributes => [])}
+    assert_raise(ActiveRecord::RecordInvalid){OptionSet.create!(:mission => get_mission, :name => 'foo', :optionings_attributes => [])}
   end
 
   test "update an option set and removing all no options should not validate" do
@@ -144,9 +144,9 @@ class OptionSetTest < ActiveSupport::TestCase
     
     # attempt to delete both option settings
     assert_raise(ActiveRecord::RecordInvalid) do
-      os.update_attributes!(:option_settings_attributes => [
-        {:id => os.option_settings.first.id, :_destroy => true},
-        {:id => os.option_settings.last.id, :_destroy => true}
+      os.update_attributes!(:optionings_attributes => [
+        {:id => os.optionings.first.id, :_destroy => true},
+        {:id => os.optionings.last.id, :_destroy => true}
       ])
     end
   end
@@ -156,14 +156,14 @@ class OptionSetTest < ActiveSupport::TestCase
     
     # attempt to blank out all name translations of the first option
     assert_raise(ActiveRecord::RecordInvalid) do
-      os.update_attributes!(:option_settings_attributes => [
-        {:id => os.option_settings[0].id, :rank => 1, :option_attributes => {:name_en => ''}}
+      os.update_attributes!(:optionings_attributes => [
+        {:id => os.optionings[0].id, :rank => 1, :option_attributes => {:name_en => ''}}
       ])
     end
     
     # check that we get the right error msg (there should only be one entry in os.errors.messages)
     assert_equal(1, os.errors.messages.size)
-    assert_equal(I18n.t('activerecord.errors.models.option.names_cant_be_all_blank'), os.errors.messages[:'option_settings.option.base'].join)
+    assert_equal(I18n.t('activerecord.errors.models.option.names_cant_be_all_blank'), os.errors.messages[:'optionings.option.base'].join)
   end
   
   
@@ -180,7 +180,7 @@ class OptionSetTest < ActiveSupport::TestCase
           name = o
           rank = nil
         end
-        os.option_settings.new(:option => Option.new(:name_en => name), :rank => rank)
+        os.optionings.new(:option => Option.new(:name_en => name), :rank => rank)
       end
       os.save!
       os
@@ -188,7 +188,7 @@ class OptionSetTest < ActiveSupport::TestCase
     
     # checks that each rank is as expected
     def assert_ranks(os, ranks)
-      os.option_settings.each do |o|
+      os.optionings.each do |o|
         assert_equal(ranks[o.option.name_en], o.rank)
       end
     end

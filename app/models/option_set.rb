@@ -1,8 +1,8 @@
 class OptionSet < ActiveRecord::Base
   include MissionBased, FormVersionable
 
-  has_many(:option_settings, :order => "rank", :dependent => :destroy, :autosave => true, :inverse_of => :option_set)
-  has_many(:options, :through => :option_settings, :order => "option_settings.rank")
+  has_many(:optionings, :order => "rank", :dependent => :destroy, :autosave => true, :inverse_of => :option_set)
+  has_many(:options, :through => :optionings, :order => "optionings.rank")
   has_many(:questions, :inverse_of => :option_set)
   has_many(:questionings, :through => :questions)
   
@@ -16,7 +16,7 @@ class OptionSet < ActiveRecord::Base
   default_scope(order("name"))
   scope(:with_associations, includes(:questions, :options, {:questionings => :form}))
   
-  accepts_nested_attributes_for(:option_settings, :allow_destroy => true)
+  accepts_nested_attributes_for(:optionings, :allow_destroy => true)
   
   self.per_page = 100
   
@@ -25,37 +25,37 @@ class OptionSet < ActiveRecord::Base
     !questionings.detect{|qing| qing.published?}.nil?
   end
   
-  # finds or initializes an option_setting for every option in the database for current mission (never meant to be saved)
-  def all_option_settings(options)
+  # finds or initializes an optioning for every option in the database for current mission (never meant to be saved)
+  def all_optionings(options)
     # make sure there is an associated answer object for each questioning in the form
-    options.collect{|o| option_setting_for(o) || option_settings.new(:option_id => o.id, :included => false)}
+    options.collect{|o| optioning_for(o) || optionings.new(:option_id => o.id, :included => false)}
   end
   
-  def all_option_settings=(params)
+  def all_optionings=(params)
     # create a bunch of temp objects, discarding any unchecked options
-    submitted = params.values.collect{|p| p[:included] == '1' ? OptionSetting.new(p) : nil}.compact
+    submitted = params.values.collect{|p| p[:included] == '1' ? Optioning.new(p) : nil}.compact
     
     # copy new choices into old objects, creating or deleting if necessary
-    option_settings.compare_by_element(submitted, Proc.new{|os| os.option_id}) do |orig, subd|
+    optionings.compare_by_element(submitted, Proc.new{|os| os.option_id}) do |orig, subd|
       # if both exist, do nothing
       # if submitted is nil, destroy the original
       if subd.nil?
         options.delete(orig.option)
       # if original is nil, add the new one to this option_set's array
       elsif orig.nil?
-        option_settings << OptionSetting.new(:option => subd.option)
+        optionings << Optioning.new(:option => subd.option)
       end
     end
   end
     
-  def option_setting_for(option)
-    # get the matching option_setting
-    option_setting_hash[option]
+  def optioning_for(option)
+    # get the matching optioning
+    optioning_hash[option]
   end
 
-  def option_setting_hash(options = {})
-    @option_setting_hash = nil if options[:rebuild]
-    @option_setting_hash ||= Hash[*option_settings.collect{|os| [os.option, os]}.flatten]
+  def optioning_hash(options = {})
+    @optioning_hash = nil if options[:rebuild]
+    @optioning_hash ||= Hash[*optionings.collect{|os| [os.option, os]}.flatten]
   end
   
   def as_json(options = {})
@@ -77,7 +77,7 @@ class OptionSet < ActiveRecord::Base
   
   # checks if any of the option ranks have changed since last save
   def ranks_changed?
-    option_settings.map(&:rank_was) != option_settings.map(&:rank)
+    optionings.map(&:rank_was) != optionings.map(&:rank)
   end
   
   private
@@ -87,11 +87,11 @@ class OptionSet < ActiveRecord::Base
       # sort the option settings by existing rank and then re-assign to ensure sequentialness
       # if the options are already sorted this way, nothing will change
       # if a rank is null, we sort it to the end
-      option_settings.sort_by{|o| o.rank || 10000000}.each_with_index{|o, idx| o.rank = idx + 1}
+      optionings.sort_by{|o| o.rank || 10000000}.each_with_index{|o, idx| o.rank = idx + 1}
     end
     
     def at_least_one_option
-      errors.add(:base, :at_least_one) if option_settings.reject{|a| a.marked_for_destruction?}.empty?
+      errors.add(:base, :at_least_one) if optionings.reject{|a| a.marked_for_destruction?}.empty?
     end
     
     def name_unique_per_mission
