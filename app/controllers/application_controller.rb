@@ -334,6 +334,9 @@ class ApplicationController < ActionController::Base
     def set_success_and_redirect(obj, options = {})
       # redirect to index by default
       options[:to] ||= :index
+
+      # if we're redirecting to index, save the object id in the flash
+      flash[:modified_obj_id] = obj.id if options[:to] == :index
       
       # if options[:to] is a symbol, we really mean :action => xxx
       options[:to] = {:action => options[:to]} if options[:to].is_a?(Symbol)

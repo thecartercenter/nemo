@@ -38,5 +38,15 @@
     <% end %>
     <br/>
     <%= will_paginate(objects) if paginated %>
+    
+    <%# flash the modified obj %>
+    <% if flash[:modified_obj_id] %>
+      <%= javascript_doc_ready do %>
+        console.log(<%= "#{objects.first.class.name.underscore}_#{flash[:modified_obj_id]}" %>)
+        $('#<%= "#{objects.first.class.name.underscore}_#{flash[:modified_obj_id]}" %>').effect("highlight", {}, 1000);
+      <% end %>
+    <% end %>
   <% end %>
 </div>
+
+  
