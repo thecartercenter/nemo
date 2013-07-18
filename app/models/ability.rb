@@ -108,7 +108,7 @@ class Ability
           end
         
           # coord can manage these classes for the current mission
-          [Form, FormType, Setting, Question, Option, OptionSet, Sms::Message].each do |klass|
+          [Form, Setting, Question, Option, OptionSet, Sms::Message].each do |klass|
             can :manage, klass, :mission_id => user.current_mission_id
           end
         

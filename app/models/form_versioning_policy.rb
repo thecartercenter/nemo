@@ -1,5 +1,5 @@
 # Implements the policy about when a form's version should be upgraded.
-# Any form component objects (Option, OptionSet, OptionSetting, Question, Questioning) should call this class before updating.
+# Any form component objects (Option, OptionSet, Optioning, Question, Questioning) should call this class before updating.
 # This class tells them which, if any, forms will require a version update as a result.
 # If the update proceeds, this class should be notified again, whereupon it will tell the appropriate Forms to upgrade their versions.
 class FormVersioningPolicy
@@ -21,10 +21,10 @@ class FormVersioningPolicy
       case action
       when :update
         # changing the option order is a trigger
-        triggers << {:reason => :option_order_changed, :forms => obj.forms} if obj.ordering_changed?
+        triggers << {:reason => :option_order_changed, :forms => obj.forms} if obj.ranks_changed?
       end
       
-    when "OptionSetting"
+    when "Optioning"
       case action
       when :create
         # adding an option to an option set is a trigger

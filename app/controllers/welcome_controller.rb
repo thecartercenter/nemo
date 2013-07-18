@@ -12,7 +12,7 @@ class WelcomeController < ApplicationController
       @reports = Report::Report.accessible_by(current_ability).by_popularity
       
       # published forms
-      @pubd_forms = Form.accessible_by(current_ability).published.with_form_type
+      @pubd_forms = Form.accessible_by(current_ability).published
       @pub_form_count = @pubd_forms.count
       
       # total unpublished forms

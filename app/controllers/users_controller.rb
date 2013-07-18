@@ -3,8 +3,8 @@ class UsersController < ApplicationController
   load_and_authorize_resource
   
   def index
-    # apply pagination and search, and include mission association
-    @users = apply_filters(@users.includes(:missions))
+    # apply pagination and search
+    @users = apply_filters(@users.with_assoc)
   end
   
   def new

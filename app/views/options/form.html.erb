@@ -16,9 +16,5 @@
       :details => rank == 0 ? t("activerecord.tips.option.name") : nil) %>
   <% end %>
   
-  <% unless @option.published? %>
-    <%= form_field(f, :value, :required => true) %>
-  <% end %>
-  
   <%= form_submit_button(f, :label => :save) %>
 <% end %>

@@ -9,7 +9,7 @@ function responses_fetch() {
   responses_old_ids = responses_get_ids();
   
   // run the ajax request
-  Utils.ajax_with_session_timeout_check({
+  $.ajax({
     url: Utils.add_url_param(window.location.href, "auto=1"),
     method: "get",
     success: responses_update

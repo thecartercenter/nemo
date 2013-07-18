@@ -7,8 +7,8 @@
   ns.Settings = klass = function(params) { var self = this;
     
     // hookup 'select all' link to select the text in the pre
-    $("form.setting_form #tableau_sql .form_field_control a").click(function(e) { 
-      $("form.setting_form #tableau_sql .form_field_control pre").selectText();
+    $("form.setting_form #tableau_sql .control a").click(function(e) { 
+      $("form.setting_form #tableau_sql .control pre").selectText();
       return false;
     });
     

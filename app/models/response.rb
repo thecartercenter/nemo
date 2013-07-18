@@ -17,7 +17,7 @@ class Response < ActiveRecord::Base
   # don't need to validate answers in odk mode
   validates_associated(:answers, :message => :invalid_answers, :if => Proc.new{|r| r.modifier != "odk"})
   
-  default_scope(includes({:form => :type}, :user).order("responses.created_at DESC"))
+  default_scope(includes(:form, :user).order("responses.created_at DESC"))
   scope(:unreviewed, where(:reviewed => false))
   scope(:by, lambda{|user| where(:user_id => user.id)})
   
@@ -46,7 +46,6 @@ class Response < ActiveRecord::Base
   def self.search_qualifiers
     [
       Search::Qualifier.new(:name => "form", :col => "forms.name", :assoc => :forms),
-      Search::Qualifier.new(:name => "form_type", :col => "form_types.name", :assoc => :form_types),
       Search::Qualifier.new(:name => "reviewed", :col => "responses.reviewed"),
       Search::Qualifier.new(:name => "submitter", :col => "users.name", :assoc => :users, :partials => true),
       Search::Qualifier.new(:name => "source", :col => "responses.source"),
@@ -176,7 +175,6 @@ class Response < ActiveRecord::Base
       rel = rel.select("responses.created_at AS submission_time")
       rel = rel.select("responses.reviewed AS is_reviewed")
       rel = rel.select("forms.name AS form_name")
-      rel = rel.select("form_types.name AS form_type")
       rel = rel.select("questions.code AS question_code")
       rel = rel.select("questions._name AS question_name")
       rel = rel.select("questions.qtype_name AS question_type")
@@ -187,11 +185,10 @@ class Response < ActiveRecord::Base
       rel = rel.select("answers.date_value AS answer_date_value")
       rel = rel.select("answers.time_value AS answer_time_value")
       rel = rel.select("IFNULL(ao._name, co._name) AS choice_name")
-      rel = rel.select("IFNULL(ao.value, co.value) AS choice_value")
       rel = rel.select("option_sets.name AS option_set")
 
       # add all the joins
-      rel = rel.joins(Report::Join.list_to_sql([:users, :forms, :form_types, 
+      rel = rel.joins(Report::Join.list_to_sql([:users, :forms, 
         :answers, :questionings, :questions, :option_sets, :options, :choices]))
         
       rel.to_sql

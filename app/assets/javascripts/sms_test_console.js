@@ -14,7 +14,7 @@
   klass.prototype.submit = function() { var self = this;
     $("form#new_sms_test .loading_indicator img").show();
     
-    Utils.ajax_with_session_timeout_check({
+    $.ajax({
       type: 'POST',
       url: self.form.attr("action"),
       data: self.form.serialize(),

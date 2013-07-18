@@ -1,4 +1,5 @@
 require 'test_helper'
+require 'unit/report/report_test_helper'
 
 class Report::ListReportTest < ActiveSupport::TestCase
   setup do
@@ -27,11 +28,10 @@ class Report::ListReportTest < ActiveSupport::TestCase
   end
   
   test "list with select one" do
-
-    create_opt_set(%w(Yes No))
+    @yes_no = FactoryGirl.create(:option_set, :option_names => %w(Yes No))
     create_question(:code => "Inty", :type => "integer")
     create_question(:code => "State", :type => "text")
-    create_question(:code => "Happy", :type => "select_one")
+    create_question(:code => "Happy", :type => "select_one", :option_set => @yes_no)
     create_response(:source => "odk", :answers => {:State => "ga", :Inty => 10, :Happy => "Yes"})
     create_response(:source => "web", :answers => {:State => "ga", :Inty => 3, :Happy => "No"})
     create_response(:source => "web", :answers => {:State => "al", :Inty => 5, :Happy => "No"})

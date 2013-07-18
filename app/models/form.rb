@@ -10,10 +10,7 @@ class Form < ActiveRecord::Base
   # while a form has many versions, this is a reference to the most up-to-date one
   belongs_to(:current_version, :class_name => "FormVersion")
   
-  belongs_to(:type, :class_name => "FormType", :foreign_key => :form_type_id, :inverse_of => :forms)
-  
   validates(:name, :presence => true, :length => {:maximum => 32})
-  validates(:type, :presence => true)
   validate(:cant_change_published)
   validate(:name_unique_per_mission)
   
@@ -25,15 +22,14 @@ class Form < ActiveRecord::Base
   # no pagination
   self.per_page = 1000000
   
-  scope(:with_form_type, order("form_types.name, forms.name").includes(:type))
   scope(:published, where(:published => true))
-  scope(:with_questionings, includes(:type, {
+  scope(:with_questionings, includes(
     :questionings => [
       :form, 
       {:question => {:option_set => :options}},
       {:condition => [:option, :ref_qing]}
     ]
-  }).order("questionings.rank"))
+  ).order("questionings.rank"))
     
   # finds the highest 'version' number of all forms with the given base name
   # returns nil if no forms found
@@ -55,7 +51,8 @@ class Form < ActiveRecord::Base
   end
   
   def full_name
-    "#{type.name}: #{name}"
+    # this used to include the form type, but for now it's just name
+    name
   end
   
   def option_sets
@@ -136,7 +133,7 @@ class Form < ActiveRecord::Base
     base = name.match(/^(.+?)( v(\d+))?$/)[1]
     version = (self.class.max_version(base) || 1) + 1
     # create the new form and set the basic attribs
-    cloned = self.class.new(:mission_id => mission_id, :name => "#{base} v#{version}", :published => false, :form_type_id => form_type_id)
+    cloned = self.class.new(:mission_id => mission_id, :name => "#{base} v#{version}", :published => false)
     # clone all the questionings
     cloned.questionings = Questioning.duplicate(questionings)
     # done!

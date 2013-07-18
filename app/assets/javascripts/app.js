@@ -10,6 +10,32 @@
     // setup the language change form and link
     $("a#locale_form_link").on("click", function(){ $("#locale_form").css("display", "inline-block"); $(this).hide(); return false; });
     $("#locale_form select").on("change", function(){ self.change_locale($(this).val()); return false; });
+    
+    // set session countdown
+    self.reset_session_countdown();
+    
+    // listen for any ajax calls so we can update the session countdown
+    // but don't update the countdown if the auto param is set, because those don't count
+    $(document).bind("ajaxComplete", function(event, xhr, ajaxopts){ 
+      if (!ajaxopts.url.match(/\bauto=1\b/))
+        self.reset_session_countdown(); 
+    });
+  }
+  
+  // sets a countdown to session timeout
+  klass.prototype.reset_session_countdown = function() { var self = this;
+    if (self.params.logged_in) {
+      // clear the old one
+      if (self.session_countdown) clearTimeout(self.session_countdown);
+    
+      // set the new one (subtract 5s to account for transit times)
+      self.session_countdown = setTimeout(function(){ self.redirect_to_login(); }, self.params.session_timeout * 1000 - 5000);
+    }
+  }
+  
+  // redirects the user to the login page
+  klass.prototype.redirect_to_login = function() { var self = this;
+    window.location.href = self.params.login_path;
   }
 
   // changes the current locale by rewriting the url to use the new locale

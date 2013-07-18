@@ -1,80 +1,66 @@
 class OptionSet < ActiveRecord::Base
   include MissionBased, FormVersionable
 
-  has_many(:option_settings, :dependent => :destroy, :autosave => true, :inverse_of => :option_set)
-  has_many(:options, :through => :option_settings)
+  has_many(:optionings, :order => "rank", :dependent => :destroy, :autosave => true, :inverse_of => :option_set)
+  has_many(:options, :through => :optionings, :order => "optionings.rank")
   has_many(:questions, :inverse_of => :option_set)
   has_many(:questionings, :through => :questions)
   
   validates(:name, :presence => true)
-  validates(:ordering, :presence => true)
-  validates_associated(:option_settings)
   validate(:at_least_one_option)
-  validate(:unique_values)
   validate(:name_unique_per_mission)
   
+  before_validation(:ensure_ranks)
+  before_validation(:ensure_option_missions)
   before_save(:notify_form_versioning_policy_of_update)
   
   default_scope(order("name"))
   scope(:with_associations, includes(:questions, :options, {:questionings => :form}))
   
-  ORDERINGS = [{:code => "value_asc", :sql => "value asc"}, {:code => "value_desc", :sql => "value desc"}]
+  accepts_nested_attributes_for(:optionings, :allow_destroy => true)
   
   self.per_page = 100
-
-  # creates a simple yes/no/na option set
-  # don't need to translate since default mission language is english
-  def self.create_default(mission)
-    options = Option.create_simple_set(%w(Yes No N/A), mission)
-    set = OptionSet.new(:name => "Yes/No/NA", :ordering => "value_asc", :mission => mission)
-    options.each{|o| set.options << options}
-    set.save!
-  end
-  
-  def sorted_options
-    @sorted_options ||= options.sort{|a,b| (a.value.to_i <=> b.value.to_i) * (ordering && ordering.match(/desc/) ? -1 : 1)}
-  end
   
   def published?
     # check for any published questionings
     !questionings.detect{|qing| qing.published?}.nil?
   end
   
-  # finds or initializes an option_setting for every option in the database for current mission (never meant to be saved)
-  def all_option_settings(options)
+  # finds or initializes an optioning for every option in the database for current mission (never meant to be saved)
+  def all_optionings(options)
     # make sure there is an associated answer object for each questioning in the form
-    options.collect{|o| option_setting_for(o) || option_settings.new(:option_id => o.id, :included => false)}
+    options.collect{|o| optioning_for(o) || optionings.new(:option_id => o.id, :included => false)}
   end
   
-  def all_option_settings=(params)
+  def all_optionings=(params)
     # create a bunch of temp objects, discarding any unchecked options
-    submitted = params.values.collect{|p| p[:included] == '1' ? OptionSetting.new(p) : nil}.compact
+    submitted = params.values.collect{|p| p[:included] == '1' ? Optioning.new(p) : nil}.compact
     
     # copy new choices into old objects, creating or deleting if necessary
-    option_settings.compare_by_element(submitted, Proc.new{|os| os.option_id}) do |orig, subd|
+    optionings.compare_by_element(submitted, Proc.new{|os| os.option_id}) do |orig, subd|
       # if both exist, do nothing
       # if submitted is nil, destroy the original
       if subd.nil?
         options.delete(orig.option)
       # if original is nil, add the new one to this option_set's array
       elsif orig.nil?
-        options << subd.option
+        optionings << Optioning.new(:option => subd.option)
       end
     end
   end
     
-  def option_setting_for(option)
-    # get the matching option_setting
-    option_setting_hash[option]
+  def optioning_for(option)
+    # get the matching optioning
+    optioning_hash[option]
   end
 
-  def option_setting_hash(options = {})
-    @option_setting_hash = nil if options[:rebuild]
-    @option_setting_hash ||= Hash[*option_settings.collect{|os| [os.option, os]}.flatten]
+  def optioning_hash(options = {})
+    @optioning_hash = nil if options[:rebuild]
+    @optioning_hash ||= Hash[*optionings.collect{|os| [os.option, os]}.flatten]
   end
   
   def as_json(options = {})
-    Hash[*%w(id name ordering).collect{|k| [k, self.send(k)]}.flatten]
+    Hash[*%w(id name).collect{|k| [k, self.send(k)]}.flatten]
   end
   
   # gets all forms to which this option set is linked (through questionings)
@@ -86,21 +72,36 @@ class OptionSet < ActiveRecord::Base
     # make sure not associated with any questions
     raise DeletionError.new(:cant_delete_if_has_questions) unless questions.empty?
     
-    # make sure not associated with any existing answers/choices
-    option_settings.each{|os| os.no_answers_or_choices}
+    # don't need to check if associated with any existing answers/choices
+    # since questions can't be deleted if there are existing responses, so the first check above is sufficient
+  end
+  
+  # checks if any of the option ranks have changed since last save
+  def ranks_changed?
+    optionings.map(&:rank_was) != optionings.map(&:rank)
   end
   
   private
-    def at_least_one_option
-      errors.add(:base, :at_least_one) if options.empty?
+    # makes sure that the options in the set have sequential ranks starting at 1. 
+    # if not, fixes them.
+    def ensure_ranks
+      # sort the option settings by existing rank and then re-assign to ensure sequentialness
+      # if the options are already sorted this way, nothing will change
+      # if a rank is null, we sort it to the end
+      optionings.sort_by{|o| o.rank || 10000000}.each_with_index{|o, idx| o.rank = idx + 1}
     end
     
-    def unique_values
-      values = option_settings.map{|o| o.option.value}
-      errors.add(:base, :non_unique_values) if values.uniq.size != values.size
+    def at_least_one_option
+      errors.add(:base, :at_least_one) if optionings.reject{|a| a.marked_for_destruction?}.empty?
     end
     
     def name_unique_per_mission
       errors.add(:name, :must_be_unique) unless unique_in_mission?(:name)
+    end
+    
+    # ensures mission is set on all options
+    def ensure_option_missions
+      # go in through optionings association in case these are newly created options via nested attribs
+      optionings.each{|oing| oing.option.mission_id ||= mission_id}
     end
 end

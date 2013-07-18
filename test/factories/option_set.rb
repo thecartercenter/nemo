@@ -4,23 +4,18 @@ FactoryGirl.define do
       option_names %w(Yes No)
     end
     
-    name "YesNo"
-    options {
-      opt = option_names
-      
-      # get the option objects
-      options = opt.each_with_index.map{|o,i| Option.new(:value => i+1, :name_en => o, :mission => get_mission)}
-      
-      # randomize the array to make sure things get sorted properly later
-      options = options.shuffle
-      
-      # now save the options
-      options.each{|o| o.save!}
-      
-      options
+    name {
+      option_names ? option_names.join : "AnOptionSet"
     }
     
-    ordering "value_asc"
+    optionings {
+      opt = option_names
+      
+      # get the option setting objects, respecting the order they came in
+      osg = opt.each_with_index.map{|o,i| Optioning.new(:rank => i+1, 
+        :option => Option.new(:name_en => o, :mission => get_mission))}
+    }
+    
     mission { get_mission }
   end
 end

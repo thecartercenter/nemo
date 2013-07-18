@@ -2,7 +2,7 @@ require 'test_helper'
 
 class FormVersioningPolicyTest < ActiveSupport::TestCase
   setup do
-    [Form, Question, Questioning, Option, OptionSet, OptionSetting].each{|k| k.delete_all}
+    [Form, Question, Questioning, Option, OptionSet, Optioning].each{|k| k.delete_all}
 
     # create three forms
     @forms = (0...3).collect{ FactoryGirl.create(:form, :published => false) }
@@ -20,7 +20,7 @@ class FormVersioningPolicyTest < ActiveSupport::TestCase
     save_old_version_codes
     
     # add an option
-    @os.options << Option.new(:value => "3", :name_en => "Troublemaker", :mission => get_mission)
+    @os.options << Option.new(:name_en => "Troublemaker", :mission => get_mission)
     @os.save!
     
     publish_and_check_versions(:should_change => true)
@@ -155,12 +155,18 @@ class FormVersioningPolicyTest < ActiveSupport::TestCase
     publish_and_check_versions(:should_change => true)
   end
   
-  test "changing option_set order should cause upgrade" do
+  test "changing option order should cause upgrade" do
     setup_option_set
     save_old_version_codes
     
-    # now change the option set order
-    @os.update_attributes(:ordering => "value_desc")
+    # now change the option order (we move the first optioning to the back)
+    opt_stg = @os.optionings[0]
+    old_rank = opt_stg.rank
+    opt_stg.rank = 10000 # this will automatically be trimmed
+    @os.save!
+    
+    # verify the rank changed
+    assert_not_equal(old_rank, opt_stg.reload.rank)
     
     publish_and_check_versions(:should_change => true)
   end
@@ -170,7 +176,7 @@ class FormVersioningPolicyTest < ActiveSupport::TestCase
     save_old_version_codes
     
     # now remove an option from the set the option set order
-    @os.option_settings.delete(@os.option_settings.last)
+    @os.optionings.delete(@os.optionings.last)
     @os.save
     
     publish_and_check_versions(:should_change => true)
@@ -179,7 +185,7 @@ class FormVersioningPolicyTest < ActiveSupport::TestCase
   private
     # creates an option set, and a question that has the option set, and adds it to first two forms
     def setup_option_set
-      @os = FactoryGirl.create(:option_set, :ordering => "value_asc")
+      @os = FactoryGirl.create(:option_set)
       @q = FactoryGirl.create(:question, :qtype_name => "select_one", :option_set => @os)
       @forms[0...2].each do |f|
         f.questions << @q

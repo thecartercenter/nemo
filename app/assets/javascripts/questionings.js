@@ -4,7 +4,7 @@
   // constructor
   ns.Questioning = klass = function() {
     // hookup type change event and trigger immediately
-    var type_box = $('form.questioning_form .form_field#qtype_name .form_field_control select');
+    var type_box = $('form.questioning_form .form_field#qtype_name .control select');
     (function(_this){ type_box.change(function(e){_this.question_type_changed(e)}); })(this);
     type_box.trigger("change");
   }
@@ -18,7 +18,7 @@
 
     // reset select if hiding
     if (!show_opt_set) 
-      $("form.questioning_form .form_field#option_set_id .form_field_control select")[0].selectedIndex = 0;
+      $("form.questioning_form .form_field#option_set_id .control select")[0].selectedIndex = 0;
     
     // show/hide max/min
     var show_max_min = (selected_type == "decimal" || selected_type == "integer");

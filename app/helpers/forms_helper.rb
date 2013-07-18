@@ -11,12 +11,11 @@ module FormsHelper
   end
   
   def forms_index_fields
-    %w[type version name questions published smsable updated_at downloads responses actions]
+    %w[version name questions published smsable updated_at downloads responses actions]
   end
     
   def format_forms_field(form, field)
     case field
-    when "type" then form.type.name
     when "version" then form.current_version ? form.current_version.sequence : ""
     when "name" then link_to(form.name, form_path(form), :title => t("common.view"))
     when "questions" then form.questionings_count

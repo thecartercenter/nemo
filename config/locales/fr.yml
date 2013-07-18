@@ -114,10 +114,6 @@ fr:
         zero: "Fiches"
         one: "Fiche"
         other: "Fiches"
-      form_type:
-        zero: "Types de fiche"
-        one: "Type de fiche"
-        other: "Types de fiche"
       mission:
         zero: "Missions"
         one: "Mission"
@@ -195,14 +191,12 @@ fr:
         which_phone: "Quel(s) téléphone(s)"
       form:
         downloads: "Téléchargements"
-        form_type_id: "Type de fiche"
         responses: "Soumissions"
         smsable: "Utilisable par SMS"
         updated_at: "Dernière modification"
         version: "Version"
       option_set:
         options: "Options"
-        ordering: "Ordre"
       question:
         base: "" # this is a sort of hack to get error msg to display properly
         minimum: "Minimum"
@@ -277,17 +271,13 @@ fr:
       user_batch:
         users: "Utilisateurs"
     tips:
-      form_type:
-        name: "Un nom court pour ce type de fiche. Un maximum de 16 caractères."
       mission:
         name: "Un nom pour cette mission. Un maximum de 32 caractères. Il faut être unique. Considérez l'inclusion de l'année s'il sera des missions futures avec le même nom."
       option:
-        value: "Le valeur numérique qui répresenter cet option."
         name: "La description textuelle de cet option."
       option_set:
         name: "Un nom qui résume cet ensemble des options. Les utilisateurs normaux ne verront pas ce nom."
         options: "Verifiez les options que devraient être inclus dans cet ensemble."
-        ordering: "L'ordre dans lequel vous aimeriez que les options d'apparaître."
       question:
         code: "Un nom de code court (entre 2-20 caractères). Devrait contenir seulement des lettres et des chiffres, par ex. UrneClos, HeureDeDepart."
         hint: "Instructions additionnels, par ex. 'Entrez un compte approximatif de personnes qui attendent pour voter.'"
@@ -359,8 +349,6 @@ fr:
           cant_delete_published: "Une Fiche publié non peut être supprimer."
           cant_edit_published: "Une Fiche publié non peut être révisé."
           ranks_break_conditions: "Les nouveaux classements invalident un ou plus conditions."
-        form_type:
-          cant_delete_if_has_forms: "Vous ne pouvez pas supprimer ce type de fiche parce qu'un ou plus Fiches y sont associés."
         mission:
           cant_delete_if_assoc: "Non pouvez supprimer cette Mission parce que lui est associée à fiches, soumissions, ou plus d'objets."
           let_num_spc_only: "peut seulement contenir lettres, numéros et espaces."
@@ -452,12 +440,6 @@ fr:
           zero:  "Pas de fiches trouvées"
           one:   "Montrant <b>1</b> fiche"
           other: "Montrant <b>toutes les %{count}</b> fiches"
-    form_type:
-      page_entries_info: 
-        single_page_html:
-          zero:  "Pas de types de fiche trouvés"
-          one:   "Montrant <b>1</b> type de fiche"
-          other: "Montrant <b>tous les %{count}</b> types de fiche"
     mission:
       page_entries_info: 
         single_page_html:
@@ -557,7 +539,6 @@ fr:
     date: "date"
     email: "email"
     form: "fiche"
-    form_type: "type-de-fiche"
     login: "nom-d'utilisateur"
     name: "nom"
     option_set: "collection-d'options"
@@ -573,11 +554,6 @@ fr:
       index: "Diffusions"
       new: "Envoyer un diffusion"
       show: "Diffusion"
-    form_types:
-      edit: "Type de fiche: %{name}"
-      index: "Types de fiche"
-      new: "Nouveau type to fiche"
-      show: "Type de fiche: %{name}"
     forms:
       choose_questions: "Ajoutant des questions au fiche: %{name}"
       edit: "Modifier le fiche: %{name}"
@@ -709,9 +685,6 @@ fr:
     unsaved_rank_notice: "Vous n'avez pas encore enregistrer les changements vous avez fait à l'ordre des questions.  Vous devriez poussez 'enregistrer' si vous voulez sauver les changements."
     view_sms_guide: "Voir le guide de SMS"
   
-  form_type:
-    create_link: "Créer un nouveau type de fiche"
-  
   location_picker:
     choose_location: "Choisissez l'emplacement"
     current_location: "L'emplacement actuel"
@@ -740,9 +713,6 @@ fr:
     create_link: "Créer une nouvelle collection d'options"
     create_options: "créer des options"
     options_before_sets: "Vous avez besoin de %{link} avant vous pouvez créer des options."
-    orderings:
-      value_asc: "Valeur bas à haut"
-      value_desc: "Valeur haut à bas"
 
   password_reset:
     check_email: "Instructions pour changer votre mot de passe était envoyer par email à vous.  S'il vous plait, verifié votre e-mail."

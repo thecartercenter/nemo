@@ -111,7 +111,7 @@ class Report::ReportsController < ApplicationController
         :report => @report,
         :options => {
           :attribs => Report::AttribField.all,
-          :forms => Form.for_mission(current_mission).with_form_type.all,
+          :forms => Form.for_mission(current_mission).all,
           :calculation_types => Report::Calculation::TYPES,
           :questions => Question.for_mission(current_mission).includes(:forms).all,
           :option_sets => OptionSet.for_mission(current_mission).all,

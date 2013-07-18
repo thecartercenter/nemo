@@ -4,7 +4,6 @@
     r.id AS response_id,
     r.reviewed AS is_reviewed,
     f.name AS form_name,
-    ft.name AS form_type,
     q.code AS question_code,
     q._name AS question_name,
     q.qtype_name AS question_type,
@@ -15,7 +14,6 @@
     a.time_value AS time_value,
     a.datetime_value AS datetime_value,
     IFNULL(ao._name, co._name) AS choice_name,
-    IFNULL(ao.value, co.value) AS choice_value,
     os.name AS option_set
   from answers a
     left join options ao on a.option_id = ao.id
@@ -24,7 +22,6 @@
     join responses r on a.response_id = r.id
       join users u on r.user_id = u.id
       join forms f on r.form_id = f.id
-        join form_types ft on f.form_type_id = ft.id
     join questionings qing on a.questioning_id = qing.id
       join questions q on qing.question_id = q.id
         left join option_sets os on q.option_set_id = os.id

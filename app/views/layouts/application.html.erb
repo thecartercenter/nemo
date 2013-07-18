@@ -20,12 +20,18 @@
   <%= javascript_doc_ready do %>
     // handles general client side stuff that appears in the template (e.g. language chooser form)
     // appears at top of file because it needs to be loaded first
-    ELMO.app = new ELMO.App({site_name: <%= configatron.site_name.to_json.html_safe %>});
+    ELMO.app = new ELMO.App({
+      mission_locales: <%= configatron.languages.to_json.html_safe %>,
+      logged_in: <%= (!current_user.nil?).to_json %>,
+      site_name: <%= configatron.site_name.to_json.html_safe %>,
+      session_timeout: <%= User::SESSION_TIMEOUT %>,
+      login_path: <%= login_path.to_json.html_safe %>
+    });
   <% end %>
   
   <%= yield(:per_page_js) %>
 </head>
-<body>
+<body class="<%= controller_name %>">
   <div id="userinfo">
     <% if current_user %>
       <%# username %>
@@ -73,7 +79,7 @@
   
   <div id="nav">
     <ul>
-      <% [Response, Form, Report::Report, Option, OptionSet, FormType, Broadcast, Setting, User, Mission].each do |k| %>
+      <% [Response, Form, Report::Report, OptionSet, Broadcast, Setting, User, Mission].each do |k| %>
         <% if can?(:index, k) %>
           <li><%= link_to(pluralize_model(k), send("#{k.model_name.route_key}_path")) %></li>
         <% end %>
@@ -115,9 +121,5 @@
       <div id="dev_mode_warning"><%= t("layout.dev_mode") %></div>
     <% end %>
   </div>
-  
-  <%= javascript_tag do %>
-    var LOGIN_PATH = <%= login_path.to_json.html_safe %>;
-  <% end %>
 </body>
 </html>

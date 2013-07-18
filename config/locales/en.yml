@@ -114,10 +114,6 @@ en:
         zero: "Forms"
         one: "Form"
         other: "Forms"
-      form_type:
-        zero: "Form Types"
-        one: "Form Type"
-        other: "Form Types"
       mission:
         zero: "Missions"
         one: "Mission"
@@ -195,14 +191,14 @@ en:
         which_phone: "Which Phone(s)"
       form:
         downloads: "Downloads"
-        form_type_id: "Form Type"
         responses: "Responses"
         smsable: "SMSable?"
         updated_at: "Last Modified"
         version: "Version"
+      option:
+        base: "" # this is a sort of hack to get error msg to display properly
       option_set:
         options: "Options"
-        ordering: "Ordering"
       question:
         base: "" # this is a sort of hack to get error msg to display properly
         minimum: "Minimum"
@@ -277,17 +273,13 @@ en:
       user_batch:
         users: "Users"
     tips:
-      form_type:
-        name: "A short name for this Form Type. Maximum 16 characters."
       mission:
         name: "A name for this Mission. Maximum 32 characters. Must be unique. Think about including the year if there will be future missions with the same name."
       option:
-        value: "The numeric value that best represents this option."
         name: "The textual description of this option that users will see."
       option_set:
         name: "A name that summarizes this set of options. Normal users will not see this name."
-        options: "Check the options that should be included in this set."
-        ordering: "The order in which you'd like the options to appear."
+        options: "Add existing options by typing them and clicking 'Add'. If you do not see an option in the drop down, you can add a new one by clicking 'Create New Option'."
       question:
         code: "A short codename (between 2-20 characters). Should contain only letters and numbers, e.g. BallotBoxSealed, DepartTime."
         hint: "Additional instructions, e.g. 'Enter an approximate count of the people waiting to vote.'"
@@ -359,8 +351,6 @@ en:
           cant_delete_published: "A published Form can't be deleted."
           cant_edit_published: "A published Form can't be edited."
           ranks_break_conditions: "The new rankings invalidate one or more conditions"
-        form_type:
-          cant_delete_if_has_forms: "You can't delete this Form Type because one or more Forms are associated with it."
         mission:
           cant_delete_if_assoc: "You can't delete this Mission because it has associated Forms, Responses, or other objects."
           let_num_spc_only: "can only contain letters, numbers, and spaces"
@@ -369,6 +359,7 @@ en:
           cant_delete_if_has_response: "You can't delete this Option because it is included in at least one Response."
           cant_change_if_published: "You can't change this Option because it appears in at least one published Form."
           cant_delete_if_published: "You can't delete this Option because it appears in at least one published Form."
+          names_cant_be_all_blank: "At least one name translation must be given for each option."
           names_too_long: "Names must be at most 30 characters in length."
         option_set:
           at_least_one: "You must choose at least one option."
@@ -452,12 +443,6 @@ en:
           zero:  "No Forms found"
           one:   "Displaying <b>1</b> Form"
           other: "Displaying <b>all %{count}</b> Forms"
-    form_type:
-      page_entries_info: 
-        single_page_html:
-          zero:  "No Form Types found"
-          one:   "Displaying <b>1</b> Form Type"
-          other: "Displaying <b>all %{count}</b> Form Types"
     mission:
       page_entries_info: 
         single_page_html:
@@ -557,7 +542,6 @@ en:
     date: "date"
     email: "email"
     form: "form"
-    form_type: "form-type"
     login: "login"
     name: "name"
     option_set: "option-set"
@@ -575,11 +559,6 @@ en:
       index: "Broadcasts"
       new: "Send Broadcast"
       show: "Broadcast"
-    form_types:
-      edit: "Form Type: %{name}"
-      index: "Form Types"
-      new: "New Form Type"
-      show: "Form Type: %{name}"
     forms:
       choose_questions: "Adding Questions to Form: %{name}"
       edit: "Edit Form: %{name}"
@@ -711,9 +690,6 @@ en:
     unsaved_rank_notice: "You have not yet saved the changes you made to the Question order. You should click the 'Save' button if you want to save these changes."
     view_sms_guide: "View SMS Guide"
   
-  form_type:
-    create_link: "Create Form Type"
-    
   location_picker:
     choose_location: "Choose Location"
     current_location: "Current Location"
@@ -736,15 +712,17 @@ en:
   option:
     appears_elsewhere: "Note: This option appears on the following forms: %{forms}. Any changes you make below will be reflected on those forms."
     create_link: "Create Option"
+    in_use_warning: "This Option is in use in other published Forms or is referenced in existing Responses. You should therefore be careful not to change the meaning of the Option in your edits."
     other_forms_published: "At least one of those forms is also published, so only names can be edited. You should also take care to not change the meaning of the option if editing the names."
   
   option_set:
+    create_new: "[Create New Option]"
     create_link: "Create Option Set"
-    create_options: "create some Options"
-    options_before_sets: "You need to %{link} before you can create Option Sets."
-    orderings:
-      value_asc: "Value Low to High"
-      value_desc: "Value High to Low"
+    edit_option: "Edit Option"
+    leave_page_warning: "Leaving this page will abandon your changes to this Option Set."
+    none_found: "No matching options found"
+    searching: "Searching..."
+    type_to_add_new: "Type an option name"
 
   password_reset:
     check_email: "Instructions to reset your password have been emailed to you. Please check your email."

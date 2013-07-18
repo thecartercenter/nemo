@@ -39,27 +39,7 @@ class Report::Join
       :dependencies => :answers,
       :name => :questionings, 
       :sql => "INNER JOIN questionings __questionings ON __answers.questioning_id = __questionings.id"
-    ),      
-    :options => new(
-      :dependencies => :answers,
-      :name => :options,
-      :sql => ["LEFT JOIN options __ao ON __answers.option_id = __ao.id"]
-    ),      
-    :choices => new(
-      :dependencies => :answers,
-      :name => :choices,
-      :sql => ["LEFT JOIN choices __choices ON __choices.answer_id = __answers.id",
-        "LEFT JOIN options __co ON __choices.option_id = __co.id"]
-    ),      
-    :forms => new(
-      :name => :forms,
-      :sql => "INNER JOIN forms __forms ON responses.form_id = __forms.id"
-    ),      
-    :form_types => new(
-      :name => :form_types,
-      :dependencies => :forms, 
-      :sql => "INNER JOIN form_types __form_types ON __forms.form_type_id = __form_types.id"
-    ),      
+    ),
     :questions => new(
       :name => :questions,
       :dependencies => :questionings,
@@ -70,6 +50,29 @@ class Report::Join
       :dependencies => :questions, 
       :sql => "LEFT JOIN option_sets __option_sets ON __questions.option_set_id = __option_sets.id"
     ),
+    :options => new(
+      :dependencies => [:answers, :option_sets],
+      :name => :options,
+      :sql => [
+        "LEFT JOIN options __ao ON __answers.option_id = __ao.id",
+        "LEFT JOIN optionings __ans_opt_stgs ON __ans_opt_stgs.option_id = __ao.id " +
+          "AND __ans_opt_stgs.option_set_id = __option_sets.id"
+      ]
+    ),      
+    :choices => new(
+      :dependencies => [:answers, :option_sets],
+      :name => :choices,
+      :sql => [
+        "LEFT JOIN choices __choices ON __choices.answer_id = __answers.id",
+        "LEFT JOIN options __co ON __choices.option_id = __co.id",
+        "LEFT JOIN optionings __ch_opt_stgs ON __ch_opt_stgs.option_id = __co.id " + 
+          "AND __ch_opt_stgs.option_set_id = __option_sets.id"
+      ]
+    ),      
+    :forms => new(
+      :name => :forms,
+      :sql => "INNER JOIN forms __forms ON responses.form_id = __forms.id"
+    ),      
     :users => new(
       :name => :users,
       :sql => "LEFT JOIN users __users ON responses.user_id = __users.id"

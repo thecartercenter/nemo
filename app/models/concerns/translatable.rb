@@ -136,4 +136,18 @@ module Translatable
       nil
     end
   end  
+  
+  def available_locales(options = {})
+    # get union of all locales of all translated fields, and convert to symbol
+    locales = self.class.translated_fields.inject([]) do |union, field|
+      trans = send("#{field}_translations")
+      union |= trans.keys unless trans.nil?
+      union
+    end.map{|l| l.to_sym}
+    
+    # honor :except_current option
+    locales -= [I18n.locale] if options[:except_current]
+    
+    locales
+  end
 end

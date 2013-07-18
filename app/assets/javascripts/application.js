@@ -12,9 +12,12 @@
 //
 //= require core_ext/array
 //= require core_ext/string
+//= require core_ext/object
 //= require jquery
 //= require jquery_ujs
-//= require jquery-ui-1.10.3.custom.min
+//= require jquery-ui-1.10.3.custom
+//= require jquery.tokeninput
+//= require jquery.mjs.nestedSortable-1.3.5
 //= require core_ext/jquery_ext
 //= require common
 //= require sassafras/utils

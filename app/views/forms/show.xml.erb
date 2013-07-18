@@ -47,7 +47,7 @@
         <label ref="jr:itext('<%= q.question.odk_code %>:label')"/>
         <hint ref="jr:itext('<%= q.question.odk_code %>:hint')"/>
         <% if set = q.question.option_set %>
-          <% set.sorted_options.each do |opt| %>
+          <% set.options.each do |opt| %>
             <item>
               <label ref="jr:itext('option<%= opt.id %>')"/>
               <value><%= opt.id %></value>

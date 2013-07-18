@@ -7,8 +7,13 @@ module ApplicationHelper
     :map => "globe",
     :print => "print",
     :publish => "arrow-up",
+    :remove => "remove",
     :sms => "comment",
     :unpublish => "arrow-down"
+  }
+  
+  ERROR_MESSAGE_KEYS_TO_HIDE = {
+    :'optionings.option.base' => true
   }
   
   # renders the flash message and any form errors for the given activerecord object
@@ -16,128 +21,10 @@ module ApplicationHelper
     render("layouts/flash", :flash => flash, :object => object)
   end
   
-  # makes a standard looking form
-  def nice_form_for(obj, options = {})
-    options[:html] ||= {}
-    options[:html][:class] = "#{obj.class.model_name.singular}_form"
-    form = form_for(obj, options) do |f|
-      
-      # set form mode
-      f.mode = form_mode
-      yield(f)
-    end
-    
-    # add required * def'n
-    if form =~ /"reqd_sym"/
-      form = (content_tag(:div, t("layout.reqd_sym_definition", :reqd_sym => reqd_sym).html_safe, :class => "tip") + form).html_safe
-    end
-    
-    form
-  end
-  
-  # gets the mode a form should be displayed in: one of new, edit, or show
-  def form_mode
-    {:new => :new, :create => :new, :edit => :edit, :update => :edit, :show => :show}[controller.action_name.to_sym]
-  end
-  
-  def form_field(f, method, options = {})
-    if options[:type] == :hidden
-      f.hidden_field(method)
-    elsif options[:type] == :submit
-      f.submit(f.object.class.human_attribute_name("submit_" + (f.object.new_record? ? "new" : "edit")), :class => "submit")
-    else
-      cls = ["form_field", options[:class]].compact.join(" ")
-      content_tag("div", :class => cls, :id => method) do
-        label_str = options[:label] || f.object.class.human_attribute_name(method)
-        label_html = (label_str + (options[:required] ? " #{reqd_sym}" : "")).html_safe
-        label = f.label(method, label_html, :class => "main")
-        
-        # temporarily force show mode if requested
-        old_f_mode = f.mode
-        f.mode = :show if options[:force_show_mode]
-        
-        field = content_tag("div", :class => "form_field_control") do
-          
-          # if this is a partial
-          if options[:partial]
-            render_options = {:partial => options[:partial]}
-            render_options[:locals] = (options[:locals] || {}).merge({:form => f, :method => method})
-            render_options[:collection] = options[:collection] if options[:collection]
-            render(render_options)
-          else
-            case options[:type]
-            when nil, :text
-              f.text_field(method, {:class => "text"}.merge(options.reject{|k,v| ![:size, :maxlength].include?(k)}))
-            when :check_box
-              # if we are in show mode, show 'yes' or 'no' instead of checkbox
-              if f.mode == :show
-                content_tag("strong"){tbool(f.object.send(method))}
-              else
-                f.check_box(method)
-              end
-            when :radio_buttons
-              options[:options].collect{|o| f.radio_button(method, o, :class => "radio") + o}.join("&nbsp;&nbsp;").html_safe
-            when :textarea 
-              f.text_area(method)
-            when :password
-              f.password_field(method, :class => "text")
-            when :country
-              country_select(f.object.class.name.downcase, method, nil)
-            when :select
-              f.select(method, options[:options], :include_blank => options[:blank_text] || true)
-            when :datetime
-              f.datetime_select(method, :ampm => true, :order => [:month, :day, :year], :default => options[:default])
-            when :birthdate
-              f.date_select(method, :start_year => Time.now.year - 110, :end_year => Time.now.year - 18, 
-                :include_blank => true, :order => [:month, :day, :year], :default => nil)
-            when :timezone
-              f.time_zone_select(method)
-            end
-          end
-          
-        end
-        
-        # revert to old form mode
-        f.mode = old_f_mode
-        
-        tip = t(method, :scope => [:activerecord, :tips, f.object.class.model_name.i18n_key], :default => "")
-
-        details_txt = options[:details] || tip
-        details = details_txt.blank? ? "" : content_tag("div", :class => "form_field_details"){simple_format(details_txt)}
-
-        label + field + details + content_tag("div", :class => "space_line"){}
-      end
-    end
-  end
-  
-  def form_submit_button(f = nil, options = {})
-    # wrap in form_buttons if not wrapped
-    return form_buttons{form_submit_button(f, options.merge(:multiple => true))} unless options[:multiple]
-    label = options.delete(:label) || :submit
-    
-    # if label is a symbol, translate it
-    label = t("common.#{label}") if label.is_a?(Symbol)
-    
-    options.merge!(:class => "submit")
-    options.delete(:multiple)
-    f ? f.submit(label, options) : submit_tag(label, options)
-  end
-  
-  def form_buttons(options = {}, &block)
-    buttons = capture{block.call}
-    load_ind = options[:loading_indicator] ? capture{loading_indicator} : ''
-    content_tag("div", :class => "form_buttons"){buttons + load_ind + tag("br")}
-  end
-  
-  # renders the standard 'required' symbol, which is an asterisk
-  def reqd_sym(condition = true)
-    (condition ? '<div class="reqd_sym">*</div>' : '').html_safe
-  end
-  
   # returns the html for an action icon using font awesome and the mappings defined above
   def action_link(action, href, html_options = {})
     # join passed html class (if any) with the default class
-    html_options[:class] = [html_options[:class], "action_link"].compact.join(" ")
+    html_options[:class] = [html_options[:class], "action_link", "action_link_#{action}"].compact.join(" ")
     
     link_to(content_tag(:i, "", :class => "icon-" + FONT_AWESOME_ICON_MAPPINGS[action.to_sym]), href, html_options)
   end
@@ -309,5 +196,29 @@ module ApplicationHelper
   def tmd(*args)
     # strip the outer <p> </p> tags
     BlueCloth.new(t(*args)).to_html[3..-5].html_safe
+  end
+  
+  # makes sure error messages look right
+  def format_validation_error_messages(obj, options = {})
+    messages = obj.errors.map do |attrib, message|
+      # if error message key is in special list, don't show full message
+      ERROR_MESSAGE_KEYS_TO_HIDE[attrib] ? message : obj.errors.full_message(attrib, message)
+    end
+    
+    # join all messages into one string
+    message = messages.join(', ')
+    
+    # add a custom prefix if given
+    if options[:prefix]
+      # remove the inital cap also
+      message = options[:prefix] + ' ' + message.gsub(/^([A-Z])/){$1.downcase}
+    end
+    
+    # add Error: unless in compact mode
+    unless options[:compact]
+      message = t("common.error", :count => obj.errors.size) + ": " + message 
+    end
+    
+    message
   end
 end

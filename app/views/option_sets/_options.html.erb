@@ -1,0 +1,31 @@
+<% unless form.mode == :show %>
+  <div class="add_options">
+    <input type="text" class="add_options_box">
+    <input type="button" class="btn_secondary" value="<%= t('common.add') %>" />
+  </div>
+<% end %>
+
+<div id="options_wrapper">
+</div>
+
+<% unless form.mode == :show %>
+  <div class="edit_option_form" title="<%= t("option_set.edit_option") %>">
+    <div class="in_use_warning"><%= t('option.in_use_warning') %></div>
+    <% configatron.languages.each do |locale| %>
+      <div class="translation">
+        <label for="<%= locale %>"><%= t(:locale_name, :locale => locale) %></label>
+        <input type="text" id="name_<%= locale %>" data-locale="<%= locale %>" maxlength="30">
+      </div>
+    <% end %>
+  </div>
+<% end %>
+
+<%= javascript_doc_ready do %>
+  new ELMO.OptionSetsFormView({
+    edit_link: <%= action_link(:edit, '#').to_json.html_safe %>,
+    remove_link: <%= action_link(:remove, '#').to_json.html_safe %>,
+    optionings: <%= @option_set.optionings.to_json.html_safe %>,
+    suggest_path: '<%= suggest_options_path %>',
+    form_mode: <%= form.mode.to_json.html_safe %>
+  });
+<% end %>

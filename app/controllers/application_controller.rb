@@ -202,7 +202,7 @@ class ApplicationController < ActionController::Base
       
       # get the current user session from authlogic
       if user_session = UserSession.find
-
+        
         # look up the current user from the user session
         # we use a find call to the User class so that we can do eager loading
         @current_user = (user = user_session.user) && User.includes(:assignments).find(user.id)
@@ -212,6 +212,18 @@ class ApplicationController < ActionController::Base
       
         # if a mission was found, notify the settings class
         Setting.mission_was_set(@current_mission) if @current_mission
+      end
+    end
+    
+    # logs out user if not already logged out
+    # might be called /after/ get_user_and_mission due to filter order
+    # so should undo that method's changes
+    def ensure_logged_out
+      if user_session = UserSession.find
+        user_session.destroy
+        @current_user = nil
+        @current_mission = nil
+        Setting.set_defaults
       end
     end
     
@@ -248,6 +260,9 @@ class ApplicationController < ActionController::Base
         return false
       end
       
+      # update the settings using the new mission
+      Setting.copy_to_config(@user_session.user.current_mission)
+      
       return true
     end
     
@@ -256,7 +271,7 @@ class ApplicationController < ActionController::Base
     ##############################################################################
     
     # redirects to the login page
-    # or if this is an ajax request, returns a 401 unauthorized error
+    # or if this is an ajax request, returns a 401 unauthorized error (but this should never happen)
     # in the latter case, the script should catch this error and redirect to the login page itself
     def redirect_to_login
       if ajax_request?
@@ -319,6 +334,9 @@ class ApplicationController < ActionController::Base
     def set_success_and_redirect(obj, options = {})
       # redirect to index by default
       options[:to] ||= :index
+
+      # if we're redirecting to index, save the object id in the flash
+      flash[:modified_obj_id] = obj.id if options[:to] == :index
       
       # if options[:to] is a symbol, we really mean :action => xxx
       options[:to] = {:action => options[:to]} if options[:to].is_a?(Symbol)

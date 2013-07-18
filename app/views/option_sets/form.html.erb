@@ -1,14 +1,8 @@
 <% @title_args = {:name => @option_set.name} %>
 
 <%= flash_and_form_errors(@option_set) %>
-<% if @options.empty? %>
-  <%= t("option_set.options_before_sets", :link => link_to(t("option_set.create_options"), options_path)).html_safe %>
-<% else %>
-  <%= nice_form_for(@option_set) do |f| %>
-    <%= form_field(f, :name, :required => true) %>
-    <%= form_field(f, :options, :partial => "option_setting", :collection => @option_set.all_option_settings(@options)) %>
-    <%= form_field(f, :ordering, :type => :select, :required => true,
-      :options => translate_options(OptionSet::ORDERINGS.map{|o| o[:code]}, [:option_set, :orderings])) %>
-    <%= form_submit_button(f, :label => :save) %> 
-  <% end %>
+<%= nice_form_for(@option_set) do |f| %>
+  <%= form_field(f, :name, :required => true) %>
+  <%= form_field(f, :options, :required => true, :partial => "options") %>
+  <%= form_submit_button(f, :label => :save) %> 
 <% end %>

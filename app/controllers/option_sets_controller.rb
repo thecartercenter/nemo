@@ -47,7 +47,6 @@ class OptionSetsController < ApplicationController
     
     # prepares objects for and renders the form template
     def prepare_and_render_form
-      @options = Option.accessible_by(current_ability).all
       render(:form)
     end
 end

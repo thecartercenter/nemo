@@ -8,12 +8,10 @@ class Mission < ActiveRecord::Base
 
   has_many(:options, :inverse_of => :mission, :dependent => :destroy)
   has_many(:option_sets, :inverse_of => :mission, :dependent => :destroy)
-  has_many(:form_types, :inverse_of => :mission, :dependent => :destroy)
   has_one(:setting, :dependent => :destroy)
   
   before_validation(:create_compact_name)
   before_destroy(:check_associations)
-  after_create(:seed)
   
   validates(:name, :presence => true)
   validates(:name, :format => {:with => /^[a-z][a-z0-9 ]*$/i, :message => :let_num_spc_only},
@@ -41,11 +39,5 @@ class Mission < ActiveRecord::Base
       if !name.blank? && matching = (self.class.where(:compact_name => compact_name).all - [self]).first
         errors.add(:name, :not_unique, :existing => matching.name)
       end
-    end
-    
-    # creates some default seed objects for the mission
-    def seed
-      FormType.create_default(self)
-      OptionSet.create_default(self)
     end
 end
