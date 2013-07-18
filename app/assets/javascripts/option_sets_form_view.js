@@ -188,7 +188,7 @@
       modal: true,
       autoOpen: true,
       width: 500,
-      height: 150 + (ELMO.app.params.mission_locales.length * 40)
+      height: 180 + (ELMO.app.params.mission_locales.length * 40)
     });
 
     // show the in_use_warning if appopriate

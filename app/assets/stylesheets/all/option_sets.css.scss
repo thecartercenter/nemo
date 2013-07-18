@@ -86,28 +86,32 @@ body.option_sets {
   
   div.edit_option_modal {
     
-    div.in_use_warning {
-      display: none;
-      color: $theme_red;
-      margin-bottom: 10px;
-    }
+    div.ui-dialog-content {
+      margin-top: 10px;
     
-    div.translation {
-      height: 40px;
-      
-      &:first-child {
-        margin-top: 10px;
+      div.in_use_warning {
+        display: none;
+        color: $theme_red;
+        margin-bottom: 20px;
       }
+    
+      div.translation {
+        height: 40px;
       
-      label {
-        width: 125px;
-        display: inline-block;
-      }
+        &:first-child {
+          margin-top: 10px;
+        }
       
-      input[type=text] {
-        padding: 3px;
-        display: inline-block;
-        width: 250px;
+        label {
+          width: 125px;
+          display: inline-block;
+        }
+      
+        input[type=text] {
+          padding: 3px;
+          display: inline-block;
+          width: 250px;
+        }
       }
     }
   }
