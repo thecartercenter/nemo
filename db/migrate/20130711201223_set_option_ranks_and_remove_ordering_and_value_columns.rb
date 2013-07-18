@@ -3,25 +3,25 @@ class SetOptionRanksAndRemoveOrderingAndValueColumns < ActiveRecord::Migration
     rank_assignment_succeeded = false
     
     transaction do
-      # for each option set, get the option_settings in the old sorted order and set the new rank parameter according to that order
+      # for each option set, get the optionings in the old sorted order and set the new rank parameter according to that order
       OptionSet.all.each do |os|
         puts "processing option set #{os.id}: #{os.name}"
         
         # purge any option settings with nil for option
-        os.option_settings.each do |o| 
+        os.optionings.each do |o| 
           if o.option.nil?
             puts "purging option setting #{o.id} since it has no associated option"
-            os.option_settings.destroy(o)
+            os.optionings.destroy(o)
           end
         end
         
         # sort the option settings
-        option_settings = os.option_settings.sort do |a,b|
+        optionings = os.optionings.sort do |a,b|
           (a.option.value.to_i <=> b.option.value.to_i) * (os.ordering && os.ordering.match(/desc/) ? -1 : 1)
         end
         
         # assign ranks
-        option_settings.each_with_index do |o, idx|
+        optionings.each_with_index do |o, idx|
           puts "assigning rank #{idx + 1} to option #{o.option.id}: #{o.option.name}"
           o.rank = idx + 1
           o.save!
