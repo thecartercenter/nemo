@@ -584,6 +584,8 @@ en:
       all: "Reset Password"
     questions:
       edit: "Edit Question: %{name}"
+    questionings:
+      edit: "Edit Question: %{name}"
     responses:
       edit: "Edit Response: #%{id}"
       index: "Responses"
