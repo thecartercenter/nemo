@@ -26,7 +26,9 @@
       searchingText: I18n.t('option_set.searching'),
       resultsFormatter: self.format_token_result,
       preventDuplicates: true,
-      tokenValue: 'name'
+      tokenValue: 'name',
+      onResult: function(results){ return self.process_token_results(results); },
+      onAdd: function(item){ return self.token_added(item); }
     });
     
     // hookup form submit
@@ -34,7 +36,7 @@
   };
   
   // returns the html to insert in the token input result list
-  klass.prototype.format_token_result = function(item) {
+  klass.prototype.format_token_result = function(item) { var self = this;
     var details, css = "details";
     // if this is the new placeholder, add a string about that
     if (item.id == null) {
@@ -48,6 +50,18 @@
       details = item.set_names;
     
     return '<li>' + item.name + '<div class="'+ css + '">' + details + '</div></li>';
+  };
+  
+  // strips duplicates from token results
+  // this doesn't work if the result is cached
+  klass.prototype.process_token_results = function(results) { var self = this;
+    return results.filter(function(r){ return !self.option_set.has_option_with_name(r.name); });
+  };
+  
+  // if the added token is a duplicate, delete it!
+  klass.prototype.token_added = function(item) { var self = this;
+    if (self.option_set.has_option_with_name(item.name))
+      $('input[type=text].add_options').tokenInput("remove", {name: item.name});
   };
   
   // renders the option html to the view
@@ -100,11 +114,11 @@
     
     // loop over chosen options
     chosen.forEach(function(opt){
-      // create optioning
-      var oing = new ELMO.Optioning({id: null, removable: true, option: opt});
+      // don't add if it's a duplicate
+      if (self.option_set.has_option_with_name(opt.name)) return false;
       
-      // add to data model
-      self.option_set.add_optioning(oing);
+      // add to data model (returns new optioning)
+      var oing = self.option_set.add_option(opt);
 
       // wrap in li and add to view
       $('<li>').html(self.render_option(oing)).appendTo(ol);
