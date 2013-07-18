@@ -11,6 +11,7 @@ class OptionSet < ActiveRecord::Base
   validate(:name_unique_per_mission)
   
   before_validation(:ensure_ranks)
+  before_validation(:ensure_option_missions)
   before_save(:notify_form_versioning_policy_of_update)
   
   default_scope(order("name"))
@@ -96,5 +97,11 @@ class OptionSet < ActiveRecord::Base
     
     def name_unique_per_mission
       errors.add(:name, :must_be_unique) unless unique_in_mission?(:name)
+    end
+    
+    # ensures mission is set on all options
+    def ensure_option_missions
+      # go in through optionings association in case these are newly created options via nested attribs
+      optionings.each{|oing| oing.option.mission_id ||= mission_id}
     end
 end

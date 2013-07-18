@@ -166,6 +166,20 @@ class OptionSetTest < ActiveSupport::TestCase
     assert_equal(I18n.t('activerecord.errors.models.option.names_cant_be_all_blank'), os.errors.messages[:'optionings.option.base'].join)
   end
   
+  test "newly added options should have mission id set" do
+    yn = FactoryGirl.create(:option_set)
+    
+    # update option set, adding new option without mission id
+    yn.update_attributes!(:optionings_attributes => [
+      {:id => yn.optionings.last.id, :rank => 1, :option_id => yn.options.last.id},
+      {:id => yn.optionings.first.id, :rank => 2, :option_id => yn.options.first.id},
+      {:rank => 3, :option_attributes => {:name_en => "foo", :name_fr => "bar"}}
+    ])
+    
+    # ensure new option has mission set
+    yn.reload
+    assert_not_nil(yn.options.last.mission_id)
+  end
   
   private
     def create_option_set(options)
