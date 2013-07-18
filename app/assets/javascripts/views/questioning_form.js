@@ -9,7 +9,6 @@
     var type_box = $('form.questioning_form .form_field#qtype_name .control select');
     (function(_this){ type_box.change(function(e){_this.question_type_changed(e)}); })(this);
     type_box.trigger("change");
-    console.log('new questioning')
   }
   
   klass.prototype.question_type_changed = function(event) {

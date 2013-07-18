@@ -48,5 +48,4 @@
     return !!self.options_by_name[name];
   };
   
-  
 })(ELMO.Models);
