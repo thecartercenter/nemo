@@ -105,7 +105,13 @@
   // builds the inner div tag for an option
   klass.prototype.render_option = function(optioning) { var self = this;
     // make inner option tag
-    var inner = $('<div>').attr('class', 'inner').append(optioning.option.name);
+    var inner = $('<div>').attr('class', 'inner')
+    
+    // add sort icon
+    inner.append($('<i>').attr('class', 'icon-sort'));
+    
+    // add option name
+    inner.append(optioning.option.name);
     
     // add edit/remove unless in show mode
     if (self.params.form_mode != 'show') {
