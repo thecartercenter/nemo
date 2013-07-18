@@ -45,7 +45,6 @@
   
   // quickly checks if this set currently has an option with the given name
   klass.prototype.has_option_with_name = function(name) { var self = this;
-    console.log(self.options_by_name);
     return !!self.options_by_name[name];
   };
   

@@ -31,7 +31,8 @@
       preventDuplicates: true,
       tokenValue: 'name',
       onResult: function(results){ return self.process_token_results(results); },
-      onAdd: function(item){ return self.token_added(item); }
+      onAdd: function(item){ return self.token_added(item); },
+      onEnter: function(){ self.add_options(); }
     });
     
     // hookup form submit
