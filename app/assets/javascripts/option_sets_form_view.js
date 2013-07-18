@@ -12,14 +12,14 @@
     self.render_options();
     
     // hookup add button
-    $('input[type=button].add_options').on('click', function() { self.add_options(); });
+    $('div.add_options input[type=button]').on('click', function() { self.add_options(); });
     
-    // hookup setup edit/remove links
+    // hookup setup edit/remove links (deferred)
     $('div#options_wrapper').on('click', 'a.action_link_edit', function(){ self.edit_option($(this)); return false; });
     $('div#options_wrapper').on('click', 'a.action_link_remove', function(){ self.remove_option($(this)); return false; });
     
     // setup the tokenInput control
-    $('input[type=text].add_options').tokenInput(params.suggest_path, {
+    $('input.add_options_box').tokenInput(params.suggest_path, {
       theme: 'elmo',
       hintText: I18n.t('option_set.type_to_add_new'),
       noResultsText: I18n.t('option_set.none_found'),
@@ -61,7 +61,7 @@
   // if the added token is a duplicate, delete it!
   klass.prototype.token_added = function(item) { var self = this;
     if (self.option_set.has_option_with_name(item.name))
-      $('input[type=text].add_options').tokenInput("remove", {name: item.name});
+      $('input.add_options_box').tokenInput("remove", {name: item.name});
   };
   
   // renders the option html to the view
@@ -77,13 +77,15 @@
     // append to wrapper div
     ol.appendTo('div#options_wrapper');
     
-    // setup the sortable plugin
-    ol.nestedSortable({
-      handle: 'div',
-      items: 'li',
-      toleranceElement: '> div',
-      maxLevels: 1
-    });
+    
+    // setup the sortable plugin unless in show mode
+    if (self.params.form_mode != 'show')
+      ol.nestedSortable({
+        handle: 'div',
+        items: 'li',
+        toleranceElement: '> div',
+        maxLevels: 1
+      });
   };
   
   // builds the inner div tag for an option
@@ -91,10 +93,12 @@
     // make inner option tag
     var inner = $('<div>').attr('class', 'inner').append(optioning.option.name);
     
-    // add edit/remove
-    var links = $('<div>').attr('class', 'links').append(self.params.edit_link);
-    if (optioning.removable) links.append(self.params.remove_link);
-    links.appendTo(inner);
+    // add edit/remove unless in show mode
+    if (self.params.form_mode != 'show') {
+      var links = $('<div>').attr('class', 'links').append(self.params.edit_link);
+      if (optioning.removable) links.append(self.params.remove_link);
+      links.appendTo(inner);
+    }
     
     // add locales
     inner.append($('<em>').html(optioning.locale_str()));
@@ -109,7 +113,7 @@
   
   // adds options from the token input control to the view and data model
   klass.prototype.add_options = function() { var self = this;
-    var chosen = $('input[type=text].add_options').tokenInput('get');
+    var chosen = $('input.add_options_box').tokenInput('get');
     var ol = $('div#options_wrapper > ol');
     
     // loop over chosen options
@@ -125,7 +129,7 @@
     });
     
     // clear out the add box
-    $('input[type=text].add_options').tokenInput('clear');
+    $('input.add_options_box').tokenInput('clear');
   };
   
   // removes an option from the view

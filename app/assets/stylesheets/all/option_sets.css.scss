@@ -14,14 +14,18 @@ body.option_sets {
       width: 500px;
     }
     
-    input[type=text].add_options {
-      width: 350px;
-    }
+    div.add_options {
+      margin-bottom: 20px;
+      
+      input[type=text] {
+        width: 350px;
+      }
 
-    input[type=button].add_options {
-      vertical-align: top;
-      margin-left: 5px;
-      display: inline-block;
+      input[type=button] {
+        vertical-align: top;
+        margin-left: 5px;
+        display: inline-block;
+      }
     }
   }
   
@@ -33,6 +37,7 @@ body.option_sets {
 
   #options_wrapper ol {
     padding-left: 0;
+    margin: 0 20px 0 0;
     
     li {
       display: block;
