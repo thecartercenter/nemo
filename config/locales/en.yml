@@ -37,6 +37,7 @@ en:
     next: "Next"
     _no: "No" # using 'no' by itself as a key causes an error in i18n-js
     none: "None"
+    ok: "OK"
     or: "or"
     previous: "Previous"
     print: "Print"
@@ -60,6 +61,7 @@ en:
     thanks_excl: "Thank You!"
     this: "This"
     total: "Total"
+    try_again: "Try Again"
     updated: "Updated"
     view: "View"
     _yes: "Yes" # using 'yes' by itself as a key causes an error in i18n-js
@@ -275,7 +277,7 @@ en:
         phone2: "Alternate Phone"
         pref_lang: "Preferred Language"
       user_batch:
-        users: "Users"
+        batch: "User Attributes"
     tips:
       form_type:
         name: "A short name for this Form Type. Maximum 16 characters."
@@ -341,12 +343,12 @@ en:
         password_confirmation: "Enter the new password again."
         pref_lang: "The language in which you would like to use the system."
       user_batch:
-        users: |-
-          Enter the user names, email addresses, and phone numbers (WITH country codes), one per line, separated by commas or tabs. For example:
+        batch: |-
+          Enter names, email addresses, and phone numbers (WITH country codes), one per line, separated by commas or tabs. For example:
             
           Alice Merrywinkle, alice@winkle.org, +20112313411
           Chung Li, cli@gmail.com
-          Forgo Niambot, , +203300303
+          Forgo Niambot, +203300303, +2083748374
           Stewbuilder Dennis, chow@yahoo.co.uk, +20923187493
     errors:
       models:
@@ -948,6 +950,8 @@ en:
     must_login: "You must login to access that page."
   
   user_batch:
+    bad_tokens: "Could not understand these pieces: %{tokens}"
+    error: "There was an error creating the users. See below."
     success: "Users created successfully."
     
   user:

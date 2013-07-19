@@ -177,9 +177,49 @@ form.user_form input#login_suggest_button { width: 75px; }
 form.user_form textarea#user_notes { width: 240px; height: 100px; }
 
 /* user batches */
-.user_batches_new #user_batch_users { width: 500px; height: 200px; margin-right: 20px; }
-.user_batches_new div.form_field_control { width: 525px !important; }
-.user_batches_new div.form_field label { width: 75px; }
+form.user_batch_form {
+  /* regular form */
+  #user_batch_batch { 
+    width: 500px; 
+    height: 200px; 
+    margin-right: 20px; 
+  }
+  
+  div.form_field_control { 
+    width: 525px !important; 
+  }
+  
+  /* special form */
+  div.batch_line_with_info {
+    padding: 10px 5px;
+    border-top: 1px solid #ddd;
+    width: 900px;
+    
+    input[type=text] {
+      width: 400px;
+    }
+    
+    div.info {
+      display: inline-block;
+      margin-left: 5px;
+      
+      i {
+        margin: 0 5px;
+        width: 10px;
+        display: inline-block;
+        text-align: center;
+      }
+    }
+    
+    &.line_ok div.info {
+      color: #9dc400; 
+    }
+
+    &.line_error div.info {
+      color: #d02000; 
+    }
+  }
+}
 
 /* report index */
 .report_reports_index .title_col { min-width: 200px; }

@@ -61,8 +61,9 @@ class Setting < ActiveRecord::Base
     # build hash
     hsh = Hash[*KEYS_TO_COPY.collect{|k| [k.to_sym, send(k)]}.flatten]
     
-    # split languages into array
     hsh[:languages] = lang_codes
+    
+    hsh[:preferred_language] = hsh[:languages].first
     
     # get class based on sms adapter setting; default to nil if setting is invalid
     hsh[:outgoing_sms_adapter] = begin
