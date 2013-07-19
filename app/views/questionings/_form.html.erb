@@ -19,7 +19,10 @@
       <%= form_field(f2, :code, :required => true, :maxlength => 20) %>
       <%= form_field(f2, :qtype_name, :type => :select, :required => true, 
         :options => @question_types.map{|qt| [t(qt.name, :scope => :question_type), qt.name]}) %>
-      <%= form_field(f2, :option_set_id, :type => :select, :options => sel_opts_from_objs(@option_sets)) %>
+      
+      <%# these is a partial because they contain more complex controls %>
+      <%# the partial paths are fully qualified because THIS partial might be included in several different contexts %>
+      <%= form_field(f2, :option_set_id, :partial => 'questions/option_set_select') %>      
       <%= form_field(f2, :minimum, :partial => "questions/min_max_condition") %>
       <%= form_field(f2, :maximum, :partial => "questions/min_max_condition") %>
     <% end %>
@@ -34,8 +37,17 @@
   <%= form_field(f, :hidden, :type => :check_box) %>
 
   <%= form_submit_button(f, :label => :save) %>
+
+  <%# new option set modal %>
+  <% if f.mode != :show && can?(:create, OptionSet) %>
+    <div class="new_option_set_form_wrapper" title="<%= t("option_set.create_link") %>">
+    </div>
+  <% end %>
+
 <% end %>
 
 <%= javascript_doc_ready do %>
-  new ELMO.Views.QuestioningForm();
+  new ELMO.Views.QuestioningForm({
+    new_option_set_path: <%= new_option_set_path.to_json.html_safe %>
+  });
 <% end %>

@@ -93,24 +93,44 @@ div.dialog_bg * { opacity: 1; filter: alpha(opacity=100); }
 #login_instructions #instructions p { margin-top: 0; }
   
 /* flash and error messages */
-div.success, div.error { 
-  position: absolute; 
-  left: 27%; 
-  top: 106px; 
-  padding: 3px; 
-  color: white; 
-  font-weight: bold; 
-  width: 600px; 
-  margin-bottom: 10px; 
-  text-align: center;
+
+div.status_messages.no_ajax {
+  div.success, div.error { 
+    position: absolute; 
+    left: 27%; 
+    top: 106px; 
+    padding: 3px; 
+    color: white; 
+    font-weight: bold; 
+    width: 600px; 
+    margin-bottom: 10px; 
+    text-align: center;
+  }
+  
+  div.success { 
+    background-color: #9dc400; 
+  }
+
+  div.error { 
+    background-color: #d02000; 
+  }
 }
 
-div.success { 
-  background-color: #9dc400; 
-}
+div.status_messages.ajax {
+  div.success, div.error { 
+    padding: 3px; 
+    color: white; 
+    font-weight: bold; 
+    margin-bottom: 10px; 
+  }
+  
+  div.success { 
+    background-color: #9dc400; 
+  }
 
-div.error { 
-  background-color: #d02000; 
+  div.error { 
+    background-color: #d02000; 
+  }
 }
 
 /* hide printable things */

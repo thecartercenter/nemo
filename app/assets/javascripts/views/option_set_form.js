@@ -6,7 +6,7 @@
   // constructor
   ns.OptionSetForm = klass = function(params) { var self = this;
     self.params = params;
-    self.option_set = new ELMO.Models.OptionSet(params.optionings);
+    self.option_set = new ELMO.Models.OptionSet(params.option_set);
     
     // render the options
     self.render_options();
@@ -36,13 +36,14 @@
     });
     
     // hookup form submit
-    $('form.option_set_form').on('submit', function(){ self.form_submitted(); })
+    $('form.option_set_form').on('submit', function(){ return self.form_submitted(); })
     
-    // hookup leave page warning
-    window.onbeforeunload = function(){ 
-      if (self.dirty)
-        return I18n.t('option_set.leave_page_warning');
-    }
+    // hookup leave page warning unless ajax request
+    if (!self.params.ajax_mode)
+      window.onbeforeunload = function(){ 
+        if (self.dirty)
+          return I18n.t('option_set.leave_page_warning');
+      };
   };
   
   // returns the html to insert in the token input result list
@@ -219,6 +220,9 @@
   
   // write the data model to the form as hidden tags so that the data will be included in the submission
   klass.prototype.form_submitted = function() { var self = this;
+    // save the name in the data model
+    self.option_set.name = $('#option_set_name').val();
+    
     var form = $('form.option_set_form');
     self.option_set.optionings.forEach(function(optioning, idx){
       if (optioning.id)
@@ -239,12 +243,47 @@
     
     // cancel the dirty flag so no warning
     self.dirty = false;
+    
+    // if the form is in ajax mode, submit via ajax
+    if (self.params.ajax_mode) {
+      $.ajax({
+        url: $('form.option_set_form').attr('action'),
+        method: 'POST',
+        data: $('form.option_set_form').serialize(),
+        success: function(data, status, jqxhr) {
+          // if content type was json, that means success
+          if (jqxhr.getResponseHeader('Content-Type').match('application/json')) {
+          
+            // the data holds the new option set's ID
+            self.option_set.id = parseInt(data);
+          
+            // trigger the custom event
+            $('form.option_set_form').trigger('option_set_form_submit_success', [self.option_set]);
+
+          // otherwise we got an error,
+          // so replace the div with the new partial (this will instantiate a new instance of this class)
+          } else {
+            $('div.option_set_form').replaceWith(jqxhr.responseText);
+          }
+        },
+        error: function(jqxhr) {
+          // if we get an HTTP error, it's some server thing so just display a generic message
+          $('div.option_set_form').replaceWith("Server Error");
+        }
+      });
+
+      // return false so the form won't submit normally
+      return false;
+
+    } else {
+      // if not in ajax mode, just return true and let form submit normally
+      return true;
+    }
   };
   
   // adds a hidden form field with the given name and value
   klass.prototype.add_form_field = function(name, value) { var self = this;
     $('form.option_set_form').append($('<input>').attr('type', 'hidden').attr('name', name).attr('value', value));
   };
-  
   
 })(ELMO.Views);

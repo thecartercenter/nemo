@@ -6,7 +6,9 @@
 #login_instructions #instructions { page-break-after: always; }
 
 /* flash and error messages */
-div.success, div.failure { display: none; }
+div.status_messages {
+  div.success, div.failure { display: none; }
+}
 
 /* hide screen-only things */
 .screen { display: none; }

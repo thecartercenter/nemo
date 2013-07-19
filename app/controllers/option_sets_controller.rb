@@ -8,15 +8,20 @@ class OptionSetsController < ApplicationController
   end
   
   def new
-    prepare_and_render_form
+    # we only need the partial if it's an ajax request
+    if ajax_request?
+      render(:partial => 'form')
+    else
+      render(:form)
+    end
   end
   
   def edit
-    prepare_and_render_form
+    render(:form)
   end
 
   def show
-    prepare_and_render_form
+    render(:form)
   end
 
   def create
@@ -38,15 +43,22 @@ class OptionSetsController < ApplicationController
     def create_or_update
       begin
         @option_set.save!
-        set_success_and_redirect(@option_set)
+        
+        # if this is an ajax request, we just render the option set's id
+        if ajax_request?
+          render(:json => @option_set.id)
+        else
+          set_success_and_redirect(@option_set)
+        end
       rescue ActiveRecord::RecordInvalid, DeletionError
         @option_set.errors.add(:base, $!.to_s) if $!.is_a?(DeletionError)
-        prepare_and_render_form
+        
+        # if this is an ajax request, we just render the form partial
+        if ajax_request?
+          render(:partial => 'form')
+        else
+          render(:form)
+        end
       end
-    end
-    
-    # prepares objects for and renders the form template
-    def prepare_and_render_form
-      render(:form)
     end
 end

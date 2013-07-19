@@ -1,0 +1,8 @@
+<div class="option_set_form">
+  <%= flash_and_form_errors(@option_set) %>
+  <%= nice_form_for(@option_set) do |f| %>
+    <%= form_field(f, :name, :required => true) %>
+    <%= form_field(f, :options, :required => true, :partial => "options") %>
+    <%= form_submit_button(f, :label => :save) unless ajax_request? %> 
+  <% end %>
+</div>

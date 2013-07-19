@@ -4,14 +4,19 @@
 (function(ns, klass) {
   
   // constructor
-  ns.QuestioningForm = klass = function() {
+  ns.QuestioningForm = klass = function(params) { var self = this;
+    self.params = params;
+    
     // hookup type change event and trigger immediately
     var type_box = $('form.questioning_form .form_field#qtype_name .control select');
     (function(_this){ type_box.change(function(e){_this.question_type_changed(e)}); })(this);
     type_box.trigger("change");
+    
+    // hookup add option set link
+    $('form.questioning_form a.create_option_set').on('click', function(){ self.show_option_set_form(); return false; });
   }
   
-  klass.prototype.question_type_changed = function(event) {
+  klass.prototype.question_type_changed = function(event) { var self = this;
     var selected_type = $(event.target).find("option:selected").val();
     
     // show/hide option set
@@ -35,4 +40,46 @@
       $(".form_field#maximum input[id$='_maxstrictly']").prop("checked", false);
     }
   }
+  
+  // shows the create option set form and sets up a callback to receive the result
+  klass.prototype.show_option_set_form = function() { var self = this;
+    // show the loading indicator
+    $('form.questioning_form #option_set_id .loading_indicator').show();
+    
+    $("div.new_option_set_form_wrapper").load(self.params.new_option_set_path, function(){
+      
+      // register a callback for when the form submission is done
+      $(document).on('option_set_form_submit_success', 'form.option_set_form', function(e, option_set){ 
+        self.option_set_created(option_set);
+      });
+      
+      // create the dialog
+      $("div.new_option_set_form_wrapper").dialog({
+        dialogClass: "new_option_set_modal",
+        buttons: [
+          {text: I18n.t('common.cancel'), click: function() { $(this).dialog('close'); }},
+          {text: I18n.t('common.create'), click: function() { $('form.option_set_form').submit(); }}
+        ],
+        modal: true,
+        autoOpen: true,
+        width: 935,
+        height: 650
+      });
+      
+    });
+  }
+  
+  // called when the option set is created so we can add it to the dropdown
+  klass.prototype.option_set_created = function(option_set) { var self = this;
+    // close the dialog
+    $("div.new_option_set_form_wrapper").dialog('close');
+    
+    // add the new option set to the list and select it
+    $('form.questioning_form .form_field#option_set_id select').append($('<option>', {value: option_set.id}).text(option_set.name))
+      .val(option_set.id);
+      
+    // flash the option set row
+    $('form.questioning_form .form_field#option_set_id').effect("highlight", {}, 1000);
+  };
+  
 }(ELMO.Views));

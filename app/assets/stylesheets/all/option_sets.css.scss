@@ -2,43 +2,36 @@
 $theme_red: #d02000;
 $theme_green: #9dc400;
 
-body.option_sets {
-
-  form.option_set_form {
-    /* narrower labels and wider controls */
-    label.main {
-      width: 75px;
-    }
-    
-    div.control {
-      width: 500px;
-    }
-    
-    div.add_options {
-      margin-bottom: 20px;
-      
-      input[type=text] {
-        width: 350px;
-      }
-
-      input[type=button] {
-        vertical-align: top;
-        margin-left: 5px;
-        display: inline-block;
-      }
-    }
+form.option_set_form {
+  /* narrower labels and wider controls */
+  label.main {
+    width: 75px;
   }
   
+  div.control {
+    width: 500px;
+  }
+  
+  div.add_options {
+    margin-bottom: 20px;
+    
+    input[type=text] {
+      width: 350px;
+    }
+
+    input[type=button] {
+      vertical-align: top;
+      margin-left: 5px;
+      display: inline-block;
+    }
+  }
+
   /* FOR THE SORTABLE/DRAGGABLE LIST */
-  
-  body.dragging, body.dragging * {
-    cursor: move !important;
-  }
 
   #options_wrapper ol {
     padding-left: 0;
     margin: 0 20px 0 0;
-    
+  
     li {
       display: block;
       margin: 5px 0;
@@ -50,17 +43,17 @@ body.option_sets {
       border: 1px solid #CCC;
       background: #eee;
       cursor: default;
-      
+    
       &:last-child {
         margin-bottom: 0;
       }
-      
+    
       div {
         /* icon */
         i.icon-sort {
           margin-right: 5px;
         }
-        
+      
         /* locales */
         em {
           display: block;
@@ -72,7 +65,7 @@ body.option_sets {
           margin-left: 10px;
           color: $theme_green;
         }
-        
+      
         /* edit/remove links */
         div.links {
           float: right;
@@ -83,40 +76,42 @@ body.option_sets {
     }
   }
   
-  /* EDIT OPTION MODAL WINDOW */
-  
+  /* this becomes the modal, so hide it initially */
   div.edit_option_form {
     display: none;
   }
+}
+
+/* EDIT OPTION MODAL WINDOW 
+   (not inside the form since it's appended to the body) */
+
+div.edit_option_modal {
+
+  div.ui-dialog-content {
+    margin-top: 10px;
+
+    div.in_use_warning {
+      display: none;
+      color: $theme_red;
+      margin-bottom: 20px;
+    }
+
+    div.translation {
+      height: 40px;
   
-  div.edit_option_modal {
-    
-    div.ui-dialog-content {
-      margin-top: 10px;
-    
-      div.in_use_warning {
-        display: none;
-        color: $theme_red;
-        margin-bottom: 20px;
+      &:first-child {
+        margin-top: 10px;
       }
-    
-      div.translation {
-        height: 40px;
-      
-        &:first-child {
-          margin-top: 10px;
-        }
-      
-        label {
-          width: 125px;
-          display: inline-block;
-        }
-      
-        input[type=text] {
-          padding: 3px;
-          display: inline-block;
-          width: 250px;
-        }
+  
+      label {
+        width: 125px;
+        display: inline-block;
+      }
+  
+      input[type=text] {
+        padding: 3px;
+        display: inline-block;
+        width: 250px;
       }
     }
   }
