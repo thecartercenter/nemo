@@ -123,17 +123,24 @@ class Response < ActiveRecord::Base
   
   # finds all responses with duplicate hashes
   def find_duplicates
-    possible_duplicates = Response.where("signature = '" + signature + "' AND id != " + id.to_s + " ")
+    responses = Response.arel_table
+    
+    # don't include responses that have no signatures
+    if signature
+      possible_duplicates = Response.where(responses["signature"].eq(signature).and(responses["id"].not_eq(id)))
+    end
+    
     return possible_duplicates
   end
   
   # hashes all the answer values of the response
   def hash_answers
     answers_digest = ""
-    all_answers.each do |a|
+    answers.each do |a|
       answer_value = a.value || a.option_id || a.time_value || a.date_value || a.datetime_value
       answers_digest = answers_digest + answer_value.to_s
     end
+    
     signature = Digest::SHA1.hexdigest(answers_digest)
     self.signature = signature
   end

@@ -78,8 +78,8 @@ class ActiveSupport::TestCase
     @questions[params[:code].to_sym] = q
 
     # create questionings for each form
-    params[:forms].each{ |f| f.questionings << q.questionings.new }
-  end
+   params[:forms].each{|f| q.questionings.create(:form => f)}
+ end
 
   def create_response(params)
     ans = params.delete(:answers) || {}
