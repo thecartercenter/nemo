@@ -13,7 +13,7 @@ require "capistrano/ext/multistage"
 
 set :application, "elmo"
 set :user, "cceom"
-set :repository,  "https://code.google.com/p/elmo"
+set :repository, "ssh://git@github.com/thecartercenter/elmo.git"
 set(:deploy_to) {"/home/cceom/webapps/rails2/#{application}_#{stage}"}
 set :deploy_via, :remote_cache
 set :use_sudo, false
