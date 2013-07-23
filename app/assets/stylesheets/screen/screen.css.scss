@@ -94,9 +94,9 @@ div.dialog_bg * { opacity: 1; filter: alpha(opacity=100); }
   
 /* flash and error messages */
 div.success, div.error { 
-  position: relative; 
-  left: 25%; 
-  top: -55px; 
+  position: absolute; 
+  left: 27%; 
+  top: 106px; 
   padding: 3px; 
   color: white; 
   font-weight: bold; 
