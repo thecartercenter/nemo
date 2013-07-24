@@ -9,7 +9,10 @@
   <%= form_field(form, :code, :required => true, :maxlength => 20) %>
   <%= form_field(form, :qtype_name, :type => :select, :required => true, 
     :options => @question_types.map{|qt| [t(qt.name, :scope => :question_type), qt.name]}) %>
-  <%= form_field(form, :option_set_id, :type => :select, :options => sel_opts_from_objs(@option_sets)) %>
+
+  <%# this is a partial because it contains more complex controls %>
+  <%# the partial path is fully qualified because THIS partial might be included in several different contexts %>
+  <%= form_field(form, :option_set_id, :partial => 'questions/option_set_select') %>      
 
   <div class="minmax">
     <%= form_field(form, :minimum, :partial => "questions/min_max_condition") %>
@@ -19,8 +22,16 @@
   <% (configatron.languages).each_with_index do |lang, rank| %>
     <%= render("questions/title_and_hint", :lang => lang, :form => form, :rank => rank) %>
   <% end %>
+
+  <%# new option set modal %>
+  <% if form.mode != :show && can?(:create, OptionSet) %>
+    <div class="new_option_set_form_wrapper" title="<%= t("option_set.create_link") %>">
+    </div>
+  <% end %>
 </div>
 
 <%= javascript_doc_ready do %>
-  new ELMO.Question();
+  new ELMO.Views.QuestionForm({
+    new_option_set_path: <%= new_option_set_path.to_json.html_safe %>
+  });
 <% end %>

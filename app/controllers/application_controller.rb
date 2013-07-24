@@ -47,7 +47,7 @@ class ApplicationController < ActionController::Base
   attr_reader :current_user, :current_mission
   
   # make these methods visible in the view
-  helper_method :current_user, :current_mission
+  helper_method :current_user, :current_mission, :ajax_request?
   
   # hackish way of getting the route key identical to what would be returned by model_name.route_key on a model
   def route_key

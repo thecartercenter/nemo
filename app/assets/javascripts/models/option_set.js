@@ -1,10 +1,13 @@
-// ELMO.OptionSet
+// ELMO.Models.OptionSet
 //
 // Client side option set model
 (function(ns, klass) {
-  
+
   // constructor
-  ns.OptionSet = klass = function(optionings) { var self = this;
+  ns.OptionSet = klass = function(attribs) { var self = this;
+    // copy attribs
+    for (var key in attribs) self[key] = attribs[key];
+    
     // create an array for removed optionings
     self.removed_optionings = [];
     
@@ -12,13 +15,14 @@
     self.options_by_name = {};
 
     // create model objects for each optioning hash
-    self.optionings = []
-    optionings.forEach(function(optioning){ self.add_optioning(new ELMO.Optioning(optioning)); });
+    var optioning_attribs = self.optionings;
+    self.optionings = [];
+    optioning_attribs.forEach(function(optioning){ self.add_optioning(new ELMO.Models.Optioning(optioning)); });
   };
   
   // adds a newly created option to the set (also creates optioning); returns the new optioning
   klass.prototype.add_option = function(option_params) { var self = this;
-    var oing = new ELMO.Optioning({id: null, removable: true, option: option_params});
+    var oing = new ELMO.Models.Optioning({id: null, removable: true, option: option_params});
     self.add_optioning(oing);
     return oing;
   };
@@ -48,5 +52,4 @@
     return !!self.options_by_name[name];
   };
   
-  
-})(ELMO);
+})(ELMO.Models);

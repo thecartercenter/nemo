@@ -60,7 +60,7 @@ class OptionSet < ActiveRecord::Base
   end
   
   def as_json(options = {})
-    Hash[*%w(id name).collect{|k| [k, self.send(k)]}.flatten]
+    Hash[*%w(id name optionings).collect{|k| [k, self.send(k)]}.flatten(1)]
   end
   
   # gets all forms to which this option set is linked (through questionings)
