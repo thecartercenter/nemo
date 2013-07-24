@@ -14,8 +14,15 @@ module QuestionFormable
   end
   
   def setup_qing_form_support_objs
-    @option_sets = OptionSet.accessible_by(current_ability).all
-    @question_types = QuestionType.all
+    setup_question_form_support_objs
     @condition = @questioning.condition || @questioning.build_condition
+    
+    # if the question instance var has not yet been set, get it from the questioning
+    @question ||= @questioning.question
+  end
+  
+  def setup_question_form_support_objs
+    @question_types = QuestionType.all
+    @option_sets = OptionSet.accessible_by(current_ability).all
   end
 end

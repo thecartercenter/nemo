@@ -585,7 +585,15 @@ en:
     password_resets: 
       all: "Reset Password"
     questions:
-      edit: "Edit Question: %{name}"
+      edit: "Edit Question: %{code}"
+      index: "Questions"
+      new: "New Question"
+      show: "Question: %{code}"
+    questionings:
+      edit: "Edit Question: %{code}"
+      index: "Questions"
+      new: "New Question"
+      show: "Question: %{code}"
     responses:
       edit: "Edit Response: #%{id}"
       index: "Responses"
@@ -750,7 +758,7 @@ en:
 
   question:
     answer_only_caps: "ANSWER ONLY IF"
-    appears_elsewhere: "Note: This question also appears on the following forms: %{forms}. Any changes you make below will also be reflected on those forms."
+    appears_elsewhere: "Note: This question appears on the following forms: %{forms}. Any changes you make below will be reflected on those forms."
     create_link: "Create Question"
     maxmin:
       gt: "greater than"

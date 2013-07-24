@@ -18,6 +18,7 @@ ELMO::Application.routes.draw do
     resources(:options, :only => [:create, :update]){collection{get 'suggest'}}
     resources(:option_sets)
     resources(:password_resets)
+    resources(:questions)
     resources(:questionings)
     resources(:responses)
     resources(:settings)

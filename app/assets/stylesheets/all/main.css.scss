@@ -117,15 +117,18 @@ form.search_form #search_examples { margin-top: 2px; color: #666; }
 .responses_edit label.main, .responses_new label.main, .responses_show label.main { width: 300px !important; }
 a.edit_location_link img { vertical-align: bottom; }
 
-/* question show/edit */
+/* question fields */
+div.question_fields .control { width: 475px !important; }
+div.question_fields .form_field.name_hint textarea { width: 400px; height: 30px; }
+div.question_fields div.minmax input[type=text] { width: 100px; } 
+
+/* questioning fields */
 form.questioning_form .control { width: 475px !important; }
-form.questioning_form .form_field.name_hint textarea { width: 400px; height: 30px; }
 form.questioning_form .form_field#condition select { min-width: 125px; }
 form.questioning_form .form_field#condition input { width: 120px; }
 form.questioning_form .form_field#condition div.row { margin-bottom: 4px; }
 form.questioning_form .form_field#condition div.row > div { display: inline-block; }
 form.questioning_form .form_field#condition div.row > div:first-child { width: 100px; }
-form.questioning_form input#questioning_question_minimum, form.questioning_form input#questioning_question_maximum { width: 100px; } 
 
 /* question index/choose */
 .questions_choose .name_col { width: 400px; }

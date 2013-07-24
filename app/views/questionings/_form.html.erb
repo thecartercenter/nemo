@@ -3,30 +3,9 @@
 <%= nice_form_for(@questioning) do |f| %>
   <%= f.hidden_field(:form_id) %>
   
-  <% @question_pubd = f.mode == :edit && @questioning.question.published? %>
-  
-  <% if f.mode == :edit && !(other_forms = @questioning.other_forms).empty? %>
-    <div class="tip important">
-      <%= t("question.appears_elsewhere", :forms => other_forms.map{|f| f.name}.join(", ")) %>
-      <%= t("question.other_forms_published") if @question_pubd %>
-    </div>
-  <% end %>
-
-  <%= f.fields_for(:question) do |f2| %>
-    <% f2.mode = form_mode %>
-    
-    <% unless @question_pubd %>
-      <%= form_field(f2, :code, :required => true, :maxlength => 20) %>
-      <%= form_field(f2, :qtype_name, :type => :select, :required => true, 
-        :options => @question_types.map{|qt| [t(qt.name, :scope => :question_type), qt.name]}) %>
-      <%= form_field(f2, :option_set_id, :type => :select, :options => sel_opts_from_objs(@option_sets)) %>
-      <%= form_field(f2, :minimum, :partial => "questions/min_max_condition") %>
-      <%= form_field(f2, :maximum, :partial => "questions/min_max_condition") %>
-    <% end %>
-
-    <% (configatron.languages).each_with_index do |lang, rank| %>
-      <%= render("questions/title_and_hint", :lang => lang, :f => f2, :rank => rank) %>
-    <% end %>
+  <%= f.fields_for(:question) do |question_form| %>
+    <% question_form.mode = form_mode %>
+    <%= render('questions/fields', :form => question_form) %>
   <% end %>
   
   <%= form_field(f, :condition, :partial => "conditions/form") %>
