@@ -23,6 +23,8 @@
     <%= render("questions/title_and_hint", :lang => lang, :form => form, :rank => rank) %>
   <% end %>
 
+  <%= form_field(form, :key, :type => :check_box) %>
+  
   <%# new option set modal %>
   <% if form.mode != :show && can?(:create, OptionSet) %>
     <div class="new_option_set_form_wrapper" title="<%= t("option_set.create_link") %>">

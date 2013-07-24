@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130718122835) do
+ActiveRecord::Schema.define(:version => 20130724212350) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -183,6 +183,7 @@ ActiveRecord::Schema.define(:version => 20130718122835) do
     t.text     "_hint"
     t.text     "name_translations"
     t.text     "hint_translations"
+    t.boolean  "key",               :default => false
   end
 
   add_index "questions", ["mission_id"], :name => "index_questions_on_mission_id"
