@@ -92,6 +92,9 @@ class Ability
         
           # can do sms tests
           can :create, Sms::Test
+
+          # can view the dashboard (individual dashboard components are checked separately)
+          can :read, Dashboard
         end
       
         # coordinator abilities

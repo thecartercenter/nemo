@@ -1,0 +1,27 @@
+/* STYLES FOR DASHBOARD */
+
+body.dashboard {
+  /* hide most template components */
+  div#nav, div#userinfo, div#footer {
+    display: none;
+  }
+
+  /* reduce margin on title and content */
+  div#title {
+    margin-left: 10px;
+  }
+
+  div#content {
+    margin-left: 0;
+  }
+
+  /* close link */
+  a.close_dashboard {
+    position: absolute;
+    top: 3px;
+    right: 10px;
+    text-decoration: none;
+    font-size: 18px;
+    color: white;
+  }
+}

@@ -28,6 +28,8 @@ ELMO::Application.routes.draw do
     resources(:user_batches)
   
     namespace(:report){resources(:reports)}
+
+    match('/dashboard' => 'dashboard#show', :as => :dashboard)
     
     # login/logout shortcut
     match("/logged_out" => "user_sessions#logged_out", :as => :logged_out)

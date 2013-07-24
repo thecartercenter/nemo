@@ -1,6 +1,6 @@
 en:
   locale_name: "English"
-  
+
   # common words (should be capitalized except for those that obviously shouldn't like and, or, e.g., etc.)
   common:
     accept: "Accept"
@@ -86,7 +86,7 @@ en:
       must_be_unique: "must be unique"
       is_invalid: "is invalid"
       did_not_match: "did not match"
-  
+
   # model names, attrib names, tips, and errors for activerecord models
   activerecord:
     models:
@@ -423,7 +423,7 @@ en:
     system_version: "System Version"
     time_ago: "%{time} ago"
     time_zone: "Time Zone"
-  
+
   # pagination translations
   will_paginate:
     previous_label: "&#8592; Previous"
@@ -523,7 +523,7 @@ en:
         login: "Username"
         password: "Password"
         remember_me: "Remember Me"
-  
+
   # time/date formats (see http://www.ruby-doc.org/core-2.0/Time.html#method-i-strftime for code meanings)
   date:
     formats:
@@ -536,7 +536,7 @@ en:
       short: "%b %d %H:%M"
       long: "%A, %B %d %Y %H:%M"
       time_only: "%H:%M"
-      
+
   # all search qualifier translations should have NO SPACES and NO CAPS. use '-'s instead
   search_qualifiers:
     date: "date"
@@ -551,7 +551,7 @@ en:
     reviewed: "reviewed"
     source: "source"
     submitter: "submitter"
-  
+
   # all page titles by controller and action
   # controller names are usually plural (rails convention)
   page_titles:
@@ -559,6 +559,8 @@ en:
       index: "Broadcasts"
       new: "Send Broadcast"
       show: "Broadcast"
+    dashboard:
+      all: "Dashboard"
     forms:
       choose_questions: "Adding Questions to Form: %{name}"
       edit: "Edit Form: %{name}"
@@ -611,14 +613,14 @@ en:
       show: "User: %{name}"
     welcome:
       index: "Home"
-      
+
   ##############################
   # the rest of these string groups should be kept in alphabetical order by key
-  
+
   answer:
     no_name: "No Name"
     this_answer: "This answer"
-  
+
   broadcast:
     balance_notice: "You have %{balance} SMS credits in your %{account_type} account."
     chars: # these are for informing the user how many chars they have left in their sms
@@ -649,7 +651,7 @@ en:
       main_only: "Main phone only"
       alternate_only: "Alternate phone only"
       both: "Both phones"
-      
+
   condition:
     operators:
       eq: "is equal to"
@@ -662,7 +664,10 @@ en:
       ninc: "does not include"
     op: "Comparison"
     value: "Value"
-  
+
+  dashboard:
+    full_screen_link: "View full screen dashboard"
+
   form:
     add_questions: "Add Questions"
     add_selected: "Add Selected Questions to Form"
@@ -689,7 +694,7 @@ en:
     unpublish: "Unpublish"
     unsaved_rank_notice: "You have not yet saved the changes you made to the Question order. You should click the 'Save' button if you want to save these changes."
     view_sms_guide: "View SMS Guide"
-  
+
   location_picker:
     choose_location: "Choose Location"
     current_location: "Current Location"
@@ -698,7 +703,7 @@ en:
 
   mission:
     create_link: "Create Mission"
-  
+
   notifier:
     if_link_doesnt_work: "If the above link does not work try copying and pasting it into your browser."
     if_you_made_it: "If you did make this request just click the link below:"
@@ -708,13 +713,13 @@ en:
     password_reset_instructions: "Password Reset Instructions"
     request_made: "A request to reset your %{site} password has been made. If you did not make this request, simply ignore this email."
     welcome: "Welcome to %{site}!"
-  
+
   option:
     appears_elsewhere: "Note: This option appears on the following forms: %{forms}. Any changes you make below will be reflected on those forms."
     create_link: "Create Option"
     in_use_warning: "This Option is in use in other published Forms or is referenced in existing Responses. You should therefore be careful not to change the meaning of the Option in your edits."
     other_forms_published: "At least one of those forms is also published, so only names can be edited. You should also take care to not change the meaning of the option if editing the names."
-  
+
   option_set:
     create_new: "[Create New Option]"
     create_link: "Create Option Set"
@@ -733,7 +738,7 @@ en:
       We're sorry, but we could not locate your account. If you are having issues try copying and pasting the URL 
       from your email into your browser or restarting the reset password process.
     user_not_found: "No user was found with that email address."
-    
+
   permission_error:
     need_mission: "You can't view this without selecting a mission"
     need_login: "You must login to view that page."
@@ -742,7 +747,7 @@ en:
     observers_cant_change_submitter: "Observers can't change the submitter for responses."
     must_be_admin: "You must be an administrator to view that page."
     must_be_logged_out: "You must be logged out to view that page."
-    
+
   question:
     answer_only_caps: "ANSWER ONLY IF"
     appears_elsewhere: "Note: This question also appears on the following forms: %{forms}. Any changes you make below will also be reflected on those forms."
@@ -754,7 +759,7 @@ en:
       strictly_lt: "Strictly less than"
       strictly_gt: "Strictly greater than"
     other_forms_published: "At least one of those forms is also published, so not all fields can be edited."
-   
+
   question_type:
     text: "Text"
     long_text: "Long Text"
@@ -767,7 +772,7 @@ en:
     datetime: "Date/Time"
     date: "Date"
     time: "Time"
-    
+
   report/report:
     add_question_attribute: "Add Question/Attribute"
     attribute:
@@ -832,19 +837,19 @@ en:
     question_labels:
       code: "Codes Only (Saves Space)"
       title: "Full Titles (Easier to Read)"
-      
+
   response:
     create_link: "Create Response"
     export_to_csv: "Export to CSV Format"
     observation_time: "Observation Time"
     save_and_mark_reviewed: "Save and Mark as Reviewed"
-    
+
   role:
     role: "Role"
     observer: "Observer"
     staffer: "Staffer"
     coordinator: "Coordinator"
-    
+
   search:
     at_end_of_query: "at end of query"
     expected: "Expected"
@@ -853,23 +858,23 @@ en:
     invalid_qualifier: "'%{chunk}' is not a valid search qualifier."
     unexpected: "Unexpected text near '%{str}'"
     search_error: "Search Error"
-  
+
   setting:
     change_sms_password: "Change SMS Password"
     headings:
       general: "General Settings"
       incoming_sms: "Incoming SMS Settings"
       outgoing_sms: "Outgoing SMS Settings"
-      
+
   sms:
     no_valid_adapter: "There is no valid outgoing SMS adapter. Please check the settings."
     outgoing_provider: "Outgoing SMS Provider"
-    
+
   sms_console:
     back_to_forms: "Back to Forms"
     no_reply: "No reply."
     submit_error: "There was an error submitting your test."
-    
+
   sms_form:
     decoding:
       answer_error_intro: "Sorry, your answer '%{value}' for question %{rank} on form '%{form_code}'"
@@ -924,10 +929,10 @@ en:
   unauthorized:
     default: "You are not authorized to access that page."
     must_login: "You must login to access that page."
-  
+
   user_batch:
     success: "Users created successfully."
-    
+
   user:
     back_to_index: "Back to Users List"
     create_link: "Create User"
@@ -963,7 +968,7 @@ en:
     reset_password_label_reset: "Reset Password?"
     send_email_instructions: "send email instructions"
     show_printable_instructions: "show printable instructions"
-  
+
   welcome:
     awaiting_review: "**%{count}** Awaiting Review"
     by_you: "**%{count}** Submissions By You"

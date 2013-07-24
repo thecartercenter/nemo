@@ -29,14 +29,19 @@ body {
   color: white;
   margin: 10px 0 20px $nav_width;
   
+  > div {
+    display: inline-block;
+    vertical-align: top;
+  }
+
   img {
     display: block;
     height: 15px; /* explicit height to prevent shifting during load */
   }
   
   a { color: white; text-decoration: none; }
-  h1 { font-size: 40px; line-height: 1; display: inline-block; margin: 0 10px 5px 0; }
-  h2 { font-size: 22px; width: 300px; margin: 0; color: white; display: inline-block; text-transform: uppercase; vertical-align: top; }
+  h1 { font-size: 40px; line-height: 1; margin: 0 10px 5px 0; }
+  h2 { font-size: 22px; width: 300px; margin: 0; color: white; text-transform: uppercase; vertical-align: top; }
 }
 
 #nav {
