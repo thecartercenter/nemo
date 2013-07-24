@@ -143,18 +143,22 @@ class Response < ActiveRecord::Base
 
   def answer_for(questioning)
     # get the matching answer(s)
-    answer_hash[questioning]
+    answer_for_qing[questioning]
   end
   
-  def answer_hash(options = {})
-    @answer_hash = nil if options[:rebuild]
-    @answer_hash ||= Hash[*answers.collect{|a| [a.questioning, a]}.flatten]
+  def answer_for_qing(options = {})
+    @answer_for_qing = nil if options[:rebuild]
+    @answer_for_qing ||= answers.index_by(&:questioning)
+  end
+  
+  def answer_for_question(question)
+    (@answers_by_question ||= answers.index_by(&:question))[question]
   end
   
   # returns an array of required questionings for which answers are missing
   def missing_answers
     return @missing_answers if @missing_answers
-    answer_hash(:rebuild => true)
+    answer_for_qing(:rebuild => true)
     @missing_answers = visible_questionings.collect do |qing|
       (answer_for(qing).nil? && qing.required?) ? qing : nil
     end.compact

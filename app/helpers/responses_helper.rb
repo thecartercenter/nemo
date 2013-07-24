@@ -1,24 +1,35 @@
 module ResponsesHelper
   def responses_index_fields
-    %w(id form_id user_id created_at age reviewed actions)
+    fields = %w(id form_id user_id)
+    
+    # add top two key questions
+    fields += Question.key(2).map{|q| {:title => q.code, :css_class => q.code.downcase, :question => q}}
+    
+    # add rest of fields
+    fields += %w(created_at age reviewed actions)
   end
   
   def format_responses_field(resp, field)
-    case field
-    when "id" then link_to(resp.id, response_path(resp), :title => t("common.view"))
-    when "form_id" then resp.form_name
-    when "created_at" then resp.created_at ? l(resp.created_at) : ""
-    when "age" then resp.created_at ? time_ago_in_words(resp.created_at) : ""
-    when "reviewed" then tbool(resp.reviewed?)
-    when "user_id" then resp.submitter
-    when "actions"
-      # we don't need to authorize these links b/c for responses, if you can see it, you can edit it.
-      # the controller actions will still be auth'd
-      by = resp.user ? " by #{resp.user.name}" : ""
-      action_links(resp, :obj_description => resp.user ? 
-        "#{Response.model_name.human} #{t('common.by').downcase} #{resp.user.name}" : 
-        "#{t('common.this').downcase} #{Response.model_name.human}")
-    else resp.send(field)
+    # handle special case where field is hash
+    if field.is_a?(Hash)
+      format_answer(resp.answer_for_question(field[:question]), :table_cell)
+    else
+      case field
+      when "id" then link_to(resp.id, response_path(resp), :title => t("common.view"))
+      when "form_id" then resp.form_name
+      when "created_at" then resp.created_at ? l(resp.created_at) : ""
+      when "age" then resp.created_at ? time_ago_in_words(resp.created_at) : ""
+      when "reviewed" then tbool(resp.reviewed?)
+      when "user_id" then resp.submitter
+      when "actions"
+        # we don't need to authorize these links b/c for responses, if you can see it, you can edit it.
+        # the controller actions will still be auth'd
+        by = resp.user ? " by #{resp.user.name}" : ""
+        action_links(resp, :obj_description => resp.user ? 
+          "#{Response.model_name.human} #{t('common.by').downcase} #{resp.user.name}" : 
+          "#{t('common.this').downcase} #{Response.model_name.human}")
+      else resp.send(field)
+      end
     end
   end
   

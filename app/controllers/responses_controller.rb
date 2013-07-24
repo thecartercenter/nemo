@@ -14,6 +14,9 @@ class ResponsesController < ApplicationController
         params[:page] ||= 1
         @responses = apply_filters(@responses)
         
+        # include answers so we can show key questions
+        @responses = @responses.includes(:answers)
+        
         # get list of published forms for 'create response' link
         @pubd_forms = Form.accessible_by(current_ability).published
         

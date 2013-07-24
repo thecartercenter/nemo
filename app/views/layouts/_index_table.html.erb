@@ -11,7 +11,14 @@
           <tr class="header">
             <% if batch_ops %><th></th><% end %>
             <% fields.each do |f| %>
-              <th><%= f == "actions" ? "" : objects.first.class.human_attribute_name(f) %></th>
+              <th>
+                <%# if field def is a hash, look for the :title key %>
+                <% if f.is_a?(Hash) %>
+                  <%= f[:title] %>
+                <% else %>
+                  <%= f == "actions" ? "" : objects.first.class.human_attribute_name(f) %>
+                <% end %>
+              </th>
             <% end %>
           </tr>
         </thead>
@@ -24,7 +31,7 @@
                 </td>
               <% end %>
               <% fields.each do |f| %>
-                <td class="<%= "#{f.gsub(/[^\w\d]/, "")}_col" %>">
+                <td class="<%= "#{(f.is_a?(Hash) ? f[:css_class] : f).gsub(/[^\w\d]/, "")}_col" %>">
                   <div><%= self.send("format_#{klass.table_name}_field", o, f) %></div>
                 </td>
               <% end %>

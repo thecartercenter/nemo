@@ -19,7 +19,7 @@ class Question < ActiveRecord::Base
   
   default_scope(order("code"))
   scope(:select_types, where(:qtype_name => %w(select_one select_multiple)))
-  
+
   translates :name, :hint
   
   delegate :smsable?, :has_options?, :to => :qtype
@@ -27,6 +27,11 @@ class Question < ActiveRecord::Base
   # returns questions that do NOT already appear in the given form
   def self.not_in_form(form)
     scoped.where("(questions.id not in (select question_id from questionings where form_id='#{form.id}'))")
+  end
+  
+  # returns N questions marked as key questions, sorted by the number of forms they appear in
+  def self.key(n)
+    where(:key => true).includes(:questionings).all.sort_by{|q| q.questionings.size}[0...n]
   end
   
   # returns the question type object associated with this question
@@ -82,7 +87,7 @@ class Question < ActiveRecord::Base
       end
       
       # error if anything (except name/hint) has changed and the question is published
-      errors.add(:base, :cant_change_if_published) if published? && (changed? && !changed.reject{|f| f =~ /^_?(name|hint)/}.empty?)
+      errors.add(:base, :cant_change_if_published) if published? && (changed? && !changed.reject{|f| f =~ /^_?(name|hint)/ || f == 'key'}.empty?)
     end
 
     def check_assoc
