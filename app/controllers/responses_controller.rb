@@ -141,8 +141,12 @@ class ResponsesController < ApplicationController
           # hash answers before search for duplicates and save
           @response.hash_answers
           
-          # if possible duplicates are found, set duplicate column to 1, else 0
-          @response.duplicate = @response.find_duplicates.empty? || @response.find_duplicates.nil? ? 0 : 1
+          # ignore flagging response as duplicate if user updated response
+          if params[:action] == "create"
+            # if possible duplicates are found, set duplicate column to 1, else 0
+            @response.duplicate = @response.find_duplicates.empty? || @response.find_duplicates.nil? ? 0 : 1
+          end
+          
         end
         @response.save!
         set_success_and_redirect(@response)

@@ -9,9 +9,7 @@ class Response < ActiveRecord::Base
   
   attr_accessor(:modifier)
   attr_accessor(:dup_resp)
-  
-  before_update(:hash_answers)
-  
+    
   # we turn off validate above and do it here so we can control the message and have only one message
   # regardless of how many answer errors there are
   validates(:user, :presence => true)

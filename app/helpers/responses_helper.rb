@@ -24,8 +24,13 @@ module ResponsesHelper
   end
   
   def duplicate_notice(resp)
-    duplicate_str = "Possible duplicate of response " + resp.dup_resp.id.to_s
-    content_tag("div",duplicate_str,:class => "duplicate") + link_to("Not a duplicate", {:action => "change_duplicate",:id => resp.id}, :method => :put)
+    
+    # only display if response is flagged as duplicate
+    if resp.duplicate
+      duplicate_str = "Possible duplicate of response " + resp.dup_resp.id.to_s
+      content_tag("div",duplicate_str,:class => "duplicate") + link_to("Not a duplicate", {:action => "change_duplicate",:id => resp.id}, :method => :put)
+    end
+    
   end
   
   def responses_index_links(responses)
