@@ -7,10 +7,10 @@ class Response < ActiveRecord::Base
     :autosave => true, :validate => false, :dependent => :destroy, :inverse_of => :response)
   belongs_to(:user, :inverse_of => :responses)
   
-  # before_save hashAnswers and set Response.hash to the hash
-  before_save :hash_answers
-  
   attr_accessor(:modifier)
+  attr_accessor(:dup_resp)
+  
+  before_update(:hash_answers)
   
   # we turn off validate above and do it here so we can control the message and have only one message
   # regardless of how many answer errors there are
@@ -23,7 +23,7 @@ class Response < ActiveRecord::Base
   default_scope(includes({:form => :type}, :user).order("responses.created_at DESC"))
   scope(:unreviewed, where(:reviewed => false))
   scope(:by, lambda{|user| where(:user_id => user.id)})
-  
+
   # loads all the associations required for show, edit, etc.
   scope(:with_associations, includes(
     :form, {
@@ -125,7 +125,7 @@ class Response < ActiveRecord::Base
   def find_duplicates
     responses = Response.arel_table
     
-    # don't include responses that have no signatures
+    # don't include responses that have null signatures
     if signature
       possible_duplicates = Response.where(responses["signature"].eq(signature).and(responses["id"].not_eq(id)))
     end
@@ -135,7 +135,7 @@ class Response < ActiveRecord::Base
   
   # hashes all the answer values of the response
   def hash_answers
-    answers_digest = ""
+    answers_digest = user.id.to_s
     answers.each do |a|
       answer_value = a.value || a.option_id || a.time_value || a.date_value || a.datetime_value
       answers_digest = answers_digest + answer_value.to_s

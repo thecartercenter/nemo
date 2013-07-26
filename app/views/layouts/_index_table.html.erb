@@ -11,7 +11,7 @@
           <tr class="header">
             <% if batch_ops %><th></th><% end %>
             <% fields.each do |f| %>
-              <th><%= f == "actions" ? "" : objects.first.class.human_attribute_name(f) %></th>
+              <th><%= f == "duplicate" || f == "actions" ? "" : objects.first.class.human_attribute_name(f) %></th>
             <% end %>
           </tr>
         </thead>

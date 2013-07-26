@@ -105,14 +105,19 @@ div.success, div.error {
   text-align: center;
 }
 
-
-
 div.success { 
   background-color: #9dc400; 
 }
 
 div.error { 
   background-color: #d02000; 
+}
+
+.duplicate_col * {
+  font-size: .9em;
+  font-weight: bold;
+  background-color: yellow;
+  text-align: center;
 }
 
 /* hide printable things */

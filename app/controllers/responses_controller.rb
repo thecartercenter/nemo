@@ -14,6 +14,9 @@ class ResponsesController < ApplicationController
         params[:page] ||= 1
         @responses = apply_filters(@responses)
         
+        # map each response to its duplicate if one exists
+        @responses.map! { |r| r.dup_resp = (duplicates = r.find_duplicates) ? Response.last : nil }
+        
         # get list of published forms for 'create response' link
         @pubd_forms = Form.accessible_by(current_ability).published.with_form_type
         
@@ -25,7 +28,7 @@ class ResponsesController < ApplicationController
       format.csv do
         # get the response, for export, but not paginated
         @responses = Response.for_export(apply_filters(@responses, :pagination => false))
-
+        
         # render the csv
         render_csv("Responses")
       end
@@ -50,12 +53,18 @@ class ResponsesController < ApplicationController
     prepare_and_render_form
   end
   
+  def change_duplicate
+    @response = Response.find(params[:id])
+    @response.duplicate = 0
+    @response.save
+    redirect_to(:action => :index)
+  end
+  
   def edit
     @response = Response.find(params[:id])
     
-    # using the signature of the response found with the given id, pull up 
-    # all possible duplicates 
-    @duplicates = @response.find_duplicates
+    # if the duplicate is flagged as such, return the first duplicate entry
+    @duplicate = @response.duplicate ? @response.find_duplicates.last : nil
     
     prepare_and_render_form
   end
@@ -102,6 +111,10 @@ class ResponsesController < ApplicationController
   end
   
   def destroy
+    @response.find_duplicates.each do |r| 
+      r.update_attributes!(:duplicate => 0)
+    end
+    
     destroy_and_handle_errors(@response)
     redirect_to(:action => :index)
   end
@@ -122,16 +135,16 @@ class ResponsesController < ApplicationController
       params[:response][:reviewed] = true if params[:commit_and_mark_reviewed]
       
       # try to save
-      begin
-        @response.update_attributes!(params[:response])
-        
+      begin        
         if params[:response][:duplicate].nil?
           
-          # if no possible duplicates are found, update response object with 0 for duplicate column
-          # otherwise, update response object with 1 for duplicat ecolumn
-          @response.find_duplicates.empty? ? @response.update_attributes!("duplicate" => 0) : @response.update_attributes!("duplicate" => 1)
+          # hash answers before search for duplicates and save
+          @response.hash_answers
           
+          # if possible duplicates are found, set duplicate column to 1, else 0
+          @response.duplicate = @response.find_duplicates.empty? || @response.find_duplicates.nil? ? 0 : 1
         end
+        @response.save!
         set_success_and_redirect(@response)
       rescue ActiveRecord::RecordInvalid
         prepare_and_render_form

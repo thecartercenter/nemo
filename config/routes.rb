@@ -20,7 +20,9 @@ ELMO::Application.routes.draw do
     resources(:option_sets)
     resources(:password_resets)
     resources(:questionings)
-    resources(:responses)
+    resources(:responses) do
+      put 'change_duplicate', :on => :member, :as => 'change_duplicate'
+    end
     resources(:settings)
     resources(:sms, :only => [:index, :create])
     resources(:sms_tests)

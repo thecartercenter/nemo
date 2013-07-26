@@ -39,7 +39,8 @@ class Response::DuplicatesTest < ActiveSupport::TestCase
     # create response with no signature
     response_no_sig = FactoryGirl.create(:response, :form => form1, :answer_names => {})
     response_no_sig.signature = nil
-
+    response_no_sig.duplicate = true
+    
     # test whether response was created with no answers submitted
     assert_not_nil(empty_response,"Empty Response not nil")
     
