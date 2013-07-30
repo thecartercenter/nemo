@@ -16,6 +16,9 @@
 
 <%= javascript_doc_ready do %>
   new ELMO.Views.Dashboard({
-    responses: <%= @responses.to_json.html_safe %>
+    map: {
+      locations: <%= @location_answers.to_json.html_safe %>,
+      info_window_url: <%= dashboard_info_window_url.to_json.html_safe %>
+    }
   });
 <% end %>

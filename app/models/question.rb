@@ -31,7 +31,7 @@ class Question < ActiveRecord::Base
   
   # returns N questions marked as key questions, sorted by the number of forms they appear in
   def self.key(n)
-    where(:key => true).includes(:questionings).all.sort_by{|q| q.questionings.size}[0...n]
+    where(:key => true).all.sort_by{|q| q.questionings.size}[0...n]
   end
   
   # returns the question type object associated with this question

@@ -42,3 +42,6 @@ gem 'capistrano', :group => :development
 
 # markdown support
 gem 'bluecloth'
+
+# query optimization
+gem "bullet", :group => "development"

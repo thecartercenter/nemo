@@ -35,6 +35,15 @@ class Response < ActiveRecord::Base
     }
   ))
   
+  # loads basic belongs_to associations
+  scope(:with_basic_assoc, includes(:form, :user))
+  
+  # loads only some answer info
+  scope(:with_basic_answers, includes(:answers => {:questioning => :question}))
+  
+  # loads only answers with location info
+  scope(:with_location_answers, includes(:location_answers))
+  
   self.per_page = 20
   
   # takes a Relation, adds a bunch of selects and joins, and uses find_by_sql to do the actual finding
@@ -175,17 +184,6 @@ class Response < ActiveRecord::Base
   def location
     ans = location_answers.first
     ans ? ans.location : nil
-  end
-  
-  # for now, the only thing we use json for here is the dashboard map
-  def as_json(options = {})
-    {
-      :id => id, 
-      :location => location,
-      :form => form,
-      :user => user,
-      :created_at => I18n.l(created_at)
-    }
   end
   
   private

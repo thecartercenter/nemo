@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130724212350) do
+ActiveRecord::Schema.define(:version => 20130730144254) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -188,6 +188,7 @@ ActiveRecord::Schema.define(:version => 20130724212350) do
 
   add_index "questions", ["mission_id"], :name => "index_questions_on_mission_id"
   add_index "questions", ["option_set_id"], :name => "index_questions_on_option_set_id"
+  add_index "questions", ["qtype_name"], :name => "index_questions_on_qtype_name"
 
   create_table "report_calculations", :force => true do |t|
     t.string   "type"

@@ -63,12 +63,15 @@ body.dashboard {
   
   /* map info window */
   div.info_window {
+    width: 275px;
+    height: 130px;
+    
     h3 {
       margin-bottom: 10px;
     }
     
     table {
-      width: 250px;
+      width: 100%;
       
       td:first-child {
         font-size: 11px;

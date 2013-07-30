@@ -31,6 +31,7 @@ ELMO::Application.routes.draw do
     namespace(:report){resources(:reports)}
 
     match('/dashboard' => 'dashboard#show', :as => :dashboard)
+    match('/dashboard/info_window' => 'dashboard#info_window', :as => :dashboard_info_window)
     
     # login/logout shortcut
     match("/logged_out" => "user_sessions#logged_out", :as => :logged_out)

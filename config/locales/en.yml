@@ -854,6 +854,7 @@ en:
     create_link: "Create Response"
     edit_this_response: "Edit This Response"
     export_to_csv: "Export to CSV Format"
+    loading: "Loading Response..."
     observation_time: "Observation Time"
     save_and_mark_reviewed: "Save and Mark as Reviewed"
     view_response: "View Response"

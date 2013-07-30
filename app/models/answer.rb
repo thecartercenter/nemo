@@ -51,6 +51,20 @@ class Answer < ActiveRecord::Base
     ans
   end
   
+  # gets all location answers for the given mission
+  # returns only the response ID and the answer value
+  def self.location_answers_for_mission(mission)
+    find_by_sql([
+      "SELECT r.id AS r_id, a.value AS loc
+      FROM answers a 
+        INNER JOIN responses r ON a.response_id = r.id 
+        INNER JOIN questionings qing ON a.questioning_id = qing.id 
+        INNER JOIN questions q ON qing.question_id = q.id 
+      WHERE q.qtype_name = 'location' AND a.value IS NOT NULL AND r.mission_id = ?",
+      mission.id
+    ])
+  end
+  
   def choice_for(option)
     choice_hash[option]
   end
