@@ -7,6 +7,9 @@ class Response < ActiveRecord::Base
     :autosave => true, :validate => false, :dependent => :destroy, :inverse_of => :response)
   belongs_to(:user, :inverse_of => :responses)
   
+  has_many(:location_answers, :include => {:questioning => :question}, :class_name => 'Answer',
+    :conditions => "questions.qtype_name = 'location'", :order => 'questionings.rank')
+  
   attr_accessor(:modifier)
   
   # we turn off validate above and do it here so we can control the message and have only one message
@@ -166,6 +169,24 @@ class Response < ActiveRecord::Base
   
   def form_name; form ? form.name : nil; end
   def submitter; user ? user.name : nil; end
+  
+  # if this response contains location questions, returns the gps location (as a 2 element array) 
+  # of the first such question on the form, else returns nil
+  def location
+    ans = location_answers.first
+    ans ? ans.location : nil
+  end
+  
+  # for now, the only thing we use json for here is the dashboard map
+  def as_json(options = {})
+    {
+      :id => id, 
+      :location => location,
+      :form => form,
+      :user => user,
+      :created_at => I18n.l(created_at)
+    }
+  end
   
   private
     def no_missing_answers

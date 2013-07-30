@@ -228,6 +228,10 @@ class User < ActiveRecord::Base
     SESSION_TIMEOUT - (Time.now - last_request_at)
   end
   
+  def as_json(options = {})
+    {:name => name}
+  end
+  
   private
     def clean_fields
       self.phone = phone.blank? ? nil : "+" + phone.gsub(/[^0-9]/, "")

@@ -47,13 +47,15 @@ table.form td.name { min-width: 75px; }
 div.collection_form div.item { margin-bottom: 3px; }
 
 /* action links/icons */
-a.action_link { font-size: 14px; text-decoration: none; display: inline-block; margin: -2px 5px; }
+a.action_link { font-size: 14px; text-decoration: none; display: inline-block; margin-right: 3px; }
+table a.action_link { margin: -2px 10px -2px 0; }
 
 /* index tables */
 table.index_table th, table.form th { text-align: left; color: #444; background-color: #ddd; 
     font-size: 90%; padding: 3px 10px 3px 3px; }
 table.index_table td { border-bottom: 1px solid #ddd; padding: 6px 10px 6px 3px; }
 table.index_table td.actions_col img { margin-right: 5px; }
+table.index_table tbody tr { cursor: pointer; }
 td.actions_col { white-space: nowrap; }
 div.loading_indicator_inline { width: 16px; display: inline; }
 div.loading_indicator_floating { width: 16px; float: left; }

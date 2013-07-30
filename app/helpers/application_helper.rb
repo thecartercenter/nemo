@@ -64,18 +64,23 @@ module ApplicationHelper
   end
   
   # renders an index table for the given class and list of objects
-  def index_table(klass, objects)
-    # get links from class' helper
-    links = send("#{klass.table_name}_index_links", objects).compact
+  def index_table(klass, objects, options = {})
+    links = []
+    
+    unless options[:table_only]
+      # get links from class' helper
+      links = send("#{klass.table_name}_index_links", objects).compact
 
-    # if there are any batch links, insert the 'select all' link
-    batch_ops = !links.reject{|l| !l.match(/class="batch_op_link"/)}.empty?
-    links.insert(0, select_all_link) if batch_ops
+      # if there are any batch links, insert the 'select all' link
+      batch_ops = !links.reject{|l| !l.match(/class="batch_op_link"/)}.empty?
+      links.insert(0, select_all_link) if batch_ops
+    end
     
     # render, getting fields and checking if there are no objects at all
     render("layouts/index_table",
       :klass => klass,
       :objects => objects,
+      :options => options,
       :paginated => objects.respond_to?(:total_entries),
       :links => links.flatten.join.html_safe,
       :fields => send("#{klass.table_name}_index_fields"),

@@ -221,7 +221,7 @@ en:
         form_id: "Form"
         reviewed: "Reviewed?"
         source: "Source"
-        user_id: "Submitter/Team Name"
+        user_id: "User/Team"
       report/report:
         aggregation: "Operation"
         aggregation_id: "Operation"
@@ -677,6 +677,8 @@ en:
 
   dashboard:
     full_screen_link: "View full screen dashboard"
+    recent_responses: "Recent Responses"
+    response_locations: "Response Locations"
 
   form:
     add_questions: "Add Questions"
@@ -850,9 +852,11 @@ en:
 
   response:
     create_link: "Create Response"
+    edit_this_response: "Edit This Response"
     export_to_csv: "Export to CSV Format"
     observation_time: "Observation Time"
     save_and_mark_reviewed: "Save and Mark as Reviewed"
+    view_response: "View Response"
 
   role:
     role: "Role"

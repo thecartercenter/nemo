@@ -1,9 +1,14 @@
 <div id="index_table">
-  <div class="header link_set">
-    <%= page_entries_info(ensure_paginated(objects), :model => klass) %>.
-    &nbsp;
-    <%= links %>
-  </div>
+  
+  <%# header links %>
+  <% unless options[:table_only] %>
+    <div class="header link_set">
+      <%= page_entries_info(ensure_paginated(objects), :model => klass) %>.
+      &nbsp;
+      <%= links %>
+    </div>
+  <% end %>
+  
   <% unless objects.empty? %>
     <%= form_tag("", :method => "post", :id => "batch_form") do %>
       <table class="index_table">
@@ -22,9 +27,9 @@
             <% end %>
           </tr>
         </thead>
-        <tbody id="index_table_body">
+        <tbody class="index_table_body">
           <% objects.each do |o| %>
-            <tr id="<%= "#{o.class.name.underscore}_#{o.id}" %>">
+            <tr id="<%= "#{o.class.name.underscore}_#{o.id}" %>" data-href="<%= url_for(o) %>">
               <% if batch_ops %>
                 <td>
                   <%= check_box_tag("selected[#{o.id}]", 1, false, :onchange => "batch_cb_changed(this);") %>
@@ -44,13 +49,26 @@
       <% end %>
     <% end %>
     <br/>
-    <%= will_paginate(objects) if paginated %>
+    
+    <%# pagination links %>
+    <% unless options[:table_only] %>
+      <%= will_paginate(objects) if paginated %>
+    <% end %>
     
     <%# flash the modified obj %>
     <% if flash[:modified_obj_id] %>
       <%= javascript_doc_ready do %>
         $('#<%= "#{objects.first.class.name.underscore}_#{flash[:modified_obj_id]}" %>').effect("highlight", {}, 1000);
       <% end %>
+    <% end %>
+    
+    <%# hookup whole-row link %>
+    <%= javascript_doc_ready do %>
+      $('table.index_table tbody').on('click', 'tr', function(e) {
+        // go to the tr's href unless the click was on an icon
+        if (!$(e.target).is('i[class^=icon-]'))
+          window.location.href = $(e.target).closest('tr').data('href'); 
+      });
     <% end %>
   <% end %>
 </div>

@@ -113,6 +113,16 @@ class Answer < ActiveRecord::Base
   # alias
   def relevant; relevant?; end
   
+  # if this answer is for a location question and the value is not blank, returns a two element array representing the
+  # lat long. else returns nil
+  def location
+    if questioning.question.qtype_name == 'location' && !value.blank?
+      value.split(' ')
+    else
+      nil
+    end
+  end
+  
   private
     def required
       if required? && !hidden? && relevant? && qtype.name != "select_multiple" &&

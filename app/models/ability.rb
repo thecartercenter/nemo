@@ -94,7 +94,7 @@ class Ability
           can :create, Sms::Test
 
           # can view the dashboard (individual dashboard components are checked separately)
-          can :read, Dashboard
+          can :view, :dashboard
         end
       
         # coordinator abilities

@@ -1,5 +1,5 @@
 <%# load the mapping API %>
-<% content_for(:per_page_js){ javascript_include_tag(configatron.map_api_url) } %>
+<% content_for(:per_page_js){ javascript_include_tag("https://maps.googleapis.com/maps/api/js?sensor=false") } %>
 
 <%# title includes ID if defined %>
 <% @title_args = {:id => @response.id} %>
@@ -9,6 +9,14 @@
 <%= flash_and_form_errors(@response) %>
 
 <% @response.answers.collect{|a| a.errors.full_messages.join(", ")}.join(" ") %>
+
+<%# show an edit link if allowed and in show mode %>
+<% if params[:action] == 'show' && can?(:update, @response) %>
+  <div class="tip">
+    <%= action_link('edit', edit_response_path(@response)) %>
+    <%= link_to(t('response.edit_this_response'), edit_response_path(@response)) %>
+  </div>
+<% end %>
 
 <%= nice_form_for(@response) do |f| %>
 

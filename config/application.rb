@@ -62,9 +62,6 @@ module ELMO
     # regular expressions
     configatron.lat_lng_regexp = /^(-?\d+(\.\d+)?)\s*[,;:\s]\s*(-?\d+(\.\d+)?)/
     
-    # google map api
-    configatron.map_api_url = "https://maps.googleapis.com/maps/api/js?sensor=false"
-    
     # SMS broadcast settings (used to be [TCC] but the [ was getting corrupted on IntelliSms)
     configatron.broadcast_tag = "|TCC|"
     

@@ -19,6 +19,7 @@
 translations:
   - file: "public/javascripts/translations.js"
     only: [
+      "*.activerecord.attributes.*",
       "*.activerecord.models.*",
       "*.activerecord.errors.models.report/report.*",
       "*.broadcast.chars.*",
@@ -28,5 +29,6 @@ translations:
       "*.location_picker.*",
       "*.layout.*",
       "*.option_set.*",
-      "*.report/report.*"
+      "*.report/report.*",
+      "*.response.*"
     ]

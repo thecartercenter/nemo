@@ -1,12 +1,16 @@
 module ResponsesHelper
   def responses_index_fields
-    fields = %w(id form_id user_id)
-    
-    # add top two key questions
-    fields += Question.key(2).map{|q| {:title => q.code, :css_class => q.code.downcase, :question => q}}
-    
-    # add rest of fields
-    fields += %w(created_at age reviewed actions)
+    # if in dashboard mode, don't put as many fields
+    if params[:controller] == 'dashboard'
+      fields = %w(form_id user_id) + key_question_hashes(2) + %w(age reviewed)
+    else
+      fields = %w(id form_id user_id) + key_question_hashes(2) + %w(created_at age reviewed actions)
+    end
+  end
+  
+  # returns an array of hashes representing the key question column(s)
+  def key_question_hashes(n)
+    Question.accessible_by(current_ability).key(n).map{|q| {:title => q.code, :css_class => q.code.downcase, :question => q}}
   end
   
   def format_responses_field(resp, field)
@@ -15,7 +19,7 @@ module ResponsesHelper
       format_answer(resp.answer_for_question(field[:question]), :table_cell)
     else
       case field
-      when "id" then link_to(resp.id, response_path(resp), :title => t("common.view"))
+      when "id" then link_to(resp.id, resp, :title => t("common.view"))
       when "form_id" then resp.form_name
       when "created_at" then resp.created_at ? l(resp.created_at) : ""
       when "age" then resp.created_at ? time_ago_in_words(resp.created_at) : ""

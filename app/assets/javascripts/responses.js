@@ -19,8 +19,8 @@ function responses_fetch() {
 // gets IDs of each row in index table
 function responses_get_ids() {
   var ids = [];
-  if ($('#index_table_body')) {
-    var rows = $('#index_table_body tr');
+  if ($('.index_table_body')) {
+    var rows = $('.index_table_body tr');
     for (var i = 0; i < rows.length; i++) ids.push(rows[i].id);
   }
   return ids;
