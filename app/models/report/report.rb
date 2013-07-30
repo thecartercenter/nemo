@@ -10,6 +10,7 @@ class Report::Report < ActiveRecord::Base
 
   scope(:by_viewed_at, order("viewed_at desc"))
   scope(:by_popularity, order("view_count desc"))
+  scope(:by_name, order("name"))
 
   before_save(:normalize_attribs)
 

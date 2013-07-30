@@ -9,6 +9,12 @@ class DashboardController < ApplicationController
     
     # get location answers
     @location_answers = Answer.location_answers_for_mission(current_mission)
+    
+    # get list of all reports for the mission
+    @reports = Report::Report.accessible_by(current_ability).by_name
+    
+    # get the most popular report
+    @report = Report::Report.accessible_by(current_ability).by_popularity.first
   end
   
   # map info window

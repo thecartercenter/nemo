@@ -3,15 +3,26 @@
 
 <%= link_to('&times;'.html_safe, root_path, :class => 'close_dashboard') %>
 
-<h2><%= t('dashboard.recent_responses') %></h2>
+<div class="col left_col">
+  <h2><%= t('dashboard.recent_responses') %></h2>
 
-<div class="recent_responses">
-  <%= index_table(Response, @responses, :table_only => true) %>
+  <div class="recent_responses">
+    <%= index_table(Response, @responses, :table_only => true) %>
+  </div>
+
+  <h2><%= t('dashboard.response_locations') %></h2>
+
+  <div class="response_locations">
+  </div>
+
 </div>
 
-<h2><%= t('dashboard.response_locations') %></h2>
-
-<div class="response_locations">
+<div class="col right_col">
+  <form class="report_chooser">
+    <%= select_tag('report_id', options_from_collection_for_select(@reports, 'id', 'name'), :prompt => t('report/report.choose_report')) %>
+  </form>
+  
+  <h2><%= @report.name %></h2>
 </div>
 
 <%= javascript_doc_ready do %>

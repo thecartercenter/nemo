@@ -32,6 +32,21 @@ body.dashboard {
     font-size: 18px;
   }
   
+  /* columns */
+  div.col {
+    display: inline-block;
+    vertical-align: top;
+    
+    &.left_col {
+      width: 611px;
+      padding-right: 20px;
+    }
+
+    &.right_col {
+      width: 811px;
+    }
+  }
+  
   /* responses index table */
   table.index_table {
     td {
@@ -83,6 +98,10 @@ body.dashboard {
         font-weight: bold;
       }
     }
+  }
+  
+  form.report_chooser {
+    float: right;
   }
   
 }
