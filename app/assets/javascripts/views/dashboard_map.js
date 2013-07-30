@@ -59,13 +59,17 @@
     self.info_window = new google.maps.InfoWindow({content: '<div class="info_window"><h3>' + I18n.t('response.loading') + '</h3></div>'});
     self.info_window.open(self.map, marker);
     
-    // load the response
-    $.ajax({
-      url: self.params.info_window_url,
-      method: 'get',
-      data: {response_id: marker.r_id},
-      success: function(data){ $('div.info_window').replaceWith(data); }
-    })
+    // do the ajax call after the info window is loaded
+    google.maps.event.addListener(self.info_window, 'domready', function() {
+      // load the response
+      $.ajax({
+        url: self.params.info_window_url,
+        method: 'get',
+        data: {response_id: marker.r_id},
+        success: function(data){ $('div.info_window').replaceWith(data); },
+        error: function(){ $('div.info_window').html(I18n.t('layout.server_contact_error')); }
+      });
+    });
   };
 
 }(ELMO.Views));
