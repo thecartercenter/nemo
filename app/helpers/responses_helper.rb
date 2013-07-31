@@ -80,7 +80,7 @@ module ResponsesHelper
   # takes a recent count (e.g. [5, "week"]) and translates it
   def translate_recent_responses(count)
     if count.nil?
-      t("welcome.no_recent")
+      tmd("welcome.no_recent")
     else
       tmd("welcome.in_the_past_#{count[1]}", :count => count[0])
     end

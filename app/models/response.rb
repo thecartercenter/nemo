@@ -85,12 +85,27 @@ class Response < ActiveRecord::Base
   # format e.g. [5, "week"] (5 in the last week)
   # nil means no recent responses
   def self.recent_count(rel)
-    %w(hour day week month).each do |p|
+    %w(hour day week month year).each do |p|
       if (count = rel.where("created_at > ?", 1.send(p).ago).count) > 0
         return [count, p]
       end
     end
     nil
+  end
+  
+  # returns an array of N response counts grouped by form
+  # uses the WHERE clause from the given relation
+  def self.per_form(rel, n)
+    where_clause = rel.arel.send(:where_clauses).join(' AND ')
+    where_clause = '1=1' if where_clause.empty?
+    
+    find_by_sql("
+      SELECT forms.name AS form_name, COUNT(responses.id) AS count
+      FROM responses INNER JOIN forms ON responses.form_id = forms.id
+      WHERE #{where_clause}
+      GROUP BY forms.id, forms.name
+      ORDER BY count DESC
+      LIMIT #{n}")
   end
   
   def populate_from_xml(xml)

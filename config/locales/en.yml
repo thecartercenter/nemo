@@ -678,8 +678,10 @@ en:
   dashboard:
     close_dashboard: "Close Dashboard"
     full_screen_link: "View full screen dashboard"
-    recent_responses: "Recent Responses"
+    recent_responses: "Latest Responses"
     response_locations: "Response Locations"
+    summary: "Summary"
+    top_forms: "Top Forms"
 
   form:
     add_questions: "Add Questions"
@@ -994,7 +996,8 @@ en:
     in_the_past_hour: "**%{count}** in the Past Hour"
     in_the_past_month: "**%{count}** in the Past Month"
     in_the_past_week: "**%{count}** in the Past Week"
-    no_recent: "No recent responses"
+    in_the_past_year: "**%{count}** in the Past Year"
+    no_recent: "**0** Recent Responses"
     published_form_count: "**%{count}** Published Forms"
     select_a_form: "Select a Form To Submit"
     select_a_report: "Select a Report To View"

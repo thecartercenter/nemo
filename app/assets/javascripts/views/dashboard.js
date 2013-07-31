@@ -40,8 +40,11 @@
     var cont_w = $('#content').width() - 4;
     var cont_h = $(window).height() - $('#title').outerHeight(true) - 3 * spacing;
     
-    // the height of the h2 elements
+    // height of the h2 elements
     var title_h = $('#content h2').height();
+    
+    // height of the stats pane
+    var stats_h = $('.report_stats').height();
     
     // left col is slightly narrower than right col
     $('.recent_responses, .response_locations').width((cont_w - spacing) * .8 / 2)
@@ -50,8 +53,8 @@
     // for left panes height we subtract 2 title heights plus 3 spacings (2 bottom, one top)
     $('.recent_responses, .response_locations').height((cont_h - 2 * title_h - 3 * spacing) / 2);
     
-    // for right panes we just subtract one title height and one spacing
-    $('.report_main').height(cont_h - title_h - spacing);
+    // for right panes we subtract 1 title height plus 2 spacings (1 bottom, 1 top) plus the stats pane height
+    $('.report_main').height(cont_h - title_h - 2 * spacing - stats_h);
   };
   
 }(ELMO.Views));

@@ -1,4 +1,5 @@
 /* STYLES FOR DASHBOARD */
+$theme_blue: #0065d1;
 
 body.dashboard {
   /* hide most template components */
@@ -60,10 +61,6 @@ body.dashboard {
     }
   }
   
-  /* map */
-  div.response_locations {
-  }
-  
   /* map info window */
   div.info_window {
     width: 275px;
@@ -88,15 +85,50 @@ body.dashboard {
     }
   }
   
-  form.report_chooser {
-    float: right;
+  /* stats */
+  
+  div.report_stats {
+    /* ensure stat blocks don't wrap */
+    white-space: nowrap;
+    overflow-x: auto;
   }
   
-  /* report column */
-  div.col.right_col {
-    h2 {
-      display: inline-block;
+  div.stat_block {
+    display: inline-block;
+    vertical-align: top;
+    margin-right: 15px;
+    
+    ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+      font-size: 16px;
+      
+      li {
+        width: 225px;
+        white-space: nowrap;
+        overflow: hidden;
+      }
+      
+      strong {
+        display: inline-block;
+        width: 30px;
+      }
+      
+      a {
+        text-decoration: none;
+      }
     }
   }
+
+  /* report */
+
+  form.report_chooser {
+    float: right;
+    margin-top: 15px;
+  }
   
+  .report_header h2 {
+    display: inline-block;
+  }
 }

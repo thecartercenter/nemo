@@ -10,7 +10,11 @@ end %>
   <h2><%= t('dashboard.recent_responses') %></h2>
 
   <div class="recent_responses">
-    <%= index_table(Response, @responses, :table_only => true) %>
+    <% if @responses.empty? %>
+      <%= t('will_paginate.response.page_entries_info.single_page_html.zero') %>
+    <% else %>
+      <%= index_table(Response, @responses, :table_only => true) %>
+    <% end %>
   </div>
 
   <h2 class="interior"><%= t('dashboard.response_locations') %></h2>
@@ -21,11 +25,34 @@ end %>
 </div>
 
 <div class="col right_col">
-  <form class="report_chooser">
-    <%= select_tag('report_id', options_from_collection_for_select(@reports, 'id', 'name'), :prompt => t('report/report.choose_report')) %>
-  </form>
+  <div class="report_stats">
+    <div class="stat_block">
+      <h2><%= t('dashboard.summary') %></h2>
+      <ul>
+        <li><%= link_to(translate_recent_responses(@recent_responses_count), responses_path) %></li>
+        <li><%= link_to(tmd("welcome.total_responses", :count => @total_response_count), responses_path) %></li>
+        <li><%= link_to(tmd("welcome.awaiting_review", :count => @unreviewed_response_count), responses_path(:search => "reviewed:no")) %></li>
+      </ul>
+    </div>
+    <div class="stat_block">
+      <% unless @responses.empty? %>
+        <h2><%= t('dashboard.top_forms') %></h2>
+        <ul>
+          <% @responses_by_form.each do |row| %>
+            <li><%= link_to("<strong>#{row['count']}</strong> ".html_safe + row['form_name'], responses_path(:search => "form:\"#{row['form_name']}\"")) %></li>
+          <% end %>
+        </ul>
+      <% end %>
+    </div>
+  </div>
+  
+  <div>
+    <form class="report_chooser">
+      <%= select_tag('report_id', options_from_collection_for_select(@reports, 'id', 'name'), :prompt => t('report/report.choose_report')) %>
+    </form>
 
-  <div class="report_header">
+    <div class="report_header">
+    </div>
   </div>
   
   <div class="report_main">
