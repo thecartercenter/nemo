@@ -52,26 +52,12 @@ body.dashboard {
   
   /* responses index table */
   div.recent_responses {
-    overflow: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
     table.index_table {
-      td {
-        width: 100px;
-
-        > div {
-          width: 100px;
-          white-space: nowrap;
-          overflow: hidden;
-        }
-      }
-
-      td.reviewed_col {
-        width: 50px;
-        > div { width: 50px; }
-      }
-
-      td.age_col {
-        width: 75px;
-        > div { width: 75px; }
+      td > div {
+        white-space: nowrap;
+        overflow: hidden;
       }
     }
   }

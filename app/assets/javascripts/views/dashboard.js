@@ -9,6 +9,7 @@
     
     self.adjust_pane_sizes();
     
+    self.list_view = new ELMO.Views.DashboardResponseList();
     self.map_view = new ELMO.Views.DashboardMap(self.params.map);
     self.report_view = new ELMO.Views.DashboardReport(self.params.report);
   };
