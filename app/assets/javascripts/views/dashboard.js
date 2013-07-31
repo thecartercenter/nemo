@@ -7,11 +7,27 @@
   ns.Dashboard = klass = function(params) { var self = this;
     self.params = params;
     
-    self.adjust_pane_sizes();
-    
     self.list_view = new ELMO.Views.DashboardResponseList();
     self.map_view = new ELMO.Views.DashboardMap(self.params.map);
     self.report_view = new ELMO.Views.DashboardReport(self.params.report);
+    
+    // readjust stuff on window resize
+    $(window).on('resize', function(){
+      self.adjust_pane_sizes();
+      self.list_view.adjust_columns();
+      
+      // clear this timeout in case this is another resize event before it ran out
+      clearTimeout(self.resize_done_timeout)
+      
+      // set a timeout to refresh the report
+      self.resize_done_timeout = setTimeout(function(){
+        ELMO.app.report_controller.refresh_view();
+      }, 1000);
+    })
+    
+    // adjust sizes for the initial load
+    self.adjust_pane_sizes();
+    self.list_view.adjust_columns();
   };
   
   klass.prototype.adjust_pane_sizes = function() { var self = this;

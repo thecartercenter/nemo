@@ -8,9 +8,10 @@
   
   // constructor
   ns.DashboardResponseList = klass = function() { var self = this;
+  };
 
-    // adjust column widths depending on how many there are
-    
+  // adjusts column widths depending on how many there are
+  klass.prototype.adjust_columns = function() { var self = this;
     // age and reviewed columns get fixed widths
     var small_w = 75;
     

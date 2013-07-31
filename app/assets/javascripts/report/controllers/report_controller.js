@@ -119,4 +119,9 @@
     $(".report_links, .report_main").show();
   }
   
+  // refreshes the report view
+  klass.prototype.refresh_view = function() {
+    this.display_report(this.report_last_run);
+  }
+  
 }(ELMO.Report));
