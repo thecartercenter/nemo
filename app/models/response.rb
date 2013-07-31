@@ -115,11 +115,12 @@ class Response < ActiveRecord::Base
   # the key will change if the number of responses changes, or if a response is updated.
   def self.per_mission_cache_key(mission)
     rel = unscoped.for_mission(mission)
+    prefix = "responses/mission-#{mission.id}/"
     if rel.empty?
-      'empty'
+      "#{prefix}empty"
     else
       last_update = rel.by_updated_at.first.updated_at.strftime('%Y%m%d%H%M%S')
-      "#{count}-#{last_update}"
+      "#{prefix}#{count}-#{last_update}"
     end
   end
   
