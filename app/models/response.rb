@@ -120,7 +120,7 @@ class Response < ActiveRecord::Base
       "#{prefix}empty"
     else
       last_update = rel.by_updated_at.first.updated_at.strftime('%Y%m%d%H%M%S')
-      "#{prefix}#{count}-#{last_update}"
+      "#{prefix}#{rel.count}-#{last_update}"
     end
   end
   
