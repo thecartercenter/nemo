@@ -31,8 +31,8 @@
   klass.prototype.render = function() {
     // if no matching data, show message
     if (this.report.no_data()) {
-      $("#report_info").empty();
-      $("#report_body").html(I18n.t("report/report.no_match"))
+      $(".report_info").empty();
+      $(".report_body").html(I18n.t("report/report.no_match"))
     } else {
       // create an appropriate Display class based on the display_type
       switch (this.report.attribs.display_type) {
@@ -63,7 +63,7 @@
   // hookup link events
   klass.prototype.hookup_links = function() {
     var _this = this;
-    $("#report_links a").click(function() { _this.controller.show_edit_view(parseInt(this.id.match(/_(\d+)$/)[1])); return false; })
+    $(".report_links a").click(function() { _this.controller.show_edit_view(parseInt(this.id.match(/_(\d+)$/)[1])); return false; })
   }
   
 }(ELMO.Report));

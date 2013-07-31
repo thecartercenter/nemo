@@ -3,14 +3,14 @@
 
 <%= loading_indicator(:id => "report_load_ind") %>
 
-<div class="link_set" id="report_top_links">
+<div class="link_set report_top_links">
   <%= link_to(t("report/report.create_link"), new_report_report_path) if can?(:create, Report::Report) %>
   <%= link_to(t("report/report.back_to_list"), report_reports_path) if can?(:index, Report::Report) %>
   <%= link_to(t("report/report.export_to_csv"), report_report_path(@report, :format => :csv), :id => "csv_link") unless @report.new_record? %>
 </div>
 <div class="report_view">
   <% if can?(:update, @report) %>
-    <div id="report_links">
+    <div class="report_links">
       <strong><%= t("common.edit") %> <%= Report::Report.model_name.human %></strong>
       <% if @report.new_record? %>
         <a id="edit_link_0" href="#"><%= t("report/report.report_type") %></a>
@@ -23,7 +23,7 @@
       <a id="edit_link_6" href="#"><%= t("report/report.report_title") %></a>
     </div>
   <% end %>
-  <div id="report_main">
+  <div class="report_main">
     <%= render('main') %>
   </div>
 </div>

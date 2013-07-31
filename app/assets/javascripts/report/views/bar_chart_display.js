@@ -57,7 +57,8 @@
     var legend_space = 150;
     
     var cont_height = Math.max(300, headers.row.cells.length * (stacked ? 20 : headers.col.cells.length * 15) + haxis_space);
-    var cont_width = $("#content").width() - $("#report_links").width() - 200;
+    console.log($(".report_main").width())
+    var cont_width = $(".report_main").width() - 20;
     var options = {
       width: cont_width,
       height: cont_height,
@@ -70,7 +71,7 @@
       series: series
     };
 
-    var chart = new google.visualization.BarChart($('#report_body')[0]);
+    var chart = new google.visualization.BarChart($('.report_body')[0]);
     chart.draw(g_data, options);
   }
   

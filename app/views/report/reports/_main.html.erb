@@ -1,5 +1,5 @@
-<div class="tip" id="report_info"></div>
-<div id="report_body"></div>
+<div class="tip" class="report_info"></div>
+<div class="report_body"></div>
 
 <%= javascript_doc_ready do %>
   new ELMO.Report.ReportController(<%=j @report_data.to_json.html_safe %>);

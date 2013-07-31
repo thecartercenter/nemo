@@ -175,17 +175,17 @@
     }
     
     // add a row count
-    $('#report_info').empty().append($("<div>").attr("id", "row_count").text(I18n.t("report/report.total_rows") + ": " + data.rows.length));
+    $('.report_info').empty().append($("<div>").attr("id", "row_count").text(I18n.t("report/report.total_rows") + ": " + data.rows.length));
     
     // add the table
-    $('#report_body').empty().append(tbl);
+    $('.report_body').empty().append(tbl);
     
     this.equalize_col_widths();
   }
   
   klass.prototype.equalize_col_widths = function() {
     // get the available extra space
-    var extra_spc = $("#report_body").position().left + $("#report_body").width() - this.tbl.position().left - this.tbl.width();
+    var extra_spc = $(".report_body").position().left + $(".report_body").width() - this.tbl.position().left - this.tbl.width();
 
     // get the current column widths
     var cur_widths = []

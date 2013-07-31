@@ -42,7 +42,7 @@
   }
 
   klass.prototype.show_edit_view = function(idx) {
-    $("#report_links, #report_main").hide();
+    $(".report_links, .report_main").hide();
     this.edit_view.show(this.report_last_run.clone(), idx);
   }
   
@@ -116,7 +116,7 @@
     // hide load ind
     this.report_view.show_loading_indicator(false);
     // show links and body
-    $("#report_links, #report_main").show();
+    $(".report_links, .report_main").show();
   }
   
 }(ELMO.Report));

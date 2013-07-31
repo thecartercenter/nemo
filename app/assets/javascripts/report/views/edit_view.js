@@ -183,7 +183,7 @@
   klass.prototype.show_hide_edit_links = function(report) {
     var ep = this.enabled_panes(report);
     for (var i = 0; i < this.panes.length; i++)
-      $("#report_links a#edit_link_" + i)[ep[this.panes[i].id] ? "show" : "hide"]();
+      $(".report_links a#edit_link_" + i)[ep[this.panes[i].id] ? "show" : "hide"]();
   }
   
   // returns a hash indicating which panes should be enabled based on the given report
