@@ -74,6 +74,7 @@ GEM
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
+    memcache-client (1.8.5)
     mime-types (1.23)
     multi_json (1.7.6)
     mysql2 (0.3.11)
@@ -156,6 +157,7 @@ DEPENDENCIES
   iso-639
   jquery-rails
   libxml-ruby
+  memcache-client
   mysql2
   rails (= 3.2.13)
   rails-i18n

@@ -46,3 +46,6 @@ gem 'bluecloth'
 # query optimization
 gem "bullet", :group => "development"
 gem 'term-ansicolor'
+
+# memcache
+gem 'memcache-client'

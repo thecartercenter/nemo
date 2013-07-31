@@ -36,7 +36,7 @@ ELMO::Application.configure do
   config.assets.debug = true
   
   # use null cache for development for now
-  config.cache_store = :null_store
+  config.cache_store = :mem_cache_store
   
   # bullet gem for query optimization
   config.after_initialize do
