@@ -44,6 +44,9 @@ class Response < ActiveRecord::Base
   # loads only answers with location info
   scope(:with_location_answers, includes(:location_answers))
   
+  # sort by updated_at DESC
+  scope(:by_updated_at, order('updated_at DESC'))
+  
   self.per_page = 20
   
   # takes a Relation, adds a bunch of selects and joins, and uses find_by_sql to do the actual finding
@@ -106,6 +109,18 @@ class Response < ActiveRecord::Base
       GROUP BY forms.id, forms.name
       ORDER BY count DESC
       LIMIT #{n}")
+  end
+  
+  # generates a cache key for the set of all responses for the given mission.
+  # the key will change if the number of responses changes, or if a response is updated.
+  def self.per_mission_cache_key(mission)
+    rel = unscoped.for_mission(mission)
+    if rel.empty?
+      'empty'
+    else
+      last_update = rel.by_updated_at.first.updated_at.strftime('%Y%m%d%H%M%S')
+      "#{count}-#{last_update}"
+    end
   end
   
   def populate_from_xml(xml)

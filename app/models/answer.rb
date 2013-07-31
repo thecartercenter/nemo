@@ -6,7 +6,7 @@ class Answer < ActiveRecord::Base
 
   belongs_to(:questioning, :inverse_of => :answers)
   belongs_to(:option, :inverse_of => :answers)
-  belongs_to(:response, :inverse_of => :answers)
+  belongs_to(:response, :inverse_of => :answers, :touch => true)
   has_many(:choices, :dependent => :destroy, :inverse_of => :answer)
   
   before_validation(:clean_locations)
