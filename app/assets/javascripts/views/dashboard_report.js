@@ -21,13 +21,12 @@
     // show loading message
     $('.report_main').html(I18n.t('report/report.loading_report'));
     
-    // send ajax request
-    $.ajax({
-      url: Utils.build_url('report/reports', id),
-      method: 'GET',
-      success: function(data) { $('.report_main').html(data); },
-      error: function() { $('.report_main').html(I18n.t('layout.server_contact_error')); }
-    });
+    // send ajax requests
+    $('.report_header').load(Utils.build_url('dashboard/report_header', id));
+    $('.report_main').load(Utils.build_url('report/reports', id));
+    
+    // clear the dropdown for the next choice
+    $('.report_chooser select').val("");
   };
 
 }(ELMO.Views));

@@ -26,8 +26,9 @@ end %>
   <form class="report_chooser">
     <%= select_tag('report_id', options_from_collection_for_select(@reports, 'id', 'name'), :prompt => t('report/report.choose_report')) %>
   </form>
-  
-  <h2><%= translate_model(Report::Report) %>: <%= @report.name %></h2>
+
+  <div class="report_header">
+  </div>
   
   <div class="report_main">
   </div>

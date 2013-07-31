@@ -104,4 +104,11 @@ body.dashboard {
     float: right;
   }
   
+  /* report column */
+  div.col.right_col {
+    h2 {
+      display: inline-block;
+    }
+  }
+  
 }

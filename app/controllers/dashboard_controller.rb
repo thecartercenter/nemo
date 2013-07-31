@@ -23,4 +23,12 @@ class DashboardController < ApplicationController
     authorize!(:view, @response)
     render(:layout => false)
   end
+  
+  # rebuilds the report header when a new report is chosen
+  def report_header
+    # load just report, no associations, and don't run it. that happens in reports controller.
+    @report = Report::Report.find(params[:id])
+    authorize!(:view, @report)
+    render(:partial => 'report_header')
+  end
 end

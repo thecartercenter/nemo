@@ -797,6 +797,7 @@ en:
     choose_report: "Choose a Report..."
     create_link: "Create Report"
     display_options: "Display Options"
+    edit_report: "Edit Report"
     enter_name: "Enter a descriptive name for the report."
     export_to_csv: "Export Data To CSV Format"
     groupings: "Groupings"
