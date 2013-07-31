@@ -46,4 +46,10 @@ module Report::ReportsHelper
       end
     end
   end
+  
+  # javascript includes for the report view
+  def report_js_includes
+    javascript_include_tag("https://www.google.com/jsapi") +
+      javascript_tag('google.load("visualization", "1", {packages:["corechart"]});')
+  end
 end

@@ -28,7 +28,12 @@ ELMO::Application.routes.draw do
     resources(:users){member{get 'login_instructions'}; collection{post 'export'}}
     resources(:user_batches)
   
-    namespace(:report){resources(:reports)}
+    namespace(:report) do
+      resources(:reports)
+      resources(:question_answer_tally_reports, :controller => 'reports')
+      resources(:grouped_tally_reports, :controller => 'reports')
+      resources(:list_reports, :controller => 'reports')
+    end
 
     match('/dashboard' => 'dashboard#show', :as => :dashboard)
     match('/dashboard/info_window' => 'dashboard#info_window', :as => :dashboard_info_window)

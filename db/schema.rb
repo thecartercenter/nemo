@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130730144254) do
+ActiveRecord::Schema.define(:version => 20130730185504) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -23,6 +23,7 @@ ActiveRecord::Schema.define(:version => 20130730144254) do
     t.time     "time_value"
     t.date     "date_value"
     t.datetime "datetime_value"
+    t.string   "qtype_name"
   end
 
   add_index "answers", ["option_id"], :name => "index_answers_on_option_id"
@@ -133,6 +134,9 @@ ActiveRecord::Schema.define(:version => 20130730144254) do
     t.datetime "updated_at"
     t.integer  "rank"
   end
+
+  add_index "optionings", ["option_id"], :name => "index_optionings_on_option_id"
+  add_index "optionings", ["option_set_id"], :name => "index_optionings_on_option_set_id"
 
   create_table "options", :force => true do |t|
     t.datetime "created_at"

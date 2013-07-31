@@ -15,7 +15,7 @@ class Option < ActiveRecord::Base
   after_save(:invalidate_cache)
   after_destroy(:invalidate_cache)
   
-  default_scope(includes(:option_sets => [:questionings, {:questions => {:questionings => :form}}]))
+  scope(:with_questions_and_forms, includes(:option_sets => [:questionings, {:questions => {:questionings => :form}}]))
   
   translates :name, :hint
   

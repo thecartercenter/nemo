@@ -802,6 +802,7 @@ en:
     groupings: "Groupings"
     how_to_display_questions: "How should questions be displayed?"
     how_to_display_results: "How would you like to display the results?"
+    loading_report: "Loading Report..."
     questions_attributes: "Questions/Attributes"
     questions_with_option_sets: "Questions with these option sets"
     no_match: "No matching data were found."

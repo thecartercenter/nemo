@@ -1,8 +1,5 @@
-<%# google vis api stuff %>
-<% content_for(:per_page_js) do %>
-  <%= javascript_include_tag("https://www.google.com/jsapi") %>
-  <%= javascript_tag('google.load("visualization", "1", {packages:["corechart"]});') %>
-<% end %>
+<%# include javascript google vis api stuff %>
+<% content_for(:per_page_js){report_js_includes} %>
 
 <%= loading_indicator(:id => "report_load_ind") %>
 
@@ -27,8 +24,7 @@
     </div>
   <% end %>
   <div id="report_main">
-    <div class="tip" id="report_info"></div>
-    <div id="report_body"></div>
+    <%= render('main') %>
   </div>
 </div>
 
@@ -47,7 +43,7 @@
                 <div>
                   <input type="radio" name="report_type" id="report_type_<%= i %>" value="<%= klass.name %>">
                   <label for="report_type_<%= i %>">
-                    <h3><%= klass.model_name.human %></h3>
+                    <h3><%= translate_model(klass) %></h3>
                     <div class="ex_lbl"><%= t("common.example", :count => 2) %>:</div>
                     <ul>
                       <% t("report/report.examples.#{klass.name.demodulize.underscore}").each do |ex| %>
@@ -264,9 +260,3 @@
     
   </form>
 </div>
-
-<script type="text/javascript">
-  $(document).ready(function(){
-    var report = new ELMO.Report.ReportController(<%=j @report_json.html_safe %>);
-  })
-</script>

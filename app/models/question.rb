@@ -19,7 +19,8 @@ class Question < ActiveRecord::Base
   
   default_scope(order("code"))
   scope(:select_types, where(:qtype_name => %w(select_one select_multiple)))
-
+  scope(:with_forms, includes(:forms))
+  
   translates :name, :hint
   
   delegate :smsable?, :has_options?, :to => :qtype
@@ -70,8 +71,9 @@ class Question < ActiveRecord::Base
     I18n.t("layout.must_be") + " " + clauses.join(" " + I18n.t("common.and") + " ")
   end
   
-  def as_json(options = {})
-    {:id => id, :code => code, :qtype_name => qtype_name, :form_ids => forms.collect{|f| f.id}.sort}
+  # returns sorted list of form ids related to this form
+  def form_ids
+    forms.collect{|f| f.id}.sort
   end
   
   private

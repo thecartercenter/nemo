@@ -26,7 +26,9 @@ class Report::ReportsController < ApplicationController
     # handle different formats
     respond_to do |format|
       # for html, use the render_show function below
-      format.html{render_show}
+      format.html do 
+        render_show
+      end
       
       # for csv, just render the csv template
       format.csv do 
@@ -87,7 +89,7 @@ class Report::ReportsController < ApplicationController
       raise if @report.new_record?
       
       # if not a new record, run it and record viewing
-      @report.record_viewing
+      @report.record_viewing unless ajax_request?
       
       return run_and_handle_errors
     end
@@ -106,19 +108,28 @@ class Report::ReportsController < ApplicationController
   
     # prepares and renders the show template, which is used for new and show actions
     def render_show
-      # setup json data to be used on client side
-      @report_json = {
-        :report => @report,
-        :options => {
+      # setup data to be used on client side
+      @report_data = {:report => @report}
+      
+      # add stuff for report editing, or read only flag, if appropriate
+      if ajax_request?
+        @report_data[:read_only] = true
+      else
+        @report_data[:options] = {
           :attribs => Report::AttribField.all,
           :forms => Form.for_mission(current_mission).all,
           :calculation_types => Report::Calculation::TYPES,
-          :questions => Question.for_mission(current_mission).includes(:forms).all,
+          :questions => Question.for_mission(current_mission).with_forms.all.as_json(:methods => :form_ids),
           :option_sets => OptionSet.for_mission(current_mission).all,
           :percent_types => Report::Report::PERCENT_TYPES
         }
-      }.to_json
+      end
       
-      render(:show)
+      # render partial only if ajax request
+      if ajax_request?
+        render(:partial => 'main')
+      else
+        render(:show)
+      end
     end
 end

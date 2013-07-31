@@ -27,7 +27,7 @@
       el: this.cont.find("div#form_select"),
       objs: this.menus.form.objs,
       id_key: "id",
-      txt_key: "full_name"
+      txt_key: "name"
     });
     this.form_chooser.change(function() { _this.broadcast_change("form_selection"); });
   }

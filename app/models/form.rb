@@ -38,10 +38,6 @@ class Form < ActiveRecord::Base
     mv == 0 ? nil : mv
   end
   
-  def as_json(options = {})
-    {:id => id, :name => name, :full_name => full_name}
-  end
-  
   def temp_response_id
     "#{name}_#{ActiveSupport::SecureRandom.random_number(899999999) + 100000000}"
   end

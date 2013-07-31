@@ -15,7 +15,7 @@ class OptionSet < ActiveRecord::Base
   before_save(:notify_form_versioning_policy_of_update)
   
   default_scope(order("name"))
-  scope(:with_associations, includes(:questions, :options, {:questionings => :form}))
+  scope(:with_associations, includes(:questions, {:optionings => :option}, {:questionings => :form}))
   
   accepts_nested_attributes_for(:optionings, :allow_destroy => true)
   
@@ -57,10 +57,6 @@ class OptionSet < ActiveRecord::Base
   def optioning_hash(options = {})
     @optioning_hash = nil if options[:rebuild]
     @optioning_hash ||= Hash[*optionings.collect{|os| [os.option, os]}.flatten]
-  end
-  
-  def as_json(options = {})
-    Hash[*%w(id name optionings).collect{|k| [k, self.send(k)]}.flatten(1)]
   end
   
   # gets all forms to which this option set is linked (through questionings)

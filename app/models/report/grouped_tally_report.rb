@@ -1,6 +1,6 @@
 class Report::GroupedTallyReport < Report::TallyReport
   include Report::Groupable
-  
+
   protected
   
     def prep_relation(rel)

@@ -3,18 +3,20 @@
   
   // constructor
   ns.ReportController = klass = function(init_data) {
-    // create supporting models
-    this.options = init_data.options;
-    this.menus = {
-      attrib: new ns.AttribMenu(this.options.attribs),
-      form: new ns.FormMenu(this.options.forms),
-      calc_type: new ns.CalcTypeMenu(this.options.calculation_types),
-      question: new ns.QuestionMenu(this.options.questions),
-      option_set: new ns.OptionSetMenu(this.options.option_sets)
+    // create supporting models unless in read only mode
+    if (!init_data.read_only) {
+      this.options = init_data.options;
+      this.menus = {
+        attrib: new ns.AttribMenu(this.options.attribs),
+        form: new ns.FormMenu(this.options.forms),
+        calc_type: new ns.CalcTypeMenu(this.options.calculation_types),
+        question: new ns.QuestionMenu(this.options.questions),
+        option_set: new ns.OptionSetMenu(this.options.option_sets)
+      }
     }
-
+    
     this.report_in_db = new ns.Report(init_data.report, this.menus);
-    this.report_in_db.prepare();
+    if (!init_data.read_only) this.report_in_db.prepare();
     
     // create copy of report to be referenced each run
     this.report_last_run = this.report_in_db.clone();
@@ -22,13 +24,15 @@
     // create report view
     this.report_view = new ns.ReportView(this, this.report_in_db);
     
-    // create edit view
-    this.edit_view = new ns.EditView(this.menus, this.options, this);
+    // create edit view if applicable
+    if (!init_data.read_only) {
+      this.edit_view = new ns.EditView(this.menus, this.options, this);
     
-    // update the links
-    this.edit_view.show_hide_edit_links(this.report_in_db);
-        
-    // otherwise, if is new record, show dialog first page
+      // update the links
+      this.edit_view.show_hide_edit_links(this.report_in_db);
+    }
+    
+    // if is new record, show dialog first page
     if (!this.report_in_db.has_run())
       this.show_edit_view(0);
       
