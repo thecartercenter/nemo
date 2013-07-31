@@ -15,7 +15,7 @@ end %>
     <%= index_table(Response, @responses, :table_only => true) %>
   </div>
 
-  <h2><%= t('dashboard.response_locations') %></h2>
+  <h2 class="interior"><%= t('dashboard.response_locations') %></h2>
 
   <div class="response_locations">
   </div>
@@ -33,7 +33,6 @@ end %>
   <div class="report_main">
   </div>
 </div>
-
 <%= javascript_doc_ready do %>
   new ELMO.Views.Dashboard({
     map: {

@@ -28,8 +28,13 @@ body.dashboard {
   h2 {
     color: #888;
     text-transform: uppercase;
-    margin-top: 0;
+    margin: 0 0 15px 0;
     font-size: 18px;
+  }
+  
+  /* interior headers need top margin also */
+  h2.interior {
+    margin-top: 15px;
   }
   
   /* columns */
@@ -38,42 +43,41 @@ body.dashboard {
     vertical-align: top;
     
     &.left_col {
-      width: 611px;
-      padding-right: 20px;
+      padding-right: 15px;
     }
 
     &.right_col {
-      width: 811px;
     }
   }
   
   /* responses index table */
-  table.index_table {
-    td {
-      width: 100px;
-      
-      > div {
+  div.recent_responses {
+    overflow: auto;
+    table.index_table {
+      td {
         width: 100px;
-        white-space: nowrap;
-        overflow: hidden;
-      }
-    }
-    
-    td.reviewed_col {
-      width: 50px;
-      > div { width: 50px; }
-    }
 
-    td.age_col {
-      width: 75px;
-      > div { width: 75px; }
+        > div {
+          width: 100px;
+          white-space: nowrap;
+          overflow: hidden;
+        }
+      }
+
+      td.reviewed_col {
+        width: 50px;
+        > div { width: 50px; }
+      }
+
+      td.age_col {
+        width: 75px;
+        > div { width: 75px; }
+      }
     }
   }
   
   /* map */
   div.response_locations {
-    width: 611px;
-    height: 400px;
   }
   
   /* map info window */
