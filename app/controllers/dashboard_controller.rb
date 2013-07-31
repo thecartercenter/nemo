@@ -6,33 +6,39 @@ class DashboardController < ApplicationController
   def show
     authorize!(:view, :dashboard)
     @dont_print_title = true
-
-    # get a relation for accessible responses
-    accessible_responses = Response.accessible_by(current_ability)
     
-    # load objects for the view
-    @responses = accessible_responses.with_basic_assoc.with_basic_answers.limit(20)
+    # we need to check for a cache fragment here because some of the below fetches are not lazy
+    @cache_key = Response.per_mission_cache_key(current_mission)
+    unless fragment_exist?(@cache_key)
     
-    # get location answers
-    @location_answers = Answer.location_answers_for_mission(current_mission)
+      # get a relation for accessible responses
+      accessible_responses = Response.accessible_by(current_ability)
     
-    # get list of all reports for the mission
-    @reports = Report::Report.accessible_by(current_ability).by_name
+      # load objects for the view
+      @responses = accessible_responses.with_basic_assoc.with_basic_answers.limit(20)
     
-    # get the most popular report
-    @report = Report::Report.accessible_by(current_ability).by_popularity.first
+      # get location answers
+      @location_answers = Answer.location_answers_for_mission(current_mission)
     
-    # get the number of responses in recent period
-    @recent_responses_count = Response.recent_count(accessible_responses)
+      # get list of all reports for the mission
+      @reports = Report::Report.accessible_by(current_ability).by_name
     
-    # total responses for this mission
-    @total_response_count = accessible_responses.count
+      # get the most popular report
+      @report = Report::Report.accessible_by(current_ability).by_popularity.first
     
-    # unreviewed response count
-    @unreviewed_response_count = accessible_responses.unreviewed.count
+      # get the number of responses in recent period
+      @recent_responses_count = Response.recent_count(accessible_responses)
     
-    # responses by form (top N most popular)
-    @responses_by_form = Response.per_form(accessible_responses, STAT_ROWS)
+      # total responses for this mission
+      @total_response_count = accessible_responses.count
+    
+      # unreviewed response count
+      @unreviewed_response_count = accessible_responses.unreviewed.count
+    
+      # responses by form (top N most popular)
+      @responses_by_form = Response.per_form(accessible_responses, STAT_ROWS)
+      
+    end
   end
   
   # map info window
