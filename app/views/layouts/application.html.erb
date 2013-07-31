@@ -88,6 +88,7 @@
           <li><%= link_to(pluralize_model(k), send("#{k.model_name.route_key}_path")) %></li>
         <% end %>
       <% end %>
+      <li><%= link_to(t('page_titles.dashboard.all'), dashboard_path) if can?(:view, :dashboard) %></li>
     </ul>
   </div>
   

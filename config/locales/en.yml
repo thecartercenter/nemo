@@ -677,7 +677,6 @@ en:
 
   dashboard:
     close_dashboard: "Close Dashboard"
-    full_screen_link: "View full screen dashboard"
     recent_responses: "Latest Responses"
     response_locations: "Response Locations"
     summary: "Summary"

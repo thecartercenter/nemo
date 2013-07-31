@@ -1,7 +1,5 @@
 <%= flash_and_form_errors %>
 
-<%= link_to(t('dashboard.full_screen_link'), dashboard_path) %>
-
 <%# use a partial so that just the blocks can be rendered on ajax request %>
 <div id="blocks"><%= render("blocks") %></div>
 
