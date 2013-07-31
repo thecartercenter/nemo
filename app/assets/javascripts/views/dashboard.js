@@ -43,8 +43,9 @@
     // the height of the h2 elements
     var title_h = $('#content h2').height();
     
-    // all widths are the same
-    $('.recent_responses, .response_locations, .report_main').width((cont_w - spacing) / 2);
+    // left col is slightly narrower than right col
+    $('.recent_responses, .response_locations').width((cont_w - spacing) * .8 / 2)
+    $('.report_main').width((cont_w - spacing) * 1.2 / 2);
     
     // for left panes height we subtract 2 title heights plus 3 spacings (2 bottom, one top)
     $('.recent_responses, .response_locations').height((cont_h - 2 * title_h - 3 * spacing) / 2);
