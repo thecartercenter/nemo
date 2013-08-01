@@ -29,6 +29,24 @@
     set_col_width(small_w, '.reviewed_col');
   };
   
+  // gets the ID of the latest response in the list, or empty string if no responses
+  klass.prototype.latest_response_id = function(args) { var self = this;
+    var dom_id = $('.recent_responses tbody tr:first-child').attr('id');
+    return dom_id ? dom_id.replace(/[^\d]/g, '') : '';
+  };
+  
+  // highlights all responses after (higher in the list than) the response with the given id
+  // id may be null, in which case we do nothing
+  klass.prototype.highlight_responses_after = function(id) { var self = this;
+    if (id) {
+      // loop through the response rows, highlighting, until we reach the one with the given ID
+      $('.recent_responses tbody tr').each(function(){
+        if (this.id == 'response_' + id) return false;
+        $(this).effect("highlight", {}, 4000);
+      })
+    }
+  };
+  
   // sets the width of the table columns. if cls is given, it's added as a suffix to the td selector.
   function set_col_width(width, cls) { var self = this;
     if (!cls) cls = '';

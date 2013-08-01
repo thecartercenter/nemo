@@ -3,7 +3,7 @@
 // View model for the Dashboard
 (function(ns, klass) {
   
-  var RELOAD_INTERVAL = 60; // seconds
+  var RELOAD_INTERVAL = 10; // seconds
   
   // constructor
   ns.Dashboard = klass = function(params) { var self = this;
@@ -61,15 +61,14 @@
     
     // for report pane we subtract 1 title height plus 2 spacings (1 bottom, 1 top) plus the stats pane height
     $('.report_main').height(cont_h - title_h - 2 * spacing - stats_h);
-    
-    //if (self.map_view) self.map_view.resized();
   };
   
   // reloads the page, passing the current report id
   klass.prototype.reload = function(args) { var self = this;
     // we don't set the 'auto' parameter on this request so that the session will be kept alive
     // the dashboard is meant to be a long-running page so doesn't make sense to let the session expire
-    $('#content').load(Utils.build_url('dashboard?report_id=' + self.report_view.current_report_id));
+    $('#content').load(Utils.build_url('dashboard?report_id=' + self.report_view.current_report_id + 
+      '&latest_response_id=' + self.list_view.latest_response_id()));
   };
   
 }(ELMO.Views));
