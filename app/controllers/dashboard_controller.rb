@@ -71,8 +71,8 @@ class DashboardController < ApplicationController
       
       unless @report.nil?
         authorize!(:view, @report)
-        build_report_data(:read_only => true)
         run_and_handle_errors
+        build_report_data(:read_only => true)
       end
     end
 end
