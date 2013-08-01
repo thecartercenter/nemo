@@ -67,6 +67,8 @@
   
   // reloads the page, passing the current report id
   klass.prototype.reload = function(args) { var self = this;
+    // we don't set the 'auto' parameter on this request so that the session will be kept alive
+    // the dashboard is meant to be a long-running page so doesn't make sense to let the session expire
     $('#content').load(Utils.build_url('dashboard?report_id=' + self.report_view.current_report_id));
   };
   
