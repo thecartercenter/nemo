@@ -8,7 +8,7 @@
     self.params = params;
     
     // hookup the form change event
-    $('form.report_chooser').on('change', function(e){ 
+    $('.report_pane').on('change', 'form.report_chooser', function(e){ 
       var report_id = $(e.target).val();
       if (report_id) self.load_report(report_id);
     });

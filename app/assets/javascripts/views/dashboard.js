@@ -54,7 +54,7 @@
     // for left panes height we subtract 2 title heights plus 3 spacings (2 bottom, one top)
     $('.recent_responses, .response_locations').height((cont_h - 2 * title_h - 3 * spacing) / 2);
     
-    // for right panes we subtract 1 title height plus 2 spacings (1 bottom, 1 top) plus the stats pane height
+    // for report pane we subtract 1 title height plus 2 spacings (1 bottom, 1 top) plus the stats pane height
     $('.report_main').height(cont_h - title_h - 2 * spacing - stats_h);
   };
   

@@ -26,9 +26,6 @@ class DashboardController < ApplicationController
       # get location answers
       @location_answers = Answer.location_answers_for_mission(current_mission)
     
-      # get list of all reports for the mission
-      @reports = Report::Report.accessible_by(current_ability).by_name
-    
       # get the number of responses in recent period
       @recent_responses_count = Response.recent_count(accessible_responses)
     
@@ -62,6 +59,9 @@ class DashboardController < ApplicationController
   private
   
     def prepare_report
+      # get list of all reports for the mission, for the dropdown
+      @reports = Report::Report.accessible_by(current_ability).by_name
+      
       authorize!(:view, @report)
       build_report_data(:read_only => true)
       run_and_handle_errors
