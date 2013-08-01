@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130730185504) do
+ActiveRecord::Schema.define(:version => 20130801185904) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -23,7 +23,6 @@ ActiveRecord::Schema.define(:version => 20130730185504) do
     t.time     "time_value"
     t.date     "date_value"
     t.datetime "datetime_value"
-    t.string   "qtype_name"
   end
 
   add_index "answers", ["option_id"], :name => "index_answers_on_option_id"
@@ -235,6 +234,8 @@ ActiveRecord::Schema.define(:version => 20130730185504) do
     t.string   "aggregation_name"
   end
 
+  add_index "report_reports", ["view_count"], :name => "index_report_reports_on_view_count"
+
   create_table "responses", :force => true do |t|
     t.integer  "form_id"
     t.integer  "user_id"
@@ -245,8 +246,11 @@ ActiveRecord::Schema.define(:version => 20130730185504) do
     t.integer  "mission_id"
   end
 
+  add_index "responses", ["created_at"], :name => "index_responses_on_created_at"
   add_index "responses", ["form_id"], :name => "index_responses_on_form_id"
   add_index "responses", ["mission_id"], :name => "index_responses_on_mission_id"
+  add_index "responses", ["reviewed"], :name => "index_responses_on_reviewed"
+  add_index "responses", ["updated_at"], :name => "index_responses_on_updated_at"
   add_index "responses", ["user_id"], :name => "index_responses_on_user_id"
 
   create_table "roles", :force => true do |t|
