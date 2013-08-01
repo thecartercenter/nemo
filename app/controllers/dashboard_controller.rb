@@ -71,8 +71,10 @@ class DashboardController < ApplicationController
       # get list of all reports for the mission, for the dropdown
       @reports = Report::Report.accessible_by(current_ability).by_name
       
-      authorize!(:view, @report)
-      build_report_data(:read_only => true)
-      run_and_handle_errors
+      unless @report.nil?
+        authorize!(:view, @report)
+        build_report_data(:read_only => true)
+        run_and_handle_errors
+      end
     end
 end

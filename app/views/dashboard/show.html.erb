@@ -16,7 +16,7 @@ end %>
         info_window_url: <%=j dashboard_info_window_url.to_json.html_safe %>
       },
       report: {
-        id: <%= @report.id %>
+        id: <%=j @report.try(:id).to_json.html_safe %>
       }
     });
   <% end %>

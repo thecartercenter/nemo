@@ -677,6 +677,7 @@ en:
 
   dashboard:
     close_dashboard: "Close Dashboard"
+    no_reports: "No Reports have been created for this mission yet."
     recent_responses: "Latest Responses"
     response_locations: "Response Locations"
     summary: "Summary"
