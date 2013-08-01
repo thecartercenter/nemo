@@ -12,7 +12,7 @@
 
   // adjusts column widths depending on how many there are
   klass.prototype.adjust_columns = function() { var self = this;
-    // age and reviewed columns get fixed widths
+    // reviewed column gets fixed width
     var small_w = 75;
     
     // the rest are computed based on size of pane and number of cols
@@ -23,10 +23,9 @@
     var scrollbar_w = 12;
     
     // first set all of them to the wider width, also allow for scrollbar
-    set_col_width((pane_w - 2 * small_w) / (num_cols - 2) - scrollbar_w);
+    set_col_width((pane_w - small_w) / (num_cols - 1) - scrollbar_w);
     
     // then set the two smaller ones
-    set_col_width(small_w, '.age_col');
     set_col_width(small_w, '.reviewed_col');
   };
   

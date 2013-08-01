@@ -2,7 +2,7 @@ module ResponsesHelper
   def responses_index_fields
     # if in dashboard mode, don't put as many fields
     if params[:controller] == 'dashboard'
-      fields = %w(form_id user_id) + key_question_hashes(2) + %w(age reviewed)
+      fields = %w(form_id user_id) + key_question_hashes(2) + %w(created_at reviewed)
     else
       fields = %w(id form_id user_id) + key_question_hashes(2) + %w(created_at age reviewed actions)
     end
