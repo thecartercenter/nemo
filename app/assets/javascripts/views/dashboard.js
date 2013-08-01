@@ -67,8 +67,21 @@
   klass.prototype.reload = function(args) { var self = this;
     // we don't set the 'auto' parameter on this request so that the session will be kept alive
     // the dashboard is meant to be a long-running page so doesn't make sense to let the session expire
-    $('#content').load(Utils.build_url('dashboard?report_id=' + self.report_view.current_report_id + 
-      '&latest_response_id=' + self.list_view.latest_response_id()));
+    $.ajax({
+      url: Utils.build_url('dashboard'),
+      method: 'GET',
+      data: {
+        report_id: self.report_view.current_report_id,
+        latest_response_id: self.list_view.latest_response_id()
+      },
+      success: function(data) {
+        $('#content').html(data);
+      },
+      error: function() {
+        $('#content').html(I18n.t('layout.server_contact_error'));
+      }
+    });
+    
   };
   
 }(ELMO.Views));
