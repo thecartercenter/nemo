@@ -39,10 +39,18 @@
   // id may be null, in which case we do nothing
   klass.prototype.highlight_responses_after = function(id) { var self = this;
     if (id) {
+      var sound_played = false;
+      
       // loop through the response rows, highlighting, until we reach the one with the given ID
+      // also play a sound if we find a new response
       $('.recent_responses tbody tr').each(function(){
         if (this.id == 'response_' + id) return false;
         $(this).effect("highlight", {}, 4000);
+        
+        if (!sound_played) {
+          $("#new_arrival_sound")[0].play();
+          sound_played = true;
+        }
       })
     }
   };

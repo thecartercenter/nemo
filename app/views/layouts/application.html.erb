@@ -126,5 +126,8 @@
       <div id="dev_mode_warning"><%= t("layout.dev_mode") %></div>
     <% end %>
   </div>
+  
+  <%# insert any audio objects at the end %>
+  <%= yield(:audio) %>
 </body>
 </html>
