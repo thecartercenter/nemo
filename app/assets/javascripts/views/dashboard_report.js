@@ -4,8 +4,12 @@
 (function(ns, klass) {
   
   // constructor
-  ns.DashboardReport = klass = function(params) { var self = this;
+  ns.DashboardReport = klass = function(dashboard, params) { var self = this;
+    self.dashboard = dashboard;
     self.params = params;
+    
+    // save the report id
+    self.current_report_id = self.params.id;
     
     // hookup the form change event
     $('.report_pane').on('change', 'form.report_chooser', function(e){ 
@@ -15,6 +19,9 @@
   };
   
   klass.prototype.load_report = function(id) { var self = this;
+    // save the ID
+    self.current_report_id = self.params.id;
+    
     // show loading message
     $('.report_pane h2').html(I18n.t('report/report.loading_report'));
     $('.report_main').empty();
@@ -22,7 +29,7 @@
     // send ajax request
     $('.report_pane').load(Utils.build_url('dashboard/report_pane', id), function(){
       // fix pane sizes again after load is done
-      self.params.dashboard.adjust_pane_sizes();
+      self.dashboard.adjust_pane_sizes();
     });
     
     // clear the dropdown for the next choice

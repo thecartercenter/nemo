@@ -10,7 +10,13 @@ class DashboardController < ApplicationController
     @dont_print_title = true
     
     # we need to load the report outside the cache block b/c it's included in the cache key
-    @report = Report::Report.accessible_by(current_ability).by_popularity.first
+    # if report id given, load that
+    if params[:report_id]
+      @report = Report::Report.find(params[:report_id])
+    else
+      # else load the most popular report
+      @report = Report::Report.accessible_by(current_ability).by_popularity.first
+    end
     
     # we need to check for a cache fragment here because some of the below fetches are not lazy
     @cache_key = Response.per_mission_cache_key(current_mission) + '-' + (@report.try(:cache_key) || 'no-report')
@@ -40,6 +46,9 @@ class DashboardController < ApplicationController
       
       prepare_report
     end
+    
+    # render without layout if ajax request
+    render(:layout => !ajax_request?)
   end
   
   # map info window

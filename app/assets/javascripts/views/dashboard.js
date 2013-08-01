@@ -3,14 +3,11 @@
 // View model for the Dashboard
 (function(ns, klass) {
   
+  var RELOAD_INTERVAL = 60; // seconds
+  
   // constructor
   ns.Dashboard = klass = function(params) { var self = this;
     self.params = params;
-    
-    self.list_view = new ELMO.Views.DashboardResponseList();
-    self.map_view = new ELMO.Views.DashboardMap(self.params.map);
-    self.params.report.dashboard = self;
-    self.report_view = new ELMO.Views.DashboardReport(self.params.report);
     
     // readjust stuff on window resize
     $(window).on('resize', function(){
@@ -26,8 +23,16 @@
       }, 1000);
     })
     
+    // setup auto-reload
+    self.reload_timer = setTimeout(function(){ self.reload(); }, RELOAD_INTERVAL * 1000);
+    
     // adjust sizes for the initial load
     self.adjust_pane_sizes();
+
+    self.list_view = new ELMO.Views.DashboardResponseList();
+    self.map_view = new ELMO.Views.DashboardMap(self.params.map);
+    self.report_view = new ELMO.Views.DashboardReport(self, self.params.report);
+    
     self.list_view.adjust_columns();
   };
   
@@ -56,6 +61,13 @@
     
     // for report pane we subtract 1 title height plus 2 spacings (1 bottom, 1 top) plus the stats pane height
     $('.report_main').height(cont_h - title_h - 2 * spacing - stats_h);
+    
+    //if (self.map_view) self.map_view.resized();
+  };
+  
+  // reloads the page, passing the current report id
+  klass.prototype.reload = function(args) { var self = this;
+    $('#content').load(Utils.build_url('dashboard?report_id=' + self.report_view.current_report_id));
   };
   
 }(ELMO.Views));
