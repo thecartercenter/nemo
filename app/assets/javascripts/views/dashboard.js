@@ -3,7 +3,7 @@
 // View model for the Dashboard
 (function(ns, klass) {
   
-  var RELOAD_INTERVAL = 10; // seconds
+  var RELOAD_INTERVAL = 30; // seconds
   
   // constructor
   ns.Dashboard = klass = function(params) { var self = this;
