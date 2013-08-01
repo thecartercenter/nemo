@@ -1,4 +1,6 @@
 class Report::ReportsController < ApplicationController
+  include ReportEmbeddable
+  
   # need to do special load for new/create/update because CanCan won't work with the STI hack in report.rb
   before_filter :custom_load, :only => [:create]
   
@@ -20,13 +22,16 @@ class Report::ReportsController < ApplicationController
   end
   
   def show
-    # prep the report for viewing
-    init_report
+    # run the report
+    run_and_handle_errors
     
     # handle different formats
     respond_to do |format|
       # for html, use the render_show function below
       format.html do 
+        # record viewing of report
+        @report.record_viewing
+
         render_show
       end
       
@@ -82,54 +87,11 @@ class Report::ReportsController < ApplicationController
       @report = Report::Report.create(params[:report].merge(:mission_id => current_mission.id))
     end
   
-    # sets up the report object by recording a viewing and running
-    # returns true if report ran with no errors, false otherwise
-    # should only be run if @report is not a new record
-    def init_report
-      raise if @report.new_record?
-      
-      # if not a new record, run it and record viewing
-      @report.record_viewing unless ajax_request?
-      
-      return run_and_handle_errors
-    end
-    
-    # runs the report and handles any errors, adding them to the report errors array
-    # returns true if no errors, false otherwise
-    def run_and_handle_errors
-      begin
-        @report.run
-        return true
-      rescue Report::ReportError, Search::ParseError
-        @report.errors.add(:base, $!.to_s)
-        return false
-      end
-    end
-  
     # prepares and renders the show template, which is used for new and show actions
     def render_show
       # setup data to be used on client side
-      @report_data = {:report => @report}
+      build_report_data
       
-      # add stuff for report editing, or read only flag, if appropriate
-      if ajax_request?
-        @report_data[:read_only] = true
-      else
-        @report_data[:options] = {
-          :attribs => Report::AttribField.all,
-          :forms => Form.for_mission(current_mission).all,
-          :calculation_types => Report::Calculation::TYPES,
-          :questions => Question.for_mission(current_mission).with_forms.all.as_json(:methods => :form_ids),
-          :option_sets => OptionSet.for_mission(current_mission).all,
-          :percent_types => Report::Report::PERCENT_TYPES
-        }
-      end
-      
-      # render partial only if ajax request
-      if ajax_request?
-        render(:partial => 'main')
-      else
-        render(:show)
-      end
+      render(:show)
     end
 end

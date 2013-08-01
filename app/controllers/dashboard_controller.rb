@@ -1,5 +1,7 @@
 # handles the dashboard view. plural name just because of Rails convention.
 class DashboardController < ApplicationController
+  include ReportEmbeddable
+
   # number of rows in the stats blocks
   STAT_ROWS = 3
   
@@ -7,8 +9,12 @@ class DashboardController < ApplicationController
     authorize!(:view, :dashboard)
     @dont_print_title = true
     
+    # we need to load the report outside the cache block b/c it's included in the cache key
+    @report = Report::Report.accessible_by(current_ability).by_popularity.first
+    
     # we need to check for a cache fragment here because some of the below fetches are not lazy
-    @cache_key = Response.per_mission_cache_key(current_mission)
+    @cache_key = Response.per_mission_cache_key(current_mission) + '-' + (@report.try(:cache_key) || 'no-report')
+    
     unless fragment_exist?(@cache_key)
     
       # get a relation for accessible responses
@@ -23,9 +29,6 @@ class DashboardController < ApplicationController
       # get list of all reports for the mission
       @reports = Report::Report.accessible_by(current_ability).by_name
     
-      # get the most popular report
-      @report = Report::Report.accessible_by(current_ability).by_popularity.first
-    
       # get the number of responses in recent period
       @recent_responses_count = Response.recent_count(accessible_responses)
     
@@ -38,6 +41,7 @@ class DashboardController < ApplicationController
       # responses by form (top N most popular)
       @responses_by_form = Response.per_form(accessible_responses, STAT_ROWS)
       
+      prepare_report
     end
   end
   
@@ -48,11 +52,18 @@ class DashboardController < ApplicationController
     render(:layout => false)
   end
   
-  # rebuilds the report header when a new report is chosen
-  def report_header
-    # load just report, no associations, and don't run it. that happens in reports controller.
+  # loads the specified report when chosen from the dropdown menu
+  def report_pane
     @report = Report::Report.find(params[:id])
-    authorize!(:view, @report)
-    render(:partial => 'report_header')
+    prepare_report
+    render(:partial => 'report_pane')
   end
+  
+  private
+  
+    def prepare_report
+      authorize!(:view, @report)
+      build_report_data(:read_only => true)
+      run_and_handle_errors
+    end
 end

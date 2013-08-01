@@ -9,6 +9,7 @@
     
     self.list_view = new ELMO.Views.DashboardResponseList();
     self.map_view = new ELMO.Views.DashboardMap(self.params.map);
+    self.params.report.dashboard = self;
     self.report_view = new ELMO.Views.DashboardReport(self.params.report);
     
     // readjust stuff on window resize

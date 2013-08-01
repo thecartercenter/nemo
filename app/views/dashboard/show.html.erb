@@ -47,16 +47,12 @@ end %>
       </div>
     </div>
   
-    <div>
-      <form class="report_chooser">
-        <%= select_tag('report_id', options_from_collection_for_select(@reports, 'id', 'name'), :prompt => t('report/report.choose_report')) %>
-      </form>
-
-      <div class="report_header">
-      </div>
-    </div>
-  
-    <div class="report_main">
+    <form class="report_chooser">
+      <%= select_tag('report_id', options_from_collection_for_select(@reports, 'id', 'name'), :prompt => t('report/report.choose_report')) %>
+    </form>
+    
+    <div class="report_pane">
+      <%= render('report_pane') %>
     </div>
   </div>
   <%= link_to(t('dashboard.close_dashboard'), root_path, :class => 'close_dashboard') %>
