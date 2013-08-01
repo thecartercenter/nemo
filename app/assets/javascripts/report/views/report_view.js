@@ -21,11 +21,13 @@
     this.show_title();
 
     // if there was a handled error with the report model, display it
-    if (this.report.attribs.errors)
-      this.show_error("Error: " + this.report.attribs.errors);
+    if (this.report.attribs.errors && this.report.attribs.errors.base)
+      this.show_error("Error: " + this.report.attribs.errors.base.join(', '));
     // else, the run must have been successful, so render it!
-    else
+    else {
+      Utils.clear_flash();
       this.render();
+    }
   }
   
   klass.prototype.render = function() {

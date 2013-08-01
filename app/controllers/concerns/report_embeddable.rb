@@ -2,7 +2,7 @@
 module ReportEmbeddable
   # sets up the @report_data structure which will be converted to json
   def build_report_data(options = {})
-    @report_data = {:report => @report}
+    @report_data = {:report => @report.as_json(:methods => :errors)}
     
     # add stuff for report editing, or read only flag, if appropriate
     if options[:read_only]

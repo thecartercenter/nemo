@@ -55,7 +55,8 @@ class Report::ReportsController < ApplicationController
     @report.just_created = true if @report.errors.empty?
     
     # return data in json format
-    render(:json => {:report => @report}.to_json)
+    build_report_data(:read_only => true)
+    render(:json => @report_data.to_json)
   end
 
   # this method only reached through ajax
@@ -72,7 +73,8 @@ class Report::ReportsController < ApplicationController
     end
     
     # return data in json format
-    render(:json => {:report => @report}.to_json)
+    build_report_data(:read_only => true)
+    render(:json => @report_data.to_json)
   end
   
   protected

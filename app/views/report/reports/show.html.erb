@@ -3,6 +3,8 @@
 
 <%= loading_indicator(:id => "report_load_ind") %>
 
+<%= flash_and_form_errors(@report) %>
+
 <div class="link_set report_top_links">
   <%= link_to(t("report/report.create_link"), new_report_report_path) if can?(:create, Report::Report) %>
   <%= link_to(t("report/report.back_to_list"), report_reports_path) if can?(:index, Report::Report) %>

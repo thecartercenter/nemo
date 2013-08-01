@@ -109,7 +109,7 @@
     this.report_view.update(report);
     
     // show/hide the export link if there is no data or an error
-    $("a#csv_link")[report.no_data() || report.has_errors() ? "hide" : "show"]();
+    $("a#csv_link")[report.has_errors() || report.no_data() ? "hide" : "show"]();
   }
   
   klass.prototype.restore_view = function() {

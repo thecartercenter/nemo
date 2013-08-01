@@ -160,7 +160,7 @@ function logout() {
 (function (Utils, undefined) {
   Utils.show_flash = function(params) {
     Utils.clear_flash();
-    $("#content").prepend($("<div>").addClass(params.type).text(params.msg));
+    $(".status_messages").append($("<div>").addClass(params.type).text(params.msg));
     if (params.hide_after)
       setTimeout(Utils.clear_flash, params.hide_after * 1000);
   }
