@@ -1,7 +1,7 @@
 # methods required to embed a report display in a page
 module ReportEmbeddable
   # sets up the @report_data structure which will be converted to json
-  def build_report_data(options)
+  def build_report_data(options = {})
     @report_data = {:report => @report}
     
     # add stuff for report editing, or read only flag, if appropriate
