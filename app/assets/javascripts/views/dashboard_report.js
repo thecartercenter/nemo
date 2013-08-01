@@ -20,7 +20,7 @@
   
   klass.prototype.load_report = function(id) { var self = this;
     // save the ID
-    self.current_report_id = self.params.id;
+    self.current_report_id = id;
     
     // show loading message
     $('.report_pane h2').html(I18n.t('report/report.loading_report'));
