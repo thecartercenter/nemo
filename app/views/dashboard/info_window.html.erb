@@ -3,11 +3,11 @@
   <table>
     <tr>
       <td><%= translate_model(Form) %></td>
-      <td><%= @response.form.name %></td>
+      <td><%= @response.form.try(:name) %></td>
     </tr>
     <tr>
       <td><%= t('activerecord.attributes.response.user_id') %></td>
-      <td><%= @response.user.name %></td>
+      <td><%= @response.user.try(:name) %></td>
     </tr>
     <tr>
       <td><%= t('activerecord.attributes.response.created_at') %></td>
