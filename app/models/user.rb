@@ -25,6 +25,8 @@ class User < ActiveRecord::Base
     c.merge_validates_uniqueness_of_email_field_options(:unless => Proc.new{|u| u.email.blank?})
   end
   
+  after_initialize(:set_default_pref_lang)
+  after_initialize(:set_default_login)
   before_validation(:clean_fields)
   before_destroy(:check_assoc)
   before_validation(:generate_password_if_none)
@@ -102,14 +104,6 @@ class User < ActiveRecord::Base
   def reset_password
     self.password = self.password_confirmation = self.class.random_password
   end
-  
-#  def generate_login!
-#    base = "#{name.gsub(/[^A-Za-z]/,'')[0,1]}#{last_name.gsub(/[^A-Za-z]/,'')[0,7]}".downcase.normalize
-#    try = 1
-#    until self.class.find_by_login(self.login = base + (try > 1 ? try.to_s : "")).nil?
-#      try += 1
-#    end
-#  end
 
   def deliver_intro!
     reset_perishable_token!
@@ -308,4 +302,15 @@ class User < ActiveRecord::Base
       @ability = Ability.new(self)
       return true
     end
+    
+    # sets the user's preferred language to the mission default
+    def set_default_pref_lang
+      self.pref_lang ||= configatron.preferred_language
+    end
+    
+    # sets the user's default login name
+    def set_default_login
+      self.login ||= self.class.suggest_login(name) unless name.blank?
+    end
+    
 end

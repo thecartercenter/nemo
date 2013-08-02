@@ -244,6 +244,8 @@ ActiveRecord::Schema.define(:version => 20130801185904) do
     t.boolean  "reviewed",   :default => false
     t.string   "source"
     t.integer  "mission_id"
+    t.string   "signature"
+    t.boolean  "duplicate"
   end
 
   add_index "responses", ["created_at"], :name => "index_responses_on_created_at"
@@ -308,12 +310,6 @@ ActiveRecord::Schema.define(:version => 20130801185904) do
   end
 
   add_index "sms_messages", ["body"], :name => "index_sms_messages_on_body", :length => {"body"=>160}
-
-  create_table "user_batches", :force => true do |t|
-    t.text     "users"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
 
   create_table "users", :force => true do |t|
     t.string   "login"

@@ -13,7 +13,7 @@ require "capistrano/ext/multistage"
 
 set :application, "elmo"
 set :user, "cceom"
-set :repository,  "https://code.google.com/p/elmo"
+set :repository, "ssh://git@github.com/thecartercenter/elmo.git"
 set(:deploy_to) {"/home/cceom/webapps/rails2/#{application}_#{stage}"}
 set :deploy_via, :remote_cache
 set :use_sudo, false
@@ -78,16 +78,4 @@ namespace :deploy do
     run "curl -s #{ping_url} > /dev/null"
   end
   after "deploy:restart", "deploy:ping"
-  
-  # override the assets precompilation task to check if assets need to be precompiled
-  namespace :assets do
-    task :precompile, :roles => :web, :except => { :no_release => true } do
-      from = source.next_revision(current_revision)
-      if releases.length <= 1 || capture("cd #{latest_release} && #{source.local.log(from)} vendor/assets/ lib/assets/ app/assets/ | wc -l").to_i > 0
-        run %Q{cd #{latest_release} && #{rake} RAILS_ENV=#{rails_env} #{asset_env} assets:precompile}
-      else
-        logger.info "Skipping asset pre-compilation because there were no asset changes"
-      end
-    end
-  end
 end

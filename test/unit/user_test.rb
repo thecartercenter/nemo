@@ -1,7 +1,19 @@
 require 'test_helper'
 
 class UserTest < ActiveSupport::TestCase
-
+  
+  setup do
+    @mission = get_mission
+    Setting.mission_was_set(@mission)
+  end
+  
+  test "creating a user with minimal info should produce good defaults" do
+    user = User.create!(:name => 'Alpha Tester', :reset_password_method => 'print', 
+      :assignments => [Assignment.new(:mission => @mission, :role => User::ROLES.first, :active => true)])
+    assert_equal(:en, user.pref_lang)
+    assert_equal('atester', user.login)
+  end
+  
   test "phone numbers should be unique" do
     # make sure no interference
     User.delete_all

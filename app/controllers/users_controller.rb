@@ -9,7 +9,6 @@ class UsersController < ApplicationController
   
   def new
     # set the default pref_lang based on the mission settings
-    @user.pref_lang = configatron.languages.first || I18n.default_locale
     prepare_and_render_form
   end
   
