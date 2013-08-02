@@ -23,9 +23,9 @@ ELMO::Application.configure do
 
   # Use a different logger for distributed setups
   # config.logger = SyslogLogger.new
-
-  # use file cache because we don't use cache much (yet)
-  config.cache_store = :file_store, Rails.root + "/tmp/cache"
+  
+  # we use a non-standard port on the prod server to avoid conflicts
+  config.cache_store = :dalli_store, 'localhost:11219'
   
   # Disable Rails's static asset server
   # In production, Apache or nginx will already do this

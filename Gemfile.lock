@@ -53,6 +53,7 @@ GEM
       net-ssh-gateway (>= 1.1.0)
     configatron (2.10.0)
       yamler (>= 0.1.0)
+    dalli (2.6.4)
     erubis (2.7.0)
     execjs (1.4.0)
       multi_json (~> 1.0)
@@ -74,7 +75,6 @@ GEM
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
-    memcache-client (1.8.5)
     mime-types (1.23)
     multi_json (1.7.6)
     mysql2 (0.3.11)
@@ -152,12 +152,12 @@ DEPENDENCIES
   cancan
   capistrano
   configatron
+  dalli
   factory_girl_rails (~> 4.0)
   i18n-js!
   iso-639
   jquery-rails
   libxml-ruby
-  memcache-client
   mysql2
   rails (= 3.2.13)
   rails-i18n

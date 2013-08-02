@@ -48,4 +48,4 @@ gem "bullet", :group => "development"
 gem 'term-ansicolor'
 
 # memcache
-gem 'memcache-client'
+gem 'dalli'
