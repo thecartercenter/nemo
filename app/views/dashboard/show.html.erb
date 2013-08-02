@@ -18,6 +18,9 @@ end %>
   
   <%# placing this up here so it's the first call to document.ready, so that the pane sizing happens before report drawing %>
   <%= javascript_doc_ready do %>
+    // delete any previous instance
+    delete ELMO.app.dashboard;
+    
     ELMO.app.dashboard = new ELMO.Views.Dashboard({
       map: {
         locations: <%=j @location_answers.to_json.html_safe %>,

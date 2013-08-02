@@ -3,7 +3,8 @@
 // View model for the Dashboard
 (function(ns, klass) {
   
-  var RELOAD_INTERVAL = 30; // seconds
+  var AJAX_RELOAD_INTERVAL = 30; // seconds
+  var PAGE_RELOAD_INTERVAL = 30; // minutes
   
   // constructor
   ns.Dashboard = klass = function(params) { var self = this;
@@ -24,7 +25,14 @@
     })
     
     // setup auto-reload
-    self.reload_timer = setTimeout(function(){ self.reload(); }, RELOAD_INTERVAL * 1000);
+    self.reload_timer = setTimeout(function(){ self.reload(); }, AJAX_RELOAD_INTERVAL * 1000);
+    
+    // setup long-running page reload timer, unless it already exists
+    // this timer ensures that we don't have memory issues due to a long running page
+    if (!ELMO.app.dashboard_reload_timer)
+      ELMO.app.dashboard_reload_timer = setTimeout(function(){ 
+        window.location.href = Utils.build_url('dashboard') + '?report_id=' + self.report_view.current_report_id;
+      }, PAGE_RELOAD_INTERVAL * 60000);
     
     // adjust sizes for the initial load
     self.adjust_pane_sizes();
