@@ -4,7 +4,7 @@ class UserTest < ActiveSupport::TestCase
   
   setup do
     @mission = get_mission
-    Setting.mission_was_set(@mission)
+    @mission.setting.load
   end
   
   test "creating several users with varying amounts of info should work" do

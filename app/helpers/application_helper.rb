@@ -125,7 +125,7 @@ module ApplicationHelper
   # tries to use the translated locale name if it exists, otherwise use english language name from the iso639 gem
   # returns code itself if code not found
   def language_name(code)
-    if configatron.locales.include?(code)
+    if configatron.full_locales.include?(code)
       t(:locale_name, :locale => code)
     else
       (entry = ISO_639.find(code.to_s)) ? entry.english_name : code.to_s

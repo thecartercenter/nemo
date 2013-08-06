@@ -9,7 +9,7 @@
       <input type="hidden" name="sms_guide" value="1">
       <%= t("common.language") %>:
       <select name="lang" onchange="this.form.submit();">
-        <%= configatron.locales.collect{|l| content_tag(:option, t("locale_name", :locale => l), 
+        <%= configatron.full_locales.collect{|l| content_tag(:option, t("locale_name", :locale => l), 
             {:value => l}.merge(@lang.to_s == l.to_s ? {:selected => "selected"} : {}))}.join.html_safe %>
       </select>
     </form>

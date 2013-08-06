@@ -66,6 +66,6 @@ module ELMO
     configatron.broadcast_tag = "|TCC|"
     
     # locales with full translations (I18n.available_locales returns a whole bunch more defined by i18n-js)
-    configatron.locales = [:en, :fr]
+    configatron.full_locales = [:en, :fr]
   end
 end

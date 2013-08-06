@@ -10,7 +10,7 @@
         </data>
       </instance>
       <itext>
-        <% configatron.languages.each do |lang| %>
+        <% configatron.preferred_locales.each do |lang| %>
           <translation lang="<%= language_name(lang) %>">
             <% @form.visible_questionings.each do |q| %>
               <text id="<%= q.question.odk_code %>:label">

@@ -32,7 +32,7 @@ class MissingKeysFinder
     missing_keys = {}
     all_keys.each do |key|
 
-      configatron.locales.each do |locale|
+      configatron.full_locales.each do |locale|
 
         skip = false
         ls = locale.to_s
@@ -60,7 +60,7 @@ class MissingKeysFinder
   end
 
   def output_available_locales
-    puts "#{configatron.locales.size} #{configatron.locales.size == 1 ? 'locale' : 'locales'} available: #{configatron.locales.join(', ')}"
+    puts "#{configatron.full_locales.size} #{configatron.full_locales.size == 1 ? 'locale' : 'locales'} available: #{configatron.full_locales.join(', ')}"
   end
 
   def output_missing_keys(missing_keys)

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130801185904) do
+ActiveRecord::Schema.define(:version => 20130806132009) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -244,8 +244,6 @@ ActiveRecord::Schema.define(:version => 20130801185904) do
     t.boolean  "reviewed",   :default => false
     t.string   "source"
     t.integer  "mission_id"
-    t.string   "signature"
-    t.boolean  "duplicate"
   end
 
   add_index "responses", ["created_at"], :name => "index_responses_on_created_at"
@@ -285,7 +283,6 @@ ActiveRecord::Schema.define(:version => 20130801185904) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "mission_id"
-    t.string   "languages"
     t.string   "outgoing_sms_adapter"
     t.string   "intellisms_username"
     t.string   "intellisms_password"
@@ -293,6 +290,7 @@ ActiveRecord::Schema.define(:version => 20130801185904) do
     t.string   "isms_username"
     t.string   "isms_password"
     t.string   "incoming_sms_number"
+    t.string   "preferred_locales"
   end
 
   add_index "settings", ["mission_id"], :name => "index_settings_on_mission_id"

@@ -10,7 +10,7 @@
     </div>
   <% end %>
 
-  <% configatron.languages.each_with_index do |lang, rank| %>
+  <% configatron.preferred_locales.each_with_index do |lang, rank| %>
     <%= form_field(f, :"name_#{lang}",
       :label => Option.human_attribute_name("name") + " (#{language_name(lang)})",
       :details => rank == 0 ? t("activerecord.tips.option.name") : nil) %>

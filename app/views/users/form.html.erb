@@ -15,7 +15,7 @@
   <%= form_field(f, :phone2, :size => 20) %>
   <%= form_field(f, :admin, :type => :check_box) if can?(:adminify, @user) %>
   <%= form_field(f, :assignments, :partial => "assignments") if can?(:manage, @user) && can?(:manage, Assignment) %>
-  <%= form_field(f, :pref_lang, :type => :select, :options => configatron.locales.map{|l| [language_name(l), l]}) %>
+  <%= form_field(f, :pref_lang, :type => :select, :options => configatron.full_locales.map{|l| [language_name(l), l]}) %>
 
   <%= form_field(f, :notes, :type => :textarea) %>
   

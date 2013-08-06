@@ -15,7 +15,26 @@ class ActiveSupport::TestCase
   # logs in the given user
   # we assume that the password is 'password'
   def login(user)
-    post_via_redirect(user_session_path, :user_session => {:login => user.login, :password => "password"})
+    post(user_session_path, :user_session => {:login => user.login, :password => "password"})
+    follow_redirect!
+    assert_response(:success)
+    
+    # reload the user since some stuff may have changed in database (e.g. current_mission) during login process
+    user.reload
+  end
+  
+  # logs out the current user and follows redirect
+  def logout
+    delete(user_session_path)
+    follow_redirect!
+    assert_response(:success)
+  end
+  
+  # changes the current mission for the session
+  def change_mission(user, mission)
+    put(user_path(@admin), :user => {:current_mission_id => mission.id})
+    follow_redirect!
+    assert_response(:success)
   end
   
   # helper that sets up a new form with the given parameters

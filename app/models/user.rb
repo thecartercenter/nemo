@@ -305,7 +305,7 @@ class User < ActiveRecord::Base
     
     # sets the user's preferred language to the mission default
     def set_default_pref_lang
-      self.pref_lang ||= configatron.preferred_language
+      self.pref_lang ||= configatron.preferred_locales.first
     end
     
     # sets the user's default login name
