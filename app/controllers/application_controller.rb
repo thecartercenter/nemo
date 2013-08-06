@@ -40,8 +40,8 @@ class ApplicationController < ActionController::Base
   before_filter(:basic_auth_for_xml)
   before_filter(:get_user_and_mission)
   
-  # this goes last as the timezone can depend on the user
-  before_filter(:set_timezone)
+  # lastly, we load settings
+  before_filter(:load_settings)
   
   # allow the current user and mission to be accessed
   attr_reader :current_user, :current_mission
@@ -152,6 +152,15 @@ class ApplicationController < ActionController::Base
       # return the relation
       rel
     end
+    
+    # loads settings for the mission, or if no mission, default settings, into configatron
+    def load_settings
+      if current_mission
+        current_mission.setting.load
+      else
+        Setting.build_default.load
+      end
+    end
 
     ##############################################################################
     # AUTHENTICATION AND USER SESSION METHODS
@@ -191,7 +200,6 @@ class ApplicationController < ActionController::Base
       @current_mission = mission
       @current_user.current_mission = mission
       @current_user.save(:validate => false)
-      Setting.mission_was_set(@current_mission)
     end
     
     # gets the user and mission from the user session if they're not already set
@@ -209,21 +217,6 @@ class ApplicationController < ActionController::Base
     
         # look up the current mission based on the current user
         @current_mission = @current_user ? @current_user.current_mission : nil
-      
-        # if a mission was found, notify the settings class
-        Setting.mission_was_set(@current_mission) if @current_mission
-      end
-    end
-    
-    # logs out user if not already logged out
-    # might be called /after/ get_user_and_mission due to filter order
-    # so should undo that method's changes
-    def ensure_logged_out
-      if user_session = UserSession.find
-        user_session.destroy
-        @current_user = nil
-        @current_mission = nil
-        Setting.set_defaults
       end
     end
     
@@ -259,9 +252,6 @@ class ApplicationController < ActionController::Base
         redirect_to(login_path)
         return false
       end
-      
-      # update the settings using the new mission
-      Setting.copy_to_config(@user_session.user.current_mission)
       
       return true
     end

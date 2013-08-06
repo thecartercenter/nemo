@@ -249,7 +249,7 @@ en:
         isms_password1: "Password"
         isms_password2: "Password Confirmation"
         isms_username: "Username"
-        languages: "Preferred Languages"
+        preferred_locales_str: "Preferred Languages"
         outgoing_sms_adapter: "Provider"
         tableau_sql: "Tableau SQL" # Tableau is a software product name and shouldn't be translated
         timezone: "Time Zone"
@@ -307,7 +307,7 @@ en:
         percent_type: "Whether and how percentages should be calculated for the report."
         bar_style: "Whether bars should be stacked or side-by-side."
       setting:
-        languages: |- 
+        preferred_locales_str: |- 
           Enter the <a href=\"http://www.loc.gov/standards/iso639-2/php/code_list.php\">two-letter codes</a>, separated by commas, for the languages for this mission, in order of preference.
           
           This setting determines:
@@ -394,7 +394,7 @@ en:
           missing_answers: "Not all questions have answers."
         setting:
           attributes:
-            languages:
+            preferred_locales_str:
               invalid_code: "code '%{code}' is invalid"
               one_must_have_translations: "must contain at least one language that has translations (%{locales})"
         user:

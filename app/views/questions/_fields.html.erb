@@ -19,7 +19,7 @@
     <%= form_field(form, :maximum, :partial => "questions/min_max_condition") %>
   </div>
   
-  <% (configatron.languages).each_with_index do |lang, rank| %>
+  <% (configatron.preferred_locales).each_with_index do |lang, rank| %>
     <%= render("questions/title_and_hint", :lang => lang, :form => form, :rank => rank) %>
   <% end %>
 

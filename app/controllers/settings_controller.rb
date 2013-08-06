@@ -3,7 +3,7 @@ class SettingsController < ApplicationController
   
   def index
     # load setting for current mission (create with defaults if doesn't exist)
-    @setting = Setting.find_or_create(current_mission)
+    @setting = current_mission.setting
     
     # do authorization check
     authorize!(:update, @setting)
@@ -18,9 +18,6 @@ class SettingsController < ApplicationController
       authorize!(:update, @setting)
       
       @setting.update_attributes!(params[:setting])
-      
-      # copy the updated settings to the config
-      @setting.copy_to_config
       
       set_success_and_redirect(@setting)
     rescue ActiveRecord::RecordInvalid

@@ -11,6 +11,7 @@ class Mission < ActiveRecord::Base
   has_one(:setting, :dependent => :destroy)
   
   before_validation(:create_compact_name)
+  before_create(:ensure_setting)
   before_destroy(:check_associations)
   
   validates(:name, :presence => true)
@@ -39,5 +40,10 @@ class Mission < ActiveRecord::Base
       if !name.blank? && matching = (self.class.where(:compact_name => compact_name).all - [self]).first
         errors.add(:name, :not_unique, :existing => matching.name)
       end
+    end
+    
+    # creates an accompanying settings object composed of defaults, unless one exists
+    def ensure_setting
+      self.setting ||= Setting.build_default(self)
     end
 end

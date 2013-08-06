@@ -244,7 +244,7 @@ fr:
         isms_password1: "Mot de passe"
         isms_password2: "Confirmation de mot de passe"
         isms_username: "Nom d'utilisateur"
-        languages: "Langues de fiche"
+        preferred_locales_str: "Langues de fiche"
         outgoing_sms_adapter: "Fournisseur"
         tableau_sql: "Tableau SQL" # Tableau is a software product name and shouldn't be translated
         timezone: "Fuseau horaire"
@@ -301,7 +301,7 @@ fr:
         percent_type: "Si et comment les pourcentages doivent être calculés pour la rapport."
         bar_style: "Si les bandes doivent être empilés ou côte-à-côte."
       setting:
-        languages: |- 
+        preferred_locales_str: |- 
           Entrez le <a href=\"http://www.loc.gov/standards/iso639-2/php/code_list.php\">code à deux lettres</a>, séparé par des virgules, pour les langues dans lesquelles vous voulez autoriser des questions à définir.
           
           Ce code determines:
@@ -387,7 +387,7 @@ fr:
           missing_answers: "Au moins une question manque de réponse."
         setting:
           attributes:
-            languages:
+            preferred_locales_str:
               invalid_code: "Le code '%{code}' non est pas valide"
               one_must_have_translations: "must contain at least one language that has translations (%{locales})"
         user:

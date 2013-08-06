@@ -21,7 +21,7 @@
     // handles general client side stuff that appears in the template (e.g. language chooser form)
     // appears at top of file because it needs to be loaded first
     ELMO.app = new ELMO.App({
-      mission_locales: <%= configatron.languages.to_json.html_safe %>,
+      mission_locales: <%= configatron.preferred_locales.to_json.html_safe %>,
       logged_in: <%= (!current_user.nil?).to_json %>,
       site_name: <%= configatron.site_name.to_json.html_safe %>,
       session_timeout: <%= User::SESSION_TIMEOUT %>,
@@ -103,7 +103,7 @@
     <%= link_to(t("layout.change_language"), "#", :id => "locale_form_link") %> 
     
     <%= form_tag(nil, :id => "locale_form") do %>
-      <%= select_tag(:locale, options_for_select(configatron.locales.map{|l| [t(:locale_name, :locale => l), l]}, I18n.locale)) %>
+      <%= select_tag(:locale, options_for_select(configatron.full_locales.map{|l| [t(:locale_name, :locale => l), l]}, I18n.locale)) %>
     <% end %>
     
     &nbsp;|&nbsp;

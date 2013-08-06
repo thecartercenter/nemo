@@ -1,78 +1,44 @@
 class Setting < ActiveRecord::Base
   include MissionBased
 
-  KEYS_TO_COPY = %w(timezone languages intellisms_username intellisms_password isms_hostname isms_username isms_password incoming_sms_number)
-  DEFAULTS = {:timezone => "UTC", :languages => "en"}
+  KEYS_TO_COPY = %w(timezone preferred_locales intellisms_username intellisms_password isms_hostname isms_username isms_password incoming_sms_number)
+  DEFAULTS = {:timezone => "UTC", :preferred_locales => [:en]}
 
   scope(:by_mission, lambda{|m| where(:mission_id => m ? m.id : nil)})
   scope(:default, where(DEFAULTS))
   
-  before_validation(:cleanup_languages)
-  validate(:lang_codes_are_valid)
-  validate(:one_lang_must_have_translations)
+  before_validation(:cleanup_locales)
+  validate(:locales_are_valid)
+  validate(:one_locale_must_have_translations)
   validate(:sms_adapter_is_valid)
   validate(:sms_credentials_are_valid)
   before_save(:save_sms_passwords)
   
+  serialize :preferred_locales, JSON
+  
   # accessors for password/password confirm fields
   attr_accessor :intellisms_password1, :intellisms_password2, :isms_password1, :isms_password2
   
-  def self.table_exists?
-    ActiveRecord::Base.connection.tables.include?("settings")
-  end
-  
-  # gets called each time the current_mission is set by the application controller
-  # checks if the settings have been copied to configatron since the *app* (not the request) was started
-  def self.mission_was_set(mission)
-    unless configatron.settings_copied?
-      configatron.settings_copied = true
-      copy_to_config(mission)
-    end
-  end
-  
-  # loads or creates a setting for the given mission
-  def self.find_or_create(mission)
-    return nil unless table_exists?
-    unless setting = by_mission(mission).first 
-      setting = build_default(mission)
-      setting.save!
-    end
-    return setting
-  end
-  
-  # copies all settings for the given mission to configatron
-  def self.copy_to_config(mission)
-    return if !table_exists?
-    
-    # get the setting or default
-    find_or_create(mission).copy_to_config
-  end
-  
-  # creates a default Setting by using the defaults specified in this file and those specified in the local config
+  # builds and returns (but doesn't save) a default Setting object 
+  # by using the defaults specified in this file and those specified in the local config
+  # mission may be nil.
   def self.build_default(mission = nil)
+    # initialize a new setting object with default values
     setting = by_mission(mission).default.new
-    
+
     # copy default_settings from configatron
     configatron.default_settings.configatron_keys.each do |k| 
       setting.send("#{k}=", configatron.default_settings.send(k)) if setting.respond_to?("#{k}=")
     end
     
-    return setting
+    setting
   end
   
-  # sets all settings to default values
-  def self.set_defaults
-    copy_to_config(build_default)
-  end
-  
-  def copy_to_config
+  # copies this setting to configatron
+  def load
     # build hash
-    hsh = Hash[*KEYS_TO_COPY.collect{|k| [k.to_sym, send(k)]}.flatten]
-    
-    hsh[:languages] = lang_codes
-    
-    hsh[:preferred_language] = hsh[:languages].first
-    
+    hsh = Hash[*KEYS_TO_COPY.collect{|k| [k.to_sym, send(k)]}.flatten(1)]
+
     # get class based on sms adapter setting; default to nil if setting is invalid
     hsh[:outgoing_sms_adapter] = begin
       Sms::Adapters::Factory.new.create(outgoing_sms_adapter)
@@ -80,38 +46,47 @@ class Setting < ActiveRecord::Base
       nil
     end
     
+    # set system timezone
+    Time.zone = timezone
+
     # copy to configatron
     configatron.configure_from_hash(hsh)
   end
   
-  # converts a comma-delimited string of languages to an array of symbols
-  def lang_codes
-    (languages || "").split(",").collect{|c| c.to_sym}
+  # converts preferred_locales to a comma delimited string
+  def preferred_locales_str
+    (preferred_locales || []).join(',')
   end
   
   # reverse of self.lang_codes
-  def lang_codes=(codes)
-    self.languages = codes.join(",")
+  def preferred_locales_str=(codes)
+    self.preferred_locales = (codes || '').split(',')
+  end
+  
+  # converts preferred locales to symbols on read
+  def preferred_locales
+    read_attribute('preferred_locales').map(&:to_sym)
   end
   
   private
-    # gets rid of any junk chars in lang codes field and converts all to sym
-    def cleanup_languages
-      self.lang_codes = lang_codes.collect{|c| c.to_s.downcase.gsub(/[^a-z]/, "")[0,2].to_sym}
+  
+    # gets rid of any junk chars in locales
+    def cleanup_locales
+      self.preferred_locales = preferred_locales.map{|l| l.to_s.downcase.gsub(/[^a-z]/, "")[0,2]}
       return true
     end
     
     # makes sure all language codes are valid ISO639 codes
-    def lang_codes_are_valid
-      lang_codes.each do |lc|
-        errors.add(:languages, :invalid_code, :code => lc) unless ISO_639.find(lc.to_s)
+    def locales_are_valid
+      preferred_locales.each do |l|
+        errors.add(:preferred_locales_str, :invalid_code, :code => l) unless ISO_639.find(l.to_s)
       end
     end
     
-    # makes sure at least one of the chosen languages is an available locale
-    def one_lang_must_have_translations
-      if (lang_codes & configatron.locales).empty?
-        errors.add(:languages, :one_must_have_translations, :locales => configatron.locales.join(","))
+    # makes sure at least one of the chosen locales is an available locale
+    def one_locale_must_have_translations
+      if (preferred_locales & configatron.full_locales).empty?
+        errors.add(:preferred_locales_str, :one_must_have_translations, :locales => configatron.full_locales.join(","))
       end
     end
     

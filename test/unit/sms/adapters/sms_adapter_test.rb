@@ -4,7 +4,7 @@ class Sms::Adapters::SmsAdapterTest < ActiveSupport::TestCase
   setup do
     # copy settings 
     @mission = get_mission
-    Setting.mission_was_set(@mission)
+    @mission.setting.load
   end
   
   test "delivering a message with one recipient should work" do

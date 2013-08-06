@@ -5,7 +5,7 @@
   <h2><%= t("setting.headings.general") %></h2>
   <%= form_field(f, :mission_id, :type => :hidden) %>
   <%= form_field(f, :timezone, :type => :timezone, :required => true) %>
-  <%= form_field(f, :languages, :required => true) %>
+  <%= form_field(f, :preferred_locales_str, :required => true) %>
   
   <h2><%= t("setting.headings.outgoing_sms") %></h2>
   <%= form_field(f, :outgoing_sms_adapter, :type => :select, :options => @adapter_options, :blank_text => t("common.none")) %>
