@@ -8,7 +8,8 @@ module ApplicationHelper
     :print => "print",
     :publish => "arrow-up",
     :sms => "comment",
-    :unpublish => "arrow-down"
+    :unpublish => "arrow-down",
+    :duplicate => "exclamation-sign",
   }
   
   # renders the flash message and any form errors for the given activerecord object

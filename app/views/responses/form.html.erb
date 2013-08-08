@@ -5,7 +5,7 @@
 <% @title_args = {:id => @response.id} %>
 
 <%= content_tag(
-      :div, content_tag(:a, "Possible duplicate: response " + @duplicate.id.to_s, :href => "../" + @duplicate.id.to_s + "/edit ").html_safe,
+      :div, ("Possible duplicate: " + content_tag(:a, "response #" + @duplicate.id.to_s, :href => "../" + @duplicate.id.to_s + "/edit ")).html_safe,
   	  :class => "error", :style => "background-color: #ffcc33; color: #000000") if @duplicate %>
 	  
 <%= render("layouts/location_picker") %>

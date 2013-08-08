@@ -114,12 +114,27 @@ div.error {
 }
 
 .duplicate_col * {
-  font-size: .9em;
-  font-weight: bold;
-  background-color: yellow;
+  color: #FF3300;
   text-align: center;
 }
 
+.ui-tooltip {
+  display:block;
+  background-color: white;
+  border: 1px solid #DDD;
+  border-radius: 2px;  
+  font-size:.75em;
+  height:40px;
+  width:90px;
+  padding:10px;
+  text-align: center;
+  -moz-box-shadow: 2px 2px 1px #888;
+  -webkit-box-shadow: 2px 2px 1px #888;
+  box-shadow: 2px 2px 1px #888;
+  color: black;
+}
+
+    
 /* hide printable things */
 .printable { display: none; }
 
