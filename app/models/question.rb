@@ -1,7 +1,7 @@
 class Question < ActiveRecord::Base
   include MissionBased, FormVersionable, Translatable
   
-  belongs_to(:option_set, :include => :options, :inverse_of => :questions)
+  belongs_to(:option_set, :include => :options, :inverse_of => :questions, :autosave => true)
   has_many(:questionings, :dependent => :destroy, :autosave => true, :inverse_of => :question)
   has_many(:answers, :through => :questionings)
   has_many(:referring_conditions, :through => :questionings)
@@ -10,7 +10,7 @@ class Question < ActiveRecord::Base
   validates(:code, :presence => true)
   validates(:code, :format => {:with => /^[a-z][a-z0-9]{1,19}$/i}, :if => Proc.new{|q| !q.code.blank?})
   validates(:qtype_name, :presence => true)
-  validates(:option_set_id, :presence => true, :if => Proc.new{|q| q.qtype && q.has_options?})
+  validates(:option_set, :presence => true, :if => Proc.new{|q| q.qtype && q.has_options?})
   validate(:integrity)
   validate(:code_unique_per_mission)
 
