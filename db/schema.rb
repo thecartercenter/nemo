@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130806132009) do
+ActiveRecord::Schema.define(:version => 20130812145656) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -79,18 +79,25 @@ ActiveRecord::Schema.define(:version => 20130806132009) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "option_id"
+    t.boolean  "is_standard",    :default => false
+    t.integer  "standard_id"
   end
+
+  add_index "conditions", ["standard_id"], :name => "index_conditions_on_standard_id"
 
   create_table "form_versions", :force => true do |t|
     t.integer  "form_id"
-    t.integer  "sequence",   :default => 1
+    t.integer  "sequence",    :default => 1
     t.string   "code"
-    t.boolean  "is_current", :default => true
-    t.datetime "created_at",                   :null => false
-    t.datetime "updated_at",                   :null => false
+    t.boolean  "is_current",  :default => true
+    t.datetime "created_at",                     :null => false
+    t.datetime "updated_at",                     :null => false
+    t.boolean  "is_standard", :default => false
+    t.integer  "standard_id"
   end
 
   add_index "form_versions", ["code"], :name => "index_form_versions_on_code", :unique => true
+  add_index "form_versions", ["standard_id"], :name => "index_form_versions_on_standard_id"
 
   create_table "forms", :force => true do |t|
     t.string   "name"
@@ -104,9 +111,12 @@ ActiveRecord::Schema.define(:version => 20130806132009) do
     t.integer  "current_version_id"
     t.boolean  "upgrade_needed",     :default => false
     t.boolean  "smsable",            :default => false
+    t.boolean  "is_standard",        :default => false
+    t.integer  "standard_id"
   end
 
   add_index "forms", ["mission_id"], :name => "index_forms_on_mission_id"
+  add_index "forms", ["standard_id"], :name => "index_forms_on_standard_id"
 
   create_table "missions", :force => true do |t|
     t.string   "name"
@@ -122,9 +132,12 @@ ActiveRecord::Schema.define(:version => 20130806132009) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "mission_id"
+    t.boolean  "is_standard", :default => false
+    t.integer  "standard_id"
   end
 
   add_index "option_sets", ["mission_id"], :name => "index_option_sets_on_mission_id"
+  add_index "option_sets", ["standard_id"], :name => "index_option_sets_on_standard_id"
 
   create_table "optionings", :force => true do |t|
     t.integer  "option_set_id"
@@ -132,10 +145,13 @@ ActiveRecord::Schema.define(:version => 20130806132009) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "rank"
+    t.boolean  "is_standard",   :default => false
+    t.integer  "standard_id"
   end
 
   add_index "optionings", ["option_id"], :name => "index_optionings_on_option_id"
   add_index "optionings", ["option_set_id"], :name => "index_optionings_on_option_set_id"
+  add_index "optionings", ["standard_id"], :name => "index_optionings_on_standard_id"
 
   create_table "options", :force => true do |t|
     t.datetime "created_at"
@@ -145,9 +161,12 @@ ActiveRecord::Schema.define(:version => 20130806132009) do
     t.text     "_hint"
     t.text     "name_translations"
     t.text     "hint_translations"
+    t.boolean  "is_standard",       :default => false
+    t.integer  "standard_id"
   end
 
   add_index "options", ["mission_id"], :name => "index_options_on_mission_id"
+  add_index "options", ["standard_id"], :name => "index_options_on_standard_id"
 
   create_table "question_types", :force => true do |t|
     t.string   "name"
@@ -166,10 +185,13 @@ ActiveRecord::Schema.define(:version => 20130806132009) do
     t.boolean  "hidden",      :default => false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "is_standard", :default => false
+    t.integer  "standard_id"
   end
 
   add_index "questionings", ["form_id"], :name => "index_questionings_on_form_id"
   add_index "questionings", ["question_id"], :name => "index_questionings_on_question_id"
+  add_index "questionings", ["standard_id"], :name => "index_questionings_on_standard_id"
 
   create_table "questions", :force => true do |t|
     t.string   "code"
@@ -187,11 +209,14 @@ ActiveRecord::Schema.define(:version => 20130806132009) do
     t.text     "name_translations"
     t.text     "hint_translations"
     t.boolean  "key",               :default => false
+    t.boolean  "is_standard",       :default => false
+    t.integer  "standard_id"
   end
 
   add_index "questions", ["mission_id"], :name => "index_questions_on_mission_id"
   add_index "questions", ["option_set_id"], :name => "index_questions_on_option_set_id"
   add_index "questions", ["qtype_name"], :name => "index_questions_on_qtype_name"
+  add_index "questions", ["standard_id"], :name => "index_questions_on_standard_id"
 
   create_table "report_calculations", :force => true do |t|
     t.string   "type"
