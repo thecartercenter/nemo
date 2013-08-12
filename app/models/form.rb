@@ -31,12 +31,59 @@ class Form < ActiveRecord::Base
     ]
   ).order("questionings.rank"))
     
-  # finds the highest 'version' number of all forms with the given base name
-  # returns nil if no forms found
-  def self.max_version(base_name)
-    mv = all.collect{|f| m = f.name.match(/^#{base_name}( v(\d+))?$/); m ? (m[2] ? m[2].to_i : 1) : 0}.max
-    mv == 0 ? nil : mv
+
+  # gets the appropriate name for a clone (e.g. My Form Copy, My Form Copy 2, etc.) for the given name (e.g. My Form)
+  def self.name_of_clone(name)
+    copy_word = I18n.t("common.copy")
+    
+    # extract any copy suffix from existing name
+    prefix = name.gsub(/ \(#{copy_word}( \d+)?\)$/, '')
+    
+    # get all existing copy numbers
+    existing_nums = all.map do |f|
+      m = f.name.match(/^#{prefix}( \(#{copy_word}( (\d+))?\))?$/)
+      
+      # if there was no match, return nil
+      if m.nil?
+        nil
+      
+      # else if we got a match then we must examine what matched
+      # if it was just the prefix, the number is 0
+      elsif $1.nil?
+        0
+      
+      # if there was no digit matched, it was just the word 'copy' so the number is 1
+      elsif $3.nil?
+        1
+      
+      # otherwise we matched a digit so use that
+      else
+        $3.to_i
+      end
+    end.compact
+    
+    # if there was no matches, then the copy num is 0 (we shouldn't append a copy suffix)
+    copy_num = if existing_nums.empty?
+       0
+    # else copy num is max of existing plus 1
+    else
+      existing_nums.max + 1
+    end
+    
+    # if copy num is 0, no suffix
+    if copy_num == 0
+      suffix = ''
+    
+    else
+      # number string is empty string if 1, else the number plus space
+      num_str = copy_num == 1 ? '' : " #{copy_num}"
+      suffix = " (#{copy_word}#{num_str})"
+    end
+    
+    # now build the new name
+    "#{prefix}#{suffix}"
   end
+
   
   def temp_response_id
     "#{name}_#{ActiveSupport::SecureRandom.random_number(899999999) + 100000000}"
@@ -123,19 +170,20 @@ class Form < ActiveRecord::Base
     save(:validate => false)
   end
   
-  # makes a copy of the form, with a new name and a new set of questionings
+  # makes and returns copy of the form, with a new name and a new set of questionings
+  # we use 'duplicate' instead of clone b/c clone is a special word in ruby
   def duplicate
-    # get the base name
-    base = name.match(/^(.+?)( v(\d+))?$/)[1]
-    version = (self.class.max_version(base) || 1) + 1
-    # create the new form and set the basic attribs
-    cloned = self.class.new(:mission_id => mission_id, :name => "#{base} v#{version}", :published => false)
+    # create the new form with the appropriate name
+    cloned = self.class.new(:name => self.class.name_of_clone(name))
+    
     # clone all the questionings
     cloned.questionings = Questioning.duplicate(questionings)
-    # done!
-    cloned.save
+    
+    # save and return
+    cloned.save!
+    cloned
   end
-  
+    
   # upgrades the version of the form and saves it
   def upgrade_version!
     if current_version
