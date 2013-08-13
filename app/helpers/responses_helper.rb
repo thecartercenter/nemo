@@ -10,7 +10,7 @@ module ResponsesHelper
     when "created_at" then resp.created_at ? l(resp.created_at) : ""
     when "age" then resp.created_at ? time_ago_in_words(resp.created_at) : ""
     when "reviewed" then tbool(resp.reviewed?)
-    when "duplicate" then resp.duplicate? ? duplicate_notice(resp.duplicate) : ""
+    when "duplicate" then resp.duplicate? ? duplicate_notice(resp) : ""
     when "user_id" then resp.submitter
     when "actions"
       # we don't need to authorize these links b/c for responses, if you can see it, you can edit it.
