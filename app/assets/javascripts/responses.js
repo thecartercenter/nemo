@@ -41,18 +41,11 @@ $(document).ready(function(){
     return false;
   });
   
-  $(".icon-exclamation-sign").tooltip({
-	  content: function() {
-		  var id = $(this).attr("data");
-          return "Possible duplicate of <br> <a href='/responses/" + id + "'> response #" + id + "</a>.<br> <b> Click icon if not duplicate. <br> <i class=\"icon-arrow-down\"></i> </b>";
-	  },
-	  hide: {
-	    delay: 1000	  
-	  },
-	  track: true,
-      position: {
-         my: "center bottom-5",
-         at: "center top",
-       }
+  // attach event handler to all duplicate icons
+  $(".duplicate_icon").each(function(){
+    $(this).mouseover(function(){
+	  var id = $(this).attr("data");
+	  tooltip.pop(this,"Possible duplicate of <a href='/responses/" + id + "'>Response #" + id + "</a> <br> Click icon if not a duplicate.");
+    });
   });
 });

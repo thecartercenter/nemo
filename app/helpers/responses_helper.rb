@@ -24,7 +24,10 @@ module ResponsesHelper
   end
   
   def duplicate_notice(resp)
-    action_link("duplicate",{:action => "change_duplicate", :id => resp.id}, :method=> :put, :data => "#{resp.id}", :title => "Possible duplicate of Response ##{resp.id}")    
+    
+    # show duplicate action link icon
+    action_link("duplicate",{:action => "change_duplicate", :id => resp.id}, :method=> :put, :data => resp.dup_resp.id, :class => "duplicate_icon")
+    
   end
   
   def responses_index_links(responses)

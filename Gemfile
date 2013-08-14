@@ -17,7 +17,6 @@ gem 'configatron'
 gem 'libxml-ruby'
 gem 'rdiscount'
 gem 'jquery-rails'
-gem 'jquery-ui-rails'
 gem 'random_data'
 
 # building factories for testing -- stupid and offensive name but it's a good gem :(
