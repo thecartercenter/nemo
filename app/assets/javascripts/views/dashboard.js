@@ -61,8 +61,8 @@
     var stats_h = $('.report_stats').height();
     
     // left col is slightly narrower than right col
-    $('.recent_responses, .response_locations').width((cont_w - spacing) * .8 / 2)
-    $('.report_main').width((cont_w - spacing) * 1.2 / 2);
+    $('.recent_responses, .response_locations').width((cont_w - spacing) * .9 / 2)
+    $('.report_main').width((cont_w - spacing) * 1.1 / 2);
     
     // for left panes height we subtract 2 title heights plus 3 spacings (2 bottom, one top)
     $('.recent_responses, .response_locations').height((cont_h - 2 * title_h - 3 * spacing) / 2);
