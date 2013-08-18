@@ -108,8 +108,9 @@
     // make inner option tag
     var inner = $('<div>').attr('class', 'inner')
     
-    // add sort icon
-    inner.append($('<i>').attr('class', 'icon-sort'));
+    // add sort icon if not in show mode
+    if (self.params.form_mode != 'show')
+      inner.append($('<i>').attr('class', 'icon-sort'));
     
     // add option name
     inner.append(optioning.option.name);
