@@ -7,6 +7,11 @@
   ns.App = klass = function(params) { var self = this;
     self.params = params;
     
+    // setup I18n module
+    I18n.locale = self.params.locale;
+    I18n.defaultLocale = self.params.default_locale;
+    I18n.fallbacks = true;
+
     // setup the language change form and link
     $("a#locale_form_link").on("click", function(){ $("#locale_form").css("display", "inline-block"); $(this).hide(); return false; });
     $("#locale_form select").on("change", function(){ self.change_locale($(this).val()); return false; });
