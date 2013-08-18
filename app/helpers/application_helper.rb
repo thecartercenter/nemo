@@ -13,7 +13,8 @@ module ApplicationHelper
   }
   
   ERROR_MESSAGE_KEYS_TO_HIDE = {
-    :'optionings.option.base' => true
+    :'optionings.option.base' => true,
+    :'condition.base' => true
   }
   
   # renders the flash message and any form errors for the given activerecord object

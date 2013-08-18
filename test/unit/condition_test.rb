@@ -13,7 +13,7 @@ class ConditionTest < ActiveSupport::TestCase
   test "all fields required" do
     q, c = build_condition(:op => 'eq', :value => nil)
     q.save
-    assert_match(/All fields are required/, q.errors.messages.values.join)
+    assert_match(/All condition fields are required/, q.errors.messages.values.join)
   end
   
   test "blanks stripped" do

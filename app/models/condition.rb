@@ -13,8 +13,8 @@ class Condition < ActiveRecord::Base
   validate(:all_fields_required)
   validates(:questioning, :presence => true)
 
-  delegate :qtype, :to => :questioning
-  delegate :has_options?, :select_options, :qtype, :rank, :to => :ref_qing, :prefix => :ref_question  
+  delegate :qtype, :to => :questioning, :allow_nil => true
+  delegate :has_options?, :select_options, :qtype, :rank, :to => :ref_qing, :prefix => :ref_question, :allow_nil => true
     
   OPS = [
     {:name => :eq, :types => %w(decimal integer text long_text address select_one datetime date time), :code => "="},
@@ -54,7 +54,7 @@ class Condition < ActiveRecord::Base
 
   # returns names of all operators that are applicable to this condition based on its referred question
   def applicable_operator_names
-    OPS.select{|o| o[:types].include?(ref_question_qtype.name)}.map{|o| o[:name]}
+    ref_qing ? OPS.select{|o| o[:types].include?(ref_question_qtype.name)}.map{|o| o[:name]} : []
   end
 
   # duplicates this condition
@@ -122,13 +122,13 @@ class Condition < ActiveRecord::Base
     fields += %w(refable_qing_types refable_qing_option_lists operators) if options[:dropdown_values]
     Hash[*fields.map{|k| [k, send(k)]}.flatten(1)]
   end
-  
+
   private 
     def clear_blanks
       # catch errors in case hash is frozen
       begin
-        self.value = nil if value.blank?
-        self.option_id = nil if option_id.blank?
+        self.value = nil if value.blank? || ref_qing && ref_question_has_options?
+        self.option = nil if option_id.blank? || ref_qing && !ref_question_has_options?
       rescue
       end
       return true
@@ -150,6 +150,8 @@ class Condition < ActiveRecord::Base
     end
     
     def all_fields_required
-      errors.add(:base, :all_required) if ref_qing.blank? || op.blank? || (value.blank? && option.blank?)
+      if ref_qing.blank? || op.blank? || ref_question_has_options? && option.blank? || !ref_question_has_options? && value.blank?
+        errors.add(:base, :all_required)
+      end
     end
 end

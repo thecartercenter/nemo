@@ -350,7 +350,7 @@ en:
         answer:
           required: "is required"
         condition:
-          all_required: "All fields are required."
+          all_required: "All condition fields are required."
         form:
           cant_delete_if_has_responses: "You can't delete this Form because it has associated responses."
           cant_delete_published: "A published Form can't be deleted."

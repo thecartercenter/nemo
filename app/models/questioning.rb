@@ -7,6 +7,7 @@ class Questioning < ActiveRecord::Base
   has_one(:condition, :autosave => true, :dependent => :destroy, :inverse_of => :questioning)
   has_many(:referring_conditions, :class_name => "Condition", :foreign_key => "ref_qing_id", :dependent => :destroy, :inverse_of => :ref_qing)
   
+  before_validation(:destroy_condition_if_ref_qing_blank)
   before_create(:set_rank)
 
   # also validates the associated condition because condition has validates(:questioning, ...)
@@ -79,7 +80,11 @@ class Questioning < ActiveRecord::Base
   private
     # sets rank if not already set
     def set_rank
-      self.rank ||= form.max_rank + 1
+      self.rank ||= (form.try(:max_rank) || 0) + 1
       return true
+    end
+
+    def destroy_condition_if_ref_qing_blank
+      condition.destroy if condition && condition.ref_qing.blank?
     end
 end
