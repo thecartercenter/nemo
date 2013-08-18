@@ -27,7 +27,7 @@ class QuestionTest < ActiveSupport::TestCase
     q = FactoryGirl.build(:question, :qtype_name => 'select_one')
     q.option_set = nil
     q.save
-    assert_match(/Option Set can't be blank/, q.errors.full_messages.join)
+    assert_match(/Option set can't be blank/, q.errors.full_messages.join)
   end
   
   test "not in proto form" do

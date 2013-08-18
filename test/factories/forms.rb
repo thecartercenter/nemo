@@ -4,7 +4,9 @@ FactoryGirl.define do
       question_types []
     end
     
-    name 'some form'
+    mission { get_mission }
+
+    name {"some form #{rand(1000000)}"}
     
     questionings do
       question_types.each_with_index.map do |qt, idx|
