@@ -126,7 +126,7 @@ class Form < ActiveRecord::Base
     end
     
     # validate the condition orderings (raises an error if they're invalid)
-    questionings.each{|qing| qing.verify_condition_ordering}
+    questionings.each{|qing| qing.condition_verify_ordering}
   end
   
   def destroy_questionings(qings)

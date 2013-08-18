@@ -22,9 +22,9 @@
     <div><%=t "conditions.value" %></div>
     <div>
       <%= f.text_field(:value, :id => "questioning_condition_value",
-        :style => @condition.has_options? ? "display: none" : "") %>
+        :style => @condition.ref_question_has_options? ? "display: none" : "") %>
       <%= f.select(:option_id, @condition.ref_question_select_options, {:include_blank => true}, 
-        :style => @condition.has_options? ? "" : "display: none", 
+        :style => @condition.ref_question_has_options? ? "" : "display: none", 
         :id => "questioning_condition_option_id") %>
     </div>
   </div>

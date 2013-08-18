@@ -57,6 +57,14 @@ class Question < ActiveRecord::Base
   def odk_code
     "q#{id}"
   end
+
+  # an odk (xpath) expression of any question contraints
+  def odk_constraint
+    exps = []
+    exps << ". #{minstrictly ? '>' : '>='} #{minimum}" if minimum
+    exps << ". #{maxstrictly ? '<' : '<='} #{maximum}" if maximum
+    "(" + exps.join(" and ") + ")"
+  end
   
   # shortcut method for tests
   def qing_ids
