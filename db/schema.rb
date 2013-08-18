@@ -244,8 +244,6 @@ ActiveRecord::Schema.define(:version => 20130801185904) do
     t.boolean  "reviewed",   :default => false
     t.string   "source"
     t.integer  "mission_id"
-    t.string   "signature"
-    t.boolean  "duplicate"
   end
 
   add_index "responses", ["created_at"], :name => "index_responses_on_created_at"
