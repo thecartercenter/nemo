@@ -19,7 +19,8 @@ class DashboardController < ApplicationController
     end
     
     # we need to check for a cache fragment here because some of the below fetches are not lazy
-    @cache_key = Response.per_mission_cache_key(current_mission) + '-' + (@report.try(:cache_key) || 'no-report')
+    # we include the locale in the cache key so the translations are correct
+    @cache_key = I18n.locale.to_s + '/' + Response.per_mission_cache_key(current_mission) + '-' + (@report.try(:cache_key) || 'no-report')
     
     # get a relation for accessible responses
     accessible_responses = Response.accessible_by(current_ability)
