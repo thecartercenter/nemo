@@ -4,6 +4,8 @@ FactoryGirl.define do
       option_names %w(Yes No)
       option_names_with_ranks nil
     end
+
+    mission { get_mission }
     
     name do
       option_names ? option_names.join : "AnOptionSet"

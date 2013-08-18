@@ -6,12 +6,9 @@ class Option < ActiveRecord::Base
   has_many(:answers, :inverse_of => :option)
   has_many(:choices, :inverse_of => :option)
   
-  validate(:integrity)
   validate(:name_lengths)
   validate(:not_all_blank_name_translations)
   
-  before_destroy(:check_assoc)
-  after_destroy(:notify_form_versioning_policy_of_destroy)
   after_save(:invalidate_cache)
   after_destroy(:invalidate_cache)
   
@@ -84,16 +81,6 @@ class Option < ActiveRecord::Base
   end
 
   private
-    def integrity
-      # error if anything has changed (except names/hints) and the option is published
-      errors.add(:base, :cant_change_if_published) if published? && (changed? && !changed.reject{|f| f =~ /^_?(name|hint)/}.empty?)
-    end
-
-    def check_assoc
-      # could be in a published form but no responses yet
-      raise DeletionError.new(:cant_delete_if_published) if published?
-    end
-    
     # checks that all name fields have lengths at most 30 chars
     def name_lengths
       errors.add(:base, :names_too_long) if name_translations && name_translations.detect{|l,t| !t.nil? && t.size > 30}

@@ -1,6 +1,44 @@
 require 'test_helper'
 
 class OptionSetTest < ActiveSupport::TestCase
+  setup do
+    clear_objects(OptionSet, Option)
+  end
+
+  test "creation" do
+    # create the yes/no option set
+    os = FactoryGirl.create(:option_set)
+    os.reload
+    assert(os.optionings.count > 0, "should have optionings")
+    assert(os.options.count > 0, "should have options")
+  end
+  
+  test "must have at least one option" do
+    os = FactoryGirl.build(:option_set, :option_names => [])
+    os.save
+    assert_match(/at least one/, os.errors.messages[:base].join)
+  end
+  
+  test "optioning for" do
+    os = FactoryGirl.create(:option_set, :option_names => %w(a b c d))
+    assert_equal(os.optionings[2].id, os.optioning_for(os.options[2]).id)
+  end
+  
+  test "ranks changed" do
+    os = FactoryGirl.create(:option_set, :option_names => %w(a b c d))
+    assert_equal(false, os.ranks_changed?)
+
+    # changing rank should raise flag
+    os.optionings[1].rank = 6
+    assert_equal(true, os.ranks_changed?)
+    os.save!
+    assert_equal(false, os.ranks_changed?)
+    
+    # adding option set should also raise flag
+    os.optionings.build(:rank => 8, :option => Option.new(:name => 'e'))
+    assert_equal(true, os.ranks_changed?)
+    os.save!
+  end
 
   test "creating an option set without explicit ranks should add default ranks" do
     os = create_option_set(["S", "V", "X"])
@@ -168,6 +206,7 @@ class OptionSetTest < ActiveSupport::TestCase
   
   test "newly added options should have mission id set" do
     yn = FactoryGirl.create(:option_set)
+    assert_not_nil(yn.mission)
     
     # update option set, adding new option without mission id
     yn.update_attributes!(:optionings_attributes => [
