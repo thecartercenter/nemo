@@ -63,12 +63,14 @@
     <% end %>
     
     <%# hookup whole-row link %>
-    <%= javascript_doc_ready do %>
-      $('table.index_table tbody').on('click', 'tr', function(e) {
-        // go to the tr's href if the click was on a non-active element
-        if (e.target.tagName == 'DIV' || e.target.tagName == 'TD')
-          window.location.href = $(e.currentTarget).data('href'); 
-      });
+    <% unless options[:no_whole_row_link] %>
+      <%= javascript_doc_ready do %>
+        $('table.index_table tbody').on('click', 'tr', function(e) {
+          // go to the tr's href if the click was on a non-active element
+          if (e.target.tagName == 'DIV' || e.target.tagName == 'TD')
+            window.location.href = $(e.currentTarget).data('href'); 
+        });
+      <% end %>
     <% end %>
   <% end %>
 </div>

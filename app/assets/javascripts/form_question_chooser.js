@@ -25,6 +25,12 @@
         return false;
       });
     }
+
+    // make a click anywhere on question list toggle checkbox
+    $('div.question_list tbody.index_table_body tr').on('click', function(e) {
+      if (e.target.tagName == 'DIV' || e.target.tagName == 'TD')
+        $(e.currentTarget).find('input[type=checkbox]').first().trigger('click');
+    });
   }
 
 }(ELMO));
