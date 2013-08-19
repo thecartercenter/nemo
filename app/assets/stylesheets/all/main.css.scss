@@ -122,10 +122,30 @@ form.search_form #search_examples { margin-top: 2px; color: #666; }
 a.edit_location_link img { vertical-align: bottom; }
 
 /* question fields */
-div.question_fields .control { width: 475px !important; }
-div.question_fields .form_field.name_hint textarea { width: 400px; height: 30px; }
-div.question_fields a.create_option_set { margin-left: 10px; }
-div.question_fields div.minmax input[type=text] { width: 100px; } 
+div.question_fields {
+  .control { 
+    width: 475px !important; 
+  }
+  
+  .form_field.name_hint textarea { 
+    width: 400px; 
+    height: 30px; 
+  }
+  
+  a.create_option_set { 
+    margin-left: 10px; 
+  }
+  
+  div.minmax {
+    input[type=text] { 
+      width: 100px; 
+    }
+
+    div.control label {
+      vertical-align: middle
+    }
+  } 
+}
 
 /* questioning fields */
 form.questioning_form .control { width: 475px !important; }
