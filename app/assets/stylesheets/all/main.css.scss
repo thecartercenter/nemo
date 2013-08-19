@@ -33,6 +33,7 @@ div.important { font-weight: bold; color: Black; }
 div.boilerplate { display: none; }
 div.dialog { position: absolute; background-color: white; border: 1px solid #555; padding: 10px; }
 div.dialog h2 { margin: 0 0 10px 0; }
+.translation_missing { color: red; }
 
 /* loading indicator */
 div.loader { background: image-url('loader.gif') no-repeat; padding-left: 20px; }

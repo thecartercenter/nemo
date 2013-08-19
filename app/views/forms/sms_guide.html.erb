@@ -20,7 +20,7 @@
     <tr>
       <td colspan="2" class="step1">
         <strong><%= t("common.step") %> 1:</strong> <%= t("sms_form.guide.step1") %>
-        <%= t(@form.all_required? ? "sms_forms.guide.all_required" : "sms_forms.guide.not_all_required") %>
+        <%= t(@form.all_required? ? "sms_form.guide.all_required" : "sms_form.guide.not_all_required") %>
       </td>
       <td class="answers"></td>
     </tr>
@@ -84,7 +84,7 @@
             <li><%= ss.gsub("%{submit_number}", submit_number).html_safe %></li>
           <% end %>
         </ol>
-        <%= t("common.thank_you_excl") %>
+        <%= t("common.thanks_excl") %>
       </td>
       <td></td>
     </tr>
