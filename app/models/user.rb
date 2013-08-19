@@ -8,7 +8,7 @@ class User < ActiveRecord::Base
   delegate :can?, :cannot?, :to => :ability
   
   has_many(:responses, :inverse_of => :user)
-  has_many(:broadcast_addressings, :inverse_of => :user)
+  has_many(:broadcast_addressings, :inverse_of => :user, :dependent => :destroy)
   has_many(:assignments, :autosave => true, :dependent => :destroy, :validate => true, :inverse_of => :user)
   has_many(:missions, :through => :assignments, :order => "missions.created_at DESC")
   belongs_to(:current_mission, :class_name => "Mission")
