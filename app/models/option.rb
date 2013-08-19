@@ -5,7 +5,8 @@ class Option < ActiveRecord::Base
   has_many(:optionings, :inverse_of => :option, :dependent => :destroy, :autosave => true)
   has_many(:answers, :inverse_of => :option)
   has_many(:choices, :inverse_of => :option)
-  
+  has_many(:conditions, :inverse_of => :option)
+
   validate(:integrity)
   validate(:name_lengths)
   validate(:not_all_blank_name_translations)

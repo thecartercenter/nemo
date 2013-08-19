@@ -1,11 +1,4 @@
 class Report::QuestionAnswerTallyReport < Report::TallyReport
-  has_many(:option_set_choices, :class_name => "Report::OptionSetChoice", :foreign_key => "report_report_id", :dependent => :destroy, :autosave => true)
-  has_many(:option_sets, :through => :option_set_choices)
-  has_many(:calculations, :class_name => "Report::Calculation", :foreign_key => "report_report_id", :dependent => :destroy, :autosave => true)
-
-  accepts_nested_attributes_for(:calculations, :allow_destroy => true)
-  accepts_nested_attributes_for(:option_set_choices, :allow_destroy => true)
-  attr_accessible(:option_set_choices_attributes)
   
   def as_json(options = {})
     h = super(options)

@@ -6,6 +6,7 @@ class Question < ActiveRecord::Base
   has_many(:answers, :through => :questionings)
   has_many(:referring_conditions, :through => :questionings)
   has_many(:forms, :through => :questionings)
+  has_many(:calculations, :foreign_key => "question1_id", :inverse_of => :question1)
 
   validates(:code, :presence => true)
   validates(:code, :format => {:with => /^[a-z][a-z0-9]{1,19}$/i}, :if => Proc.new{|q| !q.code.blank?})

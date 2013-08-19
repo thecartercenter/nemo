@@ -5,7 +5,7 @@ class Form < ActiveRecord::Base
   has_many(:questionings, :order => "rank", :autosave => true, :dependent => :destroy, :inverse_of => :form)
   has_many(:responses, :inverse_of => :form)
   
-  has_many(:versions, :class_name => "FormVersion", :dependent => :destroy)
+  has_many(:versions, :class_name => "FormVersion", :inverse_of => :form, :dependent => :destroy)
   
   # while a form has many versions, this is a reference to the most up-to-date one
   belongs_to(:current_version, :class_name => "FormVersion")

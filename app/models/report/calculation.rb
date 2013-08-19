@@ -4,10 +4,10 @@ class Report::Calculation < ActiveRecord::Base
   attr_accessible :type, :report_report_id, :attrib1_name, :question1_id, :arg1, :attrib1, :question1, :rank
   attr_writer :table_prefix
   
-  belongs_to :report, :class_name => "Report::Report", :foreign_key => "report_report_id"
-  belongs_to :question1, :class_name => "Question"
+  belongs_to(:report, :class_name => "Report::Report", :foreign_key => "report_report_id", :inverse_of => :calculations)
+  belongs_to(:question1, :class_name => "Question", :inverse_of => :calculations)
   
-  before_save :normalize_values
+  before_save(:normalize_values)
   
   # HACK TO GET STI TO WORK WITH ACCEPTS_NESTED_ATTRIBUTES_FOR
   class << self

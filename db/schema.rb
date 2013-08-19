@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130806132009) do
+ActiveRecord::Schema.define(:version => 20130819152914) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -215,21 +215,18 @@ ActiveRecord::Schema.define(:version => 20130806132009) do
     t.integer  "mission_id"
     t.string   "type"
     t.string   "name"
-    t.boolean  "saved",                :default => false
+    t.boolean  "saved",            :default => false
     t.integer  "filter_id"
-    t.integer  "pri_group_by_id"
-    t.integer  "sec_group_by_id"
     t.integer  "option_set_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "viewed_at"
-    t.integer  "view_count",           :default => 0
-    t.string   "display_type",         :default => "table"
-    t.string   "bar_style",            :default => "side_by_side"
-    t.boolean  "unreviewed",           :default => false
-    t.string   "question_labels",      :default => "code"
-    t.boolean  "show_question_labels", :default => true
-    t.string   "percent_type",         :default => "none"
+    t.integer  "view_count",       :default => 0
+    t.string   "display_type",     :default => "table"
+    t.string   "bar_style",        :default => "side_by_side"
+    t.boolean  "unreviewed",       :default => false
+    t.string   "question_labels",  :default => "code"
+    t.string   "percent_type",     :default => "none"
     t.boolean  "unique_rows"
     t.string   "aggregation_name"
   end
