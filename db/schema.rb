@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130819152914) do
+ActiveRecord::Schema.define(:version => 20130819154806) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -149,15 +149,6 @@ ActiveRecord::Schema.define(:version => 20130819152914) do
 
   add_index "options", ["mission_id"], :name => "index_options_on_mission_id"
 
-  create_table "question_types", :force => true do |t|
-    t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "odk_name"
-    t.string   "odk_tag"
-    t.string   "long_name"
-  end
-
   create_table "questionings", :force => true do |t|
     t.integer  "question_id"
     t.integer  "form_id"
@@ -249,14 +240,6 @@ ActiveRecord::Schema.define(:version => 20130819152914) do
   add_index "responses", ["reviewed"], :name => "index_responses_on_reviewed"
   add_index "responses", ["updated_at"], :name => "index_responses_on_updated_at"
   add_index "responses", ["user_id"], :name => "index_responses_on_user_id"
-
-  create_table "roles", :force => true do |t|
-    t.string   "name"
-    t.integer  "level"
-    t.boolean  "location_required", :default => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
 
   create_table "search_searches", :force => true do |t|
     t.text     "str"
