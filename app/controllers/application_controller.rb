@@ -170,36 +170,41 @@ class ApplicationController < ActionController::Base
     # this just sets the current user for this one request. no user session is created.
     def basic_auth_for_xml
 
-      return unless request.format == Mime::XML
+      begin
+        return unless request.format == Mime::XML
 
-      # authenticate with basic 
-      user = authenticate_with_http_basic do |login, password|
-        # use eager loading to optimize things a bit
-        User.includes(:assignments).find_by_credentials(login, password)
+        # authenticate with basic 
+        user = authenticate_with_http_basic do |login, password|
+          # use eager loading to optimize things a bit
+          User.includes(:assignments).find_by_credentials(login, password)
+        end
+        
+        # if authentication not successful, fail
+        return request_http_basic_authentication if !user
+
+        # save the user
+        @current_user = user
+
+        # mission compact name must be set for all ODK/XML requests
+        raise ArgumentError.new("mission not specified") if params[:mission_compact_name].blank?
+        
+        # lookup the mission
+        mission = Mission.find_by_compact_name(params[:mission_compact_name])
+        
+        # if the mission wasnt found, raise error
+        raise ArgumentError.new("mission not found") if !mission
+        
+        # if user can't access the mission, force re-authentication
+        return request_http_basic_authentication if !can?(:read, mission)
+        
+        # if we get this far, we can set the current mission
+        @current_mission = mission
+        @current_user.current_mission = mission
+        @current_user.save(:validate => false)
+      rescue ArgumentError
+        render(:nothing => true, :status => 404)
+        false
       end
-      
-      # if authentication not successful, fail
-      return request_http_basic_authentication if !user
-
-      # save the user
-      @current_user = user
-
-      # mission compact name must be set for all ODK/XML requests
-      raise "mission not specified" if params[:mission_compact_name].blank?
-      
-      # lookup the mission
-      mission = Mission.find_by_compact_name(params[:mission_compact_name])
-      
-      # if the mission wasnt found, raise error
-      raise "mission not found" if !mission
-      
-      # if user can't access the mission, force re-authentication
-      return request_http_basic_authentication if !can?(:read, mission)
-      
-      # if we get this far, we can set the current mission
-      @current_mission = mission
-      @current_user.current_mission = mission
-      @current_user.save(:validate => false)
     end
     
     # gets the user and mission from the user session if they're not already set
