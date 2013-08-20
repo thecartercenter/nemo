@@ -21,7 +21,6 @@ class CreateUsers < ActiveRecord::Migration
 
       t.timestamps
     end
-    salt = ActiveSupport::SecureRandom.base64(8)
     
     add_index(:users, [:login], :unique => true)
   end

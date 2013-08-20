@@ -7,15 +7,15 @@ class AddRedundantLinksToPlaces < ActiveRecord::Migration
     add_column(:places, :country_id, :integer)
     
     # populate
-    Place.all.each do |p|
-      cont = p
-      while !cont.nil? do
-        puts "Setting #{p.full_name}'s #{cont.place_type.short_name}_id to #{cont.id}"
-        p.send("#{cont.place_type.short_name}_id=", cont.id)
-        cont = cont.container
-      end
-      p.save(:validate => false)
-    end
+    # Place.all.each do |p|
+    #   cont = p
+    #   while !cont.nil? do
+    #     puts "Setting #{p.full_name}'s #{cont.place_type.short_name}_id to #{cont.id}"
+    #     p.send("#{cont.place_type.short_name}_id=", cont.id)
+    #     cont = cont.container
+    #   end
+    #   p.save(:validate => false)
+    # end
   end
 
   def self.down
