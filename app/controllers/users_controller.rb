@@ -7,7 +7,7 @@ class UsersController < ApplicationController
   
   def index
     # apply pagination and search
-    @users = apply_filters(@users.with_assoc)
+    @users = apply_filters(@users.by_name.with_assoc)
   end
   
   def new

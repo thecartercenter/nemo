@@ -42,10 +42,10 @@ class User < ActiveRecord::Base
   validate(:ensure_current_mission_is_valid)
   validate(:phone_should_be_unique)
   
-  default_scope(order("users.name"))
+  scope(:by_name, order("users.name"))
   scope(:assigned_to, lambda{|m| where("users.id IN (SELECT user_id FROM assignments WHERE mission_id = ?)", m.id)})
   scope(:with_assoc, includes(:missions, {:assignments => :mission}))
-  
+
   # we want all of these on one page for now
   self.per_page = 1000000
 
@@ -99,6 +99,18 @@ class User < ActiveRecord::Base
 
   def self.search_examples
     ["john smith", "#{I18n.t('search_qualifiers.phone')}:+44"]
+  end
+
+  # returns an array of hashes of format {:name => "Some User", :count => 2}
+  # of user response counts for the given mission
+  def self.sorted_response_counts(mission, limit)
+    find_by_sql(["SELECT users.name AS name, COUNT(DISTINCT responses.id) AS response_count
+      FROM users 
+        INNER JOIN assignments ON users.id = assignments.user_id AND assignments.mission_id = ?
+        LEFT JOIN responses ON responses.user_id = users.id AND responses.mission_id = ?
+      GROUP BY users.id, users.name
+      ORDER BY response_count
+      LIMIT ?", mission.id, mission.id, limit])
   end
   
   def reset_password
@@ -199,7 +211,7 @@ class User < ActiveRecord::Base
   def set_current_mission
     # ensure no current mission set if the user has no assignments
     if assignments.active.empty?
-      change_mission!(nil) 
+      change_mission!(nil)
     # else if user has no current mission, pick one
     elsif current_mission.nil?
       change_mission!(assignments.active.sorted_recent_first.first.mission)
@@ -305,12 +317,20 @@ class User < ActiveRecord::Base
     
     # sets the user's preferred language to the mission default
     def set_default_pref_lang
-      self.pref_lang ||= configatron.preferred_locales.first
+      begin
+        self.pref_lang ||= configatron.preferred_locales.first
+      rescue ActiveModel::MissingAttributeError
+        # we rescue this error in case find_by_sql is being used
+      end
     end
     
     # sets the user's default login name
     def set_default_login
-      self.login ||= self.class.suggest_login(name) unless name.blank?
+      begin
+        self.login ||= self.class.suggest_login(name) unless name.blank?
+      rescue ActiveModel::MissingAttributeError
+        # we rescue this error in case find_by_sql is being used
+      end
     end
     
 end

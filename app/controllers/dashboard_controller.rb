@@ -42,7 +42,10 @@ class DashboardController < ApplicationController
     
       # responses by form (top N most popular)
       @responses_by_form = Response.per_form(accessible_responses, STAT_ROWS)
-      
+
+      # responses per user
+      @responses_per_user = User.sorted_response_counts(current_mission, STAT_ROWS)
+
       prepare_report
     end
     

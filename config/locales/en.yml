@@ -679,6 +679,7 @@ en:
 
   dashboard:
     close_dashboard: "Close Dashboard"
+    low_activity: "Low Activity"
     no_reports: "No Reports have been created for this mission yet."
     recent_responses: "Latest Responses"
     response_locations: "Response Locations"
