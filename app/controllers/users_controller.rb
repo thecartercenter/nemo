@@ -1,4 +1,7 @@
 class UsersController < ApplicationController
+  # special find method before load_resource
+  before_filter :build_user_with_proper_mission, :only => [:new, :create]
+
   # authorization via CanCan
   load_and_authorize_resource
   
@@ -21,6 +24,7 @@ class UsersController < ApplicationController
   end
   
   def create
+    Rails.logger.debug(@user.assignments.inspect)
     if @user.save
       @user.reset_password_if_requested
 
@@ -113,5 +117,13 @@ class UsersController < ApplicationController
       @assignable_roles = Ability.assignable_roles(current_user)
       
       render(:form)
+    end
+
+    # builds a user with an appropriate mission assignment if the current_user doesn't have permission to edit a blank user
+    def build_user_with_proper_mission
+      @user = User.new(params[:user])
+      if current_user.cannot?(:create, @user) && @user.assignments.empty?
+        @user.assignments.build(:mission => current_mission, :active => true)
+      end
     end
 end
