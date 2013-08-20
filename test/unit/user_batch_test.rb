@@ -39,6 +39,14 @@ class UserTest < ActiveSupport::TestCase
     assert(ub.succeeded?, "user creation failed")
     assert_equal(ub.lines.size, 2)
   end
+
+  test "extra commas should be ignored" do
+    ub = UserBatch.new(:batch => "A Bob,, +2279182137, a@bc.com,,\nBo Cod,")
+    ub.create_users(@mission)
+    assert(ub.succeeded?, "user creation failed")
+    assert_user_attribs(ub.lines[0][:user], :name => 'A Bob', :phone => '+2279182137', :phone2 => nil, :email => 'a@bc.com')
+    assert_user_attribs(ub.lines[1][:user], :name => 'Bo Cod', :phone => nil, :phone2 => nil, :email => nil)
+  end
   
   private
     def assert_user_attribs(user, attribs)
