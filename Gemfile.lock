@@ -62,9 +62,14 @@ GEM
     factory_girl_rails (4.2.1)
       factory_girl (~> 4.2.0)
       railties (>= 3.0.0)
+    foreigner (1.4.2)
+      activerecord (>= 3.0.0)
     highline (1.6.19)
     hike (1.2.2)
     i18n (0.6.1)
+    immigrant (0.1.5)
+      activerecord (>= 3.0)
+      foreigner (>= 1.2.1)
     iso-639 (0.1.0)
     journey (1.0.4)
     jquery-rails (3.0.0)
@@ -154,7 +159,9 @@ DEPENDENCIES
   configatron
   dalli
   factory_girl_rails (~> 4.0)
+  foreigner
   i18n-js!
+  immigrant
   iso-639
   jquery-rails
   libxml-ruby

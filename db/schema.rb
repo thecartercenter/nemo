@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130819154806) do
+ActiveRecord::Schema.define(:version => 20130820002405) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -25,9 +25,9 @@ ActiveRecord::Schema.define(:version => 20130819154806) do
     t.datetime "datetime_value"
   end
 
-  add_index "answers", ["option_id"], :name => "index_answers_on_option_id"
-  add_index "answers", ["questioning_id"], :name => "index_answers_on_questioning_id"
-  add_index "answers", ["response_id"], :name => "index_answers_on_response_id"
+  add_index "answers", ["option_id"], :name => "answers_option_id_fk"
+  add_index "answers", ["questioning_id"], :name => "answers_questioning_id_fk"
+  add_index "answers", ["response_id"], :name => "answers_response_id_fk"
 
   create_table "assignments", :force => true do |t|
     t.integer  "mission_id"
@@ -38,8 +38,8 @@ ActiveRecord::Schema.define(:version => 20130819154806) do
     t.string   "role"
   end
 
-  add_index "assignments", ["mission_id"], :name => "index_assignments_on_mission_id"
-  add_index "assignments", ["user_id"], :name => "index_assignments_on_user_id"
+  add_index "assignments", ["mission_id"], :name => "assignments_mission_id_fk"
+  add_index "assignments", ["user_id"], :name => "assignments_user_id_fk"
 
   create_table "broadcast_addressings", :force => true do |t|
     t.integer  "broadcast_id"
@@ -47,6 +47,9 @@ ActiveRecord::Schema.define(:version => 20130819154806) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "broadcast_addressings", ["broadcast_id"], :name => "broadcast_addressings_broadcast_id_fk"
+  add_index "broadcast_addressings", ["user_id"], :name => "broadcast_addressings_user_id_fk"
 
   create_table "broadcasts", :force => true do |t|
     t.string   "subject"
@@ -59,7 +62,7 @@ ActiveRecord::Schema.define(:version => 20130819154806) do
     t.integer  "mission_id"
   end
 
-  add_index "broadcasts", ["mission_id"], :name => "index_broadcasts_on_mission_id"
+  add_index "broadcasts", ["mission_id"], :name => "broadcasts_mission_id_fk"
 
   create_table "choices", :force => true do |t|
     t.integer  "answer_id"
@@ -68,8 +71,8 @@ ActiveRecord::Schema.define(:version => 20130819154806) do
     t.datetime "updated_at"
   end
 
-  add_index "choices", ["answer_id"], :name => "index_choices_on_answer_id"
-  add_index "choices", ["option_id"], :name => "index_choices_on_option_id"
+  add_index "choices", ["answer_id"], :name => "choices_answer_id_fk"
+  add_index "choices", ["option_id"], :name => "choices_option_id_fk"
 
   create_table "conditions", :force => true do |t|
     t.integer  "questioning_id"
@@ -81,6 +84,10 @@ ActiveRecord::Schema.define(:version => 20130819154806) do
     t.integer  "option_id"
   end
 
+  add_index "conditions", ["option_id"], :name => "conditions_option_id_fk"
+  add_index "conditions", ["questioning_id"], :name => "conditions_questioning_id_fk"
+  add_index "conditions", ["ref_qing_id"], :name => "conditions_ref_qing_id_fk"
+
   create_table "form_versions", :force => true do |t|
     t.integer  "form_id"
     t.integer  "sequence",   :default => 1
@@ -91,6 +98,7 @@ ActiveRecord::Schema.define(:version => 20130819154806) do
   end
 
   add_index "form_versions", ["code"], :name => "index_form_versions_on_code", :unique => true
+  add_index "form_versions", ["form_id"], :name => "form_versions_form_id_fk"
 
   create_table "forms", :force => true do |t|
     t.string   "name"
@@ -106,7 +114,8 @@ ActiveRecord::Schema.define(:version => 20130819154806) do
     t.boolean  "smsable",            :default => false
   end
 
-  add_index "forms", ["mission_id"], :name => "index_forms_on_mission_id"
+  add_index "forms", ["current_version_id"], :name => "forms_current_version_id_fk"
+  add_index "forms", ["mission_id"], :name => "forms_mission_id_fk"
 
   create_table "missions", :force => true do |t|
     t.string   "name"
@@ -124,7 +133,7 @@ ActiveRecord::Schema.define(:version => 20130819154806) do
     t.integer  "mission_id"
   end
 
-  add_index "option_sets", ["mission_id"], :name => "index_option_sets_on_mission_id"
+  add_index "option_sets", ["mission_id"], :name => "option_sets_mission_id_fk"
 
   create_table "optionings", :force => true do |t|
     t.integer  "option_set_id"
@@ -134,8 +143,8 @@ ActiveRecord::Schema.define(:version => 20130819154806) do
     t.integer  "rank"
   end
 
-  add_index "optionings", ["option_id"], :name => "index_optionings_on_option_id"
-  add_index "optionings", ["option_set_id"], :name => "index_optionings_on_option_set_id"
+  add_index "optionings", ["option_id"], :name => "optionings_option_id_fk"
+  add_index "optionings", ["option_set_id"], :name => "optionings_option_set_id_fk"
 
   create_table "options", :force => true do |t|
     t.datetime "created_at"
@@ -147,7 +156,7 @@ ActiveRecord::Schema.define(:version => 20130819154806) do
     t.text     "hint_translations"
   end
 
-  add_index "options", ["mission_id"], :name => "index_options_on_mission_id"
+  add_index "options", ["mission_id"], :name => "options_mission_id_fk"
 
   create_table "questionings", :force => true do |t|
     t.integer  "question_id"
@@ -159,8 +168,8 @@ ActiveRecord::Schema.define(:version => 20130819154806) do
     t.datetime "updated_at"
   end
 
-  add_index "questionings", ["form_id"], :name => "index_questionings_on_form_id"
-  add_index "questionings", ["question_id"], :name => "index_questionings_on_question_id"
+  add_index "questionings", ["form_id"], :name => "questionings_form_id_fk"
+  add_index "questionings", ["question_id"], :name => "questionings_question_id_fk"
 
   create_table "questions", :force => true do |t|
     t.string   "code"
@@ -180,8 +189,8 @@ ActiveRecord::Schema.define(:version => 20130819154806) do
     t.boolean  "key",               :default => false
   end
 
-  add_index "questions", ["mission_id"], :name => "index_questions_on_mission_id"
-  add_index "questions", ["option_set_id"], :name => "index_questions_on_option_set_id"
+  add_index "questions", ["mission_id"], :name => "questions_mission_id_fk"
+  add_index "questions", ["option_set_id"], :name => "questions_option_set_id_fk"
   add_index "questions", ["qtype_name"], :name => "index_questions_on_qtype_name"
 
   create_table "report_calculations", :force => true do |t|
@@ -194,13 +203,16 @@ ActiveRecord::Schema.define(:version => 20130819154806) do
     t.integer  "rank"
   end
 
+  add_index "report_calculations", ["question1_id"], :name => "report_calculations_question1_id_fk"
+  add_index "report_calculations", ["report_report_id"], :name => "report_calculations_report_report_id_fk"
+
   create_table "report_option_set_choices", :force => true do |t|
     t.integer "report_report_id"
     t.integer "option_set_id"
   end
 
-  add_index "report_option_set_choices", ["option_set_id"], :name => "index_report_option_set_choices_on_option_set_id"
-  add_index "report_option_set_choices", ["report_report_id"], :name => "index_report_option_set_choices_on_report_report_id"
+  add_index "report_option_set_choices", ["option_set_id"], :name => "report_option_set_choices_option_set_id_fk"
+  add_index "report_option_set_choices", ["report_report_id"], :name => "report_option_set_choices_report_report_id_fk"
 
   create_table "report_reports", :force => true do |t|
     t.integer  "mission_id"
@@ -222,6 +234,8 @@ ActiveRecord::Schema.define(:version => 20130819154806) do
     t.string   "aggregation_name"
   end
 
+  add_index "report_reports", ["filter_id"], :name => "report_reports_filter_id_fk"
+  add_index "report_reports", ["mission_id"], :name => "report_reports_mission_id_fk"
   add_index "report_reports", ["view_count"], :name => "index_report_reports_on_view_count"
 
   create_table "responses", :force => true do |t|
@@ -235,11 +249,11 @@ ActiveRecord::Schema.define(:version => 20130819154806) do
   end
 
   add_index "responses", ["created_at"], :name => "index_responses_on_created_at"
-  add_index "responses", ["form_id"], :name => "index_responses_on_form_id"
-  add_index "responses", ["mission_id"], :name => "index_responses_on_mission_id"
+  add_index "responses", ["form_id"], :name => "responses_form_id_fk"
+  add_index "responses", ["mission_id"], :name => "responses_mission_id_fk"
   add_index "responses", ["reviewed"], :name => "index_responses_on_reviewed"
   add_index "responses", ["updated_at"], :name => "index_responses_on_updated_at"
-  add_index "responses", ["user_id"], :name => "index_responses_on_user_id"
+  add_index "responses", ["user_id"], :name => "responses_user_id_fk"
 
   create_table "search_searches", :force => true do |t|
     t.text     "str"
@@ -255,7 +269,6 @@ ActiveRecord::Schema.define(:version => 20130819154806) do
     t.datetime "updated_at"
   end
 
-  add_index "sessions", ["session_id"], :name => "index_sessions_on_session_id"
   add_index "sessions", ["updated_at"], :name => "index_sessions_on_updated_at"
 
   create_table "settings", :force => true do |t|
@@ -273,7 +286,7 @@ ActiveRecord::Schema.define(:version => 20130819154806) do
     t.string   "preferred_locales"
   end
 
-  add_index "settings", ["mission_id"], :name => "index_settings_on_mission_id"
+  add_index "settings", ["mission_id"], :name => "settings_mission_id_fk"
 
   create_table "sms_messages", :force => true do |t|
     t.string   "direction"
@@ -288,6 +301,7 @@ ActiveRecord::Schema.define(:version => 20130819154806) do
   end
 
   add_index "sms_messages", ["body"], :name => "index_sms_messages_on_body", :length => {"body"=>160}
+  add_index "sms_messages", ["mission_id"], :name => "sms_messages_mission_id_fk"
 
   create_table "users", :force => true do |t|
     t.string   "login"
@@ -310,6 +324,63 @@ ActiveRecord::Schema.define(:version => 20130819154806) do
     t.string   "pref_lang"
   end
 
+  add_index "users", ["current_mission_id"], :name => "users_current_mission_id_fk"
   add_index "users", ["login"], :name => "index_users_on_login", :unique => true
+
+  add_foreign_key "answers", "options", :name => "answers_option_id_fk"
+  add_foreign_key "answers", "questionings", :name => "answers_questioning_id_fk"
+  add_foreign_key "answers", "responses", :name => "answers_response_id_fk"
+
+  add_foreign_key "assignments", "missions", :name => "assignments_mission_id_fk"
+  add_foreign_key "assignments", "users", :name => "assignments_user_id_fk"
+
+  add_foreign_key "broadcast_addressings", "broadcasts", :name => "broadcast_addressings_broadcast_id_fk"
+  add_foreign_key "broadcast_addressings", "users", :name => "broadcast_addressings_user_id_fk"
+
+  add_foreign_key "broadcasts", "missions", :name => "broadcasts_mission_id_fk"
+
+  add_foreign_key "choices", "answers", :name => "choices_answer_id_fk"
+  add_foreign_key "choices", "options", :name => "choices_option_id_fk"
+
+  add_foreign_key "conditions", "options", :name => "conditions_option_id_fk"
+  add_foreign_key "conditions", "questionings", :name => "conditions_questioning_id_fk"
+  add_foreign_key "conditions", "questionings", :name => "conditions_ref_qing_id_fk", :column => "ref_qing_id"
+
+  add_foreign_key "form_versions", "forms", :name => "form_versions_form_id_fk"
+
+  add_foreign_key "forms", "form_versions", :name => "forms_current_version_id_fk", :column => "current_version_id"
+  add_foreign_key "forms", "missions", :name => "forms_mission_id_fk"
+
+  add_foreign_key "option_sets", "missions", :name => "option_sets_mission_id_fk"
+
+  add_foreign_key "optionings", "option_sets", :name => "optionings_option_set_id_fk"
+  add_foreign_key "optionings", "options", :name => "optionings_option_id_fk"
+
+  add_foreign_key "options", "missions", :name => "options_mission_id_fk"
+
+  add_foreign_key "questionings", "forms", :name => "questionings_form_id_fk"
+  add_foreign_key "questionings", "questions", :name => "questionings_question_id_fk"
+
+  add_foreign_key "questions", "missions", :name => "questions_mission_id_fk"
+  add_foreign_key "questions", "option_sets", :name => "questions_option_set_id_fk"
+
+  add_foreign_key "report_calculations", "questions", :name => "report_calculations_question1_id_fk", :column => "question1_id"
+  add_foreign_key "report_calculations", "report_reports", :name => "report_calculations_report_report_id_fk"
+
+  add_foreign_key "report_option_set_choices", "option_sets", :name => "report_option_set_choices_option_set_id_fk"
+  add_foreign_key "report_option_set_choices", "report_reports", :name => "report_option_set_choices_report_report_id_fk"
+
+  add_foreign_key "report_reports", "missions", :name => "report_reports_mission_id_fk"
+  add_foreign_key "report_reports", "search_searches", :name => "report_reports_filter_id_fk", :column => "filter_id"
+
+  add_foreign_key "responses", "forms", :name => "responses_form_id_fk"
+  add_foreign_key "responses", "missions", :name => "responses_mission_id_fk"
+  add_foreign_key "responses", "users", :name => "responses_user_id_fk"
+
+  add_foreign_key "settings", "missions", :name => "settings_mission_id_fk"
+
+  add_foreign_key "sms_messages", "missions", :name => "sms_messages_mission_id_fk"
+
+  add_foreign_key "users", "missions", :name => "users_current_mission_id_fk", :column => "current_mission_id"
 
 end

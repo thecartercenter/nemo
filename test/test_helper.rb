@@ -6,6 +6,10 @@ class ActiveSupport::TestCase
   
   setup :set_locale_in_url_options
 
+  def clear_objects(*args)
+    args.each{|k| k.delete_all}
+  end
+  
   # sets the locale in the url options to the current locale for integration tests
   # this is also done in application_controller but needs to be done here too for some reason
   def set_locale_in_url_options
