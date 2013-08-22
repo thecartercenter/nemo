@@ -215,7 +215,7 @@ div#mcTooltip a { color:#36c; }
 /*Close button. Available when sticky or overlay has been set to true, or is on iPhone, iPad, Android, BlackBerry, or IEMobile devices. */
 div#mcttCloseButton 
 {
-  width:14px;height:14px;position:absolute;background-image:url(closeBtn.gif);cursor:pointer; overflow:hidden;
+  width:14px;height:14px;position:absolute;cursor:pointer; overflow:hidden;
   top:12px; right:12px; left:auto;
 }            
 

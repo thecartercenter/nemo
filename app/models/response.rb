@@ -15,8 +15,6 @@ class Response < ActiveRecord::Base
   validates(:user, :presence => true)
   validate(:no_missing_answers)
   
-  # before_save(:hash_answers)
-
   # don't need to validate answers in odk mode
   validates_associated(:answers, :message => :invalid_answers, :if => Proc.new{|r| r.modifier != "odk"})
   
@@ -138,9 +136,8 @@ class Response < ActiveRecord::Base
     answers_digest = user.id.to_s
     answers.each do |a|
       answer_value = a.value || a.option_id || a.time_value || a.date_value || a.datetime_value
-      puts "inspection of a yields " + a.inspect
-      if a.all_choices
-        answers_digest += a.all_choices.map { |choice| choice.option_id }.join("")
+      if a.choices
+        answers_digest += a.choices.map { |choice| choice.option_id }.join("")
       end
       answers_digest += answer_value.to_s
     end

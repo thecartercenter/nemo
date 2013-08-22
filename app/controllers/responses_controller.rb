@@ -15,7 +15,11 @@ class ResponsesController < ApplicationController
         @responses = apply_filters(@responses)
         
         # map each response to its duplicate if one exists
-        @responses.map! { |r| r.dup_resp = (duplicates = r.find_duplicates) ? duplicates.last : nil }
+        @responses.map! do |r|
+          if r.duplicate
+            r.dup_resp = (duplicates = r.find_duplicates) ? duplicates.last : nil
+          end
+        end
         
         # get list of published forms for 'create response' link
         @pubd_forms = Form.accessible_by(current_ability).published.with_form_type
@@ -141,11 +145,8 @@ class ResponsesController < ApplicationController
           # hash answers before search for duplicates and save
           @response.hash_answers
           
-          # ignore flagging response as duplicate if user updated response
-          if params[:action] == "create"
-            # if possible duplicates are found, set duplicate column to 1, else 0
-            @response.duplicate = @response.find_duplicates.empty? || @response.find_duplicates.nil? ? 0 : 1
-          end
+          # if possible duplicates are found, set duplicate column to 1, else 0
+          @response.duplicate = @response.find_duplicates.empty? || @response.find_duplicates.nil? ? 0 : 1
           
         end
         @response.save!

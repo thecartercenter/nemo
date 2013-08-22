@@ -36,11 +36,11 @@ function responses_update(data) {
 }
 
 $(document).ready(function(){
-  $("a.create_response").on("click", function(){
+  $("#content").on("click", ".create_response", function(){
     $('#form_chooser').show(); 
     return false;
   });
-  
+
   // attach event handler to all duplicate icons
   $("#content").on("mouseover",".duplicate_icon",function(){
 	  var id = $(this).attr("data");

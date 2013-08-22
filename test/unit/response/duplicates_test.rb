@@ -48,7 +48,7 @@ class Response::DuplicatesTest < ActiveSupport::TestCase
     response_no_sig.duplicate = true
     
     # test whether response was created with no answers submitted
-    assert_not_nil(empty_response,"Empty Response not nil")
+    assert_not_nil(empty_response.signature,"Empty Response's signature not nil")
     
     # assert the two duplicate response signatures are equal
     assert_equal(response1.signature,response1_copy.signature)
@@ -58,13 +58,10 @@ class Response::DuplicatesTest < ActiveSupport::TestCase
     
     # assert the empty response's signature is not equal to the first response's signature
     assert_not_equal(empty_response.signature,response1.signature)     
-    
+
     # assert response1 has a different signature than the response with different multiple options selected
     assert_not_equal(different_value_response.signature,different_sel_multiple_response.signature) 
     
-    puts "different_value_response : " + different_value_response.signature.to_s
-    puts "different sel mult response: " + different_sel_multiple_response.signature.to_s
-    puts "response1_copy: " + response1_copy.signature.to_s
   end
 
 
