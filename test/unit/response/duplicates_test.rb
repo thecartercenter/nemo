@@ -16,22 +16,28 @@ class Response::DuplicatesTest < ActiveSupport::TestCase
     opt_set = FactoryGirl.create(:option_set, :option_names => %w(Yes No Maybe))
         
     # create question with selectable answer
-    question1 = FactoryGirl.create(:question, :code => "q1", :forms => [form1], :qtype_name => "select_one", :option_set => opt_set)
+    question_sel1 = FactoryGirl.create(:question, :code => "q1", :forms => [form1], :qtype_name => "select_one", :option_set => opt_set)
     
     # create another question
-    question2 = FactoryGirl.create(:question, :code => "q2", :forms => [form1], :qtype_name => "select_one", :option_set => opt_set)
+    question_sel2 = FactoryGirl.create(:question, :code => "q2", :forms => [form1], :qtype_name => "select_one", :option_set => opt_set)
     
     # create question with value as answer  
-    question3 = FactoryGirl.create(:question, :code => "q3", :forms => [form1], :qtype_name => "text")
+    question_val = FactoryGirl.create(:question, :code => "q3", :forms => [form1], :qtype_name => "text")
 
+    # create question that takes multiple selections
+    question_sel_multi = FactoryGirl.create(:question, :code => "q4", :forms => [form1], :qtype_name => "select_multiple", :option_set => opt_set)
+    
     # create a response using question
-    response1 = FactoryGirl.create(:response, :form => form1, :answer_names => { :q1 => "Yes", :q2 => "Yes", :q3 => "value"})
+    response1 = FactoryGirl.create(:response, :form => form1, :answer_names => { :q1 => "Yes", :q2 => "Yes", :q3 => "value", :q4 => ["Yes","No"]})
 
     # create a duplicate response
-    response1_copy = FactoryGirl.create(:response, :form => form1, :answer_names => { :q1 => "Yes", :q2 => "Yes", :q3 => "value" })
+    response1_copy = FactoryGirl.create(:response, :form => form1, :answer_names => { :q1 => "Yes", :q2 => "Yes", :q3 => "value", :q4 => ["Yes","No"]})
 
-    # create a different response
-    different_response = FactoryGirl.create(:response, :form => form1, :answer_names => { :q1 => "No", :q2 => "Yes", :q3 => "value1" })
+    # create a different response with a different value for value question
+    different_value_response = FactoryGirl.create(:response, :form => form1, :answer_names => { :q1 => "No", :q2 => "Yes", :q3 => "value1" , :q4 => ["Yes","No"]})
+    
+    # create a response with a different options for select_multiple question
+    different_sel_multiple_response = FactoryGirl.create(:response, :form => form1, :answer_names => { :q1 => "No", :q2 => "Yes", :q3 => "value1" , :q4 => ["No","No"]})
 
     # create empty response
     empty_response = FactoryGirl.create(:response, :form => form1, :answer_names => {})
@@ -47,9 +53,18 @@ class Response::DuplicatesTest < ActiveSupport::TestCase
     # assert the two duplicate response signatures are equal
     assert_equal(response1.signature,response1_copy.signature)
     
-    # assert the different response signature is not equal to the first response signature
-    assert_not_equal(empty_response.signature,response1.signature)
-        
+    # assert two different responses have different signatures
+    assert_not_equal(response1.signature,different_value_response.signature)
+    
+    # assert the empty response's signature is not equal to the first response's signature
+    assert_not_equal(empty_response.signature,response1.signature)     
+    
+    # assert response1 has a different signature than the response with different multiple options selected
+    assert_not_equal(different_value_response.signature,different_sel_multiple_response.signature) 
+    
+    puts "different_value_response : " + different_value_response.signature.to_s
+    puts "different sel mult response: " + different_sel_multiple_response.signature.to_s
+    puts "response1_copy: " + response1_copy.signature.to_s
   end
 
 

@@ -42,10 +42,8 @@ $(document).ready(function(){
   });
   
   // attach event handler to all duplicate icons
-  $(".duplicate_icon").each(function(){
-    $(this).mouseover(function(){
+  $("#content").on("mouseover",".duplicate_icon",function(){
 	  var id = $(this).attr("data");
 	  tooltip.pop(this,"Possible duplicate of <a href='/responses/" + id + "'>Response #" + id + "</a> <br> Click icon if not a duplicate.");
-    });
   });
 });

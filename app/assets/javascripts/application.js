@@ -19,6 +19,7 @@
 //= require common
 //= require sassafras/utils
 //= require i18n
+//= require tooltip
 //= require i18n/translations
 
 // some report superclasses need to come first due to inheritance

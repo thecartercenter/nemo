@@ -15,7 +15,7 @@ class ResponsesController < ApplicationController
         @responses = apply_filters(@responses)
         
         # map each response to its duplicate if one exists
-        @responses.map! { |r| r.dup_resp = (duplicates = r.find_duplicates) ? Response.last : nil }
+        @responses.map! { |r| r.dup_resp = (duplicates = r.find_duplicates) ? duplicates.last : nil }
         
         # get list of published forms for 'create response' link
         @pubd_forms = Form.accessible_by(current_ability).published.with_form_type

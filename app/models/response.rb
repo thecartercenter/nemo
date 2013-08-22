@@ -14,6 +14,8 @@ class Response < ActiveRecord::Base
   # regardless of how many answer errors there are
   validates(:user, :presence => true)
   validate(:no_missing_answers)
+  
+  # before_save(:hash_answers)
 
   # don't need to validate answers in odk mode
   validates_associated(:answers, :message => :invalid_answers, :if => Proc.new{|r| r.modifier != "odk"})
@@ -125,7 +127,7 @@ class Response < ActiveRecord::Base
     
     # don't include responses that have null signatures
     if signature
-      possible_duplicates = Response.where(responses["signature"].eq(signature).and(responses["id"].not_eq(id)))
+      possible_duplicates = Response.where(responses["signature"].eq(self.signature).and(responses["id"].not_eq(id)))
     end
     
     return possible_duplicates
@@ -136,7 +138,11 @@ class Response < ActiveRecord::Base
     answers_digest = user.id.to_s
     answers.each do |a|
       answer_value = a.value || a.option_id || a.time_value || a.date_value || a.datetime_value
-      answers_digest = answers_digest + answer_value.to_s
+      puts "inspection of a yields " + a.inspect
+      if a.all_choices
+        answers_digest += a.all_choices.map { |choice| choice.option_id }.join("")
+      end
+      answers_digest += answer_value.to_s
     end
     
     self.signature = Digest::SHA1.hexdigest(answers_digest)
