@@ -1,7 +1,13 @@
 ELMO
 =========
 
-Documentation coming soon.
+More documentation coming soon.
+
+Diagram of the Object Model
+==============
+The following link describes ELMO's object model and relations.
+
+[Entity Relationship Diagram](docs/erd.pdf)
 
 <!---
 Ensure you have the following dependencies installed.

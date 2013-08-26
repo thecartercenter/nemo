@@ -53,3 +53,6 @@ gem 'dalli'
 # foreign key maintenance
 gem 'foreigner'
 gem 'immigrant'
+
+# diagraming 
+gem "rails-erd"
