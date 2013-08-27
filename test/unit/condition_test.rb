@@ -2,7 +2,7 @@ require 'test_helper'
 
 class ConditionTest < ActiveSupport::TestCase
   setup do
-    clear_objects(Question, Questioning, Form, OptionSet, Option, Condition)
+    clear_objects(Questioning, Question, Form, OptionSet, Option, Condition)
   end
   
   test "create" do
@@ -85,7 +85,7 @@ class ConditionTest < ActiveSupport::TestCase
   private
 
     def build_condition(params = {})
-    	clear_objects(Form, Question, Questioning, OptionSet)
+      clear_objects(Questioning, Question, Form, Optioning, Option, OptionSet)
       f = FactoryGirl.create(:form, :question_types => params.delete(:question_types) || %w(integer integer integer))
       q = f.questionings.last
       
