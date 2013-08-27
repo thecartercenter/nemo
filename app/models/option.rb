@@ -17,6 +17,8 @@ class Option < ActiveRecord::Base
   
   translates :name, :hint
   
+  replicable :assocs => []
+  
   # the max number of suggestion matches to return
   MAX_SUGGESTIONS = 5
 

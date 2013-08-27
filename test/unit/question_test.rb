@@ -59,4 +59,7 @@ class QuestionTest < ActiveSupport::TestCase
     assert_equal('FooCopy3', q4.code)
   end
 
+  test "replicating a question with no option set should just copy the question" do
+    
+  end
 end

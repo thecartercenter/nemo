@@ -2,7 +2,15 @@ module Replicable
   extend ActiveSupport::Concern
 
   included do
-    cattr_accessor :replicable_assocs, :preserve_uniqueness, :non_replicable_attribs
+    # dsl-style method for setting options from base class
+    def self.replicable(options)
+      class_variable_set('@@replication_options', options)
+    end
+
+    # accessor for within the concern
+    def self.replication_options
+      class_variable_defined?('@@replication_options') ? class_variable_get('@@replication_options') : nil
+    end
   end
 
   # creates a duplicate in this or another mission
@@ -33,7 +41,7 @@ module Replicable
     attributes.except(*dont_copy).each{|k,v| copy.send("#{k}=", v)}
 
     # if property is set, change the name
-    if params = self.class.preserve_uniqueness
+    if params = self.class.replication_options[:uniqueness]
       copy.send("#{params[:field]}=", self.make_unique(params.merge(:mission => to_mission)))
     end
 
@@ -41,7 +49,7 @@ module Replicable
     options[:recursed] = true
 
     # replicate associations
-    replicable_assocs.try(:each) do |assoc|
+    self.class.replication_options[:assocs].try(:each) do |assoc|
       if assoc[1] == :many
         copy.send("#{assoc[0]}=", send(assoc[0]).map{|o| o.replicate(to_mission, options)})
       else
