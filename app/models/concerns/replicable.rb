@@ -55,7 +55,7 @@ module Replicable
       if self.class.reflect_on_association(assoc).collection?
         copy.send("#{assoc}=", send(assoc).map{|o| o.replicate(to_mission, options)})
       else
-        copy.send("#{assoc}=", send(assoc).replicate(to_mission, options))
+        copy.send("#{assoc}=", send(assoc).replicate(to_mission, options)) unless send(assoc).nil?
       end
     end
 

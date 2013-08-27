@@ -30,7 +30,7 @@ class QuestionTest < ActiveSupport::TestCase
     assert_match(/Option set can't be blank/, q.errors.full_messages.join)
   end
   
-  test "not in proto form" do
+  test "not in form" do
     f = FactoryGirl.create(:form, :question_types => %w(integer integer))
     q = FactoryGirl.create(:question)
     assert_equal([q], Question.not_in_form(f).all)
@@ -45,7 +45,7 @@ class QuestionTest < ActiveSupport::TestCase
     q = FactoryGirl.create(:question, :qtype_name => 'select_one')
     q.reload
     assert_equal(%w(Yes No), q.options.map(&:name))
-    q = FactoryGirl.create(:question, :qtype_name => 'integer')
+    q = FactoryGirl.create(:question, :qtype_name => 'integer', :code => 'intq')
     assert_nil(q.options)
   end
 
