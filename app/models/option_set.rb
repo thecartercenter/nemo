@@ -25,7 +25,7 @@ class OptionSet < ActiveRecord::Base
 
   # replication options
   self.replicable_assocs = [[:optionings, :many]]
-  self.change_name_on_replicate = true
+  self.preserve_uniqueness = {:field => :name, :style => :sep_words}
   
   def published?
     # check for any published questionings

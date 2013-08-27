@@ -49,4 +49,14 @@ class QuestionTest < ActiveSupport::TestCase
     assert_nil(q.options)
   end
 
+  test "replicating a question within a mission should change the code" do
+    q = FactoryGirl.create(:question, :qtype_name => 'integer', :code => 'Foo')
+    q2 = q.replicate
+    assert_equal('FooCopy', q2.code)
+    q3 = q2.replicate
+    assert_equal('FooCopy2', q3.code)
+    q4 = q3.replicate
+    assert_equal('FooCopy3', q4.code)
+  end
+
 end

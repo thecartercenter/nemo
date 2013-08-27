@@ -1,5 +1,5 @@
 class Question < ActiveRecord::Base
-  include MissionBased, FormVersionable, Translatable
+  include MissionBased, FormVersionable, Translatable, Standardizable, Replicable
   
   belongs_to(:option_set, :include => :options, :inverse_of => :questions, :autosave => true)
   has_many(:questionings, :dependent => :destroy, :autosave => true, :inverse_of => :question)
@@ -25,6 +25,8 @@ class Question < ActiveRecord::Base
   translates :name, :hint
   
   delegate :smsable?, :has_options?, :to => :qtype
+
+  self.preserve_uniqueness = {:field => :code, :style => :camel_case}
   
   # returns questions that do NOT already appear in the given form
   def self.not_in_form(form)

@@ -2,7 +2,7 @@ module Replicable
   extend ActiveSupport::Concern
 
   included do
-    cattr_accessor :replicable_assocs, :change_name_on_replicate, :non_replicable_attribs
+    cattr_accessor :replicable_assocs, :preserve_uniqueness, :non_replicable_attribs
   end
 
   # creates a duplicate in this or another mission
@@ -33,7 +33,9 @@ module Replicable
     attributes.except(*dont_copy).each{|k,v| copy.send("#{k}=", v)}
 
     # if property is set, change the name
-    copy.name = self.name_of_copy(to_mission) if self.class.change_name_on_replicate
+    if params = self.class.preserve_uniqueness
+      copy.send("#{params[:field]}=", self.make_unique(params.merge(:mission => to_mission)))
+    end
 
     # set the recursed flag in the options so we will know what to do with deep copying
     options[:recursed] = true
@@ -58,17 +60,28 @@ module Replicable
     copy
   end
 
-  # gets the appropriate name for a copy (e.g. My Form Copy, My Form Copy 2, etc.) for the given name (e.g. My Form)
-  def name_of_copy(to_mission)
+  # gets the appropriate name or other field for a copy (e.g. My Form Copy, My Form Copy 2, etc.) for the given name (e.g. My Form)
+  # params[:mission] - the mission in which it should be unique
+  # params[:field] - the field to operate on
+  # params[:style] - the style to adhere to in generating the unique value (:sep_words or :camel_case)
+  def make_unique(params)
     copy_word = I18n.t("common.copy")
     
-    # extract any copy suffix from existing name
-    prefix = name.gsub(/ \(#{copy_word}( \d+)?\)$/, '')
-    
+    # extract any copy suffix from existing value
+    if params[:style] == :sep_words
+      prefix = send(params[:field]).gsub(/ \(#{copy_word}( \d+)?\)$/, '')
+    else
+      prefix = send(params[:field]).gsub(/#{copy_word}(\d+)?$/, '')
+    end
+
     # get all existing copy numbers
-    existing_nums = self.class.for_mission(to_mission).map do |f|
-      m = f.name.match(/^#{prefix}( \(#{copy_word}( (\d+))?\))?$/)
-      
+    existing_nums = self.class.for_mission(params[:mission]).map do |f|
+      if params[:style] == :sep_words
+        m = f.send(params[:field]).match(/^#{prefix}( \(#{copy_word}( (\d+))?\))?$/)
+      else
+        m = f.send(params[:field]).match(/^#{prefix}(#{copy_word}((\d+))?)?$/)
+      end
+
       # if there was no match, return nil
       if m.nil?
         nil
@@ -102,11 +115,16 @@ module Replicable
     
     else
       # number string is empty string if 1, else the number plus space
-      num_str = copy_num == 1 ? '' : " #{copy_num}"
-      suffix = " (#{copy_word}#{num_str})"
+      if params[:style] == :sep_words
+        num_str = copy_num == 1 ? '' : " #{copy_num}"
+        suffix = " (#{copy_word}#{num_str})"
+      else
+        num_str = copy_num == 1 ? '' : copy_num.to_s
+        suffix = "#{copy_word}#{num_str}"
+      end
     end
     
-    # now build the new name
+    # now build the new value
     "#{prefix}#{suffix}"
   end
 
