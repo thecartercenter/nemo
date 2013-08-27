@@ -1,6 +1,5 @@
 # Builds the diagram pdf after db:migrate is called
 Rake::Task['db:migrate'].enhance do
-<<<<<<< HEAD
 	# Don't show all the attributes for a cleaner presentation
 	ENV['attributes'] = 'false'
 	# Save to the docs dir
