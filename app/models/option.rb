@@ -1,5 +1,5 @@
 class Option < ActiveRecord::Base
-  include MissionBased, FormVersionable, Translatable
+  include MissionBased, FormVersionable, Translatable, Standardizable, Replicable
   
   has_many(:option_sets, :through => :optionings)
   has_many(:optionings, :inverse_of => :option, :dependent => :destroy, :autosave => true)
@@ -70,7 +70,7 @@ class Option < ActiveRecord::Base
   def in_use?
     published? || !answers.empty? || !choices.empty?
   end
-  
+
   def as_json(options = {})
     { 
       :id => id,

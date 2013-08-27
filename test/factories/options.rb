@@ -1,6 +1,7 @@
 FactoryGirl.define do
   factory :option do
     name_en "Yes"
-    mission { get_mission }
+    is_standard false
+    mission { is_standard ? nil : get_mission }
   end
 end
