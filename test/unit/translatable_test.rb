@@ -3,7 +3,7 @@ require 'test_helper'
 class TranslatableTest < ActiveSupport::TestCase
 
   test "translatable" do
-    o = ProtoOption.new
+    o = Option.new
     
     I18n.locale = :en
     
@@ -54,7 +54,7 @@ class TranslatableTest < ActiveSupport::TestCase
   end
   
   test "available locales" do
-    o = ProtoOption.new
+    o = Option.new
     I18n.locale = :en
     
     assert_equal([], o.available_locales)
@@ -65,37 +65,4 @@ class TranslatableTest < ActiveSupport::TestCase
     assert_equal([:fr], o.available_locales(:except_current => true))
   end
   
-  test "delelgated translations" do
-    o = Option.new
-    o.proto_option = ProtoOption.new
-    o.proto_option.name_en = 'blarb'
-    assert_equal('blarb', o.name)
-    o.name_en = 'chork'
-    assert_equal('chork', o.name)
-    assert_equal('chork', o.proto_option.name_en)
-  end
-
-  test "delelgated translation get with nil delegate" do
-    o = Option.new
-    assert_raise(ArgumentError){o.name}
-  end
-
-  test "delelgated translation set with nil delegate" do
-    o = Option.new
-    assert_raise(ArgumentError){o.name_en = 'foo'}
-  end
-  
-  test "delegated available locales" do
-    o = Option.new
-    o.proto_option = ProtoOption.new
-    o.proto_option.name_en = 'blarb'
-    o.proto_option.name_fr = 'blarbz'
-    assert_equal([:en, :fr], o.proto_option.available_locales)
-    assert_equal([:en, :fr], o.available_locales)
-  end
-  
-  test "delelgated available locales with nil delegate" do
-    o = Option.new
-    assert_raise(ArgumentError){o.available_locales}
-  end
 end

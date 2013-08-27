@@ -15,16 +15,10 @@ module Translatable
       # save the list of translated fields
       class_variable_set('@@translated_fields', args)
       
-      # set up the _tranlsations fields to serialize, unless we're delegating
-      unless translation_delegated?
-        translated_fields.each do |f|
-          serialize "#{f}_translations", JSON
-        end
+      # set up the _tranlsations fields to serialize
+      translated_fields.each do |f|
+        serialize "#{f}_translations", JSON
       end
-    end
-
-    def translation_delegated?
-      !translate_options[:delegate_to].nil?
     end
 
     # special accessors that we have to use for class vars in concerns
@@ -37,15 +31,6 @@ module Translatable
     end
   end
 
-  # gets the method target, which is self unless delegated
-  def translate_method_target
-    if self.class.translate_options[:delegate_to]
-      send(self.class.translate_options[:delegate_to])
-    else
-      self
-    end
-  end
-  
   # define methods like name_en, etc.
   # possible forms:
   # name
@@ -66,11 +51,7 @@ module Translatable
     
     # if the method looks like a translation method
     if field
-      if translate_method_target.nil?
-        raise ArgumentError.new('translation delegate does not exist')
-      else
-        translate_method_target.process_translation(field, locale, is_setter, options, args)
-      end
+      self.process_translation(field, locale, is_setter, options, args)
     else
       super
     end
@@ -173,15 +154,6 @@ module Translatable
   end  
   
   def available_locales(options = {})
-    # delegate if appropriate
-    if self.class.translation_delegated?
-      if translate_method_target.nil?
-        raise ArgumentError.new('translation delegate does not exist')
-      else
-        return translate_method_target.available_locales 
-      end
-    end
-    
     # get union of all locales of all translated fields, and convert to symbol
     locales = self.class.translated_fields.inject([]) do |union, field|
       trans = send("#{field}_translations")
