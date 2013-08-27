@@ -49,3 +49,7 @@ gem 'term-ansicolor'
 
 # memcache
 gem 'dalli'
+
+# foreign key maintenance
+gem 'foreigner'
+gem 'immigrant'

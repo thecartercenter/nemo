@@ -34,6 +34,6 @@
 
 <%= javascript_doc_ready do %>
   new ELMO.Views.QuestionForm({
-    new_option_set_path: <%= new_option_set_path.to_json.html_safe %>
+    new_option_set_path: <%=j new_option_set_path.to_json.html_safe %>
   });
 <% end %>

@@ -33,7 +33,7 @@
     <%# setup condition js object unless in show mode %>
     <% if form_mode != :show && (cond = answer.questioning.condition) %>
       <script type="text/javascript">
-        ELMO.Response.conditions.push(new ELMO.Condition(<%= cond.to_json.html_safe %>));
+        ELMO.Response.conditions.push(new ELMO.Condition(<%=j cond.to_json.html_safe %>));
       </script>
     <% end %>
   </div>

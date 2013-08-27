@@ -5,6 +5,7 @@ class OptionSet < ActiveRecord::Base
   has_many(:options, :through => :optionings, :order => "optionings.rank")
   has_many(:questions, :inverse_of => :option_set)
   has_many(:questionings, :through => :questions)
+  has_many(:report_option_set_choices, :inverse_of => :option_set, :class_name => "Report::OptionSetChoice")
   
   validates(:name, :presence => true)
   validate(:at_least_one_option)

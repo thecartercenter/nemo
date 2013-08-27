@@ -34,8 +34,8 @@ class UserBatch
       # iterate over each line, creating users as we go
       lines.each do |line|
         
-        # split the line's text by delimiter and strip whitespace
-        tokens = line[:text].split(/,|\t/).map{|t| t.strip}
+        # split the line's text by delimiter, strip whitespace, and remove blanks
+        tokens = line[:text].split(/,|\t/).map{|t| t.strip}.reject{|t| t.blank?}
         
         # iterate over tokens, trying to identify each one
         parsed = {:phones => [], :emails => [], :names => []}

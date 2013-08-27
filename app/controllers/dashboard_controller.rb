@@ -19,7 +19,8 @@ class DashboardController < ApplicationController
     end
     
     # we need to check for a cache fragment here because some of the below fetches are not lazy
-    @cache_key = Response.per_mission_cache_key(current_mission) + '-' + (@report.try(:cache_key) || 'no-report')
+    # we include the locale in the cache key so the translations are correct
+    @cache_key = I18n.locale.to_s + '/' + Response.per_mission_cache_key(current_mission) + '-' + (@report.try(:cache_key) || 'no-report')
     
     # get a relation for accessible responses
     accessible_responses = Response.accessible_by(current_ability)
@@ -41,7 +42,10 @@ class DashboardController < ApplicationController
     
       # responses by form (top N most popular)
       @responses_by_form = Response.per_form(accessible_responses, STAT_ROWS)
-      
+
+      # responses per user
+      @responses_per_user = User.sorted_response_counts(current_mission, STAT_ROWS)
+
       prepare_report
     end
     

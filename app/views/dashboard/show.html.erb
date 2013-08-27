@@ -89,6 +89,17 @@ end %>
           </ul>
         <% end %>
       </div>
+
+      <div class="stat_block">
+        <% unless @responses.empty? %>
+          <h2><%= t('dashboard.low_activity') %></h2>
+          <ul>
+            <% @responses_per_user.each do |row| %>
+              <li><%= link_to("<strong>#{row.response_count}</strong> ".html_safe + row.name, responses_path(:search => "submitter:\"#{row.name}\"")) %></li>
+            <% end %>
+          </ul>
+        <% end %>
+      </div>
     <% end %>
   </div>
   

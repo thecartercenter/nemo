@@ -10,7 +10,7 @@
   </div>
 
   <div class="row">
-    <div><%=t "conditions.op" %></div>
+    <div><%=t "condition.op" %></div>
     <div>
       <%= f.select(:op, translate_options(@condition.applicable_operator_names, [:condition, :operators]), 
         :include_blank => true) %>
@@ -18,7 +18,7 @@
   </div>
   
   <div class="row">
-    <div><%=t "conditions.value" %></div>
+    <div><%=t "condition.value" %></div>
     <div>
       <%= f.text_field(:value, :style => @condition.ref_question_has_options? ? "display: none" : "") %>
       <%= f.select(:option_id, @condition.ref_question_select_options || [], {:include_blank => true}, 
@@ -29,6 +29,6 @@
 
 <% if controller.action_name != "show" %>
   <script type="text/javascript">
-    new ELMO.Views.ConditionForm(<%= @condition.to_json(:dropdown_values => true).html_safe %>);
+    new ELMO.Views.ConditionForm(<%=j @condition.to_json(:dropdown_values => true).html_safe %>);
   </script>
 <% end %>

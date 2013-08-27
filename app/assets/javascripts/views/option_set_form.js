@@ -108,8 +108,9 @@
     // make inner option tag
     var inner = $('<div>').attr('class', 'inner')
     
-    // add sort icon
-    inner.append($('<i>').attr('class', 'icon-sort'));
+    // add sort icon if not in show mode
+    if (self.params.form_mode != 'show')
+      inner.append($('<i>').attr('class', 'icon-sort'));
     
     // add option name
     inner.append(optioning.option.name);
@@ -228,11 +229,9 @@
       if (optioning.id)
         self.add_form_field('option_set[optionings_attributes][' + idx + '][id]', optioning.id);
       self.add_form_field('option_set[optionings_attributes][' + idx + '][rank]', optioning.div.closest('li').index() + 1);
-      if (optioning.option.id)
-        self.add_form_field('option_set[optionings_attributes][' + idx + '][option_id]', optioning.option.id);
-      else
-        for (var locale in optioning.option.name_translations)
-          self.add_form_field('option_set[optionings_attributes][' + idx + '][option_attributes][name_' + locale + ']', optioning.option.name_translations[locale]);
+      self.add_form_field('option_set[optionings_attributes][' + idx + '][option_attributes][id]', optioning.option.id);
+      for (var locale in optioning.option.name_translations)
+        self.add_form_field('option_set[optionings_attributes][' + idx + '][option_attributes][name_' + locale + ']', optioning.option.name_translations[locale]);
     });
     
     // add removed optionings

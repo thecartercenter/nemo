@@ -415,6 +415,7 @@ en:
     actions: "Actions"
     are_you_sure: "Are you sure?"
     change_language: "Change Language"
+    created_by: "Created by"
     delete_warning: "Are you sure you want to permanently delete the %{obj_description}?"
     deselect_all: "Deselect All"
     dev_mode: "Development Mode"
@@ -680,6 +681,7 @@ en:
 
   dashboard:
     close_dashboard: "Close Dashboard"
+    low_activity: "Low Activity"
     no_reports: "No Reports have been created for this mission yet."
     recent_responses: "Latest Responses"
     response_locations: "Response Locations"

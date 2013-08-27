@@ -2,18 +2,6 @@ module Report::Groupable
   module ClassMethods
   end
 
-  def self.included(base)
-    # ruby idiom to activate class methods
-    base.extend(ClassMethods)
-    
-    # add scope
-    base.class_eval do
-      attr_accessible :calculations_attributes
-      has_many(:calculations, :class_name => "Report::Calculation", :foreign_key => "report_report_id")
-      accepts_nested_attributes_for(:calculations, :allow_destroy => true)
-    end
-  end
-  
   # applys both groupings
   def apply_groupings(rel, options = {})
     raise Report::ReportError.new("primary groupings not allowed for this report type") if pri_grouping && options[:secondary_only]

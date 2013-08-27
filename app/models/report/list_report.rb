@@ -1,8 +1,5 @@
 class Report::ListReport < Report::Report
   
-  has_many(:calculations, :class_name => "Report::Calculation", :foreign_key => "report_report_id", :order => "rank", :dependent => :destroy, :autosave => true)
-  accepts_nested_attributes_for(:calculations, :allow_destroy => true)
-  
   def as_json(options = {})
     h = super(options)
     h[:calculations_attributes] = calculations

@@ -66,4 +66,9 @@ class ActiveSupport::TestCase
     @form.publish!
     @form.reload
   end
+
+  # encodes credentials for basic auth
+  def encode_credentials(username, password)
+    "Basic #{Base64.encode64("#{username}:#{password}")}"
+  end
 end

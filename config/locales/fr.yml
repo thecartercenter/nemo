@@ -407,6 +407,7 @@ fr:
     actions: "Actions"
     are_you_sure: "Êtes-vous sur?"
     change_language: "Changer la langue"
+    created_by: "Crée par"
     delete_warning: "Êtes-vous sur que vous voulez supprimer définitivement le %{obj_description}?"
     deselect_all: "Désélectionner tous"
     dev_mode: "Mode de développement"

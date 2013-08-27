@@ -4,11 +4,11 @@ class Mission < ActiveRecord::Base
   has_many(:report_reports, :class_name => "Report::Report", :inverse_of => :mission)
   has_many(:broadcasts, :inverse_of => :mission)
   has_many(:assignments, :inverse_of => :mission)
+  has_many(:users, :through => :assignments)
   has_many(:questions, :inverse_of => :mission)
-
   has_many(:options, :inverse_of => :mission, :dependent => :destroy)
   has_many(:option_sets, :inverse_of => :mission, :dependent => :destroy)
-  has_one(:setting, :dependent => :destroy)
+  has_one(:setting, :inverse_of => :mission, :dependent => :destroy)
   
   before_validation(:create_compact_name)
   before_create(:ensure_setting)

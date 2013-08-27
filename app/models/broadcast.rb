@@ -1,7 +1,7 @@
 class Broadcast < ActiveRecord::Base
   include MissionBased
 
-  has_many(:broadcast_addressings, :inverse_of => :broadcast)
+  has_many(:broadcast_addressings, :inverse_of => :broadcast, :dependent => :destroy)
   has_many(:recipients, :through => :broadcast_addressings, :source => :user)
   
   validates(:recipients, :presence => true)

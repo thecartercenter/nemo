@@ -5,8 +5,19 @@ class Report::Report < ActiveRecord::Base
   attr_accessible :type, :name, :option_set_id, :display_type, :bar_style, :unreviewed, 
     :question_labels, :show_question_labels, :percent_type, :unique_rows, :calculations_attributes, :calculations, 
     :option_set, :filter_attributes, :mission_id, :mission
-  
-  belongs_to(:filter, :class_name => "Search::Search", :autosave => true, :dependent => :destroy)
+
+  attr_accessible(:option_set_choices_attributes)
+
+  has_many(:option_set_choices, :class_name => "Report::OptionSetChoice", :foreign_key => "report_report_id", :inverse_of => :report,
+    :dependent => :destroy, :autosave => true)
+  has_many(:option_sets, :through => :option_set_choices)
+  has_many(:calculations, :class_name => "Report::Calculation", :foreign_key => "report_report_id", :inverse_of => :report,
+    :order => "rank", :dependent => :destroy, :autosave => true)
+  belongs_to(:filter, :class_name => "Search::Search", :inverse_of => :reports, :autosave => true, :dependent => :destroy)
+
+  accepts_nested_attributes_for(:calculations, :allow_destroy => true)
+  accepts_nested_attributes_for(:option_set_choices, :allow_destroy => true)
+
 
   scope(:by_viewed_at, order("viewed_at desc"))
   scope(:by_popularity, order("view_count desc"))

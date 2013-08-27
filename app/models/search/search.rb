@@ -1,4 +1,6 @@
 class Search::Search < ActiveRecord::Base
+  has_many(:reports, :class_name => 'Report::Report', :foreign_key => 'filter_id', :inverse_of => :filter)
+
   # finds or creates a search based on the given class_name and str
   def self.find_or_create(params)
     find_or_create_by_class_name_and_str(params[:class_name], params[:str])

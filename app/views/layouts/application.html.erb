@@ -11,21 +11,17 @@
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
 
-  <script type="text/javascript">
-    // copy i18n settings to javascript i18n
-    I18n.defaultLocale = "<%= I18n.default_locale %>";
-    I18n.locale = "<%= I18n.locale %>";
-  </script>
-  
   <%= javascript_doc_ready do %>
     // handles general client side stuff that appears in the template (e.g. language chooser form)
     // appears at top of file because it needs to be loaded first
     ELMO.app = new ELMO.App({
-      mission_locales: <%= configatron.preferred_locales.to_json.html_safe %>,
-      logged_in: <%= (!current_user.nil?).to_json %>,
-      site_name: <%= configatron.site_name.to_json.html_safe %>,
-      session_timeout: <%= User::SESSION_TIMEOUT %>,
-      login_path: <%= login_path.to_json.html_safe %>
+      locale: <%=j I18n.locale.to_json.html_safe %>,
+      default_locale: <%=j I18n.default_locale.to_json.html_safe %>,
+      mission_locales: <%=j configatron.preferred_locales.to_json.html_safe %>,
+      logged_in: <%=j (!current_user.nil?).to_json.html_safe %>,
+      site_name: <%=j configatron.site_name.to_json.html_safe %>,
+      session_timeout: <%=j User::SESSION_TIMEOUT %>,
+      login_path: <%=j login_path.to_json.html_safe %>
     });
   <% end %>
   
@@ -125,6 +121,10 @@
       &nbsp;&nbsp;
       <div id="dev_mode_warning"><%= t("layout.dev_mode") %></div>
     <% end %>
+
+    <div class="site_by">
+      <%= t('layout.created_by') %> <%= link_to('Sassafras Tech Collective', 'http://sassafrastech.com') %>
+    </div>
   </div>
   
   <%# insert any audio objects at the end %>

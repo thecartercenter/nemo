@@ -1,6 +1,10 @@
 require 'test_helper'
 
 class FormVersionTest < ActiveSupport::TestCase
+  setup do
+    clear_objects(Form, FormVersion)
+  end
+
   test "form version code generated on initialize" do
     fv = FormVersion.new
     assert_match(/[a-z]{#{FormVersion::CODE_LENGTH}}/, fv.code)
@@ -23,7 +27,10 @@ class FormVersionTest < ActiveSupport::TestCase
   end
   
   test "upgrade" do
-    fv1 = FormVersion.create(:form_id => 99)
+    f = FactoryGirl.create(:form)
+    f.publish!
+    fv1 = f.current_version
+    assert_not_nil(fv1)
     old_v1_code = fv1.code
     
     # do the upgrade and save both forms
@@ -33,7 +40,7 @@ class FormVersionTest < ActiveSupport::TestCase
     
     # make sure values are updated properly
     assert_equal(2, fv2.sequence)
-    assert_equal(99, fv2.form_id)
+    assert_equal(f.id, fv2.form_id)
     assert_not_equal(fv1.code, fv2.code)
     
     # make sure old v1 code didnt change
