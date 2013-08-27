@@ -11,11 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-<<<<<<< HEAD
-ActiveRecord::Schema.define(:version => 20130812145656) do
-=======
 ActiveRecord::Schema.define(:version => 20130820002405) do
->>>>>>> staging
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -90,13 +86,10 @@ ActiveRecord::Schema.define(:version => 20130820002405) do
     t.integer  "standard_id"
   end
 
-<<<<<<< HEAD
-  add_index "conditions", ["standard_id"], :name => "index_conditions_on_standard_id"
-=======
   add_index "conditions", ["option_id"], :name => "conditions_option_id_fk"
   add_index "conditions", ["questioning_id"], :name => "conditions_questioning_id_fk"
   add_index "conditions", ["ref_qing_id"], :name => "conditions_ref_qing_id_fk"
->>>>>>> staging
+  add_index "conditions", ["standard_id"], :name => "index_conditions_on_standard_id"
 
   create_table "form_versions", :force => true do |t|
     t.integer  "form_id"
@@ -110,11 +103,8 @@ ActiveRecord::Schema.define(:version => 20130820002405) do
   end
 
   add_index "form_versions", ["code"], :name => "index_form_versions_on_code", :unique => true
-<<<<<<< HEAD
-  add_index "form_versions", ["standard_id"], :name => "index_form_versions_on_standard_id"
-=======
   add_index "form_versions", ["form_id"], :name => "form_versions_form_id_fk"
->>>>>>> staging
+  add_index "form_versions", ["standard_id"], :name => "index_form_versions_on_standard_id"
 
   create_table "forms", :force => true do |t|
     t.string   "name"
@@ -132,13 +122,9 @@ ActiveRecord::Schema.define(:version => 20130820002405) do
     t.integer  "standard_id"
   end
 
-<<<<<<< HEAD
-  add_index "forms", ["mission_id"], :name => "index_forms_on_mission_id"
-  add_index "forms", ["standard_id"], :name => "index_forms_on_standard_id"
-=======
   add_index "forms", ["current_version_id"], :name => "forms_current_version_id_fk"
   add_index "forms", ["mission_id"], :name => "forms_mission_id_fk"
->>>>>>> staging
+  add_index "forms", ["standard_id"], :name => "index_forms_on_standard_id"
 
   create_table "missions", :force => true do |t|
     t.string   "name"
@@ -158,12 +144,8 @@ ActiveRecord::Schema.define(:version => 20130820002405) do
     t.integer  "standard_id"
   end
 
-<<<<<<< HEAD
-  add_index "option_sets", ["mission_id"], :name => "index_option_sets_on_mission_id"
-  add_index "option_sets", ["standard_id"], :name => "index_option_sets_on_standard_id"
-=======
   add_index "option_sets", ["mission_id"], :name => "option_sets_mission_id_fk"
->>>>>>> staging
+  add_index "option_sets", ["standard_id"], :name => "index_option_sets_on_standard_id"
 
   create_table "optionings", :force => true do |t|
     t.integer  "option_set_id"
@@ -175,14 +157,9 @@ ActiveRecord::Schema.define(:version => 20130820002405) do
     t.integer  "standard_id"
   end
 
-<<<<<<< HEAD
-  add_index "optionings", ["option_id"], :name => "index_optionings_on_option_id"
-  add_index "optionings", ["option_set_id"], :name => "index_optionings_on_option_set_id"
-  add_index "optionings", ["standard_id"], :name => "index_optionings_on_standard_id"
-=======
   add_index "optionings", ["option_id"], :name => "optionings_option_id_fk"
   add_index "optionings", ["option_set_id"], :name => "optionings_option_set_id_fk"
->>>>>>> staging
+  add_index "optionings", ["standard_id"], :name => "index_optionings_on_standard_id"
 
   create_table "options", :force => true do |t|
     t.datetime "created_at"
@@ -196,21 +173,8 @@ ActiveRecord::Schema.define(:version => 20130820002405) do
     t.integer  "standard_id"
   end
 
-<<<<<<< HEAD
-  add_index "options", ["mission_id"], :name => "index_options_on_mission_id"
-  add_index "options", ["standard_id"], :name => "index_options_on_standard_id"
-
-  create_table "question_types", :force => true do |t|
-    t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "odk_name"
-    t.string   "odk_tag"
-    t.string   "long_name"
-  end
-=======
   add_index "options", ["mission_id"], :name => "options_mission_id_fk"
->>>>>>> staging
+  add_index "options", ["standard_id"], :name => "index_options_on_standard_id"
 
   create_table "questionings", :force => true do |t|
     t.integer  "question_id"
@@ -224,14 +188,9 @@ ActiveRecord::Schema.define(:version => 20130820002405) do
     t.integer  "standard_id"
   end
 
-<<<<<<< HEAD
-  add_index "questionings", ["form_id"], :name => "index_questionings_on_form_id"
-  add_index "questionings", ["question_id"], :name => "index_questionings_on_question_id"
-  add_index "questionings", ["standard_id"], :name => "index_questionings_on_standard_id"
-=======
   add_index "questionings", ["form_id"], :name => "questionings_form_id_fk"
   add_index "questionings", ["question_id"], :name => "questionings_question_id_fk"
->>>>>>> staging
+  add_index "questionings", ["standard_id"], :name => "index_questionings_on_standard_id"
 
   create_table "questions", :force => true do |t|
     t.string   "code"
