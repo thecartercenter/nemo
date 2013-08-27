@@ -1,5 +1,6 @@
 class OptionSet < ActiveRecord::Base
-  include MissionBased, FormVersionable
+  include MissionBased, FormVersionable, Standardizable, Replicable
+
 
   has_many(:optionings, :order => "rank", :dependent => :destroy, :autosave => true, :inverse_of => :option_set)
   has_many(:options, :through => :optionings, :order => "optionings.rank")
@@ -21,6 +22,10 @@ class OptionSet < ActiveRecord::Base
   accepts_nested_attributes_for(:optionings, :allow_destroy => true)
   
   self.per_page = 100
+
+  # replication options
+  self.replicable_assocs = [[:optionings, :many]]
+  self.change_name_on_replicate = true
   
   def published?
     # check for any published questionings
@@ -77,7 +82,7 @@ class OptionSet < ActiveRecord::Base
   def ranks_changed?
     optionings.map(&:rank_was) != optionings.map(&:rank)
   end
-  
+
   private
     # makes sure that the options in the set have sequential ranks starting at 1. 
     # if not, fixes them.

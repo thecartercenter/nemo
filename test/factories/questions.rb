@@ -4,7 +4,8 @@ FactoryGirl.define do
     qtype_name 'integer'
     name 'the question'
     hint 'some info about the question'
-    
+    mission { is_standard ? nil : get_mission }
+
     option_set do
       if QuestionType[qtype_name].has_options?
         FactoryGirl.build(:option_set)

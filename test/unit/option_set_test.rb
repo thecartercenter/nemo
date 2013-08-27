@@ -220,6 +220,96 @@ class OptionSetTest < ActiveSupport::TestCase
     assert_not_nil(yn.options.last.mission_id)
   end
   
+  test "replicating option set within mission should avoid name conflict" do
+    os = FactoryGirl.create(:option_set, :name => "Stuff")
+    os2 = os.replicate
+
+    assert_not_equal(os.id, os2.id)
+    assert_equal("Stuff (Copy)", os2.name)
+  end
+
+  test "replicating standard option set to mission should not change name if no matching exists" do
+    os = FactoryGirl.create(:option_set, :name => "Stuff", :is_standard => true)
+    assert_nil(os.mission)
+
+    # make sure no matching set in mission
+    assert_equal([], get_mission.option_sets.where(:name => 'Stuff'))
+
+    # replicate and check name
+    os2 = os.replicate(get_mission)
+    assert_equal("Stuff", os2.name)
+  end
+
+  test "replicating standard option set to mission should change name if matching set exists in mission" do
+    std = FactoryGirl.create(:option_set, :name => 'Stuff', :is_standard => true)
+    orig = FactoryGirl.create(:option_set, :name => 'Stuff')
+    copy = std.replicate(get_mission)
+    assert_equal('Stuff (Copy)', copy.name)
+  end
+
+  test "replicating non-standard option set within mission should not duplicate options" do
+    os = FactoryGirl.create(:option_set, :name => "Stuff")
+    os2 = os.replicate
+
+    assert_not_equal(os.id, os2.id)
+    assert_equal(os.mission, os2.mission)
+    assert_not_equal(os.optionings, os2.optionings)
+    assert_equal(os.options, os2.options)
+
+    # make sure still ok after reload
+    os2.reload
+    assert_equal(os.options, os2.options)
+  end
+
+  test "replicating standard option set to mission should also replicate options" do
+    std = FactoryGirl.create(:option_set, :name => "Stuff", :is_standard => true)
+
+    # make sure options are also standard
+    assert(std.options.first.is_standard?, 'options should be standard')
+
+    copy = std.replicate(get_mission)
+
+    # options should be different
+    assert_not_equal(std.options, copy.options)
+    assert(!copy.options.include?(std.options.first), 'copied options should not include any originals')
+
+    # copied objects should retain standard links
+    assert_equal(copy.standard, std)
+    assert_equal(copy.options.first.standard, std.options.first)
+    assert_equal(copy.optionings.first.standard, std.optionings.first)
+
+    # copies should not be standard
+    assert(!copy.is_standard?, 'copy should not be standard')
+    assert(!copy.optionings.first.is_standard?, 'copy should not be standard')
+    assert(!copy.options.first.is_standard?, 'copy should not be standard')
+  end
+
+  test "replicating should not copy options if they have already been copied from earlier replication" do
+    # create two standard option sets sharing an option
+    std1 = FactoryGirl.create(:option_set, :name => "Stuff", :is_standard => true, :option_names => %w(yes no))
+    std2 = FactoryGirl.create(:option_set, :name => "Stuff", :is_standard => true, :option_names => %w(maybe))
+    std2.options << std1.options.first
+    std2.save!
+
+    # ensure the option is shared
+    assert_equal(std1.options[0], std2.options[1])
+
+    # replicate std1 to a mission then replicate std2
+    copy1 = std1.replicate(get_mission)
+    copy2 = std2.replicate(get_mission)
+
+    # the maybe option should be copied but the yes option should not be copied twice
+    assert_equal(3, get_mission.options.size)
+    assert_equal(copy1.options[0], copy2.options[1])
+
+    # copied options should be distinct
+    assert_not_equal(copy1.options[0], std1.options[0])
+
+    # copies should have appropriate standard links
+    assert_equal(std1.options[0], copy1.options[0].standard)
+  end
+
+
   private
     def create_option_set(options)
       os = OptionSet.new(:name => "test")

@@ -4,7 +4,7 @@ FactoryGirl.define do
       question_types []
     end
     
-    mission { get_mission }
+    mission { is_standard ? nil : get_mission }
 
     name {"some form #{rand(1000000)}"}
     

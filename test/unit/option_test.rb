@@ -19,7 +19,7 @@ class OptionTest < ActiveSupport::TestCase
     assert_match(/At least one name translation/, o.errors.messages[:base].join)
   end
 
-  test "replicate non-standard non-standard-linked object within mission should work" do
+  test "replicating non-standard-linked object within mission should work" do
     o = FactoryGirl.build(:option, :name => 'Stuff')
     o2 = o.replicate
     assert(!o.is_standard, 'original should not be standard')
@@ -33,7 +33,7 @@ class OptionTest < ActiveSupport::TestCase
     assert(!o2.new_record?, 'new option should be saved')
   end
 
-  test "replicate standard-linked object within mission should not retain standard link" do
+  test "replicating standard-linked object within mission should not retain standard link" do
     so = FactoryGirl.build(:option, :name => 'Stuff', :is_standard => true)
     o = FactoryGirl.build(:option, :name => 'Stuff', :standard => so)
     
@@ -47,7 +47,7 @@ class OptionTest < ActiveSupport::TestCase
     assert_equal(o.mission, o2.mission)
   end
 
-  test "replicate standard option should work" do
+  test "replicating standard option should work" do
     o = FactoryGirl.build(:option, :name => 'Stuff', :is_standard => true)
     o2 = o.replicate(get_mission)
 

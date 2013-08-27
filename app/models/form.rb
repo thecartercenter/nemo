@@ -32,57 +32,7 @@ class Form < ActiveRecord::Base
   ).order("questionings.rank"))
     
 
-  # gets the appropriate name for a clone (e.g. My Form Copy, My Form Copy 2, etc.) for the given name (e.g. My Form)
-  def self.name_of_clone(name)
-    copy_word = I18n.t("common.copy")
-    
-    # extract any copy suffix from existing name
-    prefix = name.gsub(/ \(#{copy_word}( \d+)?\)$/, '')
-    
-    # get all existing copy numbers
-    existing_nums = all.map do |f|
-      m = f.name.match(/^#{prefix}( \(#{copy_word}( (\d+))?\))?$/)
-      
-      # if there was no match, return nil
-      if m.nil?
-        nil
-      
-      # else if we got a match then we must examine what matched
-      # if it was just the prefix, the number is 0
-      elsif $1.nil?
-        0
-      
-      # if there was no digit matched, it was just the word 'copy' so the number is 1
-      elsif $3.nil?
-        1
-      
-      # otherwise we matched a digit so use that
-      else
-        $3.to_i
-      end
-    end.compact
-    
-    # if there was no matches, then the copy num is 0 (we shouldn't append a copy suffix)
-    copy_num = if existing_nums.empty?
-       0
-    # else copy num is max of existing plus 1
-    else
-      existing_nums.max + 1
-    end
-    
-    # if copy num is 0, no suffix
-    if copy_num == 0
-      suffix = ''
-    
-    else
-      # number string is empty string if 1, else the number plus space
-      num_str = copy_num == 1 ? '' : " #{copy_num}"
-      suffix = " (#{copy_word}#{num_str})"
-    end
-    
-    # now build the new name
-    "#{prefix}#{suffix}"
-  end
+
 
   
   def temp_response_id

@@ -1,5 +1,5 @@
 class Optioning < ActiveRecord::Base
-  include FormVersionable
+  include FormVersionable, Standardizable, Replicable
 
   belongs_to(:option, :inverse_of => :optionings)
   belongs_to(:option_set, :inverse_of => :optionings)
@@ -9,7 +9,10 @@ class Optioning < ActiveRecord::Base
   after_destroy(:notify_form_versioning_policy_of_destroy)
   
   accepts_nested_attributes_for(:option)
-  
+
+  # replication options
+  self.replicable_assocs = [[:option, :one]]
+
   # temp var used in the option_set form
   attr_writer :included
   
@@ -30,7 +33,7 @@ class Optioning < ActiveRecord::Base
   def removable?
     !has_answers_or_choices?
   end
-  
+
   def as_json(options = {})
     {:id => id, :option => option, :removable => removable?}
   end
