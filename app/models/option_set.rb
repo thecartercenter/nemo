@@ -24,8 +24,7 @@ class OptionSet < ActiveRecord::Base
   self.per_page = 100
 
   # replication options
-  replicable :assocs => [[:optionings, :many]], 
-    :uniqueness => {:field => :name, :style => :sep_words}
+  replicable :assocs => [:optionings, :many], :uniqueness => {:field => :name, :style => :sep_words}
   
   def published?
     # check for any published questionings

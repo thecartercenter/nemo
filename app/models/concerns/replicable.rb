@@ -4,6 +4,8 @@ module Replicable
   included do
     # dsl-style method for setting options from base class
     def self.replicable(options)
+      options[:assocs] = [options[:assocs]] unless options[:assocs].empty? || options[:assocs].first.is_a?(Array)
+      options[:dont_copy] = Array.wrap(options[:dont_copy]).map(&:to_s)
       class_variable_set('@@replication_options', options)
     end
 
@@ -36,7 +38,7 @@ module Replicable
     end
 
     # copy the appropriate attribs
-    dont_copy = %w(id created_at updated_at mission_id is_standard standard_id)
+    dont_copy = %w(id created_at updated_at mission_id is_standard standard_id) + self.class.replication_options[:dont_copy]
     copy = self.class.new
     attributes.except(*dont_copy).each{|k,v| copy.send("#{k}=", v)}
 
@@ -49,7 +51,7 @@ module Replicable
     options[:recursed] = true
 
     # replicate associations
-    self.class.replication_options[:assocs].try(:each) do |assoc|
+    self.class.replication_options[:assocs].each do |assoc|
       if assoc[1] == :many
         copy.send("#{assoc[0]}=", send(assoc[0]).map{|o| o.replicate(to_mission, options)})
       else

@@ -26,7 +26,7 @@ class Question < ActiveRecord::Base
   
   delegate :smsable?, :has_options?, :to => :qtype
 
-  replicable :uniqueness => {:field => :code, :style => :camel_case}
+  replicable :assocs => [:option_set, :one], :uniqueness => {:field => :code, :style => :camel_case}, :dont_copy => :key
   
   # returns questions that do NOT already appear in the given form
   def self.not_in_form(form)
