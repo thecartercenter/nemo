@@ -57,8 +57,8 @@ module Replicable
       # set the proper mission if applicable
       copy.mission = to_mission if respond_to?(:mission)
 
-      # if this is a standard obj, set the copy's standard to this
-      copy.standard = self if is_standard?
+      # if this is a standard obj, add to copies if not there already
+      copies << copy if is_standard? && !copies.include?(copy)
 
       # determine appropriate attribs to copy
       dont_copy = %w(id created_at updated_at mission_id is_standard standard_id) + self.class.replication_options[:dont_copy]
