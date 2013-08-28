@@ -24,12 +24,8 @@ module Replicable
     # by default, we do a deep copy iff we're copying to a different mission
     options[:deep_copy] = mission != to_mission if options[:deep_copy].nil?
 
-    # puts self.class.name
-    # puts "deep:" + options[:deep_copy].inspect
-    # puts "recursing:" + options[:recursed].inspect
-
     # if we're on a recursive step AND we're doing a shallow copy AND this is not a join class, just return self
-    return self if options[:recursed] && !options[:deep_copy] && !%w(Optioning Questioning).include?(self.class.name)
+    return self if options[:recursed] && !options[:deep_copy] && !%w(Optioning Questioning Condition).include?(self.class.name)
 
     # if this is a standard object AND we're copying to a mission AND there exists in the mission an object already referencing this standard,
     # just return that object, no need to replicate further
@@ -37,9 +33,27 @@ module Replicable
       return instance
     end
 
-    # copy the appropriate attribs
-    dont_copy = %w(id created_at updated_at mission_id is_standard standard_id) + self.class.replication_options[:dont_copy]
+    # init the copy
     copy = self.class.new
+
+    # store a reference to self if this is the root of the replication
+    options[:orig_root] ||= self
+
+    # puts "--------"
+    # puts "class:" + self.class.name
+    # puts "deep:" + options[:deep_copy].inspect
+    # puts "recursing:" + options[:recursed].inspect
+
+    # determine appropriate attribs to copy
+    dont_copy = %w(id created_at updated_at mission_id is_standard standard_id) + self.class.replication_options[:dont_copy]
+
+    # don't copy foreign key field of belongs_to associations
+    self.class.replication_options[:assocs].each do |assoc|
+      refl = self.class.reflect_on_association(assoc)
+      dont_copy << refl.foreign_key if refl.macro == :belongs_to
+    end
+
+    # copy attribs
     attributes.except(*dont_copy).each{|k,v| copy.send("#{k}=", v)}
 
     # if property is set, change the name

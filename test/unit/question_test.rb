@@ -86,6 +86,7 @@ class QuestionTest < ActiveSupport::TestCase
     q2 = q.replicate(get_mission)
     assert_not_equal(q, q2)
     assert_not_equal(q.option_set, q2.option_set)
+    assert_not_equal(q.option_set.options.first, q2.option_set.options.first)
     assert_not_nil(q2.option_set.mission)
   end
 end
