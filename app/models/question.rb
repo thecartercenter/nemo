@@ -1,5 +1,5 @@
 class Question < ActiveRecord::Base
-  include MissionBased, FormVersionable, Translatable, Standardizable, Replicable
+  include MissionBased, Translatable, Standardizable, Replicable
   
   belongs_to(:option_set, :include => :options, :inverse_of => :questions, :autosave => true)
   has_many(:questionings, :dependent => :destroy, :autosave => true, :inverse_of => :question)
@@ -16,7 +16,6 @@ class Question < ActiveRecord::Base
   validate(:code_unique_per_mission)
 
   before_destroy(:check_assoc)
-  before_save(:notify_form_versioning_policy_of_update)
   
   default_scope(order("code"))
   scope(:select_types, where(:qtype_name => %w(select_one select_multiple)))

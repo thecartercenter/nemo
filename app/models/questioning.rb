@@ -1,5 +1,5 @@
 class Questioning < ActiveRecord::Base
-  include FormVersionable, Standardizable, Replicable
+  include Standardizable, Replicable
 
   belongs_to(:form, :inverse_of => :questionings, :counter_cache => true)
   belongs_to(:question, :autosave => true, :inverse_of => :questionings)

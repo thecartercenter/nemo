@@ -1,5 +1,5 @@
 class OptionSet < ActiveRecord::Base
-  include MissionBased, FormVersionable, Standardizable, Replicable
+  include MissionBased, Standardizable, Replicable
 
 
   has_many(:optionings, :order => "rank", :dependent => :destroy, :autosave => true, :inverse_of => :option_set)
@@ -14,7 +14,6 @@ class OptionSet < ActiveRecord::Base
   
   before_validation(:ensure_ranks)
   before_validation(:ensure_option_missions)
-  before_save(:notify_form_versioning_policy_of_update)
   
   default_scope(order("name"))
   scope(:with_associations, includes(:questions, {:optionings => :option}, {:questionings => :form}))

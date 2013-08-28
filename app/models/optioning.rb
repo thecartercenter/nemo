@@ -1,12 +1,10 @@
 class Optioning < ActiveRecord::Base
-  include FormVersionable, Standardizable, Replicable
+  include Standardizable, Replicable
 
   belongs_to(:option, :inverse_of => :optionings)
   belongs_to(:option_set, :inverse_of => :optionings)
   
   before_destroy(:no_answers_or_choices)
-  after_create(:notify_form_versioning_policy_of_create)
-  after_destroy(:notify_form_versioning_policy_of_destroy)
   
   accepts_nested_attributes_for(:option)
 
