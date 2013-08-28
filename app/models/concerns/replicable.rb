@@ -24,6 +24,9 @@ module Replicable
     # by default, we do a deep copy iff we're copying to a different mission
     options[:deep_copy] = mission != to_mission if options[:deep_copy].nil?
 
+    # copy's immediate parent is just copy_parents.last
+    copy_parent = copy_parents.last
+
     # if we're on a recursive step AND we're doing a shallow copy AND this is not a join class, just return self
     if options[:recursed] && !options[:deep_copy] && !%w(Optioning Questioning Condition).include?(self.class.name)
       copy = self
@@ -60,7 +63,13 @@ module Replicable
         dont_copy << refl.foreign_key if refl.macro == :belongs_to
       end
 
-      # TODO don't copy foreign key field of parent's has_* associations
+      # don't copy foreign key field of parent's has_* association
+      if parent_assoc
+        refl = copy_parent.class.reflect_on_association(parent_assoc)
+        if [:has_one, :has_many].include?(refl.macro)
+          dont_copy << refl.foreign_key
+        end
+      end
 
       # copy attribs
       attributes.except(*dont_copy).each{|k,v| copy.send("#{k}=", v)}
