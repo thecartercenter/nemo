@@ -114,23 +114,6 @@ class FormTest < ActiveSupport::TestCase
     assert_equal(f.questions[1].option_set, f2.questions[1].option_set)
   end
 
-  test "replicating form with conditions should produce correct new conditions" do
-    f = FactoryGirl.create(:form, :question_types => %w(integer select_one))
-
-    # create condition
-    f.questionings[1].condition = FactoryGirl.build(:condition, :ref_qing => f.questionings[0], :op => 'gt', :value => 1)
-
-    # replicate and test
-    f2 = f.replicate
-
-    # questionings and conditions should be distinct
-    assert_not_equal(f.questionings[1], f2.questionings[1])
-    assert_not_equal(f.questionings[1].condition, f2.questionings[1].condition)
-
-    # new condition should point to new questioning
-    assert_equal(f2.questionings[1].condition.ref_qing, f2.questionings[0])
-  end
-
   test "replicating a standard form should do a deep copy" do 
     f = FactoryGirl.create(:form, :question_types => %w(select_one integer), :is_standard => true)
     f2 = f.replicate(get_mission)
@@ -151,6 +134,23 @@ class FormTest < ActiveSupport::TestCase
     assert_equal(f.questionings[0].rank, f2.questionings[0].rank)
     assert_equal(f.questionings[0].question.code, f2.questionings[0].question.code)
     assert_equal(f.questionings[0].question.option_set.optionings[0].option.name, f2.questionings[0].question.option_set.optionings[0].option.name)
+  end
+
+  test "replicating form with conditions should produce correct new conditions" do
+    f = FactoryGirl.create(:form, :question_types => %w(integer select_one))
+
+    # create condition
+    f.questionings[1].condition = FactoryGirl.build(:condition, :ref_qing => f.questionings[0], :op => 'gt', :value => 1)
+
+    # replicate and test
+    f2 = f.replicate
+
+    # questionings and conditions should be distinct
+    assert_not_equal(f.questionings[1], f2.questionings[1])
+    assert_not_equal(f.questionings[1].condition, f2.questionings[1].condition)
+
+    # new condition should point to new questioning
+    assert_equal(f2.questionings[1].condition.ref_qing, f2.questionings[0])
   end
 
   test "replicating a standard form with a condition referencing an option should produce correct new option reference" do 
@@ -177,7 +177,17 @@ class FormTest < ActiveSupport::TestCase
     assert_equal(f2.questionings[1].condition.option, f2.questionings[0].question.option_set.optionings[0].option)
   end
 
-  # TODO multiple conditions
+  test "replicating a form with multiple conditions should also work" do
+    f = FactoryGirl.create(:form, :question_types => %w(integer integer integer integer))
 
+    # create conditions
+    f.questionings[1].condition = FactoryGirl.build(:condition, :ref_qing => f.questionings[0], :op => 'gt', :value => 1)
+    f.questionings[3].condition = FactoryGirl.build(:condition, :ref_qing => f.questionings[1], :op => 'gt', :value => 1)
+
+    f2 = f.replicate
+    # new conditions should point to new questionings
+    assert_equal(f2.questionings[1].condition.ref_qing, f2.questionings[0])
+    assert_equal(f2.questionings[3].condition.ref_qing, f2.questionings[1])
+  end
 
 end
