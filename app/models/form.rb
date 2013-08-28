@@ -32,7 +32,7 @@ class Form < ActiveRecord::Base
   ).order("questionings.rank"))
     
   replicable :assocs => :questionings, :uniqueness => {:field => :name, :style => :sep_words}, 
-    :dont_copy => [:published, :downloads, :responses_count, :upgrade_needed, :smsable, :current_version_id]
+    :dont_copy => [:published, :downloads, :responses_count, :questionings_count, :upgrade_needed, :smsable, :current_version_id]
 
   def temp_response_id
     "#{name}_#{ActiveSupport::SecureRandom.random_number(899999999) + 100000000}"
@@ -119,20 +119,6 @@ class Form < ActiveRecord::Base
     save(:validate => false)
   end
   
-  # makes and returns copy of the form, with a new name and a new set of questionings
-  # we use 'duplicate' instead of clone b/c clone is a special word in ruby
-  def duplicate
-    # create the new form with the appropriate name
-    cloned = self.class.new(:name => self.class.name_of_clone(name))
-    
-    # clone all the questionings
-    cloned.questionings = Questioning.duplicate(questionings)
-    
-    # save and return
-    cloned.save!
-    cloned
-  end
-    
   # upgrades the version of the form and saves it
   def upgrade_version!
     if current_version

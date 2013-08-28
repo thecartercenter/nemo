@@ -168,7 +168,7 @@ class FormsController < ApplicationController
   # makes an unpublished copy of the form that can be edited without affecting the original
   def clone
     begin
-      @form.duplicate
+      @form.replicate
       flash[:success] = t("form.clone_success", :form_name => @form.name)
     rescue
       flash[:error] = t("form.clone_error", :msg => $!.to_s)

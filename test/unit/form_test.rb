@@ -6,22 +6,6 @@ class FormTest < ActiveSupport::TestCase
     clear_objects(Question, Questioning, Form, Form)
   end
 
-  test "name of clone should be correct" do
-    assert_equal('My Form', Form.name_of_clone('My Form'))
-
-    FactoryGirl.create(:form, :name => 'My Form')
-    assert_equal('My Form (Copy)', Form.name_of_clone('My Form'))
-    
-    FactoryGirl.create(:form, :name => 'My Form (Copy)')
-    assert_equal('My Form (Copy 2)', Form.name_of_clone('My Form'))
-    assert_equal('My Form (Copy 2)', Form.name_of_clone('My Form (Copy)'))
-
-    FactoryGirl.create(:form, :name => 'My Form (Copy 2)')
-    assert_equal('My Form (Copy 3)', Form.name_of_clone('My Form'))
-    assert_equal('My Form (Copy 3)', Form.name_of_clone('My Form (Copy 1)'))
-    assert_equal('My Form (Copy 3)', Form.name_of_clone('My Form (Copy 2)'))
-  end
-  
   test "update ranks" do
     f = FactoryGirl.create(:form, :question_types => %w(integer integer))
     
@@ -52,20 +36,6 @@ class FormTest < ActiveSupport::TestCase
     assert_equal([1,2], f.questionings.map(&:rank))
   end
 
-  test "duplicate" do
-    f = FactoryGirl.create(:form, :question_types => %w(integer integer))
-    
-    f2 = f.duplicate
-    f2.reload
-    
-    assert_not_equal(f2.name, f.name)
-    
-    # should have same questions but different questionings
-    assert_equal(f2.questions, f.questions)
-    assert_not_equal(f2.questionings, f.questionings)
-    assert((f.questionings.map(&:id) & f2.questionings.map(&:id)).empty?, "questionings should have distinct IDs")
-  end
-  
   test "questionings count should work" do
     f = FactoryGirl.create(:form, :question_types => %w(integer integer))
     f.reload
@@ -207,8 +177,7 @@ class FormTest < ActiveSupport::TestCase
     assert_equal(f2.questionings[1].condition.option, f2.questionings[0].question.option_set.optionings[0].option)
   end
 
-  # multiple conditions
+  # TODO multiple conditions
 
-  # should not copy some form fields
 
 end
