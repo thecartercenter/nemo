@@ -22,31 +22,6 @@ class Questioning < ActiveRecord::Base
 
   replicable :assocs => [:question, :condition]
 
-  # clones and returns a set of questionings, including their conditions
-  # assumes qings are in order in which they appear on the form
-  # does not save qings and conditions, just initializes them
-  # does NOT set form_id since the expectation is that these will be used on a new form
-  def self.duplicate(qings)
-    # create basic clones and store cleverly
-    qid_hash = {}; new_qings = []
-    qings.each do |qing|
-      # create the basic clone
-      new_qing = new(:question_id => qing.question_id, :rank => qing.rank, :required => qing.required, :hidden => qing.hidden)
-      
-      # store in the hash (in case it's needed during condition cloning for later qings)
-      qid_hash[qing.question_id] = new_qing
-      
-      # clone the condition if necessary
-      new_qing.condition = qing.condition.duplicate if qing.condition
-      
-      # store in the array
-      new_qings << new_qing
-    end
-    
-    # return the cloned qings
-    new_qings
-  end
-
   # returns any questionings appearing before this one on the form
   def previous
     form.questionings.reject{|q| !rank.nil? && (q == self || q.rank > rank)}
