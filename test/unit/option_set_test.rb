@@ -244,7 +244,7 @@ class OptionSetTest < ActiveSupport::TestCase
     std = FactoryGirl.create(:option_set, :name => 'Stuff', :is_standard => true)
     orig = FactoryGirl.create(:option_set, :name => 'Stuff')
     copy = std.replicate(get_mission)
-    assert_equal('Stuff (Copy)', copy.name)
+    assert_equal('Stuff 2', copy.name)
   end
 
   test "replicating non-standard option set within mission should not duplicate options" do

@@ -2,10 +2,6 @@ require 'test_helper'
 
 class QuestionTest < ActiveSupport::TestCase
 
-  setup do
-    clear_objects(Question)
-  end
-
   test "creation" do
     FactoryGirl.create(:question)
     # should not raise
@@ -52,11 +48,11 @@ class QuestionTest < ActiveSupport::TestCase
   test "replicating a question within a mission should change the code" do
     q = FactoryGirl.create(:question, :qtype_name => 'integer', :code => 'Foo')
     q2 = q.replicate
-    assert_equal('FooCopy', q2.code)
+    assert_equal('Foo2', q2.code)
     q3 = q2.replicate
-    assert_equal('FooCopy2', q3.code)
+    assert_equal('Foo3', q3.code)
     q4 = q3.replicate
-    assert_equal('FooCopy3', q4.code)
+    assert_equal('Foo4', q4.code)
   end
 
   test "replicating a question should not replicate the key field" do

@@ -131,26 +131,25 @@ module Replicable
     end
   end
 
-  # gets the appropriate name or other field for a copy (e.g. My Form Copy, My Form Copy 2, etc.) for the given name (e.g. My Form)
+  # gets the appropriate name or other field for a copy (e.g. My Form 2, My Form 3, etc.) for the given name (e.g. My Form)
   # params[:mission] - the mission in which it should be unique
   # params[:field] - the field to operate on
   # params[:style] - the style to adhere to in generating the unique value (:sep_words or :camel_case)
   def make_unique(params)
-    copy_word = I18n.t("common.copy")
     
-    # extract any copy suffix from existing value
+    # extract any numeric suffix from existing value
     if params[:style] == :sep_words
-      prefix = send(params[:field]).gsub(/ \(#{copy_word}( \d+)?\)$/, '')
+      prefix = send(params[:field]).gsub(/( \d+)?$/, '')
     else
-      prefix = send(params[:field]).gsub(/#{copy_word}(\d+)?$/, '')
+      prefix = send(params[:field]).gsub(/(\d+)?$/, '')
     end
 
     # get all existing copy numbers
     existing_nums = self.class.for_mission(params[:mission]).map do |obj|
       if params[:style] == :sep_words
-        m = obj.send(params[:field]).match(/^#{prefix}( \(#{copy_word}( (\d+))?\))?$/)
+        m = obj.send(params[:field]).match(/^#{prefix}( (\d+))?$/)
       else
-        m = obj.send(params[:field]).match(/^#{prefix}(#{copy_word}((\d+))?)?$/)
+        m = obj.send(params[:field]).match(/^#{prefix}((\d+))?$/)
       end
 
       # if there was no match, return nil
@@ -158,23 +157,19 @@ module Replicable
         nil
       
       # else if we got a match then we must examine what matched
-      # if it was just the prefix, the number is 0
-      elsif $1.nil?
-        0
-      
-      # if there was no digit matched, it was just the word 'copy' so the number is 1
-      elsif $3.nil?
+      # if it was just the prefix, the number is 1
+      elsif $2.nil?
         1
       
       # otherwise we matched a digit so use that
       else
-        $3.to_i
+        $2.to_i
       end
     end.compact
 
     # if there was no matches, then the copy num is 0 (we shouldn't append a copy suffix)
     copy_num = if existing_nums.empty?
-       0
+      0
     # else copy num is max of existing plus 1
     else
       existing_nums.max + 1
@@ -187,11 +182,9 @@ module Replicable
     else
       # number string is empty string if 1, else the number plus space
       if params[:style] == :sep_words
-        num_str = copy_num == 1 ? '' : " #{copy_num}"
-        suffix = " (#{copy_word}#{num_str})"
+        suffix = " #{copy_num}"
       else
-        num_str = copy_num == 1 ? '' : copy_num.to_s
-        suffix = "#{copy_word}#{num_str}"
+        suffix = copy_num.to_s
       end
     end
     

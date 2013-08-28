@@ -3,7 +3,7 @@ require 'test_helper'
 class FormTest < ActiveSupport::TestCase
   
   setup do
-    clear_objects(Question, Questioning, Form, Form)
+    clear_objects(Questioning, Question, Form)
   end
 
   test "update ranks" do
@@ -92,11 +92,11 @@ class FormTest < ActiveSupport::TestCase
   test "replicating form within mission should avoid name conflict" do
     f = FactoryGirl.create(:form, :name => "Myform", :question_types => %w(integer select_one))
     f2 = f.replicate
-    assert_equal('Myform (Copy)', f2.name)
+    assert_equal('Myform 2', f2.name)
     f3 = f2.replicate
-    assert_equal('Myform (Copy 2)', f3.name)
+    assert_equal('Myform 3', f3.name)
     f4 = f3.replicate
-    assert_equal('Myform (Copy 3)', f4.name)
+    assert_equal('Myform 4', f4.name)
   end
 
   test "replicating form within mission should produce different questionings but same questions and option set" do
