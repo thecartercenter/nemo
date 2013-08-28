@@ -10,7 +10,8 @@ FactoryGirl.define do
     
     questionings do
       question_types.each_with_index.map do |qt, idx|
-        FactoryGirl.build(:questioning, :question => FactoryGirl.build(:question, :code => "q#{idx}", :qtype_name => qt))
+        FactoryGirl.build(:questioning, :question => FactoryGirl.build(:question, :code => "q#{idx}", :qtype_name => qt, :is_standard => is_standard), 
+          :is_standard => is_standard)
       end
     end
   end

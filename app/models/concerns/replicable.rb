@@ -28,12 +28,14 @@ module Replicable
     if options[:recursed] && !options[:deep_copy] && !%w(Optioning Questioning Condition).include?(self.class.name)
       copy = self
       add_copy_to_parent(copy, copy_parents, parent_assoc)
+
     # if this is a standard object AND we're copying to a mission AND there exists in the mission an object already referencing this standard,
     # just return that object, no need to replicate further
     elsif is_standard? && !to_mission.nil? && respond_to?(:mission) && (instance = self.class.for_mission(to_mission).where(:standard_id => self.id).first)
       # TODO test replication of standard object that already exists
       copy = instance
       add_copy_to_parent(copy, copy_parents, parent_assoc)
+
     else
 
       # init the copy
@@ -42,12 +44,12 @@ module Replicable
       # set the recursed flag in the options so we will know what to do with deep copying
       options[:recursed] = true
 
-      puts "--------"
-      puts "class:" + self.class.name
-      puts "deep:" + options[:deep_copy].inspect
-      puts "recursing:" + options[:recursed].inspect
-      puts "copy parents:"
-      copy_parents.each{|p| puts p.inspect}
+      # puts "--------"
+      # puts "class:" + self.class.name
+      # puts "deep:" + options[:deep_copy].inspect
+      # puts "recursing:" + options[:recursed].inspect
+      # puts "copy parents:"
+      # copy_parents.each{|p| puts p.inspect}
 
       # determine appropriate attribs to copy
       dont_copy = %w(id created_at updated_at mission_id is_standard standard_id) + self.class.replication_options[:dont_copy]
@@ -60,7 +62,6 @@ module Replicable
 
       # TODO don't copy foreign key field of parent's has_* associations
 
-
       # copy attribs
       attributes.except(*dont_copy).each{|k,v| copy.send("#{k}=", v)}
 
@@ -70,13 +71,12 @@ module Replicable
       end
 
       # call a callback if requested
-      if self.class.replication_options[:before_add_copy_to_parent]
-        self.class.replication_options[:before_add_copy_to_parent].call(self, copy, copy_parents)
+      if self.class.replication_options[:after_copy_attribs]
+        self.send(self.class.replication_options[:after_copy_attribs], copy, copy_parents)
       end
 
       # add to parent before recursive step
       add_copy_to_parent(copy, copy_parents, parent_assoc)
-
 
       # add the new copy to the list of copy parents
       copy_parents = copy_parents + [copy]
@@ -97,7 +97,6 @@ module Replicable
 
       # if this is a standard obj, set the copy's standard to this
       copy.standard = self if is_standard?
-
 
       copy.save!
     end
@@ -131,11 +130,11 @@ module Replicable
     end
 
     # get all existing copy numbers
-    existing_nums = self.class.for_mission(params[:mission]).map do |f|
+    existing_nums = self.class.for_mission(params[:mission]).map do |obj|
       if params[:style] == :sep_words
-        m = f.send(params[:field]).match(/^#{prefix}( \(#{copy_word}( (\d+))?\))?$/)
+        m = obj.send(params[:field]).match(/^#{prefix}( \(#{copy_word}( (\d+))?\))?$/)
       else
-        m = f.send(params[:field]).match(/^#{prefix}(#{copy_word}((\d+))?)?$/)
+        m = obj.send(params[:field]).match(/^#{prefix}(#{copy_word}((\d+))?)?$/)
       end
 
       # if there was no match, return nil
@@ -156,7 +155,7 @@ module Replicable
         $3.to_i
       end
     end.compact
-    
+
     # if there was no matches, then the copy num is 0 (we shouldn't append a copy suffix)
     copy_num = if existing_nums.empty?
        0

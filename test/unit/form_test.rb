@@ -161,10 +161,54 @@ class FormTest < ActiveSupport::TestCase
     assert_equal(f2.questionings[1].condition.ref_qing, f2.questionings[0])
   end
 
-  # should not copy some form fields
+  test "replicating a standard form should do a deep copy" do 
+    f = FactoryGirl.create(:form, :question_types => %w(select_one integer), :is_standard => true)
+    f2 = f.replicate(get_mission)
 
-  # should update condition option_id
+    # mission should now be set and should not be standard
+    assert(!f2.is_standard)
+    assert_equal(get_mission, f2.mission)
+
+    # all objects should be distinct
+    assert_not_equal(f, f2)
+    assert_not_equal(f.questionings[0], f2.questionings[0])
+    assert_not_equal(f.questionings[0].question, f2.questionings[0].question)
+    assert_not_equal(f.questionings[0].question.option_set, f2.questionings[0].question.option_set)
+    assert_not_equal(f.questionings[0].question.option_set.optionings[0], f2.questionings[0].question.option_set.optionings[0])
+    assert_not_equal(f.questionings[0].question.option_set.optionings[0].option, f2.questionings[0].question.option_set.optionings[0].option)
+
+    # but properties should be same
+    assert_equal(f.questionings[0].rank, f2.questionings[0].rank)
+    assert_equal(f.questionings[0].question.code, f2.questionings[0].question.code)
+    assert_equal(f.questionings[0].question.option_set.optionings[0].option.name, f2.questionings[0].question.option_set.optionings[0].option.name)
+  end
+
+  test "replicating a standard form with a condition referencing an option should produce correct new option reference" do 
+    f = FactoryGirl.create(:form, :question_types => %w(select_one integer), :is_standard => true)
+
+    # create condition with option reference
+    f.questionings[1].condition = FactoryGirl.build(:condition, :ref_qing => f.questionings[0], :op => 'eq', 
+      :option => f.questions[0].option_set.options[0])
+
+    # replicate and test
+    f2 = f.replicate(get_mission)
+
+    # questionings, conditions, and options should be distinct
+    assert_not_equal(f.questionings[1], f2.questionings[1])
+    assert_not_equal(f.questionings[1].condition, f2.questionings[1].condition)
+    assert_not_equal(f.questionings[0].question.option_set.optionings[0].option, f2.questionings[0].question.option_set.optionings[0].option)
+
+    # new condition should point to new questioning
+    assert_equal(f2.questionings[1].condition.ref_qing, f2.questionings[0])
+
+    # new condition should point to new option
+    assert_not_nil(f2.questionings[1].condition.option)
+    assert_not_nil(f2.questionings[0].question.option_set.optionings[0].option)
+    assert_equal(f2.questionings[1].condition.option, f2.questionings[0].question.option_set.optionings[0].option)
+  end
 
   # multiple conditions
+
+  # should not copy some form fields
 
 end

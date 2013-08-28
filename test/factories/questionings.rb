@@ -1,4 +1,4 @@
 FactoryGirl.define do
-  factory :questioning do    
+  factory :questioning do
   end
 end

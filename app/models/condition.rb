@@ -30,12 +30,7 @@ class Condition < ActiveRecord::Base
 
   # TODO update option link also
 
-  replicable :before_add_copy_to_parent => lambda { |orig, copy, copy_parents| 
-    ref_qing_rank = orig.ref_qing.rank
-    puts "refqingrank #{ref_qing_rank}"
-    copy_form = copy_parents[0]
-    copy.ref_qing = copy_form.questionings[ref_qing_rank - 1]
-  }, :dont_copy => [:questioning_id, :ref_qing_id]
+  replicable :after_copy_attribs => :copy_ref_qing_and_option, :dont_copy => [:questioning_id, :ref_qing_id]
   
   # all questionings that can be referred to by this condition
   def refable_qings
@@ -162,6 +157,26 @@ class Condition < ActiveRecord::Base
     def all_fields_required
       if ref_qing.blank? || op.blank? || ref_question_has_options? && option.blank? || !ref_question_has_options? && value.blank?
         errors.add(:base, :all_required)
+      end
+    end
+
+    # during replication process, copies the ref qing and option to the new condition
+    def copy_ref_qing_and_option(copy, copy_parents)
+      # the copy's form is the second parent
+      copy_form = copy_parents[-2]
+
+      # get the rank of the original ref_qing
+      ref_qing_rank = self.ref_qing.rank
+
+      # set the copy's ref_qing to the corresponding one
+      copy.ref_qing = copy_form.questionings[ref_qing_rank - 1]
+
+      if self.option
+        # get the index of the original option
+        ref_option_idx = self.ref_qing.question.option_set.options.index(self.option)
+
+        # set the copy's option to the new ref_qing's corresponding option, in case the option set was also replicated
+        copy.option = copy.ref_qing.question.option_set.optionings[ref_option_idx].option
       end
     end
 end
