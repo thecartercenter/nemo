@@ -55,6 +55,15 @@ class QuestionTest < ActiveSupport::TestCase
     assert_equal('Foo4', q4.code)
   end
 
+  test "replicating a standard question should not change the code" do
+    q = FactoryGirl.create(:question, :qtype_name => 'integer', :code => 'Foo', :is_standard => true)
+    q2 = q.replicate(get_mission)
+    assert_equal(q.code, q2.code)
+    q = FactoryGirl.create(:question, :qtype_name => 'integer', :code => 'Foo1', :is_standard => true)
+    q2 = q.replicate(get_mission)
+    assert_equal(q.code, q2.code)
+  end
+
   test "replicating a question should not replicate the key field" do
     q = FactoryGirl.create(:question, :qtype_name => 'integer', :key => true)
     q2 = q.replicate

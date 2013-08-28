@@ -82,7 +82,7 @@ module Replicable
 
       # if uniqueness property is set, make sure the specified field is unique
       if params = self.class.replication_options[:uniqueness]
-        copy.send("#{params[:field]}=", self.make_unique(params.merge(:mission => to_mission)))
+        copy.send("#{params[:field]}=", self.ensure_unique(params.merge(:mission => to_mission)))
       end
 
       # call a callback if requested
@@ -131,11 +131,12 @@ module Replicable
     end
   end
 
-  # gets the appropriate name or other field for a copy (e.g. My Form 2, My Form 3, etc.) for the given name (e.g. My Form)
+  # ensures the given name or other field would be unique, and generates a new name if it wouldnt be
+  # (e.g. My Form 2, My Form 3, etc.) for the given name (e.g. My Form)
   # params[:mission] - the mission in which it should be unique
   # params[:field] - the field to operate on
   # params[:style] - the style to adhere to in generating the unique value (:sep_words or :camel_case)
-  def make_unique(params)
+  def ensure_unique(params)
     
     # extract any numeric suffix from existing value
     if params[:style] == :sep_words
@@ -144,8 +145,13 @@ module Replicable
       prefix = send(params[:field]).gsub(/(\d+)?$/, '')
     end
 
+    # keep track of whether we found the exact name
+    found_exact = false
+
     # get all existing copy numbers
     existing_nums = self.class.for_mission(params[:mission]).map do |obj|
+      found_exact = true if obj.send(params[:field]) == send(params[:field])
+
       if params[:style] == :sep_words
         m = obj.send(params[:field]).match(/^#{prefix}( (\d+))?$/)
       else
@@ -167,25 +173,17 @@ module Replicable
       end
     end.compact
 
-    # if there was no matches, then the copy num is 0 (we shouldn't append a copy suffix)
-    copy_num = if existing_nums.empty?
-      0
-    # else copy num is max of existing plus 1
-    else
-      existing_nums.max + 1
-    end
+    # if we didn't find the exact match or any prefix matches, then no need to add number
+    return send(params[:field]) if existing_nums.empty? || !found_exact
+
+    # copy num is max of existing plus 1
+    copy_num = existing_nums.max + 1
     
-    # if copy num is 0, no suffix
-    if copy_num == 0
-      suffix = ''
-    
+    # number string is empty string if 1, else the number plus space
+    if params[:style] == :sep_words
+      suffix = " #{copy_num}"
     else
-      # number string is empty string if 1, else the number plus space
-      if params[:style] == :sep_words
-        suffix = " #{copy_num}"
-      else
-        suffix = copy_num.to_s
-      end
+      suffix = copy_num.to_s
     end
     
     # now build the new value

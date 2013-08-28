@@ -225,7 +225,7 @@ class OptionSetTest < ActiveSupport::TestCase
     os2 = os.replicate
 
     assert_not_equal(os.id, os2.id)
-    assert_equal("Stuff (Copy)", os2.name)
+    assert_equal("Stuff 2", os2.name)
   end
 
   test "replicating standard option set to mission should not change name if no matching exists" do
