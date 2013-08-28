@@ -34,8 +34,8 @@ module Replicable
 
     # if this is a standard object AND we're copying to a mission AND there exists in the mission an object already referencing this standard,
     # just return that object, no need to replicate further
-    elsif is_standard? && !to_mission.nil? && respond_to?(:mission) && (instance = self.class.for_mission(to_mission).where(:standard_id => self.id).first)
-      # TODO test replication of standard object that already exists
+    elsif is_standard? && !to_mission.nil? && respond_to?(:mission) && 
+      (instance = self.class.for_mission(to_mission).where(:standard_id => self.id).first)
       copy = instance
       add_copy_to_parent(copy, copy_parents, parent_assoc)
 
@@ -53,6 +53,12 @@ module Replicable
       # puts "recursing:" + options[:recursed].inspect
       # puts "copy parents:"
       # copy_parents.each{|p| puts p.inspect}
+
+      # set the proper mission if applicable
+      copy.mission = to_mission if respond_to?(:mission)
+
+      # if this is a standard obj, set the copy's standard to this
+      copy.standard = self if is_standard?
 
       # determine appropriate attribs to copy
       dont_copy = %w(id created_at updated_at mission_id is_standard standard_id) + self.class.replication_options[:dont_copy]
@@ -74,7 +80,7 @@ module Replicable
       # copy attribs
       attributes.except(*dont_copy).each{|k,v| copy.send("#{k}=", v)}
 
-      # if property is set, change the name
+      # if uniqueness property is set, make sure the specified field is unique
       if params = self.class.replication_options[:uniqueness]
         copy.send("#{params[:field]}=", self.make_unique(params.merge(:mission => to_mission)))
       end
@@ -99,24 +105,25 @@ module Replicable
         end
       end
 
-      copy_parents.pop
-
-      # set the proper mission if applicable
-      copy.mission = to_mission if respond_to?(:mission)
-
-      # if this is a standard obj, set the copy's standard to this
-      copy.standard = self if is_standard?
-
       copy.save!
     end
 
     return copy
   end
 
+  # adds the specified object to the parent object
+  # we do it this way so that links between parent and children objects
+  # are established during recursion instead of all at the end
+  # this is because some child objects (e.g. conditions) need access to their parents
   def add_copy_to_parent(copy, copy_parents, parent_assoc)
+    # trivial case
     return if copy_parents.empty?
+
+    # get immediate parent and reflect on association
     parent = copy_parents.last
     refl = parent.class.reflect_on_association(parent_assoc)
+
+    # associate object with parent using appropriate method depending on assoc type
     if refl.collection?
       parent.send(parent_assoc).send('<<', copy)
     else

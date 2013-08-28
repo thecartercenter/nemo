@@ -28,8 +28,6 @@ class Condition < ActiveRecord::Base
     {:name => :ninc, :types => %w(select_multiple), :code => "!="}
   ]     
 
-  # TODO update option link also
-
   replicable :after_copy_attribs => :copy_ref_qing_and_option, :dont_copy => [:ref_qing_id]
   
   # all questionings that can be referred to by this condition
