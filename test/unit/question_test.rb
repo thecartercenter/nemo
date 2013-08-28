@@ -94,4 +94,10 @@ class QuestionTest < ActiveSupport::TestCase
     assert_not_equal(q.option_set.options.first, q2.option_set.options.first)
     assert_not_nil(q2.option_set.mission)
   end
+
+  test "replicating question with short code that ends in zero should work" do
+    q = FactoryGirl.create(:question, :qtype_name => 'integer', :code => 'q0')
+    q2 = q.replicate
+    assert_equal('q1', q2.code)
+  end
 end
