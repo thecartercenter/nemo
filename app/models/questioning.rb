@@ -1,5 +1,5 @@
 class Questioning < ActiveRecord::Base
-  include FormVersionable
+  include FormVersionable, Standardizable, Replicable
 
   belongs_to(:form, :inverse_of => :questionings, :counter_cache => true)
   belongs_to(:question, :autosave => true, :inverse_of => :questionings)
@@ -19,6 +19,8 @@ class Questioning < ActiveRecord::Base
     :has_options?, :options, :select_options, :odk_code, :odk_constraint, :to => :question
   delegate :published?, :to => :form
   delegate :verify_ordering, :to => :condition, :prefix => true, :allow_nil => true
+
+  replicable :assocs => [:question, :condition]
 
   # clones and returns a set of questionings, including their conditions
   # assumes qings are in order in which they appear on the form

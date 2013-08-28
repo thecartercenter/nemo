@@ -1,5 +1,5 @@
 class Form < ActiveRecord::Base
-  include MissionBased
+  include MissionBased, Standardizable, Replicable
 
   has_many(:questions, :through => :questionings)
   has_many(:questionings, :order => "rank", :autosave => true, :dependent => :destroy, :inverse_of => :form)
@@ -31,10 +31,9 @@ class Form < ActiveRecord::Base
     ]
   ).order("questionings.rank"))
     
+  replicable :assocs => :questionings, :uniqueness => {:field => :name, :style => :sep_words}, 
+    :dont_copy => [:published, :downloads, :responses_count, :upgrade_needed, :smsable, :current_version_id]
 
-
-
-  
   def temp_response_id
     "#{name}_#{ActiveSupport::SecureRandom.random_number(899999999) + 100000000}"
   end

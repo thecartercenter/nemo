@@ -118,4 +118,53 @@ class FormTest < ActiveSupport::TestCase
     f.reload
     assert_equal(old, f.current_version.code)
   end
+
+  test "replicating form within mission should avoid name conflict" do
+    f = FactoryGirl.create(:form, :name => "Myform", :question_types => %w(integer select_one))
+    f2 = f.replicate
+    assert_equal('Myform (Copy)', f2.name)
+    f3 = f2.replicate
+    assert_equal('Myform (Copy 2)', f3.name)
+    f4 = f3.replicate
+    assert_equal('Myform (Copy 3)', f4.name)
+  end
+
+  test "replicating form within mission should produce different questionings but same questions and option set" do
+    f = FactoryGirl.create(:form, :question_types => %w(integer select_one))
+    f2 = f.replicate
+    assert_not_equal(f.questionings.first, f2.questionings.first)
+
+    # questionings should point to proper form
+    assert_equal(f.questionings[0].form, f)
+    assert_equal(f2.questionings[0].form, f2)
+
+    # questions and option sets should be same
+    assert_equal(f.questions, f2.questions)
+    assert_not_nil(f2.questions[1].option_set)
+    assert_equal(f.questions[1].option_set, f2.questions[1].option_set)
+  end
+
+  test "replicating form with conditions should produce correct new conditions" do
+    f = FactoryGirl.create(:form, :question_types => %w(integer select_one))
+
+    # create condition
+    f.questionings[1].condition = FactoryGirl.build(:condition, :ref_qing => f.questionings[0], :op => 'gt', :value => 1)
+
+    # replicate and test
+    f2 = f.replicate
+
+    # questionings and conditions should be distinct
+    assert_not_equal(f.questionings[1], f2.questionings[1])
+    assert_not_equal(f.questionings[1].condition, f2.questionings[1].condition)
+
+    # new condition should point to new questioning
+    assert_equal(f2.questionings[1].condition.ref_qing, f2.questionings[0])
+  end
+
+  # should not copy some form fields
+
+  # should update condition option_id
+
+  # multiple conditions
+
 end

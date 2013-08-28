@@ -12,6 +12,25 @@ class QuestioningTest < ActiveSupport::TestCase
     assert_equal(Questioning, f.questionings[0].class)
   end
   
+  test "set rank" do
+    f = FactoryGirl.create(:form, :question_types => %w(integer decimal))
+    assert_equal(1, f.questionings[0].rank)
+    assert_equal(2, f.questionings[1].rank)
+  end
+  
+  test "validates conditon" do
+    f = FactoryGirl.create(:form, :question_types => %w(integer decimal))
+    assert_raise(ActiveRecord::RecordNotSaved) do
+      # not sure why this is raising an exception but no time to find out
+      f.questionings.last.condition = Condition.new(:ref_qing => f.questionings.first, :op => nil)
+    end
+  end
+  
+  test "previous" do
+    f = FactoryGirl.create(:form, :question_types => %w(integer decimal integer))
+    assert_equal(f.questionings[0..1], f.questionings.last.previous)
+  end
+
   test "duplicate" do
     f = FactoryGirl.create(:form, :question_types => %w(integer decimal))
     
@@ -35,24 +54,9 @@ class QuestioningTest < ActiveSupport::TestCase
     assert_not_equal(newqs.last.condition, f.questionings.last.condition)
     assert_not_nil(newqs.last.condition.id)
   end
-  
-  test "set rank" do
-    f = FactoryGirl.create(:form, :question_types => %w(integer decimal))
-    assert_equal(1, f.questionings[0].rank)
-    assert_equal(2, f.questionings[1].rank)
-  end
-  
-  test "validates conditon" do
-    f = FactoryGirl.create(:form, :question_types => %w(integer decimal))
-    assert_raise(ActiveRecord::RecordNotSaved) do
-      # not sure why this is raising an exception but no time to find out
-      f.questionings.last.condition = Condition.new(:ref_qing => f.questionings.first, :op => nil)
-    end
-  end
-  
-  test "previous" do
-    f = FactoryGirl.create(:form, :question_types => %w(integer decimal integer))
-    assert_equal(f.questionings[0..1], f.questionings.last.previous)
+
+  test "replicating questioning should replicate question" do
+
   end
   
 end

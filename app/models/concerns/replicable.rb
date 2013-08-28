@@ -16,7 +16,7 @@ module Replicable
   end
 
   # creates a duplicate in this or another mission
-  def replicate(to_mission = nil, options = {})
+  def replicate(to_mission = nil, options = {}, copy_parents = [], parent_assoc = nil)
     # default to current mission if not specified
     to_mission ||= mission if respond_to?(:mission)
 
@@ -25,63 +25,95 @@ module Replicable
     options[:deep_copy] = mission != to_mission if options[:deep_copy].nil?
 
     # if we're on a recursive step AND we're doing a shallow copy AND this is not a join class, just return self
-    return self if options[:recursed] && !options[:deep_copy] && !%w(Optioning Questioning Condition).include?(self.class.name)
-
+    if options[:recursed] && !options[:deep_copy] && !%w(Optioning Questioning Condition).include?(self.class.name)
+      copy = self
+      add_copy_to_parent(copy, copy_parents, parent_assoc)
     # if this is a standard object AND we're copying to a mission AND there exists in the mission an object already referencing this standard,
     # just return that object, no need to replicate further
-    if is_standard? && !to_mission.nil? && respond_to?(:mission) && (instance = self.class.for_mission(to_mission).where(:standard_id => self.id).first)
-      return instance
-    end
+    elsif is_standard? && !to_mission.nil? && respond_to?(:mission) && (instance = self.class.for_mission(to_mission).where(:standard_id => self.id).first)
+      # TODO test replication of standard object that already exists
+      copy = instance
+      add_copy_to_parent(copy, copy_parents, parent_assoc)
+    else
 
-    # init the copy
-    copy = self.class.new
+      # init the copy
+      copy = self.class.new
 
-    # store a reference to self if this is the root of the replication
-    options[:orig_root] ||= self
+      # set the recursed flag in the options so we will know what to do with deep copying
+      options[:recursed] = true
 
-    # puts "--------"
-    # puts "class:" + self.class.name
-    # puts "deep:" + options[:deep_copy].inspect
-    # puts "recursing:" + options[:recursed].inspect
+      puts "--------"
+      puts "class:" + self.class.name
+      puts "deep:" + options[:deep_copy].inspect
+      puts "recursing:" + options[:recursed].inspect
+      puts "copy parents:"
+      copy_parents.each{|p| puts p.inspect}
 
-    # determine appropriate attribs to copy
-    dont_copy = %w(id created_at updated_at mission_id is_standard standard_id) + self.class.replication_options[:dont_copy]
+      # determine appropriate attribs to copy
+      dont_copy = %w(id created_at updated_at mission_id is_standard standard_id) + self.class.replication_options[:dont_copy]
 
-    # don't copy foreign key field of belongs_to associations
-    self.class.replication_options[:assocs].each do |assoc|
-      refl = self.class.reflect_on_association(assoc)
-      dont_copy << refl.foreign_key if refl.macro == :belongs_to
-    end
-
-    # copy attribs
-    attributes.except(*dont_copy).each{|k,v| copy.send("#{k}=", v)}
-
-    # if property is set, change the name
-    if params = self.class.replication_options[:uniqueness]
-      copy.send("#{params[:field]}=", self.make_unique(params.merge(:mission => to_mission)))
-    end
-
-    # set the recursed flag in the options so we will know what to do with deep copying
-    options[:recursed] = true
-
-    # replicate associations
-    self.class.replication_options[:assocs].each do |assoc|
-      if self.class.reflect_on_association(assoc).collection?
-        copy.send("#{assoc}=", send(assoc).map{|o| o.replicate(to_mission, options)})
-      else
-        copy.send("#{assoc}=", send(assoc).replicate(to_mission, options)) unless send(assoc).nil?
+      # don't copy foreign key field of belongs_to associations
+      self.class.replication_options[:assocs].each do |assoc|
+        refl = self.class.reflect_on_association(assoc)
+        dont_copy << refl.foreign_key if refl.macro == :belongs_to
       end
+
+      # TODO don't copy foreign key field of parent's has_* associations
+
+
+      # copy attribs
+      attributes.except(*dont_copy).each{|k,v| copy.send("#{k}=", v)}
+
+      # if property is set, change the name
+      if params = self.class.replication_options[:uniqueness]
+        copy.send("#{params[:field]}=", self.make_unique(params.merge(:mission => to_mission)))
+      end
+
+      # call a callback if requested
+      if self.class.replication_options[:before_add_copy_to_parent]
+        self.class.replication_options[:before_add_copy_to_parent].call(self, copy, copy_parents)
+      end
+
+      # add to parent before recursive step
+      add_copy_to_parent(copy, copy_parents, parent_assoc)
+
+
+      # add the new copy to the list of copy parents
+      copy_parents = copy_parents + [copy]
+
+      # replicate associations
+      self.class.replication_options[:assocs].each do |assoc|
+        if self.class.reflect_on_association(assoc).collection?
+          send(assoc).each{|o| o.replicate(to_mission, options, copy_parents, assoc)}
+        else
+          send(assoc).replicate(to_mission, options, copy_parents, assoc) unless send(assoc).nil?
+        end
+      end
+
+      copy_parents.pop
+
+      # set the proper mission if applicable
+      copy.mission = to_mission if respond_to?(:mission)
+
+      # if this is a standard obj, set the copy's standard to this
+      copy.standard = self if is_standard?
+
+
+      copy.save!
     end
 
-    # set the proper mission if applicable
-    copy.mission = to_mission if respond_to?(:mission)
+    return copy
+  end
 
-    # if this is a standard obj, set the copy's standard to this
-    copy.standard = self if is_standard?
-
-    # save and return
-    copy.save!
-    copy
+  def add_copy_to_parent(copy, copy_parents, parent_assoc)
+    return if copy_parents.empty?
+    parent = copy_parents.last
+    refl = parent.class.reflect_on_association(parent_assoc)
+    if refl.collection?
+      parent.send(parent_assoc).send('<<', copy)
+    else
+      parent.send("#{parent_assoc}=", copy)
+    end
   end
 
   # gets the appropriate name or other field for a copy (e.g. My Form Copy, My Form Copy 2, etc.) for the given name (e.g. My Form)

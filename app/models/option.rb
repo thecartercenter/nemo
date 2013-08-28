@@ -17,7 +17,7 @@ class Option < ActiveRecord::Base
   
   translates :name, :hint
   
-  replicable # no options
+  replicable # no replication params
   
   # the max number of suggestion matches to return
   MAX_SUGGESTIONS = 5

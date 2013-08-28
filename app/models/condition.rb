@@ -1,4 +1,5 @@
 class Condition < ActiveRecord::Base
+  include Standardizable, Replicable
 
   # question types that cannot be used in conditions
   NON_REFABLE_TYPES = %w(location)
@@ -25,7 +26,16 @@ class Condition < ActiveRecord::Base
     {:name => :neq, :types => %w(decimal integer text long_text address select_one datetime date time), :code => "!="},
     {:name => :inc, :types => %w(select_multiple), :code => "="},
     {:name => :ninc, :types => %w(select_multiple), :code => "!="}
-  ]                                                                                                  
+  ]     
+
+  # TODO update option link also
+
+  replicable :before_add_copy_to_parent => lambda { |orig, copy, copy_parents| 
+    ref_qing_rank = orig.ref_qing.rank
+    puts "refqingrank #{ref_qing_rank}"
+    copy_form = copy_parents[0]
+    copy.ref_qing = copy_form.questionings[ref_qing_rank - 1]
+  }, :dont_copy => [:questioning_id, :ref_qing_id]
   
   # all questionings that can be referred to by this condition
   def refable_qings
