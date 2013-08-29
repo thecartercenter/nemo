@@ -10,7 +10,7 @@ class Optioning < ActiveRecord::Base
   accepts_nested_attributes_for(:option)
 
   # replication options
-  replicable :assocs => :option
+  replicable :assocs => :option, :parent => :option_set
 
   # temp var used in the option_set form
   attr_writer :included

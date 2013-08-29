@@ -312,4 +312,34 @@ class FormTest < ActiveSupport::TestCase
     assert_equal([1,2], copy.questionings.map(&:rank))
   end
 
+  test "removal of condition from question should be replcated to copy" do
+    std = FactoryGirl.create(:form, :question_types => %w(integer integer integer), :is_standard => true)
+
+    # create condition
+    std.questionings[2].condition = FactoryGirl.build(:condition, :ref_qing => std.questionings[0], :op => 'gt', :value => 1, :is_standard => true)
+    std.save!
+    std.reload
+
+    # replicate initially
+    copy = std.replicate(get_mission)
+
+    # save copy condition id
+    copy_cond_id = std.questionings[2].condition.id
+    assert_not_nil(copy_cond_id)
+
+    # remove condition and save the qing. this is how it will happen in the controller.
+    puts "----destroying condition-------------------"
+    std.questionings[2].destroy_condition
+    assert_nil(std.questionings[2].condition)
+    std.questionings[2].save!
+
+    copy.reload
+
+    # copy qing should still be linked to std
+    assert_equal(std.questionings[2], copy.questionings[2].standard)
+
+    # but questioning should have no condition and copied condition should no longer exist
+    assert_nil(copy.questionings[2].condition)
+    assert_nil(Condition.where(:id => copy_cond_id).first)
+  end
 end

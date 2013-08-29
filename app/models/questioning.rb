@@ -21,7 +21,7 @@ class Questioning < ActiveRecord::Base
   delegate :published?, :to => :form
   delegate :verify_ordering, :to => :condition, :prefix => true, :allow_nil => true
 
-  replicable :assocs => [:question, :condition]
+  replicable :assocs => [:question, :condition], :parent => :form
 
   # returns any questionings appearing before this one on the form
   def previous
@@ -30,6 +30,12 @@ class Questioning < ActiveRecord::Base
 
   def has_condition?
     !condition.nil?
+  end
+
+  # destroys condition and ensures that the condition param is nulled out
+  def destroy_condition
+    condition.destroy
+    self.condition = nil
   end
 
   # REFACTOR: should use translation delegation, from abandoned std_objs branch
@@ -63,7 +69,7 @@ class Questioning < ActiveRecord::Base
     end
 
     def destroy_condition_if_ref_qing_blank
-      condition.destroy if condition && condition.ref_qing.blank?
+      destroy_condition if condition && condition.ref_qing.blank?
     end
 
     # copy mission from question

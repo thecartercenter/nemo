@@ -69,12 +69,9 @@ module Replicable
       dont_copy << refl.foreign_key if refl.macro == :belongs_to
     end
 
-    # don't copy foreign key field of parent's has_* association
-    if parent_assoc
-      refl = copy_parent.class.reflect_on_association(parent_assoc)
-      if [:has_one, :has_many].include?(refl.macro)
-        dont_copy << refl.foreign_key
-      end
+    # don't copy foreign key field of parent's has_* association, if applicable
+    if self.class.replication_options[:parent]
+      dont_copy << self.class.replication_options[:parent].to_s + '_id'
     end
 
     # copy attribs
@@ -122,7 +119,19 @@ module Replicable
         # replicate the existing children
         send(assoc).each{|o| o.replicate(to_mission, options, copy_parents, assoc)}
       else
-        send(assoc).replicate(to_mission, options, copy_parents, assoc) unless send(assoc).nil?
+
+        # if orig assoc is nil, make sure copy is also
+        if send(assoc).nil?
+          puts "orig assoc is nil"
+          if !copy.send(assoc).nil?
+          puts "destroying on copy"
+            copy.changing_in_replication = true
+            copy.send(assoc).destroy
+          end
+        # else replicate
+        else
+          send(assoc).replicate(to_mission, options, copy_parents, assoc)
+        end
       end
     end
 
@@ -134,6 +143,11 @@ module Replicable
     puts "copy after save: " + copy.inspect
 
     return copy
+  end
+
+  def replication_parent_class
+    p = self.class.replication_options[:parent]
+    p ? p.classify.constantize : nil
   end
 
   # adds the specified object to the parent object
