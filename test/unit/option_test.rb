@@ -59,4 +59,28 @@ class OptionTest < ActiveSupport::TestCase
     assert_equal(o, o2.standard)
     assert_equal(o.id, o2.standard_id)
   end
+
+  test "standard and copies associations should work without reload" do
+    o = FactoryGirl.build(:option, :name => 'Stuff', :is_standard => true)
+    o2 = o.replicate(get_mission)
+
+    # o.copies associate should work even before reload
+    assert_equal(o2.standard, o)
+    assert_equal(o.copies, [o2])
+  end
+
+  test "update of normal param in a std option should replicate to instances" do
+    puts "creating std opt set"
+    o = FactoryGirl.create(:option, :name => 'Stuff', :is_standard => true)
+    puts "creating copy"
+    o2 = o.replicate(get_mission)
+
+    # do update and reload copy
+    o.name = 'Stuffz'
+    o.save!
+    o2.reload
+
+    # check replication
+    assert_equal('Stuffz', o2.name)
+  end
 end
