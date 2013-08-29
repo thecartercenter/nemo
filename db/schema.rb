@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130828190920) do
+ActiveRecord::Schema.define(:version => 20130829009920) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -84,8 +84,10 @@ ActiveRecord::Schema.define(:version => 20130828190920) do
     t.integer  "option_id"
     t.boolean  "is_standard",    :default => false
     t.integer  "standard_id"
+    t.integer  "mission_id"
   end
 
+  add_index "conditions", ["mission_id", "standard_id"], :name => "index_conditions_on_mission_id_and_standard_id", :unique => true
   add_index "conditions", ["option_id"], :name => "conditions_option_id_fk"
   add_index "conditions", ["questioning_id"], :name => "conditions_questioning_id_fk"
   add_index "conditions", ["ref_qing_id"], :name => "conditions_ref_qing_id_fk"
@@ -157,8 +159,10 @@ ActiveRecord::Schema.define(:version => 20130828190920) do
     t.integer  "rank"
     t.boolean  "is_standard",   :default => false
     t.integer  "standard_id"
+    t.integer  "mission_id"
   end
 
+  add_index "optionings", ["mission_id", "standard_id"], :name => "index_optionings_on_mission_id_and_standard_id", :unique => true
   add_index "optionings", ["option_id"], :name => "optionings_option_id_fk"
   add_index "optionings", ["option_set_id"], :name => "optionings_option_set_id_fk"
   add_index "optionings", ["standard_id"], :name => "index_optionings_on_standard_id"
@@ -189,9 +193,11 @@ ActiveRecord::Schema.define(:version => 20130828190920) do
     t.datetime "updated_at"
     t.boolean  "is_standard", :default => false
     t.integer  "standard_id"
+    t.integer  "mission_id"
   end
 
   add_index "questionings", ["form_id"], :name => "questionings_form_id_fk"
+  add_index "questionings", ["mission_id", "standard_id"], :name => "index_questionings_on_mission_id_and_standard_id", :unique => true
   add_index "questionings", ["question_id"], :name => "questionings_question_id_fk"
   add_index "questionings", ["standard_id"], :name => "index_questionings_on_standard_id"
 
@@ -370,6 +376,7 @@ ActiveRecord::Schema.define(:version => 20130828190920) do
   add_foreign_key "choices", "answers", :name => "choices_answer_id_fk"
   add_foreign_key "choices", "options", :name => "choices_option_id_fk"
 
+  add_foreign_key "conditions", "missions", :name => "conditions_mission_id_fk"
   add_foreign_key "conditions", "options", :name => "conditions_option_id_fk"
   add_foreign_key "conditions", "questionings", :name => "conditions_questioning_id_fk"
   add_foreign_key "conditions", "questionings", :name => "conditions_ref_qing_id_fk", :column => "ref_qing_id"
@@ -381,12 +388,14 @@ ActiveRecord::Schema.define(:version => 20130828190920) do
 
   add_foreign_key "option_sets", "missions", :name => "option_sets_mission_id_fk"
 
+  add_foreign_key "optionings", "missions", :name => "optionings_mission_id_fk"
   add_foreign_key "optionings", "option_sets", :name => "optionings_option_set_id_fk"
   add_foreign_key "optionings", "options", :name => "optionings_option_id_fk"
 
   add_foreign_key "options", "missions", :name => "options_mission_id_fk"
 
   add_foreign_key "questionings", "forms", :name => "questionings_form_id_fk"
+  add_foreign_key "questionings", "missions", :name => "questionings_mission_id_fk"
   add_foreign_key "questionings", "questions", :name => "questionings_question_id_fk"
 
   add_foreign_key "questions", "missions", :name => "questions_mission_id_fk"

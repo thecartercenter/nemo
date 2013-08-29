@@ -5,6 +5,9 @@ class AddMissionIdStandardIdKeys < ActiveRecord::Migration
     add_index(:questions, [:mission_id, :standard_id], :unique => true)
     add_index(:option_sets, [:mission_id, :standard_id], :unique => true)
     add_index(:options, [:mission_id, :standard_id], :unique => true)
+    add_index(:questionings, [:mission_id, :standard_id], :unique => true)
+    add_index(:conditions, [:mission_id, :standard_id], :unique => true)
+    add_index(:optionings, [:mission_id, :standard_id], :unique => true)
   end
 
   def down
