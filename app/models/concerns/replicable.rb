@@ -17,7 +17,7 @@ module Replicable
 
   # creates a duplicate in this or another mission
   def replicate(to_mission = nil, options = {}, copy_parents = [], parent_assoc = nil)
-    puts "replicating #{self.to_s} to #{to_mission.to_s}"
+    puts "---- replicating #{self.to_s} to #{to_mission.to_s}"
 
     # default to current mission if not specified
     to_mission ||= mission if respond_to?(:mission)
@@ -145,6 +145,7 @@ module Replicable
         parent.send(parent_assoc).send('<<', copy)
       end
     else
+      puts "setting on parent #{parent.id}"
       parent.send("#{parent_assoc}=", copy)
     end
   end

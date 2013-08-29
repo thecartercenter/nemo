@@ -9,8 +9,8 @@ module Standardizable
     belongs_to(:standard, :class_name => name, :inverse_of => :copies)
     has_many(:copies, :class_name => name, :foreign_key => 'standard_id', :inverse_of => :standard)
 
-    # create hooks to replicate changes to copies
-    after_save(:replicate_changes_to_copies)
+    # create hooks to replicate changes to copies for key classes
+    after_save(:replicate_changes_to_copies) if %w(Form Question OptionSet Option).include?(name)
   end
 
   # get copy in the given mission, if it exists (there can only be one)
@@ -22,6 +22,7 @@ module Standardizable
 
   private
     def replicate_changes_to_copies
+      puts "CALLBACK #{self.class.name}"
       if saving_in_replication
         saving_in_replication = false
       else

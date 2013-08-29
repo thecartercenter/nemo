@@ -68,6 +68,6 @@ class Questioning < ActiveRecord::Base
 
     # copy mission from question
     def set_mission
-      self.mission = question.try(:mission)
+      self.mission = form.try(:mission)
     end
 end

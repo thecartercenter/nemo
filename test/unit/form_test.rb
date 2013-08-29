@@ -190,4 +190,72 @@ class FormTest < ActiveSupport::TestCase
     assert_equal(f2.questionings[3].condition.ref_qing, f2.questionings[1])
   end
 
+  test "adding new question with condition to middle of form should add to copy also" do
+    # setup
+    f = FactoryGirl.create(:form, :question_types => %w(integer integer), :is_standard => true)
+    f2 = f.replicate(get_mission)
+
+    # add question to std
+    f.questionings.build(:rank => 2, :question => FactoryGirl.create(:question, :code => 'charley', :is_standard => true),
+      :condition => Condition.new(:ref_qing => f.questionings[0], :op => 'gt', :value => '1', :is_standard => true))
+    f.questionings[1].rank = 3
+    f.save!
+    
+    # ensure question and condition got added properly on std
+    f.reload
+    assert_equal('charley', f.questionings[1].question.code)
+    assert_equal(f.questionings[0], f.questionings[1].condition.ref_qing)
+
+    # ensure replication was ok
+    f2.reload
+    assert_equal('charley', f2.questionings[1].question.code)
+    assert_equal(f2.questionings[0], f2.questionings[1].condition.ref_qing)
+    assert_not_equal(f.questionings[1].question.id, f2.questionings[1].question.id)
+  end
+
+  test "adding new condition to std form should create copy" do
+    # setup
+    f = FactoryGirl.create(:form, :question_types => %w(integer integer), :is_standard => true)
+    f2 = f.replicate(get_mission)
+
+    # add condition to standard
+    f.questionings[1].condition = FactoryGirl.build(:condition, :ref_qing => f.questionings[0], :op => 'lt', :value => 10)
+    f.save!
+
+    f2.reload
+    puts f2.questionings[1].id.to_s + "&&&&&&&&&&&&&&&&&&&&&&&&&"
+
+    # a similiar condition should now exist in copy
+    assert_equal("10", f2.questionings[1].condition.value)
+    assert_equal(get_mission, f2.questionings[1].condition.mission)
+    assert_equal(f2.questionings[0], f2.questionings[1].condition.ref_qing)
+
+    # but conditions should be distinct
+    assert_not_equal(f.questionings[1].condition, f2.questionings[1].condition)
+  end
+
+  test "changing condition ref_qing should replicate properly" do
+    f = FactoryGirl.create(:form, :question_types => %w(integer integer integer), :is_standard => true)
+
+    # create condition
+    f.questionings[2].condition = FactoryGirl.build(:condition, :ref_qing => f.questionings[0], :op => 'gt', :value => 1, :is_standard => true)
+    f.save!
+
+    # replicate first time
+    f2 = f.replicate(get_mission)
+
+    # change condition ref_qing
+    f.questionings[2].condition.ref_qing = f.questionings[1]
+    puts '------- changing condition -------------------------------------------------------------------------'
+    f.save!
+
+    # ensure change replicated
+    f2.reload
+    assert_equal(f2.questionings[1], f2.questionings[2].condition.ref_qing)
+  end
+
+  test "multiple copies" do
+
+  end
+
 end

@@ -161,8 +161,9 @@ class Condition < ActiveRecord::Base
 
     # during replication process, copies the ref qing and option to the new condition
     def copy_ref_qing_and_option(copy, copy_parents)
-      # the copy's form is the second parent
-      copy_form = copy_parents[-2]
+      # the copy's form is just the immediate parent (questioning)'s form
+      puts copy_parents.inspect + "^^^^^^^^^^^^^^^^^"
+      copy_form = copy_parents.last.form
 
       # get the rank of the original ref_qing
       ref_qing_rank = self.ref_qing.rank
