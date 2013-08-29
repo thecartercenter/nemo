@@ -309,6 +309,23 @@ class OptionSetTest < ActiveSupport::TestCase
     assert_equal(std1.options[0], copy1.options[0].standard)
   end
 
+  test "changing name of option set with copies should avoid conflicts when changing name of copies" do
+    # make set and copy
+    std = FactoryGirl.create(:option_set, :name => 'Stuff', :is_standard => true)
+    copy = std.replicate(get_mission)
+
+    # make regular set in a mission
+    reg = FactoryGirl.create(:option_set, :name => 'Fluff', :mission => get_mission)
+
+    # rename std to same name as reg
+    std.name = 'Fluff'
+    std.save!
+    copy.reload
+
+    # copy's name should be Fluff 2 to avoid conflict
+    assert_equal('Fluff 2', copy.name)
+  end
+
 
   private
     def create_option_set(options)
