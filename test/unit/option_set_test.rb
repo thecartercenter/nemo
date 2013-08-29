@@ -362,6 +362,21 @@ class OptionSetTest < ActiveSupport::TestCase
     assert_equal(copy.options[2], copy2.options[0])
   end
 
+  test "removing optioning from std option set will also remove from copies" do
+    std = FactoryGirl.create(:option_set, :is_standard => true, :option_names => %w(yes no maybe))
+    copy = std.replicate(get_mission)
+
+    # remove option
+    std.optionings.destroy(std.optionings[2])
+    std.save!
+    std.reload
+    assert_equal(2, std.options.size)
+
+    # ensure option is deleted from copy
+    copy.reload
+    assert_equal(2, copy.options.size)
+    assert_equal(%w(yes no), copy.options.map(&:name))
+  end
 
   private
     def create_option_set(options)

@@ -107,13 +107,29 @@ module Replicable
     # replicate associations
     self.class.replication_options[:assocs].each do |assoc|
       if self.class.reflect_on_association(assoc).collection?
+        # destroy any children in copy that don't exist in standard
+        std_child_ids = send(assoc).map(&:id)
+        puts "std ids: #{std_child_ids.inspect}"
+        copy.send(assoc).each do |o|
+          puts "checking for #{o.standard_id}"
+          unless std_child_ids.include?(o.standard_id)
+            puts "destroying"
+            copy.changing_in_replication = true
+            copy.send(assoc).destroy(o) 
+          end
+        end
+
+        # replicate the existing children
         send(assoc).each{|o| o.replicate(to_mission, options, copy_parents, assoc)}
       else
         send(assoc).replicate(to_mission, options, copy_parents, assoc) unless send(assoc).nil?
       end
     end
 
-    copy.saving_in_replication = true
+
+
+    # set flag so that standardizable callback doesn't call replicate again unnecessarily
+    copy.changing_in_replication = true
     copy.save!
     puts "copy after save: " + copy.inspect
 

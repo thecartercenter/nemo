@@ -3,14 +3,17 @@ module Standardizable
 
   included do
     # create a flag to use with the callback below
-    attr_accessor :saving_in_replication
+    attr_accessor :changing_in_replication
 
     # create self-associations in both directions for is-copy-of relationship
     belongs_to(:standard, :class_name => name, :inverse_of => :copies)
     has_many(:copies, :class_name => name, :foreign_key => 'standard_id', :inverse_of => :standard)
 
     # create hooks to replicate changes to copies for key classes
-    after_save(:replicate_changes_to_copies) if %w(Form Question OptionSet Option).include?(name)
+    if %w(Form Question OptionSet Option).include?(name)
+      after_save(:replicate_changes_to_copies)
+      after_destroy(:replicate_changes_to_copies)
+    end
   end
 
   # get copy in the given mission, if it exists (there can only be one)
@@ -23,8 +26,8 @@ module Standardizable
   private
     def replicate_changes_to_copies
       puts "CALLBACK #{self.class.name}"
-      if saving_in_replication
-        saving_in_replication = false
+      if changing_in_replication
+        changing_in_replication = false
       else
         # if we just run replicate for each copy's mission, all changes will be propagated
         copies.each{|c| replicate(c.mission)}
