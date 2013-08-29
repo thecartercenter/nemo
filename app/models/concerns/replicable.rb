@@ -145,6 +145,12 @@ module Replicable
     return copy
   end
 
+  def replicate_destruction(to_mission)
+    if c = copy_for_mission(to_mission)
+      c.destroy
+    end
+  end
+
   def replication_parent_class
     p = self.class.replication_options[:parent]
     p ? p.classify.constantize : nil

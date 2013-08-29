@@ -83,4 +83,11 @@ class OptionTest < ActiveSupport::TestCase
     # check replication
     assert_equal('Stuffz', o2.name)
   end
+
+  test "deleting std option should delete copies" do
+    o = FactoryGirl.create(:option, :name => 'Stuff', :is_standard => true)
+    o2 = o.replicate(get_mission)
+    o.destroy
+    assert_nil(Option.where(:id => o2.id).first)
+  end
 end

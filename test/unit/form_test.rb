@@ -342,4 +342,27 @@ class FormTest < ActiveSupport::TestCase
     assert_nil(copy.questionings[2].condition)
     assert_nil(Condition.where(:id => copy_cond_id).first)
   end
+
+  test "deleting a standard form should delete copies and copy questionings and conditions" do
+    std = FactoryGirl.create(:form, :question_types => %w(integer integer), :is_standard => true)
+    copy = std.replicate(get_mission)
+
+    # add condition to standard, which will get replicated
+    std.questionings[1].condition = FactoryGirl.build(:condition, :ref_qing => std.questionings[0], :op => 'lt', :value => 10)
+    std.save!
+    assert_not_nil(Questioning.where(:form_id => copy.id).first)
+    
+    # get ID of copy condition
+    copy.reload
+    copy_cond_id = copy.questionings[1].condition.id
+    assert_not_nil(copy_cond_id)
+
+    # destroy std
+    std.destroy
+
+    # copy and assoc'd questionings and conditions should be gone
+    assert(!Form.exists?(copy))
+    assert_nil(Questioning.where(:form_id => copy.id).first)
+    assert_nil(Condition.where(:id => copy_cond_id).first)
+  end
 end

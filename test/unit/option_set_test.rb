@@ -378,6 +378,20 @@ class OptionSetTest < ActiveSupport::TestCase
     assert_equal(%w(yes no), copy.options.map(&:name))
   end
 
+  test "deleting an option set should delete copies" do
+    std = FactoryGirl.create(:option_set, :is_standard => true, :option_names => %w(yes no maybe))
+    copy = std.replicate(get_mission)
+    
+    # make sure optionings exist
+    assert_not_nil(Optioning.where(:option_set_id => copy.id).first)
+    
+    std.destroy
+
+    # make sure option set and optionings are destroyed
+    assert(!OptionSet.exists?(copy))
+    assert_nil(Optioning.where(:option_set_id => copy.id).first)
+  end
+
   private
     def create_option_set(options)
       os = OptionSet.new(:name => "test")
