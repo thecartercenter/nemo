@@ -326,6 +326,23 @@ class OptionSetTest < ActiveSupport::TestCase
     assert_equal('Fluff 2', copy.name)
   end
 
+  test "adding option to existing std option set should also add it to copies" do
+    std = FactoryGirl.create(:option_set, :is_standard => true, :option_names => %w(yes no))
+    copy = std.replicate(get_mission)
+
+    puts copy.options.map(&:name).inspect
+    # add option
+    std.options << FactoryGirl.create(:option, :name => 'maybe')
+    puts 'SAVING WITH NEW NAME'
+    std.save!
+    assert_equal(3, std.options.size)
+
+    # copy should have new option also
+    copy.reload
+    puts copy.options.map(&:name).inspect
+    assert_equal(3, copy.options.size)
+    assert_equal(%w(yes no maybe), copy.options.map(&:name))
+  end
 
   private
     def create_option_set(options)

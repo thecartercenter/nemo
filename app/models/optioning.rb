@@ -41,6 +41,7 @@ class Optioning < ActiveRecord::Base
 
     # copy mission from option_set
     def set_mission
+      Rails.logger.debug "SETTING MISSION TO #{option_set.try(:mission).inspect}"
       self.mission = option_set.try(:mission)
     end
 

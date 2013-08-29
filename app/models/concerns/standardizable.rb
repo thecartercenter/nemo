@@ -14,8 +14,10 @@ module Standardizable
   end
 
   # get copy in the given mission, if it exists (there can only be one)
+  # (we can assume that all standardizable classes are also mission-based)
   def copy_for_mission(mission)
-    respond_to?(:mission) ? copies.for_mission(mission).first : nil
+    puts "standard has copies: #{copies.inspect}"
+    copies.for_mission(mission).first
   end
 
   private

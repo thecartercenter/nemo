@@ -102,6 +102,6 @@ class OptionSet < ActiveRecord::Base
     # ensures mission is set on all options
     def ensure_option_missions
       # go in through optionings association in case these are newly created options via nested attribs
-      optionings.each{|oing| oing.option.mission_id ||= mission_id}
+      optionings.each{|oing| oing.option.mission_id ||= mission_id if oing.option}
     end
 end

@@ -37,10 +37,11 @@ module Replicable
 
     # if this is a standard object AND we're copying to a mission AND there exists a copy in the given mission,
     # then we don't need to create a new object
-    if is_standard? && !to_mission.nil? && respond_to?(:mission) && (c = copy_for_mission(to_mission))
-      puts "HERE"
+    if is_standard? && !to_mission.nil? && (c = copy_for_mission(to_mission))
+      puts 'found copy'
       copy = c
     else
+      puts 'creating new'
       # init the copy
       copy = self.class.new
     end
@@ -56,13 +57,11 @@ module Replicable
     # copy_parents.each{|p| puts p.inspect}
 
     # set the proper mission if applicable
-    copy.mission = to_mission if respond_to?(:mission)
-
-    # if this is a standard obj, add to copies if not there already
-    copies << copy if is_standard? && !copies.include?(copy)
+    puts "setting mission for #{copy.class} to #{to_mission}"
+    copy.mission_id = to_mission.try(:id)
 
     # determine appropriate attribs to copy
-    dont_copy = %w(id created_at updated_at mission_id is_standard standard_id) + self.class.replication_options[:dont_copy]
+    dont_copy = %w(id created_at updated_at mission_id mission is_standard standard_id standard) + self.class.replication_options[:dont_copy]
 
     # don't copy foreign key field of belongs_to associations
     self.class.replication_options[:assocs].each do |assoc|
@@ -80,7 +79,7 @@ module Replicable
 
     # copy attribs
     attribs_to_copy = attributes.except(*dont_copy)
-    attribs_to_copy.each{|k,v| copy.send("#{k}=", v)}
+    attribs_to_copy.each{|k,v| puts "copying #{k}"; copy.send("#{k}=", v)}
 
     # if uniqueness property is set, make sure the specified field is unique
     if params = self.class.replication_options[:uniqueness]
@@ -94,6 +93,16 @@ module Replicable
 
     # add to parent before recursive step
     add_copy_to_parent(copy, copy_parents, parent_assoc)
+
+    puts "1: " + copy.inspect
+    Rails.logger.debug("**********************************")
+    # if this is a standard obj, add to copies if not there already
+    copies << copy if is_standard? && !copies.include?(copy)
+    Rails.logger.debug("**********************************")
+
+    puts "2: " + copy.inspect
+
+
 
     # add the new copy to the list of copy parents
     copy_parents = copy_parents + [copy]
@@ -125,9 +134,16 @@ module Replicable
     parent = copy_parents.last
     refl = parent.class.reflect_on_association(parent_assoc)
 
+    puts "adding #{copy.inspect} to parent"
+    
     # associate object with parent using appropriate method depending on assoc type
     if refl.collection?
-      parent.send(parent_assoc).send('<<', copy) unless parent.send(parent_assoc).include?(copy)
+      puts "parent already has #{parent.send(parent_assoc).inspect}"
+      if parent.send(parent_assoc).include?(copy)
+        puts 'already there'
+      else
+        parent.send(parent_assoc).send('<<', copy)
+      end
     else
       parent.send("#{parent_assoc}=", copy)
     end
