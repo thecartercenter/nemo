@@ -94,15 +94,12 @@ module Replicable
     # add to parent before recursive step
     add_copy_to_parent(copy, copy_parents, parent_assoc)
 
-    puts "1: " + copy.inspect
-    Rails.logger.debug("**********************************")
+    puts "copy before add to std copies array: " + copy.inspect
+
     # if this is a standard obj, add to copies if not there already
     copies << copy if is_standard? && !copies.include?(copy)
-    Rails.logger.debug("**********************************")
 
-    puts "2: " + copy.inspect
-
-
+    puts "copy after add to std copies array: " + copy.inspect
 
     # add the new copy to the list of copy parents
     copy_parents = copy_parents + [copy]
@@ -118,6 +115,7 @@ module Replicable
 
     copy.saving_in_replication = true
     copy.save!
+    puts "copy after save: " + copy.inspect
 
     return copy
   end

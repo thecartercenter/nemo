@@ -254,7 +254,45 @@ class FormTest < ActiveSupport::TestCase
     assert_equal(f2.questionings[1], f2.questionings[2].condition.ref_qing)
   end
 
-  test "multiple copies" do
+  test "changes replicated to multiple copies" do
+    std = FactoryGirl.create(:form, :question_types => %w(integer integer integer), :is_standard => true)
+    c1 = std.replicate(get_mission)
+    c2 = std.replicate(FactoryGirl.create(:mission, :name => 'foo'))
+
+    # add option set to first question
+    q = std.questions[0]
+    q.qtype_name = 'select_one'
+    q.option_set = FactoryGirl.create(:option_set, :is_standard => true)
+    q.save!
+
+    # ensure change worked on std
+    std.reload
+    assert_equal('select_one', std.questions[0].qtype_name)
+
+    # ensure two copies get made
+    c1.reload
+    c2.reload
+    assert_equal('select_one', c1.questions[0].qtype_name)
+    assert_equal('select_one', c2.questions[0].qtype_name)
+  end
+
+  test "question order should remain correct after replication" do
+    f = FactoryGirl.create(:form, :question_types => %w(integer integer integer), :is_standard => true)
+    copy = f.replicate(get_mission)
+    
+    first_std_q_id = f.questions[0].id
+    first_copy_q_id = copy.questions[0].id
+
+    # change the first question in std
+    q = f.questions[0]
+    q.qtype_name = "decimal"
+    q.save!
+
+    # ensure question order is still correct
+    f.reload
+    assert_equal(first_std_q_id, f.questions[0].id)
+    copy.reload
+    assert_equal(first_copy_q_id, copy.questions[0].id)
 
   end
 

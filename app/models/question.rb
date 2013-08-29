@@ -17,7 +17,7 @@ class Question < ActiveRecord::Base
 
   before_destroy(:check_assoc)
   
-  default_scope(order("code"))
+  scope(:by_code, order("code"))
   scope(:select_types, where(:qtype_name => %w(select_one select_multiple)))
   scope(:with_forms, includes(:forms))
   
