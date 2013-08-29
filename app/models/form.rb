@@ -79,6 +79,7 @@ class Form < ActiveRecord::Base
   end
   
   def destroy_questionings(qings)
+    qings = Array.wrap(qings)
     transaction do
       # delete the qings
       qings.each do |qing|

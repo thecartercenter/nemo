@@ -293,7 +293,23 @@ class FormTest < ActiveSupport::TestCase
     assert_equal(first_std_q_id, f.questions[0].id)
     copy.reload
     assert_equal(first_copy_q_id, copy.questions[0].id)
+  end
 
+  test "removal of question should be replcated to copy" do
+    std = FactoryGirl.create(:form, :question_types => %w(integer decimal date), :is_standard => true)
+    copy = std.replicate(get_mission)
+
+    # use the special destroy_questionings method
+    std.destroy_questionings(std.questionings[1])
+    std.save
+
+    copy.reload
+    assert_equal(2, copy.questionings.size)
+    assert_equal(2, copy.questions.size)
+    assert_equal(%w(integer date), copy.questionings.map(&:qtype_name))
+
+    # ranks should also remain correct on copy
+    assert_equal([1,2], copy.questionings.map(&:rank))
   end
 
 end
