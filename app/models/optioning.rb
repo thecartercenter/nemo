@@ -1,9 +1,10 @@
 class Optioning < ActiveRecord::Base
-  include Standardizable, Replicable
+  include MissionBased, Standardizable, Replicable
 
   belongs_to(:option, :inverse_of => :optionings)
   belongs_to(:option_set, :inverse_of => :optionings)
   
+  before_create(:set_mission)
   before_destroy(:no_answers_or_choices)
   
   accepts_nested_attributes_for(:option)
@@ -35,4 +36,12 @@ class Optioning < ActiveRecord::Base
   def as_json(options = {})
     {:id => id, :option => option, :removable => removable?}
   end
+
+  private
+
+    # copy mission from option_set
+    def set_mission
+      self.mission = option_set.try(:mission)
+    end
+
 end

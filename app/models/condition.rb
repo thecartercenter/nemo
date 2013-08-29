@@ -1,5 +1,5 @@
 class Condition < ActiveRecord::Base
-  include Standardizable, Replicable
+  include MissionBased, Standardizable, Replicable
 
   # question types that cannot be used in conditions
   NON_REFABLE_TYPES = %w(location)
@@ -10,6 +10,7 @@ class Condition < ActiveRecord::Base
   
   before_validation(:clear_blanks)
   before_validation(:clean_times)
+  before_create(:set_mission)
  
   validate(:all_fields_required)
   validates(:questioning, :presence => true)
@@ -177,4 +178,10 @@ class Condition < ActiveRecord::Base
         copy.option = copy.ref_qing.question.option_set.optionings[ref_option_idx].option
       end
     end
+
+    # copy mission from questioning
+    def set_mission
+      self.mission = questioning.try(:mission)
+    end
+
 end

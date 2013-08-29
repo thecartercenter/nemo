@@ -31,4 +31,8 @@ class QuestioningTest < ActiveSupport::TestCase
     assert_equal(f.questionings[0..1], f.questionings.last.previous)
   end
 
+  test "mission should get copied from question on creation" do
+    f = FactoryGirl.create(:form, :question_types => %w(integer), :mission => get_mission)
+    assert_equal(get_mission, f.questionings[0].mission)
+  end
 end

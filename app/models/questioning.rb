@@ -1,5 +1,5 @@
 class Questioning < ActiveRecord::Base
-  include Standardizable, Replicable
+  include MissionBased, Standardizable, Replicable
 
   belongs_to(:form, :inverse_of => :questionings, :counter_cache => true)
   belongs_to(:question, :autosave => true, :inverse_of => :questionings)
@@ -9,6 +9,7 @@ class Questioning < ActiveRecord::Base
   
   before_validation(:destroy_condition_if_ref_qing_blank)
   before_create(:set_rank)
+  before_create(:set_mission)
 
   # also validates the associated condition because condition has validates(:questioning, ...)
   
@@ -63,5 +64,10 @@ class Questioning < ActiveRecord::Base
 
     def destroy_condition_if_ref_qing_blank
       condition.destroy if condition && condition.ref_qing.blank?
+    end
+
+    # copy mission from question
+    def set_mission
+      self.mission = question.try(:mission)
     end
 end
