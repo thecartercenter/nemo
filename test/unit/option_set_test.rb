@@ -326,13 +326,13 @@ class OptionSetTest < ActiveSupport::TestCase
     assert_equal('Fluff 2', copy.name)
   end
 
-  test "adding option to existing std option set should also add it to copies" do
+  test "adding new option to existing std option set should also add it to copies" do
     std = FactoryGirl.create(:option_set, :is_standard => true, :option_names => %w(yes no))
     copy = std.replicate(get_mission)
 
     puts copy.options.map(&:name).inspect
     # add option
-    std.options << FactoryGirl.create(:option, :name => 'maybe')
+    std.options << FactoryGirl.create(:option, :name => 'maybe', :is_standard => true)
     puts 'SAVING WITH NEW NAME'
     std.save!
     assert_equal(3, std.options.size)
@@ -343,6 +343,25 @@ class OptionSetTest < ActiveSupport::TestCase
     assert_equal(3, copy.options.size)
     assert_equal(%w(yes no maybe), copy.options.map(&:name))
   end
+
+  test "adding existing std option to existing std option set should also add it to copies" do
+    # create two sets and replicate both
+    std = FactoryGirl.create(:option_set, :is_standard => true, :option_names => %w(yes no))
+    copy = std.replicate(get_mission)
+    std2 = FactoryGirl.create(:option_set, :is_standard => true, :option_names => %w(high low))
+    copy2 = std2.replicate(get_mission)
+
+    # now add an option from one to the other
+    std.options << std2.options[0]
+    std.save!
+    assert_equal(std.options[2], std2.options[0])
+
+    # copy should have new option also
+    copy.reload
+    assert_equal(3, copy.options.size)
+    assert_equal(copy.options[2], copy2.options[0])
+  end
+
 
   private
     def create_option_set(options)
