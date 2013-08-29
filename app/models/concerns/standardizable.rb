@@ -20,12 +20,9 @@ module Standardizable
 
   private
     def replicate_changes_to_copies
-      puts "doing standardizable callback"
       if saving_in_replication
         saving_in_replication = false
-        puts "cancelled"
       else
-        puts "calling replicate"
         # if we just run replicate for each copy's mission, all changes will be propagated
         copies.each{|c| replicate(c.mission)}
       end
