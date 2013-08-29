@@ -70,9 +70,7 @@ class OptionTest < ActiveSupport::TestCase
   end
 
   test "update of normal param in a std option should replicate to instances" do
-    puts "creating std opt set"
     o = FactoryGirl.create(:option, :name => 'Stuff', :is_standard => true)
-    puts "creating copy"
     o2 = o.replicate(get_mission)
 
     # do update and reload copy

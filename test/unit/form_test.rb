@@ -223,7 +223,6 @@ class FormTest < ActiveSupport::TestCase
     f.save!
 
     f2.reload
-    puts f2.questionings[1].id.to_s + "&&&&&&&&&&&&&&&&&&&&&&&&&"
 
     # a similiar condition should now exist in copy
     assert_equal("10", f2.questionings[1].condition.value)
@@ -246,7 +245,6 @@ class FormTest < ActiveSupport::TestCase
 
     # change condition ref_qing
     f.questionings[2].condition.ref_qing = f.questionings[1]
-    puts '------- changing condition -------------------------------------------------------------------------'
     f.save!
 
     # ensure change replicated
@@ -328,7 +326,6 @@ class FormTest < ActiveSupport::TestCase
     assert_not_nil(copy_cond_id)
 
     # remove condition and save the qing. this is how it will happen in the controller.
-    puts "----destroying condition-------------------"
     std.questionings[2].destroy_condition
     assert_nil(std.questionings[2].condition)
     std.questionings[2].save!
