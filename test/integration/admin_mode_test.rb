@@ -8,6 +8,23 @@ class AdminModeTest < ActionDispatch::IntegrationTest
     @nonadmin = FactoryGirl.create(:user)
   end
 
+  test "path helpers still should work after addition of admin routes" do
+    @option_set = FactoryGirl.create(:option_set)
+    assert_equal("/en/option_sets/#{@option_set.id}", option_set_path(@option_set))
+    assert_equal("/en", root_path)
+    assert_equal("/en/admin", root_path(:admin_mode => 'admin'))
+  end
+
+  test "controller admin_mode helper should work properly" do
+    get(root_url)
+    assert(!@controller.send(:admin_mode?))
+    login(@admin)
+    get(root_url)
+    assert(!@controller.send(:admin_mode?))
+    get(root_url(:admin_mode => true))
+    assert(@controller.send(:admin_mode?))
+  end
+
   test "admin mode should only be available to admins" do
     # login as admin and check for admin mode link
     login(@admin)
