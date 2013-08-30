@@ -10,6 +10,9 @@ class ApplicationController < ActionController::Base
   
   # handle authorization errors nicely
   rescue_from CanCan::AccessDenied do |exception|
+    # set flag for tests to check
+    @access_denied = true
+
     # log to debug log
     Rails.logger.debug("ACCESS DENIED on #{exception.action} #{exception.subject.inspect}")
     
@@ -39,6 +42,9 @@ class ApplicationController < ActionController::Base
   # user/user_session stuff
   before_filter(:basic_auth_for_xml)
   before_filter(:get_user_and_mission)
+
+  # protect admin mode
+  before_filter(:protect_admin_mode)
   
   # lastly, we load settings
   before_filter(:load_settings)
@@ -47,7 +53,7 @@ class ApplicationController < ActionController::Base
   attr_reader :current_user, :current_mission
   
   # make these methods visible in the view
-  helper_method :current_user, :current_mission, :ajax_request?
+  helper_method :current_user, :current_mission, :ajax_request?, :admin_mode?
   
   # hackish way of getting the route key identical to what would be returned by model_name.route_key on a model
   def route_key
@@ -159,6 +165,18 @@ class ApplicationController < ActionController::Base
         current_mission.setting.load
       else
         Setting.build_default.load
+      end
+    end
+
+    def admin_mode?
+      !params[:admin_mode].nil?
+    end
+
+    # makes sure admin_mode is not true if user is not admin
+    def protect_admin_mode
+      if admin_mode? && cannot?(:view, :admin_mode)
+        params[:admin_mode] = nil
+        raise CanCan::AccessDenied.new("not authorized for admin mode", :view, :admin_mode)
       end
     end
 

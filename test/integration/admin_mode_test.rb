@@ -22,10 +22,17 @@ class AdminModeTest < ActionDispatch::IntegrationTest
 
   test "params admin_mode should be correct" do
     login(@admin)
-    get(root_url)
+    get_success(root_url)
+    assert_response(:success)
     assert_nil(request.params[:admin_mode])
-    get('/admin')
+    get_success('/admin')
     assert_not_nil(request.params[:admin_mode])
+  end
+
+  test "admin mode should not be permitted for non-admins" do
+    login(@nonadmin)
+    get('/admin')
+    assert_access_denied
   end
 
   test "mission dropdown should not be visible in admin mode" do

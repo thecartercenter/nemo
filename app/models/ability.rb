@@ -33,6 +33,7 @@ class Ability
         can :manage, User
         can :manage, Assignment
         can :manage, Mission
+        can :view, :admin_mode
       
         # only admins can give/take admin (adminify) to/from others, but not from themselves
         cannot :adminify, User

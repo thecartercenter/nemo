@@ -71,4 +71,14 @@ class ActiveSupport::TestCase
   def encode_credentials(username, password)
     "Basic #{Base64.encode64("#{username}:#{password}")}"
   end
+
+  def get_success(*params)
+    get(*params)
+    assert_response(:success)
+  end
+
+  def assert_access_denied
+    assert_response(302)
+    assert_not_nil(assigns(:access_denied), "access should have been denied")
+  end
 end
