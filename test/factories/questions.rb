@@ -8,7 +8,7 @@ FactoryGirl.define do
 
     option_set do
       if QuestionType[qtype_name].has_options?
-        FactoryGirl.build(:option_set, :is_standard => is_standard)
+        FactoryGirl.build(:option_set)
       else
         nil
       end

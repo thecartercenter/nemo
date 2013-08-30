@@ -15,12 +15,12 @@ FactoryGirl.define do
       if option_names_with_ranks
         # make the optioning objects according to the rank specified
         option_names_with_ranks.each_pair.map do |name, rank|
-          Optioning.new(:rank => rank, :option => Option.new(:name => name, :is_standard => is_standard), :is_standard => is_standard)
+          Optioning.new(:rank => rank, :option => Option.new(:name => name))
         end
       else
         # make the optioning objects, respecting the order they came in
         option_names.each_with_index.map do |name, i|
-          Optioning.new(:rank => i + 1, :option => Option.new(:name => name, :is_standard => is_standard), :is_standard => is_standard)
+          Optioning.new(:rank => i + 1, :option => Option.new(:name => name))
         end
       end
     end

@@ -50,9 +50,15 @@ module Standardizable
       self.class.replication_options[:assocs].each do |assoc|
         refl = self.class.reflect_on_association(assoc)
         if refl.collection?
-          send(assoc).each{|o| o.is_standard = is_standard?}
+          send(assoc).each do |o| 
+            o.is_standard = is_standard?
+            o.mission = nil if is_standard?
+          end
         else
-          send(assoc).is_standard = is_standard? if send(assoc)
+          if send(assoc)
+            send(assoc).is_standard = is_standard? 
+            send(assoc).mission = nil if is_standard?
+          end
         end
       end
     end
