@@ -251,9 +251,9 @@ class ApplicationController < ActionController::Base
       end
     end
 
-    # override CanCan's current_ability method to use the user ability method
+    # get the current user's ability. not cached because it's volatile!
     def current_ability
-      current_user ? current_user.ability : Ability.new(nil)
+      Ability.new(current_user, admin_mode?)
     end
     
     # resets the Rails session but preserves the :return_to key
