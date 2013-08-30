@@ -191,6 +191,9 @@ class ApplicationController < ActionController::Base
       begin
         return unless request.format == Mime::XML
 
+        # xml requests not allowed in admin mode
+        raise ArgumentError.new("xml requests not allowed in admin mode") if admin_mode?
+
         # authenticate with basic 
         user = authenticate_with_http_basic do |login, password|
           # use eager loading to optimize things a bit
@@ -217,8 +220,7 @@ class ApplicationController < ActionController::Base
         
         # if we get this far, we can set the current mission
         @current_mission = mission
-        @current_user.current_mission = mission
-        @current_user.save(:validate => false)
+        @current_user.change_mission(mission)
       rescue ArgumentError
         render(:nothing => true, :status => 404)
         false
@@ -237,12 +239,18 @@ class ApplicationController < ActionController::Base
         # look up the current user from the user session
         # we use a find call to the User class so that we can do eager loading
         @current_user = (user = user_session.user) && User.includes(:assignments).find(user.id)
-    
-        # look up the current mission based on the current user
-        @current_mission = @current_user ? @current_user.current_mission : nil
+
+        # if we're in admin mode, the current mission is nil and we need to set the user's current mission to nil also
+        if admin_mode?
+          @current_mission = nil
+          @current_user.change_mission!(nil)
+        else
+          # look up the current mission based on the current user
+          @current_mission = @current_user ? @current_user.current_mission : nil
+        end
       end
     end
-    
+
     # override CanCan's current_ability method to use the user ability method
     def current_ability
       current_user ? current_user.ability : Ability.new(nil)

@@ -45,8 +45,15 @@ class AdminModeTest < ActionDispatch::IntegrationTest
     assert_select('a.exit_admin_mode')
   end
 
-  test "user's current mission and current_mission should be nil in admin mode" do
+  test "users current mission and current_mission should be nil in admin mode" do
+    login(@admin)
+    assert_not_nil(@admin.current_mission)
+    assert_not_nil(@controller.current_mission)
 
+    get('/admin')
+    @admin.reload
+    assert_nil(@admin.current_mission)
+    assert_nil(@controller.current_mission)
   end
 
   test "exiting admin mode should return user to last mission" do
