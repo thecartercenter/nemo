@@ -21,7 +21,7 @@ class AdminModeTest < ActionDispatch::IntegrationTest
     login(@admin)
     get(root_url)
     assert(!@controller.send(:admin_mode?))
-    get(root_url(:admin_mode => true))
+    get(root_url(:admin_mode => 'admin'))
     assert(@controller.send(:admin_mode?))
   end
 
