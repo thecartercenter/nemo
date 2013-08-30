@@ -35,7 +35,7 @@ namespace :env do
   end
 end
 
-after 'deploy:update_code', 'deploy:migrate'
+#after 'deploy:update_code', 'deploy:migrate'
 
 after "deploy", "deploy:cleanup" # keep only the last 5 releases
 

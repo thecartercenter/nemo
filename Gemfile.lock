@@ -51,6 +51,7 @@ GEM
       net-sftp (>= 2.0.0)
       net-ssh (>= 2.0.14)
       net-ssh-gateway (>= 1.1.0)
+    choice (0.1.6)
     configatron (2.10.0)
       yamler (>= 0.1.0)
     dalli (2.6.4)
@@ -106,6 +107,11 @@ GEM
       activesupport (= 3.2.13)
       bundler (~> 1.0)
       railties (= 3.2.13)
+    rails-erd (1.1.0)
+      activerecord (>= 3.0)
+      activesupport (>= 3.0)
+      choice (~> 0.1.6)
+      ruby-graphviz (~> 1.0.4)
     rails-i18n (0.7.3)
       i18n (~> 0.5)
     railties (3.2.13)
@@ -120,6 +126,7 @@ GEM
     rdiscount (2.1.6)
     rdoc (3.12.2)
       json (~> 1.4)
+    ruby-graphviz (1.0.9)
     sass (3.2.5)
     sass-rails (3.2.6)
       railties (~> 3.2.0)
@@ -167,6 +174,7 @@ DEPENDENCIES
   libxml-ruby
   mysql2
   rails (= 3.2.13)
+  rails-erd
   rails-i18n
   rake
   random_data
