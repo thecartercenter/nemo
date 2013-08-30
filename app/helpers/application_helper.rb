@@ -13,7 +13,8 @@ module ApplicationHelper
   }
   
   ERROR_MESSAGE_KEYS_TO_HIDE = {
-    :'optionings.option.base' => true
+    :'optionings.option.base' => true,
+    :'condition.base' => true
   }
   
   # renders the flash message and any form errors for the given activerecord object
@@ -225,5 +226,14 @@ module ApplicationHelper
     end
     
     message
+  end
+
+  # returns img tag for standard icon if obj is standard, '' otherwise
+  def std_icon(obj)
+    if obj.respond_to?(:is_standard?) && obj.is_standard?
+      image_tag('std-seal.png', :class => 'std_seal')
+    else
+      ''
+    end
   end
 end

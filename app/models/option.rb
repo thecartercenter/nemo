@@ -1,5 +1,5 @@
 class Option < ActiveRecord::Base
-  include MissionBased, FormVersionable, Translatable
+  include MissionBased, Translatable, Standardizable, Replicable
   
   has_many(:option_sets, :through => :optionings)
   has_many(:optionings, :inverse_of => :option, :dependent => :destroy, :autosave => true)
@@ -7,12 +7,9 @@ class Option < ActiveRecord::Base
   has_many(:choices, :inverse_of => :option)
   has_many(:conditions, :inverse_of => :option)
 
-  validate(:integrity)
   validate(:name_lengths)
   validate(:not_all_blank_name_translations)
   
-  before_destroy(:check_assoc)
-  after_destroy(:notify_form_versioning_policy_of_destroy)
   after_save(:invalidate_cache)
   after_destroy(:invalidate_cache)
   
@@ -20,13 +17,16 @@ class Option < ActiveRecord::Base
   
   translates :name, :hint
   
+  replicable :parent => :optioning
+  
   # the max number of suggestion matches to return
   MAX_SUGGESTIONS = 5
 
   # returns an array of hashes representing suggested options matching the given mission and textual query
   def self.suggestions(mission, query)
     # fetch all mission options from the cache
-    options = Rails.cache.fetch("mission_options/#{mission.id}", :expires_in => 2.minutes) do
+    mission_id = mission ? mission.id : 'std'
+    options = Rails.cache.fetch("mission_options/#{mission_id}", :expires_in => 2.minutes) do
       Option.unscoped.includes(:option_sets).for_mission(mission).all
     end
 
@@ -73,7 +73,7 @@ class Option < ActiveRecord::Base
   def in_use?
     published? || !answers.empty? || !choices.empty?
   end
-  
+
   def as_json(options = {})
     { 
       :id => id,
@@ -85,16 +85,6 @@ class Option < ActiveRecord::Base
   end
 
   private
-    def integrity
-      # error if anything has changed (except names/hints) and the option is published
-      errors.add(:base, :cant_change_if_published) if published? && (changed? && !changed.reject{|f| f =~ /^_?(name|hint)/}.empty?)
-    end
-
-    def check_assoc
-      # could be in a published form but no responses yet
-      raise DeletionError.new(:cant_delete_if_published) if published?
-    end
-    
     # checks that all name fields have lengths at most 30 chars
     def name_lengths
       errors.add(:base, :names_too_long) if name_translations && name_translations.detect{|l,t| !t.nil? && t.size > 30}

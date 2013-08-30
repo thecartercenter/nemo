@@ -10,7 +10,7 @@ ELMO::Application.routes.draw do
   match("/missions/:mission_compact_name/forms/:id" => 'forms#show', :format => :xml)
   match("/missions/:mission_compact_name/submission" => 'responses#create', :format => :xml)
 
-  scope "(:locale)", :locale => /[a-z]{2}/ do
+  scope "(:locale)(/:admin_mode)", :locale => /[a-z]{2}/ do
     resources(:broadcasts){collection{post 'new_with_users'}}
     resources(:forms){member{post *%w(add_questions remove_questions); get *%w(publish clone choose_questions)}}
     resources(:markers)
@@ -46,7 +46,10 @@ ELMO::Application.routes.draw do
 
     root(:to => "welcome#index")
   end
-  
+
+  # need this so that '/' will work
+  match('/' => "welcome#index")
+
   # proxies for ajax
   match("proxies/:action", :controller => "proxies")
 end

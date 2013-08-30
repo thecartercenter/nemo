@@ -122,7 +122,7 @@ class FormsController < ApplicationController
   # shows the form to either choose existing questions or create a new one to add
   def choose_questions
     # get questions for choice list
-    @questions = Question.accessible_by(current_ability).not_in_form(@form)
+    @questions = Question.by_code.accessible_by(current_ability).not_in_form(@form)
     
     # setup new questioning for use with the questioning form
     init_qing(:form_id => @form.id, :question_attributes => {})
@@ -168,7 +168,7 @@ class FormsController < ApplicationController
   # makes an unpublished copy of the form that can be edited without affecting the original
   def clone
     begin
-      @form.duplicate
+      @form.replicate
       flash[:success] = t("form.clone_success", :form_name => @form.name)
     rescue
       flash[:error] = t("form.clone_error", :msg => $!.to_s)

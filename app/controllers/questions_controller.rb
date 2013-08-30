@@ -5,7 +5,7 @@ class QuestionsController < ApplicationController
   load_and_authorize_resource
 
   def index
-    @questions = @questions.paginate(:page => params[:page], :per_page => 25)
+    @questions = @questions.by_code.paginate(:page => params[:page], :per_page => 25)
   end
   
   def show

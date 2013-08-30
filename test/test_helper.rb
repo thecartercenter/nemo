@@ -4,16 +4,16 @@ require 'rails/test_help'
 
 class ActiveSupport::TestCase
   
-  setup :set_locale_in_url_options
+  setup :set_url_options
 
   def clear_objects(*args)
     args.each{|k| k.delete_all}
   end
   
-  # sets the locale in the url options to the current locale for integration tests
+  # sets the url options for integration tests
   # this is also done in application_controller but needs to be done here too for some reason
-  def set_locale_in_url_options
-    app.default_url_options = { :locale => I18n.locale } if defined?(app)
+  def set_url_options
+    app.default_url_options = { :locale => I18n.locale, :admin_mode => nil } if defined?(app)
   end
   
   # logs in the given user
@@ -70,5 +70,15 @@ class ActiveSupport::TestCase
   # encodes credentials for basic auth
   def encode_credentials(username, password)
     "Basic #{Base64.encode64("#{username}:#{password}")}"
+  end
+
+  def get_success(*params)
+    get(*params)
+    assert_response(:success)
+  end
+
+  def assert_access_denied
+    assert_response(302)
+    assert_not_nil(assigns(:access_denied), "access should have been denied")
   end
 end

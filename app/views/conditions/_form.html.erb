@@ -1,5 +1,4 @@
-<%# TODO refactor to use nested_attributes %>
-<%= fields_for("questioning[condition]", @condition) do |f| %>
+<%= fields_for("questioning[condition_attributes]", @condition) do |f| %>
   <%= render("layouts/object_errors", :object => @condition, :compact => true) %>
   <% f.mode = form_mode %>
   <div class="row">
@@ -21,11 +20,9 @@
   <div class="row">
     <div><%=t "condition.value" %></div>
     <div>
-      <%= f.text_field(:value, :id => "questioning_condition_value",
-        :style => @condition.has_options? ? "display: none" : "") %>
-      <%= f.select(:option_id, @condition.ref_question_select_options, {:include_blank => true}, 
-        :style => @condition.has_options? ? "" : "display: none", 
-        :id => "questioning_condition_option_id") %>
+      <%= f.text_field(:value, :style => @condition.ref_question_has_options? ? "display: none" : "") %>
+      <%= f.select(:option_id, @condition.ref_question_select_options || [], {:include_blank => true}, 
+        :style => @condition.ref_question_has_options? ? "" : "display: none") %>
     </div>
   </div>
 <% end %>

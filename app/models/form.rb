@@ -1,7 +1,7 @@
 class Form < ActiveRecord::Base
-  include MissionBased
+  include MissionBased, Standardizable, Replicable
 
-  has_many(:questions, :through => :questionings)
+  has_many(:questions, :through => :questionings, :order => "questionings.rank")
   has_many(:questionings, :order => "rank", :autosave => true, :dependent => :destroy, :inverse_of => :form)
   has_many(:responses, :inverse_of => :form)
   
@@ -31,13 +31,9 @@ class Form < ActiveRecord::Base
     ]
   ).order("questionings.rank"))
     
-  # finds the highest 'version' number of all forms with the given base name
-  # returns nil if no forms found
-  def self.max_version(base_name)
-    mv = all.collect{|f| m = f.name.match(/^#{base_name}( v(\d+))?$/); m ? (m[2] ? m[2].to_i : 1) : 0}.max
-    mv == 0 ? nil : mv
-  end
-  
+  replicable :assocs => :questionings, :uniqueness => {:field => :name, :style => :sep_words}, 
+    :dont_copy => [:published, :downloads, :responses_count, :questionings_count, :upgrade_needed, :smsable, :current_version_id]
+
   def temp_response_id
     "#{name}_#{ActiveSupport::SecureRandom.random_number(899999999) + 100000000}"
   end
@@ -79,10 +75,11 @@ class Form < ActiveRecord::Base
     end
     
     # validate the condition orderings (raises an error if they're invalid)
-    questionings.each{|qing| qing.verify_condition_ordering}
+    questionings.each{|qing| qing.condition_verify_ordering}
   end
   
   def destroy_questionings(qings)
+    qings = Array.wrap(qings)
     transaction do
       # delete the qings
       qings.each do |qing|
@@ -121,19 +118,6 @@ class Form < ActiveRecord::Base
   def add_download
     self.downloads += 1
     save(:validate => false)
-  end
-  
-  # makes a copy of the form, with a new name and a new set of questionings
-  def duplicate
-    # get the base name
-    base = name.match(/^(.+?)( v(\d+))?$/)[1]
-    version = (self.class.max_version(base) || 1) + 1
-    # create the new form and set the basic attribs
-    cloned = self.class.new(:mission_id => mission_id, :name => "#{base} v#{version}", :published => false)
-    # clone all the questionings
-    cloned.questionings = Questioning.duplicate(questionings)
-    # done!
-    cloned.save
   end
   
   # upgrades the version of the form and saves it

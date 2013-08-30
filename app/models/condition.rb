@@ -1,67 +1,76 @@
 class Condition < ActiveRecord::Base
+  include MissionBased, Standardizable, Replicable
+
+  # question types that cannot be used in conditions
+  NON_REFABLE_TYPES = %w(location)
+
   belongs_to(:questioning, :inverse_of => :condition)
   belongs_to(:ref_qing, :class_name => "Questioning", :foreign_key => "ref_qing_id", :inverse_of => :referring_conditions)
   belongs_to(:option, :dependent => :destroy)
   
   before_validation(:clear_blanks)
   before_validation(:clean_times)
+  before_create(:set_mission)
+ 
   validate(:all_fields_required)
+  validates(:questioning, :presence => true)
+
+  delegate :qtype, :to => :questioning, :allow_nil => true
+  delegate :has_options?, :select_options, :qtype, :rank, :to => :ref_qing, :prefix => :ref_question, :allow_nil => true
     
   OPS = [
-    {:name => :eq, :types => [:decimal, :integer, :text, :long_text, :address, :select_one, :datetime, :date, :time], :code => "="},
-    {:name => :lt, :types => [:decimal, :integer, :datetime, :date, :time], :code => "<"},
-    {:name => :gt, :types => [:decimal, :integer, :datetime, :date, :time], :code => ">"},
-    {:name => :leq, :types => [:decimal, :integer, :datetime, :date, :time], :code => "<="},
-    {:name => :geq, :types => [:decimal, :integer, :datetime, :date, :time], :code => "="},
-    {:name => :neq, :types => [:decimal, :integer, :text, :long_text, :address, :select_one, :datetime, :date, :time], :code => "!="},
-    {:name => :inc, :types => [:select_multiple], :code => "="},
-    {:name => :ninc, :types => [:select_multiple], :code => "!="}
-  ]
+    {:name => :eq, :types => %w(decimal integer text long_text address select_one datetime date time), :code => "="},
+    {:name => :lt, :types => %w(decimal integer datetime date time), :code => "<"},
+    {:name => :gt, :types => %w(decimal integer datetime date time), :code => ">"},
+    {:name => :leq, :types => %w(decimal integer datetime date time), :code => "<="},
+    {:name => :geq, :types => %w(decimal integer datetime date time), :code => "="},
+    {:name => :neq, :types => %w(decimal integer text long_text address select_one datetime date time), :code => "!="},
+    {:name => :inc, :types => %w(select_multiple), :code => "="},
+    {:name => :ninc, :types => %w(select_multiple), :code => "!="}
+  ]     
+
+  replicable :after_copy_attribs => :copy_ref_qing_and_option, :parent => :questionings, :dont_copy => [:ref_qing_id]
   
   # all questionings that can be referred to by this condition
   def refable_qings
-    questioning ? questioning.previous_qings.reject{|qing| %w[location].include?(qing.question.qtype.name)} : []
+    questioning ? questioning.previous.reject{|qing| %w[location].include?(qing.question.qtype.name)} : []
   end
   
-  # returns a hash mapping ids for conditionable questionings to their types
+  # all questionings that can be referred to by this condition
+  def refable_qings
+    questioning.previous.reject{|qing| NON_REFABLE_TYPES.include?(qing.qtype_name)}
+  end
+ 
+  # all referrable proto_questionings that have options
+  def refable_qings_with_options
+    refable_qings.reject{|qing| qing.options.nil?}
+  end
+
+  # generates a hash mapping ids for refable questionings to their types
   def refable_qing_types
-    Hash[*refable_qings.map{|qing| [qing.id, qing.question.qtype.name]}.flatten]
+    Hash[*refable_qings.map{|qing| [qing.id, qing.qtype_name]}.flatten(1)]
   end
-  
+
   # returns a hash mapping qing IDs to arrays of options (for select questions only), for use when choosing an option for the condition.
   def refable_qing_option_lists
-    Hash[*refable_qings.reject{|qing| !qing.question.options}.map{|qing| [qing.id, qing.question.select_options]}.flatten(1)]
+    Hash[*refable_qings_with_options.map{|qing| [qing.id, qing.select_options]}.flatten(1)]
   end
 
   # returns names of all operators that are applicable to this condition based on its referred question
   def applicable_operator_names
-    ref_question ? OPS.reject{|o| !o[:types].include?(ref_question.qtype.name.to_sym)}.map{|o| o[:name]} : []
+    ref_qing ? OPS.select{|o| o[:types].include?(ref_question_qtype.name)}.map{|o| o[:name]} : []
   end
-  
-  def ref_question_select_options
-    ref_question ? ref_question.select_options : []
+
+  # duplicates this condition
+  def duplicate
+    self.class.new(:ref_qing_id => ref_qing_id, :op => op, :value => value, :option_id => option_id)
   end
-  
-  def has_options?
-    ref_question && !ref_question.options.nil?
-  end
-  
-  def duplicate(new_qing, qid_hash)
-    # look up the new ref_qing_id
-    new_ref_qing = qid_hash[ref_qing.question_id]
-    # initialize and return
-    new_qing.build_condition(:ref_qing => new_ref_qing, :op => op, :value => value, :option_id => option_id)
-  end
-  
-  def ref_question
-    ref_qing ? ref_qing.question : nil
-  end
-  
+
   def verify_ordering
     raise ConditionOrderingError.new if questioning.rank <= ref_qing.rank
   end
   
-  # gets the hash from the OPS array corresponding to this conditions operator
+  # gets the hash from the OPS array corresponding to self's operator
   def operator
     @operator ||= OPS.index_by{|o| o[:name]}[op.to_sym]
   end
@@ -73,20 +82,22 @@ class Condition < ActiveRecord::Base
   
   def to_odk
     # set default lhs
-    lhs = "/data/#{ref_question.odk_code}"
-    if has_options?
+    lhs = "/data/#{ref_qing.odk_code}"
+
+    if ref_question_has_options?
       xpath = "selected(#{lhs}, '#{option_id}')"
       xpath = "not(#{xpath})" if operator[:name] == :neq
+
     else
-      
       # for numeric ref. questions, just convert value to string to get rhs
-      if ref_question.qtype.numeric? 
+      if ref_question_qtype.numeric? 
         rhs = value.to_s
       
       # for temporal ref. questions, need to convert dates to appropriate format
-      elsif ref_question.qtype.temporal?
+      elsif ref_question_qtype.temporal?
+        
         # get xpath compatible date type name
-        date_type = ref_question.qtype.name.gsub("datetime", "dateTime")
+        date_type = ref_question_qtype.name.gsub("datetime", "dateTime")
         format = :"javarosa_#{date_type.downcase}"
         formatted = Time.zone.parse(value).to_s(format)
         lhs = "format-date(#{lhs}, '#{Time::DATE_FORMATS[format]}')"
@@ -100,12 +111,13 @@ class Condition < ActiveRecord::Base
       # build the final xpath expression
       xpath = "#{lhs} #{operator[:code]} #{rhs}"
     end
-    xpath
+    
+    return xpath
   end
-  
+
   def to_s
     words = I18n.t(op, :scope => [:condition, :operators])
-    "#{Question.model_name.human} ##{ref_qing.rank} #{words} \"#{option ? option.name : value}\""
+    "#{Question.model_name.human} ##{ref_question_rank} #{words} \"#{option ? option.name : value}\""
   end
   
   # if options[:dropdown_values] is included, adds a series of lists of values for use with form dropdowns
@@ -114,12 +126,13 @@ class Condition < ActiveRecord::Base
     fields += %w(refable_qing_types refable_qing_option_lists operators) if options[:dropdown_values]
     Hash[*fields.map{|k| [k, send(k)]}.flatten(1)]
   end
-  
+
   private 
     def clear_blanks
+      # catch errors in case hash is frozen
       begin
-        self.value = nil if value.blank?
-        self.option_id = nil if option_id.blank?
+        self.value = nil if value.blank? || ref_qing && ref_question_has_options?
+        self.option = nil if option_id.blank? || ref_qing && !ref_question_has_options?
       rescue
       end
       return true
@@ -128,12 +141,9 @@ class Condition < ActiveRecord::Base
     # parses and reformats time strings given as conditions
     def clean_times
       if ref_qing && !value.blank?
-        # get the question type
-        qtype = ref_qing.question.qtype
-        
         begin
           # reformat only if it's a temporal question
-          self.value = Time.zone.parse(value).to_s(:"std_#{qtype.name}") if qtype.temporal? 
+          self.value = Time.zone.parse(value).to_s(:"std_#{ref_question_qtype.name}") if ref_question_qtype.temporal? 
         rescue
           # reset to nil if error in parsing
           # catch additional error incase frozen hash
@@ -144,6 +154,34 @@ class Condition < ActiveRecord::Base
     end
     
     def all_fields_required
-      errors.add(:base, :all_required) if ref_qing.blank? || op.blank? || (value.blank? && option_id.blank?)
+      if ref_qing.blank? || op.blank? || ref_question_has_options? && option.blank? || !ref_question_has_options? && value.blank?
+        errors.add(:base, :all_required)
+      end
     end
+
+    # during replication process, copies the ref qing and option to the new condition
+    def copy_ref_qing_and_option(copy, copy_parents)
+      # the copy's form is just the immediate parent (questioning)'s form
+      copy_form = copy_parents.last.form
+
+      # get the rank of the original ref_qing
+      ref_qing_rank = self.ref_qing.rank
+
+      # set the copy's ref_qing to the corresponding one
+      copy.ref_qing = copy_form.questionings[ref_qing_rank - 1]
+
+      if self.option
+        # get the index of the original option
+        ref_option_idx = self.ref_qing.question.option_set.options.index(self.option)
+
+        # set the copy's option to the new ref_qing's corresponding option, in case the option set was also replicated
+        copy.option = copy.ref_qing.question.option_set.optionings[ref_option_idx].option
+      end
+    end
+
+    # copy mission from questioning
+    def set_mission
+      self.mission = questioning.try(:mission)
+    end
+
 end

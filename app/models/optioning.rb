@@ -1,15 +1,17 @@
 class Optioning < ActiveRecord::Base
-  include FormVersionable
+  include MissionBased, Standardizable, Replicable
 
   belongs_to(:option, :inverse_of => :optionings)
   belongs_to(:option_set, :inverse_of => :optionings)
   
+  before_create(:set_mission)
   before_destroy(:no_answers_or_choices)
-  after_create(:notify_form_versioning_policy_of_create)
-  after_destroy(:notify_form_versioning_policy_of_destroy)
   
   accepts_nested_attributes_for(:option)
-  
+
+  # replication options
+  replicable :assocs => :option, :parent => :option_set
+
   # temp var used in the option_set form
   attr_writer :included
   
@@ -30,8 +32,16 @@ class Optioning < ActiveRecord::Base
   def removable?
     !has_answers_or_choices?
   end
-  
+
   def as_json(options = {})
     {:id => id, :option => option, :removable => removable?}
   end
+
+  private
+
+    # copy mission from option_set
+    def set_mission
+      self.mission = option_set.try(:mission)
+    end
+
 end

@@ -10,7 +10,7 @@
     self.condition = condition;
     
     // hookup change event on ref qing select box
-    $("#questioning_condition_ref_qing_id").on("change", function(){ self.update_controls($(this).val()); });
+    $("#questioning_condition_attributes_ref_qing_id").on("change", function(){ self.update_controls($(this).val()); });
 
   }
   
@@ -18,9 +18,9 @@
   klass.prototype.update_controls = function(ref_qing_id) { var self = this;
     // the ref qing is null, clear out all the boxes
     if (!ref_qing_id) {
-      $("#questioning_condition_op").emptyExceptFirst();
-      $("#questioning_condition_option_id").emptyExceptFirst().hide();
-      $("#questioning_condition_value").val("").show();
+      $("#questioning_condition_attributes_op").emptyExceptFirst();
+      $("#questioning_condition_attributes_option_id").emptyExceptFirst().hide();
+      $("#questioning_condition_attributes_value").val("").show();
     
     } else {
     
@@ -34,24 +34,24 @@
       var op_dropdowns = ops.map(function(o){ return [I18n.t("condition.operators." + o.name), o.name]; });
     
       // load the op dropdown with the appropriate operators and their translations
-      $("#questioning_condition_op").emptyExceptFirst().addOptions(op_dropdowns);
+      $("#questioning_condition_attributes_op").emptyExceptFirst().addOptions(op_dropdowns);
     
       // if the ref_qing has options, populate and show the option dropdown
       var opts;
       if (opts = self.condition.refable_qing_option_lists[ref_qing_id]) {
         // add the option list to the option_id box and show it
-        $("#questioning_condition_option_id").emptyExceptFirst().addOptions(opts).show();
+        $("#questioning_condition_attributes_option_id").emptyExceptFirst().addOptions(opts).show();
       
         // hide the text box
-        $("#questioning_condition_value").hide();
+        $("#questioning_condition_attributes_value").hide();
       
       // else clear and show the textbox
       } else {
         // show the text box
-        $("#questioning_condition_value").show();
+        $("#questioning_condition_attributes_value").show();
       
         // hide the options box
-        $("#questioning_condition_option_id").empty().hide();
+        $("#questioning_condition_attributes_option_id").empty().hide();
       }
     }
   }

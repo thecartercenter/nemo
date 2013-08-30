@@ -10,6 +10,9 @@ class ApplicationController < ActionController::Base
   
   # handle authorization errors nicely
   rescue_from CanCan::AccessDenied do |exception|
+    # set flag for tests to check
+    @access_denied = true
+
     # log to debug log
     Rails.logger.debug("ACCESS DENIED on #{exception.action} #{exception.subject.inspect}")
     
@@ -39,6 +42,9 @@ class ApplicationController < ActionController::Base
   # user/user_session stuff
   before_filter(:basic_auth_for_xml)
   before_filter(:get_user_and_mission)
+
+  # protect admin mode
+  before_filter(:protect_admin_mode)
   
   # lastly, we load settings
   before_filter(:load_settings)
@@ -47,7 +53,7 @@ class ApplicationController < ActionController::Base
   attr_reader :current_user, :current_mission
   
   # make these methods visible in the view
-  helper_method :current_user, :current_mission, :ajax_request?
+  helper_method :current_user, :current_mission, :ajax_request?, :admin_mode?
   
   # hackish way of getting the route key identical to what would be returned by model_name.route_key on a model
   def route_key
@@ -55,7 +61,7 @@ class ApplicationController < ActionController::Base
   end
   
   def default_url_options(options={})
-    { :locale => I18n.locale }
+    { :locale => I18n.locale, :admin_mode => admin_mode? ? 'admin' : nil }
   end
   
   protected
@@ -162,6 +168,18 @@ class ApplicationController < ActionController::Base
       end
     end
 
+    def admin_mode?
+      !params[:admin_mode].nil?
+    end
+
+    # makes sure admin_mode is not true if user is not admin
+    def protect_admin_mode
+      if admin_mode? && cannot?(:view, :admin_mode)
+        params[:admin_mode] = nil
+        raise CanCan::AccessDenied.new("not authorized for admin mode", :view, :admin_mode)
+      end
+    end
+
     ##############################################################################
     # AUTHENTICATION AND USER SESSION METHODS
     ##############################################################################
@@ -172,6 +190,9 @@ class ApplicationController < ActionController::Base
 
       begin
         return unless request.format == Mime::XML
+
+        # xml requests not allowed in admin mode
+        raise ArgumentError.new("xml requests not allowed in admin mode") if admin_mode?
 
         # authenticate with basic 
         user = authenticate_with_http_basic do |login, password|
@@ -199,8 +220,7 @@ class ApplicationController < ActionController::Base
         
         # if we get this far, we can set the current mission
         @current_mission = mission
-        @current_user.current_mission = mission
-        @current_user.save(:validate => false)
+        @current_user.change_mission!(mission)
       rescue ArgumentError
         render(:nothing => true, :status => 404)
         false
@@ -219,15 +239,21 @@ class ApplicationController < ActionController::Base
         # look up the current user from the user session
         # we use a find call to the User class so that we can do eager loading
         @current_user = (user = user_session.user) && User.includes(:assignments).find(user.id)
-    
-        # look up the current mission based on the current user
-        @current_mission = @current_user ? @current_user.current_mission : nil
+
+        # if we're in admin mode, the current mission is nil and we need to set the user's current mission to nil also
+        if admin_mode?
+          @current_mission = nil
+          @current_user.change_mission!(nil)
+        else
+          # look up the current mission based on the current user
+          @current_mission = @current_user ? @current_user.current_mission : nil
+        end
       end
     end
-    
-    # override CanCan's current_ability method to use the user ability method
+
+    # get the current user's ability. not cached because it's volatile!
     def current_ability
-      current_user ? current_user.ability : Ability.new(nil)
+      Ability.new(current_user, admin_mode?)
     end
     
     # resets the Rails session but preserves the :return_to key

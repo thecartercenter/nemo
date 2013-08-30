@@ -16,7 +16,7 @@ class Ability
   end
   
   # defines user's abilities
-  def initialize(user)
+  def initialize(user, admin_mode = false)
     if user
 
       # anybody can see the welcome page
@@ -33,7 +33,15 @@ class Ability
         can :manage, User
         can :manage, Assignment
         can :manage, Mission
-      
+        can :view, :admin_mode
+
+        # standard objects are available as long as the user is no-mission (admin) mode
+        if admin_mode
+          [Form, Questioning, Condition, Question, OptionSet, Optioning, Option].each do |k|
+            can :manage, k, :is_standard => true
+          end
+        end
+
         # only admins can give/take admin (adminify) to/from others, but not from themselves
         cannot :adminify, User
         can :adminify, User, ["id != ?", user.id] do |other_user|

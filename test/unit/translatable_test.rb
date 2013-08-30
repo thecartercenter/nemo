@@ -64,4 +64,5 @@ class TranslatableTest < ActiveSupport::TestCase
     assert_equal([:en, :fr], o.available_locales)
     assert_equal([:fr], o.available_locales(:except_current => true))
   end
+  
 end

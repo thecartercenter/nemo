@@ -1,7 +1,7 @@
 class Question < ActiveRecord::Base
-  include MissionBased, FormVersionable, Translatable
+  include MissionBased, Translatable, Standardizable, Replicable
   
-  belongs_to(:option_set, :include => :options, :inverse_of => :questions)
+  belongs_to(:option_set, :include => :options, :inverse_of => :questions, :autosave => true)
   has_many(:questionings, :dependent => :destroy, :autosave => true, :inverse_of => :question)
   has_many(:answers, :through => :questionings)
   has_many(:referring_conditions, :through => :questionings)
@@ -11,20 +11,21 @@ class Question < ActiveRecord::Base
   validates(:code, :presence => true)
   validates(:code, :format => {:with => /^[a-z][a-z0-9]{1,19}$/i}, :if => Proc.new{|q| !q.code.blank?})
   validates(:qtype_name, :presence => true)
-  validates(:option_set_id, :presence => true, :if => Proc.new{|q| q.qtype && q.has_options?})
+  validates(:option_set, :presence => true, :if => Proc.new{|q| q.qtype && q.has_options?})
   validate(:integrity)
   validate(:code_unique_per_mission)
 
   before_destroy(:check_assoc)
-  before_save(:notify_form_versioning_policy_of_update)
   
-  default_scope(order("code"))
+  scope(:by_code, order("code"))
   scope(:select_types, where(:qtype_name => %w(select_one select_multiple)))
   scope(:with_forms, includes(:forms))
   
   translates :name, :hint
   
   delegate :smsable?, :has_options?, :to => :qtype
+
+  replicable :assocs => :option_set, :parent => :questioning, :uniqueness => {:field => :code, :style => :camel_case}, :dont_copy => :key
   
   # returns questions that do NOT already appear in the given form
   def self.not_in_form(form)
@@ -57,6 +58,14 @@ class Question < ActiveRecord::Base
   # an odk-friendly unique code
   def odk_code
     "q#{id}"
+  end
+
+  # an odk (xpath) expression of any question contraints
+  def odk_constraint
+    exps = []
+    exps << ". #{minstrictly ? '>' : '>='} #{minimum}" if minimum
+    exps << ". #{maxstrictly ? '<' : '<='} #{maximum}" if maximum
+    "(" + exps.join(" and ") + ")"
   end
   
   # shortcut method for tests

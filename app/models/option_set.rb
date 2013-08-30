@@ -1,5 +1,6 @@
 class OptionSet < ActiveRecord::Base
-  include MissionBased, FormVersionable
+  include MissionBased, Standardizable, Replicable
+
 
   has_many(:optionings, :order => "rank", :dependent => :destroy, :autosave => true, :inverse_of => :option_set)
   has_many(:options, :through => :optionings, :order => "optionings.rank")
@@ -13,7 +14,6 @@ class OptionSet < ActiveRecord::Base
   
   before_validation(:ensure_ranks)
   before_validation(:ensure_option_missions)
-  before_save(:notify_form_versioning_policy_of_update)
   
   default_scope(order("name"))
   scope(:with_associations, includes(:questions, {:optionings => :option}, {:questionings => :form}))
@@ -21,6 +21,9 @@ class OptionSet < ActiveRecord::Base
   accepts_nested_attributes_for(:optionings, :allow_destroy => true)
   
   self.per_page = 100
+
+  # replication options
+  replicable :assocs => :optionings, :parent => :question, :uniqueness => {:field => :name, :style => :sep_words}
   
   def published?
     # check for any published questionings
@@ -77,7 +80,7 @@ class OptionSet < ActiveRecord::Base
   def ranks_changed?
     optionings.map(&:rank_was) != optionings.map(&:rank)
   end
-  
+
   private
     # makes sure that the options in the set have sequential ranks starting at 1. 
     # if not, fixes them.
@@ -99,6 +102,6 @@ class OptionSet < ActiveRecord::Base
     # ensures mission is set on all options
     def ensure_option_missions
       # go in through optionings association in case these are newly created options via nested attribs
-      optionings.each{|oing| oing.option.mission_id ||= mission_id}
+      optionings.each{|oing| oing.option.mission_id ||= mission_id if oing.option}
     end
 end
