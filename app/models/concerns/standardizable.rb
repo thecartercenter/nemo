@@ -9,6 +9,10 @@ module Standardizable
     belongs_to(:standard, :class_name => name, :inverse_of => :copies)
     has_many(:copies, :class_name => name, :foreign_key => 'standard_id', :inverse_of => :standard)
 
+    # create hooks to copy is_standard param to children
+    # this doesn't work with before_create for some reason
+    before_save(:copy_is_standard_to_children)
+
     # create hooks to replicate changes to copies for key classes
     after_save(:replicate_save_to_copies)
     after_destroy(:replicate_destruction_to_copies)
@@ -40,5 +44,16 @@ module Standardizable
     
     def replicate_destruction_to_copies
       replicate_changes_to_copies(:destroy)
+    end
+
+    def copy_is_standard_to_children
+      self.class.replication_options[:assocs].each do |assoc|
+        refl = self.class.reflect_on_association(assoc)
+        if refl.collection?
+          send(assoc).each{|o| o.is_standard = is_standard?}
+        else
+          send(assoc).is_standard = is_standard? if send(assoc)
+        end
+      end
     end
 end

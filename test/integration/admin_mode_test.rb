@@ -77,4 +77,56 @@ class AdminModeTest < ActionDispatch::IntegrationTest
 
   end
 
+  test "creating a form in admin mode should create a standard form" do
+    login(@admin)
+    post_via_redirect(forms_path(:admin_mode => 'admin'), {:form => {:name => 'Foo', :smsable => false}})
+    f = assigns(:form)
+    assert_nil(f.mission)
+    assert(f.is_standard?, 'new form should be standard')
+  end
+
+  test "creating a question in admin mode should create a standard question" do
+    login(@admin)
+    post_via_redirect(questions_path(:admin_mode => 'admin'), {:question => {:code => 'Foo', :qtype_name => 'integer', :name_en => 'Stuff'}})
+    q = Question.order('created_at').last
+    assert_nil(q.mission)
+    assert(q.is_standard?, 'new question should be standard')
+  end
+
+  test "creating an option set in admin mode should create a standard option set and options" do
+    login(@admin)
+    post_via_redirect(option_sets_path(:admin_mode => 'admin'), {
+      :option_set => {:name => 'Foo', 
+        :optionings_attributes => {
+          '0' => {
+            :rank => 1,
+            :option_attributes => {:name_en => 'Yes'}
+          },
+          '1' => {
+            :rank => 2,
+            :option_attributes => {:name_en => 'No'}
+          }
+        }
+      }
+    })
+    os = OptionSet.order('created_at').last
+
+    # make sure it got created correctly
+    assert('Yes', os.options[0].name)
+
+    # make sure mission is nil and is standard
+    assert_nil(os.mission)
+    assert(os.is_standard?, 'new option set should be standard')
+
+    # make sure optionings and options are also ok
+    assert_nil(os.optionings[0].mission)
+    assert(os.optionings[0].is_standard?, 'new optioning should be standard')
+    assert_nil(os.options[0].mission)
+    assert(os.options[0].is_standard?, 'new option should be standard')
+  end
+
+  test "adding question to form should create standard questioning" do
+
+  end
+
 end

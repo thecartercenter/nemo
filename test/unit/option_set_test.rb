@@ -388,6 +388,23 @@ class OptionSetTest < ActiveSupport::TestCase
     assert_nil(Optioning.where(:option_set_id => copy.id).first)
   end
 
+  test "is_standard param should be cascaded down on save" do
+    # manually construct option set so factory doesnt interfere
+    os = OptionSet.new(:name => 'foo', :is_standard => true)
+    os.optionings.build(:rank => 1)
+    os.optionings[0].build_option(:name => 'Yes')
+
+    # check that child is_standard is not set before save
+    assert(!os.optionings[0].is_standard?)
+    assert(!os.optionings[0].option.is_standard?)
+
+    # save and check cascade
+    os.save!
+    os.reload
+    assert(os.optionings[0].is_standard?)
+    assert(os.optionings[0].option.is_standard?)
+  end
+
   private
     def create_option_set(options)
       os = OptionSet.new(:name => "test")
