@@ -125,8 +125,14 @@ class AdminModeTest < ActionDispatch::IntegrationTest
     assert(os.options[0].is_standard?, 'new option should be standard')
   end
 
-  test "adding question to form should create standard questioning" do
-
+  test "adding a question to form should create standard questioning" do
+    login(@admin)
+    f = FactoryGirl.create(:form, :is_standard => true)
+    q = FactoryGirl.create(:question, :is_standard => true)
+    post_via_redirect(add_questions_form_path(f, :admin_mode => 'admin'), :selected => {q.id => '1'})
+    f.reload
+    assert_equal(q, f.questionings[0].question)
+    assert(f.questionings[0].is_standard?)
   end
 
 end
