@@ -32,6 +32,7 @@
     <% if current_user %>
       <%# username %>
       <%= t("layout.logged_in_as") %> <strong><%= current_user.login %></strong> &nbsp;&bull;&nbsp;
+      <%= params[:admin_mode] %>
       
       <%# admin mode link %>
       <% if current_user.admin? %>

@@ -14,8 +14,8 @@ FactoryGirl.define do
       role_name :coordinator
     end
     
-    login { Random.words(1) }
-    name {"Test #{role_name.capitalize}"}
+    login { Random.letters(8) }
+    name { Random.full_name }
     reset_password_method "print"
     password "password"
     password_confirmation "password"
