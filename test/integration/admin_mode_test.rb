@@ -56,14 +56,6 @@ class AdminModeTest < ActionDispatch::IntegrationTest
     assert_nil(@controller.current_mission)
   end
 
-  test "exiting admin mode should return user to last mission" do
-
-  end
-
-  test "if user had no last mission, exiting admin mode should still work" do
-
-  end
-
   test "mission menu item should only appear in admin mode" do
 
   end

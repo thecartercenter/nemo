@@ -37,17 +37,17 @@
       <% if current_user.admin? %>
         <% if admin_mode? %>
           <%= content_tag('i', '', :class => 'icon-remove') %>
-          <%= link_to(t('admin_mode.exit_admin_mode'), '#', :class => 'exit_admin_mode') %>
+          <%= link_to(t('admin_mode.exit_admin_mode'), root_url(:admin_mode => nil), :class => 'exit_admin_mode') %>
         <% else %>
           <%= content_tag('i', '', :class => 'icon-trophy') %>
-          <%= link_to(t('admin_mode.goto_admin_mode'), '#', :class => 'goto_admin_mode') %>
+          <%= link_to(t('admin_mode.goto_admin_mode'), root_url(:admin_mode => 'admin'), :class => 'goto_admin_mode') %>
         <% end %>
         &nbsp;&bull;&nbsp;
       <% end %>
 
       <%# if not in admin mode, show mission and role info %>
       <% unless admin_mode? %>
-      
+
         <%# current mission and dropdown, if there are choices %>
         <%= Mission.model_name.human %>:
         <% if current_user.accessible_missions.size > 0 %>
