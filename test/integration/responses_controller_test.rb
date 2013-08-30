@@ -2,10 +2,10 @@ require 'test_helper'
 
 class ResponsesControllerTest < ActionDispatch::IntegrationTest
 
-	ODK_XML_FILE = 'odk_xml_file.xml'
+  ODK_XML_FILE = 'odk_xml_file.xml'
 
   setup do
-  	@user = FactoryGirl.create(:user, :role_name => 'observer')
+    @user = FactoryGirl.create(:user, :role_name => 'observer')
     @other_mission = FactoryGirl.create(:mission, :name => 'other mission')
   end
 
@@ -20,7 +20,7 @@ class ResponsesControllerTest < ActionDispatch::IntegrationTest
 
   test 'odk submission should work and have mission set to current mission' do
     do_submission(submission_path)
-  	assert_response(201)
+    assert_response(201)
     assert_equal(5, assigns(:response).answers[0].value)
     assert_equal(10, assigns(:response).answers[1].value)
     assert_equal(get_mission, assigns(:response).mission)
@@ -45,22 +45,22 @@ class ResponsesControllerTest < ActionDispatch::IntegrationTest
       post(path, {:xml_submission_file => uploaded, :format => 'xml'}, 'HTTP_AUTHORIZATION' => encode_credentials(@user.login, 'password'))
     end
 
-  	# build a sample xml submission for the given form (assumes all questions are integer questions)
-  	# assigns answers in the sequence 5, 10, 15, ...
-  	# stores the xml in a tmp file
-  	def build_odk_submission(form)
-  		File.open(Rails.root.join('test/fixtures/', ODK_XML_FILE).to_s, 'w') do |f|
-	  		xml = "<?xml version='1.0' ?><data id=\"#{form.id}\">"
-	  		form.questionings.each_with_index do |qing, i|
-	  			xml += "<#{qing.question.odk_code}>#{(i+1)*5}</#{qing.question.odk_code}>"
-	  		end
-	  		xml += "</data>"
-	  		f.write(xml)
-	  	end
-  	end
+    # build a sample xml submission for the given form (assumes all questions are integer questions)
+    # assigns answers in the sequence 5, 10, 15, ...
+    # stores the xml in a tmp file
+    def build_odk_submission(form)
+      File.open(Rails.root.join('test/fixtures/', ODK_XML_FILE).to_s, 'w') do |f|
+        xml = "<?xml version='1.0' ?><data id=\"#{form.id}\">"
+        form.questionings.each_with_index do |qing, i|
+          xml += "<#{qing.question.odk_code}>#{(i+1)*5}</#{qing.question.odk_code}>"
+        end
+        xml += "</data>"
+        f.write(xml)
+      end
+    end
 
-  	def submission_path(mission = nil)
+    def submission_path(mission = nil)
       mission ||= get_mission
-  		"/m/#{mission.compact_name}/submission"
-  	end
+      "/m/#{mission.compact_name}/submission"
+    end
 end
