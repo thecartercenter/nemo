@@ -25,7 +25,8 @@ class Option < ActiveRecord::Base
   # returns an array of hashes representing suggested options matching the given mission and textual query
   def self.suggestions(mission, query)
     # fetch all mission options from the cache
-    options = Rails.cache.fetch("mission_options/#{mission.id}", :expires_in => 2.minutes) do
+    mission_id = mission ? mission.id : 'std'
+    options = Rails.cache.fetch("mission_options/#{mission_id}", :expires_in => 2.minutes) do
       Option.unscoped.includes(:option_sets).for_mission(mission).all
     end
 
