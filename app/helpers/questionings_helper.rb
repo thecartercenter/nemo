@@ -34,11 +34,12 @@ module QuestioningsHelper
   end
   
   def questionings_index_fields
-    %w(rank code name type condition required hidden actions)
+    %w(std_icon rank code name type condition required hidden actions)
   end
   
   def format_questionings_field(qing, field)
     case field
+    when "std_icon" then std_icon(qing)
     when "name" then link_to(qing.question.name, questioning_path(qing), :title => t("common.view"))
     when "rank" then controller.action_name == "show" ? qing.rank : text_field_tag("rank[#{qing.id}]", qing.rank, :class => "rank_box")
     when "code", "name", "type" then format_questions_field(qing.question, field)

@@ -227,4 +227,13 @@ module ApplicationHelper
     
     message
   end
+
+  # returns img tag for standard icon if obj is standard, '' otherwise
+  def std_icon(obj)
+    if obj.respond_to?(:is_standard?) && obj.is_standard?
+      image_tag('std-seal.png')
+    else
+      ''
+    end
+  end
 end

@@ -4,11 +4,12 @@ module OptionsHelper
   end
   
   def options_index_fields
-    %w(name published actions)
+    %w(std_icon name published actions)
   end
   
   def format_options_field(option, field)
     case field
+    when "std_icon" then std_icon(option)
     when "name" then link_to(option.name, option_path(option), :title => t("common.view"))
     when "published" then tbool(option.published?)
     when "actions" then action_links(option, :obj_name => option.name, :exclude => (option.published? ? [:destroy] : []))

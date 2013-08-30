@@ -25,14 +25,15 @@ module QuestionsHelper
   def questions_index_fields
     # fields for form mode
     if params[:controller] == 'forms'
-      %w(code name type)
+      %w(std_icon code name type)
     else
-      %w(code name type actions)
+      %w(std_icon code name type actions)
     end
   end
 
   def format_questions_field(q, field)
     case field
+    when "std_icon" then std_icon(q)
     when "type" then t(q.qtype_name, :scope => :question_type)
     when "published?" then tbool(q.published?)
     when "actions" then action_links(q, :obj_name => q.code)

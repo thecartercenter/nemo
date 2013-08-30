@@ -77,6 +77,7 @@ en:
     password: "Password"
     published: "Published?"
     questions: "Questions"
+    std_icon: "" # left blank on purpose to achieve blank table header
     title: "Title"
     type: "Type"
     value: "Value"
