@@ -231,7 +231,7 @@ module ApplicationHelper
   # returns img tag for standard icon if obj is standard, '' otherwise
   def std_icon(obj)
     if obj.respond_to?(:is_standard?) && obj.is_standard?
-      image_tag('std-seal.png')
+      image_tag('std-seal.png', :class => 'std_seal')
     else
       ''
     end
