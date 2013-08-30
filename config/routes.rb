@@ -46,6 +46,10 @@ ELMO::Application.routes.draw do
 
     root(:to => "welcome#index")
   end
+
+  # need this so that '/' will work
+  match('/' => "welcome#index")
+
   # proxies for ajax
   match("proxies/:action", :controller => "proxies")
 end

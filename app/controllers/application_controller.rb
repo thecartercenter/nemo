@@ -220,7 +220,7 @@ class ApplicationController < ActionController::Base
         
         # if we get this far, we can set the current mission
         @current_mission = mission
-        @current_user.change_mission(mission)
+        @current_user.change_mission!(mission)
       rescue ArgumentError
         render(:nothing => true, :status => 404)
         false
