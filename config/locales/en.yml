@@ -631,6 +631,9 @@ en:
   ##############################
   # the rest of these string groups should be kept in alphabetical order by key
 
+  admin_mode:
+    goto_admin_mode: "Admin Mode"
+
   answer:
     no_name: "No Name"
     this_answer: "This answer"

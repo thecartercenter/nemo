@@ -14,12 +14,12 @@ FactoryGirl.define do
       role_name :coordinator
     end
     
-    login {"test#{role_name}"}
+    login { Random.words(1) }
     name {"Test #{role_name.capitalize}"}
     reset_password_method "print"
     password "password"
     password_confirmation "password"
-    phone "+15558881212"
+    phone { Random.phone }
     pref_lang "en"
     
     persistence_token { Authlogic::Random.hex_token }

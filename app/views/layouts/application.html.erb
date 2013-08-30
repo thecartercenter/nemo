@@ -33,6 +33,13 @@
       <%# username %>
       <%= t("layout.logged_in_as") %> <strong><%= current_user.login %></strong> &nbsp;&bull;&nbsp;
       
+      <%# admin mode link %>
+      <% if current_user.admin? %>
+        <%= content_tag('i', '', :class => 'icon-trophy') %>
+        <%= link_to(t('admin_mode.goto_admin_mode'), '#', :class => 'admin_mode') %>
+      <% end %>
+      &nbsp;&bull;&nbsp;
+
       <%# current mission and dropdown, if there are choices %>
       <%= Mission.model_name.human %>:
       <% if current_user.accessible_missions.size > 0 %>
