@@ -632,6 +632,8 @@ en:
   # the rest of these string groups should be kept in alphabetical order by key
 
   admin_mode:
+    admin_mode: "Admin Mode"
+    exit_admin_mode: "Exit Admin Mode"
     goto_admin_mode: "Admin Mode"
 
   answer:

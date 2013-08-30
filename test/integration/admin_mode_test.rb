@@ -12,12 +12,12 @@ class AdminModeTest < ActionDispatch::IntegrationTest
     # login as admin and check for admin mode link
     login(@admin)
     get(root_url)
-    assert_select("div#userinfo a.admin_mode")
+    assert_select("div#userinfo a.goto_admin_mode")
 
     # login as other user and make sure not available
     logout
     login(@nonadmin)
-    assert_select("div#userinfo a.admin_mode", false)
+    assert_select("div#userinfo a.goto_admin_mode", false)
   end
 
   test "params admin_mode should be correct" do
@@ -37,10 +37,12 @@ class AdminModeTest < ActionDispatch::IntegrationTest
 
   test "mission dropdown should not be visible in admin mode" do
     login(@admin)
-    get(admin_url)
-
+    assert_select('select#user_current_mission_id')
+    get('/admin')
+    assert_select('select#user_current_mission_id', false)
 
     # exit admin mode link should be visible instead
+    assert_select('a.exit_admin_mode')
   end
 
   test "user's current mission and current_mission should be nil in admin mode" do

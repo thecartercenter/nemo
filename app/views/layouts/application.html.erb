@@ -35,29 +35,39 @@
 
       <%# admin mode link %>
       <% if current_user.admin? %>
-        <%= content_tag('i', '', :class => 'icon-trophy') %>
-        <%= link_to(t('admin_mode.goto_admin_mode'), '#', :class => 'admin_mode') %>
+        <% if admin_mode? %>
+          <%= content_tag('i', '', :class => 'icon-remove') %>
+          <%= link_to(t('admin_mode.exit_admin_mode'), '#', :class => 'exit_admin_mode') %>
+        <% else %>
+          <%= content_tag('i', '', :class => 'icon-trophy') %>
+          <%= link_to(t('admin_mode.goto_admin_mode'), '#', :class => 'goto_admin_mode') %>
+        <% end %>
         &nbsp;&bull;&nbsp;
       <% end %>
 
-      <%# current mission and dropdown, if there are choices %>
-      <%= Mission.model_name.human %>:
-      <% if current_user.accessible_missions.size > 0 %>
-        <%= nice_form_for(current_user) do |f| %>
-          <% f.mode = :edit %>
-          <%= f.select(:current_mission_id, sel_opts_from_objs(current_user.accessible_missions), :include_blank => "[#{t('common.none').capitalize}]") %>
-          <%= loading_indicator(:header => true) %>
-          <%= hidden_field_tag(:changing_current_mission, 1) %>
-        <% end %>
-      <% else %>
-        <strong><%= current_mission ? current_mission.name : t("common.none") %></strong>
-      <% end %>
-      &nbsp;&bull;&nbsp;
+      <%# if not in admin mode, show mission and role info %>
+      <% unless admin_mode? %>
       
-      <%# role %>
-      <% if current_mission %>
-        <%= t("role.role") %>: <%= t(current_user.role(current_mission), :scope => :role, :default => "[#{t("common.none")}]") %>
+        <%# current mission and dropdown, if there are choices %>
+        <%= Mission.model_name.human %>:
+        <% if current_user.accessible_missions.size > 0 %>
+          <%= nice_form_for(current_user) do |f| %>
+            <% f.mode = :edit %>
+            <%= f.select(:current_mission_id, sel_opts_from_objs(current_user.accessible_missions), :include_blank => "[#{t('common.none').capitalize}]") %>
+            <%= loading_indicator(:header => true) %>
+            <%= hidden_field_tag(:changing_current_mission, 1) %>
+          <% end %>
+        <% else %>
+          <strong><%= current_mission ? current_mission.name : t("common.none") %></strong>
+        <% end %>
         &nbsp;&bull;&nbsp;
+
+        <%# role %>
+        <% if current_mission %>
+          <%= t("role.role") %>: <%= t(current_user.role(current_mission), :scope => :role, :default => "[#{t("common.none")}]") %>
+          &nbsp;&bull;&nbsp;
+        <% end %>
+      
       <% end %>
       
       <%# link to edit profile %>
@@ -80,7 +90,7 @@
       <%= image_tag("four-dots.png") %>
     </div>
     <div>
-      <h2><%= nn(current_mission).name %></h2>
+      <h2><%= admin_mode? ? t('admin_mode.admin_mode') : current_mission.try(:name) %></h2>
     </div>
   </div>
  
