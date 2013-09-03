@@ -23,7 +23,7 @@
     <%= render("questions/title_and_hint", :lang => lang, :form => form, :rank => rank) %>
   <% end %>
 
-  <%= form_field(form, :key, :type => :check_box) %>
+  <%= form_field(form, :key, :type => :check_box) unless admin_mode? %>
   
   <%# new option set modal %>
   <% if form.mode != :show && can?(:create, OptionSet) %>

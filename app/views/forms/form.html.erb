@@ -5,7 +5,7 @@
 <div class="screen">
   <%= nice_form_for(@form) do |f| %>
     <%= form_field(f, :name, :required => true) %>
-    <%= form_field(f, :smsable, :type => :check_box) %>
+    <%= form_field(f, :smsable, :type => :check_box) unless admin_mode? %>
     <%= form_field(f, :published, :type => :check_box, :force_show_mode => true) unless f.mode == :new %>
   <% end %>
 
