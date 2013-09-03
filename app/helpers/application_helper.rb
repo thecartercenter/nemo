@@ -236,4 +236,14 @@ module ApplicationHelper
       ''
     end
   end
+
+  # makes a set of <li> wrapped links to the index actions of the given classes
+  def nav_links(*klasses)
+    l = []
+    klasses.each do |k|
+      l << content_tag(:li, link_to(pluralize_model(k), send("#{k.model_name.route_key}_path"))) if can?(:index, k)
+    end
+    l.join.html_safe
+  end
+
 end

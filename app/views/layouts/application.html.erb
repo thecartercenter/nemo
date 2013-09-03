@@ -95,14 +95,30 @@
   </div>
  
   <div id="nav">
-    <ul>
-      <% [Response, Form, Question, Report::Report, OptionSet, Broadcast, Setting, User, Mission].each do |k| %>
-        <% if can?(:index, k) %>
-          <li><%= link_to(pluralize_model(k), send("#{k.model_name.route_key}_path")) %></li>
-        <% end %>
+    <%# no nav necessary if no mission %>
+    <% if current_mission || admin_mode? %>
+      <%# nav first section -- responses and reports %>
+      <% unless admin_mode? %>
+        <ul>
+          <%= nav_links(Response, Report::Report) %>
+          <li><%= link_to(t('page_titles.dashboard.all'), dashboard_path) if can?(:view, :dashboard) %></li>
+        </ul>
       <% end %>
-      <li><%= link_to(t('page_titles.dashboard.all'), dashboard_path) if can?(:view, :dashboard) %></li>
-    </ul>
+
+      <%# nav first section -- form design %>
+      <%# show the 'standard' label in admin mode %>
+      <% if admin_mode? %>
+        <div class="standard_label"><%= t('standard.standard') %></div>
+      <% end %>
+      <ul class="<%= admin_mode? ? 'indented' : '' %>">
+        <%= nav_links(Form, Question, OptionSet) %>
+      </ul>
+      
+      <%# nav third section -- users and infrastructure %>
+      <ul>
+        <%= nav_links(User, Mission, Broadcast, Setting) %>
+      </ul>
+    <% end %>
   </div>
   
   <div id="content" class="<%= ctlr_action_name %>">

@@ -49,9 +49,42 @@ body {
   color: white;
   float: left;
   
-  ul { font-weight: bold; padding: 5px; list-style-type:none; }
-  ul li a { text-decoration: none; color: white; }
-  ul li a:hover { text-decoration: none; color: #0065d1; }
+  .standard_label {
+    margin-left: 10px;
+    text-transform: uppercase;
+    color: #ccc;
+  }
+
+  ul { 
+    font-weight: bold; 
+    padding: 0 5px 5px 5px;
+    margin: 0 10px 5px 10px;
+    list-style-type: none;
+    border-bottom: 1px solid #ccc;
+
+    &.indented {
+      padding-left: 10px;
+    }
+
+    &:last-child {
+      border: none;
+    }
+
+    li {
+      margin: 0;
+      padding: 3px 0;
+
+      a { 
+        text-decoration: none; 
+        color: white;
+
+        &:hover { 
+          text-decoration: none; 
+          color: #0065d1; 
+        }
+      }
+    }
+  }
 }
 
 #content {

@@ -959,6 +959,9 @@ en:
       missing_answer: "Sorry, the answer to the required question %{ranks} was missing from your response to form '%{form_code}'."
       missing_answers: "Sorry, the answers to the required questions %{ranks} were missing from your response to form '%{form_code}'."
 
+  standard:
+    standard: "Standard"
+
   unauthorized:
     default: "You are not authorized to access that page."
     must_login: "You must login to access that page."
