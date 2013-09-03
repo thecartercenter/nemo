@@ -275,6 +275,7 @@ en:
         phone: "Main Phone"
         phone2: "Alternate Phone"
         pref_lang: "Preferred Language"
+        role: "Role"
       user_batch:
         batch: "User Attributes"
     tips:
@@ -338,6 +339,7 @@ en:
         password: "Enter a new password here if you'd like to change your existing password."
         password_confirmation: "Enter the new password again."
         pref_lang: "The language in which you would like to use the system."
+        role: "The role of the user in the current mission, and whether or not they are presently active. Inactive users cannot access the mission at all."
       user_batch:
         batch: |-
           Enter names, email addresses, and phone numbers (WITH country codes), one per line, separated by commas or tabs. For example:

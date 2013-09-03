@@ -24,7 +24,6 @@ class UsersController < ApplicationController
   end
   
   def create
-    Rails.logger.debug(@user.assignments.inspect)
     if @user.save
       @user.reset_password_if_requested
 
@@ -113,7 +112,7 @@ class UsersController < ApplicationController
       @blank_assignment = Assignment.new(:active => true, :user_id => current_user.id)
       
       # get assignable missons and roles for this user
-      @assignable_missions = Mission.accessible_by(current_ability)
+      @assignable_missions = Mission.accessible_by(current_ability, :assign_to)
       @assignable_roles = Ability.assignable_roles(current_user)
       
       render(:form)

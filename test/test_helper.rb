@@ -81,4 +81,14 @@ class ActiveSupport::TestCase
     assert_response(302)
     assert_not_nil(assigns(:access_denied), "access should have been denied")
   end
+
+  # checks that roles are as specified
+  # roles should be an array of pairs e.g. [[mission1, role1], [mission2, role2]]
+  def assert_roles(expected, user)
+    expected = [expected] unless expected.empty? || expected[0].is_a?(Array)
+    actual = user.roles
+    expected.each do |r|
+      assert_equal(r[1].to_s, actual[r[0]])
+    end
+  end
 end

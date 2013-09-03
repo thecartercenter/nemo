@@ -30,20 +30,23 @@ class Ability
 
       # admin abilities that don't depend on a mission being set
       if user.admin?
-        can :manage, User
-        can :manage, Assignment
         can :view, :admin_mode
 
-        # standard objects and missions are available as long as the user is no-mission (admin) mode
+        # standard objects, missions, and all users are available in no-mission (admin) mode
         if admin_mode
           [Form, Questioning, Condition, Question, OptionSet, Optioning, Option].each do |k|
             can :manage, k, :is_standard => true
           end
           can :manage, Mission
+          can :manage, User
+          can :manage, Assignment
         end
 
-        # admin switch to any mission, regardless of mode
+        # admin can switch to any mission, regardless of mode
         can :switch_to, Mission
+
+        # admin can assign user to current mission
+        can :assign_to, Mission, :id => user.current_mission_id
         
         # only admins can give/take admin (adminify) to/from others, but not from themselves
         cannot :adminify, User
@@ -55,13 +58,13 @@ class Ability
       # anybody can access missions to which assigned (but don't need this permission if admin)
       if !user.admin?
         can :switch_to, Mission, Mission.active_for_user(user) do |mission|
-          user.assignments.detect{|a| a.mission == mission}
+          user.assignments.detect{|a| a.mission == mission && a.active?}
         end
       end
       
       # user can submit to any form if they can access the form's mission
       can :submit_to, Form do |form|
-        user.accessible_missions.include?(form.mission)
+        user.accessible_missions.include?(form.mission, :switch_to)
       end
       
       # all the rest of the permissions require a current mission to be set
@@ -69,11 +72,8 @@ class Ability
       
         # observer abilities
         if user.role?(:observer)
-          # don't bother with these if the user is also an admin
-          unless user.admin?
-            # can view and export users in same mission
-            can [:index, :read, :export], User, :assignments => {:mission_id => user.current_mission_id}
-          end
+          # can view and export users in same mission
+          can [:index, :read, :export], User, :assignments => {:mission_id => user.current_mission_id}
         
           # can submit responses for themselves only, and can only manage unreviewed responses
           # only need this ability if not also a staffer
@@ -112,6 +112,7 @@ class Ability
         if user.role?(:coordinator)
           # can manage users in current mission
           can [:create, :update, :login_instructions], User, :assignments => {:mission_id => user.current_mission_id}
+          can :assign_to, Mission, :id => user.current_mission_id
         
           # can create user batches
           can :manage, UserBatch
