@@ -216,7 +216,7 @@ class ApplicationController < ActionController::Base
         raise ArgumentError.new("mission not found") if !mission
         
         # if user can't access the mission, force re-authentication
-        return request_http_basic_authentication if !can?(:read, mission)
+        return request_http_basic_authentication if !can?(:switch_to, mission)
         
         # if we get this far, we can set the current mission
         @current_mission = mission

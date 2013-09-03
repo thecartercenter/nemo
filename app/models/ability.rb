@@ -32,16 +32,19 @@ class Ability
       if user.admin?
         can :manage, User
         can :manage, Assignment
-        can :manage, Mission
         can :view, :admin_mode
 
-        # standard objects are available as long as the user is no-mission (admin) mode
+        # standard objects and missions are available as long as the user is no-mission (admin) mode
         if admin_mode
           [Form, Questioning, Condition, Question, OptionSet, Optioning, Option].each do |k|
             can :manage, k, :is_standard => true
           end
+          can :manage, Mission
         end
 
+        # admin switch to any mission, regardless of mode
+        can :switch_to, Mission
+        
         # only admins can give/take admin (adminify) to/from others, but not from themselves
         cannot :adminify, User
         can :adminify, User, ["id != ?", user.id] do |other_user|
@@ -51,7 +54,7 @@ class Ability
       
       # anybody can access missions to which assigned (but don't need this permission if admin)
       if !user.admin?
-        can :read, Mission, Mission.active_for_user(user) do |mission|
+        can :switch_to, Mission, Mission.active_for_user(user) do |mission|
           user.assignments.detect{|a| a.mission == mission}
         end
       end

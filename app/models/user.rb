@@ -204,7 +204,7 @@ class User < ActiveRecord::Base
   
   # returns all missions that the user has access to
   def accessible_missions
-    @accessible_missions ||= Mission.accessible_by(ability)
+    @accessible_missions ||= Mission.accessible_by(ability, :switch_to)
   end
   
   # if user has no current mission, choose one (if assigned to any)
