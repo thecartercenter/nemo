@@ -59,7 +59,7 @@ FactoryGirl.define do
     }
     
     before(:create) do |o,e|
-      e.hash_answers
+      e.generate_duplicate_signature
     end      
   end
 end

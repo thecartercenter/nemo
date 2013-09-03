@@ -143,7 +143,7 @@ class ResponsesController < ApplicationController
         if params[:response][:duplicate].nil?
           
           # hash answers before search for duplicates and save
-          @response.hash_answers
+          @response.generate_duplicate_signature
           
           # if possible duplicates are found, set duplicate column to 1, else 0
           @response.duplicate = @response.find_duplicates.empty? || @response.find_duplicates.nil? ? 0 : 1

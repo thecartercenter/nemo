@@ -132,17 +132,27 @@ class Response < ActiveRecord::Base
   end
   
   # hashes all the answer values of the response
-  def hash_answers
-    answers_digest = user.id.to_s
+  def generate_duplicate_signature
+    
+    # append user id to digest string
+    answers_digest = user_id.to_s
+    
+    # iterate through each answer and append the value of answer or choice
+    # to the digest string
     answers.each do |a|
-      answer_value = a.value || a.option_id || a.time_value || a.date_value || a.datetime_value
-      if a.choices
-        answers_digest += a.choices.map { |choice| choice.option_id }.join("")
+      
+      if (answers_value = a.value || a.option_id || a.time_value || a.date_value || a.datetime_value) == nil
+        
+        # iterate through choices of answer if there is no value stored in answers table
+        if a.choices
+          answers_digest += a.choices.map { |choice| choice.option_id }.join("")
+        end
+      else
+        answers_digest += answers_value.to_s
       end
-      answers_digest += answer_value.to_s
     end
     
-    self.signature = Digest::SHA1.hexdigest(answers_digest)
+    self.signature = Digest::SHA1.hexdigest(answers_digest)    
   end
   
   def visible_questionings
