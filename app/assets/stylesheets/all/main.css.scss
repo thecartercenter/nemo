@@ -161,7 +161,13 @@ form.questioning_form .form_field#condition div.row > div { display: inline-bloc
 form.questioning_form .form_field#condition div.row > div:first-child { width: 100px; }
 
 /* question index/choose */
+.questions_index .code_col { min-width: 100px; }
+.questions_index .name_col { min-width: 400px; }
+.questions_index .type_col { min-width: 100px; }
 .questions_choose .name_col { width: 400px; }
+
+/* form index */
+.forms_index .name_col { min-width: 200px; }
 
 /* option edit */
 .options_edit td.value input#option_value, .options_new td.value input#option_value { width: 100px; }
