@@ -152,7 +152,7 @@ class Response < ActiveRecord::Base
       end
     end
     
-    self.signature = Digest::SHA1.hexdigest(answers_digest)    
+    self.signature = Digest::SHA1.hexdigest(answers_digest)
   end
   
   def visible_questionings
