@@ -247,6 +247,9 @@ class ApplicationController < ActionController::Base
         else
           # look up the current mission based on the current user
           @current_mission = @current_user ? @current_user.current_mission : nil
+
+          # save the current mission in the session so we can remember it if the user goes into admin mode
+          session[:last_mission_id] = @current_mission.try(:id)
         end
       end
     end

@@ -92,6 +92,14 @@ class UsersController < ApplicationController
       end
     end
   end
+
+  # sets the current user's current mission to the last one used, and redirects to home page for that mission
+  def exit_admin_mode
+    if m = Mission.where(:id => session[:last_mission_id]).first
+      current_user.change_mission!(m)
+    end
+    redirect_to(root_path(:admin_mode => false))
+  end
   
   private
     

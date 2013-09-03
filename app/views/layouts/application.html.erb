@@ -37,7 +37,7 @@
       <% if current_user.admin? %>
         <% if admin_mode? %>
           <%= content_tag('i', '', :class => 'icon-remove') %>
-          <%= link_to(t('admin_mode.exit_admin_mode'), root_url(:admin_mode => nil), :class => 'exit_admin_mode') %>
+          <%= link_to(t('admin_mode.exit_admin_mode'), exit_admin_mode_user_url(current_user), :class => 'exit_admin_mode') %>
         <% else %>
           <%= content_tag('i', '', :class => 'icon-trophy') %>
           <%= link_to(t('admin_mode.goto_admin_mode'), root_url(:admin_mode => 'admin'), :class => 'goto_admin_mode') %>
