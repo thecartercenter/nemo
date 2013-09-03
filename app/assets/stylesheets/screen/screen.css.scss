@@ -74,7 +74,7 @@ body {
       margin: 0;
       padding: 3px 0;
 
-      a { 
+      a {
         text-decoration: none; 
         color: white;
 
@@ -82,6 +82,10 @@ body {
           text-decoration: none; 
           color: #0065d1; 
         }
+      }
+
+      &.active a {
+        color: #bdf;
       }
     }
   }

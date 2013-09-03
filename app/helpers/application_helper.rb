@@ -241,7 +241,11 @@ module ApplicationHelper
   def nav_links(*klasses)
     l = []
     klasses.each do |k|
-      l << content_tag(:li, link_to(pluralize_model(k), send("#{k.model_name.route_key}_path"))) if can?(:index, k)
+      if can?(:index, k)
+        path = send("#{k.model_name.route_key}_path")
+        active = request.fullpath == path
+        l << content_tag(:li, link_to(pluralize_model(k), path), :class => active ? 'active' : '')
+      end
     end
     l.join.html_safe
   end
