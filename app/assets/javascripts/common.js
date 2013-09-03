@@ -186,7 +186,7 @@ function logout() {
     return url + (url.indexOf("?") == "-1" ? "?" : "&") + param;
   }
   
-  // builds a URL by adding the locale
+  // builds a URL by adding the locale and maintaining admin mode
   // last arg can optionally specify the locale, e.g. {locale: "fr"}
   Utils.build_url = function() {
     // we need some funky magic to turn the arguments object into an array
@@ -202,8 +202,11 @@ function logout() {
     // default to the current locale
     if (!options.locale) options.locale = I18n.locale;
     
+    // admin chunk
+    var admin_chunk = ELMO.app.params.admin_mode ? '/admin' : '';
+
     // return, fixing any double slashes
-    return ("/" + options.locale + "/" + args.join("/")).replace(/[\/]{2,}/g, "/");
+    return ("/" + options.locale + admin_chunk + "/" + args.join("/")).replace(/[\/]{2,}/g, "/");
   }
   
 }(Utils = {}));
