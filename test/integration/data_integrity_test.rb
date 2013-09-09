@@ -22,6 +22,13 @@ class AuthorizationTest < ActionDispatch::IntegrationTest
     assert_action_link(form, :destroy, false)
   end
 
+  test "form with responses should not be deletable" do
+    form = FactoryGirl.create(:form)
+    FactoryGirl.create(:response, :form => form)
+
+    assert_action_link(form, :destroy, false)
+  end
+
   private
     def assert_action_link(obj, action, tf)
       get(send("#{obj.class.model_name.route_key}_path"))
