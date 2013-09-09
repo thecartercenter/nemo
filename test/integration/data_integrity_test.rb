@@ -10,19 +10,7 @@ class AuthorizationTest < ActionDispatch::IntegrationTest
   test "unpublished form should be deletable" do
     form = FactoryGirl.create(:form)
     assert_action_link(form, :destroy, true)
-
-    # do delete
-    delete(form_path(form))
-    follow_redirect!
-    assert_response(:success)
-
-    # ensure no errors
-    assert(form.errors.empty?)
-    assert_nil(flash[:error])
-    assert_nil(assigns(:error_msg))
-
-    # ensure object was deleted
-    assert(!Form.exists?(form))
+    assert_deletable(form)
   end
 
   test "published form should not be deletable" do
@@ -46,6 +34,7 @@ class AuthorizationTest < ActionDispatch::IntegrationTest
     form = FactoryGirl.create(:form, :is_standard => true)
     copy = form.replicate(get_mission)
     assert_action_link(copy, :destroy, true)
+    assert_deletable(copy)
   end
 
   test "published form should be renameable" do
@@ -64,6 +53,21 @@ class AuthorizationTest < ActionDispatch::IntegrationTest
       get(send("#{obj.class.model_name.route_key}_path"))
       assert_response(:success)
       assert_select("tr##{obj.class.model_name.singular}_#{obj.id} a.action_link_#{action}", tf)
+    end
+
+    def assert_deletable(obj)
+      # do delete
+      delete(send("#{obj.class.model_name.singular}_path", obj))
+      follow_redirect!
+      assert_response(:success)
+
+      # ensure no errors
+      assert(obj.errors.empty?)
+      assert_nil(flash[:error])
+      assert_nil(assigns(:error_msg))
+
+      # ensure object was deleted
+      assert(!obj.class.exists?(obj))
     end
 
 end
