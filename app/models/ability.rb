@@ -143,7 +143,7 @@ class Ability
     cannot :destroy, Form, :published => true
 
     # forms with responses can't be deleted
-    cannot :destroy, Form, do |f| 
+    cannot :destroy, Form do |f| 
       !f.responses.empty?
     end
   end

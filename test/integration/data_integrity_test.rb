@@ -29,6 +29,12 @@ class AuthorizationTest < ActionDispatch::IntegrationTest
     assert_action_link(form, :destroy, false)
   end
 
+  test "standard form copy should be deletable" do
+    form = FactoryGirl.create(:form, :is_standard => true)
+    copy = form.replicate(get_mission)
+    assert_action_link(copy, :destroy, true)
+  end
+
   private
     def assert_action_link(obj, action, tf)
       get(send("#{obj.class.model_name.route_key}_path"))
