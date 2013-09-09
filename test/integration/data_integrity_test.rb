@@ -35,6 +35,17 @@ class AuthorizationTest < ActionDispatch::IntegrationTest
     assert_action_link(copy, :destroy, true)
   end
 
+  test "published form should be renameable" do
+    form = FactoryGirl.create(:form)
+    form.publish!
+
+    get(edit_form_path(form))
+    assert_select('input#form_name')
+    put(form_path(form), :form => {:name => 'new name'})
+    follow_redirect!
+    assert_equal('new name', form.reload.name)
+  end
+
   private
     def assert_action_link(obj, action, tf)
       get(send("#{obj.class.model_name.route_key}_path"))

@@ -11,13 +11,11 @@ class Form < ActiveRecord::Base
   belongs_to(:current_version, :class_name => "FormVersion")
   
   validates(:name, :presence => true, :length => {:maximum => 32})
-  validate(:cant_change_published)
   validate(:name_unique_per_mission)
   
   validates_associated(:questionings)
   
   before_create(:init_downloads)
-  before_destroy(:check_assoc)
   
   # no pagination
   self.per_page = 1000000
@@ -147,24 +145,9 @@ class Form < ActiveRecord::Base
   end
   
   private
-    def cant_change_published
-      # if this is a published form and something other than published and downloads changes, wrong!
-      if published_was && !(changed - %w[published downloads]).empty?
-        errors.add(:base, :cant_edit_published) 
-      end
-    end
-    
     def init_downloads
       self.downloads = 0
       return true
-    end
-    
-    def check_assoc
-      if published?
-        raise DeletionError.new(:cant_delete_published)
-      elsif !responses.empty?
-        raise DeletionError.new(:cant_delete_if_has_responses)
-      end
     end
     
     def name_unique_per_mission
