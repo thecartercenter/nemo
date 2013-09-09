@@ -10,6 +10,19 @@ class AuthorizationTest < ActionDispatch::IntegrationTest
   test "unpublished form should be deletable" do
     form = FactoryGirl.create(:form)
     assert_action_link(form, :destroy, true)
+
+    # do delete
+    delete(form_path(form))
+    follow_redirect!
+    assert_response(:success)
+
+    # ensure no errors
+    assert(form.errors.empty?)
+    assert_nil(flash[:error])
+    assert_nil(assigns(:error_msg))
+
+    # ensure object was deleted
+    assert(!Form.exists?(form))
   end
 
   test "published form should not be deletable" do
