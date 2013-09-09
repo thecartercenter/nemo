@@ -31,7 +31,7 @@ module FormsHelper
     when "smsable" then tbool(form.smsable?)
     when "actions"
       # get standard action links
-      links = action_links(form, :obj_name => form.name, :exclude => (form.published? ? [:edit, :destroy] : []))
+      links = action_links(form, :obj_name => form.name)
       
       # get the appropriate publish icon and add link, if auth'd
       if can?(:publish, form)

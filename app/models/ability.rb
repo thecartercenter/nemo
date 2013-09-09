@@ -17,6 +17,7 @@ class Ability
   
   # defines user's abilities
   def initialize(user, admin_mode = false)
+
     if user
 
       # anybody can see the welcome page
@@ -135,5 +136,10 @@ class Ability
       end
     end
     
+    ###############
+    # these permissions are user-independent
+
+    # published forms can't be deleted
+    cannot :destroy, Form, :published => true
   end
 end
