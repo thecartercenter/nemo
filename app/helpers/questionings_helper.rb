@@ -46,8 +46,9 @@ module QuestioningsHelper
     when "condition" then tbool(qing.has_condition?)
     when "required", "hidden" then tbool(qing.send(field))
     when "actions"
-      exclude = [:destroy]
-      exclude << :edit if qing.published? || controller.action_name == "show"
+      exclude = []
+      exclude << :destroy if controller.action_name == "show"
+      exclude << :edit if controller.action_name == "show"
       action_links(qing, :obj_name => qing.code, :exclude => exclude)
     else qing.send(field)
     end
