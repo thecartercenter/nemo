@@ -119,12 +119,25 @@ class Response < ActiveRecord::Base
     end
   end
   
+  def check_if_duplicate_and_save
+    
+    # generate the duplicate signature hash to find duplicate
+    # responses if signature is not currently set
+    self.signature == nil ? generate_duplicate_signature : nil
+
+    # find duplicate responses, if none exist, flag duplicate column as 0
+    # else, flag it as 1
+    self.duplicate = find_duplicates.empty? ? 0 : 1
+    
+    save!(:validate => false)
+  end
+  
   # finds all responses with duplicate hashes
   def find_duplicates
     responses = Response.arel_table
     
     # don't include responses that have null signatures
-    if signature
+    if self.signature
       possible_duplicates = Response.where(responses["signature"].eq(self.signature).and(responses["id"].not_eq(id)))
     end
     
@@ -135,11 +148,11 @@ class Response < ActiveRecord::Base
   def generate_duplicate_signature
     
     # append user id to digest string
-    answers_digest = user_id.to_s
+    answers_digest = self.user_id.to_s
     
     # iterate through each answer and append the value of answer or choice
     # to the digest string
-    answers.each do |a|
+    self.answers.each do |a|
       
       if (answers_value = a.value || a.option_id || a.time_value || a.date_value || a.datetime_value) == nil
         
