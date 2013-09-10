@@ -24,6 +24,11 @@ module Standardizable
     copies.for_mission(mission).first
   end
 
+  # returns whether the object is standard or related to a standard object
+  def standardized?
+    is_standard? || !standard.nil?
+  end
+
   private
     def replicate_changes_to_copies(change_type)
       if changing_in_replication
