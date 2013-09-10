@@ -28,7 +28,7 @@ class Form < ActiveRecord::Base
       {:condition => [:option, :ref_qing]}
     ]
   ).order("questionings.rank"))
-    
+
   replicable :assocs => :questionings, :uniqueness => {:field => :name, :style => :sep_words}, 
     :dont_copy => [:published, :downloads, :responses_count, :questionings_count, :upgrade_needed, :smsable, :current_version_id]
 
@@ -142,6 +142,21 @@ class Form < ActiveRecord::Base
   # if options[:smsable] is set, specifically looks for non-required questions that are smsable
   def all_required?(options = {})
     @all_required ||= visible_questionings.reject{|qing| qing.required? || (options[:smsable] ? !qing.question.smsable? : false)}.empty?
+  end
+
+  # efficiently gets the number of answers for the given questioning on this form
+  def qing_answer_count(qing)
+    # fetch the counts if not already fetched
+    @answer_counts ||= Questioning.find_by_sql([%{
+      SELECT questionings.id, COUNT(answers.id) AS answer_count 
+      FROM questionings 
+        LEFT OUTER JOIN answers ON answers.questioning_id = questionings.id 
+      WHERE questionings.form_id = ?
+      GROUP BY questionings.id
+    }, id]).index_by(&:id)
+    
+    # get the desired count
+    @answer_counts[qing.id].try(:answer_count) || 0
   end
   
   private
