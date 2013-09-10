@@ -65,7 +65,7 @@ class Ability
       
       # user can submit to any form if they can access the form's mission
       can :submit_to, Form do |form|
-        user.accessible_missions.include?(form.mission, :switch_to)
+        user.accessible_missions.include?(form.mission)
       end
       
       # all the rest of the permissions require a current mission to be set
