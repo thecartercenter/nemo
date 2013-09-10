@@ -25,9 +25,14 @@ class OptionSet < ActiveRecord::Base
   # replication options
   replicable :assocs => :optionings, :parent => :question, :uniqueness => {:field => :name, :style => :sep_words}
   
+  # checks if this option set appears in any published questionings
   def published?
-    # check for any published questionings
-    !questionings.detect{|qing| qing.published?}.nil?
+    questionings.any?(&:published?)
+  end
+
+  # checks if this option set appears in any smsable questionings
+  def form_smsable?
+    questionings.any?(&:form_smsable?)
   end
   
   # finds or initializes an optioning for every option in the database for current mission (never meant to be saved)

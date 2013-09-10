@@ -41,7 +41,7 @@ class Question < ActiveRecord::Base
   def qtype
     QuestionType[qtype_name]
   end
-  
+
   def options
     option_set ? option_set.options : nil
   end
@@ -52,9 +52,15 @@ class Question < ActiveRecord::Base
 
   # determines if the question appears on any published forms
   def published?
-    !forms.detect{|f| f.published?}.nil?
+    forms.any?(&:published?)
   end
-  
+
+  # checks if any associated forms are smsable
+  # NOTE different from plain Question.smsable?
+  def form_smsable?
+    forms.any?(&:smsable?)
+  end
+
   # an odk-friendly unique code
   def odk_code
     "q#{id}"
