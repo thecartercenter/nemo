@@ -10,7 +10,7 @@ FactoryGirl.define do
     
     questionings do
       question_types.each_with_index.map do |qt, idx|
-        FactoryGirl.build(:questioning, :question => FactoryGirl.build(:question, :code => "question#{idx}", :qtype_name => qt))
+        FactoryGirl.build(:questioning, :question => FactoryGirl.build(:question, :code => "q#{rand(100000)}", :qtype_name => qt))
       end
     end
   end
