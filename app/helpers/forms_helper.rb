@@ -143,4 +143,21 @@ module FormsHelper
   def submit_number
     content_tag("strong", configatron.incoming_sms_number.blank? ? "[" + t("sms_form.guide.unknown_number") + "]" : configatron.incoming_sms_number)
   end
+
+  # constructs html for a warning about published objects (form, questioning, question, option set)
+  def published_warning(obj)
+    # get primary text
+    type = obj.class.model_name.singular
+    text = [tmd("form.published_warnings.by_type.#{type}")]
+
+    # add sms piece if applicable
+    smsable = obj.is_a?(Form) ? obj.smsable? : obj.form_smsable?
+    text << tmd("form.published_warnings.sms") if smsable
+
+    # add odk piece
+    text << tmd("form.published_warnings.odk")
+
+    # create tag and return
+    content_tag('div', text.join(' ').html_safe, :class => 'published_warning')
+  end
 end
