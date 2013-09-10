@@ -72,6 +72,11 @@ class OptionSet < ActiveRecord::Base
   def forms
     questionings.collect(&:form).uniq
   end
+
+  # gets a comma separated list of all related forms names
+  def form_names
+    forms.map(&:name).join(', ')
+  end
   
   def check_associations
     # make sure not associated with any questions

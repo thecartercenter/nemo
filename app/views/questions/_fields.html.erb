@@ -1,10 +1,8 @@
 <div class="question_fields">
-  <%= published_warning(@question) if @question.published? && form.mode == :edit %>
 
-  <% if form.mode == :edit && !(forms = @question.forms).empty? %>
-    <div class="form_builder_warning">
-      <%= t("question.appears_elsewhere_warning", :forms => forms.map{|f| f.name}.join(", ")) %>
-    </div>
+  <% if form.mode == :edit %>
+    <%= appears_elsewhere_warning(@question) unless @question.forms.empty? %>
+    <%= published_warning(@question) if @question.published? %>
   <% end %>
   
   <%= form_field(form, :code, :required => true, :maxlength => 20) %>

@@ -699,6 +699,10 @@ en:
   form:
     add_questions: "Add Questions"
     add_selected: "Add Selected Questions to Form"
+    appears_elsewhere_warnings:
+      by_type:
+        question: "This Question appears on the following Forms: %{forms}. Any changes you make below will be reflected on those Forms."
+        option_set: "This Option Set appears on the following Forms: %{forms}. Any changes you make below will be reflected on those Forms."
     back_to_questions: "Back to Questions List"
     choose_form: "Choose a Form..."
     clone_confirm: "Are you sure you want to make a copy of the form '%{form_name}'?"
@@ -756,7 +760,6 @@ en:
     other_forms_published: "At least one of those forms is also published, so only names can be edited. You should also take care to not change the meaning of the option if editing the names."
 
   option_set:
-    appears_elsewhere_warning: "This Option Set appears on the following Forms: %{forms}. Any changes you make below will be reflected on those Forms."
     create_new: "[Create New Option]"
     create_link: "Create Option Set"
     edit_option: "Edit Option"
@@ -786,7 +789,6 @@ en:
 
   question:
     answer_only_caps: "ANSWER ONLY IF"
-    appears_elsewhere_warning: "This Question appears on the following Forms: %{forms}. Any changes you make below will be reflected on those Forms."
     create_link: "Create Question"
     maxmin:
       gt: "greater than"

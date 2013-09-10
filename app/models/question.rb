@@ -91,6 +91,11 @@ class Question < ActiveRecord::Base
   def form_ids
     forms.collect{|f| f.id}.sort
   end
+
+  # gets a comma separated list of all related forms names
+  def form_names
+    forms.map(&:name).join(', ')
+  end
   
   private
 

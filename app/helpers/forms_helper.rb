@@ -158,6 +158,17 @@ module FormsHelper
     text << tmd("form.published_warnings.odk")
 
     # create tag and return
-    content_tag('div', text.join(' ').html_safe, :class => 'form_builder_warning')
+    form_builder_warning(text.join(' ').html_safe)
+  end
+
+  def appears_elsewhere_warning(obj)
+    type = obj.class.model_name.singular
+    text = tmd("form.appears_elsewhere_warnings.by_type.#{type}", :forms => obj.form_names)
+    form_builder_warning(text)
+  end
+
+  def form_builder_warning(text)
+    icon = content_tag(:i, '', :class => 'icon-warning-sign')
+    content_tag(:div, (icon + content_tag(:div, text)).html_safe, :class => 'form_builder_warning')
   end
 end
