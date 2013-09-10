@@ -1,8 +1,9 @@
 <div class="question_fields">
+  <%= published_warning(@question) if @question.published? && form.mode == :edit %>
+
   <% if form.mode == :edit && !(forms = @question.forms).empty? %>
-    <div class="tip important">
-      <%= t("question.appears_elsewhere", :forms => forms.map{|f| f.name}.join(", ")) %>
-      <%= t("question.other_forms_published") if @question.published? %>
+    <div class="form_builder_warning">
+      <%= t("question.appears_elsewhere_warning", :forms => forms.map{|f| f.name}.join(", ")) %>
     </div>
   <% end %>
   

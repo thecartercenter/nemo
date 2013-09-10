@@ -158,6 +158,6 @@ module FormsHelper
     text << tmd("form.published_warnings.odk")
 
     # create tag and return
-    content_tag('div', text.join(' ').html_safe, :class => 'published_warning')
+    content_tag('div', text.join(' ').html_safe, :class => 'form_builder_warning')
   end
 end

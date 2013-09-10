@@ -1,4 +1,12 @@
 <div class="option_set_form">
+  <% if form_mode == :edit && !@option_set.forms.empty? %>
+    <div class="form_builder_warning">
+      <%= t("option_set.appears_elsewhere_warning", :forms => @option_set.forms.map{|f| f.name}.join(", ")) %>
+    </div>
+  <% end %>
+
+  <%= published_warning(@option_set) if @option_set.published? && form_mode == :edit %>
+
   <%= flash_and_form_errors(@option_set) %>
   <%= nice_form_for(@option_set) do |f| %>
     <%= form_field(f, :name, :required => true) %>

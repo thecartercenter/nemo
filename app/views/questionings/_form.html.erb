@@ -8,6 +8,8 @@
     <%= render('questions/fields', :form => question_form) %>
   <% end %>
   
+  <%= published_warning(@questioning) if @questioning.published? && form_mode == :edit %>
+
   <%= form_field(f, :condition, :partial => "conditions/form") %>
   <%= form_field(f, :required, :type => :check_box) %>
   <%= form_field(f, :hidden, :type => :check_box) %>
