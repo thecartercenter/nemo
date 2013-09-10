@@ -51,6 +51,22 @@ class AuthorizationTest < ActionDispatch::IntegrationTest
     assert_field_changeable(copy, :name)
   end
 
+  test "should be able to add non-required question to published form" do
+    form = FactoryGirl.create(:form)
+    form.publish!
+
+    # check for add question link
+    get(edit_form_path(form))
+    assert_response(:success)
+    assert_select("a[href$=choose_questions]")
+
+    # check can add question
+    q = FactoryGirl.create(:question)
+    post(add_questions_form_path(form, :selected => {q.id.to_s => "1"}))
+    assert_successful_action(form)
+    assert_equal(q, form.reload.questions.last)
+  end
+
   private
     def assert_action_link(obj, action, tf)
       get(send("#{obj.class.model_name.route_key}_path"))
@@ -61,13 +77,8 @@ class AuthorizationTest < ActionDispatch::IntegrationTest
     def assert_deletable(obj)
       # do delete
       delete(send("#{obj.class.model_name.singular}_path", obj))
-      follow_redirect!
-      assert_response(:success)
 
-      # ensure no errors
-      assert(obj.errors.empty?)
-      assert_nil(flash[:error])
-      assert_nil(assigns(:error_msg))
+      assert_successful_action(obj)
 
       # ensure object was deleted
       assert(!obj.class.exists?(obj))
@@ -83,5 +94,15 @@ class AuthorizationTest < ActionDispatch::IntegrationTest
       follow_redirect!
       assert_equal(new_val, obj.reload.send(field))
     end
+
+    def assert_successful_action(obj)
+      # ensure no errors
+      follow_redirect!
+      assert_response(:success)
+      assert(obj.errors.empty?)
+      assert_nil(flash[:error])
+      assert_nil(assigns(:error_msg))
+    end
+
 
 end
