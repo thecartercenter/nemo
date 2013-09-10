@@ -155,11 +155,10 @@ class FormsController < ApplicationController
     qings = load_selected_objects(Questioning)
     # destroy
     begin
-      qings.each{|q| q.check_assoc}
       @form.destroy_questionings(qings)
       flash[:success] = t("form.questions_remove_success")
     rescue
-      flash[:error] = t("form.question_remove_error", :msg => $!.to_s)
+      flash[:error] = t("form.#{$!}")
     end
     # redirect to form edit
     redirect_to(edit_form_path(@form))

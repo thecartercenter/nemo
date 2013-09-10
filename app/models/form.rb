@@ -13,8 +13,6 @@ class Form < ActiveRecord::Base
   validates(:name, :presence => true, :length => {:maximum => 32})
   validate(:name_unique_per_mission)
   
-  validates_associated(:questionings)
-  
   before_create(:init_downloads)
   
   # no pagination
@@ -81,6 +79,10 @@ class Form < ActiveRecord::Base
     transaction do
       # delete the qings
       qings.each do |qing|
+
+        # if this qing has a non-zero answer count, raise an error
+        raise DeletionError.new('question_remove_answer_error') if qing_answer_count(qing) > 0
+
         questionings.delete(qing)
         qing.destroy
       end
