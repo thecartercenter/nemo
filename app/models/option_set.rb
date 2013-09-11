@@ -32,7 +32,7 @@ class OptionSet < ActiveRecord::Base
             LEFT OUTER JOIN optionings ON optionings.option_set_id = option_sets.id 
             LEFT OUTER JOIN answers ON answers.option_id = optionings.option_id 
             LEFT OUTER JOIN choices ON choices.option_id = optionings.option_id 
-          WHERE option_sets.mission_id #{mission ? '= ' + mission.id : 'IS NULL'}
+          WHERE option_sets.mission_id #{mission ? '= ' + mission.id.to_s : 'IS NULL'}
           GROUP BY option_sets.id
       ) AS counts ON counts.count_os_id = option_sets.id
     }).group('option_sets.id')})
