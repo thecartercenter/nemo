@@ -146,5 +146,11 @@ class Ability
     cannot :destroy, Form do |f| 
       !f.responses.empty?
     end
+
+    # a lot of things are restricted with standard copies
+    cannot :add_questions, Form do |f|
+      f.standard_copy?
+    end
+
   end
 end

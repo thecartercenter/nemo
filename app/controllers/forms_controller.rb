@@ -121,6 +121,8 @@ class FormsController < ApplicationController
   
   # shows the form to either choose existing questions or create a new one to add
   def choose_questions
+    authorize!(:add_questions, @form)
+
     # get questions for choice list
     @questions = Question.with_assoc_counts.by_code.accessible_by(current_ability).not_in_form(@form)
     

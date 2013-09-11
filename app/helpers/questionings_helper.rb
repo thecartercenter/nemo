@@ -5,7 +5,7 @@ module QuestioningsHelper
     # these links only make sense if we're editing
     if controller.action_name == "edit"
       # add questions link
-      links << link_to(t("form.add_questions"), choose_questions_form_path(@form))
+      links << link_to(t("form.add_questions"), choose_questions_form_path(@form)) if can?(:add_questions, @form)
       
       # these links only make sense if there are questions
       if qings.size > 0

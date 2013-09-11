@@ -26,9 +26,13 @@ module Standardizable
 
   # returns whether the object is standard or related to a standard object
   def standardized?
-    is_standard? || !standard.nil?
+    is_standard? || standard_copy?
   end
 
+  def standard_copy?
+    !standard.nil?
+  end
+  
   private
     def replicate_changes_to_copies(change_type)
       if changing_in_replication
