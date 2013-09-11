@@ -151,7 +151,7 @@ class Ability
     cannot [:add_questions, :remove_questions, :reorder_questions], Form do |f|
       f.standard_copy?
     end
-    cannot [:destroy, :update], Questioning do |q|
+    cannot [:destroy, :update, :update_own_fields], Questioning do |q|
       q.standard_copy?
     end
 
