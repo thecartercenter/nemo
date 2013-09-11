@@ -6,8 +6,10 @@
   <% end %>
   
   <%= form_field(form, :code, :required => true, :maxlength => 20) %>
+
   <%= form_field(form, :qtype_name, :type => :select, :required => true, 
-    :options => @question_types.map{|qt| [t(qt.name, :scope => :question_type), qt.name]}) %>
+        :options => @question_types.map{|qt| [t(qt.name, :scope => :question_type), qt.name]},
+        :force_show_mode => !@question.answers.empty?) %>
 
   <%# this is a partial because it contains more complex controls %>
   <%# the partial path is fully qualified because THIS partial might be included in several different contexts %>
