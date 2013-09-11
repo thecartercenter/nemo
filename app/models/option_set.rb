@@ -21,13 +21,19 @@ class OptionSet < ActiveRecord::Base
 
   scope(:by_name, order('option_sets.name'))
   scope(:with_assoc_counts_and_published, lambda { |mission|
-    select('option_sets.*, counts.answer_count, counts.choice_count, COUNT(questions.id) AS question_count, MAX(forms.published) AS form_published').
+    select(%{
+      option_sets.*, 
+      counts.answer_count, 
+      counts.choice_count, 
+      COUNT(DISTINCT questions.id) AS question_count, 
+      MAX(forms.published) AS form_published
+    }).
     joins(%{
       LEFT OUTER JOIN questions ON questions.option_set_id = option_sets.id 
       LEFT OUTER JOIN questionings ON questionings.question_id = questions.id 
       LEFT OUTER JOIN forms ON forms.id = questionings.form_id
       LEFT OUTER JOIN (
-        SELECT option_sets.id AS count_os_id, COUNT(answers.id) AS answer_count, COUNT(choices.id) AS choice_count
+        SELECT option_sets.id AS count_os_id, COUNT(DISTINCT answers.id) AS answer_count, COUNT(DISTINCT choices.id) AS choice_count
           FROM option_sets 
             LEFT OUTER JOIN optionings ON optionings.option_set_id = option_sets.id 
             LEFT OUTER JOIN answers ON answers.option_id = optionings.option_id 
@@ -72,7 +78,7 @@ class OptionSet < ActiveRecord::Base
     # if we get here, false
     false
   end
-    
+
   # finds or initializes an optioning for every option in the database for current mission (never meant to be saved)
   def all_optionings(options)
     # make sure there is an associated answer object for each questioning in the form

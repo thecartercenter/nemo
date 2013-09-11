@@ -203,6 +203,7 @@ en:
         base: "" # this is a sort of hack to get error msg to display properly
       option_set:
         options: "Options"
+        answers: "Answers"
       question:
         base: "" # this is a sort of hack to get error msg to display properly
         forms: "Forms"

@@ -4,7 +4,7 @@ module OptionSetsHelper
   end
   
   def option_sets_index_fields
-    %w(std_icon name options questions published actions)
+    %w(std_icon name options questions answers published actions)
   end
   
   def format_option_sets_field(option_set, field)
@@ -14,6 +14,7 @@ module OptionSetsHelper
     when "published" then tbool(option_set.form_published == 1)
     when "options" then option_set.options.collect{|o| o.name}.join(", ")
     when "questions" then option_set.question_count
+    when "answers" then number_with_delimiter(option_set.answer_count + option_set.choice_count)
     when "actions"
       exclude = []
       exclude << :destroy if option_set.has_answers? || option_set.has_questions?
