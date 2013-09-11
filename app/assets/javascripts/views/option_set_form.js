@@ -117,7 +117,11 @@
     
     // add edit/remove unless in show mode
     if (self.params.form_mode != 'show') {
-      var links = $('<div>').attr('class', 'links').append(self.params.edit_link);
+      var links = $('<div>').attr('class', 'links')
+
+      // don't show the edit link if the option is existing and has not yet been added to the set (rails limitation)
+      if (optioning.id || !optioning.option.id) links.append(self.params.edit_link);
+      
       if (optioning.removable) links.append(self.params.remove_link);
       links.appendTo(inner);
     }
@@ -229,9 +233,14 @@
       if (optioning.id)
         self.add_form_field('option_set[optionings_attributes][' + idx + '][id]', optioning.id);
       self.add_form_field('option_set[optionings_attributes][' + idx + '][rank]', optioning.div.closest('li').index() + 1);
-      self.add_form_field('option_set[optionings_attributes][' + idx + '][option_attributes][id]', optioning.option.id);
-      for (var locale in optioning.option.name_translations)
-        self.add_form_field('option_set[optionings_attributes][' + idx + '][option_attributes][name_' + locale + ']', optioning.option.name_translations[locale]);
+      
+      if (optioning.id || !optioning.option.id) {
+        self.add_form_field('option_set[optionings_attributes][' + idx + '][option_attributes][id]', optioning.option.id);
+        for (var locale in optioning.option.name_translations)
+          self.add_form_field('option_set[optionings_attributes][' + idx + '][option_attributes][name_' + locale + ']', optioning.option.name_translations[locale]);
+      } else {
+        self.add_form_field('option_set[optionings_attributes][' + idx + '][option_id]', optioning.option.id);
+      }
     });
     
     // add removed optionings
