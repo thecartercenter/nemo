@@ -1,6 +1,9 @@
 class Question < ActiveRecord::Base
   include MissionBased, Translatable, Standardizable, Replicable
   
+  # this needs to be up here other wise it runs /after/ the children are destroyed
+  before_destroy(:check_assoc)
+
   belongs_to(:option_set, :include => :options, :inverse_of => :questions, :autosave => true)
   has_many(:questionings, :dependent => :destroy, :autosave => true, :inverse_of => :question)
   has_many(:answers, :through => :questionings)
@@ -15,11 +18,14 @@ class Question < ActiveRecord::Base
   validate(:integrity)
   validate(:code_unique_per_mission)
 
-  before_destroy(:check_assoc)
-  
   scope(:by_code, order("code"))
   scope(:select_types, where(:qtype_name => %w(select_one select_multiple)))
   scope(:with_forms, includes(:forms))
+  scope(:with_answer_counts, select("questions.*, COUNT(answers.id) AS answer_count").
+    joins(%{
+      LEFT OUTER JOIN questionings ON questionings.question_id = questions.id 
+      LEFT OUTER JOIN answers ON answers.questioning_id = questionings.id
+    }).group("questions.id"))
   
   translates :name, :hint
   
@@ -96,7 +102,7 @@ class Question < ActiveRecord::Base
   def form_names
     forms.map(&:name).join(', ')
   end
-  
+
   private
 
     def integrity
@@ -114,7 +120,7 @@ class Question < ActiveRecord::Base
     end
 
     def check_assoc
-      raise DeletionError.new(:cant_delete_if_in_form) unless questionings.empty?
+      raise DeletionError.new(:cant_delete_if_has_answers) unless answers.empty?
     end
 
     def code_unique_per_mission

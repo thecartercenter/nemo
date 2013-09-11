@@ -36,8 +36,10 @@ module QuestionsHelper
     when "std_icon" then std_icon(q)
     when "type" then t(q.qtype_name, :scope => :question_type)
     when "published?" then tbool(q.published?)
-    when "actions" then action_links(q, :obj_name => q.code)
-    when "name" then
+    when "actions"
+      exclude = q.answer_count > 0 ? [:destroy] : []
+      action_links(q, :obj_name => q.code, :exclude => exclude)
+    when "name"
       params[:controller] == 'forms' ? q.name : link_to(q.name, q)
     else q.send(field)
     end
