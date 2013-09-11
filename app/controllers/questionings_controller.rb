@@ -31,6 +31,11 @@ class QuestioningsController < ApplicationController
       prepare_and_render_form
     end
   end
+
+  def destroy
+    destroy_and_handle_errors(@questioning)
+    redirect_to(edit_form_path(@questioning.form))
+  end
   
   private
     # prepares objects for and renders the form template
