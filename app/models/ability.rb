@@ -154,6 +154,9 @@ class Ability
     cannot [:destroy, :update, :update_own_fields], Questioning do |q|
       q.standard_copy?
     end
+    cannot [:destroy], Question do |q|
+      q.standard_copy? && q.has_standard_copy_form?
+    end
 
     # BUT can update questioning if can update related question
     can :update, Questioning do |q|

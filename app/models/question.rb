@@ -25,7 +25,8 @@ class Question < ActiveRecord::Base
       questions.*, 
       COUNT(DISTINCT answers.id) AS answer_count, 
       COUNT(DISTINCT questionings.id) AS form_count, 
-      MAX(DISTINCT forms.published) AS form_published
+      MAX(DISTINCT forms.published) AS form_published,
+      MAX(DISTINCT forms.standard_id) AS standard_copy_form_id
     }).joins(%{
       LEFT OUTER JOIN questionings ON questionings.question_id = questions.id
       LEFT OUTER JOIN forms ON forms.id = questionings.form_id
@@ -71,6 +72,12 @@ class Question < ActiveRecord::Base
   # uses the eager-loaded form_published field if available
   def published?
     respond_to?(:form_published) ? form_published == 1 : forms.any?(&:published?)
+  end
+
+  # determines if any of the forms on which this question appears are standard copies
+  # uses a special eager-loaded attribute if available
+  def has_standard_copy_form?
+    respond_to?(:standard_copy_form_id) ? !standard_copy_form_id.nil? : forms.any?(&:standard_copy?)
   end
 
   # checks if any associated forms are smsable
