@@ -122,7 +122,9 @@
       // don't show the edit link if the option is existing and has not yet been added to the set (rails limitation)
       if (optioning.id || !optioning.option.id) links.append(self.params.edit_link);
       
+      // don't show the removable link if the option isn't removable
       if (optioning.removable) links.append(self.params.remove_link);
+
       links.appendTo(inner);
     }
     
