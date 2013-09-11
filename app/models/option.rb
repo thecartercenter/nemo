@@ -64,6 +64,14 @@ class Option < ActiveRecord::Base
   
   def questions; option_sets.collect{|os| os.questions}.flatten.uniq; end
   
+  def has_answers?
+    !answers.empty?
+  end
+
+  def has_choices?
+    !choices.empty?
+  end
+
   # returns all forms on which this option appears
   def forms
     option_sets.collect{|os| os.questionings.collect(&:form)}.flatten.uniq

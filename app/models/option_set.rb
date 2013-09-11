@@ -51,7 +51,26 @@ class OptionSet < ActiveRecord::Base
   def form_smsable?
     questionings.any?(&:form_smsable?)
   end
-  
+
+  # checks if this option set is used in at least one question
+  # uses the special 'question_count' field if it was loaded, else uses the questionings assoc
+  def has_questions?
+    respond_to?(:question_count) ? question_count > 0 : !questionings.empty?
+  end
+
+  # checks if this option set has any answers/choices
+  # uses methods from special eager loaded scope if they are available
+  def has_answers?
+    # check for answers
+    return true if (respond_to?(:answer_count) ? answer_count > 0 : options.any?(&:has_answers?))
+
+    # check for choices
+    return true if (respond_to?(:choice_count) ? choice_count > 0 : options.any?(&:has_choices?))
+
+    # if we get here, false
+    false
+  end
+    
   # finds or initializes an optioning for every option in the database for current mission (never meant to be saved)
   def all_optionings(options)
     # make sure there is an associated answer object for each questioning in the form
