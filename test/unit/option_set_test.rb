@@ -93,10 +93,10 @@ class OptionSetTest < ActiveSupport::TestCase
     assert_equal(true, os.ranks_changed?)
   end
   
-  test "checking associations for an option set that is presently used in a question should raise deletion error" do
+  test "destroying an option set that is presently used in a question should raise deletion error" do
     os = FactoryGirl.create(:option_set)
     q = FactoryGirl.create(:question, :qtype_name => 'select_one', :option_set => os)
-    assert_raise(DeletionError){os.check_associations}
+    assert_raise(DeletionError){os.reload.destroy}
   end
 
   test "creating an option set with nested paramters and a mix of new and existing options should work" do

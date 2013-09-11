@@ -63,7 +63,7 @@ class OptionSet < ActiveRecord::Base
   # checks if this option set is used in at least one question
   # uses the special 'question_count' field if it was loaded, else uses the questionings assoc
   def has_questions?
-    respond_to?(:question_count) ? question_count > 0 : !questionings.empty?
+    respond_to?(:question_count) ? question_count > 0 : !questions.empty?
   end
 
   # checks if this option set has any answers/choices
