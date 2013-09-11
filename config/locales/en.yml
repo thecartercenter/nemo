@@ -206,6 +206,7 @@ en:
       question:
         base: "" # this is a sort of hack to get error msg to display properly
         forms: "Forms"
+        published: "Published?"
         key: "Is Key Question?"
         minimum: "Minimum"
         maximum: "Maximum"
@@ -379,6 +380,7 @@ en:
           cant_change_if_conditions: "You can't change the Type or Option Set because there are Conditions that refer to this Question."
           cant_change_if_responses: "You can't change the Type or Option Set because there are already Responses for this Question."
           cant_delete_if_has_answers: "You can't delete this Question because it is referred to in at least one Answer."
+          cant_delete_if_published: "You can't delete this Question because it appears on at least one published Form."
         questioning:
           cant_delete_if_has_answers: "You can't remove this Question because it has one or more answers for this Form."
           invalid_condition: "is invalid (see below)"

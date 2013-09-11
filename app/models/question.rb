@@ -21,9 +21,14 @@ class Question < ActiveRecord::Base
   scope(:by_code, order("code"))
   scope(:select_types, where(:qtype_name => %w(select_one select_multiple)))
   scope(:with_forms, includes(:forms))
-  scope(:with_assoc_counts, select("questions.*, COUNT(DISTINCT answers.id) AS answer_count, COUNT(DISTINCT questionings.id) AS form_count").
-    joins(%{
-      LEFT OUTER JOIN questionings ON questionings.question_id = questions.id 
+  scope(:with_assoc_counts, select(%{
+      questions.*, 
+      COUNT(DISTINCT answers.id) AS answer_count, 
+      COUNT(DISTINCT questionings.id) AS form_count, 
+      MAX(DISTINCT forms.published) AS form_published
+    }).joins(%{
+      LEFT OUTER JOIN questionings ON questionings.question_id = questions.id
+      LEFT OUTER JOIN forms ON forms.id = questionings.form_id
       LEFT OUTER JOIN answers ON answers.questioning_id = questionings.id
     }).group("questions.id"))
   
@@ -56,9 +61,16 @@ class Question < ActiveRecord::Base
     (opt = options) ? opt.collect{|o| [o.name, o.id]} : []
   end
 
+  # determins if question has answers
+  # uses the eager-loaded answer_count field if available
+  def has_answers?
+    respond_to?(:answer_count) ? answer_count > 0 : !answers.empty?
+  end
+
   # determines if the question appears on any published forms
+  # uses the eager-loaded form_published field if available
   def published?
-    forms.any?(&:published?)
+    respond_to?(:form_published) ? form_published == 1 : forms.any?(&:published?)
   end
 
   # checks if any associated forms are smsable
@@ -117,7 +129,8 @@ class Question < ActiveRecord::Base
     end
 
     def check_assoc
-      raise DeletionError.new(:cant_delete_if_has_answers) unless answers.empty?
+      raise DeletionError.new(:cant_delete_if_has_answers) if has_answers?
+      raise DeletionError.new(:cant_delete_if_published) if published?
     end
 
     def code_unique_per_mission

@@ -25,9 +25,9 @@ module QuestionsHelper
   def questions_index_fields
     # fields for form mode
     if params[:controller] == 'forms'
-      %w(std_icon code name type forms)
+      %w(std_icon code name type forms published)
     else
-      %w(std_icon code name type forms actions)
+      %w(std_icon code name type forms published actions)
     end
   end
 
@@ -35,10 +35,11 @@ module QuestionsHelper
     case field
     when "std_icon" then std_icon(q)
     when "type" then t(q.qtype_name, :scope => :question_type)
-    when "published?" then tbool(q.published?)
+    when "published" then tbool(q.published?)
     when "forms" then q.form_count
     when "actions"
-      exclude = q.answer_count > 0 ? [:destroy] : []
+      exclude = []
+      exclude << :destroy if q.has_answers? || q.published?
       action_links(q, :obj_name => q.code, :exclude => exclude)
     when "name"
       params[:controller] == 'forms' ? q.name : link_to(q.name, q)
