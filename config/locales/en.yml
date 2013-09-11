@@ -696,13 +696,26 @@ en:
     summary: "Summary"
     top_forms: "Top Forms"
 
+  data_integrity:
+    appears_elsewhere_warnings:
+      by_type:
+        question: "This Question appears on the following Forms: *%{forms}*. Any changes you make below will be reflected on those Forms."
+        option_set: "This Option Set appears on the following Forms: *%{forms}*. Any changes you make below will be reflected on those Forms."
+    has_answers_warnings:
+      by_type:
+        question: "This Question has existing Answers. Changes to type and Option Set are not allowed."
+    published_warnings:
+      by_type:
+        form: "This Form is published, meaning it may already be in the hands of observers. Please proceed with caution when **adding required Questions**, **removing Questions**, or **reordering Questions**."
+        questioning: "The Form to which the below fields apply is published. Please proceed with caution when changing **any of these fields**."
+        question: "This Question appears on at least one published Form, meaning it may already be in the hands of observers. Please proceed with caution when changing the **Question type**, **Option Set**, or **max/min constraints**."
+        option_set: "This Option Set appears on at least one published Form, meaning it may already be in the hands of observers. Please proceed with caution when **adding, removing, or reordering Options**."
+      sms: "Such changes will cause SMS form users to receive an error if they try to submit the current version of the Form."
+      odk: "Such changes will not disable Responses from ODK, but may cause some data loss and/or Responses that are not valid (e.g. missing required answers)."
+
   form:
     add_questions: "Add Questions"
     add_selected: "Add Selected Questions to Form"
-    appears_elsewhere_warnings:
-      by_type:
-        question: "This Question appears on the following Forms: %{forms}. Any changes you make below will be reflected on those Forms."
-        option_set: "This Option Set appears on the following Forms: %{forms}. Any changes you make below will be reflected on those Forms."
     back_to_questions: "Back to Questions List"
     choose_form: "Choose a Form..."
     clone_confirm: "Are you sure you want to make a copy of the form '%{form_name}'?"
@@ -714,14 +727,6 @@ en:
     publish_error: "There was a problem publishing the form (%{msg})."
     publish_success: "Form published successfully."
     publish_form: "Publish Form"
-    published_warnings:
-      by_type:
-        form: "This Form is published, meaning it may already be in the hands of observers. Please proceed with caution when **adding required Questions**, **removing Questions**, or **reordering Questions**."
-        questioning: "The Form to which the below fields apply is published. Please proceed with caution when changing **any of these fields**."
-        question: "This Question appears on at least one published Form, meaning it may already be in the hands of observers. Please proceed with caution when changing the **Question type**, **Option Set**, or **constraints**."
-        option_set: "This Option Set appears on at least one published Form, meaning it may already be in the hands of observers. Please proceed with caution when **adding, removing, or reordering Options**."
-      sms: "Such changes will cause SMS form users to receive an error if they try to submit the current version of the Form."
-      odk: "Such changes will not disable Responses from ODK, but may cause some data loss and/or Responses that are not valid (e.g. missing required answers)."
     question_remove_error: "There was a problem removing the questions (%{msg})."
     question_remove_answer_error: "One or more of the selected questions has answers and can't be removed."
     questions_add_error: "There was a problem adding the questions (%{msg})."

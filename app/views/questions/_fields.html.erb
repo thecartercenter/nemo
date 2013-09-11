@@ -1,8 +1,12 @@
 <div class="question_fields">
 
   <% if form.mode == :edit %>
+    <% if !@question.answers.empty? %>
+      <%= has_answers_warning(@question) %>
+    <% else %>
+      <%= published_warning(@question) if @question.published? %>
+    <% end %>
     <%= appears_elsewhere_warning(@question) unless @question.forms.empty? %>
-    <%= published_warning(@question) if @question.published? %>
   <% end %>
   
   <%= form_field(form, :code, :required => true, :maxlength => 20) %>

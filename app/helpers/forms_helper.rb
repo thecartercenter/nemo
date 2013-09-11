@@ -143,32 +143,4 @@ module FormsHelper
   def submit_number
     content_tag("strong", configatron.incoming_sms_number.blank? ? "[" + t("sms_form.guide.unknown_number") + "]" : configatron.incoming_sms_number)
   end
-
-  # constructs html for a warning about published objects (form, questioning, question, option set)
-  def published_warning(obj)
-    # get primary text
-    type = obj.class.model_name.singular
-    text = [tmd("form.published_warnings.by_type.#{type}")]
-
-    # add sms piece if applicable
-    smsable = obj.is_a?(Form) ? obj.smsable? : obj.form_smsable?
-    text << tmd("form.published_warnings.sms") if smsable
-
-    # add odk piece
-    text << tmd("form.published_warnings.odk")
-
-    # create tag and return
-    form_builder_warning(text.join(' ').html_safe)
-  end
-
-  def appears_elsewhere_warning(obj)
-    type = obj.class.model_name.singular
-    text = tmd("form.appears_elsewhere_warnings.by_type.#{type}", :forms => obj.form_names)
-    form_builder_warning(text)
-  end
-
-  def form_builder_warning(text)
-    icon = content_tag(:i, '', :class => 'icon-warning-sign')
-    content_tag(:div, (icon + content_tag(:div, text)).html_safe, :class => 'form_builder_warning')
-  end
 end
