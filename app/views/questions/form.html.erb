@@ -1,4 +1,4 @@
-<% @title_args = {:code => @question.code} %>
+<% @title_args = {:code => @question.code, :standardized => @question.standardized?} %>
 
 <%= flash_and_form_errors(@question) %>
 

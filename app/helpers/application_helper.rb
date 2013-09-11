@@ -173,9 +173,13 @@ module ApplicationHelper
   
   # gets or constructs the page title from the translation file or from an explicitly set @title
   # returns empty string if no translation found and no explicit title set
-  def title
+  # looks for special :standard option in @title_args, shows seal if set
+  # options[:text_only] - don't return any images or html
+  def title(options = {})
     # use explicit title if given
     return @title unless @title.nil?
+
+    @title_args ||= {}
 
     # if action specified outright, use that
     action = if @title_action
@@ -189,7 +193,19 @@ module ApplicationHelper
       end
     end
 
-    @title = t(action, {:scope => "page_titles.#{controller_name}", :default => [:all, ""]}.merge(@title_args || {}))
+    ttl = ''
+
+    # add seal if appropriate
+    if !options[:text_only]
+      if admin_mode? && %w(forms questions questionings option_sets).include?(controller_name) || @title_args.delete(:standardized)
+        ttl += image_tag('std-seal.png') + ' '
+      end
+    end
+
+    # add text
+    ttl += t(action, {:scope => "page_titles.#{controller_name}", :default => [:all, ""]}.merge(@title_args || {}))
+
+    ttl.html_safe
   end
   
   # pluralizes an activerecord model name

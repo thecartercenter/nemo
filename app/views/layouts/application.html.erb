@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title><%= configatron.site_name %><%= title.blank? ? "" : ": #{title}" %></title>
+  <title><%= configatron.site_name %><%= (ttl = title(:text_only => true)).blank? ? "" : ": #{ttl}" %></title>
 
   <%= stylesheet_link_tag "application", :media => "all" %>
   <%= stylesheet_link_tag "application-screen", :media => "screen" %>
@@ -125,8 +125,6 @@
   <div id="content" class="<%= ctlr_action_name %>">
     <% unless @dont_print_title %>
       <h1 class="title">
-        <%# show seal if appropriate %>
-        <%= image_tag('std-seal.png') if admin_mode? && %w(forms questions questionings option_sets).include?(controller_name) %>
         <%= title %>
       </h1>
     <% end %>
