@@ -151,17 +151,18 @@ class Ability
     cannot [:add_questions, :remove_questions, :reorder_questions], Form do |f|
       f.standard_copy?
     end
+
     cannot [:destroy, :update, :update_own_fields], Questioning do |q|
       q.standard_copy?
     end
-    cannot [:destroy], Question do |q|
-      q.standard_copy? && q.has_standard_copy_form?
-    end
+
+    # update_core refers to the core fields: code, question type, option set, constraints
+    cannot(:update_core, Question) { |q| q.standard_copy? }
+
+    cannot(:destroy, Question) { |q| q.standard_copy? && q.has_standard_copy_form? }
 
     # BUT can update questioning if can update related question
-    can :update, Questioning do |q|
-      can :update, q.question
-    end
+    can(:update, Questioning) { |q| can :update, q.question }
 
   end
 end

@@ -1,16 +1,20 @@
 <div class="question_fields">
 
   <% if form.mode == :edit %>
-    <%= has_answers_warning(@question) if !@question.answers.empty? %>
+    <%= has_answers_warning(@question) if @question.has_answers? %>
     <%= published_warning(@question) if @question.published? %>
     <%= appears_elsewhere_warning(@question) unless @question.forms.empty? %>
   <% end %>
   
+  <%# core fields should not be editable if don't have update_core permission %>
+  <% old_f_mode = form.mode
+     form.mode = :show if cannot?(:update_core, @question) %>
+
   <%= form_field(form, :code, :required => true, :maxlength => 20) %>
 
   <%= form_field(form, :qtype_name, :type => :select, :required => true, 
         :options => @question_types.map{|qt| [t(qt.name, :scope => :question_type), qt.name]},
-        :force_show_mode => !@question.answers.empty?) %>
+        :force_show_mode => @question.has_answers?) %>
 
   <%# this is a partial because it contains more complex controls %>
   <%# the partial path is fully qualified because THIS partial might be included in several different contexts %>
@@ -20,6 +24,9 @@
     <%= form_field(form, :minimum, :partial => "questions/min_max_condition") %>
     <%= form_field(form, :maximum, :partial => "questions/min_max_condition") %>
   </div>
+
+  <% form.mode = old_f_mode %>
+  
   
   <% (configatron.preferred_locales).each_with_index do |lang, rank| %>
     <%= render("questions/title_and_hint", :lang => lang, :form => form, :rank => rank) %>
