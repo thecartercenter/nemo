@@ -707,7 +707,8 @@ en:
     has_answers_warnings:
       by_type:
         question: "This Question has existing Answers. Changes to type and Option Set are not allowed."
-    option_in_use_name_change_warning: "This Option is in use in other published Forms or is referenced in existing Responses. You should therefore be careful not to change the meaning of the Option in your edits."
+    option_in_use_name_change_warning: "This Option is in use in other published Forms or is referenced in existing Responses. You should be careful not to change the meaning of the Option in your edits."
+    option_standard_copy_name_change_warning: "This Option is a copy of a standard Option. You should be sure to preserve the original meaning of the Option so that it agrees with the standard."
     published_warnings:
       by_type:
         form: "This Form is published, meaning it may already be in the hands of observers. Please proceed with caution when **adding required Questions**, **removing Questions**, or **reordering Questions**."

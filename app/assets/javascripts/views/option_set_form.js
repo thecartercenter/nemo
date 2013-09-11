@@ -186,8 +186,8 @@
       $('div.edit_option_form input#name_' + locale).val("");
     });
     
-    // hide the in_use_warning
-    $('div.edit_option_form div.in_use_warning').hide();
+    // hide the in_use warning
+    $('div.edit_option_form div.option_in_use_name_change_warning').hide();
 
     // then populate text boxes
     for (var locale in optioning.option.name_translations)
@@ -206,8 +206,8 @@
       height: 180 + (ELMO.app.params.mission_locales.length * 40)
     });
 
-    // show the in_use_warning if appopriate
-    if (optioning.option.in_use) $('div.edit_option_form div.in_use_warning').show();
+    // show the in_use warning if appopriate
+    if (optioning.option.in_use) $('div.edit_option_form div.option_in_use_name_change_warning').show();
   };
   
   // saves entered translations to data model

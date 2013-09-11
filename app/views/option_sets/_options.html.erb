@@ -10,7 +10,11 @@
 
 <% if form.mode != :show %>
   <div class="edit_option_form" title="<%= t("option_set.edit_option") %>">
-    <%= data_integrity_warning(t('data_integrity.option_in_use_name_change_warning')) %>
+    <%= data_integrity_warning(:option_standard_copy_name_change_warning) if @option_set.standard_copy? %>
+
+    <%# this warning will get hidden/shown by the js %>
+    <%= data_integrity_warning(:option_in_use_name_change_warning) %>
+
     <% configatron.preferred_locales.each do |locale| %>
       <div class="translation">
         <label for="<%= locale %>"><%= t(:locale_name, :locale => locale) %></label>
