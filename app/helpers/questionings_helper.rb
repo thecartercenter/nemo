@@ -41,7 +41,12 @@ module QuestioningsHelper
     case field
     when "std_icon" then std_icon(qing)
     when "name" then link_to(qing.question.name, questioning_path(qing), :title => t("common.view"))
-    when "rank" then controller.action_name == "show" ? qing.rank : text_field_tag("rank[#{qing.id}]", qing.rank, :class => "rank_box")
+    when "rank" 
+      if controller.action_name == "show" || cannot?(:reorder_questions, qing.form) 
+        qing.rank
+      else
+        text_field_tag("rank[#{qing.id}]", qing.rank, :class => "rank_box")
+      end
     when "code", "name", "type" then format_questions_field(qing.question, field)
     when "condition" then tbool(qing.has_condition?)
     when "required", "hidden" then tbool(qing.send(field))

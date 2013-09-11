@@ -83,7 +83,7 @@ class FormsController < ApplicationController
       @form.assign_attributes(params[:form])
       
       # update ranks if provided (possibly raising condition ordering error)
-      @form.update_ranks(params[:rank]) if params[:rank]
+      @form.update_ranks(params[:rank]) if params[:rank] && can?(:reorder_questions, @form)
 
       # save everything and redirect
       @form.save!
