@@ -90,7 +90,7 @@
     
     
     // setup the sortable plugin unless in show mode
-    if (self.params.form_mode != 'show') {
+    if (self.params.form_mode != 'show' && self.params.can_reorder) {
       ol.nestedSortable({
         handle: 'div',
         items: 'li',
@@ -109,7 +109,7 @@
     var inner = $('<div>').attr('class', 'inner')
     
     // add sort icon if not in show mode
-    if (self.params.form_mode != 'show')
+    if (self.params.form_mode != 'show' && self.params.can_reorder)
       inner.append($('<i>').attr('class', 'icon-sort'));
     
     // add option name
@@ -122,8 +122,9 @@
       // don't show the edit link if the option is existing and has not yet been added to the set (rails limitation)
       if (optioning.id || !optioning.option.id) links.append(self.params.edit_link);
       
-      // don't show the removable link if the option isn't removable
-      if (optioning.removable) links.append(self.params.remove_link);
+      // don't show the removable link if the specific option isn't removable
+      // or if the global removable permission is false
+      if (self.params.can_remove_options && optioning.removable) links.append(self.params.remove_link);
 
       links.appendTo(inner);
     }

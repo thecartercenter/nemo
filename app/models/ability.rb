@@ -156,6 +156,9 @@ class Ability
       q.standard_copy?
     end
 
+    # update_own_fields as opposed to update the contained options' fields
+    cannot(:update_own_fields, OptionSet) { |o| o.standard_copy? }
+
     # update_core refers to the core fields: code, question type, option set, constraints
     cannot(:update_core, Question) { |q| q.standard_copy? }
 

@@ -1,13 +1,14 @@
 <div class="option_set_form">
 
   <% if form_mode == :edit %>
-    <%= published_warning(@option_set) if @option_set.published? && form_mode == :edit %>
-    <%= appears_elsewhere_warning(@option_set) unless @option_set.forms.empty? %>
+    <%= published_warning(@option_set) if @option_set.published? %>
+    <%= appears_elsewhere_warning(@option_set) if @option_set.has_questions? %>
   <% end %>
 
   <%= flash_and_form_errors(@option_set) %>
   <%= nice_form_for(@option_set) do |f| %>
-    <%= form_field(f, :name, :required => true) %>
+
+    <%= form_field(f, :name, :required => true, :force_show_mode => cannot?(:update_own_fields, @option_set)) %>
     <%= form_field(f, :options, :required => true, :partial => "options") %>
     <%= form_submit_button(f, :label => :save) unless ajax_request? %> 
   <% end %>
