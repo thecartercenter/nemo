@@ -11,7 +11,7 @@ module QuestioningsHelper
       if qings.size > 0
         # add remove questions link
         links << batch_op_link(:name => t("form.remove_selected"), :path => remove_questions_form_path(@form),
-          :confirm => t("form.remove_question_confirm"))
+          :confirm => t("form.remove_question_confirm")) if can?(:remove_questions, @form)
         
         # add publish link
         links << link_to("#{t('form.publish_form')}", publish_form_path(@form))
@@ -47,7 +47,7 @@ module QuestioningsHelper
     when "required", "hidden" then tbool(qing.send(field))
     when "actions"
       exclude = []
-      exclude << :destroy if controller.action_name == "show" || qing.form.qing_answer_count(qing) > 0
+      exclude << :destroy if controller.action_name == "show" || qing.form.qing_answer_count(qing) > 0 || cannot?(:destroy, qing)
       exclude << :edit if controller.action_name == "show"
       action_links(qing, :obj_name => qing.code, :exclude => exclude)
     else qing.send(field)

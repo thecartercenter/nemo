@@ -148,8 +148,12 @@ class Ability
     end
 
     # a lot of things are restricted with standard copies
-    cannot :add_questions, Form do |f|
+    cannot [:add_questions, :remove_questions], Form do |f|
       f.standard_copy?
+    end
+
+    cannot [:destroy], Questioning do |q|
+      q.standard_copy?
     end
 
   end
