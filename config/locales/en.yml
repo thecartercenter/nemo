@@ -205,6 +205,7 @@ en:
         options: "Options"
       question:
         base: "" # this is a sort of hack to get error msg to display properly
+        forms: "Forms"
         key: "Is Key Question?"
         minimum: "Minimum"
         maximum: "Maximum"

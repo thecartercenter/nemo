@@ -21,7 +21,7 @@ class Question < ActiveRecord::Base
   scope(:by_code, order("code"))
   scope(:select_types, where(:qtype_name => %w(select_one select_multiple)))
   scope(:with_forms, includes(:forms))
-  scope(:with_answer_counts, select("questions.*, COUNT(answers.id) AS answer_count").
+  scope(:with_assoc_counts, select("questions.*, COUNT(DISTINCT answers.id) AS answer_count, COUNT(DISTINCT questionings.id) AS form_count").
     joins(%{
       LEFT OUTER JOIN questionings ON questionings.question_id = questions.id 
       LEFT OUTER JOIN answers ON answers.questioning_id = questionings.id
