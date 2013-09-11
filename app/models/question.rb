@@ -114,9 +114,6 @@ class Question < ActiveRecord::Base
           errors.add(:base, :cant_change_if_conditions)
         end
       end
-      
-      # error if anything (except name/hint) has changed and the question is published
-      errors.add(:base, :cant_change_if_published) if published? && (changed? && !changed.reject{|f| f =~ /^_?(name|hint)/ || f == 'key'}.empty?)
     end
 
     def check_assoc
