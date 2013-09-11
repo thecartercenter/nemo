@@ -44,13 +44,6 @@ class AuthorizationTest < ActionDispatch::IntegrationTest
     assert_field_changeable(form, :name)
   end
 
-  test "standard form copy should be renameable" do
-    form = FactoryGirl.create(:form, :is_standard => true)
-    copy = form.replicate(get_mission)
-
-    assert_field_changeable(copy, :name)
-  end
-
   test "should be able to add non-required question to published form" do
     form = FactoryGirl.create(:form)
     form.publish!
