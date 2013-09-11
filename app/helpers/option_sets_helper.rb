@@ -11,10 +11,14 @@ module OptionSetsHelper
     case field
     when "std_icon" then std_icon(option_set)
     when "name" then link_to(option_set.name, option_set_path(option_set), :title => t("common.view"))
-    when "published" then tbool(option_set.published?)
+    when "published" then tbool(option_set.form_published == 1)
     when "options" then option_set.options.collect{|o| o.name}.join(", ")
-    when "questions" then option_set.questions.size
-    when "actions" then action_links(option_set, :obj_name => option_set.name, :exclude => (option_set.published? ? [:destroy] : []))
+    when "questions" then option_set.question_count
+    when "actions"
+      exclude = []
+      exclude << :destroy if option_set.answer_count > 0 || option_set.choice_count > 0
+      
+      action_links(option_set, :obj_name => option_set.name, :exclude => exclude)
     else option_set.send(field)
     end
   end

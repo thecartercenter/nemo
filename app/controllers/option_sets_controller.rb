@@ -3,8 +3,17 @@ class OptionSetsController < ApplicationController
   load_and_authorize_resource
 
   def index
-    # add the included assocations
-    @option_sets = @option_sets.with_associations
+    # get the total entries before adding the big joins
+    total = @option_sets.count
+
+    # add the included assocations and order
+    @option_sets = @option_sets.with_assoc_counts_and_published(current_mission).by_name
+
+    # paginate all on one page for now. we specify the total enteries so that the autogen'd count query isn't huge
+    @option_sets = @option_sets.paginate(:page => 1, :per_page => 10000000, :total_entries => total)
+
+    # now we apply .all so that any .empty? or .count calls in the template don't cause more queries
+    @option_sets = @option_sets.all
   end
   
   def new

@@ -15,8 +15,25 @@ class OptionSet < ActiveRecord::Base
   before_validation(:ensure_ranks)
   before_validation(:ensure_option_missions)
   
-  default_scope(order("name"))
   scope(:with_associations, includes(:questions, {:optionings => :option}, {:questionings => :form}))
+
+  scope(:by_name, order('option_sets.name'))
+  scope(:with_assoc_counts_and_published, lambda { |mission|
+    select('option_sets.*, counts.answer_count, counts.choice_count, COUNT(questions.id) AS question_count, MAX(forms.published) AS form_published').
+    joins(%{
+      LEFT OUTER JOIN questions ON questions.option_set_id = option_sets.id 
+      LEFT OUTER JOIN questionings ON questionings.question_id = questions.id 
+      LEFT OUTER JOIN forms ON forms.id = questionings.form_id
+      LEFT OUTER JOIN (
+        SELECT option_sets.id AS count_os_id, COUNT(answers.id) AS answer_count, COUNT(choices.id) AS choice_count
+          FROM option_sets 
+            LEFT OUTER JOIN optionings ON optionings.option_set_id = option_sets.id 
+            LEFT OUTER JOIN answers ON answers.option_id = optionings.option_id 
+            LEFT OUTER JOIN choices ON choices.option_id = optionings.option_id 
+          WHERE option_sets.mission_id = #{mission.id}
+          GROUP BY option_sets.id
+      ) AS counts ON counts.count_os_id = option_sets.id
+    }).group('option_sets.id')})
   
   accepts_nested_attributes_for(:optionings, :allow_destroy => true)
   
