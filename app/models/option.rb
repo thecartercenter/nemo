@@ -79,7 +79,7 @@ class Option < ActiveRecord::Base
   
   # returns whether this option is in use -- is referenced in any answers/choices AND/OR is published
   def in_use?
-    published? || !answers.empty? || !choices.empty?
+    published? || has_answers? || has_choices?
   end
 
   def as_json(options = {})

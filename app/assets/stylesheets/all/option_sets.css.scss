@@ -1,5 +1,4 @@
 /* variables */
-$theme_red: #d02000;
 $theme_green: #9dc400;
 
 form.option_set_form {
@@ -90,10 +89,8 @@ div.edit_option_modal {
   div.ui-dialog-content {
     margin-top: 10px;
 
-    div.in_use_warning {
-      display: none;
-      color: $theme_red;
-      margin-bottom: 20px;
+    div.data_integrity_warning {
+      margin-top: -8px;
     }
 
     div.translation {
