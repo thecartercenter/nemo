@@ -43,7 +43,7 @@ class OptionSetsController < ApplicationController
   end
 
   def destroy
-    destroy_and_handle_errors(@option_set, :but_first => :check_associations)
+    destroy_and_handle_errors(@option_set)
     redirect_to(:action => :index)
   end
 

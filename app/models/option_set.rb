@@ -1,6 +1,8 @@
 class OptionSet < ActiveRecord::Base
   include MissionBased, Standardizable, Replicable
 
+  # this needs to be up here or it will run too late
+  before_destroy(:check_associations)
 
   has_many(:optionings, :order => "rank", :dependent => :destroy, :autosave => true, :inverse_of => :option_set)
   has_many(:options, :through => :optionings, :order => "optionings.rank")
@@ -114,14 +116,6 @@ class OptionSet < ActiveRecord::Base
     forms.map(&:name).join(', ')
   end
   
-  def check_associations
-    # make sure not associated with any questions
-    raise DeletionError.new(:cant_delete_if_has_questions) unless questions.empty?
-    
-    # don't need to check if associated with any existing answers/choices
-    # since questions can't be deleted if there are existing responses, so the first check above is sufficient
-  end
-  
   # checks if any of the option ranks have changed since last save
   def ranks_changed?
     optionings.map(&:rank_was) != optionings.map(&:rank)
@@ -135,6 +129,14 @@ class OptionSet < ActiveRecord::Base
       # if the options are already sorted this way, nothing will change
       # if a rank is null, we sort it to the end
       optionings.sort_by{|o| o.rank || 10000000}.each_with_index{|o, idx| o.rank = idx + 1}
+    end
+
+    def check_associations
+      # make sure not associated with any questions
+      raise DeletionError.new(:cant_delete_if_has_questions) if has_questions?
+
+      # make sure not associated with any answers
+      raise DeletionError.new(:cant_delete_if_has_answers) if has_answers?
     end
     
     def at_least_one_option
