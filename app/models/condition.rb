@@ -6,7 +6,7 @@ class Condition < ActiveRecord::Base
 
   belongs_to(:questioning, :inverse_of => :condition)
   belongs_to(:ref_qing, :class_name => "Questioning", :foreign_key => "ref_qing_id", :inverse_of => :referring_conditions)
-  belongs_to(:option, :dependent => :destroy)
+  belongs_to(:option)
   
   before_validation(:clear_blanks)
   before_validation(:clean_times)

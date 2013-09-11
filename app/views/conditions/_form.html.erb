@@ -1,6 +1,8 @@
 <%= fields_for("questioning[condition_attributes]", @condition) do |f| %>
   <%= render("layouts/object_errors", :object => @condition, :compact => true) %>
   <% f.mode = form_mode %>
+  <%= f.hidden_field(:id) %>
+  
   <div class="row">
     <div><%= translate_model(Question) %></div>
     <div>
