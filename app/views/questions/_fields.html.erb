@@ -1,11 +1,8 @@
 <div class="question_fields">
 
   <% if form.mode == :edit %>
-    <% if !@question.answers.empty? %>
-      <%= has_answers_warning(@question) %>
-    <% else %>
-      <%= published_warning(@question) if @question.published? %>
-    <% end %>
+    <%= has_answers_warning(@question) !@question.answers.empty? %>
+    <%= published_warning(@question) if @question.published? %>
     <%= appears_elsewhere_warning(@question) unless @question.forms.empty? %>
   <% end %>
   
