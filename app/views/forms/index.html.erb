@@ -1,5 +1,22 @@
 <div class="screen">
   <%= flash_and_form_errors %>
   <%= index_table(Form, @forms) %>
+
+  <% if @importable %>
+    <div class="importable">
+      <% if @importable.empty? %>
+        <%= t('standard.no_importable') %>
+      <% else %>
+        <form>
+          <% @importable.each do |o| %>
+            <div>
+              <input type="checkbox" id="importable-<%= o.id %>" value="<%= o.id %>">
+              <label for="importable-<%= o.id %>"><%= o.name %></label>
+            </div>
+          <% end %>
+        </form>
+      <% end %>
+    </div>
+  <% end %>
 </div>
 <div id="form_to_print"></div>

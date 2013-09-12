@@ -981,6 +981,7 @@ en:
 
   standard:
     import: "Import Standard"
+    no_importable: "There is nothing available to import. Either there are no standard objects of this type, or they have all been imported already."
     standard: "Standard"
     standard_forms: "Standard Forms"
 
