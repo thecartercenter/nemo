@@ -39,7 +39,7 @@ module QuestionsHelper
     when "forms" then q.form_count
     when "actions"
       exclude = []
-      exclude << :destroy if q.has_answers? || q.published?
+      exclude << :destroy if cannot?(:destroy, q)
       action_links(q, :obj_name => q.code, :exclude => exclude)
     when "name"
       params[:controller] == 'forms' ? q.name : link_to(q.name, q)
