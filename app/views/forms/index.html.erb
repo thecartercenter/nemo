@@ -3,10 +3,13 @@
   <%= index_table(Form, @forms) %>
 
   <% if @importable %>
-    <div class="importable">
+    <div class="importable" title="<%= t('standard.import_standard') %>">
       <% if @importable.empty? %>
         <%= t('standard.no_importable') %>
       <% else %>
+        <div>
+          <%= t('standard.import_instructions') %>
+        </div>
         <form>
           <% @importable.each do |o| %>
             <div>

@@ -11,7 +11,23 @@
   };
 
   klass.prototype.show_dialog = function() { var self = this;
-    console.log('foo');
-  }
+    // create the dialog
+    $("div.importable").dialog({
+      dialogClass: "no-close standard_import_modal",
+      buttons: [
+        {text: I18n.t('common.cancel'), click: function() { $(this).dialog('close'); }},
+        {text: I18n.t('standard.import'), click: function() { self.do_import(); }}
+      ],
+      modal: true,
+      autoOpen: true,
+      width: 500,
+      height: 300
+    });
+
+  };
+
+  klass.prototype.do_import = function() { var self = this;
+    console.log('doing import!');
+  };
   
 })(ELMO.Views);

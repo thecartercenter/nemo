@@ -980,7 +980,9 @@ en:
       missing_answers: "Sorry, the answers to the required questions %{ranks} were missing from your response to form '%{form_code}'."
 
   standard:
-    import: "Import Standard"
+    import: "Import"
+    import_instructions: "Check the box next to the objects you'd like to import. Then click the 'import' button."
+    import_standard: "Import Standard"
     no_importable: "There is nothing available to import. Either there are no standard objects of this type, or they have all been imported already."
     standard: "Standard"
     standard_forms: "Standard Forms"

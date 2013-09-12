@@ -5,7 +5,7 @@ module FormsHelper
     # add links based on authorization
     links << create_link(Form) if can?(:create, Form)
     links << link_to(t("page_titles.sms_tests.all"), new_sms_test_path) if can?(:create, Sms::Test)
-    links << link_to(t('standard.import'), '#', :class => 'import_standard') if @importable
+    links << link_to(t('standard.import_standard'), '#', :class => 'import_standard') if @importable
     # return links
     links
   end
