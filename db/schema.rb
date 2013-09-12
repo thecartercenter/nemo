@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130829010537) do
+ActiveRecord::Schema.define(:version => 20130912153204) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -383,7 +383,7 @@ ActiveRecord::Schema.define(:version => 20130829010537) do
 
   add_foreign_key "form_versions", "forms", :name => "form_versions_form_id_fk"
 
-  add_foreign_key "forms", "form_versions", :name => "forms_current_version_id_fk", :column => "current_version_id"
+  add_foreign_key "forms", "form_versions", :name => "forms_current_version_id_fk", :column => "current_version_id", :dependent => :nullify
   add_foreign_key "forms", "missions", :name => "forms_mission_id_fk"
 
   add_foreign_key "option_sets", "missions", :name => "option_sets_mission_id_fk"
