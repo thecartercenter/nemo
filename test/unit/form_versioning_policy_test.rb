@@ -147,17 +147,17 @@ class FormVersioningPolicyTest < ActiveSupport::TestCase
     publish_and_check_versions(:should_change => true)
   end
   
-  # test "adding an option to a set should cause upgrade" do
-  #   setup_option_set
+  test "adding an option to a set should cause upgrade" do
+    setup_option_set
 
-  #   save_old_version_codes
+    save_old_version_codes
     
-  #   # add an option
-  #   @os.options << Option.new(:name_en => "Troublemaker", :mission => get_mission)
-  #   @os.save!
+    # add an option
+    @os.options << Option.new(:name_en => "Troublemaker", :mission => get_mission)
+    @os.save!
     
-  #   publish_and_check_versions(:should_change => true)
-  # end
+    publish_and_check_versions(:should_change => true)
+  end
   
   # test "changing option label should not cause an upgrade" do
   #   setup_option_set
