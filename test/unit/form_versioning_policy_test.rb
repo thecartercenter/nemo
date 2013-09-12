@@ -129,6 +129,24 @@ class FormVersioningPolicyTest < ActiveSupport::TestCase
     publish_and_check_versions(:should_change => true)
   end
 
+  test "changing question type should cause upgrade" do
+    # add question to first two forms
+    q = FactoryGirl.create(:question)
+    @forms[0...2].each do |f|
+      Questioning.create(:form_id => f.id, :question_id => q.id)
+    end
+    
+    # reload the question so it knows about its new forms
+    q.reload
+    
+    save_old_version_codes
+    
+    # now change question type to decimal
+    q.update_attributes(:qtype_name => "decimal")
+    
+    publish_and_check_versions(:should_change => true)
+  end
+  
   # test "adding an option to a set should cause upgrade" do
   #   setup_option_set
 
@@ -167,24 +185,6 @@ class FormVersioningPolicyTest < ActiveSupport::TestCase
   
   
     
-  # test "changing question type should cause upgrade" do
-  #   # add question to first two forms
-  #   q = FactoryGirl.create(:question)
-  #   @forms[0...2].each do |f|
-  #     Questioning.create(:form_id => f.id, :question_id => q.id)
-  #   end
-    
-  #   # reload the question so it knows about its new forms
-  #   q.reload
-    
-  #   save_old_version_codes
-    
-  #   # now change question type to decimal
-  #   q.update_attributes(:qtype_name => "decimal")
-    
-  #   publish_and_check_versions(:should_change => true)
-  # end
-  
   # test "changing option order should cause upgrade" do
   #   setup_option_set
   #   save_old_version_codes
