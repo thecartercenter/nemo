@@ -66,8 +66,10 @@ class FormVersioningPolicy
     when "Question"
       case action
       when :update
-        # changing question type is a trigger
+        # changing question type, option set, or constraints is a trigger
         triggers << {:reason => :question_type_changed, :forms => obj.forms} if obj.qtype_name_changed?
+        triggers << {:reason => :question_option_set_changed, :forms => obj.forms} if obj.option_set_id_changed?
+        triggers << {:reason => :question_constraint_changed, :forms => obj.forms} if obj.constraint_changed?
       end
     end
     return triggers

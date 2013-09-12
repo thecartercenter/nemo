@@ -122,6 +122,10 @@ class Question < ActiveRecord::Base
     forms.map(&:name).join(', ')
   end
 
+  def constraint_changed?
+    %w(minimum maximum minstrictly maxstrictly).any?{|f| send("#{f}_changed?")}
+  end
+
   private
 
     def integrity
