@@ -103,6 +103,48 @@ class FormVersioningPolicyTest < ActiveSupport::TestCase
     publish_and_check_versions(:should_change => true)
   end
 
+  test "changing question condition should cause upgrade if question required" do
+    # add ref question and required question
+    q1 = FactoryGirl.create(:question)
+    q2 = FactoryGirl.create(:question)
+    qings1 = []; qings2 = []
+    @forms.each do |f|
+      qings1 << Questioning.create!(:form_id => f.id, :question_id => q1.id, :required => true)
+      qings2 << Questioning.create!(:form_id => f.id, :question_id => q2.id, :required => true)
+    end
+
+    save_old_version_codes
+
+    # add a condition in first 2 forms, should cause bump
+    qings2[0...2].each_with_index do |qing, i|
+      qing.reload
+      qing.build_condition(:ref_qing => qings1[i], :op => 'eq', :value => '1')
+      qing.save!
+    end
+    publish_and_check_versions(:should_change => true)
+
+    save_old_version_codes
+
+    # modify condition, should cause bump
+    qings2[0...2].each_with_index do |qing, i|
+      qing.reload
+      qing.condition.value = '2'
+      qing.save!
+    end
+    publish_and_check_versions(:should_change => true)
+
+    save_old_version_codes
+
+    # destroy condition, should cause bump
+    qings2[0...2].each_with_index do |qing, i|
+      qing.reload
+      qing.destroy_condition
+      qing.save!
+    end
+    publish_and_check_versions(:should_change => true)
+
+  end
+
   test "changing question required status should cause upgrade" do
     # add non-required question to first two forms
     q = FactoryGirl.create(:question)
@@ -235,6 +277,9 @@ class FormVersioningPolicyTest < ActiveSupport::TestCase
     end
     
     def save_old_version_codes
+      # publish and unpublish so any pending upgrades are performed
+      reload_forms
+      @forms.each{|f| f.publish!; f.unpublish!}
       reload_forms
       @old_versions = @forms.collect{|f| f.current_version.code}
     end

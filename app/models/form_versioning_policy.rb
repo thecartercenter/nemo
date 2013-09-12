@@ -47,6 +47,19 @@ class FormVersioningPolicy
         triggers << {:reason => :question_rank_changed, :forms => [obj.form]} if obj.rank_changed? && obj.form.smsable?
       end
 
+    when "Condition"
+      case action
+      when :create
+        # creating a condition is a trigger if question is required
+        triggers << {:reason => :new_condition, :forms => [obj.form]} if obj.questioning.required?
+      when :update
+        # changing condition is a trigger if question is required
+        triggers << {:reason => :condition_changed, :forms => [obj.form]} if obj.changed? && obj.questioning.required?
+      when :destroy
+        # destroying a condition is a trigger if question is required
+        triggers << {:reason => :condition_destroyed, :forms => [obj.form]} if obj.questioning.required?
+      end
+
     when "Question"
       case action
       when :update
