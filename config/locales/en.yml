@@ -743,6 +743,7 @@ en:
     unpublish_error: "There was a problem unpublishing the form (%{msg})."
     unpublish_success: "Form unpublished successfully. The download count has also been reset."
     unpublish: "Unpublish"
+    unpublish_form: "Unpublish Form"
     unsaved_rank_notice: "You have not yet saved the changes you made to the Question order. You should click the 'Save' button if you want to save these changes."
     view_sms_guide: "View SMS Guide"
 

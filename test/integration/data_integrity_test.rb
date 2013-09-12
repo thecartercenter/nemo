@@ -44,20 +44,14 @@ class AuthorizationTest < ActionDispatch::IntegrationTest
     assert_field_changeable(form, :name)
   end
 
-  test "should be able to add non-required question to published form" do
+  test "should not be able to add non-required question to published form" do
     form = FactoryGirl.create(:form)
     form.publish!
 
-    # check for add question link
+    # check for no add question link
     get(edit_form_path(form))
     assert_response(:success)
-    assert_select("a[href$=choose_questions]")
-
-    # check can add question
-    q = FactoryGirl.create(:question)
-    post(add_questions_form_path(form, :selected => {q.id.to_s => "1"}))
-    assert_successful_action(form)
-    assert_equal(q, form.reload.questions.last)
+    assert_select("a[href$=choose_questions]", false)
   end
 
   # DID NOT FINISH WRITING ALL THESE TESTS DUE TO TIME CONSTRAINTS

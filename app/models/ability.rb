@@ -147,9 +147,8 @@ class Ability
       !f.responses.empty?
     end
 
-    # a lot of things are restricted with standard copies
     cannot [:add_questions, :remove_questions, :reorder_questions], Form do |f|
-      f.standard_copy?
+      f.standard_copy? || f.published?
     end
 
     cannot [:destroy, :update, :update_own_fields], Questioning do |q|

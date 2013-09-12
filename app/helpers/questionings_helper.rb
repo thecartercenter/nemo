@@ -14,7 +14,9 @@ module QuestioningsHelper
           :confirm => t("form.remove_question_confirm")) if can?(:remove_questions, @form)
         
         # add publish link
-        links << link_to("#{t('form.publish_form')}", publish_form_path(@form))
+        key = @form.published? ? 'unpublish_form' : 'publish_form'
+        lbl = t("form.#{key}")
+        links << link_to("#{lbl}", publish_form_path(@form))
       end
     end
     
