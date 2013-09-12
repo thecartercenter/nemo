@@ -9,6 +9,7 @@
     <%= form_field(f, :name, :required => true, :force_show_mode => @form.standard_copy?) %>
     <%= form_field(f, :smsable, :type => :check_box) unless admin_mode? %>
     <%= form_field(f, :published, :type => :check_box, :force_show_mode => true) unless f.mode == :new %>
+    <%= form_field(f, :version, :partial => 'version') unless f.mode == :new %>
   <% end %>
 
   <%# questions on the form %>

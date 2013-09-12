@@ -19,7 +19,7 @@ module FormsHelper
   def format_forms_field(form, field)
     case field
     when "std_icon" then std_icon(form)
-    when "version" then form.current_version ? form.current_version.sequence : ""
+    when "version" then form.version
     when "name" then link_to(form.name, form_path(form), :title => t("common.view"))
     when "questions" then form.questionings_count
     when "updated_at" then l(form.updated_at)

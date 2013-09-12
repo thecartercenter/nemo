@@ -35,7 +35,11 @@ class Form < ActiveRecord::Base
   end
   
   def version
-    "1.0" # this isn't implemented yet
+    current_version.try(:sequence) || ""
+  end
+
+  def version_with_code
+    current_version.try(:sequence_and_code) || ""
   end
   
   def full_name
