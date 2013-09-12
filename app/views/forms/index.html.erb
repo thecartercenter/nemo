@@ -17,6 +17,10 @@
         </form>
       <% end %>
     </div>
+
+    <%= javascript_doc_ready do %>
+      new ELMO.Views.StandardImportForm({});
+    <% end %>
   <% end %>
 </div>
 <div id="form_to_print"></div>
