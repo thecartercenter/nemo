@@ -16,6 +16,18 @@ module Standardizable
     # create hooks to replicate changes to copies for key classes
     after_save(:replicate_save_to_copies)
     after_destroy(:replicate_destruction_to_copies)
+
+    # returns a scope for all standard objects of that are copyable to the given mission
+    # (i.e. that don't already exist in that mission)
+    def self.copyable_to(mission)
+      # get ids of all standard objs already copied to the mission
+      copied_ids = for_mission(mission).where('standard_id IS NOT NULL').map(&:standard_id)
+
+      # build relation
+      rel = where(:is_standard => true)
+      rel = rel.where("id NOT IN (?)", copied_ids) unless copied_ids.empty?
+      rel
+    end
   end
 
   # get copy in the given mission, if it exists (there can only be one)
@@ -32,7 +44,7 @@ module Standardizable
   def standard_copy?
     !standard.nil?
   end
-  
+
   private
     def replicate_changes_to_copies(change_type)
       if changing_in_replication
