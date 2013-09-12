@@ -155,23 +155,27 @@ class Ability
       q.standard_copy? || q.form.published?
     end
 
-    # update_own_fields as opposed to update the contained options' fields
-    cannot(:update_own_fields, OptionSet) do |o| 
-      o.standard_copy?
+    # BUT can update questioning if can update related question
+    can :update, Questioning do |q| 
+      can :update, q.question
     end
 
     # update_core refers to the core fields: code, question type, option set, constraints
-    cannot(:update_core, Question) do |q| 
+    cannot :update_core, Question do |q| 
       q.standard_copy? || q.published?
     end
 
-    cannot(:destroy, Question) do |q| 
+    cannot :destroy, Question do |q| 
       q.standard_copy? && q.has_standard_copy_form? || q.published? || q.has_answers?
     end
 
-    # BUT can update questioning if can update related question
-    can(:update, Questioning) do |q| 
-      can :update, q.question
+    # update_own_fields as opposed to update the contained options' fields
+    cannot :update_own_fields, OptionSet do |o| 
+      o.standard_copy?
+    end
+
+    cannot :destroy, OptionSet do |o|
+      o.has_answers? || o.has_questions? || o.published?
     end
 
   end
