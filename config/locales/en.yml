@@ -980,6 +980,7 @@ en:
       missing_answers: "Sorry, the answers to the required questions %{ranks} were missing from your response to form '%{form_code}'."
 
   standard:
+    import: "Import Standard"
     standard: "Standard"
     standard_forms: "Standard Forms"
 

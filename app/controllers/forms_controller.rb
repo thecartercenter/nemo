@@ -14,7 +14,8 @@ class FormsController < ApplicationController
       # render normally if html
       format.html do
         @forms = apply_filters(@forms)
-        render(:index)  
+        @importable = Form.importable_to(current_mission) if !admin_mode? && can?(:create, Form)
+        render(:index)
       end
       
       # get only published forms and render openrosa if xml requested
