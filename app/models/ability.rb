@@ -152,7 +152,7 @@ class Ability
     end
 
     cannot [:destroy, :update, :update_own_fields], Questioning do |q|
-      q.standard_copy?
+      q.standard_copy? || q.form.published?
     end
 
     # update_own_fields as opposed to update the contained options' fields
