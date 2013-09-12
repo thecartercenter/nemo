@@ -159,16 +159,16 @@ class FormVersioningPolicyTest < ActiveSupport::TestCase
     publish_and_check_versions(:should_change => true)
   end
   
-  # test "changing option label should not cause an upgrade" do
-  #   setup_option_set
+  test "changing option label should not cause an upgrade" do
+    setup_option_set
 
-  #   save_old_version_codes
+    save_old_version_codes
     
-  #   # change the option
-  #   @os.options.first.update_attributes!(:name_en => "New name")
+    # change the option
+    @os.options.first.update_attributes!(:name_en => "New name")
     
-  #   publish_and_check_versions(:should_change => false)
-  # end
+    publish_and_check_versions(:should_change => false)
+  end
   
   # test "destroying an option should cause upgrade" do
   #   setup_option_set
