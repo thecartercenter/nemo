@@ -171,7 +171,7 @@ class Ability
 
     # update_own_fields as opposed to update the contained options' fields
     cannot :update_own_fields, OptionSet do |o| 
-      o.standard_copy?
+      o.standard_copy? || o.published?
     end
 
     cannot :destroy, OptionSet do |o|
