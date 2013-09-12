@@ -7,6 +7,8 @@ class FormsController < ApplicationController
 
   # in the choose_questions action we have a question form so we need this Concern
   include QuestionFormable
+
+  include StandardImportable
   
   def index
     # handle different formats
@@ -14,7 +16,7 @@ class FormsController < ApplicationController
       # render normally if html
       format.html do
         @forms = apply_filters(@forms)
-        @importable = Form.importable_to(current_mission) if !admin_mode? && can?(:create, Form)
+        get_importable_objs
         render(:index)
       end
       
