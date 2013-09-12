@@ -14,7 +14,7 @@ module OptionSetsHelper
     when "published" then tbool(option_set.form_published == 1)
     when "options" then option_set.options.collect{|o| o.name}.join(", ")
     when "questions" then option_set.question_count
-    when "answers" then number_with_delimiter(option_set.answer_count + option_set.choice_count)
+    when "answers" then number_with_delimiter(option_set.answer_count)
     when "actions"
       exclude = []
       exclude << :destroy if cannot?(:destroy, option_set)

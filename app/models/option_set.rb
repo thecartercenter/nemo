@@ -23,8 +23,7 @@ class OptionSet < ActiveRecord::Base
   scope(:with_assoc_counts_and_published, lambda { |mission|
     select(%{
       option_sets.*, 
-      counts.answer_count, 
-      counts.choice_count, 
+      COUNT(DISTINCT answers.id) AS answer_count,
       COUNT(DISTINCT questions.id) AS question_count, 
       MAX(forms.published) AS form_published
     }).
@@ -32,15 +31,7 @@ class OptionSet < ActiveRecord::Base
       LEFT OUTER JOIN questions ON questions.option_set_id = option_sets.id 
       LEFT OUTER JOIN questionings ON questionings.question_id = questions.id 
       LEFT OUTER JOIN forms ON forms.id = questionings.form_id
-      LEFT OUTER JOIN (
-        SELECT option_sets.id AS count_os_id, COUNT(DISTINCT answers.id) AS answer_count, COUNT(DISTINCT choices.id) AS choice_count
-          FROM option_sets 
-            LEFT OUTER JOIN optionings ON optionings.option_set_id = option_sets.id 
-            LEFT OUTER JOIN answers ON answers.option_id = optionings.option_id 
-            LEFT OUTER JOIN choices ON choices.option_id = optionings.option_id 
-          WHERE option_sets.mission_id #{mission ? '= ' + mission.id.to_s : 'IS NULL'}
-          GROUP BY option_sets.id
-      ) AS counts ON counts.count_os_id = option_sets.id
+      LEFT OUTER JOIN answers ON answers.questioning_id = questionings.id
     }).group('option_sets.id')})
   
   accepts_nested_attributes_for(:optionings, :allow_destroy => true)
@@ -66,17 +57,11 @@ class OptionSet < ActiveRecord::Base
     respond_to?(:question_count) ? question_count > 0 : !questions.empty?
   end
 
-  # checks if this option set has any answers/choices
-  # uses methods from special eager loaded scope if they are available
+  # checks if this option set has any answers (that is, answers to questions that use this option set)
+  # uses method from special eager loaded scope if available
   def has_answers?
     # check for answers
-    return true if (respond_to?(:answer_count) ? answer_count > 0 : options.any?(&:has_answers?))
-
-    # check for choices
-    return true if (respond_to?(:choice_count) ? choice_count > 0 : options.any?(&:has_choices?))
-
-    # if we get here, false
-    false
+    respond_to?(:answer_count) ? answer_count > 0 : questionings.any?(&:has_answers?)
   end
 
   # finds or initializes an optioning for every option in the database for current mission (never meant to be saved)

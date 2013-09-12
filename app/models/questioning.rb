@@ -34,6 +34,10 @@ class Questioning < ActiveRecord::Base
     !condition.nil?
   end
 
+  def has_answers?
+    !answers.empty?
+  end
+
   # destroys condition and ensures that the condition param is nulled out
   def destroy_condition
     condition.destroy
