@@ -27,7 +27,7 @@ module QuestioningsHelper
     end
     
     # add the sms guide link if appropriate
-    if qings.size > 0 && qings.first.form.smsable? && qings.first.form.published?
+    if qings.size > 0 && qings.first.form.smsable? && qings.first.form.published? && !admin_mode?
       links << link_to(t("form.view_sms_guide"), form_path(qings.first.form, :sms_guide => 1))
     end
     
