@@ -1,5 +1,5 @@
 class Question < ActiveRecord::Base
-  include MissionBased, Translatable, Standardizable, Replicable
+  include MissionBased, FormVersionable, Translatable, Standardizable, Replicable
   
   # this needs to be up here other wise it runs /after/ the children are destroyed
   before_destroy(:check_assoc)

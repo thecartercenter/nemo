@@ -1,5 +1,5 @@
 class Optioning < ActiveRecord::Base
-  include MissionBased, Standardizable, Replicable
+  include MissionBased, FormVersionable, Standardizable, Replicable
 
   belongs_to(:option, :inverse_of => :optionings)
   belongs_to(:option_set, :inverse_of => :optionings)

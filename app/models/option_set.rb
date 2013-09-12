@@ -1,5 +1,5 @@
 class OptionSet < ActiveRecord::Base
-  include MissionBased, Standardizable, Replicable
+  include MissionBased, FormVersionable, Standardizable, Replicable
 
   # this needs to be up here or it will run too late
   before_destroy(:check_associations)
