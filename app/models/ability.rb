@@ -142,6 +142,9 @@ class Ability
     # published forms can't be deleted
     cannot :destroy, Form, :published => true
 
+    # standard forms can't be cloned (hard to implement and not currently needed)
+    cannot :clone, Form, :is_standard => true
+
     # forms with responses can't be deleted
     cannot :destroy, Form do |f| 
       !f.responses.empty?
