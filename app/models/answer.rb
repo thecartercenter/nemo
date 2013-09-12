@@ -51,6 +51,17 @@ class Answer < ActiveRecord::Base
     ans
   end
   
+  def digest
+    
+    # iterate through choices of answer if there is no value stored in answers table
+    if choices
+      answers_value = choices.map { |choice| choice.option_id }.join("")
+    else
+      answers_value = value || a.option_id || a.time_value || a.date_value || a.datetime_value
+    end
+    return answers_value
+  end
+  
   def choice_for(option)
     choice_hash[option]
   end

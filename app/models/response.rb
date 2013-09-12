@@ -119,17 +119,15 @@ class Response < ActiveRecord::Base
     end
   end
   
-  def check_if_duplicate_and_save
+  def check_if_duplicate!
     
     # generate the duplicate signature hash to find duplicate
     # responses if signature is not currently set
-    self.signature == nil ? generate_duplicate_signature : nil
+    generate_duplicate_signature if signature.nil?
 
-    # find duplicate responses, if none exist, flag duplicate column as 0
-    # else, flag it as 1
-    self.duplicate = find_duplicates.empty? ? 0 : 1
+    self.duplicate = find_duplicates.empty?
     
-    save!(:validate => false)
+    save(:validate => false)
   end
   
   # finds all responses with duplicate hashes
@@ -137,7 +135,7 @@ class Response < ActiveRecord::Base
     responses = Response.arel_table
     
     # don't include responses that have null signatures
-    if self.signature
+    if signature
       possible_duplicates = Response.where(responses["signature"].eq(self.signature).and(responses["id"].not_eq(id)))
     end
     
@@ -148,22 +146,7 @@ class Response < ActiveRecord::Base
   def generate_duplicate_signature
     
     # append user id to digest string
-    answers_digest = self.user_id.to_s
-    
-    # iterate through each answer and append the value of answer or choice
-    # to the digest string
-    self.answers.each do |a|
-      
-      if (answers_value = a.value || a.option_id || a.time_value || a.date_value || a.datetime_value) == nil
-        
-        # iterate through choices of answer if there is no value stored in answers table
-        if a.choices
-          answers_digest += a.choices.map { |choice| choice.option_id }.join("")
-        end
-      else
-        answers_digest += answers_value.to_s
-      end
-    end
+    answers_digest = user_id.to_s + answers.map{ |a| a.digest }.join
     
     self.signature = Digest::SHA1.hexdigest(answers_digest)
   end
