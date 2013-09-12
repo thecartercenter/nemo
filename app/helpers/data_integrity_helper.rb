@@ -2,19 +2,9 @@ module DataIntegrityHelper
 
   # constructs html for a warning about published objects (form, questioning, question, option set)
   def published_warning(obj)
-    # get primary text
     type = obj.class.model_name.singular
-    text = [tmd("data_integrity.published_warnings.by_type.#{type}")]
-
-    # add sms piece if applicable
-    smsable = obj.is_a?(Form) ? obj.smsable? : obj.form_smsable?
-    text << tmd("data_integrity.published_warnings.sms") if smsable
-
-    # add odk piece
-    text << tmd("data_integrity.published_warnings.odk")
-
-    # create tag and return
-    data_integrity_warning(:published_warning, text.join(' ').html_safe)
+    text = tmd("data_integrity.published_warnings.by_type.#{type}")
+    data_integrity_warning(:published_warning, text)
   end
 
   def has_answers_warning(obj)
