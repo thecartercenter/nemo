@@ -160,6 +160,12 @@ class Form < ActiveRecord::Base
     # get the desired count
     @answer_counts[qing.id].try(:answer_count) || 0
   end
+
+  # ensures question ranks are sequential
+  def fix_ranks
+    questionings(true).sort_by{|qing| qing.rank}.each_with_index{|qing, idx| qing.rank = idx + 1}
+    save!
+  end
   
   private
     def init_downloads

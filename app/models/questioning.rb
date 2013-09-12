@@ -10,6 +10,7 @@ class Questioning < ActiveRecord::Base
   before_validation(:destroy_condition_if_ref_qing_blank)
   before_create(:set_rank)
   before_create(:set_mission)
+  after_destroy(:fix_ranks)
 
   # also validates the associated condition because condition has validates(:questioning, ...)
   
@@ -76,5 +77,10 @@ class Questioning < ActiveRecord::Base
     # copy mission from question
     def set_mission
       self.mission = form.try(:mission)
+    end
+
+    # repair the ranks of the remaining questions on the form
+    def fix_ranks
+      form.fix_ranks
     end
 end

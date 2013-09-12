@@ -171,6 +171,31 @@ class FormVersioningPolicyTest < ActiveSupport::TestCase
     publish_and_check_versions(:should_change => true)
   end
 
+  test "deleting question should cause upgrade if question appeared not at end of an smsable form" do
+    # add questions to first two forms
+    q1 = FactoryGirl.create(:question)
+    q2 = FactoryGirl.create(:question)
+
+    # ensure forms are smsable
+    @forms.each{|f| f.smsable = true; f.save!}
+
+    @forms[0...2].each do |f|
+      Questioning.create(:form_id => f.id, :question_id => q1.id)
+      Questioning.create(:form_id => f.id, :question_id => q2.id)
+    end
+
+    # reload the question so it knows about its new forms
+    q1.reload
+    
+    save_old_version_codes
+
+    # destroy the question: should cause bump
+    q1.destroy
+
+    publish_and_check_versions(:should_change => true)
+  end
+
+
   test "changing question type should cause upgrade" do
     # add question to first two forms
     q = FactoryGirl.create(:question)
