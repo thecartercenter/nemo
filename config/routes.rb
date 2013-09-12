@@ -34,6 +34,11 @@ ELMO::Application.routes.draw do
       resources(:list_reports, :controller => 'reports')
     end
 
+    # import routes for standardizeable objects
+    %w(forms questions option_sets).each do |k|
+      post("/#{k}/import_standard" => "#{k}#import_standard")
+    end
+
     match('/options/suggest' => 'options#suggest', :as => :suggest_options)
 
     match('/dashboard' => 'dashboard#show', :as => :dashboard)
