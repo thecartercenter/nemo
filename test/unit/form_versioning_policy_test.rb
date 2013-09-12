@@ -103,6 +103,32 @@ class FormVersioningPolicyTest < ActiveSupport::TestCase
     publish_and_check_versions(:should_change => true)
   end
 
+  test "changing question required status should cause upgrade" do
+    # add non-required question to first two forms
+    q = FactoryGirl.create(:question)
+    @forms[0...2].each do |f|
+      Questioning.create(:form_id => f.id, :question_id => q.id, :required => false)
+    end
+    
+    save_old_version_codes
+    
+    # now change questioning type to required
+    @forms[0...2].each do |f|
+      f.questionings.first.update_attributes(:required => true)
+    end
+    
+    publish_and_check_versions(:should_change => true)
+    
+    save_old_version_codes
+    
+    # now change questioning type back to not required
+    @forms[0...2].each do |f|
+      f.questionings.first.update_attributes(:required => false)
+    end
+    
+    publish_and_check_versions(:should_change => true)
+  end
+
   # test "adding an option to a set should cause upgrade" do
   #   setup_option_set
 
@@ -139,31 +165,6 @@ class FormVersioningPolicyTest < ActiveSupport::TestCase
   #   publish_and_check_versions(:should_change => true)
   # end
   
-  # test "changing question required status should cause upgrade" do
-  #   # add non-required question to first two forms
-  #   q = FactoryGirl.create(:question)
-  #   @forms[0...2].each do |f|
-  #     Questioning.create(:form_id => f.id, :question_id => q.id, :required => false)
-  #   end
-    
-  #   save_old_version_codes
-    
-  #   # now change questioning type to required
-  #   @forms[0...2].each do |f|
-  #     f.questionings.first.update_attributes(:required => true)
-  #   end
-    
-  #   publish_and_check_versions(:should_change => true)
-    
-  #   save_old_version_codes
-    
-  #   # now change questioning type back to not required
-  #   @forms[0...2].each do |f|
-  #     f.questionings.first.update_attributes(:required => false)
-  #   end
-    
-  #   publish_and_check_versions(:should_change => true)
-  # end
   
     
   # test "changing question type should cause upgrade" do
