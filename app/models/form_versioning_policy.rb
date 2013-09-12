@@ -20,8 +20,8 @@ class FormVersioningPolicy
     when "OptionSet"
       case action
       when :update
-        # changing the option order is a trigger
-        triggers << {:reason => :option_order_changed, :forms => obj.forms} if obj.ranks_changed?
+        # changing the option order is a trigger if the form is smsable
+        triggers << {:reason => :option_order_changed, :forms => obj.forms.reject{|f| !f.smsable?}} if obj.ranks_changed?
       end
       
     when "Optioning"

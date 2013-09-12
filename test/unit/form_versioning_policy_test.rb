@@ -170,47 +170,51 @@ class FormVersioningPolicyTest < ActiveSupport::TestCase
     publish_and_check_versions(:should_change => false)
   end
   
-  # test "destroying an option should cause upgrade" do
-  #   setup_option_set
+  test "destroying an option should cause upgrade" do
+    setup_option_set
     
-  #   save_old_version_codes
+    save_old_version_codes
     
-  #   # destroy one of the options from os
-  #   Option.find(@os.options.last.id).destroy
-  #   @os.reload
-  #   assert_equal(1, @os.options.size)
+    # destroy one of the options from os
+    Option.find(@os.options.last.id).destroy
+    @os.reload
+    assert_equal(1, @os.options.size)
     
-  #   publish_and_check_versions(:should_change => true)
-  # end
+    publish_and_check_versions(:should_change => true)
+  end
   
-  
+  test "changing option order should cause upgrade if form smsable" do
+    setup_option_set
     
-  # test "changing option order should cause upgrade" do
-  #   setup_option_set
-  #   save_old_version_codes
-    
-  #   # now change the option order (we move the first optioning to the back)
-  #   opt_stg = @os.optionings[0]
-  #   old_rank = opt_stg.rank
-  #   opt_stg.rank = 10000 # this will automatically be trimmed
-  #   @os.save!
-    
-  #   # verify the rank changed
-  #   assert_not_equal(old_rank, opt_stg.reload.rank)
-    
-  #   publish_and_check_versions(:should_change => true)
-  # end
+    [true, false].each do |bool|
+      @forms.each{|f| f.smsable = bool; f.save!}
 
-  # test "removing option from option_set should cause upgrade" do
-  #   setup_option_set
-  #   save_old_version_codes
+      save_old_version_codes
     
-  #   # now remove an option from the set the option set order
-  #   @os.optionings.delete(@os.optionings.last)
-  #   @os.save
+      # now change the option order (we move the first optioning to the back)
+      @os.reload
+      opt_stg = @os.optionings[0]
+      old_rank = opt_stg.rank
+      opt_stg.rank = 10000 # this will automatically be trimmed
+      @os.save!
+      
+      # verify the rank changed
+      assert_not_equal(old_rank, opt_stg.reload.rank)
+      
+      publish_and_check_versions(:should_change => bool)
+    end
+  end
+
+  test "removing option from option_set should cause upgrade" do
+    setup_option_set
+    save_old_version_codes
     
-  #   publish_and_check_versions(:should_change => true)
-  # end
+    # now remove an option from the set the option set order
+    @os.optionings.delete(@os.optionings.last)
+    @os.save
+    
+    publish_and_check_versions(:should_change => true)
+  end
   
   private
     # creates an option set, and a question that has the option set, and adds it to first two forms
