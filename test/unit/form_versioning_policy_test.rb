@@ -69,6 +69,39 @@ class FormVersioningPolicyTest < ActiveSupport::TestCase
     publish_and_check_versions(:should_change => true)
   end
   
+  test "changing question rank should cause upgrade if form smsable" do
+    # add two question to first two forms
+    q1 = FactoryGirl.create(:question, :code => "q1")
+    q2 = FactoryGirl.create(:question, :code => "q2")
+    @forms[0...2].each do |f|
+      Questioning.create(:form_id => f.id, :question_id => q1.id)
+      Questioning.create(:form_id => f.id, :question_id => q2.id)
+    end
+    
+    save_old_version_codes
+    
+    # make forms not smsable
+    @forms.each{|f| f.smsable = false; f.save!}
+
+    # now flip the ranks
+    @forms[0...2].each do |f|
+      old1 = f.questionings.find_by_rank(1)
+      old2 = f.questionings.find_by_rank(2)
+      f.update_ranks({old1.id.to_s => "2", old2.id.to_s => "1"})
+      f.save(:validate => false)
+    end
+    publish_and_check_versions(:should_change => false)
+
+    # make forms smsable and try again -- should get a bump
+    @forms.each{|f| f.smsable = true; f.save!}
+    @forms[0...2].each do |f|
+      old1 = f.questionings.find_by_rank(1)
+      old2 = f.questionings.find_by_rank(2)
+      f.update_ranks({old1.id.to_s => "2", old2.id.to_s => "1"})
+      f.save(:validate => false)
+    end
+    publish_and_check_versions(:should_change => true)
+  end
 
   # test "adding an option to a set should cause upgrade" do
   #   setup_option_set
@@ -132,28 +165,7 @@ class FormVersioningPolicyTest < ActiveSupport::TestCase
   #   publish_and_check_versions(:should_change => true)
   # end
   
-  # test "changing question rank status should cause upgrade" do
-  #   # add two question to first two forms
-  #   q1 = FactoryGirl.create(:question, :code => "q1")
-  #   q2 = FactoryGirl.create(:question, :code => "q2")
-  #   @forms[0...2].each do |f|
-  #     Questioning.create(:form_id => f.id, :question_id => q1.id)
-  #     Questioning.create(:form_id => f.id, :question_id => q2.id)
-  #   end
     
-  #   save_old_version_codes
-    
-  #   # now flip the ranks
-  #   @forms[0...2].each do |f|
-  #     old1 = f.questionings.find_by_rank(1)
-  #     old2 = f.questionings.find_by_rank(2)
-  #     f.update_ranks({old1.id.to_s => "2", old2.id.to_s => "1"})
-  #     f.save(:validate => false)
-  #   end
-    
-  #   publish_and_check_versions(:should_change => true)
-  # end
-  
   # test "changing question type should cause upgrade" do
   #   # add question to first two forms
   #   q = FactoryGirl.create(:question)
