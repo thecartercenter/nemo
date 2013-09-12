@@ -45,6 +45,9 @@ class FormVersioningPolicy
         
         # changing question rank is a trigger if form is smsable
         triggers << {:reason => :question_rank_changed, :forms => [obj.form]} if obj.rank_changed? && obj.form.smsable?
+
+        # changing question visibility is a trigger if changed to visible (not hidden)
+        triggers << {:reason => :question_hidden_changed, :forms => [obj.form]} if obj.hidden_changed? && !obj.hidden?
       end
 
     when "Condition"
