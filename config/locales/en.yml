@@ -981,15 +981,36 @@ en:
 
   standard:
     import: "Import"
-    import_choose_one: "Please choose at least one object to import."
+    import_choose_one: 
+      forms: "Please choose at least one Form to import."
+      option_sets: "Please choose at least one Option Set to import."
+      questions: "Please choose at least one Question to import."
     import_errors: "There were errors."
-    import_instructions: "Check the box next to the objects you'd like to import. Then click the 'import' button."
-    import_standard: "Import Standard"
-    import_success: 
-      zero: "Successfully imported %{count} objects."
-      one: "Successfully imported %{count} object."
-      other: "Successfully imported %{count} objects."
-    no_importable: "There is nothing available to import. Either there are no standard objects of this type, or they have all been imported already."
+    import_instructions: 
+      forms: "Check the boxes next to the Forms you'd like to import. Then click the 'import' button."
+      option_sets: "Check the boxes next to the Option Sets you'd like to import. Then click the 'import' button."
+      questions: "Check the boxes next to the Questions you'd like to import. Then click the 'import' button."
+    import_standard: 
+      forms: "Import Standard Forms"
+      option_sets: "Import Standard Option Sets"
+      questions: "Import Standard Questions"
+    import_success:
+      forms:
+        zero: "Successfully imported %{count} Forms."
+        one: "Successfully imported %{count} Form."
+        other: "Successfully imported %{count} Forms."
+      option_sets:
+        zero: "Successfully imported %{count} Option Sets."
+        one: "Successfully imported %{count} Option Set."
+        other: "Successfully imported %{count} Option Sets."
+      questions:
+        zero: "Successfully imported %{count} Questions."
+        one: "Successfully imported %{count} Question."
+        other: "Successfully imported %{count} Questions."
+    no_importable: 
+      forms: "There is nothing available to import. Either there are no standard Forms, or they have all been imported already."
+      option_sets: "There is nothing available to import. Either there are no standard Option Sets, or they have all been imported already."
+      questions: "There is nothing available to import. Either there are no standard Questions, or they have all been imported already."
     standard: "Standard"
     standard_forms: "Standard Forms"
 

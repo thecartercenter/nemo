@@ -3,15 +3,15 @@
   <%= index_table(Form, @forms) %>
 
   <% if @importable %>
-    <div class="importable" title="<%= t('standard.import_standard') %>">
+    <div class="importable" title="<%= t("standard.import_standard.#{controller_name}") %>">
       <div class="modal_error">
-        <%= t('standard.import_choose_one') %>
+        <%= t("standard.import_choose_one.#{controller_name}") %>
       </div>
       <% if @importable.empty? %>
-        <%= t('standard.no_importable') %>
+        <%= t("standard.no_importable.#{controller_name}") %>
       <% else %>
         <div>
-          <%= t('standard.import_instructions') %>
+          <%= t("standard.import_instructions.#{controller_name}") %>
         </div>
         <form method="post" action="<%= send("import_standard_#{controller_name}_path") %>">
           <% @importable.each do |o| %>
