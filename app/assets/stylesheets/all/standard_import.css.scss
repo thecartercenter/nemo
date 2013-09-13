@@ -1,3 +1,20 @@
 div.importable {
   display: none;
+
+  form {
+    margin-top: 10px;
+
+    div {
+      margin-bottom: 5px;
+
+      input[type=checkbox] {
+        float: left;
+      }
+
+      label {
+        display: block;
+        margin-left: 20px;
+      }
+    }
+  }
 }
