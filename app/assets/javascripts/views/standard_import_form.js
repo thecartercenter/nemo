@@ -14,13 +14,16 @@
   klass.prototype.show_dialog = function() { var self = this;
     $('div.importable div.modal_error').hide();
 
+    // determine buttons based on importable obj count
+    var buttons = [{text: I18n.t('common.cancel'), click: function() { $(this).dialog('close'); }}];
+
+    if (self.params.importable_count > 0)
+      buttons.push({text: I18n.t('standard.import'), click: function() { self.do_import(); }})
+
     // create the dialog
     $("div.importable").dialog({
       dialogClass: "no-close standard_import_modal",
-      buttons: [
-        {text: I18n.t('common.cancel'), click: function() { $(this).dialog('close'); }},
-        {text: I18n.t('standard.import'), click: function() { self.do_import(); }}
-      ],
+      buttons: buttons,
       modal: true,
       autoOpen: true,
       width: 500,

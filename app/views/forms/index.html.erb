@@ -25,7 +25,9 @@
     </div>
 
     <%= javascript_doc_ready do %>
-      new ELMO.Views.StandardImportForm({});
+      new ELMO.Views.StandardImportForm({
+        importable_count: <%= @importable.count.to_json.html_safe %>
+      });
     <% end %>
   <% end %>
 </div>
