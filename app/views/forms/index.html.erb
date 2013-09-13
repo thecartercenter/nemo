@@ -10,10 +10,10 @@
         <div>
           <%= t('standard.import_instructions') %>
         </div>
-        <form>
+        <form method="post" action="<%= send("import_standard_#{controller_name}_path") %>">
           <% @importable.each do |o| %>
             <div>
-              <input type="checkbox" id="importable-<%= o.id %>" value="<%= o.id %>">
+              <input type="checkbox" name="objs_to_import[]" id="importable-<%= o.id %>" value="<%= o.id %>">
               <label for="importable-<%= o.id %>"><%= o.name %></label>
             </div>
           <% end %>

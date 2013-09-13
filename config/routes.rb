@@ -36,7 +36,7 @@ ELMO::Application.routes.draw do
 
     # import routes for standardizeable objects
     %w(forms questions option_sets).each do |k|
-      post("/#{k}/import_standard" => "#{k}#import_standard")
+      post("/#{k}/import_standard" => "#{k}#import_standard", :as => "import_standard_#{k}")
     end
 
     match('/options/suggest' => 'options#suggest', :as => :suggest_options)

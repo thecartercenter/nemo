@@ -5,6 +5,7 @@
 
   // constructor
   ns.StandardImportForm = klass = function(params) { var self = this;
+    self.params = params;
 
     // setup the link
     $('a.import_standard').click(function(){ self.show_dialog(); return false; });
@@ -27,7 +28,7 @@
   };
 
   klass.prototype.do_import = function() { var self = this;
-    console.log('doing import!');
+    $('div.importable form').submit();
   };
   
 })(ELMO.Views);
