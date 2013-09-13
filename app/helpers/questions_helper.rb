@@ -24,11 +24,13 @@ module QuestionsHelper
 
   def questions_index_fields
     # fields for form mode
-    if params[:controller] == 'forms'
-      %w(std_icon code name type forms published)
-    else
-      %w(std_icon code name type forms published actions)
-    end
+    fields = %w(std_icon code name type forms)
+
+    # dont add published if in admin mode
+    fields << 'published' unless admin_mode?
+
+    # dont add the actions column if we're not in the forms controller, since that means we're probably in form#choose_questions
+    fields << 'actions' unless params[:controller] == 'forms'
   end
 
   def format_questions_field(q, field)

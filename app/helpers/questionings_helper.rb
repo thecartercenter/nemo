@@ -13,10 +13,12 @@ module QuestioningsHelper
         links << batch_op_link(:name => t("form.remove_selected"), :path => remove_questions_form_path(@form),
           :confirm => t("form.remove_question_confirm")) if can?(:remove_questions, @form)
         
-        # add publish link
-        key = @form.published? ? 'unpublish_form' : 'publish_form'
-        lbl = t("form.#{key}")
-        links << link_to("#{lbl}", publish_form_path(@form))
+        # add publish link if allowed
+        if can?(:publish, @form)
+          key = @form.published? ? 'unpublish_form' : 'publish_form'
+          lbl = t("form.#{key}")
+          links << link_to("#{lbl}", publish_form_path(@form))
+        end
       end
     end
     

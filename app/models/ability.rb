@@ -154,6 +154,8 @@ class Ability
       f.standard_copy? || f.published?
     end
 
+    cannot :publish, Form, :is_standard => true
+
     cannot [:destroy, :update, :update_own_fields], Questioning do |q|
       q.standard_copy? || q.form.published?
     end

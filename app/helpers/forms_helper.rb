@@ -5,14 +5,14 @@ module FormsHelper
     # add links based on authorization
     links << create_link(Form) if can?(:create, Form)
     links << link_to(t("page_titles.sms_tests.all"), new_sms_test_path) if can?(:create, Sms::Test)
-    links << link_to(t('standard.import_standard'), '#', :class => 'import_standard') if @importable
+    links << link_to(t('standard.import_standard'), '#', :class => 'import_standard') if !admin_mode? && @importable
     # return links
     links
   end
   
   def forms_index_fields
-    f = %w(std_icon version name questions published)
-    f += %w(downloads responses smsable) unless admin_mode? 
+    f = %w(std_icon version name questions)
+    f += %w(published downloads responses smsable) unless admin_mode? 
     f += %w(updated_at actions)
   end
     

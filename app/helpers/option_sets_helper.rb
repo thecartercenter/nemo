@@ -4,7 +4,12 @@ module OptionSetsHelper
   end
   
   def option_sets_index_fields
-    %w(std_icon name options questions answers published actions)
+    fields = %w(std_icon name options questions)
+
+    # don't add answers/published if in admin mode, since they don't make sense there
+    fields += %w(answers published) unless admin_mode?
+
+    fields << 'actions'
   end
   
   def format_option_sets_field(option_set, field)

@@ -1,7 +1,7 @@
 <div class="option_set_form">
 
   <% if form_mode == :edit %>
-    <%= published_warning(@option_set) if @option_set.published? %>
+    <%= published_warning(@option_set) if !admin_mode? && @option_set.published? %>
     <%= appears_elsewhere_warning(@option_set) if @option_set.has_questions? %>
   <% end %>
 
