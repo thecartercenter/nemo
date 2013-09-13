@@ -16,6 +16,8 @@ module QuestionsHelper
     else
       # add the create new question
       links << create_link(Question) if can?(:create, Question)
+
+      add_import_standard_link_if_appropriate(links)
     end
     
     # return the link set

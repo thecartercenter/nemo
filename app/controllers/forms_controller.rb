@@ -1,4 +1,6 @@
 class FormsController < ApplicationController
+  include StandardImportable
+
   # special find method before load_resource
   before_filter :find_form_with_questionings, :only => [:show, :edit, :update]
   
@@ -8,7 +10,6 @@ class FormsController < ApplicationController
   # in the choose_questions action we have a question form so we need this Concern
   include QuestionFormable
 
-  include StandardImportable
   
   def index
     # handle different formats
@@ -16,7 +17,7 @@ class FormsController < ApplicationController
       # render normally if html
       format.html do
         @forms = apply_filters(@forms)
-        get_importable_objs
+        load_importable_objs
         render(:index)
       end
       
