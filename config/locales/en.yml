@@ -981,8 +981,13 @@ en:
 
   standard:
     import: "Import"
+    import_errors: "There were errors."
     import_instructions: "Check the box next to the objects you'd like to import. Then click the 'import' button."
     import_standard: "Import Standard"
+    import_success: 
+      zero: "Successfully imported %{count} objects."
+      one: "Successfully imported %{count} object."
+      other: "Successfully imported %{count} objects."
     no_importable: "There is nothing available to import. Either there are no standard objects of this type, or they have all been imported already."
     standard: "Standard"
     standard_forms: "Standard Forms"

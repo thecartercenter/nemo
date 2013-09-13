@@ -180,6 +180,12 @@ class ApplicationController < ActionController::Base
       end
     end
 
+    # attempts to get the model class controlled by this controller
+    # not always appropriate
+    def model_class
+      @model_class ||= controller_name.classify.constantize
+    end
+
     ##############################################################################
     # AUTHENTICATION AND USER SESSION METHODS
     ##############################################################################
