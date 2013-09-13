@@ -27,7 +27,7 @@
       modal: true,
       autoOpen: true,
       width: 500,
-      height: 300
+      height: 400
     });
 
   };

@@ -3,9 +3,16 @@ div.importable {
 
   form {
     margin-top: 10px;
+    border-top: 1px solid #ccc;
 
-    div {
-      margin-bottom: 5px;
+    /* rows of the list */
+    & > div {
+      border-bottom: 1px solid #ccc;
+      padding: 5px;
+
+      &:hover {
+        background-color: #eee;
+      }
 
       input[type=checkbox] {
         float: left;
@@ -14,6 +21,12 @@ div.importable {
       label {
         display: block;
         margin-left: 20px;
+        cursor: pointer;
+
+        small {
+          color: #888;
+          font-size: 11px;
+        }
       }
     }
   }

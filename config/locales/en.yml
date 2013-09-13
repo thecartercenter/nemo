@@ -206,6 +206,7 @@ en:
         answers: "Answers"
       question:
         base: "" # this is a sort of hack to get error msg to display properly
+        code: "Code"
         forms: "Forms"
         published: "Published?"
         key: "Is Key Question?"
@@ -435,6 +436,7 @@ en:
     system_version: "System Version"
     time_ago: "%{time} ago"
     time_zone: "Time Zone"
+    updated_at: "Updated at"
 
   # pagination translations
   will_paginate:

@@ -1,0 +1,7 @@
+<%# how this question should be represented in a list. the question is stored 'obj'. %>
+<div><%= obj.name %></div>
+<small>
+  <%= t('activerecord.attributes.question.code') %>: <%= obj.code %>
+  -
+  <%= t('layout.updated_at') %> <%= l(obj.updated_at) %>
+</small>
