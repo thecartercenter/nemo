@@ -12,6 +12,8 @@
   };
 
   klass.prototype.show_dialog = function() { var self = this;
+    $('div.importable div.modal_error').hide();
+
     // create the dialog
     $("div.importable").dialog({
       dialogClass: "no-close standard_import_modal",
@@ -28,7 +30,10 @@
   };
 
   klass.prototype.do_import = function() { var self = this;
-    $('div.importable form').submit();
+    if ($('div.importable form input:checked').length == 0)
+      $('div.importable div.modal_error').show();
+    else
+      $('div.importable form').submit();
   };
   
 })(ELMO.Views);

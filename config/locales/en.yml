@@ -981,6 +981,7 @@ en:
 
   standard:
     import: "Import"
+    import_choose_one: "Please choose at least one object to import."
     import_errors: "There were errors."
     import_instructions: "Check the box next to the objects you'd like to import. Then click the 'import' button."
     import_standard: "Import Standard"

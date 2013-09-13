@@ -4,6 +4,9 @@
 
   <% if @importable %>
     <div class="importable" title="<%= t('standard.import_standard') %>">
+      <div class="modal_error">
+        <%= t('standard.import_choose_one') %>
+      </div>
       <% if @importable.empty? %>
         <%= t('standard.no_importable') %>
       <% else %>
