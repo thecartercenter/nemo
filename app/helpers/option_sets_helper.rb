@@ -1,6 +1,9 @@
 module OptionSetsHelper
   def option_sets_index_links(option_sets)
-    can?(:create, OptionSet) ? [create_link(OptionSet)] : []
+    links = []
+    links << create_link(OptionSet) if can?(:create, OptionSet)
+    add_import_standard_link_if_appropriate(links)
+    links
   end
   
   def option_sets_index_fields

@@ -1,4 +1,6 @@
 class OptionSetsController < ApplicationController
+  include StandardImportable
+
   # authorization via cancan
   load_and_authorize_resource
 
@@ -14,6 +16,8 @@ class OptionSetsController < ApplicationController
 
     # now we apply .all so that any .empty? or .count calls in the template don't cause more queries
     @option_sets = @option_sets.all
+
+    load_importable_objs
   end
   
   def new
