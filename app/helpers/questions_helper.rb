@@ -31,6 +31,8 @@ module QuestionsHelper
 
     # dont add the actions column if we're not in the forms controller, since that means we're probably in form#choose_questions
     fields << 'actions' unless params[:controller] == 'forms'
+
+    fields
   end
 
   def format_questions_field(q, field)

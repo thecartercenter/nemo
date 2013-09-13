@@ -10,6 +10,8 @@ module OptionSetsHelper
     fields += %w(answers published) unless admin_mode?
 
     fields << 'actions'
+
+    fields
   end
   
   def format_option_sets_field(option_set, field)

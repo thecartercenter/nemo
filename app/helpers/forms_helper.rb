@@ -11,9 +11,10 @@ module FormsHelper
   end
   
   def forms_index_fields
-    f = %w(std_icon version name questions)
-    f += %w(published downloads responses smsable) unless admin_mode? 
-    f += %w(updated_at actions)
+    fields = %w(std_icon version name questions)
+    fields += %w(published downloads responses smsable) unless admin_mode? 
+    fields += %w(updated_at actions)
+    fields
   end
     
   def format_forms_field(form, field)
