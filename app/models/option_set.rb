@@ -20,6 +20,7 @@ class OptionSet < ActiveRecord::Base
   scope(:with_associations, includes(:questions, {:optionings => :option}, {:questionings => :form}))
 
   scope(:by_name, order('option_sets.name'))
+  scope(:default_order, by_name)
   scope(:with_assoc_counts_and_published, lambda { |mission|
     select(%{
       option_sets.*, 

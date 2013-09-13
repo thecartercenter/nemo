@@ -26,6 +26,7 @@ class Form < ActiveRecord::Base
       {:condition => [:option, :ref_qing]}
     ]
   ).order("questionings.rank"))
+  scope(:default_order, order('forms.name'))
 
   replicable :assocs => :questionings, :uniqueness => {:field => :name, :style => :sep_words}, 
     :dont_copy => [:published, :downloads, :responses_count, :questionings_count, :upgrade_needed, :smsable, :current_version_id]

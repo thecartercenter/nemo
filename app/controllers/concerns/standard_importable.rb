@@ -32,6 +32,6 @@ module StandardImportable
   private
     # gets the set of std objs that can be imported to the current mission and sets them in an instance var
     def get_importable_objs
-      @importable = model_class.importable_to(current_mission) if !admin_mode? && can?(:manage, model_class)
+      @importable = model_class.importable_to(current_mission).default_order if !admin_mode? && can?(:manage, model_class)
     end
 end
