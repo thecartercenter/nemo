@@ -125,7 +125,16 @@ class Response < ActiveRecord::Base
     # responses if signature is not currently set
     generate_duplicate_signature if signature.nil?
 
-    self.duplicate = find_duplicates.empty?
+    # find duplicate entries
+    duplicates = find_duplicates
+    
+    # set duplicate flag to true or false whether duplicates were found
+    self.duplicate = !duplicates.empty?
+    
+    # if duplicates were found, set dup_resp to the first possible duplicate
+    if duplicate
+      self.dup_resp = duplicates.last
+    end
     
     save(:validate => false)
   end

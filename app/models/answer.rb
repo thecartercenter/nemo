@@ -57,7 +57,7 @@ class Answer < ActiveRecord::Base
     if choices
       answers_value = choices.map { |choice| choice.option_id }.join("")
     else
-      answers_value = value || a.option_id || a.time_value || a.date_value || a.datetime_value
+      answers_value = value || option_id || time_value || date_value || datetime_value
     end
     return answers_value
   end

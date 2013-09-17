@@ -16,9 +16,7 @@ class ResponsesController < ApplicationController
         
         # map each response to its duplicate if one exists
         @responses.map! do |r|
-          if r.duplicate
-            r.dup_resp = (duplicates = r.find_duplicates) ? duplicates.last : nil
-          end
+          r.check_if_duplicate!
         end
         
         # get list of published forms for 'create response' link
