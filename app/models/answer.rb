@@ -54,11 +54,12 @@ class Answer < ActiveRecord::Base
   def digest
     
     # iterate through choices of answer if there is no value stored in answers table
-    if choices
-      answers_value = choices.map { |choice| choice.option_id }.join("")
-    else
+    if choices.empty?
       answers_value = value || option_id || time_value || date_value || datetime_value
+    else
+      answers_value = choices.map { |choice| choice.option_id }.join("")
     end
+        
     return answers_value
   end
   
