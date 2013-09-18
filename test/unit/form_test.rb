@@ -362,4 +362,11 @@ class FormTest < ActiveSupport::TestCase
     assert_nil(Questioning.where(:form_id => copy.id).first)
     assert_nil(Condition.where(:id => copy_cond_id).first)
   end
+
+  test "ranks should be fixed after deleting a question" do
+    f = FactoryGirl.create(:form, :question_types => %w(integer integer integer))
+    f.questions[1].destroy
+    assert_equal(2, f.reload.questions.size)
+    assert_equal(2, f.questionings.last.rank)
+  end
 end
