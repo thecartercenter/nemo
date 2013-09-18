@@ -93,7 +93,7 @@ class Form < ActiveRecord::Base
       end
       
       # fix the ranks
-      questionings.each_with_index{|q, i| q.rank = i + 1}
+      fix_ranks(:reload => false, :save => true)
       
       save
     end
@@ -167,9 +167,11 @@ class Form < ActiveRecord::Base
   end
 
   # ensures question ranks are sequential
-  def fix_ranks
-    questionings(true).sort_by{|qing| qing.rank}.each_with_index{|qing, idx| qing.rank = idx + 1}
-    save(:validate => false)
+  def fix_ranks(options = {})
+    options[:reload] = true if options[:reload].nil?
+    options[:save] = true if options[:save].nil?
+    questionings(options[:reload]).sort_by{|qing| qing.rank}.each_with_index{|qing, idx| qing.rank = idx + 1}
+    save(:validate => false) if options[:save]
   end
   
   private
