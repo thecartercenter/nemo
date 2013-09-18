@@ -192,12 +192,12 @@ module Replicable
 
     # get all existing copy numbers
     existing_nums = existing.map do |obj|
-      found_exact = true if obj.send(params[:field]) == send(params[:field])
+      found_exact = true if obj.send(params[:field]).downcase.strip == send(params[:field]).downcase.strip
 
       if params[:style] == :sep_words
-        m = obj.send(params[:field]).match(/^#{prefix}( (\d+))?$/)
+        m = obj.send(params[:field]).match(/^#{prefix}\s*( (\d+))?\s*$/i)
       else
-        m = obj.send(params[:field]).match(/^#{prefix}((\d+))?$/)
+        m = obj.send(params[:field]).match(/^#{prefix}((\d+))?\s*$/i)
       end
 
       # if there was no match, return nil
