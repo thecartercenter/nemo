@@ -75,15 +75,35 @@ class ResponsesController < ApplicationController
           
           # parse the xml stuff
           @response.populate_from_xml(contents)
-          
+           
+          # ensure response's user can submit to the form
+          authorize!(:submit_to, @response.form)
+
           # save without validating, as we have no way to present validation errors to user, and ODK already does validation
           @response.save(:validate => false)
           
           # ODK wants a blank response with code 201 on success
           render(:nothing => true, :status => 201)
-        rescue ArgumentError
-          # if we catch an error, render 404 code
+
+        rescue CanCan::AccessDenied
+          # permission error should give unauthorized (401)
+          render(:nothing => true, :status => 401)
+
+        rescue ActiveRecord::RecordNotFound
+          # not found error should give not found (404)
           render(:nothing => true, :status => 404)
+
+        rescue FormVersionError
+          # form version outdated should give 426 (upgrade needed)
+          render(:nothing => true, :status => 426)
+
+        rescue ArgumentError
+          # argument error should give unprocessible entity
+          render(:nothing => true, :status => 422)
+
+        rescue
+          # if we get this far it's some kind of server error
+          render(:nothing => true, :status => 500)
         end
       end
       

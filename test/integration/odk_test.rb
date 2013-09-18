@@ -1,6 +1,7 @@
 require 'test_helper'
 
-class ResponsesControllerTest < ActionDispatch::IntegrationTest
+# tests handling of odk collect requests
+class OdkTest < ActionDispatch::IntegrationTest
 
   ODK_XML_FILE = 'odk_xml_file.xml'
 
@@ -39,7 +40,9 @@ class ResponsesControllerTest < ActionDispatch::IntegrationTest
   test 'odk submission of integer value to select question should fail gracefully' do
     # create form with select one question
     form = FactoryGirl.create(:form, :question_types => %w(select_one))
+    form.publish!
     form2 = FactoryGirl.create(:form, :name => 'other form', :question_types => %w(integer))
+    form2.publish!
 
     # attempt submission to proper form
     xml = build_odk_submission(form2)
@@ -59,11 +62,31 @@ class ResponsesControllerTest < ActionDispatch::IntegrationTest
     assert_nil(resp.answers.first.option_id)
   end
 
+  test 'submitting to old version of form should return error 426 upgrade required' do
+    # create form build response xml based on it
+    f = FactoryGirl.create(:form, :question_types => %w(integer integer))
+    f.publish!
+    xml = build_odk_submission(f)
+    old_version = f.current_version.sequence
+    
+    # change form and force an upgrade (verify upgrade happened)
+    f.unpublish!
+    f.questionings.first.required = true
+    f.save!
+    f.publish!
+    assert_not_equal(old_version, f.reload.current_version.sequence)
+
+    # try to submit old xml and check for error
+    do_submission(submission_path(get_mission), xml)
+    assert_response(426)
+  end
+
   private
     # builds a form and sends a submission to the given path
     def do_submission(path, xml = nil)
       f = FactoryGirl.create(:form, :question_types => %w(integer integer))
-      
+      f.publish!
+
       xml ||= build_odk_submission(f)
 
       # write xml to file
@@ -81,7 +104,9 @@ class ResponsesControllerTest < ActionDispatch::IntegrationTest
       # allow form id to be overridden for testing bad submissions
       form_id = options[:override_form_id] || form.id
 
-      xml = "<?xml version='1.0' ?><data id=\"#{form_id}\">"
+      raise "form should have version" if form.current_version.nil?
+
+      xml = "<?xml version='1.0' ?><data id=\"#{form_id}-#{form.current_version.sequence}\">"
       form.questionings.each_with_index do |qing, i|
         xml += "<#{qing.question.odk_code}>#{(i+1)*5}</#{qing.question.odk_code}>"
       end
