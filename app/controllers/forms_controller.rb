@@ -38,9 +38,6 @@ class FormsController < ApplicationController
   end
   
   def show
-    # add to download count if xml
-    @form.add_download if request.format && request.format.xml? 
-    
     respond_to do |format|
       
       # for html, render the printable or sms_guide styles if requested, otherwise render the form
@@ -69,7 +66,11 @@ class FormsController < ApplicationController
       end
       
       # for xml, render openrosa
-      format.xml{render_openrosa}
+      format.xml do
+        authorize!(:download, @form)
+        @form.add_download
+        render_openrosa
+      end
     end
   end
   
