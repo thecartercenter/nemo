@@ -15,7 +15,6 @@ ELMO::Application.routes.draw do
     resources(:forms){member{post *%w(add_questions remove_questions); get *%w(publish clone choose_questions)}}
     resources(:markers)
     resources(:missions)
-    resources(:options, :only => [:create, :update]){collection{get 'suggest'}}
     resources(:option_sets)
     resources(:password_resets)
     resources(:questions)
@@ -25,7 +24,7 @@ ELMO::Application.routes.draw do
     resources(:sms, :only => [:index, :create])
     resources(:sms_tests)
     resource(:user_session){collection{get 'logged_out'}}
-    resources(:users){member{get 'login_instructions'}; collection{post 'export'}}
+    resources(:users){member{get 'login_instructions'; get 'exit_admin_mode'}; collection{post 'export'}}
     resources(:user_batches)
   
     namespace(:report) do
@@ -34,6 +33,13 @@ ELMO::Application.routes.draw do
       resources(:grouped_tally_reports, :controller => 'reports')
       resources(:list_reports, :controller => 'reports')
     end
+
+    # import routes for standardizeable objects
+    %w(forms questions option_sets).each do |k|
+      post("/#{k}/import_standard" => "#{k}#import_standard", :as => "import_standard_#{k}")
+    end
+
+    match('/options/suggest' => 'options#suggest', :as => :suggest_options)
 
     match('/dashboard' => 'dashboard#show', :as => :dashboard)
     match('/dashboard/info_window' => 'dashboard#info_window', :as => :dashboard_info_window)

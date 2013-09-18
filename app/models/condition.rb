@@ -1,12 +1,12 @@
 class Condition < ActiveRecord::Base
-  include MissionBased, Standardizable, Replicable
+  include MissionBased, FormVersionable, Standardizable, Replicable
 
   # question types that cannot be used in conditions
   NON_REFABLE_TYPES = %w(location)
 
   belongs_to(:questioning, :inverse_of => :condition)
   belongs_to(:ref_qing, :class_name => "Questioning", :foreign_key => "ref_qing_id", :inverse_of => :referring_conditions)
-  belongs_to(:option, :dependent => :destroy)
+  belongs_to(:option)
   
   before_validation(:clear_blanks)
   before_validation(:clean_times)
@@ -15,7 +15,7 @@ class Condition < ActiveRecord::Base
   validate(:all_fields_required)
   validates(:questioning, :presence => true)
 
-  delegate :qtype, :to => :questioning, :allow_nil => true
+  delegate :qtype, :form, :to => :questioning, :allow_nil => true
   delegate :has_options?, :select_options, :qtype, :rank, :to => :ref_qing, :prefix => :ref_question, :allow_nil => true
     
   OPS = [
@@ -79,7 +79,7 @@ class Condition < ActiveRecord::Base
   def operators
     OPS
   end
-  
+
   def to_odk
     # set default lhs
     lhs = "/data/#{ref_qing.odk_code}"

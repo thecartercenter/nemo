@@ -18,6 +18,9 @@ module Replicable
   # creates a duplicate in this or another mission
   def replicate(to_mission = nil, options = {}, copy_parents = [], parent_assoc = nil)
 
+    # wrap in transaction if this is the first call
+    return transaction { replicate(to_mission, options.merge(:in_transaction => true), copy_parents, parent_assoc) } unless options[:in_transaction]
+
     # default to current mission if not specified
     to_mission ||= mission if respond_to?(:mission)
 
@@ -76,7 +79,7 @@ module Replicable
 
     # if uniqueness property is set, make sure the specified field is unique
     if params = self.class.replication_options[:uniqueness]
-      copy.send("#{params[:field]}=", self.ensure_unique(params.merge(:mission => to_mission)))
+      copy.send("#{params[:field]}=", self.ensure_unique(params.merge(:mission => to_mission, :dest_obj => copy)))
     end
 
     # call a callback if requested
@@ -166,6 +169,7 @@ module Replicable
   # ensures the given name or other field would be unique, and generates a new name if it wouldnt be
   # (e.g. My Form 2, My Form 3, etc.) for the given name (e.g. My Form)
   # params[:mission] - the mission in which it should be unique
+  # params[:dest_obj] - the object to which the name will be applied in the specified mission
   # params[:field] - the field to operate on
   # params[:style] - the style to adhere to in generating the unique value (:sep_words or :camel_case)
   def ensure_unique(params)
@@ -180,8 +184,14 @@ module Replicable
     # keep track of whether we found the exact name
     found_exact = false
 
+    # build a relation to get existing objs
+    existing = self.class.for_mission(params[:mission])
+
+    # if the dest_obj has an ID, be sure to exclude that when looking for conflicting objects
+    existing = existing.where('id != ?', params[:dest_obj]) unless params[:dest_obj].new_record?
+
     # get all existing copy numbers
-    existing_nums = self.class.for_mission(params[:mission]).map do |obj|
+    existing_nums = existing.map do |obj|
       found_exact = true if obj.send(params[:field]) == send(params[:field])
 
       if params[:style] == :sep_words

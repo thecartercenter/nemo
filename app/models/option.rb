@@ -1,5 +1,5 @@
 class Option < ActiveRecord::Base
-  include MissionBased, Translatable, Standardizable, Replicable
+  include MissionBased, FormVersionable, Translatable, Standardizable, Replicable
   
   has_many(:option_sets, :through => :optionings)
   has_many(:optionings, :inverse_of => :option, :dependent => :destroy, :autosave => true)
@@ -64,6 +64,14 @@ class Option < ActiveRecord::Base
   
   def questions; option_sets.collect{|os| os.questions}.flatten.uniq; end
   
+  def has_answers?
+    !answers.empty?
+  end
+
+  def has_choices?
+    !choices.empty?
+  end
+
   # returns all forms on which this option appears
   def forms
     option_sets.collect{|os| os.questionings.collect(&:form)}.flatten.uniq
@@ -71,7 +79,7 @@ class Option < ActiveRecord::Base
   
   # returns whether this option is in use -- is referenced in any answers/choices AND/OR is published
   def in_use?
-    published? || !answers.empty? || !choices.empty?
+    published? || has_answers? || has_choices?
   end
 
   def as_json(options = {})

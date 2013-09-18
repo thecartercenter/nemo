@@ -30,5 +30,6 @@ translations:
       "*.layout.*",
       "*.option_set.*",
       "*.report/report.*",
-      "*.response.*"
+      "*.response.*",
+      "*.standard.*"
     ]

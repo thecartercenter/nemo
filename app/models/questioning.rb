@@ -1,5 +1,5 @@
 class Questioning < ActiveRecord::Base
-  include MissionBased, Standardizable, Replicable
+  include MissionBased, FormVersionable, Standardizable, Replicable
 
   belongs_to(:form, :inverse_of => :questionings, :counter_cache => true)
   belongs_to(:question, :autosave => true, :inverse_of => :questionings)
@@ -10,6 +10,7 @@ class Questioning < ActiveRecord::Base
   before_validation(:destroy_condition_if_ref_qing_blank)
   before_create(:set_rank)
   before_create(:set_mission)
+  after_destroy(:fix_ranks)
 
   # also validates the associated condition because condition has validates(:questioning, ...)
   
@@ -19,6 +20,7 @@ class Questioning < ActiveRecord::Base
   delegate :code, :code=, :option_set, :option_set=, :option_set_id, :option_set_id=, :qtype_name, :qtype_name=, :qtype, 
     :has_options?, :options, :select_options, :odk_code, :odk_constraint, :to => :question
   delegate :published?, :to => :form
+  delegate :smsable?, :to => :form, :prefix => true
   delegate :verify_ordering, :to => :condition, :prefix => true, :allow_nil => true
 
   replicable :assocs => [:question, :condition], :parent => :form
@@ -30,6 +32,10 @@ class Questioning < ActiveRecord::Base
 
   def has_condition?
     !condition.nil?
+  end
+
+  def has_answers?
+    !answers.empty?
   end
 
   # destroys condition and ensures that the condition param is nulled out
@@ -75,5 +81,10 @@ class Questioning < ActiveRecord::Base
     # copy mission from question
     def set_mission
       self.mission = form.try(:mission)
+    end
+
+    # repair the ranks of the remaining questions on the form
+    def fix_ranks
+      form.fix_ranks
     end
 end

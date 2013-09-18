@@ -204,9 +204,9 @@ class User < ActiveRecord::Base
   
   # returns all missions that the user has access to
   def accessible_missions
-    @accessible_missions ||= Mission.accessible_by(ability)
+    @accessible_missions ||= Mission.accessible_by(ability, :switch_to)
   end
-  
+
   # if user has no current mission, choose one (if assigned to any)
   def set_current_mission
     # ensure no current mission set if the user has no assignments
@@ -238,6 +238,11 @@ class User < ActiveRecord::Base
     {:name => name}
   end
   
+  # returns hash of missions to roles
+  def roles
+    Hash[*assignments.map{|a| [a.mission, a.role]}.flatten]
+  end
+
   private
     def clean_fields
       self.phone = phone.blank? ? nil : "+" + phone.gsub(/[^0-9]/, "")

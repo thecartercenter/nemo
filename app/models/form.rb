@@ -1,5 +1,5 @@
 class Form < ActiveRecord::Base
-  include MissionBased, Standardizable, Replicable
+  include MissionBased, FormVersionable, Standardizable, Replicable
 
   has_many(:questions, :through => :questionings, :order => "questionings.rank")
   has_many(:questionings, :order => "rank", :autosave => true, :dependent => :destroy, :inverse_of => :form)
@@ -11,13 +11,9 @@ class Form < ActiveRecord::Base
   belongs_to(:current_version, :class_name => "FormVersion")
   
   validates(:name, :presence => true, :length => {:maximum => 32})
-  validate(:cant_change_published)
   validate(:name_unique_per_mission)
   
-  validates_associated(:questionings)
-  
   before_create(:init_downloads)
-  before_destroy(:check_assoc)
   
   # no pagination
   self.per_page = 1000000
@@ -30,7 +26,8 @@ class Form < ActiveRecord::Base
       {:condition => [:option, :ref_qing]}
     ]
   ).order("questionings.rank"))
-    
+  scope(:default_order, order('forms.name'))
+
   replicable :assocs => :questionings, :uniqueness => {:field => :name, :style => :sep_words}, 
     :dont_copy => [:published, :downloads, :responses_count, :questionings_count, :upgrade_needed, :smsable, :current_version_id]
 
@@ -39,7 +36,11 @@ class Form < ActiveRecord::Base
   end
   
   def version
-    "1.0" # this isn't implemented yet
+    current_version.try(:sequence) || ""
+  end
+
+  def version_with_code
+    current_version.try(:sequence_and_code) || ""
   end
   
   def full_name
@@ -83,6 +84,10 @@ class Form < ActiveRecord::Base
     transaction do
       # delete the qings
       qings.each do |qing|
+
+        # if this qing has a non-zero answer count, raise an error
+        raise DeletionError.new('question_remove_answer_error') if qing_answer_count(qing) > 0
+
         questionings.delete(qing)
         qing.destroy
       end
@@ -145,26 +150,32 @@ class Form < ActiveRecord::Base
   def all_required?(options = {})
     @all_required ||= visible_questionings.reject{|qing| qing.required? || (options[:smsable] ? !qing.question.smsable? : false)}.empty?
   end
+
+  # efficiently gets the number of answers for the given questioning on this form
+  def qing_answer_count(qing)
+    # fetch the counts if not already fetched
+    @answer_counts ||= Questioning.find_by_sql([%{
+      SELECT questionings.id, COUNT(answers.id) AS answer_count 
+      FROM questionings 
+        LEFT OUTER JOIN answers ON answers.questioning_id = questionings.id 
+      WHERE questionings.form_id = ?
+      GROUP BY questionings.id
+    }, id]).index_by(&:id)
+    
+    # get the desired count
+    @answer_counts[qing.id].try(:answer_count) || 0
+  end
+
+  # ensures question ranks are sequential
+  def fix_ranks
+    questionings(true).sort_by{|qing| qing.rank}.each_with_index{|qing, idx| qing.rank = idx + 1}
+    save!
+  end
   
   private
-    def cant_change_published
-      # if this is a published form and something other than published and downloads changes, wrong!
-      if published_was && !(changed - %w[published downloads]).empty?
-        errors.add(:base, :cant_edit_published) 
-      end
-    end
-    
     def init_downloads
       self.downloads = 0
       return true
-    end
-    
-    def check_assoc
-      if published?
-        raise DeletionError.new(:cant_delete_published)
-      elsif !responses.empty?
-        raise DeletionError.new(:cant_delete_if_has_responses)
-      end
     end
     
     def name_unique_per_mission

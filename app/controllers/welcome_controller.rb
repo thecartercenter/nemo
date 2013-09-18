@@ -5,21 +5,21 @@ class WelcomeController < ApplicationController
   def index
     # authorize the action (merely a formality!)
     authorize! :show, Welcome
+
+    # published forms
+    @pubd_forms = Form.accessible_by(current_ability).published
+    @pub_form_count = @pubd_forms.count
+    
+    # total unpublished forms
+    @unpub_form_count = Form.accessible_by(current_ability).count - @pub_form_count
+
+    # total users
+    @user_count = User.accessible_by(current_ability).count 
     
     if current_mission
       # load objects for the blocks, making heavy use of accessible_by
       # reports
       @reports = Report::Report.accessible_by(current_ability).by_popularity
-      
-      # published forms
-      @pubd_forms = Form.accessible_by(current_ability).published
-      @pub_form_count = @pubd_forms.count
-      
-      # total unpublished forms
-      @unpub_form_count = Form.accessible_by(current_ability).count - @pub_form_count
-      
-      # total users
-      @user_count = User.accessible_by(current_ability).count 
       
       # get a relation for accessible responses
       accessible_responses = Response.accessible_by(current_ability)

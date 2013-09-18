@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title><%= configatron.site_name %><%= title.blank? ? "" : ": #{title}" %></title>
+  <title><%= configatron.site_name %><%= (ttl = title(:text_only => true)).blank? ? "" : ": #{ttl}" %></title>
 
   <%= stylesheet_link_tag "application", :media => "all" %>
   <%= stylesheet_link_tag "application-screen", :media => "screen" %>
@@ -15,6 +15,7 @@
     // handles general client side stuff that appears in the template (e.g. language chooser form)
     // appears at top of file because it needs to be loaded first
     ELMO.app = new ELMO.App({
+      admin_mode: <%= admin_mode?.to_json.html_safe %>,
       locale: <%=j I18n.locale.to_json.html_safe %>,
       default_locale: <%=j I18n.default_locale.to_json.html_safe %>,
       mission_locales: <%=j configatron.preferred_locales.to_json.html_safe %>,
@@ -37,7 +38,7 @@
       <% if current_user.admin? %>
         <% if admin_mode? %>
           <%= content_tag('i', '', :class => 'icon-remove') %>
-          <%= link_to(t('admin_mode.exit_admin_mode'), root_url(:admin_mode => nil), :class => 'exit_admin_mode') %>
+          <%= link_to(t('admin_mode.exit_admin_mode'), exit_admin_mode_user_url(current_user), :class => 'exit_admin_mode') %>
         <% else %>
           <%= content_tag('i', '', :class => 'icon-trophy') %>
           <%= link_to(t('admin_mode.goto_admin_mode'), root_url(:admin_mode => 'admin'), :class => 'goto_admin_mode') %>
@@ -95,19 +96,37 @@
   </div>
  
   <div id="nav">
-    <ul>
-      <% [Response, Form, Question, Report::Report, OptionSet, Broadcast, Setting, User, Mission].each do |k| %>
-        <% if can?(:index, k) %>
-          <li><%= link_to(pluralize_model(k), send("#{k.model_name.route_key}_path")) %></li>
-        <% end %>
+    <%# no nav necessary if no mission %>
+    <% if current_mission || admin_mode? %>
+      <%# nav first section -- responses and reports %>
+      <% unless admin_mode? %>
+        <ul>
+          <%= nav_links(Response, Report::Report) %>
+          <li><%= link_to(t('page_titles.dashboard.all'), dashboard_path) if can?(:view, :dashboard) %></li>
+        </ul>
       <% end %>
-      <li><%= link_to(t('page_titles.dashboard.all'), dashboard_path) if can?(:view, :dashboard) %></li>
-    </ul>
+
+      <%# nav first section -- form design %>
+      <%# show the 'standard' label in admin mode %>
+      <% if admin_mode? %>
+        <div class="standard_label"><%= t('standard.standard') %></div>
+      <% end %>
+      <ul class="<%= admin_mode? ? 'indented' : '' %>">
+        <%= nav_links(Form, Question, OptionSet) %>
+      </ul>
+      
+      <%# nav third section -- users and infrastructure %>
+      <ul>
+        <%= nav_links(User, Mission, Broadcast, Setting) %>
+      </ul>
+    <% end %>
   </div>
   
   <div id="content" class="<%= ctlr_action_name %>">
     <% unless @dont_print_title %>
-      <h1 class="title"><%= title %></h1>
+      <h1 class="title">
+        <%= title %>
+      </h1>
     <% end %>
     <%= body %>
   </div>

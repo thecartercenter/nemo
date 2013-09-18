@@ -18,6 +18,10 @@ class FormVersion < ActiveRecord::Base
     save
     return upgraded
   end
+
+  def sequence_and_code
+    "#{sequence} (#{code})"
+  end
   
   private
   

@@ -5,19 +5,24 @@ module FormsHelper
     # add links based on authorization
     links << create_link(Form) if can?(:create, Form)
     links << link_to(t("page_titles.sms_tests.all"), new_sms_test_path) if can?(:create, Sms::Test)
-    
+
+    add_import_standard_link_if_appropriate(links)
+
     # return links
     links
   end
   
   def forms_index_fields
-    %w[std_icon version name questions published smsable updated_at downloads responses actions]
+    fields = %w(std_icon version name questions)
+    fields += %w(published downloads responses smsable) unless admin_mode? 
+    fields += %w(updated_at actions)
+    fields
   end
     
   def format_forms_field(form, field)
     case field
     when "std_icon" then std_icon(form)
-    when "version" then form.current_version ? form.current_version.sequence : ""
+    when "version" then form.version
     when "name" then link_to(form.name, form_path(form), :title => t("common.view"))
     when "questions" then form.questionings_count
     when "updated_at" then l(form.updated_at)
@@ -29,7 +34,7 @@ module FormsHelper
     when "smsable" then tbool(form.smsable?)
     when "actions"
       # get standard action links
-      links = action_links(form, :obj_name => form.name, :exclude => (form.published? ? [:edit, :destroy] : []))
+      links = action_links(form, :obj_name => form.name)
       
       # get the appropriate publish icon and add link, if auth'd
       if can?(:publish, form)
@@ -49,7 +54,7 @@ module FormsHelper
       end
       
       # add an sms template link if appropriate
-      if form.smsable? && form.published?
+      if form.smsable? && form.published? && !admin_mode?
         links += action_link("sms", form_path(form, :sms_guide => 1), :title => "Sms Guide")
       end
       

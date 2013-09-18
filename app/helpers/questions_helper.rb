@@ -16,6 +16,8 @@ module QuestionsHelper
     else
       # add the create new question
       links << create_link(Question) if can?(:create, Question)
+
+      add_import_standard_link_if_appropriate(links)
     end
     
     # return the link set
@@ -24,20 +26,28 @@ module QuestionsHelper
 
   def questions_index_fields
     # fields for form mode
-    if params[:controller] == 'forms'
-      %w(std_icon code name type)
-    else
-      %w(std_icon code name type actions)
-    end
+    fields = %w(std_icon code name type forms)
+
+    # dont add published if in admin mode
+    fields << 'published' unless admin_mode?
+
+    # dont add the actions column if we're not in the forms controller, since that means we're probably in form#choose_questions
+    fields << 'actions' unless params[:controller] == 'forms'
+
+    fields
   end
 
   def format_questions_field(q, field)
     case field
     when "std_icon" then std_icon(q)
     when "type" then t(q.qtype_name, :scope => :question_type)
-    when "published?" then tbool(q.published?)
-    when "actions" then action_links(q, :obj_name => q.code)
-    when "name" then
+    when "published" then tbool(q.published?)
+    when "forms" then q.form_count
+    when "actions"
+      exclude = []
+      exclude << :destroy if cannot?(:destroy, q)
+      action_links(q, :obj_name => q.code, :exclude => exclude)
+    when "name"
       params[:controller] == 'forms' ? q.name : link_to(q.name, q)
     else q.send(field)
     end

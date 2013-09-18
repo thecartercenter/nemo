@@ -203,8 +203,12 @@ en:
         base: "" # this is a sort of hack to get error msg to display properly
       option_set:
         options: "Options"
+        answers: "Answers"
       question:
         base: "" # this is a sort of hack to get error msg to display properly
+        code: "Code"
+        forms: "Forms"
+        published: "Published?"
         key: "Is Key Question?"
         minimum: "Minimum"
         maximum: "Maximum"
@@ -275,6 +279,7 @@ en:
         phone: "Main Phone"
         phone2: "Alternate Phone"
         pref_lang: "Preferred Language"
+        role: "Role"
       user_batch:
         batch: "User Attributes"
     tips:
@@ -338,6 +343,7 @@ en:
         password: "Enter a new password here if you'd like to change your existing password."
         password_confirmation: "Enter the new password again."
         pref_lang: "The language in which you would like to use the system."
+        role: "The role of the user in the current mission, and whether or not they are presently active. Inactive users cannot access the mission at all."
       user_batch:
         batch: |-
           Enter names, email addresses, and phone numbers (WITH country codes), one per line, separated by commas or tabs. For example:
@@ -370,13 +376,13 @@ en:
         option_set:
           at_least_one: "You must choose at least one option."
           cant_delete_if_has_questions: "You can't delete this Option Set because one or more Questions are associated with it."
-          cant_delete_if_has_response: "You can't delete this Option Set because it is included in at least one Response."
+          cant_delete_if_has_answers: "You can't delete this Option Set because it is included in at least one Answer."
           non_unique_values: "Two or more of the options you've chosen have the same numeric value."
         question:
           cant_change_if_conditions: "You can't change the Type or Option Set because there are Conditions that refer to this Question."
-          cant_change_if_published: "You can't change this Question because it appears in at least one published Form."
           cant_change_if_responses: "You can't change the Type or Option Set because there are already Responses for this Question."
-          cant_delete_if_in_form: "You can't delete this Question because it is included in at least one Form."
+          cant_delete_if_has_answers: "You can't delete this Question because it is referred to in at least one Answer."
+          cant_delete_if_published: "You can't delete this Question because it appears on at least one published Form."
         questioning:
           cant_delete_if_has_answers: "You can't remove this Question because it has one or more answers for this Form."
           invalid_condition: "is invalid (see below)"
@@ -430,6 +436,7 @@ en:
     system_version: "System Version"
     time_ago: "%{time} ago"
     time_zone: "Time Zone"
+    updated_at: "Updated at"
 
   # pagination translations
   will_paginate:
@@ -694,6 +701,25 @@ en:
     summary: "Summary"
     top_forms: "Top Forms"
 
+  data_integrity:
+    appears_elsewhere_warnings:
+      by_type:
+        question: "This Question appears on the following Forms: *%{forms}*. Any changes you make below will be reflected on those Forms."
+        option_set: "This Option Set appears on the following Forms: *%{forms}*. Any changes you make below will be reflected on those Forms."
+    has_answers_warnings:
+      by_type:
+        question: "This Question has existing Answers. Changes to type and Option Set are not allowed."
+    option_in_use_name_change_warning: "This Option is in use in other published Forms or is referenced in existing Responses. You should be careful not to change the meaning of the Option in your edits."
+    option_standard_copy_name_change_warning: "This Option is a copy of a standard Option. You should be sure to preserve the original meaning of the Option so that it agrees with the standard."
+    published_warnings:
+      by_type:
+        form: "This Form is published, meaning it may already be in the hands of observers. Some fields are thus not-editable. Please proceed with caution when making any changes."
+        questioning: "The Form to which the below fields apply is published and thus they cannot be edited."
+        question: "This Question appears on at least one published Form, meaning it may already be in the hands of observers. Some fields are thus not-editable. Please be sure to not change the meaning of the question."
+        option_set: "This Option Set appears on at least one published Form, meaning it may already be in the hands of observers, thus Options cannot be added, removed, or reordered. Please proceed with caution if editing Options."
+      sms: "Such changes will cause SMS form users to receive an error if they try to submit the current version of the Form."
+      odk: "Such changes will not disable Responses from ODK, but may cause some data loss and/or Responses that are not valid (e.g. missing required answers)."
+
   form:
     add_questions: "Add Questions"
     add_selected: "Add Selected Questions to Form"
@@ -709,6 +735,7 @@ en:
     publish_success: "Form published successfully."
     publish_form: "Publish Form"
     question_remove_error: "There was a problem removing the questions (%{msg})."
+    question_remove_answer_error: "One or more of the selected questions has answers and can't be removed."
     questions_add_error: "There was a problem adding the questions (%{msg})."
     questions_add_success: "Questions added successfully."
     questions_remove_success: "Questions removed successfully."
@@ -718,6 +745,7 @@ en:
     unpublish_error: "There was a problem unpublishing the form (%{msg})."
     unpublish_success: "Form unpublished successfully. The download count has also been reset."
     unpublish: "Unpublish"
+    unpublish_form: "Unpublish Form"
     unsaved_rank_notice: "You have not yet saved the changes you made to the Question order. You should click the 'Save' button if you want to save these changes."
     view_sms_guide: "View SMS Guide"
 
@@ -741,10 +769,7 @@ en:
     welcome: "Welcome to %{site}!"
 
   option:
-    appears_elsewhere: "Note: This option appears on the following forms: %{forms}. Any changes you make below will be reflected on those forms."
     create_link: "Create Option"
-    in_use_warning: "This Option is in use in other published Forms or is referenced in existing Responses. You should therefore be careful not to change the meaning of the Option in your edits."
-    other_forms_published: "At least one of those forms is also published, so only names can be edited. You should also take care to not change the meaning of the option if editing the names."
 
   option_set:
     create_new: "[Create New Option]"
@@ -776,7 +801,6 @@ en:
 
   question:
     answer_only_caps: "ANSWER ONLY IF"
-    appears_elsewhere: "Note: This question appears on the following forms: %{forms}. Any changes you make below will be reflected on those forms."
     create_link: "Create Question"
     maxmin:
       gt: "greater than"
@@ -956,6 +980,41 @@ en:
       invalid_answer: "Sorry, the answer to question %{rank} %{error}."
       missing_answer: "Sorry, the answer to the required question %{ranks} was missing from your response to form '%{form_code}'."
       missing_answers: "Sorry, the answers to the required questions %{ranks} were missing from your response to form '%{form_code}'."
+
+  standard:
+    import: "Import"
+    import_choose_one: 
+      forms: "Please choose at least one Form to import."
+      option_sets: "Please choose at least one Option Set to import."
+      questions: "Please choose at least one Question to import."
+    import_errors: "There were errors."
+    import_instructions: 
+      forms: "Check the boxes next to the Forms you'd like to import. Then click the 'import' button."
+      option_sets: "Check the boxes next to the Option Sets you'd like to import. Then click the 'import' button."
+      questions: "Check the boxes next to the Questions you'd like to import. Then click the 'import' button."
+    import_standard: 
+      forms: "Import Standard Forms"
+      option_sets: "Import Standard Option Sets"
+      questions: "Import Standard Questions"
+    import_success:
+      forms:
+        zero: "Successfully imported %{count} Forms."
+        one: "Successfully imported %{count} Form."
+        other: "Successfully imported %{count} Forms."
+      option_sets:
+        zero: "Successfully imported %{count} Option Sets."
+        one: "Successfully imported %{count} Option Set."
+        other: "Successfully imported %{count} Option Sets."
+      questions:
+        zero: "Successfully imported %{count} Questions."
+        one: "Successfully imported %{count} Question."
+        other: "Successfully imported %{count} Questions."
+    no_importable: 
+      forms: "There is nothing available to import. Either there are no standard Forms, or they have all been imported already."
+      option_sets: "There is nothing available to import. Either there are no standard Option Sets, or they have all been imported already."
+      questions: "There is nothing available to import. Either there are no standard Questions, or they have all been imported already."
+    standard: "Standard"
+    standard_forms: "Standard Forms"
 
   unauthorized:
     default: "You are not authorized to access that page."

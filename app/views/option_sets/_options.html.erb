@@ -1,4 +1,4 @@
-<% unless form.mode == :show %>
+<% if form.mode != :show && can?(:update_own_fields, @option_set) %>
   <div class="add_options">
     <input type="text" class="add_options_box">
     <input type="button" class="btn_secondary" value="<%= t('common.add') %>" />
@@ -8,9 +8,13 @@
 <div id="options_wrapper">
 </div>
 
-<% unless form.mode == :show %>
+<% if form.mode != :show %>
   <div class="edit_option_form" title="<%= t("option_set.edit_option") %>">
-    <div class="in_use_warning"><%= t('option.in_use_warning') %></div>
+    <%= data_integrity_warning(:option_standard_copy_name_change_warning) if @option_set.standard_copy? %>
+
+    <%# this warning will get hidden/shown by the js %>
+    <%= data_integrity_warning(:option_in_use_name_change_warning) %>
+
     <% configatron.preferred_locales.each do |locale| %>
       <div class="translation">
         <label for="<%= locale %>"><%= t(:locale_name, :locale => locale) %></label>
@@ -27,6 +31,8 @@
     option_set: <%=j @option_set.as_json(:methods => :optionings).to_json.html_safe %>,
     suggest_path: <%=j suggest_options_path.to_json.html_safe %>,
     form_mode: <%=j form.mode.to_json.html_safe %>,
-    ajax_mode: <%=j ajax_request?.to_json.html_safe %>
+    ajax_mode: <%=j ajax_request?.to_json.html_safe %>,
+    can_reorder: <%=j can?(:update_own_fields, @option_set).to_json.html_safe %>,
+    can_remove_options: <%=j can?(:update_own_fields, @option_set).to_json.html_safe %>
   });
 <% end %>

@@ -1,6 +1,8 @@
 class OptionSet < ActiveRecord::Base
-  include MissionBased, Standardizable, Replicable
+  include MissionBased, FormVersionable, Standardizable, Replicable
 
+  # this needs to be up here or it will run too late
+  before_destroy(:check_associations)
 
   has_many(:optionings, :order => "rank", :dependent => :destroy, :autosave => true, :inverse_of => :option_set)
   has_many(:options, :through => :optionings, :order => "optionings.rank")
@@ -15,8 +17,23 @@ class OptionSet < ActiveRecord::Base
   before_validation(:ensure_ranks)
   before_validation(:ensure_option_missions)
   
-  default_scope(order("name"))
   scope(:with_associations, includes(:questions, {:optionings => :option}, {:questionings => :form}))
+
+  scope(:by_name, order('option_sets.name'))
+  scope(:default_order, by_name)
+  scope(:with_assoc_counts_and_published, lambda { |mission|
+    select(%{
+      option_sets.*, 
+      COUNT(DISTINCT answers.id) AS answer_count,
+      COUNT(DISTINCT questions.id) AS question_count, 
+      MAX(forms.published) AS form_published
+    }).
+    joins(%{
+      LEFT OUTER JOIN questions ON questions.option_set_id = option_sets.id 
+      LEFT OUTER JOIN questionings ON questionings.question_id = questions.id 
+      LEFT OUTER JOIN forms ON forms.id = questionings.form_id
+      LEFT OUTER JOIN answers ON answers.questioning_id = questionings.id
+    }).group('option_sets.id')})
   
   accepts_nested_attributes_for(:optionings, :allow_destroy => true)
   
@@ -25,11 +42,29 @@ class OptionSet < ActiveRecord::Base
   # replication options
   replicable :assocs => :optionings, :parent => :question, :uniqueness => {:field => :name, :style => :sep_words}
   
+  # checks if this option set appears in any published questionings
   def published?
-    # check for any published questionings
-    !questionings.detect{|qing| qing.published?}.nil?
+    questionings.any?(&:published?)
   end
-  
+
+  # checks if this option set appears in any smsable questionings
+  def form_smsable?
+    questionings.any?(&:form_smsable?)
+  end
+
+  # checks if this option set is used in at least one question
+  # uses the special 'question_count' field if it was loaded, else uses the questionings assoc
+  def has_questions?
+    respond_to?(:question_count) ? question_count > 0 : !questions.empty?
+  end
+
+  # checks if this option set has any answers (that is, answers to questions that use this option set)
+  # uses method from special eager loaded scope if available
+  def has_answers?
+    # check for answers
+    respond_to?(:answer_count) ? answer_count > 0 : questionings.any?(&:has_answers?)
+  end
+
   # finds or initializes an optioning for every option in the database for current mission (never meant to be saved)
   def all_optionings(options)
     # make sure there is an associated answer object for each questioning in the form
@@ -67,13 +102,10 @@ class OptionSet < ActiveRecord::Base
   def forms
     questionings.collect(&:form).uniq
   end
-  
-  def check_associations
-    # make sure not associated with any questions
-    raise DeletionError.new(:cant_delete_if_has_questions) unless questions.empty?
-    
-    # don't need to check if associated with any existing answers/choices
-    # since questions can't be deleted if there are existing responses, so the first check above is sufficient
+
+  # gets a comma separated list of all related forms names
+  def form_names
+    forms.map(&:name).join(', ')
   end
   
   # checks if any of the option ranks have changed since last save
@@ -89,6 +121,14 @@ class OptionSet < ActiveRecord::Base
       # if the options are already sorted this way, nothing will change
       # if a rank is null, we sort it to the end
       optionings.sort_by{|o| o.rank || 10000000}.each_with_index{|o, idx| o.rank = idx + 1}
+    end
+
+    def check_associations
+      # make sure not associated with any questions
+      raise DeletionError.new(:cant_delete_if_has_questions) if has_questions?
+
+      # make sure not associated with any answers
+      raise DeletionError.new(:cant_delete_if_has_answers) if has_answers?
     end
     
     def at_least_one_option

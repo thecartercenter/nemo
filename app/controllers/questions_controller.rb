@@ -1,11 +1,14 @@
 class QuestionsController < ApplicationController
+  include StandardImportable
+  
   # this Concern includes routines for building question/ing forms
   include QuestionFormable
-
+  
   load_and_authorize_resource
 
   def index
-    @questions = @questions.by_code.paginate(:page => params[:page], :per_page => 25)
+    @questions = @questions.with_assoc_counts.by_code.paginate(:page => params[:page], :per_page => 25)
+    load_importable_objs
   end
   
   def show

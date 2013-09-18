@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :question do
-    code 'somecode'
+    code {"q#{rand(10000000)}"}
     qtype_name 'integer'
     name 'the question'
     hint 'some info about the question'

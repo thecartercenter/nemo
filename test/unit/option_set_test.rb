@@ -93,10 +93,10 @@ class OptionSetTest < ActiveSupport::TestCase
     assert_equal(true, os.ranks_changed?)
   end
   
-  test "checking associations for an option set that is presently used in a question should raise deletion error" do
+  test "destroying an option set that is presently used in a question should raise deletion error" do
     os = FactoryGirl.create(:option_set)
     q = FactoryGirl.create(:question, :qtype_name => 'select_one', :option_set => os)
-    assert_raise(DeletionError){os.check_associations}
+    assert_raise(DeletionError){os.reload.destroy}
   end
 
   test "creating an option set with nested paramters and a mix of new and existing options should work" do
@@ -238,6 +238,12 @@ class OptionSetTest < ActiveSupport::TestCase
     # replicate and check name
     os2 = os.replicate(get_mission)
     assert_equal("Stuff", os2.name)
+
+    # subsequent updates to std set should not perturb name
+    os.optionings[0].rank = 2
+    os.optionings[1].rank = 1
+    os.save!
+    assert_equal('Stuff', os2.reload.name)
   end
 
   test "replicating standard option set to mission should change name if matching set exists in mission" do

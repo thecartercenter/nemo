@@ -14,6 +14,10 @@ form.button_to input { background-color: transparent; border: none; color: #0065
   text-decoration: underline; padding: 0; margin: 0; cursor: pointer; }
 h1, h2, h3 { color: black; font-family: Helvetica; }
 h1 { margin: 0 0 10px 0; font-size: 17pt; }
+
+/* std seal in title */ 
+h1.title img { width: 16px; height: 16px; }
+
 h2 { font-size: 11pt; color: #888; }
 h3 { font-size: 12pt; margin: 0; color: #444; }
 ul { margin-top: 0; padding-left: 20px; }
@@ -44,6 +48,24 @@ div.form > div, table.form td { padding: 5px; border-bottom: 1px solid #ddd; }
 div.form div.details, table.form td.details { width: 250px; }
 div.reqd_sym { display: inline; font-weight: bold; color: #d02000; font-size: 125%; line-height: 5px; vertical-align: middle; }
 table.form td.name { min-width: 75px; }
+
+div.data_integrity_warning {
+  background-color: #e4eeff;
+  padding: 5px;
+  margin: 10px 0;
+  max-width: 800px;
+
+  i {
+    display: block;
+    float: left;
+    font-size: 14px;
+    margin-top: 1px;
+  }
+
+  & > div {
+    margin-left: 20px;
+  }
+}
 
 /* collection form */
 div.collection_form div.item { margin-bottom: 3px; }
@@ -157,7 +179,13 @@ form.questioning_form .form_field#condition div.row > div { display: inline-bloc
 form.questioning_form .form_field#condition div.row > div:first-child { width: 100px; }
 
 /* question index/choose */
+.questions_index .code_col { min-width: 100px; }
+.questions_index .name_col { min-width: 400px; }
+.questions_index .type_col { min-width: 100px; }
 .questions_choose .name_col { width: 400px; }
+
+/* form index */
+.forms_index .name_col { min-width: 200px; }
 
 /* option edit */
 .options_edit td.value input#option_value, .options_new td.value input#option_value { width: 100px; }

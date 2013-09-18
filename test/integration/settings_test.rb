@@ -44,14 +44,11 @@ class SettingsTest < ActionDispatch::IntegrationTest
     assert_equal('Brisbane', Time.zone.name)
     
     # create a new mission and ensure that a new setting object was created with the default timezone
-    post(missions_path, :mission => {:name => 'Foo'})
+    post(missions_path(:admin_mode => 'admin'), :mission => {:name => 'Foo'})
     follow_redirect!
     assert_response(:success)
     assert_equal(Setting::DEFAULTS[:timezone], Mission.find_by_name('Foo').setting.timezone)
-    
-    # but current timezone should still be brisbane because we haven't changed missions yet
-    assert_equal('Brisbane', Time.zone.name)
-    
+
     # change to that mission and see that timezone changed
     change_mission(@admin, Mission.find_by_name('foo'))
     assert_equal(Setting::DEFAULTS[:timezone], Time.zone.name)

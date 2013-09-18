@@ -1,5 +1,5 @@
-<%# no need to show anything if no mission %>
-<% if current_mission %>
+<%# no need to show anything if no mission and not admin mode %>
+<% if current_mission || admin_mode? %>
 
   <%# user block %>
   <% if can?(:index, User) %>
@@ -18,7 +18,7 @@
   <% if can?(:index, Form) %>
     <div class="block">
       <%= link_to(t("common." + (can?(:manage, Form) ? "design" : "view")), forms_path, :class => "title") %>
-      <%= link_to(pluralize_model(Form), forms_path, :class => "subtitle") %>
+      <%= link_to(admin_mode? ? t('standard.standard_forms') : pluralize_model(Form), forms_path, :class => "subtitle") %>
       <%= link_to(image_tag("blocks/block_design.png"), forms_path) %>
       <ul>
         <li><%= link_to(tmd("welcome.published_form_count", :count => @pub_form_count), forms_path) %></li>

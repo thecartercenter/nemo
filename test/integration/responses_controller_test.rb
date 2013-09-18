@@ -36,27 +36,57 @@ class ResponsesControllerTest < ActionDispatch::IntegrationTest
     assert_response(404)
   end
 
+  test 'odk submission of integer value to select question should fail gracefully' do
+    # create form with select one question
+    form = FactoryGirl.create(:form, :question_types => %w(select_one))
+    form2 = FactoryGirl.create(:form, :name => 'other form', :question_types => %w(integer))
+
+    # attempt submission to proper form
+    xml = build_odk_submission(form2)
+    do_submission(submission_path(get_mission), xml)
+
+    # answer should look right
+    resp = form2.reload.responses.last
+    assert_equal('5', resp.answers.first.value)
+
+    # attempt submission of value to wrong question
+    xml = build_odk_submission(form2, :override_form_id => form.id)
+    do_submission(submission_path(get_mission), xml)
+
+    # answer should remain blank, integer value should not get stored
+    resp = form.reload.responses.last
+    assert_nil(resp.answers.first.value)
+    assert_nil(resp.answers.first.option_id)
+  end
+
   private
     # builds a form and sends a submission to the given path
-    def do_submission(path)
+    def do_submission(path, xml = nil)
       f = FactoryGirl.create(:form, :question_types => %w(integer integer))
-      build_odk_submission(f)
+      
+      xml ||= build_odk_submission(f)
+
+      # write xml to file
+      File.open(Rails.root.join('test/fixtures/', ODK_XML_FILE).to_s, 'w') do |f|
+        f.write(xml)
+      end
+
       uploaded = fixture_file_upload(Rails.root.join('test/fixtures/', ODK_XML_FILE), 'text/xml')
       post(path, {:xml_submission_file => uploaded, :format => 'xml'}, 'HTTP_AUTHORIZATION' => encode_credentials(@user.login, 'password'))
     end
 
     # build a sample xml submission for the given form (assumes all questions are integer questions)
     # assigns answers in the sequence 5, 10, 15, ...
-    # stores the xml in a tmp file
-    def build_odk_submission(form)
-      File.open(Rails.root.join('test/fixtures/', ODK_XML_FILE).to_s, 'w') do |f|
-        xml = "<?xml version='1.0' ?><data id=\"#{form.id}\">"
-        form.questionings.each_with_index do |qing, i|
-          xml += "<#{qing.question.odk_code}>#{(i+1)*5}</#{qing.question.odk_code}>"
-        end
-        xml += "</data>"
-        f.write(xml)
+    def build_odk_submission(form, options = {})
+      # allow form id to be overridden for testing bad submissions
+      form_id = options[:override_form_id] || form.id
+
+      xml = "<?xml version='1.0' ?><data id=\"#{form_id}\">"
+      form.questionings.each_with_index do |qing, i|
+        xml += "<#{qing.question.odk_code}>#{(i+1)*5}</#{qing.question.odk_code}>"
       end
+      xml += "</data>"
+      xml
     end
 
     def submission_path(mission = nil)

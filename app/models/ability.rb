@@ -17,6 +17,7 @@ class Ability
   
   # defines user's abilities
   def initialize(user, admin_mode = false)
+
     if user
 
       # anybody can see the welcome page
@@ -30,18 +31,24 @@ class Ability
 
       # admin abilities that don't depend on a mission being set
       if user.admin?
-        can :manage, User
-        can :manage, Assignment
-        can :manage, Mission
         can :view, :admin_mode
 
-        # standard objects are available as long as the user is no-mission (admin) mode
+        # standard objects, missions, and all users are available in no-mission (admin) mode
         if admin_mode
           [Form, Questioning, Condition, Question, OptionSet, Optioning, Option].each do |k|
             can :manage, k, :is_standard => true
           end
+          can :manage, Mission
+          can :manage, User
+          can :manage, Assignment
         end
 
+        # admin can switch to any mission, regardless of mode
+        can :switch_to, Mission
+
+        # admin can assign user to current mission
+        can :assign_to, Mission, :id => user.current_mission_id
+        
         # only admins can give/take admin (adminify) to/from others, but not from themselves
         cannot :adminify, User
         can :adminify, User, ["id != ?", user.id] do |other_user|
@@ -51,8 +58,8 @@ class Ability
       
       # anybody can access missions to which assigned (but don't need this permission if admin)
       if !user.admin?
-        can :read, Mission, Mission.active_for_user(user) do |mission|
-          user.assignments.detect{|a| a.mission == mission}
+        can :switch_to, Mission, Mission.active_for_user(user) do |mission|
+          user.assignments.detect{|a| a.mission == mission && a.active?}
         end
       end
       
@@ -66,11 +73,8 @@ class Ability
       
         # observer abilities
         if user.role?(:observer)
-          # don't bother with these if the user is also an admin
-          unless user.admin?
-            # can view and export users in same mission
-            can [:index, :read, :export], User, :assignments => {:mission_id => user.current_mission_id}
-          end
+          # can view and export users in same mission
+          can [:index, :read, :export], User, :assignments => {:mission_id => user.current_mission_id}
         
           # can submit responses for themselves only, and can only manage unreviewed responses
           # only need this ability if not also a staffer
@@ -109,6 +113,7 @@ class Ability
         if user.role?(:coordinator)
           # can manage users in current mission
           can [:create, :update, :login_instructions], User, :assignments => {:mission_id => user.current_mission_id}
+          can :assign_to, Mission, :id => user.current_mission_id
         
           # can create user batches
           can :manage, UserBatch
@@ -131,5 +136,52 @@ class Ability
       end
     end
     
+    ###############
+    # these permissions are user-independent
+
+    # published forms can't be deleted
+    cannot :destroy, Form, :published => true
+
+    # standard forms can't be cloned (hard to implement and not currently needed)
+    cannot :clone, Form, :is_standard => true
+
+    # forms with responses can't be deleted
+    cannot :destroy, Form do |f| 
+      !f.responses.empty?
+    end
+
+    cannot [:add_questions, :remove_questions, :reorder_questions], Form do |f|
+      f.standard_copy? || f.published?
+    end
+
+    cannot :publish, Form, :is_standard => true
+
+    cannot [:destroy, :update, :update_own_fields], Questioning do |q|
+      q.standard_copy? || q.form.published?
+    end
+
+    # BUT can update questioning if can update related question
+    can :update, Questioning do |q| 
+      can :update, q.question
+    end
+
+    # update_core refers to the core fields: code, question type, option set, constraints
+    cannot :update_core, Question do |q| 
+      q.standard_copy? || q.published?
+    end
+
+    cannot :destroy, Question do |q| 
+      q.standard_copy? && q.has_standard_copy_form? || q.published? || q.has_answers?
+    end
+
+    # update_own_fields as opposed to update the contained options' fields
+    cannot :update_own_fields, OptionSet do |o| 
+      o.standard_copy? || o.published?
+    end
+
+    cannot :destroy, OptionSet do |o|
+      o.has_answers? || o.has_questions? || o.published?
+    end
+
   end
 end

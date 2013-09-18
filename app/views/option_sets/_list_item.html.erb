@@ -1,0 +1,9 @@
+<%# how this option set should be represented in a list. the option set is stored 'obj'. %>
+<div><%= obj.name %></div>
+<small>
+  <%= pluralize_model(Option, :count => obj.options.count) %>:
+  <%= obj.options[0...3].map(&:name).join(', ') %>
+  <%= '...' if obj.options.size > 3 %>
+  -
+  <%= t('layout.updated_at') %> <%= l(obj.updated_at) %>
+</small>

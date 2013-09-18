@@ -1,4 +1,6 @@
 class FormsController < ApplicationController
+  include StandardImportable
+
   # special find method before load_resource
   before_filter :find_form_with_questionings, :only => [:show, :edit, :update]
   
@@ -7,6 +9,7 @@ class FormsController < ApplicationController
 
   # in the choose_questions action we have a question form so we need this Concern
   include QuestionFormable
+
   
   def index
     # handle different formats
@@ -14,7 +17,8 @@ class FormsController < ApplicationController
       # render normally if html
       format.html do
         @forms = apply_filters(@forms)
-        render(:index)  
+        load_importable_objs
+        render(:index)
       end
       
       # get only published forms and render openrosa if xml requested
@@ -83,7 +87,7 @@ class FormsController < ApplicationController
       @form.assign_attributes(params[:form])
       
       # update ranks if provided (possibly raising condition ordering error)
-      @form.update_ranks(params[:rank]) if params[:rank]
+      @form.update_ranks(params[:rank]) if params[:rank] && can?(:reorder_questions, @form)
 
       # save everything and redirect
       @form.save!
@@ -121,8 +125,10 @@ class FormsController < ApplicationController
   
   # shows the form to either choose existing questions or create a new one to add
   def choose_questions
+    authorize!(:add_questions, @form)
+
     # get questions for choice list
-    @questions = Question.by_code.accessible_by(current_ability).not_in_form(@form)
+    @questions = Question.with_assoc_counts.by_code.accessible_by(current_ability).not_in_form(@form)
     
     # setup new questioning for use with the questioning form
     init_qing(:form_id => @form.id, :question_attributes => {})
@@ -155,11 +161,10 @@ class FormsController < ApplicationController
     qings = load_selected_objects(Questioning)
     # destroy
     begin
-      qings.each{|q| q.check_assoc}
       @form.destroy_questionings(qings)
       flash[:success] = t("form.questions_remove_success")
     rescue
-      flash[:error] = t("form.question_remove_error", :msg => $!.to_s)
+      flash[:error] = t("form.#{$!}")
     end
     # redirect to form edit
     redirect_to(edit_form_path(@form))

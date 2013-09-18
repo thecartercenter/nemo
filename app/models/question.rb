@@ -1,6 +1,9 @@
 class Question < ActiveRecord::Base
-  include MissionBased, Translatable, Standardizable, Replicable
+  include MissionBased, FormVersionable, Translatable, Standardizable, Replicable
   
+  # this needs to be up here other wise it runs /after/ the children are destroyed
+  before_destroy(:check_assoc)
+
   belongs_to(:option_set, :include => :options, :inverse_of => :questions, :autosave => true)
   has_many(:questionings, :dependent => :destroy, :autosave => true, :inverse_of => :question)
   has_many(:answers, :through => :questionings)
@@ -15,11 +18,21 @@ class Question < ActiveRecord::Base
   validate(:integrity)
   validate(:code_unique_per_mission)
 
-  before_destroy(:check_assoc)
-  
-  scope(:by_code, order("code"))
+  scope(:by_code, order("questions.code"))
+  scope(:default_order, by_code)
   scope(:select_types, where(:qtype_name => %w(select_one select_multiple)))
   scope(:with_forms, includes(:forms))
+  scope(:with_assoc_counts, select(%{
+      questions.*, 
+      COUNT(DISTINCT answers.id) AS answer_count, 
+      COUNT(DISTINCT questionings.id) AS form_count, 
+      MAX(DISTINCT forms.published) AS form_published,
+      MAX(DISTINCT forms.standard_id) AS standard_copy_form_id
+    }).joins(%{
+      LEFT OUTER JOIN questionings ON questionings.question_id = questions.id
+      LEFT OUTER JOIN forms ON forms.id = questionings.form_id
+      LEFT OUTER JOIN answers ON answers.questioning_id = questionings.id
+    }).group("questions.id"))
   
   translates :name, :hint
   
@@ -41,7 +54,7 @@ class Question < ActiveRecord::Base
   def qtype
     QuestionType[qtype_name]
   end
-  
+
   def options
     option_set ? option_set.options : nil
   end
@@ -50,11 +63,30 @@ class Question < ActiveRecord::Base
     (opt = options) ? opt.collect{|o| [o.name, o.id]} : []
   end
 
-  # determines if the question appears on any published forms
-  def published?
-    !forms.detect{|f| f.published?}.nil?
+  # determins if question has answers
+  # uses the eager-loaded answer_count field if available
+  def has_answers?
+    respond_to?(:answer_count) ? answer_count > 0 : !answers.empty?
   end
-  
+
+  # determines if the question appears on any published forms
+  # uses the eager-loaded form_published field if available
+  def published?
+    respond_to?(:form_published) ? form_published == 1 : forms.any?(&:published?)
+  end
+
+  # determines if any of the forms on which this question appears are standard copies
+  # uses a special eager-loaded attribute if available
+  def has_standard_copy_form?
+    respond_to?(:standard_copy_form_id) ? !standard_copy_form_id.nil? : forms.any?(&:standard_copy?)
+  end
+
+  # checks if any associated forms are smsable
+  # NOTE different from plain Question.smsable?
+  def form_smsable?
+    forms.any?(&:smsable?)
+  end
+
   # an odk-friendly unique code
   def odk_code
     "q#{id}"
@@ -85,7 +117,16 @@ class Question < ActiveRecord::Base
   def form_ids
     forms.collect{|f| f.id}.sort
   end
-  
+
+  # gets a comma separated list of all related forms names
+  def form_names
+    forms.map(&:name).join(', ')
+  end
+
+  def constraint_changed?
+    %w(minimum maximum minstrictly maxstrictly).any?{|f| send("#{f}_changed?")}
+  end
+
   private
 
     def integrity
@@ -97,13 +138,11 @@ class Question < ActiveRecord::Base
           errors.add(:base, :cant_change_if_conditions)
         end
       end
-      
-      # error if anything (except name/hint) has changed and the question is published
-      errors.add(:base, :cant_change_if_published) if published? && (changed? && !changed.reject{|f| f =~ /^_?(name|hint)/ || f == 'key'}.empty?)
     end
 
     def check_assoc
-      raise DeletionError.new(:cant_delete_if_in_form) unless questionings.empty?
+      raise DeletionError.new(:cant_delete_if_has_answers) if has_answers?
+      raise DeletionError.new(:cant_delete_if_published) if published?
     end
 
     def code_unique_per_mission
