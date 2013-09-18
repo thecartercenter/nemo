@@ -362,4 +362,27 @@ class FormTest < ActiveSupport::TestCase
     assert_nil(Questioning.where(:form_id => copy.id).first)
     assert_nil(Condition.where(:id => copy_cond_id).first)
   end
+
+  test "ranks should be fixed after deleting a question" do
+    f = FactoryGirl.create(:form, :question_types => %w(integer integer integer))
+    f.questions[1].destroy
+    assert_equal(2, f.reload.questions.size)
+    assert_equal(2, f.questionings.last.rank)
+  end
+
+  test "updating ranks improperly should trigger condition ordering error" do
+    f = FactoryGirl.create(:form, :question_types => %w(integer integer integer))
+    f.questionings[2].condition = FactoryGirl.build(:condition, :ref_qing => f.questionings[0], :op => 'lt', :value => 10)
+    f.save!
+
+    # we are specifically testing the update_ranks method here
+    q1, q2, q3 = f.questionings
+
+    # this one shouldn't raise since q with condition stays last
+    f.update_ranks({q1.id.to_s => '2', q2.id.to_s => '1', q3.id.to_s => '3'})
+
+    assert_raise(ConditionOrderingError) do
+      f.update_ranks({q1.id.to_s => '3', q2.id.to_s => '2', q3.id.to_s => '1'})
+    end
+  end
 end

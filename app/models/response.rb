@@ -125,23 +125,34 @@ class Response < ActiveRecord::Base
   end
   
   def populate_from_xml(xml)
+    # response mission should already be set
+    raise "xml submissions must have a mission" if mission.nil?
+
     # parse xml
     doc = XML::Parser.string(xml).parse
     
     # set the source/modifier values to odk
     self.source = self.modifier = "odk"
 
-    # get form id
-    if doc.root["id"]
-      self.form_id = doc.root["id"].to_i
-    else
-      raise ArgumentError.new("no form id was given")
-    end
-    
-    # check if the form is associated with this response's mission
-    unless mission && form = Form.for_mission(mission).find_by_id(form_id)
-      raise ArgumentError.new("form not found")
-    end
+    # if no root ID, error
+    raise ArgumentError.new("no form id was given") if doc.root['id'].nil?
+
+    # get form ID and version sequence number and attempt to convert to int
+    form_id = doc.root['id'].try(:to_i)
+    form_ver = doc.root['version'].try(:to_i)
+
+    # if either of these is nil or not an integer, error
+    raise ArgumentError.new("no form id was given") if form_id.nil?
+    raise FormVersionError.new("form version must be specified") if form_ver.nil?
+
+    # try to load form (will raise activerecord error if not found)
+    self.form = Form.find(form_id)
+
+    # if form has no version, error
+    raise "xml submissions must be to versioned forms" if form.current_version.nil?
+
+    # if form version is outdated, error
+    raise FormVersionError.new("form version is outdated") if form.current_version.sequence > form_ver
     
     # get the visible questionings
     qings = form.visible_questionings

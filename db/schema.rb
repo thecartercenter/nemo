@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130912153204) do
+ActiveRecord::Schema.define(:version => 20130918185359) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -125,6 +125,7 @@ ActiveRecord::Schema.define(:version => 20130912153204) do
   end
 
   add_index "forms", ["current_version_id"], :name => "forms_current_version_id_fk"
+  add_index "forms", ["mission_id", "name"], :name => "index_forms_on_mission_id_and_name", :unique => true
   add_index "forms", ["mission_id", "standard_id"], :name => "index_forms_on_mission_id_and_standard_id", :unique => true
   add_index "forms", ["mission_id"], :name => "forms_mission_id_fk"
   add_index "forms", ["standard_id"], :name => "index_forms_on_standard_id"
@@ -147,6 +148,7 @@ ActiveRecord::Schema.define(:version => 20130912153204) do
     t.integer  "standard_id"
   end
 
+  add_index "option_sets", ["mission_id", "name"], :name => "index_option_sets_on_mission_id_and_name", :unique => true
   add_index "option_sets", ["mission_id", "standard_id"], :name => "index_option_sets_on_mission_id_and_standard_id", :unique => true
   add_index "option_sets", ["mission_id"], :name => "option_sets_mission_id_fk"
   add_index "option_sets", ["standard_id"], :name => "index_option_sets_on_standard_id"
@@ -221,6 +223,7 @@ ActiveRecord::Schema.define(:version => 20130912153204) do
     t.integer  "standard_id"
   end
 
+  add_index "questions", ["mission_id", "code"], :name => "index_questions_on_mission_id_and_code", :unique => true
   add_index "questions", ["mission_id", "standard_id"], :name => "index_questions_on_mission_id_and_standard_id", :unique => true
   add_index "questions", ["mission_id"], :name => "questions_mission_id_fk"
   add_index "questions", ["option_set_id"], :name => "questions_option_set_id_fk"

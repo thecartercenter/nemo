@@ -10,6 +10,8 @@ class Form < ActiveRecord::Base
   # while a form has many versions, this is a reference to the most up-to-date one
   belongs_to(:current_version, :class_name => "FormVersion")
   
+  before_validation(:normalize_fields)
+
   validates(:name, :presence => true, :length => {:maximum => 32})
   validate(:name_unique_per_mission)
   
@@ -74,6 +76,9 @@ class Form < ActiveRecord::Base
         questionings[i].rank = new_ranks[questionings[i].id.to_s].to_i
       end
     end
+
+    # ensure the ranks are sequential
+    fix_ranks(:reload => false, :save => false)
     
     # validate the condition orderings (raises an error if they're invalid)
     questionings.each{|qing| qing.condition_verify_ordering}
@@ -93,7 +98,7 @@ class Form < ActiveRecord::Base
       end
       
       # fix the ranks
-      questionings.each_with_index{|q, i| q.rank = i + 1}
+      fix_ranks(:reload => false, :save => true)
       
       save
     end
@@ -167,9 +172,11 @@ class Form < ActiveRecord::Base
   end
 
   # ensures question ranks are sequential
-  def fix_ranks
-    questionings(true).sort_by{|qing| qing.rank}.each_with_index{|qing, idx| qing.rank = idx + 1}
-    save!
+  def fix_ranks(options = {})
+    options[:reload] = true if options[:reload].nil?
+    options[:save] = true if options[:save].nil?
+    questionings(options[:reload]).sort_by{|qing| qing.rank}.each_with_index{|qing, idx| qing.rank = idx + 1}
+    save(:validate => false) if options[:save]
   end
   
   private
@@ -180,5 +187,10 @@ class Form < ActiveRecord::Base
     
     def name_unique_per_mission
       errors.add(:name, :must_be_unique) unless unique_in_mission?(:name)
+    end
+
+    def normalize_fields
+      self.name = name.strip
+      return true
     end
 end

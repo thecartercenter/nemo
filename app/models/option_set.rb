@@ -14,6 +14,7 @@ class OptionSet < ActiveRecord::Base
   validate(:at_least_one_option)
   validate(:name_unique_per_mission)
   
+  before_validation(:normalize_fields)
   before_validation(:ensure_ranks)
   before_validation(:ensure_option_missions)
   
@@ -144,4 +145,10 @@ class OptionSet < ActiveRecord::Base
       # go in through optionings association in case these are newly created options via nested attribs
       optionings.each{|oing| oing.option.mission_id ||= mission_id if oing.option}
     end
+
+    def normalize_fields
+      self.name = name.strip
+      return true
+    end
+
 end

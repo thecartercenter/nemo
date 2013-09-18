@@ -86,7 +86,7 @@ class Ability
           # can read published forms for the mission
           # only need this ability if not also a coordinator
           unless user.role?(:coordinator)
-            can [:index, :read], Form, :mission_id => user.current_mission_id, :published => true
+            can [:index, :read, :download], Form, :mission_id => user.current_mission_id, :published => true
           end
         
         end
@@ -183,5 +183,7 @@ class Ability
       o.has_answers? || o.has_questions? || o.published?
     end
 
+    # only published forms can be downloaded
+    cannot :download, Form, :published => false
   end
 end

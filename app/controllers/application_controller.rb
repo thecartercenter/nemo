@@ -63,6 +63,14 @@ class ApplicationController < ActionController::Base
   def default_url_options(options={})
     { :locale => I18n.locale, :admin_mode => admin_mode? ? 'admin' : nil }
   end
+
+  # mailer is for some reason too stupid to figure these out on its own
+  def mailer_set_url_options
+    # copy options from the above method, and add a host option b/c mailer is especially stupid
+    default_url_options.merge(:host => request.host_with_port).each_pair do |k,v|
+      ActionMailer::Base.default_url_options[k] = v
+    end
+  end
   
   protected
     
@@ -103,11 +111,6 @@ class ApplicationController < ActionController::Base
     # Loads the user-specified timezone from configatron, if one exists
     def set_timezone
       Time.zone = configatron.timezone.to_s if configatron.timezone?
-    end
-    
-    def mailer_set_url_options
-      ActionMailer::Base.default_url_options[:host] = request.host_with_port
-      ActionMailer::Base.default_url_options[:locale] = I18n.locale
     end
     
     # loads objects selected with a batch form

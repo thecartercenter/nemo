@@ -40,7 +40,7 @@ class ActiveSupport::TestCase
 
   def create_question(params)
     # create default form if necessary
-    params[:forms] ||= [create_form(:name => "f")]  
+    params[:forms] ||= [create_form(:name => "f#{rand(1000000)}")]  
   
     q = Question.new(:name_en => params[:name_en] || params[:code], :code => params[:code], :mission => mission, :qtype_name => params[:type])
 
