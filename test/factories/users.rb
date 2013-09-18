@@ -1,5 +1,5 @@
 def get_user
-  u = User.find_by_login("test") || FactoryGirl.create(:user)
+  u = FactoryGirl.create(:user)
   
   # set the mission to get_mission so that ability stuff will work
   u.current_mission = get_mission
@@ -16,6 +16,7 @@ FactoryGirl.define do
     
     login { Random.letters(8) }
     name { Random.full_name }
+    email { Random.email }
     reset_password_method "print"
     password "password"
     password_confirmation "password"
