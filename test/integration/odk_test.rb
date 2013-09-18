@@ -81,6 +81,17 @@ class OdkTest < ActionDispatch::IntegrationTest
     assert_response(426)
   end
 
+  test 'submitting old xml without form version should return 426 also' do
+    f = FactoryGirl.create(:form, :question_types => %w(integer integer))
+    f.publish!
+
+    # create old xml with no answers (don't need them) but valid form id
+    xml = "<?xml version='1.0' ?><data id=\"#{f.id}\"></data>"
+
+    do_submission(submission_path(get_mission), xml)
+    assert_response(426)
+  end
+
   private
     # builds a form and sends a submission to the given path
     def do_submission(path, xml = nil)
