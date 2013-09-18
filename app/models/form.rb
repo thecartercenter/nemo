@@ -74,6 +74,9 @@ class Form < ActiveRecord::Base
         questionings[i].rank = new_ranks[questionings[i].id.to_s].to_i
       end
     end
+
+    # ensure the ranks are sequential
+    fix_ranks(:reload => false, :save => false)
     
     # validate the condition orderings (raises an error if they're invalid)
     questionings.each{|qing| qing.condition_verify_ordering}
