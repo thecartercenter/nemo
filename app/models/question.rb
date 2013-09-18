@@ -11,6 +11,8 @@ class Question < ActiveRecord::Base
   has_many(:forms, :through => :questionings)
   has_many(:calculations, :foreign_key => "question1_id", :inverse_of => :question1)
 
+  before_validation(:normalize_fields)
+
   validates(:code, :presence => true)
   validates(:code, :format => {:with => /^[a-z][a-z0-9]{1,19}$/i}, :if => Proc.new{|q| !q.code.blank?})
   validates(:qtype_name, :presence => true)
@@ -147,5 +149,10 @@ class Question < ActiveRecord::Base
 
     def code_unique_per_mission
       errors.add(:code, :must_be_unique) unless unique_in_mission?(:code)
+    end
+
+    def normalize_fields
+      self.code = code.strip
+      return true
     end
 end

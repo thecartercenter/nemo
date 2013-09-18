@@ -10,6 +10,8 @@ class Form < ActiveRecord::Base
   # while a form has many versions, this is a reference to the most up-to-date one
   belongs_to(:current_version, :class_name => "FormVersion")
   
+  before_validation(:normalize_fields)
+
   validates(:name, :presence => true, :length => {:maximum => 32})
   validate(:name_unique_per_mission)
   
@@ -185,5 +187,10 @@ class Form < ActiveRecord::Base
     
     def name_unique_per_mission
       errors.add(:name, :must_be_unique) unless unique_in_mission?(:name)
+    end
+
+    def normalize_fields
+      self.name = name.strip
+      return true
     end
 end
