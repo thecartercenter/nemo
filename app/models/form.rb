@@ -169,7 +169,7 @@ class Form < ActiveRecord::Base
   # ensures question ranks are sequential
   def fix_ranks
     questionings(true).sort_by{|qing| qing.rank}.each_with_index{|qing, idx| qing.rank = idx + 1}
-    save!
+    save(:validate => false)
   end
   
   private
