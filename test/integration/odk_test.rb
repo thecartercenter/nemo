@@ -117,7 +117,7 @@ class OdkTest < ActionDispatch::IntegrationTest
 
       raise "form should have version" if form.current_version.nil?
 
-      xml = "<?xml version='1.0' ?><data id=\"#{form_id}-#{form.current_version.sequence}\">"
+      xml = "<?xml version='1.0' ?><data id=\"#{form_id}\" version=\"#{form.current_version.sequence}\">"
       form.questionings.each_with_index do |qing, i|
         xml += "<#{qing.question.odk_code}>#{(i+1)*5}</#{qing.question.odk_code}>"
       end

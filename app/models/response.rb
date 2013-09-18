@@ -137,12 +137,13 @@ class Response < ActiveRecord::Base
     # if no root ID, error
     raise ArgumentError.new("no form id was given") if doc.root['id'].nil?
 
-    # get form ID and version sequence number
-    form_id, form_ver = doc.root['id'].split('-')
+    # get form ID and version sequence number and attempt to convert to int
+    form_id = doc.root['id'].try(:to_i)
+    form_ver = doc.root['version'].try(:to_i)
 
     # if either of these is nil or not an integer, error
-    raise ArgumentError.new("no form id was given") if form_id.nil? || !form_id.match(/^\d+$/)
-    raise FormVersionError.new("form version must be specified") if form_ver.nil? || !form_ver.match(/^\d+$/)
+    raise ArgumentError.new("no form id was given") if form_id.nil?
+    raise FormVersionError.new("form version must be specified") if form_ver.nil?
 
     # try to load form (will raise activerecord error if not found)
     self.form = Form.find(form_id)
@@ -151,7 +152,7 @@ class Response < ActiveRecord::Base
     raise "xml submissions must be to versioned forms" if form.current_version.nil?
 
     # if form version is outdated, error
-    raise FormVersionError.new("form version is outdated") if form.current_version.sequence > form_ver.to_i
+    raise FormVersionError.new("form version is outdated") if form.current_version.sequence > form_ver
     
     # get the visible questionings
     qings = form.visible_questionings

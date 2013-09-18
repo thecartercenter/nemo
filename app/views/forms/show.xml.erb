@@ -4,7 +4,7 @@
     <model>
       <instance>
         <%# include both form ID and form version sequence number in ODK form ID %>
-        <data id="<%= @form.id %>-<%= @form.current_version.try(:sequence) %>">
+        <data id="<%= @form.id %>" version="<%= @form.current_version.sequence %>">
           <% @form.visible_questionings.each do |q| %>
             <%= tag(q.question.odk_code) %>
           <% end %>
