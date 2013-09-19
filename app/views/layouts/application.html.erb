@@ -96,8 +96,8 @@
   </div>
  
   <div id="nav">
-    <%# no nav necessary if no mission %>
-    <% if current_mission || admin_mode? %>
+    <%# no nav necessary if no user or mission %>
+    <% if current_user && (current_mission || admin_mode?) %>
       <%# nav first section -- responses and reports %>
       <% unless admin_mode? %>
         <ul>
