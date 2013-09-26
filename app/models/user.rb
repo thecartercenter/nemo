@@ -287,9 +287,12 @@ class User < ActiveRecord::Base
     # if current mission is not accessible, set to nil
     def ensure_current_mission_is_valid
       if !current_mission_id.nil?
-        # this shouldn't happen
+        # the current mission should never be non-nil on a new user
         raise "current mission can't be set on new user" if new_record?
-        self.current_mission_id = nil unless can?(:read, current_mission)
+
+        # if current mission can't be switched to by self, set it to nil
+        # not sure if this belongs here since change_mission! saves without validating, but leaving it here for now
+        self.current_mission_id = nil unless can?(:switch_to, current_mission)
       end
     end
     
