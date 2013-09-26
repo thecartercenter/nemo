@@ -906,6 +906,7 @@ en:
     observer: "Observer"
     staffer: "Staffer"
     coordinator: "Coordinator"
+    admin: "Admin"
 
   search:
     at_end_of_query: "at end of query"

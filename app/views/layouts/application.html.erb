@@ -65,7 +65,8 @@
 
         <%# role %>
         <% if current_mission %>
-          <%= t("role.role") %>: <%= t(current_user.role(current_mission), :scope => :role, :default => "[#{t("common.none")}]") %>
+          <%= t("role.role") %>:
+          <%= t(current_user.admin? ? :admin : current_user.role(current_mission), :scope => :role) %>
           &nbsp;&bull;&nbsp;
         <% end %>
       
