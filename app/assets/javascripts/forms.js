@@ -88,7 +88,7 @@
 
     // load form show page into div
     $.ajax({
-      url: Utils.build_url("forms", form_id),
+      url: Utils.build_path("forms", form_id),
       method: "get",
       data: {print: 1},
       success: function(data) {

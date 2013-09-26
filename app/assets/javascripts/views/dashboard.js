@@ -31,7 +31,7 @@
     // this timer ensures that we don't have memory issues due to a long running page
     if (!ELMO.app.dashboard_reload_timer)
       ELMO.app.dashboard_reload_timer = setTimeout(function(){ 
-        window.location.href = Utils.build_url('dashboard') + '?report_id=' + self.report_view.current_report_id;
+        window.location.href = Utils.build_path('dashboard') + '?report_id=' + self.report_view.current_report_id;
       }, PAGE_RELOAD_INTERVAL * 60000);
     
     // adjust sizes for the initial load
@@ -76,7 +76,7 @@
     // we don't set the 'auto' parameter on this request so that the session will be kept alive
     // the dashboard is meant to be a long-running page so doesn't make sense to let the session expire
     $.ajax({
-      url: Utils.build_url('dashboard'),
+      url: Utils.build_path('dashboard'),
       method: 'GET',
       data: {
         report_id: self.report_view.current_report_id,

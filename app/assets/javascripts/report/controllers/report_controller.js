@@ -57,7 +57,7 @@
   
     // comply with REST stuff
     to_serialize["_method"] = report.attribs.new_record ? "post" : "put"
-    var url = Utils.build_url("report", "reports", report.attribs.new_record ? "" : report.attribs.id);
+    var url = Utils.build_path("report", "reports", report.attribs.new_record ? "" : report.attribs.id);
   
     // send ajax (use currying for event handlers)
     (function(_this) {
@@ -76,7 +76,7 @@
     // if the 'just created' flag is set, redirect to the show action so that links, etc., will work
     if (data.report.just_created) {
       this.report_view.show_loading_indicator(true);
-      window.location.href = Utils.build_url("report", "reports", data.report.id)
+      window.location.href = Utils.build_path("report", "reports", data.report.id)
       
     // otherwise we can process the updated report object
     } else {
@@ -98,7 +98,7 @@
     // if report is new, go back to report index
     if (!this.report_in_db.has_run()) {
       this.report_view.show_loading_indicator(true);
-      window.location.href = Utils.build_url("report/reports");
+      window.location.href = Utils.build_path("report/reports");
     // else restore the view
     } else
       this.restore_view();

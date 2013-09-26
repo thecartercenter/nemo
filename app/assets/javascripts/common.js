@@ -188,7 +188,7 @@ function logout() {
   
   // builds a URL by adding the locale and maintaining admin mode
   // last arg can optionally specify the locale, e.g. {locale: "fr"}
-  Utils.build_url = function() {
+  Utils.build_path = function() {
     // we need some funky magic to turn the arguments object into an array
     var args = Array.prototype.slice.call(arguments, 0);
     var options = {};
@@ -207,6 +207,18 @@ function logout() {
 
     // return, fixing any double slashes
     return ("/" + options.locale + admin_chunk + "/" + args.join("/")).replace(/[\/]{2,}/g, "/");
+  }
+
+  // strips any locale and admin-mode information from the given path
+  // "/en/foo" => "/foo"; "/foo" => "/foo"; "/en/" => "/"; "/en" => "/"; "/" => "/", "" => "/";
+  // "/en/admin/foo" => "/foo"; "/en/admin" => "/"; "/en/admin/" => "/"
+  Utils.strip_path = function(path) {
+    // replace the "/en/", "/en/admin", "/en/admin/", "/en", and "/" variants with "/"
+    if (path == "" || path.match(/^\/([a-z]{2}(\/admin)?(\/)?)?$/))
+      return "/";
+    // else fix the "/en/foo" or "/en/admin/foo" variants
+    else
+      return path.replace(/^\/[a-z]{2}(\/admin)?\/(.+)/, function(m, $1, $2){ return "/" + $2; });
   }
   
 }(Utils = {}));
