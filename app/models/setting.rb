@@ -19,6 +19,19 @@ class Setting < ActiveRecord::Base
   # accessors for password/password confirm fields
   attr_accessor :intellisms_password1, :intellisms_password2, :isms_password1, :isms_password2
   
+  # loads the settings for the given mission (or nil mission/admin mode) into the configatron store
+  # if the settings can't be found, a default setting is created and saved before being loaded
+  def self.load_for_mission(mission)
+    setting = by_mission(mission).first
+
+    if !setting
+      setting = build_default(mission)
+      setting.save!
+    end
+
+    setting.load
+  end
+
   # builds and returns (but doesn't save) a default Setting object 
   # by using the defaults specified in this file and those specified in the local config
   # mission may be nil.
