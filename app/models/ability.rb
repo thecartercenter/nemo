@@ -33,7 +33,7 @@ class Ability
       if user.admin?
         can :view, :admin_mode
 
-        # standard objects, missions, and all users are available in no-mission (admin) mode
+        # standard objects, missions, settings, and all users are available in no-mission (admin) mode
         if admin_mode
           [Form, Questioning, Condition, Question, OptionSet, Optioning, Option].each do |k|
             can :manage, k, :is_standard => true
@@ -41,6 +41,7 @@ class Ability
           can :manage, Mission
           can :manage, User
           can :manage, Assignment
+          can :manage, Setting, :mission_id => nil
         end
 
         # admin can switch to any mission, regardless of mode

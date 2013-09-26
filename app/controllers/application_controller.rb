@@ -164,7 +164,7 @@ class ApplicationController < ActionController::Base
     
     # loads settings for the mission, or no mission (admin mode), into configatron
     def load_settings
-      Setting.load_for_mission(current_mission)
+      @setting = Setting.load_for_mission(current_mission)
     end
 
     def admin_mode?

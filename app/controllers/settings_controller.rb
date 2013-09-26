@@ -2,9 +2,8 @@ class SettingsController < ApplicationController
   # no authorization up here because we do it manually because Setting is atypical
   
   def index
-    # load setting for current mission (create with defaults if doesn't exist)
-    @setting = current_mission.setting
-    
+    # setting is already loaded by application controller
+
     # do authorization check
     authorize!(:update, @setting)
     
@@ -13,8 +12,9 @@ class SettingsController < ApplicationController
   
   def update
     begin
-      # find the setting and authorize
-      @setting = Setting.find(params[:id])
+      # setting is already loaded by application controller
+
+      # do auth check so cancan doesn't complain
       authorize!(:update, @setting)
       
       @setting.update_attributes!(params[:setting])

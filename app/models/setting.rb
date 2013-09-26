@@ -30,6 +30,7 @@ class Setting < ActiveRecord::Base
     end
 
     setting.load
+    return setting
   end
 
   # builds and returns (but doesn't save) a default Setting object 
