@@ -136,7 +136,7 @@
     <%= link_to(t("layout.change_language"), "#", :id => "locale_form_link") %> 
     
     <%= form_tag(nil, :id => "locale_form") do %>
-      <%= select_tag(:locale, options_for_select(configatron.full_locales.map{|l| [t(:locale_name, :locale => l), l]}, I18n.locale)) %>
+      <%= select_tag(:locale, options_for_select(configatron.full_locales.map{|l| [language_name(l), l]}, I18n.locale)) %>
     <% end %>
     
     &nbsp;|&nbsp;

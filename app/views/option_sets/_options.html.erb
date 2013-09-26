@@ -17,7 +17,7 @@
 
     <% configatron.preferred_locales.each do |locale| %>
       <div class="translation">
-        <label for="<%= locale %>"><%= t(:locale_name, :locale => locale) %></label>
+        <label for="<%= locale %>"><%= language_name(locale) %></label>
         <input type="text" id="name_<%= locale %>" data-locale="<%= locale %>" maxlength="30">
       </div>
     <% end %>
