@@ -76,7 +76,7 @@
       &nbsp;&bull;&nbsp;
 
       <%# logout button %>
-      <%= button_to(t("common.logout"), user_session_path, :method => :delete, :id => "logout_button") %>
+      <%= button_to(t("common.logout"), user_session_path(:admin_mode => false), :method => :delete, :id => "logout_button") %>
       
     <% else %>
       
