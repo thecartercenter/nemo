@@ -88,8 +88,16 @@ module NiceFormsHelper
       
         # revert to old form mode
         f.mode = old_f_mode
-      
-        tip = t(method, :scope => [:activerecord, :tips, f.object.class.model_name.i18n_key], :default => "")
+        
+        # get the tip based on the method and the form mode
+        # we first try the method name plus the form mode,
+        # then we try the method name plus 'other'
+        # then we try just the method name
+        # so for a method called 'name' and form mode 'edit', 
+        # we'd try activerecord.tips.themodel.name.edit, then .name.other, then just .name
+        # if all fail then we return ''
+        keys_to_try = [:"#{method}.#{f.mode}", :"#{method}.other", method.to_sym, '']
+        tip = t(keys_to_try.first, :scope => [:activerecord, :tips, f.object.class.model_name.i18n_key], :default => keys_to_try.drop(1))
 
         details_txt = options[:details] || tip
         details = details_txt.blank? ? "" : content_tag("div", :class => "details"){simple_format(details_txt)}
