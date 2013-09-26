@@ -10,7 +10,7 @@ class UserTest < ActiveSupport::TestCase
   test "creating a user with minimal info should produce good defaults" do
     user = User.create!(:name => 'Alpha Tester', :reset_password_method => 'print', 
       :assignments => [Assignment.new(:mission => @mission, :role => User::ROLES.first, :active => true)])
-    assert_equal(:en, user.pref_lang)
+    assert_equal('en', user.pref_lang)
     assert_equal('atester', user.login)
   end
   

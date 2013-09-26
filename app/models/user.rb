@@ -326,7 +326,7 @@ class User < ActiveRecord::Base
     # sets the user's preferred language to the mission default
     def set_default_pref_lang
       begin
-        self.pref_lang ||= configatron.has_key?(:preferred_locales) ? configatron.preferred_locales.first : 'en'
+        self.pref_lang ||= configatron.has_key?(:preferred_locales) ? configatron.preferred_locales.first.to_s : 'en'
       rescue ActiveModel::MissingAttributeError
         # we rescue this error in case find_by_sql is being used
       end
