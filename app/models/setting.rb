@@ -33,6 +33,13 @@ class Setting < ActiveRecord::Base
     return setting
   end
 
+  # loads the default settings without saving
+  def self.load_default
+    setting = build_default
+    setting.load
+    return setting
+  end
+
   # builds and returns (but doesn't save) a default Setting object 
   # by using the defaults specified in this file and those specified in the local config
   # mission may be nil.
