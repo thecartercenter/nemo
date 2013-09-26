@@ -11,7 +11,7 @@ class DashboardController < ApplicationController
     
     # we need to load the report outside the cache block b/c it's included in the cache key
     # if report id given, load that
-    if params[:report_id]
+    if !params[:report_id].blank?
       @report = Report::Report.find(params[:report_id])
     else
       # else load the most popular report
