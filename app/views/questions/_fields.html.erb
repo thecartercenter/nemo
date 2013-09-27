@@ -2,7 +2,7 @@
 
   <% if form.mode == :edit %>
     <%= has_answers_warning(@question) if @question.has_answers? %>
-    <%= published_warning(@question) if !admin_mode? && @question.published? %>
+    <%= published_warning(@question) if @question.published? %>
     <%= appears_elsewhere_warning(@question) unless @question.forms.empty? %>
   <% end %>
   

@@ -85,7 +85,7 @@ class Question < ActiveRecord::Base
   # gets the number of answers to this question. uses an eager loaded col if available
   def answer_count
     if is_standard?
-      respond_to?(:copy_answer_count_col) ? copy_answer_count_col : copies.inject{|sum,c| sum += c.answer_count}
+      respond_to?(:copy_answer_count_col) ? copy_answer_count_col : copies.inject(0){|sum,c| sum += c.answer_count}
     else
       respond_to?(:answer_count_col) ? answer_count_col : answers.count
     end
