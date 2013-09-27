@@ -24,17 +24,28 @@ class Question < ActiveRecord::Base
   scope(:default_order, by_code)
   scope(:select_types, where(:qtype_name => %w(select_one select_multiple)))
   scope(:with_forms, includes(:forms))
+
+  # fetches association counts along with the questions
+  # accounts for copies with standard questions
+  # - form_published returns 1 if any associated forms are published, 0 or nil otherwise
+  # - standard_copy_form_id returns a std copy form id associated with the question if available, or nil if there are none
   scope(:with_assoc_counts, select(%{
       questions.*, 
-      COUNT(DISTINCT answers.id) AS answer_count_col, 
-      COUNT(DISTINCT questionings.id) AS form_count, 
+      COUNT(DISTINCT answers.id) AS answer_count_col,
+      COUNT(DISTINCT forms.id) AS form_count_col,
       MAX(DISTINCT forms.published) AS form_published,
+      COUNT(DISTINCT copy_answers.id) AS copy_answer_count_col,
+      MAX(DISTINCT copy_forms.published) AS copy_form_published,
       MAX(DISTINCT forms.standard_id) AS standard_copy_form_id
     }).joins(%{
       LEFT OUTER JOIN questionings ON questionings.question_id = questions.id
       LEFT OUTER JOIN forms ON forms.id = questionings.form_id
       LEFT OUTER JOIN answers ON answers.questioning_id = questionings.id
-    }).group("questions.id"))
+      LEFT OUTER JOIN questions copies ON questions.is_standard = 1 AND questions.id = copies.standard_id
+      LEFT OUTER JOIN questionings copy_questionings ON copy_questionings.question_id = copies.id
+      LEFT OUTER JOIN forms copy_forms ON copy_forms.id = copy_questionings.form_id
+      LEFT OUTER JOIN answers copy_answers ON copy_answers.questioning_id = copy_questionings.id
+    }).group('questions.id'))
   
   translates :name, :hint
   
@@ -65,9 +76,19 @@ class Question < ActiveRecord::Base
     (opt = options) ? opt.collect{|o| [o.name, o.id]} : []
   end
 
+  # gets the number of forms which with this question is directly associated.
+  # uses the form_count/std_form_count eager loaded fields if available
+  def form_count
+    respond_to?(:form_count_col) ? form_count_col : forms.count
+  end
+
   # gets the number of answers to this question. uses an eager loaded col if available
   def answer_count
-    respond_to?(:answer_count_col) ? answer_count_col : answers.count
+    if is_standard?
+      respond_to?(:copy_answer_count_col) ? copy_answer_count_col : copies.inject{|sum,c| sum += c.answer_count}
+    else
+      respond_to?(:answer_count_col) ? answer_count_col : answers.count
+    end
   end
 
   # determins if question has answers
@@ -79,13 +100,17 @@ class Question < ActiveRecord::Base
   # determines if the question appears on any published forms
   # uses the eager-loaded form_published field if available
   def published?
-    respond_to?(:form_published) ? form_published == 1 : forms.any?(&:published?)
+    if is_standard?
+      respond_to?(:copy_form_published_col) ? copy_form_published_col == 1 : copies.any?(&:published?)
+    else
+      respond_to?(:form_published_col) ? form_published_col == 1 : forms.any?(&:published?)
+    end
   end
 
   # determines if any of the forms on which this question appears are standard copies
   # uses a special eager-loaded attribute if available
   def has_standard_copy_form?
-    respond_to?(:standard_copy_form_id) ? !standard_copy_form_id.nil? : forms.any?(&:standard_copy?)
+    is_standard ? false : respond_to?(:standard_copy_form_id) ? !standard_copy_form_id.nil? : forms.any?(&:standard_copy?)
   end
 
   # checks if any associated forms are smsable

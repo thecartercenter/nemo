@@ -25,7 +25,6 @@ module QuestionsHelper
   end
 
   def questions_index_fields
-    # fields for form mode
     fields = %w(std_icon code name type form_count answer_count published)
 
     # dont add the actions column if we're not in the forms controller, since that means we're probably in form#choose_questions
