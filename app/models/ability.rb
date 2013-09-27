@@ -168,9 +168,9 @@ class Ability
       can :update, q.question
     end
 
-    # update_core refers to the core fields: code, question type, option set, constraints
+    # update_core refers to the core fields: question type, option set, constraints
     cannot :update_core, Question do |q| 
-      q.standard_copy? || q.published?
+      q.standard_copy? || q.published? || q.has_answers?
     end
 
     cannot :destroy, Question do |q| 

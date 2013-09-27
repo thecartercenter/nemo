@@ -6,24 +6,23 @@
     <%= appears_elsewhere_warning(@question) unless @question.forms.empty? %>
   <% end %>
   
+  <%= form_field(form, :code, :required => true, :maxlength => 20) %>
+
   <%# core fields should not be editable if don't have update_core permission %>
   <% old_f_mode = form.mode
      form.mode = :show if cannot?(:update_core, @question) %>
 
-  <%= form_field(form, :code, :required => true, :maxlength => 20) %>
+    <%= form_field(form, :qtype_name, :type => :select, :required => true, 
+          :options => @question_types.map{|qt| [t(qt.name, :scope => :question_type), qt.name]}) %>
 
-  <%= form_field(form, :qtype_name, :type => :select, :required => true, 
-        :options => @question_types.map{|qt| [t(qt.name, :scope => :question_type), qt.name]},
-        :force_show_mode => @question.has_answers?) %>
+    <%# this is a partial because it contains more complex controls %>
+    <%# the partial path is fully qualified because THIS partial might be included in several different contexts %>
+    <%= form_field(form, :option_set_id, :partial => 'questions/option_set_select') %>      
 
-  <%# this is a partial because it contains more complex controls %>
-  <%# the partial path is fully qualified because THIS partial might be included in several different contexts %>
-  <%= form_field(form, :option_set_id, :partial => 'questions/option_set_select') %>      
-
-  <div class="minmax">
-    <%= form_field(form, :minimum, :partial => "questions/min_max_condition") %>
-    <%= form_field(form, :maximum, :partial => "questions/min_max_condition") %>
-  </div>
+    <div class="minmax">
+      <%= form_field(form, :minimum, :partial => "questions/min_max_condition") %>
+      <%= form_field(form, :maximum, :partial => "questions/min_max_condition") %>
+    </div>
 
   <% form.mode = old_f_mode %>
   

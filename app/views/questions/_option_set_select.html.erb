@@ -1,17 +1,6 @@
-<%
-  old_f_mode = form.mode
-  form.mode = :show unless @question.answers.empty?
-%>
-
-<%= form.select(:option_set_id, sel_opts_from_objs(@option_sets), 
-      :include_blank => true,
-      :force_show_mode => !@question.answers.empty?) %>
+<%= form.select(:option_set_id, sel_opts_from_objs(@option_sets), :include_blank => true) %>
 
 <% if form.mode != :show %>
   <%= link_to('+ ' + t('option_set.create_link'), '#', :class => 'create_option_set') %>
   <%= loading_indicator %>
 <% end %>
-
-<%
-  form.mode = old_f_mode
-%>
