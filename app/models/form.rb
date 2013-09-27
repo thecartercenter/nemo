@@ -30,8 +30,8 @@ class Form < ActiveRecord::Base
   # if the form is not a standard, these will just be zero
   scope(:with_copy_counts, select(%{
       forms.*, 
-      IF(forms.is_standard, COUNT(DISTINCT copies.id), 0) AS _copy_count,
-      IF(forms.is_standard, SUM(copies.published), 0) AS _published_copy_count
+      IF(forms.is_standard, COUNT(DISTINCT copies.id), 0) AS copy_count_col,
+      IF(forms.is_standard, SUM(copies.published), 0) AS published_copy_count_col
     })
     .joins("LEFT OUTER JOIN forms copies ON forms.id = copies.standard_id")
     .group("forms.id"))
@@ -61,7 +61,13 @@ class Form < ActiveRecord::Base
   # returns whether this form is published OR any of its copies (if it's a standard) are published
   # uses nifty eager loaded field if available
   def self_or_copy_published?
-    published? || is_standard? && (respond_to?(:_published_copy_count) ? (_published_copy_count || 0) > 0 : copies.any?(&:published?))
+    published? || is_standard? && (respond_to?(:published_copy_count_col) ? (published_copy_count_col || 0) > 0 : copies.any?(&:published?))
+  end
+
+  # returns number of copies published. uses eager loaded field if available
+  def published_copy_count
+    # published_copy_count_col may be nil so be careful
+    respond_to?(:published_copy_count_col) ? (published_copy_count_col || 0).to_i : copies.find_all(&:published?).size
   end
 
   def option_sets

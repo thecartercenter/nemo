@@ -50,7 +50,7 @@ module Standardizable
   # returns number of copies, or zero if this obj is not standard
   # uses eager loaded field if available
   def copy_count
-    is_standard? ? (respond_to?(:_copy_count) ? _copy_count : copies.count) : 0
+    is_standard? ? (respond_to?(:copy_count_col) ? copy_count_col : copies.count) : 0
   end
 
   private
