@@ -30,8 +30,9 @@ class Form < ActiveRecord::Base
   # if the form is not a standard, these will just be zero
   scope(:with_copy_counts, select(%{
       forms.*, 
-      IF(forms.is_standard, COUNT(DISTINCT copies.id), 0) AS copy_count_col,
-      IF(forms.is_standard, SUM(copies.published), 0) AS published_copy_count_col
+      COUNT(DISTINCT copies.id) AS copy_count_col,
+      SUM(copies.published) AS published_copy_count_col,
+      SUM(copies.responses_count) AS copy_response_count_col
     })
     .joins("LEFT OUTER JOIN forms copies ON forms.id = copies.standard_id")
     .group("forms.id"))
@@ -60,11 +61,11 @@ class Form < ActiveRecord::Base
 
   # returns whether this form or (if standard) any of its copies have responses, using an eager loaded col if available
   def has_responses?
-    # if is_standard?
-    #   respond_to?(:copy_response_count_col) ? (copy_response_count_col || 0) > 0 : copies.any?(&:has_responses?)
-    # else
-      response_count > 0
-    # end
+    if is_standard?
+      respond_to?(:copy_response_count_col) ? (copy_response_count_col || 0) > 0 : copies.any?(&:has_responses?)
+    else
+      responses_count > 0
+    end
   end
 
   # returns whether this form is published OR if standard, if any of its copies are published
