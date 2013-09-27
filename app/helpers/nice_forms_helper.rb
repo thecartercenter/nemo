@@ -104,12 +104,16 @@ module NiceFormsHelper
 
         end
 
-        # run the details text through simple format, but no need to sanitize since we don't want to lose links 
-        # AND we know this text will not be coming from the user
-        options[:details] = simple_format(options[:details], {}, :sanitize => false)
+        if options[:details].blank?
+          details = ''
+        else
+          # run the details text through simple format, but no need to sanitize since we don't want to lose links 
+          # AND we know this text will not be coming from the user
+          options[:details] = simple_format(options[:details], {}, :sanitize => false)
 
-        # build the html for the details
-        details = options[:details].blank? ? "" : content_tag("div", options[:details], :class => "details")
+          # build the html for the details
+          details = content_tag("div", options[:details], :class => "details")
+        end
 
         content_tag(:div, label + field, :class => "label_and_control") + 
           details + content_tag("div", "", :class => "space_line")
