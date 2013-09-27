@@ -142,21 +142,21 @@ class Ability
 
     # published forms and forms with responses can't be deleted
     cannot :destroy, Form do |f|
-      f.self_or_copy_published? || f.has_responses?
+      f.published? || f.has_responses?
     end
 
     # standard forms can't be cloned (hard to implement and not currently needed)
     cannot :clone, Form, :is_standard => true
 
     cannot [:add_questions, :remove_questions, :reorder_questions], Form do |f|
-      f.standard_copy? || f.self_or_copy_published?
+      f.standard_copy? || f.published?
     end
 
     # standard forms cannot be published and do not have versions, which are only assigned on publish
     cannot :publish, Form, :is_standard => true
 
     cannot [:destroy, :update, :update_own_fields], Questioning do |q|
-      q.standard_copy? || q.self_or_copy_published?
+      q.standard_copy? || q.published?
     end
 
     # BUT can update questioning if can update related question

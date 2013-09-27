@@ -3,7 +3,7 @@
 <%= flash_and_form_errors(@form) %>
 
 <div class="screen">
-  <%= published_warning(@form) if @form.self_or_copy_published? && form_mode == :edit %>
+  <%= published_warning(@form) if @form.published? && form_mode == :edit %>
 
   <%= nice_form_for(@form) do |f| %>
     <%= form_field(f, :name, :required => true, :force_show_mode => @form.standard_copy?) %>

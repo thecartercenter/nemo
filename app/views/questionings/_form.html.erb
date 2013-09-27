@@ -11,7 +11,7 @@
   <% old_f_mode = f.mode
      f.mode = :show if cannot?(:update_own_fields, @questioning) %>
 
-  <%= published_warning(@questioning) if @questioning.self_or_copy_published? && form_mode == :edit %>
+  <%= published_warning(@questioning) if @questioning.published? && form_mode == :edit %>
 
   <%= form_field(f, :condition, :partial => "conditions/form") %>
   <%= form_field(f, :required, :type => :check_box) %>

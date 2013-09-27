@@ -58,15 +58,23 @@ class Form < ActiveRecord::Base
     name
   end
 
-  # returns whether this form has responses, using the responses_count counter cache
+  # returns whether this form or (if standard) any of its copies have responses, using an eager loaded col if available
   def has_responses?
-    responses_count > 0
+    # if is_standard?
+    #   respond_to?(:copy_response_count_col) ? (copy_response_count_col || 0) > 0 : copies.any?(&:has_responses?)
+    # else
+      response_count > 0
+    # end
   end
 
-  # returns whether this form is published OR any of its copies (if it's a standard) are published
-  # uses nifty eager loaded field if available
-  def self_or_copy_published?
-    published? || is_standard? && (respond_to?(:published_copy_count_col) ? (published_copy_count_col || 0) > 0 : copies.any?(&:published?))
+  # returns whether this form is published OR if standard, if any of its copies are published
+  # uses eager loaded col if available
+  def published?
+    if is_standard?
+      respond_to?(:published_copy_count_col) ? (published_copy_count_col || 0) > 0 : copies.any?(&:published?)
+    else
+      read_attribute(:published)
+    end
   end
 
   # returns number of copies published. uses eager loaded field if available
