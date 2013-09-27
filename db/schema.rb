@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130927122240) do
+ActiveRecord::Schema.define(:version => 20130927135358) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -376,6 +376,7 @@ ActiveRecord::Schema.define(:version => 20130927122240) do
   add_foreign_key "choices", "answers", :name => "choices_answer_id_fk"
   add_foreign_key "choices", "options", :name => "choices_option_id_fk"
 
+  add_foreign_key "conditions", "conditions", :name => "conditions_standard_id_fk", :column => "standard_id"
   add_foreign_key "conditions", "missions", :name => "conditions_mission_id_fk"
   add_foreign_key "conditions", "options", :name => "conditions_option_id_fk"
   add_foreign_key "conditions", "questionings", :name => "conditions_questioning_id_fk"
@@ -384,22 +385,28 @@ ActiveRecord::Schema.define(:version => 20130927122240) do
   add_foreign_key "form_versions", "forms", :name => "form_versions_form_id_fk"
 
   add_foreign_key "forms", "form_versions", :name => "forms_current_version_id_fk", :column => "current_version_id", :dependent => :nullify
+  add_foreign_key "forms", "forms", :name => "forms_standard_id_fk", :column => "standard_id"
   add_foreign_key "forms", "missions", :name => "forms_mission_id_fk"
 
   add_foreign_key "option_sets", "missions", :name => "option_sets_mission_id_fk"
+  add_foreign_key "option_sets", "option_sets", :name => "option_sets_standard_id_fk", :column => "standard_id"
 
   add_foreign_key "optionings", "missions", :name => "optionings_mission_id_fk"
   add_foreign_key "optionings", "option_sets", :name => "optionings_option_set_id_fk"
+  add_foreign_key "optionings", "optionings", :name => "optionings_standard_id_fk", :column => "standard_id"
   add_foreign_key "optionings", "options", :name => "optionings_option_id_fk"
 
   add_foreign_key "options", "missions", :name => "options_mission_id_fk"
+  add_foreign_key "options", "options", :name => "options_standard_id_fk", :column => "standard_id"
 
   add_foreign_key "questionings", "forms", :name => "questionings_form_id_fk"
   add_foreign_key "questionings", "missions", :name => "questionings_mission_id_fk"
+  add_foreign_key "questionings", "questionings", :name => "questionings_standard_id_fk", :column => "standard_id"
   add_foreign_key "questionings", "questions", :name => "questionings_question_id_fk"
 
   add_foreign_key "questions", "missions", :name => "questions_mission_id_fk"
   add_foreign_key "questions", "option_sets", :name => "questions_option_set_id_fk"
+  add_foreign_key "questions", "questions", :name => "questions_standard_id_fk", :column => "standard_id"
 
   add_foreign_key "report_calculations", "questions", :name => "report_calculations_question1_id_fk", :column => "question1_id"
   add_foreign_key "report_calculations", "report_reports", :name => "report_calculations_report_report_id_fk"

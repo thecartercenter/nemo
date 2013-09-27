@@ -15,7 +15,9 @@ module Standardizable
 
     # create hooks to replicate changes to copies for key classes
     after_save(:replicate_save_to_copies)
-    after_destroy(:replicate_destruction_to_copies)
+
+    # we make this one before destroy because if we do it after then we violate an fk constraint before we get the chance
+    before_destroy(:replicate_destruction_to_copies)
 
     # returns a scope for all standard objects of that are importable to the given mission
     # (i.e. that don't already exist in that mission)
