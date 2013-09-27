@@ -161,7 +161,7 @@ class Ability
     cannot :publish, Form, :is_standard => true
 
     cannot [:destroy, :update, :update_own_fields], Questioning do |q|
-      q.standard_copy? || q.form.published?
+      q.standard_copy? || q.self_or_copy_published?
     end
 
     # BUT can update questioning if can update related question
