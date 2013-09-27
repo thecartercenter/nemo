@@ -13,7 +13,9 @@ module FormsHelper
   end
   
   def forms_index_fields
-    fields = %w(std_icon version name questions)
+    fields = %w(std_icon)
+    fields << 'version' unless admin_mode?
+    fields += %w(name questions)
     fields += admin_mode? ? %w(copy_count) : %w(published downloads responses smsable)
     fields += %w(updated_at actions)
     fields
