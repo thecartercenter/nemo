@@ -34,8 +34,11 @@ class Questioning < ActiveRecord::Base
     !condition.nil?
   end
 
+  # checks if this form has any answers
+  # uses the form.qing_answer_count method because these requests tend to come in batches so better
+  # to fetch the counts for all qings on the form at once
   def has_answers?
-    !answers.empty?
+    form.qing_answer_count(self) > 0
   end
 
   # destroys condition and ensures that the condition param is nulled out

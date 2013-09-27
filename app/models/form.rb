@@ -134,6 +134,7 @@ class Form < ActiveRecord::Base
       qings.each do |qing|
 
         # if this qing has a non-zero answer count, raise an error
+        # this is necessary due to bulk deletion operations
         raise DeletionError.new('question_remove_answer_error') if qing_answer_count(qing) > 0
 
         questionings.delete(qing)

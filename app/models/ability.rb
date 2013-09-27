@@ -159,6 +159,10 @@ class Ability
       q.standard_copy? || q.published?
     end
 
+    cannot :destroy, Questioning do |q|
+      q.has_answers?
+    end
+
     # BUT can update questioning if can update related question
     can :update, Questioning do |q| 
       can :update, q.question
