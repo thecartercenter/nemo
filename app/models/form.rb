@@ -58,6 +58,11 @@ class Form < ActiveRecord::Base
     name
   end
 
+  # returns whether this form has responses, using the responses_count counter cache
+  def has_responses?
+    responses_count > 0
+  end
+
   # returns whether this form is published OR any of its copies (if it's a standard) are published
   # uses nifty eager loaded field if available
   def self_or_copy_published?

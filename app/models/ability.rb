@@ -140,18 +140,13 @@ class Ability
     ###############
     # these permissions are user-independent
 
-    # published forms can't be deleted
+    # published forms and forms with responses can't be deleted
     cannot :destroy, Form do |f|
-      f.self_or_copy_published?
+      f.self_or_copy_published? || f.has_responses?
     end
 
     # standard forms can't be cloned (hard to implement and not currently needed)
     cannot :clone, Form, :is_standard => true
-
-    # forms with responses can't be deleted
-    cannot :destroy, Form do |f| 
-      !f.responses.empty?
-    end
 
     cannot [:add_questions, :remove_questions, :reorder_questions], Form do |f|
       f.standard_copy? || f.self_or_copy_published?
