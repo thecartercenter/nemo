@@ -141,7 +141,9 @@ class Ability
     # these permissions are user-independent
 
     # published forms can't be deleted
-    cannot :destroy, Form, :published => true
+    cannot :destroy, Form do |f|
+      f.self_or_copy_published?
+    end
 
     # standard forms can't be cloned (hard to implement and not currently needed)
     cannot :clone, Form, :is_standard => true
@@ -155,6 +157,7 @@ class Ability
       f.standard_copy? || f.published?
     end
 
+    # standard forms cannot be published and do not have versions, which are only assigned on publish
     cannot :publish, Form, :is_standard => true
 
     cannot [:destroy, :update, :update_own_fields], Questioning do |q|

@@ -47,6 +47,12 @@ module Standardizable
     !standard.nil?
   end
 
+  # returns number of copies, or zero if this obj is not standard
+  # uses eager loaded field if available
+  def copy_count
+    is_standard? ? (respond_to?(:_copy_count) ? _copy_count : copies.count) : 0
+  end
+
   private
     def replicate_changes_to_copies(change_type)
       if changing_in_replication

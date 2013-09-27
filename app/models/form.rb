@@ -17,9 +17,6 @@ class Form < ActiveRecord::Base
   
   before_create(:init_downloads)
   
-  # no pagination
-  self.per_page = 1000000
-  
   scope(:published, where(:published => true))
   scope(:with_questionings, includes(
     :questionings => [
@@ -28,6 +25,17 @@ class Form < ActiveRecord::Base
       {:condition => [:option, :ref_qing]}
     ]
   ).order("questionings.rank"))
+
+  # this scope adds a count of the number of copies of this form, and of those that are published
+  # if the form is not a standard, these will just be zero
+  scope(:with_copy_counts, select(%{
+      forms.*, 
+      IF(forms.is_standard, COUNT(DISTINCT copies.id), 0) AS _copy_count,
+      IF(forms.is_standard, SUM(copies.published), 0) AS _published_copy_count
+    })
+    .joins("LEFT OUTER JOIN forms copies ON forms.id = copies.standard_id")
+    .group("forms.id"))
+  
   scope(:default_order, order('forms.name'))
 
   replicable :assocs => :questionings, :uniqueness => {:field => :name, :style => :sep_words}, 
@@ -49,7 +57,13 @@ class Form < ActiveRecord::Base
     # this used to include the form type, but for now it's just name
     name
   end
-  
+
+  # returns whether this form is published OR any of its copies (if it's a standard) are published
+  # uses nifty eager loaded field if available
+  def self_or_copy_published?
+    published? || is_standard? && (respond_to?(:_published_copy_count) ? (_published_copy_count || 0) > 0 : copies.any?(&:published?))
+  end
+
   def option_sets
     # going through the questionings model as that's the one that is eager-loaded in .with_questionings
     questionings.map(&:question).map(&:option_set).compact.uniq

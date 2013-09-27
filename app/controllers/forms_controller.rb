@@ -16,7 +16,8 @@ class FormsController < ApplicationController
     respond_to do |format|
       # render normally if html
       format.html do
-        @forms = apply_filters(@forms)
+        # add some eager loading stuff
+        @forms = @forms.with_copy_counts
         load_importable_objs
         render(:index)
       end
