@@ -195,6 +195,7 @@ en:
         to: "To"
         which_phone: "Which Phone(s)"
       form:
+        copy_responses_count: "Copy Responses"
         downloads: "Downloads"
         responses: "Responses"
         smsable: "SMSable?"

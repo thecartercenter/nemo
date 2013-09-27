@@ -13,12 +13,11 @@ module FormsHelper
   end
   
   def forms_index_fields
-    fields = %w(std_icon)
-    fields << 'version' unless admin_mode?
-    fields += %w(name questions)
-    fields += admin_mode? ? %w(copy_count) : %w(published downloads responses smsable)
-    fields += %w(updated_at actions)
-    fields
+    if admin_mode?
+      %w(std_icon name questions copy_count copy_responses_count updated_at actions)
+    else
+      %w(std_icon version name questions published downloads responses smsable updated_at actions)
+    end
   end
     
   def format_forms_field(form, field)

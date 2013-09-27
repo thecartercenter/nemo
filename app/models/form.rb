@@ -32,7 +32,7 @@ class Form < ActiveRecord::Base
       forms.*, 
       COUNT(DISTINCT copies.id) AS copy_count_col,
       SUM(copies.published) AS published_copy_count_col,
-      SUM(copies.responses_count) AS copy_response_count_col
+      SUM(copies.responses_count) AS copy_responses_count_col
     })
     .joins("LEFT OUTER JOIN forms copies ON forms.id = copies.standard_id")
     .group("forms.id"))
@@ -62,9 +62,18 @@ class Form < ActiveRecord::Base
   # returns whether this form or (if standard) any of its copies have responses, using an eager loaded col if available
   def has_responses?
     if is_standard?
-      respond_to?(:copy_response_count_col) ? (copy_response_count_col || 0) > 0 : copies.any?(&:has_responses?)
+      respond_to?(:copy_responses_count_col) ? (copy_responses_count_col || 0) > 0 : copies.any?(&:has_responses?)
     else
       responses_count > 0
+    end
+  end
+
+  # returns the number of responses for all copy forms. uses eager loaded col if available
+  def copy_responses_count
+    if is_standard?
+      respond_to?(:copy_responses_count_col) ? (copy_responses_count_col || 0).to_i : copies.inject(0){|sum, c| sum += c.responses_count}
+    else
+      raise "non-standard forms should not request copy_responses_count"
     end
   end
 
