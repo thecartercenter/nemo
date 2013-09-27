@@ -209,7 +209,8 @@ en:
       question:
         base: "" # this is a sort of hack to get error msg to display properly
         code: "Code"
-        forms: "Forms"
+        answer_count: "Answers"
+        form_count: "Forms"
         published: "Published?"
         key: "Is Key Question?"
         minimum: "Minimum"

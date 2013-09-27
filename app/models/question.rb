@@ -26,7 +26,7 @@ class Question < ActiveRecord::Base
   scope(:with_forms, includes(:forms))
   scope(:with_assoc_counts, select(%{
       questions.*, 
-      COUNT(DISTINCT answers.id) AS answer_count, 
+      COUNT(DISTINCT answers.id) AS answer_count_col, 
       COUNT(DISTINCT questionings.id) AS form_count, 
       MAX(DISTINCT forms.published) AS form_published,
       MAX(DISTINCT forms.standard_id) AS standard_copy_form_id
@@ -65,10 +65,15 @@ class Question < ActiveRecord::Base
     (opt = options) ? opt.collect{|o| [o.name, o.id]} : []
   end
 
+  # gets the number of answers to this question. uses an eager loaded col if available
+  def answer_count
+    respond_to?(:answer_count_col) ? answer_count_col : answers.count
+  end
+
   # determins if question has answers
   # uses the eager-loaded answer_count field if available
   def has_answers?
-    respond_to?(:answer_count) ? answer_count > 0 : !answers.empty?
+    answer_count > 0
   end
 
   # determines if the question appears on any published forms

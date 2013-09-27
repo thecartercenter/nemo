@@ -26,10 +26,7 @@ module QuestionsHelper
 
   def questions_index_fields
     # fields for form mode
-    fields = %w(std_icon code name type forms)
-
-    # dont add published if in admin mode
-    fields << 'published' unless admin_mode?
+    fields = %w(std_icon code name type form_count answer_count published)
 
     # dont add the actions column if we're not in the forms controller, since that means we're probably in form#choose_questions
     fields << 'actions' unless params[:controller] == 'forms'
@@ -42,7 +39,7 @@ module QuestionsHelper
     when "std_icon" then std_icon(q)
     when "type" then t(q.qtype_name, :scope => :question_type)
     when "published" then tbool(q.published?)
-    when "forms" then q.form_count
+    when "answer_count" then number_with_delimiter(q.answer_count)
     when "actions" then action_links(q, :obj_name => q.code)
     when "name"
       params[:controller] == 'forms' ? q.name : link_to(q.name, q)
