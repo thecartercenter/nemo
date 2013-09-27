@@ -154,7 +154,7 @@ class Ability
     end
 
     cannot [:add_questions, :remove_questions, :reorder_questions], Form do |f|
-      f.standard_copy? || f.published?
+      f.standard_copy? || f.self_or_copy_published?
     end
 
     # standard forms cannot be published and do not have versions, which are only assigned on publish

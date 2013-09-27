@@ -3,7 +3,13 @@ module DataIntegrityHelper
   # constructs html for a warning about published objects (form, questioning, question, option set)
   def published_warning(obj)
     type = obj.class.model_name.singular
-    text = tmd("data_integrity.published_warnings.by_type.#{type}")
+
+    # get the proper i18n sub-key depending on if this is a standard obj or not
+    # if it is a standard object, we need to say that a copy is published, not the obj itself, 
+    # b/c that is not possible for std objs
+    subkey = obj.is_standard? ? 'copy_published' : 'self_published'
+
+    text = tmd("data_integrity.published_warnings.#{subkey}.#{type}")
     data_integrity_warning(:published_warning, text)
   end
 
