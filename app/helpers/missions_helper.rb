@@ -11,7 +11,7 @@ module MissionsHelper
     case field
     when "name" then link_to(mission.name, mission_path(mission), :title => t("common.view"))
     when "created_at" then l(mission.created_at)
-    when "actions" then action_links(mission, :exclude => [:show], :obj_name => mission.name)
+    when "actions" then action_links(mission, :exclude => :show, :obj_name => mission.name)
     else mission.send(field)
     end
   end

@@ -25,10 +25,7 @@ module OptionSetsHelper
     when "options" then option_set.options.collect{|o| o.name}.join(", ")
     when "questions" then option_set.question_count
     when "answers" then number_with_delimiter(option_set.answer_count)
-    when "actions"
-      exclude = []
-      exclude << :destroy if cannot?(:destroy, option_set)
-      action_links(option_set, :obj_name => option_set.name, :exclude => exclude)
+    when "actions" then action_links(option_set, :obj_name => option_set.name)
     else option_set.send(field)
     end
   end

@@ -30,26 +30,42 @@ module ApplicationHelper
     link_to(content_tag(:i, "", :class => "icon-" + FONT_AWESOME_ICON_MAPPINGS[action.to_sym]), href, html_options)
   end
   
-  # assembles links for the basic actions in an index table (show edit and destroy)
+  # assembles links for the basic actions in an index table (edit and destroy)
   def action_links(obj, options)
     route_key = obj.class.model_name.singular_route_key
-    links = %w(edit destroy).collect do |action|
-      options[:exclude] = [options[:exclude]] unless options[:exclude].is_a?(Array)
-      next if options[:exclude] && options[:exclude].include?(action.to_sym)
-      key = "#{obj.class.table_name}##{action}"
+
+    options[:exclude] = Array.wrap(options[:exclude])
+
+    # always exclude edit and destroy if we are in show mode
+    options[:exclude] += [:edit, :destroy] if controller.action_name == 'show'
+
+    # build links
+    %w(edit destroy).map do |action|
+
+      # skip to next action if action is excluded
+      next if options[:exclude].include?(action.to_sym)
+
       case action
       when "edit"
-        can?(:update, obj) ? action_link(action, send("edit_#{route_key}_path", obj), :title => t("common.edit")) : nil
+        # check permissions
+        next unless can?(:update, obj)
+
+        # build link
+        action_link(action, send("edit_#{route_key}_path", obj), :title => t("common.edit"))
+      
       when "destroy"
+        # check permissions
+        next unless can?(:destroy, obj)
+
         # build a delete warning
         obj_description = options[:obj_name] ? "#{obj.class.model_name.human} '#{options[:obj_name]}'" : options[:obj_description]
         warning = t("layout.delete_warning", :obj_description => obj_description)
         
-        can?(:destroy, obj) ? action_link(action, send("#{route_key}_path", obj), :method => :delete, 
-          :confirm => warning, :title => t("common.delete")) : nil
+        # build link
+        action_link(action, send("#{route_key}_path", obj), :method => :delete, :confirm => warning, :title => t("common.delete"))
       end
-    end.compact
-    links.join("").html_safe
+
+    end.join('').html_safe
   end
   
   # creates a link to a batch operation
