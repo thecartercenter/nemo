@@ -44,8 +44,9 @@ class OptionSet < ActiveRecord::Base
   replicable :assocs => :optionings, :parent => :question, :uniqueness => {:field => :name, :style => :sep_words}
   
   # checks if this option set appears in any published questionings
+  # uses eager loaded field if available
   def published?
-    questionings.any?(&:published?)
+    respond_to?(:form_published) ? form_published == 1 : questionings.any?(&:published?)
   end
 
   # checks if this option set appears in any smsable questionings

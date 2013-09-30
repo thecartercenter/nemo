@@ -21,7 +21,7 @@ module OptionSetsHelper
     case field
     when "std_icon" then std_icon(option_set)
     when "name" then link_to(option_set.name, option_set_path(option_set), :title => t("common.view"))
-    when "published" then tbool(option_set.form_published == 1)
+    when "published" then tbool(option_set.published?)
     when "options" then option_set.options.collect{|o| o.name}.join(", ")
     when "questions" then option_set.question_count
     when "answers" then number_with_delimiter(option_set.answer_count)
