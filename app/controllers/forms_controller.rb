@@ -16,8 +16,8 @@ class FormsController < ApplicationController
     respond_to do |format|
       # render normally if html
       format.html do
-        # add some eager loading stuff
-        @forms = @forms.with_copy_counts
+        # add some eager loading stuff, and ordering
+        @forms = @forms.with_copy_counts.default_order
         load_importable_objs
         render(:index)
       end
