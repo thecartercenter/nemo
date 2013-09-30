@@ -8,7 +8,7 @@
   <%= flash_and_form_errors(@option_set) %>
   <%= nice_form_for(@option_set) do |f| %>
 
-    <%= form_field(f, :name, :required => true, :force_show_mode => cannot?(:update_own_fields, @option_set)) %>
+    <%= form_field(f, :name, :required => true, :force_show_mode => cannot?(:update_core, @option_set)) %>
     <%= form_field(f, :options, :required => true, :partial => "options") %>
     <%= form_submit_button(f, :label => :save) unless ajax_request? %> 
   <% end %>

@@ -179,8 +179,8 @@ class Ability
       q.standard_copy? && q.has_standard_copy_form? || q.published? || q.has_answers?
     end
 
-    # update_own_fields as opposed to update the contained options' fields
-    cannot :update_own_fields, OptionSet do |o| 
+    # we need these specialized permissions because option names/hints are updated via option set
+    cannot [:update_core, :add_options, :remove_options, :reorder_options], OptionSet do |o| 
       o.standard_copy? || o.published?
     end
 
