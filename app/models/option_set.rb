@@ -25,7 +25,7 @@ class OptionSet < ActiveRecord::Base
   scope(:with_assoc_counts_and_published, lambda { |mission|
     select(%{
       option_sets.*, 
-      COUNT(DISTINCT answers.id) AS answer_count,
+      COUNT(DISTINCT answers.id) AS answer_count_col,
       COUNT(DISTINCT questions.id) AS question_count, 
       MAX(forms.published) AS form_published
     }).
@@ -64,7 +64,11 @@ class OptionSet < ActiveRecord::Base
   # uses method from special eager loaded scope if available
   def has_answers?
     # check for answers
-    respond_to?(:answer_count) ? answer_count > 0 : questionings.any?(&:has_answers?)
+    respond_to?(:answer_count_col) ? answer_count_col > 0 : questionings.any?(&:has_answers?)
+  end
+
+  def answer_count
+    respond_to?(:answer_count_col) ? answer_count_col : questionings.inject(0){|sum, q| sum += q.answers.count}
   end
 
   # finds or initializes an optioning for every option in the database for current mission (never meant to be saved)
