@@ -1075,6 +1075,7 @@ en:
   welcome:
     awaiting_review: "**%{count}** Awaiting Review"
     by_you: "**%{count}** Submissions By You"
+    form_count: "**%{count}** Forms"
     in_the_past_day: "**%{count}** in the Past Day"
     in_the_past_hour: "**%{count}** in the Past Hour"
     in_the_past_month: "**%{count}** in the Past Month"

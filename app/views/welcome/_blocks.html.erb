@@ -21,11 +21,20 @@
       <%= link_to(admin_mode? ? t('standard.standard_forms') : pluralize_model(Form), forms_path, :class => "subtitle") %>
       <%= link_to(image_tag("blocks/block_design.png"), forms_path) %>
       <ul>
-        <li><%= link_to(tmd("welcome.published_form_count", :count => @pub_form_count), forms_path) %></li>
-      
-        <%# these links are only for form mgmt %>
+        <%# if admin mode, we show only the unpub form count (and just call it 'forms') b/c all std forms are unpublished %>
+        <% if admin_mode? %>
+          <li><%= link_to(tmd("welcome.form_count", :count => @unpub_form_count), forms_path) %></li>
+
+        <% else %>
+          <li><%= link_to(tmd("welcome.published_form_count", :count => @pub_form_count), forms_path) %></li>
+        
+          <%# only show unpub'd form count if can manage forms %>
+          <% if can?(:manage, Form) %>
+            <li><%= link_to(tmd("welcome.unpublished_form_count", :count => @unpub_form_count), forms_path) %></li>
+          <% end %>
+        <% end %>
+
         <% if can?(:manage, Form) %>
-          <li><%= link_to(tmd("welcome.unpublished_form_count", :count => @unpub_form_count), forms_path) %></li>
           <li><%= create_link(Form) %></li>
         <% end %>
       </ul>
