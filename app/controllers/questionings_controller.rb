@@ -33,6 +33,7 @@ class QuestioningsController < ApplicationController
     @questioning.assign_attributes(params[:questioning])
 
     authorize!(:update_core, @questioning) if @questioning.core_changed?
+    authorize!(:update_core, @questioning.question) if @questioning.question.core_changed?
 
     if @questioning.save
       set_success_and_redirect(@questioning.question, :to => edit_form_path(@questioning.form))

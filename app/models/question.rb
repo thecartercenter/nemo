@@ -159,6 +159,11 @@ class Question < ActiveRecord::Base
     %w(minimum maximum minstrictly maxstrictly).any?{|f| send("#{f}_changed?")}
   end
 
+  # checks if any core fields (type, option set, constraints) changed
+  def core_changed?
+    qtype_name_changed? || option_set_id_changed? || constraint_changed?
+  end
+
   private
 
     def integrity

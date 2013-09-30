@@ -29,6 +29,7 @@ class QuestionsController < ApplicationController
   
   def update
     @question.assign_attributes(params[:question])
+    authorize!(:update_core, @question) if @question.core_changed?
     create_or_update
   end
   
