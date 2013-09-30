@@ -11,7 +11,8 @@ class OptionSetsController < ApplicationController
     # add the included assocations and order
     @option_sets = @option_sets.with_assoc_counts_and_published(current_mission).by_name
 
-    # paginate all on one page for now. we specify the total enteries so that the autogen'd count query isn't huge
+    # paginate all on one page for now. we specify the total entries so that the autogen'd count query isn't huge.
+    # we still bother to call pagination so that the table header works
     @option_sets = @option_sets.paginate(:page => 1, :per_page => 10000000, :total_entries => total)
 
     # now we apply .all so that any .empty? or .count calls in the template don't cause more queries
