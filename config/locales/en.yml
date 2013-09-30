@@ -71,7 +71,7 @@ en:
   attributes:
     name: "Name"
     code: "Code"
-    copy_count: "Copies (Published)"
+    copy_count: "Copies"
     created_at: "Creation Time"
     email: "Email"
     hint: "Hint"

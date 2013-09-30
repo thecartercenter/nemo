@@ -14,7 +14,7 @@ module FormsHelper
   
   def forms_index_fields
     if admin_mode?
-      %w(std_icon name questions copy_count copy_responses_count updated_at actions)
+      %w(std_icon name questions copy_count published copy_responses_count updated_at actions)
     else
       %w(std_icon version name questions published downloads responses smsable updated_at actions)
     end
@@ -33,7 +33,7 @@ module FormsHelper
     when "downloads" then form.downloads || 0
     when "published" then tbool(form.published?)
     when "smsable" then tbool(form.smsable?)
-    when "copy_count" then "#{form.copy_count} (#{form.published_copy_count})"
+    when "copy_count" then form.copy_count
     when "actions"
       # get standard action links
       links = action_links(form, :obj_name => form.name)
