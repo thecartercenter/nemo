@@ -148,11 +148,10 @@ class Form < ActiveRecord::Base
     end
   end
   
-  # publishes the form and resets the download count
+  # publishes the form
   # upgrades the version if necessary
   def publish!
     self.published = true
-    self.downloads = 0
     
     # upgrade if necessary
     if upgrade_needed? || current_version.nil?
@@ -175,6 +174,7 @@ class Form < ActiveRecord::Base
   end
   
   # upgrades the version of the form and saves it
+  # also resets the download count
   def upgrade_version!
     if current_version
       self.current_version = current_version.upgrade
@@ -184,6 +184,9 @@ class Form < ActiveRecord::Base
     
     # since we've upgraded, we can lower the upgrade flag
     self.upgrade_needed = false
+
+    # reset downloads since we are only interested in downloads of present version
+    self.downloads = 0
     
     save(:validate => false)
   end
