@@ -155,17 +155,19 @@ class Ability
     # standard forms cannot be published and do not have versions, which are only assigned on publish
     cannot :publish, Form, :is_standard => true
 
-    cannot [:destroy, :update, :update_own_fields], Questioning do |q|
+    # cannot destroy/update a questioning if it's a standard copy or published
+    cannot [:destroy, :update, :update_core], Questioning do |q|
       q.standard_copy? || q.published?
+    end
+
+    # BUT can update questioning (though not its core) if can update related question
+    # we need this because questions are updated via questionings
+    can :update, Questioning do |q| 
+      can :update, q.question
     end
 
     cannot :destroy, Questioning do |q|
       q.has_answers?
-    end
-
-    # BUT can update questioning if can update related question
-    can :update, Questioning do |q| 
-      can :update, q.question
     end
 
     # update_core refers to the core fields: question type, option set, constraints

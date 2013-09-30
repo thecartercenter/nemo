@@ -9,7 +9,7 @@
   <% end %>
 
   <% old_f_mode = f.mode
-     f.mode = :show if cannot?(:update_own_fields, @questioning) %>
+     f.mode = :show if cannot?(:update_core, @questioning) %>
 
   <%= published_warning(@questioning) if @questioning.published? && form_mode == :edit %>
 
