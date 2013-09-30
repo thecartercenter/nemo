@@ -161,6 +161,22 @@ class OptionSet < ActiveRecord::Base
     optionings.map(&:rank_was) != optionings.map(&:rank)
   end
 
+  # checks if any core fields (currently only name) changed
+  def core_changed?
+    name_changed?
+  end
+
+  # checks if any options have been added since last save
+  def options_added?
+    optionings.any?(&:new_record?)
+  end
+
+  # checks if any options have been removed since last save
+  # relies on the the marked_for_destruction field since this method is used by the controller
+  def options_removed?
+    optionings.any?(&:marked_for_destruction?)
+  end
+
   private
     # makes sure that the options in the set have sequential ranks starting at 1. 
     # if not, fixes them.
