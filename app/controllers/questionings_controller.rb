@@ -25,7 +25,16 @@ class QuestioningsController < ApplicationController
   end
   
   def update
-    if @questioning.update_attributes(params[:questioning])
+    # strip out condition fields if they're blank and questioning has no existing condition
+    # this prevents an empty condition from getting initialized and then deleted again
+    params[:questioning].delete(:condition_attributes) if params[:questioning][:condition_attributes][:ref_qing_id].blank? && !@questioning.condition
+
+    # assign attributes first, then check auth
+    @questioning.assign_attributes(params[:questioning])
+
+    authorize!(:update_core, @questioning) if @questioning.core_changed?
+
+    if @questioning.save
       set_success_and_redirect(@questioning.question, :to => edit_form_path(@questioning.form))
     else
       prepare_and_render_form

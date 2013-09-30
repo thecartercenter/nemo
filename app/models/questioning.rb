@@ -47,6 +47,11 @@ class Questioning < ActiveRecord::Base
     self.condition = nil
   end
 
+  # checks if any of the core fields (condition, required, hidden) have changed
+  def core_changed?
+    condition.try(:changed?) || required_changed? || hidden_changed?
+  end
+
   # REFACTOR: should use translation delegation, from abandoned std_objs branch
   def method_missing(*args)
     # pass appropriate methods on to question
