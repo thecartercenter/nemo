@@ -11,6 +11,7 @@ module Standardizable
 
     # create hooks to copy is_standard param to children
     # this doesn't work with before_create for some reason
+    before_save(:copy_is_standard_from_parent)
     before_save(:copy_is_standard_to_children)
 
     # create hooks to replicate changes to copies for key classes
@@ -55,6 +56,7 @@ module Standardizable
 
   private
     def replicate_changes_to_copies(change_type)
+      Rails.logger.debug("********** replicating changes to copies (type: #{change_type})")
       if changing_in_replication
         changing_in_replication = false
       else
@@ -76,6 +78,7 @@ module Standardizable
     end
 
     def copy_is_standard_to_children
+      Rails.logger.debug("********** copying is_standard to children")
       self.class.replication_options[:assocs].each do |assoc|
         refl = self.class.reflect_on_association(assoc)
         if refl.collection?
@@ -89,6 +92,16 @@ module Standardizable
             send(assoc).mission = nil if is_standard?
           end
         end
+      end
+    end
+
+    def copy_is_standard_from_parent
+      Rails.logger.debug("********** copying is_standard from parent")
+      # if a parent is defined and there is a matching association 
+      # (e.g. questioning has parent = form, and a form association exists)
+      if (parent_assoc = self.class.replication_options[:parent]) && self.respond_to?(parent_assoc)
+        self.is_standard = self.send(parent_assoc).is_standard?
+        self.mission = nil if is_standard?
       end
     end
 end
