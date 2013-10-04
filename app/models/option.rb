@@ -34,9 +34,9 @@ class Option < ActiveRecord::Base
     matches = []; exact_match = false
     for i in 0...options.size
       # if we have a a partial match
-      if options[i].name && options[i].name =~ /#{query}/i
+      if options[i].name && options[i].name =~ /#{Regexp.escape(query)}/i
         # if also an exact match, set a flag and put it at the top
-        if options[i].name =~ /^#{query}$/i
+        if options[i].name =~ /^#{Regexp.escape(query)}$/i
           matches.insert(0, options[i])
           exact_match = true
         # otherwise just insert at the end
