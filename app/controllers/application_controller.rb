@@ -246,11 +246,13 @@ class ApplicationController < ActionController::Base
       return if request.format == Mime::XML
       
       # get the current user session from authlogic
-      if user_session = UserSession.find
+      user_session = UserSession.find
+      user = user_session.nil? ? nil : user_session.user
+      unless user.nil?
         
         # look up the current user from the user session
         # we use a find call to the User class so that we can do eager loading
-        @current_user = (user = user_session.user) && User.includes(:assignments).find(user.id)
+        @current_user = User.includes(:assignments).find(user.id)
 
         # if we're in admin mode, the current mission is nil and we need to set the user's current mission to nil also
         if admin_mode?
