@@ -151,11 +151,16 @@ class OptionSet < ActiveRecord::Base
     questionings.collect(&:form).uniq
   end
 
-  # gets a comma separated list of all related forms names
+  # gets a comma separated list of all related forms' names
   def form_names
     forms.map(&:name).join(', ')
   end
   
+  # gets a comma separated list of all related questions' codes
+  def question_codes
+    questions.map(&:code).join(', ')
+  end
+
   # checks if any of the option ranks have changed since last save
   def ranks_changed?
     optionings.map(&:rank_was) != optionings.map(&:rank)

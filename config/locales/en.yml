@@ -709,8 +709,8 @@ en:
   data_integrity:
     appears_elsewhere_warnings:
       by_type:
-        question: "This Question appears on the following Forms: *%{forms}*. Any changes you make below will be reflected on those Forms."
-        option_set: "This Option Set appears on the following Forms: *%{forms}*. Any changes you make below will be reflected on those Forms."
+        question: "This Question appears on the following Forms: *%{related}*. Any changes you make below will be reflected on those Forms."
+        option_set: "This Option Set appears on the following Questions: *%{related}*. Any changes you make below will be reflected on those Questions."
     has_answers_warnings:
       by_type:
         question: "This Question has existing Answers. Some fields are thus not editable."

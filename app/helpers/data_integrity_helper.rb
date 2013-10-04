@@ -21,7 +21,15 @@ module DataIntegrityHelper
 
   def appears_elsewhere_warning(obj)
     type = obj.class.model_name.singular
-    text = tmd("data_integrity.appears_elsewhere_warnings.by_type.#{type}", :forms => obj.form_names)
+
+    # get the appropriate list of names of related objects
+    related = case obj.class.name
+    when 'Question' then obj.form_names
+    when 'OptionSet' then obj.question_codes
+    else raise 'invalid object type for appears_elsewhere_warning'
+    end
+
+    text = tmd("data_integrity.appears_elsewhere_warnings.by_type.#{type}", :related => related)
     data_integrity_warning(:appears_elsewhere_warning, text)
   end
 
