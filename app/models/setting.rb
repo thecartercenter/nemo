@@ -1,13 +1,19 @@
 class Setting < ActiveRecord::Base
   include MissionBased
 
+  # attribs to copy to configatron
   KEYS_TO_COPY = %w(timezone preferred_locales intellisms_username intellisms_password isms_hostname isms_username isms_password incoming_sms_number)
+  
+  # these are the keys that make sense in admin mode
+  ADMIN_MODE_KEYS = %w(timezone preferred_locales)
+
   DEFAULTS = {:timezone => "UTC", :preferred_locales => [:en]}
 
   scope(:by_mission, lambda{|m| where(:mission_id => m ? m.id : nil)})
   scope(:default, where(DEFAULTS))
   
   before_validation(:cleanup_locales)
+  before_validation(:nullify_fields_if_these_are_admin_mode_settings)
   validate(:locales_are_valid)
   validate(:one_locale_must_have_translations)
   validate(:sms_adapter_is_valid)
@@ -139,5 +145,14 @@ class Setting < ActiveRecord::Base
         send("#{adapter}_password=", input) unless input.blank?
       end
       return true
+    end
+
+    # if we are in admin mode, then a bunch of fields don't make sense and should be null
+    # make sure they are in fact null
+    def nullify_fields_if_these_are_admin_mode_settings
+      # if mission_id is nil, that means we're in admin mode
+      if mission_id.nil?
+        (attributes.keys - ADMIN_MODE_KEYS - %w(id created_at updated_at mission_id)).each{|a| self.send("#{a}=", nil)}
+      end
     end
 end
