@@ -1,4 +1,12 @@
 div.form_field {
+  /* the field div itself should not wrap, but we don't want this to inherit */
+  white-space: nowrap;
+
+  > * {
+    white-space: normal;
+  }
+
+
   label, .control, .details {
     vertical-align: top; 
     padding: 5px 0;
@@ -6,6 +14,11 @@ div.form_field {
   
   .label_and_control {
     display: inline-block;
+    white-space: nowrap;
+
+    label {
+      white-space: normal;
+    }
   }
   
   label.main, .control { 
