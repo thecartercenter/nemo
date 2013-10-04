@@ -132,11 +132,11 @@ class ResponsesController < ApplicationController
     # handles creating/updating for the web form
     def web_create_or_update
       # set source/modifier to web
-      params[:response][:source] = "web" if params[:action] == "create"
-      params[:response][:modifier] = "web"
+      @response.source = "web" if params[:action] == "create"
+      @response.modifier = "web"
 
       # check for "update and mark as reviewed"
-      params[:response][:reviewed] = true if params[:commit_and_mark_reviewed]
+      @response.reviewed = true if params[:commit_and_mark_reviewed]
       
       # try to save
       begin
