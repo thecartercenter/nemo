@@ -32,6 +32,7 @@
       tokenValue: 'name',
       onResult: function(results){ return self.process_token_results(results); },
       onAdd: function(item){ return self.token_added(item); },
+      // this event hook is custom, added by tomsmyth. see the tokenInput source code.
       onEnter: function(){ self.add_options(); }
     });
     
