@@ -25,6 +25,9 @@
       if (!ajaxopts.url.match(/\bauto=1\b/))
         self.reset_session_countdown(); 
     });
+
+    // prevent double submission of any forms on the page
+    $('form').preventDoubleSubmission();
   }
   
   // sets a countdown to session timeout
