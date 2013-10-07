@@ -4,7 +4,7 @@ module MissionsHelper
   end
   
   def missions_index_fields
-    %w(name created_at actions)
+    %w(name compact_name created_at actions)
   end
   
   def format_missions_field(mission, field)

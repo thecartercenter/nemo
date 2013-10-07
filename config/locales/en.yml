@@ -201,6 +201,8 @@ en:
         smsable: "SMSable?"
         updated_at: "Last Modified"
         version: "Version"
+      mission:
+        compact_name: "Compact Name"
       option:
         base: "" # this is a sort of hack to get error msg to display properly
       option_set:
