@@ -95,7 +95,7 @@ module Standardizable
     # copies the is_standard and mission properties from any parent association
     def copy_is_standard_and_mission_from_parent
       # reflect on parent association, if it exists
-      parent_assoc = self.class.reflect_on_association(self.class.replication_options[:parent])
+      parent_assoc = self.class.reflect_on_association(self.class.replication_options[:parent_assoc])
 
       # if the parent association exists and is a belongs_to association 
       # (e.g. questioning has parent = form, and a form association exists)
@@ -111,7 +111,7 @@ module Standardizable
     # copies the is_standard and mission properties to any children associations
     def copy_is_standard_and_mission_to_children
       # iterate over children assocs
-      self.class.replication_options[:assocs].each do |assoc|
+      self.class.replication_options[:child_assocs].each do |assoc|
         refl = self.class.reflect_on_association(assoc)
         
         # if is a collection association, copy to each, else copy to individual

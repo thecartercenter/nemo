@@ -10,7 +10,7 @@ module Replicable
   included do
     # dsl-style method for setting options from base class
     def self.replicable(options = {})
-      options[:assocs] = Array.wrap(options[:assocs])
+      options[:child_assocs] = Array.wrap(options[:child_assocs])
       options[:dont_copy] = Array.wrap(options[:dont_copy]).map(&:to_s)
       class_variable_set('@@replication_options', options)
     end
@@ -68,8 +68,8 @@ module Replicable
     # unless it is there already
     copies << dest_obj if is_standard? && !copies.include?(dest_obj)
 
-    # replicate associations
-    replicable_opts(:assocs).each do |assoc|
+    # replicate child associations
+    replicable_opts(:child_assocs).each do |assoc|
       if self.class.reflect_on_association(assoc).collection?
         # destroy any children in copy that don't exist in standard
         std_child_ids = send(assoc).map(&:id)
@@ -134,14 +134,14 @@ module Replicable
     dont_copy += replicable_opts(:dont_copy)
 
     # don't copy foreign key field of belongs_to associations
-    replicable_opts(:assocs).each do |assoc|
+    replicable_opts(:child_assocs).each do |assoc|
       refl = self.class.reflect_on_association(assoc)
       dont_copy << refl.foreign_key if refl.macro == :belongs_to
     end
 
     # don't copy foreign key field of parent's has_* association, if applicable
-    if replicable_opts(:parent)
-      dont_copy << replicable_opts(:parent).to_s + '_id'
+    if replicable_opts(:parent_assoc)
+      dont_copy << replicable_opts(:parent_assoc).to_s + '_id'
     end
 
     # get hash and return

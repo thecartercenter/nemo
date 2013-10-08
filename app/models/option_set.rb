@@ -49,7 +49,7 @@ class OptionSet < ActiveRecord::Base
   self.per_page = 100
 
   # replication options
-  replicable :assocs => :optionings, :parent => :question, :uniqueness => {:field => :name, :style => :sep_words}
+  replicable :child_assocs => :optionings, :parent_assoc => :question, :uniqueness => {:field => :name, :style => :sep_words}
   
   # checks if this option set appears in any smsable questionings
   def form_smsable?
