@@ -75,16 +75,8 @@ module Replicable
     replicable_opts(:child_assocs).each do |assoc|
       if self.class.reflect_on_association(assoc).collection?
         
-        # destroy any children in dest obj that don't exist source obj
-        src_child_ids = send(assoc).map(&:id)
-        dest_obj.send(assoc).each do |o|
-          unless src_child_ids.include?(o.standard_id)
-            dest_obj.send(assoc).destroy(o) 
-          end
-        end
+        replicate_collection_association(assoc, replication)
 
-        # RECURSIVE STEP: replicate the existing children
-        send(assoc).each{|o| o.replicate(replication.clone_for_recursion(o, assoc))}
       else
 
         # if orig assoc is nil, make sure copy is also
@@ -109,6 +101,22 @@ module Replicable
     if c = copy_for_mission(to_mission)
       c.destroy
     end
+  end
+
+  # replicates a collection-type association
+  # by destroying any children on the dest obj that arent on the src obj
+  # and then replicating the existing children of the src obj to the dest obj
+  def replicate_collection_association(assoc_name, replication)
+    # destroy any children in dest obj that don't exist source obj
+    src_child_ids = send(assoc_name).map(&:id)
+    replication.dest_obj.send(assoc_name).each do |o|
+      unless src_child_ids.include?(o.standard_id)
+        replication.dest_obj.send(assoc_name).destroy(o) 
+      end
+    end
+
+    # replicate the existing children
+    send(assoc_name).each{|o| o.replicate(replication.clone_for_recursion(o, assoc_name))}
   end
 
   # gets the object to which the replication operation will copy attributes, etc.
