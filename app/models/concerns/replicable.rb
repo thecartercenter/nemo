@@ -64,7 +64,8 @@ module Replicable
     # add to parent before recursive step
     add_replication_dest_obj_to_parents_assocation(dest_obj, replication)
 
-    # if this is a standard obj, add to copies if not there already
+    # if this is a standard obj, add the dest obj to the list of copies
+    # unless it is there already
     copies << dest_obj if is_standard? && !copies.include?(dest_obj)
 
     # replicate associations
