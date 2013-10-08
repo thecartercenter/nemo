@@ -27,7 +27,7 @@ class Replication
   def redo_in_transaction
     @in_transaction = true
     return ActiveRecord::Base.transaction do
-      @obj.replicate(to_mission, self)
+      @obj.replicate(self)
     end
   end
 
