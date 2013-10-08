@@ -4,7 +4,7 @@ module Standardizable
   # we assume that any Standardizable class also imports Replicable
 
   # list of class names whose changes should be replicated on save
-  CLASSES_TO_REPLICATE_ON_SAVE = %w(Form Question Questioning OptionSet Option)
+  CLASSES_TO_REREPLICATE = %w(Form Question Questioning OptionSet Option)
 
   included do
     # create a flag to use with the callback below
@@ -19,11 +19,11 @@ module Standardizable
     before_save(:copy_is_standard_and_mission_from_parent)
     before_save(:copy_is_standard_and_mission_to_children)
 
-    # create hooks to replicate changes to copies for key classes
-    after_save(:replicate_save_to_copies)
+    # re-replicate to copies after save so that any changes are propagated
+    after_save(:rereplicate_to_copies)
 
     # we make this one before destroy because if we do it after then we violate an fk constraint before we get the chance
-    before_destroy(:replicate_destruction_to_copies)
+    before_destroy(:destroy_copies)
 
     # returns a scope for all standard objects of the current class that are importable to the given mission
     # (i.e. that don't already exist in that mission)
@@ -66,35 +66,25 @@ module Standardizable
   end
 
   private
-    def replicate_save_to_copies
-      replicate_changes_to_copies(:save)
-
-      return true
-    end
     
-    def replicate_destruction_to_copies
-      replicate_changes_to_copies(:destroy)
-
-      return true
-    end
-
-    def replicate_changes_to_copies(change_type)
+    def rereplicate_to_copies
       # don't replicate changes arising from the replication process itself, as this leads to an infinite loop
       if changing_in_replication
         changing_in_replication = false
       else
-        if change_type == :destroy
-          copies.each{|c| replicate_destruction(c.mission)}
-        else
-          # we only need to replicate save on certain classes
-          # can't really remember why :(
-          if CLASSES_TO_REPLICATE_ON_SAVE.include?(self.class.name)
-            # if we just run replicate for each copy's mission, all changes will be propagated
-            copies.each{|c| replicate(c.mission)}
-          end
+        # we only need to rereplicate on certain classes
+        # can't really remember why :(
+        if CLASSES_TO_REREPLICATE.include?(self.class.name)
+          # if we just run replicate for each copy's mission, all changes will be propagated
+          copies(true).each{|c| replicate(c.mission)}
         end
       end
+      return true
+    end
 
+    # destroys all copies of this standard object
+    def destroy_copies
+      copies(true).each{|c| c.destroy}
       return true
     end
 
@@ -110,7 +100,6 @@ module Standardizable
         self.is_standard = self.send(parent_assoc.name).is_standard?
         self.mission = self.send(parent_assoc.name).mission
       end
-
       return true
     end    
 
@@ -133,7 +122,6 @@ module Standardizable
           end
         end
       end
-
       return true
     end
 end

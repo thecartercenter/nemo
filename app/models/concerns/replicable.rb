@@ -75,12 +75,6 @@ module Replicable
     return dest_obj
   end
 
-  def replicate_destruction(to_mission)
-    if c = copy_for_mission(to_mission)
-      c.destroy
-    end
-  end
-
   # ensures the given name or other field would be unique, and generates a new name if it wouldnt be
   # (e.g. My Form 2, My Form 3, etc.) for the given name (e.g. My Form)
   # params[:mission] - the mission in which it should be unique
@@ -264,6 +258,7 @@ module Replicable
       src_child_ids = send(assoc_name).map(&:id)
       replication.dest_obj.send(assoc_name).each do |o|
         unless src_child_ids.include?(o.standard_id)
+          Rails.logger.debug("DESTROYING CHILD")
           replication.dest_obj.send(assoc_name).destroy(o) 
         end
       end
