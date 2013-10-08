@@ -10,7 +10,7 @@ class CleanupUniqueFields < ActiveRecord::Migration
           o.send("#{spec[1]}=", o.send(spec[1]).strip)
 
           # change the field to a unique
-          o.send("#{spec[1]}=", o.ensure_unique_field(:mission => o.mission, :dest_obj => o, :field => spec[1], :style => spec[2]))
+          o.send("#{spec[1]}=", o.generate_unique_field_value(:mission => o.mission, :dest_obj => o, :field => spec[1], :style => spec[2]))
 
           if o.send("#{spec[1]}_changed?")
             old_val = o.send("#{spec[1]}_was")

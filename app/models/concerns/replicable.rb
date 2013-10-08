@@ -53,10 +53,8 @@ module Replicable
     # copy attributes from src to parent
     attribs_to_copy_in_replication.each{|k,v| dest_obj.send("#{k}=", v)}
 
-    # if uniqueness property is set, make sure the specified field is unique
-    if params = replicable_opts(:uniqueness)
-      dest_obj.send("#{params[:field]}=", self.ensure_unique_field(params.merge(:mission => replication.to_mission, :dest_obj => dest_obj)))
-    end
+    # ensure uniqueness params are respected
+    ensure_uniqueness_when_replicating(replication)
 
     # call a callback if requested
     if replicable_opts(:after_copy_attribs)
@@ -150,6 +148,21 @@ module Replicable
     attributes.except(*dont_copy)
   end
 
+  # ensures the uniqueness replicable option is respected
+  def ensure_uniqueness_when_replicating(replication)
+    # if uniqueness property is set, make sure the specified field is unique
+    if params = replicable_opts(:uniqueness)
+      # setup the params for the call to the generate_unique_field_value method
+      params = params.merge(:mission => replication.to_mission, :dest_obj => replication.dest_obj)
+
+      # get a unique field value (e.g. name) for the dest_obj (may be the same as the source object's value)
+      unique_field_val = generate_unique_field_value(params)
+
+      # set the value on the dest_obj
+      replication.dest_obj.send("#{params[:field]}=", unique_field_val)
+    end
+  end
+
   # adds the specified object to the parent object's association
   # we do it this way so that links between parent and children objects
   # are established during recursion instead of all at the end
@@ -178,7 +191,7 @@ module Replicable
   # params[:dest_obj] - the object to which the name will be applied in the specified mission
   # params[:field] - the field to operate on
   # params[:style] - the style to adhere to in generating the unique value (:sep_words or :camel_case)
-  def ensure_unique_field(params)
+  def generate_unique_field_value(params)
     
     # extract any numeric suffix from existing value
     if params[:style] == :sep_words
