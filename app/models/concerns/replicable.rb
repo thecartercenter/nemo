@@ -17,7 +17,7 @@ module Replicable
   end
 
   # creates a duplicate in this or another mission
-  def replicate(to_mission = nil, replication = nil, options = {})
+  def replicate(to_mission = nil, replication = nil)
 
     # if not already set, setup a replication object to track replication parameters
     replication ||= Replication.new(:obj => self, :to_mission => to_mission)
@@ -93,7 +93,7 @@ module Replicable
         end
 
         # RECURSIVE STEP: replicate the existing children
-        send(assoc).each{|o| o.replicate(replication.to_mission, replication.clone_for_recursion(o, assoc, copy), options)}
+        send(assoc).each{|o| o.replicate(replication.to_mission, replication.clone_for_recursion(o, assoc, copy))}
       else
 
         # if orig assoc is nil, make sure copy is also
@@ -105,7 +105,7 @@ module Replicable
         # else replicate
         else
           # RECURSIVE STEP: replicate the child
-          send(assoc).replicate(replication.to_mission, replication.clone_for_recursion(send(assoc), assoc, copy), options)
+          send(assoc).replicate(replication.to_mission, replication.clone_for_recursion(send(assoc), assoc, copy))
         end
       end
     end
