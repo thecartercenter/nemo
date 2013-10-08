@@ -17,10 +17,13 @@ module Replicable
   end
 
   # creates a duplicate in this or another mission
-  def replicate(to_mission = nil, options = {}, copy_parents = [], parent_assoc = nil)
+  def replicate(to_mission = nil, replication = nil, options = {}, copy_parents = [], parent_assoc = nil)
 
+    # setup a replication object to track replication parameters
+    replication ||= Replication.new(:obj => self, :to_mission => to_mission)
+    
     # wrap in transaction if this is the first call
-    return transaction { replicate(to_mission, options.merge(:in_transaction => true), copy_parents, parent_assoc) } unless options[:in_transaction]
+    return transaction { replicate(to_mission, replication, options.merge(:in_transaction => true), copy_parents, parent_assoc) } unless options[:in_transaction]
 
     # default to current mission if not specified
     to_mission ||= mission if respond_to?(:mission)
@@ -109,8 +112,8 @@ module Replicable
           end
         end
 
-        # replicate the existing children
-        send(assoc).each{|o| o.replicate(to_mission, options, copy_parents, assoc)}
+        # RECURSIVE STEP: replicate the existing children
+        send(assoc).each{|o| replication.recurse_to(o, options, copy_parents, assoc)}
       else
 
         # if orig assoc is nil, make sure copy is also
@@ -121,7 +124,8 @@ module Replicable
           end
         # else replicate
         else
-          send(assoc).replicate(to_mission, options, copy_parents, assoc)
+          # RECURSIVE STEP: replicate the child
+          replication.recurse_to(send(assoc), options, copy_parents, assoc)
         end
       end
     end
