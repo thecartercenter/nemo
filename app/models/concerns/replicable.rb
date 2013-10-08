@@ -28,12 +28,8 @@ module Replicable
     # default to current mission if not specified
     to_mission ||= mission if respond_to?(:mission)
 
-    # determine whether deep or shallow, unless already set
-    # by default, we do a deep copy iff we're copying to a different mission
-    options[:deep_copy] = mission != to_mission if options[:deep_copy].nil?
-
     # if we're on a recursive step AND we're doing a shallow copy AND this is not a join class, just return self
-    if options[:recursed] && !options[:deep_copy] && !%w(Optioning Questioning Condition).include?(self.class.name)
+    if options[:recursed] && replication.shallow_copy? && !%w(Optioning Questioning Condition).include?(self.class.name)
       add_copy_to_parent(self, replication)
       return self
     end
@@ -52,7 +48,6 @@ module Replicable
 
     # puts "--------"
     # puts "class:" + self.class.name
-    # puts "deep:" + options[:deep_copy].inspect
     # puts "recursing:" + options[:recursed].inspect
 
     # set the proper mission if applicable
