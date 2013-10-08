@@ -4,11 +4,12 @@ class Replication
   attr_accessor :to_mission, :parent_assoc
 
   def initialize(params)
-    @obj = params[:obj]
+    # copy all params
+    params.each{|k,v| instance_variable_set("@#{k}", v)}
 
     # to_mission should default to obj's mission if nil
     # this would imply a within-mission clone
-    @to_mission = params[:to_mission] || @obj.mission
+    @to_mission ||= @obj.mission
   end
 
   # propagates the replication to the given child object
