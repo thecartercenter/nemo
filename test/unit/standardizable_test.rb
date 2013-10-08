@@ -38,15 +38,26 @@ class StandardizableTest < ActiveSupport::TestCase
     assert(f.optionings.all?(&:is_standard?))
   end
 
-  # test "deleting option from std option set with copies should replicate properly" do
-  #   # setup std option set, question, and form
-  #   std_os = FactoryGirl.create(:option_set, :is_standard => true, :option_names => %w(yes no maybe))
-  #   std_q = FactoryGirl.create(:question, :qtype_name => 'select_one', :option_set => std_os, :is_standard => true)
-  #   std_f = FactoryGirl.create(:form, :is_standard => true)
-  #   std_f.questions << std_q
+  test "deleting option from std option set with copies should replicate properly" do
+    # setup std option set, question, and form
+    std_os = FactoryGirl.create(:option_set, :is_standard => true, :option_names => %w(yes no maybe))
+    std_q = FactoryGirl.create(:question, :qtype_name => 'select_one', :option_set => std_os, :is_standard => true)
+    std_f = FactoryGirl.create(:form, :is_standard => true)
+    std_f.questions << std_q
 
-  #   puts std_f.reload.questionings.inspect
+    # make copy of form, which will copy option set also
+    # we do it this way because it produced a bug, whereas just replicating the option set without the form did not
+    copy_f = std_f.replicate(get_mission)
 
-  # end
+    # get a reference to the copied option set and ensure it's different from the std
+    copy_os = copy_f.questions.last.option_set
+    assert_not_equal(copy_os, std_os)
+
+    # remove option from std set
+    std_os.optionings[1].destroy
+
+    # copy should now have only two options -- yes and maybe
+    assert_equal(%w(yes maybe), copy_os.reload.options.map(&:name))
+  end
 
 end
