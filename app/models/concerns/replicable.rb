@@ -10,7 +10,7 @@ module Replicable
       class_variable_set('@@replication_options', options)
     end
 
-    # accessor for within the concern
+    # cleaner accessor for replication options
     def self.replication_options
       class_variable_defined?('@@replication_options') ? class_variable_get('@@replication_options') : nil
     end
