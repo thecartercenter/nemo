@@ -39,17 +39,11 @@ module Replicable
       return self
     end
 
-    # if this is a standard object AND we're copying to a mission AND there exists a copy in the given mission,
-    # then we don't need to create a new object
-    if is_standard? && replication.has_to_mission? && (c = copy_for_mission(replication.to_mission))
-      copy = c
-    else
-      # otherwise, we init the new object
-      copy = self.class.new
-    end
+    # get the obj to copy stuff to
+    dest_obj = replication_destination_obj(replication)
 
     # set the proper mission if applicable
-    copy.mission_id = replication.to_mission.try(:id)
+    dest_obj.mission_id = replication.to_mission.try(:id)
 
     # determine appropriate attribs to copy
     dont_copy = %w(id created_at updated_at mission_id mission is_standard standard_id standard) + replicable_opts(:dont_copy)
@@ -67,64 +61,78 @@ module Replicable
 
     # copy attribs
     attribs_to_copy = attributes.except(*dont_copy)
-    attribs_to_copy.each{|k,v| copy.send("#{k}=", v)}
+    attribs_to_copy.each{|k,v| dest_obj.send("#{k}=", v)}
 
     # if uniqueness property is set, make sure the specified field is unique
     if params = replicable_opts(:uniqueness)
-      copy.send("#{params[:field]}=", self.ensure_unique_field(params.merge(:mission => replication.to_mission, :dest_obj => copy)))
+      dest_obj.send("#{params[:field]}=", self.ensure_unique_field(params.merge(:mission => replication.to_mission, :dest_obj => dest_obj)))
     end
 
     # call a callback if requested
     if replicable_opts(:after_copy_attribs)
-      self.send(replicable_opts(:after_copy_attribs), copy, replication.ancestors)
+      self.send(replicable_opts(:after_copy_attribs), dest_obj, replication.ancestors)
     end
 
     # add to parent before recursive step
-    add_copy_to_parent(copy, replication)
+    add_copy_to_parent(dest_obj, replication)
 
     # if this is a standard obj, add to copies if not there already
-    copies << copy if is_standard? && !copies.include?(copy)
+    copies << dest_obj if is_standard? && !copies.include?(dest_obj)
 
     # replicate associations
     replicable_opts(:assocs).each do |assoc|
       if self.class.reflect_on_association(assoc).collection?
         # destroy any children in copy that don't exist in standard
         std_child_ids = send(assoc).map(&:id)
-        copy.send(assoc).each do |o|
+        dest_obj.send(assoc).each do |o|
           unless std_child_ids.include?(o.standard_id)
-            copy.changing_in_replication = true
-            copy.send(assoc).destroy(o) 
+            dest_obj.changing_in_replication = true
+            dest_obj.send(assoc).destroy(o) 
           end
         end
 
         # RECURSIVE STEP: replicate the existing children
-        send(assoc).each{|o| o.replicate(replication.clone_for_recursion(o, assoc, copy))}
+        send(assoc).each{|o| o.replicate(replication.clone_for_recursion(o, assoc, dest_obj))}
       else
 
         # if orig assoc is nil, make sure copy is also
         if send(assoc).nil?
-          if !copy.send(assoc).nil?
-            copy.changing_in_replication = true
-            copy.send(assoc).destroy
+          if !dest_obj.send(assoc).nil?
+            dest_obj.changing_in_replication = true
+            dest_obj.send(assoc).destroy
           end
         # else replicate
         else
           # RECURSIVE STEP: replicate the child
-          send(assoc).replicate(replication.clone_for_recursion(send(assoc), assoc, copy))
+          send(assoc).replicate(replication.clone_for_recursion(send(assoc), assoc, dest_obj))
         end
       end
     end
 
     # set flag so that standardizable callback doesn't call replicate again unnecessarily
-    copy.changing_in_replication = true
-    copy.save!
+    dest_obj.changing_in_replication = true
+    dest_obj.save!
 
-    return copy
+    return dest_obj
   end
 
   def replicate_destruction(to_mission)
     if c = copy_for_mission(to_mission)
       c.destroy
+    end
+  end
+
+
+  # gets the object to which the replication operation will copy attributes, etc.
+  # may be a new object or an existing one depending on parameters
+  def replication_destination_obj(replication)
+    # if this is a standard object AND we're copying to a mission AND there exists a copy of this obj in the given mission,
+    # then we don't need to create a new object, so return the existing copy
+    if is_standard? && replication.has_to_mission? && (copy = copy_for_mission(replication.to_mission))
+      return copy
+    else
+      # otherwise, we init and return the new object
+      return self.class.new
     end
   end
 
