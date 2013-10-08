@@ -1,7 +1,7 @@
 # models a recursive replication operation
 # holds all internal parameters used during the operation
 class Replication
-  attr_accessor :to_mission, :parent_assoc, :in_transaction, :current_assoc, :ancestors, :deep_copy, :recursed
+  attr_accessor :to_mission, :parent_assoc, :in_transaction, :current_assoc, :ancestors, :deep_copy, :recursed, :dest_obj
 
   def initialize(params)
     # copy all params

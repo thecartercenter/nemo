@@ -39,8 +39,9 @@ module Replicable
       return self
     end
 
-    # get the obj to copy stuff to
+    # get the obj to copy stuff to, and also tell the replication object about it
     dest_obj = replication_destination_obj(replication)
+    replication.dest_obj = dest_obj
 
     # set the proper mission if applicable
     dest_obj.mission_id = replication.to_mission.try(:id)
