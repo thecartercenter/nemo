@@ -41,7 +41,7 @@ module Replicable
     # if we're on a recursive step AND we're doing a shallow copy AND this is not a join class, 
     # we don't need to do any recursive copying, so just return self
     if replication.recursed? && replication.shallow_copy? && !JOIN_CLASSES.include?(self.class.name)
-      add_replication_dest_obj_to_parents_assocation(self, replication)
+      add_replication_dest_obj_to_parents_assocation(replication, self)
       return self
     end
 
@@ -65,7 +65,7 @@ module Replicable
     end
 
     # add dest_obj to its parent's assoc before recursive step so that children can access it
-    add_replication_dest_obj_to_parents_assocation(dest_obj, replication)
+    add_replication_dest_obj_to_parents_assocation(replication)
 
     # if this is a standard obj, add the dest obj to the list of copies
     # unless it is there already
@@ -226,9 +226,12 @@ module Replicable
     # we do it this way so that links between parent and children objects
     # are established during recursion instead of all at the end
     # this is because some child objects (e.g. conditions) need access to their parents
-    def add_replication_dest_obj_to_parents_assocation(copy, replication)
+    def add_replication_dest_obj_to_parents_assocation(replication, dest_obj = nil)
       # trivial case
       return unless replication.has_ancestors?
+
+      # get dest obj from replication unless specified explicitly
+      dest_obj ||= replication.dest_obj
 
       # get immediate parent and reflect on association
       refl = replication.parent.class.reflect_on_association(replication.current_assoc)
@@ -236,11 +239,11 @@ module Replicable
       # associate object with parent using appropriate method depending on assoc type
       if refl.collection?
         # only copy if not already there
-        unless replication.parent.send(replication.current_assoc).include?(copy)
-          replication.parent.send(replication.current_assoc).send('<<', copy)
+        unless replication.parent.send(replication.current_assoc).include?(dest_obj)
+          replication.parent.send(replication.current_assoc).send('<<', dest_obj)
         end
       else
-        replication.parent.send("#{replication.current_assoc}=", copy)
+        replication.parent.send("#{replication.current_assoc}=", dest_obj)
       end
     end
 
