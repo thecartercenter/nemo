@@ -68,14 +68,17 @@ module Replicable
     # unless it is there already
     copies << dest_obj if is_standard? && !copies.include?(dest_obj)
 
+    # set flag so that standardizable callback doesn't call replicate again unnecessarily
+    dest_obj.changing_in_replication = true
+
     # replicate child associations
     replicable_opts(:child_assocs).each do |assoc|
       if self.class.reflect_on_association(assoc).collection?
-        # destroy any children in copy that don't exist in standard
-        std_child_ids = send(assoc).map(&:id)
+        
+        # destroy any children in dest obj that don't exist source obj
+        src_child_ids = send(assoc).map(&:id)
         dest_obj.send(assoc).each do |o|
-          unless std_child_ids.include?(o.standard_id)
-            dest_obj.changing_in_replication = true
+          unless src_child_ids.include?(o.standard_id)
             dest_obj.send(assoc).destroy(o) 
           end
         end
@@ -87,7 +90,6 @@ module Replicable
         # if orig assoc is nil, make sure copy is also
         if send(assoc).nil?
           if !dest_obj.send(assoc).nil?
-            dest_obj.changing_in_replication = true
             dest_obj.send(assoc).destroy
           end
         # else replicate
@@ -98,8 +100,6 @@ module Replicable
       end
     end
 
-    # set flag so that standardizable callback doesn't call replicate again unnecessarily
-    dest_obj.changing_in_replication = true
     dest_obj.save!
 
     return dest_obj
