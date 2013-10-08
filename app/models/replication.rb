@@ -75,6 +75,10 @@ class Replication
     !ancestors.empty?
   end
 
+  def has_to_mission?
+    !to_mission.nil?
+  end
+
   # returns the immediate parent obj of this replication
   # may be nil
   def parent

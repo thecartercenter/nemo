@@ -41,10 +41,10 @@ module Replicable
 
     # if this is a standard object AND we're copying to a mission AND there exists a copy in the given mission,
     # then we don't need to create a new object
-    if is_standard? && !replication.to_mission.nil? && (c = copy_for_mission(replication.to_mission))
+    if is_standard? && replication.has_to_mission? && (c = copy_for_mission(replication.to_mission))
       copy = c
     else
-      # init the copy
+      # otherwise, we init the new object
       copy = self.class.new
     end
 
