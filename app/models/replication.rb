@@ -34,7 +34,7 @@ class Replication
   # creates a clone of the current replication for a recursive call
   # child - the child object on which the call is being done
   # association - the name of the association to which the child belongs
-  def clone_for_recursion(child, association, copy)
+  def clone_for_recursion(child, association)
     self.class.new(
       # the new src_obj is of course the child
       :src_obj => child, 
@@ -50,7 +50,7 @@ class Replication
       :current_assoc => association,
 
       # add the new copy to the list of copy parents
-      :ancestors => ancestors + [copy],
+      :ancestors => ancestors + [dest_obj],
 
       # recursed always is true since we're recursing here
       :recursed => true
