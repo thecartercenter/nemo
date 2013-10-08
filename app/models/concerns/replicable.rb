@@ -78,17 +78,8 @@ module Replicable
         replicate_collection_association(assoc, replication)
 
       else
+        replicate_non_collection_association(assoc, replication)
 
-        # if orig assoc is nil, make sure copy is also
-        if send(assoc).nil?
-          if !dest_obj.send(assoc).nil?
-            dest_obj.send(assoc).destroy
-          end
-        # else replicate
-        else
-          # RECURSIVE STEP: replicate the child
-          send(assoc).replicate(replication.clone_for_recursion(send(assoc), assoc))
-        end
       end
     end
 
@@ -117,6 +108,21 @@ module Replicable
 
     # replicate the existing children
     send(assoc_name).each{|o| o.replicate(replication.clone_for_recursion(o, assoc_name))}
+  end
+
+  # replicates a non-collection-type association (e.g. belongs_to)
+  def replicate_non_collection_association(assoc_name, replication)
+    # if orig assoc is nil, make sure copy is also
+    if send(assoc_name).nil?
+      unless replication.dest_obj.send(assoc_name).nil?
+        replication.dest_obj.send(assoc_name).destroy
+        replication.dest_obj.send("assoc_name=", nil)
+      end
+    # else replicate
+    else
+      # call replicate the single child object
+      send(assoc_name).replicate(replication.clone_for_recursion(send(assoc_name), assoc_name))
+    end
   end
 
   # gets the object to which the replication operation will copy attributes, etc.
