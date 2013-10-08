@@ -61,14 +61,13 @@ module Replicable
       self.send(replicable_opts(:after_copy_attribs), dest_obj, replication.ancestors)
     end
 
-    # add to parent before recursive step
+    # add dest_obj to its parent's assoc before recursive step so that children can access it
     add_replication_dest_obj_to_parents_assocation(dest_obj, replication)
 
     # if this is a standard obj, add the dest obj to the list of copies
     # unless it is there already
     copies << dest_obj if is_standard? && !copies.include?(dest_obj)
 
-    # replicate associations
     replicate_child_associations(replication)
 
     dest_obj.save!
