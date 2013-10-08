@@ -1,7 +1,7 @@
 # models a recursive replication operation
 # holds all internal parameters used during the operation
 class Replication
-  attr_accessor :to_mission, :parent_assoc, :in_transaction
+  attr_accessor :to_mission, :parent_assoc, :in_transaction, :current_assoc
 
   def initialize(params)
     # copy all params
@@ -23,11 +23,20 @@ class Replication
 
   # propagates the replication to the given child object
   # creates a new replication object for that stage of the replication
-  def recurse_to(child, *args)
+  # association is the name of the association that we are recursing to
+  def recurse_to(child, association, *args)
     new_replication = self.class.new(
+      # the new obj is of course the child
       :obj => child, 
+
+      # this stays the same
       :to_mission => to_mission,
-      :in_transaction => true)
+
+      # this is always true since we go into a transaction first thing
+      :in_transaction => true,
+
+      # the current_assoc is the name of the association that is currently being replicated
+      :current_assoc => association)
 
     child.replicate(to_mission, new_replication, *args)
   end

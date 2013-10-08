@@ -17,7 +17,7 @@ module Replicable
   end
 
   # creates a duplicate in this or another mission
-  def replicate(to_mission = nil, replication = nil, options = {}, copy_parents = [], parent_assoc = nil)
+  def replicate(to_mission = nil, replication = nil, options = {}, copy_parents = [])
 
     # if not already set, setup a replication object to track replication parameters
     replication ||= Replication.new(:obj => self, :to_mission => to_mission)
@@ -37,7 +37,7 @@ module Replicable
 
     # if we're on a recursive step AND we're doing a shallow copy AND this is not a join class, just return self
     if options[:recursed] && !options[:deep_copy] && !%w(Optioning Questioning Condition).include?(self.class.name)
-      add_copy_to_parent(self, copy_parents, parent_assoc)
+      add_copy_to_parent(self, copy_parents, replication)
       return self
     end
 
@@ -92,7 +92,7 @@ module Replicable
     end
 
     # add to parent before recursive step
-    add_copy_to_parent(copy, copy_parents, parent_assoc)
+    add_copy_to_parent(copy, copy_parents, replication)
 
     # if this is a standard obj, add to copies if not there already
     copies << copy if is_standard? && !copies.include?(copy)
@@ -113,7 +113,7 @@ module Replicable
         end
 
         # RECURSIVE STEP: replicate the existing children
-        send(assoc).each{|o| replication.recurse_to(o, options, copy_parents, assoc)}
+        send(assoc).each{|o| replication.recurse_to(o, assoc, options, copy_parents)}
       else
 
         # if orig assoc is nil, make sure copy is also
@@ -125,7 +125,7 @@ module Replicable
         # else replicate
         else
           # RECURSIVE STEP: replicate the child
-          replication.recurse_to(send(assoc), options, copy_parents, assoc)
+          replication.recurse_to(send(assoc), assoc, options, copy_parents)
         end
       end
     end
@@ -147,22 +147,22 @@ module Replicable
   # we do it this way so that links between parent and children objects
   # are established during recursion instead of all at the end
   # this is because some child objects (e.g. conditions) need access to their parents
-  def add_copy_to_parent(copy, ancestors, parent_assoc)
+  def add_copy_to_parent(copy, ancestors, replication)
     # trivial case
     return if ancestors.empty?
 
     # get immediate parent and reflect on association
     parent = ancestors.last
-    refl = parent.class.reflect_on_association(parent_assoc)
+    refl = parent.class.reflect_on_association(replication.current_assoc)
     
     # associate object with parent using appropriate method depending on assoc type
     if refl.collection?
       # only copy if not already there
-      unless parent.send(parent_assoc).include?(copy)
-        parent.send(parent_assoc).send('<<', copy)
+      unless parent.send(replication.current_assoc).include?(copy)
+        parent.send(replication.current_assoc).send('<<', copy)
       end
     else
-      parent.send("#{parent_assoc}=", copy)
+      parent.send("#{replication.current_assoc}=", copy)
     end
   end
 
