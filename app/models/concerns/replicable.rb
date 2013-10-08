@@ -40,9 +40,6 @@ module Replicable
       copy = self.class.new
     end
 
-    # puts "--------"
-    # puts "class:" + self.class.name
-
     # set the proper mission if applicable
     copy.mission_id = replication.to_mission.try(:id)
 
