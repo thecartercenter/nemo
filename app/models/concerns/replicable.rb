@@ -47,8 +47,7 @@ module Replicable
 
     # if we get this far we DO need to do recursive copying
     # get the obj to copy stuff to, and also tell the replication object about it
-    dest_obj = setup_replication_destination_obj(replication)
-    replication.dest_obj = dest_obj
+    replication.dest_obj = dest_obj = setup_replication_destination_obj(replication)
 
     # set the proper mission if applicable
     dest_obj.mission_id = replication.to_mission.try(:id)
@@ -60,9 +59,7 @@ module Replicable
     ensure_uniqueness_when_replicating(replication)
 
     # call a callback if requested
-    if replicable_opts(:after_copy_attribs)
-      self.send(replicable_opts(:after_copy_attribs), replication)
-    end
+    self.send(replicable_opts(:after_copy_attribs), replication) if replicable_opts(:after_copy_attribs)
 
     # add dest_obj to its parent's assoc before recursive step so that children can access it
     add_replication_dest_obj_to_parents_assocation(replication)
