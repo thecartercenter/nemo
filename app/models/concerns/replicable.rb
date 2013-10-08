@@ -80,7 +80,7 @@ module Replicable
 
     # if uniqueness property is set, make sure the specified field is unique
     if params = self.class.replication_options[:uniqueness]
-      copy.send("#{params[:field]}=", self.ensure_unique(params.merge(:mission => to_mission, :dest_obj => copy)))
+      copy.send("#{params[:field]}=", self.ensure_unique_field(params.merge(:mission => to_mission, :dest_obj => copy)))
     end
 
     # call a callback if requested
@@ -168,7 +168,7 @@ module Replicable
   # params[:dest_obj] - the object to which the name will be applied in the specified mission
   # params[:field] - the field to operate on
   # params[:style] - the style to adhere to in generating the unique value (:sep_words or :camel_case)
-  def ensure_unique(params)
+  def ensure_unique_field(params)
     
     # extract any numeric suffix from existing value
     if params[:style] == :sep_words
@@ -183,20 +183,27 @@ module Replicable
     # build a relation to get existing objs
     existing = self.class.for_mission(params[:mission])
 
-    # if the dest_obj has an ID, be sure to exclude that when looking for conflicting objects
+    # if the dest_obj has an ID (is not a new record), 
+    # be sure to exclude that when looking for conflicting objects
     existing = existing.where('id != ?', params[:dest_obj]) unless params[:dest_obj].new_record?
 
-    # get all existing copy numbers
+    # get the number suffixes of all existing objects
+    # e.g. if there are My Form, Other Form, My Form 4, My Form 3, TheForm return [1, 4, 3]
     existing_nums = existing.map do |obj|
-      found_exact = true if obj.send(params[:field]).downcase.strip == send(params[:field]).downcase.strip
 
+      # for the current match, check if it's an exact match and take note
+      if obj.send(params[:field]).downcase.strip == send(params[:field]).downcase.strip
+        found_exact = true 
+      end
+
+      # check if the current existing object's name matches the name we're looking for
       if params[:style] == :sep_words
         m = obj.send(params[:field]).match(/^#{prefix}\s*( (\d+))?\s*$/i)
       else
         m = obj.send(params[:field]).match(/^#{prefix}((\d+))?\s*$/i)
       end
 
-      # if there was no match, return nil
+      # if there was no match, return nil (this will be compacted out of the array at the end)
       if m.nil?
         nil
       
@@ -211,20 +218,21 @@ module Replicable
       end
     end.compact
 
-    # if we didn't find the exact match or any prefix matches, then no need to add number
+    # if we didn't find the exact match or any prefix matches, then no need to add any new suffix
+    # just return the name as is
     return send(params[:field]) if existing_nums.empty? || !found_exact
 
     # copy num is max of existing plus 1
     copy_num = existing_nums.max + 1
     
-    # number string is empty string if 1, else the number plus space
+    # suffix string depends on style
     if params[:style] == :sep_words
       suffix = " #{copy_num}"
     else
       suffix = copy_num.to_s
     end
     
-    # now build the new value
+    # now build the new value and return
     "#{prefix}#{suffix}"
   end
 
