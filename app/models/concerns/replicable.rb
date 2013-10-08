@@ -1,3 +1,4 @@
+# methods that handle replicating changes to copies of core objects (forms, questions, etc.) within and across missions
 module Replicable
   extend ActiveSupport::Concern
 
@@ -136,11 +137,6 @@ module Replicable
     if c = copy_for_mission(to_mission)
       c.destroy
     end
-  end
-
-  def replication_parent_class
-    p = self.class.replication_options[:parent]
-    p ? p.classify.constantize : nil
   end
 
   # adds the specified object to the parent object
