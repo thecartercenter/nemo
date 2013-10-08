@@ -53,6 +53,12 @@ module Standardizable
     !standard.nil?
   end
 
+  # adds an obj to the list of copies
+  def add_copy(obj)
+    # don't add if already there
+    copies << obj unless copies.include?(obj)
+  end
+
   # returns number of copies, or zero if this obj is not standard
   # uses eager loaded field if available
   def copy_count

@@ -49,7 +49,7 @@ module Replicable
     # get the obj to copy stuff to, and also tell the replication object about it
     replication.dest_obj = dest_obj = setup_replication_destination_obj(replication)
 
-    # set the proper mission if applicable
+    # set the proper mission ID if applicable
     dest_obj.mission_id = replication.to_mission.try(:id)
 
     # copy attributes from src to parent
@@ -64,9 +64,9 @@ module Replicable
     # add dest_obj to its parent's assoc before recursive step so that children can access it
     add_replication_dest_obj_to_parents_assocation(replication)
 
-    # if this is a standard obj, add the dest obj to the list of copies
+    # if this is a standard obj, add the newly replicated dest obj to the list of copies
     # unless it is there already
-    copies << dest_obj if is_standard? && !copies.include?(dest_obj)
+    add_copy(dest_obj) if is_standard?
 
     replicate_child_associations(replication)
 
