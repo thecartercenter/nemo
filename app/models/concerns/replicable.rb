@@ -47,17 +47,17 @@ module Replicable
     copy.mission_id = replication.to_mission.try(:id)
 
     # determine appropriate attribs to copy
-    dont_copy = %w(id created_at updated_at mission_id mission is_standard standard_id standard) + replication_opts(:dont_copy)
+    dont_copy = %w(id created_at updated_at mission_id mission is_standard standard_id standard) + replicable_opts(:dont_copy)
 
     # don't copy foreign key field of belongs_to associations
-    replication_opts(:assocs).each do |assoc|
+    replicable_opts(:assocs).each do |assoc|
       refl = self.class.reflect_on_association(assoc)
       dont_copy << refl.foreign_key if refl.macro == :belongs_to
     end
 
     # don't copy foreign key field of parent's has_* association, if applicable
-    if replication_opts(:parent)
-      dont_copy << replication_opts(:parent).to_s + '_id'
+    if replicable_opts(:parent)
+      dont_copy << replicable_opts(:parent).to_s + '_id'
     end
 
     # copy attribs
@@ -65,13 +65,13 @@ module Replicable
     attribs_to_copy.each{|k,v| copy.send("#{k}=", v)}
 
     # if uniqueness property is set, make sure the specified field is unique
-    if params = replication_opts(:uniqueness)
+    if params = replicable_opts(:uniqueness)
       copy.send("#{params[:field]}=", self.ensure_unique_field(params.merge(:mission => replication.to_mission, :dest_obj => copy)))
     end
 
     # call a callback if requested
-    if replication_opts(:after_copy_attribs)
-      self.send(replication_opts(:after_copy_attribs), copy, replication.ancestors)
+    if replicable_opts(:after_copy_attribs)
+      self.send(replicable_opts(:after_copy_attribs), copy, replication.ancestors)
     end
 
     # add to parent before recursive step
@@ -81,7 +81,7 @@ module Replicable
     copies << copy if is_standard? && !copies.include?(copy)
 
     # replicate associations
-    replication_opts(:assocs).each do |assoc|
+    replicable_opts(:assocs).each do |assoc|
       if self.class.reflect_on_association(assoc).collection?
         # destroy any children in copy that don't exist in standard
         std_child_ids = send(assoc).map(&:id)
@@ -220,7 +220,7 @@ module Replicable
   end
 
   # convenience method for replication options
-  def replication_opts(key)
+  def replicable_opts(key)
     self.class.replication_options[key]
   end
 
