@@ -4,6 +4,9 @@ module Replicable
 
   JOIN_CLASSES = %w(Optioning Questioning Condition)
 
+  # an initial list of attributes that we don't want to copy from the src_obj to the dest_obj
+  ATTRIBS_NOT_TO_COPY = %w(id created_at updated_at mission_id mission is_standard standard_id standard)
+
   included do
     # dsl-style method for setting options from base class
     def self.replicable(options = {})
@@ -39,6 +42,7 @@ module Replicable
       return self
     end
 
+    # if we get this far we DO need to do recursive copying
     # get the obj to copy stuff to, and also tell the replication object about it
     dest_obj = replication_destination_obj(replication)
     replication.dest_obj = dest_obj
@@ -46,23 +50,8 @@ module Replicable
     # set the proper mission if applicable
     dest_obj.mission_id = replication.to_mission.try(:id)
 
-    # determine appropriate attribs to copy
-    dont_copy = %w(id created_at updated_at mission_id mission is_standard standard_id standard) + replicable_opts(:dont_copy)
-
-    # don't copy foreign key field of belongs_to associations
-    replicable_opts(:assocs).each do |assoc|
-      refl = self.class.reflect_on_association(assoc)
-      dont_copy << refl.foreign_key if refl.macro == :belongs_to
-    end
-
-    # don't copy foreign key field of parent's has_* association, if applicable
-    if replicable_opts(:parent)
-      dont_copy << replicable_opts(:parent).to_s + '_id'
-    end
-
-    # copy attribs
-    attribs_to_copy = attributes.except(*dont_copy)
-    attribs_to_copy.each{|k,v| dest_obj.send("#{k}=", v)}
+    # copy attributes from src to parent
+    attribs_to_copy_in_replication.each{|k,v| dest_obj.send("#{k}=", v)}
 
     # if uniqueness property is set, make sure the specified field is unique
     if params = replicable_opts(:uniqueness)
@@ -135,6 +124,30 @@ module Replicable
       # otherwise, we init and return the new object
       return self.class.new
     end
+  end
+
+  # gets a hash of attributes of this object that should be copied to the dest obj
+  # in the current replication operation. this is surprisingly intricate
+  def attribs_to_copy_in_replication
+    # start with the initial, constant set
+    dont_copy = ATTRIBS_NOT_TO_COPY
+
+    # add the ones that are specified explicitly in the replicable options
+    dont_copy += replicable_opts(:dont_copy)
+
+    # don't copy foreign key field of belongs_to associations
+    replicable_opts(:assocs).each do |assoc|
+      refl = self.class.reflect_on_association(assoc)
+      dont_copy << refl.foreign_key if refl.macro == :belongs_to
+    end
+
+    # don't copy foreign key field of parent's has_* association, if applicable
+    if replicable_opts(:parent)
+      dont_copy << replicable_opts(:parent).to_s + '_id'
+    end
+
+    # get hash and return
+    attributes.except(*dont_copy)
   end
 
   # adds the specified object to the parent object's association
