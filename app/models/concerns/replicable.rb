@@ -139,22 +139,22 @@ module Replicable
     end
   end
 
-  # adds the specified object to the parent object
+  # adds the specified object to the parent object's association
   # we do it this way so that links between parent and children objects
   # are established during recursion instead of all at the end
   # this is because some child objects (e.g. conditions) need access to their parents
-  def add_copy_to_parent(copy, copy_parents, parent_assoc)
+  def add_copy_to_parent(copy, ancestors, parent_assoc)
     # trivial case
-    return if copy_parents.empty?
+    return if ancestors.empty?
 
     # get immediate parent and reflect on association
-    parent = copy_parents.last
+    parent = ancestors.last
     refl = parent.class.reflect_on_association(parent_assoc)
     
     # associate object with parent using appropriate method depending on assoc type
     if refl.collection?
-      if parent.send(parent_assoc).include?(copy)
-      else
+      # only copy if not already there
+      unless parent.send(parent_assoc).include?(copy)
         parent.send(parent_assoc).send('<<', copy)
       end
     else
