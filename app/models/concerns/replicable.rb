@@ -38,7 +38,7 @@ module Replicable
     # if we're on a recursive step AND we're doing a shallow copy AND this is not a join class, 
     # we don't need to do any recursive copying, so just return self
     if replication.recursed? && replication.shallow_copy? && !JOIN_CLASSES.include?(self.class.name)
-      add_copy_to_parent(self, replication)
+      add_replication_dest_obj_to_parents_assocation(self, replication)
       return self
     end
 
@@ -62,7 +62,7 @@ module Replicable
     end
 
     # add to parent before recursive step
-    add_copy_to_parent(dest_obj, replication)
+    add_replication_dest_obj_to_parents_assocation(dest_obj, replication)
 
     # if this is a standard obj, add to copies if not there already
     copies << dest_obj if is_standard? && !copies.include?(dest_obj)
@@ -109,7 +109,6 @@ module Replicable
       c.destroy
     end
   end
-
 
   # gets the object to which the replication operation will copy attributes, etc.
   # may be a new object or an existing one depending on parameters
@@ -163,11 +162,11 @@ module Replicable
     end
   end
 
-  # adds the specified object to the parent object's association
+  # adds the specified object to the applicable parent object's association
   # we do it this way so that links between parent and children objects
   # are established during recursion instead of all at the end
   # this is because some child objects (e.g. conditions) need access to their parents
-  def add_copy_to_parent(copy, replication)
+  def add_replication_dest_obj_to_parents_assocation(copy, replication)
     # trivial case
     return unless replication.has_ancestors?
 
