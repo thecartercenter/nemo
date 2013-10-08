@@ -31,11 +31,11 @@ class Replication
     end
   end
 
-  # propagates the replication to the given child object
-  # creates a new replication object for that stage of the replication
-  # association is the name of the association that we are recursing to
-  def recurse_to(child, association, copy, *args)
-    new_replication = self.class.new(
+  # creates a clone of the current replication for a recursive call
+  # child - the child object on which the call is being done
+  # association - the name of the association to which the child belongs
+  def clone_for_recursion(child, association, copy)
+    self.class.new(
       # the new obj is of course the child
       :obj => child, 
 
@@ -55,8 +55,6 @@ class Replication
       # recursed always is true since we're recursing here
       :recursed => true
     )
-
-    child.replicate(to_mission, new_replication, *args)
   end
 
   # accessor for better readability

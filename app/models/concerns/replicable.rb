@@ -96,7 +96,7 @@ module Replicable
         end
 
         # RECURSIVE STEP: replicate the existing children
-        send(assoc).each{|o| replication.recurse_to(o, assoc, copy, options)}
+        send(assoc).each{|o| o.replicate(to_mission, replication.clone_for_recursion(o, assoc, copy), options)}
       else
 
         # if orig assoc is nil, make sure copy is also
@@ -108,7 +108,7 @@ module Replicable
         # else replicate
         else
           # RECURSIVE STEP: replicate the child
-          replication.recurse_to(send(assoc), assoc, copy, options)
+          send(assoc).replicate(to_mission, replication.clone_for_recursion(send(assoc), assoc, copy), options)
         end
       end
     end
