@@ -25,9 +25,6 @@ module Replicable
     # wrap in transaction if this is the first call
     return replication.redo_in_transaction unless replication.in_transaction?
 
-    # default to current mission if not specified
-    to_mission ||= mission if respond_to?(:mission)
-
     # if we're on a recursive step AND we're doing a shallow copy AND this is not a join class, just return self
     if replication.recursed? && replication.shallow_copy? && !%w(Optioning Questioning Condition).include?(self.class.name)
       add_copy_to_parent(self, replication)
@@ -36,7 +33,7 @@ module Replicable
 
     # if this is a standard object AND we're copying to a mission AND there exists a copy in the given mission,
     # then we don't need to create a new object
-    if is_standard? && !to_mission.nil? && (c = copy_for_mission(to_mission))
+    if is_standard? && !replication.to_mission.nil? && (c = copy_for_mission(replication.to_mission))
       copy = c
     else
       # init the copy
@@ -47,7 +44,7 @@ module Replicable
     # puts "class:" + self.class.name
 
     # set the proper mission if applicable
-    copy.mission_id = to_mission.try(:id)
+    copy.mission_id = replication.to_mission.try(:id)
 
     # determine appropriate attribs to copy
     dont_copy = %w(id created_at updated_at mission_id mission is_standard standard_id standard) + replication_opts(:dont_copy)
@@ -69,7 +66,7 @@ module Replicable
 
     # if uniqueness property is set, make sure the specified field is unique
     if params = replication_opts(:uniqueness)
-      copy.send("#{params[:field]}=", self.ensure_unique_field(params.merge(:mission => to_mission, :dest_obj => copy)))
+      copy.send("#{params[:field]}=", self.ensure_unique_field(params.merge(:mission => replication.to_mission, :dest_obj => copy)))
     end
 
     # call a callback if requested
@@ -96,7 +93,7 @@ module Replicable
         end
 
         # RECURSIVE STEP: replicate the existing children
-        send(assoc).each{|o| o.replicate(to_mission, replication.clone_for_recursion(o, assoc, copy), options)}
+        send(assoc).each{|o| o.replicate(replication.to_mission, replication.clone_for_recursion(o, assoc, copy), options)}
       else
 
         # if orig assoc is nil, make sure copy is also
@@ -108,7 +105,7 @@ module Replicable
         # else replicate
         else
           # RECURSIVE STEP: replicate the child
-          send(assoc).replicate(to_mission, replication.clone_for_recursion(send(assoc), assoc, copy), options)
+          send(assoc).replicate(replication.to_mission, replication.clone_for_recursion(send(assoc), assoc, copy), options)
         end
       end
     end
