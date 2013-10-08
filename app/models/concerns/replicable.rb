@@ -19,11 +19,11 @@ module Replicable
   # creates a duplicate in this or another mission
   def replicate(to_mission = nil, replication = nil, options = {}, copy_parents = [], parent_assoc = nil)
 
-    # setup a replication object to track replication parameters
+    # if not already set, setup a replication object to track replication parameters
     replication ||= Replication.new(:obj => self, :to_mission => to_mission)
     
     # wrap in transaction if this is the first call
-    return transaction { replicate(to_mission, replication, options.merge(:in_transaction => true), copy_parents, parent_assoc) } unless options[:in_transaction]
+    return replication.redo_in_transaction unless replication.in_transaction?
 
     # default to current mission if not specified
     to_mission ||= mission if respond_to?(:mission)
