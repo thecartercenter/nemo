@@ -29,7 +29,7 @@ module Replicable
     if to_mission_or_replication.is_a?(Replication)
       replication = to_mission_or_replication
     else
-      replication = Replication.new(:obj => self, :to_mission => to_mission_or_replication)
+      replication = Replication.new(:src_obj => self, :to_mission => to_mission_or_replication)
     end
     
     # wrap in transaction if this is the first call

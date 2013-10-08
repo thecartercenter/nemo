@@ -7,16 +7,16 @@ class Replication
     # copy all params
     params.each{|k,v| instance_variable_set("@#{k}", v)}
 
-    # to_mission should default to obj's mission if nil
+    # to_mission should default to src_obj's mission if nil
     # this would imply a within-mission clone
-    @to_mission ||= @obj.mission
+    @to_mission ||= @src_obj.mission
 
     # ensure ancestors is [] if nil
     @ancestors ||= []
 
     # determine whether deep or shallow, unless already set
     # by default, we do a deep copy iff we're copying to a different mission
-    @deep_copy ||= @obj.mission != @to_mission
+    @deep_copy ||= @src_obj.mission != @to_mission
 
     # recursed defaults to false, and is set to true explicitly when recursing
     @recursed ||= false
@@ -27,7 +27,7 @@ class Replication
   def redo_in_transaction
     @in_transaction = true
     return ActiveRecord::Base.transaction do
-      @obj.replicate(self)
+      @src_obj.replicate(self)
     end
   end
 
@@ -36,8 +36,8 @@ class Replication
   # association - the name of the association to which the child belongs
   def clone_for_recursion(child, association, copy)
     self.class.new(
-      # the new obj is of course the child
-      :obj => child, 
+      # the new src_obj is of course the child
+      :src_obj => child, 
 
       # these stay the same
       :to_mission => to_mission,
