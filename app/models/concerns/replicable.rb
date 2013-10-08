@@ -71,17 +71,8 @@ module Replicable
     # set flag so that standardizable callback doesn't call replicate again unnecessarily
     dest_obj.changing_in_replication = true
 
-    # replicate child associations
-    replicable_opts(:child_assocs).each do |assoc|
-      if self.class.reflect_on_association(assoc).collection?
-        
-        replicate_collection_association(assoc, replication)
-
-      else
-        replicate_non_collection_association(assoc, replication)
-
-      end
-    end
+    # replicate associations
+    replicate_child_associations(replication)
 
     dest_obj.save!
 
@@ -91,6 +82,18 @@ module Replicable
   def replicate_destruction(to_mission)
     if c = copy_for_mission(to_mission)
       c.destroy
+    end
+  end
+
+  # replicates all child associations
+  def replicate_child_associations(replication)
+    # loop over each assoc and call appropriate method
+    replicable_opts(:child_assocs).each do |assoc|
+      if self.class.reflect_on_association(assoc).collection?
+        replicate_collection_association(assoc, replication)
+      else
+        replicate_non_collection_association(assoc, replication)
+      end
     end
   end
 
