@@ -107,7 +107,7 @@ module Replicable
     end
 
     # replicate the existing children
-    send(assoc_name).each{|o| o.replicate(replication.clone_for_recursion(o, assoc_name))}
+    send(assoc_name).each{|o| replicate_child(o, assoc_name, replication)}
   end
 
   # replicates a non-collection-type association (e.g. belongs_to)
@@ -118,11 +118,20 @@ module Replicable
         replication.dest_obj.send(assoc_name).destroy
         replication.dest_obj.send("assoc_name=", nil)
       end
-    # else replicate
+    # else replicate the single child
     else
-      # call replicate the single child object
-      send(assoc_name).replicate(replication.clone_for_recursion(send(assoc_name), assoc_name))
+      replicate_child(send(assoc_name), assoc_name, replication)
     end
+  end
+
+  # calls replicate on an individual child object, generating a new set of replication params 
+  # for this particular replicate call
+  def replicate_child(child, assoc_name, replication)
+    # build new replication param obj for child
+    new_replication = replication.clone_for_recursion(child, assoc_name)
+
+    # call replicate for the child object
+    child.replicate(new_replication)
   end
 
   # gets the object to which the replication operation will copy attributes, etc.
