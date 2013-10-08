@@ -2,6 +2,8 @@
 module Replicable
   extend ActiveSupport::Concern
 
+  JOIN_CLASSES = %w(Optioning Questioning Condition)
+
   included do
     # dsl-style method for setting options from base class
     def self.replicable(options = {})
@@ -30,8 +32,9 @@ module Replicable
     # wrap in transaction if this is the first call
     return replication.redo_in_transaction unless replication.in_transaction?
 
-    # if we're on a recursive step AND we're doing a shallow copy AND this is not a join class, just return self
-    if replication.recursed? && replication.shallow_copy? && !%w(Optioning Questioning Condition).include?(self.class.name)
+    # if we're on a recursive step AND we're doing a shallow copy AND this is not a join class, 
+    # we don't need to do any recursive copying, so just return self
+    if replication.recursed? && replication.shallow_copy? && !JOIN_CLASSES.include?(self.class.name)
       add_copy_to_parent(self, replication)
       return self
     end
