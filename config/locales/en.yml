@@ -1083,6 +1083,9 @@ en:
     in_the_past_month: "**%{count}** in the Past Month"
     in_the_past_week: "**%{count}** in the Past Week"
     in_the_past_year: "**%{count}** in the Past Year"
+    no_mission_selected:
+      title: "No Mission Selected"
+      description: "Please select a mission from the dropdown in the top-right of the screen."
     no_recent: "**0** Recent Responses"
     published_form_count: "**%{count}** Published Forms"
     select_a_form: "Select a Form To Submit"
