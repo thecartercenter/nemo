@@ -44,7 +44,7 @@ module Replicable
 
     # if we get this far we DO need to do recursive copying
     # get the obj to copy stuff to, and also tell the replication object about it
-    dest_obj = replication_destination_obj(replication)
+    dest_obj = setup_replication_destination_obj(replication)
     replication.dest_obj = dest_obj
 
     # set the proper mission if applicable
@@ -67,9 +67,6 @@ module Replicable
     # if this is a standard obj, add the dest obj to the list of copies
     # unless it is there already
     copies << dest_obj if is_standard? && !copies.include?(dest_obj)
-
-    # set flag so that standardizable callback doesn't call replicate again unnecessarily
-    dest_obj.changing_in_replication = true
 
     # replicate associations
     replicate_child_associations(replication)
@@ -139,15 +136,20 @@ module Replicable
 
   # gets the object to which the replication operation will copy attributes, etc.
   # may be a new object or an existing one depending on parameters
-  def replication_destination_obj(replication)
+  def setup_replication_destination_obj(replication)
     # if this is a standard object AND we're copying to a mission AND there exists a copy of this obj in the given mission,
     # then we don't need to create a new object, so return the existing copy
     if is_standard? && replication.has_to_mission? && (copy = copy_for_mission(replication.to_mission))
-      return copy
+      obj = copy
     else
       # otherwise, we init and return the new object
-      return self.class.new
+      obj = self.class.new
     end
+
+    # set flag so that standardizable callback doesn't call replicate again unnecessarily
+    obj.changing_in_replication = true
+
+    obj
   end
 
   # gets a hash of attributes of this object that should be copied to the dest obj
