@@ -29,7 +29,7 @@ module Replicable
     to_mission ||= mission if respond_to?(:mission)
 
     # if we're on a recursive step AND we're doing a shallow copy AND this is not a join class, just return self
-    if options[:recursed] && replication.shallow_copy? && !%w(Optioning Questioning Condition).include?(self.class.name)
+    if replication.recursed? && replication.shallow_copy? && !%w(Optioning Questioning Condition).include?(self.class.name)
       add_copy_to_parent(self, replication)
       return self
     end
@@ -43,12 +43,8 @@ module Replicable
       copy = self.class.new
     end
 
-    # set the recursed flag in the options so we will know what to do with deep copying
-    options[:recursed] = true
-
     # puts "--------"
     # puts "class:" + self.class.name
-    # puts "recursing:" + options[:recursed].inspect
 
     # set the proper mission if applicable
     copy.mission_id = to_mission.try(:id)

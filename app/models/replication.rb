@@ -1,7 +1,7 @@
 # models a recursive replication operation
 # holds all internal parameters used during the operation
 class Replication
-  attr_accessor :to_mission, :parent_assoc, :in_transaction, :current_assoc, :ancestors, :deep_copy
+  attr_accessor :to_mission, :parent_assoc, :in_transaction, :current_assoc, :ancestors, :deep_copy, :recursed
 
   def initialize(params)
     # copy all params
@@ -17,6 +17,9 @@ class Replication
     # determine whether deep or shallow, unless already set
     # by default, we do a deep copy iff we're copying to a different mission
     @deep_copy ||= @obj.mission != @to_mission
+
+    # recursed defaults to false, and is set to true explicitly when recursing
+    @recursed ||= false
   end
 
   # calls replication from within a transaction and returns result
@@ -46,8 +49,11 @@ class Replication
       # the current_assoc is the name of the association that is currently being replicated
       :current_assoc => association,
 
-       # add the new copy to the list of copy parents
-      :ancestors => ancestors + [copy]
+      # add the new copy to the list of copy parents
+      :ancestors => ancestors + [copy],
+
+      # recursed always is true since we're recursing here
+      :recursed => true
     )
 
     child.replicate(to_mission, new_replication, *args)
@@ -75,5 +81,9 @@ class Replication
   # may be nil
   def parent
     ancestors.last
+  end
+
+  def recursed?
+    recursed
   end
 end
