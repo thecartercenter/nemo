@@ -160,22 +160,22 @@ class Condition < ActiveRecord::Base
     end
 
     # during replication process, copies the ref qing and option to the new condition
-    def copy_ref_qing_and_option(copy, copy_parents)
-      # the copy's form is just the immediate parent (questioning)'s form
-      copy_form = copy_parents.last.form
+    def copy_ref_qing_and_option(replication)
+      # the dest_obj's form is just the immediate parent (questioning)'s form
+      dest_form = replication.parent.form
 
       # get the rank of the original ref_qing
       ref_qing_rank = self.ref_qing.rank
 
       # set the copy's ref_qing to the corresponding one
-      copy.ref_qing = copy_form.questionings[ref_qing_rank - 1]
+      replication.dest_obj.ref_qing = dest_form.questionings[ref_qing_rank - 1]
 
       if self.option
         # get the index of the original option
         ref_option_idx = self.ref_qing.question.option_set.options.index(self.option)
 
         # set the copy's option to the new ref_qing's corresponding option, in case the option set was also replicated
-        copy.option = copy.ref_qing.question.option_set.optionings[ref_option_idx].option
+        replication.dest_obj.option = replication.dest_obj.ref_qing.question.option_set.optionings[ref_option_idx].option
       end
     end
 

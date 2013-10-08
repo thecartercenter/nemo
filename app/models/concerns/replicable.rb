@@ -61,7 +61,7 @@ module Replicable
 
     # call a callback if requested
     if replicable_opts(:after_copy_attribs)
-      self.send(replicable_opts(:after_copy_attribs), dest_obj, replication.ancestors)
+      self.send(replicable_opts(:after_copy_attribs), replication)
     end
 
     # add dest_obj to its parent's assoc before recursive step so that children can access it
