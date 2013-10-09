@@ -203,6 +203,7 @@ class User < ActiveRecord::Base
   end
   
   # returns all missions that the user has access to
+  # caches in case of multiple accesses
   def accessible_missions
     @accessible_missions ||= Mission.accessible_by(ability, :switch_to)
   end

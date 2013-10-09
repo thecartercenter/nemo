@@ -53,7 +53,7 @@ class ApplicationController < ActionController::Base
   attr_reader :current_user, :current_mission
   
   # make these methods visible in the view
-  helper_method :current_user, :current_mission, :ajax_request?, :admin_mode?
+  helper_method :current_user, :current_mission, :accessible_missions, :ajax_request?, :admin_mode?
   
   # hackish way of getting the route key identical to what would be returned by model_name.route_key on a model
   def route_key
@@ -71,7 +71,7 @@ class ApplicationController < ActionController::Base
       ActionMailer::Base.default_url_options[k] = v
     end
   end
-  
+
   protected
     
     # sets the locale based on the locale param (grabbed from the path by the router)
@@ -266,6 +266,12 @@ class ApplicationController < ActionController::Base
           session[:last_mission_id] = @current_mission.try(:id)
         end
       end
+    end
+
+    # gets the missions accessible to the current user, or [] if no current user
+    # sorts result
+    def accessible_missions
+      current_user ? current_user.accessible_missions.sorted_by_name : []
     end
 
     # get the current user's ability. not cached because it's volatile!
