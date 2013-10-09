@@ -56,7 +56,7 @@ class ApplicationController < ActionController::Base
   attr_reader :current_user, :current_mission
   
   # make these methods visible in the view
-  helper_method :current_user, :current_mission, :accessible_missions, :ajax_request?, :admin_mode?, :index_url
+  helper_method :current_user, :current_mission, :accessible_missions, :ajax_request?, :admin_mode?, :index_url_with_page_num
   
   # hackish way of getting the route key identical to what would be returned by model_name.route_key on a model
   def route_key
@@ -379,8 +379,8 @@ class ApplicationController < ActionController::Base
     
     # sets a success message and redirects
     def set_success_and_redirect(obj, options = {})
-      # redirect to index_url by default
-      options[:to] ||= index_url
+      # redirect to index_url_with_page_num by default
+      options[:to] ||= index_url_with_page_num
 
       # if we're redirecting to index, save the object id in the flash
       flash[:modified_obj_id] = obj.id if options[:to] == :index
@@ -396,7 +396,7 @@ class ApplicationController < ActionController::Base
 
     # gets the url to an index action, ensuring the appropriate page is returned to
     # ctlr - the controller whose index should be used. defaults to current controller
-    def index_url(ctlr = nil)
+    def index_url_with_page_num(ctlr = nil)
       url_for(:controller => ctlr || controller_name, :action => :index)
     end
 

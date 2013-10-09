@@ -46,7 +46,7 @@ class ResponsesController < ApplicationController
     rescue ActiveRecord::RecordNotFound
       # this should not be possible
       flash[:error] = "no form selected"
-      return redirect_to(index_url)
+      return redirect_to(index_url_with_page_num)
     end
     
     # render the form template
@@ -120,7 +120,7 @@ class ResponsesController < ApplicationController
   
   def destroy
     destroy_and_handle_errors(@response)
-    redirect_to(index_url)
+    redirect_to(index_url_with_page_num)
   end
   
   private

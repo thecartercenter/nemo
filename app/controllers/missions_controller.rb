@@ -37,6 +37,6 @@ class MissionsController < ApplicationController
 
   def destroy
     destroy_and_handle_errors(@mission, :but_first => :check_associations)
-    redirect_to(index_url)
+    redirect_to(index_url_with_page_num)
   end
 end
