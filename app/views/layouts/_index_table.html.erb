@@ -55,13 +55,14 @@
       <%= will_paginate(objects) if paginated %>
     <% end %>
     
-    <%# flash the modified obj %>
-    <% if flash[:modified_obj_id] %>
-      <%= javascript_doc_ready do %>
-        $('#<%= "#{objects.first.class.name.underscore}_#{flash[:modified_obj_id]}" %>').effect("highlight", {}, 1000);
-      <% end %>
+    <%# create js view model for index table %>
+    <%= javascript_doc_ready do %>
+      new ELMO.Views.IndexTable({
+        class_name: <%= objects.first.class.name.underscore.to_json.html_safe %>,
+        modified_obj_id: <%= flash[:modified_obj_id].to_json.html_safe %>
+      });
     <% end %>
-    
+
     <%# hookup whole-row link %>
     <% unless options[:no_whole_row_link] %>
       <%= javascript_doc_ready do %>
