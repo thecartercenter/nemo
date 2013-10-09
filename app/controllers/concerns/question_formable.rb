@@ -23,6 +23,6 @@ module QuestionFormable
   
   def setup_question_form_support_objs
     @question_types = QuestionType.all
-    @option_sets = OptionSet.accessible_by(current_ability).all
+    @option_sets = OptionSet.accessible_by(current_ability).default_order
   end
 end
