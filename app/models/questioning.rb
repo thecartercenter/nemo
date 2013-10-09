@@ -23,7 +23,7 @@ class Questioning < ActiveRecord::Base
   delegate :smsable?, :to => :form, :prefix => true
   delegate :verify_ordering, :to => :condition, :prefix => true, :allow_nil => true
 
-  replicable :assocs => [:question, :condition], :parent => :form
+  replicable :child_assocs => [:question, :condition], :parent_assoc => :form
 
   # returns any questionings appearing before this one on the form
   def previous

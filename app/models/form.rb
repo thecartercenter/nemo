@@ -39,7 +39,7 @@ class Form < ActiveRecord::Base
   
   scope(:default_order, order('forms.name'))
 
-  replicable :assocs => :questionings, :uniqueness => {:field => :name, :style => :sep_words}, 
+  replicable :child_assocs => :questionings, :uniqueness => {:field => :name, :style => :sep_words}, 
     :dont_copy => [:published, :downloads, :responses_count, :questionings_count, :upgrade_needed, :smsable, :current_version_id]
 
   def temp_response_id
@@ -176,6 +176,8 @@ class Form < ActiveRecord::Base
   # upgrades the version of the form and saves it
   # also resets the download count
   def upgrade_version!
+    raise "standard forms should not be versioned" if is_standard?
+
     if current_version
       self.current_version = current_version.upgrade
     else
@@ -193,6 +195,8 @@ class Form < ActiveRecord::Base
   
   # sets the upgrade flag so that the form will be upgraded when next published
   def flag_for_upgrade!
+    raise "standard forms should not be versioned" if is_standard?
+
     self.upgrade_needed = true
     save(:validate => false)
   end

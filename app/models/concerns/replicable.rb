@@ -1,169 +1,89 @@
+# methods that handle replicating changes to copies of core objects (forms, questions, etc.) within and across missions
 module Replicable
   extend ActiveSupport::Concern
+
+  JOIN_CLASSES = %w(Optioning Questioning Condition)
+
+  # an initial list of attributes that we don't want to copy from the src_obj to the dest_obj
+  ATTRIBS_NOT_TO_COPY = %w(id created_at updated_at mission_id mission is_standard standard_id standard)
+
+  # whether to print verbose info to Rails log
+  LOG_REPLICATION = true
 
   included do
     # dsl-style method for setting options from base class
     def self.replicable(options = {})
-      options[:assocs] = Array.wrap(options[:assocs])
+      options[:child_assocs] = Array.wrap(options[:child_assocs])
       options[:dont_copy] = Array.wrap(options[:dont_copy]).map(&:to_s)
       class_variable_set('@@replication_options', options)
     end
 
-    # accessor for within the concern
+    # cleaner accessor for replication options
     def self.replication_options
       class_variable_defined?('@@replication_options') ? class_variable_get('@@replication_options') : nil
+    end
+
+    # only log replication if constant is set and env is dev or test
+    def self.log_replication?
+      LOG_REPLICATION && (Rails.env.test? || Rails.env.development?)
     end
   end
 
   # creates a duplicate in this or another mission
-  def replicate(to_mission = nil, options = {}, copy_parents = [], parent_assoc = nil)
+  # accepts the mission to which to replicate (when called from outside)
+  # or a Replication object, which holds the params for the replication operation
+  # spawns additional replication operations recursively, if appropriate
+  def replicate(to_mission_or_replication = nil)
+
+    # if mission or nil was passed in, we don't have a replication object, so we need to create one
+    # a replication is an object to track replication parameters
+    if to_mission_or_replication.is_a?(Replication)
+      replication = to_mission_or_replication
+    else
+      replication = Replication.new(:src_obj => self, :to_mission => to_mission_or_replication)
+    end
 
     # wrap in transaction if this is the first call
-    return transaction { replicate(to_mission, options.merge(:in_transaction => true), copy_parents, parent_assoc) } unless options[:in_transaction]
+    return replication.redo_in_transaction unless replication.in_transaction?
 
-    # default to current mission if not specified
-    to_mission ||= mission if respond_to?(:mission)
+    # do logging after redo_in_transaction so we don't get duplication
+    Rails.logger.debug(replication.to_s) if self.class.log_replication?
 
-    # determine whether deep or shallow, unless already set
-    # by default, we do a deep copy iff we're copying to a different mission
-    options[:deep_copy] = mission != to_mission if options[:deep_copy].nil?
-
-    # copy's immediate parent is just copy_parents.last
-    copy_parent = copy_parents.last
-
-    # if we're on a recursive step AND we're doing a shallow copy AND this is not a join class, just return self
-    if options[:recursed] && !options[:deep_copy] && !%w(Optioning Questioning Condition).include?(self.class.name)
-      add_copy_to_parent(self, copy_parents, parent_assoc)
+    # if we're on a recursive step AND we're doing a shallow copy AND this is not a join class, 
+    # we don't need to do any recursive copying, so just return self
+    if replication.recursed? && replication.shallow_copy? && !JOIN_CLASSES.include?(self.class.name)
+      add_replication_dest_obj_to_parents_assocation(replication, self)
       return self
     end
 
-    # if this is a standard object AND we're copying to a mission AND there exists a copy in the given mission,
-    # then we don't need to create a new object
-    if is_standard? && !to_mission.nil? && (c = copy_for_mission(to_mission))
-      copy = c
-    else
-      # init the copy
-      copy = self.class.new
-    end
+    # if we get this far we DO need to do recursive copying
+    # get the obj to copy stuff to, and also tell the replication object about it
+    replication.dest_obj = dest_obj = setup_replication_destination_obj(replication)
 
-    # set the recursed flag in the options so we will know what to do with deep copying
-    options[:recursed] = true
+    # set the proper mission ID if applicable
+    dest_obj.mission_id = replication.to_mission.try(:id)
 
-    # puts "--------"
-    # puts "class:" + self.class.name
-    # puts "deep:" + options[:deep_copy].inspect
-    # puts "recursing:" + options[:recursed].inspect
-    # puts "copy parents:"
-    # copy_parents.each{|p| puts p.inspect}
+    # copy attributes from src to parent
+    attribs_to_copy_in_replication.each{|k,v| dest_obj.send("#{k}=", v)}
 
-    # set the proper mission if applicable
-    copy.mission_id = to_mission.try(:id)
-
-    # determine appropriate attribs to copy
-    dont_copy = %w(id created_at updated_at mission_id mission is_standard standard_id standard) + self.class.replication_options[:dont_copy]
-
-    # don't copy foreign key field of belongs_to associations
-    self.class.replication_options[:assocs].each do |assoc|
-      refl = self.class.reflect_on_association(assoc)
-      dont_copy << refl.foreign_key if refl.macro == :belongs_to
-    end
-
-    # don't copy foreign key field of parent's has_* association, if applicable
-    if self.class.replication_options[:parent]
-      dont_copy << self.class.replication_options[:parent].to_s + '_id'
-    end
-
-    # copy attribs
-    attribs_to_copy = attributes.except(*dont_copy)
-    attribs_to_copy.each{|k,v| copy.send("#{k}=", v)}
-
-    # if uniqueness property is set, make sure the specified field is unique
-    if params = self.class.replication_options[:uniqueness]
-      copy.send("#{params[:field]}=", self.ensure_unique(params.merge(:mission => to_mission, :dest_obj => copy)))
-    end
+    # ensure uniqueness params are respected
+    ensure_uniqueness_when_replicating(replication)
 
     # call a callback if requested
-    if self.class.replication_options[:after_copy_attribs]
-      self.send(self.class.replication_options[:after_copy_attribs], copy, copy_parents)
-    end
+    self.send(replicable_opts(:after_copy_attribs), replication) if replicable_opts(:after_copy_attribs)
 
-    # add to parent before recursive step
-    add_copy_to_parent(copy, copy_parents, parent_assoc)
+    # add dest_obj to its parent's assoc before recursive step so that children can access it
+    add_replication_dest_obj_to_parents_assocation(replication)
 
-    # if this is a standard obj, add to copies if not there already
-    copies << copy if is_standard? && !copies.include?(copy)
+    # if this is a standard obj, add the newly replicated dest obj to the list of copies
+    # unless it is there already
+    add_copy(dest_obj) if is_standard?
 
-    # add the new copy to the list of copy parents
-    copy_parents = copy_parents + [copy]
+    replicate_child_associations(replication)
 
-    # replicate associations
-    self.class.replication_options[:assocs].each do |assoc|
-      if self.class.reflect_on_association(assoc).collection?
-        # destroy any children in copy that don't exist in standard
-        std_child_ids = send(assoc).map(&:id)
-        copy.send(assoc).each do |o|
-          unless std_child_ids.include?(o.standard_id)
-            copy.changing_in_replication = true
-            copy.send(assoc).destroy(o) 
-          end
-        end
+    dest_obj.save!
 
-        # replicate the existing children
-        send(assoc).each{|o| o.replicate(to_mission, options, copy_parents, assoc)}
-      else
-
-        # if orig assoc is nil, make sure copy is also
-        if send(assoc).nil?
-          if !copy.send(assoc).nil?
-            copy.changing_in_replication = true
-            copy.send(assoc).destroy
-          end
-        # else replicate
-        else
-          send(assoc).replicate(to_mission, options, copy_parents, assoc)
-        end
-      end
-    end
-
-    # set flag so that standardizable callback doesn't call replicate again unnecessarily
-    copy.changing_in_replication = true
-    copy.save!
-
-    return copy
-  end
-
-  def replicate_destruction(to_mission)
-    if c = copy_for_mission(to_mission)
-      c.destroy
-    end
-  end
-
-  def replication_parent_class
-    p = self.class.replication_options[:parent]
-    p ? p.classify.constantize : nil
-  end
-
-  # adds the specified object to the parent object
-  # we do it this way so that links between parent and children objects
-  # are established during recursion instead of all at the end
-  # this is because some child objects (e.g. conditions) need access to their parents
-  def add_copy_to_parent(copy, copy_parents, parent_assoc)
-    # trivial case
-    return if copy_parents.empty?
-
-    # get immediate parent and reflect on association
-    parent = copy_parents.last
-    refl = parent.class.reflect_on_association(parent_assoc)
-    
-    # associate object with parent using appropriate method depending on assoc type
-    if refl.collection?
-      if parent.send(parent_assoc).include?(copy)
-      else
-        parent.send(parent_assoc).send('<<', copy)
-      end
-    else
-      parent.send("#{parent_assoc}=", copy)
-    end
+    return dest_obj
   end
 
   # ensures the given name or other field would be unique, and generates a new name if it wouldnt be
@@ -172,7 +92,7 @@ module Replicable
   # params[:dest_obj] - the object to which the name will be applied in the specified mission
   # params[:field] - the field to operate on
   # params[:style] - the style to adhere to in generating the unique value (:sep_words or :camel_case)
-  def ensure_unique(params)
+  def generate_unique_field_value(params)
     
     # extract any numeric suffix from existing value
     if params[:style] == :sep_words
@@ -187,20 +107,27 @@ module Replicable
     # build a relation to get existing objs
     existing = self.class.for_mission(params[:mission])
 
-    # if the dest_obj has an ID, be sure to exclude that when looking for conflicting objects
+    # if the dest_obj has an ID (is not a new record), 
+    # be sure to exclude that when looking for conflicting objects
     existing = existing.where('id != ?', params[:dest_obj]) unless params[:dest_obj].new_record?
 
-    # get all existing copy numbers
+    # get the number suffixes of all existing objects
+    # e.g. if there are My Form, Other Form, My Form 4, My Form 3, TheForm return [1, 4, 3]
     existing_nums = existing.map do |obj|
-      found_exact = true if obj.send(params[:field]).downcase.strip == send(params[:field]).downcase.strip
 
+      # for the current match, check if it's an exact match and take note
+      if obj.send(params[:field]).downcase.strip == send(params[:field]).downcase.strip
+        found_exact = true 
+      end
+
+      # check if the current existing object's name matches the name we're looking for
       if params[:style] == :sep_words
         m = obj.send(params[:field]).match(/^#{prefix}\s*( (\d+))?\s*$/i)
       else
         m = obj.send(params[:field]).match(/^#{prefix}((\d+))?\s*$/i)
       end
 
-      # if there was no match, return nil
+      # if there was no match, return nil (this will be compacted out of the array at the end)
       if m.nil?
         nil
       
@@ -215,21 +142,174 @@ module Replicable
       end
     end.compact
 
-    # if we didn't find the exact match or any prefix matches, then no need to add number
+    # if we didn't find the exact match or any prefix matches, then no need to add any new suffix
+    # just return the name as is
     return send(params[:field]) if existing_nums.empty? || !found_exact
 
     # copy num is max of existing plus 1
     copy_num = existing_nums.max + 1
     
-    # number string is empty string if 1, else the number plus space
+    # suffix string depends on style
     if params[:style] == :sep_words
       suffix = " #{copy_num}"
     else
       suffix = copy_num.to_s
     end
     
-    # now build the new value
+    # now build the new value and return
     "#{prefix}#{suffix}"
   end
+
+  # convenience method for replication options
+  def replicable_opts(key)
+    self.class.replication_options[key]
+  end
+
+  # returns a string representation used for debugging
+  def to_s
+    pieces = []
+    pieces << self.class.name
+    pieces << "id:##{id.inspect}"
+    pieces << "standardized:" + (is_standard? ? 'standard' : (standard_id.nil? ? 'no' : "copy-of-#{standard_id}"))
+    pieces << "mission:#{mission_id.inspect}"
+    pieces.join(', ')
+  end
+
+  private
+
+    # gets the object to which the replication operation will copy attributes, etc.
+    # may be a new object or an existing one depending on parameters
+    def setup_replication_destination_obj(replication)
+      # if this is a standard object AND we're copying to a mission AND there exists a copy of this obj in the given mission,
+      # then we don't need to create a new object, so return the existing copy
+      if is_standard? && replication.has_to_mission? && (copy = copy_for_mission(replication.to_mission))
+        obj = copy
+      else
+        # otherwise, we init and return the new object
+        obj = self.class.new
+      end
+
+      # set flag so that standardizable callback doesn't call replicate again unnecessarily
+      obj.changing_in_replication = true
+
+      obj
+    end
+
+    # gets a hash of attributes of this object that should be copied to the dest obj
+    # in the current replication operation. this is surprisingly intricate
+    def attribs_to_copy_in_replication
+      # start with the initial, constant set
+      dont_copy = ATTRIBS_NOT_TO_COPY
+
+      # add the ones that are specified explicitly in the replicable options
+      dont_copy += replicable_opts(:dont_copy)
+
+      # don't copy foreign key field of belongs_to associations
+      replicable_opts(:child_assocs).each do |assoc|
+        refl = self.class.reflect_on_association(assoc)
+        dont_copy << refl.foreign_key if refl.macro == :belongs_to
+      end
+
+      # don't copy foreign key field of parent's has_* association, if applicable
+      if replicable_opts(:parent_assoc)
+        dont_copy << replicable_opts(:parent_assoc).to_s + '_id'
+      end
+
+      # get hash and return
+      attributes.except(*dont_copy)
+    end
+
+    # ensures the uniqueness replicable option is respected
+    def ensure_uniqueness_when_replicating(replication)
+      # if uniqueness property is set, make sure the specified field is unique
+      if params = replicable_opts(:uniqueness)
+        # setup the params for the call to the generate_unique_field_value method
+        params = params.merge(:mission => replication.to_mission, :dest_obj => replication.dest_obj)
+
+        # get a unique field value (e.g. name) for the dest_obj (may be the same as the source object's value)
+        unique_field_val = generate_unique_field_value(params)
+
+        # set the value on the dest_obj
+        replication.dest_obj.send("#{params[:field]}=", unique_field_val)
+      end
+    end
+
+    # adds the specified object to the applicable parent object's association
+    # we do it this way so that links between parent and children objects
+    # are established during recursion instead of all at the end
+    # this is because some child objects (e.g. conditions) need access to their parents
+    def add_replication_dest_obj_to_parents_assocation(replication, dest_obj = nil)
+      # trivial case
+      return unless replication.has_ancestors?
+
+      # get dest obj from replication unless specified explicitly
+      dest_obj ||= replication.dest_obj
+
+      # get immediate parent and reflect on association
+      refl = replication.parent.class.reflect_on_association(replication.current_assoc)
+      
+      # associate object with parent using appropriate method depending on assoc type
+      if refl.collection?
+        # only copy if not already there
+        unless replication.parent.send(replication.current_assoc).include?(dest_obj)
+          replication.parent.send(replication.current_assoc).send('<<', dest_obj)
+        end
+      else
+        replication.parent.send("#{replication.current_assoc}=", dest_obj)
+      end
+    end
+
+    # replicates all child associations
+    def replicate_child_associations(replication)
+      # loop over each assoc and call appropriate method
+      replicable_opts(:child_assocs).each do |assoc|
+        if self.class.reflect_on_association(assoc).collection?
+          replicate_collection_association(assoc, replication)
+        else
+          replicate_non_collection_association(assoc, replication)
+        end
+      end
+    end
+
+    # replicates a collection-type association
+    # by destroying any children on the dest obj that arent on the src obj
+    # and then replicating the existing children of the src obj to the dest obj
+    def replicate_collection_association(assoc_name, replication)
+      # destroy any children in dest obj that don't exist source obj
+      src_child_ids = send(assoc_name).map(&:id)
+      replication.dest_obj.send(assoc_name).each do |o|
+        unless src_child_ids.include?(o.standard_id)
+          Rails.logger.debug("DESTROYING CHILD")
+          replication.dest_obj.send(assoc_name).destroy(o) 
+        end
+      end
+
+      # replicate the existing children
+      send(assoc_name).each{|o| replicate_child(o, assoc_name, replication)}
+    end
+
+    # replicates a non-collection-type association (e.g. belongs_to)
+    def replicate_non_collection_association(assoc_name, replication)
+      # if orig assoc is nil, make sure copy is also
+      if send(assoc_name).nil?
+        unless replication.dest_obj.send(assoc_name).nil?
+          replication.dest_obj.send(assoc_name).destroy
+          replication.dest_obj.send("assoc_name=", nil)
+        end
+      # else replicate the single child
+      else
+        replicate_child(send(assoc_name), assoc_name, replication)
+      end
+    end
+
+    # calls replicate on an individual child object, generating a new set of replication params 
+    # for this particular replicate call
+    def replicate_child(child, assoc_name, replication)
+      # build new replication param obj for child
+      new_replication = replication.clone_for_recursion(child, assoc_name)
+
+      # call replicate for the child object
+      child.replicate(new_replication)
+    end
 
 end

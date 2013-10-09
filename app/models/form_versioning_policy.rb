@@ -81,6 +81,9 @@ class FormVersioningPolicy
     forms_to_upgrade = check(obj, action).collect{|trigger| trigger[:forms]}.flatten.uniq
     
     # flag them
-    forms_to_upgrade.each{|f| f.flag_for_upgrade!}
+    forms_to_upgrade.each do |f| 
+      raise "standard forms should not be subject to version policy" if f.is_standard?
+      f.flag_for_upgrade!
+    end
   end
 end
