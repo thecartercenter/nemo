@@ -56,7 +56,7 @@ class OptionSetsController < ApplicationController
 
   def destroy
     destroy_and_handle_errors(@option_set)
-    redirect_to(index_path)
+    redirect_to(index_url)
   end
 
   private

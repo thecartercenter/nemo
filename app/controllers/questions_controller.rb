@@ -35,7 +35,7 @@ class QuestionsController < ApplicationController
   
   def destroy
     destroy_and_handle_errors(@question)
-    redirect_to(index_path)
+    redirect_to(index_url)
   end
   
   private
