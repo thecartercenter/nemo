@@ -397,12 +397,20 @@ class ApplicationController < ActionController::Base
     # gets the url to an index action, ensuring the appropriate page is returned to
     # ctlr - the controller whose index should be used. defaults to current controller
     def index_url_with_page_num(ctlr = nil)
-      url_for(:controller => ctlr || controller_name, :action => :index)
+      last_page = session[:last_page_numbers][last_page_number_hash_key]
+      url_for(:controller => ctlr || controller_name, :action => :index, :page => last_page)
     end
 
-    # remembers the last visited page number for each controller
+    # remembers the last visited page number for each controller and mission
     def remember_page_number
-      session[:last_page_numbers] ||= {}
-      session[:last_page_numbers][controller_name.to_sym] = params[:page] || 1
+      if params[:page]
+        session[:last_page_numbers] ||= {}
+        session[:last_page_numbers][last_page_number_hash_key] = params[:page]
+      end
+    end
+
+    # builds a simple hash key for remembering page numbers
+    def last_page_number_hash_key
+      controller_name + current_mission.try(:id).to_s
     end
 end
