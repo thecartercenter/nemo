@@ -192,12 +192,6 @@ class ApplicationController < ActionController::Base
       @model_class ||= controller_name.classify.constantize
     end
 
-    # gets the path to an index action, ensuring the appropriate page is returned to
-    # ctlr - the controller whose index should be used. defaults to current controller
-    def index_path(ctlr = nil)
-      url_for(:controller => ctlr || controller_name, :action => :index)
-    end
-
     ##############################################################################
     # AUTHENTICATION AND USER SESSION METHODS
     ##############################################################################
@@ -382,8 +376,8 @@ class ApplicationController < ActionController::Base
     
     # sets a success message and redirects
     def set_success_and_redirect(obj, options = {})
-      # redirect to index by default
-      options[:to] ||= :index
+      # redirect to index_path by default
+      options[:to] ||= index_path
 
       # if we're redirecting to index, save the object id in the flash
       flash[:modified_obj_id] = obj.id if options[:to] == :index
@@ -396,4 +390,11 @@ class ApplicationController < ActionController::Base
       # do the redirect
       redirect_to(options[:to])
     end
+
+    # gets the path to an index action, ensuring the appropriate page is returned to
+    # ctlr - the controller whose index should be used. defaults to current controller
+    def index_path(ctlr = nil)
+      url_for(:controller => ctlr || controller_name, :action => :index)
+    end
+
 end

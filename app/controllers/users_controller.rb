@@ -76,7 +76,7 @@ class UsersController < ApplicationController
   
   def destroy
     destroy_and_handle_errors(@user)
-    redirect_to(:action => :index)
+    redirect_to(index_path)
   end
   
   # shows printable login instructions for the user
@@ -110,7 +110,7 @@ class UsersController < ApplicationController
         flash[:password] = @user.password
         redirect_to(:action => :login_instructions, :id => @user.id)
       else
-        redirect_to(:action => :index)
+        redirect_to(index_path)
       end
     end
     
