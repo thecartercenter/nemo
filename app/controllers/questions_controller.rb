@@ -35,7 +35,7 @@ class QuestionsController < ApplicationController
   
   def destroy
     destroy_and_handle_errors(@question)
-    redirect_to(:action => :index)
+    redirect_to(index_path)
   end
   
   private

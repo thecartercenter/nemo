@@ -53,7 +53,7 @@ class ApplicationController < ActionController::Base
   attr_reader :current_user, :current_mission
   
   # make these methods visible in the view
-  helper_method :current_user, :current_mission, :accessible_missions, :ajax_request?, :admin_mode?
+  helper_method :current_user, :current_mission, :accessible_missions, :ajax_request?, :admin_mode?, :index_path
   
   # hackish way of getting the route key identical to what would be returned by model_name.route_key on a model
   def route_key
@@ -190,6 +190,12 @@ class ApplicationController < ActionController::Base
     # not always appropriate
     def model_class
       @model_class ||= controller_name.classify.constantize
+    end
+
+    # gets the path to an index action, ensuring the appropriate page is returned to
+    # ctlr - the controller whose index should be used. defaults to current controller
+    def index_path(ctlr = nil)
+      url_for(:controller => ctlr || controller_name, :action => :index)
     end
 
     ##############################################################################

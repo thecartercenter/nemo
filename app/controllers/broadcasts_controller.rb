@@ -12,6 +12,8 @@ class BroadcastsController < ApplicationController
   
   def new
     flash[:success] = t("broadcast.instructions")
+
+    # redirect to the users index, but don't worry about preserving the page number
     redirect_to(users_path)
   end
   
