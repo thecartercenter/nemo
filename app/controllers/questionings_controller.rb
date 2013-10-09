@@ -29,9 +29,11 @@ class QuestioningsController < ApplicationController
     # this prevents an empty condition from getting initialized and then deleted again
     params[:questioning].delete(:condition_attributes) if params[:questioning][:condition_attributes][:ref_qing_id].blank? && !@questioning.condition
 
-    # assign attributes first, then check auth
+    # assign attribs and validate now so that normalization runs before authorizing and saving
     @questioning.assign_attributes(params[:questioning])
+    @questioning.valid?
 
+    # authorize special abilities
     authorize!(:update_core, @questioning) if @questioning.core_changed?
     authorize!(:update_core, @questioning.question) if @questioning.question.core_changed?
 

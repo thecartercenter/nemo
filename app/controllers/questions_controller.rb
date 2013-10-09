@@ -28,8 +28,13 @@ class QuestionsController < ApplicationController
   end
   
   def update
+    # assign attribs and validate now so that normalization runs before authorizing and saving
     @question.assign_attributes(params[:question])
+    @question.valid?
+
+    # authorize special abilities
     authorize!(:update_core, @question) if @question.core_changed?
+
     create_or_update
   end
   

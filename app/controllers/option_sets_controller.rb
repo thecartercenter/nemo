@@ -43,9 +43,11 @@ class OptionSetsController < ApplicationController
   end
   
   def update
+    # assign attribs and validate now so that normalization runs before authorizing and saving
     @option_set.assign_attributes(params[:option_set])
+    @option_set.valid?
 
-    # do auth checks just in case
+    # authorize special abilities
     authorize!(:update_core, @option_set) if @option_set.core_changed?
     authorize!(:add_options, @option_set) if @option_set.options_added?
     authorize!(:remove_options, @option_set) if @option_set.options_removed?
