@@ -55,23 +55,13 @@
       <%= will_paginate(objects) if paginated %>
     <% end %>
     
-    <%# create js view model for index table %>
+    <%# create js view model for index table, only necessary if there are some objects %>
     <%= javascript_doc_ready do %>
       new ELMO.Views.IndexTable({
         class_name: <%= objects.first.class.name.underscore.to_json.html_safe %>,
-        modified_obj_id: <%= flash[:modified_obj_id].to_json.html_safe %>
+        modified_obj_id: <%= flash[:modified_obj_id].to_json.html_safe %>,
+        no_whole_row_link: <%= options[:no_whole_row_link].to_json.html_safe %>
       });
-    <% end %>
-
-    <%# hookup whole-row link %>
-    <% unless options[:no_whole_row_link] %>
-      <%= javascript_doc_ready do %>
-        $('table.index_table tbody').on('click', 'tr', function(e) {
-          // go to the tr's href if the click was on a non-active element
-          if (e.target.tagName == 'DIV' || e.target.tagName == 'TD')
-            window.location.href = $(e.currentTarget).data('href'); 
-        });
-      <% end %>
     <% end %>
   <% end %>
 </div>
