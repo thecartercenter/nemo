@@ -23,7 +23,7 @@ class PasswordResetTest < ActionDispatch::IntegrationTest
     follow_redirect!
   end
 
-  test "password reset generated in admin mode should generate correct url" do
+  test "password reset generated in admin mode should generate correct email" do
     @admin = FactoryGirl.create(:user, :admin => true)
     login(@admin)
 
@@ -44,9 +44,16 @@ class PasswordResetTest < ActionDispatch::IntegrationTest
 
     # make sure url is correct
     # first get the url
-    url = ActionMailer::Base.deliveries.first.body.match(/http:.+\/edit/).to_s
+    email = ActionMailer::Base.deliveries.first
+    url = email.body.match(/http:.+\/edit/).to_s
 
-    # now ensure no /admin/ chunk
+    # make sure we actually found it
+    assert_match(/^http/, url)
+
+    # ensure no /admin/ chunk in email
     assert_not_match("/admin/", url)
+
+    # ensure no missing translations
+    assert_not_match(/translation_missing/, email.body.to_s)
   end
 end
