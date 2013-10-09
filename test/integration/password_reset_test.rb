@@ -22,4 +22,31 @@ class PasswordResetTest < ActionDispatch::IntegrationTest
     assert_redirected_to(login_url)
     follow_redirect!
   end
+
+  test "password reset generated in admin mode should generate correct url" do
+    @admin = FactoryGirl.create(:user, :admin => true)
+    login(@admin)
+
+    # make sure email gets sent
+    assert_difference('ActionMailer::Base.deliveries.size', +1) do
+      # create a new user, sending password instr to email
+      post(users_path(:admin_mode => 'admin'), "user"=>{
+        "name"=>"Alberto Ooooh", 
+        "login"=>"aooooh", 
+        "email"=>"foo@example.com", 
+        "assignments_attributes"=>{"1"=>{"id"=>"", "_destroy"=>"false", "mission_id"=>get_mission.id, "role"=>"observer", "active"=>"1"}},
+        "reset_password_method"=>"email"
+      })
+      assert_redirected_to(users_path(:admin_mode => 'admin'))
+      follow_redirect!
+      assert_response(:success)
+    end
+
+    # make sure url is correct
+    # first get the url
+    url = ActionMailer::Base.deliveries.first.body.match(/http:.+\/edit/).to_s
+
+    # now ensure no /admin/ chunk
+    assert_not_match("/admin/", url)
+  end
 end
