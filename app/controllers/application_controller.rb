@@ -46,6 +46,9 @@ class ApplicationController < ActionController::Base
   # protect admin mode
   before_filter(:protect_admin_mode)
   
+  # store index page numbers if this is an index action
+  before_filter(:remember_page_number, :only => :index)
+
   # lastly, we load settings
   before_filter(:load_settings)
   
@@ -397,4 +400,9 @@ class ApplicationController < ActionController::Base
       url_for(:controller => ctlr || controller_name, :action => :index)
     end
 
+    # remembers the last visited page number for each controller
+    def remember_page_number
+      session[:last_page_numbers] ||= {}
+      session[:last_page_numbers][controller_name.to_sym] = params[:page] || 1
+    end
 end
