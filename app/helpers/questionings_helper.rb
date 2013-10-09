@@ -32,6 +32,11 @@ module QuestioningsHelper
     if qings.size > 0 && qings.first.form.smsable? && qings.first.form.published? && !admin_mode?
       links << link_to(t("form.view_sms_guide"), form_path(qings.first.form, :sms_guide => 1))
     end
+
+    # add the sms test console link if appropriate
+    if qings.size > 0 && qings.first.form.smsable? && !admin_mode? && can?(:create, Sms::Test)
+      links << link_to(t("page_titles.sms_tests.all"), new_sms_test_path)
+    end
     
     # return the array of links we built
     links
