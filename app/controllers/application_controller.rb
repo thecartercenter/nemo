@@ -382,8 +382,8 @@ class ApplicationController < ActionController::Base
       # redirect to index_url_with_page_num by default
       options[:to] ||= index_url_with_page_num
 
-      # if we're redirecting to index, save the object id in the flash
-      flash[:modified_obj_id] = obj.id if options[:to] == :index
+      # save the object id in the flash in case the view wants to have some fun with it
+      flash[:modified_obj_id] = obj.id
       
       # if options[:to] is a symbol, we really mean :action => xxx
       options[:to] = {:action => options[:to]} if options[:to].is_a?(Symbol)
