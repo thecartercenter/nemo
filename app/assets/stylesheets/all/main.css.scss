@@ -80,6 +80,7 @@ table.index_table th, table.form th { text-align: left; color: #444; background-
 table.index_table td { border-bottom: 1px solid #ddd; padding: 6px 10px 6px 3px; }
 table.index_table td.actions_col img { margin-right: 5px; }
 table.index_table tbody tr { cursor: pointer; }
+table.index_table tbody tr:hover { background-color: #f4f4ff; }
 td.actions_col { white-space: nowrap; }
 div.loading_indicator_inline { width: 16px; display: inline; }
 div.loading_indicator_floating { width: 16px; float: left; }
