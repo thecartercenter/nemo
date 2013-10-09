@@ -44,4 +44,26 @@ class QuestionTest < ActiveSupport::TestCase
     q = FactoryGirl.create(:question, :qtype_name => 'integer', :code => 'intq')
     assert_nil(q.options)
   end
+
+  test "integer question should have non-null minstrictly value if minimum is set" do
+    q = FactoryGirl.create(:question, :qtype_name => 'integer', :minimum => 4, :minstrictly => nil)
+    assert_equal(false, q.minstrictly)
+    q = FactoryGirl.create(:question, :qtype_name => 'integer', :minimum => 4, :minstrictly => false)
+    assert_equal(false, q.minstrictly)
+    q = FactoryGirl.create(:question, :qtype_name => 'integer', :minimum => 4, :minstrictly => true)
+    assert_equal(true, q.minstrictly)
+  end
+
+  test "integer question should have null minstrictly value if minimum is null" do
+    q = FactoryGirl.create(:question, :qtype_name => 'integer', :minimum => nil, :minstrictly => true)
+    assert_nil(q.minstrictly)
+    q = FactoryGirl.create(:question, :qtype_name => 'integer', :minimum => nil, :minstrictly => false)
+    assert_nil(q.minstrictly)
+  end
+
+  test "non numeric questions should have null constraint values" do
+    q = FactoryGirl.create(:question, :qtype_name => 'text', :minimum => 5, :minstrictly => true)
+    assert_nil(q.minimum)
+    assert_nil(q.minstrictly)
+  end
 end

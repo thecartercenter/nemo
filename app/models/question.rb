@@ -187,7 +187,29 @@ class Question < ActiveRecord::Base
     end
 
     def normalize_fields
+      # clear whitespace from code
       self.code = code.strip
+
+      normalize_constraint_values
+
       return true
+    end
+
+    # normalizes constraints based on question type
+    def normalize_constraint_values
+      # constraint should be nil/non-nil depending on qtype
+      if qtype.numeric?
+        # for numeric qtype, min/max can still be nil, and booleans should be nil if min/max are nil, else should be false
+        self.minstrictly = false if !minimum.nil? && minstrictly.nil?
+        self.maxstrictly = false if !maximum.nil? && maxstrictly.nil?
+        self.minstrictly = nil if minimum.nil?
+        self.maxstrictly = nil if maximum.nil?
+      else
+        # for non-numeric qtype, all constraint fields should be nil
+        self.minimum = nil
+        self.maximum = nil
+        self.minstrictly = nil
+        self.maxstrictly = nil
+      end
     end
 end
