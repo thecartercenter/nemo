@@ -7,6 +7,9 @@ module Replicable
   # an initial list of attributes that we don't want to copy from the src_obj to the dest_obj
   ATTRIBS_NOT_TO_COPY = %w(id created_at updated_at mission_id mission is_standard standard_id standard)
 
+  # whether to print verbose info to Rails log
+  LOG_REPLICATION = true
+
   included do
     # dsl-style method for setting options from base class
     def self.replicable(options = {})
@@ -34,9 +37,12 @@ module Replicable
     else
       replication = Replication.new(:src_obj => self, :to_mission => to_mission_or_replication)
     end
-    
+
     # wrap in transaction if this is the first call
     return replication.redo_in_transaction unless replication.in_transaction?
+
+    # do logging after redo_in_transaction so we don't get duplication
+    Rails.logger.debug(replication.to_s) if LOG_REPLICATION
 
     # if we're on a recursive step AND we're doing a shallow copy AND this is not a join class, 
     # we don't need to do any recursive copying, so just return self
@@ -152,6 +158,16 @@ module Replicable
   # convenience method for replication options
   def replicable_opts(key)
     self.class.replication_options[key]
+  end
+
+  # returns a string representation used for debugging
+  def to_s
+    pieces = []
+    pieces << self.class.name
+    pieces << "id:##{id.inspect}"
+    pieces << "standardized:" + (is_standard? ? 'standard' : (standard_id.nil? ? 'no' : "copy-of-#{standard_id}"))
+    pieces << "mission:#{mission_id.inspect}"
+    pieces.join(', ')
   end
 
   private

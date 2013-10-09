@@ -32,6 +32,11 @@ class Mission < ActiveRecord::Base
     to_check = [:assignments, :responses, :forms, :report_reports, :questions, :broadcasts]
     to_check.each{|a| raise DeletionError.new(:cant_delete_if_assoc) unless self.send(a).empty?}
   end
+
+  # returns a string representation used for debugging
+  def to_s
+    "#{id}(#{compact_name})"
+  end
   
   private
     def create_compact_name

@@ -1,7 +1,8 @@
 # models a recursive replication operation
 # holds all internal parameters used during the operation
 class Replication
-  attr_accessor :to_mission, :parent_assoc, :in_transaction, :current_assoc, :ancestors, :deep_copy, :recursed, :dest_obj
+  attr_accessor :to_mission, :parent_assoc, :in_transaction, :current_assoc, :ancestors, :deep_copy, 
+    :recursed, :src_obj, :dest_obj
 
   def initialize(params)
     # copy all params
@@ -87,5 +88,14 @@ class Replication
 
   def recursed?
     recursed
+  end
+
+  # returns a string representation used for logging
+  def to_s
+    lines = []
+    lines << "***** REPLICATING *******************************************************************"
+    lines << "Source obj:   #{src_obj}"
+    lines << "Dest mission: #{to_mission}"
+    lines.join("\n")
   end
 end

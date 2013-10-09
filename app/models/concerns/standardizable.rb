@@ -67,11 +67,21 @@ module Standardizable
 
   private
     
+    # replicates the current object (if standard) to each of its copies to ensure any changes are propagated
     def rereplicate_to_copies
+      return unless is_standard?
+
       # don't replicate changes arising from the replication process itself, as this leads to an infinite loop
       if changing_in_replication
         changing_in_replication = false
       else
+        if Replicable::LOG_REPLICATION
+          lines = []
+          lines << "***** RE-REPLICATING TO COPIES AFTER SAVING STANDARD ***********************************"
+          lines << "Source obj: #{self}"
+          Rails.logger.debug(lines.join("\n"))
+        end
+
         # we only need to rereplicate on certain classes
         # can't really remember why :(
         if CLASSES_TO_REREPLICATE.include?(self.class.name)
@@ -84,6 +94,15 @@ module Standardizable
 
     # destroys all copies of this standard object
     def destroy_copies
+      return unless is_standard?
+
+      if Replicable::LOG_REPLICATION
+        lines = []
+        lines << "***** DESTROYING COPIES BEFORE DESTROYING STANDARD ***************************************"
+        lines << "Source obj:   #{self}"
+        Rails.logger.debug(lines.join("\n"))
+      end
+
       copies(true).each{|c| c.destroy}
       return true
     end
