@@ -14,7 +14,7 @@ class BroadcastsController < ApplicationController
     flash[:success] = t("broadcast.instructions")
 
     # redirect to the users index, but don't worry about preserving the page number
-    redirect_to(users_path)
+    redirect_to(users_url)
   end
   
   # Displays a new broadcast form with the given recipients.
@@ -56,7 +56,7 @@ class BroadcastsController < ApplicationController
       else
         flash[:success] = t("broadcast.send_success")
       end
-      redirect_to(broadcast_path(@broadcast))
+      redirect_to(broadcast_url(@broadcast))
     else
       render(:form)
     end

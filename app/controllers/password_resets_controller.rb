@@ -20,7 +20,7 @@ class PasswordResetsController < ApplicationController
     if @user  
       @user.deliver_password_reset_instructions!  
       flash[:success] = t("password_reset.check_email")
-      redirect_to(login_path)
+      redirect_to(login_url)
     else  
       flash[:error] = t("password_reset.user_not_found")
       redirect_to(:action => :new)

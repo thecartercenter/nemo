@@ -27,11 +27,11 @@ class ApplicationController < ActionController::Base
       if Ability::CRUD.include?(exception.action) && current_user.can?(:index, exception.subject.class)
         redirect_to :controller => controller_name, :action => :index
       else
-        redirect_to root_path
+        redirect_to root_url
       end
     # else redirect to welcome page with error
     else
-      redirect_to root_path, :flash => { :error => exception.message }
+      redirect_to root_url, :flash => { :error => exception.message }
     end
   end
   
@@ -303,7 +303,7 @@ class ApplicationController < ActionController::Base
       if @user_session.user.current_mission.nil? && !@user_session.user.admin?
         flash[:error] = t("activerecord.errors.models.user.no_missions")
         @user_session.destroy
-        redirect_to(login_path)
+        redirect_to(login_url)
         return false
       end
       
@@ -323,7 +323,7 @@ class ApplicationController < ActionController::Base
         render(:text => "LOGIN_REQUIRED", :status => 401)
       else
         store_location
-        redirect_to(login_path)
+        redirect_to(login_url)
       end
     end
     

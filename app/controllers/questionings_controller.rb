@@ -44,7 +44,7 @@ class QuestioningsController < ApplicationController
 
   def destroy
     destroy_and_handle_errors(@questioning)
-    redirect_to(edit_form_path(@questioning.form))
+    redirect_to(edit_form_url(@questioning.form))
   end
   
   private

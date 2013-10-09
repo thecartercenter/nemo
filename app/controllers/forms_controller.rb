@@ -154,7 +154,7 @@ class FormsController < ApplicationController
     end
     
     # redirect to form edit
-    redirect_to(edit_form_path(@form))
+    redirect_to(edit_form_url(@form))
   end
   
   # removes selected questions from the form
@@ -169,7 +169,7 @@ class FormsController < ApplicationController
       flash[:error] = t("form.#{$!}")
     end
     # redirect to form edit
-    redirect_to(edit_form_path(@form))
+    redirect_to(edit_form_url(@form))
   end
   
   # makes an unpublished copy of the form that can be edited without affecting the original

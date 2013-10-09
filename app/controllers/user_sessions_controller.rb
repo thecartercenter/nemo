@@ -33,7 +33,7 @@ class UserSessionsController < ApplicationController
   
   def destroy
     forget_location
-    redirect_to(logged_out_path)
+    redirect_to(logged_out_url)
   end
   
   # shows a simple 'you are logged out' page
