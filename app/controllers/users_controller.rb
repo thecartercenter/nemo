@@ -45,9 +45,9 @@ class UsersController < ApplicationController
       new_mission = params[:user][:current_mission_id].blank? ? nil : Mission.find(params[:user][:current_mission_id])
       @user.change_mission!(new_mission)
 
-      # redirect back to the referrer, and set a flag
+      # redirect back to the referrer (stripping query string), and set a flag
       flash[:mission_changed] = true
-      redirect_to(request.referrer)
+      redirect_to(referrer_without_query_string)
     
     # otherwise this is a normal update
     else

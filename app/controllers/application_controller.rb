@@ -420,4 +420,10 @@ class ApplicationController < ActionController::Base
         nil
       end
     end
+
+    # gets the request's referrer without the query string
+    def referrer_without_query_string
+      ref = URI(request.referrer)
+      ref.to_s.gsub("?#{ref.query}", '')
+    end
 end
