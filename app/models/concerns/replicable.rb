@@ -22,6 +22,11 @@ module Replicable
     def self.replication_options
       class_variable_defined?('@@replication_options') ? class_variable_get('@@replication_options') : nil
     end
+
+    # only log replication if constant is set and env is dev or test
+    def self.log_replication?
+      LOG_REPLICATION && (Rails.env.test? || Rails.env.development?)
+    end
   end
 
   # creates a duplicate in this or another mission
@@ -42,7 +47,7 @@ module Replicable
     return replication.redo_in_transaction unless replication.in_transaction?
 
     # do logging after redo_in_transaction so we don't get duplication
-    Rails.logger.debug(replication.to_s) if LOG_REPLICATION
+    Rails.logger.debug(replication.to_s) if self.class.log_replication?
 
     # if we're on a recursive step AND we're doing a shallow copy AND this is not a join class, 
     # we don't need to do any recursive copying, so just return self

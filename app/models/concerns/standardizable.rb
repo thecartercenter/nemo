@@ -75,7 +75,7 @@ module Standardizable
       if changing_in_replication
         changing_in_replication = false
       else
-        if Replicable::LOG_REPLICATION
+        if self.class.log_replication?
           lines = []
           lines << "***** RE-REPLICATING TO COPIES AFTER SAVING STANDARD ***********************************"
           lines << "Source obj: #{self}"
@@ -96,7 +96,7 @@ module Standardizable
     def destroy_copies
       return unless is_standard?
 
-      if Replicable::LOG_REPLICATION
+      if self.class.log_replication?
         lines = []
         lines << "***** DESTROYING COPIES BEFORE DESTROYING STANDARD ***************************************"
         lines << "Source obj:   #{self}"
