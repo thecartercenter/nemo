@@ -43,7 +43,7 @@ class Sms::Adapters::IntelliSmsAdapter < Sms::Adapters::Adapter
     params['from'].gsub!(/^0+/, "")
 
     # create and return the message
-    [Sms::Message.create(:from => "+#{params['from']}", :body => params["text"], :sent_at => Time.zone.parse(params["sent"], :adapter_name => service_name))]
+    [Sms::Message.create(:from => "+#{params['from']}", :body => params["text"], :sent_at => Time.zone.parse(params["sent"]), :adapter_name => service_name)]
   end
   
   # check_balance returns the balance string
