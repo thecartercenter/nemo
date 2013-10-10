@@ -218,7 +218,7 @@ module Replicable
     def replicate_attributes(replication)
       # get the names of attribs NOT to copy
       skip = attribs_not_to_replicate(replication)
-
+      puts skip.inspect
       # hashify the list to avoid n^2 runtime
       skip = Hash[*skip.map{|a| [a,1]}.flatten]
 
@@ -231,7 +231,7 @@ module Replicable
       # get ref to dest obj
       dest_obj = replication.dest_obj
 
-      # if attribute is a hash, it gets special treatment
+      # if attribute is or was a hash, it gets special treatment
       if value.is_a?(Hash)
 
         # examine each member individually
@@ -286,16 +286,19 @@ module Replicable
         # otherwise, we need to check if value has deviated in dest obj
         unless replication.creating?
 
-          # if the attrib is a hash, it gets special treatment
-          if send(attrib).is_a?(Hash)
+          # if the src attrib is or was a hash, it gets special treatment
+          if send(attrib).is_a?(Hash) || send("#{attrib}_was").is_a?(Hash)
 
             # get refs, ensuring no nils
-            src_hash = send(attrib)
+            src_hash = send(attrib) || {}
             src_hash_was = send("#{attrib}_was") || {}
             dest_hash = replication.dest_obj.send(attrib) || {}
 
-            # loop over each member in src
-            src_hash.each do |k, v|
+            puts "src was:" + src_hash_was.inspect
+            puts "dest is:" + dest_hash.inspect
+
+            # loop over each key in src
+            src_hash_was.each_key do |k|
               # don't copy this particular key if deviated
               dont_copy << "#{attrib}.#{k}" if src_hash_was[k] != dest_hash[k]
             end

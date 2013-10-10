@@ -131,7 +131,62 @@ class StandardizableQuestionTest < ActiveSupport::TestCase
   end
 
   test "translation delete should not be replicated if copy translation has deviated" do
+    q = FactoryGirl.create(:question, :is_standard => true, :name_en => 'Cow', :name_fr => 'Vache')
+    copy = q.replicate(get_mission)
+
+    # change copy first
+    copy.name_fr = 'Vachon'
+    copy.save!
+
+    # delete std french translation
+    q.reload.name_fr = nil
+    q.save!
+
+    # delete should not be replicated
+    assert_equal('Cow', copy.reload.name_en)
+    assert_equal('Vachon', copy.reload.name_fr)
   end
 
-  # test hash stuff with nil values
+  test "translation delete should be replicated if copy translation also been deleted" do
+    q = FactoryGirl.create(:question, :is_standard => true, :name_en => 'Cow', :name_fr => 'Vache')
+    copy = q.replicate(get_mission)
+
+    # delete copy translation first
+    copy.name_fr = nil
+    copy.save!
+
+    # delete std translation
+    q.reload.name_fr = nil
+    q.save!
+
+    # delete should be intact
+    assert_equal('Cow', copy.reload.name_en)
+    assert_equal(nil, copy.reload.name_fr)
+  end
+
+  test "replication of obj with nil hash value should work" do
+    # make question with no names
+    q = FactoryGirl.create(:question, :is_standard => true)
+    q.name_translations = nil
+    q.save!
+
+    assert_nil(q.reload.name_translations)
+
+    # replication should work
+    copy = q.replicate(get_mission)
+    assert_nil(copy.name_translations)
+  end
+
+  test "change of hash value to nil should be replicated if no changes to copy" do
+    q = FactoryGirl.create(:question, :is_standard => true, :name_en => 'Cow', :name_fr => 'Vache')
+    copy = q.replicate(get_mission)
+
+    # change std hash value to nil
+    q.name_translations = nil
+    q.save!
+
+    # copy value should now be nil
+    assert_nil(copy.reload.name_translations)
+  end
+
 end
