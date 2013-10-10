@@ -175,6 +175,11 @@ class Ability
       q.standard_copy? || q.published? || q.has_answers?
     end
 
+    # update_code refers to the question code attribute
+    cannot :update_code, Question do |q|
+      q.standard_copy?
+    end
+
     cannot :destroy, Question do |q| 
       q.standard_copy? && q.has_standard_copy_form? || q.published? || q.has_answers?
     end

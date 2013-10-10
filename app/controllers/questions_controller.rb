@@ -33,6 +33,7 @@ class QuestionsController < ApplicationController
     @question.valid?
 
     # authorize special abilities
+    authorize!(:update_code, @question) if @question.code_changed?
     authorize!(:update_core, @question) if @question.core_changed?
 
     create_or_update
