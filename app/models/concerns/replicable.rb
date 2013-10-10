@@ -235,8 +235,13 @@ module Replicable
       end
 
       # don't copy user-modifiable attributes unless dest obj is just now being created
+      # OR dest obj attrib value has deviated from std
       replicable_opts(:user_modifiable).each do |attrib|
-        dont_copy << attrib unless replication.creating?
+        # figure out if the attribute has deviated
+        deviated = attrib_before_save(attrib.to_sym) != replication.dest_obj.send(attrib)
+
+        # don't copy if creating or deviated
+        dont_copy << attrib unless replication.creating? || deviated
       end
 
       # get hash and return

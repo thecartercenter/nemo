@@ -65,11 +65,11 @@ class StandardizableQuestionTest < ActiveSupport::TestCase
     assert_equal('Foo', q2.name)
   end
 
-  test "name should not be replicated on update" do
+  test "name should be replicated on update if copy hasnt changed" do
     q = FactoryGirl.create(:question, :is_standard => true, :name => 'Foo')
     q2 = q.replicate(get_mission)
     q.name = 'Bar'
     q.save!
-    assert_equal('Foo', q2.reload.name)
+    assert_equal('Bar', q2.reload.name)
   end
 end
