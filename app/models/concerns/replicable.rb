@@ -218,7 +218,7 @@ module Replicable
     def replicate_attributes(replication)
       # get the names of attribs NOT to copy
       skip = attribs_not_to_replicate(replication)
-      puts skip.inspect
+
       # hashify the list to avoid n^2 runtime
       skip = Hash[*skip.map{|a| [a,1]}.flatten]
 
@@ -293,9 +293,6 @@ module Replicable
             src_hash = send(attrib) || {}
             src_hash_was = send("#{attrib}_was") || {}
             dest_hash = replication.dest_obj.send(attrib) || {}
-
-            puts "src was:" + src_hash_was.inspect
-            puts "dest is:" + dest_hash.inspect
 
             # loop over each key in src
             src_hash_was.each_key do |k|
