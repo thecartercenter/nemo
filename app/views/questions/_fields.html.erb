@@ -6,7 +6,7 @@
     <%= appears_elsewhere_warning(@question) unless @question.forms.empty? %>
   <% end %>
   
-  <%= form_field(form, :code, :required => true, :maxlength => 20, :force_show_mode => cannot?(:update_code, Question)) %>
+  <%= form_field(form, :code, :required => true, :maxlength => 20, :force_show_mode => cannot?(:update_code, @question)) %>
 
   <%# core fields should not be editable if don't have update_core permission %>
   <% old_f_mode = form.mode
