@@ -61,16 +61,20 @@ class StandardizableOptionTest < ActiveSupport::TestCase
     assert_equal(o.copies, [o2])
   end
 
-  test "update of user-modifiable param in a std option should replicate to instances on create only" do
+  test "update of user-modifiable param in a std option should not replicate to copy if copy changed" do
     o = FactoryGirl.create(:option, :name => 'Stuff', :is_standard => true)
     o2 = o.replicate(get_mission)
 
+    # change copy first
+    o2.name = 'Blah'
+    o2.save!
+
     # do update
-    o.name = 'Stuffz'
+    o.reload.name = 'Stuffz'
     o.save!
 
     # check non-replication
-    assert_equal('Stuff', o2.reload.name)
+    assert_equal('Blah', o2.reload.name)
   end
 
   test "deleting std option should delete copies" do
