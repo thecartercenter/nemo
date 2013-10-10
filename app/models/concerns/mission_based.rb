@@ -16,7 +16,10 @@ module MissionBased
       # only Setting has a has_one association, so don't pluralize
       inverse = (base.model_name == "Setting" ? base.model_name : base.model_name.plural).downcase.to_sym
       belongs_to(:mission, :inverse_of => inverse)
-      scope(:for_mission, lambda{|m| m.nil? ? where("0") : where(:mission_id => m.id)})
+
+      # scope to find objects with the given mission
+      # mission can be nil
+      scope(:for_mission, lambda{|m| where(:mission_id => m.try(:id))})
     end
     
     # checks if this object is unique in the mission according to the attrib given by attrib_name
