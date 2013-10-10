@@ -234,14 +234,17 @@ module Replicable
         dont_copy << replicable_opts(:parent_assoc).to_s + '_id'
       end
 
-      # don't copy user-modifiable attributes unless dest obj is just now being created
-      # OR dest obj attrib value has deviated from std
+      # copy user-modifiable attributes IF:
+      # 1. dest obj is being created OR
+      # 2. dest obj attrib value has NOT deviated from std
+      # therefore, if either of the above conditions is met, we should NOT add the attrib to the dont_copy list
+      # in all other cases, we should add it to the dont_copy list
       replicable_opts(:user_modifiable).each do |attrib|
         # figure out if the attribute has deviated
-        deviated = attrib_before_save(attrib.to_sym) != replication.dest_obj.send(attrib)
+        deviated = send("#{attrib}_was") != replication.dest_obj.send(attrib)
 
-        # don't copy if creating or deviated
-        dont_copy << attrib unless replication.creating? || deviated
+        # don't copy unless creating or not deviated
+        dont_copy << attrib unless replication.creating? || !deviated
       end
 
       # get hash and return

@@ -72,4 +72,21 @@ class StandardizableQuestionTest < ActiveSupport::TestCase
     q.save!
     assert_equal('Bar', q2.reload.name)
   end
+
+  test "name should not be replicated on update if copy has changed" do
+    other_mission = FactoryGirl.create(:mission, :name => 'other')
+    q = FactoryGirl.create(:question, :is_standard => true, :name => 'Foo')
+    copy1 = q.replicate(get_mission)
+    copy2 = q.replicate(other_mission)
+
+    # change copy1
+    copy1.name = 'Baz'
+    copy1.save!
+
+    # now change std -- change should not replicate to copy1
+    q.reload.name = 'Bar'
+    q.save!
+    assert_equal('Baz', copy1.reload.name)
+    assert_equal('Bar', copy2.reload.name)
+  end
 end
