@@ -15,6 +15,7 @@ module Replicable
     def self.replicable(options = {})
       options[:child_assocs] = Array.wrap(options[:child_assocs])
       options[:dont_copy] = Array.wrap(options[:dont_copy]).map(&:to_s)
+      options[:user_modifiable] = Array.wrap(options[:user_modifiable]).map(&:to_s)
       class_variable_set('@@replication_options', options)
     end
 
@@ -64,7 +65,7 @@ module Replicable
     dest_obj.mission_id = replication.to_mission.try(:id)
 
     # copy attributes from src to parent
-    attribs_to_copy_in_replication.each{|k,v| dest_obj.send("#{k}=", v)}
+    attribs_to_copy_in_replication(replication).each{|k,v| dest_obj.send("#{k}=", v)}
 
     # ensure uniqueness params are respected
     ensure_uniqueness_when_replicating(replication)
@@ -197,7 +198,7 @@ module Replicable
 
     # gets a hash of attributes of this object that should be copied to the dest obj
     # in the current replication operation. this is surprisingly intricate
-    def attribs_to_copy_in_replication
+    def attribs_to_copy_in_replication(replication)
       # start with the initial, constant set
       dont_copy = ATTRIBS_NOT_TO_COPY
 
@@ -213,6 +214,11 @@ module Replicable
       # don't copy foreign key field of parent's has_* association, if applicable
       if replicable_opts(:parent_assoc)
         dont_copy << replicable_opts(:parent_assoc).to_s + '_id'
+      end
+
+      # don't copy user-modifiable attributes unless dest obj is just now being created
+      replicable_opts(:user_modifiable).each do |attrib|
+        dont_copy << attrib unless replication.creating?
       end
 
       # get hash and return
