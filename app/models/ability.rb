@@ -152,6 +152,10 @@ class Ability
       f.standard_copy? || f.published?
     end
 
+    cannot :rename, Form do |f|
+      f.standard_copy?
+    end
+
     # standard forms cannot be published and do not have versions, which are only assigned on publish
     cannot :publish, Form, :is_standard => true
 

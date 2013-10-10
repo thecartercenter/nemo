@@ -88,6 +88,9 @@ class FormsController < ApplicationController
       # save basic attribs
       @form.assign_attributes(params[:form])
       
+      # check special permissions
+      authorize!(:rename, @form) if @form.name_changed?
+
       # update ranks if provided (possibly raising condition ordering error)
       @form.update_ranks(params[:rank]) if params[:rank] && can?(:reorder_questions, @form)
 
