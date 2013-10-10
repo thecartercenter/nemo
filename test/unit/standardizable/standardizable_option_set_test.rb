@@ -90,7 +90,7 @@ class StandardizableOptionSetTest < ActiveSupport::TestCase
   test "replicating should not copy options if they have already been copied from earlier replication" do
     # create two standard option sets sharing an option
     std1 = FactoryGirl.create(:option_set, :name => "Stuff", :is_standard => true, :option_names => %w(yes no))
-    std2 = FactoryGirl.create(:option_set, :name => "Stuff", :is_standard => true, :option_names => %w(maybe))
+    std2 = FactoryGirl.create(:option_set, :name => "Stuff2", :is_standard => true, :option_names => %w(maybe))
     std2.options << std1.options.first
     std2.save!
 
