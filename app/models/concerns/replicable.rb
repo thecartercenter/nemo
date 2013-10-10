@@ -65,10 +65,10 @@ module Replicable
     dest_obj.mission_id = replication.to_mission.try(:id)
 
     # copy attributes from src to parent
-    attribs_to_copy_in_replication(replication).each{|k,v| dest_obj.send("#{k}=", v)}
-
+    replicate_attributes(replication)
+    
     # ensure uniqueness params are respected
-    ensure_uniqueness_when_replicating(replication)
+    ensure_uniqueness_when_replicating(replication)    
 
     # call a callback if requested
     self.send(replicable_opts(:after_copy_attribs), replication) if replicable_opts(:after_copy_attribs)
@@ -214,9 +214,24 @@ module Replicable
       obj
     end
 
-    # gets a hash of attributes of this object that should be copied to the dest obj
-    # in the current replication operation. this is surprisingly intricate
-    def attribs_to_copy_in_replication(replication)
+    # replicates the appropriate attributes from the src to the dest
+    def replicate_attributes(replication)
+      # get the names of attribs NOT to copy
+      skip = attribs_not_to_replicate(replication)
+
+      # hashify the list to avoid n^2 runtime
+      skip = Hash[*skip.map{|a| [a,1]}.flatten]
+
+      # do the copy
+      attributes.each do |k,v|
+        replication.dest_obj.send("#{k}=", v) unless skip[k]
+      end
+    end
+
+    # gets a list of attribute keys of this object that should NOT be copied to the dest obj
+    # this might look like [foo, bar, alpha.bravo] 
+    # where alpha.bravo means "don't copy the 'bravo' key of the 'alpha' hash"
+    def attribs_not_to_replicate(replication)
       # start with the initial, constant set
       dont_copy = ATTRIBS_NOT_TO_COPY
 
@@ -247,8 +262,7 @@ module Replicable
         dont_copy << attrib unless replication.creating? || !deviated
       end
 
-      # get hash and return
-      attributes.except(*dont_copy)
+      dont_copy
     end
 
     # ensures the uniqueness replicable option is respected
