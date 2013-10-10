@@ -59,4 +59,17 @@ class StandardizableQuestionTest < ActiveSupport::TestCase
     assert_equal('q1', q2.code)
   end
 
+  test "name should be replicated on create" do
+    q = FactoryGirl.create(:question, :is_standard => true, :name => 'Foo')
+    q2 = q.replicate(get_mission)
+    assert_equal('Foo', q2.name)
+  end
+
+  test "name should not be replicated on update" do
+    q = FactoryGirl.create(:question, :is_standard => true, :name => 'Foo')
+    q2 = q.replicate(get_mission)
+    q.name = 'Bar'
+    q.save!
+    assert_equal('Foo', q2.reload.name)
+  end
 end
