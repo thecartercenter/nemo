@@ -176,6 +176,14 @@ module Replicable
     pieces.join(', ')
   end
 
+  # gets a value of the specified attribute before the last save call
+  # uses the previous_changes hash
+  # attrib - (symbol) the name of the attrib to get
+  def attrib_before_save(attrib)
+    attrib = attrib.to_s
+    previous_changes.has_key?(attrib) ? previous_changes[attrib].first : send(attrib)
+  end
+
   private
 
     # gets the object to which the replication operation will copy attributes, etc.
