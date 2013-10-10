@@ -22,7 +22,7 @@
       logged_in: <%=j (!current_user.nil?).to_json.html_safe %>,
       site_name: <%=j configatron.site_name.to_json.html_safe %>,
       session_timeout: <%=j User::SESSION_TIMEOUT %>,
-      login_path: <%=j login_path(:admin_mode => false).to_json.html_safe %>
+      login_path: <%=j login_path(:admin_mode => nil).to_json.html_safe %>
     });
   <% end %>
   

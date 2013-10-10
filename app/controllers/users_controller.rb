@@ -98,7 +98,7 @@ class UsersController < ApplicationController
     if m = Mission.where(:id => session[:last_mission_id]).first
       current_user.change_mission!(m)
     end
-    redirect_to(root_url(:admin_mode => false))
+    redirect_to(root_url(:admin_mode => nil))
   end
   
   private
