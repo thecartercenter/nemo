@@ -17,7 +17,7 @@ class Option < ActiveRecord::Base
   
   translates :name, :hint
   
-  replicable :parent_assoc => :optioning, :user_modifiable => [:name_translations, :hint_translations]
+  replicable :parent_assoc => :optioning, :user_modifiable => [:name_translations, :_name, :hint_translations, :_hint]
   
   # the max number of suggestion matches to return
   MAX_SUGGESTIONS = 5
