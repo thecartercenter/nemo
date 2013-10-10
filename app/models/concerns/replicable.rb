@@ -181,7 +181,17 @@ module Replicable
   # attrib - (symbol) the name of the attrib to get
   def attrib_before_save(attrib)
     attrib = attrib.to_s
-    previous_changes.has_key?(attrib) ? previous_changes[attrib].first : send(attrib)
+
+    # if id just changed from nil then we know the last save was actually a create
+    # in this case we just return the current value
+    # if the value didn't change, we also just return the current value
+    if previous_changes['id'] && previous_changes['id'].first.nil? || !previous_changes.has_key?(attrib)
+      send(attrib)
+
+    # otherwise, we return the old value
+    else 
+      previous_changes[attrib].first
+    end
   end
 
   private
