@@ -117,7 +117,20 @@ class StandardizableQuestionTest < ActiveSupport::TestCase
     assert_equal('Vachon', copy.name_fr)
   end
 
-  test "translations should get deleted if appropriate" do
+  test "translation delete should be replicated if copy translation has not deviated" do
+    q = FactoryGirl.create(:question, :is_standard => true, :name_en => 'Cow', :name_fr => 'Vache')
+    copy = q.replicate(get_mission)
+
+    # delete french translation without any changes to copy
+    q.name_fr = nil
+    q.save!
+
+    # delete should be replicated
+    assert_equal('Cow', copy.reload.name_en)
+    assert_nil(copy.reload.name_fr)
+  end
+
+  test "translation delete should not be replicated if copy translation has deviated" do
   end
 
   # test hash stuff with nil values
