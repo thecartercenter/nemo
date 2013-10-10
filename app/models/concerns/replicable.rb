@@ -223,8 +223,34 @@ module Replicable
       skip = Hash[*skip.map{|a| [a,1]}.flatten]
 
       # do the copy
-      attributes.each do |k,v|
-        replication.dest_obj.send("#{k}=", v) unless skip[k]
+      attributes.each{|k,v| replicate_attribute(k, v, replication, skip)}
+    end
+
+    # replicates a single attribute for the given replication op, respecting the given hashified skip list
+    def replicate_attribute(name, value, replication, skip)
+      # get ref to dest obj
+      dest_obj = replication.dest_obj
+
+      # if attribute is a hash, it gets special treatment
+      if value.is_a?(Hash)
+
+        # examine each member individually
+        value.each do |k, v|
+
+          # copy unless explicitly told not to
+          unless skip["#{name}.#{k}"]
+
+            # ensure dest attrib is initialized
+            dest_obj.send("#{name}=", {}) unless dest_obj.send(name).is_a?(Hash)
+
+            # do the copy
+            dest_obj.send(name)[k] = v
+          end 
+        end
+
+      # otherwise it's not a hash, so just do the copy
+      else
+        dest_obj.send("#{name}=", value) unless skip[name]
       end
     end
 
@@ -255,11 +281,32 @@ module Replicable
       # therefore, if either of the above conditions is met, we should NOT add the attrib to the dont_copy list
       # in all other cases, we should add it to the dont_copy list
       replicable_opts(:user_modifiable).each do |attrib|
-        # figure out if the attribute has deviated
-        deviated = send("#{attrib}_was") != replication.dest_obj.send(attrib)
 
-        # don't copy unless creating or not deviated
-        dont_copy << attrib unless replication.creating? || !deviated
+        # if we are creating, immediately we know that nothing gets added to dont_copy
+        # otherwise, we need to check if value has deviated in dest obj
+        unless replication.creating?
+
+          # if the attrib is a hash, it gets special treatment
+          if send(attrib).is_a?(Hash)
+
+            # get refs, ensuring no nils
+            src_hash = send(attrib)
+            src_hash_was = send("#{attrib}_was") || {}
+            dest_hash = replication.dest_obj.send(attrib) || {}
+
+            # loop over each member in src
+            src_hash.each do |k, v|
+              # don't copy this particular key if deviated
+              dont_copy << "#{attrib}.#{k}" if src_hash_was[k] != dest_hash[k]
+            end
+          else
+            # figure out if the attribute has deviated
+            deviated = send("#{attrib}_was") != replication.dest_obj.send(attrib)
+
+            # don't copy if value has deviated
+            dont_copy << attrib if deviated
+          end
+        end
       end
 
       dont_copy

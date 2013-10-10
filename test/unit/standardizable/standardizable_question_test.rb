@@ -99,4 +99,26 @@ class StandardizableQuestionTest < ActiveSupport::TestCase
     assert_equal('Baz', copy1.reload._name)
     assert_equal('Bar', copy2.reload._name)
   end
+
+  test "only translations that have not changed in copy should be replicated on update" do
+    q = FactoryGirl.create(:question, :is_standard => true, :name_en => 'Cow', :name_fr => 'Vache')
+    copy = q.replicate(get_mission)
+
+    # change french translation on copy
+    copy.name_fr = 'Vachon'
+    copy.save!
+
+    # now change the english translation on the std
+    q.name_en = 'Cowed'
+    q.save!
+
+    # english should be replicated but french should not
+    assert_equal('Cowed', copy.reload.name_en)
+    assert_equal('Vachon', copy.name_fr)
+  end
+
+  test "translations should get deleted if appropriate" do
+  end
+
+  # test hash stuff with nil values
 end
