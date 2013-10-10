@@ -230,6 +230,12 @@ class StandardizableOptionSetTest < ActiveSupport::TestCase
     assert_equal(%w(yes maybe), copy_os.reload.options.map(&:name))
   end
 
+  test "user-modifiable field should be replicated on create" do
+    std = FactoryGirl.create(:option_set, :is_standard => true, :option_names => %w(yes no))
+    copy = std.replicate(get_mission)
+    assert_equal('yes', copy.options.first.name)
+  end
+
   test "user-modifiable attrib should not be replicated on update" do
     std = FactoryGirl.create(:option_set, :is_standard => true, :option_names => %w(yes no))
     copy = std.replicate(get_mission)
@@ -242,9 +248,6 @@ class StandardizableOptionSetTest < ActiveSupport::TestCase
 
     # option name should still be maybe
     assert_equal('maybe', copy.reload.options.first.name)
-  end
-
-  test "user-modifiable field should be replicated on create" do
   end
 
 end
