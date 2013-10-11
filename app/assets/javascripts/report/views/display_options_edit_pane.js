@@ -48,7 +48,7 @@
     this.question_labels.change(function() { _this.broadcast_change("question_labels"); });
     
     // register fields to watch for changes
-    this.attribs_to_watch = {display_type: true, report_type: true};
+    this.attribs_to_watch = {display_type: true, report_type: true, tally_type: true};
   }
   
   klass.prototype.update = function(report) {
@@ -89,6 +89,10 @@
     this.report.attribs.percent_type = this.percent_type.get();
     this.report.attribs.bar_style = this.bar_style.get();
     this.report.attribs.question_labels = this.question_labels.get();
+  }
+
+  klass.prototype.fields_for_validation_errors = function() {
+    return ['tally_type'];
   }
 
 }(ELMO.Report));

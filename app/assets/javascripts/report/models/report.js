@@ -205,6 +205,10 @@
     if (!this.attribs.type)
       this.errors.add("type", I18n.t("activerecord.errors.models.report/report.attributes.type.blank"));
 
+    // tally type should be non-null if type is tallyreport
+    if (this.attribs.type == 'Report::TallyReport' && !this.attribs.tally_type)
+      this.errors.add("tally_type", I18n.t("activerecord.errors.models.report/report.attributes.tally_type.blank"));
+
     // title
     if (!this.attribs.name.match(/\w+/))
       this.errors.add("name", I18n.t("activerecord.errors.models.report/report.attributes.name.blank"));

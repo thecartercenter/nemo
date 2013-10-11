@@ -406,6 +406,8 @@ en:
               blank: "You must enter a report title."
             questions:
               blank: "You must choose at least one question or one option set."
+            tally_type:
+              blank: "You must choose a tally type."
             type:
               blank: "You must choose a report type."
         response:
