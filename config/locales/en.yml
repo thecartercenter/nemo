@@ -858,7 +858,7 @@ en:
     questions_attributes: "Questions/Attributes"
     questions_with_option_sets: "Questions with these option sets"
     no_match: "No matching data were found."
-    report_title: "Report Title"
+    report_title: "Title"
     report_type: "Report Type"
     tally: "Tally"
     these_questions: "These specific questions"
