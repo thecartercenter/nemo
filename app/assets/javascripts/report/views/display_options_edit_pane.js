@@ -21,6 +21,10 @@
     
     // call super first
     this.parent.build.call(this);
+
+    // build tally type chooser
+    this.tally_type = new ELMO.Control.RadioGroup({inputs: this.cont.find("input[name='tally_type']")});
+    this.tally_type.change(function() { _this.broadcast_change("tally_type"); });
     
     // build display type chooser
     this.display_type = new ELMO.Control.RadioGroup({inputs: this.cont.find("input[name='display_type']")});
@@ -57,10 +61,14 @@
     this.bar_style.update(report.attribs.bar_style);
     this.question_labels.update(report.attribs.question_labels);
     
-    var is_tally = this.report.attribs.type && this.report.attribs.type.match(/TallyReport/);
+    var is_tally = this.report.attribs.type == 'Report::TallyReport';
     
     var show;
+
     show = is_tally;
+    this.tally_type.closest(".section")[show ? "show" : "hide"]();
+    if (!show) this.tally_type.clear();
+
     this.display_type.closest(".section")[show ? "show" : "hide"]();
     if (!show) this.display_type.clear();
     

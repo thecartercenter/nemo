@@ -865,7 +865,7 @@ en:
     report_title: "Title"
     report_type: "Report Type"
     tally: "Tally"
-    tally_type: "Tally Type"
+    tally_type: "What would you like to tally?"
     these_questions: "These specific questions"
     total_rows: "Total Rows"
     what_attrib_col_headers: "What attribute or question would you like for the column headers (optional)?"
