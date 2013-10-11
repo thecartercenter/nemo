@@ -193,8 +193,8 @@
       report_type: true,
       display_options: true,
       form_selection: true,
-      question_selection: report.attribs.type == "Report::QuestionAnswerTallyReport",
-      grouping: report.attribs.type == "Report::GroupedTallyReport",
+      question_selection: report.attribs.tally_type == "QuestionAnswer",
+      grouping: report.attribs.tally_type == "Grouped",
       fields: report.attribs.type == "Report::ListReport",
       report_title: true
     }

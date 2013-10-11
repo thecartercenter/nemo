@@ -56,6 +56,7 @@
     this.report = report;
 
     // update controls
+    this.tally_type.update(report.attribs.tally_type)
     this.display_type.update(report.attribs.display_type);
     this.percent_type.update(report.attribs.percent_type);
     this.bar_style.update(report.attribs.bar_style);
@@ -83,6 +84,7 @@
 
   // extracts data from the view into the model
   klass.prototype.extract = function() {
+    this.report.attribs.tally_type = this.tally_type.get();
     this.report.attribs.display_type = this.display_type.get();
     this.report.attribs.percent_type = this.percent_type.get();
     this.report.attribs.bar_style = this.bar_style.get();
