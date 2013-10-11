@@ -151,6 +151,10 @@ en:
         zero: "Reports"
         one: "Report"
         other: "Reports"
+      report/tally_report:
+        zero: "Tally Reports"
+        one: "Tally Report"
+        other: "Tally Reports"
       report/question_answer_tally_report:
         zero: "Tallies of Answers per Question"
         one: "Tally of Answers per Question"
@@ -882,13 +886,10 @@ en:
       table: "Table"
       bar_chart: "Bar Chart"
     examples:
-      question_answer_tally_report:
+      tally_report:
         - "Number of Very Good, Good, etc. answers for the Overall question"
         - "Percentage of Yes and No for all Yes-No questions"
-        - "Number of Zero and Non-zero answers for questions about observers"
-      grouped_tally_report:
         - "Number of responses per form for each team"
-        - "Percentage of Yes and No per day for the PeacefulEnvironment question"
         - "Percentage of Zero and Non-zero answers per State for the DomesticObservers question"
       list_report:
         - "List of answers to the Complaints and OtherIrreg questions along with the polling place number"
