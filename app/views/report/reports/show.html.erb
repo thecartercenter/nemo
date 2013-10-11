@@ -66,6 +66,34 @@
       <div class="pane_scroll">
         <div class="error_box"></div>
         <div class="pane_body">
+          <div class="section tally_type">
+            <div class="name horiz"><%= t("report/report.tally_type") %></div>
+            <div class="controls horiz">
+              <div class="choice">
+                <input type="radio" name="tally_type" id="tally_type_1" value="QuestionAnswerTallyReport" />
+                <label for="tally_type_1">
+                  <%= t("report/report.tally_types.question_answer") %>
+                  <br/>
+                  <em>
+                    <%= t('common.example_abbr') %>
+                    <%= t('report/report.tally_type_examples.question_answer') %>
+                  </em>
+                </label>
+              </div>
+              <br/>
+              <div class="choice">
+                <input type="radio" name="tally_type" id="tally_type_2" value="Grouped" />
+                <label for="tally_type_2">
+                  <%= t("report/report.tally_types.grouped") %>
+                  <br/>
+                  <em>
+                    <%= t('common.example_abbr') %>
+                    <%= t('report/report.tally_type_examples.grouped') %>
+                  </em>
+                </label>
+              </div>
+            </div>
+          </div>
           <div class="section display_type">
             <div class="name horiz"><%= t("report/report.how_to_display_results") %></div>
             <div class="controls horiz">

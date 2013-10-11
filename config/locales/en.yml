@@ -865,6 +865,7 @@ en:
     report_title: "Title"
     report_type: "Report Type"
     tally: "Tally"
+    tally_type: "Tally Type"
     these_questions: "These specific questions"
     total_rows: "Total Rows"
     what_attrib_col_headers: "What attribute or question would you like for the column headers (optional)?"
@@ -903,6 +904,12 @@ en:
     question_labels:
       code: "Codes Only (Saves Space)"
       title: "Full Titles (Easier to Read)"
+    tally_types:
+      question_answer: "Answers per Question"
+      grouped: "Responses per Answer/Attribute"
+    tally_type_examples:
+      question_answer: "Tally of Yes's and No's for all Yes/No questions"
+      grouped: "Tally of responses per form for each team"
 
   response:
     create_link: "Create Response"
