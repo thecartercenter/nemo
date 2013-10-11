@@ -25,7 +25,7 @@
     // build tally type chooser
     this.tally_type = new ELMO.Control.RadioGroup({inputs: this.cont.find("input[name='tally_type']")});
     this.tally_type.change(function() { _this.broadcast_change("tally_type"); });
-    
+
     // build display type chooser
     this.display_type = new ELMO.Control.RadioGroup({inputs: this.cont.find("input[name='display_type']")});
     this.display_type.change(function() { _this.broadcast_change("display_type"); });
@@ -57,6 +57,7 @@
 
     // update controls
     this.tally_type.update(report.attribs.tally_type)
+    this.tally_type.enable(!this.report.has_run());
     this.display_type.update(report.attribs.display_type);
     this.percent_type.update(report.attribs.percent_type);
     this.bar_style.update(report.attribs.bar_style);
