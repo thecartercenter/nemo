@@ -18,6 +18,7 @@ class Report::Report < ActiveRecord::Base
   accepts_nested_attributes_for(:calculations, :allow_destroy => true)
   accepts_nested_attributes_for(:option_set_choices, :allow_destroy => true)
 
+  validates(:mission, :presence => true)
 
   scope(:by_viewed_at, order("viewed_at desc"))
   scope(:by_popularity, order("view_count desc"))
