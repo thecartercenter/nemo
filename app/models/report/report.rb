@@ -27,7 +27,7 @@ class Report::Report < ActiveRecord::Base
   before_save(:normalize_attribs)
 
   attr_accessor :just_created
-  attr_reader :header_set, :data, :totals
+  attr_reader :header_set, :data, :totals, :query
 
   # validation is all handled client-side
   
@@ -77,25 +77,29 @@ class Report::Report < ActiveRecord::Base
     @has_run = true
   
     # prep the relation and add a filter clause
-    rel = prep_relation(Response.unscoped.for_mission(mission))
+    @query = prep_query(Response.unscoped.for_mission(mission))
   
-    # execute it the relation, returning rows, and create dbresult obj
-    @db_result = Report::DbResult.new(rel.all)
-    
-    # extract headers
-    @header_set = Report::HeaderSet.new(:row => get_row_header, :col => get_col_header)
-    
-    # extract data
-    @data = Report::Data.new(blank_data_table(@db_result))
-    @db_result.rows.each_with_index do |row, row_idx|
-      extract_data_from_row(row, row_idx)
+    # these bits are only applicable to the older style reports
+    unless is_a?(Report::StandardFormReport)
+
+      # execute it the relation, returning rows, and create dbresult obj
+      @db_result = Report::DbResult.new(@query.all)
+      
+      # extract headers
+      @header_set = Report::HeaderSet.new(:row => get_row_header, :col => get_col_header)
+      
+      # extract data
+      @data = Report::Data.new(blank_data_table(@db_result))
+      @db_result.rows.each_with_index do |row, row_idx|
+        extract_data_from_row(row, row_idx)
+      end
+      
+      # clean out blank rows
+      remove_blank_rows
+      
+      # compute totals if appropriate
+      @data.compute_totals if can_total?
     end
-    
-    # clean out blank rows
-    remove_blank_rows
-    
-    # compute totals if appropriate
-    @data.compute_totals if can_total?
   end
   
   # form assignment helper for filter

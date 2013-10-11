@@ -3,7 +3,7 @@ class Report::GroupedTallyReport < Report::TallyReport
 
   protected
   
-    def prep_relation(rel)
+    def prep_query(rel)
       joins = []
       
       # add tally to select

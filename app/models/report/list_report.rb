@@ -8,7 +8,7 @@ class Report::ListReport < Report::Report
 
   protected
   
-    def prep_relation(rel)
+    def prep_query(rel)
       joins = []
       questions = []
       

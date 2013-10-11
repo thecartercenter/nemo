@@ -27,4 +27,24 @@ class Report::StandardFormReportTest < ActiveSupport::TestCase
     @new_report.form = FactoryGirl.create(:form)
     assert_not_nil(@new_report.form)
   end
+
+  test "report should return correct response count" do
+    build_form_and_responses
+    @report = FactoryGirl.create(:standard_form_report, :form => @form)
+    @report.run
+    assert_equal(5, @report.response_count)
+  end
+
+  test "report should raise if data is requested before run" do
+
+  end
+
+  private
+    def build_form_and_responses
+      @form = FactoryGirl.create(:form, :question_types => %w(integer))
+      @responses = Array.new(5).map do
+        Rails.logger.debug("BUILDING RESPONSE")
+        FactoryGirl.create(:response, :form => @form)
+      end
+    end
 end
