@@ -866,6 +866,7 @@ en:
     no_match: "No matching data were found."
     report_title: "Title"
     report_type: "Report Type"
+    show_examples: "Show Examples"
     tally: "Tally"
     tally_type: "What would you like to tally?"
     these_questions: "These specific questions"
@@ -888,6 +889,9 @@ en:
     display_types:
       table: "Table"
       bar_chart: "Bar Chart"
+    descriptions:
+      tally_report: "Aggregated tallies of answers or responses, grouped by attributes of interest."
+      list_report: "A raw listing of answers and attributes for a set of responses."
     examples:
       tally_report:
         - "Number of Very Good, Good, etc. answers for the Overall question"

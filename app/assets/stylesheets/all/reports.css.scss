@@ -39,12 +39,51 @@ div.report_edit_pane div.multiselect div.choices { overflow: auto; background-co
 div.report_edit_pane div.multiselect div.links { margin-top: 5px; }
 div.report_edit_pane div.multiselect div.links a { display: inline-block; margin-right: 5px; }
 
-div.report_edit_pane.report_type input { vertical-align: top; }
-div.report_edit_pane.report_type input[type='radio'] { margin-left: 3px; float: left; }
-div.report_edit_pane.report_type label { display: block; margin-left: 30px; }
-div.report_edit_pane.report_type h3 { font-size: 11pt; margin-bottom: 5px; color: #0065d1; }
-div.report_edit_pane.report_type .ex_lbl { vertical-align: top; margin-bottom: 5px; font-size: 90%; }
-div.report_edit_pane.report_type ul { line-height: 100%; }
+div.report_edit_pane.report_type {
+  input { vertical-align: top; }
+  input[type='radio'] { margin-left: 3px; float: left; }
+  label { display: block; margin-left: 30px; }
+  h3 { 
+    font-size: 10pt; 
+    margin-bottom: 5px; 
+    color: #0065d1; 
+  }
+  
+  /* rows */
+  div.controls > div {
+    margin-bottom: 10px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  div.description {
+    display: inline-block;
+  }
+
+  /* link to show examples */
+  a {
+    font-size: 11px;
+    color: #aaa;
+    display: inline-block;
+    margin-left: 5px;
+  }
+
+  div.examples { 
+    display: none; 
+    margin-top: 10px;
+
+    .ex_lbl { 
+      margin-bottom: 5px; 
+      font-weight: bold;
+    }
+
+    ul {
+      line-height: 100%; 
+    }
+  }
+}
 
 div.report_edit_pane.display_options div.section.display_type input { vertical-align: middle; }
 div.report_edit_pane.display_options div.section.display_type label { margin-right: 15px; }

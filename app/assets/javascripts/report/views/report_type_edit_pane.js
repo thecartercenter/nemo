@@ -24,6 +24,13 @@
     // make type chooser
     this.type_chooser = new ELMO.Control.RadioGroup({inputs: this.cont.find("input[name='report_type']")});
     this.type_chooser.change(function() { _this.broadcast_change("report_type"); });
+
+    // handle example link clicks
+    this.cont.find('a.show-examples').click(function(e){
+      $(e.target).closest('label').find('div.examples').toggle();
+      e.stopPropagation();
+      e.preventDefault();
+    });
   }
   
   klass.prototype.update = function(report) {

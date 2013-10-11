@@ -46,12 +46,18 @@
                   <input type="radio" name="report_type" id="report_type_<%= i %>" value="<%= klass.name %>">
                   <label for="report_type_<%= i %>">
                     <h3><%= translate_model(klass) %></h3>
-                    <div class="ex_lbl"><%= t("common.example", :count => 2) %>:</div>
-                    <ul>
-                      <% t("report/report.examples.#{klass.name.demodulize.underscore}").each do |ex| %>
-                        <li><%= ex %></li>
-                      <% end %>
-                    </ul>
+                    <div class="description">
+                      <%= t("report/report.descriptions.#{klass.name.demodulize.underscore}") %>
+                    </div>
+                    <a class="show-examples" href="#"><%= t('report/report.show_examples') %></a>
+                    <div class="examples">
+                      <div class="ex_lbl"><%= t("common.example", :count => 2) %></div>
+                      <ul>
+                        <% t("report/report.examples.#{klass.name.demodulize.underscore}").each do |ex| %>
+                          <li><%= ex %></li>
+                        <% end %>
+                      </ul>
+                    </div>
                   </label>
                 </div>
               <% end %>
