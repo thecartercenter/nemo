@@ -1,6 +1,9 @@
 class Report::StandardFormReport < Report::Report
   belongs_to(:form)
 
+  # question types that we leave off this report (stored as a hash for better performance)
+  EXCLUDED_TYPES = {'location' => true}
+
   # returns the number of responses matching the report query
   def response_count
     query.count
@@ -14,7 +17,7 @@ class Report::StandardFormReport < Report::Report
       {:answers => [:option, {:choices => :option}]}]}).find(form_id)
 
     # generate
-    @summaries = f.questionings.reject{|qing| qing.hidden?}.map do |qing|
+    @summaries = f.questionings.reject{|qing| qing.hidden? || EXCLUDED_TYPES[qing.qtype.name]}.map do |qing|
       Report::QuestionSummary.new(:questioning => qing)
     end
   end
