@@ -157,6 +157,9 @@ class Report::QuestionSummaryTest < ActiveSupport::TestCase
   end
 
   test "text summary should work with no values" do
+    prepare_form_and_report('text', [])
+    assert_equal([], @report.summaries[0].items)
+    assert_equal(0, @report.summaries[0].null_count)
   end
 
   test "text summary should include reference to response" do
