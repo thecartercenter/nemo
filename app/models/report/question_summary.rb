@@ -1,6 +1,6 @@
 # models a summary of the answers for a question on a form
 class Report::QuestionSummary
-  attr_reader :questioning, :items, :answer_count
+  attr_reader :questioning, :items, :null_count
 
   def initialize(attribs)
     # save attribs
@@ -9,8 +9,9 @@ class Report::QuestionSummary
     case questioning.qtype_name
     when 'integer', 'decimal'
 
-      # get non-blank values
+      # get non-blank values and set null count
       values = questioning.answers.reject{|a| a.value.blank?}.map(&:value)
+      @null_count = questioning.answers.size - values.size
 
       if values.empty?
         @items = nil
@@ -31,8 +32,6 @@ class Report::QuestionSummary
 
       # build tallies
       questioning.answers.each{|a| @items[a.option] += 1}
-
-      @answer_count = questioning.answers.size
     end
   end
 

@@ -27,6 +27,11 @@ class Report::QuestionSummaryTest < ActiveSupport::TestCase
     assert_equal(Float, items[:median].class)
   end
 
+  test "null_count should be correct for integer" do
+    prepare_form_and_report('integer', [5, nil, '', 2])
+    assert_equal(2, @report.summaries[0].null_count)
+  end
+
   test "integer summary should be correct with no values" do
     prepare_form_and_report('integer', [])
     assert(@report.summaries[0].empty?, 'summary should say it\'s empty')
@@ -61,7 +66,6 @@ class Report::QuestionSummaryTest < ActiveSupport::TestCase
     prepare_form_and_report('select_one', %w(Yes No No No))
     options = @form.questions[0].option_set.options
     assert_equal({options[0] => 1, options[1] => 3}, @report.summaries[0].items)
-    assert_equal(4, @report.summaries[0].answer_count)
   end
 
   test "select_one summary should report nulls" do
