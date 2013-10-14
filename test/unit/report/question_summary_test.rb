@@ -104,6 +104,16 @@ class Report::QuestionSummaryTest < ActiveSupport::TestCase
     assert_equal(%w(20131026 20131027 20131028).map{|d| Date.parse(d)}, @report.summaries[0].items.keys)
   end
 
+  test "date question summary should work with null values" do
+    prepare_form_and_report('date', ['20131027', nil])
+    assert_equal({Date.parse('20131027') => 1}, @report.summaries[0].items)
+  end
+
+  test "null_count should be correct for date question summary" do
+    prepare_form_and_report('date', [nil, '20131027', nil])
+    assert_equal(2, @report.summaries[0].null_count)
+  end
+
   private
     def prepare_form_and_report(qtype, answers, options = {})
       prepare_form(qtype, answers, options)

@@ -64,11 +64,13 @@ class Report::QuestionSummary
     when 'date'
       # init tallies to zero
       @items = ActiveSupport::OrderedHash.new
-      @null_count = 0
+
+      # we compute this directly and use to_a so as not to trigger an additional db query
+      @null_count = questioning.answers.to_a.count{|a| a.date_value.nil?}
 
       # build tallies
-      questioning.answers.sort_by{|a| a.date_value}.each do |a| 
-        if a.nil?
+      questioning.answers.reject{|a| a.date_value.nil?}.sort_by{|a| a.date_value}.each do |a| 
+        if a.date_value.nil?
           @null_count += 1
         else
           @items[a.date_value] ||= 0
