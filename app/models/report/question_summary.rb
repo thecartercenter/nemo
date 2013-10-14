@@ -17,19 +17,18 @@ class Report::QuestionSummary
     attribs.each{|k,v| instance_variable_set("@#{k}", v)}
 
     case questioning.qtype_name
-    when 'integer', 'decimal'
+
+    # these types all get descriptive statistics
+    when 'integer', 'decimal', 'time', 'datetime'
 
       # get non-blank values and set null count
-      values = questioning.answers.reject{|a| a.value.blank?}.map(&:value)
+      values = questioning.answers.map(&:casted_value).compact
       @null_count = questioning.answers.size - values.size
 
       if values.empty?
         # no statistics make sense in this case
         @items = {}
       else
-        # convert values appropriately
-        values = values.map(&(questioning.qtype.name == 'integer' ? :to_i : :to_f))
-
         # add the descriptive statistics methods
         values = values.extend(DescriptiveStatistics)
 
@@ -77,7 +76,7 @@ class Report::QuestionSummary
           @items[a.date_value] += 1
         end
       end
-    end
+    end    
   end
 
   def qtype

@@ -114,6 +114,11 @@ class Report::QuestionSummaryTest < ActiveSupport::TestCase
     assert_equal(2, @report.summaries[0].null_count)
   end
 
+  # test "time question summary should be correct in normal case" do
+  #   prepare_form_and_report('time', %w(9:30 10:15 22:15))
+  #   assert_equal({:mean => tzp('14:00'), :median => tzp('10:15'), :min => tzp('9:30'), :max => tzp('22:15')}, @report.summaries[0].items)
+  # end
+
   private
     def prepare_form_and_report(qtype, answers, options = {})
       prepare_form(qtype, answers, options)
@@ -128,5 +133,9 @@ class Report::QuestionSummaryTest < ActiveSupport::TestCase
     def prepare_report
       @report = FactoryGirl.create(:standard_form_report, :form => @form)
       @report.run
+    end
+
+    def tzp(s)
+      Time.zone.parse(s)
     end
 end

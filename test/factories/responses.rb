@@ -33,6 +33,9 @@ FactoryGirl.define do
           when 'date'
             ans.date_value = Date.parse(a)
 
+          when 'time'
+            ans.time_value = Time.zone.parse(a)
+
           else
             ans.value = a
           end
