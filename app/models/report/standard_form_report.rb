@@ -10,7 +10,7 @@ class Report::StandardFormReport < Report::Report
     return @summaries if @summaries
 
     # generate
-    @summaries = form.questionings.map do |qing|
+    @summaries = form.questionings.visible.map do |qing|
       Report::QuestionSummary.new(:questioning => qing)
     end
   end

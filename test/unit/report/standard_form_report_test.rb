@@ -40,19 +40,27 @@ class Report::StandardFormReportTest < ActiveSupport::TestCase
     assert_equal('integer', @report.summaries[0].qtype.name)
   end
 
+  test "report should not contain invisible questionings" do
+    build_form_and_responses
+    
+    # make one question invisible
+    @form.questionings[1].hidden = true
+    @form.save!
+
+    build_and_run_report
+    
+    assert(!@report.summaries.map(&:questioning).include?(@form.questionings[1]), "summaries should not contain hidden question")
+  end
+
   # test "integer summary should be correct" do
   #   build_form_and_responses
   #   build_and_run_report
   #   assert_equal({:average => 5, :median => 6, :max => 10, :min => 2}, @report.summaries[0].items)
   # end
 
-  test "report should not contain invisible questionings" do
-
-  end
-
   private
     def build_form_and_responses
-      @form = FactoryGirl.create(:form, :question_types => %w(integer))
+      @form = FactoryGirl.create(:form, :question_types => %w(integer integer))
       @responses = Array.new(5).map do
         FactoryGirl.create(:response, :form => @form)
       end

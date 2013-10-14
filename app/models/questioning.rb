@@ -25,6 +25,8 @@ class Questioning < ActiveRecord::Base
 
   replicable :child_assocs => [:question, :condition], :parent_assoc => :form
 
+  scope(:visible, where(:hidden => false))
+
   # returns any questionings appearing before this one on the form
   def previous
     form.questionings.reject{|q| !rank.nil? && (q == self || q.rank > rank)}
