@@ -9,8 +9,12 @@ class Report::StandardFormReport < Report::Report
   def summaries
     return @summaries if @summaries
 
+    # eager load form
+    f = Form.includes({:questionings => [{:question => {:option_set => :options}}, 
+      {:answers => [:option, {:choices => :option}]}]}).find(form_id)
+
     # generate
-    @summaries = form.questionings.visible.map do |qing|
+    @summaries = f.questionings.reject{|qing| qing.hidden?}.map do |qing|
       Report::QuestionSummary.new(:questioning => qing)
     end
   end
@@ -18,7 +22,6 @@ class Report::StandardFormReport < Report::Report
   protected
 
     def prep_query(query)
-      # default is fine for now
       query
     end
 end
