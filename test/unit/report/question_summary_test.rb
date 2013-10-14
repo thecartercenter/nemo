@@ -43,6 +43,20 @@ class Report::QuestionSummaryTest < ActiveSupport::TestCase
     assert_equal({:mean => 7.3, :median => 7.2, :max => 11.5, :min => 1.1}, @report.summaries[0].items)
   end
 
+  test "decimal summary should be correct with no non-blank values" do
+    prepare_form_and_report('decimal', [nil, ''])
+    assert(@report.summaries[0].empty?, 'summary should say it\'s empty')
+  end
+
+  test "decimal summary values should be correct type" do
+    prepare_form_and_report('decimal', [1])
+    items = @report.summaries[0].items
+    assert_equal(Float, items[:max].class)
+    assert_equal(Float, items[:min].class)
+    assert_equal(Float, items[:mean].class)
+    assert_equal(Float, items[:median].class)
+  end
+
   private
     def prepare_form_and_report(qtype, answers)
       @form = FactoryGirl.create(:form, :question_types => [qtype])
