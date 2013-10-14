@@ -6,6 +6,15 @@ class Report::StandardFormReport < Report::Report
     query.count
   end
 
+  def summaries
+    return @summaries if @summaries
+
+    # generate
+    @summaries = form.questionings.map do |qing|
+      Report::QuestionSummary.new(:questioning => qing)
+    end
+  end
+
   protected
 
     def prep_query(query)

@@ -30,12 +30,23 @@ class Report::StandardFormReportTest < ActiveSupport::TestCase
 
   test "report should return correct response count" do
     build_form_and_responses
-    @report = FactoryGirl.create(:standard_form_report, :form => @form)
-    @report.run
+    build_and_run_report
     assert_equal(5, @report.response_count)
   end
 
-  test "report should raise if data is requested before run" do
+  test "summary should contain question type" do
+    build_form_and_responses
+    build_and_run_report
+    assert_equal('integer', @report.summaries[0].qtype.name)
+  end
+
+  # test "integer summary should be correct" do
+  #   build_form_and_responses
+  #   build_and_run_report
+  #   assert_equal({:average => 5, :median => 6, :max => 10, :min => 2}, @report.summaries[0].items)
+  # end
+
+  test "report should not contain invisible questionings" do
 
   end
 
@@ -43,8 +54,12 @@ class Report::StandardFormReportTest < ActiveSupport::TestCase
     def build_form_and_responses
       @form = FactoryGirl.create(:form, :question_types => %w(integer))
       @responses = Array.new(5).map do
-        Rails.logger.debug("BUILDING RESPONSE")
         FactoryGirl.create(:response, :form => @form)
       end
+    end
+
+    def build_and_run_report
+      @report = FactoryGirl.create(:standard_form_report, :form => @form)
+      @report.run
     end
 end
