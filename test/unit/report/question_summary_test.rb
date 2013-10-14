@@ -124,6 +124,18 @@ class Report::QuestionSummaryTest < ActiveSupport::TestCase
     assert_equal({:mean => tp('14:00'), :median => tp('10:15'), :min => tp('9:30'), :max => tp('22:15')}, @report.summaries[0].items)
   end
 
+  test "null_count should be correct for time" do
+    prepare_form_and_report('time', ['9:30', nil, nil])
+    assert_equal(2, @report.summaries[0].null_count)
+  end
+
+  test "time summary should be correct with no values" do
+    prepare_form_and_report('time', [])
+    assert_equal({}, @report.summaries[0].items)
+  end
+
+  
+
   private
     def prepare_form_and_report(qtype, answers, options = {})
       prepare_form(qtype, answers, options)
