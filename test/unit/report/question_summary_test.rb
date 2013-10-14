@@ -100,6 +100,8 @@ class Report::QuestionSummaryTest < ActiveSupport::TestCase
   end
 
   test "date question summary keys should be sorted properly" do
+    prepare_form_and_report('date', %w(20131027 20131027 20131026 20131028))
+    assert_equal(%w(20131026 20131027 20131028).map{|d| Date.parse(d)}, @report.summaries[0].items.keys)
   end
 
   private

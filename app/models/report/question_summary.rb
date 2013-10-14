@@ -67,7 +67,7 @@ class Report::QuestionSummary
       @null_count = 0
 
       # build tallies
-      questioning.answers.each do |a| 
+      questioning.answers.sort_by{|a| a.date_value}.each do |a| 
         if a.nil?
           @null_count += 1
         else
@@ -75,9 +75,6 @@ class Report::QuestionSummary
           @items[a.date_value] += 1
         end
       end
-      
-      # sort keys
-
     end
   end
 
