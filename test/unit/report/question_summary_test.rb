@@ -78,14 +78,23 @@ class Report::QuestionSummaryTest < ActiveSupport::TestCase
     assert_equal({options[0] => 0, options[1] => 0}, @report.summaries[0].items)
   end
 
+  test "select_multiple summary should be correct in normal case" do
+    prepare_form_and_report('select_multiple', [%w(A), %w(B C), %w(A C)], :option_names => %w(A B C))
+    options = @form.questions[0].option_set.options
+    assert_equal({options[0] => 2, options[1] => 1, options[2] => 2}, @report.summaries[0].items)
+  end
+
+  test "choice count should be correct for select_multiple" do
+  end
+
   private
-    def prepare_form_and_report(qtype, answers)
-      prepare_form(qtype, answers)
+    def prepare_form_and_report(qtype, answers, options = {})
+      prepare_form(qtype, answers, options)
       prepare_report
     end
 
-    def prepare_form(qtype, answers)
-      @form = FactoryGirl.create(:form, :question_types => [qtype])
+    def prepare_form(qtype, answers, options = {})
+      @form = FactoryGirl.create(:form, options.merge(:question_types => [qtype]))
       answers.each{|a| FactoryGirl.create(:response, :form => @form, :_answers => [a])}
     end
 

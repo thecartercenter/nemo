@@ -20,6 +20,15 @@ FactoryGirl.define do
             option = qing.options.index_by(&:name)[a] or raise "could not find option with name '#{a}'"
             ans.option_id = option.id
           end
+        when 'select_multiple'
+          # in this case, a should be either nil or an array of arrays of choice names
+          unless a.nil? || a.empty?
+            options_by_name = qing.options.index_by(&:name)
+            ans.choices = a.map do |c|
+              option = options_by_name[c] or raise "could not find option with name '#{c}'"
+              Choice.new(:option_id => option.id)
+            end
+          end
         else
           ans.value = a
         end

@@ -27,13 +27,23 @@ class Report::QuestionSummary
         @items = ActiveSupport::OrderedHash[*stats_to_compute.map{|stat| [stat, values.send(stat)]}.flatten]
       end
 
-    when 'select_one'
+    when 'select_one', 'select_multiple'
       # init tallies to zero
       @items = ActiveSupport::OrderedHash[*questioning.options.map{|o| [o, 0]}.flatten]
       @null_count = 0
 
       # build tallies
-      questioning.answers.each{|a| a.option.nil? ? (@null_count += 1) : (@items[a.option] += 1)}
+      questioning.answers.each do |ans| 
+        # build tally differently depending on if one or multiple
+        if questioning.qtype_name == 'select_one'
+          ans.option.nil? ? (@null_count += 1) : (@items[ans.option] += 1)
+        else
+          # we need to loop over choices
+          # there are no nulls in a select_multiple (choice.option should never be nil)
+          ans.choices.each{|choice| @items[choice.option] += 1 unless choice.option.nil?}
+        end
+      end
+
     end
   end
 
