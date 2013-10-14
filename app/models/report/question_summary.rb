@@ -7,7 +7,7 @@ class Report::QuestionSummary
     attribs.each{|k,v| instance_variable_set("@#{k}", v)}
 
     # build the summary
-    values = questioning.answers.map{|a| a.value.to_f}.extend(DescriptiveStatistics)
+    values = questioning.answers.reject{|a| a.value.blank?}.map{|a| a.value.to_f}.extend(DescriptiveStatistics)
     stats_to_compute = [:mean, :median, :max, :min]
     @items = ActiveSupport::OrderedHash[*stats_to_compute.map{|stat| [stat, values.send(stat)]}.flatten]
   end

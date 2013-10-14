@@ -15,8 +15,14 @@ class Report::QuestionSummaryTest < ActiveSupport::TestCase
     assert_equal({:mean => 5.0, :median => 6.0, :max => 10.0, :min => 1.0}, @report.summaries[0].items)
   end
 
-  test "integer summary should be correct with nil values" do
-
+  test "integer summary should not include nil or blank values" do
+    @form = FactoryGirl.create(:form, :question_types => %w(integer))
+    FactoryGirl.create(:response, :form => @form, :_answers => [5])
+    FactoryGirl.create(:response, :form => @form, :_answers => [nil])
+    FactoryGirl.create(:response, :form => @form, :_answers => [''])
+    FactoryGirl.create(:response, :form => @form, :_answers => [2])
+    build_and_run_report
+    assert_equal({:mean => 3.5, :median => 3.5, :max => 5.0, :min => 2.0}, @report.summaries[0].items)
   end
 
   test "integer summary should be correct with no values" do
