@@ -2,7 +2,7 @@
 $nav_width: 135px;
 
 body { 
-  background-color: #888; 
+  background-color: #879CAA; 
 }
 
 #userinfo { 
@@ -27,11 +27,11 @@ body {
 
 #title {
   color: white;
-  margin: 10px 0 20px $nav_width;
+  margin: 10px 0 10px $nav_width;
   
   img {
     display: block;
-    height: 15px; /* explicit height to prevent shifting during load */
+    height: 64px; /* explicit height to prevent shifting during load */
   }
   
   a { color: white; text-decoration: none; }
