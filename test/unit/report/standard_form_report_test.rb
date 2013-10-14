@@ -46,12 +46,19 @@ class Report::StandardFormReportTest < ActiveSupport::TestCase
     assert(!@report.summaries.map(&:questioning).include?(@form.questionings[1]), "summaries should not contain hidden question")
   end
 
+  test "report should return summaries matching questions" do
+    build_form_and_responses
+    build_and_run_report
+    assert_equal('decimal', @report.summaries[2].qtype.name)
+    assert_equal(@form.questionings, @report.summaries.map(&:questioning))
+  end
+
 
   private
     def build_form_and_responses
-      @form = FactoryGirl.create(:form, :question_types => %w(integer integer))
+      @form = FactoryGirl.create(:form, :question_types => %w(integer integer decimal))
       5.times do
-        FactoryGirl.create(:response, :form => @form, :_answers => [1, 2])
+        FactoryGirl.create(:response, :form => @form, :_answers => [1, 2, 1.5])
       end
     end
 

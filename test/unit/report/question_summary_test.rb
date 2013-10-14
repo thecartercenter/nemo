@@ -28,7 +28,7 @@ class Report::QuestionSummaryTest < ActiveSupport::TestCase
     prepare_form_and_report('integer', [nil, ''])
     assert(@report.summaries[0].empty?, 'summary should say it\'s empty')
   end
-  
+
   private
     def prepare_form_and_report(qtype, answers)
       @form = FactoryGirl.create(:form, :question_types => [qtype])
