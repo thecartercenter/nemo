@@ -7,7 +7,7 @@ class Report::QuestionSummary
     attribs.each{|k,v| instance_variable_set("@#{k}", v)}
 
     # build the summary
-    values = questioning.answers.reject{|a| a.value.blank?}.map{|a| a.value.to_f}.extend(DescriptiveStatistics)
+    values = questioning.answers.reject{|a| a.value.blank?}.map{|a| a.value.to_i}.extend(DescriptiveStatistics)
     if values.empty?
       @items = nil
     else
