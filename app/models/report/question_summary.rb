@@ -87,7 +87,12 @@ class Report::QuestionSummary
       end
 
     when 'text', 'tiny_text', 'long_text'
-      @items = questioning.answers.reject(&:nil_value?).map{|a| {:text => a.casted_value, :response => a.response}}
+      # reject nil answers and sort by response date
+      answers = questioning.answers.reject(&:nil_value?)
+      answers.sort_by!{|a| a.response.created_at}
+
+      # get items
+      @items = answers.map{|a| {:text => a.casted_value, :response => a.response}}
 
       # nulls are stripped out so we can calculate how many just by taking difference
       @null_count = questioning.answers.size - @items.size

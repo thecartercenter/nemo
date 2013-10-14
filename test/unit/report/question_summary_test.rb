@@ -168,6 +168,18 @@ class Report::QuestionSummaryTest < ActiveSupport::TestCase
   end
 
   test "text summary items should be in chronological order" do
+    prepare_form('text', ['foo', 'bar', 'baz'])
+
+    # change response dates
+    @form.responses[1].created_at += 1.hour
+    @form.responses[1].save!
+    @form.responses[2].created_at -= 1.day
+    @form.responses[2].save!
+
+    prepare_report
+
+    # check for correct order
+    assert_equal(%w(baz foo bar), @report.summaries[0].items.map{|i| i[:text]})
   end
 
   private
