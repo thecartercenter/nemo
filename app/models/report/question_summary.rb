@@ -40,8 +40,4 @@ class Report::QuestionSummary
   def qtype
     questioning.qtype
   end
-
-  def empty?
-    items.empty?
-  end
 end

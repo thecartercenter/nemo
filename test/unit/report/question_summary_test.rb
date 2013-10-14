@@ -34,13 +34,12 @@ class Report::QuestionSummaryTest < ActiveSupport::TestCase
 
   test "integer summary should be correct with no values" do
     prepare_form_and_report('integer', [])
-    assert(@report.summaries[0].empty?, 'summary should say it\'s empty')
     assert_equal({}, @report.summaries[0].items)
   end
 
   test "integer summary should be correct with no non-blank values" do
     prepare_form_and_report('integer', [nil, ''])
-    assert(@report.summaries[0].empty?, 'summary should say it\'s empty')
+    assert_equal({}, @report.summaries[0].items)
   end
 
   test "decimal summary should be correct in normal case" do
@@ -50,7 +49,7 @@ class Report::QuestionSummaryTest < ActiveSupport::TestCase
 
   test "decimal summary should be correct with no non-blank values" do
     prepare_form_and_report('decimal', [nil, ''])
-    assert(@report.summaries[0].empty?, 'summary should say it\'s empty')
+    assert_equal({}, @report.summaries[0].items)
   end
 
   test "decimal summary values should be correct type" do
