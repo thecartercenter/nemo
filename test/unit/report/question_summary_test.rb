@@ -148,7 +148,7 @@ class Report::QuestionSummaryTest < ActiveSupport::TestCase
 
   test "text summary should be correct in normal case" do
     prepare_form_and_report('text', ['foo', 'bar'])
-    assert_equal(['foo', 'bar'], @report.summaries[0].items)
+    assert_equal(['foo', 'bar'], @report.summaries[0].items.map{|i| i[:text]})
   end
 
   test "null_count should work for text summary" do
@@ -162,8 +162,10 @@ class Report::QuestionSummaryTest < ActiveSupport::TestCase
     assert_equal(0, @report.summaries[0].null_count)
   end
 
-  test "text summary should include reference to response" do
-  end
+  # test "text summary should include reference to response" do
+  #   prepare_form_and_report('text', ['foo', 'bar'])
+  #   assert_equal(['foo', 'bar'], @report.summaries[0].items)
+  # end
 
   test "text summary items should be in chronological order" do
   end
