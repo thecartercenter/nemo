@@ -152,6 +152,11 @@ class Report::QuestionSummaryTest < ActiveSupport::TestCase
   end
 
   test "null_count should work for text summary" do
+    prepare_form_and_report('text', ['foo', nil, 'bar', ''])
+    assert_equal(2, @report.summaries[0].null_count)
+  end
+
+  test "text summary should work with no values" do
   end
 
   test "text summary should include reference to response" do
