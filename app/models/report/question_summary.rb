@@ -6,20 +6,31 @@ class Report::QuestionSummary
     # save attribs
     attribs.each{|k,v| instance_variable_set("@#{k}", v)}
 
-    # get non-blank values
-    values = questioning.answers.reject{|a| a.value.blank?}.map(&:value)
+    case questioning.qtype_name
+    when 'integer', 'decimal'
 
-    if values.empty?
-      @items = nil
-    else
-      # convert values appropriately
-      values = values.map(&(questioning.qtype.name == 'integer' ? :to_i : :to_f))
+      # get non-blank values
+      values = questioning.answers.reject{|a| a.value.blank?}.map(&:value)
 
-      # add the descriptive statistics methods
-      values = values.extend(DescriptiveStatistics)
+      if values.empty?
+        @items = nil
+      else
+        # convert values appropriately
+        values = values.map(&(questioning.qtype.name == 'integer' ? :to_i : :to_f))
 
-      stats_to_compute = [:mean, :median, :max, :min]
-      @items = ActiveSupport::OrderedHash[*stats_to_compute.map{|stat| [stat, values.send(stat)]}.flatten]
+        # add the descriptive statistics methods
+        values = values.extend(DescriptiveStatistics)
+
+        stats_to_compute = [:mean, :median, :max, :min]
+        @items = ActiveSupport::OrderedHash[*stats_to_compute.map{|stat| [stat, values.send(stat)]}.flatten]
+      end
+
+    when 'select_one'
+      # init tallies to zero
+      @items = ActiveSupport::OrderedHash[*questioning.options.map{|o| [o, 0]}.flatten]
+
+      # build tallies
+      questioning.answers.each{|a| @items[a.option] += 1}
     end
   end
 
