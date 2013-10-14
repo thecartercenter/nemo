@@ -134,7 +134,17 @@ class Report::QuestionSummaryTest < ActiveSupport::TestCase
     assert_equal({}, @report.summaries[0].items)
   end
 
-  
+  test "datetime summary should be correct in normal case" do
+    prepare_form_and_report('datetime', ['2013-10-26 18:45', '2013-10-26 10:15', '2013-10-27 19:00'])
+
+    # check that the time got stored properly
+    assert_equal(dtp('2013-10-26 18:45'), @form.responses.first.answers.first.datetime_value)
+
+    # check stats
+    assert_equal({:mean => dtp('2013-10-27 00:00'), :median => dtp('2013-10-26 18:45'), 
+      :min => dtp('2013-10-26 10:15'), :max => dtp('2013-10-27 19:00')}, 
+      @report.summaries[0].items)
+  end
 
   private
     def prepare_form_and_report(qtype, answers, options = {})
@@ -152,7 +162,13 @@ class Report::QuestionSummaryTest < ActiveSupport::TestCase
       @report.run
     end
 
+    # parse a time value
     def tp(s)
       Time.parse("2000-01-01 #{s} UTC")
+    end
+
+    # parse a datetime value
+    def dtp(s)
+      Time.zone.parse(s)
     end
 end

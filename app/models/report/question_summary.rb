@@ -39,7 +39,10 @@ class Report::QuestionSummary
         @items = ActiveSupport::OrderedHash[*stats_to_compute.map{|stat| [stat, values.send(stat)]}.flatten]
 
         # if temporal, convert back to Times
-        @items.each{|k,v| @items[k] = Time.at(v)}
+        case questioning.qtype_name
+        when 'time' then @items.each{|k,v| @items[k] = Time.at(v)}
+        when 'datetime' then @items.each{|k,v| @items[k] = Time.zone.at(v)}
+        end
       end
 
     when 'select_one', 'select_multiple'

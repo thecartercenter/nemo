@@ -36,6 +36,9 @@ FactoryGirl.define do
           when 'time'
             ans.time_value = a
 
+          when 'datetime'
+            ans.datetime_value = a
+
           else
             ans.value = a
           end
