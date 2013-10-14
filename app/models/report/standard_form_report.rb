@@ -9,6 +9,7 @@ class Report::StandardFormReport < Report::Report
     query.count
   end
 
+  # returns an array of question summaries ordered by question rank
   def summaries
     return @summaries if @summaries
 
