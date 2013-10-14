@@ -90,6 +90,8 @@ class Report::QuestionSummaryTest < ActiveSupport::TestCase
   end
 
   test "choice count should be correct for select_multiple" do
+    prepare_form_and_report('select_multiple', [%w(A), %w(B C), %w(A C)], :option_names => %w(A B C))
+    assert_equal(5, @report.summaries[0].choice_count)
   end
 
   private

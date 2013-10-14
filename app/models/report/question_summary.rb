@@ -1,6 +1,16 @@
 # models a summary of the answers for a question on a form
 class Report::QuestionSummary
-  attr_reader :questioning, :items, :null_count
+  # the questioning we're summarizing
+  attr_reader :questioning
+    
+  # the individual items of information in the summary. can be an ordered hash or an array
+  attr_reader :items
+
+  # the number of null answers we encountered
+  attr_reader :null_count
+
+  # the number of choices as opposed to answers, we encountered (only set for select_multiple questions)
+  attr_reader :choice_count
 
   def initialize(attribs)
     # save attribs
@@ -31,16 +41,23 @@ class Report::QuestionSummary
       # init tallies to zero
       @items = ActiveSupport::OrderedHash[*questioning.options.map{|o| [o, 0]}.flatten]
       @null_count = 0
-
-      # build tallies
-      questioning.answers.each do |ans| 
-        # build tally differently depending on if one or multiple
-        if questioning.qtype_name == 'select_one'
-          ans.option.nil? ? (@null_count += 1) : (@items[ans.option] += 1)
-        else
+      
+      if questioning.qtype_name == 'select_multiple'
+        @choice_count = 0 
+        questioning.answers.each do |ans|
           # we need to loop over choices
           # there are no nulls in a select_multiple (choice.option should never be nil)
-          ans.choices.each{|choice| @items[choice.option] += 1 unless choice.option.nil?}
+          ans.choices.each do |choice|
+            unless choice.option.nil?
+              @items[choice.option] += 1
+              @choice_count += 1
+            end
+          end
+        end
+
+      else # select_one
+        questioning.answers.each do |ans|
+          ans.option.nil? ? (@null_count += 1) : (@items[ans.option] += 1)
         end
       end
 
