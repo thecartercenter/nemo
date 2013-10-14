@@ -84,6 +84,11 @@ class Report::QuestionSummaryTest < ActiveSupport::TestCase
     assert_equal({options[0] => 2, options[1] => 1, options[2] => 2}, @report.summaries[0].items)
   end
 
+  test "null_count should always be zero for select_multiple" do
+    prepare_form_and_report('select_multiple', [%w(A)], :option_names => %w(A B C))
+    assert_equal(0, @report.summaries[0].null_count)
+  end
+
   test "choice count should be correct for select_multiple" do
   end
 
