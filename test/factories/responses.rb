@@ -31,10 +31,10 @@ FactoryGirl.define do
             end
 
           when 'date'
-            ans.date_value = Date.parse(a)
+            ans.date_value = a
 
           when 'time'
-            ans.time_value = Time.zone.parse(a)
+            ans.time_value = a
 
           else
             ans.value = a

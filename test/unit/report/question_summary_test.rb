@@ -114,10 +114,15 @@ class Report::QuestionSummaryTest < ActiveSupport::TestCase
     assert_equal(2, @report.summaries[0].null_count)
   end
 
-  # test "time question summary should be correct in normal case" do
-  #   prepare_form_and_report('time', %w(9:30 10:15 22:15))
-  #   assert_equal({:mean => tzp('14:00'), :median => tzp('10:15'), :min => tzp('9:30'), :max => tzp('22:15')}, @report.summaries[0].items)
-  # end
+  test "time question summary should be correct in normal case" do
+    prepare_form_and_report('time', %w(9:30 10:15 22:15))
+
+    # check that the time got stored properly
+    assert_equal(Time.parse('2000-01-01 9:30 UTC'), @form.responses.first.answers.first.time_value)
+    
+    # check stats    
+    assert_equal({:mean => tp('14:00'), :median => tp('10:15'), :min => tp('9:30'), :max => tp('22:15')}, @report.summaries[0].items)
+  end
 
   private
     def prepare_form_and_report(qtype, answers, options = {})
@@ -135,7 +140,7 @@ class Report::QuestionSummaryTest < ActiveSupport::TestCase
       @report.run
     end
 
-    def tzp(s)
-      Time.zone.parse(s)
+    def tp(s)
+      Time.parse("2000-01-01 #{s} UTC")
     end
 end

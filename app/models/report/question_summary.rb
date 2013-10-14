@@ -32,8 +32,14 @@ class Report::QuestionSummary
         # add the descriptive statistics methods
         values = values.extend(DescriptiveStatistics)
 
+        # if temporal question type, convert values unix timestamps before running stats
+        values.map!(&:to_i) if questioning.qtype.temporal?
+
         stats_to_compute = [:mean, :median, :max, :min]
         @items = ActiveSupport::OrderedHash[*stats_to_compute.map{|stat| [stat, values.send(stat)]}.flatten]
+
+        # if temporal, convert back to Times
+        @items.each{|k,v| @items[k] = Time.at(v)}
       end
 
     when 'select_one', 'select_multiple'
