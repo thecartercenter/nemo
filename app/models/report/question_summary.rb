@@ -29,9 +29,10 @@ class Report::QuestionSummary
     when 'select_one'
       # init tallies to zero
       @items = ActiveSupport::OrderedHash[*questioning.options.map{|o| [o, 0]}.flatten]
+      @null_count = 0
 
       # build tallies
-      questioning.answers.each{|a| @items[a.option] += 1}
+      questioning.answers.each{|a| a.option.nil? ? (@null_count += 1) : (@items[a.option] += 1)}
     end
   end
 

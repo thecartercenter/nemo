@@ -68,7 +68,16 @@ class Report::QuestionSummaryTest < ActiveSupport::TestCase
     assert_equal({options[0] => 1, options[1] => 3}, @report.summaries[0].items)
   end
 
+  test "null_count should be correct for select_one" do
+    prepare_form_and_report('select_one', ['Yes', nil, 'No', nil])
+    assert_equal(2, @report.summaries[0].null_count)
+  end
+
   test "select_one summary should report nulls" do
+  end
+
+  test "select_one summary should still work if answer option is no longer in option set" do
+
   end
 
   private

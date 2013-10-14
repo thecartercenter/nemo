@@ -16,8 +16,10 @@ FactoryGirl.define do
         ans = Answer.new(:questioning => qing)
         case qing.qtype_name
         when 'select_one'
-          option = qing.options.index_by(&:name)[a] or raise "could not find option with name '#{a}'"
-          ans.option_id = option.id
+          unless a.nil?
+            option = qing.options.index_by(&:name)[a] or raise "could not find option with name '#{a}'"
+            ans.option_id = option.id
+          end
         else
           ans.value = a
         end
