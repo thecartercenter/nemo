@@ -19,9 +19,15 @@ class Report::QuestionSummaryTest < ActiveSupport::TestCase
   end
 
   test "integer summary should be correct with no values" do
-
+    prepare_form_and_report('integer', [])
+    assert(@report.summaries[0].empty?, 'summary should say it\'s empty')
+    assert_nil(@report.summaries[0].items)
   end
 
+  test "integer summary should be correct with no non-blank values" do
+
+  end
+  
   private
     def prepare_form_and_report(qtype, answers)
       @form = FactoryGirl.create(:form, :question_types => [qtype])

@@ -8,11 +8,19 @@ class Report::QuestionSummary
 
     # build the summary
     values = questioning.answers.reject{|a| a.value.blank?}.map{|a| a.value.to_f}.extend(DescriptiveStatistics)
-    stats_to_compute = [:mean, :median, :max, :min]
-    @items = ActiveSupport::OrderedHash[*stats_to_compute.map{|stat| [stat, values.send(stat)]}.flatten]
+    if values.empty?
+      @items = nil
+    else
+      stats_to_compute = [:mean, :median, :max, :min]
+      @items = ActiveSupport::OrderedHash[*stats_to_compute.map{|stat| [stat, values.send(stat)]}.flatten]
+    end
   end
 
   def qtype
     questioning.qtype
+  end
+
+  def empty?
+    items.nil?
   end
 end
