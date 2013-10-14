@@ -149,6 +149,11 @@ class Answer < ActiveRecord::Base
     end
   end
   
+  # true if the casted_value is nil
+  def nil_value?
+    casted_value.nil?
+  end
+
   private
     def required
       if required? && !hidden? && relevant? && qtype.name != "select_multiple" &&

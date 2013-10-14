@@ -87,7 +87,7 @@ class Report::QuestionSummary
       end
 
     when 'text', 'tiny_text', 'long_text'
-      @items = questioning.answers.map(&:casted_value).compact.map{|v| {:text => v}}
+      @items = questioning.answers.reject(&:nil_value?).map{|a| {:text => a.casted_value, :response => a.response}}
 
       # nulls are stripped out so we can calculate how many just by taking difference
       @null_count = questioning.answers.size - @items.size
