@@ -14,7 +14,8 @@ class Report::QuestionSummary
       @null_count = questioning.answers.size - values.size
 
       if values.empty?
-        @items = nil
+        # no statistics make sense in this case
+        @items = {}
       else
         # convert values appropriately
         values = values.map(&(questioning.qtype.name == 'integer' ? :to_i : :to_f))
@@ -41,6 +42,6 @@ class Report::QuestionSummary
   end
 
   def empty?
-    items.nil?
+    items.empty?
   end
 end

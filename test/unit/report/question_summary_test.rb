@@ -35,7 +35,7 @@ class Report::QuestionSummaryTest < ActiveSupport::TestCase
   test "integer summary should be correct with no values" do
     prepare_form_and_report('integer', [])
     assert(@report.summaries[0].empty?, 'summary should say it\'s empty')
-    assert_nil(@report.summaries[0].items)
+    assert_equal({}, @report.summaries[0].items)
   end
 
   test "integer summary should be correct with no non-blank values" do
@@ -73,17 +73,21 @@ class Report::QuestionSummaryTest < ActiveSupport::TestCase
     assert_equal(2, @report.summaries[0].null_count)
   end
 
-  test "select_one summary should report nulls" do
-  end
-
-  test "select_one summary should still work if answer option is no longer in option set" do
-
+  test "select_one summary should be correct if no values" do
   end
 
   private
     def prepare_form_and_report(qtype, answers)
+      prepare_form(qtype, answers)
+      prepare_report
+    end
+
+    def prepare_form(qtype, answers)
       @form = FactoryGirl.create(:form, :question_types => [qtype])
       answers.each{|a| FactoryGirl.create(:response, :form => @form, :_answers => [a])}
+    end
+
+    def prepare_report
       @report = FactoryGirl.create(:standard_form_report, :form => @form)
       @report.run
     end
