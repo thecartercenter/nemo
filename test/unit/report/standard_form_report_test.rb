@@ -60,6 +60,23 @@ class Report::StandardFormReportTest < ActiveSupport::TestCase
     assert(!@report.summaries.map(&:questioning).include?(@form.questionings[3]), "summaries should not contain location questions")
   end
 
+  test "report should return non-submitting observers" do
+    # make observers
+    observers = %w(bob jojo cass sal).map{|n| FactoryGirl.create(:user, :login => n, :role_name => :observer)}
+
+    # make decoy coord and admin users
+    coord = FactoryGirl.create(:user, :role_name => :coordinator)
+    admin = FactoryGirl.create(:user, :role_name => :observer, :admin => true)
+
+    # make simple form and add responses from first two users
+    @form = FactoryGirl.create(:form)
+    observers[0...2].each{|o| FactoryGirl.create(:response, :form => @form, :user => o)}
+
+    # run report and check missing observers
+    build_and_run_report
+    assert_equal(%w(cass sal), @report.users_without_responses(:role => :observer).map(&:login).sort)
+  end
+
   private
     def build_form_and_responses
       @form = FactoryGirl.create(:form, :question_types => %w(integer integer decimal location))
