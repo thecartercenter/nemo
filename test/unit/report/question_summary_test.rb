@@ -146,6 +146,20 @@ class Report::QuestionSummaryTest < ActiveSupport::TestCase
       @report.summaries[0].items)
   end
 
+  test "text summary should be correct in normal case" do
+    prepare_form_and_report('text', ['foo', 'bar'])
+    assert_equal(['foo', 'bar'], @report.summaries[0].items)
+  end
+
+  test "null_count should work for text summary" do
+  end
+
+  test "text summary should include reference to response" do
+  end
+
+  test "text summary items should be in chronological order" do
+  end
+
   private
     def prepare_form_and_report(qtype, answers, options = {})
       prepare_form(qtype, answers, options)

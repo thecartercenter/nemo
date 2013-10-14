@@ -85,7 +85,11 @@ class Report::QuestionSummary
           @items[a.date_value] += 1
         end
       end
-    end    
+
+    when 'text', 'tiny_text', 'long_text'
+      @items = questioning.answers.map(&:casted_value).compact
+      #@null_count = questioning.answers.size - non_nulls.size
+    end
   end
 
   def qtype
