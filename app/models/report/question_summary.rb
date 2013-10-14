@@ -1,6 +1,6 @@
 # models a summary of the answers for a question on a form
 class Report::QuestionSummary
-  attr_reader :questioning, :items
+  attr_reader :questioning, :items, :answer_count
 
   def initialize(attribs)
     # save attribs
@@ -31,6 +31,8 @@ class Report::QuestionSummary
 
       # build tallies
       questioning.answers.each{|a| @items[a.option] += 1}
+
+      @answer_count = questioning.answers.size
     end
   end
 

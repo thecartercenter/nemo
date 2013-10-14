@@ -61,6 +61,7 @@ class Report::QuestionSummaryTest < ActiveSupport::TestCase
     prepare_form_and_report('select_one', %w(Yes No No No))
     options = @form.questions[0].option_set.options
     assert_equal({options[0] => 1, options[1] => 3}, @report.summaries[0].items)
+    assert_equal(4, @report.summaries[0].answer_count)
   end
 
   test "select_one summary should report nulls" do
