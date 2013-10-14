@@ -6,7 +6,7 @@ class Report::StandardFormReport < Report::Report
 
   # returns the number of responses matching the report query
   def response_count
-    query.count
+    @response_count ||= form.responses.count
   end
 
   # returns an array of question summaries ordered by question rank
@@ -29,12 +29,6 @@ class Report::StandardFormReport < Report::Report
     # eager load responses with users
     all_observers = form.mission.assignments.includes(:user).find_all{|a| a.role.to_sym == options[:role] && a.active? && !a.user.admin?}.map(&:user)
     submitters = form.responses.includes(:user).map(&:user).uniq
-    all_observers - submitters
+    @users_without_responses = all_observers - submitters
   end
-
-  protected
-
-    def prep_query(query)
-      query
-    end
 end

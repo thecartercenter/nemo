@@ -76,11 +76,11 @@ class Report::Report < ActiveRecord::Base
     # set the has run flag
     @has_run = true
   
-    # prep the relation and add a filter clause
-    @query = prep_query(Response.unscoped.for_mission(mission))
-  
     # these bits are only applicable to the older style reports
     unless is_a?(Report::StandardFormReport)
+
+      # prep the relation and add a filter clause
+      @query = prep_query(Response.unscoped.for_mission(mission))
 
       # execute it the relation, returning rows, and create dbresult obj
       @db_result = Report::DbResult.new(@query.all)
