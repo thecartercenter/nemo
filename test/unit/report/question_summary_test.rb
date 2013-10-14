@@ -25,7 +25,8 @@ class Report::QuestionSummaryTest < ActiveSupport::TestCase
   end
 
   test "integer summary should be correct with no non-blank values" do
-
+    prepare_form_and_report('integer', [nil, ''])
+    assert(@report.summaries[0].empty?, 'summary should say it\'s empty')
   end
   
   private
