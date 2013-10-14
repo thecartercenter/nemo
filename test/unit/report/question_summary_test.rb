@@ -73,7 +73,10 @@ class Report::QuestionSummaryTest < ActiveSupport::TestCase
     assert_equal(2, @report.summaries[0].null_count)
   end
 
-  test "select_one summary should be correct if no values" do
+  test "select_one summary should still have items if no values" do
+    prepare_form_and_report('select_one', [nil, nil])
+    options = @form.questions[0].option_set.options
+    assert_equal({options[0] => 0, options[1] => 0}, @report.summaries[0].items)
   end
 
   private
