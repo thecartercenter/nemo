@@ -38,10 +38,10 @@ class Report::QuestionSummaryTest < ActiveSupport::TestCase
     assert(@report.summaries[0].empty?, 'summary should say it\'s empty')
   end
 
-  # test "decimal summary should be correct in normal case" do
-  #   prepare_form_and_report('integer', [10, 7, 6, 1, 1])
-  #   assert_equal({:mean => 5.0, :median => 6.0, :max => 10.0, :min => 1.0}, @report.summaries[0].items)
-  # end
+  test "decimal summary should be correct in normal case" do
+    prepare_form_and_report('decimal', [10.0, 7.2, 6.7, 1.1, 11.5])
+    assert_equal({:mean => 7.3, :median => 7.2, :max => 11.5, :min => 1.1}, @report.summaries[0].items)
+  end
 
   private
     def prepare_form_and_report(qtype, answers)
