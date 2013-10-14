@@ -94,6 +94,14 @@ class Report::QuestionSummaryTest < ActiveSupport::TestCase
     assert_equal(5, @report.summaries[0].choice_count)
   end
 
+  test "date question summary should be correct in normal case" do
+    prepare_form_and_report('date', %w(20131026 20131027 20131027 20131028))
+    assert_equal({Date.parse('20131026') => 1, Date.parse('20131027') => 2, Date.parse('20131028') => 1}, @report.summaries[0].items)
+  end
+
+  test "date question summary keys should be sorted properly" do
+  end
+
   private
     def prepare_form_and_report(qtype, answers, options = {})
       prepare_form(qtype, answers, options)

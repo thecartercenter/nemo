@@ -61,6 +61,23 @@ class Report::QuestionSummary
         end
       end
 
+    when 'date'
+      # init tallies to zero
+      @items = ActiveSupport::OrderedHash.new
+      @null_count = 0
+
+      # build tallies
+      questioning.answers.each do |a| 
+        if a.nil?
+          @null_count += 1
+        else
+          @items[a.date_value] ||= 0
+          @items[a.date_value] += 1
+        end
+      end
+      
+      # sort keys
+
     end
   end
 
