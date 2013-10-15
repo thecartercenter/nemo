@@ -6,12 +6,13 @@ module Report::ReportsHelper
   end
   
   def report_reports_index_fields
-    %w(name viewed_at view_count actions)
+    %w(name type viewed_at view_count actions)
   end
   
   def format_report_reports_field(report, field)
     case field
     when "name" then link_to(report.name, report_report_path(report), :title => t("common.view"))
+    when "type" then translate_model(report.class)
     when "viewed_at" then report.viewed_at && t("layout.time_ago", :time => time_ago_in_words(report.viewed_at))
     when "actions" then action_links(report.becomes(Report::Report), :obj_name => report.name)
     else report.send(field)

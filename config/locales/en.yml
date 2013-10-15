@@ -156,13 +156,13 @@ en:
         one: "Tally Report"
         other: "Tally Reports"
       report/question_answer_tally_report:
-        zero: "Tallies of Answers per Question"
-        one: "Tally of Answers per Question"
-        other: "Tallies of Answers per Question"
+        zero: "Answer Tally Reports"
+        one: "Answer Tally Report"
+        other: "Answer Tally Reports"
       report/grouped_tally_report:
-        zero: "Tallies of Responses per Answer/Attribute"
-        one: "Tally of Responses per Answer/Attribute"
-        other: "Tallies of Responses per Answer/Attribute"
+        zero: "Response Tally Reports"
+        one: "Response Tally Report"
+        other: "Response Tally Reports"
       report/list_report:
         zero: "List Reports"
         one: "List Report"
