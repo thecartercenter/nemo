@@ -36,7 +36,7 @@ class Report::Report < ActiveRecord::Base
   PERCENT_TYPES = %w(none overall by_row by_col)
   
   # list of all immediate subclasses in the order they should be shown to the user
-  SUBCLASSES = [Report::TallyReport, Report::ListReport]
+  SUBCLASSES = [Report::TallyReport, Report::ListReport, Report::StandardFormReport]
   
   # HACK TO GET STI TO WORK WITH ACCEPTS_NESTED_ATTRIBUTES_FOR
   class << self

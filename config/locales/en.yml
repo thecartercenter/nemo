@@ -164,9 +164,13 @@ en:
         one: "Tally of Responses per Answer/Attribute"
         other: "Tallies of Responses per Answer/Attribute"
       report/list_report:
-        zero: "Lists of Answers/Attributes"
-        one: "List of Answers/Attributes"
-        other: "Lists of Answers/Attributes"
+        zero: "List Reports"
+        one: "List Report"
+        other: "List Reports"
+      report/standard_form_report:
+        zero: "Standard Form Reports"
+        one: "Standard Form Report"
+        other: "Standard Form Reports"
       response: 
         zero: "Responses"
         one: "Response"
@@ -892,6 +896,7 @@ en:
     descriptions:
       tally_report: "Aggregated tallies of answers or responses, grouped by attributes of interest."
       list_report: "A raw listing of answers and attributes for a set of responses."
+      standard_form_report: "A question-by-question summary of the responses for a specific form."
     examples:
       tally_report:
         - "Number of Very Good, Good, etc. answers for the Overall question"
@@ -902,6 +907,10 @@ en:
         - "List of answers to the Complaints and OtherIrreg questions along with the polling place number"
         - "List of all polling place numbers, with no duplicates"
         - "List of submitter name, date, and answer to the NeedSecurityContact question"
+      standard_form_report:
+        - "Summaries (percentage, averages, medians, etc.) of all questions on a form"
+        - "Can be grouped by question rank or question type"
+        - "Can be split by the answer to a specific question (e.g. region or urban/rural)"
     percent_types:
       none: "No Percentage"
       overall: "Percentage Overall"
