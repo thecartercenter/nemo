@@ -8,6 +8,7 @@
   <%= stylesheet_link_tag "application", :media => "all" %>
   <%= stylesheet_link_tag "application-screen", :media => "screen" %>
   <%= stylesheet_link_tag "application-print", :media => "print" %>
+  <link href='http://fonts.googleapis.com/css?family=Raleway:400,700' rel='stylesheet' type='text/css'>
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
 
@@ -68,7 +69,6 @@
   <div id="title">
     <%= link_to(image_tag("logo.png"), root_path) %>
     <%# Stripping title name since we have a logo now %>
-    <h1><%= configatron.site_name.gsub(/ELMO/, '')%></h1>
     <h2><%= nn(current_mission).name %></h2>
   </div>
   

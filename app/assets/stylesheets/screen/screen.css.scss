@@ -31,13 +31,25 @@ body {
   
   img {
     display: inline-block;
-    height: 64px; /* explicit height to prevent shifting during load */
+    height: 54px; /* explicit height to prevent shifting during load */
     vertical-align: bottom;
+    padding-bottom: 25px;
   }
   
   a { color: white; text-decoration: none; }
   h1 { font-size: 40px; color: white; line-height: 1; display: inline-block; margin: 0 10px 5px 0; }
-  h2 { font-size: 22px; width: 300px; margin: 0; color: white; display: inline-block; text-transform: uppercase; vertical-align: top; }
+  h2 { 
+    font-size: 24px; 
+    font-family: "Raleway", sans-serif; 
+    width: 300px; 
+    margin: 0; 
+    color: #D9ECF7; 
+    display: inline-block; 
+    text-transform: lowercase; 
+    vertical-align: bottom; 
+    line-height: 24px; 
+    padding-bottom: 23px; 
+  }
 }
 
 #nav {
