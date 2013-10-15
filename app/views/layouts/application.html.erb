@@ -67,6 +67,8 @@
   
   <div id="title">
     <%= link_to(image_tag("logo.png"), root_path) %>
+    <%# Stripping title name since we have a logo now %>
+    <h1><%= configatron.site_name.gsub(/ELMO/, '')%></h1>
     <h2><%= nn(current_mission).name %></h2>
   </div>
   

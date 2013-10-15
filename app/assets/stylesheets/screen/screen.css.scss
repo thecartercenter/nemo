@@ -30,12 +30,13 @@ body {
   margin: 10px 0 10px $nav_width;
   
   img {
-    display: block;
+    display: inline-block;
     height: 64px; /* explicit height to prevent shifting during load */
+    vertical-align: bottom;
   }
   
   a { color: white; text-decoration: none; }
-  h1 { font-size: 40px; line-height: 1; display: inline-block; margin: 0 10px 5px 0; }
+  h1 { font-size: 40px; color: white; line-height: 1; display: inline-block; margin: 0 10px 5px 0; }
   h2 { font-size: 22px; width: 300px; margin: 0; color: white; display: inline-block; text-transform: uppercase; vertical-align: top; }
 }
 
