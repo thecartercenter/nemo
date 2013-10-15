@@ -96,7 +96,13 @@ class Report::Report < ActiveRecord::Base
     h[:just_created] = just_created
     h[:type] = type
     h[:filter_str] = filter ? filter.str : ""
+    h[:empty] = empty?
     h
+  end
+
+  # should be overridden
+  def empty?
+    true
   end
   
   private

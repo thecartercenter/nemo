@@ -65,4 +65,10 @@ module Report::LegacyReport
     # by default we don't have to worry about blank rows
     def remove_blank_rows
     end
+
+    # checks if this report returned no data
+    def empty?
+      data.nil? ? true : data.rows.empty?
+    end
+
 end

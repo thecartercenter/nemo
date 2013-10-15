@@ -32,7 +32,7 @@
   
   klass.prototype.render = function() {
     // if no matching data, show message
-    if (this.report.no_data()) {
+    if (this.report.attribs.empty) {
       $(".report_info").empty();
       $(".report_body").html(I18n.t("report/report.no_match"))
     } else {
