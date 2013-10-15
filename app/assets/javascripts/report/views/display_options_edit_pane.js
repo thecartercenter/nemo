@@ -5,6 +5,7 @@
   ns.DisplayOptionsEditPane = klass = function(parent_view, menus, options) {
     this.parent_view = parent_view;
     this.options = options;
+    this.menus = menus;
     this.build();
   }
   
@@ -25,6 +26,15 @@
     // build tally type chooser
     this.tally_type = new ELMO.Control.RadioGroup({inputs: this.cont.find("input[name='tally_type']")});
     this.tally_type.change(function() { _this.broadcast_change("tally_type"); });
+
+    // build form chooser (for std form report)
+    this.form_id = new ELMO.Control.Select({
+      el: this.cont.find("select#form_id"),
+      objs: this.menus.form.objs,
+      id_key: "id",
+      txt_key: "name"
+    })
+    this.form_id.change(function() { _this.broadcast_change("form_id"); });
 
     // build display type chooser
     this.display_type = new ELMO.Control.RadioGroup({inputs: this.cont.find("input[name='display_type']")});
@@ -77,6 +87,10 @@
 
     this.display_type.closest(".section")[show ? "show" : "hide"]();
     if (!show) this.display_type.clear();
+
+    show = this.report.attribs.type == "Report::StandardFormReport";
+    this.form_id.closest(".section")[show ? "show" : "hide"]();
+    if (!show) this.form_id.clear();
     
     show = this.report.attribs.display_type == "table" && is_tally;
     this.percent_type.closest(".section")[show ? "show" : "hide"]();
