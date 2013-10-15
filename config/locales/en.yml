@@ -847,7 +847,7 @@ en:
     time: "Time"
 
   report/report:
-    add_question_attribute: "Add Question/Attribute"
+    add_column: "Add Column"
     attribute:
       zero: "Attributes"
       one: "Attribute"
@@ -865,7 +865,7 @@ en:
     how_to_display_questions: "How should questions be displayed?"
     how_to_display_results: "How would you like to display the results?"
     loading_report: "Loading Report..."
-    questions_attributes: "Questions/Attributes"
+    columns: "Columns"
     questions_with_option_sets: "Questions with these option sets"
     no_match: "No matching data were found."
     report_type: "Report Type"
@@ -878,7 +878,7 @@ en:
     what_attrib_row_headers: "What attribute or question would you like for the row headers?"
     what_bar_style: "What bar style would you like?"
     what_percent_style: "What percentage style would you like?"
-    what_questions_in_list: "What questions and/or attributes would you like to see in the list?"
+    what_columns_in_list: "What columns would you like to see in the list?"
     what_type: "What type of report would you like?"
     which_calculation: "Which calculation (if any) would you like to apply?"
     which_forms: "Which forms are you interested in?"

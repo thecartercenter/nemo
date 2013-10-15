@@ -21,7 +21,7 @@
       <a id="edit_link_2" href="#"><%= pluralize_model(Form) %></a>
       <a id="edit_link_3" href="#"><%= pluralize_model(Question) %></a>
       <a id="edit_link_4" href="#"><%= t("report/report.groupings") %></a>
-      <a id="edit_link_5" href="#"><%= t("report/report.questions_attributes") %></a>
+      <a id="edit_link_5" href="#"><%= t("report/report.columns") %></a>
     </div>
   <% end %>
   <div class="report_main">
@@ -251,12 +251,12 @@
     </div>
     
     <div class="report_edit_pane fields">
-      <h2><%= t("report/report.questions_attributes") %></h2>
+      <h2><%= t("report/report.columns") %></h2>
       <div class="pane_scroll">
         <div class="error_box"></div>
         <div class="pane_body">
           <div class="section">
-            <div class="name vert"><%= t("report/report.what_questions_in_list") %></div>
+            <div class="name vert"><%= t("report/report.what_columns_in_list") %></div>
             <div class="controls vert">
               <div class="field_selector_set">
                 <div class="selectors">
@@ -267,7 +267,7 @@
                     <a href="#" class="remove"><%= t("common.remove") %></a>
                   </div>
                 </div>
-                <a href="#" class="add"><%= t("report/report.add_question_attribute") %></a>
+                <a href="#" class="add"><%= t("report/report.add_column") %></a>
               </div>
             </div>
           </div>
