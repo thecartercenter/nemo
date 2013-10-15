@@ -89,7 +89,7 @@
     var next_idx = this.next_pane(step);
 
     // show it unless it's null 
-    if (next_idx) this.show_pane(next_idx);
+    if (next_idx != null) this.show_pane(next_idx);
   }
 
   // gets the idx of the next active pane in the given direction
@@ -161,11 +161,11 @@
     this.enable_button("cancel", true);
 
     // these buttons should appear if there is another pane in the appropriate direction
-    this.enable_button("prev", !!this.next_pane(-1));
-    this.enable_button("next", !!this.next_pane(1));
+    this.enable_button("prev", this.next_pane(-1) != null);
+    this.enable_button("next", this.next_pane(1) != null);
 
     // run button should appear if report has already run or if this is the last pane
-    this.enable_button("run", this.report.has_run() || !this.next_pane(1));
+    this.enable_button("run", this.report.has_run() || this.next_pane(1) == null);
   }
   
   klass.prototype.enable_button = function(name, which) {
