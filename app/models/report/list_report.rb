@@ -1,8 +1,12 @@
 class Report::ListReport < Report::Report
+  include Report::LegacyReport
   
   def as_json(options = {})
     h = super(options)
     h[:calculations_attributes] = calculations
+    h[:data] = @data
+    h[:headers] = @header_set ? @header_set.headers : {}
+    h[:can_total] = can_total?
     h
   end
 
