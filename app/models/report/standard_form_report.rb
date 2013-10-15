@@ -31,4 +31,8 @@ class Report::StandardFormReport < Report::Report
     submitters = form.responses.includes(:user).map(&:user).uniq
     @users_without_responses = all_observers - submitters
   end
+
+  def empty?
+    response_count == 0
+  end
 end

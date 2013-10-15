@@ -77,6 +77,18 @@ class Report::StandardFormReportTest < ActiveSupport::TestCase
     assert_equal(%w(cass sal), @report.users_without_responses(:role => :observer).map(&:login).sort)
   end
 
+  test "empty? should be false if responses" do
+    build_form_and_responses
+    build_and_run_report
+    assert(!@report.empty?, "report should not be empty")
+  end
+
+  test "empty? should be true if no responses" do
+    @form = FactoryGirl.create(:form)
+    build_and_run_report
+    assert(@report.empty?, "report should be empty")
+  end
+
   private
     def build_form_and_responses
       @form = FactoryGirl.create(:form, :question_types => %w(integer integer decimal location))
