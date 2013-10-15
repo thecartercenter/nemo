@@ -6,24 +6,14 @@
 <%= flash_and_form_errors(@report) %>
 
 <div class="link_set report_top_links">
+  <% if can?(:update, @report) %>
+    <a id="edit_link" href="#"><%= t("report/report.edit_report") %></a>
+  <% end %>
   <%= link_to(t("report/report.create_link"), new_report_report_path) if can?(:create, Report::Report) %>
   <%= link_to(t("report/report.back_to_list"), report_reports_path) if can?(:index, Report::Report) %>
   <%= link_to(t("report/report.export_to_csv"), report_report_path(@report, :format => :csv), :id => "csv_link") unless @report.new_record? %>
 </div>
 <div class="report_view">
-  <% if can?(:update, @report) %>
-    <div class="report_links">
-      <strong><%= t("common.edit") %> <%= Report::Report.model_name.human %></strong>
-      <% if @report.new_record? %>
-        <a id="edit_link_0" href="#"><%= t("report/report.report_type") %></a>
-      <% end %>
-      <a id="edit_link_1" href="#"><%= t("report/report.display_options") %></a>
-      <a id="edit_link_2" href="#"><%= pluralize_model(Form) %></a>
-      <a id="edit_link_3" href="#"><%= pluralize_model(Question) %></a>
-      <a id="edit_link_4" href="#"><%= t("report/report.groupings") %></a>
-      <a id="edit_link_5" href="#"><%= t("report/report.columns") %></a>
-    </div>
-  <% end %>
   <div class="report_main">
     <%= render('main') %>
   </div>

@@ -66,7 +66,7 @@
   // hookup link events
   klass.prototype.hookup_links = function() {
     var _this = this;
-    $(".report_links a").click(function() { _this.controller.show_edit_view(parseInt(this.id.match(/_(\d+)$/)[1])); return false; })
+    $(".report_top_links a#edit_link").click(function() { _this.controller.show_edit_view(1); return false; })
   }
   
 }(ELMO.Report));

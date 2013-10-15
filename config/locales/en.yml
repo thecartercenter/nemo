@@ -856,7 +856,7 @@ en:
     blank: "Blank" # should be very short
     choose_attrib_question: "Choose an attribute or question"
     choose_report: "Choose a Report..."
-    create_link: "Create Report"
+    create_link: "Create New Report"
     display_options: "Options"
     edit_report: "Edit Report"
     enter_name: "What is the report title?"

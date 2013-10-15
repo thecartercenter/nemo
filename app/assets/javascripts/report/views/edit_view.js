@@ -58,8 +58,6 @@
       if (enabled[this.panes[i].id])
         this.panes[i].update(report, true);
     
-    this.show_hide_edit_links(this.report);
-
     // show the dialog and the appropriate pane
     this.dialog.show();
     this.show_pane(idx);
@@ -185,14 +183,6 @@
     for (var i = 0; i < this.panes.length; i++)
       if (this.panes[i].attribs_to_watch && this.panes[i].attribs_to_watch[src])
         this.panes[i].update(this.report, false);
-        
-    this.show_hide_edit_links(this.report);
-  }
-  
-  klass.prototype.show_hide_edit_links = function(report) {
-    var ep = this.enabled_panes(report);
-    for (var i = 0; i < this.panes.length; i++)
-      $(".report_links a#edit_link_" + i)[ep[this.panes[i].id] ? "show" : "hide"]();
   }
   
   // returns a hash indicating which panes should be enabled based on the given report
