@@ -13,7 +13,7 @@
   
   klass.prototype.render = function() { var self = this;
     var template = JST['templates/report/form_summary_display'];
-    $('.report_body').empty().append(template({foo: 'there'}));
+    $('.report_body').empty().append(template(this.report.attribs));
   }
   
 }(ELMO.Report));

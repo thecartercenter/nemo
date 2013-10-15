@@ -4,6 +4,12 @@ class Report::StandardFormReport < Report::Report
   # question types that we leave off this report (stored as a hash for better performance)
   EXCLUDED_TYPES = {'location' => true}
 
+  def as_json(options = {})
+    # add the required methods to the methods option
+    options[:methods] = Array.wrap(options[:methods]) + [:response_count, :summaries, :observers_without_responses]
+    h = super(options)
+  end
+
   # returns the number of responses matching the report query
   def response_count
     @response_count ||= form.responses.count
@@ -30,6 +36,10 @@ class Report::StandardFormReport < Report::Report
     all_observers = form.mission.assignments.includes(:user).find_all{|a| a.role.to_sym == options[:role] && a.active? && !a.user.admin?}.map(&:user)
     submitters = form.responses.includes(:user).map(&:user).uniq
     @users_without_responses = all_observers - submitters
+  end
+
+  def observers_without_responses
+    users_without_responses(:role => :observer)
   end
 
   def empty?
