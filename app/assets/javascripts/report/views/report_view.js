@@ -35,17 +35,18 @@
     if (this.report.attribs.empty) {
       $(".report_info").empty();
       $(".report_body").html(I18n.t("report/report.no_match"))
+
     } else {
       // create an appropriate Display class based on the display_type
-      switch (this.report.attribs.display_type) {
-        case "bar_chart":
-          this.display = new ns.BarChartDisplay(this.report);
-          break;
-        default:
-          this.display = new ns.TableDisplay(this.report);
-          break;
-      }
-    
+      if (this.report.attribs.type == "Report::StandardFormReport")
+        this.display = new ns.FormSummaryDisplay(this.report);
+      
+      else if (this.report.attribs.display_type == 'bar_chart')
+        this.display = new ns.BarChartDisplay(this.report);
+      
+      else
+        this.display = new ns.TableDisplay(this.report);
+
       this.display.render();
     }
   }
