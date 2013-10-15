@@ -56,6 +56,7 @@ GEM
       yamler (>= 0.1.0)
     dalli (2.6.4)
     descriptive_statistics (1.1.2)
+    ejs (1.0.0)
     erubis (2.7.0)
     execjs (1.4.0)
       multi_json (~> 1.0)
@@ -167,6 +168,7 @@ DEPENDENCIES
   configatron
   dalli
   descriptive_statistics
+  ejs
   factory_girl_rails (~> 4.0)
   foreigner
   i18n-js!

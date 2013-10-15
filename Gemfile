@@ -59,3 +59,6 @@ gem "rails-erd"
 
 # mean, median, etc.
 gem 'descriptive_statistics', :require => 'descriptive_statistics/safe'
+
+# underscore templates
+gem 'ejs'

@@ -12,7 +12,8 @@
   klass.prototype.parent = ns.Display.prototype;
   
   klass.prototype.render = function() { var self = this;
-    $('.report_body').empty().append('hello');
+    var template = JST['templates/report/form_summary_display'];
+    $('.report_body').empty().append(template({foo: 'there'}));
   }
   
 }(ELMO.Report));
