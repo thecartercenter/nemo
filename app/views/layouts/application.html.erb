@@ -90,7 +90,14 @@
   <div id="title">
     <%= link_to(image_tag("logo.png"), root_path) %>
     <%# Stripping title name since we have a logo now %>
-    <h2><%= admin_mode? ? t('admin_mode.admin_mode') : current_mission.try(:name) %></h2>
+    <h2>
+      <% if admin_mode? %> 
+        <i class="icon-trophy"></i>
+        <%= t('admin_mode.admin_mode') %>
+      <% else %>
+        <%= current_mission.try(:name) %>
+      <% end %>
+    </h2>
   </div>
  
   <div id="nav">
