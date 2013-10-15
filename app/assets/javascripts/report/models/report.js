@@ -147,9 +147,12 @@
     self.fix_calculation_ranks();
 
     var to_serialize = {}
-    $(["type", "name", "display_type", "percent_type", "bar_style", "question_labels", "calculations_attributes"]).each(function(){
+    $(["type", "name", "form_id", "display_type", "percent_type", "bar_style", "question_labels", "calculations_attributes"]).each(function(){
       to_serialize[this] = (typeof(self.attribs[this]) == "undefined" || self.attribs[this] == null) ? "" : self.attribs[this];
     });
+
+    // calc attribs must be an array
+    if (to_serialize['calculations_attributes'] == '') to_serialize['calculations_attributes'] = [];
 
     // adjust type if tally report
     if (to_serialize['type'] == 'Report::TallyReport')
