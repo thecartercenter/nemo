@@ -35,4 +35,8 @@ class Report::StandardFormReport < Report::Report
   def empty?
     response_count == 0
   end
+
+  def exportable?
+    false
+  end
 end

@@ -104,6 +104,11 @@ class Report::Report < ActiveRecord::Base
   def empty?
     true
   end
+
+  # should be overridden
+  def exportable?
+    false
+  end
   
   private
 

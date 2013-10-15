@@ -11,7 +11,10 @@
   <% end %>
   <%= link_to(t("report/report.create_link"), new_report_report_path) if can?(:create, Report::Report) %>
   <%= link_to(t("report/report.back_to_list"), report_reports_path) if can?(:index, Report::Report) %>
-  <%= link_to(t("report/report.export_to_csv"), report_report_path(@report, :format => :csv), :id => "csv_link") unless @report.new_record? %>
+
+  <% if !@report.new_record? && @report.exportable? %>
+    <%= link_to(t("report/report.export_to_csv"), report_report_path(@report, :format => :csv), :id => "csv_link") %>
+  <% end %>
 </div>
 <div class="report_view">
   <div class="report_main">

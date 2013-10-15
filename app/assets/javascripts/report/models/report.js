@@ -32,7 +32,8 @@
   
   // checks if the report has errors or not
   klass.prototype.has_errors = function() {
-    return !!this.attribs.errors;
+    // Rails errors converts to json as {} if no errors
+    return !this.attribs.errors || Object.keys(this.attribs.errors).length > 0;
   }
   
   // scans through all calculations and returns an array of question ids

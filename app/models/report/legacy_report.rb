@@ -29,6 +29,11 @@ module Report::LegacyReport
     @data.compute_totals if can_total?
   end
 
+  # legacy reports can all be exported to csv
+  def exportable?
+    true
+  end
+
   protected
     # adds the given array of joins to the given relation by using the Join class
     def add_joins_to_relation(rel, joins)
