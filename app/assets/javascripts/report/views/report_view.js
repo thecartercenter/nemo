@@ -31,12 +31,18 @@
   }
   
   klass.prototype.render = function() {
+    // clear out info bar
+    $(".report_info").empty();
+
     // if no matching data, show message
     if (this.report.attribs.empty) {
-      $(".report_info").empty();
       $(".report_body").html(I18n.t("report/report.no_match"))
 
     } else {
+      // add the generated date/time to info bar
+      console.log(this.report)
+      $('<div>').append(I18n.t('report/report.generated_at') + ' ' + this.report.attribs.generated_at).appendTo($(".report_info"));
+
       // create an appropriate Display class based on the display_type
       if (this.report.attribs.type == "Report::StandardFormReport")
         this.display = new ns.FormSummaryDisplay(this.report);
