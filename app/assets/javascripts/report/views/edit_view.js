@@ -27,7 +27,6 @@
       this.question_selection_pane = new ns.QuestionSelectionEditPane(this, menus),
       this.grouping_pane = new ns.GroupingEditPane(this, menus),
       this.field_pane = new ns.FieldsEditPane(this, menus),
-      this.report_title_pane = new ns.ReportTitleEditPane(this, menus)
     ];
 
     // pane pointer
@@ -86,19 +85,25 @@
   
   // go to the next/previous pane
   klass.prototype.change_pane = function(step) {
-    // don't be silly
-    if (step == -1 && this.current_pane_idx == 0 || step == 1 && this.current_pane_idx == this.panes.length - 1)
-      return;
-      
+    // get the idx of the next pane to show
+    var next_idx = this.next_pane(step);
+
+    // show it unless it's null 
+    if (next_idx) this.show_pane(next_idx);
+  }
+
+  // gets the idx of the next active pane in the given direction
+  // returns null if there is none
+  klass.prototype.next_pane = function(step) {
     // figure out the next index (don't show disabled panes)
     var idx = this.current_pane_idx;
     var ep = this.enabled_panes(this.report);
-    do {
-      idx += step;
-    } while (!ep[this.panes[idx].id]);
     
-    // show the pane
-    this.show_pane(idx);
+    // keep looping until we run past the end of the array or we hit an enabled pane
+    do { idx += step; } while (idx >= 0 && idx < this.panes.length && !ep[this.panes[idx].id]);
+
+    // if we went past the end, return null. else return the idx
+    return (idx < 0 || idx >= this.panes.length) ? null : idx;
   }
   
   klass.prototype.run = function() { var self = this;
@@ -154,9 +159,13 @@
 
   klass.prototype.update_buttons = function() {
     this.enable_button("cancel", true);
-    this.enable_button("prev", this.current_pane_idx > 0);
-    this.enable_button("next", this.current_pane_idx < this.panes.length - 1);
-    this.enable_button("run", this.report.has_run() || this.current_pane_idx == this.panes.length - 1);
+
+    // these buttons should appear if there is another pane in the appropriate direction
+    this.enable_button("prev", !!this.next_pane(-1));
+    this.enable_button("next", !!this.next_pane(1));
+
+    // run button should appear if report has already run or if this is the last pane
+    this.enable_button("run", this.report.has_run() || !this.next_pane(1));
   }
   
   klass.prototype.enable_button = function(name, which) {
@@ -196,7 +205,6 @@
       question_selection: report.attribs.tally_type == "QuestionAnswer",
       grouping: report.attribs.tally_type == "Grouped",
       fields: report.attribs.type == "Report::ListReport",
-      report_title: true
     }
   }
 }(ELMO.Report));

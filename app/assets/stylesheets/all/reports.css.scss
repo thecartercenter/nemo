@@ -108,14 +108,16 @@ div.report_edit_pane.display_options div.section.tally_type {
   }
 }
 
+div.report_edit_pane.display_options input#report_title { 
+  width: 300px; font-size: 11pt;  
+}
+
 
 
 div.report_edit_pane.form_selection div#form_select div.choices { height: 300px; width: 250px; }
 
 div.report_edit_pane.question_selection div.q_sel_type { margin-bottom: 10px; vertical-align: bottom; width: 300px; display: inline-block; }
 div.report_edit_pane.question_selection div.multiselect div.choices { height: 150px; width: 250px; margin-top: 5px; }
-
-div.report_edit_pane.report_title input { width: 400px; font-size: 11pt;  }
 
 div.report_edit_dialog .buttons { text-align: right; border-top: 1px solid #ddd; padding-top: 10px; }
 div.report_edit_dialog .buttons a { display: inline-block; margin: 0 0 0 10px; padding: 10px; font-size: 120%; font-weight: bold; width: 110px; text-align: center; 

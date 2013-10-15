@@ -22,7 +22,6 @@
       <a id="edit_link_3" href="#"><%= pluralize_model(Question) %></a>
       <a id="edit_link_4" href="#"><%= t("report/report.groupings") %></a>
       <a id="edit_link_5" href="#"><%= t("report/report.questions_attributes") %></a>
-      <a id="edit_link_6" href="#"><%= t("report/report.report_title") %></a>
     </div>
   <% end %>
   <div class="report_main">
@@ -149,6 +148,12 @@
               </div>
             </div>
           </div>
+          <div class="section">
+            <div class="name horiz"><%= t("report/report.enter_name") %></div>
+            <div class="controls horiz">
+              <input type="text" id="report_title"/>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -264,23 +269,6 @@
                 </div>
                 <a href="#" class="add"><%= t("report/report.add_question_attribute") %></a>
               </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <div class="report_edit_pane report_title">
-      <h2><%= t("report/report.report_title") %></h2>
-      <div class="pane_scroll">
-        <div class="error_box"></div>
-        <div class="pane_body">
-          <div class="section">
-            <div class="name vert">
-              <label for="report_title"><%= t("report/report.enter_name") %></label>
-            </div>
-            <div class="controls vert">
-              <input type="text" id="report_title"/>
             </div>
           </div>
         </div>

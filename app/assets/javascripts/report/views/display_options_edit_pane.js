@@ -39,16 +39,19 @@
     })
     this.percent_type.change(function() { _this.broadcast_change("percent_type"); });
     
-    // build question label chooser
+    // build bar style chooser
     this.bar_style = new ELMO.Control.RadioGroup({inputs: this.cont.find("input[name='bar_style']")});
     this.bar_style.change(function() { _this.broadcast_change("bar_style"); });
 
     // build question label chooser
     this.question_labels = new ELMO.Control.RadioGroup({inputs: this.cont.find("input[name='question_labels']")});
     this.question_labels.change(function() { _this.broadcast_change("question_labels"); });
+
+    // report title field
+    this.title_fld = this.cont.find("input#report_title");
     
     // register fields to watch for changes
-    this.attribs_to_watch = {display_type: true, report_type: true, tally_type: true};
+    this.attribs_to_watch = {display_type: true, report_type: true, tally_type: true, report_title: true};
   }
   
   klass.prototype.update = function(report) {
@@ -62,7 +65,8 @@
     this.percent_type.update(report.attribs.percent_type);
     this.bar_style.update(report.attribs.bar_style);
     this.question_labels.update(report.attribs.question_labels);
-    
+    this.title_fld.val(report.attribs.name);
+
     var is_tally = this.report.attribs.type == 'Report::TallyReport';
     
     var show;
@@ -90,10 +94,11 @@
     this.report.attribs.percent_type = this.percent_type.get();
     this.report.attribs.bar_style = this.bar_style.get();
     this.report.attribs.question_labels = this.question_labels.get();
+    this.report.attribs.name = this.title_fld.val();
   }
 
   klass.prototype.fields_for_validation_errors = function() {
-    return ['tally_type'];
+    return ['tally_type', 'name'];
   }
 
 }(ELMO.Report));
