@@ -92,7 +92,7 @@ class Report::QuestionSummary
       answers.sort_by!{|a| a.response.created_at}
 
       # get items
-      @items = answers.map{|a| {:text => a.casted_value, :response => a.response}}
+      @items = answers.map{|a| {:text => a.casted_value, :response => a.response.as_json(:only => [:id, :created_at])}}
 
       # nulls are stripped out so we can calculate how many just by taking difference
       @null_count = questioning.answers.size - @items.size
@@ -101,5 +101,14 @@ class Report::QuestionSummary
 
   def qtype
     questioning.qtype
+  end
+
+  def as_json(options = {})
+    h = super(options)
+    h[:questioning] = questioning.as_json(:only => [:id])
+    h[:items] = items
+    h[:null_count] = null_count
+    h[:choice_count] = choice_count
+    h
   end
 end

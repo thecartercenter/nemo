@@ -8,6 +8,10 @@ class Report::StandardFormReport < Report::Report
     # add the required methods to the methods option
     options[:methods] = Array.wrap(options[:methods]) + [:response_count, :summaries, :observers_without_responses]
     h = super(options)
+    h[:response_count] = response_count
+    h[:summaries] = summaries
+    h[:observers_without_responses] = observers_without_responses.as_json(:only => [:id, :name])
+    h
   end
 
   # returns the number of responses matching the report query
