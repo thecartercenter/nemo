@@ -406,6 +406,8 @@ en:
           attributes:
             fields:
               blank: "You must choose at least one question or attribute."
+            form_id:
+              blank: "You must choose a form to report on."
             name:
               blank: "You must enter a report title."
             questions:

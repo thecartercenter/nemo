@@ -204,6 +204,10 @@
     if (!this.attribs.type)
       this.errors.add("type", I18n.t("activerecord.errors.models.report/report.attributes.type.blank"));
 
+    // form_id should be non-null if type is std form report
+    if (this.attribs.type == 'Report::StandardFormReport' && !this.attribs.form_id)
+      this.errors.add("form_id", I18n.t("activerecord.errors.models.report/report.attributes.form_id.blank"));
+
     // tally type should be non-null if type is tallyreport
     if (this.attribs.type == 'Report::TallyReport' && !this.attribs.tally_type)
       this.errors.add("tally_type", I18n.t("activerecord.errors.models.report/report.attributes.tally_type.blank"));

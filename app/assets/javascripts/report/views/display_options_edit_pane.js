@@ -115,7 +115,7 @@
   }
 
   klass.prototype.fields_for_validation_errors = function() {
-    return ['tally_type', 'name'];
+    return ['form_id', 'tally_type', 'name'];
   }
 
 }(ELMO.Report));
