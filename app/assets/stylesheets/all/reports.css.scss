@@ -17,6 +17,25 @@ div.report_body th.row_grouping_label, div.report_body th.col_grouping_label { c
 div.report_body th.row_grouping_label > div { margin-left: 3px; overflow: hidden; }
 div.report_body th.col_grouping_label { text-align: center; }
 
+/* std form report */
+div.report_body {
+  table.report_meta {
+    td {
+      border: none;
+      padding: 3px 0;
+    }
+
+    td:first-child {
+      color: #aaa;
+      padding-right: 10px;
+    }
+
+    td:last-child {
+
+    }
+  }
+}
+
 /* report form */
 div.report_edit_dialog { width: 650px; height: 451px; }
 div.report_edit_pane { width: 650px; display: none; }
