@@ -1,6 +1,6 @@
 # models one cell of a question summary for a standard form report
 class Report::SummaryItem
-  attr_reader :stat, :text, :count, :pct, :response
+  attr_accessor :stat, :text, :count, :pct, :response
   
   def initialize(attribs)
     attribs.each{|k,v| instance_variable_set("@#{k}", v)}

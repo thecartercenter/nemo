@@ -3,7 +3,7 @@ class Report::QuestionSummary
   # the questioning we're summarizing
   attr_reader :questioning
     
-  # the individual items of information in the summary. can be an ordered hash or an array
+  # array containing the individual items of information in the summary
   attr_reader :items
 
   # the column headers, if any
@@ -38,19 +38,19 @@ class Report::QuestionSummary
         # if temporal question type, convert values unix timestamps before running stats
         values.map!(&:to_i) if questioning.qtype.temporal?
 
-        stats_to_compute = [:mean, :median, :max, :min]
-        @items = ActiveSupport::OrderedHash[*stats_to_compute.map{|stat| [stat, values.send(stat)]}.flatten]
+        @headers = [:mean, :median, :max, :min]
+        @items = @headers.map{|stat| Report::SummaryItem.new(:stat => values.send(stat))}
 
         # if temporal, convert back to Times
         case questioning.qtype_name
-        when 'time' then @items.each{|k,v| @items[k] = Time.at(v)}
-        when 'datetime' then @items.each{|k,v| @items[k] = Time.zone.at(v)}
+        when 'time' then @items.each{|i| i.stat = Time.at(i.stat)}
+        when 'datetime' then @items.each{|i| i.stat = Time.zone.at(i.stat)}
         end
       end
 
     when 'select_one', 'select_multiple'
       # init tallies to zero
-      @items = ActiveSupport::OrderedHash[*questioning.options.map{|o| [o, 0]}.flatten]
+      @items = ActiveSupport::OrderedHash[*questioning.options.map{|o| [o, Report::SummaryItem.new(:count => 0)]}.flatten]
       @null_count = 0
       
       if questioning.qtype_name == 'select_multiple'
@@ -60,7 +60,7 @@ class Report::QuestionSummary
           # there are no nulls in a select_multiple (choice.option should never be nil)
           ans.choices.each do |choice|
             unless choice.option.nil?
-              @items[choice.option] += 1
+              @items[choice.option].count += 1
               @choice_count += 1
             end
           end
@@ -68,9 +68,13 @@ class Report::QuestionSummary
 
       else # select_one
         questioning.answers.each do |ans|
-          ans.option.nil? ? (@null_count += 1) : (@items[ans.option] += 1)
+          ans.option.nil? ? (@null_count += 1) : (@items[ans.option].count += 1)
         end
       end
+
+      # split items hash into keys and values
+      @headers = @items.keys
+      @items = @items.values
 
     when 'date'
       # init tallies to zero
@@ -84,27 +88,27 @@ class Report::QuestionSummary
         if a.date_value.nil?
           @null_count += 1
         else
-          @items[a.date_value] ||= 0
-          @items[a.date_value] += 1
+          @items[a.date_value] ||= Report::SummaryItem.new(:count => 0)
+          @items[a.date_value].count += 1
         end
       end
+
+      # split items hash into keys and values
+      @headers = @items.keys
+      @items = @items.values
 
     when 'text', 'tiny_text', 'long_text'
       # reject nil answers and sort by response date
       answers = questioning.answers.reject(&:nil_value?)
       answers.sort_by!{|a| a.response.created_at}
 
-      # get items
-      @items = answers.map{|a| Report::SummaryItem.new(:text => a.casted_value, :response => a.response)}
-
+      # get items and headers
       @headers = questioning.qtype_name == 'long_text' ? [:long_responses] : [:responses]
+      @items = answers.map{|a| Report::SummaryItem.new(:text => a.casted_value, :response => a.response)}
 
       # nulls are stripped out so we can calculate how many just by taking difference
       @null_count = questioning.answers.size - @items.size
     end
-
-    # default
-    @headers ||= @items.keys if @items.respond_to?(:keys)
   end
 
   def qtype
