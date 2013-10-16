@@ -70,8 +70,21 @@
             <%= summary.items.map(function(item) { return '"' + item.text + '"'; }).join(', ') %>
           </td>
 
-        <% } %>
+        <% /*# if structured type with less than max_cols, do separate cells */ %>
+        <% } else if (cluster.display_type == 'structured' && cluster.headers.length < max_cols) { %>
 
+          <% summary.items.forEach(function(item) { %>
+            <td>
+              <%= item.count != null ? I18n.toNumber(item.pct, {precision: 1}) + '% (' + I18n.toNumber(item.count, {precision: 0}) + ')' : I18n.toNumber(item.stat, {precision: 1}) %>
+            </td>
+          <% }); %>
+
+          <% /*# print out blank cells up to max */ %>
+          <% for (var i = 0; i < max_cols - cluster.headers.length; i++) { %>
+            <td></td>
+          <% } %>
+
+        <% } %>
       </tr>
     <% }); %>
   <% }); %>
