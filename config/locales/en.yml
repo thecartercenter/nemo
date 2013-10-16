@@ -927,6 +927,10 @@ en:
     question_labels:
       code: "Codes Only (Saves Space)"
       title: "Full Titles (Easier to Read)"
+    standard_form_report:
+      overall_headers:
+        dates: "Dates"
+        responses: "Responses"
     tally_types:
       question_answer: "Answers per Question"
       grouped: "Responses per Answer/Attribute"

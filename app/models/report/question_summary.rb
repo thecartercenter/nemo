@@ -15,6 +15,9 @@ class Report::QuestionSummary
   # the number of choices as opposed to answers, we encountered (only set for select_multiple questions)
   attr_reader :choice_count
 
+  attr_reader :display_type
+  attr_reader :overall_header
+
   def initialize(attribs)
     # save attribs
     attribs.each{|k,v| instance_variable_set("@#{k}", v)}
@@ -23,6 +26,7 @@ class Report::QuestionSummary
 
     # these types all get descriptive statistics
     when 'integer', 'decimal', 'time', 'datetime'
+      @display_type = :structured
 
       # get non-blank values and set null count
       values = questioning.answers.map(&:casted_value).compact
@@ -49,6 +53,9 @@ class Report::QuestionSummary
       end
 
     when 'select_one', 'select_multiple'
+      @display_type = :structured
+      @overall_header = questioning.option_set.name
+
       # init tallies to zero
       @items = ActiveSupport::OrderedHash[*questioning.options.map{|o| [o, Report::SummaryItem.new(:count => 0)]}.flatten]
       @null_count = 0
@@ -79,6 +86,9 @@ class Report::QuestionSummary
       compute_percentages
 
     when 'date'
+      @display_type = :structured
+      @overall_header = I18n.t('report/report.standard_form_report.overall_headers.dates')
+
       # init tallies to zero
       @items = ActiveSupport::OrderedHash.new
 
@@ -102,6 +112,9 @@ class Report::QuestionSummary
       compute_percentages
 
     when 'text', 'tiny_text', 'long_text'
+      @display_type = :flow
+      @overall_header = I18n.t('report/report.standard_form_report.overall_headers.responses')
+
       # reject nil answers and sort by response date
       answers = questioning.answers.reject(&:nil_value?)
       answers.sort_by!{|a| a.response.created_at}

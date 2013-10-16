@@ -33,14 +33,28 @@
   </tr>
 </table>
 
-<!-- for now we just have one group -->
-<% groups[0].clusters.forEach(function(cluster){ %>
-  <% cluster.headers.forEach(function(header){ %>
-    <% if (typeof(header) == 'string') { %>
-      <%= header %>
-    <% } else { %>
-      <%= header.name %>
-    <% } %>
+<table class="main">
+  <% /*# for now we just have one group */ %>
+  <% groups[0].clusters.forEach(function(cluster){ %>
+    
+    <% /*# do cluster header row */ %>
+    <tr class="cluster_header">
+      <td>#</td>
+      <td><%= I18n.t('activerecord.models.question.one') %></td>
+
+      <% if (cluster.display_type == 'flow' || cluster.headers.length > 5) { %>
+        <td colspan="5"><%= cluster.overall_header %></td>
+      <% } else { %>
+        <% /*# print out each header cell */ %>
+        <% cluster.headers.forEach(function(header) { %>
+          <td><%= header.name || header %></td>
+        <% }); %>
+
+        <% /*# print out blank cells up to max */ %>
+        <% for (var i = 0; i < 5 - cluster.headers.length; i++) { %>
+          <td></td>
+        <% } %>
+      <% } %>
+    </tr>
   <% }); %>
-  <br/>
-<% }); %>
+</table>

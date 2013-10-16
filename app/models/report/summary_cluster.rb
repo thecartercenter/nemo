@@ -1,12 +1,14 @@
 # models a cluster of question summaries for a standard form report
 # a cluster is a set of questions with the same qtype and option set or other headings
 class Report::SummaryCluster
-  attr_reader :summaries, :headers
+  attr_reader :summaries, :headers, :display_type, :overall_header
 
   # initialize takes a summary which should be included and which defines the cluster
   def initialize(first_summary)
     @summaries = []
     @headers = first_summary.headers
+    @display_type = first_summary.display_type
+    @overall_header = first_summary.overall_header
     add(first_summary)
   end
 
@@ -21,6 +23,6 @@ class Report::SummaryCluster
   end
 
   def as_json(options = {})
-    super(:only => [:summaries, :headers])
+    super(:only => [:summaries, :headers, :display_type, :overall_header])
   end
 end
