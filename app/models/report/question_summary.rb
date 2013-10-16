@@ -89,7 +89,6 @@ class Report::QuestionSummary
     when 'text', 'tiny_text', 'long_text'
       # reject nil answers and sort by response date
       answers = questioning.answers.reject(&:nil_value?)
-      answers.sort_by!{|a| a.response.created_at}
 
       # get items
       @items = answers.map{|a| {:text => a.casted_value, :response => a.response}}
