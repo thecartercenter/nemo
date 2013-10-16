@@ -21,6 +21,10 @@ class Report::StandardFormReport < Report::Report
     @response_count ||= form.responses.count
   end
 
+  def groups
+    @groups = [Report::SummaryGroup.new(:type => :all)]
+  end
+
   # returns an array of question summaries ordered by question rank
   def summaries
     return @summaries if @summaries

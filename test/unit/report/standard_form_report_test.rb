@@ -34,6 +34,13 @@ class Report::StandardFormReportTest < ActiveSupport::TestCase
     assert_equal(5, @report.response_count)
   end
 
+  test "report with numeric question order should have single summary group" do
+    @form = FactoryGirl.create(:form)
+    build_and_run_report # defaults to numeric order
+    assert_equal(1, @report.groups.size)
+    assert_equal(:all, @report.groups[0].type)
+  end
+
   test "report should not contain invisible questionings" do
     build_form_and_responses
     
