@@ -1,6 +1,8 @@
 class Report::StandardFormReport < Report::Report
   belongs_to(:form)
 
+  attr_reader :groups, :clusters, :summaries
+
   # question types that we leave off this report (stored as a hash for better performance)
   EXCLUDED_TYPES = {'location' => true}
 
@@ -16,27 +18,22 @@ class Report::StandardFormReport < Report::Report
     h
   end
 
-  # returns the number of responses matching the report query
-  def response_count
-    @response_count ||= form.responses.count
-  end
-
-  def groups
-    @groups = [Report::SummaryGroup.new(:type => :all)]
-  end
-
-  # returns an array of question summaries ordered by question rank
-  def summaries
-    return @summaries if @summaries
-
+  def run
     # eager load form
     f = Form.includes({:questionings => [{:question => {:option_set => :options}}, 
       {:answers => [:response, :option, {:choices => :option}]}]}).find(form_id)
 
-    # generate
+    @groups = [Report::SummaryGroup.new(:type => :all)]
+
+    # generate summaries
     @summaries = f.questionings.reject{|qing| qing.hidden? || EXCLUDED_TYPES[qing.qtype.name]}.map do |qing|
       Report::QuestionSummary.new(:questioning => qing)
     end
+  end
+
+  # returns the number of responses matching the report query
+  def response_count
+    @response_count ||= form.responses.count
   end
 
   # returns all non-admin users in the form's mission with the given (active) role that have not submitted any responses to the form
