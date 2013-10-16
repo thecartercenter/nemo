@@ -15,8 +15,15 @@
     var template = JST['templates/report/form_summary_display'];
     $('.report_body').empty().append(template({
       report: this.report.attribs,
-      max_cols: 5
+      max_cols: 5,
+      helper: self
     }));
+  }
+
+  klass.prototype.partial = function(name, params) {
+    params.helper = this;
+    var template = JST['templates/report/form_summary_' + name];
+    return template(params);
   }
   
 }(ELMO.Report));
