@@ -32,3 +32,15 @@
     </td>
   </tr>
 </table>
+
+<!-- for now we just have one group -->
+<% groups[0].clusters.forEach(function(cluster){ %>
+  <% cluster.headers.forEach(function(header){ %>
+    <% if (typeof(header) == 'string') { %>
+      <%= header %>
+    <% } else { %>
+      <%= header.name %>
+    <% } %>
+  <% }); %>
+  <br/>
+<% }); %>
