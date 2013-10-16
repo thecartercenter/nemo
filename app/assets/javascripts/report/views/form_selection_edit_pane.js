@@ -45,9 +45,11 @@
   }
 
   // extracts data from the view into the model
-  klass.prototype.extract = function() {
-    // send selected IDs to model
-    this.report.attribs.form_ids = this.form_chooser.all_selected() ? "ALL" : Sassafras.Utils.array_to_ints(this.form_chooser.get());
+  klass.prototype.extract = function(enabled) {
+    if (enabled) {
+      // send selected IDs to model
+      this.report.attribs.form_ids = this.form_chooser.all_selected() ? "ALL" : Sassafras.Utils.array_to_ints(this.form_chooser.get());
+    }
   }
   
 }(ELMO.Report));

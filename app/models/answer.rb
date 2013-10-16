@@ -136,7 +136,24 @@ class Answer < ActiveRecord::Base
       nil
     end
   end
+
+  # returns the value for this answer casted to the appropriate data type
+  def casted_value
+    case qtype.name
+    when 'date' then date_value
+    when 'time' then time_value
+    when 'datetime' then datetime_value
+    when 'integer' then value.blank? ? nil : value.to_i
+    when 'decimal' then value.blank? ? nil : value.to_f
+    else value.blank? ? nil : value
+    end
+  end
   
+  # true if the casted_value is nil
+  def nil_value?
+    casted_value.nil?
+  end
+
   private
     def required
       if required? && !hidden? && relevant? && qtype.name != "select_multiple" &&

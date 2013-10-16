@@ -17,6 +17,8 @@ module ReportEmbeddable
         :percent_types => Report::Report::PERCENT_TYPES
       }
     end
+
+    @report_data[:report][:generated_at] = I18n.l(Time.zone.now)
   end
   
   # runs the report and handles any errors, adding them to the report errors array

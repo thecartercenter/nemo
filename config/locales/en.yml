@@ -151,18 +151,26 @@ en:
         zero: "Reports"
         one: "Report"
         other: "Reports"
+      report/tally_report:
+        zero: "Tally Reports"
+        one: "Tally Report"
+        other: "Tally Reports"
       report/question_answer_tally_report:
-        zero: "Tallies of Answers per Question"
-        one: "Tally of Answers per Question"
-        other: "Tallies of Answers per Question"
+        zero: "Answer Tally Reports"
+        one: "Answer Tally Report"
+        other: "Answer Tally Reports"
       report/grouped_tally_report:
-        zero: "Tallies of Responses per Answer/Attribute"
-        one: "Tally of Responses per Answer/Attribute"
-        other: "Tallies of Responses per Answer/Attribute"
+        zero: "Response Tally Reports"
+        one: "Response Tally Report"
+        other: "Response Tally Reports"
       report/list_report:
-        zero: "Lists of Answers/Attributes"
-        one: "List of Answers/Attributes"
-        other: "Lists of Answers/Attributes"
+        zero: "List Reports"
+        one: "List Report"
+        other: "List Reports"
+      report/standard_form_report:
+        zero: "Standard Form Reports"
+        one: "Standard Form Report"
+        other: "Standard Form Reports"
       response: 
         zero: "Responses"
         one: "Response"
@@ -398,10 +406,14 @@ en:
           attributes:
             fields:
               blank: "You must choose at least one question or attribute."
+            form_id:
+              blank: "You must choose a form to report on."
             name:
               blank: "You must enter a report title."
             questions:
               blank: "You must choose at least one question or one option set."
+            tally_type:
+              blank: "You must choose a tally type."
             type:
               blank: "You must choose a report type."
         response:
@@ -837,7 +849,7 @@ en:
     time: "Time"
 
   report/report:
-    add_question_attribute: "Add Question/Attribute"
+    add_column: "Add Column"
     attribute:
       zero: "Attributes"
       one: "Attribute"
@@ -845,29 +857,37 @@ en:
     back_to_list: "Back To Report List"
     blank: "Blank" # should be very short
     choose_attrib_question: "Choose an attribute or question"
+    choose_form: "Choose a Form..."
     choose_report: "Choose a Report..."
-    create_link: "Create Report"
-    display_options: "Display Options"
+    columns: "Columns"
+    create_link: "Create New Report"
+    display_options: "Options"
     edit_report: "Edit Report"
-    enter_name: "Enter a descriptive name for the report."
+    enter_name: "What is the report title?"
     export_to_csv: "Export Data To CSV Format"
+    form: "Form"
+    generated_at: "Generated at"
     groupings: "Groupings"
     how_to_display_questions: "How should questions be displayed?"
     how_to_display_results: "How would you like to display the results?"
     loading_report: "Loading Report..."
-    questions_attributes: "Questions/Attributes"
     questions_with_option_sets: "Questions with these option sets"
+    missing_observers: "Non-reporting Observers"
+    mission: "Mission"
     no_match: "No matching data were found."
-    report_title: "Report Title"
     report_type: "Report Type"
+    response_count: "Total Submissions"
+    show_examples: "Show Examples"
     tally: "Tally"
+    tally_type: "What would you like to tally?"
     these_questions: "These specific questions"
     total_rows: "Total Rows"
     what_attrib_col_headers: "What attribute or question would you like for the column headers (optional)?"
     what_attrib_row_headers: "What attribute or question would you like for the row headers?"
     what_bar_style: "What bar style would you like?"
     what_percent_style: "What percentage style would you like?"
-    what_questions_in_list: "What questions and/or attributes would you like to see in the list?"
+    what_columns_in_list: "What columns would you like to see in the list?"
+    what_form: "What form would you like to report on?"
     what_type: "What type of report would you like?"
     which_calculation: "Which calculation (if any) would you like to apply?"
     which_forms: "Which forms are you interested in?"
@@ -881,19 +901,24 @@ en:
     display_types:
       table: "Table"
       bar_chart: "Bar Chart"
+    descriptions:
+      tally_report: "Aggregated tallies of answers or responses, grouped by attributes of interest."
+      list_report: "A raw listing of answers and attributes for a set of responses."
+      standard_form_report: "A question-by-question summary of the responses for a specific form."
     examples:
-      question_answer_tally_report:
+      tally_report:
         - "Number of Very Good, Good, etc. answers for the Overall question"
         - "Percentage of Yes and No for all Yes-No questions"
-        - "Number of Zero and Non-zero answers for questions about observers"
-      grouped_tally_report:
         - "Number of responses per form for each team"
-        - "Percentage of Yes and No per day for the PeacefulEnvironment question"
         - "Percentage of Zero and Non-zero answers per State for the DomesticObservers question"
       list_report:
         - "List of answers to the Complaints and OtherIrreg questions along with the polling place number"
         - "List of all polling place numbers, with no duplicates"
         - "List of submitter name, date, and answer to the NeedSecurityContact question"
+      standard_form_report:
+        - "Summaries (percentage, averages, medians, etc.) of all questions on a form"
+        - "Can be grouped by question rank or question type"
+        - "Can be split by the answer to a specific question (e.g. region or urban/rural)"
     percent_types:
       none: "No Percentage"
       overall: "Percentage Overall"
@@ -902,6 +927,21 @@ en:
     question_labels:
       code: "Codes Only (Saves Space)"
       title: "Full Titles (Easier to Read)"
+    standard_form_report:
+      overall_headers:
+        dates: "Dates"
+        responses: "Responses"
+      stat_headers:
+        mean: "Average"
+        median: "Median"
+        min: "Minimum"
+        max: "Maximum"
+    tally_types:
+      question_answer: "Answers per Question"
+      grouped: "Responses per Answer/Attribute"
+    tally_type_examples:
+      question_answer: "Tally of Yes's and No's for all Yes/No questions"
+      grouped: "Tally of responses per form for each team"
 
   response:
     create_link: "Create Response"

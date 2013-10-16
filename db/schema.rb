@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131009183730) do
+ActiveRecord::Schema.define(:version => 20131011154737) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -248,23 +248,27 @@ ActiveRecord::Schema.define(:version => 20131009183730) do
     t.integer  "mission_id"
     t.string   "type"
     t.string   "name"
-    t.boolean  "saved",            :default => false
+    t.boolean  "saved",               :default => false
     t.integer  "filter_id"
     t.integer  "option_set_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "viewed_at"
-    t.integer  "view_count",       :default => 0
-    t.string   "display_type",     :default => "table"
-    t.string   "bar_style",        :default => "side_by_side"
-    t.boolean  "unreviewed",       :default => false
-    t.string   "question_labels",  :default => "code"
-    t.string   "percent_type",     :default => "none"
+    t.integer  "view_count",          :default => 0
+    t.string   "display_type",        :default => "table"
+    t.string   "bar_style",           :default => "side_by_side"
+    t.boolean  "unreviewed",          :default => false
+    t.string   "question_labels",     :default => "title"
+    t.string   "percent_type",        :default => "none"
     t.boolean  "unique_rows"
     t.string   "aggregation_name"
+    t.integer  "form_id"
+    t.string   "question_order",      :default => "number",       :null => false
+    t.boolean  "show_long_responses", :default => true,           :null => false
   end
 
   add_index "report_reports", ["filter_id"], :name => "report_reports_filter_id_fk"
+  add_index "report_reports", ["form_id"], :name => "report_reports_form_id_fk"
   add_index "report_reports", ["mission_id"], :name => "report_reports_mission_id_fk"
   add_index "report_reports", ["view_count"], :name => "index_report_reports_on_view_count"
 
@@ -410,6 +414,7 @@ ActiveRecord::Schema.define(:version => 20131009183730) do
   add_foreign_key "report_option_set_choices", "option_sets", :name => "report_option_set_choices_option_set_id_fk"
   add_foreign_key "report_option_set_choices", "report_reports", :name => "report_option_set_choices_report_report_id_fk"
 
+  add_foreign_key "report_reports", "forms", :name => "report_reports_form_id_fk"
   add_foreign_key "report_reports", "missions", :name => "report_reports_mission_id_fk"
   add_foreign_key "report_reports", "search_searches", :name => "report_reports_filter_id_fk", :column => "filter_id"
 

@@ -2,7 +2,7 @@ require 'mission_based'
 class Report::Report < ActiveRecord::Base
   include MissionBased
   
-  attr_accessible :type, :name, :option_set_id, :display_type, :bar_style, :unreviewed, 
+  attr_accessible :type, :name, :form_id, :option_set_id, :display_type, :bar_style, :unreviewed, 
     :question_labels, :show_question_labels, :percent_type, :unique_rows, :calculations_attributes, :calculations, 
     :option_set, :filter_attributes, :mission_id, :mission
 
@@ -18,6 +18,7 @@ class Report::Report < ActiveRecord::Base
   accepts_nested_attributes_for(:calculations, :allow_destroy => true)
   accepts_nested_attributes_for(:option_set_choices, :allow_destroy => true)
 
+  validates(:mission, :presence => true)
 
   scope(:by_viewed_at, order("viewed_at desc"))
   scope(:by_popularity, order("view_count desc"))
@@ -26,7 +27,6 @@ class Report::Report < ActiveRecord::Base
   before_save(:normalize_attribs)
 
   attr_accessor :just_created
-  attr_reader :header_set, :data, :totals
 
   # validation is all handled client-side
   
@@ -34,8 +34,8 @@ class Report::Report < ActiveRecord::Base
   
   PERCENT_TYPES = %w(none overall by_row by_col)
   
-  # list of all subclasses in the order they should be shown in the new report form
-  SUBCLASSES = [Report::QuestionAnswerTallyReport, Report::GroupedTallyReport, Report::ListReport]
+  # list of all immediate subclasses in the order they should be shown to the user
+  SUBCLASSES = [Report::TallyReport, Report::ListReport, Report::StandardFormReport]
   
   # HACK TO GET STI TO WORK WITH ACCEPTS_NESTED_ATTRIBUTES_FOR
   class << self
@@ -74,27 +74,8 @@ class Report::Report < ActiveRecord::Base
   def run
     # set the has run flag
     @has_run = true
-  
-    # prep the relation and add a filter clause
-    rel = prep_relation(Response.unscoped.for_mission(mission))
-  
-    # execute it the relation, returning rows, and create dbresult obj
-    @db_result = Report::DbResult.new(rel.all)
-    
-    # extract headers
-    @header_set = Report::HeaderSet.new(:row => get_row_header, :col => get_col_header)
-    
-    # extract data
-    @data = Report::Data.new(blank_data_table(@db_result))
-    @db_result.rows.each_with_index do |row, row_idx|
-      extract_data_from_row(row, row_idx)
-    end
-    
-    # clean out blank rows
-    remove_blank_rows
-    
-    # compute totals if appropriate
-    @data.compute_totals if can_total?
+
+    # the remaining stuff from run in legacy reports can be found in Report::LegacyReport
   end
   
   # form assignment helper for filter
@@ -114,51 +95,23 @@ class Report::Report < ActiveRecord::Base
     h[:new_record] = new_record?
     h[:just_created] = just_created
     h[:type] = type
-    h[:data] = @data
-    h[:headers] = @header_set ? @header_set.headers : {}
     h[:filter_str] = filter ? filter.str : ""
-    h[:can_total] = can_total?
+    h[:empty] = empty?
     h
   end
-  
-  def can_total?
-    # default to false, should be overridden
+
+  # should be overridden
+  def empty?
+    true
+  end
+
+  # should be overridden
+  def exportable?
     false
   end
   
-  protected
-    # adds the given array of joins to the given relation by using the Join class
-    def add_joins_to_relation(rel, joins)
-      return rel.joins(Report::Join.list_to_sql(joins))
-    end
-    
-    # builds a nested SQL IF statement of the form IF(a, x, IF(b, y, IF(c, z, ...)))
-    def build_nested_if(exprs, conds, options = {})\
-      unless options[:dont_optimize]
-        # optimize by joining conditions for identical expressions
-        # first build a hash
-        expr_hash = {}
-        exprs.each_with_index do |expr, i|
-          expr_hash[expr] ||= []
-          expr_hash[expr] << conds[i]
-        end
-      
-        # rebuild condensed exprs and conds arrays
-        exprs, conds = [], []
-        expr_hash.each do |expr, cond_set|
-          exprs << expr
-          conds << cond_set.join(" OR ")
-        end
-      end
-      
-      if exprs.size == 1
-        return exprs.first 
-      else
-        rest = build_nested_if(exprs[1..-1], conds[1..-1], :dont_optimize => true)
-        "IF(#{conds.first}, #{exprs.first}, #{rest})"
-      end
-    end
-    
+  private
+
     def normalize_attribs
       # we now do default values here as well as changing blanks to nils. 
       # the AR default stuff doesn't work b/c the blank from the client side overwrites the default and there's no easy way to get it back
@@ -168,7 +121,4 @@ class Report::Report < ActiveRecord::Base
       self.percent_type = "none" if percent_type.blank?
     end
     
-    # by default we don't have to worry about blank rows
-    def remove_blank_rows
-    end
 end

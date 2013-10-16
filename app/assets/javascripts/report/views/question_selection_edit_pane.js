@@ -53,7 +53,7 @@
     });
     this.opt_set_chooser.change(function() { _this.broadcast_change("option_set"); });
     
-    this.attribs_to_watch = {omnibus_calculation: true, q_sel_type: true, form_selection: true, report_type: true};
+    this.attribs_to_watch = {omnibus_calculation: true, q_sel_type: true, form_selection: true, report_type: true, tally_type: true};
   }
   
   klass.prototype.update = function(report, on_show) {

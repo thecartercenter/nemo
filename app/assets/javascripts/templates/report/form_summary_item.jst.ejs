@@ -1,0 +1,8 @@
+<% if (item.text != null) { %>
+  <%= item.text %>
+<% } else if (item.count != null) { %>
+  <%= I18n.toNumber(item.pct, {precision: 1}) %>%
+  (<%= I18n.toNumber(item.count, {precision: 0}) %>)
+<% } else { %>
+  <%= I18n.toNumber(item.stat, {precision: 1}) %>
+<% } %>

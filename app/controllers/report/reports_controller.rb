@@ -37,6 +37,7 @@ class Report::ReportsController < ApplicationController
       
       # for csv, just render the csv template
       format.csv do 
+        raise "reports of this type are not exportable" unless @report.exportable?
         # build a nice filename
         title = sanitize_filename(@report.name.gsub(" ", ""))
         render_csv(title)
