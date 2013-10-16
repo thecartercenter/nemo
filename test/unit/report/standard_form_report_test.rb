@@ -34,13 +34,6 @@ class Report::StandardFormReportTest < ActiveSupport::TestCase
     assert_equal(5, @report.response_count)
   end
 
-  test "report with numeric question order should have single summary group" do
-    @form = FactoryGirl.create(:form)
-    build_and_run_report # defaults to numeric order
-    assert_equal(1, @report.groups.size)
-    assert_equal(:all, @report.groups[0].type)
-  end
-
   test "report should not contain invisible questionings" do
     build_form_and_responses
     
@@ -95,6 +88,26 @@ class Report::StandardFormReportTest < ActiveSupport::TestCase
     build_and_run_report
     assert(@report.empty?, "report should be empty")
   end
+
+  test "report with numeric question order should have single summary group" do
+    @form = FactoryGirl.create(:form)
+    build_and_run_report # defaults to numeric order
+    assert_equal(1, @report.groups.size)
+    assert_equal(:all, @report.groups[0].type)
+  end
+
+  # test "report should cluster summaries properly" do
+  #   # create two option sets
+  #   @osA = FactoryGirl.create(:option_set, :option_names => %w(Yes No))
+  #   @osB = FactoryGirl.create(:option_set, :option_names => %w(Red Blue Green))
+
+  #   # create form with int dec time int sel_one(A) sel_one(A) sel_one(B) sel_mult(A) text date date date
+  #   @form = FactoryGirl.create(:form)
+  #   @form.questions << FactoryGirl.create(:question, )
+
+  #   # clusters should be [int dec time int], [sel_one(A) sel_one(A)], [sel_one(B)], [sel_mult(A)], [text], [date date], [date]
+
+  # end
 
   private
     def build_form_and_responses

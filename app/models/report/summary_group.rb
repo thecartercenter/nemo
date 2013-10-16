@@ -1,7 +1,7 @@
 # models a group of summary clusters for a standard form report
 class Report::SummaryGroup
   # the type of group this is
-  attr_reader :type
+  attr_reader :type, :clusters
 
   def initialize(attribs)
     # save attribs

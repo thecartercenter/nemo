@@ -1,7 +1,7 @@
 class Report::StandardFormReport < Report::Report
   belongs_to(:form)
 
-  attr_reader :groups, :clusters, :summaries
+  attr_reader :groups, :summaries
 
   # question types that we leave off this report (stored as a hash for better performance)
   EXCLUDED_TYPES = {'location' => true}
@@ -13,7 +13,6 @@ class Report::StandardFormReport < Report::Report
     h[:response_count] = response_count
     h[:mission] = form.mission.as_json(:only => [:id, :name])
     h[:form] = form.as_json(:only => [:id, :name])
-    h[:summaries] = summaries
     h[:observers_without_responses] = observers_without_responses.as_json(:only => [:id, :name])
     h
   end
@@ -23,12 +22,24 @@ class Report::StandardFormReport < Report::Report
     f = Form.includes({:questionings => [{:question => {:option_set => :options}}, 
       {:answers => [:response, :option, {:choices => :option}]}]}).find(form_id)
 
-    @groups = [Report::SummaryGroup.new(:type => :all)]
-
     # generate summaries
     @summaries = f.questionings.reject{|qing| qing.hidden? || EXCLUDED_TYPES[qing.qtype.name]}.map do |qing|
       Report::QuestionSummary.new(:questioning => qing)
     end
+
+    # divide summaries into clusters
+    clusters = []
+    @summaries.each do |s|
+      # if this summary doesn't fit with the current cluster, or if there is no current cluster, create a new one
+      if clusters.last && clusters.last.accepts(s)
+        clusters.last.add(s)
+      else
+        clusters << Report::SummaryCluster.new(s)
+      end
+    end
+
+    # create the main group
+    @groups = [Report::SummaryGroup.new(:type => :all, :clusters => clusters)]
   end
 
   # returns the number of responses matching the report query

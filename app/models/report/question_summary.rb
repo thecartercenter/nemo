@@ -6,6 +6,9 @@ class Report::QuestionSummary
   # the individual items of information in the summary. can be an ordered hash or an array
   attr_reader :items
 
+  # the column headers, if any
+  attr_reader :headers
+
   # the number of null answers we encountered
   attr_reader :null_count
 
@@ -94,13 +97,23 @@ class Report::QuestionSummary
       # get items
       @items = answers.map{|a| {:text => a.casted_value, :response => a.response.as_json(:only => [:id, :created_at])}}
 
+      @headers = [:responses]
+
       # nulls are stripped out so we can calculate how many just by taking difference
       @null_count = questioning.answers.size - @items.size
     end
+
+    # default
+    @headers ||= @items.keys if @items.respond_to?(:keys)
   end
 
   def qtype
     questioning.qtype
+  end
+
+  # gets a set of objects that allow this summary to be compared to others for clustering
+  def signature
+    [questioning.qtype_name, questioning.option_set, headers]
   end
 
   def as_json(options = {})
