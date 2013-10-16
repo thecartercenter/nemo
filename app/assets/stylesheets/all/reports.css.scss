@@ -20,6 +20,8 @@ div.report_body th.col_grouping_label { text-align: center; }
 /* std form report */
 div.report_body {
   table.report_meta {
+    margin-bottom: 10px;
+
     td {
       border: none;
       padding: 3px 0;
@@ -32,6 +34,30 @@ div.report_body {
 
     td:last-child {
 
+    }
+  }
+
+  table.std_form_report {
+    td {
+      padding: 8px 3px;
+
+      i.no_match {
+        color: #ccc;
+      }
+    }
+
+    td.structured {
+      width: 11%;
+    }
+
+    tr.cluster_header td {
+      color: #888;
+      font-weight: bold;
+      background-color: #f2f2ff;
+    }
+
+    tr.full_width_subhead td {
+      background-color: #eee;
     }
   }
 }
