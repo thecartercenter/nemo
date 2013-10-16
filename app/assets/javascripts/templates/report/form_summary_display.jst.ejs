@@ -65,8 +65,8 @@
     <% /*# do summary rows */ %>
     <% cluster.summaries.forEach(function(summary) { %>
 
-      <% /*# if this is a full_width summary, it gets multiple rows, one item per row */ %>
-      <% if (cluster.display_type == 'full_width') { %>
+      <% /*# if this is a full_width summary (and it has matching items), it gets multiple rows, one item per row */ %>
+      <% if (cluster.display_type == 'full_width' && summary.items.length > 0) { %>
 
         <tr>
           <td><%= summary.questioning.rank %></td>
@@ -89,10 +89,12 @@
           <td><%= summary.questioning.rank %></td>
           <td><%= report.question_labels == 'title' ? summary.questioning.name : summary.questioning.code %></td>
 
-          <% /*# if flow type, just print the responses sep'd by commas */ %>
-          <% if (cluster.display_type == 'flow') { %>
+          <% /*# if flow type, or if any other type and items are empty, just print the responses sep'd by commas */ %>
+          <% if (cluster.display_type == 'flow' || summary.items.length == 0) { %>
 
             <td colspan="<%= max_cols %>">
+              <% if (summary.items.length == 0) { %><%= I18n.t('report/report.no_match') %><% } %>
+
               <%= summary.items.map(function(item) { return '"' + item.text + '"'; }).join(', ') %>
             </td>
 
