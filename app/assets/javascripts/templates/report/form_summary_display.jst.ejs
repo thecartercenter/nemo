@@ -4,7 +4,7 @@
       <%= I18n.t('report/report.mission') %>
     </td>
     <td>
-      <%= mission.name %>
+      <%= report.mission.name %>
     </td>
   </tr>
   <tr>
@@ -12,7 +12,7 @@
       <%= I18n.t('report/report.form') %>
     </td>
     <td>
-      <%= form.name %>
+      <%= report.form.name %>
     </td>
   </tr>
   <tr>
@@ -20,7 +20,7 @@
       <%= I18n.t('report/report.response_count') %>
     </td>
     <td>
-      <%= response_count %>
+      <%= report.response_count %>
     </td>
   </tr>
   <tr>
@@ -28,22 +28,22 @@
       <%= I18n.t('report/report.missing_observers') %>
     </td>
     <td>
-      <%= observers_without_responses.map(function(obs){ return obs.name; }).join(', ') %>
+      <%= report.observers_without_responses.map(function(obs){ return obs.name; }).join(', ') %>
     </td>
   </tr>
 </table>
 
 <table class="main">
   <% /*# for now we just have one group */ %>
-  <% groups[0].clusters.forEach(function(cluster){ %>
+  <% report.groups[0].clusters.forEach(function(cluster){ %>
     
     <% /*# do cluster header row */ %>
     <tr class="cluster_header">
       <td>#</td>
       <td><%= I18n.t('activerecord.models.question.one') %></td>
 
-      <% if (cluster.display_type == 'flow' || cluster.headers.length > 5) { %>
-        <td colspan="5"><%= cluster.overall_header %></td>
+      <% if (cluster.display_type == 'flow' || cluster.headers.length > max_cols) { %>
+        <td colspan="<%= max_cols %>"><%= cluster.overall_header %></td>
       <% } else { %>
         <% /*# print out each header cell */ %>
         <% cluster.headers.forEach(function(header) { %>
@@ -51,7 +51,7 @@
         <% }); %>
 
         <% /*# print out blank cells up to max */ %>
-        <% for (var i = 0; i < 5 - cluster.headers.length; i++) { %>
+        <% for (var i = 0; i < max_cols - cluster.headers.length; i++) { %>
           <td></td>
         <% } %>
       <% } %>

@@ -13,7 +13,10 @@
   
   klass.prototype.render = function() { var self = this;
     var template = JST['templates/report/form_summary_display'];
-    $('.report_body').empty().append(template(this.report.attribs));
+    $('.report_body').empty().append(template({
+      report: this.report.attribs,
+      max_cols: 5
+    }));
   }
   
 }(ELMO.Report));
