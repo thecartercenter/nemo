@@ -65,6 +65,7 @@ class Report::QuestionSummaryTest < ActiveSupport::TestCase
     prepare_form_and_report('select_one', %w(Yes No No No))
     options = @form.questions[0].option_set.options
     assert_equal({options[0] => 1, options[1] => 3}, item_hash(:count))
+    assert_equal({options[0] => 25.0, options[1] => 75.0}, item_hash(:pct))
   end
 
   test "null_count should be correct for select_one" do
@@ -76,12 +77,14 @@ class Report::QuestionSummaryTest < ActiveSupport::TestCase
     prepare_form_and_report('select_one', [nil, nil])
     options = @form.questions[0].option_set.options
     assert_equal({options[0] => 0, options[1] => 0}, item_hash(:count))
+    assert_equal({options[0] => 0, options[1] => 0}, item_hash(:pct))
   end
 
   test "select_multiple summary should be correct in normal case" do
-    prepare_form_and_report('select_multiple', [%w(A), %w(B C), %w(A C)], :option_names => %w(A B C))
+    prepare_form_and_report('select_multiple', [%w(A), %w(B C), %w(A C), %w(C)], :option_names => %w(A B C))
     options = @form.questions[0].option_set.options
-    assert_equal({options[0] => 2, options[1] => 1, options[2] => 2}, item_hash(:count))
+    assert_equal({options[0] => 2, options[1] => 1, options[2] => 3}, item_hash(:count))
+    assert_equal({options[0] => 50.0, options[1] => 25.0, options[2] => 75.0}, item_hash(:pct))
   end
 
   test "null_count should always be zero for select_multiple" do
@@ -97,6 +100,7 @@ class Report::QuestionSummaryTest < ActiveSupport::TestCase
   test "date question summary should be correct in normal case" do
     prepare_form_and_report('date', %w(20131026 20131027 20131027 20131028))
     assert_equal({Date.parse('20131026') => 1, Date.parse('20131027') => 2, Date.parse('20131028') => 1}, item_hash(:count))
+    assert_equal({Date.parse('20131026') => 25.0, Date.parse('20131027') => 50.0, Date.parse('20131028') => 25.0}, item_hash(:pct))
   end
 
   test "date question summary headers should be sorted properly" do

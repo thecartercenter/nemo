@@ -76,6 +76,8 @@ class Report::QuestionSummary
       @headers = @items.keys
       @items = @items.values
 
+      compute_percentages
+
     when 'date'
       # init tallies to zero
       @items = ActiveSupport::OrderedHash.new
@@ -96,6 +98,8 @@ class Report::QuestionSummary
       # split items hash into keys and values
       @headers = @items.keys
       @items = @items.values
+
+      compute_percentages
 
     when 'text', 'tiny_text', 'long_text'
       # reject nil answers and sort by response date
@@ -118,6 +122,13 @@ class Report::QuestionSummary
   # gets a set of objects that allow this summary to be compared to others for clustering
   def signature
     [questioning.option_set, headers]
+  end
+
+  def compute_percentages
+    denominator = (questioning.answers.size - null_count).to_f
+    items.each do |item|
+      item.pct = denominator == 0 ? 0 : item.count.to_f / denominator * 100
+    end
   end
 
   def as_json(options = {})
