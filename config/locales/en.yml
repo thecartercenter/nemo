@@ -872,6 +872,7 @@ en:
     loading_report: "Loading Report..."
     questions_with_option_sets: "Questions with these option sets"
     missing_observers: "Observers who have not reported for this form"
+    mission: "Mission"
     no_match: "No matching data were found."
     report_type: "Report Type"
     response_count: "Total number of submissions"
