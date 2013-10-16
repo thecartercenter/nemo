@@ -21,7 +21,7 @@ class Report::StandardFormReport < Report::Report
 
     # eager load form
     f = Form.includes({:questionings => [{:question => {:option_set => :options}}, 
-      {:answers => [:option, {:choices => :option}]}]}).find(form_id)
+      {:answers => [:response, :option, {:choices => :option}]}]}).find(form_id)
 
     # generate
     @summaries = f.questionings.reject{|qing| qing.hidden? || EXCLUDED_TYPES[qing.qtype.name]}.map do |qing|
