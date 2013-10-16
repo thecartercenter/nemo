@@ -1,3 +1,7 @@
 <div class="response_count">
   <%= I18n.t('report/report.response_count') %>: <%= response_count %>
 </div>
+<div class="missing_observers">
+  <%= I18n.t('report/report.missing_observers') %>: 
+  <%= observers_without_responses.map(function(obs){ return obs.name; }).join(', ') %>
+</div>
