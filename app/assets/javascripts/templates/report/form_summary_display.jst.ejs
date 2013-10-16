@@ -33,7 +33,7 @@
   </tr>
 </table>
 
-<table class="main">
+<table class="std_form_report">
   <% /*# for now we just have one group */ %>
   <% report.groups[0].clusters.forEach(function(cluster){ %>
     
@@ -55,10 +55,8 @@
           <td><%= helper.partial('header', {header: header}) %></td>
         <% }); %>
 
-        <% /*# print out blank cells up to max */ %>
-        <% for (var i = 0; i < max_cols - cluster.headers.length; i++) { %>
-          <td></td>
-        <% } %>
+        <% /*# print out blank cell to fill up to max */ %>
+        <% if (max_cols > cluster.headers.length) { %><td colspan="<%= max_cols - cluster.headers.length %>"></td><% } %>
       <% } %>
     </tr>
 
@@ -105,10 +103,8 @@
               <td><%= helper.partial('item', {item: item}) %></td>
             <% }); %>
 
-            <% /*# print out blank cells up to max */ %>
-            <% for (var i = 0; i < max_cols - cluster.headers.length; i++) { %>
-              <td></td>
-            <% } %>
+            <% /*# print out blank cell to fill up to max */ %>
+            <% if (max_cols > cluster.headers.length) { %><td colspan="<%= max_cols - cluster.headers.length %>"></td><% } %>
 
           <% /*# if structured type with more than max_cols, do one big cell */ %>
           <% } else if (cluster.display_type == 'structured' && cluster.headers.length > max_cols) { %>
@@ -117,10 +113,8 @@
               <%= summary.items.map(function(item, idx) { return helper.partial('item_with_header', {item: item, header: cluster.headers[idx]}); }).join(', ') %>
             </td>
 
-            <% /*# print out blank cells up to max */ %>
-            <% for (var i = 0; i < max_cols - cluster.headers.length; i++) { %>
-              <td></td>
-            <% } %>
+            <% /*# print out blank cell to fill up to max */ %>
+            <% if (max_cols > cluster.headers.length) { %><td colspan="<%= max_cols - cluster.headers.length %>"></td><% } %>
 
           <% } %>
         </tr>
