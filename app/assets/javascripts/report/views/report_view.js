@@ -40,7 +40,6 @@
 
     } else {
       // add the generated date/time to info bar
-      console.log(this.report)
       $('<div>').append(I18n.t('report/report.generated_at') + ' ' + this.report.attribs.generated_at).appendTo($(".report_info"));
 
       // create an appropriate Display class based on the display_type
