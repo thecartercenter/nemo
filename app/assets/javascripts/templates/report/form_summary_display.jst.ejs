@@ -62,6 +62,16 @@
       <tr>
         <td><%= summary.questioning.rank %></td>
         <td><%= report.question_labels == 'title' ? summary.questioning.name : summary.questioning.code %></td>
+
+        <% /*# if flow type, just print the responses sep'd by commas */ %>
+        <% if (cluster.display_type == 'flow') { %>
+
+          <td colspan="<%= max_cols %>">
+            <%= summary.items.map(function(item) { return '"' + item.text + '"'; }).join(', ') %>
+          </td>
+
+        <% } %>
+
       </tr>
     <% }); %>
   <% }); %>
