@@ -112,15 +112,15 @@ class Report::QuestionSummary
       compute_percentages
 
     when 'text', 'tiny_text', 'long_text'
-      @display_type = :flow
+      @display_type = questioning.qtype_name == 'long_text' ? :full_width : :flow
       @overall_header = I18n.t('report/report.standard_form_report.overall_headers.responses')
+      @headers = []
 
       # reject nil answers and sort by response date
       answers = questioning.answers.reject(&:nil_value?)
       answers.sort_by!{|a| a.response.created_at}
 
-      # get items and headers
-      @headers = questioning.qtype_name == 'long_text' ? [:long_responses] : [:responses]
+      # get items
       @items = answers.map{|a| Report::SummaryItem.new(:text => a.casted_value, :response => a.response)}
 
       # nulls are stripped out so we can calculate how many just by taking difference
@@ -134,7 +134,7 @@ class Report::QuestionSummary
 
   # gets a set of objects that allow this summary to be compared to others for clustering
   def signature
-    [questioning.option_set, headers]
+    [display_type, questioning.option_set, headers]
   end
 
   def compute_percentages
