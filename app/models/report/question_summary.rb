@@ -97,7 +97,7 @@ class Report::QuestionSummary
       # get items
       @items = answers.map{|a| {:text => a.casted_value, :response => a.response.as_json(:only => [:id, :created_at])}}
 
-      @headers = [:responses]
+      @headers = questioning.qtype_name == 'long_text' ? [:long_responses] : [:responses]
 
       # nulls are stripped out so we can calculate how many just by taking difference
       @null_count = questioning.answers.size - @items.size
@@ -113,7 +113,7 @@ class Report::QuestionSummary
 
   # gets a set of objects that allow this summary to be compared to others for clustering
   def signature
-    [questioning.qtype_name, questioning.option_set, headers]
+    [questioning.option_set, headers]
   end
 
   def as_json(options = {})

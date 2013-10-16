@@ -17,4 +17,8 @@ class Report::SummaryCluster
   def accepts(summary)
     summary.signature == summaries.first.signature
   end
+
+  def as_json(options = {})
+    super(:only => :summaries)
+  end
 end

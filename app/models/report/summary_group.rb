@@ -7,4 +7,8 @@ class Report::SummaryGroup
     # save attribs
     attribs.each{|k,v| instance_variable_set("@#{k}", v)}
   end
+
+  def as_json(options = {})
+    super(:only => [:type, :clusters])
+  end
 end

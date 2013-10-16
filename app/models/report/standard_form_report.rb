@@ -8,11 +8,11 @@ class Report::StandardFormReport < Report::Report
 
   def as_json(options = {})
     # add the required methods to the methods option
-    options[:methods] = Array.wrap(options[:methods]) + [:response_count, :summaries, :observers_without_responses]
     h = super(options)
     h[:response_count] = response_count
     h[:mission] = form.mission.as_json(:only => [:id, :name])
     h[:form] = form.as_json(:only => [:id, :name])
+    h[:groups] = groups
     h[:observers_without_responses] = observers_without_responses.as_json(:only => [:id, :name])
     h
   end
