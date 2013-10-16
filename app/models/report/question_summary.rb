@@ -42,8 +42,9 @@ class Report::QuestionSummary
         # if temporal question type, convert values unix timestamps before running stats
         values.map!(&:to_i) if questioning.qtype.temporal?
 
-        @headers = [:mean, :median, :max, :min]
-        @items = @headers.map{|stat| Report::SummaryItem.new(:stat => values.send(stat))}
+        stats = [:mean, :median, :max, :min]
+        @headers = stats.map{|s| {:name => I18n.t("report/report.standard_form_report.stat_headers.#{s}"), :stat => s}}
+        @items = stats.map{|stat| Report::SummaryItem.new(:stat => values.send(stat))}
 
         # if temporal, convert back to Times
         case questioning.qtype_name
@@ -80,7 +81,7 @@ class Report::QuestionSummary
       end
 
       # split items hash into keys and values
-      @headers = @items.keys
+      @headers = @items.keys.map{|option| {:name => option.name, :option => option}}
       @items = @items.values
 
       compute_percentages
@@ -106,7 +107,7 @@ class Report::QuestionSummary
       end
 
       # split items hash into keys and values
-      @headers = @items.keys
+      @headers = @items.keys.map{|date| {:name => I18n.l(date, :format => :short), :date => date}}
       @items = @items.values
 
       compute_percentages
