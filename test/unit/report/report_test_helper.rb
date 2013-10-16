@@ -13,6 +13,9 @@ class ActiveSupport::TestCase
     if option_set = options.delete(:option_set)
       options[:option_set_choices_attributes] = [{:option_set_id => option_set.id}]
     end
+
+    # this is no longer the default
+    options[:question_labels] ||= 'code'
   
     report = "Report::#{klass}Report".constantize.new(:mission_id => mission.id)
     report.generate_default_name
