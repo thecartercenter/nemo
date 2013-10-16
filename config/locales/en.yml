@@ -865,6 +865,7 @@ en:
     edit_report: "Edit Report"
     enter_name: "What is the report title?"
     export_to_csv: "Export Data To CSV Format"
+    form: "Form"
     generated_at: "Generated at"
     groupings: "Groupings"
     how_to_display_questions: "How should questions be displayed?"

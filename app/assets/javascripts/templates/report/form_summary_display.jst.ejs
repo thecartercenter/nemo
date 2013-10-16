@@ -1,10 +1,34 @@
-<div class="mission">
-  <%= I18n.t('report/report.mission') %>: <strong><%= mission.name %></strong>
-</div>
-<div class="response_count">
-  <%= I18n.t('report/report.response_count') %>: <strong><%= response_count %></strong>
-</div>
-<div class="missing_observers">
-  <%= I18n.t('report/report.missing_observers') %>: 
-  <strong><%= observers_without_responses.map(function(obs){ return obs.name; }).join(', ') %></strong>
-</div>
+<table>
+  <tr>
+    <td>
+      <%= I18n.t('report/report.mission') %>
+    </td>
+    <td>
+      <%= mission.name %>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <%= I18n.t('report/report.form') %>
+    </td>
+    <td>
+      <%= form.name %>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <%= I18n.t('report/report.response_count') %>
+    </td>
+    <td>
+      <%= response_count %>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <%= I18n.t('report/report.missing_observers') %>
+    </td>
+    <td>
+      <%= observers_without_responses.map(function(obs){ return obs.name; }).join(', ') %>
+    </td>
+  </tr>
+</table>
