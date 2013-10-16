@@ -32,7 +32,8 @@
       el: this.cont.find("select#form_id"),
       objs: this.menus.form.objs,
       id_key: "id",
-      txt_key: "name"
+      txt_key: "name",
+      prompt: true // prompt is defined in HTML
     })
     this.form_id.change(function() { _this.broadcast_change("form_id"); });
 

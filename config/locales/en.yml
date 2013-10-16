@@ -855,6 +855,7 @@ en:
     back_to_list: "Back To Report List"
     blank: "Blank" # should be very short
     choose_attrib_question: "Choose an attribute or question"
+    choose_form: "Choose a Form..."
     choose_report: "Choose a Report..."
     columns: "Columns"
     create_link: "Create New Report"

@@ -95,7 +95,10 @@
           <div class="section form_id">
             <div class="name horiz"><%= t("report/report.what_form") %></div>
             <div class="controls horiz">
-              <select id="form_id"></select>
+              <select id="form_id">
+                <%# rest of options filled in by js %>
+                <option><%= I18n.t('report/report.choose_form') %></option>
+              </select>
             </div>
           </div>
           <div class="section display_type">
