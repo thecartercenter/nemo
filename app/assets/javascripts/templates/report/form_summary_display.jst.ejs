@@ -61,6 +61,7 @@
     <% cluster.summaries.forEach(function(summary) { %>
       <tr>
         <td><%= summary.questioning.rank %></td>
+        <td><%= report.question_labels == 'title' ? summary.questioning.name : summary.questioning.code %></td>
       </tr>
     <% }); %>
   <% }); %>
