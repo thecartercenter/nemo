@@ -33,12 +33,12 @@
   </tr>
 </table>
 
-<table class="std_form_report">
+<table class="std_form_report qlabels_<%= report.question_labels %>">
   <% /*# for now we just have one group */ %>
   <% report.groups[0].clusters.forEach(function(cluster){ %>
     
     <% /*# do cluster header row */ %>
-    <tr class="cluster_header qlabels_<%= report.question_labels %> ">
+    <tr class="cluster_header">
       <td></td>
 
       <% /*# if full width display type with responses, header cell must be extra wide */ %>

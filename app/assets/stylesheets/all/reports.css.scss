@@ -46,8 +46,18 @@ div.report_body {
       }
     }
 
-    td.structured {
-      width: 11%;
+    /* widths for longer question titles (assuming 5 result cells) */
+    &.qlabels_title {
+      td.num { width: 4%; }
+      td.qname { width: 40%; }
+      td.structured { width: 11%; }
+    }
+
+    /* widths for shorter question titles (assuming 8 result cells) */
+    &.qlabels_code {
+      td.num { width: 4%; }
+      td.qname { width: 15%; }
+      td.structured { width: 10%; }
     }
 
     tr.cluster_header td {
