@@ -146,7 +146,7 @@ class Report::QuestionSummary
 
   def as_json(options = {})
     h = super(options)
-    h[:questioning] = questioning.as_json(:only => [:id])
+    h[:questioning] = questioning.as_json(:only => [:id, :rank])
     h[:items] = items
     h[:null_count] = null_count
     h[:choice_count] = choice_count

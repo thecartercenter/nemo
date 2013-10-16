@@ -56,5 +56,12 @@
         <% } %>
       <% } %>
     </tr>
+
+    <% /*# do summary rows */ %>
+    <% cluster.summaries.forEach(function(summary) { %>
+      <tr>
+        <td><%= summary.questioning.rank %></td>
+      </tr>
+    <% }); %>
   <% }); %>
 </table>
