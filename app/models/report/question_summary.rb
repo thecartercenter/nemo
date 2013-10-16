@@ -95,7 +95,7 @@ class Report::QuestionSummary
       answers.sort_by!{|a| a.response.created_at}
 
       # get items
-      @items = answers.map{|a| {:text => a.casted_value, :response => a.response.as_json(:only => [:id, :created_at])}}
+      @items = answers.map{|a| Report::SummaryItem.new(:text => a.casted_value, :response => a.response)}
 
       @headers = questioning.qtype_name == 'long_text' ? [:long_responses] : [:responses]
 

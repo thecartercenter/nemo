@@ -164,7 +164,7 @@ class Report::QuestionSummaryTest < ActiveSupport::TestCase
 
   test "text summary should include reference to response" do
     prepare_form_and_report('text', ['foo', 'bar'])
-    assert_equal(@form.responses, @report.summaries[0].items.map{|i| i[:response]})
+    assert_equal(@form.responses, @report.summaries[0].items.map(&:response))
   end
 
   test "text summary items should be in chronological order" do
