@@ -113,6 +113,11 @@ class Report::QuestionSummaryTest < ActiveSupport::TestCase
     assert_equal({Date.parse('20131027') => 1}, item_hash(:count))
   end
 
+  test "date question summary should work with no responses" do
+    prepare_form_and_report('date', [])
+    assert_equal({}, item_hash(:count))
+  end
+
   test "null_count should be correct for date question summary" do
     prepare_form_and_report('date', [nil, '20131027', nil])
     assert_equal(2, @report.summaries[0].null_count)
