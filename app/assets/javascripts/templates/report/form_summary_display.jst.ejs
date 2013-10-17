@@ -92,7 +92,7 @@
           <% if (cluster.display_type == 'flow' || summary.items.length == 0) { %>
 
             <td colspan="<%= max_cols %>">
-              <% if (summary.items.length == 0) { %> <i class="no_match"><%= I18n.t('report/report.no_match') %></i> <% } %>
+              <% if (summary.items.length == 0) { %> <em class="no_match"><%= I18n.t('report/report.no_match') %></em> <% } %>
 
               <%= summary.items.map(function(item) { return '"' + item.text + '"'; }).join(', ') %>
             </td>
