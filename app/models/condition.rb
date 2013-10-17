@@ -29,7 +29,7 @@ class Condition < ActiveRecord::Base
     {:name => :ninc, :types => %w(select_multiple), :code => "!="}
   ]     
 
-  replicable :after_copy_attribs => :copy_ref_qing_and_option, :parent_assoc => :questionings, :dont_copy => [:ref_qing_id]
+  replicable :after_copy_attribs => :copy_ref_qing_and_option, :parent_assoc => :questioning, :dont_copy => [:ref_qing_id]
   
   # all questionings that can be referred to by this condition
   def refable_qings
