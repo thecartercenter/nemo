@@ -54,6 +54,11 @@ class Questioning < ActiveRecord::Base
     condition.try(:changed?) || required_changed? || hidden_changed?
   end
 
+  # gets ranks of all referring conditions' questionings (should use eager loading)
+  def referring_condition_ranks
+    referring_conditions.map{|c| c.questioning.rank}
+  end
+
   # REFACTOR: should use translation delegation, from abandoned std_objs branch
   def method_missing(*args)
     # pass appropriate methods on to question

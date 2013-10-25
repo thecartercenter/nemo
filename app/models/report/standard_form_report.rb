@@ -19,8 +19,19 @@ class Report::StandardFormReport < Report::Report
 
   def run
     # eager load form
-    f = Form.includes({:questionings => [{:question => {:option_set => :options}}, 
-      {:answers => [:response, :option, {:choices => :option}]}]}).find(form_id)
+    f = Form.includes({:questionings => [
+      # eager load qing conditions
+      {:condition => [:ref_qing, :option]},
+
+      # eager load referring conditions and their questionings
+      {:referring_conditions => :questioning},
+
+      # eager load questions and their option sets
+      {:question => {:option_set => :options}},
+
+      # eager load answers/responses (going to nix this later)
+      {:answers => [:response, :option, {:choices => :option}]}
+    ]}).find(form_id)
 
     # generate summaries
     @summaries = Report::QuestionSummary.generate_for(questionings_to_include(f))
