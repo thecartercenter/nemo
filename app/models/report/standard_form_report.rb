@@ -39,19 +39,8 @@ class Report::StandardFormReport < Report::Report
     # generate summaries
     @summaries = Report::QuestionSummary.generate_for(questionings_to_include(f))
 
-    # divide summaries into clusters
-    clusters = []
-    @summaries.each do |s|
-      # if this summary doesn't fit with the current cluster, or if there is no current cluster, create a new one
-      if clusters.last && clusters.last.accepts(s)
-        clusters.last.add(s)
-      else
-        clusters << Report::SummaryCluster.new(s)
-      end
-    end
-
-    # create the main group
-    @groups = [Report::SummaryGroup.new(:type => :all, :clusters => clusters)]
+    # divide into groups and clusters
+    @groups = Report::SummaryGroup.generate(@summaries, :order => question_order)
   end
 
   # returns the number of responses matching the report query

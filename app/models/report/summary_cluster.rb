@@ -3,6 +3,20 @@
 class Report::SummaryCluster
   attr_reader :summaries, :headers, :display_type, :overall_header
 
+  # generates a set of clusters for the given summaries
+  def self.generate(summaries)
+    [].tap do |clusters|
+      summaries.each do |s|
+        # if this summary doesn't fit with the current cluster, or if there is no current cluster, create a new one
+        if clusters.last && clusters.last.accepts(s)
+          clusters.last.add(s)
+        else
+          clusters << new(s)
+        end
+      end
+    end
+  end
+
   # initialize takes a summary which should be included and which defines the cluster
   def initialize(first_summary)
     @summaries = []
