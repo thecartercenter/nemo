@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131025174451) do
+ActiveRecord::Schema.define(:version => 20131025203530) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -248,7 +248,6 @@ ActiveRecord::Schema.define(:version => 20131025174451) do
     t.integer  "mission_id"
     t.string   "type"
     t.string   "name"
-    t.boolean  "saved",            :default => false
     t.integer  "filter_id"
     t.integer  "option_set_id"
     t.datetime "created_at"
