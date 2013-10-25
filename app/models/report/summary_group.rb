@@ -1,7 +1,7 @@
 # models a group of summary clusters for a standard form report
 class Report::SummaryGroup
   # the type of group this is
-  attr_reader :type_set, :clusters
+  attr_reader :type_set, :clusters, :max_header_count
 
   # each SummaryGroup contains a set of types. this is them, in the order they'll be displayed.
   TYPE_SETS = ActiveSupport::OrderedHash[
@@ -57,6 +57,8 @@ class Report::SummaryGroup
     # sort appropriately
     sort_summaries
 
+    find_max_header_count
+
     # generate clusters
     @clusters = Report::SummaryCluster.generate(@summaries)
   end
@@ -71,7 +73,13 @@ class Report::SummaryGroup
     @summaries.sort_by!{|s| s.questioning.option_set.name} if type_set == 'categorical'
   end
 
+  # looks through all summaries and gets the max number of headers over all of them
+  # this is useful in computing how many columns to put in a table
+  def find_max_header_count
+    @max_header_count = @summaries.map{|s| s.headers.size}.max
+  end
+
   def as_json(options = {})
-    super(:only => [:type_set, :clusters])
+    super(:only => [:type_set, :clusters, :max_header_count])
   end
 end

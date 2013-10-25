@@ -15,7 +15,7 @@
     var template = JST['templates/report/form_summary_display'];
     $('.report_body').empty().append(template({
       report: this.report.attribs,
-      max_cols: this.report.attribs.question_labels == 'title' ? 5 : 8,
+      max_result_cols: this.report.attribs.question_labels == 'title' ? 5 : 8,
       helper: self
     }));
   }
