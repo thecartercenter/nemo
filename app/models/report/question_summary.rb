@@ -18,6 +18,26 @@ class Report::QuestionSummary
   attr_reader :display_type
   attr_reader :overall_header
 
+  def self.generate_for(form)
+    # get all questionings and split
+
+    # # take all statistic type questions and get data
+    # @summaries << generate_for_statistic_questionings(stat_qings)
+
+    # @summaries << generate_for_select_questionings(tally_qings)
+
+    # @summaries << generate_for_date_questionings(date_qings)
+
+    # @summaries << generate_for_raw_questionings(raw_qings)
+
+    # @summaries
+
+    # old way
+    form.questionings.reject{|qing| qing.hidden? || Report::StandardFormReport::EXCLUDED_TYPES[qing.qtype.name]}.map do |qing|
+      new(:questioning => qing)
+    end
+  end
+
   def initialize(attribs)
     # save attribs
     attribs.each{|k,v| instance_variable_set("@#{k}", v)}

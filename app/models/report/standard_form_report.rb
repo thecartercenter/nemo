@@ -23,9 +23,7 @@ class Report::StandardFormReport < Report::Report
       {:answers => [:response, :option, {:choices => :option}]}]}).find(form_id)
 
     # generate summaries
-    @summaries = f.questionings.reject{|qing| qing.hidden? || EXCLUDED_TYPES[qing.qtype.name]}.map do |qing|
-      Report::QuestionSummary.new(:questioning => qing)
-    end
+    @summaries = Report::QuestionSummary.generate_for(f)
 
     # divide summaries into clusters
     clusters = []
