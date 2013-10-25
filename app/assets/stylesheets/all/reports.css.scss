@@ -38,6 +38,8 @@ div.report_body {
   }
 
   table.std_form_report {
+    min-width: 600px;
+    
     td {
       padding: 8px 3px;
 
@@ -61,6 +63,10 @@ div.report_body {
 
     tr.full_width_subhead td {
       background-color: #eee;
+    }
+
+    td.qname {
+      min-width: 300px;
     }
 
     div.condition_info {
