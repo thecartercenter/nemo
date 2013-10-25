@@ -43,7 +43,7 @@
     <h2><%= I18n.t('report/report.standard_form_report.type_sets.' + group.type_set) %></h2>
   <% } %>
 
-  <table class="std_form_report qlabels_<%= report.question_labels %>">
+  <table class="std_form_report result_cols_<%= result_cols %>">
     
     <% group.clusters.forEach(function(cluster){ %>
     

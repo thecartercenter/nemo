@@ -75,8 +75,9 @@ class Report::SummaryGroup
 
   # looks through all summaries and gets the max number of headers over all of them
   # this is useful in computing how many columns to put in a table
+  # min should be one
   def find_max_header_count
-    @max_header_count = @summaries.map{|s| s.headers.size}.max
+    @max_header_count = (@summaries.map{|s| s.headers.size} + [1]).max
   end
 
   def as_json(options = {})
