@@ -18,7 +18,7 @@ class Report::QuestionSummary
   attr_reader :display_type
   attr_reader :overall_header
 
-  def self.generate_for(form)
+  def self.generate_for(questionings)
     # get all questionings and split
 
     # # take all statistic type questions and get data
@@ -33,7 +33,7 @@ class Report::QuestionSummary
     # @summaries
 
     # old way
-    form.questionings.reject{|qing| qing.hidden? || Report::StandardFormReport::EXCLUDED_TYPES[qing.qtype.name]}.map do |qing|
+    questionings.map do |qing|
       new(:questioning => qing)
     end
   end

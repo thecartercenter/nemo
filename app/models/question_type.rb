@@ -3,9 +3,9 @@ class QuestionType < ActiveRecord::Base
   attr_reader :name, :odk_name, :odk_tag, :properties
   
   @@attributes = [
-    {:name => "text", :odk_name => "string", :odk_tag => "input", :properties => %w(form_printable)},
-    {:name => "long_text", :odk_name => "string", :odk_tag => "input", :properties => %w(form_printable)},
-    {:name => "tiny_text", :odk_name => "string", :odk_tag => "input", :properties => %w(form_printable smsable)},
+    {:name => "text", :odk_name => "string", :odk_tag => "input", :properties => %w(form_printable textual)},
+    {:name => "long_text", :odk_name => "string", :odk_tag => "input", :properties => %w(form_printable textual)},
+    {:name => "tiny_text", :odk_name => "string", :odk_tag => "input", :properties => %w(form_printable smsable textual)},
     {:name => "integer", :odk_name => "int", :odk_tag => "input", :properties => %w(form_printable smsable numeric)},
     {:name => "decimal", :odk_name => "decimal", :odk_tag => "input", :properties => %w(form_printable smsable numeric)},
     {:name => "location", :odk_name => "geopoint", :odk_tag => "input", :properties => %w()},
@@ -62,5 +62,10 @@ class QuestionType < ActiveRecord::Base
   # returns whether this type is temporal
   def temporal?
     properties.include?("temporal")
+  end
+
+  # returns whether this is a textual type
+  def textual?
+    properties.include?("textual")
   end
 end

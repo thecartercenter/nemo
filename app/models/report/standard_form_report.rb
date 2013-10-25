@@ -23,7 +23,7 @@ class Report::StandardFormReport < Report::Report
       {:answers => [:response, :option, {:choices => :option}]}]}).find(form_id)
 
     # generate summaries
-    @summaries = Report::QuestionSummary.generate_for(f)
+    @summaries = Report::QuestionSummary.generate_for(questionings_to_include(f))
 
     # divide summaries into clusters
     clusters = []
@@ -56,6 +56,18 @@ class Report::StandardFormReport < Report::Report
 
   def observers_without_responses
     users_without_responses(:role => :observer)
+  end
+
+  # returns the list of questionings to include in this report
+  # takes an optional form argument to allow eager loaded form
+  def questionings_to_include(form = nil)
+    form ||= self.form
+    form.questionings.reject do |qing|
+      qing.hidden? || 
+      Report::StandardFormReport::EXCLUDED_TYPES[qing.qtype.name] || 
+      text_responses == 'short_only' && qing.qtype.name == 'long_text' ||
+      text_responses == 'none' && qing.qtype.textual?
+    end
   end
 
   def empty?
