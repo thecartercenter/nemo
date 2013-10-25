@@ -2,6 +2,8 @@ require 'test_helper'
 require 'unit/report/report_test_helper'
 
 class Report::QuestionSummaryTest < ActiveSupport::TestCase
+  setup do
+  end
 
   test "summary should contain question type" do
     prepare_form_and_report('integer', [0])
@@ -184,6 +186,7 @@ class Report::QuestionSummaryTest < ActiveSupport::TestCase
     @form.responses[1].save!
     @form.responses[2].created_at -= 1.day
     @form.responses[2].save!
+    @form.reload
 
     prepare_report
 
