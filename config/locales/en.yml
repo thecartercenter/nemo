@@ -410,6 +410,8 @@ en:
               blank: "You must choose a form to report on."
             name:
               blank: "You must enter a report title."
+            question_order:
+              blank: "You must choose a question order."
             questions:
               blank: "You must choose at least one question or one option set."
             tally_type:
@@ -873,6 +875,7 @@ en:
     groupings: "Groupings"
     how_to_display_questions: "How should questions be displayed?"
     how_to_display_results: "How would you like to display the results?"
+    how_to_order_questions: "How should questions be ordered?"
     loading_report: "Loading Report..."
     questions_with_option_sets: "Questions with these option sets"
     missing_observers: "Non-reporting Observers"
@@ -934,6 +937,9 @@ en:
     question_labels:
       code: "Codes Only (Saves Space)"
       title: "Full Titles (Easier to Read)"
+    question_orders:
+      number: "By Number"
+      type: "By Type"
     standard_form_report:
       overall_headers:
         dates: "Dates"

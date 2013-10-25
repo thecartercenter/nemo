@@ -6,6 +6,9 @@ class Report::StandardFormReport < Report::Report
   # question types that we leave off this report (stored as a hash for better performance)
   EXCLUDED_TYPES = {'location' => true}
 
+  # options for the question_order attrib
+  QUESTION_ORDER_OPTIONS = %w(number type)
+
   def as_json(options = {})
     # add the required methods to the methods option
     h = super(options)

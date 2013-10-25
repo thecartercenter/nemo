@@ -138,6 +138,17 @@
             </div>
           </div>
           <div class="section">
+            <div class="name horiz"><%= t("report/report.how_to_order_questions") %></div>
+            <div class="controls horiz">
+              <% Report::StandardFormReport::QUESTION_ORDER_OPTIONS.each do |key| %>
+                <div class="choice">
+                  <input type="radio" name="question_order" id="question_order_<%= key %>" value="<%= key %>" />
+                  <label for="question_order_<%= key %>"><%= t("report/report.question_orders.#{key}") %></label>
+                </div>
+              <% end %>
+            </div>
+          </div>
+          <div class="section">
             <div class="name horiz"><%= t("report/report.how_to_display_questions") %></div>
             <div class="controls horiz">
               <div class="choice">
