@@ -33,15 +33,15 @@
   </tr>
 </table>
 
-<table class="std_form_report qlabels_<%= report.question_labels %>">
-  <% report.groups.forEach(function(group){ %>
+<% report.groups.forEach(function(group){ %>
 
-    <tr class="group_header">
-      <td colspan="<%= max_cols + 2 %>">
-        <%= group.type_set %>
-      </td>
-    </tr>
+  <% /*# show group header unless there is only one big group */ %>
+  <% if (group.type_set != 'all') { %>
+    <h2><%= I18n.t('report/report.standard_form_report.type_sets.' + group.type_set) %></h2>
+  <% } %>
 
+  <table class="std_form_report qlabels_<%= report.question_labels %>">
+    
     <% group.clusters.forEach(function(cluster){ %>
     
       <% /*# do cluster header row */ %>
@@ -131,5 +131,5 @@
         <% } %>
       <% }); %>
     <% }); %>
-  <% }); %>
-</table>
+  </table>
+<% }); %>

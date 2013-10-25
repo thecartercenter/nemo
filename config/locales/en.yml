@@ -949,6 +949,13 @@ en:
         median: "Median"
         min: "Minimum"
         max: "Maximum"
+      type_sets:
+        categorical: "Categorical Questions"
+        numbers: "Numerical Questions"
+        dates: "Date Questions"
+        times: "Time Questions"
+        short_text: "Short Text Questions"
+        long_text: "Long Text Questions"
     tally_types:
       question_answer: "Answers per Question"
       grouped: "Responses per Answer/Attribute"
