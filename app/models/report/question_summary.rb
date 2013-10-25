@@ -127,7 +127,7 @@ class Report::QuestionSummary
       end
 
       # split items hash into keys and values
-      @headers = @items.keys.map{|date| {:name => I18n.l(date, :format => :short), :date => date}}
+      @headers = @items.keys.map{|date| {:name => I18n.l(date), :date => date}}
       @items = @items.values
 
       compute_percentages
