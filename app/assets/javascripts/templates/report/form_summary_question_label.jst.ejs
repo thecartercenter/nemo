@@ -1,0 +1,13 @@
+<div>
+  <%= report.question_labels == 'title' ? questioning.name : questioning.code %>
+</div>
+<div class="condition_info">
+  <% if (questioning.referring_condition_ranks.length > 0) { %>
+    <%= I18n.t('report/report.see_dependent_questions', {count: questioning.referring_condition_ranks.length}) %>
+    <%= questioning.referring_condition_ranks.map(function(r){ return '#' + r; }).join(', ') %>
+  <% } %>
+  <% if (questioning.condition) { %>
+    <%= I18n.t('report/report.answered_only_if') %>
+    <%= questioning.condition.to_s %>
+  <% } %>
+</div>

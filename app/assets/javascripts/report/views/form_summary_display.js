@@ -22,6 +22,7 @@
 
   klass.prototype.partial = function(name, params) {
     params.helper = this;
+    params.report = this.report.attribs;
     var template = JST['templates/report/form_summary_' + name];
     return template(params);
   }

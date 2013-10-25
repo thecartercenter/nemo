@@ -852,6 +852,7 @@ en:
 
   report/report:
     add_column: "Add Column"
+    answered_only_if: "Answered only if"
     attribute:
       zero: "Attributes"
       one: "Attribute"
@@ -879,6 +880,9 @@ en:
     no_match: "No matching data were found."
     report_type: "Report Type"
     response_count: "Total Submissions"
+    see_dependent_questions:
+      one: "See dependent question"
+      other: "See dependent questions"
     show_examples: "Show Examples"
     show_text_responses: "Show text responses?"
     tally: "Tally"

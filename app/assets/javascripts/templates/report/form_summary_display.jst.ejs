@@ -70,7 +70,7 @@
         <tr class="summary full_width_subhead">
           <td class="num">#<%= summary.questioning.rank %></td>
           <td colspan="<%= max_cols + 2 %>">
-            <%= report.question_labels == 'title' ? summary.questioning.name : summary.questioning.code %>
+            <%= helper.partial('question_label', {questioning: summary.questioning}) %>
           </td>
         </tr>
 
@@ -86,7 +86,9 @@
 
         <tr class="summary">
           <td class="num">#<%= summary.questioning.rank %></td>
-          <td class="qname"><%= report.question_labels == 'title' ? summary.questioning.name : summary.questioning.code %></td>
+          <td class="qname">
+            <%= helper.partial('question_label', {questioning: summary.questioning}) %>
+          </td>
 
           <% /*# if flow type, or if any other type and items are empty, just print the responses sep'd by commas */ %>
           <% if (cluster.display_type == 'flow' || summary.items.length == 0) { %>
