@@ -42,7 +42,8 @@ class Report::QuestionSummary
     # save attribs
     attribs.each{|k,v| instance_variable_set("@#{k}", v)}
 
-    case questioning.qtype_name
+    qtype_name = questioning.qtype_name
+    case qtype_name
 
     # these types all get descriptive statistics
     when 'integer', 'decimal', 'time', 'datetime'
@@ -64,12 +65,12 @@ class Report::QuestionSummary
 
         stats = [:mean, :median, :max, :min]
         @headers = stats.map{|s| {:name => I18n.t("report/report.standard_form_report.stat_headers.#{s}"), :stat => s}}
-        @items = stats.map{|stat| Report::SummaryItem.new(:stat => values.send(stat))}
+        @items = stats.map{|stat| Report::SummaryItem.new(:qtype_name => qtype_name, :stat => values.send(stat))}
 
-        # if temporal, convert back to Times
+        # if temporal, convert back to Times and convert to a nice string
         case questioning.qtype_name
-        when 'time' then @items.each{|i| i.stat = Time.at(i.stat)}
-        when 'datetime' then @items.each{|i| i.stat = Time.zone.at(i.stat)}
+        when 'time' then @items.each{|i| i.stat = I18n.l(Time.at(i.stat).utc, :format => :time_only)}
+        when 'datetime' then @items.each{|i| i.stat = I18n.l(Time.zone.at(i.stat))}
         end
       end
 

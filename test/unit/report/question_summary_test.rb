@@ -149,7 +149,7 @@ class Report::QuestionSummaryTest < ActiveSupport::TestCase
     prepare_form_and_report('datetime', ['2013-10-26 18:45', '2013-10-26 10:15', '2013-10-27 19:00'])
 
     # check that the time got stored properly
-    assert_equal(dtp('2013-10-26 18:45'), @form.responses.first.answers.first.datetime_value)
+    assert_equal(dtp('2013-10-26 18:45'), I18n.l(@form.responses.first.answers.first.datetime_value))
 
     # check stats
     assert_equal({:mean => dtp('2013-10-27 00:00'), :median => dtp('2013-10-26 18:45'), 
@@ -212,12 +212,12 @@ class Report::QuestionSummaryTest < ActiveSupport::TestCase
 
     # parse a time value
     def tp(s)
-      Time.parse("2000-01-01 #{s} UTC")
+      I18n.l(Time.parse("2000-01-01 #{s} UTC"), :format => :time_only)
     end
 
     # parse a datetime value
     def dtp(s)
-      Time.zone.parse(s)
+      I18n.l(Time.zone.parse(s))
     end
 
     # generates a hash of headers to items for testing purposes

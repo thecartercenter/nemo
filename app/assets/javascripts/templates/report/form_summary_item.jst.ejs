@@ -3,6 +3,7 @@
 <% } else if (item.count != null) { %>
   <%= I18n.toNumber(item.pct, {precision: 1}) %>%
   (<%= I18n.toNumber(item.count, {precision: 0}) %>)
-<% } else { %>
-  <%= I18n.toNumber(item.stat, {precision: 1}) %>
+<% } else if (item.stat != null) { %>
+  <% /*# round number unless date/time type. we cheated a little and did date formatting in ruby b/c in JS it sux */ %>
+  <%= ((item.qtype_name == 'datetime' || item.qtype_name == 'time') ? item.stat : I18n.toNumber(item.stat, {precision: 1})) %>
 <% } %>
