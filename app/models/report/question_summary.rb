@@ -146,8 +146,8 @@ class Report::QuestionSummary
       # nulls are stripped out so we can calculate how many just by taking difference
       @null_count = questioning.answers.size - @items.size
 
-      # display type is only 'full_width' if long text WITH answers
-      @display_type = questioning.qtype_name == 'long_text' && !@items.empty? ? :full_width : :flow
+      # display type is only 'full_width' if long text
+      @display_type = questioning.qtype_name == 'long_text' ? :full_width : :flow
     end
   end
 

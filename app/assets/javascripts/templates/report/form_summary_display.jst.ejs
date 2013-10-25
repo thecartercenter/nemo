@@ -84,13 +84,27 @@
             </td>
           </tr>
 
-          <% summary.items.forEach(function(item) { %>
+          <% /*# if no items, show the 'no data' message */ %>
+          <% if (summary.items.length == 0) { %>
+
             <tr class="summary">
               <td colspan="<%= result_cols + 2 %>">
-                <%= helper.partial('item', {item: item}) %>
+                <em class="no_match"><%= I18n.t('report/report.no_match') %></em>
               </td>
             </tr>
-          <% }); %>
+
+          <% /*# otherwise, loop over each item (answer) and make a row for it */ %>
+          <% } else { %>
+            
+            <% summary.items.forEach(function(item) { %>
+              <tr class="summary">
+                <td colspan="<%= result_cols + 2 %>">
+                  <%= helper.partial('item', {item: item}) %>
+                </td>
+              </tr>
+            <% }); %>
+
+          <% } %>
 
         <% } else { %>
 
