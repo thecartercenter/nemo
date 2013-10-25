@@ -1,31 +1,77 @@
 # models a group of summary clusters for a standard form report
 class Report::SummaryGroup
   # the type of group this is
-  attr_reader :type, :clusters
+  attr_reader :type_set, :clusters
+
+  # each SummaryGroup contains a set of types. this is them, in the order they'll be displayed.
+  TYPE_SETS = ActiveSupport::OrderedHash[
+    'categorical' => %w(select_one select_multiple),
+    'numbers' => %w(integer decimal),
+    'dates' => %w(date),
+    'times' => %w(time datetime),
+    'short_text' => %w(text tiny_text),
+    'long_text' => %w(long_text)
+  ]
 
   # generates a set of groups for the given summaries and options
+  # summaries are given in no particular order
   # options[:order] - either number or type
   def self.generate(summaries, options)
     # if order is by number, then just go for it
-    if options[:order] == 'number'
-      [new(:type => :all, :clusters => Report::SummaryCluster.generate(summaries))]
+    case options[:order]
+    when 'number'
+      # return one big group
+      [new(:type_set => 'all', :summaries => summaries)]
 
     # else if by type
-    else
-
-      # separate summaries by type
+    when 'type'
+      # first, separate summaries by type set
+      summaries_by_type_set = ActiveSupport::OrderedHash[*TYPE_SETS.each_key.map{|type_set| [type_set, []]}.flatten(1)]
+      summaries.each do |s|
+        summaries_by_type_set[types_to_type_sets[s.qtype.name]] << s
+      end
 
       # generate each group
-      #types.map{|t| generate(summaries)}
+      summaries_by_type_set.map{|type_set, summaries| summaries.empty? ? nil : new(:type_set => type_set, :summaries => summaries)}.compact
+    else
+      raise 'no question order specified'
     end
+  end
+
+  # generates a hash of question types to type sets (reverse of the TYPE_SETS hash)
+  def self.types_to_type_sets
+    return @@types_to_type_sets if defined?(@@types_to_type_sets)
+    @@types_to_type_sets = {}
+    TYPE_SETS.each do |type_set, types|
+      types.each do |t|
+        @@types_to_type_sets[t] = type_set
+      end
+    end
+    @@types_to_type_sets
   end
 
   def initialize(attribs)
     # save attribs
     attribs.each{|k,v| instance_variable_set("@#{k}", v)}
+
+    # sort appropriately
+    sort_summaries
+
+    # generate clusters
+    @clusters = Report::SummaryCluster.generate(@summaries)
+  end
+
+  # sorts summaries in this group depending on the group's type set
+  def sort_summaries
+    # sort first by rank, as all should be sorted by rank last
+    # the stable sorting algorithm means this order will be preserved if all else equal
+    @summaries.sort_by!{|s| s.questioning.rank}
+
+    # the categorical group should be sorted by option set name
+    @summaries.sort_by!{|s| s.questioning.option_set.name} if type_set == 'categorical'
   end
 
   def as_json(options = {})
-    super(:only => [:type, :clusters])
+    super(:only => [:type_set, :clusters])
   end
 end
