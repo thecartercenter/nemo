@@ -414,6 +414,8 @@ en:
               blank: "You must choose at least one question or one option set."
             tally_type:
               blank: "You must choose a tally type."
+            text_responses:
+              blank: "You must choose how to display text responses."
             type:
               blank: "You must choose a report type."
         response:
@@ -878,6 +880,7 @@ en:
     report_type: "Report Type"
     response_count: "Total Submissions"
     show_examples: "Show Examples"
+    show_text_responses: "Show text responses?"
     tally: "Tally"
     tally_type: "What would you like to tally?"
     these_questions: "These specific questions"
@@ -942,6 +945,10 @@ en:
     tally_type_examples:
       question_answer: "Tally of Yes's and No's for all Yes/No questions"
       grouped: "Tally of responses per form for each team"
+    text_response_options:
+      all: "Show All"
+      short_only: "Don't Show Long Text Questions"
+      none: "Show None"
 
   response:
     create_link: "Create Response"

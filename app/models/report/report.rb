@@ -3,7 +3,7 @@ class Report::Report < ActiveRecord::Base
   include MissionBased
   
   attr_accessible :type, :name, :form_id, :option_set_id, :display_type, :bar_style, :unreviewed, 
-    :question_labels, :show_question_labels, :percent_type, :unique_rows, :calculations_attributes, :calculations, 
+    :question_labels, :show_question_labels, :text_responses, :percent_type, :unique_rows, :calculations_attributes, :calculations, 
     :option_set, :filter_attributes, :mission_id, :mission
 
   attr_accessible(:option_set_choices_attributes)
@@ -119,6 +119,7 @@ class Report::Report < ActiveRecord::Base
       self.bar_style = "side_by_side" if bar_style.blank?
       self.display_type = "table" if display_type.blank?
       self.percent_type = "none" if percent_type.blank?
+      self.text_responses = nil if text_responses.blank?
     end
     
 end

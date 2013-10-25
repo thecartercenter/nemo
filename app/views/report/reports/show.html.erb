@@ -151,6 +151,17 @@
             </div>
           </div>
           <div class="section">
+            <div class="name horiz"><%= t("report/report.show_text_responses") %></div>
+            <div class="controls horiz">
+              <% t("report/report.text_response_options").each do |key, label| %>
+                <div class="choice">
+                  <input type="radio" name="text_responses" id="text_responses_<%= key %>" value="<%= key %>" />
+                  <label for="text_responses_<%= key %>"><%= label %></label>
+                </div>
+              <% end %>
+            </div>
+          </div>
+          <div class="section">
             <div class="name horiz"><%= t("report/report.enter_name") %></div>
             <div class="controls horiz">
               <input type="text" id="report_title"/>

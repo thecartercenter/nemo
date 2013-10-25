@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131011154737) do
+ActiveRecord::Schema.define(:version => 20131025142216) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -248,23 +248,23 @@ ActiveRecord::Schema.define(:version => 20131011154737) do
     t.integer  "mission_id"
     t.string   "type"
     t.string   "name"
-    t.boolean  "saved",               :default => false
+    t.boolean  "saved",            :default => false
     t.integer  "filter_id"
     t.integer  "option_set_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "viewed_at"
-    t.integer  "view_count",          :default => 0
-    t.string   "display_type",        :default => "table"
-    t.string   "bar_style",           :default => "side_by_side"
-    t.boolean  "unreviewed",          :default => false
-    t.string   "question_labels",     :default => "title"
-    t.string   "percent_type",        :default => "none"
+    t.integer  "view_count",       :default => 0
+    t.string   "display_type",     :default => "table"
+    t.string   "bar_style",        :default => "side_by_side"
+    t.boolean  "unreviewed",       :default => false
+    t.string   "question_labels",  :default => "title"
+    t.string   "percent_type",     :default => "none"
     t.boolean  "unique_rows"
     t.string   "aggregation_name"
     t.integer  "form_id"
-    t.string   "question_order",      :default => "number",       :null => false
-    t.boolean  "show_long_responses", :default => true,           :null => false
+    t.string   "question_order",   :default => "number",       :null => false
+    t.string   "text_responses"
   end
 
   add_index "report_reports", ["filter_id"], :name => "report_reports_filter_id_fk"

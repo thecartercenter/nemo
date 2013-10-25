@@ -148,7 +148,7 @@
     self.fix_calculation_ranks();
 
     var to_serialize = {}
-    $(["type", "name", "form_id", "display_type", "percent_type", "bar_style", "question_labels", "calculations_attributes"]).each(function(){
+    $(["type", "name", "form_id", "display_type", "percent_type", "bar_style", "question_labels", "text_responses", "calculations_attributes"]).each(function(){
       to_serialize[this] = (typeof(self.attribs[this]) == "undefined" || self.attribs[this] == null) ? "" : self.attribs[this];
     });
 
@@ -204,9 +204,11 @@
     if (!this.attribs.type)
       this.errors.add("type", I18n.t("activerecord.errors.models.report/report.attributes.type.blank"));
 
-    // form_id should be non-null if type is std form report
+    // form_id and text_responses should be non-null if type is std form report
     if (this.attribs.type == 'Report::StandardFormReport' && !this.attribs.form_id)
       this.errors.add("form_id", I18n.t("activerecord.errors.models.report/report.attributes.form_id.blank"));
+    if (this.attribs.type == 'Report::StandardFormReport' && !this.attribs.text_responses)
+      this.errors.add("text_responses", I18n.t("activerecord.errors.models.report/report.attributes.text_responses.blank"));
 
     // tally type should be non-null if type is tallyreport
     if (this.attribs.type == 'Report::TallyReport' && !this.attribs.tally_type)
