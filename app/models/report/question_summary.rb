@@ -22,7 +22,7 @@ class Report::QuestionSummary
     @summaries = []
 
     # split questionings by type
-    stat_qings = questionings.find_all{|qing| qing.qtype_name == 'integer'}
+    stat_qings = questionings.find_all{|qing| %w(integer decimal).include?(qing.qtype_name)}
 
     # take all statistic type questions and get data
     @summaries += generate_for_statistic_questionings(stat_qings)
@@ -37,6 +37,8 @@ class Report::QuestionSummary
   end
 
   def self.generate_for_statistic_questionings(questionings)
+    return [] if questionings.empty?
+
     qing_ids = questionings.map(&:id).join(',')
     qings_by_id = questionings.index_by(&:id)
 
@@ -45,16 +47,16 @@ class Report::QuestionSummary
       SELECT qing.id AS qing_id, q.qtype_name AS qtype_name,
         SUM(IF(a.value IS NULL OR a.value = '', 1, 0)) AS null_count,
         CASE q.qtype_name
-          WHEN 'integer' then AVG(convert(a.value, signed integer)) 
-          WHEN 'decimal' then AVG(convert(a.value, decimal))
+          WHEN 'integer' THEN AVG(CONVERT(a.value, SIGNED INTEGER)) 
+          WHEN 'decimal' THEN AVG(CONVERT(a.value, DECIMAL(9,6)))
         END AS mean,
         CASE q.qtype_name
-          WHEN 'integer' then MIN(convert(a.value, signed integer)) 
-          WHEN 'decimal' then MIN(convert(a.value, decimal))
+          WHEN 'integer' THEN MIN(CONVERT(a.value, SIGNED INTEGER)) 
+          WHEN 'decimal' THEN MIN(CONVERT(a.value, DECIMAL(9,6)))
         END AS min,
         CASE q.qtype_name
-          WHEN 'integer' then MAX(convert(a.value, signed integer)) 
-          WHEN 'decimal' then MAX(convert(a.value, decimal))
+          WHEN 'integer' THEN MAX(CONVERT(a.value, SIGNED INTEGER)) 
+          WHEN 'decimal' THEN MAX(CONVERT(a.value, DECIMAL(9,6)))
         END AS max
       FROM answers a INNER JOIN questionings qing ON a.questioning_id = qing.id AND qing.id IN (#{qing_ids}) 
         INNER JOIN questions q ON q.id = qing.question_id 
@@ -109,7 +111,7 @@ class Report::QuestionSummary
     case qtype_name
 
     # these types all get descriptive statistics
-    when 'decimal', 'time', 'datetime'
+    when 'time', 'datetime'
       @display_type = :structured
 
       # get non-blank values and set null count
