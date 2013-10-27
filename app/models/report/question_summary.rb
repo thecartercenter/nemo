@@ -22,7 +22,7 @@ class Report::QuestionSummary
     @summaries = []
 
     # split questionings by type
-    stat_qings = questionings.find_all{|qing| %w(integer decimal time).include?(qing.qtype_name)}
+    stat_qings = questionings.find_all{|qing| %w(integer decimal time datetime).include?(qing.qtype_name)}
 
     # take all statistic type questions and get data
     @summaries += generate_for_statistic_questionings(stat_qings)
@@ -50,26 +50,30 @@ class Report::QuestionSummary
             WHEN 'integer' THEN IF(a.value IS NULL OR a.value = '', 1, 0)
             WHEN 'decimal' THEN IF(a.value IS NULL OR a.value = '', 1, 0)
             WHEN 'time' THEN IF(a.time_value IS NULL, 1, 0)
+            WHEN 'datetime' THEN IF(a.datetime_value IS NULL, 1, 0)
           END
         ) AS null_count,
         CASE q.qtype_name
           WHEN 'integer' THEN AVG(CONVERT(a.value, SIGNED INTEGER)) 
           WHEN 'decimal' THEN AVG(CONVERT(a.value, DECIMAL(9,6)))
           WHEN 'time' THEN SEC_TO_TIME(AVG(TIME_TO_SEC(a.time_value)))
+          WHEN 'datetime' THEN FROM_UNIXTIME(AVG(UNIX_TIMESTAMP(a.datetime_value)))
         END AS mean,
         CASE q.qtype_name
           WHEN 'integer' THEN MIN(CONVERT(a.value, SIGNED INTEGER)) 
           WHEN 'decimal' THEN MIN(CONVERT(a.value, DECIMAL(9,6)))
           WHEN 'time' THEN MIN(a.time_value)
+          WHEN 'datetime' THEN MIN(a.datetime_value)
         END AS min,
         CASE q.qtype_name
           WHEN 'integer' THEN MAX(CONVERT(a.value, SIGNED INTEGER)) 
           WHEN 'decimal' THEN MAX(CONVERT(a.value, DECIMAL(9,6)))
           WHEN 'time' THEN MAX(a.time_value)
+          WHEN 'datetime' THEN MAX(a.datetime_value)
         END AS max
       FROM answers a INNER JOIN questionings qing ON a.questioning_id = qing.id AND qing.id IN (#{qing_ids}) 
         INNER JOIN questions q ON q.id = qing.question_id 
-      WHERE q.qtype_name in ('integer', 'decimal', 'time') GROUP BY qing.id, q.qtype_name
+      WHERE q.qtype_name in ('integer', 'decimal', 'time', 'datetime') GROUP BY qing.id, q.qtype_name
     eos
 
     res = ActiveRecord::Base.connection.execute(query)
@@ -95,6 +99,8 @@ class Report::QuestionSummary
           %w(mean max min).each{|s| row[s] = row[s].to_f}
         when 'time'
           %w(mean max min).each{|s| row[s] = I18n.l(Time.parse(row[s]), :format => :time_only)}
+        when 'datetime'
+          %w(mean max min).each{|s| row[s] = I18n.l(Time.zone.parse(row[s] + ' UTC'))}
         end
 
         # build items
@@ -122,7 +128,7 @@ class Report::QuestionSummary
     case qtype_name
 
     # these types all get descriptive statistics
-    when 'datetime'
+    when nil
       @display_type = :structured
 
       # get non-blank values and set null count
