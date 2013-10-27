@@ -161,6 +161,11 @@ class Report::QuestionSummaryTest < ActiveSupport::TestCase
       item_hash(:stat, :stat))
   end
 
+  test "null_count should be correct for datetime" do
+    prepare_form_and_report('datetime', ['2013-10-26 9:30', nil, nil])
+    assert_equal(2, @report.summaries[0].null_count)
+  end
+
   test "text summary should be correct in normal case" do
     prepare_form_and_report('text', ['foo', 'bar'])
     assert_equal(['foo', 'bar'], @report.summaries[0].items.map(&:text))
