@@ -22,12 +22,27 @@ class Report::QuestionSummary
     @summaries = []
 
     # split questionings by type
-    stat_qings = questionings.find_all{|qing| %w(integer decimal time datetime).include?(qing.qtype_name)}
+    type_to_group = {
+      'integer' => 'stat',
+      'decimal' => 'stat',
+      'time' => 'stat',
+      'datetime' => 'stat',
+      'select_one' => 'select',
+      'select_multiple' => 'select',
+      'date' => 'date',
+      'text' => 'raw',
+      'tiny_text' => 'raw',
+      'long_text' => 'raw'
+    }
+
+    grouped = {'stat' => [], 'select' => [], 'date' => [], 'raw' => []}
+
+    questionings.each{|qing| grouped[type_to_group[qing.qtype_name]] << qing}
 
     # take all statistic type questions and get data
-    @summaries += generate_for_statistic_questionings(stat_qings)
+    @summaries += generate_for_statistic_questionings(grouped['stat'])
 
-    # @summaries += generate_for_select_questionings(tally_qings)
+    @summaries += generate_for_select_questionings(grouped['select'])
 
     # @summaries += generate_for_date_questionings(date_qings)
 
@@ -120,6 +135,52 @@ class Report::QuestionSummary
     summaries
   end
 
+  def self.generate_for_select_questionings(questionings)
+    return [] if questionings.empty?
+
+    qing_ids = questionings.map(&:id).join(',')
+    qings_by_id = questionings.index_by(&:id)
+
+    # build big query
+    query = <<-eos
+      SELECT qings.id AS qing_id, o.id AS option_id, COUNT(a.id) AS answer_count 
+      FROM questionings qings 
+        INNER JOIN questions q ON qings.question_id = q.id 
+        INNER JOIN option_sets os ON q.option_set_id = os.id 
+        INNER JOIN optionings oings ON os.id = oings.option_set_id 
+        INNER JOIN options o ON oings.option_id = o.id 
+        LEFT OUTER JOIN answers a ON qings.id = a.questioning_id AND a.option_id = o.id 
+        WHERE q.qtype_name IN ('select_one', 'select_multiple') 
+          AND qings.id IN (#{qing_ids})
+        GROUP BY qings.id, o.id 
+        ORDER BY qings.id, oings.rank
+    eos
+
+    # run query
+    res = ActiveRecord::Base.connection.execute(query)
+
+    # read tallies into hash
+    tallies = {}
+    res.each(:as => :hash).map do |row|
+      tallies[[row['qing_id'], row['option_id']]] = row['answer_count']
+    end
+
+    # loop over each questioning and generate summary
+    questionings.map do |qing|
+
+      # build headers
+      headers = qing.options.map{|option| {:name => option.name, :option => option}}
+
+      # build tallies
+      items = qing.options.map do |o| 
+        count = tallies[[qing.id, o.id]] || 0
+        Report::SummaryItem.new(:count => count)
+      end
+
+      new(:questioning => qing, :display_type => :structured, :overall_header => qing.option_set.name, :headers => headers, :items => items)
+    end
+  end
+
   def initialize(attribs)
     # save attribs
     attribs.each{|k,v| instance_variable_set("@#{k}", v)}
@@ -156,7 +217,7 @@ class Report::QuestionSummary
         end
       end
 
-    when 'select_one', 'select_multiple'
+    when nil
       @display_type = :structured
       @overall_header = questioning.option_set.name
 
