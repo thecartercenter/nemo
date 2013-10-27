@@ -12,21 +12,23 @@ class Report::QuestionSummaryTest < ActiveSupport::TestCase
 
   test "integer summary should be correct" do
     prepare_form_and_report('integer', [10, 7, 6, 1, 1])
-    assert_equal({:mean => 5.0, :median => 6.0, :max => 10, :min => 1}, item_hash(:stat, :stat))
+    # assert_equal({:mean => 5.0, :median => 6.0, :max => 10, :min => 1}, item_hash(:stat, :stat))
+    assert_equal({:mean => 5.0, :max => 10, :min => 1}, item_hash(:stat, :stat))
   end
 
   test "integer summary should not include nil or blank values" do
     prepare_form_and_report('integer', [5, nil, '', 2])
-    assert_equal({:mean => 3.5, :median => 3.5, :max => 5, :min => 2}, item_hash(:stat, :stat))
+    # assert_equal({:mean => 3.5, :median => 3.5, :max => 5, :min => 2}, item_hash(:stat, :stat))
+    assert_equal({:mean => 3.5, :max => 5, :min => 2}, item_hash(:stat, :stat))
   end
 
   test "integer summary values should be correct type" do
     prepare_form_and_report('integer', [1])
     items = @report.summaries[0].items
     assert_equal(Float, items[0].stat.class) # mean
-    assert_equal(Float, items[1].stat.class) # median
-    assert_equal(Fixnum, items[2].stat.class) # max
-    assert_equal(Fixnum, items[3].stat.class) # min
+    # assert_equal(Float, items[1].stat.class) # median
+    assert_equal(Fixnum, items[1].stat.class) # max
+    assert_equal(Fixnum, items[2].stat.class) # min
   end
 
   test "null_count should be correct for integer" do
@@ -46,7 +48,8 @@ class Report::QuestionSummaryTest < ActiveSupport::TestCase
 
   test "decimal summary should be correct in normal case" do
     prepare_form_and_report('decimal', [10.0, 7.2, 6.7, 1.1, 11.5])
-    assert_equal({:mean => 7.3, :median => 7.2, :max => 11.5, :min => 1.1}, item_hash(:stat, :stat))
+    # assert_equal({:mean => 7.3, :median => 7.2, :max => 11.5, :min => 1.1}, item_hash(:stat, :stat))
+    assert_equal({:mean => 7.3, :max => 11.5, :min => 1.1}, item_hash(:stat, :stat))
   end
 
   test "decimal summary should be correct with no non-blank values" do
@@ -132,7 +135,8 @@ class Report::QuestionSummaryTest < ActiveSupport::TestCase
     assert_equal(Time.parse('2000-01-01 9:30 UTC'), @form.responses.first.answers.first.time_value)
     
     # check stats    
-    assert_equal({:mean => tp('14:00'), :median => tp('10:15'), :min => tp('9:30'), :max => tp('22:15')}, item_hash(:stat, :stat))
+    # assert_equal({:mean => tp('14:00'), :median => tp('10:15'), :min => tp('9:30'), :max => tp('22:15')}, item_hash(:stat, :stat))
+    assert_equal({:mean => tp('14:00'), :min => tp('9:30'), :max => tp('22:15')}, item_hash(:stat, :stat))
   end
 
   test "null_count should be correct for time" do
@@ -152,7 +156,10 @@ class Report::QuestionSummaryTest < ActiveSupport::TestCase
     assert_equal(dtp('2013-10-26 18:45'), I18n.l(@form.responses.first.answers.first.datetime_value))
 
     # check stats
-    assert_equal({:mean => dtp('2013-10-27 00:00'), :median => dtp('2013-10-26 18:45'), 
+    # assert_equal({:mean => dtp('2013-10-27 00:00'), :median => dtp('2013-10-26 18:45'), 
+    #   :min => dtp('2013-10-26 10:15'), :max => dtp('2013-10-27 19:00')}, 
+    #   item_hash(:stat, :stat))
+    assert_equal({:mean => dtp('2013-10-27 00:00'),
       :min => dtp('2013-10-26 10:15'), :max => dtp('2013-10-27 19:00')}, 
       item_hash(:stat, :stat))
   end
