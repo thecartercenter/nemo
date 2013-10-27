@@ -181,9 +181,9 @@ class Report::QuestionSummary
       end
 
       # null count
-      #null_count = tallies[[qing.id, nil]]
+      null_count = tallies[[qing.id, nil]]
 
-      new(:questioning => qing, :display_type => :structured, :overall_header => qing.option_set.name, :headers => headers, :items => items)
+      new(:questioning => qing, :display_type => :structured, :overall_header => qing.option_set.name, :headers => headers, :items => items, :null_count => null_count)
     end
   end
 
