@@ -60,10 +60,10 @@ class Report::QuestionSummaryTest < ActiveSupport::TestCase
   test "decimal summary values should be correct type" do
     prepare_form_and_report('decimal', [1])
     items = @report.summaries[0].items
-    assert_equal(Float, items[0].stat.class)
-    assert_equal(Float, items[1].stat.class)
-    assert_equal(Float, items[2].stat.class)
-    assert_equal(Float, items[3].stat.class)
+    assert_equal(Float, items[0].stat.class) # mean
+    #assert_equal(Float, items[1].stat.class) # median
+    assert_equal(Float, items[1].stat.class) # max
+    assert_equal(Float, items[2].stat.class) # min
   end
 
   test "select_one summary should be correct in normal case" do
