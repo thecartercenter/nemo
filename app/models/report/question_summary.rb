@@ -43,6 +43,7 @@ class Report::QuestionSummary
     # build big query
     query = <<-eos
       SELECT qing.id AS qing_id, q.qtype_name AS qtype_name,
+        SUM(IF(a.value IS NULL OR a.value = '', 1, 0)) AS null_count,
         CASE q.qtype_name
           WHEN 'integer' then AVG(convert(a.value, signed integer)) 
           WHEN 'decimal' then AVG(convert(a.value, decimal))
@@ -81,7 +82,7 @@ class Report::QuestionSummary
       items = stats.map{|stat| Report::SummaryItem.new(:qtype_name => row['qtype_name'], :stat => row[stat])}
 
       # build summary
-      new(:questioning => qings_by_id[row['qing_id']], :display_type => :structured, :headers => headers, :items => items)
+      new(:questioning => qings_by_id[row['qing_id']], :display_type => :structured, :headers => headers, :items => items, :null_count => row['null_count'])
     end
   end
 
