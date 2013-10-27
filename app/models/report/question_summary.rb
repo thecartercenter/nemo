@@ -143,17 +143,13 @@ class Report::QuestionSummary
 
     # build big query
     query = <<-eos
-      SELECT qings.id AS qing_id, o.id AS option_id, COUNT(a.id) AS answer_count 
+      SELECT qings.id AS qing_id, a.option_id AS option_id, COUNT(a.id) AS answer_count 
       FROM questionings qings 
         INNER JOIN questions q ON qings.question_id = q.id 
-        INNER JOIN option_sets os ON q.option_set_id = os.id 
-        INNER JOIN optionings oings ON os.id = oings.option_set_id 
-        INNER JOIN options o ON oings.option_id = o.id 
-        LEFT OUTER JOIN answers a ON qings.id = a.questioning_id AND a.option_id = o.id 
+        LEFT OUTER JOIN answers a ON qings.id = a.questioning_id
         WHERE q.qtype_name IN ('select_one', 'select_multiple') 
           AND qings.id IN (#{qing_ids})
-        GROUP BY qings.id, o.id 
-        ORDER BY qings.id, oings.rank
+        GROUP BY qings.id, a.option_id 
     eos
 
     # run query
@@ -171,11 +167,21 @@ class Report::QuestionSummary
       # build headers
       headers = qing.options.map{|option| {:name => option.name, :option => option}}
 
-      # build tallies
-      items = qing.options.map do |o| 
+      # build tallies, keeping a running sum
+      non_null_answer_count = 0
+      items = qing.options.map do |o|
         count = tallies[[qing.id, o.id]] || 0
+        non_null_answer_count += count
         Report::SummaryItem.new(:count => count)
       end
+
+      # compute percentages
+      items.each do |item|
+        item.pct = non_null_answer_count == 0 ? 0 : item.count.to_f / non_null_answer_count * 100
+      end
+
+      # null count
+      #null_count = tallies[[qing.id, nil]]
 
       new(:questioning => qing, :display_type => :structured, :overall_header => qing.option_set.name, :headers => headers, :items => items)
     end
