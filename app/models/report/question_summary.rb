@@ -19,22 +19,69 @@ class Report::QuestionSummary
   attr_reader :overall_header
 
   def self.generate_for(questionings)
-    # get all questionings and split
+    @summaries = []
 
-    # # take all statistic type questions and get data
-    # @summaries << generate_for_statistic_questionings(stat_qings)
+    # split questionings by type
+    stat_qings = questionings.find_all{|qing| qing.qtype_name == 'integer'}
 
-    # @summaries << generate_for_select_questionings(tally_qings)
+    # take all statistic type questions and get data
+    @summaries += generate_for_statistic_questionings(stat_qings)
 
-    # @summaries << generate_for_date_questionings(date_qings)
+    # @summaries += generate_for_select_questionings(tally_qings)
 
-    # @summaries << generate_for_raw_questionings(raw_qings)
+    # @summaries += generate_for_date_questionings(date_qings)
 
-    # @summaries
+    # @summaries += generate_for_raw_questionings(raw_qings)
 
-    # old way
-    questionings.map do |qing|
-      new(:questioning => qing)
+    @summaries
+  end
+
+  def self.generate_for_statistic_questionings(questionings)
+    qing_ids = questionings.map(&:id).join(',')
+    qings_by_id = questionings.index_by(&:id)
+
+    # build big query
+    query = <<-eos
+      SELECT qing.id AS qing_id, q.qtype_name AS qtype_name,
+        CASE q.qtype_name
+          WHEN 'integer' then AVG(convert(a.value, signed integer)) 
+          WHEN 'decimal' then AVG(convert(a.value, decimal))
+        END AS mean,
+        CASE q.qtype_name
+          WHEN 'integer' then MIN(convert(a.value, signed integer)) 
+          WHEN 'decimal' then MIN(convert(a.value, decimal))
+        END AS min,
+        CASE q.qtype_name
+          WHEN 'integer' then MAX(convert(a.value, signed integer)) 
+          WHEN 'decimal' then MAX(convert(a.value, decimal))
+        END AS max
+      FROM answers a INNER JOIN questionings qing ON a.questioning_id = qing.id AND qing.id IN (#{qing_ids}) 
+        INNER JOIN questions q ON q.id = qing.question_id 
+      WHERE q.qtype_name in ('integer', 'decimal') GROUP BY qing.id, q.qtype_name
+    eos
+
+    res = ActiveRecord::Base.connection.execute(query)
+    stats = %w(mean min max)
+    res.each(:as => :hash).map do |row|
+      qing = qings_by_id[row['qing_id']]
+
+      # convert stats to appropriate type
+      case qing.qtype_name
+      when 'integer'
+        row['mean'] = row['mean'].to_f
+        %w(max min).each{|s| row[s] = row[s].to_i}
+      when 'decimal'
+        %w(mean max min).each{|s| row[s] = row[s].to_f}
+      end
+
+      # build headers
+      headers = stats.map{|s| {:name => I18n.t("report/report.standard_form_report.stat_headers.#{s}"), :stat => s.to_sym}}
+
+      # build items
+      items = stats.map{|stat| Report::SummaryItem.new(:qtype_name => row['qtype_name'], :stat => row[stat])}
+
+      # build summary
+      new(:questioning => qings_by_id[row['qing_id']], :display_type => :structured, :headers => headers, :items => items)
     end
   end
 
@@ -46,7 +93,7 @@ class Report::QuestionSummary
     case qtype_name
 
     # these types all get descriptive statistics
-    when 'integer', 'decimal', 'time', 'datetime'
+    when 'decimal', 'time', 'datetime'
       @display_type = :structured
 
       # get non-blank values and set null count
