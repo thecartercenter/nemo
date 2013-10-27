@@ -70,17 +70,23 @@ class Report::QuestionSummary
     summaries = res.each(:as => :hash).map do |row|
       qing = qings_by_id[row['qing_id']]
 
-      # convert stats to appropriate type
-      case qing.qtype_name
-      when 'integer'
-        row['mean'] = row['mean'].to_f
-        %w(max min).each{|s| row[s] = row[s].to_i}
-      when 'decimal'
-        %w(mean max min).each{|s| row[s] = row[s].to_f}
-      end
+      # if mean is nil, means no non-nil values
+      if row['mean'].nil?
 
-      # build items
-      items = stats.map{|stat| Report::SummaryItem.new(:qtype_name => row['qtype_name'], :stat => row[stat])}
+        items = {}
+      else
+        # convert stats to appropriate type
+        case qing.qtype_name
+        when 'integer'
+          row['mean'] = row['mean'].to_f
+          %w(max min).each{|s| row[s] = row[s].to_i}
+        when 'decimal'
+          %w(mean max min).each{|s| row[s] = row[s].to_f}
+        end
+
+        # build items
+        items = stats.map{|stat| Report::SummaryItem.new(:qtype_name => row['qtype_name'], :stat => row[stat])}
+      end
 
       # build summary
       new(:questioning => qings_by_id[row['qing_id']], :display_type => :structured, :headers => headers, :items => items, :null_count => row['null_count'])
