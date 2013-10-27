@@ -45,7 +45,13 @@ class Report::QuestionSummary
     # build big query
     query = <<-eos
       SELECT qing.id AS qing_id, q.qtype_name AS qtype_name,
-        SUM(IF(a.value IS NULL OR a.value = '', 1, 0)) AS null_count,
+        SUM(
+          CASE q.qtype_name
+            WHEN 'integer' THEN IF(a.value IS NULL OR a.value = '', 1, 0)
+            WHEN 'decimal' THEN IF(a.value IS NULL OR a.value = '', 1, 0)
+            WHEN 'time' THEN IF(a.time_value IS NULL, 1, 0)
+          END
+        ) AS null_count,
         CASE q.qtype_name
           WHEN 'integer' THEN AVG(CONVERT(a.value, SIGNED INTEGER)) 
           WHEN 'decimal' THEN AVG(CONVERT(a.value, DECIMAL(9,6)))
