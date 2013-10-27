@@ -63,7 +63,11 @@ class Report::QuestionSummary
 
     res = ActiveRecord::Base.connection.execute(query)
     stats = %w(mean min max)
-    res.each(:as => :hash).map do |row|
+
+    # build headers
+    headers = stats.map{|s| {:name => I18n.t("report/report.standard_form_report.stat_headers.#{s}"), :stat => s.to_sym}}
+
+    summaries = res.each(:as => :hash).map do |row|
       qing = qings_by_id[row['qing_id']]
 
       # convert stats to appropriate type
@@ -75,15 +79,20 @@ class Report::QuestionSummary
         %w(mean max min).each{|s| row[s] = row[s].to_f}
       end
 
-      # build headers
-      headers = stats.map{|s| {:name => I18n.t("report/report.standard_form_report.stat_headers.#{s}"), :stat => s.to_sym}}
-
       # build items
       items = stats.map{|stat| Report::SummaryItem.new(:qtype_name => row['qtype_name'], :stat => row[stat])}
 
       # build summary
       new(:questioning => qings_by_id[row['qing_id']], :display_type => :structured, :headers => headers, :items => items, :null_count => row['null_count'])
     end
+
+    # build blank summaries for missing qings
+    already_summarized = summaries.map(&:questioning)
+    summaries += (questionings - already_summarized).map do |qing|
+      new(:questioning => qing, :display_type => :structured, :headers => headers, :items => {}, :null_count => 0)
+    end
+
+    summaries
   end
 
   def initialize(attribs)
