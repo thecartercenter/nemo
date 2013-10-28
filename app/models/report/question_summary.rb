@@ -266,7 +266,7 @@ class Report::QuestionSummary
         item.pct = non_null_count == 0 ? 0 : item.count.to_f / non_null_count * 100
       end
 
-      null_count = tallies[[qing.id, nil]]
+      null_count = tallies[qing.id][nil] || 0
 
       new(:questioning => qing, :display_type => :structured, :overall_header => I18n.t('report/report.standard_form_report.overall_headers.dates'),
         :headers => headers, :items => items, :null_count => null_count)
