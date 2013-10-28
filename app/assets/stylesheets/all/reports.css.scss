@@ -39,6 +39,30 @@ div.report_body {
 
   table.std_form_report {
     min-width: 600px;
+    page-break-inside: auto;
+
+    /* widths cols depending on number of result cols */
+    &.result_cols_1 { td.num { width: 4%; } td.qname { width: 40%; } td.structured { width: 50%; } }
+    &.result_cols_2 { td.num { width: 4%; } td.qname { width: 40%; } td.structured { width: 25%; } }
+    &.result_cols_3 { td.num { width: 4%; } td.qname { width: 40%; } td.structured { width: 20%; } }
+    &.result_cols_4, &.result_cols_5 { td.num { width: 4%; } td.qname { width: 40%; } td.structured { width: 11%; } }
+    &.result_cols_6, &.result_cols_7, &.result_cols_8 { td.num { width: 4%; } td.qname { width: 15%; } td.structured { width: 10%; } }
+
+    /* no page breaks inside rows */
+    tr {
+      page-break-inside: avoid; 
+      page-break-after: auto;
+    }
+
+    tr.cluster_header td {
+      color: #888;
+      font-weight: bold;
+      background-color: #f2f2ff;
+    }
+
+    tr.full_width_subhead td {
+      background-color: #eee;
+    }
 
     tr.summary {
       em.no_match {
@@ -63,31 +87,14 @@ div.report_body {
       padding: 8px 3px;
     }
 
-    /* widths cols depending on number of result cols */
-    &.result_cols_1 { td.num { width: 4%; } td.qname { width: 40%; } td.structured { width: 50%; } }
-    &.result_cols_2 { td.num { width: 4%; } td.qname { width: 40%; } td.structured { width: 25%; } }
-    &.result_cols_3 { td.num { width: 4%; } td.qname { width: 40%; } td.structured { width: 20%; } }
-    &.result_cols_4, &.result_cols_5 { td.num { width: 4%; } td.qname { width: 40%; } td.structured { width: 11%; } }
-    &.result_cols_6, &.result_cols_7, &.result_cols_8 { td.num { width: 4%; } td.qname { width: 15%; } td.structured { width: 10%; } }
-
-    tr.cluster_header td {
-      color: #888;
-      font-weight: bold;
-      background-color: #f2f2ff;
-    }
-
-    tr.full_width_subhead td {
-      background-color: #eee;
-    }
-
     td.qname {
       min-width: 300px;
-    }
 
-    div.condition_info {
-      color: #888;
-      font-size: 90%;
-      font-style: italic;
+      div.condition_info {
+        color: #888;
+        font-size: 90%;
+        font-style: italic;
+      }
     }
   }
 }
