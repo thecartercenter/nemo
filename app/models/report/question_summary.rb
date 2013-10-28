@@ -217,8 +217,8 @@ class Report::QuestionSummary
         item.pct = non_null_count == 0 ? 0 : item.count.to_f / non_null_count * 100
       end
 
-      # null count
-      null_count = tallies[[qing.id, nil]]
+      # null count should be zero for sel multiple b/c no selection can be a valid answer
+      null_count = qing.qtype_name == 'select_one' ? tallies[[qing.id, nil]] : 0
 
       new(:questioning => qing, :display_type => :structured, :overall_header => qing.option_set.name, 
         :headers => headers, :items => items, :null_count => null_count)
