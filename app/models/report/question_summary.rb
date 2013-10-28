@@ -12,9 +12,6 @@ class Report::QuestionSummary
   # the number of null answers we encountered
   attr_reader :null_count
 
-  # the number of choices as opposed to answers, we encountered (only set for select_multiple questions)
-  attr_reader :choice_count
-
   attr_reader :display_type
   attr_reader :overall_header
 
@@ -364,7 +361,6 @@ class Report::QuestionSummary
     )
     h[:items] = items
     h[:null_count] = null_count
-    h[:choice_count] = choice_count
     h
   end
 end

@@ -97,11 +97,6 @@ class Report::QuestionSummaryTest < ActiveSupport::TestCase
     assert_equal(0, @report.summaries[0].null_count)
   end
 
-  test "choice count should be correct for select_multiple" do
-    prepare_form_and_report('select_multiple', [%w(A), %w(B C), %w(A C)], :option_names => %w(A B C))
-    assert_equal(5, @report.summaries[0].choice_count)
-  end
-
   test "date question summary should be correct in normal case" do
     prepare_form_and_report('date', %w(20131026 20131027 20131027 20131028))
     assert_equal({Date.parse('20131026') => 1, Date.parse('20131027') => 2, Date.parse('20131028') => 1}, item_hash(:date, :count))
