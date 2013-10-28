@@ -186,10 +186,10 @@ class Report::QuestionSummaryTest < ActiveSupport::TestCase
     prepare_form('text', ['foo', 'bar', 'baz'])
 
     # change response dates
-    @form.responses[1].created_at += 1.hour
-    @form.responses[1].save!
-    @form.responses[2].created_at -= 1.day
-    @form.responses[2].save!
+    @form.responses[1].answers[0].created_at += 1.hour
+    @form.responses[1].answers[0].save!
+    @form.responses[2].answers[0].created_at -= 1.day
+    @form.responses[2].answers[0].save!
     @form.reload
 
     prepare_report

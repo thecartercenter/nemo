@@ -43,7 +43,7 @@ class Report::QuestionSummary
 
     @summaries += generate_for_date_questionings(grouped['date'])
 
-    # @summaries += generate_for_raw_questionings(raw_qings)
+    @summaries += generate_for_raw_questionings(grouped['raw'])
 
     @summaries
   end
@@ -273,6 +273,57 @@ class Report::QuestionSummary
     end
   end
 
+  def self.generate_for_raw_questionings(questionings)
+    return [] if questionings.empty?
+
+    qing_ids = questionings.map(&:id).join(',')
+
+    # # build and run query
+    # query = <<-eos
+    #   SELECT a.questioning_id AS qing_id, a.value AS text
+    #   FROM answers a
+    #     WHERE a.questioning_id IN (#{qing_ids})
+    #       AND a.value IS NOT NULL
+    #       AND a.value != ''
+    #     ORDER BY a.created_at
+    # eos
+    # res = ActiveRecord::Base.connection.execute(query)
+
+    answers = Answer.includes(:response => :user).where(:questioning_id => qing_ids).order('created_at')
+
+    # build summary items and index by qing id, also keep null counts
+    items_by_qing_id = {}
+    null_counts_by_qing_id = {}
+    answers.each do |answer|
+      # ensure both initialized
+      items_by_qing_id[answer.questioning_id] ||= []
+      null_counts_by_qing_id[answer.questioning_id] ||= 0
+
+      # increment null count or add item
+      if answer.nil_value?
+        null_counts_by_qing_id[answer.questioning_id] += 1
+      else
+        items_by_qing_id[answer.questioning_id] << Report::SummaryItem.new(:text => answer.value, :response => answer.response)
+      end
+    end
+
+    # build summaries
+    questionings.map do |qing|
+
+      # get items from hash
+      items = items_by_qing_id[qing.id] || []
+
+      # display type is only 'full_width' if long text
+      display_type = qing.qtype_name == 'long_text' ? :full_width : :flow
+
+      # null count from hash also
+      null_count = null_counts_by_qing_id[qing.id] || 0
+
+      new(:questioning => qing, :display_type => display_type, :overall_header => I18n.t('report/report.standard_form_report.overall_headers.responses'),
+        :headers => [], :items => items, :null_count => null_count)
+    end
+  end
+
   def initialize(attribs)
     # save attribs
     attribs.each{|k,v| instance_variable_set("@#{k}", v)}
@@ -368,7 +419,7 @@ class Report::QuestionSummary
 
       compute_percentages
 
-    when 'text', 'tiny_text', 'long_text'
+    when nil
       @overall_header = I18n.t('report/report.standard_form_report.overall_headers.responses')
       @headers = []
 
