@@ -30,10 +30,7 @@ class Report::StandardFormReport < Report::Report
       {:referring_conditions => :questioning},
 
       # eager load questions and their option sets
-      {:question => {:option_set => :options}},
-
-      # eager load answers/responses (going to nix this later)
-      {:answers => [:response, :option, {:choices => :option}]}
+      {:question => {:option_set => :options}}
     ]}).find(form_id)
 
     # generate summaries

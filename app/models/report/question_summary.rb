@@ -90,7 +90,7 @@ class Report::QuestionSummary
       # if mean is nil, means no non-nil values
       if row['mean'].nil?
 
-        items = {}
+        items = []
       else
         # convert stats to appropriate type
         case qing.qtype_name
@@ -116,7 +116,7 @@ class Report::QuestionSummary
     # build blank summaries for missing qings
     already_summarized = summaries.map(&:questioning)
     summaries += (questionings - already_summarized).map do |qing|
-      new(:questioning => qing, :display_type => :structured, :headers => headers, :items => {}, :null_count => 0)
+      new(:questioning => qing, :display_type => :structured, :headers => headers, :items => [], :null_count => 0)
     end
 
     summaries
@@ -196,7 +196,7 @@ class Report::QuestionSummary
 
       # if this is a sel mult question, the non_null_count we summed reflects the total number of non_null choices, not answers
       # but to compute percentages, we are interested in the non-null answer value, so get it from the hash we built above
-      non_null_count = sel_mult_non_null_tallies[qing.id] if qing.qtype_name == 'select_multiple'
+      non_null_count = sel_mult_non_null_tallies[qing.id] || 0 if qing.qtype_name == 'select_multiple'
 
       # compute percentages
       items.each do |item|
@@ -266,7 +266,7 @@ class Report::QuestionSummary
   def self.generate_for_raw_questionings(questionings)
     return [] if questionings.empty?
 
-    qing_ids = questionings.map(&:id).join(',')
+    qing_ids = questionings.map(&:id)
 
     # do answer query
     answers = Answer.includes(:response => :user).where(:questioning_id => qing_ids).order('created_at')
@@ -280,7 +280,7 @@ class Report::QuestionSummary
       null_counts_by_qing_id[answer.questioning_id] ||= 0
 
       # increment null count or add item
-      if answer.nil_value?
+      if answer.value.blank?
         null_counts_by_qing_id[answer.questioning_id] += 1
       else
         items_by_qing_id[answer.questioning_id] << Report::SummaryItem.new(:text => answer.value, :response => answer.response)
