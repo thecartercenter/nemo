@@ -16,8 +16,6 @@ class Report::QuestionSummary
   attr_reader :overall_header
 
   def self.generate_for(questionings)
-    @summaries = []
-
     # split questionings by type
     type_to_group = {
       'integer' => 'stat',
@@ -35,7 +33,7 @@ class Report::QuestionSummary
     questionings.each{|qing| grouped[type_to_group[qing.qtype_name]] << qing}
 
     # generate summaries for each group
-    grouped.each_key.map{|g| send("generate_for_#{g}_questionings", grouped[g])}.flatten
+    grouped.keys.map{|g| send("generate_for_#{g}_questionings", grouped[g])}.flatten
   end
 
   def self.generate_for_stat_questionings(questionings)
@@ -269,7 +267,7 @@ class Report::QuestionSummary
     qing_ids = questionings.map(&:id)
 
     # do answer query
-    answers = Answer.includes(:response => :user).where(:questioning_id => qing_ids).order('created_at')
+    answers = Answer.where(:questioning_id => qing_ids).order('created_at')
 
     # build summary items and index by qing id, also keep null counts
     items_by_qing_id = {}
@@ -283,7 +281,14 @@ class Report::QuestionSummary
       if answer.value.blank?
         null_counts_by_qing_id[answer.questioning_id] += 1
       else
-        items_by_qing_id[answer.questioning_id] << Report::SummaryItem.new(:text => answer.value, :response => answer.response)
+        item = Report::SummaryItem.new(:text => answer.value)
+
+        # add response info for long text q's
+        # item.response_id = answer.response_id
+        # item.created_at = answer.created_at
+        # item.submitter_name = answer.response.user.name
+
+        items_by_qing_id[answer.questioning_id] << item
       end
     end
 
