@@ -152,6 +152,7 @@ class Report::QuestionSummary
         GROUP BY qings.id, a.option_id
     eos
     sel_one_res = ActiveRecord::Base.connection.execute(query)
+    
     query = <<-eos
       SELECT qings.id AS qing_id, c.option_id AS option_id, COUNT(c.id) AS choice_count 
       FROM questionings qings 
@@ -166,11 +167,31 @@ class Report::QuestionSummary
 
     # read tallies into hashes
     tallies = {}
-    sel_one_res.each(:as => :hash).map do |row|
+    sel_one_res.each(:as => :hash).each do |row|
       tallies[[row['qing_id'], row['option_id']]] = row['answer_count']
     end
-    sel_mult_res.each(:as => :hash).map do |row|
+    sel_mult_res.each(:as => :hash).each do |row|
       tallies[[row['qing_id'], row['option_id']]] = row['choice_count']
+    end
+
+    # get the non-null answer counts for sel mult questions
+    query = <<-eos
+      SELECT qings.id AS qing_id, COUNT(DISTINCT a.id) AS non_null_answer_count 
+      FROM questionings qings 
+        INNER JOIN questions q ON qings.question_id = q.id 
+        LEFT OUTER JOIN answers a ON qings.id = a.questioning_id
+        LEFT OUTER JOIN choices c ON a.id = c.answer_id
+        WHERE q.qtype_name = 'select_multiple'
+          AND qings.id IN (#{qing_ids})
+          AND c.id IS NOT NULL
+        GROUP BY qings.id
+    eos
+    sel_mult_non_null_res = ActiveRecord::Base.connection.execute(query)
+
+    # read non-null answer counts into hash
+    sel_mult_non_null_tallies = {}
+    sel_mult_non_null_res.each(:as => :hash).each do |row|
+      sel_mult_non_null_tallies[row['qing_id']] = row['non_null_answer_count']
     end
 
     # loop over each questioning and generate summary
@@ -186,6 +207,10 @@ class Report::QuestionSummary
         non_null_count += count
         Report::SummaryItem.new(:count => count)
       end
+
+      # if this is a sel mult question, the non_null_count we summed reflects the total number of non_null choices, not answers
+      # but to compute percentages, we are interested in the non-null answer value, so get it from the hash we built above
+      non_null_count = sel_mult_non_null_tallies[qing.id] if qing.qtype_name == 'select_multiple'
 
       # compute percentages
       items.each do |item|
