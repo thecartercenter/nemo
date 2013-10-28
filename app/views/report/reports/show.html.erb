@@ -33,19 +33,19 @@
           <div class="section">
             <div class="name vert"><%= t("report/report.what_type") %></div>
             <div class="controls vert">
-              <% Report::Report::SUBCLASSES.each_with_index do |klass, i| %>
+              <% Report::Report::SUBCLASSES.each_with_index do |class_name, i| %>
                 <div>
-                  <input type="radio" name="report_type" id="report_type_<%= i %>" value="<%= klass.name %>">
+                  <input type="radio" name="report_type" id="report_type_<%= i %>" value="<%= class_name %>">
                   <label for="report_type_<%= i %>">
-                    <h3><%= translate_model(klass) %></h3>
+                    <h3><%= translate_model(class_name) %></h3>
                     <div class="description">
-                      <%= t("report/report.descriptions.#{klass.name.demodulize.underscore}") %>
+                      <%= t("report/report.descriptions.#{class_name.demodulize.underscore}") %>
                     </div>
                     <a class="show-examples" href="#"><%= t('report/report.show_examples') %></a>
                     <div class="examples">
                       <div class="ex_lbl"><%= t("common.example", :count => 2) %></div>
                       <ul>
-                        <% t("report/report.examples.#{klass.name.demodulize.underscore}").each do |ex| %>
+                        <% t("report/report.examples.#{class_name.demodulize.underscore}").each do |ex| %>
                           <li><%= ex %></li>
                         <% end %>
                       </ul>
