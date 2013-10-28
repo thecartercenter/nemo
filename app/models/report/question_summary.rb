@@ -141,24 +141,36 @@ class Report::QuestionSummary
     qing_ids = questionings.map(&:id).join(',')
     qings_by_id = questionings.index_by(&:id)
 
-    # build big query
+    # build and run queries for select_one and _multiple
     query = <<-eos
       SELECT qings.id AS qing_id, a.option_id AS option_id, COUNT(a.id) AS answer_count 
       FROM questionings qings 
         INNER JOIN questions q ON qings.question_id = q.id 
         LEFT OUTER JOIN answers a ON qings.id = a.questioning_id
-        WHERE q.qtype_name IN ('select_one', 'select_multiple') 
+        WHERE q.qtype_name IN ('select_one', 'select_multiple')
           AND qings.id IN (#{qing_ids})
-        GROUP BY qings.id, a.option_id 
+        GROUP BY qings.id, a.option_id
     eos
+    sel_one_res = ActiveRecord::Base.connection.execute(query)
+    query = <<-eos
+      SELECT qings.id AS qing_id, c.option_id AS option_id, COUNT(c.id) AS choice_count 
+      FROM questionings qings 
+        INNER JOIN questions q ON qings.question_id = q.id 
+        LEFT OUTER JOIN answers a ON qings.id = a.questioning_id
+        LEFT OUTER JOIN choices c ON a.id = c.answer_id
+        WHERE q.qtype_name = 'select_multiple'
+          AND qings.id IN (#{qing_ids})
+        GROUP BY qings.id, c.option_id
+    eos
+    sel_mult_res = ActiveRecord::Base.connection.execute(query)
 
-    # run query
-    res = ActiveRecord::Base.connection.execute(query)
-
-    # read tallies into hash
+    # read tallies into hashes
     tallies = {}
-    res.each(:as => :hash).map do |row|
+    sel_one_res.each(:as => :hash).map do |row|
       tallies[[row['qing_id'], row['option_id']]] = row['answer_count']
+    end
+    sel_mult_res.each(:as => :hash).map do |row|
+      tallies[[row['qing_id'], row['option_id']]] = row['choice_count']
     end
 
     # loop over each questioning and generate summary
@@ -168,22 +180,23 @@ class Report::QuestionSummary
       headers = qing.options.map{|option| {:name => option.name, :option => option}}
 
       # build tallies, keeping a running sum
-      non_null_answer_count = 0
+      non_null_count = 0
       items = qing.options.map do |o|
         count = tallies[[qing.id, o.id]] || 0
-        non_null_answer_count += count
+        non_null_count += count
         Report::SummaryItem.new(:count => count)
       end
 
       # compute percentages
       items.each do |item|
-        item.pct = non_null_answer_count == 0 ? 0 : item.count.to_f / non_null_answer_count * 100
+        item.pct = non_null_count == 0 ? 0 : item.count.to_f / non_null_count * 100
       end
 
       # null count
       null_count = tallies[[qing.id, nil]]
 
-      new(:questioning => qing, :display_type => :structured, :overall_header => qing.option_set.name, :headers => headers, :items => items, :null_count => null_count)
+      new(:questioning => qing, :display_type => :structured, :overall_header => qing.option_set.name, 
+        :headers => headers, :items => items, :null_count => null_count)
     end
   end
 
