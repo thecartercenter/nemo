@@ -65,12 +65,14 @@ class Report::SummaryGroup
 
   # sorts summaries in this group depending on the group's type set
   def sort_summaries
-    # sort first by rank, as all should be sorted by rank last
-    # the stable sorting algorithm means this order will be preserved if all else equal
-    @summaries.sort_by!{|s| s.questioning.rank}
-
-    # the categorical group should be sorted by option set name
-    @summaries.sort_by!{|s| s.questioning.option_set.name} if type_set == 'categorical'
+    if type_set == 'categorical'
+      # the categorical group should be sorted by option set name, then rank
+      @summaries.sort_by!{|s| [s.questioning.option_set.name, s.questioning.rank]} 
+      
+    else
+      # else just sort by rank
+      @summaries.sort_by!{|s| s.questioning.rank}
+    end
   end
 
   # looks through all summaries and gets the max number of headers over all of them

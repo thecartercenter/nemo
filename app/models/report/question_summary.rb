@@ -15,6 +15,7 @@ class Report::QuestionSummary
   attr_reader :display_type
   attr_reader :overall_header
 
+  # generates question summaries for the given questionings
   def self.generate_for(questionings)
     # split questionings by type
     type_to_group = {
