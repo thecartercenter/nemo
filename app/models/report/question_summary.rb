@@ -41,7 +41,7 @@ class Report::QuestionSummary
 
     @summaries += generate_for_select_questionings(grouped['select'])
 
-    # @summaries += generate_for_date_questionings(date_qings)
+    @summaries += generate_for_date_questionings(grouped['date'])
 
     # @summaries += generate_for_raw_questionings(raw_qings)
 
@@ -136,7 +136,6 @@ class Report::QuestionSummary
     return [] if questionings.empty?
 
     qing_ids = questionings.map(&:id).join(',')
-    qings_by_id = questionings.index_by(&:id)
 
     # build and run queries for select_one and _multiple
     query = <<-eos
@@ -222,6 +221,58 @@ class Report::QuestionSummary
     end
   end
 
+
+  def self.generate_for_date_questionings(questionings)
+    return [] if questionings.empty?
+
+    qing_ids = questionings.map(&:id).join(',')
+
+    # build and run query
+    query = <<-eos
+      SELECT qings.id AS qing_id, a.date_value AS date, COUNT(a.id) AS answer_count 
+      FROM questionings qings
+        INNER JOIN questions q ON qings.question_id = q.id 
+        LEFT OUTER JOIN answers a ON qings.id = a.questioning_id
+        WHERE q.qtype_name = 'date'
+          AND qings.id IN (#{qing_ids})
+        GROUP BY qings.id, a.date_value
+        ORDER BY qing_id, date
+    eos
+    res = ActiveRecord::Base.connection.execute(query)
+
+    # read into tallies
+    tallies = {}
+    res.each(:as => :hash).each do |row|
+      tallies[row['qing_id']] ||= ActiveSupport::OrderedHash[]
+      tallies[row['qing_id']][row['date']] = row['answer_count']
+    end
+
+    # loop over each questioning and generate summary
+    questionings.map do |qing|
+
+      # build headers from tally keys (already sorted)
+      headers = (tallies[qing.id] ? tallies[qing.id].keys.reject(&:nil?) : []).map{|date| {:name => I18n.l(date), :date => date}}
+      
+      # build tallies, keeping a running sum
+      non_null_count = 0
+      items = headers.map do |h|
+        count = tallies[qing.id][h[:date]] || 0
+        non_null_count += count
+        Report::SummaryItem.new(:count => count)
+      end
+
+      # compute percentages
+      items.each do |item|
+        item.pct = non_null_count == 0 ? 0 : item.count.to_f / non_null_count * 100
+      end
+
+      null_count = tallies[[qing.id, nil]]
+
+      new(:questioning => qing, :display_type => :structured, :overall_header => I18n.t('report/report.standard_form_report.overall_headers.dates'),
+        :headers => headers, :items => items, :null_count => null_count)
+    end
+  end
+
   def initialize(attribs)
     # save attribs
     attribs.each{|k,v| instance_variable_set("@#{k}", v)}
@@ -291,7 +342,7 @@ class Report::QuestionSummary
 
       compute_percentages
 
-    when 'date'
+    when nil
       @display_type = :structured
       @overall_header = I18n.t('report/report.standard_form_report.overall_headers.dates')
 
