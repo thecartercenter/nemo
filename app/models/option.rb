@@ -83,13 +83,14 @@ class Option < ActiveRecord::Base
   end
 
   def as_json(options = {})
-    { 
-      :id => id,
-      :name => name,
-      :name_translations => name_translations,
-      :set_names => option_sets.map{|os| os.name}.join(', '),
-      :in_use => in_use?
-    }
+    # { 
+    #   :id => id,
+    #   :name => name,
+    #   :name_translations => name_translations,
+    #   :set_names => option_sets.map{|os| os.name}.join(', '),
+    #   :in_use => in_use?
+    # }
+    super(options)
   end
 
   private
