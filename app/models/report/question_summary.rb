@@ -267,8 +267,26 @@ class Report::QuestionSummary
 
     qing_ids = questionings.map(&:id)
 
+    # also get ids of long_text q's
+    long_qing_ids = questionings.find_all{|q| q.qtype_name == 'long_text'}.map(&:id)
+
     # do answer query
     answers = Answer.where(:questioning_id => qing_ids).order('created_at')
+
+    # get submitter info for long text responses and store in hash
+    if long_qing_ids.empty?
+      submitter_names = {}
+    else
+      query = <<-eos
+        SELECT a.id AS answer_id, u.name AS submitter_name 
+        FROM answers a 
+          INNER JOIN responses r ON a.response_id = r.id
+          INNER JOIN users u ON r.user_id = u.id
+        WHERE a.questioning_id IN (#{long_qing_ids.join(',')})
+      eos
+      res = ActiveRecord::Base.connection.execute(query)
+      submitter_names = Hash[*res.each(:as => :hash).map{|row| [row['answer_id'], row['submitter_name']]}.flatten]
+    end
 
     # build summary items and index by qing id, also keep null counts
     items_by_qing_id = {}
@@ -285,9 +303,11 @@ class Report::QuestionSummary
         item = Report::SummaryItem.new(:text => answer.value)
 
         # add response info for long text q's
-        # item.response_id = answer.response_id
-        # item.created_at = answer.created_at
-        # item.submitter_name = answer.response.user.name
+        if name = submitter_names[answer.id]
+          item.response_id = answer.response_id
+          item.created_at = I18n.l(answer.created_at)
+          item.submitter_name = name
+        end
 
         items_by_qing_id[answer.questioning_id] << item
       end

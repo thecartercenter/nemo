@@ -39,13 +39,28 @@ div.report_body {
 
   table.std_form_report {
     min-width: 600px;
-    
-    td {
-      padding: 8px 3px;
 
+    tr.summary {
       em.no_match {
         color: #ccc;
       }
+
+      div.by_at {
+        float: right;
+        padding: 2px 5px;
+        background-color: #eee;
+        font-size: 90%;
+        color: #888;
+        margin: -8px -3px 3px 3px;
+
+        a {
+          color: #888;
+        }
+      }
+    }
+
+    td {
+      padding: 8px 3px;
     }
 
     /* widths cols depending on number of result cols */
