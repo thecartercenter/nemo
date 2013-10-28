@@ -31,24 +31,14 @@ class Report::QuestionSummary
       'tiny_text' => 'raw',
       'long_text' => 'raw'
     }
-
     grouped = {'stat' => [], 'select' => [], 'date' => [], 'raw' => []}
-
     questionings.each{|qing| grouped[type_to_group[qing.qtype_name]] << qing}
 
-    # take all statistic type questions and get data
-    @summaries += generate_for_statistic_questionings(grouped['stat'])
-
-    @summaries += generate_for_select_questionings(grouped['select'])
-
-    @summaries += generate_for_date_questionings(grouped['date'])
-
-    @summaries += generate_for_raw_questionings(grouped['raw'])
-
-    @summaries
+    # generate summaries for each group
+    grouped.each_key.map{|g| send("generate_for_#{g}_questionings", grouped[g])}.flatten
   end
 
-  def self.generate_for_statistic_questionings(questionings)
+  def self.generate_for_stat_questionings(questionings)
     return [] if questionings.empty?
 
     qing_ids = questionings.map(&:id).join(',')
@@ -278,17 +268,7 @@ class Report::QuestionSummary
 
     qing_ids = questionings.map(&:id).join(',')
 
-    # # build and run query
-    # query = <<-eos
-    #   SELECT a.questioning_id AS qing_id, a.value AS text
-    #   FROM answers a
-    #     WHERE a.questioning_id IN (#{qing_ids})
-    #       AND a.value IS NOT NULL
-    #       AND a.value != ''
-    #     ORDER BY a.created_at
-    # eos
-    # res = ActiveRecord::Base.connection.execute(query)
-
+    # do answer query
     answers = Answer.includes(:response => :user).where(:questioning_id => qing_ids).order('created_at')
 
     # build summary items and index by qing id, also keep null counts
@@ -327,115 +307,6 @@ class Report::QuestionSummary
   def initialize(attribs)
     # save attribs
     attribs.each{|k,v| instance_variable_set("@#{k}", v)}
-
-    qtype_name = questioning.qtype_name
-    case qtype_name
-
-    # these types all get descriptive statistics
-    when nil
-      @display_type = :structured
-
-      # get non-blank values and set null count
-      values = questioning.answers.map(&:casted_value).compact
-      @null_count = questioning.answers.size - values.size
-
-      if values.empty?
-        # no statistics make sense in this case
-        @items = {}
-      else
-        # add the descriptive statistics methods
-        values = values.extend(DescriptiveStatistics)
-
-        # if temporal question type, convert values unix timestamps before running stats
-        values.map!(&:to_i) if questioning.qtype.temporal?
-
-        stats = [:mean, :median, :max, :min]
-        @headers = stats.map{|s| {:name => I18n.t("report/report.standard_form_report.stat_headers.#{s}"), :stat => s}}
-        @items = stats.map{|stat| Report::SummaryItem.new(:qtype_name => qtype_name, :stat => values.send(stat))}
-
-        # if temporal, convert back to Times and convert to a nice string
-        case questioning.qtype_name
-        when 'time' then @items.each{|i| i.stat = I18n.l(Time.at(i.stat).utc, :format => :time_only)}
-        when 'datetime' then @items.each{|i| i.stat = I18n.l(Time.zone.at(i.stat))}
-        end
-      end
-
-    when nil
-      @display_type = :structured
-      @overall_header = questioning.option_set.name
-
-      # init tallies to zero
-      @items = ActiveSupport::OrderedHash[*questioning.options.map{|o| [o, Report::SummaryItem.new(:count => 0)]}.flatten]
-      @null_count = 0
-      
-      if questioning.qtype_name == 'select_multiple'
-        @choice_count = 0 
-        questioning.answers.each do |ans|
-          # we need to loop over choices
-          # there are no nulls in a select_multiple (choice.option should never be nil)
-          ans.choices.each do |choice|
-            unless choice.option.nil?
-              @items[choice.option].count += 1
-              @choice_count += 1
-            end
-          end
-        end
-
-      else # select_one
-        questioning.answers.each do |ans|
-          ans.option.nil? ? (@null_count += 1) : (@items[ans.option].count += 1)
-        end
-      end
-
-      # split items hash into keys and values
-      @headers = @items.keys.map{|option| {:name => option.name, :option => option}}
-      @items = @items.values
-
-      compute_percentages
-
-    when nil
-      @display_type = :structured
-      @overall_header = I18n.t('report/report.standard_form_report.overall_headers.dates')
-
-      # init tallies to zero
-      @items = ActiveSupport::OrderedHash.new
-
-      # we compute this directly and use to_a so as not to trigger an additional db query
-      @null_count = questioning.answers.to_a.count{|a| a.date_value.nil?}
-
-      # build tallies
-      questioning.answers.reject{|a| a.date_value.nil?}.sort_by{|a| a.date_value}.each do |a| 
-        if a.date_value.nil?
-          @null_count += 1
-        else
-          @items[a.date_value] ||= Report::SummaryItem.new(:count => 0)
-          @items[a.date_value].count += 1
-        end
-      end
-
-      # split items hash into keys and values
-      @headers = @items.keys.map{|date| {:name => I18n.l(date), :date => date}}
-      @items = @items.values
-
-      compute_percentages
-
-    when nil
-      @overall_header = I18n.t('report/report.standard_form_report.overall_headers.responses')
-      @headers = []
-
-      # reject nil answers and sort by response date
-      answers = questioning.answers.reject(&:nil_value?)
-      answers.sort_by!{|a| a.response.created_at}
-
-      # get items
-      @items = answers.map{|a| Report::SummaryItem.new(:text => a.casted_value, :response => a.response)}
-
-      # nulls are stripped out so we can calculate how many just by taking difference
-      @null_count = questioning.answers.size - @items.size
-
-      # display type is only 'full_width' if long text
-      @display_type = questioning.qtype_name == 'long_text' ? :full_width : :flow
-    end
   end
 
   def qtype
@@ -445,13 +316,6 @@ class Report::QuestionSummary
   # gets a set of objects that allow this summary to be compared to others for clustering
   def signature
     [display_type, questioning.option_set, headers]
-  end
-
-  def compute_percentages
-    denominator = (questioning.answers.size - null_count).to_f
-    items.each do |item|
-      item.pct = denominator == 0 ? 0 : item.count.to_f / denominator * 100
-    end
   end
 
   def as_json(options = {})
