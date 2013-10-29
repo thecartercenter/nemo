@@ -6,7 +6,7 @@ require 'test_helper'
 require 'unit/report/report_test_helper'
 
 class Report::SummaryCollectionTest < ActiveSupport::TestCase
-  test "collection subsets should have proper disagg values" do
+  test "collection subsets with select_one disaggregation should have proper disagg values" do
     # build a form with two questions: the one we want to analyze and the one we want to disaggregate by
     prepare_form_and_collection('integer', 'select_one', {'a' => [1,2,4], 'b' => [8,9]})
     options = @form.questionings[1].options
@@ -14,7 +14,7 @@ class Report::SummaryCollectionTest < ActiveSupport::TestCase
     assert_equal(options[1], @collection.subsets[1].disagg_value)
   end
 
-  test "collection subsets should have correct summaries" do
+  test "collection subsets with select_one disaggregation should have correct summaries" do
     prepare_form_and_collection('integer', 'select_one', {'a' => [1,2,4,6], 'b' => [8,9]})
     options = @form.questionings[1].options
     assert_equal(3.25, @collection.subsets[0].summaries[0].items[0].stat) # mean
@@ -25,7 +25,19 @@ class Report::SummaryCollectionTest < ActiveSupport::TestCase
     assert_equal(9, @collection.subsets[1].summaries[0].items[2].stat) # max
   end
 
-  test "what happens if options with no answers" do end
+  test "collection subsets with select_one disaggregation should be correct if no answers for one of the options" do
+    prepare_form_and_collection('integer', 'select_one', {'a' => [1,2,4,6], 'b' => [8,9], 'c' => []})
+    options = @form.questionings[1].options
+
+    # subset should still be created
+    assert_equal(options[2], @collection.subsets[2].disagg_value)
+
+    # but should be marked empty
+    assert_equal(true, @collection.subsets[2].empty?)    
+  end
+
+  test "collection should work if there are no answers at all" do
+  end
 
   test "the disaggregation question should not be included in the report output" do
     # since otherwise it would always be 100% in one column and 0% in the others

@@ -9,5 +9,12 @@ class Report::SummarySubset
   def initialize(attribs)
     # save attribs
     attribs.each{|k,v| instance_variable_set("@#{k}", v)}
+
+    # if all summaries have no items (are empty), set the empty flag
+    @empty = summaries.all?{|s| s.items.empty?}
+  end
+
+  def empty?
+    @empty
   end
 end

@@ -64,9 +64,12 @@ class Report::SummaryCollectionBuilder
           # get stat values from has we built above
           stat_values = results_by_disagg_value_and_qing_id[[disagg_value.id, qing.id]]
 
-          # if mean is nil, then no non-nil values
-          if stat_values['mean'].nil?
+          if stat_values.nil?
             items = []
+            null_count = 0
+          elsif stat_values['mean'].nil?
+            items = []
+            null_count = stat_values['null_count']
           else
             # convert stats to appropriate type
             case qing.qtype_name
@@ -83,11 +86,12 @@ class Report::SummaryCollectionBuilder
 
             # build items
             items = stats.map{|stat| Report::SummaryItem.new(:qtype_name => qing.qtype_name, :stat => stat_values[stat])}
+            null_count = stat_values['null_count']
           end
 
           # build summary and store in hash
           Report::QuestionSummary.new(:questioning => qing, :display_type => :structured, 
-            :headers => headers, :items => items, :null_count => stat_values['null_count'])
+            :headers => headers, :items => items, :null_count => null_count)
         end
 
         # build blank summaries for missing qings
