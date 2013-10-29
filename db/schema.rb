@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131025203530) do
+ActiveRecord::Schema.define(:version => 20131029133657) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -142,8 +142,10 @@ ActiveRecord::Schema.define(:version => 20131025203530) do
     t.integer  "mission_id"
     t.boolean  "is_standard", :default => false
     t.integer  "standard_id"
+    t.boolean  "geographic",  :default => false, :null => false
   end
 
+  add_index "option_sets", ["geographic"], :name => "index_option_sets_on_geographic"
   add_index "option_sets", ["mission_id", "name"], :name => "index_option_sets_on_mission_id_and_name", :unique => true
   add_index "option_sets", ["mission_id", "standard_id"], :name => "index_option_sets_on_mission_id_and_standard_id", :unique => true
   add_index "option_sets", ["standard_id"], :name => "index_option_sets_on_standard_id"
