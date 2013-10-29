@@ -32,11 +32,15 @@ class Report::SummaryCollectionTest < ActiveSupport::TestCase
     # subset should still be created
     assert_equal(options[2], @collection.subsets[2].disagg_value)
 
-    # but should be marked empty
-    assert_equal(true, @collection.subsets[2].empty?)    
+    # but should be marked no_data
+    assert_equal(true, @collection.subsets[2].no_data?)    
   end
 
   test "collection should work if there are no answers at all" do
+    prepare_form_and_collection('integer', 'select_one', {'a' => [], 'b' => []})
+
+    # collection should be marked no_data
+    assert_equal(true, @collection.no_data?)
   end
 
   test "the disaggregation question should not be included in the report output" do
