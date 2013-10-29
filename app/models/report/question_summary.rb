@@ -15,35 +15,91 @@ class Report::QuestionSummary
   attr_reader :display_type
   attr_reader :overall_header
 
+  # hash for converting qtypes to groups (stat, select, date, raw) used for generating summaries
+  QTYPE_TO_SUMMARY_GROUP = {
+    'integer' => 'stat',
+    'decimal' => 'stat',
+    'time' => 'stat',
+    'datetime' => 'stat',
+    'select_one' => 'select',
+    'select_multiple' => 'select',
+    'date' => 'date',
+    'text' => 'raw',
+    'tiny_text' => 'raw',
+    'long_text' => 'raw'
+  }
+
   # generates question summaries for the given questionings
   def self.generate_for(questionings)
     # split questionings by type
-    type_to_group = {
-      'integer' => 'stat',
-      'decimal' => 'stat',
-      'time' => 'stat',
-      'datetime' => 'stat',
-      'select_one' => 'select',
-      'select_multiple' => 'select',
-      'date' => 'date',
-      'text' => 'raw',
-      'tiny_text' => 'raw',
-      'long_text' => 'raw'
-    }
     grouped = {'stat' => [], 'select' => [], 'date' => [], 'raw' => []}
-    questionings.each{|qing| grouped[type_to_group[qing.qtype_name]] << qing}
+    questionings.each{|qing| grouped[QTYPE_TO_SUMMARY_GROUP[qing.qtype_name]] << qing}
 
     # generate summaries for each group
-    grouped.keys.map{|g| send("generate_for_#{g}_questionings", grouped[g])}.flatten
+    grouped.keys.map{|g| grouped[g].empty? ? nil : send("generate_for_#{g}_questionings", grouped[g])}.compact.flatten
   end
 
-  def self.generate_for_stat_questionings(questionings)
-    return [] if questionings.empty?
+  ####################################################################
+  # stat questions
+  ####################################################################
 
-    qing_ids = questionings.map(&:id).join(',')
+  # generates summaries for statistical questions
+  # returns a SummarySet object
+  def self.generate_for_stat_questionings(questionings)
+    # do the query
+    res = run_stat_query(questionings)
+
+    # some supporting arrays
+    stats = %w(mean min max)
     qings_by_id = questionings.index_by(&:id)
 
-    # build big query
+    # build headers
+    headers = stats.map{|s| {:name => I18n.t("report/report.standard_form_report.stat_headers.#{s}"), :stat => s.to_sym}}
+
+    # build summaries, one per row of the result set
+    summaries = res.each(:as => :hash).map do |row|
+      qing = qings_by_id[row['qing_id']]
+
+      # if mean is nil, means no non-nil values
+      if row['mean'].nil?
+
+        items = []
+      else
+        # convert stats to appropriate type
+        case qing.qtype_name
+        when 'integer'
+          row['mean'] = row['mean'].to_f
+          %w(max min).each{|s| row[s] = row[s].to_i}
+        when 'decimal'
+          stats.each{|s| row[s] = row[s].to_f}
+        when 'time'
+          stats.each{|s| row[s] = I18n.l(Time.parse(row[s]), :format => :time_only)}
+        when 'datetime'
+          stats.each{|s| row[s] = I18n.l(Time.zone.parse(row[s] + ' UTC'))}
+        end
+
+        # build items
+        items = stats.map{|stat| Report::SummaryItem.new(:qtype_name => row['qtype_name'], :stat => row[stat])}
+      end
+
+      # build summary
+      new(:questioning => qings_by_id[row['qing_id']], :display_type => :structured, :headers => headers, :items => items, :null_count => row['null_count'])
+    end
+
+    # build blank summaries for missing qings
+    already_summarized = summaries.map(&:questioning)
+    summaries += (questionings - already_summarized).map do |qing|
+      new(:questioning => qing, :display_type => :structured, :headers => headers, :items => [], :null_count => 0)
+    end
+
+    summaries
+  end
+
+  # builds and executes a query for summary info for stat questions
+  # returns a mysql result handle
+  def self.run_stat_query(questionings)
+    qing_ids = questionings.map(&:id).join(',')
+
     query = <<-eos
       SELECT qing.id AS qing_id, q.qtype_name AS qtype_name,
         SUM(
@@ -76,55 +132,56 @@ class Report::QuestionSummary
         INNER JOIN questions q ON q.id = qing.question_id 
       WHERE q.qtype_name in ('integer', 'decimal', 'time', 'datetime') GROUP BY qing.id, q.qtype_name
     eos
-
-    res = ActiveRecord::Base.connection.execute(query)
-    stats = %w(mean min max)
-
-    # build headers
-    headers = stats.map{|s| {:name => I18n.t("report/report.standard_form_report.stat_headers.#{s}"), :stat => s.to_sym}}
-
-    summaries = res.each(:as => :hash).map do |row|
-      qing = qings_by_id[row['qing_id']]
-
-      # if mean is nil, means no non-nil values
-      if row['mean'].nil?
-
-        items = []
-      else
-        # convert stats to appropriate type
-        case qing.qtype_name
-        when 'integer'
-          row['mean'] = row['mean'].to_f
-          %w(max min).each{|s| row[s] = row[s].to_i}
-        when 'decimal'
-          %w(mean max min).each{|s| row[s] = row[s].to_f}
-        when 'time'
-          %w(mean max min).each{|s| row[s] = I18n.l(Time.parse(row[s]), :format => :time_only)}
-        when 'datetime'
-          %w(mean max min).each{|s| row[s] = I18n.l(Time.zone.parse(row[s] + ' UTC'))}
-        end
-
-        # build items
-        items = stats.map{|stat| Report::SummaryItem.new(:qtype_name => row['qtype_name'], :stat => row[stat])}
-      end
-
-      # build summary
-      new(:questioning => qings_by_id[row['qing_id']], :display_type => :structured, :headers => headers, :items => items, :null_count => row['null_count'])
-    end
-
-    # build blank summaries for missing qings
-    already_summarized = summaries.map(&:questioning)
-    summaries += (questionings - already_summarized).map do |qing|
-      new(:questioning => qing, :display_type => :structured, :headers => headers, :items => [], :null_count => 0)
-    end
-
-    summaries
+    ActiveRecord::Base.connection.execute(query)
   end
 
-  def self.generate_for_select_questionings(questionings)
-    return [] if questionings.empty?
+  ####################################################################
+  # select questions
+  ####################################################################
 
+  def self.generate_for_select_questionings(questionings)
     qing_ids = questionings.map(&:id).join(',')
+
+    # get tallies of answers
+    tallies = get_select_question_tallies(qing_ids)
+
+    # get tallies of non_null answers for each select multiple question
+    sel_mult_non_null_tallies = get_sel_mult_non_null_tallies(qing_ids)
+
+    # loop over each questioning and generate summary
+    questionings.map do |qing|
+
+      # build headers
+      headers = qing.options.map{|option| {:name => option.name, :option => option}}
+
+      # build tallies, keeping a running sum of non-null answers
+      non_null_count = 0
+      items = qing.options.map do |o|
+        count = tallies[[qing.id, o.id]] || 0
+        non_null_count += count
+        Report::SummaryItem.new(:count => count)
+      end
+
+      # if this is a sel mult question, the non_null_count we summed reflects the total number of non_null choices, not answers
+      # but to compute percentages, we are interested in the non-null answer value, so get it from the hash we built above
+      non_null_count = sel_mult_non_null_tallies[qing.id] || 0 if qing.qtype_name == 'select_multiple'
+
+      # compute percentages
+      items.each do |item|
+        item.pct = non_null_count == 0 ? 0 : item.count.to_f / non_null_count * 100
+      end
+
+      # null count should be zero for sel multiple b/c no selection can be a valid answer
+      null_count = qing.qtype_name == 'select_one' ? tallies[[qing.id, nil]] : 0
+
+      # build summary
+      new(:questioning => qing, :display_type => :structured, :overall_header => qing.option_set.name, 
+        :headers => headers, :items => items, :null_count => null_count)
+    end
+  end
+
+  # gets a hash of tallies for each combination of qing_id and option_id for the given select questioning_ids
+  def self.get_select_question_tallies(qing_ids)
 
     # build and run queries for select_one and _multiple
     query = <<-eos
@@ -159,6 +216,12 @@ class Report::QuestionSummary
       tallies[[row['qing_id'], row['option_id']]] = row['choice_count']
     end
 
+    tallies
+  end
+
+  # gets tallies of non-null answers for the given select-multiple qing_ids
+  # useful in computing percentages
+  def self.get_sel_mult_non_null_tallies(qing_ids)
     # get the non-null answer counts for sel mult questions
     query = <<-eos
       SELECT qings.id AS qing_id, COUNT(DISTINCT a.id) AS non_null_answer_count 
@@ -171,70 +234,23 @@ class Report::QuestionSummary
           AND c.id IS NOT NULL
         GROUP BY qings.id
     eos
-    sel_mult_non_null_res = ActiveRecord::Base.connection.execute(query)
-
-    # read non-null answer counts into hash
-    sel_mult_non_null_tallies = {}
-    sel_mult_non_null_res.each(:as => :hash).each do |row|
-      sel_mult_non_null_tallies[row['qing_id']] = row['non_null_answer_count']
-    end
-
-    # loop over each questioning and generate summary
-    questionings.map do |qing|
-
-      # build headers
-      headers = qing.options.map{|option| {:name => option.name, :option => option}}
-
-      # build tallies, keeping a running sum
-      non_null_count = 0
-      items = qing.options.map do |o|
-        count = tallies[[qing.id, o.id]] || 0
-        non_null_count += count
-        Report::SummaryItem.new(:count => count)
-      end
-
-      # if this is a sel mult question, the non_null_count we summed reflects the total number of non_null choices, not answers
-      # but to compute percentages, we are interested in the non-null answer value, so get it from the hash we built above
-      non_null_count = sel_mult_non_null_tallies[qing.id] || 0 if qing.qtype_name == 'select_multiple'
-
-      # compute percentages
-      items.each do |item|
-        item.pct = non_null_count == 0 ? 0 : item.count.to_f / non_null_count * 100
-      end
-
-      # null count should be zero for sel multiple b/c no selection can be a valid answer
-      null_count = qing.qtype_name == 'select_one' ? tallies[[qing.id, nil]] : 0
-
-      new(:questioning => qing, :display_type => :structured, :overall_header => qing.option_set.name, 
-        :headers => headers, :items => items, :null_count => null_count)
-    end
-  end
-
-
-  def self.generate_for_date_questionings(questionings)
-    return [] if questionings.empty?
-
-    qing_ids = questionings.map(&:id).join(',')
-
-    # build and run query
-    query = <<-eos
-      SELECT qings.id AS qing_id, a.date_value AS date, COUNT(a.id) AS answer_count 
-      FROM questionings qings
-        INNER JOIN questions q ON qings.question_id = q.id 
-        LEFT OUTER JOIN answers a ON qings.id = a.questioning_id
-        WHERE q.qtype_name = 'date'
-          AND qings.id IN (#{qing_ids})
-        GROUP BY qings.id, a.date_value
-        ORDER BY qing_id, date
-    eos
     res = ActiveRecord::Base.connection.execute(query)
 
-    # read into tallies
+    # read non-null answer counts into hash
     tallies = {}
     res.each(:as => :hash).each do |row|
-      tallies[row['qing_id']] ||= ActiveSupport::OrderedHash[]
-      tallies[row['qing_id']][row['date']] = row['answer_count']
+      tallies[row['qing_id']] = row['non_null_answer_count']
     end
+    tallies
+  end
+
+  ####################################################################
+  # date questions
+  ####################################################################
+
+  def self.generate_for_date_questionings(questionings)
+    # get tallies for each qing and date
+    tallies = get_date_question_tallies(questionings)
 
     # loop over each questioning and generate summary
     questionings.map do |qing|
@@ -255,38 +271,53 @@ class Report::QuestionSummary
         item.pct = non_null_count == 0 ? 0 : item.count.to_f / non_null_count * 100
       end
 
+      # get null count from tallies
       null_count = tallies[qing.id][nil] || 0
 
+      # build summary
       new(:questioning => qing, :display_type => :structured, :overall_header => I18n.t('report/report.standard_form_report.overall_headers.dates'),
         :headers => headers, :items => items, :null_count => null_count)
     end
   end
 
+  # gets tallies of dates and answers for each of the given questionings
+  def self.get_date_question_tallies(questionings)
+    qing_ids = questionings.map(&:id).join(',')
+
+    # build and run query
+    query = <<-eos
+      SELECT qings.id AS qing_id, a.date_value AS date, COUNT(a.id) AS answer_count 
+      FROM questionings qings
+        INNER JOIN questions q ON qings.question_id = q.id 
+        LEFT OUTER JOIN answers a ON qings.id = a.questioning_id
+        WHERE q.qtype_name = 'date'
+          AND qings.id IN (#{qing_ids})
+        GROUP BY qings.id, a.date_value
+        ORDER BY qing_id, date
+    eos
+    res = ActiveRecord::Base.connection.execute(query)
+
+    # read into tallies, preserving sorted date order
+    tallies = {}
+    res.each(:as => :hash).each do |row|
+      tallies[row['qing_id']] ||= ActiveSupport::OrderedHash[]
+      tallies[row['qing_id']][row['date']] = row['answer_count']
+    end
+    tallies
+  end
+
+  ####################################################################
+  # date questions
+  ####################################################################
+
   def self.generate_for_raw_questionings(questionings)
-    return [] if questionings.empty?
-
     qing_ids = questionings.map(&:id)
-
-    # also get ids of long_text q's
-    long_qing_ids = questionings.find_all{|q| q.qtype_name == 'long_text'}.map(&:id)
 
     # do answer query
     answers = Answer.where(:questioning_id => qing_ids).order('created_at')
 
-    # get submitter info for long text responses and store in hash
-    if long_qing_ids.empty?
-      submitter_names = {}
-    else
-      query = <<-eos
-        SELECT a.id AS answer_id, u.name AS submitter_name 
-        FROM answers a 
-          INNER JOIN responses r ON a.response_id = r.id
-          INNER JOIN users u ON r.user_id = u.id
-        WHERE a.questioning_id IN (#{long_qing_ids.join(',')})
-      eos
-      res = ActiveRecord::Base.connection.execute(query)
-      submitter_names = Hash[*res.each(:as => :hash).map{|row| [row['answer_id'], row['submitter_name']]}.flatten]
-    end
+    # get submitter names for long text q's
+    submitter_names = get_submiter_names(questionings)
 
     # build summary items and index by qing id, also keep null counts
     items_by_qing_id = {}
@@ -325,8 +356,31 @@ class Report::QuestionSummary
       # null count from hash also
       null_count = null_counts_by_qing_id[qing.id] || 0
 
+      # build summary
       new(:questioning => qing, :display_type => display_type, :overall_header => I18n.t('report/report.standard_form_report.overall_headers.responses'),
         :headers => [], :items => items, :null_count => null_count)
+    end
+  end
+
+  # gets a hash of answer_id to submitter names for each long_text answer to questionings in the given array
+  def self.get_submiter_names(questionings)
+    # get ids of long_text q's from the given array
+    # (should be eager loaded with Question to avoid n+1)
+    long_qing_ids = questionings.find_all{|q| q.qtype_name == 'long_text'}.map(&:id)
+
+    # get submitter info for long text responses and store in hash
+    if long_qing_ids.empty?
+      {}
+    else
+      query = <<-eos
+        SELECT a.id AS answer_id, u.name AS submitter_name 
+        FROM answers a 
+          INNER JOIN responses r ON a.response_id = r.id
+          INNER JOIN users u ON r.user_id = u.id
+        WHERE a.questioning_id IN (#{long_qing_ids.join(',')})
+      eos
+      res = ActiveRecord::Base.connection.execute(query)
+      Hash[*res.each(:as => :hash).map{|row| [row['answer_id'], row['submitter_name']]}.flatten]
     end
   end
 
