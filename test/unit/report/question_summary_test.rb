@@ -2,9 +2,6 @@ require 'test_helper'
 require 'unit/report/report_test_helper'
 
 class Report::QuestionSummaryTest < ActiveSupport::TestCase
-  setup do
-  end
-
   test "summary should contain question type" do
     prepare_form_and_report('integer', [0])
     assert_equal('integer', first_summary.qtype.name)
