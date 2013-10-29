@@ -6,7 +6,7 @@ require 'test_helper'
 require 'unit/report/report_test_helper'
 
 class Report::SummaryCollectionTest < ActiveSupport::TestCase
-  test "collection subsets with select_one disaggregation should have proper disagg values" do
+  test "collection should have proper disagg values" do
     # build a form with two questions: the one we want to analyze and the one we want to disaggregate by
     prepare_form_and_collection('integer', 'select_one', {'a' => [1,2,4], 'b' => [8,9]})
     options = @form.questionings[1].options
@@ -14,9 +14,8 @@ class Report::SummaryCollectionTest < ActiveSupport::TestCase
     assert_equal(options[1], @collection.subsets[1].disagg_value)
   end
 
-  test "collection subsets with select_one disaggregation should have correct summaries" do
+  test "collections with integer questions should have correct summaries" do
     prepare_form_and_collection('integer', 'select_one', {'a' => [1,2,4,6], 'b' => [8,9]})
-    options = @form.questionings[1].options
     assert_equal(3.25, @collection.subsets[0].summaries[0].items[0].stat) # mean
     assert_equal(1, @collection.subsets[0].summaries[0].items[1].stat) # min
     assert_equal(6, @collection.subsets[0].summaries[0].items[2].stat) # max
@@ -25,7 +24,15 @@ class Report::SummaryCollectionTest < ActiveSupport::TestCase
     assert_equal(9, @collection.subsets[1].summaries[0].items[2].stat) # max
   end
 
-  test "collection subsets with select_one disaggregation should be correct if no answers for one of the options" do
+  test "collections with select questions should have correct summaries" do
+    prepare_form_and_collection('select_one', 'select_one', {'a' => ['Yes', 'Yes', 'No'], 'b' => ['No', 'Yes', 'No', 'No']})
+    assert_equal(2, @collection.subsets[0].summaries[0].items[0].count) # a - Yes
+    assert_equal(1, @collection.subsets[0].summaries[0].items[1].count) # a - No
+    assert_equal(1, @collection.subsets[1].summaries[0].items[0].count) # b - Yes
+    assert_equal(3, @collection.subsets[1].summaries[0].items[1].count) # b - No
+  end
+
+  test "collection subsets should be correct if no answers for one of the options" do
     prepare_form_and_collection('integer', 'select_one', {'a' => [1,2,4,6], 'b' => [8,9], 'c' => []})
     options = @form.questionings[1].options
 
@@ -55,6 +62,7 @@ class Report::SummaryCollectionTest < ActiveSupport::TestCase
 
     def prepare_form(analyze_type, dissag_type, answers_by_dissag_value)
       # create form with just the analysis type
+      # if the analyze question is a select type, just let it default to the Yes/No option set
       @form = FactoryGirl.create(:form, :question_types => [analyze_type])
 
       # add the disagg question

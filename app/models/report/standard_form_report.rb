@@ -1,3 +1,39 @@
+# when run, this report generates a fairly complex data structure, as follows:
+# StandardFormReport = {
+#   :subreports => [
+#     {
+#       :groups => [
+#         {
+#           :clusters => [
+#             {:summaries => [summary, summary, ...]},
+#             {:summaries => [summary, summary, ...]}
+#           ]
+#         },
+#         {
+#           :clusters => [
+#             {:summaries => [summary, summary, ...]},
+#             {:summaries => [summary, summary, ...]}
+#           ]
+#         }
+#       ]
+#     }
+#   ]
+# }
+#
+# Subreports are generated from intermediate constructs called SummaryCollections, which are constructed as follows:
+# SummaryCollection = {
+#   :subsets => [
+#     {
+#       :disagg_value => xxx,
+#       :summaries => [summary, summary, ...]
+#     },
+#     {
+#       :disagg_value => xxx,
+#       :summaries => [summary, summary, ...]
+#     }
+#   ]
+# }
+
 class Report::StandardFormReport < Report::Report
   belongs_to(:form)
 

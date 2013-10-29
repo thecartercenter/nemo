@@ -53,8 +53,6 @@ class Report::SummaryCollectionBuilder
       # build headers
       headers = stats.map{|s| {:name => I18n.t("report/report.standard_form_report.stat_headers.#{s}"), :stat => s.to_sym}}
 
-      disagg_values = disagg_qing.options
-
       # loop over each possible disagg value
       subsets = disagg_values.map do |disagg_value|
         
@@ -143,7 +141,8 @@ class Report::SummaryCollectionBuilder
         FROM answers a INNER JOIN questionings qing ON a.questioning_id = qing.id AND qing.id IN (#{qing_ids}) 
           INNER JOIN questions q ON q.id = qing.question_id
           #{disagg_join_clause}
-        WHERE q.qtype_name in ('integer', 'decimal', 'time', 'datetime') GROUP BY #{disagg_group_by_expr} qing.id, q.qtype_name
+        WHERE q.qtype_name in ('integer', 'decimal', 'time', 'datetime') 
+        GROUP BY #{disagg_group_by_expr} qing.id, q.qtype_name
       eos
       res = ActiveRecord::Base.connection.execute(query)
 
@@ -168,74 +167,84 @@ class Report::SummaryCollectionBuilder
       # get tallies of non_null answers for each select multiple question
       sel_mult_non_null_tallies = get_sel_mult_non_null_tallies(qing_ids)
 
-      # loop over each questioning and generate summary
-      select_qs.map do |qing|
+      # loop over each possible disagg_value to generate subsets
+      subsets = disagg_values.map do |disagg_value|
 
-        # build headers
-        headers = qing.options.map{|option| {:name => option.name, :option => option}}
+        # loop over each questioning to generate summaries
+        summaries = select_qs.map do |qing|
+          
+          # build headers
+          headers = qing.options.map{|option| {:name => option.name, :option => option}}
 
-        # build tallies, keeping a running sum of non-null answers
-        non_null_count = 0
-        items = qing.options.map do |o|
-          count = tallies[[qing.id, o.id]] || 0
-          non_null_count += count
-          Report::SummaryItem.new(:count => count)
+          # build tallies, keeping a running sum of non-null answers
+          non_null_count = 0
+          items = qing.options.map do |o|
+            count = tallies[[disagg_value.id, qing.id, o.id]] || 0
+            non_null_count += count
+            Report::SummaryItem.new(:count => count)
+          end
+
+          # if this is a sel mult question, the non_null_count we summed reflects the total number of non_null choices, not answers
+          # but to compute percentages, we are interested in the non-null answer value, so get it from the hash we built above
+          non_null_count = sel_mult_non_null_tallies[[disagg_value.id, qing.id]] || 0 if qing.qtype_name == 'select_multiple'
+
+          # compute percentages
+          items.each do |item|
+            item.pct = non_null_count == 0 ? 0 : item.count.to_f / non_null_count * 100
+          end
+
+          # null count should be zero for sel multiple b/c no selection can be a valid answer
+          null_count = qing.qtype_name == 'select_one' ? tallies[[disagg_value.id, qing.id, nil]] : 0
+
+          # build summary
+          Report::QuestionSummary.new(:questioning => qing, :display_type => :structured, :overall_header => qing.option_set.name, 
+            :headers => headers, :items => items, :null_count => null_count)
         end
 
-        # if this is a sel mult question, the non_null_count we summed reflects the total number of non_null choices, not answers
-        # but to compute percentages, we are interested in the non-null answer value, so get it from the hash we built above
-        non_null_count = sel_mult_non_null_tallies[qing.id] || 0 if qing.qtype_name == 'select_multiple'
-
-        # compute percentages
-        items.each do |item|
-          item.pct = non_null_count == 0 ? 0 : item.count.to_f / non_null_count * 100
-        end
-
-        # null count should be zero for sel multiple b/c no selection can be a valid answer
-        null_count = qing.qtype_name == 'select_one' ? tallies[[qing.id, nil]] : 0
-
-        # build summary
-        Report::QuestionSummary.new(:questioning => qing, :display_type => :structured, :overall_header => qing.option_set.name, 
-          :headers => headers, :items => items, :null_count => null_count)
+        # make a subset for the current disagg_value for this set of summaries
+        Report::SummarySubset.new(:disagg_value => disagg_value, :summaries => summaries)
       end
+
+      Report::SummaryCollection.new(:subsets => subsets, :questionings => select_qs)
     end
 
-    # gets a hash of tallies for each combination of qing_id and option_id for the given select questioning_ids
+    # gets a hash of form [disagg_value, qing_id, option_id] => tally for the given select questioning_ids
     def get_select_question_tallies(qing_ids)
 
       # build and run queries for select_one and _multiple
       query = <<-eos
-        SELECT qings.id AS qing_id, a.option_id AS option_id, COUNT(a.id) AS answer_count 
+        SELECT #{disagg_select_expr} qings.id AS qing_id, a.option_id AS option_id, COUNT(a.id) AS answer_count 
         FROM questionings qings 
           INNER JOIN questions q ON qings.question_id = q.id 
           LEFT OUTER JOIN answers a ON qings.id = a.questioning_id
+          #{disagg_join_clause}
           WHERE q.qtype_name IN ('select_one', 'select_multiple')
             AND qings.id IN (#{qing_ids})
-          GROUP BY qings.id, a.option_id
+          GROUP BY #{disagg_group_by_expr} qings.id, a.option_id
       eos
       sel_one_res = ActiveRecord::Base.connection.execute(query)
       
       query = <<-eos
-        SELECT qings.id AS qing_id, c.option_id AS option_id, COUNT(c.id) AS choice_count 
+        SELECT #{disagg_select_expr} qings.id AS qing_id, c.option_id AS option_id, COUNT(c.id) AS choice_count 
         FROM questionings qings 
           INNER JOIN questions q ON qings.question_id = q.id 
           LEFT OUTER JOIN answers a ON qings.id = a.questioning_id
           LEFT OUTER JOIN choices c ON a.id = c.answer_id
+          #{disagg_join_clause}
           WHERE q.qtype_name = 'select_multiple'
             AND qings.id IN (#{qing_ids})
-          GROUP BY qings.id, c.option_id
+          GROUP BY #{disagg_group_by_expr} qings.id, c.option_id
       eos
       sel_mult_res = ActiveRecord::Base.connection.execute(query)
 
       # read tallies into hashes
       tallies = {}
       sel_one_res.each(:as => :hash).each do |row|
-        tallies[[row['qing_id'], row['option_id']]] = row['answer_count']
+        tallies[[row['disagg_value'], row['qing_id'], row['option_id']]] = row['answer_count']
       end
       sel_mult_res.each(:as => :hash).each do |row|
-        tallies[[row['qing_id'], row['option_id']]] = row['choice_count']
+        tallies[[row['disagg_value'], row['qing_id'], row['option_id']]] = row['choice_count']
       end
-
       tallies
     end
 
@@ -244,22 +253,23 @@ class Report::SummaryCollectionBuilder
     def get_sel_mult_non_null_tallies(qing_ids)
       # get the non-null answer counts for sel mult questions
       query = <<-eos
-        SELECT qings.id AS qing_id, COUNT(DISTINCT a.id) AS non_null_answer_count 
+        SELECT #{disagg_select_expr} qings.id AS qing_id, COUNT(DISTINCT a.id) AS non_null_answer_count
         FROM questionings qings 
           INNER JOIN questions q ON qings.question_id = q.id 
           LEFT OUTER JOIN answers a ON qings.id = a.questioning_id
           LEFT OUTER JOIN choices c ON a.id = c.answer_id
+          #{disagg_join_clause}
           WHERE q.qtype_name = 'select_multiple'
             AND qings.id IN (#{qing_ids})
             AND c.id IS NOT NULL
-          GROUP BY qings.id
+          GROUP BY #{disagg_group_by_expr} qings.id
       eos
       res = ActiveRecord::Base.connection.execute(query)
 
       # read non-null answer counts into hash
       tallies = {}
       res.each(:as => :hash).each do |row|
-        tallies[row['qing_id']] = row['non_null_answer_count']
+        tallies[[row['disagg_value'], row['qing_id']]] = row['non_null_answer_count']
       end
       tallies
     end
@@ -402,6 +412,11 @@ class Report::SummaryCollectionBuilder
         res = ActiveRecord::Base.connection.execute(query)
         Hash[*res.each(:as => :hash).map{|row| [row['answer_id'], row['submitter_name']]}.flatten]
       end
+    end
+
+    # returns all possible disagg_values
+    def disagg_values
+      disagg_qing.options
     end
 
     # returns a fully qualified column reference for the disaggregation value
