@@ -24,12 +24,23 @@ class Report::SummaryCollectionTest < ActiveSupport::TestCase
     assert_equal(9, @collection.subsets[1].summaries[0].items[2].stat) # max
   end
 
-  test "collections with select questions should have correct summaries" do
-    prepare_form_and_collection('select_one', 'select_one', {'a' => ['Yes', 'Yes', 'No'], 'b' => ['No', 'Yes', 'No', 'No']})
-    assert_equal(2, @collection.subsets[0].summaries[0].items[0].count) # a - Yes
-    assert_equal(1, @collection.subsets[0].summaries[0].items[1].count) # a - No
-    assert_equal(1, @collection.subsets[1].summaries[0].items[0].count) # b - Yes
-    assert_equal(3, @collection.subsets[1].summaries[0].items[1].count) # b - No
+  test "collections with select_one questions should have correct summaries" do
+    prepare_form_and_collection('select_one', 'select_one', {'a' => ['red', 'red', 'blue'], 'b' => ['blue', 'red', 'blue', 'blue']})
+    assert_equal(2, @collection.subsets[0].summaries[0].items[0].count) # a - red
+    assert_equal(1, @collection.subsets[0].summaries[0].items[1].count) # a - blue
+    assert_equal(1, @collection.subsets[1].summaries[0].items[0].count) # b - red
+    assert_equal(3, @collection.subsets[1].summaries[0].items[1].count) # b - blue
+  end
+
+  test "collections with select_multiple questions should have correct summaries" do
+    prepare_form_and_collection('select_multiple', 'select_one', 
+      {'a' => [['red'], ['red', 'green'], []], 'b' => [['blue', 'red'], ['blue', 'green']]})
+    assert_equal(2, @collection.subsets[0].summaries[0].items[0].count) # a - red
+    assert_equal(0, @collection.subsets[0].summaries[0].items[1].count) # a - blue
+    assert_equal(1, @collection.subsets[0].summaries[0].items[2].count) # a - green
+    assert_equal(1, @collection.subsets[1].summaries[0].items[0].count) # b - red
+    assert_equal(2, @collection.subsets[1].summaries[0].items[1].count) # b - blue
+    assert_equal(1, @collection.subsets[1].summaries[0].items[2].count) # b - green
   end
 
   test "collection subsets should be correct if no answers for one of the options" do
@@ -61,13 +72,16 @@ class Report::SummaryCollectionTest < ActiveSupport::TestCase
     end
 
     def prepare_form(analyze_type, dissag_type, answers_by_dissag_value)
-      # create form with just the analysis type
-      # if the analyze question is a select type, just let it default to the Yes/No option set
-      @form = FactoryGirl.create(:form, :question_types => [analyze_type])
+      # create form
+      @form = FactoryGirl.create(:form)
+
+      # if the analyze question is a select type, use red blue green as option set (ignored otherwise)
+      analyze_q = FactoryGirl.create(:question, :qtype_name => analyze_type, :option_names => %w(red blue green))
 
       # add the disagg question
       disagg_q = FactoryGirl.create(:question, :qtype_name => dissag_type, :option_names => answers_by_dissag_value.keys)
-      @form.questions << disagg_q
+      
+      @form.questions << analyze_q << disagg_q
       @form.save!
 
       # convert answers to array of arrays
