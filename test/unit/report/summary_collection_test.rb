@@ -43,6 +43,15 @@ class Report::SummaryCollectionTest < ActiveSupport::TestCase
     assert_equal(1, @collection.subsets[1].summaries[0].items[2].count) # b - green
   end
 
+  test "collections with date questions should have correct summaries" do
+    prepare_form_and_collection('date', 'select_one', 
+      {'a' => %w(2012-10-26 2011-07-22 2012-10-26), 'b' => %w(2013-07-22 2012-9-22 2013-07-22 2013-07-22)})
+
+    # check that headers are correct and in correct order
+    assert_equal(['Jul 22 2011', 'Oct 26 2012'], header_names_for_disagg_value('a'))
+    assert_equal(['Sep 22 2012', 'Jul 22 2013'], header_names_for_disagg_value('b'))
+  end
+
   test "collection subsets should be correct if no answers for one of the options" do
     prepare_form_and_collection('integer', 'select_one', {'a' => [1,2,4,6], 'b' => [8,9], 'c' => []})
     options = @form.questionings[1].options
@@ -97,5 +106,14 @@ class Report::SummaryCollectionTest < ActiveSupport::TestCase
     def prepare_collection
       # pass the full questionings array, and the disaggregation questioning, which is the last one
       @collection = Report::SummaryCollectionBuilder.new(@form.questionings, @form.questionings.last).build
+    end
+
+    def subsets_by_disagg_value
+      @subsets_by_disagg_value ||= @collection.subsets.index_by{|s| s.disagg_value.name}
+    end
+
+    def header_names_for_disagg_value(val)
+      # the question we're interested in is always rank 1
+      subsets_by_disagg_value[val].summaries.detect{|s| s.questioning.rank == 1}.headers.map{|h| h[:name]}
     end
 end

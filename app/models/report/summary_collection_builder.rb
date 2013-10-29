@@ -25,13 +25,13 @@ class Report::SummaryCollectionBuilder
   def build
     # split questionings by type
     grouped = {'stat' => [], 'select' => [], 'date' => [], 'raw' => []}
-    @questionings.each{|qing| grouped[QTYPE_TO_SUMMARY_GROUP[qing.qtype_name]] << qing}
+    questionings.each{|qing| grouped[QTYPE_TO_SUMMARY_GROUP[qing.qtype_name]] << qing}
 
     # generate summary collections for each group
     collections = grouped.keys.map{|g| grouped[g].empty? ? nil : send("collection_for_#{g}_questionings", grouped[g])}.compact.flatten
 
     # merge to make a single summary collection
-    Report::SummaryCollection.merge(collections)
+    Report::SummaryCollection.merge_all(collections, questionings)
   end
 
   private
@@ -282,32 +282,45 @@ class Report::SummaryCollectionBuilder
       # get tallies for each qing and date
       tallies = get_date_question_tallies(date_qs)
 
-      # loop over each questioning and generate summary
-      date_qs.map do |qing|
+      # loop over each possible disagg_value to generate subsets
+      subsets = disagg_values.map do |disagg_value|
 
-        # build headers from tally keys (already sorted)
-        headers = (tallies[qing.id] ? tallies[qing.id].keys.reject(&:nil?) : []).map{|date| {:name => I18n.l(date), :date => date}}
-        
-        # build tallies, keeping a running sum
-        non_null_count = 0
-        items = headers.map do |h|
-          count = tallies[qing.id][h[:date]] || 0
-          non_null_count += count
-          Report::SummaryItem.new(:count => count)
+        # loop over each questioning to generate summaries
+        summaries = date_qs.map do |qing|
+
+          # get tallies for this disagg_value and qing
+          cur_tallies = tallies[[disagg_value.id, qing.id]]
+
+          # build headers from tally keys (already sorted)
+          headers = (cur_tallies ? cur_tallies.keys.reject(&:nil?) : []).map{|date| {:name => I18n.l(date), :date => date}}
+          
+          # build tallies, keeping a running sum
+          non_null_count = 0
+          items = headers.map do |h|
+            count = cur_tallies[h[:date]] || 0
+            non_null_count += count
+            Report::SummaryItem.new(:count => count)
+          end
+
+          # compute percentages
+          items.each do |item|
+            item.pct = non_null_count == 0 ? 0 : item.count.to_f / non_null_count * 100
+          end
+
+          # get null count from tallies
+          null_count = cur_tallies[nil] || 0
+
+          # build summary
+          Report::QuestionSummary.new(:questioning => qing, :display_type => :structured, 
+            :overall_header => I18n.t('report/report.standard_form_report.overall_headers.dates'),
+            :headers => headers, :items => items, :null_count => null_count)
         end
 
-        # compute percentages
-        items.each do |item|
-          item.pct = non_null_count == 0 ? 0 : item.count.to_f / non_null_count * 100
-        end
-
-        # get null count from tallies
-        null_count = tallies[qing.id][nil] || 0
-
-        # build summary
-        Report::QuestionSummary.new(:questioning => qing, :display_type => :structured, :overall_header => I18n.t('report/report.standard_form_report.overall_headers.dates'),
-          :headers => headers, :items => items, :null_count => null_count)
+        # make a subset for the current disagg_value for this set of summaries
+        Report::SummarySubset.new(:disagg_value => disagg_value, :summaries => summaries)
       end
+
+      Report::SummaryCollection.new(:subsets => subsets, :questionings => date_qs)
     end
 
     # gets tallies of dates and answers for each of the given questionings
@@ -316,22 +329,23 @@ class Report::SummaryCollectionBuilder
 
       # build and run query
       query = <<-eos
-        SELECT qings.id AS qing_id, a.date_value AS date, COUNT(a.id) AS answer_count 
+        SELECT #{disagg_select_expr} qings.id AS qing_id, a.date_value AS date, COUNT(a.id) AS answer_count 
         FROM questionings qings
           INNER JOIN questions q ON qings.question_id = q.id 
           LEFT OUTER JOIN answers a ON qings.id = a.questioning_id
+          #{disagg_join_clause}
           WHERE q.qtype_name = 'date'
             AND qings.id IN (#{qing_ids})
-          GROUP BY qings.id, a.date_value
-          ORDER BY qing_id, date
+          GROUP BY #{disagg_group_by_expr} qings.id, a.date_value
+          ORDER BY disagg_value, qing_id, date
       eos
       res = ActiveRecord::Base.connection.execute(query)
 
       # read into tallies, preserving sorted date order
       tallies = {}
       res.each(:as => :hash).each do |row|
-        tallies[row['qing_id']] ||= ActiveSupport::OrderedHash[]
-        tallies[row['qing_id']][row['date']] = row['answer_count']
+        tallies[[row['disagg_value'], row['qing_id']]] ||= ActiveSupport::OrderedHash[]
+        tallies[[row['disagg_value'], row['qing_id']]][row['date']] = row['answer_count']
       end
       tallies
     end
