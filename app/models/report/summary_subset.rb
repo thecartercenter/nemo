@@ -4,7 +4,7 @@
 # 1:  :disaggregation_value => Option(:name => 'urban'), :summaries => [summary1, summary2, ...]
 # 2:  :disaggregation_value => Option(:name => 'rural'), :summaries => [summary1, summary2, ...]
 class Report::SummarySubset
-  attr_reader :disaggregation_value, :summaries
+  attr_reader :disagg_value, :summaries
 
   def initialize(attribs)
     # save attribs
