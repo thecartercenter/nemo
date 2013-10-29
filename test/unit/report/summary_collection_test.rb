@@ -14,6 +14,17 @@ class Report::SummaryCollectionTest < ActiveSupport::TestCase
     assert_equal(options[1], @collection.subsets[1].disagg_value)
   end
 
+  test "collection subsets should have correct summaries" do
+    prepare_form_and_collection('integer', 'select_one', {'a' => [1,2,4,6], 'b' => [8,9]})
+    options = @form.questionings[1].options
+    assert_equal(3.25, @collection.subsets[0].summaries[0].items[0].stat) # mean
+    assert_equal(1, @collection.subsets[0].summaries[0].items[1].stat) # min
+    assert_equal(6, @collection.subsets[0].summaries[0].items[2].stat) # max
+    assert_equal(8.5, @collection.subsets[1].summaries[0].items[0].stat) # mean
+    assert_equal(8, @collection.subsets[1].summaries[0].items[1].stat) # min
+    assert_equal(9, @collection.subsets[1].summaries[0].items[2].stat) # max
+  end
+
   test "what happens if options with no answers" do end
 
   test "the disaggregation question should not be included in the report output" do
