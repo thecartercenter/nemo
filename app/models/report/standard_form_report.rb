@@ -1,7 +1,7 @@
 class Report::StandardFormReport < Report::Report
   belongs_to(:form)
 
-  attr_reader :groups, :summaries
+  attr_reader :subreports
 
   # question types that we leave off this report (stored as a hash for better performance)
   EXCLUDED_TYPES = {'location' => true}
@@ -33,11 +33,13 @@ class Report::StandardFormReport < Report::Report
       {:question => {:option_set => :options}}
     ]}).find(form_id)
 
-    # generate summaries
-    @summaries = Report::QuestionSummary.generate_for(questionings_to_include(f))
+    # generate summary collection (sets of disaggregated summaries)
+    summary_collection = Report::QuestionSummary.generate_for(questionings_to_include(f))
+
+    @subreports = Report::StandardFormSubreport.generate(summary_collection, :parent => self)
 
     # divide into groups and clusters
-    @groups = Report::SummaryGroup.generate(@summaries, :order => question_order)
+    #@groups = Report::SummaryGroup.generate(@summaries, :order => question_order)
   end
 
   # returns the number of responses matching the report query

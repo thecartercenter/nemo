@@ -35,8 +35,11 @@ class Report::QuestionSummary
     grouped = {'stat' => [], 'select' => [], 'date' => [], 'raw' => []}
     questionings.each{|qing| grouped[QTYPE_TO_SUMMARY_GROUP[qing.qtype_name]] << qing}
 
-    # generate summaries for each group
-    grouped.keys.map{|g| grouped[g].empty? ? nil : send("generate_for_#{g}_questionings", grouped[g])}.compact.flatten
+    # generate summary collections for each group
+    summaries = grouped.keys.map{|g| grouped[g].empty? ? nil : send("generate_for_#{g}_questionings", grouped[g])}.compact.flatten
+
+    # make a summary_collection
+    Report::SummaryCollection.new(:subsets => [Report::SummarySubset.new(:disaggregation_value => :all, :summaries => summaries)])
   end
 
   ####################################################################
