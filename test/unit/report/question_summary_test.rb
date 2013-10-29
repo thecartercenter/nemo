@@ -38,12 +38,12 @@ class Report::QuestionSummaryTest < ActiveSupport::TestCase
 
   test "integer summary should be correct with no values" do
     prepare_form_and_report('integer', [])
-    assert_equal({}, @report.summaries[0].items)
+    assert_equal([], @report.summaries[0].items)
   end
 
   test "integer summary should be correct with no non-blank values" do
     prepare_form_and_report('integer', [nil, ''])
-    assert_equal({}, @report.summaries[0].items)
+    assert_equal([], @report.summaries[0].items)
   end
 
   test "decimal summary should be correct in normal case" do
@@ -54,7 +54,7 @@ class Report::QuestionSummaryTest < ActiveSupport::TestCase
 
   test "decimal summary should be correct with no non-blank values" do
     prepare_form_and_report('decimal', [nil, ''])
-    assert_equal({}, @report.summaries[0].items)
+    assert_equal([], @report.summaries[0].items)
   end
 
   test "decimal summary values should be correct type" do
@@ -141,7 +141,7 @@ class Report::QuestionSummaryTest < ActiveSupport::TestCase
 
   test "time summary should be correct with no values" do
     prepare_form_and_report('time', [])
-    assert_equal({}, @report.summaries[0].items)
+    assert_equal([], @report.summaries[0].items)
   end
 
   test "datetime summary should be correct in normal case" do
@@ -177,9 +177,9 @@ class Report::QuestionSummaryTest < ActiveSupport::TestCase
     assert_equal(0, @report.summaries[0].null_count)
   end
 
-  test "text summary should include reference to response" do
-    prepare_form_and_report('text', ['foo', 'bar'])
-    assert_equal(@form.responses, @report.summaries[0].items.map(&:response))
+  test "long_text summary should include response_id" do
+    prepare_form_and_report('long_text', ['foo', 'bar'])
+    assert_equal(@form.responses.map(&:id), @report.summaries[0].items.map(&:response_id))
   end
 
   test "text summary items should be in chronological order" do
