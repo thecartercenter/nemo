@@ -6,6 +6,9 @@ class Report::StandardFormReport < Report::Report
   # question types that we leave off this report (stored as a hash for better performance)
   EXCLUDED_TYPES = {'location' => true}
 
+  # options for the question_order attrib
+  QUESTION_ORDER_OPTIONS = %w(number type)
+
   def as_json(options = {})
     # add the required methods to the methods option
     h = super(options)
@@ -19,27 +22,22 @@ class Report::StandardFormReport < Report::Report
 
   def run
     # eager load form
-    f = Form.includes({:questionings => [{:question => {:option_set => :options}}, 
-      {:answers => [:response, :option, {:choices => :option}]}]}).find(form_id)
+    f = Form.includes({:questionings => [
+      # eager load qing conditions
+      {:condition => [:ref_qing, :option]},
+
+      # eager load referring conditions and their questionings
+      {:referring_conditions => :questioning},
+
+      # eager load questions and their option sets
+      {:question => {:option_set => :options}}
+    ]}).find(form_id)
 
     # generate summaries
-    @summaries = f.questionings.reject{|qing| qing.hidden? || EXCLUDED_TYPES[qing.qtype.name]}.map do |qing|
-      Report::QuestionSummary.new(:questioning => qing)
-    end
+    @summaries = Report::QuestionSummary.generate_for(questionings_to_include(f))
 
-    # divide summaries into clusters
-    clusters = []
-    @summaries.each do |s|
-      # if this summary doesn't fit with the current cluster, or if there is no current cluster, create a new one
-      if clusters.last && clusters.last.accepts(s)
-        clusters.last.add(s)
-      else
-        clusters << Report::SummaryCluster.new(s)
-      end
-    end
-
-    # create the main group
-    @groups = [Report::SummaryGroup.new(:type => :all, :clusters => clusters)]
+    # divide into groups and clusters
+    @groups = Report::SummaryGroup.generate(@summaries, :order => question_order)
   end
 
   # returns the number of responses matching the report query
@@ -58,6 +56,18 @@ class Report::StandardFormReport < Report::Report
 
   def observers_without_responses
     users_without_responses(:role => :observer)
+  end
+
+  # returns the list of questionings to include in this report
+  # takes an optional form argument to allow eager loaded form
+  def questionings_to_include(form = nil)
+    form ||= self.form
+    form.questionings.reject do |qing|
+      qing.hidden? || 
+      Report::StandardFormReport::EXCLUDED_TYPES[qing.qtype.name] || 
+      text_responses == 'short_only' && qing.qtype.name == 'long_text' ||
+      text_responses == 'none' && qing.qtype.textual?
+    end
   end
 
   def empty?

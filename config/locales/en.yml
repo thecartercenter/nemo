@@ -410,10 +410,14 @@ en:
               blank: "You must choose a form to report on."
             name:
               blank: "You must enter a report title."
+            question_order:
+              blank: "You must choose a question order."
             questions:
               blank: "You must choose at least one question or one option set."
             tally_type:
               blank: "You must choose a tally type."
+            text_responses:
+              blank: "You must choose how to display text responses."
             type:
               blank: "You must choose a report type."
         response:
@@ -850,6 +854,7 @@ en:
 
   report/report:
     add_column: "Add Column"
+    answered_only_if: "Answered only if"
     attribute:
       zero: "Attributes"
       one: "Attribute"
@@ -870,6 +875,7 @@ en:
     groupings: "Groupings"
     how_to_display_questions: "How should questions be displayed?"
     how_to_display_results: "How would you like to display the results?"
+    how_to_order_questions: "How should questions be ordered?"
     loading_report: "Loading Report..."
     questions_with_option_sets: "Questions with these option sets"
     missing_observers: "Non-reporting Observers"
@@ -878,10 +884,17 @@ en:
     report_type: "Report Type"
     response_count: "Total Submissions"
     show_examples: "Show Examples"
+    see_dependent_questions:
+      one: "See dependent question"
+      other: "See dependent questions"
+    show_examples: "Show Examples"
+    show_text_responses: "Show text responses?"
+    submitted_by_at: "By %{user} at %{datetime}"
     tally: "Tally"
     tally_type: "What would you like to tally?"
     these_questions: "These specific questions"
     total_rows: "Total Rows"
+    view_response: "Response #%{id}"
     what_attrib_col_headers: "What attribute or question would you like for the column headers (optional)?"
     what_attrib_row_headers: "What attribute or question would you like for the row headers?"
     what_bar_style: "What bar style would you like?"
@@ -927,6 +940,9 @@ en:
     question_labels:
       code: "Codes Only (Saves Space)"
       title: "Full Titles (Easier to Read)"
+    question_orders:
+      number: "By Number"
+      type: "By Type"
     standard_form_report:
       overall_headers:
         dates: "Dates"
@@ -936,12 +952,23 @@ en:
         median: "Median"
         min: "Minimum"
         max: "Maximum"
+      type_sets:
+        categorical: "Categorical Questions"
+        numbers: "Numerical Questions"
+        dates: "Date Questions"
+        times: "Time Questions"
+        short_text: "Short Text Questions"
+        long_text: "Long Text Questions"
     tally_types:
       question_answer: "Answers per Question"
       grouped: "Responses per Answer/Attribute"
     tally_type_examples:
       question_answer: "Tally of Yes's and No's for all Yes/No questions"
       grouped: "Tally of responses per form for each team"
+    text_response_options:
+      all: "Show All"
+      short_only: "Don't Show Long Text Questions"
+      none: "Show None"
 
   response:
     create_link: "Create Response"

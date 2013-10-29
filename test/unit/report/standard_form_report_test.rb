@@ -19,8 +19,8 @@ class Report::StandardFormReportTest < ActiveSupport::TestCase
     assert_equal('number', @new_report.question_order)
   end
 
-  test "show_long_responses should default to true" do
-    assert_equal(true, @new_report.show_long_responses)
+  test "text_responses should default to all" do
+    assert_equal('all', @new_report.text_responses)
   end
 
   test "form foreign key should work" do
@@ -93,21 +93,8 @@ class Report::StandardFormReportTest < ActiveSupport::TestCase
     @form = FactoryGirl.create(:form)
     build_and_run_report # defaults to numeric order
     assert_equal(1, @report.groups.size)
-    assert_equal(:all, @report.groups[0].type)
+    assert_equal('all', @report.groups[0].type_set)
   end
-
-  # test "report should cluster summaries properly" do
-  #   # create two option sets
-  #   @osA = FactoryGirl.create(:option_set, :option_names => %w(Yes No))
-  #   @osB = FactoryGirl.create(:option_set, :option_names => %w(Red Blue Green))
-
-  #   # create form with int dec time int sel_one(A) sel_one(A) sel_one(B) sel_mult(A) text date date date
-  #   @form = FactoryGirl.create(:form)
-  #   @form.questions << FactoryGirl.create(:question, )
-
-  #   # clusters should be [int dec time int], [sel_one(A) sel_one(A)], [sel_one(B)], [sel_mult(A)], [text], [date date], [date]
-
-  # end
 
   private
     def build_form_and_responses

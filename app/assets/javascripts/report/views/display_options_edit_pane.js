@@ -58,6 +58,14 @@
     this.question_labels = new ELMO.Control.RadioGroup({inputs: this.cont.find("input[name='question_labels']")});
     this.question_labels.change(function() { _this.broadcast_change("question_labels"); });
 
+    // build question label chooser
+    this.question_order = new ELMO.Control.RadioGroup({inputs: this.cont.find("input[name='question_order']")});
+    this.question_order.change(function() { _this.broadcast_change("question_order"); });
+
+    // build text responses chooser
+    this.text_responses = new ELMO.Control.RadioGroup({inputs: this.cont.find("input[name='text_responses']")});
+    this.text_responses.change(function() { _this.broadcast_change("text_responses"); });
+
     // report title field
     this.title_fld = this.cont.find("input#report_title");
     
@@ -77,6 +85,8 @@
     this.percent_type.update(report.attribs.percent_type);
     this.bar_style.update(report.attribs.bar_style);
     this.question_labels.update(report.attribs.question_labels);
+    this.question_order.update(report.attribs.question_order);
+    this.text_responses.update(report.attribs.text_responses);
     this.title_fld.val(report.attribs.name);
 
     var is_tally = this.report.attribs.type == 'Report::TallyReport';
@@ -93,6 +103,10 @@
     show = this.report.attribs.type == "Report::StandardFormReport";
     this.form_id.closest(".section")[show ? "show" : "hide"]();
     if (!show) this.form_id.clear();
+    this.question_order.closest(".section")[show ? "show" : "hide"]();
+    if (!show) this.question_order.clear();
+    this.text_responses.closest(".section")[show ? "show" : "hide"]();
+    if (!show) this.text_responses.clear();
     
     show = this.report.attribs.display_type == "table" && is_tally;
     this.percent_type.closest(".section")[show ? "show" : "hide"]();
@@ -111,11 +125,13 @@
     this.report.attribs.percent_type = this.percent_type.get();
     this.report.attribs.bar_style = this.bar_style.get();
     this.report.attribs.question_labels = this.question_labels.get();
+    this.report.attribs.question_order = this.question_order.get();
+    this.report.attribs.text_responses = this.text_responses.get();
     this.report.attribs.name = this.title_fld.val();
   }
 
   klass.prototype.fields_for_validation_errors = function() {
-    return ['form_id', 'tally_type', 'name'];
+    return ['form_id', 'tally_type', 'question_order', 'text_responses', 'name'];
   }
 
 }(ELMO.Report));

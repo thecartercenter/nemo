@@ -1,0 +1,14 @@
+<div>
+  <%= report.question_labels == 'title' ? questioning.name : questioning.code %>
+</div>
+<div class="condition_info">
+  <% condition_info = []; %>
+  <% if (questioning.condition) { %>
+    <% condition_info.push(I18n.t('report/report.answered_only_if') + ' ' + questioning.condition.to_s); %>
+  <% } %>
+  <% if (questioning.referring_condition_ranks.length > 0) { %>
+    <% condition_info.push(I18n.t('report/report.see_dependent_questions', {count: questioning.referring_condition_ranks.length}) + ' ' +
+      questioning.referring_condition_ranks.map(function(r){ return '#' + r; }).join(', ')); %>
+  <% } %>
+  <%= condition_info.join('; ') %>
+</div>

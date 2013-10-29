@@ -33,19 +33,19 @@
           <div class="section">
             <div class="name vert"><%= t("report/report.what_type") %></div>
             <div class="controls vert">
-              <% Report::Report::SUBCLASSES.each_with_index do |klass, i| %>
+              <% Report::Report::SUBCLASSES.each_with_index do |class_name, i| %>
                 <div>
-                  <input type="radio" name="report_type" id="report_type_<%= i %>" value="<%= klass.name %>">
+                  <input type="radio" name="report_type" id="report_type_<%= i %>" value="<%= class_name %>">
                   <label for="report_type_<%= i %>">
-                    <h3><%= translate_model(klass) %></h3>
+                    <h3><%= translate_model(class_name) %></h3>
                     <div class="description">
-                      <%= t("report/report.descriptions.#{klass.name.demodulize.underscore}") %>
+                      <%= t("report/report.descriptions.#{class_name.demodulize.underscore}") %>
                     </div>
                     <a class="show-examples" href="#"><%= t('report/report.show_examples') %></a>
                     <div class="examples">
                       <div class="ex_lbl"><%= t("common.example", :count => 2) %></div>
                       <ul>
-                        <% t("report/report.examples.#{klass.name.demodulize.underscore}").each do |ex| %>
+                        <% t("report/report.examples.#{class_name.demodulize.underscore}").each do |ex| %>
                           <li><%= ex %></li>
                         <% end %>
                       </ul>
@@ -138,6 +138,17 @@
             </div>
           </div>
           <div class="section">
+            <div class="name horiz"><%= t("report/report.how_to_order_questions") %></div>
+            <div class="controls horiz">
+              <% Report::StandardFormReport::QUESTION_ORDER_OPTIONS.each do |key| %>
+                <div class="choice">
+                  <input type="radio" name="question_order" id="question_order_<%= key %>" value="<%= key %>" />
+                  <label for="question_order_<%= key %>"><%= t("report/report.question_orders.#{key}") %></label>
+                </div>
+              <% end %>
+            </div>
+          </div>
+          <div class="section">
             <div class="name horiz"><%= t("report/report.how_to_display_questions") %></div>
             <div class="controls horiz">
               <div class="choice">
@@ -148,6 +159,17 @@
                 <input type="radio" name="question_labels" id="question_labels_1" value="code" />
                 <label for="question_labels_1"><%= t("report/report.question_labels.code") %></label>
               </div>
+            </div>
+          </div>
+          <div class="section">
+            <div class="name horiz"><%= t("report/report.show_text_responses") %></div>
+            <div class="controls horiz">
+              <% t("report/report.text_response_options").each do |key, label| %>
+                <div class="choice">
+                  <input type="radio" name="text_responses" id="text_responses_<%= key %>" value="<%= key %>" />
+                  <label for="text_responses_<%= key %>"><%= label %></label>
+                </div>
+              <% end %>
             </div>
           </div>
           <div class="section">

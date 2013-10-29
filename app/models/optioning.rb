@@ -34,7 +34,11 @@ class Optioning < ActiveRecord::Base
   end
 
   def as_json(options = {})
-    {:id => id, :option => option, :removable => removable?}
+    if options[:for_option_set_form]
+      super(:only => :id, :methods => :removable?).merge(:option => option.as_json(:for_option_set_form => true))
+    else
+      super(options)
+    end
   end
 
   private

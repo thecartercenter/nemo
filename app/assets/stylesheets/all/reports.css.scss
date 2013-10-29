@@ -38,26 +38,20 @@ div.report_body {
   }
 
   table.std_form_report {
-    td {
-      padding: 8px 3px;
+    min-width: 600px;
+    page-break-inside: auto;
 
-      i.no_match {
-        color: #ccc;
-      }
-    }
+    /* widths cols depending on number of result cols */
+    &.result_cols_1 { td.num { width: 4%; } td.qname { width: 40%; } td.structured { width: 50%; } }
+    &.result_cols_2 { td.num { width: 4%; } td.qname { width: 40%; } td.structured { width: 25%; } }
+    &.result_cols_3 { td.num { width: 4%; } td.qname { width: 40%; } td.structured { width: 20%; } }
+    &.result_cols_4, &.result_cols_5 { td.num { width: 4%; } td.qname { width: 40%; } td.structured { width: 11%; } }
+    &.result_cols_6, &.result_cols_7, &.result_cols_8 { td.num { width: 4%; } td.qname { width: 15%; } td.structured { width: 10%; } }
 
-    /* widths for longer question titles (assuming 5 result cells) */
-    &.qlabels_title {
-      td.num { width: 4%; }
-      td.qname { width: 40%; }
-      td.structured { width: 11%; }
-    }
-
-    /* widths for shorter question titles (assuming 8 result cells) */
-    &.qlabels_code {
-      td.num { width: 4%; }
-      td.qname { width: 15%; }
-      td.structured { width: 10%; }
+    /* no page breaks inside rows */
+    tr {
+      page-break-inside: avoid; 
+      page-break-after: auto;
     }
 
     tr.cluster_header td {
@@ -68,6 +62,39 @@ div.report_body {
 
     tr.full_width_subhead td {
       background-color: #eee;
+    }
+
+    tr.summary {
+      em.no_match {
+        color: #ccc;
+      }
+
+      div.by_at {
+        float: right;
+        padding: 2px 5px;
+        background-color: #eee;
+        font-size: 90%;
+        color: #888;
+        margin: -8px -3px 3px 3px;
+
+        a {
+          color: #888;
+        }
+      }
+    }
+
+    td {
+      padding: 8px 3px;
+    }
+
+    td.qname {
+      min-width: 300px;
+
+      div.condition_info {
+        color: #888;
+        font-size: 90%;
+        font-style: italic;
+      }
     }
   }
 }

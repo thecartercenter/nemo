@@ -49,15 +49,12 @@ class Option < ActiveRecord::Base
     # trim results to max size (couldn't do this earlier b/c had to search whole list for exact match)
     matches = matches[0...MAX_SUGGESTIONS]
     
-    # convert to hashes for json
-    hashes = matches.map{|o| o.as_json}
-    
     # if there was no exact match, we append a 'new option' placeholder
     unless exact_match
-      hashes << Option.new(:name => query).as_json
+      matches << Option.new(:name => query)
     end
     
-    hashes
+    matches
   end
   
   def published?; !option_sets.detect{|os| os.published?}.nil?; end
@@ -82,14 +79,17 @@ class Option < ActiveRecord::Base
     published? || has_answers? || has_choices?
   end
 
+  # gets the names of all option sets in which this option appears
+  def set_names
+    option_sets.map{|os| os.name}.join(', ')
+  end
+
   def as_json(options = {})
-    { 
-      :id => id,
-      :name => name,
-      :name_translations => name_translations,
-      :set_names => option_sets.map{|os| os.name}.join(', '),
-      :in_use => in_use?
-    }
+    if options[:for_option_set_form]
+      super(:only => [:id, :name_translations], :methods => [:name, :set_names, :in_use?])
+    else
+      super(options)
+    end
   end
 
   private
