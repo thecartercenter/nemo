@@ -214,8 +214,9 @@ en:
       option:
         base: "" # this is a sort of hack to get error msg to display properly
       option_set:
-        options: "Options"
         answers: "Answers"
+        geographic: "Is Geographic?"
+        options: "Options"
       question:
         base: "" # this is a sort of hack to get error msg to display properly
         code: "Code"
@@ -301,6 +302,7 @@ en:
       option:
         name: "The textual description of this option that users will see."
       option_set:
+        geographic: "Whether this option set represents geographic information, e.g. a set of provinces or regions."
         name: "A name that summarizes this set of options. Normal users will not see this name."
         options: 
           other: "Add existing options by typing them and clicking 'Add'. If you do not see an option in the drop down, you can add a new one by clicking 'Create New Option'."
