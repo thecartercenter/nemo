@@ -31,6 +31,10 @@ class Report::SummarySubset
   def as_json(options = {})
     # assumes disagg_value is nil or an Option
     # don't need to include summaries as they're in the groups
-    {:groups => groups, :disagg_value => disagg_value.nil? ? nil : disagg_value.as_json(:only => [:id], :methods => :name)}
+    {
+      :groups => groups, 
+      :disagg_value => disagg_value.nil? ? nil : disagg_value.as_json(:only => [:id], :methods => :name),
+      :no_data => no_data?
+    }
   end
 end

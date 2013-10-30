@@ -59,6 +59,10 @@ div.report_body {
       margin-bottom: 10px;
     }
 
+    em.no_match {
+      color: #ccc;
+    }
+
     div.subset {
       margin-left: 20px;
 
@@ -96,10 +100,6 @@ div.report_body {
       }
 
       tr.summary {
-        em.no_match {
-          color: #ccc;
-        }
-
         div.by_at {
           float: right;
           padding: 2px 5px;
