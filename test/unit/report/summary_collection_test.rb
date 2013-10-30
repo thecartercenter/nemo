@@ -53,14 +53,16 @@ class Report::SummaryCollectionTest < ActiveSupport::TestCase
     assert_equal([1, 3], items_for_disagg_value('b', :count))
   end
 
-  # test "collections with text questions should have correct summaries" do
-  #   prepare_form_and_collection('text', 'select_one', 
-  #     {'a' => %w(foo bar baz), 'b' => %w(bing bop)})
+  test "collections with text questions should have correct summaries" do
+    prepare_form_and_collection('text', 'select_one', 
+      {'a' => %w(foo bar baz), 'b' => %w(bing bop) + [nil]}, :dont_shuffle => true)
 
-  #   # check that headers are correct and in correct order
-  #   assert_equal(['Jul 22 2011', 'Oct 26 2012'], header_names_for_disagg_value('a'))
-  #   assert_equal(['Sep 22 2012', 'Jul 22 2013'], header_names_for_disagg_value('b'))
-  # end
+    # check that items are correct
+    assert_equal(%w(foo bar baz), items_for_disagg_value('a', :text))
+    assert_equal(%w(bing bop), items_for_disagg_value('b', :text))
+    assert_equal(0, null_count_for_disagg_value('a'))
+    assert_equal(1, null_count_for_disagg_value('b'))
+  end
 
   test "collection subsets should be correct if no answers for one of the options" do
     prepare_form_and_collection('integer', 'select_one', {'a' => [1,2,4,6], 'b' => [8,9], 'c' => []})
@@ -90,7 +92,7 @@ class Report::SummaryCollectionTest < ActiveSupport::TestCase
       prepare_collection
     end
 
-    def prepare_form(analyze_type, dissag_type, answers_by_dissag_value)
+    def prepare_form(analyze_type, dissag_type, answers_by_dissag_value, options = {})
       # create form
       @form = FactoryGirl.create(:form)
 
@@ -107,7 +109,7 @@ class Report::SummaryCollectionTest < ActiveSupport::TestCase
       answers = answers_by_dissag_value.map{|dissag_value, values| values.map{|v| [v, dissag_value]}}.flatten(1)
 
       # randomize to make sure they're untangled properly later
-      answers.shuffle!
+      answers.shuffle! unless options[:dont_shuffle]
 
       # build the responses
       answers.each{|a| FactoryGirl.create(:response, :form => @form, :_answers => a)}
@@ -129,5 +131,9 @@ class Report::SummaryCollectionTest < ActiveSupport::TestCase
 
     def items_for_disagg_value(val, item_attrib)
       subsets_by_disagg_value[val].summaries.detect{|s| s.questioning.rank == 1}.items.map{|i| i.send(item_attrib)}
+    end
+
+    def null_count_for_disagg_value(val)
+      subsets_by_disagg_value[val].summaries.detect{|s| s.questioning.rank == 1}.null_count
     end
 end

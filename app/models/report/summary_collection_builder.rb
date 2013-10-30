@@ -351,59 +351,85 @@ class Report::SummaryCollectionBuilder
     end
 
     ####################################################################
-    # date questions
+    # raw questions
     ####################################################################
 
     def collection_for_raw_questionings(raw_qs)
-      qing_ids = raw_qs.map(&:id)
-
       # do answer query
-      answers = Answer.where(:questioning_id => qing_ids).order('created_at')
+      res = run_raw_answer_query(raw_qs)
 
       # get submitter names for long text q's
       submitter_names = get_submiter_names(raw_qs)
 
-      # build summary items and index by qing id, also keep null counts
-      items_by_qing_id = {}
-      null_counts_by_qing_id = {}
-      answers.each do |answer|
+      # build summary *items* and index by disagg_value and qing_id
+      # also keep null counts
+      items_hash = {}
+      null_counts_hash = {}
+      res.each(:as => :hash) do |row|
         # ensure both initialized
-        items_by_qing_id[answer.questioning_id] ||= []
-        null_counts_by_qing_id[answer.questioning_id] ||= 0
+        items_hash[[row['disagg_value'], row['qing_id']]] ||= []
+        null_counts_hash[[row['disagg_value'], row['qing_id']]] ||= 0
 
         # increment null count or add item
-        if answer.value.blank?
-          null_counts_by_qing_id[answer.questioning_id] += 1
+        if row['value'].blank?
+          null_counts_hash[[row['disagg_value'], row['qing_id']]] += 1
         else
-          item = Report::SummaryItem.new(:text => answer.value)
+          item = Report::SummaryItem.new(:text => row['value'])
 
           # add response info for long text q's
-          if name = submitter_names[answer.id]
-            item.response_id = answer.response_id
-            item.created_at = I18n.l(answer.created_at)
+          if name = submitter_names[row['id']]
+            item.response_id = row['response_id']
+            item.created_at = I18n.l(row['created_at'])
             item.submitter_name = name
           end
 
-          items_by_qing_id[answer.questioning_id] << item
+          items_hash[[row['disagg_value'], row['qing_id']]] << item
         end
       end
 
-      # build summaries
-      raw_qs.map do |qing|
+      # build subsets
+      subsets = disagg_values.map do |disagg_value|    
+        
+        # build summaries for this disagg_value
+        summaries = raw_qs.map do |qing|
 
-        # get items from hash
-        items = items_by_qing_id[qing.id] || []
+          # get items from hash
+          items = items_hash[[disagg_value.id, qing.id]] || []
 
-        # display type is only 'full_width' if long text
-        display_type = qing.qtype_name == 'long_text' ? :full_width : :flow
+          # display type is only 'full_width' if long text
+          display_type = qing.qtype_name == 'long_text' ? :full_width : :flow
 
-        # null count from hash also
-        null_count = null_counts_by_qing_id[qing.id] || 0
+          # null count from hash also
+          null_count = null_counts_hash[[disagg_value.id, qing.id]] || 0
 
-        # build summary
-        Report::QuestionSummary.new(:questioning => qing, :display_type => display_type, :overall_header => I18n.t('report/report.standard_form_report.overall_headers.responses'),
-          :headers => [], :items => items, :null_count => null_count)
+          # build summary (headers are blank b/c there is only one column so header is always the same ('responses'))
+          Report::QuestionSummary.new(:questioning => qing, :display_type => display_type, 
+            :overall_header => I18n.t('report/report.standard_form_report.overall_headers.responses'),
+            :headers => [], :items => items, :null_count => null_count)
+        end
+
+        # make a subset for the current disagg_value for this set of summaries
+        Report::SummarySubset.new(:disagg_value => disagg_value, :summaries => summaries)
       end
+
+      Report::SummaryCollection.new(:subsets => subsets, :questionings => raw_qs)
+    end
+
+    # runs a query to get each answer for the given qings
+    # returns a mysql result
+    def run_raw_answer_query(raw_qs)
+      qing_ids = raw_qs.map(&:id).join(',')
+
+      # build and run query
+      query = <<-eos
+        SELECT #{disagg_select_expr} a.id AS id, a.questioning_id AS qing_id, a.value AS value, 
+          a.response_id AS response_id, a.created_at AS created_at
+        FROM answers a
+          #{disagg_join_clause}
+          WHERE a.questioning_id IN (#{qing_ids})
+          ORDER BY disagg_value, a.created_at
+      eos
+      ActiveRecord::Base.connection.execute(query)
     end
 
     # gets a hash of answer_id to submitter names for each long_text answer to questionings in the given array
