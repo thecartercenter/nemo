@@ -63,7 +63,7 @@ class Report::SummaryCollectionBuilder
         summaries = stat_qs.map do |qing|
 
           # get stat values from has we built above
-          stat_values = results_by_disagg_value_and_qing_id[[disagg_value.id, qing.id]]
+          stat_values = results_by_disagg_value_and_qing_id[[disagg_value, qing.id]]
 
           if stat_values.nil?
             items = []
@@ -152,6 +152,8 @@ class Report::SummaryCollectionBuilder
       # build hash
       hash = ActiveSupport::OrderedHash[]
       res.each(:as => :hash) do |row|
+        # get the object from the disagg value as returned from the db
+        row['disagg_value'] = disagg_value_db_to_obj[row['disagg_value']]
         hash[[row['disagg_value'], row['qing_id']]] = row
       end
       hash
@@ -182,14 +184,14 @@ class Report::SummaryCollectionBuilder
           # build tallies, keeping a running sum of non-null answers
           non_null_count = 0
           items = qing.options.map do |o|
-            count = tallies[[disagg_value.id, qing.id, o.id]] || 0
+            count = tallies[[disagg_value, qing.id, o.id]] || 0
             non_null_count += count
             Report::SummaryItem.new(:count => count)
           end
 
           # if this is a sel mult question, the non_null_count we summed reflects the total number of non_null choices, not answers
           # but to compute percentages, we are interested in the non-null answer value, so get it from the hash we built above
-          non_null_count = sel_mult_non_null_tallies[[disagg_value.id, qing.id]] || 0 if qing.qtype_name == 'select_multiple'
+          non_null_count = sel_mult_non_null_tallies[[disagg_value, qing.id]] || 0 if qing.qtype_name == 'select_multiple'
 
           # compute percentages
           items.each do |item|
@@ -197,7 +199,7 @@ class Report::SummaryCollectionBuilder
           end
 
           # null count should be zero for sel multiple b/c no selection can be a valid answer
-          null_count = qing.qtype_name == 'select_one' ? tallies[[disagg_value.id, qing.id, nil]] : 0
+          null_count = qing.qtype_name == 'select_one' ? tallies[[disagg_value, qing.id, nil]] : 0
 
           # build summary
           Report::QuestionSummary.new(:questioning => qing, :display_type => :structured, :overall_header => qing.option_set.name, 
@@ -243,9 +245,15 @@ class Report::SummaryCollectionBuilder
       # read tallies into hashes
       tallies = {}
       sel_one_res.each(:as => :hash).each do |row|
+        # get the object from the disagg value as returned from the db
+        row['disagg_value'] = disagg_value_db_to_obj[row['disagg_value']]
+
         tallies[[row['disagg_value'], row['qing_id'], row['option_id']]] = row['answer_count']
       end
       sel_mult_res.each(:as => :hash).each do |row|
+        # get the object from the disagg value as returned from the db
+        row['disagg_value'] = disagg_value_db_to_obj[row['disagg_value']]
+
         tallies[[row['disagg_value'], row['qing_id'], row['option_id']]] = row['choice_count']
       end
       tallies
@@ -272,6 +280,9 @@ class Report::SummaryCollectionBuilder
       # read non-null answer counts into hash
       tallies = {}
       res.each(:as => :hash).each do |row|
+        # get the object from the disagg value as returned from the db
+        row['disagg_value'] = disagg_value_db_to_obj[row['disagg_value']]
+
         tallies[[row['disagg_value'], row['qing_id']]] = row['non_null_answer_count']
       end
       tallies
@@ -292,7 +303,7 @@ class Report::SummaryCollectionBuilder
         summaries = date_qs.map do |qing|
 
           # get tallies for this disagg_value and qing
-          cur_tallies = tallies[[disagg_value.id, qing.id]]
+          cur_tallies = tallies[[disagg_value, qing.id]]
 
           # build headers from tally keys (already sorted)
           headers = (cur_tallies ? cur_tallies.keys.reject(&:nil?) : []).map{|date| {:name => I18n.l(date), :date => date}}
@@ -347,6 +358,9 @@ class Report::SummaryCollectionBuilder
       # read into tallies, preserving sorted date order
       tallies = {}
       res.each(:as => :hash).each do |row|
+        # get the object from the disagg value as returned from the db
+        row['disagg_value'] = disagg_value_db_to_obj[row['disagg_value']]
+
         tallies[[row['disagg_value'], row['qing_id']]] ||= ActiveSupport::OrderedHash[]
         tallies[[row['disagg_value'], row['qing_id']]][row['date']] = row['answer_count']
       end
@@ -369,6 +383,9 @@ class Report::SummaryCollectionBuilder
       items_hash = {}
       null_counts_hash = {}
       res.each(:as => :hash) do |row|
+        # get the object from the disagg value as returned from the db
+        row['disagg_value'] = disagg_value_db_to_obj[row['disagg_value']]
+
         # ensure both initialized
         items_hash[[row['disagg_value'], row['qing_id']]] ||= []
         null_counts_hash[[row['disagg_value'], row['qing_id']]] ||= 0
@@ -397,13 +414,13 @@ class Report::SummaryCollectionBuilder
         summaries = raw_qs.map do |qing|
 
           # get items from hash
-          items = items_hash[[disagg_value.id, qing.id]] || []
+          items = items_hash[[disagg_value, qing.id]] || []
 
           # display type is only 'full_width' if long text
           display_type = qing.qtype_name == 'long_text' ? :full_width : :flow
 
           # null count from hash also
-          null_count = null_counts_hash[[disagg_value.id, qing.id]] || 0
+          null_count = null_counts_hash[[disagg_value, qing.id]] || 0
 
           # build summary (headers are blank b/c there is only one column so header is always the same ('responses'))
           Report::QuestionSummary.new(:questioning => qing, :display_type => display_type, 
@@ -460,6 +477,11 @@ class Report::SummaryCollectionBuilder
     # returns all possible disagg_values
     def disagg_values
       disagg_qing.options
+    end
+
+    # returns a hash of disagg_value as returned from the db (e.g. 123) to the objects we want to use (e.g. Option)
+    def disagg_value_db_to_obj
+      @disagg_value_db_to_obj ||= Hash[*disagg_qing.options.map{|o| [o.id, o]}.flatten]
     end
 
     # returns a fully qualified column reference for the disaggregation value
