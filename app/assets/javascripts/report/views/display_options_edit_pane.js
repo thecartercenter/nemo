@@ -63,7 +63,8 @@
     this.question_order.change(function() { _this.broadcast_change("question_order"); });
 
     // build disaggregation chooser
-    //this.disagg_qing = new ELMO.Control.Select({el: });
+    this.disagg_question_chooser = new ELMO.Report.DisaggQuestionSelector(this.menus.question);
+    this.disagg_question_chooser.field.change(function(){ _this.broadcast_change("disagg_question_id"); })
     this.cont.find("#disaggregate").change(function(){ _this.broadcast_change("disaggregate"); })
 
     // build text responses chooser
@@ -74,7 +75,8 @@
     this.title_fld = this.cont.find("input#report_title");
     
     // register fields to watch for changes
-    this.attribs_to_watch = {display_type: true, report_type: true, tally_type: true, report_title: true, disaggregate: true};
+    this.attribs_to_watch = {display_type: true, report_type: true, tally_type: true, report_title: true, 
+      disaggregate: true, disagg_question_id: true, form_id: true};
   }
   
   klass.prototype.update = function(report) {
@@ -90,6 +92,7 @@
     this.bar_style.update(report.attribs.bar_style);
     this.question_labels.update(report.attribs.question_labels);
     this.question_order.update(report.attribs.question_order);
+    this.disagg_question_chooser.update(report);
     this.text_responses.update(report.attribs.text_responses);
     this.title_fld.val(report.attribs.name);
 
@@ -119,11 +122,11 @@
 
       // if box is checked then select should be visible, else, not
       this.cont.find('#disagg_qing')[report.attribs.disaggregate ? 'show' : 'hide']();
-    
     } else {
-      // TODO add .clear
+      this.cont.find('#disaggregate').attr('checked', false);
+      this.disagg_question_chooser.field.clear();
     }
-    
+
     show = this.report.attribs.display_type == "table" && is_tally;
     this.percent_type.closest(".section")[show ? "show" : "hide"]();
     if (!show) this.percent_type.clear();
@@ -143,6 +146,7 @@
     this.report.attribs.question_labels = this.question_labels.get();
     this.report.attribs.question_order = this.question_order.get();
     this.report.attribs.disaggregate = this.cont.find('#disaggregate').is(':checked');
+    this.report.attribs.disagg_question_id = this.cont.find('#disaggregate').is(':checked') ? this.disagg_question_chooser.get() : null;
     this.report.attribs.text_responses = this.text_responses.get();
     this.report.attribs.name = this.title_fld.val();
   }

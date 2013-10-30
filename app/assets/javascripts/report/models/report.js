@@ -20,7 +20,7 @@
       this.attribs.tally_type = 'Grouped';
     }
 
-    this.attribs.disaggregate = this.attribs.disagg_qing_id != null;
+    this.attribs.disaggregate = this.attribs.disagg_question_id != null;
   }
   
   klass.prototype.clone = function() {
@@ -151,7 +151,7 @@
 
     var to_serialize = {}
     $(["type", "name", "form_id", "display_type", "percent_type", "bar_style", "question_order", 
-        "question_labels", "text_responses", "calculations_attributes"]).each(function(){
+        "question_labels", "text_responses", "calculations_attributes", "disagg_question_id"]).each(function(){
       to_serialize[this] = (typeof(self.attribs[this]) == "undefined" || self.attribs[this] == null) ? "" : self.attribs[this];
     });
 

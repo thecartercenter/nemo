@@ -54,6 +54,7 @@ class Report::StandardFormReport < Report::Report
     h[:form] = form.as_json(:only => [:id, :name])
     h[:subreports] = subreports
     h[:observers_without_responses] = observers_without_responses.as_json(:only => [:id, :name])
+    h[:disagg_question_id] = disagg_question_id
     h
   end
 
@@ -114,8 +115,12 @@ class Report::StandardFormReport < Report::Report
     false
   end
 
+  def disagg_question_id
+    disagg_qing.try(:question_id)
+  end
+
   # settor method allowing the disaggregation *question* and not *questioning* to be set
-  def disagg_question=(question)
-    self.disagg_qing = form.questionings.detect{|qing| qing.question_id == question.id}
+  def disagg_question_id=(question_id)
+    self.disagg_qing = form.questionings.detect{|qing| qing.question_id == question_id.to_i}
   end
 end
