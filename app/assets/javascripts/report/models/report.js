@@ -19,6 +19,8 @@
       this.attribs.type = 'Report::TallyReport';
       this.attribs.tally_type = 'Grouped';
     }
+
+    this.attribs.disaggregate = this.attribs.disagg_qing_id != null;
   }
   
   klass.prototype.clone = function() {
