@@ -18,8 +18,10 @@
   </tr>
 </table>
 
-<% /*# render each report subset */ %>
-<% report.subreports.forEach(function(subset){ %>
-  <% /*# render the subset, and let the partial know whether it's the only one or not */ %>
-  <%= helper.partial('subset', {subset: subset, max_result_cols: max_result_cols, is_only: (report.subreports.length == 1)}) %>
-<% }); %>
+<div class="std_form_report_results">
+  <% /*# render each report subset */ %>
+  <% report.subreports.forEach(function(subreport){ %>
+    <% /*# render the subset, and let the partial know whether it's the only one or not */ %>
+    <%= helper.partial('subreport', {subreport: subreport, max_result_cols: max_result_cols, is_only: (report.subreports.length == 1)}) %>
+  <% }); %>
+</div>

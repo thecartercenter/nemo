@@ -55,6 +55,7 @@ class Report::StandardFormReport < Report::Report
     h[:subreports] = subreports
     h[:observers_without_responses] = observers_without_responses.as_json(:only => [:id, :name])
     h[:disagg_question_id] = disagg_question_id
+    h[:disagg_qing] = disagg_qing.as_json(:only => :id, :include => {:question => {:only => :code}})
     h
   end
 
@@ -72,7 +73,7 @@ class Report::StandardFormReport < Report::Report
     ]}).find(form_id)
 
     # generate summary collection (sets of disaggregated summaries)
-    summary_collection = Report::SummaryCollectionBuilder.new(questionings_to_include(f)).build
+    summary_collection = Report::SummaryCollectionBuilder.new(questionings_to_include(f), disagg_qing).build
 
     # generate the set of subreports from the summary collection, as described above
     @subreports = Report::StandardFormSubreport.generate(summary_collection, :parent => self)
