@@ -84,7 +84,7 @@ class Report::StandardFormReportTest < ActiveSupport::TestCase
   end
 
   test "empty? should be true if no responses" do
-    @form = FactoryGirl.create(:form)
+    build_form_and_responses(:response_count => 0)
     build_and_run_report
     assert(@report.empty?, "report should be empty")
   end
@@ -92,7 +92,7 @@ class Report::StandardFormReportTest < ActiveSupport::TestCase
   test "empty? should be true if no questions" do
 
   end
-  
+
   test "report with numeric question order should have single summary group" do
     @form = FactoryGirl.create(:form)
     build_and_run_report # defaults to numeric order
@@ -101,9 +101,9 @@ class Report::StandardFormReportTest < ActiveSupport::TestCase
   end
 
   private
-    def build_form_and_responses
+    def build_form_and_responses(options = {})
       @form = FactoryGirl.create(:form, :question_types => %w(integer integer decimal location))
-      5.times do
+      (options[:response_count] || 5).times do
         FactoryGirl.create(:response, :form => @form, :_answers => [1, 2, 1.5, nil])
       end
     end
