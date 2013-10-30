@@ -41,7 +41,7 @@ class Report::SummaryCollection
       end
 
       # keep the no_data flag updated
-      @no_data = false unless theirs.summaries.empty?
+      @no_data = false unless theirs.no_data?
     end
   end
 end

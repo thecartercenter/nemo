@@ -18,11 +18,11 @@ class Report::SummaryCollectionBuilder
   # builds a summary collection with the given questionings and disaggregation qing
   # if disagg_qing is nil, no disaggregation will be done
   def initialize(questionings, disagg_qing = nil)
-    @questionings = questionings
     @disagg_qing = disagg_qing
 
     # should not include disagg_qing in summaries
-    @questionings.delete(disagg_qing)
+    # we use reject so that we don't mess up the originally passed array
+    @questionings = questionings.reject{|qing| qing == disagg_qing}
   end
 
   def build
