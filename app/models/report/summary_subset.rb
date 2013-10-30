@@ -23,4 +23,8 @@ class Report::SummarySubset
   def append_summaries(summaries)
     @summaries += summaries
   end
+
+  def as_json(options = {})
+    super(:only => [:disagg_value, :summaries])
+  end
 end

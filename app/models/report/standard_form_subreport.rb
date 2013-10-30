@@ -17,4 +17,8 @@ class Report::StandardFormSubreport
     # save attribs
     attribs.each{|k,v| instance_variable_set("@#{k}", v)}
   end
+
+  def as_json(options = {})
+    {:groups => groups}
+  end
 end

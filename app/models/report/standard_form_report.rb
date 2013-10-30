@@ -51,7 +51,7 @@ class Report::StandardFormReport < Report::Report
     h[:response_count] = response_count
     h[:mission] = form.mission.as_json(:only => [:id, :name])
     h[:form] = form.as_json(:only => [:id, :name])
-    h[:groups] = groups
+    h[:subreports] = subreports
     h[:observers_without_responses] = observers_without_responses.as_json(:only => [:id, :name])
     h
   end
