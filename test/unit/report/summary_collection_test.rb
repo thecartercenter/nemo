@@ -84,6 +84,10 @@ class Report::SummaryCollectionTest < ActiveSupport::TestCase
 
   test "the disaggregation question should not be included in the report output" do
     # since otherwise it would always be 100% in one column and 0% in the others
+    prepare_form_and_collection('integer', 'select_one', {'a' => [1,2,4,6], 'b' => [8,9], 'c' => []})
+
+    # there should only be one summary (integer type) in each subset. the select_one question should not be included.
+    assert_equal(%w(integer), @collection.subsets[0].summaries.map{|s| s.qtype.name})
   end
 
   private

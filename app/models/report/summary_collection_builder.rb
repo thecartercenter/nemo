@@ -20,6 +20,9 @@ class Report::SummaryCollectionBuilder
   def initialize(questionings, disagg_qing = nil)
     @questionings = questionings
     @disagg_qing = disagg_qing
+
+    # should not include disagg_qing in summaries
+    @questionings.delete(disagg_qing)
   end
 
   def build
