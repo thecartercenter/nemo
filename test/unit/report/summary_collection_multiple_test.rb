@@ -90,6 +90,16 @@ class Report::SummaryCollectionMultipleTest < ActiveSupport::TestCase
     assert_equal(%w(integer), @collection.subsets[0].summaries.map{|s| s.qtype.name})
   end
 
+  test "a nil disaggregation value should still have a subset" do
+    prepare_form_and_collection('integer', 'select_one', {'a' => [1,2,4,6], 'b' => [8,9], nil => [2,5]})
+    assert_equal(%w(Average Minimum Maximum), header_names_for_disagg_value('a'))
+    assert_equal(%w(Average Minimum Maximum), header_names_for_disagg_value('b'))
+    assert_equal(%w(Average Minimum Maximum), header_names_for_disagg_value(nil))
+    assert_equal([3.25, 1, 6], items_for_disagg_value('a', :stat))
+    assert_equal([8.5, 8, 9], items_for_disagg_value('b', :stat))
+    assert_equal([3.5, 2, 5], items_for_disagg_value(nil, :stat))
+  end
+
   private
     def prepare_form_and_collection(*args)
       prepare_form(*args)
@@ -104,7 +114,7 @@ class Report::SummaryCollectionMultipleTest < ActiveSupport::TestCase
       analyze_q = FactoryGirl.create(:question, :qtype_name => analyze_type, :option_names => %w(red blue green))
 
       # add the disagg question
-      disagg_q = FactoryGirl.create(:question, :qtype_name => dissag_type, :option_names => answers_by_dissag_value.keys)
+      disagg_q = FactoryGirl.create(:question, :qtype_name => dissag_type, :option_names => answers_by_dissag_value.keys.compact)
       
       @form.questions << analyze_q << disagg_q
       @form.save!
@@ -125,7 +135,7 @@ class Report::SummaryCollectionMultipleTest < ActiveSupport::TestCase
     end
 
     def subsets_by_disagg_value
-      @subsets_by_disagg_value ||= @collection.subsets.index_by{|s| s.disagg_value.name}
+      @subsets_by_disagg_value ||= @collection.subsets.index_by{|s| s.disagg_value.try(:name)}
     end
 
     def header_names_for_disagg_value(val)

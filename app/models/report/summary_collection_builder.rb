@@ -479,8 +479,11 @@ class Report::SummaryCollectionBuilder
       # if there is no disagg_qing, this is just the symbol :all
       if disagg_qing.nil?
         [:all]
+
+      # otherwise we return each of the options for the question, plus nil, 
+      # since we need to include a subset for responses with no answer to the disagg_qing
       else
-        disagg_qing.options
+        disagg_qing.options + [nil]
       end
     end
 
