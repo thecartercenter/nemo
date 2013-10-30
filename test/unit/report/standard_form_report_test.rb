@@ -96,7 +96,7 @@ class Report::StandardFormReportTest < ActiveSupport::TestCase
   end
 
   test "report with numeric question order should have single summary group" do
-    @form = FactoryGirl.create(:form)
+    build_form_and_responses
     build_and_run_report # defaults to numeric order
     assert_equal(1, @report.subreports[0].groups.size)
     assert_equal('all', @report.subreports[0].groups[0].type_set)
