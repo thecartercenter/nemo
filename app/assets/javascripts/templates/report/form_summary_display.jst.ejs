@@ -19,9 +19,18 @@
 </table>
 
 <div class="std_form_report_results">
-  <% /*# render each report subset */ %>
-  <% report.subsets.forEach(function(subset){ %>
-    <% /*# render the subset, and let the partial know whether it's the only one or not */ %>
-    <%= helper.partial('subset', {subset: subset, max_result_cols: max_result_cols, is_only: (report.subsets.length == 1)}) %>
-  <% }); %>
+  <% /*# print message if report has no data */ %>
+  <% if (report.no_data) { %>
+
+    <em><%= I18n.t('report/report.no_match') %></em>
+  
+  <% } else { %>
+
+    <% /*# render each report subset */ %>
+    <% report.subsets.forEach(function(subset){ %>
+      <% /*# render the subset, and let the partial know whether it's the only one or not */ %>
+      <%= helper.partial('subset', {subset: subset, max_result_cols: max_result_cols, is_only: (report.subsets.length == 1)}) %>
+    <% }); %>
+
+  <% } %>
 </div>

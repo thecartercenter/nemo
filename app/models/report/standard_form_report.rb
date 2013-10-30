@@ -45,6 +45,7 @@ class Report::StandardFormReport < Report::Report
     h[:observers_without_responses] = observers_without_responses.as_json(:only => [:id, :name])
     h[:disagg_question_id] = disagg_question_id
     h[:disagg_qing] = disagg_qing.as_json(:only => :id, :include => {:question => {:only => :code}})
+    h[:no_data] = no_data?
     h
   end
 
@@ -95,8 +96,11 @@ class Report::StandardFormReport < Report::Report
   end
 
   def empty?
-    questionings_to_include.empty? || response_count == 0
+    summary_collection.nil? || summary_collection.no_data?
   end
+
+  # no_data is a more accurate name
+  alias_method :no_data?, :empty?
 
   def exportable?
     false
@@ -107,7 +111,7 @@ class Report::StandardFormReport < Report::Report
   end
 
   def subsets
-    summary_collection.subsets
+    summary_collection.try(:subsets)
   end
 
   # settor method allowing the disaggregation *question* and not *questioning* to be set

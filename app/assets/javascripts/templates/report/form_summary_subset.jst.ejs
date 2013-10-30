@@ -5,14 +5,14 @@
   <small><%= I18n.t("report/report.subset_intro", {disagg_value: value_str, question: report.disagg_qing.question.code}) %></small>
 <% } %>
 
-<% /*# if no data, then print a notice */ %>
-<% if (subset.no_data) { %>
-  
-  <em><%= I18n.t('report/report.no_match') %></em>
+<div class="subset <%= is_only ? 'is_only' : '' %>">
 
-<% } else { %>
+  <% /*# if no data, then print a notice */ %>
+  <% if (subset.no_data) { %>
+    
+    <em><%= I18n.t('report/report.no_match') %></em>
 
-  <div class="subset <%= is_only ? 'is_only' : '' %>">
+  <% } else { %>
 
     <% subset.groups.forEach(function(group){ %>
 
@@ -131,5 +131,6 @@
         <% }); %>
       </table>
     <% }); %>
-  </div>
-<% } %>
+  <% } %>
+</div>
+
