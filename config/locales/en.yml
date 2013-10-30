@@ -864,6 +864,7 @@ en:
     back_to_list: "Back To Report List"
     blank: "Blank" # should be very short
     choose_attrib_question: "Choose an attribute or question"
+    choose_disagg_qing: "Choose a Question..."
     choose_form: "Choose a Form..."
     choose_report: "Choose a Report..."
     columns: "Columns"
@@ -875,6 +876,7 @@ en:
     form: "Form"
     generated_at: "Generated at"
     groupings: "Groupings"
+    how_to_disaggregate: "Split report by a special question?"
     how_to_display_questions: "How should questions be displayed?"
     how_to_display_results: "How would you like to display the results?"
     how_to_order_questions: "How should questions be ordered?"
