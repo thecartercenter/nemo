@@ -36,6 +36,7 @@
 
 class Report::StandardFormReport < Report::Report
   belongs_to(:form)
+  belongs_to(:disagg_qing, :class_name => 'Questioning')
 
   attr_reader :subreports
 
@@ -111,5 +112,10 @@ class Report::StandardFormReport < Report::Report
 
   def exportable?
     false
+  end
+
+  # settor method allowing the disaggregation *question* and not *questioning* to be set
+  def disagg_question=(question)
+    self.disagg_qing = form.questionings.detect{|qing| qing.question_id == question.id}
   end
 end
