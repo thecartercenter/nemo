@@ -266,10 +266,10 @@ ActiveRecord::Schema.define(:version => 20131029140847) do
     t.integer  "form_id"
     t.string   "question_order",   :default => "number",       :null => false
     t.string   "text_responses",   :default => "all"
-    t.integer  "disaggregator_id"
+    t.integer  "disagg_qing_id"
   end
 
-  add_index "report_reports", ["disaggregator_id"], :name => "report_reports_disaggregator_id_fk"
+  add_index "report_reports", ["disagg_qing_id"], :name => "report_reports_disagg_qing_id_fk"
   add_index "report_reports", ["filter_id"], :name => "report_reports_filter_id_fk"
   add_index "report_reports", ["form_id"], :name => "report_reports_form_id_fk"
   add_index "report_reports", ["mission_id"], :name => "report_reports_mission_id_fk"
@@ -419,7 +419,7 @@ ActiveRecord::Schema.define(:version => 20131029140847) do
 
   add_foreign_key "report_reports", "forms", :name => "report_reports_form_id_fk"
   add_foreign_key "report_reports", "missions", :name => "report_reports_mission_id_fk"
-  add_foreign_key "report_reports", "questionings", :name => "report_reports_disaggregator_id_fk", :column => "disaggregator_id"
+  add_foreign_key "report_reports", "questionings", :name => "report_reports_disagg_qing_id_fk", :column => "disagg_qing_id"
   add_foreign_key "report_reports", "search_searches", :name => "report_reports_filter_id_fk", :column => "filter_id"
 
   add_foreign_key "responses", "forms", :name => "responses_form_id_fk"
