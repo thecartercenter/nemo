@@ -894,7 +894,7 @@ en:
     show_examples: "Show Examples"
     show_text_responses: "Show text responses?"
     submitted_by_at: "By %{user} at %{datetime}"
-    subreport_intro: "Data for responses in which the answer to the '%{question}' question was '%{disagg_value}'"
+    subset_intro: "Data for responses in which the answer to the '%{question}' question was '%{disagg_value}'"
     tally: "Tally"
     tally_type: "What would you like to tally?"
     these_questions: "These specific questions"

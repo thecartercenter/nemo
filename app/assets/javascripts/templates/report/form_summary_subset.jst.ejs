@@ -1,13 +1,13 @@
-<% /*# print a header unless this is the only subreport */ %>
+<% /*# print a header unless this is the only subset */ %>
 <% if (!is_only) { %>
-  <% var value_str = subreport.disagg_value ? subreport.disagg_value.name : '[' + I18n.t('common.blank') + ']'; %>
+  <% var value_str = subset.disagg_value ? subset.disagg_value.name : '[' + I18n.t('common.blank') + ']'; %>
   <h2><%= report.disagg_qing.question.code + ': ' + value_str %></h2>
-  <small><%= I18n.t("report/report.subreport_intro", {disagg_value: value_str, question: report.disagg_qing.question.code}) %></small>
+  <small><%= I18n.t("report/report.subset_intro", {disagg_value: value_str, question: report.disagg_qing.question.code}) %></small>
 <% } %>
 
-<div class="subreport <%= is_only ? 'is_only' : '' %>">
+<div class="subset <%= is_only ? 'is_only' : '' %>">
 
-  <% subreport.groups.forEach(function(group){ %>
+  <% subset.groups.forEach(function(group){ %>
 
     <% /*# determine the number of result columns in the table */ %>
     <% var result_cols = Math.min(max_result_cols, group.max_header_count); %>
@@ -17,7 +17,7 @@
       <h3><%= I18n.t('report/report.standard_form_report.type_sets.' + group.type_set) %></h3>
     <% } %>
 
-    <table class="subreport result_cols_<%= result_cols %>">
+    <table class="subset result_cols_<%= result_cols %>">
       
       <% group.clusters.forEach(function(cluster){ %>
       

@@ -45,7 +45,7 @@ div.report_body {
       margin-bottom: 0;
     }
 
-    /* subreport intro */
+    /* subset intro */
     small {
       color: #888;
       font-size: 11px;
@@ -59,7 +59,7 @@ div.report_body {
       margin-bottom: 10px;
     }
 
-    div.subreport {
+    div.subset {
       margin-left: 20px;
 
       &.is_only {
@@ -67,7 +67,7 @@ div.report_body {
       }
     }
 
-    table.subreport {
+    table.subset {
       min-width: 600px;
       page-break-inside: auto;
       margin-bottom: 10px;

@@ -17,8 +17,9 @@ class Report::SummaryCollectionBuilder
 
   # builds a summary collection with the given questionings and disaggregation qing
   # if disagg_qing is nil, no disaggregation will be done
-  def initialize(questionings, disagg_qing = nil)
+  def initialize(questionings, disagg_qing, options = {})
     @disagg_qing = disagg_qing
+    @options = options
 
     # should not include disagg_qing in summaries
     # we use reject so that we don't mess up the originally passed array
@@ -34,7 +35,12 @@ class Report::SummaryCollectionBuilder
     collections = grouped.keys.map{|g| grouped[g].empty? ? nil : send("collection_for_#{g}_questionings", grouped[g])}.compact.flatten
 
     # merge to make a single summary collection
-    Report::SummaryCollection.merge_all(collections, questionings)
+    collection = Report::SummaryCollection.merge_all(collections, questionings)
+
+    # now tell all subsets to build SummaryGroups
+    collection.subsets.each{|s| s.build_groups(@options)}
+
+    collection
   end
 
   private

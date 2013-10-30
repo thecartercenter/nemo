@@ -1,44 +1,33 @@
 # when run, this report generates a fairly complex data structure, as follows:
 # StandardFormReport = {
-#   :subreports => [
-#     {
-#       :groups => [
-#         {
-#           :clusters => [
-#             {:summaries => [summary, summary, ...]},
-#             {:summaries => [summary, summary, ...]}
-#           ]
-#         },
-#         {
-#           :clusters => [
-#             {:summaries => [summary, summary, ...]},
-#             {:summaries => [summary, summary, ...]}
-#           ]
-#         }
-#       ]
-#     }
-#   ]
+#   :summary_collection => {
+#     :subsets => [
+#       {
+#         :groups => [
+#           {
+#             :clusters => [
+#               {:summaries => [summary, summary, ...]},
+#               {:summaries => [summary, summary, ...]}
+#             ]
+#           },
+#           {
+#             :clusters => [
+#               {:summaries => [summary, summary, ...]},
+#               {:summaries => [summary, summary, ...]}
+#             ]
+#           }
+#         ]
+#       }
+#     ]
+#   }
 # }
 #
-# Subreports are generated from intermediate constructs called SummaryCollections, which are constructed as follows:
-# SummaryCollection = {
-#   :subsets => [
-#     {
-#       :disagg_value => xxx,
-#       :summaries => [summary, summary, ...]
-#     },
-#     {
-#       :disagg_value => xxx,
-#       :summaries => [summary, summary, ...]
-#     }
-#   ]
-# }
 
 class Report::StandardFormReport < Report::Report
   belongs_to(:form)
   belongs_to(:disagg_qing, :class_name => 'Questioning')
 
-  attr_reader :subreports
+  attr_reader :summary_collection
 
   # question types that we leave off this report (stored as a hash for better performance)
   EXCLUDED_TYPES = {'location' => true}
@@ -52,7 +41,7 @@ class Report::StandardFormReport < Report::Report
     h[:response_count] = response_count
     h[:mission] = form.mission.as_json(:only => [:id, :name])
     h[:form] = form.as_json(:only => [:id, :name])
-    h[:subreports] = subreports
+    h[:subsets] = subsets
     h[:observers_without_responses] = observers_without_responses.as_json(:only => [:id, :name])
     h[:disagg_question_id] = disagg_question_id
     h[:disagg_qing] = disagg_qing.as_json(:only => :id, :include => {:question => {:only => :code}})
@@ -73,10 +62,7 @@ class Report::StandardFormReport < Report::Report
     ]}).find(form_id)
 
     # generate summary collection (sets of disaggregated summaries)
-    summary_collection = Report::SummaryCollectionBuilder.new(questionings_to_include(f), disagg_qing).build
-
-    # generate the set of subreports from the summary collection, as described above
-    @subreports = Report::StandardFormSubreport.generate(summary_collection, :parent => self)
+    @summary_collection = Report::SummaryCollectionBuilder.new(questionings_to_include(f), disagg_qing, :question_order => question_order).build
   end
 
   # returns the number of responses matching the report query
@@ -118,6 +104,10 @@ class Report::StandardFormReport < Report::Report
 
   def disagg_question_id
     disagg_qing.try(:question_id)
+  end
+
+  def subsets
+    summary_collection.subsets
   end
 
   # settor method allowing the disaggregation *question* and not *questioning* to be set

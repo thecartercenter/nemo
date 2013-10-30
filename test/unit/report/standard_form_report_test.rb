@@ -43,21 +43,21 @@ class Report::StandardFormReportTest < ActiveSupport::TestCase
 
     build_and_run_report
     
-    assert(!@report.subreports[0].summaries.map(&:questioning).include?(@form.questionings[1]), "summaries should not contain hidden question")
+    assert(!@report.subsets[0].summaries.map(&:questioning).include?(@form.questionings[1]), "summaries should not contain hidden question")
   end
 
   test "report should return summaries matching questions" do
     build_form_and_responses
     build_and_run_report
-    assert_equal('decimal', @report.subreports[0].summaries[2].qtype.name)
-    assert_equal(@form.questionings[0..2], @report.subreports[0].summaries.map(&:questioning))
+    assert_equal('decimal', @report.subsets[0].summaries[2].qtype.name)
+    assert_equal(@form.questionings[0..2], @report.subsets[0].summaries.map(&:questioning))
   end
 
   test "report should skip location questions" do
     build_form_and_responses
     build_and_run_report
     assert_equal('location', @form.questionings[3].qtype_name)
-    assert(!@report.subreports[0].summaries.map(&:questioning).include?(@form.questionings[3]), "summaries should not contain location questions")
+    assert(!@report.subsets[0].summaries.map(&:questioning).include?(@form.questionings[3]), "summaries should not contain location questions")
   end
 
   test "report should return non-submitting observers" do
@@ -98,8 +98,8 @@ class Report::StandardFormReportTest < ActiveSupport::TestCase
   test "report with numeric question order should have single summary group" do
     build_form_and_responses
     build_and_run_report # defaults to numeric order
-    assert_equal(1, @report.subreports[0].groups.size)
-    assert_equal('all', @report.subreports[0].groups[0].type_set)
+    assert_equal(1, @report.subsets[0].groups.size)
+    assert_equal('all', @report.subsets[0].groups[0].type_set)
   end
 
   private

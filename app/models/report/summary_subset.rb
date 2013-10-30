@@ -4,7 +4,7 @@
 # 1:  :disaggregation_value => Option(:name => 'urban'), :summaries => [summary1, summary2, ...]
 # 2:  :disaggregation_value => Option(:name => 'rural'), :summaries => [summary1, summary2, ...]
 class Report::SummarySubset
-  attr_reader :disagg_value, :summaries
+  attr_reader :disagg_value, :summaries, :groups
 
   def initialize(attribs)
     # save attribs
@@ -24,7 +24,13 @@ class Report::SummarySubset
     @summaries += summaries
   end
 
+  def build_groups(options)
+    @groups = Report::SummaryGroup.generate(summaries, :order => options[:question_order] || 'number')
+  end
+
   def as_json(options = {})
-    super(:only => [:disagg_value, :summaries])
+    # assumes disagg_value is nil or an Option
+    # don't need to include summaries as they're in the groups
+    {:groups => groups, :disagg_value => disagg_value.nil? ? nil : disagg_value.as_json(:only => [:id], :methods => :name)}
   end
 end
