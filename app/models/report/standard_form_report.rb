@@ -72,10 +72,8 @@ class Report::StandardFormReport < Report::Report
     # generate summary collection (sets of disaggregated summaries)
     summary_collection = Report::SummaryCollectionBuilder.new(questionings_to_include(f)).build
 
+    # generate the set of subreports from the summary collection, as described above
     @subreports = Report::StandardFormSubreport.generate(summary_collection, :parent => self)
-
-    # divide into groups and clusters
-    #@groups = Report::SummaryGroup.generate(@summaries, :order => question_order)
   end
 
   # returns the number of responses matching the report query
@@ -99,8 +97,7 @@ class Report::StandardFormReport < Report::Report
   # returns the list of questionings to include in this report
   # takes an optional form argument to allow eager loaded form
   def questionings_to_include(form = nil)
-    form ||= self.form
-    form.questionings.reject do |qing|
+    @questionings_to_include ||= (form || self.form).questionings.reject do |qing|
       qing.hidden? || 
       Report::StandardFormReport::EXCLUDED_TYPES[qing.qtype.name] || 
       text_responses == 'short_only' && qing.qtype.name == 'long_text' ||
@@ -109,7 +106,7 @@ class Report::StandardFormReport < Report::Report
   end
 
   def empty?
-    response_count == 0
+    questionings_to_include.empty? || response_count == 0
   end
 
   def exportable?

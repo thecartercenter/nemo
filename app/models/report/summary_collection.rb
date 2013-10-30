@@ -20,7 +20,7 @@ class Report::SummaryCollection
     @subsets ||= []
 
     # if all subsets are no_data, the whole collection is no_data!
-    @no_data = subsets.all?{|s| s.no_data?}
+    @no_data = subsets.empty? || subsets.all?{|s| s.no_data?}
   end
 
   def no_data?

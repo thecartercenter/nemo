@@ -90,7 +90,9 @@ class Report::StandardFormReportTest < ActiveSupport::TestCase
   end
 
   test "empty? should be true if no questions" do
-
+    @form = FactoryGirl.create(:form)
+    build_and_run_report
+    assert(@report.empty?, "report should be empty")
   end
 
   test "report with numeric question order should have single summary group" do

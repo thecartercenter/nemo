@@ -7,9 +7,10 @@ class Report::StandardFormSubreport
   # attribs[:parent] - the parent StandardFormReport
   def self.generate(summary_collection, attribs)
     # for each SummarySubset in the collection, create a subreport
-    summaries = summary_collection.subsets.first.summaries
-    groups = Report::SummaryGroup.generate(summaries, :order => attribs[:parent].question_order)
-    [new(attribs.merge(:summaries => summaries, :groups => groups))]
+    summary_collection.subsets.map do |subset|
+      groups = Report::SummaryGroup.generate(subset.summaries, :order => attribs[:parent].question_order)
+      new(attribs.merge(:summaries => subset.summaries, :groups => groups))
+    end
   end
 
   def initialize(attribs)
