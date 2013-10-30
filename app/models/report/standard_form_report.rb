@@ -70,7 +70,7 @@ class Report::StandardFormReport < Report::Report
     ]}).find(form_id)
 
     # generate summary collection (sets of disaggregated summaries)
-    summary_collection = Report::SummaryCollection.new(questionings_to_include(f))
+    summary_collection = Report::SummaryCollectionBuilder.new(questionings_to_include(f)).build
 
     @subreports = Report::StandardFormSubreport.generate(summary_collection, :parent => self)
 
