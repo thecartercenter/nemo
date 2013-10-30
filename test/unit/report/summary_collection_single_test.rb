@@ -128,7 +128,7 @@ class Report::SummaryCollectionSingleTest < ActiveSupport::TestCase
 
     # check stats    
     # assert_equal({:mean => tp('14:00'), :median => tp('10:15'), :min => tp('9:30'), :max => tp('22:15')}, headers_and_items(:stat, :stat))
-    assert_equal({:mean => tp('14:00'), :min => tp('9:30'), :max => tp('22:15')}, headers_and_items(:stat, :stat))
+    assert_equal({:mean => '14:00', :min => '09:30', :max => '22:15'}, headers_and_items(:stat, :stat))
   end
 
   test "null_count should be correct for time" do
@@ -148,8 +148,8 @@ class Report::SummaryCollectionSingleTest < ActiveSupport::TestCase
     # assert_equal({:mean => dtp('2013-10-27 00:00'), :median => dtp('2013-10-26 18:45'), 
     #   :min => dtp('2013-10-26 10:15'), :max => dtp('2013-10-27 19:00')}, 
     #   headers_and_items(:stat, :stat))
-    assert_equal({:mean => dtp('2013-10-27 00:00'),
-      :min => dtp('2013-10-26 10:15'), :max => dtp('2013-10-27 19:00')}, 
+    assert_equal({:mean => 'Oct 27 2013 00:00',
+      :min => 'Oct 26 2013 10:15', :max => 'Oct 27 2013 19:00'},
       headers_and_items(:stat, :stat))
   end
 
@@ -209,16 +209,6 @@ class Report::SummaryCollectionSingleTest < ActiveSupport::TestCase
     def prepare_collection
       # leave off the second argument, since there is no disaggregation question
       @collection = Report::SummaryCollectionBuilder.new(@form.questionings).build
-    end
-
-    # parse a time value
-    def tp(s)
-      I18n.l(Time.parse("2000-01-01 #{s} UTC"), :format => :time_only)
-    end
-
-    # parse a datetime value
-    def dtp(s)
-      I18n.l(Time.zone.parse(s))
     end
 
     # gets the first summary in the generated collection
