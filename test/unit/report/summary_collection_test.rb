@@ -50,7 +50,20 @@ class Report::SummaryCollectionTest < ActiveSupport::TestCase
     # check that headers are correct and in correct order
     assert_equal(['Jul 22 2011', 'Oct 26 2012'], header_names_for_disagg_value('a'))
     assert_equal(['Sep 22 2012', 'Jul 22 2013'], header_names_for_disagg_value('b'))
+
+    # check that tallies are correct
+    assert_equal([1, 2], items_for_disagg_value('a', :count))
+    assert_equal([1, 3], items_for_disagg_value('b', :count))
   end
+
+  # test "collections with text questions should have correct summaries" do
+  #   prepare_form_and_collection('text', 'select_one', 
+  #     {'a' => %w(foo bar baz), 'b' => %w(bing bop)})
+
+  #   # check that headers are correct and in correct order
+  #   assert_equal(['Jul 22 2011', 'Oct 26 2012'], header_names_for_disagg_value('a'))
+  #   assert_equal(['Sep 22 2012', 'Jul 22 2013'], header_names_for_disagg_value('b'))
+  # end
 
   test "collection subsets should be correct if no answers for one of the options" do
     prepare_form_and_collection('integer', 'select_one', {'a' => [1,2,4,6], 'b' => [8,9], 'c' => []})
@@ -115,5 +128,9 @@ class Report::SummaryCollectionTest < ActiveSupport::TestCase
     def header_names_for_disagg_value(val)
       # the question we're interested in is always rank 1
       subsets_by_disagg_value[val].summaries.detect{|s| s.questioning.rank == 1}.headers.map{|h| h[:name]}
+    end
+
+    def items_for_disagg_value(val, item_attrib)
+      subsets_by_disagg_value[val].summaries.detect{|s| s.questioning.rank == 1}.items.map{|i| i.send(item_attrib)}
     end
 end
