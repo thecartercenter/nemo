@@ -1,11 +1,11 @@
 # tests the general case of summary collections, where there are multiple subsets in the collection
 # makes sure that the data is disaggregated properly
-# tests for the singleton case, where there is only one subset in the collection, are currently in QuestionSummaryTest
+# tests for the singleton case, where there is only one subset in the collection, are currently in SummaryCollectionSingleTest
 
 require 'test_helper'
 require 'unit/report/report_test_helper'
 
-class Report::SummaryCollectionTest < ActiveSupport::TestCase
+class Report::SummaryCollectionMultipleTest < ActiveSupport::TestCase
   test "collection should have proper disagg values" do
     # build a form with two questions: the one we want to analyze and the one we want to disaggregate by
     prepare_form_and_collection('integer', 'select_one', {'a' => [1,2,4], 'b' => [8,9]})

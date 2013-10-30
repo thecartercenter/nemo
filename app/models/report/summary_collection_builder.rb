@@ -476,22 +476,34 @@ class Report::SummaryCollectionBuilder
 
     # returns all possible disagg_values
     def disagg_values
-      disagg_qing.options
+      # if there is no disagg_qing, this is just the symbol :all
+      if disagg_qing.nil?
+        [:all]
+      else
+        disagg_qing.options
+      end
     end
 
     # returns a hash of disagg_value as returned from the db (e.g. 123) to the objects we want to use (e.g. Option)
     def disagg_value_db_to_obj
-      @disagg_value_db_to_obj ||= Hash[*disagg_qing.options.map{|o| [o.id, o]}.flatten]
+      if disagg_qing.nil?
+        {'all' => :all}
+      else
+        @disagg_value_db_to_obj ||= Hash[*disagg_qing.options.map{|o| [o.id, o]}.flatten]
+      end
     end
 
     # returns a fully qualified column reference for the disaggregation value
     def disagg_column
-      'disagg_ans.option_id'
+      if disagg_qing.nil?
+        "'all'"
+      else
+        'disagg_ans.option_id'
+      end
     end
 
     # gets the extra sql select expression that needs to be added to each query if we're disaggregating
     def disagg_select_expr
-      return '' if disagg_qing.nil?
       "#{disagg_column} AS disagg_value,"
     end
 
