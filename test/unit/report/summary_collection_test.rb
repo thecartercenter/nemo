@@ -16,31 +16,28 @@ class Report::SummaryCollectionTest < ActiveSupport::TestCase
 
   test "collections with integer questions should have correct summaries" do
     prepare_form_and_collection('integer', 'select_one', {'a' => [1,2,4,6], 'b' => [8,9]})
-    assert_equal(3.25, @collection.subsets[0].summaries[0].items[0].stat) # mean
-    assert_equal(1, @collection.subsets[0].summaries[0].items[1].stat) # min
-    assert_equal(6, @collection.subsets[0].summaries[0].items[2].stat) # max
-    assert_equal(8.5, @collection.subsets[1].summaries[0].items[0].stat) # mean
-    assert_equal(8, @collection.subsets[1].summaries[0].items[1].stat) # min
-    assert_equal(9, @collection.subsets[1].summaries[0].items[2].stat) # max
+    assert_equal(%w(Average Minimum Maximum), header_names_for_disagg_value('a'))
+    assert_equal(%w(Average Minimum Maximum), header_names_for_disagg_value('b'))
+    assert_equal([3.25, 1, 6], items_for_disagg_value('a', :stat))
+    assert_equal([8.5, 8, 9], items_for_disagg_value('b', :stat))
   end
 
   test "collections with select_one questions should have correct summaries" do
     prepare_form_and_collection('select_one', 'select_one', {'a' => ['red', 'red', 'blue'], 'b' => ['blue', 'red', 'blue', 'blue']})
-    assert_equal(2, @collection.subsets[0].summaries[0].items[0].count) # a - red
-    assert_equal(1, @collection.subsets[0].summaries[0].items[1].count) # a - blue
-    assert_equal(1, @collection.subsets[1].summaries[0].items[0].count) # b - red
-    assert_equal(3, @collection.subsets[1].summaries[0].items[1].count) # b - blue
+    assert_equal(%w(red blue green), header_names_for_disagg_value('a'))
+    assert_equal(%w(red blue green), header_names_for_disagg_value('b'))
+    assert_equal([2, 1, 0], items_for_disagg_value('a', :count))
+    assert_equal([1, 3, 0], items_for_disagg_value('b', :count))
   end
 
   test "collections with select_multiple questions should have correct summaries" do
     prepare_form_and_collection('select_multiple', 'select_one', 
       {'a' => [['red'], ['red', 'green'], []], 'b' => [['blue', 'red'], ['blue', 'green']]})
-    assert_equal(2, @collection.subsets[0].summaries[0].items[0].count) # a - red
-    assert_equal(0, @collection.subsets[0].summaries[0].items[1].count) # a - blue
-    assert_equal(1, @collection.subsets[0].summaries[0].items[2].count) # a - green
-    assert_equal(1, @collection.subsets[1].summaries[0].items[0].count) # b - red
-    assert_equal(2, @collection.subsets[1].summaries[0].items[1].count) # b - blue
-    assert_equal(1, @collection.subsets[1].summaries[0].items[2].count) # b - green
+    
+    assert_equal(%w(red blue green), header_names_for_disagg_value('a'))
+    assert_equal(%w(red blue green), header_names_for_disagg_value('b'))
+    assert_equal([2, 0, 1], items_for_disagg_value('a', :count))
+    assert_equal([1, 2, 1], items_for_disagg_value('b', :count))
   end
 
   test "collections with date questions should have correct summaries" do
