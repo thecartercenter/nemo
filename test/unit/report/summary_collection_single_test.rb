@@ -207,8 +207,8 @@ class Report::SummaryCollectionSingleTest < ActiveSupport::TestCase
     end
 
     def prepare_collection
-      # leave off the second argument, since there is no disaggregation question
-      @collection = Report::SummaryCollectionBuilder.new(@form.questionings).build
+      # second argument is nil since there is no disaggregation question
+      @collection = Report::SummaryCollectionBuilder.new(@form.questionings, nil).build
     end
 
     # gets the first summary in the generated collection

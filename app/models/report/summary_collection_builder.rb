@@ -308,7 +308,7 @@ class Report::SummaryCollectionBuilder
         # loop over each questioning to generate summaries
         summaries = date_qs.map do |qing|
 
-          # get tallies for this disagg_value and qing
+          # get tallies for this disagg_value and qing (could be nil)
           cur_tallies = tallies[[disagg_value, qing.id]]
 
           # build headers from tally keys (already sorted)
@@ -328,7 +328,7 @@ class Report::SummaryCollectionBuilder
           end
 
           # get null count from tallies
-          null_count = cur_tallies[nil] || 0
+          null_count = (cur_tallies || {})[nil] || 0
 
           # build summary
           Report::QuestionSummary.new(:questioning => qing, :display_type => :structured, 
