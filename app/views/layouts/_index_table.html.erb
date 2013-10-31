@@ -50,11 +50,6 @@
     <% end %>
     <br/>
     
-    <%# pagination links %>
-    <% unless options[:table_only] %>
-      <%= will_paginate(objects) if paginated %>
-    <% end %>
-    
     <%# create js view model for index table, only necessary if there are some objects %>
     <%= javascript_doc_ready do %>
       new ELMO.Views.IndexTable({
@@ -64,6 +59,12 @@
       });
     <% end %>
   <% end %>
+
+  <%# pagination links (don't show if there are no entries) %>
+  <% if paginated && objects.total_entries > 0 %>
+    <%= will_paginate(objects) %>
+  <% end %>
+
 </div>
 
   
