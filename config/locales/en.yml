@@ -445,6 +445,7 @@ en:
   
   # application-wide strings
   layout:
+    about: "About ELMO"
     actions: "Actions"
     are_you_sure: "Are you sure?"
     change_language: "Change Language"

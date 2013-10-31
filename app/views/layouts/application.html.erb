@@ -156,11 +156,9 @@
       <%= link_to(t("page_titles.sms.index"), sms_path) %> &nbsp;|&nbsp;
     <% end %>
 
-    <%= t("layout.system_version") %>: <%= configatron.system_version %>
-    
-    <div class="site_by">
-      <%= t('layout.created_by') %> <%= link_to('Sassafras Tech Collective', 'http://sassafrastech.com') %>
-    </div>
+    <%= t("layout.system_version") %>: <%= configatron.system_version %> &nbsp;|&nbsp;
+
+    <%= link_to(t('layout.about'), 'http://getelmo.org') %>
   </div>
   
   <%# insert any audio objects at the end %>
