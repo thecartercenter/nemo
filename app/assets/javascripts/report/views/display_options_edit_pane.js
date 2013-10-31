@@ -17,7 +17,7 @@
   klass.prototype.id = "display_options";
 
   // builds controls
-  klass.prototype.build = function() {
+  klass.prototype.build = function() { var self = this;
     var _this = this;
     
     // call super first
@@ -65,7 +65,16 @@
     // build disaggregation chooser
     this.disagg_question_chooser = new ELMO.Report.DisaggQuestionSelector(this.menus.question);
     this.disagg_question_chooser.field.change(function(){ _this.broadcast_change("disagg_question_id"); })
-    this.cont.find("#disaggregate").change(function(){ _this.broadcast_change("disaggregate"); })
+    
+    // setup an event handler for the disaggregate checkbox
+    this.cont.find("#disaggregate").change(function(e){ 
+      // if the box has just become checked
+      // set the value of the disagg_question_chooser to the first geographic question, if one exists
+      if ($(e.target).is(':checked'))
+        self.disagg_question_chooser.select_first_geographic();
+
+      _this.broadcast_change("disaggregate"); 
+    })
 
     // build text responses chooser
     this.text_responses = new ELMO.Control.RadioGroup({inputs: this.cont.find("input[name='text_responses']")});

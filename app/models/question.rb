@@ -50,6 +50,7 @@ class Question < ActiveRecord::Base
   translates :name, :hint
   
   delegate :smsable?, :has_options?, :to => :qtype
+  delegate :geographic?, :to => :option_set, :allow_nil => true
 
   replicable :child_assocs => :option_set, :parent_assoc => :questioning, :uniqueness => {:field => :code, :style => :camel_case}, :dont_copy => :key,
     :user_modifiable => [:name_translations, :_name, :hint_translations, :_hint]
