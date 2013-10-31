@@ -113,7 +113,7 @@ class Ability
         # coordinator abilities
         if user.role?(:coordinator)
           # can manage users in current mission
-          can [:create, :update, :login_instructions], User, :assignments => {:mission_id => user.current_mission_id}
+          can [:create, :update, :login_instructions, :change_assignments], User, :assignments => {:mission_id => user.current_mission_id}
           can :assign_to, Mission, :id => user.current_mission_id
         
           # can create user batches

@@ -51,6 +51,9 @@ class UsersController < ApplicationController
     
     # otherwise this is a normal update
     else
+      # make sure changing assignment role is permitted if attempting
+      authorize!(:change_assignments, @user) if params[:user]['assignments_attributes']
+
       # try to save
       if @user.update_attributes(params[:user])
 
