@@ -35,6 +35,9 @@ class Report::StandardFormReport < Report::Report
   # options for the question_order attrib
   QUESTION_ORDER_OPTIONS = %w(number type)
 
+  # question types that can be used to disaggregated
+  DISAGGABLE_TYPES = %w(select_one)
+
   def as_json(options = {})
     # add the required methods to the methods option
     h = super(options)
@@ -50,6 +53,12 @@ class Report::StandardFormReport < Report::Report
   end
 
   def run
+    # make sure the disagg_qing is still on this form (unlikely to be an error)
+    raise Report::ReportError.new("disaggregation question is not on this form") unless disagg_qing.nil? || disagg_qing.form_id == form_id
+
+    # make sure disagg_qing is disaggable
+    raise Report::ReportError.new("disaggregation question is incorrect type") unless can_disaggregate_with?(disagg_qing)
+
     # eager load form
     f = Form.includes({:questionings => [
       # eager load qing conditions
@@ -106,16 +115,25 @@ class Report::StandardFormReport < Report::Report
     false
   end
 
-  def disagg_question_id
-    disagg_qing.try(:question_id)
-  end
-
   def subsets
     summary_collection.try(:subsets)
   end
 
+  def disagg_question_id
+    disagg_qing.try(:question_id)
+  end
+
   # settor method allowing the disaggregation *question* and not *questioning* to be set
   def disagg_question_id=(question_id)
-    self.disagg_qing = form.questionings.detect{|qing| qing.question_id == question_id.to_i}
+    if question_id.nil?
+      self.disagg_qing = nil
+    else
+      self.disagg_qing = form.questionings.detect{|qing| qing.question_id == question_id.to_i}
+    end
+  end
+
+  # returns whether this report can be disaggregated by the given questioning
+  def can_disaggregate_with?(qing)
+    qing.nil? || DISAGGABLE_TYPES.include?(qing.question.qtype_name)
   end
 end
