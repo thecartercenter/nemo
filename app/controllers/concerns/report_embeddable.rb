@@ -12,7 +12,10 @@ module ReportEmbeddable
         :attribs => Report::AttribField.all,
         :forms => Form.for_mission(current_mission).as_json(:only => [:id, :name]),
         :calculation_types => Report::Calculation::TYPES,
-        :questions => Question.for_mission(current_mission).with_forms.as_json(:only => [:id, :code, :qtype_name], :methods => :form_ids),
+        :questions => Question.for_mission(current_mission).includes(:forms, :option_set).as_json(
+          :only => [:id, :code, :qtype_name], 
+          :methods => [:form_ids, :geographic?]
+        ),
         :option_sets => OptionSet.for_mission(current_mission).as_json(:only => [:id, :name]),
         :percent_types => Report::Report::PERCENT_TYPES
       }

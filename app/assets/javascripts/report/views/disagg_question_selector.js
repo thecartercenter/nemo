@@ -17,14 +17,12 @@
     });
   }
 
-  // called when the form_id or disagg_question_id has been updated, thus necessitating a change to the available options
+  // called when the form_id or disagg_question_id has been updated, thus necessitating a change to the available/selected options
   klass.prototype.update = function(report) {
     this.report = report;
-
-    console.log(report.attribs.form_id);
     
     // get the appropriate questions
-    var questions = this.question_menu.filter({form_ids: [report.attribs.form_id], question_types: ['select_one']});
+    var questions = this.filter_questions(report.attribs.form_id);
 
     // update our select control with the new questions
     this.field.update_objs(questions);
@@ -36,6 +34,34 @@
   // gets the current field value
   klass.prototype.get = function() {
     return this.field.get();
+  }
+
+  // selects the first geographic question in the dropdown, or does nothing if none available
+  klass.prototype.select_first_geographic = function() {
+    // get geographic questions
+    var geo_qs = this.filter_questions(this.report.attribs.form_id, true);
+
+    // if there were any matches, update the field to the match's id
+    if (geo_qs.length > 0)
+      this.field.update(geo_qs[0].id);
+  }
+
+  // gets questions that appear on the form with the given form_id, that are disaggregatable, and that are optionally geographic
+  // if form_id is falsy, returns an empty array
+  // geographic is optional
+  klass.prototype.filter_questions = function(form_id, geographic) {
+    if (!form_id) return [];
+
+    var params = {form_ids: [form_id]};
+
+    // add disaggregatable types
+    params['question_types'] = ['select_one'];
+
+    // add geographic if specified
+    if (geographic !== undefined)
+      params['geographic'] = geographic;
+
+    return this.question_menu.filter(params);
   }
   
 }(ELMO.Report));
