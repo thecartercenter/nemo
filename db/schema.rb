@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131025203530) do
+ActiveRecord::Schema.define(:version => 20131029140847) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -142,8 +142,10 @@ ActiveRecord::Schema.define(:version => 20131025203530) do
     t.integer  "mission_id"
     t.boolean  "is_standard", :default => false
     t.integer  "standard_id"
+    t.boolean  "geographic",  :default => false, :null => false
   end
 
+  add_index "option_sets", ["geographic"], :name => "index_option_sets_on_geographic"
   add_index "option_sets", ["mission_id", "name"], :name => "index_option_sets_on_mission_id_and_name", :unique => true
   add_index "option_sets", ["mission_id", "standard_id"], :name => "index_option_sets_on_mission_id_and_standard_id", :unique => true
   add_index "option_sets", ["standard_id"], :name => "index_option_sets_on_standard_id"
@@ -264,8 +266,10 @@ ActiveRecord::Schema.define(:version => 20131025203530) do
     t.integer  "form_id"
     t.string   "question_order",   :default => "number",       :null => false
     t.string   "text_responses",   :default => "all"
+    t.integer  "disagg_qing_id"
   end
 
+  add_index "report_reports", ["disagg_qing_id"], :name => "report_reports_disagg_qing_id_fk"
   add_index "report_reports", ["filter_id"], :name => "report_reports_filter_id_fk"
   add_index "report_reports", ["form_id"], :name => "report_reports_form_id_fk"
   add_index "report_reports", ["mission_id"], :name => "report_reports_mission_id_fk"
@@ -415,6 +419,7 @@ ActiveRecord::Schema.define(:version => 20131025203530) do
 
   add_foreign_key "report_reports", "forms", :name => "report_reports_form_id_fk"
   add_foreign_key "report_reports", "missions", :name => "report_reports_mission_id_fk"
+  add_foreign_key "report_reports", "questionings", :name => "report_reports_disagg_qing_id_fk", :column => "disagg_qing_id"
   add_foreign_key "report_reports", "search_searches", :name => "report_reports_filter_id_fk", :column => "filter_id"
 
   add_foreign_key "responses", "forms", :name => "responses_form_id_fk"

@@ -193,6 +193,12 @@ class Ability
       o.standard_copy? || o.published?
     end
 
+    # the geographic option is used only for reporting so doesnt matter if published, etc.
+    # only matters if standard_copy, b/c the value does get copied on replication
+    cannot :change_geographic, OptionSet do |o|
+      o.standard_copy?
+    end
+
     cannot :destroy, OptionSet do |o|
       o.has_answers? || o.has_questions? || o.published?
     end

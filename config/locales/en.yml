@@ -7,6 +7,7 @@ en:
     active: "Active"
     add: "Add"
     and: "and"
+    blank: "Blank"
     by: "By"
     cancel: "Cancel"
     choose: "Choose"
@@ -214,8 +215,9 @@ en:
       option:
         base: "" # this is a sort of hack to get error msg to display properly
       option_set:
-        options: "Options"
         answers: "Answers"
+        geographic: "Is Geographic?"
+        options: "Options"
       question:
         base: "" # this is a sort of hack to get error msg to display properly
         code: "Code"
@@ -301,6 +303,7 @@ en:
       option:
         name: "The textual description of this option that users will see."
       option_set:
+        geographic: "Whether this option set represents geographic information, e.g. a set of provinces or regions."
         name: "A name that summarizes this set of options. Normal users will not see this name."
         options: 
           other: "Add existing options by typing them and clicking 'Add'. If you do not see an option in the drop down, you can add a new one by clicking 'Create New Option'."
@@ -862,6 +865,7 @@ en:
     back_to_list: "Back To Report List"
     blank: "Blank" # should be very short
     choose_attrib_question: "Choose an attribute or question"
+    choose_disagg_qing: "Choose a Question..."
     choose_form: "Choose a Form..."
     choose_report: "Choose a Report..."
     columns: "Columns"
@@ -873,6 +877,7 @@ en:
     form: "Form"
     generated_at: "Generated at"
     groupings: "Groupings"
+    how_to_disaggregate: "Split report by a special question?"
     how_to_display_questions: "How should questions be displayed?"
     how_to_display_results: "How would you like to display the results?"
     how_to_order_questions: "How should questions be ordered?"
@@ -890,6 +895,7 @@ en:
     show_examples: "Show Examples"
     show_text_responses: "Show text responses?"
     submitted_by_at: "By %{user} at %{datetime}"
+    subset_intro: "Data for responses in which the answer to the '%{question}' question was '%{disagg_value}'"
     tally: "Tally"
     tally_type: "What would you like to tally?"
     these_questions: "These specific questions"
@@ -953,12 +959,12 @@ en:
         min: "Minimum"
         max: "Maximum"
       type_sets:
-        categorical: "Categorical Questions"
-        numbers: "Numerical Questions"
-        dates: "Date Questions"
-        times: "Time Questions"
-        short_text: "Short Text Questions"
-        long_text: "Long Text Questions"
+        categorical: "Categorical Data"
+        numbers: "Statistical Data"
+        dates: "Dates"
+        times: "Times"
+        short_text: "Short Text Answers"
+        long_text: "Long Text Answers"
     tally_types:
       question_answer: "Answers per Question"
       grouped: "Responses per Answer/Attribute"

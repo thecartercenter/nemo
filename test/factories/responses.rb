@@ -19,15 +19,22 @@ FactoryGirl.define do
           case qing.qtype_name
 
           when 'select_one'
-            option = qing.options.index_by(&:name)[a] or raise "could not find option with name '#{a}'"
-            ans.option_id = option.id
+            if a.nil?
+              ans.option_id = nil
+            else
+              option = qing.options.index_by(&:name)[a] or raise "could not find option with name '#{a}'"
+              ans.option_id = option.id
+            end
 
+          # in this case, a should be either nil or an array of arrays of choice names
           when 'select_multiple'
-            # in this case, a should be either nil or an array of arrays of choice names
-            options_by_name = qing.options.index_by(&:name)
-            ans.choices = a.map do |c|
-              option = options_by_name[c] or raise "could not find option with name '#{c}'"
-              Choice.new(:option_id => option.id)
+            # if a is nil, we can just do nothing
+            unless a.nil?
+              options_by_name = qing.options.index_by(&:name)
+              ans.choices = a.map do |c|
+                option = options_by_name[c] or raise "could not find option with name '#{c}'"
+                Choice.new(:option_id => option.id)
+              end
             end
 
           when 'date'
