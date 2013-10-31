@@ -14,6 +14,11 @@
     
     // hookup add option set link
     $('div.question_fields a.create_option_set').on('click', function(){ self.show_option_set_form(); return false; });
+
+    // register a callback for when option set form submission is done
+    $(document).on('option_set_form_submit_success', 'form.option_set_form', function(e, option_set){ 
+      self.option_set_created(option_set);
+    });
   }
   
   klass.prototype.question_type_changed = function(event) { var self = this;
@@ -47,11 +52,6 @@
     $('div.question_fields #option_set_id .loading_indicator').show();
     
     $("div.new_option_set_form_wrapper").load(self.params.new_option_set_path, function(){
-      
-      // register a callback for when the form submission is done
-      $(document).on('option_set_form_submit_success', 'form.option_set_form', function(e, option_set){ 
-        self.option_set_created(option_set);
-      });
       
       // create the dialog
       $("div.new_option_set_form_wrapper").dialog({
