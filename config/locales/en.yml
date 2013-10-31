@@ -451,7 +451,6 @@ en:
     created_by: "Created by"
     delete_warning: "Are you sure you want to permanently delete the %{obj_description}?"
     deselect_all: "Deselect All"
-    dev_mode: "Development Mode"
     logged_in_as: "Logged in as"
     must_be: "must be"
     no_selection: "You haven't selected anything."

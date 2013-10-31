@@ -158,11 +158,6 @@
 
     <%= t("layout.system_version") %>: <%= configatron.system_version %>
     
-    <% if Rails.env == "development" %>
-      &nbsp;&nbsp;
-      <div id="dev_mode_warning"><%= t("layout.dev_mode") %></div>
-    <% end %>
-
     <div class="site_by">
       <%= t('layout.created_by') %> <%= link_to('Sassafras Tech Collective', 'http://sassafrastech.com') %>
     </div>

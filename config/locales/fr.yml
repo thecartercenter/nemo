@@ -410,7 +410,6 @@ fr:
     created_by: "Crée par"
     delete_warning: "Êtes-vous sur que vous voulez supprimer définitivement le %{obj_description}?"
     deselect_all: "Désélectionner tous"
-    dev_mode: "Mode de développement"
     logged_in_as: "Connecté en tant que"
     must_be: "Doit être"
     no_selection: "Vous n'avez rien sélectionné."
