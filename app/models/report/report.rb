@@ -28,6 +28,9 @@ class Report::Report < ActiveRecord::Base
 
   attr_accessor :just_created
 
+  # this is overridden by StandardFormReport, and ignored elsewhere
+  attr_accessor :disagg_question_id
+
   # validation is all handled client-side
   
   @@per_page = 20
