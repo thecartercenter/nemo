@@ -45,7 +45,7 @@
                     <div class="examples">
                       <div class="ex_lbl"><%= t("common.example", :count => 2) %></div>
                       <ul>
-                        <% t("report/report.examples.#{class_name.demodulize.underscore}").each do |ex| %>
+                        <% (I18n.t("report/report.examples.#{class_name.demodulize.underscore}", :raise => true) rescue []).each do |ex| %>
                           <li><%= ex %></li>
                         <% end %>
                       </ul>
@@ -173,10 +173,10 @@
           <div class="section">
             <div class="name horiz"><%= t("report/report.show_text_responses") %></div>
             <div class="controls horiz">
-              <% t("report/report.text_response_options").each do |key, label| %>
+              <% Report::StandardFormReport::TEXT_RESPONSE_OPTIONS.each do |key| %>
                 <div class="choice">
                   <input type="radio" name="text_responses" id="text_responses_<%= key %>" value="<%= key %>" />
-                  <label for="text_responses_<%= key %>"><%= label %></label>
+                  <label for="text_responses_<%= key %>"><%= t("report/report.text_response_options.#{key}") %></label>
                 </div>
               <% end %>
             </div>

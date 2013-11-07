@@ -38,6 +38,8 @@ class Report::StandardFormReport < Report::Report
   # question types that can be used to disaggregated
   DISAGGABLE_TYPES = %w(select_one)
 
+  TEXT_RESPONSE_OPTIONS = %w(all short_only none)
+
   def as_json(options = {})
     # add the required methods to the methods option
     h = super(options)
