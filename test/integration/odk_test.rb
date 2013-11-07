@@ -101,11 +101,14 @@ class OdkTest < ActionDispatch::IntegrationTest
       xml ||= build_odk_submission(f)
 
       # write xml to file
-      File.open(Rails.root.join('test/fixtures/', ODK_XML_FILE).to_s, 'w') do |f|
+      require 'fileutils'
+      FileUtils.mkpath('test/fixtures')
+      fixture_file = Rails.root.join('test/fixtures/', ODK_XML_FILE)
+      File.open(fixture_file.to_s, 'w') do |f|
         f.write(xml)
       end
 
-      uploaded = fixture_file_upload(Rails.root.join('test/fixtures/', ODK_XML_FILE), 'text/xml')
+      uploaded = fixture_file_upload(fixture_file, 'text/xml')
       post(path, {:xml_submission_file => uploaded, :format => 'xml'}, 'HTTP_AUTHORIZATION' => encode_credentials(@user.login, 'password'))
     end
 
