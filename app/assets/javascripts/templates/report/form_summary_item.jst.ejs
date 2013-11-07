@@ -4,12 +4,12 @@
   <% /*# include submitter name and add link to response if appropriate */ %>
   <% if (item.submitter_name) { %>
     <div class="by_at">
-      <%= I18n.t('report/report.submitted_by_at', {user: item.submitter_name, datetime: item.created_at}) %>,
+      <%- I18n.t('report/report.submitted_by_at', {user: item.submitter_name, datetime: item.created_at}) %>,
       <a href="<%= Utils.build_path('responses', item.response_id) %>"><%= I18n.t('report/report.view_response', {id: item.response_id}) %></a>
     </div>
   <% } %>
 
-  <%= item.text %>
+  <%- item.text %>
 
 <% /*# tally items */ %>
 <% } else if (item.count != null) { %>

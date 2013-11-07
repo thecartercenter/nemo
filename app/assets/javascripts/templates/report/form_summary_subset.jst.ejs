@@ -1,8 +1,8 @@
 <% /*# print a header unless this is the only subset */ %>
 <% if (!is_only) { %>
   <% var value_str = subset.disagg_value ? subset.disagg_value.name : '[' + I18n.t('common.blank') + ']'; %>
-  <h2><%= report.disagg_qing.question.code + ': ' + value_str %></h2>
-  <small><%= I18n.t("report/report.subset_intro", {disagg_value: value_str, question: report.disagg_qing.question.code}) %></small>
+  <h2><%- report.disagg_qing.question.code + ': ' + value_str %></h2>
+  <small><%- I18n.t("report/report.subset_intro", {disagg_value: value_str, question: report.disagg_qing.question.code}) %></small>
 <% } %>
 
 <div class="subset <%= is_only ? 'is_only' : '' %>">
@@ -39,7 +39,7 @@
 
             <% /*# do rest of header cells if necessary */ %>
             <% if (cluster.display_type == 'flow' || cluster.display_type == 'structured' && cluster.headers.length > result_cols) { %>
-              <td colspan="<%= result_cols %>"><%= cluster.overall_header %></td>
+              <td colspan="<%= result_cols %>"><%- cluster.overall_header %></td>
             
             <% } else if (cluster.display_type == 'structured') { %>
               <% /*# print out each header cell */ %>
@@ -101,7 +101,7 @@
                   <td colspan="<%= result_cols %>">
                     <% if (summary.items.length == 0) { %> <em class="no_match"><%= I18n.t('report/report.no_match') %></em> <% } %>
 
-                    <%= summary.items.map(function(item) { return '"' + item.text + '"'; }).join(', ') %>
+                    <%- summary.items.map(function(item) { return '"' + item.text + '"'; }).join(', ') %>
                   </td>
 
                 <% /*# if structured type with less than result_cols, do separate cells */ %>
