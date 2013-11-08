@@ -106,6 +106,9 @@ class Search::Token
       
       # get the qualifier translations for current locale and reverse them
       trans = I18n.t("search_qualifiers").invert
+
+      # also add the qualifier translations for english if the current locale is not english
+      trans.merge!(I18n.t("search_qualifiers", :locale => :en).invert) unless I18n.locale == :en
       
       # add a bunch of entries with accents removed
       normalized = {}
