@@ -156,16 +156,9 @@
       <%= link_to(t("page_titles.sms.index"), sms_path) %> &nbsp;|&nbsp;
     <% end %>
 
-    <%= t("layout.system_version") %>: <%= configatron.system_version %>
-    
-    <% if Rails.env == "development" %>
-      &nbsp;&nbsp;
-      <div id="dev_mode_warning"><%= t("layout.dev_mode") %></div>
-    <% end %>
+    <%= t("layout.system_version") %>: <%= configatron.system_version %> &nbsp;|&nbsp;
 
-    <div class="site_by">
-      <%= t('layout.created_by') %> <%= link_to('Sassafras Tech Collective', 'http://sassafrastech.com') %>
-    </div>
+    <%= link_to(t('layout.about'), 'http://getelmo.org') %>
   </div>
   
   <%# insert any audio objects at the end %>

@@ -25,12 +25,8 @@
     this.report_view = new ns.ReportView(this, this.report_in_db);
     
     // create edit view if applicable
-    if (!init_data.read_only) {
+    if (!init_data.read_only)
       this.edit_view = new ns.EditView(this.menus, this.options, this);
-    
-      // update the links
-      this.edit_view.show_hide_edit_links(this.report_in_db);
-    }
     
     // if is new record, show dialog first page
     if (!this.report_in_db.has_run())
@@ -109,7 +105,7 @@
     this.report_view.update(report);
     
     // show/hide the export link if there is no data or an error
-    $("a#csv_link")[report.has_errors() || report.no_data() ? "hide" : "show"]();
+    $("a#csv_link")[report.has_errors() || report.attribs.empty ? "hide" : "show"]();
   }
   
   klass.prototype.restore_view = function() {

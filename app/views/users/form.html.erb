@@ -15,7 +15,7 @@
   <%= form_field(f, :phone2, :size => 20) %>
   <%= form_field(f, :admin, :type => :check_box) if can?(:adminify, @user) && admin_mode? %>
   
-  <% if can?(@user.new_record? ? :create : :update, @user) %>
+  <% if can?(:change_assignments, @user) %>
     <%# field name depends on whether we're in admin mode or not. under the hood it's all the same though %>
     <%= form_field(f, admin_mode? ? :assignments : :role, :partial => "assignments") %>
   <% end %>

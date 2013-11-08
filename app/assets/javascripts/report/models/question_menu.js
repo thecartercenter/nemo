@@ -13,7 +13,7 @@
   klass.prototype.parent = ns.ObjectMenu.prototype;
   
   
-  // filter questions by calc_type, form_ids, and question_types
+  // filter questions by calc_type, form_ids, question_types, and geographic
   klass.prototype.filter = function(options) {
     var o = [];
     
@@ -35,6 +35,7 @@
     
     // build cache key
     var cache_key = options.calc_type + "|" + options.form_ids.join(",") + "|" + options.question_types.join(",");
+    if (options.geographic !== undefined) cache_key += "|" + (options.geographic ? 'geo' : 'nogeo');
     
     // try the cache
     if (this.cache[cache_key])
@@ -52,6 +53,10 @@
         
       // question must appear on one of the given forms
       if (options.form_ids.length > 0 && Sassafras.Utils.intersect(this.objs[i].form_ids, options.form_ids).length == 0)
+        continue;
+
+      // respect the geographic option
+      if (options.geographic !== undefined && this.objs[i]['geographic?'] !== options.geographic)
         continue;
       
       // if we get this far, we can push  

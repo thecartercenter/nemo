@@ -31,21 +31,27 @@
   }
   
   klass.prototype.render = function() {
+    // clear out info bar
+    $(".report_info").empty();
+
     // if no matching data, show message
-    if (this.report.no_data()) {
-      $(".report_info").empty();
+    if (this.report.attribs.empty) {
       $(".report_body").html(I18n.t("report/report.no_match"))
+
     } else {
+      // add the generated date/time to info bar
+      $('<div>').append(I18n.t('report/report.generated_at') + ' ' + this.report.attribs.generated_at).appendTo($(".report_info"));
+
       // create an appropriate Display class based on the display_type
-      switch (this.report.attribs.display_type) {
-        case "bar_chart":
-          this.display = new ns.BarChartDisplay(this.report);
-          break;
-        default:
-          this.display = new ns.TableDisplay(this.report);
-          break;
-      }
-    
+      if (this.report.attribs.type == "Report::StandardFormReport")
+        this.display = new ns.FormSummaryDisplay(this.report);
+      
+      else if (this.report.attribs.display_type == 'bar_chart')
+        this.display = new ns.BarChartDisplay(this.report);
+      
+      else
+        this.display = new ns.TableDisplay(this.report);
+
       this.display.render();
     }
   }
@@ -65,7 +71,7 @@
   // hookup link events
   klass.prototype.hookup_links = function() {
     var _this = this;
-    $(".report_links a").click(function() { _this.controller.show_edit_view(parseInt(this.id.match(/_(\d+)$/)[1])); return false; })
+    $(".report_top_links a#edit_link").click(function() { _this.controller.show_edit_view(1); return false; })
   }
   
 }(ELMO.Report));

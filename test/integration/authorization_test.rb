@@ -40,6 +40,33 @@ class AuthorizationTest < ActionDispatch::IntegrationTest
     @form2 = FactoryGirl.create(:form, :mission_id => @other_mission.id)
     assert_can_access(@user, forms_path)
   end
+
+  test "observer can update own name" do
+    user = FactoryGirl.create(:user, :role_name => :observer, :name => 'foo')
+    login(user)
+    put(user_path(user), :user => {:name => 'bar'})
+    assert_response(302) # redirected
+    assert_equal('bar', user.reload.name)
+  end
+
+  test "observer cant update own role" do
+    user = FactoryGirl.create(:user, :role_name => :observer)
+    login(user)
+    assignments_attributes = user.assignments.first.attributes.slice(*%w(id mission_id)).merge('role' => 'staffer')
+    put(user_path(user), :user => {:assignments_attributes => [assignments_attributes]})
+    assert_equal(true, assigns(:access_denied))
+    assert_equal('observer', user.reload.assignments.first.role)
+  end
+
+  test "coordinator can update role of user in same mission" do
+    coord = FactoryGirl.create(:user, :role_name => :coordinator)
+    obs = FactoryGirl.create(:user, :role_name => :observer)
+    login(coord)
+    assignments_attributes = obs.assignments.first.attributes.slice(*%w(id mission_id)).merge('role' => 'staffer')
+    put(user_path(obs), :user => {:assignments_attributes => [assignments_attributes]})
+    assert_nil(assigns(:access_denied))
+    assert_equal('staffer', obs.reload.assignments.first.role)
+  end
   
   private
     # logs in a user and attempts to load the given path

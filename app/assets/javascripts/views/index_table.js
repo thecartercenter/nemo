@@ -14,7 +14,8 @@
       $('table.index_table tbody').on('click', 'tr', function(e) {
         // go to the tr's href if the click was on a non-active element
         // but don't do it with td.actions_col or td.actions_col > div to avoid misclick
-        if ($(e.target).is('div:not(.actions_col > div), td:not(.actions_col)'))
+        // also don't do it if no clickable
+        if ($(e.target).is('div:not(.actions_col > div), td:not(.actions_col)') && $(e.currentTarget).is(':clickable'))
           window.location.href = $(e.currentTarget).data('href'); 
       });
   }

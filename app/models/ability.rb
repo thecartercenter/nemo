@@ -113,7 +113,7 @@ class Ability
         # coordinator abilities
         if user.role?(:coordinator)
           # can manage users in current mission
-          can [:create, :update, :login_instructions], User, :assignments => {:mission_id => user.current_mission_id}
+          can [:create, :update, :login_instructions, :change_assignments], User, :assignments => {:mission_id => user.current_mission_id}
           can :assign_to, Mission, :id => user.current_mission_id
         
           # can create user batches
@@ -191,6 +191,12 @@ class Ability
     # we need these specialized permissions because option names/hints are updated via option set
     cannot [:update_core, :add_options, :remove_options, :reorder_options], OptionSet do |o| 
       o.standard_copy? || o.published?
+    end
+
+    # the geographic option is used only for reporting so doesnt matter if published, etc.
+    # only matters if standard_copy, b/c the value does get copied on replication
+    cannot :change_geographic, OptionSet do |o|
+      o.standard_copy?
     end
 
     cannot :destroy, OptionSet do |o|

@@ -24,7 +24,7 @@
     this.pri = new ns.FieldSelector($(".primary.field_selector"), this.menus);
     this.sec = new ns.FieldSelector($(".secondary.field_selector"), this.menus);
     
-    this.attribs_to_watch = {report_type: true, form_selection: true};
+    this.attribs_to_watch = {report_type: true, tally_type: true, form_selection: true};
   }
   
   klass.prototype.update = function(report) {

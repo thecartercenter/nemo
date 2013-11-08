@@ -28,6 +28,6 @@ class OptionTest < ActiveSupport::TestCase
 
     # should be two suggestions: Foo, and the new option one
     assert_equal(2, s.size)
-    assert(s.any?{|o| o[:name] == 'Foo'})
+    assert(s.any?{|o| o.name == 'Foo'})
   end
 end

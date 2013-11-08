@@ -51,6 +51,9 @@ class UsersController < ApplicationController
     
     # otherwise this is a normal update
     else
+      # make sure changing assignment role is permitted if attempting
+      authorize!(:change_assignments, @user) if params[:user]['assignments_attributes']
+
       # try to save
       if @user.update_attributes(params[:user])
 
@@ -129,7 +132,7 @@ class UsersController < ApplicationController
     # builds a user with an appropriate mission assignment if the current_user doesn't have permission to edit a blank user
     def build_user_with_proper_mission
       @user = User.new(params[:user])
-      if current_user.cannot?(:create, @user) && @user.assignments.empty?
+      if cannot?(:create, @user) && @user.assignments.empty?
         @user.assignments.build(:mission => current_mission, :active => true)
       end
     end

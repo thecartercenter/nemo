@@ -10,6 +10,17 @@
   // called when data first received
   klass.prototype.prepare = function() {
     this.extract_form_ids_from_filter_str();
+
+    // set tally type/report type, if report type is a tally report
+    if (this.attribs.type == 'Report::QuestionAnswerTallyReport') {
+      this.attribs.type = 'Report::TallyReport';
+      this.attribs.tally_type = 'QuestionAnswer';
+    } else if (this.attribs.type == 'Report::GroupedTallyReport') {
+      this.attribs.type = 'Report::TallyReport';
+      this.attribs.tally_type = 'Grouped';
+    }
+
+    this.attribs.disaggregate = this.attribs.disagg_question_id != null;
   }
   
   klass.prototype.clone = function() {
@@ -21,14 +32,10 @@
     return !this.attribs.new_record;
   }
   
-  // checks if the report has data or not
-  klass.prototype.no_data = function() {
-    return this.attribs.data.rows.length == 0;
-  }
-
   // checks if the report has errors or not
   klass.prototype.has_errors = function() {
-    return !!this.attribs.errors;
+    // Rails errors converts to json as {} if no errors
+    return !this.attribs.errors || Object.keys(this.attribs.errors).length > 0;
   }
   
   // scans through all calculations and returns an array of question ids
@@ -44,7 +51,7 @@
   klass.prototype.set_calculations_by_question_ids = function(qids) {
     var _this = this;
     
-    if (this.attribs.type != "Report::QuestionAnswerTallyReport") return;
+    if (this.attribs.tally_type != "QuestionAnswer") return;
     
     // calculations to empty array if not exist
     this.attribs.calculations_attributes = this.attribs.calculations_attributes || [];
@@ -143,11 +150,19 @@
     self.fix_calculation_ranks();
 
     var to_serialize = {}
-    $(["type", "name", "display_type", "percent_type", "bar_style", "question_labels", "calculations_attributes"]).each(function(){
+    $(["type", "name", "form_id", "display_type", "percent_type", "bar_style", "question_order", 
+        "question_labels", "text_responses", "calculations_attributes", "disagg_question_id"]).each(function(){
       to_serialize[this] = (typeof(self.attribs[this]) == "undefined" || self.attribs[this] == null) ? "" : self.attribs[this];
     });
-    
-    if (this.attribs.type == "Report::QuestionAnswerTallyReport")
+
+    // calc attribs must be an array
+    if (to_serialize['calculations_attributes'] == '') to_serialize['calculations_attributes'] = [];
+
+    // adjust type if tally report
+    if (to_serialize['type'] == 'Report::TallyReport')
+      to_serialize['type'] = 'Report::' + this.attribs.tally_type + 'TallyReport';
+
+    if (this.attribs.tally_type == "QuestionAnswer")
       to_serialize.option_set_choices_attributes = self.attribs.option_set_choices_attributes;
     
     // filter params
@@ -192,12 +207,24 @@
     if (!this.attribs.type)
       this.errors.add("type", I18n.t("activerecord.errors.models.report/report.attributes.type.blank"));
 
+    // form_id, text_responses, and question_order should be non-null if type is std form report
+    if (this.attribs.type == 'Report::StandardFormReport' && !this.attribs.form_id)
+      this.errors.add("form_id", I18n.t("activerecord.errors.models.report/report.attributes.form_id.blank"));
+    if (this.attribs.type == 'Report::StandardFormReport' && !this.attribs.question_order)
+      this.errors.add("question_order", I18n.t("activerecord.errors.models.report/report.attributes.question_order.blank"));
+    if (this.attribs.type == 'Report::StandardFormReport' && !this.attribs.text_responses)
+      this.errors.add("text_responses", I18n.t("activerecord.errors.models.report/report.attributes.text_responses.blank"));
+
+    // tally type should be non-null if type is tallyreport
+    if (this.attribs.type == 'Report::TallyReport' && !this.attribs.tally_type)
+      this.errors.add("tally_type", I18n.t("activerecord.errors.models.report/report.attributes.tally_type.blank"));
+
     // title
     if (!this.attribs.name.match(/\w+/))
       this.errors.add("name", I18n.t("activerecord.errors.models.report/report.attributes.name.blank"));
 
     // question/option_set
-    if (this.attribs.type == "Report::QuestionAnswerTallyReport" 
+    if (this.attribs.tally_type == "QuestionAnswer"
       && this.count_not_to_be_destroyed(this.attribs.calculations_attributes) == 0 
       && this.count_not_to_be_destroyed(this.attribs.option_set_choices_attributes) == 0)
         this.errors.add("questions", I18n.t("activerecord.errors.models.report/report.attributes.questions.blank"));

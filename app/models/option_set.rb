@@ -182,6 +182,14 @@ class OptionSet < ActiveRecord::Base
     optionings.any?(&:marked_for_destruction?)
   end
 
+  def as_json(options = {})
+    if options[:for_option_set_form]
+      {:optionings => optionings.as_json(:for_option_set_form => true)}
+    else
+      super(options)
+    end
+  end
+
   private
     # makes sure that the options in the set have sequential ranks starting at 1. 
     # if not, fixes them.

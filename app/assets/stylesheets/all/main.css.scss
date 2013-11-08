@@ -79,7 +79,7 @@ table.index_table th, table.form th { text-align: left; color: #444; background-
     font-size: 90%; padding: 3px 10px 3px 3px; }
 table.index_table td { border-bottom: 1px solid #ddd; padding: 6px 10px 6px 3px; }
 table.index_table td.actions_col img { margin-right: 5px; }
-table.index_table tbody tr { cursor: pointer; }
+table.index_table tbody tr.clickable { cursor: pointer; }
 table.index_table tbody tr:hover { background-color: #f4f4ff; }
 td.actions_col { white-space: nowrap; }
 div.loading_indicator_inline { width: 16px; display: inline; }
@@ -114,21 +114,6 @@ form.search_form #search_examples { margin-top: 2px; color: #666; }
 
 /* login form */
 .user_sessions_new .form_buttons { margin-bottom: 10px; }
-
-/* welcome */
-.welcome_index div.block { display: inline-block; background-color: #eee; width: 150px; height: 250px; padding: 10px; margin: 0 15px 15px 0; vertical-align: top; }
-.welcome_index div.block img { display: block; border: none; }
-.welcome_index div.block a { text-decoration: none; }
-.welcome_index div.block a.title, .welcome_index div.block a.subtitle { display: block; color: #666; 
-  font-weight: bold; text-transform: uppercase; }
-.welcome_index div.block a.title { font-size: 18pt; }
-.welcome_index div.block a.subtitle { font-size: 10pt; }
-.welcome_index div.block ul { list-style-type: none; padding: 0; }
-.welcome_index div.block li { line-height: 17px; }
-.welcome_index div.block li small { color: #888; font-size: 8pt; }
-.welcome_index div.block li strong { font-style: normal; font-size: 12pt; font-weight: bold; }
-.welcome_index div.block select { width: 140px; }
-.welcome_index div.block input { font-size: 8pt; width: 30px; }
 
 /* place map */
 #map_canvas { width: 600px; height: 400px; }
@@ -265,25 +250,6 @@ form.user_batch_form {
     }
   }
 }
-
-/* report index */
-.report_reports_index .title_col { min-width: 200px; }
-
-/* report info & body */
-div.report_info div { display: inline-block; border-left: 1px solid #ccc; padding: 0 10px; }
-div.report_info div:first-child { border: none; padding-left: 0; }
-div.report_body div#row_count { margin-bottom: 5px; }
-div.report_body table td, div.report_body table th { padding: 2px; border: 1px solid #ddd; }
-div.report_body table td.string { text-align: left; }
-div.report_body table td.number { text-align: right; }
-div.report_body table th { font-size: 90%; background-color: #eee; padding: 2px 5px 2px 2px; }
-div.report_body table td { background-color: white; }
-div.report_body table th.col { text-align: left;  }
-div.report_body table th.row { text-align: left; white-space: nowrap; }
-div.report_body table td.row_total, div.report_body table td.col_total { background-color: #eee; }
-div.report_body th.row_grouping_label, div.report_body th.col_grouping_label { color: #888; font-weight: normal; }
-div.report_body th.row_grouping_label > div { margin-left: 3px; overflow: hidden; }
-div.report_body th.col_grouping_label { text-align: center; }
 
 /* location picker */
 div.location_picker { width: 900px; height: 500px; }

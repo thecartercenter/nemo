@@ -1,5 +1,15 @@
 # contains methods common to all tally reports
 class Report::TallyReport < Report::Report
+  include Report::LegacyReport
+
+  def as_json(options = {})
+    h = super(options)
+    h[:data] = @data
+    h[:headers] = @header_set ? @header_set.headers : {}
+    h[:can_total] = can_total?
+    h
+  end
+
   protected
     # extracts the row header values from the db_result object
     def get_row_header

@@ -229,6 +229,7 @@ module ApplicationHelper
   # pluralizes an activerecord model name
   # assumes 2 if count not given in options
   def pluralize_model(klass, options = {})
+    klass = klass.constantize if klass.is_a?(String)
     t("activerecord.models.#{klass.model_name.i18n_key}", :count => options[:count] || 2)
   end
   

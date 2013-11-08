@@ -1,0 +1,13 @@
+.welcome_index div.block { display: inline-block; background-color: #eee; width: 150px; height: 250px; padding: 10px; margin: 0 15px 15px 0; vertical-align: top; }
+.welcome_index div.block img { display: block; border: none; }
+.welcome_index div.block a { text-decoration: none; }
+.welcome_index div.block a.title, .welcome_index div.block a.subtitle { display: block; color: #666; 
+  font-weight: bold; text-transform: uppercase; }
+.welcome_index div.block a.title { font-size: 18pt; }
+.welcome_index div.block a.subtitle { font-size: 10pt; }
+.welcome_index div.block ul { list-style-type: none; padding: 0; }
+.welcome_index div.block li { line-height: 17px; }
+.welcome_index div.block li small { color: #888; font-size: 8pt; }
+.welcome_index div.block li strong { font-style: normal; font-size: 12pt; font-weight: bold; }
+.welcome_index div.block select { width: 140px; }
+.welcome_index div.block input { font-size: 8pt; width: 30px; }

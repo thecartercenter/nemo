@@ -62,8 +62,8 @@ module ELMO
     # regular expressions
     configatron.lat_lng_regexp = /^(-?\d+(\.\d+)?)\s*[,;:\s]\s*(-?\d+(\.\d+)?)/
     
-    # SMS broadcast settings (used to be [TCC] but the [ was getting corrupted on IntelliSms)
-    configatron.broadcast_tag = "|TCC|"
+    # a short tag that starts smses and email subjects for broadcasts
+    configatron.broadcast_tag = "[TCC]"
     
     # locales with full translations (I18n.available_locales returns a whole bunch more defined by i18n-js)
     configatron.full_locales = [:en, :fr]
