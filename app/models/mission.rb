@@ -12,21 +12,21 @@ class Mission < ActiveRecord::Base
   has_many(:optionings, :inverse_of => :mission, :dependent => :destroy)
   has_many(:option_sets, :inverse_of => :mission, :dependent => :destroy)
   has_one(:setting, :inverse_of => :mission, :dependent => :destroy)
-  
+
   before_validation(:create_compact_name)
   before_create(:ensure_setting)
   before_destroy(:check_associations)
-  
+
   validates(:name, :presence => true)
   validates(:name, :format => {:with => /^[a-z][a-z0-9 ]*$/i, :message => :let_num_spc_only},
                    :length => {:minimum => 3, :maximum => 32},
                    :if => Proc.new{|m| !m.name.blank?})
   validate(:compact_name_unique)
-  
+
   scope(:sorted_by_name, order("name"))
   scope(:sorted_recent_first, order("created_at DESC"))
   scope(:active_for_user, lambda{|u| where("missions.id IN (SELECT mission_id FROM assignments WHERE user_id = ? AND active = 1)", u.id)})
-  
+
   # checks to make sure there are no associated objects.
   def check_associations
     to_check = [:assignments, :responses, :forms, :report_reports, :questions, :broadcasts]
@@ -37,19 +37,19 @@ class Mission < ActiveRecord::Base
   def to_s
     "#{id}(#{compact_name})"
   end
-  
+
   private
     def create_compact_name
       self.compact_name = name.gsub(" ", "").downcase
       return true
     end
-    
+
     def compact_name_unique
       if !name.blank? && matching = (self.class.where(:compact_name => compact_name).all - [self]).first
         errors.add(:name, :not_unique, :existing => matching.name)
       end
     end
-    
+
     # creates an accompanying settings object composed of defaults, unless one exists
     def ensure_setting
       self.setting ||= Setting.build_default(self)

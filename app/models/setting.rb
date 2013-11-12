@@ -3,7 +3,7 @@ class Setting < ActiveRecord::Base
 
   # attribs to copy to configatron
   KEYS_TO_COPY = %w(timezone preferred_locales intellisms_username intellisms_password isms_hostname isms_username isms_password incoming_sms_number)
-  
+
   # these are the keys that make sense in admin mode
   ADMIN_MODE_KEYS = %w(timezone preferred_locales)
 
@@ -11,7 +11,7 @@ class Setting < ActiveRecord::Base
 
   scope(:by_mission, lambda{|m| where(:mission_id => m ? m.id : nil)})
   scope(:default, where(DEFAULTS))
-  
+
   before_validation(:cleanup_locales)
   before_validation(:nullify_fields_if_these_are_admin_mode_settings)
   validate(:locales_are_valid)
@@ -19,12 +19,12 @@ class Setting < ActiveRecord::Base
   validate(:sms_adapter_is_valid)
   validate(:sms_credentials_are_valid)
   before_save(:save_sms_passwords)
-  
+
   serialize :preferred_locales, JSON
-  
+
   # accessors for password/password confirm fields
   attr_accessor :intellisms_password1, :intellisms_password2, :isms_password1, :isms_password2
-  
+
   # loads the settings for the given mission (or nil mission/admin mode) into the configatron store
   # if the settings can't be found, a default setting is created and saved before being loaded
   def self.load_for_mission(mission)
@@ -46,7 +46,7 @@ class Setting < ActiveRecord::Base
     return setting
   end
 
-  # builds and returns (but doesn't save) a default Setting object 
+  # builds and returns (but doesn't save) a default Setting object
   # by using the defaults specified in this file and those specified in the local config
   # mission may be nil.
   def self.build_default(mission = nil)
@@ -54,13 +54,13 @@ class Setting < ActiveRecord::Base
     setting = by_mission(mission).default.new
 
     # copy default_settings from configatron
-    configatron.default_settings.configatron_keys.each do |k| 
+    configatron.default_settings.configatron_keys.each do |k|
       setting.send("#{k}=", configatron.default_settings.send(k)) if setting.respond_to?("#{k}=")
     end
-    
+
     setting
   end
-  
+
   # copies this setting to configatron
   def load
     # build hash
@@ -72,56 +72,56 @@ class Setting < ActiveRecord::Base
     rescue ArgumentError
       nil
     end
-    
+
     # set system timezone
     Time.zone = timezone
 
     # copy to configatron
     configatron.configure_from_hash(hsh)
   end
-  
+
   # converts preferred_locales to a comma delimited string
   def preferred_locales_str
     (preferred_locales || []).join(',')
   end
-  
+
   # reverse of self.lang_codes
   def preferred_locales_str=(codes)
     self.preferred_locales = (codes || '').split(',')
   end
-  
+
   # converts preferred locales to symbols on read
   def preferred_locales
     read_attribute('preferred_locales').map(&:to_sym)
   end
-  
+
   private
-  
+
     # gets rid of any junk chars in locales
     def cleanup_locales
       self.preferred_locales = preferred_locales.map{|l| l.to_s.downcase.gsub(/[^a-z]/, "")[0,2]}
       return true
     end
-    
+
     # makes sure all language codes are valid ISO639 codes
     def locales_are_valid
       preferred_locales.each do |l|
         errors.add(:preferred_locales_str, :invalid_code, :code => l) unless ISO_639.find(l.to_s)
       end
     end
-    
+
     # makes sure at least one of the chosen locales is an available locale
     def one_locale_must_have_translations
       if (preferred_locales & configatron.full_locales).empty?
         errors.add(:preferred_locales_str, :one_must_have_translations, :locales => configatron.full_locales.join(","))
       end
     end
-    
+
     # sms adapter can be blank or must be valid according to the Factory
     def sms_adapter_is_valid
       errors.add(:outgoing_sms_adapter, :is_invalid) unless outgoing_sms_adapter.blank? || Sms::Adapters::Factory.name_is_valid?(outgoing_sms_adapter)
     end
-    
+
     # checks that the provided credentials are valid
     def sms_credentials_are_valid
       case outgoing_sms_adapter
@@ -136,7 +136,7 @@ class Setting < ActiveRecord::Base
         # if there is no adapter then don't need to check anything
       end
     end
-    
+
     # if the sms password temp fields are set (and they match, which is checked above), copy the value to the real field
     def save_sms_passwords
       unless outgoing_sms_adapter.blank?

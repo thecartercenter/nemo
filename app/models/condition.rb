@@ -7,17 +7,17 @@ class Condition < ActiveRecord::Base
   belongs_to(:questioning, :inverse_of => :condition)
   belongs_to(:ref_qing, :class_name => "Questioning", :foreign_key => "ref_qing_id", :inverse_of => :referring_conditions)
   belongs_to(:option)
-  
+
   before_validation(:clear_blanks)
   before_validation(:clean_times)
   before_create(:set_mission)
- 
+
   validate(:all_fields_required)
   validates(:questioning, :presence => true)
 
   delegate :qtype, :form, :to => :questioning, :allow_nil => true
   delegate :has_options?, :select_options, :qtype, :rank, :to => :ref_qing, :prefix => :ref_question, :allow_nil => true
-    
+
   OPS = [
     {:name => :eq, :types => %w(decimal integer text long_text address select_one datetime date time), :code => "="},
     {:name => :lt, :types => %w(decimal integer datetime date time), :code => "<"},
@@ -27,20 +27,20 @@ class Condition < ActiveRecord::Base
     {:name => :neq, :types => %w(decimal integer text long_text address select_one datetime date time), :code => "!="},
     {:name => :inc, :types => %w(select_multiple), :code => "="},
     {:name => :ninc, :types => %w(select_multiple), :code => "!="}
-  ]     
+  ]
 
   replicable :after_copy_attribs => :copy_ref_qing_and_option, :parent_assoc => :questioning, :dont_copy => [:ref_qing_id]
-  
+
   # all questionings that can be referred to by this condition
   def refable_qings
     questioning ? questioning.previous.reject{|qing| %w[location].include?(qing.question.qtype.name)} : []
   end
-  
+
   # all questionings that can be referred to by this condition
   def refable_qings
     questioning.previous.reject{|qing| NON_REFABLE_TYPES.include?(qing.qtype_name)}
   end
- 
+
   # all referrable proto_questionings that have options
   def refable_qings_with_options
     refable_qings.reject{|qing| qing.options.nil?}
@@ -69,12 +69,12 @@ class Condition < ActiveRecord::Base
   def verify_ordering
     raise ConditionOrderingError.new if questioning.rank <= ref_qing.rank
   end
-  
+
   # gets the hash from the OPS array corresponding to self's operator
   def operator
     @operator ||= OPS.index_by{|o| o[:name]}[op.to_sym]
   end
-  
+
   # returns all known operators
   def operators
     OPS
@@ -90,28 +90,28 @@ class Condition < ActiveRecord::Base
 
     else
       # for numeric ref. questions, just convert value to string to get rhs
-      if ref_question_qtype.numeric? 
+      if ref_question_qtype.numeric?
         rhs = value.to_s
-      
+
       # for temporal ref. questions, need to convert dates to appropriate format
       elsif ref_question_qtype.temporal?
-        
+
         # get xpath compatible date type name
         date_type = ref_question_qtype.name.gsub("datetime", "dateTime")
         format = :"javarosa_#{date_type.downcase}"
         formatted = Time.zone.parse(value).to_s(format)
         lhs = "format-date(#{lhs}, '#{Time::DATE_FORMATS[format]}')"
         rhs = "'#{formatted}'"
-        
+
       # otherwise just quoted string
       else
         rhs = "'#{value}'"
       end
-      
+
       # build the final xpath expression
       xpath = "#{lhs} #{operator[:code]} #{rhs}"
     end
-    
+
     return xpath
   end
 
@@ -119,7 +119,7 @@ class Condition < ActiveRecord::Base
     words = I18n.t(op, :scope => [:condition, :operators])
     "#{Question.model_name.human} ##{ref_question_rank} #{words} \"#{option ? option.name : value}\""
   end
-  
+
   # if options[:dropdown_values] is included, adds a series of lists of values for use with form dropdowns
   def as_json(options = {})
     fields = %w(questioning_id ref_qing_id op value option_id)
@@ -127,7 +127,7 @@ class Condition < ActiveRecord::Base
     Hash[*fields.map{|k| [k, send(k)]}.flatten(1)]
   end
 
-  private 
+  private
     def clear_blanks
       # catch errors in case hash is frozen
       begin
@@ -137,13 +137,13 @@ class Condition < ActiveRecord::Base
       end
       return true
     end
-    
+
     # parses and reformats time strings given as conditions
     def clean_times
       if ref_qing && !value.blank?
         begin
           # reformat only if it's a temporal question
-          self.value = Time.zone.parse(value).to_s(:"std_#{ref_question_qtype.name}") if ref_question_qtype.temporal? 
+          self.value = Time.zone.parse(value).to_s(:"std_#{ref_question_qtype.name}") if ref_question_qtype.temporal?
         rescue
           # reset to nil if error in parsing
           # catch additional error incase frozen hash
@@ -152,7 +152,7 @@ class Condition < ActiveRecord::Base
       end
       return true
     end
-    
+
     def all_fields_required
       if ref_qing.blank? || op.blank? || ref_question_has_options? && option.blank? || !ref_question_has_options? && value.blank?
         errors.add(:base, :all_required)

@@ -9,7 +9,7 @@ module MissionBased
   def self.included(base)
     # ruby idiom to activate class methods
     base.extend(ClassMethods)
-    
+
     # add scope
     base.class_eval do
 
@@ -21,7 +21,7 @@ module MissionBased
       # mission can be nil
       scope(:for_mission, lambda{|m| where(:mission_id => m.try(:id))})
     end
-    
+
     # checks if this object is unique in the mission according to the attrib given by attrib_name
     def unique_in_mission?(attrib_name)
       rel = self.class.for_mission(mission).where(attrib_name => send(attrib_name))
