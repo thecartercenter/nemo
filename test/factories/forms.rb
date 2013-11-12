@@ -6,11 +6,11 @@ FactoryGirl.define do
       # optionally specifies the options for the option set of the first select type question on the form
       option_names nil
     end
-    
+
     mission { is_standard ? nil : get_mission }
 
     name {"some form #{rand(1000000)}"}
-    
+
     questionings do
       found_select = false
       question_types.each_with_index.map do |qt, idx|

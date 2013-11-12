@@ -1,14 +1,14 @@
 class MissionsController < ApplicationController
   # authorization via cancan
   load_and_authorize_resource
-  
+
   def index
   end
-  
+
   def new
     render(:form)
   end
-  
+
   def show
     render(:form)
   end
@@ -16,7 +16,7 @@ class MissionsController < ApplicationController
   def edit
     render(:form)
   end
-  
+
   def create
     begin
       @mission.save!
@@ -25,7 +25,7 @@ class MissionsController < ApplicationController
       render(:form)
     end
   end
-  
+
   def update
     begin
       @mission.update_attributes!(params[:mission])

@@ -1,6 +1,6 @@
 class Question < ActiveRecord::Base
   include MissionBased, FormVersionable, Translatable, Standardizable, Replicable
-  
+
   # this needs to be up here other wise it runs /after/ the children are destroyed
   before_destroy(:check_assoc)
 
@@ -30,7 +30,7 @@ class Question < ActiveRecord::Base
   # - form_published returns 1 if any associated forms are published, 0 or nil otherwise
   # - standard_copy_form_id returns a std copy form id associated with the question if available, or nil if there are none
   scope(:with_assoc_counts, select(%{
-      questions.*, 
+      questions.*,
       COUNT(DISTINCT answers.id) AS answer_count_col,
       COUNT(DISTINCT forms.id) AS form_count_col,
       MAX(DISTINCT forms.published) AS form_published,
@@ -46,25 +46,25 @@ class Question < ActiveRecord::Base
       LEFT OUTER JOIN forms copy_forms ON copy_forms.id = copy_questionings.form_id
       LEFT OUTER JOIN answers copy_answers ON copy_answers.questioning_id = copy_questionings.id
     }).group('questions.id'))
-  
+
   translates :name, :hint
-  
+
   delegate :smsable?, :has_options?, :to => :qtype
   delegate :geographic?, :to => :option_set, :allow_nil => true
 
   replicable :child_assocs => :option_set, :parent_assoc => :questioning, :uniqueness => {:field => :code, :style => :camel_case}, :dont_copy => :key,
     :user_modifiable => [:name_translations, :_name, :hint_translations, :_hint]
-  
+
   # returns questions that do NOT already appear in the given form
   def self.not_in_form(form)
     scoped.where("(questions.id not in (select question_id from questionings where form_id='#{form.id}'))")
   end
-  
+
   # returns N questions marked as key questions, sorted by the number of forms they appear in
   def self.key(n)
     where(:key => true).all.sort_by{|q| q.questionings.size}[0...n]
   end
-  
+
   # returns the question type object associated with this question
   def qtype
     QuestionType[qtype_name]
@@ -73,7 +73,7 @@ class Question < ActiveRecord::Base
   def options
     option_set ? option_set.options : nil
   end
-  
+
   def select_options
     (opt = options) ? opt.collect{|o| [o.name, o.id]} : []
   end
@@ -133,12 +133,12 @@ class Question < ActiveRecord::Base
     exps << ". #{maxstrictly ? '<' : '<='} #{maximum}" if maximum
     "(" + exps.join(" and ") + ")"
   end
-  
+
   # shortcut method for tests
   def qing_ids
     questionings.collect{|qing| qing.id}
   end
-  
+
   def min_max_error_msg
     return nil unless minimum || maximum
     clauses = []
@@ -146,7 +146,7 @@ class Question < ActiveRecord::Base
     clauses << I18n.t("question.maxmin.lt") + " " + (maxstrictly ? "" : I18n.t("question.maxmin.or_eq") + " " ) + maximum.to_s if maximum
     I18n.t("layout.must_be") + " " + clauses.join(" " + I18n.t("common.and") + " ")
   end
-  
+
   # returns sorted list of form ids related to this form
   def form_ids
     forms.collect{|f| f.id}.sort
@@ -170,7 +170,7 @@ class Question < ActiveRecord::Base
 
     def integrity
       # error if type or option set have changed and there are answers or conditions
-      if (qtype_name_changed? || option_set_id_changed?) 
+      if (qtype_name_changed? || option_set_id_changed?)
         if !answers.empty?
           errors.add(:base, :cant_change_if_responses)
         elsif !referring_conditions.empty?

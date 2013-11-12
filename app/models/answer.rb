@@ -8,18 +8,18 @@ class Answer < ActiveRecord::Base
   belongs_to(:option, :inverse_of => :answers)
   belongs_to(:response, :inverse_of => :answers, :touch => true)
   has_many(:choices, :dependent => :destroy, :inverse_of => :answer)
-  
+
   before_validation(:clean_locations)
   before_save(:round_ints)
   before_save(:blanks_to_nulls)
-  
+
   validates(:value, :numericality => true, :if => Proc.new{|a| a.qtype.numeric? && !a.value.blank?})
-  
+
   # in these custom validations, we add errors to the base, but we don't use full sentences (e.g. we use 'is required')
   # since this class really just represents one value
   validate(:min_max)
   validate(:required)
-  
+
   delegate :question, :to => :questioning
   delegate :qtype, :to => :question
 
@@ -39,10 +39,10 @@ class Answer < ActiveRecord::Base
     elsif ans.qtype.temporal?
       # parse the string into a time
       val = Time.zone.parse(str)
-      
+
       # convert the parsed time to the appropriate database format unless question is timezone sensitive
       val = val.to_s(:"db_#{ans.qtype.name}") unless ans.qtype.has_timezone?
-      
+
       # assign the value
       ans.send("#{ans.qtype.name}_value=", val)
     else
@@ -50,32 +50,32 @@ class Answer < ActiveRecord::Base
     end
     ans
   end
-  
+
   # gets all location answers for the given mission
   # returns only the response ID and the answer value
   def self.location_answers_for_mission(mission)
     find_by_sql([
       "SELECT r.id AS r_id, a.value AS loc
-      FROM answers a 
-        INNER JOIN responses r ON a.response_id = r.id 
-        INNER JOIN questionings qing ON a.questioning_id = qing.id 
-        INNER JOIN questions q ON qing.question_id = q.id 
+      FROM answers a
+        INNER JOIN responses r ON a.response_id = r.id
+        INNER JOIN questionings qing ON a.questioning_id = qing.id
+        INNER JOIN questions q ON qing.question_id = q.id
       WHERE q.qtype_name = 'location' AND a.value IS NOT NULL AND r.mission_id = ?",
       mission.id
     ])
   end
-  
+
   def choice_for(option)
     choice_hash[option]
   end
-  
+
   def choice_hash(options = {})
     if !@choice_hash || options[:rebuild]
       @choice_hash = {}; choices.each{|c| @choice_hash[c.option] = c}
     end
     @choice_hash
   end
-  
+
   def all_choices
     # for each option, if we have a matching choice, return it and set it's fake bit to true
     # otherwise create one and set its fake bit to false
@@ -88,11 +88,11 @@ class Answer < ActiveRecord::Base
       c
     end
   end
-  
+
   def all_choices=(params)
     # create a bunch of temp objects, discarding any unchecked choices
     submitted = params.values.collect{|p| p[:checked] == '1' ? Choice.new(p) : nil}.compact
-    
+
     # copy new choices into old objects, creating or deleting if necessary
     choices.compare_by_element(submitted, Proc.new{|c| c.option_id}) do |orig, subd|
       # if both exist, do nothing
@@ -103,9 +103,9 @@ class Answer < ActiveRecord::Base
       elsif orig.nil?
         choices << subd
       end
-    end  
+    end
   end
-  
+
   def question; questioning ? questioning.question : nil; end
   def rank; questioning.rank; end
   def required?; questioning.required?; end
@@ -113,12 +113,12 @@ class Answer < ActiveRecord::Base
   def question_name; question.name; end
   def question_hint; question.hint || ""; end
   def options; question.options; end
-  
+
   # relevant defaults to true until set otherwise
   def relevant?
     @relevant.nil? ? true : @relevant
   end
-  
+
   # convert to boolean
   def relevant=(r)
     @relevant = (r == "true")
@@ -126,7 +126,7 @@ class Answer < ActiveRecord::Base
 
   # alias
   def relevant; relevant?; end
-  
+
   # if this answer is for a location question and the value is not blank, returns a two element array representing the
   # lat long. else returns nil
   def location
@@ -148,7 +148,7 @@ class Answer < ActiveRecord::Base
     else value.blank? ? nil : value
     end
   end
-  
+
   # true if the casted_value is nil
   def nil_value?
     casted_value.nil?
@@ -157,21 +157,21 @@ class Answer < ActiveRecord::Base
   private
     def required
       if required? && !hidden? && relevant? && qtype.name != "select_multiple" &&
-        value.blank? && time_value.blank? && date_value.blank? && datetime_value.blank? && option_id.nil? 
+        value.blank? && time_value.blank? && date_value.blank? && datetime_value.blank? && option_id.nil?
           errors.add(:base, :required)
       end
     end
-    
+
     def round_ints
       self.value = value.to_i if qtype.name == "integer" && !value.blank?
       return true
     end
-    
+
     def blanks_to_nulls
       self.value = nil if value.blank?
       return true
     end
-    
+
     def min_max
       val_f = value.to_f
       if question.maximum && (val_f > question.maximum || question.maxstrictly && val_f == question.maximum) ||
@@ -179,7 +179,7 @@ class Answer < ActiveRecord::Base
         errors.add(:base, question.min_max_error_msg)
       end
     end
-    
+
     def clean_locations
       if qtype.name == "location" && !value.blank?
         if value.match(configatron.lat_lng_regexp)

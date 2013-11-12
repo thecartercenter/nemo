@@ -9,48 +9,48 @@ class OptionSet < ActiveRecord::Base
   has_many(:questions, :inverse_of => :option_set)
   has_many(:questionings, :through => :questions)
   has_many(:report_option_set_choices, :inverse_of => :option_set, :class_name => "Report::OptionSetChoice")
-  
+
   validates(:name, :presence => true)
   validate(:at_least_one_option)
   validate(:name_unique_per_mission)
-  
+
   before_validation(:normalize_fields)
   before_validation(:ensure_ranks)
   before_validation(:ensure_option_missions)
-  
+
   scope(:with_associations, includes(:questions, {:optionings => :option}, {:questionings => :form}))
 
   scope(:by_name, order('option_sets.name'))
   scope(:default_order, by_name)
   scope(:with_assoc_counts_and_published, lambda { |mission|
     select(%{
-      option_sets.*, 
+      option_sets.*,
       COUNT(DISTINCT answers.id) AS answer_count_col,
-      COUNT(DISTINCT questions.id) AS question_count_col, 
+      COUNT(DISTINCT questions.id) AS question_count_col,
       MAX(forms.published) AS published_col,
       COUNT(DISTINCT copy_answers.id) AS copy_answer_count_col,
-      COUNT(DISTINCT copy_questions.id) AS copy_question_count_col, 
+      COUNT(DISTINCT copy_questions.id) AS copy_question_count_col,
       MAX(copy_forms.published) AS copy_published_col
     }).
     joins(%{
-      LEFT OUTER JOIN questions ON questions.option_set_id = option_sets.id 
-      LEFT OUTER JOIN questionings ON questionings.question_id = questions.id 
+      LEFT OUTER JOIN questions ON questions.option_set_id = option_sets.id
+      LEFT OUTER JOIN questionings ON questionings.question_id = questions.id
       LEFT OUTER JOIN forms ON forms.id = questionings.form_id
       LEFT OUTER JOIN answers ON answers.questioning_id = questionings.id
       LEFT OUTER JOIN option_sets copies ON option_sets.is_standard = 1 AND copies.standard_id = option_sets.id
-      LEFT OUTER JOIN questions copy_questions ON copy_questions.option_set_id = copies.id 
-      LEFT OUTER JOIN questionings copy_questionings ON copy_questionings.question_id = copy_questions.id 
+      LEFT OUTER JOIN questions copy_questions ON copy_questions.option_set_id = copies.id
+      LEFT OUTER JOIN questionings copy_questionings ON copy_questionings.question_id = copy_questions.id
       LEFT OUTER JOIN forms copy_forms ON copy_forms.id = copy_questionings.form_id
       LEFT OUTER JOIN answers copy_answers ON copy_answers.questioning_id = copy_questionings.id
     }).group('option_sets.id')})
-  
+
   accepts_nested_attributes_for(:optionings, :allow_destroy => true)
-  
+
   self.per_page = 100
 
   # replication options
   replicable :child_assocs => :optionings, :parent_assoc => :question, :uniqueness => {:field => :name, :style => :sep_words}
-  
+
   # checks if this option set appears in any smsable questionings
   def form_smsable?
     questionings.any?(&:form_smsable?)
@@ -95,7 +95,7 @@ class OptionSet < ActiveRecord::Base
   # or in the case of a standard option set, answers to questions that use copies of this option set
   # uses method from special eager loaded scope if available
   def has_answers?
-    if is_standard? 
+    if is_standard?
       respond_to?(:copy_answer_count_col) ? (copy_answer_count_col || 0) > 0 : copies.any?{|c| c.questionings.any?(&:has_answers?)}
     else
       respond_to?(:answer_count_col) ? (answer_count_col || 0) > 0 : questionings.any?(&:has_answers?)
@@ -106,7 +106,7 @@ class OptionSet < ActiveRecord::Base
   # or in the case of a standard option set, answers to questions that use copies of this option set
   # uses method from special eager loaded scope if available
   def answer_count
-    if is_standard? 
+    if is_standard?
       respond_to?(:copy_answer_count_col) ? copy_answer_count_col || 0 : copies.inject?(0){|sum, c| sum += c.answer_count}
     else
       respond_to?(:answer_count_col) ? answer_count_col || 0 : questionings.inject(0){|sum, q| sum += q.answers.count}
@@ -118,11 +118,11 @@ class OptionSet < ActiveRecord::Base
     # make sure there is an associated answer object for each questioning in the form
     options.collect{|o| optioning_for(o) || optionings.new(:option_id => o.id, :included => false)}
   end
-  
+
   def all_optionings=(params)
     # create a bunch of temp objects, discarding any unchecked options
     submitted = params.values.collect{|p| p[:included] == '1' ? Optioning.new(p) : nil}.compact
-    
+
     # copy new choices into old objects, creating or deleting if necessary
     optionings.compare_by_element(submitted, Proc.new{|os| os.option_id}) do |orig, subd|
       # if both exist, do nothing
@@ -135,7 +135,7 @@ class OptionSet < ActiveRecord::Base
       end
     end
   end
-    
+
   def optioning_for(option)
     # get the matching optioning
     optioning_hash[option]
@@ -145,7 +145,7 @@ class OptionSet < ActiveRecord::Base
     @optioning_hash = nil if options[:rebuild]
     @optioning_hash ||= Hash[*optionings.collect{|os| [os.option, os]}.flatten]
   end
-  
+
   # gets all forms to which this option set is linked (through questionings)
   def forms
     questionings.collect(&:form).uniq
@@ -155,7 +155,7 @@ class OptionSet < ActiveRecord::Base
   def form_names
     forms.map(&:name).join(', ')
   end
-  
+
   # gets a comma separated list of all related questions' codes
   def question_codes
     questions.map(&:code).join(', ')
@@ -191,7 +191,7 @@ class OptionSet < ActiveRecord::Base
   end
 
   private
-    # makes sure that the options in the set have sequential ranks starting at 1. 
+    # makes sure that the options in the set have sequential ranks starting at 1.
     # if not, fixes them.
     def ensure_ranks
       # sort the option settings by existing rank and then re-assign to ensure sequentialness
@@ -207,15 +207,15 @@ class OptionSet < ActiveRecord::Base
       # make sure not associated with any answers
       raise DeletionError.new(:cant_delete_if_has_answers) if has_answers?
     end
-    
+
     def at_least_one_option
       errors.add(:base, :at_least_one) if optionings.reject{|a| a.marked_for_destruction?}.empty?
     end
-    
+
     def name_unique_per_mission
       errors.add(:name, :must_be_unique) unless unique_in_mission?(:name)
     end
-    
+
     # ensures mission is set on all options
     def ensure_option_missions
       # go in through optionings association in case these are newly created options via nested attribs

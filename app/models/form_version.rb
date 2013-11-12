@@ -3,12 +3,12 @@
 class FormVersion < ActiveRecord::Base
   attr_accessible :code, :form_id, :is_current, :sequence
   belongs_to :form
-  
+
   after_initialize :generate_code
   before_create :ensure_unique_code
-  
+
   CODE_LENGTH = 3
-  
+
   # inits a new FormVersion with same form_id
   # increments sequence
   # sets self.is_current = false
@@ -22,17 +22,17 @@ class FormVersion < ActiveRecord::Base
   def sequence_and_code
     "#{sequence} (#{code})"
   end
-  
+
   private
-  
+
     # generates the unique random code
     def generate_code
       # only need to do this if code not set
       return if code
-      
+
       ensure_unique_code
     end
-    
+
     # double checks that code is still unique
     def ensure_unique_code
       # keep trying new random codes until no match
