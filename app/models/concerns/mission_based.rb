@@ -20,6 +20,18 @@ module MissionBased
       # scope to find objects with the given mission
       # mission can be nil
       scope(:for_mission, lambda{|m| where(:mission_id => m.try(:id))})
+
+      # When a mission is deleted, pre-remove all records related to a mission
+      def self.mission_pre_delete(mission)
+        mission_related = self.where(mission_id:mission)
+
+        if self.respond_to?(:terminate_sub_relationships)
+          self.terminate_sub_relationships(mission_related.pluck(:id))
+        end
+
+        mission_related.delete_all
+      end
+
     end
 
     # checks if this object is unique in the mission according to the attrib given by attrib_name
@@ -28,5 +40,6 @@ module MissionBased
       rel = rel.where("id != ?", id) unless new_record?
       rel.count == 0
     end
+
   end
 end

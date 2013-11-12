@@ -113,6 +113,12 @@ class Report::Report < ActiveRecord::Base
     false
   end
 
+  # Remove Report Sub-Relationship of Objects
+  def self.terminate_sub_relationships(reports)
+    Report::Calculation.where(report_report_id: reports).delete_all
+    Report::OptionSetChoice.where(report_report_id: reports).delete_all
+  end
+
   private
 
     def normalize_attribs

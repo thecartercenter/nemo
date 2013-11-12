@@ -190,6 +190,11 @@ class OptionSet < ActiveRecord::Base
     end
   end
 
+  # Remove Heirarch of Objects
+  def self.terminate_sub_relationships(option_sets)
+     Optioning.where(option_set_id: option_sets).delete_all
+  end
+
   private
     # makes sure that the options in the set have sequential ranks starting at 1.
     # if not, fixes them.

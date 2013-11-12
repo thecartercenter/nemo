@@ -33,10 +33,29 @@ class Mission < ActiveRecord::Base
     to_check.each{|a| raise DeletionError.new(:cant_delete_if_assoc) unless self.send(a).empty?}
   end
 
+  # Remove this mission and other related records from the Database
+  # * This method is designed for speed.
+  def terminate_mission
+    ActiveRecord::Base.transaction do
+      begin
+        # Remove MissionBased Classes
+        relationships_to_delete = [Setting, Report::Report, Condition, Questioning,
+                                   Optioning, Option, Question, OptionSet, Response,
+                                   Form, Broadcast, Assignment, Sms::Message, User]
+        relationships_to_delete.each{|r| r.mission_pre_delete(self)}
+
+        self.delete
+      rescue Exception => e
+        raise e
+      end
+    end
+  end
+
   # returns a string representation used for debugging
   def to_s
     "#{id}(#{compact_name})"
   end
+
 
   private
     def create_compact_name

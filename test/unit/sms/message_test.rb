@@ -32,4 +32,10 @@ class Sms::MessageTest < ActiveSupport::TestCase
     Sms::Message.create(:from => "foo", :body => long)
     assert_nil(Sms::Message.find_by_body(long + "a"))
   end
+
+  test "when a mission is deleted, remove all sms messages from that mission" do
+    m = FactoryGirl.create(:sms_message_with_mission)
+    Sms::Message.mission_deleted(m.mission)
+    assert_nil(Sms::Message.find_by_mission_id(m.id))
+  end
 end

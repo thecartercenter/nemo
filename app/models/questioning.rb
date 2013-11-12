@@ -82,6 +82,13 @@ class Questioning < ActiveRecord::Base
   end
   # /REFACTOR
 
+  # Remove Heirarch of Objects
+  def self.terminate_sub_relationships(questionings)
+     answers = Answer.where(questioning_id: questionings)
+     Choice.where(answer_id: answers).delete_all
+     answers.delete_all
+  end
+
   private
     # sets rank if not already set
     def set_rank

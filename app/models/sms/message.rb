@@ -18,6 +18,11 @@ class Sms::Message < ActiveRecord::Base
 
   scope(:newest_first, order("sent_at DESC"))
 
+  # When a mission is deleted, remove all sms messages from that mission
+  def self.mission_pre_delete(mission)
+    self.delete_all(mission_id:mission)
+  end
+
   private
 
     # sets sent_at to now unless it's already set

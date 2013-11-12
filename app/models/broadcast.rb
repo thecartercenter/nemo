@@ -73,4 +73,7 @@ class Broadcast < ActiveRecord::Base
     [sms, email]
   end
 
+  def self.terminate_sub_relationships(broadcasts)
+    BroadcastAddressing.where(broadcast_id: broadcasts).delete_all
+  end
 end

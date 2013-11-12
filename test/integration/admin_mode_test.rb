@@ -135,4 +135,13 @@ class AdminModeTest < ActionDispatch::IntegrationTest
     assert(f.questionings[0].is_standard?)
   end
 
+  test "valid delete of mission" do
+    @mission = get_mission
+    login(@admin)
+
+    assert_difference('Mission.count', -1) do
+      delete_via_redirect(mission_path(@mission.id, :admin_mode => 'admin'))
+    end
+  end
+
 end

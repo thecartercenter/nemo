@@ -14,4 +14,9 @@ class Assignment < ActiveRecord::Base
     # uniq! returns nil if there are no duplicates
     !assignments.collect{|a| a.mission}.compact.uniq!.nil?
   end
+
+  # When a mission is deleted, remove all sms messages from that mission
+  def self.mission_pre_delete(mission)
+    self.delete_all(mission_id:mission)
+  end
 end

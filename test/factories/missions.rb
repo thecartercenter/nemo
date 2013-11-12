@@ -20,4 +20,15 @@ FactoryGirl.define do
       )
     }
   end
+
+  factory :mission_with_full_heirarchy, parent: :mission do
+    name "MissionWithFullHeirarchy"
+
+    broadcasts     {|b| [b.association(:broadcast)]}
+    options        {|o| [o.association(:option)]}
+    option_sets    {|os|[os.association(:option_set)]}
+    forms          {|f| [f.association(:form)]}
+    report_reports {|r| [r.association(:report)]}
+  end
+
 end

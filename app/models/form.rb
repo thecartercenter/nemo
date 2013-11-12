@@ -241,6 +241,12 @@ class Form < ActiveRecord::Base
     save(:validate => false) if options[:save]
   end
 
+  # Remove Heirarch of Objects
+  def self.terminate_sub_relationships(forms)
+     FormVersion.where(form_id: forms).delete_all
+     Questioning.where(form_id: forms).delete_all
+  end
+
   private
     def init_downloads
       self.downloads = 0

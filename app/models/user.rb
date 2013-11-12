@@ -244,6 +244,10 @@ class User < ActiveRecord::Base
     Hash[*assignments.map{|a| [a.mission, a.role]}.flatten]
   end
 
+  def self.mission_pre_delete(mission)
+    self.where(current_mission_id: mission).update_all(current_mission_id:nil)
+  end
+
   private
     def clean_fields
       self.phone = phone.blank? ? nil : "+" + phone.gsub(/[^0-9]/, "")

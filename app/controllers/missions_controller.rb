@@ -36,7 +36,12 @@ class MissionsController < ApplicationController
   end
 
   def destroy
-    destroy_and_handle_errors(@mission, :but_first => :check_associations)
+    begin
+      @mission.terminate_mission
+      flash[:success] = "The mission, #{@mission.name}, was sucessfully deleted."
+    rescue
+      flash[:error] = "The mission, #{@mission.name}, could not be deleted."
+    end
     redirect_to(index_url_with_page_num)
   end
 end
