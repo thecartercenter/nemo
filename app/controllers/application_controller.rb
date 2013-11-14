@@ -152,7 +152,8 @@ class ApplicationController < ActionController::Base
 
       # apply search
       begin
-        @search = Search::Search.new(:class_name => klass.name, :str => params[:search])
+        @search = Search::Search.new(:str => params[:search])
+        @search.qualifiers = klass.search_qualifiers(:mission => current_mission)
         rel = @search.apply(rel) unless options[:search] == false
       rescue Search::ParseError
         @error_msg = "#{t('search.search_error')}: #{$!}"

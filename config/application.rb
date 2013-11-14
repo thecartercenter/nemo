@@ -48,6 +48,10 @@ module ELMO
     
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
+
+    # schema dump format is sql b/c we have a fulltext index and we dont care about changing rdbms
+    config.active_record.schema_format = :sql
+
     
     ####################################
     # CUSTOM SETTINGS

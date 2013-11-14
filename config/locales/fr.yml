@@ -536,7 +536,7 @@ fr:
 
   # all search qualifier translations should have NO spaces (use '-'), capital letters, or any of these chars: : = < > ! , )
   search_qualifiers:
-    date: "date"
+    text: "texte"
     email: "email"
     form: "fiche"
     login: "nom-d'utilisateur"
@@ -547,6 +547,7 @@ fr:
     question_type: "type-de-question"
     reviewed: "revu"
     source: "source"
+    submit_date: "date-d'émission"
     submitter: "émetteur"
 
   page_titles:

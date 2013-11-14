@@ -1,9 +1,11 @@
+<%# ensures objects collection is paginated and .all is called %>
+<% objects = prepare_for_index(objects) %>
 <div id="index_table">
   
   <%# header links %>
   <% unless options[:table_only] %>
     <div class="header link_set">
-      <%= page_entries_info(ensure_paginated(objects), :model => klass) %>.
+      <%= page_entries_info(objects, :model => klass) %>.
       &nbsp;
       <%= links %>
     </div>
@@ -21,7 +23,7 @@
                 <% if f.is_a?(Hash) %>
                   <%= f[:title] %>
                 <% else %>
-                  <%= f == "actions" ? "" : objects.first.class.human_attribute_name(f) %>
+                  <%= f == "actions" ? "" : objects[0].class.human_attribute_name(f) %>
                 <% end %>
               </th>
             <% end %>

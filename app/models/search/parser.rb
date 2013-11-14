@@ -8,19 +8,19 @@ class Search::Parser
   # bin-bool-op ::= "and" | "or"
   # comp-op ::= "=" | ":" | "<" | ">" | "<=" | ">=" | "!=" | "<>"
   # target-set ::= target "," target-set | target
-  # target ::= STRING | CHUNK
+  # target ::= "(" chunks ")" | STRING | CHUNK
+  # chunks ::= CHUNK chunks | CHUNK
   
   COMP_OP = [:colon, :equal, :lt, :gt, :lteq, :gteq, :gtlt, :noteq]
   BIN_BOOL_OP = [:and, :or]
   
-  def initialize(search)
-    @search = search
-    @str = @search.str
+  def initialize(attribs)
+    attribs.each{|k,v| instance_variable_set("@#{k}", v)}
   end
   
   def parse
-    unless @str.blank?
-      @lexer = Search::Lexer.new(@str)
+    unless @search.str.blank?
+      @lexer = Search::Lexer.new(@search.str)
       @lexer.lex
       @query = take(:query)
     end
@@ -73,7 +73,18 @@ class Search::Parser
           [take(:target)] + (next_is(:comma) ? [take_terminal(:comma), take(:target_set)] : [])
         
         when :target
-          take_terminal(:chunk, :string)
+          if next_is(:lparen)
+            [take_terminal(:lparen), take(:chunks), take_terminal(:rparen)]
+          else
+            take_terminal(:chunk, :string)
+          end
+
+        when :chunks
+          if next2_is(:chunk)
+            [take_terminal(:chunk), take(:chunks)]
+          else
+            take_terminal(:chunk)
+          end
         end
       )
     end

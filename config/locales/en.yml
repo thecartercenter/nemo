@@ -579,7 +579,7 @@ en:
 
   # all search qualifier translations should have NO SPACES and NO CAPS. use '-'s instead
   search_qualifiers:
-    date: "date"
+    text: "text"
     email: "email"
     form: "form"
     login: "login"
@@ -590,6 +590,7 @@ en:
     question_type: "question-type"
     reviewed: "reviewed"
     source: "source"
+    submit_date: "submit-date"
     submitter: "submitter"
 
   # all page titles by controller and action
@@ -994,12 +995,24 @@ en:
 
   search:
     at_end_of_query: "at end of query"
+    examples:
+      responses:
+        - "\"some phrase\""
+        - "submitter: \"john smith\""
+        - "form: polling"
+        - "reviewed: 1"
+        - "submit-date < 2013-10-15"
+        - "text: intimidation"
+        - "{comments}: (disruption security)"
+      users:
+        - "john smith"
+        - "phone: +443726458364"
     expected: "Expected"
     invalid_op: "The operator '%{op}' is not valid for the qualifier '%{qualifier}'."
     must_use_qualifier: "You must use a qualifier for all search terms."
     invalid_qualifier: "'%{chunk}' is not a valid search qualifier."
-    unexpected: "Unexpected text near '%{str}'"
     search_error: "Search Error"
+    unexpected: "Unexpected text near '%{str}'"
 
   setting:
     change_sms_password: "Change SMS Password"

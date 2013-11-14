@@ -7,6 +7,12 @@ module Report::LegacyReport
   end
 
   def run
+    # add the qualifiers to the search (really we should just be creating the search here)
+    if filter.present?
+      filter.qualifiers = Response.search_qualifiers(:mission => mission)
+      filter.dont_group = true
+    end
+
     # prep the relation and add a filter clause
     @query = prep_query(Response.unscoped.for_mission(mission))
 

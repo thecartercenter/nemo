@@ -58,32 +58,33 @@ class Response < ActiveRecord::Base
   # gets the list of fields to be searched for this class
   # includes whether they should be included in a default, unqualified search
   # and whether they are searchable by a regular expression
-  def self.search_qualifiers
+  def self.search_qualifiers(scope)
     [
       Search::Qualifier.new(:name => "form", :col => "forms.name", :assoc => :forms),
       Search::Qualifier.new(:name => "reviewed", :col => "responses.reviewed"),
       Search::Qualifier.new(:name => "submitter", :col => "users.name", :assoc => :users, :partials => true),
       Search::Qualifier.new(:name => "source", :col => "responses.source"),
-      Search::Qualifier.new(:name => "date", :col => "DATE(CONVERT_TZ(responses.created_at, 'UTC', '#{Time.zone.mysql_name}'))"),
+      Search::Qualifier.new(:name => "submit_date", :col => "DATE(CONVERT_TZ(responses.created_at, 'UTC', '#{Time.zone.mysql_name}'))"),
 
       # this qualifier matches responses that have answers to questions with the given option set
       Search::Qualifier.new(:name => "option_set", :col => "option_sets.name", :assoc => :option_sets),
 
-      # this qualifier matces responses that have answers to questions with the given type
+      # this qualifier matches responses that have answers to questions with the given type
       Search::Qualifier.new(:name => "question_type", :col => "questions.qtype_name", :assoc => :questions),
 
-      # this qualifier matces responses that have answers to the given question
-      Search::Qualifier.new(:name => "question", :col => "questions.code", :assoc => :questions)
+      # this qualifier matches responses that have answers to the given question
+      Search::Qualifier.new(:name => "question", :col => "questions.code", :assoc => :questions),
+
+      # fulltext searches of all answers
+      Search::Qualifier.new(:name => "text", :col => "answers.value", :assoc => :answers, :fulltext => true, :default => true),
+      
+      # support {foobar}:stuff style searches, where foobar is a question code
+      Search::Qualifier.new(:name => /^\{(#{Question::CODE_FORMAT})\}$/, :col => "answers.value", :assoc => :questions, :fulltext => true,
+        :extra_condition => ->(md){ ['questions.code = ?', md[1]] },
+        :validator => ->(md){ Question.exists?(:mission_id => scope[:mission].id, :code => md[1]) })
     ]
   end
   
-  def self.search_examples
-    ["#{I18n.t('search_qualifiers.submitter')}:\"john smith\"", 
-      "#{I18n.t('search_qualifiers.form')}:polling", 
-      "#{I18n.t('search_qualifiers.reviewed')}:1", 
-      "#{I18n.t('search_qualifiers.date')} < 2010-03-15"]
-  end
-
   # returns a count how many responses have arrived recently
   # format e.g. [5, "week"] (5 in the last week)
   # nil means no recent responses

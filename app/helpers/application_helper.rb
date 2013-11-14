@@ -175,14 +175,18 @@ module ApplicationHelper
   end
 
   # if the given array is not paginated, apply an infinite pagination so the will_paginate methods will still work
-  def ensure_paginated(objs)
-    if !objs.respond_to?(:total_entries) && objs.respond_to?(:paginate)
-      # we call .all here so that will_paginate doesn't try to run relation.size, 
+  def prepare_for_index(objs)
+    objs = if !objs.respond_to?(:total_entries) && objs.respond_to?(:paginate)
       # which doesn't work for some of our more complex relations
-      objs.paginate(:page => 1, :per_page => 1000000).all
+      objs.paginate(:page => 1, :per_page => 1000000)
     else
       objs
     end
+
+    # ensure .all gets called so that a bunch of extra queries don't get triggered
+    objs = objs.all if objs.respond_to?(:all)
+
+    objs
   end
   
   def translate_model(model)

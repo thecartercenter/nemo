@@ -83,7 +83,7 @@ class Report::Report < ActiveRecord::Base
   
   # form assignment helper for filter
   def filter_attributes=(attribs)
-    self.filter = attribs[:str].blank? ? nil : Search::Search.new(attribs)
+    self.filter = attribs[:str].blank? ? nil : Search::Search.new(:str => attribs[:str])
   end
   
   # records a viewing of the form, keeping the view_count up to date

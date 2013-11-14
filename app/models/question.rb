@@ -1,6 +1,8 @@
 class Question < ActiveRecord::Base
   include MissionBased, FormVersionable, Translatable, Standardizable, Replicable
   
+  CODE_FORMAT = "[a-z][a-z0-9]{1,19}"
+
   # this needs to be up here other wise it runs /after/ the children are destroyed
   before_destroy(:check_assoc)
 
@@ -14,7 +16,7 @@ class Question < ActiveRecord::Base
   before_validation(:normalize_fields)
 
   validates(:code, :presence => true)
-  validates(:code, :format => {:with => /^[a-z][a-z0-9]{1,19}$/i}, :if => Proc.new{|q| !q.code.blank?})
+  validates(:code, :format => {:with => /^#{CODE_FORMAT}$/i}, :if => Proc.new{|q| !q.code.blank?})
   validates(:qtype_name, :presence => true)
   validates(:option_set, :presence => true, :if => Proc.new{|q| q.qtype && q.has_options?})
   validate(:integrity)

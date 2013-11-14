@@ -88,17 +88,13 @@ class User < ActiveRecord::Base
     suggestion
   end
   
-  def self.search_qualifiers
+  def self.search_qualifiers(scope)
     [
       Search::Qualifier.new(:name => "name", :col => "users.name", :default => true, :partials => true),
       Search::Qualifier.new(:name => "login", :col => "users.login", :default => true),
       Search::Qualifier.new(:name => "email", :col => "users.email", :partials => true),
       Search::Qualifier.new(:name => "phone", :col => "users.phone", :partials => true)
     ]
-  end
-
-  def self.search_examples
-    ["john smith", "#{I18n.t('search_qualifiers.phone')}:+44"]
   end
 
   # returns an array of hashes of format {:name => "Some User", :count => 2}
