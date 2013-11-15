@@ -34,8 +34,8 @@ class Sms::MessageTest < ActiveSupport::TestCase
   end
 
   test "when a mission is deleted, remove all sms messages from that mission" do
-    m = FactoryGirl.create(:sms_message_with_mission)
-    Sms::Message.mission_deleted(m.mission)
-    assert_nil(Sms::Message.find_by_mission_id(m.id))
+    sms = FactoryGirl.create(:sms_message_with_mission)
+    Sms::Message.mission_pre_delete(sms.mission)
+    assert_nil(Sms::Message.find_by_mission_id(sms.id))
   end
 end
