@@ -36,12 +36,7 @@ class MissionsController < ApplicationController
   end
 
   def destroy
-    begin
-      @mission.terminate_mission
-      flash[:success] = "The mission, #{@mission.name}, was sucessfully deleted."
-    rescue
-      flash[:error] = "The mission, #{@mission.name}, could not be deleted."
-    end
+    destroy_and_handle_errors(@mission)
     redirect_to(index_url_with_page_num)
   end
 end

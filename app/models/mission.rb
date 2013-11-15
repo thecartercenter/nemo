@@ -15,7 +15,6 @@ class Mission < ActiveRecord::Base
 
   before_validation(:create_compact_name)
   before_create(:ensure_setting)
-  before_destroy(:check_associations)
 
   validates(:name, :presence => true)
   validates(:name, :format => {:with => /^[a-z][a-z0-9 ]*$/i, :message => :let_num_spc_only},
@@ -26,6 +25,11 @@ class Mission < ActiveRecord::Base
   scope(:sorted_by_name, order("name"))
   scope(:sorted_recent_first, order("created_at DESC"))
   scope(:active_for_user, lambda{|u| where("missions.id IN (SELECT mission_id FROM assignments WHERE user_id = ? AND active = 1)", u.id)})
+
+  # Override default destory
+  def destroy
+    terminate_mission
+  end
 
   # checks to make sure there are no associated objects.
   def check_associations
@@ -44,8 +48,10 @@ class Mission < ActiveRecord::Base
                                    Form, Broadcast, Assignment, Sms::Message, User]
         relationships_to_delete.each{|r| r.mission_pre_delete(self)}
 
+        check_associations
         self.delete
       rescue Exception => e
+        Rails.logger.error "We had to rescue from the delete for mission: #{self.id}-#{self.title}. #{e}"
         raise e
       end
     end
