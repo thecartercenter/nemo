@@ -51,7 +51,7 @@ class Mission < ActiveRecord::Base
         check_associations
         self.delete
       rescue Exception => e
-        Rails.logger.error "We had to rescue from the delete for mission: #{self.id}-#{self.title}. #{e}"
+        Rails.logger.error "We had to rescue from the delete for mission: #{self.id}-#{self.name}. #{e}"
         raise e
       end
     end
