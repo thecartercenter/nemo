@@ -16,7 +16,7 @@ FactoryGirl.define do
 
     login { Random.letters(8) }
     name { Random.full_name }
-    email { Random.email }
+    email { Random.letters(8) + '@example.com' }
     reset_password_method "print"
     password "password"
     password_confirmation "password"

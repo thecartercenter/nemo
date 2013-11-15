@@ -3,7 +3,6 @@ require 'test_helper'
 class AuthorizationTest < ActionDispatch::IntegrationTest
   
   setup do
-    [User, Mission].each(&:delete_all)
     @other_mission = FactoryGirl.create(:mission, :name => "Other")
   end
 

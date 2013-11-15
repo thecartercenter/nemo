@@ -4,7 +4,6 @@ require 'sms_forms_test_helper'
 class SmsDecoderTest < ActiveSupport::TestCase
   
   setup do
-    [Form, Question, Questioning, Option, OptionSet, Optioning, Response].each{|k| k.delete_all}
     @user = get_user
   end
   
