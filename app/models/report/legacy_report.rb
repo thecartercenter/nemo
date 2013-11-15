@@ -1,7 +1,7 @@
 # contains functions that are common to the old report style that needed to be refactored out of Report::Report
 module Report::LegacyReport
   extend ActiveSupport::Concern
-  
+
   included do
     attr_reader :header_set, :data, :totals, :query
   end
@@ -12,19 +12,19 @@ module Report::LegacyReport
 
     # execute it the relation, returning rows, and create dbresult obj
     @db_result = Report::DbResult.new(@query.all)
-    
+
     # extract headers
     @header_set = Report::HeaderSet.new(:row => get_row_header, :col => get_col_header)
-    
+
     # extract data
     @data = Report::Data.new(blank_data_table(@db_result))
     @db_result.rows.each_with_index do |row, row_idx|
       extract_data_from_row(row, row_idx)
     end
-    
+
     # clean out blank rows
     remove_blank_rows
-    
+
     # compute totals if appropriate
     @data.compute_totals if can_total?
   end
@@ -39,7 +39,7 @@ module Report::LegacyReport
     def add_joins_to_relation(rel, joins)
       return rel.joins(Report::Join.list_to_sql(joins))
     end
-    
+
     # builds a nested SQL IF statement of the form IF(a, x, IF(b, y, IF(c, z, ...)))
     def build_nested_if(exprs, conds, options = {})\
       unless options[:dont_optimize]
@@ -50,7 +50,7 @@ module Report::LegacyReport
           expr_hash[expr] ||= []
           expr_hash[expr] << conds[i]
         end
-      
+
         # rebuild condensed exprs and conds arrays
         exprs, conds = [], []
         expr_hash.each do |expr, cond_set|
@@ -58,9 +58,9 @@ module Report::LegacyReport
           conds << cond_set.join(" OR ")
         end
       end
-      
+
       if exprs.size == 1
-        return exprs.first 
+        return exprs.first
       else
         rest = build_nested_if(exprs[1..-1], conds[1..-1], :dont_optimize => true)
         "IF(#{conds.first}, #{exprs.first}, #{rest})"

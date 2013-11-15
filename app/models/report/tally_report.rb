@@ -15,16 +15,16 @@ class Report::TallyReport < Report::Report
     def get_row_header
       get_header(:row)
     end
-  
+
     # extracts the col header values from the db_result object
     def get_col_header
       get_header(:col)
     end
-    
+
     def get_header(type)
       prefix = type == :row ? "pri" : "sec"
       if has_grouping(type)
-        hashes = @db_result.extract_unique_tuples("#{prefix}_name", "#{prefix}_value", "#{prefix}_type").collect do |tuple| 
+        hashes = @db_result.extract_unique_tuples("#{prefix}_name", "#{prefix}_value", "#{prefix}_type").collect do |tuple|
           {:name => Report::Formatter.format(tuple[0], tuple[2], :header), :key => tuple[0], :sort_value => tuple[1]}
         end
       else
@@ -43,18 +43,18 @@ class Report::TallyReport < Report::Report
       # set the matching cell value
       @data.set_cell(r, c, get_result_value(db_row))
     end
-  
+
     # extracts and casts the result value from the given result row
     def get_result_value(row)
       # counts will always be integers so we just cast to integer
       row["tally"].to_i
     end
-    
+
     # totaling is appropriate
     def can_total?
       return true
     end
-    
+
     # constructs a blank array of arrays matching the size of the headers
     def blank_data_table(db_result)
       @header_set[:row].collect{|h| Array.new(@header_set[:col].size)}
