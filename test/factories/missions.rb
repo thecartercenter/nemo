@@ -27,8 +27,10 @@ FactoryGirl.define do
     broadcasts     {|b| [b.association(:broadcast)]}
     options        {|o| [o.association(:option)]}
     option_sets    {|os|[os.association(:option_set)]}
-    forms          {|f| [f.association(:form)]}
+    forms          {|f| [f.association(:form, :question_types => %w(integer decimal location ))]}
     report_reports {|r| [r.association(:report)]}
+    responses      {|r| [r.association(:response)]}
+    questions      {|q| [q.association(:question)]}
   end
 
 end

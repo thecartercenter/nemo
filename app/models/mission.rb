@@ -48,6 +48,7 @@ class Mission < ActiveRecord::Base
                                    Form, Broadcast, Assignment, Sms::Message, User]
         relationships_to_delete.each{|r| r.mission_pre_delete(self)}
 
+        self.reload
         check_associations
         self.delete
       rescue Exception => e
