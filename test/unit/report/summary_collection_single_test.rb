@@ -176,7 +176,7 @@ class Report::SummaryCollectionSingleTest < ActiveSupport::TestCase
 
   test "long_text summary should include response_id" do
     prepare_form_and_collection('long_text', ['foo', 'bar'])
-    assert_equal(@form.responses.map(&:id), first_summary.items.map(&:response_id))
+    assert_equal(@form.responses.map(&:id).sort, first_summary.items.map(&:response_id).sort)
   end
 
   test "text summary items should be in chronological order" do
