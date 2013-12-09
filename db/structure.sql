@@ -118,7 +118,6 @@ CREATE TABLE `forms` (
   `updated_at` datetime DEFAULT NULL,
   `published` tinyint(1) DEFAULT '0',
   `downloads` int(11) DEFAULT NULL,
-  `questionings_count` int(11) DEFAULT '0',
   `responses_count` int(11) DEFAULT '0',
   `mission_id` int(11) DEFAULT NULL,
   `current_version_id` int(11) DEFAULT NULL,
@@ -313,7 +312,7 @@ CREATE TABLE `report_reports` (
   CONSTRAINT `report_reports_disagg_qing_id_fk` FOREIGN KEY (`disagg_qing_id`) REFERENCES `questionings` (`id`),
   CONSTRAINT `report_reports_form_id_fk` FOREIGN KEY (`form_id`) REFERENCES `forms` (`id`),
   CONSTRAINT `report_reports_mission_id_fk` FOREIGN KEY (`mission_id`) REFERENCES `missions` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=195 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=196 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `responses` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -349,7 +348,7 @@ CREATE TABLE `sessions` (
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `index_sessions_on_updated_at` (`updated_at`)
-) ENGINE=InnoDB AUTO_INCREMENT=2793 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2794 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `settings` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -820,3 +819,5 @@ INSERT INTO schema_migrations (version) VALUES ('20131120165641');
 INSERT INTO schema_migrations (version) VALUES ('20131120173227');
 
 INSERT INTO schema_migrations (version) VALUES ('20131120175045');
+
+INSERT INTO schema_migrations (version) VALUES ('20131209182701');
