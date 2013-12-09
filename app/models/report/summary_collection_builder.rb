@@ -37,6 +37,9 @@ class Report::SummaryCollectionBuilder
     # merge to make a single summary collection
     collection = Report::SummaryCollection.merge_all(collections, questionings)
 
+    # remove the null subset if empty
+    collection.remove_null_subset_if_empty!
+
     # now tell all subsets to build SummaryGroups
     collection.subsets.each{|s| s.build_groups(@options)}
 

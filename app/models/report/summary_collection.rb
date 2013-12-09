@@ -27,6 +27,12 @@ class Report::SummaryCollection
     @no_data
   end
 
+  # does as it says
+  def remove_null_subset_if_empty!
+    null_subset = subsets.detect{|s| s.disagg_value.nil?}
+    subsets.delete(null_subset) if null_subset.no_data?
+  end
+
   # merges this collection with the given one. combines subsets with the same disagg_value
   def merge(other)
     ours_by_disagg_value = subsets.index_by(&:disagg_value)
