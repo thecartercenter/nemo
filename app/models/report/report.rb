@@ -31,14 +31,14 @@ class Report::Report < ActiveRecord::Base
   attr_accessor :disagg_question_id
 
   # validation is all handled client-side
-  
+
   @@per_page = 20
-  
+
   PERCENT_TYPES = %w(none overall by_row by_col)
-  
+
   # list of all immediate subclasses in the order they should be shown to the user
   SUBCLASSES = %w(Report::TallyReport Report::ListReport Report::StandardFormReport)
-  
+
   # HACK TO GET STI TO WORK WITH ACCEPTS_NESTED_ATTRIBUTES_FOR
   class << self
     def new_with_cast(*a, &b)
@@ -51,13 +51,13 @@ class Report::Report < ActiveRecord::Base
     end
     alias_method_chain :new, :cast
   end
-  
+
   # generates a default name that won't collide with any existing names
   def generate_default_name
     prefix = "New Report"
-    
+
     # get next number
-    nums = self.class.for_mission(mission).where("name LIKE '#{prefix}%'").collect do |r| 
+    nums = self.class.for_mission(mission).where("name LIKE '#{prefix}%'").collect do |r|
       # get suffix
       if r.name.match(/^#{prefix}(\s+\d+$|$)/)
         [$1.to_i, 1].max # must be at least one if found
@@ -67,11 +67,11 @@ class Report::Report < ActiveRecord::Base
     end
     next_num = (nums.compact.max || 0) + 1
     suffix = next_num == 1 ? "" : " #{next_num}"
-    
+
     # set to attrib
     self.name = "#{prefix}#{suffix}"
   end
-  
+
   # runs the report by populating header_set, data, and totals objects
   def run
     # set the has run flag
@@ -86,7 +86,7 @@ class Report::Report < ActiveRecord::Base
     self.view_count += 1
     save(:validate => false)
   end
-  
+
   def as_json(options = {})
     h = super(options)
     h[:new_record] = new_record?
@@ -106,11 +106,11 @@ class Report::Report < ActiveRecord::Base
   def exportable?
     false
   end
-  
+
   private
 
     def normalize_attribs
-      # we now do default values here as well as changing blanks to nils. 
+      # we now do default values here as well as changing blanks to nils.
       # the AR default stuff doesn't work b/c the blank from the client side overwrites the default and there's no easy way to get it back
       self.option_set_id = nil if option_set_id.blank?
       self.bar_style = "side_by_side" if bar_style.blank?
@@ -118,5 +118,5 @@ class Report::Report < ActiveRecord::Base
       self.percent_type = "none" if percent_type.blank?
       self.text_responses = nil if text_responses.blank?
     end
-    
+
 end

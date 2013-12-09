@@ -6,18 +6,18 @@ class Questioning < ActiveRecord::Base
   has_many(:answers, :dependent => :destroy, :inverse_of => :questioning)
   has_one(:condition, :autosave => true, :dependent => :destroy, :inverse_of => :questioning)
   has_many(:referring_conditions, :class_name => "Condition", :foreign_key => "ref_qing_id", :dependent => :destroy, :inverse_of => :ref_qing)
-  
+
   before_validation(:destroy_condition_if_ref_qing_blank)
   before_create(:set_rank)
   before_create(:set_mission)
   after_destroy(:fix_ranks)
 
   # also validates the associated condition because condition has validates(:questioning, ...)
-  
+
   accepts_nested_attributes_for(:question)
   accepts_nested_attributes_for(:condition)
-  
-  delegate :name, :code, :code=, :option_set, :option_set=, :option_set_id, :option_set_id=, :qtype_name, :qtype_name=, :qtype, 
+
+  delegate :name, :code, :code=, :option_set, :option_set=, :option_set_id, :option_set_id=, :qtype_name, :qtype_name=, :qtype,
     :has_options?, :options, :select_options, :odk_code, :odk_constraint, :to => :question
   delegate :published?, :to => :form
   delegate :smsable?, :to => :form, :prefix => true
@@ -68,20 +68,20 @@ class Questioning < ActiveRecord::Base
       super
     end
   end
- 
+
   def respond_to?(symbol, *)
     is_question_method?(symbol.to_s) || super
   end
- 
+
   def respond_to_missing?(symbol, include_private)
     is_question_method?(symbol.to_s) || super
   end
-  
+
   def is_question_method?(symbol)
     symbol.match(/^((name|hint)_([a-z]{2})(=?))(_before_type_cast)?$/)
   end
   # /REFACTOR
-  
+
   private
     # sets rank if not already set
     def set_rank

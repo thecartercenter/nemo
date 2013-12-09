@@ -1,7 +1,7 @@
 module AnswersHelper
   def format_answer(answer, context)
     return '' if answer.nil?
-    
+
     case answer.questioning.question.qtype_name
     when "select_one"
       answer.option.name
