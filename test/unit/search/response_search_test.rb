@@ -1,14 +1,11 @@
 # tests the search functionality for the response model
 require 'test_helper'
+require 'sphinx_helper'
 
 class Search::ResponseSearchTest < ActiveSupport::TestCase
 
-  setup do
-    # setup a basic form
-    @form = FactoryGirl.create(:form, :name => 'foo', :question_types => %w(integer))
-  end
-
   test "form qualifier should work" do
+    setup_basic_form
     # setup a second form
     @form2 = FactoryGirl.create(:form, :name => 'bar', :question_types => %w(integer))
 
@@ -17,117 +14,118 @@ class Search::ResponseSearchTest < ActiveSupport::TestCase
     r2 = FactoryGirl.create(:response, :form => @form2)
     r3 = FactoryGirl.create(:response, :form => @form)
 
-    assert_search_matches('form:foo', r1, r3)
+    assert_search('form:foo', r1, r3)
   end
 
-  # TODO test other qualifiers
+  # this is all in one test because sphinx is costly to setup and teardown
+  test "response full text searches should work" do
+    # make sure sphinx is running, and responses have been added and indexed
+    ThinkingSphinx::Test.init
+    ThinkingSphinx::Test.run do
+      no_transaction do
 
-  test "answers qualifier should work with long_text questions" do
-    # add long text question
-    @form.questions << FactoryGirl.create(:question, :qtype_name => 'long_text')
+        setup_basic_form
 
-    # add some responses
-    r1 = FactoryGirl.create(:response, :form => @form, :_answers => [1, 'the quick brown'])
-    r2 = FactoryGirl.create(:response, :form => @form, :_answers => [1, 'fox jumps'])
-    r3 = FactoryGirl.create(:response, :form => @form, :_answers => [1, 'over the lazy brown dog'])
+        # add long text and short text question
+        @form.questions << FactoryGirl.create(:question, :qtype_name => 'long_text', :code => 'mauve')
+        @form.questions << FactoryGirl.create(:question, :qtype_name => 'text')
 
-    assert_search_matches('text:brown', r1, r3)
-  end
+        # add two long text questions with explicit codes
+        @form.questions << FactoryGirl.create(:question, :qtype_name => 'long_text', :code => 'blue')
+        @form.questions << FactoryGirl.create(:question, :qtype_name => 'long_text', :code => 'green')
 
-  test "answers qualifier should match short text questions and multiple questions" do
-    # add long text and short text question
-    @form.questions << FactoryGirl.create(:question, :qtype_name => 'long_text')
-    @form.questions << FactoryGirl.create(:question, :qtype_name => 'text')
-
-    # add some responses
-    r1 = FactoryGirl.create(:response, :form => @form, :_answers => [1, 'the quick brown', 'alpha'])
-    r2 = FactoryGirl.create(:response, :form => @form, :_answers => [1, 'fox jumps', 'bravo'])
-    r3 = FactoryGirl.create(:response, :form => @form, :_answers => [1, 'over bravo the lazy dog', 'charlie'])
-
-    assert_search_matches('text:bravo', r2, r3)
-  end
-
-  test "answers qualifier should be the default" do
-    # add long text question
-    @form.questions << FactoryGirl.create(:question, :qtype_name => 'long_text')
-
-    # add some responses
-    r1 = FactoryGirl.create(:response, :form => @form, :_answers => [1, 'the quick brown'])
-    r2 = FactoryGirl.create(:response, :form => @form, :_answers => [1, 'fox jumps'])
-
-    assert_search_matches('brown', r1)
-  end
-
-  test "exact phrase matching should work" do
-    # add long text question
-    @form.questions << FactoryGirl.create(:question, :qtype_name => 'long_text')
-
-    # add some responses
-    r1 = FactoryGirl.create(:response, :form => @form, :_answers => [1, 'the quick brown'])
-    r2 = FactoryGirl.create(:response, :form => @form, :_answers => [1, 'the brown quick'])
-    
-    assert_search_matches(%{text:(quick brown)}, r1, r2) # parenths don't force exact phrase matching
-    assert_search_matches(%{text:"quick brown"}, r1)
-    assert_search_matches(%{"quick brown"}, r1)
-    assert_search_matches(%{quick brown}, r1, r2)
-    assert_search_matches(%{(quick brown)}, r1, r2)
-  end
-
-  test "question codes should work as qualifiers" do
-    # add two long text questions with explicit codes
-    @form.questions << FactoryGirl.create(:question, :qtype_name => 'long_text', :code => 'blue')
-    @form.questions << FactoryGirl.create(:question, :qtype_name => 'long_text', :code => 'green')
-
-    # add some responses
-    r1 = FactoryGirl.create(:response, :form => @form, :_answers => [1, 'alpha bravo charlie', 'delta echo'])
-    r2 = FactoryGirl.create(:response, :form => @form, :_answers => [1, 'foxtrot golf', 'alpha hotel india'])
-    r3 = FactoryGirl.create(:response, :form => @form, :_answers => [1, 'juliet lima', 'mike november'])
-
-    # search regularly
-    assert_search_matches('text:alpha', r1, r2)
-    
-    # search by code
-    assert_search_matches('{blue}:alpha', r1)
-    assert_search_matches('{green}:alpha', r2)
-  end
-
-  test "invalid question codes should raise error" do
-    assert_raise(Search::ParseError) do
-      assert_search_matches('{foo}:bar')
-    end
-  end
-
-  test "using code from other mission should raise error" do
-    # create other mission and question
-    other_mission = FactoryGirl.create(:mission, :name => 'other')
-    FactoryGirl.create(:question, :qtype_name => 'long_text', :code => 'blue', :mission => other_mission)
-
-    assert_raise(Search::ParseError) do
-      assert_search_matches('{blue}:bar')
-    end
-
-    # now create in the default mission and try again
-    FactoryGirl.create(:question, :qtype_name => 'long_text', :code => 'blue')
-    assert_search_matches('{blue}:bar') # should match nothing, but not error
-  end
-
-  test "response should only appear once even if it has two matching answers" do
-    # add two long text questions
-    @form.questions << FactoryGirl.create(:question, :qtype_name => 'long_text')
-    @form.questions << FactoryGirl.create(:question, :qtype_name => 'long_text')
-
-    # add a response with same word in both answers
-    r1 = FactoryGirl.create(:response, :form => @form, :_answers => [1, 'alpha bravo charlie', 'delta bravo'])
-
-    # make sure only matches once
-    assert_search_matches('text:bravo', r1)    
-  end
+        # add some responses
+        r1 = FactoryGirl.create(:response, :form => @form, :reviewed => false, 
+          :_answers => [1, 'the quick brown', 'alpha', 'apple bear cat', 'dog earwax ipswitch'])
+        r2 = FactoryGirl.create(:response, :form => @form, :reviewed => true, 
+          :_answers => [1, 'fox heaven jumps', 'bravo', 'fuzzy gusher', 'apple heaven ipswitch'])
+        r3 = FactoryGirl.create(:response, :form => @form, :reviewed => true, 
+          :_answers => [1, 'over bravo the lazy brown quick dog', 'contour', 'joker lumpy', 'meal nexttime'])
+        
+        do_sphinx_index
   
+        # answers qualifier should work with long_text questions
+        assert_search('text:brown', r1, r3)
+
+        # answers qualifier should match short text questions and multiple questions
+        assert_search('text:bravo', r2, r3)
+
+        # answers qualifier should be the default
+        assert_search('quick brown', r1, r3)
+
+        # exact phrase matching should work
+        assert_search(%{text:(quick brown)}, r1, r3) # parenths don't force exact phrase matching
+        assert_search(%{text:"quick brown"}, r1)
+        assert_search(%{"quick brown"}, r1)
+
+        # question codes should work as qualifiers
+        assert_search('text:apple', r1, r2)
+        assert_search('{blue}:apple', r1)
+        assert_search('{green}:apple', r2)
+
+        #invalid question codes should raise error
+        assert_search('{foo}:bar', :error => /'{foo}' is not a valid search qualifier./)
+
+        # using code from other mission should raise error
+        # create other mission and question
+        other_mission = FactoryGirl.create(:mission, :name => 'other')
+        FactoryGirl.create(:question, :qtype_name => 'long_text', :code => 'purple', :mission => other_mission)
+        assert_search('{purple}:bar', :error => /valid search qualifier/)
+        # now create in the default mission and try again
+        FactoryGirl.create(:question, :qtype_name => 'long_text', :code => 'purple')
+        assert_search('{purple}:bar') # should match nothing, but not error
+
+        # response should only appear once even if it has two matching answers
+        assert_search('text:heaven', r2)
+
+        # multiple indexed qualifiers should work
+        assert_search('{blue}:lumpy {green}:meal', r3)
+        assert_search('{blue}:lumpy {green}:ipswitch')
+
+        # mixture of indexed and normal qualifiers should work
+        assert_search('{green}:ipswitch reviewed:1', r2)
+
+        # excerpts should be correct
+        assert_excerpts('text:heaven', [
+          [{:code => 'mauve', :text => "fox {{{heaven}}} jumps"}, {:code => 'green', :text => "apple {{{heaven}}} ipswitch"}]
+        ])
+        assert_excerpts('{green}:heaven', [
+          [{:code => 'green', :text => "apple {{{heaven}}} ipswitch"}]
+        ])
+      end
+    end
+  end
+
   private
-    def assert_search_matches(query, *objs)
-      @search = Search::Search.new(:str => query)
-      @search.qualifiers = Response.search_qualifiers(:mission => get_mission)
-      results = @search.apply(Response.unscoped).all
-      assert_equal(objs, results)
+
+    def setup_basic_form
+      @form = FactoryGirl.create(:form, :name => 'foo', :question_types => %w(integer))
+    end
+
+    def assert_search(query, *objs_or_error)
+      if objs_or_error[0].is_a?(Hash)
+        error_pattern = objs_or_error[0][:error]
+        begin 
+          run_search(query)
+        rescue
+          assert_match(error_pattern, $!.to_s)
+        else
+          fail("No error was raised.")
+        end
+      else
+        assert_equal(objs_or_error, run_search(query))
+      end
+    end
+
+    # runs a search with the given query and checks the returned excerpts
+    def assert_excerpts(query, excerpts)
+      responses = run_search(query, :include_excerpts => true)
+      assert_equal(excerpts.size, responses.size)
+      responses.each_with_index{|r,i| assert_equal(excerpts[i], r.excerpts)}
+    end
+
+    def run_search(query, options = {})
+      options[:include_excerpts] ||= false
+      Response.do_search(Response.unscoped, query, {:mission => get_mission}, options)
     end
 end

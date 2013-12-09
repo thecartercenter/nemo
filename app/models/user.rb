@@ -88,14 +88,29 @@ class User < ActiveRecord::Base
     suggestion
   end
   
-  def self.search_qualifiers(scope)
+  def self.search_qualifiers
     [
-      Search::Qualifier.new(:name => "name", :col => "users.name", :default => true, :partials => true),
-      Search::Qualifier.new(:name => "login", :col => "users.login", :default => true),
-      Search::Qualifier.new(:name => "email", :col => "users.email", :partials => true),
-      Search::Qualifier.new(:name => "phone", :col => "users.phone", :partials => true)
+      Search::Qualifier.new(:name => "name", :col => "users.name", :type => :text, :default => true),
+      Search::Qualifier.new(:name => "login", :col => "users.login", :type => :text),
+      Search::Qualifier.new(:name => "email", :col => "users.email", :type => :text),
+      Search::Qualifier.new(:name => "phone", :col => "users.phone", :type => :text)
     ]
   end
+
+  # searches for users
+  # relation - a User relation upon which to build the search query
+  # query - the search query string (e.g. name:foo)
+  def self.do_search(relation, query)
+    # create a search object and generate qualifiers
+    search = Search::Search.new(:str => query, :qualifiers => search_qualifiers)
+
+    # get the sql
+    sql = search.sql
+
+    # apply the conditions
+    relation = relation.where(sql)
+  end
+
 
   # returns an array of hashes of format {:name => "Some User", :count => 2}
   # of user response counts for the given mission

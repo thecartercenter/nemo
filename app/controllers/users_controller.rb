@@ -6,8 +6,17 @@ class UsersController < ApplicationController
   load_and_authorize_resource
   
   def index
-    # apply pagination and search
-    @users = apply_filters(@users.by_name.with_assoc)
+    # sort and eager load
+    @users = @users.by_name.with_assoc
+
+    # do search if applicable
+    if params[:search].present?
+      begin
+        @users = User.do_search(@users, params[:search])
+      rescue Search::ParseError
+        @error_msg = "#{t('search.search_error')}: #{$!}"
+      end
+    end
   end
   
   def new

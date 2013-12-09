@@ -10,7 +10,7 @@ class Response < ActiveRecord::Base
   has_many(:location_answers, :include => {:questioning => :question}, :class_name => 'Answer',
     :conditions => "questions.qtype_name = 'location'", :order => 'questionings.rank')
   
-  attr_accessor(:modifier)
+  attr_accessor(:modifier, :excerpts)
   
   # we turn off validate above and do it here so we can control the message and have only one message
   # regardless of how many answer errors there are
@@ -47,8 +47,6 @@ class Response < ActiveRecord::Base
   # sort by updated_at DESC
   scope(:by_updated_at, order('updated_at DESC'))
   
-  self.per_page = 20
-  
   # takes a Relation, adds a bunch of selects and joins, and uses find_by_sql to do the actual finding
   # this technique is due to limitations (at the time of dev) in the Relation system
   def self.for_export(rel)
@@ -62,9 +60,9 @@ class Response < ActiveRecord::Base
     [
       Search::Qualifier.new(:name => "form", :col => "forms.name", :assoc => :forms),
       Search::Qualifier.new(:name => "reviewed", :col => "responses.reviewed"),
-      Search::Qualifier.new(:name => "submitter", :col => "users.name", :assoc => :users, :partials => true),
+      Search::Qualifier.new(:name => "submitter", :col => "users.name", :assoc => :users, :type => :text),
       Search::Qualifier.new(:name => "source", :col => "responses.source"),
-      Search::Qualifier.new(:name => "submit_date", :col => "DATE(CONVERT_TZ(responses.created_at, 'UTC', '#{Time.zone.mysql_name}'))"),
+      Search::Qualifier.new(:name => "submit_date", :col => "DATE(CONVERT_TZ(responses.created_at, 'UTC', '#{Time.zone.mysql_name}'))", :type => :scale),
 
       # this qualifier matches responses that have answers to questions with the given option set
       Search::Qualifier.new(:name => "option_set", :col => "option_sets.name", :assoc => :option_sets),
@@ -75,14 +73,113 @@ class Response < ActiveRecord::Base
       # this qualifier matches responses that have answers to the given question
       Search::Qualifier.new(:name => "question", :col => "questions.code", :assoc => :questions),
 
-      # fulltext searches of all answers
-      Search::Qualifier.new(:name => "text", :col => "answers.value", :assoc => :answers, :fulltext => true, :default => true),
+      # this qualifier inserts a placeholder that we replace later
+      Search::Qualifier.new(:name => "text", :col => "responses.id", :type => :indexed, :default => true),
       
       # support {foobar}:stuff style searches, where foobar is a question code
-      Search::Qualifier.new(:name => /^\{(#{Question::CODE_FORMAT})\}$/, :col => "answers.value", :assoc => :questions, :fulltext => true,
-        :extra_condition => ->(md){ ['questions.code = ?', md[1]] },
-        :validator => ->(md){ Question.exists?(:mission_id => scope[:mission].id, :code => md[1]) })
+      Search::Qualifier.new(:name => "text_by_code", :pattern => /^\{(#{Question::CODE_FORMAT})\}$/, :col => "responses.id", 
+        :type => :indexed, :validator => ->(md){ Question.exists?(:mission_id => scope[:mission].id, :code => md[1]) })
     ]
+  end
+
+  # searches for responses
+  # relation - a Response relation upon which to build the search query
+  # query - the search query string (e.g. form:polling text:interference, tomfoolery)
+  # scope - the scope to pass to the search qualifiers generator
+  # options[:include_excerpts] - if true, execute the query and return the results with answer excerpts (if applicable) included;
+  #   if false, doesn't execute the query and just returns the relation
+  def self.do_search(relation, query, scope, options = {})
+    options[:include_excerpts] ||= false
+
+    # create a search object and generate qualifiers
+    search = Search::Search.new(:str => query, :qualifiers => search_qualifiers(scope))
+
+    # apply the needed associations
+    relation = relation.joins(Report::Join.list_to_sql(search.associations))
+    
+    # get the sql
+    sql = search.sql
+
+    sphinx_param_sets = []
+
+    # replace any fulltext search placeholders
+    sql = sql.gsub(/###(\d+)###/) do
+      # the matched number is the index of the expression in the search's expression list
+      expression = search.expressions[$1.to_i]
+
+      # search all answers in this mission for a match
+      # not escaping the query value because double quotes were getting escaped which makes exact phrase not work
+      attribs = {:mission_id => scope[:mission].id}
+
+      if expression.qualifier.name == "text_by_code"
+        # get qualifier text (e.g. {form}) and strip outer braces
+        question_code = expression.qualifier_text[1..-2]
+
+        # get the question with the given code
+        question = Question.where(:mission_id => scope[:mission].id).where(:code => question_code).first
+
+        # raising here since this shouldn't happen due to validator
+        raise "question with code '#{question_code}' not found" if question.nil?
+
+        # add an attrib to this sphinx search
+        attribs[:question_id] = question.id
+      end
+
+      # save the search params as we'll need them again
+      sphinx_params = [expression.values, {:with => attribs, :max_matches => 1000000, :per_page => 1000000}]
+      sphinx_param_sets << sphinx_params
+
+      # run the sphinx search
+      answer_ids = Answer.search_for_ids(*sphinx_params)
+
+      # turn into an sql fragment
+      if answer_ids.empty?
+        "0"
+      else
+        # get all response IDs and join into string
+        Answer.connection.execute("SELECT DISTINCT response_id FROM answers WHERE answers.id IN (#{answer_ids.join(',')})").to_a.flatten.join(',')
+      end
+    end
+
+    # apply the conditions
+    relation = relation.where(sql)
+
+    # do excerpts
+    if !sphinx_param_sets.empty? && options[:include_excerpts]
+      
+      # get matches
+      responses = relation.all
+
+      unless responses.empty?      
+        responses_by_id = responses.index_by(&:id)
+
+        # run answer searches again, but this time restricting response_ids to the matches responses
+        sphinx_param_sets.each do |sphinx_params|
+
+          # run search again
+          sphinx_params[1][:with][:response_id] = responses_by_id.keys
+          sphinx_params[1][:sql] = {:include => {:questioning => :question}}
+          answers = Answer.search(*sphinx_params)
+
+          # create excerpter
+          excerpter = ThinkingSphinx::Excerpter.new('answer_core', sphinx_params[0],
+            :before_match => '{{{', :after_match => '}}}', :chunk_separator => ' ... ', :query_mode => true)
+
+          # for each matching answer, add to excerpt to appropriate response
+          answers.each do |a|
+            r = responses_by_id[a.response_id]
+            r.excerpts ||= []
+            r.excerpts << {:code => a.questioning.code, :text => excerpter.excerpt!(a.value)}
+          end
+        end
+      end
+
+      # return responses
+      responses
+    else
+      # no excerpts, just return the relation
+      relation
+    end
   end
   
   # returns a count how many responses have arrived recently

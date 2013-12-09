@@ -6,7 +6,7 @@ class Report::QuestionAnswerTallyReportTest < ActiveSupport::TestCase
     prep_objects
   end
 
-  test "counts of yes and no for all yes-no questions" do
+  test "counts of yes and no for all yes no questions" do
     # create several yes/no questions and responses for them
     @yes_no = FactoryGirl.create(:option_set, :option_names => %w(Yes No))
     forms = [create_form(:name => "form0"), create_form(:name => "form1")]
@@ -39,8 +39,7 @@ class Report::QuestionAnswerTallyReportTest < ActiveSupport::TestCase
                                               %w( TTL  30 18  48 ))
     
     # try with joined-attrib filter
-    report = create_report("QuestionAnswerTally", :option_set => @yes_no,
-      :filter_attributes => {:str => "form: form0", :class_name => "Response"})
+    report = create_report("QuestionAnswerTally", :option_set => @yes_no, :filter => "form: form0")
     assert_report(report, %w(     Yes No TTL ),
                           %w( yn0   6  4  10 ),
                           %w( yn1   7  3  10 ),

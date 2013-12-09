@@ -9,12 +9,13 @@ CREATE TABLE `answers` (
   `time_value` time DEFAULT NULL,
   `date_value` date DEFAULT NULL,
   `datetime_value` datetime DEFAULT NULL,
+  `delta` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `answers_option_id_fk` (`option_id`),
   KEY `answers_questioning_id_fk` (`questioning_id`),
   KEY `answers_response_id_fk` (`response_id`),
   FULLTEXT KEY `fulltext_answers` (`value`)
-) ENGINE=MyISAM AUTO_INCREMENT=283487 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=283571 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `assignments` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -143,7 +144,7 @@ CREATE TABLE `missions` (
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `index_missions_on_compact_name` (`compact_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=240249 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=240250 DEFAULT CHARSET=latin1;
 
 CREATE TABLE `option_sets` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -287,7 +288,6 @@ CREATE TABLE `report_reports` (
   `mission_id` int(11) DEFAULT NULL,
   `type` varchar(255) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
-  `filter_id` int(11) DEFAULT NULL,
   `option_set_id` int(11) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
@@ -304,14 +304,13 @@ CREATE TABLE `report_reports` (
   `question_order` varchar(255) NOT NULL DEFAULT 'number',
   `text_responses` varchar(255) DEFAULT 'all',
   `disagg_qing_id` int(11) DEFAULT NULL,
+  `filter` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `index_report_reports_on_view_count` (`view_count`),
-  KEY `report_reports_filter_id_fk` (`filter_id`),
   KEY `report_reports_mission_id_fk` (`mission_id`),
   KEY `report_reports_form_id_fk` (`form_id`),
   KEY `report_reports_disagg_qing_id_fk` (`disagg_qing_id`),
   CONSTRAINT `report_reports_disagg_qing_id_fk` FOREIGN KEY (`disagg_qing_id`) REFERENCES `questionings` (`id`),
-  CONSTRAINT `report_reports_filter_id_fk` FOREIGN KEY (`filter_id`) REFERENCES `search_searches` (`id`),
   CONSTRAINT `report_reports_form_id_fk` FOREIGN KEY (`form_id`) REFERENCES `forms` (`id`),
   CONSTRAINT `report_reports_mission_id_fk` FOREIGN KEY (`mission_id`) REFERENCES `missions` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=195 DEFAULT CHARSET=utf8;
@@ -335,21 +334,12 @@ CREATE TABLE `responses` (
   CONSTRAINT `responses_form_id_fk` FOREIGN KEY (`form_id`) REFERENCES `forms` (`id`),
   CONSTRAINT `responses_mission_id_fk` FOREIGN KEY (`mission_id`) REFERENCES `missions` (`id`),
   CONSTRAINT `responses_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=240980 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=240985 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `schema_migrations` (
   `version` varchar(255) NOT NULL,
   UNIQUE KEY `unique_schema_migrations` (`version`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE `search_searches` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `str` text,
-  `class_name` varchar(255) DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `updated_at` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=205 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `sessions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -359,7 +349,7 @@ CREATE TABLE `sessions` (
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `index_sessions_on_updated_at` (`updated_at`)
-) ENGINE=InnoDB AUTO_INCREMENT=2786 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2793 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `settings` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -378,7 +368,7 @@ CREATE TABLE `settings` (
   PRIMARY KEY (`id`),
   KEY `settings_mission_id_fk` (`mission_id`),
   CONSTRAINT `settings_mission_id_fk` FOREIGN KEY (`mission_id`) REFERENCES `missions` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=240237 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=240238 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `sms_messages` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -824,3 +814,9 @@ INSERT INTO schema_migrations (version) VALUES ('20131029140847');
 INSERT INTO schema_migrations (version) VALUES ('20131112194557');
 
 INSERT INTO schema_migrations (version) VALUES ('20131112202048');
+
+INSERT INTO schema_migrations (version) VALUES ('20131120165641');
+
+INSERT INTO schema_migrations (version) VALUES ('20131120173227');
+
+INSERT INTO schema_migrations (version) VALUES ('20131120175045');

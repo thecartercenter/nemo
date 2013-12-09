@@ -8,13 +8,19 @@
       <%= f.hidden_field(:questioning_id, :index => answer_counter) %>
       <%= f.hidden_field(:relevant, :class => "relevant", :index => answer_counter) %>
       <% case type = answer.qtype.name %>
-      <% when "address", "text", "integer", "decimal", "tiny_text" %>
+      <% when "text", "tiny_text", "long_text" %>
+        <% if f.mode == :show %>
+          <%# show search excerpt (highlights search terms) if @highlighter has been defined %>
+          <strong><%= safe_excerpt(answer.value, @highlighter) %></strong>
+        <% else %>
+          <% field_type = answer.qtype.name == 'long_text' ? 'text_area' : 'text_field' %>
+          <%= f.send(field_type, :value, :class => "qtype_#{type}", :index => answer_counter) %>
+        <% end %>
+      <% when "integer", "decimal" %>
         <%= f.text_field(:value, :class => "qtype_#{type}", :index => answer_counter) %>
       <% when "location" %>
         <%= f.text_field(:value, :class => "qtype_location", :index => answer_counter) %>
         &nbsp;<%= action_link("edit", "#", :class => "edit_location_link") if f.mode != :show %>
-      <% when "long_text" %>
-        <%= f.text_area(:value, :class => "qtype_#{type}", :index => answer_counter) %>
       <% when "select_one" %>
         <%= f.select(:option_id, answer.question.select_options, {:include_blank => true}, :index => answer_counter) %>
       <% when "select_multiple" %>

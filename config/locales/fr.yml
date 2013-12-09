@@ -838,6 +838,7 @@ fr:
     
   search:
     at_end_of_query: "à la fin de recherche"
+    blank: "vide"
     expected: "Attendu"
     invalid_op: "L'opérateur '%{op}' isnon est pas valide pour le qualificatif '%{qualifier}'."
     must_use_qualifier: "Vous devez utiliser un qualificatif pour tous les termes de recherche."

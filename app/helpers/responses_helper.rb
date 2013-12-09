@@ -19,7 +19,7 @@ module ResponsesHelper
       format_answer(resp.answer_for_question(field[:question]), :table_cell)
     else
       case field
-      when "id" then link_to(resp.id, resp, :title => t("common.view"))
+      when "id" then link_to(resp.id, path_for_with_search(resp), :title => t("common.view"))
       when "form_id" then resp.form_name
       when "created_at" then resp.created_at ? l(resp.created_at) : ""
       when "age" then resp.created_at ? time_ago_in_words(resp.created_at) : ""
@@ -54,6 +54,20 @@ module ResponsesHelper
     links
   end
   
+  # shows response excerpts if available
+  def responses_second_row(response)
+    if response.excerpts
+      # loop over each 
+      response.excerpts.map do |e|
+        # force the string to be escaped before adding more tags
+        html = excerpt_to_html(e[:text])
+
+        # add the code
+        "<p><b>[#{e[:code]}]:</b> #{html}</p>"
+      end.join('').html_safe
+    end
+  end
+
   # builds a small inline form consisting of a dropdown for choosing a Form to which to submit a new response
   def new_response_mini_form(visible = true)
     form_tag(new_response_path, :method => :get, :id => "form_chooser", :style => visible ? "" : "display: none") do

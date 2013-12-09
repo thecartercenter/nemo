@@ -1,5 +1,5 @@
 module SearchesHelper
-  def search_examples(search)
+  def search_examples
     examples = I18n.t("search.examples.#{controller_name}", :default => "")
     examples = examples.join("&nbsp;&nbsp;&nbsp;") if examples.is_a?(Array)
     

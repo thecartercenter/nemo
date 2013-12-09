@@ -12,10 +12,21 @@ class ResponsesController < ApplicationController
       format.html do
         # apply search and pagination
         params[:page] ||= 1
-        @responses = apply_filters(@responses)
         
+        # paginate
+        @responses = @responses.paginate(:page => params[:page], :per_page => 20)
+
         # include answers so we can show key questions
         @responses = @responses.includes(:answers)
+
+        # do search, including excerpts, if applicable
+        if params[:search].present?
+          begin
+            @responses = Response.do_search(@responses, params[:search], {:mission => current_mission}, :include_excerpts => true)
+          rescue Search::ParseError
+            @error_msg = "#{t('search.search_error')}: #{$!}"
+          end
+        end
         
         # get list of published forms for 'create response' link
         @pubd_forms = Form.accessible_by(current_ability).published
@@ -26,8 +37,18 @@ class ResponsesController < ApplicationController
       
       # csv output is for exporting responses
       format.csv do
+        # do search, excluding excerpts
+        if params[:search].present?
+          begin
+            @responses = Response.do_search(@responses, params[:search], {:mission => current_mission}, :include_excerpts => false)
+          rescue Search::ParseError
+            @error_msg = "#{t('search.search_error')}: #{$!}"
+            return
+          end
+        end
+
         # get the response, for export, but not paginated
-        @responses = Response.for_export(apply_filters(@responses, :pagination => false))
+        @responses = Response.for_export(@responses)
 
         # render the csv
         render_csv("Responses")
@@ -36,6 +57,12 @@ class ResponsesController < ApplicationController
   end
 
   def show
+    # build an excerpter if there is a search query
+    # this is for highlighting results
+    if params[:search]
+      @highlighter = ThinkingSphinx::Excerpter.new('answer_core', params[:search],
+        :before_match => '{{{', :after_match => '}}}', :chunk_separator => ' ... ', :query_mode => true, :limit => 1000000)
+    end
     prepare_and_render_form
   end
   

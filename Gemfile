@@ -11,7 +11,7 @@ end
 
 gem 'authlogic'
 gem 'rake'
-gem 'mysql2'
+gem 'mysql2', '0.3.12b5' # beta version needed for sphinx
 gem 'will_paginate'
 gem 'configatron'
 gem 'libxml-ruby'
@@ -62,3 +62,9 @@ gem 'descriptive_statistics', :require => 'descriptive_statistics/safe'
 
 # underscore templates
 gem 'ejs'
+
+# search
+gem 'thinking-sphinx', '~> 3.0.2'
+
+# cleaning db for testing
+gem 'database_cleaner', :group => [:development, :test]

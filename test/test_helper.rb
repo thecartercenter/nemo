@@ -1,6 +1,7 @@
 ENV["RAILS_ENV"] = "test"
 require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
+require 'database_cleaner'
 
 class ActiveSupport::TestCase
   
@@ -15,6 +16,35 @@ class ActiveSupport::TestCase
 
   @@last_gc_run = Time.now
   @@reserved_ivars = %w(@fixture_connections @loaded_fixtures @test_passed @fixture_cache @method_name @_assertion_wrapped @_result).map(&:to_sym)
+
+  self.use_transactional_fixtures = false
+
+  setup do
+    DatabaseCleaner.strategy = :transaction
+    DatabaseCleaner.start
+  end
+
+  teardown do
+    DatabaseCleaner.clean
+  end
+
+  # runs the block outside a transaction, evading the default database cleaning strategy
+  # this is slower, but needed sometimes
+  def no_transaction
+    # close the current transaction
+    DatabaseCleaner.clean
+
+    # change strategy to truncation for now
+    DatabaseCleaner.strategy = :truncation
+
+    yield
+
+    # remove whatever was added in block
+    DatabaseCleaner.clean
+
+    # go back to transaction method
+    DatabaseCleaner.strategy = :transaction
+  end
 
   def begin_gc_deferment
     GC.disable if DEFERRED_GC_THRESHOLD > 0

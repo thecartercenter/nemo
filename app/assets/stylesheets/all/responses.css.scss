@@ -1,0 +1,53 @@
+/* response index */
+.responses_index {
+  form#form_chooser {
+    display: inline;
+
+    input, select { 
+      margin-right: 10px; 
+    }
+  }
+
+  table {
+    max-width: 900px;
+    
+    td.form_id_col {
+      width: 200px;
+    }
+
+    td.user_id_col {
+      width: 150px;
+    }
+
+    /* search excerpt */
+    tr.second_row td {
+      border-top: none !important;
+      padding-top: 0;
+      color: #aaa;
+
+      p {
+        margin-top: 0;
+        margin-bottom: 3px;
+      }
+
+      p:last-child {
+        margin: 0;
+      }
+    }
+  }
+}
+
+.responses_index, .responses_show {
+  em.match {
+    background-color: #ffffaa;
+    font-style: normal;
+  }
+}
+
+/* response edit */
+.responses_edit input.qtype_integer, .responses_new input.qtype_integer { width: 100px; }
+.responses_edit input.qtype_decimal, .responses_new input.qtype_decimal { width: 100px; }
+.responses_edit textarea.qtype_long_text, .responses_new textarea.qtype_long_text { width: 340px; height: 100px; }
+.responses_edit input.qtype_location, .responses_new input.qtype_location { width: 200px; }
+.responses_edit label.main, .responses_new label.main, .responses_show label.main { width: 300px !important; }
+a.edit_location_link img { vertical-align: bottom; }

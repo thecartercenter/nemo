@@ -1,23 +1,22 @@
 class Search::LexToken
-  attr_reader(:kind, :content, :fragment)
+  attr_reader :kind, :content, :fragment
+  attr_accessor :parent
   
   # array of lex token kinds, in the order by which they should be searched
   EQUAL = {:name => :equal, :pattern => "="}
   KINDS = [
     {:name => :colon, :pattern => ":", :sql => "="},
     EQUAL,
-    {:name => :gt, :pattern => ">"},
-    {:name => :lt, :pattern => "<"},
     {:name => :gteq, :pattern => ">="},
     {:name => :lteq, :pattern => "<="},
-    {:name => :gtlt, :pattern => "<>"},
+    {:name => :gt, :pattern => ">"},
+    {:name => :lt, :pattern => "<"},
     {:name => :noteq, :pattern => "!="},
     {:name => :lparen, :pattern => "("},
     {:name => :rparen, :pattern => ")"},
     {:name => :comma, :pattern => ","},
-    {:name => :and, :pattern => /and/i, :sql => "AND"},
-    {:name => :or, :pattern => /or/i, :sql => "OR"},
-    {:name => :string, :pattern => /"([^"]*?[^\\"]|)"/, :sub_idx => 1},
+    {:name => :or, :pattern => /OR|\|/},
+    {:name => :string, :pattern => /"((?:[^"\\]|\\.)*)"/, :sub_idx => 1, :unescape_dbl_quotes => true},
     {:name => :chunk, :pattern => /[^\s:=<>!,)]+/}
   ]
     

@@ -117,16 +117,16 @@
     if (this.attribs.form_ids == "ALL")
       return null;
     else
-      return "form:\"" + this.menus.form.get_names(this.attribs.form_ids).join("\",\"") + "\"";
+      return "form:(\"" + this.menus.form.get_names(this.attribs.form_ids).join("\"|\"") + "\")";
   }
   
   klass.prototype.extract_form_ids_from_filter_str = function() {
     var m;
-    if (m = this.attribs.filter_str.match(/^\(form:(.*)\)( and \((.+)\))?/)) {
-      this.attribs.filter_str = m[3] || "";
+    if (this.attribs.filter && (m = this.attribs.filter.match(/^form:\((.*)\)$/))) {
+      this.attribs.filter = "";
       
       // split name str and strip quotes
-      var names = m[1].split(",");
+      var names = m[1].split("|");
       $(names).each(function(i){ names[i] = names[i].substring(1, names[i].length - 1); });
       
       // get ids from form menu
@@ -165,17 +165,7 @@
     if (this.attribs.tally_type == "QuestionAnswer")
       to_serialize.option_set_choices_attributes = self.attribs.option_set_choices_attributes;
     
-    // filter params
-    to_serialize.filter_attributes = {}
-    to_serialize.filter_attributes.class_name = "Response"
-
-    // include the form id spec in the filter string
-    var filter_clauses = []
-    var form_str = this.form_filter_str();
-    if (form_str) filter_clauses.push("(" + form_str + ")");
-    if (this.attribs.filter_str.length > 0) filter_clauses.push("(" + this.attribs.filter_str + ")");
-    
-    to_serialize.filter_attributes.str = filter_clauses.join(" and "); // this 'and' is code, not human readable
+    to_serialize.filter = this.form_filter_str();
     
     return to_serialize;
   }

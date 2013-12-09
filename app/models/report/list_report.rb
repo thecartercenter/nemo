@@ -43,7 +43,7 @@ class Report::ListReport < Report::Report
       end
       
       # apply filter
-      rel = filter.apply(rel) unless filter.nil?
+      rel = apply_filter(rel)
       
       return rel
     end

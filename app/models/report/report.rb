@@ -2,9 +2,9 @@ require 'mission_based'
 class Report::Report < ActiveRecord::Base
   include MissionBased
   
-  attr_accessible :type, :name, :form_id, :option_set_id, :display_type, :bar_style, :unreviewed, 
+  attr_accessible :type, :name, :form_id, :option_set_id, :display_type, :bar_style, :unreviewed, :filter,
     :question_labels, :show_question_labels, :question_order, :text_responses, :percent_type, :unique_rows, :calculations_attributes, :calculations, 
-    :option_set, :filter_attributes, :mission_id, :mission, :disagg_question_id
+    :option_set, :mission_id, :mission, :disagg_question_id
 
   attr_accessible(:option_set_choices_attributes)
 
@@ -13,7 +13,6 @@ class Report::Report < ActiveRecord::Base
   has_many(:option_sets, :through => :option_set_choices)
   has_many(:calculations, :class_name => "Report::Calculation", :foreign_key => "report_report_id", :inverse_of => :report,
     :order => "rank", :dependent => :destroy, :autosave => true)
-  belongs_to(:filter, :class_name => "Search::Search", :inverse_of => :reports, :autosave => true, :dependent => :destroy)
 
   accepts_nested_attributes_for(:calculations, :allow_destroy => true)
   accepts_nested_attributes_for(:option_set_choices, :allow_destroy => true)
@@ -80,12 +79,7 @@ class Report::Report < ActiveRecord::Base
 
     # the remaining stuff from run in legacy reports can be found in Report::LegacyReport
   end
-  
-  # form assignment helper for filter
-  def filter_attributes=(attribs)
-    self.filter = attribs[:str].blank? ? nil : Search::Search.new(:str => attribs[:str])
-  end
-  
+    
   # records a viewing of the form, keeping the view_count up to date
   def record_viewing
     self.viewed_at = Time.now
@@ -98,7 +92,7 @@ class Report::Report < ActiveRecord::Base
     h[:new_record] = new_record?
     h[:just_created] = just_created
     h[:type] = type
-    h[:filter_str] = filter ? filter.str : ""
+    h[:filter] = filter
     h[:empty] = empty?
     h
   end

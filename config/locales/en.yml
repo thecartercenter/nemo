@@ -995,6 +995,7 @@ en:
 
   search:
     at_end_of_query: "at end of query"
+    blank: "blank"
     examples:
       responses:
         - "\"some phrase\""
@@ -1003,13 +1004,17 @@ en:
         - "reviewed: 1"
         - "submit-date < 2013-10-15"
         - "text: intimidation"
-        - "{comments}: (disruption security)"
+        - "{QuestionCode}: (disruption security)"
       users:
         - "john smith"
         - "phone: +443726458364"
+        - "login: jsmith"
+        - "email: jsmith@example.com"
     expected: "Expected"
     invalid_op: "The operator '%{op}' is not valid for the qualifier '%{qualifier}'."
+    multiple_terms_not_allowed: "Multiple terms aren't allowed for '%{qualifier}' searches unless OR is used."
     must_use_qualifier: "You must use a qualifier for all search terms."
+    or_not_allowed_between: "OR is not allowed between expressions."
     invalid_qualifier: "'%{chunk}' is not a valid search qualifier."
     search_error: "Search Error"
     unexpected: "Unexpected text near '%{str}'"

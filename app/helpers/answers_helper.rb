@@ -21,4 +21,16 @@ module AnswersHelper
       answer.value
     end
   end
+
+  # generates an excerpt given a string and an excerpter
+  # if excerpter or string is nil, just returns the string
+  def safe_excerpt(str, excerpter)
+    return str if excerpter.nil? || str.nil?
+    excerpt_to_html(excerpter.excerpt!(str))
+  end
+
+  # assuming excerpts are enclosed with {{{ ... }}}, safely converts to <em> tags and returns html_safe string
+  def excerpt_to_html(str)
+    h(str).gsub('{{{', '<em class="match">').gsub('}}}', '</em>').html_safe
+  end
 end

@@ -7,12 +7,6 @@ module Report::LegacyReport
   end
 
   def run
-    # add the qualifiers to the search (really we should just be creating the search here)
-    if filter.present?
-      filter.qualifiers = Response.search_qualifiers(:mission => mission)
-      filter.dont_group = true
-    end
-
     # prep the relation and add a filter clause
     @query = prep_query(Response.unscoped.for_mission(mission))
 
@@ -82,4 +76,13 @@ module Report::LegacyReport
       data.nil? ? true : data.rows.empty?
     end
 
+    # builds a search object for the search string stored in the filter attrib
+    # and applies it to the given relation, returning the result
+    def apply_filter(rel)
+      if filter.present?
+        Response.do_search(rel, filter, :mission => mission)
+      else
+        rel
+      end
+    end
 end

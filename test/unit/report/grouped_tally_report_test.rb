@@ -109,10 +109,11 @@ class Report::GroupedTallyReportTest < ActiveSupport::TestCase
                           %w( No    5   3   8 ),
                           %w( TTL   9  11  20 ))
                           
+    # test filtering
     report = create_report("GroupedTally", :calculations => [
       Report::IdentityCalculation.new(:rank => 1, :question1 => @questions[:yn]),
       Report::IdentityCalculation.new(:rank => 2, :question1 => @questions[:hl])
-    ], :filter_attributes => {:str => "form: form0", :class_name => "Response"})
+    ], :filter => "form: form0")
     
     assert_report(report, %w(    High Low TTL ),
                           %w( Yes   2   8  10 ),

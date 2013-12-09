@@ -1,9 +1,9 @@
 <form class="search_form">
-  <%= t("common.search") %>: <input type="text" name="search" value="<%= search.str %>" id="search_str">
+  <%= t("common.search") %>: <input type="text" name="search" value="<%= params[:search] %>" id="search_str">
   <input type="submit" value="<%= t("common.search") %>" class="btn_secondary">
-  <% unless search.str.blank? %>
+  <% if params[:search].present? %>
     <input type="button" value="<%= t("common.clear") %>" id="clear_button" class="btn_secondary">
   <% end %>
   <br/>
-  <%= search_examples(search) %>
+  <%= search_examples %>
 </form>

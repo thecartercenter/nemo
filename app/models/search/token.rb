@@ -1,153 +1,138 @@
 class Search::Token
-  EQUAL_TOKEN = Search::LexToken.new(Search::LexToken::EQUAL, "=")
-  
-  def initialize(search, kind, children)
+  attr_accessor :children
+  attr_reader :kind
+
+  def initialize(search, kind, parent)
     @search = search
     @kind = kind
-    @children = children.is_a?(Array) ? children : [children]
+    @parent = parent
   end
 
   def to_s_indented(level = 0)
-    ("  " * level) + "#{@kind}\n" + @children.collect{|c| c.to_s_indented(level + 1)}.join("\n")
+    ("  " * level) + "#{kind}\n" + children.collect{|c| c.to_s_indented(level + 1)}.join("\n")
   end
   
-  # returns either an sql string or an array of sql fragments, depending on the kind
+  # returns an sql string
   def to_sql
-    @sql ||= case @kind
-    when :comp_op, :bin_bool_op, :term
-      child(0).to_sql
-    when :target
-      # first form
-      if child(0).is?(:lparen)
-        child(1).to_sql
-      # other forms
-      else
-        child(0).to_sql
-      end
-    when :qual_term
-      # child(2) will be a target_set token
-      "(" + comparison(child(0), child(1).child(0), child(2)) + ")"
-    when :unqual_term
-      "(" + default_quals.collect{|q| comparison(q, EQUAL_TOKEN, child(0))}.join(" OR ") + ")"
+    @sql ||= case kind
+
     when :query
-      # first form
-      if child(0).is?(:lparen)
-        @children.collect{|c| c.to_sql}.join
-      # second form
-      elsif child(1) && child(1).is?(:bin_bool_op)
-        @children.collect{|c| c.to_sql}.join(" ")
-      # third form
-      elsif child(1) && child(1).is?(:query)
-        child(0).to_sql + " AND " + child(1).to_sql
-      # fourth form
+      # expressions should be ANDed together
+      children.map(&:to_sql).join(" AND ")
+
+    when :unqualified_expression
+      "(" + comparison(default_qualifer, Search::LexToken.new(Search::LexToken::EQUAL, "="), children[0]) + ")"
+
+    when :qualified_expression
+      # children[2] will be an :rhs token
+      "(" + comparison(children[0], children[1], children[2]) + ")"
+
+    when :values
+      # if first form, 'and' is implicit
+      if children[1] && !children[1].is?(:or)
+        "#{children[0].to_sql} AND #{children[1].to_sql}"
       else
-        child(0).to_sql
+        children.map(&:to_sql).join
       end
-    when :chunks
-      child(0).to_sql + (child(1) ? ' ' + child(1).to_sql : '')
+
+    else
+      children[0].to_sql
     end
   end
-  
-  def assoc
-    if @assoc.nil?
-      # generate sql so that assoc array is populated
-      to_sql
-      # gather associations for all children
-      @assoc = (@assoc || []) + @children.collect{|c| c.is_a?(Search::Token) ? c.assoc : []}.flatten
-      # make sure there are no duplicate entries
-      @assoc.uniq!
-    end
-    @assoc
-  end
-  
+    
   protected
     # generates an sql fragment for a comparison
-    # qual - either a Search::Qualifier or a LexToken that needs to be converted into a Qualifier
+    # qual - a LexToken representing a search qualifier, or a Search::Qualifier object
     # op - a LexToken representing an operator. these should be checked for compatibility with Qualifier
-    # rhs - a target or target_set token
-    def comparison(qual, op, rhs)
+    # rhs_or_values - an :rhs or :values Token
+    def comparison(qual, op, rhs_or_values)
+      # make an expression object for this comparison
+      expr = Search::Expression.new
+
       # if qual was given as a lex token, save its original content as we might need it later
       # then lookup the qualifier
       if qual.is_a?(Search::LexToken)
-        qual_text = qual.content
+        expr.qualifier_text = qual.content
         qual = lookup_qualifier(qual.content)
-      else
-        qual_text = nil
       end
+
+      qual_name = expr.qualifier_text || I18n.t("search_qualifiers.#{qual.name}")
+
+      expr.qualifier = qual
 
       # ensure valid operator
-      raise Search::ParseError.new(I18n.t("search.invalid_op", :op => op.content, :qualifier => qual.name)) unless qual.op_valid?(op.to_sql)
-      
-      # first expand the rhs token into targets
-      fragments = rhs.targets.map do |target_token|
+      raise_error_with_qualifier('invalid_op', qual_name, :op => op.content) unless qual.op_valid?(op.to_sql)
 
-        # get the sql representation of the target_token
-        target_sql = target_token.to_sql
+      # expand rhs into leaves and iterate
+      previous = nil
+      sql = ""
+      expr.values = ""
+      leaves = rhs_or_values.expand
+      leaves.each do |lex_tok|
 
-        # sanitize by default
-        sanitize_rhs = true
-        
-        # perform substitution if specified
-        target_sql = qual.subst[target_sql] || target_sql
+        # if this is a value token descendant
+        if lex_tok.parent.is?(:value)
 
-        # get the op sql
-        op_sql = op.to_sql
-        
-        # if the operator is equal/not-equal
-        if ["=", "!="].include?(op_sql)
-          # if rhs is [null], act accordingly
-          if target_sql =~ /\[null\]/i
-            op_sql = (op_sql == "=" ? "IS" : "IS NOT")
-            target_sql = "NULL"
-            sanitize_rhs = false
-
-          # if partial matches are allowed, change to LIKE
-          elsif qual.partials?
-            op_sql = op_sql == "=" ? "LIKE" : "NOT LIKE"
-            target_sql = "%#{target_sql}%"
+          # if the previous token was also a value token, need to insert the implicit AND (if allowed)
+          if previous && previous.parent.is?(:value)
+            if qual.and_allowed?
+              sql += " AND "
+              expr.values += " "
+            else
+              raise_error_with_qualifier('multiple_terms_not_allowed', qual_name)
+            end
           end
-        end
-        
-        # save the associations needed for this comparison
-        @assoc = (@assoc || []) + qual.assoc
-          
-        # generate the string
-        if qual.fulltext?
-          # wrap in double quotes, to achieve exact phrase match, if target is a quoted string
-          target_sql = "\"#{target_sql}\"" if target_token.child(0).is?(:string)
 
-          sanitize("MATCH (#{qual.col}) AGAINST (? IN BOOLEAN MODE)", target_sql)
-        else
-          sanitize_rhs ? sanitize("#{qual.col} #{op_sql} ?", target_sql) : sanitize("#{qual.col} #{op_sql} #{target_sql}")
+          # insert the comparison itself
+          sql += comparison_fragment(qual, op, lex_tok)
+          expr.values += "\"#{lex_tok.content}\""
+
+        # else, if this is an 'OR', insert that
+        elsif lex_tok.is?(:or)
+          sql += " OR "
+          expr.values += " | "
         end
+
+        previous = lex_tok
       end
 
-      # now OR the fragments together
-      condition = fragments.join(' OR ')
+      @search.expressions << expr
 
-      # if there was an extra condition requested, add it
-      if qual.extra_condition
-        # first get the match data for the qualifier text if available
-        md = qual.regexp? ? qual.name.match(qual_text) : nil
-
-        # now run the extra condition lambda, passing the match data
-        extra_cond_args = qual.extra_condition.call(md)
-
-        # now sanitize
-        extra_cond_sql = sanitize(*extra_cond_args)
-
-        # now build the full string
-        condition = "(#{condition}) AND (#{extra_cond_sql})"
+      if qual.type == :indexed
+        "(#{qual.col} IN (####{@search.expressions.size-1}###))"
+      else
+        sql
       end
-
-      condition
     end
-    
-    # looks up all the default qualifiers for the Search's class
+
+    # generates an sql where clause fragment for a comparison with the given qualifier, operator, and value token
+    def comparison_fragment(qual, op, value_token)
+      # get the sql representations
+      value_sql = value_token.to_sql
+      op_sql = op.to_sql
+      
+      # if rhs is [blank], act accordingly
+      inner = if [I18n.locale, :en].map{|l| '[' + I18n.t('search.blank', :locale => l) + ']'}.include?(value_sql)
+        op_sql = (op_sql == "=" ? "IS" : "IS NOT")
+        "#{qual.col} #{op_sql} NULL"
+
+      # if partial matches are allowed, change to LIKE
+      elsif qual.type == :text
+        op_sql = op_sql == "=" ? "LIKE" : "NOT LIKE"
+        sanitize("#{qual.col} #{op_sql} ?", "%#{value_sql}%")
+      
+      else
+        sanitize("#{qual.col} #{op_sql} ?", value_sql)
+      end
+      
+      "(#{inner})"
+    end
+
+    # looks up the default qualifier
     # raises an error if there are none
-    def default_quals
-      dq = @search.qualifiers.select{|q| q.default?}
-      raise Search::ParseError.new(I18n.t("search.must_use_qualifier")) if dq.empty?
+    def default_qualifer
+      dq = @search.qualifiers.detect{|q| q.default?}
+      raise Search::ParseError.new(I18n.t("search.must_use_qualifier")) if dq.nil?
       dq
     end
     
@@ -193,24 +178,20 @@ class Search::Token
       qualifier
     end
     
-    def child(num); @children[num]; end
-    def is?(kind); @kind == kind; end
+    def is?(kind)
+      @kind == kind
+    end
 
     def sanitize(*args)
       ActiveRecord::Base.__send__(:sanitize_sql, args, '')
     end
 
-    # gets all :target tokens represented by this token
-    # if this token is a :target token, just returns this token wrapped in an array
-    # if this token is a :target_set token, expands to find all :target tokens and returns
-    # else raises error
-    def targets
-      if @kind == :target
-        [self]
-      elsif @kind == :target_set
-        [child(0)] + (child(1) ? child(2).targets : [])
-      else
-        raise "can't call targets on :#{@kind} token"
-      end
+    # expands the current token into its component lextokens (leaf nodes)
+    def expand
+      children.map{|c| c.is_a?(Search::LexToken) ? c : c.expand}.flatten
+    end
+
+    def raise_error_with_qualifier(err_name, qual, params = {})
+      raise Search::ParseError.new(I18n.t("search.#{err_name}", params.merge(:qualifier => qual)))
     end
 end

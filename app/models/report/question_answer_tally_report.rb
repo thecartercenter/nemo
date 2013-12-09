@@ -73,7 +73,7 @@ class Report::QuestionAnswerTallyReport < Report::TallyReport
       rel = add_joins_to_relation(rel, joins)
       
       # apply filter
-      rel = filter.apply(rel) unless filter.nil?
+      rel = apply_filter(rel)
       
       return rel
     end
