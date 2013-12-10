@@ -269,7 +269,7 @@ CREATE TABLE `report_calculations` (
   KEY `report_calculations_report_report_id_fk` (`report_report_id`),
   CONSTRAINT `report_calculations_question1_id_fk` FOREIGN KEY (`question1_id`) REFERENCES `questions` (`id`),
   CONSTRAINT `report_calculations_report_report_id_fk` FOREIGN KEY (`report_report_id`) REFERENCES `report_reports` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=631 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=634 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `report_option_set_choices` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -280,7 +280,7 @@ CREATE TABLE `report_option_set_choices` (
   KEY `report_option_set_choices_report_report_id_fk` (`report_report_id`),
   CONSTRAINT `report_option_set_choices_option_set_id_fk` FOREIGN KEY (`option_set_id`) REFERENCES `option_sets` (`id`),
   CONSTRAINT `report_option_set_choices_report_report_id_fk` FOREIGN KEY (`report_report_id`) REFERENCES `report_reports` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=178 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=182 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `report_reports` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -348,7 +348,7 @@ CREATE TABLE `sessions` (
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `index_sessions_on_updated_at` (`updated_at`)
-) ENGINE=InnoDB AUTO_INCREMENT=2794 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2796 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `settings` (
   `id` int(11) NOT NULL AUTO_INCREMENT,

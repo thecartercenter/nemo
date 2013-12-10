@@ -53,9 +53,9 @@ class ActiveSupport::TestCase
     # save and store in hash
     q.save!
     @questions[params[:code].to_sym] = q
-  
+    
     # create questionings for each form
-    params[:forms].each{|f| q.questionings.create(:form => f)}
+    params[:forms].each{|f| f.questions << q}
   end
 
   def create_response(params)
