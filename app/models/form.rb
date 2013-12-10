@@ -26,15 +26,20 @@ class Form < ActiveRecord::Base
     ]
   ).order("questionings.rank"))
 
-  # this scope adds a count of the number of copies of this form, and of those that are published
+  # this scope adds a count of the questionings on this form and
+  # the number of copies of this form, and of those that are published
   # if the form is not a standard, these will just be zero
-  scope(:with_copy_counts, select(%{
+  scope(:with_questioning_and_copy_counts, select(%{
       forms.*,
+      COUNT(DISTINCT questionings.id) AS questionings_count_col,
       COUNT(DISTINCT copies.id) AS copy_count_col,
       SUM(copies.published) AS published_copy_count_col,
       SUM(copies.responses_count) AS copy_responses_count_col
     })
-    .joins("LEFT OUTER JOIN forms copies ON forms.id = copies.standard_id")
+    .joins(%{
+      LEFT OUTER JOIN questionings ON forms.id = questionings.form_id
+      LEFT OUTER JOIN forms copies ON forms.id = copies.standard_id
+    })
     .group("forms.id"))
 
   scope(:default_order, order('forms.name'))
@@ -91,6 +96,11 @@ class Form < ActiveRecord::Base
   def published_copy_count
     # published_copy_count_col may be nil so be careful
     respond_to?(:published_copy_count_col) ? (published_copy_count_col || 0).to_i : copies.find_all(&:published?).size
+  end
+
+  # returns number of questionings on the form. uses eager loaded field if available.
+  def questionings_count
+    respond_to?(:questionings_count_col) ? (questionings_count_col || 0).to_i : questionings.count
   end
 
   def option_sets
