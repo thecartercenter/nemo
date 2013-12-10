@@ -10,6 +10,6 @@ FactoryGirl.define do
   end
 
   factory :sms_message_with_mission, :parent => :sms_message do
-    mission get_mission
+    mission { get_mission }
   end
 end
