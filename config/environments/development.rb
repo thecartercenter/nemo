@@ -40,11 +40,11 @@ ELMO::Application.configure do
   config.cache_store = :dalli_store
   
   # bullet gem for query optimization
-  config.after_initialize do
-    Bullet.enable = true
-    Bullet.bullet_logger = true
-    Bullet.console = true
-    Bullet.rails_logger = true
-  end
+  # config.after_initialize do
+  #   Bullet.enable = true
+  #   Bullet.bullet_logger = true
+  #   Bullet.console = true
+  #   Bullet.rails_logger = true
+  # end
 end
 
