@@ -86,7 +86,7 @@ class Condition < ActiveRecord::Base
 
     if ref_question_has_options?
       xpath = "selected(#{lhs}, '#{option_id}')"
-      xpath = "not(#{xpath})" if operator[:name] == :neq
+      xpath = "not(#{xpath})" if [:neq, :ninc].include?(operator[:name])
 
     else
       # for numeric ref. questions, just convert value to string to get rhs
