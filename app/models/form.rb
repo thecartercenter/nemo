@@ -4,7 +4,7 @@ class Form < ActiveRecord::Base
   has_many(:questions, :through => :questionings, :order => "questionings.rank")
   has_many(:questionings, :order => "rank", :autosave => true, :dependent => :destroy, :inverse_of => :form)
   has_many(:responses, :inverse_of => :form)
-  
+
   has_many(:versions, :class_name => "FormVersion", :inverse_of => :form, :dependent => :destroy)
 
   # while a form has many versions, this is a reference to the most up-to-date one
@@ -46,6 +46,12 @@ class Form < ActiveRecord::Base
 
   replicable :child_assocs => :questionings, :uniqueness => {:field => :name, :style => :sep_words},
     :dont_copy => [:published, :downloads, :responses_count, :questionings_count, :upgrade_needed, :smsable, :current_version_id]
+
+  # remove heirarch of objects
+  def self.terminate_sub_relationships(form_ids)
+    FormVersion.where(form_id: form_ids).delete_all
+    Questioning.where(form_id: form_ids).delete_all
+  end
 
   def temp_response_id
     "#{name}_#{ActiveSupport::SecureRandom.random_number(899999999) + 100000000}"
@@ -250,13 +256,13 @@ class Form < ActiveRecord::Base
     questionings(options[:reload]).sort_by{|qing| qing.rank}.each_with_index{|qing, idx| qing.rank = idx + 1}
     save(:validate => false) if options[:save]
   end
-  
+
   private
     def init_downloads
       self.downloads = 0
       return true
     end
-    
+
     def name_unique_per_mission
       errors.add(:name, :must_be_unique) unless unique_in_mission?(:name)
     end

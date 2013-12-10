@@ -2,7 +2,6 @@ require 'test_helper'
 
 class ConditionTest < ActiveSupport::TestCase
   setup do
-    clear_objects(Questioning, Question, Form, OptionSet, Option, Condition)
   end
   
   test "create" do

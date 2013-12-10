@@ -15,9 +15,6 @@ class UserTest < ActiveSupport::TestCase
   end
   
   test "phone numbers should be unique" do
-    # make sure no interference
-    User.delete_all
-    
     # create a user with two phone numbers
     first = FactoryGirl.create(:user, :phone => "+19998887777", :phone2 => "+17776665537")
     

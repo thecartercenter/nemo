@@ -1,10 +1,6 @@
 require 'test_helper'
 
 class FormVersionTest < ActiveSupport::TestCase
-  setup do
-    clear_objects(Form, FormVersion)
-  end
-
   test "form version code generated on initialize" do
     fv = FormVersion.new
     assert_match(/[a-z]{#{FormVersion::CODE_LENGTH}}/, fv.code)

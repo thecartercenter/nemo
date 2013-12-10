@@ -348,7 +348,7 @@ CREATE TABLE `sessions` (
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `index_sessions_on_updated_at` (`updated_at`)
-) ENGINE=InnoDB AUTO_INCREMENT=2796 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2798 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `settings` (
   `id` int(11) NOT NULL AUTO_INCREMENT,

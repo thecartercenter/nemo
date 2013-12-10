@@ -8,6 +8,8 @@
 # body        a string holding the body of the message
 # sent_at     the time the message was sent/received
 class Sms::Message < ActiveRecord::Base
+  include MissionBased
+
   serialize :to, JSON
 
   belongs_to :mission

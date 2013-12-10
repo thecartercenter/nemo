@@ -4,8 +4,6 @@ require 'test_helper'
 # timezone is used as a key test vector
 class SettingsTest < ActionDispatch::IntegrationTest
   setup do
-    Mission.delete_all
-    Setting.delete_all
     @admin = FactoryGirl.create(:user, :admin => true)
   end
   

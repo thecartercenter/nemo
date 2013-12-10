@@ -1,9 +1,6 @@
 require 'test_helper'
 
 class OptionSetTest < ActiveSupport::TestCase
-  setup do
-    clear_objects(OptionSet, Option)
-  end
 
   test "creation" do
     # create the yes/no option set

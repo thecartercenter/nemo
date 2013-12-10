@@ -11,7 +11,6 @@ class Response < ActiveRecord::Base
     :conditions => "questions.qtype_name = 'location'", :order => 'questionings.rank')
 
   attr_accessor(:modifier, :excerpts)
-  attr_accessor(:modifier)
 
   # we turn off validate above and do it here so we can control the message and have only one message
   # regardless of how many answer errors there are

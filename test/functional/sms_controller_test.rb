@@ -4,7 +4,6 @@ require 'sms_forms_test_helper'
 class SmsControllerTest < ActionController::TestCase
 
   setup do
-    clear_objects(Form, Question, Questioning, Option, OptionSet, Optioning, Response)
     @user = get_user
 
     # we only need one form for all these tests, with two integer questions, both required

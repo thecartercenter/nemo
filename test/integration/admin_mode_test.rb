@@ -2,7 +2,7 @@ require 'test_helper'
 
 # this class contains tests for the general environment, e.g. admin mode
 class AdminModeTest < ActionDispatch::IntegrationTest
-  
+
   setup do
     @admin = FactoryGirl.create(:user, :admin => true)
     @nonadmin = FactoryGirl.create(:user)
@@ -96,7 +96,7 @@ class AdminModeTest < ActionDispatch::IntegrationTest
   test "creating an option set in admin mode should create a standard option set and options" do
     login(@admin)
     post_via_redirect(option_sets_path(:admin_mode => 'admin'), {
-      :option_set => {:name => 'Foo', 
+      :option_set => {:name => 'Foo',
         :optionings_attributes => {
           '0' => {
             :rank => 1,
@@ -133,6 +133,15 @@ class AdminModeTest < ActionDispatch::IntegrationTest
     f.reload
     assert_equal(q, f.questionings[0].question)
     assert(f.questionings[0].is_standard?)
+  end
+
+  test "valid delete of mission" do
+    @mission = get_mission
+    login(@admin)
+
+    assert_difference('Mission.count', -1) do
+      delete_via_redirect(mission_path(@mission.id, :admin_mode => 'admin'))
+    end
   end
 
 end

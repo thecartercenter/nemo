@@ -2,8 +2,6 @@ require 'test_helper'
 
 class FormVersioningPolicyTest < ActiveSupport::TestCase
   setup do
-    [Form, Question, Questioning, Option, OptionSet, Optioning].each{|k| k.delete_all}
-
     # create three forms
     @forms = (0...3).map{ FactoryGirl.create(:form, :published => false) }
 

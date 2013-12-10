@@ -8,5 +8,5 @@ class ActiveSupport::TestCase
   def form_code
     @form.current_version.code
   end
-  
+
 end

@@ -21,9 +21,14 @@ class Broadcast < ActiveRecord::Base
   # options for which phone numbers the broadcast should be sent to
   WHICH_PHONE_OPTIONS = %w(main_only alternate_only both)
 
+  def self.terminate_sub_relationships(broadcast_ids)
+    BroadcastAddressing.where(broadcast_id: broadcast_ids).delete_all
+  end
+
   def recipient_ids
     recipients.collect{|r| r.id}.join(",")
   end
+
   def recipient_ids=(ids)
     self.recipients = ids.split(",").collect{|id| User.find_by_id(id)}.compact
   end

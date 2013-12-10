@@ -15,7 +15,6 @@ class Mission < ActiveRecord::Base
 
   before_validation(:create_compact_name)
   before_create(:ensure_setting)
-  before_destroy(:check_associations)
 
   validates(:name, :presence => true)
   validates(:name, :format => {:with => /^[a-z][a-z0-9 ]*$/i, :message => :let_num_spc_only},
@@ -27,10 +26,36 @@ class Mission < ActiveRecord::Base
   scope(:sorted_recent_first, order("created_at DESC"))
   scope(:active_for_user, lambda{|u| where("missions.id IN (SELECT mission_id FROM assignments WHERE user_id = ? AND active = 1)", u.id)})
 
+  # Override default destory
+  def destroy
+    terminate_mission
+  end
+
   # checks to make sure there are no associated objects.
   def check_associations
     to_check = [:assignments, :responses, :forms, :report_reports, :questions, :broadcasts]
     to_check.each{|a| raise DeletionError.new(:cant_delete_if_assoc) unless self.send(a).empty?}
+  end
+
+  # remove this mission and other related records from the Database
+  # * this method is designed for speed.
+  def terminate_mission
+    ActiveRecord::Base.transaction do
+      begin
+        # Remove MissionBased Classes
+        relationships_to_delete = [Setting, Report::Report, Condition, Questioning,
+                                   Optioning, Option, Question, OptionSet, Response,
+                                   Form, Broadcast, Assignment, Sms::Message, User]
+        relationships_to_delete.each{|r| r.mission_pre_delete(self)}
+
+        self.reload
+        check_associations
+        self.delete
+      rescue Exception => e
+        Rails.logger.error "We had to rescue from the delete for mission: #{self.id}-#{self.name}. #{e}"
+        raise e
+      end
+    end
   end
 
   # returns a string representation used for debugging

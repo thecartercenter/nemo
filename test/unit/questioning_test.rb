@@ -2,10 +2,6 @@ require 'test_helper'
 
 class QuestioningTest < ActiveSupport::TestCase
   
-  setup do
-    clear_objects(Question, Questioning, Form)
-  end
-  
   test "creation" do
     # creating a protoform with a question should automatically create a questioning
     f = FactoryGirl.create(:form, :question_types => %w(integer))

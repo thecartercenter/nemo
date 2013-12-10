@@ -3,7 +3,6 @@ require 'test_helper'
 class FormTest < ActiveSupport::TestCase
 
   setup do
-    clear_objects(Questioning, Question, Form)
   end
 
   test "update ranks" do
