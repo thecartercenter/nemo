@@ -63,11 +63,12 @@
       height: cont_height,
       bar: {groupWidth: "80%"},
       legend: {textStyle: {fontSize: 12}},
-      vAxis: {title: headers.row.title, textStyle: {fontSize: 12}},
-      hAxis: {title: this.report.aggregation(), textStyle: {fontSize: 12}},
+      vAxis: {title: headers.row.title, textStyle: {fontSize: 12}, titleTextStyle: {fontSize: 14}},
+      hAxis: {title: this.report.aggregation(), textStyle: {fontSize: 12}, titleTextStyle: {fontSize: 14}},
       chartArea: {top: 0, left: vaxis_space, height: cont_height - haxis_space, width: cont_width - legend_space - vaxis_space},
       isStacked: stacked,
-      series: series
+      series: series,
+      tooltip: {textStyle: {fontSize: 11}}
     };
 
     var chart = new google.visualization.BarChart($('.report_body')[0]);
