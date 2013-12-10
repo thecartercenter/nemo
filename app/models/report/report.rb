@@ -53,6 +53,12 @@ class Report::Report < ActiveRecord::Base
     alias_method_chain :new, :cast
   end
 
+  # remove report sub-relationship of objects
+  def self.terminate_sub_relationships(report_ids)
+    Report::Calculation.where(report_report_id: report_ids).delete_all
+    Report::OptionSetChoice.where(report_report_id: report_ids).delete_all
+  end
+
   # generates a default name that won't collide with any existing names
   def generate_default_name
     prefix = "New Report"
@@ -111,12 +117,6 @@ class Report::Report < ActiveRecord::Base
   # should be overridden
   def exportable?
     false
-  end
-
-  # Remove Report Sub-Relationship of Objects
-  def self.terminate_sub_relationships(reports)
-    Report::Calculation.where(report_report_id: reports).delete_all
-    Report::OptionSetChoice.where(report_report_id: reports).delete_all
   end
 
   private

@@ -42,6 +42,12 @@ class Form < ActiveRecord::Base
   replicable :child_assocs => :questionings, :uniqueness => {:field => :name, :style => :sep_words},
     :dont_copy => [:published, :downloads, :responses_count, :questionings_count, :upgrade_needed, :smsable, :current_version_id]
 
+  # remove heirarch of objects
+  def self.terminate_sub_relationships(form_ids)
+    FormVersion.where(form_id: form_ids).delete_all
+    Questioning.where(form_id: form_ids).delete_all
+  end
+
   def temp_response_id
     "#{name}_#{ActiveSupport::SecureRandom.random_number(899999999) + 100000000}"
   end
@@ -239,12 +245,6 @@ class Form < ActiveRecord::Base
     options[:save] = true if options[:save].nil?
     questionings(options[:reload]).sort_by{|qing| qing.rank}.each_with_index{|qing, idx| qing.rank = idx + 1}
     save(:validate => false) if options[:save]
-  end
-
-  # Remove Heirarch of Objects
-  def self.terminate_sub_relationships(forms)
-     FormVersion.where(form_id: forms).delete_all
-     Questioning.where(form_id: forms).delete_all
   end
 
   private

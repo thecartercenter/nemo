@@ -8,6 +8,8 @@
 # body        a string holding the body of the message
 # sent_at     the time the message was sent/received
 class Sms::Message < ActiveRecord::Base
+  include MissionBased
+
   serialize :to, JSON
 
   belongs_to :mission
@@ -17,11 +19,6 @@ class Sms::Message < ActiveRecord::Base
   after_initialize :normalize_numbers
 
   scope(:newest_first, order("sent_at DESC"))
-
-  # When a mission is deleted, remove all sms messages from that mission
-  def self.mission_pre_delete(mission)
-    self.delete_all(mission_id:mission)
-  end
 
   private
 

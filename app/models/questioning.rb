@@ -27,6 +27,13 @@ class Questioning < ActiveRecord::Base
 
   scope(:visible, where(:hidden => false))
 
+  # remove heirarch of objects
+  def self.terminate_sub_relationships(questioning_ids)
+    answers = Answer.where(questioning_id: questioning_ids)
+    Choice.where(answer_id: answers).delete_all
+    answers.delete_all
+  end
+
   # returns any questionings appearing before this one on the form
   def previous
     form.questionings.reject{|q| !rank.nil? && (q == self || q.rank > rank)}
@@ -81,13 +88,6 @@ class Questioning < ActiveRecord::Base
     symbol.match(/^((name|hint)_([a-z]{2})(=?))(_before_type_cast)?$/)
   end
   # /REFACTOR
-
-  # Remove Heirarch of Objects
-  def self.terminate_sub_relationships(questionings)
-     answers = Answer.where(questioning_id: questionings)
-     Choice.where(answer_id: answers).delete_all
-     answers.delete_all
-  end
 
   private
     # sets rank if not already set

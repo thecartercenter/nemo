@@ -37,8 +37,8 @@ class Mission < ActiveRecord::Base
     to_check.each{|a| raise DeletionError.new(:cant_delete_if_assoc) unless self.send(a).empty?}
   end
 
-  # Remove this mission and other related records from the Database
-  # * This method is designed for speed.
+  # remove this mission and other related records from the Database
+  # * this method is designed for speed.
   def terminate_mission
     ActiveRecord::Base.transaction do
       begin

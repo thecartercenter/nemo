@@ -49,6 +49,10 @@ class User < ActiveRecord::Base
   # we want all of these on one page for now
   self.per_page = 1000000
 
+  def self.mission_pre_delete(mission)
+    self.where(current_mission_id: mission).update_all(current_mission_id:nil)
+  end
+
   def self.random_password(size = 6)
     charset = %w{2 3 4 6 7 9 a c d e f g h j k m n p q r t v w x y z}
     (0...size).map{charset.to_a[rand(charset.size)]}.join
@@ -242,10 +246,6 @@ class User < ActiveRecord::Base
   # returns hash of missions to roles
   def roles
     Hash[*assignments.map{|a| [a.mission, a.role]}.flatten]
-  end
-
-  def self.mission_pre_delete(mission)
-    self.where(current_mission_id: mission).update_all(current_mission_id:nil)
   end
 
   private

@@ -21,7 +21,7 @@ module MissionBased
       # mission can be nil
       scope(:for_mission, lambda{|m| where(:mission_id => m.try(:id))})
 
-      # When a mission is deleted, pre-remove all records related to a mission
+      # when a mission is deleted, pre-remove all records related to a mission
       def self.mission_pre_delete(mission)
         mission_related = self.where(mission_id:mission)
 
