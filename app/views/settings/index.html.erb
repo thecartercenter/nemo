@@ -6,13 +6,13 @@
   <%= form_field(f, :mission_id, :type => :hidden) %>
   <%= form_field(f, :timezone, :type => :timezone, :required => true) %>
   <%= form_field(f, :preferred_locales_str, :required => true) %>
-  
+
   <%# none of the rest of this is relevant in admin mode %>
   <% unless admin_mode? %>
 
     <h2><%= t("setting.headings.outgoing_sms") %></h2>
     <%= form_field(f, :outgoing_sms_adapter, :type => :select, :options => @adapter_options, :blank_text => t("common.none")) %>
-    
+
     <div class="adapter_settings" data-adapter="IntelliSms">
       <%= form_field(f, :intellisms_username) %>
       <%= link_to(t("setting.change_sms_password"), "#") %>
@@ -31,10 +31,10 @@
         <%= form_field(f, :isms_password2, :type => :password) %>
       </div>
     </div>
-    
+
     <h2><%= t("setting.headings.incoming_sms") %></h2>
     <%= form_field(f, :incoming_sms_number) %>
-    
+
     <h2>Tableau</h2><!-- not i18n'd b/c it's a product name -->
     <%= form_field(f, :tableau_sql, :partial => "tableau_sql") %>
 
