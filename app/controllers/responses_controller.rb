@@ -57,11 +57,14 @@ class ResponsesController < ApplicationController
   end
 
   def show
-    # build an excerpter if there is a search query
-    # this is for highlighting results
+    # if there is a search param, we try to load the response via the do_search mechanism so that we get highlighted excerpts
     if params[:search]
-      @highlighter = ThinkingSphinx::Excerpter.new('answer_core', params[:search],
-        :before_match => '{{{', :after_match => '}}}', :chunk_separator => ' ... ', :query_mode => true, :limit => 1000000)
+      # we pass a relation matching only one respoonse, so there should be at most one match
+      matches = Response.do_search(Response.where(:id => @response.id), params[:search], {:mission => current_mission}, 
+        :include_excerpts => true, :dont_truncate_excerpts => true)
+
+      # if we get a match, then we use that object instead, since it contains excerpts
+      @response = matches.first if matches.first
     end
     prepare_and_render_form
   end

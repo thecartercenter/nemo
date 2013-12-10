@@ -87,10 +87,11 @@ class Search::ResponseSearchTest < ActiveSupport::TestCase
 
         # excerpts should be correct
         assert_excerpts('text:heaven', [
-          [{:code => 'mauve', :text => "fox {{{heaven}}} jumps"}, {:code => 'green', :text => "apple {{{heaven}}} ipswitch"}]
+          [{:questioning_id => @form.questionings[1].id, :code => 'mauve', :text => "fox {{{heaven}}} jumps"}, 
+           {:questioning_id => @form.questionings[4].id, :code => 'green', :text => "apple {{{heaven}}} ipswitch"}]
         ])
         assert_excerpts('{green}:heaven', [
-          [{:code => 'green', :text => "apple {{{heaven}}} ipswitch"}]
+          [{:questioning_id => @form.questionings[4].id, :code => 'green', :text => "apple {{{heaven}}} ipswitch"}]
         ])
       end
     end

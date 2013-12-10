@@ -88,6 +88,7 @@ class Response < ActiveRecord::Base
   # scope - the scope to pass to the search qualifiers generator
   # options[:include_excerpts] - if true, execute the query and return the results with answer excerpts (if applicable) included;
   #   if false, doesn't execute the query and just returns the relation
+  # options[:dont_truncate_excerpts] - if true, excerpt length limit is very high, so full answer is returned with matches highlighted
   def self.do_search(relation, query, scope, options = {})
     options[:include_excerpts] ||= false
 
@@ -161,15 +162,17 @@ class Response < ActiveRecord::Base
           sphinx_params[1][:sql] = {:include => {:questioning => :question}}
           answers = Answer.search(*sphinx_params)
 
+          excerpter_options = {:before_match => '{{{', :after_match => '}}}', :chunk_separator => ' ... ', :query_mode => true}
+          excerpter_options[:limit] = 1000000 if options[:dont_truncate_excerpts]
+
           # create excerpter
-          excerpter = ThinkingSphinx::Excerpter.new('answer_core', sphinx_params[0],
-            :before_match => '{{{', :after_match => '}}}', :chunk_separator => ' ... ', :query_mode => true)
+          excerpter = ThinkingSphinx::Excerpter.new('answer_core', sphinx_params[0], excerpter_options)
 
           # for each matching answer, add to excerpt to appropriate response
           answers.each do |a|
             r = responses_by_id[a.response_id]
             r.excerpts ||= []
-            r.excerpts << {:code => a.questioning.code, :text => excerpter.excerpt!(a.value)}
+            r.excerpts << {:questioning_id => a.questioning_id, :code => a.questioning.code, :text => excerpter.excerpt!(a.value)}
           end
         end
       end
@@ -324,6 +327,11 @@ class Response < ActiveRecord::Base
   def location
     ans = location_answers.first
     ans ? ans.location : nil
+  end
+
+  # indexes excerpts by questioning_id
+  def excerpts_by_questioning_id
+    @excerpts_by_questioning_id ||= (excerpts || []).index_by{|e| e[:questioning_id]}
   end
 
   private

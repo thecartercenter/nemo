@@ -42,6 +42,16 @@
     background-color: #ffffaa;
     font-style: normal;
   }
+
+  div.text_answer {
+    p:first-child {
+      margin-top: 0;
+    }
+
+    p:last-child {
+      margin-bottom: 0;
+    }
+  }
 }
 
 /* response edit */

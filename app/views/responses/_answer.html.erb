@@ -10,8 +10,12 @@
       <% case type = answer.qtype.name %>
       <% when "text", "tiny_text", "long_text" %>
         <% if f.mode == :show %>
-          <%# show search excerpt (highlights search terms) if @highlighter has been defined %>
-          <strong><%= safe_excerpt(answer.value, @highlighter) %></strong>
+          <%# show search excerpt (highlights search terms) if exists for this questioning %>
+          <div class="text_answer">
+            <strong>
+              <%= excerpt_if_exists(@response, answer) %>
+            </strong>
+          </div>
         <% else %>
           <% field_type = answer.qtype.name == 'long_text' ? 'text_area' : 'text_field' %>
           <%= f.send(field_type, :value, :class => "qtype_#{type}", :index => answer_counter) %>
