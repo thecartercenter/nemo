@@ -61,6 +61,17 @@ class OptionSetsController < ApplicationController
     redirect_to(index_url_with_page_num)
   end
 
+  # makes a copy of the option set that can be edited without affecting the original
+  def clone
+    begin
+      @option_set.replicate
+      flash[:success] = t("option_set.clone_success", :name => @option_set.name)
+    rescue
+      flash[:error] = t("option_set.clone_error", :msg => $!.to_s)
+    end
+    redirect_to(index_url_with_page_num)
+  end
+
   private
     # creates/updates the option set
     def create_or_update

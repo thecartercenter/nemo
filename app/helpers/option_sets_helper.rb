@@ -25,7 +25,7 @@ module OptionSetsHelper
       # add a clone link if auth'd
       if can?(:clone, option_set)
         links += action_link("clone", clone_option_set_path(option_set), :'data-method' => 'put',
-          :title => t("common.clone"), :confirm => t("option_set.clone_confirm", :option_set_name => option_set.name))
+          :title => t("common.clone"), :confirm => t("option_set.clone_confirm", :name => option_set.name))
       end
     else option_set.send(field)
     end
