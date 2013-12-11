@@ -35,8 +35,9 @@ function responses_update(data) {
   }
 }
 
+// setup handler for 'create response'
 $(document).ready(function(){
-  $("a.create_response").on("click", function(){
+  $(document).on("click", "a.create_response", function(){
     $('#form_chooser').show();
     return false;
   });
