@@ -67,6 +67,9 @@ module Replicable
     # copy attributes from src to parent
     replicate_attributes(replication)
 
+    # if we are copying standard to standard, preserve the is_standard flag
+    dest_obj.is_standard = true if replication.standard_to_standard?
+
     # ensure uniqueness params are respected
     ensure_uniqueness_when_replicating(replication)
 

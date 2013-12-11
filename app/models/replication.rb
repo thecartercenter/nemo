@@ -10,6 +10,7 @@ class Replication
 
     # to_mission should default to src_obj's mission if nil
     # this would imply a within-mission clone
+    # if the src object's mission is also nil, then this is a standard object being cloned
     @to_mission ||= @src_obj.mission
 
     # ensure ancestors is [] if nil
@@ -58,6 +59,11 @@ class Replication
     )
   end
 
+  # checks if this replication is replicating a standard object to another standard object
+  def standard_to_standard?
+    src_obj.is_standard? && to_mission.nil?
+  end
+
   # accessor for better readability
   def in_transaction?
     !!in_transaction
@@ -100,7 +106,7 @@ class Replication
     lines = []
     lines << "***** REPLICATING *******************************************************************"
     lines << "Source obj:   #{src_obj}"
-    lines << "Dest mission: #{to_mission}"
+    lines << "Dest mission: #{to_mission || '[nil]'}"
     lines.join("\n")
   end
 end

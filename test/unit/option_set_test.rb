@@ -234,12 +234,26 @@ class OptionSetTest < ActiveSupport::TestCase
   test "cloning a standard option set should work" do
     yn = FactoryGirl.create(:option_set, :name => 'Foo', :is_standard => true)
     yn2 = yn.replicate
+    yn.reload
 
     # missions should be the same (nil)
     assert_nil(yn2.mission)
 
+    # new option set should be marked standard
+    #assert_equal(true, yn2.is_standard?)
+
+    # new and old optionings should all be marked standard and have nil missions
+    assert_equal([true], yn.optionings.map(&:is_standard?).uniq)
+    assert_equal([nil], yn.optionings.map(&:mission_id).uniq)
+    assert_equal([true], yn2.optionings.map(&:is_standard?).uniq)
+    assert_equal([nil], yn2.optionings.map(&:mission_id).uniq)
+
     # options should be the same objects
     assert_equal(yn.options, yn2.options)
+
+    # options should still be standard and null mission
+    assert_equal([true], yn2.options.map(&:is_standard?).uniq)
+    assert_equal([nil], yn2.options.map(&:mission_id).uniq)
 
     # names should be different
     assert_not_equal(yn.name, yn2.name)
