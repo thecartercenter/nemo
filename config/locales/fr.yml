@@ -1,6 +1,6 @@
 fr:
   locale_name: Français
-  
+
   # common words (should be capitalized except for those that obviously shouldn't like and, or, e.g., etc.)
   common:
     accept: "Accepter"
@@ -20,7 +20,7 @@ fr:
     design: "Concevoir"
     edit: "Modifier"
     error:
-      zero: "Erreurs" 
+      zero: "Erreurs"
       one: "Erreur"
       other: "Erreurs"
     example:
@@ -44,7 +44,7 @@ fr:
     report: "Rapporter"
     reset: "Réinstalisation"
     result:
-      zero: "Résultats" 
+      zero: "Résultats"
       one: "Résultat"
       other: "Résultats"
     review: "Examiner"
@@ -86,7 +86,7 @@ fr:
       must_be_unique: "doit être unique"
       is_invalid: "n'est pas valide"
       did_not_match: "ne correspondent pas"
-  
+
   # model names, attrib names, tips, and errors for activerecord models
   activerecord:
     models:
@@ -171,11 +171,11 @@ fr:
         one: "Paramètre"
         other: "Paramètres"
       sms/message:
-        zero: "Messages de SMS" 
+        zero: "Messages de SMS"
         one: "Message de SMS"
         other: "Messages de SMS"
       user:
-        zero: "Utilisateurs" 
+        zero: "Utilisateurs"
         one: "Utilisateur"
         other: "Utilisateurs"
     attributes:
@@ -183,7 +183,7 @@ fr:
         balance: "Balance de SMS"
         body: "Message"
         created_at: "Heure d'envoyer"
-        errors: "Erreurs?" 
+        errors: "Erreurs?"
         medium: "Méthode"
         send_errors: "Erreurs de livraison"
         subject: "Sujet"
@@ -249,14 +249,14 @@ fr:
         tableau_sql: "Tableau SQL" # Tableau is a software product name and shouldn't be translated
         timezone: "Fuseau horaire"
       sms/message:
-        adapter_name: "Adaptateur" 
+        adapter_name: "Adaptateur"
         from: "De"
         body: "Texte"
         sent_at: "L'heure d'envoi"
-        to: "À" 
+        to: "À"
       sms/test:
         from: "De"
-        body: "Texte" 
+        body: "Texte"
       user:
         admin: "Administrateur?"
         assignments: "Tâches"
@@ -301,9 +301,9 @@ fr:
         percent_type: "Si et comment les pourcentages doivent être calculés pour la rapport."
         bar_style: "Si les bandes doivent être empilés ou côte-à-côte."
       setting:
-        preferred_locales_str: |- 
+        preferred_locales_str: |-
           Entrez le <a href=\"http://www.loc.gov/standards/iso639-2/php/code_list.php\">code à deux lettres</a>, séparé par des virgules, pour les langues dans lesquelles vous voulez autoriser des questions à définir.
-          
+
           Ce code determines:
           * La langue préférée pour nouveau utilisateurs
           * La langue préférée pour les réponses SMS
@@ -333,7 +333,7 @@ fr:
       user_batch:
         users: |-
           Inscrivez les noms d'utilisateur, les addresse e-mail, et les numéros de téléphone (avec l'indicatif de pays), un par ligne, séparés par des virgules ou des tabulations. Par ex:
-            
+
           Alice Merrywinkle, alice@winkle.org, +20112313411
           Chung Li, cli@gmail.com
           Forgo Niambot, , +203300303
@@ -401,7 +401,7 @@ fr:
           attributes:
             assignments:
               cant_be_empty_if_not_admin: "Ne peut pas être vide si pas d'administration"
-  
+
   # application-wide strings
   layout:
     actions: "Actions"
@@ -420,7 +420,7 @@ fr:
     system_version: "Version de système"
     time_ago: "%{time}"
     time_zone: "Fuseau horaire"
-  
+
   # pagination translations
   will_paginate:
     previous_label: "&#8592; Précédent"
@@ -428,76 +428,76 @@ fr:
     page_gap: "&hellip;" # this entry should be the same for all languages
     # please preserve <b> and </b> tags in the below
     broadcast:
-      page_entries_info: 
+      page_entries_info:
         single_page_html:
           zero:  "Pas de diffusions trouvées"
           one:   "Montrant <b>1</b> diffusion"
           other: "Montrant <b>toutes les %{count}</b> diffusions"
         multi_page_html: "Montrant les diffusions <b>%{from} - %{to}</b> de <b>%{count}</b> au total"
     form:
-      page_entries_info: 
+      page_entries_info:
         single_page_html:
           zero:  "Pas de fiches trouvées"
           one:   "Montrant <b>1</b> fiche"
           other: "Montrant <b>toutes les %{count}</b> fiches"
     mission:
-      page_entries_info: 
+      page_entries_info:
         single_page_html:
           zero:  "Pas de missions trouvées"
           one:   "Montrant <b>1</b> mission"
           other: "Montrant <b>toutes les %{count}</b> missions"
     option:
-      page_entries_info: 
+      page_entries_info:
         single_page_html:
           zero:  "Pas d'options trouvées"
           one:   "Montrant <b>1</b> option"
           other: "Montrant <b>toutes les %{count}</b> options"
     option_set:
-      page_entries_info: 
+      page_entries_info:
         single_page_html:
           zero:  "Pas de collections d'options trouvées"
           one:   "Montrant <b>1</b> collection d'options"
           other: "Montrant <b>toutes les %{count}</b> collections d'options"
     question:
-      page_entries_info: 
+      page_entries_info:
         single_page_html:
           zero:  "Pas de questions trouvées"
           one:   "Montrant <b>1</b> question"
           other: "Montrant <b>toutes les %{count}</b> questions"
     questioning: # should be same as question
-      page_entries_info: 
+      page_entries_info:
         single_page_html:
           zero:  "Pas de questions trouvées"
           one:   "Montrant <b>1</b> question"
           other: "Montrant <b>toutes les %{count}</b> questions"
     report/report:
-      page_entries_info: 
+      page_entries_info:
         single_page_html:
           zero:  "Pas de rapports trouvés"
           one:   "Montrant <b>1</b> rapport"
           other: "Montrant <b>tous les %{count}</b> rapports"
     response:
-      page_entries_info: 
+      page_entries_info:
         single_page_html:
           zero:  "Pas de soumissions trouvées"
           one:   "Montrant <b>1</b> soumission"
           other: "Montrant <b>toutes les %{count}</b> soumissions"
         multi_page_html: "Montrant les soumissions <b>%{from} - %{to}</b> de <b>%{count}</b> au total"
     sms/message:
-      page_entries_info: 
+      page_entries_info:
         single_page_html:
           zero:  "Pas de SMSes trouvés"
           one:   "Montrant <b>1</b> SMS"
           other: "Montrant <b>tous les %{count}</b> SMS"
         multi_page_html: "Montrant les SMS <b>%{from} - %{to}</b> de <b>%{count}</b> au total"
     user:
-      page_entries_info: 
+      page_entries_info:
         single_page_html:
           zero:  "Pas d'utilisateurs trouvés"
           one:   "Montrant <b>1</b> utilisateur"
           other: "Montrant <b>tous les %{count}</b> utilisateurs"
         multi_page_html: "Montrant les utilisateurs <b>%{from} - %{to}</b> de <b>%{count}</b> au total"
-          
+
   # authlogic translations
   authlogic:
     error_messages:
@@ -520,7 +520,7 @@ fr:
         login: "Nom d'utilisateur"
         password: "Mot de passe"
         remember_me: "Rester connecté"
-  
+
   # time/date formats (see http://www.ruby-doc.org/core-2.0/Time.html#method-i-strftime for code meanings)
   date:
     formats:
@@ -576,7 +576,7 @@ fr:
       index: "Options"
       new: "Nouvelle option"
       show: "Option: %{name}"
-    password_resets: 
+    password_resets:
       all: "Réinitialiser le mot de passe"
     questions:
       edit: "Modifier la question: %{name}"
@@ -610,11 +610,11 @@ fr:
 
   ##############################
   # the rest of these string groups should be kept in alphabetical order by key
-  
+
   answer:
     no_name: "Pas de nom"
     this_answer: "Cette réponse"
-  
+
   broadcast:
     balance_notice: "Vous avez %{balance} solde créditeur de SMS dans votre %{account_type} compte."
     chars: # these are for informing the user how many chars they have left in their sms
@@ -645,7 +645,7 @@ fr:
       main_only: "Seulement téléphone principale "
       alternate_only: "Seulement téléphone alterné"
       both: "Les deux portables"
-      
+
   condition:
     operators:
       eq: "égal à"
@@ -656,7 +656,7 @@ fr:
       neq: "n'est pas égal"
       inc: "inclure"
       ninc: "n'est pas inclure"
-    op: "Comparaison" 
+    op: "Comparaison"
     value: "Valeur"
 
   form:
@@ -665,7 +665,7 @@ fr:
     back_to_questions: "Retourner à la liste des questions"
     choose_form: "Choisissez une fiche..."
     clone_confirm: "Vous êtes sûr que vous voulez faire un copie de la fiche '%{form_name}'?"
-    clone_error: "Il y avait un problème avec le clonage de la fiche (%{msg})."    
+    clone_error: "Il y avait un problème avec le clonage de la fiche (%{msg})."
     clone_success: "Fiche '%{form_name}' cloné avec succès."
     create_link: "Créer une nouvelle fiche"
     print_form: "Imprimer la fiche"
@@ -685,16 +685,16 @@ fr:
     unpublish: "Depublier"
     unsaved_rank_notice: "Vous n'avez pas encore enregistrer les changements vous avez fait à l'ordre des questions.  Vous devriez poussez 'enregistrer' si vous voulez sauver les changements."
     view_sms_guide: "Voir le guide de SMS"
-  
+
   location_picker:
     choose_location: "Choisissez l'emplacement"
     current_location: "L'emplacement actuel"
     enter_query: "Entrer une question dans la boîte au-dessus pour chercher un emplacement dans la base de données du Google."
     search_locations: "Recherche les emplacements..."
-  
+
   mission:
     create_link: "Créer une nouvelle mission"
-  
+
   notifier:
     if_link_doesnt_work: "Si le lien au-dessus ne marche pas, essayer de copier et coller dans le navigateur."
     if_you_made_it: "Si vous avez fait cette sollicitation seulement cliquer le lien au-dessus:"
@@ -704,12 +704,12 @@ fr:
     password_reset_instructions: "Instructions pour rerégler le mot de passe"
     request_made: "Une sollicitation pour remettre votre %{site} mot de passe a été fait. Si vous n'avez pas faites cette sollicitation, seulement ignorez cette courriel."
     welcome: "Bienvenue à %{site}!"
-  
+
   option:
     appears_elsewhere: "Noter: Cette option apparaît dans les fiches suivantes %{forms}. Quelque changement fait au-dessus va être réfléchi dans ces fiches."
     create_link: "Créer une nouvelle option"
     other_forms_published: "Au moins un de ces fiches est aussi publiée, donc seulement les noms peuvent être édité. Vous devez aussi faire attention de non changer pas le nom des options si vous éditez les noms."
-  
+
   option_set:
     create_link: "Créer une nouvelle collection d'options"
     create_options: "créer des options"
@@ -721,10 +721,10 @@ fr:
     fill_out_form: "Compléter la fiche au-dessus et les instructions pour remettre votre mot de passe seront vous envoyé. S'il n'y a pas une adresse du courriel associée a votre compte votre mot de passe devra être remis par un administrateur."
     success: "Mot de passe mis à jour avec succès"
     token_not_found: |-
-      Nous sommes désolés, mais ne pouvons pas trouver votre compte. Si vous avez des problèmes, essayez de recopier et coller l'URL. 
+      Nous sommes désolés, mais ne pouvons pas trouver votre compte. Si vous avez des problèmes, essayez de recopier et coller l'URL.
       de votre courriel dans votre navigateur ou recommencer le procès de remettre le mot de passe.
     user_not_found: "Pas d'utilisatuer était trouver à cet adresse d'e-mail."
-    
+
   permission_error:
     need_mission: "Vous ne pouvez pas voir ceci sans sélectionner une mission."
     need_login: "Vous devez connecter pour voir ça page."
@@ -733,7 +733,7 @@ fr:
     observers_cant_change_submitter: "Les observateurs ne peuvent pas changer l'expéditeur des soumissions."
     must_be_admin: "Vous devez être administrateur de vue cette page."
     must_be_logged_out: "Vous devez déconnecté de vue cette page."
-    
+
   question:
     answer_only_caps: "REPONDEZ SEULEMENT SI"
     appears_elsewhere: "Cette question apparaitre aussi dans les fiches suivants: %{forms}. Les changements que vous faites suivant sont réfleter sur les fiches aussi."
@@ -745,7 +745,7 @@ fr:
       strictly_lt: "strictement moins que"
       strictly_gt: "strictement plus grand que"
     other_forms_published: "Au moins d'une fiche est aussi publié, pas tout les domaine peuvent etre modifier."
-   
+
   question_type:
     text: "Texte"
     long_text: "Texte Longue"
@@ -758,7 +758,7 @@ fr:
     datetime: "Date/L'heure"
     date: "Date"
     time: "L'heure"
-    
+
   report/report:
     add_question_attribute: "Ajouter question/attribut"
     attribute:
@@ -823,19 +823,19 @@ fr:
     question_labels:
       code: "Seulement les codes (économise de l'espace)"
       title: "Titres remplis (plus facile à lire)"
-      
+
   response:
     create_link: "Créer un nouveau response"
     export_to_csv: "Exporter à format CSV"
     observation_time: "L'heure d'Observation"
     save_and_mark_reviewed: "Enregistrer et Marquer comme Examiné"
-    
+
   role:
     role: "Rôle"
     observer: "Observateur/Observatrice"
     staffer: "Membre du Personnel"
     coordinator: "Coodinateur/Coordinatrice"
-    
+
   search:
     at_end_of_query: "à la fin de recherche"
     blank: "vide"
@@ -845,23 +845,23 @@ fr:
     invalid_qualifier: "'%{chunk}' n'est pas un qualificateur valide de recherche."
     unexpected: "Texte inattendu près '%{str}'"
     search_error: "Erreur de Recherche"
-  
+
   setting:
     change_sms_password: "Changez mot de passe pour SMS"
     headings:
       general: "Paramètres généraux"
       incoming_sms: "Paramètres de SMS Entrant"
       outgoing_sms: "Paramètres de SMS en Partance"
-      
+
   sms:
     no_valid_adapter: "Il n'y a pas un adapteur de SMS en partance. S'il vous plaît vérifier le paramètres."
     outgoing_provider: "Fournisseur de SMS en partance"
-    
+
   sms_console:
     back_to_forms: "Retour au fiches"
     no_reply: "Aucune réponse."
     submit_error: "Il y avait un erreur pendant la soumission de votre examen."
-    
+
   sms_form:
     decoding:
       answer_error_intro: "Désolé, votre réponse '%{value}' pour question %{rank} dans la fiche '%{form_code}'"
@@ -916,10 +916,10 @@ fr:
   unauthorized:
     default: "Vous n'avez pas l'authorisation pour accès à la page."
     must_login: "Vous devez login pour accès à la page."
-  
+
   user_batch:
     success: "Utilisateurs créés avec succès."
-    
+
   user:
     back_to_index: "Retourner à liste d'utilisateurs"
     create_link: "Créer un nouveau utilisateur"
@@ -933,8 +933,8 @@ fr:
         - "Si vous plait (SVP) noté le 's' en 'https' sur le URL."
         - "Si vous aimez un mot de passe mémorable, vous pouvez changer sur le site."
         - |-
-          Les identifiants au-dessus fonctionneront aussi dans votre dispositif Android. Pour entrer votre identifiants, 
-          start the 'ODK Collect' application, press the 'Menu' button, tap 'Preferences', 
+          Les identifiants au-dessus fonctionneront aussi dans votre dispositif Android. Pour entrer votre identifiants,
+          start the 'ODK Collect' application, press the 'Menu' button, tap 'Preferences',
           and then tap each nom d'utilisateur et mot de passe.
       preamble_singular: |-
         Les instructions sont montrées sous. S'il vous plaît imprimer cette page et vous assurez que l'utilisateur sous la reçoit.
@@ -955,7 +955,7 @@ fr:
     reset_password_label_reset: "Réinstalisation de mot de passe?"
     send_email_instructions: "Envoyer les instructions d'email"
     show_printable_instructions: "Montrer instructions imprimable"
-  
+
   welcome:
     awaiting_review: "**%{count}** En attentes de révision"
     by_you: "**%{count}** Soumissions par vous"

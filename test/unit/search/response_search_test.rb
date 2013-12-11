@@ -35,15 +35,15 @@ class Search::ResponseSearchTest < ActiveSupport::TestCase
         @form.questions << FactoryGirl.create(:question, :qtype_name => 'long_text', :code => 'green')
 
         # add some responses
-        r1 = FactoryGirl.create(:response, :form => @form, :reviewed => false, 
+        r1 = FactoryGirl.create(:response, :form => @form, :reviewed => false,
           :_answers => [1, 'the quick brown', 'alpha', 'apple bear cat', 'dog earwax ipswitch'])
-        r2 = FactoryGirl.create(:response, :form => @form, :reviewed => true, 
+        r2 = FactoryGirl.create(:response, :form => @form, :reviewed => true,
           :_answers => [1, 'fox heaven jumps', 'bravo', 'fuzzy gusher', 'apple heaven ipswitch'])
-        r3 = FactoryGirl.create(:response, :form => @form, :reviewed => true, 
+        r3 = FactoryGirl.create(:response, :form => @form, :reviewed => true,
           :_answers => [1, 'over bravo the lazy brown quick dog', 'contour', 'joker lumpy', 'meal nexttime'])
-        
+
         do_sphinx_index
-  
+
         # answers qualifier should work with long_text questions
         assert_search('text:brown', r1, r3)
 
@@ -87,7 +87,7 @@ class Search::ResponseSearchTest < ActiveSupport::TestCase
 
         # excerpts should be correct
         assert_excerpts('text:heaven', [
-          [{:questioning_id => @form.questionings[1].id, :code => 'mauve', :text => "fox {{{heaven}}} jumps"}, 
+          [{:questioning_id => @form.questionings[1].id, :code => 'mauve', :text => "fox {{{heaven}}} jumps"},
            {:questioning_id => @form.questionings[4].id, :code => 'green', :text => "apple {{{heaven}}} ipswitch"}]
         ])
         assert_excerpts('{green}:heaven', [
@@ -106,7 +106,7 @@ class Search::ResponseSearchTest < ActiveSupport::TestCase
     def assert_search(query, *objs_or_error)
       if objs_or_error[0].is_a?(Hash)
         error_pattern = objs_or_error[0][:error]
-        begin 
+        begin
           run_search(query)
         rescue
           assert_match(error_pattern, $!.to_s)

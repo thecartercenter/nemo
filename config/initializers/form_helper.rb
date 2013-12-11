@@ -2,7 +2,7 @@ module ActionView
   module Helpers
     class FormBuilder
       include ActionView::Helpers::TagHelper
-      
+
       attr_accessor :mode
       alias :old_text_field :text_field
       alias :old_text_area :text_area
@@ -16,41 +16,41 @@ module ActionView
       def text_field(*args)
         rewrite_if_show_mode(:text_field, *args)
       end
-      
+
       def text_area(*args)
         rewrite_if_show_mode(:text_area, *args)
       end
-      
+
       def select(*args)
         rewrite_if_show_mode(:select, *args)
       end
-      
+
       def datetime_select(*args)
         rewrite_if_show_mode(:datetime_select, *args)
       end
-      
+
       def date_select(*args)
         rewrite_if_show_mode(:date_select, *args)
       end
-      
+
       def time_select(*args)
         rewrite_if_show_mode(:time_select, *args)
       end
-      
+
       def check_box(*args)
         rewrite_if_show_mode(:check_box, *args)
       end
-      
+
       def submit(*args)
         rewrite_if_show_mode(:submit, *args)
       end
-      
+
       private
-      
+
         # rewrites the output for the given field_type if the form is in show mode
         def rewrite_if_show_mode(field_type, *args)
           html = send("old_#{field_type}", *args)
-        
+
           # if not show mode, or field hidden, just return straight html
           if mode != :show || html.match(/display: none/)
             html
@@ -76,12 +76,12 @@ module ActionView
             else
               dummy_tag("[Rendering Error]")
             end
-            
+
             # return the dummy tag plus the original html hidden
             (html.gsub(/(<\w+ )/, '\1style="display: none" ') + dummy).html_safe
           end
         end
-        
+
         def dummy_tag(content, options = {})
           options[:style] ||= "dummy"
           "<div class=\"#{options[:style]}\">#{content}</div>".html_safe

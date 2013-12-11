@@ -5,16 +5,16 @@ class FixReportSettingCols < ActiveRecord::Migration
       %w(display_type bar_style question_labels percent_type).each do |col|
         r.send("#{col}=", r.send(col).underscore.gsub(" ", "_")) unless r.send(col).nil?
       end
-      
+
       # fix any 'undefined' values in the bar_style col
       r.bar_style = "side_by_side" if r.bar_style == "undefined"
-      
+
       # change any blank percent type to 'none'
       r.percent_type = "none" if r.percent_type.blank?
-      
+
       r.save(:validate => false)
     end
-    
+
     # fix default values
     change_column :report_reports, :display_type, :string, :default => "table"
     change_column :report_reports, :bar_style, :string, :default => "side_by_side"

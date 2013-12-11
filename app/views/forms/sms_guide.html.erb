@@ -9,11 +9,11 @@
       <input type="hidden" name="sms_guide" value="1">
       <%= t("common.language") %>:
       <select name="lang" onchange="this.form.submit();">
-        <%= configatron.full_locales.collect{|l| content_tag(:option, language_name(l), 
+        <%= configatron.full_locales.collect{|l| content_tag(:option, language_name(l),
             {:value => l}.merge(@lang.to_s == l.to_s ? {:selected => "selected"} : {}))}.join.html_safe %>
       </select>
     </form>
-    
+
     <%= link_to(t("page_titles.sms_tests.all"), new_sms_test_path) if can?(:create, Sms::Test) %>
   </div>
   <table>
@@ -33,7 +33,7 @@
         <%= answer_space(@form.current_version.code) %>
       </td>
     </tr>
-    
+
     <%# loop over each question %>
     <% @form.smsable_questionings.each do |qing| %>
       <tr>
@@ -46,7 +46,7 @@
           <%= answer_space(" #{qing.rank}.") %>
         </td>
       </tr>
-      
+
       <%# options area, for select_* questions %>
       <% if qing.question.qtype.has_options? %>
         <tr>
@@ -59,7 +59,7 @@
           <td class="answers"></td>
         </tr>
       <% end %>
-      
+
       <%# pointer/answer row, depends on question type %>
       <tr>
         <td class="rank"></td>
@@ -74,7 +74,7 @@
         </td>
       </tr>
     <% end %>
-    
+
     <%# final instructions %>
     <tr>
       <td colspan="3" class="step2">
@@ -88,7 +88,7 @@
       </td>
       <td></td>
     </tr>
-    
+
   </table>
 </div>
 <% I18n.locale = locale_was %>

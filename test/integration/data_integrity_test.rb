@@ -1,7 +1,7 @@
 require 'test_helper'
- 
+
 class DataIntegrityTest < ActionDispatch::IntegrationTest
-  
+
   setup do
     @admin = FactoryGirl.create(:user, :admin => true)
     login(@admin)

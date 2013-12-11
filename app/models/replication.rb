@@ -1,7 +1,7 @@
 # models a recursive replication operation
 # holds all internal parameters used during the operation
 class Replication
-  attr_accessor :to_mission, :parent_assoc, :in_transaction, :current_assoc, :ancestors, :deep_copy, 
+  attr_accessor :to_mission, :parent_assoc, :in_transaction, :current_assoc, :ancestors, :deep_copy,
     :recursed, :src_obj, :dest_obj
 
   def initialize(params)
@@ -38,7 +38,7 @@ class Replication
   def clone_for_recursion(child, association)
     self.class.new(
       # the new src_obj is of course the child
-      :src_obj => child, 
+      :src_obj => child,
 
       # these stay the same
       :to_mission => to_mission,

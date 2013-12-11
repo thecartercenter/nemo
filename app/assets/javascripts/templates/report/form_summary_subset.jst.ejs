@@ -9,7 +9,7 @@
 
   <% /*# if no data, then print a notice */ %>
   <% if (subset.no_data) { %>
-    
+
     <em><%= I18n.t('report/report.no_match') %></em>
 
   <% } else { %>
@@ -25,9 +25,9 @@
       <% } %>
 
       <table class="subset result_cols_<%= result_cols %>">
-        
+
         <% group.clusters.forEach(function(cluster){ %>
-        
+
           <% /*# do cluster header row */ %>
           <tr class="cluster_header">
             <td></td>
@@ -40,7 +40,7 @@
             <% /*# do rest of header cells if necessary */ %>
             <% if (cluster.display_type == 'flow' || cluster.display_type == 'structured' && cluster.headers.length > result_cols) { %>
               <td colspan="<%= result_cols %>"><%- cluster.overall_header %></td>
-            
+
             <% } else if (cluster.display_type == 'structured') { %>
               <% /*# print out each header cell */ %>
               <% cluster.headers.forEach(function(header) { %>
@@ -76,7 +76,7 @@
 
               <% /*# otherwise, loop over each item (answer) and make a row for it */ %>
               <% } else { %>
-                
+
                 <% summary.items.forEach(function(item) { %>
                   <tr class="summary">
                     <td colspan="<%= result_cols + 2 %>">

@@ -1,7 +1,7 @@
 class Search::LexToken
   attr_reader :kind, :content, :fragment
   attr_accessor :parent
-  
+
   # array of lex token kinds, in the order by which they should be searched
   EQUAL = {:name => :equal, :pattern => "="}
   KINDS = [
@@ -19,7 +19,7 @@ class Search::LexToken
     {:name => :string, :pattern => /"((?:[^"\\]|\\.)*)"/, :sub_idx => 1, :unescape_dbl_quotes => true},
     {:name => :chunk, :pattern => /[^\s:=<>!,)]+/}
   ]
-    
+
   def initialize(defn, content = "", fragment = "")
     @kind = defn[:name]
     @content, @fragment = content, fragment

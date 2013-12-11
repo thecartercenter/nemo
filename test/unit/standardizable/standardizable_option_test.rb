@@ -28,7 +28,7 @@ class StandardizableOptionTest < ActiveSupport::TestCase
   test "replicating standard-linked object within mission should not retain standard link" do
     so = FactoryGirl.build(:option, :name => 'Stuff', :is_standard => true)
     o = FactoryGirl.build(:option, :name => 'Stuff', :standard => so)
-    
+
     # standard objects should have nil mission
     assert_nil(so.mission)
     assert_not_nil(o.mission)

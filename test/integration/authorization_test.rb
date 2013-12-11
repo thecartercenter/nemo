@@ -1,7 +1,7 @@
 require 'test_helper'
- 
+
 class AuthorizationTest < ActionDispatch::IntegrationTest
-  
+
   setup do
     @other_mission = FactoryGirl.create(:mission, :name => "Other")
   end
@@ -14,7 +14,7 @@ class AuthorizationTest < ActionDispatch::IntegrationTest
     @user = FactoryGirl.create(:user)
     assert_can_access(@user, root_path)
   end
-  
+
   test "anybody can logout" do
     @user = FactoryGirl.create(:user)
     # even guest can go to the logout page and get a sensible response (reduced confusion if back button used)
@@ -27,7 +27,7 @@ class AuthorizationTest < ActionDispatch::IntegrationTest
     assert_can_access(nil, missions_path, :redirected_to => login_url)
     assert_select("div.error", /must login/)
   end
-  
+
   test "user redirected to root if unauthorized" do
     @user = FactoryGirl.create(:user, :role_name => :observer, :admin => false)
     assert_cannot_access(@user, settings_path)
@@ -66,25 +66,25 @@ class AuthorizationTest < ActionDispatch::IntegrationTest
     assert_nil(assigns(:access_denied))
     assert_equal('staffer', obs.reload.assignments.first.role)
   end
-  
+
   private
     # logs in a user and attempts to load the given path
     # errors if the response is not 200
     def assert_can_access(user, path, options = {})
       login(user) if user
-      
+
       get(path)
-      
+
       if options[:redirected_to]
         # check to make sure we were redirected properly
         assert_redirected_to(options[:redirected_to])
         # follow the redirect and look for a message
         follow_redirect!
       end
-      
+
       assert_response(options[:expected_response] || :success)
     end
-    
+
     def assert_cannot_access(user, path, options = {})
       login(user) if user
       get(path)

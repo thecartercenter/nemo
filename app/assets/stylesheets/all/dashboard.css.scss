@@ -23,24 +23,24 @@ body.dashboard {
     right: 10px;
     text-decoration: none;
   }
-  
+
   h2 {
     color: #888;
     text-transform: uppercase;
     margin: 0 0 15px 0;
     font-size: 18px;
   }
-  
+
   /* interior headers need top margin also */
   h2.interior {
     margin-top: 15px;
   }
-  
+
   /* columns */
   div.col {
     display: inline-block;
     vertical-align: top;
-    
+
     &.left_col {
       padding-right: 15px;
     }
@@ -48,7 +48,7 @@ body.dashboard {
     &.right_col {
     }
   }
-  
+
   /* responses index table */
   div.recent_responses {
     overflow-x: hidden;
@@ -60,56 +60,56 @@ body.dashboard {
       }
     }
   }
-  
+
   /* map info window */
   div.info_window {
     width: 275px;
     height: 130px;
-    
+
     h3 {
       margin-bottom: 10px;
     }
-    
+
     table {
       width: 100%;
-      
+
       td:first-child {
         font-size: 11px;
         padding-right: 10px;
         height: 20px;
       }
-      
+
       td:last-child {
         font-weight: bold;
       }
     }
   }
-  
+
   /* stats */
-  
+
   div.report_stats {
     /* ensure stat blocks don't wrap */
     white-space: nowrap;
     overflow-x: auto;
   }
-  
+
   div.stat_block {
     display: inline-block;
     vertical-align: top;
     margin-right: 15px;
-    
+
     ul {
       list-style-type: none;
       padding: 0;
       margin: 0;
       font-size: 16px;
-      
+
       li {
         width: 225px;
         white-space: nowrap;
         overflow: hidden;
       }
-      
+
       a {
         text-decoration: none;
       }
@@ -122,15 +122,15 @@ body.dashboard {
     float: right;
     margin-top: 15px;
   }
-  
+
   .report_pane {
-    
+
     h2 {
       display: inline-block;
     }
-    
-    .report_main { 
-      overflow: auto; 
+
+    .report_main {
+      overflow: auto;
     }
   }
 }

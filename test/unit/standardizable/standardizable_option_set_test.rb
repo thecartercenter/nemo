@@ -180,10 +180,10 @@ class StandardizableOptionSetTest < ActiveSupport::TestCase
   test "deleting an option set should delete copies" do
     std = FactoryGirl.create(:option_set, :is_standard => true, :option_names => %w(yes no maybe))
     copy = std.replicate(get_mission)
-    
+
     # make sure optionings exist
     assert_not_nil(Optioning.where(:option_set_id => copy.id).first)
-    
+
     std.destroy
 
     # make sure option set and optionings are destroyed

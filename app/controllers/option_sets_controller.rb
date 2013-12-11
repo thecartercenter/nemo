@@ -20,7 +20,7 @@ class OptionSetsController < ApplicationController
 
     load_importable_objs
   end
-  
+
   def new
     # we only need the partial if it's an ajax request
     if ajax_request?
@@ -29,7 +29,7 @@ class OptionSetsController < ApplicationController
       render(:form)
     end
   end
-  
+
   def edit
     render(:form)
   end
@@ -41,7 +41,7 @@ class OptionSetsController < ApplicationController
   def create
     create_or_update
   end
-  
+
   def update
     # assign attribs and validate now so that normalization runs before authorizing and saving
     @option_set.assign_attributes(params[:option_set])
@@ -66,7 +66,7 @@ class OptionSetsController < ApplicationController
     def create_or_update
       begin
         @option_set.save!
-        
+
         # if this is an ajax request, we just render the option set's id
         if ajax_request?
           render(:json => @option_set.id)
@@ -75,7 +75,7 @@ class OptionSetsController < ApplicationController
         end
       rescue ActiveRecord::RecordInvalid, DeletionError
         @option_set.errors.add(:base, $!.to_s) if $!.is_a?(DeletionError)
-        
+
         # if this is an ajax request, we just render the form partial
         if ajax_request?
           render(:partial => 'form')

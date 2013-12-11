@@ -7,12 +7,12 @@ module ResponsesHelper
       fields = %w(id form_id user_id) + key_question_hashes(2) + %w(created_at age reviewed actions)
     end
   end
-  
+
   # returns an array of hashes representing the key question column(s)
   def key_question_hashes(n)
     Question.accessible_by(current_ability).key(n).map{|q| {:title => q.code, :css_class => q.code.downcase, :question => q}}
   end
-  
+
   def format_responses_field(resp, field)
     # handle special case where field is hash
     if field.is_a?(Hash)
@@ -29,35 +29,35 @@ module ResponsesHelper
         # we don't need to authorize these links b/c for responses, if you can see it, you can edit it.
         # the controller actions will still be auth'd
         by = resp.user ? " by #{resp.user.name}" : ""
-        action_links(resp, :obj_description => resp.user ? 
-          "#{Response.model_name.human} #{t('common.by').downcase} #{resp.user.name}" : 
+        action_links(resp, :obj_description => resp.user ?
+          "#{Response.model_name.human} #{t('common.by').downcase} #{resp.user.name}" :
           "#{t('common.this').downcase} #{Response.model_name.human}")
       else resp.send(field)
       end
     end
   end
-  
+
   def responses_index_links(responses)
     links = []
-    
+
     # only add the create response link if there are any published forms and the user is auth'd to create
     if !@pubd_forms.empty? && can?(:create, Response)
       links << create_link(Response, :js => true) + new_response_mini_form(false)
     end
-    
+
     # only add the export link if there are responses and the user is auth'd to export
     if !responses.empty? && can?(:export, Response)
       links << link_to(t("response.export_to_csv"), responses_path(:format => :csv, :search => params[:search]))
     end
-    
+
     # return the assembled list of links
     links
   end
-  
+
   # shows response excerpts if available
   def responses_second_row(response)
     if response.excerpts
-      # loop over each 
+      # loop over each
       response.excerpts.map do |e|
         # force the string to be escaped before adding more tags
         html = excerpt_to_html(e[:text])
@@ -71,11 +71,11 @@ module ResponsesHelper
   # builds a small inline form consisting of a dropdown for choosing a Form to which to submit a new response
   def new_response_mini_form(visible = true)
     form_tag(new_response_path, :method => :get, :id => "form_chooser", :style => visible ? "" : "display: none") do
-      select_tag(:form_id, sel_opts_from_objs(@pubd_forms, :name_method => :full_name, :tags => true), 
+      select_tag(:form_id, sel_opts_from_objs(@pubd_forms, :name_method => :full_name, :tags => true),
         :prompt => t("form.choose_form"), :onchange => "this.form.submit()")
     end
   end
-  
+
   # converts the given responses to csv
   def responses_to_csv(responses)
     if responses.empty?
@@ -84,13 +84,13 @@ module ResponsesHelper
       CSV.generate do |csv|
         # add header row
         csv << responses.first.attributes.keys
-        
+
         # add rest of rows
         responses.each{|r| csv << r.attributes.values}
       end
     end
   end
-  
+
   # takes a recent count (e.g. [5, "week"]) and translates it
   def translate_recent_responses(count)
     if count.nil?

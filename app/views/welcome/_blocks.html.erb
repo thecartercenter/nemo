@@ -24,7 +24,7 @@
 
       <% else %>
         <li><%= link_to(tmd("welcome.published_form_count", :count => @pub_form_count), forms_path) %></li>
-      
+
         <%# only show unpub'd form count if can manage forms %>
         <% if can?(:manage, Form) %>
           <li><%= link_to(tmd("welcome.unpublished_form_count", :count => @unpub_form_count), forms_path) %></li>
@@ -64,7 +64,7 @@
       <li><%= link_to(tmd("welcome.total_responses", :count => @total_response_count), responses_path) %></li>
       <li><%= link_to(tmd("welcome.awaiting_review", :count => @unreviewed_response_count),
                 responses_path(:search => "reviewed:no")) %></li>
-    
+
       <%# only show the total response count if it's nonzero %>
       <% if @total_response_count > 0 %>
         <li><%= link_to(translate_recent_responses(@recent_responses_count), responses_path) %></li>

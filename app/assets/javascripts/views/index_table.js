@@ -17,7 +17,7 @@
         // but don't do it with td.actions_col or td.actions_col > div to avoid misclick
         // also don't do it if no clickable
         if ($(e.target).closest('td').is(':not(.actions_col)') && $(e.currentTarget).is('.clickable'))
-          window.location.href = $(e.currentTarget).data('href'); 
+          window.location.href = $(e.currentTarget).data('href');
       });
 
     // add 'hovered' class to partner row if exists
@@ -37,7 +37,7 @@
     $('table.index_table tbody').on('mouseout', 'tr', function(e) {
       $('table.index_table tbody tr.hovered').removeClass('hovered');
     });
-    
+
   }
 
 })(ELMO.Views);

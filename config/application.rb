@@ -48,30 +48,30 @@ module ELMO
 
     # Enable the asset pipeline
     config.assets.enabled = true
-    
+
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
 
     # schema dump format is sql b/c we have a fulltext index and we dont care about changing rdbms
     config.active_record.schema_format = :sql
 
-    
+
     ####################################
     # CUSTOM SETTINGS
     ####################################
-    
+
     # read system version as git tag
     configatron.system_version = `git describe`.strip rescue "?"
-    
+
     # set up preferred geocoder
     configatron.geocoder = Configatron::Delayed.new{GoogleGeocoder}
-    
+
     # regular expressions
     configatron.lat_lng_regexp = /^(-?\d+(\.\d+)?)\s*[,;:\s]\s*(-?\d+(\.\d+)?)/
-    
+
     # a short tag that starts smses and email subjects for broadcasts
     configatron.broadcast_tag = "[TCC]"
-    
+
     # locales with full translations (I18n.available_locales returns a whole bunch more defined by i18n-js)
     configatron.full_locales = [:en, :fr]
   end

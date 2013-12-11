@@ -1,6 +1,6 @@
 class FixFormRanks < ActiveRecord::Migration
   def up
-    Form.all.each do |f| 
+    Form.all.each do |f|
       if f.respond_to?(:fix_ranks)
         puts "checking form '#{f.name}'"
 

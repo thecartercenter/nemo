@@ -3,18 +3,18 @@ FactoryGirl.define do
     ignore do
       _answers []
     end
-    
+
     user
     form
     mission { get_mission }
-    
+
     # build answer objects from _answers array
     answers do
       _answers.each_with_index.map do |a, idx|
         # build answer from string value
         qing = form.questionings[idx]
         ans = Answer.new(:questioning => qing)
-        
+
         unless a.nil?
           case qing.qtype_name
 

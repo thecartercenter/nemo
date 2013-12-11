@@ -2,7 +2,7 @@
 
 <%= nice_form_for(@questioning) do |f| %>
   <%= f.hidden_field(:form_id) %>
-  
+
   <%= f.fields_for(:question) do |question_form| %>
     <% question_form.mode = form_mode %>
     <%= render('questions/fields', :form => question_form) %>

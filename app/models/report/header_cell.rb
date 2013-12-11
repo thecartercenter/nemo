@@ -7,7 +7,7 @@ class Report::HeaderCell
     @sort_value = params[:sort_value] || @name
     @key = params[:key] || @name
   end
-  
+
   def as_json(options = {})
     {:name => name, :sort_value => sort_value, :key => key}
   end

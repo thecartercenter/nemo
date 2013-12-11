@@ -46,7 +46,7 @@ en:
     remove: "Remove"
     report: "Report"
     reset: "Reset"
-    result: 
+    result:
       zero: "Results"
       one: "Result"
       other: "Results"
@@ -104,7 +104,7 @@ en:
         zero: "Assignments"
         one: "Assignment"
         other: "Assignments"
-      broadcast: 
+      broadcast:
         zero: "Broadcasts"
         one: "Broadcast"
         other: "Broadcasts"
@@ -172,7 +172,7 @@ en:
         zero: "Standard Form Reports"
         one: "Standard Form Report"
         other: "Standard Form Reports"
-      response: 
+      response:
         zero: "Responses"
         one: "Response"
         other: "Responses"
@@ -197,7 +197,7 @@ en:
         balance: "SMS Balance"
         body: "Message"
         created_at: "Send Time"
-        errors: "Errors?" 
+        errors: "Errors?"
         medium: "Medium"
         send_errors: "Delivery Errors"
         subject: "Subject"
@@ -305,7 +305,7 @@ en:
       option_set:
         geographic: "Whether this option set represents geographic information, e.g. a set of provinces or regions."
         name: "A name that summarizes this set of options. Normal users will not see this name."
-        options: 
+        options:
           other: "Add existing options by typing them and clicking 'Add'. If you do not see an option in the drop down, you can add a new one by clicking 'Create New Option'."
           show: "The options that will appear for questions using this option set."
       question:
@@ -332,9 +332,9 @@ en:
         percent_type: "Whether and how percentages should be calculated for the report."
         bar_style: "Whether bars should be stacked or side-by-side."
       setting:
-        preferred_locales_str: |- 
+        preferred_locales_str: |-
           Enter the <a href="http://www.loc.gov/standards/iso639-2/php/code_list.php" target="_blank">two-letter codes</a>, separated by commas, for the languages for this mission, in order of preference.
-          
+
           This setting determines:
           * The default language preference for new users
           * The default language for SMS replies
@@ -365,7 +365,7 @@ en:
       user_batch:
         batch: |-
           Enter names, email addresses, and phone numbers (WITH country codes), one per line, separated by commas or tabs. For example:
-            
+
           Alice Merrywinkle, alice@winkle.org, +20112313411
           Chung Li, cli@gmail.com
           Forgo Niambot, +203300303, +2083748374
@@ -442,7 +442,7 @@ en:
           attributes:
             assignments:
               cant_be_empty_if_not_admin: "can't be empty if not admin"
-  
+
   # application-wide strings
   layout:
     about: "About ELMO"
@@ -471,76 +471,76 @@ en:
     page_gap: "&hellip;" # this entry should be the same for all languages
     # please preserve <b> and </b> tags in the below
     broadcast:
-      page_entries_info: 
+      page_entries_info:
         single_page_html:
           zero:  "No Broadcasts found"
           one:   "Displaying <b>1</b> Broadcast"
           other: "Displaying <b>all %{count}</b> Broadcasts"
         multi_page_html: "Displaying Broadcasts <b>%{from} - %{to}</b> of <b>%{count}</b> in total"
     form:
-      page_entries_info: 
+      page_entries_info:
         single_page_html:
           zero:  "No Forms found"
           one:   "Displaying <b>1</b> Form"
           other: "Displaying <b>all %{count}</b> Forms"
     mission:
-      page_entries_info: 
+      page_entries_info:
         single_page_html:
           zero:  "No Missions found"
           one:   "Displaying <b>1</b> Mission"
           other: "Displaying <b>all %{count}</b> Missions"
     option:
-      page_entries_info: 
+      page_entries_info:
         single_page_html:
           zero:  "No Options found"
           one:   "Displaying <b>1</b> Option"
           other: "Displaying <b>all %{count}</b> Options"
     option_set:
-      page_entries_info: 
+      page_entries_info:
         single_page_html:
           zero:  "No Option Sets found"
           one:   "Displaying <b>1</b> Option Set"
           other: "Displaying <b>all %{count}</b> Option Sets"
     question:
-      page_entries_info: 
+      page_entries_info:
         single_page_html:
           zero:  "No Questions found"
           one:   "Displaying <b>1</b> Question"
           other: "Displaying <b>all %{count}</b> Questions"
     questioning: # should be same as question
-      page_entries_info: 
+      page_entries_info:
         single_page_html:
           zero:  "No Questions found"
           one:   "Displaying <b>1</b> Question"
           other: "Displaying <b>all %{count}</b> Questions"
     report/report:
-      page_entries_info: 
+      page_entries_info:
         single_page_html:
           zero:  "No Reports found"
           one:   "Displaying <b>1</b> Report"
           other: "Displaying <b>all %{count}</b> Reports"
     response:
-      page_entries_info: 
+      page_entries_info:
         single_page_html:
           zero:  "No Responses found"
           one:   "Displaying <b>1</b> Response"
           other: "Displaying <b>all %{count}</b> Responses"
         multi_page_html: "Displaying Responses <b>%{from} - %{to}</b> of <b>%{count}</b> in total"
     sms/message:
-      page_entries_info: 
+      page_entries_info:
         single_page_html:
           zero:  "No SMSes found"
           one:   "Displaying <b>1</b> SMS"
           other: "Displaying <b>all %{count}</b> SMSes"
         multi_page_html: "Displaying SMSes <b>%{from} - %{to}</b> of <b>%{count}</b> in total"
     user:
-      page_entries_info: 
+      page_entries_info:
         single_page_html:
           zero:  "No Users found"
           one:   "Displaying <b>1</b> User"
           other: "Displaying <b>all %{count}</b> Users"
         multi_page_html: "Displaying Users <b>%{from} - %{to}</b> of <b>%{count}</b> in total"
-  
+
   # authlogic translations
   authlogic:
     error_messages:
@@ -624,7 +624,7 @@ en:
       index: "Options"
       new: "New Option"
       show: "Option: %{name}"
-    password_resets: 
+    password_resets:
       all: "Reset Password"
     questions:
       edit: "Edit Question: %{code}"
@@ -759,7 +759,7 @@ en:
     back_to_questions: "Back to Questions List"
     choose_form: "Choose a Form..."
     clone_confirm: "Are you sure you want to make a copy of the form '%{form_name}'?"
-    clone_error: "There was a problem cloning the form (%{msg})."    
+    clone_error: "There was a problem cloning the form (%{msg})."
     clone_success: "Form '%{form_name}' cloned successfully."
     create_link: "Create Form"
     print_form: "Print Form"
@@ -819,7 +819,7 @@ en:
     fill_out_form: "Fill out the form below and instructions to reset your password will be emailed to you. If there is no email address associated with your account your password will have to reset by an administrator."
     success: "Password updated successfully."
     token_not_found: |-
-      We're sorry, but we could not locate your account. If you are having issues try copying and pasting the URL 
+      We're sorry, but we could not locate your account. If you are having issues try copying and pasting the URL
       from your email into your browser or restarting the reset password process.
     user_not_found: "No user was found with that email address."
 
@@ -1088,16 +1088,16 @@ en:
 
   standard:
     import: "Import"
-    import_choose_one: 
+    import_choose_one:
       forms: "Please choose at least one Form to import."
       option_sets: "Please choose at least one Option Set to import."
       questions: "Please choose at least one Question to import."
     import_errors: "There were errors."
-    import_instructions: 
+    import_instructions:
       forms: "Check the boxes next to the Forms you'd like to import. Then click the 'import' button."
       option_sets: "Check the boxes next to the Option Sets you'd like to import. Then click the 'import' button."
       questions: "Check the boxes next to the Questions you'd like to import. Then click the 'import' button."
-    import_standard: 
+    import_standard:
       forms: "Import Standard Forms"
       option_sets: "Import Standard Option Sets"
       questions: "Import Standard Questions"
@@ -1114,7 +1114,7 @@ en:
         zero: "Successfully imported %{count} Questions."
         one: "Successfully imported %{count} Question."
         other: "Successfully imported %{count} Questions."
-    no_importable: 
+    no_importable:
       forms: "There is nothing available to import. Either there are no standard Forms, or they have all been imported already."
       option_sets: "There is nothing available to import. Either there are no standard Option Sets, or they have all been imported already."
       questions: "There is nothing available to import. Either there are no standard Questions, or they have all been imported already."
@@ -1143,8 +1143,8 @@ en:
         - "Please note the 's' in 'https' in the site URL."
         - "If you'd like to choose a more memorable password, you can change your password using the website."
         - |-
-          The above credentials will also work on your Android device. To enter your credentials, 
-          start the 'ODK Collect' application, press the 'Menu' button, tap 'Preferences', 
+          The above credentials will also work on your Android device. To enter your credentials,
+          start the 'ODK Collect' application, press the 'Menu' button, tap 'Preferences',
           and then tap each of 'Username' and 'Password'.
       preamble_singular: |-
         Login instructions are shown below. Please print this page now and ensure the user below receives it.
@@ -1183,5 +1183,5 @@ en:
     select_a_form: "Select a Form To Submit"
     select_a_report: "Select a Report To View"
     total_responses: "**%{count}** Total Responses"
-    total_users: "**%{count}** Total Users"    
+    total_users: "**%{count}** Total Users"
     unpublished_form_count: "**%{count}** Unpublished Forms"

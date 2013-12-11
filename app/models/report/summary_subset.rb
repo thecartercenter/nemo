@@ -11,7 +11,7 @@ class Report::SummarySubset
     attribs.each{|k,v| instance_variable_set("@#{k}", v)}
 
     @summaries ||= []
-    
+
     # if all summaries have no items (are empty), set the empty flag
     @no_data = summaries.all?{|s| s.items.empty?}
   end
@@ -32,7 +32,7 @@ class Report::SummarySubset
     # assumes disagg_value is nil or an Option
     # don't need to include summaries as they're in the groups
     {
-      :groups => groups, 
+      :groups => groups,
       :disagg_value => disagg_value.nil? ? nil : disagg_value.as_json(:only => [:id], :methods => :name),
       :no_data => no_data?
     }

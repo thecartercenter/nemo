@@ -126,7 +126,7 @@ class Report::SummaryCollectionSingleTest < ActiveSupport::TestCase
   test "time question summary should be correct in normal case" do
     prepare_form_and_collection('time', %w(9:30 10:15 22:15))
 
-    # check stats    
+    # check stats
     # assert_equal({:mean => tp('14:00'), :median => tp('10:15'), :min => tp('9:30'), :max => tp('22:15')}, headers_and_items(:stat, :stat))
     assert_equal({:mean => '14:00', :min => '09:30', :max => '22:15'}, headers_and_items(:stat, :stat))
   end
@@ -145,8 +145,8 @@ class Report::SummaryCollectionSingleTest < ActiveSupport::TestCase
     prepare_form_and_collection('datetime', ['2013-10-26 18:45', '2013-10-26 10:15', '2013-10-27 19:00'])
 
     # check stats
-    # assert_equal({:mean => dtp('2013-10-27 00:00'), :median => dtp('2013-10-26 18:45'), 
-    #   :min => dtp('2013-10-26 10:15'), :max => dtp('2013-10-27 19:00')}, 
+    # assert_equal({:mean => dtp('2013-10-27 00:00'), :median => dtp('2013-10-26 18:45'),
+    #   :min => dtp('2013-10-26 10:15'), :max => dtp('2013-10-27 19:00')},
     #   headers_and_items(:stat, :stat))
     assert_equal({:mean => 'Oct 27 2013 00:00',
       :min => 'Oct 26 2013 10:15', :max => 'Oct 27 2013 19:00'},

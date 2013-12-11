@@ -36,13 +36,13 @@ class Report::StandardFormReportTest < ActiveSupport::TestCase
 
   test "report should not contain invisible questionings" do
     build_form_and_responses
-    
+
     # make one question invisible
     @form.questionings[1].hidden = true
     @form.save!
 
     build_and_run_report
-    
+
     assert(!@report.subsets[0].summaries.map(&:questioning).include?(@form.questionings[1]), "summaries should not contain hidden question")
   end
 

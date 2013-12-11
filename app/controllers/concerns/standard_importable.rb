@@ -7,7 +7,7 @@ module StandardImportable
   # attempts to import each, failing silently if any import fails and continuing on to next
   # imports generally shouldn't fail, however
   def import_standard
-    # for each id, try to find the object and import it. keep a count. if there are errors, 
+    # for each id, try to find the object and import it. keep a count. if there are errors,
     # just log them to debug, since this should never happen.
     import_count = 0
     errors = false

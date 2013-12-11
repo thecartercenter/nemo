@@ -1,10 +1,10 @@
 class UserBatchesController < ApplicationController
   # authorization via cancan
   load_and_authorize_resource
-  
+
   def new
   end
-  
+
   def create
     @user_batch.create_users(current_mission)
     if @user_batch.succeeded?

@@ -67,7 +67,7 @@ class Report::SummaryCollectionBuilder
 
       # loop over each possible disagg value
       subsets = disagg_values.map do |disagg_value|
-        
+
         # loop over each stat qing
         summaries = stat_qs.map do |qing|
 
@@ -100,7 +100,7 @@ class Report::SummaryCollectionBuilder
           end
 
           # build summary and store in hash
-          Report::QuestionSummary.new(:questioning => qing, :display_type => :structured, 
+          Report::QuestionSummary.new(:questioning => qing, :display_type => :structured,
             :headers => headers, :items => items, :null_count => null_count)
         end
 
@@ -123,7 +123,7 @@ class Report::SummaryCollectionBuilder
       qing_ids = stat_qs.map(&:id).join(',')
 
       query = <<-eos
-        SELECT #{disagg_select_expr} qing.id AS qing_id, q.qtype_name AS qtype_name, 
+        SELECT #{disagg_select_expr} qing.id AS qing_id, q.qtype_name AS qtype_name,
           SUM(
             CASE q.qtype_name
               WHEN 'integer' THEN IF(a.value IS NULL OR a.value = '', 1, 0)
@@ -133,27 +133,27 @@ class Report::SummaryCollectionBuilder
             END
           ) AS null_count,
           CASE q.qtype_name
-            WHEN 'integer' THEN AVG(CONVERT(a.value, SIGNED INTEGER)) 
+            WHEN 'integer' THEN AVG(CONVERT(a.value, SIGNED INTEGER))
             WHEN 'decimal' THEN AVG(CONVERT(a.value, DECIMAL(9,6)))
             WHEN 'time' THEN SEC_TO_TIME(AVG(TIME_TO_SEC(a.time_value)))
             WHEN 'datetime' THEN FROM_UNIXTIME(AVG(UNIX_TIMESTAMP(a.datetime_value)))
           END AS mean,
           CASE q.qtype_name
-            WHEN 'integer' THEN MIN(CONVERT(a.value, SIGNED INTEGER)) 
+            WHEN 'integer' THEN MIN(CONVERT(a.value, SIGNED INTEGER))
             WHEN 'decimal' THEN MIN(CONVERT(a.value, DECIMAL(9,6)))
             WHEN 'time' THEN MIN(a.time_value)
             WHEN 'datetime' THEN MIN(a.datetime_value)
           END AS min,
           CASE q.qtype_name
-            WHEN 'integer' THEN MAX(CONVERT(a.value, SIGNED INTEGER)) 
+            WHEN 'integer' THEN MAX(CONVERT(a.value, SIGNED INTEGER))
             WHEN 'decimal' THEN MAX(CONVERT(a.value, DECIMAL(9,6)))
             WHEN 'time' THEN MAX(a.time_value)
             WHEN 'datetime' THEN MAX(a.datetime_value)
           END AS max
-        FROM answers a INNER JOIN questionings qing ON a.questioning_id = qing.id AND qing.id IN (#{qing_ids}) 
+        FROM answers a INNER JOIN questionings qing ON a.questioning_id = qing.id AND qing.id IN (#{qing_ids})
           INNER JOIN questions q ON q.id = qing.question_id
           #{disagg_join_clause}
-        WHERE q.qtype_name in ('integer', 'decimal', 'time', 'datetime') 
+        WHERE q.qtype_name in ('integer', 'decimal', 'time', 'datetime')
         GROUP BY #{disagg_group_by_expr} qing.id, q.qtype_name
       eos
       res = ActiveRecord::Base.connection.execute(query)
@@ -186,7 +186,7 @@ class Report::SummaryCollectionBuilder
 
         # loop over each questioning to generate summaries
         summaries = select_qs.map do |qing|
-          
+
           # build headers
           headers = qing.options.map{|option| {:name => option.name, :option => option}}
 
@@ -211,7 +211,7 @@ class Report::SummaryCollectionBuilder
           null_count = qing.qtype_name == 'select_one' ? tallies[[disagg_value, qing.id, nil]] : 0
 
           # build summary
-          Report::QuestionSummary.new(:questioning => qing, :display_type => :structured, :overall_header => qing.option_set.name, 
+          Report::QuestionSummary.new(:questioning => qing, :display_type => :structured, :overall_header => qing.option_set.name,
             :headers => headers, :items => items, :null_count => null_count)
         end
 
@@ -227,9 +227,9 @@ class Report::SummaryCollectionBuilder
 
       # build and run queries for select_one and _multiple
       query = <<-eos
-        SELECT #{disagg_select_expr} qings.id AS qing_id, a.option_id AS option_id, COUNT(a.id) AS answer_count 
-        FROM questionings qings 
-          INNER JOIN questions q ON qings.question_id = q.id 
+        SELECT #{disagg_select_expr} qings.id AS qing_id, a.option_id AS option_id, COUNT(a.id) AS answer_count
+        FROM questionings qings
+          INNER JOIN questions q ON qings.question_id = q.id
           LEFT OUTER JOIN answers a ON qings.id = a.questioning_id
           #{disagg_join_clause}
           WHERE q.qtype_name IN ('select_one', 'select_multiple')
@@ -237,11 +237,11 @@ class Report::SummaryCollectionBuilder
           GROUP BY #{disagg_group_by_expr} qings.id, a.option_id
       eos
       sel_one_res = ActiveRecord::Base.connection.execute(query)
-      
+
       query = <<-eos
-        SELECT #{disagg_select_expr} qings.id AS qing_id, c.option_id AS option_id, COUNT(c.id) AS choice_count 
-        FROM questionings qings 
-          INNER JOIN questions q ON qings.question_id = q.id 
+        SELECT #{disagg_select_expr} qings.id AS qing_id, c.option_id AS option_id, COUNT(c.id) AS choice_count
+        FROM questionings qings
+          INNER JOIN questions q ON qings.question_id = q.id
           LEFT OUTER JOIN answers a ON qings.id = a.questioning_id
           LEFT OUTER JOIN choices c ON a.id = c.answer_id
           #{disagg_join_clause}
@@ -274,8 +274,8 @@ class Report::SummaryCollectionBuilder
       # get the non-null answer counts for sel mult questions
       query = <<-eos
         SELECT #{disagg_select_expr} qings.id AS qing_id, COUNT(DISTINCT a.id) AS non_null_answer_count
-        FROM questionings qings 
-          INNER JOIN questions q ON qings.question_id = q.id 
+        FROM questionings qings
+          INNER JOIN questions q ON qings.question_id = q.id
           LEFT OUTER JOIN answers a ON qings.id = a.questioning_id
           LEFT OUTER JOIN choices c ON a.id = c.answer_id
           #{disagg_join_clause}
@@ -316,7 +316,7 @@ class Report::SummaryCollectionBuilder
 
           # build headers from tally keys (already sorted)
           headers = (cur_tallies ? cur_tallies.keys.reject(&:nil?) : []).map{|date| {:name => I18n.l(date), :date => date}}
-          
+
           # build tallies, keeping a running sum
           non_null_count = 0
           items = headers.map do |h|
@@ -334,7 +334,7 @@ class Report::SummaryCollectionBuilder
           null_count = (cur_tallies || {})[nil] || 0
 
           # build summary
-          Report::QuestionSummary.new(:questioning => qing, :display_type => :structured, 
+          Report::QuestionSummary.new(:questioning => qing, :display_type => :structured,
             :overall_header => I18n.t('report/report.standard_form_report.overall_headers.dates'),
             :headers => headers, :items => items, :null_count => null_count)
         end
@@ -352,9 +352,9 @@ class Report::SummaryCollectionBuilder
 
       # build and run query
       query = <<-eos
-        SELECT #{disagg_select_expr} qings.id AS qing_id, a.date_value AS date, COUNT(a.id) AS answer_count 
+        SELECT #{disagg_select_expr} qings.id AS qing_id, a.date_value AS date, COUNT(a.id) AS answer_count
         FROM questionings qings
-          INNER JOIN questions q ON qings.question_id = q.id 
+          INNER JOIN questions q ON qings.question_id = q.id
           LEFT OUTER JOIN answers a ON qings.id = a.questioning_id
           #{disagg_join_clause}
           WHERE q.qtype_name = 'date'
@@ -417,8 +417,8 @@ class Report::SummaryCollectionBuilder
       end
 
       # build subsets
-      subsets = disagg_values.map do |disagg_value|    
-        
+      subsets = disagg_values.map do |disagg_value|
+
         # build summaries for this disagg_value
         summaries = raw_qs.map do |qing|
 
@@ -432,7 +432,7 @@ class Report::SummaryCollectionBuilder
           null_count = null_counts_hash[[disagg_value, qing.id]] || 0
 
           # build summary (headers are blank b/c there is only one column so header is always the same ('responses'))
-          Report::QuestionSummary.new(:questioning => qing, :display_type => display_type, 
+          Report::QuestionSummary.new(:questioning => qing, :display_type => display_type,
             :overall_header => I18n.t('report/report.standard_form_report.overall_headers.responses'),
             :headers => [], :items => items, :null_count => null_count)
         end
@@ -451,7 +451,7 @@ class Report::SummaryCollectionBuilder
 
       # build and run query
       query = <<-eos
-        SELECT #{disagg_select_expr} a.id AS id, a.questioning_id AS qing_id, a.value AS value, 
+        SELECT #{disagg_select_expr} a.id AS id, a.questioning_id AS qing_id, a.value AS value,
           a.response_id AS response_id, a.created_at AS created_at
         FROM answers a
           #{disagg_join_clause}
@@ -472,8 +472,8 @@ class Report::SummaryCollectionBuilder
         {}
       else
         query = <<-eos
-          SELECT a.id AS answer_id, u.name AS submitter_name 
-          FROM answers a 
+          SELECT a.id AS answer_id, u.name AS submitter_name
+          FROM answers a
             INNER JOIN responses r ON a.response_id = r.id
             INNER JOIN users u ON r.user_id = u.id
           WHERE a.questioning_id IN (#{long_qing_ids.join(',')})
@@ -489,7 +489,7 @@ class Report::SummaryCollectionBuilder
       if disagg_qing.nil?
         [:all]
 
-      # otherwise we return each of the options for the question, plus nil, 
+      # otherwise we return each of the options for the question, plus nil,
       # since we need to include a subset for responses with no answer to the disagg_qing
       else
         disagg_qing.options + [nil]

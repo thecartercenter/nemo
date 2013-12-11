@@ -6,7 +6,7 @@ class AbilityTest < ActiveSupport::TestCase
 		coord = FactoryGirl.create(:user, :role_name => 'coordinator')
 		coord.set_current_mission
 		a = Ability.new(coord)
-		
+
 		u = User.new
 		assert(a.cannot?(:create, u))
 		u.assignments.build(:mission => coord.current_mission)
@@ -17,7 +17,7 @@ class AbilityTest < ActiveSupport::TestCase
 		staffer = FactoryGirl.create(:user, :role_name => 'staffer')
 		staffer.set_current_mission
 		a = Ability.new(staffer)
-		
+
 		u = User.new
 		assert(a.cannot?(:create, u))
 		u.assignments.build(:mission => staffer.current_mission)

@@ -1,6 +1,6 @@
 // ELMO.Report.DisplayOptionsEditPane < ELMO.Report.EditPane
 (function(ns, klass) {
-  
+
   // constructor
   ns.DisplayOptionsEditPane = klass = function(parent_view, menus, options) {
     this.parent_view = parent_view;
@@ -8,18 +8,18 @@
     this.menus = menus;
     this.build();
   }
-  
+
   // inherit from EditPane
   klass.prototype = new ns.EditPane();
   klass.prototype.constructor = klass;
   klass.prototype.parent = ns.EditPane.prototype;
-  
+
   klass.prototype.id = "display_options";
 
   // builds controls
   klass.prototype.build = function() { var self = this;
     var _this = this;
-    
+
     // call super first
     this.parent.build.call(this);
 
@@ -49,7 +49,7 @@
       txt_key: "label"
     })
     this.percent_type.change(function() { _this.broadcast_change("percent_type"); });
-    
+
     // build bar style chooser
     this.bar_style = new ELMO.Control.RadioGroup({inputs: this.cont.find("input[name='bar_style']")});
     this.bar_style.change(function() { _this.broadcast_change("bar_style"); });
@@ -65,15 +65,15 @@
     // build disaggregation chooser
     this.disagg_question_chooser = new ELMO.Report.DisaggQuestionSelector(this.menus.question);
     this.disagg_question_chooser.field.change(function(){ _this.broadcast_change("disagg_question_id"); })
-    
+
     // setup an event handler for the disaggregate checkbox
-    this.cont.find("#disaggregate").change(function(e){ 
+    this.cont.find("#disaggregate").change(function(e){
       // if the box has just become checked
       // set the value of the disagg_question_chooser to the first geographic question, if one exists
       if ($(e.target).is(':checked'))
         self.disagg_question_chooser.select_first_geographic();
 
-      _this.broadcast_change("disaggregate"); 
+      _this.broadcast_change("disaggregate");
     })
 
     // build text responses chooser
@@ -82,12 +82,12 @@
 
     // report title field
     this.title_fld = this.cont.find("input#report_title");
-    
+
     // register fields to watch for changes
-    this.attribs_to_watch = {display_type: true, report_type: true, tally_type: true, report_title: true, 
+    this.attribs_to_watch = {display_type: true, report_type: true, tally_type: true, report_title: true,
       disaggregate: true, disagg_question_id: true, form_id: true};
   }
-  
+
   klass.prototype.update = function(report) {
     // store report reference
     this.report = report;

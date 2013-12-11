@@ -11,7 +11,7 @@ class Search::Token
   def to_s_indented(level = 0)
     ("  " * level) + "#{kind}\n" + children.collect{|c| c.to_s_indented(level + 1)}.join("\n")
   end
-  
+
   # returns an sql string
   def to_sql
     @sql ||= case kind
@@ -39,7 +39,7 @@ class Search::Token
       children[0].to_sql
     end
   end
-    
+
   protected
     # generates an sql fragment for a comparison
     # qual - a LexToken representing a search qualifier, or a Search::Qualifier object
@@ -110,7 +110,7 @@ class Search::Token
       # get the sql representations
       value_sql = value_token.to_sql
       op_sql = op.to_sql
-      
+
       # if rhs is [blank], act accordingly
       inner = if [I18n.locale, :en].map{|l| '[' + I18n.t('search.blank', :locale => l) + ']'}.include?(value_sql)
         op_sql = (op_sql == "=" ? "IS" : "IS NOT")
@@ -120,11 +120,11 @@ class Search::Token
       elsif qual.type == :text
         op_sql = op_sql == "=" ? "LIKE" : "NOT LIKE"
         sanitize("#{qual.col} #{op_sql} ?", "%#{value_sql}%")
-      
+
       else
         sanitize("#{qual.col} #{op_sql} ?", value_sql)
       end
-      
+
       "(#{inner})"
     end
 
@@ -135,17 +135,17 @@ class Search::Token
       raise Search::ParseError.new(I18n.t("search.must_use_qualifier")) if dq.nil?
       dq
     end
-    
+
     # looks up the qualifier for the given chunk, or raises an error
     def lookup_qualifier(chunk)
       qualifier = nil
-      
+
       # get the qualifier translations for current locale and reverse them
       trans = I18n.t("search_qualifiers").invert
 
       # also add the qualifier translations for english if the current locale is not english
       trans.merge!(I18n.t("search_qualifiers", :locale => :en).invert) unless I18n.locale == :en
-      
+
       # add a bunch of entries with accents removed
       normalized = {}
       trans.each do |k,v|
@@ -153,7 +153,7 @@ class Search::Token
         normalized[k_normalized] = v if k != k_normalized
       end
       trans.merge!(normalized)
-      
+
       # try looking up the chunk. this should now work even the user didn't put in the accents
       qualifier_name = trans[chunk].to_s
 
@@ -172,12 +172,12 @@ class Search::Token
           end
         end
       end
-      
+
       raise Search::ParseError.new(I18n.t("search.invalid_qualifier", :chunk => chunk)) if qualifier.nil?
-      
+
       qualifier
     end
-    
+
     def is?(kind)
       @kind == kind
     end

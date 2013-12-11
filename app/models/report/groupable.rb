@@ -9,7 +9,7 @@ module Report::Groupable
     rel = sec_grouping.apply(rel) if sec_grouping
     return rel
   end
-  
+
   def pri_grouping
     @pri_grouping ||= grouping(1)
   end
@@ -17,22 +17,22 @@ module Report::Groupable
   def sec_grouping
     @sec_grouping ||= grouping(2)
   end
-  
+
   def grouping(rank)
     c = calculations.find_by_rank(rank)
     c.nil? ? nil : Report::Grouping.new(c, [:primary, :secondary][rank-1])
   end
-  
+
   def has_grouping(which)
     grouping = which == :row ? pri_grouping : sec_grouping
     !grouping.nil?
   end
-  
+
   def header_title(which)
     grouping = which == :row ? pri_grouping : sec_grouping
     grouping ? grouping.header_title : nil
   end
-  
+
   def as_json(options = {})
     h = super(options)
     h[:calculations_attributes] = calculations

@@ -68,7 +68,7 @@ class OdkTest < ActionDispatch::IntegrationTest
     f.publish!
     xml = build_odk_submission(f)
     old_version = f.current_version.sequence
-    
+
     # change form and force an upgrade (verify upgrade happened)
     f.unpublish!
     f.questionings.first.required = true

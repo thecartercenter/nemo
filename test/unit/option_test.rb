@@ -6,13 +6,13 @@ class OptionTest < ActiveSupport::TestCase
     FactoryGirl.create(:option, :name => 'Foo')
     # no raise means saved properly
   end
-  
+
   test "name lengths can't be too long" do
     o = FactoryGirl.build(:option, :name => 'Foooooooooo oooo oooooooooooo oooooooooooooooo')
     o.save
     assert_match(/characters in length/, o.errors.messages[:base].join)
   end
-  
+
   test "names can't all be blank" do
     o = FactoryGirl.build(:option, :name => '')
     o.save

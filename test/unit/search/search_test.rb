@@ -7,7 +7,7 @@ class Search::SearchTest < ActiveSupport::TestCase
 
     # this is just a regular-type qualifier that is not the default
     Search::Qualifier.new(:name => "source", :col => "t.source"),
-    
+
     # this qualifier allows partial matches but is not indexed with sphinx
     Search::Qualifier.new(:name => "submitter", :col => "t3.f3", :type => :text),
 
@@ -40,7 +40,7 @@ class Search::SearchTest < ActiveSupport::TestCase
     assert_search(:str => "v", :sql => "((t1.f1 = 'v'))")
   end
 
-  test "boolean AND should be ignored" do 
+  test "boolean AND should be ignored" do
     assert_search(:str => "v1 | and", :sql => "((t1.f1 = 'v1') OR (t1.f1 = 'and'))")
   end
 
@@ -109,11 +109,11 @@ class Search::SearchTest < ActiveSupport::TestCase
     assert_search(:str => "source: [vide]", :sql => "((t.source IS NULL))")
     I18n.locale = :en
   end
-  
+
   test "gt operator should work with scale-type qualifier" do
     assert_search(:str => "submit-date > 5", :sql => "((t.subdate > '5'))")
   end
-  
+
   test "second number should not get taken into gt operator expression" do
     assert_search(:str => "submit-date > 5 6", :sql => "((t.subdate > '5')) AND ((t1.f1 = '6'))")
   end
@@ -121,7 +121,7 @@ class Search::SearchTest < ActiveSupport::TestCase
   test "AND should not be allowed for scale qualifiers" do
     assert_search(:str => "submit-date > (5 6)", :error => /Multiple terms aren't allowed for 'submit-date' searches unless OR is used./)
   end
-  
+
   test "scale qualifier should work with regular qualifier" do
     assert_search(:str => "submit-date <= 5 source: bar", :sql => "((t.subdate <= '5')) AND ((t.source = 'bar'))")
   end
@@ -140,7 +140,7 @@ class Search::SearchTest < ActiveSupport::TestCase
   end
 
   test "text qualifier with AND and OR should work" do
-    assert_search(:str => "submitter: (v1 v2 | v3) source: bar", 
+    assert_search(:str => "submitter: (v1 v2 | v3) source: bar",
       :sql => "((t3.f3 LIKE '%v1%') AND (t3.f3 LIKE '%v2%') OR (t3.f3 LIKE '%v3%')) AND ((t.source = 'bar'))")
   end
 
@@ -174,15 +174,15 @@ class Search::SearchTest < ActiveSupport::TestCase
     assert_search(:str => 'text:(alpha OR bravo)', :sql => "((tbl.id IN (###0###)))", :qualifiers => INDEXED)
     assert_equal('"alpha" | "bravo"', @search.expressions.detect{|e| e.qualifier.name == 'text'}.values)
   end
-  
-  test "indexed qualifiers should not allow not equals operator" do 
+
+  test "indexed qualifiers should not allow not equals operator" do
     assert_search(:str => 'text != alpha', :error => /The operator '!=' is not valid for the qualifier 'text'/, :qualifiers => INDEXED)
   end
-  
+
   test "odd characters in terms should still work" do
     assert_search(:str => "v1-_+'^&", :sql => "((t1.f1 = 'v1-_+\\'^&'))")
   end
-  
+
   test "blank search should work" do
     assert_search(:str => "  ", :sql => "1")
     assert_search(:str => nil, :sql => "1")
@@ -209,7 +209,7 @@ class Search::SearchTest < ActiveSupport::TestCase
 
   private
     # special assertion to test search parsing
-    # params: 
+    # params:
     #  :str - the search string
     #  :klass - the dummy class from which the search_qualifiers should be pulled
     #  :sql - the expected sql

@@ -1,6 +1,6 @@
 // ELMO.Report.ReportTypeEditPane < ELMO.Report.EditPane
 (function(ns, klass) {
-  
+
   // constructor
   ns.ReportTypeEditPane = klass = function(parent_view) {
     this.parent_view = parent_view;
@@ -11,7 +11,7 @@
   klass.prototype = new ns.EditPane();
   klass.prototype.constructor = klass;
   klass.prototype.parent = ns.EditPane.prototype;
-  
+
   klass.prototype.id = "report_type";
 
   // builds controls
@@ -32,11 +32,11 @@
       e.preventDefault();
     });
   }
-  
+
   klass.prototype.update = function(report) {
     // store report reference
     this.report = report;
-    
+
     // update controls
     this.type_chooser.update(this.report.attribs.type);
     this.type_chooser.enable(!this.report.has_run());
@@ -46,7 +46,7 @@
   klass.prototype.extract = function() {
     this.report.attribs.type = this.type_chooser.get();
   }
-  
+
   klass.prototype.fields_for_validation_errors = function() {
     return ["type"];
   }

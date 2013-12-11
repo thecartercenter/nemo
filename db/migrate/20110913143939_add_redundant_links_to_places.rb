@@ -5,7 +5,7 @@ class AddRedundantLinksToPlaces < ActiveRecord::Migration
     add_column(:places, :locality_id, :integer)
     add_column(:places, :state_id, :integer)
     add_column(:places, :country_id, :integer)
-    
+
     # populate
     # Place.all.each do |p|
     #   cont = p

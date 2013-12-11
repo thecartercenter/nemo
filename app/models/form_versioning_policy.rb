@@ -7,7 +7,7 @@ class FormVersioningPolicy
   # if the list is empty, it means that no form's version will have to be updated
   def self.check(obj, action)
     triggers = []
-    
+
     case obj.class.name
 
     when "Option"
@@ -16,14 +16,14 @@ class FormVersioningPolicy
         # changing an option is fine, but destroying an option is a trigger
         triggers << {:reason => :destroyed_option, :forms => obj.forms}
       end
-      
+
     when "OptionSet"
       case action
       when :update
         # changing the option order is a trigger if the form is smsable
         triggers << {:reason => :option_order_changed, :forms => obj.forms.reject{|f| !f.smsable?}} if obj.ranks_changed?
       end
-      
+
     when "Optioning"
       case action
       when :create
@@ -33,7 +33,7 @@ class FormVersioningPolicy
         # removing an option from an option set is a trigger
         triggers << {:reason => :option_removed_from_set, :forms => obj.option_set.forms}
       end
-      
+
     when "Questioning"
       case action
       when :create
@@ -42,7 +42,7 @@ class FormVersioningPolicy
       when :update
         # if required is changed, it's a trigger
         triggers << {:reason => :question_required_changed, :forms => [obj.form]} if obj.required_changed?
-        
+
         # changing question rank is a trigger if form is smsable
         triggers << {:reason => :question_rank_changed, :forms => [obj.form]} if obj.rank_changed? && obj.form.smsable?
 
@@ -74,14 +74,14 @@ class FormVersioningPolicy
     end
     return triggers
   end
-  
+
   # this method is called when the change actually occurs. it sets the upgrade_neccessary flag on forms where necessary.
   def self.notify(obj, action)
     # get the list of forms that need to be upgraded
     forms_to_upgrade = check(obj, action).collect{|trigger| trigger[:forms]}.flatten.uniq
-    
+
     # flag them
-    forms_to_upgrade.each do |f| 
+    forms_to_upgrade.each do |f|
       raise "standard forms should not be subject to version policy" if f.is_standard?
       f.flag_for_upgrade!
     end

@@ -10,12 +10,12 @@ form { margin: 0; }
 input, select, textarea { border: 1px solid #444; background-color: #eee; margin: 2px 0; }
 a { color: $theme_blue; }
 form.button_to, form.button_to div { display: inline; }
-form.button_to input { background-color: transparent; border: none; color: #0065d1; 
+form.button_to input { background-color: transparent; border: none; color: #0065d1;
   text-decoration: underline; padding: 0; margin: 0; cursor: pointer; }
 h1, h2, h3 { color: black; font-family: Helvetica; }
 h1 { margin: 0 0 10px 0; font-size: 17pt; }
 
-/* std seal in title */ 
+/* std seal in title */
 h1.title img { width: 16px; height: 16px; }
 
 h2 { font-size: 11pt; color: #888; }
@@ -25,7 +25,7 @@ li { margin-bottom: 5px; }
 table { border-collapse: collapse; }
 td { vertical-align: top; }
 
-input[type="radio"], input[type="checkbox"] {                         
+input[type="radio"], input[type="checkbox"] {
   border: 0px !important;
   background-color: transparent;
 }
@@ -75,7 +75,7 @@ a.action_link { font-size: 14px; text-decoration: none; display: inline-block; m
 table a.action_link { margin: -2px 10px -2px 0; }
 
 /* index tables */
-table.index_table th, table.form th { text-align: left; color: #444; background-color: #ddd; 
+table.index_table th, table.form th { text-align: left; color: #444; background-color: #ddd;
     font-size: 90%; padding: 3px 10px 3px 3px; }
 table.index_table td { border-top: 1px solid #ddd; padding: 6px 10px 6px 3px; }
 table.index_table tr:last-child td { border-bottom: 1px solid #ddd; }
@@ -90,7 +90,7 @@ table.index_table img.std_seal { margin-bottom: -5px; }
 /* set of links */
 .link_set {
   margin-bottom: 10px;
-  
+
   a, input[type='submit'] {
     display: inline-block;
     padding-right: 10px;
@@ -98,7 +98,7 @@ table.index_table img.std_seal { margin-bottom: -5px; }
 }
 
 /* pagination */
-div.pagination * { float: left; display: block; background-color: #eee; padding: 1px; 
+div.pagination * { float: left; display: block; background-color: #eee; padding: 1px;
   margin-right: 4px; text-align: center; width: 20px; text-decoration: none; }
 div.pagination *.disabled { display: none; }
 div.pagination em { font-style: normal; font-weight: bold; }
@@ -109,18 +109,18 @@ div.compact_error { color: $theme_red; font-weight: bold; }
 div.field_with_errors { display: inline; }
 
 /* search form */
-form.search_form { 
+form.search_form {
   margin-bottom: 10px;
-  
-  input#search_str { 
-    width: 500px; 
-    margin-right: 5px; 
+
+  input#search_str {
+    width: 500px;
+    margin-right: 5px;
     padding: 3px;
   }
 
-  #search_examples { 
-    margin-top: 4px; 
-    color: #666; 
+  #search_examples {
+    margin-top: 4px;
+    color: #666;
   }
 }
 
@@ -132,28 +132,28 @@ form.search_form {
 
 /* question fields */
 div.question_fields {
-  .control { 
-    width: 475px !important; 
+  .control {
+    width: 475px !important;
   }
-  
-  .form_field.name_hint textarea { 
-    width: 400px; 
-    height: 30px; 
+
+  .form_field.name_hint textarea {
+    width: 400px;
+    height: 30px;
   }
-  
-  a.create_option_set { 
-    margin-left: 10px; 
+
+  a.create_option_set {
+    margin-left: 10px;
   }
-  
+
   div.minmax {
-    input[type=text] { 
-      width: 100px; 
+    input[type=text] {
+      width: 100px;
     }
 
     div.control label {
       vertical-align: middle
     }
-  } 
+  }
 }
 
 /* questioning fields */
@@ -209,30 +209,30 @@ form.user_form textarea#user_notes { width: 240px; height: 100px; }
 /* user batches */
 form.user_batch_form {
   /* regular form */
-  #user_batch_batch { 
-    width: 500px; 
-    height: 200px; 
-    margin-right: 20px; 
+  #user_batch_batch {
+    width: 500px;
+    height: 200px;
+    margin-right: 20px;
   }
-  
-  div.control { 
-    width: 525px !important; 
+
+  div.control {
+    width: 525px !important;
   }
-  
+
   /* special form */
   div.batch_line_with_info {
     padding: 10px 5px;
     border-top: 1px solid #ddd;
     width: 900px;
-    
+
     input[type=text] {
       width: 400px;
     }
-    
+
     div.info {
       display: inline-block;
       margin-left: 5px;
-      
+
       i {
         margin: 0 5px;
         width: 10px;
@@ -240,13 +240,13 @@ form.user_batch_form {
         text-align: center;
       }
     }
-    
+
     &.line_ok div.info {
-      color: #9dc400; 
+      color: #9dc400;
     }
 
     &.line_error div.info {
-      color: #d02000; 
+      color: #d02000;
     }
   }
 }
@@ -283,10 +283,10 @@ div.sms_guide td.options span { display: inline-block; margin-right: 8px; }
 div.sms_guide td.pointer { background: image-url('long-arrow.png') no-repeat right top; padding: 0 5px 0 0; }
 div.sms_guide td.pointer em { display: inline-block; background-color: white; margin-right: 30px; padding: 0 5px 10px 0; }
 div.sms_guide td.answers { width: 160px; padding-left: 10px; }
-div.sms_guide span.answer_space { display: inline-block; width: 20px; height: 20px; text-align: center; border-bottom: 2px solid black; 
+div.sms_guide span.answer_space { display: inline-block; width: 20px; height: 20px; text-align: center; border-bottom: 2px solid black;
   font-weight: bold; font-size: 14px; }
 div.sms_guide span.spc_glyph { font-size: 7px; }
-div.sms_guide span.sms_example { display: inline-block; font-style: normal; font-weight: bold; padding: 0 5px; 
+div.sms_guide span.sms_example { display: inline-block; font-style: normal; font-weight: bold; padding: 0 5px;
   border-bottom: 1px solid black; }
 
 /* sms log */

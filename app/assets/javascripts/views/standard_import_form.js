@@ -38,5 +38,5 @@
     else
       $('div.importable form').submit();
   };
-  
+
 })(ELMO.Views);

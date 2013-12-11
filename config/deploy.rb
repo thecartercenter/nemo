@@ -72,7 +72,7 @@ namespace :deploy do
     end
   end
   before "deploy", "deploy:check_revision"
-  
+
   desc "ping the server so that it connects to db"
   task :ping, roles: :web do
     run "curl -s #{ping_url} > /dev/null"

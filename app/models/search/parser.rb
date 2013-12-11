@@ -1,6 +1,6 @@
 class Search::Parser
   attr_reader :sql
-  
+
   # GRAMMAR
   # query ::= expression query | expression
   # expression ::= qualified-expression | unqualified-expression
@@ -11,13 +11,13 @@ class Search::Parser
   # value ::= CHUNK | STRING
   # comp-op ::= "=" | ":" | "<" | ">" | "<=" | ">=" | "!="
   # or ::= "|" | "OR"
-    
+
   COMP_OP = [:colon, :equal, :lt, :gt, :lteq, :gteq, :noteq]
-  
+
   def initialize(attribs)
     attribs.each{|k,v| instance_variable_set("@#{k}", v)}
   end
-  
+
   def parse
     if @search.str.blank?
       @sql = "1"
@@ -29,7 +29,7 @@ class Search::Parser
       @sql = @query.to_sql
     end
   end
-  
+
   private
 
     # parses a token of the specified kind out of the lexical tokens
@@ -41,17 +41,17 @@ class Search::Parser
       token.children = case kind
         when :query
           [take(token, :expression)] + (next_is?(:eot) ? [] : [take(token, :query)])
-          
+
         when :expression
           raise Search::ParseError.new(I18n.t("search.or_not_allowed_between")) if next_is?(:or)
           [(next_is?(:chunk) && next2_is?(*COMP_OP)) ? take(token, :qualified_expression) : take(token, :unqualified_expression)]
-      
+
         when :unqualified_expression
           [take(token, :values)]
-        
+
         when :qualified_expression
           [take_terminal(token, :chunk), take_terminal(token, *COMP_OP), take(token, :rhs)]
-      
+
         when :rhs
           if next_is?(:lparen)
             [take_terminal(token, :lparen), take(token, :values), take_terminal(token, :rparen)]
@@ -60,7 +60,7 @@ class Search::Parser
           end
 
         when :values
-          [take(token, :value)] + 
+          [take(token, :value)] +
             if next_is?(:eot, :rparen) || next2_is?(*COMP_OP)
               []
             elsif next_is?(:or)
@@ -76,7 +76,7 @@ class Search::Parser
 
       token
     end
-  
+
     def take_terminal(parent, *options)
       if next_is?(*options)
         # set parent for lex token and return
@@ -88,13 +88,13 @@ class Search::Parser
         near = @lexer.tokens[0].fragment
         near = near.empty? ? I18n.("searches.at_end_of_query") : "#{I18n.t('common.near').downcase} '#{near}'"
         raise Search::ParseError.new("#{I18n.t('search.expected')} '#{expected}' #{near}")
-      end 
+      end
     end
-  
+
     def next_is?(*options)
       options.include?(nil) || options.include?(@lexer.tokens[0].kind)
     end
-  
+
     def next2_is?(*options)
       options.include?(nil) || @lexer.tokens[1] && options.include?(@lexer.tokens[1].kind)
     end

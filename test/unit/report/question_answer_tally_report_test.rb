@@ -10,25 +10,25 @@ class Report::QuestionAnswerTallyReportTest < ActiveSupport::TestCase
     # create several yes/no questions and responses for them
     @yes_no = FactoryGirl.create(:option_set, :option_names => %w(Yes No))
     forms = [create_form(:name => "form0"), create_form(:name => "form1")]
-    3.times{|i| create_question(:code => "yn#{i}", :name_en => "Yes No Question #{i}", 
+    3.times{|i| create_question(:code => "yn#{i}", :name_en => "Yes No Question #{i}",
       :type => "select_one", :forms => forms, :option_set => @yes_no)}
     1.times{create_response(:form => @forms[:form0], :answers => {:yn0 => "Yes", :yn1 => "Yes", :yn2 => "Yes"})}
     2.times{create_response(:form => @forms[:form0], :answers => {:yn0 => "Yes", :yn1 => "Yes", :yn2 => "No"})}
     3.times{create_response(:form => @forms[:form0], :answers => {:yn0 => "Yes", :yn1 => "No", :yn2 => "Yes"})}
     4.times{create_response(:form => @forms[:form0], :answers => {:yn0 => "No", :yn1 => "Yes", :yn2 => "Yes"})}
     9.times{create_response(:form => @forms[:form1], :answers => {:yn0 => "No", :yn1 => "Yes"})}
-    
+
     # create report with question label 'code'
     report = create_report("QuestionAnswerTally", :option_set => @yes_no)
-    
-    # test                   
+
+    # test
     assert_report(report, %w(     Yes No TTL ),
                           %w( yn0   6 13  19 ),
                           %w( yn1  16  3  19 ),
                           %w( yn2   8  2  10 ),
                           %w( TTL  30 18  48 ))
 
-                          
+
     # try question label 'title'
     report = create_report("QuestionAnswerTally", :option_set => @yes_no, :question_labels => "title")
 
@@ -37,7 +37,7 @@ class Report::QuestionAnswerTallyReportTest < ActiveSupport::TestCase
                           ["Yes No Question 1"] + %w(  16  3  19 ),
                           ["Yes No Question 2"] + %w(   8  2  10 ),
                                               %w( TTL  30 18  48 ))
-    
+
     # try with joined-attrib filter
     report = create_report("QuestionAnswerTally", :option_set => @yes_no, :filter => "form: form0")
     assert_report(report, %w(     Yes No TTL ),
@@ -47,7 +47,7 @@ class Report::QuestionAnswerTallyReportTest < ActiveSupport::TestCase
                           %w( TTL  21  9  30 ))
 
   end
-  
+
   test "counts of options for specific questions across two option sets" do
     # create several questions and responses for them
     @yes_no = FactoryGirl.create(:option_set, :option_names => %w(Yes No))
@@ -58,20 +58,20 @@ class Report::QuestionAnswerTallyReportTest < ActiveSupport::TestCase
     2.times{create_response(:answers => {:yn0 => "Yes", :yn1 => "Yes", :hl0 => "Low", :hl1 => "Low"})}
     3.times{create_response(:answers => {:yn0 => "Yes", :yn1 => "No", :hl0 => "Low", :hl1 => "High"})}
     4.times{create_response(:answers => {:yn0 => "No", :yn1 => "Yes", :hl0 => "High", :hl1 => "Low"})}
-    
+
     # create report naming only three questions
-    report = create_report("QuestionAnswerTally", 
+    report = create_report("QuestionAnswerTally",
       :calculations => [:yn0, :yn1, :hl1].collect{|code| Report::IdentityCalculation.new(:question1 => @questions[code])}
     )
-    
-    # test                   
+
+    # test
     assert_report(report, %w(     High Low Yes No TTL ),
                           %w( hl1    4   6   _  _  10 ),
                           %w( yn0    _   _   6  4  10 ),
                           %w( yn1    _   _   7  3  10 ),
                           %w( TTL    4   6  13  7  30 ))
   end
-  
+
   test "counts of yes and no for empty result" do
     # create several option sets but only responses for the last one
     @yes_no = FactoryGirl.create(:option_set, :option_names => %w(Yes No))
@@ -79,10 +79,10 @@ class Report::QuestionAnswerTallyReportTest < ActiveSupport::TestCase
     create_question(:code => "yn", :type => "select_one", :option_set => @yes_no)
     create_question(:code => "lh", :type => "select_one", :option_set => @high_low)
     4.times{create_response(:answers => {:lh => "Low"})}
-    
+
     # create report
     report = create_report("QuestionAnswerTally", :option_set => @yes_no)
-    
+
     # ensure no data
     assert_report(report, nil)
   end
@@ -102,7 +102,7 @@ class Report::QuestionAnswerTallyReportTest < ActiveSupport::TestCase
       Report::IdentityCalculation.new(:question1 => @questions[:yn]),
       Report::IdentityCalculation.new(:question1 => @questions[:rgb])
     ])
-    
+
     # make sure we account for the null (no answer given) values that will come up for the rgb question (we use a _)
     assert_report(report, %w(      _ Red Blue Green Yes No TTL ),
                           %w( rgb  2   5    5     7   _  _  19 ),

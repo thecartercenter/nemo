@@ -4,13 +4,13 @@
   // constructor
   ns.EditView = klass = function(menus, options, controller) {
     var _this = this;
-    
+
     this.controller = controller;
-    
+
     // save refs
     this.menus = menus;
     this.options = options;
-    
+
     // create the container div and dialog
     this.cont = $("div.report_edit_dialog");
     this.dialog = new ELMO.Dialog(this.cont, {dont_show: true});
@@ -31,7 +31,7 @@
 
     // pane pointer
     this.current_pane_idx = 0;
-    
+
     // get buttons and hook up click events
     this.cancel_handler = function() { _this.cancel(); return false; };
     this.prev_handler = function() { _this.change_pane(-1); return false; };
@@ -45,30 +45,30 @@
       run: this.form.find("a.run")
     }
   }
-  
+
   klass.prototype.show = function(report, idx) {
     var _this = this;
 
     // save ref to report
     this.report = report;
-    
+
     // update panes
     var enabled = this.enabled_panes();
     for (var i = 0; i < this.panes.length; i++)
       if (enabled[this.panes[i].id])
         this.panes[i].update(report, true);
-    
+
     // show the dialog and the appropriate pane
     this.dialog.show();
     this.show_pane(idx);
-    
+
     // hookup esc key
     if (this.report.has_run()) {
       this.esc_handler = function(e){ if (e.keyCode === 27) _this.cancel(); };
       $(document).bind("keyup", this.esc_handler);
     }
   }
-  
+
   klass.prototype.show_pane = function(idx) {
     // hide current pane
     this.panes[this.current_pane_idx].hide();
@@ -76,17 +76,17 @@
     // show new pane and store ref
     this.panes[idx].show();
     this.current_pane_idx = idx;
-    
+
     // show/hide prev/next/run
     this.update_buttons();
   }
-  
+
   // go to the next/previous pane
   klass.prototype.change_pane = function(step) {
     // get the idx of the next pane to show
     var next_idx = this.next_pane(step);
 
-    // show it unless it's null 
+    // show it unless it's null
     if (next_idx != null) this.show_pane(next_idx);
   }
 
@@ -96,30 +96,30 @@
     // figure out the next index (don't show disabled panes)
     var idx = this.current_pane_idx;
     var ep = this.enabled_panes(this.report);
-    
+
     // keep looping until we run past the end of the array or we hit an enabled pane
     do { idx += step; } while (idx >= 0 && idx < this.panes.length && !ep[this.panes[idx].id]);
 
     // if we went past the end, return null. else return the idx
     return (idx < 0 || idx >= this.panes.length) ? null : idx;
   }
-  
+
   klass.prototype.run = function() { var self = this;
     // tell panes to update model, and let them know if they're currently enabled or not
     var enabled = self.enabled_panes();
     $(self.panes).each(function(){
       this.extract(enabled[this.id]);
     });
-    
+
     // show/clear validation errors
     this.pane_do("before_validation");
-    
+
     // validate
     var is_valid = this.report.validate();
 
     // show/clear validation errors
     this.pane_do("show_validation_errors");
-    
+
     // send to controller if valid
     if (is_valid) {
       this.controller.run_report(this.report);
@@ -134,17 +134,17 @@
         }
     }
   }
-  
+
   klass.prototype.cancel = function() {
     this.dialog.hide();
-    
+
     // unregister keyup event
     $(document).unbind("keyup", this.esc_handler);
-    
+
     // notify controller
     this.controller.edit_cancelled();
   }
-  
+
   klass.prototype.hide = function() {
     this.dialog.hide();
   }
@@ -153,7 +153,7 @@
   klass.prototype.pane_do = function(func_name) {
     for (var i = 0; i < this.panes.length; i++)
       if (this.panes[i][func_name]) this.panes[i][func_name](Array.prototype.slice.call(arguments, 1));
-  } 
+  }
 
   klass.prototype.update_buttons = function() {
     this.enable_button("cancel", true);
@@ -165,7 +165,7 @@
     // run button should appear if report has already run or if this is the last pane
     this.enable_button("run", this.report.has_run() || this.next_pane(1) == null);
   }
-  
+
   klass.prototype.enable_button = function(name, which) {
     var button = this.buttons[name];
     var handler = this[name + "_handler"];
@@ -184,7 +184,7 @@
       if (this.panes[i].attribs_to_watch && this.panes[i].attribs_to_watch[src])
         this.panes[i].update(this.report, false);
   }
-  
+
   // returns a hash indicating which panes should be enabled based on the given report
   klass.prototype.enabled_panes = function(report) {
     if (!report) report = this.report;

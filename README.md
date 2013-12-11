@@ -16,7 +16,7 @@ You can also learn more about The Carter Center's Election Standards [here](http
 
 ## How Do I Install ELMO?
 
-In the future, we plan to offer managed instances of ELMO. 
+In the future, we plan to offer managed instances of ELMO.
 
 For an easy production setup, PaaS providers like [Heroku](http://heroku.com) or [Engine Yard](http://engineyard.com) would work well for ELMO.
 
@@ -50,7 +50,7 @@ Note to install the software below we recommend the following package managers:
 ### Running the App
 
 1. **Retrieve project files using Git**
-	
+
   ```
   git clone https://github.com/thecartercenter/elmo.git
   ```
@@ -61,7 +61,7 @@ Note to install the software below we recommend the following package managers:
 	- Copy `config/initializers/local_config.rb.example` to `config/initializers/local_config.rb` and adjust any settings.
 	- Run database migrations: `rake db:migrate`.
 	- Create an admin account: `rake db:create_admin`.
-	
+
 1. **Start the server**
 	- For a development setup, just run `rails s`.
 	- For a production setup, this will depend on your choice of servers, process monitors, etc., and goes beyond the scope of this document.
@@ -93,7 +93,7 @@ Contributors may find our auto-generated [Entity-Relationship Diagram (ERD)](doc
   ```
 
 2. **Create a New Branch**
-  
+
   ```
 	cd elmo
 	git checkout -b my_new_branch
@@ -106,7 +106,7 @@ Contributors may find our auto-generated [Entity-Relationship Diagram (ERD)](doc
 4. **Commit**
 	- **NEVER leave the commit message blank!** Provide a detailed, clear, and complete description of your commit!
   - If you have several commits, please make sure that they are **squashed** into one commit with a good summarizing commit message before pushing.
-   
+
 5. **Update Your Branch**
 
   ```

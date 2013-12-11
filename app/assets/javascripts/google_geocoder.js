@@ -5,10 +5,10 @@
   ns.GoogleGeocoder = klass = function(query, callback) {
     this.query = query;
     this.callback = callback;
-    
+
     // run the search (curry for callbacks)
     (function(_this){
-      $.ajax({url: klass.geocoder_url, method: "get", data: {address: _this.query}, 
+      $.ajax({url: klass.geocoder_url, method: "get", data: {address: _this.query},
         success: function(data){_this.search_done(data)}, error: function(data){_this.search_error(data)}});
     })(this);
   };
@@ -21,7 +21,7 @@
     else
       this.callback(data.results);
   }
-  
+
   // search failed
   klass.prototype.search_error = function(data) {
     this.callback("Search Error")

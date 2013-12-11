@@ -73,9 +73,9 @@ class Response < ActiveRecord::Base
 
       # this qualifier inserts a placeholder that we replace later
       Search::Qualifier.new(:name => "text", :col => "responses.id", :type => :indexed, :default => true),
-      
+
       # support {foobar}:stuff style searches, where foobar is a question code
-      Search::Qualifier.new(:name => "text_by_code", :pattern => /^\{(#{Question::CODE_FORMAT})\}$/, :col => "responses.id", 
+      Search::Qualifier.new(:name => "text_by_code", :pattern => /^\{(#{Question::CODE_FORMAT})\}$/, :col => "responses.id",
         :type => :indexed, :validator => ->(md){ Question.exists?(:mission_id => scope[:mission].id, :code => md[1]) })
     ]
   end
@@ -95,7 +95,7 @@ class Response < ActiveRecord::Base
 
     # apply the needed associations
     relation = relation.joins(Report::Join.list_to_sql(search.associations))
-    
+
     # get the sql
     sql = search.sql
 
@@ -145,11 +145,11 @@ class Response < ActiveRecord::Base
 
     # do excerpts
     if !sphinx_param_sets.empty? && options[:include_excerpts]
-      
+
       # get matches
       responses = relation.all
 
-      unless responses.empty?      
+      unless responses.empty?
         responses_by_id = responses.index_by(&:id)
 
         # run answer searches again, but this time restricting response_ids to the matches responses
@@ -182,7 +182,7 @@ class Response < ActiveRecord::Base
       relation
     end
   end
-  
+
   # returns a count how many responses have arrived recently
   # format e.g. [5, "week"] (5 in the last week)
   # nil means no recent responses

@@ -31,9 +31,9 @@ class PasswordResetTest < ActionDispatch::IntegrationTest
     assert_difference('ActionMailer::Base.deliveries.size', +1) do
       # create a new user, sending password instr to email
       post(users_path(:admin_mode => 'admin'), "user"=>{
-        "name"=>"Alberto Ooooh", 
-        "login"=>"aooooh", 
-        "email"=>"foo@example.com", 
+        "name"=>"Alberto Ooooh",
+        "login"=>"aooooh",
+        "email"=>"foo@example.com",
         "assignments_attributes"=>{"1"=>{"id"=>"", "_destroy"=>"false", "mission_id"=>get_mission.id, "role"=>"observer", "active"=>"1"}},
         "reset_password_method"=>"email"
       })

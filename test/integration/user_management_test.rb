@@ -6,7 +6,7 @@ class UserManagementTest < ActionDispatch::IntegrationTest
   setup do
     @admin = FactoryGirl.create(:user, :admin => true)
     @coord = FactoryGirl.create(:user, :role_name => :coordinator)
-  end 
+  end
 
   test "coordinator can create new user in current mission" do
     login(@coord)
@@ -35,8 +35,8 @@ class UserManagementTest < ActionDispatch::IntegrationTest
     def test_create_user(creator, mission, options = {})
       # submission should work
       post(users_path, :user => {
-        :name => 'Alan Bob', 
-        :login => 'abob', 
+        :name => 'Alan Bob',
+        :login => 'abob',
         :assignments_attributes => {"1" => {"mission_id"=> mission.id, "role" => "staffer", "active" => "1" }},
         :reset_password_method => 'print'
       })

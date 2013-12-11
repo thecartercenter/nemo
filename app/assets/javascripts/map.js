@@ -8,25 +8,25 @@ function draw_map(markers, bounds) {
     streetViewControl: false,
     zoom: 3
   });
-  
+
   for (var i = 0; i < markers.length; i++) {
     var marker = markers[i];
     marker.ui = new google.maps.Marker({
-          position: new google.maps.LatLng(marker.latitude, marker.longitude), 
+          position: new google.maps.LatLng(marker.latitude, marker.longitude),
           map: map
       });
     var infowindow = null;
     // curry!
     (function(m) {
-      google.maps.event.addListener(m.ui, 'click', function() { 
+      google.maps.event.addListener(m.ui, 'click', function() {
         // close any previous infowindow
         if (infowindow) infowindow.close();
         infowindow = new google.maps.InfoWindow({content: m.info});
-        infowindow.open(map, m.ui); 
+        infowindow.open(map, m.ui);
       });
     }(marker));
-  }  
-  
+  }
+
   // if bounds argument is given, translate it to google maps speak
   if (bounds) {
     map.setCenter(new google.maps.LatLng(

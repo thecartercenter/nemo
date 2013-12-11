@@ -1,7 +1,7 @@
 <%# ensures objects collection is paginated and .all is called %>
 <% objects = prepare_for_index(objects) %>
 <div id="index_table">
-  
+
   <%# header links %>
   <% unless options[:table_only] %>
     <div class="header link_set">
@@ -10,7 +10,7 @@
       <%= links %>
     </div>
   <% end %>
-  
+
   <% unless objects.empty? %>
     <%= form_tag("", :method => "post", :id => "batch_form") do %>
       <table class="index_table">
@@ -33,11 +33,11 @@
           <% objects.each do |o| %>
             <%# include the path for the current object in the tr tag so that we can support clicking anywhere on the row (may be nil) %>
             <% path = path_for_with_search(o) %>
-            <%= content_tag(:tr, 
+            <%= content_tag(:tr,
                   :id => "#{o.class.name.underscore}_#{o.id}",
                   :'data-href' => path,
                   :class => path ? 'clickable' : nil) do %>
-      
+
               <% if batch_ops %>
                 <td>
                   <%= check_box_tag("selected[#{o.id}]", 1, false, :onchange => "batch_cb_changed(this);") %>
@@ -53,7 +53,7 @@
 
             <%# do second row if requested %>
             <% if respond_to?("#{klass.table_name}_second_row") && content = send("#{klass.table_name}_second_row", o) %>
-              <%= content_tag(:tr, 
+              <%= content_tag(:tr,
                     :'data-href' => path,
                     :class => 'second_row' + (path ? ' clickable' : '')) do %>
                 <td colspan="<%= fields.size + 1 %>">
@@ -69,7 +69,7 @@
       <% end %>
     <% end %>
     <br/>
-    
+
     <%# create js view model for index table, only necessary if there are some objects %>
     <%= javascript_doc_ready do %>
       new ELMO.Views.IndexTable({
@@ -87,4 +87,3 @@
 
 </div>
 
-  

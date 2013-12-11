@@ -5,7 +5,7 @@ module DataIntegrityHelper
     type = obj.class.model_name.singular
 
     # get the proper i18n sub-key depending on if this is a standard obj or not
-    # if it is a standard object, we need to say that a copy is published, not the obj itself, 
+    # if it is a standard object, we need to say that a copy is published, not the obj itself,
     # b/c that is not possible for std objs
     subkey = obj.is_standard? ? 'copy_published' : 'self_published'
 

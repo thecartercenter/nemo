@@ -16,7 +16,7 @@ class StandardizableFormTest < ActiveSupport::TestCase
     assert(f.reload.questions.all?(&:is_standard?))
     assert(f.questionings.all?(&:is_standard?))
   end
-  
+
   test "replicating form within mission should avoid name conflict" do
     f = FactoryGirl.create(:form, :name => "Myform", :question_types => %w(integer select_one))
     f2 = f.replicate
@@ -42,7 +42,7 @@ class StandardizableFormTest < ActiveSupport::TestCase
     assert_equal(f.questions[1].option_set, f2.questions[1].option_set)
   end
 
-  test "replicating a standard form should do a deep copy" do 
+  test "replicating a standard form should do a deep copy" do
     f = FactoryGirl.create(:form, :question_types => %w(select_one integer), :is_standard => true)
     f2 = f.replicate(get_mission)
 
@@ -81,11 +81,11 @@ class StandardizableFormTest < ActiveSupport::TestCase
     assert_equal(f2.questionings[1].condition.ref_qing, f2.questionings[0])
   end
 
-  test "replicating a standard form with a condition referencing an option should produce correct new option reference" do 
+  test "replicating a standard form with a condition referencing an option should produce correct new option reference" do
     f = FactoryGirl.create(:form, :question_types => %w(select_one integer), :is_standard => true)
 
     # create condition with option reference
-    f.questionings[1].condition = FactoryGirl.build(:condition, :ref_qing => f.questionings[0], :op => 'eq', 
+    f.questionings[1].condition = FactoryGirl.build(:condition, :ref_qing => f.questionings[0], :op => 'eq',
       :option => f.questions[0].option_set.options[0])
 
     # replicate and test
@@ -128,7 +128,7 @@ class StandardizableFormTest < ActiveSupport::TestCase
       :condition => Condition.new(:ref_qing => f.questionings[0], :op => 'gt', :value => '1', :is_standard => true))
     f.questionings[1].rank = 3
     f.save!
-    
+
     # ensure question and condition got added properly on std
     f.reload
     assert_equal('charley', f.questionings[1].question.code)
@@ -205,7 +205,7 @@ class StandardizableFormTest < ActiveSupport::TestCase
   test "question order should remain correct after replication" do
     f = FactoryGirl.create(:form, :question_types => %w(integer integer integer), :is_standard => true)
     copy = f.replicate(get_mission)
-    
+
     first_std_q_id = f.questions[0].id
     first_copy_q_id = copy.questions[0].id
 
@@ -276,7 +276,7 @@ class StandardizableFormTest < ActiveSupport::TestCase
     std.questionings[1].condition = FactoryGirl.build(:condition, :ref_qing => std.questionings[0], :op => 'lt', :value => 10)
     std.save!
     assert_not_nil(Questioning.where(:form_id => copy.id).first)
-    
+
     # get ID of copy condition
     copy.reload
     copy_cond_id = copy.questionings[1].condition.id

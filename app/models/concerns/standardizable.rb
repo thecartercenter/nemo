@@ -66,7 +66,7 @@ module Standardizable
   end
 
   private
-    
+
     # replicates the current object (if standard) to each of its copies to ensure any changes are propagated
     def rereplicate_to_copies
       return unless is_standard?
@@ -112,7 +112,7 @@ module Standardizable
       # reflect on parent association, if it exists
       parent_assoc = self.class.reflect_on_association(self.class.replication_options[:parent_assoc])
 
-      # if the parent association exists and is a belongs_to association 
+      # if the parent association exists and is a belongs_to association
       # (e.g. questioning has parent = form, and a form association exists)
       if parent_assoc.try(:macro) == :belongs_to
         # copy the params
@@ -120,23 +120,23 @@ module Standardizable
         self.mission = self.send(parent_assoc.name).mission
       end
       return true
-    end    
+    end
 
     # copies the is_standard and mission properties to any children associations
     def copy_is_standard_and_mission_to_children
       # iterate over children assocs
       self.class.replication_options[:child_assocs].each do |assoc|
         refl = self.class.reflect_on_association(assoc)
-        
+
         # if is a collection association, copy to each, else copy to individual
         if refl.collection?
-          send(assoc).each do |o| 
+          send(assoc).each do |o|
             o.is_standard = is_standard?
             o.mission = mission
           end
         else
           unless send(assoc).nil?
-            send(assoc).is_standard = is_standard? 
+            send(assoc).is_standard = is_standard?
             send(assoc).mission = mission
           end
         end

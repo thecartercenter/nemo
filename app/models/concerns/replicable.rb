@@ -50,7 +50,7 @@ module Replicable
     # do logging after redo_in_transaction so we don't get duplication
     Rails.logger.debug(replication.to_s) if self.class.log_replication?
 
-    # if we're on a recursive step AND we're doing a shallow copy AND this is not a join class, 
+    # if we're on a recursive step AND we're doing a shallow copy AND this is not a join class,
     # we don't need to do any recursive copying, so just return self
     if replication.recursed? && replication.shallow_copy? && !JOIN_CLASSES.include?(self.class.name)
       add_replication_dest_obj_to_parents_assocation(replication, self)
@@ -66,9 +66,9 @@ module Replicable
 
     # copy attributes from src to parent
     replicate_attributes(replication)
-    
+
     # ensure uniqueness params are respected
-    ensure_uniqueness_when_replicating(replication)    
+    ensure_uniqueness_when_replicating(replication)
 
     # call a callback if requested
     self.send(replicable_opts(:after_copy_attribs), replication) if replicable_opts(:after_copy_attribs)
@@ -94,7 +94,7 @@ module Replicable
   # params[:field] - the field to operate on
   # params[:style] - the style to adhere to in generating the unique value (:sep_words or :camel_case)
   def generate_unique_field_value(params)
-    
+
     # extract any numeric suffix from existing value
     if params[:style] == :sep_words
       prefix = send(params[:field]).gsub(/( \d+)?$/, '')
@@ -108,7 +108,7 @@ module Replicable
     # build a relation to get existing objs
     existing = self.class.for_mission(params[:mission])
 
-    # if the dest_obj has an ID (is not a new record), 
+    # if the dest_obj has an ID (is not a new record),
     # be sure to exclude that when looking for conflicting objects
     existing = existing.where('id != ?', params[:dest_obj]) unless params[:dest_obj].new_record?
 
@@ -118,7 +118,7 @@ module Replicable
 
       # for the current match, check if it's an exact match and take note
       if obj.send(params[:field]).downcase.strip == send(params[:field]).downcase.strip
-        found_exact = true 
+        found_exact = true
       end
 
       # check if the current existing object's name matches the name we're looking for
@@ -131,12 +131,12 @@ module Replicable
       # if there was no match, return nil (this will be compacted out of the array at the end)
       if m.nil?
         nil
-      
+
       # else if we got a match then we must examine what matched
       # if it was just the prefix, the number is 1
       elsif $2.nil?
         1
-      
+
       # otherwise we matched a digit so use that
       else
         $2.to_i
@@ -149,14 +149,14 @@ module Replicable
 
     # copy num is max of existing plus 1
     copy_num = existing_nums.max + 1
-    
+
     # suffix string depends on style
     if params[:style] == :sep_words
       suffix = " #{copy_num}"
     else
       suffix = copy_num.to_s
     end
-    
+
     # now build the new value and return
     "#{prefix}#{suffix}"
   end
@@ -189,7 +189,7 @@ module Replicable
       send(attrib)
 
     # otherwise, we return the old value
-    else 
+    else
       previous_changes[attrib].first
     end
   end
@@ -245,7 +245,7 @@ module Replicable
 
             # do the copy
             dest_obj.send(name)[k] = v
-          end 
+          end
         end
 
       # otherwise it's not a hash, so just do the copy
@@ -255,7 +255,7 @@ module Replicable
     end
 
     # gets a list of attribute keys of this object that should NOT be copied to the dest obj
-    # this might look like [foo, bar, alpha.bravo] 
+    # this might look like [foo, bar, alpha.bravo]
     # where alpha.bravo means "don't copy the 'bravo' key of the 'alpha' hash"
     def attribs_not_to_replicate(replication)
       # start with the initial, constant set
@@ -340,7 +340,7 @@ module Replicable
 
       # get immediate parent and reflect on association
       refl = replication.parent.class.reflect_on_association(replication.current_assoc)
-      
+
       # associate object with parent using appropriate method depending on assoc type
       if refl.collection?
         # only copy if not already there
@@ -373,7 +373,7 @@ module Replicable
       replication.dest_obj.send(assoc_name).each do |o|
         unless src_child_ids.include?(o.standard_id)
           Rails.logger.debug("DESTROYING CHILD")
-          replication.dest_obj.send(assoc_name).destroy(o) 
+          replication.dest_obj.send(assoc_name).destroy(o)
         end
       end
 
@@ -395,7 +395,7 @@ module Replicable
       end
     end
 
-    # calls replicate on an individual child object, generating a new set of replication params 
+    # calls replicate on an individual child object, generating a new set of replication params
     # for this particular replicate call
     def replicate_child(child, assoc_name, replication)
       # build new replication param obj for child

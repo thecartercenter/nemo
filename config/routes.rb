@@ -23,7 +23,7 @@ ELMO::Application.routes.draw do
     resources(:sms, :only => [:index, :create])
     resources(:sms_tests)
     resource(:user_session){collection{get 'logged_out'}}
-  
+
     namespace(:report) do
       resources(:reports)
 
@@ -38,7 +38,7 @@ ELMO::Application.routes.draw do
     match('/dashboard' => 'dashboard#show', :as => :dashboard)
     match('/dashboard/info_window' => 'dashboard#info_window', :as => :dashboard_info_window)
     match('/dashboard/report_pane/:id' => 'dashboard#report_pane')
-    
+
     # login/logout shortcut
     match("/logged_out" => "user_sessions#logged_out", :as => :logged_out)
     match("/logout" => "user_sessions#destroy", :as => :logout)
@@ -47,7 +47,7 @@ ELMO::Application.routes.draw do
 
   # the routes in this scope are admin mode optional
   scope "(:locale)(/:admin_mode)", :locale => /[a-z]{2}/ do
-    
+
     # the rest of these routes can have admin mode or not
     resources(:forms){member{post *%w(add_questions remove_questions); get *%w(publish clone choose_questions)}}
     resources(:markers)

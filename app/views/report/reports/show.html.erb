@@ -24,7 +24,7 @@
 
 <div class="report_edit_dialog">
   <form class="report_form">
-    
+
     <div class="report_edit_pane report_type">
       <h2><%= t("report/report.report_type") %></h2>
       <div class="pane_scroll">
@@ -58,7 +58,7 @@
         </div>
       </div>
     </div>
-        
+
     <div class="report_edit_pane display_options">
       <h2><%= t("report/report.display_options") %></h2>
       <div class="pane_scroll">
@@ -190,7 +190,7 @@
         </div>
       </div>
     </div>
-    
+
     <div class="report_edit_pane form_selection">
       <h2><%= pluralize_model(Form) %></h2>
       <div class="pane_scroll">
@@ -223,11 +223,11 @@
               <select id="omnibus_calculation"></select>
             </div>
           </div>
-      
+
           <div class="section">
             <div class="name vert"><%= t("report/report.which_questions") %></div>
             <div class="controls vert">
-      
+
               <div class="q_sel_type">
                 <div class="choice">
                   <input type="radio" name="q_sel_type" id="q_sel_type_questions" value="questions">
@@ -237,7 +237,7 @@
                   <div class="choices"></div>
                 </div>
               </div>
-      
+
               <div class="q_sel_type">
                 <div class="choice">
                   <input type="radio" name="q_sel_type" id="q_sel_type_option_set" value="option_set">
@@ -252,7 +252,7 @@
         </div>
       </div>
     </div>
-    
+
     <div class="report_edit_pane grouping">
       <h2><%= t("report/report.groupings") %></h2>
       <div class="pane_scroll">
@@ -282,7 +282,7 @@
         </div>
       </div>
     </div>
-    
+
     <div class="report_edit_pane fields">
       <h2><%= t("report/report.columns") %></h2>
       <div class="pane_scroll">
@@ -307,13 +307,13 @@
         </div>
       </div>
     </div>
-    
+
     <div class="buttons">
       <a href="#" class="cancel"><%= t("common.cancel") %></a>
       <a href="#" class="prev">&lt; <%= t("common.previous") %></a>
       <a href="#" class="next"><%= t("common.next") %> &gt;</a>
       <a href="#" class="run"><%= t("common.run") %></a>
     </div>
-    
+
   </form>
 </div>

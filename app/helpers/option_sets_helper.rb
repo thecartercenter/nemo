@@ -5,11 +5,11 @@ module OptionSetsHelper
     add_import_standard_link_if_appropriate(links)
     links
   end
-  
+
   def option_sets_index_fields
     %w(std_icon name options questions answers published actions)
   end
-  
+
   def format_option_sets_field(option_set, field)
     case field
     when "std_icon" then std_icon(option_set)

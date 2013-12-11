@@ -1,5 +1,5 @@
 class Search::Qualifier
-  
+
   attr_reader :name, :col, :type, :pattern, :default, :validator, :assoc
 
   # name  - the name of the qualifier (required, underscored)
@@ -10,13 +10,13 @@ class Search::Qualifier
   # validator - a lambda that accepts a MatchData object and returns whether the given string should be accepted as a valid qualifier
   def initialize(attribs)
     attribs.each{|k,v| instance_variable_set("@#{k}", v)}
-    
+
     @default ||= false
     @assoc = Array.wrap(@assoc)
     @subst ||= {}
     @type ||= :regular
   end
-  
+
   def op_valid?(op)
     case type
     when :regular, :text then %w(= !=).include?(op)
@@ -37,7 +37,7 @@ class Search::Qualifier
   def and_allowed?
     type == :text || type == :indexed
   end
-  
+
   def default?
     default
   end

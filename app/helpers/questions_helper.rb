@@ -1,17 +1,17 @@
 module QuestionsHelper
   def questions_index_links(questions)
     links = []
-    
+
     # links for form mode
     if params[:controller] == 'forms'
       # add the 'add questions to form' link if there are some questions
       unless @questions.empty?
         links << batch_op_link(:name => t("form.add_selected"), :path => add_questions_form_path(@form))
       end
-    
+
       # add the create new questions link
       links << create_link(Question, :js => true) if can?(:create, Question)
-    
+
     # otherwise, we're in regular questions mode
     else
       # add the create new question
@@ -19,7 +19,7 @@ module QuestionsHelper
 
       add_import_standard_link_if_appropriate(links)
     end
-    
+
     # return the link set
     links
   end

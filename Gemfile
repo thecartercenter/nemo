@@ -54,7 +54,7 @@ gem 'dalli'
 gem 'foreigner'
 gem 'immigrant'
 
-# diagraming 
+# diagraming
 gem "rails-erd"
 
 # mean, median, etc.

@@ -1,12 +1,12 @@
 // a select box that shows only questions that can be used to disaggregate the present form
 // ELMO.Report.DisaggQuestionSelector
 (function(ns, klass) {
-  
+
   // constructor
   ns.DisaggQuestionSelector = klass = function(question_menu) {
     this.question_menu = question_menu;
     this.visible = true;
-    
+
     // create the select object
     this.field = new ELMO.Control.Select({
       el: $("select#disagg_qing"),
@@ -20,17 +20,17 @@
   // called when the form_id or disagg_question_id has been updated, thus necessitating a change to the available/selected options
   klass.prototype.update = function(report) {
     this.report = report;
-    
+
     // get the appropriate questions
     var questions = this.filter_questions(report.attribs.form_id);
 
     // update our select control with the new questions
     this.field.update_objs(questions);
 
-    // update the select control's value        
+    // update the select control's value
     this.field.update(report.attribs.disagg_question_id);
   }
-  
+
   // gets the current field value
   klass.prototype.get = function() {
     return this.field.get();
@@ -63,5 +63,5 @@
 
     return this.question_menu.filter(params);
   }
-  
+
 }(ELMO.Report));

@@ -1,9 +1,9 @@
 require 'mission_based'
 class Report::Report < ActiveRecord::Base
   include MissionBased
-  
+
   attr_accessible :type, :name, :form_id, :option_set_id, :display_type, :bar_style, :unreviewed, :filter,
-    :question_labels, :show_question_labels, :question_order, :text_responses, :percent_type, :unique_rows, :calculations_attributes, :calculations, 
+    :question_labels, :show_question_labels, :question_order, :text_responses, :percent_type, :unique_rows, :calculations_attributes, :calculations,
     :option_set, :mission_id, :mission, :disagg_question_id
 
   attr_accessible(:option_set_choices_attributes)

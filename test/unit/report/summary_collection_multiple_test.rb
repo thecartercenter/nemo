@@ -31,9 +31,9 @@ class Report::SummaryCollectionMultipleTest < ActiveSupport::TestCase
   end
 
   test "collections with select_multiple questions should have correct summaries" do
-    prepare_form_and_collection('select_multiple', 'select_one', 
+    prepare_form_and_collection('select_multiple', 'select_one',
       {'a' => [['red'], ['red', 'green'], []], 'b' => [['blue', 'red'], ['blue', 'green']]})
-    
+
     assert_equal(%w(red blue green), header_names_for_disagg_value('a'))
     assert_equal(%w(red blue green), header_names_for_disagg_value('b'))
     assert_equal([2, 0, 1], items_for_disagg_value('a', :count))
@@ -41,7 +41,7 @@ class Report::SummaryCollectionMultipleTest < ActiveSupport::TestCase
   end
 
   test "collections with date questions should have correct summaries" do
-    prepare_form_and_collection('date', 'select_one', 
+    prepare_form_and_collection('date', 'select_one',
       {'a' => %w(2012-10-26 2011-07-22 2012-10-26), 'b' => %w(2013-07-22 2012-9-22 2013-07-22 2013-07-22)})
 
     # check that headers are correct and in correct order
@@ -54,7 +54,7 @@ class Report::SummaryCollectionMultipleTest < ActiveSupport::TestCase
   end
 
   test "collections with text questions should have correct summaries" do
-    prepare_form_and_collection('text', 'select_one', 
+    prepare_form_and_collection('text', 'select_one',
       {'a' => %w(foo bar baz), 'b' => %w(bing bop) + [nil]}, :dont_shuffle => true)
 
     # check that items are correct
@@ -72,7 +72,7 @@ class Report::SummaryCollectionMultipleTest < ActiveSupport::TestCase
     assert_equal(options[2], @collection.subsets[2].disagg_value)
 
     # but should be marked no_data
-    assert_equal(true, @collection.subsets[2].no_data?)    
+    assert_equal(true, @collection.subsets[2].no_data?)
   end
 
   test "collection should work if there are no answers at all" do
@@ -115,7 +115,7 @@ class Report::SummaryCollectionMultipleTest < ActiveSupport::TestCase
 
       # add the disagg question
       disagg_q = FactoryGirl.create(:question, :qtype_name => dissag_type, :option_names => answers_by_dissag_value.keys.compact)
-      
+
       @form.questions << analyze_q << disagg_q
       @form.save!
 

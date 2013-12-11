@@ -1,6 +1,6 @@
 class Question < ActiveRecord::Base
   include MissionBased, FormVersionable, Translatable, Standardizable, Replicable
-  
+
   CODE_FORMAT = "[a-z][a-z0-9]{1,19}"
 
   # this needs to be up here other wise it runs /after/ the children are destroyed

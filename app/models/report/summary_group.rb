@@ -67,8 +67,8 @@ class Report::SummaryGroup
   def sort_summaries
     if type_set == 'categorical'
       # the categorical group should be sorted by option set name, then rank
-      @summaries.sort_by!{|s| [s.questioning.option_set.name, s.questioning.rank]} 
-      
+      @summaries.sort_by!{|s| [s.questioning.option_set.name, s.questioning.rank]}
+
     else
       # else just sort by rank
       @summaries.sort_by!{|s| s.questioning.rank}

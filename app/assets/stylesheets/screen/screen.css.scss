@@ -1,26 +1,26 @@
 /* general layout styles */
 $nav_width: 135px;
 
-body { 
-  background-color: #879CAA; 
+body {
+  background-color: #879CAA;
 }
 
-#userinfo { 
+#userinfo {
   color: white;
   text-align: right;
   padding-right: 5px;
   margin-top: 2px;
   height: 25px;
-  
-  a, form.button_to input { 
-    color: white; 
+
+  a, form.button_to input {
+    color: white;
   }
-  
-  form { 
+
+  form {
     display: inline;
-    
-    select { 
-      font-size: 9pt; 
+
+    select {
+      font-size: 9pt;
     }
   }
 }
@@ -28,7 +28,7 @@ body {
 #title {
   color: white;
   margin: 10px 0 10px $nav_width;
-  
+
   > div {
     display: inline-block;
     vertical-align: top;
@@ -40,20 +40,20 @@ body {
     vertical-align: bottom;
     padding-bottom: 25px;
   }
-  
+
   a { color: white; text-decoration: none; }
   h1 { font-size: 40px; color: white; line-height: 1; display: inline-block; margin: 0 10px 5px 0; }
-  h2 { 
-    font-size: 24px; 
-    font-family: "Raleway", sans-serif; 
-    width: 300px; 
-    margin: 0; 
-    color: #D9ECF7; 
-    display: inline-block; 
-    text-transform: lowercase; 
-    vertical-align: bottom; 
-    line-height: 24px; 
-    padding-bottom: 23px; 
+  h2 {
+    font-size: 24px;
+    font-family: "Raleway", sans-serif;
+    width: 300px;
+    margin: 0;
+    color: #D9ECF7;
+    display: inline-block;
+    text-transform: lowercase;
+    vertical-align: bottom;
+    line-height: 24px;
+    padding-bottom: 23px;
 
     /* trophy icon */
     i {
@@ -66,15 +66,15 @@ body {
   width: $nav_width;
   color: white;
   float: left;
-  
+
   .standard_label {
     margin-left: 10px;
     text-transform: uppercase;
     color: #ccc;
   }
 
-  ul { 
-    font-weight: bold; 
+  ul {
+    font-weight: bold;
     padding: 0 5px 5px 5px;
     margin: 0 10px 5px 10px;
     list-style-type: none;
@@ -93,12 +93,12 @@ body {
       padding: 3px 0;
 
       a {
-        text-decoration: none; 
+        text-decoration: none;
         color: white;
 
-        &:hover { 
-          text-decoration: none; 
-          color: #0065d1; 
+        &:hover {
+          text-decoration: none;
+          color: #0065d1;
         }
       }
 
@@ -111,9 +111,9 @@ body {
 
 #content {
   margin-left: $nav_width;
-  padding: 15px 15px 30px 15px; 
-  min-height: 400px; 
-  background-color: white; 
+  padding: 15px 15px 30px 15px;
+  min-height: 400px;
+  background-color: white;
 }
 
 #footer {
@@ -122,19 +122,19 @@ body {
   text-align: right;
   height: 25px;
   margin-left: $nav_width;
-  
-  * { 
+
+  * {
     vertical-align: top;
   }
-  
-  a { 
-    color: #ddd; 
+
+  a {
+    color: #ddd;
   }
-  
-  #locale_form { 
-    display: none; 
+
+  #locale_form {
+    display: none;
   }
-  
+
   div.site_by {
     margin-top: 10px;
     padding: 3px;
@@ -149,45 +149,45 @@ div.dialog_bg * { opacity: 1; filter: alpha(opacity=100); }
 #login_instructions #preamble { width: 600px; margin-bottom: 20px; }
 #login_instructions #instructions { width: 600px; border: 1px solid #888; padding: 10px; }
 #login_instructions #instructions p { margin-top: 0; }
-  
+
 /* flash and error messages */
 
 div.status_messages.no_ajax {
-  div.success, div.error { 
-    position: absolute; 
-    left: 27%; 
-    top: 115px; 
-    padding: 3px; 
-    color: white; 
-    font-weight: bold; 
-    width: 600px; 
+  div.success, div.error {
+    position: absolute;
+    left: 27%;
+    top: 115px;
+    padding: 3px;
+    color: white;
+    font-weight: bold;
+    width: 600px;
     margin-bottom: 10px;
     text-align: center;
   }
-  
-  div.success { 
-    background-color: #9dc400; 
+
+  div.success {
+    background-color: #9dc400;
   }
 
-  div.error { 
-    background-color: #d02000; 
+  div.error {
+    background-color: #d02000;
   }
 }
 
 div.status_messages.ajax {
-  div.success, div.error { 
-    padding: 3px; 
-    color: white; 
-    font-weight: bold; 
-    margin-bottom: 10px; 
-  }
-  
-  div.success { 
-    background-color: #9dc400; 
+  div.success, div.error {
+    padding: 3px;
+    color: white;
+    font-weight: bold;
+    margin-bottom: 10px;
   }
 
-  div.error { 
-    background-color: #d02000; 
+  div.success {
+    background-color: #9dc400;
+  }
+
+  div.error {
+    background-color: #d02000;
   }
 }
 
@@ -203,13 +203,13 @@ body.reports {
   div.report_view {
     display: table-row;
   }
-  
+
   div.report_links {
     display: table-cell;
-    padding: 0 15px 0 0; line-height: 150%; 
+    padding: 0 15px 0 0; line-height: 150%;
     a { display: block; white-space: nowrap; }
   }
-  
+
   div.report_main {
     display: table-cell;
     vertical-align: top;

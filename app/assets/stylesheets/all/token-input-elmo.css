@@ -1,7 +1,7 @@
 /* elmo specific styles for the token input plugin */
 ul.token-input-list-elmo {
-    overflow: hidden; 
-    height: auto !important; 
+    overflow: hidden;
+    height: auto !important;
     height: 1%;
     width: 400px;
     border: 1px solid #444;
@@ -27,8 +27,8 @@ ul.token-input-list-elmo li input {
 }
 
 li.token-input-token-elmo {
-    overflow: hidden; 
-    height: auto !important; 
+    overflow: hidden;
+    height: auto !important;
     height: 15px;
     margin: 3px;
     padding: 1px 3px;

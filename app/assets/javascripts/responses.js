@@ -7,7 +7,7 @@ function responses_setup_periodic_update() {
 function responses_fetch() {
   // get current list of IDs
   responses_old_ids = responses_get_ids();
-  
+
   // run the ajax request
   $.ajax({
     url: Utils.add_url_param(window.location.href, "auto=1"),
@@ -37,7 +37,7 @@ function responses_update(data) {
 
 $(document).ready(function(){
   $("a.create_response").on("click", function(){
-    $('#form_chooser').show(); 
+    $('#form_chooser').show();
     return false;
   });
 });

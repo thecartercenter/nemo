@@ -26,7 +26,7 @@
       login_path: <%=j login_path(:admin_mode => nil).to_json.html_safe %>
     });
   <% end %>
-  
+
   <%= yield(:per_page_js) %>
 </head>
 <body class="<%= controller_name %>">
@@ -70,28 +70,28 @@
           <%= t(current_user.admin? ? :admin : current_user.role(current_mission), :scope => :role) %>
           &nbsp;&bull;&nbsp;
         <% end %>
-      
+
       <% end %>
-      
+
       <%# link to edit profile %>
       <%= link_to(t("user.edit_profile"), edit_user_path(current_user.id)) %>
       &nbsp;&bull;&nbsp;
 
       <%# logout button %>
       <%= button_to(t("common.logout"), user_session_path(:admin_mode => nil), :method => :delete, :id => "logout_button") %>
-      
+
     <% else %>
-      
+
       <%# login link %>
       <%= link_to(t("common.login"), login_path) %>
     <% end %>
   </div>
-  
+
   <div id="title">
     <%= link_to(image_tag("logo.png"), root_path) %>
     <%# Stripping title name since we have a logo now %>
     <h2>
-      <% if admin_mode? %> 
+      <% if admin_mode? %>
         <i class="icon-trophy"></i>
         <%= t('admin_mode.admin_mode') %>
       <% else %>
@@ -99,7 +99,7 @@
       <% end %>
     </h2>
   </div>
- 
+
   <div id="nav">
     <%# no nav necessary if no user or mission %>
     <% if current_user && (current_mission || admin_mode?) %>
@@ -119,14 +119,14 @@
       <ul class="<%= admin_mode? ? 'indented' : '' %>">
         <%= nav_links(Form, Question, OptionSet) %>
       </ul>
-      
+
       <%# nav third section -- users and infrastructure %>
       <ul>
         <%= nav_links(User, Mission, Broadcast, Setting) %>
       </ul>
     <% end %>
   </div>
-  
+
   <div id="content" class="<%= ctlr_action_name %>">
     <% unless @dont_print_title %>
       <h1 class="title">
@@ -135,23 +135,23 @@
     <% end %>
     <%= body %>
   </div>
-  
+
   <div id="footer">
-    <%= link_to(t("layout.change_language"), "#", :id => "locale_form_link") %> 
-    
+    <%= link_to(t("layout.change_language"), "#", :id => "locale_form_link") %>
+
     <%= form_tag(nil, :id => "locale_form") do %>
       <%= select_tag(:locale, options_for_select(configatron.full_locales.map{|l| [language_name(l), l]}, I18n.locale)) %>
     <% end %>
-    
+
     &nbsp;|&nbsp;
-    
+
     <%= t("layout.time_zone") %>: <%= Time.zone.to_s %> &nbsp;|&nbsp;
-    
+
     <% if current_mission %>
       <%= t("sms.outgoing_provider") %>:
       <%= configatron.outgoing_sms_adapter ? configatron.outgoing_sms_adapter.service_name : "[#{t('common.none').capitalize}]" %> &nbsp;|&nbsp;
     <% end %>
-    
+
     <% if can?(:index, Sms::Message) %>
       <%= link_to(t("page_titles.sms.index"), sms_path) %> &nbsp;|&nbsp;
     <% end %>
@@ -160,7 +160,7 @@
 
     <%= link_to(t('layout.about'), 'http://getelmo.org') %>
   </div>
-  
+
   <%# insert any audio objects at the end %>
   <%= yield(:audio) %>
 </body>

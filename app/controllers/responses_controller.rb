@@ -1,7 +1,7 @@
 class ResponsesController < ApplicationController
   # need to load with associations for show and edit
   before_filter :load_with_associations, :only => [:show, :edit]
-  
+
   # authorization via CanCan
   load_and_authorize_resource
 
@@ -12,7 +12,7 @@ class ResponsesController < ApplicationController
       format.html do
         # apply search and pagination
         params[:page] ||= 1
-        
+
         # paginate
         @responses = @responses.paginate(:page => params[:page], :per_page => 20)
 
@@ -27,14 +27,14 @@ class ResponsesController < ApplicationController
             @error_msg = "#{t('search.search_error')}: #{$!}"
           end
         end
-        
+
         # get list of published forms for 'create response' link
         @pubd_forms = Form.accessible_by(current_ability).published
-        
+
         # render just the table if this is an ajax request
         render(:partial => "table_only", :locals => {:responses => @responses}) if ajax_request?
       end
-      
+
       # csv output is for exporting responses
       format.csv do
         # do search, excluding excerpts
@@ -60,7 +60,7 @@ class ResponsesController < ApplicationController
     # if there is a search param, we try to load the response via the do_search mechanism so that we get highlighted excerpts
     if params[:search]
       # we pass a relation matching only one respoonse, so there should be at most one match
-      matches = Response.do_search(Response.where(:id => @response.id), params[:search], {:mission => current_mission}, 
+      matches = Response.do_search(Response.where(:id => @response.id), params[:search], {:mission => current_mission},
         :include_excerpts => true, :dont_truncate_excerpts => true)
 
       # if we get a match, then we use that object instead, since it contains excerpts
@@ -68,7 +68,7 @@ class ResponsesController < ApplicationController
     end
     prepare_and_render_form
   end
-  
+
   def new
     # get the form specified in the params and error if it's not there
     begin
@@ -78,40 +78,40 @@ class ResponsesController < ApplicationController
       flash[:error] = "no form selected"
       return redirect_to(index_url_with_page_num)
     end
-    
+
     # render the form template
     prepare_and_render_form
   end
-  
+
   def edit
     prepare_and_render_form
   end
-  
+
   def create
     # if this is a submission from ODK collect
     if request.format == Mime::XML
-      
+
       # if the method is HEAD or GET just render the 'no content' status since that's what odk wants!
       if %w(HEAD GET).include?(request.method)
         render(:nothing => true, :status => 204)
-      
+
       # otherwise, we should process the xml submission
       elsif upfile = params[:xml_submission_file]
         begin
           contents = upfile.read
-          
+
           # set the user_id to current user
           @response.user_id = current_user.id
-          
+
           # parse the xml stuff
           @response.populate_from_xml(contents)
-           
+
           # ensure response's user can submit to the form
           authorize!(:submit_to, @response.form)
 
           # save without validating, as we have no way to present validation errors to user, and ODK already does validation
           @response.save(:validate => false)
-          
+
           # ODK wants a blank response with code 201 on success
           render(:nothing => true, :status => 201)
 
@@ -136,29 +136,29 @@ class ResponsesController < ApplicationController
           render(:nothing => true, :status => 500)
         end
       end
-      
+
     # for HTML format just use the method below
     else
       web_create_or_update
     end
   end
-  
+
   def update
     @response.assign_attributes(params[:response])
     web_create_or_update
   end
-  
+
   def destroy
     destroy_and_handle_errors(@response)
     redirect_to(index_url_with_page_num)
   end
-  
+
   private
     # loads the response with its associations
     def load_with_associations
       @response = Response.with_associations.find(params[:id])
     end
-    
+
     # handles creating/updating for the web form
     def web_create_or_update
       # set source/modifier to web
@@ -167,7 +167,7 @@ class ResponsesController < ApplicationController
 
       # check for "update and mark as reviewed"
       @response.reviewed = true if params[:commit_and_mark_reviewed]
-      
+
       # try to save
       begin
         @response.save!
@@ -176,12 +176,12 @@ class ResponsesController < ApplicationController
         prepare_and_render_form
       end
     end
-    
+
     # prepares objects for and renders the form template
     def prepare_and_render_form
       # get the users to which this response can be assigned
       @possible_submitters = User.accessible_by(current_ability).assigned_to(current_mission)
-      
+
       # render the form
       render(:form)
     end

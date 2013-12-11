@@ -6,11 +6,11 @@ FactoryGirl.define do
     end
 
     mission { is_standard ? nil : get_mission }
-    
+
     name do
       option_names ? option_names.join : "AnOptionSet"
     end
-    
+
     optionings do
       if option_names_with_ranks
         # make the optioning objects according to the rank specified

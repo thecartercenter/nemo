@@ -6,14 +6,14 @@ form.option_set_form {
   label.main {
     width: 100px;
   }
-  
+
   div.control {
     width: 475px;
   }
-  
+
   div.add_options {
     margin-bottom: 20px;
-    
+
     input[type=text] {
       width: 350px;
     }
@@ -30,7 +30,7 @@ form.option_set_form {
   #options_wrapper ol {
     padding-left: 0;
     margin: 0 20px 0 0;
-  
+
     li {
       display: block;
       margin: 5px 0;
@@ -42,17 +42,17 @@ form.option_set_form {
       border: 1px solid #CCC;
       background: #eee;
       cursor: default;
-    
+
       &:last-child {
         margin-bottom: 0;
       }
-    
+
       div {
         /* icon */
         i.icon-sort {
           margin-right: 5px;
         }
-      
+
         /* locales */
         em {
           display: block;
@@ -64,7 +64,7 @@ form.option_set_form {
           margin-left: 10px;
           color: $theme_green;
         }
-      
+
         /* edit/remove links */
         div.links {
           float: right;
@@ -74,14 +74,14 @@ form.option_set_form {
       }
     }
   }
-  
+
   /* this becomes the modal, so hide it initially */
   div.edit_option_form {
     display: none;
   }
 }
 
-/* EDIT OPTION MODAL WINDOW 
+/* EDIT OPTION MODAL WINDOW
    (not inside the form since it's appended to the body) */
 
 div.edit_option_modal {
@@ -94,16 +94,16 @@ div.edit_option_modal {
 
     div.translation {
       height: 40px;
-  
+
       &:first-child {
         margin-top: 10px;
       }
-  
+
       label {
         width: 125px;
         display: inline-block;
       }
-  
+
       input[type=text] {
         padding: 3px;
         display: inline-block;
