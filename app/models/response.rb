@@ -1,6 +1,7 @@
 require 'xml'
 class Response < ActiveRecord::Base
   include MissionBased
+  include Cacheable
 
   belongs_to(:form, :inverse_of => :responses, :counter_cache => true)
   has_many(:answers, :include => :questioning, :order => "questionings.rank",
@@ -43,9 +44,6 @@ class Response < ActiveRecord::Base
 
   # loads only answers with location info
   scope(:with_location_answers, includes(:location_answers))
-
-  # sort by updated_at DESC
-  scope(:by_updated_at, order('updated_at DESC'))
 
   # takes a Relation, adds a bunch of selects and joins, and uses find_by_sql to do the actual finding
   # this technique is due to limitations (at the time of dev) in the Relation system
@@ -215,14 +213,7 @@ class Response < ActiveRecord::Base
   # generates a cache key for the set of all responses for the given mission.
   # the key will change if the number of responses changes, or if a response is updated.
   def self.per_mission_cache_key(mission)
-    rel = unscoped.for_mission(mission)
-    prefix = "responses/mission-#{mission.id}/"
-    if rel.empty?
-      "#{prefix}empty"
-    else
-      last_update = rel.by_updated_at.first.updated_at.strftime('%Y%m%d%H%M%S')
-      "#{prefix}#{rel.count}-#{last_update}"
-    end
+    count_and_date_cache_key(:rel => unscoped.for_mission(mission), :prefix => "mission-#{mission.id}")
   end
 
   def populate_from_xml(xml)

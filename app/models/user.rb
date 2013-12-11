@@ -1,4 +1,6 @@
 class User < ActiveRecord::Base
+  include Cacheable
+
   ROLES = %w[observer staffer coordinator]
   SESSION_TIMEOUT = 60.minutes
 
@@ -126,6 +128,12 @@ class User < ActiveRecord::Base
       GROUP BY users.id, users.name
       ORDER BY response_count
       LIMIT ?", mission.id, mission.id, limit])
+  end
+
+  # generates a cache key for the set of all users for the given mission.
+  # the key will change if the number of users changes, or if a user is updated.
+  def self.per_mission_cache_key(mission)
+    count_and_date_cache_key(:rel => unscoped.assigned_to(mission), :prefix => "mission-#{mission.id}")
   end
 
   def reset_password
