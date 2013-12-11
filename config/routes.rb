@@ -49,7 +49,7 @@ ELMO::Application.routes.draw do
   scope "(:locale)(/:admin_mode)", :locale => /[a-z]{2}/ do
 
     # the rest of these routes can have admin mode or not
-    resources(:forms){member{post *%w(add_questions remove_questions); get *%w(publish clone choose_questions)}}
+    resources(:forms){member{post *%w(add_questions remove_questions); put *%w(clone publish); get *%w(choose_questions)}}
     resources(:markers)
     resources(:option_sets)
     resources(:questions)

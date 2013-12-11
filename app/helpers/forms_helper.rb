@@ -41,12 +41,12 @@ module FormsHelper
       # get the appropriate publish icon and add link, if auth'd
       if can?(:publish, form)
         verb = form.published? ? "unpublish" : "publish"
-        links += action_link(verb, publish_form_path(form), :title => t("form.#{verb}"))
+        links += action_link(verb, publish_form_path(form), :title => t("form.#{verb}"), :'data-method' => 'put')
       end
 
       # add a clone link if auth'd
       if can?(:clone, form)
-        links += action_link("clone", clone_form_path(form),
+        links += action_link("clone", clone_form_path(form), :'data-method' => 'put',
           :title => t("common.clone"), :confirm => t("form.clone_confirm", :form_name => form.name))
       end
 

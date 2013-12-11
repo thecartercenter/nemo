@@ -17,7 +17,7 @@ module QuestioningsHelper
         if can?(:publish, @form)
           key = @form.published? ? 'unpublish_form' : 'publish_form'
           lbl = t("form.#{key}")
-          links << link_to("#{lbl}", publish_form_path(@form))
+          links << link_to("#{lbl}", publish_form_path(@form), :'data-method' => 'put')
         end
       end
     end
