@@ -64,7 +64,11 @@ class OptionSetsController < ApplicationController
   # makes a copy of the option set that can be edited without affecting the original
   def clone
     begin
-      @option_set.replicate
+      cloned = @option_set.replicate
+
+      # save the cloned obj id so that it will flash
+      flash[:modified_obj_id] = cloned.id
+
       flash[:success] = t("option_set.clone_success", :name => @option_set.name)
     rescue
       flash[:error] = t("option_set.clone_error", :msg => $!.to_s)
