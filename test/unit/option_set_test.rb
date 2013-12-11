@@ -239,14 +239,17 @@ class OptionSetTest < ActiveSupport::TestCase
     # missions should be the same (nil)
     assert_nil(yn2.mission)
 
-    # new option set should be marked standard
-    #assert_equal(true, yn2.is_standard?)
+    # new option set should be marked standard and have nil standard_id
+    assert_equal(true, yn2.is_standard?)
+    assert_nil(yn2.standard_id)
 
-    # new and old optionings should all be marked standard and have nil missions
+    # new and old optionings should all be marked standard and have nil missions and standard_ids
     assert_equal([true], yn.optionings.map(&:is_standard?).uniq)
     assert_equal([nil], yn.optionings.map(&:mission_id).uniq)
+    assert_equal([nil], yn.optionings.map(&:standard_id).uniq)
     assert_equal([true], yn2.optionings.map(&:is_standard?).uniq)
     assert_equal([nil], yn2.optionings.map(&:mission_id).uniq)
+    assert_equal([nil], yn2.optionings.map(&:standard_id).uniq)
 
     # options should be the same objects
     assert_equal(yn.options, yn2.options)
@@ -254,6 +257,7 @@ class OptionSetTest < ActiveSupport::TestCase
     # options should still be standard and null mission
     assert_equal([true], yn2.options.map(&:is_standard?).uniq)
     assert_equal([nil], yn2.options.map(&:mission_id).uniq)
+    assert_equal([nil], yn2.options.map(&:standard_id).uniq)
 
     # names should be different
     assert_not_equal(yn.name, yn2.name)

@@ -64,6 +64,11 @@ class Replication
     src_obj.is_standard? && to_mission.nil?
   end
 
+  # checks if this replication is replicating a standard object to a mission
+  def standard_to_mission?
+    src_obj.is_standard? && !to_mission.nil?
+  end
+
   # accessor for better readability
   def in_transaction?
     !!in_transaction
