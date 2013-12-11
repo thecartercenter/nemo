@@ -11,7 +11,7 @@ set :stages, %w(master staging demo)
 set :default_stage, "staging"
 require "capistrano/ext/multistage"
 
-require 'thinking_sphinx/deploy/capistrano'
+require 'thinking_sphinx/capistrano'
 
 set :application, "elmo"
 set :repository, "ssh://git@github.com/thecartercenter/elmo.git"
