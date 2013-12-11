@@ -805,6 +805,7 @@ en:
     create_link: "Create Option"
 
   option_set:
+    clone_confirm: "Are you sure you want to make a copy of the option set '%{option_set_name}'?"
     create_new: "[Create New Option]"
     create_link: "Create Option Set"
     edit_option: "Edit Option"
