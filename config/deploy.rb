@@ -13,6 +13,11 @@ require "capistrano/ext/multistage"
 
 require 'thinking_sphinx/capistrano'
 
+# this handles installing the whenever tasks
+set :whenever_command, "bundle exec whenever"
+set(:whenever_identifier) {"elmo_#{stage}"}
+require "whenever/capistrano"
+
 set :application, "elmo"
 set :repository, "ssh://git@github.com/thecartercenter/elmo.git"
 set(:deploy_to) {"#{home_dir}/webapps/rails2/#{application}_#{stage}"}
@@ -52,6 +57,7 @@ namespace :deploy do
   task :setup_config, roles: :app do
     run "mkdir -p #{shared_path}/config"
     put File.read("config/database.yml.example"), "#{shared_path}/config/database.yml"
+    put File.read("config/railsenv.example"), "#{shared_path}/config/railsenv"
     put File.read("config/initializers/local_config.rb.example"), "#{shared_path}/config/local_config.rb"
     puts "Now edit the config files in #{shared_path}."
   end
@@ -60,6 +66,7 @@ namespace :deploy do
   task :symlink_config, roles: :app do
     run "ln -nfs #{shared_path}/config/database.yml #{release_path}/config/database.yml"
     run "ln -nfs #{shared_path}/config/local_config.rb #{release_path}/config/initializers/local_config.rb"
+    run "ln -nfs #{shared_path}/config/railsenv #{release_path}/config/railsenv"
   end
   after "deploy:finalize_update", "deploy:symlink_config"
 

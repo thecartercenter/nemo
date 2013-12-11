@@ -4,11 +4,12 @@ db/*.sqlite3
 db/sphinx
 log
 tmp/
+railsenv
+config/railsenv
 config/initializers/local_config.rb
 config/database.yml
 TODO
 .sass-cache/
-railsenv
 NOTES
 
 # compiled assets

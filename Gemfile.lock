@@ -52,6 +52,7 @@ GEM
       net-ssh (>= 2.0.14)
       net-ssh-gateway (>= 1.1.0)
     choice (0.1.6)
+    chronic (0.9.0)
     configatron (2.10.0)
       yamler (>= 0.1.0)
     dalli (2.6.4)
@@ -163,6 +164,9 @@ GEM
       execjs (>= 0.3.0)
       multi_json (~> 1.0, >= 1.0.2)
     uniform_notifier (1.2.0)
+    whenever (0.8.2)
+      activesupport (>= 2.3.4)
+      chronic (>= 0.6.3)
     will_paginate (3.0.5)
     yamler (0.1.0)
 
@@ -199,4 +203,5 @@ DEPENDENCIES
   thinking-sphinx (~> 3.0.2)
   timecop
   uglifier (>= 1.0.3)
+  whenever
   will_paginate

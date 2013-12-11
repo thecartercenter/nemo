@@ -68,3 +68,6 @@ gem 'thinking-sphinx', '~> 3.0.2'
 
 # cleaning db for testing
 gem 'database_cleaner', :group => [:development, :test]
+
+# cron management
+gem 'whenever', :require => false
