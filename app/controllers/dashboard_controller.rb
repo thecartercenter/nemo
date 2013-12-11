@@ -26,7 +26,7 @@ class DashboardController < ApplicationController
     accessible_responses = Response.accessible_by(current_ability)
   
     # load objects for the view
-    @responses = accessible_responses.with_basic_assoc.with_basic_answers.limit(20)
+    @responses = accessible_responses.with_basic_assoc.with_basic_answers.paginate(:page => 1, :per_page => 20)
 
     # total responses for this mission
     @total_response_count = accessible_responses.count
