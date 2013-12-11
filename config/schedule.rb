@@ -12,5 +12,9 @@ set :environment, ENV['RAILS_ENV']
 job_type :rake_with_env, "cd :path && source config/railsenv && RAILS_ENV=:environment bundle exec rake :task --silent :output"
 
 every 1.hour do
+  # redo the indexes
   rake_with_env "ts:index"
+
+  # make sure the daemon is running
+  rake_with_env "ts:start"
 end
