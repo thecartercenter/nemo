@@ -217,6 +217,20 @@ class OptionSetTest < ActiveSupport::TestCase
     assert_not_nil(yn.options.last.mission_id)
   end
 
+  test "cloning an option set within a mission should work" do
+    yn = FactoryGirl.create(:option_set, :name => 'Foo')
+    yn2 = yn.replicate
+
+    # missions should be the same
+    assert_equal(yn.mission, yn2.mission)
+
+    # options should be the same objects
+    assert_equal(yn.options, yn2.options)
+
+    # names should be different
+    assert_not_equal(yn.name, yn2.name)
+  end
+
   private
     def create_option_set(options)
       os = OptionSet.new(:name => "test")
