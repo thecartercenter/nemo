@@ -18,7 +18,15 @@ module OptionSetsHelper
     when "options" then option_set.options.collect{|o| o.name}.join(", ")
     when "questions" then option_set.question_count
     when "answers" then number_with_delimiter(option_set.answer_count)
-    when "actions" then action_links(option_set, :obj_name => option_set.name)
+    when "actions" then
+      # get standard action links
+      links = action_links(option_set, :obj_name => option_set.name)
+
+      # add a clone link if auth'd
+      if can?(:clone, option_set)
+        links += action_link("clone", clone_option_set_path(option_set), :'data-method' => 'put',
+          :title => t("common.clone"), :confirm => t("option_set.clone_confirm", :name => option_set.name))
+      end
     else option_set.send(field)
     end
   end

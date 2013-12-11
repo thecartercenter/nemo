@@ -67,6 +67,9 @@ module Replicable
     # copy attributes from src to parent
     replicate_attributes(replication)
 
+    # if we are copying standard to standard, preserve the is_standard flag
+    dest_obj.is_standard = true if replication.standard_to_standard?
+
     # ensure uniqueness params are respected
     ensure_uniqueness_when_replicating(replication)
 
@@ -76,9 +79,9 @@ module Replicable
     # add dest_obj to its parent's assoc before recursive step so that children can access it
     add_replication_dest_obj_to_parents_assocation(replication)
 
-    # if this is a standard obj, add the newly replicated dest obj to the list of copies
+    # if this is a standard-to-mission replication, add the newly replicated dest obj to the list of copies
     # unless it is there already
-    add_copy(dest_obj) if is_standard?
+    add_copy(dest_obj) if replication.standard_to_mission?
 
     replicate_child_associations(replication)
 
