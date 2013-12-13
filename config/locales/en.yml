@@ -300,6 +300,7 @@ en:
     tips:
       mission:
         name: "A name for this Mission. Maximum 32 characters. Must be unique. Think about including the year if there will be future missions with the same name."
+        locked: "If a mission is locked, Responses and Forms cannot be created or edited and Users cannot be added or deleted."
       option:
         name: "The textual description of this option that users will see."
       option_set:
