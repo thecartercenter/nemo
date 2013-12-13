@@ -125,7 +125,7 @@ class Ability
           end
 
           # coord can manage these classes for the current mission
-          [Form, Setting, Question, Option, Sms::Message].each do |klass|
+          [Form, Setting, Question, Questioning, Option, Sms::Message].each do |klass|
             can :manage, klass, :mission_id => user.current_mission_id
           end
 
@@ -136,9 +136,7 @@ class Ability
             end
           end
 
-          # coord can also manage Questionings (they don't have missions, only their parent questions/forms do)
-          can :manage, Questioning, :question => {:mission_id => user.current_mission_id}
-          # there is no Questioning index though
+          # there is no Questioning index
           cannot :index, Questioning
         end
       end
