@@ -84,6 +84,8 @@ class Ability
               :user_id => user.id, :mission_id => user.current_mission_id, :reviewed => false
           end
 
+          # TODO: Lockdown Response create, update, destroy for a locked mission
+
           # can read published forms for the mission
           # only need this ability if not also a coordinator
           unless user.role?(:coordinator)
@@ -102,6 +104,7 @@ class Ability
 
           # can manage responses for anybody
           can :manage, Response, :mission_id => user.current_mission_id
+          # TODO: lockdown for locked mission
 
           # can do sms tests
           can :create, Sms::Test
@@ -115,14 +118,17 @@ class Ability
           # can manage users in current mission
           can [:create, :update, :login_instructions, :change_assignments], User, :assignments => {:mission_id => user.current_mission_id}
           can :assign_to, Mission, :id => user.current_mission_id
+          # TODO: lock down if a mission is locked
 
           # can create user batches
           can :manage, UserBatch
+          # TODO: lock down if a mission is locked
 
           # can destroy users only if they have only one mission and it's the current mission
           can :destroy, User do |other_user|
             other_user.assignments.count == 1 && other_user.assignments.first.mission_id == user.current_mission_id
           end
+          # TODO: lock down if a mission is locked
 
           # coord can manage these classes for the current mission
           [Form, Setting, Question, Questioning, Option, Sms::Message].each do |klass|
@@ -130,8 +136,10 @@ class Ability
           end
 
           # coord can manage these classes for the current mission unless the mission is locked
+          # TODO: add ability to index, read for these items.
+          # TODO: check ability to export.
           unless user.current_mission.locked?
-            [OptionSet].each do |klass|
+            [OptionSet].each do |klass|  # Form, Question, Questioning, Option
               can :manage, klass, :mission_id => user.current_mission_id
             end
           end
