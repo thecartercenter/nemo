@@ -238,8 +238,13 @@ module ApplicationHelper
 
   # translates and interprets markdown markup
   def tmd(*args)
-    # strip the outer <p> </p> tags
-    BlueCloth.new(t(*args)).to_html[3..-5].html_safe
+    html = BlueCloth.new(t(*args)).to_html
+
+    if html[0,3] == '<p>' && html[-4,4] == '</p>'
+      html = html[3..-5]
+    end
+
+    html.html_safe
   end
 
   # makes sure error messages look right
