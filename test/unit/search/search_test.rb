@@ -162,7 +162,7 @@ class Search::SearchTest < ActiveSupport::TestCase
 
   test "indexed qualifiers should work with multiple terms" do
     assert_search(:str => 'source:bar text:(alpha bravo)', :sql => "((t.source = 'bar')) AND ((tbl.id IN (###1###)))", :qualifiers => INDEXED)
-    assert_equal('"alpha" "bravo"', @search.expressions.detect{|e| e.qualifier.name == 'text'}.values)
+    assert_equal('alpha bravo', @search.expressions.detect{|e| e.qualifier.name == 'text'}.values)
   end
 
   test "indexed qualifiers should work with exact phrases" do
@@ -172,7 +172,12 @@ class Search::SearchTest < ActiveSupport::TestCase
 
   test "indexed qualifiers should work with OR operator" do
     assert_search(:str => 'text:(alpha OR bravo)', :sql => "((tbl.id IN (###0###)))", :qualifiers => INDEXED)
-    assert_equal('"alpha" | "bravo"', @search.expressions.detect{|e| e.qualifier.name == 'text'}.values)
+    assert_equal('alpha | bravo', @search.expressions.detect{|e| e.qualifier.name == 'text'}.values)
+  end
+
+  test "indexed qualifiers should work with minus operator" do
+    assert_search(:str => 'text:(alpha -bravo)', :sql => "((tbl.id IN (###0###)))", :qualifiers => INDEXED)
+    assert_equal('alpha -bravo', @search.expressions.detect{|e| e.qualifier.name == 'text'}.values)
   end
 
   test "indexed qualifiers should not allow not equals operator" do
