@@ -7,7 +7,13 @@ class UsersController < ApplicationController
 
   def index
     # sort and eager load
-    @users = @users.by_name.with_assoc
+    @users = @users.by_name
+
+    # if there is a search with the '.' character in it, we can't eager load due to a bug in Rails
+    # this should be fixed in Rails 4
+    unless params[:search].present? && params[:search].match(/\./)
+      @users = @users.with_assoc
+    end
 
     # do search if applicable
     if params[:search].present?
