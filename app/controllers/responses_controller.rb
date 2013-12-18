@@ -25,6 +25,10 @@ class ResponsesController < ApplicationController
             @responses = Response.do_search(@responses, params[:search], {:mission => current_mission}, :include_excerpts => true)
           rescue Search::ParseError
             @error_msg = "#{t('search.search_error')}: #{$!}"
+          rescue ThinkingSphinx::SphinxError
+            # format sphinx message a little more nicely
+            sphinx_msg = $!.to_s.gsub(/index .+?:\s+/, '')
+            @error_msg = "#{t('search.search_error')}: #{sphinx_msg}"
           end
         end
 

@@ -108,22 +108,6 @@ div.pagination *.next_page, div.pagination *.previous_page { width: 80px; }
 div.compact_error { color: $theme_red; font-weight: bold; }
 div.field_with_errors { display: inline; }
 
-/* search form */
-form.search_form {
-  margin-bottom: 10px;
-
-  input#search_str {
-    width: 500px;
-    margin-right: 5px;
-    padding: 3px;
-  }
-
-  #search_examples {
-    margin-top: 4px;
-    color: #666;
-  }
-}
-
 /* login form */
 .user_sessions_new .form_buttons { margin-bottom: 10px; }
 

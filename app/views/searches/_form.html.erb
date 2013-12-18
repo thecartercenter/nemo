@@ -5,5 +5,12 @@
     <input type="button" value="<%= t("common.clear") %>" id="clear_button" class="btn_secondary">
   <% end %>
   <br/>
-  <%= search_examples %>
+  <div class="search_footer">
+    <%= search_examples %>
+    <a href="#"><%= t('search.help_link') %></a>
+  </div>
 </form>
+
+<div class="search_help" title="<%= t("search.help_title") %>">
+  <%= tmd("search.help_text.#{controller_name}") %>
+</div>

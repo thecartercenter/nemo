@@ -1,0 +1,33 @@
+/* search form */
+form.search_form {
+  margin-bottom: 10px;
+
+  input#search_str {
+    width: 500px;
+    margin-right: 5px;
+    padding: 3px;
+  }
+
+  div.search_footer {
+
+    #search_examples {
+      margin: 4px 8px 10px 0;
+      color: #666;
+      display: inline-block;
+    }
+  }
+}
+
+/* search help */
+div.search_help {
+  /* initially hidden, shown as modal */
+  display: none;
+
+  ul {
+    list-style: none;
+  }
+
+  h2:first-child {
+    margin-top: 0;
+  }
+}

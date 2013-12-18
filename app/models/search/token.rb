@@ -85,7 +85,7 @@ class Search::Token
 
           # insert the comparison itself
           sql += comparison_fragment(qual, op, lex_tok)
-          expr.values += "\"#{lex_tok.content}\""
+          expr.values += lex_tok.is?(:string) ? "\"#{lex_tok.content}\"" : lex_tok.content
 
         # else, if this is an 'OR', insert that
         elsif lex_tok.is?(:or)
