@@ -48,4 +48,14 @@ class MissionLockedTest < ActiveSupport::TestCase
     end
   end
 
+  #####
+  # assign user to mission tests
+  test "coordinator cannot assign user to on a locked Mission" do
+    assert_equal(false, @coordinator.ability.can?(:assign_to, Mission, :id => @mission.id))
+  end
+
+  test "admin cannot assign user to a locked mission" do
+    assert_equal(false, @admin.ability.can?(:assign_to, Mission))
+  end
+
 end

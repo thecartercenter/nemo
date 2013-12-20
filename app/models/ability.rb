@@ -47,9 +47,6 @@ class Ability
         # admin can switch to any mission, regardless of mode
         can :switch_to, Mission
 
-        # admin can assign user to current mission
-        can :assign_to, Mission, :id => user.current_mission_id
-
         # only admins can give/take admin (adminify) to/from others, but not from themselves
         cannot :adminify, User
         can :adminify, User, ["id != ?", user.id] do |other_user|
@@ -71,6 +68,11 @@ class Ability
 
       # all the rest of the permissions require a current mission to be set
       if user.current_mission_id
+
+        # admin can assign user to current mission
+        if user.admin? && !user.current_mission.locked?
+          can :assign_to, Mission, :id => user.current_mission_id
+        end
 
         # observer abilities
         if user.role?(:observer)
@@ -117,8 +119,11 @@ class Ability
         if user.role?(:coordinator)
           # can manage users in current mission
           can [:create, :update, :login_instructions, :change_assignments], User, :assignments => {:mission_id => user.current_mission_id}
-          can :assign_to, Mission, :id => user.current_mission_id
           # TODO: lock down if a mission is locked
+
+          unless user.current_mission.locked?
+            can :assign_to, Mission, :id => user.current_mission_id
+          end
 
           # can create user batches
           can :manage, UserBatch
