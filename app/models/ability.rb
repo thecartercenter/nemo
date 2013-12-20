@@ -82,11 +82,13 @@ class Ability
           # can submit responses for themselves only, and can only manage unreviewed responses
           # only need this ability if not also a staffer
           unless user.role?(:staffer)
-            can [:index, :read, :export, :create, :update, :destroy], Response,
+            can [:index, :read, :export], Response,
               :user_id => user.id, :mission_id => user.current_mission_id, :reviewed => false
+            unless user.current_mission.locked?
+              can [:create, :update, :destroy], Response,
+                :user_id => user.id, :mission_id => user.current_mission_id, :reviewed => false
+            end
           end
-
-          # TODO: Lockdown Response create, update, destroy for a locked mission
 
           # can read published forms for the mission
           # only need this ability if not also a coordinator

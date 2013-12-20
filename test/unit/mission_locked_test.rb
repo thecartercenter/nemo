@@ -79,6 +79,22 @@ class MissionLockedTest < ActiveSupport::TestCase
   end
 
   #####
+  # Observer Response Tests
+  observer_abilities_for_locked_mission = [:index, :read, :export]
+  observer_abilities_for_locked_mission.each do |observer_ability|
+    test "observer can #{observer_ability} Responses for a locked mission" do
+      assert_equal(true, @observer.ability.can?(observer_ability, Response))
+    end
+  end
+
+  observer_inabilities_for_locked_mission = [:create, :update, :destroy]
+  observer_inabilities_for_locked_mission.each do |observer_inability|
+    test "observer cannot #{observer_inability} Responses for a locked mission" do
+      assert_equal(false, @observer.ability.can?(observer_inability, Response))
+    end
+  end
+
+  #####
   # assign user to mission tests
   test "coordinator cannot assign user to on a locked Mission" do
     assert_equal(false, @coordinator.ability.can?(:assign_to, Mission, :id => @mission.id))
