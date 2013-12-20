@@ -36,6 +36,15 @@ class MissionLockedTest < ActiveSupport::TestCase
   end
 
   #####
+  # Coordinator Ability to manage Users Tests
+  user_permissions = [:create, :login_instructions, :change_assignments]
+  user_permissions.each do |user_permission|
+    test "user cannot execute #{user_permission} on a User for a locked mission" do
+      assert_equal(false, @coordinator.ability.can?(user_permission, User))
+    end
+  end
+
+  #####
   # Coordinatory Ability to manage OptionSet, Form, Question, Questioning and OPtions
   lockable_managed_classes = [OptionSet, Form, Question, Questioning, Option]
   lockable_managed_classes.each do |lockable_managed_class|
