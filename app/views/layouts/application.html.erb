@@ -96,6 +96,9 @@
         <%= t('admin_mode.admin_mode') %>
       <% else %>
         <%= current_mission.try(:name) %>
+        <% if current_mission.try(:locked) %>
+          <i class="icon-lock"></i>
+        <% end %>
       <% end %>
     </h2>
   </div>
