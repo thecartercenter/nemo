@@ -130,11 +130,12 @@ class Ability
             can :manage, UserBatch
           end
 
-          # can destroy users only if they have only one mission and it's the current mission
-          can :destroy, User do |other_user|
-            other_user.assignments.count == 1 && other_user.assignments.first.mission_id == user.current_mission_id
+          unless user.current_mission.locked?
+            # can destroy users only if they have only one mission and it's the current mission
+            can :destroy, User do |other_user|
+              other_user.assignments.count == 1 && other_user.assignments.first.mission_id == user.current_mission_id
+            end
           end
-          # TODO: lock down if a mission is locked
 
           # coord can manage these classes for the current mission
           [Setting, Sms::Message].each do |klass|

@@ -31,6 +31,10 @@ class MissionLockedTest < ActiveSupport::TestCase
     assert_equal(false, @admin.ability.can?(:manage, UserBatch))
   end
 
+  test "user cannot delete a user from a locked mission" do
+    assert_equal(false, @admin.ability.can?(:destroy, User))
+  end
+
   #####
   # Coordinatory Ability to manage OptionSet, Form, Question, Questioning and OPtions
   lockable_managed_classes = [OptionSet, Form, Question, Questioning, Option]
