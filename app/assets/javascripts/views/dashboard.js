@@ -61,8 +61,16 @@
     var stats_h = $('.report_stats').height();
 
     // left col is slightly narrower than right col
-    $('.recent_responses, .response_locations').width((cont_w - spacing) * .9 / 2)
-    $('.report_main').width((cont_w - spacing) * 1.1 / 2);
+    var left_w = (cont_w - spacing) * .9 / 2;
+    $('.recent_responses, .response_locations').width(left_w);
+    var right_w = cont_w - spacing - left_w - 15;
+    $('.report_main').width(right_w);
+
+    // must control width of stat block li's
+    $('.report_stats .stat_block li').css('maxWidth', (right_w / 3) - 25);
+
+    // must control report title width or we get weird wrapping
+    $('.report_pane h2').css('maxWidth', right_w - 200);
 
     // for left panes height we subtract 2 title heights plus 3 spacings (2 bottom, one top)
     $('.recent_responses, .response_locations').height((cont_h - 2 * title_h - 3 * spacing) / 2);

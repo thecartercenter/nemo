@@ -46,18 +46,21 @@ class DashboardController < ApplicationController
     # unreviewed response count
     @unreviewed_response_count = accessible_responses.unreviewed.count
 
-    # do the non-lazy loads inside this block so they don't run if we get a cache hit
+    # do the non-lazy loads inside these blocks so they don't run if we get a cache hit
     unless fragment_exist?(@cache_key + '/js_init')
-
       # get location answers
       @location_answers = Answer.location_answers_for_mission(current_mission)
+    end
 
+    unless fragment_exist?(@cache_key + '/stat_blocks')
       # responses by form (top N most popular)
       @responses_by_form = Response.per_form(accessible_responses, STAT_ROWS)
 
       # responses per user
       @responses_per_user = User.sorted_response_counts(current_mission, STAT_ROWS)
+    end
 
+    unless fragment_exist?(@cache_key + '/report_pane')
       prepare_report
     end
 

@@ -96,7 +96,7 @@ body.dashboard {
   div.stat_block {
     display: inline-block;
     vertical-align: top;
-    margin-right: 15px;
+    margin-right: 25px;
 
     ul {
       list-style-type: none;
@@ -105,7 +105,6 @@ body.dashboard {
       font-size: 16px;
 
       li {
-        width: 225px;
         white-space: nowrap;
         overflow: hidden;
       }
@@ -121,16 +120,33 @@ body.dashboard {
   form.report_chooser {
     float: right;
     margin-top: 15px;
+
+    select {
+      width: 150px;
+    }
   }
 
   .report_pane {
 
     h2 {
       display: inline-block;
+      overflow: hidden;
+      height: 20px;
+      white-space: nowrap;
+    }
+
+    a.action_link_edit {
+      vertical-align: top;
+      margin-top: 18px;
     }
 
     .report_main {
       overflow: auto;
+
+      div.tip {
+        /* have to cancel the 800px width as it messes with the dashboard sizing */
+        width: inherit;
+      }
     }
   }
 }
