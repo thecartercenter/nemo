@@ -131,15 +131,16 @@ class Ability
           # TODO: lock down if a mission is locked
 
           # coord can manage these classes for the current mission
-          [Form, Setting, Question, Questioning, Option, Sms::Message].each do |klass|
+          [Setting, Sms::Message].each do |klass|
             can :manage, klass, :mission_id => user.current_mission_id
           end
 
-          # coord can manage these classes for the current mission unless the mission is locked
-          # TODO: add ability to index, read for these items.
-          # TODO: check ability to export.
-          unless user.current_mission.locked?
-            [OptionSet].each do |klass|  # Form, Question, Questioning, Option
+          # coord can index, read, export these classes for a locked mission
+          if user.current_mission.locked?
+            can [:index, :read, :export], [Form, Question, OptionSet], :mission_id => user.current_mission_id
+          else
+            # coord can manage these classes for the current mission unless the mission is locked
+            [Form, OptionSet, Question, Questioning, Option].each do |klass|
               can :manage, klass, :mission_id => user.current_mission_id
             end
           end

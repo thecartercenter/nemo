@@ -27,10 +27,25 @@ class MissionLockedTest < ActiveSupport::TestCase
     @coordinator.change_mission!(@mission)
   end
 
-  test "user cannot create a new option set for a locked mission" do
-    option_set = FactoryGirl.build(:option_set, :mission => @mission)
+  #####
+  # Coordinatory Ability to manage OptionSet, Form, Question, Questioning and OPtions
+  lockable_managed_classes = [OptionSet, Form, Question, Questioning, Option]
+  lockable_managed_classes.each do |lockable_managed_class|
+    test "user cannot manage a new #{lockable_managed_class} for a locked mission" do
+      assert_equal(false, @coordinator.ability.can?(:manage, lockable_managed_class))
+    end
+  end
 
-    assert_equal(false, @admin.ability.can?(:create, OptionSet))
+  #####
+  # admin user can view index, read and export classes for a locked mission
+  admin_read_only_classes = [Form, Question, OptionSet]
+  admin_read_only_classes.each do |admin_read_only_class|
+    index_read_export_abilities = [:index, :read, :export]
+    index_read_export_abilities.each do |ability|
+      test "user can #{ability} on #{admin_read_only_class} for locked mission" do
+        assert_equal(true, @admin.ability.can?(ability, admin_read_only_class))
+      end
+    end
   end
 
 end
