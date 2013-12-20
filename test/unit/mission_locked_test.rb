@@ -36,7 +36,7 @@ class MissionLockedTest < ActiveSupport::TestCase
   end
 
   #####
-  # Coordinator Ability to manage Users Tests
+  # coordinator ability to manage Users Tests
   user_permissions = [:create, :login_instructions, :change_assignments]
   user_permissions.each do |user_permission|
     test "user cannot execute #{user_permission} on a User for a locked mission" do
@@ -45,7 +45,7 @@ class MissionLockedTest < ActiveSupport::TestCase
   end
 
   #####
-  # Coordinatory Ability to manage OptionSet, Form, Question, Questioning and OPtions
+  # coordinator ability to manage OptionSet, Form, Question, Questioning and Options
   lockable_managed_classes = [OptionSet, Form, Question, Questioning, Option]
   lockable_managed_classes.each do |lockable_managed_class|
     test "user cannot manage a new #{lockable_managed_class} for a locked mission" do
@@ -66,7 +66,7 @@ class MissionLockedTest < ActiveSupport::TestCase
   end
 
   #####
-  # Staffer Response Tests
+  # staffer Response tests
   staffer_abilities_for_locked_mission = [:index, :read, :export]
   staffer_abilities_for_locked_mission.each do |staffer_ability|
     test "staffer can #{staffer_ability} Responses for a locked mission" do
@@ -79,7 +79,7 @@ class MissionLockedTest < ActiveSupport::TestCase
   end
 
   #####
-  # Observer Response Tests
+  # observer Response tests
   observer_abilities_for_locked_mission = [:index, :read, :export]
   observer_abilities_for_locked_mission.each do |observer_ability|
     test "observer can #{observer_ability} Responses for a locked mission" do
@@ -95,7 +95,7 @@ class MissionLockedTest < ActiveSupport::TestCase
   end
 
   #####
-  # assign user to mission tests
+  # assign User to Mission tests
   test "coordinator cannot assign user to on a locked Mission" do
     assert_equal(false, @coordinator.ability.can?(:assign_to, Mission, :id => @mission.id))
   end
