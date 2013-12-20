@@ -27,6 +27,10 @@ class MissionLockedTest < ActiveSupport::TestCase
     @coordinator.change_mission!(@mission)
   end
 
+  test "user cannot manage UserBatch for a locked mission" do
+    assert_equal(false, @admin.ability.can?(:manage, UserBatch))
+  end
+
   #####
   # Coordinatory Ability to manage OptionSet, Form, Question, Questioning and OPtions
   lockable_managed_classes = [OptionSet, Form, Question, Questioning, Option]

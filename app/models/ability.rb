@@ -126,8 +126,9 @@ class Ability
           end
 
           # can create user batches
-          can :manage, UserBatch
-          # TODO: lock down if a mission is locked
+          unless user.current_mission.locked?
+            can :manage, UserBatch
+          end
 
           # can destroy users only if they have only one mission and it's the current mission
           can :destroy, User do |other_user|
