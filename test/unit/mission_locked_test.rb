@@ -66,6 +66,19 @@ class MissionLockedTest < ActiveSupport::TestCase
   end
 
   #####
+  # Staffer Response Tests
+  staffer_abilities_for_locked_mission = [:index, :read, :export]
+  staffer_abilities_for_locked_mission.each do |staffer_ability|
+    test "staffer can #{staffer_ability} Responses for a locked mission" do
+      assert_equal(true, @staffer.ability.can?(staffer_ability, Response))
+    end
+  end
+
+  test "staffer cannot manage Responses for a locked mission" do
+    assert_equal(false, @staffer.ability.can?(:manage, Response))
+  end
+
+  #####
   # assign user to mission tests
   test "coordinator cannot assign user to on a locked Mission" do
     assert_equal(false, @coordinator.ability.can?(:assign_to, Mission, :id => @mission.id))

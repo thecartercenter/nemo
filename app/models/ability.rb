@@ -104,9 +104,13 @@ class Ability
           # can do reports for the current mission
           can :manage, Report::Report, :mission_id => user.current_mission_id
 
-          # can manage responses for anybody
-          can :manage, Response, :mission_id => user.current_mission_id
-          # TODO: lockdown for locked mission
+          if user.current_mission.locked?
+            # can index, read, export responses for a locked mission
+            can [:index, :read, :export], Response, :mission_id => user.current_mission_id
+          else
+            # can manage responses for anybody for an unlocked mission
+            can :manage, Response, :mission_id => user.current_mission_id
+          end
 
           # can do sms tests
           can :create, Sms::Test
