@@ -75,43 +75,39 @@ class MissionLockedTest < ActiveSupport::TestCase
     end
   end
 
-  #####
-  # staffer Response tests
-  staffer_abilities_for_locked_mission = [:index, :read, :export]
-  staffer_abilities_for_locked_mission.each do |staffer_ability|
-    test "staffer can #{staffer_ability} Responses for a locked mission" do
-      assert_equal(true, @staffer.ability.can?(staffer_ability, Response))
+  test "staffer should be able to index read and export responses for a locked mission" do
+    resp = FactoryGirl.create(:response, :mission => @mission)
+    [:index, :read, :export].each do |perm|
+      assert_equal(true, @staffer.ability.can?(perm, resp))
     end
   end
 
-  test "staffer cannot manage Responses for a locked mission" do
-    assert_equal(false, @staffer.ability.can?(:manage, Response))
-  end
-
-  #####
-  # observer Response tests
-  observer_abilities_for_locked_mission = [:index, :read, :export]
-  observer_abilities_for_locked_mission.each do |observer_ability|
-    test "observer can #{observer_ability} Responses for a locked mission" do
-      assert_equal(true, @observer.ability.can?(observer_ability, Response))
+  test "staffer shouldnt be able to create update or destroy responses for a locked mission" do
+    resp = FactoryGirl.build(:response, :mission => @mission)
+    [:create, :update, :destroy].each do |perm|
+      assert_equal(false, @staffer.ability.can?(perm, resp))
     end
   end
 
-  observer_inabilities_for_locked_mission = [:create, :update, :destroy]
-  observer_inabilities_for_locked_mission.each do |observer_inability|
-    test "observer cannot #{observer_inability} Responses for a locked mission" do
-      assert_equal(false, @observer.ability.can?(observer_inability, Response))
+  test "observer should be able to index read and export own responses for a locked mission" do
+    resp = FactoryGirl.create(:response, :mission => @mission, :user => @observer)
+    [:index, :read, :export].each do |perm|
+      assert_equal(true, @observer.ability.can?(perm, resp))
     end
   end
 
-  #####
-  # assign User to Mission tests
-  test "coordinator cannot assign user to on a locked Mission" do
-    assert_equal(false, @coordinator.ability.can?(:assign_to, Mission, :id => @mission.id))
+  test "observer shouldnt be able to create update or destroy own responses for a locked mission" do
+    resp = FactoryGirl.build(:response, :mission => @mission, :user => @observer)
+    [:create, :update, :destroy].each do |perm|
+      assert_equal(false, @observer.ability.can?(perm, resp))
+    end
+  end
+
+  test "coordinator shouldnt be able to assign user to a locked Mission" do
+    assert_equal(false, @coordinator.ability.can?(:assign_to, @mission))
   end
 
   test "admin cannot assign user to a locked mission" do
-    assert_equal(false, @admin.ability.can?(:assign_to, Mission))
+    assert_equal(false, @admin.ability.can?(:assign_to, @mission))
   end
-
 end
