@@ -30,7 +30,7 @@ CREATE TABLE `assignments` (
   KEY `assignments_user_id_fk` (`user_id`),
   CONSTRAINT `assignments_mission_id_fk` FOREIGN KEY (`mission_id`) REFERENCES `missions` (`id`),
   CONSTRAINT `assignments_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=240359 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=240363 DEFAULT CHARSET=latin1;
 
 CREATE TABLE `broadcast_addressings` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -95,7 +95,7 @@ CREATE TABLE `conditions` (
   CONSTRAINT `conditions_questioning_id_fk` FOREIGN KEY (`questioning_id`) REFERENCES `questionings` (`id`),
   CONSTRAINT `conditions_ref_qing_id_fk` FOREIGN KEY (`ref_qing_id`) REFERENCES `questionings` (`id`),
   CONSTRAINT `conditions_standard_id_fk` FOREIGN KEY (`standard_id`) REFERENCES `conditions` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=240547 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=240548 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `form_versions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -109,7 +109,7 @@ CREATE TABLE `form_versions` (
   UNIQUE KEY `index_form_versions_on_code` (`code`),
   KEY `form_versions_form_id_fk` (`form_id`),
   CONSTRAINT `form_versions_form_id_fk` FOREIGN KEY (`form_id`) REFERENCES `forms` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=127 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=128 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `forms` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -133,7 +133,7 @@ CREATE TABLE `forms` (
   CONSTRAINT `forms_current_version_id_fk` FOREIGN KEY (`current_version_id`) REFERENCES `form_versions` (`id`) ON DELETE SET NULL,
   CONSTRAINT `forms_mission_id_fk` FOREIGN KEY (`mission_id`) REFERENCES `missions` (`id`),
   CONSTRAINT `forms_standard_id_fk` FOREIGN KEY (`standard_id`) REFERENCES `forms` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=240304 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=240305 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `missions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -162,7 +162,7 @@ CREATE TABLE `option_sets` (
   KEY `index_option_sets_on_geographic` (`geographic`),
   CONSTRAINT `option_sets_mission_id_fk` FOREIGN KEY (`mission_id`) REFERENCES `missions` (`id`),
   CONSTRAINT `option_sets_standard_id_fk` FOREIGN KEY (`standard_id`) REFERENCES `option_sets` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=240572 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=240576 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `optionings` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -183,7 +183,7 @@ CREATE TABLE `optionings` (
   CONSTRAINT `optionings_option_id_fk` FOREIGN KEY (`option_id`) REFERENCES `options` (`id`),
   CONSTRAINT `optionings_option_set_id_fk` FOREIGN KEY (`option_set_id`) REFERENCES `option_sets` (`id`),
   CONSTRAINT `optionings_standard_id_fk` FOREIGN KEY (`standard_id`) REFERENCES `optionings` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=241755 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=241769 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `options` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -201,7 +201,7 @@ CREATE TABLE `options` (
   KEY `index_options_on_standard_id` (`standard_id`),
   CONSTRAINT `options_mission_id_fk` FOREIGN KEY (`mission_id`) REFERENCES `missions` (`id`),
   CONSTRAINT `options_standard_id_fk` FOREIGN KEY (`standard_id`) REFERENCES `options` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=241645 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=241659 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `questionings` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -224,7 +224,7 @@ CREATE TABLE `questionings` (
   CONSTRAINT `questionings_mission_id_fk` FOREIGN KEY (`mission_id`) REFERENCES `missions` (`id`),
   CONSTRAINT `questionings_question_id_fk` FOREIGN KEY (`question_id`) REFERENCES `questions` (`id`),
   CONSTRAINT `questionings_standard_id_fk` FOREIGN KEY (`standard_id`) REFERENCES `questionings` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=241628 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=241648 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `questions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -254,7 +254,7 @@ CREATE TABLE `questions` (
   CONSTRAINT `questions_mission_id_fk` FOREIGN KEY (`mission_id`) REFERENCES `missions` (`id`),
   CONSTRAINT `questions_option_set_id_fk` FOREIGN KEY (`option_set_id`) REFERENCES `option_sets` (`id`),
   CONSTRAINT `questions_standard_id_fk` FOREIGN KEY (`standard_id`) REFERENCES `questions` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=241103 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=241123 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `report_calculations` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -349,7 +349,7 @@ CREATE TABLE `sessions` (
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `index_sessions_on_updated_at` (`updated_at`)
-) ENGINE=InnoDB AUTO_INCREMENT=2811 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2814 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `settings` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -411,7 +411,7 @@ CREATE TABLE `users` (
   UNIQUE KEY `index_users_on_login` (`login`),
   KEY `users_current_mission_id_fk` (`current_mission_id`),
   CONSTRAINT `users_current_mission_id_fk` FOREIGN KEY (`current_mission_id`) REFERENCES `missions` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=240339 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=240340 DEFAULT CHARSET=utf8;
 
 INSERT INTO schema_migrations (version) VALUES ('20110602191123');
 

@@ -108,10 +108,10 @@ class Ability
           else
             # can manage responses for anybody for an unlocked mission
             can :manage, Response, :mission_id => user.current_mission_id
-          end
 
-          # can do sms tests
-          can :create, Sms::Test
+            # can do sms tests for an unlocked mission
+            can :create, Sms::Test
+          end
 
           # can view the dashboard (individual dashboard components are checked separately)
           can :view, :dashboard
