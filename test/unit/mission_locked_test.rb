@@ -3,7 +3,6 @@ require 'test_helper'
 # this class contains tests for the mission locked feature.
 class MissionLockedTest < ActiveSupport::TestCase
 
-
   setup do
     @mission = FactoryGirl.create(:mission, :name => 'Locked mission')
 
@@ -29,11 +28,7 @@ class MissionLockedTest < ActiveSupport::TestCase
   end
 
   test "user cannot manage UserBatch for a locked mission" do
-    assert_equal(false, @admin.ability.can?(:manage, UserBatch))
-  end
-
-  test "user cannot delete a user from a locked mission" do
-    assert_equal(false, @admin.ability.can?(:destroy, User))
+    assert_equal(false, @admin_ability.can?(:manage, UserBatch))
   end
 
   #####
@@ -108,7 +103,7 @@ class MissionLockedTest < ActiveSupport::TestCase
 
   test "nobody should be able to assign a user to a locked Mission" do
     assert_equal(false, @coordinator.ability.can?(:assign_to, @mission))
-    assert_equal(false, @admin.ability.can?(:assign_to, @mission))
+    assert_equal(false, @admin_ability.can?(:assign_to, @mission))
   end
 
   test "nobody should be able to edit an assignment on a locked mission" do
