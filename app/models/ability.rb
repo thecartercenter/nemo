@@ -190,14 +190,13 @@ class Ability
       q.standard_copy? || q.published?
     end
 
-    # TODO test removing this doesn't break anything
     # BUT can update questioning (though not its core) if can update related question
     # we need this because questions are updated via questionings
-    # can :update, Questioning do |q|
-    #   pp q.question.mission
-    #   pp can? :update, q.question
-    #   can? :update, q.question
-    # end
+    # so a question (though not its core) may be updatable even though it's published
+    # and we need to allow access to that question via the questioning index
+    can :update, Questioning do |q|
+      can? :update, q.question
+    end
 
     cannot :destroy, Questioning do |q|
       q.has_answers?
