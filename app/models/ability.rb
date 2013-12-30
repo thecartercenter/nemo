@@ -123,6 +123,8 @@ class Ability
 
         # coordinator abilities
         if user.role?(:coordinator)
+
+          # TODO refactor these into one block
           unless user.current_mission.locked?
             # can manage users in current mission
             can [:create, :update, :login_instructions, :change_assignments], User, :assignments => {:mission_id => user.current_mission_id}
@@ -192,11 +194,14 @@ class Ability
       q.standard_copy? || q.published?
     end
 
+    # TODO test removing this doesn't break anything
     # BUT can update questioning (though not its core) if can update related question
     # we need this because questions are updated via questionings
-    can :update, Questioning do |q|
-      can :update, q.question
-    end
+    # can :update, Questioning do |q|
+    #   pp q.question.mission
+    #   pp can? :update, q.question
+    #   can? :update, q.question
+    # end
 
     cannot :destroy, Questioning do |q|
       q.has_answers?

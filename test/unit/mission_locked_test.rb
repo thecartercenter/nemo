@@ -53,12 +53,16 @@ class MissionLockedTest < ActiveSupport::TestCase
     assert_equal(true, @coordinator.ability.can?(:create, @new_user), "should be able to create user in regular mission")
   end
 
-  #####
-  # coordinator ability to manage OptionSet, Form, Question, Questioning and Options
-  lockable_managed_classes = [OptionSet, Form, Question, Questioning, Option]
-  lockable_managed_classes.each do |lockable_managed_class|
-    test "user cannot manage a new #{lockable_managed_class} for a locked mission" do
-      assert_equal(false, @coordinator.ability.can?(:manage, lockable_managed_class))
+  test "coordinator shouldnt be able to create update or destroy core classes for a locked mission" do
+    [:option_set, :form, :question, :questioning, :option].each do |klass|
+      locked_obj = FactoryGirl.build(klass, :mission => @mission)
+      normal_obj = FactoryGirl.build(klass, :mission => get_mission)
+      [:create, :update, :destroy].each do |perm|
+        @coordinator.change_mission!(@mission)
+        assert_equal(false, @coordinator.ability.can?(perm, locked_obj), "shouldn't be able to #{perm} #{klass}")
+        @coordinator.change_mission!(get_mission)
+        assert_equal(true, @coordinator.ability.can?(perm, normal_obj), "should be able to #{perm} #{klass}")
+      end
     end
   end
 
