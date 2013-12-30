@@ -35,17 +35,19 @@ class MissionLockedTest < ActiveSupport::TestCase
 
   #####
   # coordinator ability to manage Users Tests
-  test "user cannot create or update users for a locked mission" do
+  test "user shouldnt be able to update users for a locked mission" do
     # shouldn't be able to do these things to user in locked mission
     [:update, :login_instructions, :change_assignments].each do |p|
       assert_equal(false, @coordinator.ability.can?(p, @observer), "shouldn't be able to #{p} user")
     end
+  end
 
-    # shouldn't be able to create a new user in locked mission
+  test "coordinator shouldnt be able to create a new user in locked mission" do
     @new_user = FactoryGirl.build(:user, :mission => @mission, :role_name => :observer)
     assert_equal(false, @coordinator.ability.can?(:create, @new_user), "shouldn't be able to create user")
+  end
 
-    # should be able to create a new user in non-locked mission
+  test "coordinator should be able to create a new user in non-locked mission" do
     @coordinator.change_mission!(get_mission)
     @new_user = FactoryGirl.build(:user, :mission => get_mission, :role_name => :observer)
     assert_equal(true, @coordinator.ability.can?(:create, @new_user), "should be able to create user in regular mission")
