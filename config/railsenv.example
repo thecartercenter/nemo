@@ -1,0 +1,2 @@
+# This file is a shell script that is used to set up an environment for cron jobs.
+# Add any PATH or GEM_HOME declarations that your cron daemon will need to run Rails successfully.
