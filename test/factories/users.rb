@@ -12,6 +12,7 @@ FactoryGirl.define do
   factory :user do
     ignore do
       role_name :coordinator
+      mission { get_mission }
     end
 
     login { Random.letters(8) }
@@ -28,7 +29,7 @@ FactoryGirl.define do
     perishable_token { Authlogic::Random.friendly_token }
 
     after(:build) do |user, evaluator|
-      user.assignments.build(:mission => get_mission, :active => true, :role => evaluator.role_name.to_s)
+      user.assignments.build(:mission => evaluator.mission, :active => true, :role => evaluator.role_name.to_s)
     end
   end
 end
