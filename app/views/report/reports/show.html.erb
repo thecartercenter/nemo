@@ -1,7 +1,6 @@
 <%# include javascript google vis api stuff %>
 <% content_for(:per_page_js){report_js_includes} %>
 
-<%= loading_indicator(:id => "report_load_ind") %>
 
 <%= flash_and_form_errors(@report) %>
 
@@ -15,6 +14,8 @@
   <% if !@report.new_record? && @report.exportable? %>
     <%= link_to(t("report/report.export_to_csv"), report_report_path(@report, :format => :csv), :id => "csv_link") %>
   <% end %>
+
+  <%= loading_indicator(:id => "report_load_ind") %>
 </div>
 <div class="report_view">
   <div class="report_main">

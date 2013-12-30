@@ -18,6 +18,9 @@ class Report::ReportsController < ApplicationController
   end
 
   def edit
+    # set flash and redirect to show
+    # we do it this way because staying in the edit action produces a somewhat inaccurate url
+    flash[:edit_mode] = true
     redirect_to(:action => :show)
   end
 
@@ -93,7 +96,8 @@ class Report::ReportsController < ApplicationController
     # prepares and renders the show template, which is used for new and show actions
     def render_show
       # setup data to be used on client side
-      build_report_data
+      # set edit mode if it was passed in the flash
+      build_report_data(:edit_mode => flash[:edit_mode])
 
       render(:show)
     end
