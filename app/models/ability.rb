@@ -84,6 +84,7 @@ class Ability
           unless user.role?(:staffer)
             can [:index, :read, :export], Response,
               :user_id => user.id, :mission_id => user.current_mission_id, :reviewed => false
+
             unless user.current_mission.locked?
               can [:create, :update, :destroy], Response,
                 :user_id => user.id, :mission_id => user.current_mission_id, :reviewed => false
@@ -124,41 +125,36 @@ class Ability
         # coordinator abilities
         if user.role?(:coordinator)
 
-          # TODO refactor these into one block
-          unless user.current_mission.locked?
+          # permissions for locked missions only
+          if user.current_mission.locked?
+            # coord can index, read, export these classes for a locked mission
+            can [:index, :read, :export], [Form, Question, OptionSet], :mission_id => user.current_mission_id
+
+          # permissions for non-locked mission
+          else
             # can manage users in current mission
             can [:create, :update, :login_instructions, :change_assignments], User, :assignments => {:mission_id => user.current_mission_id}
-          end
 
-          unless user.current_mission.locked?
+            # can assign to mission
             can :assign_to, Mission, :id => user.current_mission_id
-          end
 
-          # can create user batches
-          unless user.current_mission.locked?
+            # can create user batches
             can :manage, UserBatch
-          end
 
-          unless user.current_mission.locked?
             # can destroy users only if they have only one mission and it's the current mission
             can :destroy, User do |other_user|
               other_user.assignments.count == 1 && other_user.assignments.first.mission_id == user.current_mission_id
             end
-          end
 
-          # coord can manage these classes for the current mission
-          [Setting, Sms::Message].each do |klass|
-            can :manage, klass, :mission_id => user.current_mission_id
-          end
-
-          # coord can index, read, export these classes for a locked mission
-          if user.current_mission.locked?
-            can [:index, :read, :export], [Form, Question, OptionSet], :mission_id => user.current_mission_id
-          else
-            # coord can manage these classes for the current mission unless the mission is locked
+            # coord can manage these classes for the current mission
             [Form, OptionSet, Question, Questioning, Option].each do |klass|
               can :manage, klass, :mission_id => user.current_mission_id
             end
+          end
+
+          # coord can manage these classes for the current mission even if locked
+          [Setting, Sms::Message].each do |klass|
+            can :manage, klass, :mission_id => user.current_mission_id
           end
 
           # there is no Questioning index
