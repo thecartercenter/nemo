@@ -23,6 +23,9 @@ class MissionLockedTest < ActiveSupport::TestCase
     @staffer.change_mission!(@mission)
     @observer.change_mission!(@mission)
     @coordinator.change_mission!(@mission)
+
+    # need special ability object for admin with admin mode set to true
+    @admin_ability = Ability.new(@admin, true)
   end
 
   test "user cannot manage UserBatch for a locked mission" do
@@ -103,11 +106,16 @@ class MissionLockedTest < ActiveSupport::TestCase
     end
   end
 
-  test "coordinator shouldnt be able to assign user to a locked Mission" do
+  test "nobody should be able to assign a user to a locked Mission" do
     assert_equal(false, @coordinator.ability.can?(:assign_to, @mission))
+    assert_equal(false, @admin.ability.can?(:assign_to, @mission))
   end
 
-  test "admin cannot assign user to a locked mission" do
-    assert_equal(false, @admin.ability.can?(:assign_to, @mission))
+  test "nobody should be able to edit an assignment on a locked mission" do
+    # get the observers assignment to the locked mission
+    assign = @observer.assignments.first
+    assert_equal(false, @admin_ability.can?(:update, assign))
+    assign2 = @observer.assignments.create(:mission => get_mission, :role => 'observer')
+    assert_equal(true, @admin_ability.can?(:update, assign2))
   end
 end

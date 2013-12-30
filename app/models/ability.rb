@@ -69,11 +69,6 @@ class Ability
       # all the rest of the permissions require a current mission to be set
       if user.current_mission_id
 
-        # admin can assign user to current mission
-        if user.admin? && !user.current_mission.locked?
-          can :assign_to, Mission, :id => user.current_mission_id
-        end
-
         # observer abilities
         if user.role?(:observer)
           # can view and export users in same mission
@@ -133,10 +128,8 @@ class Ability
           # permissions for non-locked mission
           else
             # can manage users in current mission
+            # special change_assignments permission is given so that users cannot update their own assignments via edit profile
             can [:create, :update, :login_instructions, :change_assignments], User, :assignments => {:mission_id => user.current_mission_id}
-
-            # can assign to mission
-            can :assign_to, Mission, :id => user.current_mission_id
 
             # can create user batches
             can :manage, UserBatch
@@ -233,5 +226,11 @@ class Ability
 
     # only published forms can be downloaded
     cannot :download, Form, :published => false
+
+    # nobody can assign anybody to a locked mission
+    cannot :assign_to, Mission, :locked => true
+
+    # nobody can edit assignments for a locked mission
+    cannot [:create, :update, :destroy], Assignment, :mission => {:locked => true}
   end
 end
