@@ -1,0 +1,115 @@
+/* user login instructions */
+#login_instructions td.name { width: 100px; }
+#login_instructions td.value { font-weight: bold; width: 300px; }
+
+/* user edit */
+form.user_form {
+
+  div.control {
+    width: 500px !important;
+  }
+
+  input#user_login {
+    width: 150px;
+  }
+
+  input#login_suggest_button {
+    margin-left: 10px;
+    display: inline-block;
+  }
+
+  textarea#user_notes {
+    width: 240px;
+    height: 100px;
+  }
+
+  div.form_field#assignments {
+
+    div.item {
+      padding: 2px 0;
+    }
+
+    div.assignment, div.assignment_header {
+      display: inline-block;
+
+      > div {
+        display: inline-block;
+        padding-right: 10px;
+      }
+
+      div.mission {
+        width: 150px;
+
+        select {
+          width: 145px;
+        }
+      }
+
+      div.role {
+        width: 120px;
+
+        select {
+          width: 115px;
+        }
+      }
+
+      div.active {
+        width: 75px;
+      }
+    }
+
+    div.assignment {
+      font-weight: bold;
+    }
+
+    div.assignment_header {
+      font-size: 11px;
+      color: #aaa;
+    }
+  }
+}
+
+/* user batches */
+form.user_batch_form {
+  /* regular form */
+  #user_batch_batch {
+    width: 500px;
+    height: 200px;
+    margin-right: 20px;
+  }
+
+  div.control {
+    width: 525px !important;
+  }
+
+  /* special form */
+  div.batch_line_with_info {
+    padding: 10px 5px;
+    border-top: 1px solid #ddd;
+    width: 900px;
+
+    input[type=text] {
+      width: 400px;
+    }
+
+    div.info {
+      display: inline-block;
+      margin-left: 5px;
+
+      i {
+        margin: 0 5px;
+        width: 10px;
+        display: inline-block;
+        text-align: center;
+      }
+    }
+
+    &.line_ok div.info {
+      color: #9dc400;
+    }
+
+    &.line_error div.info {
+      color: #d02000;
+    }
+  }
+}

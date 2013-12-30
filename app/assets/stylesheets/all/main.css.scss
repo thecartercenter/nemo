@@ -196,61 +196,6 @@ textarea#broadcast_body { width: 300px; height: 170px; }
 /* form choose questions */
 .forms_choose_questions div.question_form { display: none; }
 
-/* user login instructions */
-#login_instructions td.name { width: 100px; }
-#login_instructions td.value { font-weight: bold; width: 300px; }
-
-/* user edit */
-form.user_form div.control { width: 500px !important; }
-form.user_form input#user_login { width: 150px; }
-form.user_form input#login_suggest_button { margin-left: 10px; display: inline-block; }
-form.user_form textarea#user_notes { width: 240px; height: 100px; }
-
-/* user batches */
-form.user_batch_form {
-  /* regular form */
-  #user_batch_batch {
-    width: 500px;
-    height: 200px;
-    margin-right: 20px;
-  }
-
-  div.control {
-    width: 525px !important;
-  }
-
-  /* special form */
-  div.batch_line_with_info {
-    padding: 10px 5px;
-    border-top: 1px solid #ddd;
-    width: 900px;
-
-    input[type=text] {
-      width: 400px;
-    }
-
-    div.info {
-      display: inline-block;
-      margin-left: 5px;
-
-      i {
-        margin: 0 5px;
-        width: 10px;
-        display: inline-block;
-        text-align: center;
-      }
-    }
-
-    &.line_ok div.info {
-      color: #9dc400;
-    }
-
-    &.line_error div.info {
-      color: #d02000;
-    }
-  }
-}
-
 /* location picker */
 div.location_picker { width: 900px; height: 500px; }
 div.location_picker div.map_canvas { width: 600px; height: 440px; border: 1px solid #ccc; float: left; margin-right: 10px; }

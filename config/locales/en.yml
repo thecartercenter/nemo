@@ -31,6 +31,7 @@ en:
       other: "Examples"
     example_abbr: "e.g."
     found: "Found"
+    inactive: "Inactive"
     language: "Language"
     login: "Login"
     logout: "Logout"

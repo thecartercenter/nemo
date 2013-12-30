@@ -1,4 +1,19 @@
-<%= fields.select(:mission_id, sel_opts_from_objs(@assignable_missions), :prompt => "[#{Mission.model_name.human}]") %>&nbsp;&nbsp;
-<%= fields.select(:role, User::ROLES.map{|r| [t(r, :scope => :role), r]}, :prompt => "[#{t('role.role')}]") %>&nbsp;&nbsp;
-<%= fields.check_box(:active) %>
-<%= fields.label(:active, "#{t('common.active').capitalize}?") %>
+<div class="assignment">
+  <div class="mission">
+    <% if fields.object.new_record? %>
+      <%= fields.select(:mission_id, sel_opts_from_objs(@assignable_missions), :prompt => "[#{Mission.model_name.human}]") %>&nbsp;&nbsp;
+    <% else %>
+      <%= fields.object.mission.name %>
+    <% end %>
+  </div>
+
+  <% if can?(:update, fields.object) %>
+    <div class="role"><%= fields.select(:role, User::ROLES.map{|r| [t(r, :scope => :role), r]}, :prompt => "[#{t('role.role')}]") %>&nbsp;&nbsp;</div>
+    <div class="active">
+      <%= fields.check_box(:active) %>
+    </div>
+  <% else %>
+    <div class="role"><%= t("role.#{fields.object.role}") %></div>
+    <div class="active">[<%= fields.object.active? ? t('common.active') : t('common.inactive') %>]</div>
+  <% end %>
+</div>
