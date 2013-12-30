@@ -66,14 +66,11 @@ class MissionLockedTest < ActiveSupport::TestCase
     end
   end
 
-  #####
-  # admin user can view index, read and export classes for a locked mission
-  admin_read_only_classes = [Form, Question, OptionSet]
-  admin_read_only_classes.each do |admin_read_only_class|
-    index_read_export_abilities = [:index, :read, :export]
-    index_read_export_abilities.each do |ability|
-      test "user can #{ability} on #{admin_read_only_class} for locked mission" do
-        assert_equal(true, @admin.ability.can?(ability, admin_read_only_class))
+  test "coordinator should be able to index read and export core classes for a locked mission" do
+    [:form, :question, :option_set].each do |klass|
+      obj = FactoryGirl.build(klass, :mission => @mission)
+      [:index, :read, :export].each do |perm|
+        assert_equal(true, @coordinator.ability.can?(perm, obj), "should be able to #{perm} #{klass}")
       end
     end
   end
