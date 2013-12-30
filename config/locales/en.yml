@@ -1316,7 +1316,11 @@ en:
     in_the_past_year: "**%{count}** in the Past Year"
     no_mission_selected:
       title: "No Mission Selected"
-      description: "Please select a mission from the dropdown in the top-right of the screen."
+      choose: "Please select a mission from the dropdown in the top-right of the screen."
+      choose_or_create: "Please select a mission from the dropdown in the top-right of the screen, or you can "
+      create_link: "create a new mission"
+      need_to_create: "There are currently no missions. Please "
+      no_missions: "There are currently no missions in the system. Please contact an administrator."
     no_recent: "**0** Recent Responses"
     published_form_count: "**%{count}** Published Forms"
     select_a_form: "Select a Form To Submit"
