@@ -6,7 +6,9 @@
   </div>
 
   <%= collection_form(:parent_form => form, :collection_name => :assignments, :blank_obj => @blank_assignment, :tr_name => Assignment.model_name.human) %>
+
 <% else %>
+
   <%= form.fields_for(:assignments) do |af| %>
     <% if af.object.mission == current_mission %>
       <% af.mode = form.mode %>
@@ -17,4 +19,5 @@
       <%= af.label(:active, "#{t('common.active').capitalize}?") %>
     <% end %>
   <% end %>
+
 <% end %>
