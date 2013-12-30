@@ -123,11 +123,9 @@ class Ability
 
         # coordinator abilities
         if user.role?(:coordinator)
-          # TODO take care of locked mission scenario
-          can [:update], User, :assignments => {:mission_id => user.current_mission_id}
           unless user.current_mission.locked?
             # can manage users in current mission
-            can [:create, :login_instructions, :change_assignments], User, :assignments => {:mission_id => user.current_mission_id}
+            can [:create, :update, :login_instructions, :change_assignments], User, :assignments => {:mission_id => user.current_mission_id}
           end
 
           unless user.current_mission.locked?

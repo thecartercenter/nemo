@@ -5,18 +5,16 @@ class MissionLockedTest < ActiveSupport::TestCase
 
 
   setup do
-    @mission = FactoryGirl.create(:mission, :name => 'Locked mission')#, :locked => true)
+    @mission = FactoryGirl.create(:mission, :name => 'Locked mission')
 
     @admin = FactoryGirl.create(:user, :admin => true)
 
-    @staffer = FactoryGirl.create(:user)
-    @staffer.assignments.create(:mission => @mission, :active => true, :role => "staffer")
+    @observer = FactoryGirl.create(:user, :mission => @mission, :role_name => :observer)
+    @staffer = FactoryGirl.create(:user, :mission => @mission, :role_name => :staffer)
+    @coordinator = FactoryGirl.create(:user, :mission => @mission, :role_name => :coordinator)
 
-    @observer = FactoryGirl.create(:user)
-    @observer.assignments.create(:mission => @mission, :active => true, :role => "observer")
-
-    @coordinator = FactoryGirl.create(:user)
-    @coordinator.assignments.create(:mission => @mission, :active => true, :role => "coordinator")
+    # also add the coordinator to a non-locked mission
+    @coordinator.assignments.create!(:mission => get_mission, :role => 'coordinator')
 
     @mission.locked = true
     @mission.save
@@ -37,11 +35,20 @@ class MissionLockedTest < ActiveSupport::TestCase
 
   #####
   # coordinator ability to manage Users Tests
-  user_permissions = [:create, :login_instructions, :change_assignments]
-  user_permissions.each do |user_permission|
-    test "user cannot execute #{user_permission} on a User for a locked mission" do
-      assert_equal(false, @coordinator.ability.can?(user_permission, User))
+  test "user cannot create or update users for a locked mission" do
+    # shouldn't be able to do these things to user in locked mission
+    [:update, :login_instructions, :change_assignments].each do |p|
+      assert_equal(false, @coordinator.ability.can?(p, @observer), "shouldn't be able to #{p} user")
     end
+
+    # shouldn't be able to create a new user in locked mission
+    @new_user = FactoryGirl.build(:user, :mission => @mission, :role_name => :observer)
+    assert_equal(false, @coordinator.ability.can?(:create, @new_user), "shouldn't be able to create user")
+
+    # should be able to create a new user in non-locked mission
+    @coordinator.change_mission!(get_mission)
+    @new_user = FactoryGirl.build(:user, :mission => get_mission, :role_name => :observer)
+    assert_equal(true, @coordinator.ability.can?(:create, @new_user), "should be able to create user in regular mission")
   end
 
   #####
