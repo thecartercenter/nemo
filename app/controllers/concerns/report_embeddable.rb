@@ -4,10 +4,11 @@ module ReportEmbeddable
   def build_report_data(options = {})
     @report_data = {:report => @report.as_json(:methods => :errors)}
 
-    # add stuff for report editing, or read only flag, if appropriate
-    if options[:read_only]
-      @report_data[:read_only] = true
-    else
+    # merge in options from method call
+    @report_data.merge!(options)
+
+    # add stuff for report editing, if appropriate
+    unless options[:read_only]
       @report_data[:options] = {
         :attribs => Report::AttribField.all,
         :forms => Form.for_mission(current_mission).as_json(:only => [:id, :name]),
