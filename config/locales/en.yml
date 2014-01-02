@@ -31,6 +31,7 @@ en:
       other: "Examples"
     example_abbr: "e.g."
     found: "Found"
+    generate: "Generate"
     language: "Language"
     login: "Login"
     logout: "Logout"
@@ -339,6 +340,10 @@ en:
           * The default language preference for new users
           * The default language for SMS replies
           * The languages for Questions and Options
+        override_code:
+          Allow constraint overrides for observers in ODK.
+
+          When regenerating a new code, please record the old code if there are previous live forms.  The new code will only work for new forms.
         incoming_sms_number: "Enter the phone number to which incoming SMSes for SMS forms should be sent. This will be displayed on the SMS guide."
         outgoing_sms_adapter: "The adapter used to send outgoing SMSes."
         intellisms_username: "The username for the IntelliSMS account."
@@ -762,6 +767,7 @@ en:
     clone_error: "There was a problem cloning the form (%{msg})."
     clone_success: "Form '%{form_name}' cloned successfully."
     create_link: "Create Form"
+    new_code_new_form: "Record the current code as new codes will only work with new forms."
     print_form: "Print Form"
     publish: "Publish"
     publish_error: "There was a problem publishing the form (%{msg})."
@@ -1020,6 +1026,7 @@ en:
     unexpected: "Unexpected text near '%{str}'"
 
   setting:
+    override_code: "Override Code"
     change_sms_password: "Change SMS Password"
     headings:
       general: "General Settings"

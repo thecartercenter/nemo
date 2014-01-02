@@ -7,6 +7,10 @@
   <%= form_field(f, :timezone, :type => :timezone, :required => true) %>
   <%= form_field(f, :preferred_locales_str, :required => true) %>
 
+  <% unless admin_mode? %>
+    <%= form_field(f, :override_code, :partial => 'override_code') %>
+  <% end %>
+
   <%# none of the rest of this is relevant in admin mode %>
   <% unless admin_mode? %>
 

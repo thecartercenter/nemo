@@ -17,7 +17,11 @@ class SettingsController < ApplicationController
       # do auth check so cancan doesn't complain
       authorize!(:update, @setting)
 
-      @setting.update_attributes!(params[:setting])
+      if params[:generate]
+        @setting.generate_override_code!
+      else
+        @setting.update_attributes!(params[:setting])
+      end
 
       set_success_and_redirect(@setting)
     rescue ActiveRecord::RecordInvalid
