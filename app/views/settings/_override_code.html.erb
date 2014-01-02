@@ -1,5 +1,5 @@
 <%= form.text_field(:override_code, :size => 20, :readonly => true) %>
 <% unless form.mode == :show %>
-  <input class="submit" name='generate' data-confirm="<%= t('form.new_code_new_form') %> <%= t('layout.are_you_sure') %>" type="submit" value="Generate">
+  <input class="submit" name="generate" data-confirm="<%= t('form.new_code_new_form') %> <%= t('layout.are_you_sure') %>" type="submit" value="<%= t('common.regenerate') %>">
 <% end %>
 
