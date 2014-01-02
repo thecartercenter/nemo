@@ -17,7 +17,7 @@ class SettingsController < ApplicationController
       # do auth check so cancan doesn't complain
       authorize!(:update, @setting)
 
-      if params[:generate]
+      if params[:regenerate]
         @setting.generate_override_code!
       else
         @setting.update_attributes!(params[:setting])
