@@ -39,11 +39,6 @@ class Setting < ActiveRecord::Base
     return setting
   end
 
-  def generate_override_code!(size_of_code = 6)
-    self.override_code = ('a'..'z').to_a.shuffle[0,size_of_code].join
-    self.save!
-  end
-
   # loads the default settings without saving
   def self.load_default
     setting = build_default
@@ -64,6 +59,11 @@ class Setting < ActiveRecord::Base
     end
 
     setting
+  end
+
+  def generate_override_code!(size_of_code = 6)
+    self.override_code = ('a'..'z').to_a.shuffle[0,size_of_code].join
+    self.save!
   end
 
   # copies this setting to configatron
