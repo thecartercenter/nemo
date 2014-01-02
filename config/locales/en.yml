@@ -274,6 +274,7 @@ en:
         isms_username: "Username"
         preferred_locales_str: "Preferred Languages"
         outgoing_sms_adapter: "Provider"
+        override_code: "Override Code"
         tableau_sql: "Tableau SQL" # Tableau is a software product name and shouldn't be translated
         timezone: "Time Zone"
       sms/message:
@@ -1027,7 +1028,6 @@ en:
     unexpected: "Unexpected text near '%{str}'"
 
   setting:
-    override_code: "Override Code"
     change_sms_password: "Change SMS Password"
     headings:
       general: "General Settings"
