@@ -61,8 +61,8 @@ class Setting < ActiveRecord::Base
     setting
   end
 
-  def generate_override_code!(size_of_code = 6)
-    self.override_code = ('a'..'z').to_a.shuffle[0,size_of_code].join
+  def generate_override_code!(size = 6)
+    self.override_code = Random.alphanum_no_zero(size)
     self.save!
   end
 
