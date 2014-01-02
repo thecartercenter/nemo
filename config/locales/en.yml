@@ -769,7 +769,6 @@ en:
     clone_error: "There was a problem cloning the form (%{msg})."
     clone_success: "Form '%{form_name}' cloned successfully."
     create_link: "Create Form"
-    new_code_new_form: "Record the current code as new codes will only work with new forms."
     print_form: "Print Form"
     publish: "Publish"
     publish_error: "There was a problem publishing the form (%{msg})."
@@ -1029,6 +1028,7 @@ en:
 
   setting:
     change_sms_password: "Change SMS Password"
+    override_code_warning: "Note that the new override code will not work with forms that have already been downloaded. You should record the existing code if this is a problem. Are you sure you want to regenerate the code?"
     headings:
       general: "General Settings"
       incoming_sms: "Incoming SMS Settings"
