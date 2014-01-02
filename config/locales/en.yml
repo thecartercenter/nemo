@@ -341,7 +341,7 @@ en:
           * The default language preference for new users
           * The default language for SMS replies
           * The languages for Questions and Options
-        override_code:
+        override_code: |-
           Allow constraint overrides for observers in ODK.
 
           When regenerating a new code, please record the old code if there are previous live forms.  The new code will only work for new forms.
