@@ -93,6 +93,12 @@ class OptionSetTest < ActiveSupport::TestCase
     assert_equal([1,2], os.option_levels.map(&:rank))
   end
 
+  test "multilevel option sets should have option levels" do
+    os = FactoryGirl.build(:option_set, :multi_level => true)
+    os.valid?
+    assert_match(/must have at least one OptionLevel/, os.errors[:base].join)
+  end
+
   test "destroying an option set that is presently used in a question should raise deletion error" do
     os = FactoryGirl.create(:option_set)
     q = FactoryGirl.create(:question, :qtype_name => 'select_one', :option_set => os)

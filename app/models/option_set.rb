@@ -14,6 +14,7 @@ class OptionSet < ActiveRecord::Base
   validates(:name, :presence => true)
   validate(:at_least_one_option)
   validate(:name_unique_per_mission)
+  validate(:multi_level_option_sets_must_have_option_levels)
 
   before_validation(:normalize_fields)
   before_validation(:ensure_ranks)
@@ -204,4 +205,7 @@ class OptionSet < ActiveRecord::Base
       return true
     end
 
+    def multi_level_option_sets_must_have_option_levels
+      errors.add(:base, "Multi-level OptionSets must have at least one OptionLevel") if multi_level? && option_levels.empty?
+    end
 end
