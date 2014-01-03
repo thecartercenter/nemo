@@ -16,11 +16,6 @@ class OptionSetTest < ActiveSupport::TestCase
     assert_match(/at least one/, os.errors.messages[:base].join)
   end
 
-  test "optioning for" do
-    os = FactoryGirl.create(:option_set, :option_names => %w(a b c d))
-    assert_equal(os.optionings[2].id, os.optioning_for(os.options[2]).id)
-  end
-
   test "ranks changed" do
     os = FactoryGirl.create(:option_set, :option_names => %w(a b c d))
     assert_equal(false, os.ranks_changed?)

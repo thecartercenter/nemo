@@ -48,8 +48,6 @@ class OptionSet < ActiveRecord::Base
 
   accepts_nested_attributes_for(:optionings, :allow_destroy => true)
 
-  self.per_page = 100
-
   # replication options
   replicable :child_assocs => :optionings, :parent_assoc => :question, :uniqueness => {:field => :name, :style => :sep_words}
 
@@ -118,39 +116,6 @@ class OptionSet < ActiveRecord::Base
     else
       respond_to?(:answer_count_col) ? answer_count_col || 0 : questionings.inject(0){|sum, q| sum += q.answers.count}
     end
-  end
-
-  # finds or initializes an optioning for every option in the database for current mission (never meant to be saved)
-  def all_optionings(options)
-    # make sure there is an associated answer object for each questioning in the form
-    options.collect{|o| optioning_for(o) || optionings.new(:option_id => o.id, :included => false)}
-  end
-
-  def all_optionings=(params)
-    # create a bunch of temp objects, discarding any unchecked options
-    submitted = params.values.collect{|p| p[:included] == '1' ? Optioning.new(p) : nil}.compact
-
-    # copy new choices into old objects, creating or deleting if necessary
-    optionings.compare_by_element(submitted, Proc.new{|os| os.option_id}) do |orig, subd|
-      # if both exist, do nothing
-      # if submitted is nil, destroy the original
-      if subd.nil?
-        options.delete(orig.option)
-      # if original is nil, add the new one to this option_set's array
-      elsif orig.nil?
-        optionings << Optioning.new(:option => subd.option)
-      end
-    end
-  end
-
-  def optioning_for(option)
-    # get the matching optioning
-    optioning_hash[option]
-  end
-
-  def optioning_hash(options = {})
-    @optioning_hash = nil if options[:rebuild]
-    @optioning_hash ||= Hash[*optionings.collect{|os| [os.option, os]}.flatten]
   end
 
   # gets all forms to which this option set is linked (through questionings)
