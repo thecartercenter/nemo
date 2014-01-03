@@ -71,3 +71,6 @@ gem 'database_cleaner', :group => [:development, :test]
 
 # cron management
 gem 'whenever', :require => false
+
+# mocking/stubbing
+gem 'mocha', :group => [:development, :test]
