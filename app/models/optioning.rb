@@ -1,11 +1,11 @@
 class Optioning < ActiveRecord::Base
-  include MissionBased, FormVersionable, Standardizable, Replicable
+  include MissionBased, FormVersionable, Standardizable, Replicable, OptioningParentable
 
   belongs_to(:option, :inverse_of => :optionings)
   belongs_to(:option_set, :inverse_of => :optionings)
   belongs_to(:option_level, :inverse_of => :optionings)
   belongs_to(:parent, :class_name => 'Optioning')
-  has_many(:children, :class_name => 'Optioning', :foreign_key => :parent_id)
+  has_many(:children, :order => "rank", :class_name => 'Optioning', :foreign_key => :parent_id)
 
   before_create(:set_mission)
   before_destroy(:no_answers_or_choices)
@@ -58,7 +58,7 @@ class Optioning < ActiveRecord::Base
     end
 
     def must_have_parent_if_not_top_option_level
-      errors.add(:parent_id, "can't be blank if not top option level") if option_level_rank.present? && option_level_rank > 1
+      errors.add(:parent_id, "can't be blank if not top option level") if option_level_rank.present? && option_level_rank > 1 && parent_id.nil?
     end
 
     def must_have_option_level_if_in_multi_level_option_set

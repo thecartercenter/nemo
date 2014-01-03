@@ -3,7 +3,7 @@ class OptionLevel < ActiveRecord::Base
 
   # TODO make sure this gets deleted on mission delete
 
-  attr_accessible :is_standard, :mission_id, :name_translations, :option_set_id, :rank, :standard_id
+  attr_accessible :is_standard, :mission_id, :name_translations, :option_set_id, :rank, :standard_id, :name
 
   belongs_to(:option_set)
   has_many(:optionings, :inverse_of => :option_level)

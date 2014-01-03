@@ -1,10 +1,10 @@
 class OptionSet < ActiveRecord::Base
-  include MissionBased, FormVersionable, Standardizable, Replicable
+  include MissionBased, FormVersionable, Standardizable, Replicable, OptioningParentable
 
   # this needs to be up here or it will run too late
   before_destroy(:check_associations)
 
-  has_many(:optionings, :order => "rank", :dependent => :destroy, :autosave => true, :inverse_of => :option_set)
+  has_many(:optionings, :order => "parent_id, rank", :dependent => :destroy, :autosave => true, :inverse_of => :option_set)
   has_many(:options, :through => :optionings, :order => "optionings.rank")
   has_many(:questions, :inverse_of => :option_set)
   has_many(:questionings, :through => :questions)
@@ -17,7 +17,7 @@ class OptionSet < ActiveRecord::Base
   validate(:multi_level_option_sets_must_have_option_levels)
 
   before_validation(:normalize_fields)
-  before_validation(:ensure_ranks)
+  before_validation(:ensure_children_ranks)
   before_validation(:ensure_option_level_ranks)
   before_validation(:ensure_option_missions)
 
@@ -163,19 +163,17 @@ class OptionSet < ActiveRecord::Base
     end
   end
 
+  # returns top-level optionings (those that have no parents)
+  def children(reload = false)
+    @children = nil if reload
+    @children ||= optionings.select{|o| o.parent.nil?}
+  end
+
   private
-    # makes sure that the options in the set have sequential ranks starting at 1.
-    # if not, fixes them.
-    def ensure_ranks
-      # sort the option settings by existing rank and then re-assign to ensure sequentialness
-      # if the options are already sorted this way, nothing will change
-      # if a rank is null, we sort it to the end
-      optionings.sort_by{|o| o.rank || 10000000}.each_with_index{|o, idx| o.rank = idx + 1}
-    end
 
     # makes sure that the set's option_levels have sequential ranks starting at 1.
     def ensure_option_level_ranks
-      option_levels.sort_by{|ol| ol.rank || 1_000_000_000}.each_with_index{|ol, idx| ol.rank = idx + 1}
+      option_levels.ensure_contiguous_ranks
     end
 
     def check_associations

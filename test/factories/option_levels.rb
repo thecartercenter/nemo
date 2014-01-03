@@ -4,7 +4,7 @@ FactoryGirl.define do
   factory :option_level do
     option_set
     rank 1
-    name_translations Hash['en', 'foo']
+    name_en { "Level #{rank}" }
     mission { get_mission }
   end
 end

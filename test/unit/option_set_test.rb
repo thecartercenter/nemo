@@ -16,6 +16,10 @@ class OptionSetTest < ActiveSupport::TestCase
     assert_match(/at least one/, os.errors.messages[:base].join)
   end
 
+  #######################################################################
+  # these rank tests are for single-level option sets
+  # they should still pass even with multi-level architecture being added
+
   test "ranks changed" do
     os = FactoryGirl.create(:option_set, :option_names => %w(a b c d))
     assert_equal(false, os.ranks_changed?)
@@ -84,6 +88,52 @@ class OptionSetTest < ActiveSupport::TestCase
     os.optionings[0].rank = 50
     assert_equal(true, os.ranks_changed?)
   end
+
+  #
+  #######################################################################
+
+  #######################################################################
+  # these rank tests are for multi-level option sets
+
+  test "ranks should be contiguous for all levels of multilevel option set" do
+
+    # create the default yes/no option set
+    os = FactoryGirl.create(:option_set)
+
+    # make it multi-level
+    os.multi_level = true
+    os.option_levels << FactoryGirl.build(:option_level, :option_set => os, :rank => 1)
+    os.option_levels << FactoryGirl.build(:option_level, :option_set => os, :rank => 2)
+    os.optionings[0].option_level = os.option_levels[0]
+    os.optionings[1].option_level = os.option_levels[0]
+    os.save!
+
+    # mess up ranks
+    os.optionings[0].rank = 5
+    os.optionings[1].rank = 3
+
+    # reload the children array
+    os.children(true)
+
+    # add some second level options with odd ranks
+    os.optionings[1].children.build(:rank => 2, :option_set => os,
+      :option => Option.new(:name => 'c1'), :option_level => os.option_levels[1], :parent => os.optionings[1])
+    os.optionings[1].children.build(:rank => 5, :option_set => os,
+      :option => Option.new(:name => 'c2'), :option_level => os.option_levels[1], :parent => os.optionings[1])
+
+
+    # save and reload
+    os.save!
+    os = OptionSet.find(os.id)
+
+    # check that ranks were repaired
+    assert_equal([1,2], os.children.map(&:rank))
+    assert_equal([1,2], os.children[0].children.map(&:rank))
+    assert_empty(os.children[1].children)
+  end
+
+  #
+  #######################################################################
 
   test "option level ranks should be contiguous" do
     os = FactoryGirl.create(:option_set)
