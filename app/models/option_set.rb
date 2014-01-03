@@ -9,6 +9,7 @@ class OptionSet < ActiveRecord::Base
   has_many(:questions, :inverse_of => :option_set)
   has_many(:questionings, :through => :questions)
   has_many(:report_option_set_choices, :inverse_of => :option_set, :class_name => "Report::OptionSetChoice")
+  has_many(:option_levels, :dependent => :destroy, :autosave => true, :inverse_of => :option_set)
 
   validates(:name, :presence => true)
   validate(:at_least_one_option)

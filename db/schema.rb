@@ -11,7 +11,11 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema.define(:version => 20140103153820) do
+=======
+ActiveRecord::Schema.define(:version => 20140103144909) do
+>>>>>>> created option level model
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
