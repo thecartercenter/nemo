@@ -17,6 +17,7 @@ class OptionSet < ActiveRecord::Base
 
   before_validation(:normalize_fields)
   before_validation(:ensure_ranks)
+  before_validation(:ensure_option_level_ranks)
   before_validation(:ensure_option_missions)
 
   scope(:with_associations, includes(:questions, {:optionings => :option}, {:questionings => :form}))
@@ -204,6 +205,11 @@ class OptionSet < ActiveRecord::Base
       # if the options are already sorted this way, nothing will change
       # if a rank is null, we sort it to the end
       optionings.sort_by{|o| o.rank || 10000000}.each_with_index{|o, idx| o.rank = idx + 1}
+    end
+
+    # makes sure that the set's option_levels have sequential ranks starting at 1.
+    def ensure_option_level_ranks
+      option_levels.sort_by{|ol| ol.rank || 1_000_000_000}.each_with_index{|ol, idx| ol.rank = idx + 1}
     end
 
     def check_associations

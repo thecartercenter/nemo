@@ -90,6 +90,14 @@ class OptionSetTest < ActiveSupport::TestCase
     assert_equal(true, os.ranks_changed?)
   end
 
+  test "option level ranks should be contiguous" do
+    os = FactoryGirl.create(:option_set)
+    os.option_levels << FactoryGirl.build(:option_level, :option_set => os, :rank => 1)
+    os.option_levels << FactoryGirl.build(:option_level, :option_set => os, :rank => 3)
+    os.save!
+    assert_equal([1,2], os.option_levels.map(&:rank))
+  end
+
   test "destroying an option set that is presently used in a question should raise deletion error" do
     os = FactoryGirl.create(:option_set)
     q = FactoryGirl.create(:question, :qtype_name => 'select_one', :option_set => os)

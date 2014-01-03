@@ -1,6 +1,8 @@
 class OptionLevel < ActiveRecord::Base
   include MissionBased, Translatable
 
+  # TODO make sure this gets deleted on mission delete
+
   attr_accessible :is_standard, :mission_id, :name_translations, :option_set_id, :rank, :standard_id
 
   belongs_to(:option_set)
