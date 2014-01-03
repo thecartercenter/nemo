@@ -9,6 +9,7 @@ class Optioning < ActiveRecord::Base
   before_destroy(:no_answers_or_choices)
 
   validate(:must_have_parent_if_not_top_option_level)
+  validate(:must_have_option_level_if_in_multi_level_option_set)
 
   accepts_nested_attributes_for(:option)
 
@@ -56,5 +57,9 @@ class Optioning < ActiveRecord::Base
 
     def must_have_parent_if_not_top_option_level
       errors.add(:parent_id, "can't be blank if not top option level") if option_level_rank.present? && option_level_rank > 1
+    end
+
+    def must_have_option_level_if_in_multi_level_option_set
+      errors.add(:option_level_id, "can't be blank if in multilevel option set") if option_set.multi_level? && option_level_id.blank?
     end
 end
