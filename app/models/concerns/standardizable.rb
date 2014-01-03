@@ -115,9 +115,9 @@ module Standardizable
       # if the parent association exists and is a belongs_to association
       # (e.g. questioning has parent = form, and a form association exists)
       if parent_assoc.try(:macro) == :belongs_to
-        # copy the params
-        self.is_standard = self.send(parent_assoc.name).is_standard?
-        self.mission = self.send(parent_assoc.name).mission
+        # copy the params, noting that the parent association value might be nil
+        self.is_standard = self.send(parent_assoc.name).try(:is_standard?)
+        self.mission = self.send(parent_assoc.name).try(:mission)
       end
       return true
     end
