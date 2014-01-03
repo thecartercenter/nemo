@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140103153820) do
+ActiveRecord::Schema.define(:version => 20140103163533) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -173,14 +173,18 @@ ActiveRecord::Schema.define(:version => 20140103153820) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "rank"
-    t.boolean  "is_standard",   :default => false
+    t.boolean  "is_standard",     :default => false
     t.integer  "standard_id"
     t.integer  "mission_id"
+    t.integer  "parent_id"
+    t.integer  "option_level_id"
   end
 
   add_index "optionings", ["mission_id", "standard_id"], :name => "index_optionings_on_mission_id_and_standard_id", :unique => true
   add_index "optionings", ["option_id"], :name => "optionings_option_id_fk"
+  add_index "optionings", ["option_level_id"], :name => "optionings_option_level_id_fk"
   add_index "optionings", ["option_set_id"], :name => "optionings_option_set_id_fk"
+  add_index "optionings", ["parent_id"], :name => "optionings_parent_id_fk"
   add_index "optionings", ["standard_id"], :name => "index_optionings_on_standard_id"
 
   create_table "options", :force => true do |t|
@@ -403,7 +407,9 @@ ActiveRecord::Schema.define(:version => 20140103153820) do
   add_foreign_key "option_sets", "option_sets", :name => "option_sets_standard_id_fk", :column => "standard_id"
 
   add_foreign_key "optionings", "missions", :name => "optionings_mission_id_fk"
+  add_foreign_key "optionings", "option_levels", :name => "optionings_option_level_id_fk"
   add_foreign_key "optionings", "option_sets", :name => "optionings_option_set_id_fk"
+  add_foreign_key "optionings", "optionings", :name => "optionings_parent_id_fk", :column => "parent_id"
   add_foreign_key "optionings", "optionings", :name => "optionings_standard_id_fk", :column => "standard_id"
   add_foreign_key "optionings", "options", :name => "optionings_option_id_fk"
 
