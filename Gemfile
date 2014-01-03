@@ -73,4 +73,4 @@ gem 'database_cleaner', :group => [:development, :test]
 gem 'whenever', :require => false
 
 # mocking/stubbing
-gem 'mocha', :group => [:development, :test]
+gem 'mocha', :group => [:development, :test], :require => false

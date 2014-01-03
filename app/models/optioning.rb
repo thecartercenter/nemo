@@ -3,11 +3,17 @@ class Optioning < ActiveRecord::Base
 
   belongs_to(:option, :inverse_of => :optionings)
   belongs_to(:option_set, :inverse_of => :optionings)
+  belongs_to(:option_level, :inverse_of => :optionings)
 
   before_create(:set_mission)
   before_destroy(:no_answers_or_choices)
 
+  validate(:must_have_parent_if_not_top_option_level)
+
   accepts_nested_attributes_for(:option)
+
+  # option level rank
+  delegate :rank, :to => :option_level, :allow_nil => true, :prefix => true
 
   # replication options
   replicable :child_assocs => :option, :parent_assoc => :option_set
@@ -48,4 +54,7 @@ class Optioning < ActiveRecord::Base
       self.mission = option_set.try(:mission)
     end
 
+    def must_have_parent_if_not_top_option_level
+      errors.add(:parent_id, "can't be blank if not top option level") if option_level_rank.present? && option_level_rank > 1
+    end
 end
