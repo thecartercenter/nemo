@@ -7,7 +7,16 @@ class OptionLevel < ActiveRecord::Base
 
   validates(:option_set_id, :presence => true)
   validates(:rank, :presence => true)
-
+  validate(:not_all_blank_name_translations)
 
   translates :name
+
+
+
+  private
+
+    # checks that at least one name translation is not blank
+    def not_all_blank_name_translations
+      errors.add(:base, :names_cant_be_all_blank) if name_all_blank?
+    end
 end

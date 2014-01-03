@@ -2,11 +2,9 @@
 
 FactoryGirl.define do
   factory :option_level do
-    option_set_id 1
+    option_set
     rank 1
-    name_translations "MyText"
-    mission_id 1
-    is_standard false
-    standard_id 1
+    name_translations Hash['en', 'foo']
+    mission { get_mission }
   end
 end

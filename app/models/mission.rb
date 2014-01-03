@@ -10,6 +10,7 @@ class Mission < ActiveRecord::Base
   has_many(:conditions, :inverse_of => :mission)
   has_many(:options, :inverse_of => :mission, :dependent => :destroy)
   has_many(:optionings, :inverse_of => :mission, :dependent => :destroy)
+  has_many(:option_levels, :inverse_of => :mission, :dependent => :destroy)
   has_many(:option_sets, :inverse_of => :mission, :dependent => :destroy)
   has_one(:setting, :inverse_of => :mission, :dependent => :destroy)
 
