@@ -149,16 +149,19 @@ class Answer < ActiveRecord::Base
     end
   end
 
-  # true if the casted_value is nil
-  def nil_value?
-    casted_value.nil?
+  # check various fields for blankness
+  def blank?
+    value.blank? && time_value.blank? && date_value.blank? && datetime_value.blank? && option_id.nil?
+  end
+
+  def required_and_relevant?
+    required? && !hidden? && relevant? && qtype.name != "select_multiple"
   end
 
   private
     def required
-      if required? && !hidden? && relevant? && qtype.name != "select_multiple" &&
-        value.blank? && time_value.blank? && date_value.blank? && datetime_value.blank? && option_id.nil?
-          errors.add(:base, :required)
+      if required_and_relevant? && blank?
+        errors.add(:base, :required)
       end
     end
 
