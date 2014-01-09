@@ -261,14 +261,8 @@ class Response < ActiveRecord::Base
       answer = Answer.new_from_str(:str => str, :questioning => qing)
       self.answers << answer
 
-      incomplete_odk_response! if qing.required && answer.blank?
-    end
-  end
-
-  def incomplete_odk_response!
-    if !incomplete
-      self.incomplete = true
-      self.save
+      # set incomplete flag if required but empty
+      self.incomplete = true if answer.required_but_empty?
     end
   end
 

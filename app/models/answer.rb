@@ -149,20 +149,24 @@ class Answer < ActiveRecord::Base
     end
   end
 
+  # checks if answer is required and relevant but also empty
+  def required_but_empty?
+    required_and_relevant? && empty?
+  end
+
   # check various fields for blankness
-  def blank?
+  def empty?
     value.blank? && time_value.blank? && date_value.blank? && datetime_value.blank? && option_id.nil?
   end
 
+  # checks if answer must be non-empty to be valid
   def required_and_relevant?
     required? && !hidden? && relevant? && qtype.name != "select_multiple"
   end
 
   private
     def required
-      if required_and_relevant? && blank?
-        errors.add(:base, :required)
-      end
+      errors.add(:base, :required) if required_but_empty?
     end
 
     def round_ints
