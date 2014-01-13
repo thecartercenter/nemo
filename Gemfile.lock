@@ -41,6 +41,8 @@ GEM
       activerecord (>= 3.2)
       activesupport (>= 3.2)
     bluecloth (2.2.0)
+    bootstrap-sass (3.0.3.0)
+      sass (~> 3.2)
     builder (3.0.4)
     bullet (4.6.0)
       uniform_notifier
@@ -176,6 +178,7 @@ PLATFORMS
 DEPENDENCIES
   authlogic
   bluecloth
+  bootstrap-sass (~> 3.0.3.0)
   bullet
   cancan
   capistrano
