@@ -23,6 +23,7 @@
 //= require sassafras/utils
 //= require i18n
 //= require i18n/translations
+//= require bootstrap
 
 // some report superclasses need to come first due to inheritance
 //= require control/control
