@@ -83,6 +83,7 @@ body {
   h2 {
     font-size: 24px;
     font-family: "Raleway", sans-serif;
+    font-weight: bold;
     width: 300px;
     margin: 0;
     color: #D9ECF7;
@@ -100,7 +101,8 @@ body {
 }
 
 #nav {
-  display: none;
+  display: inline;
+  margin-top: 100px;
   width: $nav_width;
   color: white;
   float: left;
@@ -148,6 +150,7 @@ body {
 }
 
 #content {
+  margin-left: $nav_width;
   padding: 15px 15px 30px 15px;
   min-height: 400px;
   background-color: white;

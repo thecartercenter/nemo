@@ -32,7 +32,7 @@
 </head>
 <body class="<%= controller_name %>">
 
-<%# Logo and mission if selected %>
+  <%# Logo and mission if selected %>
   <div id="title">
     <%= link_to(image_tag("logo.png"), root_path) %>
     <%# Stripping title name since we have a logo now %>
@@ -51,17 +51,18 @@
 
   <div id="userinfo">
     <% if current_user %>
-    <%# current mission and dropdown, if there are choices %>
-        <% unless accessible_missions.empty? %>
-          <%= nice_form_for(current_user) do |f| %>
-            <% f.mode = :edit %>
-            <%= f.select(:current_mission_id, sel_opts_from_objs(accessible_missions), {:include_blank => "[#{t('common.none').capitalize}]"}, {:class => "form-control"}) %>
-            <%= loading_indicator(:header => true) %>
-            <%= hidden_field_tag(:changing_current_mission, 1) %>
-          <% end %>
-        <% else %>
-          <strong><%= current_mission ? current_mission.name : t("common.none") %></strong>
-        <% end %>
+      <%# current mission and dropdown, if there are choices %>
+      <% unless accessible_missions.empty? %>
+        <%= nice_form_for(current_user) do |f| %>
+        <% f.mode = :edit %>
+        <%= f.select(:current_mission_id, sel_opts_from_objs(accessible_missions),
+          {:include_blank => "[#{t('common.none').capitalize}]"}, {:class => "form-control"}) %>
+        <%= loading_indicator(:header => true) %>
+        <%= hidden_field_tag(:changing_current_mission, 1) %>
+      <% end %>
+      <% else %>
+        <strong><%= current_mission ? current_mission.name : t("common.none") %></strong>
+      <% end %>
 
       <%# admin mode link %>
       <% if current_user.admin? %>
@@ -82,7 +83,6 @@
       </div>
 
     <% else %>
-
       <%# login link %>
       <%= link_to(t("common.login"), login_path, {:class => "btn btn-default login"}) %>
     <% end %>
