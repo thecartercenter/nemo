@@ -1,5 +1,10 @@
 /* general layout styles */
 $nav_width: 135px;
+$light-blue: #D9ECF7;
+$light-yellow: #F7F6D9;
+$orange: #F77D48;
+$gray-blue: #D4DCE1;
+$gray: #3F3E3E;
 
 body {
   background-color: #879CAA;
@@ -9,11 +14,37 @@ body {
   color: white;
   text-align: right;
   padding-right: 5px;
-  margin-top: 2px;
+  margin-top: 19px;
   height: 25px;
+  float: right;
 
   a, form.button_to input {
     color: white;
+  }
+
+  a.login {
+    color: $gray;
+    margin: 10px 22px 0 0;
+  }
+
+  .icon-btn {
+    display: inline-block;
+    width: 58px;
+    margin: 0 5px 0 5px;
+    text-align: center;
+
+    a:hover {
+      color: $light-blue;
+      text-decoration: none;
+    }
+
+    .admin-mode {
+      color: $light-yellow;
+    }
+  }
+
+  span {
+    display: inline-block;
   }
 
   form {
@@ -21,13 +52,19 @@ body {
 
     select {
       font-size: 9pt;
+      vertical-align: top;
+      display: inline-block;
+      width: 190px;
+      height: 27px;
+      margin-right: 10px;
     }
   }
 }
 
 #title {
   color: white;
-  margin: 10px 0 10px $nav_width;
+  margin: 10px 0 10px 15px;
+  display: inline-block;
 
   > div {
     display: inline-block;
@@ -36,9 +73,9 @@ body {
 
   img {
     display: inline-block;
-    height: 54px; /* explicit height to prevent shifting during load */
+    margin: 12px 0 12px 12px;
+    height: 54px;  /* explicit height to prevent shifting during load */
     vertical-align: bottom;
-    padding-bottom: 25px;
   }
 
   a { color: white; text-decoration: none; }
@@ -46,6 +83,7 @@ body {
   h2 {
     font-size: 24px;
     font-family: "Raleway", sans-serif;
+    font-weight: bold;
     width: 300px;
     margin: 0;
     color: #D9ECF7;
@@ -53,7 +91,7 @@ body {
     text-transform: lowercase;
     vertical-align: bottom;
     line-height: 24px;
-    padding-bottom: 23px;
+    padding-bottom: 12px;
 
     /* trophy icon */
     i {
@@ -63,6 +101,8 @@ body {
 }
 
 #nav {
+  display: inline;
+  margin-top: 100px;
   width: $nav_width;
   color: white;
   float: left;
@@ -117,18 +157,15 @@ body {
 }
 
 #footer {
-  padding: 5px;
-  color: #ddd;
-  text-align: right;
-  height: 25px;
-  margin-left: $nav_width;
-
-  * {
-    vertical-align: top;
-  }
+  padding-top: 108px;
+  vertical-align: middle;
+  background-color: $gray-blue;
+  color: gray;
+  text-align: center;
+  height: 300px;
 
   a {
-    color: #ddd;
+    color: $orange;
   }
 
   #locale_form {

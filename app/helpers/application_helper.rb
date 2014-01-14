@@ -2,12 +2,12 @@ module ApplicationHelper
 
   FONT_AWESOME_ICON_MAPPINGS = {
     :clone => "copy",
-    :destroy => "trash",
-    :edit => "edit",
+    :destroy => "trash-o",
+    :edit => "pencil",
     :map => "globe",
     :print => "print",
     :publish => "arrow-up",
-    :remove => "remove",
+    :remove => "times",
     :sms => "comment",
     :unpublish => "arrow-down"
   }
@@ -27,7 +27,7 @@ module ApplicationHelper
     # join passed html class (if any) with the default class
     html_options[:class] = [html_options[:class], "action_link", "action_link_#{action}"].compact.join(" ")
 
-    link_to(content_tag(:i, "", :class => "icon-" + FONT_AWESOME_ICON_MAPPINGS[action.to_sym]), href, html_options)
+    link_to(content_tag(:i, "", :class => "fa fa-" + FONT_AWESOME_ICON_MAPPINGS[action.to_sym]), href, html_options)
   end
 
   # assembles links for the basic actions in an index table (edit and destroy)
