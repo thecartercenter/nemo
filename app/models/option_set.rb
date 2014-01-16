@@ -169,6 +169,12 @@ class OptionSet < ActiveRecord::Base
     @children ||= optionings.select{|o| o.parent.nil?}
   end
 
+  # returns a string representation, including multilevel options, for the default locale.
+  def to_s
+    s = "Name: #{name}\nOptions:\n"
+    s += children.map(&:to_s_indented).join
+  end
+
   private
 
     # makes sure that the set's option_levels have sequential ranks starting at 1.

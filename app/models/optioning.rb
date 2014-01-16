@@ -50,6 +50,15 @@ class Optioning < ActiveRecord::Base
     end
   end
 
+  # returns a string representation of this node and its children, indented by the given amound
+  # options[:space] - the number of spaces to indent
+  def to_s_indented(options = {})
+    options[:space] ||= 0
+    (' ' * options[:space]) +
+      ["(#{option_level.try(:name)})", "#{rank}. #{option.name}\n"].compact.join(' ') +
+      children.map{|c| c.to_s_indented(:space => options[:space] + 2)}.join
+  end
+
   private
 
     # copy mission from option_set
