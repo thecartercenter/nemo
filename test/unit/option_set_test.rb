@@ -118,12 +118,11 @@ class OptionSetTest < ActiveSupport::TestCase
     os.optionings[1].optionings.build(:rank => 5, :option_set => os,
       :option => Option.new(:name => 'c2'), :option_level => os.option_levels[1], :parent => os.optionings[1])
 
-
     # save and reload
     os.save!
-    os = OptionSet.find(os.id)
 
-    # check that ranks were repaired
+    # check that ranks were repaired and the option arrays sorted
+    assert_equal('No', os.optionings[0].option.name)
     assert_equal([1,2], os.optionings.map(&:rank))
     assert_equal([1,2], os.optionings[0].optionings.map(&:rank))
     assert_empty(os.optionings[1].optionings)
