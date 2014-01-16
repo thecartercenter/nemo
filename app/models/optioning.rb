@@ -2,10 +2,12 @@ class Optioning < ActiveRecord::Base
   include MissionBased, FormVersionable, Standardizable, Replicable, OptioningParentable
 
   belongs_to(:option, :inverse_of => :optionings)
-  belongs_to(:option_set, :inverse_of => :optionings)
+  belongs_to(:option_set, :inverse_of => :all_optionings)
   belongs_to(:option_level, :inverse_of => :optionings)
   belongs_to(:parent, :class_name => 'Optioning')
-  has_many(:children, :order => "rank", :class_name => 'Optioning', :foreign_key => :parent_id)
+
+  # this association gets the children of this optioning
+  has_many(:optionings, :order => "rank", :foreign_key => :parent_id)
 
   before_create(:set_mission)
   before_destroy(:no_answers_or_choices)
@@ -50,13 +52,13 @@ class Optioning < ActiveRecord::Base
     end
   end
 
-  # returns a string representation of this node and its children, indented by the given amound
+  # returns a string representation of this node and its children, indented by the given amount
   # options[:space] - the number of spaces to indent
   def to_s_indented(options = {})
     options[:space] ||= 0
     (' ' * options[:space]) +
       ["(#{option_level.try(:name)})", "#{rank}. #{option.name}\n"].compact.join(' ') +
-      children.map{|c| c.to_s_indented(:space => options[:space] + 2)}.join
+      optionings.map{|c| c.to_s_indented(:space => options[:space] + 2)}.join
   end
 
   private

@@ -112,13 +112,10 @@ class OptionSetTest < ActiveSupport::TestCase
     os.optionings[0].rank = 5
     os.optionings[1].rank = 3
 
-    # reload the children array
-    os.children(true)
-
     # add some second level options with odd ranks
-    os.optionings[1].children.build(:rank => 2, :option_set => os,
+    os.optionings[1].optionings.build(:rank => 2, :option_set => os,
       :option => Option.new(:name => 'c1'), :option_level => os.option_levels[1], :parent => os.optionings[1])
-    os.optionings[1].children.build(:rank => 5, :option_set => os,
+    os.optionings[1].optionings.build(:rank => 5, :option_set => os,
       :option => Option.new(:name => 'c2'), :option_level => os.option_levels[1], :parent => os.optionings[1])
 
 
@@ -127,9 +124,9 @@ class OptionSetTest < ActiveSupport::TestCase
     os = OptionSet.find(os.id)
 
     # check that ranks were repaired
-    assert_equal([1,2], os.children.map(&:rank))
-    assert_equal([1,2], os.children[0].children.map(&:rank))
-    assert_empty(os.children[1].children)
+    assert_equal([1,2], os.optionings.map(&:rank))
+    assert_equal([1,2], os.optionings[0].optionings.map(&:rank))
+    assert_empty(os.optionings[1].optionings)
   end
 
   #

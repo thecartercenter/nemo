@@ -4,7 +4,14 @@ class OptionSet < ActiveRecord::Base
   # this needs to be up here or it will run too late
   before_destroy(:check_associations)
 
-  has_many(:optionings, :order => "parent_id, rank", :dependent => :destroy, :autosave => true, :inverse_of => :option_set)
+  # this association produces ALL optionings regardless of level. should only be used when quick access to the full set of optionings is
+  # needed. note that if this and the normal optionings association are both used, there will be two separate sets of models in play.
+  # note that dependent => destroy and autosave are not turned on here.
+  has_many(:all_optionings, :order => "parent_id, rank", :inverse_of => :option_set)
+
+  # this association produces only the direct children of this option_set (the top-level options).
+  has_many(:optionings, :order => "rank", :conditions => 'parent_id IS NULL', :dependent => :destroy, :autosave => true, :inverse_of => :option_set)
+
   has_many(:options, :through => :optionings, :order => "optionings.rank")
   has_many(:questions, :inverse_of => :option_set)
   has_many(:questionings, :through => :questions)
@@ -163,16 +170,10 @@ class OptionSet < ActiveRecord::Base
     end
   end
 
-  # returns top-level optionings (those that have no parents)
-  def children(reload = false)
-    @children = nil if reload
-    @children ||= optionings.select{|o| o.parent.nil?}
-  end
-
   # returns a string representation, including multilevel options, for the default locale.
   def to_s
     s = "Name: #{name}\nOptions:\n"
-    s += children.map(&:to_s_indented).join
+    s += optionings.map(&:to_s_indented).join
   end
 
   private
