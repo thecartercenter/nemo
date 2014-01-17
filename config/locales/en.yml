@@ -81,6 +81,7 @@ en:
     incomplete: "Incomplete?"
     password: "Password"
     published: "Published?"
+    allow_incomplete: "Allow Incomplete?"
     questions: "Questions"
     std_icon: "" # left blank on purpose to achieve blank table header
     title: "Title"
@@ -789,6 +790,12 @@ en:
     unpublish_form: "Unpublish Form"
     unsaved_rank_notice: "You have not yet saved the changes you made to the Question order. You should click the 'Save' button if you want to save these changes."
     view_sms_guide: "View SMS Guide"
+
+  incomplete_response:
+    missing_answers:
+      label: "Is this form missing any required answers?"
+      hint: "This form allows submission of incomplete responses in special situations. If you are not sure whether any required answers are missing, choose 'I don't think so' and then save."
+    code_label: "Enter the incomplete override code"
 
   location_picker:
     choose_location: "Choose Location"

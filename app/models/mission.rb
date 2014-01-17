@@ -26,6 +26,8 @@ class Mission < ActiveRecord::Base
   scope(:sorted_recent_first, order("created_at DESC"))
   scope(:active_for_user, lambda{|u| where("missions.id IN (SELECT mission_id FROM assignments WHERE user_id = ? AND active = 1)", u.id)})
 
+  delegate(:override_code, :to => :setting)
+
   # Override default destory
   def destroy
     terminate_mission

@@ -70,6 +70,11 @@ class Form < ActiveRecord::Base
     name
   end
 
+  # current override code for incomplete responses
+  def override_code
+    mission.override_code
+  end
+
   # returns whether this form or (if standard) any of its copies have responses, using an eager loaded col if available
   def has_responses?
     if is_standard?

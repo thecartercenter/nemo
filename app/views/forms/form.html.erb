@@ -10,6 +10,7 @@
     <%= form_field(f, :smsable, :type => :check_box) unless admin_mode? %>
     <%= form_field(f, :published, :type => :check_box, :force_show_mode => true) if !admin_mode? && f.mode != :new %>
     <%= form_field(f, :version, :partial => 'version') unless f.mode == :new %>
+    <%= form_field(f, :allow_incomplete, :type => :check_box) unless admin_mode? %>
   <% end %>
 
   <%# questions on the form %>

@@ -1,5 +1,6 @@
 class FormsController < ApplicationController
   include StandardImportable
+  helper OdkHelper
 
   # special find method before load_resource
   before_filter :find_form_with_questionings, :only => [:show, :edit, :update]
