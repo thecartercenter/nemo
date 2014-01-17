@@ -1,6 +1,11 @@
 module OptioningParentable
   extend ActiveSupport::Concern
 
+  # checks if any options have been added since last save
+  def options_added?
+    is_a?(Optioning) && new_record? || optionings.any?(&:options_added?)
+  end
+
   # checks if any of the options in this set have changed position (rank or parent) since last save
   # trivially true if this is a new object
   def positions_changed?

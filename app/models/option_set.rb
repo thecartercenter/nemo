@@ -146,11 +146,6 @@ class OptionSet < ActiveRecord::Base
     name_changed?
   end
 
-  # checks if any options have been added since last save
-  def options_added?
-    optionings.any?(&:new_record?)
-  end
-
   # checks if any options have been removed since last save
   # relies on the the marked_for_destruction field since this method is used by the controller
   def options_removed?
