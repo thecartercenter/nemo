@@ -51,7 +51,7 @@ class OptionSetsController < ApplicationController
     authorize!(:update_core, @option_set) if @option_set.core_changed?
     authorize!(:add_options, @option_set) if @option_set.options_added?
     authorize!(:remove_options, @option_set) if @option_set.options_removed?
-    authorize!(:reorder_options, @option_set) if @option_set.ranks_changed?
+    authorize!(:reorder_options, @option_set) if @option_set.positions_changed?
 
     create_or_update
   end

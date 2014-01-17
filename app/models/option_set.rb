@@ -141,11 +141,6 @@ class OptionSet < ActiveRecord::Base
     questions.map(&:code).join(', ')
   end
 
-  # checks if any of the option ranks have changed since last save
-  def ranks_changed?
-    optionings.map(&:rank_was) != optionings.map(&:rank)
-  end
-
   # checks if any core fields (currently only name) changed
   def core_changed?
     name_changed?

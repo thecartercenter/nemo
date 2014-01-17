@@ -22,17 +22,17 @@ class OptionSetTest < ActiveSupport::TestCase
 
   test "ranks changed" do
     os = FactoryGirl.create(:option_set, :option_names => %w(a b c d))
-    assert_equal(false, os.ranks_changed?)
+    assert_equal(false, os.positions_changed?)
 
     # changing rank should raise flag
     os.optionings[1].rank = 6
-    assert_equal(true, os.ranks_changed?)
+    assert_equal(true, os.positions_changed?)
     os.save!
-    assert_equal(false, os.ranks_changed?)
+    assert_equal(false, os.positions_changed?)
 
     # adding option set should also raise flag
     os.optionings.build(:rank => 8, :option => Option.new(:name => 'e'))
-    assert_equal(true, os.ranks_changed?)
+    assert_equal(true, os.positions_changed?)
     os.save!
   end
 
@@ -82,11 +82,11 @@ class OptionSetTest < ActiveSupport::TestCase
 
     # make sure no false positive
     os.optionings[0].rank = 1
-    assert_equal(false, os.ranks_changed?)
+    assert_equal(false, os.positions_changed?)
 
     # make sure no false negative
     os.optionings[0].rank = 50
-    assert_equal(true, os.ranks_changed?)
+    assert_equal(true, os.positions_changed?)
   end
 
   #
@@ -126,6 +126,58 @@ class OptionSetTest < ActiveSupport::TestCase
     assert_equal([1,2], os.optionings.map(&:rank))
     assert_equal([1,2], os.optionings[0].optionings.map(&:rank))
     assert_empty(os.optionings[1].optionings)
+  end
+
+  test "positions_changed should work with multilevel option set" do
+    # create a single level set
+    os = FactoryGirl.create(:option_set, :option_names => %w(animal plant))
+
+    # make it multi-level
+    os.multi_level = true
+
+    # add option levels
+    os.option_levels << FactoryGirl.build(:option_level, :option_set => os, :rank => 1, :name => 'kingdom')
+    os.option_levels << FactoryGirl.build(:option_level, :option_set => os, :rank => 2, :name => 'species')
+
+    # add option levels to existing top level options
+    os.optionings[0].option_level = os.option_levels[0]
+    os.optionings[1].option_level = os.option_levels[0]
+
+    # add some second level options
+    os.optionings[0].optionings.build(:rank => 1, :option_set => os,
+      :option => Option.new(:name => 'cat'), :option_level => os.option_levels[1], :parent => os.optionings[0])
+    os.optionings[0].optionings.build(:rank => 2, :option_set => os,
+      :option => Option.new(:name => 'dog'), :option_level => os.option_levels[1], :parent => os.optionings[0])
+    os.optionings[1].optionings.build(:rank => 1, :option_set => os,
+      :option => Option.new(:name => 'pine'), :option_level => os.option_levels[1], :parent => os.optionings[1])
+    os.optionings[1].optionings.build(:rank => 2, :option_set => os,
+      :option => Option.new(:name => 'tulip'), :option_level => os.option_levels[1], :parent => os.optionings[1])
+
+    os.save!
+
+    assert_equal(false, os.positions_changed?)
+
+    # switch the two first level options
+    os.optionings[0].rank = 2
+    os.optionings[1].rank = 1
+
+    assert_equal(true, os.positions_changed?)
+    os.save!
+    assert_equal(false, os.positions_changed?)
+
+    # switch the two rank 1 second level options (this is tricky since the rank numbers aren't changing)
+    cat = os.optionings[0].optionings[0]
+    pine = os.optionings[1].optionings[0]
+
+    # move pine
+    os.optionings[0].optionings[0] = pine
+    pine.parent = os.optionings[0]
+
+    # move cat
+    os.optionings[1].optionings[0] = cat
+    cat.parent = os.optionings[1]
+
+    assert_equal(true, os.positions_changed?)
   end
 
   #

@@ -1,6 +1,13 @@
 module OptioningParentable
   extend ActiveSupport::Concern
 
+  # checks if any of the options in this set have changed position (rank or parent) since last save
+  # trivially true if this is a new object
+  def positions_changed?
+    # first check self (unless self is an OptionSet), then check children if necessary
+    is_a?(Optioning) && signature_changed? || optionings.any?(&:positions_changed?)
+  end
+
   protected
     # makes sure, recursively, that the options in the set have sequential ranks starting at 1.
     def ensure_children_ranks

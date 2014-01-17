@@ -57,8 +57,24 @@ class Optioning < ActiveRecord::Base
   def to_s_indented(options = {})
     options[:space] ||= 0
     (' ' * options[:space]) +
-      ["(#{option_level.try(:name)})", "#{rank}. #{option.name}\n"].compact.join(' ') +
+      # include option level name, option name, and parent name
+      ["(#{option_level.try(:name)})", "#{rank}. #{option.name} (parent: #{parent ? parent.option.name : '[none]'})\n"].compact.join(' ') +
       optionings.map{|c| c.to_s_indented(:space => options[:space] + 2)}.join
+  end
+
+  # string combining parent_id and rank. used for checking if optionings move around.
+  def signature
+    "#{parent_id}-#{rank}"
+  end
+
+  # same a signature, but based on previous (*_was) values
+  def signature_was
+    "#{parent_id_was}-#{rank_was}"
+  end
+
+  # checks if signature has changed since object load
+  def signature_changed?
+    signature != signature_was
   end
 
   private
