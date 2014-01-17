@@ -180,11 +180,11 @@ class OptionSetTest < ActiveSupport::TestCase
     assert_equal(true, os.positions_changed?)
   end
 
-  test "options added should work with multilevel option set" do
+  test "options_added should work with multilevel option set" do
     # create a single level set
     os = FactoryGirl.create(:option_set, :option_names => %w(animal plant))
 
-    # options added should be false now because option set has been saved
+    # should be false now because option set has been saved
     assert_equal(false, os.options_added?)
 
     # make it multi-level
@@ -208,13 +208,64 @@ class OptionSetTest < ActiveSupport::TestCase
     os.optionings[1].optionings.build(:rank => 2, :option_set => os,
       :option => Option.new(:name => 'tulip'), :option_level => os.option_levels[1], :parent => os.optionings[1])
 
-    # options added should be true now
+    # should be true now
     assert_equal(true, os.options_added?)
 
     os.save!
 
-    # options added should be false again after save
+    # should be false again after save
     assert_equal(false, os.options_added?)
+  end
+
+  test "options_removed should with multilevel option set" do
+    # create a single level set
+    os = FactoryGirl.create(:option_set, :option_names => %w(animal plant))
+
+    # should be false now because option set has been saved
+    assert_equal(false, os.options_removed?)
+
+    # make it multi-level
+    os.multi_level = true
+
+    # add option levels
+    os.option_levels << FactoryGirl.create(:option_level, :option_set => os, :rank => 1, :name => 'kingdom')
+    os.option_levels << FactoryGirl.create(:option_level, :option_set => os, :rank => 2, :name => 'species')
+
+    # add option levels to existing top level options
+    os.optionings[0].option_level = os.option_levels[0]
+    os.optionings[1].option_level = os.option_levels[0]
+
+    # add some second level options
+    os.optionings[0].optionings.build(:rank => 1, :option_set => os,
+      :option => Option.new(:name => 'cat'), :option_level => os.option_levels[1], :parent => os.optionings[0])
+    os.optionings[0].optionings.build(:rank => 2, :option_set => os,
+      :option => Option.new(:name => 'dog'), :option_level => os.option_levels[1], :parent => os.optionings[0])
+    os.optionings[1].optionings.build(:rank => 1, :option_set => os,
+      :option => Option.new(:name => 'pine'), :option_level => os.option_levels[1], :parent => os.optionings[1])
+    os.optionings[1].optionings.build(:rank => 2, :option_set => os,
+      :option => Option.new(:name => 'tulip'), :option_level => os.option_levels[1], :parent => os.optionings[1])
+
+    os.save!
+
+    # remove an option (we use _destroy as that's how it will really happen)
+    animal = os.optionings[0]
+    cat = animal.optionings[0]
+
+    os.assign_attributes('optionings_attributes' => {'0' => {
+      'id' => animal.id.to_s,
+      'optionings_attributes' => {'0' => {'id' => cat.id.to_s, '_destroy' => true}}
+    }})
+
+    # should be true now
+    assert_equal(true, os.options_removed?)
+
+    os.save!
+
+    # delete should have worked
+    assert_equal(1, os.optionings[0].optionings.size)
+
+    # should be false again after save
+    assert_equal(false, os.options_removed?)
   end
 
   #

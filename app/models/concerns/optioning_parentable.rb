@@ -6,6 +6,12 @@ module OptioningParentable
     is_a?(Optioning) && new_record? || optionings.any?(&:options_added?)
   end
 
+  # checks if any options have been removed since last save
+  # relies on the the marked_for_destruction field since this method is used by the controller
+  def options_removed?
+    is_a?(Optioning) && marked_for_destruction? || optionings.any?(&:options_removed?)
+  end
+
   # checks if any of the options in this set have changed position (rank or parent) since last save
   # trivially true if this is a new object
   def positions_changed?

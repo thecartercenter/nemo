@@ -16,6 +16,7 @@ class Optioning < ActiveRecord::Base
   validate(:must_have_option_level_if_in_multi_level_option_set)
 
   accepts_nested_attributes_for(:option)
+  accepts_nested_attributes_for(:optionings, :allow_destroy => true)
 
   # option level rank
   delegate :rank, :to => :option_level, :allow_nil => true, :prefix => true
@@ -56,10 +57,20 @@ class Optioning < ActiveRecord::Base
   # options[:space] - the number of spaces to indent
   def to_s_indented(options = {})
     options[:space] ||= 0
+
+    # indentation
     (' ' * options[:space]) +
-      # include option level name, option name, and parent name
-      ["(#{option_level.try(:name)})", "#{rank}. #{option.name} (parent: #{parent ? parent.option.name : '[none]'})\n"].compact.join(' ') +
-      optionings.map{|c| c.to_s_indented(:space => options[:space] + 2)}.join
+
+      # option level name, option name
+      ["(#{option_level.try(:name)})", "#{rank}. #{option.name}"].compact.join(' ') +
+
+      # parent name
+      " (parent: #{parent ? parent.option.name : '[none]'})" +
+
+      # add [x] if marked for destruction
+      (marked_for_destruction? ? ' [x]' : '') +
+
+      "\n" + optionings.map{|c| c.to_s_indented(:space => options[:space] + 2)}.join
   end
 
   # string combining parent_id and rank. used for checking if optionings move around.
