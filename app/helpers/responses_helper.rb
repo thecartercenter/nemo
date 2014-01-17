@@ -4,7 +4,7 @@ module ResponsesHelper
     if params[:controller] == 'dashboard'
       fields = %w(form_id user_id) + key_question_hashes(2) + %w(created_at reviewed)
     else
-      fields = %w(id form_id user_id) + key_question_hashes(2) + %w(created_at age reviewed actions)
+      fields = %w(id form_id user_id) + key_question_hashes(2) + %w(incomplete created_at age reviewed actions)
     end
   end
 
@@ -23,6 +23,7 @@ module ResponsesHelper
       when "form_id" then resp.form_name
       when "created_at" then resp.created_at ? l(resp.created_at) : ""
       when "age" then resp.created_at ? time_ago_in_words(resp.created_at) : ""
+      when "incomplete" then tbool(resp.incomplete?)
       when "reviewed" then tbool(resp.reviewed?)
       when "user_id" then resp.submitter
       when "actions"

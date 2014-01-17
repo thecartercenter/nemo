@@ -78,6 +78,7 @@ en:
     created_at: "Creation Time"
     email: "Email"
     hint: "Hint"
+    incomplete: "Incomplete?"
     password: "Password"
     published: "Published?"
     questions: "Questions"
