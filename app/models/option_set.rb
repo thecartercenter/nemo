@@ -26,7 +26,6 @@ class OptionSet < ActiveRecord::Base
   before_validation(:normalize_fields)
   before_validation(:ensure_children_ranks)
   before_validation(:ensure_option_level_ranks)
-  before_validation(:ensure_option_missions)
 
   scope(:with_associations, includes(:questions, {:optionings => :option}, {:questionings => :form}))
 
@@ -181,12 +180,6 @@ class OptionSet < ActiveRecord::Base
 
     def name_unique_per_mission
       errors.add(:name, :must_be_unique) unless unique_in_mission?(:name)
-    end
-
-    # ensures mission is set on all options
-    def ensure_option_missions
-      # go in through optionings association in case these are newly created options via nested attribs
-      optionings.each{|oing| oing.option.mission_id ||= mission_id if oing.option}
     end
 
     def normalize_fields
