@@ -52,7 +52,7 @@ class Question < ActiveRecord::Base
   translates :name, :hint
 
   delegate :smsable?, :has_options?, :to => :qtype
-  delegate :geographic?, :to => :option_set, :allow_nil => true
+  delegate :options, :geographic?, :to => :option_set, :allow_nil => true
 
   replicable :child_assocs => :option_set, :parent_assoc => :questioning, :uniqueness => {:field => :code, :style => :camel_case}, :dont_copy => :key,
     :user_modifiable => [:name_translations, :_name, :hint_translations, :_hint]
@@ -70,10 +70,6 @@ class Question < ActiveRecord::Base
   # returns the question type object associated with this question
   def qtype
     QuestionType[qtype_name]
-  end
-
-  def options
-    option_set ? option_set.options : nil
   end
 
   def select_options
