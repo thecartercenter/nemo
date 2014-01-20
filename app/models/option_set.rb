@@ -177,6 +177,7 @@ class OptionSet < ActiveRecord::Base
     end
 
     def at_least_one_option
+      # this checks only the first level options, which is sufficient
       errors.add(:base, :at_least_one) if optionings.reject{|a| a.marked_for_destruction?}.empty?
     end
 
