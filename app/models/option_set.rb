@@ -12,7 +12,9 @@ class OptionSet < ActiveRecord::Base
   # this association produces only the direct children of this option_set (the top-level options).
   has_many(:optionings, :order => "rank", :conditions => 'parent_id IS NULL', :dependent => :destroy, :autosave => true, :inverse_of => :option_set)
 
+  # returns ONLY the first-level options for this option set, sorted by rank
   has_many(:options, :through => :optionings, :order => "optionings.rank")
+
   has_many(:questions, :inverse_of => :option_set)
   has_many(:questionings, :through => :questions)
   has_many(:report_option_set_choices, :inverse_of => :option_set, :class_name => "Report::OptionSetChoice")
