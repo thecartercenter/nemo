@@ -3,12 +3,14 @@ class OptionLevel < ActiveRecord::Base
 
   # TODO make sure this gets deleted on mission delete
 
-  attr_accessible :is_standard, :mission_id, :name_translations, :option_set_id, :rank, :standard_id, :name
+  attr_accessible :is_standard, :mission_id, :name_translations, :option_set_id, :rank, :standard_id, :name, :option_set
 
   belongs_to(:option_set)
   has_many(:optionings, :inverse_of => :option_level)
 
-  validates(:option_set_id, :presence => true)
+  # we validate against option_set and not option_set_id so that validation won't fail on create
+  validates(:option_set, :presence => true)
+
   validates(:rank, :presence => true)
   validate(:not_all_blank_name_translations)
 

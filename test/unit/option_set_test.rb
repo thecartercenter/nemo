@@ -96,64 +96,25 @@ class OptionSetTest < ActiveSupport::TestCase
   # these rank tests are for multi-level option sets
 
   test "ranks should be contiguous for all levels of multilevel option set" do
+    # create the animal/plant option set
+    os = FactoryGirl.create(:multilevel_option_set)
 
-    # create the default yes/no option set
-    os = FactoryGirl.create(:option_set)
-
-    # make it multi-level
-    os.multi_level = true
-    os.option_levels << FactoryGirl.build(:option_level, :option_set => os, :rank => 1)
-    os.option_levels << FactoryGirl.build(:option_level, :option_set => os, :rank => 2)
-    os.optionings[0].option_level = os.option_levels[0]
-    os.optionings[1].option_level = os.option_levels[0]
-    os.save!
-
-    # mess up ranks
+    # mess up ranks and save
     os.optionings[0].rank = 5
     os.optionings[1].rank = 3
-
-    # add some second level options with odd ranks
-    os.optionings[1].optionings.build(:rank => 2, :option_set => os,
-      :option => Option.new(:name => 'c1'), :option_level => os.option_levels[1], :parent => os.optionings[1])
-    os.optionings[1].optionings.build(:rank => 5, :option_set => os,
-      :option => Option.new(:name => 'c2'), :option_level => os.option_levels[1], :parent => os.optionings[1])
-
-    # save and reload
+    os.optionings[0].optionings[0].rank = 2
+    os.optionings[0].optionings[1].rank = 5
     os.save!
 
     # check that ranks were repaired and the option arrays sorted
-    assert_equal('No', os.optionings[0].option.name)
+    assert_equal('plant', os.optionings[0].option.name)
     assert_equal([1,2], os.optionings.map(&:rank))
     assert_equal([1,2], os.optionings[0].optionings.map(&:rank))
-    assert_empty(os.optionings[1].optionings)
   end
 
   test "positions_changed should work with multilevel option set" do
-    # create a single level set
-    os = FactoryGirl.create(:option_set, :option_names => %w(animal plant))
-
-    # make it multi-level
-    os.multi_level = true
-
-    # add option levels
-    os.option_levels << FactoryGirl.build(:option_level, :option_set => os, :rank => 1, :name => 'kingdom')
-    os.option_levels << FactoryGirl.build(:option_level, :option_set => os, :rank => 2, :name => 'species')
-
-    # add option levels to existing top level options
-    os.optionings[0].option_level = os.option_levels[0]
-    os.optionings[1].option_level = os.option_levels[0]
-
-    # add some second level options
-    os.optionings[0].optionings.build(:rank => 1, :option_set => os,
-      :option => Option.new(:name => 'cat'), :option_level => os.option_levels[1], :parent => os.optionings[0])
-    os.optionings[0].optionings.build(:rank => 2, :option_set => os,
-      :option => Option.new(:name => 'dog'), :option_level => os.option_levels[1], :parent => os.optionings[0])
-    os.optionings[1].optionings.build(:rank => 1, :option_set => os,
-      :option => Option.new(:name => 'pine'), :option_level => os.option_levels[1], :parent => os.optionings[1])
-    os.optionings[1].optionings.build(:rank => 2, :option_set => os,
-      :option => Option.new(:name => 'tulip'), :option_level => os.option_levels[1], :parent => os.optionings[1])
-
-    os.save!
+    # create the animal/plant option set
+    os = FactoryGirl.create(:multilevel_option_set)
 
     assert_equal(false, os.positions_changed?)
 
@@ -181,32 +142,15 @@ class OptionSetTest < ActiveSupport::TestCase
   end
 
   test "options_added should work with multilevel option set" do
-    # create a single level set
-    os = FactoryGirl.create(:option_set, :option_names => %w(animal plant))
+    # create the animal/plant option set
+    os = FactoryGirl.create(:multilevel_option_set)
 
     # should be false now because option set has been saved
     assert_equal(false, os.options_added?)
 
-    # make it multi-level
-    os.multi_level = true
-
-    # add option levels
-    os.option_levels << FactoryGirl.build(:option_level, :option_set => os, :rank => 1, :name => 'kingdom')
-    os.option_levels << FactoryGirl.build(:option_level, :option_set => os, :rank => 2, :name => 'species')
-
-    # add option levels to existing top level options
-    os.optionings[0].option_level = os.option_levels[0]
-    os.optionings[1].option_level = os.option_levels[0]
-
-    # add some second level options
-    os.optionings[0].optionings.build(:rank => 1, :option_set => os,
-      :option => Option.new(:name => 'cat'), :option_level => os.option_levels[1], :parent => os.optionings[0])
-    os.optionings[0].optionings.build(:rank => 2, :option_set => os,
-      :option => Option.new(:name => 'dog'), :option_level => os.option_levels[1], :parent => os.optionings[0])
-    os.optionings[1].optionings.build(:rank => 1, :option_set => os,
-      :option => Option.new(:name => 'pine'), :option_level => os.option_levels[1], :parent => os.optionings[1])
-    os.optionings[1].optionings.build(:rank => 2, :option_set => os,
-      :option => Option.new(:name => 'tulip'), :option_level => os.option_levels[1], :parent => os.optionings[1])
+    # add another option
+    os.optionings[1].optionings.build(:rank => 3, :option_set => os,
+      :option => Option.new(:name => 'switchgrass'), :option_level => os.option_levels[1], :parent => os.optionings[1])
 
     # should be true now
     assert_equal(true, os.options_added?)
@@ -218,34 +162,11 @@ class OptionSetTest < ActiveSupport::TestCase
   end
 
   test "options_removed should with multilevel option set" do
-    # create a single level set
-    os = FactoryGirl.create(:option_set, :option_names => %w(animal plant))
+    # create the animal/plant option set
+    os = FactoryGirl.create(:multilevel_option_set)
 
     # should be false now because option set has been saved
     assert_equal(false, os.options_removed?)
-
-    # make it multi-level
-    os.multi_level = true
-
-    # add option levels
-    os.option_levels << FactoryGirl.create(:option_level, :option_set => os, :rank => 1, :name => 'kingdom')
-    os.option_levels << FactoryGirl.create(:option_level, :option_set => os, :rank => 2, :name => 'species')
-
-    # add option levels to existing top level options
-    os.optionings[0].option_level = os.option_levels[0]
-    os.optionings[1].option_level = os.option_levels[0]
-
-    # add some second level options
-    os.optionings[0].optionings.build(:rank => 1, :option_set => os,
-      :option => Option.new(:name => 'cat'), :option_level => os.option_levels[1], :parent => os.optionings[0])
-    os.optionings[0].optionings.build(:rank => 2, :option_set => os,
-      :option => Option.new(:name => 'dog'), :option_level => os.option_levels[1], :parent => os.optionings[0])
-    os.optionings[1].optionings.build(:rank => 1, :option_set => os,
-      :option => Option.new(:name => 'pine'), :option_level => os.option_levels[1], :parent => os.optionings[1])
-    os.optionings[1].optionings.build(:rank => 2, :option_set => os,
-      :option => Option.new(:name => 'tulip'), :option_level => os.option_levels[1], :parent => os.optionings[1])
-
-    os.save!
 
     # remove an option (we use _destroy as that's how it will really happen)
     animal = os.optionings[0]

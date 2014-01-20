@@ -4,10 +4,10 @@ class Optioning < ActiveRecord::Base
   belongs_to(:option, :inverse_of => :optionings)
   belongs_to(:option_set, :inverse_of => :all_optionings)
   belongs_to(:option_level, :inverse_of => :optionings)
-  belongs_to(:parent, :class_name => 'Optioning')
+  belongs_to(:parent, :class_name => 'Optioning', :inverse_of => :optionings)
 
   # this association gets the children of this optioning
-  has_many(:optionings, :order => "rank", :foreign_key => :parent_id)
+  has_many(:optionings, :order => "rank", :foreign_key => :parent_id, :inverse_of => :parent)
 
   before_create(:set_mission)
   before_destroy(:no_answers_or_choices)
@@ -96,12 +96,12 @@ class Optioning < ActiveRecord::Base
     end
 
     def must_have_parent_if_not_top_option_level
-      errors.add(:parent_id, "can't be blank if not top option level") if option_level_rank.present? && option_level_rank > 1 && parent_id.nil?
+      errors.add(:parent_id, "can't be blank if not top option level") if option_level_rank.present? && option_level_rank > 1 && parent.nil?
     end
 
     def must_have_option_level_if_in_multi_level_option_set
       # if this optioning has a parent, or if it's a top level optioning in a multi level set, then must have an option level
-      if (option_set.present? && option_set.multi_level? || parent.present?) && option_level_id.blank?
+      if (option_set.present? && option_set.multi_level? || parent.present?) && option_level.nil?
         errors.add(:option_level_id, "can't be blank if in multilevel option set")
       end
     end
