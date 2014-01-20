@@ -20,8 +20,8 @@ class Answer < ActiveRecord::Base
   validate(:min_max)
   validate(:required)
 
-  delegate :question, :to => :questioning
-  delegate :qtype, :to => :question
+  delegate :question, :qtype, :rank, :required?, :hidden?, :options, :to => :questioning
+  delegate :name, :hint, :to => :question, :prefix => true
 
   # creates a new answer from a string from odk
   def self.new_from_str(params)
@@ -105,14 +105,6 @@ class Answer < ActiveRecord::Base
       end
     end
   end
-
-  def question; questioning ? questioning.question : nil; end
-  def rank; questioning.rank; end
-  def required?; questioning.required?; end
-  def hidden?; questioning.hidden?; end
-  def question_name; question.name; end
-  def question_hint; question.hint || ""; end
-  def options; question.options; end
 
   # relevant defaults to true until set otherwise
   def relevant?
