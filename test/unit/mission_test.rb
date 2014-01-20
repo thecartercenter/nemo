@@ -8,7 +8,7 @@ class MissionTest < ActiveSupport::TestCase
     assert_difference('Mission.count', -1) do
       assert_difference('Broadcast.count', -1) do
         assert_difference('Form.count', -1) do
-          assert_difference('Option.count', -3) do
+          assert_difference('Option.count', -2) do
             assert_difference('OptionSet.count', -1) do
               assert_difference('Report::Report.count', -1) do
                 mission.terminate_mission

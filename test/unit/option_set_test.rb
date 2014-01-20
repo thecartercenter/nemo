@@ -460,7 +460,9 @@ class OptionSetTest < ActiveSupport::TestCase
 
   private
     def create_option_set(options)
-      os = OptionSet.new(:name => "test")
+      # create empty set first
+      os = FactoryGirl.build(:option_set, :name => 'Test', :option_names => [])
+
       options.each do |o|
         # if o is an array then we have an explicit rank
         if o.is_a?(Array)
@@ -471,7 +473,7 @@ class OptionSetTest < ActiveSupport::TestCase
           name = o
           rank = nil
         end
-        os.optionings.new(:option => Option.new(:name_en => name), :rank => rank)
+        os.optionings.build(:option => Option.new(:name_en => name, :mission => os.mission), :rank => rank, :mission => os.mission)
       end
       os.save!
       os

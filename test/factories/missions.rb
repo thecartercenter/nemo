@@ -24,13 +24,13 @@ FactoryGirl.define do
   factory :mission_with_full_heirarchy, parent: :mission do
     name "MissionWithFullHeirarchy"
 
-    broadcasts     {|b| [b.association(:broadcast)]}
-    options        {|o| [o.association(:option)]}
-    option_sets    {|os|[os.association(:option_set)]}
-    forms          {|f| [f.association(:form, :question_types => %w(integer decimal location ))]}
-    report_reports {|r| [r.association(:report)]}
-    responses      {|r| [r.association(:response)]}
-    questions      {|q| [q.association(:question)]}
+    after(:create) do |mission, evaluator|
+      create(:broadcast, :mission => mission)
+      create(:option_set, :mission => mission)
+      create(:form, :mission => mission, :question_types => %w(integer text))
+      create(:report, :mission => mission)
+      create(:response, :mission => mission)
+    end
   end
 
 end

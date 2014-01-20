@@ -16,8 +16,10 @@ module Standardizable
 
     # create hooks to copy key params from parent and to children
     # this doesn't work with before_create for some reason
-    before_save(:copy_is_standard_and_mission_from_parent)
-    before_save(:copy_is_standard_and_mission_to_children)
+    before_validation(:copy_is_standard_and_mission_from_parent)
+    before_validation(:copy_is_standard_and_mission_to_children)
+
+    validates(:mission_id, :presence => true, :unless => ->(o) {o.is_standard?})
 
     # re-replicate to copies after save so that any changes are propagated
     after_save(:rereplicate_to_copies)
