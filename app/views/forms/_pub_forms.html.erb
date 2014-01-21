@@ -1,0 +1,9 @@
+
+<% # If there are published forms %>
+<% if @forms.count > 0 %>
+  <% @forms.each do |p| %>
+    <%= content_tag("li", link_to(p.name, new_response_path(:form_id => p.id))) %>
+  <% end %>
+<% else %>
+  <%= content_tag("li", t("layout.no_published_forms")) %>
+<% end %>

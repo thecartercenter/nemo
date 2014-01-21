@@ -16,10 +16,16 @@ class FormsController < ApplicationController
     respond_to do |format|
       # render normally if html
       format.html do
-        # add some eager loading stuff, and ordering
-        @forms = @forms.with_questioning_and_copy_counts.default_order
-        load_importable_objs
-        render(:index)
+        # If requesting the dropdown menu
+        if params[:dropdown]
+          @forms = @forms.published.default_order
+          render(:partial => "pub_forms")
+        else
+          # add some eager loading stuff, and ordering
+          @forms = @forms.with_questioning_and_copy_counts.default_order
+          load_importable_objs
+          render(:index)
+        end
       end
 
       # get only published forms and render openrosa if xml requested

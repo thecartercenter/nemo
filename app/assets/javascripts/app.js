@@ -16,6 +16,9 @@
     $("a#locale_form_link").on("click", function(){ $("#locale_form").css("display", "inline-block"); $(this).hide(); return false; });
     $("#locale_form select").on("change", function(){ self.change_locale($(this).val()); return false; });
 
+    // setup submit response dropdown in nav bar
+    $("a.dropdown-toggle").on("click", function(){self.show_hide_submit_menu($(this)); return false;});
+
     // set session countdown
     self.reset_session_countdown();
 
@@ -57,4 +60,28 @@
     $("title").text(self.params.site_name + ": " + title)
     $("h1.title").text(title);
   }
+
+  klass.prototype.show_hide_submit_menu = function(link) { var self = this;
+
+    // show loading ind
+    link.closest("div.loading_indicator img").show();
+
+    $.ajax({
+      url: "/forms",
+      method: "get",
+      data: {'dropdown' : 'true'},
+      datatype: 'html',
+      success: function(data) {
+        // populate drop down and show it
+        link.next("ul").html(data);
+        if (link.next("ul").is(':hidden')) {
+          link.dropdown('toggle');
+        }
+        // hide loading ind
+        link.closest(".loading_indicator img").hide();
+
+      }
+    });
+  }
+
 })(ELMO);

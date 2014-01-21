@@ -88,34 +88,41 @@
     <% end %>
   </div>
 
-
-
-  <div id="nav">
-    <%# no nav necessary if no user or mission %>
-    <% if current_user && (current_mission || admin_mode?) %>
-      <%# nav first section -- responses and reports %>
-      <% unless admin_mode? %>
-        <ul>
-          <%= nav_links(Response, Report::Report) %>
-          <li><%= link_to(t('page_titles.dashboard.all'), dashboard_path) if can?(:view, :dashboard) %></li>
-        </ul>
-      <% end %>
-
-      <%# nav first section -- form design %>
-      <%# show the 'standard' label in admin mode %>
+  <%# navigation bar %>
+  <% if current_user && (current_mission || admin_mode?) %>
+    <nav class="navbar navbar-default" role="navigation">
       <% if admin_mode? %>
-        <div class="standard_label"><%= t('standard.standard') %></div>
+        <div class="navbar-header std"><%= t("standard.standard") %></div>
       <% end %>
-      <ul class="<%= admin_mode? ? 'indented' : '' %>">
-        <%= nav_links(Form, Question, OptionSet) %>
-      </ul>
 
-      <%# nav third section -- users and infrastructure %>
-      <ul>
-        <%= nav_links(User, Mission, Broadcast, Setting) %>
+      <ul class="nav navbar-nav">
+        <% unless admin_mode? %>
+
+        <%# submit response %>
+          <li class="dropdown">
+            <%= loading_indicator() %>
+            <% if can?(:create, Response) %>
+              <a href="#" data-target="#" class="dropdown-toggle" data-toggle="dropdown">
+                <i class="fa fa-share-square-o"></i><%= t("common.submit") %><b class="caret"></b>
+              </a>
+              <%# empty until ajax call %>
+              <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel"></ul>
+            <% end %>
+          </li>
+
+          <%= nav_links(Response, Report::Report) %>
+          <li><div class="line"></div></li>
+
+        <% end %><%# end not in admin mode %>
+
+        <%= nav_links(Form, Question, OptionSet) %>
+        <li><div class="line"></div></li>
+        <%= nav_links(User, Broadcast, Setting) %>
+
       </ul>
-    <% end %>
-  </div>
+    </nav>
+  <% end %>
+
 
   <div id="content" class="<%= ctlr_action_name %>">
     <% unless @dont_print_title %>
