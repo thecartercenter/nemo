@@ -104,4 +104,30 @@ class QuestionTest < ActiveSupport::TestCase
     assert_equal([], q.subquestions)
     old_subqs.each{|sq| assert_equal(false, Subquestion.exists?(sq))}
   end
+
+  test "subquestions should be maintained if level added or removed from option set" do
+    os = FactoryGirl.create(:multilevel_option_set)
+    q = FactoryGirl.create(:question, :qtype_name => 'select_one', :option_set => os)
+    os.reload # pickup the associated question
+
+    # add the level to middle
+    os.option_levels[1].rank = 3
+    os.option_levels.build(:option_set => os, :rank => 2, :name => 'phylum', :mission => os.mission)
+    os.save!
+
+    # doublecheck option levels
+    assert_equal('kingdom phylum species', os.option_levels.map(&:name).join(' '))
+
+    # subquestions should be updated, and in order
+    q.reload
+    assert_equal('kingdom phylum species', q.subquestions.map(&:option_level).map(&:name).join(' '))
+
+    # remove the level again
+    os.option_levels.destroy(os.option_levels[1])
+    os.save!
+
+    # subquestions should be updated again
+    q.reload
+    assert_equal('kingdom species', q.subquestions.map(&:option_level).map(&:name).join(' '))
+  end
 end

@@ -18,7 +18,8 @@ class OptionSet < ActiveRecord::Base
 
   has_many(:questions, :inverse_of => :option_set)
   has_many(:questionings, :through => :questions)
-  has_many(:option_levels, :dependent => :destroy, :autosave => true, :inverse_of => :option_set)
+  has_many(:option_levels, :dependent => :destroy, :autosave => true, :inverse_of => :option_set,
+    :after_add => :option_levels_changed, :after_remove => :option_levels_changed)
 
   validates(:name, :presence => true)
   validate(:at_least_one_option)
@@ -28,6 +29,7 @@ class OptionSet < ActiveRecord::Base
   before_validation(:normalize_fields)
   before_validation(:ensure_children_ranks)
   before_validation(:ensure_option_level_ranks)
+  after_save(:notify_questions_of_option_level_change)
 
   scope(:with_associations, includes(:questions, {:optionings => :option}, {:questionings => :form}))
 
@@ -187,5 +189,19 @@ class OptionSet < ActiveRecord::Base
 
     def multi_level_option_sets_must_have_option_levels
       errors.add(:base, "Multi-level OptionSets must have at least one OptionLevel") if multi_level? && option_levels.empty?
+    end
+
+    # callback called when option levels are added to/subtracted from. sets a simple flag.
+    # record - the OptionLevel record that was added or removed
+    def option_levels_changed(record)
+      @option_levels_changed = true
+    end
+
+    # if associated OptionLevels were added or removed during last save, we need to notify any associated questions
+    def notify_questions_of_option_level_change
+      if @option_levels_changed
+        questions.each(&:option_levels_changed)
+        @option_levels_changed = false
+      end
     end
 end

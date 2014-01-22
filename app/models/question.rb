@@ -14,7 +14,8 @@ class Question < Questionable
   has_many(:referring_conditions, :through => :questionings)
   has_many(:forms, :through => :questionings)
   has_many(:calculations, :foreign_key => 'question1_id', :inverse_of => :question1)
-  has_many(:subquestions, :foreign_key => 'parent_id', :inverse_of => :question, :autosave => true, :dependent => :destroy)
+  has_many(:subquestions, :foreign_key => 'parent_id', :include => :option_level, :order => 'option_levels.rank',
+    :inverse_of => :question, :autosave => true, :dependent => :destroy)
 
   before_validation(:normalize_fields)
   before_validation(:maintain_subquestions)
@@ -169,6 +170,20 @@ class Question < Questionable
     qtype_name_changed? || option_set_id_changed? || constraint_changed?
   end
 
+  # shortcut accessor
+  def option_levels
+    option_set.present? ? option_set.option_levels : []
+  end
+
+  # called by an associated OptionSet when its OptionLevels change
+  def option_levels_changed
+    # first reload the association in case it's stale
+    option_set(true)
+
+    maintain_subquestions
+    save!
+  end
+
   private
 
     def integrity
@@ -220,13 +235,18 @@ class Question < Questionable
 
     # ensures Subquestion objects are created/destroyed to match the current OptionSet, if any
     def maintain_subquestions
-      if option_set_id_changed?
-        if option_set.try(:multi_level)
-          option_set.option_levels.each{|ol| subquestions.build(:option_level => ol)}
-        else
-          subquestions.destroy_all
-        end
+      # add subquestions for any missing option levels
+      (option_levels - subquestions.map(&:option_level)).each do |ol|
+        subquestions.build(:option_level => ol)
       end
+
+      # remove any obsolete subquestions (all subquestions with option levels NOT IN the current set)
+      subquestions.reject{|subq| option_levels.include?(subq.option_level)}.each do |subq|
+        subquestions.destroy(subq)
+      end
+
+      # re-sort by OptionLevel rank
+      subquestions.sort_by(&:rank)
 
       return true
     end
