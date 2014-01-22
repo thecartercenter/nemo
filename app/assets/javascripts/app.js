@@ -61,25 +61,28 @@
     $("h1.title").text(title);
   }
 
+  // TOM: try to comment all methods
+  // you can add a little extra info, e.g.:
+  // shows the dropdown menu that extends from the 'submit' link in the navbar
   klass.prototype.show_hide_submit_menu = function(link) { var self = this;
 
     // show loading ind
     link.closest("div.loading_indicator img").show();
 
+    // TOM: note that this could probably be done more succinctly using the ajax.load method (take a look)
     $.ajax({
-      url: "/forms",
-      method: "get",
+      url: '/forms', // TOM: could write this as '/forms?dropdown=1' and remove data argument
+      method: 'get', // TOM: this is the default, can remove
       data: {'dropdown' : 'true'},
-      datatype: 'html',
+      datatype: 'html', // TOM: don't need this -- see jquery.ajax documentation (also should be dataType)
       success: function(data) {
         // populate drop down and show it
-        link.next("ul").html(data);
-        if (link.next("ul").is(':hidden')) {
+        link.next('ul').html(data); // TOM: nice avoidance of adding a class
+        if (link.next('ul').is(':hidden')) {
           link.dropdown('toggle');
         }
         // hide loading ind
         link.closest(".loading_indicator img").hide();
-
       }
     });
   }

@@ -97,26 +97,31 @@
 
       <ul class="nav navbar-nav">
         <% unless admin_mode? %>
-
-        <%# submit response %>
+        <%# TOM: indentation %>
+        <%# submit response dropdown %>
           <li class="dropdown">
             <%= loading_indicator() %>
             <% if can?(:create, Response) %>
               <a href="#" data-target="#" class="dropdown-toggle" data-toggle="dropdown">
-                <i class="fa fa-share-square-o"></i><%= t("common.submit") %><b class="caret"></b>
+                <i class="fa fa-share-square-o"></i><%= t('common.submit') %><b class="caret"></b>
               </a>
               <%# empty until ajax call %>
-              <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel"></ul>
+              <ul class="dropdown-menu" role="menu"></ul>
             <% end %>
           </li>
 
           <%= nav_links(Response, Report::Report) %>
+
+          <%# divider %>
           <li><div class="line"></div></li>
 
-        <% end %><%# end not in admin mode %>
+        <% end %><%# end unless admin mode %>
 
         <%= nav_links(Form, Question, OptionSet) %>
+
+        <%# divider %>
         <li><div class="line"></div></li>
+
         <%= nav_links(User, Broadcast, Setting) %>
 
       </ul>

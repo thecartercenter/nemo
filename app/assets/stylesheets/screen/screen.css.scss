@@ -5,7 +5,7 @@ $light-yellow: #F7F6D9;
 $orange: #F77D48;
 $gray-blue: #D4DCE1;
 $gray: #3F3E3E;
-$light-gray: #BDB9B9;
+$light-gray: #BDB9B9; /* TOM: love the use of vars here! */
 $sans-serif: Helvetica, sans-serif;
 
 body {
@@ -104,6 +104,7 @@ body {
 
 
 nav {
+  /* TOM: indentation */
     /* Override Bootstrap */
     margin-bottom: 0px !important;
     border-radius: 0px !important;
@@ -117,6 +118,7 @@ nav {
     margin: 19px 27px 0px 30px;
     font-weight: bold;
   }
+  /* TOM: extra whitespace */
 
 
 
@@ -129,6 +131,7 @@ nav {
     li {
       padding: 15px 6px 2px 6px;
       margin: 0px 6px 0px 0px;
+      /* TOM: hot! */
       a:hover, &:hover, &:focus {
         color: $orange;
       }
@@ -145,7 +148,7 @@ nav {
         font-size: 11pt;
         display: inline-block;
         vertical-align: middle;
-        padding: 0px;
+        padding: 0px; /* TOM: don't need 'px' here */
 
         &:hover, &:focus {
           text-decoration: none;

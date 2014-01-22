@@ -297,8 +297,8 @@ module ApplicationHelper
         path = send("#{k.model_name.route_key}_path")
         active = request.fullpath == path
         l << content_tag(:li, :class => active ? 'active' : '') do
-          link_to(path) do
-            content_tag('i','', :class => 'fa fa-' + FONT_AWESOME_ICON_MAPPINGS[k.model_name.param_key.to_sym]) +
+          link_to(path) do # TOM: VERY NICE!
+            content_tag('i', '', :class => 'fa fa-' + FONT_AWESOME_ICON_MAPPINGS[k.model_name.param_key.to_sym]) +
             pluralize_model(k)
           end
         end

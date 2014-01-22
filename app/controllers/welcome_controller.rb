@@ -7,6 +7,7 @@ class WelcomeController < ApplicationController
     authorize! :show, Welcome
 
     # published forms
+    # TOM: i guess these are still necessary for the time being?
     @pubd_forms = Form.accessible_by(current_ability).published.default_order
     @pub_form_count = @pubd_forms.count
 

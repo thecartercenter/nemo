@@ -16,10 +16,14 @@ class FormsController < ApplicationController
     respond_to do |format|
       # render normally if html
       format.html do
+
+        # TOM: consistent case for comments pls.
         # If requesting the dropdown menu
         if params[:dropdown]
           @forms = @forms.published.default_order
-          render(:partial => "pub_forms")
+          render(:partial => "pub_forms") # TOM: this is maybe not the best name for the partial. why not 'dropdown'?
+
+        # otherwise, it's a normal request
         else
           # add some eager loading stuff, and ordering
           @forms = @forms.with_questioning_and_copy_counts.default_order
