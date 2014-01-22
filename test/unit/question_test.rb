@@ -72,4 +72,36 @@ class QuestionTest < ActiveSupport::TestCase
     q = FactoryGirl.create(:question, :qtype_name => 'select_one', :option_set => os)
     assert_equal(os.option_levels, q.subquestions.map(&:option_level))
   end
+
+  test "subquestions should not get recreated on update question with multilevel option set" do
+    os = FactoryGirl.create(:multilevel_option_set)
+    q = FactoryGirl.create(:question, :qtype_name => 'select_one', :option_set => os)
+
+    # change just the name and make sure not created again
+    q.name = 'foo123'
+    q.save!
+
+    assert_equal(os.option_levels.size, q.subquestions.size)
+  end
+
+  test "subquestions should be maintained on update question with multilevel option set" do
+    osm = FactoryGirl.create(:multilevel_option_set)
+    os = FactoryGirl.create(:option_set)
+
+    # start out with regular option set
+    q = FactoryGirl.create(:question, :qtype_name => 'select_one', :option_set => os)
+    assert_equal([], q.subquestions)
+
+    # change to multilevel
+    q.option_set = osm
+    q.save!
+    assert_equal(osm.option_levels, q.subquestions.map(&:option_level))
+
+    # change back to regular -- old subquestions should be deleted
+    old_subqs = q.subquestions
+    q.option_set = os
+    q.save!
+    assert_equal([], q.subquestions)
+    old_subqs.each{|sq| assert_equal(false, Subquestion.exists?(sq))}
+  end
 end

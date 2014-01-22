@@ -14,7 +14,7 @@ class Question < Questionable
   has_many(:referring_conditions, :through => :questionings)
   has_many(:forms, :through => :questionings)
   has_many(:calculations, :foreign_key => 'question1_id', :inverse_of => :question1)
-  has_many(:subquestions, :foreign_key => 'parent_id', :inverse_of => :question)
+  has_many(:subquestions, :foreign_key => 'parent_id', :inverse_of => :question, :autosave => true, :dependent => :destroy)
 
   before_validation(:normalize_fields)
   before_validation(:maintain_subquestions)
@@ -220,8 +220,12 @@ class Question < Questionable
 
     # ensures Subquestion objects are created/destroyed to match the current OptionSet, if any
     def maintain_subquestions
-      if option_set.try(:multi_level)
-        option_set.option_levels.each{|ol| subquestions.build(:option_level => ol)}
+      if option_set_id_changed?
+        if option_set.try(:multi_level)
+          option_set.option_levels.each{|ol| subquestions.build(:option_level => ol)}
+        else
+          subquestions.destroy_all
+        end
       end
 
       return true
