@@ -1,4 +1,6 @@
-class Question < ActiveRecord::Base
+# a question on a form
+# question is a subtype of Questionable as per composite design pattern, since it may have Subquestions
+class Question < Questionable
   include MissionBased, FormVersionable, Translatable, Standardizable, Replicable
 
   CODE_FORMAT = "[a-z][a-z0-9]{1,19}"
