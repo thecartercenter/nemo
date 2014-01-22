@@ -27,6 +27,16 @@ class Optioning < ActiveRecord::Base
   # temp var used in the option_set form
   attr_writer :included
 
+  # remove all optionings related to the given mission
+  # this is an override of the MissionBased method
+  # this is a fast delete method to be used only when wiping out an entire mission
+  def self.mission_pre_delete(mission)
+    # we need to disable foreign key checks temporarily because there is no easy way around the parent_id constraint when deleting
+    connection.execute('SET FOREIGN_KEY_CHECKS = 0')
+    for_mission(mission).delete_all
+    connection.execute('SET FOREIGN_KEY_CHECKS = 1')
+  end
+
   def included
     # default to true
     defined?(@included) ? @included : true

@@ -44,8 +44,10 @@ class Mission < ActiveRecord::Base
     ActiveRecord::Base.transaction do
       begin
         # Remove MissionBased Classes
+        # note that we don't need to remove Optioning directly since OptionSet takes care of that
+        # the order of deletion is also important to avoid foreign key constraints
         relationships_to_delete = [Setting, Report::Report, Condition, Questioning,
-                                   Optioning, Option, Question, OptionSet, Response,
+                                   Optioning, OptionLevel, OptionSet, Option, Question, Response,
                                    Form, Broadcast, Assignment, Sms::Message, User]
         relationships_to_delete.each{|r| r.mission_pre_delete(self)}
 

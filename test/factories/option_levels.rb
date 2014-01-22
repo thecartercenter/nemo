@@ -2,9 +2,11 @@
 
 FactoryGirl.define do
   factory :option_level do
-    option_set
     rank 1
     name_en { "Level #{rank}" }
-    mission { get_mission }
+    mission { is_standard ? nil : get_mission }
+
+    # pass the mission along to the association
+    option_set { build(:option_set, :mission => mission) }
   end
 end

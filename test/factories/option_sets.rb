@@ -43,14 +43,19 @@ FactoryGirl.define do
     after(:build) do |os, evaluator|
       # build option levels
       evaluator.level_names.each_with_index do |l, i|
-        os.option_levels.build(:name => l, :rank => i, :option_set => os)
+        os.option_levels.build(:name => l, :rank => i, :option_set => os, :mission => evaluator.mission)
       end
 
       # build two levels of optionings
       evaluator.option_names.each_with_index do |names, i|
-        oing = os.optionings.build(:option => Option.new(:name => names[0], :mission => evaluator.mission), :rank => i, :option_level => evaluator.option_levels[0], :mission => evaluator.mission, :option_set => os)
+        # first level
+        oing = os.optionings.build(:option => Option.new(:name => names[0], :mission => evaluator.mission), :rank => i,
+          :option_level => evaluator.option_levels[0], :mission => evaluator.mission, :option_set => os)
+
+        # second level
         names[1].each_with_index.map do |name2, i2|
-          oing.optionings.build(:option => Option.new(:name => name2, :mission => evaluator.mission), :rank => i2, :option_level => evaluator.option_levels[1], :mission => evaluator.mission, :option_set => os, :parent => oing)
+          oing.optionings.build(:option => Option.new(:name => name2, :mission => evaluator.mission), :rank => i2,
+            :option_level => evaluator.option_levels[1], :mission => evaluator.mission, :option_set => os, :parent => oing)
         end
       end
     end

@@ -60,11 +60,6 @@ class OptionSet < ActiveRecord::Base
   # replication options
   replicable :child_assocs => :optionings, :parent_assoc => :question, :uniqueness => {:field => :name, :style => :sep_words}
 
-  # remove heirarch of objects
-  def self.terminate_sub_relationships(option_sets_ids)
-    Optioning.where(option_set_id: option_sets_ids).delete_all
-  end
-
   # checks if this option set appears in any smsable questionings
   def form_smsable?
     questionings.any?(&:form_smsable?)
