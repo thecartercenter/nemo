@@ -7,10 +7,11 @@ class OptionSet < ActiveRecord::Base
   # this association produces ALL optionings regardless of level. should only be used when quick access to the full set of optionings is
   # needed. note that if this and the normal optionings association are both used, there will be two separate sets of models in play.
   # note that dependent => destroy and autosave are not turned on here.
-  has_many(:all_optionings, :class_name => 'Optioning', :order => 'parent_id, rank', :inverse_of => :option_set)
+  has_many(:all_optionings, :class_name => 'Optioning', :order => 'optionings.parent_id, optionings.rank', :inverse_of => :option_set)
 
   # this association produces only the direct children of this option_set (the top-level options).
-  has_many(:optionings, :order => "rank", :conditions => 'parent_id IS NULL', :dependent => :destroy, :autosave => true, :inverse_of => :option_set)
+  has_many(:optionings, :order => "rank", :conditions => 'optionings.parent_id IS NULL',
+    :dependent => :destroy, :autosave => true, :inverse_of => :option_set)
 
   # returns ONLY the first-level options for this option set, sorted by rank
   has_many(:options, :through => :optionings, :order => "optionings.rank")
@@ -36,19 +37,19 @@ class OptionSet < ActiveRecord::Base
     select(%{
       option_sets.*,
       COUNT(DISTINCT answers.id) AS answer_count_col,
-      COUNT(DISTINCT questions.id) AS question_count_col,
+      COUNT(DISTINCT questionables.id) AS question_count_col,
       MAX(forms.published) AS published_col,
       COUNT(DISTINCT copy_answers.id) AS copy_answer_count_col,
       COUNT(DISTINCT copy_questions.id) AS copy_question_count_col,
       MAX(copy_forms.published) AS copy_published_col
     }).
     joins(%{
-      LEFT OUTER JOIN questions ON questions.option_set_id = option_sets.id
-      LEFT OUTER JOIN questionings ON questionings.question_id = questions.id
+      LEFT OUTER JOIN questionables ON questionables.option_set_id = option_sets.id AND questionables.type = 'Question'
+      LEFT OUTER JOIN questionings ON questionings.question_id = questionables.id
       LEFT OUTER JOIN forms ON forms.id = questionings.form_id
       LEFT OUTER JOIN answers ON answers.questioning_id = questionings.id
       LEFT OUTER JOIN option_sets copies ON option_sets.is_standard = 1 AND copies.standard_id = option_sets.id
-      LEFT OUTER JOIN questions copy_questions ON copy_questions.option_set_id = copies.id
+      LEFT OUTER JOIN questionables copy_questions ON copy_questions.option_set_id = copies.id AND copy_questions.type = 'Question'
       LEFT OUTER JOIN questionings copy_questionings ON copy_questionings.question_id = copy_questions.id
       LEFT OUTER JOIN forms copy_forms ON copy_forms.id = copy_questionings.form_id
       LEFT OUTER JOIN answers copy_answers ON copy_answers.questioning_id = copy_questionings.id

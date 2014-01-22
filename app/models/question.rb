@@ -24,7 +24,7 @@ class Question < Questionable
   validate(:integrity)
   validate(:code_unique_per_mission)
 
-  scope(:by_code, order("questions.code"))
+  scope(:by_code, order("questionables.code"))
   scope(:default_order, by_code)
   scope(:select_types, where(:qtype_name => %w(select_one select_multiple)))
   scope(:with_forms, includes(:forms))
@@ -34,7 +34,7 @@ class Question < Questionable
   # - form_published returns 1 if any associated forms are published, 0 or nil otherwise
   # - standard_copy_form_id returns a std copy form id associated with the question if available, or nil if there are none
   scope(:with_assoc_counts, select(%{
-      questions.*,
+      questionables.*,
       COUNT(DISTINCT answers.id) AS answer_count_col,
       COUNT(DISTINCT forms.id) AS form_count_col,
       MAX(DISTINCT forms.published) AS form_published,
@@ -42,14 +42,14 @@ class Question < Questionable
       MAX(DISTINCT copy_forms.published) AS copy_form_published,
       MAX(DISTINCT forms.standard_id) AS standard_copy_form_id
     }).joins(%{
-      LEFT OUTER JOIN questionings ON questionings.question_id = questions.id
+      LEFT OUTER JOIN questionings ON questionings.question_id = questionables.id AND questionables.type = 'Question'
       LEFT OUTER JOIN forms ON forms.id = questionings.form_id
       LEFT OUTER JOIN answers ON answers.questioning_id = questionings.id
-      LEFT OUTER JOIN questions copies ON questions.is_standard = 1 AND questions.id = copies.standard_id
+      LEFT OUTER JOIN questionables copies ON questionables.is_standard = 1 AND questionables.id = copies.standard_id
       LEFT OUTER JOIN questionings copy_questionings ON copy_questionings.question_id = copies.id
       LEFT OUTER JOIN forms copy_forms ON copy_forms.id = copy_questionings.form_id
       LEFT OUTER JOIN answers copy_answers ON copy_answers.questioning_id = copy_questionings.id
-    }).group('questions.id'))
+    }).group('questionables.id'))
 
   translates :name, :hint
 
@@ -61,7 +61,7 @@ class Question < Questionable
 
   # returns questions that do NOT already appear in the given form
   def self.not_in_form(form)
-    scoped.where("(questions.id not in (select question_id from questionings where form_id='#{form.id}'))")
+    scoped.where("(questionables.id not in (select question_id from questionings where form_id='#{form.id}'))")
   end
 
   # returns N questions marked as key questions, sorted by the number of forms they appear in

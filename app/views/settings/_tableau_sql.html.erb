@@ -1,6 +1,6 @@
 <!-- assumes the language desired is English. currently does not respect the locale -->
 <pre>
-  select
+  SELECT
     r.id AS response_id,
     r.reviewed AS is_reviewed,
     f.name AS form_name,
@@ -15,16 +15,16 @@
     a.datetime_value AS datetime_value,
     IFNULL(ao._name, co._name) AS choice_name,
     os.name AS option_set
-  from answers a
-    left join options ao on a.option_id = ao.id
-    left join choices c on c.answer_id = a.id
-      left join options co on c.option_id = co.id
-    join responses r on a.response_id = r.id
-      join users u on r.user_id = u.id
-      join forms f on r.form_id = f.id
-    join questionings qing on a.questioning_id = qing.id
-      join questions q on qing.question_id = q.id
-        left join option_sets os on q.option_set_id = os.id
-  where r.mission_id = '<%= current_mission.id %>';
+  FROM answers a
+    LEFT JOIN options ao ON a.option_id = ao.id
+    LEFT JOIN choices c ON c.answer_id = a.id
+      LEFT JOIN options co ON c.option_id = co.id
+    JOIN responses r ON a.response_id = r.id
+      JOIN users u ON r.user_id = u.id
+      JOIN forms f ON r.form_id = f.id
+    JOIN questionings qing ON a.questioning_id = qing.id
+      JOIN questionables q ON qing.question_id = q.id AND q.type = 'Question'
+        LEFT JOIN option_sets os ON q.option_set_id = os.id
+  WHERE r.mission_id = '<%= current_mission.id %>';
 </pre>
 <%= link_to("Select All", "#") %>

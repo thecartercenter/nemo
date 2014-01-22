@@ -45,14 +45,14 @@
               <% end %>
               <% fields.each do |f| %>
                 <td class="<%= "#{(f.is_a?(Hash) ? f[:css_class] : f).gsub(/[^\w\d]/, "")}_col" %>">
-                  <div><%= self.send("format_#{klass.table_name}_field", o, f) %></div>
+                  <div><%= self.send("format_#{klass.model_name.route_key}_field", o, f) %></div>
                 </td>
               <% end %>
 
             <% end %>
 
             <%# do second row if requested %>
-            <% if respond_to?("#{klass.table_name}_second_row") && content = send("#{klass.table_name}_second_row", o) %>
+            <% if respond_to?("#{klass.model_name.route_key}_second_row") && content = send("#{klass.model_name.route_key}_second_row", o) %>
               <%= content_tag(:tr,
                     :'data-href' => path,
                     :class => 'second_row' + (path ? ' clickable' : '')) do %>
