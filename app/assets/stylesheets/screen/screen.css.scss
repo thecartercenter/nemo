@@ -104,11 +104,10 @@ body {
 
 
 nav {
-  /* TOM: indentation */
-    /* Override Bootstrap */
-    margin-bottom: 0px !important;
-    border-radius: 0px !important;
-    height: 51px;
+  /* Override Bootstrap */
+  margin-bottom: 0px !important;
+  border-radius: 0px !important;
+  height: 51px;
 
   /* For standard label in admin mode */
   .navbar-header.std {
@@ -118,20 +117,13 @@ nav {
     margin: 19px 27px 0px 30px;
     font-weight: bold;
   }
-  /* TOM: extra whitespace */
-
-
 
   ul.navbar-nav {
 
-    &:first-child {
-      padding-left: 30px;
-    }
-
     li {
-      padding: 15px 6px 2px 6px;
+      padding: 15px 6px 15px 6px;
       margin: 0px 6px 0px 0px;
-      /* TOM: hot! */
+
       a:hover, &:hover, &:focus {
         color: $orange;
       }
@@ -148,7 +140,7 @@ nav {
         font-size: 11pt;
         display: inline-block;
         vertical-align: middle;
-        padding: 0px; /* TOM: don't need 'px' here */
+        padding: 0;
 
         &:hover, &:focus {
           text-decoration: none;
@@ -182,6 +174,8 @@ nav {
     }
 
     ul.dropdown-menu {
+      top: 78%;
+      left: 24px;
       li {
         font-weight: normal;
         font-family: $sans-serif;
@@ -201,6 +195,9 @@ nav {
           }
         }
       }
+    }
+    li.dropdown {
+      padding-left: 28px;
     }
   }
 }

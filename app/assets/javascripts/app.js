@@ -61,30 +61,27 @@
     $("h1.title").text(title);
   }
 
-  // TOM: try to comment all methods
-  // you can add a little extra info, e.g.:
   // shows the dropdown menu that extends from the 'submit' link in the navbar
   klass.prototype.show_hide_submit_menu = function(link) { var self = this;
 
-    // show loading ind
-    link.closest("div.loading_indicator img").show();
+    // only load if haven't loaded before
+    if (!link.next('ul').find('li')[0]) {
 
-    // TOM: note that this could probably be done more succinctly using the ajax.load method (take a look)
-    $.ajax({
-      url: '/forms', // TOM: could write this as '/forms?dropdown=1' and remove data argument
-      method: 'get', // TOM: this is the default, can remove
-      data: {'dropdown' : 'true'},
-      datatype: 'html', // TOM: don't need this -- see jquery.ajax documentation (also should be dataType)
-      success: function(data) {
-        // populate drop down and show it
-        link.next('ul').html(data); // TOM: nice avoidance of adding a class
-        if (link.next('ul').is(':hidden')) {
-          link.dropdown('toggle');
-        }
+      // if hidden, show drop down
+      if (link.next('ul').is(':hidden')) console.log("is hidden, show"); link.dropdown('toggle');
+
+      // show loading ind
+      link.next('ul').find('div.loading_indicator img').show();
+
+      // ajax call
+      link.next('ul').load('/forms?dropdown=1', function() {
         // hide loading ind
-        link.closest(".loading_indicator img").hide();
-      }
-    });
+        link.next('ul').find('div.loading_indicator img').hide();
+      });
+
+    }
+
   }
 
 })(ELMO);
+

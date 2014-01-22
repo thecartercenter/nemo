@@ -89,24 +89,26 @@
   </div>
 
   <%# navigation bar %>
+  <nav class="navbar navbar-default" role="navigation">
+
   <% if current_user && (current_mission || admin_mode?) %>
-    <nav class="navbar navbar-default" role="navigation">
       <% if admin_mode? %>
         <div class="navbar-header std"><%= t("standard.standard") %></div>
       <% end %>
 
       <ul class="nav navbar-nav">
         <% unless admin_mode? %>
-        <%# TOM: indentation %>
-        <%# submit response dropdown %>
+          <%# submit response dropdown %>
           <li class="dropdown">
-            <%= loading_indicator() %>
             <% if can?(:create, Response) %>
               <a href="#" data-target="#" class="dropdown-toggle" data-toggle="dropdown">
                 <i class="fa fa-share-square-o"></i><%= t('common.submit') %><b class="caret"></b>
               </a>
               <%# empty until ajax call %>
-              <ul class="dropdown-menu" role="menu"></ul>
+              <ul class="dropdown-menu" role="menu">
+                <%= loading_indicator() %>
+
+              </ul>
             <% end %>
           </li>
 
@@ -125,8 +127,9 @@
         <%= nav_links(User, Broadcast, Setting) %>
 
       </ul>
-    </nav>
   <% end %>
+  </nav>
+
 
 
   <div id="content" class="<%= ctlr_action_name %>">
