@@ -17,6 +17,7 @@ module ApplicationHelper
     :form => "file-text-o",
     :question => "question-circle",
     :option_set => "list-ul",
+    :optionset => 'list-ul',
     :user => "users",
     :broadcast => "bullhorn",
     :setting => "gear",
