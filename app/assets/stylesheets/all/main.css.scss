@@ -129,10 +129,10 @@ div.paginate-container {
 }
 
 ul.pagination {
-    a { color: $orange; }
-    li.active span, li.active span:hover {
-      background-color: $elmo-blue;
-      border-color: $elmo-blue;
+  a { color: $orange; }
+  li.active span, li.active span:hover {
+    background-color: $elmo-blue;
+    border-color: $elmo-blue;
   }
 }
 
