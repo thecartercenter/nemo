@@ -15,7 +15,10 @@ class OptionLevel < ActiveRecord::Base
 
   translates :name
 
-
+  # on mission delete, need to remove related Subquestions since otherwise we will get a foreign key error
+  def self.terminate_sub_relationships(ids)
+    Subquestion.where(:option_level_id => ids).delete_all
+  end
 
   private
 

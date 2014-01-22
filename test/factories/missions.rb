@@ -28,10 +28,13 @@ FactoryGirl.define do
       create(:broadcast, :mission => mission)
 
       # creates option_set, optionings, option_levels, and options
-      create(:multilevel_option_set, :mission => mission)
+      os = create(:multilevel_option_set, :mission => mission)
 
       # creates questionings and questions
       form = create(:form, :mission => mission, :question_types => %w(integer text))
+
+      # adds a multi-level Question, so that we get Subquestions
+      create(:question, :qtype_name => 'select_one', :option_set => os, :mission => mission)
 
       create(:report, :mission => mission)
 

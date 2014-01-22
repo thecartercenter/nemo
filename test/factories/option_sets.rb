@@ -48,6 +48,7 @@ FactoryGirl.define do
 
       # build two levels of optionings
       evaluator.option_names.each_with_index do |names, i|
+
         # first level
         oing = os.optionings.build(:option => Option.new(:name => names[0], :mission => evaluator.mission), :rank => i,
           :option_level => evaluator.option_levels[0], :mission => evaluator.mission, :option_set => os)
