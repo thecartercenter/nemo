@@ -68,7 +68,7 @@
     if (!link.next('ul').find('li')[0]) {
 
       // if hidden, show drop down
-      if (link.next('ul').is(':hidden')) console.log("is hidden, show"); link.dropdown('toggle');
+      if (link.next('ul').is(':hidden')) link.dropdown('toggle');
 
       // show loading ind
       link.next('ul').find('div.loading_indicator img').show();
