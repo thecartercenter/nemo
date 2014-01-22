@@ -9,7 +9,16 @@ module ApplicationHelper
     :publish => "arrow-up",
     :remove => "times",
     :sms => "comment",
-    :unpublish => "arrow-down"
+    :unpublish => "arrow-down",
+    :submit => "share-square-o",
+    :response => "check-circle-o",
+    :report_report => "bar-chart-o",
+    :form => "file-text-o",
+    :question => "question-circle",
+    :option_set => "list-ul",
+    :user => "users",
+    :broadcast => "bullhorn",
+    :setting => "gear"
   }
 
   ERROR_MESSAGE_KEYS_TO_HIDE = {
@@ -286,8 +295,13 @@ module ApplicationHelper
     klasses.each do |k|
       if can?(:index, k)
         path = send("#{k.model_name.route_key}_path")
-        active = request.fullpath == path
-        l << content_tag(:li, link_to(pluralize_model(k), path), :class => active ? 'active' : '')
+        active = current_page?(path)
+        l << content_tag(:li, :class => active ? 'active' : '') do
+          link_to(path) do
+            content_tag('i', '', :class => 'fa fa-' + FONT_AWESOME_ICON_MAPPINGS[k.model_name.param_key.to_sym]) +
+            pluralize_model(k)
+          end
+        end
       end
     end
     l.join.html_safe

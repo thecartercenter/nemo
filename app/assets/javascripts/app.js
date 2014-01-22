@@ -16,6 +16,9 @@
     $("a#locale_form_link").on("click", function(){ $("#locale_form").css("display", "inline-block"); $(this).hide(); return false; });
     $("#locale_form select").on("change", function(){ self.change_locale($(this).val()); return false; });
 
+    // setup submit response dropdown in nav bar
+    $("a.dropdown-toggle").on("click", function(){self.show_hide_submit_menu($(this)); return false;});
+
     // set session countdown
     self.reset_session_countdown();
 
@@ -57,4 +60,28 @@
     $("title").text(self.params.site_name + ": " + title)
     $("h1.title").text(title);
   }
+
+  // shows the dropdown menu that extends from the 'submit' link in the navbar
+  klass.prototype.show_hide_submit_menu = function(link) { var self = this;
+
+    // only load if haven't loaded before
+    if (!link.next('ul').find('li')[0]) {
+
+      // if hidden, show drop down
+      if (link.next('ul').is(':hidden')) link.dropdown('toggle');
+
+      // show loading ind
+      link.next('ul').find('div.loading_indicator img').show();
+
+      // ajax call
+      link.next('ul').load('/forms?dropdown=1', function() {
+        // hide loading ind
+        link.next('ul').find('div.loading_indicator img').hide();
+      });
+
+    }
+
+  }
+
 })(ELMO);
+

@@ -5,6 +5,8 @@ $light-yellow: #F7F6D9;
 $orange: #F77D48;
 $gray-blue: #D4DCE1;
 $gray: #3F3E3E;
+$light-gray: #BDB9B9; /* TOM: love the use of vars here! */
+$sans-serif: Helvetica, sans-serif;
 
 body {
   background-color: #879CAA;
@@ -100,57 +102,107 @@ body {
   }
 }
 
-#nav {
-  display: inline;
-  margin-top: 100px;
-  width: $nav_width;
-  color: white;
-  float: left;
 
-  .standard_label {
-    margin-left: 10px;
+nav {
+  /* Override Bootstrap */
+  margin-bottom: 0px !important;
+  border-radius: 0px !important;
+  height: 51px;
+
+  /* For standard label in admin mode */
+  .navbar-header.std {
+    margin-left: 10px !important;
     text-transform: uppercase;
-    color: #ccc;
+    color: $light-gray;
+    margin: 19px 27px 0px 30px;
+    font-weight: bold;
   }
 
-  ul {
-    font-weight: bold;
-    padding: 0 5px 5px 5px;
-    margin: 0 10px 5px 10px;
-    list-style-type: none;
-    border-bottom: 1px solid #ccc;
-
-    &.indented {
-      padding-left: 10px;
-    }
-
-    &:last-child {
-      border: none;
-    }
+  ul.navbar-nav {
 
     li {
-      margin: 0;
-      padding: 3px 0;
+      padding: 15px 6px 15px 6px;
+      margin: 0px 6px 0px 0px;
+
+      a:hover, &:hover, &:focus {
+        color: $orange;
+      }
+
+      /* Overriding bootstrap navbar prefs */
+      &.active a {
+        background-color: $light-blue !important;
+      }
 
       a {
         text-decoration: none;
-        color: white;
+        font-family: "Raleway";
+        font-weight: bold;
+        font-size: 11pt;
+        display: inline-block;
+        vertical-align: middle;
+        padding: 0;
 
-        &:hover {
+        &:hover, &:focus {
           text-decoration: none;
-          color: #0065d1;
+          color: $orange !important;
+        }
+
+      }
+
+      i {
+        vertical-align: middle;
+        margin-right: 5px;
+        display: inline-block;
+        color: $light-gray;
+        font-size: 13pt;
+      }
+
+      &.active {
+        background-color: $light-blue;
+      }
+
+      &:hover {
+        color: $light-blue;
+      }
+    }
+
+    .line {
+      border-right: 1px solid $light-gray;
+      display: inline-block;
+      width: 2px;
+      height: 20px;
+    }
+
+    ul.dropdown-menu {
+      top: 78%;
+      left: 24px;
+      li {
+        font-weight: normal;
+        font-family: $sans-serif;
+        padding: 4px 0px 6px 15px;
+
+        &:hover, &:focus {
+          background: none;
+        }
+        a {
+          font-weight: normal;
+          font-family: $sans-serif;
+          font-size: 10pt;
+
+          &:hover, &:focus {
+            background: none;
+            color: $orange;
+          }
         }
       }
-
-      &.active a {
-        color: #bdf;
-      }
+    }
+    li.dropdown {
+      padding-left: 28px;
     }
   }
 }
 
 #content {
-  margin-left: $nav_width;
   padding: 15px 15px 30px 15px;
   min-height: 400px;
   background-color: white;
