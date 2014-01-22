@@ -66,4 +66,10 @@ class QuestionTest < ActiveSupport::TestCase
     assert_nil(q.minimum)
     assert_nil(q.minstrictly)
   end
+
+  test "subquestions should get created automatically on create question with multilevel option set" do
+    os = FactoryGirl.create(:multilevel_option_set)
+    q = FactoryGirl.create(:question, :qtype_name => 'select_one', :option_set => os)
+    assert_equal(os.option_levels, q.subquestions.map(&:option_level))
+  end
 end

@@ -1,7 +1,7 @@
 # a question on a form
 # question is a subtype of Questionable as per composite design pattern, since it may have Subquestions
 class Question < Questionable
-  include MissionBased, FormVersionable, Translatable, Standardizable, Replicable
+  include FormVersionable, Translatable
 
   CODE_FORMAT = "[a-z][a-z0-9]{1,19}"
 
@@ -17,6 +17,7 @@ class Question < Questionable
   has_many(:subquestions, :foreign_key => 'parent_id', :inverse_of => :question)
 
   before_validation(:normalize_fields)
+  before_validation(:maintain_subquestions)
 
   validates(:code, :presence => true)
   validates(:code, :format => {:with => /^#{CODE_FORMAT}$/i}, :if => Proc.new{|q| !q.code.blank?})
@@ -57,7 +58,8 @@ class Question < Questionable
   delegate :smsable?, :has_options?, :to => :qtype
   delegate :options, :geographic?, :to => :option_set, :allow_nil => true
 
-  replicable :child_assocs => :option_set, :parent_assoc => :questioning, :uniqueness => {:field => :code, :style => :camel_case}, :dont_copy => :key,
+  replicable :child_assocs => [:option_set, :subquestions], :parent_assoc => :questioning,
+    :uniqueness => {:field => :code, :style => :camel_case}, :dont_copy => :key,
     :user_modifiable => [:name_translations, :_name, :hint_translations, :_hint]
 
   # returns questions that do NOT already appear in the given form
@@ -214,5 +216,14 @@ class Question < Questionable
         self.minstrictly = nil
         self.maxstrictly = nil
       end
+    end
+
+    # ensures Subquestion objects are created/destroyed to match the current OptionSet, if any
+    def maintain_subquestions
+      if option_set.try(:multi_level)
+        option_set.option_levels.each{|ol| subquestions.build(:option_level => ol)}
+      end
+
+      return true
     end
 end

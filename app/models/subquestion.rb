@@ -5,4 +5,6 @@ class Subquestion < Questionable
 
   # references to parent Question and OptionLevel are mandatory
   validates(:option_level, :question, :presence => true)
+
+  replicable :parent_assoc => :question, :dont_copy => :option_level_id
 end
