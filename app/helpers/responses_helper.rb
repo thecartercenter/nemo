@@ -40,11 +40,6 @@ module ResponsesHelper
   def responses_index_links(responses)
     links = []
 
-    # only add the create response link if there are any published forms and the user is auth'd to create
-    if !@pubd_forms.empty? && can?(:create, Response)
-      links << create_link(Response, :js => true) + new_response_mini_form(false)
-    end
-
     # only add the export link if there are responses and the user is auth'd to export
     if !responses.empty? && can?(:export, Response)
       links << link_to(t("response.export_to_csv"), responses_path(:format => :csv, :search => params[:search]))

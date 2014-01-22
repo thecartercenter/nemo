@@ -33,7 +33,7 @@ class ResponsesController < ApplicationController
         end
 
         # get list of published forms for 'create response' link
-        @pubd_forms = Form.accessible_by(current_ability).published
+        #@pubd_forms = Form.accessible_by(current_ability).published
 
         # render just the table if this is an ajax request
         render(:partial => "table_only", :locals => {:responses => @responses}) if ajax_request?
