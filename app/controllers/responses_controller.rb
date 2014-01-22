@@ -55,7 +55,7 @@ class ResponsesController < ApplicationController
         @responses = Response.for_export(@responses)
 
         # render the csv
-        render_csv("Responses")
+        render_csv("elmo-#{current_mission.compact_name}-responses-#{Time.zone.now.to_s(:filename_datetime)}")
       end
     end
   end
