@@ -1012,7 +1012,6 @@ en:
         - "form: polling"
         - "reviewed: 1"
         - "submit-date < 2013-10-15"
-        - "text: intimidation"
         - "{QuestionCode}: (disruption security)"
       users:
         - "john smith"
