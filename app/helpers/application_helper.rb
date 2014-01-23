@@ -21,7 +21,6 @@ module ApplicationHelper
     :user => "users",
     :broadcast => "bullhorn",
     :setting => "gear",
-    :welcome => ""
   }
 
   ERROR_MESSAGE_KEYS_TO_HIDE = {
@@ -227,10 +226,13 @@ module ApplicationHelper
     end
 
     ttl = ''
+    Rails.logger.debug(model_name)
+    model_name = controller_name.classify.downcase
 
-    # add icon
-    if !options[:text_only]
-      ttl += content_tag(:i, "", :class => "fa fa-" + FONT_AWESOME_ICON_MAPPINGS[controller_name.classify.downcase.to_sym])
+    # add icon where appropriate
+    if !options[:text_only] && (model_name != 'welcome' && model_name != 'usersession')
+      Rails.logger.debug(model_name)
+      ttl += content_tag(:i, "", :class => "fa fa-" + FONT_AWESOME_ICON_MAPPINGS[model_name.to_sym])
     end
 
     # add text
