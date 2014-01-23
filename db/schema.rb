@@ -136,22 +136,6 @@ ActiveRecord::Schema.define(:version => 20140103153820) do
 
   add_index "missions", ["compact_name"], :name => "index_missions_on_compact_name"
 
-  create_table "option_levels", :force => true do |t|
-    t.integer  "option_set_id",                        :null => false
-    t.integer  "rank",                                 :null => false
-    t.text     "name_translations",                    :null => false
-    t.integer  "mission_id"
-    t.boolean  "is_standard",       :default => false, :null => false
-    t.integer  "standard_id"
-    t.datetime "created_at",                           :null => false
-    t.datetime "updated_at",                           :null => false
-  end
-
-  add_index "option_levels", ["mission_id", "option_set_id", "rank"], :name => "index_option_levels_on_mission_id_and_option_set_id_and_rank", :unique => true
-  add_index "option_levels", ["mission_id", "standard_id"], :name => "index_option_levels_on_mission_id_and_standard_id", :unique => true
-  add_index "option_levels", ["option_set_id"], :name => "option_levels_option_set_id_fk"
-  add_index "option_levels", ["standard_id"], :name => "option_levels_standard_id_fk"
-
   create_table "option_sets", :force => true do |t|
     t.string   "name"
     t.datetime "created_at"
@@ -395,9 +379,6 @@ ActiveRecord::Schema.define(:version => 20140103153820) do
   add_foreign_key "forms", "form_versions", :name => "forms_current_version_id_fk", :column => "current_version_id", :dependent => :nullify
   add_foreign_key "forms", "forms", :name => "forms_standard_id_fk", :column => "standard_id"
   add_foreign_key "forms", "missions", :name => "forms_mission_id_fk"
-
-  add_foreign_key "option_levels", "option_levels", :name => "option_levels_standard_id_fk", :column => "standard_id"
-  add_foreign_key "option_levels", "option_sets", :name => "option_levels_option_set_id_fk"
 
   add_foreign_key "option_sets", "missions", :name => "option_sets_mission_id_fk"
   add_foreign_key "option_sets", "option_sets", :name => "option_sets_standard_id_fk", :column => "standard_id"
