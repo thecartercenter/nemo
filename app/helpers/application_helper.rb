@@ -226,12 +226,10 @@ module ApplicationHelper
     end
 
     ttl = ''
-    Rails.logger.debug(model_name)
     model_name = controller_name.classify.downcase
 
     # add icon where appropriate
     if !options[:text_only] && (model_name != 'welcome' && model_name != 'usersession')
-      Rails.logger.debug(model_name)
       ttl += content_tag(:i, "", :class => "fa fa-" + FONT_AWESOME_ICON_MAPPINGS[model_name.to_sym])
     end
 
