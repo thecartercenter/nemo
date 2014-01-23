@@ -170,6 +170,8 @@ GEM
       activesupport (>= 2.3.4)
       chronic (>= 0.6.3)
     will_paginate (3.0.5)
+    will_paginate-bootstrap (1.0.0)
+      will_paginate (>= 3.0.3)
     yamler (0.1.0)
 
 PLATFORMS
@@ -208,3 +210,4 @@ DEPENDENCIES
   uglifier (>= 1.0.3)
   whenever
   will_paginate
+  will_paginate-bootstrap

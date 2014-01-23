@@ -13,12 +13,14 @@ module ApplicationHelper
     :submit => "share-square-o",
     :response => "check-circle-o",
     :report_report => "bar-chart-o",
+    :report => "bar-chart-o",
     :form => "file-text-o",
     :question => "question-circle",
     :option_set => "list-ul",
+    :optionset => 'list-ul',
     :user => "users",
     :broadcast => "bullhorn",
-    :setting => "gear"
+    :setting => "gear",
   }
 
   ERROR_MESSAGE_KEYS_TO_HIDE = {
@@ -224,16 +226,22 @@ module ApplicationHelper
     end
 
     ttl = ''
+    model_name = controller_name.classify.downcase
 
-    # add seal if appropriate
-    if !options[:text_only]
-      if admin_mode? && %w(forms questions questionings option_sets).include?(controller_name) || @title_args.delete(:standardized)
-        ttl += image_tag('std-seal.png') + ' '
-      end
+    # add icon where appropriate
+   if !options[:text_only] && (icon_name = FONT_AWESOME_ICON_MAPPINGS[model_name.to_sym])
+      ttl += content_tag(:i, "", :class => "fa fa-" + icon_name)
     end
 
     # add text
     ttl += t(action, {:scope => "page_titles.#{controller_name}", :default => [:all, ""]}.merge(@title_args || {}))
+
+    # add seal after text if appropriate
+    if !options[:text_only]
+      if admin_mode? && %w(forms questions questionings option_sets).include?(controller_name) || @title_args.delete(:standardized)
+        ttl +=  content_tag(:i, "", :class => "fa fa-certificate")
+      end
+    end
 
     ttl.html_safe
   end
