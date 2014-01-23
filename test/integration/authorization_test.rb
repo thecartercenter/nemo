@@ -67,6 +67,14 @@ class AuthorizationTest < ActionDispatch::IntegrationTest
     assert_equal('staffer', obs.reload.assignments.first.role)
   end
 
+  test "admin with no assignments should not lose current mission on login" do
+    admin = FactoryGirl.create(:user, :admin => true)
+    admin.assignments.destroy_all
+    admin.change_mission!(get_mission)
+    login(admin)
+    assert_equal(get_mission, admin.current_mission)
+  end
+
   private
     # logs in a user and attempts to load the given path
     # errors if the response is not 200

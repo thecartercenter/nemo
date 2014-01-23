@@ -31,10 +31,13 @@
     // if is new record, show dialog first page
     if (!this.report_in_db.has_run())
       this.show_edit_view(0);
-
     // otherwise, the report must have already run, so update the view
     else
       this.display_report(this.report_last_run);
+
+    // if in edit mode, show edit dialog second page, since report type is not editable
+    if (init_data.edit_mode)
+      this.show_edit_view(1);
   }
 
   klass.prototype.show_edit_view = function(idx) {

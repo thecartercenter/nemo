@@ -37,15 +37,15 @@ Note to install the software below we recommend the following package managers:
 1. **Ruby 1.9.3+**
 
 1. **Memcached**
-	- A good resource on how to install on a Mac is [here](http://www.jroller.com/JamesGoodwill/entry/installing_and_configuring_memcached)
-	- Ensure memcached is running, even for development, since caching is enabled in development and production environments.
+  - A good resource on how to install on a Mac is [here](http://www.jroller.com/JamesGoodwill/entry/installing_and_configuring_memcached)
+  - Ensure memcached is running, even for development, since caching is enabled in development and production environments.
 
 1. **MySQL 5.0+**
-	- Create an empty database and accompanying user for use by the app (E.g. development database *elmo_d* with username *elmo*)
+  - Create an empty database and accompanying user for use by the app (E.g. development database *elmo_d* with username *elmo*)
 
 1. **Web Server**
-	- If your instance is for development only, you can use Rails' built-in web server by running `rails s`, as discussed below.
-	- If your instance is for production use, you will need a production-grade web server, such as nginx or Apache, and app server, such as Passenger, Unicorn, Thin, etc.
+  - If your instance is for development only, you can use Rails' built-in web server by running `rails s`, as discussed below.
+  - If your instance is for production use, you will need a production-grade web server, such as nginx or Apache, and app server, such as Passenger, Unicorn, Thin, etc.
 
 ### Running the App
 
@@ -56,20 +56,29 @@ Note to install the software below we recommend the following package managers:
   ```
 
 1. **Bundle, configure, and migrate**
-	- Install the required gems by running `bundle install` in the project directory.
-	- Copy `config/database.yml.example` to `config/database.yml` and edit `database.yml` to point to your database.
-	- Copy `config/initializers/local_config.rb.example` to `config/initializers/local_config.rb` and adjust any settings.
-	- Run database migrations: `rake db:migrate`.
-	- Create an admin account: `rake db:create_admin`.
+  - Install the required gems by running `bundle install` in the project directory.
+  - Copy `config/database.yml.example` to `config/database.yml` and edit `database.yml` to point to your database.
+  - Copy `config/thinking_sphinx.yml.example` to `thinking_sphinx.yml.example` and adjust any settings (usually not necessary).
+  - Copy `config/initializers/local_config.rb.example` to `config/initializers/local_config.rb` and adjust any settings.
+  - Run database migrations: `rake db:migrate`.
+  - Create an admin account: `rake db:create_admin`.
+
+1. **Build the Sphinx index**
+  - Run `rake ts:rebuild`
+  - This should also start the Sphinx daemon (searchd). If at any time it needs to be restarted, you can also run `rake ts:start`
+
+1. **Run Whenever to setup cron jobs**
+  - Run `whenever -i elmo`
+  - Run `crontab -l` and verify that jobs have been added.
 
 1. **Start the server**
-	- For a development setup, just run `rails s`.
-	- For a production setup, this will depend on your choice of servers, process monitors, etc., and goes beyond the scope of this document.
+  - For a development setup, just run `rails s`.
+  - For a production setup, this will depend on your choice of servers, process monitors, etc., and goes beyond the scope of this document.
 
 1. **Login**
-	- Navigate to the app's URL (http://localhost:3000 by default in a development setup).
-	- Login using username **admin** and password **temptemp** (make sure to change the password).
-	- Create a new Mission and get started making forms!
+  - Navigate to the app's URL (http://localhost:3000 by default in a development setup).
+  - Login using username **admin** and password **temptemp** (make sure to change the password).
+  - Create a new Mission and get started making forms!
 
 
 ## How Do I Contribute to ELMO?
@@ -89,22 +98,22 @@ Contributors may find our auto-generated [Entity-Relationship Diagram (ERD)](doc
 1. **Clone the Repo**
 
   ```
-	git clone https://github.com/thecartercenter/elmo.git
+  git clone https://github.com/thecartercenter/elmo.git
   ```
 
 2. **Create a New Branch**
 
   ```
-	cd elmo
-	git checkout -b my_new_branch
+  cd elmo
+  git checkout -b my_new_branch
   ```
 
 3. **Code**
-	* Adhere to common conventions in the existing code
-	* Include tests and make sure they pass
+  * Adhere to common conventions in the existing code
+  * Include tests and make sure they pass
 
 4. **Commit**
-	- **NEVER leave the commit message blank!** Provide a detailed, clear, and complete description of your commit!
+  - **NEVER leave the commit message blank!** Provide a detailed, clear, and complete description of your commit!
   - If you have several commits, please make sure that they are **squashed** into one commit with a good summarizing commit message before pushing.
 
 5. **Update Your Branch**
