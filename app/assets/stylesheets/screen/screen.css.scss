@@ -5,8 +5,9 @@ $light-yellow: #F7F6D9;
 $orange: #F77D48;
 $gray-blue: #D4DCE1;
 $gray: #3F3E3E;
-$light-gray: #BDB9B9; /* TOM: love the use of vars here! */
-$sans-serif: Helvetica, sans-serif;
+$light-gray: #BDB9B9;
+$elmo-blue: #879CAA;
+$sans-serif: 'Open Sans', Helvetica, sans-serif;
 
 body {
   background-color: #879CAA;
@@ -203,9 +204,11 @@ nav {
 }
 
 #content {
-  padding: 15px 15px 30px 15px;
+  padding: 20px 25px 30px 25px;
   min-height: 400px;
   background-color: white;
+  a i { color: $elmo-blue;}
+
 }
 
 #footer {

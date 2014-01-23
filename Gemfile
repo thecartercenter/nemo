@@ -13,6 +13,7 @@ gem 'authlogic'
 gem 'rake'
 gem 'mysql2', '0.3.12b5' # beta version needed for sphinx
 gem 'will_paginate'
+gem 'will_paginate-bootstrap'
 gem 'configatron'
 gem 'libxml-ruby'
 gem 'rdiscount'

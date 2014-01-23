@@ -471,8 +471,8 @@ en:
 
   # pagination translations
   will_paginate:
-    previous_label: "&#8592; Previous"
-    next_label: "Next &#8594;"
+    previous_label: "&#171;"
+    next_label: "&#187;"
     page_gap: "&hellip;" # this entry should be the same for all languages
     # please preserve <b> and </b> tags in the below
     broadcast:
@@ -1012,7 +1012,6 @@ en:
         - "form: polling"
         - "reviewed: 1"
         - "submit-date < 2013-10-15"
-        - "text: intimidation"
         - "{QuestionCode}: (disruption security)"
       users:
         - "john smith"
