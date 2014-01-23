@@ -71,3 +71,6 @@ gem 'database_cleaner', :group => [:development, :test]
 
 # cron management
 gem 'whenever', :require => false
+
+# Bootstrap UI framework
+gem 'bootstrap-sass', '~> 3.0.3.0'

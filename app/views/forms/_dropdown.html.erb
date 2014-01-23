@@ -1,0 +1,8 @@
+<% # if there are published forms %>
+<% if @forms.count > 0 %>
+  <% @forms.each do |f| %> <%# TOM: convention is to use first letter of class name, hence 'f' instead of 'p' %>
+    <%= content_tag("li", link_to(f.name, new_response_path(:form_id => f.id))) %>
+  <% end %>
+<% else %>
+  <%= content_tag("li", t("layout.no_published_forms")) %>
+<% end %>

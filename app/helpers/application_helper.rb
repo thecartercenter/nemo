@@ -2,14 +2,23 @@ module ApplicationHelper
 
   FONT_AWESOME_ICON_MAPPINGS = {
     :clone => "copy",
-    :destroy => "trash",
-    :edit => "edit",
+    :destroy => "trash-o",
+    :edit => "pencil",
     :map => "globe",
     :print => "print",
     :publish => "arrow-up",
-    :remove => "remove",
+    :remove => "times",
     :sms => "comment",
-    :unpublish => "arrow-down"
+    :unpublish => "arrow-down",
+    :submit => "share-square-o",
+    :response => "check-circle-o",
+    :report_report => "bar-chart-o",
+    :form => "file-text-o",
+    :question => "question-circle",
+    :option_set => "list-ul",
+    :user => "users",
+    :broadcast => "bullhorn",
+    :setting => "gear"
   }
 
   ERROR_MESSAGE_KEYS_TO_HIDE = {
@@ -27,7 +36,7 @@ module ApplicationHelper
     # join passed html class (if any) with the default class
     html_options[:class] = [html_options[:class], "action_link", "action_link_#{action}"].compact.join(" ")
 
-    link_to(content_tag(:i, "", :class => "icon-" + FONT_AWESOME_ICON_MAPPINGS[action.to_sym]), href, html_options)
+    link_to(content_tag(:i, "", :class => "fa fa-" + FONT_AWESOME_ICON_MAPPINGS[action.to_sym]), href, html_options)
   end
 
   # assembles links for the basic actions in an index table (edit and destroy)
@@ -286,8 +295,13 @@ module ApplicationHelper
     klasses.each do |k|
       if can?(:index, k)
         path = send("#{k.model_name.route_key}_path")
-        active = request.fullpath == path
-        l << content_tag(:li, link_to(pluralize_model(k), path), :class => active ? 'active' : '')
+        active = current_page?(path)
+        l << content_tag(:li, :class => active ? 'active' : '') do
+          link_to(path) do
+            content_tag('i', '', :class => 'fa fa-' + FONT_AWESOME_ICON_MAPPINGS[k.model_name.param_key.to_sym]) +
+            pluralize_model(k)
+          end
+        end
       end
     end
     l.join.html_safe
