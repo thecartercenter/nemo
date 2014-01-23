@@ -75,6 +75,13 @@ class AuthorizationTest < ActionDispatch::IntegrationTest
     assert_equal(get_mission, admin.current_mission)
   end
 
+  test "admin with no assignments should and no current mission should stay with no current mission" do
+    admin = FactoryGirl.create(:user, :admin => true)
+    admin.assignments.destroy_all
+    login(admin)
+    assert_nil(admin.current_mission)
+  end
+
   private
     # logs in a user and attempts to load the given path
     # errors if the response is not 200
