@@ -296,6 +296,10 @@ module ApplicationHelper
   # tries to get a path for the given object, returns nil if object doesn't have route
   # preserves the search param in the current query string, if any
   def path_for_with_search(obj)
-    polymorphic_path(obj, :search => params[:search])
+    begin
+      polymorphic_path(obj, :search => params[:search])
+    rescue
+      nil
+    end
   end
 end
