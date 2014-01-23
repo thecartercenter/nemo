@@ -233,9 +233,12 @@ class User < ActiveRecord::Base
 
   # if user has no current mission, choose one (if assigned to any)
   def set_current_mission
-    # ensure no current mission set if the user has no assignments and is not admin
-    if assignments.active.empty? && !admin?
-      change_mission!(nil)
+    # ensure no current mission set if the user has no assignments
+    if assignments.active.empty?
+      # but don't force to nil mission if admin
+      # this is because admins can access any mission and so they should be able to retain what mission they're on
+      change_mission!(nil) unless admin?
+
     # else if user has no current mission, pick one
     elsif current_mission.nil?
       change_mission!(assignments.active.sorted_recent_first.first.mission)
