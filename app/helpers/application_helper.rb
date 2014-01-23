@@ -229,8 +229,8 @@ module ApplicationHelper
     model_name = controller_name.classify.downcase
 
     # add icon where appropriate
-    if !options[:text_only] && (model_name != 'welcome' && model_name != 'usersession')
-      ttl += content_tag(:i, "", :class => "fa fa-" + FONT_AWESOME_ICON_MAPPINGS[model_name.to_sym])
+   if !options[:text_only] && (icon_name = FONT_AWESOME_ICON_MAPPINGS[model_name.to_sym])
+      ttl += content_tag(:i, "", :class => "fa fa-" + icon_name)
     end
 
     # add text
