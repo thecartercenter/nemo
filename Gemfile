@@ -19,6 +19,9 @@ gem 'rdiscount'
 gem 'jquery-rails'
 gem 'random_data'
 
+# Ckeditor integration gem for rails http://ckeditor.com/
+gem "ckeditor"
+
 # building factories for testing -- stupid and offensive name but it's a good gem :(
 gem "factory_girl_rails", "~> 4.0"
 
