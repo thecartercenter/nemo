@@ -12,9 +12,7 @@
         <% if f.mode == :show %>
           <%# show search excerpt (highlights search terms) if exists for this questioning %>
           <div class="text_answer">
-            <strong>
               <%= excerpt_if_exists(@response, answer) %>
-            </strong>
           </div>
         <% else %>
           <% field_type = answer.qtype.name == 'long_text' ? 'text_area' : 'text_field' %>
@@ -33,7 +31,7 @@
         <%# special handling for date/time types in show mode, so we can apply localization %>
         <% if f.mode == :show %>
           <% format = type == "time" ? :time_only : :default %>
-          <strong><%= (val = answer.send("#{type}_value")).nil? ? "" : l(val, :format => format) %></strong>
+            <%= (val = answer.send("#{type}_value")).nil? ? "" : l(val, :format => format) %>
         <% else %>
           <%= f.send("#{type}_select", :"#{type}_value", :include_blank => true, :index => answer_counter) %>
         <% end %>
