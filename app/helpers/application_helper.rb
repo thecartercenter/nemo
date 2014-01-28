@@ -33,6 +33,16 @@ module ApplicationHelper
     render("layouts/flash", :flash => flash, :object => object)
   end
 
+  # pairs flash errors with bootstrap styling
+  def flash_class(level)
+    case level
+      when :notice then "alert alert-info"
+      when :success then "alert alert-success"
+      when :error then "alert alert-danger"
+      when :alert then "alert alert-warning"
+    end
+  end
+
   # returns the html for an action icon using font awesome and the mappings defined above
   def action_link(action, href, html_options = {})
     # join passed html class (if any) with the default class

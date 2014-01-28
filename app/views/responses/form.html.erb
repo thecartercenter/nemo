@@ -6,8 +6,6 @@
 
 <%= render("layouts/location_picker") %>
 
-<%= flash_and_form_errors(@response) %>
-
 <% @response.answers.collect{|a| a.errors.full_messages.join(", ")}.join(" ") %>
 
 <%# show an edit link if allowed and in show mode %>

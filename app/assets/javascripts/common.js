@@ -166,7 +166,7 @@ function logout() {
   }
 
   Utils.clear_success_flash_after_delay = function() {
-    setTimeout(function(){$(".success").remove();}, 5000);
+    setTimeout(function(){$(".alert-success").remove();}, 5000);
   }
 
   Utils.clear_flash = function(params) {

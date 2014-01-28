@@ -5,8 +5,6 @@
   <% @title_args = {:name => @user.name} %>
 <% end %>
 
-<%= flash_and_form_errors(@user) %>
-
 <%= nice_form_for(@user) do |f| %>
   <%= form_field(f, :name, :required => true) %>
   <%= form_field(f, :login, :required => true, :partial => "login_name_field") %>

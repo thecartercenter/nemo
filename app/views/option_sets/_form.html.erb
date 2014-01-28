@@ -5,7 +5,6 @@
     <%= appears_elsewhere_warning(@option_set) if @option_set.has_questions? %>
   <% end %>
 
-  <%= flash_and_form_errors(@option_set) %>
   <%= nice_form_for(@option_set) do |f| %>
 
     <%= form_field(f, :name, :required => true, :force_show_mode => cannot?(:update_core, @option_set)) %>

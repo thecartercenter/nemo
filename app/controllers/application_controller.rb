@@ -156,7 +156,7 @@ class ApplicationController < ActionController::Base
         @search.qualifiers = klass.search_qualifiers(:mission => current_mission)
         rel = @search.apply(rel) unless options[:search] == false
       rescue Search::ParseError
-        @error_msg = "#{t('search.search_error')}: #{$!}"
+        flash.now[:error] = "#{t('search.search_error')}: #{$!}"
       end
 
       # apply pagination and return

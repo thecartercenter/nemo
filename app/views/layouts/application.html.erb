@@ -133,6 +133,7 @@
 
 
   <div id="content" class="<%= ctlr_action_name %>">
+    <%= flash_and_form_errors %>
     <% unless @dont_print_title %>
       <h1 class="title">
         <%= title %>

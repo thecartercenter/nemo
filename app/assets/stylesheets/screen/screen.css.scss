@@ -248,22 +248,19 @@ div.status_messages.no_ajax {
   div.success, div.error {
     position: absolute;
     left: 27%;
-    top: 115px;
+    top: 186px;
     padding: 3px;
-    color: white;
     font-weight: bold;
     width: 600px;
     margin-bottom: 10px;
     text-align: center;
+    line-height: 2.3;
   }
 
   div.success {
     background-color: #9dc400;
   }
 
-  div.error {
-    background-color: #d02000;
-  }
 }
 
 div.status_messages.ajax {
