@@ -14,6 +14,9 @@
     // setup a dirty flag
     self.dirty = false;
 
+    // save optioning that was clicked
+    self.optioning = null;
+
     // hookup add button
     $('div.add_options input[type=button]').on('click', function() { self.add_options(); });
 
@@ -38,6 +41,9 @@
 
     // hookup form submit
     $('form.option_set_form').on('submit', function(){ return self.form_submitted(); })
+
+    // hookup save option button on modal
+    $('#edit-option-set button.btn-primary').on('click', function(){ self.save_option(this); return false; })
 
     // hookup leave page warning unless ajax request
     if (!self.params.ajax_mode)
@@ -181,7 +187,7 @@
   // shows the edit dialog
   klass.prototype.edit_option = function(link) { var self = this;
     // get the optioning
-    var optioning = link.closest('div.inner').data('optioning');
+    self.optioning = link.closest('div.inner').data('optioning');
 
     // clear the text boxes
     ELMO.app.params.mission_locales.forEach(function(locale){
@@ -192,40 +198,34 @@
     $('div.edit_option_form div.option_in_use_name_change_warning').hide();
 
     // then populate text boxes
-    for (var locale in optioning.option.name_translations)
-      $('div.edit_option_form input#name_' + locale).val(optioning.option.name_translations[locale]);
+    for (var locale in self.optioning.option.name_translations)
+      $('div.edit_option_form input#name_' + locale).val(self.optioning.option.name_translations[locale]);
 
-    // create the dialog
-    $("div.edit_option_form").dialog({
-      dialogClass: "no-close edit_option_modal",
-      buttons: [
-        {text: I18n.t('common.cancel'), click: function() { $(this).dialog('close'); }},
-        {text: I18n.t('common.save'), click: function() { self.save_option(optioning); }}
-      ],
-      modal: true,
-      autoOpen: true,
-      width: 500,
-      height: 180 + (ELMO.app.params.mission_locales.length * 40)
-    });
+    // show the modal
+    $('#edit-option-set').modal('show');
+
+    // show the form
+    $('div.edit_option_form').show();
 
     // show the in_use warning if appopriate
-    if (optioning.option.in_use) $('div.edit_option_form div.option_in_use_name_change_warning').show();
+    if (self.optioning.option.in_use) $('div.edit_option_form div.option_in_use_name_change_warning').show();
   };
 
   // saves entered translations to data model
-  klass.prototype.save_option = function(optioning) { var self = this;
+  klass.prototype.save_option = function(save_btn) { var self = this;
+
     $('div.edit_option_form input[type=text]').each(function(){
-      optioning.update_translation({field: 'name', locale: $(this).data('locale'), value: $(this).val()});
+      self.optioning.update_translation({field: 'name', locale: $(this).data('locale'), value: $(this).val()});
     });
 
     // dirty!
     self.dirty = true;
 
     // re-render the option in the view
-    var old_div = optioning.div;
-    old_div.replaceWith(self.render_option(optioning));
+    var old_div = self.optioning.div;
+    old_div.replaceWith(self.render_option(self.optioning));
 
-    $('div.edit_option_form').dialog('close');
+    $('#edit-option-set').modal('hide');
   };
 
   // write the data model to the form as hidden tags so that the data will be included in the submission
