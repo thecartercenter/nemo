@@ -61,6 +61,7 @@ en:
     suggest: "Suggest"
     submit: "Submit"
     success:
+      # TOM: 'one' only necessary if using :count parameter in call to I18n.t()
       one: "Success"
     successfully: "Successfully"
     thanks_excl: "Thank You!"
