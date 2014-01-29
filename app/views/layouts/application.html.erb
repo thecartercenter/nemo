@@ -133,8 +133,8 @@
 
 
   <div id="content" class="<%= ctlr_action_name %>">
-    <%# TOM: please replace with just render('layouts/flash') and add comment %>
-    <%= flash_and_form_errors %>
+    <%# Show errors or alerts if any %>
+    <%= render("layouts/flash", :flash => flash) %>
 
     <% unless @dont_print_title %>
       <h1 class="title">

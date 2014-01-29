@@ -1,18 +1,11 @@
 <div class="status_messages <%= ajax_request? ? 'ajax' : 'no_ajax' %>">
-<%# TOM: indent %>
-<%# TOM: perhaps a comment here. not totally clear at first what you're iterating over %>
-<% flash.each do |name, msg| %>
-  <%# Check if translation exists %>
-  <% if !I18n.t("common.#{name}.one", :default => "").empty? %>
-    <div class="<%= flash_class(name) %>">
-      <strong><%= I18n.t("common.#{name}.one") %></strong>: <%= msg %>
-    </div>
+  <%# Display flash errors or succeses if any %>
+  <% flash.each do |name, msg| %>
+    <%# Check if translation exists %>
+    <% if !I18n.t("common.#{name}.one", :default => "").empty? %>
+      <div id="elmo-alert" class="<%= flash_class(name) %>">
+        <strong><%= I18n.t("common.#{name}.one") %></strong>: <%= msg %>
+      </div>
+    <% end %>
   <% end %>
-<% end %>
-
-  <%# TOM: i thought we were getting rid of this? %>
-  <%= defined?(object) ? render("layouts/object_errors", :object => object) : "" %>
-
-  <%# TOM: this should be moved to app.js. please get rid of the Utils method as that class should be deprecated. should be doable with just a few lines in the constructor of app.js. ask me if you need clarification. please also use slideUp instead of show so that transition is more graceful. thx. %>
-  <script type="text/javascript">Utils.clear_success_flash_after_delay();</script>
 </div>

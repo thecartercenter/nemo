@@ -88,8 +88,7 @@ class FormsController < ApplicationController
     if @form.save
       set_success_and_redirect(@form, :to => edit_form_path(@form))
     else
-      # TOM: strange name for error message trans. key. this occurs in multiple places. perhaps change these to just 'invalid'?
-      flash.now[:error] = I18n.t('activerecord.errors.models.form.invalid_answers')
+      flash.now[:error] = I18n.t('activerecord.errors.models.form.invalid')
       prepare_and_render_form
     end
   end

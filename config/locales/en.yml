@@ -61,8 +61,8 @@ en:
     suggest: "Suggest"
     submit: "Submit"
     success:
-      # TOM: 'one' only necessary if using :count parameter in call to I18n.t()
       one: "Success"
+      other: "Successes"
     successfully: "Successfully"
     thanks_excl: "Thank You!"
     this: "This"
@@ -387,7 +387,7 @@ en:
           cant_delete_published: "A published Form can't be deleted."
           cant_edit_published: "A published Form can't be edited."
           ranks_break_conditions: "The new rankings invalidate one or more conditions"
-          invalid_answers: "Form is invalid (see below)"
+          invalid: "Form is invalid (see below)"
         mission:
           cant_delete_if_assoc: "You can't delete this Mission because it has associated Forms, Responses, or other objects."
           let_num_spc_only: "can only contain letters, numbers, and spaces"
@@ -404,13 +404,13 @@ en:
           cant_delete_if_has_questions: "You can't delete this Option Set because one or more Questions are associated with it."
           cant_delete_if_has_answers: "You can't delete this Option Set because it is included in at least one Answer."
           non_unique_values: "Two or more of the options you've chosen have the same numeric value."
-          invalid_answers: "Option set is invalid (see below)"
+          invalid: "Option set is invalid (see below)"
         question:
           cant_change_if_conditions: "You can't change the Type or Option Set because there are Conditions that refer to this Question."
           cant_change_if_responses: "You can't change the Type or Option Set because there are already Responses for this Question."
           cant_delete_if_has_answers: "You can't delete this Question because it is referred to in at least one Answer."
           cant_delete_if_published: "You can't delete this Question because it appears on at least one published Form."
-          invalid_answers: "Question is invalid (see below)"
+          invalid: "Question is invalid (see below)"
         questioning:
           cant_delete_if_has_answers: "You can't remove this Question because it has one or more answers for this Form."
           invalid_condition: "is invalid (see below)"
@@ -434,7 +434,7 @@ en:
             type:
               blank: "You must choose a report type."
         response:
-          invalid_answers: "Response is invalid (see below)"
+          invalid: "Response is invalid (see below)"
           missing_answers: "Not all questions have answers."
         setting:
           attributes:
@@ -449,7 +449,7 @@ en:
           must_choose_passwd_method: "You must choose a password creation method."
           no_missions: "You are not assigned to any missions."
           phone_assigned_to_other: "has already been assigned to another user"
-          invalid_answers: "User is invalid (see below)"
+          invalid: "User is invalid (see below)"
           attributes:
             assignments:
               cant_be_empty_if_not_admin: "can't be empty if not admin"

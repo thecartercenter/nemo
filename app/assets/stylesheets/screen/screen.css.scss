@@ -245,18 +245,6 @@ div.dialog_bg * { opacity: 1; filter: alpha(opacity=100); }
 /* flash and error messages */
 
 div.status_messages.no_ajax {
-  div.success, div.error {
-    /* TOM: were we getting rid of absolute positioning here? */
-    position: absolute;
-    left: 27%;
-    top: 186px;
-    padding: 3px;
-    font-weight: bold;
-    width: 600px;
-    margin-bottom: 10px;
-    text-align: center;
-    line-height: 2.3;
-  }
 
   div.success {
     background-color: #9dc400;
