@@ -15,6 +15,11 @@
     // hookup add option set link
     $('div.question_fields a.create_option_set').on('click', function(){ self.show_option_set_form(); return false; });
 
+    // hookup form submit for modal
+    $('#create-option-set .btn-primary').on('click', function() {$('form.option_set_form').submit();});
+
+
+
     // register a callback for when option set form submission is done
     $(document).on('option_set_form_submit_success', 'form.option_set_form', function(e, option_set){
       self.option_set_created(option_set);
@@ -50,29 +55,16 @@
   klass.prototype.show_option_set_form = function() { var self = this;
     // show the loading indicator
     $('div.question_fields #option_set_id .loading_indicator').show();
+    // populate and show the modal
+    $("#create-option-set .modal-body").load(self.params.new_option_set_path, function(){
+      $("#create-option-set").modal('show');});
 
-    $("div.new_option_set_form_wrapper").load(self.params.new_option_set_path, function(){
-
-      // create the dialog
-      $("div.new_option_set_form_wrapper").dialog({
-        dialogClass: "new_option_set_modal",
-        buttons: [
-          {text: I18n.t('common.cancel'), click: function() { $(this).dialog('close'); }},
-          {text: I18n.t('common.create'), click: function() { $('form.option_set_form').submit(); }}
-        ],
-        modal: true,
-        autoOpen: true,
-        width: 935,
-        height: 650
-      });
-
-    });
   }
 
   // called when the option set is created so we can add it to the dropdown
   klass.prototype.option_set_created = function(option_set) { var self = this;
     // close the dialog
-    $("div.new_option_set_form_wrapper").dialog('close');
+    $("#create-option-set").modal('hide');
 
     // add the new option set to the list and select it
     $('div.question_fields .form_field#option_set_id select').append($('<option>', {value: option_set.id}).text(option_set.name))

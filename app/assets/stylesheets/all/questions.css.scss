@@ -1,0 +1,21 @@
+
+#create-option-set {
+  z-index: 500;
+  .modal-dialog {
+    width: 900px;
+  }
+  .modal-body {
+    min-height: 400px;
+  }
+
+  #edit-option-set {
+    .modal-body {
+      min-height: 200px;
+    }
+  }
+}
+
+/* Override modal gem */
+.modal-backdrop {
+  z-index: 300 !important;
+}

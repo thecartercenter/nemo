@@ -12,6 +12,11 @@
  *= require_tree ./all
  *= require token-input
  *= require jquery-ui-1.10.3.custom
+
  */
 
 @import "bootstrap";
+
+/*= require bootstrap-modal-bs3patch
+ *= require bootstrap-modal
+*/

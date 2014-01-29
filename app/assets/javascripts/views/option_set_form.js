@@ -40,10 +40,11 @@
     });
 
     // hookup form submit
-    $('form.option_set_form').on('submit', function(){ return self.form_submitted(); })
+    $('form.option_set_form').on('submit', function(){ return self.form_submitted(); });
+
 
     // hookup save option button on modal
-    $('#edit-option-set button.btn-primary').on('click', function(){ self.save_option(this); return false; })
+    $('#edit-option-set button.btn-primary').on('click', function(){ self.save_option(this); return false; });
 
     // hookup leave page warning unless ajax request
     if (!self.params.ajax_mode)
