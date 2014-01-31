@@ -16,7 +16,7 @@ module FormsHelper
     if admin_mode?
       %w(std_icon name questions copy_count published copy_responses_count updated_at actions)
     else
-      %w(std_icon version name questions published downloads responses smsable updated_at actions)
+      %w(std_icon version name questions published downloads responses smsable allow_incomplete updated_at actions)
     end
   end
 
@@ -34,6 +34,7 @@ module FormsHelper
     when "published" then tbool(form.published?)
     when "smsable" then tbool(form.smsable?)
     when "copy_count" then form.copy_count
+    when "allow_incomplete" then tbool(form.allow_incomplete?)
     when "actions"
       # get standard action links
       links = action_links(form, :obj_name => form.name)

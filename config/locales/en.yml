@@ -31,6 +31,7 @@ en:
       other: "Examples"
     example_abbr: "e.g."
     found: "Found"
+    generate: "Generate"
     inactive: "Inactive"
     language: "Language"
     login: "Login"
@@ -44,6 +45,7 @@ en:
     or: "or"
     previous: "Previous"
     print: "Print"
+    regenerate: "Regenerate"
     remove: "Remove"
     report: "Report"
     reset: "Reset"
@@ -77,8 +79,10 @@ en:
     created_at: "Creation Time"
     email: "Email"
     hint: "Hint"
+    incomplete: "Incomplete?"
     password: "Password"
     published: "Published?"
+    allow_incomplete: "Allow Incomplete?"
     questions: "Questions"
     std_icon: "" # left blank on purpose to achieve blank table header
     title: "Title"
@@ -274,6 +278,7 @@ en:
         isms_username: "Username"
         preferred_locales_str: "Preferred Languages"
         outgoing_sms_adapter: "Provider"
+        override_code: "Override Code"
         tableau_sql: "Tableau SQL" # Tableau is a software product name and shouldn't be translated
         timezone: "Time Zone"
       sms/message:
@@ -342,6 +347,10 @@ en:
           * The default language preference for new users
           * The default language for SMS replies
           * The languages for Questions and Options
+        override_code: |-
+          This code should be given to observers if the ability to send incomplete responses is needed. ODK will not allow submission of incomplete responses without this code.
+
+          If generating a new code, please record the old code if there are previous live forms. The new code will only work for forms downloaded after the code is regenerated.
         incoming_sms_number: "Enter the phone number to which incoming SMSes for SMS forms should be sent. This will be displayed on the SMS guide."
         outgoing_sms_adapter: "The adapter used to send outgoing SMSes."
         intellisms_username: "The username for the IntelliSMS account."
@@ -788,6 +797,12 @@ en:
     unsaved_rank_notice: "You have not yet saved the changes you made to the Question order. You should click the 'Save' button if you want to save these changes."
     view_sms_guide: "View SMS Guide"
 
+  incomplete_response:
+    missing_answers:
+      label: "Is this form missing any required answers?"
+      hint: "This form allows submission of incomplete responses in special situations. If you are not sure whether any required answers are missing, choose 'I don't think so' and then save."
+    code_label: "Enter the incomplete override code"
+
   location_picker:
     choose_location: "Choose Location"
     current_location: "Current Location"
@@ -1168,6 +1183,7 @@ en:
 
   setting:
     change_sms_password: "Change SMS Password"
+    override_code_warning: "Note that the new override code will not work with forms that have already been downloaded. You should record the existing code if this is a problem. Are you sure you want to regenerate the code?"
     headings:
       general: "General Settings"
       incoming_sms: "Incoming SMS Settings"

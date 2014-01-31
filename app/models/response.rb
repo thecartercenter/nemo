@@ -19,7 +19,7 @@ class Response < ActiveRecord::Base
   validate(:no_missing_answers)
 
   # don't need to validate answers in odk mode
-  validates_associated(:answers, :message => :invalid_answers, :if => Proc.new{|r| r.modifier != "odk"})
+  validates_associated(:answers, :message => :invalid_answers, :if => Proc.new{|r| r.modifier != "odk" && !r.incomplete?})
 
   default_scope(includes(:form, :user).order("responses.created_at DESC"))
   scope(:unreviewed, where(:reviewed => false))
@@ -256,8 +256,13 @@ class Response < ActiveRecord::Base
     qings.each do |qing|
       # get value from hash
       str = values[qing.question.odk_code]
+
       # add answer
-      self.answers << Answer.new_from_str(:str => str, :questioning => qing)
+      answer = Answer.new_from_str(:str => str, :questioning => qing)
+      self.answers << answer
+
+      # set incomplete flag if required but empty
+      self.incomplete = true if answer.required_but_empty?
     end
   end
 
@@ -327,7 +332,7 @@ class Response < ActiveRecord::Base
 
   private
     def no_missing_answers
-      errors.add(:base, :missing_answers) unless missing_answers.empty?
+      errors.add(:base, :missing_answers) unless missing_answers.empty? || incomplete?
     end
 
     def self.export_sql(rel)
