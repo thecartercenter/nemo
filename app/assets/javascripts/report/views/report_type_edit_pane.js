@@ -1,6 +1,6 @@
 // ELMO.Report.ReportTypeEditPane < ELMO.Report.EditPane
 (function(ns, klass) {
-  
+
   // constructor
   ns.ReportTypeEditPane = klass = function(parent_view) {
     this.parent_view = parent_view;
@@ -11,7 +11,7 @@
   klass.prototype = new ns.EditPane();
   klass.prototype.constructor = klass;
   klass.prototype.parent = ns.EditPane.prototype;
-  
+
   klass.prototype.id = "report_type";
 
   // builds controls
@@ -24,12 +24,19 @@
     // make type chooser
     this.type_chooser = new ELMO.Control.RadioGroup({inputs: this.cont.find("input[name='report_type']")});
     this.type_chooser.change(function() { _this.broadcast_change("report_type"); });
+
+    // handle example link clicks
+    this.cont.find('a.show-examples').click(function(e){
+      $(e.target).closest('label').find('div.examples').toggle();
+      e.stopPropagation();
+      e.preventDefault();
+    });
   }
-  
+
   klass.prototype.update = function(report) {
     // store report reference
     this.report = report;
-    
+
     // update controls
     this.type_chooser.update(this.report.attribs.type);
     this.type_chooser.enable(!this.report.has_run());
@@ -39,7 +46,7 @@
   klass.prototype.extract = function() {
     this.report.attribs.type = this.type_chooser.get();
   }
-  
+
   klass.prototype.fields_for_validation_errors = function() {
     return ["type"];
   }

@@ -34,6 +34,9 @@ module ELMO
     # default to eastern -- this will be overwritten if there is a timezone setting in the DB
     config.time_zone = 'Eastern Time (US & Canada)'
 
+    # be picky about available locales
+    config.i18n.enforce_available_locales = true
+
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
 
@@ -45,30 +48,27 @@ module ELMO
 
     # Enable the asset pipeline
     config.assets.enabled = true
-    
+
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
 
     ####################################
     # CUSTOM SETTINGS
     ####################################
-    
+
     # read system version as git tag
     configatron.system_version = `git describe`.strip rescue "?"
-    
+
     # set up preferred geocoder
     configatron.geocoder = Configatron::Delayed.new{GoogleGeocoder}
-    
+
     # regular expressions
     configatron.lat_lng_regexp = /^(-?\d+(\.\d+)?)\s*[,;:\s]\s*(-?\d+(\.\d+)?)/
-    
-    # google map api
-    configatron.map_api_url = "https://maps.googleapis.com/maps/api/js?sensor=false"
-    
-    # SMS broadcast settings (used to be [TCC] but the [ was getting corrupted on IntelliSms)
-    configatron.broadcast_tag = "|TCC|"
-    
+
+    # a short tag that starts smses and email subjects for broadcasts
+    configatron.broadcast_tag = "[TCC]"
+
     # locales with full translations (I18n.available_locales returns a whole bunch more defined by i18n-js)
-    configatron.locales = [:en, :fr]
+    configatron.full_locales = [:en, :fr]
   end
 end

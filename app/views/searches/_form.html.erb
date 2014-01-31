@@ -1,9 +1,17 @@
-<form class="search_form">
-  <%= t("common.search") %>: <input type="text" name="search" value="<%= search.str %>" id="search_str">
-  <input type="submit" value="<%= t("common.search") %>">
-  <% unless search.str.blank? %>
-    <input type="button" value="<%= t("common.clear") %>" id="clear_button">
+<form class="search_form form-inline">
+  <input type="text" class="form-control" name="search"
+    value="<%= params[:search] %>" id="search_str" placeholder="<%= t("common.search") %>">
+  <input type="submit" value="<%= t("common.search") %>" class="btn">
+  <% if params[:search].present? %>
+    <input type="button" value="<%= t("common.clear") %>" id="clear_button" class="btn">
   <% end %>
   <br/>
-  <%= search_examples(search) %>
+  <div class="search_footer">
+    <%= search_examples %>
+    <a href="#"><%= t('search.help_link') %></a>
+  </div>
 </form>
+
+<div class="search_help" title="<%= t("search.help_title") %>">
+  <%= tmd("search.help_text.#{controller_name}") %>
+</div>

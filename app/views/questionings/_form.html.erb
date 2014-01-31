@@ -2,36 +2,23 @@
 
 <%= nice_form_for(@questioning) do |f| %>
   <%= f.hidden_field(:form_id) %>
-  
-  <% @question_pubd = f.mode == :edit && @questioning.question.published? %>
-  
-  <% if f.mode == :edit && !(other_forms = @questioning.other_forms).empty? %>
-    <div class="tip important">
-      <%= t("question.appears_elsewhere", :forms => other_forms.map{|f| f.name}.join(", ")) %>
-      <%= t("question.other_forms_published") if @question_pubd %>
-    </div>
+
+  <%= f.fields_for(:question) do |question_form| %>
+    <% question_form.mode = form_mode %>
+    <%= render('questions/fields', :form => question_form) %>
   <% end %>
 
-  <%= f.fields_for(:question) do |f2| %>
-    <% f2.mode = form_mode %>
-    
-    <% unless @question_pubd %>
-      <%= form_field(f2, :code, :required => true, :maxlength => 20) %>
-      <%= form_field(f2, :qtype_name, :type => :select, :required => true, 
-        :options => @question_types.map{|qt| [t(qt.name, :scope => :question_type), qt.name]}) %>
-      <%= form_field(f2, :option_set_id, :type => :select, :options => sel_opts_from_objs(@option_sets)) %>
-      <%= form_field(f2, :minimum, :partial => "questions/min_max_condition") %>
-      <%= form_field(f2, :maximum, :partial => "questions/min_max_condition") %>
-    <% end %>
+  <% old_f_mode = f.mode
+     f.mode = :show if cannot?(:update_core, @questioning) %>
 
-    <% (configatron.languages).each_with_index do |lang, rank| %>
-      <%= render("questions/title_and_hint", :lang => lang, :f => f2, :rank => rank) %>
-    <% end %>
-  <% end %>
-  
+  <%= published_warning(@questioning) if @questioning.published? && form_mode == :edit %>
+
   <%= form_field(f, :condition, :partial => "conditions/form") %>
   <%= form_field(f, :required, :type => :check_box) %>
   <%= form_field(f, :hidden, :type => :check_box) %>
 
+  <% f.mode = old_f_mode %>
+
   <%= form_submit_button(f, :label => :save) %>
+
 <% end %>

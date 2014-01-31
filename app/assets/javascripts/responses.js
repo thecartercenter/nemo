@@ -7,9 +7,9 @@ function responses_setup_periodic_update() {
 function responses_fetch() {
   // get current list of IDs
   responses_old_ids = responses_get_ids();
-  
+
   // run the ajax request
-  Utils.ajax_with_session_timeout_check({
+  $.ajax({
     url: Utils.add_url_param(window.location.href, "auto=1"),
     method: "get",
     success: responses_update
@@ -19,8 +19,8 @@ function responses_fetch() {
 // gets IDs of each row in index table
 function responses_get_ids() {
   var ids = [];
-  if ($('#index_table_body')) {
-    var rows = $('#index_table_body tr');
+  if ($('.index_table_body')) {
+    var rows = $('.index_table_body tr');
     for (var i = 0; i < rows.length; i++) ids.push(rows[i].id);
   }
   return ids;
@@ -35,9 +35,10 @@ function responses_update(data) {
   }
 }
 
+// setup handler for 'create response'
 $(document).ready(function(){
-  $("#content").on("click", ".create_response", function(){
-    $('#form_chooser').show(); 
+  $(document).on("click", "a.create_response", function(){
+    $('#form_chooser').show();
     return false;
   });
 

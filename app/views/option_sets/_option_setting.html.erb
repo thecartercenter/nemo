@@ -1,8 +1,0 @@
-<%= fields_for("option_set[all_option_settings][]", option_setting) do |f| %>
-  <% f.mode = form_mode %>
-  <%= f.hidden_field(:option_set_id, :index => option_setting_counter) %>
-  <%= f.hidden_field(:option_id, :index => option_setting_counter) %>
-  <%= f.check_box(:included, :index => option_setting_counter) %>
-  <%= f.label(:included, "#{option_setting.option.name} (#{option_setting.option.value})", 
-    :index => option_setting_counter) %><br/>
-<% end %>

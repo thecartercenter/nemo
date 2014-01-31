@@ -2,11 +2,11 @@ module BroadcastsHelper
   def broadcasts_index_links(broadcasts)
     can?(:create, Broadcast) ? [link_to(t("broadcast.send_broadcast"), new_broadcast_path)] : []
   end
-  
+
   def broadcasts_index_fields
     %w(to medium created_at errors body)
   end
-    
+
   def format_broadcasts_field(broadcast, field)
     case field
     when "to" then "#{broadcast.recipients.count} users"

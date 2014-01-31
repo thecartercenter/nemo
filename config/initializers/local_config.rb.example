@@ -11,7 +11,6 @@ configatron.site_email = "\"#{configatron.site_name}\" <someone@someplace.com>"
 configatron.mailer_url_protocol = 'https'
 
 # mailer settings
-ELMO::Application.config.action_mailer.delivery_method = :smtp
 ELMO::Application.config.action_mailer.smtp_settings = {
   :address        => 'smtp.example.com',
   :port           => 587,
@@ -25,6 +24,3 @@ ELMO::Application.config.action_mailer.smtp_settings = {
 configatron.default_settings.outgoing_sms_adapter = "IntelliSms"
 configatron.default_settings.intellisms_username = "username"
 configatron.default_settings.intellisms_password = "password"
-
-# google maps API key
-configatron.google_maps_key = "xxx"

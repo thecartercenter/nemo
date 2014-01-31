@@ -1,6 +1,6 @@
 class AddTranslationIndex < ActiveRecord::Migration
   def self.up
-    add_index(:translations, [:language_id, :class_name, :fld, :obj_id], 
+    add_index(:translations, [:language_id, :class_name, :fld, :obj_id],
       :unique => true, :name => "translation_master")
   end
 

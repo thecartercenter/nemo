@@ -1,37 +1,53 @@
-<%# TODO refactor to use nested_attributes %>
-<%= fields_for("questioning[condition]", @condition) do |f| %>
+<%= fields_for("questioning[condition_attributes]", @condition) do |f| %>
   <%= render("layouts/object_errors", :object => @condition, :compact => true) %>
-  <% f.mode = form_mode %>
-  <div class="row">
-    <div><%= translate_model(Question) %></div>
-    <div>
-      <%= f.select(:ref_qing_id, @condition.refable_qings.map{|q| ["#{q.rank}. #{q.question.code}", q.id]}, 
-        {:include_blank => true}) %>
-    </div>
-  </div>
+  <% f.mode = form.mode %>
+  <%= f.hidden_field(:id) %>
 
-  <div class="row">
-    <div><%=t "conditions.op" %></div>
-    <div>
-      <%= f.select(:op, translate_options(@condition.applicable_operator_names, [:condition, :operators]), 
-        :include_blank => true) %>
-    </div>
-  </div>
-  
-  <div class="row">
-    <div><%=t "conditions.value" %></div>
-    <div>
-      <%= f.text_field(:value, :id => "questioning_condition_value",
-        :style => @condition.has_options? ? "display: none" : "") %>
-      <%= f.select(:option_id, @condition.ref_question_select_options, {:include_blank => true}, 
-        :style => @condition.has_options? ? "" : "display: none", 
-        :id => "questioning_condition_option_id") %>
-    </div>
-  </div>
+  <%# if in show mode and the condition is blank, just show 'none' %>
+  <% if f.mode == :show && @condition.ref_qing.nil? %>
+
+    <strong><%= t('common.none') %></strong>
+
+  <% else %>
+
+    <%# if there are no referrable questionings, no point in showing the condition form %>
+    <% if @condition.refable_qings.empty? %>
+
+      <%= t('condition.no_refable_qings') %>
+
+    <% else %>
+
+      <div class="row">
+        <div><%= translate_model(Question) %></div>
+        <div>
+          <%= f.select(:ref_qing_id, @condition.refable_qings.map{|q| ["#{q.rank}. #{q.question.code}", q.id]},
+            {:include_blank => true}) %>
+        </div>
+      </div>
+
+      <div class="row">
+        <div><%=t "condition.op" %></div>
+        <div>
+          <%= f.select(:op, translate_options(@condition.applicable_operator_names, [:condition, :operators]),
+            :include_blank => true) %>
+        </div>
+      </div>
+
+      <div class="row">
+        <div><%=t "condition.value" %></div>
+        <div>
+          <%= f.text_field(:value, :style => @condition.ref_question_has_options? ? "display: none" : "") %>
+          <%= f.select(:option_id, @condition.ref_question_select_options || [], {:include_blank => true},
+            :style => @condition.ref_question_has_options? ? "" : "display: none") %>
+        </div>
+      </div>
+    <% end %>
+
+  <% end %>
 <% end %>
 
 <% if controller.action_name != "show" %>
   <script type="text/javascript">
-    new ELMO.ConditionForm(<%= @condition.to_json(:dropdown_values => true).html_safe %>);
+    new ELMO.Views.ConditionForm(<%=j @condition.to_json(:dropdown_values => true).html_safe %>);
   </script>
 <% end %>

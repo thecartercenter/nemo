@@ -7,7 +7,7 @@ class CreateGoogleGeolocations < ActiveRecord::Migration
       t.decimal :latitude, :precision => 20, :scale => 15
       t.decimal :longitude, :precision => 20, :scale => 15
       t.string :formatted_addr
-      
+
       t.timestamps
     end
   end

@@ -1,16 +1,16 @@
 <%# get a language suffix string to append to the field names %>
-<% lang_suffix = " (#{language_name(lang)})" %>
 
-<%= form_field(f, :"name_#{lang}", 
-  :type => :textarea, 
+<% lang_suffix = " (#{language_name(lang)})" %>
+<%= form_field(form, :"name_#{lang}",
+  :type => :textarea,
   :label => Question.human_attribute_name("name") + lang_suffix,
   # show the field tip only if this is the first language in the form
   :details => rank == 0 ? t("activerecord.tips.question.name") : nil,
   :class => "name_hint") %>
 
-<%= form_field(f, :"hint_#{lang}", 
-  :type => :textarea, 
-  :label => Question.human_attribute_name("hint") + lang_suffix, 
+<%= form_field(form, :"hint_#{lang}",
+  :type => :textarea,
+  :label => Question.human_attribute_name("hint") + lang_suffix,
   # show the field tip only if this is the first language in the form
   :details => rank == 0 ? t("activerecord.tips.question.hint") : nil,
   :class => "name_hint") %>

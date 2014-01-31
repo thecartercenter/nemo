@@ -3,14 +3,15 @@
     <h:title><%= @form.full_name %></h:title>
     <model>
       <instance>
-        <data id="<%= @form.id %>">
+        <%# include both form ID and form version sequence number in ODK form ID %>
+        <data id="<%= @form.id %>" version="<%= @form.current_version.sequence %>">
           <% @form.visible_questionings.each do |q| %>
             <%= tag(q.question.odk_code) %>
           <% end %>
         </data>
       </instance>
       <itext>
-        <% configatron.languages.each do |lang| %>
+        <% configatron.preferred_locales.each do |lang| %>
           <translation lang="<%= language_name(lang) %>">
             <% @form.visible_questionings.each do |q| %>
               <text id="<%= q.question.odk_code %>:label">
@@ -25,18 +26,15 @@
                 <value><%= opt.name(lang, :strict => false) %></value>
               </text>
             <% end %>
+            <%= incomplete_response_translations if @form.allow_incomplete? %>
           </translation>
         <% end %>
       </itext>
       <% @form.visible_questionings.each do |q| %>
-        <%= tag("bind", {
-            'nodeset' => "/data/#{q.question.odk_code}",
-            'type' => q.question.qtype.odk_name,
-            'required' => q.required? ? "true()" : nil,
-            'relevant' => q.has_condition? ? q.condition.to_odk : nil,
-            'constraint' => q.odk_constraint,
-            'jr:constraintMsg' => q.question.min_max_error_msg,
-           }.reject{|k,v| v.nil?}).gsub(/"required"/, '"true()"').html_safe %>
+        <%= generate_bind_xml(@form, q) %>
+      <% end %>
+      <% if @form.allow_incomplete? %>
+        <%= incomplete_response_binding(@form) %>
       <% end %>
     </model>
   </h:head>
@@ -47,7 +45,7 @@
         <label ref="jr:itext('<%= q.question.odk_code %>:label')"/>
         <hint ref="jr:itext('<%= q.question.odk_code %>:hint')"/>
         <% if set = q.question.option_set %>
-          <% set.sorted_options.each do |opt| %>
+          <% set.options.each do |opt| %>
             <item>
               <label ref="jr:itext('option<%= opt.id %>')"/>
               <value><%= opt.id %></value>
@@ -55,6 +53,23 @@
           <% end %>
         <% end %>
       <% end %>
+    <% end %>
+    <% if @form.allow_incomplete? %>
+      <select1 ref="/data/<%= OdkHelper::IR_QUESTION %>">
+        <label ref="jr:itext('<%= OdkHelper::IR_QUESTION %>:label')"/>
+        <item>
+          <label ref="jr:itext('option1')"/>
+          <value>1</value>
+        </item>
+        <item>
+          <label ref="jr:itext('option2')"/>
+          <value>2</value>
+        </item>
+      </select1>
+      <input ref="/data/<%= OdkHelper::IR_CODE %>">
+        <label ref="jr:itext('<%= OdkHelper::IR_CODE %>:label')"/>
+        <hint ref="jr:itext('<%= OdkHelper::IR_CODE %>:hint')"/>
+      </input>
     <% end %>
   </h:body>
 </h:html>

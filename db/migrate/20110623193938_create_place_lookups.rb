@@ -3,7 +3,7 @@ class CreatePlaceLookups < ActiveRecord::Migration
     create_table :place_lookups do |t|
       t.string :query
       t.string :sugg_id
-      
+
       t.timestamps
     end
   end

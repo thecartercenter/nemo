@@ -1,9 +1,16 @@
+<%# ensures objects collection is paginated and .all is called %>
+<% objects = prepare_for_index(objects) %>
 <div id="index_table">
-  <div class="header link_set">
-    <%= page_entries_info(ensure_paginated(objects), :model => klass) %>.
-    &nbsp;
-    <%= links %>
-  </div>
+
+  <%# header links %>
+  <% unless options[:table_only] %>
+    <div class="header link_set">
+      <%= page_entries_info(objects, :model => klass) %>.
+      &nbsp;
+      <%= links %>
+    </div>
+  <% end %>
+
   <% unless objects.empty? %>
     <%= form_tag("", :method => "post", :id => "batch_form") do %>
       <table class="index_table">
@@ -11,24 +18,49 @@
           <tr class="header">
             <% if batch_ops %><th></th><% end %>
             <% fields.each do |f| %>
-              <th><%= f == ("duplicate" || "actions") ? "" : objects.first.class.human_attribute_name(f) %></th>
+              <th>
+                <%# if field def is a hash, look for the :title key %>
+                <% if f.is_a?(Hash) %>
+                  <%= f[:title] %>
+                <% else %>
+                  <%= f == ("duplicate" || "actions") ? "" : objects[0].class.human_attribute_name(f) %>
+                <% end %>
+              </th>
             <% end %>
           </tr>
         </thead>
-        <tbody id="index_table_body">
+        <tbody class="index_table_body">
           <% objects.each do |o| %>
-            <tr id="<%= "#{o.class.name.underscore}_#{o.id}" %>">
+            <%# include the path for the current object in the tr tag so that we can support clicking anywhere on the row (may be nil) %>
+            <% path = path_for_with_search(o) %>
+            <%= content_tag(:tr,
+                  :id => "#{o.class.name.underscore}_#{o.id}",
+                  :'data-href' => path,
+                  :class => path ? 'clickable' : nil) do %>
+
               <% if batch_ops %>
                 <td>
                   <%= check_box_tag("selected[#{o.id}]", 1, false, :onchange => "batch_cb_changed(this);") %>
                 </td>
               <% end %>
               <% fields.each do |f| %>
-                <td class="<%= "#{f.gsub(/[^\w\d]/, "")}_col" %>">
+                <td class="<%= "#{(f.is_a?(Hash) ? f[:css_class] : f).gsub(/[^\w\d]/, "")}_col" %>">
                   <div><%= self.send("format_#{klass.table_name}_field", o, f) %></div>
                 </td>
               <% end %>
-            </tr>
+
+            <% end %>
+
+            <%# do second row if requested %>
+            <% if respond_to?("#{klass.table_name}_second_row") && content = send("#{klass.table_name}_second_row", o) %>
+              <%= content_tag(:tr,
+                    :'data-href' => path,
+                    :class => 'second_row' + (path ? ' clickable' : '')) do %>
+                <td colspan="<%= fields.size + 1 %>">
+                  <%= content %>
+                </td>
+              <% end %>
+            <% end %>
           <% end %>
         </tbody>
       </table>
@@ -37,6 +69,23 @@
       <% end %>
     <% end %>
     <br/>
-    <%= will_paginate(objects) if paginated %>
+
+    <%# create js view model for index table, only necessary if there are some objects %>
+    <%= javascript_doc_ready do %>
+      new ELMO.Views.IndexTable({
+        class_name: <%= objects.first.class.name.underscore.to_json.html_safe %>,
+        modified_obj_id: <%= flash[:modified_obj_id].to_json.html_safe %>,
+        no_whole_row_link: <%= options[:no_whole_row_link].to_json.html_safe %>
+      });
+    <% end %>
   <% end %>
+
+  <%# pagination links (don't show if there are no entries) %>
+  <% if !options[:table_only] && paginated && objects.total_entries > 0 %>
+    <div class="paginate-container">
+      <%= will_paginate(objects, renderer: BootstrapPagination::Rails) %>
+    </div>
+  <% end %>
+
 </div>
+

@@ -6,7 +6,7 @@ class CreateSettables < ActiveRecord::Migration
       t.string :description
       t.string :default
       t.string :kind
-      
+
       t.timestamps
     end
   end

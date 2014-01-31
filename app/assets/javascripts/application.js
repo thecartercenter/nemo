@@ -12,15 +12,21 @@
 //
 //= require core_ext/array
 //= require core_ext/string
+//= require core_ext/object
 //= require jquery
 //= require jquery_ujs
-//= require jquery-ui-1.10.3.custom.min
+//= require jquery-ui-1.10.3.custom
+//= require jquery.tokeninput
+//= require jquery.mjs.nestedSortable-1.3.5
 //= require core_ext/jquery_ext
+//= require ckeditor/init
+//= require ckeditor/adapters/jquery
 //= require common
 //= require sassafras/utils
 //= require i18n
 //= require tooltip
 //= require i18n/translations
+//= require bootstrap
 
 // some report superclasses need to come first due to inheritance
 //= require control/control

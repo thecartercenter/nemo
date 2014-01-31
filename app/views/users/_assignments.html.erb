@@ -1,2 +1,23 @@
-<%= collection_form(:parent_form => form, :collection_name => :assignments, :blank_obj => @blank_assignment, :tr_name => Assignment.model_name.human) %>
+<% if admin_mode? %>
+  <div class="assignment_header">
+    <div class="mission"><%= translate_model(Mission) %></div>
+    <div class="role"><%= t('role.role') %></div>
+    <div class="active"><%= t('common.active') %>?</div>
+  </div>
 
+  <%= collection_form(:parent_form => form, :collection_name => :assignments, :blank_obj => @blank_assignment, :tr_name => Assignment.model_name.human) %>
+
+<% else %>
+
+  <%= form.fields_for(:assignments) do |af| %>
+    <% if af.object.mission == current_mission %>
+      <% af.mode = form.mode %>
+      <%= af.hidden_field(:id) %>
+      <%= af.hidden_field(:mission_id) %>
+      <%= af.select(:role, User::ROLES.map{|r| [t(r, :scope => :role), r]}, :prompt => "[#{t('role.role')}]") %>&nbsp;&nbsp;
+      <%= af.check_box(:active) %>
+      <%= af.label(:active, "#{t('common.active').capitalize}?") %>
+    <% end %>
+  <% end %>
+
+<% end %>

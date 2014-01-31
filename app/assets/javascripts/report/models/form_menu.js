@@ -5,7 +5,7 @@
   klass = ns.FormMenu = function(objs) {
     this.objs = objs;
   };
-  
+
   // inherit
   klass.prototype = new ns.ObjectMenu();
   klass.prototype.constructor = klass;
@@ -17,7 +17,7 @@
     $(this.objs).each(function() { if (form_ids.indexOf(this.id) != -1) names.push(this.name); })
     return names;
   }
-  
+
   // gets the ids of the forms with the given names
   klass.prototype.get_ids_from_names = function(names) {
     var ids = []

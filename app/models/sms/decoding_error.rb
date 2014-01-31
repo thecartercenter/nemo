@@ -6,7 +6,7 @@ class Sms::DecodingError < Sms::Error
     @type = type
     @params = params
   end
-  
+
   def to_s
     super + " #{@params.inspect}"
   end

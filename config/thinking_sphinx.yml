@@ -1,0 +1,11 @@
+development:
+  mysql41: 9306
+  max_matches: 1000000
+  html_strip: true
+test:
+  mysql41: 9307
+  max_matches: 1000000
+  html_strip: true
+production:
+  max_matches: 1000000
+  html_strip: true

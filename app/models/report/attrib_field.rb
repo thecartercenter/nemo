@@ -1,13 +1,13 @@
 # models response attributes that are not answers to questions (user, date, etc.)
 class Report::AttribField < Report::Field
-  
+
   attr_accessor :name, :name_expr_params, :value_expr_params, :data_type, :groupable
-  
+
   # builds one of each type of AttribField
   def self.all
     @@ATTRIBS.values.collect{|a| new(a[:name])}
   end
-  
+
   # builds a new object from the templates at the bottom of the file
   def initialize(attrib_name)
     raise "attrib_name #{attrib_name} not found when creating AttribField object" unless @@ATTRIBS[attrib_name.to_sym]
@@ -17,45 +17,38 @@ class Report::AttribField < Report::Field
   def name_expr(chunks)
     @name_expr ||= Report::Expression.new(name_expr_params.merge(:chunks => chunks.merge(:current_timezone => Time.zone.mysql_name)))
   end
-  
+
   def value_expr(chunks)
     @value_expr ||= Report::Expression.new(value_expr_params.merge(:chunks => chunks.merge(:current_timezone => Time.zone.mysql_name)))
   end
-  
+
   def where_expr(chunks)
     @where_expr ||= Report::Expression.new(:sql_tplt => "", :name => "where", :clause => :where)
   end
-  
+
   def sort_expr(chunks)
     @sort_expr ||= name_expr(chunks)
   end
-  
+
   def joins
     @joins || []
   end
-  
+
   def as_json(options = {})
     {:name => name, :title => name.to_s.gsub("_", " ").ucwords}
   end
-    
-  private 
+
+  private
     def joins=(j)
       @joins = j
     end
-    
+
     @@ATTRIBS = {
       :form => {
         :name => :form,
         :name_expr_params => {:sql_tplt => "__TBL_PFX__forms.name", :name => "name", :clause => :select},
         :value_expr_params => {:sql_tplt => "__TBL_PFX__forms.name", :name => "value", :clause => :select},
         :joins => [:forms],
-        :data_type => :text,
-        :groupable => true},
-      :form_type => {
-        :name => :form_type,
-        :name_expr_params => {:sql_tplt => "__TBL_PFX__form_types.name", :name => "name", :clause => :select},
-        :value_expr_params => {:sql_tplt => "__TBL_PFX__form_types.name", :name => "value", :clause => :select},
-        :joins => [:form_types],
         :data_type => :text,
         :groupable => true},
       :submitter => {

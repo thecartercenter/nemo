@@ -13,12 +13,15 @@
   <%= form_field(f, :email) %>
   <%= form_field(f, :phone, :size => 20) %>
   <%= form_field(f, :phone2, :size => 20) %>
-  <%= form_field(f, :admin, :type => :check_box) if can?(:adminify, @user) %>
-  <%= form_field(f, :assignments, :partial => "assignments") if can?(:manage, @user) && can?(:manage, Assignment) %>
-  <%= form_field(f, :pref_lang, :type => :select, :options => configatron.locales.map{|l| [language_name(l), l]}) %>
+  <%= form_field(f, :admin, :type => :check_box) if can?(:adminify, @user) && admin_mode? %>
+
+  <%# field name depends on whether we're in admin mode or not. under the hood it's all the same though %>
+  <%= form_field(f, admin_mode? ? :assignments : :role, :partial => "assignments", :force_show_mode => cannot?(:change_assignments, @user)) %>
+
+  <%= form_field(f, :pref_lang, :type => :select, :options => configatron.full_locales.map{|l| [language_name(l), l]}) %>
 
   <%= form_field(f, :notes, :type => :textarea) %>
-  
+
   <% unless f.mode == :show %>
     <% if @user == current_user %>
       <%= form_field(f, :password, :type => :password) %>
@@ -30,6 +33,6 @@
       <%= form_field(f, :reset_password_method, :label => label, :details => details, :partial => "reset_password_method") %>
     <% end %>
   <% end %>
-  
+
   <%= form_submit_button(f, :label => :save) %>
 <% end %>

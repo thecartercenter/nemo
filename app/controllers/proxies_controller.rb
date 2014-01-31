@@ -4,7 +4,7 @@ class ProxiesController < ApplicationController
   skip_authorization_check
 
   GEOCODER_URL = "http://maps.googleapis.com/maps/api/geocode/json?sensor=false"
-  
+
   # forwards geocoding requests from json, so as not to run into same-origin policy
   def geocoder
     begin

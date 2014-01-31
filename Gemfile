@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.2.13'
+gem 'rails', '~> 3.2'
 
 # Gems used only for assets and not required
 # in production environments by default.
@@ -11,13 +11,17 @@ end
 
 gem 'authlogic'
 gem 'rake'
-gem 'mysql2'
+gem 'mysql2', '0.3.12b5' # beta version needed for sphinx
 gem 'will_paginate'
+gem 'will_paginate-bootstrap'
 gem 'configatron'
 gem 'libxml-ruby'
 gem 'rdiscount'
 gem 'jquery-rails'
 gem 'random_data'
+
+# Ckeditor integration gem for rails http://ckeditor.com/
+gem "ckeditor"
 
 # building factories for testing -- stupid and offensive name but it's a good gem :(
 gem "factory_girl_rails", "~> 4.0"
@@ -42,3 +46,35 @@ gem 'capistrano', :group => :development
 
 # markdown support
 gem 'bluecloth'
+
+# query optimization
+gem "bullet", :group => "development"
+gem 'term-ansicolor'
+
+# memcache
+gem 'dalli'
+
+# foreign key maintenance
+gem 'foreigner'
+gem 'immigrant'
+
+# diagraming
+gem "rails-erd"
+
+# mean, median, etc.
+gem 'descriptive_statistics', :require => 'descriptive_statistics/safe'
+
+# underscore templates
+gem 'ejs'
+
+# search
+gem 'thinking-sphinx', '~> 3.0.2'
+
+# cleaning db for testing
+gem 'database_cleaner', :group => [:development, :test]
+
+# cron management
+gem 'whenever', :require => false
+
+# Bootstrap UI framework
+gem 'bootstrap-sass', '~> 3.0.3.0'

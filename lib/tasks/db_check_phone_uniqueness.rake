@@ -1,5 +1,5 @@
 namespace :db do
-  desc "Ensures all phone numbers in the database are unique." 
+  desc "Ensures all phone numbers in the database are unique."
   task :check_phone_uniqueness => :environment do
     # build a big has of phone => [users]
     phone_hash = {}
@@ -8,12 +8,12 @@ namespace :db do
       u.phone = nil if u.phone == ""
       u.phone2 = nil if u.phone2 == ""
       u.save(:validate => false) if u.changed?
-      
+
       # add to hash
       (phone_hash[u.phone] ||= []) << u unless u.phone.blank?
       (phone_hash[u.phone2] ||= []) << u unless u.phone2.blank?
     end
-    
+
     # if there are any hash values with more than one entry, add to fault list
     faults = []
     phone_hash.each_pair do |phone, users|
@@ -33,7 +33,7 @@ namespace :db do
         end
       end
     end
-    
+
     # print out appropriate info
     if faults.empty?
       puts "Congrats, all phone numbers are unique."

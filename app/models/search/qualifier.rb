@@ -1,33 +1,48 @@
 class Search::Qualifier
-  
-  # required params - :name, :col
-  def initialize(params)
-    @params = params
-    
-    # by default, qualifier is not default-searched
-    @params[:default] ||= false
-    
-    # by default, the associations are nil
-    @params[:assoc] ||= nil
-    
-    # by default, search has to match exactly
-    @params[:partials] ||= false
-    
-    # by default, there are no substitutions
-    @params[:subst] ||= {}
+
+  attr_reader :name, :col, :type, :pattern, :default, :validator, :assoc
+
+  # name  - the name of the qualifier (required, underscored)
+  # type - qualifier type (optional, defaults to 'regular')
+  # pattern - a regexp that will match the qualifier text
+  # col - the database column being compared against (required unless :validator defined)
+  # default - whether this qualifier should be assumed for terms with no qualifier (defaults to false)
+  # validator - a lambda that accepts a MatchData object and returns whether the given string should be accepted as a valid qualifier
+  def initialize(attribs)
+    attribs.each{|k,v| instance_variable_set("@#{k}", v)}
+
+    @default ||= false
+    @assoc = Array.wrap(@assoc)
+    @subst ||= {}
+    @type ||= :regular
   end
-  
+
   def op_valid?(op)
-    true # don't think this is necessary for now
-  end
-  
-  def method_missing(m)
-    if @params.keys.include?(m)
-      @params[m.to_sym]
-    elsif m.to_s.match(/(\w+)\?/) && @params.keys.include?(m = $1.to_sym)
-      @params[m]
-    else
-      super
+    case type
+    when :regular, :text then %w(= !=).include?(op)
+    when :indexed then op == '='
+    else true
     end
+  end
+
+  # for a regexp qualifier, checks if the given chunk matches
+  def matches(chunk)
+    return false unless regexp?
+    # do a regexp match and save match data
+    # then check the validator if given
+    (md = pattern.match(chunk)) && (validator.nil? || validator.call(md))
+  end
+
+  # whether multiple ANDed terms are allowed for this qualifier
+  def and_allowed?
+    type == :text || type == :indexed
+  end
+
+  def default?
+    default
+  end
+
+  def regexp?
+    pattern.present?
   end
 end

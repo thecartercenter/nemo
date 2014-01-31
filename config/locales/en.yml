@@ -1,12 +1,13 @@
 en:
   locale_name: "English"
-  
+
   # common words (should be capitalized except for those that obviously shouldn't like and, or, e.g., etc.)
   common:
     accept: "Accept"
     active: "Active"
     add: "Add"
     and: "and"
+    blank: "Blank"
     by: "By"
     cancel: "Cancel"
     choose: "Choose"
@@ -15,6 +16,7 @@ en:
     contact: "Contact"
     create: "Create"
     created: "Created"
+    copy: "Copy"
     data: "Data"
     delete: "Delete"
     design: "Design"
@@ -29,6 +31,8 @@ en:
       other: "Examples"
     example_abbr: "e.g."
     found: "Found"
+    generate: "Generate"
+    inactive: "Inactive"
     language: "Language"
     login: "Login"
     logout: "Logout"
@@ -37,13 +41,15 @@ en:
     next: "Next"
     _no: "No" # using 'no' by itself as a key causes an error in i18n-js
     none: "None"
+    ok: "OK"
     or: "or"
     previous: "Previous"
     print: "Print"
+    regenerate: "Regenerate"
     remove: "Remove"
     report: "Report"
     reset: "Reset"
-    result: 
+    result:
       zero: "Results"
       one: "Result"
       other: "Results"
@@ -60,6 +66,7 @@ en:
     thanks_excl: "Thank You!"
     this: "This"
     total: "Total"
+    try_again: "Try Again"
     updated: "Updated"
     view: "View"
     _yes: "Yes" # using 'yes' by itself as a key causes an error in i18n-js
@@ -68,12 +75,16 @@ en:
   attributes:
     name: "Name"
     code: "Code"
+    copy_count: "Copies"
     created_at: "Creation Time"
     email: "Email"
     hint: "Hint"
+    incomplete: "Incomplete?"
     password: "Password"
     published: "Published?"
+    allow_incomplete: "Allow Incomplete?"
     questions: "Questions"
+    std_icon: "" # left blank on purpose to achieve blank table header
     title: "Title"
     type: "Type"
     value: "Value"
@@ -86,7 +97,7 @@ en:
       must_be_unique: "must be unique"
       is_invalid: "is invalid"
       did_not_match: "did not match"
-  
+
   # model names, attrib names, tips, and errors for activerecord models
   activerecord:
     models:
@@ -98,7 +109,7 @@ en:
         zero: "Assignments"
         one: "Assignment"
         other: "Assignments"
-      broadcast: 
+      broadcast:
         zero: "Broadcasts"
         one: "Broadcast"
         other: "Broadcasts"
@@ -114,10 +125,6 @@ en:
         zero: "Forms"
         one: "Form"
         other: "Forms"
-      form_type:
-        zero: "Form Types"
-        one: "Form Type"
-        other: "Form Types"
       mission:
         zero: "Missions"
         one: "Mission"
@@ -150,19 +157,27 @@ en:
         zero: "Reports"
         one: "Report"
         other: "Reports"
+      report/tally_report:
+        zero: "Tally Reports"
+        one: "Tally Report"
+        other: "Tally Reports"
       report/question_answer_tally_report:
-        zero: "Tallies of Answers per Question"
-        one: "Tally of Answers per Question"
-        other: "Tallies of Answers per Question"
+        zero: "Answer Tally Reports"
+        one: "Answer Tally Report"
+        other: "Answer Tally Reports"
       report/grouped_tally_report:
-        zero: "Tallies of Responses per Answer/Attribute"
-        one: "Tally of Responses per Answer/Attribute"
-        other: "Tallies of Responses per Answer/Attribute"
+        zero: "Response Tally Reports"
+        one: "Response Tally Report"
+        other: "Response Tally Reports"
       report/list_report:
-        zero: "Lists of Answers/Attributes"
-        one: "List of Answers/Attributes"
-        other: "Lists of Answers/Attributes"
-      response: 
+        zero: "List Reports"
+        one: "List Report"
+        other: "List Reports"
+      report/standard_form_report:
+        zero: "Standard Form Reports"
+        one: "Standard Form Report"
+        other: "Standard Form Reports"
+      response:
         zero: "Responses"
         one: "Response"
         other: "Responses"
@@ -187,24 +202,35 @@ en:
         balance: "SMS Balance"
         body: "Message"
         created_at: "Send Time"
-        errors: "Errors?" 
+        errors: "Errors?"
         medium: "Medium"
         send_errors: "Delivery Errors"
         subject: "Subject"
         to: "To"
         which_phone: "Which Phone(s)"
       form:
+        copy_responses_count: "Copy Responses"
         downloads: "Downloads"
-        form_type_id: "Form Type"
         responses: "Responses"
         smsable: "SMSable?"
         updated_at: "Last Modified"
         version: "Version"
+      mission:
+        compact_name: "Compact Name"
+        locked: "Locked?"
+      option:
+        base: "" # this is a sort of hack to get error msg to display properly
       option_set:
+        answers: "Answers"
+        geographic: "Is Geographic?"
         options: "Options"
-        ordering: "Ordering"
       question:
         base: "" # this is a sort of hack to get error msg to display properly
+        code: "Code"
+        answer_count: "Answers"
+        form_count: "Forms"
+        published: "Published?"
+        key: "Is Key Question?"
         minimum: "Minimum"
         maximum: "Maximum"
         name: "Title"
@@ -224,7 +250,7 @@ en:
         form_id: "Form"
         reviewed: "Reviewed?"
         source: "Source"
-        user_id: "Submitter/Team Name"
+        user_id: "User/Team"
       report/report:
         aggregation: "Operation"
         aggregation_id: "Operation"
@@ -250,8 +276,9 @@ en:
         isms_password1: "Password"
         isms_password2: "Password Confirmation"
         isms_username: "Username"
-        languages: "Preferred Languages"
+        preferred_locales_str: "Preferred Languages"
         outgoing_sms_adapter: "Provider"
+        override_code: "Override Code"
         tableau_sql: "Tableau SQL" # Tableau is a software product name and shouldn't be translated
         timezone: "Time Zone"
       sms/message:
@@ -274,23 +301,25 @@ en:
         phone: "Main Phone"
         phone2: "Alternate Phone"
         pref_lang: "Preferred Language"
+        role: "Role"
       user_batch:
-        users: "Users"
+        batch: "User Attributes"
     tips:
-      form_type:
-        name: "A short name for this Form Type. Maximum 16 characters."
       mission:
         name: "A name for this Mission. Maximum 32 characters. Must be unique. Think about including the year if there will be future missions with the same name."
+        locked: "If a mission is locked, Responses and Forms cannot be created or edited and Users cannot be added or deleted."
       option:
-        value: "The numeric value that best represents this option."
         name: "The textual description of this option that users will see."
       option_set:
+        geographic: "Whether this option set represents geographic information, e.g. a set of provinces or regions."
         name: "A name that summarizes this set of options. Normal users will not see this name."
-        options: "Check the options that should be included in this set."
-        ordering: "The order in which you'd like the options to appear."
+        options:
+          other: "Add existing options by typing them and clicking 'Add'. If you do not see an option in the drop down, you can add a new one by clicking 'Create New Option'."
+          show: "The options that will appear for questions using this option set."
       question:
         code: "A short codename (between 2-20 characters). Should contain only letters and numbers, e.g. BallotBoxSealed, DepartTime."
         hint: "Additional instructions, e.g. 'Enter an approximate count of the people waiting to vote.'"
+        key: "Answers to key questions help summarize responses and appear in the response listing. Common key questions are location and overall evaluation."
         minimum: "The minimum value for the response. Check the box if the minimum itself is not valid."
         maximum: "The maximum value for the response. Check the box if the maximum itself is not valid."
         name: "The main question text, e.g. 'How many people are in line?'"
@@ -311,13 +340,17 @@ en:
         percent_type: "Whether and how percentages should be calculated for the report."
         bar_style: "Whether bars should be stacked or side-by-side."
       setting:
-        languages: |- 
-          Enter the <a href=\"http://www.loc.gov/standards/iso639-2/php/code_list.php\">two-letter codes</a>, separated by commas, for the languages for this mission, in order of preference.
-          
+        preferred_locales_str: |-
+          Enter the <a href="http://www.loc.gov/standards/iso639-2/php/code_list.php" target="_blank">two-letter codes</a>, separated by commas, for the languages for this mission, in order of preference.
+
           This setting determines:
           * The default language preference for new users
           * The default language for SMS replies
           * The languages for Questions and Options
+        override_code: |-
+          This code should be given to observers if the ability to send incomplete responses is needed. ODK will not allow submission of incomplete responses without this code.
+
+          If generating a new code, please record the old code if there are previous live forms. The new code will only work for forms downloaded after the code is regenerated.
         incoming_sms_number: "Enter the phone number to which incoming SMSes for SMS forms should be sent. This will be displayed on the SMS guide."
         outgoing_sms_adapter: "The adapter used to send outgoing SMSes."
         intellisms_username: "The username for the IntelliSMS account."
@@ -340,27 +373,26 @@ en:
         password: "Enter a new password here if you'd like to change your existing password."
         password_confirmation: "Enter the new password again."
         pref_lang: "The language in which you would like to use the system."
+        role: "The role of the user in the current mission, and whether or not they are presently active. Inactive users cannot access the mission at all."
       user_batch:
-        users: |-
-          Enter the user names, email addresses, and phone numbers (WITH country codes), one per line, separated by commas or tabs. For example:
-            
+        batch: |-
+          Enter names, email addresses, and phone numbers (WITH country codes), one per line, separated by commas or tabs. For example:
+
           Alice Merrywinkle, alice@winkle.org, +20112313411
           Chung Li, cli@gmail.com
-          Forgo Niambot, , +203300303
+          Forgo Niambot, +203300303, +2083748374
           Stewbuilder Dennis, chow@yahoo.co.uk, +20923187493
     errors:
       models:
         answer:
           required: "is required"
         condition:
-          all_required: "All fields are required."
+          all_required: "All condition fields are required."
         form:
           cant_delete_if_has_responses: "You can't delete this Form because it has associated responses."
           cant_delete_published: "A published Form can't be deleted."
           cant_edit_published: "A published Form can't be edited."
           ranks_break_conditions: "The new rankings invalidate one or more conditions"
-        form_type:
-          cant_delete_if_has_forms: "You can't delete this Form Type because one or more Forms are associated with it."
         mission:
           cant_delete_if_assoc: "You can't delete this Mission because it has associated Forms, Responses, or other objects."
           let_num_spc_only: "can only contain letters, numbers, and spaces"
@@ -369,17 +401,18 @@ en:
           cant_delete_if_has_response: "You can't delete this Option because it is included in at least one Response."
           cant_change_if_published: "You can't change this Option because it appears in at least one published Form."
           cant_delete_if_published: "You can't delete this Option because it appears in at least one published Form."
+          names_cant_be_all_blank: "At least one name translation must be given for each option."
           names_too_long: "Names must be at most 30 characters in length."
         option_set:
           at_least_one: "You must choose at least one option."
           cant_delete_if_has_questions: "You can't delete this Option Set because one or more Questions are associated with it."
-          cant_delete_if_has_response: "You can't delete this Option Set because it is included in at least one Response."
+          cant_delete_if_has_answers: "You can't delete this Option Set because it is included in at least one Answer."
           non_unique_values: "Two or more of the options you've chosen have the same numeric value."
         question:
           cant_change_if_conditions: "You can't change the Type or Option Set because there are Conditions that refer to this Question."
-          cant_change_if_published: "You can't change this Question because it appears in at least one published Form."
           cant_change_if_responses: "You can't change the Type or Option Set because there are already Responses for this Question."
-          cant_delete_if_in_form: "You can't delete this Question because it is included in at least one Form."
+          cant_delete_if_has_answers: "You can't delete this Question because it is referred to in at least one Answer."
+          cant_delete_if_published: "You can't delete this Question because it appears on at least one published Form."
         questioning:
           cant_delete_if_has_answers: "You can't remove this Question because it has one or more answers for this Form."
           invalid_condition: "is invalid (see below)"
@@ -388,10 +421,18 @@ en:
           attributes:
             fields:
               blank: "You must choose at least one question or attribute."
+            form_id:
+              blank: "You must choose a form to report on."
             name:
               blank: "You must enter a report title."
+            question_order:
+              blank: "You must choose a question order."
             questions:
               blank: "You must choose at least one question or one option set."
+            tally_type:
+              blank: "You must choose a tally type."
+            text_responses:
+              blank: "You must choose how to display text responses."
             type:
               blank: "You must choose a report type."
         response:
@@ -399,7 +440,7 @@ en:
           missing_answers: "Not all questions have answers."
         setting:
           attributes:
-            languages:
+            preferred_locales_str:
               invalid_code: "code '%{code}' is invalid"
               one_must_have_translations: "must contain at least one language that has translations (%{locales})"
         user:
@@ -413,15 +454,16 @@ en:
           attributes:
             assignments:
               cant_be_empty_if_not_admin: "can't be empty if not admin"
-  
+
   # application-wide strings
   layout:
+    about: "About ELMO"
     actions: "Actions"
     are_you_sure: "Are you sure?"
     change_language: "Change Language"
+    created_by: "Created by"
     delete_warning: "Are you sure you want to permanently delete the %{obj_description}?"
     deselect_all: "Deselect All"
-    dev_mode: "Development Mode"
     logged_in_as: "Logged in as"
     must_be: "must be"
     no_selection: "You haven't selected anything."
@@ -432,90 +474,87 @@ en:
     system_version: "System Version"
     time_ago: "%{time} ago"
     time_zone: "Time Zone"
-  
+    updated_at: "Updated at"
+    no_published_forms: "No published forms"
+
+
   # pagination translations
   will_paginate:
-    previous_label: "&#8592; Previous"
-    next_label: "Next &#8594;"
+    previous_label: "&#171;"
+    next_label: "&#187;"
     page_gap: "&hellip;" # this entry should be the same for all languages
     # please preserve <b> and </b> tags in the below
     broadcast:
-      page_entries_info: 
+      page_entries_info:
         single_page_html:
           zero:  "No Broadcasts found"
           one:   "Displaying <b>1</b> Broadcast"
           other: "Displaying <b>all %{count}</b> Broadcasts"
         multi_page_html: "Displaying Broadcasts <b>%{from} - %{to}</b> of <b>%{count}</b> in total"
     form:
-      page_entries_info: 
+      page_entries_info:
         single_page_html:
           zero:  "No Forms found"
           one:   "Displaying <b>1</b> Form"
           other: "Displaying <b>all %{count}</b> Forms"
-    form_type:
-      page_entries_info: 
-        single_page_html:
-          zero:  "No Form Types found"
-          one:   "Displaying <b>1</b> Form Type"
-          other: "Displaying <b>all %{count}</b> Form Types"
     mission:
-      page_entries_info: 
+      page_entries_info:
         single_page_html:
           zero:  "No Missions found"
           one:   "Displaying <b>1</b> Mission"
           other: "Displaying <b>all %{count}</b> Missions"
     option:
-      page_entries_info: 
+      page_entries_info:
         single_page_html:
           zero:  "No Options found"
           one:   "Displaying <b>1</b> Option"
           other: "Displaying <b>all %{count}</b> Options"
     option_set:
-      page_entries_info: 
+      page_entries_info:
         single_page_html:
           zero:  "No Option Sets found"
           one:   "Displaying <b>1</b> Option Set"
           other: "Displaying <b>all %{count}</b> Option Sets"
     question:
-      page_entries_info: 
+      page_entries_info:
         single_page_html:
           zero:  "No Questions found"
           one:   "Displaying <b>1</b> Question"
           other: "Displaying <b>all %{count}</b> Questions"
     questioning: # should be same as question
-      page_entries_info: 
+      page_entries_info:
         single_page_html:
           zero:  "No Questions found"
           one:   "Displaying <b>1</b> Question"
           other: "Displaying <b>all %{count}</b> Questions"
     report/report:
-      page_entries_info: 
+      page_entries_info:
         single_page_html:
           zero:  "No Reports found"
           one:   "Displaying <b>1</b> Report"
           other: "Displaying <b>all %{count}</b> Reports"
     response:
-      page_entries_info: 
+      page_entries_info:
         single_page_html:
           zero:  "No Responses found"
           one:   "Displaying <b>1</b> Response"
           other: "Displaying <b>all %{count}</b> Responses"
         multi_page_html: "Displaying Responses <b>%{from} - %{to}</b> of <b>%{count}</b> in total"
     sms/message:
-      page_entries_info: 
+      page_entries_info:
         single_page_html:
           zero:  "No SMSes found"
           one:   "Displaying <b>1</b> SMS"
           other: "Displaying <b>all %{count}</b> SMSes"
         multi_page_html: "Displaying SMSes <b>%{from} - %{to}</b> of <b>%{count}</b> in total"
     user:
-      page_entries_info: 
+      page_entries_info:
         single_page_html:
           zero:  "No Users found"
           one:   "Displaying <b>1</b> User"
           other: "Displaying <b>all %{count}</b> Users"
         multi_page_html: "Displaying Users <b>%{from} - %{to}</b> of <b>%{count}</b> in total"
-  
+
   # authlogic translations
   authlogic:
     error_messages:
@@ -538,7 +577,7 @@ en:
         login: "Username"
         password: "Password"
         remember_me: "Remember Me"
-  
+
   # time/date formats (see http://www.ruby-doc.org/core-2.0/Time.html#method-i-strftime for code meanings)
   date:
     formats:
@@ -551,13 +590,12 @@ en:
       short: "%b %d %H:%M"
       long: "%A, %B %d %Y %H:%M"
       time_only: "%H:%M"
-      
+
   # all search qualifier translations should have NO SPACES and NO CAPS. use '-'s instead
   search_qualifiers:
-    date: "date"
+    text: "text"
     email: "email"
     form: "form"
-    form_type: "form-type"
     login: "login"
     name: "name"
     option_set: "option-set"
@@ -566,20 +604,19 @@ en:
     question_type: "question-type"
     reviewed: "reviewed"
     source: "source"
+    submit_date: "submit-date"
     submitter: "submitter"
-  
+
   # all page titles by controller and action
   # controller names are usually plural (rails convention)
   page_titles:
     broadcasts:
       index: "Broadcasts"
       new: "Send Broadcast"
+      new_with_users: "Send Broadcast"
       show: "Broadcast"
-    form_types:
-      edit: "Form Type: %{name}"
-      index: "Form Types"
-      new: "New Form Type"
-      show: "Form Type: %{name}"
+    dashboard:
+      all: "Dashboard"
     forms:
       choose_questions: "Adding Questions to Form: %{name}"
       edit: "Edit Form: %{name}"
@@ -601,10 +638,18 @@ en:
       index: "Options"
       new: "New Option"
       show: "Option: %{name}"
-    password_resets: 
+    password_resets:
       all: "Reset Password"
     questions:
-      edit: "Edit Question: %{name}"
+      edit: "Edit Question: %{code}"
+      index: "Questions"
+      new: "New Question"
+      show: "Question: %{code}"
+    questionings:
+      edit: "Edit Question: %{code}"
+      index: "Questions"
+      new: "New Question"
+      show: "Question: %{code}"
     responses:
       edit: "Edit Response: #%{id}"
       index: "Responses"
@@ -632,14 +677,19 @@ en:
       show: "User: %{name}"
     welcome:
       index: "Home"
-      
+
   ##############################
   # the rest of these string groups should be kept in alphabetical order by key
-  
+
+  admin_mode:
+    admin_mode: "Admin Mode"
+    exit_admin_mode: "Exit Admin Mode"
+    goto_admin_mode: "Admin Mode"
+
   answer:
     no_name: "No Name"
     this_answer: "This answer"
-  
+
   broadcast:
     balance_notice: "You have %{balance} SMS credits in your %{account_type} account."
     chars: # these are for informing the user how many chars they have left in their sms
@@ -670,7 +720,7 @@ en:
       main_only: "Main phone only"
       alternate_only: "Alternate phone only"
       both: "Both phones"
-      
+
   condition:
     operators:
       eq: "is equal to"
@@ -681,16 +731,50 @@ en:
       neq: "is not equal to"
       inc: "includes"
       ninc: "does not include"
+    no_refable_qings: "There are no questions on this form to which a condition could refer."
     op: "Comparison"
     value: "Value"
-  
+
+  dashboard:
+    close_dashboard: "Close Dashboard"
+    low_activity: "Low Activity"
+    no_reports: "No Reports have been created for this mission yet."
+    recent_responses: "Latest Responses"
+    response_locations: "Response Locations"
+    summary: "Summary"
+    top_forms: "Top Forms"
+
+  data_integrity:
+    appears_elsewhere_warnings:
+      by_type:
+        question: "This Question appears on the following Forms: *%{related}*. Any changes you make below will be reflected on those Forms."
+        option_set: "This Option Set appears on the following Questions: *%{related}*. Any changes you make below will be reflected on those Questions."
+    has_answers_warnings:
+      by_type:
+        question: "This Question has existing Answers. Some fields are thus not editable."
+    option_in_use_name_change_warning: "This Option is in use in other published Forms or is referenced in existing Responses. You should be careful not to change the meaning of the Option in your edits."
+    option_standard_copy_name_change_warning: "This Option is a copy of a standard Option. You should be sure to preserve the original meaning of the Option so that it agrees with the standard."
+    published_warnings:
+      self_published:
+        form: "This Form is published, meaning it may already be in the hands of observers. Some fields are thus not-editable. Please proceed with caution when making any changes."
+        questioning: "The Form to which the below fields apply is published and thus they cannot be edited."
+        question: "This Question appears on at least one published Form, meaning it may already be in the hands of observers. Some fields are thus not-editable. Please be sure to not change the meaning of the question."
+        option_set: "This Option Set appears on at least one published Form, meaning it may already be in the hands of observers, thus Options cannot be added, removed, or reordered. Please proceed with caution if editing Options."
+      copy_published:
+        form: "At least one copy of this Form is published, meaning it may already be in the hands of observers. Some fields are thus not-editable. Please proceed with caution when making any changes."
+        questioning: "At least one copy of the Form to which the below fields apply is published and thus they cannot be edited."
+        question: "This Question appears on at least one Form with published copies, meaning it may already be in the hands of observers. Some fields are thus not-editable. Please be sure to not change the meaning of the question."
+        option_set: "This Option Set appears on at least one Form with published copies, meaning it may already be in the hands of observers, thus Options cannot be added, removed, or reordered. Please proceed with caution if editing Options."
+      sms: "Such changes will cause SMS form users to receive an error if they try to submit the current version of the Form."
+      odk: "Such changes will not disable Responses from ODK, but may cause some data loss and/or Responses that are not valid (e.g. missing required answers)."
+
   form:
     add_questions: "Add Questions"
     add_selected: "Add Selected Questions to Form"
     back_to_questions: "Back to Questions List"
     choose_form: "Choose a Form..."
     clone_confirm: "Are you sure you want to make a copy of the form '%{form_name}'?"
-    clone_error: "There was a problem cloning the form (%{msg})."    
+    clone_error: "There was a problem cloning the form (%{msg})."
     clone_success: "Form '%{form_name}' cloned successfully."
     create_link: "Create Form"
     print_form: "Print Form"
@@ -699,6 +783,7 @@ en:
     publish_success: "Form published successfully."
     publish_form: "Publish Form"
     question_remove_error: "There was a problem removing the questions (%{msg})."
+    question_remove_answer_error: "One or more of the selected questions has answers and can't be removed."
     questions_add_error: "There was a problem adding the questions (%{msg})."
     questions_add_success: "Questions added successfully."
     questions_remove_success: "Questions removed successfully."
@@ -706,14 +791,18 @@ en:
     remove_question_confirm: "Are you sure you want to remove these ### question(s) from the form?"
     reqd_sym_definition: "Required questions are marked with a"
     unpublish_error: "There was a problem unpublishing the form (%{msg})."
-    unpublish_success: "Form unpublished successfully. The download count has also been reset."
+    unpublish_success: "Form unpublished successfully."
     unpublish: "Unpublish"
+    unpublish_form: "Unpublish Form"
     unsaved_rank_notice: "You have not yet saved the changes you made to the Question order. You should click the 'Save' button if you want to save these changes."
     view_sms_guide: "View SMS Guide"
-  
-  form_type:
-    create_link: "Create Form Type"
-    
+
+  incomplete_response:
+    missing_answers:
+      label: "Is this form missing any required answers?"
+      hint: "This form allows submission of incomplete responses in special situations. If you are not sure whether any required answers are missing, choose 'I don't think so' and then save."
+    code_label: "Enter the incomplete override code"
+
   location_picker:
     choose_location: "Choose Location"
     current_location: "Current Location"
@@ -722,7 +811,7 @@ en:
 
   mission:
     create_link: "Create Mission"
-  
+
   notifier:
     if_link_doesnt_work: "If the above link does not work try copying and pasting it into your browser."
     if_you_made_it: "If you did make this request just click the link below:"
@@ -732,19 +821,21 @@ en:
     password_reset_instructions: "Password Reset Instructions"
     request_made: "A request to reset your %{site} password has been made. If you did not make this request, simply ignore this email."
     welcome: "Welcome to %{site}!"
-  
+
   option:
-    appears_elsewhere: "Note: This option appears on the following forms: %{forms}. Any changes you make below will be reflected on those forms."
     create_link: "Create Option"
-    other_forms_published: "At least one of those forms is also published, so only names can be edited. You should also take care to not change the meaning of the option if editing the names."
-  
+
   option_set:
+    clone_confirm: "Are you sure you want to make a copy of the Option Set '%{name}'?"
+    clone_error: "There was a problem cloning the Option Set (%{msg})."
+    clone_success: "Option Set '%{name}' cloned successfully."
+    create_new: "[Create New Option]"
     create_link: "Create Option Set"
-    create_options: "create some Options"
-    options_before_sets: "You need to %{link} before you can create Option Sets."
-    orderings:
-      value_asc: "Value Low to High"
-      value_desc: "Value High to Low"
+    edit_option: "Edit Option"
+    leave_page_warning: "Leaving this page will abandon your changes to this Option Set."
+    none_found: "No matching options found"
+    searching: "Searching..."
+    type_to_add_new: "Type an option name"
 
   password_reset:
     check_email: "Instructions to reset your password have been emailed to you. Please check your email."
@@ -752,10 +843,10 @@ en:
     fill_out_form: "Fill out the form below and instructions to reset your password will be emailed to you. If there is no email address associated with your account your password will have to reset by an administrator."
     success: "Password updated successfully."
     token_not_found: |-
-      We're sorry, but we could not locate your account. If you are having issues try copying and pasting the URL 
+      We're sorry, but we could not locate your account. If you are having issues try copying and pasting the URL
       from your email into your browser or restarting the reset password process.
     user_not_found: "No user was found with that email address."
-    
+
   permission_error:
     need_mission: "You can't view this without selecting a mission"
     need_login: "You must login to view that page."
@@ -764,10 +855,9 @@ en:
     observers_cant_change_submitter: "Observers can't change the submitter for responses."
     must_be_admin: "You must be an administrator to view that page."
     must_be_logged_out: "You must be logged out to view that page."
-    
+
   question:
     answer_only_caps: "ANSWER ONLY IF"
-    appears_elsewhere: "Note: This question also appears on the following forms: %{forms}. Any changes you make below will also be reflected on those forms."
     create_link: "Create Question"
     maxmin:
       gt: "greater than"
@@ -776,7 +866,7 @@ en:
       strictly_lt: "Strictly less than"
       strictly_gt: "Strictly greater than"
     other_forms_published: "At least one of those forms is also published, so not all fields can be edited."
-   
+
   question_type:
     text: "Text"
     long_text: "Long Text"
@@ -789,9 +879,10 @@ en:
     datetime: "Date/Time"
     date: "Date"
     time: "Time"
-    
+
   report/report:
-    add_question_attribute: "Add Question/Attribute"
+    add_column: "Add Column"
+    answered_only_if: "Answered only if"
     attribute:
       zero: "Attributes"
       one: "Attribute"
@@ -799,27 +890,48 @@ en:
     back_to_list: "Back To Report List"
     blank: "Blank" # should be very short
     choose_attrib_question: "Choose an attribute or question"
+    choose_disagg_qing: "Choose a Question..."
+    choose_form: "Choose a Form..."
     choose_report: "Choose a Report..."
-    create_link: "Create Report"
-    display_options: "Display Options"
-    enter_name: "Enter a descriptive name for the report."
+    columns: "Columns"
+    create_link: "Create New Report"
+    display_options: "Options"
+    edit_report: "Edit Report"
+    enter_name: "What is the report title?"
     export_to_csv: "Export Data To CSV Format"
+    form: "Form"
+    generated_at: "Generated at"
     groupings: "Groupings"
+    how_to_disaggregate: "Split report by a special question?"
     how_to_display_questions: "How should questions be displayed?"
     how_to_display_results: "How would you like to display the results?"
-    questions_attributes: "Questions/Attributes"
+    how_to_order_questions: "How should questions be ordered?"
+    loading_report: "Loading Report..."
     questions_with_option_sets: "Questions with these option sets"
+    missing_observers: "Non-reporting Observers"
+    mission: "Mission"
     no_match: "No matching data were found."
-    report_title: "Report Title"
     report_type: "Report Type"
+    response_count: "Total Submissions"
+    show_examples: "Show Examples"
+    see_dependent_questions:
+      one: "See dependent question"
+      other: "See dependent questions"
+    show_examples: "Show Examples"
+    show_text_responses: "Show text responses?"
+    submitted_by_at: "By %{user} at %{datetime}"
+    subset_intro: "Data for responses in which the answer to the '%{question}' question was '%{disagg_value}'"
     tally: "Tally"
+    tally_type: "What would you like to tally?"
     these_questions: "These specific questions"
     total_rows: "Total Rows"
+    view_response: "Response #%{id}"
     what_attrib_col_headers: "What attribute or question would you like for the column headers (optional)?"
     what_attrib_row_headers: "What attribute or question would you like for the row headers?"
     what_bar_style: "What bar style would you like?"
     what_percent_style: "What percentage style would you like?"
-    what_questions_in_list: "What questions and/or attributes would you like to see in the list?"
+    what_columns_in_list: "What columns would you like to see in the list?"
+    what_form: "What form would you like to report on?"
     what_type: "What type of report would you like?"
     which_calculation: "Which calculation (if any) would you like to apply?"
     which_forms: "Which forms are you interested in?"
@@ -833,19 +945,24 @@ en:
     display_types:
       table: "Table"
       bar_chart: "Bar Chart"
+    descriptions:
+      tally_report: "Aggregated tallies of answers or responses, grouped by attributes of interest."
+      list_report: "A raw listing of answers and attributes for a set of responses."
+      standard_form_report: "A question-by-question summary of the responses for a specific form."
     examples:
-      question_answer_tally_report:
+      tally_report:
         - "Number of Very Good, Good, etc. answers for the Overall question"
         - "Percentage of Yes and No for all Yes-No questions"
-        - "Number of Zero and Non-zero answers for questions about observers"
-      grouped_tally_report:
         - "Number of responses per form for each team"
-        - "Percentage of Yes and No per day for the PeacefulEnvironment question"
         - "Percentage of Zero and Non-zero answers per State for the DomesticObservers question"
       list_report:
         - "List of answers to the Complaints and OtherIrreg questions along with the polling place number"
         - "List of all polling place numbers, with no duplicates"
         - "List of submitter name, date, and answer to the NeedSecurityContact question"
+      standard_form_report:
+        - "Summaries (percentage, averages, medians, etc.) of all questions on a form"
+        - "Can be grouped by question rank or question type"
+        - "Can be split by the answer to a specific question (e.g. region or urban/rural)"
     percent_types:
       none: "No Percentage"
       overall: "Percentage Overall"
@@ -854,44 +971,233 @@ en:
     question_labels:
       code: "Codes Only (Saves Space)"
       title: "Full Titles (Easier to Read)"
-      
+    question_orders:
+      number: "By Number"
+      type: "By Type"
+    standard_form_report:
+      overall_headers:
+        dates: "Dates"
+        responses: "Responses"
+      stat_headers:
+        mean: "Average"
+        median: "Median"
+        min: "Minimum"
+        max: "Maximum"
+      type_sets:
+        categorical: "Categorical Data"
+        numbers: "Statistical Data"
+        dates: "Dates"
+        times: "Times"
+        short_text: "Short Text Answers"
+        long_text: "Long Text Answers"
+    tally_types:
+      question_answer: "Answers per Question"
+      grouped: "Responses per Answer/Attribute"
+    tally_type_examples:
+      question_answer: "Tally of Yes's and No's for all Yes/No questions"
+      grouped: "Tally of responses per form for each team"
+    text_response_options:
+      all: "Show All"
+      short_only: "Don't Show Long Text Questions"
+      none: "Show None"
+
   response:
     create_link: "Create Response"
+    edit_this_response: "Edit This Response"
     export_to_csv: "Export to CSV Format"
+    loading: "Loading Response..."
     observation_time: "Observation Time"
     save_and_mark_reviewed: "Save and Mark as Reviewed"
-    
+    view_response: "View Response"
+
   role:
     role: "Role"
     observer: "Observer"
     staffer: "Staffer"
     coordinator: "Coordinator"
-    
+    admin: "Admin"
+
   search:
     at_end_of_query: "at end of query"
+    blank: "blank"
+    examples:
+      responses:
+        - "\"some phrase\""
+        - "submitter: \"john smith\""
+        - "form: polling"
+        - "reviewed: 1"
+        - "submit-date < 2013-10-15"
+        - "{QuestionCode}: (disruption security)"
+      users:
+        - "john smith"
+        - "phone: +443726458364"
+        - "login: jsmith"
+        - "email: jsmith@example.com"
     expected: "Expected"
+    help_link: "Search Help"
+    help_title: "Search Help"
+    help_text:
+      responses: |-
+        ## Qualifiers ##
+
+        A simple search such as:
+
+        * __romeo juliet__
+
+        only searches the answers to textual questions. To search based on response attributes, use a qualifier, e.g.:
+
+        * __form: Widgets__
+
+        will only show responses to the 'Widgets' form.
+
+        Combine both of the above to narrow your search:
+
+        * __romeo juliet form: Widgets__
+
+        will show responses to the 'Widgets' form containing the words 'romeo' and 'juliet'.
+
+        The full set of qualifiers you can use is as follows:
+
+        * __form__ The responses's form
+        * __submitter__ The name of the user that submitted the response (partial matches allowed)
+        * __submit-date__ The date the response was submitted (e.g. 1985-03-22)
+        * __reviewed__ Whether the response has been marked 'reviewed' (1 = yes or 0 = no)
+        * __source__ The medium via which the response was submitted ('web', 'odk', or 'sms')
+        * __text__ Searches answers to textual questions
+
+        ## Exact Phrases ##
+
+        Exact phrases can be matched by enclosing the phrase in double quotes:
+
+        * __"the rain in spain"__
+
+        Double quoted phrases can be mixed with non-quoted terms:
+
+        * __apples oranges "passion fruit"__
+
+        ## All Terms vs. Any Term
+
+        By default, all terms in the search must be matched. For example,
+
+        * __alpha lima peru__
+
+        matches only responses with all three of those words. Use the vertical bar ('|') character to match several words/phrases:
+
+        * __apples | oranges | "passion fruit"__
+
+        The '|' character can also be used with qualifiers:
+
+        * __form: ( Lions | "Bears and Sharks" | Tigers )__
+
+        matches responses for any of the above forms.
+
+        ## Operators
+
+        You can negate a qualified search by using the negation operator:
+
+        * __form != Widgets__
+
+        will match responses for any form except the 'Widgets' form.
+
+        For text searches, negation works differently:
+
+        * __ballot -box__
+
+        will match any response with an answer containing the word 'ballot' but not the word 'box'. There must be at least one non-negated term in any such search.
+
+        For some qualifiers (e.g. __submit-date__), greater-than and less-than comparisons are also allowed:
+
+        * __submit-date > 2000-01-01__
+
+        Several of these can be combined to narrow the search to a range:
+
+        * __submit-date >= 2000-01-01 submit-date < 2000-02-01__
+
+        will match responses submitted in the month of January 2000.
+
+      users: |-
+
+        ## Qualifiers ##
+
+        A simple search such as:
+
+        * __romeo juliet__
+
+        only matches user names. To search based on other user attributes, use a qualifier, e.g.:
+
+        * __email: @example.com__
+
+        will search for users with email addresses matching '@example.com'.
+
+        Combine both of the above to narrow your search:
+
+        * __Susan email: @example.com__
+
+        will search for users named Susan with an example.com email address.
+
+        The full set of qualifiers you can use is as follows:
+
+        * __name__ The user's full name
+        * __login__ The user's login name
+        * __email__ The user's email address
+        * __phone__ The user's phone number (no dashes or other punctuation)
+
+        Partial matches are allowed for all qualifiers.
+
+        ## Exact Phrases ##
+
+        Exact phrases can be matched by enclosing the phrase in double quotes:
+
+        * __"john smith"__
+
+        ## All Terms vs. Any Term
+
+        By default, all terms in the search must be matched. For example,
+
+        * __john smith__
+
+        matches only users with 'john' and 'smith' both appearing in their name. Use the vertical bar ('|') character to match several names:
+
+        * __abdul | juanita | clarice__
+
+        The '|' character can also be used with qualifiers:
+
+        * __email: ( john@example.com | patty@foo.com )__
+
+        matches users with any of the above email addresses.
+
+        ## Negation
+
+        You can negate a qualified search by using the negation operator:
+
+        * __name != Oluwaseun__
+
+        will match users not named 'Oluwaseun'.
     invalid_op: "The operator '%{op}' is not valid for the qualifier '%{qualifier}'."
+    multiple_terms_not_allowed: "Multiple terms aren't allowed for '%{qualifier}' searches unless OR is used."
     must_use_qualifier: "You must use a qualifier for all search terms."
+    or_not_allowed_between: "OR is not allowed between expressions."
     invalid_qualifier: "'%{chunk}' is not a valid search qualifier."
-    unexpected: "Unexpected text near '%{str}'"
     search_error: "Search Error"
-  
+    unexpected: "Unexpected text near '%{str}'"
+
   setting:
     change_sms_password: "Change SMS Password"
+    override_code_warning: "Note that the new override code will not work with forms that have already been downloaded. You should record the existing code if this is a problem. Are you sure you want to regenerate the code?"
     headings:
       general: "General Settings"
       incoming_sms: "Incoming SMS Settings"
       outgoing_sms: "Outgoing SMS Settings"
-      
+
   sms:
     no_valid_adapter: "There is no valid outgoing SMS adapter. Please check the settings."
     outgoing_provider: "Outgoing SMS Provider"
-    
+
   sms_console:
     back_to_forms: "Back to Forms"
     no_reply: "No reply."
     submit_error: "There was an error submitting your test."
-    
+
   sms_form:
     decoding:
       answer_error_intro: "Sorry, your answer '%{value}' for question %{rank} on form '%{form_code}'"
@@ -943,13 +1249,50 @@ en:
       missing_answer: "Sorry, the answer to the required question %{ranks} was missing from your response to form '%{form_code}'."
       missing_answers: "Sorry, the answers to the required questions %{ranks} were missing from your response to form '%{form_code}'."
 
+  standard:
+    import: "Import"
+    import_choose_one:
+      forms: "Please choose at least one Form to import."
+      option_sets: "Please choose at least one Option Set to import."
+      questions: "Please choose at least one Question to import."
+    import_errors: "There were errors."
+    import_instructions:
+      forms: "Check the boxes next to the Forms you'd like to import. Then click the 'import' button."
+      option_sets: "Check the boxes next to the Option Sets you'd like to import. Then click the 'import' button."
+      questions: "Check the boxes next to the Questions you'd like to import. Then click the 'import' button."
+    import_standard:
+      forms: "Import Standard Forms"
+      option_sets: "Import Standard Option Sets"
+      questions: "Import Standard Questions"
+    import_success:
+      forms:
+        zero: "Successfully imported %{count} Forms."
+        one: "Successfully imported %{count} Form."
+        other: "Successfully imported %{count} Forms."
+      option_sets:
+        zero: "Successfully imported %{count} Option Sets."
+        one: "Successfully imported %{count} Option Set."
+        other: "Successfully imported %{count} Option Sets."
+      questions:
+        zero: "Successfully imported %{count} Questions."
+        one: "Successfully imported %{count} Question."
+        other: "Successfully imported %{count} Questions."
+    no_importable:
+      forms: "There is nothing available to import. Either there are no standard Forms, or they have all been imported already."
+      option_sets: "There is nothing available to import. Either there are no standard Option Sets, or they have all been imported already."
+      questions: "There is nothing available to import. Either there are no standard Questions, or they have all been imported already."
+    standard: "Standard"
+    standard_forms: "Standard Forms"
+
   unauthorized:
     default: "You are not authorized to access that page."
     must_login: "You must login to access that page."
-  
+
   user_batch:
+    bad_tokens: "Could not understand these pieces: %{tokens}"
+    error: "There was an error creating the users. See below."
     success: "Users created successfully."
-    
+
   user:
     back_to_index: "Back to Users List"
     create_link: "Create User"
@@ -963,8 +1306,8 @@ en:
         - "Please note the 's' in 'https' in the site URL."
         - "If you'd like to choose a more memorable password, you can change your password using the website."
         - |-
-          The above credentials will also work on your Android device. To enter your credentials, 
-          start the 'ODK Collect' application, press the 'Menu' button, tap 'Preferences', 
+          The above credentials will also work on your Android device. To enter your credentials,
+          start the 'ODK Collect' application, press the 'Menu' button, tap 'Preferences',
           and then tap each of 'Username' and 'Password'.
       preamble_singular: |-
         Login instructions are shown below. Please print this page now and ensure the user below receives it.
@@ -985,18 +1328,27 @@ en:
     reset_password_label_reset: "Reset Password?"
     send_email_instructions: "send email instructions"
     show_printable_instructions: "show printable instructions"
-  
+
   welcome:
     awaiting_review: "**%{count}** Awaiting Review"
     by_you: "**%{count}** Submissions By You"
+    form_count: "**%{count}** Forms"
     in_the_past_day: "**%{count}** in the Past Day"
     in_the_past_hour: "**%{count}** in the Past Hour"
     in_the_past_month: "**%{count}** in the Past Month"
     in_the_past_week: "**%{count}** in the Past Week"
-    no_recent: "No recent responses"
+    in_the_past_year: "**%{count}** in the Past Year"
+    no_mission_selected:
+      title: "No Mission Selected"
+      choose: "Please select a mission from the dropdown in the top-right of the screen."
+      choose_or_create: "Please select a mission from the dropdown in the top-right of the screen, or you can "
+      create_link: "create a new mission"
+      need_to_create: "There are currently no missions. Please "
+      no_missions: "There are currently no missions in the system. Please contact an administrator."
+    no_recent: "**0** Recent Responses"
     published_form_count: "**%{count}** Published Forms"
     select_a_form: "Select a Form To Submit"
     select_a_report: "Select a Report To View"
     total_responses: "**%{count}** Total Responses"
-    total_users: "**%{count}** Total Users"    
+    total_users: "**%{count}** Total Users"
     unpublished_form_count: "**%{count}** Unpublished Forms"

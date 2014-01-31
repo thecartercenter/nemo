@@ -1,6 +1,6 @@
 <div class="form_field qtype_<%= answer.qtype.name %>" id="qing_<%= answer.questioning_id %>">
   <label class="main"><%= answer.question_name || "[#{t('answer.no_name')}]" %> <%= reqd_sym(answer.required?) %>
-  </label><div class="form_field_control">
+  </label><div class="control">
     <%= fields_for('response[all_answers][]', answer) do |f| %>
       <% f.mode = form_mode %>
       <%= render("layouts/object_errors", :object => answer, :compact => true, :prefix => t("answer.this_answer")) unless answer.errors.empty? %>
@@ -8,13 +8,21 @@
       <%= f.hidden_field(:questioning_id, :index => answer_counter) %>
       <%= f.hidden_field(:relevant, :class => "relevant", :index => answer_counter) %>
       <% case type = answer.qtype.name %>
-      <% when "address", "text", "integer", "decimal", "tiny_text" %>
+      <% when "text", "tiny_text", "long_text" %>
+        <% if f.mode == :show %>
+          <%# show search excerpt (highlights search terms) if exists for this questioning %>
+          <div class="text_answer">
+              <%= excerpt_if_exists(@response, answer) %>
+          </div>
+        <% else %>
+          <% field_type = answer.qtype.name == 'long_text' ? 'text_area' : 'text_field' %>
+          <%= f.send(field_type, :value, :class => "qtype_#{type}", :index => answer_counter) %>
+        <% end %>
+      <% when "integer", "decimal" %>
         <%= f.text_field(:value, :class => "qtype_#{type}", :index => answer_counter) %>
       <% when "location" %>
         <%= f.text_field(:value, :class => "qtype_location", :index => answer_counter) %>
-        <%= action_link("edit", "#", :class => "edit_location_link") if f.mode != :show %>
-      <% when "long_text" %>
-        <%= f.text_area(:value, :class => "qtype_#{type}", :index => answer_counter) %>
+        &nbsp;<%= action_link("edit", "#", :class => "edit_location_link") if f.mode != :show %>
       <% when "select_one" %>
         <%= f.select(:option_id, answer.question.select_options, {:include_blank => true}, :index => answer_counter) %>
       <% when "select_multiple" %>
@@ -23,21 +31,21 @@
         <%# special handling for date/time types in show mode, so we can apply localization %>
         <% if f.mode == :show %>
           <% format = type == "time" ? :time_only : :default %>
-          <strong><%= (val = answer.send("#{type}_value")).nil? ? "" : l(val, :format => format) %></strong>
+            <%= (val = answer.send("#{type}_value")).nil? ? "" : l(val, :format => format) %>
         <% else %>
           <%= f.send("#{type}_select", :"#{type}_value", :include_blank => true, :index => answer_counter) %>
         <% end %>
       <% end %>
     <% end %>
-    
+
     <%# setup condition js object unless in show mode %>
     <% if form_mode != :show && (cond = answer.questioning.condition) %>
       <script type="text/javascript">
-        ELMO.Response.conditions.push(new ELMO.Condition(<%= cond.to_json.html_safe %>));
+        ELMO.Response.conditions.push(new ELMO.Condition(<%=j cond.to_json.html_safe %>));
       </script>
     <% end %>
   </div>
   <% unless answer.question_hint.empty? %>
-    <div class="form_field_details"><%= answer.question_hint %></div>
+    <div class="details"><%= answer.question_hint %></div>
   <% end %>
 </div>

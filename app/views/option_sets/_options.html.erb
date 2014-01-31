@@ -1,0 +1,38 @@
+<% if form.mode != :show && can?(:add_options, @option_set) %>
+  <div class="add_options">
+    <input type="text" class="add_options_box">
+    <input type="button" class="btn_secondary" value="<%= t('common.add') %>" />
+  </div>
+<% end %>
+
+<div id="options_wrapper">
+</div>
+
+<% if form.mode != :show %>
+  <div class="edit_option_form" title="<%= t("option_set.edit_option") %>">
+    <%= data_integrity_warning(:option_standard_copy_name_change_warning) if @option_set.standard_copy? %>
+
+    <%# this warning will get hidden/shown by the js %>
+    <%= data_integrity_warning(:option_in_use_name_change_warning) %>
+
+    <% configatron.preferred_locales.each do |locale| %>
+      <div class="translation">
+        <label for="<%= locale %>"><%= language_name(locale) %></label>
+        <input type="text" id="name_<%= locale %>" data-locale="<%= locale %>" maxlength="30">
+      </div>
+    <% end %>
+  </div>
+<% end %>
+
+<%= javascript_doc_ready do %>
+  new ELMO.Views.OptionSetForm({
+    edit_link: <%=j action_link(:edit, '#').to_json.html_safe %>,
+    remove_link: <%=j action_link(:remove, '#').to_json.html_safe %>,
+    option_set: <%=j @option_set.as_json(:for_option_set_form => true).to_json.html_safe %>,
+    suggest_path: <%=j suggest_options_path.to_json.html_safe %>,
+    form_mode: <%=j form.mode.to_json.html_safe %>,
+    ajax_mode: <%=j ajax_request?.to_json.html_safe %>,
+    can_reorder: <%=j can?(:reorder_options, @option_set).to_json.html_safe %>,
+    can_remove_options: <%=j can?(:remove_options, @option_set).to_json.html_safe %>
+  });
+<% end %>

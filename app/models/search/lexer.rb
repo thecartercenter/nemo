@@ -1,11 +1,11 @@
 class Search::Lexer
   attr_reader :tokens
-  
+
   def initialize(str)
     @str = str.strip
     @tokens = []
   end
-  
+
   # performs a lexical analysis on @str
   def lex
     # while there are characters left
@@ -32,8 +32,13 @@ class Search::Lexer
             match = nil
           end
         end
+
         # if we found a match, create the LexToken and break
-        token = Search::LexToken.new(defn, match, @str) and break unless match.nil?
+        unless match.nil?
+          match = match.gsub('\\"', '"') if defn[:unescape_dbl_quotes]
+          token = Search::LexToken.new(defn, match, @str)
+          break
+        end
       end
       # if no token found, raise error
       if token.nil?

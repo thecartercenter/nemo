@@ -8,4 +8,8 @@ FactoryGirl.define do
     body "MyText"
     sent_at "2013-04-30 08:52:03"
   end
+
+  factory :sms_message_with_mission, :parent => :sms_message do
+    mission { get_mission }
+  end
 end

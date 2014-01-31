@@ -2,18 +2,27 @@
 module FormVersionable
   extend ActiveSupport::Concern
 
-  def notify_form_versioning_policy_of_create
-    FormVersioningPolicy.notify(self, :create)
-    return true
+  included do
+    before_create do
+      FormVersioningPolicy.notify(self, :create) if versionable?
+      return true
+    end
+
+    before_save do
+      FormVersioningPolicy.notify(self, :update) if versionable?
+      return true
+    end
+
+    before_destroy do
+      FormVersioningPolicy.notify(self, :destroy) if versionable?
+      return true
+    end
   end
 
-  def notify_form_versioning_policy_of_update
-    FormVersioningPolicy.notify(self, :update)
-    return true
-  end
-
-  def notify_form_versioning_policy_of_destroy
-    FormVersioningPolicy.notify(self, :destroy)
-    return true
+  # returns whether a specific object is subject to the versioning policy
+  # if this mixin is included, we know the overall class is subject to it
+  # this is currently true iff the object is not standard
+  def versionable?
+    !respond_to?(:is_standard?) || !is_standard?
   end
 end

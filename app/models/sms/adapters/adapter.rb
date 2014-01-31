@@ -6,41 +6,41 @@ class Sms::Adapters::Adapter
   def self.recognize_receive_request?(request)
     false
   end
-  
+
   # delivers a message to one or more recipients
   # raises an error if no recipients, wrong direction, or message empty
   # should also raise an error if the provider returns an error code
   # returns true if all goes well
-  # 
+  #
   # message   the message to be sent
   def deliver(message)
     # apply the adapter name to the message
     message.update_attributes(:adapter_name => service_name)
-    
+
     # error if no recipients or message empty
     raise Sms::Error.new("message has no recipients") if message.to.blank?
     raise Sms::Error.new("message body is empty") if message.body.blank?
-    
+
     # save the message now, which sets the sent_at
     message.save
   end
-  
+
   # recieves one or more sms messages
   # returns an array of Sms::Message objects
-  # 
+  #
   # params  the parameters sent from the sms provider
   def receive(params)
-    
+
   end
-  
+
   # returns the number of sms credits available in the provider account
   # should be overridden if this feature is available
   def check_balance
     raise NotImplementedError
   end
-  
+
   protected
-    
+
     # sends request to given uri, handles errors, or returns response text if success
     def send_request(uri)
       # create http handler
@@ -50,7 +50,7 @@ class Sms::Adapters::Adapter
 
       # create request
       request = Net::HTTP::Get.new(uri.request_uri)
-      
+
       # send request and catch errors
       begin
         response = http.request(request)
@@ -59,7 +59,7 @@ class Sms::Adapters::Adapter
       rescue
         raise Sms::Error.new("error contacting #{service_name} (#{$!.class.name}: #{$!.to_s})")
       end
-      
+
       # return body if it's a clean success, else error
       if response.is_a?(Net::HTTPSuccess)
         return response.body

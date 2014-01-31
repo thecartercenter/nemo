@@ -3,7 +3,7 @@ Basic Info
 ----------------------------
 Time: <%= Time.zone.now %>
 <% if @env && @params %>
-Location: <%= raw @env['REQUEST_URI'] %> 
+Location: <%= raw @env['REQUEST_URI'] %>
 Action: <%= @params[:action] %>
 Controller: <%= @params[:controller] %>
 Query: <%= raw @env['QUERY_STRING'] %>

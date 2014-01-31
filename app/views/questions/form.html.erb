@@ -1,0 +1,8 @@
+<% @title_args = {:code => @question.code, :standardized => @question.standardized?} %>
+
+<%= flash_and_form_errors(@question) %>
+
+<%= nice_form_for(@question) do |f| %>
+  <%= render('fields', :form => f) %>
+  <%= form_submit_button(f, :label => :save) %>
+<% end %>

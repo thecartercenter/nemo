@@ -5,18 +5,18 @@ class RemoveOldTranslationsTable < ActiveRecord::Migration
     tx = ActiveRecord::Base.connection.select("SELECT * FROM translations")
     tx.each do |row|
       # try to get object
-      obj = row['class_name'].constantize.find_by_id(row['obj_id']) 
+      obj = row['class_name'].constantize.find_by_id(row['obj_id'])
       if obj
         # assign appropriate field and save
         obj.send("#{row['fld']}_#{row['language']}=", row['str'])
         obj.save(:validate => false)
-        
+
       # print message if not found
       else
         puts "#{row['class_name']} #{row['obj_id']} not found."
       end
     end
-    
+
     # set default values for any fields without translations
     puts "Checking for missing translations"
     [Question, Option].each do |klass|
@@ -26,7 +26,7 @@ class RemoveOldTranslationsTable < ActiveRecord::Migration
         obj.save(:validate => false)
       end
     end
-    
+
     drop_table :translations
   end
 

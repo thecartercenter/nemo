@@ -1,0 +1,114 @@
+/* variables */
+$theme_green: #9dc400;
+
+form.option_set_form {
+  /* narrower labels and wider controls */
+  label.main {
+    width: 100px;
+  }
+
+  div.control {
+    width: 475px;
+  }
+
+  div.add_options {
+    margin-bottom: 20px;
+
+    input[type=text] {
+      width: 350px;
+    }
+
+    input[type=button] {
+      vertical-align: top;
+      margin-left: 5px;
+      display: inline-block;
+    }
+  }
+
+  /* FOR THE SORTABLE/DRAGGABLE LIST */
+
+  #options_wrapper ol {
+    padding-left: 0;
+    margin: 0 20px 0 0;
+
+    li {
+      display: block;
+      margin: 5px 0;
+      min-height: 15px;
+      border-radius: 5px;
+      -moz-border-radius: 5px;
+      -webkit-border-radius: 5px;
+      padding: 5px;
+      border: 1px solid #CCC;
+      background: #eee;
+      cursor: default;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      div {
+        /* icon */
+        i.icon-sort {
+          margin-right: 5px;
+        }
+
+        /* locales */
+        em {
+          display: block;
+          float: right;
+          min-width: 40px;
+          text-align: left;
+          font-style: normal;
+          font-size: 11px;
+          margin-left: 10px;
+          color: $theme_green;
+        }
+
+        /* edit/remove links */
+        div.links {
+          float: right;
+          text-align: right;
+          width: 50px;
+        }
+      }
+    }
+  }
+
+  /* this becomes the modal, so hide it initially */
+  div.edit_option_form {
+    display: none;
+  }
+}
+
+/* EDIT OPTION MODAL WINDOW
+   (not inside the form since it's appended to the body) */
+
+div.edit_option_modal {
+
+  div.ui-dialog-content {
+
+    div.data_integrity_warning {
+      margin-top: -8px;
+    }
+
+    div.translation {
+      height: 40px;
+
+      &:first-child {
+        margin-top: 10px;
+      }
+
+      label {
+        width: 125px;
+        display: inline-block;
+      }
+
+      input[type=text] {
+        padding: 3px;
+        display: inline-block;
+        width: 250px;
+      }
+    }
+  }
+}

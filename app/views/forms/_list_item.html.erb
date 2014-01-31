@@ -1,0 +1,7 @@
+<%# how this form should be represented in a list. the form is stored 'obj'. %>
+<div><%= obj.name %></div>
+<small>
+  <%= obj.questionings.count %> <%= pluralize_model(Question, :count => obj.questionings.count) %>
+  -
+  <%= t('layout.updated_at') %> <%= l(obj.updated_at) %>
+</small>

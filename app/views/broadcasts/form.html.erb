@@ -1,28 +1,28 @@
 <%= flash_and_form_errors(@broadcast) %>
 
 <%= nice_form_for(@broadcast) do |f| %>
-  
+
   <%= form_field(f, :recipient_ids, :type => :hidden) %>
   <%= form_field(f, :to, :partial => "recipients") %>
-  <%= form_field(f, :medium, :type => :select, 
+  <%= form_field(f, :medium, :type => :select,
     :options => translate_options(Broadcast::MEDIUM_OPTIONS, [:broadcast, :mediums, :options]), :required => true) %>
-  
+
   <% if !@balance.nil? && f.mode != :show %>
     <%= form_field(f, :balance, :partial => "balance") %>
   <% end %>
-  
-  <%= form_field(f, :which_phone, :type => :select, 
+
+  <%= form_field(f, :which_phone, :type => :select,
     :options => translate_options(Broadcast::WHICH_PHONE_OPTIONS, [:broadcast, :which_phone_options]), :required => true) %>
   <%= form_field(f, :subject, :required => true) %>
   <%= form_field(f, :body, :required => true, :partial => "body") %>
   <% if f.mode == :show && @broadcast.send_errors %>
     <%= form_field(f, :send_errors, :partial => "send_errors") %>
   <% end %>
-  
+
   <%= form_submit_button(f, :label => :send) %>
 <% end %>
 
 <%= javascript_doc_ready do %>
-  $("#broadcast_medium").change(broadcast_medium_changed); 
+  $("#broadcast_medium").change(broadcast_medium_changed);
   $("#broadcast_medium").trigger("change");
 <% end %>

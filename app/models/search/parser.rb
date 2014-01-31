@@ -1,99 +1,101 @@
 class Search::Parser
-  
+  attr_reader :sql
+
   # GRAMMAR
-  # query ::= "(" query ")" | term bin-bool-op query | term query | term
-  # term ::= qual-term | unqual-term
-  # unqual-term ::= target
-  # qual-term ::= CHUNK comp-op target-set
-  # bin-bool-op ::= "and" | "or"
-  # comp-op ::= "=" | ":" | "<" | ">" | "<=" | ">=" | "!=" | "<>"
-  # target-set ::= target "," target-set | target
-  # target ::= STRING | CHUNK
-  
-  COMP_OP = [:colon, :equal, :lt, :gt, :lteq, :gteq, :gtlt, :noteq]
-  BIN_BOOL_OP = [:and, :or]
-  
-  def initialize(search)
-    @search = search
-    @str = @search.str
+  # query ::= expression query | expression
+  # expression ::= qualified-expression | unqualified-expression
+  # unqualified-expression ::= values
+  # qualified-expression ::= CHUNK comp-op rhs
+  # rhs ::= value | "(" values ")"
+  # values ::= value values | value or-op values | value
+  # value ::= CHUNK | STRING
+  # comp-op ::= "=" | ":" | "<" | ">" | "<=" | ">=" | "!="
+  # or ::= "|" | "OR"
+
+  COMP_OP = [:colon, :equal, :lt, :gt, :lteq, :gteq, :noteq]
+
+  def initialize(attribs)
+    attribs.each{|k,v| instance_variable_set("@#{k}", v)}
   end
-  
+
   def parse
-    unless @str.blank?
-      @lexer = Search::Lexer.new(@str)
+    if @search.str.blank?
+      @sql = "1"
+    else
+      @lexer = Search::Lexer.new(@search.str)
       @lexer.lex
-      @query = take(:query)
+      @query = take(nil, :query)
+      # puts "PARSE TREE\n" + @query.to_s_indented
+      @sql = @query.to_sql
     end
   end
-  
-  def sql
-    # default sql is simply "1" (which matches all records)
-    @query ? @query.to_sql : "1"
-  end
-  
-  def assoc
-    @query ? @query.assoc : []
-  end
-  
+
   private
-    def take(kind)
-      #puts "TAKING #{kind} FROM #{@lexer.tokens[0].fragment}"
-      Search::Token.new(@search, kind, 
-        case kind
+
+    # parses a token of the specified kind out of the lexical tokens
+    # returns an array of Tokens and/or LexTokens corresponding to the matching grammar rule
+    def take(parent, kind)
+      #puts "PARENT #{parent.try(:kind)} TAKING #{kind} FROM #{@lexer.tokens[0].fragment} NEXT IS #{@lexer.tokens[1..2].map(&:kind).join(',')}"
+      token = Search::Token.new(@search, kind, parent)
+
+      token.children = case kind
         when :query
-          if next_is(:lparen)
-            [take_terminal(:lparen), take(:query), take_terminal(:rparen)]
+          [take(token, :expression)] + (next_is?(:eot) ? [] : [take(token, :query)])
+
+        when :expression
+          raise Search::ParseError.new(I18n.t("search.or_not_allowed_between")) if next_is?(:or)
+          [(next_is?(:chunk) && next2_is?(*COMP_OP)) ? take(token, :qualified_expression) : take(token, :unqualified_expression)]
+
+        when :unqualified_expression
+          [take(token, :values)]
+
+        when :qualified_expression
+          [take_terminal(token, :chunk), take_terminal(token, *COMP_OP), take(token, :rhs)]
+
+        when :rhs
+          if next_is?(:lparen)
+            [take_terminal(token, :lparen), take(token, :values), take_terminal(token, :rparen)]
           else
-            [take(:term)] + 
-              if next_is(*BIN_BOOL_OP)
-                [take(:bin_bool_op), take(:query)]
-              elsif !next_is(:eot,:rparen)
-                [take(:query)]
-              else
-                []
-              end
+            [take(token, :value)]
           end
-          
-        when :term
-          (next_is(:chunk) && next2_is(*COMP_OP)) ? take(:qual_term) : take(:unqual_term)
-      
-        when :unqual_term
-          take(:target)
-        
-        when :qual_term
-          [take_terminal(:chunk), take(:comp_op), take(:target_set)]
-      
-        when :bin_bool_op
-          take_terminal(*BIN_BOOL_OP)
-      
-        when :comp_op
-          take_terminal(*COMP_OP)
-      
-        when :target_set
-          [take(:target)] + (next_is(:comma) ? [take_terminal(:comma), take(:target_set)] : [])
-        
-        when :target
-          take_terminal(:chunk, :string)
+
+        when :values
+          [take(token, :value)] +
+            if next_is?(:eot, :rparen) || next2_is?(*COMP_OP)
+              []
+            elsif next_is?(:or)
+              [take_terminal(token, :or), take(token, :values)]
+            else
+              [take(token, :values)]
+            end
+
+        when :value
+          [take_terminal(token, :chunk, :string)]
+
         end
-      )
+
+      token
     end
-  
-    def take_terminal(*options)
-      if next_is(*options)
-        @lexer.tokens.shift
+
+    def take_terminal(parent, *options)
+      if next_is?(*options)
+        # set parent for lex token and return
+        lex_token = @lexer.tokens.shift
+        lex_token.parent = parent
+        lex_token
       else
         expected = options.collect{|o| o.to_s.upcase}.compact.join("' #{I18n.t('common.or')} '")
         near = @lexer.tokens[0].fragment
         near = near.empty? ? I18n.("searches.at_end_of_query") : "#{I18n.t('common.near').downcase} '#{near}'"
         raise Search::ParseError.new("#{I18n.t('search.expected')} '#{expected}' #{near}")
-      end 
+      end
     end
-  
-    def next_is(*options)
+
+    def next_is?(*options)
       options.include?(nil) || options.include?(@lexer.tokens[0].kind)
     end
-  
-    def next2_is(*options)
+
+    def next2_is?(*options)
       options.include?(nil) || @lexer.tokens[1] && options.include?(@lexer.tokens[1].kind)
     end
 end

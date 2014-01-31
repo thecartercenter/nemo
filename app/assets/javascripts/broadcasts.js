@@ -1,4 +1,4 @@
-function broadcast_medium_changed() { 
+function broadcast_medium_changed() {
   var select = $('#broadcast_medium')[0];
   var selected = select.options[select.selectedIndex].value;
   var sms_possible = selected != "email_only" && selected != "";
