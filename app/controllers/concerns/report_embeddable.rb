@@ -32,7 +32,7 @@ module ReportEmbeddable
   # returns true if no errors, false otherwise
   def run_and_handle_errors
     begin
-      @report.run
+      @report.run(current_ability)
       return true
     rescue Report::ReportError, Search::ParseError
       @report.errors.add(:base, $!.to_s)
