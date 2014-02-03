@@ -24,7 +24,9 @@ class Answer < ActiveRecord::Base
   validate(:min_max)
   validate(:required)
 
-  delegate :question, :qtype, :rank, :required?, :hidden?, :options, :to => :questioning
+  validate(:questionable_is_correct_type)
+
+  delegate :question, :qtype, :rank, :required?, :hidden?, :option_set, :options, :to => :questioning
   delegate :name, :hint, :to => :question, :prefix => true
 
   # creates a new answer from a string from odk
@@ -185,6 +187,13 @@ class Answer < ActiveRecord::Base
         else
           self.value = ""
         end
+      end
+    end
+
+    # questionable must be a subquestion when question is multilevel
+    def questionable_is_correct_type
+      if option_set.try(:multi_level?) && questionable.try(:type) != 'Subquestion'
+        raise "questionable must be a subquestion when question is multilevel"
       end
     end
 end
