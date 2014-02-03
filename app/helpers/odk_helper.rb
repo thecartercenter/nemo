@@ -4,7 +4,8 @@ module OdkHelper
 
   # if a question is required, then determine the appropriate value based off of if the form allows incomplete responses
   def required_value(form)
-    form.allow_incomplete? ? "selected(/data/#{IR_QUESTION}, '1')" : "true()"
+    # if form allows incompletes, question is required only if the answer to 'are there missing answers' is 'no'
+    form.allow_incomplete? ? "selected(/data/#{IR_QUESTION}, 'no')" : "true()"
   end
 
   # generator for binding portion of xml.
@@ -36,7 +37,7 @@ module OdkHelper
     tag("bind", {
       'nodeset' => "/data/#{IR_CODE}",
       'required' => "true()",
-      'relevant' => "selected(/data/#{IR_QUESTION}, '2')",
+      'relevant' => "selected(/data/#{IR_QUESTION}, 'yes')",
       'constraint' => ". = '#{form.override_code}'",
       'type' => "string",
      }.reject{|k,v| v.nil?}).gsub(/"required"/, '"true()"').html_safe
