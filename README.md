@@ -36,7 +36,7 @@ Note to install the software below we recommend the following package managers:
 
 1. **Ruby 1.9.3+**
 
-1. **Memcached**
+1. **Memcached 1.4+**
   - A good resource on how to install on a Mac is [here](http://www.jroller.com/JamesGoodwill/entry/installing_and_configuring_memcached)
   - Ensure memcached is running, even for development, since caching is enabled in development and production environments.
 
@@ -46,6 +46,12 @@ Note to install the software below we recommend the following package managers:
 1. **Web Server**
   - If your instance is for development only, you can use Rails' built-in web server by running `rails s`, as discussed below.
   - If your instance is for production use, you will need a production-grade web server, such as nginx or Apache, and app server, such as Passenger, Unicorn, Thin, etc.
+
+1. **Sphinx 2.0.6+**
+  - Sphinx is an open source search engine.
+  - It should be available through any of the package managers listed above. If not it can be built from source.
+  - The Rails Gem that talks to Sphinx is called Thinking Sphinx.
+  - The [Thinking Sphinx site](http://pat.github.io/thinking-sphinx/) is a good place to go for troubleshooting and documentation.
 
 ### Running the App
 

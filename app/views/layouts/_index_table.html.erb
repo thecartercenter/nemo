@@ -23,7 +23,8 @@
                 <% if f.is_a?(Hash) %>
                   <%= f[:title] %>
                 <% else %>
-                  <%= f == "actions" ? "" : objects[0].class.human_attribute_name(f) %>
+                  <%= f == "actions" ? "" : t("activerecord.table_headers.#{objects.first.class.model_name.i18n_key}.#{f}",
+                    :default => objects[0].class.human_attribute_name(f)) %>
                 <% end %>
               </th>
             <% end %>
@@ -82,7 +83,9 @@
 
   <%# pagination links (don't show if there are no entries) %>
   <% if !options[:table_only] && paginated && objects.total_entries > 0 %>
-    <%= will_paginate(objects) %>
+    <div class="paginate-container">
+      <%= will_paginate(objects, renderer: BootstrapPagination::Rails) %>
+    </div>
   <% end %>
 
 </div>

@@ -4,7 +4,7 @@ module ResponsesHelper
     if params[:controller] == 'dashboard'
       fields = %w(form_id user_id) + key_question_hashes(2) + %w(created_at reviewed)
     else
-      fields = %w(id form_id user_id) + key_question_hashes(2) + %w(created_at age reviewed actions)
+      fields = %w(id form_id user_id) + key_question_hashes(2) + %w(incomplete created_at age reviewed actions)
     end
   end
 
@@ -23,6 +23,7 @@ module ResponsesHelper
       when "form_id" then resp.form_name
       when "created_at" then resp.created_at ? l(resp.created_at) : ""
       when "age" then resp.created_at ? time_ago_in_words(resp.created_at) : ""
+      when "incomplete" then tbool(resp.incomplete?)
       when "reviewed" then tbool(resp.reviewed?)
       when "user_id" then resp.submitter
       when "actions"
@@ -39,11 +40,6 @@ module ResponsesHelper
 
   def responses_index_links(responses)
     links = []
-
-    # only add the create response link if there are any published forms and the user is auth'd to create
-    if !@pubd_forms.empty? && can?(:create, Response)
-      links << create_link(Response, :js => true) + new_response_mini_form(false)
-    end
 
     # only add the export link if there are responses and the user is auth'd to export
     if !responses.empty? && can?(:export, Response)

@@ -1,5 +1,13 @@
 /* general layout styles */
 $nav_width: 135px;
+$light-blue: #D9ECF7;
+$light-yellow: #F7F6D9;
+$orange: #F77D48;
+$gray-blue: #D4DCE1;
+$gray: #3F3E3E;
+$light-gray: #BDB9B9;
+$elmo-blue: #879CAA;
+$sans-serif: 'Open Sans', Helvetica, sans-serif;
 
 body {
   background-color: #879CAA;
@@ -9,11 +17,37 @@ body {
   color: white;
   text-align: right;
   padding-right: 5px;
-  margin-top: 2px;
+  margin-top: 19px;
   height: 25px;
+  float: right;
 
   a, form.button_to input {
     color: white;
+  }
+
+  a.login {
+    color: $gray;
+    margin: 10px 22px 0 0;
+  }
+
+  .icon-btn {
+    display: inline-block;
+    width: 58px;
+    margin: 0 5px 0 5px;
+    text-align: center;
+
+    a:hover {
+      color: $light-blue;
+      text-decoration: none;
+    }
+
+    .admin-mode {
+      color: $light-yellow;
+    }
+  }
+
+  span {
+    display: inline-block;
   }
 
   form {
@@ -21,13 +55,19 @@ body {
 
     select {
       font-size: 9pt;
+      vertical-align: top;
+      display: inline-block;
+      width: 190px;
+      height: 27px;
+      margin-right: 10px;
     }
   }
 }
 
 #title {
   color: white;
-  margin: 10px 0 10px $nav_width;
+  margin: 10px 0 10px 15px;
+  display: inline-block;
 
   > div {
     display: inline-block;
@@ -36,9 +76,9 @@ body {
 
   img {
     display: inline-block;
-    height: 54px; /* explicit height to prevent shifting during load */
+    margin: 12px 0 12px 12px;
+    height: 54px;  /* explicit height to prevent shifting during load */
     vertical-align: bottom;
-    padding-bottom: 25px;
   }
 
   a { color: white; text-decoration: none; }
@@ -46,6 +86,7 @@ body {
   h2 {
     font-size: 24px;
     font-family: "Raleway", sans-serif;
+    font-weight: bold;
     width: 300px;
     margin: 0;
     color: #D9ECF7;
@@ -53,7 +94,7 @@ body {
     text-transform: lowercase;
     vertical-align: bottom;
     line-height: 24px;
-    padding-bottom: 23px;
+    padding-bottom: 12px;
 
     /* trophy icon */
     i {
@@ -62,73 +103,124 @@ body {
   }
 }
 
-#nav {
-  width: $nav_width;
-  color: white;
-  float: left;
 
-  .standard_label {
-    margin-left: 10px;
+nav {
+  /* Override Bootstrap */
+  margin-bottom: 0px !important;
+  border-radius: 0px !important;
+  height: 51px;
+
+  /* For standard label in admin mode */
+  .navbar-header.std {
+    margin-left: 10px !important;
     text-transform: uppercase;
-    color: #ccc;
+    color: $light-gray;
+    margin: 19px 27px 0px 30px;
+    font-weight: bold;
   }
 
-  ul {
-    font-weight: bold;
-    padding: 0 5px 5px 5px;
-    margin: 0 10px 5px 10px;
-    list-style-type: none;
-    border-bottom: 1px solid #ccc;
-
-    &.indented {
-      padding-left: 10px;
-    }
-
-    &:last-child {
-      border: none;
-    }
+  ul.navbar-nav {
 
     li {
-      margin: 0;
-      padding: 3px 0;
+      padding: 15px 6px 15px 6px;
+      margin: 0px 6px 0px 0px;
+
+      a:hover, &:hover, &:focus {
+        color: $orange;
+      }
+
+      /* Overriding bootstrap navbar prefs */
+      &.active a {
+        background-color: $light-blue !important;
+      }
 
       a {
         text-decoration: none;
-        color: white;
+        font-family: "Raleway";
+        font-weight: bold;
+        font-size: 11pt;
+        display: inline-block;
+        vertical-align: middle;
+        padding: 0;
 
-        &:hover {
+        &:hover, &:focus {
           text-decoration: none;
-          color: #0065d1;
+          color: $orange !important;
+        }
+
+      }
+
+      i {
+        vertical-align: middle;
+        margin-right: 5px;
+        display: inline-block;
+        color: $light-gray;
+        font-size: 13pt;
+      }
+
+      &.active {
+        background-color: $light-blue;
+      }
+
+      &:hover {
+        color: $light-blue;
+      }
+    }
+
+    .line {
+      border-right: 1px solid $light-gray;
+      display: inline-block;
+      width: 2px;
+      height: 20px;
+    }
+
+    ul.dropdown-menu {
+      top: 78%;
+      left: 24px;
+      li {
+        font-weight: normal;
+        font-family: $sans-serif;
+        padding: 4px 0px 6px 15px;
+
+        &:hover, &:focus {
+          background: none;
+        }
+        a {
+          font-weight: normal;
+          font-family: $sans-serif;
+          font-size: 10pt;
+
+          &:hover, &:focus {
+            background: none;
+            color: $orange;
+          }
         }
       }
-
-      &.active a {
-        color: #bdf;
-      }
+    }
+    li.dropdown {
+      padding-left: 28px;
     }
   }
 }
 
 #content {
-  margin-left: $nav_width;
-  padding: 15px 15px 30px 15px;
+  padding: 20px 25px 30px 25px;
   min-height: 400px;
   background-color: white;
+  a i { color: $elmo-blue;}
+
 }
 
 #footer {
-  padding: 5px;
-  color: #ddd;
-  text-align: right;
-  height: 25px;
-  margin-left: $nav_width;
-
-  * {
-    vertical-align: top;
-  }
+  padding-top: 108px;
+  vertical-align: middle;
+  background-color: $gray-blue;
+  color: gray;
+  text-align: center;
+  height: 300px;
 
   a {
-    color: #ddd;
+    color: $orange;
   }
 
   #locale_form {
@@ -156,7 +248,7 @@ div.status_messages.no_ajax {
   div.success, div.error {
     position: absolute;
     left: 27%;
-    top: 115px;
+    top: 149px;
     padding: 3px;
     color: white;
     font-weight: bold;

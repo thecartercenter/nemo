@@ -31,6 +31,8 @@ en:
       other: "Examples"
     example_abbr: "e.g."
     found: "Found"
+    generate: "Generate"
+    inactive: "Inactive"
     language: "Language"
     login: "Login"
     logout: "Logout"
@@ -43,6 +45,7 @@ en:
     or: "or"
     previous: "Previous"
     print: "Print"
+    regenerate: "Regenerate"
     remove: "Remove"
     report: "Report"
     reset: "Reset"
@@ -204,6 +207,7 @@ en:
         to: "To"
         which_phone: "Which Phone(s)"
       form:
+        allow_incomplete: "Allow Incomplete?"
         copy_responses_count: "Copy Responses"
         downloads: "Downloads"
         responses: "Responses"
@@ -212,6 +216,7 @@ en:
         version: "Version"
       mission:
         compact_name: "Compact Name"
+        locked: "Locked?"
       option:
         base: "" # this is a sort of hack to get error msg to display properly
       option_set:
@@ -245,6 +250,7 @@ en:
         reviewed: "Reviewed?"
         source: "Source"
         user_id: "User/Team"
+        incomplete: "Are there missing required answers?"
       report/report:
         aggregation: "Operation"
         aggregation_id: "Operation"
@@ -272,6 +278,7 @@ en:
         isms_username: "Username"
         preferred_locales_str: "Preferred Languages"
         outgoing_sms_adapter: "Provider"
+        override_code: "Override Code"
         tableau_sql: "Tableau SQL" # Tableau is a software product name and shouldn't be translated
         timezone: "Time Zone"
       sms/message:
@@ -297,9 +304,16 @@ en:
         role: "Role"
       user_batch:
         batch: "User Attributes"
+
+    # these strings override the attribute strings above in table headers only
+    table_headers:
+      response:
+        incomplete: "Incomplete?"
+
     tips:
       mission:
         name: "A name for this Mission. Maximum 32 characters. Must be unique. Think about including the year if there will be future missions with the same name."
+        locked: "If a mission is locked, Responses and Forms cannot be created or edited and Users cannot be added or deleted."
       option:
         name: "The textual description of this option that users will see."
       option_set:
@@ -331,6 +345,8 @@ en:
         pri_grouping: "An attribute or question by which the response count should be grouped (e.g. state, overall rating)."
         percent_type: "Whether and how percentages should be calculated for the report."
         bar_style: "Whether bars should be stacked or side-by-side."
+      response:
+        incomplete: "Check this box if there are required questions for which you can't provide answers. You will then be able to save this response without answering those questions and this response will be marked as 'incomplete'."
       setting:
         preferred_locales_str: |-
           Enter the <a href="http://www.loc.gov/standards/iso639-2/php/code_list.php" target="_blank">two-letter codes</a>, separated by commas, for the languages for this mission, in order of preference.
@@ -339,6 +355,10 @@ en:
           * The default language preference for new users
           * The default language for SMS replies
           * The languages for Questions and Options
+        override_code: |-
+          This code should be given to observers if the ability to send incomplete responses is needed. ODK will not allow submission of incomplete responses without this code.
+
+          If generating a new code, please record the old code if there are previous live forms. The new code will only work for forms downloaded after the code is regenerated.
         incoming_sms_number: "Enter the phone number to which incoming SMSes for SMS forms should be sent. This will be displayed on the SMS guide."
         outgoing_sms_adapter: "The adapter used to send outgoing SMSes."
         intellisms_username: "The username for the IntelliSMS account."
@@ -463,11 +483,13 @@ en:
     time_ago: "%{time} ago"
     time_zone: "Time Zone"
     updated_at: "Updated at"
+    no_published_forms: "No published forms"
+
 
   # pagination translations
   will_paginate:
-    previous_label: "&#8592; Previous"
-    next_label: "Next &#8594;"
+    previous_label: "&#171;"
+    next_label: "&#187;"
     page_gap: "&hellip;" # this entry should be the same for all languages
     # please preserve <b> and </b> tags in the below
     broadcast:
@@ -783,6 +805,18 @@ en:
     unsaved_rank_notice: "You have not yet saved the changes you made to the Question order. You should click the 'Save' button if you want to save these changes."
     view_sms_guide: "View SMS Guide"
 
+  incomplete_response:
+    missing_answers:
+      label: "Is this form missing any required answers?"
+      hint: "This form allows submission of incomplete responses in special situations. If you are not sure whether any required answers are missing, choose 'I don't think so' and then save."
+      foo: "bar"
+      options:
+        # these keys need to be quoted
+        "no": "I don't think so"
+        "yes": "Yes"
+
+    code_label: "Enter the incomplete override code"
+
   location_picker:
     choose_location: "Choose Location"
     current_location: "Current Location"
@@ -806,6 +840,9 @@ en:
     create_link: "Create Option"
 
   option_set:
+    clone_confirm: "Are you sure you want to make a copy of the Option Set '%{name}'?"
+    clone_error: "There was a problem cloning the Option Set (%{msg})."
+    clone_success: "Option Set '%{name}' cloned successfully."
     create_new: "[Create New Option]"
     create_link: "Create Option Set"
     edit_option: "Edit Option"
@@ -1004,7 +1041,6 @@ en:
         - "form: polling"
         - "reviewed: 1"
         - "submit-date < 2013-10-15"
-        - "text: intimidation"
         - "{QuestionCode}: (disruption security)"
       users:
         - "john smith"
@@ -1161,6 +1197,7 @@ en:
 
   setting:
     change_sms_password: "Change SMS Password"
+    override_code_warning: "Note that the new override code will not work with forms that have already been downloaded. You should record the existing code if this is a problem. Are you sure you want to regenerate the code?"
     headings:
       general: "General Settings"
       incoming_sms: "Incoming SMS Settings"

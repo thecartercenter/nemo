@@ -138,7 +138,7 @@ class UsersController < ApplicationController
       @blank_assignment = Assignment.new(:active => true, :user_id => current_user.id)
 
       # get assignable missons and roles for this user
-      @assignable_missions = Mission.accessible_by(current_ability, :assign_to)
+      @assignable_missions = Mission.accessible_by(current_ability, :assign_to).sorted_by_name
       @assignable_roles = Ability.assignable_roles(current_user)
 
       render(:form)

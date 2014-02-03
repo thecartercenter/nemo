@@ -125,7 +125,8 @@
 
       // don't show the removable link if the specific option isn't removable
       // or if the global removable permission is false
-      if (self.params.can_remove_options && optioning.removable) links.append(self.params.remove_link);
+      if (self.params.can_remove_options && optioning['removable?']) links.append(self.params.remove_link);
+
 
       links.appendTo(inner);
     }

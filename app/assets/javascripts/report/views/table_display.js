@@ -62,7 +62,7 @@
       // rest of header cells
       if (headers.col) {
         $(headers.col.cells).each(function(idx, ch) {
-          $("<th>").addClass("col").text(ch.name || "[" + I18n.t("report/report.blank") + "]").appendTo(trow);
+          $("<th>").addClass("col").html(ch.name || "[" + I18n.t("report/report.blank") + "]").appendTo(trow);
         });
       }
 
@@ -93,7 +93,7 @@
 
       // row header
       if (headers.row)
-        $("<th>").addClass("row").text(headers.row.cells[r].name || "[" + I18n.t("report/report.blank") + "]").appendTo(trow);
+        $("<th>").addClass("row").html(headers.row.cells[r].name || "[" + I18n.t("report/report.blank") + "]").appendTo(trow);
 
       // row cells
       $(data_row).each(function(c, cell) {
@@ -113,7 +113,7 @@
           }
           val = _this.format_percent(val);
         }
-        $("<td>").text(val).addClass(typ).appendTo(trow);
+        $("<td>").html(val).addClass(typ).appendTo(trow);
       });
 
       // row total

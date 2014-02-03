@@ -45,7 +45,8 @@ class Form < ActiveRecord::Base
   scope(:default_order, order('forms.name'))
 
   replicable :child_assocs => :questionings, :uniqueness => {:field => :name, :style => :sep_words},
-    :dont_copy => [:published, :downloads, :responses_count, :questionings_count, :upgrade_needed, :smsable, :current_version_id]
+    :dont_copy => [:published, :downloads, :responses_count, :questionings_count, :upgrade_needed,
+      :smsable, :current_version_id, :allow_incomplete]
 
   # remove heirarch of objects
   def self.terminate_sub_relationships(form_ids)
@@ -68,6 +69,11 @@ class Form < ActiveRecord::Base
   def full_name
     # this used to include the form type, but for now it's just name
     name
+  end
+
+  # current override code for incomplete responses
+  def override_code
+    mission.override_code
   end
 
   # returns whether this form or (if standard) any of its copies have responses, using an eager loaded col if available

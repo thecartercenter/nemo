@@ -13,11 +13,15 @@ gem 'authlogic'
 gem 'rake'
 gem 'mysql2', '0.3.12b5' # beta version needed for sphinx
 gem 'will_paginate'
+gem 'will_paginate-bootstrap'
 gem 'configatron'
 gem 'libxml-ruby'
 gem 'rdiscount'
 gem 'jquery-rails'
 gem 'random_data'
+
+# Ckeditor integration gem for rails http://ckeditor.com/
+gem "ckeditor"
 
 # building factories for testing -- stupid and offensive name but it's a good gem :(
 gem "factory_girl_rails", "~> 4.0"
@@ -71,3 +75,6 @@ gem 'database_cleaner', :group => [:development, :test]
 
 # cron management
 gem 'whenever', :require => false
+
+# Bootstrap UI framework
+gem 'bootstrap-sass', '~> 3.0.3.0'

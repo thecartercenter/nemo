@@ -1,7 +1,7 @@
 <%# user block %>
 <% if can?(:index, User) %>
   <div class="block">
-    <%= link_to(t("common." + (can?(:create, User) ? "manage" : "contact")), users_path, :class => "title") %>
+    <%= link_to(t("common." + (can?(:update, User) ? "manage" : "contact")), users_path, :class => "title") %>
     <%= link_to(pluralize_model(User), users_path, :class => "subtitle") %>
     <%= link_to(image_tag("blocks/block_manage.png"), users_path) %>
     <ul>

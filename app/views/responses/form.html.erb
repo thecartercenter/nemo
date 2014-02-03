@@ -37,6 +37,8 @@
 
   <%= render(:partial => "answer", :collection => @response.all_answers) %>
 
+  <%= form_field(f, :incomplete, :type => :check_box) if can?(:submit_incomplete, @response) %>
+
   <%= form_buttons do %>
     <%= form_submit_button(f, :label => :save, :multiple => true) %>
     <%= form_submit_button(f, :label => t("response.save_and_mark_reviewed"), :name => "commit_and_mark_reviewed",
@@ -47,4 +49,5 @@
 
 <%= javascript_doc_ready do %>
   ELMO.Response.init();
+  $('textarea').ckeditor();
 <% end %>

@@ -60,7 +60,7 @@ module NiceFormsHelper
             when :check_box
               # if we are in show mode, show 'yes' or 'no' instead of checkbox
               if f.mode == :show
-                content_tag("strong"){tbool(f.object.send(method))}
+                tbool(f.object.send(method))
               else
                 f.check_box(method)
               end

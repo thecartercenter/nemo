@@ -3,6 +3,7 @@
 <%= flash_and_form_errors(@mission) %>
 <%= nice_form_for(@mission) do |f| %>
   <%= form_field(f, :name, :required => true, :maxlength => 32) %>
+  <%= form_field(f, :locked, :type => :check_box) %>
   <%= form_field(f, :compact_name) if f.mode == :show %>
   <%= form_submit_button(f, :label => :save) %>
 <% end %>

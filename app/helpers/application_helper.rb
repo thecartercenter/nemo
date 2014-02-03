@@ -2,14 +2,26 @@ module ApplicationHelper
 
   FONT_AWESOME_ICON_MAPPINGS = {
     :clone => "copy",
-    :destroy => "trash",
-    :edit => "edit",
+    :destroy => "trash-o",
+    :edit => "pencil",
     :map => "globe",
     :print => "print",
     :publish => "arrow-up",
-    :remove => "remove",
+    :remove => "times",
     :sms => "comment",
-    :unpublish => "arrow-down"
+    :unpublish => "arrow-down",
+    :submit => "share-square-o",
+    :response => "check-circle-o",
+    :report_report => "bar-chart-o",
+    :report => "bar-chart-o",
+    :form => "file-text-o",
+    :question => "question-circle",
+    :option_set => "list-ul",
+    :optionset => 'list-ul',
+    :user => "users",
+    :broadcast => "bullhorn",
+    :setting => "gear",
+    :mission => "briefcase"
   }
 
   ERROR_MESSAGE_KEYS_TO_HIDE = {
@@ -27,7 +39,7 @@ module ApplicationHelper
     # join passed html class (if any) with the default class
     html_options[:class] = [html_options[:class], "action_link", "action_link_#{action}"].compact.join(" ")
 
-    link_to(content_tag(:i, "", :class => "icon-" + FONT_AWESOME_ICON_MAPPINGS[action.to_sym]), href, html_options)
+    link_to(content_tag(:i, "", :class => "fa fa-" + FONT_AWESOME_ICON_MAPPINGS[action.to_sym]), href, html_options)
   end
 
   # assembles links for the basic actions in an index table (edit and destroy)
@@ -215,16 +227,22 @@ module ApplicationHelper
     end
 
     ttl = ''
+    model_name = controller_name.classify.downcase
 
-    # add seal if appropriate
-    if !options[:text_only]
-      if admin_mode? && %w(forms questions questionings option_sets).include?(controller_name) || @title_args.delete(:standardized)
-        ttl += image_tag('std-seal.png') + ' '
-      end
+    # add icon where appropriate
+   if !options[:text_only] && (icon_name = FONT_AWESOME_ICON_MAPPINGS[model_name.to_sym])
+      ttl += content_tag(:i, "", :class => "fa fa-" + icon_name)
     end
 
     # add text
     ttl += t(action, {:scope => "page_titles.#{controller_name}", :default => [:all, ""]}.merge(@title_args || {}))
+
+    # add seal after text if appropriate
+    if !options[:text_only]
+      if admin_mode? && %w(forms questions questionings option_sets).include?(controller_name) || @title_args.delete(:standardized)
+        ttl +=  content_tag(:i, "", :class => "fa fa-certificate")
+      end
+    end
 
     ttl.html_safe
   end
@@ -286,8 +304,13 @@ module ApplicationHelper
     klasses.each do |k|
       if can?(:index, k)
         path = send("#{k.model_name.route_key}_path")
-        active = request.fullpath == path
-        l << content_tag(:li, link_to(pluralize_model(k), path), :class => active ? 'active' : '')
+        active = current_page?(path)
+        l << content_tag(:li, :class => active ? 'active' : '') do
+          link_to(path) do
+            content_tag('i', '', :class => 'fa fa-' + FONT_AWESOME_ICON_MAPPINGS[k.model_name.param_key.to_sym]) +
+            pluralize_model(k)
+          end
+        end
       end
     end
     l.join.html_safe

@@ -6,6 +6,22 @@
     this.report = report;
   }
 
+  // format data by striping html if present
+  strip_html = function(input_value) {
+    var value = "";
+    try {
+      value = $(input_value).text();
+      if(value == "") {
+        value = input_value;
+      }
+    } catch(err) {
+      value = input_value;
+    } finally{
+      value = value || "[Null]"
+    }
+    return value;
+  }
+
   // inherit
   klass.prototype = new ns.Display();
   klass.prototype.constructor = klass;
@@ -33,12 +49,12 @@
       series.push({color: ch.name ? DEFAULT_BAR_COLORS[color_counter++] : NULL_BAR_COLOR});
 
       // add the column header
-      g_data.addColumn('number', ch.name || "[Null]");
+      g_data.addColumn('number', strip_html(ch.name));
     })
 
     $(headers.row.cells).each(function(r, rh){
       // build the row
-      var row = [rh.name || "[Null]"];
+      var row = [strip_html(rh.name)];
 
       // add cells to row and add row to obj
       $(headers.col.cells).each(function(c, ch) {
@@ -68,7 +84,7 @@
       chartArea: {top: 0, left: vaxis_space, height: cont_height - haxis_space, width: cont_width - legend_space - vaxis_space},
       isStacked: stacked,
       series: series,
-      tooltip: {textStyle: {fontSize: 11}}
+      tooltip: {isHtml: true, textStyle: {fontSize: 11}}
     };
 
     var chart = new google.visualization.BarChart($('.report_body')[0]);

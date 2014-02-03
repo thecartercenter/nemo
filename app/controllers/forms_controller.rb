@@ -1,5 +1,6 @@
 class FormsController < ApplicationController
   include StandardImportable
+  helper OdkHelper
 
   # special find method before load_resource
   before_filter :find_form_with_questionings, :only => [:show, :edit, :update]
@@ -16,10 +17,19 @@ class FormsController < ApplicationController
     respond_to do |format|
       # render normally if html
       format.html do
-        # add some eager loading stuff, and ordering
-        @forms = @forms.with_questioning_and_copy_counts.default_order
-        load_importable_objs
-        render(:index)
+
+        # if requesting the dropdown menu
+        if params[:dropdown]
+          @forms = @forms.published.default_order
+          render(:partial => "dropdown")
+
+        # otherwise, it's a normal request
+        else
+          # add some eager loading stuff, and ordering
+          @forms = @forms.with_questioning_and_copy_counts.default_order
+          load_importable_objs
+          render(:index)
+        end
       end
 
       # get only published forms and render openrosa if xml requested
@@ -178,7 +188,11 @@ class FormsController < ApplicationController
   # makes an unpublished copy of the form that can be edited without affecting the original
   def clone
     begin
-      @form.replicate
+      cloned = @form.replicate
+
+      # save the cloned obj id so that it will flash
+      flash[:modified_obj_id] = cloned.id
+
       flash[:success] = t("form.clone_success", :form_name => @form.name)
     rescue
       flash[:error] = t("form.clone_error", :msg => $!.to_s)

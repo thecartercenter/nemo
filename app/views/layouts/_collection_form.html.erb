@@ -6,7 +6,10 @@
         <%= fields.hidden_field(:id) %>
         <%= fields.hidden_field(:_destroy) %>
         <%= render(:partial => collection_name.to_s.singularize, :locals => {:fields => fields}) %>
-        &nbsp;<%= action_link("destroy", "#", :class => "delete_item_link") unless parent_form.mode == :show %>
+
+        <% if parent_form.mode != :show && can?(:destroy, fields.object) %>
+          &nbsp;<%= action_link("destroy", "#", :class => "delete_item_link") %>
+        <% end %>
       </div>
     <% end %>
   </div>

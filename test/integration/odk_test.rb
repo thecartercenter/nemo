@@ -92,6 +92,33 @@ class OdkTest < ActionDispatch::IntegrationTest
     assert_response(426)
   end
 
+  test "response is marked incomplete when there is an incomplete response to a required question" do
+    form = FactoryGirl.create(:form, :question_types => %w(integer))
+    form.questionings.first.required = true
+    form.publish!
+
+    xml = "<?xml version='1.0' ?><data id=\"#{form.id}\" version=\"#{form.current_version.sequence}\"></data>"
+
+    do_submission(submission_path, xml)
+    assert_response(201)
+
+    response = form.reload.responses.last
+    assert_equal(true, response.incomplete)
+  end
+
+  test "response is not marked incomplete when there are no incomplete responses to a required question" do
+    form = FactoryGirl.create(:form, :question_types => %w(integer))
+    form.questionings.first.required = true
+    form.publish!
+
+    xml = build_odk_submission(form)
+    do_submission(submission_path, xml)
+    assert_response(201)
+
+    response = form.reload.responses.last
+    assert_equal(false, response.incomplete)
+  end
+
   private
     # builds a form and sends a submission to the given path
     def do_submission(path, xml = nil)
