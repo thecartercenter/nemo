@@ -14,7 +14,8 @@ class Answer < ActiveRecord::Base
   belongs_to(:questionable)
 
   before_validation(:clean_locations)
-  before_validation(:set_default_questionable)
+  before_save(:set_default_questionable)
+  before_save(:assert_questionable_is_correct_type)
   before_save(:round_ints)
   before_save(:blanks_to_nulls)
 
@@ -24,8 +25,6 @@ class Answer < ActiveRecord::Base
   # since this class really just represents one value
   validate(:min_max)
   validate(:required)
-
-  validate(:questionable_is_correct_type)
 
   delegate :question, :qtype, :rank, :required?, :hidden?, :option_set, :options, :to => :questioning
   delegate :name, :hint, :to => :question, :prefix => true
@@ -204,7 +203,7 @@ class Answer < ActiveRecord::Base
     end
 
     # questionable must be a subquestion when question is multilevel
-    def questionable_is_correct_type
+    def assert_questionable_is_correct_type
       if option_set.try(:multi_level?) && questionable.try(:type) != 'Subquestion'
         raise "questionable must be a subquestion when question is multilevel"
       end
