@@ -13,6 +13,8 @@
       <itext>
         <% configatron.preferred_locales.each do |lang| %>
           <translation lang="<%= language_name(lang) %>">
+
+            <%# form question translations %>
             <% @form.visible_questionings.each do |q| %>
               <text id="<%= q.question.odk_code %>:label">
                 <value><%= q.question.name(lang, :strict => false) %></value>
@@ -26,19 +28,38 @@
                 <value><%= opt.name(lang, :strict => false) %></value>
               </text>
             <% end %>
-            <%= incomplete_response_translations if @form.allow_incomplete? %>
+
+            <%# incomplete response question translations %>
+            <% if @form.allow_incomplete? %>
+              <text id="<%= OdkHelper::IR_QUESTION %>:label">
+                <value><%= t("incomplete_response.missing_answers.label") %></value>
+              </text>
+              <text id="<%= OdkHelper::IR_QUESTION %>:hint">
+                <value><%= t("incomplete_response.missing_answers.hint") %></value>
+              </text>
+              <text id="<%= OdkHelper::IR_CODE %>:label">
+                <value><%= t("incomplete_response.code_label") %></value>
+              </text>
+            <% end %>
           </translation>
         <% end %>
       </itext>
+
+      <%# question bindings %>
       <% @form.visible_questionings.each do |q| %>
-        <%= generate_bind_xml(@form, q) %>
+        <%= question_binding(@form, q) %>
       <% end %>
+
+      <%# incomplete response bindings %>
       <% if @form.allow_incomplete? %>
-        <%= incomplete_response_binding(@form) %>
+        <%= ir_question_binding(@form) %>
+        <%= ir_code_binding(@form) %>
       <% end %>
     </model>
   </h:head>
   <h:body>
+
+    <%# question form controls %>
     <% @form.visible_questionings.each do |q| %>
       <% next if q.question.qtype.odk_tag.nil? %>
       <%= odk_input_tag(q) do %>
@@ -54,6 +75,8 @@
         <% end %>
       <% end %>
     <% end %>
+
+    <%# incomplete response form controls %>
     <% if @form.allow_incomplete? %>
       <select1 ref="/data/<%= OdkHelper::IR_QUESTION %>">
         <label ref="jr:itext('<%= OdkHelper::IR_QUESTION %>:label')"/>

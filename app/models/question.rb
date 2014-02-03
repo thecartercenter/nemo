@@ -133,7 +133,7 @@ class Question < ActiveRecord::Base
     exps = []
     exps << ". #{minstrictly ? '>' : '>='} #{minimum}" if minimum
     exps << ". #{maxstrictly ? '<' : '<='} #{maximum}" if maximum
-    "(" + exps.join(" and ") + ")"
+    exps.empty? ? nil : "(" + exps.join(" and ") + ")"
   end
 
   # shortcut method for tests
