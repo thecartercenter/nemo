@@ -27,8 +27,8 @@ class FormVersioningPolicy
     when "Optioning"
       case action
       when :create
-        # adding an option to an option set is a trigger
-        triggers << {:reason => :option_added_to_set, :forms => obj.option_set.forms}
+        # adding an option to an option set is a trigger for smsable forms
+        triggers << {:reason => :option_added_to_set, :forms => obj.option_set.forms.select{|f| f.smsable?}}
       when :destroy
         # removing an option from an option set is a trigger
         triggers << {:reason => :option_removed_from_set, :forms => obj.option_set.forms}

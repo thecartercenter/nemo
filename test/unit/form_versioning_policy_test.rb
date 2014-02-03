@@ -212,13 +212,24 @@ class FormVersioningPolicyTest < ActiveSupport::TestCase
     publish_and_check_versions(:should_change => true)
   end
 
-  test "adding an option to a set should cause upgrade" do
+  test "adding an option to a set should cause upgrade on smsable forms only" do
     setup_option_set
 
     save_old_version_codes
 
     # add an option
     @os.options << Option.new(:name_en => "Troublemaker", :mission => get_mission)
+    @os.save!
+
+    publish_and_check_versions(:should_change => false)
+
+    # change forms to smsable
+    @os.forms.each{|f| f.update_attributes(:smsable => true)}
+
+    save_old_version_codes
+
+    # try again
+    @os.options << Option.new(:name_en => "Troublemaker2", :mission => get_mission)
     @os.save!
 
     publish_and_check_versions(:should_change => true)
