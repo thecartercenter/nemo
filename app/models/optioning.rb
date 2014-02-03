@@ -7,7 +7,7 @@ class Optioning < ActiveRecord::Base
   belongs_to(:parent, :class_name => 'Optioning', :inverse_of => :optionings)
 
   # this association gets the children of this optioning
-  has_many(:optionings, :order => "rank", :foreign_key => :parent_id, :inverse_of => :parent)
+  has_many(:optionings, :order => "rank", :foreign_key => :parent_id, :inverse_of => :parent, :autosave => true)
 
   before_create(:set_mission)
   before_destroy(:no_answers_or_choices)
@@ -53,6 +53,13 @@ class Optioning < ActiveRecord::Base
 
   def removable?
     !has_answers_or_choices?
+  end
+
+  # moves this Optioning to be the child of the specified Optioning or OptionSet
+  def move_to(dest)
+    parent.optionings -= [self]
+    parent = dest
+    dest.optionings << self
   end
 
   def as_json(options = {})
