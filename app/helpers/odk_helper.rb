@@ -4,18 +4,18 @@ module OdkHelper
 
   # generator for translation portion of xml needed for incomplete response feature
   def incomplete_response_translations
-    missing_asnwers_label + missing_asnwers_hint + code_label
+    missing_answers_label + missing_answers_hint + code_label
   end
 
   # incomplete response translation label for missing answers question
-  def missing_asnwers_label
+  def missing_answers_label
     content_tag :text, :id => "#{IR_QUESTION}:label" do
       content_tag(:value, t("incomplete_response.missing_answers.label"))
     end
   end
 
   # incomplete response translation hint for missing answers question
-  def missing_asnwers_hint
+  def missing_answers_hint
     content_tag :text, :id => "#{IR_QUESTION}:hint" do
       content_tag(:value, t("incomplete_response.missing_answers.hint"))
     end
