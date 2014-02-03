@@ -79,10 +79,8 @@ en:
     created_at: "Creation Time"
     email: "Email"
     hint: "Hint"
-    incomplete: "Incomplete?"
     password: "Password"
     published: "Published?"
-    allow_incomplete: "Allow Incomplete?"
     questions: "Questions"
     std_icon: "" # left blank on purpose to achieve blank table header
     title: "Title"
@@ -209,6 +207,7 @@ en:
         to: "To"
         which_phone: "Which Phone(s)"
       form:
+        allow_incomplete: "Allow Incomplete?"
         copy_responses_count: "Copy Responses"
         downloads: "Downloads"
         responses: "Responses"
@@ -251,6 +250,7 @@ en:
         reviewed: "Reviewed?"
         source: "Source"
         user_id: "User/Team"
+        incomplete: "Are there missing required answers?"
       report/report:
         aggregation: "Operation"
         aggregation_id: "Operation"
@@ -339,6 +339,8 @@ en:
         pri_grouping: "An attribute or question by which the response count should be grouped (e.g. state, overall rating)."
         percent_type: "Whether and how percentages should be calculated for the report."
         bar_style: "Whether bars should be stacked or side-by-side."
+      response:
+        incomplete: "Check this box if there are required questions for which you can't provide answers. You will then be able to save this response without answering those questions and this response will be marked as 'incomplete'."
       setting:
         preferred_locales_str: |-
           Enter the <a href="http://www.loc.gov/standards/iso639-2/php/code_list.php" target="_blank">two-letter codes</a>, separated by commas, for the languages for this mission, in order of preference.
