@@ -45,7 +45,8 @@ class Form < ActiveRecord::Base
   scope(:default_order, order('forms.name'))
 
   replicable :child_assocs => :questionings, :uniqueness => {:field => :name, :style => :sep_words},
-    :dont_copy => [:published, :downloads, :responses_count, :questionings_count, :upgrade_needed, :smsable, :current_version_id]
+    :dont_copy => [:published, :downloads, :responses_count, :questionings_count, :upgrade_needed,
+      :smsable, :current_version_id, :allow_incomplete]
 
   # remove heirarch of objects
   def self.terminate_sub_relationships(form_ids)
