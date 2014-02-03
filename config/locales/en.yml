@@ -803,6 +803,12 @@ en:
     missing_answers:
       label: "Is this form missing any required answers?"
       hint: "This form allows submission of incomplete responses in special situations. If you are not sure whether any required answers are missing, choose 'I don't think so' and then save."
+      foo: "bar"
+      options:
+        # these keys need to be quoted
+        "no": "I don't think so"
+        "yes": "Yes"
+
     code_label: "Enter the incomplete override code"
 
   location_picker:
