@@ -5,16 +5,22 @@
       <instance>
         <%# include both form ID and form version sequence number in ODK form ID %>
         <data id="<%= @form.id %>" version="<%= @form.current_version.sequence %>">
+
+          <%# regular question nodes %>
           <% @form.visible_questionings.each do |q| %>
             <%= tag(q.question.odk_code) %>
           <% end %>
+
+          <%# incomplete response question nodes %>
+          <%= tag(OdkHelper::IR_QUESTION) %>
+          <%= tag(OdkHelper::IR_CODE) %>
         </data>
       </instance>
       <itext>
         <% configatron.preferred_locales.each do |lang| %>
           <translation lang="<%= language_name(lang) %>">
 
-            <%# form question translations %>
+            <%# regular question translations %>
             <% @form.visible_questionings.each do |q| %>
               <text id="<%= q.question.odk_code %>:label">
                 <value><%= q.question.name(lang, :strict => false) %></value>
@@ -54,12 +60,12 @@
         <% end %>
       </itext>
 
-      <%# question bindings %>
+      <%# regualar question bindings %>
       <% @form.visible_questionings.each do |q| %>
         <%= question_binding(@form, q) %>
       <% end %>
 
-      <%# incomplete response bindings %>
+      <%# incomplete response question bindings %>
       <% if @form.allow_incomplete? %>
         <%= ir_question_binding(@form) %>
         <%= ir_code_binding(@form) %>
@@ -68,7 +74,7 @@
   </h:head>
   <h:body>
 
-    <%# question form controls %>
+    <%# regular question form controls %>
     <% @form.visible_questionings.each do |q| %>
       <% next if q.question.qtype.odk_tag.nil? %>
       <%= odk_input_tag(q) do %>
@@ -85,7 +91,7 @@
       <% end %>
     <% end %>
 
-    <%# incomplete response form controls %>
+    <%# incomplete response question form controls %>
     <% if @form.allow_incomplete? %>
       <select1 ref="/data/<%= OdkHelper::IR_QUESTION %>">
         <label ref="jr:itext('<%= OdkHelper::IR_QUESTION %>:label')"/>
