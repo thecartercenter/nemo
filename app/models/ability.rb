@@ -80,6 +80,11 @@ class Ability
             can [:index, :read, :export], Response,
               :user_id => user.id, :mission_id => user.current_mission_id, :reviewed => false
 
+            # observers can only mark a form as 'incomplete' if the form permits it
+            can :submit_incomplete, Response do |r|
+              r.form.allow_incomplete?
+            end
+
             unless user.current_mission.locked?
               can [:create, :update, :destroy], Response,
                 :user_id => user.id, :mission_id => user.current_mission_id, :reviewed => false
