@@ -92,7 +92,7 @@
   </div>
 
   <%# navigation bar %>
-  <nav class="navbar navbar-default" role="navigation">
+  <nav id="main-nav" class="navbar navbar-default" role="navigation">
     <% if current_user && (current_mission || admin_mode?) %>
         <% if admin_mode? %>
           <div class="navbar-header std"><%= t("standard.standard") %></div>

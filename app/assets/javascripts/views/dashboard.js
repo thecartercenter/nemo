@@ -52,7 +52,7 @@
 
     // content window inner dimensions
     var cont_w = $('#content').width() - 4;
-    var cont_h = $(window).height() - $('#title').outerHeight(true) - 3 * spacing;
+    var cont_h = $(window).height() - $('#title').outerHeight(true) - $('#main-nav').outerHeight(true) - 4 * spacing;
 
     // height of the h2 elements
     var title_h = $('#content h2').height();
