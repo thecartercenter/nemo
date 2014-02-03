@@ -304,6 +304,12 @@ en:
         role: "Role"
       user_batch:
         batch: "User Attributes"
+
+    # these strings override the attribute strings above in table headers only
+    table_headers:
+      response:
+        incomplete: "Incomplete?"
+
     tips:
       mission:
         name: "A name for this Mission. Maximum 32 characters. Must be unique. Think about including the year if there will be future missions with the same name."
