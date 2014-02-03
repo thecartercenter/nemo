@@ -52,17 +52,19 @@
 
   <div id="userinfo">
     <% if current_user %>
-      <%# current mission and dropdown, if there are choices %>
-      <% unless accessible_missions.empty? %>
-        <%= nice_form_for(current_user) do |f| %>
-        <% f.mode = :edit %>
-        <%= f.select(:current_mission_id, sel_opts_from_objs(accessible_missions),
-          {:include_blank => "[#{t('common.none').capitalize}]"}, {:class => "form-control"}) %>
-        <%= loading_indicator(:header => true) %>
-        <%= hidden_field_tag(:changing_current_mission, 1) %>
-      <% end %>
-      <% else %>
-        <strong><%= current_mission ? current_mission.name : t("common.none") %></strong>
+      <% unless admin_mode? %>
+        <%# current mission and dropdown, if there are choices %>
+        <% unless accessible_missions.empty? %>
+          <%= nice_form_for(current_user) do |f| %>
+            <% f.mode = :edit %>
+            <%= f.select(:current_mission_id, sel_opts_from_objs(accessible_missions),
+              {:include_blank => "[#{t('common.none').capitalize}]"}, {:class => "form-control"}) %>
+            <%= loading_indicator(:header => true) %>
+            <%= hidden_field_tag(:changing_current_mission, 1) %>
+          <% end %>
+        <% else %>
+          <strong><%= current_mission ? current_mission.name : t("common.none") %></strong>
+        <% end %>
       <% end %>
 
       <%# admin mode link %>
@@ -90,7 +92,7 @@
   </div>
 
   <%# navigation bar %>
-  <nav class="navbar navbar-default" role="navigation">
+  <nav id="main-nav" class="navbar navbar-default" role="navigation">
     <% if current_user && (current_mission || admin_mode?) %>
         <% if admin_mode? %>
           <div class="navbar-header std"><%= t("standard.standard") %></div>
@@ -124,7 +126,7 @@
           <%# divider %>
           <li><div class="line"></div></li>
 
-          <%= nav_links(User, Broadcast, Setting) %>
+          <%= nav_links(User, Broadcast, Setting, Mission) %>
 
         </ul>
     <% end %>
@@ -142,6 +144,9 @@
   </div>
 
   <div id="footer">
+    <%# temporary dashboard link %>
+    <%= link_to(t('page_titles.dashboard.all'), dashboard_path) %> &nbsp;|&nbsp;
+
     <%= link_to(t("layout.change_language"), "#", :id => "locale_form_link") %>
 
     <%= form_tag(nil, :id => "locale_form") do %>

@@ -21,6 +21,7 @@ module ApplicationHelper
     :user => "users",
     :broadcast => "bullhorn",
     :setting => "gear",
+    :mission => "briefcase"
   }
 
   ERROR_MESSAGE_KEYS_TO_HIDE = {

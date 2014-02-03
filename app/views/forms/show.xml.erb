@@ -5,14 +5,22 @@
       <instance>
         <%# include both form ID and form version sequence number in ODK form ID %>
         <data id="<%= @form.id %>" version="<%= @form.current_version.sequence %>">
+
+          <%# regular question nodes %>
           <% @form.visible_questionings.each do |q| %>
             <%= tag(q.question.odk_code) %>
           <% end %>
+
+          <%# incomplete response question nodes %>
+          <%= tag(OdkHelper::IR_QUESTION) %>
+          <%= tag(OdkHelper::IR_CODE) %>
         </data>
       </instance>
       <itext>
         <% configatron.preferred_locales.each do |lang| %>
           <translation lang="<%= language_name(lang) %>">
+
+            <%# regular question translations %>
             <% @form.visible_questionings.each do |q| %>
               <text id="<%= q.question.odk_code %>:label">
                 <value><%= q.question.name(lang, :strict => false) %></value>
@@ -26,19 +34,47 @@
                 <value><%= opt.name(lang, :strict => false) %></value>
               </text>
             <% end %>
-            <%= incomplete_response_translations if @form.allow_incomplete? %>
+
+            <%# incomplete response question translations %>
+            <% if @form.allow_incomplete? %>
+              <text id="<%= OdkHelper::IR_QUESTION %>:label">
+                <value><%= t('incomplete_response.missing_answers.label') %></value>
+              </text>
+              <text id="<%= OdkHelper::IR_QUESTION %>:hint">
+                <value><%= t('incomplete_response.missing_answers.hint') %></value>
+              </text>
+              <% [:no, :yes].each do |o| %>
+                <text id="<%= OdkHelper::IR_QUESTION %>:options:<%= o %>">
+                  <value><%= t("incomplete_response.missing_answers.options.#{o}") %></value>
+                </text>
+              <% end %>
+              <text id="<%= OdkHelper::IR_CODE %>:label">
+                <value><%= t('incomplete_response.code_label') %></value>
+              </text>
+              <text id="<%= OdkHelper::IR_CODE %>:hint">
+                <%# no hint for this question currently %>
+                <value></value>
+              </text>
+            <% end %>
           </translation>
         <% end %>
       </itext>
+
+      <%# regualar question bindings %>
       <% @form.visible_questionings.each do |q| %>
-        <%= generate_bind_xml(@form, q) %>
+        <%= question_binding(@form, q) %>
       <% end %>
+
+      <%# incomplete response question bindings %>
       <% if @form.allow_incomplete? %>
-        <%= incomplete_response_binding(@form) %>
+        <%= ir_question_binding(@form) %>
+        <%= ir_code_binding(@form) %>
       <% end %>
     </model>
   </h:head>
   <h:body>
+
+    <%# regular question form controls %>
     <% @form.visible_questionings.each do |q| %>
       <% next if q.question.qtype.odk_tag.nil? %>
       <%= odk_input_tag(q) do %>
@@ -54,17 +90,17 @@
         <% end %>
       <% end %>
     <% end %>
+
+    <%# incomplete response question form controls %>
     <% if @form.allow_incomplete? %>
       <select1 ref="/data/<%= OdkHelper::IR_QUESTION %>">
         <label ref="jr:itext('<%= OdkHelper::IR_QUESTION %>:label')"/>
-        <item>
-          <label ref="jr:itext('option1')"/>
-          <value>1</value>
-        </item>
-        <item>
-          <label ref="jr:itext('option2')"/>
-          <value>2</value>
-        </item>
+        <% [:no, :yes].each do |o| %>
+          <item>
+            <label ref="jr:itext('<%= OdkHelper::IR_QUESTION %>:options:<%= o %>')"/>
+            <value><%= o %></value>
+          </item>
+        <% end %>
       </select1>
       <input ref="/data/<%= OdkHelper::IR_CODE %>">
         <label ref="jr:itext('<%= OdkHelper::IR_CODE %>:label')"/>
