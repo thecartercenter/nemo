@@ -14,6 +14,7 @@ class Answer < ActiveRecord::Base
   belongs_to(:questionable)
 
   before_validation(:clean_locations)
+  before_validation(:set_default_questionable)
   before_save(:round_ints)
   before_save(:blanks_to_nulls)
 
@@ -188,6 +189,11 @@ class Answer < ActiveRecord::Base
           self.value = ""
         end
       end
+    end
+
+    # sets the questionable to the associated question by default
+    def set_default_questionable
+      self.questionable ||= question
     end
 
     # questionable must be a subquestion when question is multilevel
