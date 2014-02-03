@@ -43,7 +43,7 @@ class Report::Join
     :questions => new(
       :name => :questions,
       :dependencies => :questionings,
-      :sql => "INNER JOIN questions __questions ON __questionings.question_id = __questions.id"
+      :sql => "INNER JOIN questionables __questions ON __questionings.question_id = __questions.id AND __questions.type = 'Question'"
     ),
     :option_sets => new(
       :name => :option_sets,

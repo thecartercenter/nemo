@@ -41,9 +41,9 @@ class Condition < ActiveRecord::Base
     questioning.previous.reject{|qing| NON_REFABLE_TYPES.include?(qing.qtype_name)}
   end
 
-  # all referrable proto_questionings that have options
+  # all referrable questionings that have options
   def refable_qings_with_options
-    refable_qings.reject{|qing| qing.options.nil?}
+    refable_qings.select{|qing| qing.has_options?}
   end
 
   # generates a hash mapping ids for refable questionings to their types

@@ -5,8 +5,8 @@ FactoryGirl.define do
     end
 
     user
-    form
     mission { get_mission }
+    form { build(:form, :mission => mission) }
 
     # build answer objects from _answers array
     answers do

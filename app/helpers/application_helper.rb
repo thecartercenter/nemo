@@ -98,7 +98,7 @@ module ApplicationHelper
 
     unless options[:table_only]
       # get links from class' helper
-      links = send("#{klass.table_name}_index_links", objects).compact
+      links = send("#{klass.model_name.route_key}_index_links", objects).compact
 
       # if there are any batch links, insert the 'select all' link
       batch_ops = !links.reject{|l| !l.match(/class="batch_op_link"/)}.empty?
@@ -112,7 +112,7 @@ module ApplicationHelper
       :options => options,
       :paginated => objects.respond_to?(:total_entries),
       :links => links.flatten.join.html_safe,
-      :fields => send("#{klass.table_name}_index_fields"),
+      :fields => send("#{klass.model_name.route_key}_index_fields"),
       :batch_ops => batch_ops
     )
   end

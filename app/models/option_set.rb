@@ -1,22 +1,35 @@
 class OptionSet < ActiveRecord::Base
-  include MissionBased, FormVersionable, Standardizable, Replicable
+  include MissionBased, FormVersionable, Standardizable, Replicable, OptioningParentable
 
   # this needs to be up here or it will run too late
   before_destroy(:check_associations)
 
-  has_many(:optionings, :order => "rank", :dependent => :destroy, :autosave => true, :inverse_of => :option_set)
+  # this association produces ALL optionings regardless of level. should only be used when quick access to the full set of optionings is
+  # needed. note that if this and the normal optionings association are both used, there will be two separate sets of models in play.
+  # note that dependent => destroy and autosave are not turned on here.
+  has_many(:all_optionings, :class_name => 'Optioning', :order => 'optionings.parent_id, optionings.rank', :inverse_of => :option_set)
+
+  # this association produces only the direct children of this option_set (the top-level options).
+  has_many(:optionings, :order => "rank", :conditions => 'optionings.parent_id IS NULL',
+    :dependent => :destroy, :autosave => true, :inverse_of => :option_set)
+
+  # returns ONLY the first-level options for this option set, sorted by rank
   has_many(:options, :through => :optionings, :order => "optionings.rank")
+
   has_many(:questions, :inverse_of => :option_set)
   has_many(:questionings, :through => :questions)
-  has_many(:report_option_set_choices, :inverse_of => :option_set, :class_name => "Report::OptionSetChoice")
+  has_many(:option_levels, :dependent => :destroy, :autosave => true, :inverse_of => :option_set,
+    :after_add => :option_levels_changed, :after_remove => :option_levels_changed)
 
   validates(:name, :presence => true)
   validate(:at_least_one_option)
   validate(:name_unique_per_mission)
+  validate(:multi_level_option_sets_must_have_option_levels)
 
   before_validation(:normalize_fields)
-  before_validation(:ensure_ranks)
-  before_validation(:ensure_option_missions)
+  before_validation(:ensure_children_ranks)
+  before_validation(:ensure_option_level_ranks)
+  after_save(:notify_questions_of_option_level_change)
 
   scope(:with_associations, includes(:questions, {:optionings => :option}, {:questionings => :form}))
 
@@ -26,19 +39,19 @@ class OptionSet < ActiveRecord::Base
     select(%{
       option_sets.*,
       COUNT(DISTINCT answers.id) AS answer_count_col,
-      COUNT(DISTINCT questions.id) AS question_count_col,
+      COUNT(DISTINCT questionables.id) AS question_count_col,
       MAX(forms.published) AS published_col,
       COUNT(DISTINCT copy_answers.id) AS copy_answer_count_col,
       COUNT(DISTINCT copy_questions.id) AS copy_question_count_col,
       MAX(copy_forms.published) AS copy_published_col
     }).
     joins(%{
-      LEFT OUTER JOIN questions ON questions.option_set_id = option_sets.id
-      LEFT OUTER JOIN questionings ON questionings.question_id = questions.id
+      LEFT OUTER JOIN questionables ON questionables.option_set_id = option_sets.id AND questionables.type = 'Question'
+      LEFT OUTER JOIN questionings ON questionings.question_id = questionables.id
       LEFT OUTER JOIN forms ON forms.id = questionings.form_id
       LEFT OUTER JOIN answers ON answers.questioning_id = questionings.id
       LEFT OUTER JOIN option_sets copies ON option_sets.is_standard = 1 AND copies.standard_id = option_sets.id
-      LEFT OUTER JOIN questions copy_questions ON copy_questions.option_set_id = copies.id
+      LEFT OUTER JOIN questionables copy_questions ON copy_questions.option_set_id = copies.id AND copy_questions.type = 'Question'
       LEFT OUTER JOIN questionings copy_questionings ON copy_questionings.question_id = copy_questions.id
       LEFT OUTER JOIN forms copy_forms ON copy_forms.id = copy_questionings.form_id
       LEFT OUTER JOIN answers copy_answers ON copy_answers.questioning_id = copy_questionings.id
@@ -46,15 +59,8 @@ class OptionSet < ActiveRecord::Base
 
   accepts_nested_attributes_for(:optionings, :allow_destroy => true)
 
-  self.per_page = 100
-
   # replication options
   replicable :child_assocs => :optionings, :parent_assoc => :question, :uniqueness => {:field => :name, :style => :sep_words}
-
-  # remove heirarch of objects
-  def self.terminate_sub_relationships(option_sets_ids)
-    Optioning.where(option_set_id: option_sets_ids).delete_all
-  end
 
   # checks if this option set appears in any smsable questionings
   def form_smsable?
@@ -118,39 +124,6 @@ class OptionSet < ActiveRecord::Base
     end
   end
 
-  # finds or initializes an optioning for every option in the database for current mission (never meant to be saved)
-  def all_optionings(options)
-    # make sure there is an associated answer object for each questioning in the form
-    options.collect{|o| optioning_for(o) || optionings.new(:option_id => o.id, :included => false)}
-  end
-
-  def all_optionings=(params)
-    # create a bunch of temp objects, discarding any unchecked options
-    submitted = params.values.collect{|p| p[:included] == '1' ? Optioning.new(p) : nil}.compact
-
-    # copy new choices into old objects, creating or deleting if necessary
-    optionings.compare_by_element(submitted, Proc.new{|os| os.option_id}) do |orig, subd|
-      # if both exist, do nothing
-      # if submitted is nil, destroy the original
-      if subd.nil?
-        options.delete(orig.option)
-      # if original is nil, add the new one to this option_set's array
-      elsif orig.nil?
-        optionings << Optioning.new(:option => subd.option)
-      end
-    end
-  end
-
-  def optioning_for(option)
-    # get the matching optioning
-    optioning_hash[option]
-  end
-
-  def optioning_hash(options = {})
-    @optioning_hash = nil if options[:rebuild]
-    @optioning_hash ||= Hash[*optionings.collect{|os| [os.option, os]}.flatten]
-  end
-
   # gets all forms to which this option set is linked (through questionings)
   def forms
     questionings.collect(&:form).uniq
@@ -166,25 +139,9 @@ class OptionSet < ActiveRecord::Base
     questions.map(&:code).join(', ')
   end
 
-  # checks if any of the option ranks have changed since last save
-  def ranks_changed?
-    optionings.map(&:rank_was) != optionings.map(&:rank)
-  end
-
   # checks if any core fields (currently only name) changed
   def core_changed?
     name_changed?
-  end
-
-  # checks if any options have been added since last save
-  def options_added?
-    optionings.any?(&:new_record?)
-  end
-
-  # checks if any options have been removed since last save
-  # relies on the the marked_for_destruction field since this method is used by the controller
-  def options_removed?
-    optionings.any?(&:marked_for_destruction?)
   end
 
   def as_json(options = {})
@@ -195,14 +152,17 @@ class OptionSet < ActiveRecord::Base
     end
   end
 
+  # returns a string representation, including multilevel options, for the default locale.
+  def to_s
+    s = "Name: #{name}\nOptions:\n"
+    s += optionings.map(&:to_s_indented).join
+  end
+
   private
-    # makes sure that the options in the set have sequential ranks starting at 1.
-    # if not, fixes them.
-    def ensure_ranks
-      # sort the option settings by existing rank and then re-assign to ensure sequentialness
-      # if the options are already sorted this way, nothing will change
-      # if a rank is null, we sort it to the end
-      optionings.sort_by{|o| o.rank || 10000000}.each_with_index{|o, idx| o.rank = idx + 1}
+
+    # makes sure that the set's option_levels have sequential ranks starting at 1.
+    def ensure_option_level_ranks
+      option_levels.ensure_contiguous_ranks
     end
 
     def check_associations
@@ -214,6 +174,7 @@ class OptionSet < ActiveRecord::Base
     end
 
     def at_least_one_option
+      # this checks only the first level options, which is sufficient
       errors.add(:base, :at_least_one) if optionings.reject{|a| a.marked_for_destruction?}.empty?
     end
 
@@ -221,15 +182,26 @@ class OptionSet < ActiveRecord::Base
       errors.add(:name, :must_be_unique) unless unique_in_mission?(:name)
     end
 
-    # ensures mission is set on all options
-    def ensure_option_missions
-      # go in through optionings association in case these are newly created options via nested attribs
-      optionings.each{|oing| oing.option.mission_id ||= mission_id if oing.option}
-    end
-
     def normalize_fields
       self.name = name.strip
       return true
     end
 
+    def multi_level_option_sets_must_have_option_levels
+      errors.add(:base, "Multi-level OptionSets must have at least one OptionLevel") if multi_level? && option_levels.empty?
+    end
+
+    # callback called when option levels are added to/subtracted from. sets a simple flag.
+    # record - the OptionLevel record that was added or removed
+    def option_levels_changed(record)
+      @option_levels_changed = true
+    end
+
+    # if associated OptionLevels were added or removed during last save, we need to notify any associated questions
+    def notify_questions_of_option_level_change
+      if @option_levels_changed
+        questions.each(&:option_levels_changed)
+        @option_levels_changed = false
+      end
+    end
 end
