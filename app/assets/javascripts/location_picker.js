@@ -28,6 +28,7 @@
 
     // save a default centering location if null
     var latlng = new google.maps.LatLng(-34.397, 150.644);
+
     // create map
     self.map = new google.maps.Map($("#map-canvas")[0], {
       mapTypeId: google.maps.MapTypeId.ROADMAP,
@@ -46,7 +47,7 @@
     // map click event
     google.maps.event.addListener(self.map, 'click', function(event) {self.map_click(event)});
 
-    // hook up the accept and cancel links
+    // hook up the accept link
     self.container.find("button.accept_link").click(function() {self.close(true); return false;});
 
     // hook up focus and blur events for search box
@@ -143,9 +144,7 @@
 
       // create the marker if necessary
       if (!self.marker)
-        self.marker = new google.maps.Marker({
-          map: self.map
-        });
+        self.marker = new google.maps.Marker({ map: self.map });
 
       // move the marker
       self.marker.setPosition(new google.maps.LatLng(self.location[0], self.location[1]));

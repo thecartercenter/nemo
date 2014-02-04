@@ -15,9 +15,6 @@
     // setup a dirty flag
     self.dirty = false;
 
-    // save optioning that was clicked
-    self.optioning = null;
-
     // hookup add button
     $('div.add_options input[type=button]').on('click', function() { self.add_options(); });
 
@@ -114,6 +111,7 @@
 
   // builds the inner div tag for an option
   klass.prototype.render_option = function(optioning) { var self = this;
+
     // make inner option tag
     var inner = $('<div>').attr('class', 'inner')
 
@@ -121,20 +119,21 @@
     if (self.params.form_mode != 'show' && self.params.can_reorder)
       inner.append($('<i>').attr('class', 'icon-sort'));
 
-    // add option name
-    inner.append(optioning.option.name);
+    // add option name (add nbsp to make sure div doesn't collapse if name is blank)
+    inner.append(optioning.option.name + '&nbsp;');
 
     // add edit/remove unless in show mode
     if (self.params.form_mode != 'show') {
       var links = $('<div>').attr('class', 'links')
 
       // don't show the edit link if the option is existing and has not yet been added to the set (rails limitation)
-      if (optioning.id || !optioning.option.id) links.append(self.params.edit_link);
+      if (optioning.id || !optioning.option.id)
+        links.append(self.params.edit_link);
 
       // don't show the removable link if the specific option isn't removable
       // or if the global removable permission is false
-      if (self.params.can_remove_options && optioning['removable?']) links.append(self.params.remove_link);
-
+      if (self.params.can_remove_options && optioning['removable?'])
+        links.append(self.params.remove_link);
 
       links.appendTo(inner);
     }
@@ -188,8 +187,9 @@
 
   // shows the edit dialog
   klass.prototype.edit_option = function(link) { var self = this;
-    // get the optioning
-    self.optioning = link.closest('div.inner').data('optioning');
+    // get the optioning and save it as an instance var as we will need to access it
+    // when the modal gets closed
+    self.active_optioning = link.closest('div.inner').data('optioning');
 
     // clear the text boxes
     ELMO.app.params.mission_locales.forEach(function(locale){
@@ -200,8 +200,8 @@
     $('div.edit_option_form div.option_in_use_name_change_warning').hide();
 
     // then populate text boxes
-    for (var locale in self.optioning.option.name_translations)
-      $('div.edit_option_form input#name_' + locale).val(self.optioning.option.name_translations[locale]);
+    for (var locale in self.active_optioning.option.name_translations)
+      $('div.edit_option_form input#name_' + locale).val(self.active_optioning.option.name_translations[locale]);
 
     // show the modal
     $('#edit-option-set').modal('show');
@@ -210,22 +210,27 @@
     $('div.edit_option_form').show();
 
     // show the in_use warning if appopriate
-    if (self.optioning.option.in_use) $('div.edit_option_form div.option_in_use_name_change_warning').show();
+    if (self.active_optioning.option.in_use) $('div.edit_option_form div.option_in_use_name_change_warning').show();
   };
 
   // saves entered translations to data model
+  // TOM: don't need save_btn param here or in method call above
   klass.prototype.save_option = function(save_btn) { var self = this;
 
     $('div.edit_option_form input[type=text]').each(function(){
-      self.optioning.update_translation({field: 'name', locale: $(this).data('locale'), value: $(this).val()});
+      self.active_optioning.update_translation({field: 'name', locale: $(this).data('locale'), value: $(this).val()});
     });
 
     // dirty!
     self.dirty = true;
 
     // re-render the option in the view
-    var old_div = self.optioning.div;
-    old_div.replaceWith(self.render_option(self.optioning));
+    var old_div = self.active_optioning.div;
+    var new_div = self.render_option(self.active_optioning);
+    old_div.replaceWith(new_div);
+
+    // done with this optioning
+    self.active_optioning = null;
 
     $('#edit-option-set').modal('hide');
   };

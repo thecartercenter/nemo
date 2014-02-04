@@ -30,9 +30,11 @@
     // add the value, trimming whitespace
     self.option.name_translations[params.locale] = params.value.trim();
 
-    // also set the name attrib if this is the current locale
-    if (params.locale == I18n.locale)
-      self.option.name = params.value;
+    // update option name (current locale or default locale or first non-blank value)
+    var names = [self.option.name_translations[I18n.locale], self.option.name_translations[I18n.default_locale]];
+    for (var locale in self.option.name_translations)
+      names.push(self.option.name_translations[locale]);
+    self.option.name = names.filter(function(n){ return n && n != ''; })[0] || '';
   };
 
 })(ELMO.Models);

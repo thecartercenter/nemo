@@ -16,10 +16,11 @@
           <form class="location_search">
             <input type="text" class="query form-control" name="query" value=""/>
             <%= loading_indicator %>
-          <div class="results">
-            <%= t("location_picker.enter_query") %>
-          </div>
+            <div class="results">
+              <%= t("location_picker.enter_query") %>
+            </div>
           </form>
+          <%# are both id and class needed? %>
           <div id="map-canvas" class="map_canvas"></div>
 
         </div>
