@@ -45,7 +45,7 @@
       </script>
     <% end %>
   </div>
-  <% unless answer.question_hint.empty? %>
+  <% unless answer.question_hint.blank? %>
     <div class="details"><%= answer.question_hint %></div>
   <% end %>
 </div>
