@@ -12,7 +12,7 @@ module TemplateHelper
       role = tag("br")
     end
 
-    return content_tag('i', '', {:class => 'fa fa-2x fa-user', :title => t("page_titles.users.edit_profile")}) +
+    return content_tag('i', '', {:class => 'fa fa-2x fa-user', :title => t("page_titles.users.edit_profile")}) + tag("br") +
       current_user.login + tag("br") + role
   end
 
