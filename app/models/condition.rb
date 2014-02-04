@@ -116,8 +116,12 @@ class Condition < ActiveRecord::Base
   end
 
   def to_s
-    words = I18n.t(op, :scope => [:condition, :operators])
-    "#{Question.model_name.human} ##{ref_question_rank} #{words} \"#{option ? option.name : value}\""
+    if ref_qing_id.blank?
+      "[Empty condition]"
+    else
+      words = I18n.t("condition.operators.#{op}")
+      "#{Question.model_name.human} ##{ref_question_rank} #{words} \"#{option ? option.name : value}\""
+    end
   end
 
   # if options[:dropdown_values] is included, adds a series of lists of values for use with form dropdowns
