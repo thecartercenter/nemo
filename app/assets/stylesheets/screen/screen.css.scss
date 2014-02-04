@@ -11,6 +11,10 @@ $sans-serif: 'Open Sans', Helvetica, sans-serif;
 
 body {
   background-color: #879CAA;
+
+  .fa-pencil {
+    color: $elmo-blue;
+  }
 }
 
 #userinfo {

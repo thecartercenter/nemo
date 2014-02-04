@@ -26,6 +26,8 @@
 //= require i18n
 //= require i18n/translations
 //= require bootstrap
+//= require bootstrap-modal
+//= require bootstrap-modalmanager
 
 // some report superclasses need to come first due to inheritance
 //= require views/control/control

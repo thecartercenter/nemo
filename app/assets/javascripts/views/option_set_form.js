@@ -5,6 +5,7 @@
 
   // constructor
   ns.OptionSetForm = klass = function(params) { var self = this;
+
     self.params = params;
     self.option_set = new ELMO.Models.OptionSet(params.option_set);
 
@@ -37,7 +38,11 @@
     });
 
     // hookup form submit
-    $('form.option_set_form').on('submit', function(){ return self.form_submitted(); })
+    $('form.option_set_form').on('submit', function(){ return self.form_submitted(); });
+
+
+    // hookup save option button on modal
+    $('#edit-option-set button.btn-primary').on('click', function(){ self.save_option(this); return false; });
 
     // hookup leave page warning unless ajax request
     if (!self.params.ajax_mode)
@@ -106,6 +111,7 @@
 
   // builds the inner div tag for an option
   klass.prototype.render_option = function(optioning) { var self = this;
+
     // make inner option tag
     var inner = $('<div>').attr('class', 'inner')
 
@@ -113,20 +119,21 @@
     if (self.params.form_mode != 'show' && self.params.can_reorder)
       inner.append($('<i>').attr('class', 'icon-sort'));
 
-    // add option name
-    inner.append(optioning.option.name);
+    // add option name (add nbsp to make sure div doesn't collapse if name is blank)
+    inner.append(optioning.option.name + '&nbsp;');
 
     // add edit/remove unless in show mode
     if (self.params.form_mode != 'show') {
       var links = $('<div>').attr('class', 'links')
 
       // don't show the edit link if the option is existing and has not yet been added to the set (rails limitation)
-      if (optioning.id || !optioning.option.id) links.append(self.params.edit_link);
+      if (optioning.id || !optioning.option.id)
+        links.append(self.params.edit_link);
 
       // don't show the removable link if the specific option isn't removable
       // or if the global removable permission is false
-      if (self.params.can_remove_options && optioning['removable?']) links.append(self.params.remove_link);
-
+      if (self.params.can_remove_options && optioning['removable?'])
+        links.append(self.params.remove_link);
 
       links.appendTo(inner);
     }
@@ -180,8 +187,9 @@
 
   // shows the edit dialog
   klass.prototype.edit_option = function(link) { var self = this;
-    // get the optioning
-    var optioning = link.closest('div.inner').data('optioning');
+    // get the optioning and save it as an instance var as we will need to access it
+    // when the modal gets closed
+    self.active_optioning = link.closest('div.inner').data('optioning');
 
     // clear the text boxes
     ELMO.app.params.mission_locales.forEach(function(locale){
@@ -192,40 +200,38 @@
     $('div.edit_option_form div.option_in_use_name_change_warning').hide();
 
     // then populate text boxes
-    for (var locale in optioning.option.name_translations)
-      $('div.edit_option_form input#name_' + locale).val(optioning.option.name_translations[locale]);
+    for (var locale in self.active_optioning.option.name_translations)
+      $('div.edit_option_form input#name_' + locale).val(self.active_optioning.option.name_translations[locale]);
 
-    // create the dialog
-    $("div.edit_option_form").dialog({
-      dialogClass: "no-close edit_option_modal",
-      buttons: [
-        {text: I18n.t('common.cancel'), click: function() { $(this).dialog('close'); }},
-        {text: I18n.t('common.save'), click: function() { self.save_option(optioning); }}
-      ],
-      modal: true,
-      autoOpen: true,
-      width: 500,
-      height: 180 + (ELMO.app.params.mission_locales.length * 40)
-    });
+    // show the modal
+    $('#edit-option-set').modal('show');
+
+    // show the form
+    $('div.edit_option_form').show();
 
     // show the in_use warning if appopriate
-    if (optioning.option.in_use) $('div.edit_option_form div.option_in_use_name_change_warning').show();
+    if (self.active_optioning.option.in_use) $('div.edit_option_form div.option_in_use_name_change_warning').show();
   };
 
   // saves entered translations to data model
-  klass.prototype.save_option = function(optioning) { var self = this;
+  klass.prototype.save_option = function() { var self = this;
+
     $('div.edit_option_form input[type=text]').each(function(){
-      optioning.update_translation({field: 'name', locale: $(this).data('locale'), value: $(this).val()});
+      self.active_optioning.update_translation({field: 'name', locale: $(this).data('locale'), value: $(this).val()});
     });
 
     // dirty!
     self.dirty = true;
 
     // re-render the option in the view
-    var old_div = optioning.div;
-    old_div.replaceWith(self.render_option(optioning));
+    var old_div = self.active_optioning.div;
+    var new_div = self.render_option(self.active_optioning);
+    old_div.replaceWith(new_div);
 
-    $('div.edit_option_form').dialog('close');
+    // done with this optioning
+    self.active_optioning = null;
+
+    $('#edit-option-set').modal('hide');
   };
 
   // write the data model to the form as hidden tags so that the data will be included in the submission

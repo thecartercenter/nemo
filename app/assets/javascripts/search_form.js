@@ -13,15 +13,7 @@
 
     // setup the search dialog
     $('div.search_footer a').on('click', function(e){
-      $("div.search_help").dialog({
-        dialogClass: "no-close search_help_modal",
-        buttons: [{text: I18n.t('common.ok'), click: function() { $(this).dialog('close'); }}],
-        modal: true,
-        autoOpen: true,
-        width: 800,
-        height: 600
-      });
-      e.preventDefault();
+      $('#search-help-modal').modal('show');
     });
   }
 
