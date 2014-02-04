@@ -63,12 +63,8 @@ div.report_body {
       color: #ccc;
     }
 
-    div.subset {
+    div.subset.disaggregated {
       margin-left: 20px;
-
-      &.is_only {
-        margin-left: 0;
-      }
     }
 
     table.subset {
