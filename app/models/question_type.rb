@@ -1,4 +1,4 @@
-class QuestionType < ActiveRecord::Base
+class QuestionType
 
   attr_reader :name, :odk_name, :odk_tag, :properties
 
