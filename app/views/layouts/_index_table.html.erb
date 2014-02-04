@@ -40,7 +40,7 @@
                   :class => path ? 'clickable' : nil) do %>
 
               <% if batch_ops %>
-                <td>
+                <td class="cb_col">
                   <%= check_box_tag("selected[#{o.id}]", 1, false, :onchange => "batch_cb_changed(this);") %>
                 </td>
               <% end %>
