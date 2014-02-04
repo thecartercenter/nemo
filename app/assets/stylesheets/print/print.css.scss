@@ -1,4 +1,4 @@
-#userinfo, #title, #footer, #nav { display: none; }
+#userinfo, #title, #footer, nav { display: none; }
 
 /* login instructions */
 .user_batches_show h1.title { display: none; }
@@ -37,3 +37,8 @@ div.status_messages {
 
 /* sms form guide */
 div.sms_guide div.controls { display: none; }
+
+@page {
+  /* print margins */
+  margin: 15mm 15mm 15mm 15mm;
+}
