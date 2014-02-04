@@ -5,6 +5,7 @@
 
   // constructor
   ns.OptionSetForm = klass = function(params) { var self = this;
+
     self.params = params;
     self.option_set = new ELMO.Models.OptionSet(params.option_set);
 

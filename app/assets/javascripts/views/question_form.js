@@ -18,8 +18,6 @@
     // hookup form submit for modal
     $('#create-option-set .btn-primary').on('click', function() {$('form.option_set_form').submit();});
 
-
-
     // register a callback for when option set form submission is done
     $(document).on('option_set_form_submit_success', 'form.option_set_form', function(e, option_set){
       self.option_set_created(option_set);
@@ -56,8 +54,9 @@
     // show the loading indicator
     $('div.question_fields #option_set_id .loading_indicator').show();
     // populate and show the modal
-    $("#create-option-set .modal-body").load(self.params.new_option_set_path, function(){
-      $("#create-option-set").modal('show');});
+    $("#create-option-set .modal-body.option-set").load(self.params.new_option_set_path, function(){
+      $("#create-option-set").modal('show');
+    });
 
   }
 
