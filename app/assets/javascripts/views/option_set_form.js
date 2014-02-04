@@ -110,6 +110,7 @@
 
   // builds the inner div tag for an option
   klass.prototype.render_option = function(optioning) { var self = this;
+
     // make inner option tag
     var inner = $('<div>').attr('class', 'inner')
 
@@ -117,20 +118,21 @@
     if (self.params.form_mode != 'show' && self.params.can_reorder)
       inner.append($('<i>').attr('class', 'icon-sort'));
 
-    // add option name
-    inner.append(optioning.option.name);
+    // add option name (add nbsp to make sure div doesn't collapse if name is blank)
+    inner.append(optioning.option.name + '&nbsp;');
 
     // add edit/remove unless in show mode
     if (self.params.form_mode != 'show') {
       var links = $('<div>').attr('class', 'links')
 
       // don't show the edit link if the option is existing and has not yet been added to the set (rails limitation)
-      if (optioning.id || !optioning.option.id) links.append(self.params.edit_link);
+      if (optioning.id || !optioning.option.id)
+        links.append(self.params.edit_link);
 
       // don't show the removable link if the specific option isn't removable
       // or if the global removable permission is false
-      if (self.params.can_remove_options && optioning['removable?']) links.append(self.params.remove_link);
-
+      if (self.params.can_remove_options && optioning['removable?'])
+        links.append(self.params.remove_link);
 
       links.appendTo(inner);
     }
@@ -223,7 +225,8 @@
 
     // re-render the option in the view
     var old_div = self.active_optioning.div;
-    old_div.replaceWith(self.render_option(self.active_optioning));
+    var new_div = self.render_option(self.active_optioning);
+    old_div.replaceWith(new_div);
 
     // done with this optioning
     self.active_optioning = null;
