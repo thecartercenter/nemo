@@ -48,6 +48,9 @@ class User < ActiveRecord::Base
   scope(:assigned_to, lambda{|m| where("users.id IN (SELECT user_id FROM assignments WHERE mission_id = ?)", m.id)})
   scope(:with_assoc, includes(:missions, {:assignments => :mission}))
 
+  # returns users who are assigned to the given mission OR admins
+  scope(:assigned_to_or_admin, ->(m){ where("users.id IN (SELECT user_id FROM assignments WHERE mission_id = ?) OR users.admin = ?", m.id, true) })
+
   # we want all of these on one page for now
   self.per_page = 1000000
 
