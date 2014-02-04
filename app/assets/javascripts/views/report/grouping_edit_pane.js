@@ -1,4 +1,5 @@
 // ELMO.Report.GroupingEditPane < ELMO.Report.EditPane
+// This pane is for choosing row and col headers for a GroupedTallyReport
 (function(ns, klass) {
 
   // constructor
@@ -21,8 +22,8 @@
     // call super first
     this.parent.build.call(this);
 
-    this.pri = new ns.FieldSelector($(".primary.field_selector"), this.menus);
-    this.sec = new ns.FieldSelector($(".secondary.field_selector"), this.menus);
+    this.pri = new ns.FieldSelector($(".primary.field_selector"), this.menus, this.options.headerable_qtype_names);
+    this.sec = new ns.FieldSelector($(".secondary.field_selector"), this.menus, this.options.headerable_qtype_names);
 
     this.attribs_to_watch = {report_type: true, tally_type: true, form_selection: true};
   }

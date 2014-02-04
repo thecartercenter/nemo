@@ -21,12 +21,12 @@
 
     // create the panes
     this.panes = [
-      this.report_type_pane = new ns.ReportTypeEditPane(this, menus),
+      this.report_type_pane = new ns.ReportTypeEditPane(this, menus, options),
       this.display_options_pane = new ns.DisplayOptionsEditPane(this, menus, options),
-      this.form_selection_pane = new ns.FormSelectionEditPane(this, menus),
-      this.question_selection_pane = new ns.QuestionSelectionEditPane(this, menus),
-      this.grouping_pane = new ns.GroupingEditPane(this, menus),
-      this.field_pane = new ns.FieldsEditPane(this, menus),
+      this.form_selection_pane = new ns.FormSelectionEditPane(this, menus, options),
+      this.question_selection_pane = new ns.QuestionSelectionEditPane(this, menus, options),
+      this.grouping_pane = new ns.GroupingEditPane(this, menus, options),
+      this.field_pane = new ns.FieldsEditPane(this, menus, options),
     ];
 
     // pane pointer

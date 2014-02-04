@@ -18,7 +18,10 @@ module ReportEmbeddable
           :methods => [:form_ids, :geographic?]
         ),
         :option_sets => OptionSet.for_mission(current_mission).as_json(:only => [:id, :name]),
-        :percent_types => Report::Report::PERCENT_TYPES
+        :percent_types => Report::Report::PERCENT_TYPES,
+
+        # the names of qtypes that can be used in headers
+        :headerable_qtype_names => QuestionType.all.select(&:headerable?).map(&:name)
       }
     end
 

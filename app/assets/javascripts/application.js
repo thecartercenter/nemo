@@ -28,10 +28,10 @@
 //= require bootstrap
 
 // some report superclasses need to come first due to inheritance
-//= require control/control
-//= require report/controllers/report_controller
-//= require report/models/object_menu
-//= require report/views/display
-//= require report/views/edit_pane
+//= require views/control/control
+//= require controllers/report/report_controller
+//= require models/report/object_menu
+//= require views/report/display
+//= require views/report/edit_pane
 
 //= require_tree .

@@ -1,4 +1,5 @@
 // ELMO.Report.FieldsEditPane < ELMO.Report.EditPane
+// This pane is for choosing fields for a ListReport
 (function(ns, klass) {
 
   // constructor

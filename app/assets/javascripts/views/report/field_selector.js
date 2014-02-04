@@ -1,4 +1,5 @@
 // ELMO.Report.FieldSelector
+// Models a dropdown box for choosing a field, which is either an attribute or a question.
 (function(ns, klass) {
 
   // constructor
@@ -28,7 +29,7 @@
         txt_key: "title"
       },{
         label: I18n.t("activerecord.models.question.other"),
-        objs: this.menus.question.filter({form_ids: this.report.attribs.form_ids}),
+        objs: this.menus.question.filter({form_ids: this.report.attribs.form_ids, question_types: this.question_types}),
         id_key: function(obj) { return "question1_id:" + obj.id; },
         txt_key: "code"
       }
