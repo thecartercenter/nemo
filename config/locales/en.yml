@@ -309,6 +309,8 @@ en:
     table_headers:
       response:
         incomplete: "Incomplete?"
+      user:
+        admin: "Admin?"
 
     tips:
       mission:

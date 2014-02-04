@@ -9,7 +9,7 @@ module UsersHelper
   end
 
   def users_index_fields
-    f = %w(name login email phone phone2)
+    f = %w(name login email phone phone2 admin)
     f << (admin_mode? ? 'latest_mission' : 'role')
     f << 'actions'
     f
@@ -21,6 +21,7 @@ module UsersHelper
     when "email" then mail_to(user.email)
     when "latest_mission" then (lm = user.latest_mission) ? lm.name : "[#{t('common.none')}]"
     when "role" then t(user.roles[current_mission], :scope => :role)
+    when "admin" then user.admin? ? t('common._yes') : ''
     when "actions" then action_links(user, :obj_name => user.name)
     else user.send(field)
     end
