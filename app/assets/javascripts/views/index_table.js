@@ -12,10 +12,16 @@
     // hook up whole row link unless told not to
     if (!params.no_whole_row_link)
       $('table.index_table tbody').on('click', 'tr', function(e) {
-        // go to the tr's href if the click was on a non-active element
-        // but don't do it with td.actions_col or td.cb_col (checkbox column) to avoid misclick
-        // also donl't do it unless the tr is .clickable
-        if ($(e.target).closest('td').is(':not(.actions_col, .cb_col)') && $(e.currentTarget).is('.clickable'))
+        // go to the tr's href IF...
+        // parent <td> is not .actions_col or .cb_col (to avoid misclick)
+        if ($(e.target).closest('td').is(':not(.actions_col, .cb_col)')
+
+            // the parent <tr> is .clickable
+            && $(e.currentTarget).is('.clickable')
+
+            // target is not an <input>
+            && e.target.tagName != 'INPUT')
+
           window.location.href = $(e.currentTarget).data('href');
       });
 
