@@ -55,10 +55,11 @@
   klass.prototype.show_option_set_form = function() { var self = this;
     // show the loading indicator
     $('div.question_fields #option_set_id .loading_indicator').show();
+
     // populate and show the modal
     $("#create-option-set .modal-body").load(self.params.new_option_set_path, function(){
-      $("#create-option-set").modal('show');});
-
+      $("#create-option-set").modal('show');
+    });
   }
 
   // called when the option set is created so we can add it to the dropdown

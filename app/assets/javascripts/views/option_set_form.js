@@ -14,9 +14,6 @@
     // setup a dirty flag
     self.dirty = false;
 
-    // save optioning that was clicked
-    self.optioning = null;
-
     // hookup add button
     $('div.add_options input[type=button]').on('click', function() { self.add_options(); });
 
@@ -187,8 +184,9 @@
 
   // shows the edit dialog
   klass.prototype.edit_option = function(link) { var self = this;
-    // get the optioning
-    self.optioning = link.closest('div.inner').data('optioning');
+    // get the optioning and save it as an instance var as we will need to access it
+    // when the modal gets closed
+    self.active_optioning = link.closest('div.inner').data('optioning');
 
     // clear the text boxes
     ELMO.app.params.mission_locales.forEach(function(locale){
@@ -199,8 +197,8 @@
     $('div.edit_option_form div.option_in_use_name_change_warning').hide();
 
     // then populate text boxes
-    for (var locale in self.optioning.option.name_translations)
-      $('div.edit_option_form input#name_' + locale).val(self.optioning.option.name_translations[locale]);
+    for (var locale in self.active_optioning.option.name_translations)
+      $('div.edit_option_form input#name_' + locale).val(self.active_optioning.option.name_translations[locale]);
 
     // show the modal
     $('#edit-option-set').modal('show');
@@ -209,22 +207,26 @@
     $('div.edit_option_form').show();
 
     // show the in_use warning if appopriate
-    if (self.optioning.option.in_use) $('div.edit_option_form div.option_in_use_name_change_warning').show();
+    if (self.active_optioning.option.in_use) $('div.edit_option_form div.option_in_use_name_change_warning').show();
   };
 
   // saves entered translations to data model
+  // TOM: don't need save_btn param here or in method call above
   klass.prototype.save_option = function(save_btn) { var self = this;
 
     $('div.edit_option_form input[type=text]').each(function(){
-      self.optioning.update_translation({field: 'name', locale: $(this).data('locale'), value: $(this).val()});
+      self.active_optioning.update_translation({field: 'name', locale: $(this).data('locale'), value: $(this).val()});
     });
 
     // dirty!
     self.dirty = true;
 
     // re-render the option in the view
-    var old_div = self.optioning.div;
-    old_div.replaceWith(self.render_option(self.optioning));
+    var old_div = self.active_optioning.div;
+    old_div.replaceWith(self.render_option(self.active_optioning));
+
+    // done with this optioning
+    self.active_optioning = null;
 
     $('#edit-option-set').modal('hide');
   };
