@@ -14,9 +14,12 @@ div.form_field {
 
   .label_and_control {
     display: inline-block;
+
+    /* ensures label stays next to control */
     white-space: nowrap;
 
-    label {
+    label, .control {
+      /* allows normal wrapping inside of the the label and control */
       white-space: normal;
     }
   }
