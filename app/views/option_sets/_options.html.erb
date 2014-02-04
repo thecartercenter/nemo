@@ -16,8 +16,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <%# TOM: may not need id here %>
-          <h4 class="modal-title" id="myModalLabel"><%= t("option_set.edit_option") %></h4>
+          <h4 class="modal-title"><%= t("option_set.edit_option") %></h4>
         </div>
         <div class="modal-body">
 
@@ -30,7 +29,7 @@
             <% configatron.preferred_locales.each do |locale| %>
               <div class="translation">
                 <label for="<%= locale %>"><%= language_name(locale) %></label>
-                <input type="text" id="name_<%= locale %>" data-locale="<%= locale %>" maxlength="30">
+                <input type="text" class="form-control" id="name_<%= locale %>" data-locale="<%= locale %>" maxlength="30">
               </div>
             <% end %>
           </div>

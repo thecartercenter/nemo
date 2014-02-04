@@ -214,8 +214,7 @@
   };
 
   // saves entered translations to data model
-  // TOM: don't need save_btn param here or in method call above
-  klass.prototype.save_option = function(save_btn) { var self = this;
+  klass.prototype.save_option = function() { var self = this;
 
     $('div.edit_option_form input[type=text]').each(function(){
       self.active_optioning.update_translation({field: 'name', locale: $(this).data('locale'), value: $(this).val()});

@@ -29,20 +29,16 @@ form.search_form {
 }
 
 /* search help */
-
 #search-help-modal {
-  /* TOM: is width really needed for both? */
+
   .modal-dialog {
     width: 800px;
-
-    .modal-content {
-      width: 800px;
 
       .modal-body {
         overflow: auto;
         max-height: 500px;
       }
-    }
+
   }
 }
 div.search_help {
