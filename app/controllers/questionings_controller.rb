@@ -25,9 +25,7 @@ class QuestioningsController < ApplicationController
   end
 
   def update
-    # strip out condition fields if they're blank and questioning has no existing condition
-    # this prevents an empty condition from getting initialized and then deleted again
-    params[:questioning].delete(:condition_attributes) if params[:questioning][:condition_attributes][:ref_qing_id].blank? && !@questioning.condition
+    strip_condition_params_if_empty
 
     # assign attribs and validate now so that normalization runs before authorizing and saving
     @questioning.assign_attributes(params[:questioning])
@@ -60,6 +58,14 @@ class QuestioningsController < ApplicationController
     # inits the questioning using the proper method in QuestionFormable
     def init_qing_with_form_id
       authorize! :create, Questioning
+      strip_condition_params_if_empty
       init_qing(params[:questioning])
+    end
+
+    # strips out condition fields if they're blank and questioning has no existing condition
+    # this prevents an empty condition from getting initialized and then deleted again
+    # this is not set as a filter due to timing issues
+    def strip_condition_params_if_empty
+      params[:questioning].delete(:condition_attributes) if params[:questioning][:condition_attributes][:ref_qing_id].blank? && (!@questioning || !@questioning.condition)
     end
 end
