@@ -800,6 +800,7 @@ en:
     remove_selected: "Remove Selected"
     remove_question_confirm: "Are you sure you want to remove these ### question(s) from the form?"
     reqd_sym_definition: "Required questions are marked with a"
+    save_and_publish: "Save and Publish"
     unpublish_error: "There was a problem unpublishing the form (%{msg})."
     unpublish_success: "Form unpublished successfully."
     unpublish: "Unpublish"

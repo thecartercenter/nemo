@@ -11,14 +11,19 @@
     <%= form_field(f, :allow_incomplete, :type => :check_box) unless admin_mode? %>
     <%= form_field(f, :published, :type => :check_box, :force_show_mode => true) if !admin_mode? && f.mode != :new %>
     <%= form_field(f, :version, :partial => 'version') unless f.mode == :new %>
+    <input type="hidden" name="save_and_publish"/>
   <% end %>
 
   <%# questions on the form %>
   <%= index_table(Questioning, @form.questionings) if form_mode != :new %>
 
   <%# the submit button is down here because there are two forms on the page. JS makes it work properly %>
-  <%= form_submit_button(nil, :label => :save) %>
-
+  <%= form_buttons do %>
+    <%= form_submit_button(nil, :label => :save, :multiple => true) %>
+    <% if params[:action] == 'edit' && can?(:publish, @form) && !@form.published? %>
+      <%= form_submit_button(nil, :label => I18n.t('form.save_and_publish'), :multiple => true, :id => "save_and_publish_btn") %>
+    <% end %>
+  <% end %>
 </div>
 <div id="form_to_print"></div>
 
