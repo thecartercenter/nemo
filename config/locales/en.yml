@@ -279,7 +279,7 @@ en:
         preferred_locales_str: "Preferred Languages"
         outgoing_sms_adapter: "Provider"
         override_code: "Override Code"
-        tableau_sql: "Tableau SQL" # Tableau is a software product name and shouldn't be translated
+        external_sql: "External SQL"
         timezone: "Time Zone"
       sms/message:
         adapter_name: "Adapter"
@@ -368,7 +368,7 @@ en:
         isms_hostname: "The IP or domain name for the iSMS device. Can include port (e.g. 10.20.30.40:8081). Don't include http://."
         isms_password1: "Enter and re-enter a password to change the API password for the iSMS device."
         isms_username: "The API username for the iSMS device."
-        tableau_sql: "The SQL code used to extract data for use in Tableau. Click 'Select All' and then press Ctrl-C to copy."
+        external_sql: "The SQL code used to extract data for use in external applications. Click 'Select All' and then press Ctrl-C to copy."
         timezone: "The time zone in which times are displayed throughout the site."
       sms/test:
         from: "Enter the phone number from which this SMS should appear to originate. This number must include the country code (e.g. +1 404 555 1212, +23476543212)."

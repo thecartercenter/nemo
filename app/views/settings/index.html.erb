@@ -39,8 +39,8 @@
     <h2><%= t("setting.headings.incoming_sms") %></h2>
     <%= form_field(f, :incoming_sms_number) %>
 
-    <h2>Tableau</h2><!-- not i18n'd b/c it's a product name -->
-    <%= form_field(f, :tableau_sql, :partial => "tableau_sql") %>
+    <h2>External SQL</h2><!-- not i18n'd b/c it's a product name -->
+    <%= form_field(f, :external_sql, :partial => "external_sql") %>
 
   <% end %>
 

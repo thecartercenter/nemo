@@ -246,7 +246,7 @@ fr:
         isms_username: "Nom d'utilisateur"
         preferred_locales_str: "Langues de fiche"
         outgoing_sms_adapter: "Fournisseur"
-        tableau_sql: "Tableau SQL" # Tableau is a software product name and shouldn't be translated
+        external_sql: "SQL Externe"
         timezone: "Fuseau horaire"
       sms/message:
         adapter_name: "Adaptateur"
@@ -315,7 +315,7 @@ fr:
         isms_hostname: "L'adresse IP ou le nom de domaine pour l'appareil. Il peut inclure la port (par ex. 10.20.30.40:8081). N'inclurez pas http://."
         isms_password1: "Entrez et rentrez un mot de passe pour changer le mot de passe du API pour l'appareil iSMS."
         isms_username: "Le API pour l'appareil iSMS."
-        tableau_sql: "Le code SQL (langage de requêtes structuré) utilisé d'extraire les données pour l'utilisation dans Tableau. Cliquez sur 'sélectionnez tous' et pressez alors Ctrl-C pour copier."
+        external_sql: "Le code SQL (langage de requêtes structuré) utilisé d'extraire les données pour l'utilisation avec des logicels externes. Cliquez sur 'sélectionnez tous' et pressez alors Ctrl-C pour copier."
         timezone: "Le fuseau horaire dans lequel des temps sont montrés dans tout le site."
       sms/test:
         from: "Inscrivez le numéro de téléphone dont ce SMS devrait sembler être issu. Ce nombre doit inclure le code du pays (par ex. +1 404 555 1212, +23476543212)."
