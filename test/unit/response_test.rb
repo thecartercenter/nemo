@@ -51,4 +51,12 @@ class ResponseTest < ActiveSupport::TestCase
 
     r1 = FactoryGirl.create(:response, :user => @user, :form => form, :incomplete => true)
   end
+
+  test "export sql should work" do
+    FactoryGirl.create(:response, :form => FactoryGirl.create(:form, :question_types => %w(integer)), :_answers => [1])
+    res = ActiveRecord::Base.connection.execute(Response.export_sql(Response.unscoped))
+
+    # result set should have one row since one Answer in db
+    assert_equal(1, res.count)
+  end
 end
