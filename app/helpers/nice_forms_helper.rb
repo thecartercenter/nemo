@@ -53,6 +53,8 @@ module NiceFormsHelper
             render_options[:locals] = (options[:locals] || {}).merge({:form => f, :method => method})
             render_options[:collection] = options[:collection] if options[:collection]
             render(render_options)
+          elsif f.mode == :show && options[:show_mode_contents]
+            options[:show_mode_contents]
           else
             case options[:type]
             when nil, :text

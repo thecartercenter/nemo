@@ -317,9 +317,6 @@ class Response < ActiveRecord::Base
     end.compact
   end
 
-  def form_name; form ? form.name : nil; end
-  def submitter; user ? user.name : nil; end
-
   # if this response contains location questions, returns the gps location (as a 2 element array)
   # of the first such question on the form, else returns nil
   def location

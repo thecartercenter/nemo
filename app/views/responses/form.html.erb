@@ -20,11 +20,12 @@
 
 <%= nice_form_for(@response) do |f| %>
 
-  <%= form_field(f, :form_id, :type => :hidden) %>
+  <%= form_field(f, :form_id, :force_show_mode => true,
+    :show_mode_contents => link_to(@response.form.name, @response.form)) %>
 
   <%# if the user can't manage the response, then don't show the submitter box as a dropdown %>
-  <%= form_field(f, :user_id, :type => :select, :required => true, :options => sel_opts_from_objs(@possible_submitters),
-    :force_show_mode => !can?(:manage, @response)) %>
+    <%= form_field(f, :user_id, :type => :select, :required => true, :options => sel_opts_from_objs(@possible_submitters),
+      :force_show_mode => !can?(:manage, @response), :show_mode_contents => link_to(@response.user.try(:name), @response.user)) %>
 
   <% unless f.mode == :new %>
 
