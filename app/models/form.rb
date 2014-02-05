@@ -42,7 +42,8 @@ class Form < ActiveRecord::Base
     })
     .group("forms.id"))
 
-  scope(:default_order, order('forms.name'))
+  scope(:by_name, order('forms.name'))
+  scope(:default_order, by_name)
 
   replicable :child_assocs => :questionings, :uniqueness => {:field => :name, :style => :sep_words},
     :dont_copy => [:published, :downloads, :responses_count, :questionings_count, :upgrade_needed,

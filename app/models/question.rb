@@ -27,7 +27,7 @@ class Question < Questionable
   validate(:integrity)
   validate(:code_unique_per_mission)
 
-  scope(:by_code, order("questionables.code"))
+  scope(:by_code, order('questionables.code'))
   scope(:default_order, by_code)
   scope(:select_types, where(:qtype_name => %w(select_one select_multiple)))
   scope(:with_forms, includes(:forms))
