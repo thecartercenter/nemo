@@ -35,6 +35,11 @@ class SettingsController < ApplicationController
       # load options for sms adapter dropdown
       @adapter_options = Sms::Adapters::Factory::VALID_ADAPTERS
 
+      unless admin_mode?
+        # get external sql from Response class
+        @external_sql = Response.export_sql(Response.accessible_by(current_user.ability))
+      end
+
       # render the template
       render(:index)
     end

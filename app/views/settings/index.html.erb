@@ -39,7 +39,7 @@
     <h2><%= t("setting.headings.incoming_sms") %></h2>
     <%= form_field(f, :incoming_sms_number) %>
 
-    <h2>External SQL</h2><!-- not i18n'd b/c it's a product name -->
+    <h2><%= t('activerecord.attributes.setting.external_sql') %></h2>
     <%= form_field(f, :external_sql, :partial => "external_sql") %>
 
   <% end %>
