@@ -5,6 +5,18 @@
 <div class="screen">
   <%= published_warning(@form) if @form.published? && form_mode == :edit %>
 
+  <%= elmo_form_for(@form) do |f| %>
+    <%= f.field(:name, :required => true, :read_only => cannot?(:rename, @form)) %>
+
+    <% unless admin_mode? %>
+      <%= f.field(:smsable, :type => :check_box)  %>
+      <%= f.field(:allow_incomplete, :type => :check_box) unless admin_mode? %>
+      <%= f.field(:published, :type => :check_box, :read_only => true) unless @form.new_record? %>
+    <% end %>
+
+    <%= f.field(:version, :contents => @form.version_with_code) unless @form.new_record? %>
+  <% end %>
+
   <%= nice_form_for(@form) do |f| %>
     <%= form_field(f, :name, :required => true, :force_show_mode => cannot?(:rename, @form)) %>
     <%= form_field(f, :smsable, :type => :check_box) unless admin_mode? %>

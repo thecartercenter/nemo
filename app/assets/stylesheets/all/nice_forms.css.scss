@@ -7,7 +7,7 @@ div.form_field {
   }
 
 
-  label, .control, .details {
+  label, .control, .details, .hint {
     vertical-align: top;
     padding: 5px 0;
   }
@@ -54,7 +54,7 @@ div.form_field {
     width: 15px;
   }
 
-  div.details {
+  div.details, div.hint {
     display: inline-block;
     width: 290px;
     position: relative;

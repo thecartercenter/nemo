@@ -1,5 +1,10 @@
 # makes a standard looking form
-module NiceFormsHelper
+module ElmoFormHelper
+
+  def elmo_form_for(obj, *args, &block)
+    options = args.extract_options!
+    form_for(obj, *(args << options.merge(:builder => ElmoFormBuilder, :html => {:class => "#{obj.class.model_name.singular}_form"})), &block)
+  end
 
   def nice_form_for(obj, options = {})
     options[:html] ||= {}
