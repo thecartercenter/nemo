@@ -18,11 +18,7 @@ class Report::SummaryCollectionBuilder
   # builds a summary collection with the given questionings and disaggregation qing
   # if disagg_qing is nil, no disaggregation will be done
   def initialize(questionings, disagg_qing, current_ability=nil, options = {})
-    if current_ability
-      @current_user_id = current_ability.model_adapter(Response, :read).conditions[:user_id]
-      @current_user = User.find(@current_user_id)
-      @mission_id = current_ability.model_adapter(Response, :read).conditions[:mission_id]
-    end
+    determine_user_and_mission(current_ability)
 
     @disagg_qing = disagg_qing
     @options = options
@@ -53,6 +49,18 @@ class Report::SummaryCollectionBuilder
   end
 
   private
+    # determien user and mission from CanCan ability.
+    # * CanCan current_ability results in various values depending a users ability
+    def determine_user_and_mission(ability)
+      if ability
+        conditions = ability.model_adapter(Response, :read).conditions
+        if conditions.respond_to?(:has_key?) && conditions.has_key?(:user_id)
+          @current_user_id = conditions[:user_id]
+          @current_user = User.find(@current_user_id)
+        end
+        @mission_id = conditions[:mission_id] if conditions.respond_to?(:has_key?) && conditions.has_key?(:mission_id)
+      end
+    end
 
     ####################################################################
     # stat questions
