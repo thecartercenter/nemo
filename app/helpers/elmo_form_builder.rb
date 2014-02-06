@@ -26,6 +26,15 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
     })
   end
 
+  def submit(label = nil, options = {})
+    label ||= :submit
+
+    # if label is a symbol, translate it
+    label = I18n.t("common.#{label}") if label.is_a?(Symbol)
+
+    super(label, options)
+  end
+
   private
 
     # generates html for a form field
