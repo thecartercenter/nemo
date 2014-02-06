@@ -10,7 +10,7 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
   # options[:prompt] - The text for the prompt/nil option to be provided in a select control.
   # options[:maxlength] - The maxlength attribute of a text field
   def field(field_name, options = {})
-    return hidden_field(field_name) if options[:hidden]
+    return hidden_field(field_name) if options[:type] == :hidden
 
     # options[:read_only] must be true if form_mode is show
     # it may optionally be true if specified by the user
@@ -41,7 +41,7 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
       # else if content was explicitly given, just use that
       elsif options[:content]
 
-        options[:content]
+        options[:content].html_safe
 
       # otherwise generate field based on type
       else
@@ -58,8 +58,8 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
 
             when :radio_buttons, :select
               # grab selected option value from options set
-              if options[:options] =~ /<select.*?<option.*?value="#{val}".*?>(.*?)<\/option>.*?<\/select>/mi
-                $!
+              if option = options[:options].find{|o| o[1] == val}
+                option[0]
               else
                 ""
               end

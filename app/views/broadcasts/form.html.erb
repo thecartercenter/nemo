@@ -1,22 +1,23 @@
 <%= flash_and_form_errors(@broadcast) %>
 
-<%= nice_form_for(@broadcast) do |f| %>
+<%= elmo_form_for(@broadcast) do |f| %>
 
-  <%= form_field(f, :recipient_ids, :type => :hidden) %>
-  <%= form_field(f, :to, :partial => "recipients") %>
-  <%= form_field(f, :medium, :type => :select,
-    :options => translate_options(Broadcast::MEDIUM_OPTIONS, [:broadcast, :mediums, :options]), :required => true) %>
+  <%= f.field(:recipient_ids, :type => :hidden) %>
+  <%= f.field(:to, :content => @broadcast.recipients.collect{|u| link_to(u.name, u)}.join(", ")) %>
+  <%= f.field(:medium, :type => :select, :required => true,
+    :options => translate_options(Broadcast::MEDIUM_OPTIONS, [:broadcast, :mediums, :options])) %>
 
-  <% if !@balance.nil? && f.mode != :show %>
-    <%= form_field(f, :balance, :partial => "balance") %>
-  <% end %>
+  <%# only show balance if we were able to retrieve one and if we're not in read_only mode %>
+  <%= f.field(:balance, :partial => "balance") if @balance.present? && @broadcast.new_record? %>
 
-  <%= form_field(f, :which_phone, :type => :select,
-    :options => translate_options(Broadcast::WHICH_PHONE_OPTIONS, [:broadcast, :which_phone_options]), :required => true) %>
-  <%= form_field(f, :subject, :required => true) %>
-  <%= form_field(f, :body, :required => true, :partial => "body") %>
-  <% if f.mode == :show && @broadcast.send_errors %>
-    <%= form_field(f, :send_errors, :partial => "send_errors") %>
+  <%= f.field(:which_phone, :type => :select, :required => true,
+    :options => translate_options(Broadcast::WHICH_PHONE_OPTIONS, [:broadcast, :which_phone_options])) %>
+  <%= f.field(:subject, :required => true) %>
+  <%= f.field(:body, :required => true, :partial => "body") %>
+
+  <%# show any errors if we're in show mode %>
+  <% if form_mode == :show && @broadcast.send_errors %>
+    <%= f.field(:send_errors, :partial => "send_errors") %>
   <% end %>
 
   <%= form_submit_button(f, :label => :send) %>
