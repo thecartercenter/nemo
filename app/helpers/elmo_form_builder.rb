@@ -54,34 +54,60 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
         # otherwise generate field based on type
         else
 
-          #TODO add read_only treatments
+          # if field is read only, just show the value
+          if options[:read_only]
 
-          case options[:type]
-            # text is the default type
-            when nil, :text
-              # add 'text' class for legacy support
-              text_field(field_name, {:class => 'text'}.merge(options.slice(:maxlength)))
+            # get field value
+            val = @object.send(field_name)
 
-            when :check_box
-              # if read_only, show 'yes' or 'no' instead of checkbox
-              options[:read_only] ? @template.tbool(@object.send(field_name)) : check_box(field_name)
+            case options[:type]
+              when :check_box
+                @template.tbool(val)
 
-            when :radio_buttons
-              # build set of radio buttons based on options
-              options[:options].map{|o| radio_button(field_name, o, :class => 'radio') + o}.join('&nbsp;&nbsp;').html_safe
+              when :radio_buttons, :select
+                # grab selected option value from options set
+                if options[:options] =~ /<select.*?<option.*?value="#{val}".*?>(.*?)<\/option>.*?<\/select>/mi
+                  $!
+                else
+                  ""
+                end
 
-            when :textarea
-              text_area(field_name)
+              when :password
+                "*******"
 
-            when :password
-              # add 'text' class for legacy support
-              password_field(field_name, :class => 'text')
+              # show plain field value by default
+              else
+                val
+            end
 
-            when :select
-              select(field_name, options[:options], :include_blank => options[:prompt] || true)
+          else
 
-            when :timezone
-              time_zone_select(field_name)
+            case options[:type]
+              when :check_box
+                check_box(field_name)
+
+              when :radio_buttons
+                # build set of radio buttons based on options
+                options[:options].map{|o| radio_button(field_name, o, :class => 'radio') + o}.join('&nbsp;&nbsp;').html_safe
+
+              when :textarea
+                text_area(field_name)
+
+              when :password
+                # add 'text' class for legacy support
+                password_field(field_name, :class => 'text')
+
+              when :select
+                select(field_name, options[:options], :include_blank => options[:prompt] || true)
+
+              when :timezone
+                time_zone_select(field_name)
+
+              # text is the default type
+              else
+                # add 'text' class for legacy support
+                text_field(field_name, {:class => 'text'}.merge(options.slice(:maxlength)))
+            end
           end
         end
       end

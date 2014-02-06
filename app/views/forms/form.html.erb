@@ -14,7 +14,7 @@
       <%= f.field(:published, :type => :check_box, :read_only => true) unless @form.new_record? %>
     <% end %>
 
-    <%= f.field(:version, :contents => @form.version_with_code) unless @form.new_record? %>
+    <%= f.field(:version, :content => @form.version_with_code) unless @form.new_record? %>
   <% end %>
 
   <%= nice_form_for(@form) do |f| %>
