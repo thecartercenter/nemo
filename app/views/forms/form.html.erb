@@ -6,6 +6,7 @@
   <%= published_warning(@form) if @form.published? && form_mode == :edit %>
 
   <%= elmo_form_for(@form) do |f| %>
+
     <%= f.field(:name, :required => true, :read_only => cannot?(:rename, @form)) %>
 
     <% unless admin_mode? %>
@@ -15,21 +16,17 @@
     <% end %>
 
     <%= f.field(:version, :content => @form.version_with_code) unless @form.new_record? %>
-  <% end %>
 
-  <%= nice_form_for(@form) do |f| %>
-    <%= form_field(f, :name, :required => true, :force_show_mode => cannot?(:rename, @form)) %>
-    <%= form_field(f, :smsable, :type => :check_box) unless admin_mode? %>
-    <%= form_field(f, :allow_incomplete, :type => :check_box) unless admin_mode? %>
-    <%= form_field(f, :published, :type => :check_box, :force_show_mode => true) if !admin_mode? && f.mode != :new %>
-    <%= form_field(f, :version, :partial => 'version') unless f.mode == :new %>
+    <%# this control is used by the save and publish button %>
     <input type="hidden" name="save_and_publish"/>
+
   <% end %>
 
   <%# questions on the form %>
   <%= index_table(Questioning, @form.questionings) if form_mode != :new %>
 
-  <%# the submit button is down here because there are two forms on the page. JS makes it work properly %>
+  <%# NOTE: the submit buttons are down here because there are two forms on the page
+    (one for the form attribs and one for the ranks and batch action checkboxes). JS makes it work properly %>
   <%= form_buttons do %>
     <%= form_submit_button(nil, :label => :save, :multiple => true) %>
     <% if params[:action] == 'edit' && can?(:publish, @form) && !@form.published? %>
