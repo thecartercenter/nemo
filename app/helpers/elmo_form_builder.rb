@@ -1,7 +1,6 @@
 class ElmoFormBuilder < ActionView::Helpers::FormBuilder
 
-  # options[:type] - The type of field to display (:text, :check_box, :radio_butons, :textarea, :password, :country, :select,
-  #   :datetime, :birthdate, :timezone)
+  # options[:type] - The type of field to display (:text (default), :check_box, :radio_butons, :textarea, :password, :select, :timezone)
   # options[:required] - Whether the field input is required.
   # options[:content] - The content of the field's main area. If nil, the default content for the field type is used.
   # options[:partial] - A partial to be used as the field's main area. Overrides options[:content].
@@ -13,7 +12,10 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
   def field(field_name, options = {})
     return hidden_field(field_name) if options[:hidden]
 
-    # TODO set options[:read_only]
+    # options[:read_only] must be true if form_mode is show
+    # it may optionally be true if specified by the user
+    # else it is false
+    options[:read_only] ||= @template.form_mode == :show
 
     # get classes for main div tag
     # TODO id should be better qualified.
@@ -21,7 +23,7 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
 
       # get label html
       lbl = elmo_field_label(field_name, options)
-      fld = ''
+      fld = elmo_field(field_name, options)
       hint = elmo_field_hint(field_name, options)
 
       # build full string and return
@@ -32,12 +34,67 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
 
   private
 
+    # generates html for a form field
+    # considers whether field is read_only
+    def elmo_field(field_name, options)
+      @template.content_tag(:div, :class => 'control') do
+
+        # if partial was specified, just use that
+        if options[:partial]
+
+          # add form builder instance and field_name to partial locals
+          options[:locals] = {:form => self, :method => field_name}
+          @template.render(options.slice(:partial, :locals))
+
+        # else if content was explicitly given, just use that
+        elsif options[:content]
+
+          options[:content]
+
+        # otherwise generate field based on type
+        else
+
+          #TODO add read_only treatments
+
+          case options[:type]
+            # text is the default type
+            when nil, :text
+              # add 'text' class for legacy support
+              text_field(field_name, {:class => 'text'}.merge(options.slice(:maxlength)))
+
+            when :check_box
+              # if read_only, show 'yes' or 'no' instead of checkbox
+              options[:read_only] ? @template.tbool(@object.send(field_name)) : check_box(field_name)
+
+            when :radio_buttons
+              # build set of radio buttons based on options
+              options[:options].map{|o| radio_button(field_name, o, :class => 'radio') + o}.join('&nbsp;&nbsp;').html_safe
+
+            when :textarea
+              text_area(field_name)
+
+            when :password
+              # add 'text' class for legacy support
+              password_field(field_name, :class => 'text')
+
+            when :select
+              select(field_name, options[:options], :include_blank => options[:prompt] || true)
+
+            when :timezone
+              time_zone_select(field_name)
+          end
+        end
+      end
+    end
+
+    # generates html for a field label
     def elmo_field_label(field_name, options)
       label_str = options[:label] || @object.class.human_attribute_name(field_name)
       label_html = label_str + (options[:required] ? " #{@template.reqd_sym}" : "")
       label(field_name, label_html.html_safe, :class => "main")
     end
 
+    # generates html for a field hint block
     def elmo_field_hint(field_name, options)
       # if hint text is not given explicitly, look it up
       unless options[:hint]
