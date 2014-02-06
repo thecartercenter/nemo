@@ -1,0 +1,11 @@
+<%# TODO id should be better qualified. %>
+<div class="form_field" id="<%= field_name %>">
+  <div class="label_and_control">
+    <%# spacing here is important. must be no space after label tag %>
+    <%= label_tag %><div class="control"><%= field_html %></div>
+  </div>
+  <% unless hint_html.blank? %>
+    <div class="hint"><%= hint_html %></div>
+  <% end %>
+  <div class="space_line"></div>
+</div>

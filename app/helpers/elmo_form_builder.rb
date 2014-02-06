@@ -17,19 +17,13 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
     # else it is false
     options[:read_only] ||= @template.form_mode == :show
 
-    # get classes for main div tag
-    # TODO id should be better qualified.
-    @template.content_tag(:div, :class => 'form_field', :id => field_name) do
-
-      # get label html
-      lbl = elmo_field_label(field_name, options)
-      fld = elmo_field(field_name, options)
-      hint = elmo_field_hint(field_name, options)
-
-      # build full string and return
-      @template.content_tag(:div, lbl + fld, :class => 'label_and_control') + hint + @template.content_tag(:div, '', :class => 'space_line')
-    end
-
+    # get key chunks and render partial
+    @template.render(:partial => 'layouts/elmo_form_field', :locals => {
+      :field_name => field_name,
+      :label_tag => elmo_field_label(field_name, options),
+      :field_html => elmo_field(field_name, options),
+      :hint_html => elmo_field_hint(field_name, options)
+    })
   end
 
   private
@@ -37,77 +31,74 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
     # generates html for a form field
     # considers whether field is read_only
     def elmo_field(field_name, options)
-      @template.content_tag(:div, :class => 'control') do
+      # if partial was specified, just use that
+      if options[:partial]
 
-        # if partial was specified, just use that
-        if options[:partial]
+        # add form builder instance and field_name to partial locals
+        options[:locals] = {:form => self, :method => field_name}
+        @template.render(options.slice(:partial, :locals))
 
-          # add form builder instance and field_name to partial locals
-          options[:locals] = {:form => self, :method => field_name}
-          @template.render(options.slice(:partial, :locals))
+      # else if content was explicitly given, just use that
+      elsif options[:content]
 
-        # else if content was explicitly given, just use that
-        elsif options[:content]
+        options[:content]
 
-          options[:content]
+      # otherwise generate field based on type
+      else
 
-        # otherwise generate field based on type
+        # if field is read only, just show the value
+        if options[:read_only]
+
+          # get field value
+          val = @object.send(field_name)
+
+          case options[:type]
+            when :check_box
+              @template.tbool(val)
+
+            when :radio_buttons, :select
+              # grab selected option value from options set
+              if options[:options] =~ /<select.*?<option.*?value="#{val}".*?>(.*?)<\/option>.*?<\/select>/mi
+                $!
+              else
+                ""
+              end
+
+            when :password
+              "*******"
+
+            # show plain field value by default
+            else
+              val
+          end
+
         else
 
-          # if field is read only, just show the value
-          if options[:read_only]
+          case options[:type]
+            when :check_box
+              check_box(field_name)
 
-            # get field value
-            val = @object.send(field_name)
+            when :radio_buttons
+              # build set of radio buttons based on options
+              options[:options].map{|o| radio_button(field_name, o, :class => 'radio') + o}.join('&nbsp;&nbsp;').html_safe
 
-            case options[:type]
-              when :check_box
-                @template.tbool(val)
+            when :textarea
+              text_area(field_name)
 
-              when :radio_buttons, :select
-                # grab selected option value from options set
-                if options[:options] =~ /<select.*?<option.*?value="#{val}".*?>(.*?)<\/option>.*?<\/select>/mi
-                  $!
-                else
-                  ""
-                end
+            when :password
+              # add 'text' class for legacy support
+              password_field(field_name, :class => 'text')
 
-              when :password
-                "*******"
+            when :select
+              select(field_name, options[:options], :include_blank => options[:prompt] || true)
 
-              # show plain field value by default
-              else
-                val
-            end
+            when :timezone
+              time_zone_select(field_name)
 
-          else
-
-            case options[:type]
-              when :check_box
-                check_box(field_name)
-
-              when :radio_buttons
-                # build set of radio buttons based on options
-                options[:options].map{|o| radio_button(field_name, o, :class => 'radio') + o}.join('&nbsp;&nbsp;').html_safe
-
-              when :textarea
-                text_area(field_name)
-
-              when :password
-                # add 'text' class for legacy support
-                password_field(field_name, :class => 'text')
-
-              when :select
-                select(field_name, options[:options], :include_blank => options[:prompt] || true)
-
-              when :timezone
-                time_zone_select(field_name)
-
-              # text is the default type
-              else
-                # add 'text' class for legacy support
-                text_field(field_name, {:class => 'text'}.merge(options.slice(:maxlength)))
-            end
+            # text is the default type
+            else
+              # add 'text' class for legacy support
+              text_field(field_name, {:class => 'text'}.merge(options.slice(:maxlength)))
           end
         end
       end
@@ -135,16 +126,13 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
         options[:hint] = I18n.t(keys_to_try.first, :scope => [:activerecord, :hints, @object.class.model_name.i18n_key], :default => keys_to_try.drop(1))
       end
 
-      # if we get this far and hint is still blank, return no HTML
+      # if we get this far and hint is still blank, return blank
       if options[:hint].blank?
         ''
       else
         # run the hint text through simple format, but no need to sanitize since we don't want to lose links
         # AND we know this text will not be coming from the user
-        options[:hint] = @template.simple_format(options[:hint], {}, :sanitize => false)
-
-        # build the html for the hint
-        @template.content_tag("div", options[:hint], :class => "hint")
+        @template.simple_format(options[:hint], {}, :sanitize => false)
       end
     end
 
