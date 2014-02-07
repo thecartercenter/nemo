@@ -20,6 +20,7 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
     # get key chunks and render partial
     @template.render(:partial => 'layouts/elmo_form_field', :locals => {
       :field_name => field_name,
+      :options => options,
       :label_tag => elmo_field_label(field_name, options),
       :field_html => elmo_field(field_name, options),
       :hint_html => elmo_field_hint(field_name, options)
@@ -63,7 +64,8 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
           # get field value
           val = @object.send(field_name)
 
-          case options[:type]
+          # get a human readable version of the value
+          human_val = case options[:type]
             when :check_box
               @template.tbool(val)
 
@@ -82,6 +84,9 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
             else
               val
           end
+
+          # render a div with the human val, and embed the real val in a data attrib if it differs
+          content_tag(:div, human_val, :'data-val' => val != human_val ? val : nil)
 
         else
 

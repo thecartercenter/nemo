@@ -16,7 +16,7 @@ class Condition < ActiveRecord::Base
   validates(:questioning, :presence => true)
 
   delegate :qtype, :form, :to => :questioning, :allow_nil => true
-  delegate :has_options?, :select_options, :qtype, :rank, :to => :ref_qing, :prefix => :ref_question, :allow_nil => true
+  delegate :has_options?, :select_options, :qtype, :rank, :code, :to => :ref_qing, :prefix => :ref_question, :allow_nil => true
 
   OPS = [
     {:name => :eq, :types => %w(decimal integer text long_text address select_one datetime date time), :code => "="},
@@ -115,12 +115,15 @@ class Condition < ActiveRecord::Base
     return xpath
   end
 
-  def to_s
+  # generates a human readable representation of condition
+  # options[:include_code] - includes the question code in the string. may not always be desireable e.g. with printable forms.
+  def to_s(options = {})
     if ref_qing_id.blank?
-      "[Empty condition]"
+      '' # need to return something here to avoid nil errors
     else
       words = I18n.t("condition.operators.#{op}")
-      "#{Question.model_name.human} ##{ref_question_rank} #{words} \"#{option ? option.name : value}\""
+      code = options[:include_code] ? " (#{ref_question_code})" : ''
+      "#{Question.model_name.human} ##{ref_question_rank}#{code} #{words} \"#{option ? option.name : value}\""
     end
   end
 
