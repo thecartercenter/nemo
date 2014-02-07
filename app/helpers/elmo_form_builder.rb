@@ -27,6 +27,8 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
   end
 
   def submit(label = nil, options = {})
+    return '' if @template.form_mode == :show
+
     label ||= :submit
 
     # if label is a symbol, translate it
