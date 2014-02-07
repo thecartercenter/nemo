@@ -20,17 +20,16 @@
     <%# this control is used by the save and publish button %>
     <input type="hidden" name="save_and_publish"/>
 
-  <% end %>
+    <%# questions on the form %>
+    <%= index_table(Questioning, @form.questionings, :within_form => true) if form_mode != :new %>
 
-  <%# questions on the form %>
-  <%= index_table(Questioning, @form.questionings) if form_mode != :new %>
-
-  <%# NOTE: the submit buttons are down here because there are two forms on the page
-    (one for the form attribs and one for the ranks and batch action checkboxes). JS makes it work properly %>
-  <%= form_buttons do %>
-    <%= form_submit_button(nil, :label => :save, :multiple => true) %>
-    <% if params[:action] == 'edit' && can?(:publish, @form) && !@form.published? %>
-      <%= form_submit_button(nil, :label => I18n.t('form.save_and_publish'), :multiple => true, :id => "save_and_publish_btn") %>
+    <%# NOTE: the submit buttons are down here because there are two forms on the page
+      (one for the form attribs and one for the ranks and batch action checkboxes). JS makes it work properly %>
+    <%= form_buttons do %>
+      <%= form_submit_button(nil, :label => :save, :multiple => true) %>
+      <% if params[:action] == 'edit' && can?(:publish, @form) && !@form.published? %>
+        <%= form_submit_button(nil, :label => I18n.t('form.save_and_publish'), :multiple => true, :id => "save_and_publish_btn") %>
+      <% end %>
     <% end %>
   <% end %>
 </div>
