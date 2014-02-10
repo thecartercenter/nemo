@@ -56,8 +56,8 @@ class Ability
 
       # anybody can access missions to which assigned (but don't need this permission if admin)
       if !user.admin?
-        can :switch_to, Mission, Mission.active_for_user(user) do |mission|
-          user.assignments.detect{|a| a.mission == mission && a.active?}
+        can :switch_to, Mission, Mission.for_user(user) do |mission|
+          user.assignments.detect{|a| a.mission == mission}
         end
       end
 
