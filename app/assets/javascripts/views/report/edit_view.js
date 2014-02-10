@@ -13,7 +13,6 @@
 
     // create the container div and dialog
     this.cont = $("div.report_edit_dialog");
-    this.dialog = new ELMO.Dialog(this.cont, {dont_show: true});
 
     // create the form and disable submit
     this.form = $("form.report_form");
@@ -39,10 +38,10 @@
     this.run_handler = function() { _this.run(); return false; };
 
     this.buttons = {
-      cancel: this.form.find("a.cancel"),
-      prev: this.form.find("a.prev"),
-      next: this.form.find("a.next"),
-      run: this.form.find("a.run")
+      cancel: this.form.find("button.close"),
+      prev: this.form.find("button.prev"),
+      next: this.form.find("button.next"),
+      run: this.form.find("button.run")
     }
   }
 
@@ -58,9 +57,11 @@
       if (enabled[this.panes[i].id])
         this.panes[i].update(report, true);
 
-    // show the dialog and the appropriate pane
-    this.dialog.show();
+    // show the modal and the appropriate pane
+    $("#report-edit-modal").modal('show');
+
     this.show_pane(idx);
+
 
     // hookup esc key
     if (this.report.has_run()) {
@@ -79,6 +80,9 @@
 
     // show/hide prev/next/run
     this.update_buttons();
+
+    // update title of modal
+    $(".modal-title").html(I18n.t("report/report.create_link") + ": " + I18n.t("report/report." + this.panes[idx].id));
   }
 
   // go to the next/previous pane
@@ -136,7 +140,6 @@
   }
 
   klass.prototype.cancel = function() {
-    this.dialog.hide();
 
     // unregister keyup event
     $(document).unbind("keyup", this.esc_handler);
@@ -169,13 +172,24 @@
   klass.prototype.enable_button = function(name, which) {
     var button = this.buttons[name];
     var handler = this[name + "_handler"];
-    button.css("color", which ? "" : "#888");
     button.css("cursor", which ? "" : "default");
+
+
     button.unbind("click");
-    if (which)
+
+    if (which) {
       button.bind("click", handler);
-    else
+      button.show();
+      button.removeAttr("disabled");
+      if(name == "run")
+        button.addClass("btn-primary")
+    } else {
       button.bind("click", function() { return false; });
+    }
+
+    // hide the next button if last pane
+    if (name == "next" && !which) button.hide();
+
   }
 
   klass.prototype.broadcast_change = function(src) {
