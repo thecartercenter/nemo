@@ -1,4 +1,5 @@
-<div class="form_field qtype_<%= answer.qtype.name %>" id="qing_<%= answer.questioning_id %>">
+<div class="form_field qtype_<%= answer.qtype.name %> <%= form_mode == :show ? 'read_only' : '' %>"
+  data-qtype-name="<%= answer.qtype.name %>" id="qing_<%= answer.questioning_id %>">
 
   <label class="main"><%= answer.question_name || "[#{t('answer.no_name')}]" %> <%= reqd_sym(answer.required?) %>
   </label><div class="control">
@@ -9,28 +10,39 @@
 
       <% if form_mode == :show %>
 
+        <%# render the answer value based on question type. we include machine readable value in
+            data-val so that conditions can still be eval'd in JS %>
         <% case type = answer.qtype.name
            when 'select_one' %>
 
-          <%= answer.option.try(:name) %>
+          <%= content_tag(:div, answer.option.try(:name), :'data-val' => answer.option_id) %>
 
         <% when 'select_multiple' %>
 
-          <%= answer.choices.map{|c| c.option.name}.join('<br/>').html_safe %>
+          <%= content_tag(:div, answer.choices.map{|c| c.option.name}.join('<br/>').html_safe, :'data-val' => answer.choices.map(&:option_id).to_json) %>
 
         <% when 'datetime', 'date', 'time' %>
 
           <% format = type == "time" ? :time_only : :default %>
-          <%= (val = answer.send("#{type}_value")).nil? ? "" : l(val, :format => format) %>
+          <% val = answer.send("#{type}_value") %>
+
+          <%# output time value in human readable and machine readable formats %>
+          <%= content_tag(:div, val.nil? ? '' : l(val, :format => format), :'data-val' => val.nil? ? '' : val.to_s(:"std_#{type}")) %>
+
+        <% when 'integer', 'decimal' %>
+
+          <%= content_tag(:div, answer.value, :'data-val' => answer.value) %>
 
         <% when 'text', 'long_text', 'tiny_text' %>
 
           <%# show search excerpt (highlights search terms) if exists for this questioning, else just show plain answer value %>
-          <%= excerpt_if_exists(@response, answer) %>
+          <%# no need to output data-val here since same as human readable %>
+          <%= content_tag(:div, excerpt_if_exists(@response, answer)) %>
 
         <% else %>
 
-          <%= answer.value %>
+          <%# no need to output data-val here since same as human readable %>
+          <%= content_tag(:div, answer.value) %>
 
         <% end # case %>
 
@@ -76,9 +88,10 @@
   <% end %>
 </div>
 
-<%# setup condition js object unless in show mode %>
-<% if form_mode != :show && (cond = answer.questioning.condition) %>
-  <script type="text/javascript">
-    ELMO.Response.conditions.push(new ELMO.Condition(<%=j cond.to_json.html_safe %>));
-  </script>
+<%# setup condition js object if a condition exists %>
+<%# note that we need to do this in any form mode, even show %>
+<% if answer.condition %>
+  <%= javascript_doc_ready do %>
+    ELMO.Response.conditions.push(new ELMO.Condition(<%=j answer.condition.to_json.html_safe %>));
+  <% end %>
 <% end %>

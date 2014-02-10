@@ -26,7 +26,7 @@ class Answer < ActiveRecord::Base
   validate(:min_max)
   validate(:required)
 
-  delegate :question, :qtype, :rank, :required?, :hidden?, :option_set, :options, :to => :questioning
+  delegate :question, :qtype, :rank, :required?, :hidden?, :option_set, :options, :condition, :to => :questioning
   delegate :name, :hint, :to => :question, :prefix => true
 
   # creates a new answer from a string from odk
