@@ -40,7 +40,7 @@ module AnswersHelper
     html = if excerpt = response.excerpts_by_questioning_id[answer.questioning_id]
       excerpt_to_html(excerpt[:text])
     else
-       answer.value
+      answer.value
     end
 
     simple_format(html, {}, :sanitize => false)
