@@ -13,9 +13,6 @@ body, td, textarea { font-family: 'Open Sans', Helvetica, sans-serif; font-size:
 body { line-height: 1.3; height: 100%; }
 form { margin: 0; }
 a { color: $orange; }
-form.button_to, form.button_to div { display: inline; }
-form.button_to input { background-color: transparent; border: none; color: $orange;
-  text-decoration: none; padding: 0; margin: 0; cursor: pointer; }
 h1, h2, h3 { color: black; font-family: 'Open Sans', Helvetica, sans-serif; }
 h1 { margin: 0 0 10px 0; font-size: 17pt; }
 
@@ -59,34 +56,6 @@ div.dialog h2 { margin: 0 0 10px 0; }
 
 /* loading indicator */
 div.loader { background: image-url('loader.gif') no-repeat; padding-left: 20px; }
-
-/* forms (older) */
-div.form, table.form { border-top: 1px solid #ddd; margin-bottom: 10px; }
-div.form > div, table.form td { padding: 5px; border-bottom: 1px solid #ddd; }
-div.form div.details, table.form td.details { width: 250px; }
-div.reqd_sym { display: inline; font-weight: bold; color: #d02000; font-size: 125%; line-height: 5px; vertical-align: middle; }
-table.form td.name { min-width: 75px; }
-
-div.data_integrity_warning {
-  background-color: #e4eeff;
-  padding: 5px;
-  margin: 10px 0;
-  max-width: 800px;
-
-  i {
-    display: block;
-    float: left;
-    font-size: 14px;
-    margin-top: 1px;
-  }
-
-  & > div {
-    margin-left: 20px;
-  }
-}
-
-/* collection form */
-div.collection_form div.item { margin-bottom: 3px; }
 
 /* action links/icons */
 a.action_link { font-size: 14px; text-decoration: none; display: inline-block; margin-right: 3px; }
@@ -151,7 +120,7 @@ div.question_fields {
     width: 475px !important;
   }
 
-  .form_field.name_hint textarea {
+  .names_hints textarea {
     width: 400px;
     height: 30px;
   }

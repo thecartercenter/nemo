@@ -1,2 +1,6 @@
-<div id="char_limit"></div>
-<%= form.text_area(:body, :onkeyup => "broadcast_update_char_limit()") %>
+<% if form_mode == :show %>
+  <%= form.object.body %>
+<% else %>
+  <div id="char_limit"></div>
+  <%= form.text_area(:body, :onkeyup => "broadcast_update_char_limit()") %>
+<% end %>

@@ -1,24 +1,20 @@
 <%= flash_and_form_errors(@questioning) %>
 
-<%= nice_form_for(@questioning) do |f| %>
-  <%= f.hidden_field(:form_id) %>
+<%= elmo_form_for(@questioning) do |f| %>
 
-  <%= f.fields_for(:question) do |question_form| %>
-    <% question_form.mode = form_mode %>
-    <%= render('questions/fields', :form => question_form) %>
+  <%= f.field(:form_id, :type => :hidden) %>
+
+  <%= f.fields_for(:question) do |qf| %>
+    <%= render('questions/fields', :f => qf) %>
   <% end %>
-
-  <% old_f_mode = f.mode
-     f.mode = :show if cannot?(:update_core, @questioning) %>
 
   <%= published_warning(@questioning) if @questioning.published? && form_mode == :edit %>
 
-  <%= form_field(f, :condition, :partial => "conditions/form") %>
-  <%= form_field(f, :required, :type => :check_box) %>
-  <%= form_field(f, :hidden, :type => :check_box) %>
+  <% cant_update_core = cannot?(:update_core, @questioning) %>
+  <%= f.field(:condition, :partial => 'conditions/form') %>
+  <%= f.field(:required, :type => :check_box, :read_only => cant_update_core) %>
+  <%= f.field(:hidden, :type => :check_box, :read_only => cant_update_core) %>
 
-  <% f.mode = old_f_mode %>
-
-  <%= form_submit_button(f, :label => :save) %>
+  <%= f.submit %>
 
 <% end %>

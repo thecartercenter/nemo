@@ -140,8 +140,8 @@ class FormsController < ApplicationController
       flash[:error] = t("form.#{verb}_error", :msg => $!.to_s)
     end
 
-    # redirect to form index
-    redirect_to(index_url_with_page_num)
+    # redirect to index or edit
+    redirect_to(verb == :publish ? index_url_with_page_num : edit_form_path(@form))
   end
 
   # shows the form to either choose existing questions or create a new one to add

@@ -31,5 +31,6 @@ translations:
       "*.option_set.*",
       "*.report/report.*",
       "*.response.*",
+      "*.role.*",
       "*.standard.*"
     ]

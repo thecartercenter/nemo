@@ -97,7 +97,7 @@ en:
       is_invalid: "is invalid"
       did_not_match: "did not match"
 
-  # model names, attrib names, tips, and errors for activerecord models
+  # model names, attrib names, hints, and errors for activerecord models
   activerecord:
     models:
       answer:
@@ -196,6 +196,7 @@ en:
         zero: "Users"
         one: "User"
         other: "Users"
+
     attributes:
       broadcast:
         balance: "SMS Balance"
@@ -269,7 +270,7 @@ en:
         view_count: "Views"
         viewed_at: "Last Viewed"
       setting:
-        incoming_sms_number: "Incoming SMS Number"
+        incoming_sms_number: "Incoming Number"
         intellisms_password1: "Password"
         intellisms_password2: "Password Confirmation"
         intellisms_username: "Username"
@@ -278,7 +279,7 @@ en:
         isms_password2: "Password Confirmation"
         isms_username: "Username"
         preferred_locales_str: "Preferred Languages"
-        outgoing_sms_adapter: "Provider"
+        outgoing_sms_adapter: "Outgoing Provider"
         override_code: "Override Code"
         external_sql: "External SQL"
         timezone: "Time Zone"
@@ -313,7 +314,12 @@ en:
       user:
         admin: "Admin?"
 
-    tips:
+    hints:
+      form:
+        name: "A descriptive name for the form."
+        smsable: "Whether the form accepts SMS submissions. This can affect when the version number is incremented."
+        allow_incomplete: "Whether to allow incomplete submissions in extenuating cases where full information is not available. Note that the question 'required' featured should be preferred here."
+        version: "The current version number and letter code."
       mission:
         name: "A name for this Mission. Maximum 32 characters. Must be unique. Think about including the year if there will be future missions with the same name."
         locked: "If a mission is locked, Responses and Forms cannot be created or edited and Users cannot be added or deleted."
@@ -323,8 +329,8 @@ en:
         geographic: "Whether this option set represents geographic information, e.g. a set of provinces or regions."
         name: "A name that summarizes this set of options. Normal users will not see this name."
         options:
-          other: "Add existing options by typing them and clicking 'Add'. If you do not see an option in the drop down, you can add a new one by clicking 'Create New Option'."
-          show: "The options that will appear for questions using this option set."
+          editable: "Add existing options by typing them and clicking 'Add'. If you do not see an option in the drop down, you can add a new one by clicking 'Create New Option'."
+          read_only: "The options that will appear for questions using this option set."
       question:
         code: "A short codename (between 2-20 characters). Should contain only letters and numbers, e.g. BallotBoxSealed, DepartTime."
         hint: "Additional instructions, e.g. 'Enter an approximate count of the people waiting to vote.'"
@@ -362,7 +368,7 @@ en:
           This code should be given to observers if the ability to send incomplete responses is needed. ODK will not allow submission of incomplete responses without this code.
 
           If generating a new code, please record the old code if there are previous live forms. The new code will only work for forms downloaded after the code is regenerated.
-        incoming_sms_number: "Enter the phone number to which incoming SMSes for SMS forms should be sent. This will be displayed on the SMS guide."
+        incoming_sms_number: "Enter the phone number to which incoming SMSes for SMS forms should be sent. This will be displayed on the SMS guide. Only needed if using SMS submission."
         outgoing_sms_adapter: "The adapter used to send outgoing SMSes."
         intellisms_username: "The username for the IntelliSMS account."
         intellisms_password1: "Enter and re-enter a password to change the password for the IntelliSMS account."
@@ -393,6 +399,7 @@ en:
           Chung Li, cli@gmail.com
           Forgo Niambot, +203300303, +2083748374
           Stewbuilder Dennis, chow@yahoo.co.uk, +20923187493
+
     errors:
       models:
         answer:
@@ -682,6 +689,7 @@ en:
     users:
       edit: "Edit User: %{name}"
       edit_profile: "Edit Profile"
+      show_profile: "Profile: %{name}"
       index: "Users"
       login_instructions: "Login Instructions"
       new: "New User"
@@ -818,7 +826,6 @@ en:
         # these keys need to be quoted
         "no": "I don't think so"
         "yes": "Yes"
-
     code_label: "Enter the incomplete override code"
 
   location_picker:
@@ -1200,12 +1207,11 @@ en:
     unexpected: "Unexpected text near '%{str}'"
 
   setting:
-    change_sms_password: "Change SMS Password"
+    change_sms_password: "Change Password"
     override_code_warning: "Note that the new override code will not work with forms that have already been downloaded. You should record the existing code if this is a problem. Are you sure you want to regenerate the code?"
     headings:
       general: "General Settings"
-      incoming_sms: "Incoming SMS Settings"
-      outgoing_sms: "Outgoing SMS Settings"
+      sms: "SMS Settings"
 
   sms:
     no_valid_adapter: "There is no valid outgoing SMS adapter. Please check the settings."
@@ -1312,6 +1318,7 @@ en:
     success: "Users created successfully."
 
   user:
+    add_assignment: "Add Assignment"
     back_to_index: "Back to Users List"
     create_link: "Create User"
     create_multiple: "Create Multiple Users"
@@ -1339,9 +1346,9 @@ en:
     logout_success: "You have logged out successfully."
     profile_updated: "Profile updated successfully."
     reset_password_and: "Reset password and"
-    reset_password_details_choose: "Choose how this user should get their password."
-    reset_password_details_ending: "The system can either send them an email with instructions on how to %{verb} the password online, or display a printable instruction sheet including a randomly generated password."
-    reset_password_details_reset: "Choose whether and how to reset this user's password."
+    reset_password_hint_choose: "Choose how this user should get their password."
+    reset_password_hint_ending: "The system can either send them an email with instructions on how to %{verb} the password online, or display a printable instruction sheet including a randomly generated password."
+    reset_password_hint_reset: "Choose whether and how to reset this user's password."
     reset_password_label_choose: "Password Creation"
     reset_password_label_reset: "Reset Password?"
     send_email_instructions: "send email instructions"

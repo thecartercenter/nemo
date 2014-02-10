@@ -134,12 +134,20 @@ class UsersController < ApplicationController
 
     # prepares objects and renders the form template
     def prepare_and_render_form
-      # create a blank mission assignment with the appropriate user_id for the boilerplate, but don't add it to the collection
-      @blank_assignment = Assignment.new(:active => true, :user_id => current_user.id)
 
-      # get assignable missons and roles for this user
-      @assignable_missions = Mission.accessible_by(current_ability, :assign_to).sorted_by_name
-      @assignable_roles = Ability.assignable_roles(current_user)
+      if admin_mode?
+
+        # get assignable missons and roles for this user
+        @assignments = @user.assignments.as_json(:include => :mission, :methods => :new_record?)
+        @assignment_permissions = @user.assignments.map{|a| can?(:update, a)}
+        @assignable_missions = Mission.accessible_by(current_ability, :assign_to).sorted_by_name.as_json(:only => [:id, :name])
+        @assignable_roles = Ability.assignable_roles(current_user)
+
+      else
+
+        @current_assignment = @user.assignments_by_mission[current_mission]
+
+      end
 
       render(:form)
     end
@@ -148,7 +156,7 @@ class UsersController < ApplicationController
     def build_user_with_proper_mission
       @user = User.new(params[:user])
       if cannot?(:create, @user) && @user.assignments.empty?
-        @user.assignments.build(:mission => current_mission, :active => true)
+        @user.assignments.build(:mission => current_mission)
       end
     end
 end

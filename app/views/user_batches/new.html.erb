@@ -1,9 +1,9 @@
 <%= flash_and_form_errors %>
 <%# if this is an empty batch (not one with errors) show the normal form %>
 <% if @user_batch.lines.nil? %>
-  <%= nice_form_for(@user_batch) do |f| %>
-    <%= form_field(f, :batch, :type => :textarea, :required => true) %>
-    <%= form_submit_button(f, :label => :create) %>
+  <%= elmo_form_for(@user_batch) do |f| %>
+    <%= f.field(:batch, :type => :textarea, :required => true) %>
+    <%= f.submit(:create) %>
   <% end %>
 
 <%# otherwise show a special form with info about each line %>

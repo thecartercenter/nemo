@@ -82,17 +82,19 @@ module ApplicationHelper
 
   # creates a link to a batch operation
   def batch_op_link(options)
-    button_to(options[:name], "#",
+    link_to(options[:name], "#",
       :onclick => "batch_submit({path: '#{options[:path]}', confirm: '#{options[:confirm]}'}); return false;",
       :class => "batch_op_link")
   end
 
   # creates a link to select all the checkboxes in an index table
   def select_all_link
-    button_to(t("layout.select_all"), "#", :onclick => "batch_select_all(); return false", :id => "select_all_link")
+    link_to(t("layout.select_all"), '#', :onclick => "batch_select_all(); return false", :id => 'select_all_link')
   end
 
   # renders an index table for the given class and list of objects
+  # options[:within_form] - Whether the table is contained within a form tag. Affects whether a form tag is generated
+  #   to contain the batch op checkboxes.
   def index_table(klass, objects, options = {})
     links = []
 
@@ -143,11 +145,6 @@ module ApplicationHelper
 
     # wrap in tags if requested
     options[:tags] ? options_for_select(arr) : arr
-  end
-
-  # renders a collection of objects, including a boilerplate form and calls to the appropriate JS
-  def collection_form(params)
-    render(:partial => "layouts/collection_form", :locals => params)
   end
 
   # finds the english name of the language with the given code (e.g. 'French' for 'fr')

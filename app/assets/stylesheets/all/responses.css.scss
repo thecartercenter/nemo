@@ -40,14 +40,21 @@
     background-color: #ffffaa;
     font-style: normal;
   }
+}
 
-  div.text_answer {
-    p:first-child {
-      margin-top: 0;
-    }
+.responses_show {
 
-    p:last-child {
-      margin-bottom: 0;
+  /* text responses with paragraphs in show mode */
+  .form_field.qtype_long_text, .form_field.qtype_text {
+
+    .control {
+      p:first-child {
+        margin-top: 0;
+      }
+
+      p:last-child {
+        margin-bottom: 0;
+      }
     }
   }
 }

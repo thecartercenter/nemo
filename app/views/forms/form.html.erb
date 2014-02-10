@@ -5,24 +5,27 @@
 <div class="screen">
   <%= published_warning(@form) if @form.published? && form_mode == :edit %>
 
-  <%= nice_form_for(@form) do |f| %>
-    <%= form_field(f, :name, :required => true, :force_show_mode => cannot?(:rename, @form)) %>
-    <%= form_field(f, :smsable, :type => :check_box) unless admin_mode? %>
-    <%= form_field(f, :allow_incomplete, :type => :check_box) unless admin_mode? %>
-    <%= form_field(f, :published, :type => :check_box, :force_show_mode => true) if !admin_mode? && f.mode != :new %>
-    <%= form_field(f, :version, :partial => 'version') unless f.mode == :new %>
-    <input type="hidden" name="save_and_publish"/>
-  <% end %>
+  <%= elmo_form_for(@form) do |f| %>
 
-  <%# questions on the form %>
-  <%= index_table(Questioning, @form.questionings) if form_mode != :new %>
+    <%= f.field(:name, :required => true, :read_only => cannot?(:rename, @form)) %>
 
-  <%# the submit button is down here because there are two forms on the page. JS makes it work properly %>
-  <%= form_buttons do %>
-    <%= form_submit_button(nil, :label => :save, :multiple => true) %>
-    <% if params[:action] == 'edit' && can?(:publish, @form) && !@form.published? %>
-      <%= form_submit_button(nil, :label => I18n.t('form.save_and_publish'), :multiple => true, :id => "save_and_publish_btn") %>
+    <% unless admin_mode? %>
+      <%= f.field(:smsable, :type => :check_box)  %>
+      <%= f.field(:allow_incomplete, :type => :check_box) unless admin_mode? %>
+      <%= f.field(:published, :type => :check_box, :read_only => true) unless @form.new_record? %>
     <% end %>
+
+    <%= f.field(:version, :content => @form.version_with_code) unless @form.new_record? %>
+
+    <%# questions on the form %>
+    <%= index_table(Questioning, @form.questionings, :within_form => true) if form_mode != :new %>
+
+    <%= f.submit %>
+
+    <% if !@form.new_record? && !@form.published? && can?(:publish, @form) %>
+      <%= f.submit(I18n.t('form.save_and_publish'), :name => 'save_and_publish') %>
+    <% end %>
+
   <% end %>
 </div>
 <div id="form_to_print"></div>

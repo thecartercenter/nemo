@@ -1,0 +1,14 @@
+<%# TODO the id attrib below should be deprecated as its not well scoped. %>
+<div class="form_field" id="<%= field_name %>" data-field-name="<%= field_name %>">
+
+  <div class="label_and_control">
+    <%# spacing here is important. must be no space after label tag %>
+    <%= label_tag %><div class="control <%= options[:read_only] ? 'read_only' : '' %>"><%= field_html %></div>
+  </div>
+
+  <% unless hint_html.blank? %>
+    <div class="hint"><%= hint_html %></div>
+  <% end %>
+
+  <div class="space_line"></div>
+</div>

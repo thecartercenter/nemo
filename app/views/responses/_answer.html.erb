@@ -1,51 +1,97 @@
-<div class="form_field qtype_<%= answer.qtype.name %>" id="qing_<%= answer.questioning_id %>">
-  <label class="main"><%= answer.question_name || "[#{t('answer.no_name')}]" %> <%= reqd_sym(answer.required?) %>
-  </label><div class="control">
-    <%= fields_for('response[all_answers][]', answer) do |f| %>
-      <% f.mode = form_mode %>
-      <%= render("layouts/object_errors", :object => answer, :compact => true, :prefix => t("answer.this_answer")) unless answer.errors.empty? %>
-      <%= f.hidden_field(:response_id, :index => answer_counter) %>
-      <%= f.hidden_field(:questioning_id, :index => answer_counter) %>
-      <%= f.hidden_field(:relevant, :class => "relevant", :index => answer_counter) %>
-      <% case type = answer.qtype.name %>
-      <% when "text", "tiny_text", "long_text" %>
-        <% if f.mode == :show %>
-          <%# show search excerpt (highlights search terms) if exists for this questioning %>
-          <div class="text_answer">
-              <%= excerpt_if_exists(@response, answer) %>
-          </div>
-        <% else %>
-          <% field_type = answer.qtype.name == 'long_text' ? 'text_area' : 'text_field' %>
-          <%= f.send(field_type, :value, :class => "qtype_#{type}", :index => answer_counter) %>
-        <% end %>
-      <% when "integer", "decimal" %>
-        <%= f.text_field(:value, :class => "qtype_#{type}", :index => answer_counter) %>
-      <% when "location" %>
-        <%= f.text_field(:value, :class => "qtype_location", :index => answer_counter) %>
-        &nbsp;<%= action_link("edit", "#", :class => "edit_location_link") if f.mode != :show %>
-      <% when "select_one" %>
-        <%= f.select(:option_id, answer.question.select_options, {:include_blank => true}, :index => answer_counter) %>
-      <% when "select_multiple" %>
-        <%= render(:partial => "choice", :locals => {:answer_counter => answer_counter}, :collection => answer.all_choices) %>
-      <% when "datetime", "date", "time" %>
-        <%# special handling for date/time types in show mode, so we can apply localization %>
-        <% if f.mode == :show %>
-          <% format = type == "time" ? :time_only : :default %>
-            <%= (val = answer.send("#{type}_value")).nil? ? "" : l(val, :format => format) %>
-        <% else %>
-          <%= f.send("#{type}_select", :"#{type}_value", :include_blank => true, :index => answer_counter) %>
-        <% end %>
-      <% end %>
-    <% end %>
+<div class="form_field qtype_<%= answer.qtype.name %> <%= form_mode == :show ? 'read_only' : '' %>"
+  data-qtype-name="<%= answer.qtype.name %>" id="qing_<%= answer.questioning_id %>">
 
-    <%# setup condition js object unless in show mode %>
-    <% if form_mode != :show && (cond = answer.questioning.condition) %>
-      <script type="text/javascript">
-        ELMO.Response.conditions.push(new ELMO.Condition(<%=j cond.to_json.html_safe %>));
-      </script>
-    <% end %>
+  <label class="main"><%= answer.question_name || "[#{t('answer.no_name')}]" %> <%= reqd_sym if answer.required? %>
+  </label><div class="control">
+
+    <%= fields_for('response[all_answers][]', answer) do |f| %>
+
+      <%= render("layouts/object_errors", :object => answer, :compact => true, :prefix => t("answer.this_answer")) unless answer.errors.empty? %>
+
+      <% if form_mode == :show %>
+
+        <%# render the answer value based on question type. we include machine readable value in
+            data-val so that conditions can still be eval'd in JS %>
+        <% case type = answer.qtype.name
+           when 'select_one' %>
+
+          <%= content_tag(:div, answer.option.try(:name), :'data-val' => answer.option_id) %>
+
+        <% when 'select_multiple' %>
+
+          <%= content_tag(:div, answer.choices.map{|c| c.option.name}.join('<br/>').html_safe, :'data-val' => answer.choices.map(&:option_id).to_json) %>
+
+        <% when 'datetime', 'date', 'time' %>
+
+          <% format = type == "time" ? :time_only : :default %>
+          <% val = answer.send("#{type}_value") %>
+
+          <%# output time value in human readable and machine readable formats %>
+          <%= content_tag(:div, val.nil? ? '' : l(val, :format => format), :'data-val' => val.nil? ? '' : val.to_s(:"std_#{type}")) %>
+
+        <% when 'integer', 'decimal' %>
+
+          <%= content_tag(:div, answer.value, :'data-val' => answer.value) %>
+
+        <% when 'text', 'long_text', 'tiny_text' %>
+
+          <%# show search excerpt (highlights search terms) if exists for this questioning, else just show plain answer value %>
+          <%# no need to output data-val here since same as human readable %>
+          <%= content_tag(:div, excerpt_if_exists(@response, answer)) %>
+
+        <% else %>
+
+          <%# no need to output data-val here since same as human readable %>
+          <%= content_tag(:div, answer.value) %>
+
+        <% end # case %>
+
+      <%# not show mode %>
+      <% else %>
+
+        <%= f.hidden_field(:response_id, :index => answer_counter) %>
+        <%= f.hidden_field(:questioning_id, :index => answer_counter) %>
+        <%= f.hidden_field(:relevant, :class => "relevant", :index => answer_counter) %>
+
+        <% case type = answer.qtype.name
+           when "select_one" %>
+
+          <%= f.select(:option_id, answer.question.select_options, {:include_blank => true}, :index => answer_counter) %>
+
+        <% when "select_multiple" %>
+
+          <%# render a checkbox for each possible choice %>
+          <%= render(:partial => "choice", :locals => {:answer_counter => answer_counter}, :collection => answer.all_choices) %>
+
+        <% when "datetime", "date", "time" %>
+
+          <%= f.send("#{type}_select", :"#{type}_value", :include_blank => true, :index => answer_counter) %>
+
+        <% else %>
+
+          <%# textarea or input, depending on type %>
+          <%= f.send(type == 'long_text' ? 'text_area' : 'text_field', :value, :class => "qtype_#{type}", :index => answer_counter) %>
+
+          <% if type == 'location' %>
+            &nbsp;<%= action_link("edit", "#", :class => "edit_location_link") if f.mode != :show %>
+          <% end %>
+
+        <% end # case %>
+
+      <% end # if show mode %>
+
+    <% end # fields_for %>
   </div>
+
   <% unless answer.question_hint.blank? %>
-    <div class="details"><%= answer.question_hint %></div>
+    <div class="hint"><%= answer.question_hint %></div>
   <% end %>
 </div>
+
+<%# setup condition js object if a condition exists %>
+<%# note that we need to do this in any form mode, even show %>
+<% if answer.condition %>
+  <%= javascript_doc_ready do %>
+    ELMO.Response.conditions.push(new ELMO.Condition(<%=j answer.condition.to_json.html_safe %>));
+  <% end %>
+<% end %>

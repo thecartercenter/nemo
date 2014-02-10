@@ -135,6 +135,10 @@
       if (self.params.can_remove_options && optioning['removable?'])
         links.append(self.params.remove_link);
 
+      // add a spacer if empty, else it won't render right
+      if (links.is(':empty'))
+        links.append('&nbsp;')
+
       links.appendTo(inner);
     }
 

@@ -25,7 +25,7 @@ module ResponsesHelper
       when "age" then resp.created_at ? time_ago_in_words(resp.created_at) : ""
       when "incomplete" then tbool(resp.incomplete?)
       when "reviewed" then tbool(resp.reviewed?)
-      when "user_id" then link_to(resp.user.name, resp.user)
+      when "user_id" then can?(:read, resp.user) ? link_to(resp.user.name, resp.user) : resp.user.name
       when "actions"
         # we don't need to authorize these links b/c for responses, if you can see it, you can edit it.
         # the controller actions will still be auth'd

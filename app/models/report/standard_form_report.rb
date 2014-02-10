@@ -82,11 +82,11 @@ class Report::StandardFormReport < Report::Report
     @response_count ||= form.responses.count
   end
 
-  # returns all non-admin users in the form's mission with the given (active) role that have not submitted any responses to the form
+  # returns all non-admin users in the form's mission with the given role that have not submitted any responses to the form
   # options[:role] - (symbol) the role to check for
   def users_without_responses(options)
     # eager load responses with users
-    all_observers = form.mission.assignments.includes(:user).find_all{|a| a.role.to_sym == options[:role] && a.active? && !a.user.admin?}.map(&:user)
+    all_observers = form.mission.assignments.includes(:user).find_all{|a| a.role.to_sym == options[:role] && !a.user.admin?}.map(&:user)
     submitters = form.responses.includes(:user).map(&:user).uniq
     @users_without_responses = all_observers - submitters
   end

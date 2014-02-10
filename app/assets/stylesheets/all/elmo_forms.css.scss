@@ -6,8 +6,16 @@ div.form_field {
     white-space: normal;
   }
 
+  div.reqd_sym {
+    display: inline;
+    font-weight: bold;
+    color: #d02000;
+    font-size: 125%;
+    line-height: 5px;
+    vertical-align: middle;
+  }
 
-  label, .control, .details {
+  label, .control, .hint {
     vertical-align: top;
     padding: 5px 0;
   }
@@ -54,7 +62,7 @@ div.form_field {
     width: 15px;
   }
 
-  div.details {
+  div.hint {
     display: inline-block;
     width: 290px;
     position: relative;
@@ -74,43 +82,22 @@ div.form_field {
     padding: 0;
     width: auto;
   }
+}
 
-  div.dummy, span.dummy {
-    display: inline;
+div.data_integrity_warning {
+  background-color: #e4eeff;
+  padding: 5px;
+  margin: 10px 0;
+  max-width: 800px;
+
+  i {
+    display: block;
+    float: left;
+    font-size: 14px;
+    margin-top: 1px;
   }
 
-  div.dummy_checkbox {
-    height: 12px;
-    width: 12px;
-    text-align: center;
-    font-weight: bold;
-    border: 1px solid #888;
-    display: inline;
+  & > div {
+    margin-left: 20px;
   }
-}
-
-div.form_buttons {
-  padding-top: 20px;
-}
-
-/* all buttons */
-div.form_buttons input[type=submit], input[type=button], input.btn_secondary {
-  display: inline-block;
-  font-weight: bold;
-  font-size: 120%;
-  padding: 2px 15px;
-  margin: 0 5px 0 0;
-  height: 26px;
-  border-radius: 5px;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  cursor: pointer;
-}
-
-/* secondary button, less visual weight */
-input.btn_secondary, button.btn_secondary {
-  font-weight: bold;
-  font-size: 100%;
-  height: 24px;
-  margin-top: 3px;
 }

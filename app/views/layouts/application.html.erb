@@ -55,8 +55,7 @@
       <% unless admin_mode? %>
         <%# current mission and dropdown, if there are choices %>
         <% unless accessible_missions.empty? %>
-          <%= nice_form_for(current_user) do |f| %>
-            <% f.mode = :edit %>
+          <%= form_for(current_user) do |f| %>
             <%= f.select(:current_mission_id, sel_opts_from_objs(accessible_missions),
               {:include_blank => "[#{t('common.none').capitalize}]"}, {:class => "form-control"}) %>
             <%= loading_indicator(:header => true) %>

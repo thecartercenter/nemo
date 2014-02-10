@@ -40,7 +40,7 @@
         <td class="rank"><%= qing.rank %>.</td>
         <td class="question">
           <%= qing.question.send("name_#{@lang}") %>
-          <%= reqd_sym(qing.required?) %>
+          <%= reqd_sym if qing.required? %>
         </td>
         <td class="answers">
           <%= answer_space(" #{qing.rank}.") %>

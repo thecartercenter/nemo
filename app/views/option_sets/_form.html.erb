@@ -6,12 +6,12 @@
   <% end %>
 
   <%= flash_and_form_errors(@option_set) %>
-  <%= nice_form_for(@option_set) do |f| %>
 
-    <%= form_field(f, :name, :required => true, :force_show_mode => cannot?(:update_core, @option_set)) %>
-    <%= form_field(f, :geographic, :type => :check_box, :force_show_mode => cannot?(:change_geographic, @option_set)) %>
-    <%= form_field(f, :options, :required => true, :partial => "options") %>
-    <%= form_submit_button(f, :label => :save) unless ajax_request? %>
+  <%= elmo_form_for(@option_set) do |f| %>
+    <%= f.field(:name, :required => true, :read_only => cannot?(:update_core, @option_set)) %>
+    <%= f.field(:geographic, :type => :check_box, :read_only => cannot?(:change_geographic, @option_set)) %>
+    <%= f.field(:options, :required => true, :partial => "options") %>
+    <%= f.submit unless ajax_request? %>
   <% end %>
 </div>
 
