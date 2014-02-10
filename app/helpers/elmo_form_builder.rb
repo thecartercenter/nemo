@@ -94,7 +94,7 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
           end
 
           # render a div with the human val, and embed the real val in a data attrib if it differs
-          content_tag(:div, human_val, :'data-val' => val != human_val ? val : nil)
+          @template.content_tag(:div, human_val, :'data-val' => val != human_val ? val : nil)
 
         else
 
