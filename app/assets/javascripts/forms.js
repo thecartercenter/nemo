@@ -8,7 +8,10 @@
     // hookup boxes themselves
     $("input.rank_box").change(Form.recalc_ranks);
 
-    // hookup submit button
+    // hookup submit buttons
+    $("input#save_and_publish_btn").click(function(){
+      $("input[name=save_and_publish]").val(1);
+    })
     $("input.submit").click(Form.submit_form);
 
     // hookup before submit event

@@ -1,1 +1,1 @@
-<%= content_tag(form.mode == :show ? "strong" : "div"){form.object.recipients.collect{|u| u.name}.join(", ")} %>
+<%= content_tag(form.mode == :show ? "strong" : "div"){form.object.recipients.collect{|u| link_to(u.name, u)}.join(", ").html_safe} %>
