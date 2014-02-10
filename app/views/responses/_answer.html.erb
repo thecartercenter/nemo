@@ -1,7 +1,7 @@
 <div class="form_field qtype_<%= answer.qtype.name %> <%= form_mode == :show ? 'read_only' : '' %>"
   data-qtype-name="<%= answer.qtype.name %>" id="qing_<%= answer.questioning_id %>">
 
-  <label class="main"><%= answer.question_name || "[#{t('answer.no_name')}]" %> <%= reqd_sym(answer.required?) %>
+  <label class="main"><%= answer.question_name || "[#{t('answer.no_name')}]" %> <%= reqd_sym if answer.required? %>
   </label><div class="control">
 
     <%= fields_for('response[all_answers][]', answer) do |f| %>
