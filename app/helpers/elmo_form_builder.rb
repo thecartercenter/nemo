@@ -33,7 +33,7 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
   def submit(label = nil, options = {})
     return '' if @template.form_mode == :show
 
-    label ||= :submit
+    label ||= :save
 
     # if label is a symbol, translate it
     label = I18n.t("common.#{label}") if label.is_a?(Symbol)

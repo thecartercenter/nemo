@@ -7,5 +7,5 @@
 <%= elmo_form_for(@user, :url => password_reset_path, :method => :put) do |f| %>
   <%= f.field(:password, :type => :password) %>
   <%= f.field(:password_confirmation, :type => :password) %>
-  <%= f.submit(:save) %>
+  <%= f.submit %>
 <% end %>

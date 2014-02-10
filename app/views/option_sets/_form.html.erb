@@ -11,6 +11,6 @@
     <%= f.field(:name, :required => true, :read_only => cannot?(:update_core, @option_set)) %>
     <%= f.field(:geographic, :type => :check_box, :read_only => cannot?(:change_geographic, @option_set)) %>
     <%= f.field(:options, :required => true, :partial => "options") %>
-    <%= f.submit(:save) unless ajax_request? %>
+    <%= f.submit unless ajax_request? %>
   <% end %>
 </div>
