@@ -96,7 +96,7 @@ en:
       is_invalid: "is invalid"
       did_not_match: "did not match"
 
-  # model names, attrib names, tips, and errors for activerecord models
+  # model names, attrib names, hints, and errors for activerecord models
   activerecord:
     models:
       answer:

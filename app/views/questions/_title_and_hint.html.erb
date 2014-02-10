@@ -6,10 +6,10 @@
   :label => Question.human_attribute_name("name") + lang_suffix,
   # show the hint only if this is the first language in the form
   # (we mean here the field instructions, not the question.hint attribute)
-  :hint => rank == 0 ? t("activerecord.tips.question.name") : nil) %>
+  :hint => rank == 0 ? t("activerecord.hints.question.name") : nil) %>
 
 <%= f.field(:"hint_#{lang}",
   :type => :textarea,
   :label => Question.human_attribute_name("hint") + lang_suffix,
   # show the hint only if this is the first language in the form
-  :hint => rank == 0 ? t("activerecord.tips.question.hint") : nil) %>
+  :hint => rank == 0 ? t("activerecord.hints.question.hint") : nil) %>
