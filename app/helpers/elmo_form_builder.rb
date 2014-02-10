@@ -50,6 +50,11 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
         options[:locals] = {:form => self, :method => field_name}
         @template.render(options.slice(:partial, :locals))
 
+      # else if read only content was explicitly given and form is read only, use that
+      elsif options[:read_only] && options[:read_only_content]
+
+        options[:read_only_content].html_safe
+
       # else if content was explicitly given, just use that
       elsif options[:content]
 
