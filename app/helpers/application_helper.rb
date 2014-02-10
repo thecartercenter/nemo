@@ -147,11 +147,6 @@ module ApplicationHelper
     options[:tags] ? options_for_select(arr) : arr
   end
 
-  # renders a collection of objects, including a boilerplate form and calls to the appropriate JS
-  def collection_form(params)
-    render(:partial => "layouts/collection_form", :locals => params)
-  end
-
   # finds the english name of the language with the given code (e.g. 'French' for 'fr')
   # tries to use the translated locale name if it exists, otherwise use english language name from the iso639 gem
   # returns code itself if code not found

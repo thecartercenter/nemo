@@ -17,6 +17,9 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
     # else it is false
     options[:read_only] ||= @template.form_mode == :show
 
+    # don't render password fields in readonly mode
+    return '' if options[:read_only] && options[:type] == :password
+
     # get key chunks and render partial
     @template.render(:partial => 'layouts/elmo_form_field', :locals => {
       :field_name => field_name,

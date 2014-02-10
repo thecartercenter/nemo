@@ -48,20 +48,6 @@ $(document).ready(function(){ $("select#user_current_mission_id").change(functio
 })(jQuery);
 
 
-function suggest_login() {
-	var name = $('#user_name').val();
-	var m, login;
-
-	// if it looks like a person's name, suggest f. initial + l. name
-	if (m = name.match(/^([a-z][a-z']+) ([a-z'\- ]+)$/i))
-		login = m[1].substr(0,1) + m[2].replace(/[^a-z]/ig, "");
-	// otherwise just use the whole thing and strip out weird chars
-	else
-		login = name.replace(/[^a-z0-9\.]/ig, "");
-
-	$('#user_login').val(login.substr(0,10).toLowerCase());
-}
-
 function logout() {
   // click the logout button
   if ($('#logout_button')) $('#logout_button').click();

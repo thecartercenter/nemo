@@ -27,4 +27,9 @@ class Assignment < ActiveRecord::Base
   def self.per_mission_cache_key(mission)
     count_and_date_cache_key(:rel => unscoped.where(:mission_id => mission.id), :prefix => "mission-#{mission.id}")
   end
+
+  # human readable
+  def to_s
+    ""
+  end
 end

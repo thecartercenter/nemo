@@ -769,6 +769,7 @@ en:
     users:
       edit: "Edit User: %{name}"
       edit_profile: "Edit Profile"
+      show_profile: "Profile: %{name}"
       index: "Users"
       login_instructions: "Login Instructions"
       new: "New User"
@@ -1398,6 +1399,7 @@ en:
     success: "Users created successfully."
 
   user:
+    add_assignment: "Add Assignment"
     back_to_index: "Back to Users List"
     create_link: "Create User"
     create_multiple: "Create Multiple Users"
@@ -1425,9 +1427,9 @@ en:
     logout_success: "You have logged out successfully."
     profile_updated: "Profile updated successfully."
     reset_password_and: "Reset password and"
-    reset_password_details_choose: "Choose how this user should get their password."
-    reset_password_details_ending: "The system can either send them an email with instructions on how to %{verb} the password online, or display a printable instruction sheet including a randomly generated password."
-    reset_password_details_reset: "Choose whether and how to reset this user's password."
+    reset_password_hint_choose: "Choose how this user should get their password."
+    reset_password_hint_ending: "The system can either send them an email with instructions on how to %{verb} the password online, or display a printable instruction sheet including a randomly generated password."
+    reset_password_hint_reset: "Choose whether and how to reset this user's password."
     reset_password_label_choose: "Password Creation"
     reset_password_label_reset: "Reset Password?"
     send_email_instructions: "send email instructions"
