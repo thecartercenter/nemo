@@ -1,4 +1,4 @@
-<% if form.mode != :show && can?(:add_options, @option_set) %>
+<% if form_mode != :show && can?(:add_options, @option_set) %>
   <div class="add_options">
     <input type="text" class="add_options_box">
     <input type="button" class="btn_secondary" value="<%= t('common.add') %>" />
@@ -8,7 +8,7 @@
 <div id="options_wrapper">
 </div>
 
-<% if form.mode != :show %>
+<% if form_mode != :show %>
   <div class="edit_option_form" title="<%= t("option_set.edit_option") %>">
     <%= data_integrity_warning(:option_standard_copy_name_change_warning) if @option_set.standard_copy? %>
 
@@ -30,7 +30,7 @@
     remove_link: <%=j action_link(:remove, '#').to_json.html_safe %>,
     option_set: <%=j @option_set.as_json(:for_option_set_form => true).to_json.html_safe %>,
     suggest_path: <%=j suggest_options_path.to_json.html_safe %>,
-    form_mode: <%=j form.mode.to_json.html_safe %>,
+    form_mode: <%=j form_mode.to_json.html_safe %>,
     ajax_mode: <%=j ajax_request?.to_json.html_safe %>,
     can_reorder: <%=j can?(:reorder_options, @option_set).to_json.html_safe %>,
     can_remove_options: <%=j can?(:remove_options, @option_set).to_json.html_safe %>
