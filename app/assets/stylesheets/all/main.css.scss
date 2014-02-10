@@ -57,31 +57,6 @@ div.dialog h2 { margin: 0 0 10px 0; }
 /* loading indicator */
 div.loader { background: image-url('loader.gif') no-repeat; padding-left: 20px; }
 
-/* forms (older) */
-div.form, table.form { border-top: 1px solid #ddd; margin-bottom: 10px; }
-div.form > div, table.form td { padding: 5px; border-bottom: 1px solid #ddd; }
-div.form div.details, table.form td.details { width: 250px; }
-div.reqd_sym { display: inline; font-weight: bold; color: #d02000; font-size: 125%; line-height: 5px; vertical-align: middle; }
-table.form td.name { min-width: 75px; }
-
-div.data_integrity_warning {
-  background-color: #e4eeff;
-  padding: 5px;
-  margin: 10px 0;
-  max-width: 800px;
-
-  i {
-    display: block;
-    float: left;
-    font-size: 14px;
-    margin-top: 1px;
-  }
-
-  & > div {
-    margin-left: 20px;
-  }
-}
-
 /* action links/icons */
 a.action_link { font-size: 14px; text-decoration: none; display: inline-block; margin-right: 3px; }
 table a.action_link { margin: -2px 10px -2px 0; }
