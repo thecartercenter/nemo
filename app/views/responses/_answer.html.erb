@@ -73,7 +73,7 @@
           <%= f.send(type == 'long_text' ? 'text_area' : 'text_field', :value, :class => "qtype_#{type}", :index => answer_counter) %>
 
           <% if type == 'location' %>
-            &nbsp;<%= action_link("edit", "#", :class => "edit_location_link") if f.mode != :show %>
+            &nbsp;<%= action_link("edit", "#", :class => "edit_location_link") if form_mode != :show %>
           <% end %>
 
         <% end # case %>
