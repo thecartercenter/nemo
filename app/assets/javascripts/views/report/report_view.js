@@ -56,8 +56,10 @@
     }
   }
 
+  // sets page title unless in dashboard
   klass.prototype.show_title = function() {
-    ELMO.app.set_title(I18n.t("activerecord.models.report/report.one") + ": " + this.report.attribs.name);
+    if (!window.location.href.match(/dashboard/))
+      ELMO.app.set_title(I18n.t("activerecord.models.report/report.one") + ": " + this.report.attribs.name);
   }
 
   klass.prototype.show_loading_indicator = function(yn) {
