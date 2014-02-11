@@ -112,8 +112,11 @@
   }
 
   klass.prototype.restore_view = function() {
+    // hide open modal
+    $("#report-edit-modal").modal("hide");
     // hide load ind
     this.report_view.show_loading_indicator(false);
+
     // show links and body
     $(".report_links, .report_main").show();
   }
