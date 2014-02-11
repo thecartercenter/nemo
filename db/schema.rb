@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140210181847) do
+ActiveRecord::Schema.define(:version => 20140211144733) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -365,7 +365,7 @@ ActiveRecord::Schema.define(:version => 20140210181847) do
   add_index "sms_messages", ["mission_id"], :name => "sms_messages_mission_id_fk"
 
   create_table "users", :force => true do |t|
-    t.string   "login"
+    t.string   "login",                                  :null => false
     t.string   "email"
     t.string   "phone"
     t.string   "password_salt"
@@ -373,19 +373,20 @@ ActiveRecord::Schema.define(:version => 20140210181847) do
     t.string   "single_access_token"
     t.string   "perishable_token"
     t.string   "persistence_token"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                             :null => false
+    t.datetime "updated_at",                             :null => false
     t.integer  "login_count",         :default => 0
     t.text     "notes"
     t.datetime "last_request_at"
-    t.string   "name"
+    t.string   "name",                                   :null => false
     t.string   "phone2"
-    t.boolean  "admin"
+    t.boolean  "admin",               :default => false, :null => false
     t.integer  "current_mission_id"
-    t.string   "pref_lang"
+    t.string   "pref_lang",                              :null => false
   end
 
   add_index "users", ["current_mission_id"], :name => "users_current_mission_id_fk"
+  add_index "users", ["email"], :name => "index_users_on_email", :unique => true
   add_index "users", ["login"], :name => "index_users_on_login", :unique => true
 
   add_foreign_key "assignments", "missions", :name => "assignments_mission_id_fk"
