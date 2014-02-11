@@ -13,7 +13,6 @@
 
     // create the container div and dialog
     this.cont = $("div.report_edit_dialog");
-    this.dialog = new ELMO.Dialog(this.cont, {dont_show: true});
 
     // create the form and disable submit
     this.form = $("form.report_form");
@@ -39,10 +38,10 @@
     this.run_handler = function() { _this.run(); return false; };
 
     this.buttons = {
-      cancel: this.form.find("a.cancel"),
-      prev: this.form.find("a.prev"),
-      next: this.form.find("a.next"),
-      run: this.form.find("a.run")
+      cancel: this.form.find("button.close"),
+      prev: this.form.find("button.prev"),
+      next: this.form.find("button.next"),
+      run: this.form.find("button.run")
     }
   }
 
@@ -58,9 +57,10 @@
       if (enabled[this.panes[i].id])
         this.panes[i].update(report, true);
 
-    // show the dialog and the appropriate pane
-    this.dialog.show();
-    this.show_pane(idx);
+    // show the modal and the appropriate pane, disable esc for new modal
+    $("#report-edit-modal").modal({show: true, keyboard: false});
+
+    this.show_pane(idx, report);
 
     // hookup esc key
     if (this.report.has_run()) {
@@ -69,7 +69,7 @@
     }
   }
 
-  klass.prototype.show_pane = function(idx) {
+  klass.prototype.show_pane = function(idx, report) {
     // hide current pane
     this.panes[this.current_pane_idx].hide();
 
@@ -79,6 +79,12 @@
 
     // show/hide prev/next/run
     this.update_buttons();
+
+    // create title based on if new report or editing report
+    var title = report.has_run() ? I18n.t("page_titles.reports.edit") : I18n.t("page_titles.reports.new");
+
+    // update title of modal
+    $(".modal-title").html(title + ": " + I18n.t("report/report." + this.panes[idx].id));
   }
 
   // go to the next/previous pane
@@ -136,7 +142,6 @@
   }
 
   klass.prototype.cancel = function() {
-    this.dialog.hide();
 
     // unregister keyup event
     $(document).unbind("keyup", this.esc_handler);
@@ -169,13 +174,23 @@
   klass.prototype.enable_button = function(name, which) {
     var button = this.buttons[name];
     var handler = this[name + "_handler"];
-    button.css("color", which ? "" : "#888");
     button.css("cursor", which ? "" : "default");
+
     button.unbind("click");
-    if (which)
-      button.bind("click", handler);
-    else
-      button.bind("click", function() { return false; });
+
+    if (which) {
+      button.on("click", handler);
+      button.show();
+      button.removeAttr("disabled");
+      if (name == "run")
+        button.addClass("btn-primary")
+    } else {
+      button.on("click", function() { return false; });
+    }
+
+    // hide the next button if last pane
+    if (name == "next" && !which) button.hide();
+
   }
 
   klass.prototype.broadcast_change = function(src) {
