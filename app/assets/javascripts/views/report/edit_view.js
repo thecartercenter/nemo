@@ -62,7 +62,6 @@
 
     this.show_pane(idx);
 
-
     // hookup esc key
     if (this.report.has_run()) {
       this.esc_handler = function(e){ if (e.keyCode === 27) _this.cancel(); };
@@ -174,17 +173,16 @@
     var handler = this[name + "_handler"];
     button.css("cursor", which ? "" : "default");
 
-
     button.unbind("click");
 
     if (which) {
-      button.bind("click", handler);
+      button.on("click", handler);
       button.show();
       button.removeAttr("disabled");
-      if(name == "run")
+      if (name == "run")
         button.addClass("btn-primary")
     } else {
-      button.bind("click", function() { return false; });
+      button.on("click", function() { return false; });
     }
 
     // hide the next button if last pane
