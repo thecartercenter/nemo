@@ -57,10 +57,10 @@
       if (enabled[this.panes[i].id])
         this.panes[i].update(report, true);
 
-    // show the modal and the appropriate pane
-    $("#report-edit-modal").modal('show');
+    // show the modal and the appropriate pane, disable esc for new modal
+    $("#report-edit-modal").modal({show: true, keyboard: false});
 
-    this.show_pane(idx);
+    this.show_pane(idx, report);
 
 
     // hookup esc key
@@ -70,7 +70,7 @@
     }
   }
 
-  klass.prototype.show_pane = function(idx) {
+  klass.prototype.show_pane = function(idx, report) {
     // hide current pane
     this.panes[this.current_pane_idx].hide();
 
@@ -81,8 +81,11 @@
     // show/hide prev/next/run
     this.update_buttons();
 
+    // create title based on if new report or editing report
+    var title = report.has_run() ? I18n.t("page_titles.reports.edit") : I18n.t("page_titles.reports.new");
+
     // update title of modal
-    $(".modal-title").html(I18n.t("report/report.create_link") + ": " + I18n.t("report/report." + this.panes[idx].id));
+    $(".modal-title").html(title + ": " + I18n.t("report/report." + this.panes[idx].id));
   }
 
   // go to the next/previous pane

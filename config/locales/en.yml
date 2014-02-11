@@ -676,6 +676,8 @@ en:
       show: "Response: #%{id}"
     reports:
       index: "Reports"
+      new: "New Report"
+      edit: "Edit Report"
     settings:
       all: "Settings"
     sms:

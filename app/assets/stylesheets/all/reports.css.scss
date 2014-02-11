@@ -147,10 +147,10 @@ div.report_body {
   }
 
   .report_edit_pane {
-    width: 650px;
+    width: 98%;
     height: 336px;
     display: none;
-    margin-left: 20px;
+    margin-left: 8px;
 
     .alert {
       display: none;
@@ -182,12 +182,23 @@ div.report_edit_pane div.multiselect div.links a { display: inline-block; margin
 
 div.report_edit_pane.report_type {
   input { vertical-align: top; }
-  input[type='radio'] { margin-left: 3px; float: left; }
-  label { display: block; margin-left: 30px; }
+  input[type='radio'] {
+    margin-left: 3px;
+    float: left;
+    margin-top: 0px;
+  }
+
+  label {
+    display: block;
+    margin-left: 30px;
+    font-weight: normal;
+  }
+
   h3 {
     font-size: 10pt;
     margin-bottom: 5px;
-    color: $orange;
+    color: $elmo-blue;
+    font-weight: bold;
   }
 
   /* rows */
@@ -259,6 +270,26 @@ div.report_edit_pane.form_selection div#form_select div.choices { height: 300px;
 
 div.report_edit_pane.question_selection div.q_sel_type { margin-bottom: 10px; vertical-align: bottom; width: 300px; display: inline-block; }
 div.report_edit_pane.question_selection div.multiselect div.choices { height: 150px; width: 250px; margin-top: 5px; }
+div.report_edit_pane.question_selection div.section {
+  .name.horiz {
+    width: 315px;
+  }
+}
+
+div.report_edit_pane.fields {
+  a.add {
+    margin-top: 15px;
+  }
+
+  i {
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+
+  select, a {
+    margin-bottom: 10px;
+  }
+}
 
 
 button.prev { display: none; }

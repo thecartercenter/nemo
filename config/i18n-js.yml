@@ -29,6 +29,7 @@ translations:
       "*.location_picker.*",
       "*.layout.*",
       "*.option_set.*",
+      "*.page_titles.*",
       "*.report/report.*",
       "*.response.*",
       "*.role.*",
