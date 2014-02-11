@@ -65,7 +65,7 @@ class Answer < ActiveRecord::Base
       FROM answers a
         INNER JOIN responses r ON a.response_id = r.id
         INNER JOIN questionings qing ON a.questioning_id = qing.id
-        INNER JOIN questions q ON qing.question_id = q.id
+        INNER JOIN questionables q ON qing.question_id = q.id
       WHERE q.qtype_name = 'location' AND a.value IS NOT NULL AND r.mission_id = ?",
       mission.id
     ])
