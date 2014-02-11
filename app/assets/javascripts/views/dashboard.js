@@ -37,6 +37,9 @@
     // adjust sizes for the initial load
     self.adjust_pane_sizes();
 
+    // save mission_id as map serialization key
+    self.params.map.serialization_key = self.params.mission_id;
+
     self.list_view = new ELMO.Views.DashboardResponseList();
     self.map_view = new ELMO.Views.DashboardMap(self.params.map);
     self.report_view = new ELMO.Views.DashboardReport(self, self.params.report);

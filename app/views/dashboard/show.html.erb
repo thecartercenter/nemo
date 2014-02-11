@@ -22,6 +22,8 @@ end %>
     delete ELMO.app.dashboard;
 
     ELMO.app.dashboard = new ELMO.Views.Dashboard({
+      <%# needed for storing the map bounds between refreshes %>
+      mission_id: <%= current_mission.id.to_json.html_safe %>,
       map: {
         locations: <%=j @location_answers.to_json.html_safe %>,
         info_window_url: <%=j dashboard_info_window_url.to_json.html_safe %>
