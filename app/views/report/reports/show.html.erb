@@ -1,7 +1,6 @@
 <%# include javascript google vis api stuff %>
 <% content_for(:per_page_js){report_js_includes} %>
 
-
 <%= flash_and_form_errors(@report) %>
 
 <div class="link_set report_top_links">
@@ -62,9 +61,6 @@
               </div> <!-- controls vert -->
             </div> <!-- edit pane -->
           </div> <!-- section -->
-
-
-
 
           <%# Display options %>
           <div class="report_edit_pane display_options">
@@ -285,7 +281,6 @@
             </div>
           </div>
 
-
           <div class="report_edit_pane fields">
             <div class="pane_scroll">
               <div class="error_box alert alert-danger"></div>
@@ -310,11 +305,11 @@
             </div>
           </div>
 
-        <div class="modal-footer buttons">
-          <button type="button" class="btn btn-default prev"><i class="fa fa-chevron-left"></i> <%= t("common.back") %></button>
-          <button type="button" class="btn btn-primary next"><%= t("common.next") %> <i class="fa fa-chevron-right"></i></button>
-          <button type="button" class="btn btn-default run" disabled="disabled"><%= t("common.run") %></button>
-        </div>
+          <div class="modal-footer buttons">
+            <button type="button" class="btn btn-default prev"><i class="fa fa-chevron-left"></i> <%= t("common.back") %></button>
+            <button type="button" class="btn btn-primary next"><%= t("common.next") %> <i class="fa fa-chevron-right"></i></button>
+            <button type="button" class="btn btn-default run" disabled="disabled"><%= t("common.run") %></button>
+          </div>
 
         </div><!-- /.modal-body -->
       </div><!-- /.modal-content -->
