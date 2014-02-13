@@ -26,6 +26,25 @@
     self.dirty = true;
   };
 
+  // adds an optioning to the set based on a hash of option attribs
+  // aborts and returns false if there is a duplicate entry
+  // returns new Optioning otherwise
+  klass.prototype.add_from_option_attribs = function(attribs) { var self = this;
+    // don't add if it's a duplicate
+    if (self.has_with_name(attribs.name)) return false;
+
+    // create the Optioning and Option objects
+    var optioning = new ELMO.Models.Optioning({
+      id: null,
+      'removable?': true,
+      option: new ELMO.Models.Option(attribs)
+    });
+
+    self.add(optioning);
+
+    return optioning;
+  };
+
   // removes a given optioning from the set
   klass.prototype.remove = function(optioning) { var self = this;
     var removed = self.optionings.splice(self.optionings.indexOf(optioning), 1);

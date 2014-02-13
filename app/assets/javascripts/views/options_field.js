@@ -8,8 +8,8 @@
     self.params = params;
     self.optionings = params.optionings;
 
+    // create the draggable list to hold the options
     self.list = new ELMO.Views.DraggableList({
-      // items in list are Options, which implement NamedItem
       items: params.optionings,
       wrapper: params.wrapper,
       modal: params.modal,
@@ -23,20 +23,10 @@
 
   // given a hash of option attribs, creates Optioning and Option objects and adds to OptioningCollection and DraggableList
   klass.prototype.add = function(option_attribs) { var self = this;
-    // don't add if it's a duplicate
-    if (self.optionings.has_with_name(option_attribs.name)) return false;
-
-    var optioning = new ELMO.Models.Optioning({
-      id: null,
-      'removable?': true,
-      option: new ELMO.Models.Option(option_attribs)
-    });
-
-    // add to data model (returns new optioning)
-    self.optionings.add(optioning);
-
-    // add Option to list
-    self.list.add_item(optioning);
+    // add to data model
+    if (optioning = self.optionings.add_from_option_attribs(option_attribs))
+      // add to list if succeeded
+      self.list.add_item(optioning);
   };
 
 })(ELMO.Views);
