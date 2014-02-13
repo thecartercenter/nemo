@@ -1,4 +1,4 @@
-// ELMO.Models.Optioning
+// ELMO.Models.Optioning < ELMO.Models.NamedItem
 //
 // Client side model for Optioning
 (function(ns, klass) {
@@ -8,8 +8,9 @@
     // copy attribs
     for (var key in attribs) self[key] = attribs[key];
 
-    // build an Option instance out of the given attribs
-    self.option = new ELMO.Models.NamedItem(self.option);
+    // also translations from option. these are the ones we'll actually use.
+    self.name = self.option.name;
+    self.name_translations = self.option.name_translations;
 
     // optioning (option) names are editable if the optioning is not a new record
     //   OR both the option AND optioning are new records
@@ -24,32 +25,9 @@
     self.in_use = self.option['in_use?'];
   };
 
-  klass.prototype.remove = function() { var self = this;
-    self.parent.remove(self);
-  };
-
-  // get the rank from the position of the associated <li>
-  klass.prototype.rank = function() { var self = this;
-    return self.div.closest('li').index() + 1;
-  };
-
-  // DELEGATE THESE METHODS TO THE UNDERLYING OPTION MODEL
-
-  klass.prototype.locale_str = function() { var self = this;
-    return self.option.locale_str();
-  };
-
-  // updates a translation of the given field and locale
-  klass.prototype.update_translation = function(params) { var self = this;
-    self.option.update_translation(params);
-  };
-
-  klass.prototype.translation = function(locale) { var self = this;
-    return self.option.translation(locale);
-  };
-
-  klass.prototype.locales = function() { var self = this;
-    return self.option.locales();
-  };
+  // inherit from NamedItem
+  klass.prototype = new ns.NamedItem();
+  klass.prototype.constructor = klass;
+  klass.prototype.parent = ns.NamedItem.prototype;
 
 })(ELMO.Models);

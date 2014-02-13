@@ -9,6 +9,15 @@
     for (var key in attribs) self[key] = attribs[key];
   };
 
+  klass.prototype.remove = function() { var self = this;
+    self.parent.remove(self);
+  };
+
+  // get the rank from the position of the associated <li>
+  klass.prototype.rank = function() { var self = this;
+    return self.div.closest('li').index() + 1;
+  };
+
   // returns a space delimited list of all locales for this item
   klass.prototype.locale_str = function() { var self = this;
     if (self.name_translations) {
