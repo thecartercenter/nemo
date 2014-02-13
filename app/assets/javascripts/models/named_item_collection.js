@@ -4,6 +4,7 @@
 (function(ns, klass) {
 
   // constructor
+  // item_class - (optional) the class to use when building items in the collection
   ns.NamedItemCollection = klass = function(item_class) { var self = this;
 
     // create an array for removed items
@@ -13,13 +14,16 @@
 
     self.items = [];
 
-    self.item_class = item_class;
+    self.item_class = item_class || ELMO.Models.NamedItem;
   };
 
   // builds items objects from hashes of attributes
   klass.prototype.build_items = function(items_attribs) { var self = this;
     // create model objects for each item hash
     self.items = items_attribs.map(function(item_attribs){ return self.create_item(item_attribs); });
+
+    // return self for nice chaining
+    return self;
   };
 
   // creates an item object given a hash of attribs

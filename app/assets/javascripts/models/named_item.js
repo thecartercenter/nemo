@@ -7,6 +7,10 @@
   ns.NamedItem = klass = function(attribs) { var self = this;
     // copy attribs
     for (var key in attribs) self[key] = attribs[key];
+
+    // set defaults for boolean flags
+    self.removable = true;
+    self.editable = true;
   };
 
   klass.prototype.remove = function() { var self = this;

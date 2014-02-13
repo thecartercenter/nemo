@@ -9,20 +9,40 @@
     self.done = false;
 
     self.params = params;
+
+    // setup option set model
     self.option_set = new ELMO.Models.OptionSet(params.option_set);
+
+    // setup OptionLevelsField view
+    self.option_levels_field = new ELMO.Views.OptionLevelsField({
+      wrapper: $("#option-levels-wrapper"),
+      modal: $("#edit-option-level"),
+      option_levels: self.option_set.option_levels,
+      form_mode: self.params.form_mode,
+      can_reorder: true,
+      can_remove: self.params.can_remove_options,
+      edit_link: self.params.edit_link,
+      remove_link: self.params.remove_link
+    });
+
+    // setup OptionsField view
     self.options_field = new ELMO.Views.OptionsField({
-      wrapper: $("#options_wrapper"),
+      wrapper: $("#options-wrapper"),
       modal: $("#edit-option-set"),
       optionings: self.option_set.optionings,
       form_mode: self.params.form_mode,
       can_reorder: self.params.can_reorder,
-      can_remove_options: self.params.can_remove_options,
+      can_remove: self.params.can_remove_options,
       edit_link: self.params.edit_link,
       remove_link: self.params.remove_link
     });
 
     // hookup add button
     $('div.add_options input[type=button]').on('click', function() { self.add_options(); });
+
+    // watch for changes to multilevel property
+    $('#option_set_multi_level').on('change', function() { self.option_levels_field.show($(this).is(':checked')); });
+    $('#option_set_multi_level').trigger('change');
 
     // setup the tokenInput control
     $('input.add_options_box').tokenInput(params.suggest_path, {
@@ -87,7 +107,7 @@
   // adds options from the token input control to the view and data model
   klass.prototype.add_options = function() { var self = this;
     var chosen = $('input.add_options_box').tokenInput('get');
-    var ol = $('div#options_wrapper > ol');
+    var ol = $('div#options-wrapper > ol');
 
     // loop over chosen options
     chosen.forEach(function(option_attribs){ self.options_field.add(option_attribs); });

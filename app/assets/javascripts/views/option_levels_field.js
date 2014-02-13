@@ -1,10 +1,10 @@
-// ELMO.Views.OptionsLevelsField
+// ELMO.Views.OptionLevelsField
 //
 // View model for the options area of the option sets form.
 (function(ns, klass) {
 
   // constructor
-  ns.OptionsLevelsField = klass = function(params) { var self = this;
+  ns.OptionLevelsField = klass = function(params) { var self = this;
     self.params = params;
     self.option_levels = params.option_levels;
 
@@ -23,6 +23,10 @@
 
   // given a hash of option attribs, creates Optioning and Option objects and adds to OptioningCollection and DraggableList
   klass.prototype.add = function(option_attribs) { var self = this;
+  };
+
+  klass.prototype.show = function(yn) { var self = this;
+    $('.form_field[data-field-name=option_levels')[yn ? 'show' : 'hide']();
   };
 
 })(ELMO.Views);

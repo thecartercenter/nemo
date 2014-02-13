@@ -20,6 +20,15 @@ class OptionLevel < ActiveRecord::Base
     Subquestion.where(:option_level_id => ids).delete_all
   end
 
+
+  def as_json(options = {})
+    if options[:for_option_set_form]
+      super(:only => [:id, :name_translations], :methods => :name)
+    else
+      super(options)
+    end
+  end
+
   private
 
     # checks that at least one name translation is not blank

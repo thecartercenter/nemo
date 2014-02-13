@@ -15,7 +15,7 @@
       modal: params.modal,
       form_mode: params.form_mode,
       can_reorder: self.params.can_reorder,
-      can_remove: self.params.can_remove_options,
+      can_remove: self.params.can_remove,
       edit_link: self.params.edit_link,
       remove_link: self.params.remove_link
     });

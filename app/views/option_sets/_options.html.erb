@@ -6,12 +6,12 @@
   </div>
 <% end %>
 
-<div id="options_wrapper">
+<div id="options-wrapper" class="draggable-list-wrapper">
 </div>
 
 <% if form_mode != :show %>
   <%# edit option modal %>
-  <div class="modal fade" id="edit-option-set" tabindex="-1" role="dialog" aria-labelledby="editOptionSet" aria-hidden="true">
+  <div class="modal fade edit-named-item" id="edit-option" tabindex="-1" role="dialog" aria-labelledby="editOption" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -28,7 +28,7 @@
           <% configatron.preferred_locales.each do |locale| %>
             <div class="translation">
               <label for="<%= locale %>"><%= language_name(locale) %></label>
-              <input type="text" class="form-control" id="name_<%= locale %>" data-locale="<%= locale %>" maxlength="30">
+              <input type="text" class="form-control" id="option_name_<%= locale %>" data-locale="<%= locale %>" maxlength="30">
             </div>
           <% end %>
 

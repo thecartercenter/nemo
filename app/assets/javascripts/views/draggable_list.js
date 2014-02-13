@@ -102,14 +102,14 @@
     self.active_item = link.closest('div.inner').data('item');
 
     // clear the text boxes
-    self.modal.find('input[id^=name_]').val("");
+    self.modal.find('.translation input').val("");
 
     // hide the in_use warning
     self.modal.find('div[id$=in_use_name_change_warning]').hide();
 
     // then populate text boxes
     self.active_item.locales().forEach(function(l){
-      self.modal.find('input#name_' + l).val(self.active_item.translation(l));
+      self.modal.find('.translation input[id$=name_' + l + ']').val(self.active_item.translation(l));
     });
 
     // show the modal
@@ -132,7 +132,7 @@
   // saves entered translations to data model
   klass.prototype.save_item = function() { var self = this;
 
-    self.modal.find('input[id^=name_]').each(function(){
+    self.modal.find('.translation input').each(function(){
       self.active_item.update_translation({field: 'name', locale: $(this).data('locale'), value: $(this).val()});
     });
 
