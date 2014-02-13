@@ -13,7 +13,12 @@
     self.editable = self.id || !self.option.id;
 
     // alias removable with no question mark
+    // note this is a property of optioning
     self.removable = self['removable?'];
+
+    // alias in_use with no question mark
+    // note this is a property of option
+    self.in_use = self.option['in_use?'];
   };
 
   klass.prototype.remove = function() { var self = this;

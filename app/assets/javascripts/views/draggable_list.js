@@ -116,7 +116,7 @@
     self.modal.modal('show');
 
     // show the in_use warning if appopriate
-    if (self.active_item['in_use?']) self.modal.find('div[id$=in_use_name_change_warning]').show();
+    if (self.active_item.in_use) self.modal.find('div[id$=in_use_name_change_warning]').show();
   };
 
   // removes an item from the view
