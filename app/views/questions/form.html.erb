@@ -5,5 +5,5 @@
 <%= elmo_form_for(@question) do |f| %>
   <%# fields are contained in a partial because they are also used in the questioning form %>
   <%= render('fields', :f => f) %>
-  <%= f.submit %>
+  <%= f.submit(:class => 'btn btn-primary') %>
 <% end %>

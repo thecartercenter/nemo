@@ -23,7 +23,7 @@
       <% if af.object.mission == current_mission %>
         <%= af.hidden_field(:id) %>
         <%= af.hidden_field(:mission_id) %>
-        <%= af.select(:role, User::ROLES.map{|r| [t(r, :scope => :role), r]}, :prompt => "[#{t('role.role')}]") %>&nbsp;&nbsp;
+        <%= af.select(:role, User::ROLES.map{|r| [t(r, :scope => :role), r]}, {:prompt => "[#{t('role.role')}]"}, {:class => "form-control"}) %>
       <% end %>
     <% end %>
 

@@ -19,6 +19,7 @@ h1 { margin: 0 0 10px 0; font-size: 17pt; }
 h1.title {
   color: #777;
   font-weight: bold;
+  margin-bottom: 28px;
   i {
     color: $light-gray;
     margin-right: 5px;
@@ -121,7 +122,7 @@ div.question_fields {
   }
 
   .names_hints textarea {
-    width: 400px;
+    width: 100%;
     height: 30px;
   }
 
@@ -140,6 +141,7 @@ div.question_fields {
   }
 }
 
+form.question_form { margin-bottom: 50px; }
 /* questioning fields */
 form.questioning_form .control { width: 475px !important; }
 form.questioning_form .form_field#condition select { min-width: 125px; }
@@ -167,8 +169,8 @@ form.questioning_form .form_field#condition div.row > div:first-child { width: 1
 .option_sets_edit div.optcol, .option_sets_new div.optcol, .option_sets_show div.optcol { float: left; margin-right: 20px; }
 
 /* broadcasts */
-input#broadcast_subject { width: 300px; }
-textarea#broadcast_body { width: 300px; height: 170px; }
+input#broadcast_subject { width: 346px; }
+textarea#broadcast_body { width: 346px; height: 170px; }
 .broadcasts_show #send_errors div.control { color: #d02000; font-weight: bold; }
 .broadcasts_show #send_errors div.control p { margin: 0; }
 

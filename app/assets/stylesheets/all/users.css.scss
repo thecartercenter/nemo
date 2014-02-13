@@ -11,11 +11,14 @@ form.user_form {
 
   input#user_login {
     width: 150px;
+    display: inline-block;
+    vertical-align: middle;
   }
 
   input#login_suggest_button {
     margin-left: 10px;
     display: inline-block;
+    vertical-align: middle;
   }
 
   textarea#user_notes {

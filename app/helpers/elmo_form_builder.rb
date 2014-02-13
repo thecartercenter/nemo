@@ -107,22 +107,22 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
               options[:options].map{|o| radio_button(field_name, o, :class => 'radio') + o}.join('&nbsp;&nbsp;').html_safe
 
             when :textarea
-              text_area(field_name)
+              text_area(field_name, {:class => 'form-control'})
 
             when :password
               # add 'text' class for legacy support
               password_field(field_name, :class => 'text')
 
             when :select
-              select(field_name, options[:options], :include_blank => options[:prompt] || true)
+              select(field_name, options[:options], {:include_blank => options[:prompt] || true}, {:class => "form-control"})
 
             when :timezone
-              time_zone_select(field_name)
+              time_zone_select(field_name, nil, {}, {:class => "form-control"})
 
             # text is the default type
             else
               # add 'text' class for legacy support
-              text_field(field_name, {:class => 'text'}.merge(options.slice(:maxlength)))
+              text_field(field_name, {:class => 'text form-control'}.merge(options.slice(:maxlength)))
           end
         end
       end
@@ -131,7 +131,7 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
     # generates html for a field label
     def elmo_field_label(field_name, options)
       label_str = options[:label] || @object.class.human_attribute_name(field_name)
-      label_html = label_str + (options[:required] ? " #{@template.reqd_sym}" : "")
+      label_html = (options[:required] ? "#{@template.reqd_sym} " : "") + label_str + ":"
       label(field_name, label_html.html_safe, :class => "main")
     end
 

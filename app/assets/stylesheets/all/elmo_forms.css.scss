@@ -1,3 +1,5 @@
+$orange: #F77D48;
+
 div.form_field {
   /* the field div itself should not wrap, but we don't want this to inherit */
   white-space: nowrap;
@@ -9,7 +11,7 @@ div.form_field {
   div.reqd_sym {
     display: inline;
     font-weight: bold;
-    color: #d02000;
+    color: $orange;
     font-size: 125%;
     line-height: 5px;
     vertical-align: middle;
@@ -32,21 +34,24 @@ div.form_field {
     }
   }
 
-  label.main, .control {
-    border-top: 1px solid #ddd;
-  }
-
   label.main {
     display: inline-block;
+    vertical-align: middle;
     width: 150px;
     padding-right: 10px;
+    text-align: right;
   }
 
   div.control {
     display: inline-block;
+    vertical-align: middle;
     width: 350px;
     min-height: 26px;
     position: relative;
+
+    label {
+      font-weight: normal;
+    }
   }
 
   div.control input.text {
@@ -55,6 +60,7 @@ div.form_field {
 
   /* nice kooshy padding */
   input[type=text], input[type=password], textarea, select {
+    margin-bottom: 5px;
     padding: 3px;
   }
 
@@ -82,6 +88,32 @@ div.form_field {
     padding: 0;
     width: auto;
   }
+}
+
+#question_option_set_id {
+  width: 73%;
+  display: inline-block;
+}
+
+form input[type="submit"].btn-primary {
+  background-color: $orange;
+  border: 0px;
+}
+
+div.users_new {
+  form input[type="submit"].btn {
+    margin: 20px 0 10px 494px;
+  }
+}
+
+div.settings_index {
+  a.password {
+    margin-left: 150px;
+  }
+}
+
+div.broadcasts_new_with_users input[type="submit"].btn-primary {
+  margin: 20px 0 0 440px;
 }
 
 div.data_integrity_warning {
