@@ -11,6 +11,11 @@ form.option_set_form {
     width: 475px;
   }
 
+  /* hide the option levels at first */
+  div.form_field[data-field-name=option_levels] {
+    display: none;
+  }
+
   div.add_options {
     margin-bottom: 20px;
 
