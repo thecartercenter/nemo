@@ -13,7 +13,7 @@
 
     // create model objects for each optioning hash
     self.optionings = optioning_attribs.map(function(optioning){
-      optioning.option = new ELMO.Models.Option(optioning.option);
+      optioning.option = new ELMO.Models.NamedItem(optioning.option);
       optioning.parent = self;
       return new ELMO.Models.Optioning(optioning);
     });
@@ -37,7 +37,7 @@
     var optioning = new ELMO.Models.Optioning({
       id: null,
       'removable?': true,
-      option: new ELMO.Models.Option(attribs)
+      option: new ELMO.Models.NamedItem(attribs)
     });
 
     self.add(optioning);

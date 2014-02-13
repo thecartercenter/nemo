@@ -4,7 +4,9 @@
 (function(ns, klass) {
 
   // constructor
-  ns.NamedItem = klass = function() { var self = this;
+  ns.NamedItem = klass = function(attribs) { var self = this;
+    // copy attribs
+    for (var key in attribs) self[key] = attribs[key];
   };
 
   // returns a space delimited list of all locales for this item
