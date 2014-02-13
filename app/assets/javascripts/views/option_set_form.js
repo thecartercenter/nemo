@@ -6,6 +6,8 @@
   // constructor
   ns.OptionSetForm = klass = function(params) { var self = this;
 
+    self.done = false;
+
     self.params = params;
     self.option_set = new ELMO.Models.OptionSet(params.option_set);
     self.options_field = new ELMO.Views.OptionsField({
@@ -43,13 +45,14 @@
     // hookup leave page warning unless ajax request
     if (!self.params.ajax_mode)
       window.onbeforeunload = function(){
-        if (self.dirty())
+        if (self.dirty() && !self.done)
           return I18n.t('option_set.leave_page_warning');
       };
   };
 
+  // checks if client side model is dirty
   klass.prototype.dirty = function() { var self = this;
-    return false;
+    return self.option_set.optionings.dirty;
   };
 
   // returns the html to insert in the token input result list
@@ -119,8 +122,8 @@
       self.add_form_field('option_set[optionings_attributes][_' + idx + '][_destroy]', 'true');
     });
 
-    // cancel the dirty flag so no warning
-    //self.dirty = false;
+    // set flag so we don't raise warning on navigation
+    self.done = true;
 
     // if the form is in ajax mode, submit via ajax
     if (self.params.ajax_mode) {

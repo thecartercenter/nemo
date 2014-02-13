@@ -10,7 +10,7 @@
 
     self.list = new ELMO.Views.DraggableList({
       // items in list are Options, which implement NamedItem
-      items: params.optionings.get(),
+      items: params.optionings,
       wrapper: params.wrapper,
       modal: params.modal,
       form_mode: params.form_mode,

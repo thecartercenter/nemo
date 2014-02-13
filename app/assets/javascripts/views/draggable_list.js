@@ -25,7 +25,7 @@
     self.ol = $("<ol>");
 
     // add li tags
-    self.items.forEach(function(item, idx){
+    self.items.get().forEach(function(item, idx){
       $('<li>').html(self.render_item(item)).appendTo(self.ol);
     });
 
@@ -40,8 +40,8 @@
         toleranceElement: '> div',
         maxLevels: 1,
 
-        // update model ranks when positions change
-        change: function(){  }
+        // notify model when sorting changes
+        change: function(){ self.items.dirty = true; }
       });
     }
   };
@@ -147,5 +147,6 @@
 
     self.modal.modal('hide');
   };
+
 })(ELMO.Views);
 

@@ -9,12 +9,13 @@
     // create an array for removed optionings
     self.removed = [];
 
+    self.dirty = false;
+
     // create model objects for each optioning hash
-    self.optionings = [];
-    optioning_attribs.forEach(function(optioning){
+    self.optionings = optioning_attribs.map(function(optioning){
       optioning.option = new ELMO.Models.Option(optioning.option);
       optioning.parent = self;
-      self.add(new ELMO.Models.Optioning(optioning));
+      return new ELMO.Models.Optioning(optioning);
     });
   };
 
@@ -22,6 +23,7 @@
   klass.prototype.add = function(optioning) { var self = this;
     optioning.parent = self;
     self.optionings.push(optioning);
+    self.dirty = true;
   };
 
   // removes a given optioning from the set
@@ -31,6 +33,8 @@
     // if the removed optioning has an id, save it as it will need to be destroyed
     if (removed[0].id)
       self.removed.push(removed[0]);
+
+    self.dirty = true;
   };
 
   // checks if this set currently has an option with the given name
