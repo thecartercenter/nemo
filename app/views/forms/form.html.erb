@@ -20,10 +20,10 @@
     <%# questions on the form %>
     <%= index_table(Questioning, @form.questionings, :within_form => true) if form_mode != :new %>
 
-    <%= f.submit %>
+    <%= f.submit(:class => "btn btn-primary") %>
 
     <% if !@form.new_record? && !@form.published? && can?(:publish, @form) %>
-      <%= f.submit(I18n.t('form.save_and_publish'), :name => 'save_and_publish') %>
+      <%= f.submit(I18n.t('form.save_and_publish'), :name => 'save_and_publish', :class => 'btn btn-primary') %>
     <% end %>
 
   <% end %>

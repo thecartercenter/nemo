@@ -102,7 +102,7 @@ form input[type="submit"].btn-primary {
 
 div.users_new {
   form input[type="submit"].btn {
-    margin: 20px 0 10px 494px;
+    margin: 35px 0 10px 545px;
   }
 }
 
@@ -114,6 +114,18 @@ div.settings_index {
 
 div.broadcasts_new_with_users input[type="submit"].btn-primary {
   margin: 20px 0 0 440px;
+}
+
+div.option_sets_new input[type="submit"].btn-primary {
+  margin: 50px 0 0 435px;
+}
+
+div.questions_new input[type="submit"].btn-primary {
+  margin: 20px 0 0 491px;
+}
+
+div.forms_new input[type="submit"].btn-primary {
+  margin: 20px 0 0 389px;
 }
 
 div.data_integrity_warning {
