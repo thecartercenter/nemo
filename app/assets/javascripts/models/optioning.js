@@ -25,6 +25,11 @@
     self.parent.remove(self);
   };
 
+  // get the rank from the position of the associated <li>
+  klass.prototype.rank = function() { var self = this;
+    return self.div.closest('li').index() + 1;
+  };
+
   // DELEGATE THESE METHODS TO THE UNDERLYING OPTION MODEL
 
   klass.prototype.locale_str = function() { var self = this;
