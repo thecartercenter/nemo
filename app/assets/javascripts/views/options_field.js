@@ -26,13 +26,17 @@
     // don't add if it's a duplicate
     if (self.optionings.has_with_name(option_attribs.name)) return false;
 
-    var optioning = new ELMO.Models.Optioning({id: null, 'removable?': true, option: new ELMO.Models.Option(option_attribs)});
+    var optioning = new ELMO.Models.Optioning({
+      id: null,
+      'removable?': true,
+      option: new ELMO.Models.Option(option_attribs)
+    });
 
     // add to data model (returns new optioning)
     self.optionings.add(optioning);
 
     // add Option to list
-    self.list.add_item(optioning.option);
+    self.list.add_item(optioning);
   };
 
 })(ELMO.Views);

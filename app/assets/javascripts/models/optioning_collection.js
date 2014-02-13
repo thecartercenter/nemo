@@ -13,12 +13,14 @@
     self.optionings = [];
     optioning_attribs.forEach(function(optioning){
       optioning.option = new ELMO.Models.Option(optioning.option);
+      optioning.parent = self;
       self.add(new ELMO.Models.Optioning(optioning));
     });
   };
 
   // adds an optioning to the set
   klass.prototype.add = function(optioning) { var self = this;
+    optioning.parent = self;
     self.optionings.push(optioning);
   };
 
