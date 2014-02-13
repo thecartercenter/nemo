@@ -36,6 +36,6 @@ module DataIntegrityHelper
   def data_integrity_warning(type, text = nil)
     icon = content_tag(:i, '', :class => 'icon-warning-sign')
     text ||= tmd("data_integrity.#{type}")
-    content_tag(:div, (icon + content_tag(:div, text)).html_safe, :class => "data_integrity_warning #{type}")
+    content_tag(:div, (icon + content_tag(:div, text)).html_safe, :class => "data_integrity_warning #{type}", :id => type)
   end
 end

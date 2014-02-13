@@ -7,34 +7,32 @@
   ns.Optioning = klass = function(attribs) { var self = this;
     // copy attribs
     for (var key in attribs) self[key] = attribs[key];
+
+    self.editable = true;
+    self.removable = true;
   };
 
-  // returns a space delimited list of all locales for this optioning's option
+  klass.prototype.remove = function() { var self = this;
+    self.parent.remove(self);
+  };
+
+  // DELEGATE THESE METHODS TO THE UNDERLYING OPTION MODEL
+
   klass.prototype.locale_str = function() { var self = this;
-    if (self.option.name_translations) {
-      // get all locales with non-blank translations
-      var locales = Object.keys(self.option.name_translations).filter(function(l){
-        return self.option.name_translations[l] && self.option.name_translations[l] != '';
-      });
-      return locales.join(' ');
-    } else
-      return '';
+    return self.option.locale_str();
   };
 
-  // updates a translation of the given field and locale in the option model
+  // updates a translation of the given field and locale
   klass.prototype.update_translation = function(params) { var self = this;
-    // ensure there is a name_translations hash
-    if (!self.option.name_translations)
-      self.option.name_translations = {};
+    self.option.update_translation(params);
+  };
 
-    // add the value, trimming whitespace
-    self.option.name_translations[params.locale] = params.value.trim();
+  klass.prototype.translation = function(locale) { var self = this;
+    return self.option.translation(locale);
+  };
 
-    // update option name (current locale or default locale or first non-blank value)
-    var names = [self.option.name_translations[I18n.locale], self.option.name_translations[I18n.default_locale]];
-    for (var locale in self.option.name_translations)
-      names.push(self.option.name_translations[locale]);
-    self.option.name = names.filter(function(n){ return n && n != ''; })[0] || '';
+  klass.prototype.locales = function() { var self = this;
+    return self.option.locales();
   };
 
 })(ELMO.Models);

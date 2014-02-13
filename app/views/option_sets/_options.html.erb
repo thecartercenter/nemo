@@ -20,19 +20,17 @@
         </div>
         <div class="modal-body">
 
-          <div class="edit_option_form" title="<%= t("option_set.edit_option") %>">
-            <%= data_integrity_warning(:option_standard_copy_name_change_warning) if @option_set.standard_copy? %>
+          <%= data_integrity_warning(:option_standard_copy_name_change_warning) if @option_set.standard_copy? %>
 
-            <%# this warning will get hidden/shown by the js %>
-            <%= data_integrity_warning(:option_in_use_name_change_warning) %>
+          <%# this warning will get hidden/shown by the js %>
+          <%= data_integrity_warning(:option_in_use_name_change_warning) %>
 
-            <% configatron.preferred_locales.each do |locale| %>
-              <div class="translation">
-                <label for="<%= locale %>"><%= language_name(locale) %></label>
-                <input type="text" class="form-control" id="name_<%= locale %>" data-locale="<%= locale %>" maxlength="30">
-              </div>
-            <% end %>
-          </div>
+          <% configatron.preferred_locales.each do |locale| %>
+            <div class="translation">
+              <label for="<%= locale %>"><%= language_name(locale) %></label>
+              <input type="text" class="form-control" id="name_<%= locale %>" data-locale="<%= locale %>" maxlength="30">
+            </div>
+          <% end %>
 
         </div>
         <div class="modal-footer">

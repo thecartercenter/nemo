@@ -8,19 +8,19 @@
 
     self.params = params;
     self.option_set = new ELMO.Models.OptionSet(params.option_set);
-
-    // render the options
-    self.render_options();
-
-    // setup a dirty flag
-    self.dirty = false;
+    self.options_field = new ELMO.Views.OptionsField({
+      wrapper: $("#options_wrapper"),
+      modal: $("#edit-option-set"),
+      optionings: self.option_set.optionings,
+      form_mode: self.params.form_mode,
+      can_reorder: self.params.can_reorder,
+      can_remove_options: self.params.can_remove_options,
+      edit_link: self.params.edit_link,
+      remove_link: self.params.remove_link
+    });
 
     // hookup add button
     $('div.add_options input[type=button]').on('click', function() { self.add_options(); });
-
-    // hookup setup edit/remove links (deferred)
-    $('div#options_wrapper').on('click', 'a.action_link_edit', function(){ self.edit_option($(this)); return false; });
-    $('div#options_wrapper').on('click', 'a.action_link_remove', function(){ self.remove_option($(this)); return false; });
 
     // setup the tokenInput control
     $('input.add_options_box').tokenInput(params.suggest_path, {
@@ -40,16 +40,16 @@
     // hookup form submit
     $('form.option_set_form').on('submit', function(){ return self.form_submitted(); });
 
-
-    // hookup save option button on modal
-    $('#edit-option-set button.btn-primary').on('click', function(){ self.save_option(this); return false; });
-
     // hookup leave page warning unless ajax request
     if (!self.params.ajax_mode)
       window.onbeforeunload = function(){
-        if (self.dirty)
+        if (self.dirty())
           return I18n.t('option_set.leave_page_warning');
       };
+  };
+
+  klass.prototype.dirty = function() { var self = this;
+    return false;
   };
 
   // returns the html to insert in the token input result list
@@ -72,86 +72,14 @@
   // strips duplicates from token results
   // this doesn't work if the result is cached
   klass.prototype.process_token_results = function(results) { var self = this;
-    return results.filter(function(r){ return !self.option_set.has_option_with_name(r.name); });
+    return results.filter(function(r){ return !self.option_set.optionings.has_with_name(r.name); });
   };
 
   // if the added token is a duplicate, delete it!
   klass.prototype.token_added = function(item) { var self = this;
-    if (self.option_set.has_option_with_name(item.name))
+    if (self.option_set.optionings.has_with_name(item.name))
       $('input.add_options_box').tokenInput("remove", {name: item.name});
   };
-
-  // renders the option html to the view
-  klass.prototype.render_options = function() { var self = this;
-    // create outer ol tag
-    var ol = $("<ol>");
-
-    // add li tags
-    self.option_set.optionings.forEach(function(oing, idx){
-      $('<li>').html(self.render_option(oing)).appendTo(ol);
-    });
-
-    // append to wrapper div
-    ol.appendTo('div#options_wrapper');
-
-
-    // setup the sortable plugin unless in show mode
-    if (self.params.form_mode != 'show' && self.params.can_reorder) {
-      ol.nestedSortable({
-        handle: 'div',
-        items: 'li',
-        toleranceElement: '> div',
-        maxLevels: 1,
-
-        // set dirty flag when positions change
-        change: function(){ self.dirty = true; }
-      });
-    }
-  };
-
-  // builds the inner div tag for an option
-  klass.prototype.render_option = function(optioning) { var self = this;
-
-    // make inner option tag
-    var inner = $('<div>').attr('class', 'inner')
-
-    // add sort icon if not in show mode
-    if (self.params.form_mode != 'show' && self.params.can_reorder)
-      inner.append($('<i>').attr('class', 'icon-sort'));
-
-    // add option name (add nbsp to make sure div doesn't collapse if name is blank)
-    inner.append(optioning.option.name + '&nbsp;');
-
-    // add edit/remove unless in show mode
-    if (self.params.form_mode != 'show') {
-      var links = $('<div>').attr('class', 'links')
-
-      // don't show the edit link if the option is existing and has not yet been added to the set (rails limitation)
-      if (optioning.id || !optioning.option.id)
-        links.append(self.params.edit_link);
-
-      // don't show the removable link if the specific option isn't removable
-      // or if the global removable permission is false
-      if (self.params.can_remove_options && optioning['removable?'])
-        links.append(self.params.remove_link);
-
-      // add a spacer if empty, else it won't render right
-      if (links.is(':empty'))
-        links.append('&nbsp;')
-
-      links.appendTo(inner);
-    }
-
-    // add locales
-    inner.append($('<em>').html(optioning.locale_str()));
-
-    // associate optioning with data model bidirectionally
-    inner.data('optioning', optioning);
-    optioning.div = inner;
-
-    return inner;
-  };
-
 
   // adds options from the token input control to the view and data model
   klass.prototype.add_options = function() { var self = this;
@@ -159,83 +87,10 @@
     var ol = $('div#options_wrapper > ol');
 
     // loop over chosen options
-    chosen.forEach(function(opt){
-      // don't add if it's a duplicate
-      if (self.option_set.has_option_with_name(opt.name)) return false;
-
-      // dirty!
-      self.dirty = true;
-
-      // add to data model (returns new optioning)
-      var oing = self.option_set.add_option(opt);
-
-      // wrap in li and add to view
-      $('<li>').html(self.render_option(oing)).appendTo(ol);
-    });
+    chosen.forEach(function(option_attribs){ self.options_field.add(option_attribs); });
 
     // clear out the add box
     $('input.add_options_box').tokenInput('clear');
-  };
-
-  // removes an option from the view
-  klass.prototype.remove_option = function(link) { var self = this;
-    // lookup optioning object remove from option set
-    self.option_set.remove_optioning(link.closest('div.inner').data('optioning'));
-
-    // remove from view
-    link.closest('li').remove();
-
-    // dirty!
-    self.dirty = true;
-  };
-
-  // shows the edit dialog
-  klass.prototype.edit_option = function(link) { var self = this;
-    // get the optioning and save it as an instance var as we will need to access it
-    // when the modal gets closed
-    self.active_optioning = link.closest('div.inner').data('optioning');
-
-    // clear the text boxes
-    ELMO.app.params.mission_locales.forEach(function(locale){
-      $('div.edit_option_form input#name_' + locale).val("");
-    });
-
-    // hide the in_use warning
-    $('div.edit_option_form div.option_in_use_name_change_warning').hide();
-
-    // then populate text boxes
-    for (var locale in self.active_optioning.option.name_translations)
-      $('div.edit_option_form input#name_' + locale).val(self.active_optioning.option.name_translations[locale]);
-
-    // show the modal
-    $('#edit-option-set').modal('show');
-
-    // show the form
-    $('div.edit_option_form').show();
-
-    // show the in_use warning if appopriate
-    if (self.active_optioning.option.in_use) $('div.edit_option_form div.option_in_use_name_change_warning').show();
-  };
-
-  // saves entered translations to data model
-  klass.prototype.save_option = function() { var self = this;
-
-    $('div.edit_option_form input[type=text]').each(function(){
-      self.active_optioning.update_translation({field: 'name', locale: $(this).data('locale'), value: $(this).val()});
-    });
-
-    // dirty!
-    self.dirty = true;
-
-    // re-render the option in the view
-    var old_div = self.active_optioning.div;
-    var new_div = self.render_option(self.active_optioning);
-    old_div.replaceWith(new_div);
-
-    // done with this optioning
-    self.active_optioning = null;
-
-    $('#edit-option-set').modal('hide');
   };
 
   // write the data model to the form as hidden tags so that the data will be included in the submission
@@ -265,7 +120,7 @@
     });
 
     // cancel the dirty flag so no warning
-    self.dirty = false;
+    //self.dirty = false;
 
     // if the form is in ajax mode, submit via ajax
     if (self.params.ajax_mode) {
