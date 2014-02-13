@@ -8,7 +8,10 @@
     // copy attribs
     for (var key in attribs) self[key] = attribs[key];
 
-    self.editable = true;
+    // optioning (option) names are editable if the optioning is not a new record
+    //   OR both the option AND optioning are new records
+    self.editable = self.id || !self.option.id;
+
     self.removable = true;
   };
 
