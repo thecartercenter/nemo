@@ -8,7 +8,9 @@
     // copy attribs
     for (var key in attribs) self[key] = attribs[key];
 
-    self.optionings = new ELMO.Models.OptioningCollection(self.optionings);
+    var optionings_attribs = self.optionings;
+    self.optionings = new ELMO.Models.OptioningCollection();
+    self.optionings.build_items(optionings_attribs);
   };
 
 })(ELMO.Models);

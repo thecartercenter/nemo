@@ -8,6 +8,9 @@
     // copy attribs
     for (var key in attribs) self[key] = attribs[key];
 
+    // build an Option instance out of the given attribs
+    self.option = new ELMO.Models.Option(self.option);
+
     // optioning (option) names are editable if the optioning is not a new record
     //   OR both the option AND optioning are new records
     self.editable = self.id || !self.option.id;
