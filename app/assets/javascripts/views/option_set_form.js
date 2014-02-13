@@ -98,28 +98,44 @@
 
   // write the data model to the form as hidden tags so that the data will be included in the submission
   klass.prototype.form_submitted = function() { var self = this;
-    // save the name in the data model
+    // copy form values to model
     self.option_set.name = $('#option_set_name').val();
+    self.option_set.geographic = $('#option_set_geographic').is(':checked');
+    self.option_set.multi_level = $('#option_set_multi_level').is(':checked');
 
-    var form = $('form.option_set_form');
-    self.option_set.optionings.forEach(function(optioning, idx){
+    // add fields to form to represent the options, optionings, etc.
+    self.option_set.optionings.get().forEach(function(optioning, idx){
+
+      // optioning id
       if (optioning.id)
         self.add_form_field('option_set[optionings_attributes][' + idx + '][id]', optioning.id);
-      self.add_form_field('option_set[optionings_attributes][' + idx + '][rank]', optioning.div.closest('li').index() + 1);
 
-      if (optioning.id || !optioning.option.id) {
+      // rank
+      self.add_form_field('option_set[optionings_attributes][' + idx + '][rank]', optioning.rank());
+
+      // option attribs (only allowed if optioning is editable)
+      if (optioning.editable) {
+
+        // id
         self.add_form_field('option_set[optionings_attributes][' + idx + '][option_attributes][id]', optioning.option.id);
-        for (var locale in optioning.option.name_translations)
-          self.add_form_field('option_set[optionings_attributes][' + idx + '][option_attributes][name_' + locale + ']', optioning.option.name_translations[locale]);
-      } else {
+
+        optioning.locales().forEach(function(l){
+          self.add_form_field('option_set[optionings_attributes][' + idx + '][option_attributes][name_' + l + ']', optioning.translation(l));
+        });
+
+      // else (optioning is not editable) just include ref to option
+      } else
+
         self.add_form_field('option_set[optionings_attributes][' + idx + '][option_id]', optioning.option.id);
-      }
+
     });
 
-    // add removed optionings
-    self.option_set.removed_optionings.forEach(function(optioning, idx){
+    // add removed optionings with _destroy flag
+    self.option_set.optionings.removed.forEach(function(optioning, idx){
+
       self.add_form_field('option_set[optionings_attributes][_' + idx + '][id]', optioning.id);
       self.add_form_field('option_set[optionings_attributes][_' + idx + '][_destroy]', 'true');
+
     });
 
     // set flag so we don't raise warning on navigation
@@ -129,7 +145,7 @@
     if (self.params.ajax_mode) {
       $.ajax({
         url: $('form.option_set_form').attr('action'),
-        method: 'POST',
+        type: 'POST',
         data: $('form.option_set_form').serialize(),
         success: function(data, status, jqxhr) {
           // if content type was json, that means success
@@ -156,10 +172,10 @@
       // return false so the form won't submit normally
       return false;
 
-    } else {
+    } else
       // if not in ajax mode, just return true and let form submit normally
       return true;
-    }
+
   };
 
   // adds a hidden form field with the given name and value
