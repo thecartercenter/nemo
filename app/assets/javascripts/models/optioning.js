@@ -12,7 +12,8 @@
     //   OR both the option AND optioning are new records
     self.editable = self.id || !self.option.id;
 
-    self.removable = true;
+    // alias removable with no question mark
+    self.removable = self['removable?'];
   };
 
   klass.prototype.remove = function() { var self = this;
