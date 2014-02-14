@@ -59,10 +59,17 @@
   }
 }
 
+.responses_new, .responses_edit {
+  .submit-buttons {
+    width: 650px;
+    text-align: right;
+  }
+}
+
 /* response edit */
 .responses_edit input.qtype_integer, .responses_new input.qtype_integer { width: 100px; }
 .responses_edit input.qtype_decimal, .responses_new input.qtype_decimal { width: 100px; }
 .responses_edit textarea.qtype_long_text, .responses_new textarea.qtype_long_text { width: 340px; height: 100px; }
-.responses_edit input.qtype_location, .responses_new input.qtype_location { width: 200px; }
+.responses_edit input.qtype_location, .responses_new input.qtype_location { width: 200px; display: inline-block; }
 .responses_edit label.main, .responses_new label.main, .responses_show label.main { width: 300px !important; }
 a.edit_location_link img { vertical-align: bottom; }

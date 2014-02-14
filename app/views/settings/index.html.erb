@@ -51,8 +51,9 @@
     <%= f.field(:external_sql, :partial => "external_sql") %>
 
   <% end %>
-
-  <%= f.submit %>
+  <div class="submit-buttons">
+    <%= f.submit(:class => "btn btn-primary") %>
+  </div>
 
 <% end %>
 

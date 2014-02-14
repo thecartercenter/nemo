@@ -111,7 +111,7 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
 
             when :password
               # add 'text' class for legacy support
-              password_field(field_name, :class => 'text')
+              password_field(field_name, :class => 'text form-control')
 
             when :select
               select(field_name, options[:options], {:include_blank => options[:prompt] || true}, {:class => "form-control"})

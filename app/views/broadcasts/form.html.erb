@@ -20,7 +20,9 @@
     <%= f.field(:send_errors, :partial => "send_errors") %>
   <% end %>
 
-  <%= f.submit(:send, :class => "btn btn-primary") %>
+  <div class="submit-buttons">
+    <%= f.submit(:send, :class => "btn btn-primary") %>
+  </div>
 <% end %>
 
 <%= javascript_doc_ready do %>

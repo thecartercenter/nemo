@@ -98,6 +98,11 @@ en:
       is_invalid: "is invalid"
       did_not_match: "did not match"
 
+  helpers:
+    submit:
+      create: "Save"
+      update: "Save"
+
   # model names, attrib names, hints, and errors for activerecord models
   activerecord:
     models:

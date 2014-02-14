@@ -195,6 +195,11 @@ textarea#broadcast_body { width: 346px; height: 170px; }
     }
   }
 }
+
+button.btn-primary {
+  background-color: $orange;
+  border: 0px;
+}
 div.location_picker div.map_canvas { width: 500px; height: 400px; border: 1px solid #ccc; float: left; margin-right: 10px; }
 div.location_picker span.cur_lat_lng { font-weight: bold; }
 div.location_picker form.location_search { float: right; width: 275px; }

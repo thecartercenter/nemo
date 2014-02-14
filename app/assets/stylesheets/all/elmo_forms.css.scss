@@ -88,11 +88,8 @@ div.form_field {
     padding: 0;
     width: auto;
   }
-}
 
-#question_option_set_id {
-  width: 73%;
-  display: inline-block;
+
 }
 
 form input[type="submit"].btn-primary {
@@ -100,32 +97,59 @@ form input[type="submit"].btn-primary {
   border: 0px;
 }
 
-div.users_new {
-  form input[type="submit"].btn {
-    margin: 35px 0 10px 545px;
+form {
+  div.submit-buttons {
+    text-align: right;
+    margin-top: 20px;
   }
+
+  &.form_form, &.question_form, &.option_set_form, &.user_form, input.btn-primary {
+    padding: 6px 35px;
+  }
+
+  &.form_form div.submit-buttons {
+    width: 500px;
+  }
+
+  &.question_form div.submit-buttons {
+    width: 625px;
+  }
+
+  &.option_set_form div.submit-buttons {
+    width: 575px;
+  }
+
+  &.user_form div.submit-buttons {
+    width: 645px;
+  }
+
+  &.broadcast_form div.submit-buttons {
+    width: 500px;
+  }
+
+  &.user_session_form div.submit-buttons {
+    width: 500px;
+  }
+
+  &.setting_form div.submit-buttons{
+    width: 500px;
+  }
+
+
 }
+
+
+#question_option_set_id {
+  width: 73%;
+  display: inline-block;
+}
+
+
 
 div.settings_index {
   a.password {
     margin-left: 150px;
   }
-}
-
-div.broadcasts_new_with_users input[type="submit"].btn-primary {
-  margin: 20px 0 0 440px;
-}
-
-div.option_sets_new input[type="submit"].btn-primary {
-  margin: 50px 0 0 435px;
-}
-
-div.questions_new input[type="submit"].btn-primary {
-  margin: 20px 0 0 491px;
-}
-
-div.forms_new input[type="submit"].btn-primary {
-  margin: 20px 0 0 389px;
 }
 
 div.data_integrity_warning {
