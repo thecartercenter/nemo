@@ -15,9 +15,7 @@
 
   <% else %>
 
-    <%= fields_for("questioning[condition_attributes]", @condition) do |f| %>
-
-      <%= render("layouts/object_errors", :object => @condition, :compact => true) %>
+    <%= elmo_fields_for("questioning[condition_attributes]", @condition) do |f| %>
 
       <%= f.hidden_field(:id) %>
 
@@ -46,7 +44,7 @@
         </div>
       </div>
 
-    <% end # fields_for %>
+    <% end # elmo_fields_for %>
 
     <%= javascript_doc_ready do %>
       new ELMO.Views.ConditionForm(<%=j @condition.to_json(:dropdown_values => true).html_safe %>);

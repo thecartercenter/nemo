@@ -4,9 +4,7 @@
   <label class="main"><%= reqd_sym if answer.required? %> <%= answer.question_name || "[#{t('answer.no_name')}]" %>
   </label><div class="control">
 
-    <%= fields_for('response[all_answers][]', answer) do |f| %>
-
-      <%= render("layouts/object_errors", :object => answer, :compact => true, :prefix => t("answer.this_answer")) unless answer.errors.empty? %>
+    <%= elmo_fields_for('response[all_answers][]', answer) do |f| %>
 
       <% if form_mode == :show %>
 
@@ -80,7 +78,7 @@
 
       <% end # if show mode %>
 
-    <% end # fields_for %>
+    <% end # elmo_fields_for %>
   </div>
 
   <% unless answer.question_hint.blank? %>
