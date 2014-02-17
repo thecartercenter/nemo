@@ -1,3 +1,16 @@
+#standard-import-form {
+
+  .modal-body {
+    overflow-y: scroll;
+    max-height: 560px;
+  }
+
+  .btn-primary {
+    background-color: #F77D48;
+    border: 0;
+  }
+}
+
 div.importable {
   display: none;
 
