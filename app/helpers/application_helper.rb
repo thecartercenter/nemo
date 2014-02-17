@@ -234,12 +234,7 @@ module ApplicationHelper
     # add text
     ttl += t(action, {:scope => "page_titles.#{controller_name}", :default => [:all, ""]}.merge(@title_args || {}))
 
-    # add seal after text if appropriate
-    if !options[:text_only]
-      if admin_mode? && %w(forms questions questionings option_sets).include?(controller_name) || @title_args.delete(:standardized)
-        ttl +=  content_tag(:i, "", :class => "fa fa-certificate")
-      end
-    end
+
 
     ttl.html_safe
   end
@@ -289,7 +284,7 @@ module ApplicationHelper
   # returns img tag for standard icon if obj is standard, '' otherwise
   def std_icon(obj)
     if obj.respond_to?(:standardized?) && obj.standardized?
-      image_tag('std-seal.png', :class => 'std_seal')
+      content_tag(:i, "", :class => "fa fa-certificate")
     else
       ''
     end

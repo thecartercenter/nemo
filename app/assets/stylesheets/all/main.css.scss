@@ -23,11 +23,6 @@ h1.title {
   i {
     color: $light-gray;
     margin-right: 5px;
-
-    &.fa-certificate {
-      color: $gold;
-      margin-left: 5px;
-    }
   }
 }
 
@@ -79,7 +74,11 @@ table.index_table tbody tr:hover, table.index_table tbody tr.hovered { backgroun
 td.actions_col { white-space: nowrap; }
 div.loading_indicator_inline { width: 16px; display: inline; }
 div.loading_indicator_floating { width: 16px; float: left; }
-table.index_table img.std_seal { margin-bottom: -5px; }
+table.index_table i.fa-certificate {
+  margin-bottom: -5px;
+  color: $gold;
+  font-size: 1.5em;
+}
 
 /* set of links */
 .link_set {
