@@ -56,22 +56,6 @@ function logout() {
 
 // UTILITIES
 (function (Utils, undefined) {
-  Utils.show_flash = function(params) {
-    Utils.clear_flash();
-    $(".status_messages").append($("<div>").addClass(params.type).text(params.msg));
-    if (params.hide_after)
-      setTimeout(Utils.clear_flash, params.hide_after * 1000);
-  }
-
-  Utils.clear_success_flash_after_delay = function() {
-    setTimeout(function(){$(".alert-success").remove();}, 5000);
-  }
-
-  Utils.clear_flash = function(params) {
-    $(".success").remove();
-    $(".error").remove();
-  }
-
   Utils.array_eq = function(a, b) {
     if (a == null || b == null) return a == b;
     if (a.length != b.length) return false;
