@@ -8,7 +8,7 @@
 
 <% else %>
 
-  <% if form_mode == :show %>
+  <% if form_mode == :show || cannot?(:update_core, @condition.questioning) %>
 
     <%# if in show mode and the condition is blank, just show 'none' %>
     <%= @condition.blank? || @condition.ref_qing.nil? ? t('common.none') : @condition.to_s(:include_code => true) %>
@@ -21,7 +21,7 @@
 
       <%= f.hidden_field(:id) %>
 
-      <div class="row">
+      <div>
         <div><%= translate_model(Question) %></div>
         <div>
           <%= f.select(:ref_qing_id, @condition.refable_qings.map{|q| ["#{q.rank}. #{q.question.code}", q.id]},
@@ -29,7 +29,7 @@
         </div>
       </div>
 
-      <div class="row">
+      <div>
         <div><%= t('condition.op') %></div>
         <div>
           <%= f.select(:op, translate_options(@condition.applicable_operator_names, [:condition, :operators]),
@@ -37,7 +37,7 @@
         </div>
       </div>
 
-      <div class="row">
+      <div>
         <div><%= t('condition.value') %></div>
         <div>
           <%= f.text_field(:value, :style => @condition.ref_question_has_options? ? "display: none" : "") %>

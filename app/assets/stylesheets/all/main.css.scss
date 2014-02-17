@@ -145,9 +145,9 @@ form.question_form { margin-bottom: 50px; }
 form.questioning_form .control { width: 475px !important; }
 form.questioning_form .form_field#condition select { min-width: 125px; }
 form.questioning_form .form_field#condition input { width: 120px; }
-form.questioning_form .form_field#condition div.row { margin-bottom: 4px; }
-form.questioning_form .form_field#condition div.row > div { display: inline-block; }
-form.questioning_form .form_field#condition div.row > div:first-child { width: 100px; }
+form.questioning_form .form_field#condition .control > div { margin-bottom: 4px; }
+form.questioning_form .form_field#condition .control > div > div { display: inline-block; }
+form.questioning_form .form_field#condition .control > div > div:first-child { width: 100px; }
 
 /* question index/choose */
 .questions_index .code_col { min-width: 100px; }
