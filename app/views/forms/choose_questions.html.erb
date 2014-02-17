@@ -1,7 +1,5 @@
 <% @title_args = {:name => @form.name} %>
 
-<%= flash_and_form_errors %>
-
 <% unless @questions.empty? %>
   <div class="question_list">
     <%= index_table(Question, @questions, :no_whole_row_link => true) %>

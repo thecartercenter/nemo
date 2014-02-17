@@ -3,8 +3,6 @@
 <% @title = t("page_titles.users.#{form_mode}_profile", :name => @user.name) if @user == current_user %>
 
 
-<%= flash_and_form_errors(@user) %>
-
 <%= elmo_form_for(@user) do |f| %>
 
   <%= f.field(:name, :required => true) %>

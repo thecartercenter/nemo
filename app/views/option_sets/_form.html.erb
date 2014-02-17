@@ -5,8 +5,6 @@
     <%= appears_elsewhere_warning(@option_set) if @option_set.has_questions? %>
   <% end %>
 
-  <%= flash_and_form_errors(@option_set) %>
-
   <%= elmo_form_for(@option_set) do |f| %>
     <%= f.field(:name, :required => true, :read_only => cannot?(:update_core, @option_set)) %>
     <%= f.field(:geographic, :type => :check_box, :read_only => cannot?(:change_geographic, @option_set)) %>

@@ -29,11 +29,6 @@ module ApplicationHelper
     :'condition.base' => true
   }
 
-  # renders the flash message and any form errors for the given activerecord object
-  def flash_and_form_errors(object = nil)
-    render("layouts/flash", :flash => flash, :object => object)
-  end
-
   # pairs flash errors with bootstrap styling
   def flash_class(level)
     case level

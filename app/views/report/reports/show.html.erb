@@ -1,8 +1,6 @@
 <%# include javascript google vis api stuff %>
 <% content_for(:per_page_js){report_js_includes} %>
 
-<%= flash_and_form_errors(@report) %>
-
 <div class="link_set report_top_links">
   <% if can?(:update, @report) %>
     <a id="edit_link" href="#"><%= t("report/report.edit_report") %></a>

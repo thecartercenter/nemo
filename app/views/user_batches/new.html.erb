@@ -1,4 +1,3 @@
-<%= flash_and_form_errors %>
 <%# if this is an empty batch (not one with errors) show the normal form %>
 <% if @user_batch.lines.nil? %>
   <%= elmo_form_for(@user_batch) do |f| %>
