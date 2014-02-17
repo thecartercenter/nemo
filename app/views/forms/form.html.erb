@@ -1,7 +1,5 @@
 <% @title_args = {:name => @form.name, :standardized => @form.standardized?} %>
 
-<%= flash_and_form_errors(@form) %>
-
 <div class="screen">
   <%= published_warning(@form) if @form.published? && form_mode == :edit %>
 

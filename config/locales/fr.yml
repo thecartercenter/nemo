@@ -383,7 +383,7 @@ fr:
             type:
               blank: "Vous devez choisir un titre du rapport."
         response:
-          invalid_answers: "sont invalides (voyez ci-dessous)"
+          invalid: "sont invalides (voyez ci-dessous)"
           missing_answers: "Au moins une question manque de réponse."
         setting:
           attributes:

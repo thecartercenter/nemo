@@ -31,6 +31,10 @@
 
     // prevent double submission of any forms on the page
     $('form').preventDoubleSubmission();
+
+    // hide any success alerts after a delay
+    window.setTimeout(function() {$(".alert-success").slideUp(); return false;}, 4000);
+
   }
 
   // sets a countdown to session timeout
