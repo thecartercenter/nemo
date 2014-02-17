@@ -111,6 +111,10 @@ form {
     width: 500px;
   }
 
+  &.form_form div.submit-buttons.publish {
+    width: 100%;
+  }
+
   &.question_form div.submit-buttons {
     width: 625px;
   }
@@ -121,6 +125,10 @@ form {
 
   &.user_form div.submit-buttons {
     width: 645px;
+  }
+
+  &.user_batch_form div.submit-buttons {
+    width: 650px;
   }
 
   &.broadcast_form div.submit-buttons {
@@ -138,6 +146,7 @@ form {
   &.mission_form div.submit-buttons {
     width: 500px;
   }
+
 
 
 }

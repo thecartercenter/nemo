@@ -18,13 +18,18 @@
     <%# questions on the form %>
     <%= index_table(Questioning, @form.questionings, :within_form => true) if form_mode != :new %>
 
-    <div class="submit-buttons">
+    <% show_sp_btn = !@form.new_record? && !@form.published? && can?(:publish, @form) %>
+    <div class="submit-buttons <%=  'publish' unless !show_sp_btn %>">
+
+
+      <% if show_sp_btn %>
+        <%= f.submit(I18n.t('form.save_and_publish'), :name => 'save_and_publish', :class => 'btn btn-default') %>
+      <% end %>
+
       <%= f.submit(:class => "btn btn-primary") %>
     </div>
 
-    <% if !@form.new_record? && !@form.published? && can?(:publish, @form) %>
-      <%= f.submit(I18n.t('form.save_and_publish'), :name => 'save_and_publish', :class => 'btn btn-primary') %>
-    <% end %>
+
 
   <% end %>
 </div>
