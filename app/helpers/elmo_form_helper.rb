@@ -4,13 +4,13 @@ module ElmoFormHelper
   # renders a form using the ElmoFormBuilder
   def elmo_form_for(obj, *args, &block)
     options = args.extract_options!
-    base_errors(obj) + form_for(obj, *(args << options.merge(:builder => ElmoFormBuilder, :html => {:class => "#{obj.class.model_name.singular}_form"})), &block)
+    (base_errors(obj) + form_for(obj, *(args << options.merge(:builder => ElmoFormBuilder, :html => {:class => "#{obj.class.model_name.singular}_form"})), &block)).html_safe
   end
 
   # renders a set of form fields using the ElmoFormBuilder
-  def elmo_fields_for(obj, *args, &block)
+  def elmo_fields_for(field_name, obj, *args, &block)
     options = args.extract_options!
-    base_errors(obj) + fields_for(obj, *(args << options.merge(:builder => ElmoFormBuilder)), &block)
+    (base_errors(obj) + fields_for(field_name, obj, *(args << options.merge(:builder => ElmoFormBuilder)), &block)).html_safe
   end
 
   # gets the mode a form should be displayed in: one of new, edit, or show
@@ -24,6 +24,6 @@ module ElmoFormHelper
   end
 
   def base_errors(obj)
-    obj.errors[:base].join(', ')
+    content_tag(:div, obj.errors[:base].join(', '), :class => 'form-error')
   end
 end
