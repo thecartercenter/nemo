@@ -188,7 +188,8 @@ class OptionSet < ActiveRecord::Base
     end
 
     def multi_level_option_sets_must_have_option_levels
-      errors.add(:base, "Multi-level OptionSets must have at least one OptionLevel") if multi_level? && option_levels.empty?
+      # this should not normally be allowed by client side js
+      errors.add(:base, "multi-level option sets must have at least one option level") if multi_level? && option_levels.empty?
     end
 
     # callback called when option levels are added to/subtracted from. sets a simple flag.
