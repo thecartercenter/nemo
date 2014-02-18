@@ -295,14 +295,14 @@ class User < ActiveRecord::Base
 
     def must_have_password_reset_on_create
       if new_record? && reset_password_method == "dont"
-        errors.add(:base, :must_choose_passwd_method)
+        errors.add(:reset_password_method, :blank)
       end
     end
 
     def password_reset_cant_be_email_if_no_email
       if reset_password_method == "email" && email.blank?
         verb = new_record? ? "send" : "reset"
-        errors.add(:base, :cant_passwd_email, :verb => verb)
+        errors.add(:reset_password_method, :cant_passwd_email, :verb => verb)
       end
     end
 

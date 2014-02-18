@@ -479,15 +479,15 @@ en:
         user:
           at_least_digits: "must be at least %{num} digits"
           cant_delete_if_responses: "You can't delete this user because they have associated responses."
-          cant_passwd_email: "You can't %{verb} password by email because you didn't specify an email address."
           duplicate_assignments: "There are duplicate assignments."
-          must_choose_passwd_method: "You must choose a password creation method."
           no_missions: "You are not assigned to any missions."
           phone_assigned_to_other: "has already been assigned to another user"
           invalid: "User is invalid (see below)"
           attributes:
             assignments:
               cant_be_empty_if_not_admin: "can't be empty if not admin"
+            reset_password_method:
+              cant_passwd_email: "You can't %{verb} password by email because you didn't specify an email address."
 
   # application-wide strings
   layout:
