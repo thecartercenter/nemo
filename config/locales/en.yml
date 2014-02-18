@@ -439,7 +439,7 @@ en:
           cant_delete_if_has_responses: "You can't delete this Form because it has associated responses."
           cant_delete_published: "A published Form can't be deleted."
           cant_edit_published: "A published Form can't be edited."
-          ranks_break_conditions: "The new rankings invalidate one or more conditions"
+          ranks_break_conditions: "The new rankings invalidate one or more conditions."
           general: "Form is invalid (see below)."
         mission:
           cant_delete_if_assoc: "You can't delete this Mission because it has associated Forms, Responses, or other objects."
