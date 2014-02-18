@@ -225,7 +225,9 @@ en:
       option_set:
         answers: "Answers"
         geographic: "Is Geographic?"
+        multi_level: "Is Multilevel?"
         options: "Options"
+        option_levels: "Levels"
       question:
         base: "" # this is a sort of hack to get error msg to display properly
         code: "Code"
@@ -329,9 +331,11 @@ en:
       option_set:
         geographic: "Whether this option set represents geographic information, e.g. a set of provinces or regions."
         name: "A name that summarizes this set of options. Normal users will not see this name."
+        multi_level: "Whether the option set has multiple levels of options, such as country -> state -> city."
         options:
           editable: "Add existing options by typing them and clicking 'Add'. If you do not see an option in the drop down, you can add a new one by clicking 'Create New Option'."
           read_only: "The options that will appear for questions using this option set."
+        option_levels: "The names of each level of options, e.g. 'Country', 'State', 'City'. Note that these are distinct from the options themselves (e.g. 'United States', 'Illinois', 'Chicago'), which are defined below."
       question:
         code: "A short codename (between 2-20 characters). Should contain only letters and numbers, e.g. BallotBoxSealed, DepartTime."
         hint: "Additional instructions, e.g. 'Enter an approximate count of the people waiting to vote.'"
@@ -860,6 +864,7 @@ en:
     create_new: "[Create New Option]"
     create_link: "Create Option Set"
     edit_option: "Edit Option"
+    edit_option_level: "Edit Option Level"
     leave_page_warning: "Leaving this page will abandon your changes to this Option Set."
     none_found: "No matching options found"
     searching: "Searching..."

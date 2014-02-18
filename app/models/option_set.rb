@@ -146,7 +146,10 @@ class OptionSet < ActiveRecord::Base
 
   def as_json(options = {})
     if options[:for_option_set_form]
-      {:optionings => optionings.as_json(:for_option_set_form => true)}
+      {
+        :optionings => optionings.as_json(:for_option_set_form => true),
+        :option_levels => option_levels.as_json(:for_option_set_form => true)
+      }
     else
       super(options)
     end

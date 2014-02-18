@@ -11,6 +11,12 @@ form.option_set_form {
     width: 475px;
   }
 
+  /* hide the option levels at first */
+  div.form_field[data-field-name=option_levels] {
+    display: none;
+    padding-bottom: 20px;
+  }
+
   div.add_options {
     margin-bottom: 20px;
 
@@ -27,7 +33,7 @@ form.option_set_form {
 
   /* FOR THE SORTABLE/DRAGGABLE LIST */
 
-  #options_wrapper ol {
+  .draggable-list-wrapper ol {
     padding-left: 0;
     margin: 0 20px 0 0;
 
@@ -74,17 +80,12 @@ form.option_set_form {
       }
     }
   }
-
-  /* this becomes the modal, so hide it initially */
-  div.edit_option_form {
-    display: none;
-  }
 }
 
-/* EDIT OPTION MODAL WINDOW
+/* EDIT NAMED ITEM WINDOW
    (not inside the form since it's appended to the body) */
 
-#edit-option-set {
+div.modal.edit-named-item {
 
   div.data_integrity_warning {
     margin-top: -8px;
