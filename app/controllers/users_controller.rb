@@ -147,7 +147,7 @@ class UsersController < ApplicationController
 
       else
 
-        @current_assignment = @user.assignments_by_mission[current_mission]
+        @current_assignment = @user.assignments_by_mission[current_mission] || @user.assignments.build(:mission => current_mission)
 
       end
 
