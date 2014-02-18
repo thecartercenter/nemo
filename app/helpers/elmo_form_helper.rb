@@ -10,7 +10,8 @@ module ElmoFormHelper
   # renders a set of form fields using the ElmoFormBuilder
   def elmo_fields_for(field_name, obj, *args, &block)
     options = args.extract_options!
-    (base_errors(obj) + fields_for(field_name, obj, *(args << options.merge(:builder => ElmoFormBuilder)), &block)).html_safe
+    show_errors = options.delete(:show_errors)
+    ((show_errors ? base_errors(obj) : '') + fields_for(field_name, obj, *(args << options.merge(:builder => ElmoFormBuilder)), &block)).html_safe
   end
 
   # gets the mode a form should be displayed in: one of new, edit, or show

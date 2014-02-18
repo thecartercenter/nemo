@@ -4,7 +4,8 @@
   <label class="main"><%= reqd_sym if answer.required? %> <%= answer.question_name || "[#{t('answer.no_name')}]" %>
   </label><div class="control">
 
-    <%= elmo_fields_for('response[all_answers][]', answer) do |f| %>
+    <%# don't show errors because we do it manually below %>
+    <%= elmo_fields_for('response[all_answers][]', answer, :show_errors => false) do |f| %>
 
       <% if form_mode == :show %>
 
@@ -50,6 +51,9 @@
         <%= f.hidden_field(:response_id, :index => answer_counter) %>
         <%= f.hidden_field(:questioning_id, :index => answer_counter) %>
         <%= f.hidden_field(:relevant, :class => "relevant", :index => answer_counter) %>
+
+        <%# show the error messages without keys %>
+        <%= content_tag(:div, answer.errors.to_hash.values.join(', '), :class => 'form-errors') unless answer.errors.empty? %>
 
         <% case type = answer.qtype.name
            when "select_one" %>
