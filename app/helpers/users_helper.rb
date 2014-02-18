@@ -26,4 +26,11 @@ module UsersHelper
     else user.send(field)
     end
   end
+
+  def assignment_errors
+    e = []
+    e << User.human_attribute_name(:role) + ' ' + @user.errors[:'assignments.role'].first unless @user.errors[:'assignments.role'].empty?
+    e << User.human_attribute_name(:mission_id) + ' ' + @user.errors[:'assignments.mission'].first unless @user.errors[:'assignments.mission'].empty?
+    e
+  end
 end

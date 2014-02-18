@@ -1,5 +1,8 @@
 <% if admin_mode? %>
 
+  <%# special error output %>
+  <%= content_tag(:div, assignment_errors.join(', '), :class => 'form-errors') unless assignment_errors.empty? %>
+
   <div class="assignment_header">
     <div class="mission"><%= translate_model(Mission) %></div>
     <div class="role"><%= t('role.role') %></div>
@@ -21,6 +24,10 @@
     <%= elmo_fields_for("user[assignments_attributes][0]", @current_assignment) do |af| %>
       <%= af.hidden_field(:id) %>
       <%= af.hidden_field(:mission_id) %>
+
+      <%# special error output %>
+      <%= content_tag(:div, @user.errors[:'assignments.role'].join, :class => 'form-errors') unless @user.errors[:'assignments.role'].empty? %>
+
       <%= af.select(:role, User::ROLES.map{|r| [t(r, :scope => :role), r]}, {:prompt => "[#{t('role.role')}]"},
         :class => "form-control") %>
     <% end %>
