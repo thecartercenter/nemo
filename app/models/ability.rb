@@ -77,17 +77,17 @@ class Ability
           # can do reports for the current mission
           can :manage, Report::Report, :mission_id => user.current_mission_id
 
-          # can submit responses for themselves only, and can only manage unreviewed responses
-          # only need this ability if not also a staffer
+          # only need these abilities if not also a staffer
           unless user.role?(:staffer)
-            can [:index, :read, :export], Response,
-              :user_id => user.id, :mission_id => user.current_mission_id
+            # can only see own responses
+            can [:index, :read, :export], Response, :user_id => user.id, :mission_id => user.current_mission_id
 
             # observers can only mark a form as 'incomplete' if the form permits it
             can :submit_incomplete, Response do |r|
               r.form.allow_incomplete?
             end
 
+            # can only submit/edit/delete own responses, and only if mission is not locked
             unless user.current_mission.locked?
               can [:create, :update, :destroy], Response,
                 :user_id => user.id, :mission_id => user.current_mission_id, :reviewed => false
