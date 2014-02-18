@@ -20,6 +20,9 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
     # don't render password fields in readonly mode
     return '' if options[:read_only] && options[:type] == :password
 
+    # get object errors (also look under association attrib if field_name ends in _id)
+    errors = @object.errors[field_name] + (field_name =~ /^(.+)_id$/ ? @object.errors[$1] : [])
+
     # get key chunks and render partial
     @template.render(:partial => 'layouts/elmo_form_field', :locals => {
       :field_name => field_name,
@@ -27,7 +30,7 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
       :label_tag => elmo_field_label(field_name, options),
       :field_html => elmo_field(field_name, options),
       :hint_html => elmo_field_hint(field_name, options),
-      :errors => @object.errors[field_name]
+      :errors => errors
     })
   end
 
