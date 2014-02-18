@@ -92,14 +92,11 @@ en:
     type: "Type"
     value: "Value"
 
-  # general error messages
+  # general error messages (there are others under activerecord.errors)
   errors:
     messages:
       deleted_successfully: "deleted successfully"
       generic_delete_error: "Error during deletion."
-      must_be_unique: "must be unique"
-      is_invalid: "is invalid"
-      did_not_match: "did not match"
 
   helpers:
     submit:
@@ -409,10 +406,33 @@ en:
           Forgo Niambot, +203300303, +2083748374
           Stewbuilder Dennis, chow@yahoo.co.uk, +20923187493
 
+    # all error messages should be full sentences with a period, for consistency.
     errors:
+      # we don't use the 'attribute message' format
+      format: "%{message}"
+
+      # here we override some of the default rails messages to be full sentences
+      messages:
+        taken: "Please enter a unique value."
+        is_invalid: "Please enter a valid value."
+        blank: "This field is required."
+        empty: "This field can't be empty."
+        not_a_number: "Please enter a valid number."
+        not_an_integer: "Please enter a valid integer."
+        did_not_match: "The passwords did not match."
+        too_long:
+          one: "Please enter at most one character."
+          other: "Please enter at most %{count} characters."
+        too_short:
+          one: "Please enter at least one character."
+          other: "Please enter at least %{count} characters."
+        wrong_length:
+          one: "Please enter at exactly one character."
+          other: "Please enter exactly %{count} characters."
+
       models:
         answer:
-          required: "is required"
+          required: "Please enter a value."
         condition:
           all_required: "All condition fields are required."
         form:
@@ -420,12 +440,12 @@ en:
           cant_delete_published: "A published Form can't be deleted."
           cant_edit_published: "A published Form can't be edited."
           ranks_break_conditions: "The new rankings invalidate one or more conditions"
-          general: "Form is invalid (see below)"
+          general: "Form is invalid (see below)."
         mission:
           cant_delete_if_assoc: "You can't delete this Mission because it has associated Forms, Responses, or other objects."
-          let_num_spc_only: "can only contain letters, numbers, and spaces"
-          not_unique: "is too much like the existing Mission '%{existing}'"
-          general: "Mission is invalid (see below)"
+          let_num_spc_only: "Please use only letters, numbers, and spaces."
+          not_unique: "The name is too much like the existing Mission '%{existing}'"
+          general: "Mission is invalid (see below)."
         option:
           cant_delete_if_has_response: "You can't delete this Option because it is included in at least one Response."
           cant_change_if_published: "You can't change this Option because it appears in at least one published Form."
@@ -437,16 +457,16 @@ en:
           cant_delete_if_has_questions: "You can't delete this Option Set because one or more Questions are associated with it."
           cant_delete_if_has_answers: "You can't delete this Option Set because it is included in at least one Answer."
           non_unique_values: "Two or more of the options you've chosen have the same numeric value."
-          general: "Option Set is invalid (see below)"
+          general: "Option Set is invalid (see below)."
         question:
           cant_change_if_conditions: "You can't change the Type or Option Set because there are Conditions that refer to this Question."
           cant_change_if_responses: "You can't change the Type or Option Set because there are already Responses for this Question."
           cant_delete_if_has_answers: "You can't delete this Question because it is referred to in at least one Answer."
           cant_delete_if_published: "You can't delete this Question because it appears on at least one published Form."
-          general: "Question is invalid (see below)"
+          general: "Question is invalid (see below)."
         questioning:
           cant_delete_if_has_answers: "You can't remove this Question because it has one or more answers for this Form."
-          invalid_condition: "is invalid (see below)"
+          invalid_condition: "Condition is invalid (see below)."
           question: "Question"
         report/report:
           attributes:
@@ -467,25 +487,26 @@ en:
             type:
               blank: "You must choose a report type."
         response:
-          general: "Response is invalid (see below)"
+          general: "Response is invalid (see below)."
           missing_answers: "Not all questions have answers."
         setting:
           attributes:
             preferred_locales_str:
-              invalid_code: "code '%{code}' is invalid"
-              one_must_have_translations: "must contain at least one language that has translations (%{locales})"
-          general: "Settings are invalid (see below)"
-
+              invalid_code: "The language code '%{code}' is invalid."
+              one_must_have_translations: "Please choose at least one language that has translations (%{locales})."
+          general: "Settings are invalid (see below)."
         user:
-          at_least_digits: "must be at least %{num} digits"
+          at_least_digits: "Please enter at least %{num} digits."
           cant_delete_if_responses: "You can't delete this user because they have associated responses."
           duplicate_assignments: "There are duplicate assignments."
           no_missions: "You are not assigned to any missions."
-          phone_assigned_to_other: "has already been assigned to another user"
-          general: "User is invalid (see below)"
+          phone_assigned_to_other: "This number has already been assigned to another user."
+          general: "User is invalid (see below)."
           attributes:
             assignments:
-              cant_be_empty_if_not_admin: "can't be empty if not admin"
+              cant_be_empty_if_not_admin: "At least one assignment is required if user is not an admin."
+            login:
+              invalid: "Please use only letters, numbers, or periods."
             reset_password_method:
               cant_passwd_email: "You can't %{verb} password by email because you didn't specify an email address."
 

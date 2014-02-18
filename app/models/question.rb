@@ -203,7 +203,7 @@ class Question < Questionable
     end
 
     def code_unique_per_mission
-      errors.add(:code, :must_be_unique) unless unique_in_mission?(:code)
+      errors.add(:code, :taken) unless unique_in_mission?(:code)
     end
 
     def normalize_fields

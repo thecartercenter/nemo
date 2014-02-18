@@ -83,7 +83,7 @@ fr:
     messages:
       deleted_successfully: "suppression réussie"
       generic_delete_error: "erreur lors de la suppression."
-      must_be_unique: "doit être unique"
+      taken: "doit être unique"
       is_invalid: "n'est pas valide"
       did_not_match: "ne correspondent pas"
 

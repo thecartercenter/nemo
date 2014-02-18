@@ -179,7 +179,7 @@ class OptionSet < ActiveRecord::Base
     end
 
     def name_unique_per_mission
-      errors.add(:name, :must_be_unique) unless unique_in_mission?(:name)
+      errors.add(:name, :taken) unless unique_in_mission?(:name)
     end
 
     def normalize_fields

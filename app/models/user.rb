@@ -20,7 +20,7 @@ class User < ActiveRecord::Base
   acts_as_authentic do |c|
     c.disable_perishable_token_maintenance = true
     c.logged_in_timeout(SESSION_TIMEOUT)
-    c.validates_format_of_login_field_options = {:with => /[\a-zA-Z0-9\.]+/, :message => "can only contain letters, numbers, or '.'"}
+    c.validates_format_of_login_field_options = {:with => /[\a-zA-Z0-9\.]+/}
 
     # email is not mandatory, but must be valid if given
     c.merge_validates_format_of_email_field_options(:allow_blank => true)

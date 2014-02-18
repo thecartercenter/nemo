@@ -6,7 +6,7 @@
     <%= label_tag %><div class="control <%= options[:read_only] ? 'read_only' : '' %>">
 
       <%# errors %>
-      <%= content_tag(:div, errors.join(', '), :class => 'form-errors') if errors && !errors.empty? %>
+      <%= content_tag(:div, errors.join(' '), :class => 'form-errors') if errors && !errors.empty? %>
 
       <%= field_html %>
     </div>
