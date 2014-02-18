@@ -18,15 +18,11 @@
 
   <% else %>
 
-    <%# loop over all assignments and when the assignment for the current mission comes up, render a one-line form for it %>
-    <% @user.assignments.each_with_index do |a, idx| %>
-      <%= elmo_fields_for("user[assignments_attributes][#{idx}]", assignment) do |af| %>
-        <% if af.object.mission == current_mission %>
-          <%= af.hidden_field(:id) %>
-          <%= af.hidden_field(:mission_id) %>
-          <%= af.select(:role, User::ROLES.map{|r| [t(r, :scope => :role), r]}, {:prompt => "[#{t('role.role')}]"}, {:class => "form-control"}) %>
-        <% end %>
-      <% end %>
+    <%= elmo_fields_for("user[assignments_attributes][0]", @current_assignment) do |af| %>
+      <%= af.hidden_field(:id) %>
+      <%= af.hidden_field(:mission_id) %>
+      <%= af.select(:role, User::ROLES.map{|r| [t(r, :scope => :role), r]}, {:prompt => "[#{t('role.role')}]"},
+        :class => "form-control") %>
     <% end %>
 
   <% end # if show mode %>
