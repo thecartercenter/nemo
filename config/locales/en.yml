@@ -425,7 +425,7 @@ en:
           cant_delete_if_assoc: "You can't delete this Mission because it has associated Forms, Responses, or other objects."
           let_num_spc_only: "can only contain letters, numbers, and spaces"
           not_unique: "is too much like the existing Mission '%{existing}'"
-          invalid_mission: "Mission is invalid (see below)"
+          invalid: "Mission is invalid (see below)"
         option:
           cant_delete_if_has_response: "You can't delete this Option because it is included in at least one Response."
           cant_change_if_published: "You can't change this Option because it appears in at least one published Form."
@@ -474,6 +474,8 @@ en:
             preferred_locales_str:
               invalid_code: "code '%{code}' is invalid"
               one_must_have_translations: "must contain at least one language that has translations (%{locales})"
+          invalid: "Settings are invalid (see below)"
+
         user:
           at_least_digits: "must be at least %{num} digits"
           cant_delete_if_responses: "You can't delete this user because they have associated responses."
