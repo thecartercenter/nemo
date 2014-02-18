@@ -88,7 +88,7 @@ class FormsController < ApplicationController
     if @form.save
       set_success_and_redirect(@form, :to => edit_form_path(@form))
     else
-      flash.now[:error] = I18n.t('activerecord.errors.models.form.invalid')
+      flash.now[:error] = I18n.t('activerecord.errors.models.form.general')
       prepare_and_render_form
     end
   end

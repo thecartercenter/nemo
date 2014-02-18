@@ -22,7 +22,7 @@ class MissionsController < ApplicationController
       @mission.save!
       set_success_and_redirect(@mission)
     rescue ActiveRecord::RecordInvalid
-      flash.now[:error] = I18n.t('activerecord.errors.models.mission.invalid')
+      flash.now[:error] = I18n.t('activerecord.errors.models.mission.general')
       render(:form)
     end
   end

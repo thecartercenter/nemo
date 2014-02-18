@@ -174,7 +174,7 @@ class ResponsesController < ApplicationController
         @response.save!
         set_success_and_redirect(@response)
       rescue ActiveRecord::RecordInvalid
-        flash.now[:error] = I18n.t('activerecord.errors.models.response.invalid')
+        flash.now[:error] = I18n.t('activerecord.errors.models.response.general')
         prepare_and_render_form
       end
     end

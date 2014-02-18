@@ -49,7 +49,7 @@ class UsersController < ApplicationController
 
     # if create failed, render the form again
     else
-      flash.now[:error] = I18n.t('activerecord.errors.models.user.invalid')
+      flash.now[:error] = I18n.t('activerecord.errors.models.user.general')
       prepare_and_render_form
     end
   end
@@ -88,7 +88,7 @@ class UsersController < ApplicationController
 
       # if save failed, render the form again
       else
-        flash.now[:error] = I18n.t('activerecord.errors.models.user.invalid')
+        flash.now[:error] = I18n.t('activerecord.errors.models.user.general')
         prepare_and_render_form
       end
     end

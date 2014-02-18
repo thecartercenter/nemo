@@ -50,7 +50,7 @@ class QuestionsController < ApplicationController
       if @question.save
         set_success_and_redirect(@question)
       else
-        flash.now[:error] = I18n.t('activerecord.errors.models.question.invalid')
+        flash.now[:error] = I18n.t('activerecord.errors.models.question.general')
         prepare_and_render_form
       end
     end

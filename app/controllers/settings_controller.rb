@@ -25,7 +25,7 @@ class SettingsController < ApplicationController
 
       set_success_and_redirect(@setting)
     rescue ActiveRecord::RecordInvalid
-      flash.now[:error] = I18n.t('activerecord.errors.models.setting.invalid')
+      flash.now[:error] = I18n.t('activerecord.errors.models.setting.general')
       prepare_and_render_form
     end
   end
