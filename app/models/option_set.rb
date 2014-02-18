@@ -24,8 +24,8 @@ class OptionSet < ActiveRecord::Base
   validates(:name, :presence => true)
   validate(:at_least_one_option)
   validate(:name_unique_per_mission)
-  validate(:multi_level_option_sets_must_have_option_levels)
 
+  before_validation(:multi_level_option_sets_must_have_option_levels)
   before_validation(:normalize_fields)
   before_validation(:ensure_children_ranks)
   before_validation(:ensure_option_level_ranks)
@@ -189,7 +189,7 @@ class OptionSet < ActiveRecord::Base
 
     def multi_level_option_sets_must_have_option_levels
       # this should not normally be allowed by client side js
-      errors.add(:base, "multi-level option sets must have at least one option level") if multi_level? && option_levels.empty?
+      raise "multi-level option sets must have at least one option level" if multi_level? && option_levels.empty?
     end
 
     # callback called when option levels are added to/subtracted from. sets a simple flag.
