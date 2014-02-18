@@ -27,7 +27,7 @@ class Report::StandardFormReport < Report::Report
   belongs_to(:form)
   belongs_to(:disagg_qing, :class_name => 'Questioning')
 
-  attr_reader :summary_collection
+  attr_reader :summary_collection, :response_count
 
   # question types that we leave off this report (stored as a hash for better performance)
   EXCLUDED_TYPES = {'location' => true}
@@ -54,16 +54,16 @@ class Report::StandardFormReport < Report::Report
     h
   end
 
-  # @param [current_ability] user ability to access Response object as defined by CanCan
-  def run(current_ability=nil)
+  # current_ability - the ability under which the report should be run
+  def run(current_ability)
     # make sure the disagg_qing is still on this form (unlikely to be an error)
     raise Report::ReportError.new("disaggregation question is not on this form") unless disagg_qing.nil? || disagg_qing.form_id == form_id
 
     # make sure disagg_qing is disaggable
     raise Report::ReportError.new("disaggregation question is incorrect type") unless can_disaggregate_with?(disagg_qing)
 
-    # pre-calculate response count
-    response_count(current_ability)
+    # pre-calculate response count, accounting for user ability
+    @response_count = form.responses.accessible_by(current_ability).count
 
     # eager load form
     f = Form.includes({:questionings => [
@@ -77,22 +77,12 @@ class Report::StandardFormReport < Report::Report
       {:question => {:option_set => :options}}
     ]}).find(form_id)
 
+    # determine if we should restrict the responses to a single user, or allow all
+    restrict_to_user = current_ability.user.role(form.mission) == 'observer' ? current_ability.user : nil
+
     # generate summary collection (sets of disaggregated summaries)
-    @summary_collection = Report::SummaryCollectionBuilder.new(questionings_to_include(f), disagg_qing, current_ability, :question_order => question_order).build
-  end
-
-  # returns the number of responses matching the report query
-  def response_count(current_ability=nil)
-    @response_count ||= determine_responses_used(current_ability)
-  end
-
-  # determine responses the user has access to if current ability is passed in
-  def determine_responses_used(current_ability)
-    if current_ability
-      form.responses.accessible_by(current_ability).count
-    else
-      form.responses.count
-    end
+    @summary_collection = Report::SummaryCollectionBuilder.new(questionings_to_include(f), disagg_qing,
+      :restrict_to_user => restrict_to_user, :question_order => question_order).build
   end
 
   # returns all non-admin users in the form's mission with the given role that have not submitted any responses to the form

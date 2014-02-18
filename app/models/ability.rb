@@ -2,6 +2,8 @@
 class Ability
   include CanCan::Ability
 
+  attr_reader :user
+
   CRUD = [:new, :show, :edit, :create, :update, :destroy]
 
   # returns a list of roles that can be assigned by the given user
@@ -17,6 +19,9 @@ class Ability
 
   # defines user's abilities
   def initialize(user, admin_mode = false)
+
+    # save user
+    @user = user
 
     if user
 
