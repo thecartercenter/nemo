@@ -164,7 +164,7 @@ class Answer < ActiveRecord::Base
 
   private
     def required
-      errors.add(:base, :required) if required_but_empty?
+      errors.add(:value, :required) if required_but_empty?
     end
 
     def round_ints
@@ -181,7 +181,7 @@ class Answer < ActiveRecord::Base
       val_f = value.to_f
       if question.maximum && (val_f > question.maximum || question.maxstrictly && val_f == question.maximum) ||
          question.minimum && (val_f < question.minimum || question.minstrictly && val_f == question.minimum)
-        errors.add(:base, question.min_max_error_msg)
+        errors.add(:value, question.min_max_error_msg)
       end
     end
 
