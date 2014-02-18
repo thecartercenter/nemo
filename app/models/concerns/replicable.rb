@@ -30,6 +30,18 @@ module Replicable
     end
   end
 
+  # TOM: is there any reason the replication mode and destination mission can't be passed explicitly to replicate as I suggested?
+  # then we wouldn't need all this extra complexity AND the code would be more readable
+  # my suggestion was this:
+  #
+  # def replicate(options_or_replication)
+  # replicate(:mode => :clone)
+  # replicate(:mode => :to_mission, :mission => m)
+  # replicate(:mode => :to_mission, :mission => m)
+  # replicate(:mode => :promote, :retain_link_on_promote => false)
+  #
+  # I'm happy to talk more about it.
+
   # figure out the replication mode based off of the options
   def determine_replication_mode(options=nil)
     if options.is_a?(Hash) && options.key?(:mode)
@@ -58,6 +70,7 @@ module Replicable
     end
   end
 
+  # TOM: this comment will need to be rewritten. please include a list of all the available options.
   # creates a duplicate in this or another mission
   # accepts the mission to which to replicate (when called from outside)
   # or a Replication object, which holds the params for the replication operation
@@ -69,6 +82,7 @@ module Replicable
     if options.is_a?(Replication)
       replication = options
     else
+      # TOM: the link_to_standard/retain_link_on_promote option doesn't get passed into the Replication object
       replication = Replication.new(:mode => determine_replication_mode(options),
                                     :src_obj => self,
                                     :to_mission => determine_mission(options))
@@ -98,6 +112,8 @@ module Replicable
     replicate_attributes(replication)
 
     # if we are copying standard to standard, preserve the is_standard flag
+    # TOM: why do we need both replicating_to_standard? and .mode == promote?
+    # seems that replicating_to_standard should give the final word on whether the dest_obj should be standard
     dest_obj.is_standard = true if replication.replicating_to_standard? || replication.mode == :promote
 
     # ensure uniqueness params are respected
