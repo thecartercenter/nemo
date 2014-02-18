@@ -5,9 +5,6 @@ class Question < Questionable
 
   CODE_FORMAT = "[a-z][a-z0-9]{1,19}"
 
-  # this needs to be up here other wise it runs /after/ the children are destroyed
-  before_destroy(:check_assoc)
-
   belongs_to(:option_set, :include => :options, :inverse_of => :questions, :autosave => true)
   has_many(:questionings, :dependent => :destroy, :autosave => true, :inverse_of => :question)
   has_many(:answers, :through => :questionings)
@@ -24,7 +21,6 @@ class Question < Questionable
   validates(:code, :format => {:with => /^#{CODE_FORMAT}$/i}, :if => Proc.new{|q| !q.code.blank?})
   validates(:qtype_name, :presence => true)
   validates(:option_set, :presence => true, :if => Proc.new{|q| q.qtype && q.has_options?})
-  validate(:integrity)
   validate(:code_unique_per_mission)
 
   scope(:by_code, order('questionables.code'))
@@ -185,22 +181,6 @@ class Question < Questionable
   end
 
   private
-
-    def integrity
-      # error if type or option set have changed and there are answers or conditions
-      if (qtype_name_changed? || option_set_id_changed?)
-        if !answers.empty?
-          errors.add(:base, :cant_change_if_responses)
-        elsif !referring_conditions.empty?
-          errors.add(:base, :cant_change_if_conditions)
-        end
-      end
-    end
-
-    def check_assoc
-      raise DeletionError.new(:cant_delete_if_has_answers) if has_answers?
-      raise DeletionError.new(:cant_delete_if_published) if published?
-    end
 
     def code_unique_per_mission
       errors.add(:code, :taken) unless unique_in_mission?(:code)
