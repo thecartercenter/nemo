@@ -8,6 +8,12 @@ div.form_field {
     white-space: normal;
   }
 
+    div.form-errors {
+    font-weight: bold;
+    color: #CC3232;
+    margin-bottom: 5px;
+  }
+
   div.reqd_sym {
     display: inline;
     font-weight: bold;
@@ -36,9 +42,10 @@ div.form_field {
 
   label.main {
     display: inline-block;
-    vertical-align: middle;
+    vertical-align: top;
     width: 150px;
     padding-right: 10px;
+    padding-top: 12px;
     text-align: right;
   }
 
