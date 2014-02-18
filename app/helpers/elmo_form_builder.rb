@@ -26,7 +26,8 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
       :options => options,
       :label_tag => elmo_field_label(field_name, options),
       :field_html => elmo_field(field_name, options),
-      :hint_html => elmo_field_hint(field_name, options)
+      :hint_html => elmo_field_hint(field_name, options),
+      :errors => @object.errors[field_name]
     })
   end
 

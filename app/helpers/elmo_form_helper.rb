@@ -24,6 +24,6 @@ module ElmoFormHelper
   end
 
   def base_errors(obj)
-    content_tag(:div, obj.errors[:base].join(', '), :class => 'form-error')
+    content_tag(:div, obj.errors[:base].join(', '), :class => 'form-errors')
   end
 end
