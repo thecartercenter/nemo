@@ -1,5 +1,13 @@
 $orange: #F77D48;
 
+/* base errors may appear outside the form. left margin should be cancelled when inside form */
+div.form-errors {
+  margin-left: 35px;
+  font-weight: bold;
+  color: #CC3232;
+  margin-bottom: 5px;
+}
+
 div.form_field {
   /* the field div itself should not wrap, but we don't want this to inherit */
   white-space: nowrap;
@@ -8,10 +16,9 @@ div.form_field {
     white-space: normal;
   }
 
-    div.form-errors {
-    font-weight: bold;
-    color: #CC3232;
-    margin-bottom: 5px;
+  div.form-errors {
+    /* cancel the left margin for form errors inside a form_field */
+    margin-left: 0;
   }
 
   div.reqd_sym {
