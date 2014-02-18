@@ -307,7 +307,7 @@ class User < ActiveRecord::Base
     end
 
     def no_duplicate_assignments
-      errors.add(:base, :duplicate_assignments) if Assignment.duplicates?(assignments.reject{|a| a.marked_for_destruction?})
+      errors.add(:assignments, :duplicate_assignments) if Assignment.duplicates?(assignments.reject{|a| a.marked_for_destruction?})
     end
 
     def must_have_assignments_if_not_admin
