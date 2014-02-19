@@ -28,14 +28,14 @@ module ReportEmbeddable
     @report_data[:report][:generated_at] = I18n.l(Time.zone.now)
   end
 
-  # runs the report and handles any errors, adding them to the report errors array
+  # runs the report and handles any errors, adding them to the flash
   # returns true if no errors, false otherwise
   def run_and_handle_errors
     begin
       @report.run(current_ability)
       return true
     rescue Report::ReportError, Search::ParseError
-      @report.errors.add(:base, $!.to_s)
+      flash.now[:error] = $!.to_s
       return false
     end
   end

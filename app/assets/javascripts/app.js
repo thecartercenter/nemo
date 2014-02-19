@@ -31,6 +31,8 @@
 
     // prevent double submission of any forms on the page
     $('form').preventDoubleSubmission();
+
+    self.set_alert_timeout();
   }
 
   // sets a countdown to session timeout
@@ -80,8 +82,23 @@
       });
 
     }
-
   }
+
+  // shows alert at top of page
+  klass.prototype.show_alert = function(params) { var self = this;
+    $('<div>').addClass('alert').addClass('alert-' + params.type).html(params.msg).prependTo($('#content'));
+    self.set_alert_timeout();
+  };
+
+  // removes all alerts
+  klass.prototype.clear_alerts = function() { var self = this;
+    $('.alert').remove();
+  };
+
+  // hides any success alerts after a delay
+  klass.prototype.set_alert_timeout = function() { var self = this;
+    window.setTimeout(function() {$(".alert-success").slideUp(); return false;}, 4000);
+  };
 
 })(ELMO);
 

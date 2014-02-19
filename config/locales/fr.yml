@@ -94,7 +94,7 @@ fr:
     messages:
       deleted_successfully: "suppression réussie"
       generic_delete_error: "erreur lors de la suppression."
-      must_be_unique: "doit être unique"
+      taken: "doit être unique"
       is_invalid: "n'est pas valide"
       did_not_match: "ne correspondent pas"
 
@@ -455,7 +455,7 @@ fr:
             type:
               blank: "Vous devez choisir un titre du rapport."
         response:
-          invalid_answers: "sont invalides (voyez ci-dessous)"
+          invalid: "sont invalides (voyez ci-dessous)"
           missing_answers: "Au moins une question manque de réponse."
         setting:
           attributes:

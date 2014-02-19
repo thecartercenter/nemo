@@ -1,8 +1,6 @@
 <%# no title because the title is incorporated into the login instructions box %>
 <% @dont_print_title = true %>
 
-<%= flash_and_form_errors(@user) %>
-
 <div id="login_instructions">
   <div id="preamble">
     <p><%= t("user.login_instructions.preamble_singular") %></p>

@@ -2,8 +2,6 @@
   <%= t("password_reset.fill_out_form") %>
 </div>
 
-<%= flash_and_form_errors(@password_reset) %>
-
 <%= elmo_form_for(@password_reset) do |f| %>
   <%= f.field(:email) %>
   <%= f.submit(:send) %>

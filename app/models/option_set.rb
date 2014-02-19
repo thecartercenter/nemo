@@ -24,8 +24,8 @@ class OptionSet < ActiveRecord::Base
   validates(:name, :presence => true)
   validate(:at_least_one_option)
   validate(:name_unique_per_mission)
-  validate(:multi_level_option_sets_must_have_option_levels)
 
+  before_validation(:multi_level_option_sets_must_have_option_levels)
   before_validation(:normalize_fields)
   before_validation(:ensure_children_ranks)
   before_validation(:ensure_option_level_ranks)
@@ -178,11 +178,11 @@ class OptionSet < ActiveRecord::Base
 
     def at_least_one_option
       # this checks only the first level options, which is sufficient
-      errors.add(:base, :at_least_one) if optionings.reject{|a| a.marked_for_destruction?}.empty?
+      errors.add(:options, :at_least_one) if optionings.reject{|a| a.marked_for_destruction?}.empty?
     end
 
     def name_unique_per_mission
-      errors.add(:name, :must_be_unique) unless unique_in_mission?(:name)
+      errors.add(:name, :taken) unless unique_in_mission?(:name)
     end
 
     def normalize_fields
@@ -191,7 +191,8 @@ class OptionSet < ActiveRecord::Base
     end
 
     def multi_level_option_sets_must_have_option_levels
-      errors.add(:base, "Multi-level OptionSets must have at least one OptionLevel") if multi_level? && option_levels.empty?
+      # this should not normally be allowed by client side js
+      raise "multi-level option sets must have at least one option level" if multi_level? && option_levels.empty?
     end
 
     # callback called when option levels are added to/subtracted from. sets a simple flag.

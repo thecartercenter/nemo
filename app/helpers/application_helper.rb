@@ -29,9 +29,14 @@ module ApplicationHelper
     :'condition.base' => true
   }
 
-  # renders the flash message and any form errors for the given activerecord object
-  def flash_and_form_errors(object = nil)
-    render("layouts/flash", :flash => flash, :object => object)
+  # pairs flash errors with bootstrap styling
+  def flash_class(level)
+    case level
+      when :notice then "alert alert-info"
+      when :success then "alert alert-success"
+      when :error then "alert alert-danger"
+      when :alert then "alert alert-warning"
+    end
   end
 
   # returns the html for an action icon using font awesome and the mappings defined above
@@ -234,12 +239,7 @@ module ApplicationHelper
     # add text
     ttl += t(action, {:scope => "page_titles.#{controller_name}", :default => [:all, ""]}.merge(@title_args || {}))
 
-    # add seal after text if appropriate
-    if !options[:text_only]
-      if admin_mode? && %w(forms questions questionings option_sets).include?(controller_name) || @title_args.delete(:standardized)
-        ttl +=  content_tag(:i, "", :class => "fa fa-certificate")
-      end
-    end
+
 
     ttl.html_safe
   end
@@ -289,7 +289,7 @@ module ApplicationHelper
   # returns img tag for standard icon if obj is standard, '' otherwise
   def std_icon(obj)
     if obj.respond_to?(:standardized?) && obj.standardized?
-      image_tag('std-seal.png', :class => 'std_seal')
+      content_tag(:i, "", :class => "fa fa-certificate")
     else
       ''
     end

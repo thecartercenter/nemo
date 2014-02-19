@@ -2,14 +2,6 @@
 $theme_green: #9dc400;
 
 form.option_set_form {
-  /* narrower labels and wider controls */
-  label.main {
-    width: 100px;
-  }
-
-  div.control {
-    width: 475px;
-  }
 
   /* hide the option levels at first */
   div.form_field[data-field-name=option_levels] {
@@ -19,6 +11,10 @@ form.option_set_form {
 
   div.add_options {
     margin-bottom: 20px;
+
+    ul {
+      width: 388px;
+    }
 
     input[type=text] {
       width: 350px;

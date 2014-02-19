@@ -1,8 +1,8 @@
 <%# form for drag and drop and option dialog %>
 <% if form_mode != :show && can?(:add_options, @option_set) %>
   <div class="add_options">
-    <input type="text" class="add_options_box">
-    <input type="button" class="btn_secondary" value="<%= t('common.add') %>" />
+    <input type="text" class="add_options_box form-control">
+    <input type="button" class="btn_secondary btn btn-default" value="<%= t('common.add') %>" />
   </div>
 <% end %>
 

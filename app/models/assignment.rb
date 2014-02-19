@@ -4,6 +4,8 @@ class Assignment < ActiveRecord::Base
   belongs_to(:mission)
   belongs_to(:user, :inverse_of => :assignments)
 
+  before_validation(:normalize_role)
+
   validates(:mission, :presence => true)
   validates(:role, :presence => true)
 
@@ -31,4 +33,11 @@ class Assignment < ActiveRecord::Base
   def to_s
     ""
   end
+
+  private
+
+    # ensures role is one of allowable values
+    def normalize_role
+      self.role = nil unless User::ROLES.include?(role)
+    end
 end

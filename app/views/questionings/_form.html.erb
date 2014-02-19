@@ -1,10 +1,8 @@
-<%= flash_and_form_errors(@questioning) %>
-
 <%= elmo_form_for(@questioning) do |f| %>
 
   <%= f.field(:form_id, :type => :hidden) %>
 
-  <%= f.fields_for(:question) do |qf| %>
+  <%= elmo_fields_for('questioning[question_attributes]', @questioning.question) do |qf| %>
     <%= render('questions/fields', :f => qf) %>
   <% end %>
 

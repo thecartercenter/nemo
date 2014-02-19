@@ -6,8 +6,6 @@
 
 <%= render("layouts/location_picker") %>
 
-<%= flash_and_form_errors(@response) %>
-
 <% @response.answers.collect{|a| a.errors.full_messages.join(", ")}.join(" ") %>
 
 <%# show an edit link if allowed and in show mode %>
@@ -49,8 +47,14 @@
   <%# incomplete checkbox %>
   <%= f.field(:incomplete, :type => :check_box) if can?(:submit_incomplete, @response) %>
 
-  <%= f.submit %>
-  <%= f.submit(t('response.save_and_mark_reviewed'), :name => 'commit_and_mark_reviewed') if can?(:review, @response) %>
+  <div class ="submit-buttons">
+    <% if form_mode == :edit %>
+      <%= f.submit(t('response.save_and_mark_reviewed'), :class => "btn btn-primary", :name => 'commit_and_mark_reviewed') if can?(:review, @response) %>
+    <% elsif form_mode == :new %>
+      <%= f.submit(:class => "btn btn-primary") %>
+    <% end %>
+  </div>
+
 
 <% end %>
 

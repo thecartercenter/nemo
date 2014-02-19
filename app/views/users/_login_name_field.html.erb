@@ -4,7 +4,7 @@
 
 <% else %>
 
-  <%= form.text_field(:login) %>&nbsp;
-  <%= form.button(t("common.suggest"))  %>
+  <%= form.text_field(:login, :class => 'form-control') %>&nbsp;
+  <%= form.button(t("common.suggest"), :class => "btn btn-default btn-xs")  %>
 
 <% end %>

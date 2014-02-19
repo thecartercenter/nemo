@@ -1,3 +1,19 @@
+$orange: #F77D48;
+
+/* base errors may appear outside the form. left margin should be cancelled when inside form */
+div.form-errors {
+  margin-left: 35px;
+  font-weight: bold;
+  color: #CC3232;
+  margin-bottom: 5px;
+}
+
+/* standardize specific form widths */
+form.response_form, form.question_form, form.form_form, form.option_set_form, form.user_form, form.broadcast_form,
+  form.user_batch_form, form.setting_form, form.mission_form, form.user_session_form {
+  width: 650px;
+}
+
 div.form_field {
   /* the field div itself should not wrap, but we don't want this to inherit */
   white-space: nowrap;
@@ -6,10 +22,15 @@ div.form_field {
     white-space: normal;
   }
 
+  div.form-errors {
+    /* cancel the left margin for form errors inside a form_field */
+    margin-left: 0;
+  }
+
   div.reqd_sym {
     display: inline;
     font-weight: bold;
-    color: #d02000;
+    color: $orange;
     font-size: 125%;
     line-height: 5px;
     vertical-align: middle;
@@ -32,21 +53,24 @@ div.form_field {
     }
   }
 
-  label.main, .control {
-    border-top: 1px solid #ddd;
-  }
-
   label.main {
     display: inline-block;
-    width: 150px;
+    vertical-align: top;
+    width: 200px;
     padding-right: 10px;
+    text-align: right;
   }
 
   div.control {
     display: inline-block;
-    width: 350px;
+    vertical-align: middle;
+    width: 450px;
     min-height: 26px;
     position: relative;
+
+    label {
+      font-weight: normal;
+    }
   }
 
   div.control input.text {
@@ -55,6 +79,7 @@ div.form_field {
 
   /* nice kooshy padding */
   input[type=text], input[type=password], textarea, select {
+    margin-bottom: 5px;
     padding: 3px;
   }
 
@@ -81,6 +106,46 @@ div.form_field {
     margin: 0;
     padding: 0;
     width: auto;
+  }
+
+
+}
+
+form input[type="submit"].btn-primary {
+  background-color: $orange;
+  border: 0px;
+}
+
+form {
+  div.submit-buttons {
+    text-align: right;
+    margin-top: 20px;
+  }
+
+  input.btn-primary {
+    padding: 6px 35px;
+  }
+
+}
+
+form.response_form {
+  width: 750px;
+  label.main {
+    width: 300px;
+  }
+}
+
+
+#question_option_set_id {
+  width: 71%;
+  display: inline-block;
+}
+
+
+
+div.settings_index {
+  a.password {
+    margin-left: 150px;
   }
 }
 

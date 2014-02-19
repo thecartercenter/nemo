@@ -135,6 +135,9 @@
   </nav>
 
   <div id="content" class="<%= ctlr_action_name %>">
+    <%# Show errors or alerts if any %>
+    <%= render("layouts/flash", :flash => flash) %>
+
     <% unless @dont_print_title %>
       <h1 class="title">
         <%= title %>
