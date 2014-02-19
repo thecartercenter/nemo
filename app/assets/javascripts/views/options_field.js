@@ -17,7 +17,11 @@
       can_reorder: self.params.can_reorder,
       can_remove: self.params.can_remove,
       edit_link: self.params.edit_link,
-      remove_link: self.params.remove_link
+      remove_link: self.params.remove_link,
+      modal_titles: {
+        // we only need the edit title for this field
+        edit: I18n.t('option_set.edit_option')
+      }
     });
   };
 

@@ -107,12 +107,27 @@
     self.trigger('change');
   };
 
-  // shows the edit dialog
+  // shows the 'new' modal
+  klass.prototype.new_item = function(item) { var self = this;
+    self.show_modal(item, {mode: 'new'});
+  };
+
+  // shows the 'edit' modal
   // item - the model object to be edited
   klass.prototype.edit_item = function(item) { var self = this;
+    self.show_modal(item, {mode: 'edit'});
+  };
+
+  // shows the new/edit modal
+  // item - the model object to be shown
+  // options[mode] - whether to show as new or edit
+  klass.prototype.show_modal = function(item, options) { var self = this;
     // save the as an instance var as we will need to access it
     // when the modal gets closed
     self.active_item = item;
+
+    // set title
+    self.modal.find('.modal-title').text(self.modal_titles[options.mode]);
 
     // clear the text boxes
     self.modal.find('.translation input').val("");
