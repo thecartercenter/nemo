@@ -24,8 +24,9 @@
       return false;
     });
 
-    // hookup save button on modal
+    // hookup save and cancel buttons on modal
     self.modal.find('button.btn-primary').on('click', function(){ self.save_item(); return false; });
+    self.modal.find('button.btn-default').on('click', function(){ self.cancel_edit(); });
   };
 
   // renders the html to the view
@@ -126,6 +127,9 @@
     // when the modal gets closed
     self.active_item = item;
 
+    // save mode
+    self.modal_mode = options.mode;
+
     // set title
     self.modal.find('.modal-title').text(self.modal_titles[options.mode]);
 
@@ -161,21 +165,32 @@
 
   // saves entered translations to data model
   klass.prototype.save_item = function() { var self = this;
-
     self.modal.find('.translation input').each(function(){
       self.active_item.update_translation({field: 'name', locale: $(this).data('locale'), value: $(this).val()});
     });
 
-    // re-render the item in the view
-    var old_div = self.active_item.div;
+    // trigger add event if in new mode
+    if (self.modal_mode == 'new')
+      self.trigger('item_added', self.active_item);
+
+    // render the item in the view
     var new_div = self.render_item(self.active_item);
-    old_div.replaceWith(new_div);
     self.active_item.div = new_div;
+    if (self.modal_mode == 'new')
+      self.ol.append($('<li>').html(new_div));
+    else
+      self.active_item.div.replaceWith(new_div);
 
     // done with this item
     self.active_item = null;
 
     self.modal.modal('hide');
+  };
+
+  // cancels the new/edit operation
+  klass.prototype.cancel_edit = function() { var self = this;
+    // done with this item
+    self.active_item = null;
   };
 
   // returns number of items
@@ -193,8 +208,9 @@
 
   // notifies listeners for the given event
   klass.prototype.trigger = function(event_name) { var self = this;
+    var args = Array.prototype.slice.call(arguments).slice(1);
     (self.listeners[event_name] || []).forEach(function(f){
-      f.apply(self,  Array.prototype.slice.call(arguments).slice(1));
+      f.apply(self, args);
     });
   };
 

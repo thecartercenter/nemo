@@ -23,6 +23,11 @@
         edit: I18n.t('option_set.edit_option_level')
       }
     });
+
+    // handler for when items are added to list
+    self.list.on('item_added', function(item){
+      self.option_levels.add(item);
+    });
   };
 
   // initiates add level process
