@@ -154,11 +154,14 @@
   // removes an item from the view
   // item - the model object to be removed
   klass.prototype.remove_item = function(item) { var self = this;
-    // remove from view
-    item.div.closest('li').remove();
+    // get li element
+    var li = item.div.closest('li');
 
-    // notify model
-    item.remove();
+    // notify models of all children
+    li.find('div.inner').each(function(){ $(this).data('item').remove(); });
+
+    // remove li from view
+    li.remove();
 
     self.trigger('change');
   };

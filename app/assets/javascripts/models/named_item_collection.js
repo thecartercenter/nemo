@@ -1,6 +1,7 @@
 // ELMO.Models.NamedItemCollection
 //
 // Models a collection of named items such as options/optionings and option levels. Subclassed by OptioningCollection.
+// Just maintains a flat list for the purpose of duplicate checking, etc. Does not maintain hierarchy.
 (function(ns, klass) {
 
   // constructor
