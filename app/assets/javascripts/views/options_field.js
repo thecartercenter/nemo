@@ -14,6 +14,7 @@
       wrapper: params.wrapper,
       modal: params.modal,
       form_mode: params.form_mode,
+      multi_level: true,
       can_reorder: self.params.can_reorder,
       can_remove: self.params.can_remove,
       edit_link: self.params.edit_link,
@@ -32,5 +33,6 @@
       // add to list if succeeded
       self.list.add_item(optioning);
   };
+
 
 })(ELMO.Views);

@@ -14,6 +14,7 @@
       wrapper: params.wrapper,
       modal: params.modal,
       form_mode: params.form_mode,
+      multi_level: false,
       can_reorder: self.params.can_reorder,
       can_remove: self.params.can_remove,
       edit_link: self.params.edit_link,

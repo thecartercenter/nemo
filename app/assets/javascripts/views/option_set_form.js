@@ -47,7 +47,12 @@
     });
 
     // watch for changes to multilevel property
-    $('#option_set_multi_level').on('change', function() { self.option_levels_field.show($(this).is(':checked')); });
+    $('#option_set_multi_level').on('change', function() {
+      // show/hide the option levels field
+      self.option_levels_field.show($(this).is(':checked'));
+    });
+
+    // trigger initial change to get things rolling
     $('#option_set_multi_level').trigger('change');
 
     // multiselect box should be disabled unless there are 0 option levels

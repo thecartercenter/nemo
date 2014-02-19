@@ -48,7 +48,7 @@
         handle: 'div',
         items: 'li',
         toleranceElement: '> div',
-        maxLevels: 1,
+        maxLevels: self.multi_level ? 0 : 1,
 
         // notify model when sorting changes
         change: function(){ self.items.dirty = true; }
