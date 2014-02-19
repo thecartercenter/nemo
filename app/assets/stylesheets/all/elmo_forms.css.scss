@@ -8,6 +8,12 @@ div.form-errors {
   margin-bottom: 5px;
 }
 
+/* standardize specific form widths */
+form.response_form, form.question_form, form.form_form, form.option_set_form, form.user_form, form.broadcast_form,
+  form.user_batch_form, form.setting_form, form.mission_form, form.user_session_form {
+  width: 650px;
+}
+
 div.form_field {
   /* the field div itself should not wrap, but we don't want this to inherit */
   white-space: nowrap;
@@ -50,7 +56,7 @@ div.form_field {
   label.main {
     display: inline-block;
     vertical-align: top;
-    width: 150px;
+    width: 200px;
     padding-right: 10px;
     text-align: right;
   }
@@ -58,7 +64,7 @@ div.form_field {
   div.control {
     display: inline-block;
     vertical-align: middle;
-    width: 350px;
+    width: 450px;
     min-height: 26px;
     position: relative;
 
@@ -116,57 +122,22 @@ form {
     margin-top: 20px;
   }
 
-  &.form_form, &.question_form, &.option_set_form, &.user_form, input.btn-primary {
+  input.btn-primary {
     padding: 6px 35px;
   }
 
-  &.form_form div.submit-buttons {
-    width: 500px;
+}
+
+form.response_form {
+  width: 750px;
+  label.main {
+    width: 300px;
   }
-
-  &.form_form div.submit-buttons.publish {
-    width: 100%;
-  }
-
-  &.question_form div.submit-buttons {
-    width: 625px;
-  }
-
-  &.option_set_form div.submit-buttons {
-    width: 575px;
-  }
-
-  &.user_form div.submit-buttons {
-    width: 645px;
-  }
-
-  &.user_batch_form div.submit-buttons {
-    width: 650px;
-  }
-
-  &.broadcast_form div.submit-buttons {
-    width: 500px;
-  }
-
-  &.user_session_form div.submit-buttons {
-    width: 500px;
-  }
-
-  &.setting_form div.submit-buttons{
-    width: 500px;
-  }
-
-  &.mission_form div.submit-buttons {
-    width: 500px;
-  }
-
-
-
 }
 
 
 #question_option_set_id {
-  width: 73%;
+  width: 71%;
   display: inline-block;
 }
 

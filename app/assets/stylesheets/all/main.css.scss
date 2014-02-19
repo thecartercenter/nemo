@@ -116,9 +116,6 @@ div.field_with_errors { display: inline; }
 
 /* question fields */
 div.question_fields {
-  .control {
-    width: 475px !important;
-  }
 
   .names_hints textarea {
     width: 100%;
@@ -168,8 +165,7 @@ form.questioning_form .form_field#condition .control > div > div:first-child { w
 .option_sets_edit div.optcol, .option_sets_new div.optcol, .option_sets_show div.optcol { float: left; margin-right: 20px; }
 
 /* broadcasts */
-input#broadcast_subject { width: 346px; }
-textarea#broadcast_body { width: 346px; height: 170px; }
+textarea#broadcast_body { height: 170px; }
 .broadcasts_show #send_errors div.control { color: #d02000; font-weight: bold; }
 .broadcasts_show #send_errors div.control p { margin: 0; }
 
