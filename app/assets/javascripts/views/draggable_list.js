@@ -174,12 +174,12 @@
       self.trigger('item_added', self.active_item);
 
     // render the item in the view
+    var old_div = self.active_item.div; // may be undefined
     var new_div = self.render_item(self.active_item);
-    self.active_item.div = new_div;
     if (self.modal_mode == 'new')
       self.ol.append($('<li>').html(new_div));
     else
-      self.active_item.div.replaceWith(new_div);
+      old_div.replaceWith(new_div);
 
     // done with this item
     self.active_item = null;
