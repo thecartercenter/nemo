@@ -128,8 +128,6 @@
     // show the modal
     self.modal.modal('show');
 
-    console.log(self.modal);
-
     // show the in_use warning if appopriate
     if (self.active_item.in_use) self.modal.find('div[id$=in_use_name_change_warning]').show();
   };
