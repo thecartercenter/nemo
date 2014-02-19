@@ -170,7 +170,7 @@ class FormsController < ApplicationController
     if @form.save
       flash[:success] = t("form.questions_add_success")
     else
-      flash[:error] = t("form.questions_add_error", :msg => @form.errors.full_messages.join(';'))
+      flash[:error] = t("form.questions_add_error", :msg => @form.errors.messages.values.join(';'))
     end
 
     # redirect to form edit

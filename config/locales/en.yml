@@ -489,6 +489,7 @@ en:
         response:
           general: "Response is invalid (see below)."
           missing_answers: "Not all questions have answers."
+          invalid_answers: "There are invalid answers."
         setting:
           attributes:
             preferred_locales_str:

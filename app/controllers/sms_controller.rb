@@ -69,7 +69,7 @@ class SmsController < ApplicationController
         # if it's the invalid_answers error, we need to find the first answer that's invalid and report its error
         invalid_answer = elmo_response.answers.detect{|a| a.errors && a.errors.messages.size > 0}
         t_sms_msg("sms_form.validation.invalid_answer", :rank => invalid_answer.questioning.rank,
-          :error => invalid_answer.errors.full_messages.join(", "), :user => elmo_response.user, :form => elmo_response.form, :mission => sms.mission)
+          :error => invalid_answer.errors.messages.values.join(", "), :user => elmo_response.user, :form => elmo_response.form, :mission => sms.mission)
 
       else
         # if we don't recognize the key, just use the regular message. it may not be pretty but it's better than nothing.
