@@ -14,8 +14,15 @@
     self.render_items();
 
     // hookup setup edit/remove links (deferred)
-    self.wrapper.on('click', 'a.action_link_edit', function(){ self.edit_item($(this)); return false; });
-    self.wrapper.on('click', 'a.action_link_remove', function(){ self.remove_item($(this)); return false; });
+    self.wrapper.on('click', 'a.action_link_edit', function(){
+      self.edit_item($(this).closest('div.inner').data('item'));
+      return false;
+    });
+
+    self.wrapper.on('click', 'a.action_link_remove', function(){
+      self.remove_item($(this).closest('div.inner').data('item'));
+      return false;
+    });
 
     // hookup save button on modal
     self.modal.find('button.btn-primary').on('click', function(){ self.save_item(); return false; });
@@ -91,6 +98,8 @@
     return inner;
   };
 
+  // adds an item to the view
+  // item - the model object to be added
   klass.prototype.add_item = function(item) { var self = this;
     // wrap in li and add to view
     $('<li>').html(self.render_item(item)).appendTo(self.ol);
@@ -99,11 +108,11 @@
   };
 
   // shows the edit dialog
-  // link - the <a> tag that was clicked
-  klass.prototype.edit_item = function(link) { var self = this;
-    // get the item and save it as an instance var as we will need to access it
+  // item - the model object to be edited
+  klass.prototype.edit_item = function(item) { var self = this;
+    // save the as an instance var as we will need to access it
     // when the modal gets closed
-    self.active_item = link.closest('div.inner').data('item');
+    self.active_item = item;
 
     // clear the text boxes
     self.modal.find('.translation input').val("");
@@ -119,18 +128,20 @@
     // show the modal
     self.modal.modal('show');
 
+    console.log(self.modal);
+
     // show the in_use warning if appopriate
     if (self.active_item.in_use) self.modal.find('div[id$=in_use_name_change_warning]').show();
   };
 
   // removes an item from the view
-  // link - this <a> tag that was clicked
-  klass.prototype.remove_item = function(link) { var self = this;
-    // notify model
-    link.closest('div.inner').data('item').remove();
-
+  // item - the model object to be removed
+  klass.prototype.remove_item = function(item) { var self = this;
     // remove from view
-    link.closest('li').remove();
+    item.div.closest('li').remove();
+
+    // notify model
+    item.remove();
 
     self.trigger('change');
   };
