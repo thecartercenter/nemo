@@ -29,9 +29,13 @@ form.option_set_form {
 
   /* FOR THE SORTABLE/DRAGGABLE LIST */
 
+  /* these styles only apply to the outer ol */
+  .draggable-list-wrapper > ol {
+    margin: 0 20px 5px 0;
+  }
+
   .draggable-list-wrapper ol {
     padding-left: 0;
-    margin: 0 20px 5px 0;
 
     li {
       display: block;
