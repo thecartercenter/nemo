@@ -28,7 +28,7 @@
     // setup OptionsField view
     self.options_field = new ELMO.Views.OptionsField({
       wrapper: $("#options-wrapper"),
-      modal: $("#edit-option-set"),
+      modal: $("#edit-option"),
       optionings: self.option_set.optionings,
       form_mode: self.params.form_mode,
       can_reorder: self.params.can_reorder,
