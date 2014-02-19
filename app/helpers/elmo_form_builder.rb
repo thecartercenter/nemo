@@ -26,6 +26,7 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
     # get key chunks and render partial
     @template.render(:partial => 'layouts/elmo_form_field', :locals => {
       :field_name => field_name,
+      :object_name => @object.class.model_name.param_key,
       :options => options,
       :label_tag => elmo_field_label(field_name, options),
       :field_html => elmo_field(field_name, options),
