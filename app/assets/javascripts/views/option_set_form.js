@@ -79,7 +79,7 @@
 
   // checks if client side model is dirty
   klass.prototype.dirty = function() { var self = this;
-    return self.option_set.optionings.dirty;
+    return self.option_set.optionings.dirty || self.option_set.option_levels.dirty;
   };
 
   // returns the html to insert in the token input result list
