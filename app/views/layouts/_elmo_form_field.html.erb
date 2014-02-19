@@ -3,12 +3,13 @@
 
   <div class="label_and_control">
     <%# spacing here is important. must be no space after label tag %>
-    <%= label_tag %><div class="control <%= options[:read_only] ? 'read_only' : '' %>"><%= field_html %></div>
+    <%= label_tag %><div class="control <%= options[:read_only] ? 'read_only' : '' %>">
+
+      <%# errors %>
+      <%= content_tag(:div, errors.join(' '), :class => 'form-errors') if errors && !errors.empty? %>
+
+      <%= field_html %>
+    </div>
   </div>
 
-  <% unless hint_html.blank? %>
-    <div class="hint"><%= hint_html %></div>
-  <% end %>
-
-  <div class="space_line"></div>
 </div>

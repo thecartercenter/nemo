@@ -88,6 +88,7 @@ class FormsController < ApplicationController
     if @form.save
       set_success_and_redirect(@form, :to => edit_form_path(@form))
     else
+      flash.now[:error] = I18n.t('activerecord.errors.models.form.general')
       prepare_and_render_form
     end
   end
@@ -169,7 +170,7 @@ class FormsController < ApplicationController
     if @form.save
       flash[:success] = t("form.questions_add_success")
     else
-      flash[:error] = t("form.questions_add_error", :msg => @form.errors.full_messages.join(';'))
+      flash[:error] = t("form.questions_add_error", :msg => @form.errors.messages.values.join(';'))
     end
 
     # redirect to form edit

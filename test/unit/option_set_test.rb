@@ -13,7 +13,7 @@ class OptionSetTest < ActiveSupport::TestCase
   test "must have at least one option" do
     os = FactoryGirl.build(:option_set, :option_names => [])
     os.save
-    assert_match(/at least one/, os.errors.messages[:base].join)
+    assert_match(/at least one/, os.errors[:options].join)
   end
 
   #######################################################################
@@ -202,8 +202,10 @@ class OptionSetTest < ActiveSupport::TestCase
 
   test "multilevel option sets should have option levels" do
     os = FactoryGirl.build(:option_set, :multi_level => true)
-    os.valid?
-    assert_match(/must have at least one OptionLevel/, os.errors[:base].join)
+    exception = assert_raise(RuntimeError) do
+      os.valid?
+    end
+    assert_equal('multi-level option sets must have at least one option level', exception.to_s)
   end
 
   test "destroying an option set that is presently used in a question should raise deletion error" do

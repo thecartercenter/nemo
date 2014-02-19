@@ -2,8 +2,6 @@
 <% @title_args = {:name => @user.name} %>
 <% @title = t("page_titles.users.#{form_mode}_profile", :name => @user.name) if @user == current_user %>
 
-<%= flash_and_form_errors(@user) %>
-
 <%= elmo_form_for(@user) do |f| %>
 
   <%= f.field(:name, :required => true) %>
@@ -14,7 +12,8 @@
   <%= f.field(:admin, :type => :check_box) if can?(:adminify, @user) && admin_mode? %>
 
   <%# field name depends on whether we're in admin mode or not. under the hood it's all the same though %>
-  <%= f.field(admin_mode? ? :assignments : :role, :partial => "assignments", :read_only => cannot?(:change_assignments, @user)) %>
+  <%= f.field(admin_mode? ? :assignments : :role, :partial => "assignments",
+    :required => !admin_mode?, :read_only => cannot?(:change_assignments, @user)) %>
 
   <%= f.field(:pref_lang, :type => :select, :options => configatron.full_locales.map{|l| [language_name(l), l]}) %>
 
@@ -39,7 +38,9 @@
     <% end %>
   <% end %>
 
-  <%= f.submit %>
+  <div class="submit-buttons">
+    <%= f.submit(:class => "btn btn-primary") %>
+  </div>
 
 <% end %>
 

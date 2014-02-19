@@ -163,17 +163,37 @@ div.report_body {
   }
 }
 
+div.report_edit_pane {
+
+  div.section {
+
+    div.name.horiz {
+      vertical-align: middle;
+      display: inline-block;
+      text-align: right;
+      padding-right: 10px;
+      width: 250px;
+    }
+
+    div.controls.horiz {
+      display: inline-block;
+      vertical-align: middle;
+
+      label {
+        font-weight: normal;
+      }
+    }
+  }
+}
 
 div.report_edit_pane label { display: inline-block; }
 div.report_edit_pane input { display: inline-block; }
 div.report_edit_pane input[type='radio'] { margin-right: 4px; vertical-align: top; }
 div.report_edit_pane input[type='text'] { padding: 4px; }
-div.report_edit_pane div.section { border-bottom: 1px solid #ddd; padding: 10px 0; }
+div.report_edit_pane div.section { padding: 15px 0; }
 div.report_edit_pane div.section:only-child { border-bottom: none; }
 div.report_edit_pane div.section div.choice { display: inline-block; }
 div.report_edit_pane div.section div.name { font-weight: bold; }
-div.report_edit_pane div.section div.name.horiz { float: left; width: 250px; }
-div.report_edit_pane div.section div.controls.horiz { margin-left: 250px; }
 div.report_edit_pane div.section div.controls.vert { display: block; }
 div.report_edit_pane div.section label { margin-right: 10px; }
 div.report_edit_pane div.multiselect div.choices { overflow: auto; background-color: #e6e6e6; border: 1px solid #888; padding: 5px; }

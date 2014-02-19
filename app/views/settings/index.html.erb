@@ -1,4 +1,3 @@
-<%= flash_and_form_errors(@setting) %>
 
 <%= elmo_form_for(@setting) do |f| %>
 
@@ -25,7 +24,7 @@
 
       <%= f.field(:intellisms_username) %>
 
-      <%= link_to(t("setting.change_sms_password"), "#") %>
+      <%= link_to(t("setting.change_sms_password"), "#", :class => "password") %>
 
       <div class="password_fields">
         <%= f.field(:intellisms_password1, :type => :password) %>
@@ -51,8 +50,9 @@
     <%= f.field(:external_sql, :partial => "external_sql") %>
 
   <% end %>
-
-  <%= f.submit %>
+  <div class="submit-buttons">
+    <%= f.submit(:class => "btn btn-primary") %>
+  </div>
 
 <% end %>
 

@@ -20,7 +20,7 @@ class User < ActiveRecord::Base
   acts_as_authentic do |c|
     c.disable_perishable_token_maintenance = true
     c.logged_in_timeout(SESSION_TIMEOUT)
-    c.validates_format_of_login_field_options = {:with => /[\a-zA-Z0-9\.]+/, :message => "can only contain letters, numbers, or '.'"}
+    c.validates_format_of_login_field_options = {:with => /[\a-zA-Z0-9\.]+/}
 
     # email is not mandatory, but must be valid if given
     c.merge_validates_format_of_email_field_options(:allow_blank => true)
@@ -295,19 +295,19 @@ class User < ActiveRecord::Base
 
     def must_have_password_reset_on_create
       if new_record? && reset_password_method == "dont"
-        errors.add(:base, :must_choose_passwd_method)
+        errors.add(:reset_password_method, :blank)
       end
     end
 
     def password_reset_cant_be_email_if_no_email
       if reset_password_method == "email" && email.blank?
         verb = new_record? ? "send" : "reset"
-        errors.add(:base, :cant_passwd_email, :verb => verb)
+        errors.add(:reset_password_method, :cant_passwd_email, :verb => verb)
       end
     end
 
     def no_duplicate_assignments
-      errors.add(:base, :duplicate_assignments) if Assignment.duplicates?(assignments.reject{|a| a.marked_for_destruction?})
+      errors.add(:assignments, :duplicate_assignments) if Assignment.duplicates?(assignments.reject{|a| a.marked_for_destruction?})
     end
 
     def must_have_assignments_if_not_admin

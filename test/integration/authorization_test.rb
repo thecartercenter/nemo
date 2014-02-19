@@ -25,7 +25,7 @@ class AuthorizationTest < ActionDispatch::IntegrationTest
 
   test "guest redirected to login page with message if unauthorized" do
     assert_can_access(nil, missions_path, :redirected_to => login_url)
-    assert_select("div.error", /must login/)
+    assert_select("div.alert-danger", /must login/)
   end
 
   test "user redirected to root if unauthorized" do

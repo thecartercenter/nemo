@@ -1,12 +1,11 @@
 <div class="form_field qtype_<%= answer.qtype.name %> <%= form_mode == :show ? 'read_only' : '' %>"
   data-qtype-name="<%= answer.qtype.name %>" id="qing_<%= answer.questioning_id %>">
 
-  <label class="main"><%= answer.question_name || "[#{t('answer.no_name')}]" %> <%= reqd_sym if answer.required? %>
+  <label class="main"><%= reqd_sym if answer.required? %> <%= answer.question_name || "[#{t('answer.no_name')}]" %>
   </label><div class="control">
 
-    <%= fields_for('response[all_answers][]', answer) do |f| %>
-
-      <%= render("layouts/object_errors", :object => answer, :compact => true, :prefix => t("answer.this_answer")) unless answer.errors.empty? %>
+    <%# don't show errors because we do it manually below %>
+    <%= elmo_fields_for('response[all_answers][]', answer, :show_errors => false) do |f| %>
 
       <% if form_mode == :show %>
 
@@ -53,24 +52,27 @@
         <%= f.hidden_field(:questioning_id, :index => answer_counter) %>
         <%= f.hidden_field(:relevant, :class => "relevant", :index => answer_counter) %>
 
+        <%# show the error messages without keys %>
+        <%= content_tag(:div, answer.errors.to_hash.values.join(', '), :class => 'form-errors') unless answer.errors.empty? %>
+
         <% case type = answer.qtype.name
            when "select_one" %>
 
-          <%= f.select(:option_id, answer.question.select_options, {:include_blank => true}, :index => answer_counter) %>
+          <%= f.select(:option_id, answer.question.select_options, {:include_blank => true}, :index => answer_counter, :class => "form-control") %>
 
         <% when "select_multiple" %>
 
           <%# render a checkbox for each possible choice %>
-          <%= render(:partial => "choice", :locals => {:answer_counter => answer_counter}, :collection => answer.all_choices) %>
+          <%= render(:partial => "choice", :locals => {:answer_counter => answer_counter}, :collection => answer.all_choices, :class => "form-control") %>
 
         <% when "datetime", "date", "time" %>
 
-          <%= f.send("#{type}_select", :"#{type}_value", :include_blank => true, :index => answer_counter) %>
+          <%= f.send("#{type}_select", :"#{type}_value", :include_blank => true, :index => answer_counter, :class => "form-control") %>
 
         <% else %>
 
           <%# textarea or input, depending on type %>
-          <%= f.send(type == 'long_text' ? 'text_area' : 'text_field', :value, :class => "qtype_#{type}", :index => answer_counter) %>
+          <%= f.send(type == 'long_text' ? 'text_area' : 'text_field', :value, :class => "qtype_#{type} form-control", :index => answer_counter) %>
 
           <% if type == 'location' %>
             &nbsp;<%= action_link("edit", "#", :class => "edit_location_link") if form_mode != :show %>
@@ -80,11 +82,11 @@
 
       <% end # if show mode %>
 
-    <% end # fields_for %>
+    <% end # elmo_fields_for %>
   </div>
 
   <% unless answer.question_hint.blank? %>
-    <div class="hint"><%= answer.question_hint %></div>
+    <!-- <div class="hint"><%= answer.question_hint %></div> -->
   <% end %>
 </div>
 

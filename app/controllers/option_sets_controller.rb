@@ -89,7 +89,7 @@ class OptionSetsController < ApplicationController
           set_success_and_redirect(@option_set)
         end
       rescue ActiveRecord::RecordInvalid, DeletionError
-        @option_set.errors.add(:base, $!.to_s) if $!.is_a?(DeletionError)
+        flash.now[:error] = $!.is_a?(DeletionError) ? $!.to_s : I18n.t('activerecord.errors.models.option_set.general')
 
         # if this is an ajax request, we just render the form partial
         if ajax_request?

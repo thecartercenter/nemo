@@ -8,10 +8,10 @@ class UserBatchesController < ApplicationController
   def create
     @user_batch.create_users(current_mission)
     if @user_batch.succeeded?
-      @success_msg = t('user_batch.success')
+      flash.now[:success] = t('user_batch.success')
       render(:show)
     else
-      @error_msg = t('user_batch.error')
+      flash.now[:error] = t('user_batch.error')
       render(:new)
     end
   end

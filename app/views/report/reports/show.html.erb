@@ -1,8 +1,6 @@
 <%# include javascript google vis api stuff %>
 <% content_for(:per_page_js){report_js_includes} %>
 
-<%= flash_and_form_errors(@report) %>
-
 <div class="link_set report_top_links">
   <% if can?(:update, @report) %>
     <a id="edit_link" href="#"><%= t("report/report.edit_report") %></a>
@@ -123,7 +121,7 @@
               <div class="section percent_style">
                 <div class="name horiz"><%= t("report/report.what_percent_style") %></div>
                 <div class="controls horiz">
-                  <select id="percent_style"></select>
+                  <select id="percent_style" class="form-control"></select>
                 </div>
               </div>
               <div class="section">
@@ -186,7 +184,7 @@
               <div class="section">
                 <div class="name horiz"><%= t("report/report.enter_name") %></div>
                 <div class="controls horiz">
-                  <input type="text" id="report_title"/>
+                  <input type="text" id="report_title" class="form-control"/>
                 </div>
               </div>
             </div>

@@ -1,7 +1,5 @@
 <% @title_args = {:name => @form.name, :standardized => @form.standardized?} %>
 
-<%= flash_and_form_errors(@form) %>
-
 <div class="screen">
   <%= published_warning(@form) if @form.published? && form_mode == :edit %>
 
@@ -20,11 +18,18 @@
     <%# questions on the form %>
     <%= index_table(Questioning, @form.questionings, :within_form => true) if form_mode != :new %>
 
-    <%= f.submit %>
+    <% show_sp_btn = !@form.new_record? && !@form.published? && can?(:publish, @form) %>
+    <div class="submit-buttons <%=  'publish' unless !show_sp_btn %>">
 
-    <% if !@form.new_record? && !@form.published? && can?(:publish, @form) %>
-      <%= f.submit(I18n.t('form.save_and_publish'), :name => 'save_and_publish') %>
-    <% end %>
+
+      <% if show_sp_btn %>
+        <%= f.submit(I18n.t('form.save_and_publish'), :name => 'save_and_publish', :class => 'btn btn-default') %>
+      <% end %>
+
+      <%= f.submit(:class => "btn btn-primary") %>
+    </div>
+
+
 
   <% end %>
 </div>

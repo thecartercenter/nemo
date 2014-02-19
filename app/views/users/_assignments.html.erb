@@ -1,5 +1,8 @@
 <% if admin_mode? %>
 
+  <%# special error output %>
+  <%= content_tag(:div, assignment_errors.join(', '), :class => 'form-errors') unless assignment_errors.empty? %>
+
   <div class="assignment_header">
     <div class="mission"><%= translate_model(Mission) %></div>
     <div class="role"><%= t('role.role') %></div>
@@ -18,13 +21,16 @@
 
   <% else %>
 
-    <%# loop over all assignments and when the assignment for the current mission comes up, render a one-line form for it %>
-    <%= form.fields_for(:assignments) do |af| %>
-      <% if af.object.mission == current_mission %>
-        <%= af.hidden_field(:id) %>
-        <%= af.hidden_field(:mission_id) %>
-        <%= af.select(:role, User::ROLES.map{|r| [t(r, :scope => :role), r]}, :prompt => "[#{t('role.role')}]") %>&nbsp;&nbsp;
-      <% end %>
+    <%# don't show errors because we format them specially below %>
+    <%= elmo_fields_for("user[assignments_attributes][0]", @current_assignment, :show_errors => false) do |af| %>
+      <%= af.hidden_field(:id) %>
+      <%= af.hidden_field(:mission_id) %>
+
+      <%# special error output %>
+      <%= content_tag(:div, @user.errors[:'assignments.role'].join, :class => 'form-errors') unless @user.errors[:'assignments.role'].empty? %>
+
+      <%= af.select(:role, User::ROLES.map{|r| [t(r, :scope => :role), r]}, {:prompt => "[#{t('role.role')}]"},
+        :class => "form-control") %>
     <% end %>
 
   <% end # if show mode %>
