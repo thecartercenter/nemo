@@ -94,6 +94,9 @@ en:
 
   # general error messages (there are others under activerecord.errors)
   errors:
+    # our messages are all complete sentences so we use the colon
+    format: "%{attribute}: %{message}"
+
     messages:
       deleted_successfully: "deleted successfully"
       generic_delete_error: "Error during deletion."
@@ -408,9 +411,6 @@ en:
 
     # all error messages should be full sentences with a period, for consistency.
     errors:
-      # we don't use the 'attribute message' format
-      format: "%{message}"
-
       # here we override some of the default rails messages to be full sentences
       messages:
         taken: "Please enter a unique value."
@@ -617,15 +617,15 @@ en:
       consecutive_failed_logins_limit_exceeded: "You have exceeded the consecutive failed login limit. Your account has been disabled."
       email_invalid: "should look like an email address"
       general_credentials_error: "The Login/Password combination you entered is not valid."
-      login_blank: "can't be blank"
-      login_invalid: "should use only letters, numbers, spaces, and .-_@"
-      login_not_found: "is not valid"
+      login_blank: "Please enter a username."
+      login_invalid: "Should use only letters, numbers, spaces, and .-_@"
+      login_not_found: "Not valid."
       no_authentication_details: "You did not provide any details for authentication."
       not_active: "Your account is not active."
       not_approved: "Your account is not approved."
       not_confirmed: "Your account is not confirmed."
-      password_blank: "can't be blank"
-      password_invalid: "is not valid"
+      password_blank: "Please enter a password."
+      password_invalid: "Not valid."
     models:
       user_session: "User Session"
     attributes:
