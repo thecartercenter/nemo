@@ -37,9 +37,14 @@
       remove_link: self.params.remove_link
     });
 
-
-    // hookup add button
+    // add option button click event
     $('div.add_options input[type=button]').on('click', function() { self.add_options(); });
+
+    // add option level link click event
+    $('.option_set_option_levels a.add-link').on('click', function(e) {
+      self.option_levels_field.add();
+      e.preventDefault();
+    });
 
     // watch for changes to multilevel property
     $('#option_set_multi_level').on('change', function() { self.option_levels_field.show($(this).is(':checked')); });

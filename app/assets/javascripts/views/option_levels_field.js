@@ -21,7 +21,9 @@
     });
   };
 
+  // initiates add level process
   klass.prototype.add = function() { var self = this;
+
   };
 
   klass.prototype.show = function(yn) { var self = this;
