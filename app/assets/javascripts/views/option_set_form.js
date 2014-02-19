@@ -37,12 +37,19 @@
       remove_link: self.params.remove_link
     });
 
+
     // hookup add button
     $('div.add_options input[type=button]').on('click', function() { self.add_options(); });
 
     // watch for changes to multilevel property
     $('#option_set_multi_level').on('change', function() { self.option_levels_field.show($(this).is(':checked')); });
     $('#option_set_multi_level').trigger('change');
+
+    // multiselect box should be disabled unless there are 0 option levels
+    self.option_levels_field.list.on('change', function(){
+      $('#option_set_multi_level').prop('disabled', this.count() > 0);
+    });
+    self.option_levels_field.list.trigger('change');
 
     // setup the tokenInput control
     $('input.add_options_box').tokenInput(params.suggest_path, {

@@ -21,8 +21,7 @@
     });
   };
 
-  // given a hash of option attribs, creates Optioning and Option objects and adds to OptioningCollection and DraggableList
-  klass.prototype.add = function(option_attribs) { var self = this;
+  klass.prototype.add = function() { var self = this;
   };
 
   klass.prototype.show = function(yn) { var self = this;

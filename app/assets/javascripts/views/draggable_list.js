@@ -5,6 +5,8 @@
 
   // constructor
   ns.DraggableList = klass = function(attribs) { var self = this;
+    self.listeners = {};
+
     // copy attribs
     for (var key in attribs) self[key] = attribs[key];
 
@@ -92,6 +94,8 @@
   klass.prototype.add_item = function(item) { var self = this;
     // wrap in li and add to view
     $('<li>').html(self.render_item(item)).appendTo(self.ol);
+
+    self.trigger('change');
   };
 
   // shows the edit dialog
@@ -127,6 +131,8 @@
 
     // remove from view
     link.closest('li').remove();
+
+    self.trigger('change');
   };
 
   // saves entered translations to data model
@@ -146,6 +152,26 @@
     self.active_item = null;
 
     self.modal.modal('hide');
+  };
+
+  // returns number of items
+  klass.prototype.count = function() { var self = this;
+    return self.ol.find('li').length;
+  };
+
+  // registers event listeners
+  klass.prototype.on = function(event_name, cb) { var self = this;
+    if (!self.listeners[event_name])
+      self.listeners[event_name] = [];
+
+    self.listeners[event_name].push(cb);
+  };
+
+  // notifies listeners for the given event
+  klass.prototype.trigger = function(event_name) { var self = this;
+    (self.listeners[event_name] || []).forEach(function(f){
+      f.apply(self,  Array.prototype.slice.call(arguments).slice(1));
+    });
   };
 
 })(ELMO.Views);
