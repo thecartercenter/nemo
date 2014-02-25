@@ -32,7 +32,7 @@ class DataIntegrityTest < ActionDispatch::IntegrationTest
 
   test "standard form copy should be deletable" do
     form = FactoryGirl.create(:form, :is_standard => true)
-    copy = form.replicate(get_mission)
+    copy = form.replicate(:mode => :to_mission, :mission => get_mission)
     assert_action_link(copy, :destroy, true)
     assert_deletable(copy)
   end

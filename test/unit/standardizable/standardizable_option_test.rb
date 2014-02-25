@@ -5,7 +5,7 @@ class StandardizableOptionTest < ActiveSupport::TestCase
 
   test "copy_for_mission should return the correct object" do
     o = FactoryGirl.create(:option, :is_standard => true)
-    o2 = o.replicate(get_mission)
+    o2 = o.replicate(:mode => :to_mission, :mission => get_mission)
     assert_equal(o2, o.copy_for_mission(get_mission))
     assert_nil(o.copy_for_mission(nil))
     assert_nil(o.copy_for_mission(FactoryGirl.create(:mission, :name => 'junk')))
@@ -13,7 +13,7 @@ class StandardizableOptionTest < ActiveSupport::TestCase
 
   test "replicating non-standard-linked object within mission should work" do
     o = FactoryGirl.build(:option, :name => 'Stuff')
-    o2 = o.replicate
+    o2 = o.replicate(:mode => :clone)
     assert(!o.is_standard, 'original should not be standard')
     assert(!o2.is_standard, 'copy should not be standard')
     assert_nil(o.standard_id)
@@ -34,14 +34,14 @@ class StandardizableOptionTest < ActiveSupport::TestCase
     assert_not_nil(o.mission)
 
     # copy should not have standard link
-    o2 = o.replicate
+    o2 = o.replicate(:mode => :clone)
     assert_nil(o2.standard)
     assert_equal(o.mission, o2.mission)
   end
 
   test "replicating standard option should work" do
     o = FactoryGirl.build(:option, :name => 'Stuff', :is_standard => true)
-    o2 = o.replicate(get_mission)
+    o2 = o.replicate(:mode => :to_mission, :mission => get_mission)
 
     # copy should have correct mision
     assert_equal(get_mission, o2.mission)
@@ -54,7 +54,7 @@ class StandardizableOptionTest < ActiveSupport::TestCase
 
   test "standard and copies associations should work without reload" do
     o = FactoryGirl.build(:option, :name => 'Stuff', :is_standard => true)
-    o2 = o.replicate(get_mission)
+    o2 = o.replicate(:mode => :to_mission, :mission => get_mission)
 
     # o.copies associate should work even before reload
     assert_equal(o2.standard, o)
@@ -63,7 +63,7 @@ class StandardizableOptionTest < ActiveSupport::TestCase
 
   test "update of user-modifiable param in a std option should not replicate to copy if copy changed" do
     o = FactoryGirl.create(:option, :name => 'Stuff', :is_standard => true)
-    o2 = o.replicate(get_mission)
+    o2 = o.replicate(:mode => :to_mission, :mission => get_mission)
 
     # change copy first
     o2.name = 'Blah'
@@ -79,7 +79,7 @@ class StandardizableOptionTest < ActiveSupport::TestCase
 
   test "deleting std option should delete copies" do
     o = FactoryGirl.create(:option, :name => 'Stuff', :is_standard => true)
-    o2 = o.replicate(get_mission)
+    o2 = o.replicate(:mode => :to_mission, :mission => get_mission)
     o.destroy
     assert_nil(Option.where(:id => o2.id).first)
   end

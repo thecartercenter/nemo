@@ -19,17 +19,17 @@ class StandardizableFormTest < ActiveSupport::TestCase
 
   test "replicating form within mission should avoid name conflict" do
     f = FactoryGirl.create(:form, :name => "Myform", :question_types => %w(integer select_one))
-    f2 = f.replicate
+    f2 = f.replicate(:mode => :clone)
     assert_equal('Myform 2', f2.name)
-    f3 = f2.replicate
+    f3 = f2.replicate(:mode => :clone)
     assert_equal('Myform 3', f3.name)
-    f4 = f3.replicate
+    f4 = f3.replicate(:mode => :clone)
     assert_equal('Myform 4', f4.name)
   end
 
   test "replicating form within mission should produce different questionings but same questions and option set" do
     f = FactoryGirl.create(:form, :question_types => %w(integer select_one))
-    f2 = f.replicate
+    f2 = f.replicate(:mode => :clone)
     assert_not_equal(f.questionings.first, f2.questionings.first)
 
     # questionings should point to proper form
@@ -44,7 +44,7 @@ class StandardizableFormTest < ActiveSupport::TestCase
 
   test "replicating a standard form should do a deep copy" do
     f = FactoryGirl.create(:form, :question_types => %w(select_one integer), :is_standard => true)
-    f2 = f.replicate(get_mission)
+    f2 = f.replicate(:mode => :to_mission, :mission => get_mission)
 
     # mission should now be set and should not be standard
     assert(!f2.is_standard)
@@ -71,7 +71,7 @@ class StandardizableFormTest < ActiveSupport::TestCase
     f.questionings[1].condition = FactoryGirl.build(:condition, :ref_qing => f.questionings[0], :op => 'gt', :value => 1)
 
     # replicate and test
-    f2 = f.replicate
+    f2 = f.replicate(:mode => :clone)
 
     # questionings and conditions should be distinct
     assert_not_equal(f.questionings[1], f2.questionings[1])
@@ -89,7 +89,7 @@ class StandardizableFormTest < ActiveSupport::TestCase
       :option => f.questions[0].option_set.options[0])
 
     # replicate and test
-    f2 = f.replicate(get_mission)
+    f2 = f.replicate(:mode => :to_mission, :mission => get_mission)
 
     # questionings, conditions, and options should be distinct
     assert_not_equal(f.questionings[1], f2.questionings[1])
@@ -112,7 +112,7 @@ class StandardizableFormTest < ActiveSupport::TestCase
     f.questionings[1].condition = FactoryGirl.build(:condition, :ref_qing => f.questionings[0], :op => 'gt', :value => 1)
     f.questionings[3].condition = FactoryGirl.build(:condition, :ref_qing => f.questionings[1], :op => 'gt', :value => 1)
 
-    f2 = f.replicate
+    f2 = f.replicate(:mode => :clone)
     # new conditions should point to new questionings
     assert_equal(f2.questionings[1].condition.ref_qing, f2.questionings[0])
     assert_equal(f2.questionings[3].condition.ref_qing, f2.questionings[1])
@@ -121,7 +121,7 @@ class StandardizableFormTest < ActiveSupport::TestCase
   test "adding new question with condition to middle of form should add to copy also" do
     # setup
     f = FactoryGirl.create(:form, :question_types => %w(integer integer), :is_standard => true)
-    f2 = f.replicate(get_mission)
+    f2 = f.replicate(:mode => :to_mission, :mission => get_mission)
 
     # add question to std
     f.questionings.build(:rank => 2, :question => FactoryGirl.create(:question, :code => 'charley', :is_standard => true),
@@ -144,7 +144,7 @@ class StandardizableFormTest < ActiveSupport::TestCase
   test "adding new condition to std form should create copy" do
     # setup
     f = FactoryGirl.create(:form, :question_types => %w(integer integer), :is_standard => true)
-    f2 = f.replicate(get_mission)
+    f2 = f.replicate(:mode => :to_mission, :mission => get_mission)
 
     # add condition to standard
     f.questionings[1].condition = FactoryGirl.build(:condition, :ref_qing => f.questionings[0], :op => 'lt', :value => 10)
@@ -169,7 +169,7 @@ class StandardizableFormTest < ActiveSupport::TestCase
     f.save!
 
     # replicate first time
-    f2 = f.replicate(get_mission)
+    f2 = f.replicate(:mode => :to_mission, :mission => get_mission)
 
     # change condition ref_qing
     f.questionings[2].condition.ref_qing = f.questionings[1]
@@ -182,8 +182,8 @@ class StandardizableFormTest < ActiveSupport::TestCase
 
   test "changes replicated to multiple copies" do
     std = FactoryGirl.create(:form, :question_types => %w(integer integer integer), :is_standard => true)
-    c1 = std.replicate(get_mission)
-    c2 = std.replicate(FactoryGirl.create(:mission, :name => 'foo'))
+    c1 = std.replicate(:mode => :to_mission, :mission => get_mission)
+    c2 = std.replicate(:mode => :to_mission, :mission => FactoryGirl.create(:mission, :name => 'foo'))
 
     # add option set to first question
     q = std.questions[0]
@@ -204,7 +204,7 @@ class StandardizableFormTest < ActiveSupport::TestCase
 
   test "question order should remain correct after replication" do
     f = FactoryGirl.create(:form, :question_types => %w(integer integer integer), :is_standard => true)
-    copy = f.replicate(get_mission)
+    copy = f.replicate(:mode => :to_mission, :mission => get_mission)
 
     first_std_q_id = f.questions[0].id
     first_copy_q_id = copy.questions[0].id
@@ -223,7 +223,7 @@ class StandardizableFormTest < ActiveSupport::TestCase
 
   test "removal of question should be replcated to copy" do
     std = FactoryGirl.create(:form, :question_types => %w(integer decimal date), :is_standard => true)
-    copy = std.replicate(get_mission)
+    copy = std.replicate(:mode => :to_mission, :mission => get_mission)
 
     # use the special destroy_questionings method
     std.destroy_questionings(std.questionings[1])
@@ -247,7 +247,7 @@ class StandardizableFormTest < ActiveSupport::TestCase
     std.reload
 
     # replicate initially
-    copy = std.replicate(get_mission)
+    copy = std.replicate(:mode => :to_mission, :mission => get_mission)
 
     # save copy condition id
     copy_cond_id = std.questionings[2].condition.id
@@ -270,7 +270,7 @@ class StandardizableFormTest < ActiveSupport::TestCase
 
   test "deleting a standard form should delete copies and copy questionings and conditions" do
     std = FactoryGirl.create(:form, :question_types => %w(integer integer), :is_standard => true)
-    copy = std.replicate(get_mission)
+    copy = std.replicate(:mode => :to_mission, :mission => get_mission)
 
     # add condition to standard, which will get replicated
     std.questionings[1].condition = FactoryGirl.build(:condition, :ref_qing => std.questionings[0], :op => 'lt', :value => 10)

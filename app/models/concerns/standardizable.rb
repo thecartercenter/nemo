@@ -88,7 +88,7 @@ module Standardizable
         # can't really remember why :(
         if CLASSES_TO_REREPLICATE.include?(self.class.name)
           # if we just run replicate for each copy's mission, all changes will be propagated
-          copies(true).each{|c| replicate(c.mission)}
+          copies(true).each{|c| replicate(:mode => :to_mission, :mission => c.mission)}
         end
       end
       return true

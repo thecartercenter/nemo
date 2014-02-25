@@ -28,28 +28,6 @@ class ReplicableTest < ActiveSupport::TestCase
   end
 
 
-
-  test "#determine_replication_mode will return default when nothing is passed in" do
-    q = FactoryGirl.build(:question, :code => 'Alpha')
-    assert('default', q.determine_replication_mode.to_s)
-  end
-
-  test "#determine_replication_mode will return default when a non-hash value is passed in" do
-    q = FactoryGirl.build(:question, :code => 'Alpha')
-    assert('default', q.determine_replication_mode("some mission").to_s)
-  end
-
-  test "#determine_replication_mode will return the passed in mode from the options hash" do
-    q = FactoryGirl.build(:question, :code => 'Alpha')
-    assert('some_mode', q.determine_replication_mode({:mode => "some_mode"}).to_s)
-  end
-
-  test "#determine_replication_mode will return a default mode if a mode is not specificed in the options hash" do
-    q = FactoryGirl.build(:question, :code => 'Alpha')
-    assert('default', q.determine_replication_mode({:mission => "some_mode"}).to_s)
-  end
-
-
   test "#determine_mission will return the passed in mission" do
     q = FactoryGirl.build(:question, :code => 'Alpha')
     assert('some_mission', q.determine_mission({:mission => "some_mission"}))

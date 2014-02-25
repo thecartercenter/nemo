@@ -5,26 +5,26 @@ class StandardizableQuestionTest < ActiveSupport::TestCase
 
   test "replicating a question within a mission should change the code" do
     q = FactoryGirl.create(:question, :qtype_name => 'integer', :code => 'Foo')
-    q2 = q.replicate
+    q2 = q.replicate(:mode => :clone)
     assert_equal('Foo2', q2.code)
-    q3 = q2.replicate
+    q3 = q2.replicate(:mode => :clone)
     assert_equal('Foo3', q3.code)
-    q4 = q3.replicate
+    q4 = q3.replicate(:mode => :clone)
     assert_equal('Foo4', q4.code)
   end
 
   test "replicating a standard question should not change the code" do
     q = FactoryGirl.create(:question, :qtype_name => 'integer', :code => 'Foo', :is_standard => true)
-    q2 = q.replicate(get_mission)
+    q2 = q.replicate(:mode => :to_mission, :mission => get_mission)
     assert_equal(q.code, q2.code)
     q = FactoryGirl.create(:question, :qtype_name => 'integer', :code => 'Foo1', :is_standard => true)
-    q2 = q.replicate(get_mission)
+    q2 = q.replicate(:mode => :to_mission, :mission => get_mission)
     assert_equal(q.code, q2.code)
   end
 
   test "replicating a question should not replicate the key field" do
     q = FactoryGirl.create(:question, :qtype_name => 'integer', :key => true)
-    q2 = q.replicate
+    q2 = q.replicate(:mode => :clone)
 
     assert_not_equal(q, q2)
     assert_not_equal(q.key, q2.key)
@@ -32,7 +32,7 @@ class StandardizableQuestionTest < ActiveSupport::TestCase
 
   test "replicating a select question within a mission should not replicate the option set" do
     q = FactoryGirl.create(:question, :qtype_name => 'select_one')
-    q2 = q.replicate
+    q2 = q.replicate(:mode => :clone)
     assert_not_equal(q, q2)
     assert_equal(q.option_set, q2.option_set)
   end
@@ -46,7 +46,7 @@ class StandardizableQuestionTest < ActiveSupport::TestCase
     assert(q.option_set.is_standard)
 
     # replicate and test
-    q2 = q.replicate(get_mission)
+    q2 = q.replicate(:mode => :to_mission, :mission => get_mission)
     assert_not_equal(q, q2)
     assert_not_equal(q.option_set, q2.option_set)
     assert_not_equal(q.option_set.options.first, q2.option_set.options.first)
@@ -55,13 +55,13 @@ class StandardizableQuestionTest < ActiveSupport::TestCase
 
   test "replicating question with short code that ends in zero should work" do
     q = FactoryGirl.create(:question, :qtype_name => 'integer', :code => 'q0')
-    q2 = q.replicate
+    q2 = q.replicate(:mode => :clone)
     assert_equal('q1', q2.code)
   end
 
   test "name should be replicated on create" do
     q = FactoryGirl.create(:question, :is_standard => true, :name => 'Foo')
-    q2 = q.replicate(get_mission)
+    q2 = q.replicate(:mode => :to_mission, :mission => get_mission)
     assert_equal('Foo', q2.name)
 
     # also test _name attrib
@@ -70,7 +70,7 @@ class StandardizableQuestionTest < ActiveSupport::TestCase
 
   test "name should be replicated on update if copy hasnt changed" do
     q = FactoryGirl.create(:question, :is_standard => true, :name => 'Foo')
-    q2 = q.replicate(get_mission)
+    q2 = q.replicate(:mode => :to_mission, :mission => get_mission)
     q.name = 'Bar'
     q.save!
     assert_equal('Bar', q2.reload.name)
@@ -82,8 +82,8 @@ class StandardizableQuestionTest < ActiveSupport::TestCase
   test "name should not be replicated on update if copy has changed" do
     other_mission = FactoryGirl.create(:mission, :name => 'other')
     q = FactoryGirl.create(:question, :is_standard => true, :name => 'Foo')
-    copy1 = q.replicate(get_mission)
-    copy2 = q.replicate(other_mission)
+    copy1 = q.replicate(:mode => :to_mission, :mission => get_mission)
+    copy2 = q.replicate(:mode => :to_mission, :mission => other_mission)
 
     # change copy1
     copy1.name = 'Baz'
@@ -102,7 +102,7 @@ class StandardizableQuestionTest < ActiveSupport::TestCase
 
   test "only translations that have not changed in copy should be replicated on update" do
     q = FactoryGirl.create(:question, :is_standard => true, :name_en => 'Cow', :name_fr => 'Vache')
-    copy = q.replicate(get_mission)
+    copy = q.replicate(:mode => :to_mission, :mission => get_mission)
 
     # change french translation on copy
     copy.name_fr = 'Vachon'
@@ -119,7 +119,7 @@ class StandardizableQuestionTest < ActiveSupport::TestCase
 
   test "translation delete should be replicated if copy translation has not deviated" do
     q = FactoryGirl.create(:question, :is_standard => true, :name_en => 'Cow', :name_fr => 'Vache')
-    copy = q.replicate(get_mission)
+    copy = q.replicate(:mode => :to_mission, :mission => get_mission)
 
     # delete french translation without any changes to copy
     q.name_fr = nil
@@ -132,7 +132,7 @@ class StandardizableQuestionTest < ActiveSupport::TestCase
 
   test "translation delete should not be replicated if copy translation has deviated" do
     q = FactoryGirl.create(:question, :is_standard => true, :name_en => 'Cow', :name_fr => 'Vache')
-    copy = q.replicate(get_mission)
+    copy = q.replicate(:mode => :to_mission, :mission => get_mission)
 
     # change copy first
     copy.name_fr = 'Vachon'
@@ -149,7 +149,7 @@ class StandardizableQuestionTest < ActiveSupport::TestCase
 
   test "translation delete should be replicated if copy translation also been deleted" do
     q = FactoryGirl.create(:question, :is_standard => true, :name_en => 'Cow', :name_fr => 'Vache')
-    copy = q.replicate(get_mission)
+    copy = q.replicate(:mode => :to_mission, :mission => get_mission)
 
     # delete copy translation first
     copy.name_fr = nil
@@ -173,13 +173,13 @@ class StandardizableQuestionTest < ActiveSupport::TestCase
     assert_nil(q.reload.name_translations)
 
     # replication should work
-    copy = q.replicate(get_mission)
+    copy = q.replicate(:mode => :to_mission, :mission => get_mission)
     assert_nil(copy.name_translations)
   end
 
   test "change of hash value to nil should be replicated if no changes to copy" do
     q = FactoryGirl.create(:question, :is_standard => true, :name_en => 'Cow', :name_fr => 'Vache')
-    copy = q.replicate(get_mission)
+    copy = q.replicate(:mode => :to_mission, :mission => get_mission)
 
     # change std hash value to nil
     q.name_translations = nil
