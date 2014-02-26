@@ -371,7 +371,7 @@ en:
         incomplete: "Check this box if there are required questions for which you can't provide answers. You will then be able to save this response without answering those questions and this response will be marked as 'incomplete'."
       setting:
         preferred_locales_str: |-
-          Enter the <a href="http://www.loc.gov/standards/iso639-2/php/code_list.php" target="_blank">two-letter codes</a>, separated by commas, for the languages for this mission, in order of preference.
+          Enter the <a href='http://www.loc.gov/standards/iso639-2/php/code_list.php' target='_blank'>two-letter codes</a>, separated by commas, for the languages for this mission, in order of preference.
 
           This setting determines:
           * The default language preference for new users

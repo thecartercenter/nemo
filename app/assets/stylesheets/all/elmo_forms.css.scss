@@ -8,10 +8,23 @@ div.form-errors {
   margin-bottom: 5px;
 }
 
+
+
 /* standardize specific form widths */
 form.response_form, form.question_form, form.form_form, form.option_set_form, form.user_form, form.broadcast_form,
   form.user_batch_form, form.setting_form, form.mission_form, form.user_session_form {
   width: 650px;
+    .form-control {
+    display: inline-block;
+    width: 93%;
+  }
+}
+
+form#new_response {
+  .form-control {
+    display: inline-block;
+    width: 93%;
+  }
 }
 
 div.form_field {
@@ -36,7 +49,7 @@ div.form_field {
     vertical-align: middle;
   }
 
-  label, .control, .hint {
+  label, .control {
     vertical-align: top;
     padding: 5px 0;
   }
@@ -51,6 +64,13 @@ div.form_field {
       /* allows normal wrapping inside of the the label and control */
       white-space: normal;
     }
+  }
+
+  /* for rich text editor */
+  .cke {
+    display: inline-block;
+    vertical-align: top;
+    width: 415px;
   }
 
   label.main {
@@ -71,6 +91,11 @@ div.form_field {
     label {
       font-weight: normal;
     }
+
+    .widget {
+      display: inline-block;
+      vertical-align: top;
+    }
   }
 
   div.control input.text {
@@ -85,21 +110,6 @@ div.form_field {
 
   div.control input.radio {
     width: 15px;
-  }
-
-  div.hint {
-    display: inline-block;
-    width: 290px;
-    position: relative;
-    font-size: 90%;
-    background-color: #e4eeff;
-    padding: 5px;
-    margin: 0 0 5px 5px;
-
-    p {
-      padding: 0;
-      margin: 0;
-    }
   }
 
   div.space_line {

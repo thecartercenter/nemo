@@ -32,6 +32,9 @@
     // prevent double submission of any forms on the page
     $('form').preventDoubleSubmission();
 
+    // hookup hint tooltips if any on the page
+    self.hookup_hints();
+
     self.set_alert_timeout();
   }
 
@@ -99,6 +102,24 @@
   klass.prototype.set_alert_timeout = function() { var self = this;
     window.setTimeout(function() {$(".alert-success").slideUp(); return false;}, 4000);
   };
+
+  klass.prototype.hookup_hints = function() { var self = this;
+
+    // when click on the page, hints disappear
+    $('html').on('click', function(e) {
+      $('a.hint').popover('hide');
+    });
+
+    // initialize popovers
+    $('a.hint').popover({
+      html: true,
+      trigger: 'manual'
+    // toggle current tooltip
+    }).on('click', function(e) {
+      $(this).popover('toggle');
+      e.stopPropagation();
+    });
+  }
 
 })(ELMO);
 

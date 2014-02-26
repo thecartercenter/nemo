@@ -7,10 +7,10 @@
 
   klass.init = function() {
     // hookup edit location links
-    $("a.edit_location_link").click(function(e){ klass.show_location_picker(e); return false; })
+    $("a.edit_location_link").click(function(e){ klass.show_location_picker(e); return false; });
 
     // initialize conditions
-    $.each(klass.conditions, function(i, cond){ cond.init(); })
+    $.each(klass.conditions, function(i, cond){ cond.init(); });
   }
 
   // shows the map and location search box
