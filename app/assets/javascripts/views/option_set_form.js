@@ -133,8 +133,26 @@
     $('input.add_options_box').tokenInput('clear');
   };
 
-  // write the data model to the form as hidden tags so that the data will be included in the submission
+  // prepares the form to be submitted by setting up the right fields
+  // or if in ajax mode, submits the form via ajax and returns false
   klass.prototype.form_submitted = function() { var self = this;
+
+    self.prepare_form();
+
+    // set flag so we don't raise warning on navigation
+    self.done = true;
+
+    // if the form is in ajax mode, submit via ajax and return false so the form won't submit normally
+    if (self.params.ajax_mode) {
+      self.submit_via_ajax();
+      return false;
+    } else
+      // if not in ajax mode, just return true and let form submit normally
+      return true;
+  };
+
+  // prepares the form by copying data from model into fields
+  klass.prototype.prepare_form = function() { var self = this;
     // copy form values to model
     self.option_set.name = $('#option_set_name').val();
     self.option_set.geographic = $('#option_set_geographic').is(':checked');
@@ -174,46 +192,37 @@
       self.add_form_field('option_set[optionings_attributes][_' + idx + '][_destroy]', 'true');
 
     });
-
-    // set flag so we don't raise warning on navigation
-    self.done = true;
-
-    // if the form is in ajax mode, submit via ajax
-    if (self.params.ajax_mode) {
-      $.ajax({
-        url: $('form.option_set_form').attr('action'),
-        type: 'POST',
-        data: $('form.option_set_form').serialize(),
-        success: function(data, status, jqxhr) {
-          // if content type was json, that means success
-          if (jqxhr.getResponseHeader('Content-Type').match('application/json')) {
-
-            // the data holds the new option set's ID
-            self.option_set.id = parseInt(data);
-
-            // trigger the custom event
-            $('form.option_set_form').trigger('option_set_form_submit_success', [self.option_set]);
-
-          // otherwise we got an error,
-          // so replace the div with the new partial (this will instantiate a new instance of this class)
-          } else {
-            $('div.option_set_form').replaceWith(jqxhr.responseText);
-          }
-        },
-        error: function(jqxhr) {
-          // if we get an HTTP error, it's some server thing so just display a generic message
-          $('div.option_set_form').replaceWith("Server Error");
-        }
-      });
-
-      // return false so the form won't submit normally
-      return false;
-
-    } else
-      // if not in ajax mode, just return true and let form submit normally
-      return true;
-
   };
+
+  // submits form via ajax
+  klass.prototype.submit_via_ajax = function() { var self = this;
+    $.ajax({
+      url: $('form.option_set_form').attr('action'),
+      type: 'POST',
+      data: $('form.option_set_form').serialize(),
+      success: function(data, status, jqxhr) {
+        // if content type was json, that means success
+        if (jqxhr.getResponseHeader('Content-Type').match('application/json')) {
+
+          // the data holds the new option set's ID
+          self.option_set.id = parseInt(data);
+
+          // trigger the custom event
+          $('form.option_set_form').trigger('option_set_form_submit_success', [self.option_set]);
+
+        // otherwise we got an error,
+        // so replace the div with the new partial (this will instantiate a new instance of this class)
+        } else {
+          $('div.option_set_form').replaceWith(jqxhr.responseText);
+        }
+      },
+      error: function(jqxhr) {
+        // if we get an HTTP error, it's some server thing so just display a generic message
+        $('div.option_set_form').replaceWith("Server Error");
+      }
+    });
+  };
+
 
   // adds a hidden form field with the given name and value
   klass.prototype.add_form_field = function(name, value) { var self = this;
