@@ -86,10 +86,11 @@
 
     <% end # elmo_fields_for %>
     <% unless answer.question_hint.blank? %>
+      <%# TOM: don't think we need to set href on these links anymore %>
       <a href="" id="testhelp" rel="popover" class="hint" data-content="<%= answer.question_hint %>"><i class="hint fa fa-2x fa-info-circle"></i></a>
     <% end %>
   </div>
-
+  <%# TOM: extra line break %>
 
 </div>
 

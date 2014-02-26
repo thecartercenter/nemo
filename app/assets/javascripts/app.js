@@ -103,6 +103,7 @@
     window.setTimeout(function() {$(".alert-success").slideUp(); return false;}, 4000);
   };
 
+  // TOM: comment pls
   klass.prototype.hookup_hints = function() { var self = this;
 
     // when click on the page, hints disappear
@@ -120,6 +121,7 @@
       e.stopPropagation();
     });
   }
+  // TOM: semicolons after methods
 
 })(ELMO);
 

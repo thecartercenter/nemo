@@ -12,6 +12,7 @@
       </div>
 
       <% unless hint_html.blank? || hint_html.nil? %>
+        <%# TOM: don't think we need to set href on js links anymore %>
         <a href="javascript://" id="testhelp" rel="popover" class="hint" data-content="<%= hint_html %>"><i class="hint fa fa-2x fa-info-circle"></i></a>
       <% end %>
     </div>
