@@ -10,12 +10,12 @@ class QuestionTest < ActiveSupport::TestCase
   test "code must be correct format" do
     q = FactoryGirl.build(:question, :code => 'a b')
     q.save
-    assert_match(/Code is invalid/, q.errors.full_messages.join)
+    assert_match(/Code: is invalid/, q.errors.full_messages.join)
 
     # but dont raise this error if not present (let the presence validator handle that)
     q = FactoryGirl.build(:question, :code => '')
     q.save
-    assert_not_match(/Code is invalid/, q.errors.full_messages.join)
+    assert_not_match(/Code: is invalid/, q.errors.full_messages.join)
   end
 
   # this also tests .qtype and .has_options (delegated)
