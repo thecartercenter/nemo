@@ -3,6 +3,7 @@
   <%= f.field(:form_id, :type => :hidden) %>
 
   <%= elmo_fields_for('questioning[question_attributes]', @questioning.question) do |qf| %>
+    <%= qf.hidden_field(:id) %>
     <%= render('questions/fields', :f => qf) %>
   <% end %>
 
@@ -13,6 +14,8 @@
   <%= f.field(:required, :type => :check_box, :read_only => cant_update_core) %>
   <%= f.field(:hidden, :type => :check_box, :read_only => cant_update_core) %>
 
-  <%= f.submit %>
+  <div class="submit-buttons">
+    <%= f.submit(:class => 'btn btn-primary') %>
+  </div>
 
 <% end %>

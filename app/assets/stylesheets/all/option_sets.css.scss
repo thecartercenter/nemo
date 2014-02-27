@@ -9,11 +9,17 @@ form.option_set_form {
     padding-bottom: 20px;
   }
 
+  /* special case for add options widget */
+  #options div.widget {
+    vertical-align: top !important;
+  }
+
   div.add_options {
     margin-bottom: 20px;
 
+
     ul {
-      width: 388px;
+      width: 360px;
     }
 
     input[type=text] {

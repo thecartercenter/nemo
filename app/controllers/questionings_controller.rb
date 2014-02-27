@@ -67,6 +67,10 @@ class QuestioningsController < ApplicationController
     # this prevents an empty condition from getting initialized and then deleted again
     # this is not set as a filter due to timing issues
     def strip_condition_params_if_empty
-      params[:questioning].delete(:condition_attributes) if params[:questioning][:condition_attributes][:ref_qing_id].blank? && (!@questioning || !@questioning.condition)
+      if params[:questioning] && params[:questioning][:condition_attributes] &&
+        params[:questioning][:condition_attributes][:ref_qing_id].blank? &&
+        (!@questioning || !@questioning.condition)
+        params[:questioning].delete(:condition_attributes)
+      end
     end
 end

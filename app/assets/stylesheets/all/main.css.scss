@@ -57,6 +57,19 @@ div.loader { background: image-url('loader.gif') no-repeat; padding-left: 20px; 
 a.action_link { font-size: 14px; text-decoration: none; display: inline-block; margin-right: 3px; }
 table a.action_link { margin: -2px 10px -2px 0; }
 
+/* TOM: can this be in a file other than main? main should be deprecated I think. */
+i.hint {
+  color: $elmo-blue;
+  font-size: 1.5em;
+  vertical-align: middle;
+  padding: 5px;
+}
+
+div.popover {
+  top: -2.5px;
+  width: 200px;
+}
+
 /* index tables */
 table.index_table {
   width: 100%;
@@ -118,7 +131,6 @@ div.field_with_errors { display: inline; }
 div.question_fields {
 
   .names_hints textarea {
-    width: 100%;
     height: 30px;
   }
 
@@ -207,7 +219,7 @@ div.location_picker form.location_search div.results a { display: block; margin-
 /* settings */
 form.setting_form .adapter_settings { display: none; }
 form.setting_form .adapter_settings .password_fields { display: none; }
-form.setting_form #external_sql .control pre { width: 325px; height: 70px; overflow: auto; border: 1px solid #ccc; margin: 0 0 3px 0; font-size: 8pt; }
+form.setting_form #external_sql .control pre { width: 415px; height: 100px; overflow: auto; border: 1px solid #ccc; margin: 0 0 3px 0; font-size: 8pt; }
 form.setting_form #external_sql .control a { font-size: 9pt; }
 
 /* sms guide */
