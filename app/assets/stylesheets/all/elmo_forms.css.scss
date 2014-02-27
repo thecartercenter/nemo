@@ -12,18 +12,34 @@ div.form-errors {
 
 /* standardize specific form widths */
 form.response_form, form.question_form, form.form_form, form.option_set_form, form.user_form, form.broadcast_form,
-  form.user_batch_form, form.setting_form, form.mission_form, form.user_session_form {
+  form.user_batch_form, form.setting_form, form.mission_form, form.user_session_form, form.questioning_form {
   width: 650px;
     .form-control {
+    display: inline-block;
+  }
+}
+
+
+/* Custom tweaks to forms */
+form#new_response {
+  .form-control {
     display: inline-block;
     width: 93%;
   }
 }
 
-form#new_response {
-  .form-control {
-    display: inline-block;
-    width: 93%;
+.forms_edit form.form_form {
+  width: 100%;
+
+  #index_table {
+    margin-left: 73px;
+  }
+}
+
+/* login form does not have hints */
+#new_user_session {
+  input.text {
+    width: 450px !important;
   }
 }
 
@@ -94,9 +110,24 @@ div.form_field {
 
     .widget {
       display: inline-block;
-      vertical-align: top;
+      vertical-align: middle;
+
+
+      input[type='text'], select, textarea input.text {
+        width: 420px;
+        height: 35px;
+      }
+
+      textarea {
+        height: 100px;
+      }
     }
+
   }
+  /* Override for multiple selects */
+  &.qtype_select_multiple .widget {
+      vertical-align: top !important;
+    }
 
   div.control input.text {
     padding: 3px;
@@ -160,10 +191,8 @@ div.settings_index {
 }
 
 div.data_integrity_warning {
-  background-color: #e4eeff;
-  padding: 5px;
   margin: 10px 0;
-  max-width: 800px;
+  width: 100%;
 
   i {
     display: block;
