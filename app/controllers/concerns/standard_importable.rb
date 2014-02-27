@@ -14,7 +14,7 @@ module StandardImportable
     params[:objs_to_import].each do |id|
       begin
         obj = model_class.find(id)
-        obj.replicate(current_mission)
+        obj.replicate(:mode => :to_mission, :mission => current_mission)
         import_count += 1
       rescue
         errors = true

@@ -195,7 +195,7 @@ class FormsController < ApplicationController
   # makes an unpublished copy of the form that can be edited without affecting the original
   def clone
     begin
-      cloned = @form.replicate
+      cloned = @form.replicate(:mode => :clone)
 
       # save the cloned obj id so that it will flash
       flash[:modified_obj_id] = cloned.id
