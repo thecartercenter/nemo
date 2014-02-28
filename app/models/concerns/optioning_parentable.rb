@@ -19,6 +19,16 @@ module OptioningParentable
     is_a?(Optioning) && signature_changed? || optionings.any?(&:positions_changed?)
   end
 
+  # returns the parent, either an OptionSet or Optioning, or nil if self is an OptionSet
+  def _parent
+    is_a?(OptionSet) ? nil : (parent || option_set)
+  end
+
+  # gets all descendants of this node
+  def descendants
+    (optionings + optionings.map(&:descendants)).flatten
+  end
+
   # recursively updates children based on attrib array of form:
   # [
   #   {
@@ -63,29 +73,40 @@ module OptioningParentable
   # option_set - the parent option set
   # depth - the current recursion depth
   def update_children_from_json(optioning_data, option_set, depth)
-    optioning_data.each do |o|
-      # if this is a new optioning
-      if o['id'].nil?
+    optioning_data.each_with_index do |json, idx|
+      # if this is a new optioning, build it
+      if json['id'].nil?
         optioning = optionings.build(
           :mission => option_set.mission,
           :option_level => option_set.option_levels[depth - 1],
           :option_set => option_set
         )
         optioning.parent = self unless is_a?(OptionSet)
+
+      # else, we need to lookup the optioning in the tree and move it if its parent is not the current one
+      else
+        optioning = option_set.all_optionings_by_id[json['id'].to_i]
+        raise 'invalid optioning ID given in JSON' if optioning.nil?
+        optioning.move_to(self) unless optioning._parent == self
       end
 
+      # set the rank incrementally
+      optioning.rank = idx + 1
+
       # build/find the option
-      option = if id = o['option']['id']
-        optioning.option = Option.find(id)
+      option = if id = json['option']['id']
+        # if the optioning's current option already has the given ID, do nothing, just return
+        optioning.option = Option.find(id) unless optioning.option_id == id.to_i
+        optioning.option
       else
         optioning.build_option(:mission => option_set.mission)
       end
 
       # update the option translations if given
-      option.name_translations = o['option']['name_translations'] if o['option']['name_translations']
+      option.name_translations = json['option']['name_translations'] if json['option']['name_translations']
 
       # update children, if given
-      optioning.update_children_from_json(o['optionings'], option_set, depth + 1) if o['optionings']
+      optioning.update_children_from_json(json['optionings'], option_set, depth + 1) if json['optionings']
     end
   end
 

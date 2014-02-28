@@ -63,6 +63,77 @@ class OptionSetSubmissionTest < ActiveSupport::TestCase
     assert_options([['Animal', ['Cat', 'Dog']], ['Plant', ['Tulip', 'White Oak']]], os)
   end
 
+  test 'updating a multilevel option set via JSON should work' do
+    # create the standard animal/plant set
+    os = FactoryGirl.create(:multilevel_option_set)
+
+    # move pine from plant to animal
+    os.update_from_json!({
+      '_option_levels' => [
+        { 'en' => 'kingdom' },
+        { 'en' => 'species' }
+      ],
+      '_optionings' => [
+        {
+          'id' => os.optionings[0].id,
+          'option' => {
+            'id' => os.optionings[0].option.id,
+            'name_translations' => {'en' => 'animal'}
+          },
+          'optionings' => [
+            {
+              'id' => os.optionings[0].optionings[0].id,
+              'option' => {
+                'id' => os.optionings[0].optionings[0].option.id,
+                'name_translations' => {'en' => 'cat'}
+              }
+            },
+            {
+              'id' => os.optionings[1].optionings[0].id,
+              'option' => {
+                'id' => os.optionings[1].optionings[0].option.id,
+                'name_translations' => {'en' => 'pine'}
+              }
+            },
+            {
+              'id' => os.optionings[0].optionings[1].id,
+              'option' => {
+                'id' => os.optionings[0].optionings[1].option.id,
+                'name_translations' => {'en' => 'dog'}
+              }
+            }
+          ]
+        },
+        {
+          'id' => os.optionings[1].id,
+          'option' => {
+            'id' => os.optionings[1].option.id,
+            'name_translations' => {'en' => 'plant'}
+          },
+          'optionings' => [
+            {
+              'id' => os.optionings[1].optionings[1].id,
+              'option' => {
+                'id' => os.optionings[1].optionings[1].option.id,
+                'name_translations' => {'en' => 'tulip'}
+              }
+            }
+          ]
+        }
+      ]
+    })
+
+    assert_levels(%w(kingdom species), os)
+    assert_options([['animal', ['cat', 'pine', 'dog']], ['plant', ['tulip']]], os)
+  end
+
+  # change ranks
+  # delete
+  # move option and change ranks
+  # move option from level 1 to level 2
+  # make sure ranks get checked in assert methods below
+
+
   private
 
     # checks that option set levels matches the given names

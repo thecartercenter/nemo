@@ -144,6 +144,11 @@ class OptionSet < ActiveRecord::Base
     name_changed?
   end
 
+  # returns a hash of all optionings in the tree indexed by ID
+  def all_optionings_by_id
+    @all_optionings_by_id ||= descendants.index_by(&:id)
+  end
+
   # recursively updates from specially formatted hash of attributes (see option set test for examples)
   # returns self
   # raises exception if save fails
