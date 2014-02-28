@@ -85,7 +85,7 @@ table.index_table td.actions_col img { margin-right: 5px; }
 table.index_table tbody tr.clickable { cursor: pointer; }
 table.index_table tbody tr:hover, table.index_table tbody tr.hovered { background-color: #ECF1F5; }
 td.actions_col { white-space: nowrap; }
-div.loading_indicator_inline { width: 16px; display: inline; }
+div.loading_indicator_inline { width: 16px; display: inline-block; vertical-align: top; }
 div.loading_indicator_floating { width: 16px; float: left; }
 table.index_table i.fa-certificate {
   margin-bottom: -5px;
