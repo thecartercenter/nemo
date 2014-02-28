@@ -87,7 +87,13 @@ module OptioningParentable
       else
         optioning = option_set.all_optionings_by_id[json['id'].to_i]
         raise 'invalid optioning ID given in JSON' if optioning.nil?
-        optioning.move_to(self) unless optioning._parent == self
+        unless optioning._parent == self
+          # move to new parent
+          optioning.move_to(self)
+
+          # set the proper option level
+          optioning.option_level = option_set.option_levels[depth - 1]
+        end
       end
 
       # set the rank incrementally

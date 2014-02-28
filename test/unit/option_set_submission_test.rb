@@ -127,6 +127,70 @@ class OptionSetSubmissionTest < ActiveSupport::TestCase
     assert_options([['animal', ['dog', 'pine', 'cat']], ['plant', ['tulip']]], os)
   end
 
+  test "moving option from level 2 to level 1 via JSON should work" do
+    # create the standard animal/plant set
+    os = FactoryGirl.create(:multilevel_option_set)
+
+    # move pine from plant to root
+    os.update_from_json!({
+      '_option_levels' => [
+        { 'en' => 'kingdom' },
+        { 'en' => 'species' }
+      ],
+      '_optionings' => [
+        {
+          'id' => os.optionings[1].optionings[0].id,
+          'option' => {
+            'id' => os.optionings[1].optionings[0].option.id,
+            'name_translations' => {'en' => 'pine'}
+          }
+        },
+        {
+          'id' => os.optionings[0].id,
+          'option' => {
+            'id' => os.optionings[0].option.id,
+            'name_translations' => {'en' => 'animal'}
+          },
+          'optionings' => [
+            {
+              'id' => os.optionings[0].optionings[0].id,
+              'option' => {
+                'id' => os.optionings[0].optionings[0].option.id,
+                'name_translations' => {'en' => 'cat'}
+              }
+            },
+            {
+              'id' => os.optionings[0].optionings[1].id,
+              'option' => {
+                'id' => os.optionings[0].optionings[1].option.id,
+                'name_translations' => {'en' => 'dog'}
+              }
+            }
+          ]
+        },
+        {
+          'id' => os.optionings[1].id,
+          'option' => {
+            'id' => os.optionings[1].option.id,
+            'name_translations' => {'en' => 'plant'}
+          },
+          'optionings' => [
+            {
+              'id' => os.optionings[1].optionings[1].id,
+              'option' => {
+                'id' => os.optionings[1].optionings[1].option.id,
+                'name_translations' => {'en' => 'tulip'}
+              }
+            }
+          ]
+        }
+      ]
+    })
+
+    assert_levels(%w(kingdom species), os)
+    assert_options(['pine', ['animal', ['cat', 'dog']], ['plant', ['tulip']]], os)
+  end
+
   # delete
   # move option from level 1 to level 2
 
@@ -146,6 +210,9 @@ class OptionSetSubmissionTest < ActiveSupport::TestCase
 
     # checks that option set matches the given structure
     # recursive method
+    # for expected array, interior nodes are arrays with array[0] = label, array[1] = children
+    # leaf nodes are strings
+    # for root node, only array[1] is passed
     def assert_options(expected, os, node = nil, depth = nil, parent = nil)
       if node.nil?
         assert_options([nil, expected], os, os, 0, nil)

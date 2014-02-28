@@ -57,8 +57,8 @@ class Optioning < ActiveRecord::Base
 
   # moves this Optioning to be the child of the specified Optioning or OptionSet
   def move_to(dest)
-    parent.optionings -= [self]
-    parent = dest
+    parent.optionings -= [self] unless parent.nil?
+    self.parent = dest.is_a?(OptionSet) ? nil : dest
     dest.optionings << self
   end
 
