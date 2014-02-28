@@ -196,7 +196,7 @@ class OptionSetSubmissionTest < ActiveSupport::TestCase
     os = FactoryGirl.create(:multilevel_option_set)
 
     # move animal tree to plant tree
-    # and add new level
+    # and add new level and new option
     os.update_from_json!({
       '_option_levels' => [
         { 'en' => 'kingdom' },
@@ -233,6 +233,11 @@ class OptionSetSubmissionTest < ActiveSupport::TestCase
                   }
                 },
                 {
+                  'option' => {
+                    'name_translations' => {'en' => 'gnu'}
+                  }
+                },
+                {
                   'id' => os.optionings[0].optionings[1].id,
                   'option' => {
                     'id' => os.optionings[0].optionings[1].option.id,
@@ -254,7 +259,7 @@ class OptionSetSubmissionTest < ActiveSupport::TestCase
     })
 
     assert_levels(%w(kingdom phylum species), os)
-    assert_options([['plant', ['tulip', ['animal', ['cat', 'dog']], 'pine']]], os)
+    assert_options([['plant', ['tulip', ['animal', ['cat', 'gnu', 'dog']], 'pine']]], os)
   end
 
     # delete
