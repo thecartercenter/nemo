@@ -162,6 +162,7 @@ class OptionSet < ActiveRecord::Base
       update_option_levels_from_json(new_option_levels)
       update_children_from_json(new_optionings, self, 1)
 
+      # call save here so that a validation error will cancel the transaction
       save!
     end
 

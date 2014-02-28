@@ -151,52 +151,60 @@
       return true;
   };
 
-  // prepares the form by copying data from model into fields
-  // specifically we add the option_levels_attributes and optionings_attributes data
-  /*
-    option_set: {
+  // traverses the option tree and generates a hash representing the full option set
+  // see OptionSetSubmissionTest for the expected format
+  klass.prototype.prepare_data = function() { var self = this;
+    // start with basic form data
+    var data = $('form.option_set_form').serializeHash();
 
-    }
-  */
-  klass.prototype.prepare_form = function() { var self = this;
-    // copy form values to model
-    self.option_set.name = $('#option_set_name').val();
-    self.option_set.geographic = $('#option_set_geographic').is(':checked');
-    self.option_set.multi_level = $('#option_set_multi_level').is(':checked');
+    // add nodes
+    data._option_levels = self.prepare_option_levels();
+    data._optionings = self.prepare_options();
 
-    // add fields to form to represent the options, optionings, etc.
-    self.option_set.optionings.get().forEach(function(optioning, idx){
+    return data;
+  };
 
-      // optioning id
-      if (optioning.id)
-        self.add_form_field('option_set[optionings_attributes][' + idx + '][id]', optioning.id);
-
-      // rank
-      self.add_form_field('option_set[optionings_attributes][' + idx + '][rank]', optioning.rank());
-
-      // option attribs (only allowed if optioning is editable)
-      if (optioning.editable) {
-
-        // id
-        self.add_form_field('option_set[optionings_attributes][' + idx + '][option_attributes][id]', optioning.option.id);
-
-        optioning.locales().forEach(function(l){
-          self.add_form_field('option_set[optionings_attributes][' + idx + '][option_attributes][name_' + l + ']', optioning.translation(l));
-        });
-
-      // else (optioning is not editable) just include ref to option
-      } else
-
-        self.add_form_field('option_set[optionings_attributes][' + idx + '][option_id]', optioning.option.id);
-
+  // prepares the list of option levels
+  klass.prototype.prepare_option_levels = function() { var self = this;
+    // we know the item tree in this case will be 'flat'
+    return self.option_levels_field.list.item_tree().map(function(node){
+      // each 'node' in the 'tree' will be a NamedItem, so we just take the name_translations hash
+      return node.item.name_translations;
     });
+  };
 
-    // add removed optionings with _destroy flag
-    self.option_set.optionings.removed.forEach(function(optioning, idx){
+  // prepares the options, including the destroyed ones
+  klass.prototype.prepare_options = function() { var self = this;
+    // get the main tree
+    var prepared = self.prepare_option_tree(self.options_field.list.item_tree());
 
-      self.add_form_field('option_set[optionings_attributes][_' + idx + '][id]', optioning.id);
-      self.add_form_field('option_set[optionings_attributes][_' + idx + '][_destroy]', 'true');
+    // add the destroyed optionings
+    self.option_set.optionings.removed.forEach(function(o){
+      prepared.push({id: o.id, _destroy: true});
+    })
 
+    return prepared;
+  };
+
+  // prepares an option tree
+  // nodes - a list of the top level nodes in the tree
+  klass.prototype.prepare_option_tree = function(nodes) { var self = this;
+    return nodes.map(function(node){
+      // in this case, the item will be an Optioning, which is also a NamedItem
+      var prepared = {option: {name_translations: node.item.name_translations}};
+
+      // include IDs if available
+      if (node.item.id)
+        prepared.id = node.item.id;
+
+      if (node.item.option.id)
+        prepared.option.id = node.item.option.id;
+
+      // recurse
+      if (node.children)
+        prepared.optionings = self.prepare_option_tree(node.children);
+
+      return prepared;
     });
   };
 
@@ -227,12 +235,6 @@
         $('div.option_set_form').replaceWith("Server Error");
       }
     });
-  };
-
-
-  // adds a hidden form field with the given name and value
-  klass.prototype.add_form_field = function(name, value) { var self = this;
-    $('form.option_set_form').append($('<input>').attr('type', 'hidden').attr('name', name).attr('value', value));
   };
 
 })(ELMO.Views);

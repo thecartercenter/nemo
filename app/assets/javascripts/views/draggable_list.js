@@ -217,5 +217,37 @@
     });
   };
 
+  // returns a tree of items in the form:
+  // [
+  //   {item: {...}, children: [
+  //     {item: {...}, children: [
+  //       {item: {...}},
+  //       {item: {...}},
+  //       {item: {...}}
+  //     ]},
+  //     {item: {...}, children: [
+  //       {item: {...}},
+  //       {item: {...}}
+  //     ]}
+  //   ]}
+  // ]
+  klass.prototype.item_tree = function() { var self = this;
+    return self.ol_to_tree(self.ol);
+  };
+
+  klass.prototype.ol_to_tree = function(ol) { var self = this;
+    return ol.find('> li').map(function(){
+
+      // get sub ol
+      var sub_ol = $(this).find('> ol').first();
+
+      // build the hash and recurse
+      return {
+        item: $(this).find('> div').data('item'),
+        children: sub_ol.length > 0 ? self.ol_to_tree(sub_ol) : null
+      };
+    }).get();
+  };
+
 })(ELMO.Views);
 
