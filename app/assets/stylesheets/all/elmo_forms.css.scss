@@ -112,7 +112,7 @@ div.form_field {
       vertical-align: middle;
 
 
-      input[type='text'], select, textarea input.text {
+      input[type='text'], select, textarea input.text, textarea {
         width: 420px;
         height: 35px;
       }
@@ -177,7 +177,7 @@ form.response_form {
 
 
 #question_option_set_id {
-  width: 71%;
+  width: 300px;
   display: inline-block;
 }
 
