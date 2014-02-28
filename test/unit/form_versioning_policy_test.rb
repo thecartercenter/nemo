@@ -286,7 +286,7 @@ class FormVersioningPolicyTest < ActiveSupport::TestCase
     save_old_version_codes
 
     # now remove an option from the set the option set order
-    @os.optionings.delete(@os.optionings.last)
+    @os.optionings.destroy(@os.optionings.last)
     @os.save
 
     publish_and_check_versions(:should_change => true)
