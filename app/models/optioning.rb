@@ -57,7 +57,7 @@ class Optioning < ActiveRecord::Base
 
   # moves this Optioning to be the child of the specified Optioning or OptionSet
   def move_to(dest)
-    parent.optionings -= [self] unless parent.nil?
+    _parent.optionings -= [self]
     self.parent = dest.is_a?(OptionSet) ? nil : dest
     dest.optionings << self
   end
@@ -83,7 +83,7 @@ class Optioning < ActiveRecord::Base
 
       # parent, mission
       " (parent: #{parent ? parent.option.name : '[none]'}, mission: #{mission ? mission.name : '[none]'}, " +
-        "option-mission: #{option.mission ? option.mission.name : '[none]'})" +
+        "option-mission: #{option.mission ? option.mission.name : '[none]'}, option-set: #{option_set ? option_set.name : '[none]'})" +
 
       # add [x] if marked for destruction
       (marked_for_destruction? ? ' [x]' : '') +

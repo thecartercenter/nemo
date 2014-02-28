@@ -7,11 +7,11 @@ class OptionSet < ActiveRecord::Base
   # this association produces ALL optionings regardless of level. should only be used when quick access to the full set of optionings is
   # needed. note that if this and the normal optionings association are both used, there will be two separate sets of models in play.
   # note that dependent => destroy and autosave are not turned on here.
-  has_many(:all_optionings, :class_name => 'Optioning', :order => 'optionings.parent_id, optionings.rank', :inverse_of => :option_set)
+  has_many(:all_optionings, :class_name => 'Optioning', :order => 'optionings.parent_id, optionings.rank', :inverse_of => :option_set, :dependent => :destroy)
 
   # this association produces only the direct children of this option_set (the top-level options).
   has_many(:optionings, :order => "rank", :conditions => 'optionings.parent_id IS NULL',
-    :dependent => :destroy, :autosave => true, :inverse_of => :option_set)
+    :autosave => true, :inverse_of => :option_set)
 
   # returns ONLY the first-level options for this option set, sorted by rank
   has_many(:options, :through => :optionings, :order => "optionings.rank")

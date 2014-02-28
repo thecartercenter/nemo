@@ -191,8 +191,74 @@ class OptionSetSubmissionTest < ActiveSupport::TestCase
     assert_options(['pine', ['animal', ['cat', 'dog']], ['plant', ['tulip']]], os)
   end
 
-  # delete
-  # move option from level 1 to level 2
+  test "moving option tree from level 1 to level 2 via JSON should work" do
+    # create the standard animal/plant set
+    os = FactoryGirl.create(:multilevel_option_set)
+
+    # move animal tree to plant tree
+    # and add new level
+    os.update_from_json!({
+      '_option_levels' => [
+        { 'en' => 'kingdom' },
+        { 'en' => 'phylum' },
+        { 'en' => 'species' }
+      ],
+      '_optionings' => [
+        {
+          'id' => os.optionings[1].id,
+          'option' => {
+            'id' => os.optionings[1].option.id,
+            'name_translations' => {'en' => 'plant'}
+          },
+          'optionings' => [
+            {
+              'id' => os.optionings[1].optionings[1].id,
+              'option' => {
+                'id' => os.optionings[1].optionings[1].option.id,
+                'name_translations' => {'en' => 'tulip'}
+              }
+            },
+            {
+              'id' => os.optionings[0].id,
+              'option' => {
+                'id' => os.optionings[0].option.id,
+                'name_translations' => {'en' => 'animal'}
+              },
+              'optionings' => [
+                {
+                  'id' => os.optionings[0].optionings[0].id,
+                  'option' => {
+                    'id' => os.optionings[0].optionings[0].option.id,
+                    'name_translations' => {'en' => 'cat'}
+                  }
+                },
+                {
+                  'id' => os.optionings[0].optionings[1].id,
+                  'option' => {
+                    'id' => os.optionings[0].optionings[1].option.id,
+                    'name_translations' => {'en' => 'dog'}
+                  }
+                }
+              ]
+            },
+            {
+              'id' => os.optionings[1].optionings[0].id,
+              'option' => {
+                'id' => os.optionings[1].optionings[0].option.id,
+                'name_translations' => {'en' => 'pine'}
+              }
+            }
+          ]
+        }
+      ]
+    })
+
+    assert_levels(%w(kingdom phylum species), os)
+    assert_options([['plant', ['tulip', ['animal', ['cat', 'dog']], 'pine']]], os)
+  end
+
+    # delete
+  # add a new option at same time
 
   private
 
@@ -222,7 +288,7 @@ class OptionSetSubmissionTest < ActiveSupport::TestCase
           assert_equal(os, node.option_set, 'incorrect option set')
 
           # ensure correct option level
-          assert_equal(os.option_levels[depth - 1], node.option_level, "incorrect option level exp")
+          assert_equal(os.option_levels[depth - 1], node.option_level, 'incorrect option level exp')
 
           # ensure correct parent
           assert_equal(parent, node.parent, 'incorrect parent')

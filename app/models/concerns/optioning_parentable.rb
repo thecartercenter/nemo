@@ -73,12 +73,14 @@ module OptioningParentable
   # option_set - the parent option set
   # depth - the current recursion depth
   def update_children_from_json(optioning_data, option_set, depth)
+    # puts "UPDATING #{is_a?(OptionSet) ? 'root' : option.name} depth #{depth} with"
+    # pp optioning_data
+
     optioning_data.each_with_index do |json, idx|
       # if this is a new optioning, build it
       if json['id'].nil?
         optioning = optionings.build(
           :mission => option_set.mission,
-          :option_level => option_set.option_levels[depth - 1],
           :option_set => option_set
         )
         optioning.parent = self unless is_a?(OptionSet)
@@ -87,14 +89,13 @@ module OptioningParentable
       else
         optioning = option_set.all_optionings_by_id[json['id'].to_i]
         raise 'invalid optioning ID given in JSON' if optioning.nil?
-        unless optioning._parent == self
-          # move to new parent
-          optioning.move_to(self)
 
-          # set the proper option level
-          optioning.option_level = option_set.option_levels[depth - 1]
-        end
+        # move to new parent if necessary
+        optioning.move_to(self) unless optioning._parent == self
       end
+
+      # set the proper option level
+      optioning.option_level = option_set.option_levels[depth - 1]
 
       # set the rank incrementally
       optioning.rank = idx + 1
