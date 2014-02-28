@@ -295,11 +295,6 @@ class OptionSetSubmissionTest < ActiveSupport::TestCase
                 'id' => os.optionings[0].optionings[0].option.id,
                 'name_translations' => {'en' => 'cat'}
               }
-            },
-            # here is the destroy request
-            {
-              'id' => old_id = os.optionings[0].optionings[1].id,
-              '_destroy' => true
             }
           ]
         },
@@ -318,6 +313,11 @@ class OptionSetSubmissionTest < ActiveSupport::TestCase
               }
             }
           ]
+        },
+        # here is the destroy request
+        {
+          'id' => old_id = os.optionings[0].optionings[1].id,
+          '_destroy' => true
         }
       ]
     })
@@ -326,6 +326,62 @@ class OptionSetSubmissionTest < ActiveSupport::TestCase
 
     # ensure actually deleted
     assert_raise(ActiveRecord::RecordNotFound){Optioning.find(old_id)}
+  end
+
+  test "deleting option tree via JSON should work" do
+    # create the standard animal/plant set
+    os = FactoryGirl.create(:multilevel_option_set)
+
+    # delete animal subtree but move cat to plants
+    os.update_from_json!({
+      '_option_levels' => [
+        { 'en' => 'kingdom' },
+        { 'en' => 'species' }
+      ],
+      '_optionings' => [
+        {
+          'id' => os.optionings[1].id,
+          'option' => {
+            'id' => os.optionings[1].option.id,
+            'name_translations' => {'en' => 'plant'}
+          },
+          'optionings' => [
+            {
+              'id' => os.optionings[1].optionings[0].id,
+              'option' => {
+                'id' => os.optionings[1].optionings[0].option.id,
+                'name_translations' => {'en' => 'pine'}
+              }
+            },
+            {
+              'id' => os.optionings[1].optionings[1].id,
+              'option' => {
+                'id' => os.optionings[1].optionings[1].option.id,
+                'name_translations' => {'en' => 'tulip'}
+              }
+            },
+            {
+              'id' => os.optionings[0].optionings[0].id,
+              'option' => {
+                'id' => os.optionings[0].optionings[0].option.id,
+                'name_translations' => {'en' => 'cat'}
+              }
+            }
+          ]
+        },
+        # here is the destroy request, with deeper optionings first to avoid FK errors
+        {
+          'id' => os.optionings[0].optionings[1].id,
+          '_destroy' => true
+        },
+        {
+          'id' => os.optionings[0].id,
+          '_destroy' => true
+        }
+      ]
+    })
+
+    assert_options([['plant', ['pine', 'tulip', 'cat']]], os)
   end
 
   private
