@@ -62,6 +62,9 @@ class OptionSet < ActiveRecord::Base
   # replication options
   replicable :child_assocs => :optionings, :parent_assoc => :question, :uniqueness => {:field => :name, :style => :sep_words}
 
+  # these methods are used during population from JSON
+  attr_accessor :_option_levels, :_optionings
+
   # checks if this option set appears in any smsable questionings
   def form_smsable?
     questionings.any?(&:form_smsable?)
@@ -167,12 +170,9 @@ class OptionSet < ActiveRecord::Base
   # recursively populates from specially formatted hash of attributes (see option set test for examples)
   # should be run inside transaction
   def populate_from_json(data)
-    new_option_levels = data.delete('_option_levels')
-    new_optionings = data.delete('_optionings')
     assign_attributes(data)
-
-    update_option_levels_from_json(new_option_levels)
-    update_children_from_json(new_optionings, self, 1)
+    update_option_levels_from_json(_option_levels)
+    update_children_from_json(_optionings, self, 1)
   end
 
   def update_option_levels_from_json(new_option_levels)
