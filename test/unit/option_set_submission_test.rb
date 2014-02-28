@@ -131,8 +131,6 @@ class OptionSetSubmissionTest < ActiveSupport::TestCase
   # delete
   # move option and change ranks
   # move option from level 1 to level 2
-  # make sure ranks get checked in assert methods below
-
 
   private
 
@@ -143,6 +141,9 @@ class OptionSetSubmissionTest < ActiveSupport::TestCase
       # check that all have mission and correct option set reference
       assert_equal([os.mission], os.option_levels.map(&:mission).uniq)
       assert_equal([os], os.option_levels.map(&:option_set).uniq)
+
+      # check for correct sequential ranks
+      assert_equal((1..os.option_levels.size).to_a, os.option_levels.map(&:rank), 'option level ranks not sequential')
     end
 
     # checks that option set matches the given structure
@@ -169,6 +170,9 @@ class OptionSetSubmissionTest < ActiveSupport::TestCase
 
           # ensure correct number of children
           assert_equal(expected[1].size, node.optionings.size, 'incorrect number of children')
+
+          # ensure correct sequential ranks
+          assert_equal((1..node.optionings.size).to_a, node.optionings.map(&:rank), 'optioning ranks not sequential')
 
           # ensure children are correct (recursive step)
           expected[1].each_with_index do |e, idx|
