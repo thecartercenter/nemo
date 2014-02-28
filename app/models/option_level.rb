@@ -20,6 +20,11 @@ class OptionLevel < ActiveRecord::Base
     Subquestion.where(:option_level_id => ids).delete_all
   end
 
+  # updates from json attribs
+  # translations - a hash of name_translations
+  def update_from_json(translations)
+    self.name_translations = translations
+  end
 
   def as_json(options = {})
     if options[:for_option_set_form]

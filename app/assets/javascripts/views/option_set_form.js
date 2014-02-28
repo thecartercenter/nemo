@@ -152,6 +152,12 @@
   };
 
   // prepares the form by copying data from model into fields
+  // specifically we add the option_levels_attributes and optionings_attributes data
+  /*
+    option_set: {
+
+    }
+  */
   klass.prototype.prepare_form = function() { var self = this;
     // copy form values to model
     self.option_set.name = $('#option_set_name').val();

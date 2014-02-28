@@ -81,8 +81,9 @@ class Optioning < ActiveRecord::Base
       # option level name, option name
       ["(#{option_level.try(:name)})", "#{rank}. #{option.name}"].compact.join(' ') +
 
-      # parent name
-      " (parent: #{parent ? parent.option.name : '[none]'})" +
+      # parent, mission
+      " (parent: #{parent ? parent.option.name : '[none]'}, mission: #{mission ? mission.name : '[none]'}, " +
+        "option-mission: #{option.mission ? option.mission.name : '[none]'})" +
 
       # add [x] if marked for destruction
       (marked_for_destruction? ? ' [x]' : '') +

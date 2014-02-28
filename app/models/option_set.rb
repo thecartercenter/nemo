@@ -144,6 +144,41 @@ class OptionSet < ActiveRecord::Base
     name_changed?
   end
 
+  # recursively updates from specially formatted hash of attributes (see option set test for examples)
+  # returns self
+  # raises exception if save fails
+  # runs all operations in transaction
+  def update_from_json!(data)
+    transaction do
+      new_option_levels = data.delete('_option_levels')
+      new_optionings = data.delete('_optionings')
+      assign_attributes(data)
+
+      update_option_levels_from_json(new_option_levels)
+      update_children_from_json(new_optionings, self, 1)
+
+      save!
+    end
+
+    self
+  end
+
+  def update_option_levels_from_json(new_option_levels)
+    # create new option_level objects if there aren't enough
+    if (diff = new_option_levels.size - option_levels.size) > 0
+      diff.times{option_levels.build(:option_set => self, :mission => mission)}
+
+    # delete option_level objects if there are too many
+    elsif (diff = option_levels.size - new_option_levels.size) > 0
+      option_levels.destroy(option_levels[-diff..-1])
+    end
+
+    # copy option level names
+    option_levels.each_with_index do |ol, idx|
+      ol.update_from_json(new_option_levels[idx])
+    end
+  end
+
   def as_json(options = {})
     if options[:for_option_set_form]
       {

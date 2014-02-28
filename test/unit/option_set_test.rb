@@ -382,6 +382,7 @@ class OptionSetTest < ActiveSupport::TestCase
   end
 
   private
+
     def create_option_set(options)
       # create empty set first
       os = FactoryGirl.build(:option_set, :name => 'Test', :option_names => [])
