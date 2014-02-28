@@ -62,6 +62,12 @@ class Optioning < ActiveRecord::Base
     dest.optionings << self
   end
 
+  # destroys this option and removes from parent
+  def remove_and_destroy
+    _parent.optionings -= [self]
+    destroy
+  end
+
   def as_json(options = {})
     if options[:for_option_set_form]
       super(:only => :id, :methods => :removable?).merge(:option => option.as_json(:for_option_set_form => true))

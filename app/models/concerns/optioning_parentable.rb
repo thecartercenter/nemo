@@ -85,35 +85,44 @@ module OptioningParentable
         )
         optioning.parent = self unless is_a?(OptionSet)
 
-      # else, we need to lookup the optioning in the tree and move it if its parent is not the current one
+      # else, we need to lookup the optioning in the tree
       else
         optioning = option_set.all_optionings_by_id[json['id'].to_i]
         raise 'invalid optioning ID given in JSON' if optioning.nil?
+      end
+
+      # if we are destroying, destroy
+      if json['_destroy']
+
+        optioning.remove_and_destroy
+
+      else
 
         # move to new parent if necessary
         optioning.move_to(self) unless optioning._parent == self
+
+        # set the proper option level
+        optioning.option_level = option_set.option_levels[depth - 1]
+
+        # set the rank incrementally
+        optioning.rank = idx + 1
+
+        # build/find the option
+        option = if id = json['option']['id']
+          # if the optioning's current option already has the given ID, do nothing, just return
+          optioning.option = Option.find(id) unless optioning.option_id == id.to_i
+          optioning.option
+        else
+          optioning.build_option(:mission => option_set.mission)
+        end
+
+        # update the option translations if given
+        option.name_translations = json['option']['name_translations'] if json['option']['name_translations']
+
+        # update children, if given
+        optioning.update_children_from_json(json['optionings'], option_set, depth + 1) if json['optionings']
+
       end
-
-      # set the proper option level
-      optioning.option_level = option_set.option_levels[depth - 1]
-
-      # set the rank incrementally
-      optioning.rank = idx + 1
-
-      # build/find the option
-      option = if id = json['option']['id']
-        # if the optioning's current option already has the given ID, do nothing, just return
-        optioning.option = Option.find(id) unless optioning.option_id == id.to_i
-        optioning.option
-      else
-        optioning.build_option(:mission => option_set.mission)
-      end
-
-      # update the option translations if given
-      option.name_translations = json['option']['name_translations'] if json['option']['name_translations']
-
-      # update children, if given
-      optioning.update_children_from_json(json['optionings'], option_set, depth + 1) if json['optionings']
     end
   end
 

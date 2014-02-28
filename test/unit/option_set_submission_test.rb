@@ -262,8 +262,71 @@ class OptionSetSubmissionTest < ActiveSupport::TestCase
     assert_options([['plant', ['tulip', ['animal', ['cat', 'gnu', 'dog']], 'pine']]], os)
   end
 
-    # delete
-  # add a new option at same time
+  # delete
+
+  test "deleting single option via JSON should work" do
+    # create the standard animal/plant set
+    os = FactoryGirl.create(:multilevel_option_set)
+
+    # delete dog option and move pine to animal subtree
+    os.update_from_json!({
+      '_option_levels' => [
+        { 'en' => 'kingdom' },
+        { 'en' => 'species' }
+      ],
+      '_optionings' => [
+        {
+          'id' => os.optionings[0].id,
+          'option' => {
+            'id' => os.optionings[0].option.id,
+            'name_translations' => {'en' => 'animal'}
+          },
+          'optionings' => [
+            {
+              'id' => os.optionings[1].optionings[0].id,
+              'option' => {
+                'id' => os.optionings[1].optionings[0].option.id,
+                'name_translations' => {'en' => 'pine'}
+              }
+            },
+            {
+              'id' => os.optionings[0].optionings[0].id,
+              'option' => {
+                'id' => os.optionings[0].optionings[0].option.id,
+                'name_translations' => {'en' => 'cat'}
+              }
+            },
+            # here is the destroy request
+            {
+              'id' => old_id = os.optionings[0].optionings[1].id,
+              '_destroy' => true
+            }
+          ]
+        },
+        {
+          'id' => os.optionings[1].id,
+          'option' => {
+            'id' => os.optionings[1].option.id,
+            'name_translations' => {'en' => 'plant'}
+          },
+          'optionings' => [
+            {
+              'id' => os.optionings[1].optionings[1].id,
+              'option' => {
+                'id' => os.optionings[1].optionings[1].option.id,
+                'name_translations' => {'en' => 'tulip'}
+              }
+            }
+          ]
+        }
+      ]
+    })
+
+    assert_options([['animal', ['pine', 'cat']], ['plant', ['tulip']]], os)
+
+    # ensure actually deleted
+    assert_raise(ActiveRecord::RecordNotFound){Optioning.find(old_id)}
+  end
 
   private
 
