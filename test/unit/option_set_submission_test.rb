@@ -67,7 +67,7 @@ class OptionSetSubmissionTest < ActiveSupport::TestCase
     # create the standard animal/plant set
     os = FactoryGirl.create(:multilevel_option_set)
 
-    # move pine from plant to animal
+    # move pine from plant to animal, and move dog to top of animal list
     os.update_from_json!({
       '_option_levels' => [
         { 'en' => 'kingdom' },
@@ -82,10 +82,10 @@ class OptionSetSubmissionTest < ActiveSupport::TestCase
           },
           'optionings' => [
             {
-              'id' => os.optionings[0].optionings[0].id,
+              'id' => os.optionings[0].optionings[1].id,
               'option' => {
-                'id' => os.optionings[0].optionings[0].option.id,
-                'name_translations' => {'en' => 'cat'}
+                'id' => os.optionings[0].optionings[1].option.id,
+                'name_translations' => {'en' => 'dog'}
               }
             },
             {
@@ -96,10 +96,10 @@ class OptionSetSubmissionTest < ActiveSupport::TestCase
               }
             },
             {
-              'id' => os.optionings[0].optionings[1].id,
+              'id' => os.optionings[0].optionings[0].id,
               'option' => {
-                'id' => os.optionings[0].optionings[1].option.id,
-                'name_translations' => {'en' => 'dog'}
+                'id' => os.optionings[0].optionings[0].option.id,
+                'name_translations' => {'en' => 'cat'}
               }
             }
           ]
@@ -124,12 +124,10 @@ class OptionSetSubmissionTest < ActiveSupport::TestCase
     })
 
     assert_levels(%w(kingdom species), os)
-    assert_options([['animal', ['cat', 'pine', 'dog']], ['plant', ['tulip']]], os)
+    assert_options([['animal', ['dog', 'pine', 'cat']], ['plant', ['tulip']]], os)
   end
 
-  # change ranks
   # delete
-  # move option and change ranks
   # move option from level 1 to level 2
 
   private
