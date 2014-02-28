@@ -149,24 +149,30 @@ class OptionSet < ActiveRecord::Base
     @all_optionings_by_id ||= descendants.index_by(&:id)
   end
 
-  # recursively updates from specially formatted hash of attributes (see option set test for examples)
+  # populates from json and saves
   # returns self
   # raises exception if save fails
   # runs all operations in transaction
   def update_from_json!(data)
     transaction do
-      new_option_levels = data.delete('_option_levels')
-      new_optionings = data.delete('_optionings')
-      assign_attributes(data)
-
-      update_option_levels_from_json(new_option_levels)
-      update_children_from_json(new_optionings, self, 1)
+      populate_from_json(data)
 
       # call save here so that a validation error will cancel the transaction
       save!
     end
 
     self
+  end
+
+  # recursively populates from specially formatted hash of attributes (see option set test for examples)
+  # should be run inside transaction
+  def populate_from_json(data)
+    new_option_levels = data.delete('_option_levels')
+    new_optionings = data.delete('_optionings')
+    assign_attributes(data)
+
+    update_option_levels_from_json(new_option_levels)
+    update_children_from_json(new_optionings, self, 1)
   end
 
   def update_option_levels_from_json(new_option_levels)
