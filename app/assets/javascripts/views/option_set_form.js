@@ -163,6 +163,9 @@
     data.option_set._option_levels = self.prepare_option_levels();
     data.option_set._optionings = self.prepare_options();
 
+    // upate option set name in OptionSet model, as this may be used by modal
+    self.option_set.name = data['option_set[name]'];
+
     return data;
   };
 
