@@ -272,7 +272,7 @@
       var levels = self.option_levels_field.list.size();
       var depth = self.options_field.list.max_depth();
       if (levels != depth) {
-        self.add_error('.option_set_options', I18n.t('activerecord.errors.option_set.wrong_depth', {levels: levels, depth: depth}));
+        self.add_error('.option_set_options', I18n.t('activerecord.errors.models.option_set.wrong_depth', {levels: levels, depth: depth}));
         return false;
       }
     }
@@ -281,7 +281,7 @@
 
   // adds a validation error to the field with the given selector
   klass.prototype.add_error = function(selector, msg) { var self = this;
-    $(selector + ' .control').prepend($('<div>').addClass('form-error').html(msg));
+    $(selector + ' .control').prepend($('<div>').addClass('form-errors').html(msg));
   };
 
   // clears error messages
