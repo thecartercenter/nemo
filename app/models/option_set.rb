@@ -178,6 +178,7 @@ class OptionSet < ActiveRecord::Base
   def update_option_levels_from_json(option_level_data)
     # if hash, just take values
     option_level_data = option_level_data.values if option_level_data.is_a?(Hash)
+    option_level_data ||= []
 
     # create new option_level objects if there aren't enough
     if (diff = option_level_data.size - option_levels.size) > 0
