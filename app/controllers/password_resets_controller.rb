@@ -16,8 +16,8 @@ class PasswordResetsController < ApplicationController
 
   # sends the password reset instructions
   def create
-    @user = User.find_by_email(params[:password_reset][:email])
-    if @user
+    email = params[:password_reset][:email].strip
+    if email.present? && @user = User.where(:email => email).first
       @user.deliver_password_reset_instructions!
       flash[:success] = t("password_reset.check_email")
       redirect_to(login_url)
