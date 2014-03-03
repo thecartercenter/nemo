@@ -149,11 +149,17 @@
   // traverses the option tree and generates a hash representing the full option set
   // see OptionSetSubmissionTest for the expected format
   klass.prototype.prepare_data = function() { var self = this;
-    // start with basic form data
+    // temporarily enable any disabled items else serialization will fail
+    var disabled = $('form.option_set_form').find(':input:disabled').removeAttr('disabled');
+
+    // get with basic form data
     var data = $('form.option_set_form').serializeHash();
-    data.option_set = {};
+
+    // re-disable
+    disabled.attr('disabled', 'disabled');
 
     // add nodes
+    data.option_set = {};
     data.option_set._option_levels = self.prepare_option_levels();
     data.option_set._optionings = self.prepare_options();
 
