@@ -226,11 +226,19 @@
         // if content type was json, that means success
         if (jqxhr.getResponseHeader('Content-Type').match('application/json')) {
 
-          // the data holds the new option set's ID
-          self.option_set.id = parseInt(data);
+          // if we're in modal mode, we need to do different stuff
+          if (self.params.modal_mode) {
 
-          // trigger the custom event
-          $('form.option_set_form').trigger('option_set_form_submit_success', [self.option_set]);
+            // the data holds the new option set's ID
+            self.option_set.id = parseInt(data);
+
+            // trigger the custom event
+            $('form.option_set_form').trigger('option_set_form_submit_success', [self.option_set]);
+          }
+
+          // else, not modal mode, just redirect (URL given as json response)
+          else
+            window.location.href = data;
 
         // otherwise we got an error,
         // so replace the div with the new partial (this will instantiate a new instance of this class)

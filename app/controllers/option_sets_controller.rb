@@ -92,15 +92,16 @@ class OptionSetsController < ApplicationController
       begin
         @option_set.save!
 
-        # if request came from the option set modal, we just render the option set's id
-        if params[:modal_mode]
-          render(:json => @option_set.id)
+        # set the flash, which will be shown when the next request is issued as expected
+        # (not needed in modal mode)
+        set_success(@option_set) unless params[:modal_mode]
 
-        # else we just render 1 as a signal that the save succeeded
+        if params[:modal_mode]
+          # render the option set's ID in json format
+          render(:json => @option_set.id)
         else
-          # set the flash, which will be shown when the next request is issued as expected
-          set_success(@option_set)
-          render(:json => 1)
+          # render where we should redirect
+          render(:json => option_sets_path.to_json)
         end
 
       rescue ActiveRecord::RecordInvalid, DeletionError
