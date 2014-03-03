@@ -221,6 +221,9 @@
     if (self.params.modal_mode)
       data.modal_mode = 1;
 
+    // show loading
+    $('form.option_set_form .loading_indicator img').show();
+
     $.ajax({
       url: $('form.option_set_form').attr('action'),
       type: 'POST',
