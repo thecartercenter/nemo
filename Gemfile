@@ -83,3 +83,6 @@ gem 'bootstrap-sass', '~> 3.0.3.0'
 
 # mocking/stubbing
 gem 'mocha', :group => [:development, :test], :require => false
+
+# spinner
+gem 'spinjs-rails'
