@@ -76,6 +76,9 @@ module OptioningParentable
     # puts "UPDATING #{is_a?(OptionSet) ? 'root' : option.name} depth #{depth} with"
     # pp optioning_data
 
+    # if optioning_data is a hash just take the values
+    optioning_data = optioning_data.values if optioning_data.is_a?(Hash)
+
     optioning_data.each_with_index do |json, idx|
       # if this is a new optioning, build it
       if json['id'].nil?

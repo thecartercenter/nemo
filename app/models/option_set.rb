@@ -175,19 +175,22 @@ class OptionSet < ActiveRecord::Base
     update_children_from_json(_optionings, self, 1)
   end
 
-  def update_option_levels_from_json(new_option_levels)
+  def update_option_levels_from_json(option_level_data)
+    # if hash, just take values
+    option_level_data = option_level_data.values if option_level_data.is_a?(Hash)
+
     # create new option_level objects if there aren't enough
-    if (diff = new_option_levels.size - option_levels.size) > 0
+    if (diff = option_level_data.size - option_levels.size) > 0
       diff.times{option_levels.build(:option_set => self, :mission => mission)}
 
     # delete option_level objects if there are too many
-    elsif (diff = option_levels.size - new_option_levels.size) > 0
+    elsif (diff = option_levels.size - option_level_data.size) > 0
       option_levels.destroy(option_levels[-diff..-1])
     end
 
     # copy option level names
     option_levels.each_with_index do |ol, idx|
-      ol.update_from_json(new_option_levels[idx])
+      ol.update_from_json(option_level_data[idx])
     end
   end
 
