@@ -80,7 +80,7 @@
     $('form.option_set_form').on('submit', function(){ return self.form_submitted(); });
 
     // hookup leave page warning unless ajax request
-    if (!self.params.ajax_mode)
+    if (!self.params.modal_mode)
       window.onbeforeunload = function(){
         if (self.dirty() && !self.done)
           return I18n.t('option_set.leave_page_warning');
@@ -215,8 +215,8 @@
 
     // get data and set modal if applicable
     var data = self.prepare_data();
-    if (self.params.ajax_mode)
-      data.modal = 1;
+    if (self.params.modal_mode)
+      data.modal_mode = 1;
 
     $.ajax({
       url: $('form.option_set_form').attr('action'),

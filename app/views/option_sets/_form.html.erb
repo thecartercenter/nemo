@@ -24,7 +24,10 @@
     option_set: <%=j @option_set.as_json(:for_option_set_form => true).to_json.html_safe %>,
     suggest_path: <%=j suggest_options_path.to_json.html_safe %>,
     form_mode: <%=j form_mode.to_json.html_safe %>,
-    ajax_mode: <%=j ajax_request?.to_json.html_safe %>,
+
+    // whether the form is being loaded in a modal
+    modal_mode: <%=j params[:modal_mode].present?.to_json.html_safe %>,
+
     can_reorder: <%=j can?(:reorder_options, @option_set).to_json.html_safe %>,
     can_remove_options: <%=j can?(:remove_options, @option_set).to_json.html_safe %>
   });

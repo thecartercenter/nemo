@@ -24,6 +24,7 @@ class OptionSetsController < ApplicationController
   def new
     # we only need the partial if it's an ajax request
     if ajax_request?
+      params[:modal_mode] = true
       render(:partial => 'form')
     else
       render(:form)
@@ -92,7 +93,7 @@ class OptionSetsController < ApplicationController
         @option_set.save!
 
         # if request came from the option set modal, we just render the option set's id
-        if params[:modal]
+        if params[:modal_mode]
           render(:json => @option_set.id)
 
         # else we just render 1 as a signal that the save succeeded
