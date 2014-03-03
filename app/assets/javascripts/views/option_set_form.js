@@ -137,18 +137,13 @@
   // or if in ajax mode, submits the form via ajax and returns false
   klass.prototype.form_submitted = function() { var self = this;
 
-    self.prepare_form();
-
     // set flag so we don't raise warning on navigation
     self.done = true;
 
-    // if the form is in ajax mode, submit via ajax and return false so the form won't submit normally
-    if (self.params.ajax_mode) {
-      self.submit_via_ajax();
-      return false;
-    } else
-      // if not in ajax mode, just return true and let form submit normally
-      return true;
+    self.submit_via_ajax();
+
+    // so form won't submit normally
+    return false;
   };
 
   // traverses the option tree and generates a hash representing the full option set
@@ -156,10 +151,11 @@
   klass.prototype.prepare_data = function() { var self = this;
     // start with basic form data
     var data = $('form.option_set_form').serializeHash();
+    data.option_set = {};
 
     // add nodes
-    data._option_levels = self.prepare_option_levels();
-    data._optionings = self.prepare_options();
+    data.option_set._option_levels = self.prepare_option_levels();
+    data.option_set._optionings = self.prepare_options();
 
     return data;
   };
@@ -210,10 +206,16 @@
 
   // submits form via ajax
   klass.prototype.submit_via_ajax = function() { var self = this;
+
+    // get data and set modal if applicable
+    var data = self.prepare_data();
+    if (self.params.ajax_mode)
+      data.modal = 1;
+
     $.ajax({
       url: $('form.option_set_form').attr('action'),
       type: 'POST',
-      data: $('form.option_set_form').serialize(),
+      data: data,
       success: function(data, status, jqxhr) {
         // if content type was json, that means success
         if (jqxhr.getResponseHeader('Content-Type').match('application/json')) {
