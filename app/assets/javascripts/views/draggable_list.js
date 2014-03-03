@@ -54,7 +54,7 @@
 
     // add sort icon if not in show mode
     if (self.form_mode != 'show' && self.can_reorder)
-      inner.append($('<i>').attr('class', 'icon-sort'));
+      inner.append($('<i>').attr('class', 'fa fa-sort'));
 
     // add name (add nbsp to make sure div doesn't collapse if name is blank)
     inner.append(item.translation() + '&nbsp;');

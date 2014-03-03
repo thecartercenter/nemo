@@ -63,7 +63,9 @@
         <% when "select_multiple" %>
 
           <%# render a checkbox for each possible choice %>
-          <%= render(:partial => "choice", :locals => {:answer_counter => answer_counter}, :collection => answer.all_choices, :class => "form-control") %>
+          <div class="widget">
+            <%= render(:partial => "choice", :locals => {:answer_counter => answer_counter}, :collection => answer.all_choices, :class => "form-control") %>
+          </div>
 
         <% when "datetime", "date", "time" %>
 
@@ -83,11 +85,12 @@
       <% end # if show mode %>
 
     <% end # elmo_fields_for %>
+    <% unless answer.question_hint.blank? %>
+      <a href="javascript://" id="testhelp" rel="popover" class="hint" data-content="<%= answer.question_hint %>"><i class="hint fa fa-2x fa-info-circle"></i></a>
+    <% end %>
   </div>
+  <%# TOM: extra line break %>
 
-  <% unless answer.question_hint.blank? %>
-    <!-- <div class="hint"><%= answer.question_hint %></div> -->
-  <% end %>
 </div>
 
 <%# setup condition js object if a condition exists %>

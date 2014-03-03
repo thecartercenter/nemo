@@ -1,5 +1,6 @@
 /* variables */
 $theme_green: #9dc400;
+$elmo-blue: #879CAA;
 
 form.option_set_form {
 
@@ -9,11 +10,17 @@ form.option_set_form {
     padding-bottom: 20px;
   }
 
+  /* special case for add options widget */
+  #options div.widget {
+    vertical-align: top !important;
+  }
+
   div.add_options {
     margin-bottom: 20px;
 
+
     ul {
-      width: 388px;
+      width: 360px;
     }
 
     input[type=text] {
@@ -31,7 +38,7 @@ form.option_set_form {
 
   .draggable-list-wrapper ol {
     padding-left: 0;
-    margin: 0 20px 0 0;
+    margin: 0;
 
     li {
       display: block;
@@ -51,7 +58,10 @@ form.option_set_form {
 
       div {
         /* icon */
-        i.icon-sort {
+        i.fa-times, i.fa-pencil {
+          color: $elmo-blue;
+        }
+        i.fa-sort {
           margin-right: 5px;
         }
 
