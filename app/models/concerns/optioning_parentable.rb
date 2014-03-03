@@ -78,6 +78,7 @@ module OptioningParentable
 
     # if optioning_data is a hash just take the values
     optioning_data = optioning_data.values if optioning_data.is_a?(Hash)
+    optioning_data ||= []
 
     optioning_data.each_with_index do |json, idx|
       # if this is a new optioning, build it
