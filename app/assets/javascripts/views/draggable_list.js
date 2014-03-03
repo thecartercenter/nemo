@@ -27,6 +27,19 @@
     // hookup save and cancel buttons on modal
     self.modal.find('button.btn-primary').on('click', function(){ self.save_item(); return false; });
     self.modal.find('button.btn-default').on('click', function(){ self.cancel_edit(); });
+
+    // show/hide save button when translations change
+    $('body').on('keyup change', '.edit-named-item div.translation input', function(e){
+      // if all translation boxes in this modal are blank, hide the 'save' button
+      var show = false;
+      $(e.target).closest('.modal').find('div.translation input').each(function(){
+        if ($(this).val().trim() != '') {
+          show = true;
+          return false;
+        }
+      });
+      $(e.target).closest('.modal').find('.btn-primary')[show ? 'show' : 'hide']();
+    });
   };
 
   // renders the html to the view
