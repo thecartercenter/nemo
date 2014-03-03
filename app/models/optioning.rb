@@ -64,8 +64,10 @@ class Optioning < ActiveRecord::Base
 
   # destroys this option and removes from parent
   def remove_and_destroy
-    _parent.optionings -= [self]
-    destroy
+    unless destroyed?
+      _parent.optionings -= [self]
+      destroy_with_descendants
+    end
   end
 
   def as_json(options = {})

@@ -369,13 +369,13 @@ class OptionSetSubmissionTest < ActiveSupport::TestCase
             }
           ]
         },
-        # here is the destroy request, with deeper optionings first to avoid FK errors
+        # here is the destroy request. order shouldn't matter. we put the top level optioning first to test this.
         {
-          'id' => os.optionings[0].optionings[1].id,
+          'id' => os.optionings[0].id,
           '_destroy' => true
         },
         {
-          'id' => os.optionings[0].id,
+          'id' => os.optionings[0].optionings[1].id,
           '_destroy' => true
         }
       ]

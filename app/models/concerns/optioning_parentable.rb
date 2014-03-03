@@ -130,6 +130,12 @@ module OptioningParentable
     end
   end
 
+  # destroys all descendants then destroys self
+  def destroy_with_descendants
+    optionings.each{|o| o.destroy_with_descendants}
+    destroy
+  end
+
   protected
     # makes sure, recursively, that the options in the set have sequential ranks starting at 1.
     def ensure_children_ranks
