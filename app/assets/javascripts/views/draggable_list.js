@@ -262,5 +262,18 @@
     }).get();
   };
 
+  // gets the number of top-level items in the list presently
+  klass.prototype.size = function() { var self = this;
+    return self.ol.find('> li').length;
+  };
+
+  // gets the maximum depth of any item in the list
+  klass.prototype.max_depth = function() { var self = this;
+    var max = 0;
+    while (self.ol.find('li '.repeat(max + 1)).length > 0) max++;
+    return max;
+  };
+
+
 })(ELMO.Views);
 

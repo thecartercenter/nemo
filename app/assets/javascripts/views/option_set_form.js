@@ -140,7 +140,11 @@
     // set flag so we don't raise warning on navigation
     self.done = true;
 
-    self.submit_via_ajax();
+    // do client side validations
+    if (self.validate_option_depths()) {
+      // submit
+      self.submit_via_ajax();
+    }
 
     // so form won't submit normally
     return false;
@@ -257,6 +261,32 @@
         $('div.option_set_form').replaceWith("Server Error");
       }
     });
+  };
+
+  // checks if number of option levels and option depths are compatible
+  // returns whether submission should proceed
+  klass.prototype.validate_option_depths = function() { var self = this;
+    self.clear_errors();
+
+    if ($('#option_set_multi_level').is(':checked')) {
+      var levels = self.option_levels_field.list.size();
+      var depth = self.options_field.list.max_depth();
+      if (levels != depth) {
+        self.add_error('.option_set_options', I18n.t('activerecord.errors.option_set.wrong_depth', {levels: levels, depth: depth}));
+        return false;
+      }
+    }
+    return true;
+  };
+
+  // adds a validation error to the field with the given selector
+  klass.prototype.add_error = function(selector, msg) { var self = this;
+    $(selector + ' .control').prepend($('<div>').addClass('form-error').html(msg));
+  };
+
+  // clears error messages
+  klass.prototype.clear_errors = function() { var self = this;
+    $('form.option_set_form').find('div.form-error').remove();
   };
 
 })(ELMO.Views);
