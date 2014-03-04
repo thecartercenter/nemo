@@ -6,11 +6,11 @@
   // constructor
   ns.OptionLevelsField = klass = function(params) { var self = this;
     self.params = params;
-    self.option_levels = params.option_levels;
 
     // create the draggable list to hold the options
     self.list = new ELMO.Views.DraggableList({
       items: params.option_levels,
+      item_class: ELMO.Models.NamedItem,
       wrapper: params.wrapper,
       modal: params.modal,
       form_mode: params.form_mode,
@@ -23,11 +23,6 @@
         new: I18n.t('option_set.new_option_level'),
         edit: I18n.t('option_set.edit_option_level')
       }
-    });
-
-    // handler for when items are added to list
-    self.list.on('item_added', function(item){
-      self.option_levels.add(item);
     });
   };
 

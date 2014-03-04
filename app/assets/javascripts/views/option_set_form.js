@@ -10,14 +10,11 @@
 
     self.params = params;
 
-    // setup option set model
-    self.option_set = new ELMO.Models.OptionSet(params.option_set);
-
     // setup OptionLevelsField view
     self.option_levels_field = new ELMO.Views.OptionLevelsField({
       wrapper: $("#option-levels-wrapper"),
       modal: $("#edit-option-level"),
-      option_levels: self.option_set.option_levels,
+      option_levels: params.option_set.option_levels,
       form_mode: self.params.form_mode,
       can_reorder: true,
       can_remove: self.params.can_remove_options,
@@ -29,7 +26,7 @@
     self.options_field = new ELMO.Views.OptionsField({
       wrapper: $("#options-wrapper"),
       modal: $("#edit-option"),
-      optionings: self.option_set.optionings,
+      optionings: params.option_set.optionings,
       form_mode: self.params.form_mode,
       can_reorder: self.params.can_reorder,
       can_remove: self.params.can_remove_options,
@@ -87,9 +84,9 @@
       };
   };
 
-  // checks if client side model is dirty
+  // checks if there have been any changes
   klass.prototype.dirty = function() { var self = this;
-    return self.option_set.optionings.dirty || self.option_set.option_levels.dirty;
+    return self.options_field.list.dirty || self.option_levels_field.list.dirty;
   };
 
   // returns the html to insert in the token input result list
@@ -112,12 +109,12 @@
   // strips duplicates from token results
   // this doesn't work if the result is cached
   klass.prototype.process_token_results = function(results) { var self = this;
-    return results.filter(function(r){ return !self.option_set.optionings.has_with_name(r.name); });
+    return results.filter(function(r){ return !self.options_field.list.has_with_name(r.name); });
   };
 
   // if the added token is a duplicate, delete it!
   klass.prototype.token_added = function(item) { var self = this;
-    if (self.option_set.optionings.has_with_name(item.name))
+    if (self.options_field.list.has_with_name(item.name))
       $('input.add_options_box').tokenInput("remove", {name: item.name});
   };
 
@@ -168,7 +165,7 @@
     data.option_set._optionings = self.prepare_options();
 
     // upate option set name in OptionSet model, as this may be used by modal
-    self.option_set.name = data['option_set[name]'];
+    self.params.option_set.name = data['option_set[name]'];
 
     return data;
   };
@@ -188,7 +185,7 @@
     var prepared = self.prepare_option_tree(self.options_field.list.item_tree());
 
     // add the destroyed optionings
-    self.option_set.optionings.removed.forEach(function(o){
+    self.options_field.list.removed_items.forEach(function(o){
       prepared.push({id: o.id, _destroy: true});
     })
 
@@ -240,10 +237,10 @@
           if (self.params.modal_mode) {
 
             // the data holds the new option set's ID
-            self.option_set.id = parseInt(data);
+            self.params.option_set.id = parseInt(data);
 
             // trigger the custom event
-            $('form.option_set_form').trigger('option_set_form_submit_success', [self.option_set]);
+            $('form.option_set_form').trigger('option_set_form_submit_success', [self.params.option_set]);
           }
 
           // else, not modal mode, just redirect (URL given as json response)

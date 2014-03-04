@@ -10,6 +10,10 @@
     // copy attribs
     for (var key in attribs) self[key] = attribs[key];
 
+    self.removed_items = [];
+
+    self.dirty = false;
+
     // render the items
     self.render_items();
 
@@ -48,7 +52,7 @@
     self.ol = $("<ol>");
 
     // add li tags
-    self.items.get().forEach(function(item, idx){
+    self.items.forEach(function(item, idx){
       $('<li>').html(self.render_item(item)).appendTo(self.ol);
     });
 
@@ -73,7 +77,11 @@
   klass.prototype.render_item = function(item) { var self = this;
 
     // make inner tag
-    var inner = $('<div>').attr('class', 'inner')
+    var inner = $('<div>').attr('class', 'inner');
+
+    // wrap the item in an object if not already wrapped
+    if (!item.translation)
+      item = new self.item_class(item);
 
     // add sort icon if not in show mode
     if (self.form_mode != 'show' && self.can_reorder)
@@ -113,17 +121,25 @@
   };
 
   // adds an item to the view
-  // item - the model object to be added
-  klass.prototype.add_item = function(item) { var self = this;
+  // item_attribs - the item attributes
+  klass.prototype.add_item = function(item_attribs) { var self = this;
+    // wrap in object
+    var item = new self.item_class(item_attribs);
+
+    // check for duplicates
+    if (self.has_duplicate_of(item))
+      return false;
+
     // wrap in li and add to view
     $('<li>').html(self.render_item(item)).appendTo(self.ol);
 
+    self.dirty = true;
     self.trigger('change');
   };
 
   // shows the 'new' modal
-  klass.prototype.new_item = function(item) { var self = this;
-    self.show_modal(item, {mode: 'new'});
+  klass.prototype.new_item = function() { var self = this;
+    self.show_modal(new self.item_class(), {mode: 'new'});
   };
 
   // shows the 'edit' modal
@@ -171,11 +187,12 @@
     var li = item.div.closest('li');
 
     // notify models of all children
-    li.find('div.inner').each(function(){ $(this).data('item').remove(); });
+    li.find('div.inner').each(function(){ self.removed_items.push($(this).data('item')); });
 
     // remove li from view
     li.remove();
 
+    self.dirty = true;
     self.trigger('change');
   };
 
@@ -185,9 +202,8 @@
       self.active_item.update_translation({field: 'name', locale: $(this).data('locale'), value: $(this).val()});
     });
 
-    // trigger add event if in new mode
-    if (self.modal_mode == 'new')
-      self.trigger('item_added', self.active_item);
+    self.dirty = true;
+    self.trigger('change');
 
     // render the item in the view
     var old_div = self.active_item.div; // may be undefined
@@ -274,6 +290,22 @@
     return max;
   };
 
+  // checks to see if there is an item matching the given one
+  klass.prototype.has_duplicate_of = function(item) { var self = this;
+    return self.has_with_name(item.translation());
+  };
+
+  // checks if there is an item with the given name
+  klass.prototype.has_with_name = function(name) { var self = this;
+    var found = false;
+    self.ol.find('div.inner').each(function(){
+      if ($(this).data('item').translation() == name) {
+        found = true;
+        return false;
+      }
+    });
+    return found;
+  };
 
 })(ELMO.Views);
 

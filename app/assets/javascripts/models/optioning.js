@@ -9,8 +9,10 @@
     for (var key in attribs) self[key] = attribs[key];
 
     // also translations from option. these are the ones we'll actually use.
-    self.name = self.option.name;
-    self.name_translations = self.option.name_translations;
+    if (self.option) {
+      self.name = self.option.name;
+      self.name_translations = self.option.name_translations;
+    }
 
     // optioning (option) names are editable if the optioning is not a new record
     //   OR both the option AND optioning are new records
