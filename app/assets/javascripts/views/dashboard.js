@@ -10,6 +10,9 @@
   ns.Dashboard = klass = function(params) { var self = this;
     self.params = params;
 
+    // hook up full screen link
+    $("a.full-screen").on('click', function(obj) {self.toggle_full_screen(); return false;});
+
     // readjust stuff on window resize
     $(window).on('resize', function(){
       self.adjust_pane_sizes();
@@ -31,7 +34,7 @@
     // this timer ensures that we don't have memory issues due to a long running page
     if (!ELMO.app.dashboard_reload_timer)
       ELMO.app.dashboard_reload_timer = setTimeout(function(){
-        window.location.href = Utils.build_path('dashboard') + '?report_id=' + self.report_view.current_report_id;
+        window.location.href = Utils.build_path('welcome') + '?report_id=' + self.report_view.current_report_id;
       }, PAGE_RELOAD_INTERVAL * 60000);
 
     // adjust sizes for the initial load
@@ -84,10 +87,11 @@
 
   // reloads the page, passing the current report id
   klass.prototype.reload = function(args) { var self = this;
+    // TODO: should now set auto param unless in full screen mode
     // we don't set the 'auto' parameter on this request so that the session will be kept alive
     // the dashboard is meant to be a long-running page so doesn't make sense to let the session expire
     $.ajax({
-      url: Utils.build_path('dashboard'),
+      url: self.params.url,
       method: 'GET',
       data: {
         report_id: self.report_view.current_report_id,
@@ -102,5 +106,36 @@
     });
 
   };
+
+  klass.prototype.toggle_full_screen = function() { var self = this;
+    // read in full screen from local storage
+    var full_screen = JSON.parse(localStorage.getItem("full-screen"));
+
+    // toggle item in local storage
+    full_screen ? localStorage.setItem("full-screen", false) : localStorage.setItem("full-screen", true);
+
+    // display results
+    self.display_full_screen();
+  }
+
+  klass.prototype.display_full_screen = function() { var self = this;
+
+    var fs = JSON.parse(localStorage.getItem("full-screen"));
+    // if not in full screen mode, show everything (default)
+    if(!fs) {
+      $('#footer').show();
+      $('#main-nav').show();
+      $('#userinfo').show();
+      $('#title img').css('height', 'initial');
+      $('a.full-screen').html("<i class='fa fa-expand'></i> Enter Full Screen");
+    // else full screen is true, hide things
+    } else {
+      $('#footer').hide();
+      $('#main-nav').hide();
+      $('#userinfo').hide();
+      $('#title img').css('height', '30px');
+      $('a.full-screen').html("<i class='fa fa-compress'></i> Exit Full Screen");
+    }
+  }
 
 }(ELMO.Views));
