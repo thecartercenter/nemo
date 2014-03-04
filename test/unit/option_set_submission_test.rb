@@ -403,9 +403,20 @@ class OptionSetSubmissionTest < ActiveSupport::TestCase
     # for expected array, interior nodes are arrays with array[0] = label, array[1] = children
     # leaf nodes are strings
     # for root node, only array[1] is passed
-    def assert_options(expected, os, node = nil, depth = nil, parent = nil)
+    # runs twice, once before save, once after
+    def assert_options(expected, os)
+      # assert once
+      assert_options_once(expected, os)
+
+      # now save the option set and assert again
+      os.save!
+      os.reload
+      assert_options_once(expected, os)
+    end
+
+    def assert_options_once(expected, os, node = nil, depth = nil, parent = nil)
       if node.nil?
-        assert_options([nil, expected], os, os, 0, nil)
+        assert_options_once([nil, expected], os, os, 0, nil)
       else
         unless node.is_a?(OptionSet)
           # ensure correct option set
@@ -431,7 +442,7 @@ class OptionSetSubmissionTest < ActiveSupport::TestCase
 
           # ensure children are correct (recursive step)
           expected[1].each_with_index do |e, idx|
-            assert_options(e, os, node.optionings[idx], depth + 1, node.is_a?(OptionSet) ? nil : node)
+            assert_options_once(e, os, node.optionings[idx], depth + 1, node.is_a?(OptionSet) ? nil : node)
           end
 
         # else, expecting leaf
