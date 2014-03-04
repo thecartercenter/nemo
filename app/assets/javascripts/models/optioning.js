@@ -25,6 +25,9 @@
     // alias in_use with no question mark
     // note this is a property of option
     self.in_use = self.option['in_use?'];
+
+    // draggable list class expects children field
+    self.children = self.optionings;
   };
 
   // inherit from NamedItem

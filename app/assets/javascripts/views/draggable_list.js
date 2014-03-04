@@ -48,13 +48,8 @@
 
   // renders the html to the view
   klass.prototype.render_items = function() { var self = this;
-    // create outer ol tag
-    self.ol = $("<ol>");
-
-    // add li tags
-    self.items.forEach(function(item, idx){
-      $('<li>').html(self.render_item(item)).appendTo(self.ol);
-    });
+    // render all items
+    self.ol = self.render_item({root: true, children: self.items});
 
     // append to wrapper div
     self.wrapper.append(self.ol);
@@ -73,8 +68,34 @@
     }
   };
 
-  // builds the inner div tag for an item
+  // renders an li tag containing the inner tag plus an ol tag if there are children
+  // if item.root = true, returns just the ol
+  // ol may be undefined if there are no children
   klass.prototype.render_item = function(item) { var self = this;
+
+    // wrap the item in an object (unless it's root)
+    if (!item.root)
+      item = new self.item_class(item);
+
+    var li = $('<li>');
+
+    // render inner
+    if (!item.root)
+      li.append(self.render_inner(item));
+
+    // recurse and render children
+    var ol;
+    if (item.children) {
+      ol = $('<ol>');
+      item.children.forEach(function(c){ ol.append(self.render_item(c)); });
+    }
+    li.append(ol);
+
+    return item.root ? ol : li;
+  };
+
+  // builds the inner div tag for an item
+  klass.prototype.render_inner = function(item) { var self = this;
 
     // make inner tag
     var inner = $('<div>').attr('class', 'inner');
@@ -131,7 +152,7 @@
       return false;
 
     // wrap in li and add to view
-    $('<li>').html(self.render_item(item)).appendTo(self.ol);
+    $('<li>').html(self.render_inner(item)).appendTo(self.ol);
 
     self.dirty = true;
     self.trigger('change');
@@ -207,7 +228,7 @@
 
     // render the item in the view
     var old_div = self.active_item.div; // may be undefined
-    var new_div = self.render_item(self.active_item);
+    var new_div = self.render_inner(self.active_item);
     if (self.modal_mode == 'new')
       self.ol.append($('<li>').html(new_div));
     else
