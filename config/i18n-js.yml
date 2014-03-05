@@ -25,6 +25,7 @@ translations:
       "*.broadcast.chars.*",
       "*.common.*",
       "*.condition.*",
+      "*.dashboard.*",
       "*.form.unsaved_rank_notice",
       "*.location_picker.*",
       "*.layout.*",

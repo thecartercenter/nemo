@@ -806,6 +806,8 @@ en:
     response_locations: "Response Locations"
     summary: "Summary"
     top_forms: "Top Forms"
+    enter_full_screen: "Enter Full Screen"
+    exit_full_screen: "Exit Full Screen"
 
   data_integrity:
     appears_elsewhere_warnings:
