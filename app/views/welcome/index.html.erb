@@ -33,7 +33,7 @@
         report: {
           id: <%=j @report.try(:id).to_json.html_safe %>
         },
-        url: <%= welcomes_path.to_json.html_safe %>
+        url: '/'
       });
     <% end %>
 
@@ -45,7 +45,9 @@
   <% end %>
 
   <div class="col left_col">
-    <h2><%= t('dashboard.recent_responses') %></h2>
+    <h2>
+      <%= current_user.role(current_mission) == 'observer' ? t('dashboard.my_responses') : t('dashboard.recent_responses') %>
+    </h2>
 
     <%# cache the recent responses and use the explicit submit date instead of the age %>
     <% cache(@cache_key + '/recent_responses') do %>
@@ -96,20 +98,21 @@
             </ul>
           <% end %>
         </div>
-
-        <div class="stat_block">
-          <% unless @responses.empty? %>
-            <h2><%= t('dashboard.low_activity') %></h2>
-            <ul>
-              <% @responses_per_user.each do |row| %>
-                <li>
-                  <%= link_to(content_tag(:strong, number_with_delimiter(row.response_count)) + ' ' + row.name,
-                    responses_path(:search => "submitter:\"#{row.name}\"")) %>
-                </li>
-                <% end %>
-            </ul>
-          <% end %>
-        </div>
+        <% if current_user.role(current_mission) != 'observer' %>
+          <div class="stat_block">
+            <% unless @responses.empty? %>
+              <h2><%= t('dashboard.low_activity') %></h2>
+              <ul>
+                <% @responses_per_user.each do |row| %>
+                  <li>
+                    <%= link_to(content_tag(:strong, number_with_delimiter(row.response_count)) + ' ' + row.name,
+                      responses_path(:search => "submitter:\"#{row.name}\"")) %>
+                  </li>
+                  <% end %>
+              </ul>
+            <% end %>
+          </div>
+        <% end %>
       <% end %>
 
     </div>
