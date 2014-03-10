@@ -71,6 +71,12 @@
         change: function(){
           self.items.dirty = true;
           self.trigger('change');
+        },
+
+        // also need to notify if a change gets reverted due to max level. ideally we would be able to
+        // wait to see if it gets reverted, but there doesn't seem to be a way.
+        revert: function(){
+          self.trigger('change');
         }
       });
     }
