@@ -44,11 +44,8 @@
     });
 
     // watch for changes to multilevel property
-    $('#option_set_multi_level').on('change', function() {
-      // show/hide the option levels field
-      self.option_levels_field.show($(this).is(':checked'));
-    });
-    $('#option_set_multi_level').trigger('change');
+    $('#option_set_multi_level').on('change', function() { self.multilevel_changed(); });
+    self.multilevel_changed();
 
     // events to enable/disable multilevel checkbox
     self.options_field.list.on('change', function(){ self.enable_multilevel_checkbox(); });
@@ -91,6 +88,17 @@
   klass.prototype.enable_multilevel_checkbox = function() { var self = this;
     $('#option_set_multi_level').prop('disabled',
       !(self.option_levels_field.list.count() == 0 && self.options_field.list.max_depth() == 1));
+  };
+
+  // reacts to changes to multilevel checkbox
+  klass.prototype.multilevel_changed = function() { var self = this;
+    var checked = $('#option_set_multi_level').is(':checked');
+
+    // show/hide the option levels field
+    self.option_levels_field.show(checked);
+
+    // enable/disable nested options
+    self.options_field.list.allow_nesting(checked);
   };
 
   // returns the html to insert in the token input result list

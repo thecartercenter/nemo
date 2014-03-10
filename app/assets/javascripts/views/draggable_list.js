@@ -46,6 +46,12 @@
     });
   };
 
+  // turns nestability on and off
+  klass.prototype.allow_nesting = function(yn) { var self = this;
+    // maxLevels == 0 means no limit
+    self.ol.nestedSortable({maxLevels: yn ? 0 : 1});
+  };
+
   // renders the html to the view
   klass.prototype.render_items = function() { var self = this;
     // render all items
@@ -60,7 +66,6 @@
         handle: 'div',
         items: 'li',
         toleranceElement: '> div',
-        maxLevels: self.multi_level ? 0 : 1,
 
         // notify model when sorting changes
         change: function(){
