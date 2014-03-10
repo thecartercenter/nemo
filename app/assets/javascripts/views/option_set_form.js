@@ -295,7 +295,7 @@
 
   // clears error messages
   klass.prototype.clear_errors = function() { var self = this;
-    $('form.option_set_form').find('div.form-error').remove();
+    $('form.option_set_form').find('div.form-errors').remove();
   };
 
 })(ELMO.Views);
