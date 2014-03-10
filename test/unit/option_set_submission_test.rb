@@ -483,6 +483,76 @@ class OptionSetSubmissionTest < ActiveSupport::TestCase
     assert_options(['animal', 'plant'], os)
   end
 
+  test "updating non multilevel option set should work" do
+
+    # create the standard yes/no
+    os = FactoryGirl.create(:option_set)
+
+    # add a new option
+    os.update_from_json!({
+      'multi_level' => false,
+      '_option_levels' => [],
+      '_optionings' => [
+        {
+          'id' => os.optionings[0].id,
+          'option' => {
+            'id' => os.optionings[0].option.id,
+            'name_translations' => {'en' => 'Yes'}
+          },
+          'optionings' => []
+        },
+        {
+          'id' => os.optionings[1].id,
+          'option' => {
+            'id' => os.optionings[1].option.id,
+            'name_translations' => {'en' => 'No'}
+          },
+          'optionings' => []
+        },
+        {
+          'option' => {
+            'name_translations' => {'en' => 'Perhaps'}
+          },
+          'optionings' => []
+        }
+      ]
+    })
+
+    assert_equal([], os.option_levels)
+    assert_equal(false, os.multi_level)
+    assert_options(%w(Yes No Perhaps), os)
+  end
+
+  test "deleting from non multilevel option set should work" do
+
+    # create the standard yes/no
+    os = FactoryGirl.create(:option_set)
+
+    # remove 'No' option
+    os.update_from_json!({
+      'multi_level' => false,
+      '_option_levels' => [],
+      '_optionings' => [
+        {
+          'id' => os.optionings[0].id,
+          'option' => {
+            'id' => os.optionings[0].option.id,
+            'name_translations' => {'en' => 'Yes'}
+          },
+          'optionings' => []
+        },
+        {
+          'id' => os.optionings[1].id,
+          '_destroy' => true
+        }
+      ]
+    })
+
+    assert_equal([], os.option_levels)
+    assert_equal(false, os.multi_level)
+    assert_options(%w(Yes), os)
+  end
+
   private
 
     # checks that option set levels matches the given names
