@@ -553,14 +553,76 @@ class OptionSetSubmissionTest < ActiveSupport::TestCase
     assert_options(%w(Yes), os)
   end
 
+  test "creating a multilevel option set in standard mode via json should work" do
+    # we use a mixture of existing and new options
+    dog = Option.create(:name_en => 'Dog', :is_standard => true)
+    oak = Option.create(:name_en => 'Oak', :is_standard => true)
+
+    os = OptionSet.new(:mission => nil, :is_standard => true).update_from_json!({
+      'name' => 'foo',
+      'mission' => get_mission,
+      'multi_level' => true,
+      'geographic' => false,
+      '_option_levels' => [
+        { 'en' => 'Kingdom', 'fr' => 'Royaume' },
+        { 'en' => 'Species' }
+      ],
+      '_optionings' => [
+        {
+          'option' => {
+            'name_translations' => {'en' => 'Animal'}
+          },
+          'optionings' => [
+            {
+              'option' => {
+                'name_translations' => {'en' => 'Cat'}
+              }
+            },
+            {
+              'option' => {
+                'id' => dog.id
+              }
+            }
+          ]
+        },
+        {
+          'option' => {
+            'name_translations' => {'en' => 'Plant'}
+          },
+          'optionings' => [
+            {
+              'option' => {
+                'name_translations' => {'en' => 'Tulip'}
+              }
+            },
+            {
+              'option' => {
+                'id' => oak.id,
+                # also change a name for this option
+                'name_translations' => {'en' => 'White Oak'}
+              }
+            }
+          ]
+        }
+      ]
+    })
+
+    os.reload
+
+    assert_levels(%w(Kingdom Species), os)
+    assert_options([['Animal', ['Cat', 'Dog']], ['Plant', ['Tulip', 'White Oak']]], os)
+  end
+
+
   private
 
     # checks that option set levels matches the given names
     def assert_levels(expected, os)
       assert_equal(expected, os.option_levels.map(&:name_en))
 
-      # check that all have mission and correct option set reference
+      # check that all have mission, standard, and correct option set reference
       assert_equal([os.mission], os.option_levels.map(&:mission).uniq)
+      assert_equal([os.is_standard?], os.option_levels.map(&:is_standard?).uniq)
       assert_equal([os], os.option_levels.map(&:option_set).uniq)
 
       # check for correct sequential ranks
@@ -587,6 +649,8 @@ class OptionSetSubmissionTest < ActiveSupport::TestCase
       if node.nil?
         assert_options_once([nil, expected], os, os, 0, nil)
       else
+        assert_equal(os.is_standard?, node.is_standard?, 'standard flag did not match')
+
         unless node.is_a?(OptionSet)
           # ensure correct option set
           assert_equal(os, node.option_set, 'incorrect option set')
@@ -600,6 +664,9 @@ class OptionSetSubmissionTest < ActiveSupport::TestCase
 
           # ensure correct parent
           assert_equal(parent, node.parent, 'incorrect parent')
+
+          # ensure correct standard flag for option
+          assert_equal(os.is_standard?, node.option.is_standard?, 'standard flag did not match on option')
         end
 
         # if expecting interior node

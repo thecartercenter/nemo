@@ -182,7 +182,7 @@ class OptionSet < ActiveRecord::Base
 
     # create new option_level objects if there aren't enough
     if (diff = option_level_data.size - option_levels.size) > 0
-      diff.times{option_levels.build(:option_set => self, :mission => mission)}
+      diff.times{option_levels.build(:option_set => self, :mission => mission, :is_standard => is_standard)}
 
     # schedule deletion of option_level objects if there are too many
     elsif (diff = option_levels.size - option_level_data.size) > 0
