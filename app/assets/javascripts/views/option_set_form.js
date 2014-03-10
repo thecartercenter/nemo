@@ -87,7 +87,7 @@
   // should be disabled unless there are 0 option levels and all options have depth 1
   klass.prototype.enable_multilevel_checkbox = function() { var self = this;
     $('#option_set_multi_level').prop('disabled',
-      !(self.option_levels_field.list.count() == 0 && self.options_field.list.max_depth() == 1));
+      !(self.option_levels_field.list.count() == 0 && self.options_field.list.max_depth() <= 1));
   };
 
   // reacts to changes to multilevel checkbox
