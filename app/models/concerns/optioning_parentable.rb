@@ -106,7 +106,7 @@ module OptioningParentable
         optioning.move_to(self) unless optioning._parent == self
 
         # set the proper option level
-        optioning.option_level = option_set.option_levels[depth - 1]
+        optioning.option_level = option_set.multi_level? ? option_set.option_levels[depth - 1] : nil
 
         # set the rank incrementally
         optioning.rank = idx + 1

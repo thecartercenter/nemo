@@ -433,6 +433,56 @@ class OptionSetSubmissionTest < ActiveSupport::TestCase
     assert_options(['animal', 'plant'], os)
   end
 
+  test "downgrading to non-multilevel should work" do
+
+    # create the standard animal/plant set
+    os = FactoryGirl.create(:multilevel_option_set)
+
+    # delete dog option and move pine to animal subtree
+    os.update_from_json!({
+      'multi_level' => false,
+      '_option_levels' => [],
+      '_optionings' => [
+        {
+          'id' => os.optionings[0].id,
+          'option' => {
+            'id' => os.optionings[0].option.id,
+            'name_translations' => {'en' => 'animal'}
+          },
+          'optionings' => []
+        },
+        {
+          'id' => os.optionings[1].id,
+          'option' => {
+            'id' => os.optionings[1].option.id,
+            'name_translations' => {'en' => 'plant'}
+          },
+          'optionings' => []
+        },
+        {
+          'id' => old_id = os.optionings[0].optionings[0].id,
+          '_destroy' => true
+        },
+        {
+          'id' => old_id = os.optionings[0].optionings[1].id,
+          '_destroy' => true
+        },
+        {
+          'id' => old_id = os.optionings[1].optionings[0].id,
+          '_destroy' => true
+        },
+        {
+          'id' => old_id = os.optionings[1].optionings[1].id,
+          '_destroy' => true
+        }
+      ]
+    })
+
+    assert_equal([], os.option_levels)
+    assert_equal(false, os.multi_level)
+    assert_options(['animal', 'plant'], os)
+  end
+
   private
 
     # checks that option set levels matches the given names
@@ -472,7 +522,11 @@ class OptionSetSubmissionTest < ActiveSupport::TestCase
           assert_equal(os, node.option_set, 'incorrect option set')
 
           # ensure correct option level
-          assert_equal(os.option_levels[depth - 1], node.option_level, 'incorrect option level exp')
+          if os.multi_level?
+            assert_equal(os.option_levels[depth - 1], node.option_level, 'incorrect option level exp')
+          else
+            assert_nil(node.option_level)
+          end
 
           # ensure correct parent
           assert_equal(parent, node.parent, 'incorrect parent')
