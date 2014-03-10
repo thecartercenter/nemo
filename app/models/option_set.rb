@@ -173,6 +173,12 @@ class OptionSet < ActiveRecord::Base
     assign_attributes(data)
     update_option_levels_from_json(_option_levels)
     update_children_from_json(_optionings, self, 1)
+
+    # do this after we update the children to avoid foreign key errors
+    if @option_levels_to_destroy
+      option_levels.destroy(option_levels[-@option_levels_to_destroy..-1])
+      @option_levels_to_destroy = nil
+    end
   end
 
   def update_option_levels_from_json(option_level_data)
@@ -184,9 +190,9 @@ class OptionSet < ActiveRecord::Base
     if (diff = option_level_data.size - option_levels.size) > 0
       diff.times{option_levels.build(:option_set => self, :mission => mission)}
 
-    # delete option_level objects if there are too many
+    # schedule deletion of option_level objects if there are too many
     elsif (diff = option_levels.size - option_level_data.size) > 0
-      option_levels.destroy(option_levels[-diff..-1])
+      @option_levels_to_destroy = diff
     end
 
     # copy option level names

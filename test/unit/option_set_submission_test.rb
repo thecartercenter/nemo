@@ -384,6 +384,55 @@ class OptionSetSubmissionTest < ActiveSupport::TestCase
     assert_options([['plant', ['pine', 'tulip', 'cat']]], os)
   end
 
+  test "deleting an option level should work" do
+    # create the standard animal/plant set
+    os = FactoryGirl.create(:multilevel_option_set)
+
+    # delete dog option and move pine to animal subtree
+    os.update_from_json!({
+      '_option_levels' => [
+        { 'en' => 'kingdom' }
+      ],
+      '_optionings' => [
+        {
+          'id' => os.optionings[0].id,
+          'option' => {
+            'id' => os.optionings[0].option.id,
+            'name_translations' => {'en' => 'animal'}
+          },
+          'optionings' => []
+        },
+        {
+          'id' => os.optionings[1].id,
+          'option' => {
+            'id' => os.optionings[1].option.id,
+            'name_translations' => {'en' => 'plant'}
+          },
+          'optionings' => []
+        },
+        {
+          'id' => old_id = os.optionings[0].optionings[0].id,
+          '_destroy' => true
+        },
+        {
+          'id' => old_id = os.optionings[0].optionings[1].id,
+          '_destroy' => true
+        },
+        {
+          'id' => old_id = os.optionings[1].optionings[0].id,
+          '_destroy' => true
+        },
+        {
+          'id' => old_id = os.optionings[1].optionings[1].id,
+          '_destroy' => true
+        }
+      ]
+    })
+
+    assert_levels(%w(kingdom), os)
+    assert_options(['animal', 'plant'], os)
+  end
+
   private
 
     # checks that option set levels matches the given names
