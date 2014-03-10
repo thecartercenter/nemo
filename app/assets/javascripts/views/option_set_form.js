@@ -48,15 +48,12 @@
       // show/hide the option levels field
       self.option_levels_field.show($(this).is(':checked'));
     });
-
-    // trigger initial change to get things rolling
     $('#option_set_multi_level').trigger('change');
 
-    // multiselect box should be disabled unless there are 0 option levels
-    self.option_levels_field.list.on('change', function(){
-      $('#option_set_multi_level').prop('disabled', this.count() > 0);
-    });
-    self.option_levels_field.list.trigger('change');
+    // events to enable/disable multilevel checkbox
+    self.options_field.list.on('change', function(){ self.enable_multilevel_checkbox(); });
+    self.option_levels_field.list.on('change', function(){ self.enable_multilevel_checkbox(); });
+    self.enable_multilevel_checkbox();
 
     // setup the tokenInput control
     $('input.add_options_box').tokenInput(params.suggest_path, {
@@ -87,6 +84,13 @@
   // checks if there have been any changes
   klass.prototype.dirty = function() { var self = this;
     return self.options_field.list.dirty || self.option_levels_field.list.dirty;
+  };
+
+  // enables/disables multi_level checkbox depending on option levels and optioning depths
+  // should be disabled unless there are 0 option levels and all options have depth 1
+  klass.prototype.enable_multilevel_checkbox = function() { var self = this;
+    $('#option_set_multi_level').prop('disabled',
+      !(self.option_levels_field.list.count() == 0 && self.options_field.list.max_depth() == 1));
   };
 
   // returns the html to insert in the token input result list

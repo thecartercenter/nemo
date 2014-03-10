@@ -63,7 +63,10 @@
         maxLevels: self.multi_level ? 0 : 1,
 
         // notify model when sorting changes
-        change: function(){ self.items.dirty = true; }
+        change: function(){
+          self.items.dirty = true;
+          self.trigger('change');
+        }
       });
     }
   };
@@ -223,9 +226,6 @@
       self.active_item.update_translation({field: 'name', locale: $(this).data('locale'), value: $(this).val()});
     });
 
-    self.dirty = true;
-    self.trigger('change');
-
     // render the item in the view
     var old_div = self.active_item.div; // may be undefined
     var new_div = self.render_inner(self.active_item);
@@ -233,6 +233,9 @@
       self.ol.append($('<li>').html(new_div));
     else
       old_div.replaceWith(new_div);
+
+    self.dirty = true;
+    self.trigger('change');
 
     // done with this item
     self.active_item = null;
