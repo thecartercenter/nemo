@@ -31,6 +31,11 @@
 
     // prevent double submission of any forms on the page
     $('form').preventDoubleSubmission();
+
+    // hookup hint tooltips if any on the page
+    self.hookup_hints();
+
+    self.set_alert_timeout();
   }
 
   // sets a countdown to session timeout
@@ -80,8 +85,43 @@
       });
 
     }
-
   }
+
+  // shows alert at top of page
+  klass.prototype.show_alert = function(params) { var self = this;
+    $('<div>').addClass('alert').addClass('alert-' + params.type).html(params.msg).prependTo($('#content'));
+    self.set_alert_timeout();
+  };
+
+  // removes all alerts
+  klass.prototype.clear_alerts = function() { var self = this;
+    $('.alert').remove();
+  };
+
+  // hides any success alerts after a delay
+  klass.prototype.set_alert_timeout = function() { var self = this;
+    window.setTimeout(function() {$(".alert-success").slideUp(); return false;}, 4000);
+  };
+
+  // TOM: comment pls
+  klass.prototype.hookup_hints = function() { var self = this;
+
+    // when click on the page, hints disappear
+    $('html').on('click', function(e) {
+      $('a.hint').popover('hide');
+    });
+
+    // initialize popovers
+    $('a.hint').popover({
+      html: true,
+      trigger: 'manual'
+    // toggle current tooltip
+    }).on('click', function(e) {
+      $(this).popover('toggle');
+      e.stopPropagation();
+    });
+  }
+  // TOM: semicolons after methods
 
 })(ELMO);
 

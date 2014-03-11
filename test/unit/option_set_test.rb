@@ -13,27 +13,26 @@ class OptionSetTest < ActiveSupport::TestCase
   test "must have at least one option" do
     os = FactoryGirl.build(:option_set, :option_names => [])
     os.save
-    assert_match(/at least one/, os.errors.messages[:base].join)
+    assert_match(/at least one/, os.errors[:options].join)
   end
 
-  test "optioning for" do
-    os = FactoryGirl.create(:option_set, :option_names => %w(a b c d))
-    assert_equal(os.optionings[2].id, os.optioning_for(os.options[2]).id)
-  end
+  #######################################################################
+  # these rank tests are for single-level option sets
+  # they should still pass even with multi-level architecture being added
 
   test "ranks changed" do
     os = FactoryGirl.create(:option_set, :option_names => %w(a b c d))
-    assert_equal(false, os.ranks_changed?)
+    assert_equal(false, os.positions_changed?)
 
     # changing rank should raise flag
     os.optionings[1].rank = 6
-    assert_equal(true, os.ranks_changed?)
+    assert_equal(true, os.positions_changed?)
     os.save!
-    assert_equal(false, os.ranks_changed?)
+    assert_equal(false, os.positions_changed?)
 
     # adding option set should also raise flag
     os.optionings.build(:rank => 8, :option => Option.new(:name => 'e'))
-    assert_equal(true, os.ranks_changed?)
+    assert_equal(true, os.positions_changed?)
     os.save!
   end
 
@@ -83,11 +82,130 @@ class OptionSetTest < ActiveSupport::TestCase
 
     # make sure no false positive
     os.optionings[0].rank = 1
-    assert_equal(false, os.ranks_changed?)
+    assert_equal(false, os.positions_changed?)
 
     # make sure no false negative
     os.optionings[0].rank = 50
-    assert_equal(true, os.ranks_changed?)
+    assert_equal(true, os.positions_changed?)
+  end
+
+  #
+  #######################################################################
+
+  #######################################################################
+  # these rank tests are for multi-level option sets
+
+  test "ranks should be contiguous for all levels of multilevel option set" do
+    # create the animal/plant option set
+    os = FactoryGirl.create(:multilevel_option_set)
+
+    # mess up ranks and save
+    os.optionings[0].rank = 5
+    os.optionings[1].rank = 3
+    os.optionings[0].optionings[0].rank = 2
+    os.optionings[0].optionings[1].rank = 5
+    os.save!
+
+    # check that ranks were repaired and the option arrays sorted
+    assert_equal('plant', os.optionings[0].option.name)
+    assert_equal([1,2], os.optionings.map(&:rank))
+    assert_equal([1,2], os.optionings[0].optionings.map(&:rank))
+  end
+
+  test "positions_changed should work with multilevel option set" do
+    # create the animal/plant option set
+    os = FactoryGirl.create(:multilevel_option_set)
+
+    assert_equal(false, os.positions_changed?)
+
+    # switch the two first level options
+    os.optionings[0].rank = 2
+    os.optionings[1].rank = 1
+
+    assert_equal(true, os.positions_changed?)
+    os.save!
+    assert_equal(false, os.positions_changed?)
+
+    # switch the two rank 1 second level options (this is tricky since the rank numbers aren't changing)
+    cat = os.optionings[0].optionings[0]
+    pine = os.optionings[1].optionings[0]
+
+    # move pine
+    os.optionings[0].optionings[0] = pine
+    pine.parent = os.optionings[0]
+
+    # move cat
+    os.optionings[1].optionings[0] = cat
+    cat.parent = os.optionings[1]
+
+    assert_equal(true, os.positions_changed?)
+  end
+
+  test "options_added should work with multilevel option set" do
+    # create the animal/plant option set
+    os = FactoryGirl.create(:multilevel_option_set)
+
+    # should be false now because option set has been saved
+    assert_equal(false, os.options_added?)
+
+    # add another option
+    os.optionings[1].optionings.build(:rank => 3, :option_set => os,
+      :option => Option.new(:name => 'switchgrass'), :option_level => os.option_levels[1], :parent => os.optionings[1])
+
+    # should be true now
+    assert_equal(true, os.options_added?)
+
+    os.save!
+
+    # should be false again after save
+    assert_equal(false, os.options_added?)
+  end
+
+  test "options_removed should with multilevel option set" do
+    # create the animal/plant option set
+    os = FactoryGirl.create(:multilevel_option_set)
+
+    # should be false now because option set has been saved
+    assert_equal(false, os.options_removed?)
+
+    # remove an option (we use _destroy as that's how it will really happen)
+    animal = os.optionings[0]
+    cat = animal.optionings[0]
+
+    os.assign_attributes('optionings_attributes' => {'0' => {
+      'id' => animal.id.to_s,
+      'optionings_attributes' => {'0' => {'id' => cat.id.to_s, '_destroy' => true}}
+    }})
+
+    # should be true now
+    assert_equal(true, os.options_removed?)
+
+    os.save!
+
+    # delete should have worked
+    assert_equal(1, os.optionings[0].optionings.size)
+
+    # should be false again after save
+    assert_equal(false, os.options_removed?)
+  end
+
+  #
+  #######################################################################
+
+  test "option level ranks should be contiguous" do
+    os = FactoryGirl.create(:option_set)
+    os.option_levels << FactoryGirl.build(:option_level, :option_set => os, :rank => 1)
+    os.option_levels << FactoryGirl.build(:option_level, :option_set => os, :rank => 3)
+    os.save!
+    assert_equal([1,2], os.option_levels.map(&:rank))
+  end
+
+  test "multilevel option sets should have option levels" do
+    os = FactoryGirl.build(:option_set, :multi_level => true)
+    exception = assert_raise(RuntimeError) do
+      os.valid?
+    end
+    assert_equal('multi-level option sets must have at least one option level', exception.to_s)
   end
 
   test "destroying an option set that is presently used in a question should raise deletion error" do
@@ -264,8 +382,11 @@ class OptionSetTest < ActiveSupport::TestCase
   end
 
   private
+
     def create_option_set(options)
-      os = OptionSet.new(:name => "test")
+      # create empty set first
+      os = FactoryGirl.build(:option_set, :name => 'Test', :option_names => [])
+
       options.each do |o|
         # if o is an array then we have an explicit rank
         if o.is_a?(Array)
@@ -276,7 +397,7 @@ class OptionSetTest < ActiveSupport::TestCase
           name = o
           rank = nil
         end
-        os.optionings.new(:option => Option.new(:name_en => name), :rank => rank)
+        os.optionings.build(:option => Option.new(:name_en => name, :mission => os.mission), :rank => rank, :mission => os.mission)
       end
       os.save!
       os

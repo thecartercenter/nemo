@@ -2,60 +2,60 @@
 (function(ns, klass) {
 
   // constructor
-  ns.LocationPicker = klass = function(location_field) {
+  ns.LocationPicker = klass = function(location_field) { var self = this;
 
     // don't show if it's already up
     if (klass.showing) return;
 
     // save ref to location field
-    this.location_field = $(location_field);
+    self.location_field = $(location_field);
 
-    // copy boilerplate
-    this.container = $("div.boilerplate div.location_picker").clone();
-
-    // create and save the div and show the dialog
-    this.dialog = new ELMO.Dialog(this.container);
+    // save ref to modal
+    self.container = $("#location-picker-modal");
 
     // set the flag
     klass.showing = true;
 
     // get the current lat/lng if available
-    this.location = this.parse_lat_lng(this.location_field.val())
+    self.location = self.parse_lat_lng(self.location_field.val());
 
-    // create the map
-    var canvas_dom = this.container.find("div.map_canvas")[0];
-    this.map = new google.maps.Map(canvas_dom, {
+    // load the map after the window is displayed
+    self.container.on('shown.bs.modal', function (e) { self.initialize_map(); });
+
+  }
+
+  klass.prototype.initialize_map = function() { var self = this;
+
+    // save a default centering location if null
+    var latlng = new google.maps.LatLng(-34.397, 150.644);
+
+    // create map
+    self.map = new google.maps.Map($("#map-canvas")[0], {
       mapTypeId: google.maps.MapTypeId.ROADMAP,
-      zoom: this.location ? 7 : 1,
+      zoom: self.location ? 7 : 2,
       streetViewControl: false,
-      draggableCursor: 'pointer'
+      draggableCursor: 'pointer',
+      center: self.location ? self.location : latlng,
     });
 
     // put a mark at the present location
-    this.mark_location();
-
-    // center the map
-    this.center_map(this.location || [0,0]);
+    self.mark_location();
 
     // setup the search box
-    this.search_focus(false);
+    self.search_focus(false);
 
-    // use currying to hook up events
-    (function(_this) {
-      // map click event
-      google.maps.event.addListener(_this.map, 'click', function(event) {_this.map_click(event)});
+    // map click event
+    google.maps.event.addListener(self.map, 'click', function(event) {self.map_click(event)});
 
-      // hook up the accept and cancel links
-      _this.container.find("a.accept_link").click(function() {_this.close(true); return false;})
-      _this.container.find("a.cancel_link").click(function() {_this.close(false); return false;})
+    // hook up the accept link
+    self.container.find("button.accept_link").click(function() {self.close(true); return false;});
 
-      // hook up focus and blur events for search box
-      _this.container.find("form.location_search input.query").focus(function() {_this.search_focus(true);})
-      _this.container.find("form.location_search input.query").blur(function() {_this.search_focus(false);})
+    // hook up focus and blur events for search box
+    self.container.find("form.location_search input.query").focus(function() {self.search_focus(true);});
+    self.container.find("form.location_search input.query").blur(function() {self.search_focus(false);});
 
-      // hook up form submit
-      _this.container.find("form.location_search").submit(function() {_this.search_submit(); return false;});
-    })(this);
+    // hook up form submit
+    self.container.find("form.location_search").submit(function() {self.search_submit(); return false;});
   }
 
   // get float values for lat ang lng from a string
@@ -65,13 +65,13 @@
   }
 
   // handles a click event on the map
-  klass.prototype.map_click = function(event) {
-    this.set_location([event.latLng.lat(), event.latLng.lng()])
+  klass.prototype.map_click = function(event) { var self = this;
+    self.set_location([event.latLng.lat(), event.latLng.lng()])
   }
 
-  klass.prototype.search_focus = function(is_focus) {
+  klass.prototype.search_focus = function(is_focus) { var self = this;
     // get ref.
-    var box = this.container.find("form.location_search input.query");
+    var box = self.container.find("form.location_search input.query");
     var init_str = I18n.t("location_picker.search_locations");
 
     // if focused, blank the box and set the color and font style
@@ -84,28 +84,28 @@
   }
 
   // submits the search to the google geocoder class
-  klass.prototype.search_submit = function() {
+  klass.prototype.search_submit = function() { var self = this;
 
     // get query
-    var query = this.container.find("form.location_search input.query").val().trim();
+    var query = self.container.find("form.location_search input.query").val().trim();
 
     // do nothing if empty
     if (query == "") return;
 
     // show loading indicator
-    this.container.find("div.loading_indicator img").show();
+    self.container.find("div.loading_indicator img").show();
 
     // submit, giving callback method
-    (function(_this){ new ELMO.GoogleGeocoder(query, function(r){_this.show_search_results(r)}); })(this);
+    new ELMO.GoogleGeocoder(query, function(r){self.show_search_results(r)});
   }
 
   // displays the search results and hooks up the links
-  klass.prototype.show_search_results = function(results) {
+  klass.prototype.show_search_results = function(results) { var self = this;
     // hide loading indicator
-    this.container.find("div.loading_indicator img").hide();
+    self.container.find("div.loading_indicator img").hide();
 
     // get ref to div and empty it
-    var results_div = this.container.find("form.location_search div.results").empty();
+    var results_div = self.container.find("form.location_search div.results").empty();
 
     // show error if there is one
     if (typeof(results) == "string")
@@ -118,62 +118,51 @@
           attr("title", results[i].geometry.location.lat + "," + results[i].geometry.location.lng).
           text(results[i].formatted_address));
 
-      // hook up links
-      (function(_this){
-        _this.container.find("a.result_link").click(function(e){
-          _this.set_location(_this.parse_lat_lng(e.target.title), {pan: true});
-        });
-      })(this);
+      self.container.find("a.result_link").click(function(e){
+        self.set_location(self.parse_lat_lng(e.target.title), {pan: true});
+      });
     }
 
   }
 
-  klass.prototype.set_location = function(lat_lng, options) {
-    this.location = [lat_lng[0].toFixed(6), lat_lng[1].toFixed(6)];
-    this.mark_location();
+  klass.prototype.set_location = function(lat_lng, options) { var self = this;
+    self.location = [lat_lng[0].toFixed(6), lat_lng[1].toFixed(6)];
+    self.mark_location();
 
     // pan if requested
-    if (options.pan)
-      this.map.panTo(this.marker.getPosition());
+    if (options && options.pan)
+      self.map.panTo(self.marker.getPosition());
   }
 
   // updates the map to indicate that the given location has been chosen
-  klass.prototype.mark_location = function() {
+  klass.prototype.mark_location = function() { var self = this;
     // hide loading indicator
-    this.container.find("div.loading_indicator img").hide();
+    self.container.find("div.loading_indicator img").hide();
 
     // if the location is set
-    if (this.location) {
+    if (self.location) {
 
       // create the marker if necessary
-      if (!this.marker)
-        this.marker = new google.maps.Marker({
-          map: this.map
-        });
+      if (!self.marker)
+        self.marker = new google.maps.Marker({ map: self.map });
 
       // move the marker
-      this.marker.setPosition(new google.maps.LatLng(this.location[0], this.location[1]));
+      self.marker.setPosition(new google.maps.LatLng(self.location[0], self.location[1]));
     }
 
     // show the chosen location
-    this.container.find("span.cur_lat_lng").html(I18n.t("location_picker.current_location") + ": " +
-      (this.location ? this.location[0] + " " + this.location[1] : "None"));
-  }
-
-  // centersthe map on the given lat_lng
-  klass.prototype.center_map = function(lat_lng) {
-    // get the point
-    this.map.setCenter(new google.maps.LatLng(lat_lng[0], lat_lng[1]));
+    self.container.find("span.cur_lat_lng").html(I18n.t("location_picker.current_location") + ": " +
+      (self.location ? self.location[0] + " " + self.location[1] : "None"));
   }
 
   // closes the window, optionally saving the chosen location in the location field
-  klass.prototype.close = function(save) {
+  klass.prototype.close = function(save) { var self = this;
     // copy the value if requested
-    if (save) this.location_field.val(this.location[0] + " " + this.location[1]);
+    if (save) self.location_field.val(self.location[0] + " " + self.location[1]);
 
     // close the dialog and lower flag
     klass.showing = false;
-    this.dialog.close();
+    $('#location-picker-modal').modal('hide');
   }
 
   // class variables

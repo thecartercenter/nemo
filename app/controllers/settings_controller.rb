@@ -25,6 +25,7 @@ class SettingsController < ApplicationController
 
       set_success_and_redirect(@setting)
     rescue ActiveRecord::RecordInvalid
+      flash.now[:error] = I18n.t('activerecord.errors.models.setting.general')
       prepare_and_render_form
     end
   end
@@ -34,6 +35,11 @@ class SettingsController < ApplicationController
     def prepare_and_render_form
       # load options for sms adapter dropdown
       @adapter_options = Sms::Adapters::Factory::VALID_ADAPTERS
+
+      unless admin_mode?
+        # get external sql from Response class
+        @external_sql = Response.export_sql(Response.accessible_by(current_user.ability))
+      end
 
       # render the template
       render(:index)

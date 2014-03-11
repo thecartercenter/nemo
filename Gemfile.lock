@@ -41,6 +41,8 @@ GEM
       activerecord (>= 3.2)
       activesupport (>= 3.2)
     bluecloth (2.2.0)
+    bootstrap-modal-rails (2.2.0)
+      railties (>= 3.1)
     bootstrap-sass (3.0.3.0)
       sass (~> 3.2)
     builder (3.0.4)
@@ -91,8 +93,11 @@ GEM
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
+    metaclass (0.0.1)
     middleware (0.1.0)
     mime-types (1.25.1)
+    mocha (0.14.0)
+      metaclass (~> 0.0.1)
     multi_json (1.8.2)
     mysql2 (0.3.12b5)
     net-scp (1.1.1)
@@ -145,6 +150,8 @@ GEM
       railties (~> 3.2.0)
       sass (>= 3.1.10)
       tilt (~> 1.3)
+    spinjs-rails (1.3)
+      rails (>= 3.1)
     sprockets (2.2.2)
       hike (~> 1.2)
       multi_json (~> 1.0)
@@ -184,6 +191,7 @@ PLATFORMS
 DEPENDENCIES
   authlogic
   bluecloth
+  bootstrap-modal-rails
   bootstrap-sass (~> 3.0.3.0)
   bullet
   cancan
@@ -201,6 +209,7 @@ DEPENDENCIES
   iso-639
   jquery-rails
   libxml-ruby
+  mocha
   mysql2 (= 0.3.12b5)
   rails (~> 3.2)
   rails-erd
@@ -209,6 +218,7 @@ DEPENDENCIES
   random_data
   rdiscount
   sass-rails (~> 3.2.3)
+  spinjs-rails
   term-ansicolor
   thinking-sphinx (~> 3.0.2)
   timecop

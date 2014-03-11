@@ -7,6 +7,8 @@ gem 'rails', '~> 3.2'
 group :assets do
   gem 'sass-rails',   '~> 3.2.3'
   gem 'uglifier', '>= 1.0.3'
+  # makes modals stackable
+  gem 'bootstrap-modal-rails'
 end
 
 gem 'authlogic'
@@ -78,3 +80,9 @@ gem 'whenever', :require => false
 
 # Bootstrap UI framework
 gem 'bootstrap-sass', '~> 3.0.3.0'
+
+# mocking/stubbing
+gem 'mocha', :group => [:development, :test], :require => false
+
+# spinner
+gem 'spinjs-rails'

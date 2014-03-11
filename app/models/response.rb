@@ -9,7 +9,7 @@ class Response < ActiveRecord::Base
   belongs_to(:user, :inverse_of => :responses)
 
   has_many(:location_answers, :include => {:questioning => :question}, :class_name => 'Answer',
-    :conditions => "questions.qtype_name = 'location'", :order => 'questionings.rank')
+    :conditions => "questionables.qtype_name = 'location'", :order => 'questionings.rank')
 
   attr_accessor(:modifier, :excerpts)
 
@@ -66,6 +66,8 @@ class Response < ActiveRecord::Base
       Search::Qualifier.new(:name => "option_set", :col => "option_sets.name", :assoc => :option_sets),
 
       # this qualifier matches responses that have answers to questions with the given type
+      # this and other qualifiers use the 'questions' table because the join code below creates a table alias
+      # the actual STI table name is 'questionables'
       Search::Qualifier.new(:name => "question_type", :col => "questions.qtype_name", :assoc => :questions),
 
       # this qualifier matches responses that have answers to the given question
@@ -315,9 +317,6 @@ class Response < ActiveRecord::Base
     end.compact
   end
 
-  def form_name; form ? form.name : nil; end
-  def submitter; user ? user.name : nil; end
-
   # if this response contains location questions, returns the gps location (as a 2 element array)
   # of the first such question on the form, else returns nil
   def location
@@ -342,9 +341,13 @@ class Response < ActiveRecord::Base
       rel = rel.select("responses.created_at AS submission_time")
       rel = rel.select("responses.reviewed AS is_reviewed")
       rel = rel.select("forms.name AS form_name")
+
+      # these expressions use 'questions' because the join code below creates a table alias
+      # the actual STI table name is 'questionables'
       rel = rel.select("questions.code AS question_code")
       rel = rel.select("questions._name AS question_name")
       rel = rel.select("questions.qtype_name AS question_type")
+
       rel = rel.select("users.name AS submitter_name")
       rel = rel.select("answers.id AS answer_id")
       rel = rel.select("answers.value AS answer_value")

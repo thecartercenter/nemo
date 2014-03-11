@@ -21,14 +21,19 @@ class FormVersioningPolicy
       case action
       when :update
         # changing the option order is a trigger if the form is smsable
-        triggers << {:reason => :option_order_changed, :forms => obj.forms.reject{|f| !f.smsable?}} if obj.ranks_changed?
+        triggers << {:reason => :option_order_changed, :forms => obj.forms.select{|f| f.smsable?}} if obj.positions_changed?
       end
 
     when "Optioning"
       case action
       when :create
-        # adding an option to an option set is a trigger
-        triggers << {:reason => :option_added_to_set, :forms => obj.option_set.forms}
+        # adding an option to an option set is a trigger for smsable forms
+        triggers << {:reason => :option_added_to_set, :forms => obj.option_set.forms.select{|f| f.smsable?}}
+      when :update
+        # changing optioning parent is a trigger for smsable forms
+        if obj.parent_id_changed?
+          triggers << {:reason => :option_parent_changed, :forms => obj.option_set.forms.select{|f| f.smsable?}}
+        end
       when :destroy
         # removing an option from an option set is a trigger
         triggers << {:reason => :option_removed_from_set, :forms => obj.option_set.forms}
@@ -79,6 +84,9 @@ class FormVersioningPolicy
   def self.notify(obj, action)
     # get the list of forms that need to be upgraded
     forms_to_upgrade = check(obj, action).collect{|trigger| trigger[:forms]}.flatten.uniq
+
+    # reload all forms to ensure consistency, especially for testing
+    forms_to_upgrade.each(&:reload)
 
     # flag them
     forms_to_upgrade.each do |f|

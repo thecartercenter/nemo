@@ -13,23 +13,16 @@ body, td, textarea { font-family: 'Open Sans', Helvetica, sans-serif; font-size:
 body { line-height: 1.3; height: 100%; }
 form { margin: 0; }
 a { color: $orange; }
-form.button_to, form.button_to div { display: inline; }
-form.button_to input { background-color: transparent; border: none; color: $orange;
-  text-decoration: none; padding: 0; margin: 0; cursor: pointer; }
 h1, h2, h3 { color: black; font-family: 'Open Sans', Helvetica, sans-serif; }
 h1 { margin: 0 0 10px 0; font-size: 17pt; }
 
 h1.title {
   color: #777;
   font-weight: bold;
+  margin-bottom: 28px;
   i {
     color: $light-gray;
     margin-right: 5px;
-
-    &.fa-certificate {
-      color: $gold;
-      margin-left: 5px;
-    }
   }
 }
 
@@ -60,37 +53,22 @@ div.dialog h2 { margin: 0 0 10px 0; }
 /* loading indicator */
 div.loader { background: image-url('loader.gif') no-repeat; padding-left: 20px; }
 
-/* forms (older) */
-div.form, table.form { border-top: 1px solid #ddd; margin-bottom: 10px; }
-div.form > div, table.form td { padding: 5px; border-bottom: 1px solid #ddd; }
-div.form div.details, table.form td.details { width: 250px; }
-div.reqd_sym { display: inline; font-weight: bold; color: #d02000; font-size: 125%; line-height: 5px; vertical-align: middle; }
-table.form td.name { min-width: 75px; }
-
-div.data_integrity_warning {
-  background-color: #e4eeff;
-  padding: 5px;
-  margin: 10px 0;
-  max-width: 800px;
-
-  i {
-    display: block;
-    float: left;
-    font-size: 14px;
-    margin-top: 1px;
-  }
-
-  & > div {
-    margin-left: 20px;
-  }
-}
-
-/* collection form */
-div.collection_form div.item { margin-bottom: 3px; }
-
 /* action links/icons */
 a.action_link { font-size: 14px; text-decoration: none; display: inline-block; margin-right: 3px; }
 table a.action_link { margin: -2px 10px -2px 0; }
+
+/* TOM: can this be in a file other than main? main should be deprecated I think. */
+i.hint {
+  color: $elmo-blue;
+  font-size: 1.5em;
+  vertical-align: middle;
+  padding: 5px;
+}
+
+div.popover {
+  top: -2.5px;
+  width: 200px;
+}
 
 /* index tables */
 table.index_table {
@@ -107,9 +85,13 @@ table.index_table td.actions_col img { margin-right: 5px; }
 table.index_table tbody tr.clickable { cursor: pointer; }
 table.index_table tbody tr:hover, table.index_table tbody tr.hovered { background-color: #ECF1F5; }
 td.actions_col { white-space: nowrap; }
-div.loading_indicator_inline { width: 16px; display: inline; }
+div.loading_indicator_inline { width: 16px; display: inline-block; vertical-align: top; }
 div.loading_indicator_floating { width: 16px; float: left; }
-table.index_table img.std_seal { margin-bottom: -5px; }
+table.index_table i.fa-certificate {
+  margin-bottom: -5px;
+  color: $gold;
+  font-size: 1.5em;
+}
 
 /* set of links */
 .link_set {
@@ -136,7 +118,7 @@ ul.pagination {
 }
 
 /* flash/error messages */
-div.compact_error { color: $theme_red; font-weight: bold; }
+div.compact_error { color: #A94442; font-weight: bold; }
 div.field_with_errors { display: inline; }
 
 /* login form */
@@ -147,12 +129,8 @@ div.field_with_errors { display: inline; }
 
 /* question fields */
 div.question_fields {
-  .control {
-    width: 475px !important;
-  }
 
-  .form_field.name_hint textarea {
-    width: 400px;
+  .names_hints textarea {
     height: 30px;
   }
 
@@ -171,13 +149,14 @@ div.question_fields {
   }
 }
 
+form.question_form { margin-bottom: 50px; }
 /* questioning fields */
 form.questioning_form .control { width: 475px !important; }
 form.questioning_form .form_field#condition select { min-width: 125px; }
 form.questioning_form .form_field#condition input { width: 120px; }
-form.questioning_form .form_field#condition div.row { margin-bottom: 4px; }
-form.questioning_form .form_field#condition div.row > div { display: inline-block; }
-form.questioning_form .form_field#condition div.row > div:first-child { width: 100px; }
+form.questioning_form .form_field#condition .control > div { margin-bottom: 4px; }
+form.questioning_form .form_field#condition .control > div > div { display: inline-block; }
+form.questioning_form .form_field#condition .control > div > div:first-child { width: 100px; }
 
 /* question index/choose */
 .questions_index .code_col { min-width: 100px; }
@@ -198,8 +177,7 @@ form.questioning_form .form_field#condition div.row > div:first-child { width: 1
 .option_sets_edit div.optcol, .option_sets_new div.optcol, .option_sets_show div.optcol { float: left; margin-right: 20px; }
 
 /* broadcasts */
-input#broadcast_subject { width: 300px; }
-textarea#broadcast_body { width: 300px; height: 170px; }
+textarea#broadcast_body { height: 170px; }
 .broadcasts_show #send_errors div.control { color: #d02000; font-weight: bold; }
 .broadcasts_show #send_errors div.control p { margin: 0; }
 
@@ -212,10 +190,26 @@ textarea#broadcast_body { width: 300px; height: 170px; }
 .forms_choose_questions div.question_form { display: none; }
 
 /* location picker */
-div.location_picker { width: 900px; height: 500px; }
-div.location_picker div.map_canvas { width: 600px; height: 440px; border: 1px solid #ccc; float: left; margin-right: 10px; }
+#location-picker-modal {
+  .modal-dialog {
+    width: 860px;
+  }
+  .modal-body {
+    height: 500px;
+
+    .link_set {
+      display: inline-block;
+    }
+  }
+}
+
+button.btn-primary {
+  background-color: $orange;
+  border: 0px;
+}
+div.location_picker div.map_canvas { width: 500px; height: 400px; border: 1px solid #ccc; float: left; margin-right: 10px; }
 div.location_picker span.cur_lat_lng { font-weight: bold; }
-div.location_picker form.location_search { float: left; width: 275px; }
+div.location_picker form.location_search { float: right; width: 275px; }
 div.location_picker form.location_search input.query { width: 250px; margin-bottom: 10px; color: #888; font-style: italic; }
 div.location_picker form.location_search div.results a { display: block; margin-bottom: 8px; }
 
@@ -225,8 +219,8 @@ div.location_picker form.location_search div.results a { display: block; margin-
 /* settings */
 form.setting_form .adapter_settings { display: none; }
 form.setting_form .adapter_settings .password_fields { display: none; }
-form.setting_form #tableau_sql .control pre { width: 325px; height: 70px; overflow: auto; border: 1px solid #ccc; margin: 0 0 3px 0; }
-form.setting_form #tableau_sql .control a { font-size: 9pt; }
+form.setting_form #external_sql .control pre { width: 415px; height: 100px; overflow: auto; border: 1px solid #ccc; margin: 0 0 3px 0; font-size: 8pt; }
+form.setting_form #external_sql .control a { font-size: 9pt; }
 
 /* sms guide */
 div.sms_guide div.header { float: right; color: #888; font-size: 15px; }

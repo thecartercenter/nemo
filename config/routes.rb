@@ -35,9 +35,8 @@ ELMO::Application.routes.draw do
     end
 
     # special dashboard routes
-    match('/dashboard' => 'dashboard#show', :as => :dashboard)
-    match('/dashboard/info_window' => 'dashboard#info_window', :as => :dashboard_info_window)
-    match('/dashboard/report_pane/:id' => 'dashboard#report_pane')
+    match('/info_window' => 'welcome#info_window', :as => :dashboard_info_window)
+    match('/report_pane/:id' => 'welcome#report_pane')
 
     # login/logout shortcut
     match("/logged_out" => "user_sessions#logged_out", :as => :logged_out)
@@ -51,12 +50,18 @@ ELMO::Application.routes.draw do
     # the rest of these routes can have admin mode or not
     resources(:forms){member{post *%w(add_questions remove_questions); put *%w(clone publish); get *%w(choose_questions)}}
     resources(:markers)
-    resources(:option_sets){member{put *%w(clone)}}
     resources(:questions)
     resources(:questionings)
     resources(:settings)
     resources(:users){member{get 'login_instructions'; get 'exit_admin_mode'}; collection{post 'export'}}
     resources(:user_batches)
+
+    # looks nicer
+    resources(:option_sets, :path => 'option-sets'){member{put 'clone'}}
+
+    # for legacy support
+    resources(:option_sets){member{put 'clone'}}
+
 
     # import routes for standardizeable objects
     %w(forms questions option_sets).each do |k|

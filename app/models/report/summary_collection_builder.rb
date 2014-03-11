@@ -17,7 +17,9 @@ class Report::SummaryCollectionBuilder
 
   # builds a summary collection with the given questionings and disaggregation qing
   # if disagg_qing is nil, no disaggregation will be done
+  # options[:restrict_to_user] - (optional) If specified, only Responses for the given user will be included in the results.
   def initialize(questionings, disagg_qing, options = {})
+
     @disagg_qing = disagg_qing
     @options = options
 
@@ -151,8 +153,9 @@ class Report::SummaryCollectionBuilder
             WHEN 'datetime' THEN MAX(a.datetime_value)
           END AS max
         FROM answers a INNER JOIN questionings qing ON a.questioning_id = qing.id AND qing.id IN (#{qing_ids})
-          INNER JOIN questions q ON q.id = qing.question_id
+          INNER JOIN questionables q ON q.id = qing.question_id AND q.type = 'Question'
           #{disagg_join_clause}
+          #{current_user_join_clause}
         WHERE q.qtype_name in ('integer', 'decimal', 'time', 'datetime')
         GROUP BY #{disagg_group_by_expr} qing.id, q.qtype_name
       eos
@@ -229,9 +232,10 @@ class Report::SummaryCollectionBuilder
       query = <<-eos
         SELECT #{disagg_select_expr} qings.id AS qing_id, a.option_id AS option_id, COUNT(a.id) AS answer_count
         FROM questionings qings
-          INNER JOIN questions q ON qings.question_id = q.id
+          INNER JOIN questionables q ON qings.question_id = q.id AND q.type = 'Question'
           LEFT OUTER JOIN answers a ON qings.id = a.questioning_id
           #{disagg_join_clause}
+          #{current_user_join_clause}
           WHERE q.qtype_name IN ('select_one', 'select_multiple')
             AND qings.id IN (#{qing_ids})
           GROUP BY #{disagg_group_by_expr} qings.id, a.option_id
@@ -241,10 +245,11 @@ class Report::SummaryCollectionBuilder
       query = <<-eos
         SELECT #{disagg_select_expr} qings.id AS qing_id, c.option_id AS option_id, COUNT(c.id) AS choice_count
         FROM questionings qings
-          INNER JOIN questions q ON qings.question_id = q.id
+          INNER JOIN questionables q ON qings.question_id = q.id AND q.type = 'Question'
           LEFT OUTER JOIN answers a ON qings.id = a.questioning_id
           LEFT OUTER JOIN choices c ON a.id = c.answer_id
           #{disagg_join_clause}
+          #{current_user_join_clause}
           WHERE q.qtype_name = 'select_multiple'
             AND qings.id IN (#{qing_ids})
           GROUP BY #{disagg_group_by_expr} qings.id, c.option_id
@@ -275,10 +280,11 @@ class Report::SummaryCollectionBuilder
       query = <<-eos
         SELECT #{disagg_select_expr} qings.id AS qing_id, COUNT(DISTINCT a.id) AS non_null_answer_count
         FROM questionings qings
-          INNER JOIN questions q ON qings.question_id = q.id
+          INNER JOIN questionables q ON qings.question_id = q.id AND q.type = 'Question'
           LEFT OUTER JOIN answers a ON qings.id = a.questioning_id
           LEFT OUTER JOIN choices c ON a.id = c.answer_id
           #{disagg_join_clause}
+          #{current_user_join_clause}
           WHERE q.qtype_name = 'select_multiple'
             AND qings.id IN (#{qing_ids})
             AND c.id IS NOT NULL
@@ -354,9 +360,10 @@ class Report::SummaryCollectionBuilder
       query = <<-eos
         SELECT #{disagg_select_expr} qings.id AS qing_id, a.date_value AS date, COUNT(a.id) AS answer_count
         FROM questionings qings
-          INNER JOIN questions q ON qings.question_id = q.id
+          INNER JOIN questionables q ON qings.question_id = q.id AND q.type = 'Question'
           LEFT OUTER JOIN answers a ON qings.id = a.questioning_id
           #{disagg_join_clause}
+          #{current_user_join_clause}
           WHERE q.qtype_name = 'date'
             AND qings.id IN (#{qing_ids})
           GROUP BY #{disagg_group_by_expr} qings.id, a.date_value
@@ -455,6 +462,7 @@ class Report::SummaryCollectionBuilder
           a.response_id AS response_id, a.created_at AS created_at
         FROM answers a
           #{disagg_join_clause}
+          #{current_user_join_clause}
           WHERE a.questioning_id IN (#{qing_ids})
           ORDER BY disagg_value, a.created_at
       eos
@@ -525,6 +533,14 @@ class Report::SummaryCollectionBuilder
       <<-eos
         INNER JOIN responses r ON a.response_id = r.id
         LEFT OUTER JOIN answers disagg_ans ON r.id = disagg_ans.response_id AND disagg_ans.questioning_id = #{disagg_qing.id}
+      eos
+    end
+
+    # restrict query to responses observer has access to. admins and coordinators have access to all responses.
+    def current_user_join_clause
+      return '' unless @options && @options[:restrict_to_user]
+      <<-eos
+        INNER JOIN responses res ON a.response_id = res.id AND res.user_id = #{@options[:restrict_to_user].id}
       eos
     end
 

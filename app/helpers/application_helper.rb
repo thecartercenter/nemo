@@ -29,9 +29,14 @@ module ApplicationHelper
     :'condition.base' => true
   }
 
-  # renders the flash message and any form errors for the given activerecord object
-  def flash_and_form_errors(object = nil)
-    render("layouts/flash", :flash => flash, :object => object)
+  # pairs flash errors with bootstrap styling
+  def flash_class(level)
+    case level
+      when :notice then "alert alert-info"
+      when :success then "alert alert-success"
+      when :error then "alert alert-danger"
+      when :alert then "alert alert-warning"
+    end
   end
 
   # returns the html for an action icon using font awesome and the mappings defined above
@@ -82,23 +87,25 @@ module ApplicationHelper
 
   # creates a link to a batch operation
   def batch_op_link(options)
-    button_to(options[:name], "#",
+    link_to(options[:name], "#",
       :onclick => "batch_submit({path: '#{options[:path]}', confirm: '#{options[:confirm]}'}); return false;",
       :class => "batch_op_link")
   end
 
   # creates a link to select all the checkboxes in an index table
   def select_all_link
-    button_to(t("layout.select_all"), "#", :onclick => "batch_select_all(); return false", :id => "select_all_link")
+    link_to(t("layout.select_all"), '#', :onclick => "batch_select_all(); return false", :id => 'select_all_link')
   end
 
   # renders an index table for the given class and list of objects
+  # options[:within_form] - Whether the table is contained within a form tag. Affects whether a form tag is generated
+  #   to contain the batch op checkboxes.
   def index_table(klass, objects, options = {})
     links = []
 
     unless options[:table_only]
       # get links from class' helper
-      links = send("#{klass.table_name}_index_links", objects).compact
+      links = send("#{klass.model_name.route_key}_index_links", objects).compact
 
       # if there are any batch links, insert the 'select all' link
       batch_ops = !links.reject{|l| !l.match(/class="batch_op_link"/)}.empty?
@@ -112,7 +119,7 @@ module ApplicationHelper
       :options => options,
       :paginated => objects.respond_to?(:total_entries),
       :links => links.flatten.join.html_safe,
-      :fields => send("#{klass.table_name}_index_fields"),
+      :fields => send("#{klass.model_name.route_key}_index_fields"),
       :batch_ops => batch_ops
     )
   end
@@ -143,11 +150,6 @@ module ApplicationHelper
 
     # wrap in tags if requested
     options[:tags] ? options_for_select(arr) : arr
-  end
-
-  # renders a collection of objects, including a boilerplate form and calls to the appropriate JS
-  def collection_form(params)
-    render(:partial => "layouts/collection_form", :locals => params)
   end
 
   # finds the english name of the language with the given code (e.g. 'French' for 'fr')
@@ -237,12 +239,7 @@ module ApplicationHelper
     # add text
     ttl += t(action, {:scope => "page_titles.#{controller_name}", :default => [:all, ""]}.merge(@title_args || {}))
 
-    # add seal after text if appropriate
-    if !options[:text_only]
-      if admin_mode? && %w(forms questions questionings option_sets).include?(controller_name) || @title_args.delete(:standardized)
-        ttl +=  content_tag(:i, "", :class => "fa fa-certificate")
-      end
-    end
+
 
     ttl.html_safe
   end
@@ -292,7 +289,7 @@ module ApplicationHelper
   # returns img tag for standard icon if obj is standard, '' otherwise
   def std_icon(obj)
     if obj.respond_to?(:standardized?) && obj.standardized?
-      image_tag('std-seal.png', :class => 'std_seal')
+      content_tag(:i, "", :class => "fa fa-certificate")
     else
       ''
     end

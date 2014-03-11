@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140117152808) do
+ActiveRecord::Schema.define(:version => 20140211165731) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -23,17 +23,18 @@ ActiveRecord::Schema.define(:version => 20140117152808) do
     t.time     "time_value"
     t.date     "date_value"
     t.datetime "datetime_value"
-    t.boolean  "delta",          :default => true, :null => false
+    t.boolean  "delta",           :default => true, :null => false
+    t.integer  "questionable_id",                   :null => false
   end
 
   add_index "answers", ["option_id"], :name => "answers_option_id_fk"
+  add_index "answers", ["questionable_id"], :name => "answers_questionable_id_fk"
   add_index "answers", ["questioning_id"], :name => "answers_questioning_id_fk"
   add_index "answers", ["response_id"], :name => "answers_response_id_fk"
 
   create_table "assignments", :force => true do |t|
     t.integer  "mission_id"
     t.integer  "user_id"
-    t.boolean  "active"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "role"
@@ -125,7 +126,6 @@ ActiveRecord::Schema.define(:version => 20140117152808) do
   add_index "forms", ["current_version_id"], :name => "forms_current_version_id_fk"
   add_index "forms", ["mission_id", "name"], :name => "index_forms_on_mission_id_and_name", :unique => true
   add_index "forms", ["mission_id", "standard_id"], :name => "index_forms_on_mission_id_and_standard_id", :unique => true
-  add_index "forms", ["mission_id"], :name => "forms_mission_id_fk"
   add_index "forms", ["standard_id"], :name => "index_forms_on_standard_id"
 
   create_table "missions", :force => true do |t|
@@ -138,6 +138,22 @@ ActiveRecord::Schema.define(:version => 20140117152808) do
 
   add_index "missions", ["compact_name"], :name => "index_missions_on_compact_name"
 
+  create_table "option_levels", :force => true do |t|
+    t.integer  "option_set_id",                        :null => false
+    t.integer  "rank",                                 :null => false
+    t.text     "name_translations",                    :null => false
+    t.integer  "mission_id"
+    t.boolean  "is_standard",       :default => false, :null => false
+    t.integer  "standard_id"
+    t.datetime "created_at",                           :null => false
+    t.datetime "updated_at",                           :null => false
+    t.string   "_name"
+  end
+
+  add_index "option_levels", ["mission_id", "standard_id"], :name => "index_option_levels_on_mission_id_and_standard_id", :unique => true
+  add_index "option_levels", ["option_set_id"], :name => "option_levels_option_set_id_fk"
+  add_index "option_levels", ["standard_id"], :name => "option_levels_standard_id_fk"
+
   create_table "option_sets", :force => true do |t|
     t.string   "name"
     t.datetime "created_at"
@@ -146,12 +162,12 @@ ActiveRecord::Schema.define(:version => 20140117152808) do
     t.boolean  "is_standard", :default => false
     t.integer  "standard_id"
     t.boolean  "geographic",  :default => false, :null => false
+    t.boolean  "multi_level", :default => false, :null => false
   end
 
   add_index "option_sets", ["geographic"], :name => "index_option_sets_on_geographic"
   add_index "option_sets", ["mission_id", "name"], :name => "index_option_sets_on_mission_id_and_name", :unique => true
   add_index "option_sets", ["mission_id", "standard_id"], :name => "index_option_sets_on_mission_id_and_standard_id", :unique => true
-  add_index "option_sets", ["mission_id"], :name => "option_sets_mission_id_fk"
   add_index "option_sets", ["standard_id"], :name => "index_option_sets_on_standard_id"
 
   create_table "optionings", :force => true do |t|
@@ -160,14 +176,18 @@ ActiveRecord::Schema.define(:version => 20140117152808) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "rank"
-    t.boolean  "is_standard",   :default => false
+    t.boolean  "is_standard",     :default => false
     t.integer  "standard_id"
     t.integer  "mission_id"
+    t.integer  "parent_id"
+    t.integer  "option_level_id"
   end
 
   add_index "optionings", ["mission_id", "standard_id"], :name => "index_optionings_on_mission_id_and_standard_id", :unique => true
   add_index "optionings", ["option_id"], :name => "optionings_option_id_fk"
+  add_index "optionings", ["option_level_id"], :name => "optionings_option_level_id_fk"
   add_index "optionings", ["option_set_id"], :name => "optionings_option_set_id_fk"
+  add_index "optionings", ["parent_id"], :name => "optionings_parent_id_fk"
   add_index "optionings", ["standard_id"], :name => "index_optionings_on_standard_id"
 
   create_table "options", :force => true do |t|
@@ -183,8 +203,39 @@ ActiveRecord::Schema.define(:version => 20140117152808) do
   end
 
   add_index "options", ["mission_id", "standard_id"], :name => "index_options_on_mission_id_and_standard_id", :unique => true
-  add_index "options", ["mission_id"], :name => "options_mission_id_fk"
   add_index "options", ["standard_id"], :name => "index_options_on_standard_id"
+
+  create_table "questionables", :force => true do |t|
+    t.string   "code"
+    t.integer  "option_set_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "minimum"
+    t.integer  "maximum"
+    t.boolean  "maxstrictly"
+    t.boolean  "minstrictly"
+    t.integer  "mission_id"
+    t.string   "qtype_name"
+    t.text     "_name"
+    t.text     "_hint"
+    t.text     "name_translations"
+    t.text     "hint_translations"
+    t.boolean  "key",               :default => false
+    t.boolean  "is_standard",       :default => false
+    t.integer  "standard_id"
+    t.string   "type",                                 :null => false
+    t.integer  "parent_id"
+    t.integer  "option_level_id"
+  end
+
+  add_index "questionables", ["mission_id", "code"], :name => "index_questions_on_mission_id_and_code", :unique => true
+  add_index "questionables", ["mission_id", "standard_id"], :name => "index_questions_on_mission_id_and_standard_id", :unique => true
+  add_index "questionables", ["option_level_id"], :name => "questionables_option_level_id_fk"
+  add_index "questionables", ["option_set_id"], :name => "questions_option_set_id_fk"
+  add_index "questionables", ["parent_id"], :name => "questionables_parent_id_fk"
+  add_index "questionables", ["qtype_name"], :name => "index_questions_on_qtype_name"
+  add_index "questionables", ["standard_id"], :name => "index_questions_on_standard_id"
+  add_index "questionables", ["type"], :name => "index_questionables_on_type"
 
   create_table "questionings", :force => true do |t|
     t.integer  "question_id"
@@ -203,33 +254,6 @@ ActiveRecord::Schema.define(:version => 20140117152808) do
   add_index "questionings", ["mission_id", "standard_id"], :name => "index_questionings_on_mission_id_and_standard_id", :unique => true
   add_index "questionings", ["question_id"], :name => "questionings_question_id_fk"
   add_index "questionings", ["standard_id"], :name => "index_questionings_on_standard_id"
-
-  create_table "questions", :force => true do |t|
-    t.string   "code"
-    t.integer  "option_set_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "minimum"
-    t.integer  "maximum"
-    t.boolean  "maxstrictly"
-    t.boolean  "minstrictly"
-    t.integer  "mission_id"
-    t.string   "qtype_name"
-    t.text     "_name"
-    t.text     "_hint"
-    t.text     "name_translations"
-    t.text     "hint_translations"
-    t.boolean  "key",               :default => false
-    t.boolean  "is_standard",       :default => false
-    t.integer  "standard_id"
-  end
-
-  add_index "questions", ["mission_id", "code"], :name => "index_questions_on_mission_id_and_code", :unique => true
-  add_index "questions", ["mission_id", "standard_id"], :name => "index_questions_on_mission_id_and_standard_id", :unique => true
-  add_index "questions", ["mission_id"], :name => "questions_mission_id_fk"
-  add_index "questions", ["option_set_id"], :name => "questions_option_set_id_fk"
-  add_index "questions", ["qtype_name"], :name => "index_questions_on_qtype_name"
-  add_index "questions", ["standard_id"], :name => "index_questions_on_standard_id"
 
   create_table "report_calculations", :force => true do |t|
     t.string   "type"
@@ -289,8 +313,6 @@ ActiveRecord::Schema.define(:version => 20140117152808) do
     t.string   "source"
     t.integer  "mission_id"
     t.boolean  "incomplete", :default => false, :null => false
-    t.string   "signature"
-    t.boolean  "duplicate"
   end
 
   add_index "responses", ["created_at"], :name => "index_responses_on_created_at"
@@ -343,7 +365,7 @@ ActiveRecord::Schema.define(:version => 20140117152808) do
   add_index "sms_messages", ["mission_id"], :name => "sms_messages_mission_id_fk"
 
   create_table "users", :force => true do |t|
-    t.string   "login"
+    t.string   "login",                                  :null => false
     t.string   "email"
     t.string   "phone"
     t.string   "password_salt"
@@ -351,19 +373,20 @@ ActiveRecord::Schema.define(:version => 20140117152808) do
     t.string   "single_access_token"
     t.string   "perishable_token"
     t.string   "persistence_token"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                             :null => false
+    t.datetime "updated_at",                             :null => false
     t.integer  "login_count",         :default => 0
     t.text     "notes"
     t.datetime "last_request_at"
-    t.string   "name"
+    t.string   "name",                                   :null => false
     t.string   "phone2"
-    t.boolean  "admin"
+    t.boolean  "admin",               :default => false, :null => false
     t.integer  "current_mission_id"
-    t.string   "pref_lang"
+    t.string   "pref_lang",                              :null => false
   end
 
   add_index "users", ["current_mission_id"], :name => "users_current_mission_id_fk"
+  add_index "users", ["email"], :name => "index_users_on_email", :unique => true
   add_index "users", ["login"], :name => "index_users_on_login", :unique => true
 
   add_foreign_key "assignments", "missions", :name => "assignments_mission_id_fk"
@@ -388,27 +411,34 @@ ActiveRecord::Schema.define(:version => 20140117152808) do
   add_foreign_key "forms", "forms", :name => "forms_standard_id_fk", :column => "standard_id"
   add_foreign_key "forms", "missions", :name => "forms_mission_id_fk"
 
+  add_foreign_key "option_levels", "option_levels", :name => "option_levels_standard_id_fk", :column => "standard_id"
+  add_foreign_key "option_levels", "option_sets", :name => "option_levels_option_set_id_fk"
+
   add_foreign_key "option_sets", "missions", :name => "option_sets_mission_id_fk"
   add_foreign_key "option_sets", "option_sets", :name => "option_sets_standard_id_fk", :column => "standard_id"
 
   add_foreign_key "optionings", "missions", :name => "optionings_mission_id_fk"
+  add_foreign_key "optionings", "option_levels", :name => "optionings_option_level_id_fk"
   add_foreign_key "optionings", "option_sets", :name => "optionings_option_set_id_fk"
+  add_foreign_key "optionings", "optionings", :name => "optionings_parent_id_fk", :column => "parent_id"
   add_foreign_key "optionings", "optionings", :name => "optionings_standard_id_fk", :column => "standard_id"
   add_foreign_key "optionings", "options", :name => "optionings_option_id_fk"
 
   add_foreign_key "options", "missions", :name => "options_mission_id_fk"
   add_foreign_key "options", "options", :name => "options_standard_id_fk", :column => "standard_id"
 
+  add_foreign_key "questionables", "missions", :name => "questions_mission_id_fk"
+  add_foreign_key "questionables", "option_levels", :name => "questionables_option_level_id_fk"
+  add_foreign_key "questionables", "option_sets", :name => "questions_option_set_id_fk"
+  add_foreign_key "questionables", "questionables", :name => "questionables_parent_id_fk", :column => "parent_id"
+  add_foreign_key "questionables", "questionables", :name => "questions_standard_id_fk", :column => "standard_id"
+
   add_foreign_key "questionings", "forms", :name => "questionings_form_id_fk"
   add_foreign_key "questionings", "missions", :name => "questionings_mission_id_fk"
+  add_foreign_key "questionings", "questionables", :name => "questionings_question_id_fk", :column => "question_id"
   add_foreign_key "questionings", "questionings", :name => "questionings_standard_id_fk", :column => "standard_id"
-  add_foreign_key "questionings", "questions", :name => "questionings_question_id_fk"
 
-  add_foreign_key "questions", "missions", :name => "questions_mission_id_fk"
-  add_foreign_key "questions", "option_sets", :name => "questions_option_set_id_fk"
-  add_foreign_key "questions", "questions", :name => "questions_standard_id_fk", :column => "standard_id"
-
-  add_foreign_key "report_calculations", "questions", :name => "report_calculations_question1_id_fk", :column => "question1_id"
+  add_foreign_key "report_calculations", "questionables", :name => "report_calculations_question1_id_fk", :column => "question1_id"
   add_foreign_key "report_calculations", "report_reports", :name => "report_calculations_report_report_id_fk"
 
   add_foreign_key "report_option_set_choices", "option_sets", :name => "report_option_set_choices_option_set_id_fk"

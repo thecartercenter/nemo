@@ -55,8 +55,7 @@
       <% unless admin_mode? %>
         <%# current mission and dropdown, if there are choices %>
         <% unless accessible_missions.empty? %>
-          <%= nice_form_for(current_user) do |f| %>
-            <% f.mode = :edit %>
+          <%= form_for(current_user) do |f| %>
             <%= f.select(:current_mission_id, sel_opts_from_objs(accessible_missions),
               {:include_blank => "[#{t('common.none').capitalize}]"}, {:class => "form-control"}) %>
             <%= loading_indicator(:header => true) %>
@@ -99,20 +98,23 @@
         <% end %>
 
         <ul class="nav navbar-nav">
-          <% unless admin_mode? %>
-            <%# submit response dropdown %>
-            <li class="dropdown">
-              <% if can?(:create, Response) %>
-                <a href="#" data-target="#" class="dropdown-toggle" data-toggle="dropdown">
-                  <i class="fa fa-share-square-o"></i><%= t('common.submit') %><b class="caret"></b>
-                </a>
-                <%# empty until ajax call %>
-                <ul class="dropdown-menu" role="menu">
-                  <%= loading_indicator() %>
-
-                </ul>
-              <% end %>
-            </li>
+          <% if !admin_mode? %>
+            <% if can?(:create, Response) %>
+              <%# submit response dropdown %>
+              <li class="dropdown">
+                  <a href="#" data-target="#" class="dropdown-toggle" data-toggle="dropdown">
+                    <i class="fa fa-share-square-o"></i><%= t('common.submit') %><b class="caret"></b>
+                  </a>
+                  <%# empty until ajax call %>
+                  <ul class="dropdown-menu" role="menu">
+                    <%= loading_indicator() %>
+                  </ul>
+              </li>
+            <%# else mission is locked %>
+            <% else %>
+              <%# keep nav spacing %>
+              <li>&nbsp;</li>
+            <% end %>
 
             <%= nav_links(Response, Report::Report) %>
 
@@ -132,9 +134,10 @@
     <% end %>
   </nav>
 
-
-
   <div id="content" class="<%= ctlr_action_name %>">
+    <%# Show errors or alerts if any %>
+    <%= render("layouts/flash", :flash => flash) %>
+
     <% unless @dont_print_title %>
       <h1 class="title">
         <%= title %>
@@ -144,8 +147,6 @@
   </div>
 
   <div id="footer">
-    <%# temporary dashboard link %>
-    <%= link_to(t('page_titles.dashboard.all'), dashboard_path) %> &nbsp;|&nbsp;
 
     <%= link_to(t("layout.change_language"), "#", :id => "locale_form_link") %>
 

@@ -1,7 +1,9 @@
-<%= flash_and_form_errors %>
+<%# don't print usual title because each instruction box has its own title %>
+<% @dont_print_title = true %>
+
 <div id="login_instructions">
   <div id="preamble">
-    <%= t("user.login_instructions.preamble_plural") %>
+    <p><%= t("user.login_instructions.preamble_plural") %></p>
     <p><%= link_to(t("user.back_to_index"), users_path) %></p>
   </div>
 

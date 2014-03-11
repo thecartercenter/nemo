@@ -11,7 +11,6 @@ class FormsController < ApplicationController
   # in the choose_questions action we have a question form so we need this Concern
   include QuestionFormable
 
-
   def index
     # handle different formats
     respond_to do |format|
@@ -89,6 +88,7 @@ class FormsController < ApplicationController
     if @form.save
       set_success_and_redirect(@form, :to => edit_form_path(@form))
     else
+      flash.now[:error] = I18n.t('activerecord.errors.models.form.general')
       prepare_and_render_form
     end
   end
@@ -104,9 +104,16 @@ class FormsController < ApplicationController
       # update ranks if provided (possibly raising condition ordering error)
       @form.update_ranks(params[:rank]) if params[:rank] && can?(:reorder_questions, @form)
 
-      # save everything and redirect
+      # save everything
       @form.save!
-      set_success_and_redirect(@form, :to => edit_form_path(@form))
+
+      # publish if requested
+      if params[:save_and_publish].present?
+        @form.publish!
+        set_success_and_redirect(@form, :to => forms_path)
+      else
+        set_success_and_redirect(@form, :to => edit_form_path(@form))
+      end
 
     # handle problem with conditions
     rescue ConditionOrderingError
@@ -134,8 +141,8 @@ class FormsController < ApplicationController
       flash[:error] = t("form.#{verb}_error", :msg => $!.to_s)
     end
 
-    # redirect to form index
-    redirect_to(index_url_with_page_num)
+    # redirect to index or edit
+    redirect_to(verb == :publish ? index_url_with_page_num : edit_form_path(@form))
   end
 
   # shows the form to either choose existing questions or create a new one to add
@@ -163,7 +170,7 @@ class FormsController < ApplicationController
     if @form.save
       flash[:success] = t("form.questions_add_success")
     else
-      flash[:error] = t("form.questions_add_error", :msg => @form.errors.full_messages.join(';'))
+      flash[:error] = t("form.questions_add_error", :msg => @form.errors.messages.values.join(';'))
     end
 
     # redirect to form edit

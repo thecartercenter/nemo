@@ -9,7 +9,13 @@ class Answer < ActiveRecord::Base
   belongs_to(:response, :inverse_of => :answers, :touch => true)
   has_many(:choices, :dependent => :destroy, :inverse_of => :answer)
 
+  # this association refers to a Question or Subquestion
+  # it should refer to a Subquestion if the associated Question is multilevel
+  belongs_to(:questionable)
+
   before_validation(:clean_locations)
+  before_save(:set_default_questionable)
+  before_save(:assert_questionable_is_correct_type)
   before_save(:round_ints)
   before_save(:blanks_to_nulls)
 
@@ -20,8 +26,8 @@ class Answer < ActiveRecord::Base
   validate(:min_max)
   validate(:required)
 
-  delegate :question, :to => :questioning
-  delegate :qtype, :to => :question
+  delegate :question, :qtype, :rank, :required?, :hidden?, :option_set, :options, :condition, :to => :questioning
+  delegate :name, :hint, :to => :question, :prefix => true
 
   # creates a new answer from a string from odk
   def self.new_from_str(params)
@@ -53,14 +59,15 @@ class Answer < ActiveRecord::Base
 
   # gets all location answers for the given mission
   # returns only the response ID and the answer value
-  def self.location_answers_for_mission(mission)
+  def self.location_answers_for_mission(mission, user = nil)
+    user_clause = user ? "AND r.user_id = #{user.id}" : ''
     find_by_sql([
       "SELECT r.id AS r_id, a.value AS loc
       FROM answers a
         INNER JOIN responses r ON a.response_id = r.id
         INNER JOIN questionings qing ON a.questioning_id = qing.id
-        INNER JOIN questions q ON qing.question_id = q.id
-      WHERE q.qtype_name = 'location' AND a.value IS NOT NULL AND r.mission_id = ?",
+        INNER JOIN questionables q ON qing.question_id = q.id
+      WHERE q.qtype_name = 'location' AND a.value IS NOT NULL AND r.mission_id = ? #{user_clause}",
       mission.id
     ])
   end
@@ -105,14 +112,6 @@ class Answer < ActiveRecord::Base
       end
     end
   end
-
-  def question; questioning ? questioning.question : nil; end
-  def rank; questioning.rank; end
-  def required?; questioning.required?; end
-  def hidden?; questioning.hidden?; end
-  def question_name; question.name; end
-  def question_hint; question.hint || ""; end
-  def options; question.options; end
 
   # relevant defaults to true until set otherwise
   def relevant?
@@ -166,7 +165,7 @@ class Answer < ActiveRecord::Base
 
   private
     def required
-      errors.add(:base, :required) if required_but_empty?
+      errors.add(:value, :required) if required_but_empty?
     end
 
     def round_ints
@@ -183,7 +182,7 @@ class Answer < ActiveRecord::Base
       val_f = value.to_f
       if question.maximum && (val_f > question.maximum || question.maxstrictly && val_f == question.maximum) ||
          question.minimum && (val_f < question.minimum || question.minstrictly && val_f == question.minimum)
-        errors.add(:base, question.min_max_error_msg)
+        errors.add(:value, question.min_max_error_msg)
       end
     end
 
@@ -196,6 +195,18 @@ class Answer < ActiveRecord::Base
         else
           self.value = ""
         end
+      end
+    end
+
+    # sets the questionable to the associated question by default
+    def set_default_questionable
+      self.questionable ||= question
+    end
+
+    # questionable must be a subquestion when question is multilevel
+    def assert_questionable_is_correct_type
+      if option_set.try(:multi_level?) && questionable.try(:type) != 'Subquestion'
+        raise "questionable must be a subquestion when question is multilevel"
       end
     end
 end

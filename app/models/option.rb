@@ -105,6 +105,6 @@ class Option < ActiveRecord::Base
 
     # checks that at least one name translation is not blank
     def not_all_blank_name_translations
-      errors.add(:base, :names_cant_be_all_blank) if name_translations.nil? || !name_translations.detect{|l,t| !t.blank?}
+      errors.add(:base, :names_cant_be_all_blank) if name_all_blank?
     end
 end

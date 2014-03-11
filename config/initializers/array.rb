@@ -27,4 +27,12 @@ class Array
 
     nil
   end
+
+  # sorts the array elements by e.rank (or other field name as specified),
+  # then assigns contiguous integers to e.rank (1,2,3,4,...)
+  # assumes there are less than a billion elements
+  def ensure_contiguous_ranks(field_name = 'rank')
+    sort_by!{|e| e.rank || 1_000_000_000}
+    each_with_index{|e, idx| e.rank = idx + 1}
+  end
 end

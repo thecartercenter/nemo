@@ -11,6 +11,10 @@ $sans-serif: 'Open Sans', Helvetica, sans-serif;
 
 body {
   background-color: #879CAA;
+
+  .fa-pencil {
+    color: $elmo-blue;
+  }
 }
 
 #userinfo {
@@ -21,7 +25,7 @@ body {
   height: 25px;
   float: right;
 
-  a, form.button_to input {
+  a {
     color: white;
   }
 
@@ -32,7 +36,7 @@ body {
 
   .icon-btn {
     display: inline-block;
-    width: 58px;
+    width: 60px;
     margin: 0 5px 0 5px;
     text-align: center;
 
@@ -112,10 +116,10 @@ nav {
 
   /* For standard label in admin mode */
   .navbar-header.std {
-    margin-left: 10px !important;
+    margin-left: 27px !important;
     text-transform: uppercase;
     color: $light-gray;
-    margin: 19px 27px 0px 30px;
+    margin: 18px 27px 0px 30px;
     font-weight: bold;
   }
 
@@ -241,47 +245,6 @@ div.dialog_bg * { opacity: 1; filter: alpha(opacity=100); }
 #login_instructions #preamble { width: 600px; margin-bottom: 20px; }
 #login_instructions #instructions { width: 600px; border: 1px solid #888; padding: 10px; }
 #login_instructions #instructions p { margin-top: 0; }
-
-/* flash and error messages */
-
-div.status_messages.no_ajax {
-  div.success, div.error {
-    position: absolute;
-    left: 27%;
-    top: 149px;
-    padding: 3px;
-    color: white;
-    font-weight: bold;
-    width: 600px;
-    margin-bottom: 10px;
-    text-align: center;
-  }
-
-  div.success {
-    background-color: #9dc400;
-  }
-
-  div.error {
-    background-color: #d02000;
-  }
-}
-
-div.status_messages.ajax {
-  div.success, div.error {
-    padding: 3px;
-    color: white;
-    font-weight: bold;
-    margin-bottom: 10px;
-  }
-
-  div.success {
-    background-color: #9dc400;
-  }
-
-  div.error {
-    background-color: #d02000;
-  }
-}
 
 /* hide printable things */
 .printable { display: none; }

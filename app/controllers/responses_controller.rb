@@ -24,11 +24,11 @@ class ResponsesController < ApplicationController
           begin
             @responses = Response.do_search(@responses, params[:search], {:mission => current_mission}, :include_excerpts => true)
           rescue Search::ParseError
-            @error_msg = "#{t('search.search_error')}: #{$!}"
+            flash.now[:error] = "#{t('search.search_error')}: #{$!}"
           rescue ThinkingSphinx::SphinxError
             # format sphinx message a little more nicely
             sphinx_msg = $!.to_s.gsub(/index .+?:\s+/, '')
-            @error_msg = "#{t('search.search_error')}: #{sphinx_msg}"
+            flash.now[:error] = "#{t('search.search_error')}: #{sphinx_msg}"
           end
         end
 
@@ -43,7 +43,7 @@ class ResponsesController < ApplicationController
           begin
             @responses = Response.do_search(@responses, params[:search], {:mission => current_mission}, :include_excerpts => false)
           rescue Search::ParseError
-            @error_msg = "#{t('search.search_error')}: #{$!}"
+            flash.now[:error] = "#{t('search.search_error')}: #{$!}"
             return
           end
         end
@@ -52,7 +52,7 @@ class ResponsesController < ApplicationController
         @responses = Response.for_export(@responses)
 
         # render the csv
-        render_csv("Responses")
+        render_csv("elmo-#{current_mission.compact_name}-responses-#{Time.zone.now.to_s(:filename_datetime)}")
       end
     end
   end
@@ -174,6 +174,7 @@ class ResponsesController < ApplicationController
         @response.save!
         set_success_and_redirect(@response)
       rescue ActiveRecord::RecordInvalid
+        flash.now[:error] = I18n.t('activerecord.errors.models.response.general')
         prepare_and_render_form
       end
     end
@@ -181,7 +182,9 @@ class ResponsesController < ApplicationController
     # prepares objects for and renders the form template
     def prepare_and_render_form
       # get the users to which this response can be assigned
-      @possible_submitters = User.accessible_by(current_ability).assigned_to(current_mission)
+      # which is the users in this mission plus admins
+      # (we need to include admins because they can submit forms to any mission)
+      @possible_submitters = User.assigned_to_or_admin(current_mission).by_name
 
       # render the form
       render(:form)

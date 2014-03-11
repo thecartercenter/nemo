@@ -47,6 +47,7 @@ class OdkTest < ActionDispatch::IntegrationTest
     # attempt submission to proper form
     xml = build_odk_submission(form2)
     do_submission(submission_path(get_mission), xml)
+    assert_response(:success)
 
     # answer should look right
     resp = form2.reload.responses.last
@@ -55,6 +56,7 @@ class OdkTest < ActionDispatch::IntegrationTest
     # attempt submission of value to wrong question
     xml = build_odk_submission(form2, :override_form_id => form.id)
     do_submission(submission_path(get_mission), xml)
+    assert_response(:success)
 
     # answer should remain blank, integer value should not get stored
     resp = form.reload.responses.last

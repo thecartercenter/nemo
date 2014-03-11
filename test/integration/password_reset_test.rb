@@ -34,7 +34,7 @@ class PasswordResetTest < ActionDispatch::IntegrationTest
         "name"=>"Alberto Ooooh",
         "login"=>"aooooh",
         "email"=>"foo@example.com",
-        "assignments_attributes"=>{"1"=>{"id"=>"", "_destroy"=>"false", "mission_id"=>get_mission.id, "role"=>"observer", "active"=>"1"}},
+        "assignments_attributes"=>{"1"=>{"id"=>"", "_destroy"=>"false", "mission_id"=>get_mission.id, "role"=>"observer"}},
         "reset_password_method"=>"email"
       })
       assert_redirected_to(users_path(:admin_mode => 'admin'))

@@ -16,7 +16,7 @@ class Condition < ActiveRecord::Base
   validates(:questioning, :presence => true)
 
   delegate :qtype, :form, :to => :questioning, :allow_nil => true
-  delegate :has_options?, :select_options, :qtype, :rank, :to => :ref_qing, :prefix => :ref_question, :allow_nil => true
+  delegate :has_options?, :select_options, :qtype, :rank, :code, :to => :ref_qing, :prefix => :ref_question, :allow_nil => true
 
   OPS = [
     {:name => :eq, :types => %w(decimal integer text long_text address select_one datetime date time), :code => "="},
@@ -41,9 +41,9 @@ class Condition < ActiveRecord::Base
     questioning.previous.reject{|qing| NON_REFABLE_TYPES.include?(qing.qtype_name)}
   end
 
-  # all referrable proto_questionings that have options
+  # all referrable questionings that have options
   def refable_qings_with_options
-    refable_qings.reject{|qing| qing.options.nil?}
+    refable_qings.select{|qing| qing.has_options?}
   end
 
   # generates a hash mapping ids for refable questionings to their types
@@ -115,9 +115,16 @@ class Condition < ActiveRecord::Base
     return xpath
   end
 
-  def to_s
-    words = I18n.t(op, :scope => [:condition, :operators])
-    "#{Question.model_name.human} ##{ref_question_rank} #{words} \"#{option ? option.name : value}\""
+  # generates a human readable representation of condition
+  # options[:include_code] - includes the question code in the string. may not always be desireable e.g. with printable forms.
+  def to_s(options = {})
+    if ref_qing_id.blank?
+      '' # need to return something here to avoid nil errors
+    else
+      words = I18n.t("condition.operators.#{op}")
+      code = options[:include_code] ? " (#{ref_question_code})" : ''
+      "#{Question.model_name.human} ##{ref_question_rank}#{code} #{words} \"#{option ? option.name : value}\""
+    end
   end
 
   # if options[:dropdown_values] is included, adds a series of lists of values for use with form dropdowns

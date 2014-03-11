@@ -1,0 +1,21 @@
+<% if @reports.empty? %>
+  <h2 class="interior"><%= translate_model(Report::Report) %></h2>
+
+  <div><%= t('dashboard.no_reports') %></div>
+
+<% else %>
+  <div>
+    <form class="report_chooser">
+      <%= select_tag('report_id', options_from_collection_for_select(@reports, 'id', 'name'), {:prompt => I18n.t('report/report.choose_report'), :class => 'form_control'}) %>
+    </form>
+
+    <h2 class="interior"><%= translate_model(Report::Report) %>: <%= @report.name %></h2>
+    <% if can?(:update, @report) %>
+      &nbsp;&nbsp;<%= action_link('edit', edit_report_report_path(@report), :title => I18n.t('report/report.edit_report')) %>
+    <% end %>
+  </div>
+
+  <div class="report_main">
+    <%= render('report/reports/main') %>
+  </div>
+<% end %>

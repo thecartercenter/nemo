@@ -2,6 +2,8 @@
 class Ability
   include CanCan::Ability
 
+  attr_reader :user
+
   CRUD = [:new, :show, :edit, :create, :update, :destroy]
 
   # returns a list of roles that can be assigned by the given user
@@ -17,6 +19,9 @@ class Ability
 
   # defines user's abilities
   def initialize(user, admin_mode = false)
+
+    # save user
+    @user = user
 
     if user
 
@@ -56,8 +61,8 @@ class Ability
 
       # anybody can access missions to which assigned (but don't need this permission if admin)
       if !user.admin?
-        can :switch_to, Mission, Mission.active_for_user(user) do |mission|
-          user.assignments.detect{|a| a.mission == mission && a.active?}
+        can :switch_to, Mission, Mission.for_user(user) do |mission|
+          user.assignments.detect{|a| a.mission == mission}
         end
       end
 
@@ -74,17 +79,20 @@ class Ability
           # can view and export users in same mission
           can [:index, :read, :export], User, :assignments => {:mission_id => user.current_mission_id}
 
-          # can submit responses for themselves only, and can only manage unreviewed responses
-          # only need this ability if not also a staffer
+          # can do reports for the current mission
+          can :manage, Report::Report, :mission_id => user.current_mission_id
+
+          # only need these abilities if not also a staffer
           unless user.role?(:staffer)
-            can [:index, :read, :export], Response,
-              :user_id => user.id, :mission_id => user.current_mission_id, :reviewed => false
+            # can only see own responses
+            can [:index, :read, :export], Response, :user_id => user.id, :mission_id => user.current_mission_id
 
             # observers can only mark a form as 'incomplete' if the form permits it
             can :submit_incomplete, Response do |r|
               r.form.allow_incomplete?
             end
 
+            # can only submit/edit/delete own responses, and only if mission is not locked
             unless user.current_mission.locked?
               can [:create, :update, :destroy], Response,
                 :user_id => user.id, :mission_id => user.current_mission_id, :reviewed => false

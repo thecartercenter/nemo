@@ -1,4 +1,15 @@
-<%= form.text_field(method) %>
-&nbsp; &nbsp; &nbsp;
-<%= form.check_box(:"#{method.to_s[0,3]}strictly") %>
-<%= form.label(:"#{method.to_s[0,3]}strictly", t("question.maxmin.strictly_" + (method == :minimum ? "gt" : "lt"))) %>
+<% if form_mode == :show %>
+
+  <%= form.object.send(method) %>
+  <% if form.object.send(:"#{method.to_s[0,3]}strictly") %>
+    &nbsp;(<%= t("question.maxmin.strictly_" + (method == :minimum ? "gt" : "lt")) %>)
+  <% end %>
+
+<% else %>
+
+  <%= form.text_field(method) %>
+  &nbsp; &nbsp; &nbsp;
+  <%= form.check_box(:"#{method.to_s[0,3]}strictly") %>
+  <%= form.label(:"#{method.to_s[0,3]}strictly", t("question.maxmin.strictly_" + (method == :minimum ? "gt" : "lt"))) %>
+
+<% end %>

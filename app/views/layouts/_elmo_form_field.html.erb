@@ -1,0 +1,21 @@
+<%# TODO the id attrib below should be deprecated as its not well scoped. %>
+<div class="form_field <%= object_name %>_<%= field_name %>" id="<%= field_name %>" data-field-name="<%= field_name %>">
+
+  <div class="label_and_control">
+    <%# spacing here is important. must be no space after label tag %>
+    <%= label_tag %><div class="control <%= options[:read_only] ? 'read_only' : '' %>">
+
+      <%# errors %>
+      <%= content_tag(:div, errors.join(' '), :class => 'form-errors') if errors && !errors.empty? %>
+      <div class="widget">
+        <%= field_html %>
+      </div>
+
+      <% unless hint_html.blank? || hint_html.nil? %>
+        <%# TOM: don't think we need to set href on js links anymore %>
+        <a href="javascript://" id="testhelp" rel="popover" class="hint" data-content="<%= hint_html %>"><i class="hint fa fa-2x fa-info-circle"></i></a>
+      <% end %>
+    </div>
+  </div>
+
+</div>

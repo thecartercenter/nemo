@@ -2,17 +2,15 @@ module AnswersHelper
   def format_answer(answer, context)
     return '' if answer.nil?
 
-    case answer.questioning.question.qtype_name
+    case answer.qtype.name
     when "select_one"
       answer.option.name
     when "select_multiple"
       answer.choices.map{|c| c.option.name}.join(', ')
-    when "datetime"
-      I18n.l(answer.datetime_value)
-    when "date"
-      I18n.l(answer.date_value)
+    when "datetime", "date"
+      answer.casted_value.present? ? I18n.l(answer.casted_value) : ''
     when "time"
-      I18n.l(answer.time_value, :format => :time_only)
+      answer.time_value.present? ? I18n.l(answer.time_value, :format => :time_only) : ''
     when "decimal"
       "%.2f" % answer.value.to_f
     when "long_text"
@@ -40,7 +38,7 @@ module AnswersHelper
     html = if excerpt = response.excerpts_by_questioning_id[answer.questioning_id]
       excerpt_to_html(excerpt[:text])
     else
-       answer.value
+      answer.value
     end
 
     simple_format(html, {}, :sanitize => false)

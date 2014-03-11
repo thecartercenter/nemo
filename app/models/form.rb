@@ -42,7 +42,8 @@ class Form < ActiveRecord::Base
     })
     .group("forms.id"))
 
-  scope(:default_order, order('forms.name'))
+  scope(:by_name, order('forms.name'))
+  scope(:default_order, by_name)
 
   replicable :child_assocs => :questionings, :uniqueness => {:field => :name, :style => :sep_words},
     :dont_copy => [:published, :downloads, :responses_count, :questionings_count, :upgrade_needed,
@@ -270,7 +271,7 @@ class Form < ActiveRecord::Base
     end
 
     def name_unique_per_mission
-      errors.add(:name, :must_be_unique) unless unique_in_mission?(:name)
+      errors.add(:name, :taken) unless unique_in_mission?(:name)
     end
 
     def normalize_fields

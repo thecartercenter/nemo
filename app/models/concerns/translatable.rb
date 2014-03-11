@@ -47,25 +47,25 @@ module Translatable
   #     if all these are undefined then nil will be returned
   def method_missing(*args)
     # check if this is a translation method and get the pieces
-    field, locale, is_setter, options = parse_method(args[0], args[1], args[2])
+    action, field, locale, is_setter, options = translatable_parse_method(args[0], args[1], args[2])
 
-    # if the method looks like a translation method
-    if field
-      self.process_translation(field, locale, is_setter, options, args)
+    # do the action if we found one
+    if action
+      self.send("translatable_#{action}", field, locale, is_setter, options, args)
     else
       super
     end
   end
 
   def respond_to?(symbol, *)
-    !self.class.translated_fields.nil? && parse_method(symbol) || super
+    !self.class.translated_fields.nil? && translatable_parse_method(symbol) || super
   end
 
   def respond_to_missing?(symbol, include_private)
-    !self.class.translated_fields.nil? && parse_method(symbol) || super
+    !self.class.translated_fields.nil? && translatable_parse_method(symbol) || super
   end
 
-  def process_translation(field, locale, is_setter, options, args)
+  def translatable_translate(field, locale, is_setter, options, args)
 
     # if we're setting the value
     if is_setter
@@ -111,13 +111,19 @@ module Translatable
     end
   end
 
-  def parse_method(symbol, arg1 = nil, arg2 = nil)
+  # checks if all the translations are blank for the given field
+  def translatable_all_blank?(field, locale, is_setter, options, args)
+    send("#{field}_translations").nil? || !send("#{field}_translations").detect{|l,t| !t.blank?}
+  end
+
+  def translatable_parse_method(symbol, arg1 = nil, arg2 = nil)
     return nil if self.class.translated_fields.nil?
 
     fields = self.class.translated_fields.join("|")
     if symbol.to_s.match(/^(#{fields})(_([a-z]{2}))?(_before_type_cast)?(=?)$/)
 
       # get bits
+      action = :translate
       field = $1
       locale = $3
       is_setter = $5 == "="
@@ -147,7 +153,13 @@ module Translatable
       end
 
       # if we get this far, return the bits (locale should always be a string)
-      [field, locale.to_s, is_setter, options]
+      [action, field, locale.to_s, is_setter, options]
+
+    elsif symbol.to_s.match(/^(#{fields})_all_blank\?$/)
+      action = :all_blank?
+      field = $1
+
+      [action, field]
     else
       nil
     end

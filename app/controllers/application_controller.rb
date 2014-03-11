@@ -137,6 +137,7 @@ class ApplicationController < ActionController::Base
     # don't count automatic timer-based requests for resetting the logout timer
     # all automatic timer-based should set the 'auto' parameter
     def last_request_update_allowed?
+      Rails.logger.debug("auto parameter is: #{params[:auto]}")
       params[:auto].nil?
     end
 
@@ -156,7 +157,7 @@ class ApplicationController < ActionController::Base
         @search.qualifiers = klass.search_qualifiers(:mission => current_mission)
         rel = @search.apply(rel) unless options[:search] == false
       rescue Search::ParseError
-        @error_msg = "#{t('search.search_error')}: #{$!}"
+        flash.now[:error] = "#{t('search.search_error')}: #{$!}"
       end
 
       # apply pagination and return
