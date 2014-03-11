@@ -6,7 +6,7 @@
 <% else %>
   <div>
     <form class="report_chooser">
-      <%= select_tag('report_id', options_from_collection_for_select(@reports, 'id', 'name'), :prompt => I18n.t('report/report.choose_report')) %>
+      <%= select_tag('report_id', options_from_collection_for_select(@reports, 'id', 'name'), {:prompt => I18n.t('report/report.choose_report'), :class => 'form_control'}) %>
     </form>
 
     <h2 class="interior"><%= translate_model(Report::Report) %>: <%= @report.name %></h2>

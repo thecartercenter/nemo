@@ -800,12 +800,16 @@ en:
 
   dashboard:
     close_dashboard: "Close Dashboard"
+    enter_full_screen: "Enter Full Screen"
+    exit_full_screen: "Exit Full Screen"
     low_activity: "Low Activity"
+    my_responses: "My Responses"
     no_reports: "No Reports have been created for this mission yet."
     recent_responses: "Latest Responses"
     response_locations: "Response Locations"
     summary: "Summary"
     top_forms: "Top Forms"
+
 
   data_integrity:
     appears_elsewhere_warnings:

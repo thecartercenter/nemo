@@ -27,7 +27,7 @@
     $('.report_main').empty();
 
     // send ajax request
-    $('.report_pane').load(Utils.build_path('dashboard/report_pane', id), function(){
+    $('.report_pane').load(Utils.build_path('report_pane', id), function(){
       // fix pane sizes again after load is done
       self.dashboard.adjust_pane_sizes();
     });
