@@ -30,18 +30,62 @@ module Replicable
     end
   end
 
+  # TOM: is there any reason the replication mode and destination mission can't be passed explicitly to replicate as I suggested?
+  # then we wouldn't need all this extra complexity AND the code would be more readable
+  # my suggestion was this:
+  #
+  # def replicate(options_or_replication)
+  # replicate(:mode => :clone)
+  # replicate(:mode => :to_mission, :mission => m)
+  # replicate(:mode => :to_mission, :mission => m)
+  # replicate(:mode => :promote, :retain_link_on_promote => false)
+  #
+  # I'm happy to talk more about it.
+
+  # figure out the replication mode based off of the options
+  def determine_replication_mode(options=nil)
+    if options.is_a?(Hash) && options.key?(:mode)
+      options[:mode]
+    else
+      # when in the default mode, we determine the mode based off of the mission
+      # if the mission is nil we are doing a standard copy.
+      # if a mission is passed in, we are doing a clone.
+      :default
+    end
+  end
+
+  # figure out what mission to use based off of the options
+  def determine_mission(options)
+    mode = determine_replication_mode(options)
+    return nil if mode == :promote
+
+    if options.is_a?(Hash)
+      if options.key?(:mission)
+        options[:mission]
+      else # no mission was passed into the options
+        nil
+      end
+    else # options was not a hash.
+      options
+    end
+  end
+
+  # TOM: this comment will need to be rewritten. please include a list of all the available options.
   # creates a duplicate in this or another mission
   # accepts the mission to which to replicate (when called from outside)
   # or a Replication object, which holds the params for the replication operation
   # spawns additional replication operations recursively, if appropriate
-  def replicate(to_mission_or_replication = nil)
+  def replicate(options = nil)
 
     # if mission or nil was passed in, we don't have a replication object, so we need to create one
     # a replication is an object to track replication parameters
-    if to_mission_or_replication.is_a?(Replication)
-      replication = to_mission_or_replication
+    if options.is_a?(Replication)
+      replication = options
     else
-      replication = Replication.new(:src_obj => self, :to_mission => to_mission_or_replication)
+      # TOM: the link_to_standard/retain_link_on_promote option doesn't get passed into the Replication object
+      replication = Replication.new(:mode => determine_replication_mode(options),
+                                    :src_obj => self,
+                                    :to_mission => determine_mission(options))
     end
 
     # wrap in transaction if this is the first call
@@ -68,7 +112,9 @@ module Replicable
     replicate_attributes(replication)
 
     # if we are copying standard to standard, preserve the is_standard flag
-    dest_obj.is_standard = true if replication.standard_to_standard?
+    # TOM: why do we need both replicating_to_standard? and .mode == promote?
+    # seems that replicating_to_standard should give the final word on whether the dest_obj should be standard
+    dest_obj.is_standard = true if replication.replicating_to_standard? || replication.mode == :promote
 
     # ensure uniqueness params are respected
     ensure_uniqueness_when_replicating(replication)
