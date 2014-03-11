@@ -1,4 +1,4 @@
-<% if current_mission || admin_mode? %>
+<% if current_mission %>
 
   <% content_for(:per_page_js) do
    # load the mapping API
@@ -130,6 +130,11 @@
     ELMO.app.dashboard.display_full_screen();
   <% end %>
   <a href='#' class='full-screen'></a>
+
+<% elsif admin_mode? %>
+
+  <h1 class="title">Admin Mode</h1>
+  Please select from the nav bar.
 
 <%# if no mission selected %>
 <% else %>
