@@ -55,7 +55,8 @@ class AdminModeTest < ActionDispatch::IntegrationTest
   test "mission dropdown should not be visible in admin mode" do
     login(@admin)
     assert_select('select#user_current_mission_id')
-    get('/admin')
+    get_success('/admin')
+
     assert_select('select#user_current_mission_id', false)
 
     # exit admin mode link should be visible instead
