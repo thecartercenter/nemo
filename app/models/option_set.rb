@@ -7,11 +7,11 @@ class OptionSet < ActiveRecord::Base
   # this association produces ALL optionings regardless of level. should only be used when quick access to the full set of optionings is
   # needed. note that if this and the normal optionings association are both used, there will be two separate sets of models in play.
   # note that dependent => destroy and autosave are not turned on here.
-  has_many(:all_optionings, :class_name => 'Optioning', :order => 'optionings.parent_id, optionings.rank', :inverse_of => :option_set)
+  has_many(:all_optionings, :class_name => 'Optioning', :order => 'optionings.parent_id, optionings.rank', :inverse_of => :option_set, :dependent => :destroy)
 
   # this association produces only the direct children of this option_set (the top-level options).
   has_many(:optionings, :order => "rank", :conditions => 'optionings.parent_id IS NULL',
-    :dependent => :destroy, :autosave => true, :inverse_of => :option_set)
+    :autosave => true, :inverse_of => :option_set)
 
   # returns ONLY the first-level options for this option set, sorted by rank
   has_many(:options, :through => :optionings, :order => "optionings.rank")
@@ -61,6 +61,9 @@ class OptionSet < ActiveRecord::Base
 
   # replication options
   replicable :child_assocs => :optionings, :parent_assoc => :question, :uniqueness => {:field => :name, :style => :sep_words}
+
+  # these methods are used during population from JSON
+  attr_accessor :_option_levels, :_optionings
 
   # checks if this option set appears in any smsable questionings
   def form_smsable?
@@ -142,6 +145,57 @@ class OptionSet < ActiveRecord::Base
   # checks if any core fields (currently only name) changed
   def core_changed?
     name_changed?
+  end
+
+  # returns a hash of all optionings in the tree indexed by ID
+  def all_optionings_by_id
+    @all_optionings_by_id ||= descendants.index_by(&:id)
+  end
+
+  # populates from json and saves
+  # returns self
+  # raises exception if save fails
+  # runs all operations in transaction
+  def update_from_json!(data)
+    transaction do
+      populate_from_json(data)
+
+      # call save here so that a validation error will cancel the transaction
+      save!
+    end
+
+    self
+  end
+
+  # recursively populates from specially formatted hash of attributes (see option set test for examples)
+  # should be run inside transaction
+  def populate_from_json(data)
+    assign_attributes(data)
+    update_option_levels_from_json(_option_levels)
+    update_children_from_json(_optionings, self, 1)
+  end
+
+  def update_option_levels_from_json(option_level_data)
+    # if hash, just take values
+    option_level_data = option_level_data.values if option_level_data.is_a?(Hash)
+    option_level_data ||= []
+
+    # create new option_level objects if there aren't enough
+    if (diff = option_level_data.size - option_levels.size) > 0
+      diff.times{option_levels.build(:option_set => self, :mission => mission, :is_standard => is_standard)}
+
+    # schedule deletion of option_level objects if there are too many
+    elsif (diff = option_levels.size - option_level_data.size) > 0
+      # need to disable fk checks due to order of saving
+      connection.execute('SET FOREIGN_KEY_CHECKS = 0')
+      option_levels.destroy(option_levels[-diff..-1])
+      connection.execute('SET FOREIGN_KEY_CHECKS = 1')
+    end
+
+    # copy option level names
+    option_levels.each_with_index do |ol, idx|
+      ol.update_from_json(option_level_data[idx])
+    end
   end
 
   def as_json(options = {})

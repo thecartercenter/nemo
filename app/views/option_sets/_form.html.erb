@@ -1,5 +1,8 @@
 <div class="option_set_form">
 
+  <%# need to print this here if in ajax mode %>
+  <%= render("layouts/flash", :flash => flash) if ajax_request? %>
+
   <% if form_mode == :edit %>
     <%= published_warning(@option_set) if @option_set.published? %>
     <%= appears_elsewhere_warning(@option_set) if @option_set.has_questions? %>
@@ -12,7 +15,8 @@
     <%= f.field(:option_levels, :partial => "option_levels") %>
     <%= f.field(:options, :required => true, :partial => "options") %>
     <div class="submit-buttons">
-      <%= f.submit(:class => "btn btn-primary") unless ajax_request? %>
+      <%= loading_indicator %>&nbsp;
+      <%= f.submit(:class => "btn btn-primary") unless params[:modal_mode] %>
     </div>
   <% end %>
 </div>
@@ -24,7 +28,10 @@
     option_set: <%=j @option_set.as_json(:for_option_set_form => true).to_json.html_safe %>,
     suggest_path: <%=j suggest_options_path.to_json.html_safe %>,
     form_mode: <%=j form_mode.to_json.html_safe %>,
-    ajax_mode: <%=j ajax_request?.to_json.html_safe %>,
+
+    // whether the form is being loaded in a modal
+    modal_mode: <%=j params[:modal_mode].present?.to_json.html_safe %>,
+
     can_reorder: <%=j can?(:reorder_options, @option_set).to_json.html_safe %>,
     can_remove_options: <%=j can?(:remove_options, @option_set).to_json.html_safe %>
   });

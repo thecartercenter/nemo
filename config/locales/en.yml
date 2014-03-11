@@ -460,8 +460,8 @@ en:
           at_least_one: "You must choose at least one option."
           cant_delete_if_has_questions: "You can't delete this Option Set because one or more Questions are associated with it."
           cant_delete_if_has_answers: "You can't delete this Option Set because it is included in at least one Answer."
-          non_unique_values: "Two or more of the options you've chosen have the same numeric value."
-          general: "Option Set is invalid (see below)."
+          general: "There was a problem saving the option set."
+          wrong_depth: "You have %{levels} option levels but your option tree is %{depth} options deep."
         question:
           cant_change_if_conditions: "You can't change the Type or Option Set because there are Conditions that refer to this Question."
           cant_change_if_responses: "You can't change the Type or Option Set because there are already Responses for this Question."
@@ -899,6 +899,7 @@ en:
     create_link: "Create Option"
 
   option_set:
+    add_level: "Add Level"
     clone_confirm: "Are you sure you want to make a copy of the Option Set '%{name}'?"
     clone_error: "There was a problem cloning the Option Set (%{msg})."
     clone_success: "Option Set '%{name}' cloned successfully."
@@ -907,6 +908,7 @@ en:
     edit_option: "Edit Option"
     edit_option_level: "Edit Option Level"
     leave_page_warning: "Leaving this page will abandon your changes to this Option Set."
+    new_option_level: "New Option Level"
     none_found: "No matching options found"
     searching: "Searching..."
     type_to_add_new: "Type an option name"

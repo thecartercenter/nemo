@@ -21,7 +21,7 @@ translations:
     only: [
       "*.activerecord.attributes.*",
       "*.activerecord.models.*",
-      "*.activerecord.errors.models.report/report.*",
+      "*.activerecord.errors.models.*",
       "*.broadcast.chars.*",
       "*.common.*",
       "*.condition.*",

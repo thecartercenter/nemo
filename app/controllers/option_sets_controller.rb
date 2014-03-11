@@ -24,6 +24,7 @@ class OptionSetsController < ApplicationController
   def new
     # we only need the partial if it's an ajax request
     if ajax_request?
+      params[:modal_mode] = true
       render(:partial => 'form')
     else
       render(:form)
@@ -38,22 +39,30 @@ class OptionSetsController < ApplicationController
     render(:form)
   end
 
+  # always via AJAX
   def create
-    create_or_update
+    OptionSet.transaction do
+      @option_set.populate_from_json(params[:option_set])
+      create_or_update
+    end
   end
 
+  # always via AJAX
   def update
-    # assign attribs and validate now so that normalization runs before authorizing and saving
-    @option_set.assign_attributes(params[:option_set])
-    @option_set.valid?
+    # we use a transaction because populate_from_json requests it
+    OptionSet.transaction do
+      # assign attribs and validate now so that normalization runs before authorizing and saving
+      @option_set.populate_from_json(params[:option_set])
+      @option_set.valid?
 
-    # authorize special abilities
-    authorize!(:update_core, @option_set) if @option_set.core_changed?
-    authorize!(:add_options, @option_set) if @option_set.options_added?
-    authorize!(:remove_options, @option_set) if @option_set.options_removed?
-    authorize!(:reorder_options, @option_set) if @option_set.positions_changed?
+      # authorize special abilities
+      authorize!(:update_core, @option_set) if @option_set.core_changed?
+      authorize!(:add_options, @option_set) if @option_set.options_added?
+      authorize!(:remove_options, @option_set) if @option_set.options_removed?
+      authorize!(:reorder_options, @option_set) if @option_set.positions_changed?
 
-    create_or_update
+      create_or_update
+    end
   end
 
   def destroy
@@ -77,26 +86,28 @@ class OptionSetsController < ApplicationController
   end
 
   private
+
     # creates/updates the option set
     def create_or_update
       begin
         @option_set.save!
 
-        # if this is an ajax request, we just render the option set's id
-        if ajax_request?
+        # set the flash, which will be shown when the next request is issued as expected
+        # (not needed in modal mode)
+        set_success(@option_set) unless params[:modal_mode]
+
+        if params[:modal_mode]
+          # render the option set's ID in json format
           render(:json => @option_set.id)
         else
-          set_success_and_redirect(@option_set)
+          # render where we should redirect
+          render(:json => option_sets_path.to_json)
         end
+
       rescue ActiveRecord::RecordInvalid, DeletionError
         flash.now[:error] = $!.is_a?(DeletionError) ? $!.to_s : I18n.t('activerecord.errors.models.option_set.general')
-
-        # if this is an ajax request, we just render the form partial
-        if ajax_request?
-          render(:partial => 'form')
-        else
-          render(:form)
-        end
+        render(:partial => 'form')
+        raise ActiveRecord::Rollback
       end
     end
 end

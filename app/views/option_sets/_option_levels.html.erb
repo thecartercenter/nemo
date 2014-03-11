@@ -1,5 +1,6 @@
 <div id="option-levels-wrapper" class="draggable-list-wrapper">
 </div>
+<a href="#" class="add-link"><%= t('option_set.add_level') %></a>
 
 <% if form_mode != :show %>
   <%# edit option level modal %>
@@ -8,7 +9,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4 class="modal-title"><%= t("option_set.edit_option_level") %></h4>
+          <h4 class="modal-title"></h4>
         </div>
         <div class="modal-body">
 
@@ -23,7 +24,7 @@
 
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal"><%= I18n.t("common.close") %></button>
+          <button type="button" class="btn btn-default" data-dismiss="modal"><%= I18n.t("common.cancel") %></button>
           <button type="button" class="btn btn-primary"><%= I18n.t("common.save") %></button>
         </div>
       </div><!-- /.modal-content -->

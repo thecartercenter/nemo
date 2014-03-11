@@ -57,14 +57,29 @@ class Optioning < ActiveRecord::Base
 
   # moves this Optioning to be the child of the specified Optioning or OptionSet
   def move_to(dest)
-    parent.optionings -= [self]
-    parent = dest
+    _parent.optionings -= [self]
+
+    # for some reason the previous line kills this optioning's option_set_id, so we need to put it back
+    connection.execute("UPDATE optionings SET option_set_id=#{option_set_id} WHERE id=#{id}") if _parent.is_a?(OptionSet)
+
+    self.parent = dest.is_a?(OptionSet) ? nil : dest
     dest.optionings << self
+  end
+
+  # destroys this option and removes from parent
+  def remove_and_destroy
+    unless destroyed?
+      _parent.optionings -= [self]
+      destroy_with_descendants
+    end
   end
 
   def as_json(options = {})
     if options[:for_option_set_form]
-      super(:only => :id, :methods => :removable?).merge(:option => option.as_json(:for_option_set_form => true))
+      super(:only => :id, :methods => :removable?).merge(
+        :option => option.as_json(:for_option_set_form => true),
+        :optionings => optionings.as_json(:for_option_set_form => true)
+      )
     else
       super(options)
     end
@@ -81,8 +96,9 @@ class Optioning < ActiveRecord::Base
       # option level name, option name
       ["(#{option_level.try(:name)})", "#{rank}. #{option.name}"].compact.join(' ') +
 
-      # parent name
-      " (parent: #{parent ? parent.option.name : '[none]'})" +
+      # parent, mission
+      " (parent: #{parent ? parent.option.name : '[none]'}, mission: #{mission ? mission.name : '[none]'}, " +
+        "option-mission: #{option.mission ? option.mission.name : '[none]'}, option-set: #{option_set ? option_set.name : '[none]'})" +
 
       # add [x] if marked for destruction
       (marked_for_destruction? ? ' [x]' : '') +

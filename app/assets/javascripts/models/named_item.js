@@ -5,16 +5,21 @@
 
   // constructor
   ns.NamedItem = klass = function(attribs) { var self = this;
+
+    attribs = attribs || {};
+
     // copy attribs
     for (var key in attribs) self[key] = attribs[key];
+
+    // default name and name_translations if empty
+    if (!self.name_translations) {
+      self.name_translations = {};
+      self.name = '';
+    }
 
     // set defaults for boolean flags
     self.removable = true;
     self.editable = true;
-  };
-
-  klass.prototype.remove = function() { var self = this;
-    self.parent.remove(self);
   };
 
   // get the rank from the position of the associated <li>

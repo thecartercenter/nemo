@@ -36,6 +36,11 @@ form.option_set_form {
 
   /* FOR THE SORTABLE/DRAGGABLE LIST */
 
+  /* these styles only apply to the outer ol */
+  .draggable-list-wrapper > ol {
+    margin: 0 20px 5px 0;
+  }
+
   .draggable-list-wrapper ol {
     padding-left: 0;
     margin: 0;
@@ -67,13 +72,9 @@ form.option_set_form {
 
         /* locales */
         em {
-          display: block;
-          float: right;
-          min-width: 40px;
-          text-align: left;
           font-style: normal;
-          font-size: 11px;
-          margin-left: 10px;
+          font-size: 10px;
+          margin-left: 5px;
           color: $theme_green;
         }
 
