@@ -54,7 +54,8 @@ class WelcomeController < ApplicationController
       # do the non-lazy loads inside these blocks so they don't run if we get a cache hit
       unless fragment_exist?(@cache_key + '/js_init')
         # get location answers
-        @location_answers = Answer.location_answers_for_mission(current_mission)
+        # TODO refactor user argument
+        @location_answers = Answer.location_answers_for_mission(current_mission, current_user.role(current_mission) == 'observer' ? current_user : nil)
       end
 
       unless fragment_exist?(@cache_key + '/stat_blocks')

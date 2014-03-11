@@ -59,14 +59,15 @@ class Answer < ActiveRecord::Base
 
   # gets all location answers for the given mission
   # returns only the response ID and the answer value
-  def self.location_answers_for_mission(mission)
+  def self.location_answers_for_mission(mission, user = nil)
+    user_clause = user ? "AND r.user_id = #{user.id}" : ''
     find_by_sql([
       "SELECT r.id AS r_id, a.value AS loc
       FROM answers a
         INNER JOIN responses r ON a.response_id = r.id
         INNER JOIN questionings qing ON a.questioning_id = qing.id
         INNER JOIN questionables q ON qing.question_id = q.id
-      WHERE q.qtype_name = 'location' AND a.value IS NOT NULL AND r.mission_id = ?",
+      WHERE q.qtype_name = 'location' AND a.value IS NOT NULL AND r.mission_id = ? #{user_clause}",
       mission.id
     ])
   end
