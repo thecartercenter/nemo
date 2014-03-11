@@ -18,8 +18,7 @@ class Report::SummaryCollectionSingleTest < ActiveSupport::TestCase
     observer.current_mission = get_mission
     [10, 7, 6, 1, 1].each{|a| FactoryGirl.create(:response, :form => @form, :_answers => [a], :user => observer)}
 
-    ability = Ability.new(observer)
-    @collection = Report::SummaryCollectionBuilder.new(@form.questionings, nil, ability).build
+    @collection = Report::SummaryCollectionBuilder.new(@form.questionings, nil, :restrict_to_user => observer).build
 
     assert_equal({:mean => 5.0, :max => 10, :min => 1}, headers_and_items(:stat, :stat))
   end
