@@ -21,8 +21,6 @@
   z-index: 300 !important;
 }
 
-.question_fields {
-  #question_minimum, #question_maximum {
-    width: 75px;
-  }
+div.question_fields div.minmax input.text[type=text] {
+  width: 75px;
 }
