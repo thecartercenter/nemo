@@ -437,6 +437,8 @@ en:
       models:
         answer:
           required: "Please enter a value."
+        broadcast:
+          no_recipients: "None of these recipients would receive this broadcast. Please adjust the medium and try again."
         condition:
           all_required: "All condition fields are required."
         form:
