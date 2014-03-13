@@ -84,10 +84,13 @@ class WelcomeController < ApplicationController
   end
 
   # loads the specified report when chosen from the dropdown menu
-  def report_pane
+  def report_update
     @report = Report::Report.find(params[:id])
     prepare_report
-    render(:partial => 'welcome/report_pane')
+    render(:json => {
+      :title => render_to_string(:partial => 'report_pane_title'),
+      :main => render_to_string(:partial => 'report/reports/main')
+    })
   end
 
   private
