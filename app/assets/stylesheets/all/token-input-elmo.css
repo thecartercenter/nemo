@@ -17,10 +17,11 @@ ul.token-input-list-elmo {
     vertical-align: middle;
 }
 
-ul.token-input-list-elmo li input {
+.control .widget ul.token-input-list-elmo li.token-input-input-token-elmo input[type=text] {
     border: 0;
     width: 100px;
-    padding: 3px 8px;
+    height: 27px;
+    padding: 3px;
     margin: 2px 0;
     -webkit-appearance: caret;
 }
@@ -29,7 +30,7 @@ li.token-input-token-elmo {
     overflow: hidden;
     height: auto !important;
     height: 15px;
-    margin: 3px;
+    margin: 6px 3px 3px 3px;
     padding: 1px 3px;
     background-color: #f7f1aa;
     color: #000;
