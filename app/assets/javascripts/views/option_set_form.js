@@ -198,7 +198,8 @@
 
     // add the destroyed optionings
     self.options_field.list.removed_items.forEach(function(o){
-      prepared.push({id: o.id, _destroy: true});
+      if (o.id)
+        prepared.push({id: o.id, _destroy: true});
     })
 
     return prepared;
