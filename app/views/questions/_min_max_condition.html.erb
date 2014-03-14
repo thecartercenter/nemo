@@ -1,4 +1,4 @@
-<% if form_mode == :show %>
+<% if form_mode == :show || cannot?(:update_core, @question) %>
 
   <%= form.object.send(method) %>
   <% if form.object.send(:"#{method.to_s[7,3]}strictly") %>
