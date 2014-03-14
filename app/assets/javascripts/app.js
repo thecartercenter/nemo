@@ -3,6 +3,13 @@
 // handles general client side stuff that appears in the template (e.g. language chooser form)
 (function(ns, klass) {
 
+  var ALERT_CLASSES = {
+    notice: 'alert-info',
+    success: 'alert-success',
+    error: 'alert-danger',
+    alert: 'alert-warning'
+  };
+
   // constructor
   ns.App = klass = function(params) { var self = this;
     self.params = params;
@@ -87,15 +94,35 @@
     }
   }
 
-  // shows alert at top of page
+  // Shows alert at top of page
+  // params.type - success, error, notice, alert
+  // params.tag - a dashified tag (e.g. option-sets) identifying the creator of the alert, to be used later when clearing
+  // params.msg - the message
   klass.prototype.show_alert = function(params) { var self = this;
-    $('<div>').addClass('alert').addClass('alert-' + params.type).html(params.msg).prependTo($('#content'));
+    $('<div>')
+      .addClass('alert')
+      .addClass(self.alert_type_class(params.type))
+      .addClass(self.alert_tag_class(params.tag))
+      .html('<strong>' + I18n.t('common.' + params.type + '.one') + ':</strong> ' + params.msg)
+      .prependTo($('#content'));
     self.set_alert_timeout();
   };
 
   // removes all alerts
-  klass.prototype.clear_alerts = function() { var self = this;
-    $('.alert').remove();
+  klass.prototype.clear_alerts = function(params) { var self = this;
+    params = params || {}
+    // remove all alerts with given tag, or all alerts if no tag given
+    $('.' + (params.tag ? self.alert_tag_class(params.tag) : 'alert')).remove();
+  };
+
+  // gets css for alerts with given type
+  klass.prototype.alert_type_class = function(type) { var self = this;
+    return ALERT_CLASSES[type];
+  };
+
+  // gets css class for alerts with a given tag
+  klass.prototype.alert_tag_class = function(tag) { var self = this;
+    return tag ? 'alert-for-' + tag : '';
   };
 
   // hides any success alerts after a delay

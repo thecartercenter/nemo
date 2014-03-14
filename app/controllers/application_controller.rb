@@ -14,7 +14,7 @@ class ApplicationController < ActionController::Base
     @access_denied = true
 
     # log to debug log
-    Rails.logger.debug("ACCESS DENIED on #{exception.action} #{exception.subject.inspect}")
+    Rails.logger.debug("ACCESS DENIED on #{exception.action} #{exception.subject.inspect} #{exception.message}")
 
     # if not logged in, offer a login page
     if !current_user

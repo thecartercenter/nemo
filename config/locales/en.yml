@@ -1368,7 +1368,7 @@ en:
     standard_forms: "Standard Forms"
 
   unauthorized:
-    default: "You are not authorized to access that page."
+    default: "You are not authorized to access that page or operation."
     must_login: "You must login to access that page."
 
   user_batch:
