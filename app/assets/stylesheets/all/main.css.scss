@@ -126,37 +126,6 @@ div.field_with_errors { display: inline; }
 /* place map */
 #map_canvas { width: 600px; height: 400px; }
 
-/* question fields */
-div.question_fields {
-
-  .names_hints textarea {
-    height: 30px;
-  }
-
-  a.create_option_set {
-    margin-left: 10px;
-  }
-
-  div.minmax {
-    input[type=text] {
-      width: 100px;
-    }
-
-    div.control label {
-      vertical-align: middle
-    }
-  }
-}
-
-form.question_form { margin-bottom: 50px; }
-/* questioning fields */
-form.questioning_form .control { width: 475px !important; }
-form.questioning_form .form_field#condition select { min-width: 125px; }
-form.questioning_form .form_field#condition input { width: 120px; }
-form.questioning_form .form_field#condition .control > div { margin-bottom: 4px; }
-form.questioning_form .form_field#condition .control > div > div { display: inline-block; }
-form.questioning_form .form_field#condition .control > div > div:first-child { width: 100px; }
-
 /* question index/choose */
 .questions_index .code_col { min-width: 100px; }
 .questions_index .name_col { min-width: 400px; }
