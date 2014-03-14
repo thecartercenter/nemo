@@ -130,12 +130,13 @@
     window.setTimeout(function() {$(".alert-success").slideUp(); return false;}, 4000);
   };
 
-  // TOM: comment pls
   klass.prototype.hookup_hints = function() { var self = this;
 
     // when click on the page, hints disappear
     $('html').on('click', function(e) {
       $('a.hint').popover('hide');
+      e.stopPropagation();
+      e.preventDefault();
     });
 
     // initialize popovers
@@ -144,11 +145,13 @@
       trigger: 'manual'
     // toggle current tooltip
     }).on('click', function(e) {
+      // hide previous hints
+      $('a.hint').popover('hide');
       $(this).popover('toggle');
       e.stopPropagation();
+      e.preventDefault();
     });
-  }
-  // TOM: semicolons after methods
+  };
 
 })(ELMO);
 
