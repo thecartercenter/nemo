@@ -4,17 +4,17 @@ module AnswersHelper
 
     case answer.qtype.name
     when "select_one"
-      answer.option.name
+      answer.option.try(:name)
     when "select_multiple"
-      answer.choices.map{|c| c.option.name}.join(', ')
+      answer.choices && answer.choices.map{|c| c.option.name}.join(', ')
     when "datetime", "date"
       answer.casted_value.present? ? I18n.l(answer.casted_value) : ''
     when "time"
       answer.time_value.present? ? I18n.l(answer.time_value, :format => :time_only) : ''
     when "decimal"
-      "%.2f" % answer.value.to_f
+      answer.value.present? ? "%.2f" % answer.value.to_f : ''
     when "long_text"
-      context == :table_cell ? truncate(answer.value, :length => 32) : answer.value
+      answer.value.present? ? (context == :table_cell ? truncate(answer.value, :length => 32) : answer.value) : ''
     else
       answer.value
     end

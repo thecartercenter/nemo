@@ -59,4 +59,15 @@ class ResponseTest < ActiveSupport::TestCase
     # result set should have one row since one Answer in db
     assert_equal(1, res.count)
   end
+
+  test "incomplete responses should not disable constraints" do
+    form = FactoryGirl.create(:form, :question_types => %w(integer))
+    form.questionings.first.required = true
+    form.questionings.first.question.minimum = 10
+    form.publish!
+
+    r1 = FactoryGirl.build(:response, :form => form, :incomplete => true, :_answers => %w(9))
+    assert_equal(false, r1.valid?)
+    assert_match(/greater than/, r1.answers.first.errors.full_messages.join)
+  end
 end

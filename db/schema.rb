@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140211165731) do
+ActiveRecord::Schema.define(:version => 20140313202913) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -210,8 +210,8 @@ ActiveRecord::Schema.define(:version => 20140211165731) do
     t.integer  "option_set_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "minimum"
-    t.integer  "maximum"
+    t.decimal  "minimum",           :precision => 15, :scale => 10
+    t.decimal  "maximum",           :precision => 15, :scale => 10
     t.boolean  "maxstrictly"
     t.boolean  "minstrictly"
     t.integer  "mission_id"
@@ -220,10 +220,10 @@ ActiveRecord::Schema.define(:version => 20140211165731) do
     t.text     "_hint"
     t.text     "name_translations"
     t.text     "hint_translations"
-    t.boolean  "key",               :default => false
-    t.boolean  "is_standard",       :default => false
+    t.boolean  "key",                                               :default => false
+    t.boolean  "is_standard",                                       :default => false
     t.integer  "standard_id"
-    t.string   "type",                                 :null => false
+    t.string   "type",                                                                 :null => false
     t.integer  "parent_id"
     t.integer  "option_level_id"
   end

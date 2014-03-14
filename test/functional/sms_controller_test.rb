@@ -53,7 +53,7 @@ class SmsControllerTest < ActionController::TestCase
     @form.publish!
 
     # check that it works
-    assert_sms_response(:incoming => "#{form_code} 1.21 2.21", :outgoing => /question \d+ must be less than or equal to 20/)
+    assert_sms_response(:incoming => "#{form_code} 1.21 2.21", :outgoing => /Must be less than or equal to 20/)
   end
 
   test "date and time should be picked from xml" do

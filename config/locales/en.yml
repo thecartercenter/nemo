@@ -245,6 +245,8 @@ en:
         key: "Is Key Question?"
         minimum: "Minimum"
         maximum: "Maximum"
+        casted_minimum: "Minimum"
+        casted_maximum: "Maximum"
         name: "Title"
         option_set_id: "Option Set"
         qtype_name: "Type"
@@ -437,6 +439,8 @@ en:
       models:
         answer:
           required: "Please enter a value."
+        broadcast:
+          no_recipients: "None of these recipients would receive this broadcast. Please adjust the medium and try again."
         condition:
           all_required: "All condition fields are required."
         form:
@@ -525,7 +529,7 @@ en:
     delete_warning: "Are you sure you want to permanently delete the %{obj_description}?"
     deselect_all: "Deselect All"
     logged_in_as: "Logged in as"
-    must_be: "must be"
+    must_be: "Must be"
     no_selection: "You haven't selected anything."
     reqd_sym_definition: "Required fields are marked with a %{reqd_sym}."
     select_all: "Select All"
@@ -1364,7 +1368,7 @@ en:
     standard_forms: "Standard Forms"
 
   unauthorized:
-    default: "You are not authorized to access that page."
+    default: "You are not authorized to access that page or operation."
     must_login: "You must login to access that page."
 
   user_batch:

@@ -25,7 +25,7 @@
       this.show_error("Error: " + this.report.attribs.errors.base.join(', '));
     // else, the run must have been successful, so render it!
     else {
-      ELMO.app.clear_alerts();
+      ELMO.app.clear_alerts({tag: 'report'});
       this.render();
     }
   }
@@ -67,7 +67,7 @@
   }
 
   klass.prototype.show_error = function(msg) {
-    ELMO.app.show_alert({type: "danger", msg: msg});
+    ELMO.app.show_alert({tag: 'report', type: 'error', msg: msg});
   }
 
   // hookup link events

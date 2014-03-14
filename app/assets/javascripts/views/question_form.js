@@ -35,7 +35,7 @@
     // if read only
     if (field_div.is('.read_only')) {
       // first get the wrapper
-      var wrapper = field_div.find('> div');
+      var wrapper = field_div.find('.ro-val');
 
       // now try to get the wrapper's data-val value, or just the wrapper's contents failing that
       return wrapper.data('val') || wrapper.text();

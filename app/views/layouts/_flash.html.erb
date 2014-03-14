@@ -1,9 +1,9 @@
 <%# Display flash errors or succeses if any %>
 <% flash.each do |name, msg| %>
-  <%# Check if translation exists %>
-  <% if !I18n.t("common.#{name}.one", :default => "").empty? %>
+  <%# only output flash keys that have css classes defined for them %>
+  <% if flash_class(name) %>
     <div class="<%= flash_class(name) %>">
-      <strong><%= I18n.t("common.#{name}.one") %></strong>: <%= msg %>
+      <strong><%= t("common.#{name}.one") %></strong>: <%= msg %>
     </div>
   <% end %>
 <% end %>

@@ -1,3 +1,72 @@
+/* question fields */
+div.question_fields {
+
+  .names_hints textarea {
+    height: 30px;
+  }
+
+  a.create_option_set {
+    margin-left: 10px;
+  }
+
+  div.minmax {
+    input[type=text] {
+      width: 100px;
+    }
+
+    div.control label {
+      vertical-align: middle
+    }
+  }
+}
+
+form.question_form {
+  margin-bottom: 50px;
+}
+
+/* questioning fields */
+form.questioning_form {
+  .control {
+    width: 475px !important;
+  }
+
+  .form_field#condition {
+    select {
+      width: 125px;
+    }
+
+    input {
+      width: 125px;
+    }
+
+    .control {
+      .widget {
+        width: 250px;
+      }
+
+      div.field {
+        margin-bottom: 4px;
+
+        label {
+          display: inline-block;
+          width: 100px;
+          vertical-align: top;
+          padding: 0;
+        }
+
+        div {
+          width: 100px;
+          display: inline-block;
+
+          input[type=text] {
+            height: 24px;
+          }
+        }
+      }
+    }
+  }
+}
+
 #create-option-set {
   z-index: 500;
 
@@ -19,4 +88,8 @@
 /* Override modal gem */
 .modal-backdrop {
   z-index: 300 !important;
+}
+
+div.question_fields div.minmax input.text[type=text] {
+  width: 75px;
 }

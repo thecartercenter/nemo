@@ -14,11 +14,11 @@
         <% case type = answer.qtype.name
            when 'select_one' %>
 
-          <%= content_tag(:div, answer.option.try(:name), :'data-val' => answer.option_id) %>
+          <%= content_tag(:div, answer.option.try(:name), :class => 'ro-val', :'data-val' => answer.option_id) %>
 
         <% when 'select_multiple' %>
 
-          <%= content_tag(:div, answer.choices.map{|c| c.option.name}.join('<br/>').html_safe, :'data-val' => answer.choices.map(&:option_id).to_json) %>
+          <%= content_tag(:div, answer.choices.map{|c| c.option.name}.join('<br/>').html_safe, :class => 'ro-val', :'data-val' => answer.choices.map(&:option_id).to_json) %>
 
         <% when 'datetime', 'date', 'time' %>
 
@@ -26,11 +26,11 @@
           <% val = answer.send("#{type}_value") %>
 
           <%# output time value in human readable and machine readable formats %>
-          <%= content_tag(:div, val.nil? ? '' : l(val, :format => format), :'data-val' => val.nil? ? '' : val.to_s(:"std_#{type}")) %>
+          <%= content_tag(:div, val.nil? ? '' : l(val, :format => format), :class => 'ro-val', :'data-val' => val.nil? ? '' : val.to_s(:"std_#{type}")) %>
 
         <% when 'integer', 'decimal' %>
 
-          <%= content_tag(:div, answer.value, :'data-val' => answer.value) %>
+          <%= content_tag(:div, answer.value, :class => 'ro-val', :'data-val' => answer.value) %>
 
         <% when 'text', 'long_text', 'tiny_text' %>
 
@@ -85,11 +85,10 @@
       <% end # if show mode %>
 
     <% end # elmo_fields_for %>
-    <% unless answer.question_hint.blank? %>
-      <a href="javascript://" id="testhelp" rel="popover" class="hint" data-content="<%= answer.question_hint %>"><i class="hint fa fa-2x fa-info-circle"></i></a>
+    <% if form_mode != :show && answer.question_hint.present? %>
+      <a href="#" rel="popover" class="hint" data-content="<%= answer.question_hint %>"><i class="hint fa fa-2x fa-info-circle"></i></a>
     <% end %>
   </div>
-  <%# TOM: extra line break %>
 
 </div>
 

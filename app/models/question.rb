@@ -129,8 +129,8 @@ class Question < Questionable
   # an odk (xpath) expression of any question contraints
   def odk_constraint
     exps = []
-    exps << ". #{minstrictly ? '>' : '>='} #{minimum}" if minimum
-    exps << ". #{maxstrictly ? '<' : '<='} #{maximum}" if maximum
+    exps << ". #{minstrictly ? '>' : '>='} #{casted_minimum}" if minimum
+    exps << ". #{maxstrictly ? '<' : '<='} #{casted_maximum}" if maximum
     exps.empty? ? nil : "(" + exps.join(" and ") + ")"
   end
 
@@ -139,11 +139,30 @@ class Question < Questionable
     questionings.collect{|qing| qing.id}
   end
 
+  # convert value stored as decimal to integer if integer question type
+  def casted_minimum
+    minimum.blank? ? nil : (qtype_name == 'decimal' ? minimum : minimum.to_i)
+  end
+
+  def casted_maximum
+    maximum.blank? ? nil : (qtype_name == 'decimal' ? maximum : maximum.to_i)
+  end
+
+  def casted_minimum=(m)
+    self.minimum = m
+    self.minimum = casted_minimum
+  end
+
+  def casted_maximum=(m)
+    self.maximum = m
+    self.maximum = casted_maximum
+  end
+
   def min_max_error_msg
     return nil unless minimum || maximum
     clauses = []
-    clauses << I18n.t("question.maxmin.gt") + " " + (minstrictly ? "" : I18n.t("question.maxmin.or_eq") + " " ) + minimum.to_s if minimum
-    clauses << I18n.t("question.maxmin.lt") + " " + (maxstrictly ? "" : I18n.t("question.maxmin.or_eq") + " " ) + maximum.to_s if maximum
+    clauses << I18n.t("question.maxmin.gt") + " " + (minstrictly ? "" : I18n.t("question.maxmin.or_eq") + " " ) + casted_minimum.to_s if minimum
+    clauses << I18n.t("question.maxmin.lt") + " " + (maxstrictly ? "" : I18n.t("question.maxmin.or_eq") + " " ) + casted_maximum.to_s if maximum
     I18n.t("layout.must_be") + " " + clauses.join(" " + I18n.t("common.and") + " ")
   end
 

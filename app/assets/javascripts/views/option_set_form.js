@@ -150,7 +150,8 @@
     self.done = true;
 
     // do client side validations
-    if (self.validate_option_depths()) {
+    self.clear_errors();
+    if (self.validate_option_presence() && self.validate_option_depths()) {
       // submit
       self.submit_via_ajax();
     }
@@ -198,7 +199,8 @@
 
     // add the destroyed optionings
     self.options_field.list.removed_items.forEach(function(o){
-      prepared.push({id: o.id, _destroy: true});
+      if (o.id)
+        prepared.push({id: o.id, _destroy: true});
     })
 
     return prepared;
@@ -272,11 +274,18 @@
     });
   };
 
+  // makes sure there is at least one option
+  klass.prototype.validate_option_presence = function() { var self = this;
+    if (self.options_field.list.size() == 0) {
+      self.add_error('.option_set_options', I18n.t('activerecord.errors.models.option_set.at_least_one'));
+      return false;
+    }
+    return true;
+  };
+
   // checks if number of option levels and option depths are compatible
   // returns whether submission should proceed
   klass.prototype.validate_option_depths = function() { var self = this;
-    self.clear_errors();
-
     if ($('#option_set_multi_level').is(':checked')) {
       var levels = self.option_levels_field.list.size();
       var depth = self.options_field.list.max_depth();

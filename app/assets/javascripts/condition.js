@@ -78,7 +78,7 @@
     // if readonly, use the data-val attrib
     if (this.read_only) {
       // get inner div
-      var wrapper = this.rq_row.find('div.control div');
+      var wrapper = this.rq_row.find('div.control div.ro-val');
 
       // return val, or just div innerHTML if not defined
       return typeof(wrapper.data('val')) == 'undefined' ? wrapper.text() : wrapper.data('val');

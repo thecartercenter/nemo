@@ -36,7 +36,7 @@ ELMO::Application.routes.draw do
 
     # special dashboard routes
     match('/info_window' => 'welcome#info_window', :as => :dashboard_info_window)
-    match('/report_pane/:id' => 'welcome#report_pane')
+    match('/report_update/:id' => 'welcome#report_update')
 
     # login/logout shortcut
     match("/logged_out" => "user_sessions#logged_out", :as => :logged_out)

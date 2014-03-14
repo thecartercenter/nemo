@@ -14,6 +14,9 @@
 
     self.dirty = false;
 
+    // dragging only enabled if not in show mode and have can_reorder permission
+    self.enabled = self.form_mode != 'show' && self.can_reorder;
+
     // render the items
     self.render_items();
 
@@ -49,7 +52,8 @@
   // turns nestability on and off
   klass.prototype.allow_nesting = function(yn) { var self = this;
     // maxLevels == 0 means no limit
-    self.ol.nestedSortable({maxLevels: yn ? 0 : 1});
+    if (self.enabled)
+      self.ol.nestedSortable({maxLevels: yn ? 0 : 1});
   };
 
   // renders the html to the view
@@ -61,7 +65,7 @@
     self.wrapper.append(self.ol);
 
     // setup the sortable plugin unless in show mode
-    if (self.form_mode != 'show' && self.can_reorder) {
+    if (self.enabled) {
       self.ol.nestedSortable({
         handle: 'div',
         items: 'li',
@@ -119,7 +123,7 @@
       item = new self.item_class(item);
 
     // add sort icon if not in show mode
-    if (self.form_mode != 'show' && self.can_reorder)
+    if (self.enabled)
       inner.append($('<i>').attr('class', 'fa fa-sort'));
 
     // add name (add nbsp to make sure div doesn't collapse if name is blank)
