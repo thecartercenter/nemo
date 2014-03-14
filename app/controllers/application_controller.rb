@@ -137,7 +137,6 @@ class ApplicationController < ActionController::Base
     # don't count automatic timer-based requests for resetting the logout timer
     # all automatic timer-based should set the 'auto' parameter
     def last_request_update_allowed?
-      Rails.logger.debug("auto parameter is: #{params[:auto]}")
       params[:auto].nil?
     end
 
