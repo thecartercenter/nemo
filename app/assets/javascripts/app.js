@@ -135,7 +135,6 @@
     // when click on the page, hints disappear
     $('html').on('click', function(e) {
       $('a.hint').popover('hide');
-      e.stopPropagation();
     });
 
     // initialize popovers
