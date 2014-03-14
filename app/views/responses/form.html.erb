@@ -48,10 +48,9 @@
   <%= f.field(:incomplete, :type => :check_box) if can?(:submit_incomplete, @response) %>
 
   <div class ="submit-buttons">
-    <% if form_mode == :edit %>
-      <%= f.submit(t('response.save_and_mark_reviewed'), :class => "btn btn-primary", :name => 'commit_and_mark_reviewed') if can?(:review, @response) %>
-    <% elsif form_mode == :new %>
-      <%= f.submit(:class => "btn btn-primary") %>
+    <%= f.submit(:class => "btn btn-primary") %>
+    <% if form_mode == :edit && can?(:review, @response) %>
+      <%= f.submit(t('response.save_and_mark_reviewed'), :class => "btn btn-primary", :name => 'commit_and_mark_reviewed') %>
     <% end %>
   </div>
 
