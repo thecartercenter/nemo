@@ -19,12 +19,12 @@ class Answer < ActiveRecord::Base
   before_save(:round_ints)
   before_save(:blanks_to_nulls)
 
-  validates(:value, :numericality => true, :if => Proc.new{|a| a.qtype.numeric? && !a.value.blank?})
+  validates(:value, :numericality => true, :if => ->(a){ a.should_validate?(:numericality) })
 
   # in these custom validations, we add errors to the base, but we don't use full sentences (e.g. we use 'is required')
   # since this class really just represents one value
-  validate(:min_max)
-  validate(:required)
+  validate(:min_max, :if => ->(a){ a.should_validate?(:min_max) })
+  validate(:required, :if => ->(a){ a.should_validate?(:required) })
 
   delegate :question, :qtype, :rank, :required?, :hidden?, :option_set, :options, :condition, :to => :questioning
   delegate :name, :hint, :to => :question, :prefix => true
@@ -70,6 +70,21 @@ class Answer < ActiveRecord::Base
       WHERE q.qtype_name = 'location' AND a.value IS NOT NULL AND r.mission_id = ? #{user_clause}",
       mission.id
     ])
+  end
+
+  def should_validate?(field)
+    # don't validate if response says no
+    return false if response && !response.validate_answers?
+
+    case field
+    when :numericality
+      qtype.numeric? && value.present?
+    when :required
+      # don't validate requiredness if response says no
+      !(response && response.incomplete?)
+    else
+      true
+    end
   end
 
   def choice_for(option)
@@ -148,9 +163,9 @@ class Answer < ActiveRecord::Base
     end
   end
 
-  # checks if answer is required and relevant but also empty
-  def required_but_empty?
-    required_and_relevant? && empty?
+  # checks if answer must be non-empty to be valid
+  def required_and_relevant?
+    required? && !hidden? && relevant? && qtype.name != "select_multiple"
   end
 
   # check various fields for blankness
@@ -158,9 +173,9 @@ class Answer < ActiveRecord::Base
     value.blank? && time_value.blank? && date_value.blank? && datetime_value.blank? && option_id.nil?
   end
 
-  # checks if answer must be non-empty to be valid
-  def required_and_relevant?
-    required? && !hidden? && relevant? && qtype.name != "select_multiple"
+  # checks if answer is required and relevant but also empty
+  def required_but_empty?
+    required_and_relevant? && empty?
   end
 
   private

@@ -5,7 +5,7 @@ class Response < ActiveRecord::Base
 
   belongs_to(:form, :inverse_of => :responses, :counter_cache => true)
   has_many(:answers, :include => :questioning, :order => "questionings.rank",
-    :autosave => true, :validate => false, :dependent => :destroy, :inverse_of => :response)
+    :autosave => true, :dependent => :destroy, :inverse_of => :response)
   belongs_to(:user, :inverse_of => :responses)
 
   has_many(:location_answers, :include => {:questioning => :question}, :class_name => 'Answer',
@@ -17,9 +17,6 @@ class Response < ActiveRecord::Base
   # regardless of how many answer errors there are
   validates(:user, :presence => true)
   validate(:no_missing_answers)
-
-  # don't need to validate answers in odk mode
-  validates_associated(:answers, :message => :invalid_answers, :if => Proc.new{|r| r.modifier != "odk" && !r.incomplete?})
 
   default_scope(includes(:form, :user).order("responses.created_at DESC"))
   scope(:unreviewed, where(:reviewed => false))
@@ -218,6 +215,12 @@ class Response < ActiveRecord::Base
     count_and_date_cache_key(:rel => unscoped.for_mission(mission), :prefix => "mission-#{mission.id}")
   end
 
+  # whether the answers should validate themselves
+  def validate_answers?
+    # dont validate if this is an ODK submission as we don't want to lose data
+    modifier != 'odk'
+  end
+
   def populate_from_xml(xml)
     # response mission should already be set
     raise "xml submissions must have a mission" if mission.nil?
@@ -275,7 +278,7 @@ class Response < ActiveRecord::Base
 
   def all_answers
     # make sure there is an associated answer object for each questioning in the form
-    visible_questionings.collect{|qing| answer_for(qing) || answers.new(:questioning => qing)}
+    visible_questionings.collect{|qing| answer_for(qing) || answers.build(:questioning => qing)}
   end
 
   def all_answers=(params)
@@ -289,7 +292,7 @@ class Response < ActiveRecord::Base
         answers.delete(orig)
       # if original is nil, add the new one to this response's array
       elsif orig.nil?
-        answers << Answer.new(subd)
+        answers.build(subd)
       end
     end
   end

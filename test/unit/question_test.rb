@@ -34,7 +34,7 @@ class QuestionTest < ActiveSupport::TestCase
 
   test "min max error message" do
     q = FactoryGirl.build(:question, :qtype_name => 'integer', :minimum => 10, :maximum => 20, :minstrictly => false, :maxstrictly => true)
-    assert_equal('must be greater than or equal to 10 and less than 20', q.min_max_error_msg)
+    assert_equal('Must be greater than or equal to 10 and less than 20', q.min_max_error_msg)
   end
 
   test "options" do
