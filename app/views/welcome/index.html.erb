@@ -144,8 +144,8 @@
       <%= t('welcome.no_mission_selected.choose_or_create') %>
     <% else %>
       <%= t('welcome.no_mission_selected.need_to_create') %>
-      <%= link_to(t('welcome.no_mission_selected.create_link'), new_mission_path(:admin_mode => 'admin')) %>
     <% end %>
+    <%= link_to(t('welcome.no_mission_selected.create_link'), new_mission_path(:admin_mode => 'admin')) %>.
   <% else %>
     <% if Mission.any? %>
       <%= t('welcome.no_mission_selected.choose') %>
