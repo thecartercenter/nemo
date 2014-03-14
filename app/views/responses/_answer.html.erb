@@ -85,7 +85,7 @@
       <% end # if show mode %>
 
     <% end # elmo_fields_for %>
-    <% unless answer.question_hint.blank? %>
+    <% if form_mode != :show && answer.question_hint.present? %>
       <a href="#" rel="popover" class="hint" data-content="<%= answer.question_hint %>"><i class="hint fa fa-2x fa-info-circle"></i></a>
     <% end %>
   </div>

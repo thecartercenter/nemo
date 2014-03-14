@@ -136,7 +136,6 @@
     $('html').on('click', function(e) {
       $('a.hint').popover('hide');
       e.stopPropagation();
-      e.preventDefault();
     });
 
     // initialize popovers
