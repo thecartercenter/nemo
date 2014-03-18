@@ -13,6 +13,10 @@ class Replication
     :retain_link_on_promote  # when in promote mode, do we link the original object to the new standard object?
                              # if so, a coordinator will be unable to modify the object as it is no long a mission based object.
 
+  alias_method :retain_link_on_promote?, :retain_link_on_promote
+  alias_method :deep_copy?, :deep_copy
+  alias_method :recursed?, :recursed
+
   def initialize(params)
     # copy all params
     params.each{|k,v| instance_variable_set("@#{k}", v)}
@@ -30,12 +34,6 @@ class Replication
 
     # recursed defaults to false, and is set to true explicitly when recursing
     @recursed ||= false
-  end
-
-  # are we replicating a mission based object to a standard and linking to that standard
-  # if so, this results in a coordinator being unable to modify the object as it is no long a mission based object.
-  def retain_link_on_promote?
-    @retain_link_on_promote
   end
 
   # calls replication from within a transaction and returns result
@@ -91,11 +89,6 @@ class Replication
     !!in_transaction
   end
 
-  # accessor for better readability
-  def deep_copy?
-    deep_copy
-  end
-
   def shallow_copy?
     !deep_copy
   end
@@ -112,10 +105,6 @@ class Replication
   # may be nil
   def parent
     ancestors.last
-  end
-
-  def recursed?
-    recursed
   end
 
   # returns whether we are creating or updating the dest obj
