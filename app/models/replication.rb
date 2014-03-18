@@ -19,7 +19,7 @@ class Replication
 
     raise ArgumentError, 'replication mode has not been selected' if @mode.nil?
 
-    @dest_mission ||= determine_dest_mission
+    determine_dest_mission
 
     # ensure ancestors is [] if nil
     @ancestors ||= []
@@ -30,18 +30,6 @@ class Replication
 
     # recursed defaults to false, and is set to true explicitly when recursing
     @recursed ||= false
-  end
-
-  # determine dest_mission value
-  # * if we are in promte mode, the target mission is empty/nil
-  # * if the mission is passed in, we are copying to a mission
-  # * if the mission is not passed in, we are cloning to the src_obj's mission
-  def determine_dest_mission
-    if @mode == :promote
-      nil
-    else
-      @mission ? @mission : @src_obj.mission
-    end
   end
 
   # are we replicating a mission based object to a standard and linking to that standard
@@ -144,5 +132,19 @@ class Replication
     lines << "Dest mission: #{dest_mission || '[nil]'}"
     lines.join("\n")
   end
+
+  private
+
+    # determine and store the dest_mission value
+    # * if we are in promte mode, the target mission is empty/nil
+    # * if the mission is passed in, we are copying to a mission
+    # * if the mission is not passed in, we are cloning to the src_obj's mission
+    def determine_dest_mission
+      if @mode == :promote
+        @dest_mission = nil
+      else
+        @dest_mission ||= @src_obj.mission
+      end
+    end
 end
 

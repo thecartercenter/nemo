@@ -37,7 +37,7 @@ module Replicable
   #
   # Expected options:
   # replicate(:mode => :clone)
-  # replicate(:mode => :to_mission, :mission => m)
+  # replicate(:mode => :to_mission, :dest_mission => m)
   # replicate(:mode => :promote, :retain_link_on_promote => false)
   def replicate(options = nil)
     raise ArgumentError, 'Replication mode has not been defined' unless options.is_a?(Replication) || (options.respond_to?("[]") && options[:mode])
