@@ -48,6 +48,13 @@ class ReplicationTest < ActiveSupport::TestCase
     assert_equal(f.questionings[0].rank, f2.questionings[0].rank)
     assert_equal(f.questionings[0].question.code, f2.questionings[0].question.code)
     assert_equal(f.questionings[0].question.option_set.optionings[0].option.name, f2.questionings[0].question.option_set.optionings[0].option.name)
+
+    # all f2 objects should be standard
+    assert_equal(true, f2.questionings[0].is_standard?)
+    assert_equal(true, f2.questionings[0].question.is_standard?)
+    assert_equal(true, f2.questionings[0].question.option_set.is_standard?)
+    assert_equal(true, f2.questionings[0].question.option_set.optionings[0].is_standard?)
+    assert_equal(true, f2.questionings[0].question.option_set.optionings[0].option.is_standard?)
   end
 
 
