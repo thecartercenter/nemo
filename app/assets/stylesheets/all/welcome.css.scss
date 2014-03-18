@@ -47,14 +47,15 @@ body.welcome {
   }
 
   a.full-screen {
+    display: block;
     float: right;
-    margin-top: 30px;
+    margin-top: 8px;
+    margin-right: 17px;
   }
 
   /* responses index table */
   div.recent_responses {
     overflow-x: hidden;
-    overflow-y: auto;
     table.index_table {
       td > div {
         white-space: nowrap;
