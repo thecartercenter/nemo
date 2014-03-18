@@ -30,20 +30,6 @@ module Replicable
     end
   end
 
-  # figure out what mission to use based off of the options
-  def determine_mission(options)
-    if options.is_a?(Hash)
-      return nil if options[:mode] == :promote
-      if options.key?(:mission)
-        options[:mission]
-      else # no mission was passed into the options
-        nil
-      end
-    else # options was not a hash.
-      options
-    end
-  end
-
   # creates a duplicate in this or another mission
   # accepts the mission to which to replicate (when called from outside)
   # or a Replication object, which holds the params for the replication operation
@@ -61,10 +47,7 @@ module Replicable
     if options.is_a?(Replication)
       replication = options
     else
-      replication = Replication.new(:mode => options[:mode],
-                                    :mission => determine_mission(options),
-                                    :src_obj => self,
-                                    :retain_link_on_promote => options[:retain_link_on_promote])
+      replication = Replication.new(options.merge(:src_obj => self))
     end
 
     # wrap in transaction if this is the first call

@@ -27,25 +27,4 @@ class ReplicableTest < ActiveSupport::TestCase
     assert_equal('Alpha', q.attrib_before_save(:code))
   end
 
-
-  test "#determine_mission will return the passed in mission" do
-    q = FactoryGirl.build(:question, :code => 'Alpha')
-    assert('some_mission', q.determine_mission({:mission => "some_mission"}))
-  end
-
-  test "#determine_mission will return nil if the mode is :promote" do
-    q = FactoryGirl.build(:question, :code => 'Alpha')
-    assert_nil(q.determine_mission({:mode => :promote, :mission => "doesn't matter"}))
-  end
-
-  test "#determine_mission will return nil if a mission is not specified" do
-    q = FactoryGirl.build(:question, :code => 'Alpha')
-    assert_nil(q.determine_mission({:mode => :default}))
-  end
-
-  test "#determine_mission will return the passed in parameter if it is not a hash" do
-    q = FactoryGirl.build(:question, :code => 'Alpha')
-    assert("some_mission", q.determine_mission("some_mission"))
-  end
-
 end
