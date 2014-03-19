@@ -151,4 +151,18 @@ class QuestionTest < ActiveSupport::TestCase
     assert_nil(q.standard)
     assert_nil(q.option_set.standard)
   end
+
+  test "promoting a question and maintaining link should work" do
+    q = FactoryGirl.create(:question, :qtype_name => 'select_one', :option_set => FactoryGirl.create(:option_set))
+    std = q.replicate(:mode => :promote, :retain_link_on_promote => true)
+    q.reload
+
+    # all std objects should be standard
+    assert_equal(true, std.is_standard?)
+    assert_equal(true, std.option_set.is_standard?)
+
+    # originals should have standard links
+    assert_equal(std, q.standard)
+    assert_equal(std.option_set, q.option_set.standard)
+  end
 end
