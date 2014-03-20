@@ -156,6 +156,9 @@ class Ability
             [Form, OptionSet, Question, Questioning, Option].each do |klass|
               can :manage, klass, :mission_id => user.current_mission_id
             end
+
+            can :manage, Group, :mission_id => user.current_mission_id
+            can :manage, UserGroup, :mission_id => user.current_mission_id
           end
 
           # coord can manage these classes for the current mission even if locked

@@ -55,6 +55,7 @@ ELMO::Application.routes.draw do
     resources(:settings)
     resources(:users){member{get 'login_instructions'; get 'exit_admin_mode'}; collection{post 'export'}}
     resources(:user_batches)
+    resources(:groups)
 
     # looks nicer
     resources(:option_sets, :path => 'option-sets'){member{put 'clone'}}
