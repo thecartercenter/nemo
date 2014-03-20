@@ -59,6 +59,7 @@ class Replication
       # these stay the same
       :dest_mission => dest_mission,
       :deep_copy => deep_copy,
+      :retain_link_on_promote => retain_link_on_promote,
 
       # this is always true since we go into a transaction first thing
       :in_transaction => true,

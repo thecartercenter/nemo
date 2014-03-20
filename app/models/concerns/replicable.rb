@@ -91,12 +91,12 @@ module Replicable
 
     replicate_child_associations(replication)
 
-    # link basic object to newly created standard object
-    if @mode == :promote && retain_link_on_promote?
-      link_object_to_standard(new_obj)
-    end
-
     dest_obj.save!
+
+    # link basic object to newly created standard object
+    if replication.mode == :promote && replication.retain_link_on_promote?
+      link_object_to_standard(dest_obj)
+    end
 
     return dest_obj
   end
@@ -210,9 +210,9 @@ module Replicable
 
   # link the src object to the newly created standard object
   def link_object_to_standard(standard_object)
-    @src_obj.is_standard = true
-    @src_obj.standard_id = standard_object.id
-    @src_obj.save!
+    self.is_standard = true
+    self.standard_id = standard_object.id
+    self.save!
   end
 
   private
