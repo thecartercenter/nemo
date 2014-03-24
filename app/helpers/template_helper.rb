@@ -26,7 +26,7 @@ module TemplateHelper
     else
       link_to(content_tag('i', '', :class => 'fa fa-2x fa-key admin') +
         content_tag('span', t('admin_mode.goto_admin_mode'), :class => 'admin'),
-        root_url(:admin_mode => 'admin'), :class => 'goto_admin_mode admin-mode', :title => t('admin_mode.goto_admin_mode'))
+        root_url(:admin_mode => 'admin/forms'), :class => 'goto_admin_mode admin-mode', :title => t('admin_mode.goto_admin_mode'))
     end
   end
 
