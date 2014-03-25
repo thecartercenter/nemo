@@ -106,6 +106,12 @@ en:
       create: "Save"
       update: "Save"
 
+  flash_message_types:
+    success: "Success"
+    error: "Error"
+    alert: "Alert"
+    notice: "Notice"
+
   # model names, attrib names, hints, and errors for activerecord models
   activerecord:
     models:
