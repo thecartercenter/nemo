@@ -32,7 +32,7 @@
   };
 
   klass.prototype.show = function(yn) { var self = this;
-    $('.form_field[data-field-name=option_levels')[yn ? 'show' : 'hide']();
+    $('.form_field[data-field-name=option_levels]')[yn ? 'show' : 'hide']();
   };
 
 })(ELMO.Views);
