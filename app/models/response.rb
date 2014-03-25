@@ -3,7 +3,10 @@ class Response < ActiveRecord::Base
   include MissionBased
   include Cacheable
 
+  LOCK_OUT_TIME = 10
+
   belongs_to(:form, :inverse_of => :responses, :counter_cache => true)
+  belongs_to(:checked_out_by, :class_name => "User")
   has_many(:answers, :include => :questioning, :order => "questionings.rank",
     :autosave => true, :dependent => :destroy, :inverse_of => :response)
   belongs_to(:user, :inverse_of => :responses)
@@ -41,6 +44,16 @@ class Response < ActiveRecord::Base
 
   # loads only answers with location info
   scope(:with_location_answers, includes(:location_answers))
+
+  delegate :name, :to => :checked_out_by, :prefix => true
+
+  # remove previous checkouts by a user
+  def self.remove_previous_checkouts_by(user = nil)
+    raise ArguementError, "A user is required" unless user
+
+    Response.where(:checked_out_by_id => user).update_all(:checked_out_at => nil, :checked_out_by_id => nil)
+  end
+
 
   # takes a Relation, adds a bunch of selects and joins, and uses find_by_sql to do the actual finding
   # this technique is due to limitations (at the time of dev) in the Relation system
@@ -330,6 +343,40 @@ class Response < ActiveRecord::Base
   # indexes excerpts by questioning_id
   def excerpts_by_questioning_id
     @excerpts_by_questioning_id ||= (excerpts || []).index_by{|e| e[:questioning_id]}
+  end
+
+  def check_out_valid?
+    checked_out_at > Response::LOCK_OUT_TIME.minutes.ago
+  end
+
+  def checked_out_by_others?(user = nil)
+    raise ArguementError, "A user is required" unless user
+
+    !self.checked_out_by.nil? && self.checked_out_by != user && check_out_valid?
+  end
+
+  def check_out!(user = nil)
+    raise ArguementError, "A user is required to checkout a response" unless user
+
+    if !checked_out_by_others?(user)
+      transaction do
+        Response.remove_previous_checkouts_by(user)
+
+        self.checked_out_at = Time.now
+        self.checked_out_by = user
+        self.save!
+      end
+    end
+  end
+
+  def check_in
+    self.checked_out_at = nil
+    self.checked_out_by_id = nil
+  end
+
+  def check_in!
+    self.check_in
+    self.save!
   end
 
   private

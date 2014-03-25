@@ -1,6 +1,7 @@
 class ResponsesController < ApplicationController
   # need to load with associations for show and edit
   before_filter :load_with_associations, :only => [:show, :edit]
+  before_filter :mark_response_as_checked_out, :only => [:edit]
 
   # authorization via CanCan
   load_and_authorize_resource
@@ -85,6 +86,7 @@ class ResponsesController < ApplicationController
   end
 
   def edit
+    flash.now[:notice] = "#{t("response.checked_out")} #{@response.checked_out_by_name}" if @response.checked_out_by_others?(current_user)
     prepare_and_render_form
   end
 
@@ -160,6 +162,11 @@ class ResponsesController < ApplicationController
       @response = Response.with_associations.find(params[:id])
     end
 
+    # when editing a response, set timestamp to show it is being worked on
+    def mark_response_as_checked_out
+      @response.check_out!(current_user)
+    end
+
     # handles creating/updating for the web form
     def web_create_or_update
       # set source/modifier to web
@@ -168,6 +175,10 @@ class ResponsesController < ApplicationController
 
       # check for "update and mark as reviewed"
       @response.reviewed = true if params[:commit_and_mark_reviewed]
+
+      if params[:action] == "update"
+        @response.check_in
+      end
 
       # try to save
       begin

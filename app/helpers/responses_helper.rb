@@ -24,7 +24,7 @@ module ResponsesHelper
       when "created_at" then resp.created_at ? l(resp.created_at) : ""
       when "age" then resp.created_at ? time_ago_in_words(resp.created_at) : ""
       when "incomplete" then tbool(resp.incomplete?)
-      when "reviewed" then tbool(resp.reviewed?)
+      when "reviewed" then reviewed_status(resp)
       when "user_id" then can?(:read, resp.user) ? link_to(resp.user.name, resp.user) : resp.user.name
       when "actions"
         # we don't need to authorize these links b/c for responses, if you can see it, you can edit it.
@@ -94,5 +94,13 @@ module ResponsesHelper
     else
       tmd("welcome.in_the_past_#{count[1]}", :count => number_with_delimiter(count[0]))
     end
+  end
+
+  def reviewed_status(resp)
+    status = tbool(resp.reviewed?)
+    if !resp.checked_out_at.nil? && (resp.checked_out_at > Response::LOCK_OUT_TIME.minutes.ago)
+      status = I18n.t("common.pending")
+    end
+    status
   end
 end
