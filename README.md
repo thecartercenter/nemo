@@ -42,6 +42,7 @@ Note to install the software below we recommend the following package managers:
 
 1. **MySQL 5.0+**
   - Create an empty database and accompanying user for use by the app (E.g. development database *elmo_d* with username *elmo*)
+  - Set up mysql for timezone support: See [doc here](http://dev.mysql.com/doc/refman/5.5/en/time-zone-support.html)
 
 1. **Web Server**
   - If your instance is for development only, you can use Rails' built-in web server by running `rails s`, as discussed below.
