@@ -58,6 +58,7 @@ a.action_link { font-size: 14px; text-decoration: none; display: inline-block; m
 table a.action_link { margin: -2px 10px -2px 0; }
 
 i.hint {
+  display: inline-block;
   color: $elmo-blue;
   font-size: 1.5em;
   vertical-align: middle;

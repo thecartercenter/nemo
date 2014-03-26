@@ -2,10 +2,12 @@ development:
   mysql41: 9306
   max_matches: 1000000
   html_strip: true
+  sql_sock: /tmp/mysql.sock
 test:
   mysql41: 9307
   max_matches: 1000000
   html_strip: true
+  sql_sock: /tmp/mysql.sock
 production:
   max_matches: 1000000
   html_strip: true
