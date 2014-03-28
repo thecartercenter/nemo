@@ -45,7 +45,7 @@ class PasswordResetTest < ActionDispatch::IntegrationTest
     # make sure url is correct
     # first get the url
     email = ActionMailer::Base.deliveries.first
-    url = email.body.match(/http:.+\/edit/).to_s
+    url = email.body.match(/https?:.+\/edit/).to_s
 
     # make sure we actually found it
     assert_match(/^http/, url)
