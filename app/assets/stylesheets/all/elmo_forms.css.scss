@@ -12,6 +12,7 @@ div.form-errors {
 form.response_form, form.question_form, form.form_form, form.user_form, form.setting_form,
   form.user_batch_form, form.questioning_form, form.mission_form, form.broadcast_form, form.user_session_form {
   width: 665px;
+
   .form-control {
     display: inline-block;
   }
@@ -148,7 +149,6 @@ form {
 
 }
 
-
 #question_option_set_id {
   width: 300px;
   display: inline-block;
@@ -177,7 +177,6 @@ div.data_integrity_warning {
     margin-left: 20px;
   }
 }
-
 
 /* Custom form tweaks */
 
