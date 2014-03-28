@@ -9,36 +9,22 @@ div.form-errors {
 }
 
 /* standardize specific form widths */
-form.response_form, form.question_form, form.form_form, form.option_set_form, form.user_form, form.broadcast_form, form.user_batch_form, form.setting_form, form.mission_form, form.user_session_form, form.questioning_form {
-  width: 650px;
+form.response_form, form.question_form, form.form_form, form.user_form, form.setting_form,
+  form.user_batch_form, form.questioning_form, form.mission_form, form.broadcast_form, form.user_session_form {
+  width: 665px;
+
   .form-control {
     display: inline-block;
-  }
-}
-
-
-/* Custom tweaks to forms */
-form#new_response {
-  .form-control {
-    display: inline-block;
-    width: 93%;
-  }
-}
-
-.forms_edit form.form_form {
-  width: 100%;
-}
-
-/* login form does not have hints */
-#new_user_session {
-  input.text {
-    width: 450px !important;
   }
 }
 
 div.form_field {
   /* the field div itself should not wrap, but we don't want this to inherit */
   white-space: nowrap;
+  border-bottom: 1px solid #DDD;
+  margin-bottom: 5px;
+  display: inline-block;
+  width: 93%;
 
   > * {
     white-space: normal;
@@ -93,7 +79,7 @@ div.form_field {
   div.control {
     display: inline-block;
     vertical-align: middle;
-    width: 450px;
+    width: 425px;
     min-height: 26px;
     position: relative;
 
@@ -154,6 +140,7 @@ form {
   div.submit-buttons {
     text-align: right;
     margin-top: 20px;
+    margin-right: 40px;
   }
 
   input.btn-primary {
@@ -161,14 +148,6 @@ form {
   }
 
 }
-
-form.response_form {
-  width: 750px;
-  label.main {
-    width: 300px;
-  }
-}
-
 
 #question_option_set_id {
   width: 300px;
@@ -198,3 +177,60 @@ div.data_integrity_warning {
     margin-left: 20px;
   }
 }
+
+/* Custom form tweaks */
+
+/* These need to be shorter by 15px, otherwise form looks way too wide for content */
+form.broadcast_form, form.user_session_form {
+  width: 650px;
+}
+
+/* Option set form is different altogether */
+form.option_set_form {
+  width: 685px;
+  .submit-buttons {
+    margin-right: 56px;
+  }
+}
+
+
+/* Response form has to be wider */
+form.response_form {
+  width: 800px;
+  label.main {
+    width: 300px;
+  }
+  .submit-buttons {
+    margin-right: 52px;
+  }
+}
+
+.forms_edit form.form_form {
+  width: 100%;
+}
+
+/* Login form does not have hints */
+#new_user_session {
+  input.text {
+    width: 450px !important;
+  }
+}
+
+form.user_batch_form #batch {
+  border-bottom: 0px;
+}
+
+form.user_session_form {
+  div.submit-buttons {
+    margin-right: 0px;
+  }
+
+  div.form_field {
+    border-bottom: 0px;
+  }
+}
+
+div.hint {
+  display: inline-block;
+}
+
