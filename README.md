@@ -90,11 +90,7 @@ Note to install the software below we recommend the following package managers:
 
 ## How Do I Contribute to ELMO?
 
-ELMO is 100% open-source. We would like you to be part of the ELMO community! We accept and encourage contributions from the public.
-
-### Reporting Bugs and Requesting Features
-
-Please use our Redmine instance at http://redmine.sassafras.coop/projects/elmo. Bugs/feature requests can be reported anonymously.
+ELMO is 100% open-source. We would like you to be part of the ELMO community! We accept and encourage contributions from the public. You can start by filing an bug report or feature request using the 'Issues' feature on Github. Or contact [Tom Smyth](https://github.com/hooverlunch) for more info.
 
 ### ELMO Data Model
 
