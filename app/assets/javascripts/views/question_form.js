@@ -51,13 +51,10 @@
     // show/hide option set field and hint
     var show_opt_set = (selected_type == "select_one" || selected_type == "select_multiple");
     var optionSet = $("div.question_fields .form_field[data-field-name=option_set_id]");
-    var hint = optionSet.next('a.hint');
     if (show_opt_set) {
       optionSet.show();
-      hint.show();
     } else {
       optionSet.hide();
-      hint.hide();
     }
 
     // reset select if hiding
