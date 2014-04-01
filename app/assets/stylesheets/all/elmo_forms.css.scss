@@ -9,9 +9,9 @@ div.form-errors {
 }
 
 /* standardize specific form widths */
-form.response_form, form.question_form, form.form_form, form.user_form, form.setting_form,
-  form.user_batch_form, form.questioning_form, form.mission_form, form.broadcast_form, form.user_session_form {
-  width: 665px;
+
+form.std_form {
+  width: 703px;
 
   .form-control {
     display: inline-block;
@@ -180,23 +180,19 @@ div.data_integrity_warning {
 
 /* Custom form tweaks */
 
-/* These need to be shorter by 15px, otherwise form looks way too wide for content */
-form.broadcast_form, form.user_session_form {
-  width: 650px;
-}
 
 /* Option set form is different altogether */
 form.option_set_form {
-  width: 685px;
+  width: 735px;
   .submit-buttons {
-    margin-right: 56px;
+    margin-right: 47px;
   }
 }
 
 
 /* Response form has to be wider */
 form.response_form {
-  width: 800px;
+  width: 815px;
   label.main {
     width: 300px;
   }
@@ -205,6 +201,7 @@ form.response_form {
   }
 }
 
+/* Questions table should we wider in edit mode */
 .forms_edit form.form_form {
   width: 100%;
 }
@@ -216,11 +213,19 @@ form.response_form {
   }
 }
 
-form.user_batch_form #batch {
-  border-bottom: 0px;
+form.user_batch_form {
+  #batch {
+    border-bottom: 0px;
+  }
+  div.submit-buttons {
+    margin-right: 80px;
+  }
+
 }
 
 form.user_session_form {
+  width: 650px;
+
   div.submit-buttons {
     margin-right: 0px;
   }
@@ -233,4 +238,3 @@ form.user_session_form {
 div.hint {
   display: inline-block;
 }
-
