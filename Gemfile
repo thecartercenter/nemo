@@ -11,6 +11,11 @@ group :assets do
   gem 'bootstrap-modal-rails'
 end
 
+# add rspec
+group :development, :test do
+  gem 'rspec-rails'
+end
+
 gem 'authlogic'
 gem 'rake'
 gem 'mysql2', '0.3.12b5' # beta version needed for sphinx
