@@ -32,7 +32,17 @@
   };
 
   klass.prototype.show = function(yn) { var self = this;
-    $('.form_field[data-field-name=option_levels')[yn ? 'show' : 'hide']();
+    // select option level and corresponding hint
+    var multiOptionField = $('.form_field[data-field-name=option_levels]');
+    // if checked, show and format correctly
+    if (yn) {
+      multiOptionField.show();
+      multiOptionField.css('display', 'inline-block');
+    // else, hide
+    } else {
+      multiOptionField.hide();
+    }
+
   };
 
 })(ELMO.Views);
