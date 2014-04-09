@@ -79,7 +79,15 @@ table.index_table {
 }
 table.index_table th, table.form th { text-align: left; color: #444; background-color: $super-light-gray;
     font-size: 90%; padding: 3px 10px 3px 3px; }
-table.index_table td { border-top: 1px solid #ddd; padding: 6px 10px 6px 3px; }
+table.index_table td {
+  border-top: 1px solid #ddd;
+  padding: 6px 10px 6px 3px;
+
+  a {
+    color: #02648A;
+    font-size: 10pt;
+  }
+}
 table.index_table tr:last-child td { border-bottom: 1px solid #ddd; }
 table.index_table td.actions_col img { margin-right: 5px; }
 table.index_table tbody tr.clickable { cursor: pointer; }
