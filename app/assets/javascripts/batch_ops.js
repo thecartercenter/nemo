@@ -79,12 +79,16 @@ function batch_submit(options) {
 
   // else, show confirm dialog (if requested), and proceed if 'yes' clicked
   else if (options.confirm == "" || confirm(options.confirm.replace(/###/, count))) {
+
     // construct a temporary form
     var form = $('<form>').attr('action', options.path).attr('method', 'post');
 
     // copy the checked checkboxes to it
     // (we do it this way in case the main form has other stuff in it that we don't want to submit)
     form.append($('input.batch_op:checked').clone());
+
+    // need to append form to body before submitting
+    form.appendTo($('body'));
 
     // submit the form
     form.submit();
