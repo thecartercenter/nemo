@@ -75,6 +75,12 @@ gem 'thinking-sphinx', '~> 3.0.2'
 # cleaning db for testing
 gem 'database_cleaner', :group => [:development, :test]
 
+# Test framework
+gem 'rspec-rails', :group => [:development, :test]
+
+# Acceptance test framework
+gem 'capybara', :group => [:development, :test]
+
 # cron management
 gem 'whenever', :require => false
 
