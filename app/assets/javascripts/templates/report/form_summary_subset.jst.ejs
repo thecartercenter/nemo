@@ -1,11 +1,11 @@
-<% /*# print a header unless this is the only subset */ %>
-<% if (!is_only) { %>
+<% /*# print a header unless there is no disaggregaation */ %>
+<% if (subset.disagg_value != 'all') { %>
   <% var value_str = subset.disagg_value ? subset.disagg_value.name : '[' + I18n.t('common.blank') + ']'; %>
   <h2><%- report.disagg_qing.question.code + ': ' + value_str %></h2>
   <small><%- I18n.t("report/report.subset_intro", {disagg_value: value_str, question: report.disagg_qing.question.code}) %></small>
 <% } %>
 
-<div class="subset <%= is_only ? 'is_only' : '' %>">
+<div class="subset <%= subset.disagg_value == 'all' ? '' : 'disaggregated' %>">
 
   <% /*# if no data, then print a notice */ %>
   <% if (subset.no_data) { %>

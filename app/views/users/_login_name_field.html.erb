@@ -1,4 +1,10 @@
-<%= form.text_field(:login) %>
-<% unless form.mode == :show %>
-  <%= button_to_function(t("common.suggest"), "suggest_login(this)", :id => "login_suggest_button", :class => "btn_secondary") %>
+<% if form_mode == :show %>
+
+  <%= form.object.login %>
+
+<% else %>
+
+  <%= form.text_field(:login, :class => 'form-control') %>&nbsp;
+  <%= form.button(t("common.suggest"), :class => "btn btn-default btn-xs")  %>
+
 <% end %>

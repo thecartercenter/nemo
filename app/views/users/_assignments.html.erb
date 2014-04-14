@@ -1,14 +1,38 @@
 <% if admin_mode? %>
-  <%= collection_form(:parent_form => form, :collection_name => :assignments, :blank_obj => @blank_assignment, :tr_name => Assignment.model_name.human) %>
+
+  <%# special error output %>
+  <%= content_tag(:div, assignment_errors.join(', '), :class => 'form-errors') unless assignment_errors.empty? %>
+
+  <div class="assignment_header">
+    <div class="mission"><%= translate_model(Mission) %></div>
+    <div class="role"><%= t('role.role') %></div>
+  </div>
+
+  <div class="assignments"></div>
+
+  <%= link_to(t('user.add_assignment'), '#', :class => 'add_assignment') unless form_mode == :show %>
+
 <% else %>
-  <%= form.fields_for(:assignments) do |af| %>
-    <% if af.object.mission == current_mission %>
-      <% af.mode = form.mode %>
+
+  <% if form_mode == :show %>
+
+    <%# in show mode, just show the role the current mission's assignment %>
+    <%= t(@current_assignment.role, :scope => :role) %>
+
+  <% else %>
+
+    <%# don't show errors because we format them specially below %>
+    <%= elmo_fields_for("user[assignments_attributes][0]", @current_assignment, :show_errors => false) do |af| %>
       <%= af.hidden_field(:id) %>
       <%= af.hidden_field(:mission_id) %>
-      <%= af.select(:role, User::ROLES.map{|r| [t(r, :scope => :role), r]}, :prompt => "[#{t('role.role')}]") %>&nbsp;&nbsp;
-      <%= af.check_box(:active) %>
-      <%= af.label(:active, "#{t('common.active').capitalize}?") %>
+
+      <%# special error output %>
+      <%= content_tag(:div, @user.errors[:'assignments.role'].join, :class => 'form-errors') unless @user.errors[:'assignments.role'].empty? %>
+
+      <%= af.select(:role, User::ROLES.map{|r| [t(r, :scope => :role), r]}, {:prompt => "[#{t('role.role')}]"},
+        :class => "form-control") %>
     <% end %>
-  <% end %>
-<% end %>
+
+  <% end # if show mode %>
+
+<% end # if admin mode %>

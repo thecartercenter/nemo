@@ -10,6 +10,19 @@ class Report::SummaryCollectionSingleTest < ActiveSupport::TestCase
     assert_equal('integer', first_summary.qtype.name)
   end
 
+  test "observer integer summary should be correct" do
+    #prepare_form_and_collection('integer', [10, 7, 6, 1, 1])
+    prepare_form('integer', [10, 7, 6, 1, 1])
+
+    observer = FactoryGirl.create(:user, :role_name => :observer)
+    observer.current_mission = get_mission
+    [10, 7, 6, 1, 1].each{|a| FactoryGirl.create(:response, :form => @form, :_answers => [a], :user => observer)}
+
+    @collection = Report::SummaryCollectionBuilder.new(@form.questionings, nil, :restrict_to_user => observer).build
+
+    assert_equal({:mean => 5.0, :max => 10, :min => 1}, headers_and_items(:stat, :stat))
+  end
+
   test "integer summary should be correct" do
     prepare_form_and_collection('integer', [10, 7, 6, 1, 1])
     # assert_equal({:mean => 5.0, :median => 6.0, :max => 10, :min => 1}, headers_and_items(:stat, :stat))

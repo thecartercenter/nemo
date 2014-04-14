@@ -20,4 +20,13 @@ class SettingTest < ActiveSupport::TestCase
     @setting.update_attributes!(:preferred_locales_str => "fr , ar1")
     assert_equal([:fr, :ar], @setting.preferred_locales)
   end
+
+  test "generate override code will generate a new six character code" do
+    previous_code = @setting.override_code
+
+    @setting.generate_override_code!
+
+    assert_not_same(previous_code, @setting.override_code)
+    assert_equal(6, @setting.override_code.size)
+  end
 end

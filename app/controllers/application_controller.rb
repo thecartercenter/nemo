@@ -14,7 +14,7 @@ class ApplicationController < ActionController::Base
     @access_denied = true
 
     # log to debug log
-    Rails.logger.debug("ACCESS DENIED on #{exception.action} #{exception.subject.inspect}")
+    Rails.logger.debug("ACCESS DENIED on #{exception.action} #{exception.subject.inspect} #{exception.message}")
 
     # if not logged in, offer a login page
     if !current_user
@@ -25,13 +25,13 @@ class ApplicationController < ActionController::Base
     elsif flash[:mission_changed]
       # if the request was a CRUD, try redirecting to the index, or root if no permission
       if Ability::CRUD.include?(exception.action) && current_user.can?(:index, exception.subject.class)
-        redirect_to :controller => controller_name, :action => :index
+        redirect_to(:controller => controller_name, :action => :index)
       else
-        redirect_to root_url
+        redirect_to(root_url)
       end
     # else redirect to welcome page with error
     else
-      redirect_to root_url, :flash => { :error => exception.message }
+      redirect_to(root_url, :flash => { :error => exception.message })
     end
   end
 
@@ -156,7 +156,7 @@ class ApplicationController < ActionController::Base
         @search.qualifiers = klass.search_qualifiers(:mission => current_mission)
         rel = @search.apply(rel) unless options[:search] == false
       rescue Search::ParseError
-        @error_msg = "#{t('search.search_error')}: #{$!}"
+        flash.now[:error] = "#{t('search.search_error')}: #{$!}"
       end
 
       # apply pagination and return

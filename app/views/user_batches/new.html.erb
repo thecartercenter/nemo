@@ -1,9 +1,10 @@
-<%= flash_and_form_errors %>
 <%# if this is an empty batch (not one with errors) show the normal form %>
 <% if @user_batch.lines.nil? %>
-  <%= nice_form_for(@user_batch) do |f| %>
-    <%= form_field(f, :batch, :type => :textarea, :required => true) %>
-    <%= form_submit_button(f, :label => :create) %>
+  <%= elmo_form_for(@user_batch) do |f| %>
+    <%= f.field(:batch, :type => :textarea, :required => true, :class => "form-control") %>
+    <div class="submit-buttons">
+      <%= f.submit(:create, :class => "btn btn-primary") %>
+    </div>
   <% end %>
 
 <%# otherwise show a special form with info about each line %>
@@ -25,6 +26,6 @@
         </div>
       </div>
     <% end %>
-    <%= form_submit_button(f, :label => :try_again) %>
+    <%= f.submit(t('common.try_again'), :class =>"btn btn-primary") %>
   <% end %>
 <% end %>

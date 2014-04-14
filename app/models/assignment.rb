@@ -4,12 +4,13 @@ class Assignment < ActiveRecord::Base
   belongs_to(:mission)
   belongs_to(:user, :inverse_of => :assignments)
 
+  before_validation(:normalize_role)
+
   validates(:mission, :presence => true)
   validates(:role, :presence => true)
 
   default_scope(includes(:mission))
   scope(:sorted_recent_first, order("created_at DESC"))
-  scope(:active, where(:active => true))
 
   # checks if there are any duplicates in the given set of assignments
   def self.duplicates?(assignments)
@@ -27,4 +28,16 @@ class Assignment < ActiveRecord::Base
   def self.per_mission_cache_key(mission)
     count_and_date_cache_key(:rel => unscoped.where(:mission_id => mission.id), :prefix => "mission-#{mission.id}")
   end
+
+  # human readable
+  def to_s
+    ""
+  end
+
+  private
+
+    # ensures role is one of allowable values
+    def normalize_role
+      self.role = nil unless User::ROLES.include?(role)
+    end
 end

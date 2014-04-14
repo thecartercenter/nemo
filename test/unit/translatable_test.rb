@@ -65,4 +65,21 @@ class TranslatableTest < ActiveSupport::TestCase
     assert_equal([:fr], o.available_locales(:except_current => true))
   end
 
+  test "all blank" do
+    o = Option.new
+    o.name_translations = nil
+    assert_equal(true, o.name_all_blank?)
+    o.name_en = ""
+    assert_equal(true, o.name_all_blank?)
+    o.name_en = "foo"
+    assert_equal(false, o.name_all_blank?)
+    o.name_fr = "bar"
+    o.name_en = ""
+    assert_equal(false, o.name_all_blank?)
+    o.name_fr = ""
+    assert_equal(true, o.name_all_blank?)
+    o.name_fr = nil
+    assert_equal(true, o.name_all_blank?)
+  end
+
 end

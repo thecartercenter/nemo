@@ -42,10 +42,12 @@ class Form < ActiveRecord::Base
     })
     .group("forms.id"))
 
-  scope(:default_order, order('forms.name'))
+  scope(:by_name, order('forms.name'))
+  scope(:default_order, by_name)
 
   replicable :child_assocs => :questionings, :uniqueness => {:field => :name, :style => :sep_words},
-    :dont_copy => [:published, :downloads, :responses_count, :questionings_count, :upgrade_needed, :smsable, :current_version_id]
+    :dont_copy => [:published, :downloads, :responses_count, :questionings_count, :upgrade_needed,
+      :smsable, :current_version_id, :allow_incomplete]
 
   # remove heirarch of objects
   def self.terminate_sub_relationships(form_ids)
@@ -68,6 +70,11 @@ class Form < ActiveRecord::Base
   def full_name
     # this used to include the form type, but for now it's just name
     name
+  end
+
+  # current override code for incomplete responses
+  def override_code
+    mission.override_code
   end
 
   # returns whether this form or (if standard) any of its copies have responses, using an eager loaded col if available
@@ -264,7 +271,7 @@ class Form < ActiveRecord::Base
     end
 
     def name_unique_per_mission
-      errors.add(:name, :must_be_unique) unless unique_in_mission?(:name)
+      errors.add(:name, :taken) unless unique_in_mission?(:name)
     end
 
     def normalize_fields

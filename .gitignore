@@ -21,3 +21,7 @@ test/fixtures
 
 # these are auto generated
 config/*.sphinx.conf
+
+# manually generated files for quick searching
+rake_tasks.txt
+routes.txt

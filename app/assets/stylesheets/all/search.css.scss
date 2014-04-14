@@ -8,17 +8,39 @@ form.search_form {
     padding: 3px;
   }
 
+  input.form-control, input.btn {
+    height: 28px;
+  }
+
+  input.btn {
+    background-color: #D4DCE1;
+    padding: 4px 12px;
+  }
+
   div.search_footer {
 
     #search_examples {
       margin: 4px 8px 10px 0;
       color: #666;
       display: inline-block;
+      font-size: 8pt;
     }
   }
 }
 
 /* search help */
+#search-help-modal {
+
+  .modal-dialog {
+    width: 800px;
+
+      .modal-body {
+        overflow: auto;
+        max-height: 500px;
+      }
+
+  }
+}
 div.search_help {
   /* initially hidden, shown as modal */
   display: none;

@@ -2,17 +2,16 @@
   <%= link_to(t("sms_console.back_to_forms"), forms_path) %>
 </div>
 
-<%= nice_form_for(@sms_test) do |f| %>
-  <%= form_field(f, :from) %>
-  <%= form_field(f, :body, :type => :textarea) %>
+<%= elmo_form_for(@sms_test) do |f| %>
+  <%= f.field(:from) %>
+  <%= f.field(:body, :type => :textarea) %>
 
-  <%= form_submit_button(f, :label => :submit) %>
+  <%= f.submit(:submit) %>
   <%= loading_indicator %>
 <% end %>
 
 <h2><%= t("common.result", :count => 1) %></h2>
-<div class="sms_test_result">
-</div>
+<div class="sms_test_result"></div>
 
 <%= javascript_doc_ready do %>
   new ELMO.SmsTestConsole();

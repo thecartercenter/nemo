@@ -10,10 +10,14 @@ class Broadcast < ActiveRecord::Base
   validates(:which_phone, :presence => true, :if => Proc.new{|b| b.sms_possible?})
   validates(:body, :presence => true)
   validates(:body, :length => {:maximum => 140}, :if => Proc.new{|b| b.sms_possible?})
+  validate(:has_eligible_recipients)
 
   before_create(:deliver)
 
   default_scope(includes(:recipients).order("created_at DESC"))
+
+  # this method isn't used except for attaching errors
+  attr_accessor :to
 
   # options for the medium used for the broadcast
   MEDIUM_OPTIONS = %w(sms email sms_only email_only both)
@@ -77,5 +81,11 @@ class Broadcast < ActiveRecord::Base
     end
     [sms, email]
   end
+
+  private
+
+    def has_eligible_recipients
+      errors.add(:to, :no_recipients) if sort_recipients.flatten.empty?
+    end
 
 end

@@ -7,5 +7,6 @@ FactoryGirl.define do
     option do
       ref_qing.has_options? ? ref_qing.options.first : nil
     end
+    mission {get_mission}
   end
 end

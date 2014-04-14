@@ -3,6 +3,13 @@
 // handles general client side stuff that appears in the template (e.g. language chooser form)
 (function(ns, klass) {
 
+  var ALERT_CLASSES = {
+    notice: 'alert-info',
+    success: 'alert-success',
+    error: 'alert-danger',
+    alert: 'alert-warning'
+  };
+
   // constructor
   ns.App = klass = function(params) { var self = this;
     self.params = params;
@@ -16,6 +23,9 @@
     $("a#locale_form_link").on("click", function(){ $("#locale_form").css("display", "inline-block"); $(this).hide(); return false; });
     $("#locale_form select").on("change", function(){ self.change_locale($(this).val()); return false; });
 
+    // setup submit response dropdown in nav bar
+    $("a.dropdown-toggle").on("click", function(){self.show_hide_submit_menu($(this)); return false;});
+
     // set session countdown
     self.reset_session_countdown();
 
@@ -28,6 +38,11 @@
 
     // prevent double submission of any forms on the page
     $('form').preventDoubleSubmission();
+
+    // hookup hint tooltips if any on the page
+    self.hookup_hints();
+
+    self.set_alert_timeout();
   }
 
   // sets a countdown to session timeout
@@ -57,4 +72,84 @@
     $("title").text(self.params.site_name + ": " + title)
     $("h1.title").text(title);
   }
+
+  // shows the dropdown menu that extends from the 'submit' link in the navbar
+  klass.prototype.show_hide_submit_menu = function(link) { var self = this;
+
+    // only load if haven't loaded before
+    if (!link.next('ul').find('li')[0]) {
+
+      // if hidden, show drop down
+      if (link.next('ul').is(':hidden')) link.dropdown('toggle');
+
+      // show loading ind
+      link.next('ul').find('div.loading_indicator img').show();
+
+      // ajax call
+      link.next('ul').load('/forms?dropdown=1', function() {
+        // hide loading ind
+        link.next('ul').find('div.loading_indicator img').hide();
+      });
+
+    }
+  }
+
+  // Shows alert at top of page
+  // params.type - success, error, notice, alert
+  // params.tag - a dashified tag (e.g. option-sets) identifying the creator of the alert, to be used later when clearing
+  // params.msg - the message
+  klass.prototype.show_alert = function(params) { var self = this;
+    $('<div>')
+      .addClass('alert')
+      .addClass(self.alert_type_class(params.type))
+      .addClass(self.alert_tag_class(params.tag))
+      .html('<strong>' + I18n.t('common.' + params.type + '.one') + ':</strong> ' + params.msg)
+      .prependTo($('#content'));
+    self.set_alert_timeout();
+  };
+
+  // removes all alerts
+  klass.prototype.clear_alerts = function(params) { var self = this;
+    params = params || {}
+    // remove all alerts with given tag, or all alerts if no tag given
+    $('.' + (params.tag ? self.alert_tag_class(params.tag) : 'alert')).remove();
+  };
+
+  // gets css for alerts with given type
+  klass.prototype.alert_type_class = function(type) { var self = this;
+    return ALERT_CLASSES[type];
+  };
+
+  // gets css class for alerts with a given tag
+  klass.prototype.alert_tag_class = function(tag) { var self = this;
+    return tag ? 'alert-for-' + tag : '';
+  };
+
+  // hides any success alerts after a delay
+  klass.prototype.set_alert_timeout = function() { var self = this;
+    window.setTimeout(function() {$(".alert-success").slideUp(); return false;}, 4000);
+  };
+
+  klass.prototype.hookup_hints = function() { var self = this;
+
+    // when click on the page, hints disappear
+    $('html').on('click', function(e) {
+      $('a.hint').popover('hide');
+    });
+
+    // initialize popovers
+    $('a.hint').popover({
+      html: true,
+      trigger: 'manual'
+    // toggle current tooltip
+    }).on('click', function(e) {
+      // hide previous hints
+      $('a.hint').popover('hide');
+      $(this).popover('toggle');
+      e.stopPropagation();
+      e.preventDefault();
+    });
+  };
+
 })(ELMO);
+

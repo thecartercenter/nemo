@@ -1,18 +1,28 @@
 /* variables */
 $theme_green: #9dc400;
+$elmo-blue: #879CAA;
 
 form.option_set_form {
-  /* narrower labels and wider controls */
-  label.main {
-    width: 100px;
+
+  /* hide the option levels at first */
+  div.form_field[data-field-name=option_levels] {
+    display: none;
+    padding-bottom: 20px;
   }
 
-  div.control {
-    width: 475px;
+  /* special case for add options widget */
+  #options div.widget {
+    vertical-align: top !important;
   }
 
   div.add_options {
     margin-bottom: 20px;
+    width: 500px;
+
+
+    ul {
+      width: 360px;
+    }
 
     input[type=text] {
       width: 350px;
@@ -27,9 +37,14 @@ form.option_set_form {
 
   /* FOR THE SORTABLE/DRAGGABLE LIST */
 
-  #options_wrapper ol {
+  /* these styles only apply to the outer ol */
+  .draggable-list-wrapper > ol {
+    margin: 0 0 5px 0;
+    width: 421px;
+  }
+
+  .draggable-list-wrapper ol {
     padding-left: 0;
-    margin: 0 20px 0 0;
 
     li {
       display: block;
@@ -49,19 +64,18 @@ form.option_set_form {
 
       div {
         /* icon */
-        i.icon-sort {
+        i.fa-times, i.fa-pencil {
+          color: $elmo-blue;
+        }
+        i.fa-sort {
           margin-right: 5px;
         }
 
         /* locales */
         em {
-          display: block;
-          float: right;
-          min-width: 40px;
-          text-align: left;
           font-style: normal;
-          font-size: 11px;
-          margin-left: 10px;
+          font-size: 10px;
+          margin-left: 5px;
           color: $theme_green;
         }
 
@@ -74,41 +88,34 @@ form.option_set_form {
       }
     }
   }
-
-  /* this becomes the modal, so hide it initially */
-  div.edit_option_form {
-    display: none;
-  }
 }
 
-/* EDIT OPTION MODAL WINDOW
+/* EDIT NAMED ITEM WINDOW
    (not inside the form since it's appended to the body) */
 
-div.edit_option_modal {
+div.modal.edit-named-item {
 
-  div.ui-dialog-content {
+  div.data_integrity_warning {
+    margin-top: -8px;
+  }
 
-    div.data_integrity_warning {
-      margin-top: -8px;
+  div.translation {
+    height: 40px;
+    margin-top: 10px;
+
+    &:first-child {
+      margin-top: 10px;
     }
 
-    div.translation {
-      height: 40px;
+    label {
+      width: 125px;
+      display: inline-block;
+    }
 
-      &:first-child {
-        margin-top: 10px;
-      }
-
-      label {
-        width: 125px;
-        display: inline-block;
-      }
-
-      input[type=text] {
-        padding: 3px;
-        display: inline-block;
-        width: 250px;
-      }
+    input[type=text] {
+      padding: 3px;
+      display: inline-block;
+      width: 250px;
     }
   }
 }

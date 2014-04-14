@@ -1,5 +1,0 @@
-<% if !object.nil? && object.errors.any? %>
-  <%= content_tag("div", :class => defined?(compact) ? "compact_error" : "error") do %>
-    <%= format_validation_error_messages(object, local_assigns.slice(:compact, :prefix)) %>
-  <% end %>
-<% end %>

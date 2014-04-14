@@ -1,46 +1,58 @@
-<%= flash_and_form_errors(@setting) %>
 
-<%= nice_form_for(@setting) do |f| %>
+<%= elmo_form_for(@setting) do |f| %>
 
   <h2><%= t("setting.headings.general") %></h2>
-  <%= form_field(f, :mission_id, :type => :hidden) %>
-  <%= form_field(f, :timezone, :type => :timezone, :required => true) %>
-  <%= form_field(f, :preferred_locales_str, :required => true) %>
+
+  <%= f.field(:mission_id, :type => :hidden) %>
+  <%= f.field(:timezone, :type => :timezone, :required => true) %>
+  <%= f.field(:preferred_locales_str, :required => true) %>
+
+  <% unless admin_mode? %>
+    <%= f.field(:override_code, :partial => 'override_code') %>
+  <% end %>
 
   <%# none of the rest of this is relevant in admin mode %>
   <% unless admin_mode? %>
 
-    <h2><%= t("setting.headings.outgoing_sms") %></h2>
-    <%= form_field(f, :outgoing_sms_adapter, :type => :select, :options => @adapter_options, :blank_text => t("common.none")) %>
+    <h2><%= t("setting.headings.sms") %></h2>
+
+    <%= f.field(:incoming_sms_number) %>
+
+    <%= f.field(:outgoing_sms_adapter, :type => :select, :options => @adapter_options, :prompt => t("common.none")) %>
 
     <div class="adapter_settings" data-adapter="IntelliSms">
-      <%= form_field(f, :intellisms_username) %>
-      <%= link_to(t("setting.change_sms_password"), "#") %>
+
+      <%= f.field(:intellisms_username) %>
+
+      <%= link_to(t("setting.change_sms_password"), "#", :class => "password") %>
+
       <div class="password_fields">
-        <%= form_field(f, :intellisms_password1, :type => :password) %>
-        <%= form_field(f, :intellisms_password2, :type => :password) %>
+        <%= f.field(:intellisms_password1, :type => :password) %>
+        <%= f.field(:intellisms_password2, :type => :password) %>
       </div>
     </div>
 
     <div class="adapter_settings" data-adapter="Isms">
-      <%= form_field(f, :isms_hostname) %>
-      <%= form_field(f, :isms_username) %>
+
+      <%= f.field(:isms_hostname) %>
+      <%= f.field(:isms_username) %>
+
       <%= link_to(t("setting.change_sms_password"), "#") %>
+
       <div class="password_fields">
-        <%= form_field(f, :isms_password1, :type => :password) %>
-        <%= form_field(f, :isms_password2, :type => :password) %>
+        <%= f.field(:isms_password1, :type => :password) %>
+        <%= f.field(:isms_password2, :type => :password) %>
       </div>
     </div>
 
-    <h2><%= t("setting.headings.incoming_sms") %></h2>
-    <%= form_field(f, :incoming_sms_number) %>
+    <h2><%= t('activerecord.attributes.setting.external_sql') %></h2>
 
-    <h2>Tableau</h2><!-- not i18n'd b/c it's a product name -->
-    <%= form_field(f, :tableau_sql, :partial => "tableau_sql") %>
+    <%= f.field(:external_sql, :partial => "external_sql") %>
 
   <% end %>
-
-  <%= form_submit_button(f, :label => :save) %>
+  <div class="submit-buttons">
+    <%= f.submit(:class => "btn btn-primary") %>
+  </div>
 
 <% end %>
 

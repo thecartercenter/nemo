@@ -1,17 +1,31 @@
-#userinfo, #title, #footer, #nav { display: none; }
+#userinfo, #title, #footer, nav { display: none; }
 
 /* login instructions */
 .user_batches_show h1.title { display: none; }
 #login_instructions #preamble { display: none; }
 #login_instructions #instructions { page-break-after: always; }
 
-/* flash and error messages */
-div.status_messages {
-  div.success, div.failure { display: none; }
-}
-
 /* hide screen-only things */
 .screen { display: none; }
+
+#printable_form {
+  h1 {
+    font-weight: bold;
+  }
+  div.reqd_sym {
+      display: inline-block;
+      font-weight: bold;
+      color: orange !important;
+      font-size: 125%;
+      line-height: 5px;
+      vertical-align: middle;
+    }
+
+    table {
+      border-collapse: separate;
+      border-spacing: 3px;
+    }
+}
 
 /* printable form */
 #printable_form, #printable_form td { font-size: 8pt; line-height: 12pt; }
@@ -19,15 +33,15 @@ div.status_messages {
 #printable_form table tr { page-break-inside: avoid; page-break-after: auto; }
 #printable_form table tr.conditional td { color: #999; }
 #printable_form table td { border-top: 0.1pt solid #ccc; padding: 0; }
-#printable_form table td.name { width: 60%; }
-#printable_form table td.answer { width: 40%; vertical-align: middle; }
+#printable_form table td.name { width: 50%; }
+#printable_form table td.answer { width: 50%; vertical-align: middle; }
 #printable_form div.condition { font-weight: bold; }
 #printable_form div#reqd_message { float: right; }
 #printable_form .option { float: left; margin-right: 20px; }
-#printable_form .option_box, #printable_form .answer_box { background-color: #eee; border: 0.1pt solid #aaa; }
+#printable_form .option_box, #printable_form .answer_box { background-color: #eee !important; border: 0.1pt solid #aaa; }
 #printable_form .option_box { float: left; width: 0.15in; height: 0.15in; margin-right: 2px; }
 #printable_form .answer_box { height: 0.20in; }
-#printable_form td.integer_answer .answer_box, #printable_form td.decimal_answer .answer_box { width: .75in; }
+#printable_form td.integer_answer .answer_box, #printable_form td.decimal_answer .answer_box { width: 1.5in; }
 #printable_form td.long_text_answer .answer_box { height: .75in; }
 #printable_form .hint { font-size: 90%; color: #888; }
 .forms_index h1.title, .forms_edit h1.title, .forms_show h1.title { display: none; }
@@ -37,3 +51,8 @@ div.status_messages {
 
 /* sms form guide */
 div.sms_guide div.controls { display: none; }
+
+@page {
+  /* print margins */
+  margin: 15mm 15mm 15mm 15mm;
+}

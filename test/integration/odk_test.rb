@@ -47,6 +47,7 @@ class OdkTest < ActionDispatch::IntegrationTest
     # attempt submission to proper form
     xml = build_odk_submission(form2)
     do_submission(submission_path(get_mission), xml)
+    assert_response(:success)
 
     # answer should look right
     resp = form2.reload.responses.last
@@ -55,6 +56,7 @@ class OdkTest < ActionDispatch::IntegrationTest
     # attempt submission of value to wrong question
     xml = build_odk_submission(form2, :override_form_id => form.id)
     do_submission(submission_path(get_mission), xml)
+    assert_response(:success)
 
     # answer should remain blank, integer value should not get stored
     resp = form.reload.responses.last
@@ -90,6 +92,33 @@ class OdkTest < ActionDispatch::IntegrationTest
 
     do_submission(submission_path(get_mission), xml)
     assert_response(426)
+  end
+
+  test "response is marked incomplete when there is an incomplete response to a required question" do
+    form = FactoryGirl.create(:form, :question_types => %w(integer))
+    form.questionings.first.required = true
+    form.publish!
+
+    xml = "<?xml version='1.0' ?><data id=\"#{form.id}\" version=\"#{form.current_version.sequence}\"></data>"
+
+    do_submission(submission_path, xml)
+    assert_response(201)
+
+    response = form.reload.responses.last
+    assert_equal(true, response.incomplete)
+  end
+
+  test "response is not marked incomplete when there are no incomplete responses to a required question" do
+    form = FactoryGirl.create(:form, :question_types => %w(integer))
+    form.questionings.first.required = true
+    form.publish!
+
+    xml = build_odk_submission(form)
+    do_submission(submission_path, xml)
+    assert_response(201)
+
+    response = form.reload.responses.last
+    assert_equal(false, response.incomplete)
   end
 
   private

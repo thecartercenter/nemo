@@ -25,10 +25,10 @@ class Report::Formatter
       # parse it
       dict = JSON.parse(value)
 
-      # return the appropriate value (try the current locale, then the default value, then give up)
+      # return the appropriate value (try the current locale, then the default locale, then the first locale)
       translated = dict[I18n.locale.to_s]
       translated = dict[I18n.default_locale.to_s] if translated.blank?
-      translated = value if translated.blank?
+      translated = dict.values.first if translated.blank?
       translated
     else
       value

@@ -6,9 +6,14 @@ module Report::LegacyReport
     attr_reader :header_set, :data, :totals, :query
   end
 
-  def run
+  # @param [current_ability] user ability to access Response object as defined by CanCan
+  def run(current_ability=nil)
     # prep the relation and add a filter clause
-    @query = prep_query(Response.unscoped.for_mission(mission))
+    build_query = Response.unscoped.for_mission(mission)
+    if current_ability
+      build_query = build_query.accessible_by(current_ability)
+    end
+    @query = prep_query(build_query)
 
     # execute it the relation, returning rows, and create dbresult obj
     @db_result = Report::DbResult.new(@query.all)

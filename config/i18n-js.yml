@@ -21,15 +21,18 @@ translations:
     only: [
       "*.activerecord.attributes.*",
       "*.activerecord.models.*",
-      "*.activerecord.errors.models.report/report.*",
+      "*.activerecord.errors.models.*",
       "*.broadcast.chars.*",
       "*.common.*",
       "*.condition.*",
+      "*.dashboard.*",
       "*.form.unsaved_rank_notice",
       "*.location_picker.*",
       "*.layout.*",
       "*.option_set.*",
+      "*.page_titles.*",
       "*.report/report.*",
       "*.response.*",
+      "*.role.*",
       "*.standard.*"
     ]

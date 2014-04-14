@@ -1,16 +1,38 @@
 <div class="option_set_form">
 
+  <%# need to print this here if in ajax mode %>
+  <%= render("layouts/flash", :flash => flash) if ajax_request? %>
+
   <% if form_mode == :edit %>
     <%= published_warning(@option_set) if @option_set.published? %>
     <%= appears_elsewhere_warning(@option_set) if @option_set.has_questions? %>
   <% end %>
 
-  <%= flash_and_form_errors(@option_set) %>
-  <%= nice_form_for(@option_set) do |f| %>
-
-    <%= form_field(f, :name, :required => true, :force_show_mode => cannot?(:update_core, @option_set)) %>
-    <%= form_field(f, :geographic, :type => :check_box, :force_show_mode => cannot?(:change_geographic, @option_set)) %>
-    <%= form_field(f, :options, :required => true, :partial => "options") %>
-    <%= form_submit_button(f, :label => :save) unless ajax_request? %>
+  <%= elmo_form_for(@option_set) do |f| %>
+    <%= f.field(:name, :required => true, :read_only => cannot?(:update_core, @option_set)) %>
+    <%= f.field(:geographic, :type => :check_box, :read_only => cannot?(:change_geographic, @option_set)) %>
+    <%= f.field(:multi_level, :type => :check_box, :read_only => cannot?(:update_core, @option_set)) %>
+    <%= f.field(:option_levels, :partial => "option_levels") %>
+    <%= f.field(:options, :required => true, :partial => "options") %>
+    <div class="submit-buttons">
+      <%= loading_indicator %>&nbsp;
+      <%= f.submit(:class => "btn btn-primary") unless params[:modal_mode] %>
+    </div>
   <% end %>
 </div>
+
+<%= javascript_doc_ready do %>
+  new ELMO.Views.OptionSetForm({
+    edit_link: <%=j action_link(:edit, '#').to_json.html_safe %>,
+    remove_link: <%=j action_link(:remove, '#').to_json.html_safe %>,
+    option_set: <%=j @option_set.as_json(:for_option_set_form => true).to_json.html_safe %>,
+    suggest_path: <%=j suggest_options_path.to_json.html_safe %>,
+    form_mode: <%=j form_mode.to_json.html_safe %>,
+
+    // whether the form is being loaded in a modal
+    modal_mode: <%=j params[:modal_mode].present?.to_json.html_safe %>,
+
+    can_reorder: <%=j can?(:reorder_options, @option_set).to_json.html_safe %>,
+    can_remove_options: <%=j can?(:remove_options, @option_set).to_json.html_safe %>
+  });
+<% end %>
