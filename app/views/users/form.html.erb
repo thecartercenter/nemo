@@ -37,7 +37,7 @@
 
     <% end %>
   <% end %>
-
+  <%= f.field(:api_key, :read_only => true, :hint => t("activerecord.hints.form.api_key")) %>
   <div class="submit-buttons">
     <%= f.submit(:class => "btn btn-primary") %>
   </div>
