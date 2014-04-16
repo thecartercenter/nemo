@@ -1,9 +1,9 @@
-class API::V1::MissionsController < API::V1::BaseController
-	skip_authorization_check
-	
-	def index
+class API::V1::MissionsController < API::V1::BaseController	
+	respond_to :json
 
-		puts "whats up universe"
-    render :text => "hi"
+	def index
+		@missons = Mission.all
+binding.pry
+		respond_with(@missions, status: :ok)
   end
 end

@@ -85,9 +85,10 @@ ELMO::Application.routes.draw do
   match("proxies/:action", :controller => "proxies")
 
   namespace :api, defaults: { format: :json } do
-    api_version(:module => "v1", :header => {:name => "Accept", :value => "application/vnd.getelmo.org+json; version=1"}) do
-      resources :missions, only: :index
-     # match '/missions', to: 'missions#index', via: [:get] 
+    api_version(:module => "v1", :header => {:name => "Accept", :value => "application/vnd.getelmo.org; version=1"}) do
+      #resources :missions, only: :index
+      match '/missions.(:format)' => 'missions#index', :via => :get
     end
   end
+
 end
