@@ -340,7 +340,6 @@ en:
         smsable: "Whether the form accepts SMS submissions. This can affect when the version number is incremented."
         allow_incomplete: "Whether to allow incomplete submissions in extenuating cases where full information is not available. Note that the question 'required' featured should be preferred here."
         version: "The current version number and letter code."
-        api_key: "Use this key to connect to other Elmo applications."
       mission:
         name: "A name for this Mission. Maximum 32 characters. Must be unique. Think about including the year if there will be future missions with the same name."
         locked: "If a mission is locked, Responses and Forms cannot be created or edited and Users cannot be added or deleted."
@@ -414,6 +413,7 @@ en:
         password_confirmation: "Enter the new password again."
         pref_lang: "The language in which you would like to use the system."
         role: "The role of the user in the current mission, and whether or not they are presently active. Inactive users cannot access the mission at all."
+        api_key: "Use this key to connect to other Elmo applications."
       user_batch:
         batch: |-
           Enter names, email addresses, and phone numbers (WITH country codes), one per line, separated by commas or tabs. For example:
