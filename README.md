@@ -99,6 +99,7 @@ Please use our Redmine instance at http://redmine.sassafras.coop/projects/elmo. 
 ### ELMO Data Model
 
 Contributors may find our auto-generated [Entity-Relationship Diagram (ERD)](docs/erd.pdf) useful.
+You can generate it by running ```rake db:migrate ``` if adding new migrations or ```rake erd``` to run on its own. To skip running it when doing migrations run ```NO_DIAGRAM=1 rake db:migrate```
 
 ### Contributing
 
