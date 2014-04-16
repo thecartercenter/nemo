@@ -1,5 +1,8 @@
 ELMO::Application.routes.draw do
 
+
+
+
   # redirects for ODK
   # shortened (/m)
   match("/m/:mission_compact_name/formList" => 'forms#index', :format => :xml)
@@ -79,4 +82,12 @@ ELMO::Application.routes.draw do
 
   # proxies for ajax
   match("proxies/:action", :controller => "proxies")
+
+#(:module => "V3", :path => {:value => "v3"}) 
+  api_version(:module => "API/V1", :path => {:value => "v1"}   ) do
+  #:header => {:name => "Accept", :value => "application/vnd.getelmo.org; version=1"}) do
+    #resources :missions, :only => [:index]
+        match '/missions.(:format)' => 'api/v1/missions#index', :via => :get
+  end
+
 end

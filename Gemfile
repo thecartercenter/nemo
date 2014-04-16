@@ -13,7 +13,7 @@ end
 
 gem 'authlogic'
 gem 'rake'
-gem 'mysql2', '0.3.12b5' # beta version needed for sphinx
+gem 'mysql2', '>= 0.3.15' # grr 2b5' # beta version needed for sphinx
 gem 'will_paginate'
 gem 'will_paginate-bootstrap'
 gem 'configatron'
@@ -21,6 +21,7 @@ gem 'libxml-ruby'
 gem 'rdiscount'
 gem 'jquery-rails'
 gem 'random_data'
+gem 'versionist'        # versioning the api
 
 # Ckeditor integration gem for rails http://ckeditor.com/
 gem "ckeditor"
