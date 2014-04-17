@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140313202913) do
+ActiveRecord::Schema.define(:version => 20140320130929) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -127,6 +127,13 @@ ActiveRecord::Schema.define(:version => 20140313202913) do
   add_index "forms", ["mission_id", "name"], :name => "index_forms_on_mission_id_and_name", :unique => true
   add_index "forms", ["mission_id", "standard_id"], :name => "index_forms_on_mission_id_and_standard_id", :unique => true
   add_index "forms", ["standard_id"], :name => "index_forms_on_standard_id"
+
+  create_table "groups", :force => true do |t|
+    t.string   "name"
+    t.integer  "mission_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "missions", :force => true do |t|
     t.string   "name"
@@ -363,6 +370,13 @@ ActiveRecord::Schema.define(:version => 20140313202913) do
 
   add_index "sms_messages", ["body"], :name => "index_sms_messages_on_body", :length => {"body"=>160}
   add_index "sms_messages", ["mission_id"], :name => "sms_messages_mission_id_fk"
+
+  create_table "user_groups", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "group_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "users", :force => true do |t|
     t.string   "login",                                  :null => false
