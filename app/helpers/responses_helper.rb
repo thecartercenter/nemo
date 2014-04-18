@@ -98,7 +98,7 @@ module ResponsesHelper
 
   def reviewed_status(resp)
     status = tbool(resp.reviewed?)
-    if !resp.checked_out_at.nil? && (resp.checked_out_at > Response::LOCK_OUT_TIME.minutes.ago)
+    if !resp.checked_out_at.nil? && (resp.checked_out_at > Response::LOCK_OUT_TIME.ago)
       status = I18n.t("common.pending")
     end
     status

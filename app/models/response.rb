@@ -3,7 +3,7 @@ class Response < ActiveRecord::Base
   include MissionBased
   include Cacheable
 
-  LOCK_OUT_TIME = 10
+  LOCK_OUT_TIME = 10.minutes
 
   belongs_to(:form, :inverse_of => :responses, :counter_cache => true)
   belongs_to(:checked_out_by, :class_name => "User")
@@ -346,7 +346,7 @@ class Response < ActiveRecord::Base
   end
 
   def check_out_valid?
-    checked_out_at > Response::LOCK_OUT_TIME.minutes.ago
+    checked_out_at > Response::LOCK_OUT_TIME.ago
   end
 
   def checked_out_by_others?(user = nil)

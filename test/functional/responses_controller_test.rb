@@ -3,7 +3,6 @@ require 'test_helper'
 class ResponsesControllerTest < ActionController::TestCase
   setup :activate_authlogic
 
-
   test "user should get a notice when response is locked by another user" do
     user = get_user
     user_b = FactoryGirl.create(:user, :name => "first user to lock")
@@ -28,7 +27,7 @@ class ResponsesControllerTest < ActionController::TestCase
     resp = FactoryGirl.create(:response)
 
     # go just outside the valid lock time and checkout response by another user
-    Timecop.freeze((Response::LOCK_OUT_TIME + 1).minutes.ago) do
+    Timecop.freeze((Response::LOCK_OUT_TIME + 1.minutes).ago) do
       resp.check_out!(user_b)
     end
 
@@ -40,6 +39,4 @@ class ResponsesControllerTest < ActionController::TestCase
     # check that there is no warning
     assert_nil flash[:notice]
   end
-
 end
-
