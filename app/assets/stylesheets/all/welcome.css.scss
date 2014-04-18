@@ -1,5 +1,6 @@
 /* STYLES FOR WELCOME/DASHBOARD */
 $theme_blue: #0065d1;
+$elmo-darker-blue: #02648A;
 
 body.welcome {
 
@@ -114,6 +115,7 @@ body.welcome {
 
       a {
         text-decoration: none;
+        color: $elmo-darker-blue;
       }
     }
   }

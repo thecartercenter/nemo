@@ -12,6 +12,10 @@ div.form-errors {
 /* standard form width */
 form.elmo_form, div.elmo_form {
   width: $elmo-form-width;
+
+  p.instructions {
+    margin-bottom: 20px;
+  }
 }
 
 div.form_field {
