@@ -93,3 +93,17 @@ form.questioning_form {
 div.question_fields div.minmax input.text[type=text] {
   width: 75px;
 }
+
+/* Special style for option set box to accommodate link and loading indicator */
+div.form_field.question_option_set_id {
+
+  div.control div.widget select#question_option_set_id {
+    width: 260px;
+    display: inline-block;
+  }
+
+  div.loading_indicator {
+    margin-left: 5px;
+    vertical-align: middle;
+  }
+}

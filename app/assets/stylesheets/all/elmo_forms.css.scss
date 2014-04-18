@@ -1,4 +1,5 @@
 $orange: #F77D48;
+$elmo-form-width: 660px;
 
 /* base errors may appear outside the form. left margin should be cancelled when inside form */
 div.form-errors {
@@ -8,14 +9,9 @@ div.form-errors {
   margin-bottom: 5px;
 }
 
-/* standardize specific form widths */
-
-form.std_form {
-  width: 703px;
-
-  .form-control {
-    display: inline-block;
-  }
+/* standard form width */
+form.elmo_form, div.elmo_form {
+  width: $elmo-form-width;
 }
 
 div.form_field {
@@ -23,8 +19,6 @@ div.form_field {
   white-space: nowrap;
   border-bottom: 1px solid #DDD;
   margin-bottom: 5px;
-  display: inline-block;
-  width: 93%;
 
   > * {
     white-space: normal;
@@ -91,8 +85,7 @@ div.form_field {
       display: inline-block;
       vertical-align: top;
 
-
-      input[type='text'], select, textarea input.text, textarea {
+      input[type=text], input[type=password], select, textarea input.text, textarea {
         width: 420px;
         height: 35px;
       }
@@ -105,8 +98,8 @@ div.form_field {
   }
   /* Override for multiple selects */
   &.qtype_select_multiple .widget {
-      vertical-align: top !important;
-    }
+    vertical-align: top !important;
+  }
 
   div.control input.text {
     padding: 3px;
@@ -127,8 +120,10 @@ div.form_field {
     padding: 0;
     width: auto;
   }
+}
 
-
+div.hint {
+  display: inline-block;
 }
 
 form input[type="submit"].btn-primary {
@@ -140,31 +135,16 @@ form {
   div.submit-buttons {
     text-align: right;
     margin-top: 20px;
-    margin-right: 40px;
   }
 
   input.btn-primary {
     padding: 6px 35px;
   }
-
-}
-
-#question_option_set_id {
-  width: 300px;
-  display: inline-block;
-}
-
-
-
-div.settings_index {
-  a.password {
-    margin-left: 150px;
-  }
 }
 
 div.data_integrity_warning {
   margin: 10px 0;
-  width: 100%;
+  width: $elmo-form-width;
 
   i {
     display: block;
@@ -178,63 +158,11 @@ div.data_integrity_warning {
   }
 }
 
-/* Custom form tweaks */
-
-
-/* Option set form is different altogether */
-form.option_set_form {
-  width: 735px;
-  .submit-buttons {
-    margin-right: 47px;
-  }
-}
-
-
-/* Response form has to be wider */
-form.response_form {
-  width: 815px;
-  label.main {
-    width: 300px;
-  }
-  .submit-buttons {
-    margin-right: 52px;
-  }
-}
-
-/* Questions table should we wider in edit mode */
-.forms_edit form.form_form {
-  width: 100%;
-}
-
-/* Login form does not have hints */
-#new_user_session {
-  input.text {
-    width: 450px !important;
-  }
-}
-
-form.user_batch_form {
-  #batch {
-    border-bottom: 0px;
-  }
-  div.submit-buttons {
-    margin-right: 80px;
-  }
-
-}
-
-form.user_session_form {
-  width: 650px;
-
-  div.submit-buttons {
-    margin-right: 0px;
-  }
+/* Minimal form has no horiz lines and no hints */
+form.elmo_form.minimal {
+  width: 620px;
 
   div.form_field {
-    border-bottom: 0px;
+    border-bottom: none;
   }
-}
-
-div.hint {
-  display: inline-block;
 }

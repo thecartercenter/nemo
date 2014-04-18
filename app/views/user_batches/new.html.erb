@@ -1,9 +1,10 @@
 <%# if this is an empty batch (not one with errors) show the normal form %>
 <% if @user_batch.lines.nil? %>
-  <%= elmo_form_for(@user_batch) do |f| %>
-    <%= f.field(:batch, :type => :textarea, :required => true, :class => "form-control") %>
+  <%= form_for(@user_batch, :html => {:class => 'user_batch_form'}) do |f| %>
+    <%= simple_format(t('user_batch.instructions'), {}, :sanitize => false) %>
+    <%= f.text_area(:batch, :class => "form-control") %>
     <div class="submit-buttons">
-      <%= f.submit(:create, :class => "btn btn-primary") %>
+      <%= f.submit(t('common.create'), :class => "btn btn-primary") %>
     </div>
   <% end %>
 
@@ -14,7 +15,7 @@
     <% @user_batch.lines.each_with_index do |line, idx| %>
       <% ok = line[:user] && line[:user].valid? %>
       <div class="batch_line_with_info <%= ok ? 'line_ok' : 'line_error' %>">
-        <input type="text" name="user_batch[lines][][text]" value="<%= line[:text] %>"/>
+        <input type="text" name="user_batch[lines][][text]" value="<%= line[:text] %>" class="form-control" />
         <div class="info">
           <% if ok %>
             <i class="icon-ok"></i>

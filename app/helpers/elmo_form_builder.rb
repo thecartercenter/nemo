@@ -29,7 +29,7 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
       :object_name => @object.class.model_name.param_key,
       :options => options,
       :label_tag => elmo_field_label(field_name, options),
-      :field_html => elmo_field(field_name, options),
+      :field_html => elmo_field(field_name, options) + (options[:append] || ''),
       :hint_html => elmo_field_hint(field_name, options),
       :errors => errors
     })
@@ -142,6 +142,8 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
 
     # generates html for a field hint block
     def elmo_field_hint(field_name, options)
+      return '' if options[:hint] == false
+
       # if hint text is not given explicitly, look it up
       unless options[:hint]
         # get the text based on the field_name and the form mode

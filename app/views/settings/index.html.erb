@@ -22,9 +22,7 @@
 
     <div class="adapter_settings" data-adapter="IntelliSms">
 
-      <%= f.field(:intellisms_username) %>
-
-      <%= link_to(t("setting.change_sms_password"), "#", :class => "password") %>
+      <%= f.field(:intellisms_username, :append => link_to(t("setting.change_sms_password"), "#")) %>
 
       <div class="password_fields">
         <%= f.field(:intellisms_password1, :type => :password) %>
@@ -35,9 +33,7 @@
     <div class="adapter_settings" data-adapter="Isms">
 
       <%= f.field(:isms_hostname) %>
-      <%= f.field(:isms_username) %>
-
-      <%= link_to(t("setting.change_sms_password"), "#") %>
+      <%= f.field(:isms_username, :append => link_to(t("setting.change_sms_password"), "#")) %>
 
       <div class="password_fields">
         <%= f.field(:isms_password1, :type => :password) %>
