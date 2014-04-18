@@ -1,7 +1,7 @@
 <%# if this is an empty batch (not one with errors) show the normal form %>
 <% if @user_batch.lines.nil? %>
   <%= form_for(@user_batch, :html => {:class => 'user_batch_form'}) do |f| %>
-    <%= simple_format(t('user_batch.instructions'), {}, :sanitize => false) %>
+    <p class="instructions"><%= simple_format(t('user_batch.instructions'), {}, :sanitize => false) %></p>
     <%= f.text_area(:batch, :class => "form-control") %>
     <div class="submit-buttons">
       <%= f.submit(t('common.create'), :class => "btn btn-primary") %>
