@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140320130929) do
+ActiveRecord::Schema.define(:version => 20140325160925) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -318,12 +318,16 @@ ActiveRecord::Schema.define(:version => 20140320130929) do
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "reviewed",   :default => false
+    t.boolean  "reviewed",          :default => false
     t.string   "source"
     t.integer  "mission_id"
-    t.boolean  "incomplete", :default => false, :null => false
+    t.boolean  "incomplete",        :default => false, :null => false
+    t.datetime "checked_out_at"
+    t.integer  "checked_out_by_id"
   end
 
+  add_index "responses", ["checked_out_at"], :name => "index_responses_on_checked_out_at"
+  add_index "responses", ["checked_out_by_id"], :name => "responses_checked_out_by_id_fk"
   add_index "responses", ["created_at"], :name => "index_responses_on_created_at"
   add_index "responses", ["form_id"], :name => "responses_form_id_fk"
   add_index "responses", ["mission_id"], :name => "responses_mission_id_fk"
@@ -471,6 +475,7 @@ ActiveRecord::Schema.define(:version => 20140320130929) do
 
   add_foreign_key "responses", "forms", :name => "responses_form_id_fk"
   add_foreign_key "responses", "missions", :name => "responses_mission_id_fk"
+  add_foreign_key "responses", "users", :name => "responses_checked_out_by_id_fk", :column => "checked_out_by_id"
   add_foreign_key "responses", "users", :name => "responses_user_id_fk"
 
   add_foreign_key "settings", "missions", :name => "settings_mission_id_fk"

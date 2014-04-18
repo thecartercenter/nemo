@@ -70,4 +70,43 @@ class ResponseTest < ActiveSupport::TestCase
     assert_equal(false, r1.valid?)
     assert_match(/greater than/, r1.answers.first.errors.full_messages.join)
   end
+
+  test "a user can checkout a response" do
+    user = FactoryGirl.create(:user)
+
+    response = FactoryGirl.build(:response)
+
+    assert_nil(response.checked_out_at)
+    assert_nil(response.checked_out_by_id)
+
+    Timecop.freeze(Date.today) do
+      response.check_out!(user)
+
+      assert_equal(response.checked_out_at, Time.now)
+      assert_equal(user, response.checked_out_by)
+    end
+  end
+
+  test "a users previous checkout will be removed if they have more than one checkout" do
+    user = FactoryGirl.create(:user)
+
+    Timecop.freeze(Date.today) do
+      r_previous = FactoryGirl.create(:response, :checked_out_at => Time.now, :checked_out_by => user)
+      r_new      = FactoryGirl.build(:response)
+
+      assert_nil(r_new.checked_out_at)
+      assert_nil(r_new.checked_out_by_id)
+
+      r_new.check_out!(user)
+      r_previous.reload
+
+      assert_equal(r_new.checked_out_at, Time.zone.parse(DateTime.now.to_s))
+      assert_equal(user, r_new.checked_out_by)
+
+      assert_nil(r_previous.checked_out_at)
+      assert_nil(r_previous.checked_out_by_id)
+    end
+
+  end
+
 end

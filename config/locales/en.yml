@@ -45,6 +45,7 @@ en:
     none: "None"
     ok: "OK"
     or: "or"
+    pending: "Pending"
     previous: "Previous"
     print: "Print"
     regenerate: "Regenerate"
@@ -504,6 +505,7 @@ en:
           general: "Response is invalid (see below)."
           missing_answers: "Not all questions have answers."
           invalid_answers: "There are invalid answers."
+          checked_out: "This response has been checked out by:"
         setting:
           attributes:
             preferred_locales_str:
@@ -1099,6 +1101,7 @@ en:
     observation_time: "Observation Time"
     save_and_mark_reviewed: "Save and Mark as Reviewed"
     view_response: "View Response"
+    checked_out: "This response has been checked out by:"
 
   role:
     role: "Role"
