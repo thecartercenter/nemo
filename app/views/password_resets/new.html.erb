@@ -1,8 +1,7 @@
-<div class="tip">
-  <%= t("password_reset.fill_out_form") %>
-</div>
-
-<%= elmo_form_for(@password_reset) do |f| %>
+<%= elmo_form_for(@password_reset, :style => :minimal) do |f| %>
+  <p class="instructions"><%= t("password_reset.fill_out_form") %></p>
   <%= f.field(:email) %>
-  <%= f.submit(:send) %>
+  <div class="submit-buttons">
+    <%= f.submit(:send, :class => "btn btn-primary") %>
+  </div>
 <% end %>
