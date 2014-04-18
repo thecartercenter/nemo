@@ -1,30 +1,36 @@
 # models a recursive replication operation
 # holds all internal parameters used during the operation
 class Replication
-  attr_accessor :to_mission, :parent_assoc, :in_transaction,
+  attr_accessor :dest_mission, :parent_assoc, :in_transaction,
     :current_assoc, :ancestors, :deep_copy,
-    :recursed, :src_obj, :dest_obj, :link_to_standard,
-    :mode # there are two modes 1) promote and 2) default.
-          # promote: take an mission based object and clones it as a standard object
-          # TOM: same thing here. why not have 3 modes (promote, clone, to_mission) and make everything simpler and clearer
-          # default: use the mission value to determine if we are cloning to a standard or mission.
-          # TOM: i don't get this last part. how can mode be ':mission => m'? the mission should be a separate param of Replication
-          #          in the future this will be :clone or :to_mission, :mission => m
+    :recursed, :src_obj, :dest_obj,
+    :mode, # there are three modes
+           # * clone:      make a copy of the object and its decendents.
+           #               the mission for the clones is the same as the original objects mission.
+           # * to_mission: make a copy of the object and its decendents under a different mission.
+           #               requires an additional parameter: :to_mission
+           # * promote:    take an mission based object and clones it as a standard object
+    :retain_link_on_promote  # when in promote mode, do we link the original object to the new standard object?
+                             # if so, a coordinator will be unable to modify the object as it is no long a mission based object.
 
-          # TOM: we may also want to rename the :to_mission attribute to :dest_mission so as not to confuse it with the :to_mission mode
+  alias_method :retain_link_on_promote?, :retain_link_on_promote
+  alias_method :deep_copy?, :deep_copy
+  alias_method :recursed?, :recursed
 
   def initialize(params)
     # copy all params
     params.each{|k,v| instance_variable_set("@#{k}", v)}
 
-    @to_mission ||= determine_to_mission(@src_obj.mission)
+    raise ArgumentError, 'replication mode has not been selected' if @mode.nil?
+
+    determine_dest_mission
 
     # ensure ancestors is [] if nil
     @ancestors ||= []
 
     # determine whether deep or shallow, unless already set
     # by default, we do a deep copy iff we're copying to a different mission
-    @deep_copy ||= @src_obj.mission != @to_mission
+    @deep_copy ||= @src_obj.mission != @dest_mission
 
     # recursed defaults to false, and is set to true explicitly when recursing
     @recursed ||= false
@@ -94,8 +100,9 @@ class Replication
       :src_obj => child,
 
       # these stay the same
-      :to_mission => to_mission,
+      :dest_mission => dest_mission,
       :deep_copy => deep_copy,
+      :retain_link_on_promote => retain_link_on_promote,
 
       # this is always true since we go into a transaction first thing
       :in_transaction => true,
@@ -113,22 +120,17 @@ class Replication
 
   # checks if this replication is replicating a standard object to a mission
   def standard_to_mission?
-    src_obj.is_standard? && !to_mission.nil?
+    src_obj.is_standard? && !dest_mission.nil?
   end
 
   # is replication to a standard object. This can be by clone or promotion.
   def replicating_to_standard?
-    to_mission.nil?
+    dest_mission.nil?
   end
 
   # accessor for better readability
   def in_transaction?
     !!in_transaction
-  end
-
-  # accessor for better readability
-  def deep_copy?
-    deep_copy
   end
 
   def shallow_copy?
@@ -139,18 +141,14 @@ class Replication
     !ancestors.empty?
   end
 
-  def has_to_mission?
-    !to_mission.nil?
+  def has_dest_mission?
+    !dest_mission.nil?
   end
 
   # returns the immediate parent obj of this replication
   # may be nil
   def parent
     ancestors.last
-  end
-
-  def recursed?
-    recursed
   end
 
   # returns whether we are creating or updating the dest obj
@@ -164,8 +162,22 @@ class Replication
     lines << "***** REPLICATING *******************************************************************"
     lines << "mode:         #{mode}"
     lines << "Source obj:   #{src_obj}"
-    lines << "Dest mission: #{to_mission || '[nil]'}"
+    lines << "Dest mission: #{dest_mission || '[nil]'}"
     lines.join("\n")
   end
+
+  private
+
+    # determine and store the dest_mission value
+    # * if we are in promte mode, the target mission is empty/nil
+    # * if the mission is passed in, we are copying to a mission
+    # * if the mission is not passed in, we are cloning to the src_obj's mission
+    def determine_dest_mission
+      if @mode == :promote
+        @dest_mission = nil
+      else
+        @dest_mission ||= @src_obj.mission
+      end
+    end
 end
 

@@ -70,22 +70,19 @@ module Replicable
     end
   end
 
-  # TOM: this comment will need to be rewritten. please include a list of all the available options.
-  # creates a duplicate in this or another mission
-  # accepts the mission to which to replicate (when called from outside)
-  # or a Replication object, which holds the params for the replication operation
-  # spawns additional replication operations recursively, if appropriate
+  # Expected options:
+  # replicate(:mode => :clone)
+  # replicate(:mode => :to_mission, :dest_mission => m)
+  # replicate(:mode => :promote, :retain_link_on_promote => false)
   def replicate(options = nil)
+    raise ArgumentError, 'Replication mode has not been defined' unless options.is_a?(Replication) || (options.respond_to?("[]") && options[:mode])
 
     # if mission or nil was passed in, we don't have a replication object, so we need to create one
     # a replication is an object to track replication parameters
     if options.is_a?(Replication)
       replication = options
     else
-      # TOM: the link_to_standard/retain_link_on_promote option doesn't get passed into the Replication object
-      replication = Replication.new(:mode => determine_replication_mode(options),
-                                    :src_obj => self,
-                                    :to_mission => determine_mission(options))
+      replication = Replication.new(options.merge(:src_obj => self))
     end
 
     # wrap in transaction if this is the first call
@@ -106,15 +103,13 @@ module Replicable
     replication.dest_obj = dest_obj = setup_replication_destination_obj(replication)
 
     # set the proper mission ID if applicable
-    dest_obj.mission_id = replication.to_mission.try(:id)
+    dest_obj.mission_id = replication.dest_mission.try(:id)
 
     # copy attributes from src to parent
     replicate_attributes(replication)
 
     # if we are copying standard to standard, preserve the is_standard flag
-    # TOM: why do we need both replicating_to_standard? and .mode == promote?
-    # seems that replicating_to_standard should give the final word on whether the dest_obj should be standard
-    dest_obj.is_standard = true if replication.replicating_to_standard? || replication.mode == :promote
+    dest_obj.is_standard = true if replication.replicating_to_standard?
 
     # ensure uniqueness params are respected
     ensure_uniqueness_when_replicating(replication)
@@ -132,6 +127,11 @@ module Replicable
     replicate_child_associations(replication)
 
     dest_obj.save!
+
+    # link basic object to newly created standard object
+    if replication.mode == :promote && replication.retain_link_on_promote?
+      link_object_to_standard(dest_obj)
+    end
 
     return dest_obj
   end
@@ -243,6 +243,13 @@ module Replicable
     end
   end
 
+  # link the src object to the newly created standard object
+  def link_object_to_standard(standard_object)
+    self.is_standard = true
+    self.standard_id = standard_object.id
+    self.save!
+  end
+
   private
 
     # gets the object to which the replication operation will copy attributes, etc.
@@ -250,7 +257,7 @@ module Replicable
     def setup_replication_destination_obj(replication)
       # if this is a standard object AND we're copying to a mission AND there exists a copy of this obj in the given mission,
       # then we don't need to create a new object, so return the existing copy
-      if is_standard? && replication.has_to_mission? && (copy = copy_for_mission(replication.to_mission))
+      if is_standard? && replication.has_dest_mission? && (copy = copy_for_mission(replication.dest_mission))
         obj = copy
       else
         # otherwise, we init and return the new object
@@ -366,7 +373,7 @@ module Replicable
       # if uniqueness property is set, make sure the specified field is unique
       if params = replicable_opts(:uniqueness)
         # setup the params for the call to the generate_unique_field_value method
-        params = params.merge(:mission => replication.to_mission, :dest_obj => replication.dest_obj)
+        params = params.merge(:mission => replication.dest_mission, :dest_obj => replication.dest_obj)
 
         # get a unique field value (e.g. name) for the dest_obj (may be the same as the source object's value)
         unique_field_val = generate_unique_field_value(params)
