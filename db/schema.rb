@@ -128,6 +128,15 @@ ActiveRecord::Schema.define(:version => 20140325160925) do
   add_index "forms", ["mission_id", "standard_id"], :name => "index_forms_on_mission_id_and_standard_id", :unique => true
   add_index "forms", ["standard_id"], :name => "index_forms_on_standard_id"
 
+  create_table "groups", :force => true do |t|
+    t.string   "name",       :null => false
+    t.integer  "mission_id", :null => false
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "groups", ["mission_id"], :name => "groups_mission_id_fk"
+
   create_table "missions", :force => true do |t|
     t.string   "name"
     t.string   "compact_name"
@@ -139,7 +148,7 @@ ActiveRecord::Schema.define(:version => 20140325160925) do
   add_index "missions", ["compact_name"], :name => "index_missions_on_compact_name"
 
   create_table "option_levels", :force => true do |t|
-    t.integer  "option_set_id",                        :null => false
+    t.integer  "option_set_id"
     t.integer  "rank",                                 :null => false
     t.text     "name_translations",                    :null => false
     t.integer  "mission_id"
@@ -368,6 +377,16 @@ ActiveRecord::Schema.define(:version => 20140325160925) do
   add_index "sms_messages", ["body"], :name => "index_sms_messages_on_body", :length => {"body"=>160}
   add_index "sms_messages", ["mission_id"], :name => "sms_messages_mission_id_fk"
 
+  create_table "user_groups", :force => true do |t|
+    t.integer  "user_id",    :null => false
+    t.integer  "group_id",   :null => false
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "user_groups", ["group_id"], :name => "user_groups_group_id_fk"
+  add_index "user_groups", ["user_id"], :name => "user_groups_user_id_fk"
+
   create_table "users", :force => true do |t|
     t.string   "login",                                  :null => false
     t.string   "email"
@@ -415,6 +434,8 @@ ActiveRecord::Schema.define(:version => 20140325160925) do
   add_foreign_key "forms", "forms", :name => "forms_standard_id_fk", :column => "standard_id"
   add_foreign_key "forms", "missions", :name => "forms_mission_id_fk"
 
+  add_foreign_key "groups", "missions", :name => "groups_mission_id_fk"
+
   add_foreign_key "option_levels", "option_levels", :name => "option_levels_standard_id_fk", :column => "standard_id"
   add_foreign_key "option_levels", "option_sets", :name => "option_levels_option_set_id_fk"
 
@@ -460,6 +481,9 @@ ActiveRecord::Schema.define(:version => 20140325160925) do
   add_foreign_key "settings", "missions", :name => "settings_mission_id_fk"
 
   add_foreign_key "sms_messages", "missions", :name => "sms_messages_mission_id_fk"
+
+  add_foreign_key "user_groups", "groups", :name => "user_groups_group_id_fk"
+  add_foreign_key "user_groups", "users", :name => "user_groups_user_id_fk"
 
   add_foreign_key "users", "missions", :name => "users_current_mission_id_fk", :column => "current_mission_id"
 
