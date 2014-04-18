@@ -5,7 +5,8 @@ module ElmoFormHelper
   def elmo_form_for(obj, *args, &block)
     options = args.extract_options!
     (base_errors(obj, options) +
-      form_for(obj, *(args << options.merge(:builder => ElmoFormBuilder, :html => {:class => "#{obj.class.model_name.singular}_form"})), &block)).html_safe
+      form_for(obj, *(args << options.merge(:builder => ElmoFormBuilder,
+        :html => {:class => "#{obj.class.model_name.singular}_form elmo_form #{options[:style]}"})), &block)).html_safe
   end
 
   # renders a set of form fields using the ElmoFormBuilder

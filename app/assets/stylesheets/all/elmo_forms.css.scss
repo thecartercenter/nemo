@@ -1,4 +1,5 @@
 $orange: #F77D48;
+$elmo-form-width: 660px;
 
 /* base errors may appear outside the form. left margin should be cancelled when inside form */
 div.form-errors {
@@ -8,37 +9,16 @@ div.form-errors {
   margin-bottom: 5px;
 }
 
-/* standardize specific form widths */
-form.response_form, form.question_form, form.form_form, form.option_set_form, form.user_form, form.broadcast_form, form.user_batch_form, form.setting_form, form.mission_form, form.user_session_form, form.questioning_form {
-  width: 650px;
-  .form-control {
-    display: inline-block;
-  }
-}
-
-
-/* Custom tweaks to forms */
-form#new_response {
-  .form-control {
-    display: inline-block;
-    width: 93%;
-  }
-}
-
-.forms_edit form.form_form {
-  width: 100%;
-}
-
-/* login form does not have hints */
-#new_user_session {
-  input.text {
-    width: 450px !important;
-  }
+/* standard form width */
+form.elmo_form, div.elmo_form {
+  width: $elmo-form-width;
 }
 
 div.form_field {
   /* the field div itself should not wrap, but we don't want this to inherit */
   white-space: nowrap;
+  border-bottom: 1px solid #DDD;
+  margin-bottom: 5px;
 
   > * {
     white-space: normal;
@@ -93,7 +73,7 @@ div.form_field {
   div.control {
     display: inline-block;
     vertical-align: middle;
-    width: 450px;
+    width: 425px;
     min-height: 26px;
     position: relative;
 
@@ -105,8 +85,7 @@ div.form_field {
       display: inline-block;
       vertical-align: top;
 
-
-      input[type='text'], select, textarea input.text, textarea {
+      input[type=text], input[type=password], select, textarea input.text, textarea {
         width: 420px;
         height: 35px;
       }
@@ -119,8 +98,8 @@ div.form_field {
   }
   /* Override for multiple selects */
   &.qtype_select_multiple .widget {
-      vertical-align: top !important;
-    }
+    vertical-align: top !important;
+  }
 
   div.control input.text {
     padding: 3px;
@@ -141,8 +120,10 @@ div.form_field {
     padding: 0;
     width: auto;
   }
+}
 
-
+div.hint {
+  display: inline-block;
 }
 
 form input[type="submit"].btn-primary {
@@ -159,33 +140,11 @@ form {
   input.btn-primary {
     padding: 6px 35px;
   }
-
-}
-
-form.response_form {
-  width: 750px;
-  label.main {
-    width: 300px;
-  }
-}
-
-
-#question_option_set_id {
-  width: 300px;
-  display: inline-block;
-}
-
-
-
-div.settings_index {
-  a.password {
-    margin-left: 150px;
-  }
 }
 
 div.data_integrity_warning {
   margin: 10px 0;
-  width: 100%;
+  width: $elmo-form-width;
 
   i {
     display: block;
@@ -196,5 +155,14 @@ div.data_integrity_warning {
 
   & > div {
     margin-left: 20px;
+  }
+}
+
+/* Minimal form has no horiz lines and no hints */
+form.elmo_form.minimal {
+  width: 620px;
+
+  div.form_field {
+    border-bottom: none;
   }
 }

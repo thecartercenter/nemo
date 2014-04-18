@@ -26,48 +26,4 @@ class ReplicableTest < ActiveSupport::TestCase
     q = FactoryGirl.create(:question, :code => 'Alpha')
     assert_equal('Alpha', q.attrib_before_save(:code))
   end
-
-
-
-  test "#determine_replication_mode will return default when nothing is passed in" do
-    q = FactoryGirl.build(:question, :code => 'Alpha')
-    assert('default', q.determine_replication_mode.to_s)
-  end
-
-  test "#determine_replication_mode will return default when a non-hash value is passed in" do
-    q = FactoryGirl.build(:question, :code => 'Alpha')
-    assert('default', q.determine_replication_mode("some mission").to_s)
-  end
-
-  test "#determine_replication_mode will return the passed in mode from the options hash" do
-    q = FactoryGirl.build(:question, :code => 'Alpha')
-    assert('some_mode', q.determine_replication_mode({:mode => "some_mode"}).to_s)
-  end
-
-  test "#determine_replication_mode will return a default mode if a mode is not specificed in the options hash" do
-    q = FactoryGirl.build(:question, :code => 'Alpha')
-    assert('default', q.determine_replication_mode({:mission => "some_mode"}).to_s)
-  end
-
-
-  test "#determine_mission will return the passed in mission" do
-    q = FactoryGirl.build(:question, :code => 'Alpha')
-    assert('some_mission', q.determine_mission({:mission => "some_mission"}))
-  end
-
-  test "#determine_mission will return nil if the mode is :promote" do
-    q = FactoryGirl.build(:question, :code => 'Alpha')
-    assert_nil(q.determine_mission({:mode => :promote, :mission => "doesn't matter"}))
-  end
-
-  test "#determine_mission will return nil if a mission is not specified" do
-    q = FactoryGirl.build(:question, :code => 'Alpha')
-    assert_nil(q.determine_mission({:mode => :default}))
-  end
-
-  test "#determine_mission will return the passed in parameter if it is not a hash" do
-    q = FactoryGirl.build(:question, :code => 'Alpha')
-    assert("some_mission", q.determine_mission("some_mission"))
-  end
-
 end

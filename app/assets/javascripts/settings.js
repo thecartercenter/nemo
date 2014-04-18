@@ -19,7 +19,7 @@
     // hookup change password links
     $("form.setting_form .adapter_settings a").on("click", function(){
       $(this).hide();
-      $(this).next(".password_fields").show();
+      $(this).closest('.adapter_settings').find(".password_fields").show();
       return false;
     });
   }

@@ -5,31 +5,32 @@
 
   <%= elmo_form_for(@form) do |f| %>
 
-    <%= f.field(:name, :required => true, :read_only => cannot?(:rename, @form)) %>
+    <%# We wrap the top part of the form in this block b/c the whole form is 100% width due to index table below %>
+    <div class="elmo_form">
 
-    <% unless admin_mode? %>
-      <%= f.field(:smsable, :type => :check_box)  %>
-      <%= f.field(:allow_incomplete, :type => :check_box) unless admin_mode? %>
-      <%= f.field(:published, :type => :check_box, :read_only => true) unless @form.new_record? %>
-    <% end %>
+      <%= f.field(:name, :required => true, :read_only => cannot?(:rename, @form)) %>
 
-    <%= f.field(:version, :content => @form.version_with_code) unless @form.new_record? %>
+      <% unless admin_mode? %>
+        <%= f.field(:smsable, :type => :check_box)  %>
+        <%= f.field(:allow_incomplete, :type => :check_box) unless admin_mode? %>
+        <%= f.field(:published, :type => :check_box, :read_only => true) unless @form.new_record? %>
+      <% end %>
+
+      <%= f.field(:version, :content => @form.version_with_code) unless @form.new_record? %>
+
+    </div>
 
     <%# questions on the form %>
     <%= index_table(Questioning, @form.questionings, :within_form => true) if form_mode != :new %>
 
     <% show_sp_btn = !@form.new_record? && !@form.published? && can?(:publish, @form) %>
     <div class="submit-buttons <%=  'publish' unless !show_sp_btn %>">
-
-
       <% if show_sp_btn %>
         <%= f.submit(I18n.t('form.save_and_publish'), :name => 'save_and_publish', :class => 'btn btn-default') %>
       <% end %>
 
       <%= f.submit(:class => "btn btn-primary") %>
     </div>
-
-
 
   <% end %>
 </div>

@@ -48,9 +48,10 @@
   klass.prototype.question_type_changed = function() { var self = this;
     var selected_type = self.field_value('qtype_name');
 
-    // show/hide option set field
+    // show/hide option set field and hint
     var show_opt_set = (selected_type == "select_one" || selected_type == "select_multiple");
-    $("div.question_fields .form_field[data-field-name=option_set_id]")[show_opt_set ? 'show' : 'hide']();
+    var optionSet = $("div.question_fields .form_field[data-field-name=option_set_id]");
+    show_opt_set ? optionSet.show() : optionSet.hide();
 
     // reset select if hiding
     if (!show_opt_set)

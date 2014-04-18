@@ -13,6 +13,8 @@ class User < ActiveRecord::Base
   has_many(:broadcast_addressings, :inverse_of => :user, :dependent => :destroy)
   has_many(:assignments, :autosave => true, :dependent => :destroy, :validate => true, :inverse_of => :user)
   has_many(:missions, :through => :assignments, :order => "missions.created_at DESC")
+  has_many :user_groups, :dependent => :destroy
+  has_many :groups, :through => :user_groups
   belongs_to(:current_mission, :class_name => "Mission")
 
   accepts_nested_attributes_for(:assignments, :allow_destroy => true)

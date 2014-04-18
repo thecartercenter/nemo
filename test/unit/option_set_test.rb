@@ -337,7 +337,7 @@ class OptionSetTest < ActiveSupport::TestCase
 
   test "cloning an option set within a mission should work" do
     yn = FactoryGirl.create(:option_set, :name => 'Foo')
-    yn2 = yn.replicate
+    yn2 = yn.replicate(:mode => :clone)
 
     # missions should be the same
     assert_equal(yn.mission, yn2.mission)
@@ -351,7 +351,7 @@ class OptionSetTest < ActiveSupport::TestCase
 
   test "cloning a standard option set should work" do
     yn = FactoryGirl.create(:option_set, :name => 'Foo', :is_standard => true)
-    yn2 = yn.replicate
+    yn2 = yn.replicate(:mode => :clone)
     yn.reload
 
     # missions should be the same (nil)
