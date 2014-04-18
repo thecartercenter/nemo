@@ -1,0 +1,40 @@
+form.user_batch_form {
+  width: 800px;
+
+  /* regular form */
+  #user_batch_batch {
+    height: 200px;
+    margin-top: 20px;
+  }
+
+  /* special form */
+  div.batch_line_with_info {
+    padding: 10px 0;
+    border-top: 1px solid #ddd;
+
+    input[type=text] {
+      width: 400px;
+      display: inline-block;
+    }
+
+    div.info {
+      display: inline-block;
+      margin-left: 5px;
+
+      i {
+        margin: 0 5px;
+        width: 10px;
+        display: inline-block;
+        text-align: center;
+      }
+    }
+
+    &.line_ok div.info {
+      color: #9dc400;
+    }
+
+    &.line_error div.info {
+      color: #d02000;
+    }
+  }
+}

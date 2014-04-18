@@ -65,3 +65,12 @@
 .responses_edit textarea.qtype_long_text, .responses_new textarea.qtype_long_text { width: 340px; height: 100px; }
 .responses_edit input.qtype_location, .responses_new input.qtype_location { width: 200px; display: inline-block; }
 a.edit_location_link img { vertical-align: bottom; }
+
+/* Responses form should be wider */
+form.response_form {
+  width: 760px;
+
+  label.main {
+    width: 300px;
+  }
+}

@@ -413,14 +413,6 @@ en:
         password_confirmation: "Enter the new password again."
         pref_lang: "The language in which you would like to use the system."
         role: "The role of the user in the current mission, and whether or not they are presently active. Inactive users cannot access the mission at all."
-      user_batch:
-        batch: |-
-          Enter names, email addresses, and phone numbers (WITH country codes), one per line, separated by commas or tabs. For example:
-
-          Alice Merrywinkle, alice@winkle.org, +20112313411
-          Chung Li, cli@gmail.com
-          Forgo Niambot, +203300303, +2083748374
-          Stewbuilder Dennis, chow@yahoo.co.uk, +20923187493
 
     # all error messages should be full sentences with a period, for consistency.
     errors:
@@ -1382,6 +1374,13 @@ en:
 
   user_batch:
     bad_tokens: "Could not understand these pieces: %{tokens}"
+    instructions: |-
+      In the box below, enter names, email addresses, and phone numbers (WITH country codes), one per line, separated by commas or tabs. For example:
+
+      Alice Merrywinkle, alice@winkle.org, +20112313411
+      Chung Li, cli@gmail.com
+      Forgo Niambot, +203300303, +2083748374
+      Stewbuilder Dennis, chow@yahoo.co.uk, +20923187493
     error: "There was an error creating the users. See below."
     success: "Users created successfully."
 
