@@ -2,6 +2,7 @@
 $theme_red: #d02000;
 $theme_blue: #0065d1;
 $elmo-blue: #879CAA;
+$elmo-darker-blue: #02648A;
 $orange: #F77D48;
 $super-light-gray: #F0F0F0;
 $light-gray: #BDB9B9;
@@ -83,9 +84,9 @@ table.index_table td {
   border-top: 1px solid #ddd;
   padding: 6px 10px 6px 3px;
 
+  /* many of the cells are links, and they are harder to read if they are orange, so revert to blue */
   a {
-    color: #02648A;
-    font-size: 10pt;
+    color: $elmo-darker-blue;
   }
 }
 table.index_table tr:last-child td { border-bottom: 1px solid #ddd; }
