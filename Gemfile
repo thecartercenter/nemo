@@ -82,6 +82,8 @@ gem 'rspec-rails', :group => [:development, :test]
 # Acceptance test framework
 gem 'capybara', :group => [:development, :test]
 
+gem 'pry' # better debugger
+
 # cron management
 gem 'whenever', :require => false
 
