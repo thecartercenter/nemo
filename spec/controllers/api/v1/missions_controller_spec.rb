@@ -5,6 +5,7 @@ describe API::V1::MissionsController do
   before do
     @mission1 = FactoryGirl.create(:mission, name: "mission 1")
     @mission2 = FactoryGirl.create(:mission, name: "mission 2")
+    controller.should_receive(:ensure_access).and_return(FactoryGirl.create(:user))
   end
 
   it "should return json" do

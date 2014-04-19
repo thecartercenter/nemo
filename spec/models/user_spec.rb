@@ -9,7 +9,6 @@ describe User do
     end
 
     it "should have an api_key generated" do
-      puts @user.api_key
       expect(@user.api_key).to_not be_blank
     end
 
