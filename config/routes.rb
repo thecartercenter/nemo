@@ -1,5 +1,11 @@
 ELMO::Application.routes.draw do
 
+  namespace :api, defaults: { format: :json } do
+    api_version(:module => "v1", :path => {:value => "v1"}) do
+      resources :missions, only: :index
+    end
+  end
+
   # redirects for ODK
   # shortened (/m)
   match "/m/:mission_compact_name/formList" => 'forms#index', :format => :xml
@@ -98,4 +104,5 @@ ELMO::Application.routes.draw do
 
   # proxies for ajax
   match "proxies/:action", :controller => "proxies"
+
 end
