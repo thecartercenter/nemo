@@ -40,3 +40,9 @@ RSpec.configure do |config|
   #     --seed 1234
   config.order = "random"
 end
+
+# helper method to parse json and make keys symbols
+def parse_json(body)
+  JSON.parse(body, symbolize_names: true)
+end
+

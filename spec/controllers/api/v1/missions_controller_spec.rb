@@ -5,7 +5,8 @@ describe API::V1::MissionsController do
   before do
     @mission1 = FactoryGirl.create(:mission, name: "mission 1")
     @mission2 = FactoryGirl.create(:mission, name: "mission 2")
-    controller.should_receive(:ensure_access).and_return(FactoryGirl.create(:user))
+    api_user = FactoryGirl.create(:user)
+    controller.should_receive(:ensure_access).and_return(api_user)
   end
 
   it "should return json" do
@@ -20,7 +21,7 @@ describe API::V1::MissionsController do
 
   it "should return array of missions and match first name" do
     get :index, {format: :json}  
-    missions = JSON.parse(response.body, symbolize_names: true)
+    missions = parse_json(response.body)
     expect(missions.first[:name]).to eq @mission1.name
   end
 
