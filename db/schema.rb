@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140325160925) do
+ActiveRecord::Schema.define(:version => 20140413201412) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -148,7 +148,7 @@ ActiveRecord::Schema.define(:version => 20140325160925) do
   add_index "missions", ["compact_name"], :name => "index_missions_on_compact_name"
 
   create_table "option_levels", :force => true do |t|
-    t.integer  "option_set_id"
+    t.integer  "option_set_id",                        :null => false
     t.integer  "rank",                                 :null => false
     t.text     "name_translations",                    :null => false
     t.integer  "mission_id"
@@ -406,85 +406,86 @@ ActiveRecord::Schema.define(:version => 20140325160925) do
     t.boolean  "admin",               :default => false, :null => false
     t.integer  "current_mission_id"
     t.string   "pref_lang",                              :null => false
+    t.string   "api_key"
   end
 
   add_index "users", ["current_mission_id"], :name => "users_current_mission_id_fk"
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
   add_index "users", ["login"], :name => "index_users_on_login", :unique => true
 
-  add_foreign_key "assignments", "missions", :name => "assignments_mission_id_fk"
-  add_foreign_key "assignments", "users", :name => "assignments_user_id_fk"
+  add_foreign_key "assignments", "missions", name: "assignments_mission_id_fk"
+  add_foreign_key "assignments", "users", name: "assignments_user_id_fk"
 
-  add_foreign_key "broadcast_addressings", "broadcasts", :name => "broadcast_addressings_broadcast_id_fk"
-  add_foreign_key "broadcast_addressings", "users", :name => "broadcast_addressings_user_id_fk"
+  add_foreign_key "broadcast_addressings", "broadcasts", name: "broadcast_addressings_broadcast_id_fk"
+  add_foreign_key "broadcast_addressings", "users", name: "broadcast_addressings_user_id_fk"
 
-  add_foreign_key "broadcasts", "missions", :name => "broadcasts_mission_id_fk"
+  add_foreign_key "broadcasts", "missions", name: "broadcasts_mission_id_fk"
 
-  add_foreign_key "choices", "options", :name => "choices_option_id_fk"
+  add_foreign_key "choices", "options", name: "choices_option_id_fk"
 
-  add_foreign_key "conditions", "conditions", :name => "conditions_standard_id_fk", :column => "standard_id"
-  add_foreign_key "conditions", "missions", :name => "conditions_mission_id_fk"
-  add_foreign_key "conditions", "options", :name => "conditions_option_id_fk"
-  add_foreign_key "conditions", "questionings", :name => "conditions_questioning_id_fk"
-  add_foreign_key "conditions", "questionings", :name => "conditions_ref_qing_id_fk", :column => "ref_qing_id"
+  add_foreign_key "conditions", "conditions", name: "conditions_standard_id_fk", column: "standard_id"
+  add_foreign_key "conditions", "missions", name: "conditions_mission_id_fk"
+  add_foreign_key "conditions", "options", name: "conditions_option_id_fk"
+  add_foreign_key "conditions", "questionings", name: "conditions_questioning_id_fk"
+  add_foreign_key "conditions", "questionings", name: "conditions_ref_qing_id_fk", column: "ref_qing_id"
 
-  add_foreign_key "form_versions", "forms", :name => "form_versions_form_id_fk"
+  add_foreign_key "form_versions", "forms", name: "form_versions_form_id_fk"
 
-  add_foreign_key "forms", "form_versions", :name => "forms_current_version_id_fk", :column => "current_version_id", :dependent => :nullify
-  add_foreign_key "forms", "forms", :name => "forms_standard_id_fk", :column => "standard_id"
-  add_foreign_key "forms", "missions", :name => "forms_mission_id_fk"
+  add_foreign_key "forms", "form_versions", name: "forms_current_version_id_fk", column: "current_version_id", dependent: :nullify
+  add_foreign_key "forms", "forms", name: "forms_standard_id_fk", column: "standard_id"
+  add_foreign_key "forms", "missions", name: "forms_mission_id_fk"
 
-  add_foreign_key "groups", "missions", :name => "groups_mission_id_fk"
+  add_foreign_key "groups", "missions", name: "groups_mission_id_fk"
 
-  add_foreign_key "option_levels", "option_levels", :name => "option_levels_standard_id_fk", :column => "standard_id"
-  add_foreign_key "option_levels", "option_sets", :name => "option_levels_option_set_id_fk"
+  add_foreign_key "option_levels", "option_levels", name: "option_levels_standard_id_fk", column: "standard_id"
+  add_foreign_key "option_levels", "option_sets", name: "option_levels_option_set_id_fk"
 
-  add_foreign_key "option_sets", "missions", :name => "option_sets_mission_id_fk"
-  add_foreign_key "option_sets", "option_sets", :name => "option_sets_standard_id_fk", :column => "standard_id"
+  add_foreign_key "option_sets", "missions", name: "option_sets_mission_id_fk"
+  add_foreign_key "option_sets", "option_sets", name: "option_sets_standard_id_fk", column: "standard_id"
 
-  add_foreign_key "optionings", "missions", :name => "optionings_mission_id_fk"
-  add_foreign_key "optionings", "option_levels", :name => "optionings_option_level_id_fk"
-  add_foreign_key "optionings", "option_sets", :name => "optionings_option_set_id_fk"
-  add_foreign_key "optionings", "optionings", :name => "optionings_parent_id_fk", :column => "parent_id"
-  add_foreign_key "optionings", "optionings", :name => "optionings_standard_id_fk", :column => "standard_id"
-  add_foreign_key "optionings", "options", :name => "optionings_option_id_fk"
+  add_foreign_key "optionings", "missions", name: "optionings_mission_id_fk"
+  add_foreign_key "optionings", "option_levels", name: "optionings_option_level_id_fk"
+  add_foreign_key "optionings", "option_sets", name: "optionings_option_set_id_fk"
+  add_foreign_key "optionings", "optionings", name: "optionings_parent_id_fk", column: "parent_id"
+  add_foreign_key "optionings", "optionings", name: "optionings_standard_id_fk", column: "standard_id"
+  add_foreign_key "optionings", "options", name: "optionings_option_id_fk"
 
-  add_foreign_key "options", "missions", :name => "options_mission_id_fk"
-  add_foreign_key "options", "options", :name => "options_standard_id_fk", :column => "standard_id"
+  add_foreign_key "options", "missions", name: "options_mission_id_fk"
+  add_foreign_key "options", "options", name: "options_standard_id_fk", column: "standard_id"
 
-  add_foreign_key "questionables", "missions", :name => "questions_mission_id_fk"
-  add_foreign_key "questionables", "option_levels", :name => "questionables_option_level_id_fk"
-  add_foreign_key "questionables", "option_sets", :name => "questions_option_set_id_fk"
-  add_foreign_key "questionables", "questionables", :name => "questionables_parent_id_fk", :column => "parent_id"
-  add_foreign_key "questionables", "questionables", :name => "questions_standard_id_fk", :column => "standard_id"
+  add_foreign_key "questionables", "missions", name: "questions_mission_id_fk"
+  add_foreign_key "questionables", "option_levels", name: "questionables_option_level_id_fk"
+  add_foreign_key "questionables", "option_sets", name: "questions_option_set_id_fk"
+  add_foreign_key "questionables", "questionables", name: "questionables_parent_id_fk", column: "parent_id"
+  add_foreign_key "questionables", "questionables", name: "questions_standard_id_fk", column: "standard_id"
 
-  add_foreign_key "questionings", "forms", :name => "questionings_form_id_fk"
-  add_foreign_key "questionings", "missions", :name => "questionings_mission_id_fk"
-  add_foreign_key "questionings", "questionables", :name => "questionings_question_id_fk", :column => "question_id"
-  add_foreign_key "questionings", "questionings", :name => "questionings_standard_id_fk", :column => "standard_id"
+  add_foreign_key "questionings", "forms", name: "questionings_form_id_fk"
+  add_foreign_key "questionings", "missions", name: "questionings_mission_id_fk"
+  add_foreign_key "questionings", "questionables", name: "questionings_question_id_fk", column: "question_id"
+  add_foreign_key "questionings", "questionings", name: "questionings_standard_id_fk", column: "standard_id"
 
-  add_foreign_key "report_calculations", "questionables", :name => "report_calculations_question1_id_fk", :column => "question1_id"
-  add_foreign_key "report_calculations", "report_reports", :name => "report_calculations_report_report_id_fk"
+  add_foreign_key "report_calculations", "questionables", name: "report_calculations_question1_id_fk", column: "question1_id"
+  add_foreign_key "report_calculations", "report_reports", name: "report_calculations_report_report_id_fk"
 
-  add_foreign_key "report_option_set_choices", "option_sets", :name => "report_option_set_choices_option_set_id_fk"
-  add_foreign_key "report_option_set_choices", "report_reports", :name => "report_option_set_choices_report_report_id_fk"
+  add_foreign_key "report_option_set_choices", "option_sets", name: "report_option_set_choices_option_set_id_fk"
+  add_foreign_key "report_option_set_choices", "report_reports", name: "report_option_set_choices_report_report_id_fk"
 
-  add_foreign_key "report_reports", "forms", :name => "report_reports_form_id_fk"
-  add_foreign_key "report_reports", "missions", :name => "report_reports_mission_id_fk"
-  add_foreign_key "report_reports", "questionings", :name => "report_reports_disagg_qing_id_fk", :column => "disagg_qing_id"
+  add_foreign_key "report_reports", "forms", name: "report_reports_form_id_fk"
+  add_foreign_key "report_reports", "missions", name: "report_reports_mission_id_fk"
+  add_foreign_key "report_reports", "questionings", name: "report_reports_disagg_qing_id_fk", column: "disagg_qing_id"
 
-  add_foreign_key "responses", "forms", :name => "responses_form_id_fk"
-  add_foreign_key "responses", "missions", :name => "responses_mission_id_fk"
-  add_foreign_key "responses", "users", :name => "responses_checked_out_by_id_fk", :column => "checked_out_by_id"
-  add_foreign_key "responses", "users", :name => "responses_user_id_fk"
+  add_foreign_key "responses", "forms", name: "responses_form_id_fk"
+  add_foreign_key "responses", "missions", name: "responses_mission_id_fk"
+  add_foreign_key "responses", "users", name: "responses_checked_out_by_id_fk", column: "checked_out_by_id"
+  add_foreign_key "responses", "users", name: "responses_user_id_fk"
 
-  add_foreign_key "settings", "missions", :name => "settings_mission_id_fk"
+  add_foreign_key "settings", "missions", name: "settings_mission_id_fk"
 
-  add_foreign_key "sms_messages", "missions", :name => "sms_messages_mission_id_fk"
+  add_foreign_key "sms_messages", "missions", name: "sms_messages_mission_id_fk"
 
-  add_foreign_key "user_groups", "groups", :name => "user_groups_group_id_fk"
-  add_foreign_key "user_groups", "users", :name => "user_groups_user_id_fk"
+  add_foreign_key "user_groups", "groups", name: "user_groups_group_id_fk"
+  add_foreign_key "user_groups", "users", name: "user_groups_user_id_fk"
 
-  add_foreign_key "users", "missions", :name => "users_current_mission_id_fk", :column => "current_mission_id"
+  add_foreign_key "users", "missions", name: "users_current_mission_id_fk", column: "current_mission_id"
 
 end
