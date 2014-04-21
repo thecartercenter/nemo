@@ -7,7 +7,7 @@ describe API::V1::FormsController do
     @form1 = @mission.forms.create(name: "test1")
     @form2 = @mission.forms.create(name: "test2")
     api_user = FactoryGirl.create(:user)
-    controller.should_receive(:ensure_access).and_return(api_user)
+    controller.should_receive(:authenticate_token).and_return(api_user)
   end
 
   it "should return status of 200" do
