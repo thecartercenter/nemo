@@ -27,7 +27,7 @@ describe API::V1::MissionsController do
 	  end
 	end
 
-	context "when user does not have access" do
+  context "when user does not have access" do
     before do
     	controller.should_receive(:authenticate_token).and_return(false)
     end

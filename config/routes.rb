@@ -6,7 +6,7 @@ ELMO::Application.routes.draw do
       resources :missions, only: :index 
     end
   end
-
+  
   # redirects for ODK
   # shortened (/m)
   match "/m/:mission_compact_name/formList" => 'forms#index', :format => :xml

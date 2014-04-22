@@ -20,7 +20,7 @@
       <%= f.field(:version, :content => @form.version_with_code) unless @form.new_record? %>
 
     </div>
-
+    
     <%# questions on the form %>
     <%= index_table(Questioning, @form.questionings, :within_form => true) if form_mode != :new %>
 
