@@ -40,6 +40,7 @@ class FormsController < ApplicationController
   end
 
   def new
+    @form.access_level = 2
     prepare_and_render_form
   end
 
