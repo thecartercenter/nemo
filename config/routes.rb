@@ -50,13 +50,16 @@ ELMO::Application.routes.draw do
     post '/submission' => 'responses#create', :format => 'xml'
 
     # for /en/m/mission123
-    root :to => 'welcome#index'
+    root :to => 'welcome#index', :as => :mission_mode_root
   end
 
   #####################################
   # Admin-mode-only routes
   scope '(:locale)/:mode', :locale => /[a-z]{2}/, :mode => /admin/ do
     resources :missions
+
+    # for /en/admin
+    root :to => 'welcome#index', :as => :admin_mode_root
   end
 
   #####################################
@@ -98,8 +101,6 @@ ELMO::Application.routes.draw do
 
     # special route for option suggestions
     get '/options/suggest' => 'options#suggest', :as => :suggest_options
-
-    root :to => 'welcome#index'
   end
 
   #####################################
