@@ -22,7 +22,7 @@ describe 'router' do
   end
 
   it 'routes logout without locale' do
-    { :get => '/en/logout' }.should route_to(:controller => 'user_sessions', :action => 'destroy', :locale => 'en')
+    { :delete => '/en/logout' }.should route_to(:controller => 'user_sessions', :action => 'destroy', :locale => 'en')
   end
 
   it 'routes proxy requests without locale' do

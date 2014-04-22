@@ -2,25 +2,15 @@ ELMO::Application.routes.draw do
 
   MISSION_NAME_CONSTRAINT = { :id => /[a-z][a-z0-9]*/ }
 
-  # redirects for ODK
-  # shortened (/m)
-  match '/m/:mission_compact_name/formList' => 'forms#index', :format => :xml
-  match '/m/:mission_compact_name/forms/:id' => 'forms#show', :format => :xml, :as => :form_with_mission
-  match '/m/:mission_compact_name/submission' => 'responses#create', :format => :xml
-  # full (/missions)
-  match '/missions/:mission_compact_name/formList' => 'forms#index', :format => :xml
-  match '/missions/:mission_compact_name/forms/:id' => 'forms#show', :format => :xml
-  match '/missions/:mission_compact_name/submission' => 'responses#create', :format => :xml
-
   # Basic routes
   scope '(:locale)', :locale => /[a-z]{2}/ do
     # login/logout shortcut
-    match '/logged-out' => 'user_sessions#logged_out', :as => :logged_out
-    match '/logout' => 'user_sessions#destroy', :as => :logout
-    match '/login' => 'user_sessions#new', :as => :login
+    get '/logged-out' => 'user_sessions#logged_out', :as => :logged_out
+    delete '/logout' => 'user_sessions#destroy', :as => :logout
+    get '/login' => 'user_sessions#new', :as => :login
 
     # /en/, /en
-    match '/' => 'welcome#index'
+    get '/' => 'welcome#index'
   end
 
   # Mission-only routes
@@ -51,8 +41,13 @@ ELMO::Application.routes.draw do
     end
 
     # special dashboard routes
-    match '/info-window' => 'welcome#info_window', :as => :dashboard_info_window
-    match '/report-update/:id' => 'welcome#report_update'
+    get '/info-window' => 'welcome#info_window', :as => :dashboard_info_window
+    get '/report-update/:id' => 'welcome#report_update'
+
+    # special ODK routes
+    get '/formList' => 'forms#index', :format => 'xml'
+    get '/forms/:id' => 'forms#show', :format => 'xml', :as => :form_with_mission
+    post '/submission' => 'responses#create', :format => 'xml'
 
     # for /en/m/mission123
     root :to => 'welcome#index'
@@ -100,13 +95,13 @@ ELMO::Application.routes.draw do
     end
 
     # special route for option suggestions
-    match '/options/suggest' => 'options#suggest', :as => :suggest_options
+    get '/options/suggest' => 'options#suggest', :as => :suggest_options
 
     root :to => 'welcome#index'
   end
 
   # need this so that '/' will work
-  match '/' => 'welcome#index'
+  get '/' => 'welcome#index'
 
   # proxies for ajax
   match 'proxies/:action', :controller => 'proxies'
