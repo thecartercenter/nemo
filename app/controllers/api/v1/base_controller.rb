@@ -3,7 +3,6 @@ class API::V1::BaseController < ApplicationController
 
 	before_filter :authenticate
 
-
 	protected
 
 	def authenticate
