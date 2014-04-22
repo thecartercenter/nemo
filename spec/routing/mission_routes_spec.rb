@@ -42,4 +42,10 @@ describe 'router' do
   it 'rejects if missing locale, mission and prefix' do
     { :get => '/broadcasts' }.should_not be_routable
   end
+
+  it 'routes import standard' do
+    { :post => '/en/m/mission123/option-sets/import-standard' }.should route_to(
+      :controller => 'option_sets', :action => 'import_standard', :locale => 'en',
+        :mode => 'm', :mission_id => 'mission123')
+  end
 end

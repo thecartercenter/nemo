@@ -66,47 +66,46 @@ ELMO::Application.routes.draw do
     match '/' => 'welcome#index'
   end
 
-  # the routes in this scope are admin mode optional
-  # scope '(:locale)(/:admin_mode)', :locale => /[a-z]{2}/ do
+  scope '(:locale)/:mode(/:mission_id)', :locale => /[a-z]{2}/, :mode => /m|admin/, :mission_id => /[a-z][a-z0-9]*/ do
 
-  #   # the rest of these routes can have admin mode or not
-  #   resources :forms do
-  #     member do
-  #       post 'add_questions', :path => 'add-questions'
-  #       post 'remove_questions', :path => 'remove-questions'
-  #       put 'clone'
-  #       put 'publish'
-  #       get 'choose_questions', :path => 'choose-questions'
-  #     end
-  #   end
-  #   resources :markers
-  #   resources :questions
-  #   resources :questionings
-  #   resources :settings
-  #   resources :users do
-  #     member do
-  #       get 'login_instructions', :path => 'login-instructions'
-  #       get 'exit_admin_mode', :path => 'exit-admin-mode'
-  #     end
-  #     post 'export', :on => :collection
-  #   end
-  #   resources :user_batches
-  #   resources :groups
+    # the rest of these routes can have admin mode or not
+    resources :forms do
+      member do
+        post 'add_questions', :path => 'add-questions'
+        post 'remove_questions', :path => 'remove-questions'
+        put 'clone'
+        put 'publish'
+        get 'choose_questions', :path => 'choose-questions'
+      end
+    end
+    resources :markers
+    resources :questions
+    resources :questionings
+    resources :settings
+    resources :users do
+      member do
+        get 'login_instructions', :path => 'login-instructions'
+        get 'exit_admin_mode', :path => 'exit-admin-mode'
+      end
+      post 'export', :on => :collection
+    end
+    resources :user_batches
+    resources :groups
 
-  #   resources :option_sets, :path => 'option-sets' do
-  #     put 'clone', :on => :member
-  #   end
+    resources :option_sets, :path => 'option-sets' do
+      put 'clone', :on => :member
+    end
 
-  #   # import routes for standardizeable objects
-  #   %w(forms questions option_sets).each do |k|
-  #     post("/#{k.gsub('_', '-')}/import-standard" => "#{k}#import_standard", :as => "import_standard_#{k}")
-  #   end
+    # import routes for standardizeable objects
+    %w(forms questions option_sets).each do |k|
+      post("/#{k.gsub('_', '-')}/import-standard" => "#{k}#import_standard", :as => "import_standard_#{k}")
+    end
 
-  #   # special route for option suggestions
-  #   match '/options/suggest' => 'options#suggest', :as => :suggest_options
+    # special route for option suggestions
+    match '/options/suggest' => 'options#suggest', :as => :suggest_options
 
-  #   root :to => 'welcome#index'
-  # end
+    root :to => 'welcome#index'
+  end
 
   # need this so that '/' will work
   match '/' => 'welcome#index'
