@@ -1,10 +1,9 @@
 ELMO::Application.routes.draw do
 
-  MISSION_NAME_CONSTRAINT = { :id => /[a-z][a-z0-9]*/ }
-
+  #####################################
   # Basic routes
   scope '(:locale)', :locale => /[a-z]{2}/ do
-    # login/logout shortcut
+    # login/logout shortcuts
     get '/logged-out' => 'user_sessions#logged_out', :as => :logged_out
     delete '/logout' => 'user_sessions#destroy', :as => :logout
     get '/login' => 'user_sessions#new', :as => :login
@@ -13,7 +12,8 @@ ELMO::Application.routes.draw do
     get '/' => 'welcome#index'
   end
 
-  # Mission-only routes
+  #####################################
+  # Mission-mode-only routes
   scope '(:locale)/:mode/:mission_id', :locale => /[a-z]{2}/, :mode => /m/, :mission_id => /[a-z][a-z0-9]*/ do
     resources(:broadcasts) do
       collection do
@@ -53,12 +53,14 @@ ELMO::Application.routes.draw do
     root :to => 'welcome#index'
   end
 
-  # Admin-only routes
+  #####################################
+  # Admin-mode-only routes
   scope '(:locale)/:mode', :locale => /[a-z]{2}/, :mode => /admin/ do
     resources :missions
   end
 
-  # Admin-OR-mission routes
+  #####################################
+  # Admin mode OR mission mode routes
   scope '(:locale)/:mode(/:mission_id)', :locale => /[a-z]{2}/, :mode => /m|admin/, :mission_id => /[a-z][a-z0-9]*/ do
 
     # the rest of these routes can have admin mode or not
@@ -100,10 +102,12 @@ ELMO::Application.routes.draw do
     root :to => 'welcome#index'
   end
 
+  #####################################
+  # Other routes
+
   # need this so that '/' will work
   get '/' => 'welcome#index'
 
-  # proxies for ajax
+  # proxies for ajax same-origin
   match 'proxies/:action', :controller => 'proxies'
 end
-
