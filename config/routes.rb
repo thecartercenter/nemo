@@ -2,7 +2,29 @@ ELMO::Application.routes.draw do
 
   MISSION_NAME_CONSTRAINT = { :id => /[a-z][a-z0-9]*/ }
 
-  def mission_routes
+  # redirects for ODK
+  # shortened (/m)
+  match '/m/:mission_compact_name/formList' => 'forms#index', :format => :xml
+  match '/m/:mission_compact_name/forms/:id' => 'forms#show', :format => :xml, :as => :form_with_mission
+  match '/m/:mission_compact_name/submission' => 'responses#create', :format => :xml
+  # full (/missions)
+  match '/missions/:mission_compact_name/formList' => 'forms#index', :format => :xml
+  match '/missions/:mission_compact_name/forms/:id' => 'forms#show', :format => :xml
+  match '/missions/:mission_compact_name/submission' => 'responses#create', :format => :xml
+
+  # Basic routes
+  scope '(:locale)', :locale => /[a-z]{2}/ do
+    # login/logout shortcut
+    match '/logged-out' => 'user_sessions#logged_out', :as => :logged_out
+    match '/logout' => 'user_sessions#destroy', :as => :logout
+    match '/login' => 'user_sessions#new', :as => :login
+
+    # /en/, /en
+    match '/' => 'welcome#index'
+  end
+
+  # Mission-only routes
+  scope '(:locale)/:mode/:mission_id', :locale => /[a-z]{2}/, :mode => /m/, :mission_id => /[a-z][a-z0-9]*/ do
     resources(:broadcasts) do
       collection do
         post 'new_with_users', :path => 'new-with-users'
@@ -36,36 +58,12 @@ ELMO::Application.routes.draw do
     root :to => 'welcome#index'
   end
 
-  # redirects for ODK
-  # shortened (/m)
-  match '/m/:mission_compact_name/formList' => 'forms#index', :format => :xml
-  match '/m/:mission_compact_name/forms/:id' => 'forms#show', :format => :xml, :as => :form_with_mission
-  match '/m/:mission_compact_name/submission' => 'responses#create', :format => :xml
-  # full (/missions)
-  match '/missions/:mission_compact_name/formList' => 'forms#index', :format => :xml
-  match '/missions/:mission_compact_name/forms/:id' => 'forms#show', :format => :xml
-  match '/missions/:mission_compact_name/submission' => 'responses#create', :format => :xml
-
-  # the routes in this scope /require/ admin mode
-  scope '(:locale)(/:admin_mode)', :locale => /[a-z]{2}/, :admin_mode => /admin/ do
+  # Admin-only routes
+  scope '(:locale)/:mode', :locale => /[a-z]{2}/, :mode => /admin/ do
     resources :missions
   end
 
-  # Mission-only routes
-  scope '(:locale)/:mode/:mission_id', :locale => /[a-z]{2}/, :mode => /m/, :mission_id => /[a-z][a-z0-9]*/ do
-    mission_routes
-  end
-
-  scope '(:locale)', :locale => /[a-z]{2}/ do
-    # login/logout shortcut
-    match '/logged-out' => 'user_sessions#logged_out', :as => :logged_out
-    match '/logout' => 'user_sessions#destroy', :as => :logout
-    match '/login' => 'user_sessions#new', :as => :login
-
-    # /en/, /en
-    match '/' => 'welcome#index'
-  end
-
+  # Admin-OR-mission routes
   scope '(:locale)/:mode(/:mission_id)', :locale => /[a-z]{2}/, :mode => /m|admin/, :mission_id => /[a-z][a-z0-9]*/ do
 
     # the rest of these routes can have admin mode or not
