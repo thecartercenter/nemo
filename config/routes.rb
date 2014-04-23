@@ -56,11 +56,6 @@ ELMO::Application.routes.draw do
     match '/info-window' => 'welcome#info_window', :as => :dashboard_info_window
     get '/report-update/:id' => 'welcome#report_update'
 
-    # special ODK routes
-    get '/formList' => 'forms#index', :format => 'xml'
-    get '/forms/:id' => 'forms#show', :format => 'xml', :as => :form_with_mission
-    post '/submission' => 'responses#create', :format => 'xml'
-
     # for /en/m/mission123
     root :to => 'welcome#index', :as => :mission_root
   end
@@ -104,6 +99,13 @@ ELMO::Application.routes.draw do
 
     # special route for option suggestions
     get '/options/suggest' => 'options#suggest', :as => :suggest_options
+  end
+
+  # Special ODK routes. They are down here so that forms_path doesn't return the ODK variant.
+  scope '(:locale)/:mode/:mission_id', :locale => /[a-z]{2}/, :mode => /m/, :mission_id => /[a-z][a-z0-9]*/ do
+    get '/formList' => 'forms#index', :format => 'xml'
+    get '/forms/:id' => 'forms#show', :format => 'xml', :as => :form_with_mission
+    post '/submission' => 'responses#create', :format => 'xml'
   end
 
   root :to => 'welcome#index'
