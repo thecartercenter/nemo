@@ -14,7 +14,7 @@ ELMO::Application.routes.draw do
 
     # login/logout shortcuts
     get '/logged-out' => 'user_sessions#logged_out', :as => :logged_out
-    delete '/logout' => 'user_sessions#destroy', :as => :logout
+    match '/logout' => 'user_sessions#destroy', :as => :logout
     get '/login' => 'user_sessions#new', :as => :login
 
     # /en/, /en

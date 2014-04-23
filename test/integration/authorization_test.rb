@@ -24,20 +24,21 @@ class AuthorizationTest < ActionDispatch::IntegrationTest
   end
 
   test "guest redirected to login page with message if unauthorized" do
-    assert_can_access(nil, missions_path, :redirected_to => login_url)
+    assert_can_access(nil, missions_path(:mode => 'admin'), :redirected_to => login_url)
     assert_select("div.alert-danger", /must login/)
   end
 
   test "user redirected to root if unauthorized" do
     @user = FactoryGirl.create(:user, :role_name => :observer, :admin => false)
-    assert_cannot_access(@user, settings_path)
+    login(@user)
+    assert_cannot_access(@user, missions_path(:mode => 'admin'))
   end
 
   test "coordinator can only view forms for current mission" do
     @user = FactoryGirl.create(:user, :role_name => :coordinator)
-    @form1 = FactoryGirl.create(:form)
+    @form1 = FactoryGirl.create(:form, :mission_id => get_mission.id)
     @form2 = FactoryGirl.create(:form, :mission_id => @other_mission.id)
-    assert_can_access(@user, forms_path)
+    assert_can_access(@user, forms_path(:mode => 'm', :mission_id => get_mission.compact_name))
   end
 
   test "observer can update own name" do
