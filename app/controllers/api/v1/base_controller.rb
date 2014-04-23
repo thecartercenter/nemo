@@ -17,7 +17,6 @@ class API::V1::BaseController < ApplicationController
 
   def render_unauthorized
     self.headers["WWW-Authenticate"] = "Token realm='Application'"
-    
     respond_to do |format|
       format.json { render json: 'Bad Credentials', status: 401}
     end

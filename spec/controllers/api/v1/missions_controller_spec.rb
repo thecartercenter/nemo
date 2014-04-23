@@ -3,6 +3,7 @@ require 'spec_helper'
 describe API::V1::MissionsController do
 
   context "when user has access" do
+
     before do
       @mission1 = FactoryGirl.create(:mission, name: "mission 1")
       @mission2 = FactoryGirl.create(:mission, name: "mission 2")
@@ -25,9 +26,12 @@ describe API::V1::MissionsController do
       missions = parse_json(response.body)
       expect(missions.first[:name]).to eq @mission1.name
     end
+
   end
 
+
   context "when user does not have access" do
+
     before do
       controller.should_receive(:authenticate_token).and_return(false)
     end
@@ -36,6 +40,7 @@ describe API::V1::MissionsController do
       get :index, {format: :json}  
       expect(response.status).to eq 401
     end
+
   end
 
 end
