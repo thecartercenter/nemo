@@ -104,6 +104,17 @@ class ActiveSupport::TestCase
     assert_response(:success)
   end
 
+  def elmo_path(params)
+    name = params.delete(:name) || params[:obj].class.model_name.singular
+    obj = params.delete(:obj)
+    params[:mode] = 'm' if params[:mission]
+    params[:mode] = 'm' if params[:mode] == 'mission'
+    mission = params.delete(:mission)
+    mission ||= obj.mission if obj
+    params[:mission_id] = mission.try(:compact_name)
+    send("#{name}_path", *[obj, params].compact)
+  end
+
   # helper that sets up a new form with the given parameters
   def setup_form(options)
     # default question required option

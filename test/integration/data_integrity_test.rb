@@ -49,7 +49,7 @@ class DataIntegrityTest < ActionDispatch::IntegrationTest
     form.publish!
 
     # check for no add question link
-    get(edit_form_path(form, :mode => 'm', :mission_id => form.mission.compact_name))
+    get(elmo_path(:obj => form, :mode => 'mission'))
     assert_response(:success)
     assert_select("a[href$=choose_questions]", false)
   end
@@ -58,14 +58,15 @@ class DataIntegrityTest < ActionDispatch::IntegrationTest
 
   private
     def assert_action_link(obj, action, tf)
-      get(send("#{obj.class.model_name.route_key}_path", :mode => 'm', :mission_id => obj.mission.compact_name))
+      # Load the index view for the object
+      get(elmo_path(:name => obj.class.model_name.route_key, :mission => obj.mission))
       assert_response(:success)
       assert_select("tr##{obj.class.model_name.singular}_#{obj.id} a.action_link_#{action}", tf)
     end
 
     def assert_deletable(obj)
       # do delete
-      delete(send("#{obj.class.model_name.singular}_path", obj, :mode => 'm', :mission_id => obj.mission.compact_name))
+      delete(elmo_path(:obj => obj, :mode => 'mission'))
 
       assert_successful_action(obj)
 
@@ -75,7 +76,7 @@ class DataIntegrityTest < ActionDispatch::IntegrationTest
 
     def assert_field_changeable(obj, field)
       singular = obj.class.model_name.singular
-      get(send("edit_#{singular}_path", obj, :mode => 'm', :mission_id => obj.mission.compact_name))
+      get(elmo_path(:name => "edit_#{singular}", :obj => obj, :mode => 'mission'))
       assert_response(:success)
       assert_select("input##{singular}_#{field}")
       new_val = "new val #{rand(100000000)}"
@@ -92,6 +93,4 @@ class DataIntegrityTest < ActionDispatch::IntegrationTest
       assert_nil(flash[:error])
       assert_nil(assigns(:error_msg))
     end
-
-
 end

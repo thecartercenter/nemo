@@ -38,7 +38,7 @@ class AuthorizationTest < ActionDispatch::IntegrationTest
     @user = FactoryGirl.create(:user, :role_name => :coordinator)
     @form1 = FactoryGirl.create(:form, :mission_id => get_mission.id)
     @form2 = FactoryGirl.create(:form, :mission_id => @other_mission.id)
-    assert_can_access(@user, forms_path(:mode => 'm', :mission_id => get_mission.compact_name))
+    assert_can_access(@user, elmo_path(:name => 'forms', :mission => get_mission))
   end
 
   test "observer can update own name" do
