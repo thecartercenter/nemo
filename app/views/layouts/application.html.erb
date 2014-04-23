@@ -25,7 +25,7 @@
       logged_in: <%=j (!current_user.nil?).to_json.html_safe %>,
       site_name: <%=j configatron.site_name.to_json.html_safe %>,
       session_timeout: <%=j User::SESSION_TIMEOUT %>,
-      login_path: <%=j login_path(:admin_mode => nil).to_json.html_safe %>
+      login_path: <%=j login_path.to_json.html_safe %>
     });
   <% end %>
 
@@ -35,7 +35,7 @@
 
   <%# Logo and mission if selected %>
   <div id="title">
-    <%= link_to(image_tag("logo.png"), admin_mode? ? "#{root_path}/forms" : root_path) %>
+    <%= link_to(image_tag("logo.png"), admin_mode? ? admin_root_path(:mode => 'admin') : basic_root_path) %>
     <%# Stripping title name since we have a logo now %>
     <h2>
       <% if admin_mode? %>
@@ -55,12 +55,6 @@
       <% unless admin_mode? %>
         <%# current mission and dropdown, if there are choices %>
         <% unless accessible_missions.empty? %>
-          <%= form_for(current_user) do |f| %>
-            <%= f.select(:current_mission_id, sel_opts_from_objs(accessible_missions),
-              {:include_blank => "[#{t('common.none').capitalize}]"}, {:class => "form-control"}) %>
-            <%= loading_indicator(:header => true) %>
-            <%= hidden_field_tag(:changing_current_mission, 1) %>
-          <% end %>
         <% else %>
           <strong><%= current_mission ? current_mission.name : t("common.none") %></strong>
         <% end %>
@@ -80,7 +74,7 @@
 
       <%# logout button %>
       <div class="icon-btn">
-        <%= link_to(content_tag('i','', {:class => 'fa fa-2x fa-sign-out', :title => t("common.logout")}), user_session_path(:admin_mode => nil), :method => :delete, :id => "logout_button") %>
+        <%= link_to(content_tag('i','', {:class => 'fa fa-2x fa-sign-out', :title => t("common.logout")}), logout_path, :method => :delete, :id => "logout_button") %>
         <br/><br/>&nbsp;
       </div>
 
@@ -163,7 +157,7 @@
       <%= configatron.outgoing_sms_adapter ? configatron.outgoing_sms_adapter.service_name : "[#{t('common.none').capitalize}]" %> &nbsp;|&nbsp;
     <% end %>
 
-    <% if can?(:index, Sms::Message) %>
+    <% if current_mission && can?(:index, Sms::Message) %>
       <%= link_to(t("page_titles.sms.index"), sms_path) %> &nbsp;|&nbsp;
     <% end %>
 

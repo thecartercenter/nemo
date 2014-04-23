@@ -24,7 +24,7 @@ class UserSessionsController < ApplicationController
       # do post login housekeeping
       return unless post_login_housekeeping
 
-      redirect_back_or_default(root_path)
+      redirect_back_or_default(appropriate_root_path)
     else
       flash[:error] = @user_session.errors.full_messages.join(",")
       redirect_to(:action => :new)

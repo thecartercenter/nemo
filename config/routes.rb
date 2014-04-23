@@ -1,15 +1,33 @@
 ELMO::Application.routes.draw do
 
+  # proxies for ajax same-origin
+  match 'proxies/:action', :controller => 'proxies'
+
   #####################################
-  # Basic routes
+  # Basic routes (neither mission nor admin mode)
   scope '(:locale)', :locale => /[a-z]{2}/ do
+    resources(:password_resets)
+    resource(:user_session)
+
+    # For viewing/editing user profiles, which is neither mode
+    resources(:users, :only => %w(show edit update))
+
     # login/logout shortcuts
     get '/logged-out' => 'user_sessions#logged_out', :as => :logged_out
     delete '/logout' => 'user_sessions#destroy', :as => :logout
     get '/login' => 'user_sessions#new', :as => :login
 
     # /en/, /en
-    get '/' => 'welcome#index'
+    root :to => 'welcome#index', :as => :basic_root
+  end
+
+  #####################################
+  # Admin-mode-only routes
+  scope '(:locale)/:mode', :locale => /[a-z]{2}/, :mode => /admin/ do
+    resources :missions
+
+    # for /en/admin
+    root :to => 'welcome#index', :as => :admin_root
   end
 
   #####################################
@@ -20,15 +38,9 @@ ELMO::Application.routes.draw do
         post 'new_with_users', :path => 'new-with-users'
       end
     end
-    resources(:password_resets)
     resources(:responses)
     resources(:sms, :only => [:index, :create])
     resources(:sms_tests)
-    resource(:user_session) do
-      collection do
-        get 'logged_out', :path => 'logged-out'
-      end
-    end
 
     namespace :report  do
       resources :reports
@@ -41,7 +53,7 @@ ELMO::Application.routes.draw do
     end
 
     # special dashboard routes
-    get '/info-window' => 'welcome#info_window', :as => :dashboard_info_window
+    match '/info-window' => 'welcome#info_window', :as => :dashboard_info_window
     get '/report-update/:id' => 'welcome#report_update'
 
     # special ODK routes
@@ -50,16 +62,7 @@ ELMO::Application.routes.draw do
     post '/submission' => 'responses#create', :format => 'xml'
 
     # for /en/m/mission123
-    root :to => 'welcome#index', :as => :mission_mode_root
-  end
-
-  #####################################
-  # Admin-mode-only routes
-  scope '(:locale)/:mode', :locale => /[a-z]{2}/, :mode => /admin/ do
-    resources :missions
-
-    # for /en/admin
-    root :to => 'welcome#index', :as => :admin_mode_root
+    root :to => 'welcome#index', :as => :mission_root
   end
 
   #####################################
@@ -103,12 +106,5 @@ ELMO::Application.routes.draw do
     get '/options/suggest' => 'options#suggest', :as => :suggest_options
   end
 
-  #####################################
-  # Other routes
-
-  # need this so that '/' will work
-  get '/' => 'welcome#index'
-
-  # proxies for ajax same-origin
-  match 'proxies/:action', :controller => 'proxies'
+  root :to => 'welcome#index'
 end

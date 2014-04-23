@@ -10,25 +10,28 @@ class AdminModeTest < ActionDispatch::IntegrationTest
 
   test "path helpers still should work after addition of admin routes" do
     @option_set = FactoryGirl.create(:option_set)
-    assert_equal("/en/option-sets/#{@option_set.id}", option_set_path(@option_set))
-    assert_equal("/en", root_path)
-    assert_equal("/en/admin", root_path(:admin_mode => 'admin'))
+    assert_equal("/en/m/#{get_mission.compact_name}/option-sets/#{@option_set.id}",
+      option_set_path(@option_set, :mode => 'm', :mission_id => get_mission.compact_name))
+    assert_equal("/en", basic_root_path)
+    assert_equal("/en/admin", admin_root_path(:mode => 'admin'))
   end
 
   test "controller admin_mode helper should work properly" do
-    get(root_url)
-    assert(!@controller.send(:admin_mode?))
+    get(login_url)
+    assert_equal(false, @controller.send(:admin_mode?))
+
     login(@admin)
-    get(root_url)
-    assert(!@controller.send(:admin_mode?))
-    get(root_url(:admin_mode => 'admin'))
-    assert(@controller.send(:admin_mode?))
+    get(basic_root_url)
+    assert_equal(false, @controller.send(:admin_mode?))
+
+    get(admin_root_url(:mode => 'admin'))
+    assert_equal(true, @controller.send(:admin_mode?))
   end
 
   test "admin mode should only be available to admins" do
     # login as admin and check for admin mode link
     login(@admin)
-    get(root_url)
+    get(basic_root_url)
     assert_select("div#userinfo a.goto_admin_mode")
 
     # login as other user and make sure not available
@@ -39,11 +42,11 @@ class AdminModeTest < ActionDispatch::IntegrationTest
 
   test "params admin_mode should be correct" do
     login(@admin)
-    get_success(root_url)
+    get_success(basic_root_url)
     assert_response(:success)
-    assert_nil(request.params[:admin_mode])
+    assert_nil(request.params[:mode])
     get_success('/admin')
-    assert_not_nil(request.params[:admin_mode])
+    assert_equal('admin', request.params[:mode])
   end
 
   test "admin mode should not be permitted for non-admins" do
@@ -65,6 +68,7 @@ class AdminModeTest < ActionDispatch::IntegrationTest
 
   test "users current mission and current_mission should be nil in admin mode" do
     login(@admin)
+    get(mission_root_url(:mode => 'm', :mission_id => get_mission.compact_name))
     assert_not_nil(@admin.current_mission)
     assert_not_nil(@controller.current_mission)
 
@@ -80,7 +84,7 @@ class AdminModeTest < ActionDispatch::IntegrationTest
 
   test "creating a form in admin mode should create a standard form" do
     login(@admin)
-    post_via_redirect(forms_path(:admin_mode => 'admin'), {:form => {:name => 'Foo', :smsable => false}})
+    post_via_redirect(forms_path(:mode => 'admin'), {:form => {:name => 'Foo', :smsable => false}})
     f = assigns(:form)
     assert_nil(f.mission)
     assert(f.is_standard?, 'new form should be standard')
@@ -88,7 +92,7 @@ class AdminModeTest < ActionDispatch::IntegrationTest
 
   test "creating a question in admin mode should create a standard question" do
     login(@admin)
-    post_via_redirect(questions_path(:admin_mode => 'admin'), {:question => {:code => 'Foo', :qtype_name => 'integer', :name_en => 'Stuff'}})
+    post_via_redirect(questions_path(:mode => 'admin'), {:question => {:code => 'Foo', :qtype_name => 'integer', :name_en => 'Stuff'}})
     q = Question.order('created_at').last
     assert_nil(q.mission)
     assert(q.is_standard?, 'new question should be standard')
@@ -96,7 +100,7 @@ class AdminModeTest < ActionDispatch::IntegrationTest
 
   test "creating an option set in admin mode should create a standard option set and options" do
     login(@admin)
-    post_via_redirect(option_sets_path(:admin_mode => 'admin'), {
+    post_via_redirect(option_sets_path(:mode => 'admin'), {
       :option_set => {:name => 'Foo',
         :optionings_attributes => {
           '0' => {
@@ -130,7 +134,7 @@ class AdminModeTest < ActionDispatch::IntegrationTest
     login(@admin)
     f = FactoryGirl.create(:form, :is_standard => true)
     q = FactoryGirl.create(:question, :is_standard => true)
-    post_via_redirect(add_questions_form_path(f, :admin_mode => 'admin'), :selected => {q.id => '1'})
+    post_via_redirect(add_questions_form_path(f, :mode => 'admin'), :selected => {q.id => '1'})
     f.reload
     assert_equal(q, f.questionings[0].question)
     assert(f.questionings[0].is_standard?)
@@ -141,7 +145,7 @@ class AdminModeTest < ActionDispatch::IntegrationTest
     login(@admin)
 
     assert_difference('Mission.count', -1) do
-      delete_via_redirect(mission_path(@mission.id, :admin_mode => 'admin'))
+      delete_via_redirect(mission_path(@mission.id, :mode => 'admin'))
     end
   end
 

@@ -53,7 +53,7 @@ class ApplicationController < ActionController::Base
   before_filter(:load_settings)
 
   # allow the current user and mission to be accessed
-  attr_reader :current_user, :current_mission
+  attr_reader :current_user
 
   # make these methods visible in the view
   helper_method :current_user, :current_mission, :accessible_missions, :ajax_request?, :admin_mode?, :index_url_with_page_num
@@ -64,7 +64,7 @@ class ApplicationController < ActionController::Base
   end
 
   def default_url_options(options={})
-    { :locale => I18n.locale, :admin_mode => admin_mode? ? 'admin' : nil }
+    { :locale => I18n.locale, :mode => params[:mode], :mission_id => current_mission.try(:compact_name) }
   end
 
   # mailer is for some reason too stupid to figure these out on its own
@@ -73,6 +73,14 @@ class ApplicationController < ActionController::Base
     default_url_options.merge(:host => request.host_with_port).each_pair do |k,v|
       ActionMailer::Base.default_url_options[k] = v
     end
+  end
+
+  def appropriate_root_path
+    current_mission ? mission_root_path(:mode => 'm', :mission_id => current_mission.compact_name) : basic_root_path
+  end
+
+  def current_mission
+    params[:mode] == 'm' ? @current_mission : nil
   end
 
   protected
@@ -179,13 +187,13 @@ class ApplicationController < ActionController::Base
     end
 
     def admin_mode?
-      !params[:admin_mode].nil?
+      params[:mode] == 'admin'
     end
 
     # makes sure admin_mode is not true if user is not admin
     def protect_admin_mode
       if admin_mode? && cannot?(:view, :admin_mode)
-        params[:admin_mode] = nil
+        params[:mode] = nil
         raise CanCan::AccessDenied.new("not authorized for admin mode", :view, :admin_mode)
       end
     end
@@ -302,6 +310,7 @@ class ApplicationController < ActionController::Base
 
       # pick a mission
       @user_session.user.set_current_mission
+      @current_mission = @user_session.user.current_mission
 
       # if no mission, error
       if @user_session.user.current_mission.nil? && !@user_session.user.admin?

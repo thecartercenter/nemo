@@ -30,14 +30,14 @@ class PasswordResetTest < ActionDispatch::IntegrationTest
     # make sure email gets sent
     assert_difference('ActionMailer::Base.deliveries.size', +1) do
       # create a new user, sending password instr to email
-      post(users_path(:admin_mode => 'admin'), "user"=>{
+      post(users_path(:mode => 'admin'), "user"=>{
         "name"=>"Alberto Ooooh",
         "login"=>"aooooh",
         "email"=>"foo@example.com",
         "assignments_attributes"=>{"1"=>{"id"=>"", "_destroy"=>"false", "mission_id"=>get_mission.id, "role"=>"observer"}},
         "reset_password_method"=>"email"
       })
-      assert_redirected_to(users_path(:admin_mode => 'admin'))
+      assert_redirected_to(users_path(:mode => 'admin'))
       follow_redirect!
       assert_response(:success)
     end
