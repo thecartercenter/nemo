@@ -324,6 +324,7 @@ en:
         phone2: "Alternate Phone"
         pref_lang: "Preferred Language"
         role: "Role"
+        api_key: "API Key"
       user_batch:
         batch: "User Attributes"
 
@@ -413,6 +414,15 @@ en:
         password_confirmation: "Enter the new password again."
         pref_lang: "The language in which you would like to use the system."
         role: "The role of the user in the current mission, and whether or not they are presently active. Inactive users cannot access the mission at all."
+        api_key: "Use this key to connect to other Elmo applications."
+      user_batch:
+        batch: |-
+          Enter names, email addresses, and phone numbers (WITH country codes), one per line, separated by commas or tabs. For example:
+
+          Alice Merrywinkle, alice@winkle.org, +20112313411
+          Chung Li, cli@gmail.com
+          Forgo Niambot, +203300303, +2083748374
+          Stewbuilder Dennis, chow@yahoo.co.uk, +20923187493
 
     # all error messages should be full sentences with a period, for consistency.
     errors:

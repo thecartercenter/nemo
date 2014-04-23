@@ -35,6 +35,7 @@ class User < ActiveRecord::Base
   before_destroy(:check_assoc)
   before_validation(:generate_password_if_none)
   after_save(:rebuild_ability)
+  after_create(:generate_api_key)
 
   validates(:name, :presence => true)
   validates(:pref_lang, :presence => true)
@@ -375,4 +376,11 @@ class User < ActiveRecord::Base
       end
     end
 
+    def generate_api_key
+      # loop if necessary till unique token generated
+      begin
+        api_key = SecureRandom.hex
+      end while User.exists?(api_key: api_key)
+      save 
+    end
 end
