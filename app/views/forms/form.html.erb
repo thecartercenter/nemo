@@ -14,7 +14,7 @@
         <%= f.field(:smsable, :type => :check_box)  %>
         <%= f.field(:allow_incomplete, :type => :check_box) unless admin_mode? %>
         <%= f.field(:published, :type => :check_box, :read_only => true) unless @form.new_record? %>
-        <%= f.field(:access_level, :type => :select, :options => {'Public' => 1, 'Private' => 2}, :default => 2 ) %>
+        <%= f.field(:access_level, :type => :select, :options => AccessLevel.option_list ) %>
       <% end %>
 
       <%= f.field(:version, :content => @form.version_with_code) unless @form.new_record? %>

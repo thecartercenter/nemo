@@ -32,7 +32,7 @@
   </div>
 
   <%= f.field(:key, :type => :check_box) unless admin_mode? %>
-
+  <%= f.field(:access_level, :type => :select, :options => AccessLevel.option_list ) %>
   <%# new option set modal %>
   <% if form_mode != :show && can?(:create, OptionSet) %>
     <div class="new_option_set_form_wrapper" title="<%= t("option_set.create_link") %>">

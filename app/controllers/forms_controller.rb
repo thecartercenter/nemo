@@ -40,7 +40,7 @@ class FormsController < ApplicationController
   end
 
   def new
-    @form.access_level = 2
+    @form.access_level = AccessLevel::PRIVATE
     prepare_and_render_form
   end
 
