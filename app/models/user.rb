@@ -379,7 +379,7 @@ class User < ActiveRecord::Base
     def generate_api_key
       # loop if necessary till unique token generated
       begin
-        api_key = SecureRandom.hex
+        self.api_key = SecureRandom.hex
       end while User.exists?(api_key: api_key)
       save 
     end
