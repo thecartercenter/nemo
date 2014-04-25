@@ -26,9 +26,10 @@ describe "accessing forms" do
   context "View metadata on a form" do
 
     before do
-      q1 = FactoryGirl.create(:question, mission: @mission)
-      q2 = FactoryGirl.create(:question, mission: @mission)
-      @form1.questions.push(q1, q2)
+      q1 = FactoryGirl.create(:question, mission: @mission, access_level: AccessLevel::PUBLIC)
+      q2 = FactoryGirl.create(:question, mission: @mission, access_level: AccessLevel::PUBLIC)
+      q3 = FactoryGirl.create(:question, mission: @mission, access_level: AccessLevel::PRIVATE)      
+      @form1.questions.push(q1, q2, q3)
       get api_v1_form_path(@form1.id), {}, {'HTTP_AUTHORIZATION' => "Token token=#{@api_user.api_key}"}
       @form_json = parse_json(response.body)
     end
@@ -37,7 +38,11 @@ describe "accessing forms" do
       expect(@form_json.keys.include?(:name)).to be_true
     end
 
-    it "should include questions" do
+    it "should include 2 questions" do
+      expect(@form_json[:questions].size).to eq 2
+    end
+
+    it "should include question field _name" do
       expect(@form_json[:questions].first.keys.include?(:_name)).to be_true
     end
 
