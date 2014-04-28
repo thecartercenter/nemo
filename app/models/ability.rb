@@ -23,7 +23,7 @@ class Ability
     @user = params[:user]
     @mission = params[:mission]
     @mode = params[:mode]
-    @mode ||= 'm' if @mission
+    @mode ||= 'mission' if @mission
 
     if user
 
@@ -95,7 +95,7 @@ class Ability
             end
 
             # can only submit/edit/delete own responses, and only if mission is not locked
-            unless user.current_mission.locked?
+            unless mission.locked?
               can [:create, :update, :destroy], Response,
                 :user_id => user.id, :mission_id => mission.id, :reviewed => false
             end
@@ -117,7 +117,7 @@ class Ability
           # can do reports for the current mission
           can :manage, Report::Report, :mission_id => mission.id
 
-          if user.current_mission.locked?
+          if mission.locked?
             # can index, read, export responses for a locked mission
             can [:index, :read, :export], Response, :mission_id => mission.id
           else
