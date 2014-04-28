@@ -36,7 +36,7 @@ class Report::StandardFormReportTest < ActiveSupport::TestCase
 
   test "report should return correct response count for a coordinator" do
     coordinator = get_user
-    ability = Ability.new(coordinator)
+    ability = Ability.new(:user => coordinator, :mission => get_mission)
 
     build_form_and_responses
 
@@ -48,8 +48,7 @@ class Report::StandardFormReportTest < ActiveSupport::TestCase
 
   test "report should return correct response count for an observer" do
     observer = FactoryGirl.create(:user, :role_name => :observer)
-    observer.current_mission = get_mission
-    ability = Ability.new(observer)
+    ability = Ability.new(:user => observer, :mission => get_mission)
 
     build_form_and_responses
 
@@ -138,8 +137,7 @@ class Report::StandardFormReportTest < ActiveSupport::TestCase
     def build_and_run_report
       # assume we are running as admin
       @user = FactoryGirl.create(:user, :admin => true)
-      @user.change_mission!(get_mission)
       @report = FactoryGirl.create(:standard_form_report, :form => @form)
-      @report.run(Ability.new(@user))
+      @report.run(Ability.new(:user => @user, :mission => get_mission))
     end
 end
