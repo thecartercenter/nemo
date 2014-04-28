@@ -208,12 +208,9 @@ class User < ActiveRecord::Base
 
   # checks if the user can perform the given role for the given mission
   # mission defaults to user's current mission
-  def role?(base_role, mission = nil)
+  def role?(base_role, mission)
     # admins can do anything
     return true if admin?
-
-    # default to the current mission if none given
-    mission ||= current_mission
 
     # if no mission then the answer is trivially false
     return false if mission.nil?

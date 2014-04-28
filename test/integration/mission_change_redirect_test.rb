@@ -2,43 +2,48 @@ require 'test_helper'
 
 class MissionChangeRedirectTest < ActionDispatch::IntegrationTest
   setup do
-    @other_mission = FactoryGirl.create(:mission, :name => "Other")
-    @user = FactoryGirl.create(:user, :role_name => :coordinator)
+    @mission1 = FactoryGirl.create(:mission, :name => "Mission1")
+    @mission2 = FactoryGirl.create(:mission, :name => "Mission2")
+    @user = FactoryGirl.create(:user, :mission => @mission1, :role_name => :coordinator)
     @user.change_mission!(get_mission)
   end
 
   test "user should not be redirected if on object listing and has permission" do
     # add this user to the other mission so the form index will be accessible
-    @user.assignments.create!(:mission_id => @other_mission.id, :role => "coordinator")
+    @user.assignments.create!(:mission => @mission2, :role => "coordinator")
 
-    assert_redirect_after_mission_change_from(:from => forms_path, :no_redirect => true)
+    assert_redirect_after_mission_change_from(:from => '/en/m/mission1/forms', :no_redirect => true)
   end
 
   test "user should be redirected to object listing if viewing object that is mission based and not linked to new current mission" do
-    @form = FactoryGirl.create(:form)
+    @form = FactoryGirl.create(:form, :mission => @mission1)
 
     # add this user to the other mission so the form index will be accessible
-    @user.assignments.create!(:mission_id => @other_mission.id, :role => "coordinator")
+    @user.assignments.create!(:mission => @mission2, :role => "coordinator")
 
-    assert_redirect_after_mission_change_from(:from => form_path(@form), :to => forms_path)
+    assert_redirect_after_mission_change_from(
+      :from => "/en/m/mission1/forms/#{@form.id}",
+      :to => "/en/m/mission2/forms")
   end
 
   test "user should be redirected to home screen if was viewing object but redirect to object listing is not permitted" do
-    @option_set = FactoryGirl.create(:option_set)
+    @option_set = FactoryGirl.create(:option_set, :mission => @mission1)
 
     # add the user to the other mission as an observer so that the option_sets listing won't be allowed
-    @user.assignments.create!(:mission_id => @other_mission.id, :role => "observer")
+    @user.assignments.create!(:mission => @mission2, :role => "observer")
 
-    assert_redirect_after_mission_change_from(:from => option_set_path(@option_set), :to => root_path)
+    assert_redirect_after_mission_change_from(
+      :from => "/en/m/mission1/option-sets/#{@option_set.id}",
+      :to => "/en/m/mission2")
   end
 
   test "user should be redirected to home screen if current screen not permitted under new mission" do
-    @option_set = FactoryGirl.create(:option_set)
-
     # add the user to the other mission as an observer so that the option_sets listing won't be allowed
-    @user.assignments.create!(:mission_id => @other_mission.id, :role => "observer")
+    @user.assignments.create!(:mission => @mission2, :role => "observer")
 
-    assert_redirect_after_mission_change_from(:from => option_sets_path, :to => root_path)
+    assert_redirect_after_mission_change_from(
+      :from => "/en/m/mission1/option-sets",
+      :to => "/en/m/mission2")
   end
 
   private
@@ -49,13 +54,9 @@ class MissionChangeRedirectTest < ActionDispatch::IntegrationTest
       get(params[:from])
       assert_response(:success)
 
-      # then do a change mission request and make sure the redirect afterward is correct
-      # the first redirect should be back to the referrer
-      put(user_path(@user), {:user => {:current_mission_id => @other_mission.id}, :changing_current_mission => 1}, {'HTTP_REFERER' => params[:from]})
-      assert_redirected_to params[:from]
-
-      # follow the first redirect, which should lead to another redirect to the :to
-      follow_redirect!
+      # Then do a request for the same path but different mission
+      # and make sure the redirect afterward is correct
+      get(params[:from].gsub('mission1', 'mission2'), :missionchange => 1)
 
       # there should never be an error message
       assert_nil(flash[:error], "Should be no error message for mission change redirects")

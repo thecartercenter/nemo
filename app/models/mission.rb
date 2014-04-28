@@ -30,6 +30,10 @@ class Mission < ActiveRecord::Base
 
   delegate(:override_code, :to => :setting)
 
+  def self.with_compact_name(name)
+    where(:compact_name => name).first
+  end
+
   # Override default destory
   def destroy
     terminate_mission

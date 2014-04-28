@@ -14,7 +14,8 @@ class ApplicationController < ActionController::Base
     @access_denied = true
 
     # log to debug log
-    Rails.logger.debug("ACCESS DENIED on #{exception.action} #{exception.subject.inspect} #{exception.message}")
+    Rails.logger.debug("ACCESS DENIED on #{exception.action} #{exception.subject.inspect} #{exception.message} " +
+      "(Current Mission: #{current_mission.try(:name)}; Current Role: #{current_user.try(:role, current_mission)})")
 
     # if not logged in, offer a login page
     if !current_user
@@ -22,12 +23,12 @@ class ApplicationController < ActionController::Base
       flash[:error] = I18n.t("unauthorized.must_login") unless request.path == "/"
       redirect_to_login
     # else if there was just a mission change, we need to handle specially
-    elsif flash[:mission_changed]
+    elsif params[:missionchange]
       # if the request was a CRUD, try redirecting to the index, or root if no permission
-      if Ability::CRUD.include?(exception.action) && current_user.can?(:index, exception.subject.class)
+      if Ability::CRUD.include?(exception.action) && current_ability.can?(:index, exception.subject.class)
         redirect_to(:controller => controller_name, :action => :index)
       else
-        redirect_to(root_url)
+        redirect_to(mission_root_url)
       end
     # else redirect to welcome page with error
     else
@@ -39,23 +40,17 @@ class ApplicationController < ActionController::Base
   before_filter(:set_locale)
   before_filter(:mailer_set_url_options)
 
-  # user/user_session stuff
-  before_filter(:basic_auth_for_xml)
-  before_filter(:get_user_and_mission)
-
-  # protect admin mode
+  before_filter(:get_user)
+  before_filter(:get_mission)
   before_filter(:protect_admin_mode)
 
   # store index page numbers if this is an index action
   before_filter(:remember_page_number, :only => :index)
 
-  # lastly, we load settings
   before_filter(:load_settings)
 
-  # allow the current user and mission to be accessed
-  attr_reader :current_user
+  attr_reader :current_user, :current_mission
 
-  # make these methods visible in the view
   helper_method :current_user, :current_mission, :accessible_missions, :ajax_request?, :admin_mode?, :index_url_with_page_num
 
   # hackish way of getting the route key identical to what would be returned by model_name.route_key on a model
@@ -77,10 +72,6 @@ class ApplicationController < ActionController::Base
 
   def appropriate_root_path
     current_mission ? mission_root_path(:mode => 'm', :mission_id => current_mission.compact_name) : basic_root_path
-  end
-
-  def current_mission
-    params[:mode] == 'm' ? @current_mission : nil
   end
 
   protected
@@ -186,8 +177,24 @@ class ApplicationController < ActionController::Base
       end
     end
 
+    def current_mode
+      @current_mode ||= case params[:mode]
+      when 'admin' then 'admin'
+      when 'm' then 'mission'
+      else 'basic'
+      end
+    end
+
     def admin_mode?
-      params[:mode] == 'admin'
+      current_mode == 'admin'
+    end
+
+    def mission_mode?
+      current_mode == 'mission'
+    end
+
+    def basic_mode?
+      current_mode == 'basic'
     end
 
     # makes sure admin_mode is not true if user is not admin
@@ -208,16 +215,10 @@ class ApplicationController < ActionController::Base
     # AUTHENTICATION AND USER SESSION METHODS
     ##############################################################################
 
-    # if the request format is XML we should require basic auth
-    # this just sets the current user for this one request. no user session is created.
-    def basic_auth_for_xml
-
-      begin
-        return unless request.format == Mime::XML
-
-        # xml requests not allowed in admin mode
-        raise ArgumentError.new("xml requests not allowed in admin mode") if admin_mode?
-
+    # gets the user and mission from the user session if they're not already set
+    def get_user
+      # if the request format is XML we should use basic auth
+      @current_user = if request.format == Mime::XML
         # authenticate with basic
         user = authenticate_with_http_basic do |login, password|
           # use eager loading to optimize things a bit
@@ -227,56 +228,27 @@ class ApplicationController < ActionController::Base
         # if authentication not successful, fail
         return request_http_basic_authentication if !user
 
-        # save the user
-        @current_user = user
-
-        # mission compact name must be set for all ODK/XML requests
-        raise ArgumentError.new("mission not specified") if params[:mission_compact_name].blank?
-
-        # lookup the mission
-        mission = Mission.find_by_compact_name(params[:mission_compact_name])
-
-        # if the mission wasnt found, raise error
-        raise ArgumentError.new("mission not found") if !mission
-
-        # if user can't access the mission, force re-authentication
-        return request_http_basic_authentication if !can?(:switch_to, mission)
-
-        # if we get this far, we can set the current mission
-        @current_mission = mission
-        @current_user.change_mission!(mission)
-      rescue ArgumentError
-        render(:nothing => true, :status => 404)
-        false
-      end
-    end
-
-    # gets the user and mission from the user session if they're not already set
-    def get_user_and_mission
-
-      # don't do this for XML requests
-      return if request.format == Mime::XML
-
-      # get the current user session from authlogic
-      user_session = UserSession.find
-      user = user_session.nil? ? nil : user_session.user
-      unless user.nil?
+        user
+      else
+        # get the current user session from authlogic
+        user_session = UserSession.find
+        user = user_session.nil? ? nil : user_session.user
 
         # look up the current user from the user session
         # we use a find call to the User class so that we can do eager loading
-        @current_user = User.includes(:assignments).find(user.id)
+        User.includes(:assignments).find(user.id) unless user.nil?
+      end
+    end
 
-        # if we're in admin mode, the current mission is nil and we need to set the user's current mission to nil also
-        if admin_mode?
-          @current_mission = nil
-          @current_user.change_mission!(nil)
-        else
-          # look up the current mission based on the current user
-          @current_mission = @current_user ? @current_user.current_mission : nil
-
-          # save the current mission in the session so we can remember it if the user goes into admin mode
-          session[:last_mission_id] = @current_mission.try(:id)
-        end
+    def get_mission
+      # if we're in admin mode, the current mission is nil and we need to set the user's current mission to nil also
+      if mission_mode?
+        # look up the current mission based on the mission_id
+        @current_mission = Mission.with_compact_name(params[:mission_id])
+        # save the current mission in the session so we can remember it if the user goes into admin mode
+        session[:last_mission_id] = @current_mission.try(:id)
+      else
+        @current_mission = nil
       end
     end
 
@@ -288,7 +260,7 @@ class ApplicationController < ActionController::Base
 
     # get the current user's ability. not cached because it's volatile!
     def current_ability
-      Ability.new(current_user, admin_mode?)
+      Ability.new(:user => current_user, :mode => current_mode, :mission => current_mission)
     end
 
     # resets the Rails session but preserves the :return_to key
