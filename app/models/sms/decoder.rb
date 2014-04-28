@@ -104,7 +104,7 @@ class Sms::Decoder
     end
 
     def current_ability
-      @current_ability ||= Ability.new(:user => @user, :mode => 'm', :mission => @msg.mission)
+      @current_ability ||= Ability.new(:user => @user, :mission => @msg.mission)
     end
 
     # checks if the current @user has permission to submit to form @form and the form mission matches the msg mission, raises an error if not
