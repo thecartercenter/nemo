@@ -7,38 +7,38 @@ class AuthorizationTest < ActionDispatch::IntegrationTest
   end
 
   test "guests can see login page" do
-    assert_can_access(nil, login_path)
+    assert_can_access(nil, '/en/login')
   end
 
   test "user can login and see welcome screen" do
     @user = FactoryGirl.create(:user)
-    assert_can_access(@user, root_path)
+    assert_can_access(@user, '/en')
   end
 
   test "anybody can logout" do
     @user = FactoryGirl.create(:user)
     # even guest can go to the logout page and get a sensible response (reduced confusion if back button used)
-    assert_can_access(nil, logout_path, :redirected_to => logged_out_path)
+    assert_can_access(nil, '/en/logout', :redirected_to => '/en/logged-out')
     # logged in user can logout
-    assert_can_access(@user, logout_path, :redirected_to => logged_out_path)
+    assert_can_access(@user, '/en/logout', :redirected_to => '/en/logged-out')
   end
 
   test "guest redirected to login page with message if unauthorized" do
-    assert_can_access(nil, missions_path(:mode => 'admin'), :redirected_to => login_url)
+    assert_can_access(nil, '/en/admin/missions', :redirected_to => '/en/login')
     assert_select("div.alert-danger", /must login/)
   end
 
   test "user redirected to root if unauthorized" do
-    @user = FactoryGirl.create(:user, :role_name => :observer, :admin => false)
+    @user = FactoryGirl.create(:user, :role_name => :observer)
     login(@user)
-    assert_cannot_access(@user, missions_path(:mode => 'admin'))
+    assert_cannot_access(@user, '/en/admin/missions')
   end
 
   test "coordinator can only view forms for current mission" do
     @user = FactoryGirl.create(:user, :role_name => :coordinator)
     @form1 = FactoryGirl.create(:form, :mission_id => get_mission.id)
     @form2 = FactoryGirl.create(:form, :mission_id => @other_mission.id)
-    assert_can_access(@user, elmo_path(:name => 'forms', :mission => get_mission))
+    assert_can_access(@user, '/en/m/missionwithsettings/forms')
   end
 
   test "observer can update own name" do
@@ -62,25 +62,13 @@ class AuthorizationTest < ActionDispatch::IntegrationTest
     coord = FactoryGirl.create(:user, :role_name => :coordinator)
     obs = FactoryGirl.create(:user, :role_name => :observer)
     login(coord)
+
+    # Get attributes for request to change observer role to staffer.
     assignments_attributes = obs.assignments.first.attributes.slice(*%w(id mission_id)).merge('role' => 'staffer')
-    put(user_path(obs), :user => {:assignments_attributes => [assignments_attributes]})
+
+    put("/en/m/missionwithsettings/users/#{obs.id}", :user => {:assignments_attributes => [assignments_attributes]})
     assert_nil(assigns(:access_denied))
     assert_equal('staffer', obs.reload.assignments.first.role)
-  end
-
-  test "admin with no assignments should not lose current mission on login" do
-    admin = FactoryGirl.create(:user, :admin => true)
-    admin.assignments.destroy_all
-    admin.change_mission!(get_mission)
-    login(admin)
-    assert_equal(get_mission, admin.current_mission)
-  end
-
-  test "admin with no assignments should and no current mission should stay with no current mission" do
-    admin = FactoryGirl.create(:user, :admin => true)
-    admin.assignments.destroy_all
-    login(admin)
-    assert_nil(admin.current_mission)
   end
 
   private
