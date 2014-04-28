@@ -38,7 +38,7 @@ class SettingsController < ApplicationController
 
       unless admin_mode?
         # get external sql from Response class
-        @external_sql = Response.export_sql(Response.accessible_by(current_user.ability))
+        @external_sql = Response.export_sql(Response.accessible_by(current_ability))
       end
 
       # render the template
