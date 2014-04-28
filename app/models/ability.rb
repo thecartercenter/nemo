@@ -25,6 +25,8 @@ class Ability
     @mode = params[:mode]
     @mode ||= 'mission' if @mission
 
+    raise "Mission should be nil if mode is not 'mission'" if mode != 'mission' && !mission.nil?
+
     if user
 
       # anybody can see the welcome page
