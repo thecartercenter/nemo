@@ -23,6 +23,7 @@ class Ability
     @user = params[:user]
     @mission = params[:mission]
     @mode = params[:mode]
+    @mode ||= 'm' if @mission
 
     if user
 
@@ -67,9 +68,9 @@ class Ability
         end
       end
 
-      # user can submit to any form if they can access the form's mission
+      # user can submit to any form if they are admin or can access the form's mission
       can :submit_to, Form do |form|
-        user.accessible_missions.include?(form.mission)
+        user.admin? || user.assignments.detect{|a| a.mission == form.mission}
       end
 
       # all the rest of the permissions require a current mission to be set

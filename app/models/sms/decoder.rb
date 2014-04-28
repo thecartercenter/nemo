@@ -103,9 +103,13 @@ class Sms::Decoder
       raise_decoding_error("user_not_found") unless @user
     end
 
+    def current_ability
+      @current_ability ||= Ability.new(:user => @user, :mode => 'm', :mission => @msg.mission)
+    end
+
     # checks if the current @user has permission to submit to form @form and the form mission matches the msg mission, raises an error if not
     def check_permission
-      raise_decoding_error("form_not_permitted") unless @user.can?(:submit_to, @form) && @form.mission == @msg.mission
+      raise_decoding_error("form_not_permitted") unless current_ability.can?(:submit_to, @form) && @form.mission == @msg.mission
     end
 
     # finds the Questioning object specified by the current value of @rank

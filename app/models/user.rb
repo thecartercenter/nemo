@@ -6,16 +6,13 @@ class User < ActiveRecord::Base
 
   attr_writer(:reset_password_method)
 
-  # allow can? and cannot? to be called directly on user
-  delegate :can?, :cannot?, :to => :ability
-
   has_many(:responses, :inverse_of => :user)
   has_many(:broadcast_addressings, :inverse_of => :user, :dependent => :destroy)
   has_many(:assignments, :autosave => true, :dependent => :destroy, :validate => true, :inverse_of => :user)
   has_many(:missions, :through => :assignments, :order => "missions.created_at DESC")
   has_many :user_groups, :dependent => :destroy
   has_many :groups, :through => :user_groups
-  belongs_to(:current_mission, :class_name => "Mission")
+  belongs_to :current_mission, :class_name => 'Mission'
 
   accepts_nested_attributes_for(:assignments, :allow_destroy => true)
 
@@ -34,7 +31,6 @@ class User < ActiveRecord::Base
   before_validation(:normalize_fields)
   before_destroy(:check_assoc)
   before_validation(:generate_password_if_none)
-  after_save(:rebuild_ability)
 
   validates(:name, :presence => true)
   validates(:pref_lang, :presence => true)
@@ -43,7 +39,6 @@ class User < ActiveRecord::Base
   validate(:password_reset_cant_be_email_if_no_email)
   validate(:no_duplicate_assignments)
   validate(:must_have_assignments_if_not_admin)
-  validate(:ensure_current_mission_is_valid)
   validate(:phone_should_be_unique)
 
   scope(:by_name, order("users.name"))
@@ -57,7 +52,8 @@ class User < ActiveRecord::Base
   self.per_page = 1000000
 
   def self.mission_pre_delete(mission)
-    self.where(current_mission_id: mission).update_all(current_mission_id:nil)
+    # Scrub any references to the mission being deleted.
+    self.where(current_mission_id: mission).update_all(current_mission_id: nil)
   end
 
   def self.random_password(size = 6)
@@ -227,38 +223,6 @@ class User < ActiveRecord::Base
     end
   end
 
-  # returns all missions that the user has access to
-  # caches in case of multiple accesses
-  def accessible_missions
-    @accessible_missions ||= Mission.accessible_by(ability, :switch_to)
-  end
-
-  # if user has no current mission, choose one (if assigned to any)
-  def set_current_mission
-    # ensure no current mission set if the user has no assignments
-    if assignments.empty?
-      # but don't force to nil mission if admin
-      # this is because admins can access any mission and so they should be able to retain what mission they're on
-      change_mission!(nil) unless admin?
-
-    # else if user has no current mission, pick one
-    elsif current_mission.nil?
-      change_mission!(assignments.sorted_recent_first.first.mission)
-    end
-  end
-
-  # changes the user's current mission to the given mission. saves without validating.
-  def change_mission!(mission)
-    self.current_mission = mission
-    save(:validate => false)
-  end
-
-  # builds and returns a CanCan ability class for this user
-  def ability
-    rebuild_ability unless @ability
-    return @ability
-  end
-
   def session_time_left
     SESSION_TIMEOUT - (Time.now - last_request_at)
   end
@@ -315,18 +279,6 @@ class User < ActiveRecord::Base
       end
     end
 
-    # if current mission is not accessible, set to nil
-    def ensure_current_mission_is_valid
-      if !current_mission_id.nil?
-        # the current mission should never be non-nil on a new user
-        raise "current mission can't be set on new user" if new_record?
-
-        # if current mission can't be switched to by self, set it to nil
-        # not sure if this belongs here since change_mission! saves without validating, but leaving it here for now
-        self.current_mission_id = nil unless can?(:switch_to, current_mission)
-      end
-    end
-
     # ensures phone and phone2 are unique
     def phone_should_be_unique
       [:phone, :phone2].each do |field|
@@ -346,12 +298,6 @@ class User < ActiveRecord::Base
     # generates a random password before validation if this is a new record, unless one is already set
     def generate_password_if_none
       reset_password if new_record? && password.blank? && password_confirmation.blank?
-    end
-
-    # the ability object must be rebuilt after saves in case something relevant to abilities changed
-    def rebuild_ability
-      @ability = Ability.new(self)
-      return true
     end
 
     # sets the user's preferred language to the mission default

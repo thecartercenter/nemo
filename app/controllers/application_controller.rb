@@ -252,15 +252,15 @@ class ApplicationController < ActionController::Base
       end
     end
 
-    # gets the missions accessible to the current user, or [] if no current user
-    # sorts result
-    def accessible_missions
-      current_user ? current_user.accessible_missions.sorted_by_name : []
-    end
-
     # get the current user's ability. not cached because it's volatile!
     def current_ability
       Ability.new(:user => current_user, :mode => current_mode, :mission => current_mission)
+    end
+
+    # gets the missions accessible to the current ability, or [] if no current user
+    # sorts result
+    def accessible_missions
+      Mission.accessible_by(current_ability, :switch_to)
     end
 
     # resets the Rails session but preserves the :return_to key
