@@ -280,18 +280,6 @@ class ApplicationController < ActionController::Base
       # reset the perishable token for security's sake
       @user_session.user.reset_perishable_token!
 
-      # pick a mission
-      @user_session.user.set_current_mission
-      @current_mission = @user_session.user.current_mission
-
-      # if no mission, error
-      if @user_session.user.current_mission.nil? && !@user_session.user.admin?
-        flash[:error] = t("activerecord.errors.models.user.no_missions")
-        @user_session.destroy
-        redirect_to(login_url)
-        return false
-      end
-
       return true
     end
 

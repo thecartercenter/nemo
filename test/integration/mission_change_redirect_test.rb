@@ -5,7 +5,6 @@ class MissionChangeRedirectTest < ActionDispatch::IntegrationTest
     @mission1 = FactoryGirl.create(:mission, :name => "Mission1")
     @mission2 = FactoryGirl.create(:mission, :name => "Mission2")
     @user = FactoryGirl.create(:user, :mission => @mission1, :role_name => :coordinator)
-    @user.change_mission!(get_mission)
   end
 
   test "user should not be redirected if on object listing and has permission" do
