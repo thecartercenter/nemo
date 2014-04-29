@@ -5,7 +5,7 @@ class API::V1::AnswerFinder
     data = []
     answers = Answer.joins(:response).where(responses: { form_id: params[:form_id]}).where(questionable_id: params[:question_id])
     answers.where(questionable_id: params[:question_id]).each do |answer|
-      data << { answer_id: answer.id, answer_value: answer.casted_value }
+      data << {answer_id: answer.id, answer_value: answer.casted_value}
     end
     data
   end
