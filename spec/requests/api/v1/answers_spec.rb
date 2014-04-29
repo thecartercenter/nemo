@@ -10,7 +10,6 @@ describe "answers" do
       mission = FactoryGirl.create(:mission, name: "mission1") 
       form = FactoryGirl.create(:form, mission: mission, name: "something")
       q1 = FactoryGirl.create(:question, mission: mission)
-      q2 = FactoryGirl.create(:question, mission: mission)
 
       form.questions << [q1, q2]
       response_obj = FactoryGirl.create(:response, form: form, mission: mission, user: form_user)
