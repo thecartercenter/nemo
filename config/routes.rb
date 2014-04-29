@@ -105,7 +105,7 @@ ELMO::Application.routes.draw do
   scope '(:locale)/:mode/:mission_id', :locale => /[a-z]{2}/, :mode => /m/, :mission_id => /[a-z][a-z0-9]*/ do
     get '/formList' => 'forms#index', :format => 'xml'
     get '/forms/:id' => 'forms#show', :format => 'xml', :as => :form_with_mission
-    post '/submission' => 'responses#create', :format => 'xml'
+    match '/submission' => 'responses#create', :format => 'xml'
   end
 
   root :to => 'welcome#index'

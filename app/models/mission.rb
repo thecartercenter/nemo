@@ -30,8 +30,9 @@ class Mission < ActiveRecord::Base
 
   delegate(:override_code, :to => :setting)
 
+  # Raises ActiveRecord::RecordNotFound if not found.
   def self.with_compact_name(name)
-    where(:compact_name => name).first
+    where(:compact_name => name).first || (raise ActiveRecord::RecordNotFound.new('Mission not found'))
   end
 
   # Override default destory

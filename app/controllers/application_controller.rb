@@ -22,6 +22,7 @@ class ApplicationController < ActionController::Base
       # don't put an error message if the request was for the home page
       flash[:error] = I18n.t("unauthorized.must_login") unless request.path == "/"
       redirect_to_login
+
     # else if there was just a mission change, we need to handle specially
     elsif params[:missionchange]
       # if the request was a CRUD, try redirecting to the index, or root if no permission
@@ -30,6 +31,11 @@ class ApplicationController < ActionController::Base
       else
         redirect_to(mission_root_url)
       end
+
+    # else if this is not an html request, render an empty 401 (unauthorized).
+    elsif !request.format.html?
+      render(:nothing => true, :status => 401)
+
     # else redirect to welcome page with error
     else
       redirect_to(root_url, :flash => { :error => exception.message })
@@ -242,9 +248,12 @@ class ApplicationController < ActionController::Base
 
     def get_mission
       # if we're in admin mode, the current mission is nil and we need to set the user's current mission to nil also
-      if mission_mode?
-        # look up the current mission based on the mission_id
+      if mission_mode? && params[:mission_id].present?
+        # Look up the current mission based on the mission_id.
+        # This will return 404 immediately if the mission was specified but isn't found.
+        # This helps out people typing in the URL (esp. ODK users) by letting them know permission is not an issue.
         @current_mission = Mission.with_compact_name(params[:mission_id])
+
         # save the current mission in the session so we can remember it if the user goes into admin mode
         session[:last_mission_id] = @current_mission.try(:id)
       else

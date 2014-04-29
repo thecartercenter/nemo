@@ -23,13 +23,11 @@ class SettingsTest < ActionDispatch::IntegrationTest
     # login as admin
     login(@admin)
 
-    m = get_mission
-
     # ensure timezone is normal
     assert_not_equal("Brisbane", Time.zone.name)
 
     # update timzeone to something whacky
-    update_timezone_for_setting(m.setting, 'Brisbane')
+    update_timezone_for_setting(get_mission.setting, 'Brisbane')
 
     # ensure timezone is now brisbane
     assert_equal("Brisbane", Time.zone.name)
@@ -42,7 +40,7 @@ class SettingsTest < ActionDispatch::IntegrationTest
     assert_equal('Brisbane', Time.zone.name)
 
     # create a new mission and ensure that a new setting object was created with the default timezone
-    post(missions_path(:admin_mode => 'admin'), :mission => {:name => 'Foo'})
+    post(missions_path(:mode => 'admin'), :mission => {:name => 'Foo'})
     follow_redirect!
     assert_response(:success)
     assert_equal(Setting::DEFAULTS[:timezone], Mission.find_by_name('Foo').setting.timezone)
@@ -53,8 +51,10 @@ class SettingsTest < ActionDispatch::IntegrationTest
   end
 
   test "settings revert to defaults on logout" do
-    # login admin and make sure timezone not default
     login(@admin)
+
+    # Switch to a mission with known funny timezone and make sure timezone not UTC.
+    get(mission_root_path(:mode => 'm', :mission_id => get_mission.compact_name))
     assert_not_equal(Setting::DEFAULTS[:timezone], Time.zone.name)
 
     # logout and ensure timezone reverts to UTC
@@ -65,12 +65,13 @@ class SettingsTest < ActionDispatch::IntegrationTest
   test "locales should get copied properly" do
     get_mission.setting.update_attributes!(:preferred_locales_str => "fr,ar")
     login(@admin)
+    get(mission_root_path(:mode => 'm', :mission_id => get_mission.compact_name))
     assert_equal([:fr, :ar], configatron.preferred_locales)
   end
 
   private
     def update_timezone_for_setting(setting, timezone)
-      put(setting_path(setting), :setting => {:timezone => timezone})
+      put(setting_path(setting, :mode => 'm', :mission_id => setting.mission.compact_name), :setting => {:timezone => timezone})
       follow_redirect!
       assert_response(:success)
     end
