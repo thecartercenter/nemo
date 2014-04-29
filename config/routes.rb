@@ -40,7 +40,7 @@ ELMO::Application.routes.draw do
     end
     resources(:responses)
     resources(:sms, :only => [:index, :create])
-    resources(:sms_tests)
+    resources(:sms_tests, :path => 'sms-tests')
 
     namespace :report  do
       resources :reports
@@ -85,7 +85,7 @@ ELMO::Application.routes.draw do
       end
       post 'export', :on => :collection
     end
-    resources :user_batches
+    resources :user_batches, :path => 'user-batches'
     resources :groups
 
     resources :option_sets, :path => 'option-sets' do

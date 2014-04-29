@@ -1,13 +1,12 @@
 require 'test_helper'
 
-class SmsTestsControllerTest < ActionController::TestCase
-  setup :activate_authlogic
+class SmsConsoleTest < ActionDispatch::IntegrationTest
 
   test "going to the page to create a new sms should succeed" do
     user = get_user
-    assert UserSession.create(user.login)
+    login(user)
 
-    get :new
+    get "/m/#{get_mission.compact_name}/sms-tests/new"
 
     assert_response :success
   end
