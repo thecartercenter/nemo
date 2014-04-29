@@ -95,8 +95,7 @@ class SmsController < ApplicationController
 
   def create
     # get the mission from the params. if not found raise an error (we need the mission)
-    @mission = Mission.find_by_compact_name(params[:mission])
-    raise Sms::Error.new("Mission not specified") if @mission.nil?
+    raise Sms::Error.new("Mission not specified") if current_mission.nil?
 
     # first we need to figure out which provider sent this message, so we shop it around to all the adapters and see if any recognize it
     handled = false
@@ -113,7 +112,7 @@ class SmsController < ApplicationController
           @incomings = @adapter.receive(request)
 
           # we should set the mission parameter in the incoming messages
-          @incomings.each{|m| m.update_attributes(:mission => @mission)}
+          @incomings.each{|m| m.update_attributes(:mission => current_mission)}
 
           # for each sms, decode it and
           # store the sms responses in an instance variable so the functional test can access them

@@ -1,7 +1,7 @@
 require 'test_helper'
 require 'sms_forms_test_helper'
 
-class SmsControllerTest < ActionController::TestCase
+class IncomingSmsTest < ActionDispatch::IntegrationTest
 
   setup do
     @user = get_user
@@ -139,7 +139,8 @@ class SmsControllerTest < ActionController::TestCase
 
     # builds and sends the HTTP POST request to mimic incoming adapter
     def do_post_request(params)
-      req_params = nil
+      req_params = {}
+      req_env = {}
 
       case params[:incoming][:adapter]
       when "Isms"
@@ -160,7 +161,7 @@ class SmsControllerTest < ActionController::TestCase
         }
 
         # set the appropriate user agent header (needed)
-        @request.env["User-Agent"] = "MultiModem iSMS/1.41"
+        req_env["User-Agent"] = "MultiModem iSMS/1.41"
 
       when "IntelliSms"
 
@@ -174,10 +175,7 @@ class SmsControllerTest < ActionController::TestCase
 
       end
 
-      # set the mission parameter that will be picked up and decoded by the controller
-      req_params["mission"] = params[:mission].compact_name
-
       # do the post request
-      post(:create, req_params)
+      post("/m/#{params[:mission].compact_name}/sms", req_params, req_env)
     end
 end
