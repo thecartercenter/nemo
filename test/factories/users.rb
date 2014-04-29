@@ -2,7 +2,6 @@ def get_user
   u = FactoryGirl.create(:user)
 
   # set the mission to get_mission so that ability stuff will work
-  u.current_mission = get_mission
   u.save(:validate => false)
 
   return u

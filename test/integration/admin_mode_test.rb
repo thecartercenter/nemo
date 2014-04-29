@@ -66,22 +66,6 @@ class AdminModeTest < ActionDispatch::IntegrationTest
     assert_select('a.exit_admin_mode')
   end
 
-  test "users current mission and current_mission should be nil in admin mode" do
-    login(@admin)
-    get(mission_root_url(:mode => 'm', :mission_id => get_mission.compact_name))
-    assert_not_nil(@admin.current_mission)
-    assert_not_nil(@controller.current_mission)
-
-    get('/admin')
-    @admin.reload
-    assert_nil(@admin.current_mission)
-    assert_nil(@controller.current_mission)
-  end
-
-  test "mission menu item should only appear in admin mode" do
-
-  end
-
   test "creating a form in admin mode should create a standard form" do
     login(@admin)
     post_via_redirect(forms_path(:mode => 'admin'), {:form => {:name => 'Foo', :smsable => false}})
