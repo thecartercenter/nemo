@@ -38,7 +38,7 @@ class SettingsTest < ActionDispatch::IntegrationTest
   test "settings get created and saved for new mission" do
     # login admin, and set the timezone to something weird
     login(@admin)
-    update_timezone_for_setting(@admin.current_mission.setting, 'Brisbane')
+    update_timezone_for_setting(get_mission.setting, 'Brisbane')
     assert_equal('Brisbane', Time.zone.name)
 
     # create a new mission and ensure that a new setting object was created with the default timezone
@@ -50,21 +50,6 @@ class SettingsTest < ActionDispatch::IntegrationTest
     # change to that mission and see that timezone changed
     change_mission(@admin, Mission.find_by_name('foo'))
     assert_equal(Setting::DEFAULTS[:timezone], Time.zone.name)
-  end
-
-  test "settings for default mission get copied on login" do
-    # set the user's current mission to a mission with a known weird timezone
-    @admin.current_mission = get_mission
-    @admin.save!
-
-    # the @admin's current_mission settings timezone should not be UTC
-    assert_not_equal(Setting::DEFAULTS[:timezone], @admin.current_mission.setting.timezone)
-
-    # login the admin
-    login(@admin)
-
-    # and therefore the current timezone should also not be UTC
-    assert_not_equal(Setting::DEFAULTS[:timezone], Time.zone.name)
   end
 
   test "settings revert to defaults on logout" do
