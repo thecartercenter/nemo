@@ -15,9 +15,16 @@ class API::V1::AnswerFinder
     responses = Form.find(params[:form_id]).responses
     data = []
     responses.each do |resp|
+
+      answers_data = []
       resp.answers.each do |answer|
-        data << {question: answer.question.name, answer: answer.casted_value}
+        answers_data << {question: answer.question.name, answer: answer.casted_value}
       end
+      data << {response: {id: resp.id, 
+                          submitter: resp.user_id, 
+                          created_at: resp.created_at, 
+                          updated_at: resp.updated_at,
+                          answers: answers_data}}      
     end
     data
   end
