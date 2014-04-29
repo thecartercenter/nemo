@@ -5,8 +5,8 @@ ELMO::Application.routes.draw do
       get "/missions/:mission_name/forms", to: "forms#index", as: :misson_forms
       resources :forms, only: :show
       resources :missions, only: :index
-      get "/answers/:mission_name/one", to: "answers#one", as: :one_answer 
-      get "/answers/:mission_name/all", to: "answers#all", as: :all_answers
+      get "/answers/one", to: "answers#one", as: :one_answer 
+      get "/answers/all", to: "answers#all", as: :all_answers
     end
   end
   
