@@ -1,5 +1,5 @@
 <% body = yield %>
-<% ctlr_action_name = "#{controller.route_key}_#{controller.action_name.gsub('update', 'edit').gsub('create', 'new')}" %>
+<% ctlr_action_name = "#{route_key}_#{controller.action_name.gsub('update', 'edit').gsub('create', 'new')}" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -54,7 +54,7 @@
     <% if current_user %>
       <% unless admin_mode? %>
         <%# current mission and dropdown, if there are choices %>
-        <% unless accessible_missions.empty? %>
+        <% unless @accessible_missions.empty? %>
         <% else %>
           <strong><%= current_mission ? current_mission.name : t("common.none") %></strong>
         <% end %>

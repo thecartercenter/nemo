@@ -1,4 +1,5 @@
 class PasswordResetsController < ApplicationController
+
   # don't need to authorize for any of these because they're for logged out users
   skip_authorization_check
 

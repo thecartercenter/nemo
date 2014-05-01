@@ -1,5 +1,6 @@
 class FormsController < ApplicationController
   include StandardImportable
+  include BatchProcessable
   helper OdkHelper
 
   # special find method before load_resource

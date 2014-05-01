@@ -1,4 +1,5 @@
 class UserSessionsController < ApplicationController
+
   # don't need to authorize here (except for destroy action) because anyone can see log in page
   skip_authorization_check
 

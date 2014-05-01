@@ -1,4 +1,6 @@
 class UsersController < ApplicationController
+  include BatchProcessable
+
   # special find method before load_resource
   before_filter :build_user_with_proper_mission, :only => [:new, :create]
 

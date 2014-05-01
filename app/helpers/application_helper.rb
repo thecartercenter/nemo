@@ -29,6 +29,12 @@ module ApplicationHelper
     :'condition.base' => true
   }
 
+  # hackish way of getting the route key identical to what would be returned by model_name.route_key on a model
+  # Should consider merging with ApplicationController's model_class at some point.
+  def route_key
+    controller.class.name.underscore.gsub("/", "_").gsub(/_controller$/, "")
+  end
+
   # pairs flash errors with bootstrap styling
   def bootstrap_flash_class(level)
     case level

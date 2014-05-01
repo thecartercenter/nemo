@@ -73,7 +73,7 @@ class WelcomeController < ApplicationController
     end
 
     # render without layout if ajax request
-    render(:layout => !ajax_request?)
+    render(:layout => !request.xhr?)
   end
 
    # map info window

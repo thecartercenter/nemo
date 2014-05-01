@@ -20,7 +20,11 @@ module ELMO
     # -- all .rb files in that directory are automatically loaded.
 
     # add concerns folders to autoload paths
-    config.autoload_paths += ["#{config.root}/app/controllers/concerns", "#{config.root}/app/models/concerns"]
+    config.autoload_paths += [
+      "#{config.root}/app/controllers/concerns",
+      "#{config.root}/app/controllers/concerns/application_controller",
+      "#{config.root}/app/models/concerns"
+    ]
 
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named.
