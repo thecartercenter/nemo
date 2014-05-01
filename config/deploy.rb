@@ -7,7 +7,7 @@
 
 require 'bundler/capistrano'
 
-set :stages, %w(master staging demo)
+set :stages, %w(master staging demo staging-api)
 set :default_stage, "staging"
 require "capistrano/ext/multistage"
 
