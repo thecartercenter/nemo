@@ -44,7 +44,7 @@ class PasswordResetsController < ApplicationController
       flash[:success] = t("password_reset.success")
 
       # use redirect_back_or_default to preserve the original path, if appropriate
-      redirect_back_or_default(root_url)
+      redirect_back_or_default(basic_root_url)
     else
       @user.password = nil
       @user.password_confirmation = nil

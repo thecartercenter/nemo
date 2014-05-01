@@ -43,7 +43,7 @@ module Concerns::ApplicationController::ErrorHandling
 
     # else redirect to welcome page with error
     else
-      redirect_to(root_url, :flash => { :error => exception.message })
+      redirect_to(basic_root_url, :flash => { :error => exception.message })
     end
   end
 end

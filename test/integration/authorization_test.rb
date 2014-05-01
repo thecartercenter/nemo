@@ -92,7 +92,7 @@ class AuthorizationTest < ActionDispatch::IntegrationTest
     def assert_cannot_access(user, path, options = {})
       login(user) if user
       get(path)
-      assert_redirected_to(root_url)
+      assert_redirected_to('/en')
       assert_match(flash[:error], /not authorized/)
     end
 end

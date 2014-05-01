@@ -19,13 +19,6 @@ module Report::ReportsHelper
     end
   end
 
-  def view_report_report_mini_form
-    form_tag(root_url) do
-      select_tag(:rid, sel_opts_from_objs(@reports, :tags => true), :prompt => t("report/report.choose_report"),
-        :onchange => "window.location.href = Utils.build_path('report', 'reports', this.options[this.selectedIndex].value)")
-    end
-  end
-
   # converts the given report to CSV format
   def report_to_csv(report)
     CSV.generate do |csv|
