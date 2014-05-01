@@ -1,6 +1,10 @@
 module Concerns::ApplicationController::Routing
   extend ActiveSupport::Concern
 
+  def check_route
+    raise "params[:mission_id] not allowed in #{current_mode} mode" if !mission_mode? && params[:mission_id].present?
+  end
+
   def default_url_options(options={})
     { :locale => I18n.locale, :mode => params[:mode], :mission_id => current_mission.try(:compact_name) }
   end
