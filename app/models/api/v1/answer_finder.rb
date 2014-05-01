@@ -11,7 +11,6 @@ class API::V1::AnswerFinder
   end
 
   def self.for_all(params)
-    # still WIP 
     responses = Form.find(params[:form_id]).responses
     data = []
     responses.each do |resp|
@@ -30,3 +29,4 @@ class API::V1::AnswerFinder
   end
  
 end
+
