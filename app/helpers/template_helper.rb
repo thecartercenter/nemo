@@ -1,8 +1,8 @@
 module TemplateHelper
 
-	# gets html for profile icon, username, and role in header
+  # gets html for profile icon, username, and role in header
   def profile_link
-		# if not in admin mode, show mission and role info
+    # if not in admin mode, show mission and role info
     if !admin_mode?
       # get current role
       if current_mission
