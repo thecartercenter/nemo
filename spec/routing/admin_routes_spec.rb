@@ -19,4 +19,8 @@ describe 'router' do
   it 'rejects missions index in mission mode' do
     { :get => '/en/m/mission123/missions' }.should_not be_routable
   end
+
+  it 'rejects mission id in admin mode' do
+    { :get => '/en/admin/mission123/missions' }.should_not be_routable
+  end
 end
