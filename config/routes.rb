@@ -6,11 +6,11 @@ ELMO::Application.routes.draw do
   #####################################
   # Basic routes (neither mission nor admin mode)
   scope '(:locale)', :locale => /[a-z]{2}/ do
-    resources(:password_resets)
-    resource(:user_session)
+    resources :password_resets
+    resource :user_session
 
     # For viewing/editing user profiles, which is neither mode
-    resources(:users, :only => %w(show edit update))
+    resources :users, :only => %w(show edit update)
 
     # login/logout shortcuts
     get '/logged-out' => 'user_sessions#logged_out', :as => :logged_out
@@ -38,9 +38,9 @@ ELMO::Application.routes.draw do
         post 'new_with_users', :path => 'new-with-users'
       end
     end
-    resources(:responses)
-    resources(:sms, :only => [:index, :create])
-    resources(:sms_tests, :path => 'sms-tests')
+    resources :responses
+    resources :sms, :only => [:index, :create]
+    resources :sms_tests, :path => 'sms-tests'
 
     namespace :report  do
       resources :reports
@@ -94,7 +94,7 @@ ELMO::Application.routes.draw do
 
     # import routes for standardizeable objects
     %w(forms questions option_sets).each do |k|
-      post("/#{k.gsub('_', '-')}/import-standard" => "#{k}#import_standard", :as => "import_standard_#{k}")
+      post "/#{k.gsub('_', '-')}/import-standard" => "#{k}#import_standard", :as => "import_standard_#{k}"
     end
 
     # special route for option suggestions
