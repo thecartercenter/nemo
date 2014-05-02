@@ -2,11 +2,12 @@ ELMO::Application.routes.draw do
 
   namespace :api, defaults: { format: :json } do
     api_version(:module => "v1", :path => {:value => "v1"}) do
-      match "/missions/:mission_name/forms" => "forms#index"
+      get "/missions/:mission_name/forms", to: "forms#index", as: :misson_forms
+      resources :forms, only: :show
       resources :missions, only: :index 
     end
   end
-
+  
   # redirects for ODK
   # shortened (/m)
   match "/m/:mission_compact_name/formList" => 'forms#index', :format => :xml
