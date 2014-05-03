@@ -72,7 +72,7 @@ gem 'spinjs-rails'
 
 group :development do
   gem 'rails-erd'                     # generat with:  DIAGRAM=true rake db:migrate
-  gem 'capistrano'                    # deployment
+  gem 'capistrano', '~> 2.15.4'       # deployment
   gem 'bullet'                        # query optimization
 end
 

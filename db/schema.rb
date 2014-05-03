@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140424005231) do
+ActiveRecord::Schema.define(:version => 20140503160249) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -94,6 +94,13 @@ ActiveRecord::Schema.define(:version => 20140424005231) do
   add_index "conditions", ["questioning_id"], :name => "conditions_questioning_id_fk"
   add_index "conditions", ["ref_qing_id"], :name => "conditions_ref_qing_id_fk"
   add_index "conditions", ["standard_id"], :name => "index_conditions_on_standard_id"
+
+  create_table "form_api_users", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "form_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "form_versions", :force => true do |t|
     t.integer  "form_id"
@@ -414,6 +421,14 @@ ActiveRecord::Schema.define(:version => 20140424005231) do
   add_index "users", ["current_mission_id"], :name => "users_current_mission_id_fk"
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
   add_index "users", ["login"], :name => "index_users_on_login", :unique => true
+
+  create_table "whitelists", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "whitelistable_id"
+    t.string   "whitelistable_type"
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
+  end
 
   add_foreign_key "assignments", "missions", name: "assignments_mission_id_fk"
   add_foreign_key "assignments", "users", name: "assignments_user_id_fk"
