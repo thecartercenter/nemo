@@ -41,6 +41,7 @@ class FormsController < ApplicationController
 
   def new
     @form.access_level = AccessLevel::PRIVATE
+    @users = User.all
     prepare_and_render_form
   end
 
@@ -219,6 +220,7 @@ class FormsController < ApplicationController
     # prepares objects and renders the form template
     def prepare_and_render_form
       # render the form template
+      @users = User.all
       render(:form)
     end
 

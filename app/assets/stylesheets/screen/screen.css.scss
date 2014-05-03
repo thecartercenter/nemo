@@ -275,6 +275,12 @@ body.reports {
   }
 }
 
+#api_users_scrollbox {
+  scroll: auto;
+  height: 100px;
+  width: 300px;
+}
+
 /* dont show the printable title */
 div.sms_guide h1.printable { display: none; }
 div.sms_guide { max-width: 900px; }

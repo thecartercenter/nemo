@@ -15,6 +15,7 @@
         <%= f.field(:allow_incomplete, :type => :check_box) unless admin_mode? %>
         <%= f.field(:published, :type => :check_box, :read_only => true) unless @form.new_record? %>
         <%= f.field(:access_level, :type => :select, :options => AccessLevel.option_list ) %>
+        <%= render 'shared/api_user_list' %>
       <% end %>
 
       <%= f.field(:version, :content => @form.version_with_code) unless @form.new_record? %>

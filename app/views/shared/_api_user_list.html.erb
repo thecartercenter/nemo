@@ -1,0 +1,9 @@
+<h3>Select users</h3>
+
+<div id="api_users_scrollbox">
+  <% @users.each do |user| %>
+    <li>
+    <%= check_box_tag "api_user[]", user.id %>
+    <%= user.name %></li>
+  <% end %>
+</div>
