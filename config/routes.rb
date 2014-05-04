@@ -4,7 +4,9 @@ ELMO::Application.routes.draw do
     api_version(:module => "v1", :path => {:value => "v1"}) do
       get "/missions/:mission_name/forms", to: "forms#index", as: :misson_forms
       resources :forms, only: :show
-      resources :missions, only: :index 
+      resources :missions, only: :index
+      resources :responses, only: :index   
+      resources :answers, only: :index
     end
   end
   
