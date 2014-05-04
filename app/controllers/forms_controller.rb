@@ -212,6 +212,7 @@ class FormsController < ApplicationController
   private
 
     def update_api_users
+      return unless params[:access_level] == AccessLevel::PROTECTED
       @form.whitelist_users.destroy
       params[:whitelist_users].each do |api_user|
         @form.whitelist_users.create(user_id: api_user)

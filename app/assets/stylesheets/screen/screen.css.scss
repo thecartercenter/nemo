@@ -276,9 +276,14 @@ body.reports {
 }
 
 #api_users_scrollbox {
-  scroll: auto;
+  display: none;
+  overflow-y: scroll;
   height: 100px;
-  width: 300px;
+  width: 420px;
+  margin-left: 200px;
+  .checkbox_row {
+    margin-bottom: 5px;
+  }
 }
 
 /* dont show the printable title */
