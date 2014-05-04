@@ -1,0 +1,31 @@
+require "spec_helper"
+require "support/shared_context"
+
+describe "responses" do
+
+  context "when getting for one form" do
+
+    include_context "mission_response_two_questions_with_answers"
+
+    before do
+      get api_v1_responses_path, @params, {'HTTP_AUTHORIZATION' => "Token token=#{@api_user.api_key}"}
+      @answers_array = parse_json(response.body)
+    end
+
+    it "should return array of one responses" do
+      expect(@answers_array.size).to eq 1
+    end
+
+    it "should contain two questions" do
+      expect(@answers_array.first[:response][:answers].first[:question]).to eql @a1.question.name
+      expect(@answers_array.first[:response][:answers].first[:question]).to eql @a2.question.name
+    end
+
+    it "should contain two answers" do
+      expect(@answers_array.first[:response][:answers].first[:answer]).to eql @a1.casted_value
+      expect(@answers_array.first[:response][:answers].last[:answer]).to eql @a2.casted_value
+    end
+
+  end
+
+end

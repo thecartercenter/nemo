@@ -12,12 +12,6 @@ class API::V1::FormsController < API::V1::BaseController
   def show
     @form = Form.includes(:questions).where(id: params[:id]).where(:questionables => { access_level: AccessLevel::PUBLIC }).first
     render :json => @form.to_json(only: [:id, :name, :created_at, :updated_at],
-                                  include: { questions: { only: [:id, :_name] } } )
+                                  include: { questions: { methods: :name, only: :id } } )
   end
 end
-
-
-
-
-
-

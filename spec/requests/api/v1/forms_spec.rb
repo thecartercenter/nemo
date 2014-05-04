@@ -42,8 +42,8 @@ describe "accessing forms" do
       expect(@form_json[:questions].size).to eq 2
     end
 
-    it "should include question field _name" do
-      expect(@form_json[:questions].first.keys.include?(:_name)).to be_true
+    it "should include question field name" do
+      expect(@form_json[:questions].first.keys.include?(:name)).to be_true
     end
 
   end
