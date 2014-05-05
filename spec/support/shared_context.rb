@@ -3,7 +3,6 @@
 shared_context "api_user_and_mission" do
   
   before(:each) do
-
     @api_user = FactoryGirl.create(:user)
     @form_user = FactoryGirl.create(:user)
     @mission = FactoryGirl.create(:mission, name: "mission1") 

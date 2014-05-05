@@ -19,7 +19,7 @@ class Form < ActiveRecord::Base
   before_create(:init_downloads)
 
   scope(:published, where(:published => true))
-  scope(:with_questionings, includes(
+  scope(:with_questionings, includes( 
     :questionings => [
       :form,
       {:question => {:option_set => :options}},
