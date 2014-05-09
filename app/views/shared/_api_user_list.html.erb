@@ -1,32 +1,18 @@
-<script>
-$( document ).ready(function() {
-  // TODO: Move to js file
-  // Should go in the javascripts files.. but I am not sure which one is best. Move later!
-   $("#form_access_level").change(function(){
-    if ($(this).val() == "3") {
-      $("#api_users_scrollbox").show();
-    } else {
-      $("#api_users_scrollbox").hide();
-    }
-   });
-});
-</script>
-<div class="label_and_control">
-  <label class="main"></label>
-  <div class="control">
-    <div class="widget">
 
-      <div id="api_users_scrollbox">
-        <p>Select all users who can access form data via the API:
-        </p>
-        <% @users.each do |user| %>
-          <div class="checkbox_row">
-            <%= check_box_tag "whitelist_users[]", user.id, @form.whitelist_users.pluck(:user_id).include?(user.id)  %>
-            <%= user.name %>
-          </div>
-        <% end %>
+
+<div id="api-users">
+  <p><%= t("form.select_api_users") %></p>
+  <div id="api-users-scrollbox">
+    <% @users.each do |user| %>
+      <div class="checkbox-row">
+        <%= check_box_tag "whitelist_users[]", user.id, @form.whitelist_users.pluck(:user_id).include?(user.id)  %>
+        <%= user.name %>
       </div>
-
-    </div>
+    <% end %>
   </div>
 </div>
+
+
+<%= javascript_doc_ready do %>
+  ApiUserList.hookup_protected_change_event();
+<% end %>

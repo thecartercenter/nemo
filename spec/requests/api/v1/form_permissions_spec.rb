@@ -16,7 +16,7 @@ describe "protected form" do
   end
 
   it "form has one user with access" do
-    expect(@form.whitelist_users.size).to eq 1 
+    expect(@form.whitelist_users.size).to eql 1 
   end
 
   context "checking api key" do

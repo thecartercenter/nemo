@@ -99,7 +99,7 @@ class FormsController < ApplicationController
       update_api_users
       # save basic attribs
       @form.assign_attributes(params[:form])
-      
+
       # check special permissions
       authorize!(:rename, @form) if @form.name_changed?
 
@@ -228,7 +228,7 @@ class FormsController < ApplicationController
     # prepares objects and renders the form template
     def prepare_and_render_form
       # render the form template
-      @users = User.limit(5)
+      @users = User.all
       render(:form)
     end
 

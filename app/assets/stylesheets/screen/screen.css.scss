@@ -275,14 +275,18 @@ body.reports {
   }
 }
 
-#api_users_scrollbox {
+#api-users {
   display: none;
-  overflow-y: scroll;
-  height: 100px;
-  width: 420px;
   margin-left: 200px;
-  .checkbox_row {
-    margin-bottom: 5px;
+  #api-users-scrollbox {
+    border: 1px solid #dddddd;
+    padding: 4px;
+    overflow-y: scroll;
+    height: 150px;
+    width: 420px;
+    .checkbox-row {
+      margin-bottom: 7px;
+    }
   }
 }
 
