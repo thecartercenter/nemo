@@ -265,6 +265,10 @@ class Form < ActiveRecord::Base
     save(:validate => false) if options[:save]
   end
 
+  def has_white_listed_user?(user_id)
+    whitelist_users.where(user_id: user_id).exists?
+  end 
+
   private
     def init_downloads
       self.downloads = 0

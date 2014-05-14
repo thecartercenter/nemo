@@ -827,7 +827,6 @@ en:
     summary: "Summary"
     top_forms: "Top Forms"
 
-
   data_integrity:
     appears_elsewhere_warnings:
       by_type:
@@ -882,7 +881,6 @@ en:
     unpublish_form: "Unpublish Form"
     unsaved_rank_notice: "You have not yet saved the changes you made to the Question order. You should click the 'Save' button if you want to save these changes."
     view_sms_guide: "View SMS Guide"
-
 
   incomplete_response:
     missing_answers:
