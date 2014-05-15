@@ -4,7 +4,7 @@
 (function(ns, klass) {
 
   // constructor
-  ns.UserForm = klass = function(params) { var self = this;
+  ns.ApiUserForm = klass = function(params) { var self = this;
     self.params = params;
 
     // hookup suggest login button

@@ -827,7 +827,6 @@ en:
     summary: "Summary"
     top_forms: "Top Forms"
 
-
   data_integrity:
     appears_elsewhere_warnings:
       by_type:
@@ -853,6 +852,7 @@ en:
       odk: "Such changes will not disable Responses from ODK, but may cause some data loss and/or Responses that are not valid (e.g. missing required answers)."
 
   form:
+    select_api_users: "Select all users who can access form data via the API:"
     add_questions: "Add Questions"
     add_selected: "Add Selected Questions to Form"
     back_to_questions: "Back to Questions List"

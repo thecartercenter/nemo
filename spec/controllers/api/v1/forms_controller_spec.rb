@@ -3,13 +3,18 @@ require 'spec_helper'
 describe API::V1::FormsController do
 
   context "when user has access" do
+    before do
+      @api_user = FactoryGirl.create(:user)
+      controller.should_receive(:authenticate_token).and_return(@api_user)
+    end
+
     context "views a mission and all forms" do
       before do
         @mission = FactoryGirl.create(:mission, name: "mission1")
         @form1 = @mission.forms.create(name: "test1")
         @form2 = @mission.forms.create(name: "test2")
-        api_user = FactoryGirl.create(:user)
-        controller.should_receive(:authenticate_token).and_return(api_user)
+        @protected_forms = Form.create(name: "protected", access_level: AccessLevel::PROTECTED)
+        controller.stub(:protected_forms).and_return([@protected_forms])
       end
 
       it "should return status of 200" do
@@ -26,10 +31,7 @@ describe API::V1::FormsController do
     context "views meta data on a particular form" do
       before do
         @mission = FactoryGirl.create(:mission, name: "mission1")
-        @form = @mission.forms.create(name: "test1", name: "a test form")
-
-        api_user = FactoryGirl.create(:user)
-        controller.should_receive(:authenticate_token).and_return(api_user)
+        @form = @mission.forms.create(name: "test1" )
       end
 
       it "should find a form" do
