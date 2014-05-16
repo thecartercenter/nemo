@@ -92,6 +92,11 @@ en:
     title: "Title"
     type: "Type"
     value: "Value"
+    
+  api_levels:
+    level_1: Public
+    level_2: Private
+    level_3: Protected
 
   # general error messages (there are others under activerecord.errors)
   errors:

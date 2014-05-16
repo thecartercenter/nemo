@@ -22,6 +22,8 @@ GEM
       rack-cache (~> 1.2)
       rack-test (~> 0.6.1)
       sprockets (~> 2.2.1)
+    active_model_serializers (0.8.1)
+      activemodel (>= 3.0)
     activemodel (3.2.17)
       activesupport (= 3.2.17)
       builder (~> 3.0.0)
@@ -36,6 +38,7 @@ GEM
     activesupport (3.2.17)
       i18n (~> 0.6, >= 0.6.4)
       multi_json (~> 1.0)
+    api-pagination (3.0.1)
     arel (3.0.3)
     authlogic (3.3.0)
       activerecord (>= 3.2)
@@ -224,6 +227,8 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  active_model_serializers
+  api-pagination
   authlogic (= 3.3.0)
   awesome_print
   bluecloth

@@ -1,3 +1,4 @@
+require 'will_paginate/array' 
 class API::V1::FormsController < API::V1::BaseController
   respond_to :json
 
@@ -5,8 +6,7 @@ class API::V1::FormsController < API::V1::BaseController
     if params[:mission_name].present?
       @mission = Mission.where(:compact_name => params[:mission_name]).first
       forms = @mission.forms.where(access_level: AccessLevel::PUBLIC).order(:name)
-      render :json => (forms + protected_forms).to_json(:only => [:id, :name, :responses_count, :created_at, :updated_at])
-
+      paginate :json => (forms + protected_forms)
     end
   end
 
@@ -19,6 +19,10 @@ class API::V1::FormsController < API::V1::BaseController
   private
 
   def protected_forms
-    Form.joins(:whitelist_users).where(whitelists: {user_id: @api_user.id}).order(:name) 
+    @mission.forms.joins(:whitelist_users).where(whitelists: {user_id: @api_user.id}).order(:name) 
+  end
+
+  def default_serializer_options
+    {root: false}
   end
 end
