@@ -170,6 +170,11 @@ class Ability
           cannot :index, Questioning
         end
       end
+
+      # Can't change own assignments
+      cannot :change_assignments, User, ["id = ?", user.id] do |other_user|
+        user.id == other_user.id
+      end
     end
 
     ###############
