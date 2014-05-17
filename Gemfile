@@ -16,12 +16,14 @@ gem 'rake'
 gem 'mysql2', '>= 0.3.15' #was '~> 0.3.12b5' # beta version needed for sphinx
 gem 'will_paginate'
 gem 'will_paginate-bootstrap'
+gem 'api-pagination'    
 gem 'configatron'
 gem 'libxml-ruby'
 gem 'rdiscount'
 gem 'jquery-rails'
 gem 'random_data'
-gem 'versionist'        # versioning the api
+gem 'versionist'                 # versioning the api
+gem 'active_model_serializers'   # for making it easy to customize output for api 
 
 # Ckeditor integration gem for rails http://ckeditor.com/
 gem 'ckeditor'
