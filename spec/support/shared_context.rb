@@ -6,7 +6,7 @@ shared_context "api_user_and_mission" do
     @api_user = FactoryGirl.create(:user)
     @form_user = FactoryGirl.create(:user)
     @mission = FactoryGirl.create(:mission, name: "mission1") 
-    @form = FactoryGirl.create(:form, mission: @mission, name: "something")  
+    @form = FactoryGirl.create(:form, mission: @mission, name: "something", access_level: AccessLevel::PUBLIC)  
   end
 
 end
@@ -38,6 +38,27 @@ shared_context "mission_form_and_two_responses_answered" do
 
   before(:each) do
     @q1 = FactoryGirl.create(:question, mission: @mission)
+
+    @form.questions << [@q1]
+
+    response_obj = FactoryGirl.create(:response, form: @form, mission: @mission, user: @form_user)
+    @a1 = FactoryGirl.create(:answer, response: response_obj, questioning_id: @q1.id, value: 10)
+
+    response_obj = FactoryGirl.create(:response, form: @form, mission: @mission, user: @form_user)
+    @a2 = FactoryGirl.create(:answer, response: response_obj, questioning_id: @q1.id, value: 20)
+
+    @params = {form_id: @form.id, question_id: @q1.id}
+
+  end
+
+end
+
+shared_context "mission_form_one_private_question" do
+  
+  include_context "api_user_and_mission"
+
+  before(:each) do
+    @q1 = FactoryGirl.create(:question, mission: @mission, access_level: AccessLevel::PRIVATE)
 
     @form.questions << [@q1]
 

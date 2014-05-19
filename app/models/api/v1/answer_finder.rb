@@ -1,17 +1,24 @@
 class API::V1::AnswerFinder
 
   def self.for_one(params)
-    responses = Form.find(params[:form_id]).responses
+    return [] if self.form_with_permissions(params[:form_id]).blank?
     data = []
-    answers = Answer.joins(:response).where(responses: {form_id: params[:form_id]}).where(questionable_id: params[:question_id])
+    answers = Answer.joins(:response).
+                     where(responses: {form_id: params[:form_id]}).
+                     where(questionable_id: params[:question_id])
     answers.where(questionable_id: params[:question_id]).each do |answer|
-      data << {answer_id: answer.id, answer_value: answer.casted_value}
+      # Grab only the questions that are public or have nil access_level
+      if [nil, AccessLevel::PUBLIC].include?(answer.question.access_level)
+        data << {answer_id: answer.id, answer_value: answer.casted_value}
+      end
     end
     data
   end
 
   def self.for_all(params)
-    responses = Form.find(params[:form_id]).responses
+    @form = self.form_with_permissions(params[:form_id])
+    return [] if @form.blank?
+    responses = @form.responses
     data = []
     responses.each do |resp|
 
@@ -27,19 +34,10 @@ class API::V1::AnswerFinder
     end
     data
   end
-  
-  private 
 
-  def protected_and_allowed(form) 
-    form_protected?(form) && user_allowed?(form)
+  def self.form_with_permissions(form_id)
+    # This allows for protected and public forms
+    # Todo: check for protected form allowed by api user  
+    Form.where(:id => form_id).where("access_level != ?", AccessLevel::PRIVATE).first
   end
-
-  def form_protected?(form)
-    form.access_level == AccessLevel::PROTECTED     
-  end
-
-  def user_allowed?(form)
-    form.whitelist_users.pluck(:user_id).include?(@api_user.id)
-  end
-
 end
