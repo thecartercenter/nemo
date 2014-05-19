@@ -32,6 +32,27 @@ shared_context "mission_response_two_questions_with_answers" do
 
 end
 
+shared_context "mission_response_two_private_questions_with_answers" do
+  
+  include_context "api_user_and_mission"
+
+  before(:each) do
+
+    @q1 = FactoryGirl.create(:question, mission: @mission, access_level: AccessLevel::PRIVATE)
+    @q2 = FactoryGirl.create(:question, mission: @mission, access_level: AccessLevel::PRIVATE)
+
+    @form.questions << [@q1, @q2]
+
+    # response with 2 answers
+    response_obj = FactoryGirl.create(:response, form: @form, mission: @mission, user: @form_user)
+    @a1 = FactoryGirl.create(:answer, response: response_obj, questioning_id: @q1.id, value: 10)
+    @a2 = FactoryGirl.create(:answer, response: response_obj, questioning_id: @q2.id, value: 20)
+    @params = {form_id: @form.id}
+
+  end
+
+end
+
 shared_context "mission_form_and_two_responses_answered" do
   
   include_context "api_user_and_mission"

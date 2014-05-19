@@ -16,21 +16,27 @@ class API::V1::AnswerFinder
   end
 
   def self.for_all(params)
-    @form = self.form_with_permissions(params[:form_id])
-    return [] if @form.blank?
-    responses = @form.responses
+    form = self.form_with_permissions(params[:form_id])
+    return [] if form.blank?
+
     data = []
-    responses.each do |resp|
+    form.responses.each do |resp|
 
       answers_data = []
       resp.answers.each do |answer|
-        answers_data << {question: answer.question.name, answer: answer.casted_value}
+        # Grab only the questions that are public or have nil access_level
+
+        if [nil, AccessLevel::PUBLIC].include?(answer.question.access_level)
+          answers_data << {question: answer.question.name, answer: answer.casted_value}
+        end
       end
-      data << {response:{id: resp.id, 
-                         submitter: resp.user_id, 
-                         created_at: resp.created_at, 
-                         updated_at: resp.updated_at,
-                         answers: answers_data}}      
+      unless answers_data.empty?
+        data << {response:{id: resp.id, 
+                           submitter: resp.user_id, 
+                           created_at: resp.created_at, 
+                           updated_at: resp.updated_at,
+                           answers: answers_data}}
+      end      
     end
     data
   end
