@@ -1,0 +1,65 @@
+/* user login instructions */
+#login_instructions td.name { width: 100px; }
+#login_instructions td.value { font-weight: bold; width: 300px; }
+
+/* user edit */
+form.user_form {
+
+  input#user_login {
+    width: 357px;
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  input#login_suggest_button {
+    margin-left: 10px;
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  textarea#user_notes {
+    height: 100px;
+  }
+
+  div.form_field#assignments {
+
+    div.item {
+      padding: 2px 0;
+    }
+
+    div.assignment, div.assignment_header {
+      display: inline-block;
+      min-height: 20px;
+
+      > div {
+        display: inline-block;
+        padding-right: 10px;
+      }
+
+      div.mission {
+        width: 150px;
+
+        select {
+          width: 145px;
+        }
+      }
+
+      div.role {
+        width: 120px;
+
+        select {
+          width: 115px;
+        }
+      }
+
+      div.active {
+        width: 75px;
+      }
+    }
+
+    div.assignment_header {
+      font-size: 11px;
+      color: #aaa;
+    }
+  }
+}

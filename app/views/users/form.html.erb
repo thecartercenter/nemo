@@ -1,40 +1,57 @@
 <%# special title if user is editing self %>
-<% if @user == current_user %>
-  <% @title = t("page_titles.users.edit_profile") %>
-<% else %>
-  <% @title_args = {:name => @user.name} %>
-<% end %>
+<% @title_args = {:name => @user.name} %>
+<% @title = t("page_titles.users.#{form_mode}_profile", :name => @user.name) if @user == current_user %>
 
-<%= flash_and_form_errors(@user) %>
+<%= elmo_form_for(@user) do |f| %>
 
-<%= nice_form_for(@user) do |f| %>
-  <%= form_field(f, :name, :required => true) %>
-  <%= form_field(f, :login, :required => true, :partial => "login_name_field") %>
-  <%= form_field(f, :email) %>
-  <%= form_field(f, :phone, :size => 20) %>
-  <%= form_field(f, :phone2, :size => 20) %>
-  <%= form_field(f, :admin, :type => :check_box) if can?(:adminify, @user) && admin_mode? %>
+  <%= f.field(:name, :required => true) %>
+  <%= f.field(:login, :required => true, :partial => "login_name_field") %>
+  <%= f.field(:email) %>
+  <%= f.field(:phone) %>
+  <%= f.field(:phone2) %>
+  <%= f.field(:admin, :type => :check_box) if can?(:adminify, @user) && admin_mode? %>
 
-  <% if can?(:change_assignments, @user) %>
-    <%# field name depends on whether we're in admin mode or not. under the hood it's all the same though %>
-    <%= form_field(f, admin_mode? ? :assignments : :role, :partial => "assignments") %>
-  <% end %>
+  <%# field name depends on whether we're in admin mode or not. under the hood it's all the same though %>
+  <%= f.field(admin_mode? ? :assignments : :role, :partial => "assignments",
+    :required => !admin_mode?, :read_only => cannot?(:change_assignments, @user)) %>
 
-  <%= form_field(f, :pref_lang, :type => :select, :options => configatron.full_locales.map{|l| [language_name(l), l]}) %>
+  <%= f.field(:pref_lang, :type => :select, :options => configatron.full_locales.map{|l| [language_name(l), l]}) %>
 
-  <%= form_field(f, :notes, :type => :textarea) %>
+  <%= f.field(:notes, :type => :textarea) %>
 
-  <% unless f.mode == :show %>
+  <% unless form_mode == :show %>
+
+    <%# allow to change password if editing profile %>
     <% if @user == current_user %>
-      <%= form_field(f, :password, :type => :password) %>
-      <%= form_field(f, :password_confirmation, :type => :password) %>
+
+      <%= f.field(:password, :type => :password) %>
+      <%= f.field(:password_confirmation, :type => :password) %>
+
+    <%# else allow password reset %>
     <% else %>
+
       <% verb = @user.new_record? ? "choose" : "reset" %>
       <% label = t("user.reset_password_label_" + verb) %>
-      <% details = t("user.reset_password_details_" + verb) + " " + t("user.reset_password_details_ending", :verb => t("common." + verb).downcase) %>
-      <%= form_field(f, :reset_password_method, :label => label, :details => details, :partial => "reset_password_method") %>
+      <% hint = t("user.reset_password_hint_" + verb) + " " + t("user.reset_password_hint_ending", :verb => t("common." + verb).downcase) %>
+      <%= f.field(:reset_password_method, :label => label, :hint => hint, :partial => "reset_password_method") %>
+
     <% end %>
   <% end %>
+  <%= f.field(:api_key, :read_only => true) %>
+  <div class="submit-buttons">
+    <%= f.submit(:class => "btn btn-primary") %>
+  </div>
 
-  <%= form_submit_button(f, :label => :save) %>
+<% end %>
+
+<%= javascript_doc_ready do %>
+  new ELMO.Views.UserForm({
+    <% if admin_mode? %>
+      form_mode: <%= form_mode.to_json.html_safe %>,
+      assignments: <%= @assignments.to_json.html_safe %>,
+      assignment_permissions: <%= @assignment_permissions.to_json.html_safe %>,
+      assignable_missions: <%= @assignable_missions.to_json.html_safe %>,
+      assignable_roles: <%= @assignable_roles.to_json.html_safe %>
+    <% end %>
+  });
 <% end %>

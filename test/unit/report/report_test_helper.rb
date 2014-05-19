@@ -33,7 +33,7 @@ class ActiveSupport::TestCase
   def user
     return @users[:test] if @users[:test]
     @users[:test] = User.new(:login => "test", :name => "Test", :reset_password_method => "print", :pref_lang => "en")
-    @users[:test].assignments.build(:mission => mission, :active => true, :role => User::ROLES.last)
+    @users[:test].assignments.build(:mission => mission, :role => User::ROLES.last)
     @users[:test].save!
     @users[:test]
   end

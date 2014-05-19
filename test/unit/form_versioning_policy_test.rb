@@ -212,13 +212,24 @@ class FormVersioningPolicyTest < ActiveSupport::TestCase
     publish_and_check_versions(:should_change => true)
   end
 
-  test "adding an option to a set should cause upgrade" do
+  test "adding an option to a set should cause upgrade on smsable forms only" do
     setup_option_set
 
     save_old_version_codes
 
     # add an option
     @os.options << Option.new(:name_en => "Troublemaker", :mission => get_mission)
+    @os.save!
+
+    publish_and_check_versions(:should_change => false)
+
+    # change forms to smsable
+    @os.forms.each{|f| f.update_attributes(:smsable => true)}
+
+    save_old_version_codes
+
+    # try again
+    @os.options << Option.new(:name_en => "Troublemaker2", :mission => get_mission)
     @os.save!
 
     publish_and_check_versions(:should_change => true)
@@ -275,16 +286,37 @@ class FormVersioningPolicyTest < ActiveSupport::TestCase
     save_old_version_codes
 
     # now remove an option from the set the option set order
-    @os.optionings.delete(@os.optionings.last)
+    @os.optionings.destroy(@os.optionings.last)
     @os.save
+
+    publish_and_check_versions(:should_change => true)
+  end
+
+  test "changing optioning parent should cause upgrade for smsable forms" do
+    @forms.each{|f| f.update_attributes!(:smsable => true)}
+    setup_option_set(:multilevel => true)
+
+    # add a third option under 'plant'
+    @os.optionings[1].optionings.create(:option => Option.new(:name => 'box elder', :mission => get_mission), :rank => 3,
+            :option_level => @os.option_levels[0], :mission => get_mission, :option_set => @os, :parent => @os.optionings[1])
+    @os.save!
+
+    save_old_version_codes
+
+    # move the new option to the 'animal' subtree (this way the rank doesn't change)
+    @os.optionings[1].optionings[2].move_to(@os.optionings[0])
+    @os.save!
+
+    # make sure rank didn't change
+    assert_equal(3, @os.optionings[0].optionings.last.rank)
 
     publish_and_check_versions(:should_change => true)
   end
 
   private
     # creates an option set, and a question that has the option set, and adds it to first two forms
-    def setup_option_set
-      @os = FactoryGirl.create(:option_set)
+    def setup_option_set(options = {})
+      @os = FactoryGirl.create(options[:multilevel] ? :multilevel_option_set : :option_set)
       @q = FactoryGirl.create(:question, :qtype_name => "select_one", :option_set => @os)
       @forms[0...2].each do |f|
         f.questions << @q

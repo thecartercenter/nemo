@@ -5,21 +5,52 @@
 
   // constructor
   ns.OptionSetForm = klass = function(params) { var self = this;
+
+    self.done = false;
+
     self.params = params;
-    self.option_set = new ELMO.Models.OptionSet(params.option_set);
 
-    // render the options
-    self.render_options();
+    // setup OptionLevelsField view
+    self.option_levels_field = new ELMO.Views.OptionLevelsField({
+      wrapper: $("#option-levels-wrapper"),
+      modal: $("#edit-option-level"),
+      option_levels: params.option_set.option_levels,
+      form_mode: self.params.form_mode,
+      can_reorder: true,
+      can_remove: self.params.can_remove_options,
+      edit_link: self.params.edit_link,
+      remove_link: self.params.remove_link
+    });
 
-    // setup a dirty flag
-    self.dirty = false;
+    // setup OptionsField view
+    self.options_field = new ELMO.Views.OptionsField({
+      wrapper: $("#options-wrapper"),
+      modal: $("#edit-option"),
+      optionings: params.option_set.optionings,
+      form_mode: self.params.form_mode,
+      can_reorder: self.params.can_reorder,
+      can_remove: self.params.can_remove_options,
+      edit_link: self.params.edit_link,
+      remove_link: self.params.remove_link
+    });
 
-    // hookup add button
+    // add option button click event
     $('div.add_options input[type=button]').on('click', function() { self.add_options(); });
 
-    // hookup setup edit/remove links (deferred)
-    $('div#options_wrapper').on('click', 'a.action_link_edit', function(){ self.edit_option($(this)); return false; });
-    $('div#options_wrapper').on('click', 'a.action_link_remove', function(){ self.remove_option($(this)); return false; });
+    // add option level link click event
+    $('.option_set_option_levels a.add-link').on('click', function(e) {
+      self.option_levels_field.add();
+      e.preventDefault();
+    });
+
+    // watch for changes to multilevel property
+    $('#option_set_multi_level').on('change', function() { self.multilevel_changed(); });
+    self.multilevel_changed();
+
+    // events to enable/disable multilevel checkbox
+    self.options_field.list.on('change', function(){ self.enable_multilevel_checkbox(); });
+    self.option_levels_field.list.on('change', function(){ self.enable_multilevel_checkbox(); });
+    self.enable_multilevel_checkbox();
 
     // setup the tokenInput control
     $('input.add_options_box').tokenInput(params.suggest_path, {
@@ -37,14 +68,37 @@
     });
 
     // hookup form submit
-    $('form.option_set_form').on('submit', function(){ return self.form_submitted(); })
+    $('form.option_set_form').on('submit', function(){ return self.form_submitted(); });
 
     // hookup leave page warning unless ajax request
-    if (!self.params.ajax_mode)
+    if (!self.params.modal_mode)
       window.onbeforeunload = function(){
-        if (self.dirty)
+        if (self.dirty() && !self.done)
           return I18n.t('option_set.leave_page_warning');
       };
+  };
+
+  // checks if there have been any changes
+  klass.prototype.dirty = function() { var self = this;
+    return self.options_field.list.dirty || self.option_levels_field.list.dirty;
+  };
+
+  // enables/disables multi_level checkbox depending on option levels and optioning depths
+  // should be disabled unless there are 0 option levels and all options have depth 1
+  klass.prototype.enable_multilevel_checkbox = function() { var self = this;
+    $('#option_set_multi_level').prop('disabled',
+      !(self.option_levels_field.list.count() == 0 && self.options_field.list.max_depth() <= 1));
+  };
+
+  // reacts to changes to multilevel checkbox
+  klass.prototype.multilevel_changed = function() { var self = this;
+    var checked = $('#option_set_multi_level').is(':checked');
+
+    // show/hide the option levels field
+    self.option_levels_field.show(checked);
+
+    // enable/disable nested options
+    self.options_field.list.allow_nesting(checked);
   };
 
   // returns the html to insert in the token input result list
@@ -67,235 +121,190 @@
   // strips duplicates from token results
   // this doesn't work if the result is cached
   klass.prototype.process_token_results = function(results) { var self = this;
-    return results.filter(function(r){ return !self.option_set.has_option_with_name(r.name); });
+    return results.filter(function(r){ return !self.options_field.list.has_with_name(r.name); });
   };
 
   // if the added token is a duplicate, delete it!
   klass.prototype.token_added = function(item) { var self = this;
-    if (self.option_set.has_option_with_name(item.name))
+    if (self.options_field.list.has_with_name(item.name))
       $('input.add_options_box').tokenInput("remove", {name: item.name});
   };
-
-  // renders the option html to the view
-  klass.prototype.render_options = function() { var self = this;
-    // create outer ol tag
-    var ol = $("<ol>");
-
-    // add li tags
-    self.option_set.optionings.forEach(function(oing, idx){
-      $('<li>').html(self.render_option(oing)).appendTo(ol);
-    });
-
-    // append to wrapper div
-    ol.appendTo('div#options_wrapper');
-
-
-    // setup the sortable plugin unless in show mode
-    if (self.params.form_mode != 'show' && self.params.can_reorder) {
-      ol.nestedSortable({
-        handle: 'div',
-        items: 'li',
-        toleranceElement: '> div',
-        maxLevels: 1,
-
-        // set dirty flag when positions change
-        change: function(){ self.dirty = true; }
-      });
-    }
-  };
-
-  // builds the inner div tag for an option
-  klass.prototype.render_option = function(optioning) { var self = this;
-    // make inner option tag
-    var inner = $('<div>').attr('class', 'inner')
-
-    // add sort icon if not in show mode
-    if (self.params.form_mode != 'show' && self.params.can_reorder)
-      inner.append($('<i>').attr('class', 'icon-sort'));
-
-    // add option name
-    inner.append(optioning.option.name);
-
-    // add edit/remove unless in show mode
-    if (self.params.form_mode != 'show') {
-      var links = $('<div>').attr('class', 'links')
-
-      // don't show the edit link if the option is existing and has not yet been added to the set (rails limitation)
-      if (optioning.id || !optioning.option.id) links.append(self.params.edit_link);
-
-      // don't show the removable link if the specific option isn't removable
-      // or if the global removable permission is false
-      if (self.params.can_remove_options && optioning.removable) links.append(self.params.remove_link);
-
-      links.appendTo(inner);
-    }
-
-    // add locales
-    inner.append($('<em>').html(optioning.locale_str()));
-
-    // associate optioning with data model bidirectionally
-    inner.data('optioning', optioning);
-    optioning.div = inner;
-
-    return inner;
-  };
-
 
   // adds options from the token input control to the view and data model
   klass.prototype.add_options = function() { var self = this;
     var chosen = $('input.add_options_box').tokenInput('get');
-    var ol = $('div#options_wrapper > ol');
+    var ol = $('div#options-wrapper > ol');
 
     // loop over chosen options
-    chosen.forEach(function(opt){
-      // don't add if it's a duplicate
-      if (self.option_set.has_option_with_name(opt.name)) return false;
-
-      // dirty!
-      self.dirty = true;
-
-      // add to data model (returns new optioning)
-      var oing = self.option_set.add_option(opt);
-
-      // wrap in li and add to view
-      $('<li>').html(self.render_option(oing)).appendTo(ol);
-    });
+    chosen.forEach(function(option_attribs){ self.options_field.add(option_attribs); });
 
     // clear out the add box
     $('input.add_options_box').tokenInput('clear');
   };
 
-  // removes an option from the view
-  klass.prototype.remove_option = function(link) { var self = this;
-    // lookup optioning object remove from option set
-    self.option_set.remove_optioning(link.closest('div.inner').data('optioning'));
-
-    // remove from view
-    link.closest('li').remove();
-
-    // dirty!
-    self.dirty = true;
-  };
-
-  // shows the edit dialog
-  klass.prototype.edit_option = function(link) { var self = this;
-    // get the optioning
-    var optioning = link.closest('div.inner').data('optioning');
-
-    // clear the text boxes
-    ELMO.app.params.mission_locales.forEach(function(locale){
-      $('div.edit_option_form input#name_' + locale).val("");
-    });
-
-    // hide the in_use warning
-    $('div.edit_option_form div.option_in_use_name_change_warning').hide();
-
-    // then populate text boxes
-    for (var locale in optioning.option.name_translations)
-      $('div.edit_option_form input#name_' + locale).val(optioning.option.name_translations[locale]);
-
-    // create the dialog
-    $("div.edit_option_form").dialog({
-      dialogClass: "no-close edit_option_modal",
-      buttons: [
-        {text: I18n.t('common.cancel'), click: function() { $(this).dialog('close'); }},
-        {text: I18n.t('common.save'), click: function() { self.save_option(optioning); }}
-      ],
-      modal: true,
-      autoOpen: true,
-      width: 500,
-      height: 180 + (ELMO.app.params.mission_locales.length * 40)
-    });
-
-    // show the in_use warning if appopriate
-    if (optioning.option.in_use) $('div.edit_option_form div.option_in_use_name_change_warning').show();
-  };
-
-  // saves entered translations to data model
-  klass.prototype.save_option = function(optioning) { var self = this;
-    $('div.edit_option_form input[type=text]').each(function(){
-      optioning.update_translation({field: 'name', locale: $(this).data('locale'), value: $(this).val()});
-    });
-
-    // dirty!
-    self.dirty = true;
-
-    // re-render the option in the view
-    var old_div = optioning.div;
-    old_div.replaceWith(self.render_option(optioning));
-
-    $('div.edit_option_form').dialog('close');
-  };
-
-  // write the data model to the form as hidden tags so that the data will be included in the submission
+  // prepares the form to be submitted by setting up the right fields
+  // or if in ajax mode, submits the form via ajax and returns false
   klass.prototype.form_submitted = function() { var self = this;
-    // save the name in the data model
-    self.option_set.name = $('#option_set_name').val();
 
-    var form = $('form.option_set_form');
-    self.option_set.optionings.forEach(function(optioning, idx){
-      if (optioning.id)
-        self.add_form_field('option_set[optionings_attributes][' + idx + '][id]', optioning.id);
-      self.add_form_field('option_set[optionings_attributes][' + idx + '][rank]', optioning.div.closest('li').index() + 1);
+    // set flag so we don't raise warning on navigation
+    self.done = true;
 
-      if (optioning.id || !optioning.option.id) {
-        self.add_form_field('option_set[optionings_attributes][' + idx + '][option_attributes][id]', optioning.option.id);
-        for (var locale in optioning.option.name_translations)
-          self.add_form_field('option_set[optionings_attributes][' + idx + '][option_attributes][name_' + locale + ']', optioning.option.name_translations[locale]);
-      } else {
-        self.add_form_field('option_set[optionings_attributes][' + idx + '][option_id]', optioning.option.id);
-      }
+    // do client side validations
+    self.clear_errors();
+    if (self.validate_option_presence() && self.validate_option_depths()) {
+      // submit
+      self.submit_via_ajax();
+    }
+
+    // so form won't submit normally
+    return false;
+  };
+
+  // traverses the option tree and generates a hash representing the full option set
+  // see OptionSetSubmissionTest for the expected format
+  klass.prototype.prepare_data = function() { var self = this;
+    // temporarily enable any disabled items else serialization will fail
+    var disabled = $('form.option_set_form').find(':input:disabled').removeAttr('disabled');
+
+    // get with basic form data
+    var data = $('form.option_set_form').serializeHash();
+
+    // re-disable
+    disabled.attr('disabled', 'disabled');
+
+    // add nodes
+    data.option_set = {};
+    data.option_set._option_levels = self.prepare_option_levels();
+    data.option_set._optionings = self.prepare_options();
+
+    // upate option set name in OptionSet model, as this may be used by modal
+    self.params.option_set.name = data['option_set[name]'];
+
+    return data;
+  };
+
+  // prepares the list of option levels
+  klass.prototype.prepare_option_levels = function() { var self = this;
+    // we know the item tree in this case will be 'flat'
+    return self.option_levels_field.list.item_tree().map(function(node){
+      // each 'node' in the 'tree' will be a NamedItem, so we just take the name_translations hash
+      return node.item.name_translations;
     });
+  };
 
-    // add removed optionings
-    self.option_set.removed_optionings.forEach(function(optioning, idx){
-      self.add_form_field('option_set[optionings_attributes][_' + idx + '][id]', optioning.id);
-      self.add_form_field('option_set[optionings_attributes][_' + idx + '][_destroy]', 'true');
+  // prepares the options, including the destroyed ones
+  klass.prototype.prepare_options = function() { var self = this;
+    // get the main tree
+    var prepared = self.prepare_option_tree(self.options_field.list.item_tree());
+
+    // add the destroyed optionings
+    self.options_field.list.removed_items.forEach(function(o){
+      if (o.id)
+        prepared.push({id: o.id, _destroy: true});
+    })
+
+    return prepared;
+  };
+
+  // prepares an option tree
+  // nodes - a list of the top level nodes in the tree
+  klass.prototype.prepare_option_tree = function(nodes) { var self = this;
+    return nodes.map(function(node){
+      // in this case, the item will be an Optioning, which is also a NamedItem
+      var prepared = {option: {name_translations: node.item.name_translations}};
+
+      // include IDs if available
+      if (node.item.id)
+        prepared.id = node.item.id;
+
+      if (node.item.option.id)
+        prepared.option.id = node.item.option.id;
+
+      // recurse
+      if (node.children)
+        prepared.optionings = self.prepare_option_tree(node.children);
+
+      return prepared;
     });
+  };
 
-    // cancel the dirty flag so no warning
-    self.dirty = false;
+  // submits form via ajax
+  klass.prototype.submit_via_ajax = function() { var self = this;
 
-    // if the form is in ajax mode, submit via ajax
-    if (self.params.ajax_mode) {
-      $.ajax({
-        url: $('form.option_set_form').attr('action'),
-        method: 'POST',
-        data: $('form.option_set_form').serialize(),
-        success: function(data, status, jqxhr) {
-          // if content type was json, that means success
-          if (jqxhr.getResponseHeader('Content-Type').match('application/json')) {
+    // get data and set modal if applicable
+    var data = self.prepare_data();
+    if (self.params.modal_mode)
+      data.modal_mode = 1;
+
+    // show loading
+    $('form.option_set_form .loading_indicator img').show();
+
+    $.ajax({
+      url: $('form.option_set_form').attr('action'),
+      type: 'POST',
+      data: data,
+      success: function(data, status, jqxhr) {
+        // if content type was json, that means success
+        if (jqxhr.getResponseHeader('Content-Type').match('application/json')) {
+
+          // if we're in modal mode, we need to do different stuff
+          if (self.params.modal_mode) {
 
             // the data holds the new option set's ID
-            self.option_set.id = parseInt(data);
+            self.params.option_set.id = parseInt(data);
 
             // trigger the custom event
-            $('form.option_set_form').trigger('option_set_form_submit_success', [self.option_set]);
-
-          // otherwise we got an error,
-          // so replace the div with the new partial (this will instantiate a new instance of this class)
-          } else {
-            $('div.option_set_form').replaceWith(jqxhr.responseText);
+            $('form.option_set_form').trigger('option_set_form_submit_success', [self.params.option_set]);
           }
-        },
-        error: function(jqxhr) {
-          // if we get an HTTP error, it's some server thing so just display a generic message
-          $('div.option_set_form').replaceWith("Server Error");
+
+          // else, not modal mode, just redirect (URL given as json response)
+          else
+            window.location.href = data;
+
+        // otherwise we got an error,
+        // so replace the div with the new partial (this will instantiate a new instance of this class)
+        } else {
+          $('div.option_set_form').replaceWith(jqxhr.responseText);
         }
-      });
-
-      // return false so the form won't submit normally
-      return false;
-
-    } else {
-      // if not in ajax mode, just return true and let form submit normally
-      return true;
-    }
+      },
+      error: function(jqxhr) {
+        // if we get an HTTP error, it's some server thing so just display a generic message
+        $('div.option_set_form').replaceWith("Server Error");
+      }
+    });
   };
 
-  // adds a hidden form field with the given name and value
-  klass.prototype.add_form_field = function(name, value) { var self = this;
-    $('form.option_set_form').append($('<input>').attr('type', 'hidden').attr('name', name).attr('value', value));
+  // makes sure there is at least one option
+  klass.prototype.validate_option_presence = function() { var self = this;
+    if (self.options_field.list.size() == 0) {
+      self.add_error('.option_set_options', I18n.t('activerecord.errors.models.option_set.at_least_one'));
+      return false;
+    }
+    return true;
+  };
+
+  // checks if number of option levels and option depths are compatible
+  // returns whether submission should proceed
+  klass.prototype.validate_option_depths = function() { var self = this;
+    if ($('#option_set_multi_level').is(':checked')) {
+      var levels = self.option_levels_field.list.size();
+      var depth = self.options_field.list.max_depth();
+      if (levels != depth) {
+        self.add_error('.option_set_options', I18n.t('activerecord.errors.models.option_set.wrong_depth', {levels: levels, depth: depth}));
+        return false;
+      }
+    }
+    return true;
+  };
+
+  // adds a validation error to the field with the given selector
+  klass.prototype.add_error = function(selector, msg) { var self = this;
+    $(selector + ' .control').prepend($('<div>').addClass('form-errors').html(msg));
+  };
+
+  // clears error messages
+  klass.prototype.clear_errors = function() { var self = this;
+    $('form.option_set_form').find('div.form-errors').remove();
   };
 
 })(ELMO.Views);

@@ -1,4 +1,4 @@
-// ELMO.Models.Optioning
+// ELMO.Models.Optioning < ELMO.Models.NamedItem
 //
 // Client side model for Optioning
 (function(ns, klass) {
@@ -7,32 +7,32 @@
   ns.Optioning = klass = function(attribs) { var self = this;
     // copy attribs
     for (var key in attribs) self[key] = attribs[key];
+
+    // also translations from option. these are the ones we'll actually use.
+    if (self.option) {
+      self.name = self.option.name;
+      self.name_translations = self.option.name_translations;
+    }
+
+    // optioning (option) names are editable if the optioning is not a new record
+    //   OR both the option AND optioning are new records
+    self.editable = self.id || !self.option.id;
+
+    // alias removable with no question mark
+    // note this is a property of optioning
+    self.removable = self['removable?'];
+
+    // alias in_use with no question mark
+    // note this is a property of option
+    self.in_use = self.option['in_use?'];
+
+    // draggable list class expects children field
+    self.children = self.optionings;
   };
 
-  // returns a space delimited list of all locales for this optioning's option
-  klass.prototype.locale_str = function() { var self = this;
-    if (self.option.name_translations) {
-      // get all locales with non-blank translations
-      var locales = Object.keys(self.option.name_translations).filter(function(l){
-        return self.option.name_translations[l] && self.option.name_translations[l] != '';
-      });
-      return locales.join(' ');
-    } else
-      return '';
-  };
-
-  // updates a translation of the given field and locale in the option model
-  klass.prototype.update_translation = function(params) { var self = this;
-    // ensure there is a name_translations hash
-    if (!self.option.name_translations)
-      self.option.name_translations = {};
-
-    // add the value, trimming whitespace
-    self.option.name_translations[params.locale] = params.value.trim();
-
-    // also set the name attrib if this is the current locale
-    if (params.locale == I18n.locale)
-      self.option.name = params.value;
-  };
+  // inherit from NamedItem
+  klass.prototype = new ns.NamedItem();
+  klass.prototype.constructor = klass;
+  klass.prototype.parent = ns.NamedItem.prototype;
 
 })(ELMO.Models);

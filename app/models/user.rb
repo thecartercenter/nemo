@@ -13,6 +13,8 @@ class User < ActiveRecord::Base
   has_many(:broadcast_addressings, :inverse_of => :user, :dependent => :destroy)
   has_many(:assignments, :autosave => true, :dependent => :destroy, :validate => true, :inverse_of => :user)
   has_many(:missions, :through => :assignments, :order => "missions.created_at DESC")
+  has_many :user_groups, :dependent => :destroy
+  has_many :groups, :through => :user_groups
   belongs_to(:current_mission, :class_name => "Mission")
 
   accepts_nested_attributes_for(:assignments, :allow_destroy => true)
@@ -20,7 +22,7 @@ class User < ActiveRecord::Base
   acts_as_authentic do |c|
     c.disable_perishable_token_maintenance = true
     c.logged_in_timeout(SESSION_TIMEOUT)
-    c.validates_format_of_login_field_options = {:with => /[\a-zA-Z0-9\.]+/, :message => "can only contain letters, numbers, or '.'"}
+    c.validates_format_of_login_field_options = {:with => /[\a-zA-Z0-9\.]+/}
 
     # email is not mandatory, but must be valid if given
     c.merge_validates_format_of_email_field_options(:allow_blank => true)
@@ -29,10 +31,11 @@ class User < ActiveRecord::Base
 
   after_initialize(:set_default_pref_lang)
   after_initialize(:set_default_login)
-  before_validation(:clean_fields)
+  before_validation(:normalize_fields)
   before_destroy(:check_assoc)
   before_validation(:generate_password_if_none)
   after_save(:rebuild_ability)
+  after_create(:generate_api_key)
 
   validates(:name, :presence => true)
   validates(:pref_lang, :presence => true)
@@ -47,6 +50,9 @@ class User < ActiveRecord::Base
   scope(:by_name, order("users.name"))
   scope(:assigned_to, lambda{|m| where("users.id IN (SELECT user_id FROM assignments WHERE mission_id = ?)", m.id)})
   scope(:with_assoc, includes(:missions, {:assignments => :mission}))
+
+  # returns users who are assigned to the given mission OR admins
+  scope(:assigned_to_or_admin, ->(m){ where("users.id IN (SELECT user_id FROM assignments WHERE mission_id = ?) OR users.admin = ?", m.id, true) })
 
   # we want all of these on one page for now
   self.per_page = 1000000
@@ -234,14 +240,14 @@ class User < ActiveRecord::Base
   # if user has no current mission, choose one (if assigned to any)
   def set_current_mission
     # ensure no current mission set if the user has no assignments
-    if assignments.active.empty?
+    if assignments.empty?
       # but don't force to nil mission if admin
       # this is because admins can access any mission and so they should be able to retain what mission they're on
       change_mission!(nil) unless admin?
 
     # else if user has no current mission, pick one
     elsif current_mission.nil?
-      change_mission!(assignments.active.sorted_recent_first.first.mission)
+      change_mission!(assignments.sorted_recent_first.first.mission)
     end
   end
 
@@ -271,7 +277,9 @@ class User < ActiveRecord::Base
   end
 
   private
-    def clean_fields
+    def normalize_fields
+      %w(phone phone2 login name email).each{|f| self.send("#{f}").try(:strip!)}
+      self.email = nil if email.blank?
       self.phone = phone.blank? ? nil : "+" + phone.gsub(/[^0-9]/, "")
       self.phone2 = phone2.blank? ? nil : "+" + phone2.gsub(/[^0-9]/, "")
       self.login = login.downcase
@@ -290,19 +298,19 @@ class User < ActiveRecord::Base
 
     def must_have_password_reset_on_create
       if new_record? && reset_password_method == "dont"
-        errors.add(:base, :must_choose_passwd_method)
+        errors.add(:reset_password_method, :blank)
       end
     end
 
     def password_reset_cant_be_email_if_no_email
       if reset_password_method == "email" && email.blank?
         verb = new_record? ? "send" : "reset"
-        errors.add(:base, :cant_passwd_email, :verb => verb)
+        errors.add(:reset_password_method, :cant_passwd_email, :verb => verb)
       end
     end
 
     def no_duplicate_assignments
-      errors.add(:base, :duplicate_assignments) if Assignment.duplicates?(assignments.reject{|a| a.marked_for_destruction?})
+      errors.add(:assignments, :duplicate_assignments) if Assignment.duplicates?(assignments.reject{|a| a.marked_for_destruction?})
     end
 
     def must_have_assignments_if_not_admin
@@ -368,4 +376,11 @@ class User < ActiveRecord::Base
       end
     end
 
+    def generate_api_key
+      # loop if necessary till unique token generated
+      begin
+        self.api_key = SecureRandom.hex
+      end while User.exists?(api_key: api_key)
+      save 
+    end
 end

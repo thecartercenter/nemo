@@ -16,8 +16,10 @@ module Standardizable
 
     # create hooks to copy key params from parent and to children
     # this doesn't work with before_create for some reason
-    before_save(:copy_is_standard_and_mission_from_parent)
-    before_save(:copy_is_standard_and_mission_to_children)
+    before_validation(:copy_is_standard_and_mission_from_parent)
+    before_validation(:copy_is_standard_and_mission_to_children)
+
+    validates(:mission_id, :presence => true, :unless => ->(o) {o.is_standard?})
 
     # re-replicate to copies after save so that any changes are propagated
     after_save(:rereplicate_to_copies)
@@ -86,7 +88,7 @@ module Standardizable
         # can't really remember why :(
         if CLASSES_TO_REREPLICATE.include?(self.class.name)
           # if we just run replicate for each copy's mission, all changes will be propagated
-          copies(true).each{|c| replicate(c.mission)}
+          copies(true).each{|c| replicate(:mode => :to_mission, :dest_mission => c.mission)}
         end
       end
       return true
@@ -112,12 +114,12 @@ module Standardizable
       # reflect on parent association, if it exists
       parent_assoc = self.class.reflect_on_association(self.class.replication_options[:parent_assoc])
 
-      # if the parent association exists and is a belongs_to association
-      # (e.g. questioning has parent = form, and a form association exists)
-      if parent_assoc.try(:macro) == :belongs_to
+      # if the parent association exists and is a belongs_to association and parent exists
+      # (e.g. questioning has parent = form, and a form association exists, and parent exists)
+      if parent_assoc.try(:macro) == :belongs_to && parent = self.send(parent_assoc.name)
         # copy the params
-        self.is_standard = self.send(parent_assoc.name).is_standard?
-        self.mission = self.send(parent_assoc.name).mission
+        self.is_standard = parent.is_standard?
+        self.mission = parent.mission
       end
       return true
     end

@@ -6,6 +6,7 @@ class Form < ActiveRecord::Base
   has_many(:responses, :inverse_of => :form)
 
   has_many(:versions, :class_name => "FormVersion", :inverse_of => :form, :dependent => :destroy)
+  has_many(:whitelist_users, :as => :whitelistable, class_name: "Whitelist")
 
   # while a form has many versions, this is a reference to the most up-to-date one
   belongs_to(:current_version, :class_name => "FormVersion")
@@ -18,7 +19,7 @@ class Form < ActiveRecord::Base
   before_create(:init_downloads)
 
   scope(:published, where(:published => true))
-  scope(:with_questionings, includes(
+  scope(:with_questionings, includes( 
     :questionings => [
       :form,
       {:question => {:option_set => :options}},
@@ -42,10 +43,12 @@ class Form < ActiveRecord::Base
     })
     .group("forms.id"))
 
-  scope(:default_order, order('forms.name'))
+  scope(:by_name, order('forms.name'))
+  scope(:default_order, by_name)
 
   replicable :child_assocs => :questionings, :uniqueness => {:field => :name, :style => :sep_words},
-    :dont_copy => [:published, :downloads, :responses_count, :questionings_count, :upgrade_needed, :smsable, :current_version_id]
+    :dont_copy => [:published, :downloads, :responses_count, :questionings_count, :upgrade_needed,
+      :smsable, :current_version_id, :allow_incomplete]
 
   # remove heirarch of objects
   def self.terminate_sub_relationships(form_ids)
@@ -68,6 +71,11 @@ class Form < ActiveRecord::Base
   def full_name
     # this used to include the form type, but for now it's just name
     name
+  end
+
+  # current override code for incomplete responses
+  def override_code
+    mission.override_code
   end
 
   # returns whether this form or (if standard) any of its copies have responses, using an eager loaded col if available
@@ -257,6 +265,10 @@ class Form < ActiveRecord::Base
     save(:validate => false) if options[:save]
   end
 
+  def has_white_listed_user?(user_id)
+    whitelist_users.where(user_id: user_id).exists?
+  end 
+
   private
     def init_downloads
       self.downloads = 0
@@ -264,7 +276,7 @@ class Form < ActiveRecord::Base
     end
 
     def name_unique_per_mission
-      errors.add(:name, :must_be_unique) unless unique_in_mission?(:name)
+      errors.add(:name, :taken) unless unique_in_mission?(:name)
     end
 
     def normalize_fields

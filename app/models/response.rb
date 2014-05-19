@@ -3,13 +3,16 @@ class Response < ActiveRecord::Base
   include MissionBased
   include Cacheable
 
+  LOCK_OUT_TIME = 10.minutes
+
   belongs_to(:form, :inverse_of => :responses, :counter_cache => true)
+  belongs_to(:checked_out_by, :class_name => "User")
   has_many(:answers, :include => :questioning, :order => "questionings.rank",
-    :autosave => true, :validate => false, :dependent => :destroy, :inverse_of => :response)
+    :autosave => true, :dependent => :destroy, :inverse_of => :response)
   belongs_to(:user, :inverse_of => :responses)
 
   has_many(:location_answers, :include => {:questioning => :question}, :class_name => 'Answer',
-    :conditions => "questions.qtype_name = 'location'", :order => 'questionings.rank')
+    :conditions => "questionables.qtype_name = 'location'", :order => 'questionings.rank')
 
   attr_accessor(:modifier, :excerpts)
 
@@ -17,9 +20,6 @@ class Response < ActiveRecord::Base
   # regardless of how many answer errors there are
   validates(:user, :presence => true)
   validate(:no_missing_answers)
-
-  # don't need to validate answers in odk mode
-  validates_associated(:answers, :message => :invalid_answers, :if => Proc.new{|r| r.modifier != "odk"})
 
   default_scope(includes(:form, :user).order("responses.created_at DESC"))
   scope(:unreviewed, where(:reviewed => false))
@@ -45,6 +45,16 @@ class Response < ActiveRecord::Base
   # loads only answers with location info
   scope(:with_location_answers, includes(:location_answers))
 
+  delegate :name, :to => :checked_out_by, :prefix => true
+
+  # remove previous checkouts by a user
+  def self.remove_previous_checkouts_by(user = nil)
+    raise ArguementError, "A user is required" unless user
+
+    Response.where(:checked_out_by_id => user).update_all(:checked_out_at => nil, :checked_out_by_id => nil)
+  end
+
+
   # takes a Relation, adds a bunch of selects and joins, and uses find_by_sql to do the actual finding
   # this technique is due to limitations (at the time of dev) in the Relation system
   def self.for_export(rel)
@@ -66,6 +76,8 @@ class Response < ActiveRecord::Base
       Search::Qualifier.new(:name => "option_set", :col => "option_sets.name", :assoc => :option_sets),
 
       # this qualifier matches responses that have answers to questions with the given type
+      # this and other qualifiers use the 'questions' table because the join code below creates a table alias
+      # the actual STI table name is 'questionables'
       Search::Qualifier.new(:name => "question_type", :col => "questions.qtype_name", :assoc => :questions),
 
       # this qualifier matches responses that have answers to the given question
@@ -216,6 +228,12 @@ class Response < ActiveRecord::Base
     count_and_date_cache_key(:rel => unscoped.for_mission(mission), :prefix => "mission-#{mission.id}")
   end
 
+  # whether the answers should validate themselves
+  def validate_answers?
+    # dont validate if this is an ODK submission as we don't want to lose data
+    modifier != 'odk'
+  end
+
   def populate_from_xml(xml)
     # response mission should already be set
     raise "xml submissions must have a mission" if mission.nil?
@@ -256,8 +274,13 @@ class Response < ActiveRecord::Base
     qings.each do |qing|
       # get value from hash
       str = values[qing.question.odk_code]
+
       # add answer
-      self.answers << Answer.new_from_str(:str => str, :questioning => qing)
+      answer = Answer.new_from_str(:str => str, :questioning => qing)
+      self.answers << answer
+
+      # set incomplete flag if required but empty
+      self.incomplete = true if answer.required_but_empty?
     end
   end
 
@@ -268,7 +291,7 @@ class Response < ActiveRecord::Base
 
   def all_answers
     # make sure there is an associated answer object for each questioning in the form
-    visible_questionings.collect{|qing| answer_for(qing) || answers.new(:questioning => qing)}
+    visible_questionings.collect{|qing| answer_for(qing) || answers.build(:questioning => qing)}
   end
 
   def all_answers=(params)
@@ -282,7 +305,7 @@ class Response < ActiveRecord::Base
         answers.delete(orig)
       # if original is nil, add the new one to this response's array
       elsif orig.nil?
-        answers << Answer.new(subd)
+        answers.build(subd)
       end
     end
   end
@@ -310,9 +333,6 @@ class Response < ActiveRecord::Base
     end.compact
   end
 
-  def form_name; form ? form.name : nil; end
-  def submitter; user ? user.name : nil; end
-
   # if this response contains location questions, returns the gps location (as a 2 element array)
   # of the first such question on the form, else returns nil
   def location
@@ -325,9 +345,43 @@ class Response < ActiveRecord::Base
     @excerpts_by_questioning_id ||= (excerpts || []).index_by{|e| e[:questioning_id]}
   end
 
+  def check_out_valid?
+    checked_out_at > Response::LOCK_OUT_TIME.ago
+  end
+
+  def checked_out_by_others?(user = nil)
+    raise ArguementError, "A user is required" unless user
+
+    !self.checked_out_by.nil? && self.checked_out_by != user && check_out_valid?
+  end
+
+  def check_out!(user = nil)
+    raise ArguementError, "A user is required to checkout a response" unless user
+
+    if !checked_out_by_others?(user)
+      transaction do
+        Response.remove_previous_checkouts_by(user)
+
+        self.checked_out_at = Time.now
+        self.checked_out_by = user
+        self.save!
+      end
+    end
+  end
+
+  def check_in
+    self.checked_out_at = nil
+    self.checked_out_by_id = nil
+  end
+
+  def check_in!
+    self.check_in
+    self.save!
+  end
+
   private
     def no_missing_answers
-      errors.add(:base, :missing_answers) unless missing_answers.empty?
+      errors.add(:base, :missing_answers) unless missing_answers.empty? || incomplete?
     end
 
     def self.export_sql(rel)
@@ -337,9 +391,13 @@ class Response < ActiveRecord::Base
       rel = rel.select("responses.created_at AS submission_time")
       rel = rel.select("responses.reviewed AS is_reviewed")
       rel = rel.select("forms.name AS form_name")
+
+      # these expressions use 'questions' because the join code below creates a table alias
+      # the actual STI table name is 'questionables'
       rel = rel.select("questions.code AS question_code")
       rel = rel.select("questions._name AS question_name")
       rel = rel.select("questions.qtype_name AS question_type")
+
       rel = rel.select("users.name AS submitter_name")
       rel = rel.select("answers.id AS answer_id")
       rel = rel.select("answers.value AS answer_value")

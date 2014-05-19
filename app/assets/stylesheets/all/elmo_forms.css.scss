@@ -1,0 +1,172 @@
+$orange: #F77D48;
+$elmo-form-width: 660px;
+
+/* base errors may appear outside the form. left margin should be cancelled when inside form */
+div.form-errors {
+  margin-left: 35px;
+  font-weight: bold;
+  color: #CC3232;
+  margin-bottom: 5px;
+}
+
+/* standard form width */
+form.elmo_form, div.elmo_form {
+  width: $elmo-form-width;
+
+  p.instructions {
+    margin-bottom: 20px;
+  }
+}
+
+div.form_field {
+  /* the field div itself should not wrap, but we don't want this to inherit */
+  white-space: nowrap;
+  border-bottom: 1px solid #DDD;
+  margin-bottom: 5px;
+
+  > * {
+    white-space: normal;
+  }
+
+  div.form-errors {
+    /* cancel the left margin for form errors inside a form_field */
+    margin-left: 0;
+  }
+
+  div.reqd_sym {
+    display: inline;
+    font-weight: bold;
+    color: $orange;
+    font-size: 125%;
+    line-height: 5px;
+    vertical-align: middle;
+  }
+
+  label, .control {
+    vertical-align: top;
+    padding: 5px 0;
+  }
+
+  .label_and_control {
+    display: inline-block;
+
+    /* ensures label stays next to control */
+    white-space: nowrap;
+
+    label, .control {
+      /* allows normal wrapping inside of the the label and control */
+      white-space: normal;
+    }
+  }
+
+  /* for rich text editor */
+  .cke {
+    display: inline-block;
+    vertical-align: top;
+    width: 415px;
+  }
+
+  label.main {
+    display: inline-block;
+    vertical-align: top;
+    width: 200px;
+    padding-right: 10px;
+    text-align: right;
+  }
+
+  div.control {
+    display: inline-block;
+    vertical-align: middle;
+    width: 425px;
+    min-height: 26px;
+    position: relative;
+
+    label {
+      font-weight: normal;
+    }
+
+    .widget {
+      display: inline-block;
+      vertical-align: top;
+
+      input[type=text], input[type=password], select, textarea input.text, textarea {
+        width: 420px;
+        height: 35px;
+      }
+
+      textarea {
+        height: 100px;
+      }
+    }
+
+  }
+  /* Override for multiple selects */
+  &.qtype_select_multiple .widget {
+    vertical-align: top !important;
+  }
+
+  div.control input.text {
+    padding: 3px;
+  }
+
+  /* nice kooshy padding */
+  input[type=text], input[type=password], textarea, select {
+    margin-bottom: 5px;
+    padding: 3px;
+  }
+
+  div.control input.radio {
+    width: 15px;
+  }
+
+  div.space_line {
+    margin: 0;
+    padding: 0;
+    width: auto;
+  }
+}
+
+div.hint {
+  display: inline-block;
+}
+
+form input[type="submit"].btn-primary {
+  background-color: $orange;
+  border: 0px;
+}
+
+form {
+  div.submit-buttons {
+    text-align: right;
+    margin-top: 20px;
+  }
+
+  input.btn-primary {
+    padding: 6px 35px;
+  }
+}
+
+div.data_integrity_warning {
+  margin: 10px 0;
+  width: $elmo-form-width;
+
+  i {
+    display: block;
+    float: left;
+    font-size: 14px;
+    margin-top: 1px;
+  }
+
+  & > div {
+    margin-left: 20px;
+  }
+}
+
+/* Minimal form has no horiz lines and no hints */
+form.elmo_form.minimal {
+  width: 620px;
+
+  div.form_field {
+    border-bottom: none;
+  }
+}

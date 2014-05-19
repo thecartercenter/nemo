@@ -6,8 +6,6 @@
 
 <%= render("layouts/location_picker") %>
 
-<%= flash_and_form_errors(@response) %>
-
 <% @response.answers.collect{|a| a.errors.full_messages.join(", ")}.join(" ") %>
 
 <%# show an edit link if allowed and in show mode %>
@@ -18,33 +16,48 @@
   </div>
 <% end %>
 
-<%= nice_form_for(@response) do |f| %>
+<%= elmo_form_for(@response) do |f| %>
 
-  <%= form_field(f, :form_id, :type => :hidden) %>
+  <%= f.field(:form_id, :type => :hidden) %>
+
+  <%# form name %>
+  <%= f.field(:form_id, :content => link_to(@response.form.name, @response.form)) %>
 
   <%# if the user can't manage the response, then don't show the submitter box as a dropdown %>
-  <%= form_field(f, :user_id, :type => :select, :required => true, :options => sel_opts_from_objs(@possible_submitters),
-    :force_show_mode => !can?(:manage, @response)) %>
+  <%= f.field(:user_id, :type => :select, :required => true, :options => sel_opts_from_objs(@possible_submitters),
+    :read_only => cannot?(:manage, @response),
 
-  <% unless f.mode == :new %>
+    # some users are not linkable currently if they're not assigned to the mission
+    # if we give nil read_only_content then it will revert to the default read only content
+    :read_only_content => can?(:read, @response.user) ? link_to(@response.user.try(:name), @response.user) : nil) %>
 
-    <%= form_field(f, :source) if f.mode == :show %>
+  <%# don't show source or reviewed if new obj %>
+  <% unless form_mode == :new %>
+
+    <%= f.field(:source) if form_mode == :show %>
 
     <%# only show the reviewed checkbox as editable if the user can review the response %>
-    <%= form_field(f, :reviewed, :type => :check_box, :force_show_mode => !can?(:review, @response)) %>
+    <%= f.field(:reviewed, :type => :check_box, :read_only => cannot?(:review, @response)) %>
 
   <% end %>
 
+  <%# render all the answer fields %>
   <%= render(:partial => "answer", :collection => @response.all_answers) %>
 
-  <%= form_buttons do %>
-    <%= form_submit_button(f, :label => :save, :multiple => true) %>
-    <%= form_submit_button(f, :label => t("response.save_and_mark_reviewed"), :name => "commit_and_mark_reviewed",
-      :multiple => true) if can?(:review, @response) %>
-  <% end %>
+  <%# incomplete checkbox %>
+  <%= f.field(:incomplete, :type => :check_box) if can?(:submit_incomplete, @response) %>
+
+  <div class ="submit-buttons">
+    <%= f.submit(:class => "btn btn-primary") %>
+    <% if form_mode == :edit && can?(:review, @response) %>
+      <%= f.submit(t('response.save_and_mark_reviewed'), :class => "btn btn-primary", :name => 'commit_and_mark_reviewed') %>
+    <% end %>
+  </div>
+
 
 <% end %>
 
 <%= javascript_doc_ready do %>
   ELMO.Response.init();
+  $('textarea').ckeditor();
 <% end %>

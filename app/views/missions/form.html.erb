@@ -1,8 +1,11 @@
 <% @title_args = {:name => @mission.name} %>
 
-<%= flash_and_form_errors(@mission) %>
-<%= nice_form_for(@mission) do |f| %>
-  <%= form_field(f, :name, :required => true, :maxlength => 32) %>
-  <%= form_field(f, :compact_name) if f.mode == :show %>
-  <%= form_submit_button(f, :label => :save) %>
+
+<%= elmo_form_for(@mission) do |f| %>
+  <%= f.field(:name, :required => true, :maxlength => 32) %>
+  <%= f.field(:compact_name) if form_mode == :show %>
+  <%= f.field(:locked, :type => :check_box) %>
+  <div class="submit-buttons">
+    <%= f.submit(:class => "btn btn-primary") %>
+  </div>
 <% end %>

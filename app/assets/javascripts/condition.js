@@ -12,26 +12,27 @@
     this.row = $("#qing_" + this.params.questioning_id);
     this.rq_row = $("#qing_" + this.params.ref_qing_id);
 
+    // check if readonly
+    this.read_only = this.row.is('.read_only');
+
     // get question type
-    this.rq_type = this.rq_row.attr("class").substring(17);
+    this.rq_type = this.rq_row.data('qtype-name');
 
     // default to relevant
     this.eval_result = true;
   }
 
   // hooks up controls and performs an immediate refresh
-  klass.prototype.init = function() {
+  klass.prototype.init = function() { var self = this;
     // hookup controls
-    (function(_this){ _this.rq_row.find("div.control").find("input, select, textarea").change(
-      function(){ _this.refresh(); }) })(this);
-    (function(_this){ _this.rq_row.find("div.control input[type='text']").keyup(
-      function(){ _this.refresh(); }) })(this);
+    self.rq_row.find("div.control").find("input, select, textarea").on('change', function(){ self.refresh(); });
+    self.rq_row.find("div.control input[type='text']").on('keyup', function(){ self.refresh(); });
 
     // hookup form submit to clear irrelevant fields
-    (function(_this){ _this.rq_row.parents("form").submit(
-      function(){ _this.clear_on_submit_if_false(); }) })(this);
+    self.rq_row.parents("form").on('submit', function() { self.clear_on_submit_if_false(); });
 
-    this.refresh();
+    // do initial computation
+    self.refresh();
   }
 
   // evals the condition and shows/hides accordingly
@@ -73,32 +74,44 @@
 
   // determines the left hand side of the comparison, which comes from the referred question
   klass.prototype.lhs = function() {
-    switch (this.rq_type) {
-      case "address": case "text": case "location":
-        return this.rq_row.find("div.control input[type='text']").val();
 
-      case "long_text":
-        return this.rq_row.find("div.control textarea").val();
+    // if readonly, use the data-val attrib
+    if (this.read_only) {
+      // get inner div
+      var wrapper = this.rq_row.find('div.control div.ro-val');
 
-      case "integer":
-        return parseInt(this.rq_row.find("div.control input[type='text']").val());
+      // return val, or just div innerHTML if not defined
+      return typeof(wrapper.data('val')) == 'undefined' ? wrapper.text() : wrapper.data('val');
 
-      case "decimal":
-        return parseFloat(this.rq_row.find("div.control input[type='text']").val());
+    } else {
 
-      case "select_one":
-        return parseInt(this.rq_row.find("select").val());
+      switch (this.rq_type) {
+        case "long_text":
+          return this.rq_row.find("div.control textarea").val();
 
-      case "datetime": case "date": case "time":
-        return (new ELMO.TimeFormField(this.rq_row.find("div.control"))).extract_str();
+        case "integer":
+          return parseInt(this.rq_row.find("div.control input[type='text']").val());
 
-      case "select_multiple":
-        // use prev sibling call to get to rails gen'd hidden field that holds the id
-        return this.rq_row.find("div.control input:checked").map(function(){
-          // given a checkbox, get the value of the associated option_id hidden field made by rails
-          // this field is the nearest prior sibling input tag with name attribute ending in [option_id]
-          return parseInt($(this).prevAll("input[name$='[option_id]']").first().val());
-        }).get();
+        case "decimal":
+          return parseFloat(this.rq_row.find("div.control input[type='text']").val());
+
+        case "select_one":
+          return parseInt(this.rq_row.find("select").val());
+
+        case "datetime": case "date": case "time":
+          return (new ELMO.TimeFormField(this.rq_row.find("div.control"))).extract_str();
+
+        case "select_multiple":
+          // use prev sibling call to get to rails gen'd hidden field that holds the id
+          return this.rq_row.find("div.control input:checked").map(function(){
+            // given a checkbox, get the value of the associated option_id hidden field made by rails
+            // this field is the nearest prior sibling input tag with name attribute ending in [option_id]
+            return parseInt($(this).prevAll("input[name$='[option_id]']").first().val());
+          }).get();
+
+        default:
+          return this.rq_row.find("div.control input[type='text']").val();
+      }
     }
   }
 

@@ -1,38 +1,44 @@
-<% if form.mode != :show && can?(:add_options, @option_set) %>
+<%# form for drag and drop and option dialog %>
+<% if form_mode != :show && can?(:add_options, @option_set) %>
   <div class="add_options">
-    <input type="text" class="add_options_box">
-    <input type="button" class="btn_secondary" value="<%= t('common.add') %>" />
+    <input type="text" class="add_options_box form-control">
+    <input type="button" class="btn_secondary btn btn-default" value="<%= t('common.add') %>" />
   </div>
 <% end %>
 
-<div id="options_wrapper">
+<div id="options-wrapper" class="draggable-list-wrapper">
 </div>
 
-<% if form.mode != :show %>
-  <div class="edit_option_form" title="<%= t("option_set.edit_option") %>">
-    <%= data_integrity_warning(:option_standard_copy_name_change_warning) if @option_set.standard_copy? %>
+<% if form_mode != :show %>
+  <%# edit option modal %>
+  <div class="modal fade edit-named-item" id="edit-option" tabindex="-1" role="dialog" aria-labelledby="editOption" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title"></h4>
+        </div>
+        <div class="modal-body">
 
-    <%# this warning will get hidden/shown by the js %>
-    <%= data_integrity_warning(:option_in_use_name_change_warning) %>
+          <%= data_integrity_warning(:option_standard_copy_name_change_warning) if @option_set.standard_copy? %>
 
-    <% configatron.preferred_locales.each do |locale| %>
-      <div class="translation">
-        <label for="<%= locale %>"><%= language_name(locale) %></label>
-        <input type="text" id="name_<%= locale %>" data-locale="<%= locale %>" maxlength="30">
-      </div>
-    <% end %>
-  </div>
-<% end %>
+          <%# this warning will get hidden/shown by the js %>
+          <%= data_integrity_warning(:option_in_use_name_change_warning) %>
 
-<%= javascript_doc_ready do %>
-  new ELMO.Views.OptionSetForm({
-    edit_link: <%=j action_link(:edit, '#').to_json.html_safe %>,
-    remove_link: <%=j action_link(:remove, '#').to_json.html_safe %>,
-    option_set: <%=j @option_set.as_json(:for_option_set_form => true).to_json.html_safe %>,
-    suggest_path: <%=j suggest_options_path.to_json.html_safe %>,
-    form_mode: <%=j form.mode.to_json.html_safe %>,
-    ajax_mode: <%=j ajax_request?.to_json.html_safe %>,
-    can_reorder: <%=j can?(:reorder_options, @option_set).to_json.html_safe %>,
-    can_remove_options: <%=j can?(:remove_options, @option_set).to_json.html_safe %>
-  });
+          <% configatron.preferred_locales.each do |locale| %>
+            <div class="translation">
+              <label for="<%= locale %>"><%= language_name(locale) %></label>
+              <input type="text" class="form-control" id="option_name_<%= locale %>" data-locale="<%= locale %>" maxlength="30">
+            </div>
+          <% end %>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal"><%= I18n.t("common.cancel") %></button>
+          <button type="button" class="btn btn-primary"><%= I18n.t("common.save") %></button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
 <% end %>

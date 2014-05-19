@@ -1,9 +1,11 @@
-<%= flash_and_form_errors %>
 <%# if this is an empty batch (not one with errors) show the normal form %>
 <% if @user_batch.lines.nil? %>
-  <%= nice_form_for(@user_batch) do |f| %>
-    <%= form_field(f, :batch, :type => :textarea, :required => true) %>
-    <%= form_submit_button(f, :label => :create) %>
+  <%= form_for(@user_batch, :html => {:class => 'user_batch_form'}) do |f| %>
+    <p class="instructions"><%= simple_format(t('user_batch.instructions'), {}, :sanitize => false) %></p>
+    <%= f.text_area(:batch, :class => "form-control") %>
+    <div class="submit-buttons">
+      <%= f.submit(t('common.create'), :class => "btn btn-primary") %>
+    </div>
   <% end %>
 
 <%# otherwise show a special form with info about each line %>
@@ -13,7 +15,7 @@
     <% @user_batch.lines.each_with_index do |line, idx| %>
       <% ok = line[:user] && line[:user].valid? %>
       <div class="batch_line_with_info <%= ok ? 'line_ok' : 'line_error' %>">
-        <input type="text" name="user_batch[lines][][text]" value="<%= line[:text] %>"/>
+        <input type="text" name="user_batch[lines][][text]" value="<%= line[:text] %>" class="form-control" />
         <div class="info">
           <% if ok %>
             <i class="icon-ok"></i>
@@ -25,6 +27,6 @@
         </div>
       </div>
     <% end %>
-    <%= form_submit_button(f, :label => :try_again) %>
+    <%= f.submit(t('common.try_again'), :class =>"btn btn-primary") %>
   <% end %>
 <% end %>

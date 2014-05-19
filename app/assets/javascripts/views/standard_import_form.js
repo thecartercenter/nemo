@@ -12,31 +12,24 @@
   };
 
   klass.prototype.show_dialog = function() { var self = this;
+    // hide any previous errors
     $('div.importable div.modal_error').hide();
-
-    // determine buttons based on importable obj count
-    var buttons = [{text: I18n.t('common.cancel'), click: function() { $(this).dialog('close'); }}];
-
+    // only hook up import button if there are items to import
     if (self.params.importable_count > 0)
-      buttons.push({text: I18n.t('standard.import'), click: function() { self.do_import(); }})
+      $('button.btn-primary').click(function() {self.do_import(); return false;});
 
-    // create the dialog
-    $("div.importable").dialog({
-      dialogClass: "no-close standard_import_modal",
-      buttons: buttons,
-      modal: true,
-      autoOpen: true,
-      width: 500,
-      height: 400
-    });
-
+    // show the importables and modal
+    $('.importable').show();
+    $('#standard-import-form').modal('show');
   };
 
   klass.prototype.do_import = function() { var self = this;
-    if ($('div.importable form input:checked').length == 0)
+    // show error if nothing selected, otherwise submit form
+    if ($('div.importable form input:checked').length == 0) {
       $('div.importable div.modal_error').show();
-    else
+    } else {
       $('div.importable form').submit();
+      $('#standard-import-form').modal('hide');
+    }
   };
-
 })(ELMO.Views);

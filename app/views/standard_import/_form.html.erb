@@ -1,26 +1,44 @@
 <% if @importable %>
-  <div class="importable" title="<%= t("standard.import_standard.#{controller_name}") %>">
-    <div class="modal_error">
-      <%= t("standard.import_choose_one.#{controller_name}") %>
-    </div>
-    <% if @importable.empty? %>
-      <%= t("standard.no_importable.#{controller_name}") %>
-    <% else %>
-      <div>
-        <%= t("standard.import_instructions.#{controller_name}") %>
-      </div>
-      <form method="post" action="<%= send("import_standard_#{controller_name}_path") %>">
-        <% @importable.each do |o| %>
-          <div>
-            <input type="checkbox" name="objs_to_import[]" id="importable-<%= o.id %>" value="<%= o.id %>">
-            <label for="importable-<%= o.id %>">
-              <%= render("#{controller_name}/list_item", :obj => o) %>
-            </label>
+
+  <div class="modal fade" id="standard-import-form" tabindex="-1" role="dialog" aria-labelledby="editOptionSet" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title"><%= t("standard.import_standard.#{controller_name}") %></h4>
+        </div>
+        <div class="modal-body">
+          <div class="importable">
+            <div class="modal_error alert alert-danger">
+              <%= t("standard.import_choose_one.#{controller_name}") %>
+            </div>
+            <% if @importable.empty? %>
+              <%= t("standard.no_importable.#{controller_name}") %>
+            <% else %>
+              <div>
+                <%= t("standard.import_instructions.#{controller_name}") %>
+              </div>
+              <form method="post" action="<%= send("import_standard_#{controller_name}_path") %>">
+                <% @importable.each do |o| %>
+                  <div>
+                    <input type="checkbox" name="objs_to_import[]" id="importable-<%= o.id %>" value="<%= o.id %>">
+                    <label for="importable-<%= o.id %>">
+                      <%= render("#{controller_name}/list_item", :obj => o) %>
+                    </label>
+                  </div>
+                <% end %>
+              </form>
+            <% end %>
           </div>
-        <% end %>
-      </form>
-    <% end %>
-  </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal"><%= I18n.t("common.close") %></button>
+          <button type="button" class="btn btn-primary"><%= t('standard.import') %></button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
 
   <%= javascript_doc_ready do %>
     new ELMO.Views.StandardImportForm({

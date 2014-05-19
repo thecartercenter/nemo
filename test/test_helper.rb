@@ -2,6 +2,7 @@ ENV["RAILS_ENV"] = "test"
 require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
 require 'database_cleaner'
+require 'authlogic/test_case'
 
 class ActiveSupport::TestCase
 
@@ -152,3 +153,5 @@ class ActiveSupport::TestCase
     end
   end
 end
+
+require "mocha/setup"

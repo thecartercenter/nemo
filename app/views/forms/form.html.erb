@@ -1,23 +1,40 @@
 <% @title_args = {:name => @form.name, :standardized => @form.standardized?} %>
 
-<%= flash_and_form_errors(@form) %>
-
 <div class="screen">
   <%= published_warning(@form) if @form.published? && form_mode == :edit %>
 
-  <%= nice_form_for(@form) do |f| %>
-    <%= form_field(f, :name, :required => true, :force_show_mode => cannot?(:rename, @form)) %>
-    <%= form_field(f, :smsable, :type => :check_box) unless admin_mode? %>
-    <%= form_field(f, :published, :type => :check_box, :force_show_mode => true) if !admin_mode? && f.mode != :new %>
-    <%= form_field(f, :version, :partial => 'version') unless f.mode == :new %>
+  <%= elmo_form_for(@form) do |f| %>
+
+    <%# We wrap the top part of the form in this block b/c the whole form is 100% width due to index table below %>
+    <div class="elmo_form">
+
+      <%= f.field(:name, :required => true, :read_only => cannot?(:rename, @form)) %>
+
+      <% unless admin_mode? %>
+        <%= f.field(:smsable, :type => :check_box)  %>
+        <%= f.field(:allow_incomplete, :type => :check_box) unless admin_mode? %>
+        <%= f.field(:published, :type => :check_box, :read_only => true) unless @form.new_record? %>
+        <%= f.field(:access_level, :type => :select, :options => AccessLevel.option_list(:protected => true)) %>
+        <%= render 'shared/api_user_list', {:f => f} %>
+      <% end %>
+
+      <%= f.field(:version, :content => @form.version_with_code) unless @form.new_record? %>
+
+    </div>
+    
+    <%# questions on the form %>
+    <%= index_table(Questioning, @form.questionings, :within_form => true) if form_mode != :new %>
+
+    <% show_sp_btn = !@form.new_record? && !@form.published? && can?(:publish, @form) %>
+    <div class="submit-buttons <%=  'publish' unless !show_sp_btn %>">
+      <% if show_sp_btn %>
+        <%= f.submit(I18n.t('form.save_and_publish'), :name => 'save_and_publish', :class => 'btn btn-default') %>
+      <% end %>
+
+      <%= f.submit(:class => "btn btn-primary") %>
+    </div>
+
   <% end %>
-
-  <%# questions on the form %>
-  <%= index_table(Questioning, @form.questionings) if form_mode != :new %>
-
-  <%# the submit button is down here because there are two forms on the page. JS makes it work properly %>
-  <%= form_submit_button(nil, :label => :save) %>
-
 </div>
 <div id="form_to_print"></div>
 

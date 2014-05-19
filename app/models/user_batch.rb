@@ -62,7 +62,7 @@ class UserBatch
           # attempt to create the user with the parsed params, and save it with the line
           line[:user] = User.create(:name => parsed[:names][0], :email => parsed[:emails][0],
             :phone => parsed[:phones][0], :phone2 => parsed[:phones][1], :reset_password_method => "print",
-            :assignments => [Assignment.new(:mission_id => mission.id, :role => User::ROLES.first, :active => true)])
+            :assignments => [Assignment.new(:mission_id => mission.id, :role => User::ROLES.first)])
 
           # if the user has errors, set the flag
           @validation_error = true if !line[:user].valid?

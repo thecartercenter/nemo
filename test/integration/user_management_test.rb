@@ -37,7 +37,7 @@ class UserManagementTest < ActionDispatch::IntegrationTest
       post(users_path, :user => {
         :name => 'Alan Bob',
         :login => 'abob',
-        :assignments_attributes => {"1" => {"mission_id"=> mission.id, "role" => "staffer", "active" => "1" }},
+        :assignments_attributes => {"1" => {"mission_id"=> mission.id, "role" => "staffer"}},
         :reset_password_method => 'print'
       })
 

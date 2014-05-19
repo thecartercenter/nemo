@@ -6,13 +6,10 @@
   Form.hookup_rank_boxes = function() {
 
     // hookup boxes themselves
-    $("input.rank_box").change(Form.recalc_ranks);
-
-    // hookup submit button
-    $("input.submit").click(Form.submit_form);
+    $("input.rank_box").on('change', Form.recalc_ranks);
 
     // hookup before submit event
-    $("form.form_form").submit(Form.before_submit);
+    $("form.form_form").on('submit', Form.before_submit);
 
     // hookup unsaved check
     $(window).bind('beforeunload', function() {
@@ -62,11 +59,6 @@
 
     // restore the focus
     changed_box.focus()
-  }
-
-  // submits the form when the submit button is clicked
-  Form.submit_form = function() {
-    $("form.form_form").submit();
   }
 
   Form.before_submit = function() {

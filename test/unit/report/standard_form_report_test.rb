@@ -34,6 +34,31 @@ class Report::StandardFormReportTest < ActiveSupport::TestCase
     assert_equal(5, @report.response_count)
   end
 
+  test "report should return correct response count for a coordinator" do
+    coordinator = get_user
+    ability = Ability.new(coordinator)
+
+    build_form_and_responses
+
+    @report = FactoryGirl.create(:standard_form_report, :form => @form)
+    @report.run(ability)
+
+    assert_equal(5, @report.response_count)
+  end
+
+  test "report should return correct response count for an observer" do
+    observer = FactoryGirl.create(:user, :role_name => :observer)
+    observer.current_mission = get_mission
+    ability = Ability.new(observer)
+
+    build_form_and_responses
+
+    @report = FactoryGirl.create(:standard_form_report, :form => @form)
+    @report.run(ability)
+
+    assert_equal(0, @report.response_count)
+  end
+
   test "report should not contain invisible questionings" do
     build_form_and_responses
 
@@ -111,7 +136,10 @@ class Report::StandardFormReportTest < ActiveSupport::TestCase
     end
 
     def build_and_run_report
+      # assume we are running as admin
+      @user = FactoryGirl.create(:user, :admin => true)
+      @user.change_mission!(get_mission)
       @report = FactoryGirl.create(:standard_form_report, :form => @form)
-      @report.run
+      @report.run(Ability.new(@user))
     end
 end

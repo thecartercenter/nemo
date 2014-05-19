@@ -1,28 +1,29 @@
-class Question < ActiveRecord::Base
-  include MissionBased, FormVersionable, Translatable, Standardizable, Replicable
+# a question on a form
+# question is a subtype of Questionable as per composite design pattern, since it may have Subquestions
+class Question < Questionable
+  include FormVersionable, Translatable
 
   CODE_FORMAT = "[a-z][a-z0-9]{1,19}"
-
-  # this needs to be up here other wise it runs /after/ the children are destroyed
-  before_destroy(:check_assoc)
 
   belongs_to(:option_set, :include => :options, :inverse_of => :questions, :autosave => true)
   has_many(:questionings, :dependent => :destroy, :autosave => true, :inverse_of => :question)
   has_many(:answers, :through => :questionings)
   has_many(:referring_conditions, :through => :questionings)
   has_many(:forms, :through => :questionings)
-  has_many(:calculations, :foreign_key => "question1_id", :inverse_of => :question1)
+  has_many(:calculations, :foreign_key => 'question1_id', :inverse_of => :question1)
+  has_many(:subquestions, :foreign_key => 'parent_id', :include => :option_level, :order => 'option_levels.rank',
+    :inverse_of => :question, :autosave => true, :dependent => :destroy)
 
   before_validation(:normalize_fields)
+  before_validation(:maintain_subquestions)
 
   validates(:code, :presence => true)
   validates(:code, :format => {:with => /^#{CODE_FORMAT}$/i}, :if => Proc.new{|q| !q.code.blank?})
   validates(:qtype_name, :presence => true)
   validates(:option_set, :presence => true, :if => Proc.new{|q| q.qtype && q.has_options?})
-  validate(:integrity)
   validate(:code_unique_per_mission)
 
-  scope(:by_code, order("questions.code"))
+  scope(:by_code, order('questionables.code'))
   scope(:default_order, by_code)
   scope(:select_types, where(:qtype_name => %w(select_one select_multiple)))
   scope(:with_forms, includes(:forms))
@@ -32,7 +33,7 @@ class Question < ActiveRecord::Base
   # - form_published returns 1 if any associated forms are published, 0 or nil otherwise
   # - standard_copy_form_id returns a std copy form id associated with the question if available, or nil if there are none
   scope(:with_assoc_counts, select(%{
-      questions.*,
+      questionables.*,
       COUNT(DISTINCT answers.id) AS answer_count_col,
       COUNT(DISTINCT forms.id) AS form_count_col,
       MAX(DISTINCT forms.published) AS form_published,
@@ -40,26 +41,27 @@ class Question < ActiveRecord::Base
       MAX(DISTINCT copy_forms.published) AS copy_form_published,
       MAX(DISTINCT forms.standard_id) AS standard_copy_form_id
     }).joins(%{
-      LEFT OUTER JOIN questionings ON questionings.question_id = questions.id
+      LEFT OUTER JOIN questionings ON questionings.question_id = questionables.id AND questionables.type = 'Question'
       LEFT OUTER JOIN forms ON forms.id = questionings.form_id
       LEFT OUTER JOIN answers ON answers.questioning_id = questionings.id
-      LEFT OUTER JOIN questions copies ON questions.is_standard = 1 AND questions.id = copies.standard_id
+      LEFT OUTER JOIN questionables copies ON questionables.is_standard = 1 AND questionables.id = copies.standard_id
       LEFT OUTER JOIN questionings copy_questionings ON copy_questionings.question_id = copies.id
       LEFT OUTER JOIN forms copy_forms ON copy_forms.id = copy_questionings.form_id
       LEFT OUTER JOIN answers copy_answers ON copy_answers.questioning_id = copy_questionings.id
-    }).group('questions.id'))
+    }).group('questionables.id'))
 
   translates :name, :hint
 
   delegate :smsable?, :has_options?, :to => :qtype
-  delegate :geographic?, :to => :option_set, :allow_nil => true
+  delegate :options, :geographic?, :to => :option_set, :allow_nil => true
 
-  replicable :child_assocs => :option_set, :parent_assoc => :questioning, :uniqueness => {:field => :code, :style => :camel_case}, :dont_copy => :key,
+  replicable :child_assocs => [:option_set, :subquestions], :parent_assoc => :questioning,
+    :uniqueness => {:field => :code, :style => :camel_case}, :dont_copy => :key,
     :user_modifiable => [:name_translations, :_name, :hint_translations, :_hint]
 
   # returns questions that do NOT already appear in the given form
   def self.not_in_form(form)
-    scoped.where("(questions.id not in (select question_id from questionings where form_id='#{form.id}'))")
+    scoped.where("(questionables.id not in (select question_id from questionings where form_id='#{form.id}'))")
   end
 
   # returns N questions marked as key questions, sorted by the number of forms they appear in
@@ -70,10 +72,6 @@ class Question < ActiveRecord::Base
   # returns the question type object associated with this question
   def qtype
     QuestionType[qtype_name]
-  end
-
-  def options
-    option_set ? option_set.options : nil
   end
 
   def select_options
@@ -131,9 +129,9 @@ class Question < ActiveRecord::Base
   # an odk (xpath) expression of any question contraints
   def odk_constraint
     exps = []
-    exps << ". #{minstrictly ? '>' : '>='} #{minimum}" if minimum
-    exps << ". #{maxstrictly ? '<' : '<='} #{maximum}" if maximum
-    "(" + exps.join(" and ") + ")"
+    exps << ". #{minstrictly ? '>' : '>='} #{casted_minimum}" if minimum
+    exps << ". #{maxstrictly ? '<' : '<='} #{casted_maximum}" if maximum
+    exps.empty? ? nil : "(" + exps.join(" and ") + ")"
   end
 
   # shortcut method for tests
@@ -141,11 +139,30 @@ class Question < ActiveRecord::Base
     questionings.collect{|qing| qing.id}
   end
 
+  # convert value stored as decimal to integer if integer question type
+  def casted_minimum
+    minimum.blank? ? nil : (qtype_name == 'decimal' ? minimum : minimum.to_i)
+  end
+
+  def casted_maximum
+    maximum.blank? ? nil : (qtype_name == 'decimal' ? maximum : maximum.to_i)
+  end
+
+  def casted_minimum=(m)
+    self.minimum = m
+    self.minimum = casted_minimum
+  end
+
+  def casted_maximum=(m)
+    self.maximum = m
+    self.maximum = casted_maximum
+  end
+
   def min_max_error_msg
     return nil unless minimum || maximum
     clauses = []
-    clauses << I18n.t("question.maxmin.gt") + " " + (minstrictly ? "" : I18n.t("question.maxmin.or_eq") + " " ) + minimum.to_s if minimum
-    clauses << I18n.t("question.maxmin.lt") + " " + (maxstrictly ? "" : I18n.t("question.maxmin.or_eq") + " " ) + maximum.to_s if maximum
+    clauses << I18n.t("question.maxmin.gt") + " " + (minstrictly ? "" : I18n.t("question.maxmin.or_eq") + " " ) + casted_minimum.to_s if minimum
+    clauses << I18n.t("question.maxmin.lt") + " " + (maxstrictly ? "" : I18n.t("question.maxmin.or_eq") + " " ) + casted_maximum.to_s if maximum
     I18n.t("layout.must_be") + " " + clauses.join(" " + I18n.t("common.and") + " ")
   end
 
@@ -168,26 +185,24 @@ class Question < ActiveRecord::Base
     qtype_name_changed? || option_set_id_changed? || constraint_changed?
   end
 
+  # shortcut accessor
+  def option_levels
+    option_set.present? ? option_set.option_levels : []
+  end
+
+  # called by an associated OptionSet when its OptionLevels change
+  def option_levels_changed
+    # first reload the association in case it's stale
+    option_set(true)
+
+    maintain_subquestions
+    save!
+  end
+
   private
 
-    def integrity
-      # error if type or option set have changed and there are answers or conditions
-      if (qtype_name_changed? || option_set_id_changed?)
-        if !answers.empty?
-          errors.add(:base, :cant_change_if_responses)
-        elsif !referring_conditions.empty?
-          errors.add(:base, :cant_change_if_conditions)
-        end
-      end
-    end
-
-    def check_assoc
-      raise DeletionError.new(:cant_delete_if_has_answers) if has_answers?
-      raise DeletionError.new(:cant_delete_if_published) if published?
-    end
-
     def code_unique_per_mission
-      errors.add(:code, :must_be_unique) unless unique_in_mission?(:code)
+      errors.add(:code, :taken) unless unique_in_mission?(:code)
     end
 
     def normalize_fields
@@ -215,5 +230,23 @@ class Question < ActiveRecord::Base
         self.minstrictly = nil
         self.maxstrictly = nil
       end
+    end
+
+    # ensures Subquestion objects are created/destroyed to match the current OptionSet, if any
+    def maintain_subquestions
+      # add subquestions for any missing option levels
+      (option_levels - subquestions.map(&:option_level)).each do |ol|
+        subquestions.build(:option_level => ol)
+      end
+
+      # remove any obsolete subquestions (all subquestions with option levels NOT IN the current set)
+      subquestions.reject{|subq| option_levels.include?(subq.option_level)}.each do |subq|
+        subquestions.destroy(subq)
+      end
+
+      # re-sort by OptionLevel rank
+      subquestions.sort_by(&:rank)
+
+      return true
     end
 end

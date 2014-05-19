@@ -1,0 +1,20 @@
+<% if @reports.empty? %>
+  <h2 class="interior"><%= translate_model(Report::Report) %></h2>
+
+  <div><%= t('dashboard.no_reports') %></div>
+
+<% else %>
+  <div>
+    <form class="report_chooser">
+      <%= select_tag('report_id', options_from_collection_for_select(@reports, 'id', 'name'), {:prompt => I18n.t('report/report.choose_report'), :class => 'form_control'}) %>
+    </form>
+
+    <div class="report_title">
+      <%= render('report_pane_title') %>
+    </div>
+  </div>
+
+  <div class="report_main">
+    <%= render('report/reports/main') %>
+  </div>
+<% end %>

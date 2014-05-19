@@ -1,4 +1,5 @@
-# models a group of summary clusters for a standard form report
+# models a group of summary clusters for a standard form report.
+# each group contains a set of types, e.g. categorical questions or numerical questions
 class Report::SummaryGroup
   # the type of group this is
   attr_reader :type_set, :clusters, :max_header_count
