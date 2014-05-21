@@ -7,7 +7,7 @@
 
 require 'bundler/capistrano'
 
-set :stages, %w(master staging demo)
+set :stages, %w(master staging demo nigeria)
 set :default_stage, "staging"
 require "capistrano/ext/multistage"
 
@@ -20,13 +20,7 @@ require "whenever/capistrano"
 
 set :application, "elmo"
 set :repository, "ssh://git@github.com/thecartercenter/elmo.git"
-set(:deploy_to) {"#{home_dir}/webapps/rails2/#{application}_#{stage}"}
 set :deploy_via, :remote_cache
-set :use_sudo, false
-set :default_environment, {
-  "PATH" => "$PATH:$HOME/bin:$HOME/webapps/rails2/bin",
-  "GEM_HOME" => "$HOME/webapps/rails2/gems"
-}
 
 default_run_options[:pty] = true
 
@@ -47,12 +41,6 @@ end
 after "deploy", "deploy:cleanup" # keep only the last 5 releases
 
 namespace :deploy do
-  %w[start stop restart].each do |command|
-    desc "#{command} server"
-    task command, roles: :app, except: {no_release: true} do
-      run "#{home_dir}/webapps/rails2/bin/#{command}"
-    end
-  end
 
   task :setup_config, roles: :app do
     run "mkdir -p #{shared_path}/config"
