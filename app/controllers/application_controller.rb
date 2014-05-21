@@ -21,6 +21,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
 
   before_filter(:check_route)
+  before_filter(:remove_missionchange_flag)
   before_filter(:set_locale)
   before_filter(:mailer_set_url_options)
   before_filter(:get_user)

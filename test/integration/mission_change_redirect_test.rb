@@ -10,7 +10,6 @@ class MissionChangeRedirectTest < ActionDispatch::IntegrationTest
   test "user should not be redirected if on object listing and has permission" do
     # add this user to the other mission so the form index will be accessible
     @user.assignments.create!(:mission => @mission2, :role => "coordinator")
-
     assert_redirect_after_mission_change_from(:from => '/en/m/mission1/forms', :no_redirect => true)
   end
 
@@ -45,6 +44,26 @@ class MissionChangeRedirectTest < ActionDispatch::IntegrationTest
       :to => "/en/m/mission2")
   end
 
+  test "missionchange flag should be removed cleanly if it's the only query string arg" do
+    get('/en?missionchange=1')
+    assert_redirected_to('/en')
+  end
+
+  test "missionchange flag should be removed cleanly if it's the first of several args" do
+    get('/en?missionchange=1&foo=bar')
+    assert_redirected_to('/en?foo=bar')
+  end
+
+  test "missionchange flag should be removed cleanly if it's the last of several args" do
+    get('/en?foo=bar&missionchange=1')
+    assert_redirected_to('/en?foo=bar')
+  end
+
+  test "missionchange flag should be removed cleanly if it's in the middle several args" do
+    get('/en?foo=bar&missionchange=1&bar=foo')
+    assert_redirected_to('/en?foo=bar&bar=foo')
+  end
+
   private
     def assert_redirect_after_mission_change_from(params)
       login(@user)
@@ -60,11 +79,14 @@ class MissionChangeRedirectTest < ActionDispatch::IntegrationTest
       # there should never be an error message
       assert_nil(flash[:error], "Should be no error message for mission change redirects")
 
-      # if no_redirect is set then we should expect success right now
+      # We should expect a redirect to remove the missionchange param
+      assert_response(:redirect)
+      follow_redirect!
+      assert_no_match(/missionchange/, request.url)
+
       if params[:no_redirect]
         assert_response(:success)
 
-      # else we should have been redirected to the expected destination (:to)
       else
         assert_redirected_to params[:to]
 

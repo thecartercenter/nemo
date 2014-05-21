@@ -1,3 +1,4 @@
+require 'uri'
 module Concerns::ApplicationController::Routing
   extend ActiveSupport::Concern
 
@@ -39,5 +40,22 @@ module Concerns::ApplicationController::Routing
 
   def basic_mode?
     current_mode == 'basic'
+  end
+
+  # The missionchange param is set so that permission errors on mission change can be handled gracefully.
+  # But it should be removed once it is no longer needed so that the user never sees it.
+  # Implicit in this method is that missionchange will only ever appear with GET request URLs.
+  def remove_missionchange_flag
+    if params[:missionchange]
+      # This method runs before authorization is performed, so we don't know whether the path to which we
+      # are about to redirect will give rise to an authorization error. So we save the missionchange param
+      # in the flash so that in the event of an error, we will know that it came from a mission change.
+      flash[:missionchange] = true
+
+      uri = URI.parse(request.fullpath)
+      uri.query = uri.query.split('&').reject{|c| c == 'missionchange=1'}.join('&')
+      uri.query = nil if uri.query.blank?
+      redirect_to(uri.to_s)
+    end
   end
 end

@@ -29,7 +29,7 @@ module Concerns::ApplicationController::ErrorHandling
       redirect_to_login
 
     # else if there was just a mission change, we need to handle specially
-    elsif params[:missionchange]
+    elsif flash[:missionchange]
       # if the request was a CRUD, try redirecting to the index, or root if no permission
       if Ability::CRUD.include?(exception.action) && current_ability.can?(:index, exception.subject.class)
         redirect_to(:controller => controller_name, :action => :index)
