@@ -3,14 +3,12 @@ class API::V1::AnswerFinder
   def self.for_one(params)
     return [] if self.form_with_permissions(params[:form_id]).blank?
     data = []
-    answers = Answer.joins(:response).
+    answers = Answer.includes(:response, :questionable).
                      where(responses: {form_id: params[:form_id]}).
-                     where(questionable_id: params[:question_id])
-    answers.where(questionable_id: params[:question_id]).each do |answer|
-      # Grab only the questions that are public or have nil access_level
-      if [nil, AccessLevel::PUBLIC].include?(answer.question.access_level)
-        data << {answer_id: answer.id, answer_value: answer.casted_value}
-      end
+                     where(questionable_id: params[:question_id]).
+                     where("(questionables.access_level != ?) or (questionables.access_level IS NULL) ", AccessLevel::PRIVATE)
+    answers.each do |answer|
+      data << {answer_id: answer.id, answer_value: answer.casted_value}
     end
     data
   end
