@@ -22,7 +22,4 @@ class API::V1::FormsController < API::V1::BaseController
     @mission.forms.joins(:whitelist_users).where(whitelists: {user_id: @api_user.id}).order(:name) 
   end
 
-  def default_serializer_options
-    {root: false}
-  end
 end
