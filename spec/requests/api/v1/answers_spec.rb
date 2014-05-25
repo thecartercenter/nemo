@@ -55,4 +55,37 @@ describe "answers" do
 
   end
 
+  context "filtering" do
+
+    include_context "mission_form_and_two_responses_answered"
+
+    context "should find answers after a date" do 
+      before do
+        @response2.update_attribute(:created_at, 2.days.from_now)
+        @params[:created_after] = (@response1.created_at + 1.day).to_s 
+
+        get api_v1_answers_path, @params, {'HTTP_AUTHORIZATION' => "Token token=#{@api_user.api_key}"}
+        @answers_array = parse_json(response.body)
+      end
+
+      it "should find 1 response" do
+        expect(@answers_array.size).to eq 1
+      end
+    end
+
+    context "should find answers before a date" do 
+      before do
+        @response1.update_attribute(:created_at, 1.days.from_now)
+        @params[:created_before] = @response1.created_at.to_s
+        get api_v1_answers_path, @params, {'HTTP_AUTHORIZATION' => "Token token=#{@api_user.api_key}"}
+        @answers_array = parse_json(response.body)
+      end
+
+      it "should find 1 answer" do
+        expect(@answers_array.size).to eq 1
+      end
+    end
+
+  end
+
 end
