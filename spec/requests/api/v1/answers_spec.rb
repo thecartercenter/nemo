@@ -23,7 +23,7 @@ describe "answers" do
 
   end
 
-  context "when getting for one public form with 1 private questions" do
+  context "when getting for one public form with one private questions" do
     
     include_context "mission_form_one_private_question"
 
@@ -39,7 +39,7 @@ describe "answers" do
 
   end
 
-  context "when getting for one private form with 1 private questions" do
+  context "when getting for one private form with one private questions" do
     
     include_context "mission_form_one_private_question"
 

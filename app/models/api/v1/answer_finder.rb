@@ -19,4 +19,5 @@ class API::V1::AnswerFinder
     # TODO: check for protected form allowed by api user  
     Form.where(:id => form_id).where("access_level != ?", AccessLevel::PRIVATE).first
   end
+
 end
