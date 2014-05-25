@@ -17,13 +17,13 @@ describe "responses" do
     end
 
     it "should contain two questions" do
-      expect(@answers_array.first[:response][:answers].first[:question]).to eql @a1.question.name
-      expect(@answers_array.first[:response][:answers].first[:question]).to eql @a2.question.name
+      expect(@answers_array.first[:answers].first[:question]).to eql @a1.question.name
+      expect(@answers_array.first[:answers].last[:question]).to eql @a2.question.name
     end
 
     it "should contain two answers" do
-      expect(@answers_array.first[:response][:answers].first[:answer]).to eql @a1.casted_value
-      expect(@answers_array.first[:response][:answers].last[:answer]).to eql @a2.casted_value
+      expect(@answers_array.first[:answers].first[:answer]).to eql @a1.casted_value
+      expect(@answers_array.first[:answers].last[:answer]).to eql @a2.casted_value
     end
 
   end
@@ -43,13 +43,13 @@ describe "responses" do
     end
 
     it "should contain two questions" do
-      expect(@answers_array.first[:response][:answers].first[:question]).to eql @a1.question.name
-      expect(@answers_array.first[:response][:answers].first[:question]).to eql @a2.question.name
+      expect(@answers_array.first[:answers].first[:question]).to eql @a1.question.name
+      expect(@answers_array.first[:answers].first[:question]).to eql @a2.question.name
     end
 
     it "should contain two answers" do
-      expect(@answers_array.first[:response][:answers].first[:answer]).to eql @a1.casted_value
-      expect(@answers_array.first[:response][:answers].last[:answer]).to eql @a2.casted_value
+      expect(@answers_array.first[:answers].first[:answer]).to eql @a1.casted_value
+      expect(@answers_array.first[:answers].last[:answer]).to eql @a2.casted_value
     end
 
   end
@@ -65,8 +65,8 @@ describe "responses" do
       @answers_array = parse_json(response.body)
     end
 
-    it "should return array of no responses" do
-      expect(@answers_array).to be_empty
+    it "should return array of no answers" do
+      expect(@answers_array.first[:answers]).to be_empty
     end
 
   end
@@ -82,7 +82,7 @@ describe "responses" do
       @answers_array = parse_json(response.body)
     end
 
-    it "should return array of no responses" do
+    it "should return array of no response" do
       expect(@answers_array).to be_empty
     end
 
