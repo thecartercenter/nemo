@@ -17,7 +17,7 @@ class API::V1::AnswerFinder
   def self.form_with_permissions(form_id)
     # This allows for protected and public forms
     # TODO: check for protected form allowed by api user  
-    Form.where(:id => form_id).where("access_level != ?", AccessLevel::PRIVATE).first
+    Form.includes(:responses).where(:id => form_id).where("access_level != ?", AccessLevel::PRIVATE).first
   end
 
 end
