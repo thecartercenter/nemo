@@ -50,6 +50,11 @@ class Form < ActiveRecord::Base
     :dont_copy => [:published, :downloads, :responses_count, :questionings_count, :upgrade_needed,
       :smsable, :current_version_id, :allow_incomplete]
 
+
+  def api_user_id_can_see?(api_user_id)
+    whitelist_users.pluck(:user_id).include?(api_user_id)
+  end
+
   # remove heirarch of objects
   def self.terminate_sub_relationships(form_ids)
     FormVersion.where(form_id: form_ids).delete_all

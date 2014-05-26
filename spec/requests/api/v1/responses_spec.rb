@@ -87,7 +87,7 @@ describe "responses" do
       @answers_array = parse_json(response.body)
     end
 
-    it "should returen 0 answer if question was private" do
+    it "should return 0 answer if question was private" do
       expect(@answers_array.first[:answers]).to have(0).answers
     end
 
@@ -114,6 +114,22 @@ describe "responses" do
 
   end
 
+  context "when getting a protected form with one public and private question" do
+  
+    include_context "mission_protected_form_one_public_private_question"
+
+    before do
+      API::V1::AnswerFinder.stub(:form_with_permissions) { @form }
+      get api_v1_responses_path, @params, {'HTTP_AUTHORIZATION' => "Token token=#{@api_user.api_key}"}
+      @answers_array = parse_json(response.body)    
+    end
+
+    it "should have 1 answer" do
+      expect(@answers_array).to have(1).answer
+    end
+
+  end
+
   context "filtering" do
 
     include_context "mission_form_and_two_responses_answered"
@@ -128,7 +144,7 @@ describe "responses" do
       end
 
       it "should find 1 response" do
-        expect(@answers_array.size).to eq 1
+        expect(@answers_array).to have(1).answer
       end
     end
 
@@ -141,7 +157,7 @@ describe "responses" do
       end
 
       it "should find 1 answer" do
-        expect(@answers_array.size).to eq 1
+        expect(@answers_array).to have(1).answer
       end
     end
 

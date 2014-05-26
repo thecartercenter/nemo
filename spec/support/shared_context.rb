@@ -94,3 +94,27 @@ shared_context "mission_form_one_private_question" do
   end
 
 end
+
+shared_context "mission_protected_form_one_public_private_question" do
+  
+  include_context "api_user_and_mission"
+
+  before(:each) do
+    @api_user = FactoryGirl.create(:user)
+    @form.update_attribute(:access_level, AccessLevel::PROTECTED)
+    @form.whitelist_users.create(user_id: @api_user.id)
+
+    @q1 = FactoryGirl.create(:question, mission: @mission, access_level: AccessLevel::PUBLIC)
+    @q2 = FactoryGirl.create(:question, mission: @mission, access_level: AccessLevel::PRIVATE)
+
+    @form.questions << [@q1, @q2]
+
+    response_obj = FactoryGirl.create(:response, form: @form, mission: @mission, user: @form_user)
+    @a1 = FactoryGirl.create(:answer, response: response_obj, questioning_id: @q1.id, value: 10)
+    @a2 = FactoryGirl.create(:answer, response: response_obj, questioning_id: @q2.id, value: 20)
+
+    @params = {form_id: @form.id}
+
+  end
+
+end

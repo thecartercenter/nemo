@@ -9,16 +9,25 @@ class API::V1::AnswerFinder
     self.filter(answers, params)
   end
 
+  
   def self.for_all(params)
     form = self.form_with_permissions(params[:form_id])
     return [] if form.blank?
     self.filter(form.responses, params)
   end
 
+  # empty array is returned if a user does not have access to see the form
+  # TODO: maybe better name here?
   def self.form_with_permissions(form_id)
-    # This allows for protected and public forms
-    # TODO: check for protected form allowed by api user  
-    Form.includes(:responses).where(:id => form_id).where("access_level != ?", AccessLevel::PRIVATE).first
+    @form = Form.where(id: form_id).includes(:responses, :whitelist_users).first
+    if @form.access_level.blank? || (@form.access_level == AccessLevel::PUBLIC) 
+      return @form
+    elsif @form.access_level == AccessLevel::PROTECTED
+      return @form if @form.api_user_id_can_see?(@api_user.id) 
+    else
+      return []  #private
+    end
+
   end
   
   def self.filter(object, params = {})
