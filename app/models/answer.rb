@@ -29,6 +29,9 @@ class Answer < ActiveRecord::Base
   delegate :question, :qtype, :rank, :required?, :hidden?, :option_set, :options, :condition, :to => :questioning
   delegate :name, :hint, :to => :question, :prefix => true
 
+  scope :public_access, includes(:questionable).
+                        where("(questionables.access_level != ?) or (questionables.access_level IS NULL) ", AccessLevel::PRIVATE)
+
   # creates a new answer from a string from odk
   def self.new_from_str(params)
     str = params.delete(:str)
