@@ -76,24 +76,24 @@ describe "responses" do
 
     before do
       @form.update_attribute(:access_level, AccessLevel::PUBLIC)
-      @q = FactoryGirl.create(:question, mission: @mission, access_level: AccessLevel::PUBLIC)
+      @question = FactoryGirl.create(:question, mission: @mission, access_level: AccessLevel::PUBLIC)
 
-      @form.questions << [@q]
+      @form.questions << [@question]
 
       response_obj = FactoryGirl.create(:response, form: @form, mission: @mission, user: @form_user)
-      @a = FactoryGirl.create(:answer, response: response_obj, questioning_id: @q.id, value: 40)
+      @answer = FactoryGirl.create(:answer, response: response_obj, questioning_id: @question.id, value: 40)
       
       get api_v1_responses_path, @params, {'HTTP_AUTHORIZATION' => "Token token=#{@api_user.api_key}"}
       @answers_array = parse_json(response.body)
     end
 
-    it "should returen 0 answer if question was private" do
+    it "should return 0 answer if question was private" do
       expect(@answers_array.first[:answers]).to have(0).answers
     end
 
     it "should return array of 1 answers for public question" do
       expect(@answers_array.last[:answers]).to have(1).answer
-      expect(@answers_array.last[:answers].first[:question]).to eql @q.name
+      expect(@answers_array.last[:answers].first[:question]).to eql @question.name
     end
 
   end

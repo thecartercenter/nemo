@@ -6,7 +6,7 @@ class API::V1::FormsController < API::V1::BaseController
     if params[:mission_name].present?
       @mission = Mission.where(:compact_name => params[:mission_name]).first
       forms = @mission.forms.where(access_level: AccessLevel::PUBLIC).order(:name)
-      paginate :json => (forms + protected_forms)
+      paginate json: (forms + protected_forms), each_serializer: API::V1::FormSerializer
     end
   end
 

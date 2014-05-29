@@ -4,7 +4,7 @@ class API::V1::MissionsController < API::V1::BaseController
 
   def index
     @missions = Mission.all
-    paginate :json => @missions
+    paginate json: @missions
   end
 
 end

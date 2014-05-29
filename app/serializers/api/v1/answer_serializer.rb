@@ -1,4 +1,4 @@
-class AnswerSerializer < ActiveModel::Serializer
+class API::V1::AnswerSerializer < ActiveModel::Serializer
   attributes :answer_id, :answer_value
 
   def answer_id

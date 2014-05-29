@@ -1,4 +1,4 @@
-class QuestionSerializer < ActiveModel::Serializer
+class API::V1::QuestionSerializer < ActiveModel::Serializer
   attributes :question, :answer
 
   def question
