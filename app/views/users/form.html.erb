@@ -37,7 +37,7 @@
 
     <% end %>
   <% end %>
-  <%= f.field(:api_key, :read_only => true) %>
+  <%= f.field(:api_key, :read_only => true) unless @user.new_record? %>
   <div class="submit-buttons">
     <%= f.submit(:class => "btn btn-primary") %>
   </div>
