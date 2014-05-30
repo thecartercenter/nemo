@@ -14,6 +14,10 @@ describe('UrlBuilder', function() {
         expect(builder.build('a', 'b')).toEqual('/en/m/mission1/a/b');
       });
 
+      it('should work with single slash', function() {
+        expect(builder.build('/')).toEqual('/en/m/mission1');
+      });
+
       it('should discard blank components', function() {
         expect(builder.build('a', '', 'b', '')).toEqual('/en/m/mission1/a/b');
       });
