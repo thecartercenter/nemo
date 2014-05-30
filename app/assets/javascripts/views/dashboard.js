@@ -34,7 +34,7 @@
     // this timer ensures that we don't have memory issues due to a long running page
     if (!ELMO.app.dashboard_reload_timer)
       ELMO.app.dashboard_reload_timer = setTimeout(function(){
-        window.location.href = Utils.build_path('welcome') + '?report_id=' + self.report_view.current_report_id;
+        window.location.href = ELMO.app.url_builder.build('welcome') + '?report_id=' + self.report_view.current_report_id;
       }, PAGE_RELOAD_INTERVAL * 60000);
 
     // adjust sizes for the initial load

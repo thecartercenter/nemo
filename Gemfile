@@ -97,3 +97,6 @@ gem 'mocha', :group => [:development, :test], :require => false
 
 # spinner
 gem 'spinjs-rails'
+
+# JS test framework
+gem 'jasmine-rails', :group => [:development, :test]

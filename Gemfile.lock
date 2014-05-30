@@ -96,6 +96,12 @@ GEM
       foreigner (>= 1.2.1)
     innertube (1.1.0)
     iso-639 (0.1.0)
+    jasmine-core (2.0.0)
+    jasmine-rails (0.9.0)
+      jasmine-core (>= 1.3, < 3.0)
+      phantomjs
+      railties (>= 3.1.0)
+      sprockets-rails
     journey (1.0.4)
     jquery-rails (3.0.0)
       railties (>= 3.0, < 5.0)
@@ -123,6 +129,7 @@ GEM
       net-ssh (>= 2.6.5)
     nokogiri (1.5.9)
     orm_adapter (0.5.0)
+    phantomjs (1.9.7.0)
     polyglot (0.3.3)
     rack (1.4.5)
     rack-cache (1.2)
@@ -190,6 +197,8 @@ GEM
       multi_json (~> 1.0)
       rack (~> 1.0)
       tilt (~> 1.1, != 1.3.0)
+    sprockets-rails (0.0.1)
+      sprockets (>= 1.0.2)
     term-ansicolor (1.2.2)
       tins (~> 0.8)
     thinking-sphinx (3.0.6)
@@ -243,6 +252,7 @@ DEPENDENCIES
   i18n-js!
   immigrant
   iso-639
+  jasmine-rails
   jquery-rails
   libxml-ruby
   mocha

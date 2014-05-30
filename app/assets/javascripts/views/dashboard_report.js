@@ -29,7 +29,7 @@
     $('.report_main').empty();
 
     // send ajax request and replace div contents
-    $.get(Utils.build_path('report_update', id))
+    $.get(ELMO.app.url_builder.build('report-update', id))
     .done(function(data){
       $('.report_title').html(data.title);
       $('.report_main').html(data.main);

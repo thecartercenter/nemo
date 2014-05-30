@@ -5,7 +5,7 @@
   <% if (item.submitter_name) { %>
     <div class="by_at">
       <%- I18n.t('report/report.submitted_by_at', {user: item.submitter_name, datetime: item.created_at}) %>,
-      <a href="<%= Utils.build_path('responses', item.response_id) %>"><%= I18n.t('report/report.view_response', {id: item.response_id}) %></a>
+      <a href="<%= ELMO.app.url_builder.build('responses', item.response_id) %>"><%= I18n.t('report/report.view_response', {id: item.response_id}) %></a>
     </div>
   <% } %>
 
