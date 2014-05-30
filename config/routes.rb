@@ -34,7 +34,7 @@ ELMO::Application.routes.draw do
 
   #####################################
   # Mission-mode-only routes
-  scope '(:locale)/:mode/:mission_id', :locale => /[a-z]{2}/, :mode => /m/, :mission_id => /[a-z][a-z0-9]*/ do
+  scope '(:locale)/:mode/:mission_name', :locale => /[a-z]{2}/, :mode => /m/, :mission_name => /[a-z][a-z0-9]*/ do
     resources(:broadcasts) do
       collection do
         post 'new_with_users', :path => 'new-with-users'
@@ -64,7 +64,7 @@ ELMO::Application.routes.draw do
 
   #####################################
   # Admin mode OR mission mode routes
-  scope '(:locale)/:mode(/:mission_id)', :locale => /[a-z]{2}/, :mode => /m|admin/, :mission_id => /[a-z][a-z0-9]*/ do
+  scope '(:locale)/:mode(/:mission_name)', :locale => /[a-z]{2}/, :mode => /m|admin/, :mission_name => /[a-z][a-z0-9]*/ do
 
     # the rest of these routes can have admin mode or not
     resources :forms do
@@ -104,7 +104,7 @@ ELMO::Application.routes.draw do
   end
 
   # Special ODK routes. They are down here so that forms_path doesn't return the ODK variant.
-  scope '(:locale)/:mode/:mission_id', :locale => /[a-z]{2}/, :mode => /m/, :mission_id => /[a-z][a-z0-9]*/ do
+  scope '(:locale)/:mode/:mission_name', :locale => /[a-z]{2}/, :mode => /m/, :mission_name => /[a-z][a-z0-9]*/ do
     get '/formList' => 'forms#index', :format => 'xml'
     get '/forms/:id' => 'forms#show', :format => 'xml', :as => :form_with_mission
     match '/submission' => 'responses#create', :format => 'xml'

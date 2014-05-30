@@ -8,7 +8,7 @@ class ActionController::TestCase
     puts "IN HERE"
     default_url_options[:locale] = I18n.locale
     default_url_options[:mode] = 'm'
-    default_url_options[:mission_id] = 'missionwithsettings'
+    default_url_options[:mission_name] = 'missionwithsettings'
   end
 
   # def process_with_default_locale(action, parameters = nil, session = nil, flash = nil, http_method = 'GET')

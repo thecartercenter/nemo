@@ -6,15 +6,15 @@ describe 'router' do
       :controller => 'forms', :action => 'index', :locale => 'en', :mode => 'admin')
   end
 
-  it 'routes admin mode forms even with mission_id' do
+  it 'routes admin mode forms even with mission_name' do
     # Note this seems wrong but will be caught after routing by the ApplicationController
     { :get => '/en/admin/mission123/forms' }.should route_to(
-      :controller => 'forms', :action => 'index', :locale => 'en', :mode => 'admin', :mission_id => 'mission123')
+      :controller => 'forms', :action => 'index', :locale => 'en', :mode => 'admin', :mission_name => 'mission123')
   end
 
   it 'routes mission mode forms' do
     { :get => '/en/m/mission123/forms' }.should route_to(
-      :controller => 'forms', :action => 'index', :locale => 'en', :mode => 'm', :mission_id => 'mission123')
+      :controller => 'forms', :action => 'index', :locale => 'en', :mode => 'm', :mission_name => 'mission123')
   end
 
   it 'rejects forms with no mode' do
@@ -28,6 +28,6 @@ describe 'router' do
 
   it 'routes options suggest in mission mode' do
     { :get => '/en/m/mission123/options/suggest' }.should route_to(
-      :controller => 'options', :action => 'suggest', :locale => 'en', :mode => 'm', :mission_id => 'mission123')
+      :controller => 'options', :action => 'suggest', :locale => 'en', :mode => 'm', :mission_name => 'mission123')
   end
 end

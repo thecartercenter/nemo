@@ -40,7 +40,7 @@ class SettingsTest < ActionDispatch::IntegrationTest
     assert_equal('Brisbane', Time.zone.name)
 
     # create a new mission and ensure that a new setting object was created with the default timezone
-    post(missions_path(:mode => 'admin', :mission_id => nil), :mission => {:name => 'Foo'})
+    post(missions_path(:mode => 'admin', :mission_name => nil), :mission => {:name => 'Foo'})
     follow_redirect!
     assert_response(:success)
     assert_equal(Setting::DEFAULTS[:timezone], Mission.find_by_name('Foo').setting.timezone)
@@ -54,7 +54,7 @@ class SettingsTest < ActionDispatch::IntegrationTest
     login(@admin)
 
     # Switch to a mission with known funny timezone and make sure timezone not UTC.
-    get(mission_root_path(:mode => 'm', :mission_id => get_mission.compact_name))
+    get(mission_root_path(:mode => 'm', :mission_name => get_mission.compact_name))
     assert_not_equal(Setting::DEFAULTS[:timezone], Time.zone.name)
 
     # logout and ensure timezone reverts to UTC
@@ -65,13 +65,13 @@ class SettingsTest < ActionDispatch::IntegrationTest
   test "locales should get copied properly" do
     get_mission.setting.update_attributes!(:preferred_locales_str => "fr,ar")
     login(@admin)
-    get(mission_root_path(:mode => 'm', :mission_id => get_mission.compact_name))
+    get(mission_root_path(:mode => 'm', :mission_name => get_mission.compact_name))
     assert_equal([:fr, :ar], configatron.preferred_locales)
   end
 
   private
     def update_timezone_for_setting(setting, timezone)
-      put(setting_path(setting, :mode => 'm', :mission_id => setting.mission.compact_name), :setting => {:timezone => timezone})
+      put(setting_path(setting, :mode => 'm', :mission_name => setting.mission.compact_name), :setting => {:timezone => timezone})
       follow_redirect!
       assert_response(:success)
     end

@@ -111,7 +111,7 @@ class ActiveSupport::TestCase
     params[:mode] = 'm' if params[:mode] == 'mission'
     mission = params.delete(:mission)
     mission ||= obj.mission if obj
-    params[:mission_id] = mission.try(:compact_name)
+    params[:mission_name] = mission.try(:compact_name)
     send("#{name}_path", *[obj, params].compact)
   end
 

@@ -30,11 +30,11 @@ module Concerns::ApplicationController::Authentication
 
   def get_mission
     # if we're in admin mode, the current mission is nil and we need to set the user's current mission to nil also
-    if mission_mode? && params[:mission_id].present?
+    if mission_mode? && params[:mission_name].present?
       # Look up the current mission based on the mission_id.
       # This will return 404 immediately if the mission was specified but isn't found.
       # This helps out people typing in the URL (esp. ODK users) by letting them know permission is not an issue.
-      @current_mission = Mission.with_compact_name(params[:mission_id])
+      @current_mission = Mission.with_compact_name(params[:mission_name])
 
       # save the current mission in the session so we can remember it if the user goes into admin mode
       session[:last_mission_id] = @current_mission.try(:id)

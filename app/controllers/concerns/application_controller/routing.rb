@@ -3,11 +3,11 @@ module Concerns::ApplicationController::Routing
   extend ActiveSupport::Concern
 
   def check_route
-    raise "params[:mission_id] not allowed in #{current_mode} mode" if !mission_mode? && params[:mission_id].present?
+    raise "params[:mission_name] not allowed in #{current_mode} mode" if !mission_mode? && params[:mission_name].present?
   end
 
   def default_url_options(options={})
-    { :locale => I18n.locale, :mode => params[:mode], :mission_id => current_mission.try(:compact_name) }
+    { :locale => I18n.locale, :mode => params[:mode], :mission_name => current_mission.try(:compact_name) }
   end
 
   # mailer is for some reason too stupid to figure these out on its own
@@ -19,7 +19,7 @@ module Concerns::ApplicationController::Routing
   end
 
   def appropriate_root_path
-    current_mission ? mission_root_path(:mode => 'm', :mission_id => current_mission.compact_name) : basic_root_path
+    current_mission ? mission_root_path(:mode => 'm', :mission_name => current_mission.compact_name) : basic_root_path
   end
 
   def current_mode

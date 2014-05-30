@@ -11,7 +11,7 @@ class AdminModeTest < ActionDispatch::IntegrationTest
   test "path helpers still should work after addition of admin routes" do
     @option_set = FactoryGirl.create(:option_set)
     assert_equal("/en/m/#{get_mission.compact_name}/option-sets/#{@option_set.id}",
-      option_set_path(@option_set, :mode => 'm', :mission_id => get_mission.compact_name))
+      option_set_path(@option_set, :mode => 'm', :mission_name => get_mission.compact_name))
     assert_equal("/en", basic_root_path)
     assert_equal("/en/admin", admin_root_path(:mode => 'admin'))
   end
