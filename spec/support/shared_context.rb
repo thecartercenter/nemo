@@ -62,11 +62,11 @@ shared_context "mission_form_and_two_responses_answered" do
 
     @form.questions << [@q1]
 
-    response_obj = FactoryGirl.create(:response, form: @form, mission: @mission, user: @form_user)
-    @a1 = FactoryGirl.create(:answer, response: response_obj, questioning_id: @q1.id, value: 10)
+    @response1 = FactoryGirl.create(:response, form: @form, mission: @mission, user: @form_user)
+    @a1 = FactoryGirl.create(:answer, response: @response1, questioning_id: @q1.id, value: 10)
 
-    response_obj = FactoryGirl.create(:response, form: @form, mission: @mission, user: @form_user)
-    @a2 = FactoryGirl.create(:answer, response: response_obj, questioning_id: @q1.id, value: 20)
+    @response2 = FactoryGirl.create(:response, form: @form, mission: @mission, user: @form_user)
+    @a2 = FactoryGirl.create(:answer, response: @response2, questioning_id: @q1.id, value: 20)
 
     @params = {form_id: @form.id, question_id: @q1.id}
 
