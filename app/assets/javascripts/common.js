@@ -18,27 +18,6 @@ String.prototype.rpad = function(pad_str, length) {
   return str;
 }
 
-// ruby-like collect
-(function($) {
-    $.fn.collect = function(callback) {
-        if (typeof(callback) == "function") {
-            var collection = [];
-
-            $(this).each(function() {
-                var item = callback.apply(this);
-
-                if (item)
-                    collection.push(item);
-            });
-
-            return collection;
-        }
-
-        return this;
-    }
-})(jQuery);
-
-
 function logout() {
   // click the logout button
   if ($('#logout_button')) $('#logout_button').click();
