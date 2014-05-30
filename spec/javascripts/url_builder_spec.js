@@ -64,6 +64,10 @@ describe('UrlBuilder', function() {
         expect(builder.build('a', 'b')).toEqual('/en/a/b');
       });
 
+      it('should work with single slash', function() {
+        expect(builder.build('/')).toEqual('/en');
+      });
+
       it('should accept a new locale', function() {
         expect(builder.build('a', 'b', {locale: 'fr'})).toEqual('/fr/a/b');
       });

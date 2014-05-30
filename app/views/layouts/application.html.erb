@@ -28,6 +28,8 @@
       session_timeout: <%=j User::SESSION_TIMEOUT %>,
       login_path: <%=j login_path.to_json.html_safe %>
     });
+
+    new ELMO.Views.MissionChangeDropdown({el: '#change_mission select'});
   <% end %>
 
   <%= yield(:per_page_js) %>
@@ -56,6 +58,12 @@
       <% unless admin_mode? %>
         <%# current mission and dropdown, if there are choices %>
         <% unless @accessible_missions.empty? %>
+          <form id="change_mission">
+            <%= select_tag('change_mission',
+              options_from_collection_for_select(@accessible_missions, 'compact_name', 'name', current_mission.try(:compact_name)),
+              :class => 'form-control',
+              :prompt => "[#{I18n.t('common.none')}]") %>
+          </form>
         <% else %>
           <strong><%= current_mission ? current_mission.name : t("common.none") %></strong>
         <% end %>
