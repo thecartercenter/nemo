@@ -83,7 +83,6 @@ ELMO::Application.routes.draw do
     resources :users do
       member do
         get 'login_instructions', :path => 'login-instructions'
-        get 'exit_admin_mode', :path => 'exit-admin-mode'
       end
       post 'export', :on => :collection
     end

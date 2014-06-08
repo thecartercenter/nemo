@@ -12,22 +12,16 @@ module TemplateHelper
       role = tag("br")
     end
 
-    return content_tag('i', '', {:class => 'fa fa-2x fa-user', :title => t("page_titles.users.edit_profile")}) + tag("br") +
+    return content_tag(:i, '', {:class => 'fa fa-2x fa-user', :title => t("page_titles.users.edit_profile")}) + tag("br") +
       current_user.login + tag("br") + role
   end
 
-
-  # gets html for admin mode icon
-  def admin_link
-    if admin_mode?
-      link_to(content_tag('i', '', :class => 'fa fa-2x fa-times') + tag("br") + t('admin_mode.exit_admin_mode'),
-        exit_admin_mode_user_url(current_user),
-        :class => 'exit_admin_mode admin-mode', :title => t('admin_mode.exit_admin_mode'))
-    else
-      link_to(content_tag('i', '', :class => 'fa fa-2x fa-key admin') +
-        content_tag('span', t('admin_mode.goto_admin_mode'), :class => 'admin'),
-        admin_root_url(:mode => 'admin'), :class => 'goto_admin_mode admin-mode', :title => t('admin_mode.goto_admin_mode'))
-    end
+  def admin_mode_link
+    verb = admin_mode? ? 'exit' : 'goto'
+    icon = admin_mode? ? 'times' : 'key'
+    text = t("admin_mode.#{verb}_admin_mode")
+    path = admin_mode? ? admin_mode_exit_path : admin_root_path(:mode => 'admin', :mission_name => nil)
+    link_to(content_tag(:i, '', :class => "fa fa-2x fa-#{icon}") + tag('br') + text, path,
+      :class => "admin-mode #{verb}-admin-mode", :title => text)
   end
-
 end

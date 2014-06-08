@@ -37,7 +37,7 @@ module Concerns::ApplicationController::Authentication
       @current_mission = Mission.with_compact_name(params[:mission_name])
 
       # save the current mission in the session so we can remember it if the user goes into admin mode
-      session[:last_mission_id] = @current_mission.try(:id)
+      session[:last_mission_name] = @current_mission.try(:compact_name)
     else
       @current_mission = nil
     end

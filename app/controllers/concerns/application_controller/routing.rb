@@ -58,4 +58,11 @@ module Concerns::ApplicationController::Routing
       redirect_to(uri.to_s)
     end
   end
+
+  # The path to which the user should be directed if exiting admin mode.
+  def admin_mode_exit_path
+    session[:last_mission_name] ?
+      mission_root_path(:mode => 'm', :mission_name => session[:last_mission_name]) :
+      basic_root_path(:mode => nil, :mission_name => nil)
+  end
 end

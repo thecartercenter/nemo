@@ -8,6 +8,13 @@ class AdminModeTest < ActionDispatch::IntegrationTest
     @nonadmin = FactoryGirl.create(:user)
   end
 
+  test "admin mode link works" do
+    login(@admin)
+    assert_select('a.admin-mode[href=/en/admin]', true)
+    get('/en/admin')
+    assert_response(:success)
+  end
+
   test "path helpers still should work after addition of admin routes" do
     @option_set = FactoryGirl.create(:option_set)
     assert_equal("/en/m/#{get_mission.compact_name}/option-sets/#{@option_set.id}",
@@ -32,12 +39,12 @@ class AdminModeTest < ActionDispatch::IntegrationTest
     # login as admin and check for admin mode link
     login(@admin)
     get(basic_root_url)
-    assert_select("div#userinfo a.goto_admin_mode")
+    assert_select("div#userinfo a.admin-mode")
 
     # login as other user and make sure not available
     logout
     login(@nonadmin)
-    assert_select("div#userinfo a.goto_admin_mode", false)
+    assert_select("div#userinfo a.admin-mode", false)
   end
 
   test "params admin_mode should be correct" do
@@ -63,7 +70,7 @@ class AdminModeTest < ActionDispatch::IntegrationTest
     assert_select('form#change_mission', false)
 
     # exit admin mode link should be visible instead
-    assert_select('a.exit_admin_mode')
+    assert_select('a.exit-admin-mode')
   end
 
   test "creating a form in admin mode should create a standard form" do
@@ -133,4 +140,22 @@ class AdminModeTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test "exit admin mode link leads back to last mission if exists" do
+    login(@admin)
+
+    # Visit a mission to establish the last mission.
+    mission_url = "/en/m/#{get_mission.compact_name}"
+    get(mission_url)
+
+    get('/en/admin')
+    assert_response(:success)
+    assert_select("a.exit-admin-mode[href=#{mission_url}]")
+  end
+
+  test "exit admin mode link leads to basic mode if no last mission name stored" do
+    login(@admin)
+    get('/en/admin')
+    assert_response(:success)
+    assert_select("a.exit-admin-mode[href=/en]")
+  end
 end

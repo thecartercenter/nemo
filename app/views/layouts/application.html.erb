@@ -71,9 +71,7 @@
 
       <%# admin mode link %>
       <% if current_user.admin? %>
-        <div class="icon-btn">
-        <%= admin_link() %>
-        </div>
+        <div class="icon-btn"><%= admin_mode_link %></div>
       <% end %>
 
       <%# link to edit profile %>

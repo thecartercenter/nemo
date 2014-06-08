@@ -102,15 +102,6 @@ class UsersController < ApplicationController
     end
   end
 
-  # If user has last mission, redirects to mission root, else to basic root.
-  def exit_admin_mode
-    if m = Mission.where(:id => session[:last_mission_id]).first
-      redirect_to(mission_root_url(:mode => 'm', :mission_name => m.compact_name))
-    else
-      redirect_to(basic_root_url)
-    end
-  end
-
   private
 
     # if we need to print instructions, redirects to the instructions action. otherwise redirects to index.
