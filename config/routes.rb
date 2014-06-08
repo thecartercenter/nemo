@@ -44,7 +44,7 @@ ELMO::Application.routes.draw do
     resources :sms, :only => [:index, :create]
     resources :sms_tests, :path => 'sms-tests'
 
-    namespace :report  do
+    namespace :report do
       resources :reports
 
       # need to list these all separately b/c rails is dumb sometimes
