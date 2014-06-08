@@ -3,7 +3,8 @@ require 'test_helper'
 class AuthorizationTest < ActionDispatch::IntegrationTest
 
   setup do
-    @other_mission = FactoryGirl.create(:mission, :name => "Other")
+    @mission1 = get_mission
+    @mission2 = FactoryGirl.create(:mission, :name => "Other")
   end
 
   test "guests can see login page" do
@@ -30,15 +31,15 @@ class AuthorizationTest < ActionDispatch::IntegrationTest
 
   test "user redirected to root if unauthorized" do
     @user = FactoryGirl.create(:user, :role_name => :observer)
-    login(@user)
     assert_cannot_access(@user, '/en/admin/missions')
   end
 
   test "coordinator can only view forms for current mission" do
     @user = FactoryGirl.create(:user, :role_name => :coordinator)
-    @form1 = FactoryGirl.create(:form, :mission_id => get_mission.id)
-    @form2 = FactoryGirl.create(:form, :mission_id => @other_mission.id)
-    assert_can_access(@user, '/en/m/missionwithsettings/forms')
+    @form1 = FactoryGirl.create(:form, :mission_id => @mission1.id)
+    @form2 = FactoryGirl.create(:form, :mission_id => @mission2.id)
+    assert_can_access(@user, "/en/m/#{@mission1.compact_name}/forms")
+    assert_cannot_access(@user, "/en/m/#{@mission2.compact_name}/forms")
   end
 
   test "observer can update own name" do
