@@ -83,7 +83,7 @@
 
       <%# logout button %>
       <div class="icon-btn">
-        <%= link_to(content_tag('i','', {:class => 'fa fa-2x fa-sign-out', :title => t("common.logout")}), logout_path, :method => :delete, :id => "logout_button") %>
+        <%= link_to(content_tag('i','', {:class => 'fa fa-2x fa-sign-out', :title => t("common.logout")}), logout_path(:mode => nil, :mission_name => nil), :method => :delete, :id => "logout_button") %>
         <br/><br/>&nbsp;
       </div>
 
