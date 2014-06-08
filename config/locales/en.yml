@@ -309,6 +309,7 @@ en:
         from: "From"
         sent_at: "Time Sent"
         to: "To"
+        received_at: "Time Received"
       sms/test:
         from: "From"
         body: "Body"
