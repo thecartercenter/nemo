@@ -8,7 +8,7 @@ ELMO::Application.routes.draw do
   #####################################
   # Basic routes (neither mission nor admin mode)
   scope '(:locale)', :locale => /[a-z]{2}/ do
-    resources :password_resets
+    resources :password_resets, :path => 'password-resets'
     resource :user_session
 
     # For viewing/editing user profiles, which is neither mode

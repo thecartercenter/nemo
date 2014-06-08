@@ -43,15 +43,8 @@ class PasswordResetTest < ActionDispatch::IntegrationTest
     end
 
     # make sure url is correct
-    # first get the url
     email = ActionMailer::Base.deliveries.first
-    url = email.body.match(/https?:.+\/edit/).to_s
-
-    # make sure we actually found it
-    assert_match(/^http/, url)
-
-    # ensure no /admin/ chunk in email
-    assert_not_match("/admin/", url)
+    assert_match(%r{^https?://.+/en/password-resets/\w+/edit$}, email.body.to_s)
 
     # ensure no missing translations
     assert_not_match(/translation_missing/, email.body.to_s)
