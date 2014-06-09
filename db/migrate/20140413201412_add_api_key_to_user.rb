@@ -1,4 +1,4 @@
-class AddApiKeyToUser < ActiveRecord::Migration
+class AddAPIKeyToUser < ActiveRecord::Migration
   def change
     add_column :users, :api_key, :string
   end
