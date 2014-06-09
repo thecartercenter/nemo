@@ -95,13 +95,6 @@ ActiveRecord::Schema.define(:version => 20140503160249) do
   add_index "conditions", ["ref_qing_id"], :name => "conditions_ref_qing_id_fk"
   add_index "conditions", ["standard_id"], :name => "index_conditions_on_standard_id"
 
-  create_table "form_api_users", :force => true do |t|
-    t.integer  "user_id"
-    t.integer  "form_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
-
   create_table "form_versions", :force => true do |t|
     t.integer  "form_id"
     t.integer  "sequence",   :default => 1
