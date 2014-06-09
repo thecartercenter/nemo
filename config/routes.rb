@@ -5,11 +5,11 @@ ELMO::Application.routes.draw do
       get "/missions/:mission_name/forms", to: "forms#index", as: :misson_forms
       resources :forms, only: :show
       resources :missions, only: :index
-      resources :responses, only: :index   
+      resources :responses, only: :index
       resources :answers, only: :index
     end
   end
-  
+
   # redirects for ODK
   # shortened (/m)
   match "/m/:mission_compact_name/formList" => 'forms#index', :format => :xml
@@ -75,6 +75,7 @@ ELMO::Application.routes.draw do
       member do
         get 'login_instructions'
         get 'exit_admin_mode'
+        put 'regenerate_key'
       end
       post 'export', :on => :collection
     end

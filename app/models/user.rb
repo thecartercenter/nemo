@@ -35,7 +35,7 @@ class User < ActiveRecord::Base
   before_destroy(:check_assoc)
   before_validation(:generate_password_if_none)
   after_save(:rebuild_ability)
-  after_create(:generate_api_key)
+  after_create(:regenerate_api_key)
 
   validates(:name, :presence => true)
   validates(:pref_lang, :presence => true)
@@ -276,6 +276,14 @@ class User < ActiveRecord::Base
     Hash[*assignments.map{|a| [a.mission, a.role]}.flatten]
   end
 
+  def regenerate_api_key
+    # loop if necessary till unique token generated
+    begin
+      self.api_key = SecureRandom.hex
+    end while User.exists?(api_key: api_key)
+    save
+  end
+
   private
     def normalize_fields
       %w(phone phone2 login name email).each{|f| self.send("#{f}").try(:strip!)}
@@ -374,13 +382,5 @@ class User < ActiveRecord::Base
       rescue ActiveModel::MissingAttributeError
         # we rescue this error in case find_by_sql is being used
       end
-    end
-
-    def generate_api_key
-      # loop if necessary till unique token generated
-      begin
-        self.api_key = SecureRandom.hex
-      end while User.exists?(api_key: api_key)
-      save 
     end
 end

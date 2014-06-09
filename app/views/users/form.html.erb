@@ -37,7 +37,7 @@
 
     <% end %>
   <% end %>
-  <%= f.field(:api_key, :read_only => true) unless @user.new_record? %>
+  <%= f.field(:api_key, :partial => 'api_key') if !@user.new_record? && can?(:regenerate_key, @user) %>
   <div class="submit-buttons">
     <%= f.submit(:class => "btn btn-primary") %>
   </div>

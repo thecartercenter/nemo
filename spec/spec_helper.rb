@@ -46,3 +46,12 @@ def parse_json(body)
   JSON.parse(body, symbolize_names: true)
 end
 
+# Currently duplicated in test/test_helper until it becomes obvious how to refactor.
+def login(user)
+  post(user_session_path, :user_session => {:login => user.login, :password => "password"})
+  follow_redirect!
+  assert_response(:success)
+
+  # reload the user since some stuff may have changed in database (e.g. current_mission) during login process
+  user.reload
+end
