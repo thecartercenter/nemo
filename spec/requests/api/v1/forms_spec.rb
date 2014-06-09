@@ -7,9 +7,9 @@ describe "accessing forms" do
     @form1 = @mission.forms.create(name: "test1", access_level: AccessLevel::PRIVATE)
     @form2 = @mission.forms.create(name: "test2", access_level: AccessLevel::PUBLIC)
     @api_user = FactoryGirl.create(:user)
-  end 
+  end
 
-  
+
   context "Public Forms are returned for a mission" do
 
     before do
@@ -23,12 +23,22 @@ describe "accessing forms" do
 
   end
 
+  context "with invalid mission" do
+    before do
+      get api_v1_misson_forms_path(mission_name: 'junk'), {}, {'HTTP_AUTHORIZATION' => "Token token=#{@api_user.api_key}"}
+    end
+
+    it "returns 404" do
+      expect(response.status).to eq(404)
+    end
+  end
+
   context "View metadata on a form" do
 
     before do
       q1 = FactoryGirl.create(:question, mission: @mission, access_level: AccessLevel::PUBLIC)
       q2 = FactoryGirl.create(:question, mission: @mission, access_level: AccessLevel::PUBLIC)
-      q3 = FactoryGirl.create(:question, mission: @mission, access_level: AccessLevel::PRIVATE)      
+      q3 = FactoryGirl.create(:question, mission: @mission, access_level: AccessLevel::PRIVATE)
       @form1.questions.push(q1, q2, q3)
       get api_v1_form_path(@form1.id), {}, {'HTTP_AUTHORIZATION' => "Token token=#{@api_user.api_key}"}
       @form_json = parse_json(response.body)

@@ -21,9 +21,9 @@ class API::V1::BaseController < ApplicationController
       format.json { render json: 'Bad Credentials', status: 401}
     end
   end
-  
+
   private
-  
+
   def default_serializer_options
     {root: false}
   end
