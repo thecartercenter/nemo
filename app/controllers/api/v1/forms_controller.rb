@@ -29,6 +29,8 @@ class API::V1::FormsController < API::V1::BaseController
     end
     render :json => @form.to_json(only: [:id, :name, :created_at, :updated_at],
                                   include: {questions: {methods: :name, only: :id}})
+  rescue ActiveRecord::RecordNotFound
+    render :json => [], :status => 404
   end
 
   private
@@ -36,5 +38,5 @@ class API::V1::FormsController < API::V1::BaseController
   def protected_forms
     @mission.forms.joins(:whitelist_users).where(whitelists: {user_id: @api_user.id}).order(:name)
   end
-
+  
 end
