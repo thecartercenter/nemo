@@ -347,7 +347,7 @@ en:
         smsable: "Whether the form accepts SMS submissions. This can affect when the version number is incremented."
         allow_incomplete: "Whether to allow incomplete submissions in extenuating cases where full information is not available. Note that the question 'required' featured should be preferred here."
         version: "The current version number and letter code."
-        access_level: "Public: Any ELMO user can access the data via the API. Private: No one can access the data via the API. Protected: Only users with access can access data via the API."
+        access_level: "Public: Any ELMO user can access the data via the API. Protected: Only specific users can access data via the API. Private: Nobody can access the data via the API."
       mission:
         name: "A name for this Mission. Maximum 32 characters. Must be unique. Think about including the year if there will be future missions with the same name."
         locked: "If a mission is locked, Responses and Forms cannot be created or edited and Users cannot be added or deleted."
