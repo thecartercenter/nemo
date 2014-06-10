@@ -82,6 +82,30 @@ class AuthorizationTest < ActionDispatch::IntegrationTest
     assert_nil(admin.current_mission)
   end
 
+  test "non logged-in user receives basic auth prompt when accessing xml resource" do
+    admin = FactoryGirl.create(:user, :admin => true)
+    form = FactoryGirl.create(:form)
+    get(form_with_mission_path(:id => form.id, :mission_compact_name => form.mission.compact_name))
+    assert_response(401)
+    assert_not_nil(response.headers['WWW-Authenticate'])
+  end
+
+  test "logged-in user does not receive 401 when accessing xml resource" do
+    user = FactoryGirl.create(:user, :role_name => :observer)
+    form = FactoryGirl.create(:form)
+    form.publish!
+    login(user)
+    get(form_with_mission_path(:id => form.id, :mission_compact_name => form.mission.compact_name))
+    assert_response(200)
+  end
+
+  test "non logged-in user does not receive basic auth prompt when accessing non-xml resource" do
+    user = FactoryGirl.create(:user, :role_name => :observer)
+    get(forms_path)
+    assert_response(302)
+    assert_nil(response.headers['WWW-Authenticate'])
+  end
+
   private
     # logs in a user and attempts to load the given path
     # errors if the response is not 200

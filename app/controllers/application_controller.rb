@@ -204,16 +204,23 @@ class ApplicationController < ActionController::Base
     # this just sets the current user for this one request. no user session is created.
     def basic_auth_for_xml
 
-      begin
-        return unless request.format == Mime::XML
+      return unless request.format == Mime::XML
 
+      begin
         # xml requests not allowed in admin mode
         raise ArgumentError.new("xml requests not allowed in admin mode") if admin_mode?
 
-        # authenticate with basic
-        user = authenticate_with_http_basic do |login, password|
-          # use eager loading to optimize things a bit
-          User.includes(:assignments).find_by_credentials(login, password)
+        user = nil
+
+        # check for stored session first
+        if user_session = UserSession.find
+          user = user_session.user
+        else
+          # else try to authenticate with basic
+          user = authenticate_with_http_basic do |login, password|
+            # use eager loading to optimize things a bit
+            User.includes(:assignments).find_by_credentials(login, password)
+          end
         end
 
         # if authentication not successful, fail
