@@ -4,7 +4,14 @@
     <model>
       <instance>
         <%# include both form ID and form version sequence number in ODK form ID %>
-        <data id="<%= @form.id %>" version="<%= @form.current_version.sequence %>">
+        <% if @style == 'commcare' %>
+          <data xmlns:jrm="http://dev.commcarehq.org/jr/xforms"
+            xmlns="http://openrosa.org/formdesigner/<%= @form.id %>"
+            id="<%= @form.id %>"
+            uiVersion="1" version="<%= @form.current_version.sequence %>" name="<%= @form.full_name %>">
+        <% else %>
+          <data id="<%= @form.id %>" version="<%= @form.current_version.sequence %>">
+        <% end %>
 
           <%# regular question nodes %>
           <% @form.visible_questionings.each do |q| %>
@@ -18,16 +25,18 @@
       </instance>
       <itext>
         <% configatron.preferred_locales.each do |lang| %>
-          <translation lang="<%= language_name(lang) %>">
+          <translation lang="<%= @style == 'commcare' ? lang : language_name(lang) %>">
 
             <%# regular question translations %>
             <% @form.visible_questionings.each do |q| %>
               <text id="<%= q.question.odk_code %>:label">
                 <value><%= q.question.name(lang, :strict => false) %></value>
               </text>
-              <text id="<%= q.question.odk_code %>:hint">
-                <value><%= q.question.hint(lang, :strict => false) %></value>
-              </text>
+              <% unless @style == 'commcare' %>
+                <text id="<%= q.question.odk_code %>:hint">
+                  <value><%= q.question.hint(lang, :strict => false) %></value>
+                </text>
+              <% end %>
             <% end %>
             <% @form.option_sets.collect{|set| set.options}.flatten.uniq{|o| o.id}.each do |opt| %>
               <text id="option<%= opt.id %>">
@@ -36,7 +45,7 @@
             <% end %>
 
             <%# incomplete response question translations %>
-            <% if @form.allow_incomplete? %>
+            <% if allow_incomplete? %>
               <text id="<%= OdkHelper::IR_QUESTION %>:label">
                 <value><%= t('incomplete_response.missing_answers.label') %></value>
               </text>
@@ -66,7 +75,7 @@
       <% end %>
 
       <%# incomplete response question bindings %>
-      <% if @form.allow_incomplete? %>
+      <% if allow_incomplete? %>
         <%= ir_question_binding(@form) %>
         <%= ir_code_binding(@form) %>
       <% end %>
@@ -79,7 +88,9 @@
       <% next if q.question.qtype.odk_tag.nil? %>
       <%= odk_input_tag(q) do %>
         <label ref="jr:itext('<%= q.question.odk_code %>:label')"/>
-        <hint ref="jr:itext('<%= q.question.odk_code %>:hint')"/>
+        <% unless @style == 'commcare' %>
+          <hint ref="jr:itext('<%= q.question.odk_code %>:hint')"/>
+        <% end %>
         <% if set = q.question.option_set %>
           <% set.options.each do |opt| %>
             <item>
@@ -92,7 +103,7 @@
     <% end %>
 
     <%# incomplete response question form controls %>
-    <% if @form.allow_incomplete? %>
+    <% if allow_incomplete? %>
       <select1 ref="/data/<%= OdkHelper::IR_QUESTION %>">
         <label ref="jr:itext('<%= OdkHelper::IR_QUESTION %>:label')"/>
         <% [:no, :yes].each do |o| %>
