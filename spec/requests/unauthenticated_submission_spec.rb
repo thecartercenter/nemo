@@ -51,7 +51,7 @@ describe 'unauthenticated submissions', :type => :request do
       context 'with a valid username embedded' do
         before do
           @user = FactoryGirl.create(:user, :role_name => :observer)
-          submit_xml_response("<#{@question.odk_code}>42</#{@question.odk_code}><n0:username>#{@user.login}</n0:username>")
+          submit_xml_response("<#{@question.odk_code}>42</#{@question.odk_code}><username>#{@user.login}</username>")
         end
 
         it 'should set correct user' do
@@ -88,7 +88,7 @@ describe 'unauthenticated submissions', :type => :request do
 
       context 'with invalid username embedded' do
         before do
-          submit_xml_response('<data><n0:username>foo</n0:username>')
+          submit_xml_response('<data><username>foo</username>')
         end
 
         it 'should return 401' do
@@ -101,7 +101,7 @@ describe 'unauthenticated submissions', :type => :request do
         before do
           other_mission = FactoryGirl.create(:mission, :name => 'Other mission')
           @user = FactoryGirl.create(:user, :role_name => :observer, :mission => other_mission)
-          submit_xml_response("<n0:username>#{@user.login}</n0:username>")
+          submit_xml_response("<username>#{@user.login}</username>")
         end
 
         it 'should return 401' do

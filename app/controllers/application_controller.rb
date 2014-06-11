@@ -281,7 +281,7 @@ class ApplicationController < ActionController::Base
 
         Rails.logger.debug("CONTENTS: #{contents}")
 
-        if contents =~ /<n0:username>(.+?)<\/n0:username>/
+        if contents =~ /<username>(.+?)<\/username>/
           login = $1
         else
           render :text => 'USERNAME_NOT_SPECIFIED', :status => :unauthorized
