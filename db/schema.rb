@@ -143,8 +143,7 @@ ActiveRecord::Schema.define(:version => 20140610205319) do
     t.string   "compact_name"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "locked",                            :default => false, :null => false
-    t.boolean  "allow_unauthenticated_submissions", :default => false
+    t.boolean  "locked",       :default => false, :null => false
   end
 
   add_index "missions", ["compact_name"], :name => "index_missions_on_compact_name"
@@ -361,6 +360,7 @@ ActiveRecord::Schema.define(:version => 20140610205319) do
     t.string   "incoming_sms_number"
     t.string   "preferred_locales"
     t.string   "override_code"
+    t.boolean  "allow_unauthenticated_submissions", :default => false
   end
 
   add_index "settings", ["mission_id"], :name => "settings_mission_id_fk"

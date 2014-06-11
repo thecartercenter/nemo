@@ -19,7 +19,8 @@ describe 'unauthenticated submissions', :type => :request do
 
   context 'to a mission where they are allowed' do
     before do
-      @mission = FactoryGirl.create(:mission, :allow_unauthenticated_submissions => true)
+      @mission = get_mission
+      @mission.setting.update_attributes!(:allow_unauthenticated_submissions => true)
       @submission_url = "/m/#{@mission.compact_name}/noauth/submission"
       @form = FactoryGirl.create(:form, :mission => @mission, :question_types => %w(integer))
       @form.publish!
