@@ -79,6 +79,10 @@ class FormsController < ApplicationController
       format.xml do
         authorize!(:download, @form)
         @form.add_download
+
+        # xml style defaults to odk but can be specified via query string
+        @style = params[:style] || 'odk'
+
         render_openrosa
       end
     end

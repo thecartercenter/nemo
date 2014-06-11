@@ -172,8 +172,10 @@ class Ability
       end
 
       # Can't change own assignments
-      cannot :change_assignments, User, ["id = ?", user.id] do |other_user|
-        user.id == other_user.id
+      unless user.admin?
+        cannot :change_assignments, User, ["id = ?", user.id] do |other_user|
+          user.id == other_user.id
+        end
       end
     end
 

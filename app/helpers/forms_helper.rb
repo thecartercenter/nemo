@@ -149,4 +149,8 @@ module FormsHelper
   def submit_number
     content_tag("strong", configatron.incoming_sms_number.blank? ? "[" + t("sms_form.guide.unknown_number") + "]" : configatron.incoming_sms_number)
   end
+
+  def allow_incomplete?
+    @form.allow_incomplete? && @style != 'commcare'
+  end
 end
