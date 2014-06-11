@@ -261,6 +261,12 @@ class ApplicationController < ActionController::Base
     def process_noauth(mission)
       user = nil
 
+      # Check the override setting
+      if !configatron.allow_unauthenticated_submissions?
+        render :nothing => true, :status => 404
+        return false
+      end
+
       if mission.allow_unauthenticated_submissions?
         # Look for username in submission
         upfile = params[:xml_submission_file]
