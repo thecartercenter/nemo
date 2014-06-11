@@ -67,6 +67,16 @@ class AuthorizationTest < ActionDispatch::IntegrationTest
     assert_equal('staffer', obs.reload.assignments.first.role)
   end
 
+  test "admin can update own assignments in admin mode" do
+    user = FactoryGirl.create(:user, :admin => true)
+    user.assignments.delete_all
+    login(user)
+    put(user_path(user, :admin_mode => 'admin'),
+      :user => {:assignments_attributes => [{:mission_id => get_mission.id, :role => 'coordinator'}]})
+    assert_response(302)
+    assert_equal(get_mission.id, user.reload.assignments.first.mission_id)
+  end
+
   test "admin with no assignments should not lose current mission on login" do
     admin = FactoryGirl.create(:user, :admin => true)
     admin.assignments.destroy_all
