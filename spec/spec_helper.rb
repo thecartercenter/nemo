@@ -52,7 +52,7 @@ def submit_xml_response(params_or_xml)
 
   # Wrap xml with data tag, etc.
   form_info = @form ? "id=\"#{@form.id}\" version=\"#{@form.current_version.sequence}\"" : ''
-  xml = "<?xml version='1.0' ?><data #{form_info} xmlns:n0=\"http://openrosa.org/jr/xforms\">#{params[:xml]}</data>"
+  xml = "<?xml version='1.0' ?><data #{form_info}>#{params[:xml]}</data>"
 
   # Upload the fixture file
   FileUtils.mkpath('test/fixtures')
