@@ -28,7 +28,7 @@ class Mission < ActiveRecord::Base
   scope(:sorted_recent_first, order("created_at DESC"))
   scope(:for_user, lambda{|u| where("missions.id IN (SELECT mission_id FROM assignments WHERE user_id = ?)", u.id)})
 
-  delegate(:override_code, :to => :setting)
+  delegate(:override_code, :allow_unauthenticated_submissions?, :to => :setting)
 
   # Override default destory
   def destroy

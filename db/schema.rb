@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140325160925) do
+ActiveRecord::Schema.define(:version => 20140610205319) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -111,16 +111,17 @@ ActiveRecord::Schema.define(:version => 20140325160925) do
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "published",          :default => false
+    t.boolean  "published",                       :default => false
     t.integer  "downloads"
-    t.integer  "responses_count",    :default => 0
+    t.integer  "responses_count",                 :default => 0
     t.integer  "mission_id"
     t.integer  "current_version_id"
-    t.boolean  "upgrade_needed",     :default => false
-    t.boolean  "smsable",            :default => false
-    t.boolean  "is_standard",        :default => false
+    t.boolean  "upgrade_needed",                  :default => false
+    t.boolean  "smsable",                         :default => false
+    t.boolean  "is_standard",                     :default => false
     t.integer  "standard_id"
-    t.boolean  "allow_incomplete",   :default => false, :null => false
+    t.boolean  "allow_incomplete",                :default => false, :null => false
+    t.integer  "access_level",       :limit => 1
   end
 
   add_index "forms", ["current_version_id"], :name => "forms_current_version_id_fk"
@@ -148,7 +149,7 @@ ActiveRecord::Schema.define(:version => 20140325160925) do
   add_index "missions", ["compact_name"], :name => "index_missions_on_compact_name"
 
   create_table "option_levels", :force => true do |t|
-    t.integer  "option_set_id"
+    t.integer  "option_set_id",                        :null => false
     t.integer  "rank",                                 :null => false
     t.text     "name_translations",                    :null => false
     t.integer  "mission_id"
@@ -219,8 +220,8 @@ ActiveRecord::Schema.define(:version => 20140325160925) do
     t.integer  "option_set_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.decimal  "minimum",           :precision => 15, :scale => 10
-    t.decimal  "maximum",           :precision => 15, :scale => 10
+    t.decimal  "minimum",                        :precision => 15, :scale => 10
+    t.decimal  "maximum",                        :precision => 15, :scale => 10
     t.boolean  "maxstrictly"
     t.boolean  "minstrictly"
     t.integer  "mission_id"
@@ -229,12 +230,13 @@ ActiveRecord::Schema.define(:version => 20140325160925) do
     t.text     "_hint"
     t.text     "name_translations"
     t.text     "hint_translations"
-    t.boolean  "key",                                               :default => false
-    t.boolean  "is_standard",                                       :default => false
+    t.boolean  "key",                                                            :default => false
+    t.boolean  "is_standard",                                                    :default => false
     t.integer  "standard_id"
-    t.string   "type",                                                                 :null => false
+    t.string   "type",                                                                              :null => false
     t.integer  "parent_id"
     t.integer  "option_level_id"
+    t.integer  "access_level",      :limit => 1
   end
 
   add_index "questionables", ["mission_id", "code"], :name => "index_questions_on_mission_id_and_code", :unique => true
@@ -358,6 +360,7 @@ ActiveRecord::Schema.define(:version => 20140325160925) do
     t.string   "incoming_sms_number"
     t.string   "preferred_locales"
     t.string   "override_code"
+    t.boolean  "allow_unauthenticated_submissions", :default => false
   end
 
   add_index "settings", ["mission_id"], :name => "settings_mission_id_fk"
@@ -406,11 +409,20 @@ ActiveRecord::Schema.define(:version => 20140325160925) do
     t.boolean  "admin",               :default => false, :null => false
     t.integer  "current_mission_id"
     t.string   "pref_lang",                              :null => false
+    t.string   "api_key"
   end
 
   add_index "users", ["current_mission_id"], :name => "users_current_mission_id_fk"
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
   add_index "users", ["login"], :name => "index_users_on_login", :unique => true
+
+  create_table "whitelists", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "whitelistable_id"
+    t.string   "whitelistable_type"
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
+  end
 
   add_foreign_key "assignments", "missions", :name => "assignments_mission_id_fk"
   add_foreign_key "assignments", "users", :name => "assignments_user_id_fk"

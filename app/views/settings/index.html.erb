@@ -11,6 +11,8 @@
     <%= f.field(:override_code, :partial => 'override_code') %>
   <% end %>
 
+  <%= f.field(:allow_unauthenticated_submissions, :type => :check_box) if configatron.allow_unauthenticated_submissions? %>
+
   <%# none of the rest of this is relevant in admin mode %>
   <% unless admin_mode? %>
 

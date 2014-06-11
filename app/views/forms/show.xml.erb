@@ -19,10 +19,21 @@
           <% end %>
 
           <%# incomplete response question nodes %>
-          <%= tag(OdkHelper::IR_QUESTION) %>
-          <%= tag(OdkHelper::IR_CODE) %>
+          <% if allow_incomplete? %>
+            <%= tag(OdkHelper::IR_QUESTION) %>
+            <%= tag(OdkHelper::IR_CODE) %>
+          <% end %>
+
+          <% if @style == 'commcare' %>
+            <username/>
+          <% end %>
         </data>
       </instance>
+
+      <% if @style == 'commcare' %>
+        <instance id="commcaresession" src="jr://instance/session"/>
+      <% end %>
+
       <itext>
         <% configatron.preferred_locales.each do |lang| %>
           <translation lang="<%= @style == 'commcare' ? lang : language_name(lang) %>">
@@ -78,6 +89,10 @@
       <% if allow_incomplete? %>
         <%= ir_question_binding(@form) %>
         <%= ir_code_binding(@form) %>
+      <% end %>
+
+      <% if @style == 'commcare' %>
+        <bind nodeset="/data/username" calculate="instance('commcaresession')/session/context/username"/>
       <% end %>
     </model>
   </h:head>

@@ -40,3 +40,29 @@ RSpec.configure do |config|
   #     --seed 1234
   config.order = "random"
 end
+
+# Encodes credentials for basic auth
+def encode_credentials(username, password)
+  "Basic #{Base64.encode64("#{username}:#{password}")}"
+end
+
+def submit_xml_response(params_or_xml)
+  params = params_or_xml.is_a?(Hash) ? params_or_xml : {}
+  params[:xml] = params_or_xml.is_a?(String) ? params_or_xml : params[:xml]
+
+  # Wrap xml with data tag, etc.
+  form_info = @form ? "id=\"#{@form.id}\" version=\"#{@form.current_version.sequence}\"" : ''
+  xml = %Q{<?xml version='1.0' ?><data #{form_info}
+    xmlns:jrm="http://dev.commcarehq.org/jr/xforms" xmlns="http://openrosa.org/formdesigner/240361">
+    #{params[:xml]}</data>}
+
+  # Upload the fixture file
+  FileUtils.mkpath('test/fixtures')
+  fixture_file = 'test/fixtures/test.xml'
+  File.open(fixture_file.to_s, 'w'){|f| f.write(xml)}
+  uploaded = fixture_file_upload(fixture_file, 'text/xml')
+
+  # Build headers and do post
+  headers = params[:user] ? {'HTTP_AUTHORIZATION' => encode_credentials(params[:user].login, 'password')} : {}
+  post(@submission_url, {:xml_submission_file => uploaded, :format => 'xml'}, headers)
+end
