@@ -219,33 +219,35 @@ class ApplicationController < ActionController::Base
         # if the mission wasnt found, raise error
         raise ArgumentError.new("mission not found") if !mission
 
-        # Reject noauth submissions unless allowed by mission
-        if params[:noauth] && !mission.allow_unauthenticated_submissions?
-          render :text => 'UNAUTHENTICATED_SUBMISSIONS_NOT_ALLOWED', :status => :unauthorized
-          return
-        end
+        if params[:noauth]
 
-        user = nil
+          return unless process_noauth(mission)
 
-        # check for stored session first
-        if user_session = UserSession.find
-          user = user_session.user
+        # Regular authentication.
         else
-          # else try to authenticate with basic
-          user = authenticate_with_http_basic do |login, password|
-            # use eager loading to optimize things a bit
-            User.includes(:assignments).find_by_credentials(login, password)
+
+          user = nil
+
+          # check for stored session first
+          if user_session = UserSession.find
+            user = user_session.user
+          else
+            # else try to authenticate with basic
+            user = authenticate_with_http_basic do |login, password|
+              # use eager loading to optimize things a bit
+              User.includes(:assignments).find_by_credentials(login, password)
+            end
           end
+
+          # if authentication not successful, fail
+          return request_http_basic_authentication if !user
+
+          # save the user
+          @current_user = user
+
+          # if user can't access the mission, force re-authentication
+          return request_http_basic_authentication if cannot?(:switch_to, mission)
         end
-
-        # if authentication not successful, fail
-        return request_http_basic_authentication if !user
-
-        # save the user
-        @current_user = user
-
-        # if user can't access the mission, force re-authentication
-        return request_http_basic_authentication if !can?(:switch_to, mission)
 
         # if we get this far, we can set the current mission
         @current_mission = mission
@@ -254,6 +256,50 @@ class ApplicationController < ActionController::Base
         render(:nothing => true, :status => 404)
         false
       end
+    end
+
+    def process_noauth(mission)
+      user = nil
+
+      if mission.allow_unauthenticated_submissions?
+        # Look for username in submission
+        upfile = params[:xml_submission_file]
+
+        if upfile.nil? || !upfile.respond_to?(:read)
+          render :text => 'SUBMISSION_DATA_MISSING', :status => 422
+          return false
+        end
+
+        contents = upfile.read
+        upfile.rewind # So that future reads work
+
+        if contents =~ /<n0:username>(.+?)<\/n0:username>/
+          login = $1
+        else
+          render :text => 'USERNAME_NOT_SPECIFIED', :status => :unauthorized
+          return false
+        end
+
+        unless user = User.where(:login => login).first
+          render :text => 'USER_NOT_FOUND', :status => :unauthorized
+          return false
+        end
+      else
+        # Reject noauth submissions if not allowed by mission
+        render :text => 'UNAUTHENTICATED_SUBMISSIONS_NOT_ALLOWED', :status => :unauthorized
+        return false
+      end
+
+      # save the user
+      @current_user = user
+
+      # if user can't access the mission, reject
+      if cannot?(:switch_to, mission)
+        render :text => 'USER_CANT_ACCESS_MISSION', :status => :unauthorized
+        return false
+      end
+
+      return true
     end
 
     # gets the user and mission from the user session if they're not already set
