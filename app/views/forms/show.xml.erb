@@ -19,8 +19,10 @@
           <% end %>
 
           <%# incomplete response question nodes %>
-          <%= tag(OdkHelper::IR_QUESTION) %>
-          <%= tag(OdkHelper::IR_CODE) %>
+          <% if allow_incomplete? %>
+            <%= tag(OdkHelper::IR_QUESTION) %>
+            <%= tag(OdkHelper::IR_CODE) %>
+          <% end %>
         </data>
       </instance>
       <itext>
