@@ -10,6 +10,9 @@ ELMO::Application.routes.draw do
   match "/missions/:mission_compact_name/forms/:id" => 'forms#show', :format => :xml
   match "/missions/:mission_compact_name/submission" => 'responses#create', :format => :xml
 
+  # Unauthenticated submissions
+  match "/m/:mission_compact_name/noauth/submission" => 'responses#create', :format => :xml, :noauth => true
+
   # the routes in this scope /require/ admin mode
   scope "(:locale)(/:admin_mode)", :locale => /[a-z]{2}/, :admin_mode => /admin/ do
     resources :missions

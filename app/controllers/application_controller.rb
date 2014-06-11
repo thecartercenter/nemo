@@ -210,6 +210,21 @@ class ApplicationController < ActionController::Base
         # xml requests not allowed in admin mode
         raise ArgumentError.new("xml requests not allowed in admin mode") if admin_mode?
 
+        # mission compact name must be set for all ODK/XML requests
+        raise ArgumentError.new("mission not specified") if params[:mission_compact_name].blank?
+
+        # lookup the mission
+        mission = Mission.find_by_compact_name(params[:mission_compact_name])
+
+        # if the mission wasnt found, raise error
+        raise ArgumentError.new("mission not found") if !mission
+
+        # Reject noauth submissions unless allowed by mission
+        if params[:noauth] && !mission.allow_unauthenticated_submissions?
+          render :text => 'UNAUTHENTICATED_SUBMISSIONS_NOT_ALLOWED', :status => :unauthorized
+          return
+        end
+
         user = nil
 
         # check for stored session first
@@ -228,15 +243,6 @@ class ApplicationController < ActionController::Base
 
         # save the user
         @current_user = user
-
-        # mission compact name must be set for all ODK/XML requests
-        raise ArgumentError.new("mission not specified") if params[:mission_compact_name].blank?
-
-        # lookup the mission
-        mission = Mission.find_by_compact_name(params[:mission_compact_name])
-
-        # if the mission wasnt found, raise error
-        raise ArgumentError.new("mission not found") if !mission
 
         # if user can't access the mission, force re-authentication
         return request_http_basic_authentication if !can?(:switch_to, mission)
