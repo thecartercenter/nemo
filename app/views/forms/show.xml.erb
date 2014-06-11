@@ -29,6 +29,11 @@
           <% end %>
         </data>
       </instance>
+
+      <% if @style == 'commcare' %>
+        <instance id="commcaresession" src="jr://instance/session"/>
+      <% end %>
+
       <itext>
         <% configatron.preferred_locales.each do |lang| %>
           <translation lang="<%= @style == 'commcare' ? lang : language_name(lang) %>">

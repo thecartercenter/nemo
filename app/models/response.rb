@@ -415,6 +415,6 @@ class Response < ActiveRecord::Base
 
     # Detects where the xml came from and sets source and modifier attribs
     def detect_source(xml)
-      self.source = self.modifier = xml =~ %r{xmlns:n1="http://commcarehq.org/xforms"} ? 'j2me' : 'odk'
+      self.source = self.modifier = xml =~ %r{xmlns:jrm="http://dev.commcarehq.org/jr/xforms"} ? 'j2me' : 'odk'
     end
 end
