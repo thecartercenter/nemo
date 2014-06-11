@@ -241,8 +241,7 @@ class Response < ActiveRecord::Base
     # parse xml
     doc = XML::Parser.string(xml).parse
 
-    # set the source/modifier values to odk
-    self.source = self.modifier = "odk"
+    detect_source(xml)
 
     # if no root ID, error
     raise ArgumentError.new("no form id was given") if doc.root['id'].nil?
@@ -412,5 +411,10 @@ class Response < ActiveRecord::Base
         :answers, :questionings, :questions, :option_sets, :options, :choices]))
 
       rel.to_sql
+    end
+
+    # Detects where the xml came from and sets source and modifier attribs
+    def detect_source(xml)
+      self.source = self.modifier = xml =~ %r{xmlns:n1="http://commcarehq.org/xforms"} ? 'j2me' : 'odk'
     end
 end

@@ -29,7 +29,7 @@ describe 'unauthenticated submissions', :type => :request do
     context 'with a valid username embedded' do
       before do
         @user = FactoryGirl.create(:user, :role_name => :observer)
-        submit_xml("<#{@question.odk_code}>42</#{@question.odk_code}><n0:username>#{@user.login}</n0:username>")
+        submit_xml_response("<#{@question.odk_code}>42</#{@question.odk_code}><n0:username>#{@user.login}</n0:username>")
       end
 
       it 'should set correct user' do
@@ -55,7 +55,7 @@ describe 'unauthenticated submissions', :type => :request do
 
     context 'with no username embedded' do
       before do
-        submit_xml('')
+        submit_xml_response('')
       end
 
       it 'should return 401' do
@@ -66,7 +66,7 @@ describe 'unauthenticated submissions', :type => :request do
 
     context 'with invalid username embedded' do
       before do
-        submit_xml('<data><n0:username>foo</n0:username>')
+        submit_xml_response('<data><n0:username>foo</n0:username>')
       end
 
       it 'should return 401' do
@@ -79,7 +79,7 @@ describe 'unauthenticated submissions', :type => :request do
       before do
         other_mission = FactoryGirl.create(:mission, :name => 'Other mission')
         @user = FactoryGirl.create(:user, :role_name => :observer, :mission => other_mission)
-        submit_xml("<n0:username>#{@user.login}</n0:username>")
+        submit_xml_response("<n0:username>#{@user.login}</n0:username>")
       end
 
       it 'should return 401' do
@@ -87,20 +87,6 @@ describe 'unauthenticated submissions', :type => :request do
         expect(response.body).to eq 'USER_CANT_ACCESS_MISSION'
       end
     end
-    # should do sth if can't access mission
     # should set source to j2me
-  end
-
-  def submit_xml(xml)
-    # Wrap xml with data tag, etc.
-    form_info = @form ? "id=\"#{@form.id}\" version=\"#{@form.current_version.sequence}\"" : ''
-    xml = "<?xml version='1.0' ?><data #{form_info} xmlns:n0=\"http://www.w3.org/TR/html4/\">#{xml}</data>"
-
-    # Upload the fixture file and do POST
-    FileUtils.mkpath('test/fixtures')
-    fixture_file = 'test/fixtures/test.xml'
-    File.open(fixture_file.to_s, 'w'){|f| f.write(xml)}
-    uploaded = fixture_file_upload(fixture_file, 'text/xml')
-    post(@submission_url, :xml_submission_file => uploaded, :format => 'xml')
   end
 end
