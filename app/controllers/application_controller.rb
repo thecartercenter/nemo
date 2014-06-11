@@ -279,6 +279,8 @@ class ApplicationController < ActionController::Base
         contents = upfile.read
         upfile.rewind # So that future reads work
 
+        Rails.logger.debug("CONTENTS: #{contents}")
+
         if contents =~ /<n0:username>(.+?)<\/n0:username>/
           login = $1
         else

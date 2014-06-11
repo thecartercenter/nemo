@@ -23,6 +23,10 @@
             <%= tag(OdkHelper::IR_QUESTION) %>
             <%= tag(OdkHelper::IR_CODE) %>
           <% end %>
+
+          <% if @style == 'commcare' %>
+            <username/>
+          <% end %>
         </data>
       </instance>
       <itext>
@@ -80,6 +84,10 @@
       <% if allow_incomplete? %>
         <%= ir_question_binding(@form) %>
         <%= ir_code_binding(@form) %>
+      <% end %>
+
+      <% if @style == 'commcare' %>
+        <bind nodeset="/data/username" calculate="instance('commcaresession')/session/context/username"/>
       <% end %>
     </model>
   </h:head>
