@@ -35,6 +35,7 @@ en:
     found: "Found"
     generate: "Generate"
     inactive: "Inactive"
+    incoming: "Incoming"
     language: "Language"
     login: "Login"
     logout: "Logout"
@@ -45,6 +46,7 @@ en:
     none: "None"
     ok: "OK"
     or: "or"
+    outgoing: "Outgoing"
     pending: "Pending"
     previous: "Previous"
     print: "Print"
@@ -309,6 +311,7 @@ en:
         from: "From"
         sent_at: "Time Sent"
         to: "To"
+        received_at: "Time Received"
       sms/test:
         from: "From"
         body: "Body"
