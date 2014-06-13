@@ -19,7 +19,7 @@ module Concerns::ApplicationController::Routing
   end
 
   def appropriate_root_path
-    current_mission ? mission_root_path(:mode => 'm', :mission_name => current_mission.compact_name) : basic_root_path
+    current_mission ? mission_root_path : basic_root_path
   end
 
   def current_mode
@@ -62,7 +62,7 @@ module Concerns::ApplicationController::Routing
   # The path to which the user should be directed if exiting admin mode.
   def admin_mode_exit_path
     session[:last_mission_name] ?
-      mission_root_path(:mode => 'm', :mission_name => session[:last_mission_name]) :
-      basic_root_path(:mode => nil, :mission_name => nil)
+      mission_root_path(:mission_name => session[:last_mission_name]) :
+      basic_root_path
   end
 end

@@ -20,7 +20,7 @@ module TemplateHelper
     verb = admin_mode? ? 'exit' : 'goto'
     icon = admin_mode? ? 'times' : 'key'
     text = t("admin_mode.#{verb}_admin_mode")
-    path = admin_mode? ? admin_mode_exit_path : admin_root_path(:mode => 'admin', :mission_name => nil)
+    path = admin_mode? ? admin_mode_exit_path : admin_root_path
     link_to(content_tag(:i, '', :class => "fa fa-2x fa-#{icon}") + tag('br') + text, path,
       :class => "admin-mode #{verb}-admin-mode", :title => text)
   end

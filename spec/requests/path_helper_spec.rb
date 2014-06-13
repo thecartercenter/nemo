@@ -20,6 +20,7 @@ describe 'path helpers' do
         /fr
         /en/m/foo
         /en/admin
+        /en/admin/missions
         /en/admin/forms
         /en/m/foo/forms"
     end
@@ -38,6 +39,7 @@ describe 'path helpers' do
         /fr
         /en/m/foo
         /en/admin
+        /en/admin/missions
         /en/admin/forms
         /en/m/foo/forms"
     end
@@ -56,6 +58,7 @@ describe 'path helpers' do
         /fr
         /en/m/foo
         /en/admin
+        /en/admin/missions
         /en/m/foo/forms
         /en/admin/forms"
     end
