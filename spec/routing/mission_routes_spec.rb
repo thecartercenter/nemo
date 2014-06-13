@@ -14,9 +14,8 @@ describe 'router' do
     { :get => '/en/admin/mission123/broadcasts' }.should_not be_routable
   end
 
-  it 'routes without explicit locale' do
-    { :get => '/m/mission123/broadcasts' }.should route_to(
-      :controller => 'broadcasts', :action => 'index', :mode => 'm', :mission_name => 'mission123')
+  it 'doesnt route normal path without explicit locale' do
+    { :get => '/m/mission123/broadcasts' }.should_not be_routable
   end
 
   it 'routes with report namespace' do

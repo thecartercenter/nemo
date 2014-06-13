@@ -75,14 +75,14 @@ class ActiveSupport::TestCase
   # this is also done in application_controller but needs to be done here too for some reason
   def set_url_options
     if defined?(app)
-      app.default_url_options = { :locale => I18n.locale, :mode => nil }
+      app.default_url_options = { :locale => I18n.locale || I18n.default_locale, :mode => nil }
     end
   end
 
   # logs in the given user
   # we assume that the password is 'password'
   def login(user)
-    post(user_session_path, :user_session => {:login => user.login, :password => "password"})
+    post(user_session_path(:locale => 'en'), :user_session => {:login => user.login, :password => "password"})
     follow_redirect!
     assert_response(:success)
 
@@ -92,7 +92,7 @@ class ActiveSupport::TestCase
 
   # logs out the current user and follows redirect
   def logout
-    delete(user_session_path)
+    delete(user_session_path(:locale => 'en'))
     follow_redirect!
     assert_response(:success)
   end

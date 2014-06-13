@@ -6,7 +6,7 @@ class SmsConsoleTest < ActionDispatch::IntegrationTest
     user = get_user
     login(user)
 
-    get "/m/#{get_mission.compact_name}/sms-tests/new"
+    get new_sms_test_path(:mission_name => get_mission.compact_name)
 
     assert_response :success
   end

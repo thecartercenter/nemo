@@ -1,28 +1,24 @@
 require 'spec_helper'
 
 describe 'router' do
-  it 'routes root' do
-    { :get => '/' }.should route_to(:controller => 'welcome', :action => 'index')
-  end
-
   it 'routes root with locale' do
-    { :get => '/en' }.should route_to(:controller => 'welcome', :action => 'index', :locale => 'en')
+    { :get => '/en' }.should route_to(:controller => 'welcome', :action => 'index', :locale => 'en', :mode => nil, :mission_name => nil)
   end
 
   it 'routes root with locale and trailing slash' do
-    { :get => '/en/' }.should route_to(:controller => 'welcome', :action => 'index', :locale => 'en')
+    { :get => '/en/' }.should route_to(:controller => 'welcome', :action => 'index', :locale => 'en', :mode => nil, :mission_name => nil)
   end
 
   it 'routes login with locale' do
-    { :get => '/en/login' }.should route_to(:controller => 'user_sessions', :action => 'new', :locale => 'en')
+    { :get => '/en/login' }.should route_to(:controller => 'user_sessions', :action => 'new', :locale => 'en', :mode => nil, :mission_name => nil)
   end
 
-  it 'routes login without locale' do
-    { :get => '/login' }.should route_to(:controller => 'user_sessions', :action => 'new')
+  it 'doesnt route login without locale' do
+    { :get => '/login' }.should_not be_routable
   end
 
   it 'routes logout without locale' do
-    { :delete => '/en/logout' }.should route_to(:controller => 'user_sessions', :action => 'destroy', :locale => 'en')
+    { :delete => '/en/logout' }.should route_to(:controller => 'user_sessions', :action => 'destroy', :locale => 'en', :mode => nil, :mission_name => nil)
   end
 
   it 'routes proxy requests without locale' do

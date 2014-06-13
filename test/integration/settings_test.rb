@@ -8,7 +8,7 @@ class SettingsTest < ActionDispatch::IntegrationTest
   end
 
   test "settings should be default on first load" do
-    get('/')
+    get('/en')
     follow_redirect!
     assert_response(:success)
 

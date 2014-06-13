@@ -46,7 +46,6 @@ ELMO::Application.routes.draw do
       end
     end
     resources :responses
-    resources :sms, :only => [:index, :create]
     resources :sms_tests, :path => 'sms-tests'
 
     namespace :report do
@@ -109,8 +108,11 @@ ELMO::Application.routes.draw do
     get '/options/suggest' => 'options#suggest', :as => :suggest_options
   end
 
-  # Special ODK routes. They are down here so that forms_path doesn't return the ODK variant.
-  scope ':locale/m/:mission_name', :locale => /[a-z]{2}/, :mission_name => /[a-z][a-z0-9]*/, :defaults => {:mode => 'm'} do
+  # Special SMS and ODK routes. No locale.
+  scope '/m/:mission_name', :mission_name => /[a-z][a-z0-9]*/, :defaults => {:mode => 'm'} do
+    resources :sms, :only => [:index, :create]
+
+    # ODK routes. They are down here so that forms_path doesn't return the ODK variant.
     get '/formList' => 'forms#index', :format => 'xml'
     get '/forms/:id' => 'forms#show', :format => 'xml', :as => :form_with_mission
     match '/submission' => 'responses#create', :format => 'xml'
