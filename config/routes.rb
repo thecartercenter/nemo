@@ -7,7 +7,8 @@ ELMO::Application.routes.draw do
 
   #####################################
   # Basic routes (neither mission nor admin mode)
-  scope '(:locale)', :locale => /[a-z]{2}/ do
+  scope '(:locale)', :locale => /[a-z]{2}/, :defaults => {:mode => nil, :mission_name => nil} do
+
     resources :password_resets, :path => 'password-resets'
     resource :user_session
 
@@ -25,7 +26,7 @@ ELMO::Application.routes.draw do
 
   #####################################
   # Admin-mode-only routes
-  scope '(:locale)/:mode', :locale => /[a-z]{2}/, :mode => /admin/ do
+  scope '(:locale)/admin', :locale => /[a-z]{2}/, :defaults => {:mode => 'admin', :mission_name => nil} do
     resources :missions
 
     # for /en/admin
@@ -34,7 +35,7 @@ ELMO::Application.routes.draw do
 
   #####################################
   # Mission-mode-only routes
-  scope '(:locale)/:mode/:mission_name', :locale => /[a-z]{2}/, :mode => /m/, :mission_name => /[a-z][a-z0-9]*/ do
+  scope '(:locale)/m/:mission_name', :locale => /[a-z]{2}/, :mission_name => /[a-z][a-z0-9]*/, :defaults => {:mode => 'm'} do
     resources(:broadcasts) do
       collection do
         post 'new_with_users', :path => 'new-with-users'
@@ -103,7 +104,7 @@ ELMO::Application.routes.draw do
   end
 
   # Special ODK routes. They are down here so that forms_path doesn't return the ODK variant.
-  scope '(:locale)/:mode/:mission_name', :locale => /[a-z]{2}/, :mode => /m/, :mission_name => /[a-z][a-z0-9]*/ do
+  scope '(:locale)/m/:mission_name', :locale => /[a-z]{2}/, :mission_name => /[a-z][a-z0-9]*/, :defaults => {:mode => 'm'} do
     get '/formList' => 'forms#index', :format => 'xml'
     get '/forms/:id' => 'forms#show', :format => 'xml', :as => :form_with_mission
     match '/submission' => 'responses#create', :format => 'xml'
