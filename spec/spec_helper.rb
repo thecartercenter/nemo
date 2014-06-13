@@ -37,3 +37,12 @@ RSpec.configure do |config|
   #     --seed 1234
   config.order = "random"
 end
+
+def login(user)
+  post('/en/user-session', :user_session => {:login => user.login, :password => "password"})
+  follow_redirect!
+  assert_response(:success)
+
+  # reload the user since some stuff may have changed in database (e.g. current_mission) during login process
+  user.reload
+end

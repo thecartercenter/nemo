@@ -1,0 +1,9 @@
+<%# These are the path helpers we want to test %>
+<%= edit_user_path(current_user) %>
+<%= logged_out_path %>
+<%= basic_root_path %>
+<%= basic_root_path(:locale => 'fr') %>
+<%= mission_root_path(:mission_name => 'foo') %>
+<%= admin_root_path %>
+<%= forms_path(:mode => 'm', :mission_name => 'foo') %>
+<%= forms_path %>
