@@ -299,6 +299,16 @@ class SmsDecoderTest < ActiveSupport::TestCase
     assert_decoding(:body => "#{form_code} 1.15", :answers => [15])
   end
 
+  test "user submitting long wrong answer get reply with value truncated" do
+    setup_form(:questions => %w(select_one))
+    assert_decoding_fail(:value => "2313123123...",
+                         :body => "#{form_code} 1.231312312312312312312312312312312312",
+                         :error => "answer_not_valid_option")
+
+
+  end
+
+
   private
 
     # tests that a decoding was successful
