@@ -299,15 +299,47 @@ class SmsDecoderTest < ActiveSupport::TestCase
     assert_decoding(:body => "#{form_code} 1.15", :answers => [15])
   end
 
-  test "user submitting long wrong answer get reply with value truncated" do
-    setup_form(:questions => %w(select_one))
-    assert_decoding_fail(:value => "2313123123...",
-                         :body => "#{form_code} 1.231312312312312312312312312312312312",
-                         :error => "answer_not_valid_option")
+  #testing length of tiny_text
 
-
+  test "user submitting long wrong answer gets error_too_long when length very long" do
+    setup_form(:questions => %w(tiny_text))
+    message = assert_decoding_fail(:body => "#{form_code} 1.12345678902312312312312312312312312312",
+                         :error => "answer_too_long")
   end
 
+  test "user submitting long wrong answer gets error_too_long with value when length is 11" do
+    setup_form(:questions => %w(tiny_text))
+    assert_decoding_fail(:body => "#{form_code} 1.12345678901",
+                         :error => "answer_too_long")
+  end
+
+  test "user submitting long wrong answer gets error_too_long with value when length is 10" do
+    setup_form(:questions => %w(tiny_text))
+    assert_decoding_fail(:body => "#{form_code} 1.1234567890",
+                         :error => "answer_too_long")
+  end
+
+  test "user submitting tiny_text of 9 fails when length is 9" do
+    setup_form(:questions => %w(tiny_text))
+    assert_decoding_fail(:value => "123456789",
+                    :body => "#{form_code} 1.123456789",
+                    :error => "answer_too_long")
+  end
+
+  test "user submitting tiny_text of 8 get reply with value when length is 8" do
+    setup_form(:questions => %w(tiny_text))
+    assert_decoding(:value => 12345678,
+                    :body => "#{form_code} 1.12345678",
+                    :answers => ["12345678"])
+  end
+
+
+  test "user submitting tiny_text of 4 get reply with value when length is 4" do
+    setup_form(:questions => %w(tiny_text))
+    assert_decoding(:value => "1234",
+                    :body => "#{form_code} 1.1234",
+                    :answers => ["1234"])
+  end
 
   private
 
@@ -392,3 +424,4 @@ class SmsDecoderTest < ActiveSupport::TestCase
       assert_equal(options[:value], error.params[:value]) if options[:value]
     end
 end
+
