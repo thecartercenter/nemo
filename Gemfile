@@ -5,7 +5,7 @@ gem 'rails', '~> 3.2'
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
-  gem 'sass-rails',   '~> 3.2.3'
+  gem 'sass-rails'
   gem 'uglifier', '>= 1.0.3'
   # makes modals stackable
   gem 'bootstrap-modal-rails'
@@ -16,14 +16,14 @@ gem 'rake'
 gem 'mysql2', '>= 0.3.15' #was '~> 0.3.12b5' # beta version needed for sphinx
 gem 'will_paginate'
 gem 'will_paginate-bootstrap'
-gem 'api-pagination'    
+gem 'api-pagination'
 gem 'configatron'
 gem 'libxml-ruby'
 gem 'rdiscount'
 gem 'jquery-rails'
 gem 'random_data'
 gem 'versionist'                 # versioning the api
-gem 'active_model_serializers'   # for making it easy to customize output for api 
+gem 'active_model_serializers'   # for making it easy to customize output for api
 
 # Ckeditor integration gem for rails http://ckeditor.com/
 gem 'ckeditor'
