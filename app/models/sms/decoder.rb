@@ -188,10 +188,7 @@ class Sms::Decoder
         build_answer(:choices => idxs.map{|idx| Choice.new(:option => @qing.question.options[idx-1])})
 
       when "tiny_text"
-        # this one is simple, length is 8 according to app/helpers/forms_helper.rb
-        if @value.to_s.length > 8
-          raise_answer_error("answer_too_long", :value => @value)
-        end
+        # going away
         build_answer(:value => @value)
 
       when "date"
