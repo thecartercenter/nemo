@@ -261,8 +261,8 @@ class ApplicationController < ActionController::Base
     def process_noauth(mission)
       user = nil
 
-      # Check the override setting
-      if !configatron.allow_unauthenticated_submissions
+      # Check the override setting (must use explicit true due to configatron weirdness)
+      if configatron.allow_unauthenticated_submissions != true
         render :nothing => true, :status => 404
         return false
       end
