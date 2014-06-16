@@ -103,6 +103,8 @@ class ResponsesController < ApplicationController
         begin
           contents = upfile.read
 
+          Rails.logger.info("----------\nXML submission:\n#{contents}\n----------")
+
           # set the user_id to current user
           @response.user_id = current_user.id
 
@@ -119,24 +121,19 @@ class ResponsesController < ApplicationController
           render(:nothing => true, :status => 201)
 
         rescue CanCan::AccessDenied
-          # permission error should give unauthorized (401)
-          render(:nothing => true, :status => 401)
+          render_xml_submission_failure($!, 401)
 
         rescue ActiveRecord::RecordNotFound
-          # not found error should give not found (404)
-          render(:nothing => true, :status => 404)
+          render_xml_submission_failure($!, 404)
 
         rescue FormVersionError
-          # form version outdated should give 426 (upgrade needed)
-          render(:nothing => true, :status => 426)
+          render_xml_submission_failure($!, 426) # 426 - upgrade needed
 
         rescue ArgumentError
-          # argument error should give unprocessible entity
-          render(:nothing => true, :status => 422)
+          render_xml_submission_failure($!, 422)
 
         rescue
-          # if we get this far it's some kind of server error
-          render(:nothing => true, :status => 500)
+          render_xml_submission_failure($!, 500)
         end
       end
 
@@ -199,5 +196,10 @@ class ResponsesController < ApplicationController
 
       # render the form
       render(:form)
+    end
+
+    def render_xml_submission_failure(exception, code)
+      Rails.logger.info("XML submission failed: '#{exception.to_s}'")
+      render(:nothing => true, :status => code)
     end
 end
