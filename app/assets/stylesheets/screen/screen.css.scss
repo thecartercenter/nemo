@@ -17,6 +17,10 @@ body {
   }
 }
 
+.users_edit .ro-val { 
+  font-family: monospace;
+}
+
 #userinfo {
   color: white;
   text-align: right;
@@ -268,6 +272,21 @@ body.reports {
   div.report_main {
     display: table-cell;
     vertical-align: top;
+  }
+}
+
+#api-users {
+  display: none;
+  margin-left: 200px;
+  #api-users-scrollbox {
+    border: 1px solid #dddddd;
+    padding: 4px;
+    overflow-y: scroll;
+    height: 150px;
+    width: 420px;
+    .checkbox-row {
+      margin-bottom: 7px;
+    }
   }
 }
 

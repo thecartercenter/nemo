@@ -169,6 +169,12 @@ class Ability
           # there is no Questioning index
           cannot :index, Questioning
         end
+
+        # Users can view/modify only their own API keys
+        cannot :regenerate_key, User
+        can :regenerate_key, User do |u|
+          u == user
+        end
       end
 
       # Can't change own assignments

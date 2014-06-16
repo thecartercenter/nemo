@@ -262,7 +262,7 @@ class ApplicationController < ActionController::Base
       user = nil
 
       # Check the override setting
-      if !configatron.allow_unauthenticated_submissions?
+      if !configatron.allow_unauthenticated_submissions
         render :nothing => true, :status => 404
         return false
       end

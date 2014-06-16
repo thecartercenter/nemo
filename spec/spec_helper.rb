@@ -66,3 +66,18 @@ def submit_xml_response(params_or_xml)
   headers = params[:user] ? {'HTTP_AUTHORIZATION' => encode_credentials(params[:user].login, 'password')} : {}
   post(@submission_url, {:xml_submission_file => uploaded, :format => 'xml'}, headers)
 end
+
+# helper method to parse json and make keys symbols
+def parse_json(body)
+  JSON.parse(body, symbolize_names: true)
+end
+
+# Currently duplicated in test/test_helper until it becomes obvious how to refactor.
+def login(user)
+  post(user_session_path, :user_session => {:login => user.login, :password => "password"})
+  follow_redirect!
+  assert_response(:success)
+
+  # reload the user since some stuff may have changed in database (e.g. current_mission) during login process
+  user.reload
+end
