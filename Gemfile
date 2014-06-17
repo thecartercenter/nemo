@@ -25,9 +25,6 @@ gem 'random_data'
 gem 'versionist'                 # versioning the api
 gem 'active_model_serializers'   # for making it easy to customize output for api
 
-# Ckeditor integration gem for rails http://ckeditor.com/
-gem 'ckeditor'
-
 gem 'iso-639'
 
 # authorization

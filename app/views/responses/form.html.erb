@@ -59,5 +59,5 @@
 
 <%= javascript_doc_ready do %>
   ELMO.Response.init();
-  $('textarea').ckeditor();
+  $('textarea').each(function(){ CKEDITOR.replace(this.id); });
 <% end %>
