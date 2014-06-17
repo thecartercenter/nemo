@@ -1296,7 +1296,6 @@ en:
       answer_not_valid_option: "was not a valid option"
       answer_not_valid_option_multi: "contained the invalid option '%{invalid_options}'"
       answer_not_valid_options_multi: "contained invalid options '%{invalid_options}'"
-      answer_too_long: "is too long"
       congrats: "Your response to form '%{form_code}' was received. Thank you!"
       duplicate_submission: "Sorry, your response is a duplicate of one submitted recently."
       form_not_found: "Sorry, there is no form with code '%{form_code}'."
