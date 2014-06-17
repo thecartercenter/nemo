@@ -10,11 +10,6 @@ class SmsControllerTest < ActionController::TestCase
     setup_form(:questions => %w(integer integer), :required => true)
   end
 
-  test "message when tiny_text too long" do
-    setup_form(:questions => %w(tiny_text integer), :required => true)
-    assert_sms_response(:incoming => "#{form_code} 1.12345678910123 2.1", :outgoing => /is too long/i)
-  end
-
   test "correct message should get congrats" do
     # response should include the form code
     assert_sms_response(:incoming => "#{form_code} 1.15 2.20", :outgoing => /#{form_code}.+thank you/i)
