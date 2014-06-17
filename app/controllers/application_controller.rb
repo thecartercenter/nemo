@@ -267,34 +267,18 @@ class ApplicationController < ActionController::Base
         return false
       end
 
-      if mission.allow_unauthenticated_submissions?
-        # Look for username in submission
-        upfile = params[:xml_submission_file]
+      unless mission.allow_unauthenticated_submissions?
+        render_noauth_submission_failure :text => 'UNAUTHENTICATED_SUBMISSIONS_NOT_ALLOWED', :status => :unauthorized
+        return false
+      end
 
-        if upfile.nil? || !upfile.respond_to?(:read)
-          render :text => 'SUBMISSION_DATA_MISSING', :status => 422
-          return false
-        end
+      unless params[:data][:username]
+        render_noauth_submission_failure :text => 'USERNAME_NOT_SPECIFIED', :status => :unauthorized
+        return false
+      end
 
-        contents = upfile.read
-        upfile.rewind # So that future reads work
-
-        Rails.logger.debug("CONTENTS: #{contents}")
-
-        if contents =~ /<username>(.+?)<\/username>/
-          login = $1
-        else
-          render :text => 'USERNAME_NOT_SPECIFIED', :status => :unauthorized
-          return false
-        end
-
-        unless user = User.where(:login => login).first
-          render :text => 'USER_NOT_FOUND', :status => :unauthorized
-          return false
-        end
-      else
-        # Reject noauth submissions if not allowed by mission
-        render :text => 'UNAUTHENTICATED_SUBMISSIONS_NOT_ALLOWED', :status => :unauthorized
+      unless user = User.where(:login => params[:data][:username]).first
+        render_noauth_submission_failure :text => 'USER_NOT_FOUND', :status => :unauthorized
         return false
       end
 
@@ -303,11 +287,16 @@ class ApplicationController < ActionController::Base
 
       # if user can't access the mission, reject
       if cannot?(:switch_to, mission)
-        render :text => 'USER_CANT_ACCESS_MISSION', :status => :unauthorized
+        render_noauth_submission_failure :text => 'USER_CANT_ACCESS_MISSION', :status => :unauthorized
         return false
       end
 
       return true
+    end
+
+    def render_noauth_submission_failure(params)
+      Rails.logger.info("Unauthenticated submission failed: '#{params[:text]}'")
+      render(params)
     end
 
     # gets the user and mission from the user session if they're not already set

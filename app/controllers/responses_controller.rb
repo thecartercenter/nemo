@@ -91,33 +91,44 @@ class ResponsesController < ApplicationController
   end
 
   def create
-    # if this is a submission from ODK collect
+
+    # if this is a non-web submission
     if request.format == Mime::XML
 
       # if the method is HEAD or GET just render the 'no content' status since that's what odk wants!
       if %w(HEAD GET).include?(request.method)
         render(:nothing => true, :status => 204)
 
-      # otherwise, we should process the xml submission
-      elsif upfile = params[:xml_submission_file]
+      # otherwise, we should process the submission
+      else
         begin
-          contents = upfile.read
-
-          Rails.logger.info("----------\nXML submission:\n#{contents}\n----------")
-
-          # set the user_id to current user
           @response.user_id = current_user.id
 
-          # parse the xml stuff
-          @response.populate_from_xml(contents)
+          # If it looks like a J2ME submission, process accordingly
+          if params[:data] && params[:data][:'xmlns:jrm'] == 'http://dev.commcarehq.org/jr/xforms'
+            @response.populate_from_j2me(params[:data])
+
+          # Otherwise treat it like an ODK submission
+          else
+            upfile = params[:xml_submission_file]
+
+            unless upfile
+              render_xml_submission_failure('No XML file attached.', 422)
+              return false
+            end
+
+            xml = upfile.read
+            Rails.logger.info("----------\nXML submission:\n#{xml}\n----------")
+            @response.populate_from_odk(xml)
+          end
 
           # ensure response's user can submit to the form
           authorize!(:submit_to, @response.form)
 
-          # save without validating, as we have no way to present validation errors to user, and ODK already does validation
+          # save without validating, as we have no way to present validation errors to user,
+          # and submitting apps already do validation
           @response.save(:validate => false)
 
-          # ODK wants a blank response with code 201 on success
           render(:nothing => true, :status => 201)
 
         rescue CanCan::AccessDenied
@@ -127,13 +138,12 @@ class ResponsesController < ApplicationController
           render_xml_submission_failure($!, 404)
 
         rescue FormVersionError
-          render_xml_submission_failure($!, 426) # 426 - upgrade needed
+          # 426 - upgrade needed
+          # We use this because ODK can't display custom failure messages so this provides a little more info.
+          render_xml_submission_failure($!, 426)
 
-        rescue ArgumentError
+        rescue SubmissionError
           render_xml_submission_failure($!, 422)
-
-        rescue
-          render_xml_submission_failure($!, 500)
         end
       end
 

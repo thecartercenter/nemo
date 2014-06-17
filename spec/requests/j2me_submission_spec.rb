@@ -12,13 +12,16 @@ describe 'j2me submissions', :type => :request do
       @form.publish!
       @question = @form.questions.first
 
-      # Include the commcare tag we use to distinguish j2me requests.
       # Note that we don't use the noauth system here because that is tested separately.
-      submit_xml_response(:user => @user, :xml => "<#{@question.odk_code}>42</#{@question.odk_code}>")
+      submit_j2me_response(:auth => true, :data => {@question.odk_code => '42'})
+    end
+
+    it 'should create response successfully' do
+      assert_response(201)
+      expect(@question.reload.answers.first.value).to eq '42'
     end
 
     it 'should have correct source attrib' do
-      assert_response(201)
       expect(@form.reload.responses.first.source).to eq 'j2me'
     end
   end
