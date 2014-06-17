@@ -160,8 +160,10 @@ class Answer < ActiveRecord::Base
     when 'date' then date_value
     when 'time' then time_value
     when 'datetime' then datetime_value
-    when 'integer' then value.blank? ? nil : value.to_i
-    when 'decimal' then value.blank? ? nil : value.to_f
+    when 'integer' then value.try(:to_i)
+    when 'decimal' then value.try(:to_f)
+    when 'select_one' then option.try(:name)
+    when 'select_multiple' then choices.empty? ? nil : choices.map(&:option_name).join(';')
     else value.blank? ? nil : value
     end
   end
