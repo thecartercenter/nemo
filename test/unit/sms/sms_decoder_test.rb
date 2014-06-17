@@ -382,4 +382,3 @@ class SmsDecoderTest < ActiveSupport::TestCase
       assert_equal(options[:value], error.params[:value]) if options[:value]
     end
 end
-

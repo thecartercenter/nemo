@@ -123,6 +123,7 @@ class SmsControllerTest < ActionController::TestCase
         assert_nil(params[:outgoing][:body])
       else
         # ensure the to matches the from
+
         assert_equal(params[:from], sms.to.first)
 
         # ensure the body is as expected
