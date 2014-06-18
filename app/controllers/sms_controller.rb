@@ -98,57 +98,44 @@ class SmsController < ApplicationController
     @mission = Mission.find_by_compact_name(params[:mission])
     raise Sms::Error.new("Mission not specified") if @mission.nil?
 
-    # first we need to figure out which provider sent this message, so we shop it around to all the adapters and see if any recognize it
-    handled = false
-    Sms::Adapters::Factory.products.each do |klass|
+    adapter = Sms::Adapters::Factory.new.create_for_request(request)
 
-      # if we get a match
-      if klass.recognize_receive_request?(request)
+    raise Sms::Error.new("no adapters recognized this receive request") if adapter.nil?
 
-        @adapter = klass.new
+    # go ahead with processing, catching any errors
+    begin
+      # do the receive
+      @incomings = adapter.receive(request)
 
-        # go ahead with processing, catching any errors
-        begin
-          # do the receive
-          @incomings = @adapter.receive(request)
+      # we should set the mission parameter in the incoming messages
+      @incomings.each{|m| m.update_attributes(:mission => @mission)}
 
-          # we should set the mission parameter in the incoming messages
-          @incomings.each{|m| m.update_attributes(:mission => @mission)}
+      # for each sms, decode it and
+      # store the sms responses in an instance variable so the functional test can access them
+      @sms_replies = @incomings.map{|sms| self.class.handle_sms(sms)}.compact
 
-          # for each sms, decode it and
-          # store the sms responses in an instance variable so the functional test can access them
-          @sms_replies = @incomings.map{|sms| self.class.handle_sms(sms)}.compact
+      # send the responses
+      @sms_replies.each do |r|
+        # copy the settings for the message's mission
+        r.mission && r.mission.setting ? r.mission.setting.load : Setting.build_default.load
 
-          # send the responses
-          @sms_replies.each do |r|
-            # copy the settings for the message's mission
-            r.mission && r.mission.setting ? r.mission.setting.load : Setting.build_default.load
+        # set the incoming_sms_number as the from number, if we have one
+        r.update_attributes(:from => configatron.incoming_sms_number) unless configatron.incoming_sms_number.blank?
 
-            # set the incoming_sms_number as the from number, if we have one
-            r.update_attributes(:from => configatron.incoming_sms_number) unless configatron.incoming_sms_number.blank?
+        # send the message using the mission's outgoing adapter
+        configatron.outgoing_sms_adapter.deliver(r)
+      end
 
-            # send the message using the mission's outgoing adapter
-            configatron.outgoing_sms_adapter.deliver(r)
-          end
-
-        # if we get an error
-        rescue Sms::Error
-          # notify the admin (if production) but don't re-raise it so that we can keep processing other msgs
-          if Rails.env == "production"
-            notify_error($!, :dont_re_raise => true)
-          # if not in production, re-raise it
-          else
-            raise $!
-          end
-        end
-
-        # we can now exit the loop
-        handled = true
-        break
+    # if we get an error
+    rescue Sms::Error
+      # notify the admin (if production) but don't re-raise it so that we can keep processing other msgs
+      if Rails.env == "production"
+        notify_error($!, :dont_re_raise => true)
+      # if not in production, re-raise it
+      else
+        raise $!
       end
     end
-
-    raise Sms::Error.new("no adapters recognized this receive request") unless handled
 
     # render something nice for the robot
     render :text => "OK"

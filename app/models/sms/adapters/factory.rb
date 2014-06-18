@@ -13,6 +13,15 @@ class Sms::Adapters::Factory
   # creates an instance of the specified adapter
   def create(name)
     raise ArgumentError.new("invalid adapter name") unless self.class.name_is_valid?(name)
-    Sms::Adapters.const_get("#{name}Adapter").new
+    klass = Sms::Adapters.const_get("#{name}Adapter")
+    klass.new
+  end
+
+  # Creates and returns an adapter that knows how to handle the given HTTP request.
+  # Returns nil if no adapter classes recognized the request.
+  def create_for_request(request)
+    klass = Sms::Adapters::Factory.products.detect{|a| a.recognize_receive_request?(request)}
+    return nil if klass.nil?
+    klass.new
   end
 end
