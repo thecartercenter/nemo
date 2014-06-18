@@ -3,9 +3,9 @@ require 'uri'
 class Sms::Adapters::IntelliSmsAdapter < Sms::Adapters::Adapter
 
   # checks if this adapter recognizes an incoming http receive request
-  def self.recognize_receive_request?(request)
+  def self.recognize_receive_request?(params)
     # if the params from, text, msgid, and sent are all in the request params, its ours!
-    %w(from text msgid sent) - request.POST.keys == []
+    %w(from text msgid sent) - params.keys == []
   end
 
   def service_name
@@ -41,16 +41,16 @@ class Sms::Adapters::IntelliSmsAdapter < Sms::Adapters::Adapter
     return true
   end
 
-  def receive(request)
+  def receive(params)
     # strip leading zeroes from the from number (intellisms pads the country code with 0s)
-    request.POST['from'].gsub!(/^0+/, "")
+    params['from'].gsub!(/^0+/, "")
 
     # create and return the message
     Sms::Message.create(
       :direction => 'incoming',
-      :from => "+#{request.POST['from']}",
-      :body => request.POST['text'],
-      :sent_at => Time.parse(request.POST['sent']),
+      :from => "+#{params['from']}",
+      :body => params['text'],
+      :sent_at => Time.parse(params['sent']),
       :adapter_name => service_name)
   end
 

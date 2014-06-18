@@ -102,7 +102,7 @@ class SmsController < ApplicationController
 
     raise Sms::Error.new("no adapters recognized this receive request") if adapter.nil?
 
-    @incoming = adapter.receive(request)
+    @incoming = adapter.receive(request.POST)
 
     @incoming.update_attributes(:mission => mission)
 

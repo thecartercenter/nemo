@@ -28,8 +28,8 @@ class Sms::Adapters::Adapter
   # recieves one sms messages
   # returns an Sms::Message object
   #
-  # params  The incoming HTTP request.
-  def receive(request)
+  # params  The incoming HTTP request params.
+  def receive(params)
     raise NotImplementedError
   end
 
