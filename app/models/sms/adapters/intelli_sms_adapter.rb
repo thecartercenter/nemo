@@ -41,12 +41,13 @@ class Sms::Adapters::IntelliSmsAdapter < Sms::Adapters::Adapter
     return true
   end
 
-  def receive(params)
+  def receive(request)
     # strip leading zeroes from the from number (intellisms pads the country code with 0s)
-    params['from'].gsub!(/^0+/, "")
+    request['from'].gsub!(/^0+/, "")
 
     # create and return the message
-    [Sms::Message.create(:from => "+#{params['from']}", :body => params["text"], :sent_at => Time.zone.parse(params["sent"]), :adapter_name => service_name)]
+    Sms::Message.create(:from => "+#{request['from']}", :body => request["text"],
+      :sent_at => Time.zone.parse(request["sent"]), :adapter_name => service_name)
   end
 
   # check_balance returns the balance string

@@ -61,7 +61,7 @@ class SmsControllerTest < ActionController::TestCase
       :sent_at => Time.parse("2012 Mar 7 8:07:20 UTC"))
 
     # our timezone is -6 and the ISMS is UTC, so adjust accordingly
-    assert_equal(Time.zone.parse("2012 Mar 7 2:07:20"), assigns(:incomings).first.sent_at)
+    assert_equal(Time.zone.parse("2012 Mar 7 2:07:20"), assigns(:incoming).sent_at)
   end
 
   test "duplicate should result error message" do
@@ -114,7 +114,7 @@ class SmsControllerTest < ActionController::TestCase
       do_post_request(params)
 
       # compare the response to the outgoing spec
-      sms = assigns(:sms_replies).first
+      sms = assigns(:reply)
 
       # if there was no reply, check that this was expected
       if sms.nil?

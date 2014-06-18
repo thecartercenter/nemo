@@ -25,16 +25,15 @@ class Sms::Adapters::Adapter
     message.save
   end
 
-  # recieves one or more sms messages
-  # returns an array of Sms::Message objects
+  # recieves one sms messages
+  # returns an Sms::Message object
   #
-  # params  the parameters sent from the sms provider
-  def receive(params)
-
+  # params  The incoming HTTP request.
+  def receive(request)
+    raise NotImplementedError
   end
 
   # returns the number of sms credits available in the provider account
-  # should be overridden if this feature is available
   def check_balance
     raise NotImplementedError
   end

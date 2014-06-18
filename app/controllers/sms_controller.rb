@@ -95,47 +95,21 @@ class SmsController < ApplicationController
 
   def create
     # get the mission from the params. if not found raise an error (we need the mission)
-    @mission = Mission.find_by_compact_name(params[:mission])
-    raise Sms::Error.new("Mission not specified") if @mission.nil?
+    mission = Mission.find_by_compact_name(params[:mission])
+    raise Sms::Error.new("Mission not specified") if mission.nil?
 
     adapter = Sms::Adapters::Factory.new.create_for_request(request)
 
     raise Sms::Error.new("no adapters recognized this receive request") if adapter.nil?
 
-    # go ahead with processing, catching any errors
-    begin
-      # do the receive
-      @incomings = adapter.receive(request)
+    @incoming = adapter.receive(request)
 
-      # we should set the mission parameter in the incoming messages
-      @incomings.each{|m| m.update_attributes(:mission => @mission)}
+    @incoming.update_attributes(:mission => mission)
 
-      # for each sms, decode it and
-      # store the sms responses in an instance variable so the functional test can access them
-      @sms_replies = @incomings.map{|sms| self.class.handle_sms(sms)}.compact
+    # Store the reply in an instance variable so the functional test can access them
+    @reply = self.class.handle_sms(@incoming)
 
-      # send the responses
-      @sms_replies.each do |r|
-        # copy the settings for the message's mission
-        r.mission && r.mission.setting ? r.mission.setting.load : Setting.build_default.load
-
-        # set the incoming_sms_number as the from number, if we have one
-        r.update_attributes(:from => configatron.incoming_sms_number) unless configatron.incoming_sms_number.blank?
-
-        # send the message using the mission's outgoing adapter
-        configatron.outgoing_sms_adapter.deliver(r)
-      end
-
-    # if we get an error
-    rescue Sms::Error
-      # notify the admin (if production) but don't re-raise it so that we can keep processing other msgs
-      if Rails.env == "production"
-        notify_error($!, :dont_re_raise => true)
-      # if not in production, re-raise it
-      else
-        raise $!
-      end
-    end
+    deliver_reply(@reply) unless @reply.nil?
 
     # render something nice for the robot
     render :text => "OK"
@@ -152,5 +126,16 @@ class SmsController < ApplicationController
 
       # do the translation, raising error on failure
       I18n.t(key, options.merge(:locale => lang, :raise => true))
+    end
+
+    def deliver_reply(reply)
+      # Copy settings from the message's mission
+      # This is so that the incoming_sms_number is available below.
+      reply.mission && reply.mission.setting ? reply.mission.setting.load : Setting.build_default.load
+
+      # Set the incoming_sms_number as the from number, if we have one
+      reply.update_attributes(:from => configatron.incoming_sms_number) unless configatron.incoming_sms_number.blank?
+
+      configatron.outgoing_sms_adapter.deliver(reply)
     end
 end
