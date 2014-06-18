@@ -31,14 +31,16 @@ describe 'intelli sms adapter' do
   it 'should correctly parse an intellisms-style request' do
     Time.zone = ActiveSupport::TimeZone['Saskatchewan']
 
-    request = build_request('text' => 'foo', 'sent' => '2014-06-07 15:10:48.019', 'from' => '+2348036801489')
+    request = build_request('text' => 'foo', 'sent' => '2013-07-03T09:53:00+01:00', 'from' => '2348036801489',
+      'msgid' => '1234', 'mission' => get_mission.compact_name)
+
     msg = @adapter.receive(request)
     expect(msg.to).to be_nil
     expect(msg.from).to eq '+2348036801489'
     expect(msg.direction).to eq 'incoming'
-    expect(msg.adapter_name).to eq 'FrontlineSms'
-    expect(msg.sent_at).to eq Time.zone.parse('2014-06-07 15:10:48.019')
-    expect(msg.sent_at.zone).not_to eq 'UTC'
+    expect(msg.body).to eq 'foo'
+    expect(msg.adapter_name).to eq 'IntelliSms'
+    expect(msg.sent_at.utc).to eq Time.utc(2013, 7, 3, 8, 53, 00)
     expect(msg.mission).to be_nil # This gets set in controller.
   end
 
