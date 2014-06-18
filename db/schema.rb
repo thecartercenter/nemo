@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140610205319) do
+ActiveRecord::Schema.define(:version => 20140618181711) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -354,9 +354,6 @@ ActiveRecord::Schema.define(:version => 20140610205319) do
     t.string   "outgoing_sms_adapter"
     t.string   "intellisms_username"
     t.string   "intellisms_password"
-    t.string   "isms_hostname"
-    t.string   "isms_username"
-    t.string   "isms_password"
     t.string   "incoming_sms_number"
     t.string   "preferred_locales"
     t.string   "override_code"

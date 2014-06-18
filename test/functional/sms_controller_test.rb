@@ -81,18 +81,16 @@ class SmsControllerTest < ActionController::TestCase
   end
 
   test "message should go out on outgoing adapter for incoming mission" do
-    # setup the current mission
     @mission = get_mission
 
-    # set the outgoing adapter for the mission to IntelliSMS and check that it gets used even if incoming adapter is Isms
-    @mission.setting.update_attributes(:outgoing_sms_adapter => "IntelliSms")
-    assert_sms_response(:mission => @mission, :incoming => {:body => "#{form_code} 1.15 2.20", :adapter => "Isms"},
-      :outgoing => {:body => /thank you/i, :adapter => "IntelliSms"})
-
-    # set the outgoing adapter for the mission to Isms and check that it gets used even if incoming adapter is Intellisms
-    @mission.setting.update_attributes(:outgoing_sms_adapter => "Isms")
-    assert_sms_response(:mission => @mission, :incoming => {:body => "#{form_code} 1.15 2.21", :adapter => "IntelliSms"},
-      :outgoing => {:body => /thank you/i, :adapter => "Isms"})
+    # Set the outgoing adapter for the mission to one of the valid adapters
+    # and check that it gets used even if incoming adapter is different
+    # TODO change incoming adapter when we have more than one
+    incoming_adapter = 'IntelliSms'
+    outgoing_adapter = 'IntelliSms'
+    @mission.setting.update_attributes(:outgoing_sms_adapter => outgoing_adapter)
+    assert_sms_response(:mission => @mission, :incoming => {:body => "#{form_code} 1.15 2.20", :adapter => incoming_adapter},
+      :outgoing => {:body => /thank you/i, :adapter => outgoing_adapter})
   end
 
   private
@@ -110,7 +108,7 @@ class SmsControllerTest < ActionController::TestCase
       params[:mission] ||= get_mission
 
       # assume the message came in on the Isms adapter if not set
-      params[:incoming][:adapter] ||= "Isms"
+      params[:incoming][:adapter] ||= 'IntelliSms'
 
       # do post request based on params
       do_post_request(params)
@@ -142,26 +140,6 @@ class SmsControllerTest < ActionController::TestCase
       req_params = nil
 
       case params[:incoming][:adapter]
-      when "Isms"
-        # isms doesn't use the + sign
-        from = params[:from].gsub("+", "")
-
-        # get time and date in isms style
-        date = params[:sent_at].utc.strftime("%y/%m/%d")
-        time = params[:sent_at].utc.strftime("%H:%M:%S")
-
-        # get the xml for the message
-        message_xml = "<MessageNotification><ModemNumber>2:19525945092</ModemNumber><SenderNumber>#{from}</SenderNumber><Date>#{date}</Date><Time>#{time}</Time>
-            <Message>#{params[:incoming][:body]}</Message></MessageNotification>"
-
-        # build and set req params
-        req_params = {
-          "XMLDATA" => "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?><Response>#{message_xml}</Response>"
-        }
-
-        # set the appropriate user agent header (needed)
-        @request.env["User-Agent"] = "MultiModem iSMS/1.41"
-
       when "IntelliSms"
 
         req_params = {

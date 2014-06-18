@@ -32,17 +32,6 @@
       </div>
     </div>
 
-    <div class="adapter_settings" data-adapter="Isms">
-
-      <%= f.field(:isms_hostname) %>
-      <%= f.field(:isms_username, :append => link_to(t("setting.change_sms_password"), "#")) %>
-
-      <div class="password_fields">
-        <%= f.field(:isms_password1, :type => :password) %>
-        <%= f.field(:isms_password2, :type => :password) %>
-      </div>
-    </div>
-
     <h2><%= t('activerecord.attributes.setting.external_sql') %></h2>
 
     <%= f.field(:external_sql, :partial => "external_sql") %>
