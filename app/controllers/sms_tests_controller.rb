@@ -11,7 +11,7 @@ class SmsTestsController < ApplicationController
     sms = Sms::Message.create(:from => params[:sms_test][:from], :body => params[:sms_test][:body], :mission => current_mission)
 
     # submit it to the handle method over in the SmsController and get the reply
-    reply = SmsController.handle_sms(sms)
+    reply = Sms::Handler.new.handle(sms)
 
     # save the reply and let the sent_at default to now
     reply.save if reply
