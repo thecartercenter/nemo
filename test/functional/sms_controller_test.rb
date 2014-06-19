@@ -85,8 +85,7 @@ class SmsControllerTest < ActionController::TestCase
 
     # Set the outgoing adapter for the mission to one of the valid adapters
     # and check that it gets used even if incoming adapter is different
-    # TODO change incoming adapter when we have more than one
-    incoming_adapter = 'IntelliSms'
+    incoming_adapter = 'FrontlineSms'
     outgoing_adapter = 'IntelliSms'
     @mission.setting.update_attributes(:outgoing_sms_adapter => outgoing_adapter)
     assert_sms_response(:mission => @mission, :incoming => {:body => "#{form_code} 1.15 2.20", :adapter => incoming_adapter},
@@ -145,6 +144,17 @@ class SmsControllerTest < ActionController::TestCase
           "sent" => params[:sent_at].utc.strftime("%Y-%m-%dT%T%z")
         }
 
+      when "FrontlineSms"
+
+        req_params = {
+          "from" => params[:from],
+          "text" => params[:incoming][:body],
+          "sent" => params[:sent_at].utc.strftime("%Y-%m-%d %T.%L"),
+          "frontline" => "1"
+        }
+
+      else
+        raise "Incoming adapter not recognized. Can't build test request"
       end
 
       # set the mission parameter that will be picked up and decoded by the controller
