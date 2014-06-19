@@ -5,9 +5,31 @@ class SmsControllerTest < ActionController::TestCase
 
   setup do
     @user = get_user
-
-    # we only need one form for all these tests, with two integer questions, both required
     setup_form(:questions => %w(integer integer), :required => true)
+  end
+
+  test "long decimal answers have value truncated" do
+    setup_form(:questions => %w(decimal), :required => true)
+    assert_sms_response(:incoming => "#{form_code} 1.sfsdfsdfsdfsdf",
+      :outgoing => /Sorry.+answer 'sfsdfsdfsd...'.+question 1.+form '#{form_code}'.+not a valid/)
+  end
+
+  test "long integer answers have value truncated" do
+    setup_form(:questions => %w(integer), :required => true)
+    assert_sms_response(:incoming => "#{form_code} 1.sfsdfsdfsdfsdf",
+      :outgoing => /Sorry.+answer 'sfsdfsdfsd...'.+question 1.+form '#{form_code}'.+not a valid/)
+  end
+
+  test "long select_one should have value truncated" do
+    setup_form(:questions => %w(select_one), :required => true)
+    assert_sms_response(:incoming => "#{form_code} 1.sfsdfsdfsdfsdf",
+      :outgoing => /Sorry.+answer 'sfsdfsdfsd...'.+question 1.+form '#{form_code}'.+not a valid option/)
+  end
+
+  test "long select_multiple should have value truncated" do
+    setup_form(:questions => %w(select_multiple), :required => true)
+    assert_sms_response(:incoming => "#{form_code} 1.sfsdfsdfsdfsdf",
+      :outgoing => /Sorry.+answer 'sfsdfsdfsd...'.+question 1.+form '#{form_code}'.+contained multiple invalid options/)
   end
 
   test "correct message should get congrats" do

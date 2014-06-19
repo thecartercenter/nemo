@@ -153,6 +153,8 @@ class Sms::Decoder
         # case insensitive
         @value.downcase!
 
+        raise_answer_error("answer_not_valid_long_option_multi") if @value.length > 10
+
         # hopefully this stays empty!
         invalid = []
 
@@ -274,7 +276,7 @@ class Sms::Decoder
 
     # raises an sms decoding error with the given type and includes the current rank and value
     def raise_answer_error(type, options = {})
-      truncated_value = ActionController::Base.helpers.truncate(@value, length: 10)
+      truncated_value = ActionController::Base.helpers.truncate(@value, length: 13)
       raise_decoding_error(type, {:rank => @rank, :value => truncated_value}.merge(options))
     end
 
