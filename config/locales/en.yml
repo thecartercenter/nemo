@@ -1294,6 +1294,7 @@ en:
       answer_not_integer: "was not a valid integer number"
       answer_not_time: "was not a valid time"
       answer_not_valid_option: "was not a valid option"
+      answer_not_valid_long_option_multi: "contained multiple invalid options"
       answer_not_valid_option_multi: "contained the invalid option '%{invalid_options}'"
       answer_not_valid_options_multi: "contained invalid options '%{invalid_options}'"
       congrats: "Your response to form '%{form_code}' was received. Thank you!"
