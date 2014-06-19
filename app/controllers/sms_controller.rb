@@ -98,7 +98,7 @@ class SmsController < ApplicationController
     mission = Mission.find_by_compact_name(params[:mission])
     raise Sms::Error.new("Mission not specified") if mission.nil?
 
-    adapter = Sms::Adapters::Factory.new.create_for_request(request)
+    adapter = Sms::Adapters::Factory.new.create_for_request(params)
 
     raise Sms::Error.new("no adapters recognized this receive request") if adapter.nil?
 
