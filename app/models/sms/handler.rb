@@ -1,4 +1,5 @@
-# Takes an incoming Sms::Message and returns a reply.
+# Takes an incoming Sms::Message and returns a translated and formatted reply.
+# Handles errors.
 # Defers to Sms::Decoder for intricacies of decoding.
 class Sms::Handler
 
@@ -74,11 +75,7 @@ class Sms::Handler
     if reply_body.nil?
       return nil
     else
-      # build the reply message
-      reply = Sms::Message.new(:to => sms.from, :body => reply_body, :mission => sms.mission, :direction => 'outgoing')
-
-      # add to the array
-      return reply
+      return Sms::Message.new(:to => sms.from, :body => reply_body, :mission => sms.mission, :direction => 'outgoing')
     end
   end
 
