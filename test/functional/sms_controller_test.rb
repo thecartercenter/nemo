@@ -56,11 +56,11 @@ class SmsControllerTest < ActionController::TestCase
     assert_sms_response(:incoming => "#{form_code} 1.21 2.21", :outgoing => /Must be less than or equal to 20/)
   end
 
-  test "date and time should be picked from xml" do
+  test "date and time should be set properly" do
     assert_sms_response(:incoming => "#{form_code} 1.15 2.20", :outgoing => /#{form_code}.+thank you/i,
       :sent_at => Time.parse("2012 Mar 7 8:07:20 UTC"))
 
-    # our timezone is -6 and the ISMS is UTC, so adjust accordingly
+    # Ensure timezone is respected.
     assert_equal(Time.zone.parse("2012 Mar 7 2:07:20"), assigns(:incoming).sent_at)
   end
 
@@ -120,17 +120,12 @@ class SmsControllerTest < ActionController::TestCase
       if sms.nil?
         assert_nil(params[:outgoing][:body])
       else
-
-        # ensure the to matches the from
+        # Ensure attribs are appropriate
         assert_equal(params[:from], sms.to.first)
-
-        # ensure the body is as expected
         assert_match(params[:outgoing][:body], sms.body)
-
-        # ensure the body is not missing translations
+        assert_equal('outgoing', sms.direction)
+        assert_equal(params[:mission], sms.mission)
         assert_no_match(/%\{|translation missing/, sms.body)
-
-        # ensure the outgoing adapter is correct, if it is set in params
         assert_equal(params[:outgoing][:adapter], sms.adapter_name) if params[:outgoing][:adapter]
       end
     end

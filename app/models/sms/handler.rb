@@ -75,7 +75,7 @@ class Sms::Handler
       return nil
     else
       # build the reply message
-      reply = Sms::Message.new(:to => sms.from, :body => reply_body, :mission => sms.mission)
+      reply = Sms::Message.new(:to => sms.from, :body => reply_body, :mission => sms.mission, :direction => 'outgoing')
 
       # add to the array
       return reply
