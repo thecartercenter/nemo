@@ -89,20 +89,6 @@ class SmsControllerTest < ActionController::TestCase
     assert_equal('REPLY_SENT', response.body)
   end
 
-  test "for reply-via-adapter, message should go out on outgoing adapter for incoming mission" do
-    @mission = get_mission
-
-    # Set the outgoing adapter for the mission to one of the valid adapters
-    # and check that it gets used even if incoming adapter is different
-    incoming_adapter = 'FrontlineSms'
-    outgoing_adapter = 'IntelliSms'
-    @mission.setting.update_attributes(:outgoing_sms_adapter => outgoing_adapter)
-    do_post_request(:from => '+1234567890', :incoming => {:body => 'foo', :adapter => incoming_adapter})
-    outgoing_sms = assigns(:outgoing_adapter).deliveries.last
-    assert_match(/couldn't find you/i, outgoing_sms.body)
-    assert_equal(outgoing_adapter, outgoing_sms.adapter_name)
-  end
-
   test "for reply-via-response style adapter, reply body should be response body" do
     response = do_post_request(:from => '+1234567890', :incoming => {:body => 'foo', :adapter => REPLY_VIA_RESPONSE_STYLE_ADAPTER})
 
