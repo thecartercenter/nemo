@@ -1,7 +1,7 @@
 class Sms::Adapters::FrontlineSmsAdapter < Sms::Adapters::Adapter
 
   def self.recognize_receive_request?(params)
-    %w(from text sent frontline) - params.keys == []
+    %w(from text frontline) - params.keys == []
   end
 
   def self.can_deliver?
@@ -25,9 +25,7 @@ class Sms::Adapters::FrontlineSmsAdapter < Sms::Adapters::Adapter
       :direction => 'incoming',
       :from => params['from'],
       :body => params['text'],
-      # Frontline appears to send times in the gateway computer's timezone, so we should assume
-      # that the gateway computer is in the same timezone as the ELMO instance.
-      :sent_at => Time.zone.parse(params['sent']),
+      :sent_at => Time.zone.now, # Frontline doesn't supply this
       :adapter_name => service_name)
   end
 end

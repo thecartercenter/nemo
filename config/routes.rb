@@ -34,6 +34,10 @@ ELMO::Application.routes.draw do
     resources :password_resets
     resources :responses
     resources :sms, :only => [:index, :create]
+
+    # Frontline sometimes wants to do GET only
+    get '/sms/submit' => 'sms#create'
+
     resources :sms_tests
     resource :user_session do
       get 'logged_out', :on => :collection
