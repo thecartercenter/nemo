@@ -15,16 +15,15 @@ class SmsController < ApplicationController
   end
 
   def create
+    @incoming_adapter = Sms::Adapters::Factory.new.create_for_request(params)
+    raise Sms::Error.new("No adapters recognized this receive request") if @incoming_adapter.nil?
+
     # get the mission from the params. if not found raise an error (we need the mission)
     mission = Mission.find_by_compact_name(params[:mission])
     raise Sms::Error.new("Mission not specified") if mission.nil?
 
     # Copy settings from the message's mission so that settings are available below.
     mission.setting.load
-
-    @incoming_adapter = Sms::Adapters::Factory.new.create_for_request(params)
-
-    raise Sms::Error.new("no adapters recognized this receive request") if @incoming_adapter.nil?
 
     @incoming = @incoming_adapter.receive(request.POST)
 

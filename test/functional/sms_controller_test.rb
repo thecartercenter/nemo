@@ -120,9 +120,6 @@ class SmsControllerTest < ActionController::TestCase
     assert_equal(204, response.status)
   end
 
-  # "for reply-via-response style adapter, error should result in empty response with status code"
-
-
   private
     # simulates the reception of an incoming sms by the SmsController and tests the response(s) that is (are) sent back
     def assert_sms_response(params)
