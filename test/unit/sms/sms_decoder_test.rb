@@ -177,22 +177,37 @@ class SmsDecoderTest < ActiveSupport::TestCase
     assert_decoding_fail(:body => "#{form_code} 1.15.2.2", :error => "answer_not_decimal", :rank => 1, :value => "15.2.2")
   end
 
-  test "tiny text question at beginning of message should work" do
+  test "text question at beginning of message should work" do
     setup_form(:questions => %w(text integer))
     assert_decoding(:body => "#{form_code} 1.foo bar 2.15", :answers => ["foo bar", 15])
   end
 
-  test "tiny text question in middle of message should work" do
+  test "long_text question at beginning of message should work" do
+    setup_form(:questions => %w(long_text integer))
+    assert_decoding(:body => "#{form_code} 1.foo bar that is very long 2.15", :answers => ["foo bar that is very long", 15])
+  end
+
+  test "text question in middle of message should work" do
     setup_form(:questions => %w(select_one text integer))
     assert_decoding(:body => "#{form_code} 1.a 2.foo bar 3.15", :answers => ["A", "foo bar", 15])
   end
 
-  test "tiny text question at end of message should work" do
+  test "long_text question in middle of message should work" do
+    setup_form(:questions => %w(select_one long_text integer))
+    assert_decoding(:body => "#{form_code} 1.a 2.foo bar that is very long 3.15", :answers => ["A", "foo bar that is very long", 15])
+  end
+
+  test "text question at end of message should work" do
     setup_form(:questions => %w(select_one integer text))
     assert_decoding(:body => "#{form_code} 1.a 2.15 3.foo bar", :answers => ["A", 15, "foo bar"])
   end
 
-  test "tiny text question with space after decimal should work" do
+  test "long_text question at end of message should work" do
+    setup_form(:questions => %w(select_one integer long_text))
+    assert_decoding(:body => "#{form_code} 1.a 2.15 3.foo bar that is very long", :answers => ["A", 15, "foo bar that is very long"])
+  end
+
+  test "text question with space after decimal should work" do
     setup_form(:questions => %w(select_one text integer))
     assert_decoding(:body => "#{form_code} 1.a 2. foo bar 3.15", :answers => ["A", "foo bar", 15])
   end
@@ -350,7 +365,7 @@ class SmsDecoderTest < ActiveSupport::TestCase
         when "select_multiple"
           # for select multiple, the expected value is an array of the english translations of the desired options
           assert_equal(expected, ans.choices.collect{|c| c.option.name_en})
-        when "text"
+        when "text", "long_text"
           assert_equal(expected, ans.value)
         when "date"
           assert_equal(expected, ans.date_value)
