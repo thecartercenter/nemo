@@ -4,6 +4,10 @@ class Sms::Adapters::FrontlineSmsAdapter < Sms::Adapters::Adapter
     %w(from text sent frontline) - params.keys == []
   end
 
+  def self.can_deliver?
+    false
+  end
+
   def service_name
     @service_name ||= "FrontlineSms"
   end

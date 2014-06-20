@@ -9,6 +9,11 @@ class Sms::Adapters::Adapter
     false
   end
 
+  # Whether this adapter can deliver outgoing messages.
+  def self.can_deliver?
+    raise NotImplementedError
+  end
+
   # delivers a message to one or more recipients
   # raises an error if no recipients, wrong direction, or message empty
   # should also raise an error if the provider returns an error code

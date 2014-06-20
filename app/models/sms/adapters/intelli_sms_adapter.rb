@@ -8,6 +8,10 @@ class Sms::Adapters::IntelliSmsAdapter < Sms::Adapters::Adapter
     %w(from text msgid sent) - params.keys == []
   end
 
+  def self.can_deliver?
+    true
+  end
+
   def service_name
     @service_name ||= "IntelliSms"
   end
