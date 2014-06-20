@@ -96,8 +96,10 @@ class SmsControllerTest < ActionController::TestCase
     incoming_adapter = 'FrontlineSms'
     outgoing_adapter = 'IntelliSms'
     @mission.setting.update_attributes(:outgoing_sms_adapter => outgoing_adapter)
-    assert_sms_response(:mission => @mission, :incoming => {:body => "#{form_code} 1.15 2.20", :adapter => incoming_adapter},
-      :outgoing => {:body => /thank you/i, :adapter => outgoing_adapter})
+    do_post_request(:from => '+1234567890', :incoming => {:body => 'foo', :adapter => incoming_adapter})
+    outgoing_sms = assigns(:outgoing_adapter).deliveries.last
+    assert_match(/couldn't find you/i, outgoing_sms.body)
+    assert_equal(outgoing_adapter, outgoing_sms.adapter_name)
   end
 
   private
