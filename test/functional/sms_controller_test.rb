@@ -13,6 +13,11 @@ class SmsControllerTest < ActionController::TestCase
     assert_sms_response(:incoming => "#{form_code} 1.'this is a text answer'", :outgoing => /#{form_code}.+thank you/i)
   end
 
+  test "can accept long_text answers" do
+    setup_form(:questions => %w(long_text), :required => true)
+    assert_sms_response(:incoming => "#{form_code} 1.'this is a text answer that is very very long'", :outgoing => /#{form_code}.+thank you/i)
+  end
+
   test "long decimal answers have value truncated" do
     setup_form(:questions => %w(decimal), :required => true)
     assert_sms_response(:incoming => "#{form_code} 1.sfsdfsdfsdfsdf",

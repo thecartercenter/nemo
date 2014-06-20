@@ -7,6 +7,16 @@ class SmsDecoderTest < ActiveSupport::TestCase
     @user = get_user
   end
 
+  test "form with text question should work" do
+    setup_form(:questions => %w(text integer))
+    assert_decoding(:body => "#{form_code} 1.weather is very cold 2.234", :answers => ["weather is very cold", 234])
+  end
+
+  test "form with long_text question should work" do
+    setup_form(:questions => %w(text integer))
+    assert_decoding(:body => "#{form_code} 1.weather is very hot and humid with threats of storms 2.4345", :answers => ["weather is very hot and humid with threats of storms", 4345])
+  end
+
   test "form with single question should work" do
     setup_form(:questions => %w(integer))
     assert_decoding(:body => "#{form_code} 1.15", :answers => [15])
