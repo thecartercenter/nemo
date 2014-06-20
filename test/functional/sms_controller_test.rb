@@ -84,8 +84,9 @@ class SmsControllerTest < ActionController::TestCase
   end
 
   test "for reply-via-adapter style incoming adapter, reply should be sent via system outgoing adapter" do
-    do_post_request(:from => '+1234567890', :incoming => {:body => 'foo', :adapter => REPLY_VIA_ADAPTER_STYLE_ADAPTER})
+    response = do_post_request(:from => '+1234567890', :incoming => {:body => 'foo', :adapter => REPLY_VIA_ADAPTER_STYLE_ADAPTER})
     assert_equal(1, assigns(:outgoing_adapter).deliveries.size)
+    assert_equal('REPLY_SENT', response.body)
   end
 
   test "for reply-via-adapter, message should go out on outgoing adapter for incoming mission" do
@@ -112,9 +113,12 @@ class SmsControllerTest < ActionController::TestCase
     assert_equal("Sorry, we couldn't find you in the system.", response.body)
   end
 
-  # test "for reply-via-response style adapter, no reply should result in empty response" do
-  #
-  # end
+  test "for reply-via-response style adapter, message with no reply should result in empty response" do
+    # Non-numeric from number results in no reply.
+    response = do_post_request(:from => 'foo', :incoming => {:body => 'foo', :adapter => REPLY_VIA_RESPONSE_STYLE_ADAPTER})
+    assert_equal('', response.body)
+    assert_equal(204, response.status)
+  end
 
   # "for reply-via-response style adapter, error should result in empty response with status code"
 

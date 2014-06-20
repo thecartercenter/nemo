@@ -39,7 +39,7 @@ class SmsController < ApplicationController
     if @reply
       deliver_reply(@reply) # This method does an appropriate render
     else
-      render :nothing => true, :status => 204 # No Content
+      render :text => '', :status => 204 # No Content
     end
   end
 
