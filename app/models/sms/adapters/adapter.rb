@@ -2,9 +2,16 @@
 require 'net/http'
 class Sms::Adapters::Adapter
 
+  attr_writer :deliveries
+
   # checks if this adapter recognizes an incoming http receive request
   def self.recognize_receive_request?(request)
     false
+  end
+
+  # Whether this adapter can deliver outgoing messages.
+  def self.can_deliver?
+    raise NotImplementedError
   end
 
   # delivers a message to one or more recipients
@@ -23,20 +30,30 @@ class Sms::Adapters::Adapter
 
     # save the message now, which sets the sent_at
     message.save
+
+    deliveries << message
   end
 
-  # recieves one or more sms messages
-  # returns an array of Sms::Message objects
+  # recieves one sms messages
+  # returns an Sms::Message object
   #
-  # params  the parameters sent from the sms provider
+  # params  The incoming HTTP request params.
   def receive(params)
-
+    raise NotImplementedError
   end
 
   # returns the number of sms credits available in the provider account
-  # should be overridden if this feature is available
   def check_balance
     raise NotImplementedError
+  end
+
+  # How replies should be sent. Should be implemented by subclasses.
+  def reply_style
+    raise NotImplementedError
+  end
+
+  def deliveries
+    @deliveries ||= []
   end
 
   protected

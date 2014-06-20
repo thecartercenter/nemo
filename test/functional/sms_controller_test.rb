@@ -3,6 +3,9 @@ require 'sms_forms_test_helper'
 
 class SmsControllerTest < ActionController::TestCase
 
+  REPLY_VIA_ADAPTER_STYLE_ADAPTER = 'IntelliSms'
+  REPLY_VIA_RESPONSE_STYLE_ADAPTER = 'FrontlineSms'
+
   setup do
     @user = get_user
 
@@ -56,12 +59,12 @@ class SmsControllerTest < ActionController::TestCase
     assert_sms_response(:incoming => "#{form_code} 1.21 2.21", :outgoing => /Must be less than or equal to 20/)
   end
 
-  test "date and time should be picked from xml" do
+  test "date and time should be set properly" do
     assert_sms_response(:incoming => "#{form_code} 1.15 2.20", :outgoing => /#{form_code}.+thank you/i,
       :sent_at => Time.parse("2012 Mar 7 8:07:20 UTC"))
 
-    # our timezone is -6 and the ISMS is UTC, so adjust accordingly
-    assert_equal(Time.zone.parse("2012 Mar 7 2:07:20"), assigns(:incomings).first.sent_at)
+    # Ensure timezone is respected.
+    assert_equal(Time.zone.parse("2012 Mar 7 2:07:20"), assigns(:incoming).sent_at)
   end
 
   test "duplicate should result error message" do
@@ -80,19 +83,27 @@ class SmsControllerTest < ActionController::TestCase
     assert_sms_response(:incoming => "#{form_code} 1.15 2.b", :outgoing => /votre.+#{form_code}/i)
   end
 
-  test "message should go out on outgoing adapter for incoming mission" do
-    # setup the current mission
-    @mission = get_mission
+  test "for reply-via-adapter style incoming adapter, reply should be sent via system outgoing adapter" do
+    response = do_post_request(:from => '+1234567890', :incoming => {:body => 'foo', :adapter => REPLY_VIA_ADAPTER_STYLE_ADAPTER})
+    assert_equal(1, assigns(:outgoing_adapter).deliveries.size)
+    assert_equal('REPLY_SENT', response.body)
+  end
 
-    # set the outgoing adapter for the mission to IntelliSMS and check that it gets used even if incoming adapter is Isms
-    @mission.setting.update_attributes(:outgoing_sms_adapter => "IntelliSms")
-    assert_sms_response(:mission => @mission, :incoming => {:body => "#{form_code} 1.15 2.20", :adapter => "Isms"},
-      :outgoing => {:body => /thank you/i, :adapter => "IntelliSms"})
+  test "for reply-via-response style adapter, reply body should be response body" do
+    response = do_post_request(:from => '+1234567890', :incoming => {:body => 'foo', :adapter => REPLY_VIA_RESPONSE_STYLE_ADAPTER})
 
-    # set the outgoing adapter for the mission to Isms and check that it gets used even if incoming adapter is Intellisms
-    @mission.setting.update_attributes(:outgoing_sms_adapter => "Isms")
-    assert_sms_response(:mission => @mission, :incoming => {:body => "#{form_code} 1.15 2.21", :adapter => "IntelliSms"},
-      :outgoing => {:body => /thank you/i, :adapter => "Isms"})
+    # Make sure no messages developed via adatper.
+    assert_equal(0, assigns(:outgoing_adapter).deliveries.size)
+
+    # We do an exact equality test since it's key there is no extra junk in response body.
+    assert_equal("Sorry, we couldn't find you in the system.", response.body)
+  end
+
+  test "for reply-via-response style adapter, message with no reply should result in empty response" do
+    # Non-numeric from number results in no reply.
+    response = do_post_request(:from => 'foo', :incoming => {:body => 'foo', :adapter => REPLY_VIA_RESPONSE_STYLE_ADAPTER})
+    assert_equal('', response.body)
+    assert_equal(204, response.status)
   end
 
   private
@@ -109,30 +120,22 @@ class SmsControllerTest < ActionController::TestCase
       # default mission to get_mission unless specified
       params[:mission] ||= get_mission
 
-      # assume the message came in on the Isms adapter if not set
-      params[:incoming][:adapter] ||= "Isms"
-
       # do post request based on params
       do_post_request(params)
 
       # compare the response to the outgoing spec
-      sms = assigns(:sms_replies).first
+      sms = assigns(:reply)
 
       # if there was no reply, check that this was expected
       if sms.nil?
         assert_nil(params[:outgoing][:body])
       else
-
-        # ensure the to matches the from
+        # Ensure attribs are appropriate
         assert_equal(params[:from], sms.to.first)
-
-        # ensure the body is as expected
         assert_match(params[:outgoing][:body], sms.body)
-
-        # ensure the body is not missing translations
+        assert_equal('outgoing', sms.direction)
+        assert_equal(params[:mission], sms.mission)
         assert_no_match(/%\{|translation missing/, sms.body)
-
-        # ensure the outgoing adapter is correct, if it is set in params
         assert_equal(params[:outgoing][:adapter], sms.adapter_name) if params[:outgoing][:adapter]
       end
     end
@@ -141,27 +144,11 @@ class SmsControllerTest < ActionController::TestCase
     def do_post_request(params)
       req_params = nil
 
+      params[:sent_at] ||= Time.now
+      params[:mission] ||= get_mission
+      params[:incoming][:adapter] ||= 'IntelliSms'
+
       case params[:incoming][:adapter]
-      when "Isms"
-        # isms doesn't use the + sign
-        from = params[:from].gsub("+", "")
-
-        # get time and date in isms style
-        date = params[:sent_at].utc.strftime("%y/%m/%d")
-        time = params[:sent_at].utc.strftime("%H:%M:%S")
-
-        # get the xml for the message
-        message_xml = "<MessageNotification><ModemNumber>2:19525945092</ModemNumber><SenderNumber>#{from}</SenderNumber><Date>#{date}</Date><Time>#{time}</Time>
-            <Message>#{params[:incoming][:body]}</Message></MessageNotification>"
-
-        # build and set req params
-        req_params = {
-          "XMLDATA" => "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?><Response>#{message_xml}</Response>"
-        }
-
-        # set the appropriate user agent header (needed)
-        @request.env["User-Agent"] = "MultiModem iSMS/1.41"
-
       when "IntelliSms"
 
         req_params = {
@@ -172,6 +159,17 @@ class SmsControllerTest < ActionController::TestCase
           "sent" => params[:sent_at].utc.strftime("%Y-%m-%dT%T%z")
         }
 
+      when "FrontlineSms"
+
+        req_params = {
+          "from" => params[:from],
+          "text" => params[:incoming][:body],
+          "sent" => params[:sent_at].utc.strftime("%Y-%m-%d %T.%L"),
+          "frontline" => "1"
+        }
+
+      else
+        raise "Incoming adapter not recognized. Can't build test request"
       end
 
       # set the mission parameter that will be picked up and decoded by the controller
