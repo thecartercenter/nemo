@@ -3,6 +3,9 @@ require 'sms_forms_test_helper'
 
 class SmsControllerTest < ActionController::TestCase
 
+  REPLY_VIA_ADAPTER_STYLE_ADAPTER = 'IntelliSms'
+  REPLY_VIA_RESPONSE_STYLE_ADAPTER = 'FrontlineSms'
+
   setup do
     @user = get_user
 
@@ -80,7 +83,12 @@ class SmsControllerTest < ActionController::TestCase
     assert_sms_response(:incoming => "#{form_code} 1.15 2.b", :outgoing => /votre.+#{form_code}/i)
   end
 
-  test "message should go out on outgoing adapter for incoming mission" do
+  test "for reply-via-adapter style incoming adapter, reply should be sent via system outgoing adapter" do
+    do_post_request(:from => '+1234567890', :incoming => {:body => 'foo', :adapter => REPLY_VIA_ADAPTER_STYLE_ADAPTER})
+    assert_equal(1, assigns(:outgoing_adapter).deliveries.size)
+  end
+
+  test "for reply-via-adapter, message should go out on outgoing adapter for incoming mission" do
     @mission = get_mission
 
     # Set the outgoing adapter for the mission to one of the valid adapters
@@ -106,9 +114,6 @@ class SmsControllerTest < ActionController::TestCase
       # default mission to get_mission unless specified
       params[:mission] ||= get_mission
 
-      # assume the message came in on the Isms adapter if not set
-      params[:incoming][:adapter] ||= 'IntelliSms'
-
       # do post request based on params
       do_post_request(params)
 
@@ -132,6 +137,10 @@ class SmsControllerTest < ActionController::TestCase
     # builds and sends the HTTP POST request to mimic incoming adapter
     def do_post_request(params)
       req_params = nil
+
+      params[:sent_at] ||= Time.now
+      params[:mission] ||= get_mission
+      params[:incoming][:adapter] ||= 'IntelliSms'
 
       case params[:incoming][:adapter]
       when "IntelliSms"

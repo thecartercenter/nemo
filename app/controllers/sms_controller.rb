@@ -46,6 +46,9 @@ class SmsController < ApplicationController
       # Set the incoming_sms_number as the from number, if we have one
       reply.update_attributes(:from => configatron.incoming_sms_number) unless configatron.incoming_sms_number.blank?
 
-      configatron.outgoing_sms_adapter.deliver(reply)
+      # Expose this to tests.
+      @outgoing_adapter = configatron.outgoing_sms_adapter
+
+      @outgoing_adapter.deliver(reply)
     end
 end

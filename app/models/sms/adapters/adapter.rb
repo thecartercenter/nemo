@@ -2,6 +2,8 @@
 require 'net/http'
 class Sms::Adapters::Adapter
 
+  attr_writer :deliveries
+
   # checks if this adapter recognizes an incoming http receive request
   def self.recognize_receive_request?(request)
     false
@@ -23,6 +25,8 @@ class Sms::Adapters::Adapter
 
     # save the message now, which sets the sent_at
     message.save
+
+    deliveries << message
   end
 
   # recieves one sms messages
@@ -36,6 +40,10 @@ class Sms::Adapters::Adapter
   # returns the number of sms credits available in the provider account
   def check_balance
     raise NotImplementedError
+  end
+
+  def deliveries
+    @deliveries ||= []
   end
 
   protected
