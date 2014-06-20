@@ -42,6 +42,11 @@ class Sms::Adapters::Adapter
     raise NotImplementedError
   end
 
+  # How replies should be sent. Should be implemented by subclasses.
+  def reply_style
+    raise NotImplementedError
+  end
+
   def deliveries
     @deliveries ||= []
   end

@@ -59,6 +59,11 @@ class Sms::Adapters::IntelliSmsAdapter < Sms::Adapters::Adapter
     send_request(build_uri(:balance)).split(":")[1].to_i
   end
 
+  # How replies should be sent.
+  def reply_style
+    :via_adapter
+  end
+
   private
     # builds uri based on given action and query string params. returns URI object.
     def build_uri(action, params = {})

@@ -19,36 +19,41 @@ class SmsController < ApplicationController
     mission = Mission.find_by_compact_name(params[:mission])
     raise Sms::Error.new("Mission not specified") if mission.nil?
 
-    adapter = Sms::Adapters::Factory.new.create_for_request(params)
+    # Copy settings from the message's mission so that settings are available below.
+    mission.setting.load
 
-    raise Sms::Error.new("no adapters recognized this receive request") if adapter.nil?
+    @incoming_adapter = Sms::Adapters::Factory.new.create_for_request(params)
 
-    @incoming = adapter.receive(request.POST)
+    raise Sms::Error.new("no adapters recognized this receive request") if @incoming_adapter.nil?
+
+    @incoming = @incoming_adapter.receive(request.POST)
 
     @incoming.update_attributes(:mission => mission)
 
     # Store the reply in an instance variable so the functional test can access them
     @reply = Sms::Handler.new.handle(@incoming)
 
-    deliver_reply(@reply) unless @reply.nil?
+    # Expose this to tests even if we don't use it.
+    @outgoing_adapter = configatron.outgoing_sms_adapter
 
-    # render something nice for the robot
-    render :text => "OK"
+    if @reply
+      deliver_reply(@reply) # This method does an appropriate render
+    else
+      render :nothing => true, :status => 204 # No Content
+    end
   end
 
   private
 
     def deliver_reply(reply)
-      # Copy settings from the message's mission
-      # This is so that the incoming_sms_number is available below.
-      reply.mission && reply.mission.setting ? reply.mission.setting.load : Setting.build_default.load
-
       # Set the incoming_sms_number as the from number, if we have one
       reply.update_attributes(:from => configatron.incoming_sms_number) unless configatron.incoming_sms_number.blank?
 
-      # Expose this to tests.
-      @outgoing_adapter = configatron.outgoing_sms_adapter
-
-      @outgoing_adapter.deliver(reply)
+      if @incoming_adapter.reply_style == :via_adapter
+        @outgoing_adapter.deliver(reply)
+        render :text => 'REPLY_SENT'
+      else # reply via response
+        render :text => reply.body
+      end
     end
 end

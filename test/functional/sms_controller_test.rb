@@ -102,6 +102,23 @@ class SmsControllerTest < ActionController::TestCase
     assert_equal(outgoing_adapter, outgoing_sms.adapter_name)
   end
 
+  test "for reply-via-response style adapter, reply body should be response body" do
+    response = do_post_request(:from => '+1234567890', :incoming => {:body => 'foo', :adapter => REPLY_VIA_RESPONSE_STYLE_ADAPTER})
+
+    # Make sure no messages developed via adatper.
+    assert_equal(0, assigns(:outgoing_adapter).deliveries.size)
+
+    # We do an exact equality test since it's key there is no extra junk in response body.
+    assert_equal("Sorry, we couldn't find you in the system.", response.body)
+  end
+
+  # test "for reply-via-response style adapter, no reply should result in empty response" do
+  #
+  # end
+
+  # "for reply-via-response style adapter, error should result in empty response with status code"
+
+
   private
     # simulates the reception of an incoming sms by the SmsController and tests the response(s) that is (are) sent back
     def assert_sms_response(params)

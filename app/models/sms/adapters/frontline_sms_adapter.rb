@@ -8,6 +8,10 @@ class Sms::Adapters::FrontlineSmsAdapter < Sms::Adapters::Adapter
     @service_name ||= "FrontlineSms"
   end
 
+  def reply_style
+    :via_response
+  end
+
   def deliver(message)
     raise NotImplementedError
   end
