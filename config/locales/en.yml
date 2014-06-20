@@ -953,7 +953,6 @@ en:
   question_type:
     text: "Text"
     long_text: "Long Text"
-    tiny_text: "Tiny Text"
     integer: "Integer"
     decimal: "Decimal"
     location: "Location"
@@ -1312,7 +1311,8 @@ en:
       header: "ELMO SMS Composition Guide"
       not_all_required: "Questions marked with an asterisk (*) are required."
       pointers:
-        tiny_text: "Write your answer here. Abbreviate if necessary."
+        text: "Write your answer here. Abbreviate if necessary."
+        long_text: "Write your answer here. Abbreviate if necessary."
         integer: "Write your answer here."
         decimal: "Write your answer here."
         select_one: "Write the letter for your choice here. Write only one letter."

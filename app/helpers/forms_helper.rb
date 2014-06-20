@@ -124,6 +124,8 @@ module FormsHelper
     when "datetime" then "20120228 1430"
     when "date" then "20121118"
     when "time" then "0930"
+    when "text" then "rainy weather"
+    when "long_text" then "it was a very hot day and very humid"
     else nil
     end
 
@@ -138,7 +140,7 @@ module FormsHelper
     when "decimal" then 2
     when "time", "select_multiple" then 4
     when "date" then 6
-    when "datetime", "tiny_text" then 8
+    when "datetime", "text", "long_text" then 8
     else 4
     end
 

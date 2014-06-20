@@ -168,27 +168,27 @@ class SmsDecoderTest < ActiveSupport::TestCase
   end
 
   test "tiny text question at beginning of message should work" do
-    setup_form(:questions => %w(tiny_text integer))
+    setup_form(:questions => %w(text integer))
     assert_decoding(:body => "#{form_code} 1.foo bar 2.15", :answers => ["foo bar", 15])
   end
 
   test "tiny text question in middle of message should work" do
-    setup_form(:questions => %w(select_one tiny_text integer))
+    setup_form(:questions => %w(select_one text integer))
     assert_decoding(:body => "#{form_code} 1.a 2.foo bar 3.15", :answers => ["A", "foo bar", 15])
   end
 
   test "tiny text question at end of message should work" do
-    setup_form(:questions => %w(select_one integer tiny_text))
+    setup_form(:questions => %w(select_one integer text))
     assert_decoding(:body => "#{form_code} 1.a 2.15 3.foo bar", :answers => ["A", 15, "foo bar"])
   end
 
   test "tiny text question with space after decimal should work" do
-    setup_form(:questions => %w(select_one tiny_text integer))
+    setup_form(:questions => %w(select_one text integer))
     assert_decoding(:body => "#{form_code} 1.a 2. foo bar 3.15", :answers => ["A", "foo bar", 15])
   end
 
   test "weird chunk should error" do
-    setup_form(:questions => %w(select_one tiny_text integer))
+    setup_form(:questions => %w(select_one text integer))
     assert_decoding_fail(:body => "#{form_code} 1.a 2. foo bar 3.15 baz", :error => "answer_not_integer", :rank => 3, :value => "15 baz")
   end
 
@@ -340,7 +340,7 @@ class SmsDecoderTest < ActiveSupport::TestCase
         when "select_multiple"
           # for select multiple, the expected value is an array of the english translations of the desired options
           assert_equal(expected, ans.choices.collect{|c| c.option.name_en})
-        when "tiny_text"
+        when "text"
           assert_equal(expected, ans.value)
         when "date"
           assert_equal(expected, ans.date_value)
