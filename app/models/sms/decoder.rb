@@ -190,7 +190,6 @@ class Sms::Decoder
         build_answer(:choices => idxs.map{|idx| Choice.new(:option => @qing.question.options[idx-1])})
 
       when "text", "long_text"
-        # this one is simple
         build_answer(:value => @value)
 
       when "date"

@@ -124,8 +124,6 @@ module FormsHelper
     when "datetime" then "20120228 1430"
     when "date" then "20121118"
     when "time" then "0930"
-    when "text" then "rainy weather"
-    when "long_text" then "it was a very hot day and very humid"
     else nil
     end
 
