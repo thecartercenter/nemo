@@ -189,8 +189,7 @@ class Sms::Decoder
         # if we get to here, we're good, so add
         build_answer(:choices => idxs.map{|idx| Choice.new(:option => @qing.question.options[idx-1])})
 
-      when "tiny_text"
-        # going away
+      when "text", "long_text"
         build_answer(:value => @value)
 
       when "date"

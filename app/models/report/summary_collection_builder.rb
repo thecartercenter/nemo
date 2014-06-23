@@ -11,7 +11,6 @@ class Report::SummaryCollectionBuilder
     'select_multiple' => 'select',
     'date' => 'date',
     'text' => 'raw',
-    'tiny_text' => 'raw',
     'long_text' => 'raw'
   }
 

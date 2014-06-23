@@ -138,7 +138,7 @@ module FormsHelper
     when "decimal" then 2
     when "time", "select_multiple" then 4
     when "date" then 6
-    when "datetime", "tiny_text" then 8
+    when "datetime", "text", "long_text" then 8
     else 4
     end
 
