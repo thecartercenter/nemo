@@ -1,4 +1,4 @@
-class Marker < ActiveRecord::Base
+class Marker
 
   def self.generate(color)
     # ensure there is a map-markers directory inside tmp
