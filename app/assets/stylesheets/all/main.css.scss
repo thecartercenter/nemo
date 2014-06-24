@@ -225,7 +225,11 @@ div.sms_guide span.sms_example { display: inline-block; font-style: normal; font
 .sms_index {
   td.to_col { width: 225px; }
   td.from_col { width: 125px; }
-  td.body_col > div { width: 400px; overflow: hidden; }
+  td.direction_col { width: 50px; }
+  td.received_at_col { width: 130px }
+  td.sent_at_col { width: 130px }
+  td.adapter_name_col { width: 100px; }
+  td.body_col > div { width: auto; overflow: hidden; }
 }
 
 /* sms test console */

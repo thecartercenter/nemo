@@ -32,7 +32,7 @@
 
           <%= content_tag(:div, answer.value, :class => 'ro-val', :'data-val' => answer.value) %>
 
-        <% when 'text', 'long_text', 'tiny_text' %>
+        <% when 'text', 'long_text' %>
 
           <%# show search excerpt (highlights search terms) if exists for this questioning, else just show plain answer value %>
           <%# no need to output data-val here since same as human readable %>

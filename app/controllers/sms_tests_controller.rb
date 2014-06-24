@@ -8,13 +8,20 @@ class SmsTestsController < ApplicationController
   # handles a request for a test. this will be an AJAX call so we only return the message body
   def create
     # create an incoming sms object
-    sms = Sms::Message.create(:from => params[:sms_test][:from], :body => params[:sms_test][:body], :mission => current_mission)
+    sms = Sms::Message.create(:adapter_name => 'Test Console',
+                              :from => params[:sms_test][:from],
+                              :body => params[:sms_test][:body],
+                              :mission => current_mission)
 
-    # submit it to the handle method over in the SmsController and get the reply
-    reply = SmsController.handle_sms(sms)
-
-    # save the reply and let the sent_at default to now
-    reply.save if reply
+    
+    # Submit it to the handle method over in the SmsController and get the reply.
+    if reply = SmsController.handle_sms(sms)
+      # Need to set adapter name on the reply here.
+      reply.adapter_name = 'Test Console'
+      
+      # Let the sent_at default to now.
+      reply.save
+    end
 
     # render the body of the reply
     render :text => reply ? reply.body : "<em>#{t('sms_console.no_reply')}</em>".html_safe
