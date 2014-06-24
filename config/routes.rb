@@ -119,16 +119,17 @@ ELMO::Application.routes.draw do
     match '/submission' => 'responses#create', :format => 'xml'
 
     # Unauthenticated submissions
-    match "/noauth/submission" => 'responses#create', :format => :xml, :noauth => true
+    match '/noauth/submission' => 'responses#create', :format => :xml, :noauth => true
   end
 
+  # API routes.
   namespace :api, defaults: { format: :json } do
-    api_version(:module => "v1", :path => {:value => "v1"}) do
-      get "/missions/:mission_name/forms", to: "forms#index", as: :misson_forms
-      resources :forms, only: :show
-      resources :missions, only: :index
-      resources :responses, only: :index
-      resources :answers, only: :index
+    api_version :module => 'v1', :path => {:value => 'v1'} do
+      scope '/m/:mission_name', :mission_name => /[a-z][a-z0-9]*/, :defaults => {:mode => 'm'} do
+        resources :forms, only: [:index, :show]
+        resources :responses, only: :index
+        resources :answers, only: :index
+      end
     end
   end
 
