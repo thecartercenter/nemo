@@ -58,8 +58,6 @@ gem 'ejs'
 # search
 gem 'thinking-sphinx', '~> 3.0.2'
 
-gem 'pry' # better debugger
-
 # cron management
 gem 'whenever', :require => false
 
