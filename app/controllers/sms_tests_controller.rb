@@ -13,13 +13,8 @@ class SmsTestsController < ApplicationController
                               :body => params[:sms_test][:body],
                               :mission => current_mission)
 
-    
-    # Submit it to the handle method over in the SmsController and get the reply.
-    if reply = SmsController.handle_sms(sms)
-      # Need to set adapter name on the reply here.
+    if reply = Sms::Handler.new.handle(sms)
       reply.adapter_name = 'Test Console'
-      
-      # Let the sent_at default to now.
       reply.save
     end
 

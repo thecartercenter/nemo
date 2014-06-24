@@ -6,6 +6,7 @@ class Form < ActiveRecord::Base
   has_many(:responses, :inverse_of => :form)
 
   has_many(:versions, :class_name => "FormVersion", :inverse_of => :form, :dependent => :destroy)
+  has_many(:whitelist_users, :as => :whitelistable, class_name: "Whitelist")
 
   # while a form has many versions, this is a reference to the most up-to-date one
   belongs_to(:current_version, :class_name => "FormVersion")
@@ -18,7 +19,7 @@ class Form < ActiveRecord::Base
   before_create(:init_downloads)
 
   scope(:published, where(:published => true))
-  scope(:with_questionings, includes(
+  scope(:with_questionings, includes( 
     :questionings => [
       :form,
       {:question => {:option_set => :options}},
@@ -48,6 +49,11 @@ class Form < ActiveRecord::Base
   replicable :child_assocs => :questionings, :uniqueness => {:field => :name, :style => :sep_words},
     :dont_copy => [:published, :downloads, :responses_count, :questionings_count, :upgrade_needed,
       :smsable, :current_version_id, :allow_incomplete]
+
+
+  def api_user_id_can_see?(api_user_id)
+    whitelist_users.pluck(:user_id).include?(api_user_id)
+  end
 
   # remove heirarch of objects
   def self.terminate_sub_relationships(form_ids)
@@ -263,6 +269,10 @@ class Form < ActiveRecord::Base
     questionings(options[:reload]).sort_by{|qing| qing.rank}.each_with_index{|qing, idx| qing.rank = idx + 1}
     save(:validate => false) if options[:save]
   end
+
+  def has_white_listed_user?(user_id)
+    whitelist_users.where(user_id: user_id).exists?
+  end 
 
   private
     def init_downloads

@@ -121,6 +121,12 @@ class UsersController < ApplicationController
     redirect_to(root_url(:admin_mode => nil))
   end
 
+  def regenerate_key
+    @user = User.find(params[:id])
+    @user.regenerate_api_key
+    redirect_to(:action => :edit)
+  end
+
   private
 
     # if we need to print instructions, redirects to the instructions action. otherwise redirects to index.

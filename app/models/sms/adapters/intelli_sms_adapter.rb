@@ -3,9 +3,13 @@ require 'uri'
 class Sms::Adapters::IntelliSmsAdapter < Sms::Adapters::Adapter
 
   # checks if this adapter recognizes an incoming http receive request
-  def self.recognize_receive_request?(request)
+  def self.recognize_receive_request?(params)
     # if the params from, text, msgid, and sent are all in the request params, its ours!
-    %w(from text msgid sent) - request.request_parameters.keys == []
+    %w(from text msgid sent) - params.keys == []
+  end
+
+  def self.can_deliver?
+    true
   end
 
   def service_name
@@ -34,7 +38,7 @@ class Sms::Adapters::IntelliSmsAdapter < Sms::Adapters::Adapter
 
       # get any errors that the service returned
       errors = response.split("\n").reject{|l| !l.match(/ERR:/)}.join("\n")
-      raise Sms::Error.new(errors) unless errors.blank?
+      raise Sms::Error.new("IntelliSMS Server Error: #{errors}") unless errors.blank?
     end
 
     # if we get to this point, it worked
@@ -46,12 +50,22 @@ class Sms::Adapters::IntelliSmsAdapter < Sms::Adapters::Adapter
     params['from'].gsub!(/^0+/, "")
 
     # create and return the message
-    [Sms::Message.create(:from => "+#{params['from']}", :body => params["text"], :sent_at => Time.zone.parse(params["sent"]), :adapter_name => service_name)]
+    Sms::Message.create(
+      :direction => 'incoming',
+      :from => "+#{params['from']}",
+      :body => params['text'],
+      :sent_at => Time.parse(params['sent']),
+      :adapter_name => service_name)
   end
 
   # check_balance returns the balance string
   def check_balance
     send_request(build_uri(:balance)).split(":")[1].to_i
+  end
+
+  # How replies should be sent.
+  def reply_style
+    :via_adapter
   end
 
   private

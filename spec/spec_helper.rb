@@ -46,23 +46,34 @@ def encode_credentials(username, password)
   "Basic #{Base64.encode64("#{username}:#{password}")}"
 end
 
-def submit_xml_response(params_or_xml)
-  params = params_or_xml.is_a?(Hash) ? params_or_xml : {}
-  params[:xml] = params_or_xml.is_a?(String) ? params_or_xml : params[:xml]
+def submit_j2me_response(params)
+  raise 'form must have version' unless @form.current_version
 
-  # Wrap xml with data tag, etc.
-  form_info = @form ? "id=\"#{@form.id}\" version=\"#{@form.current_version.sequence}\"" : ''
-  xml = %Q{<?xml version='1.0' ?><data #{form_info}
-    xmlns:jrm="http://dev.commcarehq.org/jr/xforms" xmlns="http://openrosa.org/formdesigner/240361">
-    #{params[:xml]}</data>}
+  # Add all the extra stuff that J2ME adds to the data hash
+  params[:data]['id'] = @form.id.to_s
+  params[:data]['uiVersion'] = '1'
+  params[:data]['version'] = @form.current_version.sequence
+  params[:data]['name'] = @form.name
+  params[:data]['xmlns:jrm'] = 'http://dev.commcarehq.org/jr/xforms'
+  params[:data]['xmlns'] = "http://openrosa.org/formdesigner/#{@form.current_version.sequence}"
 
-  # Upload the fixture file
-  FileUtils.mkpath('test/fixtures')
-  fixture_file = 'test/fixtures/test.xml'
-  File.open(fixture_file.to_s, 'w'){|f| f.write(xml)}
-  uploaded = fixture_file_upload(fixture_file, 'text/xml')
+  # If we are doing a normally authenticated submission, add credentials.
+  headers = params[:auth] ? {'HTTP_AUTHORIZATION' => encode_credentials(@user.login, 'password')} : {}
 
-  # Build headers and do post
-  headers = params[:user] ? {'HTTP_AUTHORIZATION' => encode_credentials(params[:user].login, 'password')} : {}
-  post(@submission_url, {:xml_submission_file => uploaded, :format => 'xml'}, headers)
+  post(@submission_url, params.slice(:data), headers)
+end
+
+# helper method to parse json and make keys symbols
+def parse_json(body)
+  JSON.parse(body, symbolize_names: true)
+end
+
+# Currently duplicated in test/test_helper until it becomes obvious how to refactor.
+def login(user)
+  post(user_session_path, :user_session => {:login => user.login, :password => "password"})
+  follow_redirect!
+  assert_response(:success)
+
+  # reload the user since some stuff may have changed in database (e.g. current_mission) during login process
+  user.reload
 end

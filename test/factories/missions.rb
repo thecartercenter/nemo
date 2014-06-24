@@ -13,10 +13,7 @@ FactoryGirl.define do
         :preferred_locales_str => "en",
         :outgoing_sms_adapter => "IntelliSms",
         :intellisms_username => "user",
-        :intellisms_password => "pass",
-        :isms_hostname => "example.com:8080",
-        :isms_username => "user",
-        :isms_password => "pass"
+        :intellisms_password => "pass"
       )
     }
   end
