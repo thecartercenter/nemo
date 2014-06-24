@@ -20,4 +20,8 @@ RSpec.configure do |config|
     DatabaseCleaner.clean
   end
 
+  config.after(:all) do
+    DatabaseCleaner.clean_with(:truncation)
+  end
+
 end
