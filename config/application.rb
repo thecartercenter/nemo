@@ -68,9 +68,6 @@ module ELMO
     # read system version as git tag
     configatron.system_version = `git describe`.strip rescue "?"
 
-    # set up preferred geocoder
-    configatron.geocoder = Configatron::Delayed.new{GoogleGeocoder}
-
     # regular expressions
     configatron.lat_lng_regexp = /^(-?\d+(\.\d+)?)\s*[,;:\s]\s*(-?\d+(\.\d+)?)/
 

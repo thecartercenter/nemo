@@ -11,6 +11,8 @@
     <%= f.field(:override_code, :partial => 'override_code') %>
   <% end %>
 
+  <%= f.field(:allow_unauthenticated_submissions, :type => :check_box) if configatron.allow_unauthenticated_submissions? %>
+
   <%# none of the rest of this is relevant in admin mode %>
   <% unless admin_mode? %>
 
@@ -27,17 +29,6 @@
       <div class="password_fields">
         <%= f.field(:intellisms_password1, :type => :password) %>
         <%= f.field(:intellisms_password2, :type => :password) %>
-      </div>
-    </div>
-
-    <div class="adapter_settings" data-adapter="Isms">
-
-      <%= f.field(:isms_hostname) %>
-      <%= f.field(:isms_username, :append => link_to(t("setting.change_sms_password"), "#")) %>
-
-      <div class="password_fields">
-        <%= f.field(:isms_password1, :type => :password) %>
-        <%= f.field(:isms_password2, :type => :password) %>
       </div>
     </div>
 

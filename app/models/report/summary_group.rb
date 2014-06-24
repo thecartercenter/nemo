@@ -10,7 +10,7 @@ class Report::SummaryGroup
     'numbers' => %w(integer decimal),
     'dates' => %w(date),
     'times' => %w(time datetime),
-    'short_text' => %w(text tiny_text),
+    'short_text' => %w(text),
     'long_text' => %w(long_text)
   ]
 

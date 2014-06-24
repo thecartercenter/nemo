@@ -19,6 +19,11 @@ class Sms::Message < ActiveRecord::Base
   after_initialize :normalize_numbers
 
   scope(:newest_first, order("sent_at DESC"))
+  scope(:newly_created_first, order("created_at DESC"))
+
+  def received_at
+    (direction == "incoming") ? created_at : nil
+  end
 
   private
 

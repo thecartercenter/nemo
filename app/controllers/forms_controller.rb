@@ -41,6 +41,7 @@ class FormsController < ApplicationController
   end
 
   def new
+    @form.access_level = AccessLevel::PRIVATE
     prepare_and_render_form
   end
 
@@ -80,6 +81,10 @@ class FormsController < ApplicationController
       format.xml do
         authorize!(:download, @form)
         @form.add_download
+
+        # xml style defaults to odk but can be specified via query string
+        @style = params[:style] || 'odk'
+
         render_openrosa
       end
     end
@@ -96,6 +101,7 @@ class FormsController < ApplicationController
 
   def update
     begin
+      update_api_users
       # save basic attribs
       @form.assign_attributes(params[:form])
 
@@ -210,6 +216,15 @@ class FormsController < ApplicationController
 
   private
 
+    def update_api_users
+      return unless params[:form][:access_level].to_i == AccessLevel::PROTECTED
+      @form.whitelist_users.destroy
+      params[:whitelist_users].each do |api_user|
+        @form.whitelist_users.create(user_id: api_user)
+      end
+
+    end
+
     # adds the appropriate headers for openrosa content
     def render_openrosa
       render(:content_type => "text/xml")
@@ -219,6 +234,7 @@ class FormsController < ApplicationController
     # prepares objects and renders the form template
     def prepare_and_render_form
       # render the form template
+      @users = User.assigned_to_or_admin(current_mission).by_name
       render(:form)
     end
 

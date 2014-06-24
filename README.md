@@ -39,6 +39,7 @@ Note to install the software below we recommend the following package managers:
 1. **Memcached 1.4+**
   - A good resource on how to install on a Mac is [here](http://www.jroller.com/JamesGoodwill/entry/installing_and_configuring_memcached)
   - Ensure memcached is running, even for development, since caching is enabled in development and production environments.
+  - For production environments, ensure memcached is running on port 11219
 
 1. **MySQL 5.0+**
   - Create an empty database and accompanying user for use by the app (E.g. development database *elmo_d* with username *elmo*)
@@ -95,6 +96,7 @@ ELMO is 100% open-source. We would like you to be part of the ELMO community! We
 ### ELMO Data Model
 
 Contributors may find our auto-generated [Entity-Relationship Diagram (ERD)](docs/erd.pdf) useful.
+You can generate it by running ```rake db:migrate ``` if adding new migrations or ```rake erd``` to run on its own. To skip running it when doing migrations run ```NO_DIAGRAM=1 rake db:migrate```
 
 ### Contributing
 

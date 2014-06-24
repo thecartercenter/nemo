@@ -24,7 +24,7 @@ RSpec.configure do |config|
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
   # instead of true.
-  config.use_transactional_fixtures = true
+  config.use_transactional_fixtures = false
 
   # If true, the base class of anonymous controllers will be inferred
   # automatically. This will be the default behavior in future versions of
@@ -38,6 +38,34 @@ RSpec.configure do |config|
   config.order = "random"
 end
 
+# Encodes credentials for basic auth
+def encode_credentials(username, password)
+  "Basic #{Base64.encode64("#{username}:#{password}")}"
+end
+
+def submit_j2me_response(params)
+  raise 'form must have version' unless @form.current_version
+
+  # Add all the extra stuff that J2ME adds to the data hash
+  params[:data]['id'] = @form.id.to_s
+  params[:data]['uiVersion'] = '1'
+  params[:data]['version'] = @form.current_version.sequence
+  params[:data]['name'] = @form.name
+  params[:data]['xmlns:jrm'] = 'http://dev.commcarehq.org/jr/xforms'
+  params[:data]['xmlns'] = "http://openrosa.org/formdesigner/#{@form.current_version.sequence}"
+
+  # If we are doing a normally authenticated submission, add credentials.
+  headers = params[:auth] ? {'HTTP_AUTHORIZATION' => encode_credentials(@user.login, 'password')} : {}
+
+  post(@submission_url, params.slice(:data), headers)
+end
+
+# helper method to parse json and make keys symbols
+def parse_json(body)
+  JSON.parse(body, symbolize_names: true)
+end
+
+# Currently duplicated in test/test_helper until it becomes obvious how to refactor.
 def login(user)
   post('/en/user-session', :user_session => {:login => user.login, :password => "password"})
   follow_redirect!

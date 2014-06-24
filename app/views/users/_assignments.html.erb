@@ -14,10 +14,10 @@
 
 <% else %>
 
-  <% if form_mode == :show %>
+  <% if form_mode == :show || cannot?(:change_assignments, @user) %>
 
     <%# in show mode, just show the role the current mission's assignment %>
-    <%= t(@current_assignment.role, :scope => :role) %>
+    <%= @current_assignment.role ? t(@current_assignment.role, :scope => :role) : t('common.none') %>
 
   <% else %>
 

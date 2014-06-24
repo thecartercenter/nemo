@@ -3,31 +3,6 @@ module Concerns::ApplicationController::Authentication
 
   attr_reader :current_user, :current_mission
 
-  # gets the user and mission from the user session if they're not already set
-  def get_user
-    # if the request format is XML we should use basic auth
-    @current_user = if request.format == Mime::XML
-      # authenticate with basic
-      user = authenticate_with_http_basic do |login, password|
-        # use eager loading to optimize things a bit
-        User.includes(:assignments).find_by_credentials(login, password)
-      end
-
-      # if authentication not successful, fail
-      return request_http_basic_authentication if !user
-
-      user
-    else
-      # get the current user session from authlogic
-      user_session = UserSession.find
-      user = user_session.nil? ? nil : user_session.user
-
-      # look up the current user from the user session
-      # we use a find call to the User class so that we can do eager loading
-      User.includes(:assignments).find(user.id) unless user.nil?
-    end
-  end
-
   def get_mission
     # if we're in admin mode, the current mission is nil and we need to set the user's current mission to nil also
     if mission_mode? && params[:mission_name].present?
@@ -40,6 +15,70 @@ module Concerns::ApplicationController::Authentication
       session[:last_mission_name] = @current_mission.try(:compact_name)
     else
       @current_mission = nil
+    end
+  end
+
+  # Determines the user and saves in the @current_user var.
+  def get_user
+
+    # If user already logged in via Authlogic, we are done.
+    if user_session = UserSession.find
+
+      # Look up the current user from the user session
+      # We use a find call to the User class so that we can do eager loading
+      @current_user = User.includes(:assignments).find(user_session.user.id)
+
+    # If this is an XML request, we do special stuff
+    elsif request.format == Mime::XML
+
+      # Special unauthenticated request.
+      if params[:noauth]
+
+        process_noauth
+
+      # HTTP Basic authenticated request.
+      else
+
+        @current_user = authenticate_with_http_basic do |login, password|
+          # Use eager loading.
+          User.includes(:assignments).find_by_credentials(login, password)
+        end
+        return request_http_basic_authentication if !@current_user
+      end
+
+    else
+      # If we get here, nothing worked!
+      @current_user = nil
+    end
+  end
+
+  def process_noauth
+    user = nil
+
+    # Check the override setting (must use explicit true due to configatron weirdness)
+    if configatron.allow_unauthenticated_submissions != true
+      return render :nothing => true, :status => 404
+    end
+
+    unless current_mission
+      return render_noauth_submission_failure :text => 'MISSION_MUST_BE_SPECIFIED', :status => :unauthorized
+    end
+
+    unless current_mission.allow_unauthenticated_submissions?
+      return render_noauth_submission_failure :text => 'UNAUTHENTICATED_SUBMISSIONS_NOT_ALLOWED', :status => :unauthorized
+    end
+
+    unless params[:data] && params[:data][:username]
+      return render_noauth_submission_failure :text => 'USERNAME_NOT_SPECIFIED', :status => :unauthorized
+    end
+
+    unless @current_user = User.where(:login => params[:data][:username]).first
+      return render_noauth_submission_failure :text => 'USER_NOT_FOUND', :status => :unauthorized
+    end
+
+    # if user can't access the mission, reject
+    if current_ability.cannot?(:switch_to, current_mission)
+      return render_noauth_submission_failure :text => 'USER_CANT_ACCESS_MISSION', :status => :unauthorized
     end
   end
 
@@ -58,5 +97,10 @@ module Concerns::ApplicationController::Authentication
   # (This is an override for a method defined by AuthLogic)
   def last_request_update_allowed?
     params[:auto].nil?
+  end
+
+  def render_noauth_submission_failure(params)
+    Rails.logger.info("Unauthenticated submission failed: '#{params[:text]}'")
+    render(params)
   end
 end

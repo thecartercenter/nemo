@@ -89,6 +89,7 @@ ELMO::Application.routes.draw do
     resources :users do
       member do
         get 'login_instructions', :path => 'login-instructions'
+        put 'regenerate_key'
       end
       post 'export', :on => :collection
     end
@@ -116,6 +117,19 @@ ELMO::Application.routes.draw do
     get '/formList' => 'forms#index', :format => 'xml'
     get '/forms/:id' => 'forms#show', :format => 'xml', :as => :form_with_mission
     match '/submission' => 'responses#create', :format => 'xml'
+
+    # Unauthenticated submissions
+    match "/noauth/submission" => 'responses#create', :format => :xml, :noauth => true
+  end
+
+  namespace :api, defaults: { format: :json } do
+    api_version(:module => "v1", :path => {:value => "v1"}) do
+      get "/missions/:mission_name/forms", to: "forms#index", as: :misson_forms
+      resources :forms, only: :show
+      resources :missions, only: :index
+      resources :responses, only: :index
+      resources :answers, only: :index
+    end
   end
 
   root :to => redirect("/#{I18n.default_locale}")

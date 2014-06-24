@@ -234,54 +234,34 @@ class Response < ActiveRecord::Base
     modifier != 'odk'
   end
 
-  def populate_from_xml(xml)
-    # response mission should already be set
-    raise "xml submissions must have a mission" if mission.nil?
+  def populate_from_odk(xml)
+    # Response mission should already be set
+    raise "Submissions must have a mission" if mission.nil?
 
-    # parse xml
-    doc = XML::Parser.string(xml).parse
+    self.source = 'odk'
 
-    # set the source/modifier values to odk
-    self.source = self.modifier = "odk"
+    data = XML::Parser.string(xml).parse.root
 
-    # if no root ID, error
-    raise ArgumentError.new("no form id was given") if doc.root['id'].nil?
+    lookup_and_check_form(:id => data['id'], :version => data['version'])
 
-    # get form ID and version sequence number and attempt to convert to int
-    form_id = doc.root['id'].try(:to_i)
-    form_ver = doc.root['version'].try(:to_i)
+    # Loop over each child tag and create hash of odk_code => value
+    hash = Hash[*data.children.map{|c| [c.name, c.first.try(:content)]}.flatten(1)]
 
-    # if either of these is nil or not an integer, error
-    raise ArgumentError.new("no form id was given") if form_id.nil?
-    raise FormVersionError.new("form version must be specified") if form_ver.nil?
+    populate_from_hash(hash)
+  end
 
-    # try to load form (will raise activerecord error if not found)
-    self.form = Form.find(form_id)
+  def populate_from_j2me(data)
+    # Response mission should already be set
+    raise "Submissions must have a mission" if mission.nil?
 
-    # if form has no version, error
-    raise "xml submissions must be to versioned forms" if form.current_version.nil?
+    self.source = 'j2me'
 
-    # if form version is outdated, error
-    raise FormVersionError.new("form version is outdated") if form.current_version.sequence > form_ver
+    lookup_and_check_form(:id => data.delete('id'), :version => data.delete('version'))
 
-    # get the visible questionings
-    qings = form.visible_questionings
+    # Get rid of other unneeded keys.
+    data = data.except(*%w(uiVersion name xmlns xmlns:jrm))
 
-    # loop over each child tag and create hash of question_code => value
-    values = {}; doc.root.children.each{|c| values[c.name] = c.first? ? c.first.content : nil}
-
-    # loop over all the questions in the form and create answers
-    qings.each do |qing|
-      # get value from hash
-      str = values[qing.question.odk_code]
-
-      # add answer
-      answer = Answer.new_from_str(:str => str, :questioning => qing)
-      self.answers << answer
-
-      # set incomplete flag if required but empty
-      self.incomplete = true if answer.required_but_empty?
-    end
+    populate_from_hash(data)
   end
 
   def visible_questionings
@@ -412,5 +392,30 @@ class Response < ActiveRecord::Base
         :answers, :questionings, :questions, :option_sets, :options, :choices]))
 
       rel.to_sql
+    end
+
+    def lookup_and_check_form(params)
+      # if either of these is nil or not an integer, error
+      raise SubmissionError.new("no form id was given") if params[:id].nil?
+      raise FormVersionError.new("form version must be specified") if params[:version].nil?
+
+      # try to load form (will raise activerecord error if not found)
+      self.form = Form.find(params[:id])
+
+      # if form has no version, error
+      raise "xml submissions must be to versioned forms" if form.current_version.nil?
+
+      # if form version is outdated, error
+      raise FormVersionError.new("form version is outdated") if form.current_version.sequence > params[:version].to_i
+    end
+
+    def populate_from_hash(hash)
+      form.visible_questionings.each do |qing|
+        answer = Answer.new_from_str(:str => hash[qing.question.odk_code], :questioning => qing)
+        self.answers << answer
+
+        # Set incomplete flag if required but empty.
+        self.incomplete = true if answer.required_but_empty?
+      end
     end
 end

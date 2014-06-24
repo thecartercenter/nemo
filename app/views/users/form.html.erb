@@ -13,7 +13,7 @@
 
   <%# field name depends on whether we're in admin mode or not. under the hood it's all the same though %>
   <%= f.field(admin_mode? ? :assignments : :role, :partial => "assignments",
-    :required => !admin_mode?, :read_only => cannot?(:change_assignments, @user)) %>
+    :required => !admin_mode?) %>
 
   <%= f.field(:pref_lang, :type => :select, :options => configatron.full_locales.map{|l| [language_name(l), l]}) %>
 
@@ -37,7 +37,7 @@
 
     <% end %>
   <% end %>
-
+  <%= f.field(:api_key, :partial => 'api_key') if !@user.new_record? && can?(:regenerate_key, @user) %>
   <div class="submit-buttons">
     <%= f.submit(:class => "btn btn-primary") %>
   </div>

@@ -157,6 +157,8 @@ class Sms::Decoder
         # case insensitive
         @value.downcase!
 
+        raise_answer_error("answer_not_valid_long_option_multi") if @value.length > 10
+
         # hopefully this stays empty!
         invalid = []
 
@@ -191,8 +193,7 @@ class Sms::Decoder
         # if we get to here, we're good, so add
         build_answer(:choices => idxs.map{|idx| Choice.new(:option => @qing.question.options[idx-1])})
 
-      when "tiny_text"
-        # this one is simple
+      when "text", "long_text"
         build_answer(:value => @value)
 
       when "date"
@@ -278,7 +279,8 @@ class Sms::Decoder
 
     # raises an sms decoding error with the given type and includes the current rank and value
     def raise_answer_error(type, options = {})
-      raise_decoding_error(type, {:rank => @rank, :value => @value}.merge(options))
+      truncated_value = ActionController::Base.helpers.truncate(@value, length: 13)
+      raise_decoding_error(type, {:rank => @rank, :value => truncated_value}.merge(options))
     end
 
     # converts a series of letters to the corresponding index, e.g. a => 1, b => 2, z => 26, aa => 27, etc.

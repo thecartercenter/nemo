@@ -16,6 +16,7 @@ class QuestionsController < ApplicationController
   end
 
   def new
+    @question.access_level = AccessLevel::PRIVATE
     prepare_and_render_form
   end
 

@@ -20,6 +20,8 @@ class Ability
   # defines user's abilities
   def initialize(params)
 
+    raise ArgumentError.new('Ability constructor accepts Hash only') unless params.is_a?(Hash)
+
     @user = params[:user]
     @mission = params[:mission]
     @mode = params[:mode]
@@ -172,6 +174,19 @@ class Ability
 
           # there is no Questioning index
           cannot :index, Questioning
+        end
+
+        # Users can view/modify only their own API keys
+        cannot :regenerate_key, User
+        can :regenerate_key, User do |u|
+          u == user
+        end
+      end
+
+      # Can't change own assignments
+      unless user.admin?
+        cannot :change_assignments, User, ["id = ?", user.id] do |other_user|
+          user.id == other_user.id
         end
       end
     end

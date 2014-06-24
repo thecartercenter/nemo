@@ -20,8 +20,6 @@
 //= require jquery.mjs.nestedSortable-1.3.5
 //= require jquery.spin
 //= require core_ext/jquery_ext
-//= require ckeditor/init
-//= require ckeditor/adapters/jquery
 //= require common
 //= require sassafras/utils
 //= require i18n
