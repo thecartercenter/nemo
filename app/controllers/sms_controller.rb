@@ -25,7 +25,7 @@ class SmsController < ApplicationController
     # Copy settings from the message's mission so that settings are available below.
     mission.setting.load
 
-    @incoming = @incoming_adapter.receive(request.POST)
+    @incoming = @incoming_adapter.receive(params)
 
     @incoming.update_attributes(:mission => mission)
 

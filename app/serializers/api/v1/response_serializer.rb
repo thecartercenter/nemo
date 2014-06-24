@@ -4,9 +4,9 @@ class API::V1::ResponseSerializer < ActiveModel::Serializer
   has_many :answers, serializer: API::V1::QuestionSerializer
 
   def submitter
-    object.user_id
+    object.user.name
   end
- 
+
   def answers
     object.answers.public_access
   end
