@@ -24,4 +24,9 @@ describe 'router' do
   it 'routes proxy requests without locale' do
     { :get => '/proxies/geocoder' }.should route_to(:controller => 'proxies', :action => 'geocoder')
   end
+
+  it 'routes edit profile' do
+    { :get => '/en/users/1/edit' }.should route_to(:controller => 'users', :action => 'edit',
+      :locale => 'en', :mode => nil, :mission_name => nil, :id => '1')
+  end
 end

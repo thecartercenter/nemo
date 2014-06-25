@@ -30,4 +30,14 @@ describe 'router' do
     { :get => '/en/m/mission123/options/suggest' }.should route_to(
       :controller => 'options', :action => 'suggest', :locale => 'en', :mode => 'm', :mission_name => 'mission123')
   end
+
+  it 'routes user show in admin mode' do
+    { :get => "/en/admin/users/1" }.should route_to(
+      :controller => 'users', :action => 'show', :locale => 'en', :mode => 'admin', :id => '1')
+  end
+
+  it 'routes user show in mission mode' do
+    { :get => "/en/m/mission123/users/1" }.should route_to(
+      :controller => 'users', :action => 'show', :locale => 'en', :mode => 'm', :mission_name => 'mission123', :id => '1')
+  end
 end
