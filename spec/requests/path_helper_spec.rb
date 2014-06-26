@@ -14,6 +14,7 @@ describe 'path helpers' do
 
     it 'should be correct' do
       expect_urls "
+        /en/users/#{@user.id}
         /en/users/#{@user.id}/edit
         /en/logged-out
         /en

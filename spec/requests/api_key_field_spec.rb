@@ -1,17 +1,18 @@
 require 'spec_helper'
 require 'support/shared_context'
 
-describe 'api key form field' do
+describe 'api key form field', :database_cleaner => :all do
 
-  before do
-    @user = FactoryGirl.create(:user, :admin => true)
+  before(:all) do
+    @user = FactoryGirl.create(:user)
     @user2 = FactoryGirl.create(:user)
     login(@user)
   end
 
   context 'in show mode for same user' do
-    before do
-      get(user_path(@user))
+    before(:all) do
+      get("/en/m/#{get_mission.compact_name}/users/#{@user.id}")
+      assert_response(:success)
     end
 
     it 'should be visible' do
@@ -24,8 +25,8 @@ describe 'api key form field' do
   end
 
   context 'in edit mode for same user' do
-    before do
-      get(edit_user_path(@user))
+    before(:all) do
+      get("/en/m/#{get_mission.compact_name}/users/#{@user.id}/edit")
     end
 
     old_key = nil
@@ -44,10 +45,11 @@ describe 'api key form field' do
     context 'on regenerate' do
       it 'should redirect back to user path' do
         response = put(regenerate_key_user_path(@user))
-        expect(response).to redirect_to edit_user_path(@user)
+        expect(response).to redirect_to "/en/m/#{get_mission.compact_name}/users/#{@user.id}/edit"
       end
 
       it 'should have a new key' do
+        get "/en/m/#{get_mission.compact_name}/users/#{@user.id}"
         assert_select('div.user_api_key') do |e|
           expect(old_key).not_to eq e.to_s
         end
@@ -56,8 +58,8 @@ describe 'api key form field' do
   end
 
   context 'in show mode for different user' do
-    before do
-      get(user_path(@user2))
+    before(:all) do
+      get("/en/m/#{get_mission.compact_name}/users/#{@user2.id}")
     end
 
     it 'should not be visible' do
@@ -66,8 +68,8 @@ describe 'api key form field' do
   end
 
   context 'in edit mode for different user' do
-    before do
-      get(edit_user_path(@user2))
+    before(:all) do
+      get("/en/m/#{get_mission.compact_name}/users/#{@user2.id}/edit")
     end
 
     it 'should not be visible' do

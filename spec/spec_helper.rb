@@ -74,3 +74,14 @@ def login(user)
   # reload the user since some stuff may have changed in database (e.g. current_mission) during login process
   user.reload
 end
+
+def do_api_request(endpoint, params = {})
+  params[:user] ||= @api_user
+  params[:mission_name] ||= @mission.compact_name
+
+  path_args = [{:mission_name => params[:mission_name]}]
+  path_args.unshift(params[:obj]) if params[:obj]
+  path = send("api_v1_#{endpoint}_path", *path_args)
+
+  get path, params[:params], {'HTTP_AUTHORIZATION' => "Token token=#{params[:user].api_key}"}
+end

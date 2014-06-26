@@ -83,7 +83,7 @@ class Ability
         # observer abilities
         if role_in_mission?(:observer)
           # can view and export users in same mission
-          can [:index, :read, :export], User, :assignments => {:mission_id => mission.id}
+          can [:index, :read, :show, :export], User, :assignments => {:mission_id => mission.id}
 
           # can do reports for the current mission
           can :manage, Report::Report, :mission_id => mission.id
