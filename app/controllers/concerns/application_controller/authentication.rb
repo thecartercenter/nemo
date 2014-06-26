@@ -22,7 +22,7 @@ module Concerns::ApplicationController::Authentication
   def get_user
 
     # If user already logged in via Authlogic, we are done.
-    if user_session = UserSession.find
+    if (user_session = UserSession.find) && user_session.user
 
       # Look up the current user from the user session
       # We use a find call to the User class so that we can do eager loading
