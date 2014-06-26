@@ -34,8 +34,8 @@ class Ability
       # anybody can see the welcome page
       can :show, Welcome
 
-      # anybody can edit self
-      can :update, User, :id => user.id
+      # anybody can show/edit self
+      can [:show, :update], User, :id => user.id
 
       # anybody can generate map markers
       can :read, Marker
@@ -183,7 +183,7 @@ class Ability
         end
       end
 
-      # Can't change own assignments
+      # Can't change own assignments unless admin
       unless user.admin?
         cannot :change_assignments, User, ["id = ?", user.id] do |other_user|
           user.id == other_user.id
