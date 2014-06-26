@@ -34,7 +34,8 @@ describe 'path helpers' do
 
     it 'should be correct' do
       expect_urls "
-        /en/users/#{@user.id}/edit
+        /en/m/foo/users/#{@user.id}
+        /en/m/foo/users/#{@user.id}/edit
         /en/logged-out
         /en
         /fr
@@ -53,7 +54,8 @@ describe 'path helpers' do
 
     it 'should be correct' do
       expect_urls "
-        /en/users/#{@user.id}/edit
+        /en/admin/users/#{@user.id}
+        /en/admin/users/#{@user.id}/edit
         /en/logged-out
         /en
         /fr

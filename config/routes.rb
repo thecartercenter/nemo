@@ -12,9 +12,6 @@ ELMO::Application.routes.draw do
     resources :password_resets, :path => 'password-resets'
     resource :user_session, :path => 'user-session'
 
-    # For viewing/editing user profiles, which is neither mode
-    resources :users, :only => %w(show edit update)
-
     # login/logout shortcuts
     get '/logged-out' => 'user_sessions#logged_out', :as => :logged_out
     match '/logout' => 'user_sessions#destroy', :as => :logout
@@ -86,13 +83,6 @@ ELMO::Application.routes.draw do
     resources :questions
     resources :questionings
     resources :settings
-    resources :users do
-      member do
-        get 'login_instructions', :path => 'login-instructions'
-        put 'regenerate_key'
-      end
-      post 'export', :on => :collection
-    end
     resources :user_batches, :path => 'user-batches'
     resources :groups
 
@@ -107,6 +97,18 @@ ELMO::Application.routes.draw do
 
     # special route for option suggestions
     get '/options/suggest' => 'options#suggest', :as => :suggest_options
+  end
+
+  #####################################
+  # Any mode routes
+  scope ':locale(/:mode)(/:mission_name)', :locale => /[a-z]{2}/, :mode => /m|admin/, :mission_name => /[a-z][a-z0-9]*/ do
+    resources :users do
+      member do
+        get 'login_instructions', :path => 'login-instructions'
+        put 'regenerate_key'
+      end
+      post 'export', :on => :collection
+    end
   end
 
   # Special SMS and ODK routes. No locale.
