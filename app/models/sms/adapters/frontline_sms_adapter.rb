@@ -8,10 +8,6 @@ class Sms::Adapters::FrontlineSmsAdapter < Sms::Adapters::Adapter
     false
   end
 
-  def service_name
-    @service_name ||= "FrontlineSms"
-  end
-
   def reply_style
     :via_response
   end
