@@ -114,6 +114,7 @@ ELMO::Application.routes.draw do
   # Special SMS and ODK routes. No locale.
   scope '/m/:mission_name', :mission_name => /[a-z][a-z0-9]*/, :defaults => {:mode => 'm'} do
     resources :sms, :only => [:index, :create]
+    get '/sms/submit' => 'sms#create'
 
     # ODK routes. They are down here so that forms_path doesn't return the ODK variant.
     get '/formList' => 'forms#index', :format => 'xml'

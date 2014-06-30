@@ -50,6 +50,11 @@ class IncomingSmsTest < ActionDispatch::IntegrationTest
     assert_sms_response(:incoming => "#{form_code} 1.15 2.20", :outgoing => /#{form_code}.+thank you/i)
   end
 
+  test "GET submissions should be possible via different endpoint" do
+    assert_sms_response(:url => "/m/#{get_mission.compact_name}/sms/submit", :method => :get,
+      :incoming => "#{form_code} 1.15 2.20", :outgoing => /#{form_code}.+thank you/i)
+  end
+
   test "message from robot should get no response" do
     assert_sms_response(:from => "VODAFONE", :incoming => "blah blah junk", :outgoing => nil)
   end
@@ -108,13 +113,13 @@ class IncomingSmsTest < ActionDispatch::IntegrationTest
   end
 
   test "for reply-via-adapter style incoming adapter, reply should be sent via mission's outgoing adapter" do
-    do_post_request(:from => '+1234567890', :incoming => {:body => 'foo', :adapter => REPLY_VIA_ADAPTER_STYLE_ADAPTER})
+    do_incoming_request(:from => '+1234567890', :incoming => {:body => 'foo', :adapter => REPLY_VIA_ADAPTER_STYLE_ADAPTER})
     assert_equal(1, assigns(:outgoing_adapter).deliveries.size)
     assert_equal('REPLY_SENT', @response.body)
   end
 
   test "for reply-via-response style adapter, reply body should be response body" do
-    do_post_request(:from => '+1234567890', :incoming => {:body => 'foo', :adapter => REPLY_VIA_RESPONSE_STYLE_ADAPTER})
+    do_incoming_request(:from => '+1234567890', :incoming => {:body => 'foo', :adapter => REPLY_VIA_RESPONSE_STYLE_ADAPTER})
 
     # Make sure no messages developed via adatper.
     assert_equal(0, assigns(:outgoing_adapter).deliveries.size)
@@ -125,7 +130,7 @@ class IncomingSmsTest < ActionDispatch::IntegrationTest
 
   test "for reply-via-response style adapter, message with no reply should result in empty response" do
     # Non-numeric from number results in no reply.
-    do_post_request(:from => 'foo', :incoming => {:body => 'foo', :adapter => REPLY_VIA_RESPONSE_STYLE_ADAPTER})
+    do_incoming_request(:from => 'foo', :incoming => {:body => 'foo', :adapter => REPLY_VIA_RESPONSE_STYLE_ADAPTER})
     assert_equal('', @response.body)
     assert_equal(204, @response.status)
   end
@@ -133,7 +138,6 @@ class IncomingSmsTest < ActionDispatch::IntegrationTest
   private
     # simulates the reception of an incoming sms by the SmsController and tests the response(s) that is (are) sent back
     def assert_sms_response(params)
-      # default to user phone and time of now
       params[:from] ||= @user.phone
       params[:sent_at] ||= Time.now
 
@@ -145,7 +149,8 @@ class IncomingSmsTest < ActionDispatch::IntegrationTest
       params[:mission] ||= get_mission
 
       # do post request based on params
-      do_post_request(params)
+      do_incoming_request(params)
+      assert_response(:success)
 
       # compare the response to the outgoing spec
       sms = assigns(:reply)
@@ -165,13 +170,15 @@ class IncomingSmsTest < ActionDispatch::IntegrationTest
     end
 
     # builds and sends the HTTP POST request to mimic incoming adapter
-    def do_post_request(params)
+    def do_incoming_request(params)
       req_params = {}
       req_env = {}
 
       params[:sent_at] ||= Time.now
       params[:mission] ||= get_mission
       params[:incoming][:adapter] ||= 'IntelliSms'
+      params[:url] ||= "/m/#{params[:mission].compact_name}/sms"
+      params[:method] ||= :post
 
       case params[:incoming][:adapter]
       when "IntelliSms"
@@ -197,7 +204,7 @@ class IncomingSmsTest < ActionDispatch::IntegrationTest
         raise "Incoming adapter not recognized. Can't build test request"
       end
 
-      # do the post request
-      post("/m/#{params[:mission].compact_name}/sms", req_params, req_env)
+      # do the get/post/whatever request
+      send(params[:method], params[:url], req_params, req_env)
     end
 end
