@@ -2,17 +2,34 @@ require 'spec_helper'
 
 describe 'user' do
   before do
-    @user = create :user
+    @user = create :user, admin: true
   end
 
-  context 'if has never viewed a mission and has no assignments' do
-    context 'when logging in' do
-      before do
-        @user.assignments.delete_all
-        login_without_redirect @user
-      end
+  context 'if has assignments' do
+    before do
+      login_without_redirect @user
+    end
 
-      specify { expect(response).to redirect_to basic_root_path }
+    it 'should be redirected to assignment mission' do
+      expect(response).to redirect_to mission_root_path(mission_name: @user.assignments.first.mission.compact_name)
+    end
+  end
+
+
+  context 'if has never viewed a mission and has no assignments' do
+    before do
+      @user.assignments.delete_all
+      login_without_redirect @user
+    end
+
+    it 'should be redirected to basic root on login' do
+      expect(response).to redirect_to basic_root_path
+    end
+
+    it 'should be linked to basic path for admin mode exit' do
+      get admin_root_path
+      expect(response).to be_success
+      assert_select("a.admin-mode") { |link| expect(link.to_s).to match(%r{href="#{basic_root_path}"}) }
     end
   end
 
@@ -24,9 +41,7 @@ describe 'user' do
       User.record_timestamps = false
       @old = create :assignment, user: @user, updated_at: 1.day.ago, created_at: 10.days.ago
       User.record_timestamps = true
-    end
 
-    it 'should redirect to that missions root' do
       login_without_redirect @user # First login will go to more recent mission.
       expect(response).to redirect_to mission_root_path(mission_name: @recent.mission.compact_name)
 
@@ -35,13 +50,17 @@ describe 'user' do
 
       logout
       login_without_redirect @user
+    end
+
+    it 'should be redirected to that missions root on login' do
       expect(response).to redirect_to mission_root_path(mission_name: @old.mission.compact_name)
     end
+
+    it 'should be linked to that missions path for admin mode exit' do
+      get admin_root_path
+      expect(response).to be_success
+      path = mission_root_path(mission_name: @old.mission.compact_name)
+      assert_select("a.admin-mode") { |link| expect(link.to_s).to match(%r{href="#{path}"}) }
+    end
   end
-
-
-  'when exiting admin mode'
-    'if has never viewed a mission'
-    'if has previously viewed a mission'
-
 end
