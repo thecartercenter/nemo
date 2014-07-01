@@ -12,7 +12,6 @@ class User < ActiveRecord::Base
   has_many(:missions, :through => :assignments, :order => "missions.created_at DESC")
   has_many :user_groups, :dependent => :destroy
   has_many :groups, :through => :user_groups
-  belongs_to :current_mission, :class_name => 'Mission'
 
   accepts_nested_attributes_for(:assignments, :allow_destroy => true)
 
@@ -51,11 +50,6 @@ class User < ActiveRecord::Base
 
   # we want all of these on one page for now
   self.per_page = 1000000
-
-  def self.mission_pre_delete(mission)
-    # Scrub any references to the mission being deleted.
-    self.where(current_mission_id: mission).update_all(current_mission_id: nil)
-  end
 
   def self.random_password(size = 6)
     charset = %w{2 3 4 6 7 9 a c d e f g h j k m n p q r t v w x y z}

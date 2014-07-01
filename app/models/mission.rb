@@ -59,7 +59,7 @@ class Mission < ActiveRecord::Base
         # the order of deletion is also important to avoid foreign key constraints
         relationships_to_delete = [Setting, Report::Report, Condition, Questioning,
                                    Optioning, OptionLevel, Question, OptionSet, Option, Response,
-                                   Form, Broadcast, Assignment, Sms::Message, User]
+                                   Form, Broadcast, Assignment, Sms::Message]
         relationships_to_delete.each{|r| r.mission_pre_delete(self)}
 
         self.reload

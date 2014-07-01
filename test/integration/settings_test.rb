@@ -46,7 +46,7 @@ class SettingsTest < ActionDispatch::IntegrationTest
     assert_equal(Setting::DEFAULTS[:timezone], Mission.find_by_name('Foo').setting.timezone)
 
     # change to that mission and see that timezone changed
-    change_mission(@admin, Mission.find_by_name('foo'))
+    get('/en/m/foo')
     assert_equal(Setting::DEFAULTS[:timezone], Time.zone.name)
   end
 
@@ -75,5 +75,4 @@ class SettingsTest < ActionDispatch::IntegrationTest
       follow_redirect!
       assert_response(:success)
     end
-
 end
