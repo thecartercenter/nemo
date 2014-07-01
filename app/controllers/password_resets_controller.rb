@@ -37,14 +37,10 @@ class PasswordResetsController < ApplicationController
     if @user.save
       User.ignore_blank_passwords = true
 
-      # if we get this far, the user has been logged in
-      # so do post login housekeeping
-      return unless post_login_housekeeping
+      # If we get this far, the user has been logged in.
+      post_login_housekeeping
 
       flash[:success] = t("password_reset.success")
-
-      # use redirect_back_or_default to preserve the original path, if appropriate
-      redirect_back_or_default(basic_root_url)
     else
       @user.password = nil
       @user.password_confirmation = nil

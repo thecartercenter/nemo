@@ -1,16 +1,22 @@
 module Concerns::ApplicationController::LoginLogistics
   extend ActiveSupport::Concern
 
-  # tasks that should be run after the user successfully logs in OR successfully resets their password
-  # returns false if no further stuff should happen (redirect), true otherwise
+  # Tasks that should be run after the user successfully logs in OR successfully resets their password
+  # Redirects to the appropriate place.
   def post_login_housekeeping
-    # get the session
+    # Get the session
     @user_session = UserSession.find
 
-    # reset the perishable token for security's sake
+    # Reset the perishable token for security's sake
     @user_session.user.reset_perishable_token!
 
-    return true
+    # Set the locale based on the user's pref_lang (if it's supported)
+    pref_lang = @user_session.user.pref_lang.to_sym
+    I18n.locale = configatron.full_locales.include?(pref_lang) ? pref_lang : I18n.default_locale
+
+    # Redirect.
+    best_mission = @user_session.user.best_mission
+    redirect_back_or_default best_mission ? mission_root_path(mission_name: best_mission.compact_name) : basic_root_path
   end
 
   # resets the Rails session but preserves the :return_to key

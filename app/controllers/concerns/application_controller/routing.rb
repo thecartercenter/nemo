@@ -18,10 +18,6 @@ module Concerns::ApplicationController::Routing
     end
   end
 
-  def appropriate_root_path
-    current_mission ? mission_root_path : basic_root_path
-  end
-
   def current_mode
     @current_mode ||= case params[:mode]
     when 'admin' then 'admin'
@@ -64,5 +60,12 @@ module Concerns::ApplicationController::Routing
     session[:last_mission_name] ?
       mission_root_path(:mission_name => session[:last_mission_name]) :
       basic_root_path
+  end
+
+  # Saves the current mission (or lack thereof) to the DB.
+  def remember_mission
+    if current_user && current_mode == 'mission'
+      current_user.remember_last_mission(current_mission)
+    end
   end
 end

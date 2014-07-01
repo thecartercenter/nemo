@@ -251,6 +251,11 @@ class User < ActiveRecord::Base
     end
   end
 
+  def remember_last_mission(mission)
+    self.last_mission = mission
+    save validate: false
+  end
+
   private
     def normalize_fields
       %w(phone phone2 login name email).each{|f| self.send("#{f}").try(:strip!)}

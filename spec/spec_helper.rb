@@ -67,10 +67,19 @@ end
 
 # Currently duplicated in test/test_helper until it becomes obvious how to refactor.
 def login(user)
-  post('/en/user-session', :user_session => {:login => user.login, :password => 'password'})
+  login_without_redirect(user)
   follow_redirect!
   assert_response(:success)
   user.reload # Some stuff may have changed in database during login process
+end
+
+def login_without_redirect(user)
+  post('/en/user-session', :user_session => {:login => user.login, :password => 'password'})
+end
+
+def logout
+  delete('/en/user-session')
+  follow_redirect!
 end
 
 def do_api_request(endpoint, params = {})
