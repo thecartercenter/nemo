@@ -27,6 +27,6 @@ describe 'router' do
 
   it 'routes edit profile' do
     { :get => '/en/users/1/edit' }.should route_to(:controller => 'users', :action => 'edit',
-      :locale => 'en', :mode => nil, :mission_name => nil, :id => '1')
+      :locale => 'en', :id => '1')
   end
 end

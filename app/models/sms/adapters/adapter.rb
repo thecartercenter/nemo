@@ -16,7 +16,8 @@ class Sms::Adapters::Adapter
 
   # Service name is just the descendant class name minus the modules and Adapter suffix.
   def self.service_name
-    @@service_name ||= name.split('::').last.gsub(/Adapter$/, '')
+    # Warning: don't memoize this or a bunch of things fail.
+    name.split('::').last.gsub(/Adapter$/, '')
   end
 
   def service_name
