@@ -19,8 +19,7 @@ module Concerns::ApplicationController::Authorization
 
     # if not logged in, offer a login page
     if !current_user
-      # don't put an error message if the request was for the home page
-      flash[:error] = I18n.t("unauthorized.must_login") unless request.path == "/"
+      flash[:error] = I18n.t("unauthorized.must_login")
       redirect_to_login
 
     # else if there was just a mission change, we need to handle specially
