@@ -20,12 +20,8 @@ module CsvRenderable
     render(:layout => false)
   end
 
-  # removes any non-filename-safe characters from a string so that it can be used in a filename
+  # Removes any non-filename-safe characters from a string so that it can be used in a filename
   def sanitize_filename(filename)
-    sanitized = filename.strip
-    sanitized.gsub!(/^.*(\\|\/)/, '')
-    # strip out non-ascii characters
-    sanitized.gsub!(/[^0-9A-Za-z.\-]/, '_')
-    sanitized
+    filename.strip.gsub(/[^0-9A-Za-z.\-]|\s/, '_')
   end
 end

@@ -42,7 +42,7 @@ class Report::ReportsController < ApplicationController
       # for csv, just render the csv template
       format.csv do
         raise "reports of this type are not exportable" unless @report.exportable?
-        render_csv(@report.name.gsub(" ", ""))
+        render_csv(@report.name.downcase)
       end
     end
   end
