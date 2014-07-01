@@ -58,7 +58,7 @@
     <% if current_user %>
       <% unless admin_mode? %>
         <%# current mission and dropdown, if there are choices %>
-        <% unless @accessible_missions.empty? %>
+        <% if @accessible_missions.any? %>
           <form id="change_mission">
             <%= select_tag('change_mission',
               options_from_collection_for_select(@accessible_missions, 'compact_name', 'name', current_mission.try(:compact_name)),
