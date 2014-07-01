@@ -1,11 +1,12 @@
 def get_mission
-  Mission.find_by_name("MissionWithSettings") || FactoryGirl.create(:mission)
+  Mission.first || FactoryGirl.create(:mission)
 end
 
 FactoryGirl.define do
-  factory :mission do
+  sequence(:name) { |n| "Mission #{n}" }
 
-    name "MissionWithSettings"
+  factory :mission do
+    name
     setting {
       # use Saskatchewan timezone b/c no DST
       Setting.new(
@@ -19,8 +20,7 @@ FactoryGirl.define do
   end
 
   factory :mission_with_full_heirarchy, parent: :mission do
-    name "MissionWithFullHeirarchy"
-
+    name
     after(:create) do |mission, evaluator|
       create(:broadcast, :mission => mission)
 
@@ -39,5 +39,4 @@ FactoryGirl.define do
       create(:response, :mission => mission, :form => form)
     end
   end
-
 end

@@ -67,7 +67,7 @@ class AuthorizationTest < ActionDispatch::IntegrationTest
     # Get attributes for request to change observer role to staffer.
     assignments_attributes = obs.assignments.first.attributes.slice(*%w(id mission_id)).merge('role' => 'staffer')
 
-    put("/en/m/missionwithsettings/users/#{obs.id}", :user => {:assignments_attributes => [assignments_attributes]})
+    put("/en/m/#{get_mission.compact_name}/users/#{obs.id}", :user => {:assignments_attributes => [assignments_attributes]})
     assert_nil(assigns(:access_denied))
     assert_equal('staffer', obs.reload.assignments.first.role)
   end

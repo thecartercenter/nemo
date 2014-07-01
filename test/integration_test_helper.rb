@@ -5,10 +5,9 @@ class ActionController::TestCase
   setup :set_url_options
 
   def set_url_options
-    puts "IN HERE"
     default_url_options[:locale] = I18n.locale
     default_url_options[:mode] = 'm'
-    default_url_options[:mission_name] = 'missionwithsettings'
+    default_url_options[:mission_name] = 'mission1'
   end
 
   # def process_with_default_locale(action, parameters = nil, session = nil, flash = nil, http_method = 'GET')
