@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140701124136) do
+ActiveRecord::Schema.define(:version => 20140701134507) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -406,6 +406,7 @@ ActiveRecord::Schema.define(:version => 20140701124136) do
     t.boolean  "admin",               :default => false, :null => false
     t.string   "pref_lang",                              :null => false
     t.string   "api_key"
+    t.integer  "last_mission_id"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
