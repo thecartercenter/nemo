@@ -74,30 +74,23 @@ class ActiveSupport::TestCase
   # sets the url options for integration tests
   # this is also done in application_controller but needs to be done here too for some reason
   def set_url_options
-    app.default_url_options = { :locale => I18n.locale, :admin_mode => nil } if defined?(app)
+    if defined?(app)
+      app.default_url_options = { :locale => I18n.locale || I18n.default_locale, :mode => nil }
+    end
   end
 
   # logs in the given user
   # we assume that the password is 'password'
   def login(user)
-    post(user_session_path, :user_session => {:login => user.login, :password => "password"})
+    post(user_session_path(:locale => 'en'), :user_session => {:login => user.login, :password => "password"})
     follow_redirect!
     assert_response(:success)
-
-    # reload the user since some stuff may have changed in database (e.g. current_mission) during login process
-    user.reload
+    user.reload # Some stuff may have changed in database during login process
   end
 
   # logs out the current user and follows redirect
   def logout
-    delete(user_session_path)
-    follow_redirect!
-    assert_response(:success)
-  end
-
-  # changes the current mission for the session
-  def change_mission(user, mission)
-    put(user_path(@admin), :user => {:current_mission_id => mission.id})
+    delete(user_session_path(:locale => 'en'))
     follow_redirect!
     assert_response(:success)
   end

@@ -1,4 +1,6 @@
 class UsersController < ApplicationController
+  include BatchProcessable
+
   # special find method before load_resource
   before_filter :build_user_with_proper_mission, :only => [:new, :create]
 
@@ -55,42 +57,29 @@ class UsersController < ApplicationController
   end
 
   def update
-    # if this was just the current_mission form (in the banner), update and redirect back to referrer
-    if params[:changing_current_mission]
-      # update the user's mission. a blank mission_id means set mission to nil
-      new_mission = params[:user][:current_mission_id].blank? ? nil : Mission.find(params[:user][:current_mission_id])
-      @user.change_mission!(new_mission)
+    # make sure changing assignment role is permitted if attempting
+    authorize!(:change_assignments, @user) if params[:user]['assignments_attributes']
 
-      # redirect back to the referrer (stripping query string), and set a flag
-      flash[:mission_changed] = true
-      redirect_to(referrer_without_query_string)
+    # try to save
+    if @user.update_attributes(params[:user])
 
-    # otherwise this is a normal update
-    else
-      # make sure changing assignment role is permitted if attempting
-      authorize!(:change_assignments, @user) if params[:user]['assignments_attributes']
-
-      # try to save
-      if @user.update_attributes(params[:user])
-
-        # redirect and message depend on if this was user editing self or not
-        if @user == current_user
-          flash[:success] = t("user.profile_updated")
-          redirect_to(:action => :edit)
-        else
-          set_success(@user)
-
-          # if the user's password was reset, do it, and show instructions if requested
-          @user.reset_password_if_requested
-
-          handle_printable_instructions
-        end
-
-      # if save failed, render the form again
+      # redirect and message depend on if this was user editing self or not
+      if @user == current_user
+        flash[:success] = t("user.profile_updated")
+        redirect_to(:action => :edit)
       else
-        flash.now[:error] = I18n.t('activerecord.errors.models.user.general')
-        prepare_and_render_form
+        set_success(@user)
+
+        # if the user's password was reset, do it, and show instructions if requested
+        @user.reset_password_if_requested
+
+        handle_printable_instructions
       end
+
+    # if save failed, render the form again
+    else
+      flash.now[:error] = I18n.t('activerecord.errors.models.user.general')
+      prepare_and_render_form
     end
   end
 
@@ -111,14 +100,6 @@ class UsersController < ApplicationController
         render(:text => @users.collect{|u| u.to_vcf}.join("\n"))
       end
     end
-  end
-
-  # sets the current user's current mission to the last one used, and redirects to home page for that mission
-  def exit_admin_mode
-    if m = Mission.where(:id => session[:last_mission_id]).first
-      current_user.change_mission!(m)
-    end
-    redirect_to(root_url(:admin_mode => nil))
   end
 
   def regenerate_key

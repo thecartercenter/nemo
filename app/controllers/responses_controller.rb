@@ -1,4 +1,6 @@
 class ResponsesController < ApplicationController
+  include CsvRenderable
+
   # need to load with associations for show and edit
   before_filter :load_with_associations, :only => [:show, :edit]
   before_filter :mark_response_as_checked_out, :only => [:edit]
@@ -34,7 +36,7 @@ class ResponsesController < ApplicationController
         end
 
         # render just the table if this is an ajax request
-        render(:partial => "table_only", :locals => {:responses => @responses}) if ajax_request?
+        render(:partial => "table_only", :locals => {:responses => @responses}) if request.xhr?
       end
 
       # csv output is for exporting responses

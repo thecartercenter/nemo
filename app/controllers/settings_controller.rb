@@ -34,11 +34,11 @@ class SettingsController < ApplicationController
     # prepares objects and renders the form template (which in this case is really the index template)
     def prepare_and_render_form
       # load options for sms adapter dropdown
-      @adapter_options = Sms::Adapters::Factory::VALID_ADAPTERS
+      @adapter_options = Sms::Adapters::Factory.products(:can_deliver? => true).map(&:service_name)
 
       unless admin_mode?
         # get external sql from Response class
-        @external_sql = Response.export_sql(Response.accessible_by(current_user.ability))
+        @external_sql = Response.export_sql(Response.accessible_by(current_ability))
       end
 
       # render the template

@@ -1,7 +1,6 @@
 require 'test_helper'
 
-class ResponsesControllerTest < ActionController::TestCase
-  setup :activate_authlogic
+class ResponseCheckoutTest < ActionDispatch::IntegrationTest
 
   test "user should get a notice when response is locked by another user" do
     user = get_user
@@ -12,8 +11,8 @@ class ResponsesControllerTest < ActionController::TestCase
     resp.check_out!(user_b)
 
     # login with user and edit response
-    assert UserSession.create(user.login)
-    get(:edit, :id => resp.id)
+    login(user)
+    get("/en/m/#{get_mission.compact_name}/responses/#{resp.id}/edit")
     assert_response :success
 
     # check for warning that response was checked out by another user
@@ -32,8 +31,8 @@ class ResponsesControllerTest < ActionController::TestCase
     end
 
     # login with user and edit response
-    assert UserSession.create(user.login)
-    get(:edit, :id => resp.id)
+    login(user)
+    get("/en/m/#{get_mission.compact_name}/responses/#{resp.id}/edit")
     assert_response :success
 
     # check that there is no warning

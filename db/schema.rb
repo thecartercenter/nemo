@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140620131428) do
+ActiveRecord::Schema.define(:version => 20140701134507) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -404,12 +404,11 @@ ActiveRecord::Schema.define(:version => 20140620131428) do
     t.string   "name",                                   :null => false
     t.string   "phone2"
     t.boolean  "admin",               :default => false, :null => false
-    t.integer  "current_mission_id"
     t.string   "pref_lang",                              :null => false
     t.string   "api_key"
+    t.integer  "last_mission_id"
   end
 
-  add_index "users", ["current_mission_id"], :name => "users_current_mission_id_fk"
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
   add_index "users", ["login"], :name => "index_users_on_login", :unique => true
 
@@ -493,7 +492,5 @@ ActiveRecord::Schema.define(:version => 20140620131428) do
 
   add_foreign_key "user_groups", "groups", name: "user_groups_group_id_fk"
   add_foreign_key "user_groups", "users", name: "user_groups_user_id_fk"
-
-  add_foreign_key "users", "missions", name: "users_current_mission_id_fk", column: "current_mission_id"
 
 end

@@ -14,6 +14,16 @@ class Sms::Adapters::Adapter
     raise NotImplementedError
   end
 
+  # Service name is just the descendant class name minus the modules and Adapter suffix.
+  def self.service_name
+    # Warning: don't memoize this or a bunch of things fail.
+    name.split('::').last.gsub(/Adapter$/, '')
+  end
+
+  def service_name
+    self.class.service_name
+  end
+
   # delivers a message to one or more recipients
   # raises an error if no recipients, wrong direction, or message empty
   # should also raise an error if the provider returns an error code

@@ -1,49 +1,51 @@
 ELMO::Application.routes.draw do
 
-  namespace :api, defaults: { format: :json } do
-    api_version(:module => "v1", :path => {:value => "v1"}) do
-      get "/missions/:mission_name/forms", to: "forms#index", as: :misson_forms
-      resources :forms, only: :show
-      resources :missions, only: :index
-      resources :responses, only: :index
-      resources :answers, only: :index
-    end
+  mount JasmineRails::Engine => '/specs' if defined?(JasmineRails)
+
+  # proxies for ajax same-origin
+  match 'proxies/:action', :controller => 'proxies'
+
+  #####################################
+  # Basic routes (neither mission nor admin mode)
+  scope ':locale', :locale => /[a-z]{2}/, :defaults => {:mode => nil, :mission_name => nil} do
+
+    resources :password_resets, :path => 'password-resets'
+    resource :user_session, :path => 'user-session'
+
+    # login/logout shortcuts
+    get '/logged-out' => 'user_sessions#logged_out', :as => :logged_out
+    match '/logout' => 'user_sessions#destroy', :as => :logout
+    get '/login' => 'user_sessions#new', :as => :login
+
+    get '/route-tests' => 'route_tests#basic_mode' if Rails.env.development? || Rails.env.test?
+
+    # /en/, /en
+    root :to => 'welcome#index', :as => :basic_root
   end
 
-  # redirects for ODK
-  # shortened (/m)
-  match "/m/:mission_compact_name/formList" => 'forms#index', :format => :xml
-  match "/m/:mission_compact_name/forms/:id" => 'forms#show', :format => :xml, :as => :form_with_mission
-  match "/m/:mission_compact_name/submission" => 'responses#create', :format => :xml
-  # full (/missions)
-  match "/missions/:mission_compact_name/formList" => 'forms#index', :format => :xml
-  match "/missions/:mission_compact_name/forms/:id" => 'forms#show', :format => :xml
-  match "/missions/:mission_compact_name/submission" => 'responses#create', :format => :xml
-
-  # Unauthenticated submissions
-  match "/m/:mission_compact_name/noauth/submission" => 'responses#create', :format => :xml, :noauth => true
-
-  # the routes in this scope /require/ admin mode
-  scope "(:locale)(/:admin_mode)", :locale => /[a-z]{2}/, :admin_mode => /admin/ do
+  #####################################
+  # Admin-mode-only routes
+  scope ':locale/admin', :locale => /[a-z]{2}/, :defaults => {:mode => 'admin', :mission_name => nil} do
     resources :missions
+
+    get '/route-tests' => 'route_tests#admin_mode' if Rails.env.development? || Rails.env.test?
+
+    # for /en/admin
+    root :to => 'welcome#index', :as => :admin_root
   end
 
-  # the routes in this scope are not valid in admin mode
-  scope "(:locale)", :locale => /[a-z]{2}/ do
-    resources(:broadcasts){collection{post 'new_with_users'}}
-    resources :password_resets
-    resources :responses
-    resources :sms, :only => [:index, :create]
-
-    # Frontline sometimes wants to do GET only
-    get '/sms/submit' => 'sms#create'
-
-    resources :sms_tests
-    resource :user_session do
-      get 'logged_out', :on => :collection
+  #####################################
+  # Mission-mode-only routes
+  scope ':locale/m/:mission_name', :locale => /[a-z]{2}/, :mission_name => /[a-z][a-z0-9]*/, :defaults => {:mode => 'm'} do
+    resources(:broadcasts) do
+      collection do
+        post 'new_with_users', :path => 'new-with-users'
+      end
     end
+    resources :responses
+    resources :sms_tests, :path => 'sms-tests'
 
-    namespace :report  do
+    namespace :report do
       resources :reports
 
       # need to list these all separately b/c rails is dumb sometimes
@@ -54,67 +56,85 @@ ELMO::Application.routes.draw do
     end
 
     # special dashboard routes
-    match '/info_window' => 'welcome#info_window', :as => :dashboard_info_window
-    match '/report_update/:id' => 'welcome#report_update'
+    match '/info-window' => 'welcome#info_window', :as => :dashboard_info_window
+    get '/report-update/:id' => 'welcome#report_update'
 
-    # login/logout shortcut
-    match "/logged_out" => "user_sessions#logged_out", :as => :logged_out
-    match "/logout" => "user_sessions#destroy", :as => :logout
-    match "/login" => "user_sessions#new", :as => :login
+    get '/route-tests' => 'route_tests#mission_mode' if Rails.env.development? || Rails.env.test?
+
+    # for /en/m/mission123
+    root :to => 'welcome#index', :as => :mission_root
   end
 
-  # the routes in this scope are admin mode optional
-  scope "(:locale)(/:admin_mode)", :locale => /[a-z]{2}/ do
+  #####################################
+  # Admin mode OR mission mode routes
+  scope ':locale/:mode(/:mission_name)', :locale => /[a-z]{2}/, :mode => /m|admin/, :mission_name => /[a-z][a-z0-9]*/ do
 
     # the rest of these routes can have admin mode or not
     resources :forms do
       member do
-        post :add_questions, :remove_questions
-        put  :clone, :publish
-        get  :choose_questions
+        post 'add_questions', :path => 'add-questions'
+        post 'remove_questions', :path => 'remove-questions'
+        put 'clone'
+        put 'publish'
+        get 'choose_questions', :path => 'choose-questions'
       end
     end
     resources :markers
     resources :questions
     resources :questionings
     resources :settings
-    resources :users do
-      member do
-        get 'login_instructions'
-        get 'exit_admin_mode'
-        put 'regenerate_key'
-      end
-      post 'export', :on => :collection
-    end
-    resources :user_batches
+    resources :user_batches, :path => 'user-batches'
     resources :groups
 
-    # looks nicer
     resources :option_sets, :path => 'option-sets' do
       put 'clone', :on => :member
     end
 
-    # for legacy support
-    resources :option_sets do
-      put 'clone', :on => :member
-    end
-
-
     # import routes for standardizeable objects
     %w(forms questions option_sets).each do |k|
-      post("/#{k}/import_standard" => "#{k}#import_standard", :as => "import_standard_#{k}")
+      post "/#{k.gsub('_', '-')}/import-standard" => "#{k}#import_standard", :as => "import_standard_#{k}"
     end
 
     # special route for option suggestions
-    match '/options/suggest' => 'options#suggest', :as => :suggest_options
-
-    root :to => "welcome#index"
+    get '/options/suggest' => 'options#suggest', :as => :suggest_options
   end
 
-  # need this so that '/' will work
-  match '/' => "welcome#index"
+  #####################################
+  # Any mode routes
+  scope ':locale(/:mode)(/:mission_name)', :locale => /[a-z]{2}/, :mode => /m|admin/, :mission_name => /[a-z][a-z0-9]*/ do
+    resources :users do
+      member do
+        get 'login_instructions', :path => 'login-instructions'
+        put 'regenerate_key'
+      end
+      post 'export', :on => :collection
+    end
+  end
 
-  # proxies for ajax
-  match "proxies/:action", :controller => "proxies"
+  # Special SMS and ODK routes. No locale.
+  scope '/m/:mission_name', :mission_name => /[a-z][a-z0-9]*/, :defaults => {:mode => 'm'} do
+    resources :sms, :only => [:index, :create]
+    get '/sms/submit' => 'sms#create'
 
+    # ODK routes. They are down here so that forms_path doesn't return the ODK variant.
+    get '/formList' => 'forms#index', :format => 'xml'
+    get '/forms/:id' => 'forms#show', :format => 'xml', :as => :form_with_mission
+    match '/submission' => 'responses#create', :format => 'xml'
+
+    # Unauthenticated submissions
+    match '/noauth/submission' => 'responses#create', :format => :xml, :noauth => true
+  end
+
+  # API routes.
+  namespace :api, defaults: { format: :json } do
+    api_version :module => 'v1', :path => {:value => 'v1'} do
+      scope '/m/:mission_name', :mission_name => /[a-z][a-z0-9]*/, :defaults => {:mode => 'm'} do
+        resources :forms, only: [:index, :show]
+        resources :responses, only: :index
+        resources :answers, only: :index
+      end
+    end
+  end
+
+  root :to => redirect("/#{I18n.default_locale}")
 end

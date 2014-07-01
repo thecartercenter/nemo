@@ -12,10 +12,6 @@ class Sms::Adapters::IntelliSmsAdapter < Sms::Adapters::Adapter
     true
   end
 
-  def service_name
-    @service_name ||= "IntelliSms"
-  end
-
   def deliver(message)
     # let the superclass do the sanity checks
     super

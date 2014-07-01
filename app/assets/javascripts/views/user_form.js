@@ -4,13 +4,13 @@
 (function(ns, klass) {
 
   // constructor
-  ns.ApiUserForm = klass = function(params) { var self = this;
+  ns.UserForm = klass = function(params) { var self = this;
     self.params = params;
 
     // hookup suggest login button
     $('form.user_form .form_field[data-field-name=login] .control button').on('click', function(e) {
-      self.suggest_login();
       e.preventDefault();
+      self.suggest_login();
     });
 
     // build assignment form if params provided

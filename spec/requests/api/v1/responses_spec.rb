@@ -2,13 +2,12 @@ require "spec_helper"
 require "support/shared_context"
 
 describe "responses" do
-
   context "when getting for one form" do
 
     include_context "mission_response_two_questions_with_answers"
 
     before do
-      get api_v1_responses_path, @params, {'HTTP_AUTHORIZATION' => "Token token=#{@api_user.api_key}"}
+      do_api_request(:responses, :params => @params)
       @answers_array = parse_json(response.body)
     end
 
@@ -34,7 +33,7 @@ describe "responses" do
 
     before do
       @form.update_attribute(:access_level, AccessLevel::PUBLIC)
-      get api_v1_responses_path, @params, {'HTTP_AUTHORIZATION' => "Token token=#{@api_user.api_key}"}
+      do_api_request(:responses, :params => @params)
       @answers_array = parse_json(response.body)
     end
 
@@ -60,7 +59,7 @@ describe "responses" do
 
     before do
       @form.update_attribute(:access_level, AccessLevel::PUBLIC)
-      get api_v1_responses_path, @params, {'HTTP_AUTHORIZATION' => "Token token=#{@api_user.api_key}"}
+      do_api_request(:responses, :params => @params)
       @answers_array = parse_json(response.body)
     end
 
@@ -82,8 +81,8 @@ describe "responses" do
 
       response_obj = FactoryGirl.create(:response, form: @form, mission: @mission, user: @form_user)
       @answer = FactoryGirl.create(:answer, response: response_obj, questioning_id: @question.id, value: 40)
-      
-      get api_v1_responses_path, @params, {'HTTP_AUTHORIZATION' => "Token token=#{@api_user.api_key}"}
+
+      do_api_request(:responses, :params => @params)
       @answers_array = parse_json(response.body)
     end
 
@@ -104,7 +103,7 @@ describe "responses" do
 
     before do
       @form.update_attribute(:access_level, AccessLevel::PRIVATE)
-      get api_v1_responses_path, @params, {'HTTP_AUTHORIZATION' => "Token token=#{@api_user.api_key}"}
+      do_api_request(:responses, :params => @params)
       @answers_array = parse_json(response.body)
     end
 
@@ -115,13 +114,13 @@ describe "responses" do
   end
 
   context "when getting a protected form with one public and private question" do
-  
+
     include_context "mission_protected_form_one_public_private_question"
 
     before do
       API::V1::AnswerFinder.stub(:form_with_permissions) { @form }
-      get api_v1_responses_path, @params, {'HTTP_AUTHORIZATION' => "Token token=#{@api_user.api_key}"}
-      @answers_array = parse_json(response.body)    
+      do_api_request(:responses, :params => @params)
+      @answers_array = parse_json(response.body)
     end
 
     it "should have 1 answer" do
@@ -134,12 +133,12 @@ describe "responses" do
 
     include_context "mission_form_and_two_responses_answered"
 
-    context "should find answers after a date" do 
+    context "should find answers after a date" do
       before do
         @response2.update_attribute(:created_at, 2.days.from_now)
-        @params[:created_after] = (@response1.created_at + 1.day).to_s 
+        @params[:created_after] = (@response1.created_at + 1.day).to_s
 
-        get api_v1_responses_path, @params, {'HTTP_AUTHORIZATION' => "Token token=#{@api_user.api_key}"}
+        do_api_request(:responses, :params => @params)
         @answers_array = parse_json(response.body)
       end
 
@@ -148,11 +147,11 @@ describe "responses" do
       end
     end
 
-    context "should find answers before a date" do 
+    context "should find answers before a date" do
       before do
         @response1.update_attribute(:created_at, 1.days.from_now)
         @params[:created_before] = @response1.created_at.to_s
-        get api_v1_answers_path, @params, {'HTTP_AUTHORIZATION' => "Token token=#{@api_user.api_key}"}
+        do_api_request(:answers, :params => @params)
         @answers_array = parse_json(response.body)
       end
 
@@ -162,5 +161,4 @@ describe "responses" do
     end
 
   end
-
 end

@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe 'intelli sms adapter' do
-  before do
+describe Sms::Adapters::IntelliSmsAdapter do
+  before :all do
     @adapter = Sms::Adapters::Factory.new.create('IntelliSms')
   end
 

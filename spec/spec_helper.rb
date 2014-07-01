@@ -21,9 +21,6 @@ RSpec.configure do |config|
   # config.mock_with :flexmock
   # config.mock_with :rr
 
-  # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
-  config.fixture_path = "#{::Rails.root}/spec/fixtures"
-
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
   # instead of true.
@@ -70,10 +67,28 @@ end
 
 # Currently duplicated in test/test_helper until it becomes obvious how to refactor.
 def login(user)
-  post(user_session_path, :user_session => {:login => user.login, :password => "password"})
+  login_without_redirect(user)
   follow_redirect!
   assert_response(:success)
+  user.reload # Some stuff may have changed in database during login process
+end
 
-  # reload the user since some stuff may have changed in database (e.g. current_mission) during login process
-  user.reload
+def login_without_redirect(user)
+  post('/en/user-session', :user_session => {:login => user.login, :password => 'password'})
+end
+
+def logout
+  delete('/en/user-session')
+  follow_redirect!
+end
+
+def do_api_request(endpoint, params = {})
+  params[:user] ||= @api_user
+  params[:mission_name] ||= @mission.compact_name
+
+  path_args = [{:mission_name => params[:mission_name]}]
+  path_args.unshift(params[:obj]) if params[:obj]
+  path = send("api_v1_#{endpoint}_path", *path_args)
+
+  get path, params[:params], {'HTTP_AUTHORIZATION' => "Token token=#{params[:user].api_key}"}
 end

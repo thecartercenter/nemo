@@ -32,7 +32,7 @@ class OdkTest < ActionDispatch::IntegrationTest
     assert_response(401)
   end
 
-  test 'odk user submission to non-existent mission should fail' do
+  test 'odk user submission to non-existant mission should fail' do
     do_submission('/m/foo/submission')
     assert_response(404)
   end

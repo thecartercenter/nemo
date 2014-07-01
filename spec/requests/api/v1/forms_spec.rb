@@ -13,7 +13,7 @@ describe "accessing forms" do
   context "Public Forms are returned for a mission" do
 
     before do
-      get api_v1_misson_forms_path(mission_name: @mission.name), {}, {'HTTP_AUTHORIZATION' => "Token token=#{@api_user.api_key}"}
+      do_api_request(:forms)
       @forms = parse_json(response.body)
     end
 
@@ -25,7 +25,7 @@ describe "accessing forms" do
 
   context "with invalid mission" do
     before do
-      get api_v1_misson_forms_path(mission_name: 'junk'), {}, {'HTTP_AUTHORIZATION' => "Token token=#{@api_user.api_key}"}
+      do_api_request(:forms, :mission_name => 'junk')
     end
 
     it "returns 404" do
@@ -40,7 +40,7 @@ describe "accessing forms" do
       q2 = FactoryGirl.create(:question, mission: @mission, access_level: AccessLevel::PUBLIC)
       q3 = FactoryGirl.create(:question, mission: @mission, access_level: AccessLevel::PRIVATE)
       @form1.questions.push(q1, q2, q3)
-      get api_v1_form_path(@form1.id), {}, {'HTTP_AUTHORIZATION' => "Token token=#{@api_user.api_key}"}
+      do_api_request(:form, :obj => @form1)
       @form_json = parse_json(response.body)
     end
 

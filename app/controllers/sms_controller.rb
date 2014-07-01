@@ -18,16 +18,9 @@ class SmsController < ApplicationController
     @incoming_adapter = Sms::Adapters::Factory.new.create_for_request(params)
     raise Sms::Error.new("No adapters recognized this receive request") if @incoming_adapter.nil?
 
-    # get the mission from the params. if not found raise an error (we need the mission)
-    mission = Mission.find_by_compact_name(params[:mission])
-    raise Sms::Error.new("Mission not specified") if mission.nil?
-
-    # Copy settings from the message's mission so that settings are available below.
-    mission.setting.load
-
     @incoming = @incoming_adapter.receive(params)
 
-    @incoming.update_attributes(:mission => mission)
+    @incoming.update_attributes(:mission => current_mission)
 
     # Store the reply in an instance variable so the functional test can access them
     @reply = Sms::Handler.new.handle(@incoming)
