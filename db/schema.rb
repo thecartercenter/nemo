@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140701134507) do
+ActiveRecord::Schema.define(:version => 20140704171941) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -95,6 +95,13 @@ ActiveRecord::Schema.define(:version => 20140701134507) do
   add_index "conditions", ["ref_qing_id"], :name => "conditions_ref_qing_id_fk"
   add_index "conditions", ["standard_id"], :name => "index_conditions_on_standard_id"
 
+  create_table "form_api_users", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "form_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
   create_table "form_versions", :force => true do |t|
     t.integer  "form_id"
     t.integer  "sequence",   :default => 1
@@ -143,7 +150,8 @@ ActiveRecord::Schema.define(:version => 20140701134507) do
     t.string   "compact_name"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "locked",       :default => false, :null => false
+    t.boolean  "locked",          :default => false, :null => false
+    t.integer  "organization_id"
   end
 
   add_index "missions", ["compact_name"], :name => "index_missions_on_compact_name"
@@ -214,6 +222,13 @@ ActiveRecord::Schema.define(:version => 20140701134507) do
 
   add_index "options", ["mission_id", "standard_id"], :name => "index_options_on_mission_id_and_standard_id", :unique => true
   add_index "options", ["standard_id"], :name => "index_options_on_standard_id"
+
+  create_table "organizations", :force => true do |t|
+    t.string   "name"
+    t.string   "compact_name"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+  end
 
   create_table "questionables", :force => true do |t|
     t.string   "code"

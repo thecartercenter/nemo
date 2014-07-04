@@ -18,6 +18,8 @@ class Mission < ActiveRecord::Base
   before_validation(:create_compact_name)
   before_create(:ensure_setting)
 
+  belongs_to(:organization)
+
   validates(:name, :presence => true)
   validates(:name, :format => {:with => /^[a-z][a-z0-9 ]*$/i, :message => :let_num_spc_only},
                    :length => {:minimum => 3, :maximum => 32},
