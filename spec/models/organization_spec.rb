@@ -62,5 +62,17 @@ describe Organization do
 
   end
 
+  context "replication" do
+
+    it "the organization_id gets assigned to the mission when form is cloned" do
+      org = FactoryGirl.create(:organization)
+      mission = FactoryGirl.create(:mission, :name => 'asfsfsfsdfssf', :organization => org)
+      form = FactoryGirl.create(:form, mission: mission)
+      form_dup = form.replicate(:mode => 'clone')
+      expect(form.mission.organization_id).to eql form_dup.mission.organization_id
+    end
+
+  end
+  
 end
 

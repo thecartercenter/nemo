@@ -1,4 +1,9 @@
 class Organization < ActiveRecord::Base
+  include Replicable
+  #TODO: do we need to includeMissionBased ?
+
+
+
   RESERVED_SUBDOMAINS = %w(admin api assets blog calendar demo developer developers docs files ftp 
                            git imap lab mail manage mx pages pop sites smtp ssh ssl staging status support www)
   has_many :missions

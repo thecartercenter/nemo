@@ -2,7 +2,7 @@
 
 FactoryGirl.define do
   factory :organization do
-    full_name "MyString"
+    name "MyString"
     compact_name "MyString"
   end
 end
