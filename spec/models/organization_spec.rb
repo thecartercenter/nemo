@@ -62,11 +62,29 @@ describe Organization do
 
   end
 
+
+  context "relationships" do
+    before do
+      @org = FactoryGirl.create(:organization)
+      @mission1 = FactoryGirl.create(:mission, :name => 'missionOne', :organization => @org)
+      @mission2 = FactoryGirl.create(:mission, :name => 'missionTwo', :organization => @org)
+    end
+
+    it "an organization can have 1 or more missions" do 
+      expect(@org.missions.count).to eql 2
+    end
+
+    it "mission has one organization" do
+      expect(@mission1.organization).to eql @org
+    end
+  end
+
+
   context "replication" do
 
     it "the organization_id gets assigned to the mission when form is cloned" do
       org = FactoryGirl.create(:organization)
-      mission = FactoryGirl.create(:mission, :name => 'asfsfsfsdfssf', :organization => org)
+      mission = FactoryGirl.create(:mission, :name => 'missionOne', :organization => org)
       form = FactoryGirl.create(:form, mission: mission)
       form_dup = form.replicate(:mode => 'clone')
       expect(form.mission.organization_id).to eql form_dup.mission.organization_id
