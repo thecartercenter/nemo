@@ -78,8 +78,6 @@ class ResponsesController < ApplicationController
     begin
       @response.form = Form.with_questionings.find(params[:form_id])
     rescue ActiveRecord::RecordNotFound
-      # this should not be possible
-      flash[:error] = "no form selected"
       return redirect_to(index_url_with_page_num)
     end
 
