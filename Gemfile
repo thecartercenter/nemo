@@ -71,6 +71,8 @@ group :development do
   gem 'rails-erd'                     # generat with:  DIAGRAM=true rake db:migrate
   gem 'capistrano', '~> 2.15.4'       # deployment
   gem 'bullet'                        # query optimization
+  gem 'thin'                          # development web server
+  gem 'rails-dev-tweaks', '~> 1.1'    # speed up development mode
 end
 
 group :development, :test do
