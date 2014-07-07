@@ -89,7 +89,7 @@ module Concerns::ApplicationController::Authentication
 
   # Loads missions accessible to the current ability, or [] if no current user, for use in the view.
   def load_accessible_missions
-    @accessible_missions = Mission.accessible_by(current_ability, :switch_to)
+    @accessible_missions = Mission.accessible_by(current_ability, :switch_to).sorted_by_name
   end
 
   # don't count automatic timer-based requests for resetting the logout timer
