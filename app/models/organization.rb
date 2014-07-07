@@ -5,7 +5,7 @@ class Organization < ActiveRecord::Base
 
 
   RESERVED_SUBDOMAINS = %w(admin api assets blog calendar demo developer developers docs files ftp 
-                           git imap lab mail manage mx pages pop sites smtp ssh ssl staging status support www)
+                           git imap info lab mail manage mx pages pop sites smtp ssh ssl staging status support www)
   has_many :missions
 
   validates :name,         uniqueness: true, presence: true
