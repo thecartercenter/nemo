@@ -88,8 +88,7 @@
       // show loading ind
       link.next('ul').find('div.loading_indicator img').show();
 
-      // ajax call
-      link.next('ul').load('/forms?dropdown=1', function() {
+      link.next('ul').load(self.url_builder.build('forms') + '?dropdown=1', function() {
         // hide loading ind
         link.next('ul').find('div.loading_indicator img').hide();
       });
