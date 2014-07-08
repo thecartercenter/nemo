@@ -1,11 +1,9 @@
 class Organization < ActiveRecord::Base
   include Replicable
 
-  RESERVED_SUBDOMAINS = %w(admin api assets blog calendar demo developer developers docs files ftp app info
-                           git imap lab mail manage mx pages pop sites smtp ssh ssl staging status support www)
+  RESERVED_SUBDOMAINS = %w(admin api assets blog calendar demo developer developers docs files ftp 
+                           git imap info lab mail manage mx pages pop sites smtp ssh ssl staging status support www)
   has_many :missions
-
-
 
 =begin
 Valid subdomain regex: 
