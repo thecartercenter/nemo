@@ -3,7 +3,7 @@
 class Question < Questionable
   include FormVersionable, Translatable
 
-  CODE_FORMAT = "[a-z][a-z0-9]{1,19}"
+  CODE_FORMAT = "[a-zA-Z][a-zA-Z0-9]{1,19}"
 
   belongs_to(:option_set, :include => :options, :inverse_of => :questions, :autosave => true)
   has_many(:questionings, :dependent => :destroy, :autosave => true, :inverse_of => :question)
@@ -18,7 +18,7 @@ class Question < Questionable
   before_validation(:maintain_subquestions)
 
   validates(:code, :presence => true)
-  validates(:code, :format => {:with => /^#{CODE_FORMAT}$/i}, :if => Proc.new{|q| !q.code.blank?})
+  validates(:code, :format => {:with => /^#{CODE_FORMAT}$/}, :if => Proc.new{|q| !q.code.blank?})
   validates(:qtype_name, :presence => true)
   validates(:option_set, :presence => true, :if => Proc.new{|q| q.qtype && q.has_options?})
   validate(:code_unique_per_mission)
