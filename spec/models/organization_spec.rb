@@ -4,59 +4,64 @@ describe Organization do
 
   context "validations" do
     it "should not allow blank for name" do 
-      @org = Organization.create(name: "", compact_name: "a_name_org")
+      @org = Organization.create(name: "", subdomain: "a_name_org")
       expect(@org).to have(1).errors_on(:name)
     end
 
+    it "should not allow blank for subdomain" do 
+      @org = Organization.create(name: "test", subdomain: "")
+      expect(@org).to have(2).errors_on(:subdomain)
+      expect(@org.errors.full_messages).to eql ["Subdomain: This field is required.", "Subdomain: is invalid"]
+    end
+
     it "should not allow duplicates for name" do 
-      @first = Organization.create(name: "a name", compact_name: "a_name_org")
-      @second = Organization.create(name: "a name", compact_name: "a_name")
+      @first = Organization.create(name: "a name", subdomain: "a_name_org")
+      @second = Organization.create(name: "a name", subdomain: "a_name")
       expect(@second).to have(1).errors_on(:name)
     end
 
-    it "should not allow duplicates for compact_name" do 
-      @first = Organization.create(name: "a name", compact_name: "a_name")
-      @second = Organization.create(name: "another name", compact_name: "a_name")
-      expect(@second).to have(1).errors_on(:compact_name)
+    it "should not allow duplicates for subdomain" do 
+      @first = Organization.create(name: "a name", subdomain: "a_name")
+      @second = Organization.create(name: "another name", subdomain: "a_name")
+      expect(@second).to have(1).errors_on(:subdomain)
     end  
   end
 
-  context "compact_name" do
+  context "subdomain" do
     it "should allow - " do
-      @org = Organization.create(name: "test",compact_name: "one-for-all")
-      expect(@org.compact_name).to eq "one-for-all"
+      @org = Organization.create(name: "test", subdomain: "one-for-all")
+      expect(@org.subdomain).to eq "one-for-all"
     end
 
     it "should allow _" do
-      @org = Organization.create(name: "test",compact_name: "one_for_all")
-      expect(@org.compact_name).to eq "one_for_all"
+      @org = Organization.create(name: "test", subdomain: "one_for_all")
+      expect(@org.subdomain).to eq "one_for_all"
     end
 
     it "should allow numbers" do
-      @org = Organization.create(name: "test",compact_name: "one_4_all")
-      expect(@org.compact_name).to eq "one_4_all"
+      @org = Organization.create(name: "test", subdomain: "one_4_all")
+      expect(@org.subdomain).to eq "one_4_all"
     end
 
-
-    it "should allow lower case" do
-      @org = Organization.create(name: "test",compact_name: "aweSOME")
-      expect(@org.compact_name).to eq "awesome"
+    it "should convert to lowercase before save" do
+      @org = Organization.create(name: "test", subdomain: "aweSOME")
+      expect(@org.subdomain).to eq "awesome"
     end
 
     it "should not allow real subdomain www as compact name" do
-       @org = Organization.create(name: "test", compact_name: "www")
-       expect(@org).to have(1).error_on(:compact_name)
+       @org = Organization.create(name: "test", subdomain: "www")
+       expect(@org).to have(1).error_on(:subdomain)
     end
 
     it "should not allow other punctuation besides - _" do
       @org = Organization.create(name: "one4all!!!")
-      expect(@org).to have(1).error_on(:compact_name)
-      expect(@org.errors.full_messages.first).to eql "Compact name: is invalid"
+      expect(@org).to have(2).errors_on(:subdomain)
+      expect(@org.errors.full_messages).to eql ["Subdomain: This field is required.", "Subdomain: is invalid"]
     end
 
     it "should have message when a reserved word is used" do
-       @org = Organization.create(name: "test", compact_name: "ssh")
-       expect(@org.errors.full_messages.first).to eql "Compact name: is reserved"
+       @org = Organization.create(name: "test", subdomain: "ssh")
+       expect(@org.errors.full_messages.first).to eql "Subdomain: is reserved"
     end
   end
 

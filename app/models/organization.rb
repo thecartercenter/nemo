@@ -12,15 +12,17 @@ Valid subdomain regex:
  * may contain hyphens (dashes), but may not begin or end with a hyphen.
 =end
 
-  validates :compact_name, uniqueness: true, 
-                           exclusion: { in: RESERVED_SUBDOMAINS }, 
-                           format: { with: /[A-Za-z0-9][A-Za-z0-9\-]{0,61}[A-Za-z0-9]|[A-Za-z0-9]/ }
-  validates :name, uniqueness: true, presence: true
+  validates :subdomain, presence: true,
+                        uniqueness: true, 
+                        exclusion: { in: RESERVED_SUBDOMAINS }, 
+                        format: { with: /[A-Za-z0-9][A-Za-z0-9\-]{0,61}[A-Za-z0-9]|[A-Za-z0-9]/ }
+  validates :name, presence: true, uniqueness: true
+  
   before_save :format_subdomain
 
   private
     def format_subdomain
-      self.compact_name.downcase!
+      subdomain.downcase!
     end
 
 end

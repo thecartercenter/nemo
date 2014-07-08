@@ -2,7 +2,7 @@
 
 FactoryGirl.define do
   factory :organization do
-    name "MyString"
-    compact_name "MyString"
+    name "awesome organization"
+    subdomain  "awesome"
   end
 end
