@@ -155,6 +155,7 @@ ActiveRecord::Schema.define(:version => 20140704171941) do
   end
 
   add_index "missions", ["compact_name"], :name => "index_missions_on_compact_name"
+  add_index "missions", ["organization_id"], :name => "organizations_id_fk"
 
   create_table "option_levels", :force => true do |t|
     t.integer  "option_set_id",                        :null => false
@@ -224,11 +225,13 @@ ActiveRecord::Schema.define(:version => 20140704171941) do
   add_index "options", ["standard_id"], :name => "index_options_on_standard_id"
 
   create_table "organizations", :force => true do |t|
-    t.string   "name"
-    t.string   "compact_name"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.string   "name",       :null => false
+    t.string   "subdomain",  :null => false
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
+
+  add_index "organizations", ["name", "subdomain"], :name => "index_organizations_on_name_and_subdomain", :unique => true
 
   create_table "questionables", :force => true do |t|
     t.string   "code"
@@ -458,6 +461,8 @@ ActiveRecord::Schema.define(:version => 20140704171941) do
   add_foreign_key "forms", "missions", name: "forms_mission_id_fk"
 
   add_foreign_key "groups", "missions", name: "groups_mission_id_fk"
+
+  add_foreign_key "missions", "organizations", name: "organizations_id_fk"
 
   add_foreign_key "option_levels", "option_levels", name: "option_levels_standard_id_fk", column: "standard_id"
   add_foreign_key "option_levels", "option_sets", name: "option_levels_option_set_id_fk"
