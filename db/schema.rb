@@ -129,11 +129,13 @@ ActiveRecord::Schema.define(:version => 20140704171941) do
     t.integer  "standard_id"
     t.boolean  "allow_incomplete",                :default => false, :null => false
     t.integer  "access_level",       :limit => 1
+    t.integer  "organization_id"
   end
 
   add_index "forms", ["current_version_id"], :name => "forms_current_version_id_fk"
   add_index "forms", ["mission_id", "name"], :name => "index_forms_on_mission_id_and_name", :unique => true
   add_index "forms", ["mission_id", "standard_id"], :name => "index_forms_on_mission_id_and_standard_id", :unique => true
+  add_index "forms", ["organization_id"], :name => "forms_organizations_id_fk"
   add_index "forms", ["standard_id"], :name => "index_forms_on_standard_id"
 
   create_table "groups", :force => true do |t|
@@ -155,7 +157,7 @@ ActiveRecord::Schema.define(:version => 20140704171941) do
   end
 
   add_index "missions", ["compact_name"], :name => "index_missions_on_compact_name"
-  add_index "missions", ["organization_id"], :name => "organizations_id_fk"
+  add_index "missions", ["organization_id"], :name => "missions_organizations_id_fk"
 
   create_table "option_levels", :force => true do |t|
     t.integer  "option_set_id",                        :null => false
@@ -459,10 +461,11 @@ ActiveRecord::Schema.define(:version => 20140704171941) do
   add_foreign_key "forms", "form_versions", name: "forms_current_version_id_fk", column: "current_version_id", dependent: :nullify
   add_foreign_key "forms", "forms", name: "forms_standard_id_fk", column: "standard_id"
   add_foreign_key "forms", "missions", name: "forms_mission_id_fk"
+  add_foreign_key "forms", "organizations", name: "forms_organizations_id_fk"
 
   add_foreign_key "groups", "missions", name: "groups_mission_id_fk"
 
-  add_foreign_key "missions", "organizations", name: "organizations_id_fk"
+  add_foreign_key "missions", "organizations", name: "missions_organizations_id_fk"
 
   add_foreign_key "option_levels", "option_levels", name: "option_levels_standard_id_fk", column: "standard_id"
   add_foreign_key "option_levels", "option_sets", name: "option_levels_option_set_id_fk"
