@@ -141,8 +141,8 @@ class Ability
 
           # permissions for locked missions only
           if mission.locked?
-            # coord can index, read, export these classes for a locked mission
             can [:index, :read, :export], [Form, Question, OptionSet], :mission_id => mission.id
+            can :read, [Questioning, Option], :mission_id => mission.id
 
           # permissions for non-locked mission
           else
