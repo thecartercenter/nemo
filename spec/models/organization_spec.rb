@@ -3,7 +3,6 @@ require 'spec_helper'
 describe Organization do
 
   context "validations" do
-
     it "should not allow blank for name" do 
       @org = Organization.create(name: "", compact_name: "a_name_org")
       expect(@org).to have(1).errors_on(:name)
@@ -23,25 +22,25 @@ describe Organization do
   end
 
   context "compact_name" do
-
-    it "should make a compact_name from the name as default" do
-      @org = Organization.create(name: "Help a Friend")
-      expect(@org.compact_name).to eq "helpafriend"
+    it "should allow - " do
+      @org = Organization.create(name: "test",compact_name: "one-for-all")
+      expect(@org.compact_name).to eq "one-for-all"
     end
 
-    it "should remove punctuation & to make compact_name" do
-      @org = Organization.create(name: "You & Myself")
-      expect(@org.compact_name).to eq "youmyself"
+    it "should allow _" do
+      @org = Organization.create(name: "test",compact_name: "one_for_all")
+      expect(@org.compact_name).to eq "one_for_all"
     end
 
-    it "should remove punctuation ' to make compact_name" do
-      @org = Organization.create(name: "Able's Group")
-      expect(@org.compact_name).to eq "ablesgroup"
+    it "should allow numbers" do
+      @org = Organization.create(name: "test",compact_name: "one_4_all")
+      expect(@org.compact_name).to eq "one_4_all"
     end
 
-    it "should remove punctuation \" to make compact_name" do
-      @org = Organization.create(name: "Let \"Every one\" Help")
-      expect(@org.compact_name).to eq "leteveryonehelp"
+
+    it "should allow lower case" do
+      @org = Organization.create(name: "test",compact_name: "aweSOME")
+      expect(@org.compact_name).to eq "awesome"
     end
 
     it "should not allow real subdomain www as compact name" do
@@ -49,17 +48,16 @@ describe Organization do
        expect(@org).to have(1).error_on(:compact_name)
     end
 
-    it "should not allow real subdomain docs as compact name" do
-       @org = Organization.create(name: "test", compact_name: "docs")
-       expect(@org).to have(1).error_on(:compact_name)
+    it "should not allow other punctuation besides - _" do
+      @org = Organization.create(name: "one4all!!!")
+      expect(@org).to have(1).error_on(:compact_name)
+      expect(@org.errors.full_messages.first).to eql "Compact name: is invalid"
     end
 
-    it "should not allow real subdomain ssh as compact name and have message" do
+    it "should have message when a reserved word is used" do
        @org = Organization.create(name: "test", compact_name: "ssh")
-       expect(@org).to have(1).error_on(:compact_name)
        expect(@org.errors.full_messages.first).to eql "Compact name: is reserved"
     end
-
   end
 
 
@@ -81,7 +79,6 @@ describe Organization do
 
 
   context "replication" do
-
     it "the organization_id gets assigned to the mission when form is cloned" do
       org = FactoryGirl.create(:organization)
       mission = FactoryGirl.create(:mission, :name => 'missionOne', :organization => org)
@@ -89,7 +86,6 @@ describe Organization do
       form_dup = form.replicate(:mode => 'clone')
       expect(form.mission.organization_id).to eql form_dup.mission.organization_id
     end
-
   end
   
 end

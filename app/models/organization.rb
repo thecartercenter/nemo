@@ -1,22 +1,28 @@
 class Organization < ActiveRecord::Base
   include Replicable
-  #TODO: do we need to includeMissionBased ?
 
-
-
-  RESERVED_SUBDOMAINS = %w(admin api assets blog calendar demo developer developers docs files ftp 
+  RESERVED_SUBDOMAINS = %w(admin api assets blog calendar demo developer developers docs files ftp app info
                            git imap lab mail manage mx pages pop sites smtp ssh ssl staging status support www)
   has_many :missions
 
-  validates :name,         uniqueness: true, presence: true
-  validates :compact_name, uniqueness: true, exclusion: { in: RESERVED_SUBDOMAINS }
 
-  before_validation :create_compact_name  
+
+=begin
+Valid subdomain regex: 
+ * must have a length no greater than 63.
+ * must begin and end with an alpha-numeric (i.e. letters [A-Za-z] or digits [0-9]).
+ * may contain hyphens (dashes), but may not begin or end with a hyphen.
+=end
+
+  validates :compact_name, uniqueness: true, 
+                           exclusion: { in: RESERVED_SUBDOMAINS }, 
+                           format: { with: /[A-Za-z0-9][A-Za-z0-9\-]{0,61}[A-Za-z0-9]|[A-Za-z0-9]/ }
+  validates :name, uniqueness: true, presence: true
+  before_save :format_subdomain
 
   private
-    def create_compact_name
-      self.compact_name = name.gsub(/\s|&|\||\'|\"/, "").downcase unless compact_name.present?
-      return true
+    def format_subdomain
+      self.compact_name.downcase!
     end
 
 end
