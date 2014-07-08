@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe Organization do
-
   context "validations" do
     it "should not allow blank for name" do 
       @org = Organization.create(name: "", subdomain: "a_name_org")
@@ -26,7 +25,6 @@ describe Organization do
       expect(@second).to have(1).errors_on(:subdomain)
     end  
   end
-
   context "subdomain" do
     it "should allow - " do
       @org = Organization.create(name: "test", subdomain: "one-for-all")
@@ -64,8 +62,6 @@ describe Organization do
        expect(@org.errors.full_messages.first).to eql "Subdomain: is reserved"
     end
   end
-
-
   context "relationships" do
     before do
       @org = FactoryGirl.create(:organization)
@@ -81,8 +77,6 @@ describe Organization do
       expect(@mission1.organization).to eql @org
     end
   end
-
-
   context "replication" do
     it "the organization_id gets assigned to the mission when form is cloned" do
       org = FactoryGirl.create(:organization)
