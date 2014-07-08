@@ -34,7 +34,7 @@
   <%# don't show source or reviewed if new obj %>
   <% unless form_mode == :new %>
 
-    <%= f.field(:source) if form_mode == :show %>
+    <%= f.field(:source) if read_only %>
 
     <%# only show the reviewed checkbox as editable if the user can review the response %>
     <%= f.field(:reviewed, :type => :check_box, :read_only => cannot?(:review, @response)) %>

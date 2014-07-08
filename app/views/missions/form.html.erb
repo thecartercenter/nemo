@@ -3,7 +3,7 @@
 
 <%= elmo_form_for(@mission) do |f| %>
   <%= f.field(:name, :required => true, :maxlength => 32) %>
-  <%= f.field(:compact_name) if form_mode == :show %>
+  <%= f.field(:compact_name) if read_only %>
   <%= f.field(:locked, :type => :check_box) %>
   <div class="submit-buttons">
     <%= f.submit(:class => "btn btn-primary") %>

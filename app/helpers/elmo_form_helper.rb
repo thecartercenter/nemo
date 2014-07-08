@@ -22,6 +22,12 @@ module ElmoFormHelper
     {:new => :new, :create => :new, :edit => :edit, :update => :edit, :show => :show}[controller.action_name.to_sym]
   end
 
+  # Tests if form_mode == :show. Note that some the ElmoFormBuilder overrides form_mode when rendering custom partials
+  # using the :partial directive. This is also why a ? is not used as a suffix.
+  def read_only
+    form_mode == :show
+  end
+
   # renders the standard 'required' symbol, which is an asterisk
   def reqd_sym
     content_tag(:div, '*', :class => 'reqd_sym')

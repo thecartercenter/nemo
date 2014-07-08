@@ -15,7 +15,7 @@
   <%= f.field(:body, :required => true, :partial => "body") %>
 
   <%# show any errors if we're in show mode %>
-  <% if form_mode == :show && @broadcast.send_errors %>
+  <% if read_only && @broadcast.send_errors %>
     <%= f.field(:send_errors, :partial => "send_errors") %>
   <% end %>
 

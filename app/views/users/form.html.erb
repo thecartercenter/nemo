@@ -19,7 +19,7 @@
 
   <%= f.field(:notes, :type => :textarea) %>
 
-  <% unless form_mode == :show %>
+  <% unless read_only %>
 
     <%# allow to change password if editing profile %>
     <% if @user == current_user %>

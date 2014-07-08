@@ -1,5 +1,5 @@
 <%# form for drag and drop and option dialog %>
-<% if form_mode != :show && can?(:add_options, @option_set) %>
+<% if !read_only && can?(:add_options, @option_set) %>
   <div class="add_options">
     <input type="text" class="add_options_box form-control">
     <input type="button" class="btn_secondary btn btn-default" value="<%= t('common.add') %>" />
@@ -9,7 +9,7 @@
 <div id="options-wrapper" class="draggable-list-wrapper">
 </div>
 
-<% if form_mode != :show %>
+<% unless read_only %>
   <%# edit option modal %>
   <div class="modal fade edit-named-item" id="edit-option" tabindex="-1" role="dialog" aria-labelledby="editOption" aria-hidden="true">
     <div class="modal-dialog">

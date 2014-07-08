@@ -10,11 +10,11 @@
 
   <div class="assignments"></div>
 
-  <%= link_to(t('user.add_assignment'), '#', :class => 'add_assignment') unless form_mode == :show %>
+  <%= link_to(t('user.add_assignment'), '#', :class => 'add_assignment') unless read_only %>
 
 <% else %>
 
-  <% if form_mode == :show || cannot?(:change_assignments, @user) %>
+  <% if read_only || cannot?(:change_assignments, @user) %>
 
     <%# in show mode, just show the role the current mission's assignment %>
     <%= @current_assignment.role ? t(@current_assignment.role, :scope => :role) : t('common.none') %>
