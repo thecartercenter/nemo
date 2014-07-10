@@ -8,6 +8,7 @@ FactoryGirl.define do
     end
 
     mission { is_standard ? nil : get_mission }
+    organization { mission.organization }
 
     name {"some form #{rand(1000000)}"}
 

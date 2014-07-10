@@ -18,6 +18,9 @@ module Standardizable
     # this doesn't work with before_create for some reason
     before_validation(:copy_is_standard_and_mission_from_parent)
     before_validation(:copy_is_standard_and_mission_to_children)
+    
+    # make sure we have valid mission and organization
+    before_save(:validate_mission_and_organization)
 
     validates(:mission_id, :presence => true, :unless => ->(o) {o.is_standard?})
 
@@ -68,6 +71,16 @@ module Standardizable
   end
 
   private
+
+    def validate_mission_and_organization
+      #binding.pry
+      return true unless self.changed?
+      if self.mission.organization == self.organization
+        true
+      else
+        false
+      end
+    end
 
     # replicates the current object (if standard) to each of its copies to ensure any changes are propagated
     def rereplicate_to_copies

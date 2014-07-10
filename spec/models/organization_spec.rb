@@ -25,6 +25,7 @@ describe Organization do
       expect(@second).to have(1).errors_on(:subdomain)
     end  
   end
+
   context "subdomain" do
     it "should allow - " do
       @org = Organization.create(name: "test", subdomain: "one-for-all")
@@ -62,6 +63,7 @@ describe Organization do
        expect(@org.errors.full_messages.first).to eql "Subdomain: is reserved"
     end
   end
+
   context "relationships" do
     before do
       @org = FactoryGirl.create(:organization)
@@ -77,15 +79,24 @@ describe Organization do
       expect(@mission1.organization).to eql @org
     end
   end
+  
   context "replication" do
-    it "the organization_id gets assigned to the mission when form is cloned" do
+    it "the mission.organization_id and form.organization_id gets assigned when form is cloned" do
       org = FactoryGirl.create(:organization)
       mission = FactoryGirl.create(:mission, :name => 'missionOne', :organization => org)
       form = FactoryGirl.create(:form, mission: mission)
       form_dup = form.replicate(:mode => 'clone')
-      expect(form.mission.organization_id).to eql form_dup.mission.organization_id
+      expect(form.organization_id).to eql form_dup.organization_id
     end
-  end
+
+    it "the form.mission_id is null and form.organization_id gets assigned when form is cloned" do
+      org = FactoryGirl.create(:organization)
+      form = FactoryGirl.create(:form, is_standard: true)
+      form_dup = form.replicate(:mode => 'clone')
+      expect(form_dup.mission_id).to be_nil
+      expect(form.organization_id).to eql form_dup.organization_id
+    end
+  end 
   
 end
 
