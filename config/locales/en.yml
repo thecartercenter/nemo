@@ -341,6 +341,10 @@ en:
       user:
         admin: "Admin?"
 
+    placeholders:
+      question:
+        code: "MyQuestion"
+
     hints:
       form:
         name: "A descriptive name for the form."

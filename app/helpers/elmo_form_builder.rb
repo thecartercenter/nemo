@@ -103,6 +103,9 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
 
         else
 
+          placeholder = I18n.t("activerecord.placeholders.#{@object.class.model_name.i18n_key}.#{field_name}", :default => '')
+          placeholder = nil if placeholder.blank?
+
           case options[:type]
             when :check_box
               check_box(field_name)
@@ -112,7 +115,7 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
               options[:options].map{|o| radio_button(field_name, o, :class => 'radio') + o}.join('&nbsp;&nbsp;').html_safe
 
             when :textarea
-              text_area(field_name, {:class => 'form-control'})
+              text_area(field_name, {:class => 'form-control', :placeholder => placeholder})
 
             when :password
               # add 'text' class for legacy support
@@ -126,8 +129,7 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
 
             # text is the default type
             else
-              # add 'text' class for legacy support
-              text_field(field_name, {:class => 'text form-control'}.merge(options.slice(:maxlength)))
+              text_field(field_name, {:class => 'text form-control', :placeholder => placeholder}.merge(options.slice(:maxlength)))
           end
         end
       end
