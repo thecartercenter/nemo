@@ -60,11 +60,13 @@ class UsersController < ApplicationController
     # make sure changing assignment role is permitted if attempting
     authorize!(:change_assignments, @user) if params[:user]['assignments_attributes']
 
-    # try to save
-    if @user.update_attributes(params[:user])
+    @user.assign_attributes(params[:user])
+    pref_lang_changed = @user.pref_lang_changed?
 
-      # redirect and message depend on if this was user editing self or not
+    if @user.save
+
       if @user == current_user
+        I18n.locale = @user.pref_lang.to_sym if pref_lang_changed
         flash[:success] = t("user.profile_updated")
         redirect_to(:action => :edit)
       else
