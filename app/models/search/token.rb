@@ -21,7 +21,8 @@ class Search::Token
       children.map(&:to_sql).join(" AND ")
 
     when :unqualified_expression
-      "(" + comparison(default_qualifer, Search::LexToken.new(Search::LexToken::EQUAL, "="), children[0]) + ")"
+      eq = Search::LexToken.new(Search::LexToken::EQUAL, "=")
+      "(" + default_qualifiers.map{ |q| comparison(q, eq, children[0]) }.join(' OR ') + ")"
 
     when :qualified_expression
       # children[2] will be an :rhs token
@@ -128,12 +129,12 @@ class Search::Token
       "(#{inner})"
     end
 
-    # looks up the default qualifier
+    # looks up the default qualifiers
     # raises an error if there are none
-    def default_qualifer
-      dq = @search.qualifiers.detect{|q| q.default?}
-      raise Search::ParseError.new(I18n.t("search.must_use_qualifier")) if dq.nil?
-      dq
+    def default_qualifiers
+      @search.qualifiers.select(&:default?).tap do |dq|
+        raise Search::ParseError.new(I18n.t("search.must_use_qualifier")) if dq.empty?
+      end
     end
 
     # looks up the qualifier for the given chunk, or raises an error

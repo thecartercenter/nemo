@@ -1226,7 +1226,7 @@ en:
 
         * __romeo juliet__
 
-        only matches user names. To search based on other user attributes, use a qualifier, e.g.:
+        matches user names, login IDs, and emails. To search based on specific attributes, use a qualifier, e.g.:
 
         * __email: @example.com__
 

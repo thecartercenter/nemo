@@ -94,8 +94,8 @@ class User < ActiveRecord::Base
   def self.search_qualifiers
     [
       Search::Qualifier.new(:name => "name", :col => "users.name", :type => :text, :default => true),
-      Search::Qualifier.new(:name => "login", :col => "users.login", :type => :text),
-      Search::Qualifier.new(:name => "email", :col => "users.email", :type => :text),
+      Search::Qualifier.new(:name => "login", :col => "users.login", :type => :text, :default => true),
+      Search::Qualifier.new(:name => "email", :col => "users.email", :type => :text, :default => true),
       Search::Qualifier.new(:name => "phone", :col => "users.phone", :type => :text)
     ]
   end

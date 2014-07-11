@@ -19,6 +19,12 @@ class Search::SearchTest < ActiveSupport::TestCase
     Search::Qualifier.new(:name => "form", :col => "t1.f1")
   ]
 
+  MULTIPLE_DEFAULTS = [
+    Search::Qualifier.new(:name => "foo", :col => "t1.f1"),
+    Search::Qualifier.new(:name => "bar", :col => "t1.f2", :default => true),
+    Search::Qualifier.new(:name => "baz", :col => "t1.f3", :default => true)
+  ]
+
   REGEX = [
     Search::Qualifier.new(:name => "foo1", :pattern => /^[a-n]+$/, :col => "t1.f1"),
     Search::Qualifier.new(:name => "name", :col => "t1.f2"),
@@ -222,6 +228,10 @@ class Search::SearchTest < ActiveSupport::TestCase
     # z followed by 3 or less digits should work, more digits should not
     assert_search(:str => "z123:foo", :sql => "((t9.f7 = 'foo'))", :qualifiers => REGEX)
     assert_search(:str => "z12345:foo", :error => /not a valid search qualifier/, :qualifiers => REGEX)
+  end
+
+  test "search with multiple default qualifiers should work" do
+    assert_search(:str => 'test', :sql => "((t1.f2 = 'test') OR (t1.f3 = 'test'))", :qualifiers => MULTIPLE_DEFAULTS)
   end
 
   private
