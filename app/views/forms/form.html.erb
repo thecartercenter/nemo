@@ -3,7 +3,7 @@
 <div class="screen">
   <%= published_warning(@form) if @form.published? && form_mode == :edit %>
 
-  <%= elmo_form_for(@form) do |f| %>
+  <%= elmo_form_for(@form, :style => @form.has_questions? ? 'with_questions' : 'no_questions') do |f| %>
 
     <%# We wrap the top part of the form in this block b/c the whole form is 100% width due to index table below %>
     <div class="elmo_form">
@@ -21,7 +21,7 @@
       <%= f.field(:version, :content => @form.version_with_code) unless @form.new_record? %>
 
     </div>
-    
+
     <%# questions on the form %>
     <%= index_table(Questioning, @form.questionings, :within_form => true) if form_mode != :new %>
 

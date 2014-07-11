@@ -19,7 +19,7 @@ class Form < ActiveRecord::Base
   before_create(:init_downloads)
 
   scope(:published, where(:published => true))
-  scope(:with_questionings, includes( 
+  scope(:with_questionings, includes(
     :questionings => [
       :form,
       {:question => {:option_set => :options}},
@@ -71,6 +71,10 @@ class Form < ActiveRecord::Base
 
   def version_with_code
     current_version.try(:sequence_and_code) || ""
+  end
+
+  def has_questions?
+    questionings.any?
   end
 
   def full_name
@@ -272,7 +276,7 @@ class Form < ActiveRecord::Base
 
   def has_white_listed_user?(user_id)
     whitelist_users.where(user_id: user_id).exists?
-  end 
+  end
 
   private
     def init_downloads
