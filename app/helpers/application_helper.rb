@@ -246,8 +246,6 @@ module ApplicationHelper
     # add text
     ttl += t(action, {:scope => "page_titles.#{controller_name}", :default => [:all, ""]}.merge(@title_args || {}))
 
-
-
     ttl.html_safe
   end
 
