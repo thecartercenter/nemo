@@ -217,7 +217,7 @@ class Question < Questionable
     # normalizes constraints based on question type
     def normalize_constraint_values
       # constraint should be nil/non-nil depending on qtype
-      if qtype.numeric?
+      if qtype.try(:numeric?)
         # for numeric qtype, min/max can still be nil, and booleans should be nil if min/max are nil, else should be false
         self.minstrictly = false if !minimum.nil? && minstrictly.nil?
         self.maxstrictly = false if !maximum.nil? && maxstrictly.nil?
