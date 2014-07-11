@@ -3,7 +3,7 @@ class PasswordResetsController < ApplicationController
   # don't need to authorize for any of these because they're for logged out users
   skip_authorization_check
 
-  # load the user using the perishable token rather than session
+  before_filter(:ensure_logged_out)
   before_filter(:load_user_using_perishable_token, :only => [:edit, :update])
 
   # when the user requests a password reset
@@ -49,6 +49,7 @@ class PasswordResetsController < ApplicationController
   end
 
   private
+
     # loads a user using a perishable token stored in params[:id]
     def load_user_using_perishable_token
       @user = User.find_using_perishable_token(params[:id])

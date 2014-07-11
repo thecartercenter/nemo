@@ -1,6 +1,17 @@
 module Concerns::ApplicationController::LoginLogistics
   extend ActiveSupport::Concern
 
+  # logs out user if not already logged out
+  # might be called /after/ get_user_and_mission due to filter order
+  # so should undo that method's changes
+  def ensure_logged_out
+    if user_session = UserSession.find
+      user_session.destroy
+      @current_user = nil
+      @current_mission = nil
+    end
+  end
+
   # Tasks that should be run after the user successfully logs in OR successfully resets their password
   # Redirects to the appropriate place.
   def post_login_housekeeping

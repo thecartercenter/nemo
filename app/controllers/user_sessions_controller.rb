@@ -32,16 +32,4 @@ class UserSessionsController < ApplicationController
   # shows a simple 'you are logged out' page
   def logged_out
   end
-
-  private
-    # logs out user if not already logged out
-    # might be called /after/ get_user_and_mission due to filter order
-    # so should undo that method's changes
-    def ensure_logged_out
-      if user_session = UserSession.find
-        user_session.destroy
-        @current_user = nil
-        @current_mission = nil
-      end
-    end
 end
