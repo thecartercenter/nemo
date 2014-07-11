@@ -5,7 +5,8 @@ class WelcomeController < ApplicationController
   # This is because anybody is 'allowed' to see the root and letting the auth system handle things
   # leads to nasty messages and weird behavior. We merely redirect because otherwise the page would be blank
   # and not very interesting.
-  skip_authorization_check :only => :index
+  # We also skip the check for unauthorized because who cares if someone sees it.
+  skip_authorization_check :only => [:index, :unauthorized]
 
   # number of rows in the stats blocks
   STAT_ROWS = 3
@@ -95,6 +96,9 @@ class WelcomeController < ApplicationController
       :title => render_to_string(:partial => 'report_pane_title'),
       :main => render_to_string(:partial => 'report/reports/main')
     })
+  end
+
+  def unauthorized
   end
 
   private

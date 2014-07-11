@@ -764,6 +764,7 @@ en:
       show: "User: %{name}"
     welcome:
       index: "Home"
+      unauthorized: "Unauthorized"
 
   ##############################
   # the rest of these string groups should be kept in alphabetical order by key

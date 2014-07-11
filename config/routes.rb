@@ -19,6 +19,8 @@ ELMO::Application.routes.draw do
 
     get '/route-tests' => 'route_tests#basic_mode' if Rails.env.development? || Rails.env.test?
 
+    get '/unauthorized' => 'welcome#unauthorized', :as => :unauthorized
+
     # /en/, /en
     root :to => 'welcome#index', :as => :basic_root
   end

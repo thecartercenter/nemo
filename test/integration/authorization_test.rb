@@ -29,9 +29,13 @@ class AuthorizationTest < ActionDispatch::IntegrationTest
     assert_select("div.alert-danger", /must login/)
   end
 
-  test "user redirected to root if unauthorized" do
+  test "user redirected to unauthorized page if unauthorized" do
     @user = FactoryGirl.create(:user, :role_name => :observer)
-    assert_cannot_access(@user, '/en/admin/missions')
+    assert_cannot_access(@user, '/en/admin/missions') # This assertion checks redirect
+
+    follow_redirect!
+    assert_response(:success)
+    assert_nil(flash[:error]) # Not needed since we have unauth page
   end
 
   test "coordinator can only view forms for current mission" do
@@ -93,7 +97,6 @@ class AuthorizationTest < ActionDispatch::IntegrationTest
     def assert_cannot_access(user, path, options = {})
       login(user) if user
       get(path)
-      assert_redirected_to('/en')
-      assert_match(flash[:error], /not authorized/)
+      assert_redirected_to('/en/unauthorized')
     end
 end

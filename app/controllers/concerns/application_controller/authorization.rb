@@ -37,7 +37,7 @@ module Concerns::ApplicationController::Authorization
 
     # else redirect to welcome page with error
     else
-      redirect_to(basic_root_url(:mode => nil, :mission_name => nil), :flash => { :error => exception.message })
+      redirect_to(unauthorized_path)
     end
   end
 end
