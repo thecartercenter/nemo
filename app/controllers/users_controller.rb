@@ -22,7 +22,7 @@ class UsersController < ApplicationController
       begin
         @users = User.do_search(@users, params[:search])
       rescue Search::ParseError
-        flash.now[:error] = "#{t('search.search_error')}: #{$!}"
+        flash.now[:error] = $!.to_s
       end
     end
   end

@@ -44,6 +44,18 @@ class Search::SearchTest < ActiveSupport::TestCase
     assert_search(:str => "v1 | and", :sql => "((t1.f1 = 'v1') OR (t1.f1 = 'and'))")
   end
 
+  test 'invalid qualifier should be handled gracefully' do
+    assert_search(:str => 'foo:bar', :error => /'foo' is not a valid search qualifier/)
+  end
+
+  test 'qualifier with no text should be handled gracefully' do
+    assert_search(:str => 'foo:', :error => /could not be understood due to unexpected text near the end/)
+  end
+
+  test 'qualifier with no text followed by proper qualifier should be handled gracefully' do
+    assert_search(:str => 'foo: form:blah', :error => /could not be understood due to unexpected text near ':blah'/)
+  end
+
   test "unqualified or should work" do
     assert_search(:str => "v1 | v2", :sql => "((t1.f1 = 'v1') OR (t1.f1 = 'v2'))")
   end
@@ -69,11 +81,11 @@ class Search::SearchTest < ActiveSupport::TestCase
   end
 
   test "parentheses shouldnt be allowed in unqualified terms" do
-    assert_search(:str => "v1 (v2 | v3)", :error => /Expected/)
+    assert_search(:str => "v1 (v2 | v3)", :error => /unexpected text near '\(v2 \| v3\)'/)
   end
 
   test "nested parentheses shouldnt be allowed in qualified terms" do
-    assert_search(:str => "foo: (v1 v2 (v3))", :error => /Expected/)
+    assert_search(:str => "foo: (v1 v2 (v3))", :error => /unexpected text near '\(v3\)\)'/)
   end
 
   test "ORs should work with qualified expression" do

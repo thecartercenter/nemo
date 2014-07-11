@@ -84,10 +84,8 @@ class Search::Parser
         lex_token.parent = parent
         lex_token
       else
-        expected = options.collect{|o| o.to_s.upcase}.compact.join("' #{I18n.t('common.or')} '")
         near = @lexer.tokens[0].fragment
-        near = near.empty? ? I18n.("searches.at_end_of_query") : "#{I18n.t('common.near').downcase} '#{near}'"
-        raise Search::ParseError.new("#{I18n.t('search.expected')} '#{expected}' #{near}")
+        raise Search::ParseError.new(I18n.t(near.empty? ? 'search.unexpected_end' : 'search.unexpected', :str => near))
       end
     end
 

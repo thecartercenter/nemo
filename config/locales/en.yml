@@ -1118,7 +1118,6 @@ en:
     admin: "Admin"
 
   search:
-    at_end_of_query: "at end of query"
     blank: "blank"
     examples:
       responses:
@@ -1279,7 +1278,8 @@ en:
     or_not_allowed_between: "OR is not allowed between expressions."
     invalid_qualifier: "'%{chunk}' is not a valid search qualifier."
     search_error: "Search Error"
-    unexpected: "Unexpected text near '%{str}'"
+    unexpected: "Your search query could not be understood due to unexpected text near '%{str}'."
+    unexpected_end: "Your search query could not be understood due to unexpected text near the end."
 
   setting:
     change_sms_password: "Change Password"

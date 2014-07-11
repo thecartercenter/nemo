@@ -27,11 +27,11 @@ class ResponsesController < ApplicationController
           begin
             @responses = Response.do_search(@responses, params[:search], {:mission => current_mission}, :include_excerpts => true)
           rescue Search::ParseError
-            flash.now[:error] = "#{t('search.search_error')}: #{$!}"
+            flash.now[:error] = $!.to_s
           rescue ThinkingSphinx::SphinxError
             # format sphinx message a little more nicely
             sphinx_msg = $!.to_s.gsub(/index .+?:\s+/, '')
-            flash.now[:error] = "#{t('search.search_error')}: #{sphinx_msg}"
+            flash.now[:error] = sphinx_msg
           end
         end
 
@@ -46,7 +46,7 @@ class ResponsesController < ApplicationController
           begin
             @responses = Response.do_search(@responses, params[:search], {:mission => current_mission}, :include_excerpts => false)
           rescue Search::ParseError
-            flash.now[:error] = "#{t('search.search_error')}: #{$!}"
+            flash.now[:error] = $!.to_s
             return
           end
         end
