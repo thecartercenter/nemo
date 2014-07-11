@@ -17,7 +17,7 @@ body {
   }
 }
 
-.users_edit .ro-val { 
+.users_edit .ro-val {
   font-family: monospace;
 }
 
@@ -40,9 +40,11 @@ body {
 
   .icon-btn {
     display: inline-block;
-    width: 60px;
+    min-width: 60px;
+    max-width: 90px;
     margin: 0 5px 0 5px;
     text-align: center;
+    vertical-align: top;
 
     a:hover {
       color: $light-blue;
