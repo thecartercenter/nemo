@@ -7,6 +7,7 @@ FactoryGirl.define do
 
   factory :mission do
     name
+    organization
     setting {
       # use Saskatchewan timezone b/c no DST
       Setting.new(
