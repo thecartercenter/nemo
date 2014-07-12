@@ -12,6 +12,7 @@ module Standardizable
 
     # create self-associations in both directions for is-copy-of relationship
     belongs_to(:standard, :class_name => name, :inverse_of => :copies)
+    belongs_to(:organization)
     has_many(:copies, :class_name => name, :foreign_key => 'standard_id', :inverse_of => :standard)
 
     # create hooks to copy key params from parent and to children
@@ -73,9 +74,8 @@ module Standardizable
   private
 
     def validate_mission_and_organization
-      #binding.pry
       return true unless self.changed?
-      if self.mission.organization == self.organization
+      if self.mission.organization_id == self.organization.id
         true
       else
         false

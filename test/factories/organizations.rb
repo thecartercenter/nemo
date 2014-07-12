@@ -2,7 +2,7 @@
 
 FactoryGirl.define do
   factory :organization do
-    name "awesome organization"
-    subdomain  "awesome"
+    name {"organization#{rand(10000000)}"}
+    subdomain  {"sub#{rand(10000000)}"}
   end
 end
