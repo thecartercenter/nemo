@@ -67,6 +67,9 @@ GEM
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       xpath (~> 2.0)
+    capybara-webkit (1.1.0)
+      capybara (~> 2.0, >= 2.0.2)
+      json
     choice (0.1.6)
     chronic (0.10.2)
     coderay (1.1.0)
@@ -254,6 +257,7 @@ DEPENDENCIES
   cancan
   capistrano (~> 2.15.4)
   capybara
+  capybara-webkit
   configatron
   dalli
   database_cleaner

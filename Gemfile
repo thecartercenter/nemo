@@ -82,6 +82,7 @@ group :development, :test do
   gem 'pry'                          # better debugger
   gem 'mocha'                        # mocking/stubbing
   gem 'capybara'                     # acceptance tests
+  gem 'capybara-webkit'              # for testing js
   gem 'database_cleaner'             # cleans database for testing
   gem 'timecop'                      # sets time for testing
   gem 'awesome_print'                # for debugging/console, prints an object nicely
