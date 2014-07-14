@@ -81,6 +81,7 @@ en:
 
   # general attribute names
   attributes:
+    access_level: "API Security Level"
     name: "Name"
     code: "Code"
     copy_count: "Copies"
@@ -239,7 +240,6 @@ en:
         smsable: "SMSable?"
         updated_at: "Last Modified"
         version: "Version"
-        access_level: "API Security Level"
       mission:
         compact_name: "Compact Name"
         locked: "Locked?"
