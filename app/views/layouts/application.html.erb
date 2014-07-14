@@ -39,7 +39,7 @@
 
   <%# Logo and mission if selected %>
   <div id="title">
-    <%= link_to(image_tag("logo.png"), admin_mode? ? admin_root_path : basic_root_path) %>
+    <%= link_to(image_tag("logo.png"), current_root_path) %>
     <%# Stripping title name since we have a logo now %>
     <h2>
       <% if admin_mode? %>

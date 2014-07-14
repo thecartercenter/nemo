@@ -38,6 +38,10 @@ module Concerns::ApplicationController::Routing
     current_mode == 'basic'
   end
 
+  def current_root_path
+    send("#{current_mode}_root_path")
+  end
+
   # The missionchange param is set so that permission errors on mission change can be handled gracefully.
   # But it should be removed once it is no longer needed so that the user never sees it.
   # Implicit in this method is that missionchange will only ever appear with GET request URLs.

@@ -18,6 +18,7 @@ describe 'path helpers' do
         /en/users/#{@user.id}/edit
         /en/logged-out
         /en
+        /en
         /fr
         /en/m/foo
         /en/admin
@@ -37,6 +38,7 @@ describe 'path helpers' do
         /en/m/foo/users/#{@user.id}
         /en/m/foo/users/#{@user.id}/edit
         /en/logged-out
+        /en/m/foo
         /en
         /fr
         /en/m/foo
@@ -57,6 +59,7 @@ describe 'path helpers' do
         /en/admin/users/#{@user.id}
         /en/admin/users/#{@user.id}/edit
         /en/logged-out
+        /en/admin
         /en
         /fr
         /en/m/foo
