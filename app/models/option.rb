@@ -22,7 +22,7 @@ class Option < ActiveRecord::Base
   # the max number of suggestion matches to return
   MAX_SUGGESTIONS = 5
 
-  # returns an array of hashes representing suggested options matching the given mission and textual query
+  # Returns an array of Options matching the given mission and textual query.
   def self.suggestions(mission, query)
     # fetch all mission options from the cache
     mission_id = mission ? mission.id : 'std'
