@@ -100,6 +100,11 @@ class Setting < ActiveRecord::Base
     read_attribute('preferred_locales').map(&:to_sym)
   end
 
+  # Determines if this setting is read only due to mission being locked.
+  def read_only?
+    mission.try(:locked?) # Mission may be nil if admin mode, in which case it's not read only.
+  end
+
   private
 
     # gets rid of any junk chars in locales

@@ -19,7 +19,7 @@ module ElmoFormHelper
 
   # gets the mode a form should be displayed in: one of new, edit, or show
   def form_mode
-    {:new => :new, :create => :new, :edit => :edit, :update => :edit, :show => :show}[controller.action_name.to_sym]
+    @form_mode || {new: :new, create: :new, show: :show}[controller.action_name.to_sym] || :edit
   end
 
   # Tests if form_mode == :show. Note that some the ElmoFormBuilder overrides form_mode when rendering custom partials

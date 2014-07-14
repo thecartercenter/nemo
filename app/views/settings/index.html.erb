@@ -1,5 +1,7 @@
-
 <%= elmo_form_for(@setting) do |f| %>
+
+  <%# Need to specify form mode explicitly since it can't be surmised from action. %>
+  <% @form_mode = @setting.read_only? ? :show : :edit %>
 
   <h2><%= t("setting.headings.general") %></h2>
 
