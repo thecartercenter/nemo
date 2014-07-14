@@ -57,7 +57,7 @@ class Question < Questionable
   delegate :options, :geographic?, :to => :option_set, :allow_nil => true
 
   replicable :child_assocs => [:option_set, :subquestions], :parent_assoc => :questioning,
-    :uniqueness => {:field => :code, :style => :camel_case}, :dont_copy => :key,
+    :uniqueness => {:field => :code, :style => :camel_case}, :dont_copy => [:key, :access_level],
     :user_modifiable => [:name_translations, :_name, :hint_translations, :_hint]
 
   # returns questions that do NOT already appear in the given form

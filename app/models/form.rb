@@ -50,7 +50,7 @@ class Form < ActiveRecord::Base
 
   replicable :child_assocs => :questionings, :uniqueness => {:field => :name, :style => :sep_words},
     :dont_copy => [:published, :downloads, :responses_count, :questionings_count, :upgrade_needed,
-      :smsable, :current_version_id, :allow_incomplete]
+      :smsable, :current_version_id, :allow_incomplete, :access_level]
 
 
   def api_user_id_can_see?(api_user_id)
