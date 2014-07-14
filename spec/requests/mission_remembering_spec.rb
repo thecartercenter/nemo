@@ -33,34 +33,47 @@ describe 'user' do
     end
   end
 
-  context 'if has previously viewed a mission' do
+  shared_examples_for 'redirects to viewed mission' do
     before do
-      expect(@user.assignments.size).to eq 1
-      @recent = @user.assignments.first
-
-      User.record_timestamps = false
-      @old = create :assignment, user: @user, updated_at: 1.day.ago, created_at: 10.days.ago
-      User.record_timestamps = true
-
       login_without_redirect @user # First login will go to more recent mission.
-      expect(response).to redirect_to mission_root_path(mission_name: @recent.mission.compact_name)
+      #expect(response).to redirect_to mission_root_path(mission_name: @recent.mission.compact_name)
+      @other_mission = create(:mission)
 
       # This should set last_mission.
-      get(mission_root_path(mission_name: @old.mission.compact_name))
+      get(mission_root_path(mission_name: @other_mission.compact_name))
 
       logout
       login_without_redirect @user
     end
 
     it 'should be redirected to that missions root on login' do
-      expect(response).to redirect_to mission_root_path(mission_name: @old.mission.compact_name)
+      expect(response).to redirect_to mission_root_path(mission_name: @other_mission.compact_name)
     end
 
     it 'should be linked to that missions path for admin mode exit' do
       get admin_root_path
       expect(response).to be_success
-      path = mission_root_path(mission_name: @old.mission.compact_name)
+      path = mission_root_path(mission_name: @other_mission.compact_name)
       assert_select("a.admin-mode") { |link| expect(link.to_s).to match(%r{href="#{path}"}) }
+    end
+  end
+
+  context 'if has previously viewed mission' do
+    context 'if has assignments' do
+      before do
+        expect(@user.assignments.size).to eq 1
+        @recent = @user.assignments.first
+      end
+
+      it_behaves_like 'redirects to viewed mission'
+    end
+
+    context 'if has no assignments' do
+      before do
+        @user.assignments.delete_all
+      end
+
+      it_behaves_like 'redirects to viewed mission'
     end
   end
 end

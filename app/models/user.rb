@@ -242,7 +242,7 @@ class User < ActiveRecord::Base
 
   # Returns the system's best guess as to which mission this user would like to see.
   def best_mission
-    if last_mission && assignments.map(&:mission).include?(last_mission)
+    if last_mission && (admin? || assignments.map(&:mission).include?(last_mission))
       last_mission
     elsif assignments.any?
       assignments.sort_by(&:updated_at).last.mission
