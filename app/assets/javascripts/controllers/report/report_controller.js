@@ -3,6 +3,8 @@
 
   // constructor
   ns.ReportController = klass = function(init_data) {
+    this.dont_set_title = init_data.dont_set_title;
+
     // create supporting models unless in read only mode
     if (!init_data.read_only) {
       this.options = init_data.options;

@@ -109,7 +109,7 @@ class WelcomeController < ApplicationController
       unless @report.nil?
         authorize!(:view, @report)
         run_and_handle_errors
-        build_report_data(:read_only => true)
+        build_report_data(:read_only => true, :dont_set_title => true)
       end
     end
 

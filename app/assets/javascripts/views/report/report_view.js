@@ -58,7 +58,7 @@
 
   // sets page title unless in dashboard
   klass.prototype.show_title = function() {
-    if (!window.location.href.match(/dashboard/))
+    if (!this.controller.dont_set_title)
       ELMO.app.set_title(I18n.t("activerecord.models.report/report.one") + ": " + this.report.attribs.name);
   }
 

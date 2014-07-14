@@ -699,8 +699,6 @@ en:
       new: "Send Broadcast"
       new_with_users: "Send Broadcast"
       show: "Broadcast"
-    dashboard:
-      all: "Dashboard"
     forms:
       choose_questions: "Adding Questions to Form: %{name}"
       edit: "Edit Form: %{name}"
