@@ -16,7 +16,7 @@ describe API::V1::FormsController do
       before do
         @form1 = @mission.forms.create(name: "test1")
         @form2 = @mission.forms.create(name: "test2")
-        @protected_forms = Form.create(name: "protected", access_level: AccessLevel::PROTECTED)
+        @protected_forms = Form.create(name: "protected", access_level: 'protected')
         controller.stub(:protected_forms).and_return([@protected_forms])
       end
 

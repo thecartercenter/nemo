@@ -4,6 +4,7 @@ class Question < Questionable
   include FormVersionable, Translatable
 
   CODE_FORMAT = "[a-zA-Z][a-zA-Z0-9]{1,19}"
+  API_ACCESS_LEVELS = %w(inherit private)
 
   belongs_to(:option_set, :include => :options, :inverse_of => :questions, :autosave => true)
   has_many(:questionings, :dependent => :destroy, :autosave => true, :inverse_of => :question)

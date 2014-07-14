@@ -1,6 +1,8 @@
 class Form < ActiveRecord::Base
   include MissionBased, FormVersionable, Standardizable, Replicable
 
+  API_ACCESS_LEVELS = %w(private protected public)
+
   has_many(:questions, :through => :questionings, :order => "questionings.rank")
   has_many(:questionings, :order => "rank", :autosave => true, :dependent => :destroy, :inverse_of => :form)
   has_many(:responses, :inverse_of => :form)

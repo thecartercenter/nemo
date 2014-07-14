@@ -28,7 +28,7 @@ describe "answers" do
     include_context "mission_form_one_private_question"
 
     before do
-      @form.update_attribute(:access_level, AccessLevel::PUBLIC)
+      @form.update_attribute(:access_level, 'public')
       do_api_request(:answers, :params => @params)
       @answers_array = parse_json(response.body)
     end
@@ -44,7 +44,7 @@ describe "answers" do
     include_context "mission_form_one_private_question"
 
     before do
-      @form.update_attribute(:access_level, AccessLevel::PRIVATE)
+      @form.update_attribute(:access_level, 'private')
       do_api_request(:answers, :params => @params)
       @answers_array = parse_json(response.body)
     end

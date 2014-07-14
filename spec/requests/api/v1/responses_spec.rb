@@ -32,7 +32,7 @@ describe "responses" do
     include_context "mission_response_two_questions_with_answers"
 
     before do
-      @form.update_attribute(:access_level, AccessLevel::PUBLIC)
+      @form.update_attribute(:access_level, 'public')
       do_api_request(:responses, :params => @params)
       @answers_array = parse_json(response.body)
     end
@@ -58,7 +58,7 @@ describe "responses" do
     include_context "mission_response_two_private_questions_with_answers"
 
     before do
-      @form.update_attribute(:access_level, AccessLevel::PUBLIC)
+      @form.update_attribute(:access_level, 'public')
       do_api_request(:responses, :params => @params)
       @answers_array = parse_json(response.body)
     end
@@ -74,8 +74,8 @@ describe "responses" do
     include_context "mission_response_two_private_questions_with_answers"
 
     before do
-      @form.update_attribute(:access_level, AccessLevel::PUBLIC)
-      @question = FactoryGirl.create(:question, mission: @mission, access_level: AccessLevel::PUBLIC)
+      @form.update_attribute(:access_level, 'public')
+      @question = FactoryGirl.create(:question, mission: @mission)
 
       @form.questions << [@question]
 
@@ -102,7 +102,7 @@ describe "responses" do
     include_context "mission_response_two_private_questions_with_answers"
 
     before do
-      @form.update_attribute(:access_level, AccessLevel::PRIVATE)
+      @form.update_attribute(:access_level, 'private')
       do_api_request(:responses, :params => @params)
       @answers_array = parse_json(response.body)
     end

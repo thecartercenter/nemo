@@ -6,7 +6,7 @@ shared_context "api_user_and_mission" do
     @mission = create(:mission)
     @api_user = create(:user)
     @form_user = create(:user)
-    @form = create(:form, mission: @mission, name: "something", access_level: AccessLevel::PUBLIC)
+    @form = create(:form, mission: @mission, name: "something", access_level: 'public')
   end
 
 end
@@ -38,8 +38,8 @@ shared_context "mission_response_two_private_questions_with_answers" do
 
   before(:each) do
 
-    @q1 = create(:question, mission: @mission, access_level: AccessLevel::PRIVATE)
-    @q2 = create(:question, mission: @mission, access_level: AccessLevel::PRIVATE)
+    @q1 = create(:question, mission: @mission, access_level: 'private')
+    @q2 = create(:question, mission: @mission, access_level: 'private')
 
     @form.questions << [@q1, @q2]
 
@@ -79,7 +79,7 @@ shared_context "mission_form_one_private_question" do
   include_context "api_user_and_mission"
 
   before(:each) do
-    @q1 = create(:question, mission: @mission, access_level: AccessLevel::PRIVATE)
+    @q1 = create(:question, mission: @mission, access_level: 'private')
 
     @form.questions << [@q1]
 
@@ -101,11 +101,11 @@ shared_context "mission_protected_form_one_public_private_question" do
 
   before(:each) do
     @api_user = create(:user)
-    @form.update_attribute(:access_level, AccessLevel::PROTECTED)
+    @form.update_attribute(:access_level, 'protected')
     @form.whitelist_users.create(user_id: @api_user.id)
 
-    @q1 = create(:question, mission: @mission, access_level: AccessLevel::PUBLIC)
-    @q2 = create(:question, mission: @mission, access_level: AccessLevel::PRIVATE)
+    @q1 = create(:question, mission: @mission)
+    @q2 = create(:question, mission: @mission, access_level: 'private')
 
     @form.questions << [@q1, @q2]
 

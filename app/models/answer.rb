@@ -30,7 +30,7 @@ class Answer < ActiveRecord::Base
   delegate :name, :hint, :to => :question, :prefix => true
 
   scope :public_access, includes(:questionable).
-                        where("(questionables.access_level != ?) or (questionables.access_level IS NULL) ", AccessLevel::PRIVATE)
+                        where("questionables.access_level = 'inherit'")
 
   # creates a new answer from a string from odk
   def self.new_from_str(params)
