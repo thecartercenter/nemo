@@ -94,3 +94,8 @@ def do_api_request(endpoint, params = {})
 
   get path, params[:params], {'HTTP_AUTHORIZATION' => "Token token=#{params[:user].api_key}"}
 end
+
+def get_s(*args)
+  get *args
+  assert_response(:success)
+end

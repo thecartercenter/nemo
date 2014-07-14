@@ -269,6 +269,10 @@ class Ability
     cannot [:create, :update, :destroy], Assignment, :mission => {:locked => true}
   end
 
+  def to_s
+    "User: #{@user.try(:login) || '[None]'}, Mode: #{@mode}, Mission: #{@mission.try(:name) || '[None]'}"
+  end
+
   private
 
     def role_in_mission?(role_name)
