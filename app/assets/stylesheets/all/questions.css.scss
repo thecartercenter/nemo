@@ -1,4 +1,7 @@
-/* question fields */
+form.question_form {
+  margin-bottom: 50px;
+}
+
 div.question_fields {
 
   .names_hints textarea {
@@ -10,8 +13,9 @@ div.question_fields {
   }
 
   div.minmax {
-    input[type=text] {
-      width: 100px;
+    input.text[type=text] {
+      width: 75px;
+      display: inline-block;
     }
 
     div.control label {
@@ -20,43 +24,36 @@ div.question_fields {
   }
 }
 
-form.question_form {
-  margin-bottom: 50px;
-}
+form.questioning_form .form_field#condition {
+  select {
+    width: 125px;
+  }
 
-/* questioning fields */
-form.questioning_form {
-  .form_field#condition {
-    select {
-      width: 125px;
+  input {
+    width: 125px;
+  }
+
+  .control {
+    .widget {
+      width: 250px;
     }
 
-    input {
-      width: 125px;
-    }
+    div.field {
+      margin-bottom: 4px;
 
-    .control {
-      .widget {
-        width: 250px;
+      label {
+        display: inline-block;
+        width: 100px;
+        vertical-align: top;
+        padding: 0;
       }
 
-      div.field {
-        margin-bottom: 4px;
+      div {
+        width: 100px;
+        display: inline-block;
 
-        label {
-          display: inline-block;
-          width: 100px;
-          vertical-align: top;
-          padding: 0;
-        }
-
-        div {
-          width: 100px;
-          display: inline-block;
-
-          input[type=text] {
-            height: 24px;
-          }
+        input[type=text] {
+          height: 24px;
         }
       }
     }
@@ -84,10 +81,6 @@ form.questioning_form {
 /* Override modal gem */
 .modal-backdrop {
   z-index: 300 !important;
-}
-
-div.question_fields div.minmax input.text[type=text] {
-  width: 75px;
 }
 
 /* Special style for option set box to accommodate link and loading indicator */
