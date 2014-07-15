@@ -13,13 +13,6 @@ module Concerns::ApplicationController::Settings
 
   # loads settings for the mission, or no mission (admin mode), into configatron
   def load_settings_for_mission_into_config
-    # if there is a current mission, we load settings saved in DB
-    if current_mission
-      @setting = Setting.load_for_mission(current_mission)
-
-    # otherwise we just spin up a dummy default setting obj and don't save it
-    else
-      @setting = Setting.load_default
-    end
+    @setting = Setting.load_for_mission(current_mission)
   end
 end
