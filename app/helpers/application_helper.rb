@@ -46,16 +46,21 @@ module ApplicationHelper
     end
   end
 
-  # returns the html for an action icon using font awesome and the mappings defined above
-  def action_link(action, href, html_options = {})
-    # join passed html class (if any) with the default class
-    html_options[:class] = [html_options[:class], "action_link", "action_link_#{action}"].compact.join(" ")
-
-    link_to(content_tag(:i, "", :class => "fa fa-" + FONT_AWESOME_ICON_MAPPINGS[action.to_sym]), href, html_options)
+  # Builds links for the action links at the top of a new/edit/show page.
+  def top_action_links(obj)
+    ctlr = obj.class.model_name.plural
+    i18nk = obj.class.model_name.param_key
+    [:index, :new, :show, :edit, :destroy].map do |action|
+      if can?(action, %w(index create).include?(action) ? obj.class : obj) && controller.action_name.to_sym != action
+        link_to(t("activerecord.action_links.#{i18nk}.#{action}"),
+          url_for(controller: ctlr, action: action),
+          method: action == :destroy ? :delete : :get)
+      end
+    end.compact.join.html_safe
   end
 
-  # assembles links for the basic actions in an index table (edit and destroy)
-  def action_links(obj, options)
+  # Assembles links for the basic actions in an index table (edit and destroy)
+  def table_action_links(obj, options)
     route_key = obj.class.model_name.singular_route_key
 
     options[:exclude] = Array.wrap(options[:exclude])
@@ -90,6 +95,14 @@ module ApplicationHelper
       end
 
     end.join('').html_safe
+  end
+
+  # returns the html for an action icon using font awesome and the mappings defined above
+  def action_link(action, href, html_options = {})
+    # join passed html class (if any) with the default class
+    html_options[:class] = [html_options[:class], "action_link", "action_link_#{action}"].compact.join(" ")
+
+    link_to(content_tag(:i, "", :class => "fa fa-" + FONT_AWESOME_ICON_MAPPINGS[action.to_sym]), href, html_options)
   end
 
   # creates a link to a batch operation
