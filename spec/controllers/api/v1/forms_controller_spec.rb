@@ -9,7 +9,7 @@ describe API::V1::FormsController do
   context "when user has access" do
     before do
       @api_user = FactoryGirl.create(:user)
-      controller.stub(:authenticate_token).and_return(@api_user)
+      allow(controller).to receive(:authenticate_token).and_return(@api_user)
     end
 
     context "views a mission and all forms" do
@@ -17,7 +17,7 @@ describe API::V1::FormsController do
         @form1 = @mission.forms.create(name: "test1")
         @form2 = @mission.forms.create(name: "test2")
         @protected_forms = Form.create(name: "protected", access_level: 'protected')
-        controller.stub(:protected_forms).and_return([@protected_forms])
+        allow(controller).to receive(:protected_forms).and_return([@protected_forms])
       end
 
       it "should return status of 200" do
@@ -51,7 +51,7 @@ describe API::V1::FormsController do
 
   context "when user does not have access" do
     before do
-      controller.stub(:authenticate_token).and_return(false)
+      allow(controller).to receive(:authenticate_token).and_return(false)
     end
 
     it "should return 401" do

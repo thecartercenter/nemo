@@ -4,7 +4,7 @@ describe OptionsController do
   before do
     @user = create(:user)
     login(@user)
-    Option.stub(:suggestions).and_return([Option.new(:name => 'foo')])
+    allow(Option).to receive(:suggestions).and_return([Option.new(:name => 'foo')])
     get_s suggest_options_path, :q => 'foo'
   end
 
