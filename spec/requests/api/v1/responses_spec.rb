@@ -87,11 +87,11 @@ describe "responses" do
     end
 
     it "should return 0 answer if question was private" do
-      expect(@answers_array.first[:answers]).to have(0).answers
+      expect(@answers_array.first[:answers]).to be_empty
     end
 
     it "should return array of 1 answers for public question" do
-      expect(@answers_array.last[:answers]).to have(1).answer
+      expect(@answers_array.last[:answers].size).to eq 1
       expect(@answers_array.last[:answers].first[:question]).to eql @question.name
     end
 
@@ -124,7 +124,7 @@ describe "responses" do
     end
 
     it "should have 1 answer" do
-      expect(@answers_array).to have(1).answer
+      expect(@answers_array.size).to eq 1
     end
 
   end
@@ -143,7 +143,7 @@ describe "responses" do
       end
 
       it "should find 1 response" do
-        expect(@answers_array).to have(1).answer
+        expect(@answers_array.size).to eq 1
       end
     end
 
@@ -156,7 +156,7 @@ describe "responses" do
       end
 
       it "should find 1 answer" do
-        expect(@answers_array).to have(1).answer
+        expect(@answers_array.size).to eq 1
       end
     end
 

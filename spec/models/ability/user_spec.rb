@@ -203,10 +203,10 @@ describe 'abilities for users' do
   end
 
   def expect_able_to(action)
-    expect(ability.can?(action, @target)).to be_true
+    expect(ability.can?(action, @target)).to be_truthy
   end
 
   def expect_not_able_to(action)
-    expect(ability.cannot?(action, @target)).to be_true
+    expect(ability.cannot?(action, @target)).to be_truthy
   end
 end

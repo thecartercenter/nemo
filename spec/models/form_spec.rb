@@ -11,12 +11,12 @@ describe Form do
     end
 
     it "should return true for user in whitelist" do
-      expect(@form.api_user_id_can_see?(@api_user.id)).to be_true
+      expect(@form.api_user_id_can_see?(@api_user.id)).to be_truthy
     end
 
     it "should return false for user not in whitelist" do
       other_user = FactoryGirl.create(:user)
-      expect(@form.api_user_id_can_see?(other_user.id)).to be_false
+      expect(@form.api_user_id_can_see?(other_user.id)).to be_falsey
     end
   end
 

@@ -10,7 +10,7 @@ describe Setting do
 
         it 'should create one with default values' do
           setting = Setting.load_for_mission(mission)
-          expect(setting.new_record?).to be_false
+          expect(setting.new_record?).to be_falsey
           expect(setting.mission).to eq mission
           expect(setting.timezone).to eq Setting::DEFAULTS[:timezone]
         end

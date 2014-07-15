@@ -15,17 +15,17 @@ describe Sms::Adapters::IntelliSmsAdapter do
 
   it 'should return true on deliver' do
     msg = Sms::Message.new(:to => '+123', :body => 'foo')
-    expect{@adapter.deliver(msg)}.to be_true
+    expect(@adapter.deliver(msg)).to be_truthy
   end
 
   it 'should recognize an incoming request with the proper params' do
     request = {'from' => '1', 'text' => '1', 'sent' => '1', 'msgid' => '1'}
-    expect(@adapter.class.recognize_receive_request?(request)).to be_true
+    expect(@adapter.class.recognize_receive_request?(request)).to be_truthy
   end
 
   it 'should not recognize an incoming request without all the proper params' do
     request = {'from' => '1', 'text' => '1', 'sent' => '1'}
-    expect(@adapter.class.recognize_receive_request?(request)).to be_false
+    expect(@adapter.class.recognize_receive_request?(request)).to be_falsey
   end
 
   it 'should correctly parse an intellisms-style request' do

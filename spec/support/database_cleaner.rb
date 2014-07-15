@@ -16,16 +16,12 @@ RSpec.configure do |config|
     DatabaseCleaner.clean_with(:truncation)
   end
 
-  config.before(:each) do
-    if example.metadata[:database_cleaner] != :all
-      DatabaseCleaner.start
-    end
+  config.before(:each) do |example|
+    DatabaseCleaner.start if example.metadata[:database_cleaner] != :all
   end
 
-  config.after(:each) do
-    if example.metadata[:database_cleaner] != :all
-      DatabaseCleaner.clean
-    end
+  config.after(:each) do |example|
+    DatabaseCleaner.clean if example.metadata[:database_cleaner] != :all
   end
 
   config.before(:all, database_cleaner: :all) do

@@ -78,7 +78,7 @@ end
 group :development, :test do
   gem 'factory_girl_rails', '~> 4.0'
   gem 'jasmine-rails'                # test framework
-  gem 'rspec-rails', '~> 2.0'        # test framework
+  gem 'rspec-rails', '2.99'        # test framework
   gem 'pry'                          # better debugger
   gem 'mocha'                        # mocking/stubbing
   gem 'capybara'                     # acceptance tests

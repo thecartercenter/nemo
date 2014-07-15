@@ -45,7 +45,7 @@ describe "accessing forms" do
     end
 
     it "should have fields for form" do
-      expect(@form_json.keys.include?(:name)).to be_true
+      expect(@form_json.keys.include?(:name)).to be_truthy
     end
 
     # THIS TEST WAS FAILING. NEED TO FIX IT.
@@ -54,7 +54,7 @@ describe "accessing forms" do
     # end
 
     it "should include question field name" do
-      expect(@form_json[:questions].first.keys.include?(:name)).to be_true
+      expect(@form_json[:questions].first.keys.include?(:name)).to be_truthy
     end
 
   end

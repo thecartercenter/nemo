@@ -19,17 +19,17 @@ describe Sms::Adapters::FrontlineSmsAdapter do
 
   it 'should recognize an incoming request with the proper params' do
     request = {'frontline' => '1', 'from' => '1', 'text' => '1'}
-    expect(@adapter.class.recognize_receive_request?(request)).to be_true
+    expect(@adapter.class.recognize_receive_request?(request)).to be_truthy
   end
 
   it 'should not recognize an incoming request without the special frontline param' do
     request = {'from' => '1', 'text' => '1'}
-    expect(@adapter.class.recognize_receive_request?(request)).to be_false
+    expect(@adapter.class.recognize_receive_request?(request)).to be_falsey
   end
 
   it 'should not recognize an incoming request without the other params' do
     request = {'frontline' => '1'}
-    expect(@adapter.class.recognize_receive_request?(request)).to be_false
+    expect(@adapter.class.recognize_receive_request?(request)).to be_falsey
   end
 
   it 'should correctly parse a frontline-style request' do

@@ -17,8 +17,8 @@ describe "answers" do
     end
 
     it "should contain an answer from each response" do
-      expect(@answers_array.first.has_value?(@a1.value)).to be_true
-      expect(@answers_array.last.has_value?(@a2.value)).to be_true
+      expect(@answers_array.first.has_value?(@a1.value)).to be_truthy
+      expect(@answers_array.last.has_value?(@a2.value)).to be_truthy
     end
 
   end
