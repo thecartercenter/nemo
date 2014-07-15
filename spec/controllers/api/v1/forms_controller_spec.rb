@@ -9,7 +9,7 @@ describe API::V1::FormsController do
   context "when user has access" do
     before do
       @api_user = FactoryGirl.create(:user)
-      controller.should_receive(:authenticate_token).and_return(@api_user)
+      controller.stub(:authenticate_token).and_return(@api_user)
     end
 
     context "views a mission and all forms" do
@@ -51,7 +51,7 @@ describe API::V1::FormsController do
 
   context "when user does not have access" do
     before do
-      controller.should_receive(:authenticate_token).and_return(false)
+      controller.stub(:authenticate_token).and_return(false)
     end
 
     it "should return 401" do

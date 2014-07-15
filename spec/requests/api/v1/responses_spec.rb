@@ -118,7 +118,7 @@ describe "responses" do
     include_context "mission_protected_form_one_public_private_question"
 
     before do
-      API::V1::AnswerFinder.stub(:form_with_permissions) { @form }
+      allow(API::V1::AnswerFinder).to receive(:form_with_permissions) { @form }
       do_api_request(:responses, :params => @params)
       @answers_array = parse_json(response.body)
     end

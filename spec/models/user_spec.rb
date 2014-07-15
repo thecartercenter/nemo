@@ -20,7 +20,7 @@ describe User do
     context 'with no last mission' do
       context 'with no assignments' do
         before { @user.stub(:assignments).and_return([]) }
-        specify { @user.best_mission.should be_nil }
+        specify { expect(@user.best_mission).to be_nil }
       end
 
       context 'with assignments' do
@@ -33,7 +33,7 @@ describe User do
         end
 
         it 'should return the mission from the most recently updated assignment' do
-          @user.best_mission.should eq @most_recent.mission
+          expect(@user.best_mission).to eq @most_recent.mission
         end
       end
     end
@@ -52,12 +52,12 @@ describe User do
           ])
         end
 
-        specify { @user.best_mission.should eq @last_mission }
+        specify { expect(@user.best_mission),to eq @last_mission }
       end
 
       context 'but no longer assigned to last mission' do
         before { @user.stub(:assignments).and_return([]) }
-        specify { @user.best_mission.should be_nil }
+        specify { expect(@user.best_mission).to be_nil }
       end
     end
   end
