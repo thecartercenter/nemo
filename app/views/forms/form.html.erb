@@ -16,9 +16,8 @@
         <%= f.field(:published, :type => :check_box, :read_only => true) unless @form.new_record? %>
         <%= f.field(:access_level, :type => :select, :options => translate_options(Form::API_ACCESS_LEVELS, 'access_levels')) %>
         <%= render 'shared/api_user_list', {:f => f} %>
+        <%= f.field(:version, :content => @form.version_with_code) unless @form.new_record? %>
       <% end %>
-
-      <%= f.field(:version, :content => @form.version_with_code) unless @form.new_record? %>
 
     </div>
 
