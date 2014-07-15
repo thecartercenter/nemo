@@ -4,8 +4,12 @@ form.question_form {
 
 div.question_fields {
 
-  .names_hints textarea {
-    height: 30px;
+  .names_hints div.form_field div.control textarea[id^=question_name] {
+    height: 55px;
+  }
+
+  .names_hints div.form_field div.control textarea[id^=question_hint] {
+    height: 70px;
   }
 
   a.create_option_set {
