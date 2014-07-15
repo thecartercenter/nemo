@@ -9,14 +9,11 @@
   <%= f.field(:timezone, :type => :timezone, :required => true) %>
   <%= f.field(:preferred_locales_str, :required => true) %>
 
+  <%# None of the rest of this is relevant in admin mode. %>
   <% unless admin_mode? %>
     <%= f.field(:override_code, :partial => 'override_code') %>
-  <% end %>
 
-  <%= f.field(:allow_unauthenticated_submissions, :type => :check_box) if configatron.allow_unauthenticated_submissions? %>
-
-  <%# none of the rest of this is relevant in admin mode %>
-  <% unless admin_mode? %>
+    <%= f.field(:allow_unauthenticated_submissions, :type => :check_box) if configatron.allow_unauthenticated_submissions? %>
 
     <h2><%= t("setting.headings.sms") %></h2>
 
@@ -37,8 +34,8 @@
     <h2><%= t('activerecord.attributes.setting.external_sql') %></h2>
 
     <%= f.field(:external_sql, :partial => "external_sql") %>
-
   <% end %>
+
   <div class="submit-buttons">
     <%= f.submit(:class => "btn btn-primary") %>
   </div>
