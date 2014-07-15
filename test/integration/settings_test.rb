@@ -14,9 +14,6 @@ class SettingsTest < ActionDispatch::IntegrationTest
 
     # ensure default timezone got loaded
     assert_equal(Setting::DEFAULTS[:timezone], Time.zone.name)
-
-    # ensure no setting with nil mission saved
-    assert_nil(Setting.where(:mission_id => nil).first)
   end
 
   test "settings should be copied properly on update" do
