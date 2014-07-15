@@ -1,7 +1,7 @@
 <% if admin_mode? %>
 
   <%# special error output %>
-  <%= content_tag(:div, assignment_errors.join(', '), :class => 'form-errors') unless assignment_errors.empty? %>
+  <%= content_tag(:div, assignment_errors.join(' '), :class => 'form-errors') unless assignment_errors.empty? %>
 
   <div class="assignment_header">
     <div class="mission"><%= translate_model(Mission) %></div>

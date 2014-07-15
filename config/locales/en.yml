@@ -459,6 +459,8 @@ en:
       models:
         answer:
           required: "Please enter a value."
+        assignment:
+          blank: "is required."
         broadcast:
           no_recipients: "None of these recipients would receive this broadcast. Please adjust the medium and try again."
         condition:
