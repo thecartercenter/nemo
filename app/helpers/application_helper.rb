@@ -1,29 +1,5 @@
 module ApplicationHelper
 
-  FONT_AWESOME_ICON_MAPPINGS = {
-    :clone => "copy",
-    :destroy => "trash-o",
-    :edit => "pencil",
-    :map => "globe",
-    :print => "print",
-    :publish => "arrow-up",
-    :remove => "times",
-    :sms => "comment",
-    :unpublish => "arrow-down",
-    :submit => "share-square-o",
-    :response => "check-circle-o",
-    :report_report => "bar-chart-o",
-    :report => "bar-chart-o",
-    :form => "file-text-o",
-    :question => "question-circle",
-    :option_set => "list-ul",
-    :optionset => 'list-ul',
-    :user => "users",
-    :broadcast => "bullhorn",
-    :setting => "gear",
-    :mission => "briefcase"
-  }
-
   ERROR_MESSAGE_KEYS_TO_HIDE = {
     :'optionings.option.base' => true,
     :'condition.base' => true
@@ -44,12 +20,6 @@ module ApplicationHelper
       when :alert then "alert alert-warning"
       else nil
     end
-  end
-
-  # Returns the Font Awesome icon tag for the given object type.
-  # Returns nil if mapping not found.
-  def icon_tag(obj_type)
-    (name = FONT_AWESOME_ICON_MAPPINGS[obj_type.to_sym]) ? content_tag(:i, '', :class => "fa fa-#{name}") : nil
   end
 
   # renders an index table for the given class and list of objects
@@ -237,15 +207,6 @@ module ApplicationHelper
     end
 
     message
-  end
-
-  # returns img tag for standard icon if obj is standard, '' otherwise
-  def std_icon(obj)
-    if obj.respond_to?(:standardized?) && obj.standardized?
-      content_tag(:i, "", :class => "fa fa-certificate")
-    else
-      ''
-    end
   end
 
   # makes a set of <li> wrapped links to the index actions of the given classes
