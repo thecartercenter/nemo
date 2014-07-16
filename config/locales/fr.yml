@@ -1367,7 +1367,7 @@ fr:
       title: "Mission n'est pas choisie"
       choose: "Choisissez une mission de la menu déroulant dans le coin supérieur droit de l'écran."
       choose_or_create: "Choisissez une mission de la menu déroulant dans le coin supérieur droit de l'écran, ou vous pouvez..."
-      create_link: "Créer une nouvelle mission."
+      create_link: "créer une nouvelle mission."
       need_to_create: "Il n'y a pas de missions."
       no_missions: "Il n'y a pas de missions dans la systeme.  Contactez un administrateur."
     no_recent: "**0** Soumissions Récentes"
