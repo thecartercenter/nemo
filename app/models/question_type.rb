@@ -3,9 +3,8 @@ class QuestionType
   attr_reader :name, :odk_name, :odk_tag, :properties
 
   @@attributes = [
-    {:name => "text", :odk_name => "string", :odk_tag => "input", :properties => %w(form_printable textual headerable)},
-    {:name => "long_text", :odk_name => "string", :odk_tag => "input", :properties => %w(form_printable textual)},
-    {:name => "tiny_text", :odk_name => "string", :odk_tag => "input", :properties => %w(form_printable smsable textual headerable)},
+    {:name => "text", :odk_name => "string", :odk_tag => "input", :properties => %w(form_printable smsable textual headerable)},
+    {:name => "long_text", :odk_name => "string", :odk_tag => "input", :properties => %w(form_printable smsable textual)},
     {:name => "integer", :odk_name => "int", :odk_tag => "input", :properties => %w(form_printable smsable numeric headerable)},
     {:name => "decimal", :odk_name => "decimal", :odk_tag => "input", :properties => %w(form_printable smsable numeric headerable)},
     {:name => "location", :odk_name => "geopoint", :odk_tag => "input", :properties => %w()},

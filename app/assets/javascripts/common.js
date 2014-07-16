@@ -4,50 +4,6 @@ var Sassafras = {};
 
 ELMO.LAT_LNG_REGEXP = /^(-?\d+(\.\d+)?)\s*[,;:\s]\s*(-?\d+(\.\d+)?)/
 
-// pads strings to the left
-String.prototype.lpad = function(pad_str, length) {
-  var str = this;
-  while (str.length < length) str = pad_str + str;
-  return str;
-}
-
-// pads strings to the right
-String.prototype.rpad = function(pad_str, length) {
-  var str = this;
-  while (str.length < length) str = str + pad_str;
-  return str;
-}
-
-// hookup mission dropdown box to submit form
-$(document).ready(function(){ $("select#user_current_mission_id").change(function(e){
-  // show loading indicator
-  $(e.target).parents("form").find("div.loading_indicator img").show();
-
-  // submit form
-  $(e.target).parents("form").submit();
-}) });
-
-// ruby-like collect
-(function($) {
-    $.fn.collect = function(callback) {
-        if (typeof(callback) == "function") {
-            var collection = [];
-
-            $(this).each(function() {
-                var item = callback.apply(this);
-
-                if (item)
-                    collection.push(item);
-            });
-
-            return collection;
-        }
-
-        return this;
-    }
-})(jQuery);
-
-
 function logout() {
   // click the logout button
   if ($('#logout_button')) $('#logout_button').click();
@@ -56,51 +12,9 @@ function logout() {
 
 // UTILITIES
 (function (Utils, undefined) {
-  Utils.array_eq = function(a, b) {
-    if (a == null || b == null) return a == b;
-    if (a.length != b.length) return false;
-    for (var i = 0; i < a.length; i++) if (a[i] != b[i]) return false;
-    return true;
-  }
-
   // adds a name/value pair (e.g. "foo=bar") to a url; checks if there is already a query string
   Utils.add_url_param = function(url, param) {
     return url + (url.indexOf("?") == "-1" ? "?" : "&") + param;
-  }
-
-  // builds a URL by adding the locale and maintaining admin mode
-  // last arg can optionally specify the locale, e.g. {locale: "fr"}
-  Utils.build_path = function() {
-    // we need some funky magic to turn the arguments object into an array
-    var args = Array.prototype.slice.call(arguments, 0);
-    var options = {};
-
-    // if the last arg is an options hash, extract it
-    if (typeof(args[args.length-1]) == "object") {
-      options = args[args.length-1];
-      args = args.slice(0, args.length-1);
-    }
-
-    // default to the current locale
-    if (!options.locale) options.locale = I18n.locale;
-
-    // admin chunk
-    var admin_chunk = ELMO.app.params.admin_mode ? '/admin' : '';
-
-    // return, fixing any double slashes
-    return ("/" + options.locale + admin_chunk + "/" + args.join("/")).replace(/[\/]{2,}/g, "/");
-  }
-
-  // strips any locale and admin-mode information from the given path
-  // "/en/foo" => "/foo"; "/foo" => "/foo"; "/en/" => "/"; "/en" => "/"; "/" => "/", "" => "/";
-  // "/en/admin/foo" => "/foo"; "/en/admin" => "/"; "/en/admin/" => "/"
-  Utils.strip_path = function(path) {
-    // replace the "/en/", "/en/admin", "/en/admin/", "/en", and "/" variants with "/"
-    if (path == "" || path.match(/^\/([a-z]{2}(\/admin)?(\/)?)?$/))
-      return "/";
-    // else fix the "/en/foo" or "/en/admin/foo" variants
-    else
-      return path.replace(/^\/[a-z]{2}(\/admin)?\/(.+)/, function(m, $1, $2){ return "/" + $2; });
   }
 
 }(Utils = {}));

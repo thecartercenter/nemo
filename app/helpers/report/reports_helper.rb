@@ -14,15 +14,8 @@ module Report::ReportsHelper
     when "name" then link_to(report.name, report_report_path(report), :title => t("common.view"))
     when "type" then translate_model(report.class)
     when "viewed_at" then report.viewed_at && t("layout.time_ago", :time => time_ago_in_words(report.viewed_at))
-    when "actions" then action_links(report.becomes(Report::Report), :obj_name => report.name)
+    when "actions" then table_action_links(report.becomes(Report::Report))
     else report.send(field)
-    end
-  end
-
-  def view_report_report_mini_form
-    form_tag(root_url) do
-      select_tag(:rid, sel_opts_from_objs(@reports, :tags => true), :prompt => t("report/report.choose_report"),
-        :onchange => "window.location.href = Utils.build_path('report', 'reports', this.options[this.selectedIndex].value)")
     end
   end
 

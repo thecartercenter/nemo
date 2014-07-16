@@ -89,13 +89,16 @@ div.form_field {
       display: inline-block;
       vertical-align: top;
 
-      input[type=text], input[type=password], select, textarea input.text, textarea {
-        width: 420px;
+      input[type=text], input.text, input[type=password], select {
         height: 35px;
       }
 
       textarea {
         height: 100px;
+      }
+
+      input[type=text], input.text, input[type=password], select, textarea {
+        width: 420px;
       }
     }
 

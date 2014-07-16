@@ -19,6 +19,9 @@
     I18n.defaultLocale = self.params.default_locale;
     I18n.fallbacks = true;
 
+    // Setup the UrlBuilder instance for all to use.
+    self.url_builder = new ELMO.UrlBuilder({locale: self.params.locale, mode: self.params.mode, mission_name: self.params.mission_name})
+
     // setup the language change form and link
     $("a#locale_form_link").on("click", function(){ $("#locale_form").css("display", "inline-block"); $(this).hide(); return false; });
     $("#locale_form select").on("change", function(){ self.change_locale($(this).val()); return false; });
@@ -64,7 +67,7 @@
   // changes the current locale by rewriting the url to use the new locale
   klass.prototype.change_locale = function(new_locale) { var self = this;
     // build a new url and go there
-    window.location.href = Utils.build_path(Utils.strip_path(window.location.pathname), {locale: new_locale});
+    window.location.href = ELMO.app.url_builder.build(window.location.pathname, {locale: new_locale});
   }
 
   // sets the title in h1#title and <title>
@@ -85,8 +88,7 @@
       // show loading ind
       link.next('ul').find('div.loading_indicator img').show();
 
-      // ajax call
-      link.next('ul').load('/forms?dropdown=1', function() {
+      link.next('ul').load(self.url_builder.build('forms') + '?dropdown=1', function() {
         // hide loading ind
         link.next('ul').find('div.loading_indicator img').hide();
       });

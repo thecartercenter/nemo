@@ -23,7 +23,10 @@ FactoryGirl.define do
         end
 
         # build the questioning
-        FactoryGirl.build(:questioning, :mission => mission, :question => FactoryGirl.build(:question, question_attribs))
+        FactoryGirl.build(:questioning,
+          :mission => mission,
+          :form => nil, # Will be filled in when saved
+          :question => FactoryGirl.build(:question, question_attribs))
       end
     end
   end

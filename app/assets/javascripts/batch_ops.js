@@ -74,7 +74,8 @@ function batch_cb_changed(cb) {
 // submits the batch form to the given path
 function batch_submit(options) {
   // ensure there is at least one box checked, and error if not
-  if (batch_count_checked() == 0)
+  var count = batch_count_checked();
+  if (count == 0)
     alert(I18n.t("layout.no_selection"));
 
   // else, show confirm dialog (if requested), and proceed if 'yes' clicked

@@ -1,4 +1,4 @@
-<div class="form_field qtype_<%= answer.qtype.name %> <%= form_mode == :show ? 'read_only' : '' %>"
+<div class="form_field qtype_<%= answer.qtype.name %> <%= read_only ? 'read_only' : '' %>"
   data-qtype-name="<%= answer.qtype.name %>" id="qing_<%= answer.questioning_id %>">
 
   <label class="main"><%= reqd_sym if answer.required? %> <%= answer.question_name || "[#{t('answer.no_name')}]" %>
@@ -7,7 +7,7 @@
     <%# don't show errors because we do it manually below %>
     <%= elmo_fields_for('response[all_answers][]', answer, :show_errors => false) do |f| %>
 
-      <% if form_mode == :show %>
+      <% if read_only %>
 
         <%# render the answer value based on question type. we include machine readable value in
             data-val so that conditions can still be eval'd in JS %>
@@ -32,7 +32,7 @@
 
           <%= content_tag(:div, answer.value, :class => 'ro-val', :'data-val' => answer.value) %>
 
-        <% when 'text', 'long_text', 'tiny_text' %>
+        <% when 'text', 'long_text' %>
 
           <%# show search excerpt (highlights search terms) if exists for this questioning, else just show plain answer value %>
           <%# no need to output data-val here since same as human readable %>

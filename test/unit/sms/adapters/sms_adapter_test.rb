@@ -7,18 +7,20 @@ class Sms::Adapters::SmsAdapterTest < ActiveSupport::TestCase
     @mission.setting.load
   end
 
-  test "delivering a message with one recipient should work" do
-    each_adapter do |adapter|
+  test 'delivering a message with one recipient should work' do
+    each_adapter(:can_deliver? => true) do |adapter|
       assert_equal(true, adapter.deliver(Sms::Message.new(:to => %w(+15556667777), :body => "foo")))
     end
   end
 
-  test "delivering an invalid message should raise an error" do
-    each_adapter do |adapter|
-      # no recips
+  test 'delivering a message with no recipients should raise an error' do
+    each_adapter(:can_deliver? => true) do |adapter|
       assert_raise(Sms::Error){adapter.deliver(Sms::Message.new(:to => nil, :body => "foo"))}
+    end
+  end
 
-      # no body
+  test 'deliering a message with no body should raise an error' do
+    each_adapter(:can_deliver? => true) do |adapter|
       assert_raise(Sms::Error){adapter.deliver(Sms::Message.new(:to => %w(+15556667777), :body => ""))}
     end
   end
@@ -26,8 +28,8 @@ class Sms::Adapters::SmsAdapterTest < ActiveSupport::TestCase
   private
 
     # loops over each known adapter and yields to a block
-    def each_adapter(*args)
-      Sms::Adapters::Factory.products.each do |klass|
+    def each_adapter(options)
+      Sms::Adapters::Factory.products(options).each do |klass|
         yield(klass.new)
       end
     end

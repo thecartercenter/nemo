@@ -2,7 +2,7 @@ class Setting < ActiveRecord::Base
   include MissionBased
 
   # attribs to copy to configatron
-  KEYS_TO_COPY = %w(timezone preferred_locales intellisms_username intellisms_password isms_hostname isms_username isms_password incoming_sms_number)
+  KEYS_TO_COPY = %w(timezone preferred_locales intellisms_username intellisms_password incoming_sms_number)
 
   # these are the keys that make sense in admin mode
   ADMIN_MODE_KEYS = %w(timezone preferred_locales)
@@ -23,7 +23,7 @@ class Setting < ActiveRecord::Base
   serialize :preferred_locales, JSON
 
   # accessors for password/password confirm fields
-  attr_accessor :intellisms_password1, :intellisms_password2, :isms_password1, :isms_password2
+  attr_accessor :intellisms_password1, :intellisms_password2
 
   # loads the settings for the given mission (or nil mission/admin mode) into the configatron store
   # if the settings can't be found, a default setting is created and saved before being loaded
@@ -100,6 +100,11 @@ class Setting < ActiveRecord::Base
     read_attribute('preferred_locales').map(&:to_sym)
   end
 
+  # Determines if this setting is read only due to mission being locked.
+  def read_only?
+    mission.try(:locked?) # Mission may be nil if admin mode, in which case it's not read only.
+  end
+
   private
 
     # gets rid of any junk chars in locales
@@ -133,10 +138,6 @@ class Setting < ActiveRecord::Base
       when "IntelliSms"
         errors.add(:intellisms_username, :blank) if intellisms_username.blank?
         errors.add(:intellisms_password1, :did_not_match) unless intellisms_password1 == intellisms_password2
-      when "Isms"
-        errors.add(:isms_hostname, :blank) if isms_hostname.blank?
-        errors.add(:isms_username, :blank) if isms_username.blank?
-        errors.add(:isms_password1, :did_not_match) unless isms_password1 == isms_password2
       else
         # if there is no adapter then don't need to check anything
       end

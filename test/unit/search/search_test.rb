@@ -19,6 +19,12 @@ class Search::SearchTest < ActiveSupport::TestCase
     Search::Qualifier.new(:name => "form", :col => "t1.f1")
   ]
 
+  MULTIPLE_DEFAULTS = [
+    Search::Qualifier.new(:name => "foo", :col => "t1.f1"),
+    Search::Qualifier.new(:name => "bar", :col => "t1.f2", :default => true),
+    Search::Qualifier.new(:name => "baz", :col => "t1.f3", :default => true)
+  ]
+
   REGEX = [
     Search::Qualifier.new(:name => "foo1", :pattern => /^[a-n]+$/, :col => "t1.f1"),
     Search::Qualifier.new(:name => "name", :col => "t1.f2"),
@@ -42,6 +48,18 @@ class Search::SearchTest < ActiveSupport::TestCase
 
   test "boolean AND should be ignored" do
     assert_search(:str => "v1 | and", :sql => "((t1.f1 = 'v1') OR (t1.f1 = 'and'))")
+  end
+
+  test 'invalid qualifier should be handled gracefully' do
+    assert_search(:str => 'foo:bar', :error => /'foo' is not a valid search qualifier/)
+  end
+
+  test 'qualifier with no text should be handled gracefully' do
+    assert_search(:str => 'foo:', :error => /could not be understood due to unexpected text near the end/)
+  end
+
+  test 'qualifier with no text followed by proper qualifier should be handled gracefully' do
+    assert_search(:str => 'foo: form:blah', :error => /could not be understood due to unexpected text near ':blah'/)
   end
 
   test "unqualified or should work" do
@@ -69,11 +87,11 @@ class Search::SearchTest < ActiveSupport::TestCase
   end
 
   test "parentheses shouldnt be allowed in unqualified terms" do
-    assert_search(:str => "v1 (v2 | v3)", :error => /Expected/)
+    assert_search(:str => "v1 (v2 | v3)", :error => /unexpected text near '\(v2 \| v3\)'/)
   end
 
   test "nested parentheses shouldnt be allowed in qualified terms" do
-    assert_search(:str => "foo: (v1 v2 (v3))", :error => /Expected/)
+    assert_search(:str => "foo: (v1 v2 (v3))", :error => /unexpected text near '\(v3\)\)'/)
   end
 
   test "ORs should work with qualified expression" do
@@ -210,6 +228,10 @@ class Search::SearchTest < ActiveSupport::TestCase
     # z followed by 3 or less digits should work, more digits should not
     assert_search(:str => "z123:foo", :sql => "((t9.f7 = 'foo'))", :qualifiers => REGEX)
     assert_search(:str => "z12345:foo", :error => /not a valid search qualifier/, :qualifiers => REGEX)
+  end
+
+  test "search with multiple default qualifiers should work" do
+    assert_search(:str => 'test', :sql => "((t1.f2 = 'test') OR (t1.f3 = 'test'))", :qualifiers => MULTIPLE_DEFAULTS)
   end
 
   private

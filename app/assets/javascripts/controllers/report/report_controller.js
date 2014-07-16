@@ -3,6 +3,8 @@
 
   // constructor
   ns.ReportController = klass = function(init_data) {
+    this.dont_set_title = init_data.dont_set_title;
+
     // create supporting models unless in read only mode
     if (!init_data.read_only) {
       this.options = init_data.options;
@@ -56,7 +58,7 @@
 
     // comply with REST stuff
     to_serialize["_method"] = report.attribs.new_record ? "post" : "put"
-    var url = Utils.build_path("report", "reports", report.attribs.new_record ? "" : report.attribs.id);
+    var url = ELMO.app.url_builder.build("report", "reports", report.attribs.new_record ? "" : report.attribs.id);
 
     // send ajax (use currying for event handlers)
     (function(_this) {
@@ -75,7 +77,7 @@
     // if the 'just created' flag is set, redirect to the show action so that links, etc., will work
     if (data.report.just_created) {
       this.report_view.show_loading_indicator(true);
-      window.location.href = Utils.build_path("report", "reports", data.report.id)
+      window.location.href = ELMO.app.url_builder.build("report", "reports", data.report.id);
 
     // otherwise we can process the updated report object
     } else {
@@ -97,7 +99,7 @@
     // if report is new, go back to report index
     if (!this.report_in_db.has_run()) {
       this.report_view.show_loading_indicator(true);
-      window.location.href = Utils.build_path("report/reports");
+      window.location.href = ELMO.app.url_builder.build('report', 'reports');
     // else restore the view
     } else
       this.restore_view();
@@ -108,7 +110,7 @@
     this.report_view.update(report);
 
     // show/hide the export link if there is no data or an error
-    $("a#csv_link")[report.has_errors() || report.attribs.empty ? "hide" : "show"]();
+    $("a.export-link")[report.has_errors() || report.attribs.empty ? "hide" : "show"]();
   }
 
   klass.prototype.restore_view = function() {

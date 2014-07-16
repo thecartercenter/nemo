@@ -1,5 +1,6 @@
-
 <%= elmo_form_for(@broadcast) do |f| %>
+
+  <%= top_action_links(@broadcast, :only => :index) %>
 
   <%= f.field(:recipient_ids, :type => :hidden) %>
   <%= f.field(:to, :content => @broadcast.recipients.collect{|u| link_to(u.name, u)}.join(", ")) %>
@@ -15,7 +16,7 @@
   <%= f.field(:body, :required => true, :partial => "body") %>
 
   <%# show any errors if we're in show mode %>
-  <% if form_mode == :show && @broadcast.send_errors %>
+  <% if read_only && @broadcast.send_errors %>
     <%= f.field(:send_errors, :partial => "send_errors") %>
   <% end %>
 

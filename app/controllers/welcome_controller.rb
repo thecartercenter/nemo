@@ -1,14 +1,19 @@
 class WelcomeController < ApplicationController
   include ReportEmbeddable
-  # don't need to authorize up here because done manually
+
+  # Don't need to authorize since we manually redirect to login if no user.
+  # This is because anybody is 'allowed' to see the root and letting the auth system handle things
+  # leads to nasty messages and weird behavior. We merely redirect because otherwise the page would be blank
+  # and not very interesting.
+  # We also skip the check for unauthorized because who cares if someone sees it.
+  skip_authorization_check :only => [:index, :unauthorized]
 
   # number of rows in the stats blocks
   STAT_ROWS = 3
 
   # shows a series of blocks with info about the app
   def index
-    # authorize the action (merely a formality!)
-    authorize! :show, Welcome
+    return redirect_to(login_path) unless current_user
 
     # we set this because there is no title on the page
     @dont_print_title = true
@@ -73,7 +78,7 @@ class WelcomeController < ApplicationController
     end
 
     # render without layout if ajax request
-    render(:layout => !ajax_request?)
+    render(:layout => !request.xhr?)
   end
 
    # map info window
@@ -93,6 +98,9 @@ class WelcomeController < ApplicationController
     })
   end
 
+  def unauthorized
+  end
+
   private
     def prepare_report
       # get list of all reports for the mission, for the dropdown
@@ -101,7 +109,7 @@ class WelcomeController < ApplicationController
       unless @report.nil?
         authorize!(:view, @report)
         run_and_handle_errors
-        build_report_data(:read_only => true)
+        build_report_data(:read_only => true, :dont_set_title => true)
       end
     end
 

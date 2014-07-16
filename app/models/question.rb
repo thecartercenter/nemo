@@ -3,7 +3,8 @@
 class Question < Questionable
   include FormVersionable, Translatable
 
-  CODE_FORMAT = "[a-z][a-z0-9]{1,19}"
+  CODE_FORMAT = "[a-zA-Z][a-zA-Z0-9]{1,19}"
+  API_ACCESS_LEVELS = %w(inherit private)
 
   belongs_to(:option_set, :include => :options, :inverse_of => :questions, :autosave => true)
   has_many(:questionings, :dependent => :destroy, :autosave => true, :inverse_of => :question)
@@ -18,7 +19,7 @@ class Question < Questionable
   before_validation(:maintain_subquestions)
 
   validates(:code, :presence => true)
-  validates(:code, :format => {:with => /^#{CODE_FORMAT}$/i}, :if => Proc.new{|q| !q.code.blank?})
+  validates(:code, :format => {:with => /^#{CODE_FORMAT}$/}, :if => Proc.new{|q| !q.code.blank?})
   validates(:qtype_name, :presence => true)
   validates(:option_set, :presence => true, :if => Proc.new{|q| q.qtype && q.has_options?})
   validate(:code_unique_per_mission)
@@ -56,7 +57,7 @@ class Question < Questionable
   delegate :options, :geographic?, :to => :option_set, :allow_nil => true
 
   replicable :child_assocs => [:option_set, :subquestions], :parent_assoc => :questioning,
-    :uniqueness => {:field => :code, :style => :camel_case}, :dont_copy => :key,
+    :uniqueness => {:field => :code, :style => :camel_case}, :dont_copy => [:key, :access_level],
     :user_modifiable => [:name_translations, :_name, :hint_translations, :_hint]
 
   # returns questions that do NOT already appear in the given form
@@ -217,7 +218,7 @@ class Question < Questionable
     # normalizes constraints based on question type
     def normalize_constraint_values
       # constraint should be nil/non-nil depending on qtype
-      if qtype.numeric?
+      if qtype.try(:numeric?)
         # for numeric qtype, min/max can still be nil, and booleans should be nil if min/max are nil, else should be false
         self.minstrictly = false if !minimum.nil? && minstrictly.nil?
         self.maxstrictly = false if !maximum.nil? && maxstrictly.nil?

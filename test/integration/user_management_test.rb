@@ -10,7 +10,6 @@ class UserManagementTest < ActionDispatch::IntegrationTest
 
   test "coordinator can create new user in current mission" do
     login(@coord)
-    assert_equal(get_mission, @coord.current_mission)
     test_create_user(@coord, get_mission)
   end
 
@@ -18,7 +17,6 @@ class UserManagementTest < ActionDispatch::IntegrationTest
     login(@admin)
 
     # user is coord in default mission by default, so can create there
-    assert_equal(get_mission, @admin.current_mission)
     assert_roles([get_mission, :coordinator], @admin)
     test_create_user(@admin, get_mission)
   end
@@ -27,14 +25,13 @@ class UserManagementTest < ActionDispatch::IntegrationTest
     # can also create in other mission even though no role
     m = FactoryGirl.create(:mission, :name => 'foo')
     login(@admin)
-    @admin.change_mission!(m)
     test_create_user(@admin, m)
   end
 
   private
     def test_create_user(creator, mission, options = {})
       # submission should work
-      post(users_path, :user => {
+      post("/en/m/#{mission.compact_name}/users", :user => {
         :name => 'Alan Bob',
         :login => 'abob',
         :assignments_attributes => {"1" => {"mission_id"=> mission.id, "role" => "staffer"}},

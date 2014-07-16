@@ -58,7 +58,7 @@
 
   // sets page title unless in dashboard
   klass.prototype.show_title = function() {
-    if (!window.location.href.match(/dashboard/))
+    if (!this.controller.dont_set_title)
       ELMO.app.set_title(I18n.t("activerecord.models.report/report.one") + ": " + this.report.attribs.name);
   }
 
@@ -73,7 +73,7 @@
   // hookup link events
   klass.prototype.hookup_links = function() {
     var _this = this;
-    $(".report_top_links a#edit_link").click(function() { _this.controller.show_edit_view(1); return false; })
+    $(".top-action-links a.edit-link").click(function() { _this.controller.show_edit_view(1); return false; })
   }
 
 }(ELMO.Report));

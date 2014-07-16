@@ -17,6 +17,10 @@ body {
   }
 }
 
+.users_edit .ro-val {
+  font-family: monospace;
+}
+
 #userinfo {
   color: white;
   text-align: right;
@@ -36,9 +40,11 @@ body {
 
   .icon-btn {
     display: inline-block;
-    width: 60px;
+    min-width: 60px;
+    max-width: 90px;
     margin: 0 5px 0 5px;
     text-align: center;
+    vertical-align: top;
 
     a:hover {
       color: $light-blue;
@@ -54,7 +60,7 @@ body {
     display: inline-block;
   }
 
-  form {
+  form#change_mission {
     display: inline;
 
     select {
@@ -252,22 +258,30 @@ div.dialog_bg * { opacity: 1; filter: alpha(opacity=100); }
 /* report view */
 .report_reports_new h1.title, .report_reports_show h1.title { display: inline-block; }
 #report_load_ind { margin: 10px 0 0 10px; }
-.report_top_links { margin-bottom: 10px; }
 
 body.reports {
   div.report_view {
     display: table-row;
   }
 
-  div.report_links {
-    display: table-cell;
-    padding: 0 15px 0 0; line-height: 150%;
-    a { display: block; white-space: nowrap; }
-  }
-
   div.report_main {
     display: table-cell;
     vertical-align: top;
+  }
+}
+
+#api-users {
+  display: none;
+  margin-left: 200px;
+  #api-users-scrollbox {
+    border: 1px solid #dddddd;
+    padding: 4px;
+    overflow-y: scroll;
+    height: 150px;
+    width: 420px;
+    .checkbox-row {
+      margin-bottom: 7px;
+    }
   }
 }
 

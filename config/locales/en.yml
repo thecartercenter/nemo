@@ -35,6 +35,7 @@ en:
     found: "Found"
     generate: "Generate"
     inactive: "Inactive"
+    incoming: "Incoming"
     language: "Language"
     login: "Login"
     logout: "Logout"
@@ -45,6 +46,7 @@ en:
     none: "None"
     ok: "OK"
     or: "or"
+    outgoing: "Outgoing"
     pending: "Pending"
     previous: "Previous"
     print: "Print"
@@ -79,6 +81,7 @@ en:
 
   # general attribute names
   attributes:
+    access_level: "API Security Level"
     name: "Name"
     code: "Code"
     copy_count: "Copies"
@@ -92,6 +95,12 @@ en:
     title: "Title"
     type: "Type"
     value: "Value"
+
+  access_levels:
+    public: "Public"
+    private: "Private"
+    protected: "Protected"
+    inherit: "Inherit"
 
   # general error messages (there are others under activerecord.errors)
   errors:
@@ -290,14 +299,11 @@ en:
         view_count: "Views"
         viewed_at: "Last Viewed"
       setting:
+        allow_unauthenticated_submissions: "Allow Unauthenticated Submissions?"
         incoming_sms_number: "Incoming Number"
         intellisms_password1: "Password"
         intellisms_password2: "Password Confirmation"
         intellisms_username: "Username"
-        isms_hostname: "Host"
-        isms_password1: "Password"
-        isms_password2: "Password Confirmation"
-        isms_username: "Username"
         preferred_locales_str: "Preferred Languages"
         outgoing_sms_adapter: "Outgoing Provider"
         override_code: "Override Code"
@@ -309,6 +315,7 @@ en:
         from: "From"
         sent_at: "Time Sent"
         to: "To"
+        received_at: "Time Received"
       sms/test:
         from: "From"
         body: "Body"
@@ -324,6 +331,7 @@ en:
         phone2: "Alternate Phone"
         pref_lang: "Preferred Language"
         role: "Role"
+        api_key: "API Key"
       user_batch:
         batch: "User Attributes"
 
@@ -334,12 +342,65 @@ en:
       user:
         admin: "Admin?"
 
+    placeholders:
+      question:
+        code: "MyQuestion"
+
+    action_links:
+      broadcast:
+        index: "List Broadcasts"
+      form:
+        new: "Create New Form"
+        index: "List Forms"
+        show: "View Form"
+        edit: "Edit Form"
+        destroy: "Delete Form"
+        publish: "Publish Form"
+        unpublish: "Unpublish Form"
+        print: "Print Form"
+      mission:
+        new: "Create New Mission"
+        index: "List Missions"
+        show: "View Mission"
+        edit: "Edit Mission"
+        destroy: "Delete Mission"
+      option_set:
+        new: "Create New Option Set"
+        index: "List Option Sets"
+        show: "View Option Set"
+        edit: "Edit Option Set"
+        destroy: "Delete Option Set"
+      question:
+        new: "Create New Question"
+        index: "List Questions"
+        show: "View Question"
+        edit: "Edit Question"
+        destroy: "Delete Question"
+      report/report:
+        new: "Create New Report"
+        index: "List Reports"
+        show: "View Report"
+        edit: "Edit Report"
+        destroy: "Delete Report"
+      response:
+        index: "List Responses"
+        show: "View Response"
+        edit: "Edit Response"
+        destroy: "Delete Response"
+      user:
+        new: "Create New User"
+        index: "List Users"
+        show: "View User"
+        edit: "Edit User"
+        destroy: "Delete User"
+
     hints:
       form:
         name: "A descriptive name for the form."
         smsable: "Whether the form accepts SMS submissions. This can affect when the version number is incremented."
         allow_incomplete: "Whether to allow incomplete submissions in extenuating cases where full information is not available. Note that the question 'required' featured should be preferred here."
         version: "The current version number and letter code."
+        access_level: "Public: Any ELMO user can access the data via the API. Protected: Only specific users can access data via the API. Private: Nobody can access the data via the API."
       mission:
         name: "A name for this Mission. Maximum 32 characters. Must be unique. Think about including the year if there will be future missions with the same name."
         locked: "If a mission is locked, Responses and Forms cannot be created or edited and Users cannot be added or deleted."
@@ -362,6 +423,7 @@ en:
         name: "The main question text, e.g. 'How many people are in line?'"
         option_set_id: "The set of options the user will be able to choose from."
         qtype_name: "The kind of information the user will be entering."
+        access_level: "Inherit: Same access level as parent form. Private: No one can access the data via the API, regardless of parent form access level."
       questioning:
         condition: "An optional condition which must be met in order for this question to be shown to the user."
         hidden: "Whether this question will be shown on this form. Use this to disable a question if you can't delete it. This value will override any condition specified above."
@@ -379,6 +441,7 @@ en:
       response:
         incomplete: "Check this box if there are required questions for which you can't provide answers. You will then be able to save this response without answering those questions and this response will be marked as 'incomplete'."
       setting:
+        allow_unauthenticated_submissions: "If this box is checked, ANYBODY will be allowed to submit data to the mission without entering a password. Use with caution."
         preferred_locales_str: |-
           Enter the <a href='http://www.loc.gov/standards/iso639-2/php/code_list.php' target='_blank'>two-letter codes</a>, separated by commas, for the languages for this mission, in order of preference.
 
@@ -394,9 +457,6 @@ en:
         outgoing_sms_adapter: "The adapter used to send outgoing SMSes."
         intellisms_username: "The username for the IntelliSMS account."
         intellisms_password1: "Enter and re-enter a password to change the password for the IntelliSMS account."
-        isms_hostname: "The IP or domain name for the iSMS device. Can include port (e.g. 10.20.30.40:8081). Don't include http://."
-        isms_password1: "Enter and re-enter a password to change the API password for the iSMS device."
-        isms_username: "The API username for the iSMS device."
         external_sql: "The SQL code used to extract data for use in external applications. Click 'Select All' and then press Ctrl-C to copy."
         timezone: "The time zone in which times are displayed throughout the site."
       sms/test:
@@ -413,6 +473,15 @@ en:
         password_confirmation: "Enter the new password again."
         pref_lang: "The language in which you would like to use the system."
         role: "The role of the user in the current mission, and whether or not they are presently active. Inactive users cannot access the mission at all."
+        api_key: "Use this key to connect to other Elmo applications."
+      user_batch:
+        batch: |-
+          Enter names, email addresses, and phone numbers (WITH country codes), one per line, separated by commas or tabs. For example:
+
+          Alice Merrywinkle, alice@winkle.org, +20112313411
+          Chung Li, cli@gmail.com
+          Forgo Niambot, +203300303, +2083748374
+          Stewbuilder Dennis, chow@yahoo.co.uk, +20923187493
 
     # all error messages should be full sentences with a period, for consistency.
     errors:
@@ -438,6 +507,8 @@ en:
       models:
         answer:
           required: "Please enter a value."
+        assignment:
+          blank: "is required."
         broadcast:
           no_recipients: "None of these recipients would receive this broadcast. Please adjust the medium and try again."
         condition:
@@ -679,8 +750,6 @@ en:
       new: "Send Broadcast"
       new_with_users: "Send Broadcast"
       show: "Broadcast"
-    dashboard:
-      all: "Dashboard"
     forms:
       choose_questions: "Adding Questions to Form: %{name}"
       edit: "Edit Form: %{name}"
@@ -744,6 +813,7 @@ en:
       show: "User: %{name}"
     welcome:
       index: "Home"
+      unauthorized: "Unauthorized"
 
   ##############################
   # the rest of these string groups should be kept in alphabetical order by key
@@ -814,7 +884,6 @@ en:
     summary: "Summary"
     top_forms: "Top Forms"
 
-
   data_integrity:
     appears_elsewhere_warnings:
       by_type:
@@ -840,6 +909,7 @@ en:
       odk: "Such changes will not disable Responses from ODK, but may cause some data loss and/or Responses that are not valid (e.g. missing required answers)."
 
   form:
+    select_api_users: "Select all users who can access form data via the API:"
     add_questions: "Add Questions"
     add_selected: "Add Selected Questions to Form"
     back_to_questions: "Back to Questions List"
@@ -847,7 +917,6 @@ en:
     clone_confirm: "Are you sure you want to make a copy of the form '%{form_name}'?"
     clone_error: "There was a problem cloning the form (%{msg})."
     clone_success: "Form '%{form_name}' cloned successfully."
-    create_link: "Create Form"
     print_form: "Print Form"
     publish: "Publish"
     publish_error: "There was a problem publishing the form (%{msg})."
@@ -886,9 +955,6 @@ en:
     enter_query: "Enter a query into the box above to search for a location in Google's geo-database."
     search_locations: "Search Locations..."
 
-  mission:
-    create_link: "Create Mission"
-
   notifier:
     if_link_doesnt_work: "If the above link does not work try copying and pasting it into your browser."
     if_you_made_it: "If you did make this request just click the link below:"
@@ -899,16 +965,12 @@ en:
     request_made: "A request to reset your %{site} password has been made. If you did not make this request, simply ignore this email."
     welcome: "Welcome to %{site}!"
 
-  option:
-    create_link: "Create Option"
-
   option_set:
     add_level: "Add Level"
     clone_confirm: "Are you sure you want to make a copy of the Option Set '%{name}'?"
     clone_error: "There was a problem cloning the Option Set (%{msg})."
     clone_success: "Option Set '%{name}' cloned successfully."
     create_new: "[Create New Option]"
-    create_link: "Create Option Set"
     edit_option: "Edit Option"
     edit_option_level: "Edit Option Level"
     leave_page_warning: "Leaving this page will abandon your changes to this Option Set."
@@ -938,7 +1000,6 @@ en:
 
   question:
     answer_only_caps: "ANSWER ONLY IF"
-    create_link: "Create Question"
     maxmin:
       gt: "greater than"
       lt: "less than"
@@ -950,7 +1011,6 @@ en:
   question_type:
     text: "Text"
     long_text: "Long Text"
-    tiny_text: "Tiny Text"
     integer: "Integer"
     decimal: "Decimal"
     location: "Location"
@@ -974,7 +1034,6 @@ en:
     choose_form: "Choose a Form..."
     choose_report: "Choose a Report..."
     columns: "Columns"
-    create_link: "Create New Report"
     display_options: "Options"
     edit_report: "Edit Report"
     enter_name: "What is the report title?"
@@ -1086,7 +1145,6 @@ en:
       none: "Show None"
 
   response:
-    create_link: "Create Response"
     edit_this_response: "Edit This Response"
     export_to_csv: "Export to CSV Format"
     loading: "Loading Response..."
@@ -1103,7 +1161,6 @@ en:
     admin: "Admin"
 
   search:
-    at_end_of_query: "at end of query"
     blank: "blank"
     examples:
       responses:
@@ -1208,7 +1265,7 @@ en:
 
         * __romeo juliet__
 
-        only matches user names. To search based on other user attributes, use a qualifier, e.g.:
+        matches user names, login IDs, and emails. To search based on specific attributes, use a qualifier, e.g.:
 
         * __email: @example.com__
 
@@ -1264,7 +1321,8 @@ en:
     or_not_allowed_between: "OR is not allowed between expressions."
     invalid_qualifier: "'%{chunk}' is not a valid search qualifier."
     search_error: "Search Error"
-    unexpected: "Unexpected text near '%{str}'"
+    unexpected: "Your search query could not be understood due to unexpected text near '%{str}'."
+    unexpected_end: "Your search query could not be understood due to unexpected text near the end."
 
   setting:
     change_sms_password: "Change Password"
@@ -1291,6 +1349,7 @@ en:
       answer_not_integer: "was not a valid integer number"
       answer_not_time: "was not a valid time"
       answer_not_valid_option: "was not a valid option"
+      answer_not_valid_long_option_multi: "contained multiple invalid options"
       answer_not_valid_option_multi: "contained the invalid option '%{invalid_options}'"
       answer_not_valid_options_multi: "contained invalid options '%{invalid_options}'"
       congrats: "Your response to form '%{form_code}' was received. Thank you!"
@@ -1308,7 +1367,8 @@ en:
       header: "ELMO SMS Composition Guide"
       not_all_required: "Questions marked with an asterisk (*) are required."
       pointers:
-        tiny_text: "Write your answer here. Abbreviate if necessary."
+        text: "Write your answer here. Abbreviate if necessary."
+        long_text: "Write your answer here. Abbreviate if necessary."
         integer: "Write your answer here."
         decimal: "Write your answer here."
         select_one: "Write the letter for your choice here. Write only one letter."
@@ -1386,8 +1446,9 @@ en:
 
   user:
     add_assignment: "Add Assignment"
+    api_key:
+      regenerate: "Regenerate"
     back_to_index: "Back to Users List"
-    create_link: "Create User"
     create_multiple: "Create Multiple Users"
     edit_profile: "Edit Profile"
     export_vcard: "Export as vCard"

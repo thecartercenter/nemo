@@ -1,0 +1,2 @@
+class SubmissionError < StandardError
+end

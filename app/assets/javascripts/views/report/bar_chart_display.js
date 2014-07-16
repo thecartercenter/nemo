@@ -6,20 +6,8 @@
     this.report = report;
   }
 
-  // format data by striping html if present
-  strip_html = function(input_value) {
-    var value = "";
-    try {
-      value = $(input_value).text();
-      if(value == "") {
-        value = input_value;
-      }
-    } catch(err) {
-      value = input_value;
-    } finally{
-      value = value || "[Null]"
-    }
-    return value;
+  var format_header = function(str) {
+    return (str || '[Null]').strip_html();
   }
 
   // inherit
@@ -49,12 +37,12 @@
       series.push({color: ch.name ? DEFAULT_BAR_COLORS[color_counter++] : NULL_BAR_COLOR});
 
       // add the column header
-      g_data.addColumn('number', strip_html(ch.name));
+      g_data.addColumn('number', format_header(ch.name));
     })
 
     $(headers.row.cells).each(function(r, rh){
       // build the row
-      var row = [strip_html(rh.name)];
+      var row = [format_header(rh.name)];
 
       // add cells to row and add row to obj
       $(headers.col.cells).each(function(c, ch) {

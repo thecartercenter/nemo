@@ -15,7 +15,7 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
     # options[:read_only] must be true if form_mode is show
     # it may optionally be true if specified by the user
     # else it is false
-    options[:read_only] ||= @template.form_mode == :show
+    options[:read_only] ||= @template.read_only
 
     # don't render password fields in readonly mode
     return '' if options[:read_only] && options[:type] == :password
@@ -36,7 +36,7 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
   end
 
   def submit(label = nil, options = {})
-    return '' if @template.form_mode == :show
+    return '' if @template.read_only
 
     label ||= :save
 
@@ -55,7 +55,7 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
       if options[:partial]
 
         # add form builder instance and field_name to partial locals
-        options[:locals] = {:form => self, :method => field_name}
+        options[:locals] = {:form => self, :method => field_name, :read_only => options[:read_only]}
         @template.render(options.slice(:partial, :locals))
 
       # else if read only content was explicitly given and form is read only, use that
@@ -103,6 +103,9 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
 
         else
 
+          placeholder = I18n.t("activerecord.placeholders.#{@object.class.model_name.i18n_key}.#{field_name}", :default => '')
+          placeholder = nil if placeholder.blank?
+
           case options[:type]
             when :check_box
               check_box(field_name)
@@ -112,7 +115,7 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
               options[:options].map{|o| radio_button(field_name, o, :class => 'radio') + o}.join('&nbsp;&nbsp;').html_safe
 
             when :textarea
-              text_area(field_name, {:class => 'form-control'})
+              text_area(field_name, {:class => 'form-control', :placeholder => placeholder})
 
             when :password
               # add 'text' class for legacy support
@@ -126,8 +129,7 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
 
             # text is the default type
             else
-              # add 'text' class for legacy support
-              text_field(field_name, {:class => 'text form-control'}.merge(options.slice(:maxlength)))
+              text_field(field_name, {:class => 'text form-control', :placeholder => placeholder}.merge(options.slice(:maxlength)))
           end
         end
       end

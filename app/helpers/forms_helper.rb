@@ -37,7 +37,7 @@ module FormsHelper
     when "allow_incomplete" then tbool(form.allow_incomplete?)
     when "actions"
       # get standard action links
-      links = action_links(form, :obj_name => form.name)
+      links = table_action_links(form)
 
       # get the appropriate publish icon and add link, if auth'd
       if can?(:publish, form)
@@ -138,7 +138,7 @@ module FormsHelper
     when "decimal" then 2
     when "time", "select_multiple" then 4
     when "date" then 6
-    when "datetime", "tiny_text" then 8
+    when "datetime", "text", "long_text" then 8
     else 4
     end
 
@@ -148,5 +148,9 @@ module FormsHelper
   # returns the sms submit number or an indicator that it's not set up
   def submit_number
     content_tag("strong", configatron.incoming_sms_number.blank? ? "[" + t("sms_form.guide.unknown_number") + "]" : configatron.incoming_sms_number)
+  end
+
+  def allow_incomplete?
+    @form.allow_incomplete? && @style != 'commcare'
   end
 end

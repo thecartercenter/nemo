@@ -5,16 +5,19 @@
 /* user edit */
 form.user_form {
 
-  input#user_login {
-    width: 357px;
-    display: inline-block;
-    vertical-align: middle;
-  }
+  div.form_field#login {
 
-  input#login_suggest_button {
-    margin-left: 10px;
-    display: inline-block;
-    vertical-align: middle;
+    input#user_login {
+      width: 330px;
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .btn-default {
+      width: 80px;
+      display: inline-block;
+      vertical-align: middle;
+    }
   }
 
   textarea#user_notes {
@@ -61,5 +64,10 @@ form.user_form {
       font-size: 11px;
       color: #aaa;
     }
+  }
+
+  div.user_api_key .widget > div {
+    display: inline-block;
+    margin-right: 5px;
   }
 }

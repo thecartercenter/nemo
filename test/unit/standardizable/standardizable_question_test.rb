@@ -80,10 +80,11 @@ class StandardizableQuestionTest < ActiveSupport::TestCase
   end
 
   test "name should not be replicated on update if copy has changed" do
-    other_mission = FactoryGirl.create(:mission, :name => 'other')
     q = FactoryGirl.create(:question, :is_standard => true, :name => 'Foo')
-    copy1 = q.replicate(:mode => :to_mission, :dest_mission => get_mission)
-    copy2 = q.replicate(:mode => :to_mission, :dest_mission => other_mission)
+    mission1 = FactoryGirl.create(:mission)
+    mission2 = FactoryGirl.create(:mission)
+    copy1 = q.replicate(:mode => :to_mission, :dest_mission => mission1)
+    copy2 = q.replicate(:mode => :to_mission, :dest_mission => mission2)
 
     # change copy1
     copy1.name = 'Baz'

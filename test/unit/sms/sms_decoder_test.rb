@@ -7,6 +7,16 @@ class SmsDecoderTest < ActiveSupport::TestCase
     @user = get_user
   end
 
+  test "form with text question should work" do
+    setup_form(:questions => %w(text integer))
+    assert_decoding(:body => "#{form_code} 1.weather is very cold 2.234", :answers => ["weather is very cold", 234])
+  end
+
+  test "form with long_text question should work" do
+    setup_form(:questions => %w(text integer))
+    assert_decoding(:body => "#{form_code} 1.weather is very hot and humid with threats of storms 2.4345", :answers => ["weather is very hot and humid with threats of storms", 4345])
+  end
+
   test "form with single question should work" do
     setup_form(:questions => %w(integer))
     assert_decoding(:body => "#{form_code} 1.15", :answers => [15])
@@ -60,7 +70,7 @@ class SmsDecoderTest < ActiveSupport::TestCase
     other_user.reload
 
     # ensure user doesn't have permission on form
-    assert(!other_user.can?(:submit_to, @form), "User test2 shouldn't be able to access form.")
+    assert(Ability.new(:user => other_user, :mission => other_mission).cannot?(:submit_to, @form), "User test2 shouldn't be able to access form.")
 
     # ensure decoding fails due to no permission
     assert_decoding_fail(:body => "#{form_code} 1.15", :user => other_user, :error => "form_not_permitted")
@@ -167,28 +177,43 @@ class SmsDecoderTest < ActiveSupport::TestCase
     assert_decoding_fail(:body => "#{form_code} 1.15.2.2", :error => "answer_not_decimal", :rank => 1, :value => "15.2.2")
   end
 
-  test "tiny text question at beginning of message should work" do
-    setup_form(:questions => %w(tiny_text integer))
+  test "text question at beginning of message should work" do
+    setup_form(:questions => %w(text integer))
     assert_decoding(:body => "#{form_code} 1.foo bar 2.15", :answers => ["foo bar", 15])
   end
 
-  test "tiny text question in middle of message should work" do
-    setup_form(:questions => %w(select_one tiny_text integer))
+  test "long_text question at beginning of message should work" do
+    setup_form(:questions => %w(long_text integer))
+    assert_decoding(:body => "#{form_code} 1.foo bar that is very long 2.15", :answers => ["foo bar that is very long", 15])
+  end
+
+  test "text question in middle of message should work" do
+    setup_form(:questions => %w(select_one text integer))
     assert_decoding(:body => "#{form_code} 1.a 2.foo bar 3.15", :answers => ["A", "foo bar", 15])
   end
 
-  test "tiny text question at end of message should work" do
-    setup_form(:questions => %w(select_one integer tiny_text))
+  test "long_text question in middle of message should work" do
+    setup_form(:questions => %w(select_one long_text integer))
+    assert_decoding(:body => "#{form_code} 1.a 2.foo bar that is very long 3.15", :answers => ["A", "foo bar that is very long", 15])
+  end
+
+  test "text question at end of message should work" do
+    setup_form(:questions => %w(select_one integer text))
     assert_decoding(:body => "#{form_code} 1.a 2.15 3.foo bar", :answers => ["A", 15, "foo bar"])
   end
 
-  test "tiny text question with space after decimal should work" do
-    setup_form(:questions => %w(select_one tiny_text integer))
+  test "long_text question at end of message should work" do
+    setup_form(:questions => %w(select_one integer long_text))
+    assert_decoding(:body => "#{form_code} 1.a 2.15 3.foo bar that is very long", :answers => ["A", 15, "foo bar that is very long"])
+  end
+
+  test "text question with space after decimal should work" do
+    setup_form(:questions => %w(select_one text integer))
     assert_decoding(:body => "#{form_code} 1.a 2. foo bar 3.15", :answers => ["A", "foo bar", 15])
   end
 
   test "weird chunk should error" do
-    setup_form(:questions => %w(select_one tiny_text integer))
+    setup_form(:questions => %w(select_one text integer))
     assert_decoding_fail(:body => "#{form_code} 1.a 2. foo bar 3.15 baz", :error => "answer_not_integer", :rank => 3, :value => "15 baz")
   end
 
@@ -293,12 +318,6 @@ class SmsDecoderTest < ActiveSupport::TestCase
     end
   end
 
-  test "user submitting without active mission should still work" do
-    @user.update_attributes!(:current_mission => nil)
-    setup_form(:questions => %w(integer))
-    assert_decoding(:body => "#{form_code} 1.15", :answers => [15])
-  end
-
   private
 
     # tests that a decoding was successful
@@ -340,7 +359,7 @@ class SmsDecoderTest < ActiveSupport::TestCase
         when "select_multiple"
           # for select multiple, the expected value is an array of the english translations of the desired options
           assert_equal(expected, ans.choices.collect{|c| c.option.name_en})
-        when "tiny_text"
+        when "text", "long_text"
           assert_equal(expected, ans.value)
         when "date"
           assert_equal(expected, ans.date_value)

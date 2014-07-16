@@ -24,11 +24,19 @@ class Mission < ActiveRecord::Base
                    :if => Proc.new{|m| !m.name.blank?})
   validate(:compact_name_unique)
 
+  # This gets used in Ability
+  FOR_USER_MISSION_SQL = "missions.id IN (SELECT mission_id FROM assignments WHERE user_id = ?)"
+
   scope(:sorted_by_name, order("name"))
   scope(:sorted_recent_first, order("created_at DESC"))
-  scope(:for_user, lambda{|u| where("missions.id IN (SELECT mission_id FROM assignments WHERE user_id = ?)", u.id)})
+  scope(:for_user, lambda{|u| where(FOR_USER_MISSION_SQL, u.id)})
 
-  delegate(:override_code, :to => :setting)
+  delegate(:override_code, :allow_unauthenticated_submissions?, :to => :setting)
+
+  # Raises ActiveRecord::RecordNotFound if not found.
+  def self.with_compact_name(name)
+    where(:compact_name => name).first || (raise ActiveRecord::RecordNotFound.new('Mission not found'))
+  end
 
   # Override default destory
   def destroy
@@ -51,7 +59,7 @@ class Mission < ActiveRecord::Base
         # the order of deletion is also important to avoid foreign key constraints
         relationships_to_delete = [Setting, Report::Report, Condition, Questioning,
                                    Optioning, OptionLevel, Question, OptionSet, Option, Response,
-                                   Form, Broadcast, Assignment, Sms::Message, User]
+                                   Form, Broadcast, Assignment, Sms::Message]
         relationships_to_delete.each{|r| r.mission_pre_delete(self)}
 
         self.reload

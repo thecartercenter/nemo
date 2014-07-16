@@ -2,7 +2,7 @@
 class Ability
   include CanCan::Ability
 
-  attr_reader :user
+  attr_reader :user, :mission, :mode
 
   CRUD = [:new, :show, :edit, :create, :update, :destroy]
 
@@ -18,18 +18,24 @@ class Ability
   end
 
   # defines user's abilities
-  def initialize(user, admin_mode = false)
+  def initialize(params)
 
-    # save user
-    @user = user
+    raise ArgumentError.new('Ability constructor accepts Hash only') unless params.is_a?(Hash)
+
+    @user = params[:user]
+    @mission = params[:mission]
+    @mode = params[:mode]
+    @mode ||= 'mission' if @mission
+
+    raise "Mission should be nil if mode is not 'mission'" if mode != 'mission' && !mission.nil?
 
     if user
 
       # anybody can see the welcome page
       can :show, Welcome
 
-      # anybody can edit self
-      can :update, User, :id => user.id
+      # anybody can show/edit self
+      can [:show, :update], User, :id => user.id
 
       # anybody can generate map markers
       can :read, Marker
@@ -39,7 +45,7 @@ class Ability
         can :view, :admin_mode
 
         # standard objects, missions, settings, and all users are available in no-mission (admin) mode
-        if admin_mode
+        if mode == 'admin'
           [Form, Questioning, Condition, Question, OptionSet, Optioning, Option].each do |k|
             can :manage, k, :is_standard => true
           end
@@ -61,31 +67,31 @@ class Ability
 
       # anybody can access missions to which assigned (but don't need this permission if admin)
       if !user.admin?
-        can :switch_to, Mission, Mission.for_user(user) do |mission|
-          user.assignments.detect{|a| a.mission == mission}
+        can :switch_to, Mission, Mission.for_user(user) do |m|
+          user.assignments.detect{|a| a.mission == m}
         end
       end
 
-      # user can submit to any form if they can access the form's mission
+      # user can submit to any form if they are admin or can access the form's mission
       can :submit_to, Form do |form|
-        user.accessible_missions.include?(form.mission)
+        user.admin? || user.assignments.detect{|a| a.mission == form.mission}
       end
 
       # all the rest of the permissions require a current mission to be set
-      if user.current_mission_id
+      if mission
 
         # observer abilities
-        if user.role?(:observer)
+        if role_in_mission?(:observer)
           # can view and export users in same mission
-          can [:index, :read, :export], User, :assignments => {:mission_id => user.current_mission_id}
+          can [:index, :read, :show, :export], User, :assignments => {:mission_id => mission.id}
 
           # can do reports for the current mission
-          can :manage, Report::Report, :mission_id => user.current_mission_id
+          can :manage, Report::Report, :mission_id => mission.id
 
           # only need these abilities if not also a staffer
-          unless user.role?(:staffer)
+          unless role_in_mission?(:staffer)
             # can only see own responses
-            can [:index, :read, :export], Response, :user_id => user.id, :mission_id => user.current_mission_id
+            can [:index, :read, :export], Response, :user_id => user.id, :mission_id => mission.id
 
             # observers can only mark a form as 'incomplete' if the form permits it
             can :submit_incomplete, Response do |r|
@@ -93,34 +99,34 @@ class Ability
             end
 
             # can only submit/edit/delete own responses, and only if mission is not locked
-            unless user.current_mission.locked?
+            unless mission.locked?
               can [:create, :update, :destroy], Response,
-                :user_id => user.id, :mission_id => user.current_mission_id, :reviewed => false
+                :user_id => user.id, :mission_id => mission.id, :reviewed => false
             end
           end
 
           # can read published forms for the mission
           # only need this ability if not also a coordinator
-          unless user.role?(:coordinator)
-            can [:index, :read, :download], Form, :mission_id => user.current_mission_id, :published => true
+          unless role_in_mission?(:coordinator)
+            can [:index, :read, :download], Form, :mission_id => mission.id, :published => true
           end
 
         end
 
         # staffer abilities
-        if user.role?(:staffer)
+        if role_in_mission?(:staffer)
           # can send broadcasts for the current mission
-          can :manage, Broadcast, :mission_id => user.current_mission_id
+          can :manage, Broadcast, :mission_id => mission.id
 
           # can do reports for the current mission
-          can :manage, Report::Report, :mission_id => user.current_mission_id
+          can :manage, Report::Report, :mission_id => mission.id
 
-          if user.current_mission.locked?
+          if mission.locked?
             # can index, read, export responses for a locked mission
-            can [:index, :read, :export], Response, :mission_id => user.current_mission_id
+            can [:index, :read, :export], Response, :mission_id => mission.id
           else
             # can manage responses for anybody for an unlocked mission
-            can :manage, Response, :mission_id => user.current_mission_id
+            can :manage, Response, :mission_id => mission.id
 
             # can do sms tests for an unlocked mission
             can :create, Sms::Test
@@ -131,43 +137,56 @@ class Ability
         end
 
         # coordinator abilities
-        if user.role?(:coordinator)
+        if role_in_mission?(:coordinator)
 
           # permissions for locked missions only
-          if user.current_mission.locked?
-            # coord can index, read, export these classes for a locked mission
-            can [:index, :read, :export], [Form, Question, OptionSet], :mission_id => user.current_mission_id
+          if mission.locked?
+            can [:index, :read, :export], [Form, Question, OptionSet], :mission_id => mission.id
+            can :read, [Questioning, Option], :mission_id => mission.id
 
           # permissions for non-locked mission
           else
             # can manage users in current mission
             # special change_assignments permission is given so that users cannot update their own assignments via edit profile
-            can [:create, :update, :login_instructions, :change_assignments], User, :assignments => {:mission_id => user.current_mission_id}
+            can [:create, :update, :login_instructions, :change_assignments], User, :assignments => {:mission_id => mission.id}
 
             # can create user batches
             can :manage, UserBatch
 
             # can destroy users only if they have only one mission and it's the current mission
             can :destroy, User do |other_user|
-              other_user.assignments.count == 1 && other_user.assignments.first.mission_id == user.current_mission_id
+              other_user.assignments.count == 1 && other_user.assignments.first.mission_id == mission.id
             end
 
             # coord can manage these classes for the current mission
             [Form, OptionSet, Question, Questioning, Option].each do |klass|
-              can :manage, klass, :mission_id => user.current_mission_id
+              can :manage, klass, :mission_id => mission.id
             end
 
-            can :manage, Group, :mission_id => user.current_mission_id
-            can :manage, UserGroup, :mission_id => user.current_mission_id
+            can :manage, Group, :mission_id => mission.id
+            can :manage, UserGroup, :mission_id => mission.id
           end
 
           # coord can manage these classes for the current mission even if locked
           [Setting, Sms::Message].each do |klass|
-            can :manage, klass, :mission_id => user.current_mission_id
+            can :manage, klass, :mission_id => mission.id
           end
 
           # there is no Questioning index
           cannot :index, Questioning
+        end
+
+        # Users can view/modify only their own API keys
+        cannot :regenerate_key, User
+        can :regenerate_key, User do |u|
+          u == user
+        end
+      end
+
+      # Can't change own assignments unless admin
+      unless user.admin?
+        cannot :change_assignments, User, ["id = ?", user.id] do |other_user|
+          user.id == other_user.id
         end
       end
     end
@@ -249,4 +268,14 @@ class Ability
     # nobody can edit assignments for a locked mission
     cannot [:create, :update, :destroy], Assignment, :mission => {:locked => true}
   end
+
+  def to_s
+    "User: #{@user.try(:login) || '[None]'}, Mode: #{@mode}, Mission: #{@mission.try(:name) || '[None]'}"
+  end
+
+  private
+
+    def role_in_mission?(role_name)
+      user.role?(role_name, mission)
+    end
 end

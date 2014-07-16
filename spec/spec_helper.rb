@@ -2,7 +2,6 @@
 ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
-require 'rspec/autorun'
 
 # Add this to load Capybara integration:
 require 'capybara/rspec'
@@ -21,13 +20,10 @@ RSpec.configure do |config|
   # config.mock_with :flexmock
   # config.mock_with :rr
 
-  # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
-  config.fixture_path = "#{::Rails.root}/spec/fixtures"
-
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
   # instead of true.
-  config.use_transactional_fixtures = true
+  config.use_transactional_fixtures = false
 
   # If true, the base class of anonymous controllers will be inferred
   # automatically. This will be the default behavior in future versions of
@@ -39,4 +35,68 @@ RSpec.configure do |config|
   # the seed, which is printed after each run.
   #     --seed 1234
   config.order = "random"
+
+  config.infer_spec_type_from_file_location!
+
+  config.include AssertDifference
+end
+
+# Encodes credentials for basic auth
+def encode_credentials(username, password)
+  "Basic #{Base64.encode64("#{username}:#{password}")}"
+end
+
+def submit_j2me_response(params)
+  raise 'form must have version' unless @form.current_version
+
+  # Add all the extra stuff that J2ME adds to the data hash
+  params[:data]['id'] = @form.id.to_s
+  params[:data]['uiVersion'] = '1'
+  params[:data]['version'] = @form.current_version.sequence
+  params[:data]['name'] = @form.name
+  params[:data]['xmlns:jrm'] = 'http://dev.commcarehq.org/jr/xforms'
+  params[:data]['xmlns'] = "http://openrosa.org/formdesigner/#{@form.current_version.sequence}"
+
+  # If we are doing a normally authenticated submission, add credentials.
+  headers = params[:auth] ? {'HTTP_AUTHORIZATION' => encode_credentials(@user.login, 'password')} : {}
+
+  post(@submission_url, params.slice(:data), headers)
+end
+
+# helper method to parse json and make keys symbols
+def parse_json(body)
+  JSON.parse(body, symbolize_names: true)
+end
+
+# Currently duplicated in test/test_helper until it becomes obvious how to refactor.
+def login(user)
+  login_without_redirect(user)
+  follow_redirect!
+  assert_response(:success)
+  user.reload # Some stuff may have changed in database during login process
+end
+
+def login_without_redirect(user)
+  post('/en/user-session', :user_session => {:login => user.login, :password => 'password'})
+end
+
+def logout
+  delete('/en/user-session')
+  follow_redirect!
+end
+
+def do_api_request(endpoint, params = {})
+  params[:user] ||= @api_user
+  params[:mission_name] ||= @mission.compact_name
+
+  path_args = [{:mission_name => params[:mission_name]}]
+  path_args.unshift(params[:obj]) if params[:obj]
+  path = send("api_v1_#{endpoint}_path", *path_args)
+
+  get path, params[:params], {'HTTP_AUTHORIZATION' => "Token token=#{params[:user].api_key}"}
+end
+
+def get_s(*args)
+  get *args
+  assert_response(:success)
 end

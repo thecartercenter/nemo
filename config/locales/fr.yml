@@ -275,10 +275,6 @@ fr:
         intellisms_password1: "Mot de passe"
         intellisms_password2: "Confirmation de mot de passe"
         intellisms_username: "Nom d'utilisateur"
-        isms_hostname: "Hôte"
-        isms_password1: "Mot de passe"
-        isms_password2: "Confirmation de mot de passe"
-        isms_username: "Nom d'utilisateur"
         preferred_locales_str: "Langues de fiche"
         outgoing_sms_adapter: "Fournisseur"
         override_code: "Remplacer le code"
@@ -314,6 +310,25 @@ fr:
         incomplete: "Incomplet?"
       user:
         admin: "Admin?"
+
+    action_links:
+      form:
+        new: "Créer une nouvelle fiche"
+      mission:
+        new: "Créer une nouvelle mission"
+      option:
+        new: "Créer une nouvelle option"
+      option_set:
+        new: "Créer une nouvelle collection d'options"
+      question:
+        new: "Créer une nouvelle question"
+      report/report:
+        new: "Créer un nouveau rapport"
+      response:
+        new: "Créer un nouveau reponse"
+      user:
+        new: "Créer un nouveau utilisateur"
+
 
     hints:
       form:
@@ -373,9 +388,6 @@ fr:
         outgoing_sms_adapter: "L'adaptateur utilisé d'envoyer les SMS en partance."
         intellisms_username: "Le nom d'utilisateur pour le compte IntelliSMS."
         intellisms_password1: "Entrez et rentrez un mot de passe pour changer le mot de passe du compte IntelliSMS."
-        isms_hostname: "L'adresse IP ou le nom de domaine pour l'appareil. Il peut inclure la port (par ex. 10.20.30.40:8081). N'inclurez pas http://."
-        isms_password1: "Entrez et rentrez un mot de passe pour changer le mot de passe du API pour l'appareil iSMS."
-        isms_username: "Le API pour l'appareil iSMS."
         external_sql: "Le code SQL (langage de requêtes structuré) utilisé d'extraire les données pour l'utilisation dans Tableau. Cliquez sur 'sélectionnez tous' et pressez alors Ctrl-C pour copier."
         timezone: "Le fuseau horaire dans lequel des temps sont montrés dans tout le site."
       sms/test:
@@ -660,7 +672,7 @@ fr:
     password_resets:
       all: "Réinitialiser le mot de passe"
     questions:
-      edit: "Modifier la question: %{name}"
+      edit: "Modifier la question: %{code}"
       index: "Questions"
       new: "Nouvelle Question"
       show: "Question: %{code}"
@@ -798,7 +810,6 @@ fr:
     clone_confirm: "Vous êtes sûr que vous voulez faire un copie de la fiche '%{form_name}'?"
     clone_error: "Il y avait un problème avec le clonage de la fiche (%{msg})."
     clone_success: "Fiche '%{form_name}' cloné avec succès."
-    create_link: "Créer une nouvelle fiche"
     print_form: "Imprimer la fiche"
     publish: "Publier"
     publish_error: "Il y avait un problème avec l'édition de la Fiche (%{msg})."
@@ -837,9 +848,6 @@ fr:
     enter_query: "Entrer une question dans la boîte au-dessus pour chercher un emplacement dans la base de données du Google."
     search_locations: "Recherche les emplacements..."
 
-  mission:
-    create_link: "Créer une nouvelle mission"
-
   notifier:
     if_link_doesnt_work: "Si le lien au-dessus ne marche pas, essayer de copier et coller dans le navigateur."
     if_you_made_it: "Si vous avez fait cette sollicitation seulement cliquer le lien au-dessus:"
@@ -850,15 +858,11 @@ fr:
     request_made: "Une sollicitation pour remettre votre %{site} mot de passe a été fait. Si vous n'avez pas faites cette sollicitation, seulement ignorez cette courriel."
     welcome: "Bienvenue à %{site}!"
 
-  option:
-    create_link: "Créer une nouvelle option"
-
   option_set:
     clone_confirm: "Est-ce que vous etes sûr que vous voulez faire une copie de l'ensemble d'options %{name}'?"
     clone_error: "Il y avait un problème avec le clonage de l'ensemble d'options (%{msg})."
     clone_success: "L'ensemble d'options '%{name}' a été cloné avec succès."
     create_new: "[Créer un Nouveau Option]"
-    create_link: "Créer une nouvelle collection d'options"
     edit_option: "Modifier Option"
     leave_page_warning: "Si vous quittez cette page, vous perdrez vos modifications à cet ensemble des options."
     none_found: "Aucune option trouvés"
@@ -886,7 +890,6 @@ fr:
 
   question:
     answer_only_caps: "REPONDEZ SEULEMENT SI"
-    create_link: "Créer une nouvelle question"
     maxmin:
       gt: "plus grand que"
       lt: "moins que"
@@ -922,7 +925,6 @@ fr:
     choose_form: "Choisissez une fiche..."
     choose_report: "Choisissez un rapport..."
     columns: "Colonnes"
-    create_link: "Créer un nouveau rapport"
     display_options: "Options d'affichage"
     edit_report: "Modifier Rapport"
     enter_name: "Entrer un nom descriptif pour le rapport."
@@ -1034,7 +1036,6 @@ fr:
       none: "Montrer Rien"
 
   response:
-    create_link: "Créer un nouveau reponse"
     edit_this_response: "Modifier cette soumission"
     export_to_csv: "Exporter à format CSV"
     loading: "Chargant Soumission..."
@@ -1327,7 +1328,6 @@ fr:
   user:
     add_assignment: "Ajouter Devoir"
     back_to_index: "Retourner à liste d'utilisateurs"
-    create_link: "Créer un nouveau utilisateur"
     edit_profile: "Modifier le profil"
     export_vcard: "Exporter comme vCard"
     forgot_password: "Oublier mot de passe?"
@@ -1374,7 +1374,7 @@ fr:
       title: "Mission n'est pas choisie"
       choose: "Choisissez une mission de la menu déroulant dans le coin supérieur droit de l'écran."
       choose_or_create: "Choisissez une mission de la menu déroulant dans le coin supérieur droit de l'écran, ou vous pouvez..."
-      create_link: "Créer une nouvelle mission."
+      create_link: "créer une nouvelle mission."
       need_to_create: "Il n'y a pas de missions."
       no_missions: "Il n'y a pas de missions dans la systeme.  Contactez un administrateur."
     no_recent: "**0** Soumissions Récentes"

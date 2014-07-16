@@ -4,6 +4,8 @@
 
 <%= elmo_form_for(@user) do |f| %>
 
+  <%= top_action_links(@user) %>
+
   <%= f.field(:name, :required => true) %>
   <%= f.field(:login, :required => true, :partial => "login_name_field") %>
   <%= f.field(:email) %>
@@ -11,15 +13,16 @@
   <%= f.field(:phone2) %>
   <%= f.field(:admin, :type => :check_box) if can?(:adminify, @user) && admin_mode? %>
 
-  <%# field name depends on whether we're in admin mode or not. under the hood it's all the same though %>
-  <%= f.field(admin_mode? ? :assignments : :role, :partial => "assignments",
-    :required => !admin_mode?, :read_only => cannot?(:change_assignments, @user)) %>
+  <% if can?(:change_assignments, @user) %>
+    <%# field name depends on whether we're in admin mode or not. under the hood it's all the same though %>
+    <%= f.field(admin_mode? ? :assignments : :role, :partial => "assignments", :required => !admin_mode?) %>
+  <% end %>
 
   <%= f.field(:pref_lang, :type => :select, :options => configatron.full_locales.map{|l| [language_name(l), l]}) %>
 
   <%= f.field(:notes, :type => :textarea) %>
 
-  <% unless form_mode == :show %>
+  <% unless read_only %>
 
     <%# allow to change password if editing profile %>
     <% if @user == current_user %>
@@ -37,7 +40,7 @@
 
     <% end %>
   <% end %>
-
+  <%= f.field(:api_key, :partial => 'api_key') if !@user.new_record? && can?(:regenerate_key, @user) %>
   <div class="submit-buttons">
     <%= f.submit(:class => "btn btn-primary") %>
   </div>

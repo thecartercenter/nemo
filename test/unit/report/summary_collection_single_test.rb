@@ -15,7 +15,6 @@ class Report::SummaryCollectionSingleTest < ActiveSupport::TestCase
     prepare_form('integer', [10, 7, 6, 1, 1])
 
     observer = FactoryGirl.create(:user, :role_name => :observer)
-    observer.current_mission = get_mission
     [10, 7, 6, 1, 1].each{|a| FactoryGirl.create(:response, :form => @form, :_answers => [a], :user => observer)}
 
     @collection = Report::SummaryCollectionBuilder.new(@form.questionings, nil, :restrict_to_user => observer).build

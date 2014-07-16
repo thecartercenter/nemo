@@ -32,7 +32,7 @@ class Search::ResponseSearchTest < ActiveSupport::TestCase
 
         # add two long text questions with explicit codes
         @form.questions << FactoryGirl.create(:question, :qtype_name => 'long_text', :code => 'blue')
-        @form.questions << FactoryGirl.create(:question, :qtype_name => 'long_text', :code => 'green')
+        @form.questions << FactoryGirl.create(:question, :qtype_name => 'long_text', :code => 'Green')
 
         # add some responses
         r1 = FactoryGirl.create(:response, :form => @form, :reviewed => false,
@@ -61,7 +61,7 @@ class Search::ResponseSearchTest < ActiveSupport::TestCase
         # question codes should work as qualifiers
         assert_search('text:apple', r1, r2)
         assert_search('{blue}:apple', r1)
-        assert_search('{green}:apple', r2)
+        assert_search('{Green}:apple', r2)
 
         #invalid question codes should raise error
         assert_search('{foo}:bar', :error => /'{foo}' is not a valid search qualifier./)
@@ -79,19 +79,19 @@ class Search::ResponseSearchTest < ActiveSupport::TestCase
         assert_search('text:heaven', r2)
 
         # multiple indexed qualifiers should work
-        assert_search('{blue}:lumpy {green}:meal', r3)
-        assert_search('{blue}:lumpy {green}:ipswitch')
+        assert_search('{blue}:lumpy {Green}:meal', r3)
+        assert_search('{blue}:lumpy {Green}:ipswitch')
 
         # mixture of indexed and normal qualifiers should work
-        assert_search('{green}:ipswitch reviewed:1', r2)
+        assert_search('{Green}:ipswitch reviewed:1', r2)
 
         # excerpts should be correct
         assert_excerpts('text:heaven', [
           [{:questioning_id => @form.questionings[1].id, :code => 'mauve', :text => "fox {{{heaven}}} jumps"},
-           {:questioning_id => @form.questionings[4].id, :code => 'green', :text => "apple {{{heaven}}} ipswitch"}]
+           {:questioning_id => @form.questionings[4].id, :code => 'Green', :text => "apple {{{heaven}}} ipswitch"}]
         ])
         assert_excerpts('{green}:heaven', [
-          [{:questioning_id => @form.questionings[4].id, :code => 'green', :text => "apple {{{heaven}}} ipswitch"}]
+          [{:questioning_id => @form.questionings[4].id, :code => 'Green', :text => "apple {{{heaven}}} ipswitch"}]
         ])
       end
     end

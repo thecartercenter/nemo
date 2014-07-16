@@ -1,5 +1,7 @@
-
 <%= elmo_form_for(@setting) do |f| %>
+
+  <%# Need to specify form mode explicitly since it can't be surmised from action. %>
+  <% @form_mode = @setting.read_only? ? :show : :edit %>
 
   <h2><%= t("setting.headings.general") %></h2>
 
@@ -7,12 +9,11 @@
   <%= f.field(:timezone, :type => :timezone, :required => true) %>
   <%= f.field(:preferred_locales_str, :required => true) %>
 
+  <%# None of the rest of this is relevant in admin mode. %>
   <% unless admin_mode? %>
     <%= f.field(:override_code, :partial => 'override_code') %>
-  <% end %>
 
-  <%# none of the rest of this is relevant in admin mode %>
-  <% unless admin_mode? %>
+    <%= f.field(:allow_unauthenticated_submissions, :type => :check_box) if configatron.allow_unauthenticated_submissions? %>
 
     <h2><%= t("setting.headings.sms") %></h2>
 
@@ -30,22 +31,11 @@
       </div>
     </div>
 
-    <div class="adapter_settings" data-adapter="Isms">
-
-      <%= f.field(:isms_hostname) %>
-      <%= f.field(:isms_username, :append => link_to(t("setting.change_sms_password"), "#")) %>
-
-      <div class="password_fields">
-        <%= f.field(:isms_password1, :type => :password) %>
-        <%= f.field(:isms_password2, :type => :password) %>
-      </div>
-    </div>
-
     <h2><%= t('activerecord.attributes.setting.external_sql') %></h2>
 
     <%= f.field(:external_sql, :partial => "external_sql") %>
-
   <% end %>
+
   <div class="submit-buttons">
     <%= f.submit(:class => "btn btn-primary") %>
   </div>

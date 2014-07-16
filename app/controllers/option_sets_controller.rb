@@ -23,7 +23,7 @@ class OptionSetsController < ApplicationController
 
   def new
     # we only need the partial if it's an ajax request
-    if ajax_request?
+    if request.xhr?
       params[:modal_mode] = true
       render(:partial => 'form')
     else
