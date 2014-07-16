@@ -37,7 +37,7 @@ module FormsHelper
     when "allow_incomplete" then tbool(form.allow_incomplete?)
     when "actions"
       # get standard action links
-      links = action_links(form, :obj_name => form.name)
+      links = table_action_links(form, :obj_name => form.name)
 
       # get the appropriate publish icon and add link, if auth'd
       if can?(:publish, form)

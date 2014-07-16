@@ -22,7 +22,7 @@ module UsersHelper
     when "latest_mission" then (lm = user.latest_mission) ? lm.name : "[#{t('common.none')}]"
     when "role" then t(user.roles[current_mission], :scope => :role)
     when "admin" then user.admin? ? t('common._yes') : ''
-    when "actions" then action_links(user, :obj_name => user.name)
+    when "actions" then table_action_links(user, :obj_name => user.name)
     else user.send(field)
     end
   end
