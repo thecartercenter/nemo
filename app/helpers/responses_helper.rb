@@ -30,7 +30,7 @@ module ResponsesHelper
         # we don't need to authorize these links b/c for responses, if you can see it, you can edit it.
         # the controller actions will still be auth'd
         by = resp.user ? " by #{resp.user.name}" : ""
-        action_links(resp, :obj_description => resp.user ?
+        table_action_links(resp, :obj_description => resp.user ?
           "#{Response.model_name.human} #{t('common.by').downcase} #{resp.user.name}" :
           "#{t('common.this').downcase} #{Response.model_name.human}")
       else resp.send(field)

@@ -1,5 +1,7 @@
 #userinfo, #title, #footer, nav { display: none; }
 
+.top-action-links { display: none; }
+
 /* login instructions */
 .user_batches_show h1.title { display: none; }
 #login_instructions #preamble { display: none; }
@@ -47,7 +49,7 @@
 .forms_index h1.title, .forms_edit h1.title, .forms_show h1.title { display: none; }
 
 /* reports */
-.report_top_links, .report_links, div.report_edit_dialog, div.report_edit_pane { display: none !important; }
+div.report_edit_dialog, div.report_edit_pane { display: none !important; }
 
 /* sms form guide */
 div.sms_guide div.controls { display: none; }

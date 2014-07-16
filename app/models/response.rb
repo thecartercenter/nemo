@@ -228,6 +228,11 @@ class Response < ActiveRecord::Base
     count_and_date_cache_key(:rel => unscoped.for_mission(mission), :prefix => "mission-#{mission.id}")
   end
 
+  # We need a name field so that this class matches the Nameable duck type.
+  def name
+    "##{id}"
+  end
+
   # whether the answers should validate themselves
   def validate_answers?
     # dont validate if this is an ODK submission as we don't want to lose data

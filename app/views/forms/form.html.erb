@@ -1,6 +1,27 @@
 <% @title_args = {:name => @form.name, :standardized => @form.standardized?} %>
 
 <div class="screen">
+
+  <%= top_action_links(@form) do %>
+
+    <%# these links only make sense if we're editing %>
+    <% if @form.has_questions? %>
+      <% if can?(:publish, @form) %>
+        <% lbl = t("form.#{@form.verb}_form") %>
+        <%= link_to(icon_tag(@form.verb) + lbl, publish_form_path(@form), :'data-method' => 'put') %>
+      <% end %>
+
+      <% if @form.smsable? && !admin_mode? %>
+        <%= link_to(icon_tag(:sms) + t('form.view_sms_guide'), form_path(@form, :sms_guide => 1)) if @form.published? %>
+        <%= link_to(icon_tag(:sms_console) + t('page_titles.sms_tests.all'), new_sms_test_path) if can?(:create, Sms::Test) %>
+      <% end %>
+
+      <%# This link should be last because it has loading ind after it. %>
+      <%= link_to(icon_tag(:print) + t('form.print_form'), "#", :onclick => "Form.print(#{@form.id}); return false;") %>
+      <%= loading_indicator(:id => @form.id) %>
+    <% end %>
+  <% end %>
+
   <%= published_warning(@form) if @form.published? && form_mode == :edit %>
 
   <%= elmo_form_for(@form, :style => @form.has_questions? ? 'with_questions' : 'no_questions') do |f| %>

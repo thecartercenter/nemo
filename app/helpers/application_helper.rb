@@ -1,29 +1,5 @@
 module ApplicationHelper
 
-  FONT_AWESOME_ICON_MAPPINGS = {
-    :clone => "copy",
-    :destroy => "trash-o",
-    :edit => "pencil",
-    :map => "globe",
-    :print => "print",
-    :publish => "arrow-up",
-    :remove => "times",
-    :sms => "comment",
-    :unpublish => "arrow-down",
-    :submit => "share-square-o",
-    :response => "check-circle-o",
-    :report_report => "bar-chart-o",
-    :report => "bar-chart-o",
-    :form => "file-text-o",
-    :question => "question-circle",
-    :option_set => "list-ul",
-    :optionset => 'list-ul',
-    :user => "users",
-    :broadcast => "bullhorn",
-    :setting => "gear",
-    :mission => "briefcase"
-  }
-
   ERROR_MESSAGE_KEYS_TO_HIDE = {
     :'optionings.option.base' => true,
     :'condition.base' => true
@@ -44,64 +20,6 @@ module ApplicationHelper
       when :alert then "alert alert-warning"
       else nil
     end
-  end
-
-  # returns the html for an action icon using font awesome and the mappings defined above
-  def action_link(action, href, html_options = {})
-    # join passed html class (if any) with the default class
-    html_options[:class] = [html_options[:class], "action_link", "action_link_#{action}"].compact.join(" ")
-
-    link_to(content_tag(:i, "", :class => "fa fa-" + FONT_AWESOME_ICON_MAPPINGS[action.to_sym]), href, html_options)
-  end
-
-  # assembles links for the basic actions in an index table (edit and destroy)
-  def action_links(obj, options)
-    route_key = obj.class.model_name.singular_route_key
-
-    options[:exclude] = Array.wrap(options[:exclude])
-
-    # always exclude edit and destroy if we are in show mode
-    options[:exclude] += [:edit, :destroy] if controller.action_name == 'show'
-
-    # build links
-    %w(edit destroy).map do |action|
-
-      # skip to next action if action is excluded
-      next if options[:exclude].include?(action.to_sym)
-
-      case action
-      when "edit"
-        # check permissions
-        next unless can?(:update, obj)
-
-        # build link
-        action_link(action, send("edit_#{route_key}_path", obj), :title => t("common.edit"))
-
-      when "destroy"
-        # check permissions
-        next unless can?(:destroy, obj)
-
-        # build a delete warning
-        obj_description = options[:obj_name] ? "#{obj.class.model_name.human} '#{options[:obj_name]}'" : options[:obj_description]
-        warning = t("layout.delete_warning", :obj_description => obj_description)
-
-        # build link
-        action_link(action, send("#{route_key}_path", obj), :method => :delete, :confirm => warning, :title => t("common.delete"))
-      end
-
-    end.join('').html_safe
-  end
-
-  # creates a link to a batch operation
-  def batch_op_link(options)
-    link_to(options[:name], "#",
-      :onclick => "batch_submit({path: '#{options[:path]}', confirm: '#{options[:confirm]}'}); return false;",
-      :class => "batch_op_link")
-  end
-
-  # creates a link to select all the checkboxes in an index table
-  def select_all_link
-    link_to(t("layout.select_all"), '#', :onclick => "batch_select_all(); return false", :id => 'select_all_link')
   end
 
   # renders an index table for the given class and list of objects
@@ -181,15 +99,6 @@ module ApplicationHelper
     keys.map{|k| [t(k, :scope => scope), k]}
   end
 
-  # generates a link like "Create New Option Set" given a klass
-  # options[:js] - if true, the link just points to # with expectation that js will bind to it
-  def create_link(klass, options = {})
-    # get the link target path. honor the js option.
-    href = options[:js] ? "#" : send("new_#{klass.model_name.singular_route_key}_path")
-
-    link_to(t("#{klass.model_name.i18n_key}.create_link"), href, :class => "create_#{klass.model_name.param_key}")
-  end
-
   # translates a boolean value
   def tbool(b)
     t(b ? "common._yes" : "common._no")
@@ -239,8 +148,8 @@ module ApplicationHelper
     model_name = controller_name.classify.downcase
 
     # add icon where appropriate
-   if !options[:text_only] && (icon_name = FONT_AWESOME_ICON_MAPPINGS[model_name.to_sym])
-      ttl += content_tag(:i, "", :class => "fa fa-" + icon_name)
+   if !options[:text_only] && (tag = icon_tag(model_name))
+      ttl += tag
     end
 
     # add text
@@ -291,15 +200,6 @@ module ApplicationHelper
     message
   end
 
-  # returns img tag for standard icon if obj is standard, '' otherwise
-  def std_icon(obj)
-    if obj.respond_to?(:standardized?) && obj.standardized?
-      content_tag(:i, "", :class => "fa fa-certificate")
-    else
-      ''
-    end
-  end
-
   # makes a set of <li> wrapped links to the index actions of the given classes
   def nav_links(*klasses)
     l = []
@@ -308,10 +208,7 @@ module ApplicationHelper
         path = send("#{k.model_name.route_key}_path")
         active = current_page?(path)
         l << content_tag(:li, :class => active ? 'active' : '') do
-          link_to(path) do
-            content_tag('i', '', :class => 'fa fa-' + FONT_AWESOME_ICON_MAPPINGS[k.model_name.param_key.to_sym]) +
-            pluralize_model(k)
-          end
+          link_to(icon_tag(k.model_name.param_key) + pluralize_model(k), path)
         end
       end
     end

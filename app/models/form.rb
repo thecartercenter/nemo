@@ -202,6 +202,10 @@ class Form < ActiveRecord::Base
     save(:validate => false)
   end
 
+  def verb
+    published? ? 'unpublish' : 'publish'
+  end
+
   # increments the download counter
   def add_download
     self.downloads += 1

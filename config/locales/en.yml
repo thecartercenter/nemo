@@ -346,6 +346,54 @@ en:
       question:
         code: "MyQuestion"
 
+    action_links:
+      broadcast:
+        index: "List Broadcasts"
+      form:
+        new: "Create New Form"
+        index: "List Forms"
+        show: "View Form"
+        edit: "Edit Form"
+        destroy: "Delete Form"
+        publish: "Publish Form"
+        unpublish: "Unpublish Form"
+        print: "Print Form"
+      mission:
+        new: "Create New Mission"
+        index: "List Missions"
+        show: "View Mission"
+        edit: "Edit Mission"
+        destroy: "Delete Mission"
+      option_set:
+        new: "Create New Option Set"
+        index: "List Option Sets"
+        show: "View Option Set"
+        edit: "Edit Option Set"
+        destroy: "Delete Option Set"
+      question:
+        new: "Create New Question"
+        index: "List Questions"
+        show: "View Question"
+        edit: "Edit Question"
+        destroy: "Delete Question"
+      report/report:
+        new: "Create New Report"
+        index: "List Reports"
+        show: "View Report"
+        edit: "Edit Report"
+        destroy: "Delete Report"
+      response:
+        index: "List Responses"
+        show: "View Response"
+        edit: "Edit Response"
+        destroy: "Delete Response"
+      user:
+        new: "Create New User"
+        index: "List Users"
+        show: "View User"
+        edit: "Edit User"
+        destroy: "Delete User"
+
     hints:
       form:
         name: "A descriptive name for the form."
@@ -869,7 +917,6 @@ en:
     clone_confirm: "Are you sure you want to make a copy of the form '%{form_name}'?"
     clone_error: "There was a problem cloning the form (%{msg})."
     clone_success: "Form '%{form_name}' cloned successfully."
-    create_link: "Create Form"
     print_form: "Print Form"
     publish: "Publish"
     publish_error: "There was a problem publishing the form (%{msg})."
@@ -908,9 +955,6 @@ en:
     enter_query: "Enter a query into the box above to search for a location in Google's geo-database."
     search_locations: "Search Locations..."
 
-  mission:
-    create_link: "Create Mission"
-
   notifier:
     if_link_doesnt_work: "If the above link does not work try copying and pasting it into your browser."
     if_you_made_it: "If you did make this request just click the link below:"
@@ -921,16 +965,12 @@ en:
     request_made: "A request to reset your %{site} password has been made. If you did not make this request, simply ignore this email."
     welcome: "Welcome to %{site}!"
 
-  option:
-    create_link: "Create Option"
-
   option_set:
     add_level: "Add Level"
     clone_confirm: "Are you sure you want to make a copy of the Option Set '%{name}'?"
     clone_error: "There was a problem cloning the Option Set (%{msg})."
     clone_success: "Option Set '%{name}' cloned successfully."
     create_new: "[Create New Option]"
-    create_link: "Create Option Set"
     edit_option: "Edit Option"
     edit_option_level: "Edit Option Level"
     leave_page_warning: "Leaving this page will abandon your changes to this Option Set."
@@ -960,7 +1000,6 @@ en:
 
   question:
     answer_only_caps: "ANSWER ONLY IF"
-    create_link: "Create Question"
     maxmin:
       gt: "greater than"
       lt: "less than"
@@ -995,7 +1034,6 @@ en:
     choose_form: "Choose a Form..."
     choose_report: "Choose a Report..."
     columns: "Columns"
-    create_link: "Create New Report"
     display_options: "Options"
     edit_report: "Edit Report"
     enter_name: "What is the report title?"
@@ -1107,7 +1145,6 @@ en:
       none: "Show None"
 
   response:
-    create_link: "Create Response"
     edit_this_response: "Edit This Response"
     export_to_csv: "Export to CSV Format"
     loading: "Loading Response..."
@@ -1412,7 +1449,6 @@ en:
     api_key:
       regenerate: "Regenerate"
     back_to_index: "Back to Users List"
-    create_link: "Create User"
     create_multiple: "Create Multiple Users"
     edit_profile: "Edit Profile"
     export_vcard: "Export as vCard"

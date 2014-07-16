@@ -1,18 +1,14 @@
 <%# include javascript google vis api stuff %>
 <% content_for(:per_page_js){report_js_includes} %>
 
-<div class="link_set report_top_links">
-  <% if can?(:update, @report) %>
-    <a id="edit_link" href="#"><%= t("report/report.edit_report") %></a>
+<div class="report_links">
+  <%= top_action_links(@report.becomes(Report::Report), :controller => 'reports') do %>
+    <% if !@report.new_record? && @report.exportable? %>
+      <%= link_to(icon_tag(:export) + t("report/report.export_to_csv"),
+        report_report_path(@report, :format => :csv), :class => 'export-link') %>
+    <% end %>
+    <%= loading_indicator(:id => "report_load_ind") %>
   <% end %>
-  <%= link_to(t("report/report.create_link"), new_report_report_path) if can?(:create, Report::Report) %>
-  <%= link_to(t("report/report.back_to_list"), report_reports_path) if can?(:index, Report::Report) %>
-
-  <% if !@report.new_record? && @report.exportable? %>
-    <%= link_to(t("report/report.export_to_csv"), report_report_path(@report, :format => :csv), :id => "csv_link") %>
-  <% end %>
-
-  <%= loading_indicator(:id => "report_load_ind") %>
 </div>
 <div class="report_view">
   <div class="report_main">

@@ -22,7 +22,7 @@ module OptionSetsHelper
     when "answers" then number_with_delimiter(option_set.answer_count)
     when "actions" then
       # get standard action links
-      links = action_links(option_set, :obj_name => option_set.name)
+      links = table_action_links(option_set)
 
       # add a clone link if auth'd
       if can?(:clone, option_set)
