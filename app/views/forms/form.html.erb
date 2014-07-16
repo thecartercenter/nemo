@@ -3,8 +3,6 @@
 <div class="screen">
 
   <%= top_action_links(@form) do %>
-
-    <%# these links only make sense if we're editing %>
     <% if @form.has_questions? %>
       <% if can?(:publish, @form) %>
         <% lbl = t("form.#{@form.verb}_form") %>
