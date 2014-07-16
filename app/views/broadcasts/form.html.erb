@@ -1,5 +1,6 @@
-
 <%= elmo_form_for(@broadcast) do |f| %>
+
+  <%= top_action_links(@broadcast, :only => :index) %>
 
   <%= f.field(:recipient_ids, :type => :hidden) %>
   <%= f.field(:to, :content => @broadcast.recipients.collect{|u| link_to(u.name, u)}.join(", ")) %>

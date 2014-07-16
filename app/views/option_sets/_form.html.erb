@@ -3,6 +3,8 @@
   <%# need to print this here if in ajax mode %>
   <%= render("layouts/flash", :flash => flash) if request.xhr? %>
 
+  <%= top_action_links(@option_set) %>
+
   <% if form_mode == :edit %>
     <%= published_warning(@option_set) if @option_set.published? %>
     <%= appears_elsewhere_warning(@option_set) if @option_set.has_questions? %>

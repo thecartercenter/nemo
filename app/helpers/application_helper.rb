@@ -99,15 +99,6 @@ module ApplicationHelper
     keys.map{|k| [t(k, :scope => scope), k]}
   end
 
-  # generates a link like "Create New Option Set" given a klass
-  # options[:js] - if true, the link just points to # with expectation that js will bind to it
-  def create_link(klass, options = {})
-    # get the link target path. honor the js option.
-    href = options[:js] ? "#" : send("new_#{klass.model_name.singular_route_key}_path")
-
-    link_to(t("#{klass.model_name.i18n_key}.create_link"), href, :class => "create_#{klass.model_name.param_key}")
-  end
-
   # translates a boolean value
   def tbool(b)
     t(b ? "common._yes" : "common._no")

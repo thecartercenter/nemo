@@ -1,45 +1,16 @@
 module QuestioningsHelper
   def questionings_index_links(qings)
-    links = []
+    [].tap do |links|
+      if controller.action_name == "edit"
+        links << link_to(t("form.add_questions"), choose_questions_form_path(@form)) if can?(:add_questions, @form)
 
-    # these links only make sense if we're editing
-    if controller.action_name == "edit"
-      # add questions link
-      links << link_to(t("form.add_questions"), choose_questions_form_path(@form)) if can?(:add_questions, @form)
-
-      # these links only make sense if there are questions
-      if qings.size > 0
-        # add remove questions link
-        links << batch_op_link(:name => t("form.remove_selected"), :path => remove_questions_form_path(@form),
-          :confirm => t("form.remove_question_confirm")) if can?(:remove_questions, @form)
-
-        # add publish link if allowed
-        if can?(:publish, @form)
-          key = @form.published? ? 'unpublish_form' : 'publish_form'
-          lbl = t("form.#{key}")
-          links << link_to("#{lbl}", publish_form_path(@form), :'data-method' => 'put')
+        if qings.any?
+          # add remove questions link
+          links << batch_op_link(:name => t("form.remove_selected"), :path => remove_questions_form_path(@form),
+            :confirm => t("form.remove_question_confirm")) if can?(:remove_questions, @form)
         end
       end
     end
-
-    # can print from show action, if there are questions
-    if qings.size > 0
-      links << link_to("#{t('form.print_form')}", "#", :onclick => "Form.print(#{qings.first.form.id}); return false;") + " " +
-        loading_indicator(:id => qings.first.form.id)
-    end
-
-    # add the sms guide link if appropriate
-    if qings.size > 0 && qings.first.form.smsable? && qings.first.form.published? && !admin_mode?
-      links << link_to(t("form.view_sms_guide"), form_path(qings.first.form, :sms_guide => 1))
-    end
-
-    # add the sms test console link if appropriate
-    if qings.size > 0 && qings.first.form.smsable? && !admin_mode? && can?(:create, Sms::Test)
-      links << link_to(t("page_titles.sms_tests.all"), new_sms_test_path)
-    end
-
-    # return the array of links we built
-    links
   end
 
   def questionings_index_fields
@@ -59,7 +30,7 @@ module QuestioningsHelper
     when "code", "name", "type" then format_questions_field(qing.question, field)
     when "condition" then tbool(qing.has_condition?)
     when "required", "hidden" then tbool(qing.send(field))
-    when "actions" then table_action_links(qing, :obj_name => qing.code)
+    when "actions" then table_action_links(qing)
     else qing.send(field)
     end
   end

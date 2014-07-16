@@ -4,6 +4,8 @@
 
 <%= elmo_form_for(@user) do |f| %>
 
+  <%= top_action_links(@user) %>
+
   <%= f.field(:name, :required => true) %>
   <%= f.field(:login, :required => true, :partial => "login_name_field") %>
   <%= f.field(:email) %>

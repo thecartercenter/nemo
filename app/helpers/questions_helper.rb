@@ -39,7 +39,7 @@ module QuestionsHelper
     when "type" then t(q.qtype_name, :scope => :question_type)
     when "published" then tbool(q.published?)
     when "answer_count" then number_with_delimiter(q.answer_count)
-    when "actions" then table_action_links(q, :obj_name => q.code)
+    when "actions" then table_action_links(q)
     when "name"
       params[:controller] == 'forms' ? q.name : link_to(q.name, q)
     else q.send(field)

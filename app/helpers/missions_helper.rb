@@ -12,7 +12,7 @@ module MissionsHelper
     when "name" then link_to(mission.name, mission_path(mission), :title => t("common.view"))
     when "locked" then tbool(mission.locked?)
     when "created_at" then l(mission.created_at)
-    when "actions" then table_action_links(mission, :exclude => :show, :obj_name => mission.name)
+    when "actions" then table_action_links(mission, :exclude => :show)
     else mission.send(field)
     end
   end

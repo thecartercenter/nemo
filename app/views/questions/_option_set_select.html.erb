@@ -5,7 +5,7 @@
 <% else %>
 
   <%= form.select(:option_set_id, sel_opts_from_objs(@option_sets), {:include_blank => true}, {:class => "form-control"}) %>
-  <%= link_to('+ ' + t('option_set.create_link'), '#', :class => 'create_option_set') %>
+  <%= link_to('+ ' + t('activerecord.action_links.option_set.new'), '#', :class => 'create_option_set') %>
   <%= loading_indicator %>
 
 <% end %>
