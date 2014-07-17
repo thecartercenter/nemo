@@ -79,6 +79,7 @@ group :development, :test do
   gem 'factory_girl_rails', '~> 4.0'
   gem 'jasmine-rails'                # test framework
   gem 'rspec-rails', '~> 3.0'        # test framework
+  gem 'rspec-its'
   gem 'mocha'                        # mocking/stubbing
   gem 'capybara'                     # acceptance tests
   gem 'capybara-webkit'              # for testing js

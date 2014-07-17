@@ -75,7 +75,12 @@ module Replicable
   # replicate(:mode => :to_mission, :dest_mission => m)
   # replicate(:mode => :promote, :retain_link_on_promote => false)
   def replicate(options = nil)
-    raise ArgumentError, 'Replication mode has not been defined' unless options.is_a?(Replication) || (options.respond_to?("[]") && options[:mode])
+    unless options.is_a?(Replication)
+      raise ArgumentError, 'replication mode is required' unless options[:mode]
+      if options[:mode] == :to_mission && !options[:dest_mission]
+        raise ArgumentError, 'dest_mission must be specified for to_mission mode'
+      end
+    end
 
     # if mission or nil was passed in, we don't have a replication object, so we need to create one
     # a replication is an object to track replication parameters
