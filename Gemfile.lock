@@ -72,7 +72,6 @@ GEM
       json
     choice (0.1.6)
     chronic (0.10.2)
-    coderay (1.1.0)
     configatron (4.1.0)
     daemons (1.1.9)
     dalli (2.7.2)
@@ -114,7 +113,6 @@ GEM
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
     metaclass (0.0.4)
-    method_source (0.8.2)
     middleware (0.1.0)
     mime-types (1.25.1)
     mini_portile (0.6.0)
@@ -133,10 +131,6 @@ GEM
       mini_portile (= 0.6.0)
     phantomjs (1.9.7.1)
     polyglot (0.3.5)
-    pry (0.10.0)
-      coderay (~> 1.1.0)
-      method_source (~> 0.8.1)
-      slop (~> 3.4)
     rack (1.4.5)
     rack-cache (1.2)
       rack (>= 0.4)
@@ -198,7 +192,6 @@ GEM
       railties (~> 3.2.0)
       sass (>= 3.1.10)
       tilt (~> 1.3)
-    slop (3.5.0)
     spinjs-rails (1.3)
       rails (>= 3.1)
     sprockets (2.2.2)
@@ -277,7 +270,6 @@ DEPENDENCIES
   libxml-ruby
   mocha
   mysql2 (>= 0.3.15)
-  pry
   rails (~> 3.2)
   rails-dev-tweaks (~> 1.1)
   rails-erd
