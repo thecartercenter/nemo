@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140714141705) do
+ActiveRecord::Schema.define(:version => 20140717214003) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -163,6 +163,19 @@ ActiveRecord::Schema.define(:version => 20140714141705) do
   add_index "option_levels", ["mission_id", "standard_id"], :name => "index_option_levels_on_mission_id_and_standard_id", :unique => true
   add_index "option_levels", ["option_set_id"], :name => "option_levels_option_set_id_fk"
   add_index "option_levels", ["standard_id"], :name => "option_levels_standard_id_fk"
+
+  create_table "option_nodes", :force => true do |t|
+    t.string   "ancestry"
+    t.integer  "option_set_id", :null => false
+    t.integer  "option_id"
+    t.integer  "rank",          :null => false
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
+  add_index "option_nodes", ["option_id"], :name => "option_nodes_option_id_fk"
+  add_index "option_nodes", ["option_set_id"], :name => "option_nodes_option_set_id_fk"
+  add_index "option_nodes", ["rank"], :name => "index_option_nodes_on_rank"
 
   create_table "option_sets", :force => true do |t|
     t.string   "name"
@@ -446,6 +459,9 @@ ActiveRecord::Schema.define(:version => 20140714141705) do
 
   add_foreign_key "option_levels", "option_levels", name: "option_levels_standard_id_fk", column: "standard_id"
   add_foreign_key "option_levels", "option_sets", name: "option_levels_option_set_id_fk"
+
+  add_foreign_key "option_nodes", "option_sets", name: "option_nodes_option_set_id_fk"
+  add_foreign_key "option_nodes", "options", name: "option_nodes_option_id_fk"
 
   add_foreign_key "option_sets", "missions", name: "option_sets_mission_id_fk"
   add_foreign_key "option_sets", "option_sets", name: "option_sets_standard_id_fk", column: "standard_id"

@@ -67,6 +67,9 @@ gem 'bootstrap-sass', '~> 3.0.3.0'
 # spinner
 gem 'spinjs-rails'
 
+# tree data structure
+gem 'ancestry', '~> 2.0'
+
 group :development do
   gem 'rails-erd'                     # generat with:  DIAGRAM=true rake db:migrate
   gem 'capistrano', '~> 2.15.4'       # deployment
