@@ -58,6 +58,44 @@ describe OptionNode do
     end
   end
 
+  describe 'updating from hash with no changes' do
+    before do
+      @node = create(:option_node_with_children, option_set: @set)
+      @node.update_attributes!('children_attribs' => [{
+          'id' => @node.c[0].id,
+          'option_attribs' => { 'id' => @node.c[0].option_id, 'name_translations' => {'en' => 'Animal'} },
+          'children_attribs' => [
+            {
+              'id' => @node.c[0].c[0].id,
+              'option_attribs' => { 'id' => @node.c[0].c[0].option_id, 'name_translations' => {'en' => 'Cat'} }
+            },
+            {
+              'id' => @node.c[0].c[1].id,
+              'option_attribs' => { 'id' => @node.c[0].c[1].option_id, 'name_translations' => {'en' => 'Dog'} }
+            }
+          ]
+        }, {
+          'id' => @node.c[1].id,
+          'option_attribs' => { 'id' => @node.c[1].option_id, 'name_translations' => {'en' => 'Plant'} },
+          'children_attribs' => [
+            {
+              'id' => @node.c[1].c[0].id,
+              'option_attribs' => { 'id' => @node.c[1].c[0].option_id, 'name_translations' => {'en' => 'Tulip'} }
+            },
+            {
+              'id' => @node.c[1].c[1].id,
+              'option_attribs' => { 'id' => @node.c[1].c[1].option_id, 'name_translations' => {'en' => 'Oak'} }
+            }
+          ]
+        }]
+      )
+    end
+
+    it 'should still be correct' do
+      expect_node([['Animal', ['Cat', 'Dog']], ['Plant', ['Tulip', 'Oak']]])
+    end
+  end
+
   def expect_node(val, node = nil)
     if node.nil?
       node = @node
@@ -69,7 +107,7 @@ describe OptionNode do
 
     if val.is_a?(Array)
       children = node.children.order(:rank)
-      expect(children.map(&:rank)).to eq (1..children.count).to_a # Contiguous ranks and correct count
+      expect(children.map(&:rank)).to eq (1..val[1].size).to_a # Contiguous ranks and correct count
       children.each_with_index { |c, i| expect_node(val[1][i], c) } # Recurse
     else
       expect(node.children).to be_empty
