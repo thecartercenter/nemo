@@ -29,8 +29,14 @@ class OptionNode < ActiveRecord::Base
     end
   end
 
+  # Simple shorthand alias for children.
   def c
     children
+  end
+
+  # Gets the OptionLevel for this node.
+  def level
+    is_root? ? nil : option_set.level(depth)
   end
 
   private

@@ -29,6 +29,40 @@ describe OptionNode do
   #   end
   # end
 
+  describe 'destroy' do
+    before do
+      @node = create(:option_node_with_children, option_set: @set)
+      @option = @node.children[0].option
+      @node.children[0].destroy
+    end
+
+    it 'should not destroy option' do
+      expect(Option.exists?(@option)).to be_truthy
+    end
+  end
+
+  describe 'option_level' do
+    before do
+      @node = create(:option_node_with_children, option_set: @set)
+    end
+
+    it 'should be nil for root' do
+      expect(@node.level).to be_nil
+    end
+
+    it 'should be correct for first level' do
+      subnode = @node.c[0]
+      expect(subnode.option_set).to receive(:level).with(1).and_return(double(:name => 'Foo'))
+      expect(subnode.level.name).to eq 'Foo'
+    end
+
+    it 'should be correct for second level' do
+      subnode = @node.c[0].c[0]
+      expect(subnode.option_set).to receive(:level).with(2).and_return(double(:name => 'Bar'))
+      expect(subnode.level.name).to eq 'Bar'
+    end
+  end
+
   describe 'creating single level from hash' do
     before do
       # we use a mixture of existing and new options
