@@ -8,7 +8,7 @@ FactoryGirl.define do
     mission { is_standard ? nil : get_mission }
 
     name do
-      option_names ? option_names.join : "AnOptionSet"
+      option_names.try(:any?) ? option_names.join : "AnOptionSet"
     end
 
     optionings do

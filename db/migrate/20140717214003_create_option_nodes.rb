@@ -4,7 +4,7 @@ class CreateOptionNodes < ActiveRecord::Migration
       t.string :ancestry
       t.integer :option_set_id, :null => false
       t.integer :option_id
-      t.integer :rank, :null => false
+      t.integer :rank, :null => false, :default => 1
 
       t.timestamps
     end
