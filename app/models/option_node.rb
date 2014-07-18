@@ -40,19 +40,27 @@ class OptionNode < ActiveRecord::Base
       reload # Ancestry doesn't seem to work properly without this.
       copy_mission_to_children_attribs # Need this or we get a validation error.
 
+      # Index all children by ID for better performance
+      children_by_id = children.index_by(&:id)
+
+      # Loop over all children attributes.
       (children_attribs || []).each_with_index do |attribs, i|
         attribs.symbolize_keys!
 
         if attribs[:id]
-          begin
-            children.find(attribs[:id]).update_attributes!(attribs)
-          rescue ActiveRecord::RecordNotFound
+          if matching = children_by_id[attribs[:id]]
+            matching.update_attributes!(attribs.merge(rank: i + 1))
 
+            # Remove from hash so that we'll know later which ones weren't updated.
+            children_by_id.delete(attribs[:id])
           end
         else
           children.create!(attribs.merge(option_set: option_set, rank: i + 1))
         end
       end
+
+      # Destroy existing children that were not mentioned in the update.
+      children_by_id.values.each{ |c| c.destroy }
     end
 
     def copy_mission_to_option
