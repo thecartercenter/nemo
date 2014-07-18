@@ -4,7 +4,7 @@ class OptionNode < ActiveRecord::Base
   attr_accessible :ancestry, :option_id, :option_set, :option_set_id, :rank, :option, :option_attribs, :children_attribs
 
   belongs_to :option_set
-  belongs_to :option
+  belongs_to :option, :autosave => true
   has_ancestry
 
   before_validation :copy_mission_to_option

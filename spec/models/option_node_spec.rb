@@ -53,12 +53,26 @@ describe OptionNode do
       )
     end
 
-    subject { @node }
-
     it 'should be correct' do
-      expect(@node.option_id).to be_nil
-      expect(@node.descendants.count).to eq 6
-      expect(@node.children[0].children[0].option.name).to eq 'Cat'
+      expect_node([['Animal', ['Cat', 'Dog']], ['Plant', ['Tulip', 'White Oak']]])
+    end
+  end
+
+  def expect_node(val, node = nil)
+    if node.nil?
+      node = @node
+      val = [nil, val]
+    end
+
+    expect(node.option.try(:name)).to eq (val.is_a?(Array) ? val[0] : val)
+    expect(node.option_set).to eq @set
+
+    if val.is_a?(Array)
+      children = node.children.order(:rank)
+      expect(children.map(&:rank)).to eq (1..children.count).to_a # Contiguous ranks and correct count
+      children.each_with_index { |c, i| expect_node(val[1][i], c) } # Recurse
+    else
+      expect(node.children).to be_empty
     end
   end
 end

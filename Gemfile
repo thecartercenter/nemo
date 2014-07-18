@@ -83,6 +83,7 @@ group :development, :test do
   gem 'jasmine-rails'                # test framework
   gem 'rspec-rails', '~> 3.0'        # test framework
   gem 'rspec-its'
+  gem 'rspec-activemodel-mocks'
   gem 'mocha'                        # mocking/stubbing
   gem 'capybara'                     # acceptance tests
   gem 'capybara-webkit'              # for testing js
