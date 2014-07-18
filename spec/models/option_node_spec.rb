@@ -31,7 +31,7 @@ describe OptionNode do
 
   describe 'destroy' do
     before do
-      @node = create(:option_node_with_children, option_set: @set)
+      @node = create(:option_node_with_grandchildren, option_set: @set)
       @option = @node.children[0].option
       @node.children[0].destroy
     end
@@ -43,7 +43,7 @@ describe OptionNode do
 
   describe 'option_level' do
     before do
-      @node = create(:option_node_with_children, option_set: @set)
+      @node = create(:option_node_with_grandchildren, option_set: @set)
     end
 
     it 'should be nil for root' do
@@ -60,6 +60,12 @@ describe OptionNode do
       subnode = @node.c[0].c[0]
       expect(subnode.option_set).to receive(:level).with(2).and_return(double(:name => 'Bar'))
       expect(subnode.level.name).to eq 'Bar'
+    end
+
+    it 'might be nil for first level' do
+      subnode = @node.c[0]
+      expect(subnode.option_set).to receive(:level).with(1).and_return(nil)
+      expect(subnode.level).to be_nil
     end
   end
 
@@ -113,7 +119,7 @@ describe OptionNode do
 
   describe 'updating from hash with no changes' do
     before do
-      @node = create(:option_node_with_children, option_set: @set)
+      @node = create(:option_node_with_grandchildren, option_set: @set)
       @node.update_attributes!('children_attribs' => [{
           'id' => @node.c[0].id,
           'option_attribs' => { 'id' => @node.c[0].option_id, 'name_translations' => {'en' => 'Animal'} },
@@ -151,7 +157,7 @@ describe OptionNode do
 
   describe 'updating from hash with changes' do
     before do
-      @node = create(:option_node_with_children, option_set: @set)
+      @node = create(:option_node_with_grandchildren, option_set: @set)
 
       # Changes:
       # Move Cat from Animal to Plant (by deleting node and creating new)
@@ -194,7 +200,7 @@ describe OptionNode do
 
   describe 'destroying subtree and adding new subtree' do
     before do
-      @node = create(:option_node_with_children, option_set: @set)
+      @node = create(:option_node_with_grandchildren, option_set: @set)
 
       @node.update_attributes!('children_attribs' => [{
           'id' => @node.c[1].id,
@@ -230,7 +236,7 @@ describe OptionNode do
 
   describe 'destroying all' do
     before do
-      @node = create(:option_node_with_children, option_set: @set)
+      @node = create(:option_node_with_grandchildren, option_set: @set)
 
       @node.update_attributes!('children_attribs' => [])
     end
