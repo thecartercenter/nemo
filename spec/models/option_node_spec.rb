@@ -29,7 +29,26 @@ describe OptionNode do
   #   end
   # end
 
-  describe 'creating from hash' do
+  describe 'creating single level from hash' do
+    before do
+      # we use a mixture of existing and new options
+      @dog = create(:option, name_en: 'Dog')
+      @node = OptionNode.create!(
+        'option' => nil,
+        'option_set' => @set, # This only needs to be passed to root, which will propagate it.
+        'children_attribs' => [
+          { 'option_attribs' => { 'name_translations' => {'en' => 'Cat'} } },
+          { 'option_attribs' => { 'id' => @dog.id, 'name_translations' => {'en' => 'Dog'} } }
+        ]
+      )
+    end
+
+    it 'should be correct' do
+      expect_node(['Cat', 'Dog'])
+    end
+  end
+
+  describe 'creating multilevel from hash' do
     before do
       # we use a mixture of existing and new options
       @dog = create(:option, name_en: 'Dog')
@@ -134,10 +153,59 @@ describe OptionNode do
       )
     end
 
-    it 'should still be correct' do
+    it 'should be correct' do
       expect_node([['Animal', ['Doge']], ['Plant', ['Cat', 'Oak', 'Tulipe']]])
     end
   end
+
+  describe 'destroying subtree and adding new subtree' do
+    before do
+      @node = create(:option_node_with_children, option_set: @set)
+
+      @node.update_attributes!('children_attribs' => [{
+          'id' => @node.c[1].id,
+          'option_attribs' => { 'id' => @node.c[1].option_id, 'name_translations' => {'en' => 'Plant'} },
+          'children_attribs' => [
+            {
+              'id' => @node.c[1].c[0].id,
+              'option_attribs' => { 'id' => @node.c[1].c[0].option_id, 'name_translations' => {'en' => 'Tulip'} }
+            },
+            {
+              'id' => @node.c[1].c[1].id,
+              'option_attribs' => { 'id' => @node.c[1].c[1].option_id, 'name_translations' => {'en' => 'Oak'} }
+            }
+          ]
+        },{
+          'option_attribs' => { 'name_translations' => {'en' => 'Laser'} },
+          'children_attribs' => [
+            {
+              'option_attribs' => { 'name_translations' => {'en' => 'Green'} }
+            },
+            {
+              'option_attribs' => { 'name_translations' => {'en' => 'Red'} }
+            }
+          ]
+        }]
+      )
+    end
+
+    it 'should be correct' do
+      expect_node([['Plant', ['Tulip', 'Oak']], ['Laser', ['Green', 'Red']]])
+    end
+  end
+
+  describe 'destroying all' do
+    before do
+      @node = create(:option_node_with_children, option_set: @set)
+
+      @node.update_attributes!('children_attribs' => [])
+    end
+
+    it 'should be correct' do
+      expect_node([])
+    end
+  end
+
 
   def expect_node(val, node = nil)
     if node.nil?
