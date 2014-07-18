@@ -120,38 +120,15 @@ describe OptionNode do
   describe 'updating from hash with no changes' do
     before do
       @node = create(:option_node_with_grandchildren, option_set: @set)
-      @node.update_attributes!('children_attribs' => [{
-          'id' => @node.c[0].id,
-          'option_attribs' => { 'id' => @node.c[0].option_id, 'name_translations' => {'en' => 'Animal'} },
-          'children_attribs' => [
-            {
-              'id' => @node.c[0].c[0].id,
-              'option_attribs' => { 'id' => @node.c[0].c[0].option_id, 'name_translations' => {'en' => 'Cat'} }
-            },
-            {
-              'id' => @node.c[0].c[1].id,
-              'option_attribs' => { 'id' => @node.c[0].c[1].option_id, 'name_translations' => {'en' => 'Dog'} }
-            }
-          ]
-        }, {
-          'id' => @node.c[1].id,
-          'option_attribs' => { 'id' => @node.c[1].option_id, 'name_translations' => {'en' => 'Plant'} },
-          'children_attribs' => [
-            {
-              'id' => @node.c[1].c[0].id,
-              'option_attribs' => { 'id' => @node.c[1].c[0].option_id, 'name_translations' => {'en' => 'Tulip'} }
-            },
-            {
-              'id' => @node.c[1].c[1].id,
-              'option_attribs' => { 'id' => @node.c[1].c[1].option_id, 'name_translations' => {'en' => 'Oak'} }
-            }
-          ]
-        }]
-      )
+      @node.update_attributes!(no_change_submission)
     end
 
     it 'should still be correct' do
       expect_node([['Animal', ['Cat', 'Dog']], ['Plant', ['Tulip', 'Oak']]])
+    end
+
+    it 'should not cause ranks to change' do
+      expect(@node.ranks_changed?).to eq false
     end
   end
 
@@ -196,26 +173,19 @@ describe OptionNode do
     it 'should be correct' do
       expect_node([['Animal', ['Doge']], ['Plant', ['Cat', 'Oak', 'Tulipe']]])
     end
+
+    it 'should cause ranks_changed? to become true' do
+      expect(@node.ranks_changed?).to eq true
+    end
   end
 
   describe 'destroying subtree and adding new subtree' do
     before do
       @node = create(:option_node_with_grandchildren, option_set: @set)
 
-      @node.update_attributes!('children_attribs' => [{
-          'id' => @node.c[1].id,
-          'option_attribs' => { 'id' => @node.c[1].option_id, 'name_translations' => {'en' => 'Plant'} },
-          'children_attribs' => [
-            {
-              'id' => @node.c[1].c[0].id,
-              'option_attribs' => { 'id' => @node.c[1].c[0].option_id, 'name_translations' => {'en' => 'Tulip'} }
-            },
-            {
-              'id' => @node.c[1].c[1].id,
-              'option_attribs' => { 'id' => @node.c[1].c[1].option_id, 'name_translations' => {'en' => 'Oak'} }
-            }
-          ]
-        },{
+      @node.update_attributes!('children_attribs' => [
+        no_change_submission['children_attribs'][0],
+        {
           'option_attribs' => { 'name_translations' => {'en' => 'Laser'} },
           'children_attribs' => [
             {
@@ -230,7 +200,11 @@ describe OptionNode do
     end
 
     it 'should be correct' do
-      expect_node([['Plant', ['Tulip', 'Oak']], ['Laser', ['Green', 'Red']]])
+      expect_node([['Animal', ['Cat', 'Dog']], ['Laser', ['Green', 'Red']]])
+    end
+
+    it 'should not cause ranks_changed? to become true' do
+      expect(@node.ranks_changed?).to eq false
     end
   end
 
@@ -246,22 +220,55 @@ describe OptionNode do
     end
   end
 
+  private
+    def expect_node(val, node = nil)
+      if node.nil?
+        node = @node
+        val = [nil, val]
+      end
 
-  def expect_node(val, node = nil)
-    if node.nil?
-      node = @node
-      val = [nil, val]
+      expect(node.option.try(:name)).to eq (val.is_a?(Array) ? val[0] : val)
+      expect(node.option_set).to eq @set
+
+      if val.is_a?(Array)
+        children = node.children.order(:rank)
+        expect(children.map(&:rank)).to eq (1..val[1].size).to_a # Contiguous ranks and correct count
+        children.each_with_index { |c, i| expect_node(val[1][i], c) } # Recurse
+      else
+        expect(node.children).to be_empty
+      end
     end
 
-    expect(node.option.try(:name)).to eq (val.is_a?(Array) ? val[0] : val)
-    expect(node.option_set).to eq @set
-
-    if val.is_a?(Array)
-      children = node.children.order(:rank)
-      expect(children.map(&:rank)).to eq (1..val[1].size).to_a # Contiguous ranks and correct count
-      children.each_with_index { |c, i| expect_node(val[1][i], c) } # Recurse
-    else
-      expect(node.children).to be_empty
+    # Returns what a hash submission would like like for the option_node_with_grandchildren object with no changes.
+    def no_change_submission
+      {
+        'children_attribs' => [{
+          'id' => @node.c[0].id,
+          'option_attribs' => { 'id' => @node.c[0].option_id, 'name_translations' => {'en' => 'Animal'} },
+          'children_attribs' => [
+            {
+              'id' => @node.c[0].c[0].id,
+              'option_attribs' => { 'id' => @node.c[0].c[0].option_id, 'name_translations' => {'en' => 'Cat'} }
+            },
+            {
+              'id' => @node.c[0].c[1].id,
+              'option_attribs' => { 'id' => @node.c[0].c[1].option_id, 'name_translations' => {'en' => 'Dog'} }
+            }
+          ]
+        }, {
+          'id' => @node.c[1].id,
+          'option_attribs' => { 'id' => @node.c[1].option_id, 'name_translations' => {'en' => 'Plant'} },
+          'children_attribs' => [
+            {
+              'id' => @node.c[1].c[0].id,
+              'option_attribs' => { 'id' => @node.c[1].c[0].option_id, 'name_translations' => {'en' => 'Tulip'} }
+            },
+            {
+              'id' => @node.c[1].c[1].id,
+              'option_attribs' => { 'id' => @node.c[1].c[1].option_id, 'name_translations' => {'en' => 'Oak'} }
+            }
+          ]
+        }]
+      }
     end
-  end
 end
