@@ -147,10 +147,11 @@ module ApplicationHelper
     ttl = ''
     model_name = controller_name.classify.downcase
 
-    # add icon where appropriate
-   if !options[:text_only] && (tag = icon_tag(model_name))
-      ttl += tag
-    end
+    # Add standard icon if appropriate
+    ttl += std_icon(@title_args[:standardized]) unless options[:text_only]
+
+    # Add object type icon where appropriate
+    ttl += icon_tag(model_name) unless options[:text_only]
 
     # add text
     ttl += t(action, {:scope => "page_titles.#{controller_name}", :default => [:all, ""]}.merge(@title_args || {}))
