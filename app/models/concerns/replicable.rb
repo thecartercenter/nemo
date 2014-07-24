@@ -301,31 +301,31 @@ module Replicable
       # 2. dest obj attrib value has NOT deviated from std
       # therefore, if either of the above conditions is met, we should NOT add the attrib to the dont_copy list
       # in all other cases, we should add it to the dont_copy list
-      replicable_opts(:user_modifiable).each do |attrib|
+      unless replication.creating?
+        replicable_opts(:user_modifiable).each do |attrib|
+          src_is = send(attrib)
+          dest_is = replication.dest_obj.send(attrib)
 
-        # if we are creating, immediately we know that nothing gets added to dont_copy
-        # otherwise, we need to check if value has deviated in dest obj
-        unless replication.creating?
+          # Need to use previous_changes here as obj is already saved. If obj not in previous_changes
+          # hash then we know it hasn't changed.
+          src_was = previous_changes.key?(attrib.to_s) ? previous_changes[attrib.to_s].first : src_is
 
           # if the src attrib is or was a hash, it gets special treatment
-          if send(attrib).is_a?(Hash) || send("#{attrib}_was").is_a?(Hash)
+          if src_is.is_a?(Hash) || src_was.is_a?(Hash)
 
-            # get refs, ensuring no nils
-            src_hash = send(attrib) || {}
-            src_hash_was = send("#{attrib}_was") || {}
-            dest_hash = replication.dest_obj.send(attrib) || {}
+            # ensure no nils
+            src_is ||= {}
+            src_was ||= {}
+            dest_is ||= {}
 
             # loop over each key in src
-            src_hash_was.each_key do |k|
+            src_was.each_key do |k|
               # don't copy this particular key if deviated
-              dont_copy << "#{attrib}.#{k}" if src_hash_was[k] != dest_hash[k]
+              dont_copy << "#{attrib}.#{k}" if src_was[k] != dest_is[k]
             end
           else
-            # figure out if the attribute has deviated
-            deviated = send("#{attrib}_was") != replication.dest_obj.send(attrib)
-
             # don't copy if value has deviated
-            dont_copy << attrib if deviated
+            dont_copy << attrib if src_was != dest_is
           end
         end
       end

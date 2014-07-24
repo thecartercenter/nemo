@@ -122,7 +122,7 @@ class StandardizableOptionSetTest < ActiveSupport::TestCase
 
     # rename std to same name as reg
     std.name = 'Fluff'
-    std.save!
+    std.save_and_rereplicate!
     copy.reload
 
     # copy's name should be Fluff 2 to avoid conflict
@@ -134,7 +134,7 @@ class StandardizableOptionSetTest < ActiveSupport::TestCase
     copy = std.replicate(:mode => :to_mission, :dest_mission => get_mission)
     # add option
     std.options << FactoryGirl.create(:option, :name => 'maybe', :is_standard => true)
-    std.save!
+    std.save_and_rereplicate!
     assert_equal(3, std.options.size)
 
     # copy should have new option also
@@ -153,7 +153,7 @@ class StandardizableOptionSetTest < ActiveSupport::TestCase
     # now add an option from one to the other
     std.options.each
     std.options << std2.options[0]
-    std.save!
+    std.save_and_rereplicate!
     assert_equal(std.options[2], std2.options[0])
 
     # copy should have new option also
@@ -167,8 +167,8 @@ class StandardizableOptionSetTest < ActiveSupport::TestCase
     copy = std.replicate(:mode => :to_mission, :dest_mission => get_mission)
 
     # remove option
-    std.optionings.destroy(std.optionings[2])
-    std.save!
+    std.destroy_optioning_at(2)
+    std.save_and_rereplicate!
     std.reload
     assert_equal(2, std.options.size)
 
@@ -185,7 +185,7 @@ class StandardizableOptionSetTest < ActiveSupport::TestCase
     # make sure optionings exist
     assert_not_nil(Optioning.where(:option_set_id => copy.id).first)
 
-    std.destroy
+    std.destroy_with_copies
 
     # make sure option set and optionings are destroyed
     assert(!OptionSet.exists?(copy))
@@ -203,7 +203,7 @@ class StandardizableOptionSetTest < ActiveSupport::TestCase
     assert(!os.optionings[0].option.is_standard?)
 
     # save and check cascade
-    os.save!
+    os.save_and_rereplicate!
     os.reload
     assert(os.optionings[0].is_standard?)
     assert(os.optionings[0].option.is_standard?)
@@ -225,7 +225,7 @@ class StandardizableOptionSetTest < ActiveSupport::TestCase
     assert_not_equal(copy_os, std_os)
 
     # remove option from std set
-    std_os.optionings[1].destroy
+    std_os.optionings[1].destroy_with_copies
 
     # copy should now have only two options -- yes and maybe
     assert_equal(%w(yes maybe), copy_os.reload.options.map(&:name))

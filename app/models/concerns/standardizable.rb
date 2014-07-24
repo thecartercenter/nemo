@@ -21,12 +21,6 @@ module Standardizable
 
     validates(:mission_id, :presence => true, :unless => ->(o) {o.is_standard?})
 
-    # re-replicate to copies after save so that any changes are propagated
-    after_save(:rereplicate_to_copies)
-
-    # we make this one before destroy because if we do it after then we violate an fk constraint before we get the chance
-    before_destroy(:destroy_copies)
-
     # returns a scope for all standard objects of the current class that are importable to the given mission
     # (i.e. that don't already exist in that mission)
     def self.importable_to(mission)
@@ -38,6 +32,19 @@ module Standardizable
       rel = rel.where("id NOT IN (?)", existing_ids) unless existing_ids.empty?
       rel
     end
+  end
+
+  def save_and_rereplicate
+    save.tap { rereplicate_to_copies }
+  end
+
+  def save_and_rereplicate!
+    save!.tap { rereplicate_to_copies }
+  end
+
+  def destroy_with_copies
+    destroy_copies
+    destroy
   end
 
   # get copy in the given mission, if it exists (there can only be one)
@@ -91,7 +98,6 @@ module Standardizable
           copies(true).each{|c| replicate(:mode => :to_mission, :dest_mission => c.mission)}
         end
       end
-      return true
     end
 
     # destroys all copies of this standard object
@@ -106,7 +112,6 @@ module Standardizable
       end
 
       copies(true).each{|c| c.destroy}
-      return true
     end
 
     # copies the is_standard and mission properties from any parent association

@@ -215,6 +215,11 @@ class OptionSet < ActiveRecord::Base
     s += optionings.map(&:to_s_indented).join
   end
 
+  def destroy_optioning_at(index)
+    optionings[index].destroy_with_copies
+    optionings.delete_at(2)
+  end
+
   private
 
     # makes sure that the set's option_levels have sequential ranks starting at 1.

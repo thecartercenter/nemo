@@ -67,7 +67,7 @@ class StandardizableOptionTest < ActiveSupport::TestCase
 
     # change copy first
     o2.name = 'Blah'
-    o2.save!
+    o2.save_and_rereplicate!
 
     # do update
     o.reload.name = 'Stuffz'
@@ -80,7 +80,7 @@ class StandardizableOptionTest < ActiveSupport::TestCase
   test "deleting std option should delete copies" do
     o = FactoryGirl.create(:option, :name => 'Stuff', :is_standard => true)
     o2 = o.replicate(:mode => :to_mission, :dest_mission => get_mission)
-    o.destroy
+    o.destroy_with_copies
     assert_nil(Option.where(:id => o2.id).first)
   end
 
