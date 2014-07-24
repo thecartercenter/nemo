@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140718130222) do
+ActiveRecord::Schema.define(:version => 20140724195448) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -166,18 +166,21 @@ ActiveRecord::Schema.define(:version => 20140718130222) do
 
   create_table "option_nodes", :force => true do |t|
     t.string   "ancestry"
-    t.integer  "option_set_id", :null => false
+    t.integer  "option_set_id"
     t.integer  "option_id"
-    t.integer  "rank",          :null => false
-    t.datetime "created_at",    :null => false
-    t.datetime "updated_at",    :null => false
+    t.integer  "rank",          :default => 1,     :null => false
+    t.datetime "created_at",                       :null => false
+    t.datetime "updated_at",                       :null => false
     t.integer  "mission_id"
+    t.integer  "standard_id"
+    t.boolean  "is_standard",   :default => false, :null => false
   end
 
   add_index "option_nodes", ["mission_id"], :name => "option_nodes_mission_id_fk"
   add_index "option_nodes", ["option_id"], :name => "option_nodes_option_id_fk"
   add_index "option_nodes", ["option_set_id"], :name => "option_nodes_option_set_id_fk"
   add_index "option_nodes", ["rank"], :name => "index_option_nodes_on_rank"
+  add_index "option_nodes", ["standard_id"], :name => "option_nodes_standard_id_fk"
 
   create_table "option_sets", :force => true do |t|
     t.string   "name"
@@ -200,7 +203,7 @@ ActiveRecord::Schema.define(:version => 20140718130222) do
     t.integer  "option_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "rank",            :default => 1
+    t.integer  "rank"
     t.boolean  "is_standard",     :default => false
     t.integer  "standard_id"
     t.integer  "mission_id"
@@ -463,6 +466,7 @@ ActiveRecord::Schema.define(:version => 20140718130222) do
   add_foreign_key "option_levels", "option_sets", name: "option_levels_option_set_id_fk"
 
   add_foreign_key "option_nodes", "missions", name: "option_nodes_mission_id_fk"
+  add_foreign_key "option_nodes", "option_nodes", name: "option_nodes_standard_id_fk", column: "standard_id"
   add_foreign_key "option_nodes", "option_sets", name: "option_nodes_option_set_id_fk"
   add_foreign_key "option_nodes", "options", name: "option_nodes_option_id_fk"
 

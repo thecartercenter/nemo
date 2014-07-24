@@ -221,23 +221,6 @@ describe OptionNode do
   end
 
   private
-    def expect_node(val, node = nil)
-      if node.nil?
-        node = @node
-        val = [nil, val]
-      end
-
-      expect(node.option.try(:name)).to eq (val.is_a?(Array) ? val[0] : val)
-      expect(node.option_set).to eq @set
-
-      if val.is_a?(Array)
-        children = node.children.order(:rank)
-        expect(children.map(&:rank)).to eq (1..val[1].size).to_a # Contiguous ranks and correct count
-        children.each_with_index { |c, i| expect_node(val[1][i], c) } # Recurse
-      else
-        expect(node.children).to be_empty
-      end
-    end
 
     # Returns what a hash submission would like like for the option_node_with_grandchildren object with no changes.
     def no_change_submission

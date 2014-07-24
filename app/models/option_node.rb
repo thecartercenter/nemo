@@ -1,7 +1,8 @@
 class OptionNode < ActiveRecord::Base
-  include MissionBased
+  include MissionBased, Replicable, Standardizable
 
-  attr_accessible :ancestry, :option_id, :option_set, :option_set_id, :rank, :option, :option_attribs, :children_attribs
+  attr_accessible :ancestry, :option_id, :option_set, :option_set_id, :rank, :option, :option_attribs,
+    :children_attribs, :is_standard, :standard
 
   belongs_to :option_set
   belongs_to :option, :autosave => true
@@ -20,10 +21,12 @@ class OptionNode < ActiveRecord::Base
   attr_accessor :ranks_changed
   alias_method :ranks_changed?, :ranks_changed
 
+  replicable :parent_assoc => :option_set
+
   # Copy the mission ID from the option set.
   def option_set=(set)
     association(:option_set).writer(set)
-    self.mission = set.mission
+    self.mission = set.try(:mission)
   end
 
   def option_attribs=(attribs)
@@ -68,7 +71,7 @@ class OptionNode < ActiveRecord::Base
             children_by_id.delete(attribs[:id])
           end
         else
-          children.create!(attribs.merge(option_set: option_set, rank: i + 1))
+          children.create!(attribs.merge(option_set: option_set, is_standard: is_standard, standard: standard, rank: i + 1))
         end
       end
 
