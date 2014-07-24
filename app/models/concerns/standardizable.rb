@@ -1,7 +1,7 @@
+# Holds behaviors related to standard objects including re-replication, importing, etc.
+# All Standardizable objects are assumed to be Replicable also.
 module Standardizable
   extend ActiveSupport::Concern
-
-  # we assume that any Standardizable class also imports Replicable
 
   # list of class names whose changes should be replicated on save
   CLASSES_TO_REREPLICATE = %w(Form Question Questioning OptionSet Option)
@@ -52,7 +52,7 @@ module Standardizable
   end
 
   def standard_copy?
-    !standard.nil?
+    standard.present?
   end
 
   # adds an obj to the list of copies

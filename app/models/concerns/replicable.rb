@@ -1,4 +1,4 @@
-# methods that handle replicating changes to copies of core objects (forms, questions, etc.) within and across missions
+# Behaviors that handle replicating creation and updates to copies of core objects (forms, questions, etc.) within and across missions.
 module Replicable
   extend ActiveSupport::Concern
 
@@ -30,63 +30,26 @@ module Replicable
     end
   end
 
-  # TOM: is there any reason the replication mode and destination mission can't be passed explicitly to replicate as I suggested?
-  # then we wouldn't need all this extra complexity AND the code would be more readable
-  # my suggestion was this:
-  #
-  # def replicate(options_or_replication)
-  # replicate(:mode => :clone)
-  # replicate(:mode => :to_mission, :mission => m)
-  # replicate(:mode => :to_mission, :mission => m)
-  # replicate(:mode => :promote, :retain_link_on_promote => false)
-  #
-  # I'm happy to talk more about it.
-
-  # figure out the replication mode based off of the options
-  def determine_replication_mode(options=nil)
-    if options.is_a?(Hash) && options.key?(:mode)
-      options[:mode]
-    else
-      # when in the default mode, we determine the mode based off of the mission
-      # if the mission is nil we are doing a standard copy.
-      # if a mission is passed in, we are doing a clone.
-      :default
-    end
-  end
-
-  # figure out what mission to use based off of the options
-  def determine_mission(options)
-    mode = determine_replication_mode(options)
-    return nil if mode == :promote
-
-    if options.is_a?(Hash)
-      if options.key?(:mission)
-        options[:mission]
-      else # no mission was passed into the options
-        nil
-      end
-    else # options was not a hash.
-      options
-    end
-  end
-
-  # Expected options:
-  # replicate(:mode => :clone)
-  # replicate(:mode => :to_mission, :dest_mission => m)
-  # replicate(:mode => :promote, :retain_link_on_promote => false)
+  # There are three replication modes passed via the :mode parameter:
+  # * :clone      Make a copy of the object and its decendants in the same mission (or admin mode).
+  # * :to_mission Copy/update a standard object and its decendants to a particular different mission.
+  #               requires :dest_mission parameter
+  # * :promote    Creates standard objects from a non-standard object. If :retain_link_on_promote parameter
+  #               is true then the original objects immediately become standard copies and thus edits are restricted.
+  #               Otherwise no link is maintained between the original and new standard.
+  # Examples:
+  # obj.replicate(:mode => :clone)
+  # obj.replicate(:mode => :to_mission, :dest_mission => m)
+  # obj.replicate(:mode => :promote, :retain_link_on_promote => false)
   def replicate(options = nil)
-    unless options.is_a?(Replication)
-      raise ArgumentError, 'replication mode is required' unless options[:mode]
-      if options[:mode] == :to_mission && !options[:dest_mission]
-        raise ArgumentError, 'dest_mission must be specified for to_mission mode'
-      end
-    end
-
     # if mission or nil was passed in, we don't have a replication object, so we need to create one
     # a replication is an object to track replication parameters
     if options.is_a?(Replication)
       replication = options
     else
+      raise ArgumentError, 'replication mode is required' unless options[:mode]
+      raise ArgumentError, 'dest_mission must be given for to_mission mode' if options[:mode] == :to_mission && !options[:dest_mission]
+      raise ArgumentError, 'dest_mission only required for to_mission mode' if options[:mode] != :to_mission && options[:dest_mission]
       replication = Replication.new(options.merge(:src_obj => self))
     end
 
@@ -114,7 +77,7 @@ module Replicable
     replicate_attributes(replication)
 
     # if we are copying standard to standard, preserve the is_standard flag
-    dest_obj.is_standard = true if replication.replicating_to_standard?
+    dest_obj.is_standard = true if replication.to_standard?
 
     # ensure uniqueness params are respected
     ensure_uniqueness_when_replicating(replication)
@@ -127,16 +90,13 @@ module Replicable
 
     # if this is a standard-to-mission replication, add the newly replicated dest obj to the list of copies
     # unless it is there already
-    add_copy(dest_obj) if replication.standard_to_mission?
+    add_copy(dest_obj) if replication.to_mission?
 
     replicate_child_associations(replication)
 
     dest_obj.save!
 
-    # link basic object to newly created standard object
-    if replication.mode == :promote && replication.retain_link_on_promote?
-      link_object_to_standard(dest_obj)
-    end
+    link_object_to_standard(dest_obj) if replication.promote_and_retain_link?
 
     return dest_obj
   end
