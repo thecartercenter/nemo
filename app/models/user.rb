@@ -262,7 +262,7 @@ class User < ActiveRecord::Base
       self.email = nil if email.blank?
       self.phone = phone.blank? ? nil : "+" + phone.gsub(/[^0-9]/, "")
       self.phone2 = phone2.blank? ? nil : "+" + phone2.gsub(/[^0-9]/, "")
-      self.login = login.downcase
+      self.login = login.nil? ? nil : login.try(:downcase)
       return true
     end
 
