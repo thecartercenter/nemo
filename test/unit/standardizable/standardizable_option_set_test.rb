@@ -151,6 +151,7 @@ class StandardizableOptionSetTest < ActiveSupport::TestCase
     copy2 = std2.replicate(:mode => :to_mission, :dest_mission => get_mission)
 
     # now add an option from one to the other
+    std.options.each
     std.options << std2.options[0]
     std.save!
     assert_equal(std.options[2], std2.options[0])
