@@ -8,14 +8,6 @@
 
 <% @response.answers.collect{|a| a.errors.full_messages.join(", ")}.join(" ") %>
 
-<%# show an edit link if allowed and in show mode %>
-<% if params[:action] == 'show' && can?(:update, @response) %>
-  <div class="tip">
-    <%= action_link('edit', edit_response_path(@response)) %>
-    <%= link_to(t('response.edit_this_response'), edit_response_path(@response)) %>
-  </div>
-<% end %>
-
 <%= elmo_form_for(@response) do |f| %>
 
   <%= top_action_links(@response, :except => :new) %>
