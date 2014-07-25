@@ -1,17 +1,13 @@
 require 'spec_helper'
 
 describe OptionNode do
-  before { @set = create(:option_set) }
-
   # context 'on create' do
   #   before do
-  #     @root = create(:option_node, option_set: @set, rank: 1)
   #     @child = @root.children.create(rank: 1)
   #     @grandchild = @child.children.create(rank: 1)
   #   end
   #
   #   it 'should inherit option set from parent' do
-  #     expect(@child.option_set).to eq @set
   #     expect(@grandchild.option_set).to eq @set
   #   end
   # end
@@ -31,7 +27,7 @@ describe OptionNode do
 
   describe 'destroy' do
     before do
-      @node = create(:option_node_with_grandchildren, option_set: @set)
+      @node = create(:option_node_with_grandchildren)
       @option = @node.children[0].option
       @node.children[0].destroy
     end
@@ -43,7 +39,7 @@ describe OptionNode do
 
   describe 'option_level' do
     before do
-      @node = create(:option_node_with_grandchildren, option_set: @set)
+      @node = create(:option_node_with_grandchildren)
     end
 
     it 'should be nil for root' do
@@ -74,8 +70,8 @@ describe OptionNode do
       # we use a mixture of existing and new options
       @dog = create(:option, name_en: 'Dog')
       @node = OptionNode.create!(
+        'mission_id' => get_mission.id,
         'option' => nil,
-        'option_set' => @set, # This only needs to be passed to root, which will propagate it.
         'children_attribs' => [
           { 'option_attribs' => { 'name_translations' => {'en' => 'Cat'} } },
           { 'option_attribs' => { 'id' => @dog.id, 'name_translations' => {'en' => 'Dog'} } }
@@ -95,7 +91,7 @@ describe OptionNode do
       @oak = create(:option, name_en: 'Oak')
       @node = OptionNode.create!(
         'option' => nil,
-        'option_set' => @set, # This only needs to be passed to root, which will propagate it.
+        'mission_id' => get_mission.id,
         'children_attribs' => [{
           'option_attribs' => { 'name_translations' => {'en' => 'Animal'} },
           'children_attribs' => [
@@ -119,7 +115,7 @@ describe OptionNode do
 
   describe 'updating from hash with no changes' do
     before do
-      @node = create(:option_node_with_grandchildren, option_set: @set)
+      @node = create(:option_node_with_grandchildren)
       @node.update_attributes!(no_change_submission)
     end
 
@@ -134,7 +130,7 @@ describe OptionNode do
 
   describe 'updating from hash with changes' do
     before do
-      @node = create(:option_node_with_grandchildren, option_set: @set)
+      @node = create(:option_node_with_grandchildren)
 
       # Changes:
       # Move Cat from Animal to Plant (by deleting node and creating new)
@@ -181,7 +177,7 @@ describe OptionNode do
 
   describe 'destroying subtree and adding new subtree' do
     before do
-      @node = create(:option_node_with_grandchildren, option_set: @set)
+      @node = create(:option_node_with_grandchildren)
 
       @node.update_attributes!('children_attribs' => [
         no_change_submission['children_attribs'][0],
@@ -210,7 +206,7 @@ describe OptionNode do
 
   describe 'destroying all' do
     before do
-      @node = create(:option_node_with_grandchildren, option_set: @set)
+      @node = create(:option_node_with_grandchildren)
 
       @node.update_attributes!('children_attribs' => [])
     end

@@ -4,6 +4,7 @@ FactoryGirl.define do
   end
 
   factory :option_node_with_children, class: OptionNode do
+    mission { is_standard ? nil : get_mission }
     option nil
     children_attribs [
       { 'option_attribs' => { 'name_translations' => {'en' => 'Cat'} } },
