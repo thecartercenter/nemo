@@ -2,13 +2,12 @@ class OptionNode < ActiveRecord::Base
   include MissionBased, Replicable, Standardizable
 
   attr_accessible :ancestry, :option_id, :option_set, :option_set_id, :rank, :option, :option_attribs,
-    :children_attribs, :is_standard, :standard
+    :children_attribs, :is_standard, :standard, :mission_id, :standard_id
 
   belongs_to :option_set
   belongs_to :option, :autosave => true
   has_ancestry
 
-  before_validation :copy_mission_to_option
   after_save :update_children
 
   attr_accessor :children_attribs
@@ -50,7 +49,8 @@ class OptionNode < ActiveRecord::Base
     # Sets ranks_changed? flag if the ranks of any of the descendants' children change.
     def update_children
       reload # Ancestry doesn't seem to work properly without this.
-      copy_mission_to_children_attribs # Need this or we get a validation error.
+      children_attribs.each(&:symbolize_keys!) if children_attribs
+      copy_attribs_to_children
 
       self.ranks_changed = false # Assume false to begin.
 
@@ -59,8 +59,6 @@ class OptionNode < ActiveRecord::Base
 
       # Loop over all children attributes.
       (children_attribs || []).each_with_index do |attribs, i|
-        attribs.symbolize_keys!
-
         if attribs[:id]
           if matching = children_by_id[attribs[:id]]
             self.ranks_changed = true if matching.rank != i + 1
@@ -71,7 +69,7 @@ class OptionNode < ActiveRecord::Base
             children_by_id.delete(attribs[:id])
           end
         else
-          children.create!(attribs.merge(option_set: option_set, is_standard: is_standard, standard: standard, rank: i + 1))
+          children.create!(attribs.merge(rank: i + 1))
         end
       end
 
@@ -79,15 +77,10 @@ class OptionNode < ActiveRecord::Base
       children_by_id.values.each{ |c| c.destroy }
     end
 
-    def copy_mission_to_option
-      option.mission = mission if option && option.mission.nil?
-      return true
-    end
-
-    def copy_mission_to_children_attribs
-      (children_attribs || []).each do |c|
-        c[:option_attributes][:mission_id] = mission.id if c[:option_attributes]
-        c['option_attributes'][:mission_id] = mission.id if c['option_attributes']
+    def copy_attribs_to_children
+      (children_attribs || []).each do |attribs|
+        [:mission_id, :option_set_id, :is_standard, :standard_id].each{ |k| attribs[k] = send(k) }
+        [:mission_id, :is_standard, :standard_id].each{ |k| attribs[:option_attribs].try('[]=', k, send(k)) }
       end
     end
 end
