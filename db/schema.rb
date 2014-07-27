@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140714141705) do
+ActiveRecord::Schema.define(:version => 20140727210546) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -377,6 +377,29 @@ ActiveRecord::Schema.define(:version => 20140714141705) do
 
   add_index "sms_messages", ["body"], :name => "index_sms_messages_on_body", :length => {"body"=>160}
   add_index "sms_messages", ["mission_id"], :name => "sms_messages_mission_id_fk"
+
+  create_table "taggings", :force => true do |t|
+    t.integer  "question_id", :null => false
+    t.integer  "tag_id",      :null => false
+    t.boolean  "is_standard"
+    t.integer  "standard_id"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  add_index "taggings", ["question_id"], :name => "index_taggings_on_question_id"
+  add_index "taggings", ["tag_id"], :name => "index_taggings_on_tag_id"
+
+  create_table "tags", :force => true do |t|
+    t.string   "name",        :limit => 64
+    t.integer  "mission_id"
+    t.boolean  "is_standard"
+    t.integer  "standard_id"
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
+  end
+
+  add_index "tags", ["mission_id"], :name => "index_tags_on_mission_id"
 
   create_table "user_groups", :force => true do |t|
     t.integer  "user_id",    :null => false

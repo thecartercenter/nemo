@@ -1,0 +1,13 @@
+class CreateTags < ActiveRecord::Migration
+  def change
+    create_table :tags do |t|
+      t.string :name, :limit => 64
+      t.references :mission
+      t.boolean :is_standard
+      t.integer :standard_id
+
+      t.timestamps
+    end
+    add_index :tags, :mission_id
+  end
+end
