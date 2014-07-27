@@ -14,6 +14,8 @@ class Question < Questionable
   has_many(:calculations, :foreign_key => 'question1_id', :inverse_of => :question1)
   has_many(:subquestions, :foreign_key => 'parent_id', :include => :option_level, :order => 'option_levels.rank',
     :inverse_of => :question, :autosave => true, :dependent => :destroy)
+  has_many(:taggings, :dependent => :destroy)
+  has_many(:tags, :through => :taggings)
 
   before_validation(:normalize_fields)
   before_validation(:maintain_subquestions)
