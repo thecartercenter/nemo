@@ -9,19 +9,20 @@ describe Option do
   describe 'replication' do
     before do
       @orig = create(:option_node_with_grandchildren, is_standard: true)
-      @copy = @orig.replicate(mode: :to_mission, dest_mission: @mission2)
+      @node = @orig.replicate(mode: :to_mission, dest_mission: @mission2)
     end
 
     describe 'on create' do
-      subject { @copy }
+      subject { @node }
       its(:mission) { should eq @mission2 }
       its(:standard) { should eq @orig }
       its(:is_standard) { should be_falsey }
+      its(:option) { should be_nil } # Because it's root
 
-      it 'should have copies orig options' do
-        expect_node([['Animal', ['Cat', 'Dog']], ['Laser', ['Green', 'Red']]], @copy)
-        expect(@copy.c[1].c[1].standard).to eq @orig.c[1].c[1]
-        expect(@copy.c[1].c[1].option.standard).to eq @orig.c[1].c[1].option.standard
+      it 'should have copies of orig options' do
+        expect_node([['Animal', ['Cat', 'Dog']], ['Plant', ['Tulip', 'Oak']]])
+        expect(@node.c[1].c[1].standard).to eq @orig.c[1].c[1]
+        expect(@node.c[1].c[1].option.standard).to eq @orig.c[1].c[1].option
       end
     end
   end

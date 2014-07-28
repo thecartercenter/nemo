@@ -20,7 +20,7 @@ class OptionNode < ActiveRecord::Base
   attr_accessor :ranks_changed
   alias_method :ranks_changed?, :ranks_changed
 
-  replicable :parent_assoc => :option_set
+  replicable :parent_assoc => :option_set, :replicate_tree => true, :child_assocs => :option, :dont_copy => :ancestry
 
   # Copy the mission ID from the option set.
   def option_set=(set)
@@ -43,11 +43,17 @@ class OptionNode < ActiveRecord::Base
     is_root? ? nil : option_set.level(depth)
   end
 
+  def to_s
+    (is_root? ? '[ROOT]' : option.try(:name) || '[No option]') + " #{object_id}"
+  end
+
   private
 
     # Special method for creating/updating a tree of nodes via the children_attribs hash.
     # Sets ranks_changed? flag if the ranks of any of the descendants' children change.
     def update_children
+      return if children_attribs.nil?
+
       reload # Ancestry doesn't seem to work properly without this.
       children_attribs.each(&:symbolize_keys!) if children_attribs
       copy_attribs_to_children

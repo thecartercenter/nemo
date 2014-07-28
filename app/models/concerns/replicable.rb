@@ -354,22 +354,22 @@ module Replicable
     # this is because some child objects (e.g. conditions) need access to their parents
     def add_replication_dest_obj_to_parents_assocation(replication, dest_obj = nil)
       # trivial case
-      return unless replication.has_ancestors?
+      return unless replication.has_ancestors? # This has nothing to do with ancestry gem.
 
-      # get dest obj from replication unless specified explicitly
       dest_obj ||= replication.dest_obj
 
-      # get immediate parent and reflect on association
-      refl = replication.parent.class.reflect_on_association(replication.current_assoc)
-
-      # associate object with parent using appropriate method depending on assoc type
-      if refl.collection?
+      # Associate object with parent using appropriate method depending on assoc type.
+      if replication.parent_assoc_type == :singleton
+        replication.parent.send("#{replication.current_assoc}=", dest_obj)
+      else
         # only copy if not already there
         unless replication.parent.send(replication.current_assoc).include?(dest_obj)
-          replication.parent.send(replication.current_assoc).send('<<', dest_obj)
+          if replication.parent_assoc_type == :tree
+            dest_obj.parent = replication.parent
+          else # :collection
+            replication.parent.send(replication.current_assoc).send('<<', dest_obj)
+          end
         end
-      else
-        replication.parent.send("#{replication.current_assoc}=", dest_obj)
       end
     end
 
@@ -383,6 +383,8 @@ module Replicable
           replicate_non_collection_association(assoc, replication)
         end
       end
+
+      replicate_tree(replication) if replicable_opts(:replicate_tree)
     end
 
     # replicates a collection-type association
@@ -393,13 +395,12 @@ module Replicable
       src_child_ids = send(assoc_name).map(&:id)
       replication.dest_obj.send(assoc_name).each do |o|
         unless src_child_ids.include?(o.standard_id)
-          Rails.logger.debug("DESTROYING CHILD")
           replication.dest_obj.send(assoc_name).destroy(o)
         end
       end
 
       # replicate the existing children
-      send(assoc_name).each{|o| replicate_child(o, assoc_name, replication)}
+      send(assoc_name).each{|o| replicate_associated(o, assoc_name, replication)}
     end
 
     # replicates a non-collection-type association (e.g. belongs_to)
@@ -412,18 +413,21 @@ module Replicable
         end
       # else replicate the single child
       else
-        replicate_child(send(assoc_name), assoc_name, replication)
+        replicate_associated(send(assoc_name), assoc_name, replication)
       end
     end
 
-    # calls replicate on an individual child object, generating a new set of replication params
-    # for this particular replicate call
-    def replicate_child(child, assoc_name, replication)
-      # build new replication param obj for child
-      new_replication = replication.clone_for_recursion(child, assoc_name)
+    # Replicates descendants of an object that has_ancestry.
+    def replicate_tree(replication)
+      children.each{|o| replicate_associated(o, 'children', replication)}
+    end
 
-      # call replicate for the child object
-      child.replicate(new_replication)
+    # calls replicate on an individual associated object, generating a new set of replication params
+    # for this particular replicate call
+    def replicate_associated(obj, assoc_name, replication)
+      # build new replication param obj for obj
+      new_replication = replication.clone_for_recursion(obj, assoc_name)
+      obj.replicate(new_replication)
     end
 
 end

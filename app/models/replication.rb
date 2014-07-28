@@ -62,6 +62,17 @@ class Replication
     )
   end
 
+  # Returns the parent association type: :tree, :collection, or :singleton.
+  def parent_assoc_type
+    if src_obj.replicable_opts(:replicate_tree) && current_assoc == 'children'
+      :tree
+    elsif parent.class.reflect_on_association(current_assoc).collection?
+      :collection
+    else
+      :singleton
+    end
+  end
+
   def clone?
     mode == :clone
   end
