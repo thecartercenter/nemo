@@ -37,9 +37,22 @@ describe OptionNode do
     end
   end
 
+  describe 'updating without hash' do
+    before do
+      @node = create(:option_node_with_grandchildren)
+      @other_option = create(:option)
+      @node.c[0].update_attributes!(option: @other_option)
+    end
+
+    it 'should not destroy children' do
+      expect(@node.c[0].children.size).to eq 2
+    end
+  end
+
   describe 'option_level' do
     before do
       @node = create(:option_node_with_grandchildren)
+      allow_message_expectations_on_nil # Since we want to set expectations on subnode.option_set, which is nil.
     end
 
     it 'should be nil for root' do
