@@ -118,3 +118,73 @@ def expect_node(val, node = nil)
     expect(node.children).to be_empty
   end
 end
+
+# This is a standard set of changes to the option_node_with_grandchildren factory object.
+# Changes:
+# Move Cat from Animal to Plant (by deleting node and creating new)
+# Change name of Tulip to Tulipe.
+# Change name of Dog to Doge.
+# Move Tulip to rank 3.
+def standard_changeset(node)
+  {
+    'children_attribs' => [{
+      'id' => node.c[0].id,
+      'option_attribs' => { 'id' => node.c[0].option_id, 'name_translations' => {'en' => 'Animal'} },
+      'children_attribs' => [
+        {
+          'id' => node.c[0].c[1].id,
+          'option_attribs' => { 'id' => node.c[0].c[1].option_id, 'name_translations' => {'en' => 'Doge'} }
+        }
+      ]
+    }, {
+      'id' => node.c[1].id,
+      'option_attribs' => { 'id' => node.c[1].option_id, 'name_translations' => {'en' => 'Plant'} },
+      'children_attribs' => [
+        {
+          'option_attribs' => { 'id' => node.c[0].c[0].option_id, 'name_translations' => {'en' => 'Cat'} }
+        },
+        {
+          'id' => node.c[1].c[1].id,
+          'option_attribs' => { 'id' => node.c[1].c[1].option_id, 'name_translations' => {'en' => 'Oak'} }
+        },
+        {
+          'id' => node.c[1].c[0].id,
+          'option_attribs' => { 'id' => node.c[1].c[0].option_id, 'name_translations' => {'en' => 'Tulipe'} }
+        },
+      ]
+    }]
+  }
+end
+
+# What a hash submission would like like for the option_node_with_grandchildren object with no changes.
+def no_change_changeset(node)
+  {
+    'children_attribs' => [{
+      'id' => node.c[0].id,
+      'option_attribs' => { 'id' => node.c[0].option_id, 'name_translations' => {'en' => 'Animal'} },
+      'children_attribs' => [
+        {
+          'id' => node.c[0].c[0].id,
+          'option_attribs' => { 'id' => node.c[0].c[0].option_id, 'name_translations' => {'en' => 'Cat'} }
+        },
+        {
+          'id' => node.c[0].c[1].id,
+          'option_attribs' => { 'id' => node.c[0].c[1].option_id, 'name_translations' => {'en' => 'Dog'} }
+        }
+      ]
+    }, {
+      'id' => node.c[1].id,
+      'option_attribs' => { 'id' => node.c[1].option_id, 'name_translations' => {'en' => 'Plant'} },
+      'children_attribs' => [
+        {
+          'id' => node.c[1].c[0].id,
+          'option_attribs' => { 'id' => node.c[1].c[0].option_id, 'name_translations' => {'en' => 'Tulip'} }
+        },
+        {
+          'id' => node.c[1].c[1].id,
+          'option_attribs' => { 'id' => node.c[1].c[1].option_id, 'name_translations' => {'en' => 'Oak'} }
+        }
+      ]
+    }]
+  }
+end

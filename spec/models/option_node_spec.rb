@@ -129,7 +129,7 @@ describe OptionNode do
   describe 'updating from hash with no changes' do
     before do
       @node = create(:option_node_with_grandchildren)
-      @node.update_attributes!(no_change_submission)
+      @node.update_attributes!(no_change_changeset(@node))
     end
 
     it 'should still be correct' do
@@ -144,39 +144,7 @@ describe OptionNode do
   describe 'updating from hash with changes' do
     before do
       @node = create(:option_node_with_grandchildren)
-
-      # Changes:
-      # Move Cat from Animal to Plant (by deleting node and creating new)
-      # Change name of Tulip to Tulipe.
-      # Change name of Dog to Doge.
-      # Move Tulip to rank 3.
-      @node.update_attributes!('children_attribs' => [{
-          'id' => @node.c[0].id,
-          'option_attribs' => { 'id' => @node.c[0].option_id, 'name_translations' => {'en' => 'Animal'} },
-          'children_attribs' => [
-            {
-              'id' => @node.c[0].c[1].id,
-              'option_attribs' => { 'id' => @node.c[0].c[1].option_id, 'name_translations' => {'en' => 'Doge'} }
-            }
-          ]
-        }, {
-          'id' => @node.c[1].id,
-          'option_attribs' => { 'id' => @node.c[1].option_id, 'name_translations' => {'en' => 'Plant'} },
-          'children_attribs' => [
-            {
-              'option_attribs' => { 'id' => @node.c[0].c[0].option_id, 'name_translations' => {'en' => 'Cat'} }
-            },
-            {
-              'id' => @node.c[1].c[1].id,
-              'option_attribs' => { 'id' => @node.c[1].c[1].option_id, 'name_translations' => {'en' => 'Oak'} }
-            },
-            {
-              'id' => @node.c[1].c[0].id,
-              'option_attribs' => { 'id' => @node.c[1].c[0].option_id, 'name_translations' => {'en' => 'Tulipe'} }
-            },
-          ]
-        }]
-      )
+      @node.update_attributes!(standard_changeset(@node))
     end
 
     it 'should be correct' do
@@ -191,9 +159,8 @@ describe OptionNode do
   describe 'destroying subtree and adding new subtree' do
     before do
       @node = create(:option_node_with_grandchildren)
-
       @node.update_attributes!('children_attribs' => [
-        no_change_submission['children_attribs'][0],
+        no_change_changeset(@node)['children_attribs'][0],
         {
           'option_attribs' => { 'name_translations' => {'en' => 'Laser'} },
           'children_attribs' => [
@@ -228,39 +195,4 @@ describe OptionNode do
       expect_node([])
     end
   end
-
-  private
-
-    # Returns what a hash submission would like like for the option_node_with_grandchildren object with no changes.
-    def no_change_submission
-      {
-        'children_attribs' => [{
-          'id' => @node.c[0].id,
-          'option_attribs' => { 'id' => @node.c[0].option_id, 'name_translations' => {'en' => 'Animal'} },
-          'children_attribs' => [
-            {
-              'id' => @node.c[0].c[0].id,
-              'option_attribs' => { 'id' => @node.c[0].c[0].option_id, 'name_translations' => {'en' => 'Cat'} }
-            },
-            {
-              'id' => @node.c[0].c[1].id,
-              'option_attribs' => { 'id' => @node.c[0].c[1].option_id, 'name_translations' => {'en' => 'Dog'} }
-            }
-          ]
-        }, {
-          'id' => @node.c[1].id,
-          'option_attribs' => { 'id' => @node.c[1].option_id, 'name_translations' => {'en' => 'Plant'} },
-          'children_attribs' => [
-            {
-              'id' => @node.c[1].c[0].id,
-              'option_attribs' => { 'id' => @node.c[1].c[0].option_id, 'name_translations' => {'en' => 'Tulip'} }
-            },
-            {
-              'id' => @node.c[1].c[1].id,
-              'option_attribs' => { 'id' => @node.c[1].c[1].option_id, 'name_translations' => {'en' => 'Oak'} }
-            }
-          ]
-        }]
-      }
-    end
 end
