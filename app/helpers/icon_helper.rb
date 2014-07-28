@@ -36,8 +36,8 @@ module IconHelper
     (name = FONT_AWESOME_ICON_MAPPINGS[key.to_sym]) ? content_tag(:i, '', :class => "fa fa-#{name}") : ''
   end
 
-  # Returns icon tag for standard icon if obj is standard, '' otherwise.
-  def std_icon(obj)
-    obj.respond_to?(:standardized?) && obj.standardized? ? icon_tag(:standard) : ''
+  # Returns icon tag for standard icon if obj is standard (or boolean == true), '' otherwise.
+  def std_icon(obj_or_bool)
+    obj_or_bool.respond_to?(:standardized?) && obj_or_bool.standardized? || obj_or_bool == true ? icon_tag(:standard) : ''
   end
 end

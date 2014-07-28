@@ -25,6 +25,10 @@ h1.title {
     color: $light-gray;
     margin-right: 5px;
   }
+
+  i.fa-certificate {
+    color: $gold;
+  }
 }
 
 /* std seal in title */
@@ -98,8 +102,11 @@ div.loading_indicator_inline { width: 16px; display: inline-block; vertical-alig
 div.loading_indicator_floating { width: 16px; float: left; }
 table.index_table i.fa-certificate {
   margin-bottom: -5px;
-  color: $gold;
   font-size: 1.5em;
+}
+
+i.fa-certificate {
+  color: $gold;
 }
 
 /* set of links */
