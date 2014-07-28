@@ -11,6 +11,12 @@ module ApplicationHelper
     controller.class.name.underscore.gsub("/", "_").gsub(/_controller$/, "")
   end
 
+  # Returns the current action (as symbol), but returns :new for create and :edit for update.
+  def canonical_action
+    a = controller.action_name.to_sym
+    {create: :new, update: :edit}[a] || a
+  end
+
   # pairs flash errors with bootstrap styling
   def bootstrap_flash_class(level)
     case level
