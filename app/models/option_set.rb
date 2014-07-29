@@ -21,6 +21,8 @@ class OptionSet < ActiveRecord::Base
   has_many(:option_levels, :dependent => :destroy, :autosave => true, :inverse_of => :option_set,
     :after_add => :option_levels_changed, :after_remove => :option_levels_changed)
 
+  has_one :root_node, class_name: OptionNode, dependent: :destroy, autosave: true
+
   validates(:name, :presence => true)
   validate(:at_least_one_option)
   validate(:name_unique_per_mission)
@@ -64,6 +66,8 @@ class OptionSet < ActiveRecord::Base
 
   # these methods are used during population from JSON
   attr_accessor :_option_levels, :_optionings
+
+  delegate :ranks_changed?, to: :root_node
 
   # checks if this option set appears in any smsable questionings
   def form_smsable?
