@@ -96,6 +96,9 @@ module Replicable
 
     dest_obj.save!
 
+    # Need to clear this for next time.
+    clear_recent_changes! if respond_to?(:recent_changes)
+
     link_object_to_standard(dest_obj) if replication.promote_and_retain_link?
 
     return dest_obj
@@ -229,7 +232,7 @@ module Replicable
         obj = self.class.new
       end
 
-      # set flag so that standardizable callback doesn't call replicate again unnecessarily
+      # set flag that we are in a replication
       obj.changing_in_replication = true
 
       obj

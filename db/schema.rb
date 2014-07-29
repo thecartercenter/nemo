@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140724195448) do
+ActiveRecord::Schema.define(:version => 20140728201010) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -228,6 +228,7 @@ ActiveRecord::Schema.define(:version => 20140724195448) do
     t.text     "hint_translations"
     t.boolean  "is_standard",       :default => false
     t.integer  "standard_id"
+    t.text     "recent_changes"
   end
 
   add_index "options", ["mission_id", "standard_id"], :name => "index_options_on_mission_id_and_standard_id", :unique => true

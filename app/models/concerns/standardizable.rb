@@ -35,11 +35,19 @@ module Standardizable
   end
 
   def save_and_rereplicate
-    save.tap { rereplicate_to_copies }
+    Thread.current[:elmo_capturing_changes?] = true
+    result = save
+    Thread.current[:elmo_capturing_changes?] = false
+    rereplicate_to_copies
+    result
   end
 
   def save_and_rereplicate!
-    save!.tap { rereplicate_to_copies }
+    Thread.current[:elmo_capturing_changes?] = true
+    result = save!
+    Thread.current[:elmo_capturing_changes?] = false
+    rereplicate_to_copies
+    result
   end
 
   def destroy_with_copies
