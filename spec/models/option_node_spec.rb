@@ -148,7 +148,7 @@ describe OptionNode do
     end
 
     it 'should be correct' do
-      expect_node([['Animal', ['Doge']], ['Plant', ['Cat', 'Oak', 'Tulipe']]])
+      expect_node([['Animal', ['Doge']], ['Plant', ['Cat', 'Tulipe']]])
     end
 
     it 'should cause ranks_changed? to become true' do

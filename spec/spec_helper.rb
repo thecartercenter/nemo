@@ -124,6 +124,7 @@ end
 # Move Cat from Animal to Plant (by deleting node and creating new)
 # Change name of Tulip to Tulipe.
 # Change name of Dog to Doge.
+# Delete Oak.
 # Move Tulip to rank 3.
 def standard_changeset(node)
   {
@@ -142,10 +143,6 @@ def standard_changeset(node)
       'children_attribs' => [
         {
           'option_attribs' => { 'id' => node.c[0].c[0].option_id, 'name_translations' => {'en' => 'Cat'} }
-        },
-        {
-          'id' => node.c[1].c[1].id,
-          'option_attribs' => { 'id' => node.c[1].c[1].option_id, 'name_translations' => {'en' => 'Oak'} }
         },
         {
           'id' => node.c[1].c[0].id,

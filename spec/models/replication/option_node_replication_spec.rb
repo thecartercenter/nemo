@@ -28,12 +28,17 @@ describe Option do
 
     describe 'on update' do
       before do
+        @oak_node_copy = @node.c[1].c[1]
         @orig.assign_attributes(standard_changeset(@orig))
         @orig.save_and_rereplicate!
       end
 
       it 'should have replicated changes' do
-        expect_node([['Animal', ['Doge']], ['Plant', ['Cat', 'Oak', 'Tulipe']]])
+        expect_node([['Animal', ['Doge']], ['Plant', ['Cat', 'Tulipe']]])
+      end
+
+      it 'should have removed oak node copy' do
+        expect(OptionNode.exists?(@oak_node_copy)).to be_falsey
       end
     end
 
