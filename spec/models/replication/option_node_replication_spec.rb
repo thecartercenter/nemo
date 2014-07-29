@@ -36,5 +36,20 @@ describe Option do
         expect_node([['Animal', ['Doge']], ['Plant', ['Cat', 'Oak', 'Tulipe']]])
       end
     end
+
+    describe 'on destroy' do
+      before do
+        @option_copy = @node.c[0].c[0].option
+        @orig.destroy_with_copies
+      end
+
+      it 'should destroy copies' do
+        expect(OptionNode.exists?(@node)).to be_falsey
+      end
+
+      it 'should not destroy copies of related options' do
+        expect(Option.exists?(@option_copy)).to be_truthy
+      end
+    end
   end
 end

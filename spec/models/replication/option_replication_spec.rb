@@ -47,7 +47,7 @@ describe Option do
     describe 'on destroy' do
       before { @orig.destroy_with_copies }
 
-      it 'should be destroyed' do
+      it 'should destroy copies' do
         expect(Option.exists?(@copy)).to be_falsey
       end
     end
