@@ -213,9 +213,11 @@ module Replicable
 
   # link the src object to the newly created standard object
   def link_object_to_standard(standard_object)
-    self.is_standard = true
-    self.standard_id = standard_object.id
-    self.save!
+    if new_record?
+      self.standard_id = standard_object.id
+    else
+      update_column(:standard_id, standard_object.id)
+    end
   end
 
   private
