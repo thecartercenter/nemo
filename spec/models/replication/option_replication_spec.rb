@@ -22,7 +22,8 @@ describe Option do
 
     describe 'on update' do
       before do
-        @orig.update_attributes!(name_en: 'Bar')
+        @orig.name_en = 'Bar'
+        @orig.save_and_rereplicate!
       end
 
       subject { @copy.reload }
@@ -32,8 +33,9 @@ describe Option do
 
     describe 'on update after copy name change' do
       before do
-        @copy.update_attributes!(name_en: 'Baz')
-        @orig.update_attributes!(name_en: 'Noop')
+        @copy.update_attributes(name_en: 'Baz')
+        @orig.name_en = 'Noop'
+        @orig.save_and_rereplicate!
       end
 
       subject { @copy.reload }
@@ -43,7 +45,7 @@ describe Option do
     end
 
     describe 'on destroy' do
-      before { @orig.destroy }
+      before { @orig.destroy_with_copies }
 
       it 'should be destroyed' do
         expect(Option.exists?(@copy)).to be_falsey
