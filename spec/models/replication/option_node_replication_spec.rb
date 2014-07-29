@@ -6,7 +6,7 @@ describe Option do
     @mission2 = create(:mission)
   end
 
-  describe 'replication' do
+  describe 'to_mission' do
     before do
       @orig = create(:option_node_with_grandchildren, is_standard: true)
       @node = @orig.replicate(mode: :to_mission, dest_mission: @mission2)
@@ -55,6 +55,24 @@ describe Option do
       it 'should not destroy copies of related options' do
         expect(Option.exists?(@option_copy)).to be_truthy
       end
+    end
+  end
+
+  describe 'promote' do
+    before(:all) do
+      @orig = create(:option_node_with_grandchildren, mission: @mission1)
+      @node = @orig.replicate(mode: :promote, retain_link_on_promote: true)
+    end
+
+    it 'should create a correct copy' do
+      expect_node([['Animal', ['Cat', 'Dog']], ['Plant', ['Tulip', 'Oak']]])
+      expect(@node.is_standard).to eq true
+      expect(@node.standard).to be_nil
+    end
+
+    it 'should retain links' do
+      expect(@orig.reload.standard).to eq @node
+      expect(@orig.c[0].standard).to eq @node.c[0]
     end
   end
 end

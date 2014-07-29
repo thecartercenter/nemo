@@ -22,6 +22,12 @@ class OptionNode < ActiveRecord::Base
 
   replicable :parent_assoc => :option_set, :replicate_tree => true, :child_assocs => :option, :dont_copy => :ancestry
 
+  # Overriding this to avoid error from ancestry.
+  alias_method :_children, :children
+  def children
+    new_record? ? [] : _children
+  end
+
   # Copy the mission ID from the option set.
   def option_set=(set)
     association(:option_set).writer(set)

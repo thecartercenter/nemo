@@ -380,6 +380,7 @@ module Replicable
         # only copy if not already there
         unless replication.parent.send(replication.current_assoc).include?(dest_obj)
           if replication.parent_assoc_type == :tree
+            replication.parent.save! # Need to save here or setting parent may not work.
             dest_obj.parent = replication.parent
           else # :collection
             replication.parent.send(replication.current_assoc).send('<<', dest_obj)
