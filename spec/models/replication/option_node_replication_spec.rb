@@ -66,6 +66,7 @@ describe Option do
 
     it 'should create a correct copy' do
       expect_node([['Animal', ['Cat', 'Dog']], ['Plant', ['Tulip', 'Oak']]])
+      expect(@node.mission).to be_nil
       expect(@node.is_standard).to eq true
       expect(@node.standard).to be_nil
     end
@@ -73,6 +74,25 @@ describe Option do
     it 'should retain links' do
       expect(@orig.reload.standard).to eq @node
       expect(@orig.c[0].standard).to eq @node.c[0]
+    end
+  end
+
+  describe 'clone' do
+    before(:all) do
+      @orig = create(:option_node_with_grandchildren, mission: @mission1)
+      @node = @orig.replicate(mode: :clone)
+    end
+
+    it 'should make correct copy' do
+      expect_node([['Animal', ['Cat', 'Dog']], ['Plant', ['Tulip', 'Oak']]])
+      expect(@node.mission).to eq @mission1
+      expect(@node.is_standard).to eq false
+      expect(@node.standard).to be_nil
+    end
+
+    it 'should reuse options but not nodes' do
+      expect(@node.c[0].option).to eq @orig.c[0].option
+      expect(@node.c[0]).not_to eq @orig.c[0]
     end
   end
 end

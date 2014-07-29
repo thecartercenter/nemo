@@ -2,7 +2,7 @@
 module Replicable
   extend ActiveSupport::Concern
 
-  JOIN_CLASSES = %w(Optioning Questioning Condition)
+  JOIN_CLASSES = %w(Optioning OptionNode Questioning Condition)
 
   # an initial list of attributes that we don't want to copy from the src_obj to the dest_obj
   ATTRIBS_NOT_TO_COPY = %w(id created_at updated_at mission_id mission is_standard standard_id standard)
