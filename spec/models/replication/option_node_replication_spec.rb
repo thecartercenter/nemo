@@ -25,5 +25,16 @@ describe Option do
         expect(@node.c[1].c[1].option.standard).to eq @orig.c[1].c[1].option
       end
     end
+
+    describe 'on update' do
+      before do
+        @orig.assign_attributes(standard_changeset(@orig))
+        @orig.save_and_rereplicate!
+      end
+
+      it 'should have replicated changes' do
+        expect_node([['Animal', ['Doge']], ['Plant', ['Cat', 'Oak', 'Tulipe']]])
+      end
+    end
   end
 end

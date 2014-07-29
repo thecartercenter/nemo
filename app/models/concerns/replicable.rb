@@ -264,6 +264,8 @@ module Replicable
           # copy unless explicitly told not to
           unless skip["#{name}.#{k}"]
 
+            Rails.logger.debug "Replicating attribute #{name}.#{k}" if self.class.log_replication?
+
             # ensure dest attrib is initialized
             dest_obj.send("#{name}=", {}) unless dest_obj.send(name).is_a?(Hash)
 
@@ -274,6 +276,7 @@ module Replicable
 
       # otherwise it's not a hash, so just do the copy
       else
+        Rails.logger.debug "Replicating attribute #{name}" if self.class.log_replication?
         dest_obj.send("#{name}=", value) unless skip[name]
       end
     end
@@ -309,9 +312,9 @@ module Replicable
           src_is = send(attrib)
           dest_is = replication.dest_obj.send(attrib)
 
-          # Need to use previous_changes here as obj is already saved. If obj not in previous_changes
-          # hash then we know it hasn't changed.
-          src_was = previous_changes.key?(attrib.to_s) ? previous_changes[attrib.to_s].first : src_is
+          # Prefer the recent_changes hash here since it goes back further, but only implemented on some objects.
+          change_hash = (respond_to?(:recent_changes) ? recent_changes : previous_changes) || {}
+          src_was = change_hash.key?(attrib.to_s) ? change_hash[attrib.to_s].first : src_is
 
           # if the src attrib is or was a hash, it gets special treatment
           if src_is.is_a?(Hash) || src_was.is_a?(Hash)
@@ -323,8 +326,13 @@ module Replicable
 
             # loop over each key in src
             src_was.each_key do |k|
-              # don't copy this particular key if deviated
-              dont_copy << "#{attrib}.#{k}" if src_was[k] != dest_is[k]
+
+              if src_was[k] != dest_is[k]
+                if self.class.log_replication?
+                  Rails.logger.debug("Not copying #{attrib}.#{k} because destination has deviated (#{src_was[k].inspect} vs #{dest_is[k].inspect})")
+                end
+                dont_copy << "#{attrib}.#{k}"
+              end
             end
           else
             # don't copy if value has deviated
@@ -332,6 +340,8 @@ module Replicable
           end
         end
       end
+
+      Rails.logger.debug("Not copying #{dont_copy.to_s}") if self.class.log_replication?
 
       dont_copy
     end
@@ -397,9 +407,7 @@ module Replicable
       # destroy any children in dest obj that don't exist source obj
       src_child_ids = send(assoc_name).map(&:id)
       replication.dest_obj.send(assoc_name).each do |o|
-        unless src_child_ids.include?(o.standard_id)
-          replication.dest_obj.send(assoc_name).destroy(o)
-        end
+        replication.dest_obj.send(assoc_name).destroy(o) unless src_child_ids.include?(o.standard_id)
       end
 
       # replicate the existing children
@@ -422,6 +430,11 @@ module Replicable
 
     # Replicates descendants of an object that has_ancestry.
     def replicate_tree(replication)
+      # destroy any children in dest obj that don't exist source obj
+      replication.dest_obj.children.each do |o|
+        o.destroy unless child_ids.include?(o.standard_id)
+      end
+
       children.each{|o| replicate_associated(o, 'children', replication)}
     end
 

@@ -4,7 +4,7 @@ module Standardizable
   extend ActiveSupport::Concern
 
   # list of class names whose changes should be replicated on save
-  CLASSES_TO_REREPLICATE = %w(Form Question Questioning OptionSet Option)
+  CLASSES_TO_REREPLICATE = %w(Form Question Questioning OptionSet OptionNode Option)
 
   included do
     # create a flag to use with the callback below

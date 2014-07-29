@@ -25,6 +25,6 @@ module RecentChangeable
     end
 
     def clear_recent_changes!
-      update_column(:recent_changes, nil) if respond_to?(:recent_changes)
+      update_column(:recent_changes, nil) if respond_to?(:recent_changes) && !new_record?
     end
 end

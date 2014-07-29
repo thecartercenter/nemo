@@ -61,19 +61,19 @@ describe OptionNode do
 
     it 'should be correct for first level' do
       subnode = @node.c[0]
-      expect(subnode.option_set).to receive(:level).with(1).and_return(double(:name => 'Foo'))
+      expect(subnode.option_set).to receive(:try).with(:level, 1).and_return(double(:name => 'Foo'))
       expect(subnode.level.name).to eq 'Foo'
     end
 
     it 'should be correct for second level' do
       subnode = @node.c[0].c[0]
-      expect(subnode.option_set).to receive(:level).with(2).and_return(double(:name => 'Bar'))
+      expect(subnode.option_set).to receive(:try).with(:level, 2).and_return(double(:name => 'Bar'))
       expect(subnode.level.name).to eq 'Bar'
     end
 
     it 'might be nil for first level' do
       subnode = @node.c[0]
-      expect(subnode.option_set).to receive(:level).with(1).and_return(nil)
+      expect(subnode.option_set).to receive(:try).with(:level, 1).and_return(nil)
       expect(subnode.level).to be_nil
     end
   end

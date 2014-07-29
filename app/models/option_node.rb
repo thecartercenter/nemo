@@ -40,11 +40,30 @@ class OptionNode < ActiveRecord::Base
 
   # Gets the OptionLevel for this node.
   def level
-    is_root? ? nil : option_set.level(depth)
+    is_root? ? nil : option_set.try(:level, depth)
   end
 
   def to_s
-    (is_root? ? '[ROOT]' : option.try(:name) || '[No option]') + " #{object_id}"
+    "Option Node: ID #{id}  Option ID: " + (is_root? ? '[ROOT]' : option_id || '[No option]').to_s + "  System ID: #{object_id}"
+  end
+
+  # returns a string representation of this node and its children, indented by the given amount
+  # options[:space] - the number of spaces to indent
+  def to_s_indented(options = {})
+    options[:space] ||= 0
+
+    # indentation
+    (' ' * options[:space]) +
+
+      # option level name, option name
+      ["(#{level.try(:name)})", "#{rank}. #{option.try(:name) || '[Root]'}"].compact.join(' ') +
+
+      # parent, mission
+      " (mission: #{mission.try(:name) || '[None]'}, " +
+        "option-mission: #{option ? option.mission.try(:name) || '[None]' : '[N/A]'}, " +
+        "option-set: #{option_set.try(:name) || '[None]'})" +
+
+      "\n" + children.order('rank').map{ |c| c.to_s_indented(:space => options[:space] + 2) }.join
   end
 
   private
@@ -80,7 +99,7 @@ class OptionNode < ActiveRecord::Base
       end
 
       # Destroy existing children that were not mentioned in the update.
-      children_by_id.values.each{ |c| c.destroy }
+      children_by_id.values.each{ |c| c.destroy_with_copies }
     end
 
     def copy_attribs_to_children
