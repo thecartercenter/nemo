@@ -22,17 +22,17 @@ class OptionSetTest < ActiveSupport::TestCase
 
   test "ranks changed" do
     os = FactoryGirl.create(:option_set, :option_names => %w(a b c d))
-    assert_equal(false, os.positions_changed?)
+    assert_equal(false, os.ranks_changed?)
 
     # changing rank should raise flag
     os.optionings[1].rank = 6
-    assert_equal(true, os.positions_changed?)
+    assert_equal(true, os.ranks_changed?)
     os.save!
-    assert_equal(false, os.positions_changed?)
+    assert_equal(false, os.ranks_changed?)
 
     # adding option set should also raise flag
     os.optionings.build(:rank => 8, :option => Option.new(:name => 'e'))
-    assert_equal(true, os.positions_changed?)
+    assert_equal(true, os.ranks_changed?)
     os.save!
   end
 
@@ -82,11 +82,11 @@ class OptionSetTest < ActiveSupport::TestCase
 
     # make sure no false positive
     os.optionings[0].rank = 1
-    assert_equal(false, os.positions_changed?)
+    assert_equal(false, os.ranks_changed?)
 
     # make sure no false negative
     os.optionings[0].rank = 50
-    assert_equal(true, os.positions_changed?)
+    assert_equal(true, os.ranks_changed?)
   end
 
   #
@@ -116,15 +116,15 @@ class OptionSetTest < ActiveSupport::TestCase
     # create the animal/plant option set
     os = FactoryGirl.create(:multilevel_option_set)
 
-    assert_equal(false, os.positions_changed?)
+    assert_equal(false, os.ranks_changed?)
 
     # switch the two first level options
     os.optionings[0].rank = 2
     os.optionings[1].rank = 1
 
-    assert_equal(true, os.positions_changed?)
+    assert_equal(true, os.ranks_changed?)
     os.save!
-    assert_equal(false, os.positions_changed?)
+    assert_equal(false, os.ranks_changed?)
 
     # switch the two rank 1 second level options (this is tricky since the rank numbers aren't changing)
     cat = os.optionings[0].optionings[0]
@@ -138,7 +138,7 @@ class OptionSetTest < ActiveSupport::TestCase
     os.optionings[1].optionings[0] = cat
     cat.parent = os.optionings[1]
 
-    assert_equal(true, os.positions_changed?)
+    assert_equal(true, os.ranks_changed?)
   end
 
   test "options_added should work with multilevel option set" do

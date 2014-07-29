@@ -14,9 +14,9 @@ module OptioningParentable
 
   # checks if any of the options in this set have changed position (rank or parent) since last save
   # trivially true if this is a new object
-  def positions_changed?
+  def ranks_changed?
     # first check self (unless self is an OptionSet), then check children if necessary
-    is_a?(Optioning) && signature_changed? || optionings.any?(&:positions_changed?)
+    is_a?(Optioning) && signature_changed? || optionings.any?(&:ranks_changed?)
   end
 
   # returns the parent, either an OptionSet or Optioning, or nil if self is an OptionSet

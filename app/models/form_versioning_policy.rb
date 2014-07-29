@@ -21,7 +21,7 @@ class FormVersioningPolicy
       case action
       when :update
         # changing the option order is a trigger if the form is smsable
-        triggers << {:reason => :option_order_changed, :forms => obj.forms.select{|f| f.smsable?}} if obj.positions_changed?
+        triggers << {:reason => :option_order_changed, :forms => obj.forms.select{|f| f.smsable?}} if obj.ranks_changed?
       end
 
     when "Optioning"
