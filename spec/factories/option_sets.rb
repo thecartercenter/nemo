@@ -6,7 +6,7 @@ FactoryGirl.define do
 
     sequence(:name) { |n| "Option Set #{n}" }
     mission { is_standard ? nil : get_mission }
-    association :root_node, factory: :option_node_with_children
+    children_attribs { OPTION_NODE_WITH_CHILDREN_ATTRIBS }
 
     optionings do
       # make the optioning objects, respecting the order they came in
@@ -16,7 +16,7 @@ FactoryGirl.define do
     end
 
     factory :empty_option_set do
-      association :root_node, factory: :option_node_with_no_children
+      children_attribs []
     end
 
     factory :multilevel_option_set do
@@ -29,7 +29,7 @@ FactoryGirl.define do
 
       mission { is_standard ? nil : get_mission }
       multi_level true
-      association :root_node, factory: :option_node_with_grandchildren
+      children_attribs { OPTION_NODE_WITH_GRANDCHILDREN_ATTRIBS }
 
       after(:build) do |os, evaluator|
         # build option levels

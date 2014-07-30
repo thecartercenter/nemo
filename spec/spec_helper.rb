@@ -102,10 +102,10 @@ def get_s(*args)
 end
 
 def expect_node(val, node = nil, options = {})
-  if node.nil?
-    node = @node
+  unless options[:recursed]
+    node ||= @node
     val = [nil, val]
-    options[:root] = @node
+    options[:root] = node
   end
 
   expect(node.option.try(:name)).to eq (val.is_a?(Array) ? val[0] : val)
@@ -116,6 +116,7 @@ def expect_node(val, node = nil, options = {})
   if val.is_a?(Array)
     children = node.children.order(:rank)
     expect(children.map(&:rank)).to eq (1..val[1].size).to_a # Contiguous ranks and correct count
+    options[:recursed] = true
     children.each_with_index { |c, i| expect_node(val[1][i], c, options) } # Recurse
   else
     expect(node.children).to be_empty

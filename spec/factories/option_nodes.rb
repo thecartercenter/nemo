@@ -10,27 +10,12 @@ FactoryGirl.define do
 
     factory :option_node_with_children do
       option nil
-      children_attribs [
-        { 'option_attribs' => { 'name_translations' => {'en' => 'Cat'} } },
-        { 'option_attribs' => { 'name_translations' => {'en' => 'Dog'} } }
-      ]
+      children_attribs { OPTION_NODE_WITH_CHILDREN_ATTRIBS }
     end
 
     factory :option_node_with_grandchildren do
       option nil
-      children_attribs [{
-        'option_attribs' => { 'name_translations' => {'en' => 'Animal'} },
-        'children_attribs' => [
-          { 'option_attribs' => { 'name_translations' => {'en' => 'Cat'} } },
-          { 'option_attribs' => { 'name_translations' => {'en' => 'Dog'} } }
-        ]
-      }, {
-        'option_attribs' => { 'name_translations' => {'en' => 'Plant'} },
-        'children_attribs' => [
-          { 'option_attribs' => { 'name_translations' => {'en' => 'Tulip'} } },
-          { 'option_attribs' => { 'name_translations' => {'en' => 'Oak'} } }
-        ]
-      }]
+      children_attribs { OPTION_NODE_WITH_GRANDCHILDREN_ATTRIBS }
     end
   end
 end

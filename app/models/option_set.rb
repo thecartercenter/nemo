@@ -27,6 +27,7 @@ class OptionSet < ActiveRecord::Base
   validate(:at_least_one_option)
   validate(:name_unique_per_mission)
 
+  before_validation(:save_root_node)
   before_validation(:multi_level_option_sets_must_have_option_levels)
   before_validation(:normalize_fields)
   before_validation(:ensure_children_ranks)
@@ -68,6 +69,11 @@ class OptionSet < ActiveRecord::Base
   attr_accessor :_option_levels, :_optionings
 
   delegate :ranks_changed?, to: :root_node
+
+  def children_attribs=(attribs)
+    build_root_node if root_node.nil?
+    root_node.assign_attributes(children_attribs: attribs)
+  end
 
   # checks if this option set appears in any smsable questionings
   def form_smsable?
@@ -225,6 +231,12 @@ class OptionSet < ActiveRecord::Base
   end
 
   private
+
+    def save_root_node
+      # Copy some redundant attribs to root node before saving.
+      root_node.assign_attributes(mission: mission, is_standard: is_standard)
+      root_node.save!
+    end
 
     # makes sure that the set's option_levels have sequential ranks starting at 1.
     def ensure_option_level_ranks

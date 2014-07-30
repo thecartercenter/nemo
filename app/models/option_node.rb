@@ -2,7 +2,7 @@ class OptionNode < ActiveRecord::Base
   include MissionBased, Replicable, Standardizable
 
   attr_accessible :ancestry, :option_id, :option_set, :option_set_id, :rank, :option, :option_attribs,
-    :children_attribs, :is_standard, :standard, :mission_id, :standard_id, :parent
+    :children_attribs, :is_standard, :standard, :mission_id, :mission, :standard_id, :parent
 
   belongs_to :option_set
   belongs_to :option, :autosave => true
@@ -26,12 +26,6 @@ class OptionNode < ActiveRecord::Base
   alias_method :_children, :children
   def children
     new_record? ? [] : _children
-  end
-
-  # Copy the mission ID from the option set.
-  def option_set=(set)
-    association(:option_set).writer(set)
-    self.mission = set.try(:mission)
   end
 
   def option_attribs=(attribs)
