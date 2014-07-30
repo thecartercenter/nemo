@@ -157,6 +157,43 @@ def standard_changeset(node)
   }
 end
 
+# Adds one option only to standard multilevel option node.
+def additive_changeset(node)
+  {
+    'children_attribs' => [{
+      'id' => node.c[0].id,
+      'option_attribs' => { 'id' => node.c[0].option_id, 'name_translations' => {'en' => 'Animal'} },
+      'children_attribs' => [
+        {
+          'id' => node.c[0].c[0].id,
+          'option_attribs' => { 'id' => node.c[0].c[0].option_id, 'name_translations' => {'en' => 'Cat'} }
+        },
+        {
+          'id' => node.c[0].c[1].id,
+          'option_attribs' => { 'id' => node.c[0].c[1].option_id, 'name_translations' => {'en' => 'Dog'} }
+        },
+        {
+          'option_attribs' => { 'name_translations' => {'en' => 'Ocelot'} }
+        }
+      ]
+    }, {
+      'id' => node.c[1].id,
+      'option_attribs' => { 'id' => node.c[1].option_id, 'name_translations' => {'en' => 'Plant'} },
+      'children_attribs' => [
+        {
+          'id' => node.c[1].c[0].id,
+          'option_attribs' => { 'id' => node.c[1].c[0].option_id, 'name_translations' => {'en' => 'Tulip'} }
+        },
+        {
+          'id' => node.c[1].c[1].id,
+          'option_attribs' => { 'id' => node.c[1].c[1].option_id, 'name_translations' => {'en' => 'Oak'} }
+        }
+      ]
+    }]
+  }
+end
+
+
 # What a hash submission would like like for the option_node_with_grandchildren object with no changes.
 def no_change_changeset(node)
   {

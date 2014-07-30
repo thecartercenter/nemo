@@ -17,8 +17,10 @@ class OptionNode < ActiveRecord::Base
   # This attribute is set ONLY after an update using children_attribs.
   # It is true only if the node or any of its descendants have existing children
   # and the update causes their ranks to change.
-  attr_accessor :ranks_changed
+  attr_accessor :ranks_changed, :options_added, :options_removed
   alias_method :ranks_changed?, :ranks_changed
+  alias_method :options_added?, :options_added
+  alias_method :options_removed?, :options_removed
 
   replicable parent_assoc: :option_set, replicate_tree: true, child_assocs: :option, dont_copy: :ancestry
 
@@ -82,6 +84,8 @@ class OptionNode < ActiveRecord::Base
       copy_attribs_to_children
 
       self.ranks_changed = false # Assume false to begin.
+      self.options_added = false
+      self.options_removed = false
 
       # Index all children by ID for better performance
       children_by_id = children.index_by(&:id)
@@ -94,18 +98,26 @@ class OptionNode < ActiveRecord::Base
           if matching = children_by_id[attribs[:id]]
             self.ranks_changed = true if matching.rank != i + 1
             matching.update_attributes!(attribs.merge(rank: i + 1))
-            self.ranks_changed = true if matching.ranks_changed?
+            copy_flags_from_subnode(matching)
 
             # Remove from hash so that we'll know later which ones weren't updated.
             children_by_id.delete(attribs[:id])
           end
         else
+          self.options_added = true
           children.create!(attribs.merge(rank: i + 1))
         end
       end
 
       # Destroy existing children that were not mentioned in the update.
+      self.options_removed = true unless children_by_id.empty?
       children_by_id.values.each{ |c| c.destroy_with_copies }
+    end
+
+    def copy_flags_from_subnode(node)
+      self.ranks_changed = true if node.ranks_changed?
+      self.options_added = true if node.options_added?
+      self.options_removed = true if node.options_removed?
     end
 
     def copy_attribs_to_children

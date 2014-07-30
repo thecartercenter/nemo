@@ -68,7 +68,7 @@ class OptionSet < ActiveRecord::Base
   # these methods are used during population from JSON
   attr_accessor :_option_levels, :_optionings
 
-  delegate :ranks_changed?, to: :root_node
+  delegate :ranks_changed?, :options_added?, :options_removed?, to: :root_node
 
   def children_attribs=(attribs)
     build_root_node if root_node.nil?

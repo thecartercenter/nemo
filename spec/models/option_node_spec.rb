@@ -1,39 +1,6 @@
 require 'spec_helper'
 
 describe OptionNode do
-  # context 'on create' do
-  #   before do
-  #     @child = @root.children.create(rank: 1)
-  #     @grandchild = @child.children.create(rank: 1)
-  #   end
-  #
-  #   it 'should inherit option set from parent' do
-  #     expect(@grandchild.option_set).to eq @set
-  #   end
-  # end
-
-  # describe 'ranks_changed?' do
-  #   before do
-  #     @root = FactoryGirl.create(:option_node, option_set: @set, rank: 1)
-  #     @child1 = FactoryGirl.create(:option_node, option_set: @set, rank: 1, parent: @root)
-  #     FactoryGirl.create(:option_node, option_set: @set, rank: 2, parent: @root)
-  #     FactoryGirl.create(:option_node, option_set: @set, rank: 1, parent: @child1)
-  #     FactoryGirl.create(:option_node, option_set: @set, rank: 2, parent: @child1)
-  #   end
-  #
-  #   it 'should work recursively' do
-  #   end
-  # end
-
-  describe 'has_grandchildren?' do
-    it 'should return false for single level node' do
-      expect(create(:option_node_with_children).has_grandchildren?).to eq false
-    end
-
-    it 'should return true for multi level node' do
-      expect(create(:option_node_with_grandchildren).has_grandchildren?).to eq true
-    end
-  end
 
   describe 'destroy' do
     before do
@@ -149,6 +116,14 @@ describe OptionNode do
     it 'should not cause ranks to change' do
       expect(@node.ranks_changed?).to eq false
     end
+
+    it 'should cause options_added? to be false' do
+      expect(@node.options_added?).to eq false
+    end
+
+    it 'should cause options_removed? to be false' do
+      expect(@node.options_removed?).to eq false
+    end
   end
 
   describe 'updating from hash with changes' do
@@ -163,6 +138,37 @@ describe OptionNode do
 
     it 'should cause ranks_changed? to become true' do
       expect(@node.ranks_changed?).to eq true
+    end
+
+    it 'should cause options_added? to be true' do
+      expect(@node.options_added?).to eq true
+    end
+
+    it 'should cause options_removed? to be true' do
+      expect(@node.options_removed?).to eq true
+    end
+  end
+
+  describe 'adding an option via hash' do
+    before do
+      @node = create(:option_node_with_grandchildren)
+      @node.update_attributes!(additive_changeset(@node))
+    end
+
+    it 'should be correct' do
+      expect_node([['Animal', ['Cat', 'Dog', 'Ocelot']], ['Plant', ['Tulip', 'Oak']]])
+    end
+
+    it 'should cause ranks_changed? to be false' do
+      expect(@node.ranks_changed?).to eq false
+    end
+
+    it 'should cause options_added? to be true' do
+      expect(@node.options_added?).to eq true
+    end
+
+    it 'should cause options_removed? to be false' do
+      expect(@node.options_removed?).to eq false
     end
   end
 
@@ -203,6 +209,16 @@ describe OptionNode do
 
     it 'should be correct' do
       expect_node([])
+    end
+  end
+
+  describe 'has_grandchildren?' do
+    it 'should return false for single level node' do
+      expect(create(:option_node_with_children).has_grandchildren?).to eq false
+    end
+
+    it 'should return true for multi level node' do
+      expect(create(:option_node_with_grandchildren).has_grandchildren?).to eq true
     end
   end
 end
