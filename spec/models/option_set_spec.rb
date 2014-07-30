@@ -29,4 +29,10 @@ describe OptionSet do
     expect(os.root_node).to receive(:ranks_changed?)
     os.ranks_changed?
   end
+
+  it 'should delegate multi_level? to root node' do
+    os = create(:option_set)
+    expect(os.root_node).to receive(:has_grandchildren?)
+    os.multi_level?
+  end
 end

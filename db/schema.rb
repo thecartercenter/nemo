@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140729144502) do
+ActiveRecord::Schema.define(:version => 20140730144219) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -168,12 +168,13 @@ ActiveRecord::Schema.define(:version => 20140729144502) do
     t.string   "ancestry"
     t.integer  "option_set_id"
     t.integer  "option_id"
-    t.integer  "rank",          :default => 1,     :null => false
-    t.datetime "created_at",                       :null => false
-    t.datetime "updated_at",                       :null => false
+    t.integer  "rank",           :default => 1,     :null => false
+    t.datetime "created_at",                        :null => false
+    t.datetime "updated_at",                        :null => false
     t.integer  "mission_id"
     t.integer  "standard_id"
-    t.boolean  "is_standard",   :default => false, :null => false
+    t.boolean  "is_standard",    :default => false, :null => false
+    t.integer  "ancestry_depth", :default => 0
   end
 
   add_index "option_nodes", ["mission_id"], :name => "option_nodes_mission_id_fk"
@@ -190,7 +191,6 @@ ActiveRecord::Schema.define(:version => 20140729144502) do
     t.boolean  "is_standard",  :default => false
     t.integer  "standard_id"
     t.boolean  "geographic",   :default => false, :null => false
-    t.boolean  "multi_level",  :default => false, :null => false
     t.integer  "root_node_id"
   end
 

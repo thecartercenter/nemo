@@ -25,6 +25,16 @@ describe OptionNode do
   #   end
   # end
 
+  describe 'has_grandchildren?' do
+    it 'should return false for single level node' do
+      expect(create(:option_node_with_children).has_grandchildren?).to eq false
+    end
+
+    it 'should return true for multi level node' do
+      expect(create(:option_node_with_grandchildren).has_grandchildren?).to eq true
+    end
+  end
+
   describe 'destroy' do
     before do
       @node = create(:option_node_with_grandchildren)

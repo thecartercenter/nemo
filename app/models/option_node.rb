@@ -5,8 +5,8 @@ class OptionNode < ActiveRecord::Base
     :children_attribs, :is_standard, :standard, :mission_id, :mission, :standard_id, :parent
 
   belongs_to :option_set
-  belongs_to :option, :autosave => true
-  has_ancestry
+  belongs_to :option, autosave: true
+  has_ancestry cache_depth: true
 
   after_save :update_children
 
@@ -20,12 +20,16 @@ class OptionNode < ActiveRecord::Base
   attr_accessor :ranks_changed
   alias_method :ranks_changed?, :ranks_changed
 
-  replicable :parent_assoc => :option_set, :replicate_tree => true, :child_assocs => :option, :dont_copy => :ancestry
+  replicable parent_assoc: :option_set, replicate_tree: true, child_assocs: :option, dont_copy: :ancestry
 
   # Overriding this to avoid error from ancestry.
   alias_method :_children, :children
   def children
     new_record? ? [] : _children
+  end
+
+  def has_grandchildren?
+    descendants(at_depth: 2).any?
   end
 
   def option_attribs=(attribs)

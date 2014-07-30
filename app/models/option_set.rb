@@ -28,7 +28,7 @@ class OptionSet < ActiveRecord::Base
   validate(:name_unique_per_mission)
 
   before_validation(:save_root_node)
-  before_validation(:multi_level_option_sets_must_have_option_levels)
+  #before_validation(:multi_level_option_sets_must_have_option_levels)
   before_validation(:normalize_fields)
   before_validation(:ensure_children_ranks)
   before_validation(:ensure_option_level_ranks)
@@ -73,6 +73,10 @@ class OptionSet < ActiveRecord::Base
   def children_attribs=(attribs)
     build_root_node if root_node.nil?
     root_node.assign_attributes(children_attribs: attribs)
+  end
+
+  def multi_level?
+    root_node && root_node.has_grandchildren?
   end
 
   # checks if this option set appears in any smsable questionings
