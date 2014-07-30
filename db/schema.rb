@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140730144219) do
+ActiveRecord::Schema.define(:version => 20140730151310) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -192,6 +192,7 @@ ActiveRecord::Schema.define(:version => 20140730144219) do
     t.integer  "standard_id"
     t.boolean  "geographic",   :default => false, :null => false
     t.integer  "root_node_id"
+    t.text     "level_names"
   end
 
   add_index "option_sets", ["geographic"], :name => "index_option_sets_on_geographic"
