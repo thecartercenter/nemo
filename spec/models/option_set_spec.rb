@@ -12,6 +12,12 @@ describe OptionSet do
     expect_node(['Cat', 'Dog'], os.root_node)
   end
 
+  it 'should get updated properly' do
+    os = create(:option_set)
+    os.update_attributes!(children_attribs: OPTION_NODE_WITH_GRANDCHILDREN_ATTRIBS)
+    expect_node([['Animal', ['Cat', 'Dog']], ['Plant', ['Tulip', 'Oak']]], os.root_node)
+  end
+
   it 'must have at least one option' do
     os = build(:empty_option_set)
     os.save
