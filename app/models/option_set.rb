@@ -156,7 +156,7 @@ class OptionSet < ActiveRecord::Base
     questions.map(&:code).join(', ')
   end
 
-  # checks if any core fields (currently only name) changed
+  # Checks if any core fields (currently only name) changed
   def core_changed?
     name_changed?
   end

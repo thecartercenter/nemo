@@ -35,4 +35,17 @@ describe OptionSet do
     expect(os.root_node).to receive(:has_grandchildren?)
     os.multi_level?
   end
+
+  describe 'core_changed?' do
+    before { @set = create(:option_set) }
+
+    it 'should return true if name changed' do
+      @set.name = 'Foobar'
+      expect(@set.core_changed?).to eq true
+    end
+
+    it 'should return false if name didnt change' do
+      expect(@set.core_changed?).to eq false
+    end
+  end
 end
