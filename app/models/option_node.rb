@@ -89,6 +89,8 @@ class OptionNode < ActiveRecord::Base
       children_by_id = children.index_by(&:id)
 
       # Loop over all children attributes.
+      # We use the ! variant of update and create below so that validation
+      # errors on children and options will cascade up.
       (children_attribs || []).each_with_index do |attribs, i|
         if attribs[:id]
           if matching = children_by_id[attribs[:id]]
