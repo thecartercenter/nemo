@@ -48,4 +48,17 @@ describe OptionSet do
       expect(@set.core_changed?).to eq false
     end
   end
+
+  describe 'levels' do
+    it 'should be nil for single level set' do
+      set = create(:option_set)
+      expect(set.levels).to be_nil
+    end
+
+    it 'should be correct for multi level set' do
+      set = create(:multilevel_option_set)
+      expect(set.levels[0].name).to eq 'Kingdom'
+      expect(set.levels[1].name).to eq 'Species'
+    end
+  end
 end

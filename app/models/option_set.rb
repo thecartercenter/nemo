@@ -30,8 +30,6 @@ class OptionSet < ActiveRecord::Base
   before_validation(:save_root_node)
   #before_validation(:multi_level_option_sets_must_have_option_levels)
   before_validation(:normalize_fields)
-  before_validation(:ensure_children_ranks)
-  before_validation(:ensure_option_level_ranks)
   after_save(:notify_questions_of_option_level_change)
 
   scope(:with_associations, includes(:questions, {:optionings => :option}, {:questionings => :form}))
@@ -68,11 +66,17 @@ class OptionSet < ActiveRecord::Base
   # these methods are used during population from JSON
   attr_accessor :_option_levels, :_optionings
 
+  serialize :level_names, JSON
+
   delegate :ranks_changed?, :options_added?, :options_removed?, to: :root_node
 
   def children_attribs=(attribs)
     build_root_node if root_node.nil?
     root_node.assign_attributes(children_attribs: attribs)
+  end
+
+  def levels
+    @levels ||= multi_level? ? level_names.map{ |n| OptionLevel.new(name_translations: n) } : nil
   end
 
   def multi_level?
@@ -240,11 +244,6 @@ class OptionSet < ActiveRecord::Base
       # Copy some redundant attribs to root node before saving.
       root_node.assign_attributes(mission: mission, is_standard: is_standard)
       root_node.save!
-    end
-
-    # makes sure that the set's option_levels have sequential ranks starting at 1.
-    def ensure_option_level_ranks
-      option_levels.ensure_contiguous_ranks
     end
 
     def check_associations
