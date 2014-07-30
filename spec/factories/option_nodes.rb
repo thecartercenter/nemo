@@ -3,6 +3,11 @@ FactoryGirl.define do
     mission { is_standard ? nil : get_mission }
     option
 
+    factory :option_node_with_no_children do
+      option nil
+      children_attribs []
+    end
+
     factory :option_node_with_children do
       option nil
       children_attribs [

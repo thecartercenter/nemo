@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe OptionSet do
   it 'must have at least one option' do
-    os = build(:option_set, :option_names => [])
+    os = build(:empty_option_set)
     os.save
     assert_match(/at least one/, os.errors[:options].join)
   end

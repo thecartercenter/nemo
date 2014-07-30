@@ -15,6 +15,10 @@ FactoryGirl.define do
       end
     end
 
+    factory :empty_option_set do
+      association :root_node, factory: :option_node_with_no_children
+    end
+
     factory :multilevel_option_set do
       ignore do
         level_names ['kingdom', 'species']
