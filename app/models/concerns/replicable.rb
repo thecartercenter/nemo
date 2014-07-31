@@ -88,13 +88,13 @@ module Replicable
     # add dest_obj to its parent's assoc before recursive step so that children can access it
     add_replication_dest_obj_to_parents_assocation(replication)
 
-    # if this is a standard-to-mission replication, add the newly replicated dest obj to the list of copies
-    # unless it is there already
-    add_copy(dest_obj) if replication.to_mission?
-
     replicate_child_associations(replication)
 
     dest_obj.save!
+
+    # if this is a standard-to-mission replication, add the newly replicated dest obj to the list of copies
+    # unless it is there already
+    add_copy(dest_obj) if replication.to_mission?
 
     # Need to clear this for next time.
     clear_recent_changes! if respond_to?(:recent_changes)

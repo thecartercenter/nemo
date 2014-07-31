@@ -39,6 +39,11 @@ class OptionNode < ActiveRecord::Base
     children.all(:order => :rank).map(&:option)
   end
 
+  # The total number of descendant options.
+  def total_options
+    descendants.count
+  end
+
   def option_attribs=(attribs)
     attribs.symbolize_keys!
     if attribs[:id]

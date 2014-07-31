@@ -44,11 +44,16 @@ class OptionSet < ActiveRecord::Base
 
   serialize :level_names, JSON
 
-  delegate :ranks_changed?, :options_added?, :options_removed?, to: :root_node
+  delegate :ranks_changed?, :options_added?, :options_removed?, :total_options, to: :root_node
 
   def children_attribs=(attribs)
     build_root_node if root_node.nil?
     root_node.assign_attributes(children_attribs: attribs)
+  end
+
+  # Gets the OptionLevel for the given depth (1-based)
+  def level(depth)
+    levels.try(:[], depth - 1)
   end
 
   def levels
