@@ -72,7 +72,7 @@ GEM
       json
     choice (0.1.6)
     chronic (0.10.2)
-    configatron (4.1.0)
+    configatron (4.2.0)
     daemons (1.1.9)
     dalli (2.7.2)
     database_cleaner (1.3.0)
@@ -255,7 +255,7 @@ DEPENDENCIES
   capistrano (~> 2.15.4)
   capybara
   capybara-webkit
-  configatron
+  configatron (~> 4.2)
   dalli
   database_cleaner
   descriptive_statistics

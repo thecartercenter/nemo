@@ -420,7 +420,7 @@ fr:
       setting:
         allow_unauthenticated_submissions: "Si cette boîte est cochée, tous les utilisateurs peuvent soumettre des données à la mission sans un mot de passe. Faire attention. Utilisez avec précautions. "
         preferred_locales_str: |-
-          Entrez le <a href=\"http://www.loc.gov/standards/iso639-2/php/code_list.php\">code de deux lettres</a> pour les langues préférées de cette mission. Séparez les langues par des virgules.
+          Entrez le <a href='http://www.loc.gov/standards/iso639-2/php/code_list.php'>code de deux lettres</a> pour les langues préférées de cette mission. Séparez les langues par des virgules.
 
           Ce code determine:
           * La langue préférée pour nouveau utilisateurs
@@ -732,7 +732,7 @@ fr:
     password_resets:
       all: "Réinitialiser le mot de passe"
     questions:
-      edit: "Modifier la question: %{name}"
+      edit: "Modifier la question: %{code}"
       index: "Questions"
       new: "Nouvelle Question"
       show: "Question: %{code}"
