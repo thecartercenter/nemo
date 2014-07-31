@@ -732,7 +732,7 @@ fr:
     password_resets:
       all: "Réinitialiser le mot de passe"
     questions:
-      edit: "Modifier la question: %{name}"
+      edit: "Modifier la question: %{code}"
       index: "Questions"
       new: "Nouvelle Question"
       show: "Question: %{code}"
