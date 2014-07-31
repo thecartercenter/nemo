@@ -152,7 +152,7 @@ class Report::SummaryCollectionBuilder
             WHEN 'datetime' THEN MAX(a.datetime_value)
           END AS max
         FROM answers a INNER JOIN questionings qing ON a.questioning_id = qing.id AND qing.id IN (#{qing_ids})
-          INNER JOIN questionables q ON q.id = qing.question_id AND q.type = 'Question'
+          INNER JOIN questions q ON q.id = qing.question_id AND q.type = 'Question'
           #{disagg_join_clause}
           #{current_user_join_clause}
         WHERE q.qtype_name in ('integer', 'decimal', 'time', 'datetime')
@@ -231,7 +231,7 @@ class Report::SummaryCollectionBuilder
       query = <<-eos
         SELECT #{disagg_select_expr} qings.id AS qing_id, a.option_id AS option_id, COUNT(a.id) AS answer_count
         FROM questionings qings
-          INNER JOIN questionables q ON qings.question_id = q.id AND q.type = 'Question'
+          INNER JOIN questions q ON qings.question_id = q.id AND q.type = 'Question'
           LEFT OUTER JOIN answers a ON qings.id = a.questioning_id
           #{disagg_join_clause}
           #{current_user_join_clause}
@@ -244,7 +244,7 @@ class Report::SummaryCollectionBuilder
       query = <<-eos
         SELECT #{disagg_select_expr} qings.id AS qing_id, c.option_id AS option_id, COUNT(c.id) AS choice_count
         FROM questionings qings
-          INNER JOIN questionables q ON qings.question_id = q.id AND q.type = 'Question'
+          INNER JOIN questions q ON qings.question_id = q.id AND q.type = 'Question'
           LEFT OUTER JOIN answers a ON qings.id = a.questioning_id
           LEFT OUTER JOIN choices c ON a.id = c.answer_id
           #{disagg_join_clause}
@@ -279,7 +279,7 @@ class Report::SummaryCollectionBuilder
       query = <<-eos
         SELECT #{disagg_select_expr} qings.id AS qing_id, COUNT(DISTINCT a.id) AS non_null_answer_count
         FROM questionings qings
-          INNER JOIN questionables q ON qings.question_id = q.id AND q.type = 'Question'
+          INNER JOIN questions q ON qings.question_id = q.id AND q.type = 'Question'
           LEFT OUTER JOIN answers a ON qings.id = a.questioning_id
           LEFT OUTER JOIN choices c ON a.id = c.answer_id
           #{disagg_join_clause}
@@ -359,7 +359,7 @@ class Report::SummaryCollectionBuilder
       query = <<-eos
         SELECT #{disagg_select_expr} qings.id AS qing_id, a.date_value AS date, COUNT(a.id) AS answer_count
         FROM questionings qings
-          INNER JOIN questionables q ON qings.question_id = q.id AND q.type = 'Question'
+          INNER JOIN questions q ON qings.question_id = q.id AND q.type = 'Question'
           LEFT OUTER JOIN answers a ON qings.id = a.questioning_id
           #{disagg_join_clause}
           #{current_user_join_clause}

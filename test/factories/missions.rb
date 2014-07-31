@@ -30,7 +30,6 @@ FactoryGirl.define do
       # creates questionings and questions
       form = create(:form, :mission => mission, :question_types => %w(integer text))
 
-      # adds a multi-level Question, so that we get Subquestions
       create(:question, :qtype_name => 'select_one', :option_set => os, :mission => mission)
 
       create(:report, :mission => mission)

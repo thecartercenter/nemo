@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140730151310) do
+ActiveRecord::Schema.define(:version => 20140731145737) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -237,39 +237,6 @@ ActiveRecord::Schema.define(:version => 20140730151310) do
   add_index "options", ["mission_id", "standard_id"], :name => "index_options_on_mission_id_and_standard_id", :unique => true
   add_index "options", ["standard_id"], :name => "index_options_on_standard_id"
 
-  create_table "questionables", :force => true do |t|
-    t.string   "code"
-    t.integer  "option_set_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.decimal  "minimum",           :precision => 15, :scale => 10
-    t.decimal  "maximum",           :precision => 15, :scale => 10
-    t.boolean  "maxstrictly"
-    t.boolean  "minstrictly"
-    t.integer  "mission_id"
-    t.string   "qtype_name"
-    t.text     "_name"
-    t.text     "_hint"
-    t.text     "name_translations"
-    t.text     "hint_translations"
-    t.boolean  "key",                                               :default => false
-    t.boolean  "is_standard",                                       :default => false
-    t.integer  "standard_id"
-    t.string   "type",                                                                     :null => false
-    t.integer  "parent_id"
-    t.integer  "option_level_id"
-    t.string   "access_level",                                      :default => "inherit", :null => false
-  end
-
-  add_index "questionables", ["mission_id", "code"], :name => "index_questions_on_mission_id_and_code", :unique => true
-  add_index "questionables", ["mission_id", "standard_id"], :name => "index_questions_on_mission_id_and_standard_id", :unique => true
-  add_index "questionables", ["option_level_id"], :name => "questionables_option_level_id_fk"
-  add_index "questionables", ["option_set_id"], :name => "questions_option_set_id_fk"
-  add_index "questionables", ["parent_id"], :name => "questionables_parent_id_fk"
-  add_index "questionables", ["qtype_name"], :name => "index_questions_on_qtype_name"
-  add_index "questionables", ["standard_id"], :name => "index_questions_on_standard_id"
-  add_index "questionables", ["type"], :name => "index_questionables_on_type"
-
   create_table "questionings", :force => true do |t|
     t.integer  "question_id"
     t.integer  "form_id"
@@ -287,6 +254,33 @@ ActiveRecord::Schema.define(:version => 20140730151310) do
   add_index "questionings", ["mission_id", "standard_id"], :name => "index_questionings_on_mission_id_and_standard_id", :unique => true
   add_index "questionings", ["question_id"], :name => "questionings_question_id_fk"
   add_index "questionings", ["standard_id"], :name => "index_questionings_on_standard_id"
+
+  create_table "questions", :force => true do |t|
+    t.string   "code"
+    t.integer  "option_set_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.decimal  "minimum",           :precision => 15, :scale => 10
+    t.decimal  "maximum",           :precision => 15, :scale => 10
+    t.boolean  "maxstrictly"
+    t.boolean  "minstrictly"
+    t.integer  "mission_id"
+    t.string   "qtype_name"
+    t.text     "_name"
+    t.text     "_hint"
+    t.text     "name_translations"
+    t.text     "hint_translations"
+    t.boolean  "key",                                               :default => false
+    t.boolean  "is_standard",                                       :default => false
+    t.integer  "standard_id"
+    t.string   "access_level",                                      :default => "inherit", :null => false
+  end
+
+  add_index "questions", ["mission_id", "code"], :name => "index_questions_on_mission_id_and_code", :unique => true
+  add_index "questions", ["mission_id", "standard_id"], :name => "index_questions_on_mission_id_and_standard_id", :unique => true
+  add_index "questions", ["option_set_id"], :name => "questions_option_set_id_fk"
+  add_index "questions", ["qtype_name"], :name => "index_questions_on_qtype_name"
+  add_index "questions", ["standard_id"], :name => "index_questions_on_standard_id"
 
   create_table "report_calculations", :force => true do |t|
     t.string   "type"
@@ -488,18 +482,16 @@ ActiveRecord::Schema.define(:version => 20140730151310) do
   add_foreign_key "options", "missions", name: "options_mission_id_fk"
   add_foreign_key "options", "options", name: "options_standard_id_fk", column: "standard_id"
 
-  add_foreign_key "questionables", "missions", name: "questions_mission_id_fk"
-  add_foreign_key "questionables", "option_levels", name: "questionables_option_level_id_fk"
-  add_foreign_key "questionables", "option_sets", name: "questions_option_set_id_fk"
-  add_foreign_key "questionables", "questionables", name: "questionables_parent_id_fk", column: "parent_id"
-  add_foreign_key "questionables", "questionables", name: "questions_standard_id_fk", column: "standard_id"
-
   add_foreign_key "questionings", "forms", name: "questionings_form_id_fk"
   add_foreign_key "questionings", "missions", name: "questionings_mission_id_fk"
-  add_foreign_key "questionings", "questionables", name: "questionings_question_id_fk", column: "question_id"
   add_foreign_key "questionings", "questionings", name: "questionings_standard_id_fk", column: "standard_id"
+  add_foreign_key "questionings", "questions", name: "questionings_question_id_fk"
 
-  add_foreign_key "report_calculations", "questionables", name: "report_calculations_question1_id_fk", column: "question1_id"
+  add_foreign_key "questions", "missions", name: "questions_mission_id_fk"
+  add_foreign_key "questions", "option_sets", name: "questions_option_set_id_fk"
+  add_foreign_key "questions", "questions", name: "questions_standard_id_fk", column: "standard_id"
+
+  add_foreign_key "report_calculations", "questions", name: "report_calculations_question1_id_fk", column: "question1_id"
   add_foreign_key "report_calculations", "report_reports", name: "report_calculations_report_report_id_fk"
 
   add_foreign_key "report_option_set_choices", "option_sets", name: "report_option_set_choices_option_set_id_fk"

@@ -9,13 +9,9 @@ class Answer < ActiveRecord::Base
   belongs_to(:response, :inverse_of => :answers, :touch => true)
   has_many(:choices, :dependent => :destroy, :inverse_of => :answer)
 
-  # this association refers to a Question or Subquestion
-  # it should refer to a Subquestion if the associated Question is multilevel
-  belongs_to(:questionable)
+  belongs_to(:question)
 
   before_validation(:clean_locations)
-  before_save(:set_default_questionable)
-  before_save(:assert_questionable_is_correct_type)
   before_save(:round_ints)
   before_save(:blanks_to_nulls)
 
@@ -29,8 +25,8 @@ class Answer < ActiveRecord::Base
   delegate :question, :qtype, :rank, :required?, :hidden?, :option_set, :options, :condition, :to => :questioning
   delegate :name, :hint, :to => :question, :prefix => true
 
-  scope :public_access, includes(:questionable).
-                        where("questionables.access_level = 'inherit'")
+  scope :public_access, includes(:question).
+                        where("questions.access_level = 'inherit'")
 
   # creates a new answer from a string from odk
   def self.new_from_str(params)
@@ -69,7 +65,7 @@ class Answer < ActiveRecord::Base
       FROM answers a
         INNER JOIN responses r ON a.response_id = r.id
         INNER JOIN questionings qing ON a.questioning_id = qing.id
-        INNER JOIN questionables q ON qing.question_id = q.id
+        INNER JOIN questions q ON qing.question_id = q.id
       WHERE q.qtype_name = 'location' AND a.value IS NOT NULL AND r.mission_id = ? #{user_clause}",
       mission.id
     ])
@@ -215,18 +211,6 @@ class Answer < ActiveRecord::Base
         else
           self.value = ""
         end
-      end
-    end
-
-    # sets the questionable to the associated question by default
-    def set_default_questionable
-      self.questionable ||= question
-    end
-
-    # questionable must be a subquestion when question is multilevel
-    def assert_questionable_is_correct_type
-      if option_set.try(:multi_level?) && questionable.try(:type) != 'Subquestion'
-        raise "questionable must be a subquestion when question is multilevel"
       end
     end
 end

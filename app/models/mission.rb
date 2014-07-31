@@ -6,7 +6,7 @@ class Mission < ActiveRecord::Base
   has_many(:assignments, :inverse_of => :mission)
   has_many(:users, :through => :assignments)
   has_many(:groups, :inverse_of => :mission)
-  has_many(:questionables, :inverse_of => :mission)
+  has_many(:questions, :inverse_of => :mission)
   has_many(:questionings, :inverse_of => :mission)
   has_many(:conditions, :inverse_of => :mission)
   has_many(:options, :inverse_of => :mission, :dependent => :destroy)
@@ -46,7 +46,7 @@ class Mission < ActiveRecord::Base
 
   # checks to make sure there are no associated objects.
   def check_associations
-    to_check = [:assignments, :responses, :forms, :report_reports, :questionables, :broadcasts]
+    to_check = [:assignments, :responses, :forms, :report_reports, :questions, :broadcasts]
     to_check.each{|a| raise DeletionError.new(:cant_delete_if_assoc) unless self.send(a).empty?}
   end
 

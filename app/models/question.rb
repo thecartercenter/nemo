@@ -1,7 +1,6 @@
 # a question on a form
-# question is a subtype of Questionable as per composite design pattern, since it may have Subquestions
-class Question < Questionable
-  include FormVersionable, Translatable
+class Question < ActiveRecord::Base
+  include MissionBased, Standardizable, Replicable, FormVersionable, Translatable
 
   CODE_FORMAT = "[a-zA-Z][a-zA-Z0-9]{1,19}"
   API_ACCESS_LEVELS = %w(inherit private)
@@ -12,11 +11,8 @@ class Question < Questionable
   has_many(:referring_conditions, :through => :questionings)
   has_many(:forms, :through => :questionings)
   has_many(:calculations, :foreign_key => 'question1_id', :inverse_of => :question1)
-  has_many(:subquestions, :foreign_key => 'parent_id', :include => :option_level, :order => 'option_levels.rank',
-    :inverse_of => :question, :autosave => true, :dependent => :destroy)
 
   before_validation(:normalize_fields)
-  before_validation(:maintain_subquestions)
 
   validates(:code, :presence => true)
   validates(:code, :format => {:with => /^#{CODE_FORMAT}$/}, :if => Proc.new{|q| !q.code.blank?})
@@ -24,7 +20,7 @@ class Question < Questionable
   validates(:option_set, :presence => true, :if => Proc.new{|q| q.qtype && q.has_options?})
   validate(:code_unique_per_mission)
 
-  scope(:by_code, order('questionables.code'))
+  scope(:by_code, order('questions.code'))
   scope(:default_order, by_code)
   scope(:select_types, where(:qtype_name => %w(select_one select_multiple)))
   scope(:with_forms, includes(:forms))
@@ -34,7 +30,7 @@ class Question < Questionable
   # - form_published returns 1 if any associated forms are published, 0 or nil otherwise
   # - standard_copy_form_id returns a std copy form id associated with the question if available, or nil if there are none
   scope(:with_assoc_counts, select(%{
-      questionables.*,
+      questions.*,
       COUNT(DISTINCT answers.id) AS answer_count_col,
       COUNT(DISTINCT forms.id) AS form_count_col,
       MAX(DISTINCT forms.published) AS form_published,
@@ -42,27 +38,27 @@ class Question < Questionable
       MAX(DISTINCT copy_forms.published) AS copy_form_published,
       MAX(DISTINCT forms.standard_id) AS standard_copy_form_id
     }).joins(%{
-      LEFT OUTER JOIN questionings ON questionings.question_id = questionables.id AND questionables.type = 'Question'
+      LEFT OUTER JOIN questionings ON questionings.question_id = questions.id AND questions.type = 'Question'
       LEFT OUTER JOIN forms ON forms.id = questionings.form_id
       LEFT OUTER JOIN answers ON answers.questioning_id = questionings.id
-      LEFT OUTER JOIN questionables copies ON questionables.is_standard = 1 AND questionables.id = copies.standard_id
+      LEFT OUTER JOIN questions copies ON questions.is_standard = 1 AND questions.id = copies.standard_id
       LEFT OUTER JOIN questionings copy_questionings ON copy_questionings.question_id = copies.id
       LEFT OUTER JOIN forms copy_forms ON copy_forms.id = copy_questionings.form_id
       LEFT OUTER JOIN answers copy_answers ON copy_answers.questioning_id = copy_questionings.id
-    }).group('questionables.id'))
+    }).group('questions.id'))
 
   translates :name, :hint
 
   delegate :smsable?, :has_options?, :to => :qtype
   delegate :options, :geographic?, :to => :option_set, :allow_nil => true
 
-  replicable :child_assocs => [:option_set, :subquestions], :parent_assoc => :questioning,
+  replicable :child_assocs => :option_set, :parent_assoc => :questioning,
     :uniqueness => {:field => :code, :style => :camel_case}, :dont_copy => [:key, :access_level],
     :user_modifiable => [:name_translations, :_name, :hint_translations, :_hint]
 
   # returns questions that do NOT already appear in the given form
   def self.not_in_form(form)
-    scoped.where("(questionables.id not in (select question_id from questionings where form_id='#{form.id}'))")
+    scoped.where("(questions.id not in (select question_id from questionings where form_id='#{form.id}'))")
   end
 
   # returns N questions marked as key questions, sorted by the number of forms they appear in
@@ -191,15 +187,6 @@ class Question < Questionable
     option_set.present? ? option_set.option_levels : []
   end
 
-  # called by an associated OptionSet when its OptionLevels change
-  def option_levels_changed
-    # first reload the association in case it's stale
-    option_set(true)
-
-    maintain_subquestions
-    save!
-  end
-
   private
 
     def code_unique_per_mission
@@ -231,23 +218,5 @@ class Question < Questionable
         self.minstrictly = nil
         self.maxstrictly = nil
       end
-    end
-
-    # ensures Subquestion objects are created/destroyed to match the current OptionSet, if any
-    def maintain_subquestions
-      # add subquestions for any missing option levels
-      (option_levels - subquestions.map(&:option_level)).each do |ol|
-        subquestions.build(:option_level => ol)
-      end
-
-      # remove any obsolete subquestions (all subquestions with option levels NOT IN the current set)
-      subquestions.reject{|subq| option_levels.include?(subq.option_level)}.each do |subq|
-        subquestions.destroy(subq)
-      end
-
-      # re-sort by OptionLevel rank
-      subquestions.sort_by(&:rank)
-
-      return true
     end
 end

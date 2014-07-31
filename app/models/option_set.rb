@@ -40,19 +40,19 @@ class OptionSet < ActiveRecord::Base
     select(%{
       option_sets.*,
       COUNT(DISTINCT answers.id) AS answer_count_col,
-      COUNT(DISTINCT questionables.id) AS question_count_col,
+      COUNT(DISTINCT questions.id) AS question_count_col,
       MAX(forms.published) AS published_col,
       COUNT(DISTINCT copy_answers.id) AS copy_answer_count_col,
       COUNT(DISTINCT copy_questions.id) AS copy_question_count_col,
       MAX(copy_forms.published) AS copy_published_col
     }).
     joins(%{
-      LEFT OUTER JOIN questionables ON questionables.option_set_id = option_sets.id AND questionables.type = 'Question'
-      LEFT OUTER JOIN questionings ON questionings.question_id = questionables.id
+      LEFT OUTER JOIN questions ON questions.option_set_id = option_sets.id AND questions.type = 'Question'
+      LEFT OUTER JOIN questionings ON questionings.question_id = questions.id
       LEFT OUTER JOIN forms ON forms.id = questionings.form_id
       LEFT OUTER JOIN answers ON answers.questioning_id = questionings.id
       LEFT OUTER JOIN option_sets copies ON option_sets.is_standard = 1 AND copies.standard_id = option_sets.id
-      LEFT OUTER JOIN questionables copy_questions ON copy_questions.option_set_id = copies.id AND copy_questions.type = 'Question'
+      LEFT OUTER JOIN questions copy_questions ON copy_questions.option_set_id = copies.id AND copy_questions.type = 'Question'
       LEFT OUTER JOIN questionings copy_questionings ON copy_questionings.question_id = copy_questions.id
       LEFT OUTER JOIN forms copy_forms ON copy_forms.id = copy_questionings.form_id
       LEFT OUTER JOIN answers copy_answers ON copy_answers.questioning_id = copy_questionings.id
