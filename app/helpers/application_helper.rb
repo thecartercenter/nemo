@@ -222,11 +222,11 @@ module ApplicationHelper
     l.join.html_safe
   end
 
-  # tries to get a path for the given object, returns nil if object doesn't have route
-  # preserves the search param in the current query string, if any
+  # Tries to get a path for the given object, returns nil if object doesn't have route
+  # Preserves the search param in the current query string, if any, unless there was a search error.
   def path_for_with_search(obj)
     begin
-      polymorphic_path(obj, :search => params[:search])
+      polymorphic_path(obj, @search_error ? {} : {search: params[:search]})
     rescue
       nil
     end
