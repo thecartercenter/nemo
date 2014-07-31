@@ -1,7 +1,6 @@
 module ApplicationHelper
 
   ERROR_MESSAGE_KEYS_TO_HIDE = {
-    :'optionings.option.base' => true,
     :'condition.base' => true
   }
 

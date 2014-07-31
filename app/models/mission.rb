@@ -10,7 +10,6 @@ class Mission < ActiveRecord::Base
   has_many(:questionings, :inverse_of => :mission)
   has_many(:conditions, :inverse_of => :mission)
   has_many(:options, :inverse_of => :mission, :dependent => :destroy)
-  has_many(:optionings, :inverse_of => :mission, :dependent => :destroy)
   has_many(:option_levels, :inverse_of => :mission, :dependent => :destroy)
   has_many(:option_sets, :inverse_of => :mission, :dependent => :destroy)
   has_many(:option_nodes, :inverse_of => :mission, :dependent => :destroy)
@@ -56,10 +55,10 @@ class Mission < ActiveRecord::Base
     ActiveRecord::Base.transaction do
       begin
         # Remove MissionBased Classes
-        # note that we don't need to remove Optioning directly since OptionSet takes care of that
+        # note that we don't need to remove OptionNodes directly since OptionSet takes care of that
         # the order of deletion is also important to avoid foreign key constraints
         relationships_to_delete = [Setting, Report::Report, Condition, Questioning,
-                                   Optioning, OptionLevel, Question, OptionSet, Option, Response,
+                                   Question, OptionSet, Option, Response,
                                    Form, Broadcast, Assignment, Sms::Message]
         relationships_to_delete.each{|r| r.mission_pre_delete(self)}
 
