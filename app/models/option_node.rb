@@ -34,6 +34,11 @@ class OptionNode < ActiveRecord::Base
     descendants(at_depth: 2).any?
   end
 
+  # Returns options of children, ordered by rank.
+  def child_options
+    children.all(:order => :rank).map(&:option)
+  end
+
   def option_attribs=(attribs)
     attribs.symbolize_keys!
     if attribs[:id]

@@ -30,6 +30,15 @@ describe OptionSet do
     os.multi_level?
   end
 
+  describe 'options' do
+    before { @set = create(:multilevel_option_set) }
+
+    it 'should delegate to option node child options' do
+      expect(@set.root_node).to receive(:child_options)
+      @set.options
+    end
+  end
+
   describe 'core_changed?' do
     before { @set = create(:option_set) }
 

@@ -61,7 +61,7 @@ class OptionSet < ActiveRecord::Base
 
   # Returns first-level options
   def options
-
+    root_node.child_options
   end
 
   # checks if this option set appears in any smsable questionings

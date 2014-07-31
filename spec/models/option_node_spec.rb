@@ -221,4 +221,11 @@ describe OptionNode do
       expect(create(:option_node_with_grandchildren).has_grandchildren?).to eq true
     end
   end
+
+  describe 'child_options' do
+    it 'should return child options in sorted order' do
+      node = create(:option_node_with_grandchildren)
+      expect(node.child_options.map(&:name)).to eq %w(Animal Plant)
+    end
+  end
 end
