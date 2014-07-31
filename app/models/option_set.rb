@@ -185,7 +185,7 @@ class OptionSet < ActiveRecord::Base
 
     def save_root_node
       # Copy some redundant attribs to root node before saving.
-      root_node.assign_attributes(mission: mission, is_standard: is_standard)
+      root_node.assign_attributes(mission: mission, is_standard: is_standard, option_set: self)
       root_node.save!
     end
 

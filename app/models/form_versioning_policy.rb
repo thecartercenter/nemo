@@ -24,19 +24,22 @@ class FormVersioningPolicy
         triggers << {:reason => :option_order_changed, :forms => obj.forms.select{|f| f.smsable?}} if obj.ranks_changed?
       end
 
-    when "Optioning"
+    when "OptionNode"
+      # If option_set is nil, it means the option set is just getting created, so no need to go any further.
+      return [] if obj.option_set.nil?
+
       case action
       when :create
         # adding an option to an option set is a trigger for smsable forms
         triggers << {:reason => :option_added_to_set, :forms => obj.option_set.forms.select{|f| f.smsable?}}
       when :update
-        # changing optioning parent is a trigger for smsable forms
-        if obj.parent_id_changed?
-          triggers << {:reason => :option_parent_changed, :forms => obj.option_set.forms.select{|f| f.smsable?}}
-        end
+        # # Changing optioning parent is a trigger for smsable forms
+        # if obj.parent_id_changed?
+        #   triggers << {:reason => :option_parent_changed, :forms => obj.option_set.forms.select{|f| f.smsable?}}
+        # end
       when :destroy
-        # removing an option from an option set is a trigger
-        triggers << {:reason => :option_removed_from_set, :forms => obj.option_set.forms}
+        # # Removing an option from an option set is always trigger.
+        # triggers << {:reason => :option_removed_from_set, :forms => obj.option_set.forms}
       end
 
     when "Questioning"

@@ -1,5 +1,5 @@
 class OptionNode < ActiveRecord::Base
-  include MissionBased, Replicable, Standardizable
+  include MissionBased, FormVersionable, Replicable, Standardizable
 
   attr_accessible :ancestry, :option_id, :option_set, :option_set_id, :rank, :option, :option_attribs,
     :children_attribs, :is_standard, :standard, :mission_id, :mission, :standard_id, :parent

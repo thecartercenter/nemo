@@ -1,7 +1,7 @@
-require 'test_helper'
+require 'spec_helper'
 
-class FormVersioningPolicyTest < ActiveSupport::TestCase
-  setup do
+describe FormVersioningPolicy do
+  before do
     # create three forms
     @forms = (0...3).map{ FactoryGirl.create(:form, :published => false) }
 
@@ -12,7 +12,7 @@ class FormVersioningPolicyTest < ActiveSupport::TestCase
     save_old_version_codes
   end
 
-  test "adding required question should cause upgrade" do
+  it "adding required question should cause upgrade" do
     # add required question to first two forms
     q = FactoryGirl.create(:question)
     @forms[0...2].each do |f|
@@ -22,7 +22,7 @@ class FormVersioningPolicyTest < ActiveSupport::TestCase
     publish_and_check_versions(:should_change => true)
   end
 
-  test "adding non-required question should not cause upgrade" do
+  it "adding non-required question should not cause upgrade" do
     # add non-required question to first two forms
     q = FactoryGirl.create(:question)
     @forms[0...2].each do |f|
@@ -32,7 +32,7 @@ class FormVersioningPolicyTest < ActiveSupport::TestCase
     publish_and_check_versions(:should_change => false)
   end
 
-  test "removing question from form should only cause upgrade if form is smsable and it is not the last question" do
+  it "removing question from form should only cause upgrade if form is smsable and it is not the last question" do
     # ensure the forms are not smsable
     @forms.each{|f| f.smsable = false; f.save!}
 
@@ -67,7 +67,7 @@ class FormVersioningPolicyTest < ActiveSupport::TestCase
     publish_and_check_versions(:should_change => true)
   end
 
-  test "changing question rank should cause upgrade if form smsable" do
+  it "changing question rank should cause upgrade if form smsable" do
     # add two question to first two forms
     q1 = FactoryGirl.create(:question, :code => "q1")
     q2 = FactoryGirl.create(:question, :code => "q2")
@@ -101,7 +101,7 @@ class FormVersioningPolicyTest < ActiveSupport::TestCase
     publish_and_check_versions(:should_change => true)
   end
 
-  test "changing question condition should cause upgrade if question required" do
+  it "changing question condition should cause upgrade if question required" do
     # add ref question and required question
     q1 = FactoryGirl.create(:question)
     q2 = FactoryGirl.create(:question)
@@ -143,7 +143,7 @@ class FormVersioningPolicyTest < ActiveSupport::TestCase
 
   end
 
-  test "changing question required status should cause upgrade" do
+  it "changing question required status should cause upgrade" do
     # add non-required question to first two forms
     q = FactoryGirl.create(:question)
     @forms[0...2].each do |f|
@@ -169,7 +169,7 @@ class FormVersioningPolicyTest < ActiveSupport::TestCase
     publish_and_check_versions(:should_change => true)
   end
 
-  test "deleting question should cause upgrade if question appeared not at end of an smsable form" do
+  it "deleting question should cause upgrade if question appeared not at end of an smsable form" do
     # add questions to first two forms
     q1 = FactoryGirl.create(:question)
     q2 = FactoryGirl.create(:question)
@@ -194,7 +194,7 @@ class FormVersioningPolicyTest < ActiveSupport::TestCase
   end
 
 
-  test "changing question type should cause upgrade" do
+  it "changing question type should cause upgrade" do
     # add question to first two forms
     q = FactoryGirl.create(:question)
     @forms[0...2].each do |f|
@@ -212,30 +212,31 @@ class FormVersioningPolicyTest < ActiveSupport::TestCase
     publish_and_check_versions(:should_change => true)
   end
 
-  test "adding an option to a set should cause upgrade on smsable forms only" do
+  it "adding an option to a set should not cause upgrade on non-smsable form" do
     setup_option_set
 
     save_old_version_codes
 
     # add an option
-    @os.options << Option.new(:name_en => "Troublemaker", :mission => get_mission)
-    @os.save!
+    @os.update_attributes!(additive_changeset(@os.root_node))
 
     publish_and_check_versions(:should_change => false)
+  end
 
-    # change forms to smsable
+  it "adding an option to a set should cause upgrade on smsable form" do
+    setup_option_set
+
     @os.forms.each{|f| f.update_attributes(:smsable => true)}
 
     save_old_version_codes
 
-    # try again
-    @os.options << Option.new(:name_en => "Troublemaker2", :mission => get_mission)
-    @os.save!
+    # add an option
+    @os.update_attributes!(additive_changeset(@os.root_node))
 
     publish_and_check_versions(:should_change => true)
   end
 
-  test "changing option label should not cause an upgrade" do
+  it "changing option label should not cause an upgrade" do
     setup_option_set
 
     save_old_version_codes
@@ -246,7 +247,7 @@ class FormVersioningPolicyTest < ActiveSupport::TestCase
     publish_and_check_versions(:should_change => false)
   end
 
-  test "destroying an option should cause upgrade" do
+  it "destroying an option should cause upgrade" do
     setup_option_set
 
     save_old_version_codes
@@ -259,7 +260,7 @@ class FormVersioningPolicyTest < ActiveSupport::TestCase
     publish_and_check_versions(:should_change => true)
   end
 
-  test "changing option order should cause upgrade if form smsable" do
+  it "changing option order should cause upgrade if form smsable" do
     setup_option_set
 
     [true, false].each do |bool|
@@ -281,7 +282,7 @@ class FormVersioningPolicyTest < ActiveSupport::TestCase
     end
   end
 
-  test "removing option from option_set should cause upgrade" do
+  it "removing option from option_set should cause upgrade" do
     setup_option_set
     save_old_version_codes
 
@@ -292,66 +293,44 @@ class FormVersioningPolicyTest < ActiveSupport::TestCase
     publish_and_check_versions(:should_change => true)
   end
 
-  test "changing optioning parent should cause upgrade for smsable forms" do
-    @forms.each{|f| f.update_attributes!(:smsable => true)}
-    setup_option_set(:multilevel => true)
-
-    # add a third option under 'plant'
-    @os.optionings[1].optionings.create(:option => Option.new(:name => 'box elder', :mission => get_mission), :rank => 3,
-            :option_level => @os.option_levels[0], :mission => get_mission, :option_set => @os, :parent => @os.optionings[1])
-    @os.save!
-
-    save_old_version_codes
-
-    # move the new option to the 'animal' subtree (this way the rank doesn't change)
-    @os.optionings[1].optionings[2].move_to(@os.optionings[0])
-    @os.save!
-
-    # make sure rank didn't change
-    assert_equal(3, @os.optionings[0].optionings.last.rank)
-
-    publish_and_check_versions(:should_change => true)
+  # creates an option set, and a question that has the option set, and adds it to first two forms
+  def setup_option_set(options = {})
+    @os = FactoryGirl.create(:multilevel_option_set)
+    @q = FactoryGirl.create(:question, :qtype_name => "select_one", :option_set => @os)
+    @forms[0...2].each do |f|
+      f.questions << @q
+      f.save!
+    end
+    @os.reload
+    @q.reload
   end
 
-  private
-    # creates an option set, and a question that has the option set, and adds it to first two forms
-    def setup_option_set(options = {})
-      @os = FactoryGirl.create(options[:multilevel] ? :multilevel_option_set : :option_set)
-      @q = FactoryGirl.create(:question, :qtype_name => "select_one", :option_set => @os)
-      @forms[0...2].each do |f|
-        f.questions << @q
-        f.save!
-      end
-      @os.reload
-      @q.reload
-    end
+  # reloads all forms
+  def reload_forms
+    @forms.each{|f| f.reload}
+  end
 
-    # reloads all forms
-    def reload_forms
-      @forms.each{|f| f.reload}
-    end
+  def save_old_version_codes
+    # publish and unpublish so any pending upgrades are performed
+    reload_forms
+    @forms.each{|f| f.publish!; f.unpublish!}
+    reload_forms
+    @old_versions = @forms.collect{|f| f.current_version.code}
+  end
 
-    def save_old_version_codes
-      # publish and unpublish so any pending upgrades are performed
-      reload_forms
-      @forms.each{|f| f.publish!; f.unpublish!}
-      reload_forms
-      @old_versions = @forms.collect{|f| f.current_version.code}
-    end
+  def publish_and_check_versions(options)
+    reload_forms
 
-    def publish_and_check_versions(options)
-      reload_forms
+    @forms.each{|f| f.publish!}
 
-      @forms.each{|f| f.publish!}
+    reload_forms
 
-      reload_forms
+    method = options[:should_change] ? :not_to : :to
 
-      method = options[:should_change] ? "assert_not_equal" : "assert_equal"
+    expect(@old_versions[0]).send(method, eq(@forms[0].current_version.code))
+    expect(@old_versions[1]).send(method, eq(@forms[1].current_version.code))
 
-      send(method, @old_versions[0], @forms[0].current_version.code)
-      send(method, @old_versions[1], @forms[1].current_version.code)
-
-      # third form code should never change
-      assert_equal(@old_versions[2], @forms[2].current_version.code)
-    end
+    # third form code should never change
+    expect(@old_versions[2]).to eq @forms[2].current_version.code
+  end
 end
