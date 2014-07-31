@@ -17,7 +17,7 @@ gem 'mysql2', '>= 0.3.15' #was '~> 0.3.12b5' # beta version needed for sphinx
 gem 'will_paginate'
 gem 'will_paginate-bootstrap'
 gem 'api-pagination'
-gem 'configatron'
+gem 'configatron', '~> 4.2'
 gem 'libxml-ruby'
 gem 'rdiscount'
 gem 'jquery-rails'
