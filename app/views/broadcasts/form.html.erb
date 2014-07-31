@@ -5,7 +5,7 @@
   <%= f.field(:recipient_ids, :type => :hidden) %>
   <%= f.field(:to, :content => @broadcast.recipients.collect{|u| link_to(u.name, u)}.join(", ")) %>
   <%= f.field(:medium, :type => :select, :required => true,
-    :options => translate_options(Broadcast::MEDIUM_OPTIONS, [:broadcast, :mediums, :options])) %>
+    :options => translate_options(@medium_options, [:broadcast, :mediums, :options])) %>
 
   <%# only show balance if we were able to retrieve one and if we're not in read_only mode %>
   <%= f.field(:balance, :partial => "balance") if @balance.present? && @broadcast.new_record? %>
