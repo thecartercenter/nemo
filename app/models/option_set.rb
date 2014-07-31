@@ -7,7 +7,8 @@ class OptionSet < ActiveRecord::Base
   has_many :questions, :inverse_of => :option_set
   has_many :questionings, :through => :questions
 
-  has_one :root_node, class_name: OptionNode, dependent: :destroy, autosave: true
+  # We don't autosave this ass'n because we save it before validation in a callback below.
+  has_one :root_node, class_name: OptionNode, dependent: :destroy
 
   validates :name, :presence => true
   validate :name_unique_per_mission
@@ -48,7 +49,7 @@ class OptionSet < ActiveRecord::Base
 
   def children_attribs=(attribs)
     build_root_node if root_node.nil?
-    root_node.assign_attributes(children_attribs: attribs)
+    root_node.children_attribs = attribs
   end
 
   # Gets the OptionLevel for the given depth (1-based)

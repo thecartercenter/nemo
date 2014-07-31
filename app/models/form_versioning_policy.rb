@@ -21,7 +21,7 @@ class FormVersioningPolicy
       case action
       when :update
         # changing the option order is a trigger if the form is smsable
-        triggers << {:reason => :option_order_changed, :forms => obj.forms.select{|f| f.smsable?}} if obj.ranks_changed?
+        triggers << {:reason => :option_order_changed, :forms => obj.forms.select(&:smsable?)} if obj.ranks_changed?
       end
 
     when "OptionNode"
@@ -31,15 +31,10 @@ class FormVersioningPolicy
       case action
       when :create
         # adding an option to an option set is a trigger for smsable forms
-        triggers << {:reason => :option_added_to_set, :forms => obj.option_set.forms.select{|f| f.smsable?}}
-      when :update
-        # # Changing optioning parent is a trigger for smsable forms
-        # if obj.parent_id_changed?
-        #   triggers << {:reason => :option_parent_changed, :forms => obj.option_set.forms.select{|f| f.smsable?}}
-        # end
+        triggers << {:reason => :option_added_to_set, :forms => obj.option_set.forms.select(&:smsable?)}
       when :destroy
-        # # Removing an option from an option set is always trigger.
-        # triggers << {:reason => :option_removed_from_set, :forms => obj.option_set.forms}
+        # Removing an option from an option set is always trigger.
+        triggers << {:reason => :option_removed_from_set, :forms => obj.option_set.forms}
       end
 
     when "Questioning"

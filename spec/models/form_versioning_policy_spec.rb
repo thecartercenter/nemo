@@ -212,12 +212,21 @@ describe FormVersioningPolicy do
     publish_and_check_versions(:should_change => true)
   end
 
+  it "updating option set with no changes should not cause upgrade" do
+    setup_option_set
+
+    save_old_version_codes
+
+    @os.update_attributes!(no_change_changeset(@os.root_node))
+
+    publish_and_check_versions(:should_change => false)
+  end
+
   it "adding an option to a set should not cause upgrade on non-smsable form" do
     setup_option_set
 
     save_old_version_codes
 
-    # add an option
     @os.update_attributes!(additive_changeset(@os.root_node))
 
     publish_and_check_versions(:should_change => false)
@@ -230,7 +239,6 @@ describe FormVersioningPolicy do
 
     save_old_version_codes
 
-    # add an option
     @os.update_attributes!(additive_changeset(@os.root_node))
 
     publish_and_check_versions(:should_change => true)
@@ -252,10 +260,7 @@ describe FormVersioningPolicy do
 
     save_old_version_codes
 
-    # destroy one of the options from os
-    Option.find(@os.options.last.id).destroy
-    @os.reload
-    assert_equal(1, @os.options.size)
+    @os.options.first.destroy
 
     publish_and_check_versions(:should_change => true)
   end
@@ -263,32 +268,31 @@ describe FormVersioningPolicy do
   it "changing option order should cause upgrade if form smsable" do
     setup_option_set
 
-    [true, false].each do |bool|
-      @forms.each{|f| f.smsable = bool; f.save!}
+    @os.forms.each{|f| f.update_attributes(:smsable => true)}
 
-      save_old_version_codes
+    save_old_version_codes
 
-      # now change the option order (we move the first optioning to the back)
-      @os.reload
-      opt_stg = @os.optionings[0]
-      old_rank = opt_stg.rank
-      opt_stg.rank = 10000 # this will automatically be trimmed
-      @os.save!
+    @os.update_attributes!(reorder_changeset(@os.root_node))
 
-      # verify the rank changed
-      assert_not_equal(old_rank, opt_stg.reload.rank)
+    publish_and_check_versions(:should_change => true)
+  end
 
-      publish_and_check_versions(:should_change => bool)
-    end
+  it "changing option order should not cause upgrade if form not smsable" do
+    setup_option_set
+
+    save_old_version_codes
+
+    @os.update_attributes!(reorder_changeset(@os.root_node))
+
+    publish_and_check_versions(:should_change => false)
   end
 
   it "removing option from option_set should cause upgrade" do
     setup_option_set
+
     save_old_version_codes
 
-    # now remove an option from the set the option set order
-    @os.optionings.destroy(@os.optionings.last)
-    @os.save
+    @os.update_attributes!(removal_changeset(@os.root_node))
 
     publish_and_check_versions(:should_change => true)
   end
