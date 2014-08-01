@@ -47,6 +47,11 @@ class OptionSet < ActiveRecord::Base
 
   delegate :ranks_changed?, :options_added?, :options_removed?, :total_options, to: :root_node
 
+  # Efficiently deletes option nodes for all option sets with given IDs.
+  def self.terminate_sub_relationships(option_set_ids)
+    OptionNode.where("option_set_id IN (#{option_set_ids.join(',')})").delete_all unless option_set_ids.empty?
+  end
+
   def children_attribs=(attribs)
     build_root_node if root_node.nil?
     root_node.children_attribs = attribs
@@ -150,21 +155,6 @@ class OptionSet < ActiveRecord::Base
   # Checks if any core fields (currently only name) changed
   def core_changed?
     name_changed?
-  end
-
-  # populates from json and saves
-  # returns self
-  # raises exception if save fails
-  # runs all operations in transaction
-  def update_from_json!(data)
-    transaction do
-      populate_from_json(data)
-
-      # call save here so that a validation error will cancel the transaction
-      save!
-    end
-
-    self
   end
 
   def as_json(options = {})

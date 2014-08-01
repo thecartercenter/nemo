@@ -40,7 +40,7 @@ class Mission < ActiveRecord::Base
 
   # Override default destory
   def destroy
-    terminate_mission
+    terminate
   end
 
   # checks to make sure there are no associated objects.
@@ -51,7 +51,7 @@ class Mission < ActiveRecord::Base
 
   # remove this mission and other related records from the Database
   # * this method is designed for speed.
-  def terminate_mission
+  def terminate
     ActiveRecord::Base.transaction do
       begin
         # Remove MissionBased Classes
