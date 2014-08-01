@@ -14,7 +14,7 @@ describe OptionSet do
 
   it 'should get updated properly' do
     os = create(:option_set)
-    os.update_attributes!(children_attribs: OPTION_NODE_WITH_GRANDCHILDREN_ATTRIBS)
+    os.update_attributes!(children_attribs: WITH_GRANDCHILDREN_ATTRIBS)
     expect_node([['Animal', ['Cat', 'Dog']], ['Plant', ['Tulip', 'Oak']]], os.root_node)
   end
 

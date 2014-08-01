@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe OptionNode do
+  include OptionNodeSupport
 
   describe 'destroy' do
     before do

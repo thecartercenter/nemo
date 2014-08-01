@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe FormVersioningPolicy do
+  include OptionNodeSupport
+
   before do
     # create three forms
     @forms = (0...3).map{ FactoryGirl.create(:form, :published => false) }

@@ -1,6 +1,8 @@
 require 'spec_helper'
 
-describe Option do
+describe OptionNode do
+  include OptionNodeSupport
+
   before(:all) do
     @mission1 = create(:mission)
     @mission2 = create(:mission)
