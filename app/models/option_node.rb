@@ -8,6 +8,7 @@ class OptionNode < ActiveRecord::Base
   belongs_to :option, autosave: true
   has_ancestry cache_depth: true
 
+  before_destroy :ensure_no_answers_or_choices
   after_save :update_children
 
   attr_accessor :children_attribs
@@ -57,11 +58,6 @@ class OptionNode < ActiveRecord::Base
   # Gets the OptionLevel for this node.
   def level
     is_root? ? nil : option_set.try(:level, depth)
-  end
-
-  # looks for answers and choices related to this option setting
-  def has_answers?
-    Answer.any_for_option?(option_id)
   end
 
   def to_s
@@ -140,5 +136,17 @@ class OptionNode < ActiveRecord::Base
         [:mission_id, :option_set_id, :is_standard, :standard_id].each{ |k| attribs[k] = send(k) }
         [:mission_id, :is_standard, :standard_id].each{ |k| attribs[:option_attribs].try('[]=', k, send(k)) }
       end
+    end
+
+    def has_answers?
+      Answer.any_for_option?(option_id)
+    end
+
+    def removable?
+      !has_answers?
+    end
+
+    def ensure_no_answers_or_choices
+      raise DeletionError.new(:cant_delete_if_has_response) if has_answers?
     end
 end
