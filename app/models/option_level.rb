@@ -1,5 +1,5 @@
 class OptionLevel
-  include Translatable
+  include ActiveModel::Serializers::JSON, Translatable
 
   translates :name
 
@@ -7,7 +7,12 @@ class OptionLevel
     self.name_translations = attribs[:name_translations]
   end
 
+  # For serialization.
+  def attributes
+    %w(name name_translations).map_hash{ |a| send(a) }
+  end
+
   def as_json(options = {})
-    super(:only => [:name_translations], :methods => :name)
+    super(root: false)
   end
 end
