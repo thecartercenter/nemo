@@ -1,10 +1,14 @@
 require 'spec_helper'
 
 describe OptionSet do
+  include OptionNodeSupport
+
   it 'should get constructed properly' do
-    os = create(:option_set)
+    os = create(:multilevel_option_set)
     # This assertion checks that option_set, mission, and is_standard? get cascaded properly.
-    expect_node(['Cat', 'Dog'], os.root_node)
+    expect_node([['Animal', ['Cat', 'Dog']], ['Plant', ['Tulip', 'Oak']]], os.root_node)
+    expect(Option.count).to eq 6
+    expect(OptionNode.count).to eq 7
   end
 
   it 'should get constructed properly if standard' do
@@ -14,7 +18,7 @@ describe OptionSet do
 
   it 'should get updated properly' do
     os = create(:option_set)
-    os.update_attributes!(children_attribs: WITH_GRANDCHILDREN_ATTRIBS)
+    os.update_attributes!(children_attribs: OptionNodeSupport::WITH_GRANDCHILDREN_ATTRIBS)
     expect_node([['Animal', ['Cat', 'Dog']], ['Plant', ['Tulip', 'Oak']]], os.root_node)
   end
 

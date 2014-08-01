@@ -8,12 +8,12 @@ class OptionSet < ActiveRecord::Base
   has_many :questionings, :through => :questions
 
   # We don't autosave this ass'n because we save it before validation in a callback below.
-  has_one :root_node, class_name: OptionNode, dependent: :destroy
+  has_one :root_node, class_name: OptionNode, dependent: :destroy, autosave: true
 
   validates :name, :presence => true
   validate :name_unique_per_mission
 
-  before_validation :save_root_node
+  before_validation :copy_attribs_to_root_node
   before_validation :normalize_fields
 
   scope :by_name, order('option_sets.name')
@@ -184,10 +184,8 @@ class OptionSet < ActiveRecord::Base
 
   private
 
-    def save_root_node
-      # Copy some redundant attribs to root node before saving.
+    def copy_attribs_to_root_node
       root_node.assign_attributes(mission: mission, is_standard: is_standard, option_set: self)
-      root_node.save!
     end
 
     def check_associations

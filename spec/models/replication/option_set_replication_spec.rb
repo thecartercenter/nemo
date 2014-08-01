@@ -19,6 +19,8 @@ describe OptionSet do
         expect(@copy.standard).to eq @orig
         expect(@copy.is_standard).to eq false
         expect(@copy.total_options).to eq 6
+        expect(Option.count).to eq 12
+        expect(OptionNode.count).to eq 14
       end
     end
 
