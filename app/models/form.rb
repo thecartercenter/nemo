@@ -24,7 +24,7 @@ class Form < ActiveRecord::Base
   scope(:with_questionings, includes(
     :questionings => [
       :form,
-      {:question => {:option_set => :options}},
+      {:question => :option_set},
       {:condition => [:option, :ref_qing]}
     ]
   ).order("questionings.rank"))
