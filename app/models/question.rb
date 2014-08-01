@@ -38,7 +38,7 @@ class Question < ActiveRecord::Base
       MAX(DISTINCT copy_forms.published) AS copy_form_published,
       MAX(DISTINCT forms.standard_id) AS standard_copy_form_id
     }).joins(%{
-      LEFT OUTER JOIN questionings ON questionings.question_id = questions.id AND questions.type = 'Question'
+      LEFT OUTER JOIN questionings ON questionings.question_id = questions.id
       LEFT OUTER JOIN forms ON forms.id = questionings.form_id
       LEFT OUTER JOIN answers ON answers.questioning_id = questionings.id
       LEFT OUTER JOIN questions copies ON questions.is_standard = 1 AND questions.id = copies.standard_id

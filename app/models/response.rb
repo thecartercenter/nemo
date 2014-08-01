@@ -377,8 +377,6 @@ class Response < ActiveRecord::Base
       rel = rel.select("responses.reviewed AS is_reviewed")
       rel = rel.select("forms.name AS form_name")
 
-      # these expressions use 'questions' because the join code below creates a table alias
-      # the actual STI table name is 'questions'
       rel = rel.select("questions.code AS question_code")
       rel = rel.select("questions._name AS question_name")
       rel = rel.select("questions.qtype_name AS question_type")
