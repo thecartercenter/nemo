@@ -71,6 +71,10 @@ class OptionNode < ActiveRecord::Base
     end
   end
 
+  def removable?
+    !has_answers?
+  end
+
   def to_s
     "Option Node: ID #{id}  Option ID: " + (is_root? ? '[ROOT]' : option_id || '[No option]').to_s + "  System ID: #{object_id}"
   end
@@ -150,11 +154,7 @@ class OptionNode < ActiveRecord::Base
     end
 
     def has_answers?
-      Answer.any_for_option?(option_id)
-    end
-
-    def removable?
-      !has_answers?
+      !is_root? && Answer.any_for_option?(option_id)
     end
 
     def ensure_no_answers_or_choices

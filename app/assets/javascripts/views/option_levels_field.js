@@ -7,9 +7,11 @@
   ns.OptionLevelsField = klass = function(params) { var self = this;
     self.params = params;
 
+    console.log(params.option_levels)
+
     // create the draggable list to hold the options
     self.list = new ELMO.Views.DraggableList({
-      items: params.option_levels,
+      items: params.option_levels || [],
       item_class: ELMO.Models.NamedItem,
       wrapper: params.wrapper,
       modal: params.modal,

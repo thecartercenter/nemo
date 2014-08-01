@@ -14,7 +14,7 @@
     self.option_levels_field = new ELMO.Views.OptionLevelsField({
       wrapper: $("#option-levels-wrapper"),
       modal: $("#edit-option-level"),
-      option_levels: params.option_set.option_levels,
+      option_levels: params.option_set.levels,
       form_mode: self.params.form_mode,
       can_reorder: true,
       can_remove: self.params.can_remove_options,
@@ -26,7 +26,7 @@
     self.options_field = new ELMO.Views.OptionsField({
       wrapper: $("#options-wrapper"),
       modal: $("#edit-option"),
-      optionings: params.option_set.optionings,
+      root_node: params.option_set.root_node,
       form_mode: self.params.form_mode,
       can_reorder: self.params.can_reorder,
       can_remove: self.params.can_remove_options,

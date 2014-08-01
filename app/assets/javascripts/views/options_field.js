@@ -6,12 +6,12 @@
   // constructor
   ns.OptionsField = klass = function(params) { var self = this;
     self.params = params;
-    self.optionings = params.optionings;
+    self.root_node = params.root_node;
 
     // create the draggable list to hold the options
     self.list = new ELMO.Views.DraggableList({
-      items: params.optionings,
-      item_class: ELMO.Models.Optioning,
+      items: params.root_node.children,
+      item_class: ELMO.Models.OptionNode,
       wrapper: params.wrapper,
       modal: params.modal,
       form_mode: params.form_mode,
@@ -27,7 +27,6 @@
     });
   };
 
-  // given a hash of option attribs, creates Optioning and Option objects and adds to OptioningCollection and DraggableList
   klass.prototype.add = function(option_attribs) { var self = this;
     self.list.add_item({id: null, 'removable?': true, option: option_attribs});
   };
