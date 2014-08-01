@@ -8,10 +8,6 @@ class OptionLevel
   end
 
   def as_json(options = {})
-    if options[:for_option_set_form]
-      super(:only => [:name_translations], :methods => :name)
-    else
-      super(options)
-    end
+    super(:only => [:name_translations], :methods => :name)
   end
 end

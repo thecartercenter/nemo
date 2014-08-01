@@ -37,7 +37,7 @@ class OptionNode < ActiveRecord::Base
 
   # Returns options of children, ordered by rank.
   def child_options
-    children.all(:order => :rank).map(&:option)
+    sorted_children.map(&:option)
   end
 
   # The total number of descendant options.
@@ -60,6 +60,17 @@ class OptionNode < ActiveRecord::Base
     is_root? ? nil : option_set.try(:level, depth)
   end
 
+  def as_json(options = {})
+    if options[:for_option_set_form]
+      super(:only => :id, :methods => :removable?).merge(
+        :option => option.as_json(:for_option_set_form => true),
+        :children => sorted_children.as_json(:for_option_set_form => true)
+      )
+    else
+      super(options)
+    end
+  end
+
   def to_s
     "Option Node: ID #{id}  Option ID: " + (is_root? ? '[ROOT]' : option_id || '[No option]').to_s + "  System ID: #{object_id}"
   end
@@ -80,7 +91,7 @@ class OptionNode < ActiveRecord::Base
         "option-mission: #{option ? option.mission.try(:name) || '[None]' : '[N/A]'}, " +
         "option-set: #{option_set.try(:name) || '[None]'})" +
 
-      "\n" + children.order('rank').map{ |c| c.to_s_indented(:space => options[:space] + 2) }.join
+      "\n" + sorted_children.map{ |c| c.to_s_indented(:space => options[:space] + 2) }.join
   end
 
   private
@@ -148,5 +159,9 @@ class OptionNode < ActiveRecord::Base
 
     def ensure_no_answers_or_choices
       raise DeletionError.new(:cant_delete_if_has_response) if has_answers?
+    end
+
+    def sorted_children
+      children.order('rank')
     end
 end
