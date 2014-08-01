@@ -60,7 +60,7 @@ describe OptionSet do
   end
 
   describe 'promote' do
-    before(:all) do
+    before do
       @orig = create(:multilevel_option_set, mission: @mission1)
       @copy = @orig.replicate(mode: :promote, retain_link_on_promote: true)
     end
@@ -79,7 +79,7 @@ describe OptionSet do
   end
 
   describe 'clone' do
-    before(:all) do
+    before do
       @orig = create(:multilevel_option_set, mission: @mission1)
       @copy = @orig.replicate(mode: :clone)
     end
