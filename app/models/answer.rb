@@ -69,6 +69,12 @@ class Answer < ActiveRecord::Base
     ])
   end
 
+  # Tests if there exists at least one answer referencing the Option with the given ID.
+  def self.any_for_option?(option_id)
+    connection.execute("SELECT COUNT(*) FROM answers a LEFT OUTER JOIN choices c ON c.answer_id = a.id
+      WHERE a.option_id = '#{option_id}' OR c.option_id = '#{option_id}'").to_a[0][0] > 0
+  end
+
   def should_validate?(field)
     # don't validate if response says no
     return false if response && !response.validate_answers?

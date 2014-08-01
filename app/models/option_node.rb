@@ -59,6 +59,11 @@ class OptionNode < ActiveRecord::Base
     is_root? ? nil : option_set.try(:level, depth)
   end
 
+  # looks for answers and choices related to this option setting
+  def has_answers?
+    Answer.any_for_option?(option_id)
+  end
+
   def to_s
     "Option Node: ID #{id}  Option ID: " + (is_root? ? '[ROOT]' : option_id || '[No option]').to_s + "  System ID: #{object_id}"
   end
