@@ -9,8 +9,6 @@ class Answer < ActiveRecord::Base
   belongs_to(:response, :inverse_of => :answers, :touch => true)
   has_many(:choices, :dependent => :destroy, :inverse_of => :answer)
 
-  belongs_to(:question)
-
   before_validation(:clean_locations)
   before_save(:round_ints)
   before_save(:blanks_to_nulls)
@@ -25,7 +23,7 @@ class Answer < ActiveRecord::Base
   delegate :question, :qtype, :rank, :required?, :hidden?, :option_set, :options, :condition, :to => :questioning
   delegate :name, :hint, :to => :question, :prefix => true
 
-  scope :public_access, includes(:question).
+  scope :public_access, includes(:questioning => :question).
                         where("questions.access_level = 'inherit'")
 
   # creates a new answer from a string from odk
