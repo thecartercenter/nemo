@@ -42,7 +42,6 @@ class OptionSetsController < ApplicationController
   # always via AJAX
   def create
     OptionSet.transaction do
-      @option_set.populate_from_json(params[:option_set])
       create_or_update
     end
   end
@@ -51,8 +50,7 @@ class OptionSetsController < ApplicationController
   def update
     # we use a transaction because populate_from_json requests it
     OptionSet.transaction do
-      # assign attribs and validate now so that normalization runs before authorizing and saving
-      @option_set.populate_from_json(params[:option_set])
+      # validate now so that normalization runs before authorizing and saving
       @option_set.valid?
 
       # authorize special abilities
