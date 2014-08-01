@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140801153034) do
+ActiveRecord::Schema.define(:version => 20140801160114) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -146,22 +146,6 @@ ActiveRecord::Schema.define(:version => 20140801153034) do
 
   add_index "missions", ["compact_name"], :name => "index_missions_on_compact_name"
 
-  create_table "option_levels", :force => true do |t|
-    t.integer  "option_set_id",                        :null => false
-    t.integer  "rank",                                 :null => false
-    t.text     "name_translations",                    :null => false
-    t.integer  "mission_id"
-    t.boolean  "is_standard",       :default => false, :null => false
-    t.integer  "standard_id"
-    t.datetime "created_at",                           :null => false
-    t.datetime "updated_at",                           :null => false
-    t.string   "_name"
-  end
-
-  add_index "option_levels", ["mission_id", "standard_id"], :name => "index_option_levels_on_mission_id_and_standard_id", :unique => true
-  add_index "option_levels", ["option_set_id"], :name => "option_levels_option_set_id_fk"
-  add_index "option_levels", ["standard_id"], :name => "option_levels_standard_id_fk"
-
   create_table "option_nodes", :force => true do |t|
     t.string   "ancestry"
     t.integer  "option_set_id"
@@ -198,26 +182,6 @@ ActiveRecord::Schema.define(:version => 20140801153034) do
   add_index "option_sets", ["mission_id", "standard_id"], :name => "index_option_sets_on_mission_id_and_standard_id", :unique => true
   add_index "option_sets", ["root_node_id"], :name => "option_sets_root_node_id_fk"
   add_index "option_sets", ["standard_id"], :name => "index_option_sets_on_standard_id"
-
-  create_table "optionings", :force => true do |t|
-    t.integer  "option_set_id"
-    t.integer  "option_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "rank"
-    t.boolean  "is_standard",     :default => false
-    t.integer  "standard_id"
-    t.integer  "mission_id"
-    t.integer  "parent_id"
-    t.integer  "option_level_id"
-  end
-
-  add_index "optionings", ["mission_id", "standard_id"], :name => "index_optionings_on_mission_id_and_standard_id", :unique => true
-  add_index "optionings", ["option_id"], :name => "optionings_option_id_fk"
-  add_index "optionings", ["option_level_id"], :name => "optionings_option_level_id_fk"
-  add_index "optionings", ["option_set_id"], :name => "optionings_option_set_id_fk"
-  add_index "optionings", ["parent_id"], :name => "optionings_parent_id_fk"
-  add_index "optionings", ["standard_id"], :name => "index_optionings_on_standard_id"
 
   create_table "options", :force => true do |t|
     t.datetime "created_at"
@@ -458,9 +422,6 @@ ActiveRecord::Schema.define(:version => 20140801153034) do
 
   add_foreign_key "groups", "missions", name: "groups_mission_id_fk"
 
-  add_foreign_key "option_levels", "option_levels", name: "option_levels_standard_id_fk", column: "standard_id"
-  add_foreign_key "option_levels", "option_sets", name: "option_levels_option_set_id_fk"
-
   add_foreign_key "option_nodes", "missions", name: "option_nodes_mission_id_fk"
   add_foreign_key "option_nodes", "option_nodes", name: "option_nodes_standard_id_fk", column: "standard_id"
   add_foreign_key "option_nodes", "option_sets", name: "option_nodes_option_set_id_fk"
@@ -469,13 +430,6 @@ ActiveRecord::Schema.define(:version => 20140801153034) do
   add_foreign_key "option_sets", "missions", name: "option_sets_mission_id_fk"
   add_foreign_key "option_sets", "option_nodes", name: "option_sets_root_node_id_fk", column: "root_node_id"
   add_foreign_key "option_sets", "option_sets", name: "option_sets_standard_id_fk", column: "standard_id"
-
-  add_foreign_key "optionings", "missions", name: "optionings_mission_id_fk"
-  add_foreign_key "optionings", "option_levels", name: "optionings_option_level_id_fk"
-  add_foreign_key "optionings", "option_sets", name: "optionings_option_set_id_fk"
-  add_foreign_key "optionings", "optionings", name: "optionings_parent_id_fk", column: "parent_id"
-  add_foreign_key "optionings", "optionings", name: "optionings_standard_id_fk", column: "standard_id"
-  add_foreign_key "optionings", "options", name: "optionings_option_id_fk"
 
   add_foreign_key "options", "missions", name: "options_mission_id_fk"
   add_foreign_key "options", "options", name: "options_standard_id_fk", column: "standard_id"
