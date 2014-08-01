@@ -47,6 +47,9 @@ class OptionSet < ActiveRecord::Base
 
   delegate :ranks_changed?, :options_added?, :options_removed?, :total_options, to: :root_node
 
+  # These methods are for the form.
+  attr_writer :multi_level
+
   # Efficiently deletes option nodes for all option sets with given IDs.
   def self.terminate_sub_relationships(option_set_ids)
     OptionNode.where("option_set_id IN (#{option_set_ids.join(',')})").delete_all unless option_set_ids.empty?
@@ -68,6 +71,10 @@ class OptionSet < ActiveRecord::Base
 
   def multi_level?
     root_node && root_node.has_grandchildren?
+  end
+
+  def multi_level
+    multi_level?
   end
 
   # Returns first-level options
