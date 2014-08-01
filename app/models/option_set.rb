@@ -7,9 +7,9 @@ class OptionSet < ActiveRecord::Base
   has_many :questions, :inverse_of => :option_set
   has_many :questionings, :through => :questions
 
-  # We don't autosave this ass'n because we save it before validation in a callback below.
   has_one :root_node, class_name: OptionNode, dependent: :destroy, autosave: true
 
+  # These are currently performed client side but doesn't hurt to have them here too.
   validates :name, :presence => true
   validate :name_unique_per_mission
 
