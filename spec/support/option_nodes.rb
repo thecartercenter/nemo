@@ -186,11 +186,6 @@ module OptionNodeSupport
     }
   end
 
-  WITH_CHILDREN_ATTRIBS = [
-    { 'option_attribs' => { 'name_translations' => {'en' => 'Cat'} } },
-    { 'option_attribs' => { 'name_translations' => {'en' => 'Dog'} } }
-  ]
-
   WITH_GRANDCHILDREN_ATTRIBS = [{
     'option_attribs' => { 'name_translations' => {'en' => 'Animal'} },
     'children_attribs' => [

@@ -1,8 +1,15 @@
 FactoryGirl.define do
   factory :option_set do
+    ignore do
+      # First level option names.
+      option_names %w(Cat Dog)
+    end
+
     sequence(:name) { |n| "Option Set #{n}" }
     mission { is_standard ? nil : get_mission }
-    children_attribs { OptionNodeSupport::WITH_CHILDREN_ATTRIBS }
+    children_attribs do
+      option_names.map{ |n| { 'option_attribs' => { 'name_translations' => {'en' => n} } } }
+    end
 
     factory :empty_option_set do
       children_attribs []

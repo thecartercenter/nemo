@@ -10,7 +10,9 @@ FactoryGirl.define do
 
     factory :option_node_with_children do
       option nil
-      children_attribs { OptionNodeSupport::WITH_CHILDREN_ATTRIBS }
+      children_attribs do
+        option_names.map{ |n| { 'option_attribs' => { 'name_translations' => {'en' => n} } } }
+      end
     end
 
     factory :option_node_with_grandchildren do
