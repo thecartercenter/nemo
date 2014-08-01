@@ -54,14 +54,10 @@ class StandardizableFormTest < ActiveSupport::TestCase
     assert_not_equal(f, f2)
     assert_not_equal(f.questionings[0], f2.questionings[0])
     assert_not_equal(f.questionings[0].question, f2.questionings[0].question)
-    assert_not_equal(f.questionings[0].question.option_set, f2.questionings[0].question.option_set)
-    assert_not_equal(f.questionings[0].question.option_set.optionings[0], f2.questionings[0].question.option_set.optionings[0])
-    assert_not_equal(f.questionings[0].question.option_set.optionings[0].option, f2.questionings[0].question.option_set.optionings[0].option)
 
     # but properties should be same
     assert_equal(f.questionings[0].rank, f2.questionings[0].rank)
     assert_equal(f.questionings[0].question.code, f2.questionings[0].question.code)
-    assert_equal(f.questionings[0].question.option_set.optionings[0].option.name, f2.questionings[0].question.option_set.optionings[0].option.name)
   end
 
   test "replicating form with conditions should produce correct new conditions" do
@@ -94,15 +90,15 @@ class StandardizableFormTest < ActiveSupport::TestCase
     # questionings, conditions, and options should be distinct
     assert_not_equal(f.questionings[1], f2.questionings[1])
     assert_not_equal(f.questionings[1].condition, f2.questionings[1].condition)
-    assert_not_equal(f.questionings[0].question.option_set.optionings[0].option, f2.questionings[0].question.option_set.optionings[0].option)
+    assert_not_equal(f.questionings[0].question.option_set.options[0], f2.questionings[0].question.option_set.options[0])
 
     # new condition should point to new questioning
     assert_equal(f2.questionings[1].condition.ref_qing, f2.questionings[0])
 
     # new condition should point to new option
     assert_not_nil(f2.questionings[1].condition.option)
-    assert_not_nil(f2.questionings[0].question.option_set.optionings[0].option)
-    assert_equal(f2.questionings[1].condition.option, f2.questionings[0].question.option_set.optionings[0].option)
+    assert_not_nil(f2.questionings[0].question.option_set.options[0])
+    assert_equal(f2.questionings[1].condition.option, f2.questionings[0].question.option_set.options[0])
   end
 
   test "replicating a form with multiple conditions should also work" do

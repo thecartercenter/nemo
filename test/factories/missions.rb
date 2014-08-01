@@ -24,7 +24,6 @@ FactoryGirl.define do
     after(:create) do |mission, evaluator|
       create(:broadcast, :mission => mission)
 
-      # creates option_set, optionings, option_levels, and options
       os = create(:multilevel_option_set, :mission => mission)
 
       # creates questionings and questions
