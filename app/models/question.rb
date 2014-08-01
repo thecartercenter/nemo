@@ -5,7 +5,7 @@ class Question < ActiveRecord::Base
   CODE_FORMAT = "[a-zA-Z][a-zA-Z0-9]{1,19}"
   API_ACCESS_LEVELS = %w(inherit private)
 
-  belongs_to(:option_set, :include => :options, :inverse_of => :questions, :autosave => true)
+  belongs_to(:option_set, :inverse_of => :questions, :autosave => true)
   has_many(:questionings, :dependent => :destroy, :autosave => true, :inverse_of => :question)
   has_many(:answers, :through => :questionings)
   has_many(:referring_conditions, :through => :questionings)
