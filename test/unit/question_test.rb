@@ -40,7 +40,7 @@ class QuestionTest < ActiveSupport::TestCase
   test "options" do
     q = FactoryGirl.create(:question, :qtype_name => 'select_one')
     q.reload
-    assert_equal(%w(Yes No), q.options.map(&:name))
+    assert_equal(%w(Cat Dog), q.options.map(&:name))
     q = FactoryGirl.create(:question, :qtype_name => 'integer', :code => 'intq')
     assert_nil(q.options)
   end
