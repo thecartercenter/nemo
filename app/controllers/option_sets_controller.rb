@@ -51,7 +51,8 @@ class OptionSetsController < ApplicationController
     # we use a transaction because populate_from_json requests it
     OptionSet.transaction do
       # validate now so that normalization runs before authorizing and saving
-      @option_set.valid?
+      # We raise if there is an error since validation should happen client side.
+      raise ActiveRecord::RecordInvalid.new('Option set is invalid') unless @option_set.valid?
 
       # authorize special abilities
       authorize!(:update_core, @option_set) if @option_set.core_changed?
