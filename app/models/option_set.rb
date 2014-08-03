@@ -9,7 +9,6 @@ class OptionSet < ActiveRecord::Base
 
   has_one :root_node, class_name: OptionNode, dependent: :destroy, autosave: true
 
-  # These are currently performed client side but doesn't hurt to have them here too.
   validates :name, :presence => true
   validate :name_unique_per_mission
 
