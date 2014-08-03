@@ -167,7 +167,7 @@ class OptionSet < ActiveRecord::Base
   def as_json(options = {})
     if options[:for_option_set_form]
       {
-        :root_node => root_node.as_json(:for_option_set_form => true),
+        :children => root_node.as_json(:for_option_set_form => true),
         :levels => levels.as_json(:for_option_set_form => true)
       }
     else

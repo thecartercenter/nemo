@@ -60,14 +60,22 @@ class OptionNode < ActiveRecord::Base
     is_root? ? nil : option_set.try(:level, depth)
   end
 
+  def options_by_id
+    @options_by_id ||= Option.where(id: descendants.map(&:option_id)).includes(:option_sets, :answers, :choices).index_by(&:id)
+  end
+
+  # Serializes all descendants. Meant to be called on root.
   def as_json(options = {})
-    if options[:for_option_set_form]
-      super(:only => :id, :methods => :removable?).merge(
-        :option => option.as_json(:for_option_set_form => true),
-        :children => sorted_children.as_json(:for_option_set_form => true)
-      )
-    else
-      super(options)
+    arrange_as_json
+  end
+
+  def arrange_as_json(hash = nil)
+    hash ||= descendants.arrange(order: 'rank')
+    hash.map do |node, children|
+      node.attributes.slice(*%w(id rank)).tap do |branch|
+        branch[:option] = options_by_id[node['option_id']].as_json(for_option_set_form: true)
+        branch[:children] = arrange_as_json(children) unless children.empty?
+      end
     end
   end
 

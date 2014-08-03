@@ -6,11 +6,11 @@
   // constructor
   ns.OptionsField = klass = function(params) { var self = this;
     self.params = params;
-    self.root_node = params.root_node;
+    self.children = params.children;
 
     // create the draggable list to hold the options
     self.list = new ELMO.Views.DraggableList({
-      items: params.root_node.children,
+      items: params.children,
       item_class: ELMO.Models.OptionNode,
       wrapper: params.wrapper,
       modal: params.modal,
