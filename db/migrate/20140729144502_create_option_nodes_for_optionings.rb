@@ -1,3 +1,6 @@
+class OptionSet < ActiveRecord::Base; end
+class OptionNode < ActiveRecord::Base; end
+
 class CreateOptionNodesForOptionings < ActiveRecord::Migration
   require 'pp'
 
