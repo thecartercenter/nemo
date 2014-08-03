@@ -165,6 +165,11 @@ div.data_integrity_warning {
   }
 }
 
+/* Let integirty warnings have standard width in modals, else they overflow. */
+div.modal div.data_integrity_warning {
+  width: inherit;
+}
+
 /* Minimal form has no horiz lines and no hints */
 form.elmo_form.minimal {
   width: 620px;

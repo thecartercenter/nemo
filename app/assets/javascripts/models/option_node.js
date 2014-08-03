@@ -1,10 +1,10 @@
-// ELMO.Models.Optioning < ELMO.Models.NamedItem
+// ELMO.Models.OptionNode < ELMO.Models.NamedItem
 //
-// Client side model for Optioning
+// Client side model for OptionNode
 (function(ns, klass) {
 
   // constructor
-  ns.Optioning = klass = function(attribs) { var self = this;
+  ns.OptionNode = klass = function(attribs) { var self = this;
     // copy attribs
     for (var key in attribs) self[key] = attribs[key];
 
@@ -14,20 +14,17 @@
       self.name_translations = self.option.name_translations;
     }
 
-    // optioning (option) names are editable if the optioning is not a new record
-    //   OR both the option AND optioning are new records
-    self.editable = self.id || !self.option.id;
+    // names are editable if the node is not a new record
+    //   OR both the option AND node are new records
+    self.editable = true;
 
     // alias removable with no question mark
-    // note this is a property of optioning
+    // note this is a property of option node
     self.removable = self['removable?'];
 
     // alias in_use with no question mark
     // note this is a property of option
     self.in_use = self.option['in_use?'];
-
-    // draggable list class expects children field
-    self.children = self.optionings;
   };
 
   // inherit from NamedItem

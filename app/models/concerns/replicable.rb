@@ -1,8 +1,8 @@
-# methods that handle replicating changes to copies of core objects (forms, questions, etc.) within and across missions
+# Behaviors that handle replicating creation and updates to copies of core objects (forms, questions, etc.) within and across missions.
 module Replicable
   extend ActiveSupport::Concern
 
-  JOIN_CLASSES = %w(Optioning Questioning Condition)
+  JOIN_CLASSES = %w(OptionNode Questioning Condition)
 
   # an initial list of attributes that we don't want to copy from the src_obj to the dest_obj
   ATTRIBS_NOT_TO_COPY = %w(id created_at updated_at mission_id mission is_standard standard_id standard)
@@ -30,58 +30,26 @@ module Replicable
     end
   end
 
-  # TOM: is there any reason the replication mode and destination mission can't be passed explicitly to replicate as I suggested?
-  # then we wouldn't need all this extra complexity AND the code would be more readable
-  # my suggestion was this:
-  #
-  # def replicate(options_or_replication)
-  # replicate(:mode => :clone)
-  # replicate(:mode => :to_mission, :mission => m)
-  # replicate(:mode => :to_mission, :mission => m)
-  # replicate(:mode => :promote, :retain_link_on_promote => false)
-  #
-  # I'm happy to talk more about it.
-
-  # figure out the replication mode based off of the options
-  def determine_replication_mode(options=nil)
-    if options.is_a?(Hash) && options.key?(:mode)
-      options[:mode]
-    else
-      # when in the default mode, we determine the mode based off of the mission
-      # if the mission is nil we are doing a standard copy.
-      # if a mission is passed in, we are doing a clone.
-      :default
-    end
-  end
-
-  # figure out what mission to use based off of the options
-  def determine_mission(options)
-    mode = determine_replication_mode(options)
-    return nil if mode == :promote
-
-    if options.is_a?(Hash)
-      if options.key?(:mission)
-        options[:mission]
-      else # no mission was passed into the options
-        nil
-      end
-    else # options was not a hash.
-      options
-    end
-  end
-
-  # Expected options:
-  # replicate(:mode => :clone)
-  # replicate(:mode => :to_mission, :dest_mission => m)
-  # replicate(:mode => :promote, :retain_link_on_promote => false)
+  # There are three replication modes passed via the :mode parameter:
+  # * :clone      Make a copy of the object and its decendants in the same mission (or admin mode).
+  # * :to_mission Copy/update a standard object and its decendants to a particular different mission.
+  #               requires :dest_mission parameter
+  # * :promote    Creates standard objects from a non-standard object. If :retain_link_on_promote parameter
+  #               is true then the original objects immediately become standard copies and thus edits are restricted.
+  #               Otherwise no link is maintained between the original and new standard.
+  # Examples:
+  # obj.replicate(:mode => :clone)
+  # obj.replicate(:mode => :to_mission, :dest_mission => m)
+  # obj.replicate(:mode => :promote, :retain_link_on_promote => false)
   def replicate(options = nil)
-    raise ArgumentError, 'Replication mode has not been defined' unless options.is_a?(Replication) || (options.respond_to?("[]") && options[:mode])
-
     # if mission or nil was passed in, we don't have a replication object, so we need to create one
     # a replication is an object to track replication parameters
     if options.is_a?(Replication)
       replication = options
     else
+      raise ArgumentError, 'replication mode is required' unless options[:mode]
+      raise ArgumentError, 'dest_mission must be given for to_mission mode' if options[:mode] == :to_mission && !options[:dest_mission]
+      raise ArgumentError, 'dest_mission only required for to_mission mode' if options[:mode] != :to_mission && options[:dest_mission]
       replication = Replication.new(options.merge(:src_obj => self))
     end
 
@@ -109,7 +77,7 @@ module Replicable
     replicate_attributes(replication)
 
     # if we are copying standard to standard, preserve the is_standard flag
-    dest_obj.is_standard = true if replication.replicating_to_standard?
+    dest_obj.is_standard = true if replication.to_standard?
 
     # ensure uniqueness params are respected
     ensure_uniqueness_when_replicating(replication)
@@ -120,18 +88,18 @@ module Replicable
     # add dest_obj to its parent's assoc before recursive step so that children can access it
     add_replication_dest_obj_to_parents_assocation(replication)
 
-    # if this is a standard-to-mission replication, add the newly replicated dest obj to the list of copies
-    # unless it is there already
-    add_copy(dest_obj) if replication.standard_to_mission?
-
     replicate_child_associations(replication)
 
     dest_obj.save!
 
-    # link basic object to newly created standard object
-    if replication.mode == :promote && replication.retain_link_on_promote?
-      link_object_to_standard(dest_obj)
-    end
+    # if this is a standard-to-mission replication, add the newly replicated dest obj to the list of copies
+    # unless it is there already
+    add_copy(dest_obj) if replication.to_mission?
+
+    # Need to clear this for next time.
+    clear_recent_changes! if respond_to?(:recent_changes)
+
+    link_object_to_standard(dest_obj) if replication.promote_and_retain_link?
 
     return dest_obj
   end
@@ -245,9 +213,11 @@ module Replicable
 
   # link the src object to the newly created standard object
   def link_object_to_standard(standard_object)
-    self.is_standard = true
-    self.standard_id = standard_object.id
-    self.save!
+    if new_record?
+      self.standard_id = standard_object.id
+    else
+      update_column(:standard_id, standard_object.id)
+    end
   end
 
   private
@@ -264,7 +234,7 @@ module Replicable
         obj = self.class.new
       end
 
-      # set flag so that standardizable callback doesn't call replicate again unnecessarily
+      # set flag that we are in a replication
       obj.changing_in_replication = true
 
       obj
@@ -296,6 +266,8 @@ module Replicable
           # copy unless explicitly told not to
           unless skip["#{name}.#{k}"]
 
+            Rails.logger.debug "Replicating attribute #{name}.#{k}" if self.class.log_replication?
+
             # ensure dest attrib is initialized
             dest_obj.send("#{name}=", {}) unless dest_obj.send(name).is_a?(Hash)
 
@@ -306,6 +278,7 @@ module Replicable
 
       # otherwise it's not a hash, so just do the copy
       else
+        Rails.logger.debug "Replicating attribute #{name}" if self.class.log_replication?
         dest_obj.send("#{name}=", value) unless skip[name]
       end
     end
@@ -336,34 +309,41 @@ module Replicable
       # 2. dest obj attrib value has NOT deviated from std
       # therefore, if either of the above conditions is met, we should NOT add the attrib to the dont_copy list
       # in all other cases, we should add it to the dont_copy list
-      replicable_opts(:user_modifiable).each do |attrib|
+      unless replication.creating?
+        replicable_opts(:user_modifiable).each do |attrib|
+          src_is = send(attrib)
+          dest_is = replication.dest_obj.send(attrib)
 
-        # if we are creating, immediately we know that nothing gets added to dont_copy
-        # otherwise, we need to check if value has deviated in dest obj
-        unless replication.creating?
+          # Prefer the recent_changes hash here since it goes back further, but only implemented on some objects.
+          change_hash = (respond_to?(:recent_changes) ? recent_changes : previous_changes) || {}
+          src_was = change_hash.key?(attrib.to_s) ? change_hash[attrib.to_s].first : src_is
 
           # if the src attrib is or was a hash, it gets special treatment
-          if send(attrib).is_a?(Hash) || send("#{attrib}_was").is_a?(Hash)
+          if src_is.is_a?(Hash) || src_was.is_a?(Hash)
 
-            # get refs, ensuring no nils
-            src_hash = send(attrib) || {}
-            src_hash_was = send("#{attrib}_was") || {}
-            dest_hash = replication.dest_obj.send(attrib) || {}
+            # ensure no nils
+            src_is ||= {}
+            src_was ||= {}
+            dest_is ||= {}
 
             # loop over each key in src
-            src_hash_was.each_key do |k|
-              # don't copy this particular key if deviated
-              dont_copy << "#{attrib}.#{k}" if src_hash_was[k] != dest_hash[k]
+            src_was.each_key do |k|
+
+              if src_was[k] != dest_is[k]
+                if self.class.log_replication?
+                  Rails.logger.debug("Not copying #{attrib}.#{k} because destination has deviated (#{src_was[k].inspect} vs #{dest_is[k].inspect})")
+                end
+                dont_copy << "#{attrib}.#{k}"
+              end
             end
           else
-            # figure out if the attribute has deviated
-            deviated = send("#{attrib}_was") != replication.dest_obj.send(attrib)
-
             # don't copy if value has deviated
-            dont_copy << attrib if deviated
+            dont_copy << attrib if src_was != dest_is
           end
         end
       end
+
+      Rails.logger.debug("Not copying #{dont_copy.to_s}") if self.class.log_replication?
 
       dont_copy
     end
@@ -389,22 +369,23 @@ module Replicable
     # this is because some child objects (e.g. conditions) need access to their parents
     def add_replication_dest_obj_to_parents_assocation(replication, dest_obj = nil)
       # trivial case
-      return unless replication.has_ancestors?
+      return unless replication.has_ancestors? # This has nothing to do with ancestry gem.
 
-      # get dest obj from replication unless specified explicitly
       dest_obj ||= replication.dest_obj
 
-      # get immediate parent and reflect on association
-      refl = replication.parent.class.reflect_on_association(replication.current_assoc)
-
-      # associate object with parent using appropriate method depending on assoc type
-      if refl.collection?
+      # Associate object with parent using appropriate method depending on assoc type.
+      if replication.parent_assoc_type == :singleton
+        replication.parent.send("#{replication.current_assoc}=", dest_obj)
+      else
         # only copy if not already there
         unless replication.parent.send(replication.current_assoc).include?(dest_obj)
-          replication.parent.send(replication.current_assoc).send('<<', dest_obj)
+          if replication.parent_assoc_type == :tree
+            replication.parent.save! # Need to save here or setting parent may not work.
+            dest_obj.parent = replication.parent
+          else # :collection
+            replication.parent.send(replication.current_assoc).send('<<', dest_obj)
+          end
         end
-      else
-        replication.parent.send("#{replication.current_assoc}=", dest_obj)
       end
     end
 
@@ -418,6 +399,8 @@ module Replicable
           replicate_non_collection_association(assoc, replication)
         end
       end
+
+      replicate_tree(replication) if replicable_opts(:replicate_tree)
     end
 
     # replicates a collection-type association
@@ -427,14 +410,11 @@ module Replicable
       # destroy any children in dest obj that don't exist source obj
       src_child_ids = send(assoc_name).map(&:id)
       replication.dest_obj.send(assoc_name).each do |o|
-        unless src_child_ids.include?(o.standard_id)
-          Rails.logger.debug("DESTROYING CHILD")
-          replication.dest_obj.send(assoc_name).destroy(o)
-        end
+        replication.dest_obj.send(assoc_name).destroy(o) unless src_child_ids.include?(o.standard_id)
       end
 
       # replicate the existing children
-      send(assoc_name).each{|o| replicate_child(o, assoc_name, replication)}
+      send(assoc_name).each{|o| replicate_associated(o, assoc_name, replication)}
     end
 
     # replicates a non-collection-type association (e.g. belongs_to)
@@ -447,18 +427,26 @@ module Replicable
         end
       # else replicate the single child
       else
-        replicate_child(send(assoc_name), assoc_name, replication)
+        replicate_associated(send(assoc_name), assoc_name, replication)
       end
     end
 
-    # calls replicate on an individual child object, generating a new set of replication params
-    # for this particular replicate call
-    def replicate_child(child, assoc_name, replication)
-      # build new replication param obj for child
-      new_replication = replication.clone_for_recursion(child, assoc_name)
+    # Replicates descendants of an object that has_ancestry.
+    def replicate_tree(replication)
+      # destroy any children in dest obj that don't exist source obj
+      replication.dest_obj.children.each do |o|
+        o.destroy unless child_ids.include?(o.standard_id)
+      end
 
-      # call replicate for the child object
-      child.replicate(new_replication)
+      children.each{|o| replicate_associated(o, 'children', replication)}
+    end
+
+    # calls replicate on an individual associated object, generating a new set of replication params
+    # for this particular replicate call
+    def replicate_associated(obj, assoc_name, replication)
+      # build new replication param obj for obj
+      new_replication = replication.clone_for_recursion(obj, assoc_name)
+      obj.replicate(new_replication)
     end
 
 end
