@@ -5,7 +5,7 @@ require 'database_cleaner'
 require 'authlogic/test_case'
 
 # Share spec support files.
-require File.expand_path('../../spec/support/option_nodes', __FILE__)
+require File.expand_path('../../spec/support/option_node_support', __FILE__)
 
 class ActiveSupport::TestCase
 
