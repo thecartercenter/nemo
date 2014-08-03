@@ -22,7 +22,7 @@ class CreateOptionNodesForOptionings < ActiveRecord::Migration
         OptionSet.where(:standard_id => set.id).each do |copy|
           copy_root = OptionNode.create!({option_set_id: copy.id, standard_id: root.id}.merge(%w(is_standard mission_id).map_hash{ |a| set.send(a) }))
           copy.update_column(:root_node_id, copy_root.id)
-          root_copies[copy.mission.id] = copy_root # Store for recursion
+          root_copies[copy.mission_id] = copy_root # Store for recursion
           puts "Created root node copy #{copy_root.inspect}"
         end
 
