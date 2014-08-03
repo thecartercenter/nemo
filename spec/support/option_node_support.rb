@@ -23,11 +23,11 @@ module OptionNodeSupport
 
   # This is a standard set of changes to the option_node_with_grandchildren factory object.
   # Changes:
-  # Move Cat from Animal to Plant (by deleting node and creating new)
+  # Move Cat from Animal to Plant.
   # Change name of Tulip to Tulipe.
   # Change name of Dog to Doge.
   # Delete Oak.
-  # Move Tulip to rank 3.
+  # Move Tulip to rank 1.
   def standard_changeset(node)
     {
       'children_attribs' => [{
@@ -44,6 +44,7 @@ module OptionNodeSupport
         'option_attribs' => { 'id' => node.c[1].option_id, 'name_translations' => {'en' => 'Plant'} },
         'children_attribs' => [
           {
+            'id' => node.c[0].c[0].id,
             'option_attribs' => { 'id' => node.c[0].c[0].option_id, 'name_translations' => {'en' => 'Cat'} }
           },
           {

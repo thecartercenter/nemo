@@ -1,5 +1,9 @@
 FactoryGirl.define do
   factory :option_node do
+    ignore do
+      option_names %w(Cat Dog)
+    end
+
     mission { is_standard ? nil : get_mission }
     option
 

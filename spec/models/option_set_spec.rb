@@ -19,7 +19,7 @@ describe OptionSet do
   it 'should get updated properly' do
     os = create(:option_set)
     os.update_attributes!(children_attribs: OptionNodeSupport::WITH_GRANDCHILDREN_ATTRIBS)
-    expect_node([['Animal', ['Cat', 'Dog']], ['Plant', ['Tulip', 'Oak']]], os.root_node)
+    expect_node([['Animal', ['Cat', 'Dog']], ['Plant', ['Tulip', 'Oak']]], os.reload.root_node)
   end
 
   it 'should delegate ranks_changed? to root node' do

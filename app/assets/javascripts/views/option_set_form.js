@@ -161,7 +161,6 @@
   };
 
   // traverses the option tree and generates a hash representing the full option set
-  // see OptionSetSubmissionTest for the expected format
   klass.prototype.prepare_data = function() { var self = this;
     // temporarily enable any disabled items else serialization will fail
     var disabled = $('form.option_set_form').find(':input:disabled').removeAttr('disabled');
@@ -174,8 +173,8 @@
 
     // add nodes
     data.option_set = {};
-    data.option_set._option_levels = self.prepare_option_levels();
-    data.option_set._optionings = self.prepare_options();
+    data.option_set.level_names = self.prepare_option_levels();
+    data.option_set.children_attribs = self.prepare_options();
 
     // upate option set name in OptionSet model, as this may be used by modal
     self.params.option_set.name = data['option_set[name]'];
@@ -193,17 +192,10 @@
   };
 
   // prepares the options, including the destroyed ones
+  // see OptionNodeSupport modules for the expected format
   klass.prototype.prepare_options = function() { var self = this;
     // get the main tree
-    var prepared = self.prepare_option_tree(self.options_field.list.item_tree());
-
-    // add the destroyed optionings
-    self.options_field.list.removed_items.forEach(function(o){
-      if (o.id)
-        prepared.push({id: o.id, _destroy: true});
-    })
-
-    return prepared;
+    return self.prepare_option_tree(self.options_field.list.item_tree());
   };
 
   // prepares an option tree
@@ -211,18 +203,18 @@
   klass.prototype.prepare_option_tree = function(nodes) { var self = this;
     return nodes.map(function(node){
       // in this case, the item will be an Optioning, which is also a NamedItem
-      var prepared = {option: {name_translations: node.item.name_translations}};
+      var prepared = {option_attribs: {name_translations: node.item.name_translations}};
 
       // include IDs if available
       if (node.item.id)
         prepared.id = node.item.id;
 
       if (node.item.option.id)
-        prepared.option.id = node.item.option.id;
+        prepared.option_attribs.id = node.item.option.id;
 
       // recurse
       if (node.children)
-        prepared.optionings = self.prepare_option_tree(node.children);
+        prepared.children_attribs = self.prepare_option_tree(node.children);
 
       return prepared;
     });

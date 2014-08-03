@@ -46,7 +46,7 @@ class OptionNode < ActiveRecord::Base
   end
 
   def option_attribs=(attribs)
-    attribs.symbolize_keys!
+    attribs.symbolize_keys! if attribs.respond_to?(:symbolize_keys!)
     if attribs[:id]
       self.option = Option.find(attribs[:id])
       option.assign_attributes(attribs)
@@ -72,7 +72,9 @@ class OptionNode < ActiveRecord::Base
   def arrange_as_json(hash = nil)
     hash ||= descendants.arrange(order: 'rank')
     hash.map do |node, children|
-      node.attributes.slice(*%w(id rank)).tap do |branch|
+      {}.tap do |branch|
+        %w(id rank).each{ |k| branch[k.to_sym] = node[k] }
+        branch[:removable?] = !option_set.option_has_answers?(node['option_id'])
         branch[:option] = options_by_id[node['option_id']].as_json(for_option_set_form: true)
         branch[:children] = arrange_as_json(children) unless children.empty?
       end
@@ -114,7 +116,10 @@ class OptionNode < ActiveRecord::Base
       return if children_attribs.nil?
 
       reload # Ancestry doesn't seem to work properly without this.
-      children_attribs.each(&:symbolize_keys!) if children_attribs
+
+      # Symbolize keys if regular Hash. (not needed for HashWithIndifferentAccess)
+      children_attribs.each{ |a| a.symbolize_keys! if a.respond_to?(:symbolize_keys!) }
+
       copy_attribs_to_children
 
       self.ranks_changed = false # Assume false to begin.
@@ -128,18 +133,17 @@ class OptionNode < ActiveRecord::Base
       # We use the ! variant of update and create below so that validation
       # errors on children and options will cascade up.
       (children_attribs || []).each_with_index do |attribs, i|
-        if attribs[:id]
-          if matching = children_by_id[attribs[:id]]
-            self.ranks_changed = true if matching.rank != i + 1
-            matching.update_attributes!(attribs.merge(rank: i + 1))
-            copy_flags_from_subnode(matching)
+        attribs[:id] = attribs[:id].to_i if attribs.key?(:id)
+        if attribs[:id] && matching = children_by_id[attribs[:id]]
+          self.ranks_changed = true if matching.rank != i + 1
+          matching.update_attributes!(attribs.merge(rank: i + 1))
+          copy_flags_from_subnode(matching)
 
-            # Remove from hash so that we'll know later which ones weren't updated.
-            children_by_id.delete(attribs[:id])
-          end
+          # Remove from hash so that we'll know later which ones weren't updated.
+          children_by_id.delete(attribs[:id])
         else
           self.options_added = true
-          children.create!(attribs.merge(rank: i + 1))
+          children.create!(attribs.except(:id).merge(rank: i + 1))
         end
       end
 

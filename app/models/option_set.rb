@@ -45,7 +45,7 @@ class OptionSet < ActiveRecord::Base
 
   serialize :level_names, JSON
 
-  delegate :ranks_changed?, :options_added?, :options_removed?, :total_options, to: :root_node
+  delegate :ranks_changed?, :options_added?, :options_removed?, :total_options, :descendants, to: :root_node
 
   # These methods are for the form.
   attr_writer :multi_level
@@ -85,6 +85,15 @@ class OptionSet < ActiveRecord::Base
   # checks if this option set appears in any smsable questionings
   def form_smsable?
     questionings.any?(&:form_smsable?)
+  end
+
+  def option_has_answers?(option_id)
+    # Do one query for all and cache.
+    @option_ids_with_answers ||= Answer.where(questioning_id: questionings.map(&:id),
+      option_id: descendants.map(&:option_id)).pluck('DISTINCT option_id')
+
+    # Respond to particular request.
+    @option_ids_with_answers.include?(option_id)
   end
 
   # checks if this option set appears in any published questionings
