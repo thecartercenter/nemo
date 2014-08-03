@@ -1,3 +1,6 @@
+class OptionSet < ActiveRecord::Base; end
+class OptionNode < ActiveRecord::Base; has_ancestry; end
+
 class CreateOptionNodesForOptionings < ActiveRecord::Migration
   require 'pp'
 
@@ -9,7 +12,7 @@ class CreateOptionNodesForOptionings < ActiveRecord::Migration
         puts "Option Set #{set.id} (#{set.name}) -------------------------------------------------------------------------------------"
 
         # Create root node.
-        root = OptionNode.create!({option_set: set}.merge(%w(is_standard mission_id).map_hash{ |a| set.send(a) }))
+        root = OptionNode.create!({option_set_id: set.id}.merge(%w(is_standard mission_id).map_hash{ |a| set.send(a) }))
         set.update_column(:root_node_id, root.id)
 
         puts "Created root node #{root.inspect}"
@@ -17,7 +20,7 @@ class CreateOptionNodesForOptionings < ActiveRecord::Migration
         # Create root nodes for copies.
         root_copies = {}
         OptionSet.where(:standard_id => set.id).each do |copy|
-          copy_root = OptionNode.create!({option_set: copy, standard_id: root.id}.merge(%w(is_standard mission_id).map_hash{ |a| set.send(a) }))
+          copy_root = OptionNode.create!({option_set_id: copy.id, standard_id: root.id}.merge(%w(is_standard mission_id).map_hash{ |a| set.send(a) }))
           copy.update_column(:root_node_id, copy_root.id)
           root_copies[copy.mission.id] = copy_root # Store for recursion
           puts "Created root node copy #{copy_root.inspect}"
