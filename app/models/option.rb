@@ -1,8 +1,8 @@
 class Option < ActiveRecord::Base
-  include MissionBased, FormVersionable, Translatable, Standardizable, Replicable
+  include MissionBased, FormVersionable, Translatable, Standardizable, Replicable, RecentChangeable
 
-  has_many(:option_sets, :through => :optionings)
-  has_many(:optionings, :inverse_of => :option, :dependent => :destroy, :autosave => true)
+  has_many(:option_sets, :through => :option_nodes)
+  has_many(:option_nodes, :inverse_of => :option, :dependent => :destroy, :autosave => true)
   has_many(:answers, :inverse_of => :option)
   has_many(:choices, :inverse_of => :option)
   has_many(:conditions, :inverse_of => :option)
@@ -17,7 +17,7 @@ class Option < ActiveRecord::Base
 
   translates :name, :hint
 
-  replicable :parent_assoc => :optioning, :user_modifiable => [:name_translations, :_name, :hint_translations, :_hint]
+  replicable :parent_assoc => :option_node, :user_modifiable => [:name_translations, :_name, :hint_translations, :_hint]
 
   # the max number of suggestion matches to return
   MAX_SUGGESTIONS = 5

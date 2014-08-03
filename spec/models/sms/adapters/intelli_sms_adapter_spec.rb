@@ -2,6 +2,8 @@ require 'spec_helper'
 
 describe Sms::Adapters::IntelliSmsAdapter do
   before :all do
+    configatron.intellisms_username = 'foo'
+    configatron.intellisms_password = 'bar'
     @adapter = Sms::Adapters::Factory.new.create('IntelliSms')
   end
 

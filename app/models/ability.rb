@@ -46,7 +46,7 @@ class Ability
 
         # standard objects, missions, settings, and all users are available in no-mission (admin) mode
         if mode == 'admin'
-          [Form, Questioning, Condition, Question, OptionSet, Optioning, Option].each do |k|
+          [Form, Questioning, Condition, Question, OptionSet, OptionNode, Option].each do |k|
             can :manage, k, :is_standard => true
           end
           can :manage, Mission

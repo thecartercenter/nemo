@@ -1,73 +1,99 @@
 class OptionSet < ActiveRecord::Base
-  include MissionBased, FormVersionable, Standardizable, Replicable, OptioningParentable
+  include MissionBased, FormVersionable, Standardizable, Replicable
 
   # this needs to be up here or it will run too late
-  before_destroy(:check_associations)
+  before_destroy :check_associations
 
-  # this association produces ALL optionings regardless of level. should only be used when quick access to the full set of optionings is
-  # needed. note that if this and the normal optionings association are both used, there will be two separate sets of models in play.
-  # note that dependent => destroy and autosave are not turned on here.
-  has_many(:all_optionings, :class_name => 'Optioning', :order => 'optionings.parent_id, optionings.rank', :inverse_of => :option_set, :dependent => :destroy)
+  has_many :questions, :inverse_of => :option_set
+  has_many :questionings, :through => :questions
 
-  # this association produces only the direct children of this option_set (the top-level options).
-  has_many(:optionings, :order => "rank", :conditions => 'optionings.parent_id IS NULL',
-    :autosave => true, :inverse_of => :option_set)
+  has_one :root_node, class_name: OptionNode, conditions: {option_id: nil}, dependent: :destroy, autosave: true
 
-  # returns ONLY the first-level options for this option set, sorted by rank
-  has_many(:options, :through => :optionings, :order => "optionings.rank")
+  validates :name, :presence => true
+  validate :name_unique_per_mission
 
-  has_many(:questions, :inverse_of => :option_set)
-  has_many(:questionings, :through => :questions)
-  has_many(:option_levels, :dependent => :destroy, :autosave => true, :inverse_of => :option_set,
-    :after_add => :option_levels_changed, :after_remove => :option_levels_changed)
+  before_validation :copy_attribs_to_root_node
+  before_validation :normalize_fields
 
-  validates(:name, :presence => true)
-  validate(:at_least_one_option)
-  validate(:name_unique_per_mission)
-
-  before_validation(:multi_level_option_sets_must_have_option_levels)
-  before_validation(:normalize_fields)
-  before_validation(:ensure_children_ranks)
-  before_validation(:ensure_option_level_ranks)
-  after_save(:notify_questions_of_option_level_change)
-
-  scope(:with_associations, includes(:questions, {:optionings => :option}, {:questionings => :form}))
-
-  scope(:by_name, order('option_sets.name'))
-  scope(:default_order, by_name)
-  scope(:with_assoc_counts_and_published, lambda { |mission|
+  scope :by_name, order('option_sets.name')
+  scope :default_order, by_name
+  scope :with_assoc_counts_and_published, lambda { |mission|
+    includes(:root_node).
     select(%{
       option_sets.*,
       COUNT(DISTINCT answers.id) AS answer_count_col,
-      COUNT(DISTINCT questionables.id) AS question_count_col,
+      COUNT(DISTINCT questions.id) AS question_count_col,
       MAX(forms.published) AS published_col,
       COUNT(DISTINCT copy_answers.id) AS copy_answer_count_col,
       COUNT(DISTINCT copy_questions.id) AS copy_question_count_col,
       MAX(copy_forms.published) AS copy_published_col
     }).
     joins(%{
-      LEFT OUTER JOIN questionables ON questionables.option_set_id = option_sets.id AND questionables.type = 'Question'
-      LEFT OUTER JOIN questionings ON questionings.question_id = questionables.id
+      LEFT OUTER JOIN questions ON questions.option_set_id = option_sets.id
+      LEFT OUTER JOIN questionings ON questionings.question_id = questions.id
       LEFT OUTER JOIN forms ON forms.id = questionings.form_id
       LEFT OUTER JOIN answers ON answers.questioning_id = questionings.id
       LEFT OUTER JOIN option_sets copies ON option_sets.is_standard = 1 AND copies.standard_id = option_sets.id
-      LEFT OUTER JOIN questionables copy_questions ON copy_questions.option_set_id = copies.id AND copy_questions.type = 'Question'
+      LEFT OUTER JOIN questions copy_questions ON copy_questions.option_set_id = copies.id
       LEFT OUTER JOIN questionings copy_questionings ON copy_questionings.question_id = copy_questions.id
       LEFT OUTER JOIN forms copy_forms ON copy_forms.id = copy_questionings.form_id
       LEFT OUTER JOIN answers copy_answers ON copy_answers.questioning_id = copy_questionings.id
-    }).group('option_sets.id')})
-
-  accepts_nested_attributes_for(:optionings, :allow_destroy => true)
+    }).group('option_sets.id')}
 
   # replication options
-  replicable :child_assocs => :optionings, :parent_assoc => :question, :uniqueness => {:field => :name, :style => :sep_words}
+  replicable :child_assocs => :root_node, :parent_assoc => :question, :uniqueness => {:field => :name, :style => :sep_words}
 
-  # these methods are used during population from JSON
-  attr_accessor :_option_levels, :_optionings
+  serialize :level_names, JSON
+
+  delegate :ranks_changed?, :options_added?, :options_removed?, :total_options, :descendants, to: :root_node
+
+  # These methods are for the form.
+  attr_writer :multi_level
+
+  # Efficiently deletes option nodes for all option sets with given IDs.
+  def self.terminate_sub_relationships(option_set_ids)
+    OptionNode.where("option_set_id IN (#{option_set_ids.join(',')})").delete_all unless option_set_ids.empty?
+  end
+
+  def children_attribs=(attribs)
+    build_root_node if root_node.nil?
+    root_node.children_attribs = attribs
+  end
+
+  # Gets the OptionLevel for the given depth (1-based)
+  def level(depth)
+    levels.try(:[], depth - 1)
+  end
+
+  def levels
+    @levels ||= multi_level? ? level_names.map{ |n| OptionLevel.new(name_translations: n) } : nil
+  end
+
+  def multi_level?
+    root_node && root_node.has_grandchildren?
+  end
+
+  def multi_level
+    multi_level?
+  end
+
+  # Returns first-level options
+  def options
+    root_node.child_options
+  end
 
   # checks if this option set appears in any smsable questionings
   def form_smsable?
     questionings.any?(&:form_smsable?)
+  end
+
+  def option_has_answers?(option_id)
+    # Do one query for all and cache.
+    @option_ids_with_answers ||= Answer.where(questioning_id: questionings.map(&:id),
+      option_id: descendants.map(&:option_id)).pluck('DISTINCT option_id')
+
+    # Respond to particular request.
+    @option_ids_with_answers.include?(option_id)
   end
 
   # checks if this option set appears in any published questionings
@@ -142,84 +168,31 @@ class OptionSet < ActiveRecord::Base
     questions.map(&:code).join(', ')
   end
 
-  # checks if any core fields (currently only name) changed
+  # Checks if any core fields (currently only name) changed
   def core_changed?
     name_changed?
-  end
-
-  # returns a hash of all optionings in the tree indexed by ID
-  def all_optionings_by_id
-    @all_optionings_by_id ||= descendants.index_by(&:id)
-  end
-
-  # populates from json and saves
-  # returns self
-  # raises exception if save fails
-  # runs all operations in transaction
-  def update_from_json!(data)
-    transaction do
-      populate_from_json(data)
-
-      # call save here so that a validation error will cancel the transaction
-      save!
-    end
-
-    self
-  end
-
-  # recursively populates from specially formatted hash of attributes (see option set test for examples)
-  # should be run inside transaction
-  def populate_from_json(data)
-    assign_attributes(data)
-    update_option_levels_from_json(_option_levels)
-    update_children_from_json(_optionings, self, 1)
-  end
-
-  def update_option_levels_from_json(option_level_data)
-    # if hash, just take values
-    option_level_data = option_level_data.values if option_level_data.is_a?(Hash)
-    option_level_data ||= []
-
-    # create new option_level objects if there aren't enough
-    if (diff = option_level_data.size - option_levels.size) > 0
-      diff.times{option_levels.build(:option_set => self, :mission => mission, :is_standard => is_standard)}
-
-    # schedule deletion of option_level objects if there are too many
-    elsif (diff = option_levels.size - option_level_data.size) > 0
-      # need to disable fk checks due to order of saving
-      connection.execute('SET FOREIGN_KEY_CHECKS = 0')
-      option_levels.destroy(option_levels[-diff..-1])
-      connection.execute('SET FOREIGN_KEY_CHECKS = 1')
-    end
-
-    # copy option level names
-    option_levels.each_with_index do |ol, idx|
-      ol.update_from_json(option_level_data[idx])
-    end
   end
 
   def as_json(options = {})
     if options[:for_option_set_form]
       {
-        :optionings => optionings.as_json(:for_option_set_form => true),
-        :option_levels => option_levels.as_json(:for_option_set_form => true)
+        :children => root_node.as_json(:for_option_set_form => true),
+        :levels => levels.as_json(:for_option_set_form => true)
       }
     else
       super(options)
     end
   end
 
-  # returns a string representation, including multilevel options, for the default locale.
+  # Returns a string representation, including options, for the default locale.
   def to_s
-    s = "Name: #{name}\nOptions:\n"
-    s += optionings.map(&:to_s_indented).join
+    "Name: #{name}\nOptions:\n#{root_node.to_s_indented}"
   end
 
   private
 
-    # makes sure that the set's option_levels have sequential ranks starting at 1.
-    def ensure_option_level_ranks
-      option_levels.ensure_contiguous_ranks
+    def copy_attribs_to_root_node
+      root_node.assign_attributes(mission: mission, is_standard: is_standard, option_set: self)
     end
 
     def check_associations
@@ -230,11 +203,6 @@ class OptionSet < ActiveRecord::Base
       raise DeletionError.new(:cant_delete_if_has_answers) if has_answers?
     end
 
-    def at_least_one_option
-      # this checks only the first level options, which is sufficient
-      errors.add(:options, :at_least_one) if optionings.reject{|a| a.marked_for_destruction?}.empty?
-    end
-
     def name_unique_per_mission
       errors.add(:name, :taken) unless unique_in_mission?(:name)
     end
@@ -242,24 +210,5 @@ class OptionSet < ActiveRecord::Base
     def normalize_fields
       self.name = name.strip
       return true
-    end
-
-    def multi_level_option_sets_must_have_option_levels
-      # this should not normally be allowed by client side js
-      raise "multi-level option sets must have at least one option level" if multi_level? && option_levels.empty?
-    end
-
-    # callback called when option levels are added to/subtracted from. sets a simple flag.
-    # record - the OptionLevel record that was added or removed
-    def option_levels_changed(record)
-      @option_levels_changed = true
-    end
-
-    # if associated OptionLevels were added or removed during last save, we need to notify any associated questions
-    def notify_questions_of_option_level_change
-      if @option_levels_changed
-        questions.each(&:option_levels_changed)
-        @option_levels_changed = false
-      end
     end
 end
