@@ -10,7 +10,7 @@
 
     // create the draggable list to hold the options
     self.list = new ELMO.Views.DraggableList({
-      items: params.children,
+      items: params.children || [],
       item_class: ELMO.Models.OptionNode,
       wrapper: params.wrapper,
       modal: params.modal,
