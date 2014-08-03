@@ -7,7 +7,7 @@ class OptionSet < ActiveRecord::Base
   has_many :questions, :inverse_of => :option_set
   has_many :questionings, :through => :questions
 
-  has_one :root_node, class_name: OptionNode, dependent: :destroy, autosave: true
+  has_one :root_node, class_name: OptionNode, conditions: {option_id: nil}, dependent: :destroy, autosave: true
 
   validates :name, :presence => true
   validate :name_unique_per_mission
@@ -18,6 +18,7 @@ class OptionSet < ActiveRecord::Base
   scope :by_name, order('option_sets.name')
   scope :default_order, by_name
   scope :with_assoc_counts_and_published, lambda { |mission|
+    includes(:root_node).
     select(%{
       option_sets.*,
       COUNT(DISTINCT answers.id) AS answer_count_col,

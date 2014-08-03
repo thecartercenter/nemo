@@ -37,7 +37,7 @@ class OptionNode < ActiveRecord::Base
 
   # Returns options of children, ordered by rank.
   def child_options
-    sorted_children.map(&:option)
+    @child_options ||= sorted_children.includes(:option).map(&:option)
   end
 
   # The total number of descendant options.
