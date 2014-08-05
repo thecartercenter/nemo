@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140801160114) do
+ActiveRecord::Schema.define(:version => 20140805172717) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -24,6 +24,7 @@ ActiveRecord::Schema.define(:version => 20140801160114) do
     t.date     "date_value"
     t.datetime "datetime_value"
     t.boolean  "delta",          :default => true, :null => false
+    t.integer  "rank"
   end
 
   add_index "answers", ["option_id"], :name => "answers_option_id_fk"
