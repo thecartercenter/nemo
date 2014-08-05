@@ -279,8 +279,12 @@ class Response < ActiveRecord::Base
   end
 
   def all_answers=(params)
+    # Define a function that can be called on an Answer or hash of answer values and return a signature for comparison.
+    # We use the [] notation b/c that will work on either.
+    signature_proc = Proc.new{ |a| "#{a[:questioning_id]}--#{a[:rank]}" }
+
     # do a match on current and newer ids with the ID as the comparator
-    answers.compare_by_element(params.values, Proc.new{|a| a[:questioning_id].to_i}) do |orig, subd|
+    answers.compare_by_element(params.values, signature_proc) do |orig, subd|
       # if both exist, update the original
       if orig && subd
         orig.attributes = subd
