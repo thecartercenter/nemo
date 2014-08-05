@@ -2,6 +2,7 @@ FactoryGirl.define do
   factory :question do
     ignore do
       option_names nil
+      use_multilevel_option_set false
     end
 
     code {"q#{rand(10000000)}"}
@@ -12,7 +13,7 @@ FactoryGirl.define do
 
     option_set do
       if QuestionType[qtype_name].has_options?
-        opt_set_attribs = {:mission => mission}
+        opt_set_attribs = {mission: mission, multi_level: use_multilevel_option_set}
         opt_set_attribs[:option_names] = option_names unless option_names.nil?
         FactoryGirl.build(:option_set, opt_set_attribs)
       else
