@@ -30,7 +30,7 @@ class Response < ActiveRecord::Base
       :answers => [
         {:choices => :option},
         :option,
-        {:questioning => [:condition, {:question => {:option_set => :options}}]}
+        {:questioning => [:condition, {:question => :option_set}]}
       ]
     }
   ))
@@ -412,6 +412,6 @@ class Response < ActiveRecord::Base
     end
 
     def sorted_answers
-      answers.includes(:questioning).order('questioning_id, rank')
+      answers.includes(:questioning).order('answers.questioning_id, answers.rank')
     end
 end

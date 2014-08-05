@@ -1,0 +1,33 @@
+<%= f.hidden_field(:response_id, :index => index) %>
+<%= f.hidden_field(:questioning_id, :index => index) %>
+<%= f.hidden_field(:relevant, :class => "relevant", :index => index) %>
+
+<%# show the error messages without keys %>
+<%= content_tag(:div, answer_set.errors.to_hash.values.join(', '), :class => 'form-errors') unless answer_set.errors.empty? %>
+
+<% case type = answer_set.qtype.name
+   when "select_one" %>
+
+  <%#= render(partial: 'select_one') %>
+
+<% when "select_multiple" %>
+
+  <%# render a checkbox for each possible choice %>
+  <div class="widget">
+    <%= render(:partial => "choice", :locals => {:index => index}, :collection => answer_set.all_choices, :class => "form-control") %>
+  </div>
+
+<% when "datetime", "date", "time" %>
+
+  <%= f.send("#{type}_select", :"#{type}_value", :include_blank => true, :index => index, :class => "form-control") %>
+
+<% else %>
+
+  <%# textarea or input, depending on type %>
+  <%= f.send(type == 'long_text' ? 'text_area' : 'text_field', :value, :class => "qtype_#{type} form-control", :index => index) %>
+
+  <% if type == 'location' %>
+    &nbsp;<%= action_link("edit", "#", :class => "edit_location_link") if form_mode != :show %>
+  <% end %>
+
+<% end %>

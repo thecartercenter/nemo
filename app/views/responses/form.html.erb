@@ -35,8 +35,8 @@
 
   <% end %>
 
-  <%# render all the answer fields %>
-  <%= render(:partial => "answer", :collection => @response.all_answers) %>
+  <%# render all the answers %>
+  <%= render(partial: 'answer_set', collection: @response.answer_sets) %>
 
   <%# incomplete checkbox %>
   <%= f.field(:incomplete, :type => :check_box) if can?(:submit_incomplete, @response) %>

@@ -1,0 +1,27 @@
+<div class="form_field qtype_<%= answer_set.qtype.name %> <%= read_only ? 'read_only' : '' %>"
+  data-qtype-name="<%= answer_set.qtype.name %>" id="qing_<%= answer_set.questioning.id %>">
+
+  <label class="main"><%= reqd_sym if answer_set.required? %> <%= answer_set.question_name || "[#{t('answer.no_name')}]" %>
+
+  </label><div class="control">
+    <%# don't show errors because we do it manually below %>
+    <%= elmo_fields_for('response[all_answers][]', answer_set, :show_errors => false) do |f| %>
+      <%= render(read_only ? 'answer_set_read_only' : 'answer_set_editable', f: f, answer_set: answer_set, index: answer_set_counter) %>
+    <% end # elmo_fields_for %>
+  </div>
+
+  <div class="hint">
+    <% if form_mode && answer_set.question_hint.present? %>
+      <a href="#" rel="popover" class="hint" data-content="<%= answer_set.question_hint %>"><i class="hint fa fa-2x fa-info-circle"></i></a>
+    <% end %>
+  </div>
+
+</div>
+
+<%# Setup condition js object if a condition exists. %>
+<%# Note that we need to do this in any form mode, even show. %>
+<% if answer_set.condition %>
+  <%= javascript_doc_ready do %>
+    ELMO.Response.conditions.push(new ELMO.Condition(<%=j answer_set.condition.to_json.html_safe %>));
+  <% end %>
+<% end %>
