@@ -20,6 +20,7 @@
       can_remove: self.params.can_remove,
       edit_link: self.params.edit_link,
       remove_link: self.params.remove_link,
+      parent_change_allowed: self.parent_change_allowed,
       modal_titles: {
         // we only need the edit title for this field
         edit: I18n.t('option_set.edit_option')
@@ -31,5 +32,9 @@
     self.list.add_item({id: null, 'removable?': true, option: option_attribs});
   };
 
+  // Don't allow options that are not removable to change parents.
+  klass.prototype.parent_change_allowed = function (item) {
+    return item['removable?'];
+  }
 
 })(ELMO.Views);
