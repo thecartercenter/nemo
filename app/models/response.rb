@@ -298,6 +298,10 @@ class Response < ActiveRecord::Base
     end
   end
 
+  def answer_for_question(question)
+    (@answers_by_question ||= answers.index_by(&:question))[question]
+  end
+
   def answer_for(questioning)
     # get the matching answer(s)
     answer_for_qing[questioning]
