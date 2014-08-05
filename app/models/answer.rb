@@ -20,8 +20,6 @@ class Answer < ActiveRecord::Base
   delegate :question, :qtype, :rank, :required?, :hidden?, :option_set, :options, :condition, :to => :questioning
   delegate :name, :hint, :to => :question, :prefix => true
 
-  alias_method :relevant, :relevant?
-
   scope :public_access, includes(:questioning => :question).
                         where("questions.access_level = 'inherit'")
 
@@ -143,6 +141,7 @@ class Answer < ActiveRecord::Base
   def relevant?
     @relevant.nil? ? true : @relevant
   end
+  alias_method :relevant, :relevant?
 
   # A flag indicating whether the answer is relevant and should thus be validated.
   # convert string 'true'/'false' to boolean

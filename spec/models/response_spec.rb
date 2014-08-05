@@ -44,4 +44,42 @@ describe Response do
       end
     end
   end
+
+  describe 'grouped_answers' do
+      before do
+        @response = Response.new
+        @q1, @q2 = double(), double()
+        @answers = [
+          double(questioning: @q1, option_id: 10),
+          double(questioning: @q2, rank: 2, option_id: 12),
+          double(questioning: @q2, rank: 1, option_id: 11),
+          double(questioning: @q2, rank: 3, option_id: 13)
+        ]
+        allow(@answers).to receive(:includes).and_return(@answers)
+        allow(@answers).to receive(:order).and_return(@answers)
+        allow(@response).to receive(:answers).and_return(@answers)
+        allow(@response).to receive(:visible_questionings).and_return([@q1, @q2])
+      end
+
+      context 'with no missing answers' do
+        it 'should return answers grouped by questioning_id and sorted by rank' do
+          expect(@response.grouped_answers.map{|ag| ag.map(&:option_id)}).to eq [[10], [12, 11, 13]]
+        end
+      end
+
+      context 'with missing answer for multilevel question' do
+        before do
+          @answers.slice!(1,3)
+        end
+
+        it 'should build new answers' do
+          expect(@q2).to receive(:multi_level?).and_return(true)
+          expect(@q2).to receive(:level_count).and_return(3)
+          expect(@answers).to receive(:build){ |attr| double(attr) }.exactly(3).times
+          expect(@response.grouped_answers[0][0].questioning).to eq @q1
+          expect(@response.grouped_answers[1].map(&:questioning)).to eq [@q2, @q2, @q2]
+          expect(@response.grouped_answers[1].map(&:rank)).to eq [1, 2, 3]
+        end
+      end
+    end
 end

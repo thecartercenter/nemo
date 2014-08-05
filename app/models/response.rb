@@ -45,6 +45,7 @@ class Response < ActiveRecord::Base
   scope(:with_location_answers, includes(:location_answers))
 
   delegate :name, :to => :checked_out_by, :prefix => true
+  delegate :visible_questionings, to: :form
 
   # remove previous checkouts by a user
   def self.remove_previous_checkouts_by(user = nil)
@@ -268,14 +269,10 @@ class Response < ActiveRecord::Base
     populate_from_hash(data)
   end
 
-  def visible_questionings
-    # get visible questionings from form
-    form.visible_questionings
-  end
-
-  def all_answers
-    # make sure there is an associated answer object for each questioning in the form
-    visible_questionings.collect{|qing| answer_for(qing) || answers.build(:questioning => qing)}
+  # Groups answers by questioning.
+  # Makes sure there are associated answer objects for each questioning in the form.
+  def grouped_answers
+    @grouped_answers ||= visible_questionings.map{ |qing| answers_for_questioning(qing) || build_answers_for_questioning(qing) }
   end
 
   def all_answers=(params)
@@ -302,14 +299,11 @@ class Response < ActiveRecord::Base
     (@answers_by_question ||= answers.index_by(&:question))[question]
   end
 
-  def answer_for(questioning)
-    # get the matching answer(s)
-    answer_for_qing[questioning]
-  end
-
-  def answer_for_qing(options = {})
-    @answer_for_qing = nil if options[:rebuild]
-    @answer_for_qing ||= answers.index_by(&:questioning)
+  # Returns an array of answers for each questioning (there can be multiple answers due to multilevel option sets).
+  # Multiple answer arrays are ordered by rank.
+  def answers_for_questioning(questioning)
+    @answers_by_questioning ||= answers.includes(:questioning).order('questioning_id, rank').group_by(&:questioning)
+    @answers_by_questioning[questioning]
   end
 
   # if this response contains location questions, returns the gps location (as a 2 element array)
@@ -410,6 +404,14 @@ class Response < ActiveRecord::Base
 
         # Set incomplete flag if required but empty.
         self.incomplete = true if answer.required_but_empty?
+      end
+    end
+
+    def build_answers_for_questioning(questioning)
+      if questioning.multi_level?
+        questioning.level_count.times.map{ |i| answers.build(questioning: questioning, rank: i + 1) }
+      else
+        [answers.build(questioning: qing)]
       end
     end
 end
