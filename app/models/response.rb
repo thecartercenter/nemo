@@ -271,8 +271,8 @@ class Response < ActiveRecord::Base
 
   # Groups answers by questioning.
   # Makes sure there are associated answer objects for each questioning in the form.
-  def grouped_answers
-    @grouped_answers ||= visible_questionings.map{ |qing| answers_for_questioning(qing) || build_answers_for_questioning(qing) }
+  def answer_sets
+    @answer_sets ||= visible_questionings.map{ |qing| answer_set_for_questioning(qing) }
   end
 
   def all_answers=(params)
@@ -297,13 +297,6 @@ class Response < ActiveRecord::Base
 
   def answer_for_question(question)
     (@answers_by_question ||= answers.index_by(&:question))[question]
-  end
-
-  # Returns an array of answers for each questioning (there can be multiple answers due to multilevel option sets).
-  # Multiple answer arrays are ordered by rank.
-  def answers_for_questioning(questioning)
-    @answers_by_questioning ||= answers.includes(:questioning).order('questioning_id, rank').group_by(&:questioning)
-    @answers_by_questioning[questioning]
   end
 
   # if this response contains location questions, returns the gps location (as a 2 element array)
@@ -407,11 +400,18 @@ class Response < ActiveRecord::Base
       end
     end
 
-    def build_answers_for_questioning(questioning)
-      if questioning.multi_level?
-        questioning.level_count.times.map{ |i| answers.build(questioning: questioning, rank: i + 1) }
-      else
-        [answers.build(questioning: qing)]
+    def answer_set_for_questioning(questioning)
+      answer_sets_by_questioning[questioning] || AnswerSet.new(questioning: questioning)
+    end
+
+    # Builds a hash of questionings to answer sets.
+    def answer_sets_by_questioning
+      @answer_sets_by_questioning ||= {}.tap do |hash|
+        sorted_answers.group_by(&:questioning).each{ |q, a| hash[q] = AnswerSet.new(questioning: q, answers: a) }
       end
+    end
+
+    def sorted_answers
+      answers.includes(:questioning).order('questioning_id, rank')
     end
 end
