@@ -19,7 +19,6 @@ class Response < ActiveRecord::Base
   # we turn off validate above and do it here so we can control the message and have only one message
   # regardless of how many answer errors there are
   validates(:user, :presence => true)
-  validate(:no_missing_answers)
 
   default_scope(includes(:form, :user).order("responses.created_at DESC"))
   scope(:unreviewed, where(:reviewed => false))
@@ -305,19 +304,6 @@ class Response < ActiveRecord::Base
     @answer_for_qing ||= answers.index_by(&:questioning)
   end
 
-  def answer_for_question(question)
-    (@answers_by_question ||= answers.index_by(&:question))[question]
-  end
-
-  # returns an array of required questionings for which answers are missing
-  def missing_answers
-    return @missing_answers if @missing_answers
-    answer_for_qing(:rebuild => true)
-    @missing_answers = visible_questionings.collect do |qing|
-      (answer_for(qing).nil? && qing.required?) ? qing : nil
-    end.compact
-  end
-
   # if this response contains location questions, returns the gps location (as a 2 element array)
   # of the first such question on the form, else returns nil
   def location
@@ -365,10 +351,6 @@ class Response < ActiveRecord::Base
   end
 
   private
-    def no_missing_answers
-      errors.add(:base, :missing_answers) unless missing_answers.empty? || incomplete?
-    end
-
     def self.export_sql(rel)
       # add all the selects
       # assumes the language desired is English. currently does not respect the locale
@@ -397,6 +379,7 @@ class Response < ActiveRecord::Base
       rel.to_sql
     end
 
+    # Checks if form ID and version were given, if form exists, and if version is correct
     def lookup_and_check_form(params)
       # if either of these is nil or not an integer, error
       raise SubmissionError.new("no form id was given") if params[:id].nil?
