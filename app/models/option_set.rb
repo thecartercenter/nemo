@@ -76,15 +76,12 @@ class OptionSet < ActiveRecord::Base
   def multi_level?
     root_node && root_node.has_grandchildren?
   end
+  alias_method :multi_level, multi_level?
 
-  def multi_level
-    multi_level?
-  end
-
-  # Returns first-level options
-  def options
+  def first_level_options
     root_node.child_options
   end
+  alias_method :options, :first_level_options
 
   # checks if this option set appears in any smsable questionings
   def form_smsable?

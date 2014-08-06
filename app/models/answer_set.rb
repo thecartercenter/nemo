@@ -3,11 +3,12 @@
 class AnswerSet
   attr_accessor :questioning, :answers
 
-  delegate :qtype, :required?, :question, :condition, :to => :questioning
-  delegate :name, :hint, :option_set, :to => :question, :prefix => true
-  delegate :first, :to => :answers
-  delegate :errors, :choices, :all_choices, :value, :datetime_value, :date_value, :time_value, :response_id, :questioning_id, :relevant, :to => :first
-  delegate :levels, :to => :option_set
+  delegate :qtype, :required?, :question, :condition, to: :questioning
+  delegate :name, :hint, :option_set, to: :question, prefix: true
+  delegate :first_level_select_options, to: :question
+  delegate :first, to: :answers
+  delegate :errors, :choices, :all_choices, :value, :datetime_value, :date_value, :time_value, :response_id, :questioning_id, :relevant, to: :first
+  delegate :levels, to: :option_set
 
   def initialize(attribs = {})
     attribs.each{|k,v| instance_variable_set("@#{k}", v)}
