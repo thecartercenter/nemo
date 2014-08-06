@@ -8,7 +8,7 @@
 <% case type = answer_set.qtype.name
    when "select_one" %>
 
-  <%= render('select_one', answer_set: answer_set, index: index) %>
+  <%= render('select_one', answer_set: answer_set, f: f, index: index) %>
 
 <% when "select_multiple" %>
 

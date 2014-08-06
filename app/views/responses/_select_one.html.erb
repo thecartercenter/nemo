@@ -1,4 +1,5 @@
-<% answer_set.answers.each do |answer| %>
+<% answer_set.answers.each_with_index do |answer, i| %>
   <%= answer.level_name %>
-  <%#= f.select(:option_id, answer.question.select_options, {:include_blank => true}, :index => answer_counter, :class => "form-control") %>
+  <%= select_tag("answer_sets[#{index}][answers][#{i}][option_id]", options_from_collection_for_select(answer_set.options_for(answer), 'id', 'name'),
+    include_blank: true, class: 'form-control') %>
 <% end %>
