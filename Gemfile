@@ -70,6 +70,8 @@ gem 'spinjs-rails'
 # tree data structure
 gem 'ancestry', '~> 2.0'
 
+gem 'rails-backbone', github: 'codebrew/backbone-rails'
+
 group :development do
   gem 'rails-erd'                     # generat with:  DIAGRAM=true rake db:migrate
   gem 'capistrano', '~> 2.15.4'       # deployment
