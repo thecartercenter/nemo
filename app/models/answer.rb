@@ -24,6 +24,7 @@ class Answer < ActiveRecord::Base
   scope :public_access, includes(:questioning => :question).
                         where("questions.access_level = 'inherit'")
 
+
   # creates a new answer from a string from odk
   def self.new_from_str(params)
     str = params.delete(:str)

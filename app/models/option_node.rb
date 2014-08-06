@@ -40,6 +40,24 @@ class OptionNode < ActiveRecord::Base
     @child_options ||= sorted_children.includes(:option).map(&:option)
   end
 
+  # Returns the child options of the node defined by path.
+  # If node at end of path is leaf node, returns [].
+  def options_at_end_of_path(path)
+    find_descendant_by_option_path(path).try(:child_options) || []
+  end
+
+  # Traces the given path of options down the tree, returning the OptionNode at the end.
+  # Assumes path is an array of Options with 0 or more elements.
+  # Returns self if path is empty.
+  # Returns nil if any point in path does not find a match.
+  # Returns nil if path contains any nils.
+  def find_descendant_by_option_path(path)
+    return self if path.empty?
+    return nil if path.any?(&:nil?)
+    return nil unless match = children.detect{ |c| c.option_id = path[0].id }
+    match.find_descendant_by_option_path(path[1..-1])
+  end
+
   # The total number of descendant options.
   def total_options
     descendants.count
