@@ -20,12 +20,12 @@
 //= require jquery.mjs.nestedSortable-1.3.5
 //= require jquery.spin
 //= require core_ext/jquery_ext
+//= require common
 //= require underscore
 //= require backbone
 //= require backbone_rails_sync
 //= require backbone_datalink
 //= require backbone/elmo/
-//= require common
 //= require sassafras/utils
 //= require i18n
 //= require i18n/translations

@@ -1,5 +1,11 @@
 <% answer_set.answers.each_with_index do |answer, i| %>
   <%= answer.level_name %>
-  <%= select_tag("answer_sets[#{index}][answers][#{i}][option_id]", options_from_collection_for_select(answer_set.options_for(answer), 'id', 'name'),
+  <%= select_tag("response[answer_sets][#{index}][answers][#{i}][option_id]", options_from_collection_for_select(answer_set.options_for(answer), 'id', 'name'),
     include_blank: true, class: 'form-control') %>
+<% end %>
+
+<% if answer_set.multi_level? %>
+  <%= javascript_doc_ready do %>
+    new ELMO.Views.SelectOneAnswerSetView({el: $('#questioning_<%= answer_set.questioning_id %> control')});
+  <% end %>
 <% end %>
