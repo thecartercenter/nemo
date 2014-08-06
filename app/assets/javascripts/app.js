@@ -153,5 +153,9 @@
     });
   };
 
-})(ELMO);
+  // Shows/hides loading indicator.
+  klass.prototype.loading = function(yn) {
+    $('#glb-load-ind')[yn ? 'show' : 'hide']();
+  };
 
+})(ELMO);

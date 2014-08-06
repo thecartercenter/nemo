@@ -177,6 +177,11 @@
     <%= link_to(t('layout.about'), 'http://getelmo.org') %>
   </div>
 
+  <div id="glb-load-ind">
+    <%= image_tag('glb-load-ind.gif') %>
+    <%= t('layout.loading') %>
+  </div>
+
   <%# insert any audio objects at the end %>
   <%= yield(:audio) %>
 </body>
