@@ -1,1 +1,4 @@
-<%= f.select(:option_id, answer.question.select_options, {:include_blank => true}, :index => answer_counter, :class => "form-control") %>
+<% answer_set.answers.each do |answer| %>
+  <%= answer.level_name %>
+  <%#= f.select(:option_id, answer.question.select_options, {:include_blank => true}, :index => answer_counter, :class => "form-control") %>
+<% end %>

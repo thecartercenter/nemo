@@ -17,8 +17,9 @@ class Answer < ActiveRecord::Base
   validate(:min_max, :if => ->(a){ a.should_validate?(:min_max) })
   validate(:required, :if => ->(a){ a.should_validate?(:required) })
 
-  delegate :question, :qtype, :rank, :required?, :hidden?, :option_set, :options, :condition, :to => :questioning
+  delegate :question, :qtype, :required?, :hidden?, :option_set, :options, :condition, :to => :questioning
   delegate :name, :hint, :to => :question, :prefix => true
+  delegate :name, to: :level, prefix: true, allow_nil: true
 
   scope :public_access, includes(:questioning => :question).
                         where("questions.access_level = 'inherit'")
@@ -70,6 +71,11 @@ class Answer < ActiveRecord::Base
   def self.any_for_option?(option_id)
     connection.execute("SELECT COUNT(*) FROM answers a LEFT OUTER JOIN choices c ON c.answer_id = a.id
       WHERE a.option_id = '#{option_id}' OR c.option_id = '#{option_id}'").to_a[0][0] > 0
+  end
+
+  # If this is an answer to a multilevel select_one question, returns the OptionLevel, else returns nil.
+  def level
+    option_set.try(:multi_level?) ? option_set.levels[(rank || 1) - 1] : nil
   end
 
   def choice_for(option)

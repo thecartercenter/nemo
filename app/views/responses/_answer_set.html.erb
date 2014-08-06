@@ -7,7 +7,7 @@
     <%# don't show errors because we do it manually below %>
     <%= elmo_fields_for('response[all_answers][]', answer_set, :show_errors => false) do |f| %>
       <%= render(read_only ? 'answer_set_read_only' : 'answer_set_editable', f: f, answer_set: answer_set, index: answer_set_counter) %>
-    <% end # elmo_fields_for %>
+    <% end %>
   </div>
 
   <div class="hint">
