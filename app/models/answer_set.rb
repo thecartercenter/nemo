@@ -31,8 +31,8 @@ class AnswerSet
   # Returns the available Options for the given answer.
   # If the answer's rank is > 1 and the answer before it is currently nil, returns [].
   def options_for(answer)
-    path = answers_before(answer).map(&:option)
-    option_set.options_at_end_of_path(path) || []
+    path = answers_before(answer).map(&:option_id)
+    option_set.options_for_node(path) || []
   end
 
   # Returns an array of all answers in this set before the given answer, by rank.
