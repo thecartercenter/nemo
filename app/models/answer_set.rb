@@ -48,8 +48,8 @@ class AnswerSet
   # Ensures empty answers for all levels of questioning.
   def ensure_answers
     self.answers ||= []
-    questioning.level_count.times.each do |i|
-      rank = questioning.level_count > 1 ? i + 1 : nil
+    (questioning.level_count || 1).times.each do |i|
+      rank = (questioning.level_count || 1) > 1 ? i + 1 : nil
       answers[i] ||= Answer.new(questioning: questioning, rank: rank)
     end
   end
