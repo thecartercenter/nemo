@@ -49,27 +49,25 @@ describe Response do
     before do
       @response = Response.new
       @q1, @q2 = double(), double()
-      @answers = [
+      @sorted_answers = [ # These are in order because we're not testing ARs ordering capability.
         double(questioning: @q1, option_id: 10),
-        double(questioning: @q2, rank: 2, option_id: 12),
         double(questioning: @q2, rank: 1, option_id: 11),
+        double(questioning: @q2, rank: 2, option_id: 12),
         double(questioning: @q2, rank: 3, option_id: 13)
       ]
-      allow(@answers).to receive(:includes).and_return(@answers)
-      allow(@answers).to receive(:order).and_return(@answers)
-      allow(@response).to receive(:answers).and_return(@answers)
+      allow(@response).to receive(:sorted_answers).and_return(@sorted_answers)
       allow(@response).to receive(:visible_questionings).and_return([@q1, @q2])
     end
 
     context 'with no missing answers' do
       it 'should return answers grouped by questioning_id and sorted by rank' do
-        expect(@response.answer_sets.map{|s| s.answers.map(&:option_id)}).to eq [[10], [12, 11, 13]]
+        expect(@response.answer_sets.map{|s| s.answers.map(&:option_id)}).to eq [[10], [11, 12, 13]]
       end
     end
 
     context 'with missing answer for multilevel question' do
       before do
-        @answers.slice!(1,3)
+        @sorted_answers.slice!(1,3)
       end
 
       it 'should build new answers' do
