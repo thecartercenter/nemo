@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'cancan/matchers'
 
 describe Tag do
   it 'should create cleanly' do
