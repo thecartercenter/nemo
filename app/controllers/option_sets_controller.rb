@@ -73,6 +73,11 @@ class OptionSetsController < ApplicationController
     redirect_to(index_url_with_page_num)
   end
 
+  # Returns the options available at the node in the option tree specified by the given array of option IDs
+  def options_for_node
+    render(layout: false)
+  end
+
   # makes a copy of the option set that can be edited without affecting the original
   def clone
     begin
