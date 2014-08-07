@@ -30,6 +30,7 @@ class Report::StandardFormReportTest < ActiveSupport::TestCase
 
   test "report should return correct response count" do
     build_form_and_responses
+    Rails.logger.debug('----------------------------------------------------------------------------------------------')
     build_and_run_report
     assert_equal(5, @report.response_count)
   end
@@ -128,9 +129,9 @@ class Report::StandardFormReportTest < ActiveSupport::TestCase
 
   private
     def build_form_and_responses(options = {})
-      @form = FactoryGirl.create(:form, :question_types => %w(integer integer decimal location))
+      @form = FactoryGirl.create(:form, :question_types => %w(integer integer decimal location select_one))
       (options[:response_count] || 5).times do
-        FactoryGirl.create(:response, :form => @form, :_answers => [1, 2, 1.5, nil])
+        FactoryGirl.create(:response, :form => @form, :_answers => [1, 2, 1.5, nil, 'Cat'])
       end
     end
 

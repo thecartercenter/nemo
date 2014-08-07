@@ -74,7 +74,7 @@ class Report::StandardFormReport < Report::Report
       {:referring_conditions => :questioning},
 
       # eager load questions and their option sets
-      {:question => {:option_set => :options}}
+      {:question => :option_set}
     ]}).find(form_id)
 
     # determine if we should restrict the responses to a single user, or allow all
