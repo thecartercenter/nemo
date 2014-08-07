@@ -10,6 +10,18 @@ class AnswerSet
   delegate :first, to: :answers
     delegate :errors, :choices, :all_choices, :value, :datetime_value, :date_value, :time_value, :response_id, :questioning_id, :relevant, to: :first
 
+  # Builds Answer attribute hashes from submitted answer_set params.
+  # Returns an array of Answer attribute hashes.
+  def self.answers_attributes_for(params)
+    params.values.map do |as|
+      if as[:answers]
+        as.delete(:answers).values.map.with_index{ |a, i| a.merge(as).merge(rank: i + 1) }
+      else
+        as
+      end
+    end.flatten
+  end
+
   def initialize(attribs = {})
     attribs.each{|k,v| instance_variable_set("@#{k}", v)}
 

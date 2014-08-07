@@ -275,13 +275,16 @@ class Response < ActiveRecord::Base
     @answer_sets ||= visible_questionings.map{ |qing| answer_set_for_questioning(qing) }
   end
 
-  def all_answers=(params)
-    # Define a function that can be called on an Answer or hash of answer values and return a signature for comparison.
-    # We use the [] notation b/c that will work on either.
+  def answer_sets=(params)
+    self.answers_attributes = AnswerSet.answers_attributes_for(params)
+  end
+
+  def answers_attributes=(attribs)
+    # A function that returns a signature for comparison. Works for either Answer objs or hashes.
     signature_proc = Proc.new{ |a| "#{a[:questioning_id]}--#{a[:rank]}" }
 
     # do a match on current and newer ids with the ID as the comparator
-    answers.compare_by_element(params.values, signature_proc) do |orig, subd|
+    answers.compare_by_element(attribs, signature_proc) do |orig, subd|
       # if both exist, update the original
       if orig && subd
         orig.attributes = subd
