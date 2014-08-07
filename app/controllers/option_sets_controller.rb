@@ -5,6 +5,7 @@ class OptionSetsController < ApplicationController
 
   # authorization via cancan
   load_and_authorize_resource
+  skip_authorization_check :only => :options_for_node
 
   def index
     # get the total entries before adding the big joins
@@ -75,6 +76,7 @@ class OptionSetsController < ApplicationController
 
   # Returns the options available at the node in the option tree specified by the given array of option IDs
   def options_for_node
+    @options = @option_set.options_for_node(params[:ids].map(&:to_i))
     render(layout: false)
   end
 
