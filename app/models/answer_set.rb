@@ -13,8 +13,7 @@ class AnswerSet
   def initialize(attribs = {})
     attribs.each{|k,v| instance_variable_set("@#{k}", v)}
 
-    # Need to build empty answers for questioning if not given.
-    build_answers if answers.nil?
+    ensure_answers
   end
 
   # Returns the available Options for the given answer.
@@ -34,11 +33,12 @@ class AnswerSet
 
   private
 
-  def build_answers
-    self.answers = if questioning.multi_level?
-      questioning.level_count.times.map{ |i| Answer.new(questioning: questioning, rank: i + 1) }
-    else
-      [Answer.new(questioning: questioning)]
+  # Ensures empty answers for all levels of questioning.
+  def ensure_answers
+    self.answers ||= []
+    questioning.level_count.times.each do |i|
+      rank = questioning.level_count > 1 ? i + 1 : nil
+      answers[i] ||= Answer.new(questioning: questioning, rank: rank)
     end
   end
 end

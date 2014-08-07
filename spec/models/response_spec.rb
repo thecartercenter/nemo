@@ -48,7 +48,7 @@ describe Response do
   describe 'answer_sets' do
     before do
       @response = Response.new
-      @q1, @q2 = double(), double()
+      @q1, @q2 = double(level_count: 1), double(level_count: 3)
       @sorted_answers = [ # These are in order because we're not testing ARs ordering capability.
         double(questioning: @q1, option_id: 10),
         double(questioning: @q2, rank: 1, option_id: 11),
@@ -71,12 +71,24 @@ describe Response do
       end
 
       it 'should build new answers' do
-        expect(@q2).to receive(:multi_level?).and_return(true)
-        expect(@q2).to receive(:level_count).and_return(3)
         expect(Answer).to receive(:new){ |attr| double(attr) }.exactly(3).times
         expect(@response.answer_sets[0].questioning).to eq @q1
         expect(@response.answer_sets[1].questioning).to eq @q2
         expect(@response.answer_sets[1].answers.map(&:rank)).to eq [1, 2, 3]
+      end
+    end
+
+    context 'with partially answered multilevel question' do
+      # new levels can be added after an answer is created. A new answer object should be created for these
+      # levels even if the other levels are already answered.
+      before do
+        # Make q2 act like a 4 level question.
+        allow(@q2).to receive(:level_count).and_return(4)
+      end
+
+      it 'should build proper answers' do
+        expect(Answer).to receive(:new){ |attr| double(attr) }.exactly(1).times
+        expect(@response.answer_sets[1].answers.map(&:rank)).to eq [1, 2, 3, 4]
       end
     end
   end
