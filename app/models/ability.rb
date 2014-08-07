@@ -46,7 +46,7 @@ class Ability
 
         # standard objects, missions, settings, and all users are available in no-mission (admin) mode
         if mode == 'admin'
-          [Form, Questioning, Condition, Question, OptionSet, Optioning, Option].each do |k|
+          [Form, Questioning, Condition, Question, OptionSet, Optioning, Option, Tag, Tagging].each do |k|
             can :manage, k, :is_standard => true
           end
           can :manage, Mission
@@ -159,7 +159,7 @@ class Ability
             end
 
             # coord can manage these classes for the current mission
-            [Form, OptionSet, Question, Questioning, Option].each do |klass|
+            [Form, OptionSet, Question, Questioning, Option, Tag, Tagging].each do |klass|
               can :manage, klass, :mission_id => mission.id
             end
 
@@ -267,6 +267,12 @@ class Ability
 
     # nobody can edit assignments for a locked mission
     cannot [:create, :update, :destroy], Assignment, :mission => {:locked => true}
+
+    # can't update or destroy tags which are standard copies
+    cannot [:update, :destroy], Tag, standard_copy?: true
+
+    # can't destroy taggings belonging to standard question
+    cannot :destroy, Tagging, question: { is_standard?: true }
   end
 
   def to_s
