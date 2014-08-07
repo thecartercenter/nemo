@@ -171,22 +171,22 @@ class Answer < ActiveRecord::Base
     required_and_relevant? && empty?
   end
 
-  private
+  def should_validate?(field)
+    # don't validate if response says no
+    return false if response && !response.validate_answers?
 
-    def should_validate?(field)
-      # don't validate if response says no
-      return false if response && !response.validate_answers?
-
-      case field
-      when :numericality
-        qtype.numeric? && value.present?
-      when :required
-        # don't validate requiredness if response says no
-        !(response && response.incomplete?)
-      else
-        true
-      end
+    case field
+    when :numericality
+      qtype.numeric? && value.present?
+    when :required
+      # don't validate requiredness if response says no
+      !(response && response.incomplete?)
+    else
+      true
     end
+  end
+
+  private
 
     def required
       errors.add(:value, :required) if required_but_empty?

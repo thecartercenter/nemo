@@ -12,15 +12,13 @@ describe ResponsesController do
       post(responses_path(mode: 'm', mission_name: get_mission.compact_name), response: {
         user_id: @user.id,
         form_id: @form.id,
-        all_answers: {
+        answer_sets: {
           '0' => {
-            response_id: '',
             questioning_id: @form.questionings[0].id,
             relevant: '1',
             value: '42',
           },
           '1' => {
-            response_id: '',
             questioning_id: @form.questionings[1].id,
             relevant: '1',
             option_id: Option.first.id,
@@ -44,15 +42,13 @@ describe ResponsesController do
       put(url_for(@obj), response: {
         user_id: @user.id,
         form_id: @form.id,
-        all_answers: {
+        answer_sets: {
           '0' => {
-            response_id: @obj.id,
             questioning_id: @form.questionings[0].id,
             relevant: '1',
             value: '45',
           },
           '1' => {
-            response_id: @obj.id,
             questioning_id: @form.questionings[1].id,
             relevant: '1',
             option_id: Option.last.id,
