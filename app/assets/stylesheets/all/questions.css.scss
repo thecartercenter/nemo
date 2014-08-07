@@ -4,11 +4,11 @@ form.question_form {
 
 div.question_fields {
 
-  .names_hints div.form_field div.control textarea[id^=question_name] {
+  .names_hints div.form_field div.control textarea[id*=_name_] {
     height: 55px;
   }
 
-  .names_hints div.form_field div.control textarea[id^=question_hint] {
+  .names_hints div.form_field div.control textarea[id*=_hint_] {
     height: 70px;
   }
 
