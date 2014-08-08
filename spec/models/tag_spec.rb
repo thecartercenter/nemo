@@ -8,8 +8,8 @@ describe Tag do
 
   context "abilities" do
     before do
-      @tag = create(:tag)
-      @user = create(:user, admin: true)
+      @tag = build(:tag)
+      @user = double("Admin User", admin?: true).as_null_object
       @ability = Ability.new(user: @user, mission: get_mission)
     end
 

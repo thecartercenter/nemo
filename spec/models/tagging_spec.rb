@@ -3,9 +3,9 @@ require 'spec_helper'
 describe Tagging do
   context "abilities" do
     before do
-      @question = create(:question, is_standard: false)
-      @tagging = create(:tagging, question: @question)
-      @user = create(:user, admin: true)
+      @question = build(:question, is_standard: false)
+      @tagging = build(:tagging, question: @question)
+      @user = double("Admin User", admin?: true).as_null_object
       @ability = Ability.new(user: @user, mission: get_mission)
     end
 
