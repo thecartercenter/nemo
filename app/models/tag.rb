@@ -5,4 +5,6 @@ class Tag < ActiveRecord::Base
   has_many :taggings, dependent: :destroy
   has_many :questions, through: :taggings
   attr_accessible :is_standard, :name, :standard_id
+
+  before_save { |tag| tag.name.downcase! }
 end
