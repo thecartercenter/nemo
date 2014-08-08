@@ -12,6 +12,7 @@ describe Tag do
     end
 
     it "should normally allow editing and deleting" do
+      allow(@tag).to receive_messages(standard_copy?: false)
       expect(@ability).to be_able_to :update, @tag
       expect(@ability).to be_able_to :destroy, @tag
     end
