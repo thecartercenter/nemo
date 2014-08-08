@@ -1,12 +1,9 @@
 require 'spec_helper'
 
 describe Tag do
-  before do
-    @tag = create(:tag)
-  end
-
   context "abilities" do
     before do
+      @tag = create(:tag)
       @user = create(:user, admin: true)
       @ability = Ability.new(user: @user, mission: get_mission)
     end
