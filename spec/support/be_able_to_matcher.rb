@@ -1,4 +1,5 @@
 # This is the same as the matcher provided by CanCan but updated for RSpec 3's method names
+# From https://github.com/ryanb/cancan/issues/997#issuecomment-48259981
 RSpec::Matchers.define :be_able_to do |*args|
   match do |ability|
     ability.can?(*args)
