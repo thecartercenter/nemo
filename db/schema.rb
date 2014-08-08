@@ -379,24 +379,24 @@ ActiveRecord::Schema.define(:version => 20140727210546) do
   add_index "sms_messages", ["mission_id"], :name => "sms_messages_mission_id_fk"
 
   create_table "taggings", :force => true do |t|
-    t.integer  "question_id", :null => false
-    t.integer  "tag_id",      :null => false
-    t.boolean  "is_standard"
+    t.integer  "question_id",                    :null => false
+    t.integer  "tag_id",                         :null => false
+    t.boolean  "is_standard", :default => false
     t.integer  "standard_id"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at",                     :null => false
+    t.datetime "updated_at",                     :null => false
   end
 
   add_index "taggings", ["question_id"], :name => "index_taggings_on_question_id"
   add_index "taggings", ["tag_id"], :name => "index_taggings_on_tag_id"
 
   create_table "tags", :force => true do |t|
-    t.string   "name",        :limit => 64
+    t.string   "name",        :limit => 64,                    :null => false
     t.integer  "mission_id"
-    t.boolean  "is_standard"
+    t.boolean  "is_standard",               :default => false
     t.integer  "standard_id"
-    t.datetime "created_at",                :null => false
-    t.datetime "updated_at",                :null => false
+    t.datetime "created_at",                                   :null => false
+    t.datetime "updated_at",                                   :null => false
   end
 
   add_index "tags", ["mission_id"], :name => "index_tags_on_mission_id"

@@ -1,9 +1,9 @@
 class CreateTags < ActiveRecord::Migration
   def change
     create_table :tags do |t|
-      t.string :name, :limit => 64
+      t.string :name, limit: 64, null: false
       t.references :mission
-      t.boolean :is_standard
+      t.boolean :is_standard, default: false
       t.integer :standard_id
 
       t.timestamps
