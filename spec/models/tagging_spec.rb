@@ -16,11 +16,9 @@ describe Tagging do
     it { should be_able_to :destroy, @tagging }
 
     context "if belongs to standard question" do
-      before do
-        @question.is_standard = true
-        @question.save
-      end
+      before { @question.is_standard = true }
 
+      it { should be_able_to :update, @tagging }
       it { should_not be_able_to :destroy, @tagging }
     end
   end

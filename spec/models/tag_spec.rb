@@ -24,7 +24,7 @@ describe Tag do
     context "if standard copy" do
       before do
         allow(@tag).to receive_messages(standard_copy?: true)
-        @tagging = build(:tagging, tag: @tag)
+        @tag.taggings << (@tagging = build(:tagging, tag: @tag))
       end
 
       context "with standard copy taggings" do
