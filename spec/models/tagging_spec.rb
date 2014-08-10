@@ -1,18 +1,19 @@
 require 'spec_helper'
 
 describe Tagging do
-  context "abilities" do
+  describe "abilities" do
+    subject(:ability) do
+      user = double("Admin User", admin?: true).as_null_object
+      Ability.new(user: user, mission: get_mission)
+    end
+
     before do
       @question = build(:question, is_standard: false)
       @tagging = build(:tagging, question: @question)
-      @user = double("Admin User", admin?: true).as_null_object
-      @ability = Ability.new(user: @user, mission: get_mission)
     end
 
-    it "should normally allow editing and deleting" do
-      expect(@ability).to be_able_to :update, @tagging
-      expect(@ability).to be_able_to :destroy, @tagging
-    end
+    it { should be_able_to :update, @tagging }
+    it { should be_able_to :destroy, @tagging }
 
     context "if belongs to standard question" do
       before do
@@ -20,9 +21,7 @@ describe Tagging do
         @question.save
       end
 
-      it "should not allow deleting" do
-        expect(@ability).not_to be_able_to :destroy, @tagging
-      end
+      it { should_not be_able_to :destroy, @tagging }
     end
   end
 

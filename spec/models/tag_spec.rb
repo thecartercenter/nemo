@@ -17,12 +17,8 @@ describe Tag do
     context "if not standard copy" do
       before { allow(@tag).to receive_messages(standard_copy?: false) }
 
-      it "should allow editing" do
-        should be_able_to :update, @tag
-      end
-      it "should allow deleting" do
-        should be_able_to :destroy, @tag
-      end
+      it { should be_able_to :update, @tag }
+      it { should be_able_to :destroy, @tag }
     end
 
     context "if standard copy" do
@@ -34,23 +30,15 @@ describe Tag do
       context "with standard copy taggings" do
         before { allow(@tagging).to receive_messages(standard_copy?: true) }
 
-        it "should not allow editing" do
-          should_not be_able_to :update, @tag
-        end
-        it "should not allow deleting" do
-          should_not be_able_to :destroy, @tag
-        end
+        it { should_not be_able_to :update, @tag }
+        it { should_not be_able_to :destroy, @tag }
       end
 
       context "without standard copy taggings" do
         before { allow(@tagging).to receive_messages(standard_copy?: false) }
 
-        it "should allow editing" do
-          should be_able_to :update, @tag
-        end
-        it "should allow deleting" do
-          should be_able_to :destroy, @tag
-        end
+        it { should be_able_to :update, @tag }
+        it { should be_able_to :destroy, @tag }
       end
 
     end
