@@ -6,31 +6,53 @@ describe Tag do
     expect(tag.reload.name).to eq 'abc'
   end
 
-  context "abilities" do
-    before do
-      @tag = build(:tag)
-      @user = double("Admin User", admin?: true).as_null_object
-      @ability = Ability.new(user: @user, mission: get_mission)
+  describe "abilities" do
+    subject(:ability) do
+      user = double("Admin User", admin?: true).as_null_object
+      Ability.new(user: user, mission: get_mission)
     end
 
-    it "should normally allow editing and deleting" do
-      allow(@tag).to receive_messages(standard_copy?: false)
-      expect(@ability).to be_able_to :update, @tag
-      expect(@ability).to be_able_to :destroy, @tag
+    before { @tag = build(:tag) }
+
+    context "if not standard copy" do
+      before { allow(@tag).to receive_messages(standard_copy?: false) }
+
+      it "should allow editing" do
+        should be_able_to :update, @tag
+      end
+      it "should allow deleting" do
+        should be_able_to :destroy, @tag
+      end
     end
 
-    context "if copy of standard object" do
+    context "if standard copy" do
       before do
         allow(@tag).to receive_messages(standard_copy?: true)
+        @tagging = build(:tagging, tag: @tag)
       end
 
-      it "should not allow editing" do
-        expect(@ability).not_to be_able_to :update, @tag
+      context "with standard copy taggings" do
+        before { allow(@tagging).to receive_messages(standard_copy?: true) }
+
+        it "should not allow editing" do
+          should_not be_able_to :update, @tag
+        end
+        it "should not allow deleting" do
+          should_not be_able_to :destroy, @tag
+        end
       end
 
-      it "should not allow deleting" do
-        expect(@ability).not_to be_able_to :destroy, @tag
+      context "without standard copy taggings" do
+        before { allow(@tagging).to receive_messages(standard_copy?: false) }
+
+        it "should allow editing" do
+          should be_able_to :update, @tag
+        end
+        it "should allow deleting" do
+          should be_able_to :destroy, @tag
+        end
       end
+
     end
   end
 
