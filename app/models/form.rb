@@ -24,7 +24,7 @@ class Form < ActiveRecord::Base
   scope(:with_questionings, includes(
     :questionings => [
       :form,
-      {:question => {:option_set => :options}},
+      {:question => :option_set},
       {:condition => [:option, :ref_qing]}
     ]
   ).order("questionings.rank"))
@@ -172,8 +172,8 @@ class Form < ActiveRecord::Base
         # this is necessary due to bulk deletion operations
         raise DeletionError.new('question_remove_answer_error') if qing_answer_count(qing) > 0
 
+        qing.destroy_with_copies
         questionings.delete(qing)
-        qing.destroy
       end
 
       # fix the ranks

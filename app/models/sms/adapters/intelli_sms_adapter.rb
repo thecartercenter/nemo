@@ -13,8 +13,7 @@ class Sms::Adapters::IntelliSmsAdapter < Sms::Adapters::Adapter
   end
 
   def deliver(message)
-    # let the superclass do the sanity checks
-    super
+    prepare_message_for_delivery(message)
 
     # encode the message (intellisms expects iso-8859-1 encoding)
     body = message.body.encode("iso-8859-1", {:invalid => :replace, :undef => :replace, :replace => '?'})

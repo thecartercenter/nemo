@@ -1,6 +1,8 @@
 class OptionSetsController < ApplicationController
   include StandardImportable
 
+  before_filter :arrayify_attribs, :only => [:create, :update]
+
   # authorization via cancan
   load_and_authorize_resource
 
@@ -42,7 +44,6 @@ class OptionSetsController < ApplicationController
   # always via AJAX
   def create
     OptionSet.transaction do
-      @option_set.populate_from_json(params[:option_set])
       create_or_update
     end
   end
@@ -51,15 +52,17 @@ class OptionSetsController < ApplicationController
   def update
     # we use a transaction because populate_from_json requests it
     OptionSet.transaction do
-      # assign attribs and validate now so that normalization runs before authorizing and saving
-      @option_set.populate_from_json(params[:option_set])
-      @option_set.valid?
+      @option_set.assign_attributes(params['option_set']) # Quotes vs symbol is important here.
+
+      # validate now so that normalization runs before authorizing and saving
+      # We raise if there is an error since validation should happen client side.
+      raise ActiveRecord::RecordInvalid.new('Option set is invalid') unless @option_set.valid?
 
       # authorize special abilities
       authorize!(:update_core, @option_set) if @option_set.core_changed?
       authorize!(:add_options, @option_set) if @option_set.options_added?
       authorize!(:remove_options, @option_set) if @option_set.options_removed?
-      authorize!(:reorder_options, @option_set) if @option_set.positions_changed?
+      authorize!(:reorder_options, @option_set) if @option_set.ranks_changed?
 
       create_or_update
     end
@@ -87,27 +90,41 @@ class OptionSetsController < ApplicationController
 
   private
 
-    # creates/updates the option set
-    def create_or_update
-      begin
-        @option_set.save!
+  # Converts level_names and children (recursively) attribs hashes to arrays.
+  def arrayify_attribs
+    arrayify_hash_and_children(params['option_set'], 'level_names')
+    arrayify_hash_and_children(params['option_set'], 'children_attribs')
+  end
 
-        # set the flash, which will be shown when the next request is issued as expected
-        # (not needed in modal mode)
-        set_success(@option_set) unless params[:modal_mode]
-
-        if params[:modal_mode]
-          # render the option set's ID in json format
-          render(:json => @option_set.id)
-        else
-          # render where we should redirect
-          render(:json => option_sets_path.to_json)
-        end
-
-      rescue ActiveRecord::RecordInvalid, DeletionError
-        flash.now[:error] = $!.is_a?(DeletionError) ? $!.to_s : I18n.t('activerecord.errors.models.option_set.general')
-        render(:partial => 'form')
-        raise ActiveRecord::Rollback
-      end
+  def arrayify_hash_and_children(hash, key)
+    return unless hash[key].is_a?(Hash)
+    hash[key] = hash[key].values
+    hash[key].each do |value|
+      arrayify_hash_and_children(value, key) if value[key].is_a?(Hash)
     end
+  end
+
+  # creates/updates the option set
+  def create_or_update
+    begin
+      @option_set.save_and_rereplicate!
+
+      # set the flash, which will be shown when the next request is issued as expected
+      # (not needed in modal mode)
+      set_success(@option_set) unless params[:modal_mode]
+
+      if params[:modal_mode]
+        # render the option set's ID in json format
+        render(:json => @option_set.id)
+      else
+        # render where we should redirect
+        render(:json => option_sets_path.to_json)
+      end
+
+    rescue ActiveRecord::RecordInvalid, DeletionError
+      flash.now[:error] = $!.is_a?(DeletionError) ? $!.to_s : I18n.t('activerecord.errors.models.option_set.general')
+      render(:partial => 'form')
+      raise ActiveRecord::Rollback
+    end
+  end
 end

@@ -182,7 +182,7 @@ class Condition < ActiveRecord::Base
         ref_option_idx = self.ref_qing.question.option_set.options.index(self.option)
 
         # set the copy's option to the new ref_qing's corresponding option, in case the option set was also replicated
-        replication.dest_obj.option = replication.dest_obj.ref_qing.question.option_set.optionings[ref_option_idx].option
+        replication.dest_obj.option = replication.dest_obj.ref_qing.question.option_set.options[ref_option_idx]
       end
     end
 

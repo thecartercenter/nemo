@@ -55,7 +55,7 @@ class IncomingSmsTest < ActionDispatch::IntegrationTest
       :incoming => "#{form_code} 1.15 2.20", :outgoing => /#{form_code}.+thank you/i)
   end
 
-  test "message from robot should get no response" do
+  test "message from automated sender should get no response" do
     assert_sms_response(:from => "VODAFONE", :incoming => "blah blah junk", :outgoing => nil)
   end
 

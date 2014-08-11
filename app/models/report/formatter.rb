@@ -1,6 +1,7 @@
 class Report::Formatter
   extend ActionView::Helpers::TextHelper
   def self.format(value, type, context)
+    return nil if value.nil?
     value = translate(value)
     case type
     when "datetime"

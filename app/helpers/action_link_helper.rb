@@ -23,9 +23,9 @@ module ActionLinkHelper
     i18nk = obj.class.model_name.i18n_key
 
     actions_to_show = options[:only] || [:index, :new, :show, :edit, :destroy]
-    actions_to_show -= [:new, :show, :edit, :destroy] if controller.action_name == 'new'
+    actions_to_show -= [:new, :show, :edit, :destroy] if canonical_action == :new
     actions_to_show -= options[:except]
-    actions_to_show.delete(controller.action_name.to_sym)
+    actions_to_show.delete(canonical_action)
 
     content_tag(:div, :class => 'top-action-links') do
       main_links = actions_to_show.map do |action|
@@ -48,7 +48,7 @@ module ActionLinkHelper
     options[:exclude] = Array.wrap(options[:exclude])
 
     # always exclude edit and destroy if we are in show mode
-    options[:exclude] += [:edit, :destroy] if controller.action_name == 'show'
+    options[:exclude] += [:edit, :destroy] if canonical_action == :show
 
     # build links
     %w(edit destroy).map do |action|
