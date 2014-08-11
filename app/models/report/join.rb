@@ -43,7 +43,7 @@ class Report::Join
     :questions => new(
       :name => :questions,
       :dependencies => :questionings,
-      :sql => "INNER JOIN questions __questions ON __questionings.question_id = __questions.id"
+      :sql => "INNER JOIN questionables __questions ON __questionings.question_id = __questions.id AND __questions.type = 'Question'"
     ),
     :option_sets => new(
       :name => :option_sets,
@@ -55,8 +55,8 @@ class Report::Join
       :name => :options,
       :sql => [
         "LEFT JOIN options __ao ON __answers.option_id = __ao.id",
-        "LEFT JOIN option_nodes __ans_opt_nodes ON __ans_opt_nodes.option_id = __ao.id " +
-          "AND __ans_opt_nodes.option_set_id = __option_sets.id"
+        "LEFT JOIN optionings __ans_opt_stgs ON __ans_opt_stgs.option_id = __ao.id " +
+          "AND __ans_opt_stgs.option_set_id = __option_sets.id"
       ]
     ),
     :choices => new(
@@ -65,8 +65,8 @@ class Report::Join
       :sql => [
         "LEFT JOIN choices __choices ON __choices.answer_id = __answers.id",
         "LEFT JOIN options __co ON __choices.option_id = __co.id",
-        "LEFT JOIN option_nodes __ch_opt_nodes ON __ch_opt_nodes.option_id = __co.id " +
-          "AND __ch_opt_nodes.option_set_id = __option_sets.id"
+        "LEFT JOIN optionings __ch_opt_stgs ON __ch_opt_stgs.option_id = __co.id " +
+          "AND __ch_opt_stgs.option_set_id = __option_sets.id"
       ]
     ),
     :forms => new(

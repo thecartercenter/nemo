@@ -38,14 +38,13 @@ class SmsController < ApplicationController
   private
 
     def deliver_reply(reply)
-      # Set the incoming_sms_number as the from number
-      reply.from = configatron.incoming_sms_number unless configatron.incoming_sms_number.blank?
+      # Set the incoming_sms_number as the from number, if we have one
+      reply.update_attributes(:from => configatron.incoming_sms_number) unless configatron.incoming_sms_number.blank?
 
       if @incoming_adapter.reply_style == :via_adapter
         @outgoing_adapter.deliver(reply)
         render :text => 'REPLY_SENT'
       else # reply via response
-        @incoming_adapter.prepare_message_for_delivery(reply)
         render :text => reply.body
       end
     end

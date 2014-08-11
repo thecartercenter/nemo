@@ -72,7 +72,7 @@ class StandardizableQuestionTest < ActiveSupport::TestCase
     q = FactoryGirl.create(:question, :is_standard => true, :name => 'Foo')
     q2 = q.replicate(:mode => :to_mission, :dest_mission => get_mission)
     q.name = 'Bar'
-    q.save_and_rereplicate!
+    q.save!
     assert_equal('Bar', q2.reload.name)
 
     # also test _name attrib
@@ -92,7 +92,7 @@ class StandardizableQuestionTest < ActiveSupport::TestCase
 
     # now change std -- change should not replicate to copy1
     q.reload.name = 'Bar'
-    q.save_and_rereplicate!
+    q.save!
     assert_equal('Baz', copy1.reload.name)
     assert_equal('Bar', copy2.reload.name)
 
@@ -111,7 +111,7 @@ class StandardizableQuestionTest < ActiveSupport::TestCase
 
     # now change the english translation on the std
     q.name_en = 'Cowed'
-    q.save_and_rereplicate!
+    q.save!
 
     # english should be replicated but french should not
     assert_equal('Cowed', copy.reload.name_en)
@@ -124,7 +124,7 @@ class StandardizableQuestionTest < ActiveSupport::TestCase
 
     # delete french translation without any changes to copy
     q.name_fr = nil
-    q.save_and_rereplicate!
+    q.save!
 
     # delete should be replicated
     assert_equal('Cow', copy.reload.name_en)
@@ -141,7 +141,7 @@ class StandardizableQuestionTest < ActiveSupport::TestCase
 
     # delete std french translation
     q.reload.name_fr = nil
-    q.save_and_rereplicate!
+    q.save!
 
     # delete should not be replicated
     assert_equal('Cow', copy.reload.name_en)
@@ -158,7 +158,7 @@ class StandardizableQuestionTest < ActiveSupport::TestCase
 
     # delete std translation
     q.reload.name_fr = nil
-    q.save_and_rereplicate!
+    q.save!
 
     # delete should be intact
     assert_equal('Cow', copy.reload.name_en)
@@ -184,7 +184,7 @@ class StandardizableQuestionTest < ActiveSupport::TestCase
 
     # change std hash value to nil
     q.name_translations = nil
-    q.save_and_rereplicate!
+    q.save!
 
     # copy value should now be nil
     assert_nil(copy.reload.name_translations)

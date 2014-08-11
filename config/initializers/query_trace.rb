@@ -1,4 +1,4 @@
-if Rails.env.development? || ENV['QUERY_TRACE']
+if Rails.env == 'development'
   require 'term/ansicolor'
 
   # yeilds a stacktrace for each SQL query
@@ -8,7 +8,7 @@ if Rails.env.development? || ENV['QUERY_TRACE']
     attr_accessor :trace_queries
 
     def sql(event)  #:nodoc:
-      return unless QueryTrace.enabled? && logger.debug?
+      return unless QueryTrace.enabled? && logger.debug? && Rails.env.development?
       stack = Rails.backtrace_cleaner.clean(caller)
       first_line = stack.shift
       return unless first_line

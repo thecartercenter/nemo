@@ -110,4 +110,33 @@ class FormTest < ActiveSupport::TestCase
       f.update_ranks({q1.id.to_s => '3', q2.id.to_s => '2', q3.id.to_s => '1'})
     end
   end
+
+  test "replicating and promoting a form should do a deep copy" do
+    f = FactoryGirl.create(:form, :question_types => %w(select_one integer), :is_standard => false)
+    f2 = f.replicate(:mode => :promote)
+
+    # mission should now be nil and should be standard
+    assert(f2.is_standard, "Newly promoted form should be a standard type.")
+    assert_equal(nil, f2.mission)
+
+    # all objects should be distinct
+    assert_not_equal(f, f2)
+    assert_not_equal(f.questionings[0], f2.questionings[0])
+    assert_not_equal(f.questionings[0].question, f2.questionings[0].question)
+    assert_not_equal(f.questionings[0].question.option_set, f2.questionings[0].question.option_set)
+    assert_not_equal(f.questionings[0].question.option_set.optionings[0], f2.questionings[0].question.option_set.optionings[0])
+    assert_not_equal(f.questionings[0].question.option_set.optionings[0].option, f2.questionings[0].question.option_set.optionings[0].option)
+
+    # but properties should be same
+    assert_equal(f.questionings[0].rank, f2.questionings[0].rank)
+    assert_equal(f.questionings[0].question.code, f2.questionings[0].question.code)
+    assert_equal(f.questionings[0].question.option_set.optionings[0].option.name, f2.questionings[0].question.option_set.optionings[0].option.name)
+
+    # all f2 objects should be standard
+    assert_equal(true, f2.questionings[0].is_standard?)
+    assert_equal(true, f2.questionings[0].question.is_standard?)
+    assert_equal(true, f2.questionings[0].question.option_set.is_standard?)
+    assert_equal(true, f2.questionings[0].question.option_set.optionings[0].is_standard?)
+    assert_equal(true, f2.questionings[0].question.option_set.optionings[0].option.is_standard?)
+  end
 end

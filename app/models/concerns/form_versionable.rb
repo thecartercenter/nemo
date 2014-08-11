@@ -3,18 +3,18 @@ module FormVersionable
   extend ActiveSupport::Concern
 
   included do
-    after_create do
-      FormVersioningPolicy.new.notify(self, :create) if versionable?
+    before_create do
+      FormVersioningPolicy.notify(self, :create) if versionable?
       return true
     end
 
-    after_save do
-      FormVersioningPolicy.new.notify(self, :update) if versionable?
+    before_save do
+      FormVersioningPolicy.notify(self, :update) if versionable?
       return true
     end
 
-    after_destroy do
-      FormVersioningPolicy.new.notify(self, :destroy) if versionable?
+    before_destroy do
+      FormVersioningPolicy.notify(self, :destroy) if versionable?
       return true
     end
   end

@@ -22,8 +22,6 @@ class Broadcast < ActiveRecord::Base
   # options for the medium used for the broadcast
   MEDIUM_OPTIONS = %w(sms email sms_only email_only both)
 
-  MEDIUM_OPTIONS_WITHOUT_SMS = %w(email_only)
-
   # options for which phone numbers the broadcast should be sent to
   WHICH_PHONE_OPTIONS = %w(main_only alternate_only both)
 

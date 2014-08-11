@@ -30,7 +30,7 @@ class Report::QuestionAnswerTallyReport < Report::TallyReport
         rel = rel.group(expr)
 
         # add value expression
-        expr = "IFNULL(ans_opt_nodes.rank, ch_opt_nodes.rank)"
+        expr = "IFNULL(ans_opt_stgs.rank, ch_opt_stgs.rank)"
         rel = rel.select("#{expr} AS sec_value")
         rel = rel.group(expr)
         rel = rel.where("option_sets.id" => option_sets.collect{|os| os.id})

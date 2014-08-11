@@ -17,14 +17,14 @@ class ReplicationTest < ActiveSupport::TestCase
     assert_equal("new mission", @ro.dest_mission)
   end
 
-  test "#to_standard? is true if the to_mission is nil" do
+  test "#replicating_to_standard? is true if the to_mission is nil" do
     setup_replication_object(:mode => :clone, :src_obj => {:mission => nil, :is_standard? => true})
-    assert_equal(true, @ro.to_standard?)
+    assert_equal(true, @ro.replicating_to_standard?)
   end
 
-  test "#to_standard? is false if the to_mission is not nil" do
+  test "#replicating_to_standard? is false if the to_mission is not nil" do
     setup_replication_object(:mode => :to_mission, :dest_mission => "some mission", :src_obj => {:mission => "something", :is_standard? => true})
-    assert_equal(false, @ro.to_standard?)
+    assert_equal(false, @ro.replicating_to_standard?)
   end
 
   # test set up

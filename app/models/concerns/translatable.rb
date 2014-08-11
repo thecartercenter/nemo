@@ -17,7 +17,7 @@ module Translatable
 
       # set up the _tranlsations fields to serialize
       translated_fields.each do |f|
-        ancestors.include?(ActiveRecord::Base) ? (serialize "#{f}_translations", JSON) : (attr_accessor "#{f}_translations")
+        serialize "#{f}_translations", JSON
       end
     end
 

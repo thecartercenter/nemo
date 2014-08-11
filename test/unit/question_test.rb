@@ -40,7 +40,7 @@ class QuestionTest < ActiveSupport::TestCase
   test "options" do
     q = FactoryGirl.create(:question, :qtype_name => 'select_one')
     q.reload
-    assert_equal(%w(Cat Dog), q.options.map(&:name))
+    assert_equal(%w(Yes No), q.options.map(&:name))
     q = FactoryGirl.create(:question, :qtype_name => 'integer', :code => 'intq')
     assert_nil(q.options)
   end
@@ -65,6 +65,70 @@ class QuestionTest < ActiveSupport::TestCase
     q = FactoryGirl.create(:question, :qtype_name => 'text', :minimum => 5, :minstrictly => true)
     assert_nil(q.minimum)
     assert_nil(q.minstrictly)
+  end
+
+  test "subquestions should get created automatically on create question with multilevel option set" do
+    os = FactoryGirl.create(:multilevel_option_set)
+    q = FactoryGirl.create(:question, :qtype_name => 'select_one', :option_set => os)
+    assert_equal(os.option_levels, q.subquestions.map(&:option_level))
+  end
+
+  test "subquestions should not get recreated on update question with multilevel option set" do
+    os = FactoryGirl.create(:multilevel_option_set)
+    q = FactoryGirl.create(:question, :qtype_name => 'select_one', :option_set => os)
+
+    # change just the name and make sure not created again
+    q.name = 'foo123'
+    q.save!
+
+    assert_equal(os.option_levels.size, q.subquestions.size)
+  end
+
+  test "subquestions should be maintained on update question with multilevel option set" do
+    osm = FactoryGirl.create(:multilevel_option_set)
+    os = FactoryGirl.create(:option_set)
+
+    # start out with regular option set
+    q = FactoryGirl.create(:question, :qtype_name => 'select_one', :option_set => os)
+    assert_equal([], q.subquestions)
+
+    # change to multilevel
+    q.option_set = osm
+    q.save!
+    assert_equal(osm.option_levels, q.subquestions.map(&:option_level))
+
+    # change back to regular -- old subquestions should be deleted
+    old_subqs = q.subquestions
+    q.option_set = os
+    q.save!
+    assert_equal([], q.subquestions)
+    old_subqs.each{|sq| assert_equal(false, Subquestion.exists?(sq))}
+  end
+
+  test "subquestions should be maintained if level added or removed from option set" do
+    os = FactoryGirl.create(:multilevel_option_set)
+    q = FactoryGirl.create(:question, :qtype_name => 'select_one', :option_set => os)
+    os.reload # pickup the associated question
+
+    # add the level to middle
+    os.option_levels[1].rank = 3
+    os.option_levels.build(:option_set => os, :rank => 2, :name => 'phylum', :mission => os.mission)
+    os.save!
+
+    # doublecheck option levels
+    assert_equal('kingdom phylum species', os.option_levels.map(&:name).join(' '))
+
+    # subquestions should be updated, and in order
+    q.reload
+    assert_equal('kingdom phylum species', q.subquestions.map(&:option_level).map(&:name).join(' '))
+
+    # remove the level again
+    os.option_levels.destroy(os.option_levels[1])
+    os.save!
+
+    # subquestions should be updated again
+    q.reload
+    assert_equal('kingdom species', q.subquestions.map(&:option_level).map(&:name).join(' '))
   end
 
   test "promoting a question with an option set should work" do

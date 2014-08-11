@@ -8,8 +8,8 @@ class Report::AnswerField < Report::Field
     {:sql_tplt => "__TBL_PFX__co.name_translations", :name => "select_multiple_name", :clause => :select, :join => :choices},
 
     # for select questions, we use the option rank as its value
-    {:sql_tplt => "__TBL_PFX__ans_opt_nodes.rank", :name => "select_one_value", :clause => :select, :join => :options},
-    {:sql_tplt => "__TBL_PFX__ch_opt_nodes.rank", :name => "select_multiple_value", :clause => :select, :join => :choices},
+    {:sql_tplt => "__TBL_PFX__ans_opt_stgs.rank", :name => "select_one_value", :clause => :select, :join => :options},
+    {:sql_tplt => "__TBL_PFX__ch_opt_stgs.rank", :name => "select_multiple_value", :clause => :select, :join => :choices},
 
     # these question types have their own value columns
     {:sql_tplt => "CONVERT(__TBL_PFX__answers.value, SIGNED INTEGER)", :name => "integer_value", :clause => :select, :join => :answers},
@@ -20,9 +20,11 @@ class Report::AnswerField < Report::Field
     {:sql_tplt => "__TBL_PFX__answers.value", :name => "value", :clause => :select, :join => :answers},
 
     # sort expressions for select questions (using the rank value)
-    {:sql_tplt => "__TBL_PFX__ans_opt_nodes.rank", :name => "select_one_sort", :clause => :select, :join => :options},
-    {:sql_tplt => "__TBL_PFX__ch_opt_nodes.rank", :name => "select_multiple_sort", :clause => :select, :join => :choices},
+    {:sql_tplt => "__TBL_PFX__ans_opt_stgs.rank", :name => "select_one_sort", :clause => :select, :join => :options},
+    {:sql_tplt => "__TBL_PFX__ch_opt_stgs.rank", :name => "select_multiple_sort", :clause => :select, :join => :choices},
 
+    # this template uses the 'questions' table because the join class creates a table alias
+    # the actual STI table name is 'questionables'
     {:sql_tplt => "__TBL_PFX__questions.id = __QUESTION_ID__", :name => "where_expr", :clause => :where, :join => :questions}
   ]
 

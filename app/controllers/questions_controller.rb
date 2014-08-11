@@ -47,7 +47,7 @@ class QuestionsController < ApplicationController
   private
     # creates/updates the question
     def create_or_update
-      if @question.save_and_rereplicate
+      if @question.save
         set_success_and_redirect(@question)
       else
         flash.now[:error] = I18n.t('activerecord.errors.models.question.general')

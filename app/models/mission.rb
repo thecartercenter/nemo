@@ -6,13 +6,13 @@ class Mission < ActiveRecord::Base
   has_many(:assignments, :inverse_of => :mission)
   has_many(:users, :through => :assignments)
   has_many(:groups, :inverse_of => :mission)
-  has_many(:questions, :inverse_of => :mission)
+  has_many(:questionables, :inverse_of => :mission)
   has_many(:questionings, :inverse_of => :mission)
   has_many(:conditions, :inverse_of => :mission)
   has_many(:options, :inverse_of => :mission, :dependent => :destroy)
+  has_many(:optionings, :inverse_of => :mission, :dependent => :destroy)
   has_many(:option_levels, :inverse_of => :mission, :dependent => :destroy)
   has_many(:option_sets, :inverse_of => :mission, :dependent => :destroy)
-  has_many(:option_nodes, :inverse_of => :mission, :dependent => :destroy)
   has_one(:setting, :inverse_of => :mission, :dependent => :destroy)
 
   before_validation(:create_compact_name)
@@ -40,25 +40,25 @@ class Mission < ActiveRecord::Base
 
   # Override default destory
   def destroy
-    terminate
+    terminate_mission
   end
 
   # checks to make sure there are no associated objects.
   def check_associations
-    to_check = [:assignments, :responses, :forms, :report_reports, :questions, :broadcasts]
+    to_check = [:assignments, :responses, :forms, :report_reports, :questionables, :broadcasts]
     to_check.each{|a| raise DeletionError.new(:cant_delete_if_assoc) unless self.send(a).empty?}
   end
 
   # remove this mission and other related records from the Database
   # * this method is designed for speed.
-  def terminate
+  def terminate_mission
     ActiveRecord::Base.transaction do
       begin
         # Remove MissionBased Classes
-        # note that we don't need to remove OptionNodes directly since OptionSet takes care of that
+        # note that we don't need to remove Optioning directly since OptionSet takes care of that
         # the order of deletion is also important to avoid foreign key constraints
         relationships_to_delete = [Setting, Report::Report, Condition, Questioning,
-                                   Question, OptionSet, Option, Response,
+                                   Optioning, OptionLevel, Question, OptionSet, Option, Response,
                                    Form, Broadcast, Assignment, Sms::Message]
         relationships_to_delete.each{|r| r.mission_pre_delete(self)}
 

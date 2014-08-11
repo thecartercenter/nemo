@@ -18,13 +18,13 @@ class API::V1::FormsController < API::V1::BaseController
     if @form.access_level == 'protected' && @form.api_user_id_can_see?(@api_user.id)
      @form = Form.includes(:questions).
              where(id: params[:id]).
-             where("questions.access_level = 'inherit'").
+             where("questionables.access_level = 'inherit'").
              first
       #TODO: When we have budget refactor to use a scope for (public or nil) or make public access same as nil
     elsif @form.access_level != 'private'
       @form = Form.includes(:questions).
               where(id: params[:id]).
-              where("questions.access_level = 'inherit'").
+              where("questionables.access_level = 'inherit'").
               first
     end
     render :json => @form.to_json(only: [:id, :name, :created_at, :updated_at],

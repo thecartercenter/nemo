@@ -1,4 +1,4 @@
-set :branch, 'demo'
+set :branch, 'staging'
 set :ping_url, "https://elmo.sassafrastech.com"
 set :user, 'tomsmyth'
 set :home_dir, '/home/tomsmyth'

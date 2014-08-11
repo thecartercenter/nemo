@@ -162,10 +162,7 @@
 
     <% if current_mission %>
       <%= t("sms.outgoing_provider") %>:
-      <%# We have to use to_h because calling .nil? or .is_a?
-        on configatron.outgoing_sms_adapter when it's nil don't work. %>
-      <%= configatron.to_h[:outgoing_sms_adapter] ?
-        configatron.outgoing_sms_adapter.service_name : "[#{t('common.none').capitalize}]" %> &nbsp;|&nbsp;
+      <%= configatron.outgoing_sms_adapter ? configatron.outgoing_sms_adapter.service_name : "[#{t('common.none').capitalize}]" %> &nbsp;|&nbsp;
     <% end %>
 
     <% if current_mission && can?(:index, Sms::Message) %>

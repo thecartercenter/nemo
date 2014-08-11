@@ -29,8 +29,6 @@ class BroadcastsController < ApplicationController
     # create a new Broadcast
     @broadcast = Broadcast.accessible_by(current_ability).new(:recipients => users)
 
-    @medium_options = configatron.to_h[:outgoing_sms_adapter] ? Broadcast::MEDIUM_OPTIONS : Broadcast::MEDIUM_OPTIONS_WITHOUT_SMS
-
     # call authorize so no error
     authorize!(:create, @broadcast)
 

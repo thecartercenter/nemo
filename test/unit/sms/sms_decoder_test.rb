@@ -87,16 +87,6 @@ class SmsDecoderTest < ActiveSupport::TestCase
     assert_decoding_fail(:body => "#{form_code} 1.15", :from => "+12737272722", :error => "user_not_found")
   end
 
-  test "submitting from phone number with letters should raise special error" do
-    setup_form(:questions => %w(integer))
-    assert_decoding_fail(:body => "#{form_code} 1.15", :from => "DEALS", :error => "automated_sender")
-  end
-
-  test "submitting from shortcode should raise special error" do
-    setup_form(:questions => %w(integer))
-    assert_decoding_fail(:body => "#{form_code} 1.15", :from => "123456", :error => "automated_sender")
-  end
-
   test "submitting from second phone number should work" do
     setup_form(:questions => %w(integer))
 

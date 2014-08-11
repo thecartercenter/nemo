@@ -17,7 +17,7 @@ gem 'mysql2', '>= 0.3.15' #was '~> 0.3.12b5' # beta version needed for sphinx
 gem 'will_paginate'
 gem 'will_paginate-bootstrap'
 gem 'api-pagination'
-gem 'configatron', '~> 4.2'
+gem 'configatron'
 gem 'libxml-ruby'
 gem 'rdiscount'
 gem 'jquery-rails'
@@ -67,9 +67,6 @@ gem 'bootstrap-sass', '~> 3.0.3.0'
 # spinner
 gem 'spinjs-rails'
 
-# tree data structure
-gem 'ancestry', '~> 2.0'
-
 group :development do
   gem 'rails-erd'                     # generat with:  DIAGRAM=true rake db:migrate
   gem 'capistrano', '~> 2.15.4'       # deployment
@@ -82,8 +79,6 @@ group :development, :test do
   gem 'factory_girl_rails', '~> 4.0'
   gem 'jasmine-rails'                # test framework
   gem 'rspec-rails', '~> 3.0'        # test framework
-  gem 'rspec-its'
-  gem 'rspec-activemodel-mocks'
   gem 'mocha'                        # mocking/stubbing
   gem 'capybara'                     # acceptance tests
   gem 'capybara-webkit'              # for testing js

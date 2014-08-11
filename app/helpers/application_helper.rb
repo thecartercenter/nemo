@@ -1,6 +1,7 @@
 module ApplicationHelper
 
   ERROR_MESSAGE_KEYS_TO_HIDE = {
+    :'optionings.option.base' => true,
     :'condition.base' => true
   }
 
@@ -8,12 +9,6 @@ module ApplicationHelper
   # Should consider merging with ApplicationController's model_class at some point.
   def route_key
     controller.class.name.underscore.gsub("/", "_").gsub(/_controller$/, "")
-  end
-
-  # Returns the current action (as symbol), but returns :new for create and :edit for update.
-  def canonical_action
-    a = controller.action_name.to_sym
-    {create: :new, update: :edit}[a] || a
   end
 
   # pairs flash errors with bootstrap styling
@@ -221,11 +216,11 @@ module ApplicationHelper
     l.join.html_safe
   end
 
-  # Tries to get a path for the given object, returns nil if object doesn't have route
-  # Preserves the search param in the current query string, if any, unless there was a search error.
+  # tries to get a path for the given object, returns nil if object doesn't have route
+  # preserves the search param in the current query string, if any
   def path_for_with_search(obj)
     begin
-      polymorphic_path(obj, @search_error ? {} : {search: params[:search]})
+      polymorphic_path(obj, :search => params[:search])
     rescue
       nil
     end

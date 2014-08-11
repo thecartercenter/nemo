@@ -454,7 +454,7 @@ en:
 
           If generating a new code, please record the old code if there are previous live forms. The new code will only work for forms downloaded after the code is regenerated.
         incoming_sms_number: "Enter the phone number to which incoming SMSes for SMS forms should be sent. This will be displayed on the SMS guide. Only needed if using SMS submission."
-        outgoing_sms_adapter: "The adapter used to send outgoing SMSes. Note that SMS replies may be sent out on via a different adapter, depending the adapter by which they arrived."
+        outgoing_sms_adapter: "The adapter used to send outgoing SMSes."
         intellisms_username: "The username for the IntelliSMS account."
         intellisms_password1: "Enter and re-enter a password to change the password for the IntelliSMS account."
         external_sql: "The SQL code used to extract data for use in external applications. Click 'Select All' and then press Ctrl-C to copy."
@@ -656,14 +656,12 @@ en:
           zero:  "No Questions found"
           one:   "Displaying <b>1</b> Question"
           other: "Displaying <b>all %{count}</b> Questions"
-          multi_page_html: "Displaying Questions <b>%{from} - %{to}</b> of <b>%{count}</b> in total"
     questioning: # should be same as question
       page_entries_info:
         single_page_html:
           zero:  "No Questions found"
           one:   "Displaying <b>1</b> Question"
           other: "Displaying <b>all %{count}</b> Questions"
-          multi_page_html: "Displaying Questions <b>%{from} - %{to}</b> of <b>%{count}</b> in total"
     report/report:
       page_entries_info:
         single_page_html:

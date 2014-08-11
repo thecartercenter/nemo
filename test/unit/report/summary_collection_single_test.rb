@@ -214,7 +214,7 @@ class Report::SummaryCollectionSingleTest < ActiveSupport::TestCase
     end
 
     def prepare_form(qtype, answers, options = {})
-      @form = FactoryGirl.create(:form, {:question_types => [qtype], :option_names => %w(Yes No)}.merge(options))
+      @form = FactoryGirl.create(:form, options.merge(:question_types => [qtype]))
       answers.each{|a| FactoryGirl.create(:response, :form => @form, :_answers => [a])}
     end
 

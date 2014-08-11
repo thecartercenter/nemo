@@ -1,6 +1,6 @@
 // ELMO.Models.NamedItem
 //
-// Client side model for OptionNodes and OptionLevels, both of which have name_translations
+// Client side model for Optionings and OptionLevels, both of which have name_translations
 (function(ns, klass) {
 
   // constructor

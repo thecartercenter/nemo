@@ -84,8 +84,8 @@ class ConditionTest < ActiveSupport::TestCase
   private
 
     def build_condition(params = {})
-      f = FactoryGirl.create(:form, :question_types => params.delete(:question_types) || %w(integer integer integer),
-        :option_names => %w(Yes No))
+      clear_objects(Questioning, Question, Form, Optioning, Option, OptionSet)
+      f = FactoryGirl.create(:form, :question_types => params.delete(:question_types) || %w(integer integer integer))
       q = f.questionings.last
 
       # building the association this way because doing q.condition = ... causes a weird validation error

@@ -65,11 +65,11 @@ class Report::QuestionAnswerTallyReportTest < ActiveSupport::TestCase
     )
 
     # test
-    assert_report(report, %w(     Yes No High Low TTL ),
-                          %w( yn0   6  4    _   _  10 ),
-                          %w( yn1   7  3    _   _  10 ),
-                          %w( hl1   _  _    4   6  10 ),
-                          %w( TTL  13  7    4   6  30 ))
+    assert_report(report, %w(     High Low Yes No TTL ),
+                          %w( hl1    4   6   _  _  10 ),
+                          %w( yn0    _   _   6  4  10 ),
+                          %w( yn1    _   _   7  3  10 ),
+                          %w( TTL    4   6  13  7  30 ))
   end
 
   test "counts of yes and no for empty result" do
@@ -104,9 +104,9 @@ class Report::QuestionAnswerTallyReportTest < ActiveSupport::TestCase
     ])
 
     # make sure we account for the null (no answer given) values that will come up for the rgb question (we use a _)
-    assert_report(report, %w(      Yes No _ Red Blue Green TTL ),
-                          %w( yn     6  4 _   _    _     _  10 ),
-                          %w( rgb    _  _ 2   5    5     7  19 ),
-                          %w( TTL    6  4 2   5    5     7  29 ))
+    assert_report(report, %w(      _ Red Blue Green Yes No TTL ),
+                          %w( rgb  2   5    5     7   _  _  19 ),
+                          %w( yn   _   _    _     _   6  4  10 ),
+                          %w( TTL  2   5    5     7   6  4  29 ))
   end
 end

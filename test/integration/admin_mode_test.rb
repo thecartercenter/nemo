@@ -83,6 +83,38 @@ class AdminModeTest < ActionDispatch::IntegrationTest
     assert(q.is_standard?, 'new question should be standard')
   end
 
+  test "creating an option set in admin mode should create a standard option set and options" do
+    login(@admin)
+    post_via_redirect(option_sets_path(:mode => 'admin', :mission_name => nil), {
+      :option_set => {:name => 'Foo',
+        :optionings_attributes => {
+          '0' => {
+            :rank => 1,
+            :option_attributes => {:name_en => 'Yes'}
+          },
+          '1' => {
+            :rank => 2,
+            :option_attributes => {:name_en => 'No'}
+          }
+        }
+      }
+    })
+    os = OptionSet.order('created_at').last
+
+    # make sure it got created correctly
+    assert('Yes', os.options[0].name)
+
+    # make sure mission is nil and is standard
+    assert_nil(os.mission)
+    assert(os.is_standard?, 'new option set should be standard')
+
+    # make sure optionings and options are also ok
+    assert_nil(os.optionings[0].mission)
+    assert(os.optionings[0].is_standard?, 'new optioning should be standard')
+    assert_nil(os.options[0].mission)
+    assert(os.options[0].is_standard?, 'new option should be standard')
+  end
+
   test "adding a question to form should create standard questioning" do
     login(@admin)
     f = FactoryGirl.create(:form, :is_standard => true)

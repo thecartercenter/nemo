@@ -24,8 +24,13 @@ class Sms::Adapters::Adapter
     self.class.service_name
   end
 
-  # Raises an error if no recipients or message empty. Adds adapter name.
-  def prepare_message_for_delivery(message)
+  # delivers a message to one or more recipients
+  # raises an error if no recipients, wrong direction, or message empty
+  # should also raise an error if the provider returns an error code
+  # returns true if all goes well
+  #
+  # message   the message to be sent
+  def deliver(message)
     # apply the adapter name to the message
     message.update_attributes(:adapter_name => service_name)
 
@@ -34,13 +39,9 @@ class Sms::Adapters::Adapter
     raise Sms::Error.new("message body is empty") if message.body.blank?
 
     # save the message now, which sets the sent_at
-    message.save!
+    message.save
 
     deliveries << message
-  end
-
-  def deliver(message)
-    raise NotImplementedError
   end
 
   # recieves one sms messages

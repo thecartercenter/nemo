@@ -54,10 +54,14 @@ class StandardizableFormTest < ActiveSupport::TestCase
     assert_not_equal(f, f2)
     assert_not_equal(f.questionings[0], f2.questionings[0])
     assert_not_equal(f.questionings[0].question, f2.questionings[0].question)
+    assert_not_equal(f.questionings[0].question.option_set, f2.questionings[0].question.option_set)
+    assert_not_equal(f.questionings[0].question.option_set.optionings[0], f2.questionings[0].question.option_set.optionings[0])
+    assert_not_equal(f.questionings[0].question.option_set.optionings[0].option, f2.questionings[0].question.option_set.optionings[0].option)
 
     # but properties should be same
     assert_equal(f.questionings[0].rank, f2.questionings[0].rank)
     assert_equal(f.questionings[0].question.code, f2.questionings[0].question.code)
+    assert_equal(f.questionings[0].question.option_set.optionings[0].option.name, f2.questionings[0].question.option_set.optionings[0].option.name)
   end
 
   test "replicating form with conditions should produce correct new conditions" do
@@ -90,15 +94,15 @@ class StandardizableFormTest < ActiveSupport::TestCase
     # questionings, conditions, and options should be distinct
     assert_not_equal(f.questionings[1], f2.questionings[1])
     assert_not_equal(f.questionings[1].condition, f2.questionings[1].condition)
-    assert_not_equal(f.questionings[0].question.option_set.options[0], f2.questionings[0].question.option_set.options[0])
+    assert_not_equal(f.questionings[0].question.option_set.optionings[0].option, f2.questionings[0].question.option_set.optionings[0].option)
 
     # new condition should point to new questioning
     assert_equal(f2.questionings[1].condition.ref_qing, f2.questionings[0])
 
     # new condition should point to new option
     assert_not_nil(f2.questionings[1].condition.option)
-    assert_not_nil(f2.questionings[0].question.option_set.options[0])
-    assert_equal(f2.questionings[1].condition.option, f2.questionings[0].question.option_set.options[0])
+    assert_not_nil(f2.questionings[0].question.option_set.optionings[0].option)
+    assert_equal(f2.questionings[1].condition.option, f2.questionings[0].question.option_set.optionings[0].option)
   end
 
   test "replicating a form with multiple conditions should also work" do
@@ -123,7 +127,7 @@ class StandardizableFormTest < ActiveSupport::TestCase
     f.questionings.build(:rank => 2, :question => FactoryGirl.create(:question, :code => 'charley', :is_standard => true),
       :condition => Condition.new(:ref_qing => f.questionings[0], :op => 'gt', :value => '1', :is_standard => true))
     f.questionings[1].rank = 3
-    f.save_and_rereplicate!
+    f.save!
 
     # ensure question and condition got added properly on std
     f.reload
@@ -144,7 +148,7 @@ class StandardizableFormTest < ActiveSupport::TestCase
 
     # add condition to standard
     f.questionings[1].condition = FactoryGirl.build(:condition, :ref_qing => f.questionings[0], :op => 'lt', :value => 10)
-    f.save_and_rereplicate!
+    f.save!
 
     f2.reload
 
@@ -169,7 +173,7 @@ class StandardizableFormTest < ActiveSupport::TestCase
 
     # change condition ref_qing
     f.questionings[2].condition.ref_qing = f.questionings[1]
-    f.save_and_rereplicate!
+    f.save!
 
     # ensure change replicated
     f2.reload
@@ -185,7 +189,7 @@ class StandardizableFormTest < ActiveSupport::TestCase
     q = std.questions[0]
     q.qtype_name = 'select_one'
     q.option_set = FactoryGirl.create(:option_set, :is_standard => true)
-    q.save_and_rereplicate!
+    q.save!
 
     # ensure change worked on std
     std.reload
@@ -208,7 +212,7 @@ class StandardizableFormTest < ActiveSupport::TestCase
     # change the first question in std
     q = f.questions[0]
     q.qtype_name = "decimal"
-    q.save_and_rereplicate!
+    q.save!
 
     # ensure question order is still correct
     f.reload
@@ -223,7 +227,7 @@ class StandardizableFormTest < ActiveSupport::TestCase
 
     # use the special destroy_questionings method
     std.destroy_questionings(std.questionings[1])
-    std.save_and_rereplicate!
+    std.save
 
     copy.reload
     assert_equal(2, copy.questionings.size)
@@ -252,7 +256,7 @@ class StandardizableFormTest < ActiveSupport::TestCase
     # remove condition and save the qing. this is how it will happen in the controller.
     std.questionings[2].destroy_condition
     assert_nil(std.questionings[2].condition)
-    std.questionings[2].save_and_rereplicate!
+    std.questionings[2].save!
 
     copy.reload
 
@@ -270,7 +274,7 @@ class StandardizableFormTest < ActiveSupport::TestCase
 
     # add condition to standard, which will get replicated
     std.questionings[1].condition = FactoryGirl.build(:condition, :ref_qing => std.questionings[0], :op => 'lt', :value => 10)
-    std.save_and_rereplicate!
+    std.save!
     assert_not_nil(Questioning.where(:form_id => copy.id).first)
 
     # get ID of copy condition
@@ -279,7 +283,7 @@ class StandardizableFormTest < ActiveSupport::TestCase
     assert_not_nil(copy_cond_id)
 
     # destroy std
-    std.destroy_with_copies
+    std.destroy
 
     # copy and assoc'd questionings and conditions should be gone
     assert(!Form.exists?(copy))

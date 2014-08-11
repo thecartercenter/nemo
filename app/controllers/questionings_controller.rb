@@ -36,7 +36,7 @@ class QuestioningsController < ApplicationController
     authorize!(:update_core, @questioning) if @questioning.core_changed?
     authorize!(:update_core, @questioning.question) if @questioning.question.core_changed?
 
-    if @questioning.save_and_rereplicate
+    if @questioning.save
       set_success_and_redirect(@questioning.question, :to => edit_form_path(@questioning.form))
     else
       prepare_and_render_form

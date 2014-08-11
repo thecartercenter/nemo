@@ -17,7 +17,8 @@ class Sms::Decoder
     # tokenize the message by spaces
     @tokens = @msg.body.split(" ")
 
-    check_for_automated_sender
+    # if the @msg from field has letters in it, reject immediately, as it's a robot
+    raise_decoding_error("user_not_found") if @msg.from =~ /[a-z]/i
 
     # try to get user
     # we do this first because it tells us what language to send errors in (if any)
@@ -304,10 +305,5 @@ class Sms::Decoder
 
       # now we can run the query
       raise_decoding_error("duplicate_submission") if rel.count > 0
-    end
-
-    # Checks if sender looks like a shortcode and raises error if so.
-    def check_for_automated_sender
-      raise_decoding_error("automated_sender") if @msg.from_shortcode?
     end
 end

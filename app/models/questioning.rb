@@ -52,7 +52,7 @@ class Questioning < ActiveRecord::Base
 
   # destroys condition and ensures that the condition param is nulled out
   def destroy_condition
-    condition.destroy_with_copies
+    condition.destroy
     self.condition = nil
   end
 

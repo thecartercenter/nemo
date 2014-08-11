@@ -21,8 +21,8 @@ class Sms::Handler
     # if there is a decoding error, respond accordingly
     rescue Sms::DecodingError
 
-      # If it's an automated sender, send no reply at all
-      if $!.type == "automated_sender"
+      # if it's a user not found and the from number is a string, don't reply at all, b/c it's probably some robot
+      if $!.type == "user_not_found" && sms.from =~ /[a-z]/i
         nil
       else
         msg = t_sms_msg("sms_form.decoding.#{$!.type}", $!.params)
