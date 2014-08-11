@@ -11,6 +11,8 @@ class Question < ActiveRecord::Base
   has_many(:referring_conditions, :through => :questionings)
   has_many(:forms, :through => :questionings)
   has_many(:calculations, :foreign_key => 'question1_id', :inverse_of => :question1)
+  has_many(:taggings, :dependent => :destroy)
+  has_many(:tags, :through => :taggings)
 
   before_validation(:normalize_fields)
 

@@ -91,4 +91,5 @@ group :development, :test do
   gem 'timecop'                      # sets time for testing
   gem 'awesome_print'                # for debugging/console, prints an object nicely
   gem 'assert_difference'            # test assertion
+  gem 'debugger'
 end
