@@ -323,7 +323,7 @@ class Response < ActiveRecord::Base
   end
 
   def check_out!(user = nil)
-    raise ArguementError, "A user is required to checkout a response" unless user
+    raise ArgumentError, "A user is required to checkout a response" unless user
 
     if !checked_out_by_others?(user)
       transaction do
