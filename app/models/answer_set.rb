@@ -10,20 +10,15 @@ class AnswerSet
   delegate :first, to: :answers
     delegate :errors, :choices, :all_choices, :value, :datetime_value, :date_value, :time_value, :response_id, :questioning_id, :relevant, to: :first
 
-  # Builds AnswerSets from submitted answer_set params.
-  def self.from_params(params, options)
-    questionings_by_id = options[:questionings].index_by(&:id)
-
-    params.values.map do |set_params|
-      set_params[:response_id] = options[:response].id
-      answers = if set_params[:answers]
-        answers_params = set_params.delete(:answers)
-        answers_params.values.map.with_index{ |a, i| Answer.new(a.merge(set_params).merge(rank: i + 1)) }
+  # Builds Answer attribute hashes from submitted answer_set params.
+  # Returns an array of Answer attribute hashes.
+  def self.answers_attributes_for(params)
+    params.values.map do |as|
+      if as[:answers]
+        as.delete(:answers).values.map.with_index{ |a, i| a.merge(as).merge(rank: i + 1) }
       else
-        [Answer.new(set_params)]
+        as
       end
-      questioning = questionings_by_id[set_params[:questioning_id].to_i]
-      AnswerSet.new(answers: answers, questioning: questioning)
     end.flatten
   end
 
