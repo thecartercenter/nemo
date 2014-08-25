@@ -86,8 +86,8 @@ describe ResponsesController do
 
   describe 'csv' do
     before do
-      create(:response, :form => @form, :_answers => %w(2 Cat))
-      create(:response, :form => @form, :_answers => %w(15 Dog))
+      create(:response, :form => @form, :_answers => %w(2 Animal))
+      create(:response, :form => @form, :_answers => %w(15 Plant))
     end
 
     it 'should produce valid CSV' do

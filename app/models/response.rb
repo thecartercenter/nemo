@@ -276,24 +276,22 @@ class Response < ActiveRecord::Base
   end
 
   def answer_sets=(params)
-    self.answers_attributes = AnswerSet.answers_attributes_for(params)
-  end
+    @answer_sets = AnswerSet.from_params(params, response: self, questionings: visible_questionings)
 
-  def answers_attributes=(attribs)
     # A function that returns a signature for comparison. Works for either Answer objs or hashes.
     signature_proc = Proc.new{ |a| "#{a[:questioning_id]}--#{a[:rank]}" }
 
     # do a match on current and newer ids with the ID as the comparator
-    answers.compare_by_element(attribs, signature_proc) do |orig, subd|
+    answers.compare_by_element(@answer_sets.map(&:answers).flatten, signature_proc) do |orig, subd|
       # if both exist, update the original
       if orig && subd
-        orig.attributes = subd
+        orig.attributes = subd.attributes
       # if submitted is nil, destroy the original
       elsif subd.nil?
         answers.delete(orig)
       # if original is nil, add the new one to this response's array
       elsif orig.nil?
-        answers.build(subd)
+        answers << subd
       end
     end
   end
