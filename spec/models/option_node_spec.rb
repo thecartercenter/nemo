@@ -229,4 +229,12 @@ describe OptionNode do
       expect(node.child_options.map(&:name)).to eq %w(Animal Plant)
     end
   end
+
+  describe 'options_for_node' do
+    it 'should return correct options for various nodes' do
+      node = create(:option_node_with_great_grandchildren)
+      expect(node.options_for_node([]).map(&:name)).to eq %w(Animal Plant)
+      expect(node.options_for_node([node.c[1].option_id]).map(&:name)).to eq %w(Tree Flower)
+    end
+  end
 end

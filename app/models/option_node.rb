@@ -43,6 +43,7 @@ class OptionNode < ActiveRecord::Base
   # Returns the child options of the node defined by path of option ids.
   # If node at end of path is leaf node, returns [].
   def options_for_node(path)
+    x = find_descendant_by_option_path(path)
     find_descendant_by_option_path(path).try(:child_options) || []
   end
 
@@ -54,7 +55,7 @@ class OptionNode < ActiveRecord::Base
   def find_descendant_by_option_path(path)
     return self if path.empty?
     return nil if path.any?(&:nil?)
-    return nil unless match = children.detect{ |c| c.option_id = path[0] }
+    return nil unless match = children.detect{ |c| c.option_id == path[0] }
     match.find_descendant_by_option_path(path[1..-1])
   end
 
@@ -76,6 +77,10 @@ class OptionNode < ActiveRecord::Base
   # Gets the OptionLevel for this node.
   def level
     is_root? ? nil : option_set.try(:level, depth)
+  end
+
+  def sorted_children
+    children.order('rank')
   end
 
   def options_by_id
@@ -104,7 +109,10 @@ class OptionNode < ActiveRecord::Base
   end
 
   def to_s
-    "Option Node: ID #{id}  Option ID: " + (is_root? ? '[ROOT]' : option_id || '[No option]').to_s + "  System ID: #{object_id}"
+    "Option Node: ID #{id}  Option ID: " +
+    (is_root? ? '[ROOT]' : option_id || '[No option]').to_s +
+    " Option: " + option.try(:name) +
+    "  System ID: #{object_id}"
   end
 
   # returns a string representation of this node and its children, indented by the given amount
@@ -189,9 +197,5 @@ class OptionNode < ActiveRecord::Base
 
     def ensure_no_answers_or_choices
       raise DeletionError.new(:cant_delete_if_has_response) if has_answers?
-    end
-
-    def sorted_children
-      children.order('rank')
     end
 end
