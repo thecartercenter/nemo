@@ -283,7 +283,7 @@ class Response < ActiveRecord::Base
     # A function that returns a signature for comparison. Works for either Answer objs or hashes.
     signature_proc = Proc.new{ |a| "#{a[:questioning_id]}--#{a[:rank]}" }
 
-    # do a match on current and newer ids with the ID as the comparator
+    # Do a match on current and newer ids with the ID as the comparator.
     answers.compare_by_element(attribs, signature_proc) do |orig, subd|
       # if both exist, update the original
       if orig && subd
@@ -410,11 +410,7 @@ class Response < ActiveRecord::Base
     # Builds a hash of questionings to answer sets.
     def answer_sets_by_questioning
       @answer_sets_by_questioning ||= {}.tap do |hash|
-        sorted_answers.group_by(&:questioning).each{ |q, a| hash[q] = AnswerSet.new(questioning: q, answers: a) }
+        answers.group_by(&:questioning).each{ |q, a| hash[q] = AnswerSet.new(questioning: q, answers: a) }
       end
-    end
-
-    def sorted_answers
-      answers.includes(:questioning).order('answers.questioning_id, answers.rank')
     end
 end
