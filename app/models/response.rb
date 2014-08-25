@@ -31,7 +31,7 @@ class Response < ActiveRecord::Base
       :answers => [
         {:choices => :option},
         :option,
-        {:questioning => [:condition, {:question => {:option_set => :options}}]}
+        {:questioning => [:condition, {:question => :option_set}]}
       ]
     }
   ))
