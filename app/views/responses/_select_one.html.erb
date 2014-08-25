@@ -2,7 +2,8 @@
   <% answer_set.answers.each_with_index do |answer, i| %>
     <div>
       <%= answer.level_name %>
-      <%= select_tag("response[answer_sets][#{index}][answers][#{i}][option_id]", options_from_collection_for_select(answer_set.options_for(answer), 'id', 'name'),
+      <%= select_tag("response[answer_sets][#{index}][answers][#{i}][option_id]",
+        options_from_collection_for_select(answer_set.options_for(answer), 'id', 'name', answer.option_id),
         include_blank: true, class: 'form-control') %>
     </div>
   <% end %>
