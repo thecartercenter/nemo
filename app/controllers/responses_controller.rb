@@ -3,10 +3,11 @@ class ResponsesController < ApplicationController
 
   # need to load with associations for show and edit
   before_filter :load_with_associations, :only => [:show, :edit]
-  before_filter :mark_response_as_checked_out, :only => [:edit]
 
   # authorization via CanCan
   load_and_authorize_resource
+
+  before_filter :mark_response_as_checked_out, :only => [:edit]
 
   def index
     # handle different formats

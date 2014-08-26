@@ -99,6 +99,11 @@ module ApplicationHelper
     javascript_tag("$(document).ready(function(){#{content}});")
   end
 
+  # Converts given object to json and runs through html_safe.
+  def json(obj)
+    obj.to_json.html_safe
+  end
+
   # takes an array of keys and a scope and builds an options array (e.g. [["Option 1", "opt1"], ["Option 2", "opt2"], ...])
   def translate_options(keys, scope)
     keys.map{|k| [t(k, :scope => scope), k]}

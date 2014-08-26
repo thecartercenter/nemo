@@ -81,6 +81,17 @@
         // wait to see if it gets reverted, but there doesn't seem to be a way.
         revert: function(){
           self.trigger('change');
+        },
+
+        // Respect the parent_change_allowed callback.
+        isAllowed: function(li, parent) {
+          if (!self.parent_change_allowed) return true;
+
+          var item = li.find('div.inner').data('item');
+          var current_parent = li.parent().closest('li').find('div.inner').data('item') || null;
+          var new_parent = parent ? parent.find('div.inner').data('item') : null;
+
+          return current_parent == new_parent || self.parent_change_allowed(item, current_parent, new_parent);
         }
       });
     }

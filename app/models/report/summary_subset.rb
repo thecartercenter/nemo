@@ -13,7 +13,7 @@ class Report::SummarySubset
     @summaries ||= []
 
     # if all summaries have no items (are empty), set the empty flag
-    @no_data = summaries.all?{|s| s.items.empty?}
+    @no_data = summaries.all?(&:empty?)
   end
 
   def no_data?

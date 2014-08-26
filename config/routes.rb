@@ -89,7 +89,10 @@ ELMO::Application.routes.draw do
     resources :groups
 
     resources :option_sets, :path => 'option-sets' do
-      put 'clone', :on => :member
+      member do
+        get 'options_for_node', :path => 'options-for-node'
+        put 'clone'
+      end
     end
 
     # import routes for standardizeable objects

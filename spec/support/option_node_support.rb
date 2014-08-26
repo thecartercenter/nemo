@@ -200,4 +200,42 @@ module OptionNodeSupport
       { 'option_attribs' => { 'name_translations' => {'en' => 'Oak'} } }
     ]
   }]
+
+  WITH_GREAT_GRANDCHILDREN_ATTRIBS = [{
+    'option_attribs' => { 'name_translations' => {'en' => 'Animal'} },
+    'children_attribs' => [
+      {
+        'option_attribs' => { 'name_translations' => {'en' => 'Vertebrate'} },
+        'children_attribs' => [
+          { 'option_attribs' => { 'name_translations' => {'en' => 'Cat'} } },
+          { 'option_attribs' => { 'name_translations' => {'en' => 'Dog'} } }
+        ]
+      },
+      {
+        'option_attribs' => { 'name_translations' => {'en' => 'Invertebrate'} },
+        'children_attribs' => [
+          { 'option_attribs' => { 'name_translations' => {'en' => 'Lobster'} } },
+          { 'option_attribs' => { 'name_translations' => {'en' => 'Jellyfish'} } }
+        ]
+      }
+    ]
+  }, {
+    'option_attribs' => { 'name_translations' => {'en' => 'Plant'} },
+    'children_attribs' => [
+      {
+        'option_attribs' => { 'name_translations' => {'en' => 'Tree'} },
+        'children_attribs' => [
+          { 'option_attribs' => { 'name_translations' => {'en' => 'Oak'} } },
+          { 'option_attribs' => { 'name_translations' => {'en' => 'Pine'} } }
+        ]
+      },
+      {
+        'option_attribs' => { 'name_translations' => {'en' => 'Flower'} },
+        'children_attribs' => [
+          { 'option_attribs' => { 'name_translations' => {'en' => 'Tulip'} } },
+          { 'option_attribs' => { 'name_translations' => {'en' => 'Daisy'} } }
+        ]
+      }
+    ]
+  }]
 end

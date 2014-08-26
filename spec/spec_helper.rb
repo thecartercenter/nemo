@@ -100,3 +100,8 @@ def get_s(*args)
   get *args
   assert_response(:success)
 end
+
+def post_s(*args)
+  post *args
+  assert_response(:success)
+end

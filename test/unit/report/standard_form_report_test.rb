@@ -75,14 +75,9 @@ class Report::StandardFormReportTest < ActiveSupport::TestCase
     build_form_and_responses
     build_and_run_report
     assert_equal('decimal', @report.subsets[0].summaries[2].qtype.name)
-    assert_equal(@form.questionings[0..2], @report.subsets[0].summaries.map(&:questioning))
-  end
 
-  test "report should skip location questions" do
-    build_form_and_responses
-    build_and_run_report
-    assert_equal('location', @form.questionings[3].qtype_name)
-    assert(!@report.subsets[0].summaries.map(&:questioning).include?(@form.questionings[3]), "summaries should not contain location questions")
+    # We leave out the last questioning on the form since location questions should not be included.
+    assert_equal(@form.questionings[0..3], @report.subsets[0].summaries.map(&:questioning))
   end
 
   test "report should return non-submitting observers" do
@@ -129,7 +124,7 @@ class Report::StandardFormReportTest < ActiveSupport::TestCase
 
   private
     def build_form_and_responses(options = {})
-      @form = FactoryGirl.create(:form, :question_types => %w(integer integer decimal location select_one))
+      @form = FactoryGirl.create(:form, :question_types => %w(integer integer decimal select_one location))
       (options[:response_count] || 5).times do
         FactoryGirl.create(:response, :form => @form, :_answers => [1, 2, 1.5, nil, 'Cat'])
       end

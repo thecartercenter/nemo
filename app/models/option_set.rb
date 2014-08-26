@@ -45,7 +45,7 @@ class OptionSet < ActiveRecord::Base
 
   serialize :level_names, JSON
 
-  delegate :ranks_changed?, :options_added?, :options_removed?, :total_options, :descendants, to: :root_node
+  delegate :ranks_changed?, :options_added?, :options_removed?, :total_options, :descendants, :options_for_node, to: :root_node
 
   # These methods are for the form.
   attr_writer :multi_level
@@ -69,18 +69,19 @@ class OptionSet < ActiveRecord::Base
     @levels ||= multi_level? ? level_names.map{ |n| OptionLevel.new(name_translations: n) } : nil
   end
 
+  def level_count
+    levels.try(:size)
+  end
+
   def multi_level?
     root_node && root_node.has_grandchildren?
   end
+  alias_method :multi_level, :multi_level?
 
-  def multi_level
-    multi_level?
-  end
-
-  # Returns first-level options
-  def options
+  def first_level_options
     root_node.child_options
   end
+  alias_method :options, :first_level_options
 
   # checks if this option set appears in any smsable questionings
   def form_smsable?

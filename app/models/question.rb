@@ -52,7 +52,7 @@ class Question < ActiveRecord::Base
   translates :name, :hint
 
   delegate :smsable?, :has_options?, :to => :qtype
-  delegate :options, :geographic?, :to => :option_set, :allow_nil => true
+  delegate :options, :first_level_options, :geographic?, :multi_level?, :level_count, :to => :option_set, :allow_nil => true
 
   replicable :child_assocs => :option_set, :parent_assoc => :questioning,
     :uniqueness => {:field => :code, :style => :camel_case}, :dont_copy => [:key, :access_level],
@@ -73,8 +73,9 @@ class Question < ActiveRecord::Base
     QuestionType[qtype_name]
   end
 
+  # DEPRECATED: this method should go away later
   def select_options
-    (opt = options) ? opt.collect{|o| [o.name, o.id]} : []
+    (first_level_options || []).map{ |o| [o.name, o.id] }
   end
 
   # gets the number of forms which with this question is directly associated.

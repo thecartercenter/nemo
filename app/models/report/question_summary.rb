@@ -24,6 +24,11 @@ class Report::QuestionSummary
     questioning.qtype
   end
 
+  # A summary is empty if it has no items, or if all items are zero.
+  def empty?
+    items.empty? || items.all?(&:zero?)
+  end
+
   # gets a set of objects that allow this summary to be compared to others for clustering
   def signature
     [display_type, questioning.option_set, headers]

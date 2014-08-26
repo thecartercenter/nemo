@@ -1,9 +1,6 @@
 class Answer < ActiveRecord::Base
   include ActionView::Helpers::NumberHelper
 
-  # a flag set by javascript on the client side indicating whether the answer is relevant based on any conditions
-  attr_writer(:relevant)
-
   belongs_to(:questioning, :inverse_of => :answers)
   belongs_to(:option, :inverse_of => :answers)
   belongs_to(:response, :inverse_of => :answers, :touch => true)
@@ -20,11 +17,13 @@ class Answer < ActiveRecord::Base
   validate(:min_max, :if => ->(a){ a.should_validate?(:min_max) })
   validate(:required, :if => ->(a){ a.should_validate?(:required) })
 
-  delegate :question, :qtype, :rank, :required?, :hidden?, :option_set, :options, :condition, :to => :questioning
+  delegate :question, :qtype, :required?, :hidden?, :option_set, :options, :condition, :to => :questioning
   delegate :name, :hint, :to => :question, :prefix => true
+  delegate :name, to: :level, prefix: true, allow_nil: true
 
   scope :public_access, includes(:questioning => :question).
                         where("questions.access_level = 'inherit'")
+
 
   # creates a new answer from a string from odk
   def self.new_from_str(params)
@@ -75,19 +74,9 @@ class Answer < ActiveRecord::Base
       WHERE a.option_id = '#{option_id}' OR c.option_id = '#{option_id}'").to_a[0][0] > 0
   end
 
-  def should_validate?(field)
-    # don't validate if response says no
-    return false if response && !response.validate_answers?
-
-    case field
-    when :numericality
-      qtype.numeric? && value.present?
-    when :required
-      # don't validate requiredness if response says no
-      !(response && response.incomplete?)
-    else
-      true
-    end
+  # If this is an answer to a multilevel select_one question, returns the OptionLevel, else returns nil.
+  def level
+    option_set.try(:multi_level?) ? option_set.levels[(rank || 1) - 1] : nil
   end
 
   def choice_for(option)
@@ -131,19 +120,6 @@ class Answer < ActiveRecord::Base
     end
   end
 
-  # relevant defaults to true until set otherwise
-  def relevant?
-    @relevant.nil? ? true : @relevant
-  end
-
-  # convert to boolean
-  def relevant=(r)
-    @relevant = (r == "true")
-  end
-
-  # alias
-  def relevant; relevant?; end
-
   # if this answer is for a location question and the value is not blank, returns a two element array representing the
   # lat long. else returns nil
   def location
@@ -168,6 +144,18 @@ class Answer < ActiveRecord::Base
     end
   end
 
+  # relevant defaults to true until set otherwise
+  def relevant?
+    @relevant.nil? ? true : @relevant
+  end
+  alias_method :relevant, :relevant?
+
+  # A flag indicating whether the answer is relevant and should thus be validated.
+  # convert string 'true'/'false' to boolean
+  def relevant=(r)
+    @relevant = r.is_a?(String) ? r == "true" : r
+  end
+
   # checks if answer must be non-empty to be valid
   def required_and_relevant?
     required? && !hidden? && relevant? && qtype.name != "select_multiple"
@@ -183,7 +171,23 @@ class Answer < ActiveRecord::Base
     required_and_relevant? && empty?
   end
 
+  def should_validate?(field)
+    # don't validate if response says no
+    return false if response && !response.validate_answers?
+
+    case field
+    when :numericality
+      qtype.numeric? && value.present?
+    when :required
+      # don't validate requiredness if response says no
+      !(response && response.incomplete?)
+    else
+      true
+    end
+  end
+
   private
+
     def required
       errors.add(:value, :required) if required_but_empty?
     end

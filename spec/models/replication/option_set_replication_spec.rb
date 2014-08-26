@@ -8,7 +8,7 @@ describe OptionSet do
 
   describe 'to_mission' do
     before do
-      @orig = create(:multilevel_option_set, is_standard: true)
+      @orig = create(:option_set, multi_level: true, is_standard: true)
       @copy = @orig.replicate(mode: :to_mission, dest_mission: @mission2)
     end
 
@@ -63,7 +63,7 @@ describe OptionSet do
 
   describe 'promote' do
     before do
-      @orig = create(:multilevel_option_set, mission: @mission1)
+      @orig = create(:option_set, multi_level: true, mission: @mission1)
       @copy = @orig.replicate(mode: :promote, retain_link_on_promote: true)
     end
 
@@ -82,7 +82,7 @@ describe OptionSet do
 
   describe 'clone' do
     before do
-      @orig = create(:multilevel_option_set, mission: @mission1)
+      @orig = create(:option_set, multi_level: true, mission: @mission1)
       @copy = @orig.replicate(mode: :clone)
     end
 

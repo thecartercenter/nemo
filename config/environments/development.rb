@@ -37,7 +37,7 @@ ELMO::Application.configure do
   # Expands the lines which load the assets
   config.assets.debug = false
 
-  config.cache_store = :dalli_store
+  config.cache_store = :dalli_store, nil, { value_max_bytes: 2.megabytes }
 
   # bullet gem for query optimization
   # config.after_initialize do

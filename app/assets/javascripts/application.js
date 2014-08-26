@@ -9,7 +9,7 @@
 //
 // WARNING: THE FIRST BLANK LINE MARKS THE END OF WHAT'S TO BE PROCESSED, ANY BLANK LINE SHOULD
 // GO AFTER THE REQUIRES BELOW.
-//
+
 //= require core_ext/array
 //= require core_ext/string
 //= require core_ext/object
@@ -21,6 +21,11 @@
 //= require jquery.spin
 //= require core_ext/jquery_ext
 //= require common
+//= require underscore
+//= require backbone
+//= require backbone_rails_sync
+//= require backbone_datalink
+//= require backbone/elmo/
 //= require sassafras/utils
 //= require i18n
 //= require i18n/translations

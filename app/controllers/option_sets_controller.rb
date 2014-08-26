@@ -5,6 +5,7 @@ class OptionSetsController < ApplicationController
 
   # authorization via cancan
   load_and_authorize_resource
+  skip_authorization_check :only => :options_for_node
 
   def index
     # get the total entries before adding the big joins
@@ -71,6 +72,12 @@ class OptionSetsController < ApplicationController
   def destroy
     destroy_and_handle_errors(@option_set)
     redirect_to(index_url_with_page_num)
+  end
+
+  # Returns the options available at the node in the option tree specified by the given array of option IDs
+  def options_for_node
+    @options = @option_set.options_for_node(params[:ids].map(&:to_i))
+    render(layout: false)
   end
 
   # makes a copy of the option set that can be edited without affecting the original

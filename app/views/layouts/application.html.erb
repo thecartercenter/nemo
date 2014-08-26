@@ -104,13 +104,13 @@
             <% if can?(:create, Response) %>
               <%# submit response dropdown %>
               <li class="dropdown">
-                  <a href="#" data-target="#" class="dropdown-toggle" data-toggle="dropdown">
-                    <i class="fa fa-share-square-o"></i><%= t('common.submit') %><b class="caret"></b>
-                  </a>
-                  <%# empty until ajax call %>
-                  <ul class="dropdown-menu" role="menu">
-                    <%= loading_indicator() %>
-                  </ul>
+                <a href="#" data-target="#" class="dropdown-toggle" data-toggle="dropdown">
+                  <i class="fa fa-share-square-o"></i><%= t('common.submit') %><b class="caret"></b>
+                </a>
+                <%# empty until ajax call %>
+                <ul class="dropdown-menu" role="menu">
+                  <li><%= loading_indicator %></li>
+                </ul>
               </li>
             <%# else mission is locked %>
             <% else %>
@@ -175,6 +175,11 @@
     <%= t("layout.system_version") %>: <%= configatron.system_version %> &nbsp;|&nbsp;
 
     <%= link_to(t('layout.about'), 'http://getelmo.org') %>
+  </div>
+
+  <div id="glb-load-ind">
+    <%= image_tag('glb-load-ind.gif') %>
+    <%= t('layout.loading') %>
   </div>
 
   <%# insert any audio objects at the end %>

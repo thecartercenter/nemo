@@ -70,6 +70,8 @@ gem 'spinjs-rails'
 # tree data structure
 gem 'ancestry', '~> 2.0'
 
+gem 'rails-backbone', github: 'codebrew/backbone-rails'
+
 group :development do
   gem 'rails-erd'                     # generat with:  DIAGRAM=true rake db:migrate
   gem 'capistrano', '~> 2.15.4'       # deployment
@@ -87,6 +89,7 @@ group :development, :test do
   gem 'mocha'                        # mocking/stubbing
   gem 'capybara'                     # acceptance tests
   gem 'capybara-webkit'              # for testing js
+  gem 'selenium-webdriver'
   gem 'database_cleaner'             # cleans database for testing
   gem 'timecop'                      # sets time for testing
   gem 'awesome_print'                # for debugging/console, prints an object nicely

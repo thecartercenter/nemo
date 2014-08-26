@@ -1,0 +1,23 @@
+div#glb-load-ind {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 400px;
+  height: 68px;
+  margin-top: -34px;
+  margin-left: -200px;
+  background-color: rgba(0,0,0,0.2);
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  text-align: center;
+  padding-top: 10px;
+  font-size: 16px;
+
+  img {
+    display: block;
+    margin: 5px auto;
+    margin-bottom: 5px;
+  }
+}
