@@ -111,7 +111,7 @@ class OptionNode < ActiveRecord::Base
   def to_s
     "Option Node: ID #{id}  Option ID: " +
     (is_root? ? '[ROOT]' : option_id || '[No option]').to_s +
-    " Option: " + option.try(:name) +
+    " Option: #{option.try(:name)}"
     "  System ID: #{object_id}"
   end
 
