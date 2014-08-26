@@ -19,6 +19,7 @@ class Response < ActiveRecord::Base
   # we turn off validate above and do it here so we can control the message and have only one message
   # regardless of how many answer errors there are
   validates(:user, :presence => true)
+  validate(:no_missing_answers)
 
   default_scope(includes(:form, :user).order("responses.created_at DESC"))
   scope(:unreviewed, where(:reviewed => false))
@@ -302,6 +303,16 @@ class Response < ActiveRecord::Base
     (@answers_by_question ||= answers.index_by(&:question))[question]
   end
 
+  def answer_for_qing(qing)
+    (@answers_by_qing ||= answers.index_by(&:questioning))[qing]
+  end
+
+  # Returns an array of required questionings for which answers are missing.
+  # Used in cases other than the web form where answer objects may not be created for missing answers.
+  def missing_answers
+    @missing_answers ||= visible_questionings.select{ |qing| qing.required? && answer_for_qing(qing).nil? }
+  end
+
   # if this response contains location questions, returns the gps location (as a 2 element array)
   # of the first such question on the form, else returns nil
   def location
@@ -375,6 +386,10 @@ class Response < ActiveRecord::Base
         :answers, :questionings, :questions, :option_sets, :options, :choices]))
 
       rel.to_sql
+    end
+
+    def no_missing_answers
+      errors.add(:base, :missing_answers) unless missing_answers.empty? || incomplete?
     end
 
     # Checks if form ID and version were given, if form exists, and if version is correct

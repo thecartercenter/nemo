@@ -5,13 +5,13 @@ describe Response do
     before do
       @response = Response.new
       @q1, @q2 = double(level_count: 1), double(level_count: 3)
-      @sorted_answers = [ # These are in order because we're not testing ARs ordering capability.
+      @answers = [
         double(questioning: @q1, option_id: 10),
         double(questioning: @q2, rank: 1, option_id: 11),
         double(questioning: @q2, rank: 2, option_id: 12),
         double(questioning: @q2, rank: 3, option_id: 13)
       ]
-      allow(@response).to receive(:sorted_answers).and_return(@sorted_answers)
+      allow(@response).to receive(:answers).and_return(@answers)
       allow(@response).to receive(:visible_questionings).and_return([@q1, @q2])
     end
 
@@ -23,7 +23,7 @@ describe Response do
 
     context 'with missing answer for multilevel question' do
       before do
-        @sorted_answers.slice!(1,3)
+        @answers.slice!(1,3)
       end
 
       it 'should build new answers' do
