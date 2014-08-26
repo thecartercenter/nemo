@@ -3,7 +3,7 @@
 <% case type = answer_set.qtype.name
    when 'select_one' %>
 
-  <%#= content_tag(:div, answer_set.option.try(:name), :class => 'ro-val', :'data-val' => answer_set.option_id) %>
+  <%= render('select_one', answer_set: answer_set) %>
 
 <% when 'select_multiple' %>
 
