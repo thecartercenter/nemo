@@ -5,7 +5,7 @@ FactoryGirl.define do
       use_multilevel_option_set false
     end
 
-    code {"q#{rand(10000000)}"}
+    sequence(:code) { |n| "Question#{n}" }
     qtype_name 'integer'
     name 'the question'
     hint 'some info about the question'

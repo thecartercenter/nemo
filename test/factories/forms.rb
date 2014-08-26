@@ -9,8 +9,7 @@ FactoryGirl.define do
     end
 
     mission { is_standard ? nil : get_mission }
-
-    name {"some form #{rand(1000000)}"}
+    sequence(:name) { |n| "Sample Form #{n}" }
 
     questionings do
       found_select = false
@@ -33,6 +32,21 @@ FactoryGirl.define do
           :mission => mission,
           :form => nil, # Will be filled in when saved
           :question => FactoryGirl.build(:question, question_attribs))
+      end
+    end
+
+    # A form with different question types.
+    factory :sample_form do
+      questionings do
+        [
+          # Single level select_one question.
+          build(:questioning, mission: mission, form: nil,
+            question: build(:question, mission: mission, qtype_name: 'select_one', option_set: build(:option_set))),
+
+          # Multilevel select_one question.
+          build(:questioning, mission: mission, form: nil,
+            question: build(:question, mission: mission, qtype_name: 'select_one', option_set: build(:option_set, multi_level: true)))
+        ]
       end
     end
   end
