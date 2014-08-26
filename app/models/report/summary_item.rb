@@ -6,6 +6,10 @@ class Report::SummaryItem
     attribs.each{|k,v| instance_variable_set("@#{k}", v)}
   end
 
+  def zero?
+    count == 0
+  end
+
   def as_json(options = {})
     super(:only => [:qtype_name, :stat, :text, :count, :pct, :response_id, :created_at, :submitter_name])
   end
