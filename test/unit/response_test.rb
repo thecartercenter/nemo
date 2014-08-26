@@ -35,7 +35,7 @@ class ResponseTest < ActiveSupport::TestCase
     form.questionings.first.required = true
     form.publish!
 
-    invalid_response = FactoryGirl.build(:response, :user => @user, :form => form)
+    invalid_response = FactoryGirl.build(:response, user: @user, form: form, _answers: [''])
     assert_equal(false, invalid_response.valid?)
     assert_raise ActiveRecord::RecordInvalid do
       invalid_response.save!
