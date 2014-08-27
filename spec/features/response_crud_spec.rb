@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-feature 'response crud', js: true, driver: :selenium do
+feature 'response crud', js: true do
   before do
     @user = create(:user)
     @form = create(:sample_form)
