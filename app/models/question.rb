@@ -51,8 +51,8 @@ class Question < ActiveRecord::Base
 
   translates :name, :hint
 
-  delegate :smsable?, :has_options?, :to => :qtype
-  delegate :options, :first_level_options, :geographic?, :multi_level?, :level_count, :to => :option_set, :allow_nil => true
+  delegate :smsable?, :has_options?, :odk_tag, :odk_name, :to => :qtype
+  delegate :options, :first_level_options, :geographic?, :multi_level?, :level_count, :levels, :to => :option_set, :allow_nil => true
 
   replicable :child_assocs => :option_set, :parent_assoc => :questioning,
     :uniqueness => {:field => :code, :style => :camel_case}, :dont_copy => [:key, :access_level],
@@ -66,6 +66,14 @@ class Question < ActiveRecord::Base
   # returns N questions marked as key questions, sorted by the number of forms they appear in
   def self.key(n)
     where(:key => true).all.sort_by{|q| q.questionings.size}[0...n]
+  end
+
+  def subquestions
+    @subquestions ||= if multi_level?
+      levels.each_with_index.map{ |l, i| Subquestion.new(question: self, level: l, rank: i + 1) }
+    else
+      [Subquestion.new(question: self)]
+    end
   end
 
   # returns the question type object associated with this question

@@ -35,6 +35,10 @@ class OptionNode < ActiveRecord::Base
     descendants(at_depth: 2).any?
   end
 
+  def all_options
+    Option.where(id: descendants.map(&:option_id))
+  end
+
   # Returns options of children, ordered by rank.
   def child_options
     @child_options ||= sorted_children.includes(:option).map(&:option)
