@@ -45,7 +45,11 @@ FactoryGirl.define do
 
           # Multilevel select_one question.
           build(:questioning, mission: mission, form: nil,
-            question: build(:question, mission: mission, qtype_name: 'select_one', option_set: build(:option_set, multi_level: true)))
+            question: build(:question, mission: mission, qtype_name: 'select_one', option_set: build(:option_set, multi_level: true))),
+
+          # Integer question.
+          build(:questioning, mission: mission, form: nil,
+            question: build(:question, mission: mission, qtype_name: 'integer'))
         ]
       end
     end
