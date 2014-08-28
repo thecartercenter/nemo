@@ -36,20 +36,25 @@ FactoryGirl.define do
     end
 
     # A form with different question types.
+    # We hardcode names to make expectations easier, since we assume no more than one sample form per test.
     factory :sample_form do
+      name 'Sample Form'
       questionings do
         [
           # Single level select_one question.
           build(:questioning, mission: mission, form: nil,
-            question: build(:question, mission: mission, qtype_name: 'select_one', option_set: build(:option_set))),
+            question: build(:question, mission: mission, name: 'Question 1', hint: 'Hint 1',
+              qtype_name: 'select_one', option_set: build(:option_set, name: 'Set 1'))),
 
           # Multilevel select_one question.
           build(:questioning, mission: mission, form: nil,
-            question: build(:question, mission: mission, qtype_name: 'select_one', option_set: build(:option_set, multi_level: true))),
+            question: build(:question, mission: mission, name: 'Question 2', hint: 'Hint 2',
+              qtype_name: 'select_one', option_set: build(:option_set, name: 'Set 2', multi_level: true))),
 
           # Integer question.
           build(:questioning, mission: mission, form: nil,
-            question: build(:question, mission: mission, qtype_name: 'integer'))
+            question: build(:question, mission: mission, name: 'Question 3', hint: 'Hint 3',
+              qtype_name: 'integer'))
         ]
       end
     end

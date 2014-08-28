@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'xml'
 
-describe 'form rendering for odk' do
+describe 'form rendering for odk', clean_with_truncation: true do
   before do
     @user = create(:user)
     @form = create(:sample_form)
