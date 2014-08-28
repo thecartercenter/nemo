@@ -7,8 +7,8 @@ FactoryGirl.define do
 
     sequence(:code) { |n| "Question#{n}" }
     qtype_name 'integer'
-    name 'the question'
-    hint 'some info about the question'
+    sequence(:name) { |n| "Question Title #{n}" }
+    sequence(:hint) { |n| "Question Hint #{n}" }
     mission { is_standard ? nil : get_mission }
 
     option_set do

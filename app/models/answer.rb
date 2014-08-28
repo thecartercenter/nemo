@@ -18,40 +18,12 @@ class Answer < ActiveRecord::Base
   validate(:required, :if => ->(a){ a.should_validate?(:required) })
 
   delegate :question, :qtype, :required?, :hidden?, :option_set, :options, :condition, :to => :questioning
-  delegate :name, :hint, :to => :question, :prefix => true
+    delegate :name, :hint, :to => :question, :prefix => true
   delegate :name, to: :level, prefix: true, allow_nil: true
 
   scope :public_access, includes(:questioning => :question).
                         where("questions.access_level = 'inherit'")
 
-
-  # creates a new answer from a string from odk
-  def self.new_from_str(params)
-    str = params.delete(:str)
-    ans = new(params)
-
-    # if there was no answer to this question (in the case of a out of sync form) just leave it blank
-    return ans if str.nil?
-
-    # set the attributes based on the question type
-    if ans.qtype.name == "select_one"
-      ans.option_id = str.to_i
-    elsif ans.qtype.name == "select_multiple"
-      str.split(" ").each{|oid| ans.choices.build(:option_id => oid.to_i)}
-    elsif ans.qtype.temporal?
-      # parse the string into a time
-      val = Time.zone.parse(str)
-
-      # convert the parsed time to the appropriate database format unless question is timezone sensitive
-      val = val.to_s(:"db_#{ans.qtype.name}") unless ans.qtype.has_timezone?
-
-      # assign the value
-      ans.send("#{ans.qtype.name}_value=", val)
-    else
-      ans.value = str
-    end
-    ans
-  end
 
   # gets all location answers for the given mission
   # returns only the response ID and the answer value
@@ -72,6 +44,29 @@ class Answer < ActiveRecord::Base
   def self.any_for_option?(option_id)
     connection.execute("SELECT COUNT(*) FROM answers a LEFT OUTER JOIN choices c ON c.answer_id = a.id
       WHERE a.option_id = '#{option_id}' OR c.option_id = '#{option_id}'").to_a[0][0] > 0
+  end
+
+  # Populates answer from odk-like string value.
+  def populate_from_string(str)
+    return if str.nil?
+
+    if qtype.name == "select_one"
+      self.option_id = str.to_i
+
+    elsif qtype.name == "select_multiple"
+      str.split(' ').each{ |oid| choices.build(option_id: oid.to_i) }
+
+    elsif qtype.temporal?
+      val = Time.zone.parse(str)
+
+      # Convert the parsed time to the appropriate database format unless question is timezone sensitive
+      val = val.to_s(:"db_#{qtype.name}") unless qtype.has_timezone?
+
+      self.send("#{qtype.name}_value=", val)
+
+    else
+      self.value = str
+    end
   end
 
   # If this is an answer to a multilevel select_one question, returns the OptionLevel, else returns nil.
@@ -156,15 +151,22 @@ class Answer < ActiveRecord::Base
     @relevant = r.is_a?(String) ? r == "true" : r
   end
 
-  # checks if answer must be non-empty to be valid
+  # Checks if answer must be non-empty to be valid.
+  # Non-first-rank answers are currently not required even if their questioning is required (i.e. partial answers allowed).
   def required_and_relevant?
-    required? && !hidden? && relevant? && qtype.name != "select_multiple"
+    required? && !hidden? && relevant? && first_rank? && qtype.name != "select_multiple"
+  end
+
+  # Whether this Answer is the first in its set (i.e. rank is nil or 1)
+  def first_rank?
+    rank.nil? || rank == 1
   end
 
   # check various fields for blankness
   def empty?
     value.blank? && time_value.blank? && date_value.blank? && datetime_value.blank? && option_id.nil?
   end
+  alias_method :blank?, :empty?
 
   # checks if answer is required and relevant but also empty
   def required_but_empty?

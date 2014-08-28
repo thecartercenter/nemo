@@ -71,15 +71,6 @@ module FormsHelper
     end
   end
 
-  # given a Questioning object, builds an odk <input> tag
-  # calls the provided block to get the tag content
-  def odk_input_tag(qing, &block)
-    opts = {}
-    opts[:ref] = "/data/#{qing.question.odk_code}"
-    opts[:rows] = 5 if qing.question.qtype.name == "long_text"
-    content_tag(qing.question.qtype.odk_tag, opts, &block)
-  end
-
   # returns a set of divs making up an answer space for the given text for use in the sms guide
   def answer_space(text, options = {})
     # default to showing the spc glyph

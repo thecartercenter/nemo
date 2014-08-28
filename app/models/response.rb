@@ -408,13 +408,15 @@ class Response < ActiveRecord::Base
       raise FormVersionError.new("form version is outdated") if form.current_version.sequence > params[:version].to_i
     end
 
+    # Populates response given a hash of odk-style question codes (e.g. q5, q7_1) to string values.
     def populate_from_hash(hash)
       form.visible_questionings.each do |qing|
-        answer = Answer.new_from_str(:str => hash[qing.question.odk_code], :questioning => qing)
-        self.answers << answer
-
-        # Set incomplete flag if required but empty.
-        self.incomplete = true if answer.required_but_empty?
+        qing.subquestions.each do |subq|
+          answer = Answer.new(questioning: qing, rank: subq.rank)
+          answer.populate_from_string(hash[subq.odk_code])
+          self.answers << answer
+          self.incomplete = true if answer.required_but_empty?
+        end
       end
     end
 

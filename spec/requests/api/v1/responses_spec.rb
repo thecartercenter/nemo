@@ -43,7 +43,7 @@ describe "responses" do
 
     it "should contain two questions" do
       expect(@answers_array.first[:answers].first[:question]).to eql @a1.question.name
-      expect(@answers_array.first[:answers].first[:question]).to eql @a2.question.name
+      expect(@answers_array.first[:answers].last[:question]).to eql @a2.question.name
     end
 
     it "should contain two answers" do

@@ -18,7 +18,7 @@ class Questioning < ActiveRecord::Base
   accepts_nested_attributes_for(:condition)
 
   delegate :name, :code, :code=, :level_count, :multi_level?, :option_set, :option_set=, :option_set_id, :option_set_id=, :qtype_name, :qtype_name=, :qtype,
-    :has_options?, :options, :select_options, :odk_code, :odk_constraint, :to => :question
+    :has_options?, :options, :select_options, :odk_code, :odk_constraint, :subquestions, :to => :question
   delegate :published?, :to => :form
   delegate :smsable?, :to => :form, :prefix => true
   delegate :verify_ordering, :to => :condition, :prefix => true, :allow_nil => true

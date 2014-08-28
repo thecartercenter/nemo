@@ -15,7 +15,9 @@
 
           <%# regular question nodes %>
           <% @form.visible_questionings.each do |q| %>
-            <%= tag(q.question.odk_code) %>
+            <% q.subquestions.each do |subq| %>
+              <%= tag(subq.odk_code) %>
+            <% end %>
           <% end %>
 
           <%# incomplete response question nodes %>
@@ -34,22 +36,32 @@
         <instance id="commcaresession" src="jr://instance/session"/>
       <% end %>
 
+      <instance id="multi_level_options">
+        <% @form.option_sets.select(&:multi_level?).each do |set| %>
+          <%= content_tag("set#{set.id}", option_node_as_xml(set.root_node)) %>
+        <% end %>
+      </instance>
+
       <itext>
         <% configatron.preferred_locales.each do |lang| %>
           <translation lang="<%= @style == 'commcare' ? lang : language_name(lang) %>">
 
-            <%# regular question translations %>
+            <%# Regular question translations %>
             <% @form.visible_questionings.each do |q| %>
-              <text id="<%= q.question.odk_code %>:label">
-                <value><%= q.question.name(lang, :strict => false) %></value>
-              </text>
-              <% unless @style == 'commcare' %>
-                <text id="<%= q.question.odk_code %>:hint">
-                  <value><%= q.question.hint(lang, :strict => false) %></value>
+              <% q.subquestions.each do |subq| %>
+                <text id="<%= subq.odk_code %>:label">
+                  <value><%= subq.name(lang, :strict => false) %></value>
                 </text>
+                <% unless @style == 'commcare' %>
+                  <text id="<%= subq.odk_code %>:hint">
+                    <value><%= subq.hint(lang, :strict => false) %></value>
+                  </text>
+                <% end %>
               <% end %>
             <% end %>
-            <% @form.option_sets.collect{|set| set.options}.flatten.uniq{|o| o.id}.each do |opt| %>
+
+            <%# Option translations %>
+            <% @form.option_sets.map(&:all_options).flatten.uniq(&:id).each do |opt| %>
               <text id="option<%= opt.id %>">
                 <value><%= opt.name(lang, :strict => false) %></value>
               </text>
@@ -81,8 +93,10 @@
       </itext>
 
       <%# regualar question bindings %>
-      <% @form.visible_questionings.each do |q| %>
-        <%= question_binding(@form, q) %>
+      <% @form.visible_questionings.each do |qing| %>
+        <% qing.subquestions.each do |subq| %>
+          <%= question_binding(@form, qing, subq) %>
+        <% end %>
       <% end %>
 
       <%# incomplete response question bindings %>
@@ -99,20 +113,30 @@
   <h:body>
 
     <%# regular question form controls %>
-    <% @form.visible_questionings.each do |q| %>
-      <% next if q.question.qtype.odk_tag.nil? %>
-      <%= odk_input_tag(q) do %>
-        <label ref="jr:itext('<%= q.question.odk_code %>:label')"/>
-        <% unless @style == 'commcare' %>
-          <hint ref="jr:itext('<%= q.question.odk_code %>:hint')"/>
-        <% end %>
-        <% if set = q.question.option_set %>
-          <% set.options.each do |opt| %>
-            <item>
-              <label ref="jr:itext('option<%= opt.id %>')"/>
-              <value><%= opt.id %></value>
-            </item>
+    <% @form.visible_questionings.each do |qing| %>
+      <% qing.subquestions.each do |subq| %>
+        <% next if subq.odk_tag.nil? %>
+        <%= odk_input_tag(subq) do %>
+          <label ref="jr:itext('<%= subq.odk_code %>:label')"/>
+          <% unless @style == 'commcare' %>
+            <hint ref="jr:itext('<%= subq.odk_code %>:hint')"/>
           <% end %>
+
+          <%# OptionSet stuff %>
+          <% if subq.multi_level? %>
+            <itemset nodeset="<%= multi_level_option_nodeset_ref(qing, subq) %>">
+              <label ref="jr:itext(key)"/>
+              <value ref="value"/>
+            </itemset>
+          <% elsif set = subq.option_set %>
+            <% set.options.each do |opt| %>
+              <item>
+                <label ref="jr:itext('option<%= opt.id %>')"/>
+                <value><%= opt.id %></value>
+              </item>
+            <% end %>
+          <% end %>
+
         <% end %>
       <% end %>
     <% end %>
