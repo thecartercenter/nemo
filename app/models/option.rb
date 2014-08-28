@@ -93,9 +93,9 @@ class Option < ActiveRecord::Base
   end
 
   private
-    # checks that all name fields have lengths at most 30 chars
+    # Checks that all name fields don't exceed max length.
     def name_lengths
-      errors.add(:base, :names_too_long) if name_translations && name_translations.detect{|l,t| !t.nil? && t.size > 30}
+      errors.add(:base, :names_too_long) if name_translations && name_translations.any?{ |l,t| t.present? && t.size > 45 }
     end
 
     # invalidate the mission option cache after save, destroy
