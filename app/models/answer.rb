@@ -156,9 +156,15 @@ class Answer < ActiveRecord::Base
     @relevant = r.is_a?(String) ? r == "true" : r
   end
 
-  # checks if answer must be non-empty to be valid
+  # Checks if answer must be non-empty to be valid.
+  # Non-first-rank answers are currently not required even if their questioning is required (i.e. partial answers allowed).
   def required_and_relevant?
-    required? && !hidden? && relevant? && qtype.name != "select_multiple"
+    required? && !hidden? && relevant? && first_rank? && qtype.name != "select_multiple"
+  end
+
+  # Whether this Answer is the first in its set (i.e. rank is nil or 1)
+  def first_rank?
+    rank.nil? || rank == 1
   end
 
   # check various fields for blankness
