@@ -16,6 +16,11 @@ class Subquestion
     multi_level? ? "#{base} - #{level.name}" : base
   end
 
+  # Whether this Subquestion is the first in its set (i.e. rank is nil or 1)
+  def first_rank?
+    rank.nil? || rank == 1
+  end
+
   def method_missing(*args)
     question.send(*args)
   end

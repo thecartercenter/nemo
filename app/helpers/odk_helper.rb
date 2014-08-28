@@ -23,7 +23,7 @@ module OdkHelper
     tag("bind", {
       'nodeset' => "/data/#{subq.odk_code}",
       'type' => subq.odk_name,
-      '_required' => qing.required? ? required_value(form) : nil,
+      '_required' => qing.required? && subq.first_rank? ? required_value(form) : nil,
       'relevant' => qing.has_condition? ? qing.condition.to_odk : nil,
       'constraint' => subq.odk_constraint,
       'jr:constraintMsg' => subq.min_max_error_msg,
