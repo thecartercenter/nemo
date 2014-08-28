@@ -28,6 +28,11 @@ class AnswerSet
     ensure_answers
   end
 
+  # True if all answers are blank.
+  def blank?
+    answers.all?(&:blank?)
+  end
+
   # Returns the available Options for the given answer.
   # If the answer's rank is > 1 and the answer before it is currently nil, returns [].
   def options_for(answer)

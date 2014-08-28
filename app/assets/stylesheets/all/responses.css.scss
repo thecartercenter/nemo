@@ -87,6 +87,11 @@ form.response_form {
 
     .option-name {
       margin-bottom: 5px;
+
+      i { /* For blank answers */
+        font-style: normal;
+        color: #ccc;
+      }
     }
 
     > div:last-child .option-name {

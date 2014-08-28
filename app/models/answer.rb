@@ -171,6 +171,7 @@ class Answer < ActiveRecord::Base
   def empty?
     value.blank? && time_value.blank? && date_value.blank? && datetime_value.blank? && option_id.nil?
   end
+  alias_method :blank?, :empty?
 
   # checks if answer is required and relevant but also empty
   def required_but_empty?
