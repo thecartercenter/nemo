@@ -92,7 +92,6 @@ FOREIGN_KEYS = {
 
   'report_reports' => [
     {col: 'mission_id'},
-    {col: 'option_set_id'},
     {col: 'form_id'},
     {col: 'disagg_qing_id', ref_tbl: 'questionings'}
   ],

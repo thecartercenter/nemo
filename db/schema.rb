@@ -11,14 +11,142 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140805172717) do
+ActiveRecord::Schema.define(:version => 20140903170337) do
+
+  create_table "__conditions", :id => false, :force => true do |t|
+    t.integer  "id",             :limit => 8, :default => 0,     :null => false
+    t.integer  "questioning_id", :limit => 8
+    t.integer  "ref_qing_id",    :limit => 8
+    t.string   "op"
+    t.string   "value"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "option_id",      :limit => 8
+    t.boolean  "is_standard",                 :default => false
+    t.integer  "standard_id"
+    t.integer  "mission_id",     :limit => 8
+  end
+
+  create_table "__form_versions", :id => false, :force => true do |t|
+    t.integer  "id",         :limit => 8, :default => 0,    :null => false
+    t.integer  "form_id",    :limit => 8
+    t.integer  "sequence",                :default => 1
+    t.string   "code"
+    t.boolean  "is_current",              :default => true
+    t.datetime "created_at",                                :null => false
+    t.datetime "updated_at",                                :null => false
+  end
+
+  create_table "__forms", :id => false, :force => true do |t|
+    t.integer  "id",                 :limit => 8, :default => 0,         :null => false
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.boolean  "published",                       :default => false
+    t.integer  "downloads"
+    t.integer  "responses_count",                 :default => 0
+    t.integer  "mission_id",         :limit => 8
+    t.integer  "current_version_id", :limit => 8
+    t.boolean  "upgrade_needed",                  :default => false
+    t.boolean  "smsable",                         :default => false
+    t.boolean  "is_standard",                     :default => false
+    t.integer  "standard_id",        :limit => 8
+    t.boolean  "allow_incomplete",                :default => false,     :null => false
+    t.string   "access_level",                    :default => "private", :null => false
+  end
+
+  create_table "__missions", :id => false, :force => true do |t|
+    t.integer  "id",           :limit => 8, :default => 0,     :null => false
+    t.string   "name"
+    t.string   "compact_name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.boolean  "locked",                    :default => false, :null => false
+  end
+
+  create_table "__option_nodes", :id => false, :force => true do |t|
+    t.integer  "id",             :limit => 8, :default => 0,     :null => false
+    t.string   "ancestry"
+    t.integer  "option_set_id",  :limit => 8
+    t.integer  "option_id",      :limit => 8
+    t.integer  "rank",                        :default => 1,     :null => false
+    t.datetime "created_at",                                     :null => false
+    t.datetime "updated_at",                                     :null => false
+    t.integer  "mission_id",     :limit => 8
+    t.integer  "standard_id",    :limit => 8
+    t.boolean  "is_standard",                 :default => false, :null => false
+    t.integer  "ancestry_depth",              :default => 0
+  end
+
+  create_table "__option_sets", :id => false, :force => true do |t|
+    t.integer  "id",           :limit => 8, :default => 0,     :null => false
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "mission_id",   :limit => 8
+    t.boolean  "is_standard",               :default => false
+    t.integer  "standard_id",  :limit => 8
+    t.boolean  "geographic",                :default => false, :null => false
+    t.integer  "root_node_id", :limit => 8
+    t.text     "level_names"
+  end
+
+  create_table "__options", :id => false, :force => true do |t|
+    t.integer  "id",                :limit => 8, :default => 0,     :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "mission_id",        :limit => 8
+    t.string   "_name"
+    t.text     "_hint"
+    t.text     "name_translations"
+    t.text     "hint_translations"
+    t.boolean  "is_standard",                    :default => false
+    t.integer  "standard_id",       :limit => 8
+    t.text     "recent_changes"
+  end
+
+  create_table "__questionings", :id => false, :force => true do |t|
+    t.integer  "id",          :limit => 8, :default => 0,     :null => false
+    t.integer  "question_id", :limit => 8
+    t.integer  "form_id",     :limit => 8
+    t.integer  "rank"
+    t.boolean  "required",                 :default => false
+    t.boolean  "hidden",                   :default => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.boolean  "is_standard",              :default => false
+    t.integer  "standard_id", :limit => 8
+    t.integer  "mission_id",  :limit => 8
+  end
+
+  create_table "__questions", :id => false, :force => true do |t|
+    t.integer  "id",                :limit => 8,                                 :default => 0,         :null => false
+    t.string   "code"
+    t.integer  "option_set_id",     :limit => 8
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.decimal  "minimum",                        :precision => 15, :scale => 10
+    t.decimal  "maximum",                        :precision => 15, :scale => 10
+    t.boolean  "maxstrictly"
+    t.boolean  "minstrictly"
+    t.integer  "mission_id",        :limit => 8
+    t.string   "qtype_name"
+    t.text     "_name"
+    t.text     "_hint"
+    t.text     "name_translations"
+    t.text     "hint_translations"
+    t.boolean  "key",                                                            :default => false
+    t.boolean  "is_standard",                                                    :default => false
+    t.integer  "standard_id",       :limit => 8
+    t.string   "access_level",                                                   :default => "inherit", :null => false
+  end
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
     t.integer  "option_id"
     t.text     "value"
-    t.datetime "created_at",                       :null => false
-    t.datetime "updated_at",                       :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer  "questioning_id"
     t.time     "time_value"
     t.date     "date_value"
@@ -34,8 +162,8 @@ ActiveRecord::Schema.define(:version => 20140805172717) do
   create_table "assignments", :force => true do |t|
     t.integer  "mission_id"
     t.integer  "user_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string   "role"
   end
 
@@ -45,8 +173,8 @@ ActiveRecord::Schema.define(:version => 20140805172717) do
   create_table "broadcast_addressings", :force => true do |t|
     t.integer  "broadcast_id"
     t.integer  "user_id"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "broadcast_addressings", ["broadcast_id"], :name => "broadcast_addressings_broadcast_id_fk"
@@ -57,8 +185,8 @@ ActiveRecord::Schema.define(:version => 20140805172717) do
     t.text     "body"
     t.string   "medium"
     t.text     "send_errors"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string   "which_phone"
     t.integer  "mission_id"
   end
@@ -68,8 +196,8 @@ ActiveRecord::Schema.define(:version => 20140805172717) do
   create_table "choices", :force => true do |t|
     t.integer  "answer_id"
     t.integer  "option_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "choices", ["answer_id"], :name => "choices_answer_id_fk"
@@ -80,8 +208,8 @@ ActiveRecord::Schema.define(:version => 20140805172717) do
     t.integer  "ref_qing_id"
     t.string   "op"
     t.string   "value"
-    t.datetime "created_at",                        :null => false
-    t.datetime "updated_at",                        :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer  "option_id"
     t.boolean  "is_standard",    :default => false
     t.integer  "standard_id"
@@ -108,9 +236,9 @@ ActiveRecord::Schema.define(:version => 20140805172717) do
 
   create_table "forms", :force => true do |t|
     t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.boolean  "published",          :default => false
-    t.datetime "created_at",                                :null => false
-    t.datetime "updated_at",                                :null => false
     t.integer  "downloads"
     t.integer  "responses_count",    :default => 0
     t.integer  "mission_id"
@@ -140,8 +268,8 @@ ActiveRecord::Schema.define(:version => 20140805172717) do
   create_table "missions", :force => true do |t|
     t.string   "name"
     t.string   "compact_name"
-    t.datetime "created_at",                      :null => false
-    t.datetime "updated_at",                      :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.boolean  "locked",       :default => false, :null => false
   end
 
@@ -168,8 +296,8 @@ ActiveRecord::Schema.define(:version => 20140805172717) do
 
   create_table "option_sets", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at",                      :null => false
-    t.datetime "updated_at",                      :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer  "mission_id"
     t.boolean  "is_standard",  :default => false
     t.integer  "standard_id"
@@ -185,8 +313,8 @@ ActiveRecord::Schema.define(:version => 20140805172717) do
   add_index "option_sets", ["standard_id"], :name => "index_option_sets_on_standard_id"
 
   create_table "options", :force => true do |t|
-    t.datetime "created_at",                           :null => false
-    t.datetime "updated_at",                           :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer  "mission_id"
     t.string   "_name"
     t.text     "_hint"
@@ -206,8 +334,8 @@ ActiveRecord::Schema.define(:version => 20140805172717) do
     t.integer  "rank"
     t.boolean  "required",    :default => false
     t.boolean  "hidden",      :default => false
-    t.datetime "created_at",                     :null => false
-    t.datetime "updated_at",                     :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.boolean  "is_standard", :default => false
     t.integer  "standard_id"
     t.integer  "mission_id"
@@ -221,8 +349,8 @@ ActiveRecord::Schema.define(:version => 20140805172717) do
   create_table "questions", :force => true do |t|
     t.string   "code"
     t.integer  "option_set_id"
-    t.datetime "created_at",                                                               :null => false
-    t.datetime "updated_at",                                                               :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.decimal  "minimum",           :precision => 15, :scale => 10
     t.decimal  "maximum",           :precision => 15, :scale => 10
     t.boolean  "maxstrictly"
@@ -250,8 +378,8 @@ ActiveRecord::Schema.define(:version => 20140805172717) do
     t.integer  "report_report_id"
     t.integer  "question1_id"
     t.string   "attrib1_name"
-    t.datetime "created_at",       :null => false
-    t.datetime "updated_at",       :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer  "rank"
   end
 
@@ -270,9 +398,8 @@ ActiveRecord::Schema.define(:version => 20140805172717) do
     t.integer  "mission_id"
     t.string   "type"
     t.string   "name"
-    t.integer  "option_set_id"
-    t.datetime "created_at",                                   :null => false
-    t.datetime "updated_at",                                   :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.datetime "viewed_at"
     t.integer  "view_count",       :default => 0
     t.string   "display_type",     :default => "table"
@@ -297,9 +424,8 @@ ActiveRecord::Schema.define(:version => 20140805172717) do
   create_table "responses", :force => true do |t|
     t.integer  "form_id"
     t.integer  "user_id"
-    t.integer  "location_id"
-    t.datetime "created_at",                           :null => false
-    t.datetime "updated_at",                           :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.boolean  "reviewed",          :default => false
     t.string   "source"
     t.integer  "mission_id"
@@ -320,16 +446,16 @@ ActiveRecord::Schema.define(:version => 20140805172717) do
   create_table "sessions", :force => true do |t|
     t.string   "session_id", :null => false
     t.text     "data"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "sessions", ["updated_at"], :name => "index_sessions_on_updated_at"
 
   create_table "settings", :force => true do |t|
     t.string   "timezone"
-    t.datetime "created_at",                                           :null => false
-    t.datetime "updated_at",                                           :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer  "mission_id"
     t.string   "outgoing_sms_adapter"
     t.string   "intellisms_username"
