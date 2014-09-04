@@ -1,6 +1,7 @@
 require 'spec_helper'
 require 'xml'
 
+# We need to clean with truncation here b/c we use hard coded id's in expectation.
 describe 'form rendering for odk', clean_with_truncation: true do
   before do
     @user = create(:user)
