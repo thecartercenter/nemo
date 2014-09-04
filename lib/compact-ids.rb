@@ -37,7 +37,7 @@ puts 'Setting new IDs'
 transform.each do |table, items|
   puts table
   items.each do |old_id, new_id|
-    db.query("UPDATE #{table} SET id = #{new_id} WHERE id = #{old_id}")
+    db.query("UPDATE #{table} SET id = #{new_id} WHERE id = #{old_id}") unless old_id == new_id
   end
 end
 
@@ -50,10 +50,12 @@ foreign_keys.each do |table, keys|
     keys.each do |key|
       unless row[key[:col]].nil?
         if key[:ancestry]
-          updates[key[:col]] = row[key[:col]].split('/').map{ |id| transform[table][id.to_i] }.join('/')
+          updates[key[:col]] = "'" + row[key[:col]].split('/').map{ |id| transform[table][id.to_i] }.join('/') + "'"
         else
-          updates[key[:col]] = transform[key[:ref_tbl]][row[key[:col]]] || 'NULL'
-          puts "Found orphan #{key[:col]} #{row[key[:col]]} for #{table}" if updates[key[:col]] == 'NULL'
+          if transform[key[:ref_tbl]][row[key[:col]]] != row[key[:col]]
+            updates[key[:col]] = transform[key[:ref_tbl]][row[key[:col]]] || 'NULL'
+            puts "Found orphan #{key[:col]} #{row[key[:col]]} for #{table}" if updates[key[:col]] == 'NULL'
+          end
         end
       end
     end
@@ -64,5 +66,13 @@ foreign_keys.each do |table, keys|
 end
 
 db.query('COMMIT')
+
+puts 'Updating increment counters'
+
+tables.each do |table|
+  next unless db.query("SHOW COLUMNS FROM #{table}").map{ |c| c['Field']}.include?('id')
+  max_id = db.query("SELECT MAX(id) as m FROM #{table}").to_a[0]['m']
+  db.query("ALTER TABLE #{table} AUTO_INCREMENT = #{max_id + 1}") unless max_id.nil?
+end
 
 tables.each { |t| db.query("ALTER TABLE `#{t}` ENABLE KEYS") }
