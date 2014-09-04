@@ -34,6 +34,7 @@ class FormsController < ApplicationController
 
       # get only published forms and render openrosa if xml requested
       format.xml do
+        authorize!(:download, Form)
         @forms = @forms.published
         render_openrosa
       end

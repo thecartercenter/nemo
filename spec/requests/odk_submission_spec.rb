@@ -33,7 +33,7 @@ describe 'odk submissions' do
 
   it 'should fail if user not assigned to mission' do
     do_submission(submission_path(@mission2))
-    expect(response.response_code).to eq 401
+    expect(response.response_code).to eq 403
   end
 
   it 'should fail for non-existent mission' do
