@@ -1,13 +1,20 @@
 class OptionSet < ActiveRecord::Base
+
+  # We use this instead of autosave since autosave doesn't work right for belongs_to.
+  # It is up here because it should happen early, e.g., before form version callbacks.
+  after_save :save_root_node
+
   include MissionBased, FormVersionable, Standardizable, Replicable
 
-  # this needs to be up here or it will run too late
+  # This need to be up here or they will run too late.
   before_destroy :check_associations
+  before_destroy :nullify_root_node
 
   has_many :questions, :inverse_of => :option_set
   has_many :questionings, :through => :questions
+  has_many :option_nodes, dependent: :destroy
 
-  has_one :root_node, class_name: OptionNode, conditions: {option_id: nil}, dependent: :destroy, autosave: true
+  belongs_to :root_node, class_name: OptionNode, conditions: {option_id: nil}, dependent: :destroy
 
   validates :name, :presence => true
   validate :name_unique_per_mission
@@ -45,13 +52,15 @@ class OptionSet < ActiveRecord::Base
 
   serialize :level_names, JSON
 
-  delegate :ranks_changed?, :options_added?, :options_removed?, :total_options, :descendants, to: :root_node
+  delegate :ranks_changed?, :options_added?, :options_removed?, :total_options, :descendants, :all_options, :options_for_node, to: :root_node
 
   # These methods are for the form.
   attr_writer :multi_level
 
   # Efficiently deletes option nodes for all option sets with given IDs.
   def self.terminate_sub_relationships(option_set_ids)
+    # Must nullify these first to avoid fk error
+    OptionSet.where(id: option_set_ids).update_all(root_node_id: nil)
     OptionNode.where("option_set_id IN (#{option_set_ids.join(',')})").delete_all unless option_set_ids.empty?
   end
 
@@ -69,18 +78,19 @@ class OptionSet < ActiveRecord::Base
     @levels ||= multi_level? ? level_names.map{ |n| OptionLevel.new(name_translations: n) } : nil
   end
 
+  def level_count
+    levels.try(:size)
+  end
+
   def multi_level?
     root_node && root_node.has_grandchildren?
   end
+  alias_method :multi_level, :multi_level?
 
-  def multi_level
-    multi_level?
-  end
-
-  # Returns first-level options
-  def options
+  def first_level_options
     root_node.child_options
   end
+  alias_method :options, :first_level_options
 
   # checks if this option set appears in any smsable questionings
   def form_smsable?
@@ -210,5 +220,16 @@ class OptionSet < ActiveRecord::Base
     def normalize_fields
       self.name = name.strip
       return true
+    end
+
+    def nullify_root_node
+      update_column(:root_node_id, nil)
+    end
+
+    def save_root_node
+      if root_node
+        root_node.option_set = self
+        root_node.save!
+      end
     end
 end

@@ -118,7 +118,6 @@ class Report::Report < ActiveRecord::Base
     def normalize_attribs
       # we now do default values here as well as changing blanks to nils.
       # the AR default stuff doesn't work b/c the blank from the client side overwrites the default and there's no easy way to get it back
-      self.option_set_id = nil if option_set_id.blank?
       self.bar_style = "side_by_side" if bar_style.blank?
       self.display_type = "table" if display_type.blank?
       self.percent_type = "none" if percent_type.blank?

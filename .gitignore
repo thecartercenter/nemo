@@ -12,6 +12,7 @@ config/thinking_sphinx.yml
 TODO
 .sass-cache/
 NOTES
+.idea
 
 # compiled assets
 public/assets

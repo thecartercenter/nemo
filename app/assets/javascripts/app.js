@@ -80,7 +80,9 @@
   klass.prototype.show_hide_submit_menu = function(link) { var self = this;
 
     // only load if haven't loaded before
-    if (!link.next('ul').find('li')[0]) {
+    if (!link.next('ul').data('loaded')) {
+
+      link.next('ul').data('loaded', true);
 
       // if hidden, show drop down
       if (link.next('ul').is(':hidden')) link.dropdown('toggle');
@@ -153,5 +155,9 @@
     });
   };
 
-})(ELMO);
+  // Shows/hides loading indicator.
+  klass.prototype.loading = function(yn) {
+    $('#glb-load-ind')[yn ? 'show' : 'hide']();
+  };
 
+})(ELMO);

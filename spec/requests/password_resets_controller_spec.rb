@@ -64,7 +64,7 @@ describe PasswordResetsController do
         end
 
         # make sure url is correct
-        email = ActionMailer::Base.deliveries.first
+        email = ActionMailer::Base.deliveries.last
         expect(email.body.to_s).to match %r{^https?://.+/en/password-resets/\w+/edit$}
 
         # ensure no missing translations

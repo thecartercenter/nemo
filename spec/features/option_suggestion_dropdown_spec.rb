@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-feature 'option suggestion dropdown', :js => true, :driver => :webkit do
+feature 'option suggestion dropdown', :js => true do
   before do
     @user = create(:user)
     visit login_path(:locale => 'en')

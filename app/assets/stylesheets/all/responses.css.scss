@@ -73,4 +73,29 @@ form.response_form {
   label.main {
     width: 300px;
   }
+
+  .select-one-answers .level-name {
+    font-size: 8pt;
+    margin-bottom: 3px;
+    color: #888;
+  }
+
+  .read_only .select-one-answers {
+    .level-name {
+      margin-bottom: 0px;
+    }
+
+    .option-name {
+      margin-bottom: 5px;
+
+      i { /* For blank answers */
+        font-style: normal;
+        color: #ccc;
+      }
+    }
+
+    > div:last-child .option-name {
+      margin-bottom: 0;
+    }
+  }
 }

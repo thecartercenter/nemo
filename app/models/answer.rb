@@ -1,9 +1,6 @@
 class Answer < ActiveRecord::Base
   include ActionView::Helpers::NumberHelper
 
-  # a flag set by javascript on the client side indicating whether the answer is relevant based on any conditions
-  attr_writer(:relevant)
-
   belongs_to(:questioning, :inverse_of => :answers)
   belongs_to(:option, :inverse_of => :answers)
   belongs_to(:response, :inverse_of => :answers, :touch => true)
@@ -20,39 +17,13 @@ class Answer < ActiveRecord::Base
   validate(:min_max, :if => ->(a){ a.should_validate?(:min_max) })
   validate(:required, :if => ->(a){ a.should_validate?(:required) })
 
-  delegate :question, :qtype, :rank, :required?, :hidden?, :option_set, :options, :condition, :to => :questioning
-  delegate :name, :hint, :to => :question, :prefix => true
+  delegate :question, :qtype, :required?, :hidden?, :option_set, :options, :condition, :to => :questioning
+    delegate :name, :hint, :to => :question, :prefix => true
+  delegate :name, to: :level, prefix: true, allow_nil: true
 
   scope :public_access, includes(:questioning => :question).
                         where("questions.access_level = 'inherit'")
 
-  # creates a new answer from a string from odk
-  def self.new_from_str(params)
-    str = params.delete(:str)
-    ans = new(params)
-
-    # if there was no answer to this question (in the case of a out of sync form) just leave it blank
-    return ans if str.nil?
-
-    # set the attributes based on the question type
-    if ans.qtype.name == "select_one"
-      ans.option_id = str.to_i
-    elsif ans.qtype.name == "select_multiple"
-      str.split(" ").each{|oid| ans.choices.build(:option_id => oid.to_i)}
-    elsif ans.qtype.temporal?
-      # parse the string into a time
-      val = Time.zone.parse(str)
-
-      # convert the parsed time to the appropriate database format unless question is timezone sensitive
-      val = val.to_s(:"db_#{ans.qtype.name}") unless ans.qtype.has_timezone?
-
-      # assign the value
-      ans.send("#{ans.qtype.name}_value=", val)
-    else
-      ans.value = str
-    end
-    ans
-  end
 
   # gets all location answers for the given mission
   # returns only the response ID and the answer value
@@ -75,19 +46,32 @@ class Answer < ActiveRecord::Base
       WHERE a.option_id = '#{option_id}' OR c.option_id = '#{option_id}'").to_a[0][0] > 0
   end
 
-  def should_validate?(field)
-    # don't validate if response says no
-    return false if response && !response.validate_answers?
+  # Populates answer from odk-like string value.
+  def populate_from_string(str)
+    return if str.nil?
 
-    case field
-    when :numericality
-      qtype.numeric? && value.present?
-    when :required
-      # don't validate requiredness if response says no
-      !(response && response.incomplete?)
+    if qtype.name == "select_one"
+      self.option_id = str.to_i
+
+    elsif qtype.name == "select_multiple"
+      str.split(' ').each{ |oid| choices.build(option_id: oid.to_i) }
+
+    elsif qtype.temporal?
+      val = Time.zone.parse(str)
+
+      # Convert the parsed time to the appropriate database format unless question is timezone sensitive
+      val = val.to_s(:"db_#{qtype.name}") unless qtype.has_timezone?
+
+      self.send("#{qtype.name}_value=", val)
+
     else
-      true
+      self.value = str
     end
+  end
+
+  # If this is an answer to a multilevel select_one question, returns the OptionLevel, else returns nil.
+  def level
+    option_set.try(:multi_level?) ? option_set.levels[(rank || 1) - 1] : nil
   end
 
   def choice_for(option)
@@ -131,19 +115,6 @@ class Answer < ActiveRecord::Base
     end
   end
 
-  # relevant defaults to true until set otherwise
-  def relevant?
-    @relevant.nil? ? true : @relevant
-  end
-
-  # convert to boolean
-  def relevant=(r)
-    @relevant = (r == "true")
-  end
-
-  # alias
-  def relevant; relevant?; end
-
   # if this answer is for a location question and the value is not blank, returns a two element array representing the
   # lat long. else returns nil
   def location
@@ -168,22 +139,57 @@ class Answer < ActiveRecord::Base
     end
   end
 
-  # checks if answer must be non-empty to be valid
+  # relevant defaults to true until set otherwise
+  def relevant?
+    @relevant.nil? ? true : @relevant
+  end
+  alias_method :relevant, :relevant?
+
+  # A flag indicating whether the answer is relevant and should thus be validated.
+  # convert string 'true'/'false' to boolean
+  def relevant=(r)
+    @relevant = r.is_a?(String) ? r == "true" : r
+  end
+
+  # Checks if answer must be non-empty to be valid.
+  # Non-first-rank answers are currently not required even if their questioning is required (i.e. partial answers allowed).
   def required_and_relevant?
-    required? && !hidden? && relevant? && qtype.name != "select_multiple"
+    required? && !hidden? && relevant? && first_rank? && qtype.name != "select_multiple"
+  end
+
+  # Whether this Answer is the first in its set (i.e. rank is nil or 1)
+  def first_rank?
+    rank.nil? || rank == 1
   end
 
   # check various fields for blankness
   def empty?
     value.blank? && time_value.blank? && date_value.blank? && datetime_value.blank? && option_id.nil?
   end
+  alias_method :blank?, :empty?
 
   # checks if answer is required and relevant but also empty
   def required_but_empty?
     required_and_relevant? && empty?
   end
 
+  def should_validate?(field)
+    # don't validate if response says no
+    return false if response && !response.validate_answers?
+
+    case field
+    when :numericality
+      qtype.numeric? && value.present?
+    when :required
+      # don't validate requiredness if response says no
+      !(response && response.incomplete?)
+    else
+      true
+    end
+  end
+
   private
+
     def required
       errors.add(:value, :required) if required_but_empty?
     end

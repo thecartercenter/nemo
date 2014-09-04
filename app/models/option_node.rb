@@ -35,9 +35,32 @@ class OptionNode < ActiveRecord::Base
     descendants(at_depth: 2).any?
   end
 
+  def all_options
+    Option.where(id: descendants.map(&:option_id))
+  end
+
   # Returns options of children, ordered by rank.
   def child_options
     @child_options ||= sorted_children.includes(:option).map(&:option)
+  end
+
+  # Returns the child options of the node defined by path of option ids.
+  # If node at end of path is leaf node, returns [].
+  def options_for_node(path)
+    x = find_descendant_by_option_path(path)
+    find_descendant_by_option_path(path).try(:child_options) || []
+  end
+
+  # Traces the given path of option ids down the tree, returning the OptionNode at the end.
+  # Assumes path is an array of Option IDs with 0 or more elements.
+  # Returns self if path is empty.
+  # Returns nil if any point in path does not find a match.
+  # Returns nil if path contains any nils.
+  def find_descendant_by_option_path(path)
+    return self if path.empty?
+    return nil if path.any?(&:nil?)
+    return nil unless match = children.detect{ |c| c.option_id == path[0] }
+    match.find_descendant_by_option_path(path[1..-1])
   end
 
   # The total number of descendant options.
@@ -58,6 +81,10 @@ class OptionNode < ActiveRecord::Base
   # Gets the OptionLevel for this node.
   def level
     is_root? ? nil : option_set.try(:level, depth)
+  end
+
+  def sorted_children
+    children.order('rank')
   end
 
   def options_by_id
@@ -86,7 +113,10 @@ class OptionNode < ActiveRecord::Base
   end
 
   def to_s
-    "Option Node: ID #{id}  Option ID: " + (is_root? ? '[ROOT]' : option_id || '[No option]').to_s + "  System ID: #{object_id}"
+    "Option Node: ID #{id}  Option ID: " +
+    (is_root? ? '[ROOT]' : option_id || '[No option]').to_s +
+    " Option: #{option.try(:name)}"
+    "  System ID: #{object_id}"
   end
 
   # returns a string representation of this node and its children, indented by the given amount
@@ -150,6 +180,9 @@ class OptionNode < ActiveRecord::Base
       # Destroy existing children that were not mentioned in the update.
       self.options_removed = true unless children_by_id.empty?
       children_by_id.values.each{ |c| c.destroy_with_copies }
+
+      # Don't need this anymore. Nullify to prevent duplication on future saves.
+      self.children_attribs = nil
     end
 
     def copy_flags_from_subnode(node)
@@ -171,9 +204,5 @@ class OptionNode < ActiveRecord::Base
 
     def ensure_no_answers_or_choices
       raise DeletionError.new(:cant_delete_if_has_response) if has_answers?
-    end
-
-    def sorted_children
-      children.order('rank')
     end
 end

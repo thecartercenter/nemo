@@ -6,6 +6,9 @@ require 'rspec/rails'
 # Add this to load Capybara integration:
 require 'capybara/rspec'
 require 'capybara/rails'
+require 'capybara/poltergeist'
+
+Capybara.javascript_driver = :selenium
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
@@ -98,5 +101,10 @@ end
 
 def get_s(*args)
   get *args
+  assert_response(:success)
+end
+
+def post_s(*args)
+  post *args
   assert_response(:success)
 end

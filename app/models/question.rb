@@ -11,6 +11,8 @@ class Question < ActiveRecord::Base
   has_many(:referring_conditions, :through => :questionings)
   has_many(:forms, :through => :questionings)
   has_many(:calculations, :foreign_key => 'question1_id', :inverse_of => :question1)
+  has_many(:taggings, :dependent => :destroy)
+  has_many(:tags, :through => :taggings)
 
   before_validation(:normalize_fields)
 
@@ -49,8 +51,8 @@ class Question < ActiveRecord::Base
 
   translates :name, :hint
 
-  delegate :smsable?, :has_options?, :to => :qtype
-  delegate :options, :geographic?, :to => :option_set, :allow_nil => true
+  delegate :smsable?, :has_options?, :odk_tag, :odk_name, :to => :qtype
+  delegate :options, :first_level_options, :geographic?, :multi_level?, :level_count, :levels, :to => :option_set, :allow_nil => true
 
   replicable :child_assocs => :option_set, :parent_assoc => :questioning,
     :uniqueness => {:field => :code, :style => :camel_case}, :dont_copy => [:key, :access_level],
@@ -66,13 +68,22 @@ class Question < ActiveRecord::Base
     where(:key => true).all.sort_by{|q| q.questionings.size}[0...n]
   end
 
+  def subquestions
+    @subquestions ||= if multi_level?
+      levels.each_with_index.map{ |l, i| Subquestion.new(question: self, level: l, rank: i + 1) }
+    else
+      [Subquestion.new(question: self)]
+    end
+  end
+
   # returns the question type object associated with this question
   def qtype
     QuestionType[qtype_name]
   end
 
+  # DEPRECATED: this method should go away later
   def select_options
-    (opt = options) ? opt.collect{|o| [o.name, o.id]} : []
+    (first_level_options || []).map{ |o| [o.name, o.id] }
   end
 
   # gets the number of forms which with this question is directly associated.

@@ -1,4 +1,14 @@
 GIT
+  remote: git://github.com/codebrew/backbone-rails.git
+  revision: 4c1dfba7b4f2a989bd0dbc95d5afd3fc762a0b6d
+  specs:
+    rails-backbone (1.1.2)
+      coffee-script
+      ejs
+      jquery-rails
+      railties
+
+GIT
   remote: https://github.com/fnando/i18n-js.git
   revision: 263da232891313dbe965c5f96f87641e55138cee
   branch: master
@@ -72,12 +82,29 @@ GEM
     capybara-webkit (1.1.0)
       capybara (~> 2.0, >= 2.0.2)
       json
+    childprocess (0.5.3)
+      ffi (~> 1.0, >= 1.0.11)
     choice (0.1.6)
     chronic (0.10.2)
+    cliver (0.3.2)
+    coffee-script (2.3.0)
+      coffee-script-source
+      execjs
+    coffee-script-source (1.7.1)
+    columnize (0.3.6)
     configatron (4.2.0)
     daemons (1.1.9)
     dalli (2.7.2)
     database_cleaner (1.3.0)
+    debugger (1.6.8)
+      columnize (>= 0.3.1)
+      debugger-linecache (~> 1.2.0)
+      debugger-ruby_core_source (~> 1.3.5)
+    debugger-linecache (1.2.0)
+    debugger-ruby_core_source (1.3.5)
+    debugger-xml (0.3.3)
+      builder (>= 2.0.0)
+      debugger (>= 1.6.2)
     descriptive_statistics (1.1.5)
     diff-lcs (1.2.5)
     ejs (1.1.1)
@@ -89,6 +116,7 @@ GEM
     factory_girl_rails (4.4.1)
       factory_girl (~> 4.4.0)
       railties (>= 3.0.0)
+    ffi (1.9.3)
     foreigner (1.6.1)
       activerecord (>= 3.0.0)
     highline (1.6.21)
@@ -132,6 +160,11 @@ GEM
     nokogiri (1.6.2.1)
       mini_portile (= 0.6.0)
     phantomjs (1.9.7.1)
+    poltergeist (1.5.1)
+      capybara (~> 2.1)
+      cliver (~> 0.3.1)
+      multi_json (~> 1.0)
+      websocket-driver (>= 0.2.0)
     polyglot (0.3.5)
     rack (1.4.5)
     rack-cache (1.2)
@@ -196,11 +229,17 @@ GEM
       rspec-support (~> 3.0.0)
     rspec-support (3.0.2)
     ruby-graphviz (1.0.9)
+    rubyzip (1.1.6)
     sass (3.3.8)
     sass-rails (3.2.6)
       railties (~> 3.2.0)
       sass (>= 3.1.10)
       tilt (~> 1.3)
+    selenium-webdriver (2.42.0)
+      childprocess (>= 0.5.0)
+      multi_json (~> 1.0)
+      rubyzip (~> 1.0)
+      websocket (~> 1.0.4)
     spinjs-rails (1.3)
       rails (>= 3.1)
     sprockets (2.2.2)
@@ -237,6 +276,8 @@ GEM
     versionist (1.3.0)
       rails (>= 3)
       yard (~> 0.7)
+    websocket (1.0.7)
+    websocket-driver (0.3.4)
     whenever (0.9.2)
       activesupport (>= 2.3.4)
       chronic (>= 0.6.3)
@@ -268,6 +309,8 @@ DEPENDENCIES
   configatron (~> 4.2)
   dalli
   database_cleaner
+  debugger
+  debugger-xml
   descriptive_statistics
   ejs
   factory_girl_rails (~> 4.0)
@@ -280,7 +323,9 @@ DEPENDENCIES
   libxml-ruby
   mocha
   mysql2 (>= 0.3.15)
+  poltergeist
   rails (~> 3.2)
+  rails-backbone!
   rails-dev-tweaks (~> 1.1)
   rails-erd
   rails-i18n
@@ -291,6 +336,7 @@ DEPENDENCIES
   rspec-its
   rspec-rails (~> 3.0)
   sass-rails
+  selenium-webdriver
   spinjs-rails
   term-ansicolor
   thin

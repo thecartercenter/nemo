@@ -23,5 +23,10 @@ FactoryGirl.define do
       option nil
       children_attribs { OptionNodeSupport::WITH_GRANDCHILDREN_ATTRIBS }
     end
+
+    factory :option_node_with_great_grandchildren do
+      option nil
+      children_attribs { OptionNodeSupport::WITH_GREAT_GRANDCHILDREN_ATTRIBS }
+    end
   end
 end

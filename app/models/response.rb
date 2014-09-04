@@ -46,6 +46,7 @@ class Response < ActiveRecord::Base
   scope(:with_location_answers, includes(:location_answers))
 
   delegate :name, :to => :checked_out_by, :prefix => true
+  delegate :visible_questionings, to: :form
 
   # remove previous checkouts by a user
   def self.remove_previous_checkouts_by(user = nil)
@@ -269,19 +270,22 @@ class Response < ActiveRecord::Base
     populate_from_hash(data)
   end
 
-  def visible_questionings
-    # get visible questionings from form
-    form.visible_questionings
+  # Groups answers by questioning.
+  # Makes sure there are associated answer objects for each questioning in the form.
+  def answer_sets
+    @answer_sets ||= visible_questionings.map{ |qing| answer_set_for_questioning(qing) }
   end
 
-  def all_answers
-    # make sure there is an associated answer object for each questioning in the form
-    visible_questionings.collect{|qing| answer_for(qing) || answers.build(:questioning => qing)}
+  def answer_sets=(params)
+    self.answers_attributes = AnswerSet.answers_attributes_for(params)
   end
 
-  def all_answers=(params)
-    # do a match on current and newer ids with the ID as the comparator
-    answers.compare_by_element(params.values, Proc.new{|a| a[:questioning_id].to_i}) do |orig, subd|
+  def answers_attributes=(attribs)
+    # A function that returns a signature for comparison. Works for either Answer objs or hashes.
+    signature_proc = Proc.new{ |a| "#{a[:questioning_id]}--#{a[:rank]}" }
+
+    # Do a match on current and newer ids with the ID as the comparator.
+    answers.compare_by_element(attribs, signature_proc) do |orig, subd|
       # if both exist, update the original
       if orig && subd
         orig.attributes = subd
@@ -295,27 +299,18 @@ class Response < ActiveRecord::Base
     end
   end
 
-  def answer_for(questioning)
-    # get the matching answer(s)
-    answer_for_qing[questioning]
-  end
-
-  def answer_for_qing(options = {})
-    @answer_for_qing = nil if options[:rebuild]
-    @answer_for_qing ||= answers.index_by(&:questioning)
-  end
-
   def answer_for_question(question)
     (@answers_by_question ||= answers.index_by(&:question))[question]
   end
 
-  # returns an array of required questionings for which answers are missing
+  def answer_for_qing(qing)
+    (@answers_by_qing ||= answers.index_by(&:questioning))[qing]
+  end
+
+  # Returns an array of required questionings for which answers are missing.
+  # Used in cases other than the web form where answer objects may not be created for missing answers.
   def missing_answers
-    return @missing_answers if @missing_answers
-    answer_for_qing(:rebuild => true)
-    @missing_answers = visible_questionings.collect do |qing|
-      (answer_for(qing).nil? && qing.required?) ? qing : nil
-    end.compact
+    @missing_answers ||= visible_questionings.select{ |qing| qing.required? && answer_for_qing(qing).nil? }
   end
 
   # if this response contains location questions, returns the gps location (as a 2 element array)
@@ -341,7 +336,7 @@ class Response < ActiveRecord::Base
   end
 
   def check_out!(user = nil)
-    raise ArguementError, "A user is required to checkout a response" unless user
+    raise ArgumentError, "A user is required to checkout a response" unless user
 
     if !checked_out_by_others?(user)
       transaction do
@@ -365,10 +360,6 @@ class Response < ActiveRecord::Base
   end
 
   private
-    def no_missing_answers
-      errors.add(:base, :missing_answers) unless missing_answers.empty? || incomplete?
-    end
-
     def self.export_sql(rel)
       # add all the selects
       # assumes the language desired is English. currently does not respect the locale
@@ -397,6 +388,11 @@ class Response < ActiveRecord::Base
       rel.to_sql
     end
 
+    def no_missing_answers
+      errors.add(:base, :missing_answers) unless missing_answers.empty? || incomplete?
+    end
+
+    # Checks if form ID and version were given, if form exists, and if version is correct
     def lookup_and_check_form(params)
       # if either of these is nil or not an integer, error
       raise SubmissionError.new("no form id was given") if params[:id].nil?
@@ -412,13 +408,26 @@ class Response < ActiveRecord::Base
       raise FormVersionError.new("form version is outdated") if form.current_version.sequence > params[:version].to_i
     end
 
+    # Populates response given a hash of odk-style question codes (e.g. q5, q7_1) to string values.
     def populate_from_hash(hash)
       form.visible_questionings.each do |qing|
-        answer = Answer.new_from_str(:str => hash[qing.question.odk_code], :questioning => qing)
-        self.answers << answer
+        qing.subquestions.each do |subq|
+          answer = Answer.new(questioning: qing, rank: subq.rank)
+          answer.populate_from_string(hash[subq.odk_code])
+          self.answers << answer
+          self.incomplete = true if answer.required_but_empty?
+        end
+      end
+    end
 
-        # Set incomplete flag if required but empty.
-        self.incomplete = true if answer.required_but_empty?
+    def answer_set_for_questioning(questioning)
+      answer_sets_by_questioning[questioning] || AnswerSet.new(questioning: questioning)
+    end
+
+    # Builds a hash of questionings to answer sets.
+    def answer_sets_by_questioning
+      @answer_sets_by_questioning ||= {}.tap do |hash|
+        answers.group_by(&:questioning).each{ |q, a| hash[q] = AnswerSet.new(questioning: q, answers: a) }
       end
     end
 end
