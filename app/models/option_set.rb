@@ -1,13 +1,20 @@
 class OptionSet < ActiveRecord::Base
+
+  # We use this instead of autosave since autosave doesn't work right for belongs_to.
+  # It is up here because it should happen early, e.g., before form version callbacks.
+  after_save :save_root_node
+
   include MissionBased, FormVersionable, Standardizable, Replicable
 
-  # this needs to be up here or it will run too late
+  # This need to be up here or they will run too late.
   before_destroy :check_associations
+  before_destroy :nullify_root_node
 
   has_many :questions, :inverse_of => :option_set
   has_many :questionings, :through => :questions
+  has_many :option_nodes, dependent: :destroy
 
-  has_one :root_node, class_name: OptionNode, conditions: {option_id: nil}, dependent: :destroy, autosave: true
+  belongs_to :root_node, class_name: OptionNode, conditions: {option_id: nil}, dependent: :destroy
 
   validates :name, :presence => true
   validate :name_unique_per_mission
@@ -52,6 +59,8 @@ class OptionSet < ActiveRecord::Base
 
   # Efficiently deletes option nodes for all option sets with given IDs.
   def self.terminate_sub_relationships(option_set_ids)
+    # Must nullify these first to avoid fk error
+    OptionSet.where(id: option_set_ids).update_all(root_node_id: nil)
     OptionNode.where("option_set_id IN (#{option_set_ids.join(',')})").delete_all unless option_set_ids.empty?
   end
 
@@ -211,5 +220,16 @@ class OptionSet < ActiveRecord::Base
     def normalize_fields
       self.name = name.strip
       return true
+    end
+
+    def nullify_root_node
+      update_column(:root_node_id, nil)
+    end
+
+    def save_root_node
+      if root_node
+        root_node.option_set = self
+        root_node.save!
+      end
     end
 end

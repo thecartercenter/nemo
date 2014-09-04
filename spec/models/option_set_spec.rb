@@ -34,6 +34,13 @@ describe OptionSet do
     os.multi_level?
   end
 
+  it 'should be destructible' do
+    os = create(:option_set)
+    os.destroy
+    expect(OptionSet.exists?(os)).to be false
+    expect(OptionNode.where(option_set_id: os.id).count).to eq 0
+  end
+
   describe 'options' do
     before { @set = create(:option_set, multi_level: true) }
 
