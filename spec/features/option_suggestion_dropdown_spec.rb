@@ -1,12 +1,9 @@
 require 'spec_helper'
 
-feature 'option suggestion dropdown', :js => true do
+feature 'option suggestion dropdown', js: true do
   before do
     @user = create(:user)
-    visit login_path(:locale => 'en')
-    fill_in 'Username', :with => @user.login
-    fill_in 'Password', :with => 'password'
-    click_button 'Login'
+    login(@user)
   end
 
   scenario 'should drop down' do
