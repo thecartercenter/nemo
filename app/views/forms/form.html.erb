@@ -55,6 +55,8 @@
   <% end %>
 </div>
 
+<%= render('print_format_tips_modal') %>
+
 <%= javascript_doc_ready do %>
   Form.hookup_rank_boxes();
   new ELMO.Views.PrintFormView();

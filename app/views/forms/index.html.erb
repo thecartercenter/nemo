@@ -3,6 +3,8 @@
   <%= standard_import_form %>
 </div>
 
+<%= render('print_format_tips_modal') %>
+
 <%= javascript_doc_ready do %>
   new ELMO.Views.PrintFormView();
 <% end %>
