@@ -921,6 +921,9 @@ en:
     clone_error: "There was a problem cloning the form (%{msg})."
     clone_success: "Form '%{form_name}' cloned successfully."
     print_form: "Print Form"
+    print_format_tips:
+      title: "Print Format Tips"
+      body: "To ensure form prints correctly, please enable the printing of background colors and images in your system's print options dialog window. That window should appear as soon as you click 'OK' below."
     publish: "Publish"
     publish_error: "There was a problem publishing the form (%{msg})."
     publish_success: "Form published successfully."

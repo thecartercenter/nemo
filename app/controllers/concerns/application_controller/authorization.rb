@@ -31,9 +31,9 @@ module Concerns::ApplicationController::Authorization
         redirect_to(mission_root_url)
       end
 
-    # else if this is not an html request, render an empty 401 (unauthorized).
+    # else if this is not an html request, render an empty 403 (forbidden).
     elsif !request.format.html?
-      render(:nothing => true, :status => 401)
+      render(:nothing => true, :status => 403)
 
     # else redirect to welcome page with error
     else

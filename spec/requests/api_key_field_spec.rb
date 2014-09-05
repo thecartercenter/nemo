@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'support/shared_context'
 
-describe 'api key form field', :database_cleaner => :all do
+describe 'api key form field', database_cleaner: :all do
 
   before(:all) do
     @user = FactoryGirl.create(:user)

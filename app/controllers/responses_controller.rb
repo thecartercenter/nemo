@@ -135,7 +135,7 @@ class ResponsesController < ApplicationController
           render(:nothing => true, :status => 201)
 
         rescue CanCan::AccessDenied
-          render_xml_submission_failure($!, 401)
+          render_xml_submission_failure($!, 403)
 
         rescue ActiveRecord::RecordNotFound
           render_xml_submission_failure($!, 404)

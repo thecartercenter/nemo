@@ -1,14 +1,11 @@
 require 'spec_helper'
 
-feature 'response crud', js: true do
+feature 'responses flow', js: true do
   before do
     @user = create(:user)
     @form = create(:sample_form)
     @form.publish!
-    visit login_path(locale: 'en')
-    fill_in 'Username', with: @user.login
-    fill_in 'Password', with: 'password'
-    click_button 'Login'
+    login(@user)
   end
 
   scenario 'should work' do

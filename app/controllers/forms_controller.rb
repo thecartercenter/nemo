@@ -34,6 +34,7 @@ class FormsController < ApplicationController
 
       # get only published forms and render openrosa if xml requested
       format.xml do
+        authorize!(:download, Form)
         @forms = @forms.published
         render_openrosa
       end
@@ -221,7 +222,6 @@ class FormsController < ApplicationController
       params[:whitelist_users].each do |api_user|
         @form.whitelist_users.create(user_id: api_user)
       end
-
     end
 
     # adds the appropriate headers for openrosa content

@@ -181,7 +181,11 @@ class Ability
         can :regenerate_key, User do |u|
           u == user
         end
-      end
+
+        # Can't download forms for locked mission.
+        cannot :download, Form if mission.locked?
+
+      end # End if mission
 
       # Can't change own assignments unless admin
       unless user.admin?
