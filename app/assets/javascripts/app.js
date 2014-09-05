@@ -67,7 +67,7 @@
   // changes the current locale by rewriting the url to use the new locale
   klass.prototype.change_locale = function(new_locale) { var self = this;
     // build a new url and go there
-    window.location.href = ELMO.app.url_builder.build(window.location.pathname, {locale: new_locale});
+    window.location.href = ELMO.app.url_builder.build(window.location.pathname + window.location.search, {locale: new_locale});
   }
 
   // sets the title in h1#title and <title>
