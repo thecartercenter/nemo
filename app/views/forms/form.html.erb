@@ -15,7 +15,7 @@
       <% end %>
 
       <%# This link should be last because it has loading ind after it. %>
-      <%= link_to(icon_tag(:print) + t('form.print_form'), "#", :onclick => "Form.print(#{@form.id}); return false;") %>
+      <%= link_to(icon_tag(:print) + t('form.print_form'), "#", class: 'print-link', :'data-form-id' => @form.id) %>
       <%= loading_indicator(:id => @form.id) %>
     <% end %>
   <% end %>
@@ -54,8 +54,8 @@
 
   <% end %>
 </div>
-<div id="form_to_print"></div>
 
 <%= javascript_doc_ready do %>
   Form.hookup_rank_boxes();
+  new ELMO.Views.PrintFormView();
 <% end %>

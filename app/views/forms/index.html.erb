@@ -2,4 +2,7 @@
   <%= index_table(Form, @forms) %>
   <%= standard_import_form %>
 </div>
-<div id="form_to_print"></div>
+
+<%= javascript_doc_ready do %>
+  new ELMO.Views.PrintFormView();
+<% end %>

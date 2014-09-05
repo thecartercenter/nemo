@@ -53,7 +53,7 @@ module FormsHelper
 
       # add a print link if auth'd
       if can?(:print, form)
-        links += action_link("print", "#", :title => t("common.print"), :onclick => "Form.print(#{form.id}); return false;")
+        links += action_link("print", "#", title: t("common.print"), class: 'print-link', :'data-form-id' => form.id)
       end
 
       # add an sms template link if appropriate

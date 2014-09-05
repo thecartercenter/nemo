@@ -73,27 +73,4 @@
     // allow submission to proceed
     return true;
   }
-
-  Form.print = function(form_id) {
-    // show appropriate loading indicator
-    $('#loading_indicator_' + form_id).show();
-
-    // load form show page into div
-    $.ajax({
-      url: ELMO.app.url_builder.build("forms", form_id),
-      method: "get",
-      data: {print: 1},
-      success: function(data) {
-        // replace div contents
-        $('#form_to_print').html(data);
-
-        // hide loading indicator
-        $('#loading_indicator_' + form_id).hide();
-
-        // show print dialog
-        window.print();
-      }
-    });
-
-  }
 }(Form = {}));
