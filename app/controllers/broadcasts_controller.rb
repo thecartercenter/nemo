@@ -48,6 +48,8 @@ class BroadcastsController < ApplicationController
   end
 
   def show
+    # We need to include medium options so that chosen option can be displayed.
+    @medium_options = Broadcast::MEDIUM_OPTIONS
     render(:form)
   end
 
