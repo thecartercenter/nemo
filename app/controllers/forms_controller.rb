@@ -222,7 +222,6 @@ class FormsController < ApplicationController
       params[:whitelist_users].each do |api_user|
         @form.whitelist_users.create(user_id: api_user)
       end
-
     end
 
     # adds the appropriate headers for openrosa content
