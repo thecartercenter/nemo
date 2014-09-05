@@ -150,13 +150,16 @@
 
   <div id="footer">
 
-    <%= link_to(t("layout.change_language"), "#", :id => "locale_form_link") %>
+    <%# We can't change language unless the request is GET since no way to redirect browser to POST, etc. %>
+    <% if request.get? %>
+      <%= link_to(t("layout.change_language"), "#", :id => "locale_form_link") %>
 
-    <%= form_tag(nil, :id => "locale_form") do %>
-      <%= select_tag(:locale, options_for_select(configatron.full_locales.map{|l| [language_name(l), l]}, I18n.locale)) %>
+      <%= form_tag(nil, :id => "locale_form") do %>
+        <%= select_tag(:locale, options_for_select(configatron.full_locales.map{|l| [language_name(l), l]}, I18n.locale)) %>
+      <% end %>
+
+      &nbsp;|&nbsp;
     <% end %>
-
-    &nbsp;|&nbsp;
 
     <%= t("layout.time_zone") %>: <%= Time.zone.to_s %> &nbsp;|&nbsp;
 

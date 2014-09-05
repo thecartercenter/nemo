@@ -13,6 +13,9 @@ describe BroadcastsController do
 
   it 'new_with_users should work' do
     post_s(new_with_users_broadcasts_path, selected: {@user1.id => '1', @user2.id => '1'})
+
+    # Change language link should be hidden since this is a rendering POST request.
+    assert_select('#locale_form_link', false)
   end
 
   it 'create and show should work' do
