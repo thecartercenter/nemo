@@ -165,7 +165,8 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
       else
         # run the hint text through simple format, but no need to sanitize since we don't want to lose links
         # AND we know this text will not be coming from the user
-        @template.simple_format(options[:hint], {}, :sanitize => false)
+        # We also need to be careful not to allow any double quotes as this value will be included in a HTML attrib.
+        @template.simple_format(options[:hint], {}, :sanitize => false).gsub('"', "'")
       end
     end
 
