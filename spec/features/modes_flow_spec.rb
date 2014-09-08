@@ -12,7 +12,7 @@ feature 'switching between missions and modes', js: true do
 
   scenario 'should work' do
     # We get logged in to mission2, so first test that changing to mission1 from mission2 root works.
-    expect(current_url).to match(/mission2$/)
+    expect(current_url).to end_with(@mission2.compact_name)
     select(@mission1.name, from: 'change_mission')
 
     # Smart redirect on mission change should work.
