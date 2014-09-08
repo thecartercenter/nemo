@@ -154,10 +154,8 @@
 
     // do client side validations
     self.clear_errors();
-    if (self.validate_option_presence() && self.validate_option_depths()) {
-      // submit
+    if (self.validate())
       self.submit_via_ajax();
-    }
 
     // so form won't submit normally
     return false;
@@ -269,7 +267,26 @@
     });
   };
 
-  // makes sure there is at least one option
+  klass.prototype.validate = function() { var self = this;
+    var checks = ['name_presence', 'option_presence', 'option_depths'];
+    var valid = true;
+
+    // Run each check even if an early one fails.
+    checks.forEach(function(c) {
+      if (!self['validate_' + c]()) valid = false;
+    });
+
+    return valid;
+  };
+
+  klass.prototype.validate_name_presence = function() { var self = this;
+    if ($('#option_set_name').val().trim() == '') {
+      self.add_error('.option_set_name', I18n.t('activerecord.errors.messages.blank'));
+      return false;
+    }
+    return true;
+  };
+
   klass.prototype.validate_option_presence = function() { var self = this;
     if (self.options_field.list.size() == 0) {
       self.add_error('.option_set_options', I18n.t('activerecord.errors.models.option_set.at_least_one'));
