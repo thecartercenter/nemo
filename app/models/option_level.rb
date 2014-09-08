@@ -3,6 +3,8 @@ class OptionLevel
 
   translates :name
 
+  MAX_NAME_LENGTH = 20
+
   def initialize(attribs)
     self.name_translations = attribs[:name_translations]
   end

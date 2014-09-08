@@ -67,6 +67,9 @@
       onEnter: function(){ self.add_options(); }
     });
 
+    // Set maxlength on the inner token input box to enforce option name length on creation.
+    $('#token-input-').attr('maxlength', self.params.max_option_name_length);
+
     // hookup form submit
     $('form.option_set_form').on('submit', function(){ return self.form_submitted(); });
 
