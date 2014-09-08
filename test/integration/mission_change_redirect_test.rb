@@ -14,14 +14,18 @@ class MissionChangeRedirectTest < ActionDispatch::IntegrationTest
   end
 
   test "user should be redirected to object listing if viewing object that is mission based and not linked to new current mission" do
-    @form = FactoryGirl.create(:form, :mission => @mission1)
-
-    # add this user to the other mission so the form index will be accessible
+    # Add this user to the other mission so the form index will be accessible.
     @user.assignments.create!(:mission => @mission2, :role => "coordinator")
 
-    assert_redirect_after_mission_change_from(
-      :from => "/en/m/mission1/forms/#{@form.id}",
-      :to => "/en/m/mission2/forms")
+    # Try multiple object types.
+    %w(form option_set).each do |type|
+      @obj = FactoryGirl.create(type, mission: @mission1)
+
+      path_chunk = type.gsub('_', '-') << 's'
+      assert_redirect_after_mission_change_from(
+        from: "/en/m/mission1/#{path_chunk}/#{@obj.id}",
+        :to => "/en/m/mission2/#{path_chunk}")
+    end
   end
 
   test "user should be redirected to home screen if was viewing object but redirect to object listing is not permitted" do
