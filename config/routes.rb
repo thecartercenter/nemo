@@ -9,19 +9,18 @@ ELMO::Application.routes.draw do
   # Basic routes (neither mission nor admin mode)
   scope ':locale', :locale => /[a-z]{2}/, :defaults => {:mode => nil, :mission_name => nil} do
 
+    # Routes requiring no user.
     resources :password_resets, :path => 'password-resets'
     resource :user_session, :path => 'user-session'
-
-    # login/logout shortcuts
     get '/logged-out' => 'user_sessions#logged_out', :as => :logged_out
-    match '/logout' => 'user_sessions#destroy', :as => :logout
     get '/login' => 'user_sessions#new', :as => :login
 
+    # Routes requiring user.
+    match '/logout' => 'user_sessions#destroy', :as => :logout
     get '/route-tests' => 'route_tests#basic_mode' if Rails.env.development? || Rails.env.test?
-
     get '/unauthorized' => 'welcome#unauthorized', :as => :unauthorized
 
-    # /en/, /en
+    # Routes with user or no user.
     root :to => 'welcome#index', :as => :basic_root
   end
 

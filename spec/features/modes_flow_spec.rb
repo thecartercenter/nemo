@@ -23,5 +23,10 @@ feature 'switching between missions and modes', js: true do
     expect(page).to have_selector('h1.title', text: @form.name)
     select(@mission2.name, from: 'change_mission')
     expect(page).to have_selector('h1.title', text: 'Forms')
+
+    # Changing mission from unauthorized page should work.
+    visit('/en/unauthorized')
+    select(@mission1.name, from: 'change_mission')
+    expect(page).to have_selector('#title h2', text: /#{@mission1.name}/i)
   end
 end
