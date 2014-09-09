@@ -6,6 +6,7 @@ class Questioning < ActiveRecord::Base
   has_many(:answers, :dependent => :destroy, :inverse_of => :questioning)
   has_one(:condition, :autosave => true, :dependent => :destroy, :inverse_of => :questioning)
   has_many(:referring_conditions, :class_name => "Condition", :foreign_key => "ref_qing_id", :dependent => :destroy, :inverse_of => :ref_qing)
+  has_many(:standard_form_reports, class_name: 'Report::StandardFormReport', foreign_key: 'disagg_qing_id', dependent: :nullify)
 
   before_validation(:destroy_condition_if_ref_qing_blank)
   before_create(:set_rank)
