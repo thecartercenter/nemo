@@ -1,5 +1,11 @@
 class Report::QuestionAnswerTallyReport < Report::TallyReport
 
+  # Called when related OptionSetChoice destroyed.
+  # Destroys self if there are no option sets left.
+  def option_set_destroyed
+    destroy if option_sets.empty?
+  end
+
   def as_json(options = {})
     h = super(options)
     h[:calculations_attributes] = calculations

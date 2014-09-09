@@ -537,12 +537,18 @@ en:
           general: "There was a problem saving the option set."
           wrong_depth: "You have %{levels} option levels but your option tree is %{depth} options deep."
         question:
+          attributes:
+            code:
+              invalid: "Should start with a letter, use only letters and numbers, and be a maximum of 20 characters."
           cant_change_if_conditions: "You can't change the Type or Option Set because there are Conditions that refer to this Question."
           cant_change_if_responses: "You can't change the Type or Option Set because there are already Responses for this Question."
           cant_delete_if_has_answers: "You can't delete this Question because it is referred to in at least one Answer."
           cant_delete_if_published: "You can't delete this Question because it appears on at least one published Form."
           general: "Question is invalid (see below)."
         questioning:
+          attributes:
+            code:
+              invalid: "Should start with a letter, use only letters and numbers, and be a maximum of 20 characters."
           cant_delete_if_has_answers: "You can't remove this Question because it has one or more answers for this Form."
           invalid_condition: "Condition is invalid (see below)."
           question: "Question"

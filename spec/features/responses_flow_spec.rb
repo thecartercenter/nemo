@@ -11,7 +11,7 @@ feature 'responses flow', js: true do
   scenario 'should work' do
     click_link('Submit')
     click_link(@form.name)
-    expect(page).to have_selector('h1', 'New Response')
+    expect(page).to have_selector('h1', text: 'New Response')
     select(@user.name, from: 'response_user_id')
 
     # Fill in answers
@@ -21,7 +21,7 @@ feature 'responses flow', js: true do
 
     # Save and check it worked.
     click_button('Save')
-    expect(page).to have_selector('h1', 'Response')
+    expect(page).to have_selector('h1', text: 'Response')
 
     # Check show mode.
     click_link(Response.first.id.to_s)

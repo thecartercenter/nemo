@@ -10,23 +10,23 @@ feature 'locale change', js: true do
   end
 
   scenario 'should work' do
-    expect(page).to have_selector('h2', 'LATEST RESPONSES')
+    expect(page).to have_selector('h2', text: 'LATEST RESPONSES')
 
     # Change language on main page.
     click_link('Change Language')
     select('Français', from: 'locale')
-    expect(page).to have_selector('h2', 'DERNIÈRES RÉPONSES')
+    expect(page).to have_selector('h2', text: 'DERNIÈRES RÉPONSES')
 
     # Test page with query string.
     click_link('Soumettre')
     click_link(@form.name)
-    expect(page).to have_selector('h1', 'Nouvelle réponse')
-    expect(current_url).to include("responses/new?form_id=#{@form.id}")
+    expect(page).to have_selector('h1', text: 'Nouvelle réponse')
+    expect(current_url).to end_with("responses/new?form_id=#{@form.id}")
 
     # URL ending shouldn't change on link
     click_link('Changer la langue')
     select('English', from: 'locale')
-    expect(page).to have_selector('h1', 'New Response')
-    expect(current_url).to include("responses/new?form_id=#{@form.id}")
+    expect(page).to have_selector('h1', text: 'New Response')
+    expect(current_url).to end_with("responses/new?form_id=#{@form.id}")
   end
 end

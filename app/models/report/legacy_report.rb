@@ -39,6 +39,11 @@ module Report::LegacyReport
     true
   end
 
+  # Called by child calculation on destroy.
+  def calculation_destroyed
+    calculations.empty? ? destroy : fix_calculation_ranks!
+  end
+
   protected
     # adds the given array of joins to the given relation by using the Join class
     def add_joins_to_relation(rel, joins)
@@ -89,5 +94,11 @@ module Report::LegacyReport
       else
         rel
       end
+    end
+
+    # Ensures calculation ranks start at 1 and are sequential.
+    def fix_calculation_ranks!
+      calculations.sort_by(&:rank).each_with_index{ |c,i| c.rank = i + 1 }
+      save(validate: false)
     end
 end

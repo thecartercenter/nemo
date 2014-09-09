@@ -12,7 +12,7 @@ feature 'forms flow', js: true do
 
     # First time printing should show tips.
     find('a.print-link').click
-    expect(page).to have_selector('h4', 'Print Format Tips')
+    expect(page).to have_selector('h4', text: 'Print Format Tips')
     click_button('OK')
     page.driver.browser.switch_to.alert.accept
 
@@ -21,6 +21,6 @@ feature 'forms flow', js: true do
     page.driver.browser.switch_to.alert.accept
 
     # Should still be on same page.
-    expect(current_url).to match(%r{/forms$})
+    expect(current_url).to end_with('forms')
   end
 end

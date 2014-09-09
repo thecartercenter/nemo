@@ -7,9 +7,6 @@ class Option < ActiveRecord::Base
   has_many(:choices, :inverse_of => :option)
   has_many(:conditions, :inverse_of => :option)
 
-  validate(:name_lengths)
-  validate(:not_all_blank_name_translations)
-
   after_save(:invalidate_cache)
   after_destroy(:invalidate_cache)
 
@@ -19,8 +16,8 @@ class Option < ActiveRecord::Base
 
   replicable :parent_assoc => :option_node, :user_modifiable => [:name_translations, :_name, :hint_translations, :_hint]
 
-  # the max number of suggestion matches to return
-  MAX_SUGGESTIONS = 5
+  MAX_SUGGESTIONS = 5 # The max number of suggestion matches to return
+  MAX_NAME_LENGTH = 45
 
   # Returns an array of Options matching the given mission and textual query.
   def self.suggestions(mission, query)
@@ -29,6 +26,9 @@ class Option < ActiveRecord::Base
     options = Rails.cache.fetch("mission_options/#{mission_id}", :expires_in => 2.minutes) do
       Option.unscoped.includes(:option_sets).for_mission(mission).all
     end
+
+    # Trim query to maximum length.
+    query = query[0...MAX_NAME_LENGTH]
 
     # scan for options matching query
     matches = []; exact_match = false
@@ -93,18 +93,9 @@ class Option < ActiveRecord::Base
   end
 
   private
-    # Checks that all name fields don't exceed max length.
-    def name_lengths
-      errors.add(:base, :names_too_long) if name_translations && name_translations.any?{ |l,t| t.present? && t.size > 45 }
-    end
 
     # invalidate the mission option cache after save, destroy
     def invalidate_cache
       Rails.cache.delete("mission_options/#{mission_id}")
-    end
-
-    # checks that at least one name translation is not blank
-    def not_all_blank_name_translations
-      errors.add(:base, :names_cant_be_all_blank) if name_all_blank?
     end
 end
