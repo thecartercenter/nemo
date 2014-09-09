@@ -6,16 +6,6 @@ describe Option do
     create(:option, :name => 'Foo')
   end
 
-  it 'should prohibit too-long names' do
-    (option = build(:option, :name => 'Foooooooooo oooo oooooooooooo oooooooooooooooo')).save
-    assert_match(/characters in length/, option.errors.messages[:base].join)
-  end
-
-  it 'should require at least one name translation' do
-    (option = build(:option, :name => '')).save
-    assert_match(/At least one name translation/, option.errors.messages[:base].join)
-  end
-
   describe 'suggestions' do
 
     shared_examples 'return matches' do
