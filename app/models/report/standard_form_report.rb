@@ -22,9 +22,11 @@
 #   }
 # }
 #
-
 class Report::StandardFormReport < Report::Report
+  # Form is set to destroy this report upon the Form's destruction.
   belongs_to(:form)
+
+  # Questioning is set to nullify this association upon the Questioning's destruction.
   belongs_to(:disagg_qing, :class_name => 'Questioning')
 
   attr_reader :summary_collection, :response_count

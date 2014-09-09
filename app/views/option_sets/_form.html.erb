@@ -35,6 +35,7 @@
     modal_mode: <%=j params[:modal_mode].present?.to_json.html_safe %>,
 
     can_reorder: <%=j can?(:reorder_options, @option_set).to_json.html_safe %>,
-    can_remove_options: <%=j can?(:remove_options, @option_set).to_json.html_safe %>
+    can_remove_options: <%=j can?(:remove_options, @option_set).to_json.html_safe %>,
+    max_option_name_length: <%=j Option::MAX_NAME_LENGTH.to_json.html_safe %>
   });
 <% end %>

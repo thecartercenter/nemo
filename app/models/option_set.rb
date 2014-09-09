@@ -13,11 +13,9 @@ class OptionSet < ActiveRecord::Base
   has_many :questions, :inverse_of => :option_set
   has_many :questionings, :through => :questions
   has_many :option_nodes, dependent: :destroy
+  has_many :report_option_set_choices, class_name: 'Report::OptionSetChoice', dependent: :destroy
 
   belongs_to :root_node, class_name: OptionNode, conditions: {option_id: nil}, dependent: :destroy
-
-  validates :name, :presence => true
-  validate :name_unique_per_mission
 
   before_validation :copy_attribs_to_root_node
   before_validation :normalize_fields
@@ -211,10 +209,6 @@ class OptionSet < ActiveRecord::Base
 
       # make sure not associated with any answers
       raise DeletionError.new(:cant_delete_if_has_answers) if has_answers?
-    end
-
-    def name_unique_per_mission
-      errors.add(:name, :taken) unless unique_in_mission?(:name)
     end
 
     def normalize_fields

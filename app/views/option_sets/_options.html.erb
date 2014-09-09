@@ -28,7 +28,8 @@
           <% configatron.preferred_locales.each do |locale| %>
             <div class="translation">
               <label for="<%= locale %>"><%= language_name(locale) %></label>
-              <input type="text" class="form-control" id="option_name_<%= locale %>" data-locale="<%= locale %>" maxlength="30">
+              <input type="text" class="form-control" id="option_name_<%= locale %>"
+                data-locale="<%= locale %>" maxlength="<%= Option::MAX_NAME_LENGTH %>">
             </div>
           <% end %>
 

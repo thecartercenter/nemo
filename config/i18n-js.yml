@@ -17,11 +17,11 @@
 # like this:
 #
 translations:
-  - file: "public/javascripts/translations.js"
+  - file: "app/assets/javascripts/i18n/translations.js"
     only: [
       "*.activerecord.attributes.*",
       "*.activerecord.models.*",
-      "*.activerecord.errors.models.*",
+      "*.activerecord.errors.*",
       "*.broadcast.chars.*",
       "*.common.*",
       "*.condition.*",

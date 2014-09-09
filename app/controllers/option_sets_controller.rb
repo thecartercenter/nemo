@@ -128,10 +128,13 @@ class OptionSetsController < ApplicationController
         render(:json => option_sets_path.to_json)
       end
 
-    rescue ActiveRecord::RecordInvalid, DeletionError
-      flash.now[:error] = $!.is_a?(DeletionError) ? $!.to_s : I18n.t('activerecord.errors.models.option_set.general')
-      render(:partial => 'form')
-      raise ActiveRecord::Rollback
+    # These shouldn't generally happen since the delete link is hidden in cases where options shouldn't be deleted.
+    # Only remotely possible if answer arrives between when form rendered and submitted.
+    # Also, we don't catch validation errors since they should be handled on client side.
+    rescue DeletionError
+      flash.now[:error] = $!.to_s
+      render(partial: 'form')
+      raise ActiveRecord::Rollback # Rollback the transaction without re-raising the error.
     end
   end
 end
