@@ -13,6 +13,7 @@ class OptionSet < ActiveRecord::Base
   has_many :questions, :inverse_of => :option_set
   has_many :questionings, :through => :questions
   has_many :option_nodes, dependent: :destroy
+  has_many :report_option_set_choices, class_name: 'Report::OptionSetChoice', dependent: :destroy
 
   belongs_to :root_node, class_name: OptionNode, conditions: {option_id: nil}, dependent: :destroy
 
