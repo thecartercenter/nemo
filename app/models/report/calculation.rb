@@ -9,6 +9,8 @@ class Report::Calculation < ActiveRecord::Base
 
   before_save(:normalize_values)
 
+  after_destroy { report.calculation_destroyed }
+
   # HACK TO GET STI TO WORK WITH ACCEPTS_NESTED_ATTRIBUTES_FOR
   class << self
     def new_with_cast(*a, &b)

@@ -10,7 +10,7 @@ class Question < ActiveRecord::Base
   has_many(:answers, :through => :questionings)
   has_many(:referring_conditions, :through => :questionings)
   has_many(:forms, :through => :questionings)
-  has_many(:calculations, :foreign_key => 'question1_id', :inverse_of => :question1)
+  has_many(:calculations, class_name: 'Report::Calculation', foreign_key: 'question1_id', inverse_of: :question1, dependent: :destroy)
   has_many(:taggings, :dependent => :destroy)
   has_many(:tags, :through => :taggings)
 
