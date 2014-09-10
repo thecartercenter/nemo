@@ -78,6 +78,18 @@ class Search::SearchTest < ActiveSupport::TestCase
     assert_search(:str => '"foo bar baz"', :sql => "((t1.f1 = 'foo bar baz'))")
   end
 
+  test "basic qualified search should work" do
+    assert_search(:str => "source: v1", :sql => "((t.source = 'v1'))")
+  end
+
+  test "equal sign should work same as colon" do
+    assert_search(:str => "source = v1", :sql => "((t.source = 'v1'))")
+  end
+
+  test "equal sign with extra term should work" do
+    assert_search(:str => "source = v1 v2", :sql => "((t.source = 'v1')) AND ((t1.f1 = 'v2'))")
+  end
+
   test "AND should not be allowed for regular default qualifiers" do
     assert_search(:str => "v1 v2", :error => /Multiple terms aren't allowed for 'form' searches/)
   end
