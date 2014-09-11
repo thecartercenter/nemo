@@ -6,7 +6,6 @@ class Condition < ActiveRecord::Base
 
   belongs_to(:questioning, :inverse_of => :condition)
   belongs_to(:ref_qing, :class_name => "Questioning", :foreign_key => "ref_qing_id", :inverse_of => :referring_conditions)
-  belongs_to(:option)
 
   before_validation(:clear_blanks)
   before_validation(:clean_times)
@@ -17,6 +16,8 @@ class Condition < ActiveRecord::Base
 
   delegate :qtype, :form, :to => :questioning, :allow_nil => true
   delegate :has_options?, :select_options, :qtype, :rank, :code, :to => :ref_qing, :prefix => :ref_question, :allow_nil => true
+
+  serialize :option_ids, JSON
 
   OPS = [
     {:name => :eq, :types => %w(decimal integer text long_text address select_one datetime date time), :code => "="},
@@ -30,6 +31,25 @@ class Condition < ActiveRecord::Base
   ]
 
   replicable :after_copy_attribs => :copy_ref_qing_and_option, :parent_assoc => :questioning, :dont_copy => [:ref_qing_id]
+
+  # def options
+  #   # We need to sort since ar#find doesn't guarantee order
+  #   option_ids.nil? ? nil : Options.find(option_ids).sort_by{ |o| option_ids.index(o.id) }
+  # end
+
+  # Temporary methods.
+  def option_id
+    option_ids.try(:first)
+  end
+  def option_id=(oid)
+    self.option_ids = oid.nil? ? nil : "[#{oid}]"
+  end
+  def option
+    option_ids.nil? ? nil : Option.find(option_ids.first)
+  end
+  def option=(o)
+    self.option_ids = o.nil? ? nil : "[#{o.id}]"
+  end
 
   # all questionings that can be referred to by this condition
   def refable_qings
