@@ -155,26 +155,22 @@ class Condition < ActiveRecord::Base
   end
 
   private
+
     def clear_blanks
-      # catch errors in case hash is frozen
-      begin
+      unless destroyed?
         self.value = nil if value.blank? || ref_qing && ref_question_has_options?
-        self.option = nil if option_id.blank? || ref_qing && !ref_question_has_options?
-      rescue
+        self.option_ids = nil if option_ids.blank? || ref_qing && !ref_question_has_options?
       end
       return true
     end
 
-    # parses and reformats time strings given as conditions
+    # Parses and reformats time strings given as conditions.
     def clean_times
-      if ref_qing && !value.blank?
+      if !destroyed? && ref_qing && !value.blank? && ref_question_qtype.temporal?
         begin
-          # reformat only if it's a temporal question
-          self.value = Time.zone.parse(value).to_s(:"std_#{ref_question_qtype.name}") if ref_question_qtype.temporal?
-        rescue
-          # reset to nil if error in parsing
-          # catch additional error incase frozen hash
-          (self.value = nil) rescue nil
+          self.value = Time.zone.parse(value).to_s(:"std_#{ref_question_qtype.name}")
+        rescue ArgumentError
+          self.value = nil
         end
       end
       return true
