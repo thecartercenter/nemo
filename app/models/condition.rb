@@ -24,7 +24,7 @@ class Condition < ActiveRecord::Base
     {:name => :lt, :types => %w(decimal integer datetime date time), :code => "<"},
     {:name => :gt, :types => %w(decimal integer datetime date time), :code => ">"},
     {:name => :leq, :types => %w(decimal integer datetime date time), :code => "<="},
-    {:name => :geq, :types => %w(decimal integer datetime date time), :code => "="},
+    {:name => :geq, :types => %w(decimal integer datetime date time), :code => ">="},
     {:name => :neq, :types => %w(decimal integer text long_text address select_one datetime date time), :code => "!="},
     {:name => :inc, :types => %w(select_multiple), :code => "="},
     {:name => :ninc, :types => %w(select_multiple), :code => "!="}
@@ -101,14 +101,16 @@ class Condition < ActiveRecord::Base
   end
 
   def to_odk
-    # set default lhs
-    lhs = "/data/#{ref_qing.odk_code}"
+
+    lhs = "/data/#{ref_subquestion.odk_code}"
 
     if ref_question_has_options?
-      xpath = "selected(#{lhs}, '#{option_id}')"
+
+      xpath = "selected(#{lhs}, '#{option_ids.last}')"
       xpath = "not(#{xpath})" if [:neq, :ninc].include?(operator[:name])
 
     else
+
       # for numeric ref. questions, just convert value to string to get rhs
       if ref_question_qtype.numeric?
         rhs = value.to_s
@@ -155,6 +157,14 @@ class Condition < ActiveRecord::Base
   end
 
   private
+
+    # Gets the referenced Subquestion.
+    # If option_ids is not set, returns the first subquestion of ref_qing (just an alias).
+    # If option_ids is set, uses the number of
+    # option_ids in the array to determines the subquestion rank.
+    def ref_subquestion
+      ref_qing.subquestions[option_ids.blank? ? 0 : option_ids.size - 1]
+    end
 
     def clear_blanks
       unless destroyed?
