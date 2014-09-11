@@ -32,10 +32,10 @@ class Condition < ActiveRecord::Base
 
   replicable :after_copy_attribs => :copy_ref_qing_and_option, :parent_assoc => :questioning, :dont_copy => [:ref_qing_id]
 
-  # def options
-  #   # We need to sort since ar#find doesn't guarantee order
-  #   option_ids.nil? ? nil : Options.find(option_ids).sort_by{ |o| option_ids.index(o.id) }
-  # end
+  def options
+    # We need to sort since ar#find doesn't guarantee order
+    option_ids.nil? ? nil : Option.find(option_ids).sort_by{ |o| option_ids.index(o.id) }
+  end
 
   # Temporary methods.
   def option_id
