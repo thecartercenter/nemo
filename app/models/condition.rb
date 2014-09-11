@@ -181,9 +181,11 @@ class Condition < ActiveRecord::Base
     end
 
     def all_fields_required
-      if ref_qing.blank? || op.blank? || ref_question_has_options? && option.blank? || !ref_question_has_options? && value.blank?
-        errors.add(:base, :all_required)
-      end
+      errors.add(:base, :all_required) if any_fields_empty?
+    end
+
+    def any_fields_empty?
+      ref_qing.blank? || op.blank? || (ref_question_has_options? ? option_ids.blank? : value.blank?)
     end
 
     # during replication process, copies the ref qing and option to the new condition
