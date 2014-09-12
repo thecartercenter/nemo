@@ -31,4 +31,23 @@ describe BroadcastsController do
     follow_redirect!
     expect(response).to be_success
   end
+
+  context 'for users with no phone' do
+    before do
+      @user3 = create(:user, phone: nil)
+      @user4 = create(:user, phone: nil)
+    end
+
+    it 'create should show error' do
+      post_s(broadcasts_path, broadcast: {
+        recipient_ids: [@user3.id, @user4.id],
+        medium: 'sms_only',
+        which_phone: 'both',
+        subject: '',
+        body: 'foo bar'
+      })
+      expect(flash[:success]).to be_nil
+      expect(assigns(:broadcast).errors).not_to be_empty
+    end
+  end
 end
