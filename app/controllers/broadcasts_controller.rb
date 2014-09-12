@@ -20,30 +20,28 @@ class BroadcastsController < ApplicationController
   # Displays a new broadcast form with the given recipients.
   # @param [Hash] selected A Hash user ids as keys, referring to recipients of the broadcast.
   def new_with_users
-    # load the user objects
     users = User.accessible_by(current_ability).where(:id => params[:selected].keys).all
+    raise "no users given" if users.empty? # This should be impossible
 
-    # raise error if no valid users (this should be impossible)
-    raise "no users given" if users.empty?
-
-    # create a new Broadcast
     @broadcast = Broadcast.accessible_by(current_ability).new(:recipients => users)
 
-    # call authorize so no error
     authorize!(:create, @broadcast)
 
-    begin
-      # get credit balance
-      @balance = Smser.check_balance
-    rescue NotImplementedError
-      # don't need to do anything here
-    rescue
-      # log all other errors
-      logger.error("SMS balance request error: #{$!}")
-    end
+    if @broadcast.no_possible_recipients?
+      flash[:error] = t('broadcast.no_possible_recipients')
+      redirect_to(users_path)
+    else
+      begin
+        @balance = Smser.check_balance
+      rescue NotImplementedError
+        # don't need to do anything here
+      rescue
+        logger.error("SMS balance request error: #{$!}")
+      end
 
-    set_medium_options
-    render(:form)
+      set_medium_options
+      render(:form)
+    end
   end
 
   def show

@@ -3,7 +3,6 @@ require 'spec_helper'
 describe BroadcastsController do
   before(:all) do
     @user1 = create(:user)
-    @user2 = create(:user)
     login(@user1)
   end
 
@@ -24,8 +23,12 @@ describe BroadcastsController do
   end
 
   context 'for regular users' do
+    before do
+      @user2, @user3 = create(:user), create(:user)
+    end
+
     it 'new_with_users should work' do
-      post_s(new_with_users_broadcasts_path, selected: {@user1.id => '1', @user2.id => '1'})
+      post_s(new_with_users_broadcasts_path, selected: {@user2.id => '1', @user3.id => '1'})
 
       # Change language link should be hidden since this is a rendering POST request.
       assert_select('#locale_form_link', false)
@@ -33,7 +36,7 @@ describe BroadcastsController do
 
     it 'create and show should work' do
       post(broadcasts_path, broadcast: {
-        recipient_ids: [@user1.id, @user2.id],
+        recipient_ids: [@user2.id, @user3.id],
         medium: 'sms',
         which_phone: 'both',
         subject: '',
@@ -48,13 +51,12 @@ describe BroadcastsController do
 
   context 'for users with no phone' do
     before do
-      @user3 = create(:user, phone: nil)
-      @user4 = create(:user, phone: nil)
+      @user2, @user3 = create(:user, phone: nil), create(:user, phone: nil)
     end
 
     it 'create should show error' do
       post_s(broadcasts_path, broadcast: {
-        recipient_ids: [@user3.id, @user4.id],
+        recipient_ids: [@user2.id, @user3.id],
         medium: 'sms_only',
         which_phone: 'both',
         subject: '',
@@ -62,6 +64,18 @@ describe BroadcastsController do
       })
       expect(flash[:success]).to be_nil
       expect(assigns(:broadcast).errors).not_to be_empty
+    end
+  end
+
+  context 'for users with no phone or email' do
+    before do
+      @user2, @user3 = create(:user, phone: nil, email: nil), create(:user, phone: nil, email: nil)
+    end
+
+    it 'new_with_users should redirect with error' do
+      post(new_with_users_broadcasts_path, selected: {@user2.id => '1', @user3.id => '1'})
+      expect(response).to redirect_to(users_path)
+      expect(flash[:error]).to match(/None of the users you selected/)
     end
   end
 end
