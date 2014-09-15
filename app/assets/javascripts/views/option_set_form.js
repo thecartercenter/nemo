@@ -95,7 +95,12 @@
 
   // reacts to changes to multilevel checkbox
   klass.prototype.multilevel_changed = function() { var self = this;
-    var checked = $('#option_set_multi_level').is(':checked');
+    var checked;
+    // Check if multilevel checkbox is read only
+    if ($('#multi_level div.ro-val').length > 0)
+      checked = $('#multi_level div.ro-val').data('val');
+    else
+      checked = $('#option_set_multi_level').is(':checked');
 
     // show/hide the option levels field
     self.option_levels_field.show(checked);
@@ -280,6 +285,9 @@
   };
 
   klass.prototype.validate_name_presence = function() { var self = this;
+    // Ensure name field is editable.
+    if ($('input#option_set_name').length == 0) return true;
+
     if ($('#option_set_name').val().trim() == '') {
       self.add_error('.option_set_name', I18n.t('activerecord.errors.messages.blank'));
       return false;
@@ -302,7 +310,8 @@
       var levels = self.option_levels_field.list.size();
       var depth = self.options_field.list.max_depth();
       if (levels != depth) {
-        self.add_error('.option_set_options', I18n.t('activerecord.errors.models.option_set.wrong_depth', {levels: levels, depth: depth}));
+        self.add_error('.option_set_options', I18n.t('activerecord.errors.models.option_set.wrong_depth',
+          {levels: levels, depth: depth}));
         return false;
       }
     }

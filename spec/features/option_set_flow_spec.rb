@@ -47,6 +47,31 @@ feature 'option suggestion dropdown', js: true do
     expect(page).to have_selector('td.options_col div', text: 'Banana, Apple, Pear')
   end
 
+  it 'importing, editing, and showing standard' do
+    @std_set = create(:option_set, name: 'Gold', is_standard: true, multi_level: true)
+    click_link('Option Sets')
+
+    # Import
+    click_link('Import Standard Option Sets')
+    check('Gold')
+    click_button('Import')
+    expect(page).to have_selector('td.options_col div', text: 'Animal, Plant')
+
+    # Editing standard set (edit option level name and option name)
+    all('a.action_link_edit')[0].click
+    all('#option-levels-wrapper a.action_link_edit')[1].click
+    fill_in('English', with: 'Queendom')
+    click_modal_save_button
+    all('#options-wrapper ol ol a.action_link_edit')[0].click
+    fill_in('English', with: 'Kitty')
+    click_modal_save_button
+    click_button('Save')
+
+    # Show standard set to verify save worked.
+    click_link('Gold')
+    expect(page).to have_selector('#options-wrapper div.inner', text: 'Kitty')
+  end
+
   def click_modal_save_button
     find('.modal-footer .btn-primary').click
   end

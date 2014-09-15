@@ -35,12 +35,9 @@ describe OptionNode do
         @orig.save_and_rereplicate!
       end
 
-      it 'should have replicated changes' do
+      it 'should have replicated changes and removed oak node copy' do
         expect_node([['Animal', ['Doge']], ['Plant', ['Cat', 'Tulipe']]])
-      end
-
-      it 'should have removed oak node copy' do
-        expect(OptionNode.exists?(@oak_node_copy)).to be_falsey
+        expect(OptionNode.exists?(@oak_node_copy)).to be false
       end
     end
 
@@ -50,11 +47,8 @@ describe OptionNode do
         @orig.destroy_with_copies
       end
 
-      it 'should destroy copies' do
+      it 'should destroy copies of nodes but not options' do
         expect(OptionNode.exists?(@node)).to be_falsey
-      end
-
-      it 'should not destroy copies of related options' do
         expect(Option.exists?(@option_copy)).to be_truthy
       end
     end
