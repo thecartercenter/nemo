@@ -1,4 +1,4 @@
-// ELMO.SearchForm
+// ELMO.Views.SearchForm
 //
 // Models a form for entering a search query.
 (function(ns, klass) {
@@ -17,4 +17,4 @@
     });
   }
 
-})(ELMO);
+})(ELMO.Views);
