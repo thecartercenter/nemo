@@ -750,6 +750,10 @@ en:
     source: "source"
     submit_date: "submit-date"
     submitter: "submitter"
+    code: "code"
+    title: "title"
+    type: "type"
+    tag: "tag"
 
   # all page titles by controller and action
   # controller names are usually plural (rails convention)
