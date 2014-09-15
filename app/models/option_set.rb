@@ -46,7 +46,8 @@ class OptionSet < ActiveRecord::Base
     }).group('option_sets.id')}
 
   # replication options
-  replicable :child_assocs => :root_node, :parent_assoc => :question, :uniqueness => {:field => :name, :style => :sep_words}
+  replicable :child_assocs => :root_node, :parent_assoc => :question, :uniqueness => {:field => :name, :style => :sep_words},
+    :after_dest_obj_save => :link_copy_nodes_to_copy_self
 
   serialize :level_names, JSON
 
@@ -224,6 +225,13 @@ class OptionSet < ActiveRecord::Base
       if root_node
         root_node.option_set = self
         root_node.save!
+      end
+    end
+
+    def link_copy_nodes_to_copy_self(replication)
+      replication.dest_obj.descendants.each do |node|
+        node.option_set = replication.dest_obj
+        node.save!
       end
     end
 end

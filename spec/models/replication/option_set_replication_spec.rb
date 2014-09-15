@@ -19,9 +19,18 @@ describe OptionSet do
         expect(@copy.standard).to eq @orig
         expect(@copy.is_standard).to eq false
         expect(@copy.total_options).to eq 6
+
+        # Ensure option set gets correct root node id.
         expect(@copy.root_node_id).not_to be_nil
         expect(@copy.root_node_id).not_to eq @orig.root_node_id
         expect(@copy.root_node.standard_id).to eq @orig.root_node_id
+
+        # Ensure option set ID gets copied all the way down.
+        expect(@copy.root_node.option_set_id).to eq @copy.id
+        expect(@copy.root_node.c[0].option_set_id).to eq @copy.id
+        expect(@copy.root_node.c[0].c[0].option_set_id).to eq @copy.id
+
+        # Ensure no duplicates.
         expect(Option.count).to eq 12
         expect(OptionNode.count).to eq 14
       end
