@@ -1187,6 +1187,10 @@ en:
         - "phone: +443726458364"
         - "login: jsmith"
         - "email: jsmith@example.com"
+      questions:
+        - "poll workers"
+        - "code: BallotBoxes"
+        - "type: select"
     expected: "Expected"
     help_link: "Search Help"
     help_title: "Search Help"
