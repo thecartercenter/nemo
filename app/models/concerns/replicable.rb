@@ -2,7 +2,7 @@
 module Replicable
   extend ActiveSupport::Concern
 
-  JOIN_CLASSES = %w(OptionNode Questioning Condition)
+  DEPENDENT_CLASSES = %w(OptionNode Questioning Condition)
 
   # an initial list of attributes that we don't want to copy from the src_obj to the dest_obj
   ATTRIBS_NOT_TO_COPY = %w(id created_at updated_at mission_id mission is_standard standard_id standard)
@@ -61,7 +61,7 @@ module Replicable
 
     # if we're on a recursive step AND we're doing a shallow copy AND this is not a join class,
     # we don't need to do any recursive copying, so just return self
-    if replication.recursed? && replication.shallow_copy? && !JOIN_CLASSES.include?(self.class.name)
+    if replication.recursed? && replication.shallow_copy? && !DEPENDENT_CLASSES.include?(self.class.name)
       add_replication_dest_obj_to_parents_assocation(replication, self)
       return self
     end
@@ -409,10 +409,11 @@ module Replicable
     # by destroying any children on the dest obj that arent on the src obj
     # and then replicating the existing children of the src obj to the dest obj
     def replicate_collection_association(assoc_name, replication)
-      # destroy any children in dest obj that don't exist source obj
+      # Destroy any children in dest obj that don't exist source obj, but ony if they're of a dependent class.
       src_child_ids = send(assoc_name).map(&:id)
-      replication.dest_obj.send(assoc_name).each do |o|
-        replication.dest_obj.send(assoc_name).destroy(o) unless src_child_ids.include?(o.standard_id)
+      dest_assoc = replication.dest_obj.send(assoc_name)
+      dest_assoc.each do |o|
+        dest_assoc.destroy(o) if DEPENDENT_CLASSES.include?(o.class.name) && !src_child_ids.include?(o.standard_id)
       end
 
       # replicate the existing children
@@ -423,10 +424,12 @@ module Replicable
     def replicate_non_collection_association(assoc_name, replication)
       # if orig assoc is nil, make sure copy is also
       if send(assoc_name).nil?
-        unless replication.dest_obj.send(assoc_name).nil?
-          replication.dest_obj.send(assoc_name).destroy
-          replication.dest_obj.send("assoc_name=", nil)
-        end
+        # Destroy the associated object only if it's a dependent class (this also will catch nils).
+        dest_child = replication.dest_obj.send(assoc_name)
+        dest_child.destroy if DEPENDENT_CLASSES.include?(dest_child.class.name)
+
+        # Replicate the nil.
+        replication.dest_obj.send("#{assoc_name}=", nil)
       # else replicate the single child
       else
         replicate_associated(send(assoc_name), assoc_name, replication)
