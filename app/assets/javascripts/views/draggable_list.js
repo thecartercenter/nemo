@@ -116,6 +116,7 @@
     var ol;
     if (item.children) {
       ol = $('<ol>');
+      if (item.children.length > 0) self.wrapper.show();
       item.children.forEach(function(c){ ol.append(self.render_item(c)); });
     }
     li.append(ol);
@@ -182,6 +183,8 @@
 
     // wrap in li and add to view
     $('<li>').html(self.render_inner(item)).appendTo(self.ol);
+
+    self.wrapper.show();
 
     self.dirty = true;
     self.trigger('change');
@@ -251,6 +254,8 @@
     self.modal.find('.translation input').each(function(){
       self.active_item.update_translation({field: 'name', locale: $(this).data('locale'), value: $(this).val()});
     });
+
+    self.wrapper.show();
 
     // render the item in the view
     var old_div = self.active_item.div; // may be undefined
