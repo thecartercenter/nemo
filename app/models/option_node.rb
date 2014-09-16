@@ -150,8 +150,6 @@ class OptionNode < ActiveRecord::Base
       # Symbolize keys if regular Hash. (not needed for HashWithIndifferentAccess)
       children_attribs.each{ |a| a.symbolize_keys! if a.respond_to?(:symbolize_keys!) }
 
-      copy_attribs_to_children
-
       self.ranks_changed = false # Assume false to begin.
       self.options_added = false
       self.options_removed = false
@@ -163,6 +161,8 @@ class OptionNode < ActiveRecord::Base
       # We use the ! variant of update and create below so that validation
       # errors on children and options will cascade up.
       (children_attribs || []).each_with_index do |attribs, i|
+
+        # If there is a matching (by id) existing child.
         attribs[:id] = attribs[:id].to_i if attribs.key?(:id)
         if attribs[:id] && matching = children_by_id[attribs[:id]]
           self.ranks_changed = true if matching.rank != i + 1
@@ -172,7 +172,10 @@ class OptionNode < ActiveRecord::Base
           # Remove from hash so that we'll know later which ones weren't updated.
           children_by_id.delete(attribs[:id])
         else
+          attribs = copy_denormalized_attribs_to_attrib_hash(attribs)
           self.options_added = true
+
+          # We need to strip ID in case it's present due to a node changing parents.
           children.create!(attribs.except(:id).merge(rank: i + 1))
         end
       end
@@ -191,11 +194,16 @@ class OptionNode < ActiveRecord::Base
       self.options_removed = true if node.options_removed?
     end
 
-    def copy_attribs_to_children
-      (children_attribs || []).each do |attribs|
-        [:mission_id, :option_set_id, :is_standard, :standard_id].each{ |k| attribs[k] = send(k) }
-        [:mission_id, :is_standard, :standard_id].each{ |k| attribs[:option_attribs].try('[]=', k, send(k)) }
+    # Copies denormalized attributes like mission, option_set, etc., to:
+    # 1. The given hash.
+    # 2. The given hash's subhash at key :option_attribs, if present.
+    # Returns the modified hash.
+    def copy_denormalized_attribs_to_attrib_hash(hash)
+      %w(mission_id option_set_id is_standard standard_id).each{ |k| hash[k.to_sym] = send(k) }
+      if hash[:option_attribs]
+        %w(mission_id is_standard standard_id).each{ |k| hash[:option_attribs][k.to_sym] = send(k) }
       end
+      hash
     end
 
     def has_answers?

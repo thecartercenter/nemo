@@ -20,35 +20,32 @@ class BroadcastsController < ApplicationController
   # Displays a new broadcast form with the given recipients.
   # @param [Hash] selected A Hash user ids as keys, referring to recipients of the broadcast.
   def new_with_users
-    # load the user objects
     users = User.accessible_by(current_ability).where(:id => params[:selected].keys).all
+    raise "no users given" if users.empty? # This should be impossible
 
-    # raise error if no valid users (this should be impossible)
-    raise "no users given" if users.empty?
-
-    # create a new Broadcast
     @broadcast = Broadcast.accessible_by(current_ability).new(:recipients => users)
 
-    @medium_options = configatron.to_h[:outgoing_sms_adapter] ? Broadcast::MEDIUM_OPTIONS : Broadcast::MEDIUM_OPTIONS_WITHOUT_SMS
-
-    # call authorize so no error
     authorize!(:create, @broadcast)
 
-    begin
-      # get credit balance
-      @balance = Smser.check_balance
-    rescue NotImplementedError
-      # don't need to do anything here
-    rescue
-      # log all other errors
-      logger.error("SMS balance request error: #{$!}")
-    end
+    if @broadcast.no_possible_recipients?
+      flash[:error] = t('broadcast.no_possible_recipients')
+      redirect_to(users_path)
+    else
+      begin
+        @balance = Smser.check_balance
+      rescue NotImplementedError
+        # don't need to do anything here
+      rescue
+        logger.error("SMS balance request error: #{$!}")
+      end
 
-    render(:form)
+      set_medium_options
+      render(:form)
+    end
   end
 
   def show
-    # We need to include medium options so that chosen option can be displayed.
+    # We need to include all medium options in case this is an old broadcast and the options have changed.
     @medium_options = Broadcast::MEDIUM_OPTIONS
     render(:form)
   end
@@ -62,7 +59,14 @@ class BroadcastsController < ApplicationController
       end
       redirect_to(broadcast_url(@broadcast))
     else
+      set_medium_options
       render(:form)
     end
   end
+
+  private
+
+    def set_medium_options
+      @medium_options = configatron.to_h[:outgoing_sms_adapter] ? Broadcast::MEDIUM_OPTIONS : Broadcast::MEDIUM_OPTIONS_WITHOUT_SMS
+    end
 end

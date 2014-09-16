@@ -37,9 +37,9 @@ Note to install the software below we recommend the following package managers:
 1. **Ruby 1.9.3+**
 
 1. **Memcached 1.4+**
-  - A good resource on how to install on a Mac is [here](http://www.jroller.com/JamesGoodwill/entry/installing_and_configuring_memcached)
-  - Ensure memcached is running, even for development, since caching is enabled in development and production environments.
+  - Ensure memcached is running before starting server, even for development, since caching is enabled in development and production environments.
   - For production environments, ensure memcached is running on port 11219
+  - For development environments, be sure to increase the maximum size (limit_maxbytes) to at least 2 MB.
 
 1. **MySQL 5.0+**
   - Create an empty database and accompanying user for use by the app (E.g. development database *elmo_d* with username *elmo*)

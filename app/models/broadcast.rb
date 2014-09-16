@@ -84,6 +84,10 @@ class Broadcast < ActiveRecord::Base
     [sms, email]
   end
 
+  def no_possible_recipients?
+    recipients.all?{ |u| u.email.blank? && u.phone.blank? && u.phone2.blank? }
+  end
+
   private
 
     def has_eligible_recipients

@@ -8,6 +8,10 @@
   <%= stylesheet_link_tag "application", :media => "all" %>
   <%= stylesheet_link_tag "application-screen", :media => "screen" %>
   <%= stylesheet_link_tag "application-print", :media => "print" %>
+
+  <%# For Capybara. %>
+  <%= stylesheet_link_tag 'disable-transition' if Rails.env.test? %>
+
   <link href='//fonts.googleapis.com/css?family=Raleway:400,700' rel='stylesheet' type='text/css'>
   <link href='//fonts.googleapis.com/css?family=Open+Sans:400italic,400,700' rel='stylesheet' type='text/css'>
   <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
@@ -58,16 +62,14 @@
   <div id="userinfo">
     <% if current_user %>
       <% unless admin_mode? %>
-        <%# current mission and dropdown, if there are choices %>
         <% if @accessible_missions.any? %>
           <form id="change_mission">
+            <%# Changing missions when on a post or put request doesn't make sense, so we disable with message in that case. %>
             <%= select_tag('change_mission',
               options_from_collection_for_select(@accessible_missions, 'compact_name', 'name', current_mission.try(:compact_name)),
-              :class => 'form-control',
-              :prompt => "[#{I18n.t('common.none')}]") %>
+              class: 'form-control', prompt: "[#{I18n.t('common.none')}]",
+              disabled: !request.get?, title: request.get? ? '' : I18n.t('layout.mission_change_get_only')) %>
           </form>
-        <% else %>
-          <strong><%= current_mission ? current_mission.name : t("common.none") %></strong>
         <% end %>
       <% end %>
 
@@ -151,16 +153,16 @@
 
   <div id="footer">
 
-    <%# We can't change language unless the request is GET since no way to redirect browser to POST, etc. %>
-    <% if request.get? %>
-      <%= link_to(t("layout.change_language"), "#", :id => "locale_form_link") %>
+    <%= link_to(t("layout.change_language"), "#", :id => "locale_form_link") %>
 
-      <%= form_tag(nil, :id => "locale_form") do %>
-        <%= select_tag(:locale, options_for_select(configatron.full_locales.map{|l| [language_name(l), l]}, I18n.locale)) %>
-      <% end %>
-
-      &nbsp;|&nbsp;
+    <%= form_tag(nil, :id => "locale_form") do %>
+      <%# We can't change language unless the request is GET since no way to redirect browser to POST, etc. %>
+      <%# So we disable with message in that case. %>
+      <%= select_tag(:locale, options_for_select(configatron.full_locales.map{|l| [language_name(l), l]}, I18n.locale),
+        class: 'form-control', disabled: !request.get?, title: request.get? ? '' : I18n.t('layout.locale_change_get_only')) %>
     <% end %>
+
+    &nbsp;|&nbsp;
 
     <%= t("layout.time_zone") %>: <%= Time.zone.to_s %> &nbsp;|&nbsp;
 
