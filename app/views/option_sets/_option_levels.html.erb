@@ -1,8 +1,8 @@
-<div id="option-levels-wrapper" class="draggable-list-wrapper">
-</div>
-<a href="#" class="add-link"><%= t('option_set.add_level') %></a>
+<div id="option-levels-wrapper" class="draggable-list-wrapper"></div>
 
 <% unless read_only %>
+  <a href="#" class="add-link"><%= t('option_set.add_level') %></a>
+
   <%# edit option level modal %>
   <div class="modal fade edit-named-item" id="edit-option-level" tabindex="-1" role="dialog" aria-labelledby="editOptionLevel" aria-hidden="true">
     <div class="modal-dialog">
@@ -17,7 +17,7 @@
 
           <% configatron.preferred_locales.each do |locale| %>
             <div class="translation">
-              <label for="<%= locale %>"><%= language_name(locale) %></label>
+              <label for="option_level_name_<%= locale %>"><%= language_name(locale) %></label>
               <input type="text" class="form-control" id="option_level_name_<%= locale %>"
                 data-locale="<%= locale %>" maxlength="<%= OptionLevel::MAX_NAME_LENGTH %>">
             </div>

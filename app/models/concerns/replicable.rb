@@ -92,6 +92,8 @@ module Replicable
 
     dest_obj.save!
 
+    self.send(replicable_opts(:after_dest_obj_save), replication) if replicable_opts(:after_dest_obj_save)
+
     # if this is a standard-to-mission replication, add the newly replicated dest obj to the list of copies
     # unless it is there already
     add_copy(dest_obj) if replication.to_mission?
@@ -448,5 +450,4 @@ module Replicable
       new_replication = replication.clone_for_recursion(obj, assoc_name)
       obj.replicate(new_replication)
     end
-
 end

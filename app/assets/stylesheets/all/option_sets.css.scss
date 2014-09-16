@@ -7,7 +7,6 @@ form.option_set_form {
   /* hide the option levels at first */
   div.form_field[data-field-name=option_levels] {
     display: none;
-    padding-bottom: 20px;
   }
 
   /* special case for add options widget */
@@ -37,53 +36,61 @@ form.option_set_form {
 
   /* FOR THE SORTABLE/DRAGGABLE LIST */
 
-  /* these styles only apply to the outer ol */
-  .draggable-list-wrapper > ol {
-    margin: 0 0 5px 0;
-    width: 421px;
-  }
+  .draggable-list-wrapper {
+    display: none;
 
-  .draggable-list-wrapper ol {
-    padding-left: 0;
+    /* these styles only apply to the outer ol */
+    > ol {
+      margin: 0 0 5px 0;
+      width: 421px;
 
-    li {
-      display: block;
-      margin: 5px 0;
-      min-height: 15px;
-      border-radius: 5px;
-      -moz-border-radius: 5px;
-      -webkit-border-radius: 5px;
-      padding: 5px;
-      border: 1px solid #CCC;
-      background: #eee;
-      cursor: default;
-
-      &:last-child {
-        margin-bottom: 0;
+      > li:first-child {
+        margin-top: 0;
       }
+    }
 
-      div {
-        /* icon */
-        i.fa-times, i.fa-pencil {
-          color: $elmo-blue;
-        }
-        i.fa-sort {
-          margin-right: 5px;
+    ol {
+      padding-left: 0;
+
+      li {
+        display: block;
+        margin: 5px 0;
+        min-height: 15px;
+        border-radius: 5px;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        padding: 5px;
+        border: 1px solid #CCC;
+        background: #eee;
+        cursor: default;
+
+        &:last-child {
+          margin-bottom: 0;
         }
 
-        /* locales */
-        em {
-          font-style: normal;
-          font-size: 10px;
-          margin-left: 5px;
-          color: $theme_green;
-        }
+        div {
+          /* icon */
+          i.fa-times, i.fa-pencil {
+            color: $elmo-blue;
+          }
+          i.fa-sort {
+            margin-right: 5px;
+          }
 
-        /* edit/remove links */
-        div.links {
-          float: right;
-          text-align: right;
-          width: 50px;
+          /* locales */
+          em {
+            font-style: normal;
+            font-size: 10px;
+            margin-left: 5px;
+            color: $theme_green;
+          }
+
+          /* edit/remove links */
+          div.links {
+            float: right;
+            text-align: right;
+            width: 50px;
+          }
         }
       }
     }

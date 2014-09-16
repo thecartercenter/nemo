@@ -36,17 +36,27 @@
     self.modal.find('button.btn-default').on('click', function(){ self.cancel_edit(); });
 
     // show/hide save button when translations change
-    $('body').on('keyup change', '.edit-named-item div.translation input', function(e){
-      // if all translation boxes in this modal are blank, hide the 'save' button
-      var show = false;
-      $(e.target).closest('.modal').find('div.translation input').each(function(){
-        if ($(this).val().trim() != '') {
-          show = true;
-          return false;
-        }
-      });
-      $(e.target).closest('.modal').find('.btn-primary')[show ? 'show' : 'hide']();
+    $('body').on('keyup change', '.edit-named-item div.translation input', function(){ self.toggle_save_button_on_empty(); });
+
+    // Catch modal form submission.
+    self.modal.on('keypress', function(e) {
+      if (e.keyCode == 13) {
+        var btn = self.modal.find('.btn-primary');
+        if (btn.is(':visible')) btn.trigger('click');
+      }
+    })
+  };
+
+  klass.prototype.toggle_save_button_on_empty = function() { var self = this;
+    // if all translation boxes in this modal are blank, hide the 'save' button
+    var show = false;
+    self.modal.find('div.translation input').each(function(){
+      if ($(this).val().trim() != '') {
+        show = true;
+        return false;
+      }
     });
+    self.modal.find('.btn-primary')[show ? 'show' : 'hide']();
   };
 
   // turns nestability on and off
@@ -116,6 +126,7 @@
     var ol;
     if (item.children) {
       ol = $('<ol>');
+      if (item.children.length > 0) self.wrapper.show();
       item.children.forEach(function(c){ ol.append(self.render_item(c)); });
     }
     li.append(ol);
@@ -183,6 +194,8 @@
     // wrap in li and add to view
     $('<li>').html(self.render_inner(item)).appendTo(self.ol);
 
+    self.wrapper.show();
+
     self.dirty = true;
     self.trigger('change');
   };
@@ -228,6 +241,12 @@
 
     // show the in_use warning if appopriate
     if (self.active_item.in_use) self.modal.find('div[id$=in_use_name_change_warning]').show();
+
+    self.modal.on('shown.bs.modal', function() {
+      self.modal.find('input[type=text]').focus();
+    });
+
+    self.toggle_save_button_on_empty();
   };
 
   // removes an item from the view
@@ -251,6 +270,8 @@
     self.modal.find('.translation input').each(function(){
       self.active_item.update_translation({field: 'name', locale: $(this).data('locale'), value: $(this).val()});
     });
+
+    self.wrapper.show();
 
     // render the item in the view
     var old_div = self.active_item.div; // may be undefined
