@@ -6,6 +6,7 @@
     $(params.el).on('change', function(e){
       var new_mission_name = $(e.target).find('option:selected').val();
       if (new_mission_name == '')
+        // Redirect straight to root if chose 'None' from dropdown.
         window.location.href = ELMO.app.url_builder.build('/', {mode: 'basic'}) + '?missionchange=1';
       else {
         // If currently in basic mode, we automatically redirect to mission root.
