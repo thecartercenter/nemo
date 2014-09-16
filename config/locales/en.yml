@@ -1342,56 +1342,58 @@ en:
 
         * __romeo juliet__
 
-        matches user names, login IDs, and emails. To search based on specific attributes, use a qualifier, e.g.:
+        only searches the question titles. To search based on question attributes, use a qualifier, e.g.:
 
-        * __email: @example.com__
+        * __code: BallotBox__
 
-        will search for users with email addresses matching '@example.com'.
+        will show questions with 'BallotBox' in their code.
 
         Combine both of the above to narrow your search:
 
-        * __Susan email: @example.com__
+        * __romeo juliet code: BallotBox__
 
-        will search for users named Susan with an example.com email address.
+        will show responses to the 'Widgets' form containing the words 'romeo' and 'juliet'.
 
         The full set of qualifiers you can use is as follows:
 
-        * __name__ The user's full name
-        * __login__ The user's login name
-        * __email__ The user's email address
-        * __phone__ The user's phone number (no dashes or other punctuation)
-
-        Partial matches are allowed for all qualifiers.
+        * __title__ The question title (partial matches allowed)
+        * __code__ The question code (partial matches allowed)
+        * __type__ The question type (e.g. 'text', 'select_multiple')
+        * __tag__ Searches tags applied to the question
 
         ## Exact Phrases ##
 
         Exact phrases can be matched by enclosing the phrase in double quotes:
 
-        * __"john smith"__
+        * __"the rain in spain"__
+
+        Double quoted phrases can be mixed with non-quoted terms:
+
+        * __apples oranges "passion fruit"__
 
         ## All Terms vs. Any Term
 
         By default, all terms in the search must be matched. For example,
 
-        * __john smith__
+        * __alpha lima peru__
 
-        matches only users with 'john' and 'smith' both appearing in their name. Use the vertical bar ('|') character to match several names:
+        matches only questions with all three of those words. Use the vertical bar ('|') character to match several words/phrases:
 
-        * __abdul | juanita | clarice__
+        * __apples | oranges | "passion fruit"__
 
         The '|' character can also be used with qualifiers:
 
-        * __email: ( john@example.com | patty@foo.com )__
+        * __code: ( Lions | "Bears and Sharks" | Tigers )__
 
-        matches users with any of the above email addresses.
+        matches questions with any of the above codes.
 
         ## Negation
 
         You can negate a qualified search by using the negation operator:
 
-        * __name != Oluwaseun__
+        * __code != Widgets__
 
-        will match users not named 'Oluwaseun'.
+        will match questions with any code not containing 'Widgets'.
 
     invalid_op: "The operator '%{op}' is not valid for the qualifier '%{qualifier}'."
     multiple_terms_not_allowed: "Multiple terms aren't allowed for '%{qualifier}' searches unless OR is used."
