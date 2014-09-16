@@ -30,8 +30,8 @@ describe BroadcastsController do
     it 'new_with_users should work' do
       post_s(new_with_users_broadcasts_path, selected: {@user2.id => '1', @user3.id => '1'})
 
-      # Change language link should be hidden since this is a rendering POST request.
-      assert_select('#locale_form_link', false)
+      # Change language box should be disabled since this is a rendering POST request.
+      assert_select('select#locale[disabled=disabled]', true)
     end
 
     it 'create and show should work' do
