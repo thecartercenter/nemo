@@ -1194,7 +1194,7 @@ en:
       questions:
         - "poll workers"
         - "code: BallotBoxes"
-        - "type: select"
+        - "type: select_one"
     expected: "Expected"
     help_link: "Search Help"
     help_title: "Search Help"
@@ -1278,7 +1278,6 @@ en:
         will match responses submitted in the month of January 2000.
 
       users: |-
-
         ## Qualifiers ##
 
         A simple search such as:
@@ -1335,6 +1334,65 @@ en:
         * __name != Oluwaseun__
 
         will match users not named 'Oluwaseun'.
+
+      questions: |-
+        ## Qualifiers ##
+
+        A simple search such as:
+
+        * __romeo juliet__
+
+        matches user names, login IDs, and emails. To search based on specific attributes, use a qualifier, e.g.:
+
+        * __email: @example.com__
+
+        will search for users with email addresses matching '@example.com'.
+
+        Combine both of the above to narrow your search:
+
+        * __Susan email: @example.com__
+
+        will search for users named Susan with an example.com email address.
+
+        The full set of qualifiers you can use is as follows:
+
+        * __name__ The user's full name
+        * __login__ The user's login name
+        * __email__ The user's email address
+        * __phone__ The user's phone number (no dashes or other punctuation)
+
+        Partial matches are allowed for all qualifiers.
+
+        ## Exact Phrases ##
+
+        Exact phrases can be matched by enclosing the phrase in double quotes:
+
+        * __"john smith"__
+
+        ## All Terms vs. Any Term
+
+        By default, all terms in the search must be matched. For example,
+
+        * __john smith__
+
+        matches only users with 'john' and 'smith' both appearing in their name. Use the vertical bar ('|') character to match several names:
+
+        * __abdul | juanita | clarice__
+
+        The '|' character can also be used with qualifiers:
+
+        * __email: ( john@example.com | patty@foo.com )__
+
+        matches users with any of the above email addresses.
+
+        ## Negation
+
+        You can negate a qualified search by using the negation operator:
+
+        * __name != Oluwaseun__
+
+        will match users not named 'Oluwaseun'.
+
     invalid_op: "The operator '%{op}' is not valid for the qualifier '%{qualifier}'."
     multiple_terms_not_allowed: "Multiple terms aren't allowed for '%{qualifier}' searches unless OR is used."
     must_use_qualifier: "You must use a qualifier for all search terms."

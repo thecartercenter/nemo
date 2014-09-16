@@ -31,5 +31,9 @@ describe Question do
       # partial tag search should not work
       expect(search 'tag: thrifts').to eq []
     end
+
+    it "empty search" do
+      expect(search '').to eq @questions
+    end
   end
 end
