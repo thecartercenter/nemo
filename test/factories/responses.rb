@@ -24,7 +24,7 @@ FactoryGirl.define do
               rank: values.size > 1 ? i + 1 : nil,
               option: v.nil? ? nil : (options_by_name[v] or raise "could not find option with name '#{v}'")
             )
-          end
+          end.shuffle
 
         # in this case, a should be an array of choice names
         when 'select_multiple'
