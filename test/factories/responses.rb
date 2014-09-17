@@ -1,57 +1,47 @@
 FactoryGirl.define do
   factory :response do
     ignore do
-      _answers []
+      answer_values []
     end
 
     user
     mission { get_mission }
     form { build(:form, :mission => mission) }
 
-    # build answer objects from _answers array
+    # Build answer objects from answer_values array
+    # Array may contain nils, which should result in answers with nil values.
     answers do
-      _answers.each_with_index.map do |a, idx|
-        # build answer from string value
+      answer_values.each_with_index.map do |value, idx|
         qing = form.questionings[idx]
-        ans = Answer.new(:questioning => qing)
 
-        unless a.nil?
-          case qing.qtype_name
-
-          when 'select_one'
-            if a.nil?
-              ans.option_id = nil
-            else
-              option = qing.options.index_by(&:name)[a] or raise "could not find option with name '#{a}'"
-              ans.option_id = option.id
-            end
-
-          # in this case, a should be either nil or an array of arrays of choice names
-          when 'select_multiple'
-            # if a is nil, we can just do nothing
-            unless a.nil?
-              options_by_name = qing.options.index_by(&:name)
-              ans.choices = a.map do |c|
-                option = options_by_name[c] or raise "could not find option with name '#{c}'"
-                Choice.new(:option_id => option.id)
-              end
-            end
-
-          when 'date'
-            ans.date_value = a
-
-          when 'time'
-            ans.time_value = a
-
-          when 'datetime'
-            ans.datetime_value = a
-
-          else
-            ans.value = a
+        case qing.qtype_name
+        when 'select_one'
+          options_by_name = qing.all_options.index_by(&:name)
+          values = value.nil? ? [nil] : Array.wrap(value)
+          values.each_with_index.map do |v,i|
+            Answer.new(
+              questioning: qing,
+              rank: values.size > 1 ? i + 1 : nil,
+              option: v.nil? ? nil : (options_by_name[v] or raise "could not find option with name '#{v}'")
+            )
           end
+
+        # in this case, a should be an array of choice names
+        when 'select_multiple'
+          options_by_name = qing.options.index_by(&:name)
+          Answer.new(
+            questioning: qing,
+            choices: value.map{ |c| Choice.new(option: options_by_name[c]) or raise "could not find option with name '#{c}'" }
+          )
+
+        when 'date', 'time', 'datetime'
+          Answer.new(questioning: qing, :"#{qing.qtype_name}_value" => value)
+
+        else
+          Answer.new(questioning: qing, value: value)
         end
-        ans
-      end
+      end.flatten
     end
+
   end
 end

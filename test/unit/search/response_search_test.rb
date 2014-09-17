@@ -36,11 +36,11 @@ class Search::ResponseSearchTest < ActiveSupport::TestCase
 
         # add some responses
         r1 = FactoryGirl.create(:response, :form => @form, :reviewed => false,
-          :_answers => [1, 'the quick brown', 'alpha', 'apple bear cat', 'dog earwax ipswitch'])
+          :answer_values => [1, 'the quick brown', 'alpha', 'apple bear cat', 'dog earwax ipswitch'])
         r2 = FactoryGirl.create(:response, :form => @form, :reviewed => true,
-          :_answers => [1, 'fox heaven jumps', 'bravo', 'fuzzy gusher', 'apple heaven ipswitch'])
+          :answer_values => [1, 'fox heaven jumps', 'bravo', 'fuzzy gusher', 'apple heaven ipswitch'])
         r3 = FactoryGirl.create(:response, :form => @form, :reviewed => true,
-          :_answers => [1, 'over bravo the lazy brown quick dog', 'contour', 'joker lumpy', 'meal nexttime'])
+          :answer_values => [1, 'over bravo the lazy brown quick dog', 'contour', 'joker lumpy', 'meal nexttime'])
 
         do_sphinx_index
 
