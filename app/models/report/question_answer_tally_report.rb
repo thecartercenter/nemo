@@ -1,6 +1,6 @@
 class Report::QuestionAnswerTallyReport < Report::TallyReport
 
-  # Called when related OptionSetChoice destroyed.
+  # Called when related OptionSet (and OptionSetChoice) are destroyed.
   # Destroys self if there are no option sets left.
   def option_set_destroyed
     destroy if option_sets.empty?
