@@ -3,10 +3,10 @@
     value="<%= params[:search] %>" id="search_str" placeholder="<%= t("common.search") %>">
   <input type="submit" value="<%= t("common.search") %>" class="btn">
   <% if params[:search].present? %>
-    <input type="button" value="<%= t("common.clear") %>" id="clear_button" class="btn">
+    <input type="button" value="<%= t("common.clear") %>" class="btn btn-clear">
   <% end %>
   <br/>
-  <div class="search_footer">
+  <div class="search-footer">
     <%= search_examples %>
     <a href="#"><%= t('search.help_link') %></a>
   </div>
@@ -21,7 +21,7 @@
         <h4 class="modal-title"><%= t("search.help_title") %></h4>
       </div>
       <div class="modal-body">
-         <%= tmd("search.help_text.#{controller_name}") %>
+         <%= tmd("search.help_text.#{controller_name}", search_help_text_params) %>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal"><%= I18n.t("common.close") %></button>
@@ -29,3 +29,7 @@
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+
+<%= javascript_doc_ready do %>
+  new ELMO.Views.SearchFormView();
+<% end %>

@@ -9,6 +9,16 @@ class QuestionsController < ApplicationController
   def index
     @questions = @questions.with_assoc_counts.by_code.paginate(:page => params[:page], :per_page => 25)
     load_importable_objs
+
+    # do search if applicable
+    if params[:search].present?
+      begin
+        @questions = Question.do_search(@questions, params[:search])
+      rescue Search::ParseError
+        flash.now[:error] = $!.to_s
+        @search_error = true
+      end
+    end
   end
 
   def show
