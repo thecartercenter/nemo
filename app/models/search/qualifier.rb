@@ -2,6 +2,8 @@ class Search::Qualifier
 
   attr_reader :name, :col, :type, :pattern, :default, :validator, :assoc
 
+  ANDABLE_TYPES = %w(text indexed translated)
+
   # name  - the name of the qualifier (required, underscored)
   # type - qualifier type (optional, defaults to 'regular')
   # pattern - a regexp that will match the qualifier text
@@ -19,7 +21,7 @@ class Search::Qualifier
 
   def op_valid?(op)
     case type
-    when :regular, :text then %w(= !=).include?(op)
+    when :regular, :text, :translated then %w(= !=).include?(op)
     when :indexed then op == '='
     else true
     end
@@ -35,7 +37,7 @@ class Search::Qualifier
 
   # whether multiple ANDed terms are allowed for this qualifier
   def and_allowed?
-    type == :text || type == :indexed
+    ANDABLE_TYPES.include?(type.to_s)
   end
 
   def default?

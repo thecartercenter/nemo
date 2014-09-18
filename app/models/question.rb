@@ -71,7 +71,7 @@ class Question < ActiveRecord::Base
   def self.search_qualifiers
     [
       Search::Qualifier.new(name: "code", col: "questions.code", type: :text),
-      Search::Qualifier.new(name: "title", col: "questions._name", type: :text, default: true),
+      Search::Qualifier.new(name: "title", col: "questions.name_translations", type: :translated, default: true),
       Search::Qualifier.new(name: "type", col: "questions.qtype_name"),
       Search::Qualifier.new(name: "tag", col: "tags.name", assoc: :tags),
     ]
