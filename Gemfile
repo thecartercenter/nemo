@@ -97,4 +97,5 @@ group :development, :test do
   gem 'assert_difference'            # test assertion
   gem 'debugger'
   gem 'debugger-xml'
+  gem 'launchy'                      # auto-open capybara html file
 end

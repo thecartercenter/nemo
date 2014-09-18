@@ -68,6 +68,28 @@ class Question < ActiveRecord::Base
     where(:key => true).all.sort_by{|q| q.questionings.size}[0...n]
   end
 
+  def self.search_qualifiers
+    [
+      Search::Qualifier.new(name: "code", col: "questions.code", type: :text),
+      Search::Qualifier.new(name: "title", col: "questions._name", type: :text, default: true),
+      Search::Qualifier.new(name: "type", col: "questions.qtype_name"),
+      Search::Qualifier.new(name: "tag", col: "tags.name", assoc: :tags),
+    ]
+  end
+
+  # searches for questions
+  # based on User.do_search
+  def self.do_search(relation, query)
+    # create a search object and generate qualifiers
+    search = Search::Search.new(str: query, qualifiers: search_qualifiers)
+
+    # apply the needed associations
+    relation = relation.joins(search.associations)
+
+    # apply the conditions
+    relation = relation.where(search.sql)
+  end
+
   def subquestions
     @subquestions ||= if multi_level?
       levels.each_with_index.map{ |l, i| Subquestion.new(question: self, level: l, rank: i + 1) }
