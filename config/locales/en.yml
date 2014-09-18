@@ -1362,7 +1362,7 @@ en:
 
         * __title__ The question title (partial matches allowed)
         * __code__ The question code (partial matches allowed)
-        * __type__ The question type (e.g. 'text', 'select_multiple')
+        * __type__ The question type (%{question_types})
         * __tag__ Searches tags applied to the question
 
         ## Exact Phrases ##
