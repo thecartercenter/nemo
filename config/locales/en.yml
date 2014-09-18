@@ -1197,7 +1197,8 @@ en:
       questions:
         - "poll workers"
         - "code: BallotBoxes"
-        - "type: select_one"
+        # select-one below should not be translated.
+        - "type: select-one"
     expected: "Expected"
     help_link: "Search Help"
     help_title: "Search Help"

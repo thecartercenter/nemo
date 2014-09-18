@@ -112,6 +112,9 @@ class Search::Token
       value_sql = value_token.to_sql
       op_sql = op.to_sql
 
+      # Transform the value if qualifier has transformer.
+      value_sql = qual.preprocessor.call(value_sql) if qual.preprocessor
+
       # if rhs is [blank], act accordingly
       inner = if [I18n.locale, :en].map{|l| '[' + I18n.t('search.blank', :locale => l) + ']'}.include?(value_sql)
         op_sql = (op_sql == "=" ? "IS" : "IS NOT")

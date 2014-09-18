@@ -10,6 +10,7 @@ describe Question do
       @questions = [
         create(:question, name_en: 'How many cheeses?', name_fr: 'Combien de fromages?', code: 'Cheese'),
         create(:question, name_en: 'Your job?', name_fr: 'Votre metier?', qtype_name: 'text', tags: [create(:tag, name: 'employment')]),
+        create(:question, name_en: 'Yea or nay?', qtype_name: 'select_one')
       ]
     end
 
@@ -33,6 +34,7 @@ describe Question do
 
     it "question type search" do
       expect(search 'type: text').to eq [@questions[1]]
+      expect(search 'type: select-one').to eq [@questions[2]]
     end
 
     it "tag search" do

@@ -1,6 +1,6 @@
 class Search::Qualifier
 
-  attr_reader :name, :col, :type, :pattern, :default, :validator, :assoc
+  attr_reader :name, :col, :type, :pattern, :default, :validator, :assoc, :preprocessor
 
   ANDABLE_TYPES = %w(text indexed translated)
 
