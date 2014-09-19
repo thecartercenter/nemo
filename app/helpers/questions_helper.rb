@@ -47,9 +47,9 @@ module QuestionsHelper
   end
 
   # Builds option tags for the given option sets. Adds multilevel data attrib.
-  def option_set_select_option_tags(sets)
+  def option_set_select_option_tags(sets, selected_id)
     sets.map do |s|
-      content_tag(:option, s.name, value: s.id, :'data-multilevel' => s.multi_level?)
+      content_tag(:option, s.name, value: s.id, selected: s.id == selected_id ? 'selected' : nil, :'data-multilevel' => s.multi_level?)
     end.join.html_safe
   end
 end

@@ -13,7 +13,7 @@
 
     // run the type box changed event immediately
     // this might be the only time it runs since the form might be in show mode
-    self.question_type_changed();
+    self.question_type_changed({initial: true});
 
     // hookup add option set link
     $('div.question_fields a.create_option_set').on('click', function(){ self.show_option_set_form(); return false; });
@@ -45,12 +45,13 @@
       return field_div.find('input, select, textarea').val();
   }
 
-  klass.prototype.question_type_changed = function() { var self = this;
+  klass.prototype.question_type_changed = function(options) { var self = this;
     var selected_type = self.field_value('qtype_name');
 
     // Show/hide option set field and hint
-    self.show_option_set_select(selected_type == 'select_one' || selected_type == 'select_multiple',
-      {multilevel: selected_type == 'select_one'});
+    options = options || {}
+    options.multilevel = selected_type == 'select_one'
+    self.show_option_set_select(selected_type == 'select_one' || selected_type == 'select_multiple', options);
 
     // show/hide max/min
     var show_max_min = (selected_type == "decimal" || selected_type == "integer");
@@ -76,7 +77,8 @@
     }
 
     // Reset value.
-    select.find('.control select').val('');
+    if (!options.initial)
+      select.find('.control select').val('');
   };
 
   // shows the create option set form and sets up a callback to receive the result
