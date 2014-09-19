@@ -9,7 +9,7 @@ describe Report::ListReport do
     end
 
     it 'should have answer values in correct order' do
-      assert_report(@report, ["Question Title 1"], ["Animal, Cat"])
+      assert_report(@report, [@form.questions[0].name], ["Animal, Cat"])
     end
   end
 
