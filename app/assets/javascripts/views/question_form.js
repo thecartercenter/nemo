@@ -96,8 +96,8 @@
     $("#create-option-set").modal('hide');
 
     // add the new option set to the list and select it
-    $('div.question_fields .form_field#option_set_id select').append($('<option>', {value: option_set.id}).text(option_set.name))
-      .val(option_set.id);
+    var option = $('<option>', {value: option_set.id, 'data-multilevel': option_set.multi_level}).text(option_set.name);
+    $('div.question_fields .form_field#option_set_id select').append(option).val(option_set.id);
 
     // flash the option set row
     $('div.question_fields .form_field#option_set_id').effect("highlight", {}, 1000);
