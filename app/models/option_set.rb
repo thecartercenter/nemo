@@ -122,6 +122,11 @@ class OptionSet < ActiveRecord::Base
     ttl_question_count > 0
   end
 
+  # Checks if option set is used in at least one select_multiple question.
+  def has_select_multiple_questions?
+    questions.any?{ |q| q.qtype_name == 'select_multiple' }
+  end
+
   # gets total number of questions with which this option set is associated
   # in the case of a std option set, this includes non-standard questions that use copies of this option set
   def ttl_question_count

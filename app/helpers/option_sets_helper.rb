@@ -32,4 +32,10 @@ module OptionSetsHelper
     else option_set.send(field)
     end
   end
+
+  def multi_level_forbidden_notice
+    text = tmd('option_set.multi_level_forbidden_notice')
+    icon = content_tag(:i, '', class: 'fa fa-exclamation-triangle')
+    content_tag(:div, (icon + content_tag(:div, text)).html_safe, class: "form-warning alert alert-info")
+  end
 end
