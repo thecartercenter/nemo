@@ -70,11 +70,28 @@ module OdkHelper
   end
 
   # Renders the given OptionNode as XML for use with ODK, etc.
-  def option_node_as_xml(node)
+  def option_node_as_xml(option_set, node, depth = 0, path = [1])
     id = node.option_id
     "".tap do |xml|
       xml << "<value>#{id}</value><key>option#{id}</key>".html_safe unless node.root?
-      xml << node.children.map{ |c| content_tag(:opt, option_node_as_xml(c)) }.join.html_safe
+
+      if node.has_children?
+        # Recursive step.
+        xml << node.sorted_children.each_with_index.map do |c, i|
+          content_tag(:opt, option_node_as_xml(option_set, c, depth + 1, path + [i+1]))
+        end.join.html_safe
+      else
+        # If node has no children and we're on the first branch of the tree,
+        # we need to ensure the branch extends to the max depth of the tree. Otherwise ODK complains.
+        if path.uniq == [1] && (depth_diff = option_set.max_depth - depth) > 0
+          dummy_nodes = ''
+          depth_diff.times do
+            dummy_nodes = "<opt><value></value><key>blankoption</key>#{dummy_nodes}</opt>"
+          end
+          xml << dummy_nodes
+        end
+      end
+
     end.html_safe
   end
 end

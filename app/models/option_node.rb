@@ -39,6 +39,10 @@ class OptionNode < ActiveRecord::Base
     Option.where(id: descendants.map(&:option_id))
   end
 
+  def max_depth
+    @max_depth ||= descendants.maximum('ancestry_depth')
+  end
+
   # Returns options of children, ordered by rank.
   def child_options
     @child_options ||= sorted_children.includes(:option).map(&:option)
