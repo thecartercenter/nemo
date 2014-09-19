@@ -27,16 +27,16 @@
       }, 1000);
     })
 
-    // setup auto-reload
-    self.reload_timer = setTimeout(function(){ self.reload(); }, AJAX_RELOAD_INTERVAL * 1000);
+    // Setup ajax reload timer and test link.
+    self.reload_timer = setTimeout(function(){ self.reload_ajax(); }, AJAX_RELOAD_INTERVAL * 1000);
+    $('a.reload-ajax').on('click', function(){ self.reload_ajax(); });
 
-    // setup long-running page reload timer, unless it already exists
-    // this timer ensures that we don't have memory issues due to a long running page
-    if (!ELMO.app.dashboard_reload_timer)
-      ELMO.app.dashboard_reload_timer = setTimeout(function(){
-        window.location.href = ELMO.app.url_builder.build('welcome') + '?report_id=' + self.report_view.current_report_id;
-      }, PAGE_RELOAD_INTERVAL * 60000);
-
+    // Setup long-running page reload timer, unless it already exists.
+    // This timer ensures that we don't have memory issues due to a long running page.
+    if (!ELMO.app.dashboard_reload_timer) {
+      ELMO.app.dashboard_reload_timer = setTimeout(function(){ self.reload_page(); }, PAGE_RELOAD_INTERVAL * 60000);
+      $('a.reload-page').on('click', function() { self.reload_page(); });
+    }
     // adjust sizes for the initial load
     self.adjust_pane_sizes();
 
@@ -86,8 +86,8 @@
     $('.report_main').height(cont_h - title_h - 2 * spacing - stats_h);
   };
 
-  // reloads the page, passing the current report id
-  klass.prototype.reload = function(args) { var self = this;
+  // Reloads the page via AJAX, passing the current report id
+  klass.prototype.reload_ajax = function(args) { var self = this;
     // Don't have session timeout if in full screen mode
     var full_screen = JSON.parse(localStorage.getItem("full-screen")) ? 1 : undefined;
 
@@ -111,6 +111,11 @@
       }
     });
 
+  };
+
+  // Reloads the page via full refresh to avoid memory issues.
+  klass.prototype.reload_page = function() { var self = this;
+    window.location.href = ELMO.app.url_builder.build('welcome') + '?report_id=' + self.report_view.current_report_id;
   };
 
   klass.prototype.toggle_full_screen = function() { var self = this;
