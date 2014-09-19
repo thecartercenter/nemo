@@ -126,7 +126,7 @@ class Report::SummaryCollectionMultipleTest < ActiveSupport::TestCase
       answers.shuffle! unless options[:dont_shuffle]
 
       # build the responses
-      answers.each{|a| FactoryGirl.create(:response, :form => @form, :_answers => a)}
+      answers.each{|a| FactoryGirl.create(:response, :form => @form, :answer_values => a)}
     end
 
     def prepare_collection

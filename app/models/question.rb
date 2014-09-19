@@ -52,7 +52,7 @@ class Question < ActiveRecord::Base
   translates :name, :hint
 
   delegate :smsable?, :has_options?, :odk_tag, :odk_name, :to => :qtype
-  delegate :options, :first_level_options, :geographic?, :multi_level?, :level_count, :levels, :to => :option_set, :allow_nil => true
+  delegate :options, :all_options, :first_level_options, :geographic?, :multi_level?, :level_count, :levels, :to => :option_set, :allow_nil => true
 
   replicable :child_assocs => :option_set, :parent_assoc => :questioning,
     :uniqueness => {:field => :code, :style => :camel_case}, :dont_copy => [:key, :access_level],
@@ -66,6 +66,28 @@ class Question < ActiveRecord::Base
   # returns N questions marked as key questions, sorted by the number of forms they appear in
   def self.key(n)
     where(:key => true).all.sort_by{|q| q.questionings.size}[0...n]
+  end
+
+  def self.search_qualifiers
+    [
+      Search::Qualifier.new(name: "code", col: "questions.code", type: :text),
+      Search::Qualifier.new(name: "title", col: "questions.name_translations", type: :translated, default: true),
+      Search::Qualifier.new(name: "type", col: "questions.qtype_name", preprocessor: ->(s){ s.gsub(/[\-]/, '_') }),
+      Search::Qualifier.new(name: "tag", col: "tags.name", assoc: :tags),
+    ]
+  end
+
+  # searches for questions
+  # based on User.do_search
+  def self.do_search(relation, query)
+    # create a search object and generate qualifiers
+    search = Search::Search.new(str: query, qualifiers: search_qualifiers)
+
+    # apply the needed associations
+    relation = relation.joins(search.associations)
+
+    # apply the conditions
+    relation = relation.where(search.sql)
   end
 
   def subquestions

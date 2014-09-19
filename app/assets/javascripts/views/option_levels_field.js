@@ -20,8 +20,8 @@
       edit_link: self.params.edit_link,
       remove_link: self.params.remove_link,
       modal_titles: {
-        new: I18n.t('option_set.new_option_level'),
-        edit: I18n.t('option_set.edit_option_level')
+        'new': I18n.t('option_set.new_option_level'),
+        'edit': I18n.t('option_set.edit_option_level')
       }
     });
   };

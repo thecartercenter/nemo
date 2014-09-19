@@ -7,11 +7,11 @@ class ResponseTest < ActiveSupport::TestCase
     setup_form(:questions => %w(integer))
 
     # ensure key changes on edits, creates, and deletes
-    r1 = FactoryGirl.create(:response, :user => @user, :form => @form, :_answers => [1])
+    r1 = FactoryGirl.create(:response, :user => @user, :form => @form, :answer_values => [1])
     key1 = Response.per_mission_cache_key(get_mission)
 
     # create
-    r2 = FactoryGirl.create(:response, :user => @user, :form => @form, :_answers => [1])
+    r2 = FactoryGirl.create(:response, :user => @user, :form => @form, :answer_values => [1])
     key2 = Response.per_mission_cache_key(get_mission)
     assert_not_equal(key1, key2)
 
@@ -35,7 +35,7 @@ class ResponseTest < ActiveSupport::TestCase
     form.questionings.first.required = true
     form.publish!
 
-    invalid_response = FactoryGirl.build(:response, user: @user, form: form, _answers: [''])
+    invalid_response = FactoryGirl.build(:response, user: @user, form: form, answer_values: [''])
     assert_equal(false, invalid_response.valid?)
     assert_raise ActiveRecord::RecordInvalid do
       invalid_response.save!
@@ -53,7 +53,7 @@ class ResponseTest < ActiveSupport::TestCase
   end
 
   test "export sql should work" do
-    FactoryGirl.create(:response, :form => FactoryGirl.create(:form, :question_types => %w(integer)), :_answers => [1])
+    FactoryGirl.create(:response, :form => FactoryGirl.create(:form, :question_types => %w(integer)), :answer_values => [1])
     res = ActiveRecord::Base.connection.execute(Response.export_sql(Response.unscoped))
 
     # result set should have one row since one Answer in db
@@ -66,7 +66,7 @@ class ResponseTest < ActiveSupport::TestCase
     form.questionings.first.question.minimum = 10
     form.publish!
 
-    r1 = FactoryGirl.build(:response, :form => form, :incomplete => true, :_answers => %w(9))
+    r1 = FactoryGirl.build(:response, :form => form, :incomplete => true, :answer_values => %w(9))
     assert_equal(false, r1.valid?)
     assert_match(/greater than/, r1.answers.first.errors.full_messages.join)
   end

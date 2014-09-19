@@ -13,7 +13,7 @@
 
     // run the type box changed event immediately
     // this might be the only time it runs since the form might be in show mode
-    self.question_type_changed();
+    self.question_type_changed({initial: true});
 
     // hookup add option set link
     $('div.question_fields a.create_option_set').on('click', function(){ self.show_option_set_form(); return false; });
@@ -45,17 +45,13 @@
       return field_div.find('input, select, textarea').val();
   }
 
-  klass.prototype.question_type_changed = function() { var self = this;
+  klass.prototype.question_type_changed = function(options) { var self = this;
     var selected_type = self.field_value('qtype_name');
 
-    // show/hide option set field and hint
-    var show_opt_set = (selected_type == "select_one" || selected_type == "select_multiple");
-    var optionSet = $("div.question_fields .form_field[data-field-name=option_set_id]");
-    show_opt_set ? optionSet.show() : optionSet.hide();
-
-    // reset select if hiding
-    if (!show_opt_set)
-      $("div.question_fields .form_field[data-field-name=option_set_id] .control select").val('');
+    // Show/hide option set field and hint
+    options = options || {}
+    options.multilevel = selected_type == 'select_one'
+    self.show_option_set_select(selected_type == 'select_one' || selected_type == 'select_multiple', options);
 
     // show/hide max/min
     var show_max_min = (selected_type == "decimal" || selected_type == "integer");
@@ -69,6 +65,21 @@
       $(".form_field#maximum input[id$='_maxstrictly']").prop("checked", false);
     }
   }
+
+  klass.prototype.show_option_set_select = function(show, options) { var self = this;
+    var select = $("div.question_fields .form_field[data-field-name=option_set_id]");
+    select[show ? 'show' : 'hide']();
+
+    // If showing, disable the multilevel options based on options.multilevel.
+    if (show) {
+      var mult_options = select.find('.control select option[data-multilevel=true]');
+      options.multilevel ? mult_options.removeAttr('disabled') : mult_options.attr('disabled', 'disabled');
+    }
+
+    // Reset value.
+    if (!options.initial)
+      select.find('.control select').val('');
+  };
 
   // shows the create option set form and sets up a callback to receive the result
   klass.prototype.show_option_set_form = function() { var self = this;
@@ -87,8 +98,8 @@
     $("#create-option-set").modal('hide');
 
     // add the new option set to the list and select it
-    $('div.question_fields .form_field#option_set_id select').append($('<option>', {value: option_set.id}).text(option_set.name))
-      .val(option_set.id);
+    var option = $('<option>', {value: option_set.id, 'data-multilevel': option_set.multi_level}).text(option_set.name);
+    $('div.question_fields .form_field#option_set_id select').append(option).val(option_set.id);
 
     // flash the option set row
     $('div.question_fields .form_field#option_set_id').effect("highlight", {}, 1000);

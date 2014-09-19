@@ -9,4 +9,12 @@ module SearchesHelper
       end
     end
   end
+
+  def search_help_text_params
+    if controller_name == 'questions'
+      {question_types: QuestionType.all.map(&:human_name).join(', ')}
+    else
+      {}
+    end
+  end
 end

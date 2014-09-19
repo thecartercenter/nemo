@@ -62,13 +62,38 @@ describe Response do
     end
 
     context 'on create' do
-      it 'should build new answers' do
+      before do
         @answers = []
-        expect(@answers).to receive(:build).exactly(3).times
         allow(@response).to receive(:answers).and_return(@answers)
+      end
 
-        # We submit two answers with diff ranks for questioning 2
-        @response.answer_sets = @params
+      context 'with regular params' do
+        it 'should work' do
+          expect(@answers).to receive(:build).exactly(3).times
+          @response.answer_sets = @params
+        end
+      end
+
+      context 'with extra nil answer' do
+        before do
+          @params['1'][:answers]['2'] =  { option_id: nil }
+        end
+
+        it 'should discard the extra nil' do
+          expect(@answers).to receive(:build).exactly(3).times
+          @response.answer_sets = @params
+        end
+      end
+
+      context 'with single nil answer' do
+        before do
+          @params['1'][:answers] = { '0' => { option_id: nil} }
+        end
+
+        it 'should not discard the answer' do
+          expect(@answers).to receive(:build).exactly(2).times
+          @response.answer_sets = @params
+        end
       end
     end
 

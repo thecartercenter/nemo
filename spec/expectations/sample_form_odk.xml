@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <h:html xmlns="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:jr="http://openrosa.org/javarosa" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <h:head>
     <h:title>Sample Form</h:title>
@@ -10,8 +11,8 @@
           <q3/>
         </data>
       </instance>
-      <instance id="multi_level_options">
-        <set2>
+      <instance id="option_set_2">
+        <options>
           <opt>
             <value>3</value>
             <key>option3</key>
@@ -36,7 +37,7 @@
               <key>option8</key>
             </opt>
           </opt>
-        </set2>
+        </options>
       </instance>
       <itext>
         <translation lang="English">
@@ -63,6 +64,9 @@
           </text>
           <text id="q3:hint">
             <value>Hint 3</value>
+          </text>
+          <text id="blankoption">
+            <value/>
           </text>
           <text id="option1">
             <value>Cat</value>
@@ -112,7 +116,7 @@
     <select1 ref="/data/q2_1">
       <label ref="jr:itext('q2_1:label')"/>
       <hint ref="jr:itext('q2_1:hint')"/>
-      <itemset nodeset="instance('multi_level_options')/set2/opt">
+      <itemset nodeset="instance('option_set_2')/options/opt">
         <label ref="jr:itext(key)"/>
         <value ref="value"/>
       </itemset>
@@ -120,7 +124,7 @@
     <select1 ref="/data/q2_2">
       <label ref="jr:itext('q2_2:label')"/>
       <hint ref="jr:itext('q2_2:hint')"/>
-      <itemset nodeset="instance('multi_level_options')/set2/opt[value=/data/q2_1]/opt">
+      <itemset nodeset="instance('option_set_2')/options/opt[value=/data/q2_1]/opt">
         <label ref="jr:itext(key)"/>
         <value ref="value"/>
       </itemset>

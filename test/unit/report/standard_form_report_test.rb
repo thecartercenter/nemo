@@ -126,7 +126,7 @@ class Report::StandardFormReportTest < ActiveSupport::TestCase
     def build_form_and_responses(options = {})
       @form = FactoryGirl.create(:form, :question_types => %w(integer integer decimal select_one location))
       (options[:response_count] || 5).times do
-        FactoryGirl.create(:response, :form => @form, :_answers => [1, 2, 1.5, nil, 'Cat'])
+        FactoryGirl.create(:response, :form => @form, :answer_values => [1, 2, 1.5, nil, 'Cat'])
       end
     end
 

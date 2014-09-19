@@ -13,9 +13,12 @@ class AnswerSet
   # Builds Answer attribute hashes from submitted answer_set params.
   # Returns an array of Answer attribute hashes.
   def self.answers_attributes_for(params)
-    params.values.map do |as|
+    attribs = params.values.map do |as|
       if as[:answers]
-        as.delete(:answers).values.map.with_index{ |a, i| a.merge(as).merge(rank: i + 1) }
+        as.delete(:answers).values.map.with_index{ |a, i| a.merge(as).merge(rank: i + 1) }.tap do |attribs|
+          # Remove nil answers from set unless there is only one.
+          attribs.reject!{ |a| a[:option_id].nil? } unless attribs.size == 1
+        end
       else
         as
       end

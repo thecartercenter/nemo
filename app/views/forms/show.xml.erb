@@ -36,11 +36,13 @@
         <instance id="commcaresession" src="jr://instance/session"/>
       <% end %>
 
-      <instance id="multi_level_options">
-        <% @form.option_sets.select(&:multi_level?).each do |set| %>
-          <%= content_tag("set#{set.id}", option_node_as_xml(set.root_node)) %>
-        <% end %>
-      </instance>
+      <% @form.option_sets.select(&:multi_level?).each do |set| %>
+        <instance id="option_set_<%= set.id %>">
+          <options>
+            <%= option_node_as_xml(set, set.root_node) %>
+          </options>
+        </instance>
+      <% end %>
 
       <itext>
         <% configatron.preferred_locales.each do |lang| %>
@@ -61,6 +63,7 @@
             <% end %>
 
             <%# Option translations %>
+            <text id="blankoption"><value></value></text>
             <% @form.option_sets.map(&:all_options).flatten.uniq(&:id).each do |opt| %>
               <text id="option<%= opt.id %>">
                 <value><%= opt.name(lang, :strict => false) %></value>

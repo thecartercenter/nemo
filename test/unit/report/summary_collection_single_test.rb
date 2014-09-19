@@ -15,7 +15,7 @@ class Report::SummaryCollectionSingleTest < ActiveSupport::TestCase
     prepare_form('integer', [10, 7, 6, 1, 1])
 
     observer = FactoryGirl.create(:user, :role_name => :observer)
-    [10, 7, 6, 1, 1].each{|a| FactoryGirl.create(:response, :form => @form, :_answers => [a], :user => observer)}
+    [10, 7, 6, 1, 1].each{|a| FactoryGirl.create(:response, :form => @form, :answer_values => [a], :user => observer)}
 
     @collection = Report::SummaryCollectionBuilder.new(@form.questionings, nil, :restrict_to_user => observer).build
 
@@ -215,7 +215,7 @@ class Report::SummaryCollectionSingleTest < ActiveSupport::TestCase
 
     def prepare_form(qtype, answers, options = {})
       @form = FactoryGirl.create(:form, {:question_types => [qtype], :option_names => %w(Yes No)}.merge(options))
-      answers.each{|a| FactoryGirl.create(:response, :form => @form, :_answers => [a])}
+      answers.each{|a| FactoryGirl.create(:response, :form => @form, :answer_values => [a])}
     end
 
     def prepare_collection

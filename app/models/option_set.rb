@@ -53,7 +53,7 @@ class OptionSet < ActiveRecord::Base
 
   serialize :level_names, JSON
 
-  delegate :ranks_changed?, :options_added?, :options_removed?, :total_options, :descendants, :all_options, :options_for_node, to: :root_node
+  delegate :ranks_changed?, :options_added?, :options_removed?, :total_options, :descendants, :all_options, :options_for_node, :max_depth, to: :root_node
 
   # These methods are for the form.
   attr_writer :multi_level
@@ -120,6 +120,11 @@ class OptionSet < ActiveRecord::Base
   # checks if this option set is used in at least one question or if any copies are used in at least one question
   def has_questions?
     ttl_question_count > 0
+  end
+
+  # Checks if option set is used in at least one select_multiple question.
+  def has_select_multiple_questions?
+    questions.any?{ |q| q.qtype_name == 'select_multiple' }
   end
 
   # gets total number of questions with which this option set is associated

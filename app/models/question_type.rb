@@ -33,6 +33,10 @@ class QuestionType
     attribs.each{|k,v| instance_variable_set("@#{k}", v)}
   end
 
+  def human_name
+    name.gsub('_', '-')
+  end
+
   # returns whether this is a numeric type
   def numeric?
     properties.include?("numeric")

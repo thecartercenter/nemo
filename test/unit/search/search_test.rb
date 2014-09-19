@@ -12,7 +12,10 @@ class Search::SearchTest < ActiveSupport::TestCase
     Search::Qualifier.new(:name => "submitter", :col => "t3.f3", :type => :text),
 
     # this qualifier supports scale-type comparison operators
-    Search::Qualifier.new(:name => "submit_date", :col => "t.subdate", :type => :scale)
+    Search::Qualifier.new(:name => "submit_date", :col => "t.subdate", :type => :scale),
+
+    # This qualifier supportes translated fields.
+    Search::Qualifier.new(:name => "name", :col => "t.name", :type => :translated)
   ]
 
   NO_DEFAULTS = [
@@ -184,6 +187,41 @@ class Search::SearchTest < ActiveSupport::TestCase
 
   test "quoted string with quoted string inside should still work" do
     assert_search(:str => 'submitter:"v1 \\"v2 v3\\" v4"', :sql => %{((t3.f3 LIKE '%v1 \\"v2 v3\\" v4%'))})
+  end
+
+  test "translated qualifier should work" do
+    assert_search(:str => 'name: foo', :sql => %{((t.name RLIKE '"en":"([^"\\]|\\\\.)*foo([^"\\]|\\\\.)*"'))})
+  end
+
+  test "translated qualifier should sanitize properly" do
+    assert_search(:str => "name: foo';DROP_DB", :sql => %{((t.name RLIKE '"en":"([^"\\]|\\\\.)*foo\\';DROP_DB([^"\\]|\\\\.)*"'))})
+  end
+
+  test "translated qualifier should work for different locale" do
+    I18n.locale = :fr
+    assert_search(:str => 'name: foo', :sql => %{((t.name RLIKE '"fr":"([^"\\]|\\\\.)*foo([^"\\]|\\\\.)*"'))})
+    I18n.locale = :en
+  end
+
+  test "translated qualifier with quoted string should work" do
+    assert_search(:str => 'name: "foo bar"', :sql => %{((t.name RLIKE '"en":"([^"\\]|\\\\.)*foo bar([^"\\]|\\\\.)*"'))})
+  end
+
+  test "translated qualifier with and should work" do
+    assert_search(:str => 'name: (foo bar)',
+      :sql => %{((t.name RLIKE '"en":"([^"\\]|\\\\.)*foo([^"\\]|\\\\.)*"') AND (t.name RLIKE '"en":"([^"\\]|\\\\.)*bar([^"\\]|\\\\.)*"'))})
+  end
+
+  test "translated qualifier with equals operator should work" do
+    assert_search(:str => 'name = foo', :sql => %{((t.name RLIKE '"en":"([^"\\]|\\\\.)*foo([^"\\]|\\\\.)*"'))})
+  end
+
+  test "translated qualifier negated should work" do
+    assert_search(:str => 'name != foo', :sql => %{((t.name NOT RLIKE '"en":"([^"\\]|\\\\.)*foo([^"\\]|\\\\.)*"'))})
+  end
+
+  test "translated qualifier with gt operator should error" do
+    assert_search(:str => 'name > foo', :error => /The operator '>' is not valid/)
   end
 
   test "indexed qualifiers should work" do
