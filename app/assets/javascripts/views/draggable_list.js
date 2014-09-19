@@ -243,7 +243,7 @@
     if (self.active_item.in_use) self.modal.find('div[id$=in_use_name_change_warning]').show();
 
     self.modal.on('shown.bs.modal', function() {
-      self.modal.find('input[type=text]').focus();
+      self.modal.find('input[type=text]')[0].focus();
     });
 
     self.toggle_save_button_on_empty();
