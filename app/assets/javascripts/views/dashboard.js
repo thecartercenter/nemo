@@ -133,14 +133,14 @@
       $('#main-nav').show();
       $('#userinfo').show();
       $('#title img').css('height', 'initial');
-      $('a.full-screen').html("<i class='fa fa-expand'></i> " + I18n.t('dashboard.enter_full_screen'));
+      $('a.full-screen i').removeClass('fa-compress').addClass('fa-expand');
     // else full screen is true, hide things
     } else {
       $('#footer').hide();
       $('#main-nav').hide();
       $('#userinfo').hide();
       $('#title img').css('height', '30px');
-      $('a.full-screen').html("<i class='fa fa-compress'></i>  " + I18n.t('dashboard.exit_full_screen'));
+      $('a.full-screen i').removeClass('fa-expand').addClass('fa-compress');
     }
   }
 
