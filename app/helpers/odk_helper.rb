@@ -57,7 +57,7 @@ module OdkHelper
   #      instance('multi_level_options')/set2/opt[value=/data/q2_1]/opt or
   #      instance('multi_level_options')/set2/opt[value=/data/q2_1]/opt[value=/data/q2_2]/opt
   def multi_level_option_nodeset_ref(qing, cur_subq)
-    "instance('multi_level_options')/set#{qing.option_set_id}/".tap do |ref|
+    "instance('option_set_#{qing.option_set_id}')/options/".tap do |ref|
       qing.subquestions.each do |subq|
         ref << 'opt'
         if subq == cur_subq
