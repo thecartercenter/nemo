@@ -22,9 +22,11 @@
       clearTimeout(self.resize_done_timeout)
 
       // set a timeout to refresh the report
-      self.resize_done_timeout = setTimeout(function(){
-        ELMO.app.report_controller.refresh_view();
-      }, 1000);
+      if (ELMO.app.report_controller) {
+        self.resize_done_timeout = setTimeout(function(){
+          ELMO.app.report_controller.refresh_view();
+        }, 1000);
+      }
     })
 
     // Setup ajax reload timer and test link.
@@ -115,7 +117,10 @@
 
   // Reloads the page via full refresh to avoid memory issues.
   klass.prototype.reload_page = function() { var self = this;
-    window.location.href = ELMO.app.url_builder.build('welcome') + '?report_id=' + self.report_view.current_report_id;
+    var id;
+    window.location.href = ELMO.app.url_builder.build('')
+      + '?r=' + Math.floor((Math.random() * 1000000) + 1)
+      + ((id = self.report_view.current_report_id) ? '&report_id=' + id : '');
   };
 
   klass.prototype.toggle_full_screen = function() { var self = this;

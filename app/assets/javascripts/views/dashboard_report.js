@@ -9,7 +9,8 @@
     self.params = params;
 
     // save the report id
-    self.current_report_id = self.params.id;
+    if (params)
+      self.current_report_id = self.params.id;
 
     // hookup the form change event
     $('.report_pane').on('change', 'form.report_chooser', function(e){
