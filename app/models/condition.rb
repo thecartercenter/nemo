@@ -14,8 +14,7 @@ class Condition < ActiveRecord::Base
   validate(:all_fields_required)
   validates(:questioning, presence: true)
 
-  delegate :qtype, :form, to: :questioning, allow_nil: true
-  delegate :has_options?, :select_options, :qtype, :rank, :code, to: :ref_qing, prefix: :ref_question, allow_nil: true
+  delegate :form, to: :questioning, allow_nil: true
 
   serialize :option_ids, JSON
 
@@ -54,32 +53,12 @@ class Condition < ActiveRecord::Base
 
   # all questionings that can be referred to by this condition
   def refable_qings
-    questioning ? questioning.previous.reject{|qing| %w[location].include?(qing.question.qtype.name)} : []
-  end
-
-  # all questionings that can be referred to by this condition
-  def refable_qings
     questioning.previous.reject{|qing| NON_REFABLE_TYPES.include?(qing.qtype_name)}
-  end
-
-  # all referrable questionings that have options
-  def refable_qings_with_options
-    refable_qings.select{|qing| qing.has_options?}
-  end
-
-  # generates a hash mapping ids for refable questionings to their types
-  def refable_qing_types
-    Hash[*refable_qings.map{|qing| [qing.id, qing.qtype_name]}.flatten(1)]
-  end
-
-  # returns a hash mapping qing IDs to arrays of options (for select questions only), for use when choosing an option for the condition.
-  def refable_qing_option_lists
-    Hash[*refable_qings_with_options.map{|qing| [qing.id, qing.select_options]}.flatten(1)]
   end
 
   # returns names of all operators that are applicable to this condition based on its referred question
   def applicable_operator_names
-    ref_qing ? OPERATORS.select{|o| o[:types].include?(ref_question_qtype.name)}.map{|o| o[:name]} : []
+    ref_qing ? OPERATORS.select{|o| o[:types].include?(ref_qing.qtype_name)}.map{|o| o[:name]} : []
   end
 
   def verify_ordering
@@ -94,7 +73,7 @@ class Condition < ActiveRecord::Base
   def to_odk
     lhs = "/data/#{ref_subquestion.odk_code}"
 
-    if ref_question_has_options?
+    if ref_qing.has_options?
 
       selected = "selected(#{lhs}, '#{option_ids.last}')"
 
@@ -104,13 +83,13 @@ class Condition < ActiveRecord::Base
     else
 
       # For temporal ref. questions, need to convert dates to appropriate format in xpath.
-      if ref_question_qtype.temporal?
-        format = :"javarosa_#{ref_question_qtype.name}"
+      if ref_qing.temporal?
+        format = :"javarosa_#{ref_qing.qtype_name}"
         formatted = Time.zone.parse(value).to_s(format)
         lhs = "format-date(#{lhs}, '#{Time::DATE_FORMATS[format]}')"
         rhs = "'#{formatted}'"
       else
-        rhs = ref_question_qtype.numeric? ? value : "'#{value}'"
+        rhs = ref_qing.numeric? ? value : "'#{value}'"
       end
 
       "#{lhs} #{operator[:code]} #{rhs}"
@@ -126,8 +105,8 @@ class Condition < ActiveRecord::Base
     else
       bits = []
       bits << Question.model_name.human
-      bits << "##{ref_question_rank}"
-      bits << ref_question_code if prefs[:include_code]
+      bits << "##{ref_qing.rank}"
+      bits << ref_qing.code if prefs[:include_code]
 
       if ref_qing.qtype_name == 'select_one'
         if ref_qing.multi_level?
@@ -160,6 +139,10 @@ class Condition < ActiveRecord::Base
     self.option_ids = ref_qing.rank_path_to_option_path(rank_path).map(&:id)
   end
 
+  def temporal_ref_question?
+    ref_qing.try(:temporal?)
+  end
+
   private
 
     # Gets the referenced Subquestion.
@@ -172,17 +155,17 @@ class Condition < ActiveRecord::Base
 
     def clear_blanks
       unless destroyed?
-        self.value = nil if value.blank? || ref_qing && ref_question_has_options?
-        self.option_ids = nil if option_ids.blank? || ref_qing && !ref_question_has_options?
+        self.value = nil if value.blank? || ref_qing && ref_qing.has_options?
+        self.option_ids = nil if option_ids.blank? || ref_qing && !ref_qing.has_options?
       end
       return true
     end
 
     # Parses and reformats time strings given as conditions.
     def clean_times
-      if !destroyed? && ref_qing && !value.blank? && ref_question_qtype.temporal?
+      if !destroyed? && temporal_ref_question? && value.present?
         begin
-          self.value = Time.zone.parse(value).to_s(:"std_#{ref_question_qtype.name}")
+          self.value = Time.zone.parse(value).to_s(:"std_#{ref_qing.qtype_name}")
         rescue ArgumentError
           self.value = nil
         end
@@ -195,7 +178,7 @@ class Condition < ActiveRecord::Base
     end
 
     def any_fields_empty?
-      ref_qing.blank? || op.blank? || (ref_question_has_options? ? option_ids.blank? : value.blank?)
+      ref_qing.blank? || op.blank? || (ref_qing.has_options? ? option_ids.blank? : value.blank?)
     end
 
     # during replication process, copies the ref qing and option to the new condition

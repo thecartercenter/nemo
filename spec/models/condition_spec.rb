@@ -226,4 +226,66 @@ describe Condition do
       end
     end
   end
+
+  describe 'clear blanks' do
+    before do
+      @cond = Condition.new(op: 'eq', value: '  ', option_ids: '')
+      @cond.valid?
+    end
+
+    it 'should clear blanks' do
+      expect(@cond.value).to be_nil
+      expect(@cond.option_ids).to be_nil
+    end
+  end
+
+  describe 'clean times' do
+    before do
+      @form = create(:form, question_types: %w(datetime integer))
+      @cond = Condition.new(ref_qing: @form.questionings[0], value: '2013-04-30 2:14pm')
+      @cond.valid?
+    end
+
+    it 'should clean time' do
+      expect(@cond.value).to eq '2013-04-30 14:14'
+    end
+  end
+
+  describe 'refable qings' do
+    before do
+      @form = create(:form, question_types: %w(location integer integer integer integer))
+      @cond = Condition.new(questioning: @form.questionings[3])
+    end
+
+    it 'should be correct' do
+      expect(@cond.refable_qings).to eq @form.questionings[1..2]
+    end
+  end
+
+  describe 'applicable operator names' do
+    before do
+      @form = create(:form, question_types: %w(select_one integer))
+      @cond = Condition.new(ref_qing: @form.questionings[0])
+    end
+
+    it 'should be correct' do
+      expect(@cond.applicable_operator_names).to eq %w(eq neq)
+    end
+  end
+
+  describe 'verify ordering' do
+    before do
+      @form = create(:form, question_types: %w(select_one integer))
+    end
+
+    it 'should raise error when qing comes before ref_qing' do
+      @cond = Condition.new(questioning: @form.questionings[0], ref_qing: @form.questionings[1])
+      expect{@cond.verify_ordering}.to raise_error(ConditionOrderingError)
+    end
+
+    it 'should not raise error if ordering is correct' do
+      @cond = Condition.new(questioning: @form.questionings[1], ref_qing: @form.questionings[0])
+      expect{@cond.verify_ordering}.not_to raise_error
+    end
+  end
 end
