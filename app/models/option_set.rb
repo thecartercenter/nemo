@@ -51,7 +51,8 @@ class OptionSet < ActiveRecord::Base
 
   serialize :level_names, JSON
 
-  delegate :c, :ranks_changed?, :options_added?, :options_removed?, :total_options, :descendants, :all_options, :options_for_node, to: :root_node
+  delegate :c, :ranks_changed?, :options_added?, :options_removed?, :total_options, :descendants, :all_options,
+    :options_for_node, :option_path_to_rank_path, :rank_path_to_option_path, to: :root_node
 
   # These methods are for the form.
   attr_writer :multi_level

@@ -30,7 +30,7 @@ class Condition < ActiveRecord::Base
     {name: 'ninc', types: %w(select_multiple), code: "!="}
   ]
 
-  replicable after_copy_attribs: :copy_ref_qing_and_option, parent_assoc: :questioning, dont_copy: [:ref_qing_id]
+  replicable after_copy_attribs: :copy_ref_qing_and_options, parent_assoc: :questioning, dont_copy: [:ref_qing_id]
 
   def options
     # We need to sort since ar#find doesn't guarantee order
@@ -155,6 +155,11 @@ class Condition < ActiveRecord::Base
     Hash[*fields.map{|k| [k, send(k)]}.flatten(1)]
   end
 
+  # Given a rank path,  sets option_ids by getting the option path from the referred option set.
+  def set_options_by_rank_path(rank_path)
+    self.option_ids = ref_qing.rank_path_to_option_path(rank_path).map(&:id)
+  end
+
   private
 
     # Gets the referenced Subquestion.
@@ -194,22 +199,16 @@ class Condition < ActiveRecord::Base
     end
 
     # during replication process, copies the ref qing and option to the new condition
-    def copy_ref_qing_and_option(replication)
-      # the dest_obj's form is just the immediate parent (questioning)'s form
+    def copy_ref_qing_and_options(replication)
+      # Set ref_qing using rank.
       dest_form = replication.parent.form
+      replication.dest_obj.ref_qing = dest_form.questionings[ref_qing.rank - 1]
 
-      # get the rank of the original ref_qing
-      ref_qing_rank = self.ref_qing.rank
-
-      # set the copy's ref_qing to the corresponding one
-      replication.dest_obj.ref_qing = dest_form.questionings[ref_qing_rank - 1]
-
-      if self.option
+      # Set options using rank.
+      unless options.nil?
         # get the index of the original option
-        ref_option_idx = self.ref_qing.question.option_set.options.index(self.option)
-
-        # set the copy's option to the new ref_qing's corresponding option, in case the option set was also replicated
-        replication.dest_obj.option = replication.dest_obj.ref_qing.question.option_set.options[ref_option_idx]
+        rank_path = ref_qing.option_path_to_rank_path(options)
+        replication.dest_obj.set_options_by_rank_path(rank_path)
       end
     end
 
