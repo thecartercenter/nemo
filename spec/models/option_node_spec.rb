@@ -255,4 +255,22 @@ describe OptionNode do
       expect{@node.option_path_to_rank_path([create(:option)])}.to raise_error(ArgumentError)
     end
   end
+
+  describe 'rank_path_to_option_path' do
+    before do
+      @node = create(:option_node_with_grandchildren)
+    end
+
+    it 'should be correct for partial path' do
+      expect(@node.rank_path_to_option_path([2])).to eq [@node.c[1].option]
+    end
+
+    it 'should be correct for full path' do
+      expect(@node.rank_path_to_option_path([2,1])).to eq [@node.c[1].option, @node.c[1].c[0].option]
+    end
+
+    it 'should raise error for invalid path' do
+      expect{@node.rank_path_to_option_path([1,4])}.to raise_error(ArgumentError)
+    end
+  end
 end

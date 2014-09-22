@@ -102,10 +102,23 @@ class OptionNode < ActiveRecord::Base
       []
     else
       child = child_with_option_id(options.first.id)
-      raise ArgumentError.new("Could not find child with option ID #{options.first.id}") if child.nil?
+      raise ArgumentError.new("Could not find child of node #{id} with option ID #{options.first.id}") if child.nil?
       [child.rank] + child.option_path_to_rank_path(options[1..-1])
     end
   end
+
+  # Given a path (array) of option ranks, returns the options at each step of the path.
+  # Raises ArgumentError if path not found.
+  def rank_path_to_option_path(ranks)
+    if ranks.empty?
+      []
+    else
+      child = children.where(rank: ranks.first).first
+      raise ArgumentError.new("Could not find child of node #{id} with rank #{ranks.first}") if child.nil?
+      [child.option] + child.rank_path_to_option_path(ranks[1..-1])
+    end
+  end
+
 
   # Serializes all descendants. Meant to be called on root.
   def as_json(options = {})
