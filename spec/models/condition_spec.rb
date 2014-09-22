@@ -152,4 +152,78 @@ describe Condition do
       end
     end
   end
+
+  describe 'to_s' do
+    context 'for non-select ref question' do
+      before do
+        @form = create(:form, question_types: %w(integer))
+        @int_q = @form.questionings.first
+        @cond = Condition.new(ref_qing: @int_q, op: 'lt', value: '5')
+      end
+
+      it 'should work' do
+        expect(@cond.to_s).to eq "Question #1 is less than \"5\""
+      end
+
+      it 'should work when including code' do
+        expect(@cond.to_s(include_code: true)).to eq "Question #1 #{@int_q.code} is less than \"5\""
+      end
+    end
+
+    context 'for multiselect ref question' do
+      before do
+        @form = create(:form, question_types: %w(select_multiple))
+        @sel_q = @form.questionings.first
+      end
+
+      it 'positive should work' do
+        c = Condition.new(ref_qing: @sel_q, op: 'inc', option_ids: [@sel_q.options.last.id])
+        expect(c.to_s).to eq "Question #1 includes \"Dog\""
+      end
+
+      it 'negation should work' do
+        c = Condition.new(ref_qing: @sel_q, op: 'ninc', option_ids: [@sel_q.options.last.id])
+        expect(c.to_s).to eq "Question #1 does not include \"Dog\""
+      end
+    end
+
+    context 'for single level select ref question' do
+      before do
+        @form = create(:form, question_types: %w(select_one))
+        @sel_q = @form.questionings.first
+      end
+
+      it 'should work' do
+        c = Condition.new(ref_qing: @sel_q, op: 'eq', option_ids: [@sel_q.options.last.id])
+        expect(c.to_s).to eq "Question #1 is equal to \"Dog\""
+      end
+    end
+
+    context 'for multi level select ref question' do
+      before do
+        @form = create(:form, question_types: %w(select_one), use_multilevel_option_set: true)
+        @sel_q = @form.questionings.first
+      end
+
+      it 'matching first level should work' do
+        c = Condition.new(ref_qing: @sel_q, op: 'eq', option_ids: [@sel_q.option_set.c[0].option_id])
+        expect(c.to_s).to eq "Question #1 Kingdom is equal to \"Animal\""
+      end
+
+      context 'matching second level' do
+        before do
+          @cond = Condition.new(ref_qing: @sel_q, op: 'eq',
+            option_ids: [@sel_q.option_set.c[1].option_id, @sel_q.option_set.c[1].c[0].option_id])
+        end
+
+        it 'should work normally' do
+          expect(@cond.to_s).to eq "Question #1 Species is equal to \"Tulip\""
+        end
+
+        it 'should work when including code' do
+          expect(@cond.to_s(include_code: true)).to eq "Question #1 #{@sel_q.code} Species is equal to \"Tulip\""
+        end
+      end
+    end
+  end
 end

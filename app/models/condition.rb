@@ -37,18 +37,19 @@ class Condition < ActiveRecord::Base
     option_ids.nil? ? nil : Option.find(option_ids).sort_by{ |o| option_ids.index(o.id) }
   end
 
+  def option
+    options.try(:first)
+  end
+
   # Temporary methods.
   def option_id
     option_ids.try(:first)
   end
   def option_id=(oid)
-    self.option_ids = oid.nil? ? nil : "[#{oid}]"
-  end
-  def option
-    option_ids.nil? ? nil : Option.find(option_ids.first)
+    self.option_ids = oid.nil? ? nil : [oid]
   end
   def option=(o)
-    self.option_ids = o.nil? ? nil : "[#{o.id}]"
+    self.option_ids = o.nil? ? nil : [o.id]
   end
 
   # all questionings that can be referred to by this condition
@@ -117,15 +118,33 @@ class Condition < ActiveRecord::Base
     end
   end
 
-  # generates a human readable representation of condition
-  # options[:include_code] - includes the question code in the string. may not always be desireable e.g. with printable forms.
-  def to_s(options = {})
+  # Generates a human readable representation of condition.
+  # prefs[:include_code] - Includes the question code in the string. May not always be desireable e.g. with printable forms.
+  def to_s(prefs = {})
     if ref_qing_id.blank?
       '' # need to return something here to avoid nil errors
     else
-      words = I18n.t("condition.operators.#{op}")
-      code = options[:include_code] ? " (#{ref_question_code})" : ''
-      "#{Question.model_name.human} ##{ref_question_rank}#{code} #{words} \"#{option ? option.name : value}\""
+      bits = []
+      bits << Question.model_name.human
+      bits << "##{ref_question_rank}"
+      bits << ref_question_code if prefs[:include_code]
+
+      if ref_qing.qtype_name == 'select_one'
+        if ref_qing.multi_level?
+          # Get the option level for the depth matching the number of options we have.
+          level = ref_qing.level(options.size)
+          raise "no option level found for depth = #{options.size} for condition #{id}" if level.nil?
+          bits << level.name
+          target = options.last.name
+        else
+          target = option.name
+        end
+      else
+        target = option ? option.name : value
+      end
+
+      bits << I18n.t("condition.operators.#{op}") << "\"#{target}\""
+      bits.join(' ')
     end
   end
 
