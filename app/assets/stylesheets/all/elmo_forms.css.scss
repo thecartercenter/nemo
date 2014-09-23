@@ -179,7 +179,8 @@ form.elmo_form.minimal {
 }
 
 div.cascading-selects {
-  .level-name {
+  label {
+    display: block !important;
     font-size: 8pt;
     margin-bottom: 3px;
     color: #888;
@@ -187,7 +188,7 @@ div.cascading-selects {
 }
 
 .read_only div.cascading-selects {
-  .level-name {
+  label {
     margin-bottom: 0px;
   }
 

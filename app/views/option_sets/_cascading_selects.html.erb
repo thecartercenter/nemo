@@ -2,7 +2,9 @@
   <% option_path.options.each_with_index do |option, i| %>
     <div>
       <% if option_path.multi_level? && !(read_only && option_path.blank?) %>
-        <div class="level-name"><%= option_path.level_name_for_depth(i+1) %></div>
+        <label for="<%= cascading_select_input_id(input_name_template, i) %>">
+          <%= option_path.level_name_for_depth(i+1) %>
+        </label>
       <% end %>
       <% if read_only %>
         <% unless option_path.blank? %>

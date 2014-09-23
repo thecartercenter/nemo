@@ -32,4 +32,8 @@ module OptionSetsHelper
     else option_set.send(field)
     end
   end
+
+  def cascading_select_input_id(input_name_template, id)
+    input_name_template.gsub('###', id.to_s).gsub(/[\[\]]+/, '_').gsub(/_$/, '')
+  end
 end
