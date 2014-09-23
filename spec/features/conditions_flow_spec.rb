@@ -3,16 +3,13 @@ require 'spec_helper'
 feature 'conditions flow', js: true do
   before do
     @user = create(:user)
-    @form = create(:form, name: 'Foo', question_types: %w(select_one text), use_multilevel_option_set: true)
+    @form = create(:form, name: 'Foo', question_types: %w(select_one integer text), use_multilevel_option_set: true)
     login(@user)
+    visit(edit_form_path(@form, locale: 'en', mode: 'm', mission_name: get_mission.compact_name))
+    expect(page).to have_content('Edit Form')
   end
 
-  scenario 'should work' do
-    click_link('Forms')
-
-    # Add a condition to question 2 referencing question 1.
-    find('a.action_link_edit').click
-    expect(page).to have_content('Edit Form') # Wait for index.
+  scenario 'add and update condition to existing question' do
     all('a.action_link_edit')[1].click
     select("1. #{@form.questions[0].code}", from: 'Question')
     select('is equal to', from: 'Comparison')
@@ -26,7 +23,7 @@ feature 'conditions flow', js: true do
 
     # Update the condition to have a full option path.
     page.evaluate_script('window.history.back()')
-    expect(page).to have_content('Edit Form') # Wait for index.
+    expect(page).to have_content('Edit Form')
     all('a.action_link_edit')[1].click
     select('Dog', from: 'Species')
     click_button('Save')
@@ -35,10 +32,9 @@ feature 'conditions flow', js: true do
     click_link(@form.questions[1].name)
     expect(page).to have_content("Question #1 #{@form.questions[0].code}
       Species is equal to \"Dog\"")
+  end
 
-    # Add question with condition to form
-    page.evaluate_script('window.history.back()')
-    expect(page).to have_content('Edit Form') # Wait for index.
+  scenario 'add a new question with a condition' do
     click_link('Add Questions')
     fill_in('Code', with: 'NewQ')
     select('Text', from: 'Type')
@@ -53,5 +49,17 @@ feature 'conditions flow', js: true do
     click_link('New Question')
     expect(page).to have_content("Question #1 #{@form.questions[0].code}
       Species is equal to \"Oak\"")
+  end
+
+  scenario 'add a condition referring to an integer question' do
+    all('a.action_link_edit')[2].click
+    select("2. #{@form.questions[1].code}", from: 'Question')
+    select('is less than', from: 'Comparison')
+    fill_in('Value', with: '5')
+    click_button('Save')
+
+    # View the questioning and ensure the condition is shown correctly.
+    click_link(@form.questions[2].name)
+    expect(page).to have_content("Question #2 #{@form.questions[1].code} is less than 5")
   end
 end
