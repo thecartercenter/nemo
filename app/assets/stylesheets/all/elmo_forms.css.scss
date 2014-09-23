@@ -1,9 +1,8 @@
 $orange: #F77D48;
 $elmo-form-width: 660px;
 
-/* base errors may appear outside the form. left margin should be cancelled when inside form */
+/* base errors may appear outside the form. */
 div.form-errors {
-  margin-left: 35px;
   font-weight: bold;
   color: #CC3232;
   margin-bottom: 5px;

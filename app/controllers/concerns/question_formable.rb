@@ -6,6 +6,7 @@ module QuestionFormable
   def init_qing(params = {})
     # create a new questioning
     @questioning = Questioning.accessible_by(current_ability).new(params)
+    @questioning.build_question if @questioning.question.nil?
 
     # override the associated question attributes with those mandated by the authorization system
     Question.accessible_by(current_ability).new.attributes.each_pair do |k,v|
@@ -15,6 +16,7 @@ module QuestionFormable
     # set the mission of the question and questioning to the current mission
     # to ensure proper permission handling
     @questioning.mission = @questioning.question.mission = current_mission
+    @questioning
   end
 
   def setup_qing_form_support_objs

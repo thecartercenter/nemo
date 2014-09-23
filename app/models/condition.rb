@@ -14,7 +14,8 @@ class Condition < ActiveRecord::Base
   validate(:all_fields_required)
   validates(:questioning, presence: true)
 
-  delegate :form, to: :questioning, allow_nil: true
+  delegate :has_options?, to: :ref_qing, prefix: true
+  delegate :form_id, to: :questioning
 
   serialize :option_ids, JSON
 
@@ -38,6 +39,21 @@ class Condition < ActiveRecord::Base
 
   def option
     options.try(:first)
+  end
+
+  # Builds an OptionPath representing the selected options.
+  def option_path
+    @option_path ||= OptionPath.new(option_set: ref_qing.option_set, options: options)
+  end
+
+  # Accepts a hash of the form {'0' => '1234', '1' => '1238', ...} and converts to option_ids.
+  def option_path_attribs=(hash)
+    self.option_ids = hash.empty? ? nil : hash.values.map{ |id| id.blank? ? nil : id.to_i }.compact
+  end
+
+  # Given a rank path,  sets option_ids by getting the option path from the referred option set.
+  def set_options_by_rank_path(rank_path)
+    self.option_ids = ref_qing.rank_path_to_option_path(rank_path).map(&:id)
   end
 
   # Temporary methods.
@@ -127,16 +143,9 @@ class Condition < ActiveRecord::Base
     end
   end
 
-  # if options[:dropdown_values] is included, adds a series of lists of values for use with form dropdowns
   def as_json(options = {})
-    fields = %w(questioning_id ref_qing_id op value option_id)
-    fields += %w(refable_qing_types refable_qing_option_lists operators) if options[:dropdown_values]
+    fields = %w(questioning_id ref_qing_id form_id)
     Hash[*fields.map{|k| [k, send(k)]}.flatten(1)]
-  end
-
-  # Given a rank path,  sets option_ids by getting the option path from the referred option set.
-  def set_options_by_rank_path(rank_path)
-    self.option_ids = ref_qing.rank_path_to_option_path(rank_path).map(&:id)
   end
 
   def temporal_ref_question?

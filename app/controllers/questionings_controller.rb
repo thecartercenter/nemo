@@ -48,6 +48,15 @@ class QuestioningsController < ApplicationController
     redirect_to(edit_form_url(@questioning.form))
   end
 
+  # Re-renders the fields in the condition form when requested by ajax.
+  def condition_form
+    # Create a dummy questioning so that the condition can look up the refable qings, etc.
+    @questioning = init_qing(form_id: params[:form_id])
+    # Create a dummy condition with the given ref qing.
+    @condition = @questioning.build_condition(ref_qing_id: params[:ref_qing_id])
+    render(partial: 'conditions/form_fields')
+  end
+
   private
     # prepares objects for and renders the form template
     def prepare_and_render_form
