@@ -1,13 +1,13 @@
 <div class="cascading-selects" id="cascading-selects-<%= index %>">
   <% option_path.options.each_with_index do |option, i| %>
     <div>
-      <% if option_path.multi_level? && !(read_only && option_path.blank?) %>
-        <label for="<%= cascading_select_input_id(input_name_template, i) %>">
-          <%= option_path.level_name_for_depth(i+1) %>
-        </label>
-      <% end %>
       <% if read_only %>
         <% unless option_path.blank? %>
+          <% if option_path.multi_level? %>
+            <div class="option-level">
+              <%= option_path.level_name_for_depth(i+1) %>
+            </div>
+          <% end %>
           <div class="option-name">
             <%# Show 'blank' for partially empty multilevel answers. %>
             <% if option.nil? %>
@@ -18,6 +18,11 @@
           </div>
         <% end %>
       <% else %>
+        <% if option_path.multi_level? %>
+          <label for="<%= cascading_select_input_id(input_name_template, i) %>">
+            <%= option_path.level_name_for_depth(i+1) %>
+          </label>
+        <% end %>
         <%= select_tag(input_name_template.gsub('###', i.to_s),
           options_from_collection_for_select(option_path.options_for_depth(i+1), 'id', 'name', option.try(:id)),
           include_blank: true, class: 'form-control') %>

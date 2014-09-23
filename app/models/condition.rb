@@ -15,7 +15,7 @@ class Condition < ActiveRecord::Base
   validates(:questioning, presence: true)
 
   delegate :has_options?, to: :ref_qing, prefix: true
-  delegate :form_id, to: :questioning
+  delegate :form, :form_id, to: :questioning
 
   serialize :option_ids, JSON
 
