@@ -138,7 +138,8 @@ class Condition < ActiveRecord::Base
         target = option ? option.name : value
       end
 
-      bits << I18n.t("condition.operators.#{op}") << "\"#{target}\""
+      bits << I18n.t("condition.operators.#{op}")
+      bits << (numeric_ref_question? ? target : "\"#{target}\"")
       bits.join(' ')
     end
   end
@@ -150,6 +151,10 @@ class Condition < ActiveRecord::Base
 
   def temporal_ref_question?
     ref_qing.try(:temporal?)
+  end
+
+  def numeric_ref_question?
+    ref_qing.try(:numeric?)
   end
 
   private

@@ -154,7 +154,7 @@ describe Condition do
   end
 
   describe 'to_s' do
-    context 'for non-select ref question' do
+    context 'for numeric ref question' do
       before do
         @form = create(:form, question_types: %w(integer))
         @int_q = @form.questionings.first
@@ -162,11 +162,23 @@ describe Condition do
       end
 
       it 'should work' do
-        expect(@cond.to_s).to eq "Question #1 is less than \"5\""
+        expect(@cond.to_s).to eq "Question #1 is less than 5"
       end
 
       it 'should work when including code' do
-        expect(@cond.to_s(include_code: true)).to eq "Question #1 #{@int_q.code} is less than \"5\""
+        expect(@cond.to_s(include_code: true)).to eq "Question #1 #{@int_q.code} is less than 5"
+      end
+    end
+
+    context 'for non-numeric ref question' do
+      before do
+        @form = create(:form, question_types: %w(text))
+        @text_q = @form.questionings.first
+        @cond = Condition.new(ref_qing: @text_q, op: 'eq', value: 'foo')
+      end
+
+      it 'should work' do
+        expect(@cond.to_s).to eq "Question #1 is equal to \"foo\""
       end
     end
 
