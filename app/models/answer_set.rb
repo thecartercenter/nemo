@@ -33,19 +33,8 @@ class AnswerSet
     answers.all?(&:blank?)
   end
 
-  # Returns the available Options for the given answer.
-  # If the answer's rank is > 1 and the answer before it is currently nil, returns [].
-  def options_for(answer)
-    path = answers_before(answer).map(&:option_id)
-    option_set.options_for_node(path) || []
-  end
-
-  # Returns an array of all answers in this set before the given answer, by rank.
-  # Returns [] if the given answer is first in the set.
-  # Returns nil if not found.
-  def answers_before(answer)
-    return nil unless pos = answers.index(answer)
-    answers[0...pos]
+  def option_path
+    @option_path ||= OptionPath.new(option_set: option_set, options: answers.map(&:option))
   end
 
   private

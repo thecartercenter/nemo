@@ -3,7 +3,7 @@
 <% case type = answer_set.qtype.name
    when 'select_one' %>
 
-  <%= render('select_one', answer_set: answer_set) %>
+  <%= render('option_sets/cascading_selects', index: index, option_path: answer_set.option_path) %>
 
 <% when 'select_multiple' %>
 

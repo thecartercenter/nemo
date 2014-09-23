@@ -178,3 +178,31 @@ form.elmo_form.minimal {
     border-bottom: none;
   }
 }
+
+div.cascading-selects {
+  .level-name {
+    font-size: 8pt;
+    margin-bottom: 3px;
+    color: #888;
+  }
+}
+
+.read_only div.cascading-selects {
+  .level-name {
+    margin-bottom: 0px;
+  }
+
+  .option-name {
+    margin-bottom: 5px;
+
+    i { /* For blank values */
+      font-style: normal;
+      color: #ccc;
+    }
+  }
+
+  > div:last-child .option-name {
+    margin-bottom: 0;
+  }
+}
+
