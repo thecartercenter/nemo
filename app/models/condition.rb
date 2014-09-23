@@ -41,6 +41,11 @@ class Condition < ActiveRecord::Base
     options.try(:first)
   end
 
+  # Sets the first option
+  def option=(o)
+    self.option_ids = o.nil? ? nil : [o.id]
+  end
+
   # Builds an OptionPath representing the selected options.
   def option_path
     @option_path ||= OptionPath.new(option_set: ref_qing.option_set, options: options)
@@ -54,17 +59,6 @@ class Condition < ActiveRecord::Base
   # Given a rank path,  sets option_ids by getting the option path from the referred option set.
   def set_options_by_rank_path(rank_path)
     self.option_ids = ref_qing.rank_path_to_option_path(rank_path).map(&:id)
-  end
-
-  # Temporary methods.
-  def option_id
-    option_ids.try(:first)
-  end
-  def option_id=(oid)
-    self.option_ids = oid.nil? ? nil : [oid]
-  end
-  def option=(o)
-    self.option_ids = o.nil? ? nil : [o.id]
   end
 
   # all questionings that can be referred to by this condition
