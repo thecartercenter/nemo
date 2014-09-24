@@ -1,5 +1,5 @@
-<div class="form_field qtype_<%= answer_set.qtype.name %> <%= read_only ? 'read_only' : '' %>"
-  data-qtype-name="<%= answer_set.qtype.name %>" id="qing_<%= answer_set.questioning.id %>">
+<div class="form_field answer_field qtype_<%= answer_set.qtype.name %> <%= read_only ? 'read_only' : '' %>"
+  data-qtype-name="<%= answer_set.qtype.name %>" id="qing_<%= answer_set.questioning.id %>" data-index="<%= answer_set_counter %>">
 
   <label class="main"><%= reqd_sym if answer_set.required? %> <%= answer_set.question_name || "[#{t('answer.no_name')}]" %>
 
@@ -22,6 +22,6 @@
 <%# Note that we need to do this in any form mode, even show. %>
 <% if answer_set.condition %>
   <%= javascript_doc_ready do %>
-    ELMO.Response.conditions.push(new ELMO.Condition(<%=j answer_set.condition.to_json.html_safe %>));
+    ELMO.Response.conditions.push(new ELMO.Condition(<%=json answer_set.condition %>));
   <% end %>
 <% end %>
