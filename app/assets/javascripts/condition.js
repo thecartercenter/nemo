@@ -133,7 +133,7 @@
         return parseFloat(this.condition.value);
 
       case "select_one": case "select_multiple":
-        return this.condition.option_ids;
+        return this.condition.option_ids[0];
     }
   }
 
