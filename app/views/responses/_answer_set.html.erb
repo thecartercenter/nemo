@@ -22,6 +22,6 @@
 <%# Note that we need to do this in any form mode, even show. %>
 <% if answer_set.condition %>
   <%= javascript_doc_ready do %>
-    ELMO.Response.conditions.push(new ELMO.Condition(<%=json answer_set.condition %>));
+    ELMO.Response.conditions.push(new ELMO.Views.ConditionChecker(<%=json answer_set.condition %>));
   <% end %>
 <% end %>

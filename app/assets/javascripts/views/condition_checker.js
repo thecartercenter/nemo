@@ -1,10 +1,11 @@
-// ELMO.Condition
+// ELMO.Views.ConditionChecker
 //
-// Models a question relevance condition.
+// Models a question relevance condition. Knows how to grab values
+// from the response form and show/hide the Condition's question.
 (function(ns, klass) {
 
   // constructor
-  ns.Condition = klass = function(condition) {
+  ns.ConditionChecker = klass = function(condition) {
     this.condition = condition;
 
     // get refs to main row and ref'd question row
@@ -153,4 +154,4 @@
     return CKEDITOR.instances[this.rq_row.find("div.control textarea").attr('id')];
   }
 
-})(ELMO);
+})(ELMO.Views);
