@@ -1,6 +1,5 @@
 <%# NOTE this template does not use elmo_form_for because it is rendered inside the control area of
     an elmo form field and therefore doesn't need all the structure that comes with an elmo form field %>
-
 <%# if there are no referrable questionings, no point in showing the condition form %>
 <% if @condition.refable_qings.empty? %>
 
@@ -15,39 +14,12 @@
 
   <% else %>
 
-    <%= elmo_fields_for("questioning[condition_attributes]", @condition) do |f| %>
-
-      <%= f.hidden_field(:id) %>
-
-      <div class="field">
-        <label><%= translate_model(Question) %></label>
-        <div>
-          <%= f.select(:ref_qing_id, @condition.refable_qings.map{|q| ["#{q.rank}. #{q.question.code}", q.id]},
-            {:include_blank => true}) %>
-        </div>
-      </div>
-
-      <div class="field">
-        <label><%= t('condition.op') %></label>
-        <div>
-          <%= f.select(:op, translate_options(@condition.applicable_operator_names, [:condition, :operators]),
-            :include_blank => true) %>
-        </div>
-      </div>
-
-      <div class="field">
-        <label><%= t('condition.value') %></label>
-        <div>
-          <%= f.text_field(:value, :style => @condition.ref_question_has_options? ? 'display: none' : '', :class => 'text form-control') %>
-          <%= f.select(:option_id, @condition.ref_question_select_options || [], {:include_blank => true},
-            :style => @condition.ref_question_has_options? ? "" : "display: none") %>
-        </div>
-      </div>
-
-    <% end # elmo_fields_for %>
+    <div id="condition-form-fields">
+      <%= render('conditions/form_fields') %>
+    </div>
 
     <%= javascript_doc_ready do %>
-      new ELMO.Views.ConditionForm(<%=j @condition.to_json(:dropdown_values => true).html_safe %>);
+      new ELMO.Views.ConditionFormView(<%=json @condition %>);
     <% end %>
 
   <% end # show mode? %>

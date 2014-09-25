@@ -29,37 +29,23 @@ div.question_fields {
 }
 
 form.questioning_form .form_field#condition {
-  select {
-    width: 125px;
+  select, input {
+    width: 317px;
+    display: inline;
   }
 
-  input {
-    width: 125px;
-  }
+  div.field {
+    margin-bottom: 4px;
 
-  .control {
-    .widget {
-      width: 250px;
+    label {
+      display: inline-block;
+      width: 100px;
+      vertical-align: top;
+      padding: 0;
     }
 
-    div.field {
-      margin-bottom: 4px;
-
-      label {
-        display: inline-block;
-        width: 100px;
-        vertical-align: top;
-        padding: 0;
-      }
-
-      div {
-        width: 100px;
-        display: inline-block;
-
-        input[type=text] {
-          height: 24px;
-        }
-      }
+    div.cascading-selects {
+      display: inline-block;
     }
   }
 }

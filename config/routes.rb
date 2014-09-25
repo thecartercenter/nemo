@@ -82,7 +82,11 @@ ELMO::Application.routes.draw do
     end
     resources :markers
     resources :questions
-    resources :questionings
+    resources :questionings do
+      collection do
+        get 'condition_form', :path => 'condition-form'
+      end
+    end
     resources :settings
     resources :user_batches, :path => 'user-batches'
     resources :groups
