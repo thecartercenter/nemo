@@ -112,10 +112,22 @@ class Search::Token
       value_sql = value_token.to_sql
       op_sql = op.to_sql
 
+      # Transform the value if qualifier has transformer.
+      value_sql = qual.preprocessor.call(value_sql) if qual.preprocessor
+
       # if rhs is [blank], act accordingly
       inner = if [I18n.locale, :en].map{|l| '[' + I18n.t('search.blank', :locale => l) + ']'}.include?(value_sql)
         op_sql = (op_sql == "=" ? "IS" : "IS NOT")
         "#{qual.col} #{op_sql} NULL"
+
+      # if translated qualifier, use special expression
+      elsif qual.type == :translated
+        op_sql = op_sql == "=" ? "RLIKE" : "NOT RLIKE"
+        # Sanitize first with special markers, then add the enclosing syntax for matching the RLIKE.
+        sanitize("#{qual.col} #{op_sql} ?", "%%%1#{value_sql}%%%2").tap do |sql|
+          sql.gsub!('%%%1', %{"#{I18n.locale}":"([^"\\]|\\\\\\\\.)*})
+          sql.gsub!('%%%2', %{([^"\\]|\\\\\\\\.)*"})
+        end
 
       # if partial matches are allowed, change to LIKE
       elsif qual.type == :text

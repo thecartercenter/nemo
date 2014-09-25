@@ -39,6 +39,7 @@ module Standardizable
     result = save
     Thread.current[:elmo_capturing_changes?] = false
     rereplicate_to_copies
+    do_assertions
     result
   end
 
@@ -47,12 +48,14 @@ module Standardizable
     result = save!
     Thread.current[:elmo_capturing_changes?] = false
     rereplicate_to_copies
+    do_assertions
     result
   end
 
   def destroy_with_copies
     destroy_copies
     destroy
+    do_assertions
   end
 
   # get copy in the given mission, if it exists (there can only be one)
@@ -157,5 +160,26 @@ module Standardizable
         end
       end
       return true
+    end
+
+    # Runs some assertions against the database and raises an error if they fail so that the cause
+    # can be investigated.
+    def do_assertions
+      assert_no_results('select s.form_id, s.id, s.rank, c.id, c.rank
+        from questionings s left outer join questionings c on c.standard_id = s.id
+        where s.rank != c.rank order by s.form_id, s.rank',
+        'misaligned ranks between standard and copies')
+
+      assert_no_results('select s.form_id, s.id, s.rank, c.id, c.rank
+        from questionings s left outer join questionings c on c.standard_id = s.id
+        where c.id is null and s.form_id in (
+          select distinct sf.id from forms sf inner join forms sc on sf.id = sc.standard_id
+        ) order by s.form_id, s.rank',
+        'questionings from copied standard forms dont have corresponding copies')
+    end
+
+    # Raises an error if the given sql returns any results.
+    def assert_no_results(sql, msg)
+      raise "Assertion failed: #{msg}" unless self.class.find_by_sql(sql).empty?
     end
 end

@@ -752,6 +752,10 @@ en:
     source: "source"
     submit_date: "submit-date"
     submitter: "submitter"
+    code: "code"
+    title: "title"
+    type: "type"
+    tag: "tag"
 
   # all page titles by controller and action
   # controller names are usually plural (rails convention)
@@ -989,6 +993,7 @@ en:
     edit_option: "Edit Option"
     edit_option_level: "Edit Option Level"
     leave_page_warning: "Leaving this page will abandon your changes to this Option Set."
+    multi_level_forbidden_notice: "This Option Set is currently used by at least one select-multiple Question and thus it cannot be coverted to a multi-level set."
     new_option_level: "New Option Level"
     none_found: "No matching options found"
     searching: "Searching..."
@@ -1190,6 +1195,11 @@ en:
         - "phone: +443726458364"
         - "login: jsmith"
         - "email: jsmith@example.com"
+      questions:
+        - "poll workers"
+        - "code: BallotBoxes"
+        # select-one below should not be translated.
+        - "type: select-one"
     expected: "Expected"
     help_link: "Search Help"
     help_title: "Search Help"
@@ -1273,7 +1283,6 @@ en:
         will match responses submitted in the month of January 2000.
 
       users: |-
-
         ## Qualifiers ##
 
         A simple search such as:
@@ -1330,6 +1339,67 @@ en:
         * __name != Oluwaseun__
 
         will match users not named 'Oluwaseun'.
+
+      questions: |-
+        ## Qualifiers ##
+
+        A simple search such as:
+
+        * __romeo juliet__
+
+        only searches the question titles. To search based on question attributes, use a qualifier, e.g.:
+
+        * __code: BallotBox__
+
+        will show questions with 'BallotBox' in their code.
+
+        Combine both of the above to narrow your search:
+
+        * __romeo juliet code: BallotBox__
+
+        will show responses to the 'Widgets' form containing the words 'romeo' and 'juliet'.
+
+        The full set of qualifiers you can use is as follows:
+
+        * __title__ The question title (partial matches allowed)
+        * __code__ The question code (partial matches allowed)
+        * __type__ The question type (%{question_types})
+        * __tag__ Searches tags applied to the question
+
+        ## Exact Phrases ##
+
+        Exact phrases can be matched by enclosing the phrase in double quotes:
+
+        * __"the rain in spain"__
+
+        Double quoted phrases can be mixed with non-quoted terms:
+
+        * __apples oranges "passion fruit"__
+
+        ## All Terms vs. Any Term
+
+        By default, all terms in the search must be matched. For example,
+
+        * __alpha lima peru__
+
+        matches only questions with all three of those words. Use the vertical bar ('|') character to match several words/phrases:
+
+        * __apples | oranges | "passion fruit"__
+
+        The '|' character can also be used with qualifiers:
+
+        * __code: ( Lions | "Bears and Sharks" | Tigers )__
+
+        matches questions with any of the above codes.
+
+        ## Negation
+
+        You can negate a qualified search by using the negation operator:
+
+        * __code != Widgets__
+
+        will match questions with any code not containing 'Widgets'.
+
     invalid_op: "The operator '%{op}' is not valid for the qualifier '%{qualifier}'."
     multiple_terms_not_allowed: "Multiple terms aren't allowed for '%{qualifier}' searches unless OR is used."
     must_use_qualifier: "You must use a qualifier for all search terms."

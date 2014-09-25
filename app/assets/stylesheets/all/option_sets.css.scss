@@ -20,7 +20,7 @@ form.option_set_form {
 
 
     ul {
-      width: 360px;
+      width: 320px;
     }
 
     input[type=text] {
@@ -31,6 +31,7 @@ form.option_set_form {
       vertical-align: top;
       margin-left: 5px;
       display: inline-block;
+      width: 92px;
     }
   }
 
@@ -102,7 +103,7 @@ form.option_set_form {
 
 div.modal.edit-named-item {
 
-  div.data_integrity_warning {
+  div.form-warning {
     margin-top: -8px;
   }
 

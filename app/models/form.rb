@@ -146,12 +146,15 @@ class Form < ActiveRecord::Base
     questionings.map{|qing| qing.rank || 0}.max || 0
   end
 
-  # takes a hash of the form {"questioning_id" => "new_rank", ...}
+  # takes a hash of the form {questioning_id => new_rank, ...}
   def update_ranks(new_ranks)
+    # Convert everything to integers
+    new_ranks = Hash[*new_ranks.to_a.flatten.map(&:to_i)]
+
     # set but don't save the new orderings
     questionings.each_index do |i|
-      if new_ranks[questionings[i].id.to_s]
-        questionings[i].rank = new_ranks[questionings[i].id.to_s].to_i
+      if new_ranks[questionings[i].id]
+        questionings[i].rank = new_ranks[questionings[i].id]
       end
     end
 

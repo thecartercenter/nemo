@@ -15,7 +15,7 @@ describe 'form rendering for odk', clean_with_truncation: true do
     expect(response).to be_success
 
     # Parse the XML and tidy.
-    doc = XML::Parser.string(response.body, options: XML::Parser::Options::NOBLANKS).parse.root
-    expect(doc.to_s).to eq File.read(File.expand_path('../../expectations/sample_form_odk.xml', __FILE__)).strip
+    doc = XML::Parser.string(response.body, options: XML::Parser::Options::NOBLANKS).parse
+    expect(doc.to_s).to eq File.read(File.expand_path('../../expectations/sample_form_odk.xml', __FILE__))
   end
 end

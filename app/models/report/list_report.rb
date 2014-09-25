@@ -40,6 +40,9 @@ class Report::ListReport < Report::Report
         # question filter
         qing_ids = questions.collect(&:questionings).flatten.collect(&:id).join(",")
         rel = rel.where("questionings.id IN (#{qing_ids})")
+
+        # Add order by answer rank to accommodate multilevel answers.
+        rel = rel.order("answers.rank")
       end
 
       # apply filter
