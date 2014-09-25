@@ -119,9 +119,9 @@ class Replication
   # returns a string representation used for logging
   def to_s
     [].tap do |lines|
-      lines << "***** REPLICATING *******************************************************************"
+      lines << "***** REPLICATING #{src_obj.class.name.upcase} *******************************************************************"
       lines << "mode:         #{mode}"
-      lines << "Source obj:   #{src_obj}"
+      lines << "Source obj:   #{src_obj.inspect}"
       lines << "Dest mission: #{dest_mission || '[nil]'}"
     end.join("\n")
   end
