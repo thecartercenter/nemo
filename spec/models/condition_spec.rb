@@ -1,6 +1,10 @@
 require 'spec_helper'
 
 describe Condition do
+  before(:all) do
+    I18n.locale = :en
+  end
+
   describe 'options' do
     it 'should return nil if no option ids' do
       c = Condition.new(option_ids: nil)
