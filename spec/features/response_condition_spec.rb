@@ -4,20 +4,31 @@ feature 'conditions in responses', js: true do
   before do
     @user = create(:user)
     @form = create(:form, name: 'Foo',
-      question_types: %w(long_text text integer text decimal select_one select_multiple datetime date time text))
-
-    # Create conditions referring to each question except #4 and the last one.
+      question_types: %w(long_text text integer text decimal select_one select_one select_one select_multiple datetime date time text))
     @year = Time.now.year - 2
     @qings = @form.questionings
+
+    # Add a multilevel option set to the second and third select_ones.
+    @multi = create(:option_set, multi_level: true)
+    @qings[6].question.option_set = @multi
+    @qings[6].question.save!
+    @qings[7].question.option_set = @multi
+    @qings[7].question.save!
+
+    # Create conditions referring to each question except #4 and the last one.
     @qings[1].create_condition(ref_qing: @qings[0], op: 'eq', value: 'foo')
     @qings[2].create_condition(ref_qing: @qings[1], op: 'neq', value: 'bar')
     @qings[4].create_condition(ref_qing: @qings[2], op: 'gt', value: '10')
     @qings[5].create_condition(ref_qing: @qings[4], op: 'eq', value: '21.72')
     @qings[6].create_condition(ref_qing: @qings[5], op: 'eq', option_ids: [@qings[5].options.last.id]) # Dog
-    @qings[7].create_condition(ref_qing: @qings[6], op: 'inc', option_ids: [@qings[6].options.first.id]) # Cat
-    @qings[8].create_condition(ref_qing: @qings[7], op: 'lt', value: "#{@year}-01-01 5:00")
-    @qings[9].create_condition(ref_qing: @qings[8], op: 'eq', value: "#{@year}-03-22")
-    @qings[10].create_condition(ref_qing: @qings[9], op: 'geq', value: '3:00pm')
+    @qings[7].create_condition(ref_qing: @qings[6], op: 'eq',
+      option_ids: [@multi.c[1].option_id, @multi.c[1].c[0].option_id]) # Plant > Tulip
+    @qings[8].create_condition(ref_qing: @qings[7], op: 'eq',
+      option_ids: [@multi.c[0].option_id]) # Animal
+    @qings[9].create_condition(ref_qing: @qings[8], op: 'inc', option_ids: [@qings[8].options.first.id]) # Cat
+    @qings[10].create_condition(ref_qing: @qings[9], op: 'lt', value: "#{@year}-01-01 5:00")
+    @qings[11].create_condition(ref_qing: @qings[10], op: 'eq', value: "#{@year}-03-22")
+    @qings[12].create_condition(ref_qing: @qings[11], op: 'geq', value: '3:00pm')
 
     login(@user)
     visit(new_response_path(locale: 'en', mode: 'm', mission_name: get_mission.compact_name, form_id: @form.id))
@@ -26,23 +37,28 @@ feature 'conditions in responses', js: true do
 
   scenario 'should work' do
     fill_answer_and_expect_visible(0, 'fo', [0,3])
-    fill_answer_and_expect_visible(0, 'foo', [0,1,3])
+    fill_answer_and_expect_visible(0, 'foo', 0..3)
     fill_answer_and_expect_visible(1, 'bar', [0,1,3])
     fill_answer_and_expect_visible(1, 'barz', 0..3)
     fill_answer_and_expect_visible(2, '10', 0..3)
     fill_answer_and_expect_visible(2, '11', 0..4)
     fill_answer_and_expect_visible(4, '21.7', 0..4)
     fill_answer_and_expect_visible(4, '21.72', 0..5)
-    fill_answer_and_expect_visible(5, 'Cat', 0..5)
-    fill_answer_and_expect_visible(5, 'Dog', 0..6)
-    fill_answer_and_expect_visible(6, ['Dog'], 0..6)
-    fill_answer_and_expect_visible(6, ['Dog', 'Cat'], 0..7)
-    fill_answer_and_expect_visible(7, "#{@year}-01-01 5:00", 0..7)
-    fill_answer_and_expect_visible(7, "#{@year}-01-01 4:59", 0..8)
-    fill_answer_and_expect_visible(8, "#{@year}-03-21", 0..8)
-    fill_answer_and_expect_visible(8, "#{@year}-03-22", 0..9)
-    fill_answer_and_expect_visible(9, "6:00", 0..9)
-    fill_answer_and_expect_visible(9, "15:00", 0..10)
+    fill_answer_and_expect_visible(5, ['Cat'], 0..5)
+    fill_answer_and_expect_visible(5, ['Dog'], 0..6)
+    fill_answer_and_expect_visible(6, ['Plant'], 0..6)
+    fill_answer_and_expect_visible(6, ['Plant', 'Oak'], 0..6)
+    fill_answer_and_expect_visible(6, ['Plant', 'Tulip'], 0..7)
+    fill_answer_and_expect_visible(7, ['Plant'], 0..7)
+    fill_answer_and_expect_visible(7, ['Animal'], 0..8)
+    fill_answer_and_expect_visible(8, ['Dog'], 0..8)
+    fill_answer_and_expect_visible(8, ['Dog', 'Cat'], 0..9)
+    fill_answer_and_expect_visible(9, "#{@year}-01-01 5:00", 0..9)
+    fill_answer_and_expect_visible(9, "#{@year}-01-01 4:59", 0..10)
+    fill_answer_and_expect_visible(10, "#{@year}-03-21", 0..10)
+    fill_answer_and_expect_visible(10, "#{@year}-03-22", 0..11)
+    fill_answer_and_expect_visible(11, "6:00", 0..11)
+    fill_answer_and_expect_visible(11, "15:00", 0..12)
   end
 
   def fill_answer_and_expect_visible(idx, value, expect)
@@ -57,8 +73,10 @@ feature 'conditions in responses', js: true do
     when 'long_text'
       fill_in_ckeditor(id, with: value)
     when 'select_one'
-      id = "response_answer_sets_#{idx}_answers_0_option_id"
-      select(value, from: id)
+      value.each_with_index do |o,i|
+        id = "response_answer_sets_#{idx}_answers_#{i}_option_id"
+        select(o, from: id)
+      end
     when 'select_multiple'
       @qings[idx].options.each_with_index do |o,i|
         id = "response_answer_sets_#{idx}_all_choices_#{i}_checked"
@@ -81,10 +99,13 @@ feature 'conditions in responses', js: true do
     end
   end
 
-  def expect_visible(*visible)
-    visible = visible[0].to_a if visible[0].is_a?(Range)
+  def expect_visible(visible)
+    visible = visible.to_a if visible.is_a?(Range)
     @qings.each_with_index do |q,i|
-      expect(page).to have_selector("div.answer_field[data-index=\"#{i}\"]", visible: visible.include?(i))
+      cur_vis = visible.include?(i)
+
+      # We do it this way (find, then assert) for timing issues.
+      expect(find("div.answer_field[data-index=\"#{i}\"]", visible: cur_vis)).send(cur_vis ? :to : :not_to, be_visible)
     end
   end
 

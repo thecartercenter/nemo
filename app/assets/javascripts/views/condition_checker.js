@@ -100,7 +100,7 @@
           return parseFloat(this.rq_row.find("div.control input[type='text']").val());
 
         case "select_one":
-          return parseInt(this.rq_row.find("select").val());
+          return parseInt(this.rq_row.find("select").eq(this.condition.option_ids.length - 1).val());
 
         case "datetime": case "date": case "time":
           return (new ELMO.TimeFormField(this.rq_row.find("div.control"))).extract_str();
@@ -134,7 +134,7 @@
         return parseFloat(this.condition.value);
 
       case "select_one": case "select_multiple":
-        return this.condition.option_ids[0];
+        return this.condition.option_ids[this.condition.option_ids.length - 1];
     }
   }
 
