@@ -9,6 +9,7 @@ class AnswerSet
       delegate :levels, :multi_level?, to: :option_set
   delegate :first, to: :answers
     delegate :errors, :choices, :all_choices, :value, :datetime_value, :date_value, :time_value, :response_id, :questioning_id, :relevant, to: :first
+    delegate :option_ids_with_no_nils, to: :option_path
 
   # Builds Answer attribute hashes from submitted answer_set params.
   # Returns an array of Answer attribute hashes.

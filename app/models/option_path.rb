@@ -30,6 +30,10 @@ class OptionPath
     option_set.options_for_node(ids) || []
   end
 
+  def option_ids_with_no_nils
+    options.compact.map(&:id)
+  end
+
   private
 
   def ensure_options_for_all_levels

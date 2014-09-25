@@ -28,7 +28,7 @@
     this.rq_row.find("div.control").find("input, select, textarea").on('change', function(){ self.refresh(); });
     this.rq_row.find("div.control input[type='text']").on('keyup', function(){ self.refresh(); });
 
-    if (this.rq_type == 'long_text')
+    if (this.rq_type == 'long_text' && !this.read_only)
       this.get_ckeditor().on('change', function() { self.refresh(); });
 
     // hookup form submit to clear irrelevant fields
@@ -63,17 +63,22 @@
 
     // perform comparison
     switch (this.condition.op) {
-      case "eq": return lhs == rhs;
+      case "eq": return this.test_equality(lhs, rhs);
       case "lt": return lhs < rhs;
       case "gt": return lhs > rhs;
       case "leq": return lhs <= rhs;
       case "geq": return lhs >= rhs;
-      case "neq": return lhs != rhs;
+      case "neq": return !this.test_equality(lhs, rhs);
       case "inc": return lhs.indexOf(rhs) != -1;
       case "ninc": return lhs.indexOf(rhs) == -1;
       default: return false;
     }
   }
+
+  // Uses a special array comparison method if appropriate.
+  klass.prototype.test_equality = function(a,b) {
+    return $.isArray(a) && $.isArray(b) ? a.equalsArray(b) : a == b;
+  };
 
   // determines the left hand side of the comparison, which comes from the referred question
   klass.prototype.lhs = function() {
@@ -100,7 +105,12 @@
           return parseFloat(this.rq_row.find("div.control input[type='text']").val());
 
         case "select_one":
-          return parseInt(this.rq_row.find("select").eq(this.condition.option_ids.length - 1).val());
+          var ids = [];
+          this.rq_row.find("select").each(function(i, el){
+            var id = $(el).val();
+            if (id != '') ids.push(parseInt(id));
+          });
+          return ids;
 
         case "datetime": case "date": case "time":
           return (new ELMO.TimeFormField(this.rq_row.find("div.control"))).extract_str();
@@ -133,8 +143,11 @@
       case "integer": case "decimal":
         return parseFloat(this.condition.value);
 
-      case "select_one": case "select_multiple":
-        return this.condition.option_ids[this.condition.option_ids.length - 1];
+      case "select_one":
+        return this.condition.option_ids;
+
+      case "select_multiple":
+        return this.condition.option_ids[0];
     }
   }
 
