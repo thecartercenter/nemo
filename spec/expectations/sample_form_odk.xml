@@ -96,7 +96,7 @@
       </itext>
       <bind nodeset="/data/q1" type="select1"/>
       <bind nodeset="/data/q2_1" type="select1"/>
-      <bind nodeset="/data/q2_2" type="select1"/>
+      <bind nodeset="/data/q2_2" relevant="(count(instance('option_set_2')/options/opt[value=/data/q2_1]/opt) &gt; 0) and (count(instance('option_set_2')/options/opt[value=/data/q2_1]/opt/blank) = 0)" type="select1"/>
       <bind nodeset="/data/q3" type="int"/>
     </model>
   </h:head>
