@@ -842,6 +842,14 @@ en:
     no_name: "No Name"
     this_answer: "This answer"
 
+  attrib_fields:
+    form: "Form"
+    submitter: "Submitter"
+    source: "Source"
+    time_submitted: "Time Submitted"
+    date_submitted: "Date Submitted"
+    reviewed: "Reviewed"
+
   broadcast:
     balance_notice: "You have %{balance} SMS credits in your %{account_type} account."
     chars: # these are for informing the user how many chars they have left in their sms

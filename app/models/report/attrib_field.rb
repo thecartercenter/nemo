@@ -38,6 +38,10 @@ class Report::AttribField < Report::Field
     {:name => name, :title => name.to_s.gsub("_", " ").ucwords}
   end
 
+  def title
+    I18n.t("attrib_fields.#{name}", default: name.to_s.gsub('_', ' ').ucwords)
+  end
+
   private
     def joins=(j)
       @joins = j

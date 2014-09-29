@@ -772,6 +772,13 @@ fr:
     welcome:
       index: "Accueil"
       unauthorized: "Non autorisé"
+  attrib_fields:
+    form: "Fiche"
+    submitter: "Soumetteur"
+    source: "Source"
+    time_submitted: "Temps de Soumission"
+    date_submitted: "Date de Soumission"
+    reviewed: "Revue?"
   admin_mode:
     admin_mode: "Mode d'Administration"
     exit_admin_mode: "Quitter la Mode d'Administrateur"
