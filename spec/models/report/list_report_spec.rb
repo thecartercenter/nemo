@@ -19,4 +19,25 @@ describe Report::ListReport do
       )
     end
   end
+
+  context 'with non-english locale' do
+    before do
+      I18n.locale = :fr
+      @form = create(:form, question_types: %w(integer integer))
+      @response = create(:response, form: @form, answer_values: [5, 10])
+      @report = create(:list_report, _calculations: @form.questions)
+    end
+
+    it 'should have proper headers' do
+      expect(@form.questions[0].name_fr).to match(/Question/) # Ensure question created with french name.
+      expect(@report).to have_legacy_report_data(
+        @form.questions.map(&:name_fr),
+        %w(5 10)
+      )
+    end
+
+    after do
+      I18n.locale = :en
+    end
+  end
 end
