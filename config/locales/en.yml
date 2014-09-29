@@ -848,6 +848,7 @@ en:
     source: "Source"
     time_submitted: "Time Submitted"
     date_submitted: "Date Submitted"
+    response_id: "Response ID"
     reviewed: "Reviewed"
 
   broadcast:

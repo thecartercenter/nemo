@@ -779,6 +779,7 @@ fr:
     time_submitted: "Temps de Soumission"
     date_submitted: "Date de Soumission"
     reviewed: "Revue?"
+    response_id: "Numero de la réponse"
   admin_mode:
     admin_mode: "Mode d'Administration"
     exit_admin_mode: "Quitter la Mode d'Administrateur"
