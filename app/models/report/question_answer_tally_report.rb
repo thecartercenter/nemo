@@ -77,10 +77,11 @@ class Report::QuestionAnswerTallyReport < Report::TallyReport
       # add joins to relation
       joins << :options << :choices << :option_sets
       rel = add_joins_to_relation(rel, joins)
-      rel = rel.where('answers.rank IS NULL OR answers.rank = 1')
 
       # apply filter
       rel = apply_filter(rel)
+
+      rel = filter_non_top_level_answers(rel)
 
       return rel
     end
@@ -102,5 +103,9 @@ class Report::QuestionAnswerTallyReport < Report::TallyReport
         rest = build_nested_if(exprs[1..-1], conds[1..-1])
         "IF(#{conds.first.sql}, #{exprs.first.sql}, #{rest})"
       end
+    end
+
+    def filter_non_top_level_answers(rel)
+      rel.where('answers.rank IS NULL OR answers.rank = 1')
     end
 end

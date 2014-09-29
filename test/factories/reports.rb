@@ -21,6 +21,9 @@ FactoryGirl.define do
       factory :question_answer_tally_report, class: 'Report::QuestionAnswerTallyReport' do
       end
 
+      factory :grouped_tally_report, class: 'Report::GroupedTallyReport' do
+      end
+
       factory :list_report, class: 'Report::ListReport' do
       end
     end
