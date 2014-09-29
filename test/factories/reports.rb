@@ -18,10 +18,10 @@ FactoryGirl.define do
         end
       end
 
-      factory :question_answer_tally_report, class: 'Report::QuestionAnswerTallyReport' do
+      factory :answer_tally_report, class: 'Report::AnswerTallyReport' do
       end
 
-      factory :grouped_tally_report, class: 'Report::GroupedTallyReport' do
+      factory :response_tally_report, class: 'Report::ResponseTallyReport' do
       end
 
       factory :list_report, class: 'Report::ListReport' do

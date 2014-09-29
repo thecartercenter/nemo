@@ -1,7 +1,7 @@
 require 'test_helper'
 require 'unit/report/report_test_helper'
 
-class Report::QuestionAnswerTallyReportTest < ActiveSupport::TestCase
+class Report::AnswerTallyReportTest < ActiveSupport::TestCase
   setup do
     prep_objects
   end
@@ -19,7 +19,7 @@ class Report::QuestionAnswerTallyReportTest < ActiveSupport::TestCase
     9.times{create_response(:form => @forms[:form1], :answers => {:yn0 => "No", :yn1 => "Yes"})}
 
     # create report with question label 'code'
-    report = create_report("QuestionAnswerTally", :option_set => @yes_no)
+    report = create_report("AnswerTally", :option_set => @yes_no)
 
     # test
     assert_report(report, %w(     Yes No TTL ),
@@ -30,7 +30,7 @@ class Report::QuestionAnswerTallyReportTest < ActiveSupport::TestCase
 
 
     # try question label 'title'
-    report = create_report("QuestionAnswerTally", :option_set => @yes_no, :question_labels => "title")
+    report = create_report("AnswerTally", :option_set => @yes_no, :question_labels => "title")
 
     assert_report(report,                         %w( Yes No TTL ),
                           ["Yes No Question 0"] + %w(   6 13  19 ),
@@ -39,7 +39,7 @@ class Report::QuestionAnswerTallyReportTest < ActiveSupport::TestCase
                                               %w( TTL  30 18  48 ))
 
     # try with joined-attrib filter
-    report = create_report("QuestionAnswerTally", :option_set => @yes_no, :filter => "form: form0")
+    report = create_report("AnswerTally", :option_set => @yes_no, :filter => "form: form0")
     assert_report(report, %w(     Yes No TTL ),
                           %w( yn0   6  4  10 ),
                           %w( yn1   7  3  10 ),
@@ -60,7 +60,7 @@ class Report::QuestionAnswerTallyReportTest < ActiveSupport::TestCase
     4.times{create_response(:answers => {:yn0 => "No", :yn1 => "Yes", :hl0 => "High", :hl1 => "Low"})}
 
     # create report naming only three questions
-    report = create_report("QuestionAnswerTally",
+    report = create_report("AnswerTally",
       :calculations => [:yn0, :yn1, :hl1].collect{|code| Report::IdentityCalculation.new(:question1 => @questions[code])}
     )
 
@@ -81,7 +81,7 @@ class Report::QuestionAnswerTallyReportTest < ActiveSupport::TestCase
     4.times{create_response(:answers => {:lh => "Low"})}
 
     # create report
-    report = create_report("QuestionAnswerTally", :option_set => @yes_no)
+    report = create_report("AnswerTally", :option_set => @yes_no)
 
     # ensure no data
     assert_report(report, nil)
@@ -98,7 +98,7 @@ class Report::QuestionAnswerTallyReportTest < ActiveSupport::TestCase
     3.times{create_response(:answers => {:yn => "Yes", :rgb => %w(Green)})}
     4.times{create_response(:answers => {:yn => "No", :rgb => %w(Red Blue Green)})}
 
-    report = create_report("QuestionAnswerTally", :calculations => [
+    report = create_report("AnswerTally", :calculations => [
       Report::IdentityCalculation.new(:question1 => @questions[:yn]),
       Report::IdentityCalculation.new(:question1 => @questions[:rgb])
     ])

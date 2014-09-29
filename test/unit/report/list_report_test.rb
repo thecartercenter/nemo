@@ -50,7 +50,7 @@ class Report::ListReportTest < ActiveSupport::TestCase
                           %w( Test       5     al      web     No    ))
   end
 
-  test "grouped and list reports using same attrib" do
+  test "response and list reports using same attrib" do
 
     create_question(:code => "Inty", :type => "integer")
     create_response(:answers => {:Inty => 10})
@@ -64,7 +64,7 @@ class Report::ListReportTest < ActiveSupport::TestCase
                           %w( Test      ),
                           %w( Test      ))
 
-    report = create_report("GroupedTally", :calculations_attributes => [
+    report = create_report("ResponseTally", :calculations_attributes => [
       {:rank => 1, :type => "Report::IdentityCalculation", :attrib1_name => "submitter"}
     ])
 

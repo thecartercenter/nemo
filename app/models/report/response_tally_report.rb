@@ -1,4 +1,4 @@
-class Report::GroupedTallyReport < Report::TallyReport
+class Report::ResponseTallyReport < Report::TallyReport
   include Report::Groupable
 
   protected

@@ -50,8 +50,8 @@ ELMO::Application.routes.draw do
       resources :reports
 
       # need to list these all separately b/c rails is dumb sometimes
-      resources :question_answer_tally_reports, :controller => 'reports'
-      resources :grouped_tally_reports, :controller => 'reports'
+      resources :answer_tally_reports, :controller => 'reports'
+      resources :response_tally_reports, :controller => 'reports'
       resources :list_reports, :controller => 'reports'
       resources :standard_form_reports, :controller => 'reports'
     end

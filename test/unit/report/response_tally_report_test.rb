@@ -1,7 +1,7 @@
 require 'test_helper'
 require 'unit/report/report_test_helper'
 
-class Report::GroupedTallyReportTest < ActiveSupport::TestCase
+class Report::ResponseTallyReportTest < ActiveSupport::TestCase
   setup do
     prep_objects
   end
@@ -15,7 +15,7 @@ class Report::GroupedTallyReportTest < ActiveSupport::TestCase
     6.times{create_response(:created_at => Time.zone.parse("2012-01-05 1:00:00"), :answers => {:yn => "No"})}
 
     # create report with question label 'code'
-    report = create_report("GroupedTally", :calculations => [
+    report = create_report("ResponseTally", :calculations => [
       Report::IdentityCalculation.new(:rank => 1, :attrib1_name => :date_submitted),
       Report::IdentityCalculation.new(:rank => 2, :question1 => @questions[:yn])
     ])
@@ -35,13 +35,13 @@ class Report::GroupedTallyReportTest < ActiveSupport::TestCase
     8.times{create_response(:form => @forms[:f1], :source => "odk")}
     3.times{create_response(:form => @forms[:f1], :source => "web")}
 
-    report = create_report("GroupedTally", :calculations => [Report::IdentityCalculation.new(:rank => 1, :attrib1_name => :form)])
+    report = create_report("ResponseTally", :calculations => [Report::IdentityCalculation.new(:rank => 1, :attrib1_name => :form)])
     assert_report(report, %w(   Tally TTL ),
                           %w(  f0  7   7 ),
                           %w(  f1 11  11 ),
                           %w( TTL 18  18 ))
 
-    report = create_report("GroupedTally", :calculations => [
+    report = create_report("ResponseTally", :calculations => [
       Report::IdentityCalculation.new(:rank => 1, :attrib1_name => :form),
       Report::IdentityCalculation.new(:rank => 2, :attrib1_name => :source)
     ])
@@ -60,7 +60,7 @@ class Report::GroupedTallyReportTest < ActiveSupport::TestCase
     8.times{create_response(:source => "odk", :answers => {:yn => "No"})}
     3.times{create_response(:source => "web", :answers => {:yn => "No"})}
 
-    report = create_report("GroupedTally", :calculations => [
+    report = create_report("ResponseTally", :calculations => [
       Report::IdentityCalculation.new(:rank => 1, :attrib1_name => :source),
       Report::IdentityCalculation.new(:rank => 2, :question1 => @questions[:yn])
     ])
@@ -77,7 +77,7 @@ class Report::GroupedTallyReportTest < ActiveSupport::TestCase
     8.times{create_response(:source => "odk", :answers => {:int => 0})}
     3.times{create_response(:source => "web", :answers => {:int => 0})}
 
-    report = create_report("GroupedTally", :calculations => [
+    report = create_report("ResponseTally", :calculations => [
       Report::IdentityCalculation.new(:rank => 1, :attrib1_name => :source),
       Report::ZeroNonzeroCalculation.new(:rank => 2, :question1 => @questions[:int])
     ])
@@ -100,7 +100,7 @@ class Report::GroupedTallyReportTest < ActiveSupport::TestCase
     3.times{create_response(:form => @forms[:form0], :answers => {:yn => "No", :hl => "Low"})}
     2.times{create_response(:form => @forms[:form1], :answers => {:yn => "Yes", :hl => "High"})}
 
-    report = create_report("GroupedTally", :calculations => [
+    report = create_report("ResponseTally", :calculations => [
       Report::IdentityCalculation.new(:rank => 1, :question1 => @questions[:yn]),
       Report::IdentityCalculation.new(:rank => 2, :question1 => @questions[:hl])
     ])
@@ -109,7 +109,7 @@ class Report::GroupedTallyReportTest < ActiveSupport::TestCase
                           %w( No    5   3   8 ),
                           %w( TTL   9  11  20 ))
     # test filtering
-    report = create_report("GroupedTally", :calculations => [
+    report = create_report("ResponseTally", :calculations => [
       Report::IdentityCalculation.new(:rank => 1, :question1 => @questions[:yn]),
       Report::IdentityCalculation.new(:rank => 2, :question1 => @questions[:hl])
     ], :filter => "form: form0")

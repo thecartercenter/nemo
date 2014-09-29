@@ -1,4 +1,4 @@
-class Report::QuestionAnswerTallyReport < Report::TallyReport
+class Report::AnswerTallyReport < Report::TallyReport
 
   # Called when related OptionSet (and OptionSetChoice) are destroyed.
   # Destroys self if there are no option sets left.

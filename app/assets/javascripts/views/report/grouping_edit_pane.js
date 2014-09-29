@@ -1,5 +1,5 @@
 // ELMO.Report.GroupingEditPane < ELMO.Report.EditPane
-// This pane is for choosing row and col headers for a GroupedTallyReport
+// This pane is for choosing row and col headers for a ResponseTallyReport
 (function(ns, klass) {
 
   // constructor

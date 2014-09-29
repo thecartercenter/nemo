@@ -171,11 +171,11 @@ fr:
         zero: "Comptes de résultats"
         one: "Compte de résultats"
         other: "Comptes de résultats"
-      report/question_answer_tally_report:
+      report/answer_tally_report:
         zero: "Comptes de résultats par question"
         one: "Compte de résultats par question"
         other: "Comptes de résultats par question"
-      report/grouped_tally_report:
+      report/response_tally_report:
         zero: "Comptes de réponses par résultat/attribut"
         one: "Compte de réponses par résultat/attribut"
         other: "Comptes de réponses par résultat/attribut"
@@ -1078,11 +1078,11 @@ fr:
         short_text: "Courtes Réponses Textuelles"
         long_text: "Longues Réponses Textuelles"
     tally_types:
-      question_answer: "Résultats per Question"
-      grouped: "Réponses par Résultats/Caractéristique"
+      answer: "Résultats per Question"
+      response: "Réponses par Résultats/Caractéristique"
     tally_type_examples:
-      question_answer: "Compte de <<Oui>> et <<Non>> pour toutes les Questions <<Oui>> ou <<Non>>"
-      grouped: "Compte de réponses par formulaire pour chaque équipe."
+      answer: "Compte de <<Oui>> et <<Non>> pour toutes les Questions <<Oui>> ou <<Non>>"
+      response: "Compte de réponses par formulaire pour chaque équipe."
     text_response_options:
       all: "Montrer Tous"
       short_only: "Ne Montrer Pas les Longues Réponses Textuelles"
