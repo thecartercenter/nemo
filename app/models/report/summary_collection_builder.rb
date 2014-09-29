@@ -237,6 +237,7 @@ class Report::SummaryCollectionBuilder
           #{current_user_join_clause}
           WHERE q.qtype_name = 'select_one'
             AND qings.id IN (#{qing_ids})
+            AND (a.rank IS NULL OR a.rank = 1)
           GROUP BY #{disagg_group_by_expr} qings.id, a.option_id
       eos
       sel_one_res = ActiveRecord::Base.connection.execute(query)

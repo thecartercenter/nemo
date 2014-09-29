@@ -85,6 +85,14 @@ class Report::SummaryCollectionSingleTest < ActiveSupport::TestCase
     assert_equal({options[0] => 25.0, options[1] => 75.0}, headers_and_items(:option, :pct))
   end
 
+  test "select_one summary should be correct with multilevel option set" do
+    prepare_form_and_collection('select_one', [%w(Animal Dog), %w(Animal), %w(Animal Cat), %w(Plant Tulip)],
+      use_multilevel_option_set: true)
+    animal, plant = @form.questions[0].option_set.options # Top level options
+    assert_equal({animal => 3, plant => 1}, headers_and_items(:option, :count))
+    assert_equal({animal => 75.0, plant => 25.0}, headers_and_items(:option, :pct))
+  end
+
   test "null_count should be correct for select_one" do
     prepare_form_and_collection('select_one', ['Yes', nil, 'No', nil])
     assert_equal(2, first_summary.null_count)
