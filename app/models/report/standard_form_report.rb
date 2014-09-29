@@ -70,7 +70,7 @@ class Report::StandardFormReport < Report::Report
     # eager load form
     f = Form.includes({:questionings => [
       # eager load qing conditions
-      {:condition => [:ref_qing, :option]},
+      {:condition => :ref_qing},
 
       # eager load referring conditions and their questionings
       {:referring_conditions => :questioning},
