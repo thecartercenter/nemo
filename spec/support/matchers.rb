@@ -56,7 +56,7 @@ RSpec::Matchers.define :have_legacy_report_data do |*expected|
     # Add column total row.
     actual += [["TTL"] + report.data.totals[:col] + [report.data.totals[:grand]]] if report.data.totals
 
-    # Convert everything to string, except convert "" to "_".
-    actual.map{|row| row.map{|cell| cell.to_s == "" ? "_" : cell.to_s}}
+    # Convert everything to string; convert empty strings to "_".
+    actual.map{|row| row.map{|cell| cell.to_s.empty? ? "_" : cell.to_s}}
   end
 end

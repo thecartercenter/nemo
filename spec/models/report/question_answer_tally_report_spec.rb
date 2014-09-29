@@ -56,4 +56,23 @@ describe Report::QuestionAnswerTallyReport do
       end
     end
   end
+
+  context 'with multilevel option set' do
+    before do
+      @form = create(:form, question_types: %w(select_one), use_multilevel_option_set: true)
+      create(:response, form: @form, answer_values: [['Animal', 'Cat']])
+      create(:response, form: @form, answer_values: [['Animal', 'Dog']])
+      create(:response, form: @form, answer_values: [['Animal']])
+      create(:response, form: @form, answer_values: [['Plant', 'Oak']])
+      @report = create(:question_answer_tally_report, option_sets: [@form.questions[0].option_set])
+    end
+
+    it 'should count only top-level answers' do
+      expect(@report).to have_legacy_report_data(
+                                    %w(    Animal Plant TTL),
+        [@form.questions[0].name] + %w(    3      1     4),
+                                    %w(TTL 3      1     4)
+      )
+    end
+  end
 end

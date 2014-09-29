@@ -77,6 +77,7 @@ class Report::QuestionAnswerTallyReport < Report::TallyReport
       # add joins to relation
       joins << :options << :choices << :option_sets
       rel = add_joins_to_relation(rel, joins)
+      rel = rel.where('answers.rank IS NULL OR answers.rank = 1')
 
       # apply filter
       rel = apply_filter(rel)
