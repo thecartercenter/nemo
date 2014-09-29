@@ -35,7 +35,7 @@ class Report::AttribField < Report::Field
   end
 
   def as_json(options = {})
-    {:name => name, :title => name.to_s.gsub("_", " ").ucwords}
+    {:name => name, :title => title}
   end
 
   def title
