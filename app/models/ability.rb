@@ -223,7 +223,7 @@ class Ability
     end
 
     # Can hide questioning if standard copy but not if published.
-    cannot :hide, Questioning do |q|
+    cannot :update_hidden, Questioning do |q|
       q.published?
     end
 

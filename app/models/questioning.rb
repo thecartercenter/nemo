@@ -57,9 +57,8 @@ class Questioning < ActiveRecord::Base
     self.condition = nil
   end
 
-  # checks if any of the core fields (condition, required, hidden) have changed
-  def core_changed?
-    condition.try(:changed?) || required_changed? || hidden_changed?
+  def condition_changed?
+    condition.try(:changed?)
   end
 
   # gets ranks of all referring conditions' questionings (should use eager loading)
