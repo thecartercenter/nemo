@@ -1,4 +1,4 @@
-# tests the general case of summary collections, where there are multiple subsets in the collection
+# This tests the general case of summary collections, where there are multiple subsets in the collection
 # makes sure that the data is disaggregated properly
 # tests for the singleton case, where there is only one subset in the collection, are currently in SummaryCollectionSingleTest
 

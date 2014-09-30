@@ -1,3 +1,4 @@
+# There are more report tests in spec/models/report.
 require 'test_helper'
 require 'unit/report/report_test_helper'
 

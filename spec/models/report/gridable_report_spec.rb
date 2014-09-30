@@ -1,3 +1,4 @@
+# There are more report tests in test/unit/report.
 require 'spec_helper'
 
 # This spec covers behavior common to all gridable report types.
