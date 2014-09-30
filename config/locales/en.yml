@@ -1512,6 +1512,10 @@ en:
       questions: "There is nothing available to import. Either there are no standard Questions, or they have all been imported already."
     standard: "Standard"
     standard_forms: "Standard Forms"
+    there_were_errors:
+      zero: "There were %{count} errors."
+      one: "There was %{count} error."
+      other: "There were %{count} errors."
 
   unauthorized:
     default: "You are not authorized to access that page or operation."

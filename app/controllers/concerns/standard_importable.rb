@@ -10,21 +10,23 @@ module StandardImportable
     # for each id, try to find the object and import it. keep a count. if there are errors,
     # just log them to debug, since this should never happen.
     import_count = 0
-    errors = false
+    error_count = 0
     params[:objs_to_import].each do |id|
       begin
         obj = model_class.find(id)
         obj.replicate(:mode => :to_mission, :dest_mission => current_mission)
         import_count += 1
       rescue
-        errors = true
+        error_count += 1
         logger.debug("ERROR #{$!} IMPORTING #{model_class.try(:name)} ##{id} TO MISSION #{current_mission.try(:name)}")
       end
     end
 
+    flash_key = params[:objs_to_import].size == error_count ? :error : :success
+
     # set the flash message
-    flash[:success] = I18n.t("standard.import_success.#{controller_name}", :count => import_count)
-    flash[:success] += " (#{I18n.t('standard.there_were_errors')})" if errors
+    flash[flash_key] = I18n.t("standard.import_success.#{controller_name}", count: import_count)
+    flash[flash_key] += " (#{I18n.t('standard.there_were_errors', count: error_count)})" if error_count > 0
 
     redirect_to(:action => :index)
   end
