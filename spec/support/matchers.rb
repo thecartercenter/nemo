@@ -15,6 +15,6 @@ end
 
 RSpec::Matchers.define :be_able_to do |op, target|
   match do |ability|
-    ability.can?(op, target)
+    ability.can?(op.to_sym, target)
   end
 end
