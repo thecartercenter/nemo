@@ -7,6 +7,7 @@ FactoryGirl.define do
     user
     mission { get_mission }
     form { build(:form, :mission => mission) }
+    source 'web'
 
     # Build answer objects from answer_values array
     # Array may contain nils, which should result in answers with nil values.

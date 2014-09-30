@@ -1,3 +1,4 @@
+# There are more report tests in test/unit/report.
 require 'spec_helper'
 
 describe Report::StandardFormReport do

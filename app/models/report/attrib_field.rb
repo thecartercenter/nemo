@@ -35,7 +35,11 @@ class Report::AttribField < Report::Field
   end
 
   def as_json(options = {})
-    {:name => name, :title => name.to_s.gsub("_", " ").ucwords}
+    {:name => name, :title => title}
+  end
+
+  def title
+    I18n.t("attrib_fields.#{name}", default: name.to_s.gsub('_', ' ').ucwords)
   end
 
   private
@@ -44,6 +48,11 @@ class Report::AttribField < Report::Field
     end
 
     @@ATTRIBS = {
+      :response_id => {
+        :name => :response_id,
+        :name_expr_params => {:sql_tplt => "CONCAT('#',responses.id)", :name => "name", :clause => :select},
+        :value_expr_params => {:sql_tplt => "CONCAT('#',responses.id)", :name => "value", :clause => :select},
+        :data_type => :text},
       :form => {
         :name => :form,
         :name_expr_params => {:sql_tplt => "__TBL_PFX__forms.name", :name => "name", :clause => :select},
