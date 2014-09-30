@@ -2,7 +2,7 @@
 require 'spec_helper'
 
 # This spec covers behavior common to all gridable report types.
-describe Report::GridableReport do
+describe Report::Gridable do
   before do
     @form = create(:form, question_types: %w(select_one integer text))
   end
