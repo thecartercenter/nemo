@@ -12,3 +12,9 @@ RSpec::Matchers.define :be_destroyed do
     !actual.class.exists?(actual.id)
   end
 end
+
+RSpec::Matchers.define :be_able_to do |op, target|
+  match do |ability|
+    ability.can?(op, target)
+  end
+end
