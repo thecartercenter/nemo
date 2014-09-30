@@ -1,4 +1,5 @@
 en:
+  # This should be the name of the language as written in that language, e.g. English, Français, Español, etc.
   locale_name: "English"
 
   # common words (should be capitalized except for those that obviously shouldn't like and, or, e.g., etc.)
