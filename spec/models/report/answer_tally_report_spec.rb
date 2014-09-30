@@ -68,7 +68,7 @@ describe Report::AnswerTallyReport do
     end
 
     it 'should count only top-level answers' do
-      expect(@report).to have_legacy_report_data(
+      expect(@report).to have_data_grid(
                                     %w(    Animal Plant TTL),
         [@form.questions[0].name] + %w(    3      1     4),
                                     %w(TTL 3      1     4)

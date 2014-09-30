@@ -3,7 +3,7 @@ FactoryGirl.define do
     mission { get_mission }
     sequence(:name) { |n| "Report #{n}" }
 
-    factory :legacy_report do
+    factory :gridable_report do
       ignore do
         # This should be a list of either strings (for attrib names) or questions.
         _calculations []

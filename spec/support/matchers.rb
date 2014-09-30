@@ -13,8 +13,8 @@ RSpec::Matchers.define :be_destroyed do
   end
 end
 
-# Compares legacy report with expected data given as array of arrays representing grid.
-RSpec::Matchers.define :have_legacy_report_data do |*expected|
+# Compares gridable report with expected data given as array of arrays representing grid.
+RSpec::Matchers.define :have_data_grid do |*expected|
   match do |report|
     # Reload the report so we know it's saving properly
     report.reload

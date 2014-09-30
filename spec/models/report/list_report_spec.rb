@@ -11,7 +11,7 @@ describe Report::ListReport do
     end
 
     it 'should have answer values in correct order' do
-      expect(@report).to have_legacy_report_data(
+      expect(@report).to have_data_grid(
         @form.questions.map(&:name) + ['Response ID'],
         ['Animal, Cat', '5',  'Animal, Dog', "##{@response1.id}"],
         ['Animal',      '10', 'Plant, Oak',  "##{@response2.id}"],
@@ -30,7 +30,7 @@ describe Report::ListReport do
 
     it 'should have proper headers' do
       expect(@form.questions[0].name_fr).to match(/Question/) # Ensure question created with french name.
-      expect(@report).to have_legacy_report_data(
+      expect(@report).to have_data_grid(
         @form.questions.map(&:name_fr) + ['Fiche'],
         %w(5 10) + [@form.name]
       )

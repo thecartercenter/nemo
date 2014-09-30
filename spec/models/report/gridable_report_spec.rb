@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-# This spec covers behavior common to all legacy report types.
-describe Report::LegacyReport do
+# This spec covers behavior common to all gridable report types.
+describe Report::GridableReport do
   before do
     @form = create(:form, question_types: %w(select_one integer text))
   end

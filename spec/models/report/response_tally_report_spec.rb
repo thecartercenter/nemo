@@ -12,7 +12,7 @@ describe Report::ResponseTallyReport do
     end
 
     it 'should count only top-level answers' do
-      expect(@report).to have_legacy_report_data(
+      expect(@report).to have_data_grid(
         %w(       odk web TTL),
         %w(Animal   1   2   3),
         %w(Plant    1   _   1),
