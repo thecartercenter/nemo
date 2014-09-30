@@ -12,85 +12,65 @@ describe 'abilities for users' do
 
     context 'in basic mode' do
       before(:all) do
-        @mode = 'basic'
-        @mission = nil
+        @ability = Ability.new(user: @user, mode: 'basic')
       end
 
       it 'should not allow index or create' do
-        @target = User
-        expect_not_able_to(:index)
-        expect_not_able_to(:create)
+        expect(@ability).not_to be_able_to(:index, User)
+        expect(@ability).not_to be_able_to(:create, User)
       end
 
       context 'for self' do
-        before(:all) do
-          @target = @user
-        end
-
         it 'should allow show and edit' do
-          expect_able_to(:show)
-          expect_able_to(:update)
+          expect(@ability).to be_able_to(:show, @user)
+          expect(@ability).to be_able_to(:update, @user)
         end
 
         it 'should disallow other actions' do
-          expect_not_able_to(:adminify)
-          expect_not_able_to(:change_assignments)
+          expect(@ability).not_to be_able_to(:adminify, @user)
+          expect(@ability).not_to be_able_to(:change_assignments, @user)
         end
       end
 
       context 'for other user' do
-        before(:all) do
-          @target = @user2
-        end
-
         it 'should allow nothing' do
-          expect_not_able_to(:index)
-          expect_not_able_to(:create)
-          expect_not_able_to(:show)
-          expect_not_able_to(:update)
-          expect_not_able_to(:change_assignments)
+          expect(@ability).not_to be_able_to(:index, @user2)
+          expect(@ability).not_to be_able_to(:create, @user2)
+          expect(@ability).not_to be_able_to(:show, @user2)
+          expect(@ability).not_to be_able_to(:update, @user2)
+          expect(@ability).not_to be_able_to(:change_assignments, @user2)
         end
       end
     end
 
     context 'in mission mode' do
       before(:all) do
-        @mode = 'mission'
-        @mission = get_mission
+        @ability = Ability.new(user: @user, mode: 'mission', mission: get_mission)
       end
 
       it 'should allow index and create' do
-        @target = User
-        expect_able_to(:index)
-        expect_able_to(:create)
+        expect(@ability).to be_able_to(:index, User)
+        expect(@ability).to be_able_to(:create, User)
       end
 
       context 'for self' do
-        before(:all) do
-          @target = @user
-        end
-
         it 'should allow show and edit' do
-          expect_able_to(:show)
-          expect_able_to(:update)
+          expect(@ability).to be_able_to(:show, @user)
+          expect(@ability).to be_able_to(:update, @user)
         end
 
         it 'should disallow other actions' do
-          expect_not_able_to(:adminify)
+          expect(@ability).not_to be_able_to(:adminify, @user)
         end
       end
 
       context 'for other user' do
-        before(:all) do
-          @target = @user2
-        end
-
         it 'should allow show, edit, and chg assign' do
-          expect_able_to(:show)
-          expect_able_to(:update)
+          expect(@ability).to be_able_to(:show, @user2)
+          expect(@ability).to be_able_to(:update, @user2)
 
           # The form restricts this to the current mission's role only.
-          expect_able_to(:change_assignments)
+          expect(@ability).to be_able_to(:change_assignments, @user2)
         end
       end
     end
@@ -107,18 +87,16 @@ describe 'abilities for users' do
 
     context 'in mission mode' do
       before(:all) do
-        @mode = 'mission'
-        @mission = get_mission
+        @ability = Ability.new(user: @user, mode: 'mission', mission: get_mission)
       end
 
       it 'should not allow adminify self or others' do
-        @target = @user; expect_not_able_to(:adminify)
-        @target = @user2; expect_not_able_to(:adminify)
+        expect(@ability).not_to be_able_to(:adminify, @user)
+        expect(@ability).not_to be_able_to(:adminify, @user2)
       end
 
       it 'should not allow changing own assignments' do
-        @target = @user
-        expect_not_able_to(:change_assignments)
+        expect(@ability).not_to be_able_to(:change_assignments, @user)
       end
     end
   end
@@ -134,79 +112,52 @@ describe 'abilities for users' do
 
     context 'in mission mode' do
       before(:all) do
-        @mode = 'mission'
-        @mission = get_mission
+        @ability = Ability.new(user: @user, mode: 'mission', mission: get_mission)
       end
 
       it 'should not allow adminify self' do
-        @target = @user
-        expect_not_able_to(:adminify)
+        expect(@ability).not_to be_able_to(:adminify, @user)
       end
 
       it 'should allow adminify others' do
-        @target = @user2
-        expect_able_to(:adminify)
+        expect(@ability).to be_able_to(:adminify, @user2)
       end
 
       it 'should allow changing own assignments' do
-        @target = @user
-        expect_able_to(:change_assignments)
+        expect(@ability).to be_able_to(:change_assignments, @user)
       end
     end
 
     context 'in admin mode' do
       before(:all) do
-        @mode = 'admin'
-        @mission = nil
+        @ability = Ability.new(user: @user, mode: 'admin')
       end
 
       it 'should allow index and create' do
-        @target = User
-        expect_able_to(:index)
-        expect_able_to(:create)
+        expect(@ability).to be_able_to(:index, User)
+        expect(@ability).to be_able_to(:create, User)
       end
 
       context 'for self' do
-        before(:all) do
-          @target = @user
-        end
-
         it 'should allow show, edit, and chg assignments' do
-          expect_able_to(:show)
-          expect_able_to(:update)
-          expect_able_to(:change_assignments)
+          expect(@ability).to be_able_to(:show, @user)
+          expect(@ability).to be_able_to(:update, @user)
+          expect(@ability).to be_able_to(:change_assignments, @user)
         end
 
         it 'should disallow other actions' do
-          expect_not_able_to(:adminify)
+          expect(@ability).not_to be_able_to(:adminify, @user)
         end
       end
 
       context 'for other user' do
-        before(:all) do
-          @target = @user2
-        end
-
         it 'should allow all actions' do
-          expect_able_to(:show)
-          expect_able_to(:update)
-          expect_able_to(:change_assignments)
-          expect_able_to(:adminify)
+          expect(@ability).to be_able_to(:show, @user2)
+          expect(@ability).to be_able_to(:update, @user2)
+          expect(@ability).to be_able_to(:change_assignments, @user2)
+          expect(@ability).to be_able_to(:adminify, @user2)
         end
       end
     end
-
-  end
-
-  def ability
-    Ability.new(:user => @user, :mode => @mode, :mission => @mission)
-  end
-
-  def expect_able_to(action)
-    expect(ability.can?(action, @target)).to be_truthy
-  end
-
-  def expect_not_able_to(action)
-    expect(ability.cannot?(action, @target)).to be_truthy
   end
 end
