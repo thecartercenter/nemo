@@ -20,7 +20,7 @@ describe 'abilities for questionings' do
       end
 
       it 'should be able to do all' do
-        %w(show update update_core destroy).each{ |op| expect(@ability).to be_able_to(op, @qing) }
+        %w(show update update_required hide update_condition destroy).each{ |op| expect(@ability).to be_able_to(op, @qing) }
       end
 
       context 'with answers' do
@@ -29,7 +29,7 @@ describe 'abilities for questionings' do
         end
 
         it 'should be able to do all but destroy' do
-          %w(show update update_core).each{ |op| expect(@ability).to be_able_to(op, @qing) }
+          %w(show update update_required hide update_condition).each{ |op| expect(@ability).to be_able_to(op, @qing) }
           %w(destroy).each{ |op| expect(@ability).not_to be_able_to(op, @qing) }
         end
       end
@@ -44,7 +44,7 @@ describe 'abilities for questionings' do
 
       it 'should be able show and update only' do
         %w(show update).each{ |op| expect(@ability).to be_able_to(op, @qing) }
-        %w(update_core destroy).each{ |op| expect(@ability).not_to be_able_to(op, @qing) }
+        %w(update_required hide update_condition destroy).each{ |op| expect(@ability).not_to be_able_to(op, @qing) }
       end
     end
 
@@ -55,9 +55,9 @@ describe 'abilities for questionings' do
         @qing = @copy.questionings[0]
       end
 
-      it 'should be able show and update only' do
-        %w(show update).each{ |op| expect(@ability).to be_able_to(op, @qing) }
-        %w(update_core destroy).each{ |op| expect(@ability).not_to be_able_to(op, @qing) }
+      it 'should be able show, update, and hide only' do
+        %w(show update hide).each{ |op| expect(@ability).to be_able_to(op, @qing) }
+        %w(update_required update_condition destroy).each{ |op| expect(@ability).not_to be_able_to(op, @qing) }
       end
     end
   end

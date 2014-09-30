@@ -218,8 +218,13 @@ class Ability
     cannot :publish, Form, :is_standard => true
 
     # cannot destroy/update a questioning if it's a standard copy or published
-    cannot [:destroy, :update, :update_core], Questioning do |q|
+    cannot [:destroy, :update, :update_required, :update_condition], Questioning do |q|
       q.standard_copy? || q.published?
+    end
+
+    # Can hide questioning if standard copy but not if published.
+    cannot :hide, Questioning do |q|
+      q.published?
     end
 
     # BUT can update questioning (though not its core) if can update related question
