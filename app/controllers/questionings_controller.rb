@@ -33,7 +33,9 @@ class QuestioningsController < ApplicationController
     @questioning.valid?
 
     # authorize special abilities
-    authorize!(:update_core, @questioning) if @questioning.core_changed?
+    %w(required hidden condition).each do |f|
+      authorize!(:"update_#{f}", @questioning) if @questioning.send("#{f}_changed?")
+    end
     authorize!(:update_core, @questioning.question) if @questioning.question.core_changed?
 
     if @questioning.save_and_rereplicate

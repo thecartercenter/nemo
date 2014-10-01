@@ -9,10 +9,9 @@
 
   <%= published_warning(@questioning) if @questioning.published? && form_mode == :edit %>
 
-  <% cant_update_core = cannot?(:update_core, @questioning) %>
+  <%= f.field(:hidden, :type => :check_box, :read_only => cannot?(:update_hidden, @questioning)) %>
   <%= f.field(:condition, :partial => 'conditions/form') %>
-  <%= f.field(:required, :type => :check_box, :read_only => cant_update_core) %>
-  <%= f.field(:hidden, :type => :check_box, :read_only => cant_update_core) %>
+  <%= f.field(:required, :type => :check_box, :read_only => cannot?(:update_required, @questioning)) %>
 
   <div class="submit-buttons">
     <%= f.submit(:class => 'btn btn-primary') %>

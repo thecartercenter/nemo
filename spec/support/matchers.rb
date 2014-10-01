@@ -60,3 +60,9 @@ RSpec::Matchers.define :have_data_grid do |*expected|
     actual.map{|row| row.map{|cell| cell.to_s.empty? ? "_" : cell.to_s}}
   end
 end
+
+RSpec::Matchers.define :be_able_to do |op, target|
+  match do |ability|
+    ability.can?(op.to_sym, target)
+  end
+end

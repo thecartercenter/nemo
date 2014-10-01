@@ -426,9 +426,9 @@ en:
         qtype_name: "The kind of information the user will be entering."
         access_level: "Inherit: Same access level as parent form. Private: No one can access the data via the API, regardless of parent form access level."
       questioning:
+        hidden: "Whether this question will be shown on this form. Use this to disable a question if you can't delete it. This value will override the condition and required settings below."
         condition: "An optional condition which must be met in order for this question to be shown to the user."
-        hidden: "Whether this question will be shown on this form. Use this to disable a question if you can't delete it. This value will override any condition specified above."
-        required: "Whether this question must be completed on this form or is optional. Only enforced if the condition specified above is met."
+        required: "Whether this question must be completed on this form or is optional. Only enforced if question is not hidden the condition specified above is met."
       report/report:
         name: "A descriptive title for this report."
         aggregation_id: "The operation you want to perform on the combined data."
@@ -1522,6 +1522,10 @@ en:
       questions: "There is nothing available to import. Either there are no standard Questions, or they have all been imported already."
     standard: "Standard"
     standard_forms: "Standard Forms"
+    there_were_errors:
+      zero: "There were %{count} errors."
+      one: "There was %{count} error."
+      other: "There were %{count} errors."
 
   unauthorized:
     default: "You are not authorized to access that page or operation."
