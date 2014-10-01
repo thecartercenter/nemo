@@ -44,7 +44,7 @@ class Questioning < ActiveRecord::Base
   delegate :smsable?, to: :form, prefix: true
   delegate :verify_ordering, to: :condition, prefix: true, allow_nil: true
 
-  replicable :child_assocs => [:question, :condition], :parent_assoc => :form
+  replicable child_assocs: [:question, :condition], parent_assoc: :form, dont_copy: :hidden
 
   scope(:visible, where(:hidden => false))
 
