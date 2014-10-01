@@ -54,10 +54,8 @@ class FormsController < ApplicationController
 
       # for html, render the printable or sms_guide styles if requested, otherwise render the form
       format.html do
-        # printable style
         if params[:print] && request.xhr?
-          # here we only render a partial since this is coming from an ajax request
-          render(:partial => "printable", :layout => false, :locals => {:form => @form})
+          render(:form, :layout => false)
 
         # sms guide style
         elsif params[:sms_guide]

@@ -1,6 +1,6 @@
 <% @title_args = {:name => @form.name, :standardized => @form.standardized?} %>
 
-<%# If print=1 is specified, just show the printable form. Mostly used for dev along with print media emulation. %>
+<%# If print=1 is specified, just show the printable form. %>
 <%# We have to pass @form as an instance variable because the printable partial is also used in the index action. %>
 <%= render(params[:print] ? 'printable' : 'screen', form: @form) %>
 
