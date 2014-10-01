@@ -169,6 +169,10 @@ module ApplicationHelper
     ttl.html_safe
   end
 
+  def h1_title
+    content_tag(:h1, title, class: 'title')
+  end
+
   # pluralizes an activerecord model name
   # assumes 2 if count not given in options
   def pluralize_model(klass, options = {})

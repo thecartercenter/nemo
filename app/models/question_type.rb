@@ -51,6 +51,7 @@ class QuestionType
   def form_printable?
     properties.include?("form_printable")
   end
+  alias_method :printable?, :form_printable?
 
   # returns whether this question type has options
   def has_options?

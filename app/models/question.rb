@@ -51,7 +51,7 @@ class Question < ActiveRecord::Base
 
   translates :name, :hint
 
-  delegate :smsable?, :has_options?, :odk_tag, :odk_name, :to => :qtype
+  delegate :smsable?, :has_options?, :odk_tag, :odk_name, :printable?, :to => :qtype
   delegate :options, :all_options, :first_level_options, :geographic?, :multi_level?, :level_count, :levels, :to => :option_set, :allow_nil => true
 
   replicable :child_assocs => :option_set, :parent_assoc => :questioning,
