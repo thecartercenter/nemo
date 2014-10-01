@@ -2,7 +2,7 @@
 
 <div id="printable_form" class="printable">
   <%= image_tag("logo-dark.png", class: 'logo') %>
-  <h1 class="title"><%= title %></h1>
+  <h1 class="title"><%= title(name_only: true) %></h1>
   <div class="mission"><%= current_mission.name %></div>
   <table>
     <tr>
