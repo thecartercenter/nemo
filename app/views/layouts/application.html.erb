@@ -142,12 +142,7 @@
   <div id="content" class="<%= ctlr_action_name %>">
     <%# Show errors or alerts if any %>
     <%= render("layouts/flash", :flash => flash) %>
-
-    <% unless @dont_print_title %>
-      <h1 class="title">
-        <%= title %>
-      </h1>
-    <% end %>
+    <%= h1_title unless @dont_print_title %>
     <%= body %>
   </div>
 
@@ -187,6 +182,9 @@
     <%= image_tag('glb-load-ind.gif') %>
     <%= t('layout.loading') %>
   </div>
+
+<%# Include logo-dark (used for printing) here because for just-in-time ajax loading (e.g. forms) it may not load in time. %>
+<%= image_tag('logo-dark.png', class: 'hidden') if controller_name == 'forms' %>
 
   <%# insert any audio objects at the end %>
   <%= yield(:audio) %>
