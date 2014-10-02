@@ -933,6 +933,7 @@ en:
     clone_confirm: "Are you sure you want to make a copy of the form '%{form_name}'?"
     clone_error: "There was a problem cloning the form (%{msg})."
     clone_success: "Form '%{form_name}' cloned successfully."
+    no_mission: "No Misison"
     print_form: "Print Form"
     print_format_tips:
       title: "Print Format Tips"
