@@ -28,6 +28,7 @@ class Questioning < ActiveRecord::Base
            :option_set=,
            :option_set_id,
            :option_set_id=,
+           :printable?,
            :qtype_name,
            :qtype_name=,
            :qtype,
@@ -42,13 +43,13 @@ class Questioning < ActiveRecord::Base
            :subquestions,
            :temporal?,
            :numeric?,
-           :to => :question
+           to: :question
 
-  delegate :published?, :to => :form
-  delegate :smsable?, :to => :form, :prefix => true
-  delegate :verify_ordering, :to => :condition, :prefix => true, :allow_nil => true
+  delegate :published?, to: :form
+  delegate :smsable?, to: :form, prefix: true
+  delegate :verify_ordering, to: :condition, prefix: true, allow_nil: true
 
-  replicable :child_assocs => [:question, :condition], :parent_assoc => :form
+  replicable child_assocs: [:question, :condition], parent_assoc: :form, dont_copy: :hidden
 
   scope(:visible, where(:hidden => false))
 

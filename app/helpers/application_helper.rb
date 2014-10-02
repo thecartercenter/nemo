@@ -164,9 +164,17 @@ module ApplicationHelper
     ttl += icon_tag(model_name) unless options[:text_only]
 
     # add text
-    ttl += t(action, {:scope => "page_titles.#{controller_name}", :default => [:all, ""]}.merge(@title_args || {}))
+    if options[:name_only]
+      ttl += @title_args[:name]
+    else
+      ttl += t(action, {:scope => "page_titles.#{controller_name}", :default => [:all, ""]}.merge(@title_args || {}))
+    end
 
     ttl.html_safe
+  end
+
+  def h1_title
+    content_tag(:h1, title, class: 'title')
   end
 
   # pluralizes an activerecord model name

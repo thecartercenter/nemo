@@ -57,4 +57,20 @@ describe 'replicating a form' do
       end
     end
   end
+
+  describe 'hidden std copy question' do
+    before do
+      @std_form = create(:form, question_types: %w(integer integer), is_standard: true)
+      @copy_form = @std_form.replicate(mode: :to_mission, dest_mission: get_mission)
+
+      # Hide a copied question.
+      @copy_form.questionings[1].update_attributes(hidden: true)
+      @std_form.save_and_rereplicate!
+      @copy_form.reload
+    end
+
+    it 'should not get unhidden on rereplicate' do
+      expect(@copy_form.questionings.map(&:hidden)).to eq [false, true]
+    end
+  end
 end

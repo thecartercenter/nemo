@@ -55,6 +55,7 @@ class Question < ActiveRecord::Base
            :has_options?,
            :temporal?,
            :numeric?,
+           :printable?,
            :odk_tag,
            :odk_name,
            :to => :qtype
