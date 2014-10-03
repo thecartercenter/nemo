@@ -166,7 +166,7 @@ div.form-warning {
 }
 
 /* Let integirty warnings have standard width in modals, else they overflow. */
-div.modal div.data_integrity_warning {
+div.modal div.form-warning {
   width: inherit;
 }
 

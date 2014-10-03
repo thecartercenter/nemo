@@ -66,8 +66,13 @@ class Condition < ActiveRecord::Base
     self.class.new(:ref_qing_id => ref_qing_id, :op => op, :value => value, :option_id => option_id)
   end
 
-  def verify_ordering
-    raise ConditionOrderingError.new if questioning.rank <= ref_qing.rank
+  # Raises a ConditionOrderingError if the questioning ranks given in the ranks hash would cause
+  # this condition to refer to a question later than its main question.
+  # ranks - A hash of qing IDs to ranks.
+  def verify_ordering(ranks)
+    if ranks[questioning_id] <= ranks[ref_qing_id]
+      raise ConditionOrderingError.new
+    end
   end
 
   # gets the hash from the OPS array corresponding to self's operator
@@ -171,11 +176,8 @@ class Condition < ActiveRecord::Base
       # the dest_obj's form is just the immediate parent (questioning)'s form
       dest_form = replication.parent.form
 
-      # get the rank of the original ref_qing
-      ref_qing_rank = self.ref_qing.rank
-
-      # set the copy's ref_qing to the corresponding one
-      replication.dest_obj.ref_qing = dest_form.questionings[ref_qing_rank - 1]
+      # Set the copy's ref_qing to the one with the corresponding code.
+      replication.dest_obj.ref_qing = dest_form.questionings_by_code[ref_qing.code]
 
       if self.option
         # get the index of the original option

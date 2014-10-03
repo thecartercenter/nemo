@@ -15,7 +15,6 @@ FactoryGirl.define do
       found_select = false
       question_types.each_with_index.map do |qt, idx|
         question_attribs = {
-          code: "q#{rand(100000)}",
           qtype_name: qt,
           mission: mission,
           use_multilevel_option_set: use_multilevel_option_set
