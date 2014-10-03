@@ -177,7 +177,7 @@ class Condition < ActiveRecord::Base
       dest_form = replication.parent.form
 
       # Set the copy's ref_qing to the one with the corresponding code.
-      replication.dest_obj.ref_qing = dest_form.questionings_by_code[ref_qing.code]
+      replication.dest_obj.ref_qing = dest_form.questioning_with_code(ref_qing.code)
 
       if self.option
         # get the index of the original option
