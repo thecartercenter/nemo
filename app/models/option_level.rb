@@ -6,7 +6,7 @@ class OptionLevel
   MAX_NAME_LENGTH = 20
 
   def initialize(attribs)
-    self.name_translations = attribs[:name_translations]
+    attribs.each{ |k,v| send("#{k}=", v) }
   end
 
   # For serialization.
