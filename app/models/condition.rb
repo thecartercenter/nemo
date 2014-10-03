@@ -197,7 +197,7 @@ class Condition < ActiveRecord::Base
     # during replication process, copies the ref qing and option to the new condition
     def copy_ref_qing_and_options(replication)
       # Set the copy's ref_qing to the one with the corresponding code.
-      replication.dest_obj.ref_qing = replication.parent.form.questionings_by_code[ref_qing.code]
+      replication.dest_obj.ref_qing = dest_form.questioning_with_code(ref_qing.code)
 
       # Set options using rank.
       unless options.nil?
