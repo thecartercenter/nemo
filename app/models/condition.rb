@@ -71,8 +71,13 @@ class Condition < ActiveRecord::Base
     ref_qing ? OPERATORS.select{|o| o[:types].include?(ref_qing.qtype_name)}.map{|o| o[:name]} : []
   end
 
-  def verify_ordering
-    raise ConditionOrderingError.new if questioning.rank <= ref_qing.rank
+  # Raises a ConditionOrderingError if the questioning ranks given in the ranks hash would cause
+  # this condition to refer to a question later than its main question.
+  # ranks - A hash of qing IDs to ranks.
+  def verify_ordering(ranks)
+    if ranks[questioning_id] <= ranks[ref_qing_id]
+      raise ConditionOrderingError.new
+    end
   end
 
   # Gets the definition of self's operator (self.op).
@@ -191,9 +196,8 @@ class Condition < ActiveRecord::Base
 
     # during replication process, copies the ref qing and option to the new condition
     def copy_ref_qing_and_options(replication)
-      # Set ref_qing using rank.
-      dest_form = replication.parent.form
-      replication.dest_obj.ref_qing = dest_form.questionings[ref_qing.rank - 1]
+      # Set the copy's ref_qing to the one with the corresponding code.
+      replication.dest_obj.ref_qing = dest_form.questionings_by_code[ref_qing.code]
 
       # Set options using rank.
       unless options.nil?
