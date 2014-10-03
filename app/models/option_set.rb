@@ -79,6 +79,10 @@ class OptionSet < ActiveRecord::Base
     @levels ||= multi_level? ? level_names.map{ |n| OptionLevel.new(name_translations: n) } : nil
   end
 
+  def levels=(ls)
+    self.level_names = ls.map{ |l| l.name_translations }
+  end
+
   def level_count
     levels.try(:size)
   end
