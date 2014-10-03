@@ -75,7 +75,7 @@ class Condition < ActiveRecord::Base
   # this condition to refer to a question later than its main question.
   # ranks - A hash of qing IDs to ranks.
   def verify_ordering(ranks)
-    if ranks[questioning_id] <= ranks[ref_qing_id]
+    if questioning_id.present? && ref_qing_id.present? && ranks[questioning_id] <= ranks[ref_qing_id]
       raise ConditionOrderingError.new
     end
   end
@@ -197,7 +197,7 @@ class Condition < ActiveRecord::Base
     # during replication process, copies the ref qing and option to the new condition
     def copy_ref_qing_and_options(replication)
       # Set the copy's ref_qing to the one with the corresponding code.
-      replication.dest_obj.ref_qing = dest_form.questionings_by_code[ref_qing.code]
+      replication.dest_obj.ref_qing = replication.parent.form.questionings_by_code[ref_qing.code]
 
       # Set options using rank.
       unless options.nil?

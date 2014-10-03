@@ -62,7 +62,7 @@ describe 'replicating a form' do
         before do
           @std_form = create(:form, question_types: %w(select_one integer integer), is_standard: true)
           @std_form.questionings[2].create_condition(ref_qing: @std_form.questionings[0], op: 'eq',
-            option_id: @std_form.questionings[0].options[0].id)
+            option_ids: [@std_form.questionings[0].options[0].id])
           @copy_form = @std_form.replicate(mode: :to_mission, dest_mission: get_mission)
           @old_copy_qing_ids = @copy_form.questionings.map(&:id)
 
