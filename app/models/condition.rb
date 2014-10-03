@@ -66,8 +66,13 @@ class Condition < ActiveRecord::Base
     self.class.new(:ref_qing_id => ref_qing_id, :op => op, :value => value, :option_id => option_id)
   end
 
-  def verify_ordering
-    raise ConditionOrderingError.new if questioning.rank <= ref_qing.rank
+  # Raises a ConditionOrderingError if the questioning ranks given in the ranks hash would cause
+  # this condition to refer to a question later than its main question.
+  # ranks - A hash of qing IDs to ranks.
+  def verify_ordering(ranks)
+    if ranks[questioning_id] <= ranks[ref_qing_id]
+      raise ConditionOrderingError.new
+    end
   end
 
   # gets the hash from the OPS array corresponding to self's operator

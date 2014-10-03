@@ -57,12 +57,7 @@ class ConditionTest < ActiveSupport::TestCase
 
   test "verify ordering" do
     q, c = build_condition(:question_types => %w(select_one integer))
-
-    # swap question ranks on the sly!
-    q.previous[0].rank = 2
-    q.rank = 1
-
-    assert_raise(ConditionOrderingError){c.verify_ordering}
+    assert_raise(ConditionOrderingError){c.verify_ordering({q.previous[0].id => 2, q.id => 1})}
   end
 
   test "to odk" do

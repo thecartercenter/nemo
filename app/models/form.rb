@@ -165,8 +165,13 @@ class Form < ActiveRecord::Base
     # ensure the ranks are sequential
     fix_ranks(:reload => false, :save => false)
 
-    # validate the condition orderings (raises an error if they're invalid)
-    questionings.each{|qing| qing.condition_verify_ordering}
+    # Update the new_ranks hash as the ranks may have changed in fix_ranks.
+    new_ranks = Hash[*questionings.map{ |q| [q.id, q.rank] }.flatten]
+
+    # Validate the condition orderings (raises an error if they're invalid)
+    # We pass the new_ranks hash since the new ranks are not
+    # yet saved to the database and Condition won't know about them.
+    questionings.each{|qing| qing.condition_verify_ordering(new_ranks)}
   end
 
   def destroy_questionings(qings)
