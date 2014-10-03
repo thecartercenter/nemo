@@ -171,11 +171,8 @@ class Condition < ActiveRecord::Base
       # the dest_obj's form is just the immediate parent (questioning)'s form
       dest_form = replication.parent.form
 
-      # get the rank of the original ref_qing
-      ref_qing_rank = self.ref_qing.rank
-
-      # set the copy's ref_qing to the corresponding one
-      replication.dest_obj.ref_qing = dest_form.questionings[ref_qing_rank - 1]
+      # Set the copy's ref_qing to the one with the corresponding code.
+      replication.dest_obj.ref_qing = dest_form.questionings_by_code[ref_qing.code]
 
       if self.option
         # get the index of the original option

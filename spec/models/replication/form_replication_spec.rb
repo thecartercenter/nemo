@@ -36,6 +36,11 @@ describe Form do
 
         # Move middle question to top.
         ids = @std_form.questionings.map(&:id)
+
+        # Without these, the test was not triggering an error that was happening in the wild.
+        @std_form.reload
+        @copy_form.reload
+
         @std_form.name = 'Updated ranks' # Update name to ensure save
         @std_form.update_ranks({ids[0] => 2, ids[1] => 1, ids[2] => 3})
         @std_form.save_and_rereplicate!

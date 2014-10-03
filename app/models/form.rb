@@ -142,6 +142,10 @@ class Form < ActiveRecord::Base
     questionings.reject{|q| q.hidden || !q.question.qtype.smsable?}
   end
 
+  def questionings_by_code
+    @questionings_by_code ||= questionings.index_by(&:code)
+  end
+
   def max_rank
     questionings.map{|qing| qing.rank || 0}.max || 0
   end
