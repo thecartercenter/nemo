@@ -65,6 +65,13 @@ class OptionSet < ActiveRecord::Base
     OptionNode.where("option_set_id IN (#{option_set_ids.join(',')})").delete_all unless option_set_ids.empty?
   end
 
+  # Avoids N+1 queries for top level options for a set of option sets.
+  # Assumes root_node has been eager loaded.
+  def self.preload_top_level_options(option_sets)
+    return if option_sets.empty?
+    OptionNode.preload_child_options(option_sets.map(&:root_node))
+  end
+
   def children_attribs=(attribs)
     build_root_node if root_node.nil?
     root_node.children_attribs = attribs

@@ -19,11 +19,19 @@ class OptionNode < ActiveRecord::Base
   # It is true only if the node or any of its descendants have existing children
   # and the update causes their ranks to change.
   attr_accessor :ranks_changed, :options_added, :options_removed
+  attr_writer :child_options
   alias_method :ranks_changed?, :ranks_changed
   alias_method :options_added?, :options_added
   alias_method :options_removed?, :options_removed
 
   replicable parent_assoc: :option_set, replicate_tree: true, child_assocs: :option, dont_copy: :ancestry
+
+  # Given a set of nodes, preloads child_options for all in constant number of queries.
+  def self.preload_child_options(roots)
+    ancestries = roots.map{ |r| "'#{r.id}'" }.join(',')
+    nodes_by_root_id = OptionNode.includes(:option).where("ancestry IN (#{ancestries})").group_by{ |n| n.ancestry.to_i }
+    roots.each{ |r| r.child_options = nodes_by_root_id[r.id].map(&:option) }
+  end
 
   # Overriding this to avoid error from ancestry.
   alias_method :_children, :children
