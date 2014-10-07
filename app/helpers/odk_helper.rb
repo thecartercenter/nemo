@@ -53,17 +53,17 @@ module OdkHelper
   end
 
   # For the given subquestion, returns an xpath expression for the itemset tag nodeset attribute.
-  # E.g. instance('multi_level_options')/set2/opt or
-  #      instance('multi_level_options')/set2/opt[value=/data/q2_1]/opt or
-  #      instance('multi_level_options')/set2/opt[value=/data/q2_1]/opt[value=/data/q2_2]/opt
+  # E.g. instance('option_set_16')/options/o or
+  #      instance('option_set_16')/options/o[id=/data/q2_1]/o or
+  #      instance('option_set_16')/options/o[id=/data/q2_1]/o[id=/data/q2_2]/o
   def multi_level_option_nodeset_ref(qing, cur_subq)
     "instance('option_set_#{qing.option_set_id}')/options/".tap do |ref|
       qing.subquestions.each do |subq|
-        ref << 'opt'
+        ref << 'o'
         if subq == cur_subq
           break
         else
-          ref << "[value=/data/#{subq.odk_code}]/"
+          ref << "[id=/data/#{subq.odk_code}]/"
         end
       end
     end
@@ -75,7 +75,7 @@ module OdkHelper
     return option_set_hash_as_xml(nodes.first['children'], max_depth, 1) if depth == 0
 
     nodes.each_with_index.map do |node, i|
-      xml = "<value>#{node['option_id']}</value><key>option#{node['option_id']}</key>"
+      xml = "<id>#{node['option_id']}</id><k>o#{node['option_id']}</k>"
       if node['children'].present?
         xml << option_set_hash_as_xml(node['children'], max_depth, depth + 1, first_child && i == 0)
       else
@@ -84,12 +84,18 @@ module OdkHelper
         if first_child && (depth_diff = max_depth - depth) > 0
           dummy_nodes = ''
           depth_diff.times do
-            dummy_nodes = "<opt><value></value><key>blankoption</key>#{dummy_nodes}</opt>"
+            dummy_nodes = "<o><id></id><k>blankoption</k>#{dummy_nodes}</o>"
           end
           xml << dummy_nodes
         end
       end
-      content_tag(:opt, xml.html_safe)
+      content_tag(:o, xml.html_safe)
     end.join.html_safe
+  end
+
+  def odk_option_translations(form, lang)
+    content_tag(:text, tag(:value), id: 'blankoption') +
+      form.option_sets.map(&:all_options).flatten.uniq(&:id).map{
+        |o| %{<text id="o#{o.id}"><value>#{o.name(lang, strict: false)}</value></text>} }.join.html_safe
   end
 end

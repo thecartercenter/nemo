@@ -62,13 +62,7 @@
               <% end %>
             <% end %>
 
-            <%# Option translations %>
-            <text id="blankoption"><value></value></text>
-            <% @form.option_sets.map(&:all_options).flatten.uniq(&:id).each do |opt| %>
-              <text id="option<%= opt.id %>">
-                <value><%= opt.name(lang, :strict => false) %></value>
-              </text>
-            <% end %>
+            <%= odk_option_translations(@form, lang) %>
 
             <%# incomplete response question translations %>
             <% if allow_incomplete? %>
@@ -128,13 +122,13 @@
           <%# OptionSet stuff %>
           <% if subq.multi_level? %>
             <itemset nodeset="<%= multi_level_option_nodeset_ref(qing, subq) %>">
-              <label ref="jr:itext(key)"/>
-              <value ref="value"/>
+              <label ref="jr:itext(k)"/>
+              <value ref="id"/>
             </itemset>
           <% elsif set = subq.option_set %>
             <% set.options.each do |opt| %>
               <item>
-                <label ref="jr:itext('option<%= opt.id %>')"/>
+                <label ref="jr:itext('o<%= opt.id %>')"/>
                 <value><%= opt.id %></value>
               </item>
             <% end %>
