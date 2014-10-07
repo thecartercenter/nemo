@@ -95,7 +95,6 @@ module OdkHelper
 
   def odk_option_translations(form, lang)
     content_tag(:text, tag(:value), id: 'blankoption') +
-      form.option_sets.map(&:all_options).flatten.uniq(&:id).map{
-        |o| %{<text id="o#{o.id}"><value>#{o.name(lang, strict: false)}</value></text>} }.join.html_safe
+      form.all_options.map{ |o| %{<text id="o#{o.id}"><value>#{o.name(lang, strict: false)}</value></text>} }.join.html_safe
   end
 end

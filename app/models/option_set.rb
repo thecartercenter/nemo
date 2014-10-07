@@ -72,6 +72,14 @@ class OptionSet < ActiveRecord::Base
     OptionNode.preload_child_options(option_sets.map(&:root_node))
   end
 
+  # Loads all options for sets with the given IDs in a constant number of queries.
+  def self.all_options_for_sets(set_ids)
+    return [] if set_ids.empty?
+    root_node_ids = where(id: set_ids).all.map(&:root_node_id)
+    ancestry_clause = root_node_ids.map{ |id| "ancestry LIKE '#{id}/%' OR ancestry = '#{id}'" }.join(' OR ')
+    Option.where("id IN (SELECT option_id FROM option_nodes WHERE #{ancestry_clause})").all
+  end
+
   def children_attribs=(attribs)
     build_root_node if root_node.nil?
     root_node.children_attribs = attribs

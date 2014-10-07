@@ -53,14 +53,14 @@ class Form < ActiveRecord::Base
       :smsable, :current_version_id, :allow_incomplete, :access_level]
 
 
-  def api_user_id_can_see?(api_user_id)
-    whitelist_users.pluck(:user_id).include?(api_user_id)
-  end
-
   # remove heirarch of objects
   def self.terminate_sub_relationships(form_ids)
     FormVersion.where(form_id: form_ids).delete_all
     Questioning.where(form_id: form_ids).delete_all
+  end
+
+  def api_user_id_can_see?(api_user_id)
+    whitelist_users.pluck(:user_id).include?(api_user_id)
   end
 
   def temp_response_id
@@ -144,6 +144,11 @@ class Form < ActiveRecord::Base
 
   def questioning_with_code(c)
     questionings.detect{ |q| q.code == c }
+  end
+
+  # Loads all options used on the form in a constant number of queries.
+  def all_options
+    OptionSet.all_options_for_sets(questions.map(&:option_set_id).compact)
   end
 
   def max_rank
