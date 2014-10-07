@@ -200,6 +200,10 @@ class OptionSet < ActiveRecord::Base
     name_changed?
   end
 
+  def to_hash
+    root_node.subtree.arrange_serializable(order: 'rank')
+  end
+
   def as_json(options = {})
     if options[:for_option_set_form]
       {

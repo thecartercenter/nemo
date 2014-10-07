@@ -39,7 +39,7 @@
       <% @form.option_sets.select(&:multi_level?).each do |set| %>
         <instance id="option_set_<%= set.id %>">
           <options>
-            <%= option_node_as_xml(set, set.root_node) %>
+            <%= option_set_hash_as_xml(set.to_hash, set.max_depth) %>
           </options>
         </instance>
       <% end %>
