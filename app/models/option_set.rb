@@ -103,7 +103,7 @@ class OptionSet < ActiveRecord::Base
   end
 
   def multi_level?
-    root_node && root_node.has_grandchildren?
+    @multi_level ||= root_node && root_node.has_grandchildren?
   end
   alias_method :multi_level, :multi_level?
 
