@@ -1,6 +1,6 @@
 <div id="option-levels-wrapper" class="draggable-list-wrapper"></div>
 
-<% unless read_only %>
+<% unless read_only || @option_set.huge? %>
   <%= link_to(t('option_set.add_level'), '#', class: 'add-link') if can?(:add_options, @option_set) %>
 
   <%# edit option level modal %>

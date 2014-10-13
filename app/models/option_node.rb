@@ -1,6 +1,12 @@
 class OptionNode < ActiveRecord::Base
   include MissionBased, FormVersionable, Replicable, Standardizable
 
+  # Number of descendants that make a 'huge' node.
+  HUGE_CUTOFF = 100
+
+  # Number of nodes to return as JSON if node is 'huge'.
+  TO_SERIALIZE_IF_HUGE = 10
+
   attr_accessible :ancestry, :option_id, :option_set, :option_set_id, :rank, :option, :option_attribs,
     :children_attribs, :is_standard, :standard, :mission_id, :mission, :standard_id, :parent
 
@@ -77,7 +83,18 @@ class OptionNode < ActiveRecord::Base
 
   # The total number of descendant options.
   def total_options
-    descendants.count
+    @total_options ||= descendants.count
+  end
+
+  # Fetches the first count nodes in the tree using preorder traversal.
+  def first_n_descendants(count)
+    nodes = []
+    sorted_children.each do |c|
+      nodes << c
+      nodes += c.first_n_descendants(count - nodes.size)
+      break if nodes.size >= count
+    end
+    nodes[0...count]
   end
 
   def option_attribs=(attribs)
@@ -95,12 +112,16 @@ class OptionNode < ActiveRecord::Base
     is_root? ? nil : option_set.try(:level, depth)
   end
 
+  def huge?
+    total_options > HUGE_CUTOFF
+  end
+
   def sorted_children
     children.order('rank')
   end
 
-  def options_by_id
-    @options_by_id ||= Option.where(id: descendants.map(&:option_id)).includes(:option_sets, :answers, :choices).index_by(&:id)
+  def options_by_id(nodes)
+    Option.where(id: nodes.map(&:option_id)).includes(:option_sets, :answers, :choices).index_by(&:id)
   end
 
   # Serializes all descendants. Meant to be called on root.
@@ -108,16 +129,37 @@ class OptionNode < ActiveRecord::Base
     arrange_as_json
   end
 
-  def arrange_as_json(hash = nil)
-    hash ||= descendants.arrange(order: 'rank')
+  def arrange_as_json(hash = nil, opts_hash = nil)
+    # If this is the first call, hash will be nil.
+    # We fetch and arrange the nodes this first time, and then pass chunks of the fetch node hierarchy
+    # in subsequent recursive calls.
+    # We also build a hash for all fetched options now too, and pass that down the stack.
+    if hash.nil?
+      # If node has huge number of children just return the first 10.
+      nodes = huge? ? first_n_descendants(TO_SERIALIZE_IF_HUGE) : descendants
+      hash = huge? ? self.class.arrange_nodes(nodes) : nodes.arrange(order: 'rank')
+      opts_hash = options_by_id(nodes)
+    end
+
     hash.map do |node, children|
       {}.tap do |branch|
         %w(id rank).each{ |k| branch[k.to_sym] = node[k] }
-        branch[:removable?] = !option_set.option_has_answers?(node['option_id'])
-        branch[:option] = options_by_id[node['option_id']].as_json(for_option_set_form: true)
-        branch[:children] = arrange_as_json(children) unless children.empty?
+
+        # Don't need to look up this property if huge, since not editable.
+        # And option_has_answers? kicks off a big SQL query for a huge set.
+        branch[:removable?] = !option_set.option_has_answers?(node['option_id']) unless huge?
+
+        branch[:option] = opts_hash[node['option_id']].as_json(for_option_set_form: true)
+
+        # Recursive step.
+        branch[:children] = arrange_as_json(children, opts_hash) unless children.empty?
       end
     end
+  end
+
+  # Returns the total number of options omitted from the JSON serialization.
+  def options_not_serialized
+    total_options - (huge? ? TO_SERIALIZE_IF_HUGE : 0)
   end
 
   def removable?
