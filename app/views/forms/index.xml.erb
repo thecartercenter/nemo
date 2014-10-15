@@ -1,14 +1,12 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <xforms xmlns="http://openrosa.org/xforms/xformsList">
-<% @forms.each do |f| %>
-  <xform>
-    <formID>cceom.org:<%= f.id %></formID>
-    <name><%= f.full_name %></name>
-    <majorMinorVersion><%= f.version %></majorMinorVersion>
-    <downloadUrl>
-      <%# special URL that includes mission; locale is not necessary %>
-      <%= form_with_mission_url(:mission_compact_name => f.mission.compact_name, :id => f.id, :locale => nil) %>
-    </downloadUrl>
-  </xform>
-<% end %>
+  <% @forms.each do |f| %>
+    <xform>
+      <formID>cceom.org:<%= f.id %></formID>
+      <name><%= f.full_name %></name>
+      <majorMinorVersion><%= f.version %></majorMinorVersion>
+      <downloadUrl><%= odk_form_url(mission_name: f.mission.compact_name, id: f.id, locale: nil) %></downloadUrl>
+      <manifestUrl><%= odk_form_manifest_url(mission_name: f.mission.compact_name, id: f.id, locale: nil) %></manifestUrl>
+    </xform>
+  <% end %>
 </xforms>

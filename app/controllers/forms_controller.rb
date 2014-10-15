@@ -35,7 +35,7 @@ class FormsController < ApplicationController
       # get only published forms and render openrosa if xml requested
       format.xml do
         authorize!(:download, Form)
-        @forms = @forms.published
+        @forms = @forms.published.with_questionings
         render_openrosa
       end
     end
@@ -86,6 +86,18 @@ class FormsController < ApplicationController
         render_openrosa
       end
     end
+  end
+
+  # Format is always :xml
+  def odk_manifest
+    authorize!(:download, @form)
+    render_openrosa
+  end
+
+  # Format is always :csv
+  def odk_itemsets
+    authorize!(:download, @form)
+    render_openrosa
   end
 
   def create
@@ -224,7 +236,7 @@ class FormsController < ApplicationController
 
     # adds the appropriate headers for openrosa content
     def render_openrosa
-      render(:content_type => "text/xml")
+      render(content_type: "text/xml") if request.format.xml?
       response.headers['X-OpenRosa-Version'] = "1.0"
     end
 
