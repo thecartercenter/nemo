@@ -57,9 +57,12 @@ class Answer < ActiveRecord::Base
       str.split(' ').each{ |oid| choices.build(option_id: oid.to_i) }
 
     elsif qtype.temporal?
+      # Strip timezone info for datetime and time.
+      str.gsub!(/(Z|[+\-]\d+(:\d+)?)$/, '') unless qtype.name == 'date'
+
       val = Time.zone.parse(str)
 
-      # Convert the parsed time to the appropriate database format unless question is timezone sensitive
+      # Not sure why this is here. Investigate later.
       val = val.to_s(:"db_#{qtype.name}") unless qtype.has_timezone?
 
       self.send("#{qtype.name}_value=", val)
