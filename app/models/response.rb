@@ -344,7 +344,7 @@ class Response < ActiveRecord::Base
 
         self.checked_out_at = Time.now
         self.checked_out_by = user
-        self.save!
+        save(validate: false)
       end
     end
   end
