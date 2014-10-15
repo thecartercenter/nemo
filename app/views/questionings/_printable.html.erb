@@ -7,17 +7,22 @@
       <%= qing.rank %>. <%= reqd_sym if qing.required? %>
       <%= qing.question.name %>
     </div>
+    <% unless qing.question.hint.empty? %>
+      <div class="hint"><%= qing.question.hint %></div>
+    <% end %>
   </td>
-  <td class="answer <%= qing.question.qtype.name %>_answer">
+  <td class="answer <%= qing.qtype_name %>_answer">
     <% # print options if necessary %>
-    <% if qing.question.qtype.has_options? %>
-      <% qing.question.options.each do |opt| %>
+    <% if qing.has_options? %>
+      <% qing.options.each do |opt| %>
         <div class="option">
           <div class="option_box"></div>
           <%= opt.name %>
         </div>
       <% end %>
-    <% else %>
+
+    <%# For long text types, the box should be the whole cell. %>
+    <% elsif qing.qtype_name != 'long_text' %>
       <div class="answer_box"></div>
     <% end %>
   </td>

@@ -11,14 +11,14 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140918141039) do
+ActiveRecord::Schema.define(:version => 20140929210944) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
     t.integer  "option_id"
     t.text     "value"
-    t.datetime "created_at",                       :null => false
-    t.datetime "updated_at",                       :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer  "questioning_id"
     t.time     "time_value"
     t.date     "date_value"
@@ -34,8 +34,8 @@ ActiveRecord::Schema.define(:version => 20140918141039) do
   create_table "assignments", :force => true do |t|
     t.integer  "mission_id"
     t.integer  "user_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string   "role"
   end
 
@@ -45,8 +45,8 @@ ActiveRecord::Schema.define(:version => 20140918141039) do
   create_table "broadcast_addressings", :force => true do |t|
     t.integer  "broadcast_id"
     t.integer  "user_id"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "broadcast_addressings", ["broadcast_id"], :name => "broadcast_addressings_broadcast_id_fk"
@@ -57,8 +57,8 @@ ActiveRecord::Schema.define(:version => 20140918141039) do
     t.text     "body"
     t.string   "medium"
     t.text     "send_errors"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string   "which_phone"
     t.integer  "mission_id"
   end
@@ -68,8 +68,8 @@ ActiveRecord::Schema.define(:version => 20140918141039) do
   create_table "choices", :force => true do |t|
     t.integer  "answer_id"
     t.integer  "option_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "choices", ["answer_id"], :name => "choices_answer_id_fk"
@@ -80,16 +80,15 @@ ActiveRecord::Schema.define(:version => 20140918141039) do
     t.integer  "ref_qing_id"
     t.string   "op"
     t.string   "value"
-    t.datetime "created_at",                        :null => false
-    t.datetime "updated_at",                        :null => false
-    t.integer  "option_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.boolean  "is_standard",    :default => false
     t.integer  "standard_id"
     t.integer  "mission_id"
+    t.string   "option_ids"
   end
 
   add_index "conditions", ["mission_id", "standard_id"], :name => "index_conditions_on_mission_id_and_standard_id", :unique => true
-  add_index "conditions", ["option_id"], :name => "conditions_option_id_fk"
   add_index "conditions", ["questioning_id"], :name => "conditions_questioning_id_fk"
   add_index "conditions", ["ref_qing_id"], :name => "conditions_ref_qing_id_fk"
   add_index "conditions", ["standard_id"], :name => "index_conditions_on_standard_id"
@@ -108,9 +107,9 @@ ActiveRecord::Schema.define(:version => 20140918141039) do
 
   create_table "forms", :force => true do |t|
     t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.boolean  "published",          :default => false
-    t.datetime "created_at",                                :null => false
-    t.datetime "updated_at",                                :null => false
     t.integer  "downloads"
     t.integer  "responses_count",    :default => 0
     t.integer  "mission_id"
@@ -140,8 +139,8 @@ ActiveRecord::Schema.define(:version => 20140918141039) do
   create_table "missions", :force => true do |t|
     t.string   "name"
     t.string   "compact_name"
-    t.datetime "created_at",                      :null => false
-    t.datetime "updated_at",                      :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.boolean  "locked",       :default => false, :null => false
   end
 
@@ -168,8 +167,8 @@ ActiveRecord::Schema.define(:version => 20140918141039) do
 
   create_table "option_sets", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at",                      :null => false
-    t.datetime "updated_at",                      :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer  "mission_id"
     t.boolean  "is_standard",  :default => false
     t.integer  "standard_id"
@@ -184,8 +183,8 @@ ActiveRecord::Schema.define(:version => 20140918141039) do
   add_index "option_sets", ["standard_id"], :name => "index_option_sets_on_standard_id"
 
   create_table "options", :force => true do |t|
-    t.datetime "created_at",                           :null => false
-    t.datetime "updated_at",                           :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer  "mission_id"
     t.string   "_name"
     t.text     "_hint"
@@ -205,8 +204,8 @@ ActiveRecord::Schema.define(:version => 20140918141039) do
     t.integer  "rank"
     t.boolean  "required",    :default => false
     t.boolean  "hidden",      :default => false
-    t.datetime "created_at",                     :null => false
-    t.datetime "updated_at",                     :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.boolean  "is_standard", :default => false
     t.integer  "standard_id"
     t.integer  "mission_id"
@@ -220,8 +219,8 @@ ActiveRecord::Schema.define(:version => 20140918141039) do
   create_table "questions", :force => true do |t|
     t.string   "code"
     t.integer  "option_set_id"
-    t.datetime "created_at",                                                               :null => false
-    t.datetime "updated_at",                                                               :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.decimal  "minimum",           :precision => 15, :scale => 10
     t.decimal  "maximum",           :precision => 15, :scale => 10
     t.boolean  "maxstrictly"
@@ -249,8 +248,8 @@ ActiveRecord::Schema.define(:version => 20140918141039) do
     t.integer  "report_report_id"
     t.integer  "question1_id"
     t.string   "attrib1_name"
-    t.datetime "created_at",       :null => false
-    t.datetime "updated_at",       :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer  "rank"
   end
 
@@ -269,8 +268,8 @@ ActiveRecord::Schema.define(:version => 20140918141039) do
     t.integer  "mission_id"
     t.string   "type"
     t.string   "name"
-    t.datetime "created_at",                                   :null => false
-    t.datetime "updated_at",                                   :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.datetime "viewed_at"
     t.integer  "view_count",       :default => 0
     t.string   "display_type",     :default => "table"
@@ -295,9 +294,8 @@ ActiveRecord::Schema.define(:version => 20140918141039) do
   create_table "responses", :force => true do |t|
     t.integer  "form_id"
     t.integer  "user_id"
-    t.integer  "location_id"
-    t.datetime "created_at",                           :null => false
-    t.datetime "updated_at",                           :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.boolean  "reviewed",          :default => false
     t.string   "source"
     t.integer  "mission_id"
@@ -318,16 +316,16 @@ ActiveRecord::Schema.define(:version => 20140918141039) do
   create_table "sessions", :force => true do |t|
     t.string   "session_id", :null => false
     t.text     "data"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "sessions", ["updated_at"], :name => "index_sessions_on_updated_at"
 
   create_table "settings", :force => true do |t|
     t.string   "timezone"
-    t.datetime "created_at",                                           :null => false
-    t.datetime "updated_at",                                           :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer  "mission_id"
     t.string   "outgoing_sms_adapter"
     t.string   "intellisms_username"
@@ -433,7 +431,6 @@ ActiveRecord::Schema.define(:version => 20140918141039) do
 
   add_foreign_key "conditions", "conditions", name: "conditions_standard_id_fk", column: "standard_id"
   add_foreign_key "conditions", "missions", name: "conditions_mission_id_fk"
-  add_foreign_key "conditions", "options", name: "conditions_option_id_fk"
   add_foreign_key "conditions", "questionings", name: "conditions_questioning_id_fk"
   add_foreign_key "conditions", "questionings", name: "conditions_ref_qing_id_fk", column: "ref_qing_id"
 

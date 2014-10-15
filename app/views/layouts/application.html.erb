@@ -42,23 +42,6 @@
 </head>
 <body class="<%= controller_name %>">
 
-  <%# Logo and mission if selected %>
-  <div id="title">
-    <%= link_to(image_tag("logo.png"), current_root_path) %>
-    <%# Stripping title name since we have a logo now %>
-    <h2>
-      <% if admin_mode? %>
-        <i class="fa fa-key"></i>
-        <%= t('admin_mode.admin_mode') %>
-      <% else %>
-        <%= current_mission.try(:name) %>
-        <% if current_mission.try(:locked) %>
-          <i class="fa fa-lock"></i>
-        <% end %>
-      <% end %>
-    </h2>
-  </div>
-
   <div id="userinfo">
     <% if current_user %>
       <% unless admin_mode? %>
@@ -93,6 +76,23 @@
       <%# login link %>
       <%= link_to(t("common.login"), login_path, {:class => "btn btn-default login"}) %>
     <% end %>
+  </div>
+
+  <%# Logo and mission if selected %>
+  <div id="title">
+    <%= link_to(image_tag("logo.png"), current_root_path) %>
+    <%# Stripping title name since we have a logo now %>
+    <h2>
+      <% if admin_mode? %>
+        <i class="fa fa-key"></i>
+        <%= t('admin_mode.admin_mode') %>
+      <% else %>
+        <%= current_mission.try(:name) %>
+        <% if current_mission.try(:locked) %>
+          <i class="fa fa-lock"></i>
+        <% end %>
+      <% end %>
+    </h2>
   </div>
 
   <%# navigation bar %>
@@ -142,12 +142,7 @@
   <div id="content" class="<%= ctlr_action_name %>">
     <%# Show errors or alerts if any %>
     <%= render("layouts/flash", :flash => flash) %>
-
-    <% unless @dont_print_title %>
-      <h1 class="title">
-        <%= title %>
-      </h1>
-    <% end %>
+    <%= h1_title unless @dont_print_title %>
     <%= body %>
   </div>
 
@@ -187,6 +182,9 @@
     <%= image_tag('glb-load-ind.gif') %>
     <%= t('layout.loading') %>
   </div>
+
+<%# Include logo-dark (used for printing) here because for just-in-time ajax loading (e.g. forms) it may not load in time. %>
+<%= image_tag('logo-dark.png', class: 'hidden') if controller_name == 'forms' %>
 
   <%# insert any audio objects at the end %>
   <%= yield(:audio) %>

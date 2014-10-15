@@ -48,10 +48,9 @@
     <% end %>
   </div>
 
-
 <% end %>
 
 <%= javascript_doc_ready do %>
-  ELMO.Response.init();
   $('textarea').each(function(){ CKEDITOR.replace(this.id); });
+  ELMO.Response.init();
 <% end %>

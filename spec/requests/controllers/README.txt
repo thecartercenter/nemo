@@ -1,0 +1,1 @@
+These tests are in the requests folder b/c couldn't get authlogic to work with real controller specs.

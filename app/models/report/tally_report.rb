@@ -1,6 +1,6 @@
-# contains methods common to all tally reports
+# Methods common to all tally reports.
 class Report::TallyReport < Report::Report
-  include Report::LegacyReport
+  include Report::Gridable
 
   def as_json(options = {})
     h = super(options)

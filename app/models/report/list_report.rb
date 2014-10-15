@@ -1,5 +1,5 @@
 class Report::ListReport < Report::Report
-  include Report::LegacyReport
+  include Report::Gridable
 
   def as_json(options = {})
     h = super(options)

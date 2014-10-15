@@ -6,6 +6,11 @@ describe 'form rendering for odk', clean_with_truncation: true do
   before do
     @user = create(:user)
     @form = create(:sample_form)
+
+    # Hidden question should not be included, even if required.
+    @form.questionings << create(:questioning, form: @form, hidden: true, required: true)
+    @form.save!
+
     @form.publish!
     login(@user)
     get(form_path(@form, format: :xml))

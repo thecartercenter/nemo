@@ -33,7 +33,9 @@ class QuestioningsController < ApplicationController
     @questioning.valid?
 
     # authorize special abilities
-    authorize!(:update_core, @questioning) if @questioning.core_changed?
+    %w(required hidden condition).each do |f|
+      authorize!(:"update_#{f}", @questioning) if @questioning.send("#{f}_changed?")
+    end
     authorize!(:update_core, @questioning.question) if @questioning.question.core_changed?
 
     if @questioning.save_and_rereplicate
@@ -46,6 +48,15 @@ class QuestioningsController < ApplicationController
   def destroy
     destroy_and_handle_errors(@questioning)
     redirect_to(edit_form_url(@questioning.form))
+  end
+
+  # Re-renders the fields in the condition form when requested by ajax.
+  def condition_form
+    # Create a dummy questioning so that the condition can look up the refable qings, etc.
+    @questioning = init_qing(form_id: params[:form_id])
+    # Create a dummy condition with the given ref qing.
+    @condition = @questioning.build_condition(ref_qing_id: params[:ref_qing_id])
+    render(partial: 'conditions/form_fields')
   end
 
   private

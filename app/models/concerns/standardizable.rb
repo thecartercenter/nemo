@@ -34,28 +34,28 @@ module Standardizable
     end
   end
 
-  def save_and_rereplicate
-    Thread.current[:elmo_capturing_changes?] = true
-    result = save
-    Thread.current[:elmo_capturing_changes?] = false
-    rereplicate_to_copies
-    do_assertions
-    result
+  def save_and_rereplicate(method = 'save')
+    # If any of this fails it should all fail.
+    transaction do
+      Thread.current[:elmo_capturing_changes?] = true
+      result = send(method)
+      Thread.current[:elmo_capturing_changes?] = false
+      rereplicate_to_copies
+      do_assertions
+      result
+    end
   end
 
   def save_and_rereplicate!
-    Thread.current[:elmo_capturing_changes?] = true
-    result = save!
-    Thread.current[:elmo_capturing_changes?] = false
-    rereplicate_to_copies
-    do_assertions
-    result
+    save_and_rereplicate('save!')
   end
 
   def destroy_with_copies
-    destroy_copies
-    destroy
-    do_assertions
+    transaction do
+      destroy_copies
+      destroy
+      do_assertions
+    end
   end
 
   # get copy in the given mission, if it exists (there can only be one)
@@ -103,7 +103,6 @@ module Standardizable
         end
 
         # we only need to rereplicate on certain classes
-        # can't really remember why :(
         if CLASSES_TO_REREPLICATE.include?(self.class.name)
           # if we just run replicate for each copy's mission, all changes will be propagated
           copies(true).each{|c| replicate(:mode => :to_mission, :dest_mission => c.mission)}

@@ -24,10 +24,25 @@ module OdkHelper
       'nodeset' => "/data/#{subq.odk_code}",
       'type' => subq.odk_name,
       '_required' => qing.required? && subq.first_rank? ? required_value(form) : nil,
-      'relevant' => qing.has_condition? ? qing.condition.to_odk : nil,
+      'relevant' => relevance_expression(qing, subq),
       'constraint' => subq.odk_constraint,
       'jr:constraintMsg' => subq.min_max_error_msg,
      }.reject{|k,v| v.nil?}).gsub(/_required=/, 'required=').html_safe
+  end
+
+  def relevance_expression(qing, subq)
+    expr = [].tap do |chunks|
+      chunks << qing.condition.to_odk if qing.has_condition?
+      unless subq.first_rank?
+        # For levels 2+ of a multilevel question, don't show it if its nodeset is empty OR
+        # there is a 'blank' tag in the nodeset, indicating that it is really blank
+        # even though it contains a placeholder to keep ODK happy.
+        nodeset = multi_level_option_nodeset_ref(qing, subq)
+        chunks << "count(#{nodeset}) > 0"
+        chunks << "count(#{nodeset}/blank) = 0"
+      end
+    end.map{ |c| "(#{c})" }.join(' and ')
+    expr.empty? ? nil : expr
   end
 
   # binding for incomplete response question
@@ -53,11 +68,12 @@ module OdkHelper
   end
 
   # For the given subquestion, returns an xpath expression for the itemset tag nodeset attribute.
-  # E.g. instance('multi_level_options')/set2/opt or
-  #      instance('multi_level_options')/set2/opt[value=/data/q2_1]/opt or
-  #      instance('multi_level_options')/set2/opt[value=/data/q2_1]/opt[value=/data/q2_2]/opt
+  # E.g. instance('option_set_2')/options/opt or
+  #      instance('option_set_2')/options/opt[value=/data/q2_1]/opt or
+  #      instance('option_set_2')/options/opt[value=/data/q2_1]/opt[value=/data/q2_2]/opt
   def multi_level_option_nodeset_ref(qing, cur_subq)
-    "instance('option_set_#{qing.option_set_id}')/options/".tap do |ref|
+    instance_ref = "instance('option_set_#{qing.option_set_id}')"
+    "#{instance_ref}/options/".tap do |ref|
       qing.subquestions.each do |subq|
         ref << 'opt'
         if subq == cur_subq
@@ -86,7 +102,7 @@ module OdkHelper
         if path.uniq == [1] && (depth_diff = option_set.max_depth - depth) > 0
           dummy_nodes = ''
           depth_diff.times do
-            dummy_nodes = "<opt><value></value><key>blankoption</key>#{dummy_nodes}</opt>"
+            dummy_nodes = "<opt><value></value><blank></blank><key>blankoption</key>#{dummy_nodes}</opt>"
           end
           xml << dummy_nodes
         end
