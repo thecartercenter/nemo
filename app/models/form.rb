@@ -14,6 +14,7 @@ class Form < ActiveRecord::Base
   belongs_to(:current_version, :class_name => "FormVersion")
 
   before_validation(:normalize_fields)
+  before_save(:update_pub_changed_at)
 
   validates(:name, :presence => true, :length => {:maximum => 32})
   validate(:name_unique_per_mission)
@@ -313,6 +314,11 @@ class Form < ActiveRecord::Base
 
     def normalize_fields
       self.name = name.strip
+      return true
+    end
+
+    def update_pub_changed_at
+      self.pub_changed_at = Time.now if published_changed?
       return true
     end
 

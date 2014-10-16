@@ -42,4 +42,38 @@ describe Form do
       expect(@form.reload.questionings.map(&:id)).to eq [@old_ids[1], @old_ids[2], @old_ids[0]]
     end
   end
+
+  describe 'pub_changed_at' do
+    before do
+      @form = create(:form)
+    end
+
+    it 'should be nil on create' do
+      expect(@form.pub_changed_at).to be_nil
+    end
+
+    it 'should be updated when form published' do
+      @form.publish!
+      expect(@form.pub_changed_at).to be_within(0.01).of(Time.zone.now)
+    end
+
+    it 'should be updated when form unpublished' do
+      publish_and_reset_pub_changed_at
+      @form.save!
+      @form.unpublish!
+      expect(@form.pub_changed_at).to be_within(0.01).of(Time.zone.now)
+    end
+
+    it 'should not be updated when form saved otherwise' do
+      publish_and_reset_pub_changed_at
+      @form.name = 'Something else'
+      @form.save!
+      expect(@form.pub_changed_at).not_to be_within(5.minutes).of(Time.zone.now)
+    end
+  end
+
+  def publish_and_reset_pub_changed_at
+    @form.publish!
+    @form.pub_changed_at -= 1.hour
+  end
 end
