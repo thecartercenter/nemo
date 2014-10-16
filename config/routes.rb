@@ -90,6 +90,7 @@ ELMO::Application.routes.draw do
     resources :settings
     resources :user_batches, :path => 'user-batches'
     resources :groups
+    resources :tags
 
     resources :option_sets, :path => 'option-sets' do
       member do
