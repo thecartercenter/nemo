@@ -131,7 +131,7 @@ class OptionNode < ActiveRecord::Base
 
   # Arranges descendant nodes in a nested hash structure.
   # If options[:truncate_if_huge] is true, returns on the first TO_SERIALIZE_IF_HUGE nodes.
-  def arrange_with_options(options = nil)
+  def arrange_with_options(options = {})
     # If node has huge number of children just return the first 10.
     nodes = if huge? && options[:truncate_if_huge]
       first_n_descendants(TO_SERIALIZE_IF_HUGE)

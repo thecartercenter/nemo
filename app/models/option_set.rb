@@ -62,6 +62,7 @@ class OptionSet < ActiveRecord::Base
            :options_for_node,
            :max_depth,
            :options_not_serialized,
+           :arrange_with_options,
            to: :root_node
 
   # These methods are for the form.
