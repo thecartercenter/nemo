@@ -57,20 +57,20 @@ feature "questions flow" do
     # Apply tag
     click_link "thriftshop"
 
-    # Apply a second tag
-    fill_in "Tags", with: "dol"
-    click_link "dollaz"
+    # Create a new tag
+    fill_in "Tags", with: "pocket"
+    click_link "pocket"
 
     click_button "Save"
 
     # New tags show on index page
     expect(page).to have_content "Questions"
     expect(page).to have_content "thriftshop"
-    expect(page).to have_content "dollaz"
+    expect(page).to have_content "pocket"
 
     # New tags show on question page
     visit question_path(@question1)
     expect(page).to have_content "thriftshop"
-    expect(page).to have_content "dollaz"
+    expect(page).to have_content "pocket"
   end
 end
