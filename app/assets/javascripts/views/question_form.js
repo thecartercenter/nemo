@@ -25,6 +25,8 @@
     $(document).on('option_set_form_submit_success', 'form.option_set_form', function(e, option_set){
       self.option_set_created(option_set);
     });
+
+    $('#question_tags').tokenInput(self.params.tags_path)
   }
 
   // gets the current value of the field with the given name
