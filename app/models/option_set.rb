@@ -61,7 +61,6 @@ class OptionSet < ActiveRecord::Base
            :all_options,
            :options_for_node,
            :max_depth,
-           :huge?,
            :options_not_serialized,
            to: :root_node
 
@@ -116,6 +115,10 @@ class OptionSet < ActiveRecord::Base
     @multi_level ||= root_node && root_node.has_grandchildren?
   end
   alias_method :multi_level, :multi_level?
+
+  def huge?
+    root_node.present? ? root_node.huge? : false
+  end
 
   def first_level_options
     root_node.child_options

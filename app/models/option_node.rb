@@ -129,30 +129,41 @@ class OptionNode < ActiveRecord::Base
     arrange_as_json
   end
 
-  def arrange_as_json(hash = nil, opts_hash = nil)
+  # Arranges descendant nodes in a nested hash structure.
+  # If options[:truncate_if_huge] is true, returns on the first TO_SERIALIZE_IF_HUGE nodes.
+  def arrange_with_options(options = nil)
+    # If node has huge number of children just return the first 10.
+    nodes = if huge? && options[:truncate_if_huge]
+      first_n_descendants(TO_SERIALIZE_IF_HUGE)
+    else
+      descendants.ordered_by_ancestry_and('rank')
+    end
+
+    # Manually eager load options.
+    opt_hash = options_by_id(nodes)
+    nodes.each{ |n| n.option = opt_hash[n.option_id] }
+
+    # arrange_nodes is an Ancestry gem function that takes a set of nodes and arranges them in the hash structure.
+    hash = self.class.arrange_nodes(nodes)
+  end
+
+  def arrange_as_json(hash = nil)
     # If this is the first call, hash will be nil.
     # We fetch and arrange the nodes this first time, and then pass chunks of the fetch node hierarchy
     # in subsequent recursive calls.
-    # We also build a hash for all fetched options now too, and pass that down the stack.
-    if hash.nil?
-      # If node has huge number of children just return the first 10.
-      nodes = huge? ? first_n_descendants(TO_SERIALIZE_IF_HUGE) : descendants
-      hash = huge? ? self.class.arrange_nodes(nodes) : nodes.arrange(order: 'rank')
-      opts_hash = options_by_id(nodes)
-    end
+    hash = arrange_with_options(truncate_if_huge: true) if hash.nil?
 
     hash.map do |node, children|
       {}.tap do |branch|
         %w(id rank).each{ |k| branch[k.to_sym] = node[k] }
+        branch[:option] = node.option.as_json(for_option_set_form: true)
 
         # Don't need to look up this property if huge, since not editable.
         # And option_has_answers? kicks off a big SQL query for a huge set.
-        branch[:removable?] = !option_set.option_has_answers?(node['option_id']) unless huge?
-
-        branch[:option] = opts_hash[node['option_id']].as_json(for_option_set_form: true)
+        branch[:removable?] = !option_set.option_has_answers?(node.option_id) unless huge?
 
         # Recursive step.
-        branch[:children] = arrange_as_json(children, opts_hash) unless children.empty?
+        branch[:children] = arrange_as_json(children) unless children.empty?
       end
     end
   end
