@@ -87,3 +87,14 @@ jQuery.fn.preventDoubleSubmission = function() {
   // Keep chainability
   return this;
 };
+
+// Compares two arrays for equality.
+Array.prototype.equalsArray = function (other) {
+  if (this === other) return true;
+  if (this == null || other == null) return false;
+  if (this.length != other.length) return false;
+  for (var i = 0; i < this.length; ++i) {
+    if (this[i] !== other[i]) return false;
+  }
+  return true;
+}

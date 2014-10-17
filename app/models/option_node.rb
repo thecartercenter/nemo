@@ -63,8 +63,12 @@ class OptionNode < ActiveRecord::Base
   def find_descendant_by_option_path(path)
     return self if path.empty?
     return nil if path.any?(&:nil?)
-    return nil unless match = children.detect{ |c| c.option_id == path[0] }
+    return nil unless match = child_with_option_id(path[0])
     match.find_descendant_by_option_path(path[1..-1])
+  end
+
+  def child_with_option_id(oid)
+    children.detect{ |c| c.option_id == oid }
   end
 
   # The total number of descendant options.
@@ -94,6 +98,31 @@ class OptionNode < ActiveRecord::Base
   def options_by_id
     @options_by_id ||= Option.where(id: descendants.map(&:option_id)).includes(:option_sets, :answers, :choices).index_by(&:id)
   end
+
+  # Given a path (array) of options, returns the ranks of those options at each step of the path.
+  # Raises ArgumentError if path not found
+  def option_path_to_rank_path(options)
+    if options.empty?
+      []
+    else
+      child = child_with_option_id(options.first.id)
+      raise ArgumentError.new("Could not find child of node #{id} with option ID #{options.first.id}") if child.nil?
+      [child.rank] + child.option_path_to_rank_path(options[1..-1])
+    end
+  end
+
+  # Given a path (array) of option ranks, returns the options at each step of the path.
+  # Raises ArgumentError if path not found.
+  def rank_path_to_option_path(ranks)
+    if ranks.empty?
+      []
+    else
+      child = children.where(rank: ranks.first).first
+      raise ArgumentError.new("Could not find child of node #{id} with rank #{ranks.first}") if child.nil?
+      [child.option] + child.rank_path_to_option_path(ranks[1..-1])
+    end
+  end
+
 
   # Serializes all descendants. Meant to be called on root.
   def as_json(options = {})

@@ -122,7 +122,7 @@ class FormsController < ApplicationController
 
     # handle problem with conditions
     rescue ConditionOrderingError
-      @form.errors.add(:base, :ranks_break_conditions)
+      flash.now[:error] = I18n.t('activerecord.errors.models.form.ranks_break_conditions')
       prepare_and_render_form
 
     # handle other validation errors

@@ -1,5 +1,5 @@
-# contains functions that are common to the old report style that needed to be refactored out of Report::Report
-module Report::LegacyReport
+# Functions that are common to reports that can be rendered as a simple grid of data.
+module Report::Gridable
   extend ActiveSupport::Concern
 
   included do
@@ -7,7 +7,7 @@ module Report::LegacyReport
   end
 
   # @param [current_ability] user ability to access Response object as defined by CanCan
-  def run(current_ability=nil)
+  def run(current_ability = nil)
     # prep the relation and add a filter clause
     build_query = Response.unscoped.for_mission(mission)
     if current_ability
@@ -34,7 +34,7 @@ module Report::LegacyReport
     @data.compute_totals if can_total?
   end
 
-  # legacy reports can all be exported to csv
+  # Gridable reports can all be exported to csv
   def exportable?
     true
   end

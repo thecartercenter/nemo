@@ -33,6 +33,10 @@ module OptionSetsHelper
     end
   end
 
+  def cascading_select_input_id(input_name_template, id)
+    input_name_template.gsub('###', id.to_s).gsub(/[\[\]]+/, '_').gsub(/_$/, '')
+  end
+
   def multi_level_forbidden_notice
     text = tmd('option_set.multi_level_forbidden_notice')
     icon = content_tag(:i, '', class: 'fa fa-exclamation-triangle')

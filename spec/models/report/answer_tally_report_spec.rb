@@ -1,6 +1,7 @@
+# There are more report tests in test/unit/report.
 require 'spec_helper'
 
-describe Report::QuestionAnswerTallyReport do
+describe Report::AnswerTallyReport do
 
   shared_examples_for 'basic stuff' do
     describe 'destroy' do
@@ -19,7 +20,7 @@ describe Report::QuestionAnswerTallyReport do
   context 'with specific questions' do
     before do
       @form = create(:form, question_types: %w(select_one))
-      @report = create(:question_answer_tally_report, _calculations: [@form.questions[0]])
+      @report = create(:answer_tally_report, _calculations: [@form.questions[0]])
     end
 
     it_behaves_like 'basic stuff'
@@ -29,7 +30,7 @@ describe Report::QuestionAnswerTallyReport do
     before do
       @option_set1 = create(:option_set)
       @option_set2 = create(:option_set)
-      @report = create(:question_answer_tally_report, option_sets: [@option_set1, @option_set2])
+      @report = create(:answer_tally_report, option_sets: [@option_set1, @option_set2])
     end
 
     it_behaves_like 'basic stuff'
@@ -54,6 +55,25 @@ describe Report::QuestionAnswerTallyReport do
       it 'should destroy self' do
         expect(Report::Report.exists?(@report)).to be false
       end
+    end
+  end
+
+  context 'with multilevel option set' do
+    before do
+      @form = create(:form, question_types: %w(select_one), use_multilevel_option_set: true)
+      create(:response, form: @form, answer_values: [['Animal', 'Cat']])
+      create(:response, form: @form, answer_values: [['Animal', 'Dog']])
+      create(:response, form: @form, answer_values: [['Animal']])
+      create(:response, form: @form, answer_values: [['Plant', 'Oak']])
+      @report = create(:answer_tally_report, option_sets: [@form.questions[0].option_set])
+    end
+
+    it 'should count only top-level answers' do
+      expect(@report).to have_data_grid(
+                                    %w(    Animal Plant TTL),
+        [@form.questions[0].name] + %w(    3      1     4),
+                                    %w(TTL 3      1     4)
+      )
     end
   end
 end

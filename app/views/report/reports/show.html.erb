@@ -64,25 +64,25 @@
                 <div class="name horiz"><%= t("report/report.tally_type") %></div>
                 <div class="controls horiz">
                   <div class="choice">
-                    <input type="radio" name="tally_type" id="tally_type_1" value="QuestionAnswer" />
+                    <input type="radio" name="tally_type" id="tally_type_1" value="Answer" />
                     <label for="tally_type_1">
-                      <%= t("report/report.tally_types.question_answer") %>
+                      <%= t("report/report.tally_types.answer") %>
                       <br/>
                       <em>
                         <%= t('common.example_abbr') %>
-                        <%= t('report/report.tally_type_examples.question_answer') %>
+                        <%= t('report/report.tally_type_examples.answer') %>
                       </em>
                     </label>
                   </div>
                   <br/>
                   <div class="choice">
-                    <input type="radio" name="tally_type" id="tally_type_2" value="Grouped" />
+                    <input type="radio" name="tally_type" id="tally_type_2" value="Response" />
                     <label for="tally_type_2">
-                      <%= t("report/report.tally_types.grouped") %>
+                      <%= t("report/report.tally_types.response") %>
                       <br/>
                       <em>
                         <%= t('common.example_abbr') %>
-                        <%= t('report/report.tally_type_examples.grouped') %>
+                        <%= t('report/report.tally_type_examples.response') %>
                       </em>
                     </label>
                   </div>
@@ -160,6 +160,7 @@
                     <input type="radio" name="question_labels" id="question_labels_2" value="title" />
                     <label for="question_labels_2"><%= t("report/report.question_labels.title") %></label>
                   </div>
+                  <br/>
                   <div class="choice">
                     <input type="radio" name="question_labels" id="question_labels_1" value="code" />
                     <label for="question_labels_1"><%= t("report/report.question_labels.code") %></label>

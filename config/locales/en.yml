@@ -1,4 +1,5 @@
 en:
+  # This should be the name of the language as written in that language, e.g. English, Français, Español, etc.
   locale_name: "English"
 
   # common words (should be capitalized except for those that obviously shouldn't like and, or, e.g., etc.)
@@ -185,11 +186,11 @@ en:
         zero: "Tally Reports"
         one: "Tally Report"
         other: "Tally Reports"
-      report/question_answer_tally_report:
+      report/answer_tally_report:
         zero: "Answer Tally Reports"
         one: "Answer Tally Report"
         other: "Answer Tally Reports"
-      report/grouped_tally_report:
+      report/response_tally_report:
         zero: "Response Tally Reports"
         one: "Response Tally Report"
         other: "Response Tally Reports"
@@ -842,6 +843,15 @@ en:
     no_name: "No Name"
     this_answer: "This answer"
 
+  attrib_fields:
+    form: "Form"
+    submitter: "Submitter"
+    source: "Source"
+    time_submitted: "Time Submitted"
+    date_submitted: "Date Submitted"
+    response_id: "Response ID"
+    reviewed: "Reviewed"
+
   broadcast:
     balance_notice: "You have %{balance} SMS credits in your %{account_type} account."
     chars: # these are for informing the user how many chars they have left in their sms
@@ -1155,11 +1165,11 @@ en:
         short_text: "Short Text Answers"
         long_text: "Long Text Answers"
     tally_types:
-      question_answer: "Answers per Question"
-      grouped: "Responses per Answer/Attribute"
+      answer: "Answers per Question"
+      response: "Responses per Answer/Attribute"
     tally_type_examples:
-      question_answer: "Tally of Yes's and No's for all Yes/No questions"
-      grouped: "Tally of responses per form for each team"
+      answer: "Tally of Yes's and No's for all Yes/No questions"
+      response: "Tally of responses per form for each team"
     text_response_options:
       all: "Show All"
       short_only: "Don't Show Long Text Questions"
