@@ -16,7 +16,7 @@ describe UsersController do
     end
 
     after do
-      #I18n.locale = :en
+      I18n.locale = :en
     end
   end
 
