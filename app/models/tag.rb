@@ -29,16 +29,13 @@ class Tag < ActiveRecord::Base
     # scan for tags matching query
     matches = []; exact_match = false
     for i in 0...tags.size
-      # if we have a a partial match
-      if tags[i].name && tags[i].name =~ /#{Regexp.escape(query)}/i
-        # if also an exact match, set a flag and put it at the top
-        if tags[i].name == query
-          matches.unshift tags[i]
-          exact_match = true
-          # otherwise just insert at the end
-        else
-          matches << tags[i]
-        end
+      # if an exact match, set a flag and put it at the top
+      if tags[i].name == query
+        matches.unshift tags[i]
+        exact_match = true
+        # otherwise if partial match just insert at the end
+      elsif tags[i].name && tags[i].name =~ /#{Regexp.escape(query)}/i
+        matches << tags[i]
       end
     end
 
