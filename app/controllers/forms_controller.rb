@@ -9,6 +9,9 @@ class FormsController < ApplicationController
   # authorization via cancan
   load_and_authorize_resource
 
+  # We manually authorize these against :download.
+  skip_authorize_resource only: [:odk_manifest, :odk_itemsets]
+
   # in the choose_questions action we have a question form so we need this Concern
   include QuestionFormable
 

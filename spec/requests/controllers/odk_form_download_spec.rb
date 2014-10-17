@@ -15,6 +15,10 @@ describe FormsController do
       # XML rendering details are tested elsewhere.
       get_s(odk_form_path(@form))
     end
+
+    it 'getting form manifest should succeed' do
+      get_s(odk_form_manifest_path(@form))
+    end
   end
 
   context 'for locked mission' do
