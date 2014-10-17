@@ -29,16 +29,11 @@
     $('#question_tags').tokenInput(self.params.tags_path + '.json', {
       theme: 'elmo',
       jsonContainer: 'tags',
-//      hintText: I18n.t('option_set.type_to_add_new'),
-//      noResultsText: I18n.t('option_set.none_found'),
-//      searchingText: I18n.t('option_set.searching'),
-//      resultsFormatter: self.format_token_result,
+      hintText: I18n.t('tag.type_to_add_new'),
+      noResultsText: I18n.t('tag.none_found'),
+      searchingText: I18n.t('tag.searching'),
+      resultsFormatter: self.format_token_result,
       preventDuplicates: true,
-//      tokenValue: 'name',
-//      onResult: function(results){ return self.process_token_results(results); },
-//      onAdd: function(item){ return self.token_added(item); },
-//      // this event hook is custom, added by tomsmyth. see the tokenInput source code.
-//      onEnter: function(){ self.add_options(); }
     })
   }
 
