@@ -8,12 +8,12 @@ describe FormsController do
     end
 
     it 'listing forms should succeed' do
-      get_s(forms_path(format: 'xml'))
+      get_s(odk_form_list_path)
     end
 
     it 'showing form with format xml should succeed' do
       # XML rendering details are tested elsewhere.
-      get_s(form_path(@form, format: 'xml'))
+      get_s(odk_form_path(@form))
     end
   end
 
@@ -24,13 +24,13 @@ describe FormsController do
     end
 
     it 'listing forms should return 403' do
-      get(forms_path(format: 'xml'))
+      get(odk_form_list_path)
       expect(response.status).to eq 403
       expect(response.body.strip).to be_empty
     end
 
     it 'showing form with format xml should return 403' do
-      get(form_path(@form, format: 'xml'))
+      get(odk_form_path(@form))
       expect(response.status).to eq 403
       expect(response.body.strip).to be_empty
     end

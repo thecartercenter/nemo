@@ -121,7 +121,7 @@ ELMO::Application.routes.draw do
     get '/sms/submit' => 'sms#create'
 
     # ODK routes. They are down here so that forms_path doesn't return the ODK variant.
-    get '/formList' => 'forms#index', :format => 'xml', :direct_auth => true
+    get '/formList' => 'forms#index', :format => 'xml', :as => :odk_form_list, :direct_auth => true
     get '/forms/:id' => 'forms#show', :format => 'xml', :as => :odk_form, :direct_auth => true
     get '/forms/:id/manifest' => 'forms#odk_manifest', :format => 'xml', :direct_auth => true, :as => :odk_form_manifest
     get '/forms/:id/itemsets' => 'forms#odk_itemsets', :format => 'csv', :direct_auth => true, :as => :odk_form_itemsets
