@@ -49,6 +49,27 @@ describe ItemsetsFormAttachment do
 
   # Clean with truncation so we can guess IDs
   describe 'generate!', clean_with_truncation: true do
+    before do
+      configatron.preferred_locales = [:en]
+    end
+
+    context 'for regular form' do
+      before do
+        @os1 = create(:option_set)
+        allow(@form).to receive(:option_sets).and_return([@os1])
+      end
+
+      it 'should delete any previous files' do
+        # Create dummy older file.
+        FileUtils.mkdir_p(@ifa.send(:priv_dir))
+        dummy = File.join(@ifa.send(:priv_dir), 'itemsets-foo.csv')
+        FileUtils.touch(dummy)
+
+        @ifa.send(:generate!)
+        expect(File.exists?(dummy)).to be false
+      end
+    end
+
     context 'for multilevel sets' do
       before do
         @os1 = create(:option_set, super_multi_level: true)

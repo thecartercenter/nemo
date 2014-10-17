@@ -36,7 +36,10 @@ class ItemsetsFormAttachment
 
     # Generates the data and saves to file.
     def generate!
+      # Create dir if not exist and clear out old itemsets.
       FileUtils.mkdir_p(priv_dir)
+      Dir[File.join(priv_dir, 'itemsets-*.csv')].each{ |f| File.unlink(f) }
+
       CSV.open(priv_path, 'wb') do |csv|
         width = generate_header_row(csv)
         parent_ref_offset = 0 # Need to maintain this as we go so we know which column to start writing parent references.
