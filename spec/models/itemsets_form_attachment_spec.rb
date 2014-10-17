@@ -4,7 +4,6 @@ require 'fileutils'
 
 describe ItemsetsFormAttachment do
   before do
-    configatron.preferred_locales = [:en]
     @form = create(:form)
     @ifa = ItemsetsFormAttachment.new(form: @form)
   end
@@ -29,8 +28,9 @@ describe ItemsetsFormAttachment do
       end
 
       it 'should be based on current time' do
-        Timecop.freeze(Time.parse('2014-02-01 12:00:00 UTC'))
-        expect(@ifa.path).to eq "form-attachments/test/000042/itemsets-20140201_120000.csv"
+        Timecop.freeze(Time.parse('2014-02-01 12:00:00 UTC')) do
+          expect(@ifa.path).to eq "form-attachments/test/000042/itemsets-20140201_120000.csv"
+        end
       end
     end
   end

@@ -128,7 +128,7 @@ ELMO::Application.routes.draw do
     match '/submission' => 'responses#create', :direct_auth => true, :format => 'xml'
 
     # Unauthenticated submissions
-    match '/noauth/submission' => 'responses#create', :format => :xml, :noauth => true
+    match '/noauth/submission' => 'responses#create', :format => :xml, :no_auth => true
   end
 
   # API routes.

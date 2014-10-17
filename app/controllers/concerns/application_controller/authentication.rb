@@ -28,12 +28,12 @@ module Concerns::ApplicationController::Authentication
       # We use a find call to the User class so that we can do eager loading
       @current_user = User.includes(:assignments).find(user_session.user.id)
 
-    # If the direct_auth param is set (usually set in the routes file),
-    # we expect the request to provide its own authentication using e.g. basic auth.
-    elsif params[:direct_auth]
+    # If the direct_auth or no_auth params are set (usually set in the routes file),
+    # we expect the request to provide its own authentication using e.g. basic auth, or no auth.
+    elsif params[:direct_auth] || params[:no_auth]
 
       # Special unauthenticated request.
-      if params[:noauth]
+      if params[:no_auth]
 
         process_noauth
 
