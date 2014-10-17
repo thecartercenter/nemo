@@ -121,12 +121,14 @@ class OptionNode < ActiveRecord::Base
   end
 
   def options_by_id(nodes, options = {})
+    return @options_by_id if @options_by_id
+
     rel = Option.where(id: nodes.map(&:option_id))
 
     # These eager loads create a bunch of extra queries so we only do them if really necessary.
     rel = rel.includes(:option_sets, :answers, :choices) if options[:eager_load_option_assocs]
 
-    rel.index_by(&:id)
+    @options_by_id = rel.index_by(&:id)
   end
 
   # Serializes all descendants. Meant to be called on root.
