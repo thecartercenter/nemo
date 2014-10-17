@@ -26,7 +26,7 @@
       self.option_set_created(option_set);
     });
 
-    $('#question_tags').tokenInput(self.params.tags_path + '.json', {
+    $('#question_tags').tokenInput(self.params.suggest_tags_path + '.json', {
       theme: 'elmo',
       jsonContainer: 'tags',
       hintText: I18n.t('tag.type_to_add_new'),
@@ -37,6 +37,18 @@
       prePopulate: self.params.question_tags,
     })
   }
+
+  // returns the html to insert in the token input result list
+  klass.prototype.format_token_result = function(item) { var self = this;
+    var details;
+    // if this is the new placeholder, add a string about that
+    if (item.id == null) {
+      details = ' <span class="details create_new">[' + I18n.t('tag.new_tag') + ']</span>';
+    } else
+      details = '';
+
+    return '<li>' + item.name + details + '</li>';
+  };
 
   // gets the current value of the field with the given name
   // still works if field is read_only
