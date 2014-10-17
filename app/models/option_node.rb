@@ -120,8 +120,13 @@ class OptionNode < ActiveRecord::Base
     children.order('rank')
   end
 
-  def options_by_id(nodes)
-    Option.where(id: nodes.map(&:option_id)).includes(:option_sets, :answers, :choices).index_by(&:id)
+  def options_by_id(nodes, options = {})
+    rel = Option.where(id: nodes.map(&:option_id))
+
+    # These eager loads create a bunch of extra queries so we only do them if really necessary.
+    rel = rel.includes(:option_sets, :answers, :choices) if options[:eager_load_option_assocs]
+
+    rel.index_by(&:id)
   end
 
   # Serializes all descendants. Meant to be called on root.
@@ -131,6 +136,7 @@ class OptionNode < ActiveRecord::Base
 
   # Arranges descendant nodes in a nested hash structure.
   # If options[:truncate_if_huge] is true, returns on the first TO_SERIALIZE_IF_HUGE nodes.
+  # Also forwards options[:eager_load_option_assocs] to options_by_id.
   def arrange_with_options(options = {})
     # If node has huge number of children just return the first 10.
     nodes = if huge? && options[:truncate_if_huge]
@@ -140,7 +146,7 @@ class OptionNode < ActiveRecord::Base
     end
 
     # Manually eager load options.
-    opt_hash = options_by_id(nodes)
+    opt_hash = options_by_id(nodes, options)
     nodes.each{ |n| n.option = opt_hash[n.option_id] }
 
     # arrange_nodes is an Ancestry gem function that takes a set of nodes and arranges them in the hash structure.
@@ -151,7 +157,7 @@ class OptionNode < ActiveRecord::Base
     # If this is the first call, hash will be nil.
     # We fetch and arrange the nodes this first time, and then pass chunks of the fetch node hierarchy
     # in subsequent recursive calls.
-    hash = arrange_with_options(truncate_if_huge: true) if hash.nil?
+    hash = arrange_with_options(truncate_if_huge: true, eager_load_option_assocs: true) if hash.nil?
 
     hash.map do |node, children|
       {}.tap do |branch|
