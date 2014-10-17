@@ -34,6 +34,7 @@
       searchingText: I18n.t('tag.searching'),
       resultsFormatter: self.format_token_result,
       preventDuplicates: true,
+      prePopulate: self.params.question_tags,
     })
   }
 
