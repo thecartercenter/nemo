@@ -4,6 +4,7 @@ require 'fileutils'
 
 describe ItemsetsFormAttachment do
   before do
+    configatron.preferred_locales = [:en]
     @form = create(:form)
     @ifa = ItemsetsFormAttachment.new(form: @form)
   end
@@ -114,6 +115,13 @@ describe ItemsetsFormAttachment do
 
       after do
         configatron.preferred_locales = [:en]
+      end
+    end
+
+    context 'for form with no option sets' do
+      it 'should not generate a file' do
+        @ifa.ensure_generated
+        expect(File.exists?(@ifa.send(:priv_path))).to be false
       end
     end
 

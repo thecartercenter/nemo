@@ -17,7 +17,7 @@ class ItemsetsFormAttachment
 
   # Ensures the file exists. Generates if not.
   def ensure_generated
-    generate! unless File.exists?(priv_path)
+    generate! if !form.option_sets.empty? && !File.exists?(priv_path)
   end
 
   private
