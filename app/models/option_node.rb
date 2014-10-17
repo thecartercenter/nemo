@@ -46,7 +46,7 @@ class OptionNode < ActiveRecord::Base
   end
 
   def has_grandchildren?
-    descendants(at_depth: 2).any?
+    @has_grandchildren ||= descendants(at_depth: 2).any?
   end
 
   def all_options
