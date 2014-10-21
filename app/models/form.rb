@@ -26,7 +26,7 @@ class Form < ActiveRecord::Base
     :questionings => [
       :form,
       {:question => :option_set},
-      {:condition => [:option, :ref_qing]}
+      {:condition => :ref_qing}
     ]
   ).order("questionings.rank"))
 
