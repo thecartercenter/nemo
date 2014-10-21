@@ -1,6 +1,7 @@
 # Models the itemsets CSV file that is used by ODK to store option sets.
 require 'fileutils'
 require 'csv'
+require 'digest'
 include LanguageHelper
 
 class ItemsetsFormAttachment
@@ -16,7 +17,7 @@ class ItemsetsFormAttachment
   end
 
   def md5
-    'foo'
+    (contents = file_contents) ? Digest::MD5.hexdigest(contents) : (raise IOError.new('file not yet generated'))
   end
 
   # Ensures the file exists. Generates if not.
@@ -36,6 +37,10 @@ class ItemsetsFormAttachment
 
     def priv_path
       File.join(Rails.root, 'public', path)
+    end
+
+    def file_contents
+      File.exists?(priv_path) ? File.read(priv_path) : nil
     end
 
     # Generates the data and saves to file.

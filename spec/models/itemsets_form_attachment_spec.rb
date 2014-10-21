@@ -44,7 +44,18 @@ describe ItemsetsFormAttachment do
   end
 
   describe 'md5' do
+    context 'for not yet generated itemset' do
+      it 'should raise IOerror' do
+        expect{@ifa.md5}.to raise_error(IOError)
+      end
+    end
 
+    context 'for generated itemset' do
+      it 'should return correct md5' do
+        allow(@ifa).to receive(:file_contents).and_return('foo')
+        expect(@ifa.md5).to eq 'acbd18db4cc2f85cedef654fccc4a4d8' # This is md5 of 'foo'
+      end
+    end
   end
 
   # Clean with truncation so we can guess IDs
@@ -81,7 +92,7 @@ describe ItemsetsFormAttachment do
 
       it 'should build file with correct contents' do
         @ifa.send(:generate!)
-        expect(File.read(@ifa.send(:priv_path))).to eq [
+        expect(@ifa.send(:file_contents)).to eq [
           # Level names are repeated b/c each set is distinct. Just a coincidence the names are same here.
           'list_name,name,label::English,os1_lev1,os1_lev2,os3_lev1',
           'os1,o1,Animal,,,',
@@ -122,7 +133,7 @@ describe ItemsetsFormAttachment do
 
       it 'should build file with correct contents' do
         @ifa.send(:generate!)
-        expect(File.read(@ifa.send(:priv_path))).to eq [
+        expect(@ifa.send(:file_contents)).to eq [
           'list_name,name,label::English,label::Français,os1_lev1',
           'os1,o1,Animal,Animale,',
           'os1,o2,Cat,,o1',
