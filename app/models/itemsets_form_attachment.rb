@@ -15,6 +15,10 @@ class ItemsetsFormAttachment
     File.join(dir, "itemsets-#{stamp}.csv")
   end
 
+  def md5
+    'foo'
+  end
+
   # Ensures the file exists. Generates if not.
   def ensure_generated
     generate! if !form.option_sets.empty? && !File.exists?(priv_path)

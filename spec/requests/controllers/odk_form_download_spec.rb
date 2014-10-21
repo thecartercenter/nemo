@@ -18,6 +18,21 @@ describe FormsController do
 
     it 'getting form manifest should succeed' do
       get_s(odk_form_manifest_path(@form))
+      @ifa = ItemsetsFormAttachment.new(form: @form)
+      assert_select('filename', text: 'itemsets.csv')
+      assert_select('hash', text: @ifa.md5)
+      assert_select('downloadUrl', text: @ifa.path)
+    end
+
+    it 'getting itemsets file for form with option sets should succeed' do
+      # We need an option set or the file won't exist.
+      @os = create(:option_set)
+      allow(@form).to receive(:option_sets).and_return([@os])
+      @ifa = ItemsetsFormAttachment.new(form: @form)
+      @ifa.ensure_generated
+      get_s(@ifa.path)
+      expect(response).to be_success
+      expect(response.body).to match(/,Cat/)
     end
   end
 

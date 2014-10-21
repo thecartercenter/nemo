@@ -2,7 +2,7 @@
 <manifest xmlns="http://openrosa.org/xforms/xformsManifest">
   <mediaFile>
     <filename>itemsets.csv</filename>
-    <hash>md5:c28fc778a9291672baddd04ac880a05d</hash>
-    <downloadUrl><%= odk_form_itemsets_url(mission_name: @form.mission.compact_name, id: @form.id, locale: nil) %></downloadUrl>
+    <hash><%= @ifa.md5 %></hash>
+    <downloadUrl><%= @ifa.path %></downloadUrl>
   </mediaFile>
 </manifest>

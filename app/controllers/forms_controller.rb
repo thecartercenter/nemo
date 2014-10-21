@@ -94,13 +94,15 @@ class FormsController < ApplicationController
   # Format is always :xml
   def odk_manifest
     authorize!(:download, @form)
+    @ifa = ItemsetsFormAttachment.new(form: @form)
+    @ifa.ensure_generated
     render_openrosa
   end
 
   # Format is always :csv
   def odk_itemsets
     authorize!(:download, @form)
-    render_openrosa
+
   end
 
   def create
