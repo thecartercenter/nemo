@@ -26,7 +26,7 @@
       self.option_set_created(option_set);
     });
 
-    $('#question_tags').tokenInput(self.params.suggest_tags_path + '.json', {
+    $('#question_tag_ids').tokenInput(self.params.suggest_tags_path + '.json', {
       theme: 'elmo',
       jsonContainer: 'tags',
       hintText: I18n.t('tag.type_to_add_new'),

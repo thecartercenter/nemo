@@ -267,6 +267,7 @@ en:
         name: "Title"
         option_set_id: "Option Set"
         qtype_name: "Type"
+        tag_ids: "Tags"
       questioning:
         name: "Title"
         condition: "Condition?"
