@@ -9,6 +9,7 @@
           <q2_1/>
           <q2_2/>
           <q3/>
+          <q4/>
         </data>
       </instance>
       <itext>
@@ -37,23 +38,58 @@
           <text id="q3:hint">
             <value>Hint 3</value>
           </text>
+          <text id="q4:label">
+            <value>Question Title 1</value>
+          </text>
+          <text id="q4:hint">
+            <value>Question Hint 1</value>
+          </text>
+          <text id="o1">
+            <value>Cat</value>
+          </text>
+          <text id="o2">
+            <value>Dog</value>
+          </text>
+          <text id="o3">
+            <value>Animal</value>
+          </text>
+          <text id="o6">
+            <value>Plant</value>
+          </text>
         </translation>
       </itext>
-      <bind nodeset="/data/q1" type="string"/>
-      <bind nodeset="/data/q2_1" type="string"/>
+      <bind nodeset="/data/q1" type="select1"/>
+      <bind nodeset="/data/q2_1" type="select1"/>
       <bind nodeset="/data/q2_2" type="string"/>
       <bind nodeset="/data/q3" type="int"/>
+      <bind nodeset="/data/q4" type="select"/>
     </model>
   </h:head>
   <h:body>
-    <input query="instance('os1')/root/item" ref="/data/q1">
+    <select1 ref="/data/q1">
       <label ref="jr:itext('q1:label')"/>
       <hint ref="jr:itext('q1:hint')"/>
-    </input>
-    <input query="instance('os2')/root/item" ref="/data/q2_1">
+      <item>
+        <label ref="jr:itext('o1')"/>
+        <value>1</value>
+      </item>
+      <item>
+        <label ref="jr:itext('o2')"/>
+        <value>2</value>
+      </item>
+    </select1>
+    <select1 ref="/data/q2_1">
       <label ref="jr:itext('q2_1:label')"/>
       <hint ref="jr:itext('q2_1:hint')"/>
-    </input>
+      <item>
+        <label ref="jr:itext('o3')"/>
+        <value>3</value>
+      </item>
+      <item>
+        <label ref="jr:itext('o6')"/>
+        <value>6</value>
+      </item>
+    </select1>
     <input query="instance('os2')/root/item[parent_id=/data/q2_1]" ref="/data/q2_2">
       <label ref="jr:itext('q2_2:label')"/>
       <hint ref="jr:itext('q2_2:hint')"/>
@@ -62,5 +98,17 @@
       <label ref="jr:itext('q3:label')"/>
       <hint ref="jr:itext('q3:hint')"/>
     </input>
+    <select ref="/data/q4">
+      <label ref="jr:itext('q4:label')"/>
+      <hint ref="jr:itext('q4:hint')"/>
+      <item>
+        <label ref="jr:itext('o1')"/>
+        <value>1</value>
+      </item>
+      <item>
+        <label ref="jr:itext('o2')"/>
+        <value>2</value>
+      </item>
+    </select>
   </h:body>
 </h:html>

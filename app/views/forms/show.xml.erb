@@ -54,6 +54,8 @@
               <% end %>
             <% end %>
 
+            <%= odk_option_translations(@form, lang) %>
+
             <%# incomplete response question translations %>
             <% if allow_incomplete? %>
               <text id="<%= OdkHelper::IR_QUESTION %>:label">
@@ -102,12 +104,22 @@
     <%# regular question form controls %>
     <% @form.visible_questionings.each do |qing| %>
       <% qing.subquestions.each do |subq| %>
-        <% next if subq.odk_tag.nil? %>
         <%= odk_input_tag(qing, subq) do %>
           <label ref="jr:itext('<%= subq.odk_code %>:label')"/>
           <% unless @style == 'commcare' %>
             <hint ref="jr:itext('<%= subq.odk_code %>:hint')"/>
           <% end %>
+
+          <%# ODK wants the first-level options here for select questions, so we check if subq is first_rank. %>
+          <%# Options from other levels go in itemsets.csv %>
+          <% if subq.has_options? && subq.first_rank? %>
+            <% subq.option_set.options.each do |opt| %>
+              <item>
+                <label ref="jr:itext('o<%= opt.id %>')"/>
+                <value><%= opt.id %></value>
+              </item>
+            <% end %>
+          <% end  %>
         <% end %>
       <% end %>
     <% end %>

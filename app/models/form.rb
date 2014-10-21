@@ -152,6 +152,10 @@ class Form < ActiveRecord::Base
     OptionSet.all_options_for_sets(questions.map(&:option_set_id).compact)
   end
 
+  def all_first_level_options
+    OptionSet.all_options_for_sets(questions.map(&:option_set_id).compact, first_level_only: true)
+  end
+
   def max_rank
     questionings.map{|qing| qing.rank || 0}.max || 0
   end

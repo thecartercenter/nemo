@@ -83,11 +83,13 @@ class OptionSet < ActiveRecord::Base
   end
 
   # Loads all options for sets with the given IDs in a constant number of queries.
-  def self.all_options_for_sets(set_ids)
+  # If options[:first_level_only] is given, returns only first level options.
+  def self.all_options_for_sets(set_ids, options = {})
     return [] if set_ids.empty?
     root_node_ids = where(id: set_ids).all.map(&:root_node_id)
-    ancestry_clause = root_node_ids.map{ |id| "ancestry LIKE '#{id}/%' OR ancestry = '#{id}'" }.join(' OR ')
-    Option.where("id IN (SELECT option_id FROM option_nodes WHERE #{ancestry_clause})").all
+    node_where_clause = root_node_ids.map{ |id| "ancestry LIKE '#{id}/%' OR ancestry = '#{id}'" }.join(' OR ')
+    node_where_clause = "(#{node_where_clause}) AND ancestry_depth = 1" if options[:first_level_only]
+    Option.where("id IN (SELECT option_id FROM option_nodes WHERE #{node_where_clause})").all
   end
 
   def children_attribs=(attribs)
