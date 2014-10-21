@@ -7,8 +7,15 @@ class Subquestion
     attribs.each{|k,v| instance_variable_set("@#{k}", v)}
   end
 
-  def odk_code
-    multi_level? ? "#{question.odk_code}_#{rank}" : question.odk_code
+  # Returns the odk code for the question. If options[:previous] is true,
+  # returns the code for the immediately previous subquestion (multilevel only).
+  def odk_code(options = {})
+    if multi_level?
+      r = options[:previous] ? rank - 1 : rank
+      "#{question.odk_code}_#{r}"
+    else
+      question.odk_code
+    end
   end
 
   def name(*args)

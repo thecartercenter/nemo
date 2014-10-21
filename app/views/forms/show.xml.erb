@@ -36,14 +36,6 @@
         <instance id="commcaresession" src="jr://instance/session"/>
       <% end %>
 
-      <% @form.option_sets.select(&:multi_level?).each do |set| %>
-        <instance id="option_set_<%= set.id %>">
-          <options>
-            <%= option_set_hash_as_xml(set.to_hash, set.max_depth) %>
-          </options>
-        </instance>
-      <% end %>
-
       <itext>
         <% configatron.preferred_locales.each do |lang| %>
           <translation lang="<%= @style == 'commcare' ? lang : language_name(lang) %>">
@@ -61,8 +53,6 @@
                 <% end %>
               <% end %>
             <% end %>
-
-            <%= odk_option_translations(@form, lang) %>
 
             <%# incomplete response question translations %>
             <% if allow_incomplete? %>
@@ -113,27 +103,11 @@
     <% @form.visible_questionings.each do |qing| %>
       <% qing.subquestions.each do |subq| %>
         <% next if subq.odk_tag.nil? %>
-        <%= odk_input_tag(subq) do %>
+        <%= odk_input_tag(qing, subq) do %>
           <label ref="jr:itext('<%= subq.odk_code %>:label')"/>
           <% unless @style == 'commcare' %>
             <hint ref="jr:itext('<%= subq.odk_code %>:hint')"/>
           <% end %>
-
-          <%# OptionSet stuff %>
-          <% if subq.multi_level? %>
-            <itemset nodeset="<%= multi_level_option_nodeset_ref(qing, subq) %>">
-              <label ref="jr:itext(k)"/>
-              <value ref="id"/>
-            </itemset>
-          <% elsif set = subq.option_set %>
-            <% set.options.each do |opt| %>
-              <item>
-                <label ref="jr:itext('o<%= opt.id %>')"/>
-                <value><%= opt.id %></value>
-              </item>
-            <% end %>
-          <% end %>
-
         <% end %>
       <% end %>
     <% end %>

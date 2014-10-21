@@ -4,11 +4,12 @@ module OdkHelper
 
   # given a Subquestion object, builds an odk <input> tag
   # calls the provided block to get the tag content
-  def odk_input_tag(subq, &block)
+  def odk_input_tag(qing, cur_subq, &block)
     opts = {}
-    opts[:ref] = "/data/#{subq.odk_code}"
-    opts[:rows] = 5 if subq.qtype_name == "long_text"
-    content_tag(subq.odk_tag, opts, &block)
+    opts[:ref] = "/data/#{cur_subq.odk_code}"
+    opts[:rows] = 5 if cur_subq.qtype_name == "long_text"
+    opts[:query] = multi_level_option_nodeset_ref(qing, cur_subq) if qing.qtype.name == 'select_one'
+    content_tag(cur_subq.odk_tag, opts, &block)
   end
 
   # if a question is required, then determine the appropriate value based off of if the form allows incomplete responses
@@ -53,48 +54,16 @@ module OdkHelper
   end
 
   # For the given subquestion, returns an xpath expression for the itemset tag nodeset attribute.
-  # E.g. instance('option_set_16')/options/o or
-  #      instance('option_set_16')/options/o[id=/data/q2_1]/o or
-  #      instance('option_set_16')/options/o[id=/data/q2_1]/o[id=/data/q2_2]/o
+  # E.g. instance('os16')/root/item or
+  #      instance('os16')/root/item[parent_id=/data/q2_1] or
+  #      instance('os16')/root/item[parent_id=/data/q2_2]
   def multi_level_option_nodeset_ref(qing, cur_subq)
-    "instance('option_set_#{qing.option_set_id}')/options/".tap do |ref|
-      qing.subquestions.each do |subq|
-        ref << 'o'
-        if subq == cur_subq
-          break
-        else
-          ref << "[id=/data/#{subq.odk_code}]/"
-        end
-      end
+    filter = if cur_subq.first_rank?
+      ''
+    else
+      code = cur_subq.odk_code(previous: true)
+      "[parent_id=/data/#{code}]"
     end
-  end
-
-  # Renders the given hash (returned by ancestry's arrange_serializable) as XML for use with ODK, etc.
-  def option_set_hash_as_xml(nodes, max_depth, depth = 0, first_child = true)
-    # Special handling for root node (depth = 0)
-    return option_set_hash_as_xml(nodes.first['children'], max_depth, 1) if depth == 0
-
-    nodes.each_with_index.map do |node, i|
-      xml = "<id>#{node['option_id']}</id><k>o#{node['option_id']}</k>"
-      if node['children'].present?
-        xml << option_set_hash_as_xml(node['children'], max_depth, depth + 1, first_child && i == 0)
-      else
-        # If node has no children and we're on the first branch of the tree,
-        # we need to ensure the branch extends to the max depth of the tree. Otherwise ODK complains.
-        if first_child && (depth_diff = max_depth - depth) > 0
-          dummy_nodes = ''
-          depth_diff.times do
-            dummy_nodes = "<o><id></id><k>blankoption</k>#{dummy_nodes}</o>"
-          end
-          xml << dummy_nodes
-        end
-      end
-      content_tag(:o, xml.html_safe)
-    end.join.html_safe
-  end
-
-  def odk_option_translations(form, lang)
-    content_tag(:text, tag(:value), id: 'blankoption') +
-      form.all_options.map{ |o| %{<text id="o#{o.id}"><value>#{o.name(lang, strict: false)}</value></text>} }.join.html_safe
+    "instance('os#{qing.option_set_id}')/root/item#{filter}"
   end
 end

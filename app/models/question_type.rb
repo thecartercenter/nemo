@@ -8,7 +8,7 @@ class QuestionType
     {:name => "integer", :odk_name => "int", :odk_tag => "input", :properties => %w(form_printable smsable numeric headerable)},
     {:name => "decimal", :odk_name => "decimal", :odk_tag => "input", :properties => %w(form_printable smsable numeric headerable)},
     {:name => "location", :odk_name => "geopoint", :odk_tag => "input", :properties => %w()},
-    {:name => "select_one", :odk_name => "select1", :odk_tag => "select1", :properties => %w(form_printable has_options smsable headerable)},
+    {:name => "select_one", :odk_name => "string", :odk_tag => "input", :properties => %w(form_printable has_options smsable headerable)},
     {:name => "select_multiple", :odk_name => "select", :odk_tag => "select", :properties => %w(form_printable has_options smsable headerable)},
     {:name => "datetime", :odk_name => "dateTime", :odk_tag => "input", :properties => %w(form_printable temporal has_timezone smsable headerable)},
     {:name => "date", :odk_name => "date", :odk_tag => "input", :properties => %w(form_printable temporal smsable headerable)},

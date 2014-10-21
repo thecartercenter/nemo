@@ -11,34 +11,6 @@
           <q3/>
         </data>
       </instance>
-      <instance id="option_set_2">
-        <options>
-          <o>
-            <id>3</id>
-            <k>o3</k>
-            <o>
-              <id>4</id>
-              <k>o4</k>
-            </o>
-            <o>
-              <id>5</id>
-              <k>o5</k>
-            </o>
-          </o>
-          <o>
-            <id>6</id>
-            <k>o6</k>
-            <o>
-              <id>7</id>
-              <k>o7</k>
-            </o>
-            <o>
-              <id>8</id>
-              <k>o8</k>
-            </o>
-          </o>
-        </options>
-      </instance>
       <itext>
         <translation lang="English">
           <text id="q1:label">
@@ -65,70 +37,27 @@
           <text id="q3:hint">
             <value>Hint 3</value>
           </text>
-          <text id="blankoption">
-            <value/>
-          </text>
-          <text id="o1">
-            <value>Cat</value>
-          </text>
-          <text id="o2">
-            <value>Dog</value>
-          </text>
-          <text id="o3">
-            <value>Animal</value>
-          </text>
-          <text id="o4">
-            <value>Cat</value>
-          </text>
-          <text id="o5">
-            <value>Dog</value>
-          </text>
-          <text id="o6">
-            <value>Plant</value>
-          </text>
-          <text id="o7">
-            <value>Tulip</value>
-          </text>
-          <text id="o8">
-            <value>Oak</value>
-          </text>
         </translation>
       </itext>
-      <bind nodeset="/data/q1" type="select1"/>
-      <bind nodeset="/data/q2_1" type="select1"/>
-      <bind nodeset="/data/q2_2" type="select1"/>
+      <bind nodeset="/data/q1" type="string"/>
+      <bind nodeset="/data/q2_1" type="string"/>
+      <bind nodeset="/data/q2_2" type="string"/>
       <bind nodeset="/data/q3" type="int"/>
     </model>
   </h:head>
   <h:body>
-    <select1 ref="/data/q1">
+    <input query="instance('os1')/root/item" ref="/data/q1">
       <label ref="jr:itext('q1:label')"/>
       <hint ref="jr:itext('q1:hint')"/>
-      <item>
-        <label ref="jr:itext('o1')"/>
-        <value>1</value>
-      </item>
-      <item>
-        <label ref="jr:itext('o2')"/>
-        <value>2</value>
-      </item>
-    </select1>
-    <select1 ref="/data/q2_1">
+    </input>
+    <input query="instance('os2')/root/item" ref="/data/q2_1">
       <label ref="jr:itext('q2_1:label')"/>
       <hint ref="jr:itext('q2_1:hint')"/>
-      <itemset nodeset="instance('option_set_2')/options/o">
-        <label ref="jr:itext(k)"/>
-        <value ref="id"/>
-      </itemset>
-    </select1>
-    <select1 ref="/data/q2_2">
+    </input>
+    <input query="instance('os2')/root/item[parent_id=/data/q2_1]" ref="/data/q2_2">
       <label ref="jr:itext('q2_2:label')"/>
       <hint ref="jr:itext('q2_2:hint')"/>
-      <itemset nodeset="instance('option_set_2')/options/o[id=/data/q2_1]/o">
-        <label ref="jr:itext(k)"/>
-        <value ref="id"/>
-      </itemset>
-    </select1>
+    </input>
     <input ref="/data/q3">
       <label ref="jr:itext('q3:label')"/>
       <hint ref="jr:itext('q3:hint')"/>
