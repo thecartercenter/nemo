@@ -152,8 +152,9 @@ class Form < ActiveRecord::Base
     OptionSet.all_options_for_sets(questions.map(&:option_set_id).compact)
   end
 
-  def all_first_level_options
-    OptionSet.all_options_for_sets(questions.map(&:option_set_id).compact, first_level_only: true)
+  # Gets all first level option nodes with options eagerly loaded.
+  def all_first_level_option_nodes
+    OptionSet.first_level_option_nodes_for_sets(questions.map(&:option_set_id).compact)
   end
 
   def max_rank
