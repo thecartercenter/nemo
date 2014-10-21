@@ -50,40 +50,31 @@ class ItemsetsFormAttachment
       Dir[File.join(priv_dir, 'itemsets-*.csv')].each{ |f| File.unlink(f) }
 
       CSV.open(priv_path, 'wb') do |csv|
-        width = generate_header_row(csv)
-        parent_ref_offset = 0 # Need to maintain this as we go so we know which column to start writing parent references.
+        generate_header_row(csv)
         form.option_sets.each do |os|
-          generate_subtree(os.arrange_with_options, [], csv, parent_ref_offset, width)
-          parent_ref_offset += os.level_count - 1 if os.multi_level?
+          generate_subtree(os.arrange_with_options, csv)
         end
       end
     end
 
-    # Generates CSV header. Returns number of columns.
+    # Generates CSV header.
     def generate_header_row(csv)
       row = ['list_name','name']
       row += configatron.preferred_locales.map{ |l| "label::#{language_name(l)}" }
-
-      form.option_sets.select(&:multi_level?).each do |os|
-        # We need to add codes for the first N-1 option levels, of the form osM_levN where M is the option set ID.
-        row += (1...os.level_count).to_a.map{ |n| "os#{os.id}_lev#{n}" }
-      end
+      row += %w(parent_id)
       csv << row
-      row.size
     end
 
-    def generate_subtree(subtree, ancestors, csv, parent_ref_offset, total_width)
+    def generate_subtree(subtree, csv)
       subtree.each do |node, children|
         unless node.is_root?
-          row = ["os#{node.option_set_id}", "o#{node.option_id}"]
-          row += configatron.preferred_locales.map{ |l| node.option.name(l) }
-          row += [nil] * parent_ref_offset
-          row += ancestors.map{ |n| "o#{n.option_id}" } # Parent references
-          row += [nil] * (total_width - row.size)
+          row = ["os#{node.option_set_id}", "on#{node.id}"]
+          row += configatron.preferred_locales.map{ |l| node.option.name(l) } # Names
+          row << (node.depth > 1 ? "on#{node.parent_id}" : nil) # Node ID and parent node ID (unless parent is root)
           csv << row
         end
 
-        generate_subtree(children, ancestors + [node], csv, parent_ref_offset, total_width) unless children.empty?
+        generate_subtree(children, csv) unless children.empty?
       end
     end
   end

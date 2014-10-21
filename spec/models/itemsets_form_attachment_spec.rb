@@ -94,29 +94,29 @@ describe ItemsetsFormAttachment do
         @ifa.send(:generate!)
         expect(@ifa.send(:file_contents)).to eq [
           # Level names are repeated b/c each set is distinct. Just a coincidence the names are same here.
-          'list_name,name,label::English,os1_lev1,os1_lev2,os3_lev1',
-          'os1,o1,Animal,,,',
-          'os1,o2,Vertebrate,o1,,',
-          'os1,o3,Cat,o1,o2,',
-          'os1,o4,Dog,o1,o2,',
-          'os1,o5,Invertebrate,o1,,',
-          'os1,o6,Lobster,o1,o5,',
-          'os1,o7,Jellyfish,o1,o5,',
-          'os1,o8,Plant,,,',
-          'os1,o9,Tree,o8,,',
-          'os1,o10,Oak,o8,o9,',
-          'os1,o11,Pine,o8,o9,',
-          'os1,o12,Flower,o8,,',
-          'os1,o13,Tulip,o8,o12,',
-          'os1,o14,Daisy,o8,o12,',
-          'os2,o15,"Cat, Large",,,',
-          'os2,o16,Dog,,,',
-          'os3,o17,Animal,,,',
-          'os3,o18,Cat,,,o17',
-          'os3,o19,Dog,,,o17',
-          'os3,o20,Plant,,,',
-          'os3,o21,Tulip,,,o20',
-          'os3,o22,Oak,,,o20',
+          'list_name,name,label::English,parent_id',
+          'os1,on2,Animal,',
+          'os1,on3,Vertebrate,on2',
+          'os1,on4,Cat,on3',
+          'os1,on5,Dog,on3',
+          'os1,on6,Invertebrate,on2',
+          'os1,on7,Lobster,on6',
+          'os1,on8,Jellyfish,on6',
+          'os1,on9,Plant,',
+          'os1,on10,Tree,on9',
+          'os1,on11,Oak,on10',
+          'os1,on12,Pine,on10',
+          'os1,on13,Flower,on9',
+          'os1,on14,Tulip,on13',
+          'os1,on15,Daisy,on13',
+          'os2,on17,"Cat, Large",',
+          'os2,on18,Dog,',
+          'os3,on20,Animal,',
+          'os3,on21,Cat,on20',
+          'os3,on22,Dog,on20',
+          'os3,on23,Plant,',
+          'os3,on24,Tulip,on23',
+          'os3,on25,Oak,on23',
           ''
         ].join("\n")
       end
@@ -134,13 +134,13 @@ describe ItemsetsFormAttachment do
       it 'should build file with correct contents' do
         @ifa.send(:generate!)
         expect(@ifa.send(:file_contents)).to eq [
-          'list_name,name,label::English,label::Français,os1_lev1',
-          'os1,o1,Animal,Animale,',
-          'os1,o2,Cat,,o1',
-          'os1,o3,Dog,,o1',
-          'os1,o4,Plant,Plante,',
-          'os1,o5,Tulip,,o4',
-          'os1,o6,Oak,,o4',
+          'list_name,name,label::English,label::Français,parent_id',
+          'os1,on2,Animal,Animale,',
+          'os1,on3,Cat,,on2',
+          'os1,on4,Dog,,on2',
+          'os1,on5,Plant,Plante,',
+          'os1,on6,Tulip,,on5',
+          'os1,on7,Oak,,on5',
           ''
         ].join("\n")
       end
