@@ -122,6 +122,44 @@ describe ItemsetsFormAttachment do
       end
     end
 
+    context 'for uneven multilevel sets' do
+      before do
+        @os1 = create(:option_set, super_multi_level: true)
+        @os2 = create(:option_set, multi_level: true)
+
+        # Make the sets uneven so 'None' must be inserted.
+        @os1.root_node.c[1].children.each{ |c| c.destroy } # Delete all Plant's children
+        @os2.root_node.c[0].children.each{ |c| c.destroy } # Delete Cat and Dog
+
+        allow(@form).to receive(:option_sets).and_return([@os1, @os2])
+      end
+
+      it 'should build file with correct contents' do
+        @ifa.send(:generate!)
+        expect(@ifa.send(:file_contents)).to eq [
+          # Level names are repeated b/c each set is distinct. Just a coincidence the names are same here.
+          'list_name,name,label::English,parent_id',
+          'os1,on2,Animal,',
+          'os1,on3,Vertebrate,on2',
+          'os1,on4,Cat,on3',
+          'os1,on5,Dog,on3',
+          'os1,on6,Invertebrate,on2',
+          'os1,on7,Lobster,on6',
+          'os1,on8,Jellyfish,on6',
+          'os1,on9,Plant,',
+          'os1,none,[None],on9',
+          'os1,none,[None],none',
+          'os2,on17,Animal,',
+          'os2,none,[None],on17',
+          'os2,on20,Plant,',
+          'os2,on21,Tulip,on20',
+          'os2,on22,Oak,on20',
+          ''
+        ].join("\n")
+
+      end
+    end
+
     context 'for muliple languages' do
       before do
         configatron.preferred_locales = [:en, :fr]

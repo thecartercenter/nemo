@@ -52,7 +52,7 @@ class ItemsetsFormAttachment
       CSV.open(priv_path, 'wb') do |csv|
         generate_header_row(csv)
         form.option_sets.each do |os|
-          generate_subtree(os.arrange_with_options, csv)
+          generate_subtree(os.arrange_with_options, csv, os.max_depth)
         end
       end
     end
@@ -65,16 +65,34 @@ class ItemsetsFormAttachment
       csv << row
     end
 
-    def generate_subtree(subtree, csv)
+    def generate_subtree(subtree, csv, max_depth, depth = 0)
       subtree.each do |node, children|
-        unless node.is_root?
-          row = ["os#{node.option_set_id}", "on#{node.id}"]
-          row += configatron.preferred_locales.map{ |l| node.option.name(l) } # Names
-          row << (node.depth > 1 ? "on#{node.parent_id}" : nil) # Node ID and parent node ID (unless parent is root)
-          csv << row
-        end
+        csv << option_row(node) unless node.is_root?
 
-        generate_subtree(children, csv) unless children.empty?
+        # If no kids, we must add [None](s) if we are not yet at max depth.
+        if children.empty?
+          csv << none_row(node, type: :child) if depth + 1 < max_depth
+          csv << none_row(node, type: :grandchild) if depth + 1 < max_depth - 1
+        else
+          generate_subtree(children, csv, max_depth, depth + 1) unless children.empty?
+        end
       end
+    end
+
+    # Generates a CSV row for a normal node.
+    def option_row(node)
+      row = ["os#{node.option_set_id}", "on#{node.id}"]
+      row += configatron.preferred_locales.map{ |l| node.option.name(l) } # Names
+      row << (node.depth > 1 ? "on#{node.parent_id}" : nil) # Node ID and parent node ID (unless parent is root)
+      row
+    end
+
+    # Generates a 'none' CSV row for uneven option sets.
+    # options[:type] - Whether this is a child or (great)grandchild of the last non-None node.
+    def none_row(node, options)
+      row = ["os#{node.option_set_id}", 'none']
+      row += configatron.preferred_locales.map{ |l| "[#{I18n.t('common.none', locale: l)}]" }
+      row << (options[:type] == :child ? "on#{node.id}" : 'none')
+      row
     end
   end
