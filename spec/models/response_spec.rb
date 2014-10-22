@@ -122,5 +122,27 @@ describe Response do
         @response.answer_sets = new_answers
       end
     end
+
+    context 'updating with validation error' do
+      before do
+        @form = create(:form, question_types: %w(select_one integer))
+        @form.questionings[1].update_attributes(required: true) # This will lead to our validation error.
+        @qings = @form.questionings
+        @cat = @qings[0].options.first
+
+        # Create initial response.
+        @response = create(:response, form: @form, answer_values: ['Cat', '1'])
+      end
+
+      it 'should set validation error and leave answers intact' do
+        @response.answer_sets = {
+          '0' => { questioning_id: @qings[0].id, answers: { '0' => { option_id: @cat.id } } },
+          '1' => { questioning_id: @qings[1].id, value: '' } # Should not be blank.
+        }
+        @response.save
+        expect(@response.valid?).to be false
+        expect(@response.reload.answers[0].option_id).to eq @cat.id
+      end
+    end
   end
 end
