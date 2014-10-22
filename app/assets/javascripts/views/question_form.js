@@ -53,7 +53,7 @@
 
   // If previously added new tag input, remove it
   klass.prototype.remove_tag = function(item) {
-    if (item.id == null) {
+    if (item.id == null && $.inArray(item, $('#question_tag_ids').tokenInput('get')) == -1) {
       $('input[name="question[tags_attributes][][name]"][value="'+item.name+'"]').remove();
     }
   };
