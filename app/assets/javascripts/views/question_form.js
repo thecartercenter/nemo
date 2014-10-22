@@ -26,16 +26,36 @@
       self.option_set_created(option_set);
     });
 
-    $('#question_tag_ids').tokenInput(self.params.suggest_tags_path + '.json', {
+    $('#question_tag_ids').tokenInput(params.suggest_tags_path + '.json', {
       theme: 'elmo',
       jsonContainer: 'tags',
       hintText: I18n.t('tag.type_to_add_new'),
       noResultsText: I18n.t('tag.none_found'),
       searchingText: I18n.t('tag.searching'),
       resultsFormatter: self.format_token_result,
-      preventDuplicates: true,
-      prePopulate: self.params.question_tags,
-    })
+      prePopulate: params.question_tags,
+      onAdd: function(item) { self.add_tag(item, params.mission_id) },
+      onDelete: self.remove_tag,
+    });
+  };
+
+  // If tag doesn't already exist, append hidden inputs to add it via nested attributes
+  klass.prototype.add_tag = function(item, mission_id) {
+    var selector = 'input[name="question[tags_attributes][][name]"][value="'+item.name+'"]';
+    // if new item (null id) and hasn't already been added to this page
+    if (item.id == null && $(selector).length == 0) {
+      $('.question_form').append(
+        '<input type="hidden" name="question[tags_attributes][][name]" value="'+item.name+'">' +
+        '<input type="hidden" name="question[tags_attributes][][mission_id]" value="'+mission_id+'">'
+      );
+    }
+  };
+
+  // If previously added new tag input, remove it
+  klass.prototype.remove_tag = function(item) {
+    if (item.id == null) {
+      $('input[name="question[tags_attributes][][name]"][value="'+item.name+'"]').remove();
+    }
   };
 
   // returns the html to insert in the token input result list
@@ -44,9 +64,6 @@
     // if this is the new placeholder, add a string about that
     if (item.id == null) {
       details = ' <span class="details create_new">[' + I18n.t('tag.new_tag') + ']</span>';
-
-      // set id to something (otherwise it doesn't get added to the field's value)
-      item.id = item.name;
     } else
       details = '';
 
