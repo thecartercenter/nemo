@@ -238,6 +238,11 @@ class Question < ActiveRecord::Base
     option_set.present? ? option_set.option_levels : []
   end
 
+  # Convert tag string from TokenInput to array, process tags, and replace new tags in params with tag ids
+  def process_params(params)
+    params[:question][:tag_ids] = process_tags(params[:question][:tag_ids].split(','))
+  end
+
   private
 
     def code_unique_per_mission
@@ -270,4 +275,17 @@ class Question < ActiveRecord::Base
         self.maxstrictly = nil
       end
     end
+
+    # Create tags that don't exist. Tag name will be given as id if tag doesn't already exist
+    def process_tags(tag_ids = self.tag_ids)
+      tag_ids.map do |tag_id|
+        if tag_id.to_i == 0 # not a number TODO: What if tag is a number?
+          new_tag = Tag.create(name: tag_id, mission_id: mission_id)
+          tag_id = new_tag.id
+        else
+          tag_id
+        end
+      end
+    end
+
 end

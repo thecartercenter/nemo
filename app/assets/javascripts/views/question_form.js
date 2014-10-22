@@ -36,7 +36,7 @@
       preventDuplicates: true,
       prePopulate: self.params.question_tags,
     })
-  }
+  };
 
   // returns the html to insert in the token input result list
   klass.prototype.format_token_result = function(item) { var self = this;
@@ -44,6 +44,9 @@
     // if this is the new placeholder, add a string about that
     if (item.id == null) {
       details = ' <span class="details create_new">[' + I18n.t('tag.new_tag') + ']</span>';
+
+      // set id to something (otherwise it doesn't get added to the field's value)
+      item.id = item.name;
     } else
       details = '';
 

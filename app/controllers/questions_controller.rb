@@ -34,12 +34,11 @@ class QuestionsController < ApplicationController
   end
 
   def create
-    process_tag_string
     create_or_update
   end
 
   def update
-    process_tag_string
+    @question.process_params(params)
 
     # assign attribs and validate now so that normalization runs before authorizing and saving
     @question.assign_attributes(params[:question])
@@ -73,11 +72,6 @@ class QuestionsController < ApplicationController
       # this method lives in the QuestionFormable concern
       setup_question_form_support_objs
       render(:form)
-    end
-
-    # Convert tag string from TokenInput to array
-    def process_tag_string
-      params[:question][:tag_ids] = params[:question][:tag_ids].split(',')
     end
 
 end

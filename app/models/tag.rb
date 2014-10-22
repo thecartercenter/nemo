@@ -4,7 +4,7 @@ class Tag < ActiveRecord::Base
   belongs_to :mission
   has_many :taggings, dependent: :destroy
   has_many :questions, through: :taggings
-  attr_accessible :is_standard, :name, :standard_id
+  attr_accessible :is_standard, :name, :standard_id, :mission_id
 
   before_save { |tag| tag.name.downcase! }
   after_save(:invalidate_cache)
@@ -17,7 +17,7 @@ class Tag < ActiveRecord::Base
   def self.suggestions(mission, query)
     # fetch all mission tags from the cache
     mission_id = mission ? mission.id : 'std'
-    tags = Rails.cache.fetch("mission_tags/#{mission_id}", :expires_in => 2.minutes) do
+    tags = Rails.cache.fetch("mission_tags/#{mission_id}", expires_in: 2.minutes) do
       Tag.unscoped.for_mission(mission)
     end
 
@@ -44,7 +44,7 @@ class Tag < ActiveRecord::Base
 
     # if there was no exact match, we append a 'new tag' placeholder
     unless exact_match
-      matches << Tag.new(:name => query)
+      matches << Tag.new(name: query)
     end
 
     matches
