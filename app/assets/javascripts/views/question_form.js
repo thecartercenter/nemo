@@ -44,9 +44,11 @@
     var selector = 'input[name="question[tags_attributes][][name]"][value="'+item.name+'"]';
     // if new item (null id) and hasn't already been added to this page
     if (item.id == null && $(selector).length == 0) {
+      var is_standard = (mission_id == '' ? '1' : '0');
       $('.question_form').append(
         '<input type="hidden" name="question[tags_attributes][][name]" value="'+item.name+'">' +
-        '<input type="hidden" name="question[tags_attributes][][mission_id]" value="'+mission_id+'">'
+        '<input type="hidden" name="question[tags_attributes][][mission_id]" value="'+mission_id+'">',
+        '<input type="hidden" name="question[tags_attributes][][is_standard]" value="'+is_standard+'">'
       );
     }
   };
