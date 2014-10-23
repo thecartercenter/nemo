@@ -1,35 +1,18 @@
-<%# render the answer value based on question type. we include machine readable value in
-    data-val so that conditions can still be eval'd in JS %>
-<% case type = answer_set.qtype.name
-   when 'select_one' %>
-
-  <%= render('select_one', answer_set: answer_set) %>
-
-<% when 'select_multiple' %>
-
-  <%= content_tag(:div, answer_set.choices.map{|c| c.option.name}.join('<br/>').html_safe, :class => 'ro-val', :'data-val' => answer_set.choices.map(&:option_id).to_json) %>
-
-<% when 'datetime', 'date', 'time' %>
-
-  <% format = type == "time" ? :time_only : :default %>
-  <% val = answer_set.send("#{type}_value") %>
-
-  <%# output time value in human readable and machine readable formats %>
-  <%= content_tag(:div, val.nil? ? '' : l(val, :format => format), :class => 'ro-val', :'data-val' => val.nil? ? '' : val.to_s(:"std_#{type}")) %>
-
-<% when 'integer', 'decimal' %>
-
-  <%= content_tag(:div, answer_set.value, :class => 'ro-val', :'data-val' => answer_set.value) %>
-
-<% when 'text', 'long_text' %>
-
-  <%# show search excerpt (highlights search terms) if exists for this questioning, else just show plain answer value %>
-  <%# no need to output data-val here since same as human readable %>
-  <%= content_tag(:div, excerpt_if_exists(@response, answer_set.first)) %>
-
-<% else %>
-
-  <%# no need to output data-val here since same as human readable %>
-  <%= content_tag(:div, answer_set.value) %>
-
-<% end # case %>
+<%# We know this is a select-one question. %>
+<div class="select-one-answers">
+  <% unless answer_set.blank? %>
+    <% answer_set.answers.each_with_index do |answer, i| %>
+      <div>
+        <div class="level-name"><%= answer.level_name %></div>
+        <div class="option-name">
+          <%# Show 'blank' for partially empty multilevel answers. %>
+          <% if answer.blank? %>
+            <i>[<%= t('common.blank') %>]</i>
+          <% else %>
+            <%= answer.option.name %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+</div>
