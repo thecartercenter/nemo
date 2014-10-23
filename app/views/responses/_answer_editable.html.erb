@@ -1,13 +1,10 @@
-<%= hidden_field_tag("response[answers][#{index}][questioning_id]", answer.questioning_id) %>
-<%= hidden_field_tag("response[answers][#{index}][relevant]", answer.relevant, class: "relevant") %>
-
 <%# show the error messages without keys %>
 <%= content_tag(:div, answer.errors.to_hash.values.join(', '), class: 'form-errors') unless answer.errors.empty? %>
 
 <% case type = answer.qtype.name
    when "select_one" %>
 
-  <%= select_tag("response[answers][#{index}][option_id]",
+  <%= select_tag("response[answers_attributes][#{index}][option_id]",
     options_from_collection_for_select(answer.options, 'id', 'name', answer.option_id),
     include_blank: true, class: 'form-control') %>
 
@@ -20,12 +17,12 @@
 
 <% when "datetime", "date", "time" %>
 
-  <%= send("#{type}_select", "response[answers][#{index}]", :"#{type}_value", include_blank: true, object: answer, class: "form-control") %>
+  <%= send("#{type}_select", "response[answers_attributes][#{index}]", :"#{type}_value", include_blank: true, object: answer, class: "form-control") %>
 
 <% else %>
 
   <%# textarea or input, depending on type %>
-  <%= send(type == 'long_text' ? 'text_area_tag' : 'text_field_tag', "response[answers][#{index}][value]", answer.value,
+  <%= send(type == 'long_text' ? 'text_area_tag' : 'text_field_tag', "response[answers_attributes][#{index}][value]", answer.value,
     class: "qtype_#{type} form-control") %>
 
   <% if type == 'location' %>
@@ -33,3 +30,5 @@
   <% end %>
 
 <% end %>
+
+<%= render('answer_hidden_fields', answer: answer, index: index) %>

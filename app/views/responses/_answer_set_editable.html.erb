@@ -5,11 +5,11 @@
   <% answer_set.answers.each_with_index do |answer, i| %>
     <div>
       <div class="level-name"><%= answer.level_name %></div>
-      <%= select_tag("response[answers][#{index}_#{i}][option_id]",
+      <%= select_tag("response[answers_attributes][#{index}_#{i}][option_id]",
         options_from_collection_for_select(answer_set.options_for(answer), 'id', 'name', answer.option_id),
         include_blank: true, class: 'form-control') %>
-      <%= hidden_field_tag("response[answers][#{index}_#{i}][questioning_id]", answer.questioning_id) %>
-      <%= hidden_field_tag("response[answers][#{index}_#{i}][relevant]", answer.relevant, class: "relevant") %>
+      <%= render('answer_hidden_fields', answer: answer, index: "#{index}_#{i}") %>
+      <%= hidden_field_tag("response[answers_attributes][#{index}_#{i}][rank]", answer.rank) %>
     </div>
   <% end %>
 </div>

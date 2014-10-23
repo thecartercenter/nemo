@@ -25,11 +25,11 @@
 
   <%# show search excerpt (highlights search terms) if exists for this questioning, else just show plain answer value %>
   <%# no need to output data-val here since same as human readable %>
-  <%= content_tag(:div, excerpt_if_exists(@response, answer)) %>
+  <%= content_tag(:div, excerpt_if_exists(@response, answer), class: 'ro-val') %>
 
 <% else %>
 
   <%# no need to output data-val here since same as human readable %>
-  <%= content_tag(:div, answer.value) %>
+  <%= content_tag(:div, answer.value, class: 'ro-val') %>
 
 <% end # case %>

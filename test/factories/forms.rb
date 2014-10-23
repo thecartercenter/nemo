@@ -14,14 +14,16 @@ FactoryGirl.define do
     questionings do
       found_select = false
       question_types.each_with_index.map do |qt, idx|
+        qtype = QuestionType[qt == 'multi_level_select_one' ? 'select_one' : qt]
+
         question_attribs = {
-          qtype_name: qt,
+          qtype_name: qtype.name,
           mission: mission,
-          use_multilevel_option_set: use_multilevel_option_set
+          use_multilevel_option_set: use_multilevel_option_set || qt == 'multi_level_select_one'
         }
 
         # assign the options to the question if appropriate
-        if QuestionType[qt].has_options? && !found_select && !option_names.nil?
+        if qtype.has_options? && !found_select && !option_names.nil?
           question_attribs[:option_names] = option_names
           found_select = true
         end

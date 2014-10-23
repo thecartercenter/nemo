@@ -45,6 +45,8 @@ class Response < ActiveRecord::Base
   # loads only answers with location info
   scope(:with_location_answers, includes(:location_answers))
 
+  accepts_nested_attributes_for(:answers)
+
   delegate :name, :to => :checked_out_by, :prefix => true
   delegate :visible_questionings, to: :form
 
@@ -54,7 +56,6 @@ class Response < ActiveRecord::Base
 
     Response.where(:checked_out_by_id => user).update_all(:checked_out_at => nil, :checked_out_by_id => nil)
   end
-
 
   # takes a Relation, adds a bunch of selects and joins, and uses find_by_sql to do the actual finding
   # this technique is due to limitations (at the time of dev) in the Relation system
@@ -276,29 +277,6 @@ class Response < ActiveRecord::Base
     @answer_sets ||= visible_questionings.map{ |qing| answer_set_for_questioning(qing) }
   end
 
-  def answer_sets=(params)
-    self.answers_attributes = AnswerSet.answers_attributes_for(params)
-  end
-
-  def answers_attributes=(attribs)
-    # A function that returns a signature for comparison. Works for either Answer objs or hashes.
-    signature_proc = Proc.new{ |a| "#{a[:questioning_id]}--#{a[:rank]}" }
-
-    # Do a match on current and newer ids with the ID as the comparator.
-    answers.compare_by_element(attribs, signature_proc) do |orig, subd|
-      # if both exist, update the original
-      if orig && subd
-        orig.attributes = subd
-      # if submitted is nil, destroy the original
-      elsif subd.nil?
-        answers.delete(orig)
-      # if original is nil, add the new one to this response's array
-      elsif orig.nil?
-        answers.build(subd)
-      end
-    end
-  end
-
   def answer_for_question(question)
     (@answers_by_question ||= answers.index_by(&:question))[question]
   end
@@ -421,6 +399,7 @@ class Response < ActiveRecord::Base
     end
 
     def answer_set_for_questioning(questioning)
+      # If answer set already exists, it will be in the answer_sets_by_questioning hash, else create a new one.
       answer_sets_by_questioning[questioning] || AnswerSet.new(questioning: questioning)
     end
 
