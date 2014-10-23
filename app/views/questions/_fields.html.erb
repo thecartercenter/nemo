@@ -31,7 +31,7 @@
     <% end %>
   </div>
 
-  <%= f.field(:tag_ids) %>
+  <%= f.field(:tag_ids, partial: 'questions/tags') %>
 
   <% unless admin_mode? %>
     <%= f.field(:key, :type => :check_box) %>
