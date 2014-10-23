@@ -118,7 +118,7 @@ div.token-input-dropdown-elmo ul li div.details {
   color: #999;
 }
 
-div.token-input-dropdown-elmo ul li div.details.create_new {
+div.token-input-dropdown-elmo ul li .details.create_new {
   font-style: italic;
 }
 
