@@ -84,28 +84,14 @@ class Answer < ActiveRecord::Base
     option_set.try(:multi_level?) ? option_set.levels[(rank || 1) - 1] : nil
   end
 
-  def choice_for(option)
-    choice_hash[option]
-  end
-
-  def choice_hash(options = {})
-    if !@choice_hash || options[:rebuild]
-      @choice_hash = {}; choices.each{|c| @choice_hash[c.option] = c}
-    end
-    @choice_hash
+  def choices_by_option
+    @choice_hash ||= choices.select(&:checked?).index_by(&:option)
   end
 
   def all_choices
-    # for each option, if we have a matching choice, return it and set it's fake bit to true
-    # otherwise create one and set its fake bit to false
-    options.collect do |o|
-      if c = choice_for(o)
-        c.checked = true
-      else
-        c = choices.new(option: o, checked: false)
-      end
-      c
-    end
+    # for each option, if we have a matching choice, just return it (checked? defaults to true)
+    # otherwise create one and set checked? to false
+    options.map{ |o| choices_by_option[o] || choices.new(option: o, checked: false) }
   end
 
   # if this answer is for a location question and the value is not blank, returns a two element array representing the
