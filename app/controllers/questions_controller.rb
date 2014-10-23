@@ -34,11 +34,18 @@ class QuestionsController < ApplicationController
   end
 
   def create
+    # Convert tag string from TokenInput to array
+    @question.tag_ids = params[:question][:tag_ids].split(',')
+
+    # Convert tags_attributes hidden inputs to create new tags (why doesn't this happen automatically here?)
+    @question.tags_attributes = params[:question][:tags_attributes]
+
     create_or_update
   end
 
   def update
-    @question.process_params(params)
+    # Convert tag string from TokenInput to array
+    params[:question][:tag_ids] = params[:question][:tag_ids].split(',')
 
     # assign attribs and validate now so that normalization runs before authorizing and saving
     @question.assign_attributes(params[:question])

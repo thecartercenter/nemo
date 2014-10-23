@@ -240,11 +240,6 @@ class Question < ActiveRecord::Base
     option_set.present? ? option_set.option_levels : []
   end
 
-  # Convert tag string from TokenInput to array, process tags, and replace new tags in params with tag ids
-  def process_params(params)
-    params[:question][:tag_ids] = params[:question][:tag_ids].split(',')
-  end
-
   private
 
     def code_unique_per_mission
