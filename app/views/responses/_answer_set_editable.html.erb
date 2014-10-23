@@ -1,33 +1,22 @@
-<%= f.hidden_field(:response_id, :index => index) %>
-<%= f.hidden_field(:questioning_id, :index => index) %>
-<%= f.hidden_field(:relevant, :class => "relevant", :index => index) %>
-
 <%# show the error messages without keys %>
 <%= content_tag(:div, answer_set.errors.to_hash.values.join(', '), :class => 'form-errors') unless answer_set.errors.empty? %>
 
-<% case type = answer_set.qtype.name
-   when "select_one" %>
-
-  <%= render('select_one', answer_set: answer_set, f: f, index: index) %>
-
-<% when "select_multiple" %>
-
-  <%# render a checkbox for each possible choice %>
-  <div class="widget">
-    <%= render(:partial => "choice", :locals => {:index => index}, :collection => answer_set.all_choices, :class => "form-control") %>
-  </div>
-
-<% when "datetime", "date", "time" %>
-
-  <%= f.send("#{type}_select", :"#{type}_value", :include_blank => true, :index => index, :class => "form-control") %>
-
-<% else %>
-
-  <%# textarea or input, depending on type %>
-  <%= f.send(type == 'long_text' ? 'text_area' : 'text_field', :value, :class => "qtype_#{type} form-control", :index => index) %>
-
-  <% if type == 'location' %>
-    &nbsp;<%= action_link("edit", "#", :class => "edit_location_link") if form_mode != :show %>
+<div class="select-one-answers">
+  <% answer_set.answers.each_with_index do |answer, i| %>
+    <div>
+      <div class="level-name"><%= answer.level_name %></div>
+      <%= select_tag("response[answers_attributes][#{index}_#{i}][option_id]",
+        options_from_collection_for_select(answer_set.options_for(answer), 'id', 'name', answer.option_id),
+        include_blank: true, class: 'form-control') %>
+      <%= render('answer_hidden_fields', answer: answer, index: "#{index}_#{i}") %>
+      <%= hidden_field_tag("response[answers_attributes][#{index}_#{i}][rank]", answer.rank) %>
+    </div>
   <% end %>
+</div>
 
+<%= javascript_doc_ready do %>
+  new ELMO.Views.SelectOneAnswerSetView({
+    el: $('#qing_<%= answer_set.questioning_id %> .control'),
+    option_set_id: <%=json answer_set.option_set.id %>
+  });
 <% end %>

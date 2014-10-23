@@ -4,11 +4,16 @@ class Answer < ActiveRecord::Base
   belongs_to(:questioning, :inverse_of => :answers)
   belongs_to(:option, :inverse_of => :answers)
   belongs_to(:response, :inverse_of => :answers, :touch => true)
-  has_many(:choices, :dependent => :destroy, :inverse_of => :answer)
+  has_many(:choices, :dependent => :destroy, :inverse_of => :answer, :autosave => true)
 
   before_validation(:clean_locations)
   before_save(:round_ints)
   before_save(:blanks_to_nulls)
+
+  # Remove unchecked choices before saving.
+  before_save do
+    choices.destroy(*choices.reject(&:checked?))
+  end
 
   validates(:value, :numericality => true, :if => ->(a){ a.should_validate?(:numericality) })
 
@@ -16,6 +21,8 @@ class Answer < ActiveRecord::Base
   # since this class really just represents one value
   validate(:min_max, :if => ->(a){ a.should_validate?(:min_max) })
   validate(:required, :if => ->(a){ a.should_validate?(:required) })
+
+  accepts_nested_attributes_for(:choices)
 
   delegate :question, :qtype, :required?, :hidden?, :option_set, :options, :condition, :to => :questioning
     delegate :name, :hint, :to => :question, :prefix => true
@@ -95,26 +102,9 @@ class Answer < ActiveRecord::Base
       if c = choice_for(o)
         c.checked = true
       else
-        c = choices.new(:option => o, :checked => false)
+        c = choices.new(option: o, checked: false)
       end
       c
-    end
-  end
-
-  def all_choices=(params)
-    # create a bunch of temp objects, discarding any unchecked choices
-    submitted = params.values.collect{|p| p[:checked] == '1' ? Choice.new(p) : nil}.compact
-
-    # copy new choices into old objects, creating or deleting if necessary
-    choices.compare_by_element(submitted, Proc.new{|c| c.option_id}) do |orig, subd|
-      # if both exist, do nothing
-      # if submitted is nil, destroy the original
-      if subd.nil?
-        choices.delete(orig)
-      # if original is nil, add the new one to this response's array
-      elsif orig.nil?
-        choices << subd
-      end
     end
   end
 
