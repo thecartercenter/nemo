@@ -58,6 +58,25 @@ describe ItemsetsFormAttachment do
     end
   end
 
+  describe 'empty?' do
+    context 'for form with no option sets' do
+      it 'should be true' do
+        expect(@ifa.empty?).to be true
+      end
+    end
+
+    context 'for regular form' do
+      before do
+        @os1 = create(:option_set, multi_level: true)
+        allow(@form).to receive(:option_sets).and_return([@os1])
+      end
+
+      it 'should be false' do
+        expect(@ifa.empty?).to be false
+      end
+    end
+  end
+
   # Clean with truncation so we can guess IDs
   describe 'generate!', clean_with_truncation: true do
     before do

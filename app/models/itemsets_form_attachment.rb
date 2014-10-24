@@ -20,9 +20,15 @@ class ItemsetsFormAttachment
     (contents = file_contents) ? Digest::MD5.hexdigest(contents) : (raise IOError.new('file not yet generated'))
   end
 
-  # Ensures the file exists. Generates if not.
+  # Ensures the file exists if appropriate. Generates if not.
   def ensure_generated
-    generate! if !form.option_sets.empty? && !File.exists?(priv_path)
+    generate! if !empty? && !File.exists?(priv_path)
+  end
+
+  # True if there is nothing to put in the file.
+  # If true, the file will not be generated, even if ensure_generated is called.
+  def empty?
+    form.option_sets.empty?
   end
 
   private
