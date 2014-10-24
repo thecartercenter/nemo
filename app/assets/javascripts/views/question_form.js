@@ -32,7 +32,8 @@
       hintText: I18n.t('tag.type_to_add_new'),
       noResultsText: I18n.t('tag.none_found'),
       searchingText: I18n.t('tag.searching'),
-      resultsFormatter: self.format_token_result,
+      resultsFormatter: function(item) { return self.format_token_result(item, true) },
+      tokenFormatter: function(item) { return self.format_token_result(item, false) },
       prePopulate: params.question_tags,
       onAdd: function(item) { self.add_tag(item, params.mission_id) },
       onDelete: self.remove_tag,
@@ -47,7 +48,7 @@
       var is_standard = (mission_id == '' ? '1' : '0');
       $('.question_form').append(
         '<input type="hidden" name="question[tags_attributes][][name]" value="'+item.name+'">' +
-        '<input type="hidden" name="question[tags_attributes][][mission_id]" value="'+mission_id+'">',
+        '<input type="hidden" name="question[tags_attributes][][mission_id]" value="'+mission_id+'">' +
         '<input type="hidden" name="question[tags_attributes][][is_standard]" value="'+is_standard+'">'
       );
     }
@@ -61,14 +62,16 @@
   };
 
   // returns the html to insert in the token input result list
-  klass.prototype.format_token_result = function(item) { var self = this;
+  klass.prototype.format_token_result = function(item, spacer) { var self = this;
+    spacer = spacer ? '<i class="fa fa-fw"></i> ' : '';
     // if this is the new placeholder, add a string about that
     if (item.id == null) {
-      return '<li><i class="fa fa-fw"></i> ' + item.name + ' <span class="details create_new">[' + I18n.t('tag.new_tag') + ']</span>' + '</li>';
+      return '<li>' + spacer + item.name +
+          ' <span class="details create_new">[' + I18n.t('tag.new_tag') + ']</span>' + '</li>';
     } else if (item.mission_id == null) {
       return '<li><i class="fa fa-fw fa-certificate"></i> ' + item.name + '</li>';
     } else {
-      return '<li><i class="fa fa-fw"></i> ' + item.name + '</li>';
+      return '<li>' + spacer + item.name + '</li>';
     }
   };
 
