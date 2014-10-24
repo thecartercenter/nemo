@@ -1,8 +1,10 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <manifest xmlns="http://openrosa.org/xforms/xformsManifest">
-  <mediaFile>
-    <filename>itemsets.csv</filename>
-    <hash><%= @ifa.md5 %></hash>
-    <downloadUrl><%= "#{request.scheme}://#{request.host_with_port}/#{@ifa.path}" %></downloadUrl>
-  </mediaFile>
+  <% unless @ifa.empty? %>
+    <mediaFile>
+      <filename>itemsets.csv</filename><%# This is the filename ODK will create on the device. %>
+      <hash><%= @ifa.md5 %></hash>
+      <downloadUrl><%= "#{request.scheme}://#{request.host_with_port}/#{@ifa.path}" %></downloadUrl>
+    </mediaFile>
+  <% end %>
 </manifest>

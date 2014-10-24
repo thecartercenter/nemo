@@ -22,7 +22,7 @@ class ItemsetsFormAttachment
 
   # Ensures the file exists if appropriate. Generates if not.
   def ensure_generated
-    generate! if !empty? && !File.exists?(priv_path)
+    generate! if !File.exists?(priv_path)
   end
 
   # True if there is nothing to put in the file.
@@ -51,6 +51,8 @@ class ItemsetsFormAttachment
 
     # Generates the data and saves to file.
     def generate!
+      return if empty?
+
       # Create dir if not exist and clear out old itemsets.
       FileUtils.mkdir_p(priv_dir)
       Dir[File.join(priv_dir, 'itemsets-*.csv')].each{ |f| File.unlink(f) }
