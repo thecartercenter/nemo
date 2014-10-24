@@ -23,6 +23,7 @@ feature 'responses form' do
       select('Dog', from: 'response_answers_attributes_0_option_id')
 
       select('Plant', from: 'response_answers_attributes_1_0_option_id')
+      find("#response_answers_attributes_1_1_option_id option", text: 'Oak')
       select('Oak', from: 'response_answers_attributes_1_1_option_id')
 
       check('response_answers_attributes_2_choices_attributes_0_checked') # Cat
@@ -57,6 +58,7 @@ feature 'responses form' do
       # Check edit mode.
       click_link('Edit Response')
       select('Animal', from: 'response_answers_attributes_1_0_option_id')
+      find("#response_answers_attributes_1_1_option_id option", text: 'Cat')
       select('Cat', from: 'response_answers_attributes_1_1_option_id')
       uncheck('response_answers_attributes_2_choices_attributes_0_checked') # Cat
       check('response_answers_attributes_2_choices_attributes_1_checked') # Dog

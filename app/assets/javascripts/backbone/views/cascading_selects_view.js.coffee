@@ -21,7 +21,7 @@ class ELMO.Views.CascadingSelectsView extends Backbone.View
 
   # Clears all selects after and including the given one.
   clear_selects_after_and_including: (select) ->
-    select.empty()
+    select.empty().html('<option></option>')
     this.clear_selects_after_and_including(next) if next = this.next_select(select)
 
   # Fetches option tags for the given select from the server.
