@@ -32,8 +32,8 @@
       hintText: I18n.t('tag.type_to_add_new'),
       noResultsText: I18n.t('tag.none_found'),
       searchingText: I18n.t('tag.searching'),
-      resultsFormatter: function(item) { return self.format_token_result(item, true) },
-      tokenFormatter: function(item) { return self.format_token_result(item, false) },
+      resultsFormatter: self.format_token_result,
+      tokenFormatter: self.format_token,
       prePopulate: params.question_tags,
       onAdd: function(item) { self.add_tag(item, params.mission_id) },
       onDelete: self.remove_tag,
@@ -62,16 +62,27 @@
   };
 
   // returns the html to insert in the token input result list
-  klass.prototype.format_token_result = function(item, spacer) { var self = this;
-    spacer = spacer ? '<i class="fa fa-fw"></i> ' : '';
+  klass.prototype.format_token_result = function(item) {
     // if this is the new placeholder, add a string about that
     if (item.id == null) {
-      return '<li>' + spacer + item.name +
+      return '<li><i class="fa fa-fw fa-plus-circle"></i> ' + item.name +
           ' <span class="details create_new">[' + I18n.t('tag.new_tag') + ']</span>' + '</li>';
-    } else if (item.mission_id == null) {
+    } else if (item.mission_id == null) { // standard tag
       return '<li><i class="fa fa-fw fa-certificate"></i> ' + item.name + '</li>';
     } else {
-      return '<li>' + spacer + item.name + '</li>';
+      return '<li><i class="fa fa-fw"></i> ' + item.name + '</li>';
+    }
+  };
+
+  // returns the html to display the tokens in the input field
+  klass.prototype.format_token = function(item) {
+    // if this is a new tag, add an icon
+    if (item.id == null) {
+      return '<li><i class="fa fa-plus-circle"></i> ' + item.name + '</li>';
+    } else if (item.mission_id == null) { // standard tag
+      return '<li><i class="fa fa-certificate"></i> ' + item.name + '</li>';
+    } else {
+      return '<li>' + item.name + '</li>';
     }
   };
 
