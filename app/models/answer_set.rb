@@ -6,7 +6,7 @@ class AnswerSet
   delegate :qtype, :required?, :question, :condition, to: :questioning
     delegate :name, :hint, to: :question, prefix: true
     delegate :option_set, to: :question
-      delegate :levels, :multi_level?, to: :option_set
+      delegate :levels, to: :option_set
   delegate :first, to: :answers
     delegate :errors, :choices, :all_choices, :value, :datetime_value, :date_value, :time_value, :response_id, :questioning_id, :relevant, to: :first
     delegate :option_ids_with_no_nils, to: :option_path
@@ -30,6 +30,10 @@ class AnswerSet
     attribs.each{|k,v| instance_variable_set("@#{k}", v)}
 
     ensure_answers
+  end
+
+  def multi_level?
+    option_set.nil? ? false : option_set.multi_level?
   end
 
   # True if all answers are blank.
