@@ -22,6 +22,7 @@ class Questioning < ActiveRecord::Base
            :code,
            :code=,
            :level_count,
+           :level,
            :multi_level?,
            :option_set,
            :option_set=,
@@ -34,10 +35,14 @@ class Questioning < ActiveRecord::Base
            :has_options?,
            :options,
            :all_options,
+           :option_path_to_rank_path,
+           :rank_path_to_option_path,
            :select_options,
            :odk_code,
            :odk_constraint,
            :subquestions,
+           :temporal?,
+           :numeric?,
            to: :question
 
   delegate :published?, to: :form

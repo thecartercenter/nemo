@@ -82,14 +82,13 @@ ActiveRecord::Schema.define(:version => 20141016161831) do
     t.string   "value"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "option_id"
     t.boolean  "is_standard",    :default => false
     t.integer  "standard_id"
     t.integer  "mission_id"
+    t.string   "option_ids"
   end
 
   add_index "conditions", ["mission_id", "standard_id"], :name => "index_conditions_on_mission_id_and_standard_id", :unique => true
-  add_index "conditions", ["option_id"], :name => "conditions_option_id_fk"
   add_index "conditions", ["questioning_id"], :name => "conditions_questioning_id_fk"
   add_index "conditions", ["ref_qing_id"], :name => "conditions_ref_qing_id_fk"
   add_index "conditions", ["standard_id"], :name => "index_conditions_on_standard_id"
@@ -433,7 +432,6 @@ ActiveRecord::Schema.define(:version => 20141016161831) do
 
   add_foreign_key "conditions", "conditions", name: "conditions_standard_id_fk", column: "standard_id"
   add_foreign_key "conditions", "missions", name: "conditions_mission_id_fk"
-  add_foreign_key "conditions", "options", name: "conditions_option_id_fk"
   add_foreign_key "conditions", "questionings", name: "conditions_questioning_id_fk"
   add_foreign_key "conditions", "questionings", name: "conditions_ref_qing_id_fk", column: "ref_qing_id"
 

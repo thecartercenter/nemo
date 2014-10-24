@@ -135,11 +135,6 @@ div.report_body {
 
   .modal-dialog {
     width: 775px;
-    height: 600px;
-
-    .modal-content {
-      height: 500px;
-    }
 
     .modal-body {
       padding: 10px;
@@ -147,8 +142,7 @@ div.report_body {
   }
 
   .report_edit_pane {
-    width: 98%;
-    height: 336px;
+    height: 436px;
     display: none;
     margin-left: 8px;
 

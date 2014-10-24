@@ -1,4 +1,4 @@
-class Report::QuestionAnswerTallyReport < Report::TallyReport
+class Report::AnswerTallyReport < Report::TallyReport
 
   # Called when related OptionSet (and OptionSetChoice) are destroyed.
   # Destroys self if there are no option sets left.
@@ -81,6 +81,8 @@ class Report::QuestionAnswerTallyReport < Report::TallyReport
       # apply filter
       rel = apply_filter(rel)
 
+      rel = filter_non_top_level_answers(rel)
+
       return rel
     end
 
@@ -101,5 +103,9 @@ class Report::QuestionAnswerTallyReport < Report::TallyReport
         rest = build_nested_if(exprs[1..-1], conds[1..-1])
         "IF(#{conds.first.sql}, #{exprs.first.sql}, #{rest})"
       end
+    end
+
+    def filter_non_top_level_answers(rel)
+      rel.where('answers.rank IS NULL OR answers.rank = 1')
     end
 end

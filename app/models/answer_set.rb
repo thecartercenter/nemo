@@ -6,9 +6,10 @@ class AnswerSet
   delegate :qtype, :required?, :question, :condition, to: :questioning
     delegate :name, :hint, to: :question, prefix: true
     delegate :option_set, to: :question
-      delegate :levels, :multi_level?, to: :option_set
+      delegate :levels, to: :option_set
   delegate :first, to: :answers
     delegate :errors, :choices, :all_choices, :value, :datetime_value, :date_value, :time_value, :response_id, :questioning_id, :relevant, to: :first
+    delegate :option_ids_with_no_nils, to: :option_path
 
   # Builds Answer attribute hashes from submitted answer_set params.
   # Returns an array of Answer attribute hashes.
@@ -31,24 +32,17 @@ class AnswerSet
     ensure_answers
   end
 
+  def multi_level?
+    option_set.nil? ? false : option_set.multi_level?
+  end
+
   # True if all answers are blank.
   def blank?
     answers.all?(&:blank?)
   end
 
-  # Returns the available Options for the given answer.
-  # If the answer's rank is > 1 and the answer before it is currently nil, returns [].
-  def options_for(answer)
-    path = answers_before(answer).map(&:option_id)
-    option_set.options_for_node(path) || []
-  end
-
-  # Returns an array of all answers in this set before the given answer, by rank.
-  # Returns [] if the given answer is first in the set.
-  # Returns nil if not found.
-  def answers_before(answer)
-    return nil unless pos = answers.index(answer)
-    answers[0...pos]
+  def option_path
+    @option_path ||= OptionPath.new(option_set: option_set, options: answers.map(&:option))
   end
 
   private

@@ -4,11 +4,16 @@ class Answer < ActiveRecord::Base
   belongs_to(:questioning, :inverse_of => :answers)
   belongs_to(:option, :inverse_of => :answers)
   belongs_to(:response, :inverse_of => :answers, :touch => true)
-  has_many(:choices, :dependent => :destroy, :inverse_of => :answer)
+  has_many(:choices, :dependent => :destroy, :inverse_of => :answer, :autosave => true)
 
   before_validation(:clean_locations)
   before_save(:round_ints)
   before_save(:blanks_to_nulls)
+
+  # Remove unchecked choices before saving.
+  before_save do
+    choices.destroy(*choices.reject(&:checked?))
+  end
 
   validates(:value, :numericality => true, :if => ->(a){ a.should_validate?(:numericality) })
 
@@ -16,6 +21,8 @@ class Answer < ActiveRecord::Base
   # since this class really just represents one value
   validate(:min_max, :if => ->(a){ a.should_validate?(:min_max) })
   validate(:required, :if => ->(a){ a.should_validate?(:required) })
+
+  accepts_nested_attributes_for(:choices)
 
   delegate :question, :qtype, :required?, :hidden?, :option_set, :options, :condition, :to => :questioning
     delegate :name, :hint, :to => :question, :prefix => true
@@ -57,9 +64,12 @@ class Answer < ActiveRecord::Base
       str.split(' ').each{ |oid| choices.build(option_id: oid.to_i) }
 
     elsif qtype.temporal?
+      # Strip timezone info for datetime and time.
+      str.gsub!(/(Z|[+\-]\d+(:\d+)?)$/, '') unless qtype.name == 'date'
+
       val = Time.zone.parse(str)
 
-      # Convert the parsed time to the appropriate database format unless question is timezone sensitive
+      # Not sure why this is here. Investigate later.
       val = val.to_s(:"db_#{qtype.name}") unless qtype.has_timezone?
 
       self.send("#{qtype.name}_value=", val)
@@ -74,45 +84,14 @@ class Answer < ActiveRecord::Base
     option_set.try(:multi_level?) ? option_set.levels[(rank || 1) - 1] : nil
   end
 
-  def choice_for(option)
-    choice_hash[option]
-  end
-
-  def choice_hash(options = {})
-    if !@choice_hash || options[:rebuild]
-      @choice_hash = {}; choices.each{|c| @choice_hash[c.option] = c}
-    end
-    @choice_hash
+  def choices_by_option
+    @choice_hash ||= choices.select(&:checked?).index_by(&:option)
   end
 
   def all_choices
-    # for each option, if we have a matching choice, return it and set it's fake bit to true
-    # otherwise create one and set its fake bit to false
-    options.collect do |o|
-      if c = choice_for(o)
-        c.checked = true
-      else
-        c = choices.new(:option => o, :checked => false)
-      end
-      c
-    end
-  end
-
-  def all_choices=(params)
-    # create a bunch of temp objects, discarding any unchecked choices
-    submitted = params.values.collect{|p| p[:checked] == '1' ? Choice.new(p) : nil}.compact
-
-    # copy new choices into old objects, creating or deleting if necessary
-    choices.compare_by_element(submitted, Proc.new{|c| c.option_id}) do |orig, subd|
-      # if both exist, do nothing
-      # if submitted is nil, destroy the original
-      if subd.nil?
-        choices.delete(orig)
-      # if original is nil, add the new one to this response's array
-      elsif orig.nil?
-        choices << subd
-      end
-    end
+    # for each option, if we have a matching choice, just return it (checked? defaults to true)
+    # otherwise create one and set checked? to false
+    options.map{ |o| choices_by_option[o] || choices.new(option: o, checked: false) }
   end
 
   # if this answer is for a location question and the value is not blank, returns a two element array representing the

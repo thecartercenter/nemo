@@ -78,12 +78,9 @@ class Report::Report < ActiveRecord::Base
     self.name = "#{prefix}#{suffix}"
   end
 
-  # runs the report by populating header_set, data, and totals objects
-  def run
-    # set the has run flag
-    @has_run = true
-
-    # the remaining stuff from run in legacy reports can be found in Report::LegacyReport
+  # Should be overridden by children.
+  def run(current_ability = nil)
+    raise NotImplementedError
   end
 
   # records a viewing of the form, keeping the view_count up to date

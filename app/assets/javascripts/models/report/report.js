@@ -12,12 +12,12 @@
     this.extract_form_ids_from_filter_str();
 
     // set tally type/report type, if report type is a tally report
-    if (this.attribs.type == 'Report::QuestionAnswerTallyReport') {
+    if (this.attribs.type == 'Report::AnswerTallyReport') {
       this.attribs.type = 'Report::TallyReport';
-      this.attribs.tally_type = 'QuestionAnswer';
-    } else if (this.attribs.type == 'Report::GroupedTallyReport') {
+      this.attribs.tally_type = 'Answer';
+    } else if (this.attribs.type == 'Report::ResponseTallyReport') {
       this.attribs.type = 'Report::TallyReport';
-      this.attribs.tally_type = 'Grouped';
+      this.attribs.tally_type = 'Response';
     }
 
     this.attribs.disaggregate = this.attribs.disagg_question_id != null;
@@ -51,7 +51,7 @@
   klass.prototype.set_calculations_by_question_ids = function(qids) {
     var _this = this;
 
-    if (this.attribs.tally_type != "QuestionAnswer") return;
+    if (this.attribs.tally_type != "Answer") return;
 
     // calculations to empty array if not exist
     this.attribs.calculations_attributes = this.attribs.calculations_attributes || [];
@@ -162,7 +162,7 @@
     if (to_serialize['type'] == 'Report::TallyReport')
       to_serialize['type'] = 'Report::' + this.attribs.tally_type + 'TallyReport';
 
-    if (this.attribs.tally_type == "QuestionAnswer")
+    if (this.attribs.tally_type == "Answer")
       to_serialize.option_set_choices_attributes = self.attribs.option_set_choices_attributes;
 
     to_serialize.filter = this.form_filter_str();
@@ -214,7 +214,7 @@
       this.errors.add("name", I18n.t("activerecord.errors.models.report/report.attributes.name.blank"));
 
     // question/option_set
-    if (this.attribs.tally_type == "QuestionAnswer"
+    if (this.attribs.tally_type == "Answer"
       && this.count_not_to_be_destroyed(this.attribs.calculations_attributes) == 0
       && this.count_not_to_be_destroyed(this.attribs.option_set_choices_attributes) == 0)
         this.errors.add("questions", I18n.t("activerecord.errors.models.report/report.attributes.questions.blank"));

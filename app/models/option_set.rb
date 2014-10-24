@@ -55,6 +55,8 @@ class OptionSet < ActiveRecord::Base
 
   delegate :ranks_changed?,
            :children,
+           :c,
+           :ranks_changed?,
            :options_added?,
            :options_removed?,
            :total_options,
@@ -64,6 +66,8 @@ class OptionSet < ActiveRecord::Base
            :max_depth,
            :options_not_serialized,
            :arrange_with_options,
+           :option_path_to_rank_path,
+           :rank_path_to_option_path,
            to: :root_node
 
   # These methods are for the form.

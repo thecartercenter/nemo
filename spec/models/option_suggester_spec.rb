@@ -9,18 +9,18 @@ describe OptionSuggester do
 
     it 'should return exact match at top with no placeholder' do
       result = OptionSuggester.new.suggest(get_mission, 'foo')
-      expect(result.map(&:name).to eq ['Foo', "Foo's Bar"]
+      expect(result.map(&:name)).to eq ['Foo', "Foo's Bar"]
     end
 
     it 'should return non-exact matches sorted with a placeholder at bottom' do
       result = OptionSuggester.new.suggest(get_mission, 'fo')
-      expect(result.map(&:name).to eq ['Foo', "Foo's Bar", 'fo']
+      expect(result.map(&:name)).to eq ['Foo', "Foo's Bar", 'fo']
     end
 
     it 'should return just placeholder if no matches' do
       # Should not match since we match only from start of string.
       result = OptionSuggester.new.suggest(get_mission, 'oo')
-      expect(result.map(&:name).to eq ['oo']
+      expect(result.map(&:name)).to eq ['oo']
     end
   end
 
