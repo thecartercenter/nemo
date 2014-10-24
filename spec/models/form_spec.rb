@@ -72,6 +72,21 @@ describe Form do
     end
   end
 
+  describe 'needs_odk_manifest?' do
+    context 'for form with single level option sets only' do
+      before { @form = create(:form, question_types: %w(select_one)) }
+      it 'should return false' do
+        expect(@form.needs_odk_manifest?).to be false
+      end
+    end
+    context 'for form with multi level option set' do
+      before { @form = create(:form, question_types: %w(select_one multi_level_select_one)) }
+      it 'should return true' do
+        expect(@form.needs_odk_manifest?).to be true
+      end
+    end
+  end
+
   def publish_and_reset_pub_changed_at
     @form.publish!
     @form.pub_changed_at -= 1.hour

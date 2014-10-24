@@ -161,6 +161,12 @@ class Form < ActiveRecord::Base
     questionings.map{|qing| qing.rank || 0}.max || 0
   end
 
+  # Whether this form needs an accompanying manifest for odk.
+  def needs_odk_manifest?
+    # For now this is IFF there are any multilevel option sets
+    @needs_odk_manifest ||= option_sets.any?(&:multi_level?)
+  end
+
   # takes a hash of the form {questioning_id => new_rank, ...}
   def update_ranks(new_ranks)
     # Convert everything to integers
