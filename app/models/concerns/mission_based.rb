@@ -18,8 +18,10 @@ module MissionBased
       belongs_to(:mission, :inverse_of => inverse)
 
       # scope to find objects with the given mission
-      # mission can be nil
-      scope(:for_mission, lambda{|m| where(:mission_id => m.try(:id))})
+      # mission can be nil or an array
+      scope(:for_mission, lambda { |mission|
+        where(mission_id: [*mission].map { |m| m.try(:id) })
+      })
 
       # when a mission is deleted, pre-remove all records related to a mission
       def self.mission_pre_delete(mission)

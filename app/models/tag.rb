@@ -18,7 +18,7 @@ class Tag < ActiveRecord::Base
     # fetch all mission tags from the cache
     mission_id = mission ? mission.id : 'std'
     tags = Rails.cache.fetch("mission_tags/#{mission_id}", expires_in: 2.minutes) do
-      Tag.unscoped.for_mission(mission)
+      Tag.unscoped.for_mission([mission, nil])
     end
 
     # Trim query to maximum length.

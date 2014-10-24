@@ -62,14 +62,14 @@
 
   // returns the html to insert in the token input result list
   klass.prototype.format_token_result = function(item) { var self = this;
-    var details;
     // if this is the new placeholder, add a string about that
     if (item.id == null) {
-      details = ' <span class="details create_new">[' + I18n.t('tag.new_tag') + ']</span>';
-    } else
-      details = '';
-
-    return '<li>' + item.name + details + '</li>';
+      return '<li><i class="fa fa-fw"></i> ' + item.name + ' <span class="details create_new">[' + I18n.t('tag.new_tag') + ']</span>' + '</li>';
+    } else if (item.mission_id == null) {
+      return '<li><i class="fa fa-fw fa-certificate"></i> ' + item.name + '</li>';
+    } else {
+      return '<li><i class="fa fa-fw"></i> ' + item.name + '</li>';
+    }
   };
 
   // gets the current value of the field with the given name
