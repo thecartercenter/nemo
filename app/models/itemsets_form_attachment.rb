@@ -99,7 +99,7 @@ class ItemsetsFormAttachment
     # options[:type] - Whether this is a child or (great)grandchild of the last non-None node.
     def none_row(node, options)
       row = ["os#{node.option_set_id}", 'none']
-      row += configatron.preferred_locales.map{ |l| "[#{I18n.t('common.none', locale: l)}]" }
+      row += configatron.preferred_locales.map{ |l| "[#{I18n.t('common.blank', locale: l)}]" }
       row << (options[:type] == :child ? "on#{node.id}" : 'none')
       row
     end
