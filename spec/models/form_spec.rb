@@ -58,8 +58,7 @@ describe Form do
     end
 
     it 'should be updated when form unpublished' do
-      publish_and_reset_pub_changed_at
-      @form.save!
+      publish_and_reset_pub_changed_at(save: true)
       @form.unpublish!
       expect(@form.pub_changed_at).to be_within(0.01).of(Time.zone.now)
     end
@@ -87,8 +86,46 @@ describe Form do
     end
   end
 
-  def publish_and_reset_pub_changed_at
-    @form.publish!
-    @form.pub_changed_at -= 1.hour
+  describe 'odk_download_cache_key' do
+    before do
+      @form = create(:form)
+      publish_and_reset_pub_changed_at
+    end
+
+    it 'should be correct' do
+      expect(@form.odk_download_cache_key).to eq "odk-form/#{@form.id}-#{@form.pub_changed_at}"
+    end
+  end
+
+  describe 'odk_index_cache_key' do
+    before do
+      @form = create(:form)
+      @form2 = create(:form)
+      publish_and_reset_pub_changed_at(save: true)
+      publish_and_reset_pub_changed_at(form: @form2, diff: 30.minutes, save: true)
+    end
+
+    context 'for mission with forms' do
+      it 'should be correct' do
+        expect(Form.odk_index_cache_key(mission: get_mission)).to eq "odk-form-list/mission-#{get_mission.id}/#{@form2.pub_changed_at.utc.to_s(:cache_datetime)}"
+      end
+    end
+
+    context 'for mission with no forms' do
+      before do
+        @mission2 = create(:mission)
+        create(:form, mission: @mission2) # Unpublished
+      end
+      it 'should be correct' do
+        expect(Form.odk_index_cache_key(mission: @mission2)).to eq "odk-form-list/mission-#{@mission2.id}/no-pubd-forms"
+      end
+    end
+  end
+
+  def publish_and_reset_pub_changed_at(options = {})
+    f = options[:form] || @form
+    f.publish!
+    f.pub_changed_at -= (options[:diff] || 1.hour)
+    f.save! if options[:save]
   end
 end

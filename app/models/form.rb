@@ -60,6 +60,21 @@ class Form < ActiveRecord::Base
     Questioning.where(form_id: form_ids).delete_all
   end
 
+  # Gets a cache key based on the mission and the max (latest) pub_changed_at value.
+  def self.odk_index_cache_key(options)
+    # Note that since we're using maximum method, dates don't seem to be TZ adjusted on load, which is fine as long as it's consistent.
+    max_pub_changed_at = if for_mission(options[:mission]).published.any?
+      for_mission(options[:mission]).maximum(:pub_changed_at).to_s(:cache_datetime)
+    else
+      'no-pubd-forms'
+    end
+    "odk-form-list/mission-#{options[:mission].id}/#{max_pub_changed_at}"
+  end
+
+  def odk_download_cache_key
+    "odk-form/#{id}-#{pub_changed_at}"
+  end
+
   def api_user_id_can_see?(api_user_id)
     whitelist_users.pluck(:user_id).include?(api_user_id)
   end
