@@ -84,6 +84,6 @@ module OdkHelper
 
   # Returns <text> tags for all first-level options.
   def odk_option_translations(form, lang)
-    form.all_first_level_option_nodes.map{ |on| %{<text id="on#{on.id}"><value>#{on.option.name(lang, strict: false)}</value></text>} }.join.html_safe
+    form.all_first_level_option_nodes.map{ |on| %Q{<text id="on#{on.id}"><value>#{on.option.name(lang, strict: false)}</value></text>} }.join.html_safe
   end
 end
