@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-feature 'conditions flow', js: true do
+feature 'conditions flow', js: true, driver: :selenium do
   before do
     @user = create(:user)
     @form = create(:form, name: 'Foo', question_types: %w(select_one integer text), use_multilevel_option_set: true)

@@ -12,7 +12,7 @@ feature 'responses form' do
       login(@user)
     end
 
-    scenario 'should work', js: true do
+    scenario 'should work', js: true, driver: :selenium do
       click_link('Submit')
       click_link(@form.name)
       expect(page).to have_selector('h1', text: 'New Response')
