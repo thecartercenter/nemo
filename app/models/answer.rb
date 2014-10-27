@@ -58,10 +58,11 @@ class Answer < ActiveRecord::Base
     return if str.nil?
 
     if qtype.name == "select_one"
-      self.option_id = str.to_i
+      # 'none' will be returned for a blank choice for a multilevel set.
+      self.option_id = OptionNode.id_to_option_id(str[2..-1]) unless str == 'none'
 
     elsif qtype.name == "select_multiple"
-      str.split(' ').each{ |oid| choices.build(option_id: oid.to_i) }
+      str.split(' ').each{ |oid| choices.build(option_id: OptionNode.id_to_option_id(oid[2..-1])) }
 
     elsif qtype.temporal?
       # Strip timezone info for datetime and time.

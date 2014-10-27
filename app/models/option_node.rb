@@ -39,6 +39,11 @@ class OptionNode < ActiveRecord::Base
     roots.each{ |r| r.child_options = nodes_by_root_id[r.id].map(&:option) }
   end
 
+  # Efficiently gets an option id from an option node id. id may be a string or integer.
+  def self.id_to_option_id(id)
+    where(id: id).pluck(:option_id).first
+  end
+
   # Overriding this to avoid error from ancestry.
   alias_method :_children, :children
   def children
