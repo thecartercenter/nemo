@@ -42,6 +42,7 @@ li.token-input-token-elmo {
     -webkit-border-radius: 5px;
     float: left;
     white-space: nowrap;
+    text-align: center;
 }
 
 li.token-input-token-elmo p {

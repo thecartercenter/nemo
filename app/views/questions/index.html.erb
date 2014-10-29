@@ -1,4 +1,13 @@
 <%= render("searches/form", :search => @search) %>
 
+<ul class="tags clearfix">
+  <% @tags.each do |tag| %>
+    <li class="token-input-token-elmo">
+      <% if tag.is_standard? %><i class="fa fa-fw fa-certificate"></i> <% end %>
+      <%= tag.name %>
+    </li>
+  <% end %>
+</ul>
+
 <%= index_table(Question, @questions) %>
 <%= standard_import_form %>

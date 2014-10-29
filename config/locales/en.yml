@@ -1375,7 +1375,7 @@ en:
 
         * __romeo juliet code: BallotBox__
 
-        will show responses to the 'Widgets' form containing the words 'romeo' and 'juliet'.
+        will show questions with 'BallotBox' in their code whose titles also contain the words 'romeo' and 'juliet'.
 
         The full set of qualifiers you can use is as follows:
 

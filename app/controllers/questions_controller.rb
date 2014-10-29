@@ -7,9 +7,6 @@ class QuestionsController < ApplicationController
   load_and_authorize_resource
 
   def index
-    @questions = @questions.with_assoc_counts.by_code.paginate(:page => params[:page], :per_page => 25)
-    load_importable_objs
-
     # do search if applicable
     if params[:search].present?
       begin
@@ -19,6 +16,11 @@ class QuestionsController < ApplicationController
         @search_error = true
       end
     end
+
+    @tags = Tag.joins(:taggings).where(taggings: {question_id: @questions.map(&:id)}).uniq.order(:name)
+
+    @questions = @questions.with_assoc_counts.by_code.paginate(:page => params[:page], :per_page => 25)
+    load_importable_objs
   end
 
   def show
