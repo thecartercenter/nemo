@@ -12,7 +12,9 @@ class Question < ActiveRecord::Base
   has_many(:forms, :through => :questionings)
   has_many(:calculations, class_name: 'Report::Calculation', foreign_key: 'question1_id', inverse_of: :question1, dependent: :destroy)
   has_many(:taggings, :dependent => :destroy)
-  has_many(:tags, :through => :taggings)
+  has_many(:tags, :through => :taggings, :order => :name)
+
+  accepts_nested_attributes_for :tags, reject_if: proc { |attributes| attributes[:name].blank? }
 
   before_validation(:normalize_fields)
 
@@ -270,4 +272,5 @@ class Question < ActiveRecord::Base
         self.maxstrictly = nil
       end
     end
+
 end

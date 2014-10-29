@@ -103,8 +103,9 @@ ELMO::Application.routes.draw do
       post "/#{k.gsub('_', '-')}/import-standard" => "#{k}#import_standard", :as => "import_standard_#{k}"
     end
 
-    # special route for option suggestions
+    # special routes for tokeninput suggestions
     get '/options/suggest' => 'options#suggest', :as => :suggest_options
+    get '/tags/suggest' => 'tags#suggest', :as => :suggest_tags
   end
 
   #####################################
