@@ -1,13 +1,6 @@
 <% if read_only || cannot?(:update_core, @question) %>
 
-  <ul class="tags">
-    <% form.object.tags.each do |tag| %>
-      <li class="token-input-token-elmo">
-        <% if tag.is_standard? %><i class="fa fa-fw fa-certificate"></i> <% end %>
-        <%= tag.name %>
-      </li>
-    <% end %>
-  </ul>
+  <%= render_tags(form.object.tags) %>
 
 <% else %>
 
