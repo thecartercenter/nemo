@@ -109,6 +109,19 @@ i.fa-certificate {
   color: $gold;
 }
 
+table.index_table .tags {
+  display: inline;
+  line-height: 2.5;
+  margin-left: 3px;
+  vertical-align: text-top;
+  li {
+    float: none;
+    display: inline;
+    &:hover { cursor: pointer; }
+  }
+  i.fa-certificate { font-size: 1em; }
+}
+
 /* set of links */
 .link_set {
   margin-bottom: 10px;
