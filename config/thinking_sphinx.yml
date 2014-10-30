@@ -6,6 +6,7 @@ test:
   mysql41: 9307
   max_matches: 1000000
   html_strip: true
+  quiet_deltas: true
 production:
   max_matches: 1000000
   html_strip: true

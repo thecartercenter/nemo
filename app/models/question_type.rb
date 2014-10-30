@@ -1,18 +1,18 @@
 class QuestionType
 
-  attr_reader :name, :odk_name, :odk_tag, :properties
+  attr_reader :name, :odk_name, :properties
 
   @@attributes = [
-    {:name => "text", :odk_name => "string", :odk_tag => "input", :properties => %w(form_printable smsable textual headerable)},
-    {:name => "long_text", :odk_name => "string", :odk_tag => "input", :properties => %w(form_printable smsable textual)},
-    {:name => "integer", :odk_name => "int", :odk_tag => "input", :properties => %w(form_printable smsable numeric headerable)},
-    {:name => "decimal", :odk_name => "decimal", :odk_tag => "input", :properties => %w(form_printable smsable numeric headerable)},
-    {:name => "location", :odk_name => "geopoint", :odk_tag => "input", :properties => %w()},
-    {:name => "select_one", :odk_name => "select1", :odk_tag => "select1", :properties => %w(form_printable has_options smsable headerable)},
-    {:name => "select_multiple", :odk_name => "select", :odk_tag => "select", :properties => %w(form_printable has_options smsable headerable)},
-    {:name => "datetime", :odk_name => "dateTime", :odk_tag => "input", :properties => %w(form_printable temporal has_timezone smsable headerable)},
-    {:name => "date", :odk_name => "date", :odk_tag => "input", :properties => %w(form_printable temporal smsable headerable)},
-    {:name => "time", :odk_name => "time", :odk_tag => "input", :properties => %w(form_printable temporal smsable headerable)}
+    {:name => "text", :odk_name => "string", :properties => %w(form_printable smsable textual headerable)},
+    {:name => "long_text", :odk_name => "string", :properties => %w(form_printable smsable textual)},
+    {:name => "integer", :odk_name => "int", :properties => %w(form_printable smsable numeric headerable)},
+    {:name => "decimal", :odk_name => "decimal", :properties => %w(form_printable smsable numeric headerable)},
+    {:name => "location", :odk_name => "geopoint", :properties => %w()},
+    {:name => "select_one", :odk_name => "select1", :properties => %w(form_printable has_options smsable headerable)},
+    {:name => "select_multiple", :odk_name => "select", :properties => %w(form_printable has_options smsable headerable)},
+    {:name => "datetime", :odk_name => "dateTime", :properties => %w(form_printable temporal has_timezone smsable headerable)},
+    {:name => "date", :odk_name => "date", :properties => %w(form_printable temporal smsable headerable)},
+    {:name => "time", :odk_name => "time", :properties => %w(form_printable temporal smsable headerable)}
   ]
 
   # looks up a question type by name

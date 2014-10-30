@@ -998,12 +998,14 @@ en:
 
   option_set:
     add_level: "Add Level"
+    and_n_more: "... and %{count} more options."
     clone_confirm: "Are you sure you want to make a copy of the Option Set '%{name}'?"
     clone_error: "There was a problem cloning the Option Set (%{msg})."
     clone_success: "Option Set '%{name}' cloned successfully."
     create_new: "[Create New Option]"
     edit_option: "Edit Option"
     edit_option_level: "Edit Option Level"
+    huge_notice: "This Option Set is very large (%{count} Options) and thus only a small sample of its Options are displayed below. You may edit its name and other properties here but please use the import/export features to edit the Options themselves."
     leave_page_warning: "Leaving this page will abandon your changes to this Option Set."
     multi_level_forbidden_notice: "This Option Set is currently used by at least one select-multiple Question and thus it cannot be converted to a multi-level set."
     new_option_level: "New Option Level"

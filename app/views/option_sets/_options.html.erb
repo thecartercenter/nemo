@@ -1,5 +1,5 @@
 <%# form for drag and drop and option dialog %>
-<% if !read_only && can?(:add_options, @option_set) %>
+<% if !read_only && !@option_set.huge? && can?(:add_options, @option_set) %>
   <div class="add_options">
     <input type="text" class="add_options_box form-control">
     <input type="button" class="btn_secondary btn btn-default" value="<%= t('common.add') %>" />
@@ -9,7 +9,11 @@
 <div id="options-wrapper" class="draggable-list-wrapper">
 </div>
 
-<% unless read_only %>
+<% if @option_set.huge? %>
+  <strong class="and-n-more"><%= t('option_set.and_n_more', count: number_with_delimiter(@option_set.options_not_serialized)) %></strong>
+<% end %>
+
+<% unless read_only || @option_set.huge? %>
   <%# edit option modal %>
   <div class="modal fade edit-named-item" id="edit-option" tabindex="-1" role="dialog" aria-labelledby="editOption" aria-hidden="true">
     <div class="modal-dialog">

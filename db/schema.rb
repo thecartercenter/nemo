@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140929210944) do
+ActiveRecord::Schema.define(:version => 20141030004640) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -120,6 +120,7 @@ ActiveRecord::Schema.define(:version => 20140929210944) do
     t.integer  "standard_id"
     t.boolean  "allow_incomplete",   :default => false,     :null => false
     t.string   "access_level",       :default => "private", :null => false
+    t.datetime "pub_changed_at"
   end
 
   add_index "forms", ["current_version_id"], :name => "forms_current_version_id_fk"

@@ -44,6 +44,11 @@ RSpec.configure do |config|
   config.include AssertDifference
   config.include RequestSpecHelpers, type: :request
   config.include FeatureSpecHelpers, type: :feature
+
+  # Locale should be reset to :en after each test if it is changed.
+  config.after(:each) do
+    puts "WARNING: I18n locale was left as #{I18n.locale}" unless I18n.locale = :en
+  end
 end
 
 # Encodes credentials for basic auth

@@ -70,7 +70,7 @@ module Standardizable
   end
 
   def standard_copy?
-    standard.present?
+    standard_id.present?
   end
 
   # adds an obj to the list of copies

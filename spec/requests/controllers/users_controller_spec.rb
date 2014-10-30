@@ -14,6 +14,10 @@ describe UsersController do
     it 'should redirect back to profile but in french' do
       assert_redirected_to(edit_user_path(@user, :locale => 'fr'))
     end
+
+    after do
+      I18n.locale = :en
+    end
   end
 
   context 'when not updating preferred language and preferred language doesnt match locale' do

@@ -77,7 +77,7 @@ module Translatable
       send("#{field}_translations=", send("#{field}_translations").merge(locale => args[1]))
 
       # if the locale is the default locale, also cache the value in the _ attribute
-      send("_#{field}=", args[1]) if locale.to_sym == I18n.default_locale
+      send("_#{field}=", args[1]) if locale.to_sym == I18n.default_locale && respond_to?("_#{field}=")
 
     # otherwise just return what we have
     else
