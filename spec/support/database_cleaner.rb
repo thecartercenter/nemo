@@ -9,7 +9,7 @@ RSpec.configure do |config|
   end
 
   config.before(:each, clean_with_truncation: true) do
-    DatabaseCleaner.strategy = :truncation
+    DatabaseCleaner.clean_with(:truncation)
   end
 
   config.before(:each, js: true) do
