@@ -16,16 +16,23 @@ describe ResponsesController do
       post(responses_path(mode: 'm', mission_name: get_mission.compact_name), response: {
         user_id: @user.id,
         form_id: @form.id,
-        answer_sets: {
+        answers_attributes: {
           '0' => {
             questioning_id: @form.questionings[0].id,
             relevant: '1',
             value: '42',
           },
-          '1' => {
+          '1_0' => {
             questioning_id: @form.questionings[1].id,
             relevant: '1',
-            answers: { '0' => { option_id: @plant.id }, '1' => { option_id: @oak.id } }
+            option_id: @plant.id,
+            rank: 1
+          },
+          '1_1' => {
+            questioning_id: @form.questionings[1].id,
+            relevant: '1',
+            option_id: @oak.id,
+            rank: 2
           }
         }
       })
@@ -46,33 +53,49 @@ describe ResponsesController do
         mission: get_mission,
         user_id: @user.id,
         form_id: @form.id,
-        answer_sets: {
+        answers_attributes: {
           '0' => {
             questioning_id: @form.questionings[0].id,
             relevant: '1',
             value: '42',
           },
-          '1' => {
+          '1_0' => {
             questioning_id: @form.questionings[1].id,
             relevant: '1',
-            answers: { '0' => { option_id: @plant.id }, '1' => { option_id: @oak.id } }
-      }})
+            option_id: @plant.id,
+            rank: 1
+          },
+          '1_1' => {
+            questioning_id: @form.questionings[1].id,
+            relevant: '1',
+            option_id: @oak.id,
+            rank: 2
+          }
+        }
+      )
     end
 
     it 'should work' do
       put(url_for(@obj), response: {
         user_id: @user.id,
         form_id: @form.id,
-        answer_sets: {
+        answers_attributes: {
           '0' => {
-            questioning_id: @form.questionings[0].id,
+            id: @obj.answers[0].id,
             relevant: '1',
             value: '45',
           },
-          '1' => {
-            questioning_id: @form.questionings[1].id,
+          '1_0' => {
+            id: @obj.answers[1].id,
             relevant: '1',
-            answers: { '0' => { option_id: @plant.id }, '1' => { option_id: @tulip.id } }
+            option_id: @plant.id,
+            rank: 1
+          },
+          '1_1' => {
+            id: @obj.answers[2].id,
+            relevant: '1',
+            option_id: @tulip.id,
+            rank: 2
           }
         }
       })

@@ -37,10 +37,10 @@ class QuestionsController < ApplicationController
 
   def create
     # Convert tag string from TokenInput to array
-    @question.tag_ids = params[:question][:tag_ids].split(',')
+    @question.tag_ids = (params[:question][:tag_ids] || '').split(',')
 
     # Convert tags_attributes hidden inputs to create new tags (why doesn't this happen automatically here?)
-    @question.tags_attributes = params[:question][:tags_attributes]
+    @question.tags_attributes = params[:question][:tags_attributes] || []
 
     create_or_update
   end

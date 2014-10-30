@@ -14,6 +14,7 @@ class Form < ActiveRecord::Base
   belongs_to(:current_version, :class_name => "FormVersion")
 
   before_validation(:normalize_fields)
+  before_save(:update_pub_changed_at)
 
   validates(:name, :presence => true, :length => {:maximum => 32})
   validate(:name_unique_per_mission)
@@ -53,14 +54,29 @@ class Form < ActiveRecord::Base
       :smsable, :current_version_id, :allow_incomplete, :access_level]
 
 
-  def api_user_id_can_see?(api_user_id)
-    whitelist_users.pluck(:user_id).include?(api_user_id)
-  end
-
   # remove heirarch of objects
   def self.terminate_sub_relationships(form_ids)
     FormVersion.where(form_id: form_ids).delete_all
     Questioning.where(form_id: form_ids).delete_all
+  end
+
+  # Gets a cache key based on the mission and the max (latest) pub_changed_at value.
+  def self.odk_index_cache_key(options)
+    # Note that since we're using maximum method, dates don't seem to be TZ adjusted on load, which is fine as long as it's consistent.
+    max_pub_changed_at = if for_mission(options[:mission]).published.any?
+      for_mission(options[:mission]).maximum(:pub_changed_at).to_s(:cache_datetime)
+    else
+      'no-pubd-forms'
+    end
+    "odk-form-list/mission-#{options[:mission].id}/#{max_pub_changed_at}"
+  end
+
+  def odk_download_cache_key
+    "odk-form/#{id}-#{pub_changed_at}"
+  end
+
+  def api_user_id_can_see?(api_user_id)
+    whitelist_users.pluck(:user_id).include?(api_user_id)
   end
 
   def temp_response_id
@@ -146,8 +162,24 @@ class Form < ActiveRecord::Base
     questionings.detect{ |q| q.code == c }
   end
 
+  # Loads all options used on the form in a constant number of queries.
+  def all_options
+    OptionSet.all_options_for_sets(questions.map(&:option_set_id).compact)
+  end
+
+  # Gets all first level option nodes with options eagerly loaded.
+  def all_first_level_option_nodes
+    OptionSet.first_level_option_nodes_for_sets(questions.map(&:option_set_id).compact)
+  end
+
   def max_rank
     questionings.map{|qing| qing.rank || 0}.max || 0
+  end
+
+  # Whether this form needs an accompanying manifest for odk.
+  def needs_odk_manifest?
+    # For now this is IFF there are any multilevel option sets
+    @needs_odk_manifest ||= option_sets.any?(&:multi_level?)
   end
 
   # takes a hash of the form {questioning_id => new_rank, ...}
@@ -308,6 +340,11 @@ class Form < ActiveRecord::Base
 
     def normalize_fields
       self.name = name.strip
+      return true
+    end
+
+    def update_pub_changed_at
+      self.pub_changed_at = Time.now if published_changed?
       return true
     end
 

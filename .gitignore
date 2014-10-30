@@ -17,6 +17,8 @@ NOTES
 # compiled assets
 public/assets
 
+public/form-attachments/
+
 # ignore the fixtures dir as it's only used for tmp uploaded files right now
 test/fixtures
 

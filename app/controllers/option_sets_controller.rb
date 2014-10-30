@@ -21,6 +21,9 @@ class OptionSetsController < ApplicationController
     # now we apply .all so that any .empty? or .count calls in the template don't cause more queries
     @option_sets = @option_sets.all
 
+    # Avoid N+1 for option names.
+    OptionSet.preload_top_level_options(@option_sets)
+
     load_importable_objs
   end
 

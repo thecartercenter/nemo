@@ -4,5 +4,14 @@ class Choice < ActiveRecord::Base
 
   delegate :name, :to => :option, :prefix => true
 
-  attr_accessor :checked
+  def checked
+    # Only explicitly false should return false.
+    # This is so that the default value is true.
+    @checked || @checked.nil?
+  end
+  alias_method :checked?, :checked
+
+  def checked=(value)
+    @checked = (value == true || value == '1')
+  end
 end

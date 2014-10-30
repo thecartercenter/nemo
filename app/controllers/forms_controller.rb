@@ -9,6 +9,9 @@ class FormsController < ApplicationController
   # authorization via cancan
   load_and_authorize_resource
 
+  # We manually authorize these against :download.
+  skip_authorize_resource only: [:odk_manifest, :odk_itemsets]
+
   # in the choose_questions action we have a question form so we need this Concern
   include QuestionFormable
 
@@ -35,7 +38,11 @@ class FormsController < ApplicationController
       # get only published forms and render openrosa if xml requested
       format.xml do
         authorize!(:download, Form)
-        @forms = @forms.published
+        @cache_key = Form.odk_index_cache_key(mission: current_mission)
+        unless fragment_exist?(@cache_key)
+          # This query is not deferred so we have to check if it should be run or not.
+          @forms = @forms.published.with_questionings
+        end
         render_openrosa
       end
     end
@@ -86,6 +93,23 @@ class FormsController < ApplicationController
         render_openrosa
       end
     end
+  end
+
+  # Format is always :xml
+  def odk_manifest
+    authorize!(:download, @form)
+    @cache_key = @form.odk_download_cache_key
+    unless fragment_exist?(@cache_key)
+      @ifa = ItemsetsFormAttachment.new(form: @form)
+      @ifa.ensure_generated
+    end
+    render_openrosa
+  end
+
+  # Format is always :csv
+  def odk_itemsets
+    authorize!(:download, @form)
+
   end
 
   def create
@@ -224,7 +248,7 @@ class FormsController < ApplicationController
 
     # adds the appropriate headers for openrosa content
     def render_openrosa
-      render(:content_type => "text/xml")
+      render(content_type: "text/xml") if request.format.xml?
       response.headers['X-OpenRosa-Version'] = "1.0"
     end
 

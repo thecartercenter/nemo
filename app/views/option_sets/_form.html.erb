@@ -9,12 +9,14 @@
     <%= published_warning(@option_set) if @option_set.published? %>
     <%= appears_elsewhere_warning(@option_set) if @option_set.has_questions? %>
     <%= multi_level_forbidden_notice if @option_set.has_select_multiple_questions? %>
+    <%= huge_notice if @option_set.huge? %>
   <% end %>
 
   <%= elmo_form_for(@option_set) do |f| %>
     <%= f.field(:name, :required => true, :read_only => cannot?(:update_core, @option_set)) %>
     <%= f.field(:geographic, :type => :check_box, :read_only => cannot?(:change_geographic, @option_set)) %>
-    <%= f.field(:multi_level, :type => :check_box, :read_only => cannot?(:update_core, @option_set) || @option_set.has_select_multiple_questions?) %>
+    <%= f.field(:multi_level, :type => :check_box,
+      :read_only => cannot?(:update_core, @option_set) || @option_set.has_select_multiple_questions? || @option_set.huge?) %>
     <%= f.field(:option_levels, :partial => "option_levels") %>
     <%= f.field(:options, :required => true, :partial => "options") %>
     <div class="submit-buttons">
@@ -26,17 +28,20 @@
 
 <%= javascript_doc_ready do %>
   new ELMO.Views.OptionSetForm({
-    edit_link: <%=j action_link(:edit, '#').to_json.html_safe %>,
-    remove_link: <%=j action_link(:remove, '#').to_json.html_safe %>,
-    option_set: <%=j @option_set.as_json(:for_option_set_form => true).to_json.html_safe %>,
-    suggest_path: <%=j suggest_options_path.to_json.html_safe %>,
-    form_mode: <%=j form_mode.to_json.html_safe %>,
+    option_set: <%=json @option_set.as_json(:for_option_set_form => true) %>,
 
-    // whether the form is being loaded in a modal
-    modal_mode: <%=j params[:modal_mode].present?.to_json.html_safe %>,
+    edit_link: <%=json action_link(:edit, '#') %>,
+    remove_link: <%=json action_link(:remove, '#') %>,
+    suggest_path: <%=json suggest_options_path %>,
 
-    can_reorder: <%=j can?(:reorder_options, @option_set).to_json.html_safe %>,
-    can_remove_options: <%=j can?(:remove_options, @option_set).to_json.html_safe %>,
-    max_option_name_length: <%=j Option::MAX_NAME_LENGTH.to_json.html_safe %>
+    // Options and option levels are not editable if Option Set is huge.
+    options_levels_read_only: <%=json read_only || @option_set.huge? %>,
+
+    // Whether the form is being loaded in a modal.
+    modal_mode: <%=json params[:modal_mode].present? %>,
+
+    can_reorder: <%=json can?(:reorder_options, @option_set) %>,
+    can_remove_options: <%=json can?(:remove_options, @option_set) %>,
+    max_option_name_length: <%=json Option::MAX_NAME_LENGTH %>
   });
 <% end %>

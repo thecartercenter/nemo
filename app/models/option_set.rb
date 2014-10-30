@@ -53,7 +53,9 @@ class OptionSet < ActiveRecord::Base
 
   serialize :level_names, JSON
 
-  delegate :c,
+  delegate :ranks_changed?,
+           :children,
+           :c,
            :ranks_changed?,
            :options_added?,
            :options_removed?,
@@ -62,6 +64,8 @@ class OptionSet < ActiveRecord::Base
            :all_options,
            :options_for_node,
            :max_depth,
+           :options_not_serialized,
+           :arrange_with_options,
            :option_path_to_rank_path,
            :rank_path_to_option_path,
            to: :root_node
@@ -74,6 +78,27 @@ class OptionSet < ActiveRecord::Base
     # Must nullify these first to avoid fk error
     OptionSet.where(id: option_set_ids).update_all(root_node_id: nil)
     OptionNode.where("option_set_id IN (#{option_set_ids.join(',')})").delete_all unless option_set_ids.empty?
+  end
+
+  # Avoids N+1 queries for top level options for a set of option sets.
+  # Assumes root_node has been eager loaded.
+  def self.preload_top_level_options(option_sets)
+    return if option_sets.empty?
+    OptionNode.preload_child_options(option_sets.map(&:root_node))
+  end
+
+  # Loads all options for sets with the given IDs in a constant number of queries.
+  def self.all_options_for_sets(set_ids)
+    return [] if set_ids.empty?
+    root_node_ids = where(id: set_ids).all.map(&:root_node_id)
+    node_where_clause = root_node_ids.map{ |id| "ancestry LIKE '#{id}/%' OR ancestry = '#{id}'" }.join(' OR ')
+    Option.where("id IN (SELECT option_id FROM option_nodes WHERE #{node_where_clause})").all
+  end
+
+  def self.first_level_option_nodes_for_sets(set_ids)
+    return [] if set_ids.empty?
+    root_node_ids = where(id: set_ids).all.map(&:root_node_id)
+    OptionNode.where(ancestry: root_node_ids.map(&:to_s)).includes(:option).all
   end
 
   def children_attribs=(attribs)
@@ -90,14 +115,22 @@ class OptionSet < ActiveRecord::Base
     @levels ||= multi_level? ? level_names.map{ |n| OptionLevel.new(name_translations: n) } : nil
   end
 
+  def levels=(ls)
+    self.level_names = ls.map{ |l| l.name_translations }
+  end
+
   def level_count
     levels.try(:size)
   end
 
   def multi_level?
-    root_node && root_node.has_grandchildren?
+    @multi_level ||= root_node && root_node.has_grandchildren?
   end
   alias_method :multi_level, :multi_level?
+
+  def huge?
+    root_node.present? ? root_node.huge? : false
+  end
 
   def first_level_options
     root_node.child_options
@@ -198,6 +231,10 @@ class OptionSet < ActiveRecord::Base
   # Checks if any core fields (currently only name) changed
   def core_changed?
     name_changed?
+  end
+
+  def to_hash
+    root_node.subtree.arrange_serializable(order: 'rank')
   end
 
   def as_json(options = {})
