@@ -87,10 +87,22 @@ feature "questions flow" do
     # Canceled tag should not
     expect(Tag.pluck(:name)).not_to include('pop')
 
-    # Tags show on index page (not yet)
-    # expect(page).to have_content "Questions"
-    # expect(page).to have_content "thriftshop"
-    # expect(page).to have_content "pocket"
+    # Tags show on index page (twice - once at top and once in question's row)
+    expect(page).to have_content "Questions"
+    expect(page).to have_selector 'li', text: "thriftshop", count: 2
+    expect(page).to have_selector 'li', text: "awesome", count: 2
+    within all('li', text: 'awesome').first do
+      expect(page).to have_selector 'i.fa-certificate'
+    end
+    expect(page).to have_selector 'li', text: "pocket", count: 2
+    within %{tr[id="question_#{@question1.id}"]} do
+      expect(page).to have_selector 'li', text: "thriftshop"
+      expect(page).to have_selector 'li', text: "awesome"
+      within find('li', text: 'awesome') do
+        expect(page).to have_selector 'i.fa-certificate'
+      end
+      expect(page).to have_selector 'li', text: "pocket"
+    end
 
     # Tags show on question page
     visit "/en/m/#{get_mission.compact_name}/questions/#{@question1.id}"
