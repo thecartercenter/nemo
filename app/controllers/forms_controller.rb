@@ -98,8 +98,11 @@ class FormsController < ApplicationController
   # Format is always :xml
   def odk_manifest
     authorize!(:download, @form)
-    @ifa = ItemsetsFormAttachment.new(form: @form)
-    @ifa.ensure_generated
+    @cache_key = @form.odk_download_cache_key
+    unless fragment_exist?(@cache_key)
+      @ifa = ItemsetsFormAttachment.new(form: @form)
+      @ifa.ensure_generated
+    end
     render_openrosa
   end
 
