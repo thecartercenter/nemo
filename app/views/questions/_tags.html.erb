@@ -1,0 +1,16 @@
+<% if read_only || cannot?(:update_core, @question) %>
+
+  <ul class="tags">
+    <% form.object.tags.each do |tag| %>
+      <li class="token-input-token-elmo"><p>
+        <% if tag.is_standard? %><i class="fa fa-fw fa-certificate"></i> <% end %>
+        <%= tag.name %>
+      </p></li>
+    <% end %>
+  </ul>
+
+<% else %>
+
+  <%= text_field(:question, :tag_ids, {class: 'text form-control'}) %>
+
+<% end %>

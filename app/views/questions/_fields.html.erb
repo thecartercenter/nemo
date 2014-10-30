@@ -31,6 +31,8 @@
     <% end %>
   </div>
 
+  <%= f.field(:tag_ids, partial: 'questions/tags') %>
+
   <% unless admin_mode? %>
     <%= f.field(:key, :type => :check_box) %>
     <%= f.field(:access_level, :type => :select, :options => translate_options(Question::API_ACCESS_LEVELS, 'access_levels')) %>
@@ -60,6 +62,11 @@
 
 <%= javascript_doc_ready do %>
   new ELMO.Views.QuestionForm({
-    new_option_set_path: <%=j new_option_set_path.to_json.html_safe %>
+    new_option_set_path: <%=j new_option_set_path.to_json.html_safe %>,
+  });
+  new ELMO.Views.QuestionFormTagField({
+    suggest_tags_path: <%=j suggest_tags_path.to_json.html_safe %>,
+    question_tags: <%=j @question.tags.to_json.html_safe %>,
+    mission_id: "<%= @current_mission.try(:id) %>",
   });
 <% end %>

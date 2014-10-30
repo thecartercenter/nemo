@@ -207,3 +207,10 @@ div.cascading-selects {
   }
 }
 
+.question_tag_ids div.read_only {
+  padding-top: 0;
+  ul.tags {
+    padding: 0;
+    margin: 0;
+  }
+}
