@@ -8,9 +8,8 @@ feature "questions flow" do
     @question2 = create(:question, name: "How many wines?")
 
     @tag1 = create(:tag, name: "thriftshop", mission_id: @mission.id)
-    @tag2 = create(:tag, name: "twenty", mission_id: @mission.id)
-    @tag3 = create(:tag, name: "dollaz", mission_id: @mission.id)
-    @tag4 = create(:tag, name: "awesome", mission_id: nil, is_standard: true) # Standard tag
+    @tag2 = create(:tag, name: "twenty dollaz", mission_id: @mission.id)
+    @tag3 = create(:tag, name: "awesome", mission_id: nil, is_standard: true) # Standard tag
 
     @user = create(:user, role_name: 'coordinator', admin: true)
     login(@user)
@@ -52,11 +51,11 @@ feature "questions flow" do
     # Mission tags
     fill_in "token-input-question_tag_ids", with: "t"
     expect(page).to have_content "thriftshop"
-    expect(page).to have_content "twenty"
+    expect(page).to have_content "twenty dollaz"
 
     fill_in "token-input-question_tag_ids", with: "th"
     expect(page).to have_content "thriftshop"
-    expect(page).not_to have_content "twenty"
+    expect(page).not_to have_content "twenty dollaz"
     expect(page).to have_content "th [New tag]"
 
     # Apply tag
@@ -72,8 +71,8 @@ feature "questions flow" do
     find('li', text: "awesome").click
 
     # Create a new tag
-    fill_in "token-input-question_tag_ids", with: "pocket"
-    find('li', text: "pocket").click
+    fill_in "token-input-question_tag_ids", with: "in my pocket"
+    find('li', text: "in my pocket").click
 
     # Add and then cancel a new tag
     fill_in "token-input-question_tag_ids", with: "pop"
@@ -86,7 +85,7 @@ feature "questions flow" do
     click_button "Save"
 
     # New tag should be in database
-    expect(Tag.find_by_name('pocket').mission_id).to eq @mission.id
+    expect(Tag.find_by_name('in my pocket').mission_id).to eq @mission.id
     # Canceled tag should not
     expect(Tag.pluck(:name)).not_to include('pop')
 
@@ -97,21 +96,21 @@ feature "questions flow" do
     within first('li', text: 'awesome') do
       expect(page).to have_selector 'i.fa-certificate'
     end
-    expect(page).to have_selector 'li', text: "pocket", count: 2
+    expect(page).to have_selector 'li', text: "in my pocket", count: 2
     within %{tr[id="question_#{@question1.id}"]} do
       expect(page).to have_selector 'li', text: "thriftshop"
       expect(page).to have_selector 'li', text: "awesome"
       within find('li', text: 'awesome') do
         expect(page).to have_selector 'i.fa-certificate'
       end
-      expect(page).to have_selector 'li', text: "pocket"
+      expect(page).to have_selector 'li', text: "in my pocket"
     end
 
     # Tags show on question page
     visit "/en/m/#{@mission.compact_name}/questions/#{@question1.id}"
     within "div#tag_ids" do
       expect(page).to have_selector 'li', text: "thriftshop"
-      expect(page).to have_selector 'li', text: "pocket"
+      expect(page).to have_selector 'li', text: "in my pocket"
       expect(page).to have_selector 'li', text: "awesome"
       within find('li', text: 'awesome') do
         expect(page).to have_selector 'i.fa-certificate'
@@ -125,7 +124,7 @@ feature "questions flow" do
 
     fill_in "token-input-question_tag_ids", with: "a"
     expect(page).to have_content "awesome"
-    expect(page).not_to have_content "pocket" # Non-standard tag
+    expect(page).not_to have_content "in my pocket" # Non-standard tag
     find('li', text: "awesome").click
 
     # Create a new tag
@@ -148,8 +147,8 @@ feature "questions flow" do
     expect(Tag.find_by_name('newt').mission_id).to be_nil
   end
 
-  scenario 'clicking tag at top of index page adds it to search' do
-    @question1.tags = [@tag1, @tag4]
+  scenario 'clicking tag at top of index page adds it to search', js: true do
+    @question1.tags = [@tag1, @tag2, @tag3]
     visit "/en/m/#{@mission.compact_name}/questions"
 
     # First search for something else
@@ -158,6 +157,20 @@ feature "questions flow" do
 
     # Click tag
     first('li', text: 'awesome').click
-    expect(current_path).to include 'search=tag:+awesome'
+    expect(current_url).to include 'search=cheese+tag%253A+awesome'
+
+    # Click another tag
+    first('li', text: 'thriftshop').click
+    expect(current_url).to include 'search=cheese+tag%253A+thriftshop'
+    expect(current_url).not_to include 'awesome'
+
+    # More complicated searches
+    search_for('tag: (awesome |thriftshop )cheese')
+    first('li', text: 'awesome').click
+    expect(current_url).to include 'search=cheese+tag%253A+awesome'
+
+    search_for('cheese tag: "twenty dollaz"')
+    first('li', text: 'awesome').click
+    expect(current_url).to include 'search=cheese+tag%253A+awesome'
   end
 end
