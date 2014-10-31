@@ -4,3 +4,7 @@
 
 <%= index_table(Question, @questions) %>
 <%= standard_import_form %>
+
+<%= javascript_doc_ready do %>
+  new ELMO.Views.QuestionsTagsView();
+<% end %>
