@@ -12,7 +12,9 @@ class Question < ActiveRecord::Base
   has_many(:forms, :through => :questionings)
   has_many(:calculations, class_name: 'Report::Calculation', foreign_key: 'question1_id', inverse_of: :question1, dependent: :destroy)
   has_many(:taggings, :dependent => :destroy)
-  has_many(:tags, :through => :taggings)
+  has_many(:tags, :through => :taggings, :order => :name)
+
+  accepts_nested_attributes_for :tags, reject_if: proc { |attributes| attributes[:name].blank? }
 
   before_validation(:normalize_fields)
 
@@ -35,9 +37,9 @@ class Question < ActiveRecord::Base
       questions.*,
       COUNT(DISTINCT answers.id) AS answer_count_col,
       COUNT(DISTINCT forms.id) AS form_count_col,
-      MAX(DISTINCT forms.published) AS form_published,
+      MAX(DISTINCT forms.published) AS form_published_col,
       COUNT(DISTINCT copy_answers.id) AS copy_answer_count_col,
-      MAX(DISTINCT copy_forms.published) AS copy_form_published,
+      MAX(DISTINCT copy_forms.published) AS copy_form_published_col,
       MAX(DISTINCT forms.standard_id) AS standard_copy_form_id
     }).joins(%{
       LEFT OUTER JOIN questionings ON questionings.question_id = questions.id
@@ -148,7 +150,7 @@ class Question < ActiveRecord::Base
   end
 
   # determines if the question appears on any published forms
-  # uses the eager-loaded form_published field if available
+  # uses the eager-loaded form_published_col field if available
   def published?
     if is_standard?
       respond_to?(:copy_form_published_col) ? copy_form_published_col == 1 : copies.any?(&:published?)
@@ -270,4 +272,5 @@ class Question < ActiveRecord::Base
         self.maxstrictly = nil
       end
     end
+
 end

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-feature 'switching between missions and modes', js: true do
+feature 'switching between missions and modes', js: true, driver: :selenium do
   before do
     @user = create(:user)
     @form = create(:sample_form)

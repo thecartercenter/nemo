@@ -103,8 +103,9 @@ ELMO::Application.routes.draw do
       post "/#{k.gsub('_', '-')}/import-standard" => "#{k}#import_standard", :as => "import_standard_#{k}"
     end
 
-    # special route for option suggestions
+    # special routes for tokeninput suggestions
     get '/options/suggest' => 'options#suggest', :as => :suggest_options
+    get '/tags/suggest' => 'tags#suggest', :as => :suggest_tags
   end
 
   #####################################
@@ -125,12 +126,14 @@ ELMO::Application.routes.draw do
     get '/sms/submit' => 'sms#create'
 
     # ODK routes. They are down here so that forms_path doesn't return the ODK variant.
-    get '/formList' => 'forms#index', :format => 'xml'
-    get '/forms/:id' => 'forms#show', :format => 'xml', :as => :form_with_mission
-    match '/submission' => 'responses#create', :format => 'xml'
+    get '/formList' => 'forms#index', :format => 'xml', :as => :odk_form_list, :direct_auth => true
+    get '/forms/:id' => 'forms#show', :format => 'xml', :as => :odk_form, :direct_auth => true
+    get '/forms/:id/manifest' => 'forms#odk_manifest', :format => 'xml', :direct_auth => true, :as => :odk_form_manifest
+    get '/forms/:id/itemsets' => 'forms#odk_itemsets', :format => 'csv', :direct_auth => true, :as => :odk_form_itemsets
+    match '/submission' => 'responses#create', :direct_auth => true, :format => 'xml'
 
     # Unauthenticated submissions
-    match '/noauth/submission' => 'responses#create', :format => :xml, :noauth => true
+    match '/noauth/submission' => 'responses#create', :format => :xml, :no_auth => true
   end
 
   # API routes.

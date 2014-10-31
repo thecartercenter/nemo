@@ -34,5 +34,6 @@ translations:
       "*.report/report.*",
       "*.response.*",
       "*.role.*",
-      "*.standard.*"
+      "*.standard.*",
+      "*.tag.*"
     ]

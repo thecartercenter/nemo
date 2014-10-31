@@ -5,11 +5,15 @@ require 'xml'
 describe 'form rendering for odk', clean_with_truncation: true do
   before do
     @user = create(:user)
-    @form = create(:sample_form)
+    @form = create(:form, question_types: %w(select_one select_one integer select_multiple integer))
+
+    # Make the second question use the grandchildren option set, but make that option set uneven.
+    @large_opt_set = create(:option_set, super_multi_level: true)
+    @large_opt_set.root_node.c[0].c[0].children.each{ |c| c.destroy }
+    @form.questions[1].update_attributes!(option_set: @large_opt_set)
 
     # Hidden question should not be included, even if required.
-    @form.questionings << create(:questioning, form: @form, hidden: true, required: true)
-    @form.save!
+    @form.questionings[4].update_attributes!(hidden: true, required: true)
 
     @form.publish!
     login(@user)

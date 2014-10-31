@@ -35,7 +35,7 @@
       zoom: self.location ? 7 : 2,
       streetViewControl: false,
       draggableCursor: 'pointer',
-      center: self.location ? self.location : latlng,
+      center: self.location ? new google.maps.LatLng(self.location[0], self.location[1]) : latlng,
     });
 
     // put a mark at the present location

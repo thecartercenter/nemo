@@ -13,7 +13,7 @@
       item_class: ELMO.Models.NamedItem,
       wrapper: params.wrapper,
       modal: params.modal,
-      form_mode: params.form_mode,
+      options_levels_read_only: params.options_levels_read_only,
       multi_level: false,
       can_reorder: self.params.can_reorder,
       can_remove: self.params.can_remove,

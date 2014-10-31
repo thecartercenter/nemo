@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-feature 'option suggestion dropdown', js: true do
+feature 'option suggestion dropdown', js: true, driver: :selenium do
   before do
     @user = create(:user, role_name: 'coordinator')
     login(@user)

@@ -106,11 +106,13 @@
 
         case "select_one":
           var ids = [];
+          // Get non-null/blank selected option ids
           this.rq_row.find("select").each(function(i, el){
             var id = $(el).val();
-            if (id != '') ids.push(parseInt(id));
+            if (id) ids.push(parseInt(id));
           });
-          return ids;
+          // Trim to match length of rhs.
+          return ids.slice(0, this.rhs().length);
 
         case "datetime": case "date": case "time":
           return (new ELMO.TimeFormField(this.rq_row.find("div.control"))).extract_str();

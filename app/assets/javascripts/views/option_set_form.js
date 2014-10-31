@@ -15,7 +15,7 @@
       wrapper: $("#option-levels-wrapper"),
       modal: $("#edit-option-level"),
       option_levels: params.option_set.levels,
-      form_mode: self.params.form_mode,
+      options_levels_read_only: self.params.options_levels_read_only,
       can_reorder: true,
       can_remove: self.params.can_remove_options,
       edit_link: self.params.edit_link,
@@ -27,7 +27,7 @@
       wrapper: $("#options-wrapper"),
       modal: $("#edit-option"),
       children: params.option_set.children,
-      form_mode: self.params.form_mode,
+      options_levels_read_only: self.params.options_levels_read_only,
       can_reorder: self.params.can_reorder,
       can_remove: self.params.can_remove_options,
       edit_link: self.params.edit_link,
@@ -177,10 +177,12 @@
     // re-disable
     disabled.attr('disabled', 'disabled');
 
-    // add nodes
-    data.option_set = {};
-    data.option_set.level_names = self.prepare_option_levels();
-    data.option_set.children_attribs = self.prepare_options();
+    // Add nodes unless read only.
+    if (!self.params.options_levels_read_only) {
+      data.option_set = {};
+      data.option_set.level_names = self.prepare_option_levels();
+      data.option_set.children_attribs = self.prepare_options();
+    }
 
     // Upate some params OptionSet model, as this may be used by modal
     self.params.option_set.name = data['option_set[name]'];
@@ -274,7 +276,9 @@
   };
 
   klass.prototype.validate = function() { var self = this;
-    var checks = ['name_presence', 'option_presence', 'option_depths'];
+    var checks = ['name_presence'];
+    if (!self.params.options_levels_read_only)
+      checks.push('option_presence', 'option_depths');
     var valid = true;
 
     // Run each check even if an early one fails.

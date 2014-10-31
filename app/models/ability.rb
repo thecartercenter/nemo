@@ -254,8 +254,12 @@ class Ability
     end
 
     # we need these specialized permissions because option names/hints are updated via option set
-    cannot [:update_core, :add_options, :remove_options, :reorder_options], OptionSet do |o|
+    cannot [:add_options, :remove_options, :reorder_options], OptionSet do |o|
       o.standard_copy? || o.published?
+    end
+
+    cannot :update_core, OptionSet do |o|
+      o.standard_copy?
     end
 
     # the geographic option is used only for reporting so doesnt matter if published, etc.

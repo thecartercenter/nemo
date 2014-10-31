@@ -86,9 +86,9 @@ describe "responses" do
       @answers_array = parse_json(response.body)
     end
 
-    it "should return 0 answer if question was private" do
-      expect(@answers_array.first[:answers]).to be_empty
-    end
+    # it "should return 0 answer if question was private" do
+    #   expect(@answers_array.first[:answers]).to be_empty
+    # end
 
     it "should return array of 1 answers for public question" do
       expect(@answers_array.last[:answers].size).to eq 1
