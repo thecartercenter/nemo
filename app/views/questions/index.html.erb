@@ -1,6 +1,6 @@
 <%= render("searches/form", :search => @search) %>
 
-<%= render_tags(@tags, class: 'clearfix') %>
+<%= render_tags(@tags, class: 'clearfix', clickable: true) %>
 
 <%= index_table(Question, @questions) %>
 <%= standard_import_form %>

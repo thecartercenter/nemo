@@ -1018,6 +1018,7 @@ en:
     searching: "Searching..."
     type_to_add_new: "Type a tag name"
     new_tag: "New tag"
+    click_to_filter: "Click to filter by this tag"
 
   password_reset:
     check_email: "Instructions to reset your password have been emailed to you. Please check your email."
