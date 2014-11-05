@@ -23,6 +23,9 @@ class ELMO.Views.SearchFormView extends Backbone.View
     regex = /// #{qualifier}: \s* ( \w+ | \( .* \) | " .* " ) \s? ///g
     current_search = current_search.replace(regex, '').trim()
 
+    # Surround new value with quotes if contains space
+    val = val.replace(/^(.*\s+.*)$/, '"$1"')
+
     # Add new qualifier to end of search
     if current_search
       search_box.val(current_search + " #{qualifier}: #{val}")
