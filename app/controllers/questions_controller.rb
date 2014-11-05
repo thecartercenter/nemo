@@ -19,7 +19,7 @@ class QuestionsController < ApplicationController
 
     @tags = Tag.joins(:taggings).where(taggings: {question_id: @questions.map(&:id)}).uniq.order(:name)
 
-    @questions = @questions.with_assoc_counts.by_code.paginate(:page => params[:page], :per_page => 25)
+    @questions = @questions.includes(:tags).with_assoc_counts.by_code.paginate(:page => params[:page], :per_page => 25)
     load_importable_objs
   end
 

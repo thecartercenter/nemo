@@ -1,6 +1,6 @@
 <% if read_only || cannot?(:update_core, @question) %>
 
-  <%= render_tags(form.object.tags) %>
+  <%= render_tags(form.object.tags.order(:name)) %>
 
 <% else %>
 
