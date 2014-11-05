@@ -217,11 +217,8 @@ nav {
   padding: 20px 25px 30px 25px;
   min-height: 400px;
   background-color: white;
-  a i {
-    color: $elmo-blue;
-    &.fa:hover { color: darken($elmo-blue, 20%) }
-  }
-
+  a i { color: $elmo-blue; }
+  .index_table a i.fa:hover { color: darken($elmo-blue, 20%) }
 }
 
 #footer {
