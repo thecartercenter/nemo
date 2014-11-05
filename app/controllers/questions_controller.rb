@@ -17,7 +17,7 @@ class QuestionsController < ApplicationController
       end
     end
 
-    @tags = Tag.joins(:taggings).where(taggings: {question_id: @questions.map(&:id)}).uniq.order(:name)
+    @tags = Tag.mission_tags(@current_mission)
 
     @questions = @questions.includes(:tags).with_assoc_counts.by_code.paginate(:page => params[:page], :per_page => 25)
     load_importable_objs

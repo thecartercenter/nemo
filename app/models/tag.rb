@@ -50,6 +50,20 @@ class Tag < ActiveRecord::Base
     matches
   end
 
+  # Tags that should show at the top of question index page
+  def self.mission_tags(mission)
+    # In admin mode, return all standard tags
+    if mission.nil?
+      return where(is_standard: true).order(:name)
+    end
+
+    # In mission, show all tags for mission plus standard tags applied to mission
+    question_ids = Question.for_mission(mission).pluck(:id)
+    mission_id = mission.try(:id) || 'null'
+    joins(:taggings).where('mission_id = ? OR (tags.is_standard = true AND taggings.question_id IN (?))',
+        mission_id, question_ids).uniq.order(:name)
+  end
+
   private
 
     # invalidate the mission tag cache after save, destroy
