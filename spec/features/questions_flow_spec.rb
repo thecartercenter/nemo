@@ -163,7 +163,7 @@ feature "questions flow" do
 
     # Click another tag
     first('li', text: 'twenty dollaz').click
-    expect(current_url).to include 'search=cheese+tag%253A+twenty+dollaz'
+    expect(current_url).to include 'search=cheese+tag%253A+%2522twenty+dollaz%2522'
     expect(current_url).not_to include 'awesome'
     expect(page).to have_content(@question1.code)
     expect(page).not_to have_content(@question2.code)
