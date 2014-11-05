@@ -42,7 +42,7 @@ class Tag < ActiveRecord::Base
     # In mission, show all tags for mission plus standard tags applied to mission
     question_ids = Question.for_mission(mission).pluck(:id)
     mission_id = mission.try(:id) || 'null'
-    joins(:taggings).where('mission_id = ? OR (tags.is_standard = true AND taggings.question_id IN (?))',
+    includes(:taggings).where('mission_id = ? OR (tags.is_standard = true AND taggings.question_id IN (?))',
         mission_id, question_ids).uniq.order(:name)
   end
 

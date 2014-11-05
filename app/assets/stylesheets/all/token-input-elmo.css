@@ -30,7 +30,7 @@ li.token-input-token-elmo {
     overflow: hidden;
     height: auto !important;
     height: 15px;
-    margin: 6px 3px 3px 3px;
+    margin: 6px 3px;
     padding: 1px 3px;
     background-color: #f7f1aa;
     color: #000;
@@ -43,6 +43,10 @@ li.token-input-token-elmo {
     float: left;
     white-space: nowrap;
     text-align: center;
+}
+
+.read_only li.token-input-token-elmo {
+  margin: 3px;
 }
 
 li.token-input-token-elmo p {

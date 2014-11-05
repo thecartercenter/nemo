@@ -94,3 +94,10 @@ ul.tags {
     background-color: #EAE175;
   }
 }
+
+.all-tags ul.tags {
+  background: #f0f0f0;
+  max-height: 93px;
+  overflow: auto;
+  padding: 0 3px;
+}
