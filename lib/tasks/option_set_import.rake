@@ -64,7 +64,7 @@ namespace :option_set do
       row = sheet.row(r)[0...headers.size]
 
       next if row.all?(&:blank?)
-      row.map!{ |c| c.blank? ? nil : c.strip[0...MAX_OPTION_LENGTH] }
+      row.map!{ |c| c.blank? ? nil : c.to_s.strip[0...MAX_OPTION_LENGTH] }
 
       # Can't be any blank interior cells.
       raise "Error on row #{r}: blank interior cell." if blank_interior_cell?(row)
