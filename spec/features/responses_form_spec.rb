@@ -99,6 +99,37 @@ feature 'responses form' do
     end
   end
 
+  describe 'integer constraints' do
+    before do
+      @form = create(:form, question_types: %w(integer))
+      @form.questions[0].update_attributes!(minimum: 10)
+      login(@user)
+    end
+
+    scenario 'should be enforced if appropriate' do
+      new_url = new_response_path(locale: 'en', mode: 'm', mission_name: get_mission.compact_name, form_id: @form.id)
+
+      # Should raise error if value filled in.
+      visit(new_url)
+      select(@user.name, from: 'response_user_id')
+      fill_in('response_answers_attributes_0_value', with: '9')
+      click_button('Save')
+      expect(page).to have_content('greater than or equal to 10')
+
+      # Should not raise error if value is valid.
+      fill_in('response_answers_attributes_0_value', with: '11')
+      click_button('Save')
+      expect(page).to have_content('Response created successfully')
+
+      # Should not raise error if left blank.
+      visit(new_url)
+      select(@user.name, from: 'response_user_id')
+      fill_in('response_answers_attributes_0_value', with: '')
+      click_button('Save')
+      expect(page).to have_content('Response created successfully')
+    end
+  end
+
   def check_response_show_form(*values)
     values.each_with_index{ |v,i| expect_answer(i, v) }
   end

@@ -163,6 +163,8 @@ class Answer < ActiveRecord::Base
     when :required
       # don't validate requiredness if response says no
       !(response && response.incomplete?)
+    when :min_max
+      value.present?
     else
       true
     end
