@@ -10,6 +10,9 @@ class ResponsesController < ApplicationController
   before_filter :mark_response_as_checked_out, :only => [:edit]
 
   def index
+    # Disable cache, including back button
+    response.headers['Cache-Control'] = 'no-cache, max-age=0, must-revalidate, no-store'
+
     # handle different formats
     respond_to do |format|
       # html is the normal index page
