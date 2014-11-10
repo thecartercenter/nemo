@@ -314,7 +314,7 @@ class OptionNode < ActiveRecord::Base
     end
 
     def has_answers?
-      !is_root? && Answer.any_for_option?(option_id)
+      !is_root? && option_set.has_answers_for_option?(option_id)
     end
 
     def ensure_no_answers_or_choices

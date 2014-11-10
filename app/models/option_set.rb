@@ -202,6 +202,10 @@ class OptionSet < ActiveRecord::Base
     end
   end
 
+  def has_answers_for_option?(option_id)
+    questionings.any? ? Answer.any_for_option_and_questionings?(option_id, questionings.map(&:id)) : false
+  end
+
   # gets the number of answers to questions that use this option set
   # or in the case of a standard option set, answers to questions that use copies of this option set
   # uses method from special eager loaded scope if available

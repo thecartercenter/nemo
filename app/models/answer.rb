@@ -47,10 +47,11 @@ class Answer < ActiveRecord::Base
     ])
   end
 
-  # Tests if there exists at least one answer referencing the Option with the given ID.
-  def self.any_for_option?(option_id)
+  # Tests if there exists at least one answer referencing the option and questionings with the given IDs.
+  def self.any_for_option_and_questionings?(option_id, questioning_ids)
     connection.execute("SELECT COUNT(*) FROM answers a LEFT OUTER JOIN choices c ON c.answer_id = a.id
-      WHERE a.option_id = '#{option_id}' OR c.option_id = '#{option_id}'").to_a[0][0] > 0
+      WHERE (a.option_id = '#{option_id}' OR c.option_id = '#{option_id}')
+      AND a.questioning_id IN (#{questioning_ids.join(',')})").to_a[0][0] > 0
   end
 
   # Populates answer from odk-like string value.
