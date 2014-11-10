@@ -141,11 +141,8 @@ module Replicable
       end
 
       # check if the current existing object's name matches the name we're looking for
-      if params[:style] == :sep_words
-        m = obj.send(params[:field]).match(/^#{prefix}\s*( (\d+))?\s*$/i)
-      else
-        m = obj.send(params[:field]).match(/^#{prefix}((\d+))?\s*$/i)
-      end
+      number_re = params[:style] == :sep_words ? /\s*( (\d+))?/ : /((\d+))?/
+      m = obj.send(params[:field]).match(/^#{Regexp.escape(prefix)}#{number_re}\s*$/i)
 
       # if there was no match, return nil (this will be compacted out of the array at the end)
       if m.nil?
