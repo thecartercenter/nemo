@@ -16,8 +16,9 @@ module TagsHelper
         html << tag.name
         html << '</li>'
       end
-      html << '</ul>'
-      raw html
+      raw html << '</ul>'
+    else
+      ''
     end
   end
 end

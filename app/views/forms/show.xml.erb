@@ -81,7 +81,7 @@
           <% end %>
         </itext>
 
-        <%# regualar question bindings %>
+        <%# regular question bindings %>
         <% @form.visible_questionings.each do |qing| %>
           <% qing.subquestions.each do |subq| %>
             <%= question_binding(@form, qing, subq) %>

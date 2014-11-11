@@ -41,7 +41,12 @@ module QuestionsHelper
     when "answer_count" then number_with_delimiter(q.answer_count)
     when "actions" then table_action_links(q)
     when "name"
-      params[:controller] == 'forms' ? q.name : link_to(q.name, q) + render_tags(q.tags.order(:name), clickable: true)
+      if params[:controller] == 'forms'
+        # Using sort_by here and below because using order caused N+1 queries despite eager loading
+        q.name + render_tags(q.tags.sort_by(&:name))
+      else
+        link_to(q.name, q) + render_tags(q.tags.sort_by(&:name), clickable: true)
+      end
     else q.send(field)
     end
   end

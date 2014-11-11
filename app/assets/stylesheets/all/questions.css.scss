@@ -89,6 +89,7 @@ div.form_field.question_option_set_id {
 
 ul.tags {
   padding: 0;
+  li:hover { cursor: inherit; }
   &.clickable li:hover {
     cursor: pointer;
     background-color: #EAE175;
