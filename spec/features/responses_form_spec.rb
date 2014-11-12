@@ -67,8 +67,7 @@ feature 'responses form' do
         "Foo Bar Baz", "Mar 12 #{Time.now.year} 18:32", "Oct 26 #{Time.now.year}", "03:08")
 
       # Delete.
-      click_link('Delete Response')
-      page.driver.browser.switch_to.alert.accept
+      handle_js_confirm{click_link('Delete Response')}
       expect(page).to have_selector('.alert-success', text: 'deleted')
     end
   end
@@ -138,5 +137,13 @@ feature 'responses form' do
     Array.wrap(value).each do |v|
       expect(page).to have_selector("#qing_#{qing.id} .#{csscls}", text: /^#{Regexp.escape(v)}$/)
     end
+  end
+
+  # helper method
+  def handle_js_confirm
+    page.evaluate_script 'window.confirmMsg = null'
+    page.evaluate_script 'window.confirm = function(msg) { window.confirmMsg = msg; return true; }'
+    yield
+    page.evaluate_script 'window.confirmMsg'
   end
 end
