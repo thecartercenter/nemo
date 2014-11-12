@@ -13,7 +13,7 @@ feature 'responses form' do
       login(@user)
     end
 
-    scenario 'should work', js: true, driver: :selenium do
+    scenario 'should work', js: true do
       visit_submit_page_and_select_user
 
       # Fill in answers
