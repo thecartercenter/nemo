@@ -69,8 +69,9 @@ class Report::ReportsController < ApplicationController
 
     # if report is not valid, can't run it
     if @report.valid?
-      # save
       @report.save
+      @report.reload # Without this, if you add a calculation and remove another on the same edit, the new one doesn't show.
+
       # re-run the report, handling errors
       run_and_handle_errors
     end
