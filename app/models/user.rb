@@ -18,6 +18,7 @@ class User < ActiveRecord::Base
 
   acts_as_authentic do |c|
     c.disable_perishable_token_maintenance = true
+    c.perishable_token_valid_for = 1.week
     c.logged_in_timeout(SESSION_TIMEOUT)
     c.validates_format_of_login_field_options = {:with => /[\a-zA-Z0-9\.]+/}
 
