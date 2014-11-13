@@ -42,9 +42,9 @@ module QuestionsHelper
     when "actions" then table_action_links(q)
     when "name"
       if params[:controller] == 'forms'
-        q.name + render_tags(q.tags)
+        q.name + render_tags(q.sorted_tags)
       else
-        link_to(q.name, q) + render_tags(q.tags, clickable: true)
+        link_to(q.name, q) + render_tags(q.sorted_tags, clickable: true)
       end
     else q.send(field)
     end

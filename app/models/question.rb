@@ -241,9 +241,8 @@ class Question < ActiveRecord::Base
   end
 
   # This should be able to be done by adding `order: :name` to the association, but that causes a cryptic SQL error
-  alias_method :old_tags, :tags
-  def tags
-    old_tags.order(:name)
+  def sorted_tags
+    tags.sort_by(&:name)
   end
 
   private
