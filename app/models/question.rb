@@ -242,7 +242,7 @@ class Question < ActiveRecord::Base
 
   # This should be able to be done by adding `order: :name` to the association, but that causes a cryptic SQL error
   def sorted_tags
-    tags.sort_by(&:name)
+    tags.order(:name)
   end
 
   private
