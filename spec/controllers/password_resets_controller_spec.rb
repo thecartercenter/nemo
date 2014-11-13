@@ -1,6 +1,7 @@
 require 'spec_helper'
 
-describe PasswordResetsController do
+# Using request spec b/c Authlogic won't work with controller spec
+describe PasswordResetsController, type: :request do
   before do
     @user = create(:user)
   end
