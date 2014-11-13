@@ -240,6 +240,12 @@ class Question < ActiveRecord::Base
     option_set.present? ? option_set.option_levels : []
   end
 
+  # This should be able to be done by adding `order: :name` to the association, but that causes a cryptic SQL error
+  alias_method :old_tags, :tags
+  def tags
+    old_tags.order(:name)
+  end
+
   private
 
     def code_unique_per_mission

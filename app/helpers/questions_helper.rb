@@ -42,10 +42,9 @@ module QuestionsHelper
     when "actions" then table_action_links(q)
     when "name"
       if params[:controller] == 'forms'
-        # Using sort_by here and below because using order caused N+1 queries despite eager loading
-        q.name + render_tags(q.tags.sort_by(&:name))
+        q.name + render_tags(q.tags)
       else
-        link_to(q.name, q) + render_tags(q.tags.sort_by(&:name), clickable: true)
+        link_to(q.name, q) + render_tags(q.tags, clickable: true)
       end
     else q.send(field)
     end

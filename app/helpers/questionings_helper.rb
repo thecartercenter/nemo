@@ -22,7 +22,7 @@ module QuestioningsHelper
     when "std_icon" then std_icon(qing)
     when "name"
       link_to(qing.question.name, questioning_path(qing), :title => t("common.view")) +
-        render_tags(qing.question.tags.order(:name))
+        render_tags(qing.question.tags)
     when "rank"
       if controller.action_name == "show" || cannot?(:reorder_questions, qing.form)
         qing.rank
