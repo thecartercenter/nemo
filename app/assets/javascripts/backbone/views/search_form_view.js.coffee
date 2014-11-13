@@ -28,9 +28,9 @@ class ELMO.Views.SearchFormView extends Backbone.View
 
     # Add new qualifier to end of search
     if current_search
-      search_box.val(current_search + " #{qualifier}: #{val}")
+      search_box.val(current_search + " #{qualifier}:#{val}")
     else
-      search_box.val("#{qualifier}: #{val}")
+      search_box.val("#{qualifier}:#{val}")
 
     # Submit form
     @el.submit()
