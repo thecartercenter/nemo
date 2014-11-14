@@ -41,7 +41,6 @@ module Standardizable
       result = send(method)
       Thread.current[:elmo_capturing_changes?] = false
       rereplicate_to_copies
-      do_assertions
       result
     end
   end
@@ -54,7 +53,7 @@ module Standardizable
     transaction do
       destroy_copies
       destroy
-      do_assertions
+      do_standard_assertions
     end
   end
 
@@ -163,7 +162,7 @@ module Standardizable
 
     # Runs some assertions against the database and raises an error if they fail so that the cause
     # can be investigated.
-    def do_assertions
+    def do_standard_assertions
       assert_no_results('select s.form_id, s.id, s.rank, c.id, c.rank
         from questionings s left outer join questionings c on c.standard_id = s.id
         where s.rank != c.rank order by s.form_id, s.rank',
@@ -175,6 +174,10 @@ module Standardizable
           select distinct sf.id from forms sf inner join forms sc on sf.id = sc.standard_id
         ) order by s.form_id, s.rank',
         'questionings from copied standard forms dont have corresponding copies')
+
+      tbl = self.class.model_name.plural
+      assert_no_results("select c.id from #{tbl} c inner join #{tbl} s on c.standard_id=s.id where s.mission_id is not null",
+        'mission based objects should not be referenced as standards')
     end
 
     # Raises an error if the given sql returns any results.

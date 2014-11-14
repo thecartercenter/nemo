@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20141030004640) do
+ActiveRecord::Schema.define(:version => 20141114205600) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -188,9 +188,7 @@ ActiveRecord::Schema.define(:version => 20141030004640) do
     t.datetime "updated_at"
     t.integer  "mission_id"
     t.string   "_name"
-    t.text     "_hint"
     t.text     "name_translations"
-    t.text     "hint_translations"
     t.boolean  "is_standard",       :default => false
     t.integer  "standard_id"
     t.text     "recent_changes"

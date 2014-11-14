@@ -1,6 +1,7 @@
 require 'spec_helper'
 
-describe ResponsesController do
+# Using request spec b/c Authlogic won't work with controller spec
+describe ResponsesController, type: :request do
   before do
     @form = create(:form, question_types: %w(integer select_one), use_multilevel_option_set: true)
     @option_set = OptionSet.first

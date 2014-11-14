@@ -16,7 +16,7 @@ class ELMO.Views.CascadingSelectsView extends Backbone.View
   # Gets the next select box after the given one.
   # Returns false if not found.
   next_select: (select) ->
-    next = select.parent().next().find('select')
+    next = select.closest('div').next().find('select')
     next.length > 0 && next || false
 
   # Clears all selects after and including the given one.

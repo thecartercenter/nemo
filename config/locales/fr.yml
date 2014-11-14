@@ -1106,16 +1106,16 @@ fr:
     examples:
       responses:
       - '"quelques phrase"'
-      - 'émetteur: "john smith"'
-      - 'formulaire: vote'
-      - 'revue: 1'
+      - 'émetteur:"john smith"'
+      - 'formulaire:vote'
+      - 'revue:1'
       - date de réponses < 2013-10-15
-      - '{QuestionCode}: (perturbation sécurité)'
+      - '{QuestionCode}:(perturbation sécurité)'
       users:
       - john smith
-      - 'phone: +443726458364'
-      - 'login: jsmith'
-      - 'email: jsmith@example.com'
+      - 'phone:+443726458364'
+      - 'login:jsmith'
+      - 'email:jsmith@example.com'
     expected: "Attendu"
     help_link: "Aide à la recherche"
     help_title: "Aide à la recherche"
@@ -1129,13 +1129,13 @@ fr:
 
         recherche seulement réponses aux questions textuelles. Pour chercher en fonction des attributs de réponse, utiliser un qualificatif, par exemple,:
 
-        * __formulaire: Widgets__
+        * __formulaire:Widgets__
 
         ne montrera que les réponses à le formulaire 'Widgets'.
 
         Combinez les deux ci-dessus pour préciser votre recherche:
 
-        * __romeo juliet formulaire: Widgets__
+        * __romeo juliet formulaire:Widgets__
 
         montrera les réponses à le formulaire 'Widgets' contenant les mots 'romeo' et 'juliet'.
 
@@ -1170,7 +1170,7 @@ fr:
 
         Le caractère "|" peut être utilisé avec qualificatifs aussi:
 
-        * __formulaire: ( les lions | "Les ours et les requins" | les tigres )__
+        * __formulaire:( les lions | "Les ours et les requins" | les tigres )__
 
         correspond réponses pour l'une des formulaires ci-dessus.
 
@@ -1198,9 +1198,9 @@ fr:
 
         correspondra réponses qui étaient soumis en Janvier 2000.
       users: "\n## Qualificatifs ## \n\nUne recherche simple comme: \n\n* __romeo juliet__ \n\ncorrespond seulement les noms des utilisateurs. Utilisez un qualificatif pour une recherche en fonction d'autres attributs de l'utilisateur, p. ex: \n\n* __email: @example.com__ \n\nrecherchera les utilisateurs avec des adresses e-mail correspondant '@example.com'. \n\nCombinez les deux ci-dessus pour préciser votre recherche:\n\n\
-        \ * __Susan email: @example.com__ \n\nrecherchera les utilisateurs nommés Susan avec une 'example.com' addresse e-mail. \n\nL'ensemble de qualificatifs disponibles est présenté ci-dessous: \n\n* __nom__ Le nom de l'utilisateur \n* __login__ Le nom s'enregistrer de l'utilisateur \n* __email__ L'adresse email de l'utilisateur \n* __phone__ Le numéro de téléphone de l'utilisateur (pas de tirets ou autres signes de ponctuation)\
+        \ * __Susan email:@example.com__ \n\nrecherchera les utilisateurs nommés Susan avec une 'example.com' addresse e-mail. \n\nL'ensemble de qualificatifs disponibles est présenté ci-dessous: \n\n* __nom__ Le nom de l'utilisateur \n* __login__ Le nom s'enregistrer de l'utilisateur \n* __email__ L'adresse email de l'utilisateur \n* __phone__ Le numéro de téléphone de l'utilisateur (pas de tirets ou autres signes de ponctuation)\
         \ \n\nLes correspondances partielles sont admises pour chacune des qualificatifs.\n\n## Phrases Exactes ## \n\nLes phrases exactes peuvent être jumelés en enfermant la phrase entre guillemets: \n\n* __\"john smith\"__ \n\n## Tous les termes ou quelconque terme \n\nPar défaut, tous les termes de la recherche doivent correspondre. Par exemple, \n\n* __john smith__ \n\ncorrespond seulement les utilisateurs avec 'john' et\
-        \ 'smith' dans ses noms. Utilisez la barre verticale ('|') pour correspondre plusieurs noms: \n\n* __abdul | juanita | clarice__ \n\nLe caractère \"|\" peut être utilisé avec qualificatifs aussi: \n\n* __email: ( john@example.com | patty@foo.com )__ \n\ncorrespond les utilisateurs avec les adresses emails decrits. \n\n## Negation \n\nVous pouvez nier une recherche qualifié en utilisant l'opérateur de négation: \n\n*\
+        \ 'smith' dans ses noms. Utilisez la barre verticale ('|') pour correspondre plusieurs noms: \n\n* __abdul | juanita | clarice__ \n\nLe caractère \"|\" peut être utilisé avec qualificatifs aussi: \n\n* __email:( john@example.com | patty@foo.com )__ \n\ncorrespond les utilisateurs avec les adresses emails decrits. \n\n## Negation \n\nVous pouvez nier une recherche qualifié en utilisant l'opérateur de négation: \n\n*\
         \ __name != Oluwaseun__ \n\ncorrespondra les utilisateurs qui ne sont pas nommés 'Oluwaseun'"
     invalid_op: "L'opérateur '%{op}' n'est pas valide pour le qualificatif '%{qualifier}'."
     multiple_terms_not_allowed: "Plusieurs termes ne sont pas permis pour '%{qualifier}' recherches sauf le case où 'OU' est utilisé."

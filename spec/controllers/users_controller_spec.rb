@@ -1,6 +1,7 @@
 require 'spec_helper'
 
-describe UsersController do
+# Using request spec b/c Authlogic won't work with controller spec
+describe UsersController, type: :request do
   before do
     @user = create(:user)
     login(@user)

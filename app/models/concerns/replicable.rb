@@ -53,57 +53,67 @@ module Replicable
       replication = Replication.new(options.merge(:src_obj => self))
     end
 
-    # wrap in transaction if this is the first call
-    return replication.redo_in_transaction unless replication.in_transaction?
+    # Wrap in transaction and run assertions if this is the first call
+    if !replication.in_transaction?
 
-    # do logging after redo_in_transaction so we don't get duplication
-    Rails.logger.debug(replication.to_s) if self.class.log_replication?
+      transaction do
+        replication.in_transaction = true
+        result = replicate(replication)
+        do_standard_assertions
+        result
+      end
 
-    # if we're on a recursive step AND we're doing a shallow copy AND this is not a join class,
-    # we don't need to do any recursive copying, so just return self
-    if replication.recursed? && replication.shallow_copy? && !DEPENDENT_CLASSES.include?(self.class.name)
-      add_replication_dest_obj_to_parents_assocation(replication, self)
-      return self
+    else
+
+      # do logging after redo_in_transaction so we don't get duplication
+      Rails.logger.debug(replication.to_s) if self.class.log_replication?
+
+      # if we're on a recursive step AND we're doing a shallow copy AND this is not a join class,
+      # we don't need to do any recursive copying, so just return self
+      if replication.recursed? && replication.shallow_copy? && !DEPENDENT_CLASSES.include?(self.class.name)
+        add_replication_dest_obj_to_parents_assocation(replication, self)
+        return self
+      end
+
+      # if we get this far we DO need to do recursive copying
+      # get the obj to copy stuff to, and also tell the replication object about it
+      replication.dest_obj = dest_obj = setup_replication_destination_obj(replication)
+
+      # set the proper mission ID if applicable
+      dest_obj.mission_id = replication.dest_mission.try(:id)
+
+      # copy attributes from src to parent
+      replicate_attributes(replication)
+
+      # if we are copying standard to standard, preserve the is_standard flag
+      dest_obj.is_standard = true if replication.to_standard?
+
+      # ensure uniqueness params are respected
+      ensure_uniqueness_when_replicating(replication)
+
+      # call a callback if requested
+      self.send(replicable_opts(:after_copy_attribs), replication) if replicable_opts(:after_copy_attribs)
+
+      # add dest_obj to its parent's assoc before recursive step so that children can access it
+      add_replication_dest_obj_to_parents_assocation(replication)
+
+      replicate_child_associations(replication)
+
+      dest_obj.save!
+
+      self.send(replicable_opts(:after_dest_obj_save), replication) if replicable_opts(:after_dest_obj_save)
+
+      # if this is a standard-to-mission replication, add the newly replicated dest obj to the list of copies
+      # unless it is there already
+      add_copy(dest_obj) if replication.to_mission?
+
+      # Need to clear this for next time.
+      clear_recent_changes! if respond_to?(:recent_changes)
+
+      link_object_to_standard(dest_obj) if replication.promote_and_retain_link?
+
+      dest_obj
     end
-
-    # if we get this far we DO need to do recursive copying
-    # get the obj to copy stuff to, and also tell the replication object about it
-    replication.dest_obj = dest_obj = setup_replication_destination_obj(replication)
-
-    # set the proper mission ID if applicable
-    dest_obj.mission_id = replication.dest_mission.try(:id)
-
-    # copy attributes from src to parent
-    replicate_attributes(replication)
-
-    # if we are copying standard to standard, preserve the is_standard flag
-    dest_obj.is_standard = true if replication.to_standard?
-
-    # ensure uniqueness params are respected
-    ensure_uniqueness_when_replicating(replication)
-
-    # call a callback if requested
-    self.send(replicable_opts(:after_copy_attribs), replication) if replicable_opts(:after_copy_attribs)
-
-    # add dest_obj to its parent's assoc before recursive step so that children can access it
-    add_replication_dest_obj_to_parents_assocation(replication)
-
-    replicate_child_associations(replication)
-
-    dest_obj.save!
-
-    self.send(replicable_opts(:after_dest_obj_save), replication) if replicable_opts(:after_dest_obj_save)
-
-    # if this is a standard-to-mission replication, add the newly replicated dest obj to the list of copies
-    # unless it is there already
-    add_copy(dest_obj) if replication.to_mission?
-
-    # Need to clear this for next time.
-    clear_recent_changes! if respond_to?(:recent_changes)
-
-    link_object_to_standard(dest_obj) if replication.promote_and_retain_link?
-
-    return dest_obj
   end
 
   # ensures the given name or other field would be unique, and generates a new name if it wouldnt be
@@ -141,11 +151,8 @@ module Replicable
       end
 
       # check if the current existing object's name matches the name we're looking for
-      if params[:style] == :sep_words
-        m = obj.send(params[:field]).match(/^#{prefix}\s*( (\d+))?\s*$/i)
-      else
-        m = obj.send(params[:field]).match(/^#{prefix}((\d+))?\s*$/i)
-      end
+      number_re = params[:style] == :sep_words ? /\s*( (\d+))?/ : /((\d+))?/
+      m = obj.send(params[:field]).match(/^#{Regexp.escape(prefix)}#{number_re}\s*$/i)
 
       # if there was no match, return nil (this will be compacted out of the array at the end)
       if m.nil?

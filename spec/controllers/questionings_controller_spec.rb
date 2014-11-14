@@ -1,6 +1,7 @@
 require 'spec_helper'
 
-describe QuestioningsController do
+# Using request spec b/c Authlogic won't work with controller spec
+describe QuestioningsController, type: :request do
   before do
     @user = create(:user, role_name: 'coordinator')
     login(@user)

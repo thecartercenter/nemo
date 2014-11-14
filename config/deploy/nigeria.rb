@@ -1,4 +1,4 @@
-set :branch, 'nigeria'
+set :branch, 'master'
 set :ping_url, 'https://cceom.org'
 set :user, 'ubuntu'
 set :home_dir, '/home/ubuntu'

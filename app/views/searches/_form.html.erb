@@ -1,6 +1,6 @@
 <form class="search_form form-inline">
   <input type="text" class="form-control" name="search"
-    value="<%= params[:search] %>" id="search_str" placeholder="<%= t("common.search") %>">
+    value="<%= params[:search] %>" id="search_str" placeholder="<%= t("common.search") %>" autocomplete="off">
   <input type="submit" value="<%= t("common.search") %>" class="btn">
   <% if params[:search].present? %>
     <input type="button" value="<%= t("common.clear") %>" class="btn btn-clear">
@@ -31,5 +31,5 @@
 </div><!-- /.modal -->
 
 <%= javascript_doc_ready do %>
-  new ELMO.Views.SearchFormView();
+  searchFormView = new ELMO.Views.SearchFormView();
 <% end %>

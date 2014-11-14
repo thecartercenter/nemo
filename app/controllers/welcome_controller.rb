@@ -94,7 +94,7 @@ class WelcomeController < ApplicationController
     prepare_report
     render(:json => {
       :title => render_to_string(:partial => 'report_pane_title'),
-      :main => render_to_string(:partial => 'report/reports/main')
+      :main => render_to_string(:partial => 'reports/main')
     })
   end
 

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-feature 'conditions flow', js: true, driver: :selenium do
+feature 'conditions flow', js: true do
   before do
     @user = create(:user)
     @form = create(:form, name: 'Foo', question_types: %w(select_one integer text), use_multilevel_option_set: true)
@@ -22,8 +22,7 @@ feature 'conditions flow', js: true, driver: :selenium do
       Kingdom is equal to \"Animal\"")
 
     # Update the condition to have a full option path.
-    page.evaluate_script('window.history.back()')
-    expect(page).to have_content('Edit Form')
+    visit("/en/m/#{@form.mission.compact_name}/forms/#{@form.id}/edit")
     all('a.action_link_edit')[1].click
     select('Dog', from: 'Species')
     click_button('Save')

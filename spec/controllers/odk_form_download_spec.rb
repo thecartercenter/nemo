@@ -1,6 +1,7 @@
 require 'spec_helper'
 
-describe FormsController do
+# Using request spec b/c Authlogic won't work with controller spec
+describe FormsController, type: :request do
   before do
     @mission = create(:mission)
     @user = create(:user, role_name: :observer, mission: @mission)

@@ -179,7 +179,7 @@ class FormsController < ApplicationController
     authorize!(:add_questions, @form)
 
     # get questions for choice list
-    @questions = Question.with_assoc_counts.by_code.accessible_by(current_ability).not_in_form(@form)
+    @questions = Question.includes(:tags).with_assoc_counts.by_code.accessible_by(current_ability).not_in_form(@form)
 
     # setup new questioning for use with the questioning form
     init_qing(:form_id => @form.id, :question_attributes => {})
@@ -241,7 +241,7 @@ class FormsController < ApplicationController
     def update_api_users
       return unless params[:form][:access_level] == 'protected'
       @form.whitelist_users.destroy
-      params[:whitelist_users].each do |api_user|
+      (params[:whitelist_users] || []).each do |api_user|
         @form.whitelist_users.create(user_id: api_user)
       end
     end
