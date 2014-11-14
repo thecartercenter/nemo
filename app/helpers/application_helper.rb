@@ -213,7 +213,7 @@ module ApplicationHelper
     l = []
     klasses.each do |k|
       if can?(:index, k)
-        path = send("#{k.model_name.route_key}_path")
+        path = dynamic_path(k, action: :index)
         active = current_page?(path)
         l << content_tag(:li, :class => active ? 'active' : '') do
           link_to(icon_tag(k.model_name.param_key) + pluralize_model(k), path)
@@ -231,5 +231,16 @@ module ApplicationHelper
     rescue
       nil
     end
+  end
+
+  def dynamic_path(obj_or_class, options = {})
+    obj = obj_or_class.is_a?(Class) ? nil : obj_or_class
+    klass = obj_or_class.is_a?(Class) ? obj_or_class : obj_or_class.class
+    action = options.delete(:action)
+    key = klass.name.demodulize.underscore
+    key = key.pluralize if action == :index
+    key = "#{action}_#{key}" if [:new, :edit].include?(action)
+    args = [:new, :index].include?(action) ? [options] : [obj, options]
+    send("#{key}_path", *args)
   end
 end

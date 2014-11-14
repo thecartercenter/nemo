@@ -59,7 +59,7 @@ class DataIntegrityTest < ActionDispatch::IntegrationTest
   private
     def assert_action_link(obj, action, tf)
       # Load the index view for the object
-      get(send("#{obj.class.model_name.route_key}_path", :mode => 'm', :mission_name => obj.mission.compact_name))
+      get(polymorphic_path(obj, :mode => 'm', :mission_name => obj.mission.compact_name))
       assert_response(:success)
       assert_select("tr##{obj.class.model_name.singular}_#{obj.id} a.action_link_#{action}", tf)
     end

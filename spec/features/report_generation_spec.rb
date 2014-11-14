@@ -17,7 +17,7 @@ feature 'report generation', js: true, driver: :selenium do
 
     scenario 'should work' do
       # Generate list report with two cols.
-      visit(new_report_report_path(mode: 'm', mission_name: get_mission.compact_name, locale: 'en'))
+      visit(new_report_path(mode: 'm', mission_name: get_mission.compact_name, locale: 'en'))
       choose('List Report')
       3.times{ click_button('Next') }
       click_link('Add Column')

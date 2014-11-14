@@ -1,4 +1,4 @@
-class Report::ReportsController < ApplicationController
+class ReportsController < ApplicationController
   include ReportEmbeddable
   include CsvRenderable
 
@@ -6,7 +6,7 @@ class Report::ReportsController < ApplicationController
   before_filter :custom_load, :only => [:create]
 
   # authorization via cancan
-  load_and_authorize_resource
+  load_and_authorize_resource :class => 'Report::Report'
 
   def index
     @reports = @reports.by_popularity

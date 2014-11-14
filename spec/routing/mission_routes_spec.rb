@@ -19,8 +19,8 @@ describe 'router' do
   end
 
   it 'routes with report namespace' do
-    expect(:get => '/en/m/mission123/report/reports').to route_to(
-      :controller => 'report/reports', :action => 'index', :locale => 'en', :mode => 'm', :mission_name => 'mission123')
+    expect(:get => '/en/m/mission123/reports').to route_to(
+      :controller => 'reports', :action => 'index', :locale => 'en', :mode => 'm', :mission_name => 'mission123')
   end
 
   it 'routes special info-window route' do
