@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-feature 'responses form' do
+feature 'responses form', js: true do
   before do
     @user = create(:user)
   end
@@ -13,7 +13,7 @@ feature 'responses form' do
       login(@user)
     end
 
-    scenario 'should work', js: true do
+    scenario 'should work' do
       visit_submit_page_and_select_user
 
       # Fill in answers
