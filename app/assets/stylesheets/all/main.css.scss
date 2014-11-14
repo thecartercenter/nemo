@@ -91,6 +91,7 @@ table.index_table td {
   /* many of the cells are links, and they are harder to read if they are orange, so revert to blue */
   a {
     color: $elmo-darker-blue;
+    padding: 5px 0;
   }
 }
 table.index_table tr:last-child td { border-bottom: 1px solid #ddd; }
@@ -111,7 +112,7 @@ i.fa-certificate {
 
 table.index_table .tags {
   display: inline;
-  line-height: 2.5;
+  line-height: 2.1;
   margin-left: 3px;
   vertical-align: text-top;
   li {
