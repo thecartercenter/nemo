@@ -1,6 +1,7 @@
 require 'spec_helper'
 
-describe 'odk submissions' do
+# Using request spec b/c Authlogic won't work with controller spec
+describe 'odk submissions', type: :request do
 
   ODK_XML_FILE = 'odk_xml_file.xml'
 

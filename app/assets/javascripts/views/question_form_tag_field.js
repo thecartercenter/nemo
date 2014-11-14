@@ -18,6 +18,9 @@
       prePopulate: params.question_tags,
       onAdd: function(item) { self.add_tag(item, params.mission_id) },
       onDelete: self.remove_tag,
+
+      // Prevent enter press from submitting form.
+      onEnter: function() { return false; }
     });
   };
 
