@@ -6,7 +6,7 @@ feature 'option suggestion dropdown' do
     login(@user)
   end
 
-  scenario 'creating, showing, and editing', js: true do
+  scenario 'creating, showing, and editing', js: true, driver: :selenium do
     click_link('Option Sets')
 
     # Fill in basic values
