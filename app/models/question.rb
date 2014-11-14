@@ -12,7 +12,7 @@ class Question < ActiveRecord::Base
   has_many(:forms, :through => :questionings)
   has_many(:calculations, class_name: 'Report::Calculation', foreign_key: 'question1_id', inverse_of: :question1, dependent: :destroy)
   has_many(:taggings, :dependent => :destroy)
-  has_many(:tags, :through => :taggings, :order => :name)
+  has_many(:tags, :through => :taggings)
 
   accepts_nested_attributes_for :tags, reject_if: proc { |attributes| attributes[:name].blank? }
 
@@ -238,6 +238,11 @@ class Question < ActiveRecord::Base
   # shortcut accessor
   def option_levels
     option_set.present? ? option_set.option_levels : []
+  end
+
+  # This should be able to be done by adding `order: :name` to the association, but that causes a cryptic SQL error
+  def sorted_tags
+    tags.order(:name)
   end
 
   private

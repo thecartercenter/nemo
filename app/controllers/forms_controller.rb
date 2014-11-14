@@ -179,7 +179,7 @@ class FormsController < ApplicationController
     authorize!(:add_questions, @form)
 
     # get questions for choice list
-    @questions = Question.with_assoc_counts.by_code.accessible_by(current_ability).not_in_form(@form)
+    @questions = Question.includes(:tags).with_assoc_counts.by_code.accessible_by(current_ability).not_in_form(@form)
 
     # setup new questioning for use with the questioning form
     init_qing(:form_id => @form.id, :question_attributes => {})

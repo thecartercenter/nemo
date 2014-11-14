@@ -1018,6 +1018,7 @@ en:
     searching: "Searching..."
     type_to_add_new: "Type a tag name"
     new_tag: "New tag"
+    click_to_filter: "Click to filter by this tag"
 
   password_reset:
     check_email: "Instructions to reset your password have been emailed to you. Please check your email."
@@ -1233,13 +1234,13 @@ en:
 
         only searches the answers to textual questions. To search based on response attributes, use a qualifier, e.g.:
 
-        * __form: Widgets__
+        * __form:Widgets__
 
         will only show responses to the 'Widgets' form.
 
         Combine both of the above to narrow your search:
 
-        * __romeo juliet form: Widgets__
+        * __romeo juliet form:Widgets__
 
         will show responses to the 'Widgets' form containing the words 'romeo' and 'juliet'.
 
@@ -1274,7 +1275,7 @@ en:
 
         The '|' character can also be used with qualifiers:
 
-        * __form: ( Lions | "Bears and Sharks" | Tigers )__
+        * __form:( Lions | "Bears and Sharks" | Tigers )__
 
         matches responses for any of the above forms.
 
@@ -1282,7 +1283,7 @@ en:
 
         You can negate a qualified search by using the negation operator:
 
-        * __form != Widgets__
+        * __form!=Widgets__
 
         will match responses for any form except the 'Widgets' form.
 
@@ -1311,13 +1312,13 @@ en:
 
         matches user names, login IDs, and emails. To search based on specific attributes, use a qualifier, e.g.:
 
-        * __email: @example.com__
+        * __email:@example.com__
 
         will search for users with email addresses matching '@example.com'.
 
         Combine both of the above to narrow your search:
 
-        * __Susan email: @example.com__
+        * __Susan email:@example.com__
 
         will search for users named Susan with an example.com email address.
 
@@ -1348,7 +1349,7 @@ en:
 
         The '|' character can also be used with qualifiers:
 
-        * __email: ( john@example.com | patty@foo.com )__
+        * __email:( john@example.com | patty@foo.com )__
 
         matches users with any of the above email addresses.
 
@@ -1356,7 +1357,7 @@ en:
 
         You can negate a qualified search by using the negation operator:
 
-        * __name != Oluwaseun__
+        * __name!=Oluwaseun__
 
         will match users not named 'Oluwaseun'.
 
@@ -1369,15 +1370,15 @@ en:
 
         only searches the question titles. To search based on question attributes, use a qualifier, e.g.:
 
-        * __code: BallotBox__
+        * __code:BallotBox__
 
         will show questions with 'BallotBox' in their code.
 
         Combine both of the above to narrow your search:
 
-        * __romeo juliet code: BallotBox__
+        * __romeo juliet code:BallotBox__
 
-        will show responses to the 'Widgets' form containing the words 'romeo' and 'juliet'.
+        will show questions with 'BallotBox' in their code whose titles also contain the words 'romeo' and 'juliet'.
 
         The full set of qualifiers you can use is as follows:
 
@@ -1408,7 +1409,7 @@ en:
 
         The '|' character can also be used with qualifiers:
 
-        * __code: ( Lions | "Bears and Sharks" | Tigers )__
+        * __code:( Lions | "Bears and Sharks" | Tigers )__
 
         matches questions with any of the above codes.
 
@@ -1416,7 +1417,7 @@ en:
 
         You can negate a qualified search by using the negation operator:
 
-        * __code != Widgets__
+        * __code!=Widgets__
 
         will match questions with any code not containing 'Widgets'.
 

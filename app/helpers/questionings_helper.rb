@@ -20,7 +20,9 @@ module QuestioningsHelper
   def format_questionings_field(qing, field)
     case field
     when "std_icon" then std_icon(qing)
-    when "name" then link_to(qing.question.name, questioning_path(qing), :title => t("common.view"))
+    when "name"
+      link_to(qing.question.name, questioning_path(qing), :title => t("common.view")) +
+        render_tags(qing.question.sorted_tags)
     when "rank"
       if controller.action_name == "show" || cannot?(:reorder_questions, qing.form)
         qing.rank
