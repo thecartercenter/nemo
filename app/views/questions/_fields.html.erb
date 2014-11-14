@@ -66,7 +66,7 @@
   });
   new ELMO.Views.QuestionFormTagField({
     suggest_tags_path: <%=j suggest_tags_path.to_json.html_safe %>,
-    question_tags: <%=j @question.tags.to_json.html_safe %>,
+    question_tags: <%=j @question.tags.order(:name).to_json.html_safe %>,
     mission_id: "<%= @current_mission.try(:id) %>",
   });
 <% end %>

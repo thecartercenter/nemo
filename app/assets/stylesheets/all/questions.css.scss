@@ -86,3 +86,19 @@ div.form_field.question_option_set_id {
     vertical-align: middle;
   }
 }
+
+ul.tags {
+  padding: 0;
+  li:hover { cursor: inherit; }
+  &.clickable li:hover {
+    cursor: pointer;
+    background-color: #EAE175;
+  }
+}
+
+.all-tags ul.tags {
+  //background: #f0f0f0;
+  //padding: 0 3px;
+  max-height: 93px;
+  overflow: auto;
+}
