@@ -3,83 +3,83 @@ require 'test_helper'
 class TranslatableTest < ActiveSupport::TestCase
 
   test "translatable" do
-    o = Option.new
+    q = Question.new
 
     I18n.locale = :en
 
-    assert_equal(nil, o.name)
-    assert_equal(nil, o.name_en)
-    assert_equal(nil, o.name(:fr))
+    assert_equal(nil, q.name)
+    assert_equal(nil, q.name_en)
+    assert_equal(nil, q.name(:fr))
 
-    o.name_en = "foo"
+    q.name_en = "foo"
 
-    assert_equal("foo", o.name)
-    assert_equal("foo", o.name_en)
-    assert_equal(nil, o.name(:fr))
-    assert_equal("foo", o.name(:fr, :strict => false))
-    assert_equal("foo", o.name("fr", :strict => false))
-    assert_equal("foo", o.name_fr(:strict => false))
+    assert_equal("foo", q.name)
+    assert_equal("foo", q.name_en)
+    assert_equal(nil, q.name(:fr))
+    assert_equal("foo", q.name(:fr, :strict => false))
+    assert_equal("foo", q.name("fr", :strict => false))
+    assert_equal("foo", q.name_fr(:strict => false))
 
-    o.name = "bar"
+    q.name = "bar"
 
-    assert_equal("bar", o.name)
-    assert_equal("bar", o.name_en)
-    assert_equal(nil, o.name(:fr))
+    assert_equal("bar", q.name)
+    assert_equal("bar", q.name_en)
+    assert_equal(nil, q.name(:fr))
 
-    o.name_fr = "feu"
+    q.name_fr = "feu"
 
-    assert_equal("feu", o.name(:fr))
-    assert_equal("bar", o.name("en"))
-    assert_equal("bar", o.name)
+    assert_equal("feu", q.name(:fr))
+    assert_equal("bar", q.name("en"))
+    assert_equal("bar", q.name)
 
-    o.hint = "baz"
+    q.hint = "baz"
 
-    assert_equal("feu", o.name(:fr))
-    assert_equal("bar", o.name("en"))
-    assert_equal("baz", o.hint("en"))
+    assert_equal("feu", q.name(:fr))
+    assert_equal("bar", q.name("en"))
+    assert_equal("baz", q.hint("en"))
 
     I18n.locale = :fr
 
-    assert_equal("feu", o.name)
+    assert_equal("feu", q.name)
 
-    o.name = "zing"
+    q.name = "zing"
 
-    assert_equal("zing", o.name)
-    assert_equal("zing", o.name_fr)
-    assert_equal("bar", o.name_en)
+    assert_equal("zing", q.name)
+    assert_equal("zing", q.name_fr)
+    assert_equal("bar", q.name_en)
 
     I18n.locale = :en
 
-    assert_equal("bar", o.name)
+    assert_equal("bar", q.name)
   end
 
   test "available locales" do
-    o = Option.new
+    q = Question.new
     I18n.locale = :en
 
-    assert_equal([], o.available_locales)
-    o.name_en = "foo"
-    assert_equal([:en], o.available_locales)
-    o.hint_fr = "foo"
-    assert_equal([:en, :fr], o.available_locales)
-    assert_equal([:fr], o.available_locales(:except_current => true))
+    assert_equal([], q.available_locales)
+    q.name_en = "foo"
+    assert_equal([:en], q.available_locales)
+    q.hint_fr = "foo"
+    assert_equal([:en, :fr], q.available_locales)
+    assert_equal([:fr], q.available_locales(:except_current => true))
   end
 
   test "all blank" do
-    o = Option.new
-    o.name_translations = nil
-    assert_equal(true, o.name_all_blank?)
-    o.name_en = ""
-    assert_equal(true, o.name_all_blank?)
-    o.name_en = "foo"
-    assert_equal(false, o.name_all_blank?)
-    o.name_fr = "bar"
-    o.name_en = ""
-    assert_equal(false, o.name_all_blank?)
-    o.name_fr = ""
-    assert_equal(true, o.name_all_blank?)
-    o.name_fr = nil
-    assert_equal(true, o.name_all_blank?)
+    q = Question.new
+    q.name_translations = nil
+    assert_equal(true, q.name_all_blank?)
+    q.name_en = ""
+    assert_equal(true, q.name_all_blank?)
+    q.name_en = "foo"
+    assert_equal(false, q.name_all_blank?)
+    q.name_fr = "bar"
+    q.name_en = ""
+    assert_equal(false, q.name_all_blank?)
+    q.name_fr = ""
+    assert_equal(true, q.name_all_blank?)
+    q.name_fr = nil
+    assert_equal(true, q.name_all_blank?)
   end
 
 end
