@@ -96,9 +96,9 @@ ul.tags {
   }
 }
 
-//.all-tags ul.tags {
-//  background: #f0f0f0;
-//  max-height: 93px;
-//  overflow: auto;
-//  padding: 0 3px;
-//}
+.all-tags ul.tags {
+  //background: #f0f0f0;
+  //padding: 0 3px;
+  max-height: 93px;
+  overflow: auto;
+}
