@@ -82,8 +82,13 @@ class Report::StandardFormReport < Report::Report
     # determine if we should restrict the responses to a single user, or allow all
     restrict_to_user = current_ability.user.role(form.mission) == 'observer' ? current_ability.user : nil
 
+    # create hash of questions by tag for later grouping
+    questionings = questionings_to_include(f)
+    questions = questionings.map(&:question).flatten.uniq
+    @questions_by_tag = group_by_tag(questions)
+
     # generate summary collection (sets of disaggregated summaries)
-    @summary_collection = Report::SummaryCollectionBuilder.new(questionings_to_include(f), disagg_qing,
+    @summary_collection = Report::SummaryCollectionBuilder.new(questionings, disagg_qing,
       :restrict_to_user => restrict_to_user, :question_order => question_order).build
   end
 
@@ -142,5 +147,20 @@ class Report::StandardFormReport < Report::Report
   # returns whether this report can be disaggregated by the given questioning
   def can_disaggregate_with?(qing)
     qing.nil? || DISAGGABLE_TYPES.include?(qing.question.qtype_name)
+  end
+
+  # group questions by tag, including duplicates for q's with multiple tags, and 'untagged' group
+  def group_by_tag(questions)
+    tags = { untagged: [] }
+    questions.each do |q|
+      if q.tags.empty?
+        tags[:untagged] << q
+      else
+        q.tags.each do |t|
+          tags[t] ? tags[t] << q : tags[t] = [q]
+        end
+      end
+    end
+    tags
   end
 end
