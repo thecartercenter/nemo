@@ -49,7 +49,7 @@
 
   // sends an ajax request to server
   klass.prototype.run_report = function(report) {
-    this.report_view.show_loading_indicator(true);
+    ELMO.app.loading(true);
 
     // get hash from report
     var to_serialize = {}
@@ -76,7 +76,7 @@
 
     // if the 'just created' flag is set, redirect to the show action so that links, etc., will work
     if (data.report.just_created) {
-      this.report_view.show_loading_indicator(true);
+      ELMO.app.loading(true);
       window.location.href = ELMO.app.url_builder.build('reports', data.report.id);
 
     // otherwise we can process the updated report object
@@ -98,7 +98,7 @@
   klass.prototype.edit_cancelled = function() {
     // if report is new, go back to report index
     if (!this.report_in_db.has_run()) {
-      this.report_view.show_loading_indicator(true);
+      ELMO.app.loading(true);
       window.location.href = ELMO.app.url_builder.build('reports');
     // else restore the view
     } else
@@ -114,10 +114,8 @@
   }
 
   klass.prototype.restore_view = function() {
-    // hide open modal
-    $("#report-edit-modal").modal("hide");
     // hide load ind
-    this.report_view.show_loading_indicator(false);
+    ELMO.app.loading(false);
 
     // show links and body
     $(".report_links, .report_main").show();
