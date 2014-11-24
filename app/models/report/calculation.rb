@@ -24,6 +24,12 @@ class Report::Calculation < ActiveRecord::Base
     alias_method_chain :new, :cast
   end
 
+  # Called when related Question is destroyed.
+  def question_destroyed
+    delete # Calculation makes no sense now. We use delete b/c we handle callbacks manually.
+    report.calculation_destroyed(source: :question) # Report needs to know.
+  end
+
   def as_json(options = {})
     Hash[*%w(id type attrib1_name question1_id rank).collect{|k| [k, self.send(k)]}.flatten]
   end

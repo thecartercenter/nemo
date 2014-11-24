@@ -40,8 +40,15 @@ module Report::Gridable
   end
 
   # Called by child calculation on destroy.
-  def calculation_destroyed
-    calculations.empty? ? destroy : fix_calculation_ranks!
+  def calculation_destroyed(options = {})
+    if calculations.empty?
+      # If the calculation got deleted due to a question cascading delete,
+      # and there are no more calculations, the report is empty so it has to go.
+      destroy if options[:source] == :question
+    else
+      fix_calculation_ranks
+      save(validate: false)
+    end
   end
 
   protected
@@ -97,9 +104,8 @@ module Report::Gridable
     end
 
     # Ensures calculation ranks start at 1 and are sequential.
-    def fix_calculation_ranks!
+    def fix_calculation_ranks
       # Need to reload calculations because otherwise the array may still contained destroyed ones.
       calculations(true).sort_by(&:rank).each_with_index{ |c,i| c.rank = i + 1 }
-      save(validate: false)
     end
 end

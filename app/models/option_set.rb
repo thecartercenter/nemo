@@ -20,6 +20,10 @@ class OptionSet < ActiveRecord::Base
   before_validation :copy_attribs_to_root_node
   before_validation :normalize_fields
 
+  # We do this instead of using dependent: :destroy because in the latter case
+  # the dependent object doesn't know who destroyed it.
+  before_destroy { report_option_set_choices.each(&:option_set_destroyed) }
+
   before_destroy :notify_report_option_set_choices_of_destroy
 
   scope :by_name, order('option_sets.name')
@@ -292,11 +296,5 @@ class OptionSet < ActiveRecord::Base
         node.option_set = replication.dest_obj
         node.save!
       end
-    end
-
-    # We do this instead of using dependent: :destroy because in the latter case
-    # the dependent object doesn't know who destroyed it.
-    def notify_report_option_set_choices_of_destroy
-      report_option_set_choices.each{ |rosc| rosc.option_set_destroyed }
     end
 end
