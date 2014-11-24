@@ -51,6 +51,8 @@
   klass.prototype.set_calculations_by_question_ids = function(qids) {
     var _this = this;
 
+    var omnibus_calc_type = "Report::" + _this.attribs.omnibus_calculation.capitalize().underscore_to_camel() + "Calculation"
+
     if (this.attribs.tally_type != "Answer") return;
 
     // calculations to empty array if not exist
@@ -59,11 +61,11 @@
     // do a match thing: if found, leave; if not found, set _destroy; if new, create new with no id
     Sassafras.Utils.match_lists(
       {list: this.attribs.calculations_attributes, comparator: function(c){ return c.question1_id.toString() + ":" + c.type; }},
-      {list: qids, comparator: function(id){ return id + ":" + _this.attribs.omnibus_calculation; }},
+      {list: qids, comparator: function(id){ return id + ":" + omnibus_calc_type; }},
       function(current_calc, new_id) {
         // if new_id has no accompanying current_calc, create a new one
         if (current_calc == null)
-          _this.attribs.calculations_attributes.push({question1_id: new_id, type: "Report::" + _this.attribs.omnibus_calculation.capitalize().underscore_to_camel() + "Calculation"});
+          _this.attribs.calculations_attributes.push({question1_id: new_id, type: omnibus_calc_type});
 
         // if current_calc is not in the given qids, mark it for destruction
         else if (new_id == null)
