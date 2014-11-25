@@ -89,7 +89,12 @@ class Report::StandardFormReport < Report::Report
 
     # generate summary collection (sets of disaggregated summaries)
     @summary_collection = Report::SummaryCollectionBuilder.new(questionings, disagg_qing,
-      :restrict_to_user => restrict_to_user, :question_order => question_order).build
+      restrict_to_user: restrict_to_user).build
+
+    # now tell all subsets to build SummaryGroups
+    @summary_collection.subsets.each{|s| s.build_groups(question_order: question_order)}
+
+    @summary_collection
   end
 
   # returns all non-admin users in the form's mission with the given role that have not submitted any responses to the form
