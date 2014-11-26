@@ -76,8 +76,17 @@ module Translatable
       # we use the merge method because otherwise the _changed? method doesn't work right
       send("#{field}_translations=", send("#{field}_translations").merge(locale => args[1]))
 
-      # if the locale is the default locale, also cache the value in the _ attribute
-      send("_#{field}=", args[1]) if locale.to_sym == I18n.default_locale && respond_to?("_#{field}=")
+      # Remove any blank values.
+      send("#{field}_translations").reject!{ |k,v| v.blank? }
+
+      # Set back to nil if empty
+      send("#{field}_translations=", nil) if send("#{field}_translations").blank?
+
+      # Set canonical_name if appropriate
+      if respond_to?("canonical_#{field}=")
+        trans = send("#{field}_translations") || {}
+        send("canonical_#{field}=", trans[I18n.default_locale.to_s] || trans.values.first)
+      end
 
     # otherwise just return what we have
     else

@@ -80,7 +80,7 @@ class Question < ActiveRecord::Base
 
   replicable :child_assocs => :option_set, :parent_assoc => :questioning,
     :uniqueness => {:field => :code, :style => :camel_case}, :dont_copy => [:key, :access_level],
-    :user_modifiable => [:name_translations, :_name, :hint_translations, :_hint]
+    :user_modifiable => [:name_translations, :canonical_name, :hint_translations]
 
   # returns questions that do NOT already appear in the given form
   def self.not_in_form(form)
