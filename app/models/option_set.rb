@@ -24,8 +24,6 @@ class OptionSet < ActiveRecord::Base
   # the dependent object doesn't know who destroyed it.
   before_destroy { report_option_set_choices.each(&:option_set_destroyed) }
 
-  before_destroy :notify_report_option_set_choices_of_destroy
-
   scope :by_name, order('option_sets.name')
   scope :default_order, by_name
   scope :with_assoc_counts_and_published, lambda { |mission|
