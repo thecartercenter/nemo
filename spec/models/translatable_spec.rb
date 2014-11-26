@@ -70,6 +70,18 @@ describe 'Translatable' do
     assert_equal([:fr], a.available_locales(:except_current => true))
   end
 
+  it 'blanks' do
+    a = AClass.new
+    a.name_en = ''
+    expect(a.name_en).to be_nil
+    expect(a.name_translations).to be_nil
+
+    a.name_fr = 'foo'
+    a.name_en = ''
+    expect(a.name_en).to be_nil
+    expect(a.name_fr).to eq 'foo'
+  end
+
   it 'all blank' do
     a = AClass.new
     a.name_translations = nil
