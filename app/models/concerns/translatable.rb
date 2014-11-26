@@ -82,8 +82,11 @@ module Translatable
       # Set back to nil if empty
       send("#{field}_translations=", nil) if send("#{field}_translations").blank?
 
-      # if the locale is the default locale, also cache the value in the _ attribute
-      send("_#{field}=", args[1]) if locale.to_sym == I18n.default_locale && respond_to?("_#{field}=")
+      # Set canonical_name if appropriate
+      if respond_to?("canonical_#{field}=")
+        trans = send("#{field}_translations") || {}
+        send("canonical_#{field}=", trans[I18n.default_locale.to_s] || trans.values.first)
+      end
 
     # otherwise just return what we have
     else

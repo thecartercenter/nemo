@@ -3,6 +3,7 @@ require 'spec_helper'
 class AClass
   include Translatable
   translates :name, :hint
+  attr_accessor :canonical_name, :canonical_hint
 end
 
 describe 'Translatable' do
@@ -97,6 +98,43 @@ describe 'Translatable' do
     assert_equal(true, a.name_all_blank?)
     a.name_fr = nil
     assert_equal(true, a.name_all_blank?)
+  end
+
+  describe 'canonical name' do
+    it 'should be default locale if available' do
+      a = AClass.new
+      a.name_en = 'Foo'
+      expect(a.canonical_name).to eq 'Foo'
+    end
+
+    it 'should be first-entered locale if default not available' do
+      a = AClass.new
+      a.name_fr = 'Bar'
+      expect(a.canonical_name).to eq 'Bar'
+
+      a.name_en = 'Foo'
+      expect(a.canonical_name).to eq 'Foo'
+    end
+
+    it 'should be nil if no translations' do
+      a = AClass.new
+      expect(a.canonical_name).to be_nil
+      a.name_en = 'Foo'
+      expect(a.canonical_name).not_to be_nil
+      a.name_en = ''
+      expect(a.canonical_name).to be_nil
+    end
+
+    it 'should not get stored if no canonical_name attrib available' do
+      class BClass
+        include Translatable
+        translates :name
+      end
+
+      b = BClass.new
+      b.name = 'Foo'
+      expect{b.canonical_name}.to raise_error
+    end
   end
 
 end
