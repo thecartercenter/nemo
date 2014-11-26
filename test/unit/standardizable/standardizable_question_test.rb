@@ -63,9 +63,7 @@ class StandardizableQuestionTest < ActiveSupport::TestCase
     q = FactoryGirl.create(:question, :is_standard => true, :name => 'Foo')
     q2 = q.replicate(:mode => :to_mission, :dest_mission => get_mission)
     assert_equal('Foo', q2.name)
-
-    # also test _name attrib
-    assert_equal('Foo', q2._name)
+    assert_equal('Foo', q2.canonical_name)
   end
 
   test "name should be replicated on update if copy hasnt changed" do
@@ -74,9 +72,7 @@ class StandardizableQuestionTest < ActiveSupport::TestCase
     q.name = 'Bar'
     q.save_and_rereplicate!
     assert_equal('Bar', q2.reload.name)
-
-    # also test _name attrib
-    assert_equal('Bar', q2._name)
+    assert_equal('Bar', q2.canonical_name)
   end
 
   test "name should not be replicated on update if copy has changed" do
@@ -96,9 +92,8 @@ class StandardizableQuestionTest < ActiveSupport::TestCase
     assert_equal('Baz', copy1.reload.name)
     assert_equal('Bar', copy2.reload.name)
 
-    # also test _name attrib
-    assert_equal('Baz', copy1.reload._name)
-    assert_equal('Bar', copy2.reload._name)
+    assert_equal('Baz', copy1.reload.canonical_name)
+    assert_equal('Bar', copy2.reload.canonical_name)
   end
 
   test "only translations that have not changed in copy should be replicated on update" do

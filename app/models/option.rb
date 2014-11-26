@@ -14,7 +14,7 @@ class Option < ActiveRecord::Base
 
   translates :name
 
-  replicable :parent_assoc => :option_node, :user_modifiable => [:name_translations, :_name]
+  replicable :parent_assoc => :option_node, :user_modifiable => [:name_translations, :canonical_name]
 
   MAX_NAME_LENGTH = 45
 
