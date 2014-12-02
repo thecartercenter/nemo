@@ -43,6 +43,7 @@ class Questioning < ActiveRecord::Base
            :subquestions,
            :temporal?,
            :numeric?,
+           :tags,
            to: :question
 
   delegate :published?, to: :form

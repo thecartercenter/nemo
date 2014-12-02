@@ -24,8 +24,8 @@ class Report::SummarySubset
     @summaries += summaries
   end
 
-  def build_groups(options)
-    @groups = Report::SummaryGroup.generate(summaries, :order => options[:question_order] || 'number')
+  def build_tag_groups(options)
+    @tag_groups = Report::TagGroup.generate(summaries, options)
   end
 
   def as_json(options = {})

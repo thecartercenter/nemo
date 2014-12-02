@@ -1,10 +1,10 @@
 # models a group of summary clusters for a standard form report.
 # each group contains a set of types, e.g. categorical questions or numerical questions
-class Report::SummaryGroup
+class Report::TypeGroup
   # the type of group this is
   attr_reader :type_set, :clusters, :max_header_count
 
-  # each SummaryGroup contains a set of types. this is them, in the order they'll be displayed.
+  # each TypeGroup contains a set of types. this is them, in the order they'll be displayed.
   TYPE_SETS = ActiveSupport::OrderedHash[
     'categorical' => %w(select_one select_multiple),
     'numbers' => %w(integer decimal),
@@ -19,7 +19,7 @@ class Report::SummaryGroup
   # options[:order] - either number or type
   def self.generate(summaries, options)
     # if order is by number, then just go for it
-    case options[:order]
+    case options[:question_order]
     when 'number'
       # return one big group
       [new(:type_set => 'all', :summaries => summaries)]
