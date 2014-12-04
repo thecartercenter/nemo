@@ -36,4 +36,7 @@ class Report::TagGroup
     attribs.each{|k,v| instance_variable_set("@#{k}", v)}
   end
 
+  def as_json(options = {})
+    super(only: [:tag, :type_groups])
+  end
 end

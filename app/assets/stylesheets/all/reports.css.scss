@@ -70,6 +70,24 @@ div.report_body {
       margin-left: 20px;
     }
 
+    div.subset.group_by_tag {
+      margin-left: 20px;
+      &.disaggregated { margin-left: 40px; }
+
+      .tag-header {
+        margin-left: -20px;
+
+        h3 {
+          font-size: 16px;
+          color: #444;
+        }
+
+        li.token-input-token-elmo {
+          font-size: 16px;
+        }
+      }
+    }
+
     table.subset {
       min-width: 600px;
       page-break-inside: auto;

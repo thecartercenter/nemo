@@ -51,4 +51,8 @@ class Tag < ActiveRecord::Base
     name <=> other_tag.name
   end
 
+  def as_json(options = {})
+    super(only: [:name, :is_standard])
+  end
+
 end
