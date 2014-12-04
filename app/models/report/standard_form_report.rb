@@ -88,18 +88,13 @@ class Report::StandardFormReport < Report::Report
     # determine if we should restrict the responses to a single user, or allow all
     restrict_to_user = current_ability.user.role(form.mission) == 'observer' ? current_ability.user : nil
 
-    # create hash of questions (questionings) by tag for later grouping - otherwise we would have to look up each
-    # question's tags mutliple times due to disaggregation
-    questionings = questionings_to_include(f)
-    questions_by_tag = index_by_tag(questionings)
-
     # generate summary collection (sets of disaggregated summaries)
-    @summary_collection = Report::SummaryCollectionBuilder.new(questionings, disagg_qing,
+    @summary_collection = Report::SummaryCollectionBuilder.new(questionings_to_include(f), disagg_qing,
       restrict_to_user: restrict_to_user).build
 
     # now tell each subset to group summaries by tag
     @summary_collection.subsets.each do |s|
-      s.build_tag_groups(question_order: question_order || 'number', group_by_tag: group_by_tag, questions_by_tag: questions_by_tag)
+      s.build_tag_groups(question_order: question_order || 'number', group_by_tag: group_by_tag)
     end
 
     @summary_collection
@@ -162,16 +157,4 @@ class Report::StandardFormReport < Report::Report
     qing.nil? || DISAGGABLE_TYPES.include?(qing.question.qtype_name)
   end
 
-  # group questions by tag, including duplicates for q's with multiple tags, and 'untagged' group
-  def index_by_tag(questionings)
-    tags = Hash.new([])
-    questionings.each do |q|
-      if q.tags.empty?
-        tags[:untagged] << q
-      else
-        q.tags.each { |t| tags[t] << q }
-      end
-    end
-    tags
-  end
 end

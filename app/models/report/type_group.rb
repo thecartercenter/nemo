@@ -2,7 +2,7 @@
 # each group contains a set of types, e.g. categorical questions or numerical questions
 class Report::TypeGroup
   # the type of group this is
-  attr_reader :type_set, :clusters, :max_header_count
+  attr_reader :type_set, :clusters, :max_header_count, :summaries
 
   # each TypeGroup contains a set of types. this is them, in the order they'll be displayed.
   TYPE_SETS = ActiveSupport::OrderedHash[
