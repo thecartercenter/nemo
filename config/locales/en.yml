@@ -222,6 +222,10 @@ en:
         zero: "Users"
         one: "User"
         other: "Users"
+      tag:
+        zero: "Tags"
+        one: "Tag"
+        other: "Tags"
 
     attributes:
       broadcast:
@@ -1083,6 +1087,7 @@ en:
     form: "Form"
     form_selection: "Select Forms"
     generated_at: "Generated at"
+    group_by_tag: "Group questions by tag?"
     grouping: "Group by"
     groupings: "Groupings"
     how_to_disaggregate: "Split report by a special question?"

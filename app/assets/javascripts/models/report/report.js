@@ -150,7 +150,7 @@
     self.fix_calculation_ranks();
 
     var to_serialize = {}
-    $(["type", "name", "form_id", "display_type", "percent_type", "bar_style", "question_order",
+    $(["type", "name", "form_id", "display_type", "percent_type", "bar_style", "question_order", "group_by_tag",
         "question_labels", "text_responses", "calculations_attributes", "disagg_question_id"]).each(function(){
       to_serialize[this] = (typeof(self.attribs[this]) == "undefined" || self.attribs[this] == null) ? "" : self.attribs[this];
     });
