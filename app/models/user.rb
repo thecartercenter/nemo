@@ -2,7 +2,7 @@ class User < ActiveRecord::Base
   include Cacheable
 
   ROLES = %w[observer staffer coordinator]
-  SESSION_TIMEOUT = 60.minutes
+  SESSION_TIMEOUT = (Rails.env.development? ? 2.weeks : 60.minutes)
 
   attr_writer(:reset_password_method)
 
