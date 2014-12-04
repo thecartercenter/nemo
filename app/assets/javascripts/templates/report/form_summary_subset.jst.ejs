@@ -20,9 +20,9 @@
       <% if (subset.group_by_tag) { %>
         <div class="tag-header">
           <% if (tag_group.tag == 'untagged') { %>
-            <h3>Untagged</h3>
+            <h3 class="untagged">Untagged questions</h3>
           <% } else { %>
-            <ul class="tags clearfix"><li class="token-input-token-elmo"><%= tag_group.tag.name %></li></ul>
+            <h3>Questions tagged <span class="token-input-token-elmo"><%= tag_group.tag.name %></span></h3>
           <% } %>
         </div>
       <% } %>

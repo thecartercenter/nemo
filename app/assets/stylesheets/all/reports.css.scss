@@ -79,11 +79,13 @@ div.report_body {
 
         h3 {
           font-size: 16px;
-          color: #444;
+          color: black;
         }
 
-        li.token-input-token-elmo {
+        .token-input-token-elmo {
+          float: none;
           font-size: 16px;
+          padding: 1px 5px;
         }
       }
     }
