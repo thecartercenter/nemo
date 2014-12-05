@@ -54,13 +54,13 @@ describe Form do
 
     it 'should be updated when form published' do
       @form.publish!
-      expect(@form.pub_changed_at).to be_within(0.01).of(Time.zone.now)
+      expect(@form.pub_changed_at).to be_within(0.1).of(Time.zone.now)
     end
 
     it 'should be updated when form unpublished' do
       publish_and_reset_pub_changed_at(save: true)
       @form.unpublish!
-      expect(@form.pub_changed_at).to be_within(0.01).of(Time.zone.now)
+      expect(@form.pub_changed_at).to be_within(0.1).of(Time.zone.now)
     end
 
     it 'should not be updated when form saved otherwise' do
