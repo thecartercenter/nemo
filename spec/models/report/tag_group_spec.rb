@@ -11,9 +11,10 @@ describe Report::TagGroup do
       @qing2 = create(:questioning, question: @q2)
       @qing3 = create(:questioning)
       @summaries = [
-        double('summary 1', questioning: @qing1, headers: []).as_null_object,
-        double('summary 2', questioning: @qing2, headers: []).as_null_object,
-        double('summary 3', questioning: @qing3, headers: []).as_null_object,
+        @summary1 = double('summary 1', questioning: @qing1, headers: []).as_null_object,
+        @summary2 = double('summary 2', questioning: @qing2, headers: []).as_null_object,
+        @summary3 = double('summary 3', questioning: @qing3, headers: []).as_null_object,
+        @summary4 = double('summary 4', questioning: @qing1, headers: []).as_null_object,
       ]
     end
 
@@ -24,7 +25,12 @@ describe Report::TagGroup do
       expect(tag_groups.first).to be_a Report::TagGroup
       # Ordered by tag with untagged at the end
       expect(tag_groups.map(&:tag)).to eq [@tag2, @tag1, :untagged]
-      expect(tag_groups.map{|t| t.type_groups.map(&:summaries)}.flatten).to eq [@summaries[1], @summaries[0], @summaries[2]]
+      tag_groups_summaries = tag_groups.map { |t| t.type_groups.map(&:summaries).flatten }
+      expect(tag_groups_summaries).to eq [
+        [@summary2],
+        [@summary1, @summary4],
+        [@summary3]
+      ]
     end
 
     it "should return one big group when not grouped by tag" do
