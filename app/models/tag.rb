@@ -52,7 +52,7 @@ class Tag < ActiveRecord::Base
   end
 
   def as_json(options = {})
-    super(only: [:name, :is_standard])
+    super(only: [:id, :name, :is_standard])
   end
 
 end
