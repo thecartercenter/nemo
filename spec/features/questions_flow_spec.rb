@@ -129,7 +129,7 @@ feature "questions flow" do
 
     # Create a new tag
     fill_in "token-input-question_tag_ids", with: "newt"
-    find('li', text: "newt").click
+    find('li', text: /newt/).click
 
     click_button "Save"
 

@@ -1,11 +1,11 @@
-<% /*# print a header unless there is no disaggregaation */ %>
+<% /*# print a header unless there is no disaggregation */ %>
 <% if (subset.disagg_value != 'all') { %>
   <% var value_str = subset.disagg_value ? subset.disagg_value.name : '[' + I18n.t('common.blank') + ']'; %>
   <h2><%- report.disagg_qing.question.code + ': ' + value_str %></h2>
   <small><%- I18n.t("report/report.subset_intro", {disagg_value: value_str, question: report.disagg_qing.question.code}) %></small>
 <% } %>
 
-<div class="subset <%= subset.disagg_value == 'all' ? '' : 'disaggregated' %>">
+<div class="subset <%= subset.disagg_value == 'all' ? '' : 'disaggregated' %> <%= subset.group_by_tag ? 'group_by_tag' : '' %>">
 
   <% /*# if no data, then print a notice */ %>
   <% if (subset.no_data) { %>
@@ -14,122 +14,136 @@
 
   <% } else { %>
 
-    <% subset.groups.forEach(function(group){ %>
+    <% subset.tag_groups.forEach(function(tag_group){ %>
 
-      <% /*# determine the number of result columns in the table */ %>
-      <% var result_cols = Math.min(max_result_cols, group.max_header_count); %>
-
-      <% /*# show group header unless there is only one big group */ %>
-      <% if (group.type_set != 'all') { %>
-        <h3><%= I18n.t('report/report.standard_form_report.type_sets.' + group.type_set) %></h3>
+      <% /*# print tag header if grouped by tag */ %>
+      <% if (subset.group_by_tag) { %>
+        <div class="tag-header">
+          <% if (tag_group.tag == 'untagged') { %>
+            <h3 class="untagged">Untagged questions</h3>
+          <% } else { %>
+            <h3>Questions tagged <span class="token-input-token-elmo"><%= tag_group.tag.name %></span></h3>
+          <% } %>
+        </div>
       <% } %>
 
-      <table class="subset result_cols_<%= result_cols %>">
+      <% tag_group.type_groups.forEach(function(group){ %>
 
-        <% group.clusters.forEach(function(cluster){ %>
+        <% /*# determine the number of result columns in the table */ %>
+        <% var result_cols = Math.min(max_result_cols, group.max_header_count); %>
 
-          <% /*# do cluster header row */ %>
-          <tr class="cluster_header">
-            <td></td>
+        <% /*# show group header unless there is only one big group */ %>
+        <% if (group.type_set != 'all') { %>
+          <h3><%= I18n.t('report/report.standard_form_report.type_sets.' + group.type_set) %></h3>
+        <% } %>
 
-            <% /*# if full width display type with responses, header cell must be extra wide */ %>
-            <td <%= cluster.display_type == 'full_width' ? 'colspan="' + (result_cols + 1) + '"' : '' %>>
-              &nbsp;
-            </td>
+        <table class="subset result_cols_<%= result_cols %>">
 
-            <% /*# do rest of header cells if necessary */ %>
-            <% if (cluster.display_type == 'flow' || cluster.display_type == 'structured' && cluster.headers.length > result_cols) { %>
-              <td colspan="<%= result_cols %>"><%- cluster.overall_header %></td>
+          <% group.clusters.forEach(function(cluster){ %>
 
-            <% } else if (cluster.display_type == 'structured') { %>
-              <% /*# print out each header cell */ %>
-              <% cluster.headers.forEach(function(header) { %>
-                <td class="structured"><%= helper.partial('header', {header: header}) %></td>
-              <% }); %>
+            <% /*# do cluster header row */ %>
+            <tr class="cluster_header">
+              <td></td>
 
-              <% /*# print out blank cell to fill up to max */ %>
-              <% if (result_cols > cluster.headers.length) { %><td colspan="<%= result_cols - cluster.headers.length %>"></td><% } %>
-            <% } %>
-          </tr>
+              <% /*# if full width display type with responses, header cell must be extra wide */ %>
+              <td <%= cluster.display_type == 'full_width' ? 'colspan="' + (result_cols + 1) + '"' : '' %>>
+                &nbsp;
+              </td>
 
-          <% /*# do summary rows */ %>
-          <% cluster.summaries.forEach(function(summary) { %>
+              <% /*# do rest of header cells if necessary */ %>
+              <% if (cluster.display_type == 'flow' || cluster.display_type == 'structured' && cluster.headers.length > result_cols) { %>
+                <td colspan="<%= result_cols %>"><%- cluster.overall_header %></td>
 
-            <% /*# if this is a full_width summary, it gets multiple rows, one item per row */ %>
-            <% if (cluster.display_type == 'full_width') { %>
+              <% } else if (cluster.display_type == 'structured') { %>
+                <% /*# print out each header cell */ %>
+                <% cluster.headers.forEach(function(header) { %>
+                  <td class="structured"><%= helper.partial('header', {header: header}) %></td>
+                <% }); %>
 
-              <tr class="summary full_width_subhead">
-                <td class="num">#<%= summary.questioning.rank %></td>
-                <td colspan="<%= result_cols + 2 %>">
-                  <%= helper.partial('question_label', {questioning: summary.questioning}) %>
-                </td>
-              </tr>
+                <% /*# print out blank cell to fill up to max */ %>
+                <% if (result_cols > cluster.headers.length) { %><td colspan="<%= result_cols - cluster.headers.length %>"></td><% } %>
+              <% } %>
+            </tr>
 
-              <% /*# if no items, show the 'no data' message */ %>
-              <% if (summary.items.length == 0) { %>
+            <% /*# do summary rows */ %>
+            <% cluster.summaries.forEach(function(summary) { %>
 
-                <tr class="summary">
+              <% /*# if this is a full_width summary, it gets multiple rows, one item per row */ %>
+              <% if (cluster.display_type == 'full_width') { %>
+
+                <tr class="summary full_width_subhead">
+                  <td class="num">#<%= summary.questioning.rank %></td>
                   <td colspan="<%= result_cols + 2 %>">
-                    <em class="no_match"><%= I18n.t('report/report.no_match') %></em>
+                    <%= helper.partial('question_label', {questioning: summary.questioning}) %>
                   </td>
                 </tr>
 
-              <% /*# otherwise, loop over each item (answer) and make a row for it */ %>
-              <% } else { %>
+                <% /*# if no items, show the 'no data' message */ %>
+                <% if (summary.items.length == 0) { %>
 
-                <% summary.items.forEach(function(item) { %>
                   <tr class="summary">
                     <td colspan="<%= result_cols + 2 %>">
-                      <%= helper.partial('item', {item: item}) %>
+                      <em class="no_match"><%= I18n.t('report/report.no_match') %></em>
                     </td>
                   </tr>
-                <% }); %>
 
-              <% } %>
-
-            <% } else { %>
-
-              <tr class="summary">
-                <td class="num">#<%= summary.questioning.rank %></td>
-                <td class="qname">
-                  <%= helper.partial('question_label', {questioning: summary.questioning}) %>
-                </td>
-
-                <% /*# if flow type, or if any other type and items are empty, just print the responses sep'd by commas */ %>
-                <% if (cluster.display_type == 'flow' || summary.items.length == 0) { %>
-
-                  <td colspan="<%= result_cols %>">
-                    <% if (summary.items.length == 0) { %> <em class="no_match"><%= I18n.t('report/report.no_match') %></em> <% } %>
-
-                    <%- summary.items.map(function(item) { return '"' + item.text + '"'; }).join(', ') %>
-                  </td>
-
-                <% /*# if structured type with less than result_cols, do separate cells */ %>
-                <% } else if (cluster.display_type == 'structured' && cluster.headers.length <= result_cols) { %>
+                <% /*# otherwise, loop over each item (answer) and make a row for it */ %>
+                <% } else { %>
 
                   <% summary.items.forEach(function(item) { %>
-                    <td class="structured"><%= helper.partial('item', {item: item}) %></td>
+                    <tr class="summary">
+                      <td colspan="<%= result_cols + 2 %>">
+                        <%= helper.partial('item', {item: item}) %>
+                      </td>
+                    </tr>
                   <% }); %>
 
-                  <% /*# print out blank cell to fill up to max */ %>
-                  <% if (result_cols > cluster.headers.length) { %><td colspan="<%= result_cols - cluster.headers.length %>"></td><% } %>
+                <% } %>
 
-                <% /*# if structured type with more than result_cols, do one big cell */ %>
-                <% } else if (cluster.display_type == 'structured' && cluster.headers.length > result_cols) { %>
+              <% } else { %>
 
-                  <td colspan="<%= result_cols %>">
-                    <%= summary.items.map(function(item, idx) { return helper.partial('item_with_header', {item: item, header: cluster.headers[idx]}); }).join(', ') %>
+                <tr class="summary">
+                  <td class="num">#<%= summary.questioning.rank %></td>
+                  <td class="qname">
+                    <%= helper.partial('question_label', {questioning: summary.questioning}) %>
                   </td>
 
-                  <% /*# print out blank cell to fill up to max */ %>
-                  <% if (result_cols > cluster.headers.length) { %><td colspan="<%= result_cols - cluster.headers.length %>"></td><% } %>
+                  <% /*# if flow type, or if any other type and items are empty, just print the responses sep'd by commas */ %>
+                  <% if (cluster.display_type == 'flow' || summary.items.length == 0) { %>
 
-                <% } %>
-              </tr>
-            <% } %>
+                    <td colspan="<%= result_cols %>">
+                      <% if (summary.items.length == 0) { %> <em class="no_match"><%= I18n.t('report/report.no_match') %></em> <% } %>
+
+                      <%- summary.items.map(function(item) { return '"' + item.text + '"'; }).join(', ') %>
+                    </td>
+
+                  <% /*# if structured type with less than result_cols, do separate cells */ %>
+                  <% } else if (cluster.display_type == 'structured' && cluster.headers.length <= result_cols) { %>
+
+                    <% summary.items.forEach(function(item) { %>
+                      <td class="structured"><%= helper.partial('item', {item: item}) %></td>
+                    <% }); %>
+
+                    <% /*# print out blank cell to fill up to max */ %>
+                    <% if (result_cols > cluster.headers.length) { %><td colspan="<%= result_cols - cluster.headers.length %>"></td><% } %>
+
+                  <% /*# if structured type with more than result_cols, do one big cell */ %>
+                  <% } else if (cluster.display_type == 'structured' && cluster.headers.length > result_cols) { %>
+
+                    <td colspan="<%= result_cols %>">
+                      <%= summary.items.map(function(item, idx) { return helper.partial('item_with_header', {item: item, header: cluster.headers[idx]}); }).join(', ') %>
+                    </td>
+
+                    <% /*# print out blank cell to fill up to max */ %>
+                    <% if (result_cols > cluster.headers.length) { %><td colspan="<%= result_cols - cluster.headers.length %>"></td><% } %>
+
+                  <% } %>
+                </tr>
+              <% } %>
+            <% }); %>
           <% }); %>
-        <% }); %>
-      </table>
+        </table>
+      <% }); %>
     <% }); %>
   <% } %>
 </div>

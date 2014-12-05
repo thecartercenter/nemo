@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20141126160947) do
+ActiveRecord::Schema.define(:version => 20141130213116) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -282,6 +282,7 @@ ActiveRecord::Schema.define(:version => 20141126160947) do
     t.string   "text_responses",   :default => "all"
     t.integer  "disagg_qing_id"
     t.string   "filter"
+    t.boolean  "group_by_tag",     :default => false,          :null => false
   end
 
   add_index "report_reports", ["disagg_qing_id"], :name => "report_reports_disagg_qing_id_fk"
