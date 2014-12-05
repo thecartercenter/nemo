@@ -1150,7 +1150,7 @@ en:
         - "List of submitter name, date, and answer to the NeedSecurityContact question"
       standard_form_report:
         - "Summaries (percentage, averages, medians, etc.) of all questions on a form"
-        - "Can be grouped by question rank or question type"
+        - "Can be grouped by question type or question tag"
         - "Can be split by the answer to a specific question (e.g. region or urban/rural)"
     percent_types:
       none: "No Percentage"

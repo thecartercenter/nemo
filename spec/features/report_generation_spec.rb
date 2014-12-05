@@ -4,17 +4,15 @@ feature 'report generation', js: true, driver: :selenium do
   before do
     @user = create(:user)
     login(@user)
+
+    @form = create(:form, question_types: %w(integer select_one text))
+    @qs = @form.questions
+    create(:response, form: @form, answer_values: %w(1 Cat Foo))
+    create(:response, form: @form, answer_values: %w(2 Dog Bar))
+    create(:response, form: @form, answer_values: %w(3 Dog Blah))
   end
 
   describe 'list report' do
-    before do
-      @form = create(:form, question_types: %w(integer select_one text))
-      @qs = @form.questions
-      create(:response, form: @form, answer_values: %w(1 Cat Foo))
-      create(:response, form: @form, answer_values: %w(2 Dog Bar))
-      create(:response, form: @form, answer_values: %w(3 Dog Blah))
-    end
-
     scenario 'should work' do
       # Generate list report with two cols.
       visit(new_report_report_path(mode: 'm', mission_name: get_mission.compact_name, locale: 'en'))
@@ -36,6 +34,39 @@ feature 'report generation', js: true, driver: :selenium do
       all('select.field')[1].select(@qs[1].code)
       run_report_and_wait
       expect_cols(2)
+    end
+  end
+
+  describe 'standard form report' do
+    before do
+      @tag1 = build(:tag)
+      @tag2 = build(:tag)
+      @tag3 = build(:tag)
+      @qs[0].tags = [@tag1]
+      @qs[1].tags = [@tag2]
+      @qs[2].tags = [@tag3, @tag1]
+    end
+
+    scenario 'should work' do
+      # Generate standard form report
+      visit new_report_report_path(mode: 'm', mission_name: get_mission.compact_name, locale: 'en')
+      choose 'Standard Form Report'
+      click_button 'Next'
+      select @form.name, from: 'form_id'
+      fill_in 'report_title', with: 'SFR Test'
+
+      # Group questions by tag
+      check 'group_by_tag'
+      run_report_and_wait
+      expect(page).to have_selector '.tag-header', count: 4
+      expect(page).to have_selector '.tag-header', text: /questions tagged #{@tag1.name}/i
+      expect(page).to have_selector '.tag-header', text: /untagged questions/i
+
+      # Check that group by tag is checked
+      visit report_reports_path(mode: 'm', mission_name: get_mission.compact_name, locale: 'en')
+      click_link 'SFR Test'
+      edit_report
+      expect(find('#group_by_tag')).to be_checked
     end
   end
 
