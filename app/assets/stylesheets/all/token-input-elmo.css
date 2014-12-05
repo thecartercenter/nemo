@@ -26,7 +26,7 @@ ul.token-input-list-elmo {
     -webkit-appearance: caret;
 }
 
-li.token-input-token-elmo {
+.token-input-token-elmo {
     overflow: hidden;
     height: auto !important;
     height: 15px;
@@ -45,17 +45,17 @@ li.token-input-token-elmo {
     text-align: center;
 }
 
-.read_only li.token-input-token-elmo {
+.read_only .token-input-token-elmo {
   margin: 3px;
 }
 
-li.token-input-token-elmo p {
+.token-input-token-elmo p {
     display: inline;
     padding: 0;
     margin: 0;
 }
 
-li.token-input-token-elmo span {
+.token-input-token-elmo span {
     color: #555;
     margin-left: 5px;
     font-weight: bold;

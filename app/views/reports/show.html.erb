@@ -134,6 +134,23 @@
                 </div>
               </div>
               <div class="section">
+                <div class="name horiz"><%= t("report/report.how_to_disaggregate") %></div>
+                <div class="controls horiz">
+                  <input type="checkbox" id="disaggregate">&nbsp;&nbsp;&nbsp;
+                  <select id="disagg_qing">
+                    <option><%= t("report/report.choose_disagg_qing") %></option>
+                  </select>
+                </div>
+              </div>
+              <div class="section">
+                <label>
+                  <div class="name horiz"><%= t("report/report.group_by_tag") %></div>
+                  <div class="controls horiz">
+                    <input type="checkbox" id="group_by_tag">&nbsp;&nbsp;&nbsp;
+                  </div>
+                </label>
+              </div>
+              <div class="section">
                 <div class="name horiz"><%= t("report/report.how_to_order_questions") %></div>
                 <div class="controls horiz">
                   <% Report::StandardFormReport::QUESTION_ORDER_OPTIONS.each do |key| %>
@@ -142,15 +159,6 @@
                       <label for="question_order_<%= key %>"><%= t("report/report.question_orders.#{key}") %></label>
                     </div>
                   <% end %>
-                </div>
-              </div>
-              <div class="section">
-                <div class="name horiz"><%= t("report/report.how_to_disaggregate") %></div>
-                <div class="controls horiz">
-                  <input type="checkbox" id="disaggregate">&nbsp;&nbsp;&nbsp;
-                  <select id="disagg_qing">
-                    <option><%= t("report/report.choose_disagg_qing") %></option>
-                  </select>
                 </div>
               </div>
               <div class="section">

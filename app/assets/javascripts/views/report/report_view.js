@@ -62,10 +62,6 @@
       ELMO.app.set_title(I18n.t("activerecord.models.report/report.one") + ": " + this.report.attribs.name);
   }
 
-  klass.prototype.show_loading_indicator = function(yn) {
-    $("#report_load_ind img")[yn ? "show" : "hide"]();
-  }
-
   klass.prototype.show_error = function(msg) {
     ELMO.app.show_alert({tag: 'report', type: 'error', msg: msg});
   }

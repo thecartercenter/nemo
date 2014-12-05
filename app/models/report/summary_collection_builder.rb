@@ -41,9 +41,6 @@ class Report::SummaryCollectionBuilder
     # remove the null subset if empty
     collection.remove_null_subset_if_empty!
 
-    # now tell all subsets to build SummaryGroups
-    collection.subsets.each{|s| s.build_groups(@options)}
-
     collection
   end
 

@@ -1,5 +1,5 @@
 class Tag < ActiveRecord::Base
-  include MissionBased
+  include MissionBased, Comparable
 
   belongs_to :mission
   has_many :taggings, dependent: :destroy
@@ -44,6 +44,15 @@ class Tag < ActiveRecord::Base
     mission_id = mission.try(:id) || 'null'
     includes(:taggings).where('mission_id = ? OR (tags.is_standard = true AND taggings.question_id IN (?))',
         mission_id, question_ids).uniq.order(:name)
+  end
+
+  # Sorting
+  def <=> (other_tag)
+    name <=> other_tag.name
+  end
+
+  def as_json(options = {})
+    super(only: [:id, :name, :is_standard])
   end
 
 end
