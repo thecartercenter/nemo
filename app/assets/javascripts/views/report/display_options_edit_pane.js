@@ -63,7 +63,8 @@
     this.question_order.change(function() { _this.broadcast_change("question_order"); });
 
     // build group by tag chooser
-    $('#group_by_tag').change(function() { _this.broadcast_change("group_by_tag"); });
+    this.group_by_tag = $('#group_by_tag');
+    this.group_by_tag.change(function() { _this.broadcast_change("group_by_tag"); });
 
     // build disaggregation chooser
     this.disagg_question_chooser = new ELMO.Report.DisaggQuestionSelector(this.menus.question);
@@ -104,7 +105,7 @@
     this.bar_style.update(report.attribs.bar_style);
     this.question_labels.update(report.attribs.question_labels);
     this.question_order.update(report.attribs.question_order);
-    $('#group_by_tag').prop('checked', report.attribs.group_by_tag);
+    this.group_by_tag.prop('checked', report.attribs.group_by_tag);
     this.disagg_question_chooser.update(report);
     this.text_responses.update(report.attribs.text_responses);
     this.title_fld.val(report.attribs.name);
@@ -128,8 +129,8 @@
     this.cont.find('#disaggregate').closest('.section')[show ? "show" : "hide"]();
     this.text_responses.closest(".section")[show ? "show" : "hide"]();
     if (!show) this.text_responses.clear();
-    $('#group_by_tag').closest(".section")[show ? "show" : "hide"]();
-    if (!show) $('#group_by_tag').prop('checked', false);
+    this.group_by_tag.closest(".section")[show ? "show" : "hide"]();
+    if (!show) this.group_by_tag.prop('checked', false);
 
     if (show) {
       // set value of disaggregate checkbox
@@ -160,7 +161,7 @@
     this.report.attribs.bar_style = this.bar_style.get();
     this.report.attribs.question_labels = this.question_labels.get();
     this.report.attribs.question_order = this.question_order.get();
-    this.report.attribs.group_by_tag = $('#group_by_tag').prop('checked');
+    this.report.attribs.group_by_tag = this.group_by_tag.prop('checked');
     this.report.attribs.disaggregate = this.cont.find('#disaggregate').is(':checked');
     this.report.attribs.disagg_question_id = this.cont.find('#disaggregate').is(':checked') ? this.disagg_question_chooser.get() : null;
     this.report.attribs.text_responses = this.text_responses.get();
