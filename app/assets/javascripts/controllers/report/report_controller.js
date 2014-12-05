@@ -117,6 +117,8 @@
     // hide load ind
     ELMO.app.loading(false);
 
+    this.edit_view.hide();
+
     // show links and body
     $(".report_links, .report_main").show();
   }
