@@ -7,7 +7,8 @@
   ns.QuestionFormTagField = klass = function(params) { var self = this;
     self.params = params;
 
-    $('#question_tag_ids').tokenInput(params.suggest_tags_path + '.json', {
+    // Using an ends with selector because the id is different on question and questioning forms
+    $("input[id$='_tag_ids']").tokenInput(params.suggest_tags_path + '.json', {
       theme: 'elmo',
       jsonContainer: 'tags',
       hintText: I18n.t('tag.type_to_add_new'),
@@ -26,22 +27,31 @@
 
   // If tag doesn't already exist, append hidden inputs to add it via nested attributes
   klass.prototype.add_tag = function(item, mission_id) {
-    var selector = 'input[name="question[tags_attributes][][name]"][value="'+item.name+'"]';
+    var form, input_name_prefix, selector;
+    // Which form are we on?
+    if ($('.question_form').length) {
+      form = $('.question_form');
+      input_name_prefix = 'question[tags_attributes][]';
+    } else if ($('.questioning_form').length) {
+      form = $('.questioning_form');
+      input_name_prefix = 'questioning[question_attributes][tags_attributes][]';
+    }
+    selector = 'input[name="'+input_name_prefix+'[name]"][value="'+item.name+'"]';
     // if new item (null id) and hasn't already been added to this page
     if (item.id == null && $(selector).length == 0) {
       var is_standard = (mission_id == '' ? '1' : '0');
-      $('.question_form').append(
-              '<input type="hidden" name="question[tags_attributes][][name]" value="'+item.name+'">' +
-              '<input type="hidden" name="question[tags_attributes][][mission_id]" value="'+mission_id+'">' +
-              '<input type="hidden" name="question[tags_attributes][][is_standard]" value="'+is_standard+'">'
+      form.append(
+        '<input type="hidden" name="'+input_name_prefix+'[name]" value="'+item.name+'">' +
+        '<input type="hidden" name="'+input_name_prefix+'[mission_id]" value="'+mission_id+'">' +
+        '<input type="hidden" name="'+input_name_prefix+'[is_standard]" value="'+is_standard+'">'
       );
     }
   };
 
   // If previously added new tag input, remove it
   klass.prototype.remove_tag = function(item) {
-    if (item.id == null && $.inArray(item, $('#question_tag_ids').tokenInput('get')) == -1) {
-      $('input[name="question[tags_attributes][][name]"][value="'+item.name+'"]').remove();
+    if (item.id == null && $.inArray(item, $("input.form-control[id$='_tag_ids']").tokenInput('get')) == -1) {
+      $("input[name$='[tags_attributes][][name]'][value='"+item.name+"']").remove();
     }
   };
 
