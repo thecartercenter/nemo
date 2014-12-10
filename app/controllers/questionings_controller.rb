@@ -32,7 +32,9 @@ class QuestioningsController < ApplicationController
     strip_condition_params_if_empty
 
     # Convert tag string from TokenInput to array
-    params[:questioning][:question_attributes][:tag_ids] = params[:questioning][:question_attributes][:tag_ids].split(',')
+    if (tag_ids = params[:questioning][:question_attributes].try(:[], :tag_ids))
+      params[:questioning][:question_attributes][:tag_ids] = tag_ids.split(',')
+    end
 
     # assign attribs and validate now so that normalization runs before authorizing and saving
     @questioning.assign_attributes(params[:questioning])
