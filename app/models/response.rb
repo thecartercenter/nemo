@@ -347,7 +347,7 @@ class Response < ActiveRecord::Base
       rel = rel.select("forms.name AS form_name")
 
       rel = rel.select("questions.code AS question_code")
-      rel = rel.select("questions._name AS question_name")
+      rel = rel.select("questions.canonical_name AS question_name")
       rel = rel.select("questions.qtype_name AS question_type")
 
       rel = rel.select("users.name AS submitter_name")
@@ -356,7 +356,7 @@ class Response < ActiveRecord::Base
       rel = rel.select("answers.datetime_value AS answer_datetime_value")
       rel = rel.select("answers.date_value AS answer_date_value")
       rel = rel.select("answers.time_value AS answer_time_value")
-      rel = rel.select("IFNULL(ao._name, co._name) AS choice_name")
+      rel = rel.select("IFNULL(ao.canonical_name, co.canonical_name) AS choice_name")
       rel = rel.select("option_sets.name AS option_set")
 
       # add all the joins

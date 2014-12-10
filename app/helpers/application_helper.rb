@@ -213,7 +213,7 @@ module ApplicationHelper
     l = []
     klasses.each do |k|
       if can?(:index, k)
-        path = send("#{k.model_name.route_key}_path")
+        path = dynamic_path(k, action: :index)
         active = current_page?(path)
         l << content_tag(:li, :class => active ? 'active' : '') do
           link_to(icon_tag(k.model_name.param_key) + pluralize_model(k), path)
@@ -221,15 +221,5 @@ module ApplicationHelper
       end
     end
     l.join.html_safe
-  end
-
-  # Tries to get a path for the given object, returns nil if object doesn't have route
-  # Preserves the search param in the current query string, if any, unless there was a search error.
-  def path_for_with_search(obj)
-    begin
-      polymorphic_path(obj, @search_error ? {} : {search: params[:search]})
-    rescue
-      nil
-    end
   end
 end

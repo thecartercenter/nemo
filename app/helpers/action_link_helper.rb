@@ -9,7 +9,7 @@ module ActionLinkHelper
   # options[:js] - if true, the link just points to # with expectation that js will bind to it
   def create_link(klass, options = {})
     i18nk = klass.model_name.i18n_key
-    href = options[:js] ? "#" : send("new_#{klass.model_name.singular_route_key}_path")
+    href = options[:js] ? "#" : dynamic_path(klass, action: :new)
     link_to(translate_action(klass, :new), href, :class => "create_#{klass.model_name.param_key}")
   end
 
@@ -43,8 +43,6 @@ module ActionLinkHelper
 
   # Assembles links for the basic actions in an index table (edit and destroy)
   def table_action_links(obj, options = {})
-    route_key = obj.class.model_name.singular_route_key
-
     options[:exclude] = Array.wrap(options[:exclude])
 
     # always exclude edit and destroy if we are in show mode
@@ -62,7 +60,7 @@ module ActionLinkHelper
         next unless can?(:update, obj)
 
         # build link
-        action_link(action, send("edit_#{route_key}_path", obj), :title => t("common.edit"))
+        action_link(action, dynamic_path(obj, action: :edit), :title => t("common.edit"))
 
       when "destroy"
         # check permissions
@@ -70,7 +68,7 @@ module ActionLinkHelper
 
         # build link
         warning = delete_warning(obj, options.slice(:obj_description))
-        action_link(action, send("#{route_key}_path", obj), :method => :delete, :confirm => warning, :title => t("common.delete"))
+        action_link(action, dynamic_path(obj), :method => :delete, :confirm => warning, :title => t("common.delete"))
       end
 
     end.join('').html_safe

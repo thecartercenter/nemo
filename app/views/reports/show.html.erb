@@ -5,7 +5,7 @@
   <%= top_action_links(@report.becomes(Report::Report), :controller => 'reports') do %>
     <% if !@report.new_record? && @report.exportable? %>
       <%= link_to(icon_tag(:export) + t("report/report.export_to_csv"),
-        report_report_path(@report, :format => :csv), :class => 'export-link') %>
+        report_path(@report, :format => :csv), :class => 'export-link') %>
     <% end %>
     <%= loading_indicator(:id => "report_load_ind") %>
   <% end %>

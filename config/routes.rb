@@ -46,15 +46,13 @@ ELMO::Application.routes.draw do
     resources :responses
     resources :sms_tests, :path => 'sms-tests'
 
-    namespace :report do
-      resources :reports
+    resources :reports
 
-      # need to list these all separately b/c rails is dumb sometimes
-      resources :answer_tally_reports, :controller => 'reports'
-      resources :response_tally_reports, :controller => 'reports'
-      resources :list_reports, :controller => 'reports'
-      resources :standard_form_reports, :controller => 'reports'
-    end
+    # need to list these all separately b/c rails is dumb sometimes
+    resources :answer_tally_reports, :controller => 'reports'
+    resources :response_tally_reports, :controller => 'reports'
+    resources :list_reports, :controller => 'reports'
+    resources :standard_form_reports, :controller => 'reports'
 
     # special dashboard routes
     match '/info-window' => 'welcome#info_window', :as => :dashboard_info_window

@@ -15,7 +15,7 @@ feature 'report generation', js: true, driver: :selenium do
   describe 'list report' do
     scenario 'should work' do
       # Generate list report with two cols.
-      visit(new_report_report_path(mode: 'm', mission_name: get_mission.compact_name, locale: 'en'))
+      visit(new_report_path(mode: 'm', mission_name: get_mission.compact_name, locale: 'en'))
       choose('List Report')
       3.times{ click_button('Next') }
       click_link('Add Column')
@@ -49,7 +49,7 @@ feature 'report generation', js: true, driver: :selenium do
 
     scenario 'should work' do
       # Generate standard form report
-      visit new_report_report_path(mode: 'm', mission_name: get_mission.compact_name, locale: 'en')
+      visit new_report_path(mode: 'm', mission_name: get_mission.compact_name, locale: 'en')
       choose 'Standard Form Report'
       click_button 'Next'
       select @form.name, from: 'form_id'
@@ -63,7 +63,7 @@ feature 'report generation', js: true, driver: :selenium do
       expect(page).to have_selector '.tag-header', text: /untagged questions/i
 
       # Check that group by tag is checked
-      visit report_reports_path(mode: 'm', mission_name: get_mission.compact_name, locale: 'en')
+      visit reports_path(mode: 'm', mission_name: get_mission.compact_name, locale: 'en')
       click_link 'SFR Test'
       edit_report
       expect(find('#group_by_tag')).to be_checked

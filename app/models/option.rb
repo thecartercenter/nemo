@@ -12,9 +12,9 @@ class Option < ActiveRecord::Base
 
   scope(:with_questions_and_forms, includes(:option_sets => [:questionings, {:questions => {:questionings => :form}}]))
 
-  translates :name, :hint
+  translates :name
 
-  replicable :parent_assoc => :option_node, :user_modifiable => [:name_translations, :_name, :hint_translations, :_hint]
+  replicable :parent_assoc => :option_node, :user_modifiable => [:name_translations, :canonical_name]
 
   MAX_NAME_LENGTH = 45
 

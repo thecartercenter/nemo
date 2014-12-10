@@ -10,13 +10,17 @@ class Question < ActiveRecord::Base
   has_many(:answers, :through => :questionings)
   has_many(:referring_conditions, :through => :questionings)
   has_many(:forms, :through => :questionings)
-  has_many(:calculations, class_name: 'Report::Calculation', foreign_key: 'question1_id', inverse_of: :question1, dependent: :destroy)
+  has_many(:calculations, class_name: 'Report::Calculation', foreign_key: 'question1_id', inverse_of: :question1)
   has_many(:taggings, :dependent => :destroy)
   has_many(:tags, :through => :taggings)
 
   accepts_nested_attributes_for :tags, reject_if: proc { |attributes| attributes[:name].blank? }
 
   before_validation(:normalize_fields)
+
+  # We do this instead of using dependent: :destroy because in the latter case
+  # the dependent object doesn't know who destroyed it.
+  before_destroy { calculations.each(&:question_destroyed) }
 
   validates(:code, :presence => true)
   validates(:code, :format => {:with => /^#{CODE_FORMAT}$/}, :if => Proc.new{|q| !q.code.blank?})
@@ -76,7 +80,7 @@ class Question < ActiveRecord::Base
 
   replicable :child_assocs => :option_set, :parent_assoc => :questioning,
     :uniqueness => {:field => :code, :style => :camel_case}, :dont_copy => [:key, :access_level],
-    :user_modifiable => [:name_translations, :_name, :hint_translations, :_hint]
+    :user_modifiable => [:name_translations, :canonical_name, :hint_translations]
 
   # returns questions that do NOT already appear in the given form
   def self.not_in_form(form)

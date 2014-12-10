@@ -1211,21 +1211,21 @@ en:
     examples:
       responses:
         - "\"some phrase\""
-        - "submitter: \"john smith\""
-        - "form: polling"
-        - "reviewed: 1"
+        - "submitter:\"john smith\""
+        - "form:polling"
+        - "reviewed:1"
         - "submit-date < 2013-10-15"
-        - "{QuestionCode}: (disruption security)"
+        - "{QuestionCode}:(disruption security)"
       users:
         - "john smith"
-        - "phone: +443726458364"
-        - "login: jsmith"
-        - "email: jsmith@example.com"
+        - "phone:+443726458364"
+        - "login:jsmith"
+        - "email:jsmith@example.com"
       questions:
         - "poll workers"
-        - "code: BallotBoxes"
+        - "code:BallotBoxes"
         # select-one below should not be translated.
-        - "type: select-one"
+        - "type:select-one"
     expected: "Expected"
     help_link: "Search Help"
     help_title: "Search Help"
@@ -1288,7 +1288,7 @@ en:
 
         You can negate a qualified search by using the negation operator:
 
-        * __form!=Widgets__
+        * __form != Widgets__
 
         will match responses for any form except the 'Widgets' form.
 
@@ -1362,7 +1362,7 @@ en:
 
         You can negate a qualified search by using the negation operator:
 
-        * __name!=Oluwaseun__
+        * __name != Oluwaseun__
 
         will match users not named 'Oluwaseun'.
 
@@ -1422,7 +1422,7 @@ en:
 
         You can negate a qualified search by using the negation operator:
 
-        * __code!=Widgets__
+        * __code != Widgets__
 
         will match questions with any code not containing 'Widgets'.
 
