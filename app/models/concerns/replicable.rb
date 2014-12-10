@@ -287,8 +287,10 @@ module Replicable
 
       # otherwise it's not a hash, so just do the copy
       else
-        Rails.logger.debug "Replicating attribute #{name}" if self.class.log_replication?
-        dest_obj.send("#{name}=", value) unless skip[name]
+        if self.class.log_replication? && !skip[name]
+          Rails.logger.debug "Replicating attribute #{name}"
+          dest_obj.send("#{name}=", value)
+        end
       end
     end
 
