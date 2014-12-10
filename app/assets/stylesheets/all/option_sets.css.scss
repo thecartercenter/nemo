@@ -46,7 +46,7 @@ form.option_set_form {
 
     /* these styles only apply to the outer ol */
     > ol {
-      margin: 0 0 5px 0;
+      margin: 0 0 5px -15px;
       width: 421px;
 
       > li:first-child {
@@ -59,21 +59,24 @@ form.option_set_form {
 
       li {
         display: block;
-        margin: 5px 0;
-        min-height: 15px;
-        border-radius: 5px;
-        -moz-border-radius: 5px;
-        -webkit-border-radius: 5px;
-        padding: 5px;
-        border: 1px solid #CCC;
-        background: #eee;
-        cursor: default;
+        margin-left: 15px;
 
         &:last-child {
           margin-bottom: 0;
         }
 
-        div {
+        div.inner {
+
+          margin: 5px 0;
+          min-height: 15px;
+          border-radius: 5px;
+          -moz-border-radius: 5px;
+          -webkit-border-radius: 5px;
+          padding: 5px;
+          border: 1px solid #CCC;
+          background: #eee;
+          cursor: default;
+
           /* icon */
           i.fa-times, i.fa-pencil {
             color: $elmo-blue;
