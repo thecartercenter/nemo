@@ -6,6 +6,12 @@ feature "questions flow" do
 
     @question1 = create(:question, name: "How many cheeses?")
     @question2 = create(:question, name: "How many wines?")
+    @question3 = create(:question, name: "How much beer?", is_standard: true, mission_id: nil)
+
+    @form = create(:form)
+    @questioning1 = create(:questioning, form: @form, question: @question1)
+    @questioning2 = create(:questioning, form: @form, question: @question2)
+    @questioning3 = create(:questioning, form: create(:form, is_standard: true, mission_id: nil), question: @question3)
 
     @tag1 = create(:tag, name: "thriftshop", mission_id: @mission.id)
     @tag2 = create(:tag, name: "twenty dollaz", mission_id: @mission.id)
@@ -44,16 +50,40 @@ feature "questions flow" do
     click_button("Search")
   end
 
-  scenario 'tag add/remove', js: true, driver: :selenium do
-    visit "/en/m/#{@mission.compact_name}/questions/#{@question1.id}/edit"
+  scenario 'question tag add/remove', js: true, driver: :selenium do
+    tag_add_remove_test(
+      qtype: 'question',
+      edit_path: edit_question_path(@question1, mode: 'm', mission_name: @mission.compact_name, locale: 'en'),
+      show_path: question_path(@question1, mode: 'm', mission_name: @mission.compact_name, locale: 'en'),
+      admin_edit_path: edit_question_path(@question3, mode: 'admin', mission_name: nil, locale: 'en'),
+      admin_show_path: question_path(@question3, mode: 'admin', mission_name: nil, locale: 'en'),
+      input_id: "token-input-question_tag_ids",
+      table_row_id: %{tr[id="question_#{@question1.id}"]},
+    )
+  end
+
+  it 'questioning tag add/remove', js: true, driver: :selenium do
+    tag_add_remove_test(
+      qtype: 'questioning',
+      edit_path: edit_questioning_path(@questioning1, mode: 'm', mission_name: @mission.compact_name, locale: 'en'),
+      show_path: questioning_path(@questioning1, mode: 'm', mission_name: @mission.compact_name, locale: 'en'),
+      admin_edit_path: edit_questioning_path(@questioning3, mode: 'admin', mission_name: nil, locale: 'en'),
+      admin_show_path: questioning_path(@questioning3, mode: 'admin', mission_name: nil, locale: 'en'),
+      input_id: "token-input-questioning_question_attributes_tag_ids",
+      table_row_id: %{tr[id="questioning_#{@questioning1.id}"]},
+    )
+  end
+
+  def tag_add_remove_test(options = {})
+    visit options[:edit_path]
     expect(page).to have_content "Tags:"
 
     # Mission tags
-    fill_in "token-input-question_tag_ids", with: "t"
+    fill_in options[:input_id], with: "t"
     expect(page).to have_content "thriftshop"
     expect(page).to have_content "twenty dollaz"
 
-    fill_in "token-input-question_tag_ids", with: "th"
+    fill_in options[:input_id], with: "th"
     expect(page).to have_content "thriftshop"
     expect(page).not_to have_content "twenty dollaz"
     expect(page).to have_content "th [New tag]"
@@ -62,7 +92,7 @@ feature "questions flow" do
     find('li', text: "thriftshop").click
 
     # Standard tag
-    fill_in "token-input-question_tag_ids", with: "a"
+    fill_in options[:input_id], with: "a"
     expect(page).to have_content "awesome"
     within find('li', text: 'awesome') do
       expect(page).to have_selector 'i.fa-certificate'
@@ -71,33 +101,27 @@ feature "questions flow" do
     find('li', text: "awesome").click
 
     # Create a new tag
-    fill_in "token-input-question_tag_ids", with: "in my pocket"
+    fill_in options[:input_id], with: "in my pocket"
     find('li', text: "in my pocket").click
 
     # Add and then cancel a new tag
-    fill_in "token-input-question_tag_ids", with: "pop"
-    find('li', text: "pop").click
-    within find('div#tag_ids li', text: "pop") do
+    fill_in options[:input_id], with: "pop some tags"
+    find('li', text: "pop some tags").click
+    within find('div#tag_ids li', text: "pop some tags") do
       find('span.token-input-delete-token-elmo').click # "x" close button
     end
-    expect(page).not_to have_content "pop"
+    expect(page).not_to have_content "pop some tags"
 
     click_button "Save"
 
     # New tag should be in database
     expect(Tag.find_by_name('in my pocket').mission_id).to eq @mission.id
     # Canceled tag should not
-    expect(Tag.pluck(:name)).not_to include('pop')
+    expect(Tag.pluck(:name)).not_to include('pop some tags')
 
-    # Tags show on index page (twice - once at top and once in question's row)
-    expect(page).to have_content "Questions"
-    expect(page).to have_selector 'li', text: "thriftshop", count: 2
-    expect(page).to have_selector 'li', text: "awesome", count: 2
-    within first('li', text: 'awesome') do
-      expect(page).to have_selector 'i.fa-certificate'
-    end
-    expect(page).to have_selector 'li', text: "in my pocket", count: 2
-    within %{tr[id="question_#{@question1.id}"]} do
+    # Tags show in question's row on index page
+    expect(page).to have_content /Displaying (all \d+)? Questions/ # Check that index page has loaded
+    within options[:table_row_id] do
       expect(page).to have_selector 'li', text: "thriftshop"
       expect(page).to have_selector 'li', text: "awesome"
       within find('li', text: 'awesome') do
@@ -106,8 +130,20 @@ feature "questions flow" do
       expect(page).to have_selector 'li', text: "in my pocket"
     end
 
-    # Tags show on question page
-    visit "/en/m/#{@mission.compact_name}/questions/#{@question1.id}"
+    # On questions index page, also check that tags show at top
+    if options[:qtype] == 'question'
+      within 'div.all-tags' do
+        expect(page).to have_selector 'li', text: "thriftshop"
+        expect(page).to have_selector 'li', text: "awesome"
+        within first('li', text: 'awesome') do
+          expect(page).to have_selector 'i.fa-certificate'
+        end
+        expect(page).to have_selector 'li', text: "in my pocket"
+      end
+    end
+
+    # Tags show on question(ing) show page
+    visit options[:show_path]
     within "div#tag_ids" do
       expect(page).to have_selector 'li', text: "thriftshop"
       expect(page).to have_selector 'li', text: "in my pocket"
@@ -115,26 +151,25 @@ feature "questions flow" do
       within find('li', text: 'awesome') do
         expect(page).to have_selector 'i.fa-certificate'
       end
-      expect(page).not_to have_selector 'li', text: "pop"
+      expect(page).not_to have_selector 'li', text: "pop some tags"
     end
 
     # Admin mode
-    @question3 = create(:question, name: "How much beer?", is_standard: true, mission_id: nil)
-    visit "/en/admin/questions/#{@question3.id}/edit"
+    visit options[:admin_edit_path]
 
-    fill_in "token-input-question_tag_ids", with: "a"
+    fill_in options[:input_id], with: "o"
     expect(page).to have_content "awesome"
     expect(page).not_to have_content "in my pocket" # Non-standard tag
     find('li', text: "awesome").click
 
     # Create a new tag
-    fill_in "token-input-question_tag_ids", with: "newt"
-    find('li', text: /newt/).click
+    fill_in options[:input_id], with: "come-up"
+    find('li', text: /come-up/).click
 
     click_button "Save"
 
-    # Tags show on question page
-    visit "/en/admin/questions/#{@question3.id}"
+    # Tags show on question(ing) page
+    visit options[:admin_show_path]
     within "div#tag_ids" do
       expect(page).to have_selector 'li', text: "awesome"
       within find('li', text: 'awesome') do
@@ -143,11 +178,11 @@ feature "questions flow" do
     end
 
     # Check that new tag is standard in DB
-    expect(Tag.find_by_name('newt').is_standard).to be_truthy
-    expect(Tag.find_by_name('newt').mission_id).to be_nil
+    expect(Tag.find_by_name('come-up').is_standard).to be_truthy
+    expect(Tag.find_by_name('come-up').mission_id).to be_nil
   end
 
-  scenario 'clicking tag at top of index page adds it to search', js: true do
+  scenario 'clicking tag at top of question index page adds it to search', js: true do
     @question1.tags = [@tag1, @tag2, @tag3]
     visit "/en/m/#{@mission.compact_name}/questions"
 
