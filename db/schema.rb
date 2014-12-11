@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20141130213116) do
+ActiveRecord::Schema.define(:version => 20141211202531) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -348,10 +348,17 @@ ActiveRecord::Schema.define(:version => 20141130213116) do
     t.datetime "updated_at",   :null => false
     t.integer  "mission_id"
     t.string   "adapter_name"
+    t.string   "type",         :null => false
+    t.integer  "user_id"
+    t.integer  "broadcast_id"
+    t.integer  "reply_to_id"
   end
 
   add_index "sms_messages", ["body"], :name => "index_sms_messages_on_body", :length => {"body"=>160}
+  add_index "sms_messages", ["broadcast_id"], :name => "sms_messages_broadcast_id_fk"
   add_index "sms_messages", ["mission_id"], :name => "sms_messages_mission_id_fk"
+  add_index "sms_messages", ["reply_to_id"], :name => "sms_messages_reply_to_id_fk"
+  add_index "sms_messages", ["user_id"], :name => "sms_messages_user_id_fk"
 
   create_table "taggings", :force => true do |t|
     t.integer  "question_id",                    :null => false
@@ -480,7 +487,10 @@ ActiveRecord::Schema.define(:version => 20141130213116) do
 
   add_foreign_key "settings", "missions", name: "settings_mission_id_fk"
 
+  add_foreign_key "sms_messages", "broadcasts", name: "sms_messages_broadcast_id_fk"
   add_foreign_key "sms_messages", "missions", name: "sms_messages_mission_id_fk"
+  add_foreign_key "sms_messages", "sms_messages", name: "sms_messages_reply_to_id_fk", column: "reply_to_id"
+  add_foreign_key "sms_messages", "users", name: "sms_messages_user_id_fk"
 
   add_foreign_key "user_groups", "groups", name: "user_groups_group_id_fk"
   add_foreign_key "user_groups", "users", name: "user_groups_user_id_fk"
