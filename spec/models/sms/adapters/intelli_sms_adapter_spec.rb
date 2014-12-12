@@ -34,12 +34,12 @@ describe Sms::Adapters::IntelliSmsAdapter do
     Time.zone = ActiveSupport::TimeZone['Saskatchewan']
 
     request = {'text' => 'foo', 'sent' => '2013-07-03T09:53:00+01:00', 'from' => '2348036801489',
-      'msgid' => '1234'}
+      'msgid' => '1234', 'to' => '123456789'}
 
     msg = @adapter.receive(request)
-    expect(msg.to).to be_nil
+    expect(msg).to be_a Sms::Incoming
+    expect(msg.to).to eq '+123456789'
     expect(msg.from).to eq '+2348036801489'
-    expect(msg.direction).to eq 'incoming'
     expect(msg.body).to eq 'foo'
     expect(msg.adapter_name).to eq 'IntelliSms'
     expect(msg.sent_at.utc).to eq Time.utc(2013, 7, 3, 8, 53, 00)
