@@ -38,6 +38,11 @@ class Sms::Message < ActiveRecord::Base
     self.class.is_shortcode?(from)
   end
 
+  # Set user based on phone number
+  def set_user_by_phone(phone)
+    self.user ||= User.where('phone = ? OR phone2 = ?', phone, phone).first
+  end
+
   private
 
     # sets sent_at to now unless it's already set
