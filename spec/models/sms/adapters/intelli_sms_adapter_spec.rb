@@ -16,7 +16,7 @@ describe Sms::Adapters::IntelliSmsAdapter do
   end
 
   it 'should return true on deliver' do
-    msg = Sms::Message.new(:to => '+123', :body => 'foo')
+    msg = Sms::Reply.new(:to => '+123', :body => 'foo')
     expect(@adapter.deliver(msg)).to be_truthy
   end
 
