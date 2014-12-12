@@ -9,19 +9,19 @@ class Sms::Adapters::SmsAdapterTest < ActiveSupport::TestCase
 
   test 'delivering a message with one recipient should work' do
     each_adapter(:can_deliver? => true) do |adapter|
-      assert_equal(true, adapter.deliver(Sms::Message.new(:to => %w(+15556667777), :body => "foo")))
+      assert_equal(true, adapter.deliver(Sms::Reply.new(:to => "+15556667777", :body => "foo")))
     end
   end
 
   test 'delivering a message with no recipients should raise an error' do
     each_adapter(:can_deliver? => true) do |adapter|
-      assert_raise(Sms::Error){adapter.deliver(Sms::Message.new(:to => nil, :body => "foo"))}
+      assert_raise(Sms::Error){adapter.deliver(Sms::Reply.new(:to => nil, :body => "foo"))}
     end
   end
 
   test 'deliering a message with no body should raise an error' do
     each_adapter(:can_deliver? => true) do |adapter|
-      assert_raise(Sms::Error){adapter.deliver(Sms::Message.new(:to => %w(+15556667777), :body => ""))}
+      assert_raise(Sms::Error){adapter.deliver(Sms::Reply.new(:to => "+15556667777", :body => ""))}
     end
   end
 
