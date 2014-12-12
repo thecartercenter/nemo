@@ -14,7 +14,6 @@ class Sms::Message < ActiveRecord::Base
 
   belongs_to :mission
 
-  after_initialize :arrayify_to
   before_create :default_sent_at
   after_initialize :normalize_numbers
 
@@ -46,16 +45,9 @@ class Sms::Message < ActiveRecord::Base
       self.sent_at = Time.zone.now unless sent_at
     end
 
-    # makes sure the to field is an array, unless it's nil
-    def arrayify_to
-      unless to.nil? || to.is_a?(Array)
-        self.to = Array.wrap(to)
-      end
-    end
-
     # normalizes all phone numbers to ITU format
     def normalize_numbers
       self.from = self.class.normalize_phone(from)
-      to.each_with_index{|n, i| self.to[i] = self.class.normalize_phone(n)} unless to.nil?
+      self.to = self.class.normalize_phone(to) unless to.nil?
     end
 end

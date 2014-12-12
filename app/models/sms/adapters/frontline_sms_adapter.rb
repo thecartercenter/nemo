@@ -17,9 +17,9 @@ class Sms::Adapters::FrontlineSmsAdapter < Sms::Adapters::Adapter
   end
 
   def receive(params)
-    Sms::Message.create(
-      :direction => 'incoming',
+    Sms::Incoming.create(
       :from => params['from'],
+      :to => params['to'],
       :body => params['text'],
       :sent_at => Time.zone.now, # Frontline doesn't supply this
       :adapter_name => service_name)
