@@ -35,11 +35,11 @@ describe Sms::Adapters::FrontlineSmsAdapter do
   it 'should correctly parse a frontline-style request' do
     Time.zone = ActiveSupport::TimeZone['Saskatchewan']
 
-    request = {'frontline' => '1', 'text' => 'foo', 'from' => '+2348036801489'}
+    request = {'frontline' => '1', 'text' => 'foo', 'from' => '+2348036801489', 'to' => '+123456789'}
     msg = @adapter.receive(request)
-    expect(msg.to).to be_nil
+    expect(msg).to be_a Sms::Incoming
+    expect(msg.to).to eq '+123456789'
     expect(msg.from).to eq '+2348036801489'
-    expect(msg.direction).to eq 'incoming'
     expect(msg.body).to eq 'foo'
     expect(msg.adapter_name).to eq 'FrontlineSms'
     expect((msg.sent_at - Time.now).abs).to be <= 5
