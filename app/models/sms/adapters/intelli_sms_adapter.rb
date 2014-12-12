@@ -45,9 +45,9 @@ class Sms::Adapters::IntelliSmsAdapter < Sms::Adapters::Adapter
     params['from'].gsub!(/^0+/, "")
 
     # create and return the message
-    Sms::Message.create(
-      :direction => 'incoming',
+    Sms::Incoming.create(
       :from => "+#{params['from']}",
+      :to => "+#{params['to']}",
       :body => params['text'],
       :sent_at => Time.parse(params['sent']),
       :adapter_name => service_name)
