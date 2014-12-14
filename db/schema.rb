@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20141130213116) do
+ActiveRecord::Schema.define(:version => 20141214020032) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -93,6 +93,28 @@ ActiveRecord::Schema.define(:version => 20141130213116) do
   add_index "conditions", ["ref_qing_id"], :name => "conditions_ref_qing_id_fk"
   add_index "conditions", ["standard_id"], :name => "index_conditions_on_standard_id"
 
+  create_table "form_items", :force => true do |t|
+    t.integer  "question_id"
+    t.integer  "form_id"
+    t.integer  "rank"
+    t.boolean  "required",                :default => false
+    t.boolean  "hidden",                  :default => false
+    t.datetime "created_at",                                 :null => false
+    t.datetime "updated_at",                                 :null => false
+    t.boolean  "is_standard",             :default => false
+    t.integer  "standard_id"
+    t.integer  "mission_id"
+    t.string   "type"
+    t.string   "ancestry"
+    t.integer  "ancestry_depth"
+    t.string   "group_name_translations"
+  end
+
+  add_index "form_items", ["form_id"], :name => "questionings_form_id_fk"
+  add_index "form_items", ["mission_id", "standard_id"], :name => "index_questionings_on_mission_id_and_standard_id", :unique => true
+  add_index "form_items", ["question_id"], :name => "questionings_question_id_fk"
+  add_index "form_items", ["standard_id"], :name => "index_questionings_on_standard_id"
+
   create_table "form_versions", :force => true do |t|
     t.integer  "form_id"
     t.integer  "sequence",   :default => 1
@@ -121,6 +143,7 @@ ActiveRecord::Schema.define(:version => 20141130213116) do
     t.boolean  "allow_incomplete",   :default => false,     :null => false
     t.string   "access_level",       :default => "private", :null => false
     t.datetime "pub_changed_at"
+    t.integer  "root_id"
   end
 
   add_index "forms", ["current_version_id"], :name => "forms_current_version_id_fk"
@@ -196,24 +219,6 @@ ActiveRecord::Schema.define(:version => 20141130213116) do
 
   add_index "options", ["mission_id", "standard_id"], :name => "index_options_on_mission_id_and_standard_id", :unique => true
   add_index "options", ["standard_id"], :name => "index_options_on_standard_id"
-
-  create_table "questionings", :force => true do |t|
-    t.integer  "question_id"
-    t.integer  "form_id"
-    t.integer  "rank"
-    t.boolean  "required",    :default => false
-    t.boolean  "hidden",      :default => false
-    t.datetime "created_at",                     :null => false
-    t.datetime "updated_at",                     :null => false
-    t.boolean  "is_standard", :default => false
-    t.integer  "standard_id"
-    t.integer  "mission_id"
-  end
-
-  add_index "questionings", ["form_id"], :name => "questionings_form_id_fk"
-  add_index "questionings", ["mission_id", "standard_id"], :name => "index_questionings_on_mission_id_and_standard_id", :unique => true
-  add_index "questionings", ["question_id"], :name => "questionings_question_id_fk"
-  add_index "questionings", ["standard_id"], :name => "index_questionings_on_standard_id"
 
   create_table "questions", :force => true do |t|
     t.string   "code"
@@ -430,9 +435,14 @@ ActiveRecord::Schema.define(:version => 20141130213116) do
   add_foreign_key "choices", "options", name: "choices_option_id_fk"
 
   add_foreign_key "conditions", "conditions", name: "conditions_standard_id_fk", column: "standard_id"
+  add_foreign_key "conditions", "form_items", name: "conditions_questioning_id_fk", column: "questioning_id"
+  add_foreign_key "conditions", "form_items", name: "conditions_ref_qing_id_fk", column: "ref_qing_id"
   add_foreign_key "conditions", "missions", name: "conditions_mission_id_fk"
-  add_foreign_key "conditions", "questionings", name: "conditions_questioning_id_fk"
-  add_foreign_key "conditions", "questionings", name: "conditions_ref_qing_id_fk", column: "ref_qing_id"
+
+  add_foreign_key "form_items", "form_items", name: "questionings_standard_id_fk", column: "standard_id"
+  add_foreign_key "form_items", "forms", name: "questionings_form_id_fk"
+  add_foreign_key "form_items", "missions", name: "questionings_mission_id_fk"
+  add_foreign_key "form_items", "questions", name: "questionings_question_id_fk"
 
   add_foreign_key "form_versions", "forms", name: "form_versions_form_id_fk"
 
@@ -454,11 +464,6 @@ ActiveRecord::Schema.define(:version => 20141130213116) do
   add_foreign_key "options", "missions", name: "options_mission_id_fk"
   add_foreign_key "options", "options", name: "options_standard_id_fk", column: "standard_id"
 
-  add_foreign_key "questionings", "forms", name: "questionings_form_id_fk"
-  add_foreign_key "questionings", "missions", name: "questionings_mission_id_fk"
-  add_foreign_key "questionings", "questionings", name: "questionings_standard_id_fk", column: "standard_id"
-  add_foreign_key "questionings", "questions", name: "questionings_question_id_fk"
-
   add_foreign_key "questions", "missions", name: "questions_mission_id_fk"
   add_foreign_key "questions", "option_sets", name: "questions_option_set_id_fk"
   add_foreign_key "questions", "questions", name: "questions_standard_id_fk", column: "standard_id"
@@ -469,9 +474,9 @@ ActiveRecord::Schema.define(:version => 20141130213116) do
   add_foreign_key "report_option_set_choices", "option_sets", name: "report_option_set_choices_option_set_id_fk"
   add_foreign_key "report_option_set_choices", "report_reports", name: "report_option_set_choices_report_report_id_fk"
 
+  add_foreign_key "report_reports", "form_items", name: "report_reports_disagg_qing_id_fk", column: "disagg_qing_id"
   add_foreign_key "report_reports", "forms", name: "report_reports_form_id_fk"
   add_foreign_key "report_reports", "missions", name: "report_reports_mission_id_fk"
-  add_foreign_key "report_reports", "questionings", name: "report_reports_disagg_qing_id_fk", column: "disagg_qing_id"
 
   add_foreign_key "responses", "forms", name: "responses_form_id_fk"
   add_foreign_key "responses", "missions", name: "responses_mission_id_fk"
