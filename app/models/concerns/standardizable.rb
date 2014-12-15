@@ -164,12 +164,12 @@ module Standardizable
     # can be investigated.
     def do_standard_assertions
       assert_no_results('select s.form_id, s.id, s.rank, c.id, c.rank
-        from questionings s left outer join questionings c on c.standard_id = s.id
+        from form_items s left outer join form_items c on c.standard_id = s.id
         where s.rank != c.rank order by s.form_id, s.rank',
         'misaligned ranks between standard and copies')
 
       assert_no_results('select s.form_id, s.id, s.rank, c.id, c.rank
-        from questionings s left outer join questionings c on c.standard_id = s.id
+        from form_items s left outer join form_items c on c.standard_id = s.id
         where c.id is null and s.form_id in (
           select distinct sf.id from forms sf inner join forms sc on sf.id = sc.standard_id
         ) order by s.form_id, s.rank',

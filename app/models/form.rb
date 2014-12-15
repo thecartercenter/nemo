@@ -41,7 +41,7 @@ class Form < ActiveRecord::Base
       SUM(copies.responses_count) AS copy_responses_count_col
     })
     .joins(%{
-      LEFT OUTER JOIN questionings ON forms.id = questionings.form_id
+      LEFT OUTER JOIN form_items ON forms.id = form_items.form_id
       LEFT OUTER JOIN forms copies ON forms.id = copies.standard_id
     })
     .group("forms.id"))
@@ -298,17 +298,18 @@ class Form < ActiveRecord::Base
 
       # if form is standard, look for answers for copy questionings, since the std questioning will never have answers
       joins = if is_standard?
-        %{LEFT OUTER JOIN questionings copies ON questionings.id = copies.standard_id
+        %{LEFT OUTER JOIN form_items copies ON form_items.id = copies.standard_id
           LEFT OUTER JOIN answers ON answers.questioning_id = copies.id}
       else
-        "LEFT OUTER JOIN answers ON answers.questioning_id = questionings.id"
+        "LEFT OUTER JOIN answers ON answers.questioning_id = form_items.id"
       end
 
       @answer_counts = Questioning.find_by_sql([%{
         SELECT questionings.id, COUNT(DISTINCT answers.id) AS answer_count
-        FROM questionings #{joins}
-        WHERE questionings.form_id = ?
-        GROUP BY questionings.id
+        FROM form_items #{joins}
+        WHERE form_items.form_id = ?
+        AND type='Questioning'
+        GROUP BY form_items.id
       }, id]).index_by(&:id)
     end
 

@@ -1,5 +1,6 @@
 class Questioning < FormItem
   include MissionBased, FormVersionable, Standardizable, Replicable
+  self.table_name = "form_items"
 
   belongs_to(:form, :inverse_of => :questionings)
   belongs_to(:question, :autosave => true, :inverse_of => :questionings)
