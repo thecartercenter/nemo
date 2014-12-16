@@ -100,6 +100,7 @@ class Sms::Decoder
     def find_user
       @user = User.where(["phone = ? OR phone2 = ?", @msg.from, @msg.from]).first
       raise_decoding_error("user_not_found") unless @user
+      @msg.update user: @user
     end
 
     def current_ability

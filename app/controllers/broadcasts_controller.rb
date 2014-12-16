@@ -32,7 +32,7 @@ class BroadcastsController < ApplicationController
       redirect_to(users_path)
     else
       begin
-        @balance = Smser.check_balance
+        @balance = SmsBroadcaster.check_balance
       rescue NotImplementedError
         # don't need to do anything here
       rescue

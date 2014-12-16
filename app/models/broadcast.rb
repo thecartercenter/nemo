@@ -59,7 +59,7 @@ class Broadcast < ActiveRecord::Base
     end
     # send smses
     begin
-      Smser.deliver(smsees, which_phone, "#{configatron.broadcast_tag} #{body}") unless smsees.empty?
+      SmsBroadcaster.deliver(self, which_phone, "#{configatron.broadcast_tag} #{body}") if sms_possible? && sms_numbers.present?
     rescue Sms::Error
       # one error per line
       $!.to_s.split("\n").each{|e| add_send_error(I18n.t("broadcast.sms_error") + ": #{e}")}
@@ -86,6 +86,17 @@ class Broadcast < ActiveRecord::Base
 
   def no_possible_recipients?
     recipients.all?{ |u| u.email.blank? && u.phone.blank? && u.phone2.blank? }
+  end
+
+  # TODO do the same for emails then remove sort_recipients
+  def sms_numbers
+    @sms_numbers ||= [].tap do |numbers|
+      recipients.each do |r|
+        next unless r.can_get_sms?
+        numbers << r.phone if %w(main_only both).include?(which_phone)
+        numbers << r.phone2 if %w(alternate_only both).include?(which_phone)
+      end
+    end
   end
 
   private

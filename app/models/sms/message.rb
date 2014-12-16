@@ -38,9 +38,8 @@ class Sms::Message < ActiveRecord::Base
     self.class.is_shortcode?(from)
   end
 
-  # Set user based on phone number
-  def set_user_by_phone(phone)
-    self.user ||= User.where('phone = ? OR phone2 = ?', phone, phone).first
+  def recipients
+    raise NotImplementedError
   end
 
   private
