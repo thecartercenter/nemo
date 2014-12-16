@@ -3,7 +3,7 @@ class Form < ActiveRecord::Base
 
   API_ACCESS_LEVELS = %w(private protected public)
 
-  has_many(:questions, :through => :questionings, :order => "questionings.rank")
+  has_many(:questions, :through => :questionings, :order => "form_items.rank")
   has_many(:questionings, :order => "rank", :autosave => true, :dependent => :destroy, :inverse_of => :form)
   has_many(:responses, :inverse_of => :form)
   has_many(:versions, :class_name => "FormVersion", :inverse_of => :form, :dependent => :destroy)
@@ -28,7 +28,7 @@ class Form < ActiveRecord::Base
       {:question => :option_set},
       {:condition => :ref_qing}
     ]
-  ).order("questionings.rank"))
+  ).order("form_items.rank"))
 
   # this scope adds a count of the questionings on this form and
   # the number of copies of this form, and of those that are published
@@ -305,7 +305,7 @@ class Form < ActiveRecord::Base
       end
 
       @answer_counts = Questioning.find_by_sql([%{
-        SELECT questionings.id, COUNT(DISTINCT answers.id) AS answer_count
+        SELECT form_items.id, COUNT(DISTINCT answers.id) AS answer_count
         FROM form_items #{joins}
         WHERE form_items.form_id = ?
         AND type='Questioning'

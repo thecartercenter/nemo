@@ -46,11 +46,11 @@ class Question < ActiveRecord::Base
       MAX(DISTINCT copy_forms.published) AS copy_form_published_col,
       MAX(DISTINCT forms.standard_id) AS standard_copy_form_id
     }).joins(%{
-      LEFT OUTER JOIN questionings ON questionings.question_id = questions.id
+      LEFT OUTER JOIN form_items questionings ON questionings.question_id = questions.id AND questionings.type = 'Questioning'
       LEFT OUTER JOIN forms ON forms.id = questionings.form_id
       LEFT OUTER JOIN answers ON answers.questioning_id = questionings.id
       LEFT OUTER JOIN questions copies ON questions.is_standard = 1 AND questions.id = copies.standard_id
-      LEFT OUTER JOIN questionings copy_questionings ON copy_questionings.question_id = copies.id
+      LEFT OUTER JOIN form_items copy_questionings ON copy_questionings.question_id = copies.id AND copy_questionings.type = 'Questioning'
       LEFT OUTER JOIN forms copy_forms ON copy_forms.id = copy_questionings.form_id
       LEFT OUTER JOIN answers copy_answers ON copy_answers.questioning_id = copy_questionings.id
     }).group('questions.id'))
@@ -84,7 +84,7 @@ class Question < ActiveRecord::Base
 
   # returns questions that do NOT already appear in the given form
   def self.not_in_form(form)
-    scoped.where("(questions.id not in (select question_id from questionings where form_id='#{form.id}'))")
+    scoped.where("(questions.id not in (select question_id from form_items where form_id='#{form.id}'))")
   end
 
   # returns N questions marked as key questions, sorted by the number of forms they appear in

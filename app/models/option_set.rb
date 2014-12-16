@@ -39,12 +39,12 @@ class OptionSet < ActiveRecord::Base
     }).
     joins(%{
       LEFT OUTER JOIN questions ON questions.option_set_id = option_sets.id
-      LEFT OUTER JOIN questionings ON questionings.question_id = questions.id
+      LEFT OUTER JOIN form_items questionings ON questionings.question_id = questions.id AND questionings.type = 'Questioning'
       LEFT OUTER JOIN forms ON forms.id = questionings.form_id
       LEFT OUTER JOIN answers ON answers.questioning_id = questionings.id
       LEFT OUTER JOIN option_sets copies ON option_sets.is_standard = 1 AND copies.standard_id = option_sets.id
       LEFT OUTER JOIN questions copy_questions ON copy_questions.option_set_id = copies.id
-      LEFT OUTER JOIN questionings copy_questionings ON copy_questionings.question_id = copy_questions.id
+      LEFT OUTER JOIN form_items copy_questionings ON copy_questionings.question_id = copy_questions.id AND questionings.type = 'Questioning'
       LEFT OUTER JOIN forms copy_forms ON copy_forms.id = copy_questionings.form_id
       LEFT OUTER JOIN answers copy_answers ON copy_answers.questioning_id = copy_questionings.id
     }).group('option_sets.id')}
