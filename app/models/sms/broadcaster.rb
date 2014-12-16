@@ -1,5 +1,4 @@
-#TODO move to Sms namespace
-class SmsBroadcaster
+class Sms::Broadcaster
 
   def self.deliver(broadcast, which_phone, msg)
     # first ensure we have a valid adapter

@@ -57,7 +57,7 @@ class Broadcast < ActiveRecord::Base
 
     # send smses
     begin
-      SmsBroadcaster.deliver(self, which_phone, "#{configatron.broadcast_tag} #{body}") if sms_possible? && recipient_numbers.present?
+      Sms::Broadcaster.deliver(self, which_phone, "#{configatron.broadcast_tag} #{body}") if sms_possible? && recipient_numbers.present?
     rescue Sms::Error
       # one error per line
       $!.to_s.split("\n").each{|e| add_send_error(I18n.t("broadcast.sms_error") + ": #{e}")}
