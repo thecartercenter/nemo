@@ -48,22 +48,21 @@ class Broadcast < ActiveRecord::Base
   end
 
   def deliver
-    # sort recipients into email and sms
-    smsees, emailees = sort_recipients
-
     # send emails
     begin
-      BroadcastMailer.broadcast(emailees, subject, body).deliver unless emailees.empty?
+      BroadcastMailer.broadcast(recipient_emails, subject, body).deliver if email_possible? && recipient_emails.present?
     rescue
       add_send_error(I18n.t("broadcast.email_error") + ": #{$!}")
     end
+
     # send smses
     begin
-      SmsBroadcaster.deliver(self, which_phone, "#{configatron.broadcast_tag} #{body}") if sms_possible? && sms_numbers.present?
+      SmsBroadcaster.deliver(self, which_phone, "#{configatron.broadcast_tag} #{body}") if sms_possible? && recipient_numbers.present?
     rescue Sms::Error
       # one error per line
       $!.to_s.split("\n").each{|e| add_send_error(I18n.t("broadcast.sms_error") + ": #{e}")}
     end
+
     return true
   end
 
@@ -71,32 +70,22 @@ class Broadcast < ActiveRecord::Base
     self.send_errors = (send_errors.nil? ? "" : send_errors) + msg + "\n"
   end
 
-  def sort_recipients
-    sms = []
-    email = []
-    recipients.each do |r|
-      # send sms if recipient can get sms, medium is not email_only, and medium is not email (if r can get email)
-      sms << r if r.can_get_sms? && medium != "email_only" && !(medium == "email" && r.can_get_email?)
-
-      # same logic for email
-      email << r if r.can_get_email? && medium != "sms_only" && !(medium == "sms" && r.can_get_sms?)
-    end
-    [sms, email]
-  end
-
   def no_possible_recipients?
     recipients.all?{ |u| u.email.blank? && u.phone.blank? && u.phone2.blank? }
   end
 
-  # TODO do the same for emails then remove sort_recipients
-  def sms_numbers
-    @sms_numbers ||= [].tap do |numbers|
+  def recipient_numbers
+    @recipient_numbers ||= [].tap do |numbers|
       recipients.each do |r|
         next unless r.can_get_sms?
         numbers << r.phone if %w(main_only both).include?(which_phone)
         numbers << r.phone2 if %w(alternate_only both).include?(which_phone)
       end
     end
+  end
+
+  def recipient_emails
+    @recipient_emails ||= recipients.map { |r| r.email if r.can_get_email? }.compact
   end
 
   private

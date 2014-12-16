@@ -2,6 +2,6 @@ class Sms::Broadcast < Sms::Message
   belongs_to :broadcast
 
   def recipients
-    broadcast.sms_numbers
+    broadcast.recipient_numbers
   end
 end

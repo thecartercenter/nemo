@@ -4,6 +4,6 @@ class BroadcastMailer < ActionMailer::Base
   def broadcast(recips, subj, msg)
     s = configatron.broadcast_tag + " " + (subj || "")
     @msg = msg
-    mail(:to => recips.collect{|r| r.email}.compact, :subject => s)
+    mail(to: recips, subject: s)
   end
 end
