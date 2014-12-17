@@ -10,21 +10,13 @@ describe OptionNode do
 
   describe 'to_mission' do
     before do
-      @orig = create(:option_node_with_grandchildren, is_standard: true)
+      @orig = create(:option_node_with_grandchildren)
       @node = @orig.replicate(mode: :to_mission, dest_mission: @mission2)
     end
 
     subject { @node }
     its(:mission) { should eq @mission2 }
-    its(:standard) { should eq @orig }
-    its(:is_standard) { should be_falsey }
     its(:option) { should be_nil } # Because it's root
-
-    it 'should have copies of orig options' do
-      expect_node([['Animal', ['Cat', 'Dog']], ['Plant', ['Tulip', 'Oak']]])
-      expect(@node.c[1].c[1].standard).to eq @orig.c[1].c[1]
-      expect(@node.c[1].c[1].option.standard).to eq @orig.c[1].c[1].option
-    end
   end
 
   describe 'promote' do
@@ -36,13 +28,6 @@ describe OptionNode do
     it 'should create a correct copy' do
       expect_node([['Animal', ['Cat', 'Dog']], ['Plant', ['Tulip', 'Oak']]])
       expect(@node.mission).to be_nil
-      expect(@node.is_standard).to eq true
-      expect(@node.standard).to be_nil
-    end
-
-    it 'should retain links' do
-      expect(@orig.reload.standard).to eq @node
-      expect(@orig.c[0].standard).to eq @node.c[0]
     end
   end
 
@@ -55,8 +40,6 @@ describe OptionNode do
     it 'should make correct copy' do
       expect_node([['Animal', ['Cat', 'Dog']], ['Plant', ['Tulip', 'Oak']]])
       expect(@node.mission).to eq @mission1
-      expect(@node.is_standard).to eq false
-      expect(@node.standard).to be_nil
     end
 
     it 'should reuse options but not nodes' do

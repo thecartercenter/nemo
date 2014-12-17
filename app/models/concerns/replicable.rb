@@ -11,10 +11,6 @@ module Replicable
   LOG_REPLICATION = true
 
   included do
-    # create self-associations in both directions for is-copy-of relationship
-    belongs_to(:standard, :class_name => name, :inverse_of => :copies)
-    has_many(:copies, :class_name => name, :foreign_key => 'standard_id', :inverse_of => :standard)
-
     # create hooks to copy key params from parent and to children
     # this doesn't work with before_create for some reason
     before_validation(:copy_is_standard_and_mission_from_parent)
@@ -76,6 +72,7 @@ module Replicable
       # do logging after redo_in_transaction so we don't get duplication
       Rails.logger.debug(replication.to_s) if self.class.log_replication?
 
+      # TODO change the order here
       # if we're on a recursive step AND we're doing a shallow copy AND this is not a join class,
       # we don't need to do any recursive copying, so just return self
       if replication.recursed? && replication.shallow_copy? && !DEPENDENT_CLASSES.include?(self.class.name)
@@ -94,7 +91,7 @@ module Replicable
       replicate_attributes(replication)
 
       # if we are copying standard to standard, preserve the is_standard flag
-      dest_obj.is_standard = true if replication.to_standard?
+      dest_obj.is_standard = true if replication.to_standard? && standardizable?
 
       # ensure uniqueness params are respected
       ensure_uniqueness_when_replicating(replication)
@@ -113,30 +110,12 @@ module Replicable
 
       # if this is a standard-to-mission replication, add the newly replicated dest obj to the list of copies
       # unless it is there already
-      add_copy(dest_obj) if replication.to_mission?
+      add_copy(dest_obj) if replication.to_mission? && standardizable?
 
-      link_object_to_standard(dest_obj) if replication.promote_and_retain_link?
+      link_object_to_standard(dest_obj) if replication.promote_and_retain_link? && standardizable?
 
       dest_obj
     end
-  end
-
-  # get copy in the given mission, if it exists (there can only be one)
-  # (we can assume that all standardizable classes are also mission-based)
-  def copy_for_mission(mission)
-    copies.for_mission(mission).first
-  end
-
-  # adds an obj to the list of copies
-  def add_copy(obj)
-    # don't add if already there
-    copies << obj unless copies.include?(obj)
-  end
-
-  # returns number of copies
-  # uses eager loaded field if available
-  def copy_count
-    respond_to?(:copy_count_col) ? copy_count_col : copies.count
   end
 
   # ensures the given name or other field would be unique, and generates a new name if it wouldnt be
@@ -220,9 +199,14 @@ module Replicable
     pieces = []
     pieces << self.class.name
     pieces << "id:##{id.inspect}"
-    pieces << "standardized:" + (is_standard? ? 'standard' : (standard_id.nil? ? 'no' : "copy-of-#{standard_id}"))
+    pieces << "standardized:" + (is_standard? ? 'standard' : (standard_id.nil? ? 'no' : "copy-of-#{standard_id}")) if standardizable?
     pieces << "mission:#{mission_id.inspect}"
     pieces.join(', ')
+  end
+
+  # Not all replicable objects are standardizable.
+  def standardizable?
+    respond_to?(:is_standard?)
   end
 
   # gets a value of the specified attribute before the last save call
@@ -257,10 +241,14 @@ module Replicable
     # gets the object to which the replication operation will copy attributes, etc.
     # may be a new object or an existing one depending on parameters
     def setup_replication_destination_obj(replication)
+
       # if this is a standard object AND we're copying to a mission AND there exists a copy of this obj in the given mission,
       # then we don't need to create a new object, so return the existing copy
-      if is_standard? && replication.has_dest_mission? && (copy = copy_for_mission(replication.dest_mission))
+      if standardizable? && replication.has_dest_mission? && (copy = copy_for_mission(replication.dest_mission))
         obj = copy
+
+      # TODO else if trivial object and match, use that
+
       else
         # otherwise, we init and return the new object
         obj = self.class.new
@@ -396,43 +384,18 @@ module Replicable
     end
 
     # replicates a collection-type association
-    # by destroying any children on the dest obj that arent on the src obj
-    # and then replicating the existing children of the src obj to the dest obj
+    # by replicating the existing children of the src obj to the dest obj
     def replicate_collection_association(assoc_name, replication)
-      # Destroy any children in dest obj that don't exist source obj, but ony if they're of a dependent class.
-      src_child_ids = send(assoc_name).map(&:id)
-      dest_assoc = replication.dest_obj.send(assoc_name)
-      dest_assoc.each do |o|
-        dest_assoc.destroy(o) if DEPENDENT_CLASSES.include?(o.class.name) && !src_child_ids.include?(o.standard_id)
-      end
-
-      # replicate the existing children
       send(assoc_name).each{|o| replicate_associated(o, assoc_name, replication)}
     end
 
     # replicates a non-collection-type association (e.g. belongs_to)
     def replicate_non_collection_association(assoc_name, replication)
-      # if orig assoc is nil, make sure copy is also
-      if send(assoc_name).nil?
-        # Destroy the associated object only if it's a dependent class (this also will catch nils).
-        dest_child = replication.dest_obj.send(assoc_name)
-        dest_child.destroy if DEPENDENT_CLASSES.include?(dest_child.class.name)
-
-        # Replicate the nil.
-        replication.dest_obj.send("#{assoc_name}=", nil)
-      # else replicate the single child
-      else
-        replicate_associated(send(assoc_name), assoc_name, replication)
-      end
+      replicate_associated(send(assoc_name), assoc_name, replication) unless send(assoc_name).nil?
     end
 
     # Replicates descendants of an object that has_ancestry.
     def replicate_tree(replication)
-      # destroy any children in dest obj that don't exist source obj
-      replication.dest_obj.children.each do |o|
-        o.destroy unless child_ids.include?(o.standard_id)
-      end
-
       children.each{|o| replicate_associated(o, 'children', replication)}
     end
 
@@ -447,19 +410,8 @@ module Replicable
     # Runs some assertions against the database and raises an error if they fail so that the cause
     # can be investigated.
     def do_standard_assertions
-      assert_no_results('select s.form_id, s.id, s.rank, c.id, c.rank
-        from questionings s left outer join questionings c on c.standard_id = s.id
-        where s.rank != c.rank order by s.form_id, s.rank',
-        'misaligned ranks between standard and copies')
-
-      assert_no_results('select s.form_id, s.id, s.rank, c.id, c.rank
-        from questionings s left outer join questionings c on c.standard_id = s.id
-        where c.id is null and s.form_id in (
-          select distinct sf.id from forms sf inner join forms sc on sf.id = sc.standard_id
-        ) order by s.form_id, s.rank',
-        'questionings from copied standard forms dont have corresponding copies')
-
-      tbl = self.class.model_name.plural
+      return unless standardizable?
+      tbl = self.class.table_name
       assert_no_results("select c.id from #{tbl} c inner join #{tbl} s on c.standard_id=s.id where s.mission_id is not null",
         'mission based objects should not be referenced as standards')
     end
@@ -478,7 +430,7 @@ module Replicable
       # (e.g. questioning has parent = form, and a form association exists, and parent exists)
       if parent_assoc.try(:macro) == :belongs_to && parent = self.send(parent_assoc.name)
         # copy the params
-        self.is_standard = parent.is_standard?
+        self.is_standard = parent.is_standard? if standardizable?
         self.mission = parent.mission
       end
       return true
@@ -493,13 +445,13 @@ module Replicable
         # if is a collection association, copy to each, else copy to individual
         if refl.collection?
           send(assoc).each do |o|
-            o.is_standard = is_standard?
             o.mission = mission
+            o.is_standard = mission.nil? if o.standardizable?
           end
         else
           unless send(assoc).nil?
-            send(assoc).is_standard = is_standard?
             send(assoc).mission = mission
+            send(assoc).is_standard = mission.nil? if send(assoc).standardizable?
           end
         end
       end

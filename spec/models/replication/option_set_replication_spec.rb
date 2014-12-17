@@ -22,7 +22,6 @@ describe OptionSet do
       # Ensure option set gets correct root node id.
       expect(@copy.root_node_id).not_to be_nil
       expect(@copy.root_node_id).not_to eq @orig.root_node_id
-      expect(@copy.root_node.standard_id).to eq @orig.root_node_id
 
       # Ensure option set ID gets copied all the way down.
       expect(@copy.root_node.option_set_id).to eq @copy.id
@@ -46,7 +45,6 @@ describe OptionSet do
       expect(@copy.is_standard).to eq true
       expect(@copy.standard).to be_nil
       expect(@copy.total_options).to eq 6
-      expect(@copy.options.first.is_standard).to eq true
     end
 
     it 'should retain links' do

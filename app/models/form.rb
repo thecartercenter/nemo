@@ -291,26 +291,16 @@ class Form < ActiveRecord::Base
   end
 
   # efficiently gets the number of answers for the given questioning on this form
-  # or if the form is standard, for the given questioning on any copies
+  # returns zero if form is standard
   def qing_answer_count(qing)
-    # fetch the counts if not already fetched
-    if !@answer_counts
+    return 0 if is_standard?
 
-      # if form is standard, look for answers for copy questionings, since the std questioning will never have answers
-      joins = if is_standard?
-        %{LEFT OUTER JOIN questionings copies ON questionings.id = copies.standard_id
-          LEFT OUTER JOIN answers ON answers.questioning_id = copies.id}
-      else
-        "LEFT OUTER JOIN answers ON answers.questioning_id = questionings.id"
-      end
-
-      @answer_counts = Questioning.find_by_sql([%{
-        SELECT questionings.id, COUNT(DISTINCT answers.id) AS answer_count
-        FROM questionings #{joins}
-        WHERE questionings.form_id = ?
-        GROUP BY questionings.id
-      }, id]).index_by(&:id)
-    end
+    @answer_counts ||= Questioning.find_by_sql([%{
+      SELECT questionings.id, COUNT(DISTINCT answers.id) AS answer_count
+      FROM questionings LEFT OUTER JOIN answers ON answers.questioning_id = questionings.id
+      WHERE questionings.form_id = ?
+      GROUP BY questionings.id
+    }, id]).index_by(&:id)
 
     # get the desired count
     @answer_counts[qing.id].try(:answer_count) || 0

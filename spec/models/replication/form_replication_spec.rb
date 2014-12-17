@@ -42,14 +42,12 @@ describe 'replicating a form' do
         # this factory includes some default questions
         f = FactoryGirl.create(:form, :is_standard => true)
         assert(f.reload.questions.all?(&:is_standard?))
-        assert(f.questionings.all?(&:is_standard?))
       end
 
       it "adding questions to a std form should create standard questions and questionings" do
         f = FactoryGirl.create(:form, :is_standard => true)
         f.questions << FactoryGirl.create(:question, :is_standard => true)
         assert(f.reload.questions.all?(&:is_standard?))
-        assert(f.questionings.all?(&:is_standard?))
       end
 
       it "replicating form within mission should avoid name conflict" do
