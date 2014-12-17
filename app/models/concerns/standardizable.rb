@@ -175,7 +175,7 @@ module Standardizable
         ) order by s.form_id, s.rank',
         'questionings from copied standard forms dont have corresponding copies')
 
-      tbl = self.class.model_name.plural
+      tbl = self.class.table_name
       assert_no_results("select c.id from #{tbl} c inner join #{tbl} s on c.standard_id=s.id where s.mission_id is not null",
         'mission based objects should not be referenced as standards')
     end

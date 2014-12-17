@@ -35,7 +35,7 @@ class Form < ActiveRecord::Base
   # if the form is not a standard, these will just be zero
   scope(:with_questioning_and_copy_counts, select(%{
       forms.*,
-      COUNT(DISTINCT questionings.id) AS questionings_count_col,
+      COUNT(DISTINCT form_items.id) AS questionings_count_col,
       COUNT(DISTINCT copies.id) AS copy_count_col,
       SUM(copies.published) AS published_copy_count_col,
       SUM(copies.responses_count) AS copy_responses_count_col

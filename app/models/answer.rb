@@ -40,7 +40,7 @@ class Answer < ActiveRecord::Base
       "SELECT r.id AS r_id, a.value AS loc
       FROM answers a
         INNER JOIN responses r ON a.response_id = r.id
-        INNER JOIN questionings qing ON a.questioning_id = qing.id
+        INNER JOIN form_items qing ON a.questioning_id = qing.id
         INNER JOIN questions q ON qing.question_id = q.id
       WHERE q.qtype_name = 'location' AND a.value IS NOT NULL AND r.mission_id = ? #{user_clause}",
       mission.id
