@@ -1,5 +1,5 @@
 class Questioning < ActiveRecord::Base
-  include MissionBased, FormVersionable, Standardizable, Replicable
+  include MissionBased, FormVersionable, Replicable
 
   belongs_to(:form, :inverse_of => :questionings)
   belongs_to(:question, :autosave => true, :inverse_of => :questionings)
@@ -41,6 +41,7 @@ class Questioning < ActiveRecord::Base
            :odk_code,
            :odk_constraint,
            :subquestions,
+           :standardized?,
            :temporal?,
            :numeric?,
            :tags,

@@ -1,5 +1,5 @@
 class Option < ActiveRecord::Base
-  include MissionBased, FormVersionable, Translatable, Standardizable, Replicable
+  include MissionBased, FormVersionable, Translatable, Replicable
 
   has_many(:option_sets, :through => :option_nodes)
   has_many(:option_nodes, :inverse_of => :option, :dependent => :destroy, :autosave => true)

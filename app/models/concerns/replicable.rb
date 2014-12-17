@@ -11,6 +11,15 @@ module Replicable
   LOG_REPLICATION = true
 
   included do
+    # create self-associations in both directions for is-copy-of relationship
+    belongs_to(:standard, :class_name => name, :inverse_of => :copies)
+    has_many(:copies, :class_name => name, :foreign_key => 'standard_id', :inverse_of => :standard)
+
+    # create hooks to copy key params from parent and to children
+    # this doesn't work with before_create for some reason
+    before_validation(:copy_is_standard_and_mission_from_parent)
+    before_validation(:copy_is_standard_and_mission_to_children)
+
     # dsl-style method for setting options from base class
     def self.replicable(options = {})
       options[:child_assocs] = Array.wrap(options[:child_assocs])
@@ -110,6 +119,24 @@ module Replicable
 
       dest_obj
     end
+  end
+
+  # get copy in the given mission, if it exists (there can only be one)
+  # (we can assume that all standardizable classes are also mission-based)
+  def copy_for_mission(mission)
+    copies.for_mission(mission).first
+  end
+
+  # adds an obj to the list of copies
+  def add_copy(obj)
+    # don't add if already there
+    copies << obj unless copies.include?(obj)
+  end
+
+  # returns number of copies
+  # uses eager loaded field if available
+  def copy_count
+    respond_to?(:copy_count_col) ? copy_count_col : copies.count
   end
 
   # ensures the given name or other field would be unique, and generates a new name if it wouldnt be
@@ -440,5 +467,42 @@ module Replicable
     # Raises an error if the given sql returns any results.
     def assert_no_results(sql, msg)
       raise "Assertion failed: #{msg}" unless self.class.find_by_sql(sql).empty?
+    end
+
+    # copies the is_standard and mission properties from any parent association
+    def copy_is_standard_and_mission_from_parent
+      # reflect on parent association, if it exists
+      parent_assoc = self.class.reflect_on_association(self.class.replication_options[:parent_assoc])
+
+      # if the parent association exists and is a belongs_to association and parent exists
+      # (e.g. questioning has parent = form, and a form association exists, and parent exists)
+      if parent_assoc.try(:macro) == :belongs_to && parent = self.send(parent_assoc.name)
+        # copy the params
+        self.is_standard = parent.is_standard?
+        self.mission = parent.mission
+      end
+      return true
+    end
+
+    # copies the is_standard and mission properties to any children associations
+    def copy_is_standard_and_mission_to_children
+      # iterate over children assocs
+      self.class.replication_options[:child_assocs].each do |assoc|
+        refl = self.class.reflect_on_association(assoc)
+
+        # if is a collection association, copy to each, else copy to individual
+        if refl.collection?
+          send(assoc).each do |o|
+            o.is_standard = is_standard?
+            o.mission = mission
+          end
+        else
+          unless send(assoc).nil?
+            send(assoc).is_standard = is_standard?
+            send(assoc).mission = mission
+          end
+        end
+      end
+      return true
     end
 end

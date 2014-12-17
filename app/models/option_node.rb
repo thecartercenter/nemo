@@ -1,5 +1,5 @@
 class OptionNode < ActiveRecord::Base
-  include MissionBased, FormVersionable, Replicable, Standardizable
+  include MissionBased, FormVersionable, Replicable
 
   # Number of descendants that make a 'huge' node.
   HUGE_CUTOFF = 100
