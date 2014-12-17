@@ -289,7 +289,7 @@ class OptionNode < ActiveRecord::Base
 
       # Destroy existing children that were not mentioned in the update.
       self.options_removed = true unless children_by_id.empty?
-      children_by_id.values.each{ |c| c.destroy_with_copies }
+      children_by_id.values.each{ |c| c.destroy }
 
       # Don't need this anymore. Nullify to prevent duplication on future saves.
       self.children_attribs = nil

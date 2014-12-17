@@ -111,11 +111,6 @@ class Replication
     ancestors.last
   end
 
-  # returns whether we are creating or updating the dest obj
-  def creating?
-    dest_obj.new_record?
-  end
-
   # returns a string representation used for logging
   def to_s
     [].tap do |lines|

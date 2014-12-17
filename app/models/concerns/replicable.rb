@@ -15,7 +15,6 @@ module Replicable
     def self.replicable(options = {})
       options[:child_assocs] = Array.wrap(options[:child_assocs])
       options[:dont_copy] = Array.wrap(options[:dont_copy]).map(&:to_s)
-      options[:user_modifiable] = Array.wrap(options[:user_modifiable]).map(&:to_s)
       class_variable_set('@@replication_options', options)
     end
 
@@ -106,9 +105,6 @@ module Replicable
       # if this is a standard-to-mission replication, add the newly replicated dest obj to the list of copies
       # unless it is there already
       add_copy(dest_obj) if replication.to_mission?
-
-      # Need to clear this for next time.
-      clear_recent_changes! if respond_to?(:recent_changes)
 
       link_object_to_standard(dest_obj) if replication.promote_and_retain_link?
 
@@ -243,9 +239,6 @@ module Replicable
         obj = self.class.new
       end
 
-      # set flag that we are in a replication
-      obj.changing_in_replication = true
-
       obj
     end
 
@@ -313,45 +306,6 @@ module Replicable
       # don't copy foreign key field of parent's has_* association, if applicable
       if replicable_opts(:parent_assoc)
         dont_copy << replicable_opts(:parent_assoc).to_s + '_id'
-      end
-
-      # copy user-modifiable attributes IF:
-      # 1. dest obj is being created OR
-      # 2. dest obj attrib value has NOT deviated from std
-      # therefore, if either of the above conditions is met, we should NOT add the attrib to the dont_copy list
-      # in all other cases, we should add it to the dont_copy list
-      unless replication.creating?
-        replicable_opts(:user_modifiable).each do |attrib|
-          src_is = send(attrib)
-          dest_is = replication.dest_obj.send(attrib)
-
-          # Prefer the recent_changes hash here since it goes back further, but only implemented on some objects.
-          change_hash = (respond_to?(:recent_changes) ? recent_changes : previous_changes) || {}
-          src_was = change_hash.key?(attrib.to_s) ? change_hash[attrib.to_s].first : src_is
-
-          # if the src attrib is or was a hash, it gets special treatment
-          if src_is.is_a?(Hash) || src_was.is_a?(Hash)
-
-            # ensure no nils
-            src_is ||= {}
-            src_was ||= {}
-            dest_is ||= {}
-
-            # loop over each key in src
-            src_was.each_key do |k|
-
-              if src_was[k] != dest_is[k]
-                if self.class.log_replication?
-                  Rails.logger.debug("Not copying #{attrib}.#{k} because destination has deviated (#{src_was[k].inspect} vs #{dest_is[k].inspect})")
-                end
-                dont_copy << "#{attrib}.#{k}"
-              end
-            end
-          else
-            # don't copy if value has deviated
-            dont_copy << attrib if src_was != dest_is
-          end
-        end
       end
 
       Rails.logger.debug("Not copying #{dont_copy.to_s}") if self.class.log_replication?
@@ -461,5 +415,30 @@ module Replicable
       # build new replication param obj for obj
       new_replication = replication.clone_for_recursion(obj, assoc_name)
       obj.replicate(new_replication)
+    end
+
+    # Runs some assertions against the database and raises an error if they fail so that the cause
+    # can be investigated.
+    def do_standard_assertions
+      assert_no_results('select s.form_id, s.id, s.rank, c.id, c.rank
+        from questionings s left outer join questionings c on c.standard_id = s.id
+        where s.rank != c.rank order by s.form_id, s.rank',
+        'misaligned ranks between standard and copies')
+
+      assert_no_results('select s.form_id, s.id, s.rank, c.id, c.rank
+        from questionings s left outer join questionings c on c.standard_id = s.id
+        where c.id is null and s.form_id in (
+          select distinct sf.id from forms sf inner join forms sc on sf.id = sc.standard_id
+        ) order by s.form_id, s.rank',
+        'questionings from copied standard forms dont have corresponding copies')
+
+      tbl = self.class.model_name.plural
+      assert_no_results("select c.id from #{tbl} c inner join #{tbl} s on c.standard_id=s.id where s.mission_id is not null",
+        'mission based objects should not be referenced as standards')
+    end
+
+    # Raises an error if the given sql returns any results.
+    def assert_no_results(sql, msg)
+      raise "Assertion failed: #{msg}" unless self.class.find_by_sql(sql).empty?
     end
 end

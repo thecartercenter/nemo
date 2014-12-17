@@ -216,7 +216,7 @@ class Form < ActiveRecord::Base
         # this is necessary due to bulk deletion operations
         raise DeletionError.new('question_remove_answer_error') if qing_answer_count(qing) > 0
 
-        qing.destroy_with_copies
+        qing.destroy
         questionings.delete(qing)
       end
 

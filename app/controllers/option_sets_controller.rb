@@ -117,7 +117,7 @@ class OptionSetsController < ApplicationController
   # creates/updates the option set
   def create_or_update
     begin
-      @option_set.save_and_rereplicate!
+      @option_set.save!
 
       # set the flash, which will be shown when the next request is issued as expected
       # (not needed in modal mode)
