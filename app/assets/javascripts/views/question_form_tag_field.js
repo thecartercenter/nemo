@@ -39,11 +39,9 @@
     selector = 'input[name="'+input_name_prefix+'[name]"][value="'+item.name+'"]';
     // if new item (null id) and hasn't already been added to this page
     if (item.id == null && $(selector).length == 0) {
-      var is_standard = (mission_id == '' ? '1' : '0');
       form.append(
         '<input type="hidden" name="'+input_name_prefix+'[name]" value="'+item.name+'">' +
-        '<input type="hidden" name="'+input_name_prefix+'[mission_id]" value="'+mission_id+'">' +
-        '<input type="hidden" name="'+input_name_prefix+'[is_standard]" value="'+is_standard+'">'
+        '<input type="hidden" name="'+input_name_prefix+'[mission_id]" value="'+mission_id+'">'
       );
     }
   };
@@ -61,8 +59,6 @@
     if (item.id == null) {
       return '<li><i class="fa fa-fw fa-plus-circle"></i> ' + item.name +
           ' <span class="details create_new">[' + I18n.t('tag.new_tag') + ']</span>' + '</li>';
-    } else if (item.mission_id == null) { // standard tag
-      return '<li><i class="fa fa-fw fa-certificate"></i> ' + item.name + '</li>';
     } else {
       return '<li><i class="fa fa-fw"></i> ' + item.name + '</li>';
     }
@@ -73,8 +69,6 @@
     // if this is a new tag, add an icon
     if (item.id == null) {
       return '<li><i class="fa fa-plus-circle"></i> ' + item.name + '</li>';
-    } else if (item.mission_id == null) { // standard tag
-      return '<li><i class="fa fa-certificate"></i> ' + item.name + '</li>';
     } else {
       return '<li>' + item.name + '</li>';
     }
