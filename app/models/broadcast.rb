@@ -91,7 +91,7 @@ class Broadcast < ActiveRecord::Base
   private
 
     def has_eligible_recipients
-      errors.add(:to, :no_recipients) if sort_recipients.flatten.empty?
+      errors.add(:to, :no_recipients) if recipient_numbers.empty? && recipient_emails.empty?
     end
 
 end
