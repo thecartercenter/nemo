@@ -8,7 +8,7 @@ class Mission < ActiveRecord::Base
   has_many(:groups, :inverse_of => :mission)
   has_many(:questions, :inverse_of => :mission)
   has_many(:qing_groups, :inverse_of => :mission)
-  has_many(:questionings, :inverse_of => :mission)
+  has_many(:form_items, :inverse_of => :mission)
   has_many(:conditions, :inverse_of => :mission)
   has_many(:options, :inverse_of => :mission, :dependent => :destroy)
   has_many(:option_sets, :inverse_of => :mission, :dependent => :destroy)
