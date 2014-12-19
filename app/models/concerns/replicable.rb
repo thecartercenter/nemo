@@ -274,31 +274,9 @@ module Replicable
       # get ref to dest obj
       dest_obj = replication.dest_obj
 
-      # if attribute is or was a hash, it gets special treatment
-      if value.is_a?(Hash)
-
-        # examine each member individually
-        value.each do |k, v|
-
-          # copy unless explicitly told not to
-          unless skip["#{name}.#{k}"]
-
-            Rails.logger.debug "Replicating attribute #{name}.#{k}" if self.class.log_replication?
-
-            # ensure dest attrib is initialized
-            dest_obj.send("#{name}=", {}) unless dest_obj.send(name).is_a?(Hash)
-
-            # do the copy
-            dest_obj.send(name)[k] = v
-          end
-        end
-
-      # otherwise it's not a hash, so just do the copy
-      else
-        if self.class.log_replication? && !skip[name]
-          Rails.logger.debug "Replicating attribute #{name}"
-          dest_obj.send("#{name}=", value)
-        end
+      if !skip[name]
+        Rails.logger.debug "Replicating attribute #{name}" if self.class.log_replication?
+        dest_obj.send("#{name}=", value)
       end
     end
 
