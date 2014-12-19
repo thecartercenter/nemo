@@ -83,7 +83,7 @@ module Translatable
   # Sets field_translations value internally.
   def translatable_internal_set_hash(field, value)
     # Use write_attribute if available.
-    value = value.stringify_keys
+    value = value.try(:stringify_keys)
     respond_to?(:write_attribute, true) ? write_attribute(:"#{field}_translations", value) : instance_variable_set("@#{field}_translations", value)
   end
 
