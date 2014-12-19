@@ -1,5 +1,5 @@
 class OptionNode < ActiveRecord::Base
-  include MissionBased, FormVersionable, Replicable, Standardizable
+  include MissionBased, FormVersionable, Replicable
 
   # Number of descendants that make a 'huge' node.
   HUGE_CUTOFF = 100
@@ -8,7 +8,7 @@ class OptionNode < ActiveRecord::Base
   TO_SERIALIZE_IF_HUGE = 10
 
   attr_accessible :ancestry, :option_id, :option_set, :option_set_id, :rank, :option, :option_attribs,
-    :children_attribs, :is_standard, :standard, :mission_id, :mission, :standard_id, :parent
+    :children_attribs, :mission_id, :mission, :parent
 
   belongs_to :option_set
   belongs_to :option, autosave: true
@@ -289,7 +289,7 @@ class OptionNode < ActiveRecord::Base
 
       # Destroy existing children that were not mentioned in the update.
       self.options_removed = true unless children_by_id.empty?
-      children_by_id.values.each{ |c| c.destroy_with_copies }
+      children_by_id.values.each{ |c| c.destroy }
 
       # Don't need this anymore. Nullify to prevent duplication on future saves.
       self.children_attribs = nil
@@ -306,9 +306,9 @@ class OptionNode < ActiveRecord::Base
     # 2. The given hash's subhash at key :option_attribs, if present.
     # Returns the modified hash.
     def copy_denormalized_attribs_to_attrib_hash(hash)
-      %w(mission_id option_set_id is_standard standard_id).each{ |k| hash[k.to_sym] = send(k) }
+      %w(mission_id option_set_id).each{ |k| hash[k.to_sym] = send(k) }
       if hash[:option_attribs]
-        %w(mission_id is_standard standard_id).each{ |k| hash[:option_attribs][k.to_sym] = send(k) }
+        %w(mission_id).each{ |k| hash[:option_attribs][k.to_sym] = send(k) }
       end
       hash
     end

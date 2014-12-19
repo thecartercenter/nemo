@@ -4,7 +4,7 @@ class Tag < ActiveRecord::Base
   belongs_to :mission
   has_many :taggings, dependent: :destroy
   has_many :questions, through: :taggings
-  attr_accessible :is_standard, :name, :standard_id, :mission_id
+  attr_accessible :name, :mission_id
 
   before_save { |tag| tag.name.downcase! }
 
@@ -13,7 +13,7 @@ class Tag < ActiveRecord::Base
 
   # Returns an array of Tags matching the given mission and textual query.
   def self.suggestions(mission, query)
-    tags = Tag.for_mission([mission, nil])
+    tags = Tag.for_mission(mission)
 
     # Trim query to maximum length.
     query = query[0...MAX_NAME_LENGTH]
@@ -36,14 +36,13 @@ class Tag < ActiveRecord::Base
   def self.mission_tags(mission)
     # In admin mode, return all standard tags
     if mission.nil?
-      return where(is_standard: true).order(:name)
+      return where(mission_id: nil).order(:name)
     end
 
-    # In mission, show all tags for mission plus standard tags applied to mission
+    # In mission, show all tags for mission
     question_ids = Question.for_mission(mission).pluck(:id)
     mission_id = mission.try(:id) || 'null'
-    includes(:taggings).where('mission_id = ? OR (tags.is_standard = true AND taggings.question_id IN (?))',
-        mission_id, question_ids).uniq.order(:name)
+    includes(:taggings).where(mission_id: mission_id).order(:name)
   end
 
   # Sorting
@@ -52,7 +51,7 @@ class Tag < ActiveRecord::Base
   end
 
   def as_json(options = {})
-    super(only: [:id, :name, :is_standard])
+    super(only: [:id, :name])
   end
 
 end

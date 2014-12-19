@@ -9,7 +9,6 @@ module OptionNodeSupport
     expect(node.option.try(:name)).to eq (val.is_a?(Array) ? val[0] : val)
     expect(node.option_set).to eq options[:root].option_set
     expect(node.mission).to eq options[:root].mission
-    expect(node.is_standard?).to eq options[:root].is_standard?
 
     if val.is_a?(Array)
       children = node.children.order(:rank)

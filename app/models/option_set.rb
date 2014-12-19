@@ -262,7 +262,7 @@ class OptionSet < ActiveRecord::Base
   private
 
     def copy_attribs_to_root_node
-      root_node.assign_attributes(mission: mission, is_standard: is_standard, option_set: self)
+      root_node.assign_attributes(mission: mission, option_set: self)
     end
 
     def check_associations

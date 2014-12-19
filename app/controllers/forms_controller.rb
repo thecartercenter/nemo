@@ -113,6 +113,7 @@ class FormsController < ApplicationController
   end
 
   def create
+    @form.is_standard = true if current_mode == 'admin'
     if @form.save
       set_success_and_redirect(@form, :to => edit_form_path(@form))
     else
@@ -134,7 +135,7 @@ class FormsController < ApplicationController
       @form.update_ranks(params[:rank]) if params[:rank] && can?(:reorder_questions, @form)
 
       # save everything
-      @form.save_and_rereplicate!
+      @form.save!
 
       # publish if requested
       if params[:save_and_publish].present?
@@ -196,7 +197,7 @@ class FormsController < ApplicationController
 
     # add questions to form and try to save
     @form.questions += questions
-    if @form.save_and_rereplicate
+    if @form.save
       flash[:success] = t("form.questions_add_success")
     else
       flash[:error] = t("form.questions_add_error", :msg => @form.errors.messages.values.join(';'))

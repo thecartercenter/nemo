@@ -8,101 +8,158 @@ describe 'replicating a form' do
   end
 
   describe 'to_mission' do
-    context 'on create' do
-      context 'with a condition referencing an option' do
-        context 'from a multilevel set' do
-          before(:all) do
-            @std = create(:form, question_types: %w(select_one integer), is_standard: true, use_multilevel_option_set: true)
-            @std.questionings[1].condition = build(:condition,
-              ref_qing: @std.questionings[0], op: 'eq',
-              option_ids: [@std.questions[0].option_set.c[1].option_id, @std.questions[0].option_set.c[1].c[0].option_id])
-            @copy = @std.replicate(mode: :to_mission, dest_mission: get_mission)
-            @copy_cond = @copy.questionings[1].condition
-            @copy_opt_set = @copy.questionings[0].option_set
-          end
+    context 'with a condition referencing an option' do
+      context 'from a multilevel set' do
+        before(:all) do
+          @std = create(:form, question_types: %w(select_one integer), is_standard: true, use_multilevel_option_set: true)
+          @std.questionings[1].condition = build(:condition,
+            ref_qing: @std.questionings[0], op: 'eq',
+            option_ids: [@std.questions[0].option_set.c[1].option_id, @std.questions[0].option_set.c[1].c[0].option_id])
+          @copy = @std.replicate(mode: :to_mission, dest_mission: get_mission)
+          @copy_cond = @copy.questionings[1].condition
+          @copy_opt_set = @copy.questionings[0].option_set
+        end
 
-          it 'should produce distinct child objects' do
-            expect(@std.questionings[1]).not_to eq @copy.questionings[1]
-            expect(@std.questionings[1].condition).not_to eq @copy_cond
-            expect(@std.questionings[0].options[0]).not_to eq @copy_opt_set.options[0]
-          end
+        it 'should produce distinct child objects' do
+          expect(@std.questionings[1]).not_to eq @copy.questionings[1]
+          expect(@std.questionings[1].condition).not_to eq @copy_cond
+          expect(@std.questionings[0].options[0]).not_to eq @copy_opt_set.options[0]
+        end
 
-          it 'should produce correct condition-qing link' do
-            expect(@copy_cond.ref_qing).to eq @copy.questionings[0]
-          end
+        it 'should produce correct condition-qing link' do
+          expect(@copy_cond.ref_qing).to eq @copy.questionings[0]
+        end
 
-          it 'should produce correct new option references' do
-            expect(@copy_cond.option_ids).to eq([@copy_opt_set.c[1].option_id, @copy_opt_set.c[1].c[0].option_id])
-          end
+        it 'should produce correct new option references' do
+          expect(@copy_cond.option_ids).to eq([@copy_opt_set.c[1].option_id, @copy_opt_set.c[1].c[0].option_id])
+        end
+      end
+
+      context 'with an existing copy of form in mission' do
+        before do
+          @std = create(:form, question_types: %w(select_one integer), is_standard: true)
+          @copy1 = @std.replicate(mode: :to_mission, dest_mission: get_mission)
+          @copy2 = @std.replicate(mode: :to_mission, dest_mission: get_mission)
+        end
+
+        it 'should create a second copy but re-use questions, option sets' do
+          expect(@copy1).not_to eq @copy2
+          expect(@copy1.questionings[0]).not_to eq @copy2.questionings[0]
+          expect(@copy1.questions[0]).to eq @copy2.questions[0]
+          expect(@copy1.questions[0].option_set).to eq @copy2.questions[0].option_set
         end
       end
     end
 
-    context 'on update' do
-      context 'when question rank changes' do
-        context 'without conditions' do
-          before do
-            @std_form = create(:form, question_types: %w(integer integer integer integer), is_standard: true)
-            @copy_form = @std_form.replicate(mode: :to_mission, dest_mission: get_mission)
-            @old_copy_qing_ids = @copy_form.questionings.map(&:id)
 
-            # Switch ranks on @std_form (swap ranks 1,2 and 3,4)
-            ids = @std_form.questionings.map(&:id)
-            @std_form.name = 'Updated ranks' # Update name to ensure save
-            @std_form.update_ranks({ids[1] => 1, ids[0] => 2, ids[3] => 3, ids[2] => 4})
-            @std_form.save_and_rereplicate
-          end
-
-          it 'should replicate rank changes' do
-            ids = @old_copy_qing_ids
-            expect(@copy_form.reload.questionings.map(&:id)).to eq [ids[1], ids[0], ids[3], ids[2]]
-          end
-        end
-
-        context 'with condition' do
-          before do
-            @std_form = create(:form, question_types: %w(select_one integer integer), is_standard: true)
-            @std_form.questionings[2].create_condition(ref_qing: @std_form.questionings[0], op: 'eq',
-              option_ids: [@std_form.questionings[0].options[0].id])
-            @copy_form = @std_form.replicate(mode: :to_mission, dest_mission: get_mission)
-            @old_copy_qing_ids = @copy_form.questionings.map(&:id)
-
-            # Move middle question to top.
-            ids = @std_form.questionings.map(&:id)
-
-            # Without these, the test was not triggering an error that was happening in the wild.
-            @std_form.reload
-            @copy_form.reload
-
-            @std_form.name = 'Updated ranks' # Update name to ensure save
-            @std_form.update_ranks({ids[0] => 2, ids[1] => 1, ids[2] => 3})
-            @std_form.save_and_rereplicate!
-          end
-
-          it 'should replicate rank changes' do
-            ids = @old_copy_qing_ids
-            expect(@copy_form.reload.questionings.map(&:id)).to eq [ids[1], ids[0], ids[2]]
-
-            # Ref qing should not have changed.
-            expect(@copy_form.questionings[2].condition.ref_qing_id).to eq ids[0]
-          end
-        end
+    context 'old tests' do
+      it "creating standard form should create standard questions and questionings" do
+        # this factory includes some default questions
+        f = FactoryGirl.create(:form, :is_standard => true)
+        assert(f.reload.questions.all?(&:is_standard?))
       end
 
-      describe 'hidden std copy question' do
-        before do
-          @std_form = create(:form, question_types: %w(integer integer), is_standard: true)
-          @copy_form = @std_form.replicate(mode: :to_mission, dest_mission: get_mission)
+      it "adding questions to a std form should create standard questions and questionings" do
+        f = FactoryGirl.create(:form, :is_standard => true)
+        f.questions << FactoryGirl.create(:question, :is_standard => true)
+        assert(f.reload.questions.all?(&:is_standard?))
+      end
 
-          # Hide a copied question.
-          @copy_form.questionings[1].update_attributes(hidden: true)
-          @std_form.save_and_rereplicate!
-          @copy_form.reload
-        end
+      it "replicating form within mission should avoid name conflict" do
+        f = FactoryGirl.create(:form, :name => "Myform", :question_types => %w(integer select_one))
+        f2 = f.replicate(:mode => :clone)
+        assert_equal('Myform 2', f2.name)
+        f3 = f2.replicate(:mode => :clone)
+        assert_equal('Myform 3', f3.name)
+        f4 = f3.replicate(:mode => :clone)
+        assert_equal('Myform 4', f4.name)
+      end
 
-        it 'should not get unhidden on rereplicate' do
-          expect(@copy_form.questionings.map(&:hidden)).to eq [false, true]
-        end
+      it "replicating form within mission should produce different questionings but same questions and option set" do
+        f = FactoryGirl.create(:form, :question_types => %w(integer select_one))
+        f2 = f.replicate(:mode => :clone)
+        assert_not_equal(f.questionings.first, f2.questionings.first)
+
+        # questionings should point to proper form
+        assert_equal(f.questionings[0].form, f)
+        assert_equal(f2.questionings[0].form, f2)
+
+        # questions and option sets should be same
+        assert_equal(f.questions, f2.questions)
+        assert_not_nil(f2.questions[1].option_set)
+        assert_equal(f.questions[1].option_set, f2.questions[1].option_set)
+      end
+
+      it "replicating a standard form should do a deep copy" do
+        f = FactoryGirl.create(:form, :question_types => %w(select_one integer), :is_standard => true)
+        f2 = f.replicate(:mode => :to_mission, :dest_mission => get_mission)
+
+        # mission should now be set and should not be standard
+        assert(!f2.is_standard)
+        assert_equal(get_mission, f2.mission)
+
+        # all objects should be distinct
+        assert_not_equal(f, f2)
+        assert_not_equal(f.questionings[0], f2.questionings[0])
+        assert_not_equal(f.questionings[0].question, f2.questionings[0].question)
+
+        # but properties should be same
+        assert_equal(f.questionings[0].rank, f2.questionings[0].rank)
+        assert_equal(f.questionings[0].question.code, f2.questionings[0].question.code)
+      end
+
+      it "replicating form with conditions should produce correct new conditions" do
+        f = FactoryGirl.create(:form, :question_types => %w(integer select_one))
+
+        # create condition
+        f.questionings[1].condition = FactoryGirl.build(:condition, :ref_qing => f.questionings[0], :op => 'gt', :value => 1)
+
+        # replicate and test
+        f2 = f.replicate(:mode => :clone)
+
+        # questionings and conditions should be distinct
+        assert_not_equal(f.questionings[1], f2.questionings[1])
+        assert_not_equal(f.questionings[1].condition, f2.questionings[1].condition)
+
+        # new condition should point to new questioning
+        assert_equal(f2.questionings[1].condition.ref_qing, f2.questionings[0])
+      end
+
+      it "replicating a standard form with a condition referencing an option should produce correct new option reference" do
+        f = FactoryGirl.create(:form, :question_types => %w(select_one integer), :is_standard => true)
+
+        # create condition with option reference
+        f.questionings[1].condition = FactoryGirl.build(:condition, :ref_qing => f.questionings[0], :op => 'eq',
+          :option => f.questions[0].option_set.options[0])
+
+        # replicate and test
+        f2 = f.replicate(:mode => :to_mission, :dest_mission => get_mission)
+
+        # questionings, conditions, and options should be distinct
+        assert_not_equal(f.questionings[1], f2.questionings[1])
+        assert_not_equal(f.questionings[1].condition, f2.questionings[1].condition)
+        assert_not_equal(f.questionings[0].question.option_set.options[0], f2.questionings[0].question.option_set.options[0])
+
+        # new condition should point to new questioning
+        assert_equal(f2.questionings[1].condition.ref_qing, f2.questionings[0])
+
+        # new condition should point to new option
+        assert_not_nil(f2.questionings[1].condition.option)
+        assert_not_nil(f2.questionings[0].question.option_set.options[0])
+        assert_equal(f2.questionings[1].condition.option, f2.questionings[0].question.option_set.options[0])
+      end
+
+      it "replicating a form with multiple conditions should also work" do
+        f = FactoryGirl.create(:form, :question_types => %w(integer integer integer integer))
+
+        # create conditions
+        f.questionings[1].condition = FactoryGirl.build(:condition, :ref_qing => f.questionings[0], :op => 'gt', :value => 1)
+        f.questionings[3].condition = FactoryGirl.build(:condition, :ref_qing => f.questionings[1], :op => 'gt', :value => 1)
+
+        f2 = f.replicate(:mode => :clone)
+        # new conditions should point to new questionings
+        assert_equal(f2.questionings[1].condition.ref_qing, f2.questionings[0])
+        assert_equal(f2.questionings[3].condition.ref_qing, f2.questionings[1])
       end
     end
   end
