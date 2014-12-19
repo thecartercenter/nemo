@@ -64,6 +64,8 @@ class Broadcast < ActiveRecord::Base
       # one error per line
       $!.to_s.split("\n").each{|e| add_send_error(I18n.t("broadcast.sms_error") + ": #{e}")}
     end
+
+    save if send_errors
   end
 
   def add_send_error(msg)

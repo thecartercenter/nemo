@@ -19,7 +19,7 @@ class Sms::Adapters::IntelliSmsAdapter < Sms::Adapters::Adapter
     body = message.body.encode("iso-8859-1", {:invalid => :replace, :undef => :replace, :replace => '?'})
 
     # build the URI the request
-    params = {:to => message.to, :text => body}
+    params = {:to => message.recipients.join(','), :text => body}
 
     # include the from number if it is set
     params[:from] = message.from.gsub(/^\+/, "") if message.from
