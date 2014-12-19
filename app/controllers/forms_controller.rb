@@ -113,6 +113,7 @@ class FormsController < ApplicationController
   end
 
   def create
+    @form.is_standard = true if current_mode == 'admin'
     if @form.save
       set_success_and_redirect(@form, :to => edit_form_path(@form))
     else

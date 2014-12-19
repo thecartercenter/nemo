@@ -47,6 +47,7 @@ class OptionSetsController < ApplicationController
 
   # always via AJAX
   def create
+    @option_set.is_standard = true if current_mode == 'admin'
     OptionSet.transaction do
       create_or_update
     end

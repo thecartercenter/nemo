@@ -36,6 +36,8 @@ class QuestionsController < ApplicationController
   end
 
   def create
+    @question.is_standard = true if current_mode == 'admin'
+
     # Convert tag string from TokenInput to array
     @question.tag_ids = (params[:question][:tag_ids] || '').split(',')
 
