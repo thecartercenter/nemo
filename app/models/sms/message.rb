@@ -2,15 +2,13 @@
 # gets created by adapters when messages are incoming
 # and gets created by controllers and sent to adapters for sending when messages are outgoing
 #
-# to          a string or an array of strings holding phone numbers in ITU E.123 format (e.g. ["+14445556666", "+14445556667"])
+# to          a string holding a phone number in ITU E.123 format (e.g. "+14445556666")
 #             can be nil in case of an incoming message
 # from        a string holding a single phone number. can be nil in case of an outgoing message.
 # body        a string holding the body of the message
 # sent_at     the time the message was sent/received
 class Sms::Message < ActiveRecord::Base
   include MissionBased
-
-  serialize :to, JSON
 
   belongs_to :mission
 

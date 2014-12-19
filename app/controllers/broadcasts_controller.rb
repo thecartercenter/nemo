@@ -52,6 +52,7 @@ class BroadcastsController < ApplicationController
 
   def create
     if @broadcast.save
+      @broadcast.deliver
       if @broadcast.send_errors
         flash[:error] = t("broadcast.send_error")
       else

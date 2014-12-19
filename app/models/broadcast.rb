@@ -12,8 +12,6 @@ class Broadcast < ActiveRecord::Base
   validates(:body, :length => {:maximum => 140}, :if => Proc.new{|b| b.sms_possible?})
   validate(:has_eligible_recipients)
 
-  before_create(:deliver)
-
   default_scope(includes(:recipients).order("created_at DESC"))
 
   # this method isn't used except for attaching errors
@@ -50,20 +48,22 @@ class Broadcast < ActiveRecord::Base
   def deliver
     # send emails
     begin
-      BroadcastMailer.broadcast(recipient_emails, subject, body).deliver if email_possible? && recipient_emails.present?
+      if email_possible? && recipient_emails.present?
+        BroadcastMailer.broadcast(recipient_emails, subject, body).deliver
+      end
     rescue
       add_send_error(I18n.t("broadcast.email_error") + ": #{$!}")
     end
 
     # send smses
     begin
-      Sms::Broadcaster.deliver(self, which_phone, "#{configatron.broadcast_tag} #{body}") if sms_possible? && recipient_numbers.present?
+      if sms_possible? && recipient_numbers.present?
+        Sms::Broadcaster.deliver(self, which_phone, "#{configatron.broadcast_tag} #{body}")
+      end
     rescue Sms::Error
       # one error per line
       $!.to_s.split("\n").each{|e| add_send_error(I18n.t("broadcast.sms_error") + ": #{e}")}
     end
-
-    return true
   end
 
   def add_send_error(msg)
@@ -91,7 +91,9 @@ class Broadcast < ActiveRecord::Base
   private
 
     def has_eligible_recipients
-      errors.add(:to, :no_recipients) if recipient_numbers.empty? && recipient_emails.empty?
+      unless (sms_possible? && recipient_numbers.present?) || (email_possible? && recipient_emails.present?)
+        errors.add(:to, :no_recipients)
+      end
     end
 
 end

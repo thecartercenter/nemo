@@ -27,10 +27,10 @@ class Sms::Adapters::Adapter
   # Raises an error if no recipients or message empty. Adds adapter name.
   def prepare_message_for_delivery(message)
     # apply the adapter name to the message
-    message.update_attributes(:adapter_name => service_name)
+    message.adapter_name = service_name
 
     # error if no recipients or message empty
-    raise Sms::Error.new("message has no recipients") if message.to.blank?
+    raise Sms::Error.new("message has no recipients") if message.recipients.blank?
     raise Sms::Error.new("message body is empty") if message.body.blank?
 
     # save the message now, which sets the sent_at
