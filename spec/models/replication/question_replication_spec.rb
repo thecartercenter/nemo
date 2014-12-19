@@ -22,6 +22,31 @@ describe Question do
         expect(@copy.option_set).to eq @copy2.option_set
       end
     end
+
+    describe 'code sync' do
+      context 'when no conflicts' do
+        before do
+          @orig.update_attributes!(code: 'NewCode')
+        end
+
+        it 'should work' do
+          expect(@copy.reload.code).to eq 'NewCode'
+        end
+      end
+
+      context 'when new code conflicts with existing question in mission' do
+        before do
+          # This question will conflict, but is not a copy.
+          create(:question, qtype_name: 'text', code: 'NewCode', mission: @mission2)
+          @orig.update_attributes!(code: 'NewCode')
+        end
+
+        it 'should work' do
+          expect(@orig.reload.code).to eq 'NewCode'
+          expect(@copy.reload.code).to eq 'NewCode2'
+        end
+      end
+    end
   end
 
   context 'old tests' do

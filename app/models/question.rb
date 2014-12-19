@@ -78,7 +78,7 @@ class Question < ActiveRecord::Base
            :levels,
            :to => :option_set, :allow_nil => true
 
-  replicable :child_assocs => :option_set, :parent_assoc => :questioning,
+  replicable :child_assocs => :option_set, :parent_assoc => :questioning, :sync => :code,
     :uniqueness => {:field => :code, :style => :camel_case}, :dont_copy => [:key, :access_level]
 
   # returns questions that do NOT already appear in the given form

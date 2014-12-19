@@ -16,6 +16,8 @@ module Replicable
     before_validation(:copy_is_standard_and_mission_from_parent)
     before_validation(:copy_is_standard_and_mission_to_children)
 
+    after_save(:sync_chosen_attributes)
+
     # dsl-style method for setting options from base class
     def self.replicable(options = {})
       options[:child_assocs] = Array.wrap(options[:child_assocs])
@@ -440,5 +442,29 @@ module Replicable
         end
       end
       return true
+    end
+
+    # Syncs attributes chosen for syncing with copies via the ':sync' option in the replicable declaration.
+    def sync_chosen_attributes
+      return unless standardizable? && is_standard?
+      copies.each do |c|
+        Array.wrap(replicable_opts(:sync)).each do |a|
+          sync_attribute_with_copy(a, c)
+        end
+        c.save(validate: false)
+      end
+      return true
+    end
+
+    # Sync the given attribut with the given copy, avoiding naming conflicts
+    def sync_attribute_with_copy(attrib_name, copy)
+      # Ensure uniqueness if appropriate.
+      uniqueness = replicable_opts(:uniqueness) || {}
+      val = if uniqueness[:field] == attrib_name
+        generate_unique_field_value(mission: copy.mission, dest_obj: copy, field: attrib_name, style: uniqueness[:style])
+      else
+        send(attrib_name)
+      end
+      copy.send("#{attrib_name}=", val)
     end
 end
