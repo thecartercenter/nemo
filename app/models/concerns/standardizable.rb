@@ -23,9 +23,10 @@ module Standardizable
     standard_id.present?
   end
 
-  # get copy in the given mission, if it exists (there can only be one)
+  # Gets a copy of this object in the given mission, if one. exists.
+  # There may be multiple copies, in which case the most recently created one is returned
   def copy_for_mission(mission)
-    copies.for_mission(mission).first
+    copies.for_mission(mission).order(created_at: :desc).first
   end
 
   # adds an obj to the list of copies
