@@ -1,4 +1,6 @@
 class Questioning < FormItem
+  include Standardizable, Replicable
+  
   belongs_to(:question, :autosave => true, :inverse_of => :questionings)
   has_many(:answers, :dependent => :destroy, :inverse_of => :questioning)
   has_one(:condition, :autosave => true, :dependent => :destroy, :inverse_of => :questioning)
@@ -11,6 +13,8 @@ class Questioning < FormItem
   replicable child_assocs: [:question, :condition], parent_assoc: :form, dont_copy: :hidden
 
   before_validation(:destroy_condition_if_ref_qing_blank)
+  before_create(:set_rank)
+  after_destroy(:fix_ranks)
 
   delegate :name,
            :code,
@@ -46,7 +50,7 @@ class Questioning < FormItem
 
   scope(:visible, where(:hidden => false))
 
-  # remove heirarch of objects
+  # remove heirarchy of objects
   def self.terminate_sub_relationships(questioning_ids)
     answers = Answer.where(questioning_id: questioning_ids)
     Choice.where(answer_id: answers).delete_all
@@ -78,6 +82,11 @@ class Questioning < FormItem
   def referring_condition_ranks
     referring_conditions.map{|c| c.questioning.rank}
   end
+  
+  # returns any questionings appearing before this one on the form
+  def previous
+    form.questionings.reject{|q| !rank.nil? && (q == self || q.rank > rank)}
+  end
 
   # REFACTOR: should use translation delegation, from abandoned std_objs branch
   def method_missing(*args)
@@ -107,5 +116,15 @@ class Questioning < FormItem
     def destroy_condition_if_ref_qing_blank
       destroy_condition if condition && condition.ref_qing.blank?
     end
-  
+
+    # sets rank if not already set
+    def set_rank
+      self.rank ||= (form.try(:max_rank) || 0) + 1
+      return true
+    end
+    
+    # repair the ranks of the remaining questions on the form
+    def fix_ranks
+      form.fix_ranks
+    end
 end
