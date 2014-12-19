@@ -34,6 +34,21 @@ describe 'replicating a form' do
           expect(@copy_cond.option_ids).to eq([@copy_opt_set.c[1].option_id, @copy_opt_set.c[1].c[0].option_id])
         end
       end
+
+      context 'with an existing copy of form in mission' do
+        before do
+          @std = create(:form, question_types: %w(select_one integer), is_standard: true)
+          @copy1 = @std.replicate(mode: :to_mission, dest_mission: get_mission)
+          @copy2 = @std.replicate(mode: :to_mission, dest_mission: get_mission)
+        end
+
+        it 'should create a second copy but re-use questions, option sets' do
+          expect(@copy1).not_to eq @copy2
+          expect(@copy1.questionings[0]).not_to eq @copy2.questionings[0]
+          expect(@copy1.questions[0]).to eq @copy2.questions[0]
+          expect(@copy1.questions[0].option_set).to eq @copy2.questions[0].option_set
+        end
+      end
     end
 
 

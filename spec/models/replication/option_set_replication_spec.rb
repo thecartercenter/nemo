@@ -32,6 +32,17 @@ describe OptionSet do
       expect(Option.count).to eq 12
       expect(OptionNode.count).to eq 14
     end
+
+    context 'when replicating directly and copy exists in mission' do
+      before do
+        @copy2 = @orig.replicate(mode: :to_mission, dest_mission: @mission2)
+      end
+
+      it 'should make new copy but reuse options' do
+        expect(@copy).not_to eq @copy2
+        expect(@copy.options).to eq @copy2.options
+      end
+    end
   end
 
   describe 'promote with link' do

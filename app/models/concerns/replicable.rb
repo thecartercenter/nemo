@@ -76,7 +76,7 @@ module Replicable
 
       # If dest_obj is not a new record, we can just return it, no need to replicate further.
       unless dest_obj.new_record?
-        add_replication_dest_obj_to_parents_assocation(replication, self)
+        add_replication_dest_obj_to_parents_assocation(replication, dest_obj)
         return dest_obj
       end
 
@@ -247,9 +247,10 @@ module Replicable
       if replication.recursed? && replication.shallow_copy? && !DEPENDENT_CLASSES.include?(self.class.name)
         self
 
-      # If this is a standard object AND we're copying to a mission AND there exists a copy of this obj in the given mission,
+      # If this is not the first step in the replication
+      # AND is a standard object AND we're copying to a mission AND there exists a copy of this obj in the given mission,
       # then we don't need to create a new object, so return the existing copy
-      elsif standardizable? && replication.has_dest_mission? && (copy = copy_for_mission(replication.dest_mission))
+      elsif replication.recursed? && standardizable? && replication.has_dest_mission? && (copy = copy_for_mission(replication.dest_mission))
         copy
 
       # Else if trivial object and match, use that

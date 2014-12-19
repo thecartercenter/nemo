@@ -1,6 +1,29 @@
 require 'spec_helper'
 
 describe Question do
+  before(:all) do
+    @mission1 = create(:mission)
+    @mission2 = create(:mission)
+  end
+
+  describe 'to_mission' do
+    before do
+      @orig = create(:question, qtype_name: 'select_one', is_standard: true)
+      @copy = @orig.replicate(mode: :to_mission, dest_mission: @mission2)
+    end
+
+    context 'when replicating directly and copy exists in mission' do
+      before do
+        @copy2 = @orig.replicate(mode: :to_mission, dest_mission: @mission2)
+      end
+
+      it 'should make new copy but reuse option set' do
+        expect(@copy).not_to eq @copy2
+        expect(@copy.option_set).to eq @copy2.option_set
+      end
+    end
+  end
+
   context 'old tests' do
     it "replicating a question within a mission should change the code" do
       q = FactoryGirl.create(:question, :qtype_name => 'integer', :code => 'Foo')
