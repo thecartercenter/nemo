@@ -72,17 +72,17 @@ module Replicable
       # do logging after redo_in_transaction so we don't get duplication
       Rails.logger.debug(replication.to_s) if self.class.log_replication?
 
-      # TODO change the order here
-      # if we're on a recursive step AND we're doing a shallow copy AND this is not a join class,
-      # we don't need to do any recursive copying, so just return self
-      if replication.recursed? && replication.shallow_copy? && !DEPENDENT_CLASSES.include?(self.class.name)
+      dest_obj = setup_replication_destination_obj(replication)
+
+      # If dest_obj is not a new record, we can just return it, no need to replicate further.
+      unless dest_obj.new_record?
         add_replication_dest_obj_to_parents_assocation(replication, self)
-        return self
+        return dest_obj
       end
 
       # if we get this far we DO need to do recursive copying
-      # get the obj to copy stuff to, and also tell the replication object about it
-      replication.dest_obj = dest_obj = setup_replication_destination_obj(replication)
+
+      replication.dest_obj = dest_obj
 
       # set the proper mission ID if applicable
       dest_obj.mission_id = replication.dest_mission.try(:id)
@@ -242,19 +242,24 @@ module Replicable
     # may be a new object or an existing one depending on parameters
     def setup_replication_destination_obj(replication)
 
-      # if this is a standard object AND we're copying to a mission AND there exists a copy of this obj in the given mission,
-      # then we don't need to create a new object, so return the existing copy
-      if standardizable? && replication.has_dest_mission? && (copy = copy_for_mission(replication.dest_mission))
-        obj = copy
+      # If we're on a recursive step and we're doing a shallow copy, THIS is the dest obj
+      # UNLESS this is a dependent class, which always need to be replicated.
+      if replication.recursed? && replication.shallow_copy? && !DEPENDENT_CLASSES.include?(self.class.name)
+        self
 
-      # TODO else if trivial object and match, use that
+      # If this is a standard object AND we're copying to a mission AND there exists a copy of this obj in the given mission,
+      # then we don't need to create a new object, so return the existing copy
+      elsif standardizable? && replication.has_dest_mission? && (copy = copy_for_mission(replication.dest_mission))
+        copy
+
+      # Else if trivial object and match, use that
+      elsif respond_to?(:similar_for_mission) && (similar = similar_for_mission(replication.dest_mission))
+        similar
 
       else
-        # otherwise, we init and return the new object
-        obj = self.class.new
+        # Otherwise, we init and return the new object
+        self.class.new
       end
-
-      obj
     end
 
     # replicates the appropriate attributes from the src to the dest

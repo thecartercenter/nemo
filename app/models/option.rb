@@ -45,6 +45,12 @@ class Option < ActiveRecord::Base
     option_sets.map{|os| os.name}.join(', ')
   end
 
+  # Returns an Option in the given mission that has same canonical name as this Option.
+  # Returns nil if not found.
+  def similar_for_mission(other_mission)
+    self.class.where(canonical_name: canonical_name, mission_id: other_mission.try(:id)).first
+  end
+
   def as_json(options = {})
     if options[:for_option_set_form]
       super(:only => [:id, :name_translations], :methods => [:name, :set_names, :in_use?])
