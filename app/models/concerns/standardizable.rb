@@ -9,15 +9,8 @@ module Standardizable
     has_many(:copies, :class_name => name, :foreign_key => 'standard_id', :inverse_of => :standard)
 
     # returns a scope for all standard objects of the current class that are importable to the given mission
-    # (i.e. that don't already exist in that mission)
     def self.importable_to(mission)
-      # get ids of all standard objs already copied to the mission
-      existing_ids = for_mission(mission).where('standard_id IS NOT NULL').map(&:standard_id)
-
-      # build relation
-      rel = where(:is_standard => true)
-      rel = rel.where("id NOT IN (?)", existing_ids) unless existing_ids.empty?
-      rel
+      where(:is_standard => true)
     end
   end
 
