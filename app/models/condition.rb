@@ -1,5 +1,5 @@
 class Condition < ActiveRecord::Base
-  include MissionBased, FormVersionable, Standardizable, Replicable
+  include MissionBased, FormVersionable, Replicable
 
   # question types that cannot be used in conditions
   NON_REFABLE_TYPES = %w(location)

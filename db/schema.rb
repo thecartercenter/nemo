@@ -11,14 +11,14 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20141130213116) do
+ActiveRecord::Schema.define(:version => 20141219155519) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
     t.integer  "option_id"
     t.text     "value"
-    t.datetime "created_at",                       :null => false
-    t.datetime "updated_at",                       :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer  "questioning_id"
     t.time     "time_value"
     t.date     "date_value"
@@ -34,8 +34,8 @@ ActiveRecord::Schema.define(:version => 20141130213116) do
   create_table "assignments", :force => true do |t|
     t.integer  "mission_id"
     t.integer  "user_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string   "role"
   end
 
@@ -45,8 +45,8 @@ ActiveRecord::Schema.define(:version => 20141130213116) do
   create_table "broadcast_addressings", :force => true do |t|
     t.integer  "broadcast_id"
     t.integer  "user_id"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "broadcast_addressings", ["broadcast_id"], :name => "broadcast_addressings_broadcast_id_fk"
@@ -57,8 +57,8 @@ ActiveRecord::Schema.define(:version => 20141130213116) do
     t.text     "body"
     t.string   "medium"
     t.text     "send_errors"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string   "which_phone"
     t.integer  "mission_id"
   end
@@ -68,8 +68,8 @@ ActiveRecord::Schema.define(:version => 20141130213116) do
   create_table "choices", :force => true do |t|
     t.integer  "answer_id"
     t.integer  "option_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "choices", ["answer_id"], :name => "choices_answer_id_fk"
@@ -80,18 +80,15 @@ ActiveRecord::Schema.define(:version => 20141130213116) do
     t.integer  "ref_qing_id"
     t.string   "op"
     t.string   "value"
-    t.datetime "created_at",                        :null => false
-    t.datetime "updated_at",                        :null => false
-    t.boolean  "is_standard",    :default => false
-    t.integer  "standard_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer  "mission_id"
     t.string   "option_ids"
   end
 
-  add_index "conditions", ["mission_id", "standard_id"], :name => "index_conditions_on_mission_id_and_standard_id", :unique => true
+  add_index "conditions", ["mission_id"], :name => "index_conditions_on_mission_id"
   add_index "conditions", ["questioning_id"], :name => "conditions_questioning_id_fk"
   add_index "conditions", ["ref_qing_id"], :name => "conditions_ref_qing_id_fk"
-  add_index "conditions", ["standard_id"], :name => "index_conditions_on_standard_id"
 
   create_table "form_versions", :force => true do |t|
     t.integer  "form_id"
@@ -107,9 +104,9 @@ ActiveRecord::Schema.define(:version => 20141130213116) do
 
   create_table "forms", :force => true do |t|
     t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.boolean  "published",          :default => false
-    t.datetime "created_at",                                :null => false
-    t.datetime "updated_at",                                :null => false
     t.integer  "downloads"
     t.integer  "responses_count",    :default => 0
     t.integer  "mission_id"
@@ -125,7 +122,6 @@ ActiveRecord::Schema.define(:version => 20141130213116) do
 
   add_index "forms", ["current_version_id"], :name => "forms_current_version_id_fk"
   add_index "forms", ["mission_id", "name"], :name => "index_forms_on_mission_id_and_name", :unique => true
-  add_index "forms", ["mission_id", "standard_id"], :name => "index_forms_on_mission_id_and_standard_id", :unique => true
   add_index "forms", ["standard_id"], :name => "index_forms_on_standard_id"
 
   create_table "groups", :force => true do |t|
@@ -140,8 +136,8 @@ ActiveRecord::Schema.define(:version => 20141130213116) do
   create_table "missions", :force => true do |t|
     t.string   "name"
     t.string   "compact_name"
-    t.datetime "created_at",                      :null => false
-    t.datetime "updated_at",                      :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.boolean  "locked",       :default => false, :null => false
   end
 
@@ -151,12 +147,10 @@ ActiveRecord::Schema.define(:version => 20141130213116) do
     t.string   "ancestry"
     t.integer  "option_set_id"
     t.integer  "option_id"
-    t.integer  "rank",           :default => 1,     :null => false
-    t.datetime "created_at",                        :null => false
-    t.datetime "updated_at",                        :null => false
+    t.integer  "rank",           :default => 1, :null => false
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
     t.integer  "mission_id"
-    t.integer  "standard_id"
-    t.boolean  "is_standard",    :default => false, :null => false
     t.integer  "ancestry_depth", :default => 0
   end
 
@@ -164,12 +158,11 @@ ActiveRecord::Schema.define(:version => 20141130213116) do
   add_index "option_nodes", ["option_id"], :name => "option_nodes_option_id_fk"
   add_index "option_nodes", ["option_set_id"], :name => "option_nodes_option_set_id_fk"
   add_index "option_nodes", ["rank"], :name => "index_option_nodes_on_rank"
-  add_index "option_nodes", ["standard_id"], :name => "option_nodes_standard_id_fk"
 
   create_table "option_sets", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at",                      :null => false
-    t.datetime "updated_at",                      :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer  "mission_id"
     t.boolean  "is_standard",  :default => false
     t.integer  "standard_id"
@@ -179,23 +172,19 @@ ActiveRecord::Schema.define(:version => 20141130213116) do
   end
 
   add_index "option_sets", ["geographic"], :name => "index_option_sets_on_geographic"
-  add_index "option_sets", ["mission_id", "standard_id"], :name => "index_option_sets_on_mission_id_and_standard_id", :unique => true
+  add_index "option_sets", ["mission_id"], :name => "index_option_sets_on_mission_id"
   add_index "option_sets", ["root_node_id"], :name => "option_sets_root_node_id_fk"
   add_index "option_sets", ["standard_id"], :name => "index_option_sets_on_standard_id"
 
   create_table "options", :force => true do |t|
-    t.datetime "created_at",                           :null => false
-    t.datetime "updated_at",                           :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer  "mission_id"
     t.string   "canonical_name"
     t.text     "name_translations"
-    t.boolean  "is_standard",       :default => false
-    t.integer  "standard_id"
-    t.text     "recent_changes"
   end
 
-  add_index "options", ["mission_id", "standard_id"], :name => "index_options_on_mission_id_and_standard_id", :unique => true
-  add_index "options", ["standard_id"], :name => "index_options_on_standard_id"
+  add_index "options", ["mission_id"], :name => "index_options_on_mission_id"
 
   create_table "questionings", :force => true do |t|
     t.integer  "question_id"
@@ -203,23 +192,20 @@ ActiveRecord::Schema.define(:version => 20141130213116) do
     t.integer  "rank"
     t.boolean  "required",    :default => false
     t.boolean  "hidden",      :default => false
-    t.datetime "created_at",                     :null => false
-    t.datetime "updated_at",                     :null => false
-    t.boolean  "is_standard", :default => false
-    t.integer  "standard_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer  "mission_id"
   end
 
   add_index "questionings", ["form_id"], :name => "questionings_form_id_fk"
-  add_index "questionings", ["mission_id", "standard_id"], :name => "index_questionings_on_mission_id_and_standard_id", :unique => true
+  add_index "questionings", ["mission_id"], :name => "index_questionings_on_mission_id"
   add_index "questionings", ["question_id"], :name => "questionings_question_id_fk"
-  add_index "questionings", ["standard_id"], :name => "index_questionings_on_standard_id"
 
   create_table "questions", :force => true do |t|
     t.string   "code"
     t.integer  "option_set_id"
-    t.datetime "created_at",                                                               :null => false
-    t.datetime "updated_at",                                                               :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.decimal  "minimum",           :precision => 15, :scale => 10
     t.decimal  "maximum",           :precision => 15, :scale => 10
     t.boolean  "maxstrictly"
@@ -236,7 +222,6 @@ ActiveRecord::Schema.define(:version => 20141130213116) do
   end
 
   add_index "questions", ["mission_id", "code"], :name => "index_questions_on_mission_id_and_code", :unique => true
-  add_index "questions", ["mission_id", "standard_id"], :name => "index_questions_on_mission_id_and_standard_id", :unique => true
   add_index "questions", ["option_set_id"], :name => "questions_option_set_id_fk"
   add_index "questions", ["qtype_name"], :name => "index_questions_on_qtype_name"
   add_index "questions", ["standard_id"], :name => "index_questions_on_standard_id"
@@ -246,8 +231,8 @@ ActiveRecord::Schema.define(:version => 20141130213116) do
     t.integer  "report_report_id"
     t.integer  "question1_id"
     t.string   "attrib1_name"
-    t.datetime "created_at",       :null => false
-    t.datetime "updated_at",       :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer  "rank"
   end
 
@@ -266,8 +251,8 @@ ActiveRecord::Schema.define(:version => 20141130213116) do
     t.integer  "mission_id"
     t.string   "type"
     t.string   "name"
-    t.datetime "created_at",                                   :null => false
-    t.datetime "updated_at",                                   :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.datetime "viewed_at"
     t.integer  "view_count",       :default => 0
     t.string   "display_type",     :default => "table"
@@ -293,9 +278,8 @@ ActiveRecord::Schema.define(:version => 20141130213116) do
   create_table "responses", :force => true do |t|
     t.integer  "form_id"
     t.integer  "user_id"
-    t.integer  "location_id"
-    t.datetime "created_at",                           :null => false
-    t.datetime "updated_at",                           :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.boolean  "reviewed",          :default => false
     t.string   "source"
     t.integer  "mission_id"
@@ -316,16 +300,16 @@ ActiveRecord::Schema.define(:version => 20141130213116) do
   create_table "sessions", :force => true do |t|
     t.string   "session_id", :null => false
     t.text     "data"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "sessions", ["updated_at"], :name => "index_sessions_on_updated_at"
 
   create_table "settings", :force => true do |t|
     t.string   "timezone"
-    t.datetime "created_at",                                           :null => false
-    t.datetime "updated_at",                                           :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer  "mission_id"
     t.string   "outgoing_sms_adapter"
     t.string   "intellisms_username"
@@ -354,24 +338,20 @@ ActiveRecord::Schema.define(:version => 20141130213116) do
   add_index "sms_messages", ["mission_id"], :name => "sms_messages_mission_id_fk"
 
   create_table "taggings", :force => true do |t|
-    t.integer  "question_id",                    :null => false
-    t.integer  "tag_id",                         :null => false
-    t.boolean  "is_standard", :default => false
-    t.integer  "standard_id"
-    t.datetime "created_at",                     :null => false
-    t.datetime "updated_at",                     :null => false
+    t.integer  "question_id", :null => false
+    t.integer  "tag_id",      :null => false
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
   end
 
   add_index "taggings", ["question_id"], :name => "index_taggings_on_question_id"
   add_index "taggings", ["tag_id"], :name => "index_taggings_on_tag_id"
 
   create_table "tags", :force => true do |t|
-    t.string   "name",        :limit => 64,                    :null => false
+    t.string   "name",       :limit => 64, :null => false
     t.integer  "mission_id"
-    t.boolean  "is_standard",               :default => false
-    t.integer  "standard_id"
-    t.datetime "created_at",                                   :null => false
-    t.datetime "updated_at",                                   :null => false
+    t.datetime "created_at",               :null => false
+    t.datetime "updated_at",               :null => false
   end
 
   add_index "tags", ["mission_id"], :name => "index_tags_on_mission_id"
@@ -429,7 +409,6 @@ ActiveRecord::Schema.define(:version => 20141130213116) do
 
   add_foreign_key "choices", "options", name: "choices_option_id_fk"
 
-  add_foreign_key "conditions", "conditions", name: "conditions_standard_id_fk", column: "standard_id"
   add_foreign_key "conditions", "missions", name: "conditions_mission_id_fk"
   add_foreign_key "conditions", "questionings", name: "conditions_questioning_id_fk"
   add_foreign_key "conditions", "questionings", name: "conditions_ref_qing_id_fk", column: "ref_qing_id"
@@ -443,7 +422,6 @@ ActiveRecord::Schema.define(:version => 20141130213116) do
   add_foreign_key "groups", "missions", name: "groups_mission_id_fk"
 
   add_foreign_key "option_nodes", "missions", name: "option_nodes_mission_id_fk"
-  add_foreign_key "option_nodes", "option_nodes", name: "option_nodes_standard_id_fk", column: "standard_id"
   add_foreign_key "option_nodes", "option_sets", name: "option_nodes_option_set_id_fk"
   add_foreign_key "option_nodes", "options", name: "option_nodes_option_id_fk"
 
@@ -452,11 +430,9 @@ ActiveRecord::Schema.define(:version => 20141130213116) do
   add_foreign_key "option_sets", "option_sets", name: "option_sets_standard_id_fk", column: "standard_id"
 
   add_foreign_key "options", "missions", name: "options_mission_id_fk"
-  add_foreign_key "options", "options", name: "options_standard_id_fk", column: "standard_id"
 
   add_foreign_key "questionings", "forms", name: "questionings_form_id_fk"
   add_foreign_key "questionings", "missions", name: "questionings_mission_id_fk"
-  add_foreign_key "questionings", "questionings", name: "questionings_standard_id_fk", column: "standard_id"
   add_foreign_key "questionings", "questions", name: "questionings_question_id_fk"
 
   add_foreign_key "questions", "missions", name: "questions_mission_id_fk"

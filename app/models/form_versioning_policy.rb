@@ -6,7 +6,7 @@ class FormVersioningPolicy
   def notify(obj, action)
     forms_needing_upgrade(obj, action).each do |f|
       f.reload
-      raise "standard forms should not be subject to version policy" if f.is_standard?
+      raise "standard forms should not be subject to version policy" if f.standardizable? && f.is_standard?
       f.flag_for_upgrade!
     end
   end
