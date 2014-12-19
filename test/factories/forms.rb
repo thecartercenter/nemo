@@ -1,4 +1,4 @@
-def get_question(qt, mission, multi_option_set)
+def get_question(qt, mission, option_names, found_select, multi_option_set)
   qtype = QuestionType[qt == 'multi_level_select_one' ? 'select_one' : qt]
   question_attribs = {
     qtype_name: qtype.name,
@@ -7,7 +7,7 @@ def get_question(qt, mission, multi_option_set)
   }
 
   # assign the options to the question if appropriate
-  if qtype.has_options?  && !option_names.nil?
+  if qtype.has_options? && !found_select && !option_names.nil?
     question_attribs[:option_names] = option_names
     found_select = true
   end
@@ -39,7 +39,7 @@ FactoryGirl.define do
         if qt.kind_of?(Array) 
           # make a qing_group
         else
-          get_question(qt, mission, use_multilevel_option_set)        
+          get_question(qt, mission, option_names, found_select, use_multilevel_option_set)        
         end 
       end
     end
