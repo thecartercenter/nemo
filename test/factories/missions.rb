@@ -27,12 +27,7 @@ FactoryGirl.define do
       os = create(:option_set, multi_level: true, mission: mission)
 
       # creates questionings and questions
-      # TODO change factory to generate root group, questions should have root group as parent
-    #  form = create(:form, mission: mission, question_types: %w(integer text text))
-      # TODO change factory to support this syntax
-      form = create(:form, mission: mission)
-      debugger
-      add_questions_to_form(form, ['integer', ['text', 'text']])
+      form = create(:form, mission: mission, question_types: %w(integer text text))
       
       create(:question, qtype_name: 'select_one', option_set: os, mission: mission)
 

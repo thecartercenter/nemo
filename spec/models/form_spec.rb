@@ -121,6 +121,33 @@ describe Form do
       end
     end
   end
+  
+  context 'root_group' do
+    before do
+      @mission = create(:mission)
+    end
+    it 'has none by default' do
+      bare_form = Form.create(name: "test", mission: @mission)
+      expect(bare_form.root_group).to be_nil
+    end
+    it 'has a root group when created from factory' do
+      form = create(:form, mission: @mission, question_types: ['integer', ['text', 'text'], 'text'] )
+      expect(form.root_group).to_not be_nil
+    end
+  end
+  
+  context 'ancestry' do
+    before do
+      @mission = create(:mission)
+      @form = create(:form, mission: @mission, question_types: ['integer', ['text', 'text'], 'text'] )
+    end    
+    it 'has 3 children' do
+      expect(@form.root_group.children.count).to eq 3
+    end
+    it 'has one subgroup with two children' do
+      expect(@form.root_group.children[1].children.count).to eq 2
+    end
+  end
 
   def publish_and_reset_pub_changed_at(options = {})
     f = options[:form] || @form

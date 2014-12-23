@@ -19,19 +19,6 @@ def get_question(qtype_name, mission, option_names, multi_option_set, rank, pare
     :question => FactoryGirl.build(:question, question_attribs))
 end
 
-def add_questions_to_form(form, question_types)
-  option_names = nil
-  use_multilevel_option_set = false
-  question_types.each_with_index do |qts, index|
-    if qts.kind_of?(Array) 
-      group = QingGroup.create!(parent: form.root_group, mission: form.mission, rank: index+1)
-      qts.each_with_index { |qt, i| get_question(qt, form.mission, option_names, use_multilevel_option_set, i+1, group, form) }
-    else
-      get_question(qts, form.mission, option_names, use_multilevel_option_set, index+1, form.root_group, form)
-    end         
-  end
-end
-
 # Only works with create
 FactoryGirl.define do
   factory :form do
@@ -43,11 +30,21 @@ FactoryGirl.define do
       option_names nil
     end
     
-    after(:create) do |form|
+    after(:create) do |form, evaluator|
       root = QingGroup.create!(form: form, rank: 1)
-      form.update_attribute(:root_id,root.id) 
+      form.update_attribute(:root_id, root.id)
+      option_names = nil
+      use_multilevel_option_set = false
+      evaluator.question_types.each_with_index do |qts, index|
+        if qts.kind_of?(Array) 
+          group = QingGroup.create!(parent: form.root_group, form: form, rank: index+1)
+          qts.each_with_index { |qt, i| get_question(qt, form.mission, option_names, use_multilevel_option_set, i+1, group, form) }
+        else
+          get_question(qts, form.mission, option_names, use_multilevel_option_set, index+1, form.root_group, form)
+        end         
+      end
     end
-
+    
     mission { is_standard ? nil : get_mission }
     sequence(:name) { |n| "Sample Form #{n}" }
 
