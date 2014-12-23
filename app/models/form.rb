@@ -3,6 +3,7 @@ class Form < ActiveRecord::Base
 
   API_ACCESS_LEVELS = %w(private protected public)
 
+  
   has_many(:questions, :through => :questionings, :order => "form_items.rank")
   has_many(:questionings, :order => "rank", :autosave => true, :dependent => :destroy, :inverse_of => :form)
   has_many(:responses, :inverse_of => :form)
@@ -12,6 +13,7 @@ class Form < ActiveRecord::Base
 
   # while a form has many versions, this is a reference to the most up-to-date one
   belongs_to(:current_version, :class_name => "FormVersion")
+  belongs_to :root_group, class_name: QingGroup, dependent: :destroy, foreign_key: :root_id
 
   before_validation(:normalize_fields)
   before_save(:update_pub_changed_at)

@@ -1,24 +1,38 @@
-def get_question(qt, mission, option_names, found_select, multi_option_set)
-  qtype = QuestionType[qt == 'multi_level_select_one' ? 'select_one' : qt]
+def get_question(qtype_name, mission, option_names, multi_option_set, rank, parent=nil, form)
+  qtype = QuestionType[qtype_name == 'multi_level_select_one' ? 'select_one' : qtype_name]
   question_attribs = {
     qtype_name: qtype.name,
     mission: mission,
-    use_multilevel_option_set: multi_option_set || qt == 'multi_level_select_one'
+    use_multilevel_option_set: multi_option_set || qtype_name == 'multi_level_select_one'
   }
 
   # assign the options to the question if appropriate
-  if qtype.has_options? && !found_select && !option_names.nil?
+  if qtype.has_options? && !option_names.nil?
     question_attribs[:option_names] = option_names
-    found_select = true
   end
 
-  # build the questioning
-  FactoryGirl.build(:questioning,
+  FactoryGirl.create(:questioning,
     :mission => mission,
-    :form => nil, # Will be filled in when saved
+    :rank => rank,
+    :parent => parent,
+    :form => form,
     :question => FactoryGirl.build(:question, question_attribs))
 end
 
+def add_questions_to_form(form, question_types)
+  option_names = nil
+  use_multilevel_option_set = false
+  question_types.each_with_index do |qts, index|
+    if qts.kind_of?(Array) 
+      group = QingGroup.create!(parent: form.root_group, mission: form.mission, rank: index+1)
+      qts.each_with_index { |qt, i| get_question(qt, form.mission, option_names, use_multilevel_option_set, i+1, group, form) }
+    else
+      get_question(qts, form.mission, option_names, use_multilevel_option_set, index+1, form.root_group, form)
+    end         
+  end
+end
+
+# Only works with create
 FactoryGirl.define do
   factory :form do
     ignore do
@@ -28,21 +42,16 @@ FactoryGirl.define do
       # optionally specifies the options for the option set of the first select type question on the form
       option_names nil
     end
+    
+    after(:create) do |form|
+      root = QingGroup.create!(form: form, rank: 1)
+      form.update_attribute(:root_id,root.id) 
+    end
 
     mission { is_standard ? nil : get_mission }
     sequence(:name) { |n| "Sample Form #{n}" }
 
-    questionings do
-      found_select = false
-      question_types.each_with_index.map do |qt, idx|
-      #  debugger
-        if qt.kind_of?(Array) 
-          # make a qing_group
-        else
-          get_question(qt, mission, option_names, found_select, use_multilevel_option_set)        
-        end 
-      end
-    end
+
 
     # A form with different question types.
     # We hardcode names to make expectations easier, since we assume no more than one sample form per test.
