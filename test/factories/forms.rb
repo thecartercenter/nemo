@@ -1,4 +1,4 @@
-def get_question(qtype_name, mission, option_names, multi_option_set, rank, parent=nil, form)
+def create_question(qtype_name, mission, option_names, multi_option_set, rank, parent=nil, form)
   qtype = QuestionType[qtype_name == 'multi_level_select_one' ? 'select_one' : qtype_name]
   question_attribs = {
     qtype_name: qtype.name,
@@ -11,12 +11,16 @@ def get_question(qtype_name, mission, option_names, multi_option_set, rank, pare
     question_attribs[:option_names] = option_names
   end
 
-  FactoryGirl.create(:questioning,
+  qing = FactoryGirl.create(:questioning,
     :mission => mission,
     :rank => rank,
     :parent => parent,
     :form => form,
     :question => FactoryGirl.build(:question, question_attribs))
+    
+  # Keep legacy association intact.
+  form.questionings << qing
+  qing
 end
 
 # Only works with create
@@ -33,14 +37,12 @@ FactoryGirl.define do
     after(:create) do |form, evaluator|
       root = QingGroup.create!(form: form, rank: 1)
       form.update_attribute(:root_id, root.id)
-      option_names = nil
-      use_multilevel_option_set = false
       evaluator.question_types.each_with_index do |qts, index|
         if qts.kind_of?(Array) 
           group = QingGroup.create!(parent: form.root_group, form: form, rank: index+1)
-          qts.each_with_index { |qt, i| get_question(qt, form.mission, option_names, use_multilevel_option_set, i+1, group, form) }
+          qts.each_with_index { |qt, i| create_question(qt, form.mission, evaluator.option_names, evaluator.use_multilevel_option_set, i+1, group, form) }
         else
-          get_question(qts, form.mission, option_names, use_multilevel_option_set, index+1, form.root_group, form)
+          create_question(qts, form.mission, evaluator.option_names, evaluator.use_multilevel_option_set, index+1, form.root_group, form)
         end         
       end
     end

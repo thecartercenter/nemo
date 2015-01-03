@@ -24,7 +24,7 @@ describe Form do
     before do
       # Create form with condition (#3 referring to #2)
       @form = create(:form, question_types: %w(integer select_one integer))
-      @qings = @form.questionings
+      @qings = @form.root_questionings
       @qings[2].create_condition(ref_qing: @qings[1], op: 'eq', option: @qings[1].options[0])
 
       # Move question #1 down to position #3 (old #2 and #3 shift up one).
