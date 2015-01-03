@@ -57,8 +57,8 @@ class Form < ActiveRecord::Base
     :dont_copy => [:published, :downloads, :responses_count, :questionings_count, :upgrade_needed,
       :smsable, :current_version_id, :allow_incomplete, :access_level]
 
-  # remove heirarch of objects
-  def self.terminate_sub_relationships(form_ids)
+  # remove heirarchy of objects
+  def self.terminate_sub_relationships(form_ids)xx
     FormVersion.where(form_id: form_ids).delete_all
     Questioning.where(form_id: form_ids).delete_all
   end
@@ -75,6 +75,7 @@ class Form < ActiveRecord::Base
   end
 
   def root_questionings(reload = false)
+    raise "No Root Group!!" if root_group.nil?  # maybe take this out after we are sure all tests are passing, finds build/create
     @root_questionings = (reload || @root_questionings.nil?) ? root_group.children.order(:rank) : @root_questionings
   end
 

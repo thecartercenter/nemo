@@ -6,7 +6,7 @@ FactoryGirl.define do
 
     user
     mission { get_mission }
-    form { build(:form, :mission => mission) }
+    form { create(:form, :mission => mission) }
     source 'web'
 
     # Build answer objects from answer_values array

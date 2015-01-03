@@ -54,6 +54,7 @@ FactoryGirl.define do
 
     # A form with different question types.
     # We hardcode names to make expectations easier, since we assume no more than one sample form per test.
+    # TODO: Remove, can't find this used any more?
     factory :sample_form do
       name 'Sample Form'
       questionings do
