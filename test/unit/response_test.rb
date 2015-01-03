@@ -32,9 +32,9 @@ class ResponseTest < ActiveSupport::TestCase
     @user = FactoryGirl.create(:user)
 
     form = FactoryGirl.create(:form, :question_types => %w(integer))
-    form.root_questionings.first.required = true
+    form.root_questionings.first.update_attribute(:required, true)
     form.publish!
-    
+ 
     invalid_response = FactoryGirl.build(:response, user: @user, form: form, answer_values: [''])
     assert_equal(false, invalid_response.valid?)
     assert_raise ActiveRecord::RecordInvalid do
@@ -63,7 +63,7 @@ class ResponseTest < ActiveSupport::TestCase
   test "incomplete responses should not disable constraints" do
     form = FactoryGirl.create(:form, :question_types => %w(integer))
     form.root_questionings.first.required = true
-    form.root_questionings.first.question.minimum = 10
+    form.root_questionings.first.question.update_attribute(:minimum, 10)
     form.publish!
 
     r1 = FactoryGirl.build(:response, :form => form, :incomplete => true, :answer_values => %w(9))
