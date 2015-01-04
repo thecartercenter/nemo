@@ -13,7 +13,7 @@ FactoryGirl.define do
     # Array may contain nils, which should result in answers with nil values.
     answers do
       answer_values.each_with_index.map do |value, idx|
-        qing = form.root_questionings[idx]
+        qing = form.questionings[idx]
         case qing.qtype_name
         when 'select_one'
           options_by_name = qing.all_options.index_by(&:name)
