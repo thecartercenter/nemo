@@ -12,18 +12,7 @@ module SmsHelper
       else
         l(sms.created_at)
       end
-    when "to" then recipients_formatted(sms)
-    else sms.send(field)
-    end
-  end
-
-  def sms_messages_index_links(smses)
-    []
-  end
-
-  private
-
-    def recipients_formatted(sms)
+    when "to" then
       sms.recipient_hashes.map { |r|
         if r[:user] == "ELMO"
           "ELMO" + (r[:phone] ? " <#{r[:phone]}>" : "")
@@ -33,5 +22,12 @@ module SmsHelper
           r[:phone]
         end
       }.join(", ")
+    else sms.send(field)
     end
+  end
+
+  def sms_messages_index_links(smses)
+    []
+  end
+
 end
