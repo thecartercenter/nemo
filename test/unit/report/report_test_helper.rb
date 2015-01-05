@@ -21,7 +21,7 @@ class ActiveSupport::TestCase
   end
 
   def create_form(params)
-    f = Form.new(params.merge(:mission => mission))
+    f = FactoryGirl.create(:form, params.merge(:mission => mission))
     f.save(:validate => false)
     @forms[params[:name].to_sym] = f
   end
