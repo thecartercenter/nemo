@@ -5,7 +5,7 @@ class Sms::Broadcaster
     ensure_adapter
 
     # build the sms
-    message = Sms::Broadcast.new(broadcast: broadcast, body: msg)
+    message = Sms::Broadcast.new(broadcast: broadcast, body: msg, mission: broadcast.mission)
 
     # deliver
     configatron.outgoing_sms_adapter.deliver(message)
