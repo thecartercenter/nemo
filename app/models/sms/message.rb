@@ -40,6 +40,10 @@ class Sms::Message < ActiveRecord::Base
     raise NotImplementedError
   end
 
+  def recipient_hashes
+    raise NotImplementedError
+  end
+
   private
 
     # sets sent_at to now unless it's already set

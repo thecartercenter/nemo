@@ -5,4 +5,8 @@ class Sms::Reply < Sms::Message
   def recipients
     [to]
   end
+
+  def recipient_hashes
+    [user: user, phone: to]
+  end
 end

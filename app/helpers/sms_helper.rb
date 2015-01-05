@@ -12,12 +12,7 @@ module SmsHelper
       else
         l(sms.created_at)
       end
-    when "to" then
-      begin
-        sms.recipients.join(", ")
-      rescue NotImplementedError
-        sms.to
-      end
+    when "to" then recipients_formatted(sms)
     else sms.send(field)
     end
   end
@@ -25,4 +20,18 @@ module SmsHelper
   def sms_messages_index_links(smses)
     []
   end
+
+  private
+
+    def recipients_formatted(sms)
+      sms.recipient_hashes.map { |r|
+        if r[:user] == "ELMO"
+          "ELMO" + (r[:phone] ? " <#{r[:phone]}>" : "")
+        elsif r[:user]
+          "#{link_to r[:user].name, user_path(r[:user])} <#{r[:phone]}>"
+        else
+          r[:phone]
+        end
+      }.join(", ")
+    end
 end
