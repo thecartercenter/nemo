@@ -29,7 +29,7 @@ class Sms::Message < ActiveRecord::Base
   end
 
   def received_at
-    (direction == "incoming") ? created_at : nil
+    type == "Sms::Incoming" ? created_at : nil
   end
 
   def from_shortcode?
