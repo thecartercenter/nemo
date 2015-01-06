@@ -27,7 +27,7 @@ FactoryGirl.define do
       os = create(:option_set, multi_level: true, mission: mission)
 
       # creates questionings and questions
-      form = create(:form, mission: mission, question_types: %w(integer text text))
+      form = create(:form, mission: mission, question_types: ['integer', 'text', ['integer', 'integer'], 'text'])
       
       create(:question, qtype_name: 'select_one', option_set: os, mission: mission)
 
