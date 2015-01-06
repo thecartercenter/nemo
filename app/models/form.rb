@@ -10,7 +10,8 @@ class Form < ActiveRecord::Base
   has_many(:versions, :class_name => "FormVersion", :inverse_of => :form, :dependent => :destroy)
   has_many(:whitelist_users, :as => :whitelistable, class_name: "Whitelist")
   has_many(:standard_form_reports, class_name: 'Report::StandardFormReport', dependent: :destroy)
-
+  has_many(:qing_groups)
+  
   # while a form has many versions, this is a reference to the most up-to-date one
   belongs_to(:current_version, :class_name => "FormVersion")
   belongs_to :root_group, autosave: true, class_name: QingGroup, dependent: :destroy, foreign_key: :root_id
@@ -58,7 +59,7 @@ class Form < ActiveRecord::Base
       :smsable, :current_version_id, :allow_incomplete, :access_level]
 
   # remove heirarchy of objects
-  def self.terminate_sub_relationships(form_ids)xx
+  def self.terminate_sub_relationships(form_ids)
     FormVersion.where(form_id: form_ids).delete_all
     Questioning.where(form_id: form_ids).delete_all
   end
