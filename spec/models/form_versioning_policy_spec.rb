@@ -98,7 +98,6 @@ describe FormVersioningPolicy do
     @forms[0...2].each do |f|
       old1 = f.root_questionings(true).find_by_rank(1)
       old2 = f.root_questionings.find_by_rank(2)
-      p [old1, old2]
       f.update_ranks({old1.id.to_s => "2", old2.id.to_s => "1"})
       f.save(:validate => false)
     end
