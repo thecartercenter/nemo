@@ -54,26 +54,29 @@ FactoryGirl.define do
 
     # A form with different question types.
     # We hardcode names to make expectations easier, since we assume no more than one sample form per test.
-    # TODO: Remove, can't find this used any more?
+    # Used in the feature specs
     factory :sample_form do
       name 'Sample Form'
-      questionings do
-        [
-          # Single level select_one question.
-          build(:questioning, mission: mission, form: nil,
-            question: build(:question, mission: mission, name: 'Question 1', hint: 'Hint 1',
-              qtype_name: 'select_one', option_set: build(:option_set, name: 'Set 1'))),
+    
+      after(:create) do |form, evaluator|
+        form.questionings do
+          [
+            # Single level select_one question.
+            create(:questioning, mission: mission, form: form, parent: form.root_group,
+              question: create(:question, mission: mission, name: 'Question 1', hint: 'Hint 1',
+                qtype_name: 'select_one', option_set: create(:option_set, name: 'Set 1'))),
 
-          # Multilevel select_one question.
-          build(:questioning, mission: mission, form: nil,
-            question: build(:question, mission: mission, name: 'Question 2', hint: 'Hint 2',
-              qtype_name: 'select_one', option_set: build(:option_set, name: 'Set 2', multi_level: true))),
+            # Multilevel select_one question.
+            create(:questioning, mission: mission, form: form, parent: form.root_group,
+              question: create(:question, mission: mission, name: 'Question 2', hint: 'Hint 2',
+                qtype_name: 'select_one', option_set: create(:option_set, name: 'Set 2', multi_level: true))),
 
-          # Integer question.
-          build(:questioning, mission: mission, form: nil,
-            question: build(:question, mission: mission, name: 'Question 3', hint: 'Hint 3',
-              qtype_name: 'integer'))
-        ]
+            # Integer question.
+            create(:questioning, mission: mission, form: form, parent: form.root_group,
+              question: create(:question, mission: mission, name: 'Question 3', hint: 'Hint 3',
+                qtype_name: 'integer'))
+          ]
+        end
       end
     end
   end
