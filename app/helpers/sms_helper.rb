@@ -7,8 +7,9 @@ module SmsHelper
     case field
     when "type" then sms.type.split('::')[1]
     when "time" then
-      if sms.sent_at < sms.created_at - 1.minute
-        "#{l(sms.created_at)} (sent -#{Time.diff(sms.created_at, sms.sent_at, '%H %N %S')[:diff]})"
+      if sms.sent_at <= sms.created_at - 1.minute
+        time_diff = distance_of_time_in_words(sms.sent_at, sms.created_at, true, last_word_connector: ', ')
+        "#{l(sms.created_at)} <br> (sent #{time_diff} earlier)"
       else
         l(sms.created_at)
       end
