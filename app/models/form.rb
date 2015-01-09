@@ -10,7 +10,6 @@ class Form < ActiveRecord::Base
   has_many(:versions, :class_name => "FormVersion", :inverse_of => :form, :dependent => :destroy)
   has_many(:whitelist_users, :as => :whitelistable, class_name: "Whitelist")
   has_many(:standard_form_reports, class_name: 'Report::StandardFormReport', dependent: :destroy)
-  has_many(:qing_groups)
   
   # while a form has many versions, this is a reference to the most up-to-date one
   belongs_to(:current_version, :class_name => "FormVersion")
@@ -24,7 +23,8 @@ class Form < ActiveRecord::Base
   validate(:name_unique_per_mission)
 
   before_create(:init_downloads)
-
+  after_create(:create_root_group)
+  
   scope(:published, where(:published => true))
   scope(:with_questionings, includes(
     :questionings => [
@@ -73,6 +73,13 @@ class Form < ActiveRecord::Base
       'no-pubd-forms'
     end
     "odk-form-list/mission-#{options[:mission].id}/#{max_pub_changed_at}"
+  end
+
+  def create_root_group
+    unless root_id
+      root_group = QingGroup.create
+      update_attribute(:root_id, root_group.id)
+    end
   end
 
   def root_questionings(reload = false)

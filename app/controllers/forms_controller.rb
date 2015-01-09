@@ -182,10 +182,11 @@ class FormsController < ApplicationController
     @questions = Question.includes(:tags).with_assoc_counts.by_code.accessible_by(current_ability).not_in_form(@form)
 
     # setup new questioning for use with the questioning form
-    init_qing(:form_id => @form.id, :question_attributes => {})
+    init_qing(:form_id => @form.id, :ancestry => @form.root_id, :question_attributes => {})
     setup_qing_form_support_objs
   end
 
+    
   # adds questions selected in the big list to the form
   def add_questions
     # load the question objects
@@ -194,8 +195,14 @@ class FormsController < ApplicationController
     # raise error if no valid questions (this should be impossible)
     raise "no valid questions given" if questions.empty?
 
-    # add questions to form and try to save
-    @form.questions += questions
+    # add question to root_group, then to form and try to save
+    questions.each do |question|
+      @form.questions << question
+      #TODO: move this to a method for easy reuse? 
+      qing = Questioning.where(question_id: question.id, form_id: @form.id).first
+      qing.update_attribute(:parent, @form.root_group)
+    end
+    
     if @form.save_and_rereplicate
       flash[:success] = t("form.questions_add_success")
     else

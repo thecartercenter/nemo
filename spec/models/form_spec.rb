@@ -126,9 +126,9 @@ describe Form do
     before do
       @mission = create(:mission)
     end
-    it 'has none by default' do
+    it 'has one by created by form callback' do
       bare_form = Form.create(name: "test", mission: @mission)
-      expect(bare_form.root_group).to be_nil
+      expect(bare_form.root_group).to_not be_nil
     end
     it 'has a root group when created from factory' do
       form = create(:form, mission: @mission, question_types: ['integer', ['text', 'text'], 'text'] )
