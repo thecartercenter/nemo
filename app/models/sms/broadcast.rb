@@ -6,7 +6,7 @@ class Sms::Broadcast < Sms::Message
   end
 
   def recipient_hashes
-    recipients.map { |r|
+    @recipient_hashes ||= recipients.map { |r|
       u = User.where("phone = ? OR phone2 = ?", r, r).first
       {user: u, phone: r}
     }
