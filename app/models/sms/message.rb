@@ -15,9 +15,6 @@ class Sms::Message < ActiveRecord::Base
   before_create :default_sent_at
   after_initialize :normalize_numbers
 
-  scope(:newest_first, order("sent_at DESC"))
-  scope(:newly_created_first, order("created_at DESC"))
-
   def self.is_shortcode?(phone)
     phone =~ /[a-z]/i || phone.size <= 6
   end
