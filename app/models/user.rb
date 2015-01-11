@@ -3,6 +3,7 @@ class User < ActiveRecord::Base
 
   ROLES = %w[observer staffer coordinator]
   SESSION_TIMEOUT = (Rails.env.development? ? 2.weeks : 60.minutes)
+  ELMO = new name: "ELMO"
 
   attr_writer(:reset_password_method)
 
@@ -132,6 +133,10 @@ class User < ActiveRecord::Base
   # the key will change if the number of users changes, or if a user is updated.
   def self.per_mission_cache_key(mission)
     count_and_date_cache_key(:rel => unscoped.assigned_to(mission), :prefix => "mission-#{mission.id}")
+  end
+
+  def self.by_phone(phone)
+    where("phone = ? OR phone2 = ?", phone, phone).first
   end
 
   def reset_password

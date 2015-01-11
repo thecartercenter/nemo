@@ -36,6 +36,10 @@ class Sms::Message < ActiveRecord::Base
     self.class.is_shortcode?(from)
   end
 
+  def sender
+    raise NotImplementedError
+  end
+
   def recipients
     raise NotImplementedError
   end

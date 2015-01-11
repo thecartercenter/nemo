@@ -15,20 +15,26 @@ module SmsHelper
       end
     when "to" then
       sms.recipient_hashes.map { |r|
-        if r[:user] == "ELMO"
-          "ELMO" + (r[:phone] ? " <#{r[:phone]}>" : "")
-        elsif r[:user]
-          "#{link_to r[:user].name, user_path(r[:user])} <#{r[:phone]}>"
-        else
-          r[:phone]
-        end
+        user_with_phone(r[:user], r[:phone])
       }.join(", ")
+    when "from" then
+      user_with_phone sms.sender, sms.from
     else sms.send(field)
     end
   end
 
   def sms_messages_index_links(smses)
     []
+  end
+
+  def user_with_phone(user, phone = nil)
+    if user == User::ELMO
+      user.name + (phone.present? ? " <#{phone}>" : "")
+    elsif user
+      "#{link_to user.name, user_path(user)} <#{phone}>"
+    else
+      phone
+    end
   end
 
 end
