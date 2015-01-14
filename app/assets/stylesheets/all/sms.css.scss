@@ -6,10 +6,15 @@
 
   .time_col {
     width: 130px;
+    white-space: nowrap;
   }
 
   .to_col, .from_col {
     white-space: nowrap;
+
+    small {
+      color: #888;
+    }
   }
 
   .body_col {
