@@ -15,8 +15,8 @@ class Sms::Message < ActiveRecord::Base
   before_create :default_sent_at
   after_initialize :normalize_numbers
 
-  scope(:newest_first, order("sent_at DESC"))
-  scope(:newly_created_first, order("created_at DESC"))
+  # order by id after created_at to make sure they are in creation order
+  scope(:latest_first, ->{ order('created_at DESC, id DESC') })
 
   def self.is_shortcode?(phone)
     phone =~ /[a-z]/i || phone.size <= 6
@@ -25,18 +25,30 @@ class Sms::Message < ActiveRecord::Base
   # Remove all non-digit chars and add a plus at the front.
   # (unless the number looks like a shortcode, in which case we leave it alone)
   def self.normalize_phone(phone)
-    phone.nil? ? nil : (is_shortcode?(phone) ? phone : ("+" + phone.gsub(/[^\d]/, "")))
+    phone.blank? ? nil : (is_shortcode?(phone) ? phone : ("+" + phone.gsub(/[^\d]/, "")))
   end
 
   def received_at
-    (direction == "incoming") ? created_at : nil
+    type == "Sms::Incoming" ? created_at : nil
   end
 
   def from_shortcode?
     self.class.is_shortcode?(from)
   end
 
-  def recipients
+  def sender
+    raise NotImplementedError
+  end
+
+  def recipient_count
+    raise NotImplementedError
+  end
+
+  def recipient_numbers
+    raise NotImplementedError
+  end
+
+  def recipient_hashes(options = {})
     raise NotImplementedError
   end
 

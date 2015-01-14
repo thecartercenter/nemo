@@ -10,7 +10,7 @@ class Broadcast < ActiveRecord::Base
   validates(:which_phone, :presence => true, :if => Proc.new{|b| b.sms_possible?})
   validates(:body, :presence => true)
   validates(:body, :length => {:maximum => 140}, :if => Proc.new{|b| b.sms_possible?})
-  validate(:has_eligible_recipients)
+  validate(:check_eligible_recipients)
 
   default_scope(includes(:recipients).order("created_at DESC"))
 
@@ -80,8 +80,28 @@ class Broadcast < ActiveRecord::Base
     @recipient_numbers ||= [].tap do |numbers|
       recipients.each do |r|
         next unless r.can_get_sms?
-        numbers << r.phone if %w(main_only both).include?(which_phone)
-        numbers << r.phone2 if %w(alternate_only both).include?(which_phone)
+        numbers << r.phone if main_phone?
+        numbers << r.phone2 if alternate_phone?
+      end
+    end
+  end
+
+  # Returns total number of users getting an sms.
+  def sms_recipient_count
+    return 0 unless sms_possible?
+    @sms_recipient_count ||= recipients.count(&:can_get_sms?)
+  end
+
+  # Returns a set of hashes of form {user: x, phone: y} for recipients that got smses.
+  # If sms was sent to both phones, returns primary only.
+  # options[:max] - The max number to return (defaults to all).
+  def sms_recipient_hashes(options = {})
+    return [] unless sms_possible?
+    @sms_recipient_hashes ||= [].tap do |hashes|
+      recipients.each do |r|
+        next unless r.can_get_sms?
+        hashes << { user: r, phone: main_phone? ? r.phone : r.phone2 }
+        break if options[:max] && hashes.size >= options[:max]
       end
     end
   end
@@ -92,10 +112,18 @@ class Broadcast < ActiveRecord::Base
 
   private
 
-    def has_eligible_recipients
+    def check_eligible_recipients
       unless (sms_possible? && recipient_numbers.present?) || (email_possible? && recipient_emails.present?)
         errors.add(:to, :no_recipients)
       end
+    end
+
+    def main_phone?
+      %w(main_only both).include?(which_phone)
+    end
+
+    def alternate_phone?
+      %w(alternate_only both).include?(which_phone)
     end
 
 end

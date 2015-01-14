@@ -215,9 +215,9 @@ en:
         one: "Settings"
         other: "Settings"
       sms/message:
-        zero: "SMS Messages"
-        one: "SMS Message"
-        other: "SMS Messages"
+        zero: "SMSes"
+        one: "SMS"
+        other: "SMSes"
       user:
         zero: "Users"
         one: "User"

@@ -9,9 +9,10 @@ class SmsTestsController < ApplicationController
   def create
     # create an incoming sms object
     sms = Sms::Incoming.create(:adapter_name => 'Test Console',
-                              :from => params[:sms_test][:from],
-                              :body => params[:sms_test][:body],
-                              :mission => current_mission)
+      :to => configatron.incoming_sms_number,
+      :from => params[:sms_test][:from],
+      :body => params[:sms_test][:body],
+      :mission => current_mission)
 
     if reply = Sms::Handler.new.handle(sms)
       reply.adapter_name = 'Test Console'
