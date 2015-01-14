@@ -86,6 +86,12 @@ class Broadcast < ActiveRecord::Base
     end
   end
 
+  # Returns total number of users getting an sms.
+  def sms_recipient_count
+    return 0 unless sms_possible?
+    @sms_recipient_count ||= recipients.count(&:can_get_sms?)
+  end
+
   # Returns a set of hashes of form {user: x, phone: y} for recipients that got smses.
   # If sms was sent to both phones, returns primary only.
   # options[:max] - The max number to return (defaults to all).

@@ -37,7 +37,11 @@ class Sms::Message < ActiveRecord::Base
     raise NotImplementedError
   end
 
-  def recipients
+  def recipient_count
+    raise NotImplementedError
+  end
+
+  def recipient_numbers
     raise NotImplementedError
   end
 

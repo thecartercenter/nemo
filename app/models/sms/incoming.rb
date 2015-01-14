@@ -12,7 +12,11 @@ class Sms::Incoming < Sms::Message
     user
   end
 
-  def recipients
+  def recipient_count
+    1
+  end
+
+  def recipient_numbers
     [to]
   end
 
