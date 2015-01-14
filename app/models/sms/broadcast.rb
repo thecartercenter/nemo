@@ -9,7 +9,9 @@ class Sms::Broadcast < Sms::Message
     broadcast.recipient_numbers
   end
 
-  def recipient_hashes
-    broadcast.sms_recipient_hashes
+  # Returns a set of hashes of form {user: x, phone: y} for recipients.
+  # options[:max] - The max number to return (defaults to all).
+  def recipient_hashes(options = {})
+    broadcast.sms_recipient_hashes(options)
   end
 end

@@ -14,7 +14,7 @@ module SmsHelper
         l(sms.created_at)
       end
     when "to" then
-      sms.recipient_hashes.map { |r| user_with_phone(r[:user], r[:phone]) }.join(", ")
+      sms.recipient_hashes(max: 3).map { |r| user_with_phone(r[:user], r[:phone]) }.join("<br/>")
     when "from" then
       user_with_phone sms.sender, sms.from
     else sms.send(field)

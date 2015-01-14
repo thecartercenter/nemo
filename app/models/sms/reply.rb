@@ -13,7 +13,7 @@ class Sms::Reply < Sms::Message
     [to]
   end
 
-  def recipient_hashes
+  def recipient_hashes(options = {})
     [user: user, phone: to]
   end
 end

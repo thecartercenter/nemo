@@ -88,12 +88,14 @@ class Broadcast < ActiveRecord::Base
 
   # Returns a set of hashes of form {user: x, phone: y} for recipients that got smses.
   # If sms was sent to both phones, returns primary only.
-  def sms_recipient_hashes
+  # options[:max] - The max number to return (defaults to all).
+  def sms_recipient_hashes(options = {})
     return [] unless sms_possible?
     @sms_recipient_hashes ||= [].tap do |hashes|
       recipients.each do |r|
         next unless r.can_get_sms?
         hashes << { user: r, phone: main_phone? ? r.phone : r.phone2 }
+        break if options[:max] && hashes.size >= options[:max]
       end
     end
   end

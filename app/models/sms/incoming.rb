@@ -16,7 +16,7 @@ class Sms::Incoming < Sms::Message
     [to]
   end
 
-  def recipient_hashes
+  def recipient_hashes(options = {})
     [user: User::ELMO, phone: to]
   end
 end

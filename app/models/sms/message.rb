@@ -41,7 +41,7 @@ class Sms::Message < ActiveRecord::Base
     raise NotImplementedError
   end
 
-  def recipient_hashes
+  def recipient_hashes(options = {})
     raise NotImplementedError
   end
 
