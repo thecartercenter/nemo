@@ -1,0 +1,19 @@
+.sms_index .index_table {
+
+  .type_col {
+    width: 100px;
+  }
+
+  .time_col {
+    width: 130px;
+  }
+
+  .to_col, .from_col {
+    white-space: nowrap;
+  }
+
+  .body_col {
+    max-width: 400px;
+    word-wrap: break-word;
+  }
+}
