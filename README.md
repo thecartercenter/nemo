@@ -28,7 +28,7 @@ Note that manually setting up a Rails application for production use can be a co
 
 Note to install the software below we recommend the following package managers:
 
-- Mac OS X: MacPorts or Homebrew
+- Mac OS X: Homebrew
 - Linux/Unix: bundled package manager (e.g. apt-get, yum)
 - Windows: Npackd
 
@@ -39,7 +39,7 @@ Note to install the software below we recommend the following package managers:
 1. **Memcached 1.4+**
   - Ensure memcached is running before starting server, even for development, since caching is enabled in development and production environments.
   - For production environments, ensure memcached is running on port 11219
-  - For development environments, be sure to increase the maximum size (limit_maxbytes) to at least 2 MB.
+  - For development environments, be sure to increase the default slab page size to 2 MB. This is done by passing `-I 2m` to the `memcached` command.
 
 1. **MySQL 5.0+**
   - Create an empty database and accompanying user for use by the app (E.g. development database *elmo_d* with username *elmo*)
@@ -54,13 +54,28 @@ Note to install the software below we recommend the following package managers:
   - It should be available through any of the package managers listed above. If not it can be built from source.
   - The Rails Gem that talks to Sphinx is called Thinking Sphinx.
   - The [Thinking Sphinx site](http://pat.github.io/thinking-sphinx/) is a good place to go for troubleshooting and documentation.
+  
+1. **PhantomJS 1.9+** (Development only)
+  - PhantomJS is a headless browser that allows testing JavaScript.
+  - It should be available through any of the package managers listed above. If not it can be built from source.
+  - The Rails Gem that talks to PhantomJS is called Poltergeist.
 
+1. **Firefox** (Development only)
+  - Firefox is used for automated browser testing.
+  
 ### Running the App
 
 1. **Retrieve project files using Git**
 
   ```
   git clone https://github.com/thecartercenter/elmo.git
+  cd elmo
+  ```
+  
+  If developing, it's best to work off the development branch:
+  
+  ```
+  git checkout develop
   ```
 
 1. **Bundle, configure, and migrate**
@@ -88,6 +103,9 @@ Note to install the software below we recommend the following package managers:
   - Login using username **admin** and password **temptemp** (make sure to change the password).
   - Create a new Mission and get started making forms!
 
+### Running the tests
+
+ELMO currently uses a mixture of legacy Test::Unit tests and RSpec specs. Both should be run. Use `rake test && rspec`.
 
 ## How Do I Contribute to ELMO?
 
