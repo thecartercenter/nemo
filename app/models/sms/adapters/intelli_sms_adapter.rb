@@ -47,7 +47,7 @@ class Sms::Adapters::IntelliSmsAdapter < Sms::Adapters::Adapter
     # create and return the message
     Sms::Incoming.create(
       :from => "+#{params['from']}",
-      :to => "+#{params['to']}",
+      :to => configatron.incoming_sms_number, # Assume it's this since IntelliSms doesn't provide it.
       :body => params['text'],
       :sent_at => Time.parse(params['sent']),
       :adapter_name => service_name)

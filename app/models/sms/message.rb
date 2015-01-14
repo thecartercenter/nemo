@@ -22,7 +22,7 @@ class Sms::Message < ActiveRecord::Base
   # Remove all non-digit chars and add a plus at the front.
   # (unless the number looks like a shortcode, in which case we leave it alone)
   def self.normalize_phone(phone)
-    phone.nil? ? nil : (is_shortcode?(phone) ? phone : ("+" + phone.gsub(/[^\d]/, "")))
+    phone.blank? ? nil : (is_shortcode?(phone) ? phone : ("+" + phone.gsub(/[^\d]/, "")))
   end
 
   def received_at
