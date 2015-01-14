@@ -10,6 +10,6 @@ class Sms::Broadcast < Sms::Message
   end
 
   def recipient_hashes
-    @recipient_hashes ||= recipients.map { |r| {user: User.by_phone(r), phone: r} }
+    broadcast.sms_recipient_hashes
   end
 end

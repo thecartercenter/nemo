@@ -80,8 +80,20 @@ class Broadcast < ActiveRecord::Base
     @recipient_numbers ||= [].tap do |numbers|
       recipients.each do |r|
         next unless r.can_get_sms?
-        numbers << r.phone if %w(main_only both).include?(which_phone)
-        numbers << r.phone2 if %w(alternate_only both).include?(which_phone)
+        numbers << r.phone if main_phone?
+        numbers << r.phone2 if alternate_phone?
+      end
+    end
+  end
+
+  # Returns a set of hashes of form {user: x, phone: y} for recipients that got smses.
+  # If sms was sent to both phones, returns primary only.
+  def sms_recipient_hashes
+    return [] unless sms_possible?
+    @sms_recipient_hashes ||= [].tap do |hashes|
+      recipients.each do |r|
+        next unless r.can_get_sms?
+        hashes << { user: r, phone: main_phone? ? r.phone : r.phone2 }
       end
     end
   end
@@ -96,6 +108,14 @@ class Broadcast < ActiveRecord::Base
       unless (sms_possible? && recipient_numbers.present?) || (email_possible? && recipient_emails.present?)
         errors.add(:to, :no_recipients)
       end
+    end
+
+    def main_phone?
+      %w(main_only both).include?(which_phone)
+    end
+
+    def alternate_phone?
+      %w(alternate_only both).include?(which_phone)
     end
 
 end
