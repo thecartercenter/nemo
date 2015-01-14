@@ -13,7 +13,7 @@ class Sms::Incoming < Sms::Message
   end
 
   def recipients
-    []
+    [to]
   end
 
   def recipient_hashes
