@@ -3,7 +3,7 @@ class User < ActiveRecord::Base
 
   ROLES = %w[observer staffer coordinator]
   SESSION_TIMEOUT = (Rails.env.development? ? 2.weeks : 60.minutes)
-  ELMO = new name: "ELMO"
+  ELMO = new name: "ELMO" # Dummy user for use in SMS log
 
   attr_writer(:reset_password_method)
 
