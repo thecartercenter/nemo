@@ -10,7 +10,7 @@ class Broadcast < ActiveRecord::Base
   validates(:which_phone, :presence => true, :if => Proc.new{|b| b.sms_possible?})
   validates(:body, :presence => true)
   validates(:body, :length => {:maximum => 140}, :if => Proc.new{|b| b.sms_possible?})
-  validate(:has_eligible_recipients)
+  validate(:check_eligible_recipients)
 
   default_scope(includes(:recipients).order("created_at DESC"))
 
@@ -92,7 +92,7 @@ class Broadcast < ActiveRecord::Base
 
   private
 
-    def has_eligible_recipients
+    def check_eligible_recipients
       unless (sms_possible? && recipient_numbers.present?) || (email_possible? && recipient_emails.present?)
         errors.add(:to, :no_recipients)
       end
