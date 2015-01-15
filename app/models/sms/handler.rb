@@ -75,7 +75,7 @@ class Sms::Handler
     if reply_body.nil?
       return nil
     else
-      return Sms::Message.new(:to => sms.from, :body => reply_body, :mission => sms.mission, :direction => 'outgoing')
+      return Sms::Reply.new(to: sms.from, body: reply_body, mission: sms.mission, user: sms.user)
     end
   end
 

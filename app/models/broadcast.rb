@@ -10,9 +10,7 @@ class Broadcast < ActiveRecord::Base
   validates(:which_phone, :presence => true, :if => Proc.new{|b| b.sms_possible?})
   validates(:body, :presence => true)
   validates(:body, :length => {:maximum => 140}, :if => Proc.new{|b| b.sms_possible?})
-  validate(:has_eligible_recipients)
-
-  before_create(:deliver)
+  validate(:check_eligible_recipients)
 
   default_scope(includes(:recipients).order("created_at DESC"))
 
@@ -48,50 +46,84 @@ class Broadcast < ActiveRecord::Base
   end
 
   def deliver
-    # sort recipients into email and sms
-    smsees, emailees = sort_recipients
-
     # send emails
     begin
-      BroadcastMailer.broadcast(emailees, subject, body).deliver unless emailees.empty?
+      if email_possible? && recipient_emails.present?
+        BroadcastMailer.broadcast(recipient_emails, subject, body).deliver
+      end
     rescue
       add_send_error(I18n.t("broadcast.email_error") + ": #{$!}")
     end
+
     # send smses
     begin
-      Smser.deliver(smsees, which_phone, "#{configatron.broadcast_tag} #{body}") unless smsees.empty?
+      if sms_possible? && recipient_numbers.present?
+        Sms::Broadcaster.deliver(self, which_phone, "#{configatron.broadcast_tag} #{body}")
+      end
     rescue Sms::Error
       # one error per line
       $!.to_s.split("\n").each{|e| add_send_error(I18n.t("broadcast.sms_error") + ": #{e}")}
     end
-    return true
+
+    save if send_errors
   end
 
   def add_send_error(msg)
     self.send_errors = (send_errors.nil? ? "" : send_errors) + msg + "\n"
   end
 
-  def sort_recipients
-    sms = []
-    email = []
-    recipients.each do |r|
-      # send sms if recipient can get sms, medium is not email_only, and medium is not email (if r can get email)
-      sms << r if r.can_get_sms? && medium != "email_only" && !(medium == "email" && r.can_get_email?)
-
-      # same logic for email
-      email << r if r.can_get_email? && medium != "sms_only" && !(medium == "sms" && r.can_get_sms?)
-    end
-    [sms, email]
-  end
-
   def no_possible_recipients?
     recipients.all?{ |u| u.email.blank? && u.phone.blank? && u.phone2.blank? }
   end
 
+  def recipient_numbers
+    @recipient_numbers ||= [].tap do |numbers|
+      recipients.each do |r|
+        next unless r.can_get_sms?
+        numbers << r.phone if main_phone?
+        numbers << r.phone2 if alternate_phone?
+      end
+    end
+  end
+
+  # Returns total number of users getting an sms.
+  def sms_recipient_count
+    return 0 unless sms_possible?
+    @sms_recipient_count ||= recipients.count(&:can_get_sms?)
+  end
+
+  # Returns a set of hashes of form {user: x, phone: y} for recipients that got smses.
+  # If sms was sent to both phones, returns primary only.
+  # options[:max] - The max number to return (defaults to all).
+  def sms_recipient_hashes(options = {})
+    return [] unless sms_possible?
+    @sms_recipient_hashes ||= [].tap do |hashes|
+      recipients.each do |r|
+        next unless r.can_get_sms?
+        hashes << { user: r, phone: main_phone? ? r.phone : r.phone2 }
+        break if options[:max] && hashes.size >= options[:max]
+      end
+    end
+  end
+
+  def recipient_emails
+    @recipient_emails ||= recipients.map { |r| r.email if r.can_get_email? }.compact
+  end
+
   private
 
-    def has_eligible_recipients
-      errors.add(:to, :no_recipients) if sort_recipients.flatten.empty?
+    def check_eligible_recipients
+      unless (sms_possible? && recipient_numbers.present?) || (email_possible? && recipient_emails.present?)
+        errors.add(:to, :no_recipients)
+      end
+    end
+
+    def main_phone?
+      %w(main_only both).include?(which_phone)
+    end
+
+    def alternate_phone?
+      %w(alternate_only both).include?(which_phone)
     end
 
 end

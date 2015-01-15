@@ -33,7 +33,7 @@
     var adapter = $("form.setting_form select#setting_outgoing_sms_adapter").val();
 
     // then show the appropriate one (if any)
-    $("form.setting_form .adapter_settings[data-adapter=" + adapter + "]").show();
+    if (adapter) $("form.setting_form .adapter_settings[data-adapter=" + adapter + "]").show();
   }
 
 })(ELMO);

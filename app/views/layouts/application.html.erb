@@ -133,7 +133,7 @@
           <%# divider %>
           <li><div class="line"></div></li>
 
-          <%= nav_links(User, Broadcast, Setting, Mission) %>
+          <%= nav_links(User, Broadcast, Sms::Message, Setting, Mission) %>
 
         </ul>
     <% end %>
@@ -167,10 +167,6 @@
         on configatron.outgoing_sms_adapter when it's nil don't work. %>
       <%= configatron.to_h[:outgoing_sms_adapter] ?
         configatron.outgoing_sms_adapter.service_name : "[#{t('common.none').capitalize}]" %> &nbsp;|&nbsp;
-    <% end %>
-
-    <% if current_mission && can?(:index, Sms::Message) %>
-      <%= link_to(t("page_titles.sms.index"), sms_path) %> &nbsp;|&nbsp;
     <% end %>
 
     <%= t("layout.system_version") %>: <%= configatron.system_version %> &nbsp;|&nbsp;

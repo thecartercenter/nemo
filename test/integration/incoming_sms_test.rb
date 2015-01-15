@@ -159,10 +159,10 @@ class IncomingSmsTest < ActionDispatch::IntegrationTest
       if sms.nil?
         assert_nil(params[:outgoing][:body])
       else
+        assert_instance_of(Sms::Reply, sms)
         # Ensure attribs are appropriate
-        assert_equal(params[:from], sms.to.first)
+        assert_equal(params[:from], sms.to)
         assert_match(params[:outgoing][:body], sms.body)
-        assert_equal('outgoing', sms.direction)
         assert_equal(params[:mission], sms.mission)
         assert_no_match(/%\{|translation missing/, sms.body)
         assert_equal(params[:outgoing][:adapter], sms.adapter_name) if params[:outgoing][:adapter]
