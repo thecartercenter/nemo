@@ -4,7 +4,8 @@ class ResponseTest < ActiveSupport::TestCase
 
   test "cache key" do
     @user = FactoryGirl.create(:user)
-    setup_form(:questions => %w(integer))
+    @form = FactoryGirl.create(:form, :question_types => ['integer'])
+    @form.publish!
 
     # ensure key changes on edits, creates, and deletes
     r1 = FactoryGirl.create(:response, :user => @user, :form => @form, :answer_values => [1])
@@ -34,7 +35,7 @@ class ResponseTest < ActiveSupport::TestCase
     form = FactoryGirl.create(:form, :question_types => %w(integer))
     form.root_questionings.first.update_attribute(:required, true)
     form.publish!
- 
+
     invalid_response = FactoryGirl.build(:response, user: @user, form: form, answer_values: [''])
     assert_equal(false, invalid_response.valid?)
     assert_raise ActiveRecord::RecordInvalid do
