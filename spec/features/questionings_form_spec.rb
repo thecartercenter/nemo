@@ -40,11 +40,11 @@ describe 'questionings form' do
       @qing = @copy.questionings[1]
     end
 
-    it 'should display only hidden as editable' do
+    it 'should display all fields as editable' do
       visit(edit_questioning_path(@qing, locale: 'en', mode: 'm', mission_name: get_mission.compact_name))
-      expect_editable('required', false)
+      expect_editable('required', true)
       expect_editable('hidden', true)
-      expect_editable('condition', false)
+      expect_editable('condition', true)
     end
   end
 

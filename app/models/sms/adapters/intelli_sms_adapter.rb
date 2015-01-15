@@ -19,7 +19,7 @@ class Sms::Adapters::IntelliSmsAdapter < Sms::Adapters::Adapter
     body = message.body.encode("iso-8859-1", {:invalid => :replace, :undef => :replace, :replace => '?'})
 
     # build the URI the request
-    params = {:to => message.to.join(','), :text => body}
+    params = {:to => message.recipient_numbers.join(','), :text => body}
 
     # include the from number if it is set
     params[:from] = message.from.gsub(/^\+/, "") if message.from
@@ -45,9 +45,9 @@ class Sms::Adapters::IntelliSmsAdapter < Sms::Adapters::Adapter
     params['from'].gsub!(/^0+/, "")
 
     # create and return the message
-    Sms::Message.create(
-      :direction => 'incoming',
+    Sms::Incoming.create(
       :from => "+#{params['from']}",
+      :to => configatron.incoming_sms_number, # Assume it's this since IntelliSms doesn't provide it.
       :body => params['text'],
       :sent_at => Time.parse(params['sent']),
       :adapter_name => service_name)

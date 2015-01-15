@@ -135,6 +135,12 @@ describe 'Translatable' do
       b.name = 'Foo'
       expect{b.canonical_name}.to raise_error
     end
+
+    it 'should be updated if name_translations gets updated directly' do
+      a = AClass.new
+      a.name_translations = {en: 'Foo'}
+      expect(a.canonical_name).to eq 'Foo'
+    end
   end
 
 end

@@ -55,9 +55,8 @@ describe 'abilities for questionings' do
         @qing = @copy.questionings[0]
       end
 
-      it 'should be able show, update, and hide only' do
-        %w(show update update_hidden).each{ |op| expect(@ability).to be_able_to(op, @qing) }
-        %w(update_required update_condition destroy).each{ |op| expect(@ability).not_to be_able_to(op, @qing) }
+      it 'should be able to do all' do
+        %w(show update update_hidden update_required update_condition destroy).each{ |op| expect(@ability).to be_able_to(op, @qing) }
       end
     end
   end

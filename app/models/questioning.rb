@@ -1,6 +1,6 @@
 class Questioning < FormItem
-  include Standardizable, Replicable
-  
+  include Replicable
+
   belongs_to(:form, :inverse_of => :questionings)
   belongs_to(:question, :autosave => true, :inverse_of => :questionings)
   has_many(:answers, :dependent => :destroy, :inverse_of => :questioning)
@@ -40,6 +40,7 @@ class Questioning < FormItem
            :odk_code,
            :odk_constraint,
            :subquestions,
+           :standardized?,
            :temporal?,
            :numeric?,
            :tags,
@@ -71,7 +72,7 @@ class Questioning < FormItem
 
   # destroys condition and ensures that the condition param is nulled out
   def destroy_condition
-    condition.destroy_with_copies
+    condition.destroy
     self.condition = nil
   end
 
@@ -83,7 +84,7 @@ class Questioning < FormItem
   def referring_condition_ranks
     referring_conditions.map{|c| c.questioning.rank}
   end
-  
+
   # returns any questionings appearing before this one on the form
   def previous
     form.questionings.reject{|q| !rank.nil? && (q == self || q.rank > rank)}
@@ -111,9 +112,9 @@ class Questioning < FormItem
     symbol.match(/^((name|hint)_([a-z]{2})(=?))(_before_type_cast)?$/)
   end
   # /REFACTOR
-  
+
   private
-  
+
     def destroy_condition_if_ref_qing_blank
       destroy_condition if condition && condition.ref_qing.blank?
     end
@@ -123,7 +124,7 @@ class Questioning < FormItem
       self.rank ||= (form.try(:max_rank) || 0) + 1
       return true
     end
-    
+
     # repair the ranks of the remaining questions on the form
     def fix_ranks
       form.fix_ranks

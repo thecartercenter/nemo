@@ -113,6 +113,7 @@ class FormsController < ApplicationController
   end
 
   def create
+    @form.is_standard = true if current_mode == 'admin'
     if @form.save
       set_success_and_redirect(@form, :to => edit_form_path(@form))
     else
@@ -134,7 +135,7 @@ class FormsController < ApplicationController
       @form.update_ranks(params[:rank]) if params[:rank] && can?(:reorder_questions, @form)
 
       # save everything
-      @form.save_and_rereplicate!
+      @form.save!
 
       # publish if requested
       if params[:save_and_publish].present?
@@ -186,7 +187,7 @@ class FormsController < ApplicationController
     setup_qing_form_support_objs
   end
 
-    
+
   # adds questions selected in the big list to the form
   def add_questions
     # load the question objects
@@ -195,15 +196,9 @@ class FormsController < ApplicationController
     # raise error if no valid questions (this should be impossible)
     raise "no valid questions given" if questions.empty?
 
-    # add question to root_group, then to form and try to save
-    questions.each do |question|
-      @form.questions << question
-      #TODO: move this to a method for easy reuse? 
-      qing = Questioning.where(question_id: question.id, form_id: @form.id).first
-      qing.update_attribute(:parent, @form.root_group)
-    end
-    
-    if @form.save_and_rereplicate
+    # add questions to form and try to save
+    @form.questions += questions
+    if @form.save
       flash[:success] = t("form.questions_add_success")
     else
       flash[:error] = t("form.questions_add_error", :msg => @form.errors.messages.values.join(';'))

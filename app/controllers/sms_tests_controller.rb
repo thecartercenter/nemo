@@ -8,10 +8,11 @@ class SmsTestsController < ApplicationController
   # handles a request for a test. this will be an AJAX call so we only return the message body
   def create
     # create an incoming sms object
-    sms = Sms::Message.create(:adapter_name => 'Test Console',
-                              :from => params[:sms_test][:from],
-                              :body => params[:sms_test][:body],
-                              :mission => current_mission)
+    sms = Sms::Incoming.create(:adapter_name => 'Test Console',
+      :to => configatron.incoming_sms_number,
+      :from => params[:sms_test][:from],
+      :body => params[:sms_test][:body],
+      :mission => current_mission)
 
     if reply = Sms::Handler.new.handle(sms)
       reply.adapter_name = 'Test Console'

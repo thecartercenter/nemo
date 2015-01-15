@@ -15,7 +15,7 @@ feature "questions flow" do
 
     @tag1 = create(:tag, name: "thriftshop", mission_id: @mission.id)
     @tag2 = create(:tag, name: "twenty dollaz", mission_id: @mission.id)
-    @tag3 = create(:tag, name: "awesome", mission_id: nil, is_standard: true) # Standard tag
+    @tag3 = create(:tag, name: "awesome", mission_id: nil)
 
     @user = create(:user, role_name: 'coordinator', admin: true)
     login(@user)
@@ -62,7 +62,7 @@ feature "questions flow" do
     )
   end
 
-  it 'questioning tag add/remove', js: true, driver: :selenium do
+  scenario 'questioning tag add/remove', js: true, driver: :selenium do
     tag_add_remove_test(
       qtype: 'questioning',
       edit_path: edit_questioning_path(@questioning1, mode: 'm', mission_name: @mission.compact_name, locale: 'en'),
@@ -91,14 +91,9 @@ feature "questions flow" do
     # Apply tag
     find('li', text: "thriftshop").click
 
-    # Standard tag
+    # Admin-mode tags should not appear here.
     fill_in options[:input_id], with: "a"
-    expect(page).to have_content "awesome"
-    within find('li', text: 'awesome') do
-      expect(page).to have_selector 'i.fa-certificate'
-    end
-    # Apply
-    find('li', text: "awesome").click
+    expect(page).not_to have_content "awesome"
 
     # Create a new tag
     fill_in options[:input_id], with: "in my pocket"
@@ -123,10 +118,6 @@ feature "questions flow" do
     expect(page).to have_content /Displaying (all \d+)? Questions/ # Check that index page has loaded
     within options[:table_row_id] do
       expect(page).to have_selector 'li', text: "thriftshop"
-      expect(page).to have_selector 'li', text: "awesome"
-      within find('li', text: 'awesome') do
-        expect(page).to have_selector 'i.fa-certificate'
-      end
       expect(page).to have_selector 'li', text: "in my pocket"
     end
 
@@ -134,10 +125,6 @@ feature "questions flow" do
     if options[:qtype] == 'question'
       within 'div.all-tags' do
         expect(page).to have_selector 'li', text: "thriftshop"
-        expect(page).to have_selector 'li', text: "awesome"
-        within first('li', text: 'awesome') do
-          expect(page).to have_selector 'i.fa-certificate'
-        end
         expect(page).to have_selector 'li', text: "in my pocket"
       end
     end
@@ -147,10 +134,6 @@ feature "questions flow" do
     within "div#tag_ids" do
       expect(page).to have_selector 'li', text: "thriftshop"
       expect(page).to have_selector 'li', text: "in my pocket"
-      expect(page).to have_selector 'li', text: "awesome"
-      within find('li', text: 'awesome') do
-        expect(page).to have_selector 'i.fa-certificate'
-      end
       expect(page).not_to have_selector 'li', text: "pop some tags"
     end
 
@@ -172,13 +155,8 @@ feature "questions flow" do
     visit options[:admin_show_path]
     within "div#tag_ids" do
       expect(page).to have_selector 'li', text: "awesome"
-      within find('li', text: 'awesome') do
-        expect(page).to have_selector 'i.fa-certificate'
-      end
     end
 
-    # Check that new tag is standard in DB
-    expect(Tag.find_by_name('come-up').is_standard).to be_truthy
     expect(Tag.find_by_name('come-up').mission_id).to be_nil
   end
 

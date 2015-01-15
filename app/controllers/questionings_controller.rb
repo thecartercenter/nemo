@@ -17,6 +17,8 @@ class QuestioningsController < ApplicationController
   end
 
   def create
+    @questioning.question.is_standard = true if current_mode == 'admin'
+
     # Convert tag string from TokenInput to array
     @questioning.question.tag_ids = params[:questioning][:question_attributes][:tag_ids].split(',')
 
@@ -46,7 +48,7 @@ class QuestioningsController < ApplicationController
     end
     authorize!(:update_core, @questioning.question) if @questioning.question.core_changed?
 
-    if @questioning.save_and_rereplicate
+    if @questioning.save
       set_success_and_redirect(@questioning.question, :to => edit_form_path(@questioning.form))
     else
       prepare_and_render_form

@@ -83,17 +83,6 @@ class AdminModeTest < ActionDispatch::IntegrationTest
     assert(q.is_standard?, 'new question should be standard')
   end
 
-  test "adding a question to form should create standard questioning" do
-    login(@admin)
-    f = FactoryGirl.create(:form, :is_standard => true)
-    q = FactoryGirl.create(:question, :is_standard => true)
-    post_via_redirect(add_questions_form_path(f, :mode => 'admin', :mission_name => nil), :selected => {q.id => '1'})
-    assert_response(:success)
-    f.reload
-    assert_equal(q, f.questionings[0].question)
-    assert(f.questionings[0].is_standard?)
-  end
-
   test "valid delete of mission" do
     @mission = get_mission
     login(@admin)

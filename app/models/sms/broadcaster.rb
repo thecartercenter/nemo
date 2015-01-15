@@ -1,17 +1,11 @@
-class Smser
+class Sms::Broadcaster
 
-  def self.deliver(recips, which_phone, msg)
+  def self.deliver(broadcast, which_phone, msg)
     # first ensure we have a valid adapter
     ensure_adapter
 
-    # get numbers
-    numbers = []
-    numbers += recips.collect{|u| u.phone} if %w(main_only both).include?(which_phone)
-    numbers += recips.collect{|u| u.phone2} if %w(alternate_only both).include?(which_phone)
-    numbers.compact!
-
     # build the sms
-    message = Sms::Message.new(:to => numbers, :body => msg)
+    message = Sms::Broadcast.new(broadcast: broadcast, body: msg, mission: broadcast.mission)
 
     # deliver
     configatron.outgoing_sms_adapter.deliver(message)

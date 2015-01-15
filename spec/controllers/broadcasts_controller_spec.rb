@@ -43,6 +43,7 @@ describe BroadcastsController, type: :request do
         subject: '',
         body: 'foo bar'
       })
+      expect(configatron.outgoing_sms_adapter.deliveries.size).to eq 1
       expect(response.status).to redirect_to(broadcast_path(assigns(:broadcast)))
       expect(flash[:success]).not_to be_nil
       follow_redirect!
@@ -63,6 +64,7 @@ describe BroadcastsController, type: :request do
         subject: '',
         body: 'foo bar'
       })
+      expect(configatron.outgoing_sms_adapter.deliveries.size).to eq 0
       expect(flash[:success]).to be_nil
       expect(assigns(:broadcast).errors).not_to be_empty
     end

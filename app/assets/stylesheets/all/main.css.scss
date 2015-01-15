@@ -81,6 +81,10 @@ table.index_table {
   tr:first-child td {
     border-top: none;
   }
+
+  td {
+    vertical-align: middle;
+  }
 }
 table.index_table th, table.form th { text-align: left; color: #444; background-color: $super-light-gray;
     font-size: 90%; padding: 3px 10px 3px 3px; }

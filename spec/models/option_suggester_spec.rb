@@ -35,7 +35,7 @@ describe OptionSuggester do
 
     context 'for nil mission' do
       before do
-        create(:option, is_standard: true, name: 'Foo')
+        create(:option, name: 'Foo')
         @suggestions = OptionSuggester.new.suggest(nil, 'f')
       end
 

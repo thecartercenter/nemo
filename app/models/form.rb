@@ -3,14 +3,14 @@ class Form < ActiveRecord::Base
 
   API_ACCESS_LEVELS = %w(private protected public)
 
-  
+
   has_many(:questions, :through => :questionings, :order => "form_items.rank")
   has_many(:questionings, :order => "rank", :autosave => true, :dependent => :destroy, :inverse_of => :form)
   has_many(:responses, :inverse_of => :form)
   has_many(:versions, :class_name => "FormVersion", :inverse_of => :form, :dependent => :destroy)
   has_many(:whitelist_users, :as => :whitelistable, class_name: "Whitelist")
   has_many(:standard_form_reports, class_name: 'Report::StandardFormReport', dependent: :destroy)
-  
+
   # while a form has many versions, this is a reference to the most up-to-date one
   belongs_to(:current_version, :class_name => "FormVersion")
   belongs_to :root_group, autosave: true, class_name: QingGroup, dependent: :destroy, foreign_key: :root_id
@@ -24,7 +24,7 @@ class Form < ActiveRecord::Base
 
   before_create(:init_downloads)
   after_create(:create_root_group)
-  
+
   scope(:published, where(:published => true))
   scope(:with_questionings, includes(
     :questionings => [
@@ -52,7 +52,7 @@ class Form < ActiveRecord::Base
 
   scope(:by_name, order('forms.name'))
   scope(:default_order, by_name)
-  
+
   #TODO(ask Tom): Do we need to add qing_groups to child_assocs ?
   replicable :child_assocs => :questionings, :uniqueness => {:field => :name, :style => :sep_words},
     :dont_copy => [:published, :downloads, :responses_count, :questionings_count, :upgrade_needed,
@@ -231,8 +231,7 @@ class Form < ActiveRecord::Base
         # this is necessary due to bulk deletion operations
         raise DeletionError.new('question_remove_answer_error') if qing_answer_count(qing) > 0
 
-        qing.destroy_with_copies
-        
+        qing.destroy
         root_questionings.delete(qing)
       end
 
@@ -307,27 +306,16 @@ class Form < ActiveRecord::Base
   end
 
   # efficiently gets the number of answers for the given questioning on this form
-  # or if the form is standard, for the given questioning on any copies
+  # returns zero if form is standard
   def qing_answer_count(qing)
-    # fetch the counts if not already fetched
-    if !@answer_counts
+    return 0 if is_standard?
 
-      # if form is standard, look for answers for copy questionings, since the std questioning will never have answers
-      joins = if is_standard?
-        %{LEFT OUTER JOIN form_items copies ON form_items.id = copies.standard_id
-          LEFT OUTER JOIN answers ON answers.questioning_id = copies.id}
-      else
-        "LEFT OUTER JOIN answers ON answers.questioning_id = form_items.id"
-      end
-
-      @answer_counts = Questioning.find_by_sql([%{
-        SELECT form_items.id, COUNT(DISTINCT answers.id) AS answer_count
-        FROM form_items #{joins}
-        WHERE form_items.form_id = ?
-        AND type='Questioning'
-        GROUP BY form_items.id
-      }, id]).index_by(&:id)
-    end
+    @answer_counts ||= Questioning.find_by_sql([%{
+      SELECT form_items.id, COUNT(DISTINCT answers.id) AS answer_count
+      FROM form_items LEFT OUTER JOIN answers ON answers.questioning_id = form_items.id AND form_items.type = 'Questioning'
+      WHERE form_items.form_id = ?
+      GROUP BY form_items.id
+    }, id]).index_by(&:id)
 
     # get the desired count
     @answer_counts[qing.id].try(:answer_count) || 0
