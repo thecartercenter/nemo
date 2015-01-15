@@ -35,7 +35,10 @@ class ResponseTest < ActiveSupport::TestCase
     form = FactoryGirl.create(:form, :question_types => %w(integer))
     form.root_questionings.first.update_attribute(:required, true)
     form.publish!
+    form.reload
 
+    # Submit answer with first (and only) answer empty
+    # This should show up as a missing response.
     invalid_response = FactoryGirl.build(:response, user: @user, form: form, answer_values: [''])
     assert_equal(false, invalid_response.valid?)
     assert_raise ActiveRecord::RecordInvalid do
@@ -49,6 +52,7 @@ class ResponseTest < ActiveSupport::TestCase
     form = FactoryGirl.create(:form, :question_types => %w(integer))
     form.root_questionings.first.required = true
     form.publish!
+    form.reload
 
     r1 = FactoryGirl.create(:response, :user => @user, :form => form, :incomplete => true)
   end
@@ -66,6 +70,7 @@ class ResponseTest < ActiveSupport::TestCase
     form.root_questionings.first.required = true
     form.root_questionings.first.question.update_attribute(:minimum, 10)
     form.publish!
+    form.reload
 
     r1 = FactoryGirl.build(:response, :form => form, :incomplete => true, :answer_values => %w(9))
     assert_equal(false, r1.valid?)
