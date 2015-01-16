@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150106145459) do
+ActiveRecord::Schema.define(:version => 20150116181323) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -134,16 +134,17 @@ ActiveRecord::Schema.define(:version => 20150106145459) do
     t.boolean  "upgrade_needed",     :default => false
     t.boolean  "smsable",            :default => false
     t.boolean  "is_standard",        :default => false
-    t.integer  "standard_id"
+    t.integer  "original_id"
     t.boolean  "allow_incomplete",   :default => false,     :null => false
     t.string   "access_level",       :default => "private", :null => false
     t.datetime "pub_changed_at"
     t.integer  "root_id"
+    t.boolean  "standard_copy",      :default => false,     :null => false
   end
 
   add_index "forms", ["current_version_id"], :name => "forms_current_version_id_fk"
   add_index "forms", ["mission_id", "name"], :name => "index_forms_on_mission_id_and_name", :unique => true
-  add_index "forms", ["standard_id"], :name => "index_forms_on_standard_id"
+  add_index "forms", ["original_id"], :name => "index_forms_on_standard_id"
 
   create_table "groups", :force => true do |t|
     t.string   "name",       :null => false
@@ -185,17 +186,18 @@ ActiveRecord::Schema.define(:version => 20150106145459) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "mission_id"
-    t.boolean  "is_standard",  :default => false
-    t.integer  "standard_id"
-    t.boolean  "geographic",   :default => false, :null => false
+    t.boolean  "is_standard",   :default => false
+    t.integer  "original_id"
+    t.boolean  "geographic",    :default => false, :null => false
     t.integer  "root_node_id"
     t.text     "level_names"
+    t.boolean  "standard_copy", :default => false, :null => false
   end
 
   add_index "option_sets", ["geographic"], :name => "index_option_sets_on_geographic"
   add_index "option_sets", ["mission_id"], :name => "index_option_sets_on_mission_id"
+  add_index "option_sets", ["original_id"], :name => "index_option_sets_on_standard_id"
   add_index "option_sets", ["root_node_id"], :name => "option_sets_root_node_id_fk"
-  add_index "option_sets", ["standard_id"], :name => "index_option_sets_on_standard_id"
 
   create_table "options", :force => true do |t|
     t.datetime "created_at"
@@ -223,14 +225,15 @@ ActiveRecord::Schema.define(:version => 20150106145459) do
     t.text     "hint_translations"
     t.boolean  "key",                                               :default => false
     t.boolean  "is_standard",                                       :default => false
-    t.integer  "standard_id"
+    t.integer  "original_id"
     t.string   "access_level",                                      :default => "inherit", :null => false
+    t.boolean  "standard_copy",                                     :default => false,     :null => false
   end
 
   add_index "questions", ["mission_id", "code"], :name => "index_questions_on_mission_id_and_code", :unique => true
   add_index "questions", ["option_set_id"], :name => "questions_option_set_id_fk"
+  add_index "questions", ["original_id"], :name => "index_questions_on_standard_id"
   add_index "questions", ["qtype_name"], :name => "index_questions_on_qtype_name"
-  add_index "questions", ["standard_id"], :name => "index_questions_on_standard_id"
 
   create_table "report_calculations", :force => true do |t|
     t.string   "type"
@@ -432,7 +435,7 @@ ActiveRecord::Schema.define(:version => 20150106145459) do
   add_foreign_key "form_versions", "forms", name: "form_versions_form_id_fk"
 
   add_foreign_key "forms", "form_versions", name: "forms_current_version_id_fk", column: "current_version_id", dependent: :nullify
-  add_foreign_key "forms", "forms", name: "forms_standard_id_fk", column: "standard_id"
+  add_foreign_key "forms", "forms", name: "forms_standard_id_fk", column: "original_id"
   add_foreign_key "forms", "missions", name: "forms_mission_id_fk"
 
   add_foreign_key "groups", "missions", name: "groups_mission_id_fk"
@@ -443,13 +446,13 @@ ActiveRecord::Schema.define(:version => 20150106145459) do
 
   add_foreign_key "option_sets", "missions", name: "option_sets_mission_id_fk"
   add_foreign_key "option_sets", "option_nodes", name: "option_sets_root_node_id_fk", column: "root_node_id"
-  add_foreign_key "option_sets", "option_sets", name: "option_sets_standard_id_fk", column: "standard_id"
+  add_foreign_key "option_sets", "option_sets", name: "option_sets_standard_id_fk", column: "original_id"
 
   add_foreign_key "options", "missions", name: "options_mission_id_fk"
 
   add_foreign_key "questions", "missions", name: "questions_mission_id_fk"
   add_foreign_key "questions", "option_sets", name: "questions_option_set_id_fk"
-  add_foreign_key "questions", "questions", name: "questions_standard_id_fk", column: "standard_id"
+  add_foreign_key "questions", "questions", name: "questions_standard_id_fk", column: "original_id"
 
   add_foreign_key "report_calculations", "questions", name: "report_calculations_question1_id_fk", column: "question1_id"
   add_foreign_key "report_calculations", "report_reports", name: "report_calculations_report_report_id_fk"

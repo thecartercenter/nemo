@@ -5,8 +5,8 @@ module Standardizable
 
   included do
     # create self-associations in both directions for is-copy-of relationship
-    belongs_to(:standard, :class_name => name, :inverse_of => :copies)
-    has_many(:copies, :class_name => name, :foreign_key => 'standard_id', :inverse_of => :standard)
+    belongs_to(:original, :class_name => name, :inverse_of => :copies)
+    has_many(:copies, :class_name => name, :foreign_key => 'original_id', :inverse_of => :standard)
 
     # returns a scope for all standard objects of the current class that are importable to the given mission
     def self.importable_to(mission)
@@ -14,13 +14,14 @@ module Standardizable
     end
   end
 
+  # Returns the original if this is a standard copy, nil otherwise
+  def standard
+    standard_copy? ? original : nil
+  end
+
   # returns whether the object is standard or related to a standard object
   def standardized?
     is_standard? || standard_copy?
-  end
-
-  def standard_copy?
-    standard_id.present?
   end
 
   # Gets a copy of this object in the given mission, if one. exists.
