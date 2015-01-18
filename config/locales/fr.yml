@@ -1348,6 +1348,7 @@ fr:
     reset_password_label_choose: "Créer mot de passe"
     reset_password_label_reset: "Réinstalisation de mot de passe?"
     send_email_instructions: "Envoyer les instructions par email"
+    set_admin_password: "Réinstaliser le mot de passe et le profil de administrateur"
     show_printable_instructions: "Montrer instructions imprimable"
   welcome:
     awaiting_review: "**%{count}** En attentes de révision"
