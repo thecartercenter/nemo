@@ -26,9 +26,9 @@ module Concerns::ApplicationController::LoginLogistics
     I18n.locale = configatron.full_locales.include?(pref_lang) ? pref_lang : I18n.default_locale
 
     # Redirect admin's first login to password reset.
-    if @user_session.user.admin && @user_session.user.login_count <= 1
+    if @user_session.user.admin? && @user_session.user.login_count <= 1
       flash[:success] = t("user.set_admin_password")
-      redirect_to url_for(@user_session.user) + '/edit'
+      redirect_to edit_user_path(@user_session.user)
     else
       # Redirect to most relevant mission
       best_mission = @user_session.user.best_mission
