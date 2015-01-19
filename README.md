@@ -54,7 +54,7 @@ Note to install the software below we recommend the following package managers:
   - It should be available through any of the package managers listed above. If not it can be built from source.
   - The Rails Gem that talks to Sphinx is called Thinking Sphinx.
   - The [Thinking Sphinx site](http://pat.github.io/thinking-sphinx/) is a good place to go for troubleshooting and documentation.
-  
+
 1. **PhantomJS 1.9+** (Development only)
   - PhantomJS is a headless browser that allows testing JavaScript.
   - It should be available through any of the package managers listed above. If not it can be built from source.
@@ -62,7 +62,10 @@ Note to install the software below we recommend the following package managers:
 
 1. **Firefox** (Development only)
   - Firefox is used for automated browser testing.
-  
+
+1. **GraphViz 2.36+** (Development only)
+  - [GraphViz](http://graphviz.org/) is used to visualize the relationships between data in the database.
+
 ### Running the App
 
 1. **Retrieve project files using Git**
@@ -71,9 +74,9 @@ Note to install the software below we recommend the following package managers:
   git clone https://github.com/thecartercenter/elmo.git
   cd elmo
   ```
-  
+
   If developing, it's best to work off the development branch:
-  
+
   ```
   git checkout develop
   ```
@@ -81,9 +84,9 @@ Note to install the software below we recommend the following package managers:
 1. **Bundle, configure, and migrate**
   - Install the required gems by running `bundle install` in the project directory.
   - Copy `config/database.yml.example` to `config/database.yml` and edit `database.yml` to point to your database.
-  - Copy `config/thinking_sphinx.yml.example` to `thinking_sphinx.yml.example` and adjust any settings (usually not necessary).
+  - Copy `config/thinking_sphinx.yml.example` to `thinking_sphinx.yml` and adjust any settings (usually not necessary).
   - Copy `config/initializers/local_config.rb.example` to `config/initializers/local_config.rb` and adjust any settings.
-  - Run database migrations: `rake db:migrate`.
+  - Run database migrations: `rake db:migrate`. If the diagramming step hangs, run `NO_DIAGRAM=true rake db:migrate`.
   - Create an admin account: `rake db:create_admin`.
 
 1. **Build the Sphinx index**
