@@ -25,9 +25,15 @@ module Concerns::ApplicationController::LoginLogistics
     pref_lang = @user_session.user.pref_lang.to_sym
     I18n.locale = configatron.full_locales.include?(pref_lang) ? pref_lang : I18n.default_locale
 
-    # Redirect.
-    best_mission = @user_session.user.best_mission
-    redirect_back_or_default best_mission ? mission_root_path(mission_name: best_mission.compact_name) : basic_root_path
+    # Redirect admin's first login to password reset.
+    if @user_session.user.admin? && @user_session.user.login_count <= 1
+      flash[:success] = t("user.set_admin_password")
+      redirect_to edit_user_path(@user_session.user)
+    else
+      # Redirect to most relevant mission
+      best_mission = @user_session.user.best_mission
+      redirect_back_or_default best_mission ? mission_root_path(mission_name: best_mission.compact_name) : basic_root_path
+    end
   end
 
   # resets the Rails session but preserves the :return_to key
