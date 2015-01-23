@@ -1,7 +1,6 @@
 class Questioning < FormItem
   include Replication::Replicable
 
-  belongs_to(:form, :inverse_of => :questionings)
   belongs_to(:question, :autosave => true, :inverse_of => :questionings)
   has_many(:answers, :dependent => :destroy, :inverse_of => :questioning)
   has_one(:condition, :autosave => true, :dependent => :destroy, :inverse_of => :questioning)

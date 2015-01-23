@@ -3,9 +3,6 @@ class Form < ActiveRecord::Base
 
   API_ACCESS_LEVELS = %w(private protected public)
 
-
-  has_many(:questions, :through => :questionings, :order => "form_items.rank")
-  has_many(:questionings, :order => "rank", :autosave => true, :dependent => :destroy, :inverse_of => :form)
   has_many(:responses, :inverse_of => :form)
   has_many(:versions, :class_name => "FormVersion", :inverse_of => :form, :dependent => :destroy)
   has_many(:whitelist_users, :as => :whitelistable, class_name: "Whitelist")
@@ -25,6 +22,8 @@ class Form < ActiveRecord::Base
   before_create(:init_downloads)
 
   scope(:published, where(:published => true))
+
+  # TODO this may need to be fixed to respect new structure.
   scope(:with_questionings, includes(
     :questionings => [
       :form,
@@ -79,9 +78,18 @@ class Form < ActiveRecord::Base
     "odk-form-list/mission-#{options[:mission].id}/#{max_pub_changed_at}"
   end
 
+  # Returns all descendant questionings in one flat array, sorted in traversal order.
+  def questionings(reload = false)
+    root_group.sorted_leaves.flatten
+  end
+
+  def questions(reload = false)
+    questionings(reload).map(&:question)
+  end
+
   def root_questionings(reload = false)
-    raise "No Root Group!!" if root_group.nil?  # maybe take this out after we are sure all tests are passing, finds build/create
-    @root_questionings = (reload || @root_questionings.nil?) ? root_group.children.order(:rank) : @root_questionings
+    # Not memoizing this because it causes all sorts of problems.
+    root_group.children.order(:rank)
   end
 
   def odk_download_cache_key

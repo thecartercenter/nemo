@@ -43,7 +43,7 @@ describe FormVersioningPolicy do
     @forms.each do |f|
       qs.each do |q|
         f.questions << q
-        Questioning.create(:form_id => f.id, :question_id => q.id, :required => false, :parent => f.root_group)        
+        Questioning.create(:form_id => f.id, :question_id => q.id, :required => false, :parent => f.root_group)
       end
       f.save!
     end
@@ -305,8 +305,8 @@ describe FormVersioningPolicy do
     @os = FactoryGirl.create(:option_set, multi_level: true)
     @q = FactoryGirl.create(:question, :qtype_name => "select_one", :option_set => @os)
     @forms[0...2].each do |f|
-      f.questions << @q
-      f.save!
+      FactoryGirl.create(:questioning, form: f, question: @q)
+      f.reload
     end
     @os.reload
     @q.reload

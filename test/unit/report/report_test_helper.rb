@@ -52,7 +52,7 @@ class ActiveSupport::TestCase
     @questions[params[:code].to_sym] = q
 
     # create questionings for each form
-    params[:forms].each{|f| f.questions << q}
+    params[:forms].each{|f| FactoryGirl.create(:questioning, form: f, question: q) }
   end
 
   def create_response(params)
