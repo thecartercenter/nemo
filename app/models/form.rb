@@ -23,15 +23,6 @@ class Form < ActiveRecord::Base
 
   scope(:published, where(:published => true))
 
-  # TODO this may need to be fixed to respect new structure.
-  scope(:with_questionings, includes(
-    :questionings => [
-      :form,
-      {:question => :option_set},
-      {:condition => :ref_qing}
-    ]
-  ).order("form_items.rank"))
-
   # this scope adds a count of the questionings on this form and
   # the number of copies of this form, and of those that are published
   # if the form is not a standard, these will just be zero
@@ -43,8 +34,8 @@ class Form < ActiveRecord::Base
       SUM(copies.responses_count) AS copy_responses_count_col
     })
     .joins(%{
-      LEFT OUTER JOIN form_items ON forms.id = form_items.form_id
-      LEFT OUTER JOIN forms copies ON forms.id = copies.standard_id
+      LEFT OUTER JOIN form_items ON forms.id = form_items.form_id AND form_items.type = 'Questioning'
+      LEFT OUTER JOIN forms copies ON forms.id = copies.original_id AND copies.standard_copy = 1
     })
     .group("forms.id"))
 
@@ -162,25 +153,24 @@ class Form < ActiveRecord::Base
 
   # returns number of questionings on the form. uses eager loaded field if available.
   def questionings_count
-    respond_to?(:questionings_count_col) ? (questionings_count_col || 0).to_i : root_questionings.count
+    respond_to?(:questionings_count_col) ? (questionings_count_col || 0).to_i : questionings.count
   end
 
   def option_sets
-    # going through the questionings model as that's the one that is eager-loaded in .with_questionings
-    root_questionings.map(&:question).map(&:option_set).compact.uniq
+    questionings.map(&:question).map(&:option_set).compact.uniq
   end
 
   def visible_questionings
-    root_questionings.reject{|q| q.hidden}
+    questionings.reject{|q| q.hidden}
   end
 
   # returns questionings that work with sms forms and are not hidden
   def smsable_questionings
-    root_questionings.reject{|q| q.hidden || !q.question.qtype.smsable?}
+    questionings.reject{|q| q.hidden || !q.question.qtype.smsable?}
   end
 
   def questioning_with_code(c)
-    root_questionings.detect{ |q| q.code == c }
+    questionings.detect{ |q| q.code == c }
   end
 
   # Loads all options used on the form in a constant number of queries.
@@ -194,7 +184,7 @@ class Form < ActiveRecord::Base
   end
 
   def max_rank
-    root_questionings.map{|qing| qing.rank || 0}.max || 0
+    questionings.map{|qing| qing.rank || 0}.max || 0
   end
 
   # Whether this form needs an accompanying manifest for odk.
@@ -237,7 +227,6 @@ class Form < ActiveRecord::Base
         raise DeletionError.new('question_remove_answer_error') if qing_answer_count(qing) > 0
 
         qing.destroy
-        root_questionings.delete(qing)
       end
 
       # fix the ranks

@@ -36,20 +36,18 @@ class Question < ActiveRecord::Base
   # fetches association counts along with the questions
   # accounts for copies with standard questions
   # - form_published returns 1 if any associated forms are published, 0 or nil otherwise
-  # - standard_copy_form_id returns a std copy form id associated with the question if available, or nil if there are none
   scope(:with_assoc_counts, select(%{
       questions.*,
       COUNT(DISTINCT answers.id) AS answer_count_col,
       COUNT(DISTINCT forms.id) AS form_count_col,
       MAX(DISTINCT forms.published) AS form_published_col,
       COUNT(DISTINCT copy_answers.id) AS copy_answer_count_col,
-      MAX(DISTINCT copy_forms.published) AS copy_form_published_col,
-      MAX(DISTINCT forms.standard_id) AS standard_copy_form_id
+      MAX(DISTINCT copy_forms.published) AS copy_form_published_col
     }).joins(%{
       LEFT OUTER JOIN form_items questionings ON questionings.question_id = questions.id AND questionings.type = 'Questioning'
       LEFT OUTER JOIN forms ON forms.id = questionings.form_id
       LEFT OUTER JOIN answers ON answers.questioning_id = questionings.id
-      LEFT OUTER JOIN questions copies ON questions.is_standard = 1 AND questions.id = copies.standard_id
+      LEFT OUTER JOIN questions copies ON questions.is_standard = 1 AND questions.id = copies.original_id
       LEFT OUTER JOIN form_items copy_questionings ON copy_questionings.question_id = copies.id AND copy_questionings.type = 'Questioning'
       LEFT OUTER JOIN forms copy_forms ON copy_forms.id = copy_questionings.form_id
       LEFT OUTER JOIN answers copy_answers ON copy_answers.questioning_id = copy_questionings.id
@@ -160,12 +158,6 @@ class Question < ActiveRecord::Base
     else
       respond_to?(:form_published_col) ? form_published_col == 1 : forms.any?(&:published?)
     end
-  end
-
-  # determines if any of the forms on which this question appears are standard copies
-  # uses a special eager-loaded attribute if available
-  def has_standard_copy_form?
-    is_standard ? false : respond_to?(:standard_copy_form_id) ? !standard_copy_form_id.nil? : forms.any?(&:standard_copy?)
   end
 
   # checks if any associated forms are smsable

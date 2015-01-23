@@ -4,7 +4,7 @@ class FormsController < ApplicationController
   helper OdkHelper
 
   # special find method before load_resource
-  before_filter :find_form_with_questionings, :only => [:show, :edit, :update]
+  before_filter :load_form, :only => [:show, :edit, :update]
 
   # authorization via cancan
   load_and_authorize_resource
@@ -41,7 +41,7 @@ class FormsController < ApplicationController
         @cache_key = Form.odk_index_cache_key(mission: current_mission)
         unless fragment_exist?(@cache_key)
           # This query is not deferred so we have to check if it should be run or not.
-          @forms = @forms.published.with_questionings
+          @forms = @forms.published
         end
         render_openrosa
       end
@@ -261,8 +261,7 @@ class FormsController < ApplicationController
       render(:form)
     end
 
-    # loads the form object including a bunch of joins for questions
-    def find_form_with_questionings
-      @form = Form.with_questionings.find(params[:id])
+    def load_form
+      @form = Form.find(params[:id])
     end
 end
