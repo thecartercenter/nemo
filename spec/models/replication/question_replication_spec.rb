@@ -62,6 +62,25 @@ describe Question do
     end
   end
 
+  describe 'promote' do
+    before do
+      @orig = create(:question, qtype_name: 'select_one')
+      @std = @orig.replicate(:mode => :promote)
+    end
+
+    it 'should work' do
+      expect(@std.is_standard?).to be true
+      expect(@std.option_set.is_standard?).to be true
+      expect(@std.mission).to be_nil
+      expect(@std).not_to eq @orig
+      expect(@std.option_set).not_to eq @orig.option_set
+
+      # originals should not have standard links
+      expect(@orig.standard).to be_nil
+      expect(@orig.option_set.standard).to be_nil
+    end
+  end
+
   context 'old tests' do
     it "replicating a question within a mission should change the code" do
       q = FactoryGirl.create(:question, :qtype_name => 'integer', :code => 'Foo')
