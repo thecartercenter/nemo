@@ -5,7 +5,6 @@ class Option < ActiveRecord::Base
   has_many(:option_nodes, :inverse_of => :option, :dependent => :destroy, :autosave => true)
   has_many(:answers, :inverse_of => :option)
   has_many(:choices, :inverse_of => :option)
-  has_many(:conditions, :inverse_of => :option)
 
   after_save(:invalidate_cache)
   after_destroy(:invalidate_cache)

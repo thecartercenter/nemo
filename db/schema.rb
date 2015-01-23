@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150116181323) do
+ActiveRecord::Schema.define(:version => 20150123175544) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -176,6 +176,7 @@ ActiveRecord::Schema.define(:version => 20150116181323) do
     t.integer  "ancestry_depth", :default => 0
   end
 
+  add_index "option_nodes", ["ancestry"], :name => "index_option_nodes_on_ancestry"
   add_index "option_nodes", ["mission_id"], :name => "option_nodes_mission_id_fk"
   add_index "option_nodes", ["option_id"], :name => "option_nodes_option_id_fk"
   add_index "option_nodes", ["option_set_id"], :name => "option_nodes_option_set_id_fk"
@@ -207,6 +208,7 @@ ActiveRecord::Schema.define(:version => 20150116181323) do
     t.text     "name_translations"
   end
 
+  add_index "options", ["canonical_name", "mission_id"], :name => "index_options_on_canonical_name_and_mission_id"
   add_index "options", ["mission_id"], :name => "index_options_on_mission_id"
 
   create_table "questions", :force => true do |t|
@@ -370,6 +372,7 @@ ActiveRecord::Schema.define(:version => 20150116181323) do
   end
 
   add_index "tags", ["mission_id"], :name => "index_tags_on_mission_id"
+  add_index "tags", ["name", "mission_id"], :name => "index_tags_on_name_and_mission_id"
 
   create_table "user_groups", :force => true do |t|
     t.integer  "user_id",    :null => false
