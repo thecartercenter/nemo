@@ -35,8 +35,7 @@ FactoryGirl.define do
     end
 
     after(:create) do |form, evaluator|
-      root = QingGroup.create!(form: form, rank: 1)
-      form.update_attribute(:root_id, root.id)
+      form.create_root_group!(rank: 1, form: form)
       evaluator.question_types.each_with_index do |qts, index|
         if qts.kind_of?(Array)
           group = QingGroup.create!(parent: form.root_group, form: form, rank: index+1)

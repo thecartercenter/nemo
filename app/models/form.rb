@@ -23,7 +23,6 @@ class Form < ActiveRecord::Base
   validate(:name_unique_per_mission)
 
   before_create(:init_downloads)
-  after_create(:create_root_group)
 
   scope(:published, where(:published => true))
   scope(:with_questionings, includes(
@@ -78,13 +77,6 @@ class Form < ActiveRecord::Base
       'no-pubd-forms'
     end
     "odk-form-list/mission-#{options[:mission].id}/#{max_pub_changed_at}"
-  end
-
-  def create_root_group
-    unless root_id
-      root_group = QingGroup.create
-      update_attribute(:root_id, root_group.id)
-    end
   end
 
   def root_questionings(reload = false)
