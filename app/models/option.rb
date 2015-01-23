@@ -13,6 +13,8 @@ class Option < ActiveRecord::Base
 
   translates :name
 
+  # We re-use options on replicate if they have the same canonical_name as the option being imported.
+  # Options are not standardizable so we don't track the original_id (that would be overkill).
   replicable reuse_if_match: :canonical_name
 
   MAX_NAME_LENGTH = 45

@@ -36,6 +36,7 @@ FactoryGirl.define do
 
     after(:create) do |form, evaluator|
       form.create_root_group!(rank: 1, form: form)
+      form.save! # Save the reference to the root group.
       evaluator.question_types.each_with_index do |qts, index|
         if qts.kind_of?(Array)
           group = QingGroup.create!(parent: form.root_group, form: form, rank: index+1)
