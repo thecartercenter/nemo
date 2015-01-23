@@ -1,6 +1,6 @@
 # a question on a form
 class Question < ActiveRecord::Base
-  include MissionBased, Standardizable, Replicable, FormVersionable, Translatable
+  include MissionBased, Replication::Standardizable, Replication::Replicable, FormVersionable, Translatable
 
   CODE_FORMAT = "[a-zA-Z][a-zA-Z0-9]{1,19}"
   API_ACCESS_LEVELS = %w(inherit private)
@@ -78,8 +78,8 @@ class Question < ActiveRecord::Base
            :levels,
            :to => :option_set, :allow_nil => true
 
-  replicable :child_assocs => :option_set, :parent_assoc => :questioning, :sync => :code,
-    :uniqueness => {:field => :code, :style => :camel_case}, :dont_copy => [:key, :access_level]
+  replicable child_assocs: :option_set, backwards_assocs: :questioning, sync: :code,
+    uniqueness: {field: :code, style: :camel_case}, dont_copy: [:key, :access_level, :option_set_id]
 
   # returns questions that do NOT already appear in the given form
   def self.not_in_form(form)

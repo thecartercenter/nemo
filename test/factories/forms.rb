@@ -17,7 +17,7 @@ def create_question(qtype_name, mission, option_names, multi_option_set, rank, p
     :parent => parent,
     :form => form,
     :question => FactoryGirl.build(:question, question_attribs))
-    
+
   # Keep legacy association intact.
   form.questionings << qing
   qing
@@ -33,20 +33,20 @@ FactoryGirl.define do
       # optionally specifies the options for the option set of the first select type question on the form
       option_names nil
     end
-    
+
     after(:create) do |form, evaluator|
       root = QingGroup.create!(form: form, rank: 1)
       form.update_attribute(:root_id, root.id)
       evaluator.question_types.each_with_index do |qts, index|
-        if qts.kind_of?(Array) 
+        if qts.kind_of?(Array)
           group = QingGroup.create!(parent: form.root_group, form: form, rank: index+1)
           qts.each_with_index { |qt, i| create_question(qt, form.mission, evaluator.option_names, evaluator.use_multilevel_option_set, i+1, group, form) }
         else
           create_question(qts, form.mission, evaluator.option_names, evaluator.use_multilevel_option_set, index+1, form.root_group, form)
-        end         
+        end
       end
     end
-    
+
     mission { is_standard ? nil : get_mission }
     sequence(:name) { |n| "Sample Form #{n}" }
 
@@ -57,7 +57,7 @@ FactoryGirl.define do
     # Used in the feature specs
     factory :sample_form do
       name 'Sample Form'
-    
+
       after(:create) do |form, evaluator|
         form.questionings do
           [

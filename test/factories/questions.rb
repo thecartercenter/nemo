@@ -13,9 +13,9 @@ FactoryGirl.define do
 
     option_set do
       if QuestionType[qtype_name].has_options?
-        opt_set_attribs = {mission: mission, multi_level: use_multilevel_option_set}
-        opt_set_attribs[:option_names] = option_names unless option_names.nil?
-        FactoryGirl.build(:option_set, opt_set_attribs)
+        os_attrs = {mission: mission, multi_level: use_multilevel_option_set, is_standard: is_standard}
+        os_attrs[:option_names] = option_names unless option_names.nil?
+        FactoryGirl.build(:option_set, os_attrs)
       else
         nil
       end

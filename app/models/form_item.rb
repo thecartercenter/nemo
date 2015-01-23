@@ -1,11 +1,11 @@
 class FormItem < ActiveRecord::Base
-  include MissionBased, FormVersionable 
+  include MissionBased, FormVersionable, Replication::Replicable
   belongs_to(:form, :inverse_of => :questionings)
 
   before_create(:set_mission)
 
   has_ancestry cache_depth: true
-  
+
   private
 
     # copy mission from question

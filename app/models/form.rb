@@ -1,5 +1,5 @@
 class Form < ActiveRecord::Base
-  include MissionBased, FormVersionable, Standardizable, Replicable
+  include MissionBased, FormVersionable, Replication::Standardizable, Replication::Replicable
 
   API_ACCESS_LEVELS = %w(private protected public)
 
@@ -13,7 +13,7 @@ class Form < ActiveRecord::Base
 
   # while a form has many versions, this is a reference to the most up-to-date one
   belongs_to(:current_version, :class_name => "FormVersion")
-  belongs_to :root_group, autosave: true, class_name: QingGroup, dependent: :destroy, foreign_key: :root_id
+  belongs_to :root_group, autosave: true, class_name: "QingGroup", dependent: :destroy, foreign_key: :root_id
 
   before_validation(:normalize_fields)
   before_save(:update_pub_changed_at)
@@ -53,10 +53,15 @@ class Form < ActiveRecord::Base
   scope(:by_name, order('forms.name'))
   scope(:default_order, by_name)
 
-  #TODO(ask Tom): Do we need to add qing_groups to child_assocs ?
-  replicable :child_assocs => :questionings, :uniqueness => {:field => :name, :style => :sep_words},
-    :dont_copy => [:published, :downloads, :responses_count, :questionings_count, :upgrade_needed,
-      :smsable, :current_version_id, :allow_incomplete, :access_level]
+  delegate :children,
+           :c,
+           :descendants,
+           to: :root_group
+
+  replicable child_assocs: :root_group, uniqueness: {field: :name, style: :sep_words},
+    dont_copy: [:published, :pub_changed_at, :downloads, :responses_count, :upgrade_needed,
+      :smsable, :current_version_id, :allow_incomplete, :access_level, :root_id]
+
 
   # remove heirarchy of objects
   def self.terminate_sub_relationships(form_ids)
@@ -352,5 +357,4 @@ class Form < ActiveRecord::Base
       self.pub_changed_at = Time.now if published_changed?
       return true
     end
-
 end

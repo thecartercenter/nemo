@@ -10,6 +10,7 @@ describe Question do
     before do
       @orig = create(:question, qtype_name: 'select_one', is_standard: true)
       @copy = @orig.replicate(mode: :to_mission, dest_mission: @mission2)
+      @orig.reload
     end
 
     context 'when replicating directly and copy exists in mission' do
@@ -29,7 +30,7 @@ describe Question do
           @orig.update_attributes!(code: 'NewCode')
         end
 
-        it 'should work' do
+        it 'should sync' do
           expect(@copy.reload.code).to eq 'NewCode'
         end
       end
@@ -41,9 +42,21 @@ describe Question do
           @orig.update_attributes!(code: 'NewCode')
         end
 
-        it 'should work' do
+        it 'should sync' do
           expect(@orig.reload.code).to eq 'NewCode'
           expect(@copy.reload.code).to eq 'NewCode2'
+        end
+      end
+
+      context 'for non standard-mission copies' do
+        before do
+          @orig = FactoryGirl.create(:question, code: 'Foo', is_standard: true)
+          @copy = @orig.replicate(mode: :clone)
+          @orig.reload.update_attributes!(code: 'NewCode')
+        end
+
+        it 'should not sync' do
+          expect(@copy.reload.code).to eq 'Foo2'
         end
       end
     end
@@ -86,13 +99,6 @@ describe Question do
 
     it "replicating a standard select question should replicate the option set" do
       q = FactoryGirl.create(:question, :qtype_name => 'select_one', :is_standard => true)
-
-      # ensure the std q looks right
-      assert_nil(q.mission)
-      assert_nil(q.option_set.mission)
-      assert(q.option_set.is_standard)
-
-      # replicate and test
       q2 = q.replicate(:mode => :to_mission, :dest_mission => get_mission)
       assert_not_equal(q, q2)
       assert_not_equal(q.option_set, q2.option_set)

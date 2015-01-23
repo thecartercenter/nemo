@@ -1,5 +1,5 @@
 class Questioning < FormItem
-  include Replicable
+  include Replication::Replicable
 
   belongs_to(:form, :inverse_of => :questionings)
   belongs_to(:question, :autosave => true, :inverse_of => :questionings)
@@ -10,8 +10,6 @@ class Questioning < FormItem
 
   accepts_nested_attributes_for(:question)
   accepts_nested_attributes_for(:condition)
-
-  replicable child_assocs: [:question, :condition], parent_assoc: :form, dont_copy: :hidden
 
   before_validation(:destroy_condition_if_ref_qing_blank)
   before_create(:set_rank)
@@ -51,6 +49,8 @@ class Questioning < FormItem
   delegate :verify_ordering, to: :condition, prefix: true, allow_nil: true
 
   scope(:visible, where(:hidden => false))
+
+  replicable child_assocs: [:question, :condition], backward_assocs: :form, dont_copy: [:hidden, :form_id, :question_id]
 
   # remove heirarchy of objects
   def self.terminate_sub_relationships(questioning_ids)

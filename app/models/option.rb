@@ -1,5 +1,5 @@
 class Option < ActiveRecord::Base
-  include MissionBased, FormVersionable, Translatable, Replicable
+  include MissionBased, FormVersionable, Translatable, Replication::Replicable
 
   has_many(:option_sets, :through => :option_nodes)
   has_many(:option_nodes, :inverse_of => :option, :dependent => :destroy, :autosave => true)
@@ -14,7 +14,7 @@ class Option < ActiveRecord::Base
 
   translates :name
 
-  replicable :parent_assoc => :option_node
+  replicable reuse_if_match: :canonical_name
 
   MAX_NAME_LENGTH = 45
 

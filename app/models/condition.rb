@@ -1,5 +1,5 @@
 class Condition < ActiveRecord::Base
-  include MissionBased, FormVersionable, Replicable
+  include MissionBased, FormVersionable, Replication::Replicable
 
   # question types that cannot be used in conditions
   NON_REFABLE_TYPES = %w(location)
@@ -30,7 +30,8 @@ class Condition < ActiveRecord::Base
     {name: 'ninc', types: %w(select_multiple), code: "!="}
   ]
 
-  replicable after_copy_attribs: :copy_ref_qing_and_options, parent_assoc: :questioning, dont_copy: [:ref_qing_id]
+  replicable backward_assocs: [:questioning, :ref_qing, {name: :option_ids, target_class_name: 'Option', type: :serialized}],
+    dont_copy: [:ref_qing_id, :questioning_id, :option_ids]
 
   def options
     # We need to sort since ar#find doesn't guarantee order
@@ -192,19 +193,6 @@ class Condition < ActiveRecord::Base
 
     def any_fields_empty?
       ref_qing.blank? || op.blank? || (ref_qing.has_options? ? option_ids.blank? : value.blank?)
-    end
-
-    # during replication process, copies the ref qing and option to the new condition
-    def copy_ref_qing_and_options(replication)
-      # Set the copy's ref_qing to the one with the corresponding code.
-      replication.dest_obj.ref_qing = replication.parent.form.questioning_with_code(ref_qing.code)
-
-      # Set options using rank.
-      unless options.nil?
-        # get the index of the original option
-        rank_path = ref_qing.option_path_to_rank_path(options)
-        replication.dest_obj.set_options_by_rank_path(rank_path)
-      end
     end
 
     # copy mission from questioning

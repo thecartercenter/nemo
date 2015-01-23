@@ -1,5 +1,5 @@
 class OptionNode < ActiveRecord::Base
-  include MissionBased, FormVersionable, Replicable
+  include MissionBased, FormVersionable, Replication::Replicable
 
   # Number of descendants that make a 'huge' node.
   HUGE_CUTOFF = 100
@@ -30,7 +30,7 @@ class OptionNode < ActiveRecord::Base
   alias_method :options_added?, :options_added
   alias_method :options_removed?, :options_removed
 
-  replicable parent_assoc: :option_set, replicate_tree: true, child_assocs: :option, dont_copy: :ancestry
+  replicable child_assocs: [:children, :option], backward_assocs: :option_set, dont_copy: [:option_set_id, :option_id]
 
   # Given a set of nodes, preloads child_options for all in constant number of queries.
   def self.preload_child_options(roots)
