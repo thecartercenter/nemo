@@ -15,7 +15,7 @@ class FormTest < ActiveSupport::TestCase
     first_qing_id = f.root_questionings[0].id
 
     # swap ranks and save
-    f.update_ranks(f.root_questionings[0].id.to_s => '2', f.root_questionings[1].id.to_s => '1')
+    f.update_ranks(f.root_questionings[0].id => 2, f.root_questionings[1].id => 1)
     f.save!
 
     # now reload and make sure they're switched
@@ -31,7 +31,7 @@ class FormTest < ActiveSupport::TestCase
 
     # make sure they're gone and ranks are ok
     assert_equal(2, f.root_questionings.count)
-    
+
     assert_equal([1,2], f.root_questionings.map(&:rank))
   end
 
@@ -104,10 +104,10 @@ class FormTest < ActiveSupport::TestCase
     q1, q2, q3 = f.root_questionings
 
     # this one shouldn't raise since q with condition stays last
-    f.update_ranks({q1.id.to_s => '2', q2.id.to_s => '1', q3.id.to_s => '3'})
+    f.update_ranks({q1.id => 2, q2.id => 1, q3.id => 3})
 
     assert_raise(ConditionOrderingError) do
-      f.update_ranks({q1.id.to_s => '3', q2.id.to_s => '2', q3.id.to_s => '1'})
+      f.update_ranks({q1.id => 3, q2.id => 2, q3.id => 1})
     end
   end
 end
