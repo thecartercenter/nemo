@@ -4,8 +4,8 @@ describe "accessing forms" do
 
   before do
     @mission = FactoryGirl.create(:mission, name: "awesome")
-    @form1 = @mission.forms.create(name: "test1")
-    @form2 = @mission.forms.create(name: "test2", access_level: 'public')
+    @form1 = create(:form, name: 'test1')
+    @form2 = create(:form, name: 'test2', access_level: 'public')
     @api_user = FactoryGirl.create(:user)
   end
 
@@ -36,10 +36,9 @@ describe "accessing forms" do
   context "View metadata on a form" do
 
     before do
-      q1 = FactoryGirl.create(:question, mission: @mission)
-      q2 = FactoryGirl.create(:question, mission: @mission)
-      q3 = FactoryGirl.create(:question, mission: @mission, access_level: 'private')
-      @form1.questions.push(q1, q2, q3)
+      q1 = FactoryGirl.create(:question, mission: @mission, add_to_form: @form1)
+      q2 = FactoryGirl.create(:question, mission: @mission, add_to_form: @form1)
+      q3 = FactoryGirl.create(:question, mission: @mission, access_level: 'private', add_to_form: @form1)
       do_api_request(:form, :obj => @form1)
       @form_json = parse_json(response.body)
     end

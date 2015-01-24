@@ -4,7 +4,7 @@ class API::V1::AnswerFinder
     return [] if self.form_with_permissions(params[:form_id]).blank?
     answers = Answer.includes(:response, :questioning).
                      where(responses: {form_id: params[:form_id]}).
-                     where(questionings: {question_id: params[:question_id]}).
+                     where(form_items: {question_id: params[:question_id]}).
                      public_access
     self.filter(answers, params)
   end

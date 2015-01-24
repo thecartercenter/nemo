@@ -39,7 +39,7 @@ FOREIGN_KEYS = {
   'forms' => [
     {col: 'mission_id', no_rev: true},
     {col: 'current_version_id', ref_tbl: 'form_versions'},
-    {col: 'standard_id', ref_tbl: 'forms'}
+    {col: 'original_id', ref_tbl: 'forms'}
   ],
 
   'groups' => [
@@ -52,32 +52,29 @@ FOREIGN_KEYS = {
     {col: 'option_set_id'},
     {col: 'ancestry', ancestry: true},
     {col: 'option_id', no_rev: true},
-    {col: 'mission_id', no_rev: true},
-    {col: 'standard_id', ref_tbl: 'option_nodes'}
+    {col: 'mission_id', no_rev: true}
   ],
 
   'option_sets' => [
     {col: 'mission_id', no_rev: true},
-    {col: 'standard_id', ref_tbl: 'option_sets'},
+    {col: 'original_id', ref_tbl: 'option_sets'},
     {col: 'root_node_id', ref_tbl: 'option_nodes', no_rev: true}
   ],
 
   'options' => [
-    {col: 'mission_id', no_rev: true},
-    {col: 'standard_id', ref_tbl: 'options'}
+    {col: 'mission_id', no_rev: true}
   ],
 
   'questionings' => [
     {col: 'question_id', no_rev: true},
     {col: 'form_id', no_fwd: true},
-    {col: 'standard_id', ref_tbl: 'questionings'},
     {col: 'mission_id', no_rev: true}
   ],
 
   'questions' => [
     {col: 'option_set_id', no_rev: true},
     {col: 'mission_id', no_rev: true},
-    {col: 'standard_id', ref_tbl: 'questions'}
+    {col: 'original_id', ref_tbl: 'questions'}
   ],
 
   'report_calculations' => [
@@ -112,13 +109,12 @@ FOREIGN_KEYS = {
 
   # 'taggings' => [
   #   {col: 'question_id'},
-  #   {col: 'tag_id'},
-  #   {col: 'standard_id', ref_tbl: 'taggings'}
+  #   {col: 'tag_id'}
   # ],
   #
   # 'tags' => [
   #   {col: 'mission_id'},
-  #   {col: 'standard_id', ref_tbl: 'tags'}
+  #   {col: 'original_id', ref_tbl: 'tags'}
   # ],
 
   'user_groups' => [

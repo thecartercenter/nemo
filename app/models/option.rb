@@ -1,11 +1,10 @@
 class Option < ActiveRecord::Base
-  include MissionBased, FormVersionable, Translatable, Replicable
+  include MissionBased, FormVersionable, Translatable, Replication::Replicable
 
   has_many(:option_sets, :through => :option_nodes)
   has_many(:option_nodes, :inverse_of => :option, :dependent => :destroy, :autosave => true)
   has_many(:answers, :inverse_of => :option)
   has_many(:choices, :inverse_of => :option)
-  has_many(:conditions, :inverse_of => :option)
 
   after_save(:invalidate_cache)
   after_destroy(:invalidate_cache)
@@ -14,7 +13,9 @@ class Option < ActiveRecord::Base
 
   translates :name
 
-  replicable :parent_assoc => :option_node
+  # We re-use options on replicate if they have the same canonical_name as the option being imported.
+  # Options are not standardizable so we don't track the original_id (that would be overkill).
+  replicable reuse_if_match: :canonical_name
 
   MAX_NAME_LENGTH = 45
 

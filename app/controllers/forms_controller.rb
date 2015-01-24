@@ -4,7 +4,7 @@ class FormsController < ApplicationController
   helper OdkHelper
 
   # special find method before load_resource
-  before_filter :find_form_with_questionings, :only => [:show, :edit, :update]
+  before_filter :load_form, :only => [:show, :edit, :update]
 
   # authorization via cancan
   load_and_authorize_resource
@@ -41,7 +41,7 @@ class FormsController < ApplicationController
         @cache_key = Form.odk_index_cache_key(mission: current_mission)
         unless fragment_exist?(@cache_key)
           # This query is not deferred so we have to check if it should be run or not.
-          @forms = @forms.published.with_questionings
+          @forms = @forms.published
         end
         render_openrosa
       end
@@ -115,6 +115,8 @@ class FormsController < ApplicationController
   def create
     @form.is_standard = true if current_mode == 'admin'
     if @form.save
+      @form.create_root_group!(mission: @form.mission, form: @form, rank: 1)
+      @form.save!
       set_success_and_redirect(@form, :to => edit_form_path(@form))
     else
       flash.now[:error] = I18n.t('activerecord.errors.models.form.general')
@@ -124,27 +126,29 @@ class FormsController < ApplicationController
 
   def update
     begin
-      update_api_users
-      # save basic attribs
-      @form.assign_attributes(params[:form])
+      Form.transaction do
+        update_api_users
+        # save basic attribs
+        @form.assign_attributes(params[:form])
 
-      # check special permissions
-      authorize!(:rename, @form) if @form.name_changed?
+        # check special permissions
+        authorize!(:rename, @form) if @form.name_changed?
 
-      # update ranks if provided (possibly raising condition ordering error)
-      @form.update_ranks(params[:rank]) if params[:rank] && can?(:reorder_questions, @form)
+        # update ranks if provided (possibly raising condition ordering error)
+        # We convert IDs and ranks to integer before passing.
+        @form.update_ranks(Hash[*params[:rank].to_a.flatten.map(&:to_i)]) if params[:rank] && can?(:reorder_questions, @form)
 
-      # save everything
-      @form.save!
+        # save everything
+        @form.save!
 
-      # publish if requested
-      if params[:save_and_publish].present?
-        @form.publish!
-        set_success_and_redirect(@form, :to => forms_path)
-      else
-        set_success_and_redirect(@form, :to => edit_form_path(@form))
+        # publish if requested
+        if params[:save_and_publish].present?
+          @form.publish!
+          set_success_and_redirect(@form, :to => forms_path)
+        else
+          set_success_and_redirect(@form, :to => edit_form_path(@form))
+        end
       end
-
     # handle problem with conditions
     rescue ConditionOrderingError
       flash.now[:error] = I18n.t('activerecord.errors.models.form.ranks_break_conditions')
@@ -183,9 +187,10 @@ class FormsController < ApplicationController
     @questions = Question.includes(:tags).with_assoc_counts.by_code.accessible_by(current_ability).not_in_form(@form)
 
     # setup new questioning for use with the questioning form
-    init_qing(:form_id => @form.id, :question_attributes => {})
+    init_qing(:form_id => @form.id, :ancestry => @form.root_id, :question_attributes => {})
     setup_qing_form_support_objs
   end
+
 
   # adds questions selected in the big list to the form
   def add_questions
@@ -196,7 +201,7 @@ class FormsController < ApplicationController
     raise "no valid questions given" if questions.empty?
 
     # add questions to form and try to save
-    @form.questions += questions
+    @form.add_questions_to_top_level(questions)
     if @form.save
       flash[:success] = t("form.questions_add_success")
     else
@@ -260,8 +265,7 @@ class FormsController < ApplicationController
       render(:form)
     end
 
-    # loads the form object including a bunch of joins for questions
-    def find_form_with_questionings
-      @form = Form.with_questionings.find(params[:id])
+    def load_form
+      @form = Form.find(params[:id])
     end
 end

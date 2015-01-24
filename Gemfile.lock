@@ -108,6 +108,9 @@ GEM
       debugger (>= 1.6.2)
     descriptive_statistics (1.1.5)
     diff-lcs (1.2.5)
+    dotiw (2.0)
+      actionpack (>= 3)
+      i18n
     ejs (1.1.1)
     erubis (2.7.0)
     eventmachine (1.0.3)
@@ -322,6 +325,7 @@ DEPENDENCIES
   debugger
   debugger-xml
   descriptive_statistics
+  dotiw
   ejs
   factory_girl_rails (~> 4.0)
   foreigner

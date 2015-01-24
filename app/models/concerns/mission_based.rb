@@ -20,6 +20,7 @@ module MissionBased
       # scope to find objects with the given mission
       # mission can be nil
       scope(:for_mission, lambda{|m| where(:mission_id => m.try(:id))})
+      scope(:for_mission_id, lambda{|m| where(:mission_id => m)})
 
       # when a mission is deleted, pre-remove all records related to a mission
       def self.mission_pre_delete(mission)

@@ -82,7 +82,7 @@ class ResponsesController < ApplicationController
   def new
     # get the form specified in the params and error if it's not there
     begin
-      @response.form = Form.with_questionings.find(params[:form_id])
+      @response.form = Form.find(params[:form_id])
     rescue ActiveRecord::RecordNotFound
       return redirect_to(index_url_with_page_num)
     end

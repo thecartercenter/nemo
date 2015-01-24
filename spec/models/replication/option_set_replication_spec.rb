@@ -19,6 +19,15 @@ describe OptionSet do
       expect(@copy.is_standard).to eq false
       expect(@copy.total_options).to eq 6
 
+      # Ensure options are correct.
+      expect(@copy.c[0].option.name).to eq @orig.c[0].option.name
+      expect(@copy.c[0].c[0].option.name).to eq @orig.c[0].c[0].option.name
+
+      # Ensure ancestry is correct.
+      expect(@copy.root_node.parent).to be_nil
+      expect(@copy.c[0].parent).to eq @copy.root_node
+      expect(@copy.c[0].c[0].parent).to eq @copy.c[0]
+
       # Ensure option set gets correct root node id.
       expect(@copy.root_node_id).not_to be_nil
       expect(@copy.root_node_id).not_to eq @orig.root_node_id
@@ -39,8 +48,8 @@ describe OptionSet do
       end
 
       it 'should make new copy but reuse options' do
-        expect(@copy).not_to eq @copy2
-        expect(@copy.options).to eq @copy2.options
+        expect(@copy2).not_to eq @copy
+        expect(@copy2.options).to eq @copy.options
       end
     end
   end
@@ -48,18 +57,15 @@ describe OptionSet do
   describe 'promote with link' do
     before do
       @orig = create(:option_set, multi_level: true, mission: @mission1)
-      @copy = @orig.replicate(mode: :promote, retain_link_on_promote: true)
+      @copy = @orig.replicate(mode: :promote)
     end
 
     it 'should create a correct copy' do
       expect(@copy.mission).to be_nil
       expect(@copy.is_standard).to eq true
-      expect(@copy.standard).to be_nil
+      expect(@copy.original).to eq @orig
       expect(@copy.total_options).to eq 6
-    end
-
-    it 'should retain links' do
-      expect(@orig.reload.standard).to eq @copy
+      expect(@copy.options).not_to eq @orig.options
     end
   end
 
@@ -72,8 +78,9 @@ describe OptionSet do
     it 'should make correct copy' do
       expect(@copy.mission).to eq @mission1
       expect(@copy.is_standard).to eq false
-      expect(@copy.standard).to be_nil
+      expect(@copy.original).to eq @orig
       expect(@copy.total_options).to eq 6
+      expect(@copy.options).to eq @orig.options
     end
   end
 end

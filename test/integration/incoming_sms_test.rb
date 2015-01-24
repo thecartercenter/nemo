@@ -136,6 +136,15 @@ class IncomingSmsTest < ActionDispatch::IntegrationTest
   end
 
   private
+
+    # helper that sets up a new form with the given parameters
+    def setup_form(options)
+      @form = FactoryGirl.create(:form, :smsable => true, :question_types => options[:questions])
+      @form.questionings.each{ |q| q.update_attribute(:required, true) } if options[:required]
+      @form.publish!
+      @form.reload
+    end
+
     # simulates the reception of an incoming sms by the SmsController and tests the response(s) that is (are) sent back
     def assert_sms_response(params)
       params[:from] ||= @user.phone
@@ -159,10 +168,10 @@ class IncomingSmsTest < ActionDispatch::IntegrationTest
       if sms.nil?
         assert_nil(params[:outgoing][:body])
       else
+        assert_instance_of(Sms::Reply, sms)
         # Ensure attribs are appropriate
-        assert_equal(params[:from], sms.to.first)
+        assert_equal(params[:from], sms.to)
         assert_match(params[:outgoing][:body], sms.body)
-        assert_equal('outgoing', sms.direction)
         assert_equal(params[:mission], sms.mission)
         assert_no_match(/%\{|translation missing/, sms.body)
         assert_equal(params[:outgoing][:adapter], sms.adapter_name) if params[:outgoing][:adapter]

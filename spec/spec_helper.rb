@@ -8,6 +8,11 @@ require 'capybara/rspec'
 require 'capybara/rails'
 require 'capybara/poltergeist'
 
+Capybara.register_driver :poltergeist do |app|
+  Capybara::Poltergeist::Driver.new(app,
+    extensions: [File.expand_path("../support/phantomjs_ext/geolocation.js", __FILE__)])
+end
+
 Capybara.javascript_driver = :poltergeist
 
 # Requires supporting ruby files with custom matchers and macros, etc,

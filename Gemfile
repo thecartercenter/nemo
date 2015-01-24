@@ -24,6 +24,7 @@ gem 'jquery-rails'
 gem 'random_data'
 gem 'versionist'                 # versioning the api
 gem 'active_model_serializers'   # for making it easy to customize output for api
+gem 'dotiw'
 
 gem 'iso-639'
 

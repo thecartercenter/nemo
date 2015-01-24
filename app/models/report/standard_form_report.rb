@@ -73,23 +73,11 @@ class Report::StandardFormReport < Report::Report
     # pre-calculate response count, accounting for user ability
     @response_count = form.responses.accessible_by(current_ability).count
 
-    # eager load form
-    f = Form.includes({:questionings => [
-      # eager load qing conditions
-      {:condition => :ref_qing},
-
-      # eager load referring conditions and their questionings
-      {:referring_conditions => :questioning},
-
-      # eager load questions and their option sets
-      {:question => :option_set}
-    ]}).find(form_id)
-
     # determine if we should restrict the responses to a single user, or allow all
     restrict_to_user = current_ability.user.role(form.mission) == 'observer' ? current_ability.user : nil
 
     # generate summary collection (sets of disaggregated summaries)
-    @summary_collection = Report::SummaryCollectionBuilder.new(questionings_to_include(f), disagg_qing,
+    @summary_collection = Report::SummaryCollectionBuilder.new(questionings_to_include(form), disagg_qing,
       restrict_to_user: restrict_to_user).build
 
     # now tell each subset to group summaries by tag
