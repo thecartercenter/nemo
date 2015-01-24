@@ -104,7 +104,6 @@ class Report::StandardFormReport < Report::Report
   # returns the list of questionings to include in this report
   # takes an optional form argument to allow eager loaded form
   def questionings_to_include(form = nil)
-    pp (form || self.form).questionings
     @questionings_to_include ||= (form || self.form).questionings.reject do |qing|
       qing.hidden? ||
       Report::StandardFormReport::EXCLUDED_TYPES[qing.qtype.name] ||

@@ -14,6 +14,7 @@ class OptionNode < ActiveRecord::Base
   belongs_to :option, autosave: true
   has_ancestry cache_depth: true
 
+  before_validation { self.ancestry = nil if self.ancestry.blank? }
   before_destroy :ensure_no_answers_or_choices
   after_save :update_children
 

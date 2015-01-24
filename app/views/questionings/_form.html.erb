@@ -1,8 +1,7 @@
 <%= elmo_form_for(@questioning) do |f| %>
 
   <%= f.field(:form_id, :type => :hidden) %>
-  <%= hidden_field_tag('ancestry', @form.root_id) %>
-  
+
   <%= elmo_fields_for('questioning[question_attributes]', @questioning.question) do |qf| %>
     <%= qf.hidden_field(:id) %>
     <%= render('questions/fields', :f => qf) %>
