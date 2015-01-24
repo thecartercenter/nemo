@@ -63,8 +63,7 @@ class Report::StandardFormReportTest < ActiveSupport::TestCase
     build_form_and_responses
 
     # make one question invisible
-    @form.questionings[1].hidden = true
-    @form.save!
+    @form.questionings[1].update_attributes!(hidden: true)
 
     build_and_run_report
 

@@ -42,9 +42,9 @@ class MissionLockedTest < ActiveSupport::TestCase
   end
 
   test "coordinator shouldnt be able to create update or destroy core classes for a locked mission" do
-    [:option_set, :form, :question, :questioning, :option].each do |klass|
-      locked_obj = FactoryGirl.build(klass, :mission => @locked)
-      normal_obj = FactoryGirl.build(klass, :mission => get_mission)
+    [:option_set, :form, :question, :option].each do |klass|
+      locked_obj = FactoryGirl.create(klass, :mission => @locked)
+      normal_obj = FactoryGirl.create(klass, :mission => get_mission)
       [:create, :update, :destroy].each do |perm|
         assert_equal(false, coord_locked_ability.can?(perm, locked_obj), "shouldn't be able to #{perm} #{klass}")
         assert_equal(true, coord_unlocked_ability.can?(perm, normal_obj), "should be able to #{perm} #{klass}")
@@ -54,7 +54,7 @@ class MissionLockedTest < ActiveSupport::TestCase
 
   test "coordinator should be able to index read and export core classes for a locked mission" do
     [:form, :question, :option_set].each do |klass|
-      obj = FactoryGirl.build(klass, :mission => @locked)
+      obj = FactoryGirl.create(klass, :mission => @locked)
       [:index, :read, :export].each do |perm|
         assert_equal(true, coord_locked_ability.can?(perm, obj), "should be able to #{perm} #{klass}")
       end

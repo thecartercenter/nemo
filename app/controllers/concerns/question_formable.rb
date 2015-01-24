@@ -4,6 +4,8 @@ module QuestionFormable
 
   # initializes a questioning object with the given parameters. also adds a new question object.
   def init_qing(params = {})
+    params[:ancestry] ||= Form.find(params[:form_id]).root_id
+
     # create a new questioning
     @questioning = Questioning.accessible_by(current_ability).new(params)
     @questioning.build_question if @questioning.question.nil?

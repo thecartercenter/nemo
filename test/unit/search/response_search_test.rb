@@ -27,12 +27,12 @@ class Search::ResponseSearchTest < ActiveSupport::TestCase
         setup_basic_form
 
         # add long text and short text question
-        @form.questions << FactoryGirl.create(:question, :qtype_name => 'long_text', :code => 'mauve')
-        @form.questions << FactoryGirl.create(:question, :qtype_name => 'text')
+        FactoryGirl.create(:question, :qtype_name => 'long_text', :code => 'mauve', :add_to_form => @form)
+        FactoryGirl.create(:question, :qtype_name => 'text', :add_to_form => @form)
 
         # add two long text questions with explicit codes
-        @form.questions << FactoryGirl.create(:question, :qtype_name => 'long_text', :code => 'blue')
-        @form.questions << FactoryGirl.create(:question, :qtype_name => 'long_text', :code => 'Green')
+        FactoryGirl.create(:question, :qtype_name => 'long_text', :code => 'blue', :add_to_form => @form)
+        FactoryGirl.create(:question, :qtype_name => 'long_text', :code => 'Green', :add_to_form => @form)
 
         # add some responses
         r1 = FactoryGirl.create(:response, :form => @form, :reviewed => false,

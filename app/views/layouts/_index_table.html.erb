@@ -3,10 +3,8 @@
 <div id="index_table">
 
   <%# header links %>
-  <% unless options[:table_only] %>
+  <% if !options[:table_only] %>
     <div class="header link_set">
-      <%= page_entries_info(objects, :model => klass) %>.
-      &nbsp;
       <%= links %>
     </div>
   <% end %>

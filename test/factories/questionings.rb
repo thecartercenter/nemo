@@ -2,6 +2,8 @@ FactoryGirl.define do
   factory :questioning do
     question
     form
-    mission {get_mission}
+    parent { form.root_group }
+    type "Questioning"
+    mission { form.mission }
   end
 end

@@ -1,10 +1,8 @@
 class Form < ActiveRecord::Base
-  include MissionBased, FormVersionable, Standardizable, Replicable
+  include MissionBased, FormVersionable, Replication::Standardizable, Replication::Replicable
 
   API_ACCESS_LEVELS = %w(private protected public)
 
-  has_many(:questions, :through => :questionings, :order => "questionings.rank")
-  has_many(:questionings, :order => "rank", :autosave => true, :dependent => :destroy, :inverse_of => :form)
   has_many(:responses, :inverse_of => :form)
   has_many(:versions, :class_name => "FormVersion", :inverse_of => :form, :dependent => :destroy)
   has_many(:whitelist_users, :as => :whitelistable, class_name: "Whitelist")
@@ -12,9 +10,11 @@ class Form < ActiveRecord::Base
 
   # while a form has many versions, this is a reference to the most up-to-date one
   belongs_to(:current_version, :class_name => "FormVersion")
+  belongs_to :root_group, autosave: true, class_name: "QingGroup", dependent: :destroy, foreign_key: :root_id
 
   before_validation(:normalize_fields)
   before_save(:update_pub_changed_at)
+  before_destroy { root_group.destroy }
 
   validates(:name, :presence => true, :length => {:maximum => 32})
   validate(:name_unique_per_mission)
@@ -22,39 +22,37 @@ class Form < ActiveRecord::Base
   before_create(:init_downloads)
 
   scope(:published, where(:published => true))
-  scope(:with_questionings, includes(
-    :questionings => [
-      :form,
-      {:question => :option_set},
-      {:condition => :ref_qing}
-    ]
-  ).order("questionings.rank"))
 
   # this scope adds a count of the questionings on this form and
   # the number of copies of this form, and of those that are published
   # if the form is not a standard, these will just be zero
   scope(:with_questioning_and_copy_counts, select(%{
       forms.*,
-      COUNT(DISTINCT questionings.id) AS questionings_count_col,
+      COUNT(DISTINCT form_items.id) AS questionings_count_col,
       COUNT(DISTINCT copies.id) AS copy_count_col,
       SUM(copies.published) AS published_copy_count_col,
       SUM(copies.responses_count) AS copy_responses_count_col
     })
     .joins(%{
-      LEFT OUTER JOIN questionings ON forms.id = questionings.form_id
-      LEFT OUTER JOIN forms copies ON forms.id = copies.standard_id
+      LEFT OUTER JOIN form_items ON forms.id = form_items.form_id AND form_items.type = 'Questioning'
+      LEFT OUTER JOIN forms copies ON forms.id = copies.original_id AND copies.standard_copy = 1
     })
     .group("forms.id"))
 
   scope(:by_name, order('forms.name'))
   scope(:default_order, by_name)
 
-  replicable :child_assocs => :questionings, :uniqueness => {:field => :name, :style => :sep_words},
-    :dont_copy => [:published, :downloads, :responses_count, :questionings_count, :upgrade_needed,
-      :smsable, :current_version_id, :allow_incomplete, :access_level]
+  delegate :children,
+           :c,
+           :descendants,
+           to: :root_group
+
+  replicable child_assocs: :root_group, uniqueness: {field: :name, style: :sep_words},
+    dont_copy: [:published, :pub_changed_at, :downloads, :responses_count, :upgrade_needed,
+      :smsable, :current_version_id, :allow_incomplete, :access_level, :root_id]
 
 
-  # remove heirarch of objects
+  # remove heirarchy of objects
   def self.terminate_sub_relationships(form_ids)
     FormVersion.where(form_id: form_ids).delete_all
     Questioning.where(form_id: form_ids).delete_all
@@ -69,6 +67,27 @@ class Form < ActiveRecord::Base
       'no-pubd-forms'
     end
     "odk-form-list/mission-#{options[:mission].id}/#{max_pub_changed_at}"
+  end
+
+  # Returns all descendant questionings in one flat array, sorted in traversal order.
+  def questionings(reload = false)
+    root_group.sorted_leaves.flatten
+  end
+
+  def questions(reload = false)
+    questionings(reload).map(&:question)
+  end
+
+  def add_questions_to_top_level(questions)
+    max = max_rank
+    questions.each_with_index do |q, i|
+      Questioning.create!(mission: mission, form: self, question: q, parent: root_group, rank: max + i + 1)
+    end
+  end
+
+  def root_questionings(reload = false)
+    # Not memoizing this because it causes all sorts of problems.
+    root_group ? root_group.children.order(:rank).reject{ |q| q.is_a?(QingGroup) } : []
   end
 
   def odk_download_cache_key
@@ -92,7 +111,7 @@ class Form < ActiveRecord::Base
   end
 
   def has_questions?
-    questionings.any?
+    root_questionings.any?
   end
 
   def full_name
@@ -145,7 +164,6 @@ class Form < ActiveRecord::Base
   end
 
   def option_sets
-    # going through the questionings model as that's the one that is eager-loaded in .with_questionings
     questionings.map(&:question).map(&:option_set).compact.uniq
   end
 
@@ -173,7 +191,7 @@ class Form < ActiveRecord::Base
   end
 
   def max_rank
-    questionings.map{|qing| qing.rank || 0}.max || 0
+    root_group.children.order(:rank).last.try(:rank) || 0
   end
 
   # Whether this form needs an accompanying manifest for odk.
@@ -182,28 +200,20 @@ class Form < ActiveRecord::Base
     @needs_odk_manifest ||= option_sets.any?(&:multi_level?)
   end
 
-  # takes a hash of the form {questioning_id => new_rank, ...}
+  # Takes a hash of the form {questioning_id => new_rank, ...}
+  # Assumes all questionings are listed in the hash.
   def update_ranks(new_ranks)
-    # Convert everything to integers
-    new_ranks = Hash[*new_ranks.to_a.flatten.map(&:to_i)]
+    # Sort and ensure sequential.
+    sorted = new_ranks.to_a.sort_by{ |id,rank| rank }.each_with_index.map{|pair, idx| [pair[0], idx+1]}
+    new_ranks = Hash[*sorted.flatten]
 
-    # set but don't save the new orderings
-    questionings.each_index do |i|
-      if new_ranks[questionings[i].id]
-        questionings[i].rank = new_ranks[questionings[i].id]
-      end
+    # Validate the condition orderings (raises an error if they're invalid).
+    root_questionings.each{|qing| qing.condition_verify_ordering(new_ranks)}
+
+    # Assign.
+    new_ranks.each do |id, rank|
+      Questioning.find(id).update_attribute(:rank, rank)
     end
-
-    # ensure the ranks are sequential
-    fix_ranks(:reload => false, :save => false)
-
-    # Update the new_ranks hash as the ranks may have changed in fix_ranks.
-    new_ranks = Hash[*questionings.map{ |q| [q.id, q.rank] }.flatten]
-
-    # Validate the condition orderings (raises an error if they're invalid)
-    # We pass the new_ranks hash since the new ranks are not
-    # yet saved to the database and Condition won't know about them.
-    questionings.each{|qing| qing.condition_verify_ordering(new_ranks)}
   end
 
   def destroy_questionings(qings)
@@ -217,11 +227,10 @@ class Form < ActiveRecord::Base
         raise DeletionError.new('question_remove_answer_error') if qing_answer_count(qing) > 0
 
         qing.destroy
-        questionings.delete(qing)
       end
 
       # fix the ranks
-      fix_ranks(:reload => false, :save => true)
+      fix_ranks(:reload => true, :save => true)
 
       save
     end
@@ -296,21 +305,21 @@ class Form < ActiveRecord::Base
     return 0 if is_standard?
 
     @answer_counts ||= Questioning.find_by_sql([%{
-      SELECT questionings.id, COUNT(DISTINCT answers.id) AS answer_count
-      FROM questionings LEFT OUTER JOIN answers ON answers.questioning_id = questionings.id
-      WHERE questionings.form_id = ?
-      GROUP BY questionings.id
+      SELECT form_items.id, COUNT(DISTINCT answers.id) AS answer_count
+      FROM form_items LEFT OUTER JOIN answers ON answers.questioning_id = form_items.id AND form_items.type = 'Questioning'
+      WHERE form_items.form_id = ?
+      GROUP BY form_items.id
     }, id]).index_by(&:id)
 
     # get the desired count
     @answer_counts[qing.id].try(:answer_count) || 0
   end
 
-  # ensures question ranks are sequential
+  # ensures question ranks are sequential]
   def fix_ranks(options = {})
     options[:reload] = true if options[:reload].nil?
     options[:save] = true if options[:save].nil?
-    questionings(options[:reload]).sort_by{|qing| qing.rank}.each_with_index{|qing, idx| qing.rank = idx + 1}
+    root_questionings(options[:reload]).sort_by(&:rank).each_with_index{|qing, idx| qing.update_attribute(:rank, idx + 1)}
     save(:validate => false) if options[:save]
   end
 
@@ -337,5 +346,4 @@ class Form < ActiveRecord::Base
       self.pub_changed_at = Time.now if published_changed?
       return true
     end
-
 end

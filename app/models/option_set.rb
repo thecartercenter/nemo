@@ -4,7 +4,7 @@ class OptionSet < ActiveRecord::Base
   # It is up here because it should happen early, e.g., before form version callbacks.
   after_save :save_root_node
 
-  include MissionBased, FormVersionable, Standardizable, Replicable
+  include MissionBased, FormVersionable, Replication::Standardizable, Replication::Replicable
 
   # This need to be up here or they will run too late.
   before_destroy :check_associations
@@ -39,19 +39,20 @@ class OptionSet < ActiveRecord::Base
     }).
     joins(%{
       LEFT OUTER JOIN questions ON questions.option_set_id = option_sets.id
-      LEFT OUTER JOIN questionings ON questionings.question_id = questions.id
+      LEFT OUTER JOIN form_items questionings ON questionings.question_id = questions.id AND questionings.type = 'Questioning'
       LEFT OUTER JOIN forms ON forms.id = questionings.form_id
       LEFT OUTER JOIN answers ON answers.questioning_id = questionings.id
-      LEFT OUTER JOIN option_sets copies ON option_sets.is_standard = 1 AND copies.standard_id = option_sets.id
+      LEFT OUTER JOIN option_sets copies ON option_sets.is_standard = 1 AND copies.original_id = option_sets.id
       LEFT OUTER JOIN questions copy_questions ON copy_questions.option_set_id = copies.id
-      LEFT OUTER JOIN questionings copy_questionings ON copy_questionings.question_id = copy_questions.id
+      LEFT OUTER JOIN form_items copy_questionings ON copy_questionings.question_id = copy_questions.id AND questionings.type = 'Questioning'
       LEFT OUTER JOIN forms copy_forms ON copy_forms.id = copy_questionings.form_id
       LEFT OUTER JOIN answers copy_answers ON copy_answers.questioning_id = copy_questionings.id
     }).group('option_sets.id')}
 
   # replication options
-  replicable :child_assocs => :root_node, :parent_assoc => :question, :uniqueness => {:field => :name, :style => :sep_words},
-    :after_dest_obj_save => :link_copy_nodes_to_copy_self
+  replicable child_assocs: :root_node, backwards_assocs: :questions,
+    uniqueness: {field: :name, style: :sep_words},
+    dont_copy: :root_node_id
 
   serialize :level_names, JSON
 
@@ -286,13 +287,6 @@ class OptionSet < ActiveRecord::Base
       if root_node
         root_node.option_set = self
         root_node.save!
-      end
-    end
-
-    def link_copy_nodes_to_copy_self(replication)
-      replication.dest_obj.descendants.each do |node|
-        node.option_set = replication.dest_obj
-        node.save!
       end
     end
 end

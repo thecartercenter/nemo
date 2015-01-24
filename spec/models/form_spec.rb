@@ -24,7 +24,7 @@ describe Form do
     before do
       # Create form with condition (#3 referring to #2)
       @form = create(:form, question_types: %w(integer select_one integer))
-      @qings = @form.questionings
+      @qings = @form.root_questionings
       @qings[2].create_condition(ref_qing: @qings[1], op: 'eq', option: @qings[1].options[0])
 
       # Move question #1 down to position #3 (old #2 and #3 shift up one).
@@ -119,6 +119,32 @@ describe Form do
       it 'should be correct' do
         expect(Form.odk_index_cache_key(mission: @mission2)).to eq "odk-form-list/mission-#{@mission2.id}/no-pubd-forms"
       end
+    end
+  end
+
+  context 'root_group' do
+    before do
+      @mission = create(:mission)
+    end
+
+    it 'has a root group when created from factory' do
+      form = create(:form, mission: @mission, question_types: ['integer', ['text', 'text'], 'text'])
+      expect(form.root_group).to_not be_nil
+    end
+  end
+
+  context 'ancestry' do
+    before do
+      @mission = create(:mission)
+      @form = create(:form, mission: @mission, question_types: ['integer', ['text', 'text'], 'text'])
+    end
+
+    it 'has 3 children' do
+      expect(@form.root_group.children.count).to eq 3
+    end
+
+    it 'has one subgroup with two children' do
+      expect(@form.root_group.children[1].children.count).to eq 2
     end
   end
 
