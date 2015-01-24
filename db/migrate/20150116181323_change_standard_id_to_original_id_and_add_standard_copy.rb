@@ -13,8 +13,12 @@ class ChangeStandardIdToOriginalIdAndAddStandardCopy < ActiveRecord::Migration
         remove_column table, :original_id
       end
 
+      remove_foreign_key table, :standard
+
       # Now we can rename.
       rename_column table, :standard_id, :original_id
+
+      add_foreign_key table, table, column: :original_id
     end
   end
 
