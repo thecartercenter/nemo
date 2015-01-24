@@ -115,6 +115,8 @@ class FormsController < ApplicationController
   def create
     @form.is_standard = true if current_mode == 'admin'
     if @form.save
+      @form.create_root_group!(mission: @form.mission, form: @form, rank: 1)
+      @form.save!
       set_success_and_redirect(@form, :to => edit_form_path(@form))
     else
       flash.now[:error] = I18n.t('activerecord.errors.models.form.general')
@@ -124,27 +126,29 @@ class FormsController < ApplicationController
 
   def update
     begin
-      update_api_users
-      # save basic attribs
-      @form.assign_attributes(params[:form])
+      Form.transaction do
+        update_api_users
+        # save basic attribs
+        @form.assign_attributes(params[:form])
 
-      # check special permissions
-      authorize!(:rename, @form) if @form.name_changed?
+        # check special permissions
+        authorize!(:rename, @form) if @form.name_changed?
 
-      # update ranks if provided (possibly raising condition ordering error)
-      @form.update_ranks(params[:rank]) if params[:rank] && can?(:reorder_questions, @form)
+        # update ranks if provided (possibly raising condition ordering error)
+        # We convert IDs and ranks to integer before passing.
+        @form.update_ranks(Hash[*params[:rank].to_a.flatten.map(&:to_i)]) if params[:rank] && can?(:reorder_questions, @form)
 
-      # save everything
-      @form.save!
+        # save everything
+        @form.save!
 
-      # publish if requested
-      if params[:save_and_publish].present?
-        @form.publish!
-        set_success_and_redirect(@form, :to => forms_path)
-      else
-        set_success_and_redirect(@form, :to => edit_form_path(@form))
+        # publish if requested
+        if params[:save_and_publish].present?
+          @form.publish!
+          set_success_and_redirect(@form, :to => forms_path)
+        else
+          set_success_and_redirect(@form, :to => edit_form_path(@form))
+        end
       end
-
     # handle problem with conditions
     rescue ConditionOrderingError
       flash.now[:error] = I18n.t('activerecord.errors.models.form.ranks_break_conditions')
@@ -197,7 +201,7 @@ class FormsController < ApplicationController
     raise "no valid questions given" if questions.empty?
 
     # add questions to form and try to save
-    @form.questions += questions
+    @form.add_questions_to_top_level(questions)
     if @form.save
       flash[:success] = t("form.questions_add_success")
     else

@@ -78,9 +78,16 @@ class Form < ActiveRecord::Base
     questionings(reload).map(&:question)
   end
 
+  def add_questions_to_top_level(questions)
+    max = max_rank
+    questions.each_with_index do |q, i|
+      Questioning.create!(mission: mission, form: self, question: q, parent: root_group, rank: max + i + 1)
+    end
+  end
+
   def root_questionings(reload = false)
     # Not memoizing this because it causes all sorts of problems.
-    root_group.children.order(:rank)
+    root_group ? root_group.children.order(:rank).reject{ |q| q.is_a?(QingGroup) } : []
   end
 
   def odk_download_cache_key
@@ -184,7 +191,7 @@ class Form < ActiveRecord::Base
   end
 
   def max_rank
-    questionings.map{|qing| qing.rank || 0}.max || 0
+    root_group.children.order(:rank).last.try(:rank) || 0
   end
 
   # Whether this form needs an accompanying manifest for odk.
@@ -193,27 +200,20 @@ class Form < ActiveRecord::Base
     @needs_odk_manifest ||= option_sets.any?(&:multi_level?)
   end
 
-  # takes a hash of the form {questioning_id => new_rank, ...}
+  # Takes a hash of the form {questioning_id => new_rank, ...}
+  # Assumes all questionings are listed in the hash.
   def update_ranks(new_ranks)
-    # Convert everything to integers
-    new_ranks = Hash[*new_ranks.to_a.flatten.map(&:to_i)]
-    # set but don't save the new orderings
-    root_questionings.each_index do |i|
-      if new_ranks[root_questionings[i].id]
-        root_questionings[i].update_attribute(:rank, new_ranks[root_questionings[i].id])
-      end
-    end
+    # Sort and ensure sequential.
+    sorted = new_ranks.to_a.sort_by{ |id,rank| rank }.each_with_index.map{|pair, idx| [pair[0], idx+1]}
+    new_ranks = Hash[*sorted.flatten]
 
-    # ensure the ranks are sequential
-    fix_ranks(:reload => false, :save => false)
-
-    # Update the new_ranks hash as the ranks may have changed in fix_ranks.
-    new_ranks = Hash[*root_questionings.map{ |q| [q.id, q.rank] }.flatten]
-
-    # Validate the condition orderings (raises an error if they're invalid)
-    # We pass the new_ranks hash since the new ranks are not
-    # yet saved to the database and Condition won't know about them.
+    # Validate the condition orderings (raises an error if they're invalid).
     root_questionings.each{|qing| qing.condition_verify_ordering(new_ranks)}
+
+    # Assign.
+    new_ranks.each do |id, rank|
+      Questioning.find(id).update_attribute(:rank, rank)
+    end
   end
 
   def destroy_questionings(qings)

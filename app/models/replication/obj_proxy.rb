@@ -138,7 +138,7 @@ class Replication::ObjProxy
       return [] unless uniq_spec = klass.replicable_opts[:uniqueness]
       generator = Replication::UniqueFieldGenerator.new(
         uniq_spec.merge(klass: klass, orig_id: id, mission_id: replicator.target_mission_id))
-      [[uniq_spec[:field], "'#{generator.generate}'"]]
+      [[uniq_spec[:field], ActiveRecord::Base.connection.quote(generator.generate)]]
     end
 
     def standardizable_col_mappings(replicator, context)
