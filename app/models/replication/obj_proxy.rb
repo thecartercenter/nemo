@@ -31,7 +31,7 @@ class Replication::ObjProxy
       fk_id ? [self.class.new(id: fk_id, klass: assoc.target_class, replicator: replicator)] : []
     elsif assoc.ancestry?
       child_ancestry = [ancestry, id].compact.join('/')
-      build_from_sql("ancestry = '#{child_ancestry}'", target_klass: assoc.target_class)
+      build_from_sql("ancestry = '#{child_ancestry}'", target_klass: assoc.target_class, order: 'ORDER BY rank')
     else # has_one or has_many
       build_from_sql("#{assoc.foreign_key} = #{id}", target_klass: assoc.target_class)
     end
@@ -98,6 +98,7 @@ class Replication::ObjProxy
 
     # Given an SQL condition, builds a set of Objs with data resulting from that condition.
     # options[:target_klass] - The class of the new Objs. Defaults to self.klass.
+    # options[:order] - An option ORDER BY clause.
     def build_from_sql(condition, options = {})
       options[:target_klass] ||= klass
       get_target_class_from_type_col = options[:target_klass].column_names.include?('type')
@@ -105,7 +106,7 @@ class Replication::ObjProxy
       cols = [:id]
       cols << :ancestry if options[:target_klass].has_ancestry?
       cols << :type if get_target_class_from_type_col
-      data = db.select_all("SELECT #{cols.join(',')} FROM #{options[:target_klass].table_name} WHERE #{condition}")
+      data = db.select_all("SELECT #{cols.join(',')} FROM #{options[:target_klass].table_name} WHERE #{condition} #{options[:order]}")
 
       data.map do |attribs|
         tc = get_target_class_from_type_col ? attribs.delete('type').constantize : options[:target_klass]
@@ -160,25 +161,42 @@ class Replication::ObjProxy
     def backward_assoc_col_mappings(replicator, context)
       klass.backward_assocs.map do |assoc|
         if assoc.serialized?
-          [assoc.foreign_key, serialized_backward_assoc_ids(replicator.history, assoc)]
+          [assoc.foreign_key, serialized_backward_assoc_ids(assoc)]
         else
-          [assoc.foreign_key, singular_backward_assoc_id(replicator.history, assoc)]
+          [assoc.foreign_key, singular_backward_assoc_id(assoc)]
         end
       end
     end
 
-    def singular_backward_assoc_id(history, assoc)
+    def singular_backward_assoc_id(assoc)
       orig_foreign_id = klass.where(id: id).pluck(assoc.foreign_key).first
-      history.get_copy(assoc.target_class, orig_foreign_id).id
+      #copy = history.get_copy(assoc.target_class, orig_foreign_id)
+      copy_id = get_copy_id(assoc.target_class, orig_foreign_id)
+      raise "Couldn't find copy of #{assoc.target_class.name} ##{orig_foreign_id}" unless copy_id
+      copy_id
     end
 
-    def serialized_backward_assoc_ids(history, assoc)
+    def serialized_backward_assoc_ids(assoc)
       orig_foreign_ids = klass.where(id: id).pluck(assoc.foreign_key).first
       return nil if orig_foreign_ids.nil?
       copy_ids = orig_foreign_ids.map do |orig_id|
-        history.get_copy(assoc.target_class, orig_id).id
+        copy_id = get_copy_id(assoc.target_class, orig_id)
+        #copy = history.get_copy(assoc.target_class, orig_id)
+        raise "Couldn't find copy of #{assoc.target_class.name} ##{orig_id}" unless copy_id
+        copy_id
       end
       "'#{copy_ids.to_json}'"
+    end
+
+    def get_copy_id(target_class, orig_id)
+      if target_class.standardizable?
+        target_class.where(mission_id: replicator.dest_mission.id, original_id: orig_id).pluck(:id).first
+      elsif reuse_col = target_class.replicable_opts[:reuse_if_match]
+        orig_reuse_val = target_class.where(id: orig_id).pluck(reuse_col).first
+        target_class.where(mission_id: replicator.dest_mission.id, reuse_col => orig_reuse_val).pluck(:id).first
+      else
+        replicator.history.get_copy(target_class, orig_id).try(:id)
+      end
     end
 
     def do_insert(mappings)
