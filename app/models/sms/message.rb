@@ -28,6 +28,25 @@ class Sms::Message < ActiveRecord::Base
     phone.blank? ? nil : (is_shortcode?(phone) ? phone : ("+" + phone.gsub(/[^\d]/, "")))
   end
 
+  def self.search_qualifiers
+    [
+      Search::Qualifier.new(name: "body", col: "sms_messages.body", type: :text, default: true),
+    ]
+  end
+
+  # searches for sms messages
+  # based on User.do_search
+  def self.do_search(relation, query)
+    # create a search object and generate qualifiers
+    search = Search::Search.new(str: query, qualifiers: search_qualifiers)
+
+    # apply the needed associations
+    relation = relation.joins(search.associations)
+
+    # apply the conditions
+    relation = relation.where(search.sql)
+  end
+
   def received_at
     type == "Sms::Incoming" ? created_at : nil
   end
