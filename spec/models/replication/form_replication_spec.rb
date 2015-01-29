@@ -29,6 +29,21 @@ describe Form do
       end
     end
 
+    context 'with an existing copy of form in mission' do
+      before do
+        @std = create(:form, question_types: %w(select_one integer), is_standard: true)
+        @copy1 = @std.replicate(mode: :to_mission, dest_mission: get_mission)
+        @copy2 = @std.replicate(mode: :to_mission, dest_mission: get_mission)
+      end
+
+      it 'should create a second copy but re-use questions, option sets' do
+        expect(@copy1).not_to eq @copy2
+        expect(@copy1.c[0]).not_to eq @copy2.c[0]
+        expect(@copy1.c[0].question).to eq @copy2.c[0].question
+        expect(@copy1.c[0].question.option_set).to eq @copy2.c[0].question.option_set
+      end
+    end
+
     context 'with a condition referencing an option' do
       context 'from a multilevel set' do
         before(:all) do
@@ -61,18 +76,39 @@ describe Form do
       end
     end
 
-    context 'with an existing copy of form in mission' do
-      before do
+    context 'with a condition referencing a now-incompatible question' do
+      before(:all) do
         @std = create(:form, question_types: %w(select_one integer), is_standard: true)
-        @copy1 = @std.replicate(mode: :to_mission, dest_mission: get_mission)
-        @copy2 = @std.replicate(mode: :to_mission, dest_mission: get_mission)
+
+        # Create condition.
+        @std.c[1].condition = build(:condition, ref_qing: @std.c[0], op: 'eq',
+          option_ids: [@std.c[0].question.option_set.c[1].option_id])
+        @std.c[1].condition.save!
+
+        # Replicate question first and render the copy incompatible.
+        @orig_q1 = @std.c[0].question
+        @copy_q1 = @orig_q1.replicate(mode: :to_mission, dest_mission: @mission1)
+        @copy_q1.option_set = create(:option_set, mission: @mission1)
+        @copy_q1.save!
+
+        # Replicate form.
+        @copy = @std.replicate(mode: :to_mission, dest_mission: get_mission)
+        @copy_q1.reload
       end
 
-      it 'should create a second copy but re-use questions, option sets' do
-        expect(@copy1).not_to eq @copy2
-        expect(@copy1.c[0]).not_to eq @copy2.c[0]
-        expect(@copy1.c[0].question).to eq @copy2.c[0].question
-        expect(@copy1.c[0].question.option_set).to eq @copy2.c[0].question.option_set
+      it 'should make a new copy of the question and link properly' do
+        # Link should get erased when becoming incompatible.
+        expect(@copy_q1.original_id).to be_nil
+        expect(@copy_q1.standard_copy?).to be false
+
+        # New question copy should have been created.
+        expect(@copy.c[0].question).not_to eq @copy_q1
+        expect(@copy.c[0].question.original).to eq @std.c[0].question
+        expect(@copy.c[0].question.standard_copy?).to be true
+
+        # Condition should point to newer question copy.
+        expect(@copy.c[1].condition.ref_qing).to eq @copy.c[0]
+        expect(@copy.c[1].condition.options).not_to be_empty
       end
     end
   end

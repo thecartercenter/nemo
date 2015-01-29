@@ -77,7 +77,8 @@ class Question < ActiveRecord::Base
            :to => :option_set, :allow_nil => true
 
   replicable child_assocs: :option_set, backwards_assocs: :questioning, sync: :code,
-    uniqueness: {field: :code, style: :camel_case}, dont_copy: [:key, :access_level, :option_set_id]
+    uniqueness: {field: :code, style: :camel_case}, dont_copy: [:key, :access_level, :option_set_id],
+    compatibility: [:qtype_name, :option_set_id]
 
   # returns questions that do NOT already appear in the given form
   def self.not_in_form(form)
