@@ -54,24 +54,43 @@ describe Form do
             ref_qing: @std.c[0], op: 'eq',
             option_ids: [@std.questions[0].option_set.c[1].option_id, @std.questions[0].option_set.c[1].c[0].option_id])
           @std.c[1].condition.save!
-
-          @copy = @std.replicate(mode: :to_mission, dest_mission: get_mission)
-          @copy_cond = @copy.c[1].condition
-          @copy_opt_set = @copy.c[0].option_set
         end
 
-        it 'should produce distinct child objects' do
-          expect(@std.c[1]).not_to eq @copy.c[1]
-          expect(@std.c[1].condition).not_to eq @copy_cond
-          expect(@std.c[0].options[0]).not_to eq @copy_opt_set.options[0]
+        context 'if all goes well' do
+          before(:all) do
+            @copy = @std.replicate(mode: :to_mission, dest_mission: get_mission)
+            @copy_cond = @copy.c[1].condition
+            @copy_opt_set = @copy.c[0].option_set
+          end
+
+          it 'should produce distinct child objects' do
+            expect(@std.c[1]).not_to eq @copy.c[1]
+            expect(@std.c[1].condition).not_to eq @copy_cond
+            expect(@std.c[0].options[0]).not_to eq @copy_opt_set.options[0]
+          end
+
+          it 'should produce correct condition-qing link' do
+            expect(@copy_cond.ref_qing).to eq @copy.c[0]
+          end
+
+          it 'should produce correct new option references' do
+            expect(@copy_cond.option_ids).to eq([@copy_opt_set.c[1].option_id, @copy_opt_set.c[1].c[0].option_id])
+          end
         end
 
-        it 'should produce correct condition-qing link' do
-          expect(@copy_cond.ref_qing).to eq @copy.c[0]
-        end
+        context 'if option is not found' do
+          before(:all) do
+            # First replicate the option set and destroy the option.
+            @copy_os = @std.c[0].option_set.replicate(mode: :to_mission, dest_mission: get_mission)
+            @copy_os.c[1].c[0].option.destroy
 
-        it 'should produce correct new option references' do
-          expect(@copy_cond.option_ids).to eq([@copy_opt_set.c[1].option_id, @copy_opt_set.c[1].c[0].option_id])
+            # Now replicate the form.
+            @copy = @std.replicate(mode: :to_mission, dest_mission: get_mission)
+          end
+
+          it 'should delete the condition' do
+            expect(@copy.c[1].condition).to be_nil
+          end
         end
       end
     end

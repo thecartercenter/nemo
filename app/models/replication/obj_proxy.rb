@@ -160,30 +160,32 @@ class Replication::ObjProxy
 
     def backward_assoc_col_mappings(replicator, context)
       klass.backward_assocs.map do |assoc|
-        if assoc.serialized?
-          [assoc.foreign_key, serialized_backward_assoc_ids(assoc)]
-        else
-          [assoc.foreign_key, singular_backward_assoc_id(assoc)]
+        begin
+          if assoc.serialized?
+            [assoc.foreign_key, serialized_backward_assoc_ids(assoc)]
+          else
+            [assoc.foreign_key, singular_backward_assoc_id(assoc)]
+          end
+        rescue Replication::BackwardAssocError
+          # If we have explicit instructions to delete the object if an association is missing, make a note of it.
+          $!.ok_to_skip = assoc.skip_obj_if_missing
+          raise $! # Then we send on up the chain.
         end
       end
     end
 
     def singular_backward_assoc_id(assoc)
       orig_foreign_id = klass.where(id: id).pluck(assoc.foreign_key).first
-      #copy = history.get_copy(assoc.target_class, orig_foreign_id)
-      copy_id = get_copy_id(assoc.target_class, orig_foreign_id)
-      raise "Couldn't find copy of #{assoc.target_class.name} ##{orig_foreign_id}" unless copy_id
-      copy_id
+      get_copy_id(assoc.target_class, orig_foreign_id) ||
+        (raise Replication::BackwardAssocError.new("Couldn't find copy of #{assoc.target_class.name} ##{orig_foreign_id}"))
     end
 
     def serialized_backward_assoc_ids(assoc)
       orig_foreign_ids = klass.where(id: id).pluck(assoc.foreign_key).first
       return nil if orig_foreign_ids.nil?
       copy_ids = orig_foreign_ids.map do |orig_id|
-        copy_id = get_copy_id(assoc.target_class, orig_id)
-        #copy = history.get_copy(assoc.target_class, orig_id)
-        raise "Couldn't find copy of #{assoc.target_class.name} ##{orig_id}" unless copy_id
-        copy_id
+        get_copy_id(assoc.target_class, orig_id) ||
+          (raise Replication::BackwardAssocError.new("Couldn't find copy of #{assoc.target_class.name} ##{orig_id}"))
       end
       "'#{copy_ids.to_json}'"
     end
