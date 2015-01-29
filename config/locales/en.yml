@@ -1595,6 +1595,7 @@ en:
     reset_password_label_choose: "Password Creation"
     reset_password_label_reset: "Reset Password?"
     send_email_instructions: "send email instructions"
+    set_admin_password: "Set your admin password and profile information"
     show_printable_instructions: "show printable instructions"
 
   welcome:
