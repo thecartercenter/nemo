@@ -31,6 +31,9 @@ class Sms::Message < ActiveRecord::Base
   def self.search_qualifiers
     [
       Search::Qualifier.new(name: "body", col: "sms_messages.body", type: :text, default: true),
+      Search::Qualifier.new(name: "type", col: "sms_messages.type", type: :text),
+      Search::Qualifier.new(name: "date", col: "DATE(sms_messages.created_at)", type: :scale),
+      Search::Qualifier.new(name: "datetime", col: "sms_messages.created_at", type: :scale),
     ]
   end
 

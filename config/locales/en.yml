@@ -762,6 +762,8 @@ en:
     title: "title"
     type: "type"
     tag: "tag"
+    date: "date"
+    datetime: "datetime"
 
   # all page titles by controller and action
   # controller names are usually plural (rails convention)

@@ -5,7 +5,7 @@ class Search::Qualifier
   ANDABLE_TYPES = %w(text indexed translated)
 
   # name  - the name of the qualifier (required, underscored)
-  # type - qualifier type (optional, defaults to 'regular')
+  # type - qualifier type (optional, defaults to 'regular' - which means exact equality is required for match)
   # pattern - a regexp that will match the qualifier text
   # col - the database column being compared against (required unless :validator defined)
   # default - whether this qualifier should be assumed for terms with no qualifier (defaults to false)
