@@ -8,6 +8,8 @@ module Replication::Standardizable
     belongs_to(:original, :class_name => name, :inverse_of => :copies)
     has_many(:copies, :class_name => name, :foreign_key => 'original_id', :inverse_of => :original)
 
+    before_save(:scrub_original_link_if_becoming_incompatible)
+
     # returns a scope for all standard objects of the current class that are importable to the given mission
     def self.importable_to(mission)
       where(:is_standard => true)
@@ -44,5 +46,18 @@ module Replication::Standardizable
   # uses eager loaded field if available
   def copy_count
     respond_to?(:copy_count_col) ? copy_count_col : copies.count
+  end
+
+  def scrub_original_link_if_becoming_incompatible
+    if restricted_attribs = replicable_opts[:compatibility]
+      restricted_attribs.each do |attrib|
+        if send("#{attrib}_changed?")
+          self.original_id = nil
+          self.standard_copy = false
+          break
+        end
+      end
+    end
+    return true
   end
 end

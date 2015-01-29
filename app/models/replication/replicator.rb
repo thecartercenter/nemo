@@ -41,10 +41,15 @@ class Replication::Replicator
     # Returns the copy Replication::ObjProxy.
     def do_replicate(context)
       log("Object: #{context[:orig].klass.name}")
-      context[:copy] = context[:orig].make_copy(context)
-      history.add_pair(context[:orig], context[:copy])
-      replicate_children(context)
-      context[:copy]
+      begin
+        context[:copy] = context[:orig].make_copy(context)
+        history.add_pair(context[:orig], context[:copy])
+        replicate_children(context)
+        context[:copy]
+      rescue Replication::BackwardAssocError
+        # If it's explicitly ok to skip this object, do so, else raise again so this will fail loudly.
+        $!.ok_to_skip ? nil : (raise $!)
+      end
     end
 
     def replicate_children(context)

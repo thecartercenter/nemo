@@ -1,6 +1,6 @@
 # Wraps a parent or child association in the replication.
 class Replication::AssocProxy
-  attr_accessor :name, :klass, :foreign_key, :target_class, :belongs_to, :type
+  attr_accessor :name, :klass, :foreign_key, :target_class, :belongs_to, :type, :skip_obj_if_missing
 
   def self.get(klass, attribs)
     attribs = {name: attribs} if attribs.is_a?(Symbol)
