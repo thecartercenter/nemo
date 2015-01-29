@@ -151,7 +151,7 @@ class Replication::ObjProxy
         mappings << 'mission_id'
         mappings << 'is_standard' if klass.standardizable?
       when :to_mission
-        mappings << ['mission_id', replicator.dest_mission.id]
+        mappings << ['mission_id', replicator.target_mission_id]
         mappings << ['standard_copy', 1] if klass.standardizable? && replicator.source_is_standard?
       end
       mappings << ['original_id', 'id'] if klass.standardizable?
@@ -192,10 +192,10 @@ class Replication::ObjProxy
 
     def get_copy_id(target_class, orig_id)
       if target_class.standardizable?
-        target_class.where(mission_id: replicator.dest_mission.id, original_id: orig_id).pluck(:id).first
+        target_class.where(mission_id: replicator.target_mission_id, original_id: orig_id).pluck(:id).first
       elsif reuse_col = target_class.replicable_opts[:reuse_if_match]
         orig_reuse_val = target_class.where(id: orig_id).pluck(reuse_col).first
-        target_class.where(mission_id: replicator.dest_mission.id, reuse_col => orig_reuse_val).pluck(:id).first
+        target_class.where(mission_id: replicator.target_mission_id, reuse_col => orig_reuse_val).pluck(:id).first
       else
         replicator.history.get_copy(target_class, orig_id).try(:id)
       end
