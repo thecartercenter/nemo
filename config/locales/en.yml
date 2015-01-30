@@ -1228,6 +1228,15 @@ en:
         - "code:BallotBoxes"
         # select-one below should not be translated.
         - "type:select-one"
+      sms:
+        - "poll workers"
+        - "1.b"
+        - "+1234567890"
+        - "john smith"
+        - "jsmith"
+        - "type:reply"
+        - "date >= 2015-01-29"
+        - datetime < "2015-01-12 14:00"
     expected: "Expected"
     help_link: "Search Help"
     help_title: "Search Help"
@@ -1239,7 +1248,7 @@ en:
 
         * __romeo juliet__
 
-        only searches the answers to textual questions. To search based on response attributes, use a qualifier, e.g.:
+        searches only the answers to textual questions for each word. To search based on response attributes, use a qualifier, e.g.:
 
         * __form:Widgets__
 
@@ -1317,7 +1326,7 @@ en:
 
         * __romeo juliet__
 
-        matches user names, login IDs, and emails. To search based on specific attributes, use a qualifier, e.g.:
+        matches user names, login IDs, and emails on each word. To search based on specific attributes, use a qualifier, e.g.:
 
         * __email:@example.com__
 
@@ -1375,7 +1384,7 @@ en:
 
         * __romeo juliet__
 
-        only searches the question titles. To search based on question attributes, use a qualifier, e.g.:
+        searches the question titles for each word. To search based on question attributes, use a qualifier, e.g.:
 
         * __code:BallotBox__
 
@@ -1427,6 +1436,70 @@ en:
         * __code != Widgets__
 
         will match questions with any code not containing 'Widgets'.
+
+      sms: |-
+        ## Qualifiers ##
+
+        A simple search such as:
+
+        * __romeo juliet__
+
+        searches the message content, username, user's full name, and phone number for each word.
+        To search based on question attributes, use a qualifier, e.g.:
+
+        * __type:incoming__
+
+        will show incoming messages only.
+
+        Combine both of the above to narrow your search:
+
+        * __romeo juliet type:incoming__
+
+        will show incoming messages that also contain the words 'romeo' and 'juliet'.
+
+        The full set of qualifiers you can use is as follows:
+
+        * __content__ The message content (partial matches allowed)
+        * __type__ The message type (incoming, reply, or broadcast) (partial matches allowed)
+        * __user__ The username of the sender or receiver (partial matches allowed)
+        * __name__ The full name of the sender or receiver (partial matches allowed)
+        * __number__ The phone number of the sender or receiver (partial matches allowed)
+        * __date__ The date the message was sent or received (e.g. 2015-01-29)
+        * __datetime__ The date and time the message was sent or received (use quotation marks and 24-hr time: e.g. "2015-01-29 14:00")
+
+        ## Exact Phrases ##
+
+        Exact phrases can be matched by enclosing the phrase in double quotes:
+
+        * __"the rain in spain"__
+
+        Double quoted phrases can be mixed with non-quoted terms:
+
+        * __apples oranges "passion fruit"__
+
+        ## All Terms vs. Any Term
+
+        By default, all terms in the search must be matched. For example,
+
+        * __alpha lima peru__
+
+        matches only questions with all three of those words. Use the vertical bar ('|') character to match several words/phrases:
+
+        * __apples | oranges | "passion fruit"__
+
+        The '|' character can also be used with qualifiers:
+
+        * __content:( Lions | "Bears and Sharks" | Tigers )__
+
+        matches questions with any of the above codes.
+
+        ## Negation
+
+        You can negate a qualified search by using the negation operator:
+
+        * __type != broadcast__
+
+        will match messages whose type does not contain "broadcast".
 
     invalid_op: "The operator '%{op}' is not valid for the qualifier '%{qualifier}'."
     multiple_terms_not_allowed: "Multiple terms aren't allowed for '%{qualifier}' searches unless OR is used."
