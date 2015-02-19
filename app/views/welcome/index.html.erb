@@ -133,10 +133,10 @@
   <div class="dashboard-footer">
     <%# These links are for testing purposes %>
     <% if Rails.env.test? %>
-      <a href='#' class='reload-ajax'>Reload via AJAX</a>
-      <a href='#' class='reload-page'>Reload Page</a>
+      <a href="#" class="reload-ajax">Reload via AJAX</a>
+      <a href="#" class="reload-page">Reload Page</a>
     <% end %>
-    <a href='#' class='full-screen'><i class='fa fa-expand'></i> <%= I18n.t('dashboard.enter_full_screen') %></a>
+    <a href="#" class="full-screen"><i class="fa fa-expand"></i> <span><%= I18n.t('dashboard.enter_full_screen') %></span></a>
   </div>
 
 <% elsif admin_mode? %>
