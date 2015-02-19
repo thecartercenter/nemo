@@ -858,6 +858,7 @@ en:
     reviewed: "Reviewed"
 
   broadcast:
+    balance_check_failed: "SMS credit balance check failed."
     balance_notice: "You have %{balance} SMS credits in your %{account_type} account."
     chars: # these are for informing the user how many chars they have left in their sms
       remaining: "characters remaining"
