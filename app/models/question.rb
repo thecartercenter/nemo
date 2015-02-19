@@ -41,8 +41,7 @@ class Question < ActiveRecord::Base
       COUNT(DISTINCT answers.id) AS answer_count_col,
       COUNT(DISTINCT forms.id) AS form_count_col,
       MAX(DISTINCT forms.published) AS form_published_col,
-      COUNT(DISTINCT copy_answers.id) AS copy_answer_count_col,
-      MAX(DISTINCT copy_forms.published) AS copy_form_published_col
+      COUNT(DISTINCT copy_answers.id) AS copy_answer_count_col
     }).joins(%{
       LEFT OUTER JOIN form_items questionings ON questionings.question_id = questions.id AND questionings.type = 'Questioning'
       LEFT OUTER JOIN forms ON forms.id = questionings.form_id
@@ -154,11 +153,7 @@ class Question < ActiveRecord::Base
   # determines if the question appears on any published forms
   # uses the eager-loaded form_published_col field if available
   def published?
-    if is_standard?
-      respond_to?(:copy_form_published_col) ? copy_form_published_col == 1 : copies.any?(&:published?)
-    else
-      respond_to?(:form_published_col) ? form_published_col == 1 : forms.any?(&:published?)
-    end
+    is_standard? ? false : (respond_to?(:form_published_col) ? form_published_col == 1 : forms.any?(&:published?))
   end
 
   # checks if any associated forms are smsable

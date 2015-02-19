@@ -142,14 +142,10 @@ class Form < ActiveRecord::Base
     end
   end
 
-  # returns whether this form is published OR if standard, if any of its copies are published
-  # uses eager loaded col if available
+  # Returns whether this form is published, using eager loaded col if available.
+  # Standard forms are never published.
   def published?
-    if is_standard?
-      respond_to?(:published_copy_count_col) ? (published_copy_count_col || 0) > 0 : copies.any?(&:published?)
-    else
-      read_attribute(:published)
-    end
+    is_standard? ? false : read_attribute(:published)
   end
 
   # returns number of copies published. uses eager loaded field if available

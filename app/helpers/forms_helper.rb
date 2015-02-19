@@ -14,7 +14,7 @@ module FormsHelper
 
   def forms_index_fields
     if admin_mode?
-      %w(std_icon name questions copy_count published copy_responses_count updated_at actions)
+      %w(std_icon name questions copy_count copy_responses_count updated_at actions)
     else
       %w(std_icon version name questions published downloads responses smsable allow_incomplete updated_at actions)
     end
