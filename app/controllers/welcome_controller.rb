@@ -68,7 +68,7 @@ class WelcomeController < ApplicationController
         @responses_by_form = Response.per_form(accessible_responses, STAT_ROWS)
 
         # responses per user
-        @responses_per_user = User.sorted_response_counts(current_mission, STAT_ROWS)
+        @responses_per_user = User.sorted_observer_response_counts(current_mission, STAT_ROWS)
       end
 
       unless fragment_exist?(@cache_key + '/report_pane')
