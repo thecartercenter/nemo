@@ -70,6 +70,11 @@ namespace :deploy do
   end
   before "deploy", "deploy:check_revision"
 
+  desc "Create an admin user with temporary password."
+  task :create_admin, roles: :web do
+    run "cd #{current_path} && RAILS_ENV=#{rails_env} rake db:create_admin"
+  end
+
   desc "ping the server so that it connects to db"
   task :ping, roles: :web do
     run "curl -s #{ping_url} > /dev/null"
