@@ -7,7 +7,7 @@
 
 require 'bundler/capistrano'
 
-set :stages, %w(master staging demo nigeria api)
+set :stages, %w(master staging demo nigeria api cejp-drc)
 set :default_stage, "staging"
 require "capistrano/ext/multistage"
 
@@ -19,7 +19,7 @@ set(:whenever_identifier) {"elmo_#{stage}"}
 require "whenever/capistrano"
 
 set :application, "elmo"
-set :repository, "ssh://git@github.com/thecartercenter/elmo.git"
+set :repository, "https://github.com/thecartercenter/elmo.git"
 set :deploy_via, :remote_cache
 
 default_run_options[:pty] = true
