@@ -1226,7 +1226,7 @@ en:
     help_title: "Search Help"
     help_text:
       responses: |-
-        ## Qualifiers ##
+        ## Qualifiers
 
         A simple search such as:
 
@@ -1253,7 +1253,7 @@ en:
         * __source__ The medium via which the response was submitted ('web', 'odk', or 'sms')
         * __text__ Searches answers to textual questions
 
-        ## Exact Phrases ##
+        ## Exact Phrases
 
         Exact phrases can be matched by enclosing the phrase in double quotes:
 
@@ -1304,7 +1304,7 @@ en:
         will match responses submitted in the month of January 2000.
 
       users: |-
-        ## Qualifiers ##
+        ## Qualifiers
 
         A simple search such as:
 
@@ -1331,7 +1331,7 @@ en:
 
         Partial matches are allowed for all qualifiers.
 
-        ## Exact Phrases ##
+        ## Exact Phrases
 
         Exact phrases can be matched by enclosing the phrase in double quotes:
 
@@ -1362,7 +1362,7 @@ en:
         will match users not named 'Oluwaseun'.
 
       questions: |-
-        ## Qualifiers ##
+        ## Qualifiers
 
         A simple search such as:
 
@@ -1387,7 +1387,7 @@ en:
         * __type__ The question type (%{question_types})
         * __tag__ Searches tags applied to the question
 
-        ## Exact Phrases ##
+        ## Exact Phrases
 
         Exact phrases can be matched by enclosing the phrase in double quotes:
 
