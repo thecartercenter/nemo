@@ -6,7 +6,7 @@ feature "sms search" do
 
     @sms1 = create(:sms_incoming, mission: @mission, body: "I didn't expect the Spanish Inquisition.")
     @sms2 = create(:sms_reply, mission: @mission, body: "Nobody expects the Spanish Inquisition!")
-    @sms3 = create(:sms_broadcast, mission: @mission, body: "Our chief element is surprise and fear.")
+    @sms3 = create(:sms_reply, mission: @mission, body: "Our chief element is surprise and fear.")
 
     @user = create(:user, role_name: 'coordinator', admin: true)
     login(@user)
