@@ -32,13 +32,17 @@ class Sms::Message < ActiveRecord::Base
   end
 
   def self.search_qualifiers
+    # We pass explicit SQL here or else we end up with an INNER JOIN which excludes any message
+    # with no associated user.
+    user_assoc = 'LEFT JOIN users ON users.id = sms_messages.user_id'
+
     [
       Search::Qualifier.new(name: "content", col: "sms_messages.body", type: :text, default: true),
       Search::Qualifier.new(name: "type", col: "sms_messages.type", type: :text),
       Search::Qualifier.new(name: "date", col: "DATE(sms_messages.created_at)", type: :scale),
       Search::Qualifier.new(name: "datetime", col: "sms_messages.created_at", type: :scale),
-      Search::Qualifier.new(name: "username", col: "users.login", type: :text, assoc: :user, default: true),
-      Search::Qualifier.new(name: "name", col: "users.name", type: :text, assoc: :user, default: true),
+      Search::Qualifier.new(name: "username", col: "users.login", type: :text, assoc: user_assoc, default: true),
+      Search::Qualifier.new(name: "name", col: "users.name", type: :text, assoc: user_assoc, default: true),
       Search::Qualifier.new(name: "number", col: "sms_messages.to", type: :text, default: true)
     ]
   end
