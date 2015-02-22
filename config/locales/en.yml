@@ -543,6 +543,7 @@ en:
           general: "There was a problem saving the option set."
           wrong_depth: "You have %{levels} option levels but your option tree is %{depth} options deep."
         question:
+          at_least_one_name: "You must enter a title in at least one language."
           attributes:
             code:
               invalid: "Should start with a letter, use only letters and numbers, and be a maximum of 20 characters."

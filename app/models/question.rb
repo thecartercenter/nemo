@@ -27,6 +27,7 @@ class Question < ActiveRecord::Base
   validates(:qtype_name, :presence => true)
   validates(:option_set, :presence => true, :if => Proc.new{|q| q.qtype && q.has_options?})
   validate(:code_unique_per_mission)
+  validate(:at_least_one_name)
 
   scope(:by_code, order('questions.code'))
   scope(:default_order, by_code)
@@ -269,4 +270,7 @@ class Question < ActiveRecord::Base
       end
     end
 
+    def at_least_one_name
+      errors.add(:base, :at_least_one_name) if name.blank?
+    end
 end

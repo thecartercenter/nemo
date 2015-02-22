@@ -7,6 +7,8 @@
     <%= appears_elsewhere_warning(@question) unless @question.forms.empty? %>
   <% end %>
 
+  <%= f.base_errors %>
+
   <%= f.field(:code, :required => true, :maxlength => 20, :read_only => cannot?(:update_code, @question)) %>
 
   <%# core fields should not be editable if don't have update_core permission %>
