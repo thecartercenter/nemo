@@ -764,6 +764,9 @@ en:
     tag: "tag"
     date: "date"
     datetime: "datetime"
+    username: "username"
+    content: "content"
+    number: "number"
 
   # all page titles by controller and action
   # controller names are usually plural (rails convention)
@@ -1461,7 +1464,7 @@ en:
 
         * __content__ The message content (partial matches allowed)
         * __type__ The message type (incoming, reply, or broadcast) (partial matches allowed)
-        * __user__ The username of the sender or receiver (partial matches allowed)
+        * __username__ The username of the sender or receiver (partial matches allowed)
         * __name__ The full name of the sender or receiver (partial matches allowed)
         * __number__ The phone number of the sender or receiver (partial matches allowed)
         * __date__ The date the message was sent or received (e.g. 2015-01-29)

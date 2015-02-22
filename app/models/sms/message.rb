@@ -12,6 +12,9 @@ class Sms::Message < ActiveRecord::Base
 
   belongs_to :mission
 
+  # User may be nil if sent from an unrecognized number or replying to someone not recognized as user.
+  belongs_to :user
+
   before_create :default_sent_at
   after_initialize :normalize_numbers
 
@@ -34,6 +37,9 @@ class Sms::Message < ActiveRecord::Base
       Search::Qualifier.new(name: "type", col: "sms_messages.type", type: :text),
       Search::Qualifier.new(name: "date", col: "DATE(sms_messages.created_at)", type: :scale),
       Search::Qualifier.new(name: "datetime", col: "sms_messages.created_at", type: :scale),
+      Search::Qualifier.new(name: "username", col: "users.login", type: :text, assoc: :user, default: true),
+      Search::Qualifier.new(name: "name", col: "users.name", type: :text, assoc: :user, default: true),
+      Search::Qualifier.new(name: "number", col: "sms_messages.to", type: :text, default: true)
     ]
   end
 
