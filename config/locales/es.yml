@@ -1,0 +1,123 @@
+es:
+  locale_name: "Español"
+  common:
+    accept: "Aceptar"
+    active: "Activo"
+    add: "añadir "
+    and: "y"
+    back: "Regresar"
+    blank: "En blanco"
+    by: "Por"
+    cancel: "Cancelar"
+    choose: "Escoger"
+    clone: "Clonar"
+    close: "Cerrar"
+    contact: "Contacto"
+    create: "Crear"
+    created: "Creado"
+    copy: "Copiar"
+    data: "Datos"
+    delete: "Eliminar"
+    design: "diseñar"
+    edit: "Editar"
+    error:
+      zero: "Errores"
+      one: "Error"
+      other: "Errores"
+    example:
+      zero: "Ejemplos"
+      one: "Ejemplo"
+      other: "Ejemplos"
+    inactive: "Inactivo"
+    language: "Idioma"
+    login: "Iniciar Sesión"
+    logout: "Finalizar la Sesión"
+    manage: "Manejar"
+    near: "Cerca"
+    _no: "No"
+    none: "Ninguno"
+    ok: "OK"
+    or: "o "
+    outgoing: "Saliente"
+    pending: "Pendiente"
+    previous: "Anterior"
+    print: "Imprimir"
+    regenerate: "Regenerar"
+    report: "Reportar"
+    reset: "Reinicializar"
+    result:
+      zero: "Resultados"
+      one: "Resultado"
+      other: "Resultados"
+    save: "Guardar"
+    search: "Buscar"
+    send: "Mandar"
+    step: "Paso"
+    thanks_excl: "Gracias!"
+    total: "Total"
+    updated: "Actualizado"
+    _yes: "Sí"
+  attributes:
+    name: "Nombre"
+    password: "Contraseña"
+    value: "Valor"
+  access_levels:
+    public: "Público"
+    private: "Privado"
+    protected: "Protegido"
+    inherit: "Heredar"
+  errors:
+    messages:
+      deleted_successfully: "eliminado con éxito"
+  helpers:
+    submit:
+      create: "Guardar"
+      update: "Guardar"
+  activerecord:
+    models:
+      form:
+        zero: "Formularios"
+        one: "Formulario"
+        other: "Formularios"
+      mission:
+        zero: "Misiones"
+        one: "Misión"
+        other: "Misiones"
+      option:
+        zero: "Opciones"
+        one: "Opción"
+        other: "Opciones"
+      password_reset:
+        zero: "Restablecimiento de Contraseña"
+        one: "Restablecimiento de Contraseña"
+        other: "Restablecimiento de Contraseña"
+      question:
+        zero: "Preguntas"
+        one: "Pregunta"
+        other: "Preguntas"
+      questioning:
+        zero: "Preguntas"
+        one: "Pregunta"
+        other: "Preguntas"
+      report/calculation:
+        zero: "Cálculos"
+        one: "Cálculo"
+        other: "Cálculos"
+      report/report:
+        zero: "Reportes"
+        one: "Reporte"
+        other: "Reportes"
+    attributes:
+      user:
+        pref_lang: "Idioma Preferido"
+  broadcast:
+    send_broadcast: "Enviar Difusión"
+    sms_error: "Error SMS"
+    which_phone_options:
+      main_only: "único teléfono principal"
+  dashboard:
+    summary: "Resumen"
+  sms_form:
+    guide:
+      pointers:
+        long_text: "Escribe tu respuesta aquí . Abreviar si es necesario."
