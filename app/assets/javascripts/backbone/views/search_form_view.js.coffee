@@ -11,7 +11,8 @@ class ELMO.Views.SearchFormView extends Backbone.View
     e.preventDefault()
     window.location.href = window.location.pathname
 
-  show_help: ->
+  show_help: (e) ->
+    e.preventDefault()
     $('#search-help-modal').modal('show')
 
   # Add or replace the specified search qualifier

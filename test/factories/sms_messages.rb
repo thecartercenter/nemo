@@ -2,11 +2,10 @@
 
 FactoryGirl.define do
   factory :sms_message, :class => 'Sms::Message' do
-    to "MyText"
-    from "MyString"
+    to "+123456789"
+    from "+234567890"
     body "MyText"
     sent_at "2013-04-30 08:52:03"
-    type "Sms::Incoming"
   end
 
   factory :sms_incoming, :class => 'Sms::Incoming', :parent => :sms_message do
