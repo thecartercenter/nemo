@@ -6,13 +6,13 @@ fr:
     add: "Ajouter"
     and: "et"
     back: "Retourner"
-    blank: "Blanc"
+    blank: "Vide"
     by: "Par"
     cancel: "Annuler"
     choose: "Choisissez"
     clear: "Effacer"
     clone: "Dupliquer"
-    close: "Quitter"
+    close: "Fermer"
     contact: "Contacter"
     create: "Créer"
     created: "Créé"
@@ -116,9 +116,9 @@ fr:
         one: "Résultat"
         other: "Résultats"
       assignment:
-        zero: "des tâches"
-        one: "une tâche"
-        other: "des tâches"
+        zero: "Tâches"
+        one: "Tâche"
+        other: "Tâches"
       broadcast:
         zero: "Émissions"
         one: "Émission"
@@ -211,10 +211,10 @@ fr:
       broadcast:
         balance: "Solde du compte SMS"
         body: "Message"
-        created_at: "Heure d'envoyer"
+        created_at: "Heure d'envoi"
         errors: "Erreurs?"
         medium: "Moyen"
-        send_errors: "Erreurs de livraison"
+        send_errors: "Erreurs d'envoi"
         subject: "Sujet"
         to: "à"
         which_phone: "Quel(s) numéro de téléphone?"
@@ -343,7 +343,7 @@ fr:
         edit: "Modifier la mission"
         destroy: "Supprimer la mission"
       option_set:
-        new: "Créer un Nouveau Ensemble d'Options"
+        new: "Créer un Nouvel Ensemble d'Options"
         index: "Lister les ensembles d'options"
         show: "Voir l'emsemble d'option"
         edit: "Modifier l'ensemble d'option"
@@ -366,7 +366,7 @@ fr:
         edit: "Modifier la réponse"
         destroy: "Supprimer la réponse"
       user:
-        new: "Créer un Nouveau Utilisateur"
+        new: "Créer un Nouvel Utilisateur"
         index: "Lister les utilisateurs"
         show: "Voir l'utilisateur"
         edit: "Modifier l'utilisateur"
@@ -402,9 +402,9 @@ fr:
         qtype_name: "Le type d'information que l'utilisateur entrera."
         access_level: "Héritent: le même niveau d'accès que le formulaire parent. Privé: personne ne peut accéder aux données par l'API."
       questioning:
+        hidden: "Quoique cette question sera montrée sur ce formulaire. Utilisez ça pour désactiver une question si vous ne pouvez pas la supprimer. Cette valeur remplace toute condition indiquée ci-dessus."
         condition: "Pour l'utilisateur de voir cette question, une condition supplémentaire doit être satisfaite."
-        hidden: "Si cette question sera montrée sur ce formulaire. Utilisez ça pour désactiver une question si vous ne pouvez pas le supprimer. Cette valeur remplace toute condition indiquée ci-dessus."
-        required: "Si cette question doit être complétée dans ce formulaire ou si elle est facultative. C'est seulement exécutée si la condition indiquée ci-dessus est satisfaite."
+        required: "Quoique cette question doit être complétée dans ce formulaire ou qu'elle est facultative, Elle est seulement exécutée si la condition indiquée ci-dessus est satisfaite."
       report/report:
         name: "Un titre descriptif pour ce rapport."
         aggregation_id: "L'opération que vous voulez accomplir sur les données combinées."
@@ -429,7 +429,7 @@ fr:
         override_code: |-
           S'il est necessaire d'avoir la capacité de soumettre des réponses incomplètes, ce code devra être fournis aux observateurs. ODK ne permettra pas les réponses incomplètes sans ce code. Il sera possible de générer un nouveau code en tout temps et tout formulaires subséquent requirons ce code-ci. Cependant, tout les formulaires créé avant la generation du nouveau code utliseront l'ancien code.
         incoming_sms_number: "Entrez le numéro de téléphone où les SMS entrants pour les formes SMS doivent être envoyés. Il sera affiché sur le guide du SMS."
-        outgoing_sms_adapter: "L'adaptateur utilisé pour envoyer les SMS sortants."
+        outgoing_sms_adapter: "L'adaptateur utilisé pour envoyer les SMSs. Notez que les réponses par SMS peuvent être envoyées a partir de différent adaptateurs, selon l'adaptateur par lequel ils arrivent."
         intellisms_username: "l'Identifiant pour le compte IntelliSMS."
         intellisms_password1: "Entrez et rentrez un mot de passe pour changer le mot de passe du compte IntelliSMS."
         external_sql: "Le code SQL--langage de requêtes structuré--utilisé d'extraire les données pour l'utilisation dans Tableau. Cliquez sur 'sélectionnez tous' et cliquez Ctrl-C pour copier."
@@ -508,12 +508,18 @@ fr:
           general: "Il y avait un problème d'enregistrer l'ensemble d'options."
           wrong_depth: "Vous avez %{levels} niveaux d'options mais votre arbre d'options est %{depth} options profonde."
         question:
+          attributes:
+            code:
+              invalid: "Commencer par une lettre. Utiliser seulement des lettres et des chiffres et un maximum de 20 caractères."
           cant_change_if_conditions: "Vous ne pouvez pas changer le type ou l'ensemble d'options parce qu'il y a des conditions que concernent cette question."
           cant_change_if_responses: "Impossible de changer le type ou l'ensemble d'options parce qu'il y a des réponses pour cette question déjà."
           cant_delete_if_has_answers: "Impossible de supprimer cette question parce qu'elle est mentionnée dans au moins une résultat."
           cant_delete_if_published: "Impossible de supprimer cette question parce qu'elle apparaît sur au moins un formulaire publié."
           general: "La question est invalide (voir ci-dessous)."
         questioning:
+          attributes:
+            code:
+              invalid: "Commencer par une lettre. Utiliser seulement des lettres et des chiffres et un maximum de 20 caractères."
           cant_delete_if_has_answers: "Impossible d'éliminer cette question parce qu'il y a au moins un résultat pour cette formulaire."
           invalid_condition: "Une condition invalide (voir ci-dessous)"
           question: "Question"
@@ -567,12 +573,15 @@ fr:
     change_language: "Changer la langue"
     created_by: "Crée par"
     delete_warning: "Êtes-vous sur que vous voulez supprimer définitivement le %{obj_description}?"
-    deselect_all: "Désélectionner tous"
+    deselect_all: "Désélectionner tout"
+    loading: "Téléchargement"
+    locale_change_get_only: "Changement de langues à partir de cette page peut causer des pertes de données. Terminez ou annulez le formulaire et réessayer encore."
     logged_in_as: "Connecté en tant que"
+    mission_change_get_only: "Changement de mission à partir de cette page peut causer des pertes de données. Terminez ou annulez le formulaire et réessayer encore."
     must_be: "Doit être"
     no_selection: "Rien n'a été sélectionné."
     reqd_sym_definition: "Les réponses obligatoires sont marqués avec un %{reqd_sym}."
-    select_all: "Sélectionner tous"
+    select_all: "Sélectionner tout"
     server_contact_error: "Erreur de communication avec le serveur"
     system_error: "Erreur de système. L'administrateur a été notifié."
     system_version: "Version de système"
@@ -702,11 +711,15 @@ fr:
     source: "source"
     submit_date: "date de la remise"
     submitter: "émetteur"
+    code: "code"
+    title: "titre"
+    type: "type"
+    tag: "onglet"
   page_titles:
     broadcasts:
       index: "Émissions"
-      new: "Envoyer une émission"
-      new_with_users: "Envoyer une émission"
+      new: "Diffuser une émission"
+      new_with_users: "Diffuser une émission"
       show: "Émission"
     forms:
       choose_questions: "Ajouter des questions au formulaire: %{name}"
@@ -794,7 +807,7 @@ fr:
       too_many: "trop de caractères"
     email_intro: "C'est une émission diffusée de"
     email_error: "Erreur d'E-mail"
-    instructions: "Pour envoyer une émission, sélectionnez d'abord les destinaires ci-dessous, puis cliquez sur 'Envoyez une émission'."
+    instructions: "Pour diffuser une émission, sélectionnez d'abord les destinaires ci-dessous, puis cliquez sur 'Diffuser une émission'."
     may_not_be_enough: "Cela n'est pas être suffisant"
     mediums:
       names:
@@ -809,7 +822,8 @@ fr:
         sms_only: "Seulement SMS (n'envoyer pas d'emails)"
         email_only: "Seulement E-mail (n'envoyez pas des SMS)"
         both: "SMS et E-mail"
-    send_broadcast: "Envoyer une émission"
+    no_possible_recipients: "Aucun des utilisateurs sélectionnés n'a une adresse  email ou numéro de téléphone. Réessayer encore."
+    send_broadcast: "Diffuser une émission "
     send_success: "L'émission envoyé avec succès."
     send_error: "Erreur en envoyant l'émission (voir dessous)."
     sms_error: "Erreur de SMS"
@@ -856,8 +870,8 @@ fr:
       questioning: "Les champs ci-dessous ne peuvent pas être modifiés parce qu'ils sont connectés à un formulaire qui est déjà publié."
       question: "Cette question apparaît sur au moins un formulaire publié. Les observateurs peuvent accéder le formulaire maintenant.  Certains champs ne sont pas modifiables.  "
       option_set: "Cet ensemble d'options apparaît sur au moins un formulaire publié. Les observateurs peuvent accéder le formulaire maintenant. Les options ne peuvent pas etre ajoutés, enlevés, ou réorganisés.  "
-    sms: "Ces changements entraîneront une erreur pour utilisateurs de SMS si ils essaient de soumettre la version actuelle de le formulaire."
-    odk: "Ces modifications ne seront pas désactiver les réponses de ODK, mais ils peuvent causer une perte des données et / ou des réponses qui ne sont pas valides (p. ex omission de réponses nécessaires)."
+      sms: "Ces changements entraîneront une erreur pour utilisateurs de SMS si ils essaient de soumettre la version actuelle de le formulaire."
+      odk: "Ces modifications ne seront pas désactiver les réponses de ODK, mais ils peuvent causer une perte des données et / ou des réponses qui ne sont pas valides (p. ex omission de réponses nécessaires)."
   form:
     select_api_users: "Choisissez tous les utilisateurs qui peuvent accéder aux formulaires par l'API:"
     add_questions: "Ajouter des questions"
@@ -867,7 +881,11 @@ fr:
     clone_confirm: "Vous êtes sûr que vous voulez faire un copie de le formulaire '%{form_name}'?"
     clone_error: "Il y avait un problème avec le clonage de le formulaire (%{msg})."
     clone_success: "Formulaire '%{form_name}' a été cloné avec succès."
+    no_mission: "Pas de Mission"
     print_form: "Imprimer le formulaire"
+    print_format_tips:
+      title: "Conseils pour imprimer"
+      body: "Pour s'assurer que les formulaires impriment correctement, activez le fond couleurs et images dans la fenêtre de dialogue dans l'option imprimer de votre système. Cette fenêtre doit apparaitre dès que vous  appuyer \"Ok\" en bas."
     publish: "Publier"
     publish_error: "Il y avait un problème avec l'édition du formulaire (%{msg})."
     publish_success: "Formulaire publié avec succès."
@@ -919,6 +937,7 @@ fr:
     edit_option: "Modifier Option"
     edit_option_level: "Modifier Niveau"
     leave_page_warning: "Si vous quittez cette page, vous perdrez vos modifications à cet ensemble d'options."
+    multi_level_forbidden_notice: "Cet ensemble d'options est actuellement utilisé par au moins une question multiple et donc peut être converti à une option à multiple niveau."
     new_option_level: "Nouveau Niveau"
     none_found: "Il n'y avait pas d'options trouvés."
     searching: "En train de rechercher..."
@@ -1110,12 +1129,16 @@ fr:
       - 'phone:+443726458364'
       - 'login:jsmith'
       - 'email:jsmith@example.com'
+      questions:
+      - Travailleurs des bureaux de vote
+      - 'code:Urnes'
+      - 'type:sélectionnez-un'
     expected: "Attendu"
-    help_link: "Aide à la recherche"
-    help_title: "Aide à la recherche"
+    help_link: "Aide"
+    help_title: "Aide "
     help_text:
       responses: |-
-        ## Qualificatifs ##
+        ## Qualificatifs
 
         Une recherche simple comme:
 
@@ -1142,7 +1165,7 @@ fr:
         * __source__ Le moyen par lequel la réponse a été envoyé ('web', 'odk', or 'sms')
         * __texte__ Recherche les résultats aux questions textuelles.
 
-        ## Phrases Exactes ##
+        ## Phrases Exactes
 
         Les phrases exactes peuvent être jumelés en enfermant la phrase entre guillemets:
 
@@ -1164,7 +1187,7 @@ fr:
 
         Le caractère "|" peut être utilisé avec qualificatifs aussi:
 
-        * __formulaire:( les lions | "Les ours et les requins" | les tigres )__
+        * __formulaire:( lions | "Les ours et les requins" | tigres )__
 
         correspond réponses pour l'une des formulaires ci-dessus.
 
@@ -1172,7 +1195,7 @@ fr:
 
         Vous pouvez nier une recherche qualifié en utilisant l'opérateur de négation:
 
-        * __formulaires!= Widgets__
+        * __formulaires != Widgets__
 
         correspondra réponses pour toute formulaire sauf le formulaire 'Widgets'.
 
@@ -1191,11 +1214,16 @@ fr:
         * __soumettre-date >= 2000-01-01 répondre-date < 2000-02-01__
 
         correspondra réponses qui étaient soumis en Janvier 2000.
-      users: "\n## Qualificatifs ## \n\nUne recherche simple comme: \n\n* __romeo juliet__ \n\ncorrespond seulement les noms des utilisateurs. Utilisez un qualificatif pour une recherche en fonction d'autres attributs de l'utilisateur, p. ex: \n\n* __email: @example.com__ \n\nrecherchera les utilisateurs avec des adresses e-mail correspondant '@example.com'. \n\nCombinez les deux ci-dessus pour préciser votre recherche:\n\n\
-        \ * __Susan email:@example.com__ \n\nrecherchera les utilisateurs nommés Susan avec une 'example.com' addresse e-mail. \n\nL'ensemble de qualificatifs disponibles est présenté ci-dessous: \n\n* __nom__ Le nom de l'utilisateur \n* __login__ Le nom s'enregistrer de l'utilisateur \n* __email__ L'adresse email de l'utilisateur \n* __phone__ Le numéro de téléphone de l'utilisateur (pas de tirets ou autres signes de ponctuation)\
-        \ \n\nLes correspondances partielles sont admises pour chacune des qualificatifs.\n\n## Phrases Exactes ## \n\nLes phrases exactes peuvent être jumelés en enfermant la phrase entre guillemets: \n\n* __\"john smith\"__ \n\n## Tous les termes ou quelconque terme \n\nPar défaut, tous les termes de la recherche doivent correspondre. Par exemple, \n\n* __john smith__ \n\ncorrespond seulement les utilisateurs avec 'john' et\
-        \ 'smith' dans ses noms. Utilisez la barre verticale ('|') pour correspondre plusieurs noms: \n\n* __abdul | juanita | clarice__ \n\nLe caractère \"|\" peut être utilisé avec qualificatifs aussi: \n\n* __email:( john@example.com | patty@foo.com )__ \n\ncorrespond les utilisateurs avec les adresses emails decrits. \n\n## Negation \n\nVous pouvez nier une recherche qualifié en utilisant l'opérateur de négation: \n\n*\
-        \ __name != Oluwaseun__ \n\ncorrespondra les utilisateurs qui ne sont pas nommés 'Oluwaseun'"
+      users: "## Qualificatifs\n\nUne simple recherche telle que:\n\n __romeo juliet__\n\ncorrespond aux noms d'utilisateur, Identifiant et emails. Recherche basée sur des attributs spécifics, utilisez un qualificatif , ex.\n\n __email: @exemple.com__\n\nCherchera les utilisateur en fonction des emails correspondant,  '@exemple.com'.\n\nCombine les deux ci-dessus pour délimiter la recherche:\n\n __Susan email: @exemple.com__\n\n\
+        Cherchera les utilisateurs qui s'appellent Susan avec un exemple.com  address email.\n\nL'ensemble des qualificatifs qui peuvent être utilisés sont les suivants:\n\n__nom__ Le nom complet de l'utilisateur,\n __Signer__ L'identifiant de l'utilisateur\n __email__ l'adresse email de l'utilisateur\n __téléphone__ Le numéro de téléphone de l'utilisateur (sans tirait ou autre ponctuation)\n\nCorrespondances partielles autorisées\
+        \ pour tous les qualificatifs.\n\n phrases exactes \n\nExactes phrases peuvent être liées en incluant la phrase dans en double citations:\n\n __\"john smith\"__\n\nTous les termes vs. N'importe quel terme\n\nPar défaut, tous les termes dans la recherche doivent correspondre. par exemple,\n\n __john smith__\n\ncorrespond seulement aux utilisateurs nommes 'john' et 'smith' les deux apparaissant dans leur nom. Utilisez\
+        \ la barre verticale, la lettre (I) pour lier plusieurs noms:\n __abdul | juanita | clarice__\n\nLa lettre  '|' peut aussi être utilisée avec des qualificatifs:\n __email: ( john@exemple.com,  patty@foo.com )__\n\nlie les utilisateurs avec n'importe laquelle des adresses emails ci-dessus.\n\n Rejet\n\nVous pouvez rejeter une recherche qualifiée en utilisant l’opérateur de rejet.\n\n __nom != Oluwaseun__\n\nLiera les\
+        \ utilisateurs non nommés 'Oluwaseun'. "
+      questions: "## Qualificatifs \n\nUne simple recherche telle que:\n\n* __Romeo Juliette__\nChercher seulement les titres des questions. Pour rechercher sur la base des attributs des question, utiliser un qualificatif, e.g.:\n\n* __code: Urne__\n\nAffichera les questions avec 'Urne' dans leur code.\n\nCombinez les deux ci-dessus pour limiter votre recherche:\n\n* __Romeo et Juliette code: Urne__\n\nAffichera les réponses dans\
+        \ les'Widgets' formulaires contenant les mots 'Romeo et Juliette'.\n\nL'ensemble des qualificatifs que vous pouvez utilisez est le suivant:\n\n* __titre__ la question titre (lien partiel autorise)\n* __code__ La question code (lien partiel autorise)\n* __type__ La question type (%{question_types})\n __onglet__ Recherches d'onglet appliquées a la question\n\n Phrases exactes \n\nLes phrase exactes peuvent être liées en\
+        \ incluant la phrase dans une double  citation:\n\n __\"La pluie en Espagne\"__\n\nDouble citations peuvent être combinées avec des termes non-cites:\n\n _pommes oranges \"fruit de passion\"__\n\n Tous les termes vs. n importe quel terme\n\nPar défaut, tous les termes de la recherche doivent être lies. Par exemple,\n\n __alpha lima peru__\n\nLie questions avec seulement trois de ces caractères. Utilisez la barre verticale\
+        \ ('I') pour lier plusieurs mots/phrases:\n\n __pommes | oranges | \"fruit de passion\"__\n\nLe caractère '|' peut aussi être utiliser avec des qualificatifs:\n\n __code: ( Lions | \"Ours et Requins\" | Tigres )__\n\nLie les questions avec n'importe lequel de ces codes ci-dessus.\n\n Négation\n\nVous pouvez rejeter une recherche qualifiée en utilisant l’opérateur de rejet:\n\n__code != Widgets_\n\nlieront les questions\
+        \ avec n'importe code ne comportant pas de 'Widgets'."
     invalid_op: "L'opérateur '%{op}' n'est pas valide pour le qualificatif '%{qualifier}'."
     multiple_terms_not_allowed: "Plusieurs termes ne sont pas permis pour '%{qualifier}' recherches sauf le case où 'OU' est utilisé."
     must_use_qualifier: "Vous devez utiliser un qualificatif pour tous les termes de recherche."
@@ -1303,6 +1331,10 @@ fr:
       questions: "Il n'y a rien disponible pour importer.  Il n'y a pas de Questions, ou ils ont tous été déjà importé."
     standard: "Standardisé"
     standard_forms: "Formulaires Standardisés"
+    there_were_errors:
+      zero: "Nombre d'erreurs en %{count}"
+      one: "Erreur en %{count}"
+      other: "Nombre d'erreurs en %{count} "
   unauthorized:
     default: "Vous n'avez pas l'authorisation pour accéder à cette page."
     must_login: "Vous devez login pour accéder à cette page."
