@@ -21,8 +21,7 @@
 
   <% else %>
 
-    <%# don't show errors because we format them specially below %>
-    <%= elmo_fields_for("user[assignments_attributes][0]", @current_assignment, :show_errors => false) do |af| %>
+    <%= elmo_fields_for("user[assignments_attributes][0]", @current_assignment) do |af| %>
       <%= af.hidden_field(:id) %>
       <%= af.hidden_field(:mission_id) %>
 

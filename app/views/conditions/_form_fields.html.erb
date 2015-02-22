@@ -1,4 +1,5 @@
 <%= elmo_fields_for("questioning[condition_attributes]", @condition) do |f| %>
+  <%= f.base_errors %>
   <%= f.hidden_field(:id) %>
 
   <div class="field">

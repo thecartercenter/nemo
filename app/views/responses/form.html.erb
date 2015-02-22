@@ -12,6 +12,8 @@
 
   <%= top_action_links(@response, :except => :new) %>
 
+  <%= f.base_errors %>
+
   <%= f.field(:form_id, :type => :hidden) %>
 
   <%# form name %>
