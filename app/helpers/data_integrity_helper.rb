@@ -4,12 +4,7 @@ module DataIntegrityHelper
   def published_warning(obj)
     type = obj.class.model_name.singular
 
-    # get the proper i18n sub-key depending on if this is a standard obj or not
-    # if it is a standard object, we need to say that a copy is published, not the obj itself,
-    # b/c that is not possible for std objs
-    subkey = obj.is_standard? ? 'copy_published' : 'self_published'
-
-    text = tmd("data_integrity.published_warnings.#{subkey}.#{type}")
+    text = tmd("data_integrity.published_warnings.#{type}")
     data_integrity_warning(:published_warning, text)
   end
 

@@ -36,6 +36,7 @@ class BroadcastsController < ApplicationController
       rescue NotImplementedError
         # don't need to do anything here
       rescue
+        @balance = :failed
         logger.error("SMS balance request error: #{$!}")
       end
 

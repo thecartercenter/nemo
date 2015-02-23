@@ -53,9 +53,8 @@ describe 'odk submissions', type: :request do
 
       # Change form and force an upgrade (verify upgrade happened)
       f.unpublish!
-      f.questionings.first.required = true
-      f.save!
-      f.publish!
+      f.c[0].update_attributes!(required: true)
+      f.reload.publish!
       expect(f.reload.current_version.sequence).not_to eq old_version
 
       # Try to submit old xml and check for error
@@ -103,8 +102,8 @@ describe 'odk submissions', type: :request do
 
     it 'should be marked incomplete iff there is an incomplete response to a required question' do
       form = create(:form, question_types: %w(integer))
-      form.questionings.first.required = true
-      form.publish!
+      form.c[0].update_attributes!(required: true)
+      form.reload.publish!
 
       [false, true].each do |no_answers|
         resp = do_submission(submission_path, build_odk_submission(form, no_answers: no_answers))

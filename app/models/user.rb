@@ -117,13 +117,14 @@ class User < ActiveRecord::Base
   end
 
 
-  # returns an array of hashes of format {:name => "Some User", :count => 2}
-  # of user response counts for the given mission
-  def self.sorted_response_counts(mission, limit)
+  # Returns an array of hashes of format {:name => "Some User", :count => 2}
+  # of observer response counts for the given mission
+  def self.sorted_observer_response_counts(mission, limit)
     find_by_sql(["SELECT users.name AS name, COUNT(DISTINCT responses.id) AS response_count
       FROM users
         INNER JOIN assignments ON users.id = assignments.user_id AND assignments.mission_id = ?
         LEFT JOIN responses ON responses.user_id = users.id AND responses.mission_id = ?
+      WHERE assignments.role = 'observer'
       GROUP BY users.id, users.name
       ORDER BY response_count
       LIMIT ?", mission.id, mission.id, limit])

@@ -30,7 +30,8 @@ class Condition < ActiveRecord::Base
     {name: 'ninc', types: %w(select_multiple), code: "!="}
   ]
 
-  replicable backward_assocs: [:questioning, :ref_qing, {name: :option_ids, target_class_name: 'Option', type: :serialized}],
+  replicable backward_assocs: [:questioning, :ref_qing,
+      {name: :option_ids, target_class_name: 'Option', type: :serialized, skip_obj_if_missing: true}],
     dont_copy: [:ref_qing_id, :questioning_id, :option_ids]
 
   def options

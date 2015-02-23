@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150124171454) do
+ActiveRecord::Schema.define(:version => 20150219162102) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -350,8 +350,12 @@ ActiveRecord::Schema.define(:version => 20150124171454) do
 
   add_index "sms_messages", ["body"], :name => "index_sms_messages_on_body", :length => {"body"=>160}
   add_index "sms_messages", ["broadcast_id"], :name => "sms_messages_broadcast_id_fk"
+  add_index "sms_messages", ["created_at"], :name => "index_sms_messages_on_created_at"
+  add_index "sms_messages", ["from"], :name => "index_sms_messages_on_from"
   add_index "sms_messages", ["mission_id"], :name => "sms_messages_mission_id_fk"
   add_index "sms_messages", ["reply_to_id"], :name => "sms_messages_reply_to_id_fk"
+  add_index "sms_messages", ["to"], :name => "index_sms_messages_on_to"
+  add_index "sms_messages", ["type"], :name => "index_sms_messages_on_type"
   add_index "sms_messages", ["user_id"], :name => "sms_messages_user_id_fk"
 
   create_table "taggings", :force => true do |t|
@@ -408,6 +412,7 @@ ActiveRecord::Schema.define(:version => 20150124171454) do
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
   add_index "users", ["login"], :name => "index_users_on_login", :unique => true
+  add_index "users", ["name"], :name => "index_users_on_name"
 
   create_table "whitelists", :force => true do |t|
     t.integer  "user_id"

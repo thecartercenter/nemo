@@ -157,11 +157,7 @@ class OptionSet < ActiveRecord::Base
   # checks if this option set appears in any published questionings
   # uses eager loaded field if available
   def published?
-    if is_standard?
-      respond_to?(:copy_published_col) ? copy_published_col == 1 : copies.any?{|c| c.questionings.any?(&:published?)}
-    else
-      respond_to?(:published_col) ? published_col == 1 : questionings.any?(&:published?)
-    end
+    is_standard? ? false : (respond_to?(:published_col) ? published_col == 1 : questionings.any?(&:published?))
   end
 
   # checks if this option set is used in at least one question or if any copies are used in at least one question

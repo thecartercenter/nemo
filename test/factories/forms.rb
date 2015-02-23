@@ -3,7 +3,8 @@ def create_question(qtype_name, mission, option_names, multi_option_set, rank, p
   question_attribs = {
     qtype_name: qtype.name,
     mission: mission,
-    use_multilevel_option_set: multi_option_set || qtype_name == 'multi_level_select_one'
+    use_multilevel_option_set: multi_option_set || qtype_name == 'multi_level_select_one',
+    is_standard: mission.nil?
   }
 
   # assign the options to the question if appropriate

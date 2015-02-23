@@ -152,6 +152,9 @@
       $('#title img').css('height', '30px');
       $('a.full-screen i').removeClass('fa-expand').addClass('fa-compress');
     }
+
+    // Set link text
+    $('a.full-screen span').text(I18n.t('dashboard.' + (fs ? 'exit' : 'enter') + '_full_screen'));
   }
 
 }(ELMO.Views));

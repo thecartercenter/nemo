@@ -46,6 +46,10 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
     super(label, options)
   end
 
+  def base_errors
+    @template.content_tag(:div, @object.errors[:base].join(' '), :class => 'form-errors')
+  end
+
   private
 
     # generates html for a form field

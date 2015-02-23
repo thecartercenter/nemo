@@ -151,7 +151,7 @@ class Replication::ObjProxy
         mappings << 'mission_id'
         mappings << 'is_standard' if klass.standardizable?
       when :to_mission
-        mappings << ['mission_id', replicator.dest_mission.id]
+        mappings << ['mission_id', replicator.target_mission_id]
         mappings << ['standard_copy', 1] if klass.standardizable? && replicator.source_is_standard?
       end
       mappings << ['original_id', 'id'] if klass.standardizable?
@@ -160,40 +160,42 @@ class Replication::ObjProxy
 
     def backward_assoc_col_mappings(replicator, context)
       klass.backward_assocs.map do |assoc|
-        if assoc.serialized?
-          [assoc.foreign_key, serialized_backward_assoc_ids(assoc)]
-        else
-          [assoc.foreign_key, singular_backward_assoc_id(assoc)]
+        begin
+          if assoc.serialized?
+            [assoc.foreign_key, serialized_backward_assoc_ids(assoc)]
+          else
+            [assoc.foreign_key, singular_backward_assoc_id(assoc)]
+          end
+        rescue Replication::BackwardAssocError
+          # If we have explicit instructions to delete the object if an association is missing, make a note of it.
+          $!.ok_to_skip = assoc.skip_obj_if_missing
+          raise $! # Then we send on up the chain.
         end
       end
     end
 
     def singular_backward_assoc_id(assoc)
       orig_foreign_id = klass.where(id: id).pluck(assoc.foreign_key).first
-      #copy = history.get_copy(assoc.target_class, orig_foreign_id)
-      copy_id = get_copy_id(assoc.target_class, orig_foreign_id)
-      raise "Couldn't find copy of #{assoc.target_class.name} ##{orig_foreign_id}" unless copy_id
-      copy_id
+      get_copy_id(assoc.target_class, orig_foreign_id) ||
+        (raise Replication::BackwardAssocError.new("Couldn't find copy of #{assoc.target_class.name} ##{orig_foreign_id}"))
     end
 
     def serialized_backward_assoc_ids(assoc)
       orig_foreign_ids = klass.where(id: id).pluck(assoc.foreign_key).first
       return nil if orig_foreign_ids.nil?
       copy_ids = orig_foreign_ids.map do |orig_id|
-        copy_id = get_copy_id(assoc.target_class, orig_id)
-        #copy = history.get_copy(assoc.target_class, orig_id)
-        raise "Couldn't find copy of #{assoc.target_class.name} ##{orig_id}" unless copy_id
-        copy_id
+        get_copy_id(assoc.target_class, orig_id) ||
+          (raise Replication::BackwardAssocError.new("Couldn't find copy of #{assoc.target_class.name} ##{orig_id}"))
       end
       "'#{copy_ids.to_json}'"
     end
 
     def get_copy_id(target_class, orig_id)
       if target_class.standardizable?
-        target_class.where(mission_id: replicator.dest_mission.id, original_id: orig_id).pluck(:id).first
+        target_class.where(mission_id: replicator.target_mission_id, original_id: orig_id).pluck(:id).first
       elsif reuse_col = target_class.replicable_opts[:reuse_if_match]
         orig_reuse_val = target_class.where(id: orig_id).pluck(reuse_col).first
-        target_class.where(mission_id: replicator.dest_mission.id, reuse_col => orig_reuse_val).pluck(:id).first
+        target_class.where(mission_id: replicator.target_mission_id, reuse_col => orig_reuse_val).pluck(:id).first
       else
         replicator.history.get_copy(target_class, orig_id).try(:id)
       end

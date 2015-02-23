@@ -82,7 +82,14 @@ module ResponsesHelper
         csv << responses.first.attributes.keys
 
         # add rest of rows
-        responses.each{|r| csv << r.attributes.values}
+        responses.each do |r|
+          attribs = r.attributes.dup
+
+          # Strip HTML from answer_value if it exists.
+          attribs['answer_value'] = strip_tags(attribs['answer_value']) if attribs['answer_value']
+
+          csv << attribs.values
+        end
       end
     end
   end

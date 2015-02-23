@@ -1,7 +1,4 @@
 class Sms::Incoming < Sms::Message
-  # User may be nil if sent from an unrecognized number.
-  belongs_to :user
-
   # Lookup the sender.
   before_create do
     self.user ||= User.by_phone(from)

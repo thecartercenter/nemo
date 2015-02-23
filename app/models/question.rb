@@ -27,6 +27,7 @@ class Question < ActiveRecord::Base
   validates(:qtype_name, :presence => true)
   validates(:option_set, :presence => true, :if => Proc.new{|q| q.qtype && q.has_options?})
   validate(:code_unique_per_mission)
+  validate(:at_least_one_name)
 
   scope(:by_code, order('questions.code'))
   scope(:default_order, by_code)
@@ -41,8 +42,7 @@ class Question < ActiveRecord::Base
       COUNT(DISTINCT answers.id) AS answer_count_col,
       COUNT(DISTINCT forms.id) AS form_count_col,
       MAX(DISTINCT forms.published) AS form_published_col,
-      COUNT(DISTINCT copy_answers.id) AS copy_answer_count_col,
-      MAX(DISTINCT copy_forms.published) AS copy_form_published_col
+      COUNT(DISTINCT copy_answers.id) AS copy_answer_count_col
     }).joins(%{
       LEFT OUTER JOIN form_items questionings ON questionings.question_id = questions.id AND questionings.type = 'Questioning'
       LEFT OUTER JOIN forms ON forms.id = questionings.form_id
@@ -77,7 +77,8 @@ class Question < ActiveRecord::Base
            :to => :option_set, :allow_nil => true
 
   replicable child_assocs: :option_set, backwards_assocs: :questioning, sync: :code,
-    uniqueness: {field: :code, style: :camel_case}, dont_copy: [:key, :access_level, :option_set_id]
+    uniqueness: {field: :code, style: :camel_case}, dont_copy: [:key, :access_level, :option_set_id],
+    compatibility: [:qtype_name, :option_set_id]
 
   # returns questions that do NOT already appear in the given form
   def self.not_in_form(form)
@@ -153,11 +154,7 @@ class Question < ActiveRecord::Base
   # determines if the question appears on any published forms
   # uses the eager-loaded form_published_col field if available
   def published?
-    if is_standard?
-      respond_to?(:copy_form_published_col) ? copy_form_published_col == 1 : copies.any?(&:published?)
-    else
-      respond_to?(:form_published_col) ? form_published_col == 1 : forms.any?(&:published?)
-    end
+    is_standard? ? false : (respond_to?(:form_published_col) ? form_published_col == 1 : forms.any?(&:published?))
   end
 
   # checks if any associated forms are smsable
@@ -273,4 +270,7 @@ class Question < ActiveRecord::Base
       end
     end
 
+    def at_least_one_name
+      errors.add(:base, :at_least_one_name) if name.blank?
+    end
 end
