@@ -9,7 +9,7 @@ describe Form do
 
   describe 'to_mission' do
     context 'with nested questions' do
-      before(:all) do
+      before do
         @std = create(:form, question_types: ['integer', %w(select_one integer)], is_standard: true)
         @copy = @std.replicate(mode: :to_mission, dest_mission: get_mission)
         @copy.reload
@@ -46,7 +46,7 @@ describe Form do
 
     context 'with a condition referencing an option' do
       context 'from a multilevel set' do
-        before(:all) do
+        before do
           @std = create(:form, question_types: %w(select_one integer), is_standard: true, use_multilevel_option_set: true)
 
           # Create condition on 2nd questioning.
@@ -57,7 +57,7 @@ describe Form do
         end
 
         context 'if all goes well' do
-          before(:all) do
+          before do
             @copy = @std.replicate(mode: :to_mission, dest_mission: get_mission)
             @copy_cond = @copy.c[1].condition
             @copy_opt_set = @copy.c[0].option_set
@@ -79,7 +79,7 @@ describe Form do
         end
 
         context 'if option is not found' do
-          before(:all) do
+          before do
             # First replicate the option set and destroy the option.
             @copy_os = @std.c[0].option_set.replicate(mode: :to_mission, dest_mission: get_mission)
             @copy_os.c[1].c[0].option.destroy
@@ -96,7 +96,7 @@ describe Form do
     end
 
     context 'with a condition referencing a now-incompatible question' do
-      before(:all) do
+      before do
         @std = create(:form, question_types: %w(select_one integer), is_standard: true)
 
         # Create condition.
@@ -134,16 +134,12 @@ describe Form do
 
   describe 'clone' do
 
-    context 'basic', database_cleaner: :all do
-      before(:all) do
+    context 'basic' do
+      before do
         @orig = create(:form, question_types: ['integer', %w(select_one integer)], is_standard: true)
         @copy = @orig.replicate(mode: :clone)
         @copy.reload
       end
-
-      # after(:all) do
-      #   DatabaseCleaner.clean_with(:truncation)
-      # end
 
       it 'should reuse only standardizable objects' do
         expect(@orig).not_to eq @copy
