@@ -33,7 +33,7 @@ describe API::V1::FormsController do
 
     context "views meta data on a particular form" do
       before do
-        @form = @mission.forms.create(name: "test1" )
+        @form = create(:form, name: "test1", mission: @mission)
       end
 
       it "should find a form" do
