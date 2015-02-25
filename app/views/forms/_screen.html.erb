@@ -44,97 +44,93 @@
 
       <div class="questions-header" id="questions-header">
         <span><a href="choose-questions"><i class="fa fa-plus"></i> Add Question</a></span>
-        <span><a href=""><i class="fa fa-folder-open-o"></i> Add Group</a></span>
+        <span class="q-addGroup"><a><i class="fa fa-folder-open-o"></i> Add Group</a></span>
       </div>
 
       <div class="draggable-list-wrapper">
-      <ol class="questions-list ui-sortable">
-      <% @form.questionings.each do |qing| %>
-        <li class="question">
-          
-          <%# Standard question? %>
-          <% if qing.standardized? == true %>
-            <div class="q-standardized"><i class="fa fa-certificate"></i></div>
-          <% end %>
+        <ol class="questions-list ui-sortable">
+          <% @form.questionings.each do |qing| %>
+            <li class="question">
 
-          <%# Question type icon %>
-          <div class="q-type">
-            <% t = qing.qtype_name %>
-
-            <% if t == 'text' %>
-              <span>abc</span>
-            <% elsif t == 'long_text' %>
-              <i class="fa fa-align-left"></i>
-            <% elsif t == 'integer' %>
-              <span>123</span>
-            <% elsif t == 'decimal' %>
-              <span>1.23</span>
-            <% elsif t == 'select_one' %>
-              <i class="fa fa-dot-circle-o"></i>
-            <% elsif t == 'select_multiple' %>
-              <i class="fa fa-check-square-o"></i>
-            <% elsif t == 'date' %>
-              <i class="fa fa-calendar"></i>
-            <% elsif t == 'time' %>
-              <i class="fa fa-clock-o"></i>
-            <% elsif t == 'datetime' %>
-              <i class="fa fa-calendar"></i>
-              <i class="fa fa-clock-o"></i>
-            <% elsif t == 'location' %>
-              <i class="fa fa-map-marker"></i>
-            <% end %>
-          </div>
-
-          <div class="q-base"
-            <%# Question short code %>
-            <span class="q-code">[<%= qing.code %>]</span>
-
-            <%# Question text %>
-            <span class="q-name"><%= qing.name %></span>
-
-            <%# Required question? %>
-            <% if qing.required == true %>
-              <span class="q-required">*</span>
-            <% end %>
-      
-            <%# Tags %>
-            <% if qing.tags.length != 0 %>
-              <% qing.tags.each do |tag| %>
-                <span class="q-tag"> <%= tag %></span>
+              <%# Standard question? %>
+              <% if qing.standardized? == true %>
+                <div class="q-standardized"><i class="fa fa-certificate"></i></div>
               <% end %>
-            <% end %>
-          </div>
 
-          <%# Conditional on another question? %>
-          <div class="q-condition">
-            <% if qing.has_condition? == true %>
-              <i class="fa fa-link"></i>
-              <%# TODO: display question number of linked question %>
-              <span>#n.n</span>
-            <% end %>
-          </div>
+              <%# Question type icon %>
+              <div class="q-type">
+                <% t = qing.qtype_name %>
 
-          <%# Edit and delete %>
-          <div class="q-actions">
-            <a href="../../questionings/<%= qing.id %>/edit">
-              <i class="fa fa-pencil"></i>
-            </a>
-            <a href="../../questionings/<%= qing.id %>"
-              class="action_link action_link_destroy" data-confirm="Are you sure you want to permanently delete the Question '<%= qing.name %>'?" data-method="delete" rel="nofollow" title="Delete">
-              <i class="fa fa-trash-o"></i>
-            </a>
-            </a>
-          </div>
+                <% if t == 'text' %>
+                  <span>abc</span>
+                <% elsif t == 'long_text' %>
+                  <i class="fa fa-align-left"></i>
+                <% elsif t == 'integer' %>
+                  <span>123</span>
+                <% elsif t == 'decimal' %>
+                  <span>1.23</span>
+                <% elsif t == 'select_one' %>
+                  <i class="fa fa-dot-circle-o"></i>
+                <% elsif t == 'select_multiple' %>
+                  <i class="fa fa-check-square-o"></i>
+                <% elsif t == 'date' %>
+                  <i class="fa fa-calendar"></i>
+                <% elsif t == 'time' %>
+                  <i class="fa fa-clock-o"></i>
+                <% elsif t == 'datetime' %>
+                  <i class="fa fa-calendar"></i>
+                  <i class="fa fa-clock-o"></i>
+                <% elsif t == 'location' %>
+                  <i class="fa fa-map-marker"></i>
+                <% end %>
+              </div>
 
-        </li>
-      <% end %>
-      </ol>
+              <div class="q-base"
+                <%# Question short code %>
+                <span class="q-code">[<%= qing.code %>]</span>
+
+                <%# Question text %>
+                <span class="q-name"><%= qing.name %></span>
+
+                <%# Required question? %>
+                <% if qing.required == true %>
+                  <span class="q-required">*</span>
+                <% end %>
+
+                <%# Tags %>
+                <% if qing.tags.length != 0 %>
+                  <% qing.tags.each do |tag| %>
+                    <span class="q-tag"> <%= tag %></span>
+                  <% end %>
+                <% end %>
+              </div>
+
+              <%# Conditional on another question? %>
+              <div class="q-condition">
+                <% if qing.has_condition? == true %>
+                  <i class="fa fa-link"></i>
+                  <%# TODO: display question number of linked question %>
+                  <span>#n.n</span>
+                <% end %>
+              </div>
+
+              <%# Edit and delete %>
+              <div class="q-actions">
+                <a href="../../questionings/<%= qing.id %>/edit">
+                  <i class="fa fa-pencil"></i>
+                </a>
+                <a href="../../questionings/<%= qing.id %>"
+                  class="action_link action_link_destroy" data-confirm="Are you sure you want to permanently delete the Question '<%= qing.name %>'?" data-method="delete" rel="nofollow" title="Delete">
+                  <i class="fa fa-trash-o"></i>
+                </a>
+                </a>
+              </div>
+
+            </li>
+          <% end %>
+        </ol>
       </div>
-
-      <%# TODO: find spot in code to place this script to make question list sortable %>
-      <script>
-        $('.questions-list').sortable();
-      </script>
+      <%= render('add_group') %>
     </div>
 
     <% show_sp_btn = !@form.new_record? && !@form.published? && can?(:publish, @form) %>
@@ -154,4 +150,6 @@
 <%= javascript_doc_ready do %>
   Form.hookup_rank_boxes();
   new ELMO.Views.PrintFormView();
+  new ELMO.Views.SortableFormItemsView();
+  new ELMO.Views.QuestionGroupDialogView();
 <% end %>

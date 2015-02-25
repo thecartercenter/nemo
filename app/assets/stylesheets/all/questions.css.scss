@@ -105,12 +105,12 @@ ul.tags {
 
 
 // TODO: Ensure styles apply without increased specificity
-#questions-header.questions-header { 
+#questions-header.questions-header {
 
   span {
     margin-right: 10px;
   }
-  
+
   a {
     i {
     color: inherit;
@@ -119,7 +119,7 @@ ul.tags {
 }
 .questions-list {
   padding-left: 0;
-  
+
   li {
     list-style-position: inside;
   }
