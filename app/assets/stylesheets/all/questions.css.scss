@@ -102,3 +102,70 @@ ul.tags {
   max-height: 93px;
   overflow: auto;
 }
+
+
+// TODO: Ensure styles apply without increased specificity
+#questions-header.questions-header { 
+
+  span {
+    margin-right: 10px;
+  }
+  
+  a {
+    i {
+    color: inherit;
+    }
+  }
+}
+.questions-list {
+  padding-left: 0;
+  
+  li {
+    list-style-position: inside;
+  }
+
+  .question {
+    margin: 5px 0;
+    min-height: 15px;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    padding: 5px 5px 5px 50px;
+    border: 1px solid #CCC;
+    background: #eee;
+    cursor: default;
+
+    .q-type, .q-actions {
+      color: #879CAA;
+    }
+
+    .q-base, .q-actions, .q-standardized, .q-type, .q-condition {
+      display: inline-block;
+    }
+
+    .q-actions {
+      float: right;
+      text-align: right;
+    }
+
+    .q-standardized {
+      position: absolute;
+      left: 30px;
+    }
+
+    .q-type {
+      position: absolute;
+      left: 45px;
+    }
+
+    .q-condition {
+      position: absolute;
+      right: 65px;
+      color: #666;
+    }
+
+    .q-required {
+      color: #fd8452;
+    }
+  }
+}
