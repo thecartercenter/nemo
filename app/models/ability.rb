@@ -46,7 +46,7 @@ class Ability
 
         # standard objects, missions, settings, and all users are available in no-mission (admin) mode
         if mode == 'admin'
-          [Form, Questioning, Condition, Question, OptionSet, OptionNode, Option, Tag, Tagging].each do |k|
+          [Form, Questioning, QingGroup, Condition, Question, OptionSet, OptionNode, Option, Tag, Tagging].each do |k|
             can :manage, k, :mission_id => nil
           end
           can :manage, Mission
@@ -143,7 +143,7 @@ class Ability
           if mission.locked?
             can [:index, :read, :export], [Form, Question, OptionSet], :mission_id => mission.id
             can :print, Form, :mission_id => mission.id
-            can :read, [Questioning, Option], :mission_id => mission.id
+            can :read, [Questioning, QingGroup, Option], :mission_id => mission.id
 
           # permissions for non-locked mission
           else
@@ -160,7 +160,7 @@ class Ability
             end
 
             # coord can manage these classes for the current mission
-            [Form, OptionSet, Question, Questioning, Option, Tag, Tagging].each do |klass|
+            [Form, OptionSet, Question, Questioning, QingGroup, Option, Tag, Tagging].each do |klass|
               can :manage, klass, :mission_id => mission.id
             end
 
@@ -175,6 +175,9 @@ class Ability
 
           # there is no Questioning index
           cannot :index, Questioning
+
+          # there is no QingGroup index
+          cannot :index, QingGroup
         end
 
         # Users can view/modify only their own API keys
