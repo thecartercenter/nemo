@@ -3,23 +3,10 @@ require 'spec_helper'
 describe QingGroupsController, type: :request do
   before do
     @user = create(:user, role_name: 'coordinator')
-    @form = create(:form, question_types: %w(text text))
-    @qing_group = create(:qing_group,
-      form: @form, mission: get_mission, ancestry: @form.root_id)
+    @form = create(:form, question_types: ['text', ['text', 'text']])
+    @qing_group = @form.c[1]
 
     login(@user)
-  end
-
-  describe 'new' do
-    it 'should be successful' do
-      get(new_qing_group_path(@form))
-      expect(response).to be_success
-    end
-
-    it 'should assign new qing_group' do
-      get(new_qing_group_path(@form))
-      expect(assigns(:qing_group)).to be_kind_of(QingGroup)
-    end
   end
 
   describe 'create' do
@@ -33,7 +20,7 @@ describe QingGroupsController, type: :request do
     end
 
     it 'should render item partial' do
-      expect(response).to render_template(:partial => 'qing_groups/_item')
+      expect(response).to render_template(partial: 'qing_groups/_form')
     end
 
     it 'should create new qing_group' do
@@ -60,26 +47,10 @@ describe QingGroupsController, type: :request do
     end
   end
 
-  describe 'show' do
-    it 'should be successful' do
-      get(qing_group_path(@qing_group, mode: 'm', mission_name: get_mission.compact_name))
-      expect(response).to be_success
-    end
-  end
-
-  describe 'edit' do
-    it 'should be successful' do
-      get(edit_qing_group_path(@qing_group, mode: 'm', mission_name: get_mission.compact_name))
-      expect(response).to be_success
-    end
-  end
-
   describe 'destroy' do
     it 'should be successful' do
       delete(qing_group_path(@qing_group, mode: 'm', mission_name: get_mission.compact_name))
-      expect(response).to redirect_to edit_form_path(@form)
+      expect(response).to be_success
     end
   end
-
-
 end

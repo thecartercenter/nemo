@@ -2,20 +2,7 @@ class QingGroupsController < ApplicationController
   # authorization via cancan
   load_and_authorize_resource
 
-  before_filter :prepare_qing_group, :only => [:create]
-
-  def new
-    @qing_group = QingGroup.new(:form_id => params[:id])
-    render(:form)
-  end
-
-  def edit
-    render(:form)
-  end
-
-  def show
-    render(:form)
-  end
+  before_filter :prepare_qing_group, only: [:create]
 
   def create
     create_or_update
@@ -27,15 +14,17 @@ class QingGroupsController < ApplicationController
   end
 
   def destroy
-    destroy_and_handle_errors(@qing_group)
-    redirect_to(edit_form_url(@qing_group.form))
+    begin
+      @qing_group.destroy
+      render nothing: true, status: 204
+    end
   end
 
   private
     # creates/updates the qing_group
     def create_or_update
       if @qing_group.save
-        render(:partial => 'item')
+        render(partial: 'form')
       else
         render(:form)
       end
