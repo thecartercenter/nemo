@@ -1,7 +1,9 @@
 class ELMO.Views.SortableFormItemsView extends Backbone.View
 
   initialize: ->
-    $('.questions-list').sortable()
+    $('.form-items-list').sortable()
+    $('.form-group ol').sortable()
+    $('.form-group ol').droppable()
 
   # Sortable list
 

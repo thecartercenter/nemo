@@ -1,0 +1,56 @@
+@import 'mixins';
+
+// TODO: Ensure styles apply without increased specificity
+.form-items #form-items-header {
+  @include action-links;
+}
+
+.form-items-list {
+  padding-left: 0;
+
+  li {
+    list-style-position: inside;
+  }
+
+  .form-item {
+    @include draggable-list;
+    padding: 5px 5px 5px 50px;
+
+    .type, .actions {
+      color: #879CAA;
+    }
+
+    .base-info, .actions, .standardized, .type, .condition {
+      display: inline-block;
+    }
+
+    .actions {
+      float: right;
+      text-align: right;
+    }
+
+    .standardized {
+      position: absolute;
+      left: 30px;
+    }
+
+    .type {
+      position: absolute;
+      left: 45px;
+    }
+
+    .condition {
+      position: absolute;
+      right: 65px;
+      color: #666;
+    }
+
+    .required-sym {
+      color: #fd8452;
+    }
+
+    .token-input-token-elmo {
+      float: none;
+    }
+  }
+}

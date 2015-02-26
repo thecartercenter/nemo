@@ -1,3 +1,5 @@
+@import 'mixins';
+
 /* variables */
 $theme_green: #9dc400;
 $elmo-blue: #879CAA;
@@ -67,15 +69,7 @@ form.option_set_form {
 
         div.inner {
 
-          margin: 5px 0;
-          min-height: 15px;
-          border-radius: 5px;
-          -moz-border-radius: 5px;
-          -webkit-border-radius: 5px;
-          padding: 5px;
-          border: 1px solid #CCC;
-          background: #eee;
-          cursor: default;
+          @include draggable-list;
 
           /* icon */
           i.fa-times, i.fa-pencil {
@@ -109,28 +103,4 @@ form.option_set_form {
    (not inside the form since it's appended to the body) */
 
 div.modal.edit-named-item {
-
-  div.form-warning {
-    margin-top: -8px;
-  }
-
-  div.translation {
-    height: 40px;
-    margin-top: 10px;
-
-    &:first-child {
-      margin-top: 10px;
-    }
-
-    label {
-      width: 125px;
-      display: inline-block;
-    }
-
-    input[type=text] {
-      padding: 3px;
-      display: inline-block;
-      width: 250px;
-    }
-  }
 }

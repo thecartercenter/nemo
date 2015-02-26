@@ -1,0 +1,65 @@
+           <li class="form-group form-item">
+            Group
+              <ol class="<!--ui-widget-header-->">
+                <li class="form-item <!--ui-widget-content-->">Test Form Item</li>
+                <li class="form-item <!--ui-widget-content-->">Test Form Item</li>
+                <li class="form-item <!--ui-widget-content-->">Test Form Item</li>
+              </ol>
+           </li>
+
+          <%# @form.questionings.each do |qing| %>
+            <li class="form-question form-item">
+
+              <%# Standard question? %>
+              <%# if qing.standardized? %>
+                <i class="standardized fa fa-certificate"></i>
+              <%# end %>
+
+              <%# Question type icon %>
+              <div class="type">
+                <%= form_item_icon('group') %>
+              </div>
+
+              <div class="base-info">
+                <%# Question short code %>
+                <!--<span class="code">[<%#= qing.code %>]</span>-->
+
+                <%# Question text %>
+                <span class="name"><%#= qing.name %>Group</span>
+
+                <%# Required question? %>
+                <%#= content_tag(:span, '*', class: 'required-sym') if qing.required %>
+
+                <%# Tags %>
+                <%# if qing.tags.length != 0 %>
+                  <%# qing.tags.each do |tag| %>
+                    <span class="token-input-token-elmo">Tag<%#= tag.name %></span>
+                  <%# end %>
+                <%# end %>
+              </div>
+
+              <%# Conditional on another question? %>
+              <%# if qing.has_condition? %>
+              <div class="condition">
+                <i class="fa fa-link"></i>
+                <%# TODO: display question number of linked question %>
+                <span>#n.n</span>
+              </div>
+              <%# end %>
+
+            <%# Edit and delete %>
+              <div class="actions">
+                <%= link_to content_tag(:i, '', class: 'fa fa-pencil'), 'test' %>
+
+                <a href="../../questionings %>"
+                  class="action_link action_link_destroy" data-confirm="Are you sure you want to permanently delete the Question '<%#= qing.name %>'?" data-method="delete" rel="nofollow" title="Delete">
+                  <i class="fa fa-trash-o"></i>
+                </a>
+              </div>
+
+              <ol class="<!--ui-widget-header-->">
+                <li class="form-item <!--ui-widget-content-->">Test Form Item</li>
+                <li class="form-item <!--ui-widget-content-->">Test Form Item</li>
+              </ol>
+            </li>
+          <%# end %>

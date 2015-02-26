@@ -942,6 +942,7 @@ en:
 
   form:
     select_api_users: "Select all users who can access form data via the API:"
+    add_group: "Add Group"
     add_questions: "Add Questions"
     add_selected: "Add Selected Questions to Form"
     back_to_questions: "Back to Questions List"
