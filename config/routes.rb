@@ -77,6 +77,7 @@ ELMO::Application.routes.draw do
         put 'clone'
         put 'publish'
         get 'choose_questions', :path => 'choose-questions'
+        resources :qing_groups, :only => :new
       end
     end
     resources :markers
@@ -86,6 +87,7 @@ ELMO::Application.routes.draw do
         get 'condition_form', :path => 'condition-form'
       end
     end
+    resources :qing_groups, except: :new
     resources :settings
     resources :user_batches, :path => 'user-batches'
     resources :groups
