@@ -103,6 +103,11 @@ module ApplicationHelper
     t(b ? "common._yes" : "common._no")
   end
 
+  # test if given obj is paginable
+  def paginable?(obj)
+    obj.respond_to?(:total_pages)
+  end
+
   # if the given array is not paginated, apply an infinite pagination so the will_paginate methods will still work
   def prepare_for_index(objs)
     objs = if !objs.respond_to?(:total_entries) && objs.respond_to?(:paginate)
