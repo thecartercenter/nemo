@@ -12,6 +12,10 @@ class FormItem < ActiveRecord::Base
   has_many(:standard_form_reports, class_name: 'Report::StandardFormReport', foreign_key: :disagg_qing_id, dependent: :nullify)
 
   before_create(:set_mission)
+  before_create(:set_rank)
+
+  after_destroy(:fix_ranks)
+
 
   has_ancestry cache_depth: true
 
@@ -27,7 +31,25 @@ class FormItem < ActiveRecord::Base
       order: '(case when ancestry is null then 0 else 1 end), ancestry, rank'))
   end
 
+  # tests for cyclic parents
+  def check_ancestry_integrity(parent_id)
+    parent = FormItem.find_by_id(parent_id)
+    return true if parent.nil?
+    parent.ancestry != self.id.to_s
+  end
+
   private
+
+    # sets rank if not already set
+    def set_rank
+      self.rank ||= (form.try(:max_rank) || 0) + 1
+      return true
+    end
+
+    # repair the ranks of the remaining questions on the form
+    def fix_ranks
+      form.fix_ranks
+    end
 
     # copy mission from question
     def set_mission
