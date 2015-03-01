@@ -258,6 +258,7 @@ class FormsController < ApplicationController
     def prepare_and_render_form
       # render the form template
       @users = User.assigned_to_or_admin(current_mission).by_name
+      @qing_group = QingGroup.new(form: @form)
       render(:form)
     end
 

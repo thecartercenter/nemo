@@ -1,15 +1,18 @@
           <% @form.questionings.each do |qing| %>
-            <li class="form-question form-item ui-widget-content">
+            <li class="form-question form-item">
 
+            <div class="form-item-content">
               <%# Standard question? %>
               <% if qing.standardized? %>
                 <i class="standardized fa fa-certificate"></i>
+              <% else %>
+                <%# Spacing placeholder for styling purposes %>
+                <div class="standardized">
+                </div>
               <% end %>
 
               <%# Question type icon %>
-              <div class="type">
-                <%= form_item_icon(qing.qtype_name) %>
-              </div>
+              <div class="type"><%= form_item_icon(qing.qtype_name) %></div>
 
               <div class="base-info">
                 <%# Question short code %>
@@ -29,24 +32,28 @@
                 <% end %>
               </div>
 
-              <%# Conditional on another question? %>
-              <% if qing.has_condition? %>
-              <div class="condition">
-                <i class="fa fa-link"></i>
-                <%# TODO: display question number of linked question %>
-                <span>#n.n</span>
-              </div>
-              <% end %>
-
             <%# Edit and delete %>
               <div class="actions">
+
+                <%# Conditional on another question? %>
+                <% if qing.has_condition? %>
+                <div class="condition">
+                  <i class="fa fa-link"></i>
+                  <%# TODO: display question number of linked question %>
+                  <%#= qing.ref_qing %>
+                  <span>#n.n</span>
+                </div>
+                <% end %>
+
                 <%= link_to content_tag(:i, '', class: 'fa fa-pencil'), edit_questioning_path(qing) %>
 
+                <%# TODO: replace with shorter delete code %>
                 <a href="../../questionings/<%= qing.id %>"
                   class="action_link action_link_destroy" data-confirm="Are you sure you want to permanently delete the Question '<%= qing.name %>'?" data-method="delete" rel="nofollow" title="Delete">
                   <i class="fa fa-trash-o"></i>
                 </a>
                 </a>
               </div>
+            </div><%# End of form-item-content %>
             </li>
           <% end %>

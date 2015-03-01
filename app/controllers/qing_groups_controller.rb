@@ -13,6 +13,8 @@ class QingGroupsController < ApplicationController
   end
 
   def create
+    @qing_group.ancestry = @qing_group.form.root_id
+    @qing_group.rank = @qing_group.form.max_rank + 1
     create_or_update
   end
 
@@ -32,9 +34,8 @@ class QingGroupsController < ApplicationController
     # creates/updates the qing_group
     def create_or_update
       if @qing_group.save
-        render(partial: 'form')
+        render template: 'qing_groups/group'
       else
-        render(:form)
       end
     end
 

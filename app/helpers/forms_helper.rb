@@ -150,7 +150,15 @@ module FormsHelper
     'date' => 'fa-calendar',
     'time' => 'fa-clock-o',
     'location' => 'fa-map-marker',
-    'group' => 'folder-open-o'
+    'group' => 'fa-folder-open-o',
+
+    # Placeholder icons
+    'decimal' => 'fa-folder',
+    'text' => 'fa-folder',
+    'integer' => 'fa-folder',
+    'datetime' => 'fa-folder',
+    'select_multiple' => 'fa-folder',
+    'select_one' => 'fa-folder'
   }
 
   def form_item_icon(type)

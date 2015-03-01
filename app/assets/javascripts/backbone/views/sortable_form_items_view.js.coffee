@@ -1,10 +1,6 @@
 class ELMO.Views.SortableFormItemsView extends Backbone.View
 
   initialize: ->
-    $('.form-items-list').sortable()
-    $('.form-group ol').sortable()
-    $('.form-group ol').droppable()
+    $('.form-items-list, .form-group ol').sortable({connectWith: ".item-list"})
 
-  # Sortable list
-
-  # Send information to server
+  # Send position information to server

@@ -257,6 +257,8 @@ en:
         multi_level: "Is Multilevel?"
         options: "Options"
         option_levels: "Levels"
+      qing_group:
+        group_name: "Group Name"
       question:
         base: "" # this is a sort of hack to get error msg to display properly
         code: "Code"

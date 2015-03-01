@@ -1,21 +1,20 @@
-<div class="form-items" id="form-items">
+<div class="form-items">
   <h2>Questions</h2>
 
-  <div id="form-items-header" class="form-items-header">
+  <div class="form-items-header">
     <a href="<%= choose_questions_form_path(@form) %>">
       <i class="fa fa-plus"></i>
       <%= t("form.add_questions") %>
     </a>
-    <a class="form-add-group" id="form-add-group">
+    <a class="form-add-group">
       <i class="fa fa-folder-open-o"></i>
       <%= t("form.add_group") %>
     </a>
   </div>
 
   <div class="draggable-list-wrapper">
-    <ol class="form-items-list ui-sortable <!--ui-widget-header-->">
+    <ol class="form-items-list item-list">
       <%= render('form_item') %>
     </ol>
   </div>
-  <%= render('group_modal') %>
 </div>

@@ -1,5 +1,7 @@
 $orange: #F77D48;
 
+$list-item-background: #eee;
+
 @mixin draggable-list {
   margin: 5px 0;
   min-height: 15px;
@@ -8,7 +10,7 @@ $orange: #F77D48;
   -webkit-border-radius: 5px;
   padding: 5px;
   border: 1px solid #CCC;
-  background: #eee;
+  background: $list-item-background;
   cursor: default;
 }
 

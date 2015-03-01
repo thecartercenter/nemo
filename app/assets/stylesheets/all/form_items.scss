@@ -1,20 +1,39 @@
 @import 'mixins';
 
-// TODO: Ensure styles apply without increased specificity
 .form-items #form-items-header {
   @include action-links;
 }
 
 .form-items-list {
   padding-left: 0;
+  counter-reset: item;
+
+  $number: 20px;
+  $standardized: 10px;
+  $margin: 5px;
 
   li {
     list-style-position: inside;
+    border: none;
+    display: block;
+    background: none;
   }
 
   .form-item {
-    @include draggable-list;
-    padding: 5px 5px 5px 50px;
+
+    .form-item-content {
+      @include draggable-list;
+      padding: 5px 5px 5px 15px;
+    }
+
+    .form-item-content:before {
+      content: counters(item, ".") ".";
+      counter-increment: item;
+      position: relative;
+      display: inline-block;
+      left: $number + $margin + $standardized;
+      width: $number;
+    }
 
     .type, .actions {
       color: #879CAA;
@@ -30,19 +49,20 @@
     }
 
     .standardized {
-      position: absolute;
-      left: 30px;
+      position: relative;
+      left: -30px;
+      width: $standardized;
     }
 
     .type {
-      position: absolute;
-      left: 45px;
+      position: relative;
+      left: -25px;
+      width: 20px;
     }
 
     .condition {
-      position: absolute;
-      right: 65px;
       color: #666;
+      margin-right: 10px;
     }
 
     .required-sym {
@@ -51,6 +71,16 @@
 
     .token-input-token-elmo {
       float: none;
+    }
+
+    &.form-group {
+      counter-reset: group-item;
+      margin-bottom: 0;
+
+      li .form-item-content:before {
+        content: counter(group-item) ".";
+        counter-increment: group-item;
+      }
     }
   }
 }
