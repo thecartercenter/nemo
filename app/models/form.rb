@@ -74,6 +74,13 @@ class Form < ActiveRecord::Base
     root_group.sorted_leaves.flatten
   end
 
+  # Returns array of questionings, sorted in traversal order.
+  # Questionings which belong to groups are returned in sub arrays
+  # e.g [q1, [q2, q3], q4]
+  def grouped_questionings
+    root_group.sorted_leaves
+  end
+
   def questions(reload = false)
     questionings(reload).map(&:question)
   end
