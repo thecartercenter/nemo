@@ -35,7 +35,7 @@ describe UsersController, type: :request do
     context 'when updating admin profile in unassigned mission' do
       before do
         mission = create(:mission)
-        user = create(:user, admin: true, role_name: 'coordinator')
+        user = create(:user, admin: true)
         login(user)
 
         put(user_path(user, :locale => 'en', mode: 'm', mission_name: mission.compact_name), :user => {:name => 'Test'})
