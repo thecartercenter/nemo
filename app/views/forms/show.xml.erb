@@ -106,11 +106,11 @@
         <% if qing.is_a?(Array) %>
           <group appearance="field-list">
             <% qing.each do |q| %>
-              <%= render('odk_questionings', qing: q, style: @style) unless q.hidden  %>
+              <%= render('odk_questioning', qing: q, style: @style) unless q.hidden  %>
             <% end %>
           </group>
         <% else %>
-          <%= render('odk_questionings', qing: qing, style: @style) unless qing.hidden %>
+          <%= render('odk_questioning', qing: qing, style: @style) unless qing.hidden %>
         <% end %>
       <% end %>
 
