@@ -147,9 +147,12 @@ class Ability
 
           # permissions for non-locked mission
           else
-            # can manage users in current mission
-            # special change_assignments permission is given so that users cannot update their own assignments via edit profile
-            can [:create, :update, :login_instructions, :change_assignments], User, :assignments => {:mission_id => mission.id}
+
+            if !user.admin?
+              # can manage users in current mission
+              # special change_assignments permission is given so that users cannot update their own assignments via edit profile
+              can [:create, :update, :login_instructions, :change_assignments], User, :assignments => {:mission_id => mission.id}
+            end
 
             # can create user batches
             can :manage, UserBatch

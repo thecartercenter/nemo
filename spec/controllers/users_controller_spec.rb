@@ -30,4 +30,23 @@ describe UsersController, type: :request do
       assert_redirected_to(edit_user_path(@user, :locale => 'fr'))
     end
   end
+
+  describe 'update' do
+    context 'when updating admin profile in unassigned mission' do
+      before do
+        mission = create(:mission)
+        user = create(:user, admin: true, role_name: 'coordinator')
+        login(user)
+
+        put(user_path(user, :locale => 'en', mode: 'm', mission_name: mission.compact_name), :user => {:name => 'Test'})
+      end
+
+      it 'should be successful' do
+        expect(response.status).to eq(302)
+        user = assigns(:user)
+        expect(user.name).to eq 'Test'
+      end
+
+    end
+  end
 end
