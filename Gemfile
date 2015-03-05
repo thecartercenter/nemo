@@ -25,6 +25,7 @@ gem 'random_data'
 gem 'versionist'                 # versioning the api
 gem 'active_model_serializers'   # for making it easy to customize output for api
 gem 'dotiw'
+gem 'ranked-model'
 
 gem 'iso-639'
 

@@ -207,6 +207,8 @@ GEM
       thor (>= 0.14.6, < 2.0)
     rake (10.3.2)
     random_data (1.6.0)
+    ranked-model (0.4.0)
+      activerecord (>= 3.1.12)
     rdiscount (2.1.7.1)
     rdoc (3.12.2)
       json (~> 1.4)
@@ -346,6 +348,7 @@ DEPENDENCIES
   rails-i18n
   rake
   random_data
+  ranked-model
   rdiscount
   roo
   rspec-activemodel-mocks

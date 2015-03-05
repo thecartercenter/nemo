@@ -1,4 +1,4 @@
-def create_question(qtype_name, mission, option_names, multi_option_set, rank, parent=nil, form)
+def create_question(qtype_name, mission, option_names, multi_option_set, parent=nil, form)
   qtype = QuestionType[qtype_name == 'multi_level_select_one' ? 'select_one' : qtype_name]
   question_attribs = {
     qtype_name: qtype.name,
@@ -14,7 +14,6 @@ def create_question(qtype_name, mission, option_names, multi_option_set, rank, p
 
   qing = FactoryGirl.create(:questioning,
     :mission => mission,
-    :rank => rank,
     :parent => parent,
     :form => form,
     :question => FactoryGirl.build(:question, question_attribs))
@@ -29,6 +28,7 @@ FactoryGirl.define do
   factory :form do
     ignore do
       question_types []
+      questions []
       use_multilevel_option_set false
 
       # optionally specifies the options for the option set of the first select type question on the form
@@ -36,15 +36,19 @@ FactoryGirl.define do
     end
 
     after(:create) do |form, evaluator|
-      form.create_root_group!(rank: 1, form: form)
+      form.create_root_group!(form: form)
       form.save! # Save the reference to the root group.
       evaluator.question_types.each_with_index do |qts, index|
         if qts.kind_of?(Array)
-          group = QingGroup.create!(parent: form.root_group, form: form, rank: index+1)
-          qts.each_with_index { |qt, i| create_question(qt, form.mission, evaluator.option_names, evaluator.use_multilevel_option_set, i+1, group, form) }
+          group = QingGroup.create!(parent: form.root_group, form: form)
+          qts.each_with_index { |qt, i| create_question(qt, form.mission, evaluator.option_names, evaluator.use_multilevel_option_set, group, form) }
         else
-          create_question(qts, form.mission, evaluator.option_names, evaluator.use_multilevel_option_set, index+1, form.root_group, form)
+          create_question(qts, form.mission, evaluator.option_names, evaluator.use_multilevel_option_set, form.root_group, form)
         end
+      end
+
+      evaluator.questions.each do |qt|
+        create_question(qt, form.mission, evaluator.option_names, evaluator.use_multilevel_option_set, form.root_group, form)
       end
     end
 

@@ -115,7 +115,7 @@ class FormsController < ApplicationController
   def create
     @form.is_standard = true if current_mode == 'admin'
     if @form.save
-      @form.create_root_group!(mission: @form.mission, form: @form, rank: 1)
+      @form.create_root_group!(mission: @form.mission, form: @form)
       @form.save!
       set_success_and_redirect(@form, :to => edit_form_path(@form))
     else

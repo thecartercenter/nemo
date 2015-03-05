@@ -1,5 +1,7 @@
 class FormItem < ActiveRecord::Base
-  include MissionBased, FormVersionable, Replication::Replicable
+  include MissionBased, FormVersionable, Replication::Replicable, RankedModel
+
+  ranks :rank, with_same: :ancestry, class_name: 'FormItem'
 
   belongs_to(:form)
 
@@ -12,10 +14,6 @@ class FormItem < ActiveRecord::Base
   has_many(:standard_form_reports, class_name: 'Report::StandardFormReport', foreign_key: :disagg_qing_id, dependent: :nullify)
 
   before_create(:set_mission)
-  before_create(:set_rank)
-
-  after_destroy(:fix_ranks)
-
 
   has_ancestry cache_depth: true
 
@@ -39,18 +37,6 @@ class FormItem < ActiveRecord::Base
   end
 
   private
-
-    # sets rank if not already set
-    def set_rank
-      self.rank ||= (form.try(:max_rank) || 0) + 1
-      return true
-    end
-
-    # repair the ranks of the remaining questions on the form
-    def fix_ranks
-      form.fix_ranks
-    end
-
     # copy mission from question
     def set_mission
       self.mission = form.try(:mission)
