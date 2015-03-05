@@ -3,6 +3,7 @@ class QingGroupsController < ApplicationController
   load_and_authorize_resource
 
   before_filter :prepare_qing_group, only: [:create]
+  before_filter :validate_destroy, only: [:destroy]
 
   def create
     create_or_update
@@ -27,6 +28,12 @@ class QingGroupsController < ApplicationController
         render(partial: 'form')
       else
         render(:form)
+      end
+    end
+
+    def validate_destroy
+      if @qing_group.children.size > 0
+        render :json => [], :status => 404
       end
     end
 
