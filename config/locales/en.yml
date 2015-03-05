@@ -259,6 +259,7 @@ en:
         option_levels: "Levels"
       qing_group:
         group_name: "Group Name"
+        delete: "Are you sure you want to permanently delete this group:"
       question:
         base: "" # this is a sort of hack to get error msg to display properly
         code: "Code"
@@ -280,6 +281,7 @@ en:
         hidden: "Hidden?"
         rank: "Rank"
         required: "Required?"
+        delete: "Are you sure you want to permanently delete the question:"
       response:
         age: "Age"
         answers: "Answers"

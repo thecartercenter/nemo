@@ -37,7 +37,9 @@
 
     </div>
 
+    <% if form_mode == :edit %>
     <input class="btn btn-primary" type="submit" value="Save" />
+    <% end %>
 
     <%= render('form_items_list') %>
 

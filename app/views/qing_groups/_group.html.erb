@@ -1,40 +1,25 @@
+        <%# @form.qing_groups.each do |qing_group| %>
          <li class="form-group form-item">
-          <%#= debug @qing_group %>
-          <%#= debug @qing_groups %>
-
             <div class="form-item-content">
 
               <%# Standard group? %>
               <i class="standardized fa fa-certificate"></i>
-              <%# end %>
 
-              <%# Question type icon %>
               <div class="type">
                 <%= form_item_icon('group') %>
               </div>
 
               <div class="base-info">
-
-                <%# Group text %>
-                <span class="name">Name<%#= qing_group.group_name_translations %></span>
-
-                <%# Tags %>
-                <span class="token-input-token-elmo">Tag<%#= tag.name %></span>
+                <span class="name"><%#= qing_group.group_name %></span>
               </div>
 
             <%# Edit and delete %>
               <div class="actions">
+                <%#= link_to content_tag(:i, '', class: 'fa fa-pencil'), 'qing_group_path(qing_group)', method: :edit %>
 
-                <%= link_to content_tag(:i, '', class: 'fa fa-pencil'), 'test' %>
-
-                <%# TODO: replace with shorter delete for group %>
-
-                <%# TODO: determine what happens to items inside group on delete %>
-                  <%# Questions inside group moved to bottom of main item list ? %>
-                <a href="../../questionings %>"
-                  class="action_link action_link_destroy" data-confirm="Are you sure you want to permanently delete the question group?" data-method="delete" rel="nofollow" title="Delete">
-                  <i class="fa fa-trash-o"></i>
-                </a>
+                <%# if qing_group.has_children? == false %>
+                  <%#= link_to content_tag(:i, '', class: 'fa fa-trash-o'), qing_group_path(qing_group), method: :delete, data: { confirm: I18n.t("activerecord.attributes.qing_group.delete") + ' "' + qing_group.group_name + '"?'} %>
+                <%# end %>
               </div>
             </div> <%# End of form group info %>
 
@@ -44,3 +29,4 @@
               </ol>
             </li>
           <%# end %>
+        <%# end %>

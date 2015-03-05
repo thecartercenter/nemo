@@ -8,29 +8,3 @@ div.ui-dialog-content {
     display: none;
   }
 }
-
-div.modal.new-modal-style {
-  div.form-warning {
-    margin-top: -8px;
-  }
-
-  div.translation {
-    height: 40px;
-    margin-top: 10px;
-
-    &:first-child {
-      margin-top: 10px;
-    }
-
-    label {
-      width: 125px;
-      display: inline-block;
-    }
-
-    input[type=text] {
-      padding: 3px;
-      display: inline-block;
-      width: 250px;
-    }
-  }
-}

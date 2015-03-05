@@ -1,6 +1,7 @@
 <div class="form-items">
   <h2>Questions</h2>
 
+  <% if form_mode == :edit %>
   <div class="form-items-header">
     <a href="<%= choose_questions_form_path(@form) %>">
       <i class="fa fa-plus"></i>
@@ -11,6 +12,7 @@
       <%= t("form.add_group") %>
     </a>
   </div>
+  <% end %>
 
   <div class="draggable-list-wrapper">
     <ol class="form-items-list item-list">

@@ -47,12 +47,7 @@
 
                 <%= link_to content_tag(:i, '', class: 'fa fa-pencil'), edit_questioning_path(qing) %>
 
-                <%# TODO: replace with shorter delete code %>
-                <a href="../../questionings/<%= qing.id %>"
-                  class="action_link action_link_destroy" data-confirm="Are you sure you want to permanently delete the Question '<%= qing.name %>'?" data-method="delete" rel="nofollow" title="Delete">
-                  <i class="fa fa-trash-o"></i>
-                </a>
-                </a>
+                <%= link_to content_tag(:i, '', class: 'fa fa-trash-o'), questioning_path(qing), method: :delete, data: { confirm: I18n.t("activerecord.attributes.questioning.delete") + ' "' + qing.name + '"?'} %>
               </div>
             </div><%# End of form-item-content %>
             </li>

@@ -1,4 +1,4 @@
-<div class="group-modal modal fade new-modal-style" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+<div class="group-modal modal fade" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -6,7 +6,6 @@
         <h4 class="modal-title"><%= t("form.add_group") %></h4>
       </div>
       <div class="modal-body group-form">
-        <%#= @qing_group.inspect %>
         <%= elmo_form_for(@qing_group) do |f| %>
           <%= f.field(:form_id, type: :hidden) %>
 
