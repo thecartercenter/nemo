@@ -1,7 +1,8 @@
 class FormItem < ActiveRecord::Base
-  include MissionBased, FormVersionable, Replication::Replicable, RankedModel
+  include MissionBased, FormVersionable, Replication::Replicable
 
-  ranks :rank, with_same: :ancestry, class_name: 'FormItem'
+  #ranks :rank, with_same: :ancestry, class_name: 'FormItem'
+  acts_as_list column: :rank, scope: [:ancestry]
 
   belongs_to(:form)
 

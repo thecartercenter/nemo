@@ -23,7 +23,7 @@ describe FormItem do
   describe "sort" do
     before(:each) do
       @f = create(:form, questions: ['text', 'text', 'text', 'text'])
-      @group = create(:qing_group, form: @f, ancestry: @f.root_group.id)
+      @group = create(:qing_group, form: @f, ancestry: @f.root_group.id.to_s)
     end
 
     it 'should create 4 questionings and one group with correct ranks' do
@@ -37,24 +37,24 @@ describe FormItem do
       expect(@f.c[2].rank).to be < @group.rank
     end
 
-    it 'should set rank to 0 for existing questioning moved to the empty group' do
+    it 'should set rank to 1 for existing questioning moved to the empty group' do
       @qing = @f.c[0]
       @qing.ancestry = "#{@f.root_group.id}/#{@group.id}"
       @qing.save
       @qing.reload
-      expect(@qing.rank).to eq 0
+      expect(@qing.rank).to eq 1
     end
 
-    it 'should change order of the questioning moved up' do
+    it 'should change order of the questioning moved higher' do
       @qing = @f.c[3]
-      @qing.update_attribute :rank_position, :up
-      expect(@f.c[2].rank).to be > @f.c[3].rank
+      @qing.move_higher
+      expect(@f.c[3].rank).to be < @f.c[2].rank
     end
 
-    it 'should change order of the questioning moved down' do
+    it 'should change order of the questioning moved lower' do
       @qing = @f.c[0]
-      @qing.update_attribute :rank_position, :last
-      expect(@f.c[2].rank).to be < @f.c[0].rank
+      @qing.move_lower
+      expect(@f.c[1].rank).to be < @f.c[0].rank
     end
   end
 end
