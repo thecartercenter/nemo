@@ -13,7 +13,7 @@ describe FormItemsController, type: :request do
     context 'when valid ancestry' do
       before(:each) do
         put(form_item_path(@qing, mode: 'm', mission_name: get_mission.compact_name),
-          'form_item' => { 'rank' => 3, 'ancestry' => @qing_group.id })
+           'rank' => 3, 'parent_id' => @qing_group.id )
       end
 
       it 'should be successful' do
@@ -21,9 +21,9 @@ describe FormItemsController, type: :request do
       end
 
       it 'should update rank and ancestry' do
-        form_item = assigns(:form_item)
-        expect(form_item.rank).to eq 3
-        expect(form_item.ancestry).to eq @qing_group.id.to_s
+        params = controller.params
+        expect(params[:rank]).to eq "3"
+        expect(params[:parent_id]).to eq @qing_group.id.to_s
       end
     end
 
@@ -33,7 +33,7 @@ describe FormItemsController, type: :request do
         @qing.save
 
         put(form_item_path(@qing_group, mode: 'm', mission_name: get_mission.compact_name),
-          'form_item' => { 'rank' => 3, 'ancestry' => @qing.id })
+           'rank' => 3, 'parent_id' => @qing.id)
       end
 
       it 'should not be successful' do
