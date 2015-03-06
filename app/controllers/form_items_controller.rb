@@ -3,12 +3,14 @@ class FormItemsController < ApplicationController
   load_and_authorize_resource
 
   def update
-    if params[:ancestry].blank? or !@form_item.check_ancestry_integrity(params[:ancestry])
+    attrs = params[:form_item]
+
+    if attrs[:ancestry].blank? or !@form_item.check_ancestry_integrity(attrs[:ancestry])
       return render nothing: true, status: 422
     end
 
-    @form_item.ancestry = params[:ancestry]
-    @form_item.rank = params[:rank]
+    @form_item.ancestry = attrs[:ancestry]
+    @form_item.rank = attrs[:rank]
 
     if @form_item.save
       render nothing: true, status: 204

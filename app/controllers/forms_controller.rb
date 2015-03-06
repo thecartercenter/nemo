@@ -134,10 +134,6 @@ class FormsController < ApplicationController
         # check special permissions
         authorize!(:rename, @form) if @form.name_changed?
 
-        # update ranks if provided (possibly raising condition ordering error)
-        # We convert IDs and ranks to integer before passing.
-        @form.update_ranks(Hash[*params[:rank].to_a.flatten.map(&:to_i)]) if params[:rank] && can?(:reorder_questions, @form)
-
         # save everything
         @form.save!
 
