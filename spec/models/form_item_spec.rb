@@ -26,7 +26,7 @@ describe FormItem do
       @group = create(:qing_group, form: @f, ancestry: @f.root_group.id)
     end
 
-    it 'should create 4 questionings and one group with correct rank' do
+    it 'should create 4 questionings and one group with correct ranks' do
       expect(@f.c.size).to eq(5)
       expect(@f.c[0].rank).to be < @f.c[1].rank
       expect(@f.c[1].rank).to be < @f.c[2].rank
@@ -45,10 +45,16 @@ describe FormItem do
       expect(@qing.rank).to eq 0
     end
 
-    it 'should change order of the rearranged questioning in the group' do
+    it 'should change order of the questioning moved up' do
       @qing = @f.c[3]
       @qing.update_attribute :rank_position, :up
       expect(@f.c[2].rank).to be > @f.c[3].rank
+    end
+
+    it 'should change order of the questioning moved down' do
+      @qing = @f.c[0]
+      @qing.update_attribute :rank_position, :last
+      expect(@f.c[2].rank).to be < @f.c[0].rank
     end
   end
 end
