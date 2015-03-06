@@ -58,6 +58,12 @@ class UsersController < ApplicationController
   end
 
   def update
+    # don't care about assignment role if updated user is an admin
+    if current_user.admin? && params[:id].to_s == current_user.id.to_s &&
+      params[:user][:assignments_attributes][:role].blank?
+      params[:user].delete :assignments_attributes
+    end
+
     # make sure changing assignment role is permitted if attempting
     authorize!(:change_assignments, @user) if params[:user]['assignments_attributes']
 

@@ -44,8 +44,10 @@ class Ability
       if user.admin?
         can :view, :admin_mode
 
-        # standard objects, missions, settings, and all users are available in no-mission (admin) mode
-        if mode == 'admin'
+        case mode
+        when 'admin'
+
+          # standard objects, missions, settings, and all users are available in no-mission (admin) mode
           [Form, Questioning, QingGroup, Condition, Question, OptionSet, OptionNode, Option, Tag, Tagging].each do |k|
             can :manage, k, :mission_id => nil
           end
@@ -53,6 +55,12 @@ class Ability
           can :manage, User
           can :manage, Assignment
           can :manage, Setting, :mission_id => nil
+
+        when 'mission'
+
+          # Admins can edit themselves in mission mode even if they're not currently assigned.
+          can [:update, :login_instructions, :change_assignments], User, id: user.id
+
         end
 
         # admin can switch to any mission, regardless of mode
@@ -147,6 +155,7 @@ class Ability
 
           # permissions for non-locked mission
           else
+
             # can manage users in current mission
             # special change_assignments permission is given so that users cannot update their own assignments via edit profile
             can [:create, :update, :login_instructions, :change_assignments], User, :assignments => {:mission_id => mission.id}
