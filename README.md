@@ -52,6 +52,7 @@ Note to install the software below we recommend the following package managers:
 1. **Sphinx 2.0.6+**
   - Sphinx is an open source search engine.
   - It should be available through any of the package managers listed above. If not it can be built from source.
+  - It is important that Sphinx be installed **with MySQL bindings**. This is not turned on by default in some cases.
   - The Rails Gem that talks to Sphinx is called Thinking Sphinx.
   - The [Thinking Sphinx site](http://pat.github.io/thinking-sphinx/) is a good place to go for troubleshooting and documentation.
 
@@ -65,6 +66,10 @@ Note to install the software below we recommend the following package managers:
 
 1. **GraphViz 2.36+** (Development only)
   - [GraphViz](http://graphviz.org/) is used to visualize the relationships between data in the database.
+
+1. **Qt 4.8+** (Development only)
+  - Qt is a cross-platform development kit that is needed by the `capybara-webkit` gem.
+  - See [here](https://github.com/thoughtbot/capybara-webkit/wiki/Installing-Qt-and-compiling-capybara-webkit) for some installation instructions.
 
 ### Running the App
 
