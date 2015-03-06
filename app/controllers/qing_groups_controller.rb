@@ -1,9 +1,16 @@
+# Actions for QingGroups
+# All requests in this controller are AJAX based.
 class QingGroupsController < ApplicationController
   # authorization via cancan
   load_and_authorize_resource
 
   before_filter :prepare_qing_group, only: [:create]
   before_filter :validate_destroy, only: [:destroy]
+
+  def edit
+    @qing_group = QingGroup.find(params[:id])
+    render(partial: 'modal')
+  end
 
   def create
     create_or_update
