@@ -179,9 +179,6 @@ describe Condition do
         @form = create(:form, question_types: %w(text))
         @text_q = @form.questionings.first
         @cond = Condition.new(ref_qing: @text_q, op: 'eq', value: 'foo')
-
-        p @form.questionings
-        p @form.c
       end
 
       it 'should work' do
