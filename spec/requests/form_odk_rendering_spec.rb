@@ -35,7 +35,7 @@ describe 'form rendering for odk', clean_with_truncation: true do
 
   context 'group form' do
     before do
-      @form = create(:form, question_types: ['text', ['text', 'text', 'text']])
+      @form = create(:form, question_types: [['text', 'text', 'text']])
       @form.publish!
       get(form_path(@form, format: :xml))
     end

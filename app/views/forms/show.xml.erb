@@ -103,8 +103,9 @@
     <h:body>
       <%# Regular question form controls. %>
       <% @form.grouped_questionings.each do |qing| %>
-        <% if qing.is_a?(Array) %>
+        <% if qing.is_a?(Array) && qing.size %>
           <group appearance="field-list">
+            <label><%= qing.first.parent.group_name_en %></label>
             <% qing.each do |q| %>
               <%= render('odk_questioning', qing: q, style: @style) unless q.hidden  %>
             <% end %>

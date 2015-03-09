@@ -39,6 +39,7 @@
   </h:head>
   <h:body>
     <group appearance="field-list">
+      <label>Group Name</label>
       <input ref="/data/q1">
         <label ref="jr:itext('q1:label')"/>
         <hint ref="jr:itext('q1:hint')"/>

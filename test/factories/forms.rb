@@ -40,7 +40,7 @@ FactoryGirl.define do
       form.save! # Save the reference to the root group.
       evaluator.question_types.each_with_index do |qts, index|
         if qts.kind_of?(Array)
-          group = QingGroup.create!(parent: form.root_group, form: form, rank: index+1)
+          group = QingGroup.create!(parent: form.root_group, form: form, rank: index+1, group_name_en: 'Group Name')
           qts.each_with_index { |qt, i| create_question(qt, form.mission, evaluator.option_names, evaluator.use_multilevel_option_set, i+1, group, form) }
         else
           create_question(qts, form.mission, evaluator.option_names, evaluator.use_multilevel_option_set, index+1, form.root_group, form)
