@@ -106,8 +106,11 @@
         <% if qing.is_a?(Array) && qing.size %>
           <group appearance="field-list">
             <label><%= qing.first.parent.group_name_en %></label>
+
+            <%= render('odk_questioning', qing: qing.first, style: @style, options: {label: true}) %>
+
             <% qing.each do |q| %>
-              <%= render('odk_questioning', qing: q, style: @style) unless q.hidden  %>
+              <%= render('odk_questioning', qing: q, style: @style, options: {group: true}) unless q.hidden  %>
             <% end %>
           </group>
         <% else %>

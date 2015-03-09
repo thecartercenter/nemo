@@ -4,11 +4,19 @@ module OdkHelper
 
   # given a Subquestion object, builds an odk <input> tag
   # calls the provided block to get the tag content
-  def odk_input_tag(qing, subq, &block)
+  def odk_input_tag(qing, subq, options, &block)
+    options ||= {}
+
     opts = {}
     opts[:ref] = "/data/#{subq.odk_code}"
     opts[:rows] = 5 if subq.qtype_name == "long_text"
-    opts[:query] = multi_level_option_nodeset_ref(qing, subq) if subq.qtype.name == 'select_one' && !subq.first_rank?
+
+    if subq.qtype.name == 'select_one'
+      opts[:query] = multi_level_option_nodeset_ref(qing, subq) if !subq.first_rank?
+      opts[:appearance] = 'list-nolabel' if !options[:group].blank?
+      opts[:appearance] = 'label' if !options[:label].blank?
+    end
+
     content_tag(odk_input_tagname(subq), opts, &block)
   end
 
