@@ -166,11 +166,11 @@ describe Condition do
       end
 
       it 'should work' do
-        expect(@cond.to_s).to eq "Question #0 is less than 5"
+        expect(@cond.to_s).to eq "Question #1 is less than 5"
       end
 
       it 'should work when including code' do
-        expect(@cond.to_s(include_code: true)).to eq "Question #0 #{@int_q.code} is less than 5"
+        expect(@cond.to_s(include_code: true)).to eq "Question #1 #{@int_q.code} is less than 5"
       end
     end
 
@@ -182,7 +182,7 @@ describe Condition do
       end
 
       it 'should work' do
-        expect(@cond.to_s).to eq "Question #0 is equal to \"foo\""
+        expect(@cond.to_s).to eq "Question #1 is equal to \"foo\""
       end
     end
 
@@ -194,12 +194,12 @@ describe Condition do
 
       it 'positive should work' do
         c = Condition.new(ref_qing: @sel_q, op: 'inc', option_ids: [@sel_q.options.last.id])
-        expect(c.to_s).to eq "Question #0 includes \"Dog\""
+        expect(c.to_s).to eq "Question #1 includes \"Dog\""
       end
 
       it 'negation should work' do
         c = Condition.new(ref_qing: @sel_q, op: 'ninc', option_ids: [@sel_q.options.last.id])
-        expect(c.to_s).to eq "Question #0 does not include \"Dog\""
+        expect(c.to_s).to eq "Question #1 does not include \"Dog\""
       end
     end
 
@@ -211,7 +211,7 @@ describe Condition do
 
       it 'should work' do
         c = Condition.new(ref_qing: @sel_q, op: 'eq', option_ids: [@sel_q.options.last.id])
-        expect(c.to_s).to eq "Question #0 is equal to \"Dog\""
+        expect(c.to_s).to eq "Question #1 is equal to \"Dog\""
       end
     end
 
@@ -223,7 +223,7 @@ describe Condition do
 
       it 'matching first level should work' do
         c = Condition.new(ref_qing: @sel_q, op: 'eq', option_ids: [@sel_q.option_set.c[0].option_id])
-        expect(c.to_s).to eq "Question #0 Kingdom is equal to \"Animal\""
+        expect(c.to_s).to eq "Question #1 Kingdom is equal to \"Animal\""
       end
 
       context 'matching second level' do
@@ -233,11 +233,11 @@ describe Condition do
         end
 
         it 'should work normally' do
-          expect(@cond.to_s).to eq "Question #0 Species is equal to \"Tulip\""
+          expect(@cond.to_s).to eq "Question #1 Species is equal to \"Tulip\""
         end
 
         it 'should work when including code' do
-          expect(@cond.to_s(include_code: true)).to eq "Question #0 #{@sel_q.code} Species is equal to \"Tulip\""
+          expect(@cond.to_s(include_code: true)).to eq "Question #1 #{@sel_q.code} Species is equal to \"Tulip\""
         end
       end
     end

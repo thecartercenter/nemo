@@ -80,8 +80,8 @@ describe FormVersioningPolicy do
 
     # now flip the ranks
     @forms[0...2].each do |f|
-      old1 = f.root_questionings.detect{|q| q.rank == 0 }
-      old2 = f.root_questionings.detect{|q| q.rank != 0 }
+      old1 = f.root_questionings.detect{|q| q.rank == 1 }
+      old2 = f.root_questionings.detect{|q| q.rank == 2 }
       f.update_ranks({old1.id => 2, old2.id => 1})
       f.save(:validate => false)
     end
