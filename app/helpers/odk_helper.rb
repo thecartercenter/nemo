@@ -10,7 +10,6 @@ module OdkHelper
     opts[:ref] = "/data/#{subq.odk_code}"
     opts[:rows] = 5 if subq.qtype_name == "long_text"
     opts[:query] = multi_level_option_nodeset_ref(qing, subq) if !subq.first_rank? && subq.qtype.name == 'select_one'
-    #pts[:appearance] = options[:appearance] if !options[:appearance].blank?
     content_tag(odk_input_tagname(subq), opts, &block)
   end
 
