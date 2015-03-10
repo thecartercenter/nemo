@@ -4,14 +4,13 @@ module OdkHelper
 
   # given a Subquestion object, builds an odk <input> tag
   # calls the provided block to get the tag content
-  def odk_input_tag(qing, subq, options, &block)
-    options ||= {}
+  def odk_input_tag(qing, subq, opts, &block)
+    opts ||= {}
 
-    opts = {}
     opts[:ref] = "/data/#{subq.odk_code}"
     opts[:rows] = 5 if subq.qtype_name == "long_text"
     opts[:query] = multi_level_option_nodeset_ref(qing, subq) if !subq.first_rank? && subq.qtype.name == 'select_one'
-    opts[:appearance] = options[:appearance] if !options[:appearance].blank?
+    #pts[:appearance] = options[:appearance] if !options[:appearance].blank?
     content_tag(odk_input_tagname(subq), opts, &block)
   end
 
@@ -29,6 +28,18 @@ module OdkHelper
   def required_value(form)
     # if form allows incompletes, question is required only if the answer to 'are there missing answers' is 'no'
     form.allow_incomplete? ? "selected(/data/#{IR_QUESTION}, 'no')" : "true()"
+  end
+
+  def appearance(grid)
+    (grid) ? "list-nolabel" : nil
+  end
+
+  # tests if all items in the group are part of the grid
+  def grid?(qings)
+    qings.inject(true) do |memo, q|
+      memo &= q.qtype.name == "select_one"
+      memo
+    end
   end
 
   # generator for binding portion of xml.

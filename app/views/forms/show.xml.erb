@@ -103,11 +103,11 @@
     <h:body>
       <%# Regular question form controls. %>
       <% @form.grouped_questionings.each do |qing| %>
-        <% if qing.is_a?(Array) && qing.size %>
+        <% if qing.is_a?(Array) %>
           <group appearance="field-list">
             <label><%= qing.first.parent.group_name_en %></label>
-
-            <% if qing.first.qtype.name == "select_one" %>
+            <% grid = grid?(qing) %>
+            <% if grid %>
               <%= render('odk_questioning', qing: qing.first, style: @style, options: {appearance: 'label'}) %>
             <% end %>
 
@@ -115,7 +115,7 @@
               <%= render('odk_questioning',
                 qing: q,
                 style: @style,
-                options: {appearance: (q.qtype.name == "select_one") ? 'list-nolabel' : nil}) unless q.hidden  %>
+                options: {appearance: appearance(grid)}) unless q.hidden  %>
             <% end %>
           </group>
         <% else %>
