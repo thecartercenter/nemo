@@ -104,22 +104,13 @@
       <%# Regular question form controls. %>
       <% @form.grouped_questionings.each do |qing| %>
         <% if qing.is_a?(Array) %>
-          <group appearance="field-list">
-            <label><%= qing.first.parent.group_name_en %></label>
-            <% grid = grid?(qing) %>
-            <% if grid %>
-              <%= render('odk_questioning', qing: qing.first, style: @style, options: {appearance: 'label'}) %>
-            <% end %>
-
-            <% qing.each do |q| %>
-              <%= render('odk_questioning',
-                qing: q,
-                style: @style,
-                options: {appearance: appearance(grid)}) unless q.hidden  %>
-            <% end %>
-          </group>
+          <%= render('odk_group', qing: qing, style: @style, options: {}) %>
         <% else %>
-          <%= render('odk_questioning', qing: qing, style: @style, options: {}) unless qing.hidden %>
+          <%= render('odk_questioning',
+            qing: qing,
+            style: @style,
+            grid_mode: false,
+            options: {}) unless qing.hidden %>
         <% end %>
       <% end %>
 

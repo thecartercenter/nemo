@@ -46,7 +46,6 @@
       <label>Group Name</label>
       <select1 appearance="label" ref="/data/q1">
         <label>Choices</label>
-        <hint ref="jr:itext('q1:hint')"/>
         <item>
           <label ref="jr:itext('on2')"/>
           <value>on2</value>
@@ -58,7 +57,6 @@
       </select1>
       <select1 appearance="list-nolabel" ref="/data/q1">
         <label ref="jr:itext('q1:label')"/>
-        <hint ref="jr:itext('q1:hint')"/>
         <item>
           <label ref="jr:itext('on2')"/>
           <value>on2</value>
@@ -70,7 +68,6 @@
       </select1>
       <select1 appearance="list-nolabel" ref="/data/q2">
         <label ref="jr:itext('q2:label')"/>
-        <hint ref="jr:itext('q2:hint')"/>
         <item>
           <label ref="jr:itext('on5')"/>
           <value>on5</value>

@@ -34,7 +34,7 @@ module OdkHelper
   end
 
   # tests if all items in the group are part of the grid
-  def grid?(qings)
+  def grid_mode?(qings)
     qings.inject(true) do |memo, q|
       memo &= q.qtype.name == "select_one"
       memo

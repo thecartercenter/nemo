@@ -8,7 +8,7 @@
     <% end %>
 
     <%# Commcare doesn't like hints. %>
-    <% unless style == 'commcare' %>
+    <% unless style == 'commcare' or grid_mode %>
       <hint ref="jr:itext('<%= subq.odk_code %>:hint')"/>
     <% end %>
 

@@ -1,0 +1,20 @@
+<group appearance="field-list">
+  <label><%= qing.first.parent.group_name %></label>
+  <% grid_mode = grid_mode?(qing) %>
+
+  <% if grid_mode %>
+    <%= render('odk_questioning',
+      qing: qing.first,
+      style: style,
+      grid_mode: grid_mode,
+      options: {appearance: 'label'}) %>
+  <% end %>
+
+  <% qing.each do |q| %>
+    <%= render('odk_questioning',
+      qing: q,
+      style: @style,
+      grid_mode: grid_mode,
+      options: {appearance: appearance(grid_mode)}) unless q.hidden %>
+  <% end %>
+</group>
