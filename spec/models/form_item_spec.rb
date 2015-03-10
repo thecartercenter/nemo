@@ -14,7 +14,7 @@ describe FormItem do
     end
 
     it "should return false" do
-      @qing_group.ancestry = @qing.id
+      @qing_group.parent = @qing
       @qing_group.save
       expect(@qing.check_ancestry_integrity(@qing_group.id)).to be_falsy
     end
@@ -23,7 +23,7 @@ describe FormItem do
   describe "sort" do
     before(:each) do
       @f = create(:form, questions: ['text', 'text', 'text', 'text'])
-      @group = create(:qing_group, form: @f, ancestry: @f.root_group.id.to_s)
+      @group = create(:qing_group, form: @f, parent: @f.root_group)
     end
 
     it 'should create 4 questionings and one group with correct ranks' do
@@ -39,7 +39,7 @@ describe FormItem do
 
     it 'should set rank to 1 for existing questioning moved to the empty group' do
       @qing = @f.c[0]
-      @qing.ancestry = "#{@f.root_group.id}/#{@group.id}"
+      @qing.parent = @group;
       @qing.save
       @qing.reload
       expect(@qing.rank).to eq 1

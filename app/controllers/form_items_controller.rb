@@ -7,7 +7,7 @@ class FormItemsController < ApplicationController
       return render json: { errors: ['ancestry_check_failed'] }, status: 422
     end
 
-    @form_item.ancestry = params[:parent_id]
+    @form_item.parent = FormItem.find(params[:parent_id])
     @form_item.rank = params[:rank]
 
     if @form_item.save
