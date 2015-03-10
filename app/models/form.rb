@@ -185,6 +185,11 @@ class Form < ActiveRecord::Base
     OptionSet.first_level_option_nodes_for_sets(questions.map(&:option_set_id).compact)
   end
 
+  # Gets the last Questioning on the form, ignoring the group structure.
+  def last_qing
+    children.where(type: 'Questioning').order(:rank).last
+  end
+
   # Whether this form needs an accompanying manifest for odk.
   def needs_odk_manifest?
     # For now this is IFF there are any multilevel option sets
@@ -210,8 +215,8 @@ class Form < ActiveRecord::Base
   def destroy_questionings(qings)
     qings = Array.wrap(qings)
     transaction do
-      # delete the qings
-      qings.each do |qing|
+      # delete the qings, last first, to avoid version bump if possible.
+      qings.sort_by(&:rank).reverse.each do |qing|
 
         # if this qing has a non-zero answer count, raise an error
         # this is necessary due to bulk deletion operations

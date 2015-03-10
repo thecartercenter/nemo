@@ -55,7 +55,8 @@ class FormVersioningPolicy
         # changing question visibility is a trigger if changed to visible (not hidden)
         return [obj.form] if obj.required_changed? || obj.rank_changed? && obj.form.smsable? || obj.hidden_changed? && !obj.hidden?
       when :destroy
-        return [obj.form] if obj.required_changed? || obj.rank_changed? || obj.form.smsable? || obj.hidden_changed? && !obj.hidden?
+        # If form smsable and the questioning was NOT the last one on the form, it's a trigger.
+        return [obj.form] if obj.form.smsable? && obj.rank <= obj.form.last_qing.rank
       end
 
     when "Condition"

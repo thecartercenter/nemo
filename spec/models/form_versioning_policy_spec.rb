@@ -34,7 +34,7 @@ describe FormVersioningPolicy do
     publish_and_check_versions(:should_change => false)
   end
 
-  it "removing question from form should only cause upgrade if form is smsable" do
+  it "removing question from form should only cause upgrade if form is smsable and it is not the last question" do
     # ensure the forms are not smsable
     @forms.each{|f| f.smsable = false; f.save!}
 
@@ -56,11 +56,18 @@ describe FormVersioningPolicy do
     end
     publish_and_check_versions(:should_change => false)
 
-    # now make the form smsable and delete question -- this should cause a bump
+    # now make the form smsable and delete the last question -- still should not get a bump
     @forms.each{|f| f.smsable = true; f.save!}
     @forms[0...2].each do |f|
       f.destroy_questionings([f.root_questionings.last])
     end
+    publish_and_check_versions(:should_change => false)
+
+    # now delete the first question -- this should cause a bump
+    @forms[0...2].each do |f|
+      f.destroy_questionings([f.root_questionings.first])
+    end
+
     publish_and_check_versions(:should_change => true)
   end
 
