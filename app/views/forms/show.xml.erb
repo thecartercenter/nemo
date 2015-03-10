@@ -104,13 +104,9 @@
       <%# Regular question form controls. %>
       <% @form.grouped_questionings.each do |qing| %>
         <% if qing.is_a?(Array) %>
-          <%= render('odk_group', qing: qing, style: @style, options: {}) %>
+          <%= render('odk_group', qing: qing) %>
         <% else %>
-          <%= render('odk_questioning',
-            qing: qing,
-            style: @style,
-            grid_mode: false,
-            options: {}) unless qing.hidden %>
+          <%= render('odk_questioning', qing: qing) unless qing.hidden %>
         <% end %>
       <% end %>
 

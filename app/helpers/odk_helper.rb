@@ -29,16 +29,9 @@ module OdkHelper
     form.allow_incomplete? ? "selected(/data/#{IR_QUESTION}, 'no')" : "true()"
   end
 
-  def appearance(grid)
-    (grid) ? "list-nolabel" : nil
-  end
-
-  # tests if all items in the group are part of the grid
-  def grid_mode?(qings)
-    qings.inject(true) do |memo, q|
-      memo &= q.qtype.name == "select_one"
-      memo
-    end
+  def appearance(grid_mode, label_row)
+    return 'label' if label_row
+    return 'list-nolabel' if grid_mode
   end
 
   # generator for binding portion of xml.

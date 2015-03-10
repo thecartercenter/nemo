@@ -50,6 +50,7 @@ describe 'form rendering for odk', clean_with_truncation: true do
   context 'grid form' do
     before do
       @form = create(:form, question_types: [['select_one', 'select_one']])
+      @form.c[0].c[1].update_attributes(option_set: @form.c[0].c[0].option_set)
       @form.publish!
       get(form_path(@form, format: :xml))
     end
