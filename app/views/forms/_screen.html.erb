@@ -56,11 +56,15 @@
 </div>
 
 <%= render('print_format_tips_modal') %>
-<%= render('qing_groups/group_modal') %>
+<%= render('qing_groups/modal') %>
+<div><a class="test-modal">To test the modal, click here.</a></div>
+
+<%= @qing_group.inspect %>
+<%= @qing_groups.inspect %>
 
 <%= javascript_doc_ready do %>
   Form.hookup_rank_boxes();
   new ELMO.Views.PrintFormView();
-  new ELMO.Views.SortableFormItemsView();
-  new ELMO.Views.QuestionGroupDialogView();
+  new ELMO.Views.FormItemsView();
+  new ELMO.Views.GroupModalView();
 <% end %>

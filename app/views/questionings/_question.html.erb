@@ -40,14 +40,15 @@
                 <div class="condition">
                   <i class="fa fa-link"></i>
                   <%# TODO: display question number of linked question %>
-                  <%#= qing.ref_qing %>
                   <span>#n.n</span>
                 </div>
                 <% end %>
 
+                <% if form_mode == :edit %>
                 <%= link_to content_tag(:i, '', class: 'fa fa-pencil'), edit_questioning_path(qing) %>
 
                 <%= link_to content_tag(:i, '', class: 'fa fa-trash-o'), questioning_path(qing), method: :delete, data: { confirm: I18n.t("activerecord.attributes.questioning.delete") + ' "' + qing.name + '"?'} %>
+                <% end %>
               </div>
             </div><%# End of form-item-content %>
             </li>

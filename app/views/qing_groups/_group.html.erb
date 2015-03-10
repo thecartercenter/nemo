@@ -1,32 +1,38 @@
-        <%# @form.qing_groups.each do |qing_group| %>
+        <%# @form.qing_groups.each do |qing_group|%>
          <li class="form-group form-item">
             <div class="form-item-content">
 
-              <%# Standard group? %>
-              <i class="standardized fa fa-certificate"></i>
+              <%# Spacing placeholder for styling purposes %>
+              <div class="standardized"></div>
 
               <div class="type">
                 <%= form_item_icon('group') %>
               </div>
 
               <div class="base-info">
-                <span class="name"><%#= qing_group.group_name %></span>
+                <span class="name"><%= @qing_group.group_name %></span>
               </div>
 
             <%# Edit and delete %>
-              <div class="actions">
-                <%#= link_to content_tag(:i, '', class: 'fa fa-pencil'), 'qing_group_path(qing_group)', method: :edit %>
+             <%#= edit_qing_group_path(@qing_group) or "../../@{qing_group}/edit" for testing %>
 
-                <%# if qing_group.has_children? == false %>
-                  <%#= link_to content_tag(:i, '', class: 'fa fa-trash-o'), qing_group_path(qing_group), method: :delete, data: { confirm: I18n.t("activerecord.attributes.qing_group.delete") + ' "' + qing_group.group_name + '"?'} %>
-                <%# end %>
+             <a class="edit">For testing: Edit modal</a>
+
+              <% if form_mode == :edit && !@qing_group.new_record? %>
+              <div class="actions">
+                <%= link_to content_tag(:i, '', class: 'fa fa-pencil'),
+                  edit_qing_group_path(@qing_group), class: 'edit' %>
+
+                <% if @qing_group.new_record? || !@qing_group.has_children? %>
+                  <%= link_to content_tag(:i, '', class: 'fa fa-trash-o'), @qing_group, method: :delete, confirm: I18n.t("activerecord.attributes.qing_group.delete",
+                  name: @qing_group.group_name) %>
+                <% end %>
               </div>
+              <% end %>
             </div> <%# End of form group info %>
 
               <ol class="item-list">
-                <li>Test</li>
                 <%#= render('form_question') %>
               </ol>
             </li>
-          <%# end %>
         <%# end %>

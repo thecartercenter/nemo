@@ -34,7 +34,7 @@ class QingGroupsController < ApplicationController
     # creates/updates the qing_group
     def create_or_update
       if @qing_group.save
-        render template: 'qing_groups/group'
+        render partial: 'qing_groups/group'
       else
       end
     end
