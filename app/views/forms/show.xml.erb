@@ -107,14 +107,19 @@
           <group appearance="field-list">
             <label><%= qing.first.parent.group_name_en %></label>
 
-            <%= render('odk_questioning', qing: qing.first, style: @style, options: {label: true}) %>
+            <% if qing.first.qtype.name == "select_one" %>
+              <%= render('odk_questioning', qing: qing.first, style: @style, options: {appearance: 'label'}) %>
+            <% end %>
 
             <% qing.each do |q| %>
-              <%= render('odk_questioning', qing: q, style: @style, options: {group: true}) unless q.hidden  %>
+              <%= render('odk_questioning',
+                qing: q,
+                style: @style,
+                options: {appearance: (q.qtype.name == "select_one") ? 'list-nolabel' : nil}) unless q.hidden  %>
             <% end %>
           </group>
         <% else %>
-          <%= render('odk_questioning', qing: qing, style: @style) unless qing.hidden %>
+          <%= render('odk_questioning', qing: qing, style: @style, options: {}) unless qing.hidden %>
         <% end %>
       <% end %>
 

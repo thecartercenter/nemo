@@ -1,7 +1,7 @@
 <%# Note that subquestions here refers to multiple levels of a cascading select question, not question grouping. %>
 <% qing.subquestions.each do |subq| %>
   <%= odk_input_tag(qing, subq, options) do %>
-    <% if !options[:label].blank? %>
+    <% if options[:appearance] == 'label' %>
       <label>Choices</label>
     <% else %>
       <label ref="jr:itext('<%= subq.odk_code %>:label')"/>
