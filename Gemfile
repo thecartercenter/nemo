@@ -25,7 +25,7 @@ gem 'random_data'
 gem 'versionist'                 # versioning the api
 gem 'active_model_serializers'   # for making it easy to customize output for api
 gem 'dotiw'
-
+gem 'acts_as_list', :git => 'https://github.com/swanandp/acts_as_list', branch: 'master'
 gem 'iso-639'
 
 # authorization

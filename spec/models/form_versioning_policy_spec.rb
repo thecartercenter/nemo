@@ -63,10 +63,11 @@ describe FormVersioningPolicy do
     end
     publish_and_check_versions(:should_change => false)
 
-    # now delete the first question -- this should cause a bump because the ranks will change
+    # now delete the first question -- this should cause a bump
     @forms[0...2].each do |f|
       f.destroy_questionings([f.root_questionings.first])
     end
+
     publish_and_check_versions(:should_change => true)
   end
 

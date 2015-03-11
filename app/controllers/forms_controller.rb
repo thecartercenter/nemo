@@ -115,7 +115,7 @@ class FormsController < ApplicationController
   def create
     @form.is_standard = true if current_mode == 'admin'
     if @form.save
-      @form.create_root_group!(mission: @form.mission, form: @form, rank: 1)
+      @form.create_root_group!(mission: @form.mission, form: @form)
       @form.save!
       set_success_and_redirect(@form, :to => edit_form_path(@form))
     else
@@ -133,10 +133,6 @@ class FormsController < ApplicationController
 
         # check special permissions
         authorize!(:rename, @form) if @form.name_changed?
-
-        # update ranks if provided (possibly raising condition ordering error)
-        # We convert IDs and ranks to integer before passing.
-        @form.update_ranks(Hash[*params[:rank].to_a.flatten.map(&:to_i)]) if params[:rank] && can?(:reorder_questions, @form)
 
         # save everything
         @form.save!
