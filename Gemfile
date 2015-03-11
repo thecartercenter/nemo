@@ -1,15 +1,18 @@
 source 'http://rubygems.org'
 
-gem 'rails', '~> 3.2'
+gem 'rails', '~> 4.0.1'
 
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
-  gem 'sass-rails'
-  gem 'uglifier', '>= 1.0.3'
+  gem 'sass-rails', '~> 4.0.0'
+  gem 'uglifier', '>= 1.3.0'
   # makes modals stackable
   gem 'bootstrap-modal-rails'
 end
+
+gem "strong_parameters"
+gem 'actionpack-page_caching'
 
 gem 'authlogic', '3.3.0'
 gem 'rake'
@@ -36,7 +39,7 @@ gem 'cancan'
 gem 'i18n-js', :git => 'https://github.com/fnando/i18n-js.git', :branch => 'master'
 
 # i18n locale data
-gem 'rails-i18n'
+gem 'rails-i18n', '~> 4.0.4'
 
 # markdown support
 gem 'bluecloth'
@@ -86,7 +89,7 @@ end
 
 group :development, :test do
   gem 'factory_girl_rails', '~> 4.0'
-  gem 'jasmine-rails'                # test framework
+  gem 'jasmine-rails', '~> 0.10.7'   # test framework
   gem 'rspec-rails', '~> 3.0'        # test framework
   gem 'rspec-its'
   gem 'rspec-activemodel-mocks'
