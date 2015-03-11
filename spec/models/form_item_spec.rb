@@ -37,12 +37,15 @@ describe FormItem do
       expect(@f.c[2].rank).to be < @group.rank
     end
 
-    it 'should set rank to 1 for existing questioning moved to the empty group' do
-      @qing = @f.c[0]
-      @qing.parent = @group;
-      @qing.save
-      @qing.reload
-      expect(@qing.rank).to eq 1
+    it 'should adjust ranks when existing questioning moved to the empty group' do
+      @old_rank_2 = @f.c[1]
+      @old_rank_3 = @f.c[2]
+      @old_rank_4 = @f.c[3]
+      @old_rank_2.parent = @group;
+      @old_rank_2.save
+      expect(@old_rank_2.reload.rank).to eq 1
+      expect(@old_rank_3.reload.rank).to eq 2 # Should move up one.
+      expect(@old_rank_4.reload.rank).to eq 3 # Should move up one.
     end
 
     it 'should change order of the questioning moved higher' do
