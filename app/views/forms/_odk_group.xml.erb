@@ -3,7 +3,8 @@
   <% grid_mode = qing.first.parent.grid_mode?(qing) %>
 
   <% if grid_mode %>
-    <%= render('odk_questioning', qing: qing.first, grid_mode: grid_mode, label_row: true) %>
+    <%# In grid mode, we need to render a special label row that prints the available options at the top of the grid. %>
+    <%= render('odk_questioning', qing: qing.first, grid_mode: true, label_row: true) %>
   <% end %>
 
   <% qing.each do |q| %>
