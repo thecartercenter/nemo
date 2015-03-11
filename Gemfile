@@ -13,6 +13,7 @@ end
 
 gem "strong_parameters"
 gem 'actionpack-page_caching'
+gem 'activerecord-session_store'
 
 gem 'authlogic', '3.3.0'
 gem 'rake'
@@ -78,6 +79,8 @@ gem 'rails-backbone', github: 'codebrew/backbone-rails'
 
 # XLS support
 gem 'roo'
+
+gem 'therubyracer', platforms: :ruby
 
 group :development do
   gem 'rails-erd'                     # generat with:  DIAGRAM=true rake db:migrate

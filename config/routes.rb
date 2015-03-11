@@ -3,7 +3,7 @@ ELMO::Application.routes.draw do
   mount JasmineRails::Engine => '/specs' if defined?(JasmineRails)
 
   # proxies for ajax same-origin
-  match 'proxies/:action', controller: 'proxies'
+  get 'proxies/:action', controller: 'proxies'
 
   #####################################
   # Basic routes (neither mission nor admin mode)
@@ -16,7 +16,7 @@ ELMO::Application.routes.draw do
     get '/login' => 'user_sessions#new', as: :login
 
     # Routes requiring user.
-    match '/logout' => 'user_sessions#destroy', as: :logout
+    match '/logout' => 'user_sessions#destroy', as: :logout, via: [:delete]
     get '/route-tests' => 'route_tests#basic_mode' if Rails.env.development? || Rails.env.test?
     get '/unauthorized' => 'welcome#unauthorized', as: :unauthorized
 
@@ -56,7 +56,7 @@ ELMO::Application.routes.draw do
     resources :standard_form_reports, controller: 'reports'
 
     # special dashboard routes
-    match '/info-window' => 'welcome#info_window', as: :dashboard_info_window
+    get '/info-window' => 'welcome#info_window', as: :dashboard_info_window
     get '/report-update/:id' => 'welcome#report_update'
 
     get '/route-tests' => 'route_tests#mission_mode' if Rails.env.development? || Rails.env.test?
@@ -131,10 +131,10 @@ ELMO::Application.routes.draw do
     get '/forms/:id' => 'forms#show', format: 'xml', as: :odk_form, direct_auth: true
     get '/forms/:id/manifest' => 'forms#odk_manifest', format: 'xml', direct_auth: true, as: :odk_form_manifest
     get '/forms/:id/itemsets' => 'forms#odk_itemsets', format: 'csv', direct_auth: true, as: :odk_form_itemsets
-    match '/submission' => 'responses#create', direct_auth: true, format: 'xml'
+    match '/submission' => 'responses#create', direct_auth: true, format: 'xml', via: [:post]
 
     # Unauthenticated submissions
-    match '/noauth/submission' => 'responses#create', format: :xml, no_auth: true
+    match '/noauth/submission' => 'responses#create', format: :xml, no_auth: true, via: [:post]
   end
 
   # API routes.

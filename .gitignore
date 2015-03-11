@@ -7,6 +7,7 @@ tmp/
 railsenv
 config/railsenv
 config/initializers/local_config.rb
+config/initializers/secret_token.rb
 config/database.yml
 config/thinking_sphinx.yml
 TODO
