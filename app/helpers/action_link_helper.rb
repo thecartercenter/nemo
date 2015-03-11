@@ -33,7 +33,7 @@ module ActionLinkHelper
           link_to(icon_tag(action) + translate_action(obj, action),
             url_for(controller: options[:controller], action: action),
             method: action == :destroy ? :delete : nil,
-            confirm: action == :destroy ? delete_warning(obj) : nil,
+            data: {confirm: (action == :destroy) ? delete_warning(obj) : nil}
             class: "#{action}-link")
         end
       end.compact.join(' ').html_safe
@@ -68,7 +68,7 @@ module ActionLinkHelper
 
         # build link
         warning = delete_warning(obj, options.slice(:obj_description))
-        action_link(action, dynamic_path(obj), :method => :delete, :confirm => warning, :title => t("common.delete"))
+        action_link(action, dynamic_path(obj), :method => :delete, :data: {confirm: warning}, :title => t("common.delete"))
       end
 
     end.join('').html_safe
@@ -90,7 +90,7 @@ module ActionLinkHelper
   # creates a link to a batch operation
   def batch_op_link(options)
     link_to(options[:name], "#",
-      :onclick => "batch_submit({path: '#{options[:path]}', confirm: '#{options[:confirm]}'}); return false;",
+      :onclick => "batch_submit({path: '#{options[:path]}', data: {confirm: '#{options[:confirm]}'}); return false;",
       :class => "batch_op_link")
   end
 
