@@ -5,7 +5,7 @@
 
   // constructor
   ns.UserForm = klass = function(params) { var self = this;
-    self.params = params;
+    self.params = params || {};
 
     // hookup suggest login button
     $('form.user_form .form_field[data-field-name=login] .control button').on('click', function(e) {

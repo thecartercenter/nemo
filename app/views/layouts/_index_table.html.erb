@@ -82,11 +82,11 @@
 
     <%# create js view model for index table, only necessary if there are some objects %>
     <%= javascript_doc_ready do %>
-      new ELMO.Views.IndexTable({
-        class_name: <%= objects.first.class.name.underscore.to_json.html_safe %>,
-        modified_obj_id: <%= flash[:modified_obj_id].to_json.html_safe %>,
-        no_whole_row_link: <%= options[:no_whole_row_link].to_json.html_safe %>
-      });
+      new ELMO.Views.IndexTable(<%=json(
+        class_name: objects.first.class.name.underscore,
+        modified_obj_id: flash[:modified_obj_id],
+        no_whole_row_link: options[:no_whole_row_link]
+      )%>);
 
       <% if batch_ops %>
         batch_update_select_all_link();
