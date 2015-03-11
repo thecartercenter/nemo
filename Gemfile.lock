@@ -16,6 +16,14 @@ GIT
     i18n-js (3.0.0.rc5)
       i18n (~> 0.6)
 
+GIT
+  remote: https://github.com/swanandp/acts_as_list
+  revision: 84325ede9ad528acbf68a97c5070cff113ee6a17
+  branch: master
+  specs:
+    acts_as_list (0.6.0)
+      activerecord (>= 3.0)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -306,6 +314,7 @@ PLATFORMS
 
 DEPENDENCIES
   active_model_serializers
+  acts_as_list!
   ancestry (~> 2.0)
   api-pagination
   assert_difference

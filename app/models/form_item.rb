@@ -1,6 +1,8 @@
 class FormItem < ActiveRecord::Base
   include MissionBased, FormVersionable, Replication::Replicable
 
+  acts_as_list column: :rank, scope: [:ancestry]
+
   belongs_to(:form)
 
   # These associations are really only applicable to Questioning, but
@@ -27,8 +29,14 @@ class FormItem < ActiveRecord::Base
       order: '(case when ancestry is null then 0 else 1 end), ancestry, rank'))
   end
 
-  private
+  # tests for cyclic parents
+  def check_ancestry_integrity(parent_id)
+    parent = FormItem.find_by_id(parent_id)
+    return true if parent.nil?
+    parent.parent.id != self.id
+  end
 
+  private
     # copy mission from question
     def set_mission
       self.mission = form.try(:mission)

@@ -5,8 +5,6 @@ class Questioning < FormItem
   accepts_nested_attributes_for(:condition)
 
   before_validation(:destroy_condition_if_ref_qing_blank)
-  before_create(:set_rank)
-  after_destroy(:fix_ranks)
 
   delegate :name,
            :code,
@@ -112,14 +110,4 @@ class Questioning < FormItem
       destroy_condition if condition && condition.ref_qing.blank?
     end
 
-    # sets rank if not already set
-    def set_rank
-      self.rank ||= (form.try(:max_rank) || 0) + 1
-      return true
-    end
-
-    # repair the ranks of the remaining questions on the form
-    def fix_ranks
-      form.fix_ranks
-    end
 end

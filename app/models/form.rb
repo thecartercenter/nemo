@@ -86,9 +86,8 @@ class Form < ActiveRecord::Base
   end
 
   def add_questions_to_top_level(questions)
-    max = max_rank
     questions.each_with_index do |q, i|
-      Questioning.create!(mission: mission, form: self, question: q, parent: root_group, rank: max + i + 1)
+      Questioning.create!(mission: mission, form: self, question: q, parent: root_group)
     end
   end
 
@@ -193,8 +192,9 @@ class Form < ActiveRecord::Base
     OptionSet.first_level_option_nodes_for_sets(questions.map(&:option_set_id).compact)
   end
 
-  def max_rank
-    root_group.children.order(:rank).last.try(:rank) || 0
+  # Gets the last Questioning on the form, ignoring the group structure.
+  def last_qing
+    children.where(type: 'Questioning').order(:rank).last
   end
 
   # Whether this form needs an accompanying manifest for odk.
@@ -222,8 +222,8 @@ class Form < ActiveRecord::Base
   def destroy_questionings(qings)
     qings = Array.wrap(qings)
     transaction do
-      # delete the qings
-      qings.each do |qing|
+      # delete the qings, last first, to avoid version bump if possible.
+      qings.sort_by(&:rank).reverse.each do |qing|
 
         # if this qing has a non-zero answer count, raise an error
         # this is necessary due to bulk deletion operations
@@ -231,9 +231,6 @@ class Form < ActiveRecord::Base
 
         qing.destroy
       end
-
-      # fix the ranks
-      fix_ranks(:reload => true, :save => true)
 
       save
     end
@@ -316,14 +313,6 @@ class Form < ActiveRecord::Base
 
     # get the desired count
     @answer_counts[qing.id].try(:answer_count) || 0
-  end
-
-  # ensures question ranks are sequential]
-  def fix_ranks(options = {})
-    options[:reload] = true if options[:reload].nil?
-    options[:save] = true if options[:save].nil?
-    root_questionings(options[:reload]).sort_by(&:rank).each_with_index{|qing, idx| qing.update_attribute(:rank, idx + 1)}
-    save(:validate => false) if options[:save]
   end
 
   def has_white_listed_user?(user_id)
