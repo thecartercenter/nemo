@@ -1,8 +1,8 @@
+<% label_row = defined?('label_row'); grid_mode = defined?('grid_mode') # Default values %>
+
 <%# Note that subquestions here refers to multiple levels of a cascading select question, not question grouping. %>
-<% label_row ||= label_row %>
-<% grid_mode ||= grid_mode %>
 <% qing.subquestions.each do |subq| %>
-  <%= odk_input_tag(qing, subq, { appearance: appearance(grid_mode, label_row) }) do %>
+  <%= odk_input_tag(qing, subq, appearance: appearance(grid_mode, label_row)) do %>
     <% if label_row %>
       <label></label>
     <% else %>
