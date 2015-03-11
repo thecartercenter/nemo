@@ -9,9 +9,13 @@ ELMO::Application.configure do
   # Log error messages when you accidentally call methods on nil.
   config.whiny_nils = true
 
-  # Show full error reports and enable caching
+  # Show full error reports
   config.consider_all_requests_local       = true
-  config.action_controller.perform_caching = true
+  
+  # Caching may need to be turned on when testing caching itself. If so, please use
+  # config/initializers/local_config.rb to override this value, 
+  # or change it here but please don't commit the change!
+  config.action_controller.perform_caching = false
 
   # care if the mailer can't send
   config.action_mailer.raise_delivery_errors = true

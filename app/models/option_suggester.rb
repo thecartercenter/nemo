@@ -1,4 +1,4 @@
-# Gets optioin suggestions based on a query.
+# Gets option suggestions based on a query.
 class OptionSuggester
 
   MAX_SUGGESTIONS = 5 # The max number of suggestion matches to return
@@ -6,18 +6,15 @@ class OptionSuggester
   # Returns an array of Options matching the given mission and textual query.
   def suggest(mission, query)
 
-    # fetch all mission options from the cache
-    mission_id = mission ? mission.id : 'std'
-
     # Trim query to maximum length.
     query = query[0...Option::MAX_NAME_LENGTH]
 
-    where = sanitize("name_translations RLIKE ?", "%%%1#{query}%%%2").tap do |sql|
+    name_clause = sanitize("name_translations RLIKE ?", "%%%1#{query}%%%2").tap do |sql|
       sql.gsub!('%%%1', %{"#{I18n.locale}":"})
       sql.gsub!('%%%2', %{([^"\\]|\\\\\\\\.)*"})
     end
 
-    matches = Option.where(where).all
+    matches = Option.where(mission_id: mission.try(:id)).where(name_clause).all
 
     # Sort exact matches to top.
     exact_match = false

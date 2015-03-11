@@ -7,7 +7,7 @@
 
 require 'bundler/capistrano'
 
-set :stages, %w(master staging demo nigeria api)
+set :stages, %w(master staging demo nigeria api cejp-drc)
 set :default_stage, "staging"
 require "capistrano/ext/multistage"
 
@@ -19,7 +19,7 @@ set(:whenever_identifier) {"elmo_#{stage}"}
 require "whenever/capistrano"
 
 set :application, "elmo"
-set :repository, "ssh://git@github.com/thecartercenter/elmo.git"
+set :repository, "https://github.com/thecartercenter/elmo.git"
 set :deploy_via, :remote_cache
 
 default_run_options[:pty] = true
@@ -69,6 +69,11 @@ namespace :deploy do
     end
   end
   before "deploy", "deploy:check_revision"
+
+  desc "Create an admin user with temporary password."
+  task :create_admin, roles: :web do
+    run "cd #{current_path} && RAILS_ENV=#{rails_env} rake db:create_admin"
+  end
 
   desc "ping the server so that it connects to db"
   task :ping, roles: :web do

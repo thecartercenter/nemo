@@ -49,8 +49,14 @@ describe QingGroupsController, type: :request do
 
   describe 'destroy' do
     it 'should be successful' do
-      delete(qing_group_path(@qing_group, mode: 'm', mission_name: get_mission.compact_name))
+      group = create(:qing_group, form: @form, ancestry: @qing_group.id)
+      delete(qing_group_path(group, mode: 'm', mission_name: get_mission.compact_name))
       expect(response).to be_success
+    end
+
+    it 'should return 404 for not empty groups' do
+      delete(qing_group_path(@qing_group, mode: 'm', mission_name: get_mission.compact_name))
+      expect(response.status).to eq 404
     end
   end
 end

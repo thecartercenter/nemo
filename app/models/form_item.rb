@@ -47,7 +47,7 @@ class FormItem < ActiveRecord::Base
         if form_item.is_a?(Questioning)
           form_item
         else
-          _sorted_leaves(children)
+          _sorted_leaves(children).flatten
         end
       end
     end
