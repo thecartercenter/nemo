@@ -117,8 +117,8 @@ module ApplicationHelper
       objs
     end
 
-    # ensure .load gets called so that a bunch of extra queries don't get triggered
-    objs = objs.load if objs.respond_to?(:load)
+    # ensure .all gets called so that a bunch of extra queries don't get triggered
+    objs = objs.all if objs.respond_to?(:all)
 
     objs
   end
