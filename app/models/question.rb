@@ -23,7 +23,7 @@ class Question < ActiveRecord::Base
   before_destroy { calculations.each(&:question_destroyed) }
 
   validates(:code, :presence => true)
-  validates(:code, :format => {:with => /^#{CODE_FORMAT}$/}, :if => Proc.new{|q| !q.code.blank?})
+  validates(:code, :format => {:with => /\A#{CODE_FORMAT}\z/}, :if => Proc.new{|q| !q.code.blank?})
   validates(:qtype_name, :presence => true)
   validates(:option_set, :presence => true, :if => Proc.new{|q| q.qtype && q.has_options?})
   validate(:code_unique_per_mission)

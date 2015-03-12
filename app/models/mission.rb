@@ -20,7 +20,7 @@ class Mission < ActiveRecord::Base
   before_create(:ensure_setting)
 
   validates(:name, :presence => true)
-  validates(:name, :format => {:with => /^[a-z][a-z0-9 ]*$/i, :message => :let_num_spc_only},
+  validates(:name, :format => {:with => /\A[a-z][a-z0-9 ]*\z/i, :message => :let_num_spc_only},
                    :length => {:minimum => 3, :maximum => 32},
                    :if => Proc.new{|m| !m.name.blank?})
   validate(:compact_name_unique)
