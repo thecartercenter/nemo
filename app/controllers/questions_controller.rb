@@ -38,21 +38,25 @@ class QuestionsController < ApplicationController
   def create
     @question.is_standard = true if current_mode == 'admin'
 
+    permitted_params = question_params
+
     # Convert tag string from TokenInput to array
-    @question.tag_ids = (params[:question][:tag_ids] || '').split(',')
+    @question.tag_ids = (permitted_params[:tag_ids] || '').split(',')
 
     # Convert tags_attributes hidden inputs to create new tags (why doesn't this happen automatically here?)
-    @question.tags_attributes = params[:question][:tags_attributes] || []
+    @question.tags_attributes = permitted_params[:tags_attributes] || []
 
     create_or_update
   end
 
   def update
+    permitted_params = question_params
+
     # Convert tag string from TokenInput to array
-    params[:question][:tag_ids] = params[:question][:tag_ids].split(',')
+    permitted_params[:tag_ids] = permitted_params[:tag_ids].split(',')
 
     # assign attribs and validate now so that normalization runs before authorizing and saving
-    @question.assign_attributes(params[:question])
+    @question.assign_attributes(permitted_params)
     @question.valid?
 
     # authorize special abilities
@@ -85,4 +89,9 @@ class QuestionsController < ApplicationController
       render(:form)
     end
 
+    def question_params
+      params.require(:question).permit(:code, :qtype_name, :option_set_id, :casted_minimum,
+        :minstrictly, :casted_maximum, :maxstrictly, :name_en, :hint_en,
+        :tag_ids, :key, :access_level, tags_attributes: [:name, :mission_id])
+    end
 end
