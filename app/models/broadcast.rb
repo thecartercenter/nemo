@@ -12,7 +12,7 @@ class Broadcast < ActiveRecord::Base
   validates(:body, :length => {:maximum => 140}, :if => Proc.new{|b| b.sms_possible?})
   validate(:check_eligible_recipients)
 
-  default_scope(includes(:recipients).order("created_at DESC"))
+  default_scope { includes(:recipients).order("created_at DESC") }
 
   # this method isn't used except for attaching errors
   attr_accessor :to

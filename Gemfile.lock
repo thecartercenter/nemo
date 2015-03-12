@@ -65,9 +65,10 @@ GEM
     api-pagination (3.0.2)
     arel (4.0.2)
     assert_difference (0.5.0)
-    authlogic (3.3.0)
+    authlogic (3.4.0)
       activerecord (>= 3.2)
       activesupport (>= 3.2)
+      request_store (~> 1.0.5)
     awesome_print (1.2.0)
     bluecloth (2.2.0)
     bootstrap-modal-rails (2.2.5)
@@ -213,6 +214,7 @@ GEM
     random_data (1.6.0)
     rdiscount (2.1.7.1)
     ref (1.0.5)
+    request_store (1.0.8)
     riddle (1.5.11)
     roo (1.13.2)
       nokogiri
@@ -318,7 +320,7 @@ DEPENDENCIES
   ancestry (~> 2.0)
   api-pagination
   assert_difference
-  authlogic (= 3.3.0)
+  authlogic (= 3.4.0)
   awesome_print
   bluecloth
   bootstrap-modal-rails

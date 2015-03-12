@@ -29,15 +29,15 @@ class Question < ActiveRecord::Base
   validate(:code_unique_per_mission)
   validate(:at_least_one_name)
 
-  scope(:by_code, order('questions.code'))
+  scope(:by_code, -> { order('questions.code') })
   scope(:default_order, by_code)
-  scope(:select_types, where(:qtype_name => %w(select_one select_multiple)))
-  scope(:with_forms, includes(:forms))
+  scope(:select_types, -> { where(:qtype_name => %w(select_one select_multiple)) })
+  scope(:with_forms, -> { includes(:forms) })
 
   # fetches association counts along with the questions
   # accounts for copies with standard questions
   # - form_published returns 1 if any associated forms are published, 0 or nil otherwise
-  scope(:with_assoc_counts, select(%{
+  scope(:with_assoc_counts, -> { select(%{
       questions.*,
       COUNT(DISTINCT answers.id) AS answer_count_col,
       COUNT(DISTINCT forms.id) AS form_count_col,
@@ -51,7 +51,7 @@ class Question < ActiveRecord::Base
       LEFT OUTER JOIN form_items copy_questionings ON copy_questionings.question_id = copies.id AND copy_questionings.type = 'Questioning'
       LEFT OUTER JOIN forms copy_forms ON copy_forms.id = copy_questionings.form_id
       LEFT OUTER JOIN answers copy_answers ON copy_answers.questioning_id = copy_questionings.id
-    }).group('questions.id'))
+    }).group('questions.id') })
 
   translates :name, :hint
 

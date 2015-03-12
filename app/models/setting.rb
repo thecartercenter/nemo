@@ -9,8 +9,9 @@ class Setting < ActiveRecord::Base
 
   DEFAULTS = {:timezone => "UTC", :preferred_locales => [:en]}
 
-  scope(:by_mission, lambda{|m| where(:mission_id => m ? m.id : nil)})
-  scope(:default, where(DEFAULTS))
+  scope(:by_mission, ->(m) { where(:mission_id => m ? m.id : nil) })
+
+  scope(:default, -> { where(DEFAULTS) })
 
   before_validation(:cleanup_locales)
   before_validation(:nullify_fields_if_these_are_admin_mode_settings)

@@ -22,11 +22,11 @@ class Response < ActiveRecord::Base
   validate(:no_missing_answers)
 
   default_scope(includes(:form, :user).order("responses.created_at DESC"))
-  scope(:unreviewed, where(:reviewed => false))
-  scope(:by, lambda{|user| where(:user_id => user.id)})
+  scope(:unreviewed, -> { where(:reviewed => false) })
+  scope(:by, ->(user) { where(:user_id => user.id) })
 
   # loads all the associations required for show, edit, etc.
-  scope(:with_associations, includes(
+  scope(:with_associations, -> { includes(
     :form, {
       :answers => [
         {:choices => :option},
@@ -34,16 +34,16 @@ class Response < ActiveRecord::Base
         {:questioning => [:condition, {:question => :option_set}]}
       ]
     }
-  ))
+  ) })
 
   # loads basic belongs_to associations
-  scope(:with_basic_assoc, includes(:form, :user))
+  scope(:with_basic_assoc, -> { includes(:form, :user) })
 
   # loads only some answer info
-  scope(:with_basic_answers, includes(:answers => {:questioning => :question}))
+  scope(:with_basic_answers, -> { includes(:answers => {:questioning => :question}) })
 
   # loads only answers with location info
-  scope(:with_location_answers, includes(:location_answers))
+  scope(:with_location_answers, -> { includes(:location_answers) })
 
   accepts_nested_attributes_for(:answers)
 

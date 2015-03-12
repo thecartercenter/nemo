@@ -14,7 +14,7 @@ module MissionBased
     base.class_eval do
 
       # only Setting has a has_one association, so don't pluralize
-      inverse = (base.model_name == "Setting" ? base.model_name : base.model_name.plural).downcase.to_sym
+      inverse = (base.model_name == "Setting" ? base.model_name.to_s : base.model_name.plural).downcase.to_sym
       belongs_to(:mission, :inverse_of => inverse)
 
       # scope to find objects with the given mission

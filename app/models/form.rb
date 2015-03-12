@@ -21,12 +21,12 @@ class Form < ActiveRecord::Base
 
   before_create(:init_downloads)
 
-  scope(:published, where(:published => true))
+  scope(:published, -> { where(:published => true) })
 
   # this scope adds a count of the questionings on this form and
   # the number of copies of this form, and of those that are published
   # if the form is not a standard, these will just be zero
-  scope(:with_questioning_and_copy_counts, select(%{
+  scope(:with_questioning_and_copy_counts, -> { select(%{
       forms.*,
       COUNT(DISTINCT form_items.id) AS questionings_count_col,
       COUNT(DISTINCT copies.id) AS copy_count_col,
@@ -37,10 +37,10 @@ class Form < ActiveRecord::Base
       LEFT OUTER JOIN form_items ON forms.id = form_items.form_id AND form_items.type = 'Questioning'
       LEFT OUTER JOIN forms copies ON forms.id = copies.original_id AND copies.standard_copy = 1
     })
-    .group("forms.id"))
+    .group("forms.id") })
 
-  scope(:by_name, order('forms.name'))
-  scope(:default_order, by_name)
+  scope(:by_name, -> { order('forms.name') })
+  scope(:default_order, -> { by_name })
 
   delegate :children,
            :c,
