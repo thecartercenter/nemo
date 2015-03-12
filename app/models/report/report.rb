@@ -2,26 +2,26 @@ require 'mission_based'
 class Report::Report < ActiveRecord::Base
   include MissionBased
 
-  attr_accessible :type, :name, :form_id, :option_set_id, :display_type, :bar_style, :unreviewed, :filter,
-    :question_labels, :show_question_labels, :question_order, :text_responses, :percent_type, :unique_rows,
-    :calculations_attributes, :calculations, :option_set, :mission_id, :mission, :disagg_question_id, :group_by_tag
+  #attr_accessible :type, :name, :form_id, :option_set_id, :display_type, :bar_style, :unreviewed, :filter,
+  #  :question_labels, :show_question_labels, :question_order, :text_responses, :percent_type, :unique_rows,
+  #  :calculations_attributes, :calculations, :option_set, :mission_id, :mission, :disagg_question_id, :group_by_tag
 
-  attr_accessible(:option_set_choices_attributes)
+  #attr_accessible(:option_set_choices_attributes)
 
   has_many(:option_set_choices, :class_name => "Report::OptionSetChoice", :foreign_key => "report_report_id", :inverse_of => :report,
     :dependent => :destroy, :autosave => true)
   has_many(:option_sets, :through => :option_set_choices)
-  has_many(:calculations, :class_name => "Report::Calculation", :foreign_key => "report_report_id", :inverse_of => :report,
-    :order => "rank", :dependent => :destroy, :autosave => true)
+  has_many(:calculations, -> { order("rank") }, :class_name => "Report::Calculation", :foreign_key => "report_report_id", :inverse_of => :report,
+     :dependent => :destroy, :autosave => true)
 
   accepts_nested_attributes_for(:calculations, :allow_destroy => true)
   accepts_nested_attributes_for(:option_set_choices, :allow_destroy => true)
 
   validates(:mission, :presence => true)
 
-  scope(:by_viewed_at, order("viewed_at desc"))
-  scope(:by_popularity, order("view_count desc"))
-  scope(:by_name, order("name"))
+  scope(:by_viewed_at, -> { order("viewed_at desc") })
+  scope(:by_popularity, -> { order("view_count desc") })
+  scope(:by_name, -> { order("name") })
 
   before_save(:normalize_attribs)
 

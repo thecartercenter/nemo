@@ -7,12 +7,10 @@ class Response < ActiveRecord::Base
 
   belongs_to(:form, :inverse_of => :responses, :counter_cache => true)
   belongs_to(:checked_out_by, :class_name => "User")
-  has_many(:answers, :include => :questioning, :order => 'form_items.rank, answers.rank',
-    :autosave => true, :dependent => :destroy, :inverse_of => :response)
+  has_many(:answers, -> { order('form_items.rank, answers.rank').includes(:questioning) }, autosave: true, dependent: :destroy, inverse_of: :response)
   belongs_to(:user, :inverse_of => :responses)
 
-  has_many(:location_answers, :include => {:questioning => :question}, :class_name => 'Answer',
-    :conditions => "questions.qtype_name = 'location'", :order => 'form_items.rank')
+  has_many(:location_answers, -> { where("questions.qtype_name = 'location'").order.('form_items.rank').includes(questioning: :question) }, class_name: 'Answer')
 
   attr_accessor(:modifier, :excerpts)
 
@@ -21,7 +19,7 @@ class Response < ActiveRecord::Base
   validates(:user, :presence => true)
   validate(:no_missing_answers)
 
-  default_scope(includes(:form, :user).order("responses.created_at DESC"))
+  default_scope( -> { includes(:form, :user).order("responses.created_at DESC") })
   scope(:unreviewed, -> { where(:reviewed => false) })
   scope(:by, ->(user) { where(:user_id => user.id) })
 
