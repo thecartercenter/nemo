@@ -1,7 +1,9 @@
 # models a version number for a Form object. allows forms to have multiple uniquely identifiable versions.
 # provides 3 letter code for use with sms encoded forms.
 class FormVersion < ActiveRecord::Base
-  attr_accessible :code, :form_id, :is_current, :sequence
+  # FIX_ME
+  #attr_accessible :code, :form_id, :is_current, :sequence
+
   belongs_to :form
 
   after_initialize :generate_code

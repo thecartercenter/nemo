@@ -113,8 +113,11 @@ class FormsController < ApplicationController
   end
 
   def create
+    p "in create"
     @form.is_standard = true if current_mode == 'admin'
+    p "before save"
     if @form.save
+      p "saved!"
       @form.create_root_group!(mission: @form.mission, form: @form)
       @form.save!
       set_success_and_redirect(@form, :to => edit_form_path(@form))
@@ -129,7 +132,7 @@ class FormsController < ApplicationController
       Form.transaction do
         update_api_users
         # save basic attribs
-        @form.assign_attributes(params[:form])
+        @form.assign_attributes(form_params)
 
         # check special permissions
         authorize!(:rename, @form) if @form.name_changed?
@@ -263,5 +266,9 @@ class FormsController < ApplicationController
 
     def load_form
       @form = Form.find(params[:id])
+    end
+
+    def form_params
+      params.require(:form).permit(:name, :smsable, :allow_incomplete, :access_level)
     end
 end

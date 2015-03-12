@@ -83,7 +83,7 @@ GEM
     bullet (4.10.0)
       activesupport
       uniform_notifier (~> 1.6.0)
-    cancan (1.6.10)
+    cancancan (1.10.1)
     capistrano (2.15.5)
       highline
       net-scp (>= 1.0.0)
@@ -331,7 +331,7 @@ DEPENDENCIES
   bootstrap-modal-rails
   bootstrap-sass (~> 3.3.3)
   bullet
-  cancan
+  cancancan (~> 1.10)
   capistrano (~> 2.15.4)
   capybara
   capybara-webkit

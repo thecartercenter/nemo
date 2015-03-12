@@ -27,7 +27,7 @@ gem 'acts_as_list', :git => 'https://github.com/swanandp/acts_as_list', branch: 
 gem 'iso-639'
 
 # authorization
-gem 'cancan'
+gem 'cancancan', '~> 1.10'
 
 # i18n for js
 # temporary change to deal with rails 3.2.13 bug
