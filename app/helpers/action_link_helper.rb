@@ -90,7 +90,7 @@ module ActionLinkHelper
   # creates a link to a batch operation
   def batch_op_link(options)
     link_to(options[:name], "#",
-      :onclick => "batch_submit({path: '#{options[:path]}', data: {confirm: '#{options[:confirm]}'}); return false;",
+      :onclick => "batch_submit({path: '#{options[:path]}', confirm: '#{options[:confirm]}'}); return false;",
       :class => "batch_op_link")
   end
 

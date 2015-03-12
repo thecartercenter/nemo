@@ -58,16 +58,19 @@ class UsersController < ApplicationController
   end
 
   def update
+    permitted_params = user_params
+
     # don't care about assignment role if updated user is an admin
     if current_user.admin? && params[:id].to_s == current_user.id.to_s &&
-      params[:user][:assignments_attributes][:role].blank?
-      params[:user].delete :assignments_attributes
+      !permitted_params[:assignments_attributes].blank? &&
+      !permitted_params[:assignments_attributes][:role].blank?
+      permitted_params.delete :assignments_attributes
     end
 
     # make sure changing assignment role is permitted if attempting
-    authorize!(:change_assignments, @user) if params[:user]['assignments_attributes']
+    authorize!(:change_assignments, @user) if permitted_params[:assignments_attributes]
 
-    @user.assign_attributes(params[:user])
+    @user.assign_attributes(permitted_params)
     pref_lang_changed = @user.pref_lang_changed?
 
     if @user.save
@@ -156,5 +159,10 @@ class UsersController < ApplicationController
       if cannot?(:create, @user) && @user.assignments.empty?
         @user.assignments.build(:mission => current_mission)
       end
+    end
+
+    def user_params
+      params.require(:user).permit(:name, :login, :email, :phone,
+        :phone2, :pref_lang, :notes, :password, :password_confirmation, assignments_attributes: [:role])
     end
 end

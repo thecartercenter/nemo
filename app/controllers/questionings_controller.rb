@@ -19,8 +19,10 @@ class QuestioningsController < ApplicationController
   def create
     @questioning.question.is_standard = true if current_mode == 'admin'
 
+    permitteed_params = questioning_params
+
     # Convert tag string from TokenInput to array
-    @questioning.question.tag_ids = params[:questioning][:question_attributes][:tag_ids].split(',')
+    @questioning.question.tag_ids = permitteed_params[:question_attributes][:tag_ids].split(',')
 
     if @questioning.save
       set_success_and_redirect(@questioning.question, :to => edit_form_path(@questioning.form))
@@ -33,13 +35,15 @@ class QuestioningsController < ApplicationController
   def update
     strip_condition_params_if_empty
 
+    permitteed_params = questioning_params
+
     # Convert tag string from TokenInput to array
-    if (tag_ids = params[:questioning][:question_attributes].try(:[], :tag_ids))
-      params[:questioning][:question_attributes][:tag_ids] = tag_ids.split(',')
+    if (tag_ids = permitteed_params[:question_attributes].try(:[], :tag_ids))
+      permitteed_params[:question_attributes][:tag_ids] = tag_ids.split(',')
     end
 
     # assign attribs and validate now so that normalization runs before authorizing and saving
-    @questioning.assign_attributes(params[:questioning])
+    @questioning.assign_attributes(permitteed_params)
     @questioning.valid?
 
     # authorize special abilities
@@ -93,5 +97,10 @@ class QuestioningsController < ApplicationController
         (!@questioning || !@questioning.condition)
         params[:questioning].delete(:condition_attributes)
       end
+    end
+
+    def questioning_params
+      params.require(:questioning).permit(:form_id, :allow_incomplete, :access_level,
+        question_attributes: [:id, :code, :name_en, :hint_en, :tag_ids, :key, :access_level])
     end
 end
