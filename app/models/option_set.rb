@@ -26,7 +26,7 @@ class OptionSet < ActiveRecord::Base
 
   scope :by_name, -> { order('option_sets.name') }
   scope :default_order, -> { by_name }
-  scope :with_assoc_counts_and_published, ->(mission)  {
+  scope :with_assoc_counts_and_published, ->(mission) {
     includes(:root_node).
     select(%{
       option_sets.*,

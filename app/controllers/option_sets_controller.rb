@@ -143,7 +143,7 @@ class OptionSetsController < ApplicationController
   end
 
   def option_set_params
-    params.require(:option_set).permit(:name, :geographic, :multi_level,
+    params.require(:option_set).permit(:name, :geographic, :multi_level, {level_names: :en},
       children_attribs: [{ option_attribs: [{ name_translations: :en }, :id] }, :id])
   end
 end
