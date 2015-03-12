@@ -7,6 +7,11 @@ class QingGroupsController < ApplicationController
   before_filter :prepare_qing_group, only: [:create]
   before_filter :validate_destroy, only: [:destroy]
 
+  def new
+    @qing_group = QingGroup.new(form_id: params[:form_id])
+    render(partial: 'modal')
+  end
+
   def edit
     @qing_group = QingGroup.find(params[:id])
     render(partial: 'modal')
@@ -34,7 +39,7 @@ class QingGroupsController < ApplicationController
     # creates/updates the qing_group
     def create_or_update
       if @qing_group.save
-        render partial: 'qing_groups/group'
+        render partial: 'group', locals: {qing_group: @qing_group}
       else
       end
     end

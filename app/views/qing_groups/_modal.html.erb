@@ -5,15 +5,18 @@
         <button type="button" class="close group-cancel" data-dismiss="modal" aria-hidden="true">&times;</button>
 
         <h4 class="modal-title">
-          <% if @qing_group.new_record? %><%= t("activerecord.attributes.qing_group.new") %>
-          <% else %><%= t("activerecord.attributes.qing_group.edit") %><% end %>
+          <% if @qing_group.group_name %>
+            <%= t("activerecord.attributes.qing_group.edit") %>
+          <% elsif @qing_group.new_record? %>
+            <%= t("activerecord.attributes.qing_group.new") %>
+          <% end %>
         </h4>
-      </div>
-      <div class="modal-body group-form">
 
+      </div>
+
+      <div class="modal-body group-form">
         <%= elmo_form_for(@qing_group) do |f| %>
           <%= f.field(:form_id, type: :hidden) %>
-
           <% configatron.preferred_locales.each do |locale| %>
             <% lang_suffix = " (#{language_name(locale)})" %>
             <%= f.field(:"group_name_#{locale}",
@@ -21,9 +24,14 @@
           <% end %>
         <% end %>
       </div>
+
       <div class="modal-footer">
-        <button type="button" class="btn btn-default cancel" data-dismiss="modal"><%= I18n.t("common.cancel") %></button>
-        <button type="button" class="btn btn-primary save"><%= I18n.t("common.save") %></button>
+        <button type="button" class="btn btn-default cancel" data-dismiss="modal">
+          <%= I18n.t("common.cancel") %>
+        </button>
+        <button type="button" class="btn btn-primary save">
+          <%= I18n.t("common.save") %>
+        </button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->

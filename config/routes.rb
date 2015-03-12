@@ -86,7 +86,7 @@ ELMO::Application.routes.draw do
         get 'condition_form', :path => 'condition-form'
       end
     end
-    resources :qing_groups, :path => 'qing-groups', only: [:edit, :create, :update, :destroy]
+    resources :qing_groups, :path => 'qing-groups', except: :index
     resources :settings
     resources :user_batches, :path => 'user-batches'
     resources :groups

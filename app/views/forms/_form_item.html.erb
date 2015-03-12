@@ -1,12 +1,5 @@
-
-<%#TODO: iterate through form items and display in order saved
-  - Should iterate through based on item type (question or group)
-    - first level questions only
-    - second level questions iterated through inside form_group
-%>
-
-<%# @form.questionings.each do |qing| %>
-  <%= render('questionings/question') %>
-<%# end %>
-
-<%= render('qing_groups/group') %>
+<% if item.is_a?(Questioning) %>
+  <%= render('questionings/question', qing: item) %>
+<% else %>
+  <%= render('qing_groups/group', qing_group: item) %>
+<% end %>

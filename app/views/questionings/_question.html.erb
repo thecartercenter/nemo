@@ -1,55 +1,53 @@
-          <% @form.questionings.each do |qing| %>
-            <li class="form-question form-item">
+<li class="form-question form-item">
 
-            <div class="form-item-content">
-              <%# Standard question? %>
-              <% if qing.standardized? %>
-                <i class="standardized fa fa-certificate"></i>
-              <% else %>
-                <%# Spacing placeholder for styling purposes %>
-                <div class="standardized">
-                </div>
-              <% end %>
+  <div class="form-item-content">
 
-              <%# Question type icon %>
-              <div class="type"><%= form_item_icon(qing.qtype_name) %></div>
+    <%# Standard question? %>
+    <% if qing.standardized? %>
+      <i class="standardized fa fa-certificate"></i>
+    <% else %>
+      <%# Spacing placeholder for styling purposes %>
+      <div class="standardized"></div>
+    <% end %>
 
-              <div class="base-info">
-                <%# Question short code %>
-                <span class="code">[<%= qing.code %>]</span>
+    <%# Question type icon %>
+    <div class="type"><%= form_item_icon(qing.qtype_name) %></div>
 
-                <%# Question text %>
-                <span class="name"><%= qing.name %></span>
+    <div class="base-info">
 
-                <%# Required question? %>
-                <%= content_tag(:span, '*', class: 'required-sym') if qing.required %>
+      <span class="code">[<%= qing.code %>]</span> <%# Question short code %>
+      <span class="name"><%= qing.name %></span> <%# Question text %>
 
-                <%# Tags %>
-                <% if qing.tags.length != 0 %>
-                  <% qing.tags.each do |tag| %>
-                    <span class="token-input-token-elmo"><%= tag.name %></span>
-                  <% end %>
-                <% end %>
-              </div>
+      <%# Required question? %>
+      <%= content_tag(:span, '*', class: 'required-sym') if qing.required %>
 
-            <%# Edit and delete %>
-              <div class="actions">
+      <%# Tags %>
+      <% if qing.tags.length != 0 %>
+        <% qing.tags.each do |tag| %>
+          <span class="token-input-token-elmo"><%= tag.name %></span>
+        <% end %>
+      <% end %>
 
-                <%# Conditional on another question? %>
-                <% if qing.has_condition? %>
-                <div class="condition">
-                  <i class="fa fa-link"></i>
-                  <%# TODO: display question number of linked question %>
-                  <span>#n.n</span>
-                </div>
-                <% end %>
+    </div> <%# End of question base info %>
 
-                <% if form_mode == :edit %>
-                <%= link_to content_tag(:i, '', class: 'fa fa-pencil'), edit_questioning_path(qing) %>
+    <div class="actions">
 
-                <%= link_to content_tag(:i, '', class: 'fa fa-trash-o'), questioning_path(qing), method: :delete, data: { confirm: I18n.t("activerecord.attributes.questioning.delete") + ' "' + qing.name + '"?'} %>
-                <% end %>
-              </div>
-            </div><%# End of form-item-content %>
-            </li>
-          <% end %>
+      <%# Conditional on another question? %>
+      <% if qing.has_condition? %>
+        <div class="condition">
+          <i class="fa fa-link"></i> <span>#n.n</span>
+          <%# TODO: display question number of linked question %>
+        </div>
+      <% end %>
+
+      <%# Edit and delete %>
+      <% if form_mode == :edit %>
+        <%= link_to content_tag(:i, '', class: 'fa fa-pencil'), edit_questioning_path(qing) %>
+
+        <%= link_to content_tag(:i, '', class: 'fa fa-trash-o'), questioning_path(qing), method: :delete, data: { confirm: I18n.t("activerecord.attributes.questioning.delete") + ' "' + qing.name + '"?'} %>
+      <% end %>
+
+    </div>
+
+  </div><%# End of question content %>
+</li>

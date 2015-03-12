@@ -1,38 +1,33 @@
-        <%# @form.qing_groups.each do |qing_group|%>
-         <li class="form-group form-item">
-            <div class="form-item-content">
+ <li class="form-group form-item">
+    <div class="form-item-content">
 
-              <%# Spacing placeholder for styling purposes %>
-              <div class="standardized"></div>
+      <%# Spacing placeholder for styling purposes %>
+      <div class="standardized"></div>
 
-              <div class="type">
-                <%= form_item_icon('group') %>
-              </div>
+      <div class="type"><%= form_item_icon('group') %></div>
 
-              <div class="base-info">
-                <span class="name"><%= @qing_group.group_name %></span>
-              </div>
+      <div class="base-info">
+        <span class="name"><%= qing_group.group_name %></span>
+      </div>
 
-            <%# Edit and delete %>
-             <%#= edit_qing_group_path(@qing_group) or "../../@{qing_group}/edit" for testing %>
+      <% if form_mode == :edit %>
+        <div class="actions">
+          <%= link_to content_tag(:i, '', class: 'fa fa-pencil'), edit_qing_group_path(qing_group), class: 'edit' %>
 
-             <a class="edit">For testing: Edit modal</a>
+          <% if !qing_group.has_children? %>
+            <%= link_to content_tag(:i, '', class: 'fa fa-trash-o'), qing_group, class: 'delete' %>
+          <% end %>
 
-              <% if form_mode == :edit && !@qing_group.new_record? %>
-              <div class="actions">
-                <%= link_to content_tag(:i, '', class: 'fa fa-pencil'),
-                  edit_qing_group_path(@qing_group), class: 'edit' %>
+          <%# TODO: ensure links appear on newly added groups %>
+        </div>
+      <% end %>
+    </div> <%# End of form group info %>
 
-                <% if @qing_group.new_record? || !@qing_group.has_children? %>
-                  <%= link_to content_tag(:i, '', class: 'fa fa-trash-o'), @qing_group, method: :delete, confirm: I18n.t("activerecord.attributes.qing_group.delete",
-                  name: @qing_group.group_name) %>
-                <% end %>
-              </div>
-              <% end %>
-            </div> <%# End of form group info %>
-
-              <ol class="item-list">
-                <%#= render('form_question') %>
-              </ol>
-            </li>
-        <%# end %>
+    <ol class="item-list">
+      <% if qing_group.has_children? %>
+        <% qing_group.children.each do |item| %>
+          <%= render('form_item', item: item) %>
+        <% end %>
+      <% end %>
+    </ol>
+</li>

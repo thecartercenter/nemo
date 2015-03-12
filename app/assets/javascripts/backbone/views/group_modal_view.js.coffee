@@ -1,27 +1,60 @@
 class ELMO.Views.GroupModalView extends Backbone.View
-# class ELMO.Views.GroupModalView extends ELMO.Views.FormItemsView
 
   el: 'body'
 
   events:
     'click .save': 'save'
-    'click .test-modal': 'open'
 
-  intialize: (list_view) ->
-    this.list_view = list_view
-    show()
+  initialize: (options) ->
+    @list_view = options.list_view
+    @mode = options.mode
 
-  open: ->
-    show()
+    # TODO: Remove once edit_group link uses url_builder
+    @edit_link = options.edit_link
+
+    if $('.group-modal').length
+      $('.group-modal').replaceWith(options.html)
+    else
+      $('body').append(options.html)
+
+    this.show()
+
+  serialize: ->
+    @form_data = $('.qing_group_form').serialize()
 
   save: ->
-    form_data = $('.qing_group_form').serialize()
-    console.log(form_data)
-    return form_data
-    hide()
+    this.serialize()
+    ELMO.app.loading(true)
 
-  show = ->
+    if @mode == 'new'
+      this.new_group()
+    else if @mode == 'edit'
+      this.edit_group()
+
+  show: ->
     $('.group-modal').modal('show')
 
-  hide = ->
+  hide: ->
     $('.group-modal').modal('hide')
+
+  new_group: ->
+    $.ajax({
+      url: ELMO.app.url_builder.build('qing-groups', this.id),
+      method: "post"
+      data: @form_data,
+      success: (data) =>
+        @list_view.add_new_group(data)
+        this.hide()
+        ELMO.app.loading(false)
+    })
+
+  edit_group: ->
+    $.ajax({
+      url: @edit_link, # TODO: Replace URL with url_builder link
+      method: "put",
+      data: @form_data,
+      success: (data) =>
+        @list_view.update_group_on_edit(data)
+        this.hide()
+        ELMO.app.loading(false)
+    })
