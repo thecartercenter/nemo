@@ -2,7 +2,7 @@ source 'http://rubygems.org'
 
 gem 'rails', '~> 4.0.1'
 
-gem 'sass-rails', '~> 4.0.0'
+gem 'sass-rails', '~> 4.0.2'
 gem 'uglifier', '>= 1.3.0'
 gem 'bootstrap-modal-rails' # makes modals stackable
 
@@ -61,7 +61,7 @@ gem 'thinking-sphinx', '~> 3.0.2'
 gem 'whenever', :require => false
 
 # Bootstrap UI framework
-gem 'bootstrap-sass', '~> 3.0.3.0'
+gem 'bootstrap-sass', '~> 3.3.3'
 
 # spinner
 gem 'spinjs-rails'

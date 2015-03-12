@@ -30,7 +30,7 @@ class Question < ActiveRecord::Base
   validate(:at_least_one_name)
 
   scope(:by_code, -> { order('questions.code') })
-  scope(:default_order, by_code)
+  scope(:default_order, -> { by_code })
   scope(:select_types, -> { where(:qtype_name => %w(select_one select_multiple)) })
   scope(:with_forms, -> { includes(:forms) })
 

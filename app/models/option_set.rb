@@ -15,7 +15,7 @@ class OptionSet < ActiveRecord::Base
   has_many :option_nodes, dependent: :destroy
   has_many :report_option_set_choices, class_name: 'Report::OptionSetChoice'
 
-  belongs_to :root_node, class_name: OptionNode, conditions: {option_id: nil}, dependent: :destroy
+  belongs_to :root_node, -> { where(option_id: nil) }, class_name: OptionNode, dependent: :destroy
 
   before_validation :copy_attribs_to_root_node
   before_validation :normalize_fields
@@ -25,7 +25,7 @@ class OptionSet < ActiveRecord::Base
   before_destroy { report_option_set_choices.each(&:option_set_destroyed) }
 
   scope :by_name, -> { order('option_sets.name') }
-  scope :default_order, by_name
+  scope :default_order, -> { by_name }
   scope :with_assoc_counts_and_published, lambda { |mission|
     includes(:root_node).
     select(%{
