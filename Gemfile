@@ -2,16 +2,10 @@ source 'http://rubygems.org'
 
 gem 'rails', '~> 4.0.1'
 
-# Gems used only for assets and not required
-# in production environments by default.
-group :assets do
-  gem 'sass-rails', '~> 4.0.0'
-  gem 'uglifier', '>= 1.3.0'
-  # makes modals stackable
-  gem 'bootstrap-modal-rails'
-end
+gem 'sass-rails', '~> 4.0.0'
+gem 'uglifier', '>= 1.3.0'
+gem 'bootstrap-modal-rails' # makes modals stackable
 
-gem "strong_parameters"
 gem 'actionpack-page_caching'
 gem 'activerecord-session_store'
 

@@ -48,7 +48,7 @@ module FormsHelper
       # add a clone link if auth'd
       if can?(:clone, form)
         links += action_link("clone", clone_form_path(form), :'data-method' => 'put',
-          :title => t("common.clone"), data: {confim: t("form.clone_confirm"}, :form_name => form.name))
+          :title => t("common.clone"), data: {confim: t("form.clone_confirm")}, :form_name => form.name)
       end
 
       # add a print link if auth'd
