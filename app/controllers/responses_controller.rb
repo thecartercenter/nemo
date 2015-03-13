@@ -160,7 +160,10 @@ class ResponsesController < ApplicationController
   end
 
   def update
-    @response.assign_attributes(params[:response])
+    p "in update"
+    p response_params
+
+    @response.assign_attributes(response_params)
     web_create_or_update
   end
 
@@ -217,5 +220,9 @@ class ResponsesController < ApplicationController
     def render_xml_submission_failure(exception, code)
       Rails.logger.info("XML submission failed: '#{exception.to_s}'")
       render(:nothing => true, :status => code)
+    end
+
+    def response_params
+      params.require(:response).permit(:form_id, :user_id, :incomplete, :reviewed, answers_attributes: [:id, :option_id, :questioning_id, :relevant, :value])
     end
 end

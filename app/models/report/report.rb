@@ -2,11 +2,6 @@ require 'mission_based'
 class Report::Report < ActiveRecord::Base
   include MissionBased
 
-  # FIX_ME
-  #attr_accessible :type, :name, :form_id, :option_set_id, :display_type, :bar_style, :unreviewed, :filter,
-  #  :question_labels, :show_question_labels, :question_order, :text_responses, :percent_type, :unique_rows,
-  #  :calculations_attributes, :calculations, :option_set, :mission_id, :mission, :disagg_question_id, :group_by_tag
-
   #attr_accessible(:option_set_choices_attributes)
 
   has_many(:option_set_choices, :class_name => "Report::OptionSetChoice", :foreign_key => "report_report_id", :inverse_of => :report,

@@ -155,7 +155,7 @@ class UsersController < ApplicationController
 
     # builds a user with an appropriate mission assignment if the current_user doesn't have permission to edit a blank user
     def build_user_with_proper_mission
-      @user = User.new(params[:user])
+      @user = User.new(user_params)
       if cannot?(:create, @user) && @user.assignments.empty?
         @user.assignments.build(:mission => current_mission)
       end
@@ -163,6 +163,6 @@ class UsersController < ApplicationController
 
     def user_params
       params.require(:user).permit(:name, :login, :email, :phone,
-        :phone2, :pref_lang, :notes, :password, :password_confirmation, assignments_attributes: [:role])
+        :phone2, :pref_lang, :notes, :password, :password_confirmation, :reset_password_method, assignments_attributes: [:role])
     end
 end
