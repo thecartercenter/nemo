@@ -40,13 +40,13 @@ class QingGroupsController < ApplicationController
 
     def validate_destroy
       if @qing_group.children.size > 0
-        render :json => [], :status => 404
+        return render json: [], status: 404
       end
     end
 
     # prepares qing_group
     def prepare_qing_group
-      attrs = params[:qing_group]
+      attrs = qing_group_params
       attrs[:ancestry] = Form.find(attrs[:form_id]).root_id
       @qing_group = QingGroup.accessible_by(current_ability).new(attrs)
       @qing_group.mission = current_mission

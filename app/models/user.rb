@@ -18,6 +18,9 @@ class User < ActiveRecord::Base
   accepts_nested_attributes_for(:assignments, :allow_destroy => true)
 
   acts_as_authentic do |c|
+    c.transition_from_crypto_providers = [Authlogic::CryptoProviders::Sha512]
+    c.crypto_provider = Authlogic::CryptoProviders::SCrypt
+
     c.disable_perishable_token_maintenance = true
     c.perishable_token_valid_for = 1.week
     c.logged_in_timeout(SESSION_TIMEOUT)

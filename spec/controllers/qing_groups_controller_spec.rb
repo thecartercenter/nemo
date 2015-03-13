@@ -5,14 +5,12 @@ describe QingGroupsController, type: :request do
     @user = create(:user, role_name: 'coordinator')
     @form = create(:form, question_types: ['text', ['text', 'text']])
     @qing_group = @form.c[1]
-
     login(@user)
   end
 
   describe 'create' do
     before(:each) do
-      post(qing_groups_path(mission_name: get_mission.compact_name),
-        'qing_group' => { 'form_id' => @form.id })
+      post(qing_groups_path(mode: 'm', mission_name: get_mission.compact_name), qing_group: { form_id: @form.id })
     end
 
     it 'should be successful' do
