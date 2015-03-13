@@ -95,13 +95,13 @@ class OptionSet < ActiveRecord::Base
     return [] if set_ids.empty?
     root_node_ids = where(id: set_ids).all.map(&:root_node_id)
     node_where_clause = root_node_ids.map{ |id| "ancestry LIKE '#{id}/%' OR ancestry = '#{id}'" }.join(' OR ')
-    Option.where("id IN (SELECT option_id FROM option_nodes WHERE #{node_where_clause})").all
+    Option.where("id IN (SELECT option_id FROM option_nodes WHERE #{node_where_clause})").to_a
   end
 
   def self.first_level_option_nodes_for_sets(set_ids)
     return [] if set_ids.empty?
-    root_node_ids = where(id: set_ids).all.map(&:root_node_id)
-    OptionNode.where(ancestry: root_node_ids.map(&:to_s)).includes(:option).all
+    root_node_ids = where(id: set_ids).to_a.map(&:root_node_id)
+    OptionNode.where(ancestry: root_node_ids.map(&:to_s)).includes(:option).to_a
   end
 
   def children_attribs=(attribs)

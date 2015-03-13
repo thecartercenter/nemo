@@ -161,7 +161,7 @@ class ResponsesController < ApplicationController
 
   def update
     p "in update"
-    p response_params
+    response_params
 
     @response.assign_attributes(response_params)
     web_create_or_update
@@ -223,6 +223,8 @@ class ResponsesController < ApplicationController
     end
 
     def response_params
-      params.require(:response).permit(:form_id, :user_id, :incomplete, :reviewed, answers_attributes: [:id, :option_id, :questioning_id, :relevant, :value])
+      params.require(:response).permit(:form_id, :user_id, :incomplete, :reviewed).tap do |whitelisted|
+        whitelisted[:answers_attributes] = params[:response][:answers_attributes]
+      end
     end
 end
