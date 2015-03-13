@@ -160,9 +160,6 @@ class ResponsesController < ApplicationController
   end
 
   def update
-    p "in update"
-    response_params
-
     @response.assign_attributes(response_params)
     web_create_or_update
   end
