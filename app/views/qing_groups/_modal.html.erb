@@ -3,15 +3,13 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close group-cancel" data-dismiss="modal" aria-hidden="true">&times;</button>
-
         <h4 class="modal-title">
           <% if @qing_group.group_name %>
-            <%= t("activerecord.attributes.qing_group.edit") %>
+            <%= I18n.t("activerecord.attributes.qing_group.edit") %>
           <% elsif @qing_group.new_record? %>
-            <%= t("activerecord.attributes.qing_group.new") %>
+            <%= I18n.t("activerecord.attributes.qing_group.add") %>
           <% end %>
         </h4>
-
       </div>
 
       <div class="modal-body group-form">

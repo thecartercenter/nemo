@@ -1,4 +1,4 @@
- <li class="form-group form-item">
+ <li class="form-group form-item" data-id="<%= qing_group.id %>">
     <div class="form-item-content">
 
       <%# Spacing placeholder for styling purposes %>
@@ -10,15 +10,14 @@
         <span class="name"><%= qing_group.group_name %></span>
       </div>
 
+      <%# TODO: ensure links appear when new groups are added %>
       <% if form_mode == :edit %>
         <div class="actions">
           <%= link_to content_tag(:i, '', class: 'fa fa-pencil'), edit_qing_group_path(qing_group), class: 'edit' %>
 
           <% if !qing_group.has_children? %>
-            <%= link_to content_tag(:i, '', class: 'fa fa-trash-o'), qing_group, class: 'delete' %>
+            <%= link_to content_tag(:i, '', class: 'fa fa-trash-o'), qing_group, class: 'delete', data: {message: I18n.t('activerecord.attributes.qing_group.delete', name: qing_group.group_name)} %>
           <% end %>
-
-          <%# TODO: ensure links appear on newly added groups %>
         </div>
       <% end %>
     </div> <%# End of form group info %>

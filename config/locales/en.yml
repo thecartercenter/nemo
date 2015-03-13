@@ -246,6 +246,7 @@ en:
         smsable: "SMSable?"
         updated_at: "Last Modified"
         version: "Version"
+        item_list_heading: "Questions"
       mission:
         compact_name: "Compact Name"
         locked: "Locked?"
@@ -261,7 +262,7 @@ en:
         group_name: "Group Name"
         add: "Add Group"
         edit: "Edit Group"
-        delete: "Are you sure you want to permanently delete this group: %{name}?"
+        delete: "Are you sure you want to permanently delete this group: \"%{name}\"?"
       question:
         base: "" # this is a sort of hack to get error msg to display properly
         code: "Code"
@@ -283,7 +284,7 @@ en:
         hidden: "Hidden?"
         rank: "Rank"
         required: "Required?"
-        delete: "Are you sure you want to permanently delete the question:"
+        delete: "Are you sure you want to permanently delete the question: \"%{name}\"?"
       response:
         age: "Age"
         answers: "Answers"

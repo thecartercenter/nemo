@@ -44,7 +44,7 @@
       <% if form_mode == :edit %>
         <%= link_to content_tag(:i, '', class: 'fa fa-pencil'), edit_questioning_path(qing) %>
 
-        <%= link_to content_tag(:i, '', class: 'fa fa-trash-o'), questioning_path(qing), method: :delete, data: { confirm: I18n.t("activerecord.attributes.questioning.delete") + ' "' + qing.name + '"?'} %>
+        <%= link_to content_tag(:i, '', class: 'fa fa-trash-o'), questioning_path(qing), method: :delete, data: { confirm: I18n.t("activerecord.attributes.questioning.delete", name: qing.name)} %>
       <% end %>
 
     </div>

@@ -20,16 +20,18 @@ class ELMO.Views.GroupModalView extends Backbone.View
     this.show()
 
   serialize: ->
-    @form_data = $('.qing_group_form').serialize()
+    this.form_data = $('.qing_group_form').serialize()
+    return this.form_data
 
   save: ->
-    this.serialize()
     ELMO.app.loading(true)
 
     if @mode == 'new'
       this.new_group()
     else if @mode == 'edit'
       this.edit_group()
+
+    this.hide()
 
   show: ->
     $('.group-modal').modal('show')
@@ -38,23 +40,25 @@ class ELMO.Views.GroupModalView extends Backbone.View
     $('.group-modal').modal('hide')
 
   new_group: ->
+    this.serialize()
+
     $.ajax({
-      url: ELMO.app.url_builder.build('qing-groups', this.id),
+      url: ELMO.app.url_builder.build('qing-groups'),
       method: "post"
-      data: @form_data,
+      data: this.form_data,
       success: (data) =>
         @list_view.add_new_group(data)
-        this.hide()
         ELMO.app.loading(false)
     })
 
   edit_group: ->
+    this.serialize()
+
     $.ajax({
       url: @edit_link, # TODO: Replace URL with url_builder link
       method: "put",
-      data: @form_data,
+      data: this.form_data,
       success: (data) =>
         @list_view.update_group_on_edit(data)
-        this.hide()
         ELMO.app.loading(false)
     })

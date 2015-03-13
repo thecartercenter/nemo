@@ -1,8 +1,11 @@
 <div class="form-items">
-  <h2>Questions</h2>
+
+  <% unless @form.new_record? %>
+    <h2><%= I18n.t('activerecord.attributes.form.item_list_heading') %></h2>
+  <% end %>
 
   <% if form_mode == :edit %>
-  <div class="form-items-header">
+  <div id="form-items-header">
     <a href="<%= choose_questions_form_path(@form) %>">
       <i class="fa fa-plus"></i>
       <%= t("form.add_questions") %>
@@ -16,8 +19,10 @@
 
   <div class="draggable-list-wrapper">
     <ol class="form-items-list item-list">
-      <% @form.children.each do |item| %>
-        <%= render('form_item', item: item) %>
+      <% unless @form.new_record? %>
+        <% @form.children.each do |item| %>
+          <%= render('form_item', item: item) %>
+        <% end %>
       <% end %>
     </ol>
   </div>
