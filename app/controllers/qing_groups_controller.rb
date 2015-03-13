@@ -18,8 +18,7 @@ class QingGroupsController < ApplicationController
   end
 
   def create
-    @qing_group.ancestry = @qing_group.form.root_id
-    @qing_group.rank = @qing_group.form.max_rank + 1
+    @qing_group.parent = @qing_group.form.root_group
     create_or_update
   end
 
