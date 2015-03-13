@@ -85,7 +85,7 @@ class Mission < ActiveRecord::Base
     end
 
     def compact_name_unique
-      if !name.blank? && matching = (self.class.where(:compact_name => compact_name).all - [self]).first
+      if !name.blank? && matching = (self.class.where(:compact_name => compact_name).to_a - [self]).first
         errors.add(:name, :not_unique, :existing => matching.name)
       end
     end

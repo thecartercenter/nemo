@@ -5,9 +5,6 @@ class Tag < ActiveRecord::Base
   has_many :taggings, dependent: :destroy
   has_many :questions, through: :taggings
 
-  # FIX_ME
-  #attr_accessible :name, :mission_id
-
   before_save { |tag| tag.name.downcase! }
 
   MAX_SUGGESTIONS = 5 # The max number of suggestion matches to return
