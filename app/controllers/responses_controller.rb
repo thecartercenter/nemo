@@ -97,7 +97,6 @@ class ResponsesController < ApplicationController
   end
 
   def create
-
     # if this is a non-web submission
     if request.format == Mime::XML
 
@@ -220,8 +219,10 @@ class ResponsesController < ApplicationController
     end
 
     def response_params
-      params.require(:response).permit(:form_id, :user_id, :incomplete, :reviewed).tap do |whitelisted|
-        whitelisted[:answers_attributes] = params[:response][:answers_attributes]
+      if params[:response]
+        params.require(:response).permit(:form_id, :user_id, :incomplete, :reviewed).tap do |whitelisted|
+          whitelisted[:answers_attributes] = params[:response][:answers_attributes]
+        end
       end
     end
 end

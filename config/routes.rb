@@ -131,10 +131,10 @@ ELMO::Application.routes.draw do
     get '/forms/:id' => 'forms#show', format: 'xml', as: :odk_form, direct_auth: true
     get '/forms/:id/manifest' => 'forms#odk_manifest', format: 'xml', direct_auth: true, as: :odk_form_manifest
     get '/forms/:id/itemsets' => 'forms#odk_itemsets', format: 'csv', direct_auth: true, as: :odk_form_itemsets
-    match '/submission' => 'responses#create', direct_auth: true, format: 'xml', via: [:post]
+    match '/submission' => 'responses#create', direct_auth: true, format: 'xml', via: [:get, :head, :post]
 
     # Unauthenticated submissions
-    match '/noauth/submission' => 'responses#create', format: :xml, no_auth: true, via: [:post]
+    match '/noauth/submission' => 'responses#create', format: :xml, no_auth: true, via: [:get, :head, :post]
   end
 
   # API routes.
