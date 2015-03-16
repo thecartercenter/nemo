@@ -65,10 +65,11 @@ GEM
     api-pagination (3.0.2)
     arel (4.0.2)
     assert_difference (0.5.0)
-    authlogic (3.4.0)
+    authlogic (3.4.5)
       activerecord (>= 3.2)
       activesupport (>= 3.2)
-      request_store (~> 1.0.5)
+      request_store (~> 1.0)
+      scrypt (~> 1.2)
     autoprefixer-rails (5.1.7)
       execjs
       json
@@ -221,7 +222,7 @@ GEM
     random_data (1.6.0)
     rdiscount (2.1.7.1)
     ref (1.0.5)
-    request_store (1.0.8)
+    request_store (1.1.0)
     riddle (1.5.11)
     roo (1.13.2)
       nokogiri
@@ -259,7 +260,7 @@ GEM
       sass (~> 3.2.2)
       sprockets (~> 2.8, < 3.0)
       sprockets-rails (~> 2.0)
-    scrypt (2.0.0)
+    scrypt (1.2.0)
       ffi-compiler (>= 0.0.2)
       rake
     selenium-webdriver (2.43.0)
@@ -331,7 +332,7 @@ DEPENDENCIES
   ancestry (~> 2.0)
   api-pagination
   assert_difference
-  authlogic (= 3.4.0)
+  authlogic (= 3.4.5)
   awesome_print
   bluecloth
   bootstrap-modal-rails
@@ -374,7 +375,7 @@ DEPENDENCIES
   rspec-its
   rspec-rails (~> 3.0)
   sass-rails (~> 4.0.2)
-  scrypt
+  scrypt (= 1.2)
   selenium-webdriver
   spinjs-rails
   term-ansicolor

@@ -9,8 +9,8 @@ gem 'bootstrap-modal-rails' # makes modals stackable
 gem 'actionpack-page_caching'
 gem 'activerecord-session_store'
 
-gem 'authlogic', '3.4.0'
-gem 'scrypt'
+gem 'authlogic', '3.4.5'
+gem 'scrypt', '1.2'
 gem 'rake'
 gem 'mysql2', '>= 0.3.15' #was '~> 0.3.12b5' # beta version needed for sphinx
 gem 'will_paginate'
