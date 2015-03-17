@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rails', '~> 4.0.1'
+gem 'rails', '~> 4.1.0'
 
 gem 'sass-rails', '~> 4.0.2'
 gem 'uglifier', '>= 1.3.0'
@@ -83,6 +83,7 @@ group :development do
   gem 'bullet'                        # query optimization
   gem 'thin'                          # development web server
   gem 'rails-dev-tweaks', '~> 1.1'    # speed up development mode
+  gem 'spring'
 end
 
 group :development, :test do
