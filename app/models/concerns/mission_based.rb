@@ -24,7 +24,7 @@ module MissionBased
 
       # when a mission is deleted, pre-remove all records related to a mission
       def self.mission_pre_delete(mission)
-        mission_related = self.where(mission_id:mission)
+        mission_related = self.where(mission_id: mission)
 
         if self.respond_to?(:terminate_sub_relationships)
           self.terminate_sub_relationships(mission_related.pluck(:id))
