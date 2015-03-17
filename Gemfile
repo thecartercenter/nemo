@@ -65,7 +65,7 @@ gem 'whenever', :require => false
 gem 'bootstrap-sass', '~> 3.3.3'
 
 # spinner
-gem 'spinjs-rails'
+gem 'spinjs-rails', '1.3'
 
 # tree data structure
 gem 'ancestry', '~> 2.0'
@@ -101,7 +101,5 @@ group :development, :test do
   gem 'timecop'                      # sets time for testing
   gem 'awesome_print'                # for debugging/console, prints an object nicely
   gem 'assert_difference'            # test assertion
-  gem 'byebug'
-  gem 'debugger-xml'
   gem 'launchy'                      # auto-open capybara html file
 end
