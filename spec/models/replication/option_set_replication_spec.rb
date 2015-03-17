@@ -12,83 +12,60 @@ describe OptionSet do
       @copy = @orig.replicate(mode: :to_mission, dest_mission: @mission2)
     end
 
-    describe 'on create' do
-      it 'should be copied properly' do
-        expect(@copy.mission).to eq @mission2
-        expect(@copy.name).to eq @orig.name
-        expect(@copy.standard).to eq @orig
-        expect(@copy.is_standard).to eq false
-        expect(@copy.total_options).to eq 6
+    it 'should be copied properly' do
+      expect(@copy.mission).to eq @mission2
+      expect(@copy.name).to eq @orig.name
+      expect(@copy.standard).to eq @orig
+      expect(@copy.is_standard).to eq false
+      expect(@copy.total_options).to eq 6
 
-        # Ensure option set gets correct root node id.
-        expect(@copy.root_node_id).not_to be_nil
-        expect(@copy.root_node_id).not_to eq @orig.root_node_id
-        expect(@copy.root_node.standard_id).to eq @orig.root_node_id
+      # Ensure options are correct.
+      expect(@copy.c[0].option.name).to eq @orig.c[0].option.name
+      expect(@copy.c[0].c[0].option.name).to eq @orig.c[0].c[0].option.name
 
-        # Ensure option set ID gets copied all the way down.
-        expect(@copy.root_node.option_set_id).to eq @copy.id
-        expect(@copy.root_node.c[0].option_set_id).to eq @copy.id
-        expect(@copy.root_node.c[0].c[0].option_set_id).to eq @copy.id
+      # Ensure ancestry is correct.
+      expect(@copy.root_node.parent).to be_nil
+      expect(@copy.c[0].parent).to eq @copy.root_node
+      expect(@copy.c[0].c[0].parent).to eq @copy.c[0]
 
-        # Ensure no duplicates.
-        expect(Option.count).to eq 12
-        expect(OptionNode.count).to eq 14
-      end
+      # Ensure option set gets correct root node id.
+      expect(@copy.root_node_id).not_to be_nil
+      expect(@copy.root_node_id).not_to eq @orig.root_node_id
+
+      # Ensure option set ID gets copied all the way down.
+      expect(@copy.root_node.option_set_id).to eq @copy.id
+      expect(@copy.root_node.c[0].option_set_id).to eq @copy.id
+      expect(@copy.root_node.c[0].c[0].option_set_id).to eq @copy.id
+
+      # Ensure no duplicates.
+      expect(Option.count).to eq 12
+      expect(OptionNode.count).to eq 14
     end
 
-    describe 'on update' do
+    context 'when replicating directly and copy exists in mission' do
       before do
-        @orig.name = 'Foo'
-        @orig.save_and_rereplicate!
-        @copy.reload
+        @copy2 = @orig.replicate(mode: :to_mission, dest_mission: @mission2)
       end
 
-      it 'should have replicated name' do
-        expect(@copy.name).to eq 'Foo'
-        expect(@copy.total_options).to eq 6
-      end
-    end
-
-    describe 'on update to name preexisting in dest mission' do
-      before do
-        create(:option_set, name: 'Foo', mission: @mission2)
-        @orig.name = 'Foo'
-        @orig.save_and_rereplicate!
-        @copy.reload
-      end
-
-      it 'should have replicated name avoiding collision' do
-        expect(@copy.name).to eq 'Foo 2'
-      end
-    end
-
-    describe 'on destroy' do
-      before do
-        @orig.destroy_with_copies
-      end
-
-      it 'should destroy copies' do
-        expect(OptionNode.exists?(@copy)).to eq false
+      it 'should make new copy but reuse options' do
+        expect(@copy2).not_to eq @copy
+        expect(@copy2.options).to eq @copy.options
       end
     end
   end
 
-  describe 'promote' do
+  describe 'promote with link' do
     before do
       @orig = create(:option_set, multi_level: true, mission: @mission1)
-      @copy = @orig.replicate(mode: :promote, retain_link_on_promote: true)
+      @copy = @orig.replicate(mode: :promote)
     end
 
     it 'should create a correct copy' do
       expect(@copy.mission).to be_nil
       expect(@copy.is_standard).to eq true
-      expect(@copy.standard).to be_nil
+      expect(@copy.original).to eq @orig
       expect(@copy.total_options).to eq 6
-      expect(@copy.options.first.is_standard).to eq true
-    end
-
-    it 'should retain links' do
-      expect(@orig.reload.standard).to eq @copy
+      expect(@copy.options).not_to eq @orig.options
     end
   end
 
@@ -101,8 +78,9 @@ describe OptionSet do
     it 'should make correct copy' do
       expect(@copy.mission).to eq @mission1
       expect(@copy.is_standard).to eq false
-      expect(@copy.standard).to be_nil
+      expect(@copy.original).to eq @orig
       expect(@copy.total_options).to eq 6
+      expect(@copy.options).to eq @orig.options
     end
   end
 end

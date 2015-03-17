@@ -1,4 +1,4 @@
-# tests the general case of summary collections, where there are multiple subsets in the collection
+# This tests the general case of summary collections, where there are multiple subsets in the collection
 # makes sure that the data is disaggregated properly
 # tests for the singleton case, where there is only one subset in the collection, are currently in SummaryCollectionSingleTest
 
@@ -116,8 +116,11 @@ class Report::SummaryCollectionMultipleTest < ActiveSupport::TestCase
       # add the disagg question
       disagg_q = FactoryGirl.create(:question, :qtype_name => dissag_type, :option_names => answers_by_dissag_value.keys.compact)
 
-      @form.questions << analyze_q << disagg_q
+      FactoryGirl.create(:questioning, question: analyze_q, form: @form)
+      FactoryGirl.create(:questioning, question: disagg_q, form: @form)
+
       @form.save!
+      @form.reload
 
       # convert answers to array of arrays
       answers = answers_by_dissag_value.map{|dissag_value, values| values.map{|v| [v, dissag_value]}}.flatten(1)

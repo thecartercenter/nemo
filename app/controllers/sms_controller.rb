@@ -10,8 +10,18 @@ class SmsController < ApplicationController
   protect_from_forgery :except => :create
 
   def index
+    # do search if applicable
+    if params[:search].present?
+      begin
+        @sms = Sms::Message.do_search(@sms, params[:search])
+      rescue Search::ParseError
+        flash.now[:error] = $!.to_s
+        @search_error = true
+      end
+    end
+
     # cancan load_resource messes up the inflection so we need to create smses from sms
-    @smses = @sms.newly_created_first.paginate(:page => params[:page], :per_page => 50)
+    @smses = @sms.latest_first.paginate(:page => params[:page], :per_page => 50)
   end
 
   def create

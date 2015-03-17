@@ -3,8 +3,8 @@ FactoryGirl.define do
     mission { get_mission }
     sequence(:name) { |n| "Report #{n}" }
 
-    factory :legacy_report do
-      ignore do
+    factory :gridable_report do
+      transient do
         # This should be a list of either strings (for attrib names) or questions.
         _calculations []
       end
@@ -18,7 +18,10 @@ FactoryGirl.define do
         end
       end
 
-      factory :question_answer_tally_report, class: 'Report::QuestionAnswerTallyReport' do
+      factory :answer_tally_report, class: 'Report::AnswerTallyReport' do
+      end
+
+      factory :response_tally_report, class: 'Report::ResponseTallyReport' do
       end
 
       factory :list_report, class: 'Report::ListReport' do

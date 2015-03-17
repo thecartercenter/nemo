@@ -7,12 +7,10 @@ class Response < ActiveRecord::Base
 
   belongs_to(:form, :inverse_of => :responses, :counter_cache => true)
   belongs_to(:checked_out_by, :class_name => "User")
-  has_many(:answers, :include => :questioning, :order => "questionings.rank, answers.rank",
-    :autosave => true, :dependent => :destroy, :inverse_of => :response)
+  has_many(:answers, -> { order('form_items.rank, answers.rank').includes(:questioning) }, autosave: true, dependent: :destroy, inverse_of: :response)
   belongs_to(:user, :inverse_of => :responses)
 
-  has_many(:location_answers, :include => {:questioning => :question}, :class_name => 'Answer',
-    :conditions => "questions.qtype_name = 'location'", :order => 'questionings.rank')
+  has_many(:location_answers, -> { where("questions.qtype_name = 'location'").order.('form_items.rank').includes(questioning: :question) }, class_name: 'Answer')
 
   attr_accessor(:modifier, :excerpts)
 
@@ -21,12 +19,12 @@ class Response < ActiveRecord::Base
   validates(:user, :presence => true)
   validate(:no_missing_answers)
 
-  default_scope(includes(:form, :user).order("responses.created_at DESC"))
-  scope(:unreviewed, where(:reviewed => false))
-  scope(:by, lambda{|user| where(:user_id => user.id)})
+  default_scope( -> { includes(:form, :user).order("responses.created_at DESC") })
+  scope(:unreviewed, -> { where(:reviewed => false) })
+  scope(:by, ->(user) { where(:user_id => user.id) })
 
   # loads all the associations required for show, edit, etc.
-  scope(:with_associations, includes(
+  scope(:with_associations, -> { includes(
     :form, {
       :answers => [
         {:choices => :option},
@@ -34,16 +32,16 @@ class Response < ActiveRecord::Base
         {:questioning => [:condition, {:question => :option_set}]}
       ]
     }
-  ))
+  ) })
 
   # loads basic belongs_to associations
-  scope(:with_basic_assoc, includes(:form, :user))
+  scope(:with_basic_assoc, -> { includes(:form, :user) })
 
   # loads only some answer info
-  scope(:with_basic_answers, includes(:answers => {:questioning => :question}))
+  scope(:with_basic_answers, -> { includes(:answers => {:questioning => :question}) })
 
   # loads only answers with location info
-  scope(:with_location_answers, includes(:location_answers))
+  scope(:with_location_answers, -> { includes(:location_answers) })
 
   accepts_nested_attributes_for(:answers)
 
@@ -347,7 +345,7 @@ class Response < ActiveRecord::Base
       rel = rel.select("forms.name AS form_name")
 
       rel = rel.select("questions.code AS question_code")
-      rel = rel.select("questions._name AS question_name")
+      rel = rel.select("questions.canonical_name AS question_name")
       rel = rel.select("questions.qtype_name AS question_type")
 
       rel = rel.select("users.name AS submitter_name")
@@ -356,7 +354,7 @@ class Response < ActiveRecord::Base
       rel = rel.select("answers.datetime_value AS answer_datetime_value")
       rel = rel.select("answers.date_value AS answer_date_value")
       rel = rel.select("answers.time_value AS answer_time_value")
-      rel = rel.select("IFNULL(ao._name, co._name) AS choice_name")
+      rel = rel.select("IFNULL(ao.canonical_name, co.canonical_name) AS choice_name")
       rel = rel.select("option_sets.name AS option_set")
 
       # add all the joins

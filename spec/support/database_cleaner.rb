@@ -10,6 +10,10 @@ RSpec.configure do |config|
 
   config.before(:each, clean_with_truncation: true) do
     DatabaseCleaner.strategy = :truncation
+    DatabaseCleaner.clean
+
+    # Ensure sequences are reset
+    FactoryGirl.reload
   end
 
   config.before(:each, js: true) do
@@ -28,11 +32,7 @@ RSpec.configure do |config|
     DatabaseCleaner.clean if example.metadata[:database_cleaner] != :all
   end
 
-  config.before(:all, database_cleaner: :all) do
-    DatabaseCleaner.clean
-  end
-
   config.after(:all, database_cleaner: :all) do
-    DatabaseCleaner.clean
+    DatabaseCleaner.clean_with(:truncation)
   end
 end

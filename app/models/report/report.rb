@@ -2,26 +2,22 @@ require 'mission_based'
 class Report::Report < ActiveRecord::Base
   include MissionBased
 
-  attr_accessible :type, :name, :form_id, :option_set_id, :display_type, :bar_style, :unreviewed, :filter,
-    :question_labels, :show_question_labels, :question_order, :text_responses, :percent_type, :unique_rows, :calculations_attributes, :calculations,
-    :option_set, :mission_id, :mission, :disagg_question_id
-
-  attr_accessible(:option_set_choices_attributes)
+  #attr_accessible(:option_set_choices_attributes)
 
   has_many(:option_set_choices, :class_name => "Report::OptionSetChoice", :foreign_key => "report_report_id", :inverse_of => :report,
     :dependent => :destroy, :autosave => true)
   has_many(:option_sets, :through => :option_set_choices)
-  has_many(:calculations, :class_name => "Report::Calculation", :foreign_key => "report_report_id", :inverse_of => :report,
-    :order => "rank", :dependent => :destroy, :autosave => true)
+  has_many(:calculations, -> { order("rank") }, :class_name => "Report::Calculation", :foreign_key => "report_report_id", :inverse_of => :report,
+     :dependent => :destroy, :autosave => true)
 
   accepts_nested_attributes_for(:calculations, :allow_destroy => true)
   accepts_nested_attributes_for(:option_set_choices, :allow_destroy => true)
 
   validates(:mission, :presence => true)
 
-  scope(:by_viewed_at, order("viewed_at desc"))
-  scope(:by_popularity, order("view_count desc"))
-  scope(:by_name, order("name"))
+  scope(:by_viewed_at, -> { order("viewed_at desc") })
+  scope(:by_popularity, -> { order("view_count desc") })
+  scope(:by_name, -> { order("name") })
 
   before_save(:normalize_attribs)
 
@@ -78,12 +74,9 @@ class Report::Report < ActiveRecord::Base
     self.name = "#{prefix}#{suffix}"
   end
 
-  # runs the report by populating header_set, data, and totals objects
-  def run
-    # set the has run flag
-    @has_run = true
-
-    # the remaining stuff from run in legacy reports can be found in Report::LegacyReport
+  # Should be overridden by children.
+  def run(current_ability = nil)
+    raise NotImplementedError
   end
 
   # records a viewing of the form, keeping the view_count up to date

@@ -38,7 +38,7 @@ class Report::Join
     :questionings => new(
       :dependencies => :answers,
       :name => :questionings,
-      :sql => "INNER JOIN questionings __questionings ON __answers.questioning_id = __questionings.id"
+      :sql => "INNER JOIN form_items __questionings ON __answers.questioning_id = __questionings.id"
     ),
     :questions => new(
       :name => :questions,

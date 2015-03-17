@@ -1,5 +1,5 @@
-<%# load the mapping API %>
-<% content_for(:per_page_js){ javascript_include_tag("https://maps.googleapis.com/maps/api/js?sensor=false") } %>
+<%# load the mapping API # TODO revert this back to v3 when bugfix is rolled out. %>
+<% content_for(:per_page_js){ javascript_include_tag("https://maps.googleapis.com/maps/api/js?v=3.19&sensor=false") } %>
 
 <%# title includes ID if defined %>
 <% @title_args = {:id => @response.id} %>
@@ -11,6 +11,8 @@
 <%= elmo_form_for(@response) do |f| %>
 
   <%= top_action_links(@response, :except => :new) %>
+
+  <%= f.base_errors %>
 
   <%= f.field(:form_id, :type => :hidden) %>
 
@@ -48,10 +50,9 @@
     <% end %>
   </div>
 
-
 <% end %>
 
 <%= javascript_doc_ready do %>
-  ELMO.Response.init();
   $('textarea').each(function(){ CKEDITOR.replace(this.id); });
+  ELMO.Response.init();
 <% end %>

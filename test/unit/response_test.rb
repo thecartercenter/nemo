@@ -4,7 +4,8 @@ class ResponseTest < ActiveSupport::TestCase
 
   test "cache key" do
     @user = FactoryGirl.create(:user)
-    setup_form(:questions => %w(integer))
+    @form = FactoryGirl.create(:form, :question_types => ['integer'])
+    @form.publish!
 
     # ensure key changes on edits, creates, and deletes
     r1 = FactoryGirl.create(:response, :user => @user, :form => @form, :answer_values => [1])
@@ -32,9 +33,12 @@ class ResponseTest < ActiveSupport::TestCase
     @user = FactoryGirl.create(:user)
 
     form = FactoryGirl.create(:form, :question_types => %w(integer))
-    form.questionings.first.required = true
+    form.root_questionings.first.update_attribute(:required, true)
     form.publish!
+    form.reload
 
+    # Submit answer with first (and only) answer empty
+    # This should show up as a missing response.
     invalid_response = FactoryGirl.build(:response, user: @user, form: form, answer_values: [''])
     assert_equal(false, invalid_response.valid?)
     assert_raise ActiveRecord::RecordInvalid do
@@ -46,8 +50,9 @@ class ResponseTest < ActiveSupport::TestCase
     @user = FactoryGirl.create(:user)
 
     form = FactoryGirl.create(:form, :question_types => %w(integer))
-    form.questionings.first.required = true
+    form.root_questionings.first.required = true
     form.publish!
+    form.reload
 
     r1 = FactoryGirl.create(:response, :user => @user, :form => form, :incomplete => true)
   end
@@ -62,9 +67,10 @@ class ResponseTest < ActiveSupport::TestCase
 
   test "incomplete responses should not disable constraints" do
     form = FactoryGirl.create(:form, :question_types => %w(integer))
-    form.questionings.first.required = true
-    form.questionings.first.question.minimum = 10
+    form.root_questionings.first.required = true
+    form.root_questionings.first.question.update_attribute(:minimum, 10)
     form.publish!
+    form.reload
 
     r1 = FactoryGirl.build(:response, :form => form, :incomplete => true, :answer_values => %w(9))
     assert_equal(false, r1.valid?)

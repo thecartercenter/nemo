@@ -20,7 +20,7 @@ class BroadcastsController < ApplicationController
   # Displays a new broadcast form with the given recipients.
   # @param [Hash] selected A Hash user ids as keys, referring to recipients of the broadcast.
   def new_with_users
-    users = User.accessible_by(current_ability).where(:id => params[:selected].keys).all
+    users = User.accessible_by(current_ability).where(:id => params[:selected].keys).to_a
     raise "no users given" if users.empty? # This should be impossible
 
     @broadcast = Broadcast.accessible_by(current_ability).new(:recipients => users)
@@ -32,10 +32,11 @@ class BroadcastsController < ApplicationController
       redirect_to(users_path)
     else
       begin
-        @balance = Smser.check_balance
+        @balance = Sms::Broadcaster.check_balance
       rescue NotImplementedError
         # don't need to do anything here
       rescue
+        @balance = :failed
         logger.error("SMS balance request error: #{$!}")
       end
 
@@ -52,6 +53,7 @@ class BroadcastsController < ApplicationController
 
   def create
     if @broadcast.save
+      @broadcast.deliver
       if @broadcast.send_errors
         flash[:error] = t("broadcast.send_error")
       else
@@ -68,5 +70,9 @@ class BroadcastsController < ApplicationController
 
     def set_medium_options
       @medium_options = configatron.to_h[:outgoing_sms_adapter] ? Broadcast::MEDIUM_OPTIONS : Broadcast::MEDIUM_OPTIONS_WITHOUT_SMS
+    end
+
+    def broadcast_params
+      params.require(:broadcast).permit(:subject, :body, :medium, :send_errors, :which_phone, :mission_id)
     end
 end

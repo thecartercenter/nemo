@@ -12,12 +12,12 @@
     this.extract_form_ids_from_filter_str();
 
     // set tally type/report type, if report type is a tally report
-    if (this.attribs.type == 'Report::QuestionAnswerTallyReport') {
+    if (this.attribs.type == 'Report::AnswerTallyReport') {
       this.attribs.type = 'Report::TallyReport';
-      this.attribs.tally_type = 'QuestionAnswer';
-    } else if (this.attribs.type == 'Report::GroupedTallyReport') {
+      this.attribs.tally_type = 'Answer';
+    } else if (this.attribs.type == 'Report::ResponseTallyReport') {
       this.attribs.type = 'Report::TallyReport';
-      this.attribs.tally_type = 'Grouped';
+      this.attribs.tally_type = 'Response';
     }
 
     this.attribs.disaggregate = this.attribs.disagg_question_id != null;
@@ -51,7 +51,9 @@
   klass.prototype.set_calculations_by_question_ids = function(qids) {
     var _this = this;
 
-    if (this.attribs.tally_type != "QuestionAnswer") return;
+    var omnibus_calc_type = "Report::" + _this.attribs.omnibus_calculation.capitalize().underscore_to_camel() + "Calculation"
+
+    if (this.attribs.tally_type != "Answer") return;
 
     // calculations to empty array if not exist
     this.attribs.calculations_attributes = this.attribs.calculations_attributes || [];
@@ -59,11 +61,11 @@
     // do a match thing: if found, leave; if not found, set _destroy; if new, create new with no id
     Sassafras.Utils.match_lists(
       {list: this.attribs.calculations_attributes, comparator: function(c){ return c.question1_id.toString() + ":" + c.type; }},
-      {list: qids, comparator: function(id){ return id + ":" + _this.attribs.omnibus_calculation; }},
+      {list: qids, comparator: function(id){ return id + ":" + omnibus_calc_type; }},
       function(current_calc, new_id) {
         // if new_id has no accompanying current_calc, create a new one
         if (current_calc == null)
-          _this.attribs.calculations_attributes.push({question1_id: new_id, type: "Report::" + _this.attribs.omnibus_calculation.capitalize().underscore_to_camel() + "Calculation"});
+          _this.attribs.calculations_attributes.push({question1_id: new_id, type: omnibus_calc_type});
 
         // if current_calc is not in the given qids, mark it for destruction
         else if (new_id == null)
@@ -150,7 +152,7 @@
     self.fix_calculation_ranks();
 
     var to_serialize = {}
-    $(["type", "name", "form_id", "display_type", "percent_type", "bar_style", "question_order",
+    $(["type", "name", "form_id", "display_type", "percent_type", "bar_style", "question_order", "group_by_tag",
         "question_labels", "text_responses", "calculations_attributes", "disagg_question_id"]).each(function(){
       to_serialize[this] = (typeof(self.attribs[this]) == "undefined" || self.attribs[this] == null) ? "" : self.attribs[this];
     });
@@ -162,7 +164,7 @@
     if (to_serialize['type'] == 'Report::TallyReport')
       to_serialize['type'] = 'Report::' + this.attribs.tally_type + 'TallyReport';
 
-    if (this.attribs.tally_type == "QuestionAnswer")
+    if (this.attribs.tally_type == "Answer")
       to_serialize.option_set_choices_attributes = self.attribs.option_set_choices_attributes;
 
     to_serialize.filter = this.form_filter_str();
@@ -214,7 +216,7 @@
       this.errors.add("name", I18n.t("activerecord.errors.models.report/report.attributes.name.blank"));
 
     // question/option_set
-    if (this.attribs.tally_type == "QuestionAnswer"
+    if (this.attribs.tally_type == "Answer"
       && this.count_not_to_be_destroyed(this.attribs.calculations_attributes) == 0
       && this.count_not_to_be_destroyed(this.attribs.option_set_choices_attributes) == 0)
         this.errors.add("questions", I18n.t("activerecord.errors.models.report/report.attributes.questions.blank"));

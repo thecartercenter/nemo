@@ -1,0 +1,321 @@
+<%# include javascript google vis api stuff %>
+<% content_for(:per_page_js){report_js_includes} %>
+
+<div class="report_links">
+  <%= top_action_links(@report.becomes(Report::Report), :controller => 'reports') do %>
+    <% if !@report.new_record? && @report.exportable? %>
+      <%= link_to(icon_tag(:export) + t("report/report.export_to_csv"),
+        report_path(@report, :format => :csv), :class => 'export-link') %>
+    <% end %>
+    <%= loading_indicator(:id => "report_load_ind") %>
+  <% end %>
+</div>
+<div class="report_view">
+  <div class="report_main">
+    <%= render('main') %>
+  </div>
+</div>
+
+<%# report wizard  %>
+<div class="modal fade" id="report-edit-modal" tabindex="-1" role="dialog">
+  <form class="report_form">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title"></h4>
+        </div>
+        <div class="modal-body pane_body">
+
+          <div class="section">
+            <div class="report_edit_pane report_type">
+            <div class="error_box alert alert-danger"></div>
+              <div class="name vert"><%= t("report/report.what_type") %></div>
+              <div class="controls vert">
+                <% Report::Report::SUBCLASSES.each_with_index do |class_name, i| %>
+                  <div>
+                    <input type="radio" name="report_type" id="report_type_<%= i %>" value="<%= class_name %>">
+                    <label for="report_type_<%= i %>">
+                      <h3><%= translate_model(class_name) %></h3>
+                      <div class="description">
+                        <%= t("report/report.descriptions.#{class_name.demodulize.underscore}") %>
+                      </div>
+                      <a class="show-examples" href="#"><%= t('report/report.show_examples') %></a>
+                      <div class="examples">
+                        <div class="ex_lbl"><%= t("common.example", :count => 2) %></div>
+                        <ul>
+                          <% (I18n.t("report/report.examples.#{class_name.demodulize.underscore}", :raise => true) rescue []).each do |ex| %>
+                            <li><%= ex %></li>
+                          <% end %>
+                        </ul>
+                      </div>
+                    </label>
+                  </div>
+                <% end %>
+              </div> <!-- controls vert -->
+            </div> <!-- edit pane -->
+          </div> <!-- section -->
+
+          <%# Display options %>
+          <div class="report_edit_pane display_options">
+            <div class="error_box alert alert-danger"></div>
+            <div class="pane_body">
+              <div class="section tally_type">
+                <div class="name horiz"><%= t("report/report.tally_type") %></div>
+                <div class="controls horiz">
+                  <div class="choice">
+                    <input type="radio" name="tally_type" id="tally_type_1" value="Answer" />
+                    <label for="tally_type_1">
+                      <%= t("report/report.tally_types.answer") %>
+                      <br/>
+                      <em>
+                        <%= t('common.example_abbr') %>
+                        <%= t('report/report.tally_type_examples.answer') %>
+                      </em>
+                    </label>
+                  </div>
+                  <br/>
+                  <div class="choice">
+                    <input type="radio" name="tally_type" id="tally_type_2" value="Response" />
+                    <label for="tally_type_2">
+                      <%= t("report/report.tally_types.response") %>
+                      <br/>
+                      <em>
+                        <%= t('common.example_abbr') %>
+                        <%= t('report/report.tally_type_examples.response') %>
+                      </em>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="section form_id">
+                <div class="name horiz"><%= t("report/report.what_form") %></div>
+                <div class="controls horiz">
+                  <select id="form_id">
+                    <%# rest of options filled in by js %>
+                    <option><%= I18n.t('report/report.choose_form') %></option>
+                  </select>
+                </div>
+              </div>
+              <div class="section display_type">
+                <div class="name horiz"><%= t("report/report.how_to_display_results") %></div>
+                <div class="controls horiz">
+                  <div class="choice">
+                    <input type="radio" name="display_type" id="display_type_1" value="table" />
+                    <label for="display_type_1">
+                      <i class="fa fa-table"></i> <%= t("report/report.display_types.table") %>
+                    </label>
+                  </div>
+                  <div class="choice">
+                    <input type="radio" name="display_type" id="display_type_2" value="bar_chart" />
+                    <label for="display_type_2">
+                      <i class="fa fa-bar-chart-o"></i> <%= t("report/report.display_types.bar_chart") %>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="section percent_style">
+                <div class="name horiz"><%= t("report/report.what_percent_style") %></div>
+                <div class="controls horiz">
+                  <select id="percent_style" class="form-control"></select>
+                </div>
+              </div>
+              <div class="section">
+                <div class="name horiz"><%= t("report/report.what_bar_style") %></div>
+                <div class="controls horiz">
+                  <div class="choice">
+                    <input type="radio" name="bar_style" id="bar_style_1" value="side_by_side" />
+                    <label for="bar_style_1"><%= t("report/report.bar_styles.side_by_side") %></label>
+                  </div>
+                  <div class="choice">
+                    <input type="radio" name="bar_style" id="bar_style_2" value="stacked" />
+                    <label for="bar_style_2"><%= t("report/report.bar_styles.stacked") %></label>
+                  </div>
+                </div>
+              </div>
+              <div class="section">
+                <div class="name horiz"><%= t("report/report.how_to_disaggregate") %></div>
+                <div class="controls horiz">
+                  <input type="checkbox" id="disaggregate">&nbsp;&nbsp;&nbsp;
+                  <select id="disagg_qing">
+                    <option><%= t("report/report.choose_disagg_qing") %></option>
+                  </select>
+                </div>
+              </div>
+              <div class="section">
+                <label>
+                  <div class="name horiz"><%= t("report/report.group_by_tag") %></div>
+                  <div class="controls horiz">
+                    <input type="checkbox" id="group_by_tag">&nbsp;&nbsp;&nbsp;
+                  </div>
+                </label>
+              </div>
+              <div class="section">
+                <div class="name horiz"><%= t("report/report.how_to_order_questions") %></div>
+                <div class="controls horiz">
+                  <% Report::StandardFormReport::QUESTION_ORDER_OPTIONS.each do |key| %>
+                    <div class="choice">
+                      <input type="radio" name="question_order" id="question_order_<%= key %>" value="<%= key %>" />
+                      <label for="question_order_<%= key %>"><%= t("report/report.question_orders.#{key}") %></label>
+                    </div>
+                  <% end %>
+                </div>
+              </div>
+              <div class="section">
+                <div class="name horiz"><%= t("report/report.how_to_display_questions") %></div>
+                <div class="controls horiz">
+                  <div class="choice">
+                    <input type="radio" name="question_labels" id="question_labels_2" value="title" />
+                    <label for="question_labels_2"><%= t("report/report.question_labels.title") %></label>
+                  </div>
+                  <br/>
+                  <div class="choice">
+                    <input type="radio" name="question_labels" id="question_labels_1" value="code" />
+                    <label for="question_labels_1"><%= t("report/report.question_labels.code") %></label>
+                  </div>
+                </div>
+              </div>
+              <div class="section">
+                <div class="name horiz"><%= t("report/report.show_text_responses") %></div>
+                <div class="controls horiz">
+                  <% Report::StandardFormReport::TEXT_RESPONSE_OPTIONS.each do |key| %>
+                    <div class="choice">
+                      <input type="radio" name="text_responses" id="text_responses_<%= key %>" value="<%= key %>" />
+                      <label for="text_responses_<%= key %>"><%= t("report/report.text_response_options.#{key}") %></label>
+                    </div>
+                  <% end %>
+                </div>
+              </div>
+              <div class="section">
+                <div class="name horiz"><%= t("report/report.enter_name") %></div>
+                <div class="controls horiz">
+                  <input type="text" id="report_title" class="form-control"/>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="report_edit_pane form_selection">
+            <div class="pane_scroll">
+              <div class="error_box alert alert-danger"></div>
+              <div class="pane_body">
+                <div class="section">
+                  <div class="name horiz"><%= t("report/report.which_forms") %></div>
+                  <div class="controls horiz">
+                    <div id="form_select" class="multiselect">
+                      <div class="choices"></div>
+                      <div class="links">
+                        <a href="#" class="select_all"><%= t("layout.select_all") %></a>
+                        <a href="#" class="deselect_all"><%= t("layout.deselect_all") %></a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="report_edit_pane question_selection">
+            <div class="pane_scroll">
+              <div class="error_box alert alert-danger"></div>
+              <div class="pane_body">
+                <div class="section">
+                  <div class="name horiz"><%= t("report/report.which_calculation") %></div>
+                  <div class="controls horiz">
+                    <select id="omnibus_calculation"></select>
+                  </div>
+                </div>
+
+                <div class="section">
+                  <div class="name vert"><%= t("report/report.which_questions") %></div>
+                  <div class="controls vert">
+
+                    <div class="q_sel_type">
+                      <div class="choice">
+                        <input type="radio" name="q_sel_type" id="q_sel_type_questions" value="questions">
+                        <label for="q_sel_type_questions"><%= t("report/report.these_questions") %>:</label>
+                      </div>
+                      <div id="question_select" class="multiselect">
+                        <div class="choices"></div>
+                      </div>
+                    </div>
+
+                    <div class="q_sel_type">
+                      <div class="choice">
+                        <input type="radio" name="q_sel_type" id="q_sel_type_option_set" value="option_set">
+                        <label for="q_sel_type_option_set"><%= t("report/report.questions_with_option_sets") %>:</label>
+                      </div>
+                      <div id="option_set_select" class="multiselect">
+                        <div class="choices"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="report_edit_pane grouping">
+            <div class="pane_scroll">
+              <div class="error_box alert alert-danger"></div>
+              <div class="pane_body">
+                <div class="section">
+                  <div class="name vert"><%= t("report/report.what_attrib_row_headers") %></div>
+                  <div class="controls vert">
+                    <div class="primary field_selector">
+                      <select class="field">
+                        <option><%= t("report/report.choose_attrib_question") %>...</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="section">
+                  <div class="name vert"><%= t("report/report.what_attrib_col_headers") %></div>
+                  <div class="controls vert">
+                    <div class="secondary field_selector">
+                      <select class="field">
+                        <option><%= t("report/report.choose_attrib_question") %>...</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="report_edit_pane fields">
+            <div class="pane_scroll">
+              <div class="error_box alert alert-danger"></div>
+              <div class="pane_body">
+                <div class="section">
+                  <div class="name vert"><%= t("report/report.what_columns_in_list") %></div>
+                  <div class="controls vert">
+                    <div class="field_selector_set">
+                      <div class="selectors">
+                        <div>
+                          <select class="field">
+                            <option><%= t("report/report.choose_attrib_question") %>...</option>
+                          </select>
+                          <a href="#" class="remove"><i class="fa fa-trash-o"></i></a>
+                        </div>
+                      </div>
+                      <a href="#" class="add btn btn-default"><%= t("report/report.add_column") %></a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer buttons">
+            <button type="button" class="btn btn-default prev"><i class="fa fa-chevron-left"></i> <%= t("common.back") %></button>
+            <button type="button" class="btn btn-primary next"><%= t("common.next") %> <i class="fa fa-chevron-right"></i></button>
+            <button type="button" class="btn btn-default run" disabled="disabled"><%= t("common.run") %></button>
+          </div>
+
+        </div><!-- /.modal-body -->
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </form>
+</div><!-- /.modal -->

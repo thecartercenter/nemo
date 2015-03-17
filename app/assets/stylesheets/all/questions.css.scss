@@ -29,37 +29,23 @@ div.question_fields {
 }
 
 form.questioning_form .form_field#condition {
-  select {
-    width: 125px;
+  select, input {
+    width: 317px;
+    display: inline;
   }
 
-  input {
-    width: 125px;
-  }
+  div.field {
+    margin-bottom: 4px;
 
-  .control {
-    .widget {
-      width: 250px;
+    label {
+      display: inline-block;
+      width: 100px;
+      vertical-align: top;
+      padding: 0;
     }
 
-    div.field {
-      margin-bottom: 4px;
-
-      label {
-        display: inline-block;
-        width: 100px;
-        vertical-align: top;
-        padding: 0;
-      }
-
-      div {
-        width: 100px;
-        display: inline-block;
-
-        input[type=text] {
-          height: 24px;
-        }
-      }
+    div.cascading-selects {
+      display: inline-block;
     }
   }
 }
@@ -99,4 +85,20 @@ div.form_field.question_option_set_id {
     margin-left: 5px;
     vertical-align: middle;
   }
+}
+
+ul.tags {
+  padding: 0;
+  li:hover { cursor: inherit; }
+  &.clickable li:hover {
+    cursor: pointer;
+    background-color: #EAE175;
+  }
+}
+
+.all-tags ul.tags {
+  //background: #f0f0f0;
+  //padding: 0 3px;
+  max-height: 93px;
+  overflow: auto;
 }

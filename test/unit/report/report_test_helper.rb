@@ -21,7 +21,7 @@ class ActiveSupport::TestCase
   end
 
   def create_form(params)
-    f = Form.new(params.merge(:mission => mission))
+    f = FactoryGirl.create(:form, params.merge(:mission => mission))
     f.save(:validate => false)
     @forms[params[:name].to_sym] = f
   end
@@ -52,7 +52,7 @@ class ActiveSupport::TestCase
     @questions[params[:code].to_sym] = q
 
     # create questionings for each form
-    params[:forms].each{|f| f.questions << q}
+    params[:forms].each{|f| FactoryGirl.create(:questioning, form: f, question: q) }
   end
 
   def create_response(params)

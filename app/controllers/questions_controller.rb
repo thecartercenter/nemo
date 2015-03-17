@@ -7,9 +7,6 @@ class QuestionsController < ApplicationController
   load_and_authorize_resource
 
   def index
-    @questions = @questions.with_assoc_counts.by_code.paginate(:page => params[:page], :per_page => 25)
-    load_importable_objs
-
     # do search if applicable
     if params[:search].present?
       begin
@@ -19,6 +16,11 @@ class QuestionsController < ApplicationController
         @search_error = true
       end
     end
+
+    @tags = Tag.mission_tags(@current_mission)
+
+    @questions = @questions.includes(:tags).with_assoc_counts.by_code.paginate(:page => params[:page], :per_page => 25)
+    load_importable_objs
   end
 
   def show
@@ -34,12 +36,27 @@ class QuestionsController < ApplicationController
   end
 
   def create
+    @question.is_standard = true if current_mode == 'admin'
+
+    permitted_params = question_params
+
+    # Convert tag string from TokenInput to array
+    @question.tag_ids = (permitted_params[:tag_ids] || '').split(',')
+
+    # Convert tags_attributes hidden inputs to create new tags (why doesn't this happen automatically here?)
+    @question.tags_attributes = permitted_params[:tags_attributes] || []
+
     create_or_update
   end
 
   def update
+    permitted_params = question_params
+
+    # Convert tag string from TokenInput to array
+    permitted_params[:tag_ids] = permitted_params[:tag_ids].split(',')
+
     # assign attribs and validate now so that normalization runs before authorizing and saving
-    @question.assign_attributes(params[:question])
+    @question.assign_attributes(permitted_params)
     @question.valid?
 
     # authorize special abilities
@@ -57,7 +74,7 @@ class QuestionsController < ApplicationController
   private
     # creates/updates the question
     def create_or_update
-      if @question.save_and_rereplicate
+      if @question.save
         set_success_and_redirect(@question)
       else
         flash.now[:error] = I18n.t('activerecord.errors.models.question.general')
@@ -70,5 +87,11 @@ class QuestionsController < ApplicationController
       # this method lives in the QuestionFormable concern
       setup_question_form_support_objs
       render(:form)
+    end
+
+    def question_params
+      params.require(:question).permit(:code, :qtype_name, :option_set_id, :casted_minimum,
+        :minstrictly, :casted_maximum, :maxstrictly, :name_en, :hint_en,
+        :tag_ids, :key, :access_level, tags_attributes: [:name, :mission_id])
     end
 end

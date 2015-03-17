@@ -11,7 +11,7 @@ module Report::ReportsHelper
 
   def format_report_reports_field(report, field)
     case field
-    when "name" then link_to(report.name, report_report_path(report), :title => t("common.view"))
+    when "name" then link_to(report.name, report_path(report), :title => t("common.view"))
     when "type" then translate_model(report.class)
     when "viewed_at" then report.viewed_at && t("layout.time_ago", :time => time_ago_in_words(report.viewed_at))
     when "actions" then table_action_links(report.becomes(Report::Report))
@@ -36,7 +36,7 @@ module Report::ReportsHelper
         row_header = report.header_set[:row] ? [report.header_set[:row].cells[idx].name || "NULL"] : []
 
         # add the data
-        csv << row_header + row
+        csv << row_header + row.map{ |c| c.present? ? strip_tags(c) : c }
       end
     end
   end

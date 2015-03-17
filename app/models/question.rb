@@ -1,6 +1,6 @@
 # a question on a form
 class Question < ActiveRecord::Base
-  include MissionBased, Standardizable, Replicable, FormVersionable, Translatable
+  include MissionBased, Replication::Standardizable, Replication::Replicable, FormVersionable, Translatable
 
   CODE_FORMAT = "[a-zA-Z][a-zA-Z0-9]{1,19}"
   API_ACCESS_LEVELS = %w(inherit private)
@@ -10,57 +10,79 @@ class Question < ActiveRecord::Base
   has_many(:answers, :through => :questionings)
   has_many(:referring_conditions, :through => :questionings)
   has_many(:forms, :through => :questionings)
-  has_many(:calculations, class_name: 'Report::Calculation', foreign_key: 'question1_id', inverse_of: :question1, dependent: :destroy)
+  has_many(:calculations, class_name: 'Report::Calculation', foreign_key: 'question1_id', inverse_of: :question1)
   has_many(:taggings, :dependent => :destroy)
   has_many(:tags, :through => :taggings)
 
+  accepts_nested_attributes_for :tags, reject_if: proc { |attributes| attributes[:name].blank? }
+
   before_validation(:normalize_fields)
 
+  # We do this instead of using dependent: :destroy because in the latter case
+  # the dependent object doesn't know who destroyed it.
+  before_destroy { calculations.each(&:question_destroyed) }
+
   validates(:code, :presence => true)
-  validates(:code, :format => {:with => /^#{CODE_FORMAT}$/}, :if => Proc.new{|q| !q.code.blank?})
+  validates(:code, :format => {:with => /\A#{CODE_FORMAT}\z/}, :if => Proc.new{|q| !q.code.blank?})
   validates(:qtype_name, :presence => true)
   validates(:option_set, :presence => true, :if => Proc.new{|q| q.qtype && q.has_options?})
   validate(:code_unique_per_mission)
+  validate(:at_least_one_name)
 
-  scope(:by_code, order('questions.code'))
-  scope(:default_order, by_code)
-  scope(:select_types, where(:qtype_name => %w(select_one select_multiple)))
-  scope(:with_forms, includes(:forms))
+  scope(:by_code, -> { order('questions.code') })
+  scope(:default_order, -> { by_code })
+  scope(:select_types, -> { where(:qtype_name => %w(select_one select_multiple)) })
+  scope(:with_forms, -> { includes(:forms) })
 
   # fetches association counts along with the questions
   # accounts for copies with standard questions
   # - form_published returns 1 if any associated forms are published, 0 or nil otherwise
-  # - standard_copy_form_id returns a std copy form id associated with the question if available, or nil if there are none
-  scope(:with_assoc_counts, select(%{
+  scope(:with_assoc_counts, -> { select(%{
       questions.*,
       COUNT(DISTINCT answers.id) AS answer_count_col,
       COUNT(DISTINCT forms.id) AS form_count_col,
-      MAX(DISTINCT forms.published) AS form_published,
-      COUNT(DISTINCT copy_answers.id) AS copy_answer_count_col,
-      MAX(DISTINCT copy_forms.published) AS copy_form_published,
-      MAX(DISTINCT forms.standard_id) AS standard_copy_form_id
+      MAX(DISTINCT forms.published) AS form_published_col,
+      COUNT(DISTINCT copy_answers.id) AS copy_answer_count_col
     }).joins(%{
-      LEFT OUTER JOIN questionings ON questionings.question_id = questions.id
+      LEFT OUTER JOIN form_items questionings ON questionings.question_id = questions.id AND questionings.type = 'Questioning'
       LEFT OUTER JOIN forms ON forms.id = questionings.form_id
       LEFT OUTER JOIN answers ON answers.questioning_id = questionings.id
-      LEFT OUTER JOIN questions copies ON questions.is_standard = 1 AND questions.id = copies.standard_id
-      LEFT OUTER JOIN questionings copy_questionings ON copy_questionings.question_id = copies.id
+      LEFT OUTER JOIN questions copies ON questions.is_standard = 1 AND questions.id = copies.original_id
+      LEFT OUTER JOIN form_items copy_questionings ON copy_questionings.question_id = copies.id AND copy_questionings.type = 'Questioning'
       LEFT OUTER JOIN forms copy_forms ON copy_forms.id = copy_questionings.form_id
       LEFT OUTER JOIN answers copy_answers ON copy_answers.questioning_id = copy_questionings.id
-    }).group('questions.id'))
+    }).group('questions.id') })
 
   translates :name, :hint
 
-  delegate :smsable?, :has_options?, :odk_tag, :odk_name, :printable?, :to => :qtype
-  delegate :options, :all_options, :first_level_options, :geographic?, :multi_level?, :level_count, :levels, :to => :option_set, :allow_nil => true
+  delegate :smsable?,
+           :has_options?,
+           :temporal?,
+           :numeric?,
+           :printable?,
+           :odk_tag,
+           :odk_name,
+           :to => :qtype
 
-  replicable :child_assocs => :option_set, :parent_assoc => :questioning,
-    :uniqueness => {:field => :code, :style => :camel_case}, :dont_copy => [:key, :access_level],
-    :user_modifiable => [:name_translations, :_name, :hint_translations, :_hint]
+  delegate :options,
+           :all_options,
+           :first_level_options,
+           :geographic?,
+           :option_path_to_rank_path,
+           :rank_path_to_option_path,
+           :multi_level?,
+           :level_count,
+           :level,
+           :levels,
+           :to => :option_set, :allow_nil => true
+
+  replicable child_assocs: :option_set, backwards_assocs: :questioning, sync: :code,
+    uniqueness: {field: :code, style: :camel_case}, dont_copy: [:key, :access_level, :option_set_id],
+    compatibility: [:qtype_name, :option_set_id]
 
   # returns questions that do NOT already appear in the given form
   def self.not_in_form(form)
-    scoped.where("(questions.id not in (select question_id from questionings where form_id='#{form.id}'))")
+    scoped.where("(questions.id not in (select question_id from form_items where type='Questioning' and form_id='#{form.id}'))")
   end
 
   # returns N questions marked as key questions, sorted by the number of forms they appear in
@@ -130,19 +152,9 @@ class Question < ActiveRecord::Base
   end
 
   # determines if the question appears on any published forms
-  # uses the eager-loaded form_published field if available
+  # uses the eager-loaded form_published_col field if available
   def published?
-    if is_standard?
-      respond_to?(:copy_form_published_col) ? copy_form_published_col == 1 : copies.any?(&:published?)
-    else
-      respond_to?(:form_published_col) ? form_published_col == 1 : forms.any?(&:published?)
-    end
-  end
-
-  # determines if any of the forms on which this question appears are standard copies
-  # uses a special eager-loaded attribute if available
-  def has_standard_copy_form?
-    is_standard ? false : respond_to?(:standard_copy_form_id) ? !standard_copy_form_id.nil? : forms.any?(&:standard_copy?)
+    is_standard? ? false : (respond_to?(:form_published_col) ? form_published_col == 1 : forms.any?(&:published?))
   end
 
   # checks if any associated forms are smsable
@@ -220,6 +232,11 @@ class Question < ActiveRecord::Base
     option_set.present? ? option_set.option_levels : []
   end
 
+  # This should be able to be done by adding `order: :name` to the association, but that causes a cryptic SQL error
+  def sorted_tags
+    tags.order(:name)
+  end
+
   private
 
     def code_unique_per_mission
@@ -251,5 +268,9 @@ class Question < ActiveRecord::Base
         self.minstrictly = nil
         self.maxstrictly = nil
       end
+    end
+
+    def at_least_one_name
+      errors.add(:base, :at_least_one_name) if name.blank?
     end
 end

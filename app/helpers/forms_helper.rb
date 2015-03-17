@@ -14,7 +14,7 @@ module FormsHelper
 
   def forms_index_fields
     if admin_mode?
-      %w(std_icon name questions copy_count published copy_responses_count updated_at actions)
+      %w(std_icon name questions copy_count copy_responses_count updated_at actions)
     else
       %w(std_icon version name questions published downloads responses smsable allow_incomplete updated_at actions)
     end
@@ -48,7 +48,7 @@ module FormsHelper
       # add a clone link if auth'd
       if can?(:clone, form)
         links += action_link("clone", clone_form_path(form), :'data-method' => 'put',
-          :title => t("common.clone"), :confirm => t("form.clone_confirm", :form_name => form.name))
+          :title => t("common.clone"), data: {confim: t("form.clone_confirm")}, :form_name => form.name)
       end
 
       # add a print link if auth'd

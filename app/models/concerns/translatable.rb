@@ -19,6 +19,15 @@ module Translatable
       translated_fields.each do |f|
         ancestors.include?(ActiveRecord::Base) ? (serialize "#{f}_translations", JSON) : (attr_accessor "#{f}_translations")
       end
+
+      # Setup *_translations assignment handlers for each field.
+      translated_fields.each do |field|
+        class_eval %Q{
+          def #{field}_translations=(val)
+            translatable_external_set_hash('#{field}', val)
+          end
+        }
+      end
     end
 
     # special accessors that we have to use for class vars in concerns
@@ -65,19 +74,46 @@ module Translatable
     !self.class.translated_fields.nil? && translatable_parse_method(symbol) || super
   end
 
+  # Called when someone directly assigns field_translations.
+  def translatable_external_set_hash(field, value)
+    translatable_internal_set_hash(field, value)
+    translatable_set_canonical(field)
+  end
+
+  # Sets field_translations value internally.
+  def translatable_internal_set_hash(field, value)
+    # Use write_attribute if available.
+    value = value.try(:stringify_keys)
+    respond_to?(:write_attribute, true) ? write_attribute(:"#{field}_translations", value) : instance_variable_set("@#{field}_translations", value)
+  end
+
+  # Assigns the canonical_xxx attrib if applicable
+  def translatable_set_canonical(field)
+    # Set canonical_name if appropriate
+    if respond_to?("canonical_#{field}=")
+      trans = send("#{field}_translations") || {}
+      send("canonical_#{field}=", trans[I18n.default_locale.to_s] || trans.values.first)
+    end
+  end
+
   def translatable_translate(field, locale, is_setter, options, args)
 
     # if we're setting the value
     if is_setter
       # init the empty hash if it's nil
-      send("#{field}_translations=", {}) if send("#{field}_translations").nil?
+      translatable_internal_set_hash(field, {}) if send("#{field}_translations").nil?
 
       # set the value in the appropriate translation hash
       # we use the merge method because otherwise the _changed? method doesn't work right
-      send("#{field}_translations=", send("#{field}_translations").merge(locale => args[1]))
+      translatable_internal_set_hash(field, send("#{field}_translations").merge(locale => args[1]))
 
-      # if the locale is the default locale, also cache the value in the _ attribute
-      send("_#{field}=", args[1]) if locale.to_sym == I18n.default_locale
+      # Remove any blank values.
+      translatable_internal_set_hash(field, send("#{field}_translations").reject{ |k,v| v.blank? })
+
+      # Set back to nil if empty
+      translatable_internal_set_hash(field, nil) if send("#{field}_translations").blank?
+
+      translatable_set_canonical(field)
 
     # otherwise just return what we have
     else

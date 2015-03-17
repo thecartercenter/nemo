@@ -7,7 +7,7 @@
       <%= qing.rank %>. <%= reqd_sym if qing.required? %>
       <%= qing.question.name %>
     </div>
-    <% unless qing.question.hint.empty? %>
+    <% unless qing.question.hint.blank? %>
       <div class="hint"><%= qing.question.hint %></div>
     <% end %>
   </td>

@@ -41,9 +41,6 @@ class Report::SummaryCollectionBuilder
     # remove the null subset if empty
     collection.remove_null_subset_if_empty!
 
-    # now tell all subsets to build SummaryGroups
-    collection.subsets.each{|s| s.build_groups(@options)}
-
     collection
   end
 
@@ -151,7 +148,7 @@ class Report::SummaryCollectionBuilder
             WHEN 'time' THEN MAX(a.time_value)
             WHEN 'datetime' THEN MAX(a.datetime_value)
           END AS max
-        FROM answers a INNER JOIN questionings qing ON a.questioning_id = qing.id AND qing.id IN (#{qing_ids})
+        FROM answers a INNER JOIN form_items qing ON qing.type='Questioning' AND a.questioning_id = qing.id AND qing.id IN (#{qing_ids})
           INNER JOIN questions q ON q.id = qing.question_id
           #{disagg_join_clause}
           #{current_user_join_clause}
@@ -230,26 +227,29 @@ class Report::SummaryCollectionBuilder
       # build and run queries for select_one and _multiple
       query = <<-eos
         SELECT #{disagg_select_expr} qings.id AS qing_id, a.option_id AS option_id, COUNT(a.id) AS answer_count
-        FROM questionings qings
+        FROM form_items qings
           INNER JOIN questions q ON qings.question_id = q.id
           LEFT OUTER JOIN answers a ON qings.id = a.questioning_id
           #{disagg_join_clause}
           #{current_user_join_clause}
-          WHERE q.qtype_name IN ('select_one', 'select_multiple')
+          WHERE q.qtype_name = 'select_one'
+            AND qings.type = 'Questioning'
             AND qings.id IN (#{qing_ids})
+            AND (a.rank IS NULL OR a.rank = 1)
           GROUP BY #{disagg_group_by_expr} qings.id, a.option_id
       eos
       sel_one_res = ActiveRecord::Base.connection.execute(query)
 
       query = <<-eos
         SELECT #{disagg_select_expr} qings.id AS qing_id, c.option_id AS option_id, COUNT(c.id) AS choice_count
-        FROM questionings qings
+        FROM form_items qings
           INNER JOIN questions q ON qings.question_id = q.id
           LEFT OUTER JOIN answers a ON qings.id = a.questioning_id
           LEFT OUTER JOIN choices c ON a.id = c.answer_id
           #{disagg_join_clause}
           #{current_user_join_clause}
           WHERE q.qtype_name = 'select_multiple'
+            AND qings.type = 'Questioning'
             AND qings.id IN (#{qing_ids})
           GROUP BY #{disagg_group_by_expr} qings.id, c.option_id
       eos
@@ -278,13 +278,14 @@ class Report::SummaryCollectionBuilder
       # get the non-null answer counts for sel mult questions
       query = <<-eos
         SELECT #{disagg_select_expr} qings.id AS qing_id, COUNT(DISTINCT a.id) AS non_null_answer_count
-        FROM questionings qings
+        FROM form_items qings
           INNER JOIN questions q ON qings.question_id = q.id
           LEFT OUTER JOIN answers a ON qings.id = a.questioning_id
           LEFT OUTER JOIN choices c ON a.id = c.answer_id
           #{disagg_join_clause}
           #{current_user_join_clause}
           WHERE q.qtype_name = 'select_multiple'
+            AND qings.type = 'Questioning'
             AND qings.id IN (#{qing_ids})
             AND c.id IS NOT NULL
           GROUP BY #{disagg_group_by_expr} qings.id
@@ -358,13 +359,14 @@ class Report::SummaryCollectionBuilder
       # build and run query
       query = <<-eos
         SELECT #{disagg_select_expr} qings.id AS qing_id, a.date_value AS date, COUNT(a.id) AS answer_count
-        FROM questionings qings
+        FROM form_items qings
           INNER JOIN questions q ON qings.question_id = q.id
           LEFT OUTER JOIN answers a ON qings.id = a.questioning_id
           #{disagg_join_clause}
           #{current_user_join_clause}
           WHERE q.qtype_name = 'date'
             AND qings.id IN (#{qing_ids})
+            AND qings.type = 'Questioning'
           GROUP BY #{disagg_group_by_expr} qings.id, a.date_value
           ORDER BY disagg_value, qing_id, date
       eos

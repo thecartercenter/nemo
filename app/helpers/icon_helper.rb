@@ -24,6 +24,7 @@ module IconHelper
     :show => "file-o",
     :sms => "comment",
     :sms_console => "laptop",
+    :sms_message => "comment",
     :standard => "certificate",
     :submit => "share-square-o",
     :unpublish => "arrow-down",

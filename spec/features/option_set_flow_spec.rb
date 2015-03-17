@@ -1,12 +1,12 @@
 require 'spec_helper'
 
-feature 'option suggestion dropdown', js: true do
+feature 'option suggestion dropdown' do
   before do
     @user = create(:user, role_name: 'coordinator')
     login(@user)
   end
 
-  scenario 'creating, showing, and editing' do
+  scenario 'creating, showing, and editing', js: true, driver: :selenium do
     click_link('Option Sets')
 
     # Fill in basic values
@@ -47,7 +47,7 @@ feature 'option suggestion dropdown', js: true do
     expect(page).to have_selector('td.options_col div', text: 'Banana, Apple, Pear')
   end
 
-  it 'importing, editing, and showing standard' do
+  scenario 'importing, editing, and showing standard', js: true do
     @std_set = create(:option_set, name: 'Gold', is_standard: true, multi_level: true)
     click_link('Option Sets')
 
@@ -70,6 +70,13 @@ feature 'option suggestion dropdown', js: true do
     # Show standard set to verify save worked.
     click_link('Gold')
     expect(page).to have_selector('#options-wrapper div.inner', text: 'Kitty')
+  end
+
+  scenario 'deleting' do
+    os = create(:option_set, multi_level: true)
+    visit(option_sets_path(mode: 'm', mission_name: os.mission.compact_name, locale: 'en'))
+    find('a.action_link_destroy').click
+    expect(page).to have_selector('.alert-success', text: 'Option Set deleted successfully')
   end
 
   def click_modal_save_button

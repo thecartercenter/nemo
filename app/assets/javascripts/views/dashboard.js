@@ -98,7 +98,7 @@
     // sense to let the session expire
 
     $.ajax({
-      url: self.params.url,
+      url: ELMO.app.url_builder.build('/'),
       method: 'GET',
       data: {
         report_id: self.report_view.current_report_id,
@@ -152,6 +152,9 @@
       $('#title img').css('height', '30px');
       $('a.full-screen i').removeClass('fa-expand').addClass('fa-compress');
     }
+
+    // Set link text
+    $('a.full-screen span').text(I18n.t('dashboard.' + (fs ? 'exit' : 'enter') + '_full_screen'));
   }
 
 }(ELMO.Views));

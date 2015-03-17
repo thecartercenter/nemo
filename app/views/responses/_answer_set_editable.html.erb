@@ -1,22 +1,12 @@
-<%# show the error messages without keys %>
-<%= content_tag(:div, answer_set.errors.to_hash.values.join(', '), :class => 'form-errors') unless answer_set.errors.empty? %>
+<%# Show the error messages without keys %>
+<%= content_tag(:div, answer_set.errors.to_hash.values.join(', '), class: 'form-errors') unless answer_set.errors.empty? %>
 
-<div class="select-one-answers">
-  <% answer_set.answers.each_with_index do |answer, i| %>
-    <div>
-      <div class="level-name"><%= answer.level_name %></div>
-      <%= select_tag("response[answers_attributes][#{index}_#{i}][option_id]",
-        options_from_collection_for_select(answer_set.options_for(answer), 'id', 'name', answer.option_id),
-        include_blank: true, class: 'form-control') %>
-      <%= render('answer_hidden_fields', answer: answer, index: "#{index}_#{i}") %>
-      <%= hidden_field_tag("response[answers_attributes][#{index}_#{i}][rank]", answer.rank) %>
-    </div>
-  <% end %>
-</div>
+<%# This renders the select tags. %>
+<%= render('option_sets/cascading_selects', index: index, option_path: answer_set.option_path,
+  input_name_template: "response[answers_attributes][#{index}_###][option_id]") %>
 
-<%= javascript_doc_ready do %>
-  new ELMO.Views.SelectOneAnswerSetView({
-    el: $('#qing_<%= answer_set.questioning_id %> .control'),
-    option_set_id: <%=json answer_set.option_set.id %>
-  });
+<%# We also need the hidden fields for each answer. %>
+<% answer_set.answers.each_with_index do |a,i| %>
+  <%= render('answer_hidden_fields', answer: a, index: "#{index}_#{i}") %>
+  <%= hidden_field_tag("response[answers_attributes][#{index}_#{i}][rank]", a.rank) %>
 <% end %>

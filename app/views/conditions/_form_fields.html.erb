@@ -1,0 +1,26 @@
+<%= elmo_fields_for("questioning[condition_attributes]", @condition) do |f| %>
+  <%= f.base_errors %>
+  <%= f.hidden_field(:id) %>
+
+  <div class="field">
+    <%= f.label(:ref_qing_id, translate_model(Question)) %>
+    <%= f.select(:ref_qing_id, @condition.refable_qings.map{|q| ["#{q.rank}. #{q.question.code}", q.id]},
+      {include_blank: true}, class: 'form-control') %>
+  </div>
+
+  <div class="field">
+    <%= f.label(:op, t('condition.op')) %>
+    <%= f.select(:op, translate_options(@condition.applicable_operator_names, [:condition, :operators]),
+      {include_blank: true}, class: 'form-control') %>
+  </div>
+
+  <div class="field">
+    <%= f.label(:value, t('condition.value')) %>
+    <% if @condition.ref_qing.present? && @condition.ref_qing_has_options? %>
+      <%= render('option_sets/cascading_selects', index: 1, option_path: @condition.option_path,
+        input_name_template: 'questioning[condition_attributes][option_path_attribs][###]') %>
+    <% else %>
+      <%= f.text_field(:value, class: 'text form-control') %>
+    <% end %>
+  </div>
+<% end # elmo_fields_for %>

@@ -44,15 +44,23 @@ class Ability
       if user.admin?
         can :view, :admin_mode
 
-        # standard objects, missions, settings, and all users are available in no-mission (admin) mode
-        if mode == 'admin'
-          [Form, Questioning, Condition, Question, OptionSet, OptionNode, Option, Tag, Tagging].each do |k|
-            can :manage, k, :is_standard => true
+        case mode
+        when 'admin'
+
+          # standard objects, missions, settings, and all users are available in no-mission (admin) mode
+          [Form, Questioning, QingGroup, Condition, Question, OptionSet, OptionNode, Option, Tag, Tagging].each do |k|
+            can :manage, k, :mission_id => nil
           end
           can :manage, Mission
           can :manage, User
           can :manage, Assignment
           can :manage, Setting, :mission_id => nil
+
+        when 'mission'
+
+          # Admins can edit themselves in mission mode even if they're not currently assigned.
+          can [:update, :login_instructions, :change_assignments], User, id: user.id
+
         end
 
         # admin can switch to any mission, regardless of mode
@@ -142,10 +150,12 @@ class Ability
           # permissions for locked missions only
           if mission.locked?
             can [:index, :read, :export], [Form, Question, OptionSet], :mission_id => mission.id
-            can :read, [Questioning, Option], :mission_id => mission.id
+            can :print, Form, :mission_id => mission.id
+            can :read, [Questioning, QingGroup, Option], :mission_id => mission.id
 
           # permissions for non-locked mission
           else
+
             # can manage users in current mission
             # special change_assignments permission is given so that users cannot update their own assignments via edit profile
             can [:create, :update, :login_instructions, :change_assignments], User, :assignments => {:mission_id => mission.id}
@@ -159,7 +169,7 @@ class Ability
             end
 
             # coord can manage these classes for the current mission
-            [Form, OptionSet, Question, Questioning, Option, Tag, Tagging].each do |klass|
+            [Form, OptionSet, Question, Questioning, QingGroup, Option, Tag, Tagging].each do |klass|
               can :manage, klass, :mission_id => mission.id
             end
 
@@ -174,6 +184,9 @@ class Ability
 
           # there is no Questioning index
           cannot :index, Questioning
+
+          # there is no QingGroup index
+          cannot :index, QingGroup
         end
 
         # Users can view/modify only their own API keys
@@ -206,23 +219,20 @@ class Ability
     # standard forms can't be cloned (hard to implement and not currently needed)
     cannot :clone, Form, :is_standard => true
 
-    cannot [:add_questions, :remove_questions, :reorder_questions], Form do |f|
-      f.standard_copy? || f.published?
-    end
+    # only published forms can be downloaded
+    cannot :download, Form, :published => false
 
-    cannot :rename, Form do |f|
-      f.standard_copy?
+    cannot [:add_questions, :remove_questions, :reorder_questions], Form do |f|
+      f.published?
     end
 
     # standard forms cannot be published and do not have versions, which are only assigned on publish
     cannot :publish, Form, :is_standard => true
 
-    # cannot destroy/update a questioning if it's a standard copy or published
     cannot [:destroy, :update, :update_required, :update_condition], Questioning do |q|
-      q.standard_copy? || q.published?
+      q.published?
     end
 
-    # Can hide questioning if standard copy but not if published.
     cannot :update_hidden, Questioning do |q|
       q.published?
     end
@@ -241,7 +251,7 @@ class Ability
 
     # update_core refers to the core fields: question type, option set, constraints
     cannot :update_core, Question do |q|
-      q.standard_copy? || q.published? || q.has_answers?
+      q.published? || q.has_answers?
     end
 
     # update_code refers to the question code attribute
@@ -250,42 +260,23 @@ class Ability
     end
 
     cannot :destroy, Question do |q|
-      q.standard_copy? && q.has_standard_copy_form? || q.published? || q.has_answers?
+      q.published? || q.has_answers?
     end
 
     # we need these specialized permissions because option names/hints are updated via option set
-    cannot [:update_core, :add_options, :remove_options, :reorder_options], OptionSet do |o|
-      o.standard_copy? || o.published?
-    end
-
-    # the geographic option is used only for reporting so doesnt matter if published, etc.
-    # only matters if standard_copy, b/c the value does get copied on replication
-    cannot :change_geographic, OptionSet do |o|
-      o.standard_copy?
+    cannot [:add_options, :remove_options, :reorder_options], OptionSet do |o|
+      o.published?
     end
 
     cannot :destroy, OptionSet do |o|
       o.has_answers? || o.has_questions? || o.published?
     end
 
-    # only published forms can be downloaded
-    cannot :download, Form, :published => false
-
     # nobody can assign anybody to a locked mission
     cannot :assign_to, Mission, :locked => true
 
     # nobody can edit assignments for a locked mission
     cannot [:create, :update, :destroy], Assignment, :mission => {:locked => true}
-
-    # can't update or destroy tags which are standard copies and have standard copy taggings
-    cannot [:update, :destroy], Tag do |tag|
-      tag.standard_copy? && tag.taggings.any? { |t| t.standard_copy? }
-    end
-
-    # can't destroy taggings belonging to standard question
-    cannot :destroy, Tagging do |tagging|
-      tagging.question.is_standard
-    end
   end
 
   def to_s

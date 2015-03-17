@@ -8,7 +8,12 @@ require 'capybara/rspec'
 require 'capybara/rails'
 require 'capybara/poltergeist'
 
-Capybara.javascript_driver = :selenium
+Capybara.register_driver :poltergeist do |app|
+  Capybara::Poltergeist::Driver.new(app,
+    extensions: [File.expand_path("../support/phantomjs_ext/geolocation.js", __FILE__)])
+end
+
+Capybara.javascript_driver = :poltergeist
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
@@ -44,6 +49,11 @@ RSpec.configure do |config|
   config.include AssertDifference
   config.include RequestSpecHelpers, type: :request
   config.include FeatureSpecHelpers, type: :feature
+
+  # Locale should be reset to :en after each test if it is changed.
+  config.after(:each) do
+    puts "WARNING: I18n locale was left as #{I18n.locale}" unless I18n.locale = :en
+  end
 end
 
 # Encodes credentials for basic auth

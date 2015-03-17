@@ -217,8 +217,8 @@ nav {
   padding: 20px 25px 30px 25px;
   min-height: 400px;
   background-color: white;
-  a i { color: $elmo-blue;}
-
+  a i { color: $elmo-blue; }
+  .index_table a i.fa:hover { color: darken($elmo-blue, 20%) }
 }
 
 #footer {
@@ -256,8 +256,7 @@ div.dialog_bg * { opacity: 1; filter: alpha(opacity=100); }
 .printable { display: none; }
 
 /* report view */
-.report_reports_new h1.title, .report_reports_show h1.title { display: inline-block; }
-#report_load_ind { margin: 10px 0 0 10px; }
+.reports_new h1.title, .reports_show h1.title { display: inline-block; }
 
 body.reports {
   div.report_view {
@@ -272,7 +271,7 @@ body.reports {
 
 #api-users {
   display: none;
-  margin-left: 200px;
+
   #api-users-scrollbox {
     border: 1px solid #dddddd;
     padding: 4px;

@@ -1,10 +1,8 @@
 class Form < ActiveRecord::Base
-  include MissionBased, FormVersionable, Standardizable, Replicable
+  include MissionBased, FormVersionable, Replication::Standardizable, Replication::Replicable
 
   API_ACCESS_LEVELS = %w(private protected public)
 
-  has_many(:questions, :through => :questionings, :order => "questionings.rank")
-  has_many(:questionings, :order => "rank", :autosave => true, :dependent => :destroy, :inverse_of => :form)
   has_many(:responses, :inverse_of => :form)
   has_many(:versions, :class_name => "FormVersion", :inverse_of => :form, :dependent => :destroy)
   has_many(:whitelist_users, :as => :whitelistable, class_name: "Whitelist")
@@ -12,55 +10,98 @@ class Form < ActiveRecord::Base
 
   # while a form has many versions, this is a reference to the most up-to-date one
   belongs_to(:current_version, :class_name => "FormVersion")
+  belongs_to :root_group, autosave: true, class_name: "QingGroup", foreign_key: :root_id
 
   before_validation(:normalize_fields)
+  before_save(:update_pub_changed_at)
+  before_destroy { root_group.destroy }
 
   validates(:name, :presence => true, :length => {:maximum => 32})
   validate(:name_unique_per_mission)
 
   before_create(:init_downloads)
 
-  scope(:published, where(:published => true))
-  scope(:with_questionings, includes(
-    :questionings => [
-      :form,
-      {:question => :option_set},
-      {:condition => [:option, :ref_qing]}
-    ]
-  ).order("questionings.rank"))
+  scope(:published, -> { where(:published => true) })
 
   # this scope adds a count of the questionings on this form and
   # the number of copies of this form, and of those that are published
   # if the form is not a standard, these will just be zero
-  scope(:with_questioning_and_copy_counts, select(%{
+  scope(:with_questioning_and_copy_counts, -> { select(%{
       forms.*,
-      COUNT(DISTINCT questionings.id) AS questionings_count_col,
+      COUNT(DISTINCT form_items.id) AS questionings_count_col,
       COUNT(DISTINCT copies.id) AS copy_count_col,
       SUM(copies.published) AS published_copy_count_col,
       SUM(copies.responses_count) AS copy_responses_count_col
     })
     .joins(%{
-      LEFT OUTER JOIN questionings ON forms.id = questionings.form_id
-      LEFT OUTER JOIN forms copies ON forms.id = copies.standard_id
+      LEFT OUTER JOIN form_items ON forms.id = form_items.form_id AND form_items.type = 'Questioning'
+      LEFT OUTER JOIN forms copies ON forms.id = copies.original_id AND copies.standard_copy = 1
     })
-    .group("forms.id"))
+    .group("forms.id") })
 
-  scope(:by_name, order('forms.name'))
-  scope(:default_order, by_name)
+  scope(:by_name, -> { order('forms.name') })
+  scope(:default_order, -> { by_name })
 
-  replicable :child_assocs => :questionings, :uniqueness => {:field => :name, :style => :sep_words},
-    :dont_copy => [:published, :downloads, :responses_count, :questionings_count, :upgrade_needed,
-      :smsable, :current_version_id, :allow_incomplete, :access_level]
+  delegate :children,
+           :c,
+           :descendants,
+           to: :root_group
+
+  replicable child_assocs: :root_group, uniqueness: {field: :name, style: :sep_words},
+    dont_copy: [:published, :pub_changed_at, :downloads, :responses_count, :upgrade_needed,
+      :smsable, :current_version_id, :allow_incomplete, :access_level, :root_id]
 
 
-  def api_user_id_can_see?(api_user_id)
-    whitelist_users.pluck(:user_id).include?(api_user_id)
-  end
-
-  # remove heirarch of objects
+  # remove heirarchy of objects
   def self.terminate_sub_relationships(form_ids)
     FormVersion.where(form_id: form_ids).delete_all
     Questioning.where(form_id: form_ids).delete_all
+  end
+
+  # Gets a cache key based on the mission and the max (latest) pub_changed_at value.
+  def self.odk_index_cache_key(options)
+    # Note that since we're using maximum method, dates don't seem to be TZ adjusted on load, which is fine as long as it's consistent.
+    max_pub_changed_at = if for_mission(options[:mission]).published.any?
+      for_mission(options[:mission]).maximum(:pub_changed_at).to_s(:cache_datetime)
+    else
+      'no-pubd-forms'
+    end
+    "odk-form-list/mission-#{options[:mission].id}/#{max_pub_changed_at}"
+  end
+
+  # Returns all descendant questionings in one flat array, sorted in traversal order.
+  def questionings(reload = false)
+    root_group.sorted_leaves.flatten
+  end
+
+  # Returns array of questionings, sorted in traversal order.
+  # Questionings which belong to groups are returned in sub arrays
+  # e.g [q1, [q2, q3], q4]
+  def grouped_questionings
+    root_group.sorted_leaves
+  end
+
+  def questions(reload = false)
+    questionings(reload).map(&:question)
+  end
+
+  def add_questions_to_top_level(questions)
+    questions.each_with_index do |q, i|
+      Questioning.create!(mission: mission, form: self, question: q, parent: root_group)
+    end
+  end
+
+  def root_questionings(reload = false)
+    # Not memoizing this because it causes all sorts of problems.
+    root_group ? root_group.children.order(:rank).reject{ |q| q.is_a?(QingGroup) } : []
+  end
+
+  def odk_download_cache_key
+    "odk-form/#{id}-#{pub_changed_at}"
+  end
+
+  def api_user_id_can_see?(api_user_id)
+    whitelist_users.pluck(:user_id).include?(api_user_id)
   end
 
   def temp_response_id
@@ -76,7 +117,7 @@ class Form < ActiveRecord::Base
   end
 
   def has_questions?
-    questionings.any?
+    root_questionings.any?
   end
 
   def full_name
@@ -107,14 +148,10 @@ class Form < ActiveRecord::Base
     end
   end
 
-  # returns whether this form is published OR if standard, if any of its copies are published
-  # uses eager loaded col if available
+  # Returns whether this form is published, using eager loaded col if available.
+  # Standard forms are never published.
   def published?
-    if is_standard?
-      respond_to?(:published_copy_count_col) ? (published_copy_count_col || 0) > 0 : copies.any?(&:published?)
-    else
-      read_attribute(:published)
-    end
+    is_standard? ? false : read_attribute(:published)
   end
 
   # returns number of copies published. uses eager loaded field if available
@@ -129,7 +166,6 @@ class Form < ActiveRecord::Base
   end
 
   def option_sets
-    # going through the questionings model as that's the one that is eager-loaded in .with_questionings
     questionings.map(&:question).map(&:option_set).compact.uniq
   end
 
@@ -146,50 +182,55 @@ class Form < ActiveRecord::Base
     questionings.detect{ |q| q.code == c }
   end
 
-  def max_rank
-    questionings.map{|qing| qing.rank || 0}.max || 0
+  # Loads all options used on the form in a constant number of queries.
+  def all_options
+    OptionSet.all_options_for_sets(questions.map(&:option_set_id).compact)
   end
 
-  # takes a hash of the form {questioning_id => new_rank, ...}
+  # Gets all first level option nodes with options eagerly loaded.
+  def all_first_level_option_nodes
+    OptionSet.first_level_option_nodes_for_sets(questions.map(&:option_set_id).compact)
+  end
+
+  # Gets the last Questioning on the form, ignoring the group structure.
+  def last_qing
+    children.where(type: 'Questioning').order(:rank).last
+  end
+
+  # Whether this form needs an accompanying manifest for odk.
+  def needs_odk_manifest?
+    # For now this is IFF there are any multilevel option sets
+    @needs_odk_manifest ||= option_sets.any?(&:multi_level?)
+  end
+
+  # Takes a hash of the form {questioning_id => new_rank, ...}
+  # Assumes all questionings are listed in the hash.
   def update_ranks(new_ranks)
-    # Convert everything to integers
-    new_ranks = Hash[*new_ranks.to_a.flatten.map(&:to_i)]
+    # Sort and ensure sequential.
+    sorted = new_ranks.to_a.sort_by{ |id,rank| rank }.each_with_index.map{|pair, idx| [pair[0], idx+1]}
+    new_ranks = Hash[*sorted.flatten]
 
-    # set but don't save the new orderings
-    questionings.each_index do |i|
-      if new_ranks[questionings[i].id]
-        questionings[i].rank = new_ranks[questionings[i].id]
-      end
+    # Validate the condition orderings (raises an error if they're invalid).
+    root_questionings.each{|qing| qing.condition_verify_ordering(new_ranks)}
+
+    # Assign.
+    new_ranks.each do |id, rank|
+      Questioning.find(id).update_attribute(:rank, rank)
     end
-
-    # ensure the ranks are sequential
-    fix_ranks(:reload => false, :save => false)
-
-    # Update the new_ranks hash as the ranks may have changed in fix_ranks.
-    new_ranks = Hash[*questionings.map{ |q| [q.id, q.rank] }.flatten]
-
-    # Validate the condition orderings (raises an error if they're invalid)
-    # We pass the new_ranks hash since the new ranks are not
-    # yet saved to the database and Condition won't know about them.
-    questionings.each{|qing| qing.condition_verify_ordering(new_ranks)}
   end
 
   def destroy_questionings(qings)
     qings = Array.wrap(qings)
     transaction do
-      # delete the qings
-      qings.each do |qing|
+      # delete the qings, last first, to avoid version bump if possible.
+      qings.sort_by(&:rank).reverse.each do |qing|
 
         # if this qing has a non-zero answer count, raise an error
         # this is necessary due to bulk deletion operations
         raise DeletionError.new('question_remove_answer_error') if qing_answer_count(qing) > 0
 
-        qing.destroy_with_copies
-        questionings.delete(qing)
+        qing.destroy
       end
-
-      # fix the ranks
-      fix_ranks(:reload => false, :save => true)
 
       save
     end
@@ -259,37 +300,19 @@ class Form < ActiveRecord::Base
   end
 
   # efficiently gets the number of answers for the given questioning on this form
-  # or if the form is standard, for the given questioning on any copies
+  # returns zero if form is standard
   def qing_answer_count(qing)
-    # fetch the counts if not already fetched
-    if !@answer_counts
+    return 0 if is_standard?
 
-      # if form is standard, look for answers for copy questionings, since the std questioning will never have answers
-      joins = if is_standard?
-        %{LEFT OUTER JOIN questionings copies ON questionings.id = copies.standard_id
-          LEFT OUTER JOIN answers ON answers.questioning_id = copies.id}
-      else
-        "LEFT OUTER JOIN answers ON answers.questioning_id = questionings.id"
-      end
-
-      @answer_counts = Questioning.find_by_sql([%{
-        SELECT questionings.id, COUNT(DISTINCT answers.id) AS answer_count
-        FROM questionings #{joins}
-        WHERE questionings.form_id = ?
-        GROUP BY questionings.id
-      }, id]).index_by(&:id)
-    end
+    @answer_counts ||= Questioning.find_by_sql([%{
+      SELECT form_items.id, COUNT(DISTINCT answers.id) AS answer_count
+      FROM form_items LEFT OUTER JOIN answers ON answers.questioning_id = form_items.id AND form_items.type = 'Questioning'
+      WHERE form_items.form_id = ?
+      GROUP BY form_items.id
+    }, id]).index_by(&:id)
 
     # get the desired count
     @answer_counts[qing.id].try(:answer_count) || 0
-  end
-
-  # ensures question ranks are sequential
-  def fix_ranks(options = {})
-    options[:reload] = true if options[:reload].nil?
-    options[:save] = true if options[:save].nil?
-    questionings(options[:reload]).sort_by{|qing| qing.rank}.each_with_index{|qing, idx| qing.rank = idx + 1}
-    save(:validate => false) if options[:save]
   end
 
   def has_white_listed_user?(user_id)
@@ -311,4 +334,8 @@ class Form < ActiveRecord::Base
       return true
     end
 
+    def update_pub_changed_at
+      self.pub_changed_at = Time.now if published_changed?
+      return true
+    end
 end

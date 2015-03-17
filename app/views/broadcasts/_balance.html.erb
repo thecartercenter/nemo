@@ -1,4 +1,8 @@
-<%= t("broadcast.balance_notice", :balance => content_tag(:strong, @balance), :account_type => Smser.outgoing_service_name).html_safe %>
-<% if @broadcast.recipients.size > @balance %>
-  <br/><strong><%= t("broadcast.may_not_be_enough") %></strong>
+<% if @balance == :failed %>
+  <strong><%= t('broadcast.balance_check_failed') %></strong>
+<% else %>
+  <%= t("broadcast.balance_notice", :balance => content_tag(:strong, @balance), :account_type => Sms::Broadcaster.outgoing_service_name).html_safe %>
+  <% if @broadcast.recipients.size > @balance %>
+    <br/><strong><%= t("broadcast.may_not_be_enough") %></strong>
+  <% end %>
 <% end %>

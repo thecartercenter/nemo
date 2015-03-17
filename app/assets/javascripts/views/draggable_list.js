@@ -14,8 +14,8 @@
 
     self.dirty = false;
 
-    // dragging only enabled if not in show mode and have can_reorder permission
-    self.enabled = self.form_mode != 'show' && self.can_reorder;
+    // dragging only enabled if not read only and have can_reorder permission
+    self.enabled = !self.options_levels_read_only && self.can_reorder;
 
     // render the items
     self.render_items();
@@ -152,7 +152,7 @@
     inner.append(item.translation() + '&nbsp;');
 
     // add edit/remove unless in show mode
-    if (self.form_mode != 'show') {
+    if (!self.options_levels_read_only) {
       var links = $('<div>').attr('class', 'links')
 
       // only show the edit link if the item is editable

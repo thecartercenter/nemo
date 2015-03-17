@@ -1,4 +1,10 @@
 <%= render("searches/form", :search => @search) %>
 
+<div class="all-tags"><%= render_tags(@tags, class: 'clearfix', clickable: true) %></div>
+
 <%= index_table(Question, @questions) %>
 <%= standard_import_form %>
+
+<%= javascript_doc_ready do %>
+  new ELMO.Views.QuestionsTagsView();
+<% end %>

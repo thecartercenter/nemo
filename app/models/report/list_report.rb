@@ -1,5 +1,5 @@
 class Report::ListReport < Report::Report
-  include Report::LegacyReport
+  include Report::Gridable
 
   def as_json(options = {})
     h = super(options)
@@ -38,8 +38,8 @@ class Report::ListReport < Report::Report
         Report::AnswerField.expressions_for_clause(:select, joins, :tbl_pfx => "").each{|e| rel = rel.select("#{e.sql} AS answer_#{e.name}")}
 
         # question filter
-        qing_ids = questions.collect(&:questionings).flatten.collect(&:id).join(",")
-        rel = rel.where("questionings.id IN (#{qing_ids})")
+        qing_ids = questions.map(&:questionings).flatten.map(&:id).join(",")
+        rel = rel.where("questionings.id IN (#{qing_ids})") unless qing_ids.empty?
 
         # Add order by answer rank to accommodate multilevel answers.
         rel = rel.order("answers.rank")

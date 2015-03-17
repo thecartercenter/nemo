@@ -17,6 +17,13 @@ class QuestioningsController < ApplicationController
   end
 
   def create
+    @questioning.question.is_standard = true if current_mode == 'admin'
+
+    permitteed_params = questioning_params
+
+    # Convert tag string from TokenInput to array
+    @questioning.question.tag_ids = permitteed_params[:question_attributes][:tag_ids].split(',')
+
     if @questioning.save
       set_success_and_redirect(@questioning.question, :to => edit_form_path(@questioning.form))
     else
@@ -28,8 +35,15 @@ class QuestioningsController < ApplicationController
   def update
     strip_condition_params_if_empty
 
+    permitteed_params = questioning_params
+
+    # Convert tag string from TokenInput to array
+    if (tag_ids = permitteed_params[:question_attributes].try(:[], :tag_ids))
+      permitteed_params[:question_attributes][:tag_ids] = tag_ids.split(',')
+    end
+
     # assign attribs and validate now so that normalization runs before authorizing and saving
-    @questioning.assign_attributes(params[:questioning])
+    @questioning.assign_attributes(permitteed_params)
     @questioning.valid?
 
     # authorize special abilities
@@ -38,7 +52,7 @@ class QuestioningsController < ApplicationController
     end
     authorize!(:update_core, @questioning.question) if @questioning.question.core_changed?
 
-    if @questioning.save_and_rereplicate
+    if @questioning.save
       set_success_and_redirect(@questioning.question, :to => edit_form_path(@questioning.form))
     else
       prepare_and_render_form
@@ -48,6 +62,15 @@ class QuestioningsController < ApplicationController
   def destroy
     destroy_and_handle_errors(@questioning)
     redirect_to(edit_form_url(@questioning.form))
+  end
+
+  # Re-renders the fields in the condition form when requested by ajax.
+  def condition_form
+    # Create a dummy questioning so that the condition can look up the refable qings, etc.
+    @questioning = init_qing(form_id: params[:form_id])
+    # Create a dummy condition with the given ref qing.
+    @condition = @questioning.build_condition(ref_qing_id: params[:ref_qing_id])
+    render(partial: 'conditions/form_fields')
   end
 
   private
@@ -74,5 +97,11 @@ class QuestioningsController < ApplicationController
         (!@questioning || !@questioning.condition)
         params[:questioning].delete(:condition_attributes)
       end
+    end
+
+    def questioning_params
+      params.require(:questioning).permit(:form_id, :allow_incomplete, :access_level, :hidden, :required,
+        condition_attributes: [:ref_qing_id, :op, :value],
+        question_attributes: [:id, :code, :name_en, :hint_en, :tag_ids, :key, :access_level])
     end
 end

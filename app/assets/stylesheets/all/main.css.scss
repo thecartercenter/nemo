@@ -81,6 +81,10 @@ table.index_table {
   tr:first-child td {
     border-top: none;
   }
+
+  td {
+    vertical-align: middle;
+  }
 }
 table.index_table th, table.form th { text-align: left; color: #444; background-color: $super-light-gray;
     font-size: 90%; padding: 3px 10px 3px 3px; }
@@ -91,6 +95,7 @@ table.index_table td {
   /* many of the cells are links, and they are harder to read if they are orange, so revert to blue */
   a {
     color: $elmo-darker-blue;
+    padding: 5px 0;
   }
 }
 table.index_table tr:last-child td { border-bottom: 1px solid #ddd; }
@@ -107,6 +112,18 @@ table.index_table i.fa-certificate {
 
 i.fa-certificate {
   color: $gold;
+}
+
+table.index_table .tags {
+  display: inline;
+  line-height: 2.1;
+  margin-left: 3px;
+  vertical-align: text-top;
+  li {
+    float: none;
+    display: inline;
+  }
+  i.fa-certificate { font-size: 1em; }
 }
 
 /* set of links */

@@ -4,11 +4,23 @@ module OdkHelper
 
   # given a Subquestion object, builds an odk <input> tag
   # calls the provided block to get the tag content
-  def odk_input_tag(subq, &block)
-    opts = {}
+  def odk_input_tag(qing, subq, opts, &block)
+    opts ||= {}
+
     opts[:ref] = "/data/#{subq.odk_code}"
     opts[:rows] = 5 if subq.qtype_name == "long_text"
-    content_tag(subq.odk_tag, opts, &block)
+    opts[:query] = multi_level_option_nodeset_ref(qing, subq) if !subq.first_rank? && subq.qtype.name == 'select_one'
+    content_tag(odk_input_tagname(subq), opts, &block)
+  end
+
+  def odk_input_tagname(subq)
+    if subq.qtype.name == 'select_one' && subq.first_rank?
+      :select1
+    elsif subq.qtype.name == 'select_multiple'
+      :select
+    else
+      :input
+    end
   end
 
   # if a question is required, then determine the appropriate value based off of if the form allows incomplete responses
@@ -17,17 +29,27 @@ module OdkHelper
     form.allow_incomplete? ? "selected(/data/#{IR_QUESTION}, 'no')" : "true()"
   end
 
+  def appearance(grid_mode, label_row)
+    return 'label' if label_row
+    return 'list-nolabel' if grid_mode
+  end
+
   # generator for binding portion of xml.
   # note: _required is used to get around the 'required' html attribute
   def question_binding(form, qing, subq)
-    tag("bind", {
+    tag(:bind, {
       'nodeset' => "/data/#{subq.odk_code}",
-      'type' => subq.odk_name,
+      'type' => binding_type_attrib(subq),
       '_required' => qing.required? && subq.first_rank? ? required_value(form) : nil,
       'relevant' => qing.has_condition? ? qing.condition.to_odk : nil,
       'constraint' => subq.odk_constraint,
       'jr:constraintMsg' => subq.min_max_error_msg,
      }.reject{|k,v| v.nil?}).gsub(/_required=/, 'required=').html_safe
+  end
+
+  def binding_type_attrib(subq)
+    # ODK wants non-first-level selects to have type 'string'
+    subq.first_rank? ? subq.odk_name : 'string'
   end
 
   # binding for incomplete response question
@@ -53,45 +75,21 @@ module OdkHelper
   end
 
   # For the given subquestion, returns an xpath expression for the itemset tag nodeset attribute.
-  # E.g. instance('multi_level_options')/set2/opt or
-  #      instance('multi_level_options')/set2/opt[value=/data/q2_1]/opt or
-  #      instance('multi_level_options')/set2/opt[value=/data/q2_1]/opt[value=/data/q2_2]/opt
+  # E.g. instance('os16')/root/item or
+  #      instance('os16')/root/item[parent_id=/data/q2_1] or
+  #      instance('os16')/root/item[parent_id=/data/q2_2]
   def multi_level_option_nodeset_ref(qing, cur_subq)
-    "instance('option_set_#{qing.option_set_id}')/options/".tap do |ref|
-      qing.subquestions.each do |subq|
-        ref << 'opt'
-        if subq == cur_subq
-          break
-        else
-          ref << "[value=/data/#{subq.odk_code}]/"
-        end
-      end
+    filter = if cur_subq.first_rank?
+      ''
+    else
+      code = cur_subq.odk_code(previous: true)
+      "[parent_id=/data/#{code}]"
     end
+    "instance('os#{qing.option_set_id}')/root/item#{filter}"
   end
 
-  # Renders the given OptionNode as XML for use with ODK, etc.
-  def option_node_as_xml(option_set, node, depth = 0, path = [1])
-    id = node.option_id
-    "".tap do |xml|
-      xml << "<value>#{id}</value><key>option#{id}</key>".html_safe unless node.root?
-
-      if node.has_children?
-        # Recursive step.
-        xml << node.sorted_children.each_with_index.map do |c, i|
-          content_tag(:opt, option_node_as_xml(option_set, c, depth + 1, path + [i+1]))
-        end.join.html_safe
-      else
-        # If node has no children and we're on the first branch of the tree,
-        # we need to ensure the branch extends to the max depth of the tree. Otherwise ODK complains.
-        if path.uniq == [1] && (depth_diff = option_set.max_depth - depth) > 0
-          dummy_nodes = ''
-          depth_diff.times do
-            dummy_nodes = "<opt><value></value><key>blankoption</key>#{dummy_nodes}</opt>"
-          end
-          xml << dummy_nodes
-        end
-      end
-
-    end.html_safe
+  # Returns <text> tags for all first-level options.
+  def odk_option_translations(form, lang)
+    form.all_first_level_option_nodes.map{ |on| %Q{<text id="on#{on.id}"><value>#{on.option.name(lang, strict: false)}</value></text>} }.join.html_safe
   end
 end

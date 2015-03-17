@@ -10,6 +10,9 @@ class ResponsesController < ApplicationController
   before_filter :mark_response_as_checked_out, :only => [:edit]
 
   def index
+    # Disable cache, including back button
+    response.headers['Cache-Control'] = 'no-cache, max-age=0, must-revalidate, no-store'
+
     # handle different formats
     respond_to do |format|
       # html is the normal index page
@@ -79,7 +82,7 @@ class ResponsesController < ApplicationController
   def new
     # get the form specified in the params and error if it's not there
     begin
-      @response.form = Form.with_questionings.find(params[:form_id])
+      @response.form = Form.find(params[:form_id])
     rescue ActiveRecord::RecordNotFound
       return redirect_to(index_url_with_page_num)
     end
@@ -94,7 +97,6 @@ class ResponsesController < ApplicationController
   end
 
   def create
-
     # if this is a non-web submission
     if request.format == Mime::XML
 
@@ -157,7 +159,7 @@ class ResponsesController < ApplicationController
   end
 
   def update
-    @response.assign_attributes(params[:response])
+    @response.assign_attributes(response_params)
     web_create_or_update
   end
 
@@ -214,5 +216,13 @@ class ResponsesController < ApplicationController
     def render_xml_submission_failure(exception, code)
       Rails.logger.info("XML submission failed: '#{exception.to_s}'")
       render(:nothing => true, :status => code)
+    end
+
+    def response_params
+      if params[:response]
+        params.require(:response).permit(:form_id, :user_id, :incomplete, :reviewed).tap do |whitelisted|
+          whitelisted[:answers_attributes] = params[:response][:answers_attributes]
+        end
+      end
     end
 end

@@ -8,17 +8,17 @@ class SmsDecoderTest < ActiveSupport::TestCase
   end
 
   test "form with text question should work" do
-    setup_form(:questions => %w(text integer))
+    create_form(:questions => %w(text integer))
     assert_decoding(:body => "#{form_code} 1.weather is very cold 2.234", :answers => ["weather is very cold", 234])
   end
 
   test "form with long_text question should work" do
-    setup_form(:questions => %w(text integer))
+    create_form(:questions => %w(text integer))
     assert_decoding(:body => "#{form_code} 1.weather is very hot and humid with threats of storms 2.4345", :answers => ["weather is very hot and humid with threats of storms", 4345])
   end
 
   test "form with single question should work" do
-    setup_form(:questions => %w(integer))
+    create_form(:questions => %w(integer))
     assert_decoding(:body => "#{form_code} 1.15", :answers => [15])
   end
 
@@ -27,7 +27,7 @@ class SmsDecoderTest < ActiveSupport::TestCase
   end
 
   test "submitting to unpublished form should produce appropriate error" do
-    setup_form(:questions => %w(integer))
+    create_form(:questions => %w(integer))
 
     # unpublish the form and then submit
     @form.unpublish!
@@ -40,7 +40,7 @@ class SmsDecoderTest < ActiveSupport::TestCase
   end
 
   test "submitting to outdated form should produce appropriate error" do
-    setup_form(:questions => %w(integer))
+    create_form(:questions => %w(integer))
 
     # upgrade form version before submitting
     old_version_code = @form.current_version.code
@@ -50,7 +50,7 @@ class SmsDecoderTest < ActiveSupport::TestCase
   end
 
   test "submitting to non-smsable form should produce appropriate error" do
-    setup_form(:questions => %w(integer))
+    create_form(:questions => %w(integer))
 
     # turn off smsable before submitting
     @form.unpublish!
@@ -61,7 +61,7 @@ class SmsDecoderTest < ActiveSupport::TestCase
   end
 
   test "submitting to form without permission should produce appropriate error" do
-    setup_form(:questions => %w(integer))
+    create_form(:questions => %w(integer))
 
     # create user with permissions on different mission
     other_mission = FactoryGirl.create(:mission, :name => "OtherMission")
@@ -77,28 +77,28 @@ class SmsDecoderTest < ActiveSupport::TestCase
   end
 
   test "submitting from phone number without plus sign should work" do
-    setup_form(:questions => %w(integer))
+    create_form(:questions => %w(integer))
     phone = @user.phone.gsub("+", "")
     assert_decoding(:body => "#{form_code} 1.15", :from => phone, :answers => [15])
   end
 
   test "submitting from unrecognized phone number should error" do
-    setup_form(:questions => %w(integer))
+    create_form(:questions => %w(integer))
     assert_decoding_fail(:body => "#{form_code} 1.15", :from => "+12737272722", :error => "user_not_found")
   end
 
   test "submitting from phone number with letters should raise special error" do
-    setup_form(:questions => %w(integer))
+    create_form(:questions => %w(integer))
     assert_decoding_fail(:body => "#{form_code} 1.15", :from => "DEALS", :error => "automated_sender")
   end
 
   test "submitting from shortcode should raise special error" do
-    setup_form(:questions => %w(integer))
+    create_form(:questions => %w(integer))
     assert_decoding_fail(:body => "#{form_code} 1.15", :from => "123456", :error => "automated_sender")
   end
 
   test "submitting from second phone number should work" do
-    setup_form(:questions => %w(integer))
+    create_form(:questions => %w(integer))
 
     # setup second phone for user
     second_phone = "+12342342342"
@@ -110,125 +110,125 @@ class SmsDecoderTest < ActiveSupport::TestCase
   end
 
   test "form code should be case insensitive" do
-    setup_form(:questions => %w(integer))
+    create_form(:questions => %w(integer))
     assert_decoding(:body => "#{form_code.upcase} 1.15", :answers => [15])
   end
 
   test "form with invalid integer should error" do
-    setup_form(:questions => %w(integer))
+    create_form(:questions => %w(integer))
     assert_decoding_fail(:body => "#{form_code} 1.1d", :error => "answer_not_integer", :rank => 1, :value => "1d")
   end
 
   test "form with invalid question rank should error" do
-    setup_form(:questions => %w(integer))
+    create_form(:questions => %w(integer))
     assert_decoding_fail(:body => "#{form_code} 1.15 2.8", :error => "question_doesnt_exist", :rank => 2)
   end
 
   test "spaces after decimal points should not cause error" do
-    setup_form(:questions => %w(integer integer))
+    create_form(:questions => %w(integer integer))
     assert_decoding(:body => "#{form_code} 1. 15 2. 8", :answers => [15, 8])
   end
 
   test "select_one question should work" do
-    setup_form(:questions => %w(integer select_one))
+    create_form(:questions => %w(integer select_one))
     assert_decoding(:body => "#{form_code} 1.15 2.b", :answers => [15, "B"])
   end
 
   test "select_one question with numeric option should error" do
-    setup_form(:questions => %w(integer select_one))
+    create_form(:questions => %w(integer select_one))
     assert_decoding_fail(:body => "#{form_code} 1.15 2.6", :error => "answer_not_valid_option", :rank => 2, :value => "6")
   end
 
   test "select_one question with non-existent option should error" do
-    setup_form(:questions => %w(integer select_one))
+    create_form(:questions => %w(integer select_one))
     assert_decoding_fail(:body => "#{form_code} 1.15 2.h", :error => "answer_not_valid_option", :rank => 2, :value => "h")
   end
 
   test "option codes should be case insensitive" do
-    setup_form(:questions => %w(integer select_one))
+    create_form(:questions => %w(integer select_one))
     assert_decoding(:body => "#{form_code} 1.15 2.B", :answers => [15, "B"])
   end
 
   test "select_multiple question should work" do
-    setup_form(:questions => %w(integer select_multiple))
+    create_form(:questions => %w(integer select_multiple))
     assert_decoding(:body => "#{form_code} 1.15 2.bd", :answers => [15, %w(B D)])
   end
 
   test "select_multiple question with one numeric option should error" do
-    setup_form(:questions => %w(integer select_multiple))
+    create_form(:questions => %w(integer select_multiple))
     assert_decoding_fail(:body => "#{form_code} 1.15 2.b3d", :error => "answer_not_valid_option_multi",
       :rank => 2, :value => "b3d", :invalid_options => "3")
   end
 
   test "select_multiple question with one non-existent option should error" do
-    setup_form(:questions => %w(integer select_multiple))
+    create_form(:questions => %w(integer select_multiple))
     assert_decoding_fail(:body => "#{form_code} 1.15 2.abh", :error => "answer_not_valid_option_multi",
       :rank => 2, :value => "abh", :invalid_options => "h")
   end
 
   test "select_multiple question with several non-existent options should error" do
-    setup_form(:questions => %w(integer select_multiple))
+    create_form(:questions => %w(integer select_multiple))
     assert_decoding_fail(:body => "#{form_code} 1.15 2.abhk", :error => "answer_not_valid_options_multi",
       :rank => 2, :value => "abhk", :invalid_options => "h, k")
   end
 
   test "decimal question should work" do
-    setup_form(:questions => %w(decimal))
+    create_form(:questions => %w(decimal))
     assert_decoding(:body => "#{form_code} 1.1.15", :answers => [1.15])
   end
 
   test "decimal question without decimal point should work" do
-    setup_form(:questions => %w(decimal))
+    create_form(:questions => %w(decimal))
     assert_decoding(:body => "#{form_code} 1.15", :answers => [15])
   end
 
   test "decimal question with invalid answer should error" do
-    setup_form(:questions => %w(decimal))
+    create_form(:questions => %w(decimal))
     assert_decoding_fail(:body => "#{form_code} 1.15.2.2", :error => "answer_not_decimal", :rank => 1, :value => "15.2.2")
   end
 
   test "text question at beginning of message should work" do
-    setup_form(:questions => %w(text integer))
+    create_form(:questions => %w(text integer))
     assert_decoding(:body => "#{form_code} 1.foo bar 2.15", :answers => ["foo bar", 15])
   end
 
   test "long_text question at beginning of message should work" do
-    setup_form(:questions => %w(long_text integer))
+    create_form(:questions => %w(long_text integer))
     assert_decoding(:body => "#{form_code} 1.foo bar that is very long 2.15", :answers => ["foo bar that is very long", 15])
   end
 
   test "text question in middle of message should work" do
-    setup_form(:questions => %w(select_one text integer))
+    create_form(:questions => %w(select_one text integer))
     assert_decoding(:body => "#{form_code} 1.a 2.foo bar 3.15", :answers => ["A", "foo bar", 15])
   end
 
   test "long_text question in middle of message should work" do
-    setup_form(:questions => %w(select_one long_text integer))
+    create_form(:questions => %w(select_one long_text integer))
     assert_decoding(:body => "#{form_code} 1.a 2.foo bar that is very long 3.15", :answers => ["A", "foo bar that is very long", 15])
   end
 
   test "text question at end of message should work" do
-    setup_form(:questions => %w(select_one integer text))
+    create_form(:questions => %w(select_one integer text))
     assert_decoding(:body => "#{form_code} 1.a 2.15 3.foo bar", :answers => ["A", 15, "foo bar"])
   end
 
   test "long_text question at end of message should work" do
-    setup_form(:questions => %w(select_one integer long_text))
+    create_form(:questions => %w(select_one integer long_text))
     assert_decoding(:body => "#{form_code} 1.a 2.15 3.foo bar that is very long", :answers => ["A", 15, "foo bar that is very long"])
   end
 
   test "text question with space after decimal should work" do
-    setup_form(:questions => %w(select_one text integer))
+    create_form(:questions => %w(select_one text integer))
     assert_decoding(:body => "#{form_code} 1.a 2. foo bar 3.15", :answers => ["A", "foo bar", 15])
   end
 
   test "weird chunk should error" do
-    setup_form(:questions => %w(select_one text integer))
+    create_form(:questions => %w(select_one text integer))
     assert_decoding_fail(:body => "#{form_code} 1.a 2. foo bar 3.15 baz", :error => "answer_not_integer", :rank => 3, :value => "15 baz")
   end
 
   test "date question should work" do
-    setup_form(:questions => %w(integer date))
+    create_form(:questions => %w(integer date))
     assert_decoding(:body => "#{form_code} 1.4 2.20120229", :answers => [4, Date.new(2012, 2, 29)])
 
     # check other formats
@@ -238,22 +238,22 @@ class SmsDecoderTest < ActiveSupport::TestCase
   end
 
   test "date question with invalid date should error" do
-    setup_form(:questions => %w(integer date))
+    create_form(:questions => %w(integer date))
     assert_decoding_fail(:body => "#{form_code} 1.4 2.20120230", :error => "answer_not_date", :value => "20120230")
   end
 
   test "date question with too short date should error" do
-    setup_form(:questions => %w(integer date))
+    create_form(:questions => %w(integer date))
     assert_decoding_fail(:body => "#{form_code} 1.4 2.2012230", :error => "answer_not_date", :value => "2012230")
   end
 
   test "date question with junk should error" do
-    setup_form(:questions => %w(integer date))
+    create_form(:questions => %w(integer date))
     assert_decoding_fail(:body => "#{form_code} 1.4 2.foobarbaz", :error => "answer_not_date", :value => "foobarbaz")
   end
 
   test "time question should work" do
-    setup_form(:questions => %w(integer time))
+    create_form(:questions => %w(integer time))
     response = assert_decoding(:body => "#{form_code} 1.4 2.1230", :answers => [4, Time.parse("12:30 UTC")])
 
     # make sure time gets saved properly and zone doesn't mess up
@@ -273,14 +273,14 @@ class SmsDecoderTest < ActiveSupport::TestCase
   end
 
   test "invalid times should error" do
-    setup_form(:questions => %w(integer time))
+    create_form(:questions => %w(integer time))
     ["12:300", "25:00", "00000", "12", "abc"].each do |str|
       assert_decoding_fail(:body => "#{form_code} 1.4 2.#{str}", :error => "answer_not_time", :value => str)
     end
   end
 
   test "datetime question should work" do
-    setup_form(:questions => %w(integer datetime))
+    create_form(:questions => %w(integer datetime))
 
     # use sask b/c no daylight savings
     Time.zone = ActiveSupport::TimeZone["Saskatchewan"]
@@ -306,14 +306,14 @@ class SmsDecoderTest < ActiveSupport::TestCase
   end
 
   test "invalid datetimes should error" do
-    setup_form(:questions => %w(integer datetime))
+    create_form(:questions => %w(integer datetime))
     ["2012121212300", "mar 1 2012 2:30", "201212", "891015 12pm", "2-2-2012 5pm"].each do |str|
       assert_decoding_fail(:body => "#{form_code} 1.4 2.#{str}", :error => "answer_not_datetime", :value => str)
     end
   end
 
   test "duplicate sent within timeframe should error" do
-    setup_form(:questions => %w(integer))
+    create_form(:questions => %w(integer))
     assert_decoding(:body => "#{form_code} 1.4", :answers => [4])
     Timecop.travel(Sms::Decoder::DUPLICATE_WINDOW - 1.minute) do
       assert_decoding_fail(:body => "#{form_code} 1.4", :error => "duplicate_submission")
@@ -321,7 +321,7 @@ class SmsDecoderTest < ActiveSupport::TestCase
   end
 
   test "duplicate sent outside timeframe should not error" do
-    setup_form(:questions => %w(integer))
+    create_form(:questions => %w(integer))
     assert_decoding(:body => "#{form_code} 1.4", :answers => [4])
     Timecop.travel(Sms::Decoder::DUPLICATE_WINDOW + 1.minute) do
       assert_decoding(:body => "#{form_code} 1.4", :answers => [4])
@@ -330,12 +330,18 @@ class SmsDecoderTest < ActiveSupport::TestCase
 
   private
 
+    def create_form(options)
+      @form = FactoryGirl.create(:form, :smsable => true, :question_types => options[:questions], :option_names => %w(A B C D E))
+      @form.publish!
+      @form.reload
+    end
+
     # tests that a decoding was successful
     def assert_decoding(options)
       options[:user] ||= @user
 
       # create the Sms object
-      msg = Sms::Message.create(:from => options[:from] || options[:user].phone, :body => options[:body], :mission => get_mission)
+      msg = Sms::Incoming.create(:from => options[:from] || options[:user].phone, :body => options[:body], :mission => get_mission)
 
       # perform the deocding
       response = Sms::Decoder.new(msg).decode

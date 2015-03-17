@@ -2,10 +2,10 @@ require 'spec_helper'
 
 feature 'switching between missions and modes', js: true do
   before do
-    @user = create(:user)
-    @form = create(:sample_form)
-    @mission1 = get_mission
+    @mission1 = create(:mission)
     @mission2 = create(:mission)
+    @user = create(:user)
+    @form = create(:form, mission: @mission1)
     @user.assignments.create!(mission: @mission2, role: 'coordinator')
     login(@user)
   end
@@ -14,6 +14,7 @@ feature 'switching between missions and modes', js: true do
     # We get logged in to mission2, so first test that changing to mission1 from mission2 root works.
     expect(current_url).to end_with(@mission2.compact_name)
     select(@mission1.name, from: 'change_mission')
+    expect(page).to have_selector('#title h2', text: /#{@mission1.name}/i)
 
     # Smart redirect on mission change should work.
     # (Note this the controller logic for this is extensively tested in mission_change_redirect_spec but this test

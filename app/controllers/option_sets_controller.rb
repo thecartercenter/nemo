@@ -19,7 +19,10 @@ class OptionSetsController < ApplicationController
     @option_sets = @option_sets.paginate(:page => 1, :per_page => 10000000, :total_entries => total)
 
     # now we apply .all so that any .empty? or .count calls in the template don't cause more queries
-    @option_sets = @option_sets.all
+    @option_sets = @option_sets.to_a
+
+    # Avoid N+1 for option names.
+    OptionSet.preload_top_level_options(@option_sets)
 
     load_importable_objs
   end
@@ -44,6 +47,7 @@ class OptionSetsController < ApplicationController
 
   # always via AJAX
   def create
+    @option_set.is_standard = true if current_mode == 'admin'
     OptionSet.transaction do
       create_or_update
     end
@@ -53,7 +57,7 @@ class OptionSetsController < ApplicationController
   def update
     # we use a transaction because populate_from_json requests it
     OptionSet.transaction do
-      @option_set.assign_attributes(params['option_set']) # Quotes vs symbol is important here.
+      @option_set.assign_attributes(option_set_params) # Quotes vs symbol is important here.
 
       # validate now so that normalization runs before authorizing and saving
       # We raise if there is an error since validation should happen client side.
@@ -114,7 +118,7 @@ class OptionSetsController < ApplicationController
   # creates/updates the option set
   def create_or_update
     begin
-      @option_set.save_and_rereplicate!
+      @option_set.save!
 
       # set the flash, which will be shown when the next request is issued as expected
       # (not needed in modal mode)
@@ -135,6 +139,23 @@ class OptionSetsController < ApplicationController
       flash.now[:error] = $!.to_s
       render(partial: 'form')
       raise ActiveRecord::Rollback # Rollback the transaction without re-raising the error.
+    end
+  end
+
+  def option_set_params
+    option_set = params[:option_set]
+
+    params.require(:option_set).permit(:name, :geographic, :multi_level,
+      children_attribs: [{ option_attribs: :id }, :id]).tap do |whitelisted|
+
+      # handle dynamic hash keys for translations
+      whitelisted[:multi_level] = option_set[:multi_level]
+      option_set[:children_attribs].each_with_index do |child, index|
+        name_translations = child[:option_attribs][:name_translations]
+        if !name_translations.empty?
+          whitelisted[:children_attribs][index][:option_attribs][:name_translations] = name_translations
+        end
+      end
     end
   end
 end

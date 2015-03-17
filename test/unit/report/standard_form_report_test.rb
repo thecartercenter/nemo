@@ -63,8 +63,7 @@ class Report::StandardFormReportTest < ActiveSupport::TestCase
     build_form_and_responses
 
     # make one question invisible
-    @form.questionings[1].hidden = true
-    @form.save!
+    @form.questionings[1].update_attributes!(hidden: true)
 
     build_and_run_report
 
@@ -118,8 +117,8 @@ class Report::StandardFormReportTest < ActiveSupport::TestCase
   test "report with numeric question order should have single summary group" do
     build_form_and_responses
     build_and_run_report # defaults to numeric order
-    assert_equal(1, @report.subsets[0].groups.size)
-    assert_equal('all', @report.subsets[0].groups[0].type_set)
+    assert_equal(1, @report.subsets[0].tag_groups[0].type_groups.size)
+    assert_equal('all', @report.subsets[0].tag_groups[0].type_groups[0].type_set)
   end
 
   private

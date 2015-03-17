@@ -1,7 +1,6 @@
 class Report::Calculation < ActiveRecord::Base
   TYPES = %w(identity zero_nonzero)
 
-  attr_accessible :type, :report_report_id, :attrib1_name, :question1_id, :arg1, :attrib1, :question1, :rank
   attr_writer :table_prefix
 
   belongs_to(:report, :class_name => "Report::Report", :foreign_key => "report_report_id", :inverse_of => :calculations)
@@ -22,6 +21,12 @@ class Report::Calculation < ActiveRecord::Base
       new_without_cast(*a, &b)
     end
     alias_method_chain :new, :cast
+  end
+
+  # Called when related Question is destroyed.
+  def question_destroyed
+    delete # Calculation makes no sense now. We use delete b/c we handle callbacks manually.
+    report.calculation_destroyed(source: :question) # Report needs to know.
   end
 
   def as_json(options = {})
@@ -58,7 +63,11 @@ class Report::Calculation < ActiveRecord::Base
   end
 
   def header_title
-    attrib1 ? attrib1.name.to_s.gsub("_", " ").ucwords : (report.question_labels == "title" ? question1.name_en : question1.code)
+    attrib1 ? attrib1.title : question_label
+  end
+
+  def question_label
+    report.question_labels == "title" ? question1.name : question1.code
   end
 
   def table_prefix

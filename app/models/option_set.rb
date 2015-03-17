@@ -4,7 +4,7 @@ class OptionSet < ActiveRecord::Base
   # It is up here because it should happen early, e.g., before form version callbacks.
   after_save :save_root_node
 
-  include MissionBased, FormVersionable, Standardizable, Replicable
+  include MissionBased, FormVersionable, Replication::Standardizable, Replication::Replicable
 
   # This need to be up here or they will run too late.
   before_destroy :check_associations
@@ -15,16 +15,18 @@ class OptionSet < ActiveRecord::Base
   has_many :option_nodes, dependent: :destroy
   has_many :report_option_set_choices, class_name: 'Report::OptionSetChoice'
 
-  belongs_to :root_node, class_name: OptionNode, conditions: {option_id: nil}, dependent: :destroy
+  belongs_to :root_node, -> { where(option_id: nil) }, class_name: OptionNode, dependent: :destroy
 
   before_validation :copy_attribs_to_root_node
   before_validation :normalize_fields
 
-  before_destroy :notify_report_option_set_choices_of_destroy
+  # We do this instead of using dependent: :destroy because in the latter case
+  # the dependent object doesn't know who destroyed it.
+  before_destroy { report_option_set_choices.each(&:option_set_destroyed) }
 
-  scope :by_name, order('option_sets.name')
-  scope :default_order, by_name
-  scope :with_assoc_counts_and_published, lambda { |mission|
+  scope :by_name, -> { order('option_sets.name') }
+  scope :default_order, -> { by_name }
+  scope :with_assoc_counts_and_published, ->(mission) {
     includes(:root_node).
     select(%{
       option_sets.*,
@@ -37,23 +39,39 @@ class OptionSet < ActiveRecord::Base
     }).
     joins(%{
       LEFT OUTER JOIN questions ON questions.option_set_id = option_sets.id
-      LEFT OUTER JOIN questionings ON questionings.question_id = questions.id
+      LEFT OUTER JOIN form_items questionings ON questionings.question_id = questions.id AND questionings.type = 'Questioning'
       LEFT OUTER JOIN forms ON forms.id = questionings.form_id
       LEFT OUTER JOIN answers ON answers.questioning_id = questionings.id
-      LEFT OUTER JOIN option_sets copies ON option_sets.is_standard = 1 AND copies.standard_id = option_sets.id
+      LEFT OUTER JOIN option_sets copies ON option_sets.is_standard = 1 AND copies.original_id = option_sets.id
       LEFT OUTER JOIN questions copy_questions ON copy_questions.option_set_id = copies.id
-      LEFT OUTER JOIN questionings copy_questionings ON copy_questionings.question_id = copy_questions.id
+      LEFT OUTER JOIN form_items copy_questionings ON copy_questionings.question_id = copy_questions.id AND questionings.type = 'Questioning'
       LEFT OUTER JOIN forms copy_forms ON copy_forms.id = copy_questionings.form_id
       LEFT OUTER JOIN answers copy_answers ON copy_answers.questioning_id = copy_questionings.id
     }).group('option_sets.id')}
 
   # replication options
-  replicable :child_assocs => :root_node, :parent_assoc => :question, :uniqueness => {:field => :name, :style => :sep_words},
-    :after_dest_obj_save => :link_copy_nodes_to_copy_self
+  replicable child_assocs: :root_node, backwards_assocs: :questions,
+    uniqueness: {field: :name, style: :sep_words},
+    dont_copy: :root_node_id
 
   serialize :level_names, JSON
 
-  delegate :ranks_changed?, :options_added?, :options_removed?, :total_options, :descendants, :all_options, :options_for_node, :max_depth, to: :root_node
+  delegate :ranks_changed?,
+           :children,
+           :c,
+           :ranks_changed?,
+           :options_added?,
+           :options_removed?,
+           :total_options,
+           :descendants,
+           :all_options,
+           :options_for_node,
+           :max_depth,
+           :options_not_serialized,
+           :arrange_with_options,
+           :option_path_to_rank_path,
+           :rank_path_to_option_path,
+           to: :root_node
 
   # These methods are for the form.
   attr_writer :multi_level
@@ -63,6 +81,27 @@ class OptionSet < ActiveRecord::Base
     # Must nullify these first to avoid fk error
     OptionSet.where(id: option_set_ids).update_all(root_node_id: nil)
     OptionNode.where("option_set_id IN (#{option_set_ids.join(',')})").delete_all unless option_set_ids.empty?
+  end
+
+  # Avoids N+1 queries for top level options for a set of option sets.
+  # Assumes root_node has been eager loaded.
+  def self.preload_top_level_options(option_sets)
+    return if option_sets.empty?
+    OptionNode.preload_child_options(option_sets.map(&:root_node))
+  end
+
+  # Loads all options for sets with the given IDs in a constant number of queries.
+  def self.all_options_for_sets(set_ids)
+    return [] if set_ids.empty?
+    root_node_ids = where(id: set_ids).all.map(&:root_node_id)
+    node_where_clause = root_node_ids.map{ |id| "ancestry LIKE '#{id}/%' OR ancestry = '#{id}'" }.join(' OR ')
+    Option.where("id IN (SELECT option_id FROM option_nodes WHERE #{node_where_clause})").to_a
+  end
+
+  def self.first_level_option_nodes_for_sets(set_ids)
+    return [] if set_ids.empty?
+    root_node_ids = where(id: set_ids).to_a.map(&:root_node_id)
+    OptionNode.where(ancestry: root_node_ids.map(&:to_s)).includes(:option).to_a
   end
 
   def children_attribs=(attribs)
@@ -79,14 +118,22 @@ class OptionSet < ActiveRecord::Base
     @levels ||= multi_level? ? level_names.map{ |n| OptionLevel.new(name_translations: n) } : nil
   end
 
+  def levels=(ls)
+    self.level_names = ls.map{ |l| l.name_translations }
+  end
+
   def level_count
     levels.try(:size)
   end
 
   def multi_level?
-    root_node && root_node.has_grandchildren?
+    @multi_level ||= root_node && root_node.has_grandchildren?
   end
   alias_method :multi_level, :multi_level?
+
+  def huge?
+    root_node.present? ? root_node.huge? : false
+  end
 
   def first_level_options
     root_node.child_options
@@ -110,11 +157,7 @@ class OptionSet < ActiveRecord::Base
   # checks if this option set appears in any published questionings
   # uses eager loaded field if available
   def published?
-    if is_standard?
-      respond_to?(:copy_published_col) ? copy_published_col == 1 : copies.any?{|c| c.questionings.any?(&:published?)}
-    else
-      respond_to?(:published_col) ? published_col == 1 : questionings.any?(&:published?)
-    end
+    is_standard? ? false : (respond_to?(:published_col) ? published_col == 1 : questionings.any?(&:published?))
   end
 
   # checks if this option set is used in at least one question or if any copies are used in at least one question
@@ -158,6 +201,10 @@ class OptionSet < ActiveRecord::Base
     end
   end
 
+  def has_answers_for_option?(option_id)
+    questionings.any? ? Answer.any_for_option_and_questionings?(option_id, questionings.map(&:id)) : false
+  end
+
   # gets the number of answers to questions that use this option set
   # or in the case of a standard option set, answers to questions that use copies of this option set
   # uses method from special eager loaded scope if available
@@ -189,6 +236,10 @@ class OptionSet < ActiveRecord::Base
     name_changed?
   end
 
+  def to_hash
+    root_node.subtree.arrange_serializable(order: 'rank')
+  end
+
   def as_json(options = {})
     if options[:for_option_set_form]
       {
@@ -208,7 +259,7 @@ class OptionSet < ActiveRecord::Base
   private
 
     def copy_attribs_to_root_node
-      root_node.assign_attributes(mission: mission, is_standard: is_standard, option_set: self)
+      root_node.assign_attributes(mission: mission, option_set: self)
     end
 
     def check_associations
@@ -233,18 +284,5 @@ class OptionSet < ActiveRecord::Base
         root_node.option_set = self
         root_node.save!
       end
-    end
-
-    def link_copy_nodes_to_copy_self(replication)
-      replication.dest_obj.descendants.each do |node|
-        node.option_set = replication.dest_obj
-        node.save!
-      end
-    end
-
-    # We do this instead of using dependent: :destroy because in the latter case
-    # the dependent object doesn't know who destroyed it.
-    def notify_report_option_set_choices_of_destroy
-      report_option_set_choices.each{ |rosc| rosc.option_set_destroyed }
     end
 end

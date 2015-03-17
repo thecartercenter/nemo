@@ -4,10 +4,13 @@ class FormsController < ApplicationController
   helper OdkHelper
 
   # special find method before load_resource
-  before_filter :find_form_with_questionings, :only => [:show, :edit, :update]
+  before_filter :load_form, :only => [:show, :edit, :update]
 
   # authorization via cancan
   load_and_authorize_resource
+
+  # We manually authorize these against :download.
+  skip_authorize_resource only: [:odk_manifest, :odk_itemsets]
 
   # in the choose_questions action we have a question form so we need this Concern
   include QuestionFormable
@@ -35,7 +38,11 @@ class FormsController < ApplicationController
       # get only published forms and render openrosa if xml requested
       format.xml do
         authorize!(:download, Form)
-        @forms = @forms.published
+        @cache_key = Form.odk_index_cache_key(mission: current_mission)
+        unless fragment_exist?(@cache_key)
+          # This query is not deferred so we have to check if it should be run or not.
+          @forms = @forms.published
+        end
         render_openrosa
       end
     end
@@ -88,8 +95,27 @@ class FormsController < ApplicationController
     end
   end
 
+  # Format is always :xml
+  def odk_manifest
+    authorize!(:download, @form)
+    @cache_key = @form.odk_download_cache_key
+    unless fragment_exist?(@cache_key)
+      @ifa = ItemsetsFormAttachment.new(form: @form)
+      @ifa.ensure_generated
+    end
+    render_openrosa
+  end
+
+  # Format is always :csv
+  def odk_itemsets
+    authorize!(:download, @form)
+  end
+
   def create
+    @form.is_standard = true if current_mode == 'admin'
     if @form.save
+      @form.create_root_group!(mission: @form.mission, form: @form)
+      @form.save!
       set_success_and_redirect(@form, :to => edit_form_path(@form))
     else
       flash.now[:error] = I18n.t('activerecord.errors.models.form.general')
@@ -99,30 +125,28 @@ class FormsController < ApplicationController
 
   def update
     begin
-      update_api_users
-      # save basic attribs
-      @form.assign_attributes(params[:form])
+      Form.transaction do
+        update_api_users
+        # save basic attribs
+        @form.assign_attributes(form_params)
 
-      # check special permissions
-      authorize!(:rename, @form) if @form.name_changed?
+        # check special permissions
+        authorize!(:rename, @form) if @form.name_changed?
 
-      # update ranks if provided (possibly raising condition ordering error)
-      @form.update_ranks(params[:rank]) if params[:rank] && can?(:reorder_questions, @form)
+        # save everything
+        @form.save!
 
-      # save everything
-      @form.save_and_rereplicate!
-
-      # publish if requested
-      if params[:save_and_publish].present?
-        @form.publish!
-        set_success_and_redirect(@form, :to => forms_path)
-      else
-        set_success_and_redirect(@form, :to => edit_form_path(@form))
+        # publish if requested
+        if params[:save_and_publish].present?
+          @form.publish!
+          set_success_and_redirect(@form, :to => forms_path)
+        else
+          set_success_and_redirect(@form, :to => edit_form_path(@form))
+        end
       end
-
     # handle problem with conditions
     rescue ConditionOrderingError
-      @form.errors.add(:base, :ranks_break_conditions)
+      flash.now[:error] = I18n.t('activerecord.errors.models.form.ranks_break_conditions')
       prepare_and_render_form
 
     # handle other validation errors
@@ -155,12 +179,13 @@ class FormsController < ApplicationController
     authorize!(:add_questions, @form)
 
     # get questions for choice list
-    @questions = Question.with_assoc_counts.by_code.accessible_by(current_ability).not_in_form(@form)
+    @questions = Question.includes(:tags).with_assoc_counts.by_code.accessible_by(current_ability).not_in_form(@form)
 
     # setup new questioning for use with the questioning form
-    init_qing(:form_id => @form.id, :question_attributes => {})
+    init_qing(:form_id => @form.id, :ancestry => @form.root_id, :question_attributes => {})
     setup_qing_form_support_objs
   end
+
 
   # adds questions selected in the big list to the form
   def add_questions
@@ -171,8 +196,8 @@ class FormsController < ApplicationController
     raise "no valid questions given" if questions.empty?
 
     # add questions to form and try to save
-    @form.questions += questions
-    if @form.save_and_rereplicate
+    @form.add_questions_to_top_level(questions)
+    if @form.save
       flash[:success] = t("form.questions_add_success")
     else
       flash[:error] = t("form.questions_add_error", :msg => @form.errors.messages.values.join(';'))
@@ -224,7 +249,7 @@ class FormsController < ApplicationController
 
     # adds the appropriate headers for openrosa content
     def render_openrosa
-      render(:content_type => "text/xml")
+      render(content_type: "text/xml") if request.format.xml?
       response.headers['X-OpenRosa-Version'] = "1.0"
     end
 
@@ -235,8 +260,11 @@ class FormsController < ApplicationController
       render(:form)
     end
 
-    # loads the form object including a bunch of joins for questions
-    def find_form_with_questionings
-      @form = Form.with_questionings.find(params[:id])
+    def load_form
+      @form = Form.find(params[:id])
+    end
+
+    def form_params
+      params.require(:form).permit(:name, :smsable, :allow_incomplete, :access_level)
     end
 end

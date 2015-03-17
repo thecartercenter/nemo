@@ -129,7 +129,7 @@
     // send to controller if valid
     if (is_valid) {
       this.controller.run_report(this.report);
-      this.dialog.hide();
+      this.hide();
 
     // else show the first pane that has errors
     } else {
@@ -151,7 +151,7 @@
   }
 
   klass.prototype.hide = function() {
-    this.dialog.hide();
+    $("#report-edit-modal").modal('hide');
   }
 
   // applies a given function to all panes
@@ -207,8 +207,8 @@
       report_type: true,
       display_options: true,
       form_selection: report.attribs.type != "Report::StandardFormReport",
-      question_selection: report.attribs.type == "Report::TallyReport" && report.attribs.tally_type == "QuestionAnswer",
-      grouping: report.attribs.type == "Report::TallyReport" && report.attribs.tally_type == "Grouped",
+      question_selection: report.attribs.type == "Report::TallyReport" && report.attribs.tally_type == "Answer",
+      grouping: report.attribs.type == "Report::TallyReport" && report.attribs.tally_type == "Response",
       fields: report.attribs.type == "Report::ListReport",
     }
   }

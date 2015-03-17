@@ -25,11 +25,11 @@ class Answer < ActiveRecord::Base
   accepts_nested_attributes_for(:choices)
 
   delegate :question, :qtype, :required?, :hidden?, :option_set, :options, :condition, :to => :questioning
-    delegate :name, :hint, :to => :question, :prefix => true
+  delegate :name, :hint, :to => :question, :prefix => true
   delegate :name, to: :level, prefix: true, allow_nil: true
 
-  scope :public_access, includes(:questioning => :question).
-                        where("questions.access_level = 'inherit'")
+  scope :public_access, -> { includes(:questioning => :question).
+                        where("questions.access_level = 'inherit'") }
 
 
   # gets all location answers for the given mission
@@ -40,17 +40,18 @@ class Answer < ActiveRecord::Base
       "SELECT r.id AS r_id, a.value AS loc
       FROM answers a
         INNER JOIN responses r ON a.response_id = r.id
-        INNER JOIN questionings qing ON a.questioning_id = qing.id
+        INNER JOIN form_items qing ON a.questioning_id = qing.id
         INNER JOIN questions q ON qing.question_id = q.id
       WHERE q.qtype_name = 'location' AND a.value IS NOT NULL AND r.mission_id = ? #{user_clause}",
       mission.id
     ])
   end
 
-  # Tests if there exists at least one answer referencing the Option with the given ID.
-  def self.any_for_option?(option_id)
+  # Tests if there exists at least one answer referencing the option and questionings with the given IDs.
+  def self.any_for_option_and_questionings?(option_id, questioning_ids)
     connection.execute("SELECT COUNT(*) FROM answers a LEFT OUTER JOIN choices c ON c.answer_id = a.id
-      WHERE a.option_id = '#{option_id}' OR c.option_id = '#{option_id}'").to_a[0][0] > 0
+      WHERE (a.option_id = '#{option_id}' OR c.option_id = '#{option_id}')
+      AND a.questioning_id IN (#{questioning_ids.join(',')})").to_a[0][0] > 0
   end
 
   # Populates answer from odk-like string value.
@@ -58,10 +59,11 @@ class Answer < ActiveRecord::Base
     return if str.nil?
 
     if qtype.name == "select_one"
-      self.option_id = str.to_i
+      # 'none' will be returned for a blank choice for a multilevel set.
+      self.option_id = OptionNode.id_to_option_id(str[2..-1]) unless str == 'none'
 
     elsif qtype.name == "select_multiple"
-      str.split(' ').each{ |oid| choices.build(option_id: oid.to_i) }
+      str.split(' ').each{ |oid| choices.build(option_id: OptionNode.id_to_option_id(oid[2..-1])) }
 
     elsif qtype.temporal?
       # Strip timezone info for datetime and time.
@@ -162,6 +164,8 @@ class Answer < ActiveRecord::Base
     when :required
       # don't validate requiredness if response says no
       !(response && response.incomplete?)
+    when :min_max
+      value.present?
     else
       true
     end

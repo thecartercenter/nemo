@@ -1,4 +1,5 @@
 en:
+  # This should be the name of the language as written in that language, e.g. English, Français, Español, etc.
   locale_name: "English"
 
   # common words (should be capitalized except for those that obviously shouldn't like and, or, e.g., etc.)
@@ -185,11 +186,11 @@ en:
         zero: "Tally Reports"
         one: "Tally Report"
         other: "Tally Reports"
-      report/question_answer_tally_report:
+      report/answer_tally_report:
         zero: "Answer Tally Reports"
         one: "Answer Tally Report"
         other: "Answer Tally Reports"
-      report/grouped_tally_report:
+      report/response_tally_report:
         zero: "Response Tally Reports"
         one: "Response Tally Report"
         other: "Response Tally Reports"
@@ -214,13 +215,17 @@ en:
         one: "Settings"
         other: "Settings"
       sms/message:
-        zero: "SMS Messages"
-        one: "SMS Message"
-        other: "SMS Messages"
+        zero: "SMSes"
+        one: "SMS"
+        other: "SMSes"
       user:
         zero: "Users"
         one: "User"
         other: "Users"
+      tag:
+        zero: "Tags"
+        one: "Tag"
+        other: "Tags"
 
     attributes:
       broadcast:
@@ -266,6 +271,7 @@ en:
         name: "Title"
         option_set_id: "Option Set"
         qtype_name: "Type"
+        tag_ids: "Tags"
       questioning:
         name: "Title"
         condition: "Condition?"
@@ -537,6 +543,7 @@ en:
           general: "There was a problem saving the option set."
           wrong_depth: "You have %{levels} option levels but your option tree is %{depth} options deep."
         question:
+          at_least_one_name: "You must enter a title in at least one language."
           attributes:
             code:
               invalid: "Should start with a letter, use only letters and numbers, and be a maximum of 20 characters."
@@ -756,6 +763,11 @@ en:
     title: "title"
     type: "type"
     tag: "tag"
+    date: "date"
+    datetime: "datetime"
+    username: "username"
+    content: "content"
+    number: "number"
 
   # all page titles by controller and action
   # controller names are usually plural (rails convention)
@@ -842,7 +854,17 @@ en:
     no_name: "No Name"
     this_answer: "This answer"
 
+  attrib_fields:
+    form: "Form"
+    submitter: "Submitter"
+    source: "Source"
+    time_submitted: "Time Submitted"
+    date_submitted: "Date Submitted"
+    response_id: "Response ID"
+    reviewed: "Reviewed"
+
   broadcast:
+    balance_check_failed: "SMS credit balance check failed."
     balance_notice: "You have %{balance} SMS credits in your %{account_type} account."
     chars: # these are for informing the user how many chars they have left in their sms
       remaining: "characters remaining"
@@ -911,16 +933,10 @@ en:
     option_in_use_name_change_warning: "This Option is in use in other published Forms or is referenced in existing Responses. You should be careful not to change the meaning of the Option in your edits."
     option_standard_copy_name_change_warning: "This Option is a copy of a standard Option. You should be sure to preserve the original meaning of the Option so that it agrees with the standard."
     published_warnings:
-      self_published:
-        form: "This Form is published, meaning it may already be in the hands of observers. Some fields are thus not-editable. Please proceed with caution when making any changes."
-        questioning: "The Form to which the below fields apply is published and thus they cannot be edited."
-        question: "This Question appears on at least one published Form, meaning it may already be in the hands of observers. Some fields are thus not-editable. Please be sure to not change the meaning of the question."
-        option_set: "This Option Set appears on at least one published Form, meaning it may already be in the hands of observers, thus Options cannot be added, removed, or reordered. Please proceed with caution if editing Options."
-      copy_published:
-        form: "At least one copy of this Form is published, meaning it may already be in the hands of observers. Some fields are thus not-editable. Please proceed with caution when making any changes."
-        questioning: "At least one copy of the Form to which the below fields apply is published and thus they cannot be edited."
-        question: "This Question appears on at least one Form with published copies, meaning it may already be in the hands of observers. Some fields are thus not-editable. Please be sure to not change the meaning of the question."
-        option_set: "This Option Set appears on at least one Form with published copies, meaning it may already be in the hands of observers, thus Options cannot be added, removed, or reordered. Please proceed with caution if editing Options."
+      form: "This Form is published, meaning it may already be in the hands of observers. Some fields are thus not-editable. Please proceed with caution when making any changes."
+      questioning: "The Form to which the below fields apply is published and thus they cannot be edited."
+      question: "This Question appears on at least one published Form, meaning it may already be in the hands of observers. Some fields are thus not-editable. Please be sure to not change the meaning of the question."
+      option_set: "This Option Set appears on at least one published Form, meaning it may already be in the hands of observers, thus Options cannot be added, removed, or reordered. Please proceed with caution if editing Options."
       sms: "Such changes will cause SMS form users to receive an error if they try to submit the current version of the Form."
       odk: "Such changes will not disable Responses from ODK, but may cause some data loss and/or Responses that are not valid (e.g. missing required answers)."
 
@@ -987,18 +1003,27 @@ en:
 
   option_set:
     add_level: "Add Level"
+    and_n_more: "... and %{count} more options."
     clone_confirm: "Are you sure you want to make a copy of the Option Set '%{name}'?"
     clone_error: "There was a problem cloning the Option Set (%{msg})."
     clone_success: "Option Set '%{name}' cloned successfully."
     create_new: "[Create New Option]"
     edit_option: "Edit Option"
     edit_option_level: "Edit Option Level"
+    huge_notice: "This Option Set is very large (%{count} Options) and thus only a small sample of its Options are displayed below. You may edit its name and other properties here but please use the import/export features to edit the Options themselves."
     leave_page_warning: "Leaving this page will abandon your changes to this Option Set."
-    multi_level_forbidden_notice: "This Option Set is currently used by at least one select-multiple Question and thus it cannot be coverted to a multi-level set."
+    multi_level_forbidden_notice: "This Option Set is currently used by at least one select-multiple Question and thus it cannot be converted to a multi-level set."
     new_option_level: "New Option Level"
     none_found: "No matching options found"
     searching: "Searching..."
     type_to_add_new: "Type an option name"
+
+  tag:
+    none_found: "No matching tags found"
+    searching: "Searching..."
+    type_to_add_new: "Type a tag name"
+    new_tag: "New tag"
+    click_to_filter: "Click to filter by this tag"
 
   password_reset:
     check_email: "Instructions to reset your password have been emailed to you. Please check your email."
@@ -1063,6 +1088,7 @@ en:
     form: "Form"
     form_selection: "Select Forms"
     generated_at: "Generated at"
+    group_by_tag: "Group questions by tag?"
     grouping: "Group by"
     groupings: "Groupings"
     how_to_disaggregate: "Split report by a special question?"
@@ -1125,7 +1151,7 @@ en:
         - "List of submitter name, date, and answer to the NeedSecurityContact question"
       standard_form_report:
         - "Summaries (percentage, averages, medians, etc.) of all questions on a form"
-        - "Can be grouped by question rank or question type"
+        - "Can be grouped by question type or question tag"
         - "Can be split by the answer to a specific question (e.g. region or urban/rural)"
     percent_types:
       none: "No Percentage"
@@ -1155,11 +1181,11 @@ en:
         short_text: "Short Text Answers"
         long_text: "Long Text Answers"
     tally_types:
-      question_answer: "Answers per Question"
-      grouped: "Responses per Answer/Attribute"
+      answer: "Answers per Question"
+      response: "Responses per Answer/Attribute"
     tally_type_examples:
-      question_answer: "Tally of Yes's and No's for all Yes/No questions"
-      grouped: "Tally of responses per form for each team"
+      answer: "Tally of Yes's and No's for all Yes/No questions"
+      response: "Tally of responses per form for each team"
     text_response_options:
       all: "Show All"
       short_only: "Don't Show Long Text Questions"
@@ -1186,41 +1212,50 @@ en:
     examples:
       responses:
         - "\"some phrase\""
-        - "submitter: \"john smith\""
-        - "form: polling"
-        - "reviewed: 1"
+        - "submitter:\"john smith\""
+        - "form:polling"
+        - "reviewed:1"
         - "submit-date < 2013-10-15"
-        - "{QuestionCode}: (disruption security)"
+        - "{QuestionCode}:(disruption security)"
       users:
         - "john smith"
-        - "phone: +443726458364"
-        - "login: jsmith"
-        - "email: jsmith@example.com"
+        - "phone:+443726458364"
+        - "login:jsmith"
+        - "email:jsmith@example.com"
       questions:
         - "poll workers"
-        - "code: BallotBoxes"
+        - "code:BallotBoxes"
         # select-one below should not be translated.
-        - "type: select-one"
+        - "type:select-one"
+      sms:
+        - "poll workers"
+        - "1.b"
+        - "+1234567890"
+        - "john smith"
+        - "jsmith"
+        - "type:reply"
+        - "date >= 2015-01-29"
+        - datetime < "2015-01-12 14:00"
     expected: "Expected"
     help_link: "Search Help"
     help_title: "Search Help"
     help_text:
       responses: |-
-        ## Qualifiers ##
+        ## Qualifiers
 
         A simple search such as:
 
         * __romeo juliet__
 
-        only searches the answers to textual questions. To search based on response attributes, use a qualifier, e.g.:
+        searches only the answers to textual questions for each word. To search based on response attributes, use a qualifier, e.g.:
 
-        * __form: Widgets__
+        * __form:Widgets__
 
         will only show responses to the 'Widgets' form.
 
         Combine both of the above to narrow your search:
 
-        * __romeo juliet form: Widgets__
+        * __romeo juliet form:Widgets__
 
         will show responses to the 'Widgets' form containing the words 'romeo' and 'juliet'.
 
@@ -1233,7 +1268,7 @@ en:
         * __source__ The medium via which the response was submitted ('web', 'odk', or 'sms')
         * __text__ Searches answers to textual questions
 
-        ## Exact Phrases ##
+        ## Exact Phrases
 
         Exact phrases can be matched by enclosing the phrase in double quotes:
 
@@ -1255,7 +1290,7 @@ en:
 
         The '|' character can also be used with qualifiers:
 
-        * __form: ( Lions | "Bears and Sharks" | Tigers )__
+        * __form:( Lions | "Bears and Sharks" | Tigers )__
 
         matches responses for any of the above forms.
 
@@ -1284,21 +1319,21 @@ en:
         will match responses submitted in the month of January 2000.
 
       users: |-
-        ## Qualifiers ##
+        ## Qualifiers
 
         A simple search such as:
 
         * __romeo juliet__
 
-        matches user names, login IDs, and emails. To search based on specific attributes, use a qualifier, e.g.:
+        matches user names, login IDs, and emails on each word. To search based on specific attributes, use a qualifier, e.g.:
 
-        * __email: @example.com__
+        * __email:@example.com__
 
         will search for users with email addresses matching '@example.com'.
 
         Combine both of the above to narrow your search:
 
-        * __Susan email: @example.com__
+        * __Susan email:@example.com__
 
         will search for users named Susan with an example.com email address.
 
@@ -1311,7 +1346,7 @@ en:
 
         Partial matches are allowed for all qualifiers.
 
-        ## Exact Phrases ##
+        ## Exact Phrases
 
         Exact phrases can be matched by enclosing the phrase in double quotes:
 
@@ -1329,7 +1364,7 @@ en:
 
         The '|' character can also be used with qualifiers:
 
-        * __email: ( john@example.com | patty@foo.com )__
+        * __email:( john@example.com | patty@foo.com )__
 
         matches users with any of the above email addresses.
 
@@ -1342,23 +1377,23 @@ en:
         will match users not named 'Oluwaseun'.
 
       questions: |-
-        ## Qualifiers ##
+        ## Qualifiers
 
         A simple search such as:
 
         * __romeo juliet__
 
-        only searches the question titles. To search based on question attributes, use a qualifier, e.g.:
+        searches the question titles for each word. To search based on question attributes, use a qualifier, e.g.:
 
-        * __code: BallotBox__
+        * __code:BallotBox__
 
         will show questions with 'BallotBox' in their code.
 
         Combine both of the above to narrow your search:
 
-        * __romeo juliet code: BallotBox__
+        * __romeo juliet code:BallotBox__
 
-        will show responses to the 'Widgets' form containing the words 'romeo' and 'juliet'.
+        will show questions with 'BallotBox' in their code whose titles also contain the words 'romeo' and 'juliet'.
 
         The full set of qualifiers you can use is as follows:
 
@@ -1366,6 +1401,70 @@ en:
         * __code__ The question code (partial matches allowed)
         * __type__ The question type (%{question_types})
         * __tag__ Searches tags applied to the question
+
+        ## Exact Phrases
+
+        Exact phrases can be matched by enclosing the phrase in double quotes:
+
+        * __"the rain in spain"__
+
+        Double quoted phrases can be mixed with non-quoted terms:
+
+        * __apples oranges "passion fruit"__
+
+        ## All Terms vs. Any Term
+
+        By default, all terms in the search must be matched. For example,
+
+        * __alpha lima peru__
+
+        matches only questions with all three of those words. Use the vertical bar ('|') character to match several words/phrases:
+
+        * __apples | oranges | "passion fruit"__
+
+        The '|' character can also be used with qualifiers:
+
+        * __code:( Lions | "Bears and Sharks" | Tigers )__
+
+        matches questions with any of the above codes.
+
+        ## Negation
+
+        You can negate a qualified search by using the negation operator:
+
+        * __code != Widgets__
+
+        will match questions with any code not containing 'Widgets'.
+
+      sms: |-
+        ## Qualifiers ##
+
+        A simple search such as:
+
+        * __romeo juliet__
+
+        searches the message content, username, user's full name, and phone number for each word.
+        To search based on question attributes, use a qualifier, e.g.:
+
+        * __type:incoming__
+
+        will show incoming messages only.
+
+        Combine both of the above to narrow your search:
+
+        * __romeo juliet type:incoming__
+
+        will show incoming messages that also contain the words 'romeo' and 'juliet'.
+
+        The full set of qualifiers you can use is as follows:
+
+        * __content__ The message content (partial matches allowed)
+        * __type__ The message type (incoming, reply, or broadcast) (partial matches allowed)
+        * __username__ The username of the sender or receiver (partial matches allowed)
+        * __name__ The full name of the sender or receiver (partial matches allowed)
+        * __number__ The phone number of the sender or receiver (partial matches allowed)
+        * __date__ The date the message was sent or received (e.g. 2015-01-29)
+        * __datetime__ The date and time the message was sent or received (use quotation marks and 24-hr time: e.g. "2015-01-29 14:00")
 
         ## Exact Phrases ##
 
@@ -1389,7 +1488,7 @@ en:
 
         The '|' character can also be used with qualifiers:
 
-        * __code: ( Lions | "Bears and Sharks" | Tigers )__
+        * __content:( Lions | "Bears and Sharks" | Tigers )__
 
         matches questions with any of the above codes.
 
@@ -1397,9 +1496,9 @@ en:
 
         You can negate a qualified search by using the negation operator:
 
-        * __code != Widgets__
+        * __type != broadcast__
 
-        will match questions with any code not containing 'Widgets'.
+        will match messages whose type does not contain "broadcast".
 
     invalid_op: "The operator '%{op}' is not valid for the qualifier '%{qualifier}'."
     multiple_terms_not_allowed: "Multiple terms aren't allowed for '%{qualifier}' searches unless OR is used."
@@ -1570,6 +1669,7 @@ en:
     reset_password_label_choose: "Password Creation"
     reset_password_label_reset: "Reset Password?"
     send_email_instructions: "send email instructions"
+    set_admin_password: "Set your admin password and profile information"
     show_printable_instructions: "show printable instructions"
 
   welcome:

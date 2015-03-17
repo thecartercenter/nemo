@@ -19,7 +19,7 @@ class Sms::Adapters::IntelliSmsAdapter < Sms::Adapters::Adapter
     body = message.body.encode("iso-8859-1", {:invalid => :replace, :undef => :replace, :replace => '?'})
 
     # build the URI the request
-    params = {:to => message.to.join(','), :text => body}
+    params = {:to => message.recipient_numbers.join(','), :text => body}
 
     # include the from number if it is set
     params[:from] = message.from.gsub(/^\+/, "") if message.from
@@ -30,10 +30,7 @@ class Sms::Adapters::IntelliSmsAdapter < Sms::Adapters::Adapter
     # don't send in test mode
     unless Rails.env == "test"
       response = send_request(uri)
-
-      # get any errors that the service returned
-      errors = response.split("\n").reject{|l| !l.match(/ERR:/)}.join("\n")
-      raise Sms::Error.new("IntelliSMS Server Error: #{errors}") unless errors.blank?
+      parse_and_raise_any_errors
     end
 
     # if we get to this point, it worked
@@ -45,17 +42,18 @@ class Sms::Adapters::IntelliSmsAdapter < Sms::Adapters::Adapter
     params['from'].gsub!(/^0+/, "")
 
     # create and return the message
-    Sms::Message.create(
-      :direction => 'incoming',
+    Sms::Incoming.create(
       :from => "+#{params['from']}",
+      :to => configatron.incoming_sms_number, # Assume it's this since IntelliSms doesn't provide it.
       :body => params['text'],
       :sent_at => Time.parse(params['sent']),
       :adapter_name => service_name)
   end
 
-  # check_balance returns the balance string
+  # Check_balance returns the balance string. Raises error if balance check failed.
   def check_balance
-    send_request(build_uri(:balance)).split(":")[1].to_i
+    response = send_request(build_uri(:balance))
+    response.match(/^BALANCE:(\d+)\s*$/) ? $1.to_i : parse_and_raise_any_errors
   end
 
   # How replies should be sent.
@@ -83,5 +81,11 @@ class Sms::Adapters::IntelliSmsAdapter < Sms::Adapters::Adapter
       uri = URI("http://www.intellisoftware.co.uk/smsgateway/#{page}.aspx")
       uri.query = URI.encode_www_form(params)
       return uri
+    end
+
+    def parse_and_raise_any_errors
+      # get any errors that the service returned
+      errors = response.split("\n").reject{|l| !l.match(/ERR:/)}.join("\n")
+      raise Sms::Error.new("IntelliSMS Server Error: #{errors}") unless errors.blank?
     end
 end

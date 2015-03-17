@@ -1,19 +1,25 @@
 # when run, this report generates a fairly complex data structure, as follows:
+# note: the elements in these arrays are not really hashes, but various types of objects
 # StandardFormReport = {
 #   :summary_collection => {
 #     :subsets => [
 #       {
-#         :groups => [
+#         :tag_groups => [
 #           {
-#             :clusters => [
-#               {:summaries => [summary, summary, ...]},
-#               {:summaries => [summary, summary, ...]}
-#             ]
-#           },
-#           {
-#             :clusters => [
-#               {:summaries => [summary, summary, ...]},
-#               {:summaries => [summary, summary, ...]}
+#             :tag => tag_object,
+#             :type_groups => [
+#               {
+#                 :clusters => [
+#                   {:summaries => [summary, summary, ...]},
+#                   {:summaries => [summary, summary, ...]}
+#                 ]
+#               },
+#               {
+#                 :clusters => [
+#                   {:summaries => [summary, summary, ...]},
+#                   {:summaries => [summary, summary, ...]}
+#                 ]
+#               }
 #             ]
 #           }
 #         ]
@@ -67,24 +73,19 @@ class Report::StandardFormReport < Report::Report
     # pre-calculate response count, accounting for user ability
     @response_count = form.responses.accessible_by(current_ability).count
 
-    # eager load form
-    f = Form.includes({:questionings => [
-      # eager load qing conditions
-      {:condition => :ref_qing},
-
-      # eager load referring conditions and their questionings
-      {:referring_conditions => :questioning},
-
-      # eager load questions and their option sets
-      {:question => :option_set}
-    ]}).find(form_id)
-
     # determine if we should restrict the responses to a single user, or allow all
     restrict_to_user = current_ability.user.role(form.mission) == 'observer' ? current_ability.user : nil
 
     # generate summary collection (sets of disaggregated summaries)
-    @summary_collection = Report::SummaryCollectionBuilder.new(questionings_to_include(f), disagg_qing,
-      :restrict_to_user => restrict_to_user, :question_order => question_order).build
+    @summary_collection = Report::SummaryCollectionBuilder.new(questionings_to_include(form), disagg_qing,
+      restrict_to_user: restrict_to_user).build
+
+    # now tell each subset to group summaries by tag
+    @summary_collection.subsets.each do |s|
+      s.build_tag_groups(question_order: question_order || 'number', group_by_tag: group_by_tag)
+    end
+
+    @summary_collection
   end
 
   # returns all non-admin users in the form's mission with the given role that have not submitted any responses to the form
@@ -143,4 +144,5 @@ class Report::StandardFormReport < Report::Report
   def can_disaggregate_with?(qing)
     qing.nil? || DISAGGABLE_TYPES.include?(qing.question.qtype_name)
   end
+
 end

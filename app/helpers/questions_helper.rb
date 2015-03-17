@@ -25,7 +25,9 @@ module QuestionsHelper
   end
 
   def questions_index_fields
-    fields = %w(std_icon code name type form_count answer_count published)
+    fields = %w(std_icon code name type form_count answer_count)
+
+    fields << 'published' unless admin_mode?
 
     # dont add the actions column if we're not in the forms controller, since that means we're probably in form#choose_questions
     fields << 'actions' unless params[:controller] == 'forms'
@@ -41,7 +43,11 @@ module QuestionsHelper
     when "answer_count" then number_with_delimiter(q.answer_count)
     when "actions" then table_action_links(q)
     when "name"
-      params[:controller] == 'forms' ? q.name : link_to(q.name, q)
+      if params[:controller] == 'forms'
+        q.name + render_tags(q.sorted_tags)
+      else
+        link_to(q.name, q) + render_tags(q.sorted_tags, clickable: true)
+      end
     else q.send(field)
     end
   end

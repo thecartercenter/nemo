@@ -1,103 +1,82 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <h:html xmlns="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:jr="http://openrosa.org/javarosa" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <h:head>
-    <h:title>Sample Form</h:title>
+    <h:title>Sample Form 1</h:title>
     <model>
       <instance>
         <data id="1" version="1">
           <q1/>
           <q2_1/>
           <q2_2/>
+          <q2_3/>
           <q3/>
+          <q4/>
         </data>
-      </instance>
-      <instance id="option_set_2">
-        <options>
-          <opt>
-            <value>3</value>
-            <key>option3</key>
-            <opt>
-              <value>4</value>
-              <key>option4</key>
-            </opt>
-            <opt>
-              <value>5</value>
-              <key>option5</key>
-            </opt>
-          </opt>
-          <opt>
-            <value>6</value>
-            <key>option6</key>
-            <opt>
-              <value>7</value>
-              <key>option7</key>
-            </opt>
-            <opt>
-              <value>8</value>
-              <key>option8</key>
-            </opt>
-          </opt>
-        </options>
       </instance>
       <itext>
         <translation lang="English">
           <text id="q1:label">
-            <value>Question 1</value>
+            <value>Question Title 1</value>
           </text>
           <text id="q1:hint">
-            <value>Hint 1</value>
+            <value>Question Hint 1</value>
           </text>
           <text id="q2_1:label">
-            <value>Question 2 - Kingdom</value>
+            <value>Question Title 2 - Kingdom</value>
           </text>
           <text id="q2_1:hint">
-            <value>Hint 2</value>
+            <value>Question Hint 2</value>
           </text>
           <text id="q2_2:label">
-            <value>Question 2 - Species</value>
+            <value>Question Title 2 - Family</value>
           </text>
           <text id="q2_2:hint">
-            <value>Hint 2</value>
+            <value>Question Hint 2</value>
+          </text>
+          <text id="q2_3:label">
+            <value>Question Title 2 - Species</value>
+          </text>
+          <text id="q2_3:hint">
+            <value>Question Hint 2</value>
           </text>
           <text id="q3:label">
-            <value>Question 3</value>
+            <value>Question Title 3</value>
           </text>
           <text id="q3:hint">
-            <value>Hint 3</value>
+            <value>Question Hint 3</value>
           </text>
-          <text id="blankoption">
-            <value/>
+          <text id="q4:label">
+            <value>Question Title 4</value>
           </text>
-          <text id="option1">
+          <text id="q4:hint">
+            <value>Question Hint 4</value>
+          </text>
+          <text id="on2">
             <value>Cat</value>
           </text>
-          <text id="option2">
+          <text id="on3">
             <value>Dog</value>
           </text>
-          <text id="option3">
+          <text id="on8">
+            <value>Cat</value>
+          </text>
+          <text id="on9">
+            <value>Dog</value>
+          </text>
+          <text id="on11">
             <value>Animal</value>
           </text>
-          <text id="option4">
-            <value>Cat</value>
-          </text>
-          <text id="option5">
-            <value>Dog</value>
-          </text>
-          <text id="option6">
+          <text id="on18">
             <value>Plant</value>
-          </text>
-          <text id="option7">
-            <value>Tulip</value>
-          </text>
-          <text id="option8">
-            <value>Oak</value>
           </text>
         </translation>
       </itext>
       <bind nodeset="/data/q1" type="select1"/>
       <bind nodeset="/data/q2_1" type="select1"/>
-      <bind nodeset="/data/q2_2" type="select1"/>
+      <bind nodeset="/data/q2_2" type="string"/>
+      <bind nodeset="/data/q2_3" type="string"/>
       <bind nodeset="/data/q3" type="int"/>
+      <bind nodeset="/data/q4" type="select"/>
     </model>
   </h:head>
   <h:body>
@@ -105,33 +84,49 @@
       <label ref="jr:itext('q1:label')"/>
       <hint ref="jr:itext('q1:hint')"/>
       <item>
-        <label ref="jr:itext('option1')"/>
-        <value>1</value>
+        <label ref="jr:itext('on2')"/>
+        <value>on2</value>
       </item>
       <item>
-        <label ref="jr:itext('option2')"/>
-        <value>2</value>
+        <label ref="jr:itext('on3')"/>
+        <value>on3</value>
       </item>
     </select1>
     <select1 ref="/data/q2_1">
       <label ref="jr:itext('q2_1:label')"/>
       <hint ref="jr:itext('q2_1:hint')"/>
-      <itemset nodeset="instance('option_set_2')/options/opt">
-        <label ref="jr:itext(key)"/>
-        <value ref="value"/>
-      </itemset>
+      <item>
+        <label ref="jr:itext('on11')"/>
+        <value>on11</value>
+      </item>
+      <item>
+        <label ref="jr:itext('on18')"/>
+        <value>on18</value>
+      </item>
     </select1>
-    <select1 ref="/data/q2_2">
+    <input query="instance('os4')/root/item[parent_id=/data/q2_1]" ref="/data/q2_2">
       <label ref="jr:itext('q2_2:label')"/>
       <hint ref="jr:itext('q2_2:hint')"/>
-      <itemset nodeset="instance('option_set_2')/options/opt[value=/data/q2_1]/opt">
-        <label ref="jr:itext(key)"/>
-        <value ref="value"/>
-      </itemset>
-    </select1>
+    </input>
+    <input query="instance('os4')/root/item[parent_id=/data/q2_2]" ref="/data/q2_3">
+      <label ref="jr:itext('q2_3:label')"/>
+      <hint ref="jr:itext('q2_3:hint')"/>
+    </input>
     <input ref="/data/q3">
       <label ref="jr:itext('q3:label')"/>
       <hint ref="jr:itext('q3:hint')"/>
     </input>
+    <select ref="/data/q4">
+      <label ref="jr:itext('q4:label')"/>
+      <hint ref="jr:itext('q4:hint')"/>
+      <item>
+        <label ref="jr:itext('on8')"/>
+        <value>on8</value>
+      </item>
+      <item>
+        <label ref="jr:itext('on9')"/>
+        <value>on9</value>
+      </item>
+    </select>
   </h:body>
 </h:html>

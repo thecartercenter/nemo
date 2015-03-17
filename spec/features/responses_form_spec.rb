@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-feature 'responses form' do
+feature 'responses form', js: true do
   before do
     @user = create(:user)
   end
@@ -13,16 +13,14 @@ feature 'responses form' do
       login(@user)
     end
 
-    scenario 'should work', js: true do
-      click_link('Submit')
-      click_link(@form.name)
-      expect(page).to have_selector('h1', text: 'New Response')
-      select(@user.name, from: 'response_user_id')
+    scenario 'should work' do
+      visit_submit_page_and_select_user
 
       # Fill in answers
       select('Dog', from: 'response_answers_attributes_0_option_id')
 
       select('Plant', from: 'response_answers_attributes_1_0_option_id')
+      find("#response_answers_attributes_1_1_option_id option", text: 'Oak')
       select('Oak', from: 'response_answers_attributes_1_1_option_id')
 
       check('response_answers_attributes_2_choices_attributes_0_checked') # Cat
@@ -57,6 +55,7 @@ feature 'responses form' do
       # Check edit mode.
       click_link('Edit Response')
       select('Animal', from: 'response_answers_attributes_1_0_option_id')
+      find("#response_answers_attributes_1_1_option_id option", text: 'Cat')
       select('Cat', from: 'response_answers_attributes_1_1_option_id')
       uncheck('response_answers_attributes_2_choices_attributes_0_checked') # Cat
       check('response_answers_attributes_2_choices_attributes_1_checked') # Dog
@@ -68,8 +67,7 @@ feature 'responses form' do
         "Foo Bar Baz", "Mar 12 #{Time.now.year} 18:32", "Oct 26 #{Time.now.year}", "03:08")
 
       # Delete.
-      click_link('Delete Response')
-      page.driver.browser.switch_to.alert.accept
+      handle_js_confirm{click_link('Delete Response')}
       expect(page).to have_selector('.alert-success', text: 'deleted')
     end
   end
@@ -84,9 +82,9 @@ feature 'responses form' do
     end
 
     scenario 'should be properly ignored' do
-      visit(new_response_path(locale: 'en', mode: 'm', mission_name: get_mission.compact_name, form_id: @form.id))
+      visit_submit_page_and_select_user
+
       expect(page).not_to have_selector("div.form_field#qing_#{@qing1.id}")
-      select(@user.name, from: 'response_user_id')
       fill_in('response_answers_attributes_0_value', with: 'Foo')
       click_button('Save')
 
@@ -95,6 +93,38 @@ feature 'responses form' do
       expect(page).not_to have_selector("div.form_field#qing_#{@qing1.id}")
       expect(page).to have_selector("div.form_field#qing_#{@qing0.id} .ro-val", text: 'Foo')
     end
+  end
+
+  describe 'integer constraints' do
+    before do
+      @form = create(:form, question_types: %w(integer))
+      @form.questions[0].update_attributes!(minimum: 10)
+      login(@user)
+    end
+
+    scenario 'should be enforced if appropriate' do
+      # Should raise error if value filled in.
+      visit_submit_page_and_select_user
+      fill_in('response_answers_attributes_0_value', with: '9')
+      click_button('Save')
+      expect(page).to have_content('greater than or equal to 10')
+
+      # Should not raise error if value is valid.
+      fill_in('response_answers_attributes_0_value', with: '11')
+      click_button('Save')
+      expect(page).to have_content('Response created successfully')
+
+      # Should not raise error if left blank.
+      visit_submit_page_and_select_user
+      fill_in('response_answers_attributes_0_value', with: '')
+      click_button('Save')
+      expect(page).to have_content('Response created successfully')
+    end
+  end
+
+  def visit_submit_page_and_select_user
+    visit(new_response_path(locale: 'en', mode: 'm', mission_name: get_mission.compact_name, form_id: @form.id))
+    select(@user.name, from: 'response_user_id')
   end
 
   def check_response_show_form(*values)
@@ -107,5 +137,13 @@ feature 'responses form' do
     Array.wrap(value).each do |v|
       expect(page).to have_selector("#qing_#{qing.id} .#{csscls}", text: /^#{Regexp.escape(v)}$/)
     end
+  end
+
+  # helper method
+  def handle_js_confirm
+    page.evaluate_script 'window.confirmMsg = null'
+    page.evaluate_script 'window.confirm = function(msg) { window.confirmMsg = msg; return true; }'
+    yield
+    page.evaluate_script 'window.confirmMsg'
   end
 end

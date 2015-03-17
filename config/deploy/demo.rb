@@ -1,5 +1,5 @@
 set :branch, 'demo'
-set :ping_url, "https://elmo.sassafrastech.com"
+set :ping_url, "https://elmo.sassafras.coop"
 set :user, 'tomsmyth'
 set :home_dir, '/home/tomsmyth'
 set :use_sudo, false

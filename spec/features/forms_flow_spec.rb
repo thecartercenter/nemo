@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-feature 'forms flow', js: true do
+feature 'forms flow', js: true, driver: :selenium do
   before do
     @user = create(:user)
     @form = create(:sample_form)

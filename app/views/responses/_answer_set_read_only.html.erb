@@ -1,18 +1,3 @@
-<%# We know this is a select-one question. %>
-<div class="select-one-answers">
-  <% unless answer_set.blank? %>
-    <% answer_set.answers.each_with_index do |answer, i| %>
-      <div>
-        <div class="level-name"><%= answer.level_name %></div>
-        <div class="option-name">
-          <%# Show 'blank' for partially empty multilevel answers. %>
-          <% if answer.blank? %>
-            <i>[<%= t('common.blank') %>]</i>
-          <% else %>
-            <%= answer.option.name %>
-          <% end %>
-        </div>
-      </div>
-    <% end %>
-  <% end %>
+<div class="ro-val" data-val="<%=json answer_set.option_ids_with_no_nils %>">
+  <%= render('option_sets/cascading_selects', index: index, option_path: answer_set.option_path) %>
 </div>

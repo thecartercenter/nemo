@@ -5,7 +5,7 @@ describe FormVersioningPolicy do
 
   before do
     # create three forms
-    @forms = (0...3).map{ FactoryGirl.create(:form, :published => false) }
+    @forms = (0...3).map{ root_group = QingGroup.create; FactoryGirl.create(:form, :published => false, root_id: root_group.id) }
 
     # publish and then unpublish the forms so they get versions
     @forms.each{|f| f.publish!; f.unpublish!}
@@ -18,7 +18,7 @@ describe FormVersioningPolicy do
     # add required question to first two forms
     q = FactoryGirl.create(:question)
     @forms[0...2].each do |f|
-      Questioning.create(:form_id => f.id, :question_id => q.id, :required => true)
+      Questioning.create(:form_id => f.id, :question_id => q.id, :required => true, :parent => f.root_group)
     end
 
     publish_and_check_versions(:should_change => true)
@@ -28,7 +28,7 @@ describe FormVersioningPolicy do
     # add non-required question to first two forms
     q = FactoryGirl.create(:question)
     @forms[0...2].each do |f|
-      Questioning.create(:form_id => f.id, :question_id => q.id, :required => false)
+      Questioning.create(:form_id => f.id, :question_id => q.id, :required => false, :parent => f.root_group)
     end
 
     publish_and_check_versions(:should_change => false)
@@ -43,6 +43,7 @@ describe FormVersioningPolicy do
     @forms.each do |f|
       qs.each do |q|
         f.questions << q
+        Questioning.create(:form_id => f.id, :question_id => q.id, :required => false, :parent => f.root_group)
       end
       f.save!
     end
@@ -51,21 +52,22 @@ describe FormVersioningPolicy do
 
     # now delete the first question from first two forms -- this should not cause a bump b/c form is not smsable
     @forms[0...2].each do |f|
-      f.destroy_questionings([f.questionings.first])
+      f.destroy_questionings([f.root_questionings(reload = true).first])
     end
     publish_and_check_versions(:should_change => false)
 
     # now make the form smsable and delete the last question -- still should not get a bump
     @forms.each{|f| f.smsable = true; f.save!}
     @forms[0...2].each do |f|
-      f.destroy_questionings([f.questionings.last])
+      f.destroy_questionings([f.root_questionings.last])
     end
     publish_and_check_versions(:should_change => false)
 
-    # now delete the first question -- this should cause a bump because the ranks will change
+    # now delete the first question -- this should cause a bump
     @forms[0...2].each do |f|
-      f.destroy_questionings([f.questionings.first])
+      f.destroy_questionings([f.root_questionings.first])
     end
+
     publish_and_check_versions(:should_change => true)
   end
 
@@ -74,8 +76,8 @@ describe FormVersioningPolicy do
     q1 = FactoryGirl.create(:question, :code => "q1")
     q2 = FactoryGirl.create(:question, :code => "q2")
     @forms[0...2].each do |f|
-      Questioning.create(:form_id => f.id, :question_id => q1.id)
-      Questioning.create(:form_id => f.id, :question_id => q2.id)
+      Questioning.create(:form_id => f.id, :question_id => q1.id, :parent => f.root_group)
+      Questioning.create(:form_id => f.id, :question_id => q2.id, :parent => f.root_group)
     end
 
     save_old_version_codes
@@ -85,9 +87,9 @@ describe FormVersioningPolicy do
 
     # now flip the ranks
     @forms[0...2].each do |f|
-      old1 = f.questionings.find_by_rank(1)
-      old2 = f.questionings.find_by_rank(2)
-      f.update_ranks({old1.id.to_s => "2", old2.id.to_s => "1"})
+      old1 = f.root_questionings.detect{|q| q.rank == 1 }
+      old2 = f.root_questionings.detect{|q| q.rank == 2 }
+      f.update_ranks({old1.id => 2, old2.id => 1})
       f.save(:validate => false)
     end
     publish_and_check_versions(:should_change => false)
@@ -95,9 +97,9 @@ describe FormVersioningPolicy do
     # make forms smsable and try again -- should get a bump
     @forms.each{|f| f.smsable = true; f.save!}
     @forms[0...2].each do |f|
-      old1 = f.questionings.find_by_rank(1)
-      old2 = f.questionings.find_by_rank(2)
-      f.update_ranks({old1.id.to_s => "2", old2.id.to_s => "1"})
+      old1 = f.root_questionings(true).detect{|q| q.rank == 1 }
+      old2 = f.root_questionings.detect{|q| q.rank == 2 }
+      f.update_ranks({old1.id => 2, old2.id => 1})
       f.save(:validate => false)
     end
     publish_and_check_versions(:should_change => true)
@@ -109,8 +111,8 @@ describe FormVersioningPolicy do
     q2 = FactoryGirl.create(:question)
     qings1 = []; qings2 = []
     @forms.each do |f|
-      qings1 << Questioning.create!(:form_id => f.id, :question_id => q1.id, :required => true)
-      qings2 << Questioning.create!(:form_id => f.id, :question_id => q2.id, :required => true)
+      qings1 << Questioning.create!(:form_id => f.id, :question_id => q1.id, :required => true, :parent => f.root_group)
+      qings2 << Questioning.create!(:form_id => f.id, :question_id => q2.id, :required => true, :parent => f.root_group)
     end
 
     save_old_version_codes
@@ -149,7 +151,7 @@ describe FormVersioningPolicy do
     # add non-required question to first two forms
     q = FactoryGirl.create(:question)
     @forms[0...2].each do |f|
-      Questioning.create(:form_id => f.id, :question_id => q.id, :required => false)
+      Questioning.create(:form_id => f.id, :question_id => q.id, :required => false, :parent => f.root_group)
     end
 
     save_old_version_codes
@@ -180,8 +182,8 @@ describe FormVersioningPolicy do
     @forms.each{|f| f.smsable = true; f.save!}
 
     @forms[0...2].each do |f|
-      Questioning.create(:form_id => f.id, :question_id => q1.id)
-      Questioning.create(:form_id => f.id, :question_id => q2.id)
+      Questioning.create(:form_id => f.id, :question_id => q1.id, :parent => f.root_group)
+      Questioning.create(:form_id => f.id, :question_id => q2.id, :parent => f.root_group)
     end
 
     # reload the question so it knows about its new forms
@@ -304,8 +306,8 @@ describe FormVersioningPolicy do
     @os = FactoryGirl.create(:option_set, multi_level: true)
     @q = FactoryGirl.create(:question, :qtype_name => "select_one", :option_set => @os)
     @forms[0...2].each do |f|
-      f.questions << @q
-      f.save!
+      FactoryGirl.create(:questioning, form: f, question: @q)
+      f.reload
     end
     @os.reload
     @q.reload

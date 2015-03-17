@@ -6,7 +6,7 @@ module Concerns::ApplicationController::Crud
   def destroy_and_handle_errors(obj, options = {})
     begin
       obj.send(options[:but_first]) if options[:but_first]
-      obj.respond_to?(:destroy_with_copies) ? obj.destroy_with_copies : obj.destroy
+      obj.destroy
       flash[:success] = "#{obj.class.model_name.human} #{t('errors.messages.deleted_successfully')}"
     rescue DeletionError
       flash[:error] = t($!.to_s, :scope => [:activerecord, :errors, :models, obj.class.model_name.i18n_key], :default => t("errors.messages.generic_delete_error"))

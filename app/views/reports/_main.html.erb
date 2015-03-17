@@ -1,0 +1,6 @@
+<div class="tip report_info"></div>
+<div class="report_body"></div>
+
+<%= javascript_doc_ready do %>
+  ELMO.app.report_controller = new ELMO.Report.ReportController(<%=json @report_data %>);
+<% end %>
