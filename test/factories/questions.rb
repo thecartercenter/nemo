@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :question do
-    ignore do
+    transient do
       option_names nil
       use_multilevel_option_set false
       add_to_form false

@@ -26,7 +26,7 @@ end
 # Only works with create
 FactoryGirl.define do
   factory :form do
-    ignore do
+    transient do
       question_types []
       questions []
       use_multilevel_option_set false

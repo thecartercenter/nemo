@@ -4,7 +4,7 @@ FactoryGirl.define do
     sequence(:name) { |n| "Report #{n}" }
 
     factory :gridable_report do
-      ignore do
+      transient do
         # This should be a list of either strings (for attrib names) or questions.
         _calculations []
       end

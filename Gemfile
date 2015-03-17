@@ -56,7 +56,7 @@ gem 'descriptive_statistics', :require => 'descriptive_statistics/safe'
 gem 'ejs'
 
 # search
-gem 'thinking-sphinx', '~> 3.1.2'
+gem 'thinking-sphinx', '~> 3.1.3'
 
 # cron management
 gem 'whenever', :require => false
@@ -101,7 +101,7 @@ group :development, :test do
   gem 'timecop'                      # sets time for testing
   gem 'awesome_print'                # for debugging/console, prints an object nicely
   gem 'assert_difference'            # test assertion
-  gem 'debugger'
+  gem 'byebug'
   gem 'debugger-xml'
   gem 'launchy'                      # auto-open capybara html file
 end
