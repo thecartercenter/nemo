@@ -39,6 +39,9 @@ ELMO::Application.configure do
 
   config.cache_store = :dalli_store, nil, { value_max_bytes: 2.megabytes }
 
+  # Raises error for missing translations
+  config.action_view.raise_on_missing_translations = true
+
   # bullet gem for query optimization
   # config.after_initialize do
   #   Bullet.enable = true
