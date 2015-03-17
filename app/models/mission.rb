@@ -29,7 +29,7 @@ class Mission < ActiveRecord::Base
   FOR_USER_MISSION_SQL = "missions.id IN (SELECT mission_id FROM assignments WHERE user_id = ?)"
 
   scope(:sorted_by_name, -> { order("name") })
-  scope(:sorted_recent_first, -> { order("created_at DESC") })
+  scope(:sorted_recent_first, -> { order("missions.created_at DESC") })
   scope(:for_user, ->(u) { where(FOR_USER_MISSION_SQL, u.id) })
 
   delegate(:override_code, :allow_unauthenticated_submissions?, :to => :setting)
