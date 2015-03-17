@@ -9,8 +9,6 @@ require File.expand_path('../../spec/support/option_node_support', __FILE__)
 
 class ActiveSupport::TestCase
 
-  ActiveRecord::Migration.check_pending!
-
   setup :set_url_options
 
   ## MEMORY OPTIMIZATION FOR TESTING
