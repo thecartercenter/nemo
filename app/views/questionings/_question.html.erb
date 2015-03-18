@@ -1,3 +1,4 @@
+<%# This partial represents a question in the form form item list. %>
 <li class="form-question form-item">
 
   <div class="form-item-content">
@@ -12,6 +13,8 @@
 
     <%# Question type icon %>
     <div class="type"><%= form_item_icon(qing.qtype_name) %></div>
+
+    <div class="rank"><%= qing.rank %>.</div>
 
     <div class="base-info">
 
@@ -42,9 +45,10 @@
 
       <%# Edit and delete %>
       <% if form_mode == :edit %>
-        <%= link_to content_tag(:i, '', class: 'fa fa-pencil'), edit_questioning_path(qing) %>
+        <%= link_to content_tag(:i, '', class: 'fa fa-pencil'), edit_questioning_path(qing), class: 'action_link' %>
 
-        <%= link_to content_tag(:i, '', class: 'fa fa-trash-o'), questioning_path(qing), method: :delete, data: { confirm: I18n.t("activerecord.attributes.questioning.delete", name: qing.name)} %>
+        <%= link_to content_tag(:i, '', class: 'fa fa-trash-o'), questioning_path(qing), method: :delete,
+          data: { confirm: I18n.t("activerecord.attributes.questioning.delete", name: qing.name)}, class: 'action_link' %>
       <% end %>
 
     </div>
