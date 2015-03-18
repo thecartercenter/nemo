@@ -39,4 +39,8 @@ ELMO::Application.configure do
 
   # Raises error for missing translations
   config.action_view.raise_on_missing_translations = true
+
+  # Sorted order for test cases which are executed.
+  config.active_support.test_order = :sorted
 end
+
