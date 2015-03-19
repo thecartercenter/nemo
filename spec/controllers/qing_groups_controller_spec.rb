@@ -25,7 +25,7 @@ describe QingGroupsController, type: :request do
       qing_group = assigns(:qing_group)
       expect(qing_group).to be_kind_of(QingGroup)
       expect(qing_group.form_id).to eq @form.id
-      expect(qing_group.ancestry).to eq @form.root_id
+      expect(qing_group.ancestry).to eq @form.root_id.to_s
       expect(qing_group.mission).to eq get_mission
      end
   end

@@ -221,7 +221,7 @@ class ResponsesController < ApplicationController
     def response_params
       if params[:response]
         params.require(:response).permit(:form_id, :user_id, :incomplete, :reviewed,
-          answers_attributes: [:value, :questioning_id, :relevant])
+          answers_attributes: [:id, :value, :option_id, :questioning_id, :relevant, :rank])
       end
     end
 end

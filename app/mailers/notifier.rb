@@ -3,13 +3,13 @@ class Notifier < ActionMailer::Base
 
   def password_reset_instructions(user)
     build_reset_url(user)
-    mail(:to => user.email, :subject => t("notifier.password_reset_instructions")).deliver_now
+    mail(:to => user.email, :subject => t("notifier.password_reset_instructions"))
   end
 
   def intro(user)
     @user = user
     build_reset_url(user)
-    mail(:to => user.email, :subject => t("notifier.welcome", :site => configatron.site_name)).deliver_now
+    mail(:to => user.email, :subject => t("notifier.welcome", :site => configatron.site_name))
   end
 
   private

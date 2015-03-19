@@ -38,12 +38,12 @@ class QuestioningsController < ApplicationController
     permitted_params = questioning_params
 
     # Convert tag string from TokenInput to array
-    if (tag_ids = permitteed_params[:question_attributes].try(:[], :tag_ids))
-      permitteed_params[:question_attributes][:tag_ids] = tag_ids.split(',')
+    if (tag_ids = permitted_params[:question_attributes].try(:[], :tag_ids))
+      permitted_params[:question_attributes][:tag_ids] = tag_ids.split(',')
     end
 
     # assign attribs and validate now so that normalization runs before authorizing and saving
-    @questioning.assign_attributes(permitteed_params)
+    @questioning.assign_attributes(permitted_params)
     @questioning.valid?
 
     # authorize special abilities

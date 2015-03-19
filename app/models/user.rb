@@ -149,13 +149,13 @@ class User < ActiveRecord::Base
 
   def deliver_intro!
     reset_perishable_token!
-    Notifier.intro(self).deliver
+    Notifier.intro(self).deliver_now
   end
 
   # sends password reset instructions to the user's email
   def deliver_password_reset_instructions!
     reset_perishable_token!
-    Notifier.password_reset_instructions(self).deliver
+    Notifier.password_reset_instructions(self).deliver_now
   end
 
   def full_name
