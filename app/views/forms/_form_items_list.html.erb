@@ -20,7 +20,7 @@
   <div class="draggable-list-wrapper">
     <ol class="form-items-list item-list">
       <% unless @form.new_record? %>
-        <% @form.children.each do |item| %>
+        <% @form.children.order(:rank).each do |item| %>
           <%= render('form_item', item: item) %>
         <% end %>
       <% end %>
