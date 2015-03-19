@@ -98,6 +98,7 @@ class Setting < ActiveRecord::Base
 
   # converts preferred locales to symbols on read
   def preferred_locales
+    p read_attribute('preferred_locales')
     read_attribute('preferred_locales').map(&:to_sym)
   end
 

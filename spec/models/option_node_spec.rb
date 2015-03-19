@@ -11,7 +11,7 @@ describe OptionNode do
     end
 
     it 'should not destroy option' do
-      expect(Option.exists?(@option)).to be_truthy
+      expect(Option.exists?(@option.id)).to be_truthy
     end
   end
 
