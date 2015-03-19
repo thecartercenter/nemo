@@ -9,6 +9,10 @@
   padding-left: 0;
   counter-reset: item;
 
+  &, ol {
+    counter-reset: rank;
+  }
+
   li {
     list-style-position: inside;
     border: none;
@@ -22,13 +26,17 @@
       color: #879CAA;
     }
 
-    .base-info, .actions, .standardized, .type, .rank, .condition {
+    .base-info, .actions, .standardized, .type, .condition {
       display: inline-block;
     }
 
-    .rank {
-      width: 20px;
+    // This is the question rank, e.g 8., or 2.1.1.
+    .base-info::before {
+      counter-increment: rank;
+      content: counters(rank, '.') '. ';
+      min-width: 20px;
       text-align: right;
+      display: inline-block;
     }
 
     .actions {
@@ -66,3 +74,5 @@
     }
   }
 }
+
+
