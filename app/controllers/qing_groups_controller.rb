@@ -35,10 +35,8 @@ class QingGroupsController < ApplicationController
   private
     # creates/updates the qing_group
     def create_or_update
-      if @qing_group.save
-        render partial: 'group', locals: {qing_group: @qing_group}
-      else
-      end
+      @qing_group.save # Currently no validations on this model.
+      render partial: 'group', locals: {qing_group: @qing_group}
     end
 
     def validate_destroy
