@@ -55,9 +55,10 @@ class QuestioningsController < ApplicationController
     end
   end
 
+  # Only called via AJAX
   def destroy
-    destroy_and_handle_errors(@questioning)
-    redirect_to(edit_form_url(@questioning.form))
+    @questioning.destroy
+    render nothing: true, status: 204
   end
 
   # Re-renders the fields in the condition form when requested by ajax.

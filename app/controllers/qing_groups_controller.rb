@@ -28,10 +28,8 @@ class QingGroupsController < ApplicationController
   end
 
   def destroy
-    begin
-      @qing_group.destroy
-      render nothing: true, status: 204
-    end
+    @qing_group.destroy
+    render nothing: true, status: 204
   end
 
   private

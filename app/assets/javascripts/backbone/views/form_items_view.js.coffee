@@ -5,7 +5,8 @@ class ELMO.Views.FormItemsView extends Backbone.View
   events:
     'click .add-group': 'show_new_group_modal'
     'click .form-item-group .edit': 'show_edit_group_modal'
-    'click .form-item-group .delete': 'delete_group'
+    'click .form-item-group .delete': 'delete_item'
+    'click .form-item-question .delete': 'delete_item'
 
   initialize: (params) ->
     this.nested_list()
@@ -51,17 +52,19 @@ class ELMO.Views.FormItemsView extends Backbone.View
   update_group_on_edit: (data) ->
     @form_item_being_edited.replaceWith(data)
 
-  delete_group: (event) ->
+  delete_item: (event) ->
     event.preventDefault()
 
     $link = $(event.currentTarget)
     return unless confirm $link.data('message')
 
     ELMO.app.loading(true)
-    $form_item = $link.closest('li.form-item-group')
+    $form_item = $link.closest('li.form-item')
+
+    route = if $form_item.hasClass('form-item-group') then 'qing-groups' else 'questionings'
 
     $.ajax
-      url: ELMO.app.url_builder.build('qing-groups', $form_item.data('id'))
+      url: ELMO.app.url_builder.build(route, $form_item.data('id'))
       method: "delete"
       success: =>
         $form_item.remove()
