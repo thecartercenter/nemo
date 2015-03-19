@@ -78,4 +78,4 @@ class ELMO.Views.FormItemsView extends Backbone.View
 
   # TODO: Ensure only groups can hold children, rather than all items in item list
   nested_list: ->
-    $('.item-list').nestedSortable()
+    $('.item-list').nestedSortable({placeholder: 'placeholder'})

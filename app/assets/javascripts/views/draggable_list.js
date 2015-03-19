@@ -63,7 +63,9 @@
   klass.prototype.allow_nesting = function(yn) { var self = this;
     // maxLevels == 0 means no limit
     if (self.enabled)
-      self.ol.nestedSortable({maxLevels: yn ? 0 : 1});
+      self.ol.nestedSortable({
+        maxLevels: yn ? 0 : 1,
+      });
   };
 
   // renders the html to the view
@@ -79,6 +81,7 @@
       self.ol.nestedSortable({
         handle: 'div',
         items: 'li',
+        placeholder: 'placeholder',
         toleranceElement: '> div',
 
         // notify model when sorting changes
