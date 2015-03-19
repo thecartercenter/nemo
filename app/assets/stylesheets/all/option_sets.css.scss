@@ -1,9 +1,5 @@
 @import 'mixins';
 
-/* variables */
-$theme_green: #9dc400;
-$elmo-blue: #879CAA;
-
 form.option_set_form {
 
   /* hide the option levels at first */
@@ -41,60 +37,9 @@ form.option_set_form {
     font-size: 14px;
   }
 
-  /* FOR THE SORTABLE/DRAGGABLE LIST */
-
   .draggable-list-wrapper {
-    display: none;
-
-    /* these styles only apply to the outer ol */
     > ol {
-      margin: 0 0 5px -15px;
       width: 421px;
-
-      > li:first-child {
-        margin-top: 0;
-      }
-    }
-
-    ol {
-      padding-left: 0;
-
-      li {
-        display: block;
-        margin-left: 15px;
-
-        &:last-child {
-          margin-bottom: 0;
-        }
-
-        div.inner {
-
-          @include draggable-list;
-
-          /* icon */
-          i.fa-times, i.fa-pencil {
-            color: $elmo-blue;
-          }
-          i.fa-sort {
-            margin-right: 5px;
-          }
-
-          /* locales */
-          em {
-            font-style: normal;
-            font-size: 10px;
-            margin-left: 5px;
-            color: $theme_green;
-          }
-
-          /* edit/remove links */
-          div.links {
-            float: right;
-            text-align: right;
-            width: 50px;
-          }
-        }
-      }
     }
   }
 }

@@ -18,12 +18,6 @@
 
   .form-item {
 
-    .form-item-content {
-      @include draggable-list;
-      padding: 0;
-      padding-left: 15px;
-    }
-
     .type, .actions {
       color: #879CAA;
     }
@@ -37,14 +31,9 @@
       text-align: right;
     }
 
-    .base-info {
-      padding: 5px;
-    }
-
     .actions {
       float: right;
       text-align: right;
-      margin: 3px 3px 0 0
     }
 
     .standardized, .type {
@@ -52,13 +41,15 @@
     }
 
     .standardized {
-      width: 20px;
+      width: 18px;
+      margin-left: 2px;
       vertical-align: middle;
     }
 
     .type {
       width: 20px;
       text-align: center;
+      margin: -2px 0 -2px 0;
     }
 
     .condition {

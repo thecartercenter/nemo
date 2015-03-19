@@ -1,18 +1,6 @@
 $orange: #F77D48;
-
-$list-item-background: #eee;
-
-@mixin draggable-list {
-  margin: 5px 0;
-  min-height: 15px;
-  border-radius: 5px;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  padding: 5px;
-  border: 1px solid #CCC;
-  background: $list-item-background;
-  cursor: default;
-}
+$theme_green: #9dc400;
+$elmo-blue: #879CAA;
 
 @mixin action-links {
   margin-bottom: 10px;
