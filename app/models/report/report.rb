@@ -2,8 +2,6 @@ require 'mission_based'
 class Report::Report < ActiveRecord::Base
   include MissionBased
 
-  #attr_accessible(:option_set_choices_attributes)
-
   has_many(:option_set_choices, :class_name => "Report::OptionSetChoice", :foreign_key => "report_report_id", :inverse_of => :report,
     :dependent => :destroy, :autosave => true)
   has_many(:option_sets, :through => :option_set_choices)

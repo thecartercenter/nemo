@@ -53,6 +53,9 @@ class Setting < ActiveRecord::Base
   def self.build_default(mission = nil)
     # initialize a new setting object with default values
     setting = by_mission(mission).default.new
+    # preferred_locales from default scope is converted to string
+    # bug in rails 4.2?
+    setting.preferred_locales = [:en]
 
     # copy default_settings from configatron
     configatron.default_settings.configatron_keys.each do |k|

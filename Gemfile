@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rails', '~> 4.2.0'
+gem 'rails', '~> 4.2.1.rc4'
 
 gem 'sass-rails', '~> 4.0.2'
 gem 'uglifier', '>= 1.3.0'
@@ -26,6 +26,7 @@ gem 'active_model_serializers'   # for making it easy to customize output for ap
 gem 'dotiw'
 gem 'acts_as_list', :git => 'https://github.com/swanandp/acts_as_list', branch: 'master'
 gem 'iso-639'
+gem 'responders', '~> 2.0'
 
 # authorization
 gem 'cancancan', '~> 1.10'
@@ -46,7 +47,6 @@ gem 'term-ansicolor'
 gem 'dalli'
 
 # foreign key maintenance
-gem 'foreigner'
 gem 'immigrant'
 
 # mean, median, etc.
