@@ -46,7 +46,7 @@ class ELMO.Views.FormItemsView extends Backbone.View
         ELMO.app.loading(false)
 
   add_new_group: (data) ->
-    $('<li>').html(data).appendTo('.form-items-list')
+    $('.form-items-list').append(data)
 
   update_group_on_edit: (data) ->
     @form_item_being_edited.replaceWith(data)
