@@ -33,7 +33,7 @@ class FormItem < ActiveRecord::Base
   def check_ancestry_integrity(parent_id)
     parent = FormItem.find_by_id(parent_id)
     return true if parent.nil?
-    parent.parent.id != self.id
+    parent.parent.nil? || parent.parent.id != self.id
   end
 
   private

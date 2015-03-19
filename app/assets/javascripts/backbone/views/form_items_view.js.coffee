@@ -29,7 +29,6 @@ class ELMO.Views.FormItemsView extends Backbone.View
     $link = $(event.currentTarget)
     @form_item_being_edited = $link.closest('.form-item')
 
-    # TODO: replace with url_builder links, if possible
     url = $link.attr("href")
     edit_link = url.replace('/edit', '')
 
@@ -57,11 +56,6 @@ class ELMO.Views.FormItemsView extends Backbone.View
     $link = $(event.currentTarget)
     this.remove_group(event) if confirm $link.data('message')
 
-  # TODO: make sure console error "no element found" does not show on removal
-    # Appears to be trying to open the modal for some reason.
-      # Started GET "/en/m/panglossia/qing-groups/161"
-      # AbstractController::ActionNotFound (The action 'show' could not be fo
-
   remove_group: (event) ->
     $link = $(event.currentTarget)
     url = $link.attr("href")
@@ -82,9 +76,30 @@ class ELMO.Views.FormItemsView extends Backbone.View
       placeholder: 'placeholder'
       isAllowed: (item, parent) =>
         this.drop_target_is_allowed(item, parent)
+      update: (event, ui) =>
+        this.drop_happened(event, ui)
 
   drop_target_is_allowed: (item, parent) ->
     # Must be null parent or group type.
     allowed = parent == null || parent.hasClass('form-item-group')
+
+    # If not allowed, show the placeholder border as red.
     $('.form-items .placeholder').css('border-color', if allowed then '#aaa' else 'red')
+
+    # Return
     allowed
+
+  # Called at the end of a drag.
+  drop_happened: (event, ui) ->
+    $.ajax
+      url: ELMO.app.url_builder.build('form-items', ui.item.data('id'))
+      method: 'put'
+      data: this.get_parent_id_and_rank(ui.item)
+
+  # Gets the parent_id (or null if top-level) and rank of the given li.
+  get_parent_id_and_rank: (li) ->
+    parent = li.parent().closest('li.form-item')
+    {
+      parent_id: if parent.length then parent.data('id') else null,
+      rank: li.prevAll('li.form-item').length + 1
+    }
