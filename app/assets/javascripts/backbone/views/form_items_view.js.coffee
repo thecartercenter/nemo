@@ -4,8 +4,8 @@ class ELMO.Views.FormItemsView extends Backbone.View
 
   events:
     'click .add-group': 'show_new_group_modal'
-    'click .qing-group .edit': 'show_edit_group_modal'
-    'click .qing-group .delete': 'delete_group'
+    'click .form-item-group .edit': 'show_edit_group_modal'
+    'click .form-item-group .delete': 'delete_group'
 
   initialize: (params) ->
     this.nested_list()
@@ -78,4 +78,13 @@ class ELMO.Views.FormItemsView extends Backbone.View
 
   # TODO: Ensure only groups can hold children, rather than all items in item list
   nested_list: ->
-    $('.item-list').nestedSortable({placeholder: 'placeholder'})
+    $('.item-list').nestedSortable
+      placeholder: 'placeholder'
+      isAllowed: (item, parent) =>
+        this.drop_target_is_allowed(item, parent)
+
+  drop_target_is_allowed: (item, parent) ->
+    # Must be null parent or group type.
+    allowed = parent == null || parent.hasClass('form-item-group')
+    $('.form-items .placeholder').css('border-color', if allowed then '#aaa' else 'red')
+    allowed
