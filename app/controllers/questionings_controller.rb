@@ -101,7 +101,7 @@ class QuestioningsController < ApplicationController
 
     def questioning_params
       params.require(:questioning).permit(:form_id, :allow_incomplete, :access_level, :hidden, :required,
-        condition_attributes: [:ref_qing_id, :op, :value],
+        condition_attributes: [:ref_qing_id, :op, :value, :option_ids],
         question_attributes: [:id, :code, :name_en, :hint_en, :tag_ids, :key, :access_level])
     end
 end

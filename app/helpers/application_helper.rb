@@ -117,7 +117,7 @@ module ApplicationHelper
       objs
     end
 
-    # ensure .all gets called so that a bunch of extra queries don't get triggered
+    # ensure .to_a gets called so that a bunch of extra queries don't get triggered
     objs = objs.to_a if objs.respond_to?(:to_a)
 
     objs
