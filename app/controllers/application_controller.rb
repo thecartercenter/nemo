@@ -12,6 +12,8 @@ class ApplicationController < ActionController::Base
   include Concerns::ApplicationController::Settings
 
   # Makes sure authorization is performed in each controller. (CanCan method)
+  check_authorization
+
   protect_from_forgery with: :exception
 
   rescue_from Exception, :with => :notify_error
