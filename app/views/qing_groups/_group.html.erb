@@ -10,7 +10,7 @@
       <span class="name"><%= qing_group.group_name %></span>
     </div>
 
-    <% if form_mode == :edit %>
+    <% unless read_only %>
       <div class="actions">
         <%= link_to content_tag(:i, '', class: 'fa fa-pencil'), edit_qing_group_path(qing_group), class: 'edit action_link' %>
 
