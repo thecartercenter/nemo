@@ -12,10 +12,12 @@
 
     <% unless read_only %>
       <div class="actions">
-        <%= link_to content_tag(:i, '', class: 'fa fa-pencil'), edit_qing_group_path(qing_group), class: 'edit action_link' %>
+        <%= link_to content_tag(:i, '', class: 'fa fa-pencil'), edit_qing_group_path(qing_group),
+          class: 'action_link edit' %>
 
-        <% if !qing_group.has_children? %>
-          <%= link_to content_tag(:i, '', class: 'fa fa-trash-o'), qing_group, class: 'delete', data: {message: I18n.t('activerecord.attributes.qing_group.delete', name: qing_group.group_name)}, class: 'action_link' %>
+        <% unless qing_group.has_children? %>
+          <%= link_to content_tag(:i, '', class: 'fa fa-trash-o'), '#', class: 'action_link delete',
+            data: {message: I18n.t('activerecord.attributes.qing_group.delete', name: qing_group.group_name)} %>
         <% end %>
       </div>
     <% end %>

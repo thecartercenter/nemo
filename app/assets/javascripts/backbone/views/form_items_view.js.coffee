@@ -53,24 +53,20 @@ class ELMO.Views.FormItemsView extends Backbone.View
 
   delete_group: (event) ->
     event.preventDefault()
-    $link = $(event.currentTarget)
-    this.remove_group(event) if confirm $link.data('message')
 
-  remove_group: (event) ->
     $link = $(event.currentTarget)
-    url = $link.attr("href")
-    $form_item = $link.closest('.form-item')
+    return unless confirm $link.data('message')
 
     ELMO.app.loading(true)
+    $form_item = $link.closest('li.form-item-group')
 
     $.ajax
-      url: url,
-      method: "delete",
+      url: ELMO.app.url_builder.build('qing-groups', $form_item.data('id'))
+      method: "delete"
       success: =>
         $form_item.remove()
         ELMO.app.loading(false)
 
-  # TODO: Ensure only groups can hold children, rather than all items in item list
   nested_list: ->
     $('.item-list').nestedSortable
       placeholder: 'placeholder'
