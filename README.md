@@ -90,8 +90,7 @@ Note to install the software below we recommend the following package managers:
   - Install the required gems by running `bundle install` in the project directory.
   - Copy `config/database.yml.example` to `config/database.yml` and edit `database.yml` to point to your database.
   - Copy `config/thinking_sphinx.yml.example` to `thinking_sphinx.yml` and adjust any settings (usually not necessary).
-  - Copy `config/secrets.yml.example` to `config/secrets.yml` and run `rake secrets` to generate keys for development and test environmets
-  - Copy `config/initializers/secret_token.rb.example` to `config/initializers/secret_token.rb` and adjust any settings.
+  - Copy `config/initializers/local_config.rb.example` to `config/initializers/local_config.rb` and adjust any settings.
   - Run database migrations: `rake db:migrate`. If the diagramming step hangs, run `NO_DIAGRAM=true rake db:migrate`.
   - Create an admin account: `rake db:create_admin`.
 
