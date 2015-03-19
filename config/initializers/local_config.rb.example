@@ -31,4 +31,4 @@ configatron.default_settings.intellisms_password = "password"
 configatron.allow_unauthenticated_submissions = false
 
 # generate your secret key with `rake secret`
-ELMO::Application.config.secret_key_base = 'your-secret-token'
+ELMO::Application.config.secret_key_base = 'secret-token'

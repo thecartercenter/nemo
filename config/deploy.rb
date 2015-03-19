@@ -92,7 +92,7 @@ namespace :deploy do
     TASKS = [
       # Task 1: Sample task that just prints something.
       Proc.new do
-        run "echo '**** FIRST ONE-TIME TASK RAN! ****'"
+        run "sed -i.bak \"s/secret-token/`rake secret`/g\" ./config/#{shared_path}/local_config.rb"
       end
 
       # Task 2: Whatever you want!
