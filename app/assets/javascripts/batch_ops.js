@@ -89,7 +89,7 @@ function batch_submit(options) {
     form.append($('input.batch_op:checked').clone());
 
     var token = $('meta[name="csrf-token"]').attr('content');
-    $('<input>').attr({type: 'hidden', name: 'authenticity_token', value: token }).appendTo(form);
+    $('<input>').attr({type: 'hidden', name: 'authenticity_token', value: token}).appendTo(form);
 
     // need to append form to body before submitting
     form.appendTo($('body'));

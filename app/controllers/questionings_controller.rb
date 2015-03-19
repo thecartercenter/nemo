@@ -19,10 +19,10 @@ class QuestioningsController < ApplicationController
   def create
     @questioning.question.is_standard = true if current_mode == 'admin'
 
-    permitteed_params = questioning_params
+    permitted_params = questioning_params
 
     # Convert tag string from TokenInput to array
-    @questioning.question.tag_ids = permitteed_params[:question_attributes][:tag_ids].split(',')
+    @questioning.question.tag_ids = permitted_params[:question_attributes][:tag_ids].split(',')
 
     if @questioning.save
       set_success_and_redirect(@questioning.question, :to => edit_form_path(@questioning.form))
@@ -35,7 +35,7 @@ class QuestioningsController < ApplicationController
   def update
     strip_condition_params_if_empty
 
-    permitteed_params = questioning_params
+    permitted_params = questioning_params
 
     # Convert tag string from TokenInput to array
     if (tag_ids = permitteed_params[:question_attributes].try(:[], :tag_ids))
