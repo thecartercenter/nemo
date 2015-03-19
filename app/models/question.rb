@@ -82,7 +82,7 @@ class Question < ActiveRecord::Base
 
   # returns questions that do NOT already appear in the given form
   def self.not_in_form(form)
-    scoped.where("(questions.id not in (select question_id from form_items where type='Questioning' and form_id='#{form.id}'))")
+    all.where("(questions.id not in (select question_id from form_items where type='Questioning' and form_id='#{form.id}'))")
   end
 
   # returns N questions marked as key questions, sorted by the number of forms they appear in

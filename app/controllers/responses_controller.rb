@@ -220,9 +220,8 @@ class ResponsesController < ApplicationController
 
     def response_params
       if params[:response]
-        params.require(:response).permit(:form_id, :user_id, :incomplete, :reviewed).tap do |whitelisted|
-          whitelisted[:answers_attributes] = params[:response][:answers_attributes]
-        end
+        params.require(:response).permit(:form_id, :user_id, :incomplete, :reviewed,
+          answers_attributes: [:value, :questioning_id, :relevant])
       end
     end
 end
