@@ -54,8 +54,6 @@ class QuestionsController < ApplicationController
   def update
     permitted_params = question_params
 
-    p permitted_params
-
     # Convert tag string from TokenInput to array
     permitted_params[:tag_ids] = permitted_params[:tag_ids].split(',')
 
