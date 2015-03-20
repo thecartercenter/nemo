@@ -143,19 +143,9 @@ class OptionSetsController < ApplicationController
   end
 
   def option_set_params
-    option_set = params[:option_set]
-
-    params.require(:option_set).permit(:name, :geographic, :multi_level,
-      children_attribs: [{ option_attribs: :id }, :id]).tap do |whitelisted|
-
-      # handle dynamic hash keys for translations
-      whitelisted[:multi_level] = option_set[:multi_level]
-      option_set[:children_attribs].each_with_index do |child, index|
-        name_translations = child[:option_attribs][:name_translations]
-        if !name_translations.empty?
-          whitelisted[:children_attribs][index][:option_attribs][:name_translations] = name_translations
-        end
-      end
-    end
+    required = params.require(:option_set)
+    name_translations = required[:children_attribs][0][:option_attribs][:name_translations].keys
+    whitelisted = [:name, :geographic, :multi_level, children_attribs: [:id, { option_attribs: [:id, name_translations: name_translations] }]]
+    required.permit(whitelisted)
   end
 end
