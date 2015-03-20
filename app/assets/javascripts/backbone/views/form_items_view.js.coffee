@@ -68,6 +68,7 @@ class ELMO.Views.FormItemsView extends Backbone.View
       method: "delete"
       success: =>
         $form_item.remove()
+        this.update_condition_refs()
         ELMO.app.loading(false)
 
   nested_list: ->
@@ -90,6 +91,8 @@ class ELMO.Views.FormItemsView extends Backbone.View
 
   # Called at the end of a drag. Saves new position.
   drop_happened: (event, ui) ->
+    this.update_condition_refs()
+
     this.show_saving_message(true)
     $.ajax
       url: ELMO.app.url_builder.build('form-items', ui.item.data('id'))
@@ -105,6 +108,22 @@ class ELMO.Views.FormItemsView extends Backbone.View
       parent_id: if parent.length then parent.data('id') else null,
       rank: li.prevAll('li.form-item').length + 1
     }
+
+  # Gets the fully qualified rank of the given item/li.
+  get_full_rank: (li) ->
+    path = li.parents('li.form-item').andSelf()
+    ranks = path.map -> $(this).prevAll('li.form-item').length + 1
+    ranks.get().join('.')
+
+  # Updates any condition cross-references after a drop or delete.
+  update_condition_refs: ->
+    @$(".condition").each (i, cond) =>
+      cond = $(cond)
+      refd = @$("li.form-item[data-id=#{cond.data('ref-id')}]")
+      if refd.length
+        cond.find('span').html(this.get_full_rank(refd))
+      else
+        cond.remove()
 
   show_saving_message: (show) ->
     @$('#saving-message')[if show then 'show' else 'hide']()
