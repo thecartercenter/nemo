@@ -8,18 +8,6 @@ describe FormItem do
     @qing_group = @form.c[1]
   end
 
-  describe "check_ancestry_integrity" do
-    it "should return true" do
-      expect(@qing.check_ancestry_integrity(@qing_group.id)).to be_truthy
-    end
-
-    it "should return false" do
-      @qing_group.parent = @qing
-      @qing_group.save
-      expect(@qing.check_ancestry_integrity(@qing_group.id)).to be_falsy
-    end
-  end
-
   describe "parent validation" do
     it "should raise error if attempting to set questioning as parent of questioning" do
       @qing2 = @form.c[1].c[0]
