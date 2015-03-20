@@ -88,12 +88,15 @@ class ELMO.Views.FormItemsView extends Backbone.View
     # Return
     allowed
 
-  # Called at the end of a drag.
+  # Called at the end of a drag. Saves new position.
   drop_happened: (event, ui) ->
+    this.show_saving_message(true)
     $.ajax
       url: ELMO.app.url_builder.build('form-items', ui.item.data('id'))
       method: 'put'
       data: this.get_parent_id_and_rank(ui.item)
+      success: =>
+        this.show_saving_message(false)
 
   # Gets the parent_id (or null if top-level) and rank of the given li.
   get_parent_id_and_rank: (li) ->
@@ -102,3 +105,6 @@ class ELMO.Views.FormItemsView extends Backbone.View
       parent_id: if parent.length then parent.data('id') else null,
       rank: li.prevAll('li.form-item').length + 1
     }
+
+  show_saving_message: (show) ->
+    @$('#saving-message')[if show then 'show' else 'hide']()

@@ -3,6 +3,12 @@
 // Increased specificity to override default icon styles
 .form-items #form-items-header {
   @include action-links;
+
+  #saving-message {
+    display: none;
+    float: right;
+    color: #aaa;
+  }
 }
 
 .form-items-list {
