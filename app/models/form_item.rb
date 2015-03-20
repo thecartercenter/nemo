@@ -19,6 +19,12 @@ class FormItem < ActiveRecord::Base
 
   validate :parent_must_be_group
 
+  # Checks for gaps in ranks in the db directly.
+  def self.rank_gaps?
+    !find_by_sql("SELECT id FROM form_items fi1 WHERE fi1.rank > 1 AND NOT EXISTS (
+      SELECT id FROM form_items fi2 WHERE fi2.ancestry = fi1.ancestry AND fi2.rank = fi1.rank - 1)").empty?
+  end
+
   # Gets all leaves of the subtree headed by this FormItem, sorted.
   # These should all be Questionings.
   def sorted_leaves(eager_load = nil)
@@ -29,6 +35,17 @@ class FormItem < ActiveRecord::Base
     # This is the only way (apparently) to do eager loading with arrange.
     self.class.arrange_nodes(subtree.all(include: eager_load,
       order: '(case when ancestry is null then 0 else 1 end), ancestry, rank'))
+  end
+
+  # Moves item to new rank and parent.
+  def move(parent_id, rank)
+    transaction do
+      update_attributes(parent: FormItem.find(parent_id), rank: rank)
+      if self.class.rank_gaps?
+        errors.add(:base, 'That updated would have caused gaps in ranks.')
+        raise ActiveRecord::Rollback
+      end
+    end
   end
 
   private
