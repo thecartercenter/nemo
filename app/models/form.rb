@@ -10,10 +10,14 @@ class Form < ActiveRecord::Base
 
   # while a form has many versions, this is a reference to the most up-to-date one
   belongs_to(:current_version, :class_name => "FormVersion")
-  belongs_to :root_group, autosave: true, class_name: "QingGroup", dependent: :destroy, foreign_key: :root_id
+
+  # For some reason dependent: :destroy doesn't work with this assoc.
+  belongs_to :root_group, autosave: true, class_name: "QingGroup", foreign_key: :root_id
 
   before_validation(:normalize_fields)
   before_save(:update_pub_changed_at)
+
+  # For some reason this works but dependent: :destroy doesn't.
   before_destroy { root_group.destroy }
 
   validates(:name, :presence => true, :length => {:maximum => 32})
