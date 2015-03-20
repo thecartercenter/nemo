@@ -14,21 +14,25 @@
     <%# Question type icon %>
     <div class="type"><%= form_item_icon(qing.qtype_name) %></div>
 
+    <%# Filled in by CSS %>
+    <div class="rank"></div>
+
     <div class="base-info">
+      <div class="wrapper"><%# Need this so we can handle wrapping nicely %>
+        <div>
+          [<%= qing.code %>] <%= qing.name %>
 
-      <span class="code">[<%= qing.code %>]</span> <%# Question short code %>
-      <span class="name"><%= qing.name %></span> <%# Question text %>
+          <%# Required question? %>
+          <%= content_tag(:span, '*', class: 'required-sym') if qing.required %>
 
-      <%# Required question? %>
-      <%= content_tag(:span, '*', class: 'required-sym') if qing.required %>
-
-      <%# Tags %>
-      <% if qing.tags.length != 0 %>
-        <% qing.tags.each do |tag| %>
-          <span class="token-input-token-elmo"><%= tag.name %></span>
-        <% end %>
-      <% end %>
-
+          <%# Tags %>
+          <% if qing.tags.length != 0 %>
+            <% qing.tags.each do |tag| %>
+              <span class="token-input-token-elmo"><%= tag.name %></span>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
     </div> <%# End of question base info %>
 
     <div class="actions">

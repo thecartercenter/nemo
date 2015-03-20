@@ -32,22 +32,43 @@
       color: #879CAA;
     }
 
-    .base-info, .actions, .standardized, .type, .condition {
-      display: inline-block;
+    .inner {
+      display: table;
+      width: 100%;
+      padding: 2px 5px 5px 2px;
+
+      > * {
+        display: table-cell;
+      }
+    }
+
+    // We use table within a table so wrapping works nicely.
+    .base-info .wrapper {
+      display: table;
     }
 
     // This is the question rank, e.g 8., or 2.1.1.
-    .base-info::before {
+    .base-info .wrapper::before {
       counter-increment: rank;
       content: counters(rank, '.') '. ';
-      min-width: 20px;
+      width: 20px;
       text-align: right;
-      display: inline-block;
+      display: table-cell;
+      padding: 0 5px;
+    }
+
+    .base-info .wrapper > div {
+      display: table-cell;
+      line-height: 20px;
     }
 
     .actions {
-      float: right;
       text-align: right;
+      white-space: nowrap;
+
+      .condition {
+        display: inline-block;
+      }
     }
 
     .standardized, .type {
@@ -55,15 +76,18 @@
     }
 
     .standardized {
-      width: 18px;
-      margin-left: 2px;
-      vertical-align: middle;
+      width: 20px;
+      padding: 5px 0 0 2px;
     }
 
     .type {
       width: 20px;
       text-align: center;
-      margin: -2px 0 -2px 0;
+      padding-top: 2px;
+
+      i {
+        vertical-align: middle;
+      }
     }
 
     .condition {

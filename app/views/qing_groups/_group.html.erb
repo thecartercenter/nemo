@@ -7,11 +7,13 @@
     <div class="type"><%= form_item_icon('group') %></div>
 
     <div class="base-info">
-      <span class="name"><%= qing_group.group_name %></span>
+      <div class="wrapper"><%# Need this so we can handle wrapping nicely %>
+        <div><%= qing_group.group_name %></div>
+      </div>
     </div>
 
-    <% unless read_only %>
-      <div class="actions">
+    <div class="actions">
+      <% unless read_only %>
         <%= link_to content_tag(:i, '', class: 'fa fa-pencil'), edit_qing_group_path(qing_group),
           class: 'action_link edit' %>
 
@@ -19,8 +21,8 @@
           <%= link_to content_tag(:i, '', class: 'fa fa-trash-o'), '#', class: 'action_link delete',
             data: {message: I18n.t('activerecord.attributes.qing_group.delete', name: qing_group.group_name)} %>
         <% end %>
-      </div>
-    <% end %>
+      <% end %>
+    </div>
   </div> <%# End of form group info %>
 
   <ol class="item-list">
