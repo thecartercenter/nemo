@@ -516,6 +516,7 @@ en:
         wrong_length:
           one: "Please enter at exactly one character."
           other: "Please enter exactly %{count} characters."
+        must_be_group: "Parent must be a group."
 
       models:
         answer:

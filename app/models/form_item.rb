@@ -17,6 +17,8 @@ class FormItem < ActiveRecord::Base
 
   has_ancestry cache_depth: true
 
+  validate :parent_must_be_group
+
   # Gets all leaves of the subtree headed by this FormItem, sorted.
   # These should all be Questionings.
   def sorted_leaves(eager_load = nil)
@@ -50,6 +52,10 @@ class FormItem < ActiveRecord::Base
           _sorted_leaves(children).flatten
         end
       end
+    end
+
+    def parent_must_be_group
+      errors.add(:parent, :must_be_group) unless parent.nil? || parent.is_a?(QingGroup)
     end
 
 end

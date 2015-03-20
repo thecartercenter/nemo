@@ -20,6 +20,21 @@ describe FormItem do
     end
   end
 
+  describe "parent validation" do
+    it "should raise error if attempting to set questioning as parent of questioning" do
+      @qing2 = @form.c[1].c[0]
+      @qing2.parent = @qing
+      @qing2.save
+      expect(@qing2.errors.messages.values.flatten).to include "Parent must be a group."
+    end
+
+    it "should raise error if attempting to set questioning as parent of group" do
+      @qing_group.parent = @qing
+      @qing_group.save
+      expect(@qing_group.errors.messages.values.flatten).to include "Parent must be a group."
+    end
+  end
+
   describe "sort" do
     before(:each) do
       @f = create(:form, questions: ['text', 'text', 'text', 'text'])
