@@ -19,12 +19,13 @@ class QingGroupsController < ApplicationController
 
   def create
     @qing_group.parent = @qing_group.form.root_group
-    create_or_update
+    @qing_group.save!
+    render partial: 'group', locals: {qing_group: @qing_group}
   end
 
   def update
-    @qing_group.assign_attributes(params[:qing_group])
-    create_or_update
+    @qing_group.update_attributes!(params[:qing_group])
+    render partial: 'group_inner', locals: {qing_group: @qing_group}
   end
 
   def destroy
@@ -33,11 +34,6 @@ class QingGroupsController < ApplicationController
   end
 
   private
-    # creates/updates the qing_group
-    def create_or_update
-      @qing_group.save # Currently no validations on this model.
-      render partial: 'group', locals: {qing_group: @qing_group}
-    end
 
     def validate_destroy
       if @qing_group.children.size > 0

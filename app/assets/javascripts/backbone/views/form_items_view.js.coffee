@@ -50,7 +50,7 @@ class ELMO.Views.FormItemsView extends Backbone.View
     $('.form-items-list').append(data)
 
   update_group_on_edit: (data) ->
-    @form_item_being_edited.replaceWith(data)
+    @form_item_being_edited.find('> .inner').replaceWith(data)
 
   delete_item: (event) ->
     event.preventDefault()
