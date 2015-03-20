@@ -26,19 +26,5 @@ describe FormItemsController, type: :request do
         expect(params[:parent_id]).to eq @qing_group.id.to_s
       end
     end
-
-    context 'when invalid ancestry' do
-      before(:each) do
-        @qing.ancestry = @qing_group.id
-        @qing.save
-
-        put(form_item_path(@qing_group, mode: 'm', mission_name: get_mission.compact_name),
-           'rank' => 3, 'parent_id' => @qing.id)
-      end
-
-      it 'should not be successful' do
-        expect(response.status).to eq(422)
-      end
-    end
   end
 end

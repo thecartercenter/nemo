@@ -28,7 +28,7 @@
   <ol class="item-list">
     <% if qing_group.has_children? %>
       <% qing_group.children.each do |item| %>
-        <%= render('form_item', item: item) %>
+        <%= render('forms/form_item', item: item) %>
       <% end %>
     <% end %>
   </ol>
