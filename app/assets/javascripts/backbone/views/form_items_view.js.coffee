@@ -4,9 +4,9 @@ class ELMO.Views.FormItemsView extends Backbone.View
 
   events:
     'click .add-group': 'show_new_group_modal'
-    'click .form-item-group .edit': 'show_edit_group_modal'
-    'click .form-item-group .delete': 'delete_item'
-    'click .form-item-question .delete': 'delete_item'
+    'click .form-item-group > .inner .edit': 'show_edit_group_modal'
+    'click .form-item-group > .inner .delete': 'delete_item'
+    'click .form-item-question > .inner .delete': 'delete_item'
 
   initialize: (params) ->
     this.nested_list()
