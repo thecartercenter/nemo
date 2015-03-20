@@ -1,6 +1,8 @@
 class QuestionsController < ApplicationController
   include StandardImportable
 
+  include Parameters
+
   # this Concern includes routines for building question/ing forms
   include QuestionFormable
 
@@ -52,6 +54,8 @@ class QuestionsController < ApplicationController
   def update
     permitted_params = question_params
 
+    p permitted_params
+
     # Convert tag string from TokenInput to array
     permitted_params[:tag_ids] = permitted_params[:tag_ids].split(',')
 
@@ -90,8 +94,11 @@ class QuestionsController < ApplicationController
     end
 
     def question_params
-      params.require(:question).permit(:code, :qtype_name, :option_set_id, :casted_minimum,
-        :minstrictly, :casted_maximum, :maxstrictly, :name_en, :hint_en,
-        :tag_ids, :key, :access_level, tags_attributes: [:name, :mission_id])
+      required = params.require(:question)
+      whitelisted = translation_params(required, :name, :hint) + [
+        :code, :qtype_name, :option_set_id, :casted_minimum,
+        :minstrictly, :casted_maximum, :maxstrictly, :tag_ids, :key,
+        :access_level, tags_attributes: [:name, :mission_id]]
+      required.permit(whitelisted)
     end
 end
