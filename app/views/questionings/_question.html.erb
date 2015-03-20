@@ -33,11 +33,10 @@
 
     <div class="actions">
 
-      <%# Conditional on another question? %>
+      <%# Condition %>
       <% if qing.has_condition? %>
         <div class="condition">
-          <i class="fa fa-link"></i> <span>#n.n</span>
-          <%# TODO: display question number of linked question %>
+          <i class="fa fa-link"></i> #<%= qing.condition_ref_qing_full_rank %>
         </div>
       <% end %>
 
