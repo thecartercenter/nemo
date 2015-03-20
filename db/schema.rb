@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150311134337) do
+ActiveRecord::Schema.define(:version => 20150320195955) do
 
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
@@ -92,16 +92,16 @@ ActiveRecord::Schema.define(:version => 20150311134337) do
 
   create_table "form_items", :force => true do |t|
     t.integer  "question_id"
-    t.integer  "form_id"
-    t.integer  "rank"
-    t.boolean  "required",                :default => false
-    t.boolean  "hidden",                  :default => false
+    t.integer  "form_id",                                    :null => false
+    t.integer  "rank",                                       :null => false
+    t.boolean  "required",                :default => false, :null => false
+    t.boolean  "hidden",                  :default => false, :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "mission_id"
-    t.string   "type"
+    t.string   "type",                                       :null => false
     t.string   "ancestry"
-    t.integer  "ancestry_depth"
+    t.integer  "ancestry_depth",                             :null => false
     t.string   "group_name_translations"
   end
 
