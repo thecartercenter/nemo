@@ -102,7 +102,7 @@ class QuestioningsController < ApplicationController
 
     def questioning_params
       required = params.require(:questioning)
-      translation_params = translation_params(required[:question_attributes], :name, :hint)
+      translation_params = permit_translations(required[:question_attributes], :name, :hint)
 
       whitelisted = [:form_id, :allow_incomplete, :access_level, :hidden, :required,
         condition_attributes: [:ref_qing_id, :op, :value, :option_ids],
