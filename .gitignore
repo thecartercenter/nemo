@@ -9,7 +9,6 @@ config/railsenv
 config/initializers/local_config.rb
 config/database.yml
 config/thinking_sphinx.yml
-config/secrets.yml
 TODO
 .sass-cache/
 NOTES
