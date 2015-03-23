@@ -1,5 +1,6 @@
 class OptionSetsController < ApplicationController
   include StandardImportable
+  include Parameters
 
   before_filter :arrayify_attribs, :only => [:create, :update]
 
@@ -144,8 +145,13 @@ class OptionSetsController < ApplicationController
 
   def option_set_params
     required = params.require(:option_set)
+
     name_translations = required[:children_attribs][0][:option_attribs][:name_translations].keys
-    whitelisted = [:name, :geographic, :multi_level, children_attribs: [:id, { option_attribs: [:id, name_translations: name_translations] }]]
+    level_names = required[:level_names][0].keys if required[:level_names].present?
+    children_params = [:id, option_attribs: [:id, name_translations: name_translations] ]
+
+    permitted_children = permit_children(required[:children_attribs], :children_attribs, children_params)
+    whitelisted = [:name, :geographic, :multi_level, level_names: level_names, children_attribs: permitted_children ]
     required.permit(whitelisted)
   end
 end
