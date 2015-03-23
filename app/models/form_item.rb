@@ -25,6 +25,11 @@ class FormItem < ActiveRecord::Base
       SELECT id FROM form_items fi2 WHERE fi2.ancestry = fi1.ancestry AND fi2.rank = fi1.rank - 1)").empty?
   end
 
+  def self.duplicate_ranks?
+    !find_by_sql("SELECT ancestry, rank FROM form_items WHERE ancestry is NOT NULL
+      AND ancestry != '' GROUP BY ancestry, rank HAVING COUNT(id) > 1;").empty?
+  end
+
   # Gets all leaves of the subtree headed by this FormItem, sorted.
   # These should all be Questionings.
   def sorted_leaves(eager_load = nil)
@@ -38,11 +43,16 @@ class FormItem < ActiveRecord::Base
   end
 
   # Moves item to new rank and parent.
-  def move(parent_id, rank)
+  def move(new_parent_id, new_rank)
     transaction do
-      update_attributes(parent: FormItem.find(parent_id), rank: rank)
+      update_attributes(parent: FormItem.find(new_parent_id), rank: new_rank)
+
+      # Extra safeguards to make sure ranks are correct. acts_as_list should prevent these.
       if self.class.rank_gaps?
-        errors.add(:base, 'That updated would have caused gaps in ranks.')
+        errors.add(:base, 'That update would have caused gaps in ranks.')
+        raise ActiveRecord::Rollback
+      elsif self.class.duplicate_ranks?
+        errors.add(:base, 'That update would have caused duplicate ranks.')
         raise ActiveRecord::Rollback
       end
     end
