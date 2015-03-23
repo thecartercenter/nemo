@@ -73,15 +73,19 @@ class ELMO.Views.FormItemsView extends Backbone.View
 
   nested_list: ->
     $('.item-list').nestedSortable
-      placeholder: 'placeholder'
-      isAllowed: (item, parent) =>
-        this.drop_target_is_allowed(item, parent)
+      handle: 'div',
+      items: 'li',
+      toleranceElement: '> div',
+      forcePlaceholderSize: true,
+      placeholder: 'placeholder',
+      isAllowed: (placeholder, parent, item) =>
+        this.drop_target_is_allowed(placeholder, parent, item)
       update: (event, ui) =>
         this.drop_happened(event, ui)
 
-  drop_target_is_allowed: (item, parent) ->
-    # Must be null parent or group type.
-    allowed = parent == null || parent.hasClass('form-item-group')
+  drop_target_is_allowed: (placeholder, parent, item) ->
+    # Must be undefined parent or group type.
+    allowed = !parent || parent.hasClass('form-item-group')
 
     # If not allowed, show the placeholder border as red.
     $('.form-items .placeholder').css('border-color', if allowed then '#aaa' else 'red')
