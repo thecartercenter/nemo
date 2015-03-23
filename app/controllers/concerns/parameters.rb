@@ -1,7 +1,7 @@
 module Parameters
   extend ActiveSupport::Concern
 
-  # return dynamic translations paramaters
+  # return dynamic translations parameters
   def translation_params(params, *args)
     args.reduce([]) do |memo, arg|
       regex = /#{arg.to_s + '_' + '[a-z]+'}/
