@@ -60,5 +60,8 @@
 <%= javascript_doc_ready do %>
   Form.hookup_rank_boxes();
   new ELMO.Views.PrintFormView();
-  new ELMO.Views.FormItemsView({form_id: <%= @form.id %>});
+  new ELMO.Views.FormItemsView(<%=json(
+    form_id: @form.id,
+    read_only: read_only
+  )%>);
 <% end %>

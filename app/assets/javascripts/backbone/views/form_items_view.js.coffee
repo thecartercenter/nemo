@@ -9,7 +9,7 @@ class ELMO.Views.FormItemsView extends Backbone.View
     'click .form-item-question > .inner .delete': 'delete_item'
 
   initialize: (params) ->
-    this.nested_list()
+    this.init_nested_list() unless params.read_only
     this.params = params
 
   show_new_group_modal: (event) ->
@@ -71,7 +71,7 @@ class ELMO.Views.FormItemsView extends Backbone.View
         this.update_condition_refs()
         ELMO.app.loading(false)
 
-  nested_list: ->
+  init_nested_list: ->
     $('.item-list').nestedSortable
       handle: 'div',
       items: 'li',
