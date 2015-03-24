@@ -36,7 +36,7 @@ class OptionNode < ActiveRecord::Base
   # Given a set of nodes, preloads child_options for all in constant number of queries.
   def self.preload_child_options(roots)
     ancestries = roots.map{ |r| "'#{r.id}'" }.join(',')
-    nodes_by_root_id = OptionNode.includes(:option).where("ancestry IN (#{ancestries})").group_by{ |n| n.ancestry.to_i }
+    nodes_by_root_id = OptionNode.includes(:option).where("ancestry IN (#{ancestries})").order('rank').group_by{ |n| n.ancestry.to_i }
     roots.each{ |r| r.child_options = nodes_by_root_id[r.id].map(&:option) }
   end
 
