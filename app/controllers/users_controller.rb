@@ -162,7 +162,9 @@ class UsersController < ApplicationController
     end
 
     def user_params
-      params.require(:user).permit(:name, :login, :email, :phone,
+      return if params[:user].nil?
+
+      params.require(:user).permit(:name, :login, :email, :phone, :admin,
         :phone2, :pref_lang, :notes, :password, :password_confirmation, :reset_password_method,
         assignments_attributes: [:role, :mission_id, :_destroy, :id])
     end
