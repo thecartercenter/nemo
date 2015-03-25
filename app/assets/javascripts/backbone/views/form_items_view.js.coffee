@@ -87,6 +87,11 @@ class ELMO.Views.FormItemsView extends Backbone.View
     # Must be undefined parent or group type.
     allowed = !parent || parent.hasClass('form-item-group')
 
+    # If group, must be depth 1, else must be depth 1 or 2.
+    if allowed
+      depth = this.get_depth(placeholder)
+      allowed = if item.hasClass('form-item-group') then depth == 1 else depth <= 2
+
     # If not allowed, show the placeholder border as red.
     $('.form-items .placeholder').css('border-color', if allowed then '#aaa' else 'red')
 
@@ -118,6 +123,9 @@ class ELMO.Views.FormItemsView extends Backbone.View
     path = li.parents('li.form-item').andSelf()
     ranks = path.map -> $(this).prevAll('li.form-item').length + 1
     ranks.get().join('.')
+
+  get_depth: (li) ->
+    li.parents('li.form-item').length + 1
 
   # Updates any condition cross-references after a drop or delete.
   update_condition_refs: ->
