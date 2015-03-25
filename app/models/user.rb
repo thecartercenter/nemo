@@ -25,6 +25,7 @@ class User < ActiveRecord::Base
     c.perishable_token_valid_for = 1.week
     c.logged_in_timeout(SESSION_TIMEOUT)
     c.validates_format_of_login_field_options = {:with => /[\a-zA-Z0-9\.]+/}
+    c.merge_validates_length_of_password_field_options minimum: 8
 
     # email is not mandatory, but must be valid if given
     c.merge_validates_format_of_email_field_options(:allow_blank => true)
@@ -57,8 +58,8 @@ class User < ActiveRecord::Base
   # we want all of these on one page for now
   self.per_page = 1000000
 
-  def self.random_password(size = 6)
-    charset = %w{2 3 4 6 7 9 a c d e f g h j k m n p q r t v w x y z}
+  def self.random_password(size = 8)
+    charset = %w{2 3 4 6 7 9 a c d e f g h j k m n p q r t v w x y z A C D E F G H J K M N P Q R T V W X Y Z}
     (0...size).map{charset.to_a[rand(charset.size)]}.join
   end
 
