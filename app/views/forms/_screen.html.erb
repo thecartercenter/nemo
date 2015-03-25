@@ -20,39 +20,32 @@
 
   <%= published_warning(@form) if @form.published? && form_mode == :edit %>
 
-  <%= elmo_form_for(@form, :style => @form.has_questions? ? 'with_questions' : 'no_questions') do |f| %>
+  <%= elmo_form_for(@form) do |f| %>
 
-    <%# We wrap the top part of the form in this block b/c the whole form is 100% width due to index table below %>
-    <div class="elmo_form">
+    <%= f.field(:name, :required => true, :read_only => cannot?(:rename, @form)) %>
 
-      <%= f.field(:name, :required => true, :read_only => cannot?(:rename, @form)) %>
-
-      <% unless admin_mode? %>
-        <%= f.field(:smsable, :type => :check_box)  %>
-        <%= f.field(:allow_incomplete, :type => :check_box, :read_only => @form.published?) unless admin_mode? %>
-        <%= f.field(:published, :type => :check_box, :read_only => true) unless @form.new_record? %>
-        <%= f.field(:access_level, :partial => 'form_access_level') %>
-        <%= f.field(:version, :content => @form.version_with_code) unless @form.new_record? %>
-      <% end %>
-
-    </div>
-
-    <% if form_mode == :edit %>
-      <input class="btn btn-primary" type="submit" value="Save" />
+    <% unless admin_mode? %>
+      <%= f.field(:smsable, :type => :check_box)  %>
+      <%= f.field(:allow_incomplete, :type => :check_box, :read_only => @form.published?) unless admin_mode? %>
+      <%= f.field(:published, :type => :check_box, :read_only => true) unless @form.new_record? %>
+      <%= f.field(:access_level, :partial => 'form_access_level') %>
+      <%= f.field(:version, :content => @form.version_with_code) unless @form.new_record? %>
     <% end %>
 
-    <%= render('form_items_list') %>
-
-    <% show_sp_btn = !@form.new_record? && !@form.published? && can?(:publish, @form) %>
-    <div class="submit-buttons <%=  'publish' unless !show_sp_btn %>">
-      <% if show_sp_btn %>
-        <%= f.submit(I18n.t('form.save_and_publish'), :name => 'save_and_publish', :class => 'btn btn-default') %>
-      <% end %>
-
-      <%= f.submit(:class => "btn btn-primary") %>
-    </div>
+    <%# Submit/publish buttons %>
+    <% unless read_only %>
+      <% show_sp_btn = !@form.new_record? && !@form.published? && can?(:publish, @form) %>
+      <div class="submit-buttons <%= 'publish' if show_sp_btn %>">
+        <% if show_sp_btn %>
+          <%= f.submit(I18n.t('form.save_and_publish'), :name => 'save_and_publish', :class => 'btn btn-default') %>
+        <% end %>
+        <%= f.submit(:class => "btn btn-primary") %>
+      </div>
+    <% end %>
 
   <% end %>
+
+  <%= render('form_items_list') %>
 </div>
 
 <%= render('print_format_tips_modal') %>
