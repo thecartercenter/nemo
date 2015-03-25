@@ -136,6 +136,8 @@ module ApplicationHelper
     return @title unless @title.nil?
 
     @title_args ||= {}
+    p options
+    p @title_args
 
     # if action specified outright, use that
     action = if @title_action
@@ -158,14 +160,17 @@ module ApplicationHelper
     # Add object type icon where appropriate
     ttl += icon_tag(model_name) unless options[:text_only]
 
+    ttl = ttl.html_safe
+
     # add text
     if options[:name_only]
       ttl += @title_args[:name]
     else
       ttl += t(action, {:scope => "page_titles.#{controller_name}", :default => [:all, ""]}.merge(@title_args || {}))
+
     end
 
-    ttl.html_safe
+    ttl
   end
 
   def h1_title
