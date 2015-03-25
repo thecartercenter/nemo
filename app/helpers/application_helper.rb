@@ -48,7 +48,7 @@ module ApplicationHelper
       :objects => objects,
       :options => options,
       :paginated => objects.respond_to?(:total_entries),
-      :links => links.flatten.join.html_safe,
+      :links => links.flatten.reduce(:<<),
       :fields => send("#{klass.model_name.route_key}_index_fields"),
       :batch_ops => batch_ops
     )
@@ -226,6 +226,6 @@ module ApplicationHelper
         end
       end
     end
-    l.join.html_safe
+    l.reduce(:<<)
   end
 end

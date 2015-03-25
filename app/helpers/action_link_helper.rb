@@ -36,7 +36,7 @@ module ActionLinkHelper
             data: {confirm: (action == :destroy) ? delete_warning(obj) : nil},
             class: "#{action}-link")
         end
-      end.compact.join(' ').html_safe
+      end.compact.reduce(:<<)
       (main_links + (block_given? ? capture(&block) : '')).html_safe
     end
   end
@@ -71,7 +71,7 @@ module ActionLinkHelper
         action_link(action, dynamic_path(obj), :method => :delete, data: {confirm: warning}, :title => t("common.delete"))
       end
 
-    end.join('').html_safe
+    end.reduce(:<<)
   end
 
   def delete_warning(obj, options = {})

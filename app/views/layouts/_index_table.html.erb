@@ -53,7 +53,7 @@
             <% end %>
             <% fields.each do |f| %>
               <td class="<%= "#{(f.is_a?(Hash) ? f[:css_class] : f).gsub(/[^\w\d]/, "")}_col" %>">
-                <div><%== self.send("format_#{klass.model_name.route_key}_field", o, f) %></div>
+                <div><%= self.send("format_#{klass.model_name.route_key}_field", o, f) %></div>
               </td>
             <% end %>
 

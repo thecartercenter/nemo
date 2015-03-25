@@ -65,7 +65,7 @@ module FormsHelper
       links += loading_indicator(:id => form.id, :floating => true)
 
       # return the links
-      links.html_safe
+      links
 
     else form.send(field)
     end
@@ -84,7 +84,7 @@ module FormsHelper
         else char
         end
       end
-    end.join.html_safe
+    end.reduce(:<<)
   end
 
   # returns a SPC glyph type thing for use in the sms guide
