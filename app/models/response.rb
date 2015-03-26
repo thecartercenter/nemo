@@ -87,7 +87,7 @@ class Response < ActiveRecord::Base
       Search::Qualifier.new(:name => "text", :col => "responses.id", :type => :indexed, :default => true),
 
       # support {foobar}:stuff style searches, where foobar is a question code
-      Search::Qualifier.new(:name => "text_by_code", :pattern => /^\{(#{Question::CODE_FORMAT})\}$/, :col => "responses.id",
+      Search::Qualifier.new(:name => "text_by_code", :pattern => /\A\{(#{Question::CODE_FORMAT})\}\z/, :col => "responses.id",
         :type => :indexed, :validator => ->(md){ Question.exists?(:mission_id => scope[:mission].id, :code => md[1]) })
     ]
   end

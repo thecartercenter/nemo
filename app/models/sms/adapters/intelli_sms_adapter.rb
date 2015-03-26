@@ -50,7 +50,7 @@ class Sms::Adapters::IntelliSmsAdapter < Sms::Adapters::Adapter
   # Check_balance returns the balance string. Raises error if balance check failed.
   def check_balance
     response = send_request(build_uri(:balance))
-    response.match(/^BALANCE:(\d+)\s*$/) ? $1.to_i : parse_and_raise_any_errors(response)
+    response.match(/\ABALANCE:(\d+)\s*\z/) ? $1.to_i : parse_and_raise_any_errors(response)
   end
 
   # How replies should be sent.

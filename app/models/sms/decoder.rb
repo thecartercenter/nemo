@@ -38,7 +38,7 @@ class Sms::Decoder
     # decode each token after the first
     @tokens[1..-1].each do |tok|
       # if this looks like the start of an answer, treat it as such
-      if tok =~ /^(\d+)\.(.*)$/
+      if tok =~ /\A(\d+)\.(.*)\z/
         # save the rank and values to temporary variables for a moment
         r, v = $1.to_i, $2
 
@@ -72,7 +72,7 @@ class Sms::Decoder
       code = @tokens[0] ? @tokens[0].downcase : ""
 
       # check that the form code looks right
-      raise_decoding_error("invalid_form_code", :form_code => code) unless code.match(/^[a-z]{#{FormVersion::CODE_LENGTH}}$/)
+      raise_decoding_error("invalid_form_code", :form_code => code) unless code.match(/\A[a-z]{#{FormVersion::CODE_LENGTH}}\z/)
 
       # attempt to find form version by the given code
       v = FormVersion.find_by_code(code)
@@ -125,14 +125,14 @@ class Sms::Decoder
       case @qing.question.qtype.name
       when "integer"
         # for integer question, make sure the value looks like a number
-        raise_answer_error("answer_not_integer") unless @value =~ /^\d+$/
+        raise_answer_error("answer_not_integer") unless @value =~ /\A\d+\z/
 
         # add to response
         build_answer(:value => @value)
 
       when "decimal"
         # for integer question, make sure the value looks like a number
-        raise_answer_error("answer_not_decimal") unless @value =~ /^[\d]+([\.,][\d]+)?$/
+        raise_answer_error("answer_not_decimal") unless @value =~ /\A[\d]+([\.,][\d]+)?\z/
 
         # add to response
         build_answer(:value => @value)
@@ -142,7 +142,7 @@ class Sms::Decoder
         @value.downcase!
 
         # make sure the value is a letter(s)
-        raise_answer_error("answer_not_valid_option") unless @value =~ /^[a-z]+$/
+        raise_answer_error("answer_not_valid_option") unless @value =~ /\A[a-z]+\z/
 
         # convert to number (1-based)
         idx = letters_to_index(@value)
@@ -235,7 +235,7 @@ class Sms::Decoder
         # try to parse datetime
         begin
           # if we have a string of 12 straight digits, leave it alone
-          if @value =~ /^\d{12}$/
+          if @value =~ /\A\d{12}\z/
             to_parse = @value
           else
             # otherwise add a colon before the last two digits of the time (if needed) to help with parsing

@@ -48,6 +48,8 @@ class User < ActiveRecord::Base
   validate(:must_have_assignments_if_not_admin)
   validate(:phone_should_be_unique)
 
+  validates_format_of :password, with: /(?!\w*[01bilouBILOU])(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])/, if: :require_password?, message: :invalid_password
+
   scope(:by_name, -> { order("users.name") })
   scope(:assigned_to, ->(m) { where("users.id IN (SELECT user_id FROM assignments WHERE mission_id = ?)", m.id) })
   scope(:with_assoc, -> { includes(:missions, {:assignments => :mission}) })
@@ -59,8 +61,17 @@ class User < ActiveRecord::Base
   self.per_page = 1000000
 
   def self.random_password(size = 8)
-    charset = %w{2 3 4 6 7 9 a c d e f g h j k m n p q r t v w x y z A C D E F G H J K M N P Q R T V W X Y Z}
-    (0...size).map{charset.to_a[rand(charset.size)]}.join
+    size = 8 if size < 8
+    num_size = size.even? ? 2 : 3
+    alpha_size = (size - num_size) / 2
+    num = %w{2 3 4 6 7 9}
+    alpha = %w{a c d e f g h j k m n p q r t v w x y z}
+    (random(num, num_size) + random(alpha, alpha_size) + random(alpha.map(&:upcase), alpha_size)).shuffle.join
+  end
+
+  def self.random(chars, n)
+    return "" if n <= 0
+    (chars * (n / chars.size + 1)).shuffle[0..n-1]
   end
 
   def self.find_by_credentials(login, password)
@@ -70,7 +81,7 @@ class User < ActiveRecord::Base
 
   def self.suggest_login(name)
     # if it looks like a person's name, suggest f. initial + l. name
-    if m = name.match(/^([a-z][a-z']+) ([a-z'\- ]+)$/i)
+    if m = name.match(/\A([a-z][a-z']+) ([a-z'\- ]+)\z/i)
       l = $1[0,1] + $2.gsub(/[^a-z]/i, "")
     # otherwise just use the whole thing and strip out weird chars
     else

@@ -480,6 +480,7 @@ fr:
         wrong_length:
           one: "Il faut entrer exactement un caractère."
           other: "Il faut entrer exactement % {count} caractères."
+        invalid_password: "Mot de passe doit comporter au moins un chiffre, une lettre minuscule et une lettre majuscule."
       models:
         answer:
           required: "Entrez un valeur."
