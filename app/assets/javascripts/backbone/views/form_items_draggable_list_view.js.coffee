@@ -72,18 +72,22 @@ class ELMO.Views.FormItemsDraggableListView extends Backbone.View
     depth = this.get_depth(placeholder)
     depth == 1 || item.hasClass('form-item-question') && depth <= 2
 
-  # Checks if the given position (indicated by placeholder) for the given item would invalidate any conditions.
+  # Checks if the given position (indicated by placeholder) for the given item, or any of its children,
+  # would invalidate any conditions.
   # Returns false if invalid.
   check_condition_order: (placeholder, item) ->
-    # If item refers to a question, must be after it.
-    if (cond = item.find('.condition')).length > 0
-      refd = @$("li.form-item[data-id=#{cond.data('ref-id')}]")
+    # If item or any children refer to questions, the placeholder must be after all the referred questions.
+    for c in item.find('.condition')
+      refd = @$("li.form-item[data-id=#{$(c).data('ref-id')}]")
       return false unless this.compare_ranks(placeholder, refd) == 1
 
-    # If item is referred to by a question, must be before it.
-    if (cond = @$(".condition[data-ref-id=#{item.data('id')}]")).length > 0
-      referrer = cond.closest('li.form-item')
-      return false unless this.compare_ranks(placeholder, referrer) == -1
+    # If item, or any children, are referred to by one or more questions,
+    # the placeholder must be before all the referring questions.
+    child_ids = item.find('.form-item').andSelf().map -> $(this).data('id')
+    for id in child_ids.get()
+      for condition in @$(".condition[data-ref-id=#{id}]") # Loop over all matching conditions
+        referrer = $(condition.closest('li.form-item'))
+        return false unless this.compare_ranks(placeholder, referrer) == -1
 
     true
 
