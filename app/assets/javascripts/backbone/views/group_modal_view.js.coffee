@@ -1,27 +1,31 @@
 class ELMO.Views.GroupModalView extends Backbone.View
 
-  el: 'body'
-
   events:
     'click .save': 'save'
+    'keypress': 'keypress'
+    'shown.bs.modal': 'focus_first_box'
 
   initialize: (options) ->
     @list_view = options.list_view
     @mode = options.mode
 
-    # TODO: Remove once edit_group link uses url_builder
     @edit_link = options.edit_link
 
-    if $('.group-modal').length
-      $('.group-modal').replaceWith(options.html)
+    if $('#group-modal').length
+      $('#group-modal').replaceWith(options.html)
     else
       $('body').append(options.html)
+
+    this.setElement($('#group-modal')[0])
 
     this.show()
 
   serialize: ->
-    this.form_data = $('.qing_group_form').serialize()
+    this.form_data = @$('.qing_group_form').serialize()
     return this.form_data
+
+  keypress: (e) ->
+    this.save() if e.keyCode == 13 # Enter
 
   save: ->
     ELMO.app.loading(true)
@@ -34,10 +38,13 @@ class ELMO.Views.GroupModalView extends Backbone.View
     this.hide()
 
   show: ->
-    $('.group-modal').modal('show')
+    @$el.modal('show')
+
+  focus_first_box: ->
+    @$('input[type=text]')[0].focus();
 
   hide: ->
-    $('.group-modal').modal('hide')
+    @$el.modal('hide')
 
   new_group: ->
     this.serialize()
@@ -55,7 +62,7 @@ class ELMO.Views.GroupModalView extends Backbone.View
     this.serialize()
 
     $.ajax({
-      url: @edit_link, # TODO: Replace URL with url_builder link
+      url: @edit_link,
       method: "put",
       data: this.form_data,
       success: (data) =>
