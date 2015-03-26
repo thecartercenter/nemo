@@ -47,8 +47,7 @@ class User < ActiveRecord::Base
   validate(:no_duplicate_assignments)
   validate(:must_have_assignments_if_not_admin)
   validate(:phone_should_be_unique)
-
-  validates_format_of :password, with: /(?!\w*[01bilouBILOU])(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])/, if: :require_password?, message: :invalid_password
+  validates :password, format: { with: /(?!\w*[01bilouBILOU])(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])/, if: :require_password?, message: :invalid_password }
 
   scope(:by_name, -> { order("users.name") })
   scope(:assigned_to, ->(m) { where("users.id IN (SELECT user_id FROM assignments WHERE mission_id = ?)", m.id) })

@@ -517,7 +517,7 @@ en:
           one: "Please enter at exactly one character."
           other: "Please enter exactly %{count} characters."
         must_be_group: "Parent must be a group."
-        invalid_password: "Password must include at least one number, one lowercase letter, one capital letter."
+        invalid_password: "Password must include at least one number, one lowercase letter, and one capital letter."
 
       models:
         answer:
