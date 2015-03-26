@@ -55,6 +55,6 @@
   new ELMO.Views.PrintFormView();
   new ELMO.Views.FormItemsView(<%=json(
     form_id: @form.id,
-    read_only: read_only
+    can_reorder: !read_only && can?(:reorder_questions, @form)
   )%>);
 <% end %>

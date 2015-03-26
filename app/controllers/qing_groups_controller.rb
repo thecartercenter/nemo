@@ -8,7 +8,10 @@ class QingGroupsController < ApplicationController
   before_filter :validate_destroy, only: [:destroy]
 
   def new
-    @qing_group = QingGroup.new(form_id: params[:form_id])
+    @form = Form.find(params[:form_id])
+    # Adding group requires same permissions as removing questions.
+    authorize!(:add_questions, @form)
+    @qing_group = QingGroup.new(form: @form)
     render(partial: 'modal')
   end
 
@@ -18,6 +21,8 @@ class QingGroupsController < ApplicationController
   end
 
   def create
+    # Adding group requires same permissions as removing questions.
+    authorize!(:add_questions, @qing_group.form)
     @qing_group.parent = @qing_group.form.root_group
     @qing_group.save!
     render partial: 'group', locals: {qing_group: @qing_group}
@@ -29,6 +34,8 @@ class QingGroupsController < ApplicationController
   end
 
   def destroy
+    # Removing group requires same permissions as removing questions.
+    authorize!(:remove_questions, @qing_group.form)
     @qing_group.destroy
     render nothing: true, status: 204
   end

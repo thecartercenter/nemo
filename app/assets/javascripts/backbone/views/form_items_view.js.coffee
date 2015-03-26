@@ -10,7 +10,7 @@ class ELMO.Views.FormItemsView extends Backbone.View
     'click .form-item-question > .inner .delete': 'delete_item'
 
   initialize: (params) ->
-    new ELMO.Views.FormItemsDraggableListView({parent_view: this}) unless params.read_only
+    this.draggable = new ELMO.Views.FormItemsDraggableListView({parent_view: this}) if params.can_reorder
     this.params = params
 
   show_new_group_modal: (event) ->
@@ -68,7 +68,7 @@ class ELMO.Views.FormItemsView extends Backbone.View
       method: "delete"
       success: =>
         $form_item.remove()
-        this.update_condition_refs()
+        this.draggable.update_condition_refs()
         ELMO.app.loading(false)
 
   update_item_position: (id, parent_and_rank) ->
