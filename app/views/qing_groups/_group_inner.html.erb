@@ -16,10 +16,8 @@
       <%= link_to content_tag(:i, '', class: 'fa fa-pencil'), edit_qing_group_path(qing_group),
         class: 'action_link edit' %>
 
-      <% unless qing_group.has_children? %>
-        <%= link_to content_tag(:i, '', class: 'fa fa-trash-o'), '#', class: 'action_link delete',
-          data: {message: I18n.t('activerecord.attributes.qing_group.delete', name: qing_group.group_name)} %>
-      <% end %>
+      <%= link_to content_tag(:i, '', class: 'fa fa-trash-o'), '#', class: 'action_link delete',
+        data: {message: I18n.t('activerecord.attributes.qing_group.delete', name: qing_group.group_name)} %>
     <% end %>
   </div>
 </div> <%# End of form group info %>

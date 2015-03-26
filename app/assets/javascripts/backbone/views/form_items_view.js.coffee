@@ -12,6 +12,7 @@ class ELMO.Views.FormItemsView extends Backbone.View
   initialize: (params) ->
     this.draggable = new ELMO.Views.FormItemsDraggableListView({parent_view: this}) if params.can_reorder
     this.params = params
+    this.update_action_icons()
 
   show_new_group_modal: (event) ->
     event.preventDefault()
@@ -79,6 +80,12 @@ class ELMO.Views.FormItemsView extends Backbone.View
       data: parent_and_rank
       success: =>
         this.show_saving_message(false)
+
+  # Checks all groups and hides/shows delete icons when appropriate.
+  update_action_icons: ->
+    for group in @$('.form-item-group')
+      link = $(group).find('> .inner .action_link.delete')
+      link[if $(group).find('.form-item').length > 0 then 'hide' else 'show']()
 
   show_saving_message: (show) ->
     @$('#saving-message')[if show then 'show' else 'hide']()
