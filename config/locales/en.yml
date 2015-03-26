@@ -959,6 +959,10 @@ en:
     clone_error: "There was a problem cloning the form (%{msg})."
     clone_success: "Form '%{form_name}' cloned successfully."
     no_mission: "No Misison"
+    invalid_drop_location:
+      parent_must_be_group: "The parent must be a group."
+      max_depth: "Groups can't be children of other groups."
+      invalid_condition: "This position would invalidate a condition."
     print_form: "Print Form"
     print_format_tips:
       title: "Print Format Tips"

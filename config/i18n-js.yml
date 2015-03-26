@@ -26,6 +26,7 @@ translations:
       "*.common.*",
       "*.condition.*",
       "*.dashboard.*",
+      "*.form.invalid_drop_location.*",
       "*.form.unsaved_rank_notice",
       "*.location_picker.*",
       "*.layout.*",

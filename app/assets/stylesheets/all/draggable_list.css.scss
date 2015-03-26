@@ -64,5 +64,15 @@ $list-item-background: #eee;
 
   .placeholder {
     border: 1px dashed #aaa;
+
+    &.mjs-nestedSortable-error {
+      border: 1px dashed red;
+
+      // Error message
+      div {
+        margin: 5px 0 0 5px;
+        color: red;
+      }
+    }
   }
 }
