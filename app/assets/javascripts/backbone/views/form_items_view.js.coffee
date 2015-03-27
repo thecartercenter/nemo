@@ -48,7 +48,8 @@ class ELMO.Views.FormItemsView extends Backbone.View
         ELMO.app.loading(false)
 
   add_new_group: (data) ->
-    $('.form-items-list').append(data)
+    @$('.form-items-list').append(data)
+    @$('.no-questions-notice').hide()
 
   update_group_on_edit: (data) ->
     @form_item_being_edited.find('> .inner').replaceWith(data)
