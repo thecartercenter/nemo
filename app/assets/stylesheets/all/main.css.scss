@@ -1,3 +1,5 @@
+@import 'mixins';
+
 /* variables */
 $theme_red: #d02000;
 $theme_blue: #0065d1;
@@ -266,20 +268,5 @@ form#new_sms_test .loading_indicator { vertical-align: bottom; margin-bottom: 6p
 
 /* action links */
 #content div.top-action-links {
-  margin-bottom: 10px;
-
-  a {
-    display: inline-block;
-    margin: 0 10px 5px 0;
-
-    &:hover {
-      color: $orange;
-    }
-
-    i {
-      color: $orange;
-      font-size: 110%;
-      margin-right: 3px;
-    }
-  }
+  @include action-links;
 }

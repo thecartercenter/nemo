@@ -17,7 +17,7 @@
 //= require jquery_ujs
 //= require jquery-ui-1.10.3.custom
 //= require jquery.tokeninput
-//= require jquery.mjs.nestedSortable-1.3.5
+//= require jquery.mjs.nestedSortable-2.0
 //= require jquery.spin
 //= require core_ext/jquery_ext
 //= require common

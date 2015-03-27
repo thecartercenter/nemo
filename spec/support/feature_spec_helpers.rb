@@ -1,9 +1,7 @@
 module FeatureSpecHelpers
   def login(user)
-    visit login_path(locale: 'en')
-    fill_in 'Username', with: user.login
-    fill_in 'Password', with: 'password'
-    click_button 'Login'
+    visit "/test-login?user_id=#{user.id}"
+    expect(page).to have_content("Profile:")
   end
 
   def fill_in_ckeditor(locator, opts)

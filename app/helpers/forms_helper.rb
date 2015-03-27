@@ -144,4 +144,19 @@ module FormsHelper
   def allow_incomplete?
     @form.allow_incomplete? && @style != 'commcare'
   end
+
+  # Question types not listed here use PNGs instead of FA icons.
+  FORM_ITEM_ICON_CLASSES = {
+    'long_text' => 'fa-align-left',
+    'date' => 'fa-calendar',
+    'time' => 'fa-clock-o',
+    'location' => 'fa-map-marker',
+    'group' => 'fa-folder-open-o',
+  }
+
+  def form_item_icon(type)
+    cls = FORM_ITEM_ICON_CLASSES[type]
+    # Use font awesome icon if defined, else use custom icon from assets dir.
+    cls ? content_tag(:i, "", class: "fa #{cls} type-icon") : image_tag("form_items/#{type}.png", class: 'type-icon')
+  end
 end

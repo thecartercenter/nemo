@@ -14,7 +14,7 @@ module Concerns::ApplicationController::LoginLogistics
 
   # Tasks that should be run after the user successfully logs in OR successfully resets their password
   # Redirects to the appropriate place.
-  def post_login_housekeeping
+  def post_login_housekeeping(options = {})
     # Get the session
     @user_session = UserSession.find
 
@@ -24,6 +24,8 @@ module Concerns::ApplicationController::LoginLogistics
     # Set the locale based on the user's pref_lang (if it's supported)
     pref_lang = @user_session.user.pref_lang.to_sym
     I18n.locale = configatron.full_locales.include?(pref_lang) ? pref_lang : I18n.default_locale
+
+    return if options[:dont_redirect]
 
     # Redirect admin's first login to password reset.
     if @user_session.user.admin? && @user_session.user.login_count <= 1

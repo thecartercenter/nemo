@@ -3,14 +3,13 @@ class FormItemsController < ApplicationController
   load_and_authorize_resource
 
   def update
-    if params[:parent_id].blank? or !@form_item.check_ancestry_integrity(params[:parent_id])
-      return render json: { errors: ['ancestry_check_failed'] }, status: 422
-    end
+    # Blank parent_id means parent is root
+    params[:parent_id] = @form_item.form.root_id if params[:parent_id].blank?
 
-    @form_item.parent = FormItem.find(params[:parent_id])
-    @form_item.rank = params[:rank]
+    # Moves to new position and attempts to save.
+    @form_item.move(params[:parent_id], params[:rank])
 
-    if @form_item.save
+    if @form_item.valid?
       render nothing: true, status: 204
     else
       render @form_item.errors, status: 422

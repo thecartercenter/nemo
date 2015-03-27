@@ -1,0 +1,108 @@
+@import 'mixins';
+
+// Increased specificity to override default icon styles
+.form-items #form-items-header {
+  @include action-links;
+
+  #saving-message {
+    display: none;
+    float: right;
+    color: #aaa;
+  }
+}
+
+.form-items-list {
+  padding-left: 0;
+  counter-reset: item;
+
+  &, ol {
+    counter-reset: rank;
+  }
+
+  li {
+    list-style-position: inside;
+    border: none;
+    display: block;
+    background: none;
+  }
+
+  .form-item {
+
+    .type, .actions {
+      color: #879CAA;
+    }
+
+    .inner {
+      display: table;
+      width: 100%;
+      padding: 2px 5px 5px 2px;
+
+      > * {
+        display: table-cell;
+      }
+    }
+
+    // We use table within a table so wrapping works nicely.
+    .base-info .wrapper {
+      display: table;
+    }
+
+    // This is the question rank, e.g 8., or 2.1.1.
+    .base-info .wrapper::before {
+      counter-increment: rank;
+      content: counters(rank, '.') '. ';
+      width: 20px;
+      text-align: right;
+      display: table-cell;
+      padding: 0 5px;
+    }
+
+    .base-info .wrapper > div {
+      display: table-cell;
+      line-height: 20px;
+    }
+
+    .actions {
+      text-align: right;
+      white-space: nowrap;
+
+      .condition {
+        display: inline-block;
+      }
+    }
+
+    .standardized, .type {
+      font-size: 16px;
+    }
+
+    .standardized {
+      width: 20px;
+      padding: 5px 0 0 2px;
+    }
+
+    .type {
+      width: 20px;
+      text-align: center;
+      padding-top: 2px;
+
+      i {
+        vertical-align: middle;
+      }
+    }
+
+    .condition {
+      color: #666;
+      margin-right: 10px;
+    }
+
+    .required-sym {
+      color: #fd8452;
+    }
+
+    .token-input-token-elmo {
+      float: none;
+    }
+  }
+}
+
+

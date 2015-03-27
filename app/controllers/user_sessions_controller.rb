@@ -32,4 +32,15 @@ class UserSessionsController < ApplicationController
   # shows a simple 'you are logged out' page
   def logged_out
   end
+
+  # Special route, test only, used by feature specs to simulate user login.
+  def test_login
+    return render text: 'TEST MODE ONLY', status: 403 unless Rails.env.test?
+    @user = User.find(params[:user_id])
+    UserSession.create(@user)
+    post_login_housekeeping(dont_redirect: true)
+
+    # We redirect to user profile instead of dashboard because dashboard is slower to load and is not needed.
+    redirect_to user_path(@user, locale: 'en', mode: 'm', mission_name: @user.best_mission.compact_name)
+  end
 end

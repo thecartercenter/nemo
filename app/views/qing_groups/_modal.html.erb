@@ -1,1 +1,36 @@
-This is where the modal HTML should go.
+<div id="group-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close group-cancel" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">
+          <% if @qing_group.group_name %>
+            <%= I18n.t("activerecord.attributes.qing_group.edit") %>
+          <% elsif @qing_group.new_record? %>
+            <%= I18n.t("activerecord.attributes.qing_group.add") %>
+          <% end %>
+        </h4>
+      </div>
+
+      <div class="modal-body group-form">
+        <%= elmo_form_for(@qing_group) do |f| %>
+          <%= f.field(:form_id, type: :hidden) %>
+          <% configatron.preferred_locales.each do |locale| %>
+            <% lang_suffix = " (#{language_name(locale)})" %>
+            <%= f.field(:"group_name_#{locale}",
+                label: QingGroup.human_attribute_name("group_name") + lang_suffix) %>
+          <% end %>
+        <% end %>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default cancel" data-dismiss="modal">
+          <%= I18n.t("common.cancel") %>
+        </button>
+        <button type="button" class="btn btn-primary save">
+          <%= I18n.t("common.save") %>
+        </button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

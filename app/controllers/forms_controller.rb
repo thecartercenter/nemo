@@ -187,7 +187,6 @@ class FormsController < ApplicationController
     setup_qing_form_support_objs
   end
 
-
   # adds questions selected in the big list to the form
   def add_questions
     # load the question objects

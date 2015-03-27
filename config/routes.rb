@@ -5,6 +5,9 @@ ELMO::Application.routes.draw do
   # proxies for ajax same-origin
   match 'proxies/:action', :controller => 'proxies'
 
+  # Special shortcut for simulating login in feature specs.
+  get 'test-login' => 'user_sessions#test_login' if Rails.env.test?
+
   #####################################
   # Basic routes (neither mission nor admin mode)
   scope ':locale', :locale => /[a-z]{2}/, :defaults => {:mode => nil, :mission_name => nil} do
@@ -86,7 +89,7 @@ ELMO::Application.routes.draw do
         get 'condition_form', :path => 'condition-form'
       end
     end
-    resources :qing_groups, :path => 'qing-groups', only: [:edit, :create, :update, :destroy]
+    resources :qing_groups, :path => 'qing-groups', except: :index
     resources :settings
     resources :user_batches, :path => 'user-batches'
     resources :groups
