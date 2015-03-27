@@ -10,12 +10,13 @@ feature 'locale change', js: true do
   end
 
   scenario 'should work' do
-    expect(page).to have_selector('h2', text: 'LATEST RESPONSES')
+    # We land on the user profile page after login.
+    expect(page).to have_selector('h1', text: /^Profile:/)
 
     # Change language on main page.
     click_link('Change Language')
     select('Français', from: 'locale')
-    expect(page).to have_selector('h2', text: 'DERNIÈRES RÉPONSES')
+    expect(page).to have_selector('h1', text: /^Profil:/)
 
     # Test page with query string.
     click_link('Soumettre')
