@@ -13,8 +13,9 @@ class ItemsetsFormAttachment
 
   # The relative path, including filename, to the attachment.
   def path
+    return @path if @path
     stamp = (form.published? ? form.pub_changed_at : Time.now).utc.strftime('%Y%m%d_%H%M%S')
-    File.join(dir, "itemsets-#{stamp}.csv")
+    @path = File.join(dir, "itemsets-#{stamp}.csv")
   end
 
   def md5
@@ -23,7 +24,7 @@ class ItemsetsFormAttachment
 
   # Ensures the file exists if appropriate. Generates if not.
   def ensure_generated
-    generate! if !File.exists?(priv_path)
+    generate! unless File.exists?(priv_path)
   end
 
   # True if there is nothing to put in the file.
@@ -36,17 +37,17 @@ class ItemsetsFormAttachment
 
     # The subdirectory where the attachment should go.
     def dir
-      File.join('form-attachments', Rails.env, form.id.to_s.rjust(6,'0'))
+      @dir ||= File.join('form-attachments', Rails.env, form.id.to_s.rjust(6,'0'))
     end
 
     # The full path to the directory.
     def priv_dir
-      File.join(Rails.root, 'public', dir)
+      @priv_dir ||= File.join(Rails.root, 'public', dir)
     end
 
     # The full path to the file.
     def priv_path
-      File.join(Rails.root, 'public', path)
+      @priv_path ||= File.join(Rails.root, 'public', path)
     end
 
     def file_contents
