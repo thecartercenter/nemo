@@ -70,7 +70,7 @@ feature "questions flow" do
       admin_edit_path: edit_questioning_path(@questioning3, mode: 'admin', mission_name: nil, locale: 'en'),
       admin_show_path: questioning_path(@questioning3, mode: 'admin', mission_name: nil, locale: 'en'),
       input_id: "token-input-questioning_question_attributes_tag_ids",
-      table_row_id: %{tr[id="questioning_#{@questioning1.id}"]},
+      table_row_id: %{li.form-item[data-id="#{@questioning1.id}"]},
     )
   end
 
@@ -114,11 +114,12 @@ feature "questions flow" do
     # Canceled tag should not
     expect(Tag.pluck(:name)).not_to include('pop some tags')
 
-    # Tags show in question's row on index page
-    expect(page).to have_content /Displaying (all \d+)? Questions/ # Check that index page has loaded
+    # Tags show in questions row on index page
+    # Check that index/form edit page has loaded
+    expect(page).to have_selector 'h1', text: (options[:qtype] == 'question' ? 'Questions' : /^Edit Form:/)
     within options[:table_row_id] do
-      expect(page).to have_selector 'li', text: "thriftshop"
-      expect(page).to have_selector 'li', text: "in my pocket"
+      expect(page).to have_selector '.token-input-token-elmo', text: "thriftshop"
+      expect(page).to have_selector '.token-input-token-elmo', text: "in my pocket"
     end
 
     # On questions index page, also check that tags show at top
@@ -176,7 +177,7 @@ feature "questions flow" do
 
     # Click another tag
     first('li', text: 'twenty dollaz').click
-    expect(current_url).to include 'search=cheese+tag%253A%2522twenty+dollaz%2522'
+    expect(current_url).to include 'search=cheese+tag%253A%22twenty+dollaz%22'
     expect(current_url).not_to include 'awesome'
     expect(page).to have_content(@question1.code)
     expect(page).not_to have_content(@question2.code)

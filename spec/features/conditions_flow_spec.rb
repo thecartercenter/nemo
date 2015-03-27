@@ -10,25 +10,25 @@ feature 'conditions flow', js: true do
   end
 
   scenario 'add and update condition to existing question' do
-    all('a.action_link_edit')[1].click
+    all('a.action_link.edit')[1].click
     select("1. #{@form.questions[0].code}", from: 'Question')
     select('is equal to', from: 'Comparison')
     select('Animal', from: 'Kingdom')
     click_button('Save')
 
     # View the questioning and ensure the condition is shown correctly.
-    click_link(@form.questions[1].name)
+    visit("/en/m/#{@form.mission.compact_name}/questionings/#{@form.questionings[1].id}")
     expect(page).to have_content("Question #1 #{@form.questions[0].code}
       Kingdom is equal to \"Animal\"")
 
     # Update the condition to have a full option path.
     visit("/en/m/#{@form.mission.compact_name}/forms/#{@form.id}/edit")
-    all('a.action_link_edit')[1].click
+    all('a.action_link.edit')[1].click
     select('Dog', from: 'Species')
     click_button('Save')
 
     # View and test again.
-    click_link(@form.questions[1].name)
+    visit("/en/m/#{@form.mission.compact_name}/questionings/#{@form.questionings[1].id}")
     expect(page).to have_content("Question #1 #{@form.questions[0].code}
       Species is equal to \"Dog\"")
   end
@@ -45,20 +45,20 @@ feature 'conditions flow', js: true do
     click_button('Save')
 
     # Check the new condition
-    click_link('New Question')
+    visit("/en/m/#{@form.mission.compact_name}/questionings/#{@form.reload.questionings[3].id}")
     expect(page).to have_content("Question #1 #{@form.questions[0].code}
       Species is equal to \"Oak\"")
   end
 
   scenario 'add a condition referring to an integer question' do
-    all('a.action_link_edit')[2].click
+    all('a.action_link.edit')[2].click
     select("2. #{@form.questions[1].code}", from: 'Question')
     select('is less than', from: 'Comparison')
     fill_in('Value', with: '5')
     click_button('Save')
 
     # View the questioning and ensure the condition is shown correctly.
-    click_link(@form.questions[2].name)
+    visit("/en/m/#{@form.mission.compact_name}/questionings/#{@form.questionings[2].id}")
     expect(page).to have_content("Question #2 #{@form.questions[1].code} is less than 5")
   end
 end
