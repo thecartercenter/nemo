@@ -49,7 +49,7 @@ class Broadcast < ActiveRecord::Base
     # send emails
     begin
       if email_possible? && recipient_emails.present?
-        BroadcastMailer.broadcast(recipient_emails, subject, body).deliver
+        BroadcastMailer.broadcast(recipient_emails, subject, body).deliver_now
       end
     rescue
       add_send_error(I18n.t("broadcast.email_error") + ": #{$!}")
