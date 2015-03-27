@@ -11,6 +11,7 @@ class ItemsetsFormAttachment
     self.form = attribs[:form]
   end
 
+  # The relative path, including filename, to the attachment.
   def path
     stamp = (form.published? ? form.pub_changed_at : Time.now).utc.strftime('%Y%m%d_%H%M%S')
     File.join(dir, "itemsets-#{stamp}.csv")
@@ -33,14 +34,17 @@ class ItemsetsFormAttachment
 
   private
 
+    # The subdirectory where the attachment should go.
     def dir
-      File.join('/','form-attachments', Rails.env, form.id.to_s.rjust(6,'0'))
+      File.join('form-attachments', Rails.env, form.id.to_s.rjust(6,'0'))
     end
 
+    # The full path to the directory.
     def priv_dir
       File.join(Rails.root, 'public', dir)
     end
 
+    # The full path to the file.
     def priv_path
       File.join(Rails.root, 'public', path)
     end

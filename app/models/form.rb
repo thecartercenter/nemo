@@ -66,7 +66,7 @@ class Form < ActiveRecord::Base
   def self.odk_index_cache_key(options)
     # Note that since we're using maximum method, dates don't seem to be TZ adjusted on load, which is fine as long as it's consistent.
     max_pub_changed_at = if for_mission(options[:mission]).published.any?
-      for_mission(options[:mission]).maximum(:pub_changed_at).to_s(:cache_datetime)
+      for_mission(options[:mission]).maximum(:pub_changed_at).utc.to_s(:cache_datetime)
     else
       'no-pubd-forms'
     end
