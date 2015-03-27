@@ -3,8 +3,9 @@ class QingGroup < FormItem; end
 class Questioning < FormItem
   belongs_to(:form, :inverse_of => :questionings)
 end
+
 class Form < ActiveRecord::Base
-  has_many(:questionings, :order => "rank", :autosave => true, :dependent => :destroy, :inverse_of => :form)
+  has_many(:questionings, -> { order(:rank) }, :autosave => true, :dependent => :destroy, :inverse_of => :form)
 end
 
 class MoveFormQuestioningsToRootGroup < ActiveRecord::Migration

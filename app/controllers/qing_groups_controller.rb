@@ -29,7 +29,7 @@ class QingGroupsController < ApplicationController
   end
 
   def update
-    @qing_group.update_attributes!(params[:qing_group])
+    @qing_group.update_attributes!(qing_group_params)
     render partial: 'group_inner', locals: {qing_group: @qing_group}
   end
 
@@ -44,15 +44,22 @@ class QingGroupsController < ApplicationController
 
     def validate_destroy
       if @qing_group.children.size > 0
-        render :json => [], :status => 404
+        return render json: [], status: 404
       end
     end
 
     # prepares qing_group
     def prepare_qing_group
-      attrs = params[:qing_group]
+      attrs = qing_group_params
       attrs[:ancestry] = Form.find(attrs[:form_id]).root_id
       @qing_group = QingGroup.accessible_by(current_ability).new(attrs)
       @qing_group.mission = current_mission
+    end
+
+    def qing_group_params
+      params.require(:qing_group).permit(:form_id).tap do |whitelisted|
+        # handle dynamic hash keys for translations
+        whitelisted[:group_name_translations] = params[:qing_group][:group_name_translations]
+      end
     end
 end

@@ -109,7 +109,6 @@ class FormsController < ApplicationController
   # Format is always :csv
   def odk_itemsets
     authorize!(:download, @form)
-
   end
 
   def create
@@ -129,7 +128,7 @@ class FormsController < ApplicationController
       Form.transaction do
         update_api_users
         # save basic attribs
-        @form.assign_attributes(params[:form])
+        @form.assign_attributes(form_params)
 
         # check special permissions
         authorize!(:rename, @form) if @form.name_changed?
@@ -262,5 +261,9 @@ class FormsController < ApplicationController
 
     def load_form
       @form = Form.find(params[:id])
+    end
+
+    def form_params
+      params.require(:form).permit(:name, :smsable, :allow_incomplete, :access_level)
     end
 end

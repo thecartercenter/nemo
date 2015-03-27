@@ -32,14 +32,13 @@ class FormItem < ActiveRecord::Base
 
   # Gets all leaves of the subtree headed by this FormItem, sorted.
   # These should all be Questionings.
-  def sorted_leaves(eager_load = nil)
-    _sorted_leaves(arrange_and_sort(eager_load).values[0])
+  def sorted_leaves
+    _sorted_leaves(arrange_and_sort().values[0])
   end
 
-  def arrange_and_sort(eager_load = nil)
+  def arrange_and_sort
     # This is the only way (apparently) to do eager loading with arrange.
-    self.class.arrange_nodes(subtree.all(include: eager_load,
-      order: '(case when ancestry is null then 0 else 1 end), ancestry, rank'))
+    self.class.arrange_nodes(subtree.order('(case when ancestry is null then 0 else 1 end), ancestry, rank').to_a)
   end
 
   # Moves item to new rank and parent.

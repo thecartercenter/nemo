@@ -9,7 +9,7 @@ end
 
 FactoryGirl.define do
   factory :user do
-    ignore do
+    transient do
       role_name :coordinator
       mission { get_mission }
     end

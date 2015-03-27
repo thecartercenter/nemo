@@ -5,6 +5,12 @@ ELMO::Application.configure do
   # Code is not reloaded between requests
   config.cache_classes = true
 
+  # Eager load code on boot. This eager loads most of Rails and
+  # your application in memory, allowing both thread web servers
+  # and those relying on copy on write to perform better.
+  # Rake tasks automatically ignore this option for performance.
+  config.eager_load = true
+
   # Full error reports are disabled and caching is turned on
   config.consider_all_requests_local       = false
   config.action_controller.perform_caching = true
@@ -19,7 +25,7 @@ ELMO::Application.configure do
   # just comment this out and Rails will serve the files
 
   # See everything in the log (default is :info)
-  # config.log_level = :debug
+  config.log_level = :info
 
   # Use a different logger for distributed setups
   # config.logger = SyslogLogger.new
@@ -29,10 +35,11 @@ ELMO::Application.configure do
 
   # Disable Rails's static asset server
   # In production, Apache or nginx will already do this
-  config.serve_static_assets = false
+  config.serve_static_files = false
 
-  # Compress JavaScripts and CSS
-  config.assets.compress = true
+  # Compress JavaScripts and CSS.
+  config.assets.js_compressor = :uglifier
+  # config.assets.css_compressor = :sass
 
   # Don't fallback to assets pipeline if a precompiled asset is missed
   config.assets.compile = false
@@ -42,6 +49,9 @@ ELMO::Application.configure do
 
   # add special CSS files to compile
   config.assets.precompile += %w( application-screen.css application-print.css )
+
+  # Version of your assets, change this if you want to expire all your assets.
+  config.assets.version = '1.0'
 
   # Disable delivery errors, bad email addresses will be ignored
   config.action_mailer.raise_delivery_errors = true
@@ -58,5 +68,9 @@ ELMO::Application.configure do
   # Send deprecation notices to registered listeners
   config.active_support.deprecation = :notify
 
+  # Disable automatic flushing of the log to improve performance.
+  config.autoflush_log = false
 
+  # Raises error for missing translations
+  config.action_view.raise_on_missing_translations = false
 end

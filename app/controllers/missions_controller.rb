@@ -40,4 +40,10 @@ class MissionsController < ApplicationController
     destroy_and_handle_errors(@mission)
     redirect_to(index_url_with_page_num)
   end
+
+  private
+
+    def mission_params
+      params.require(:mission).permit(:name, :locked)
+    end
 end

@@ -25,11 +25,11 @@ class Answer < ActiveRecord::Base
   accepts_nested_attributes_for(:choices)
 
   delegate :question, :qtype, :required?, :hidden?, :option_set, :options, :condition, :to => :questioning
-    delegate :name, :hint, :to => :question, :prefix => true
+  delegate :name, :hint, :to => :question, :prefix => true
   delegate :name, to: :level, prefix: true, allow_nil: true
 
-  scope :public_access, includes(:questioning => :question).
-                        where("questions.access_level = 'inherit'")
+  scope :public_access, -> { includes(:questioning => :question).
+                        where("questions.access_level = 'inherit'") }
 
 
   # gets all location answers for the given mission

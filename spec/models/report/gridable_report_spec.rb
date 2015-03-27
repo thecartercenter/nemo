@@ -39,7 +39,7 @@ describe Report::Gridable do
     end
 
     it 'should destroy self' do
-      expect(Report::Report.exists?(@report)).to be false
+      expect(Report::Report.exists?(@report.id)).to be false
     end
   end
 end

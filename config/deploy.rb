@@ -95,10 +95,10 @@ namespace :deploy do
         run "echo '**** FIRST ONE-TIME TASK RAN! ****'"
       end
 
-      # Task 2: Whatever you want!
-      # Proc.new do
-      #   ...
-      # end
+      # Task 2: Added secret to local_config.
+      Proc.new do
+        run "sed -i.bak \"s/secret-token/`rake secret`/g\" ./config/#{shared_path}/local_config.rb"
+      end
     ]
 
     cur_version = nil

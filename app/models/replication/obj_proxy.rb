@@ -19,7 +19,7 @@ class Replication::ObjProxy
   # The assoc must be a belongs_to or this won't make sense.
   def associate(assoc, obj)
     # We use update_all so we won't have to load the full object.
-    klass.update_all("#{assoc.foreign_key} = #{obj.id}", "id = #{id}")
+    klass.where("id = #{id}").update_all("#{assoc.foreign_key} = #{obj.id}")
   end
 
   # assoc - A Replication::AssocProxy representing the association from which to return children.

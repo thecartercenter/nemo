@@ -14,6 +14,6 @@ describe Report::StandardFormReport do
 
   it 'should be destroyed when form destroyed' do
     @form.destroy
-    expect(Report::Report.exists?(@report)).to be false
+    expect(Report::Report.exists?(@report.id)).to be false
   end
 end

@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :option_node do
-    ignore do
+    transient do
       option_names %w(Cat Dog)
     end
 

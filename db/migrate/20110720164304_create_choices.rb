@@ -7,7 +7,7 @@ class CreateChoices < ActiveRecord::Migration
       t.timestamps
     end
 
-    Answer.all(:include => {:questioning => {:question => :type}}).each do |a|
+    Answer.includes({questioning: {question: :type} }).each do |a|
       # if this is an answer for a select_multiple, create a new choice object and set option_id to nil
       type = a.questioning.question.type.name rescue nil
       if type == "select_multiple"

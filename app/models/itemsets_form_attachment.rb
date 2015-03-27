@@ -34,7 +34,7 @@ class ItemsetsFormAttachment
   private
 
     def dir
-      File.join('form-attachments', Rails.env, form.id.to_s.rjust(6,'0'))
+      File.join('/','form-attachments', Rails.env, form.id.to_s.rjust(6,'0'))
     end
 
     def priv_dir

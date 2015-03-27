@@ -98,7 +98,7 @@
     // sense to let the session expire
 
     $.ajax({
-      url: self.params.url,
+      url: ELMO.app.url_builder.build('/'),
       method: 'GET',
       data: {
         report_id: self.report_view.current_report_id,

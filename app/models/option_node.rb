@@ -7,9 +7,6 @@ class OptionNode < ActiveRecord::Base
   # Number of nodes to return as JSON if node is 'huge'.
   TO_SERIALIZE_IF_HUGE = 10
 
-  attr_accessible :ancestry, :option_id, :option_set, :option_set_id, :rank, :option, :option_attribs,
-    :children_attribs, :mission_id, :mission, :parent
-
   belongs_to :option_set
   belongs_to :option, autosave: true
   has_ancestry cache_depth: true

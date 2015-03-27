@@ -10,6 +10,6 @@ class AdminMailer < ActionMailer::Base
     @user = user
     path = (env && env['REQUEST_URI']) ? (": " + env['REQUEST_URI']) : ""
     exception_name = @exception ? ": #{@exception.class} #{@exception.message}" : ""
-    mail(:to => configatron.webmaster_emails, :subject => "Error#{path}#{exception_name}")
+    mail(:to => configatron.webmaster_emails, :subject => "Error#{path}#{exception_name}").deliver_now
   end
 end

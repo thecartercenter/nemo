@@ -39,7 +39,7 @@ class Questioning < FormItem
   delegate :smsable?, to: :form, prefix: true
   delegate :verify_ordering, :ref_qing_full_rank, :ref_qing_id, to: :condition, prefix: true, allow_nil: true
 
-  scope(:visible, where(:hidden => false))
+  scope(:visible, -> { where(:hidden => false) })
 
   replicable child_assocs: [:question, :condition], backward_assocs: :form, dont_copy: [:hidden, :form_id, :question_id]
 

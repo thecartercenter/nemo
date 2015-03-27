@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :response do
-    ignore do
+    transient do
       answer_values []
     end
 

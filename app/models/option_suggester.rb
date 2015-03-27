@@ -14,7 +14,7 @@ class OptionSuggester
       sql.gsub!('%%%2', %{([^"\\]|\\\\\\\\.)*"})
     end
 
-    matches = Option.where(mission_id: mission.try(:id)).where(name_clause).all
+    matches = Option.where(mission_id: mission.try(:id)).where(name_clause).to_a
 
     # Sort exact matches to top.
     exact_match = false

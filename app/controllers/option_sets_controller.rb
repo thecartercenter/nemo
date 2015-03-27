@@ -1,5 +1,6 @@
 class OptionSetsController < ApplicationController
   include StandardImportable
+  include Parameters
 
   before_filter :arrayify_attribs, :only => [:create, :update]
 
@@ -19,7 +20,7 @@ class OptionSetsController < ApplicationController
     @option_sets = @option_sets.paginate(:page => 1, :per_page => 10000000, :total_entries => total)
 
     # now we apply .all so that any .empty? or .count calls in the template don't cause more queries
-    @option_sets = @option_sets.all
+    @option_sets = @option_sets.to_a
 
     # Avoid N+1 for option names.
     OptionSet.preload_top_level_options(@option_sets)
@@ -57,7 +58,7 @@ class OptionSetsController < ApplicationController
   def update
     # we use a transaction because populate_from_json requests it
     OptionSet.transaction do
-      @option_set.assign_attributes(params['option_set']) # Quotes vs symbol is important here.
+      @option_set.assign_attributes(option_set_params) # Quotes vs symbol is important here.
 
       # validate now so that normalization runs before authorizing and saving
       # We raise if there is an error since validation should happen client side.
@@ -140,5 +141,17 @@ class OptionSetsController < ApplicationController
       render(partial: 'form')
       raise ActiveRecord::Rollback # Rollback the transaction without re-raising the error.
     end
+  end
+
+  def option_set_params
+    required = params.require(:option_set)
+
+    name_translations = required[:children_attribs][0][:option_attribs][:name_translations].keys
+    level_names = required[:level_names][0].keys if required[:level_names].present?
+    children_params = [:id, option_attribs: [:id, name_translations: name_translations] ]
+
+    permitted_children = permit_children(required[:children_attribs], :children_attribs, children_params)
+    whitelisted = [:name, :geographic, :multi_level, level_names: level_names, children_attribs: permitted_children ]
+    required.permit(whitelisted)
   end
 end

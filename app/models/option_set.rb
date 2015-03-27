@@ -15,7 +15,7 @@ class OptionSet < ActiveRecord::Base
   has_many :option_nodes, dependent: :destroy
   has_many :report_option_set_choices, class_name: 'Report::OptionSetChoice'
 
-  belongs_to :root_node, class_name: OptionNode, conditions: {option_id: nil}, dependent: :destroy
+  belongs_to :root_node, -> { where(option_id: nil) }, class_name: OptionNode, dependent: :destroy
 
   before_validation :copy_attribs_to_root_node
   before_validation :normalize_fields
@@ -24,9 +24,9 @@ class OptionSet < ActiveRecord::Base
   # the dependent object doesn't know who destroyed it.
   before_destroy { report_option_set_choices.each(&:option_set_destroyed) }
 
-  scope :by_name, order('option_sets.name')
-  scope :default_order, by_name
-  scope :with_assoc_counts_and_published, lambda { |mission|
+  scope :by_name, -> { order('option_sets.name') }
+  scope :default_order, -> { by_name }
+  scope :with_assoc_counts_and_published, ->(mission) {
     includes(:root_node).
     select(%{
       option_sets.*,
@@ -95,13 +95,13 @@ class OptionSet < ActiveRecord::Base
     return [] if set_ids.empty?
     root_node_ids = where(id: set_ids).all.map(&:root_node_id)
     node_where_clause = root_node_ids.map{ |id| "ancestry LIKE '#{id}/%' OR ancestry = '#{id}'" }.join(' OR ')
-    Option.where("id IN (SELECT option_id FROM option_nodes WHERE #{node_where_clause})").all
+    Option.where("id IN (SELECT option_id FROM option_nodes WHERE #{node_where_clause})").to_a
   end
 
   def self.first_level_option_nodes_for_sets(set_ids)
     return [] if set_ids.empty?
-    root_node_ids = where(id: set_ids).all.map(&:root_node_id)
-    OptionNode.where(ancestry: root_node_ids.map(&:to_s)).includes(:option).all
+    root_node_ids = where(id: set_ids).to_a.map(&:root_node_id)
+    OptionNode.where(ancestry: root_node_ids.map(&:to_s)).includes(:option).to_a
   end
 
   def children_attribs=(attribs)
