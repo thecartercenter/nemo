@@ -3,9 +3,12 @@ module Parameters
 
   # return dynamic translations parameters
   def permit_translations(params, *args)
+    return [] if params.blank?
     args.reduce([]) do |memo, arg|
       regex = /#{arg.to_s + '_' + '[a-z]+'}/
-      memo << params.select { |key| regex.match(key.to_s) }.keys.first.to_sym
+      keys = params.select { |key| regex.match(key.to_s) }.keys
+      memo << keys.first.to_sym if keys.size > 0
+      memo
     end
   end
 
