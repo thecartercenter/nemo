@@ -12,14 +12,14 @@ describe 'footer' do
       end
 
       it 'should say none' do
-        get_s(mission_root_path(get_mission))
+        get_s(mission_root_path(mission_name: get_mission.compact_name))
         assert_select("div#footer", /Outgoing SMS Provider:\s+\[None\]/m)
       end
     end
 
     context 'with an adapter set' do # One is set by default
       it 'should say adapter name' do
-        get_s(mission_root_path(get_mission))
+        get_s(mission_root_path(mission_name: get_mission.compact_name))
         assert_select("div#footer", /Outgoing SMS Provider:\s+IntelliSms/m)
       end
     end
