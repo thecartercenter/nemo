@@ -131,14 +131,14 @@ ELMO::Application.routes.draw do
     get '/sms/submit' => 'sms#create'
 
     # ODK routes. They are down here so that forms_path doesn't return the ODK variant.
-    get '/formList' => 'forms#index', format: 'xml', as: :odk_form_list, direct_auth: true
-    get '/forms/:id' => 'forms#show', format: 'xml', as: :odk_form, direct_auth: true
-    get '/forms/:id/manifest' => 'forms#odk_manifest', format: 'xml', direct_auth: true, as: :odk_form_manifest
-    get '/forms/:id/itemsets' => 'forms#odk_itemsets', format: 'csv', direct_auth: true, as: :odk_form_itemsets
-    match '/submission' => 'responses#create', direct_auth: true, format: 'xml', via: [:get, :head, :post]
+    get '/formList' => 'forms#index', as: :odk_form_list, defaults: {format: 'xml', direct_auth: true}
+    get '/forms/:id' => 'forms#show', as: :odk_form, defaults: {format: 'xml', direct_auth: true}
+    get '/forms/:id/manifest' => 'forms#odk_manifest', as: :odk_form_manifest, defaults: {format: 'xml', direct_auth: true}
+    get '/forms/:id/itemsets' => 'forms#odk_itemsets', as: :odk_form_itemsets, defaults: {format: 'csv', direct_auth: true}
+    match '/submission' => 'responses#create', via: [:get, :head, :post], defaults: {format: 'xml', direct_auth: true}
 
     # Unauthenticated submissions
-    match '/noauth/submission' => 'responses#create', format: :xml, no_auth: true, via: [:get, :head, :post]
+    match '/noauth/submission' => 'responses#create', via: [:get, :head, :post], defaults: {format: :xml, no_auth: true}
   end
 
   # API routes.
