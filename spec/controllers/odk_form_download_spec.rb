@@ -66,8 +66,7 @@ describe FormsController, type: :request do
         end
 
         it 'should succeed' do
-          p @ifa.path
-          get_s(@ifa.path)
+          get_s("/#{@ifa.path}")
           expect(response).to be_success
           expect(response.body).to match(/,Cat/)
         end
