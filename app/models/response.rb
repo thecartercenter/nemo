@@ -210,17 +210,15 @@ class Response < ActiveRecord::Base
   # returns an array of N response counts grouped by form
   # uses the WHERE clause from the given relation
   def self.per_form(rel, n)
-    where_clause = rel.where_values.inject(:and).to_sql
-    binds = rel.where_values_hash
-    where_clause = '1=1' if where_clause.blank?
+    where_clause = rel.to_sql.match(/WHERE (.+?)(ORDER BY|\z)/)[1]
 
-    find_by_sql(["
+    find_by_sql("
       SELECT forms.name AS form_name, COUNT(responses.id) AS count
       FROM responses INNER JOIN forms ON responses.form_id = forms.id
       WHERE #{where_clause}
       GROUP BY forms.id, forms.name
       ORDER BY count DESC
-      LIMIT #{n}", binds])
+      LIMIT #{n}")
   end
 
   # generates a cache key for the set of all responses for the given mission.
