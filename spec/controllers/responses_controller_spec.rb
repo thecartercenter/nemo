@@ -120,7 +120,7 @@ describe ResponsesController, type: :request do
         /attachment; filename="elmo-#{get_mission.compact_name}-responses-\d{4}-\d\d-\d\d-\d{4}.csv"/)
       result = CSV.parse(response.body)
       expect(result.size).to eq 5 # 4 answer rows, 1 header row
-      expect(result[0].size).to eq 15
+      expect(result[0].size).to eq 16
     end
   end
 end
