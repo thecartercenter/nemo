@@ -14,7 +14,7 @@ module MissionBased
     base.class_eval do
 
       # only Setting has a has_one association, so don't pluralize
-      inverse = (base.model_name == "Setting" ? base.model_name : base.model_name.plural).downcase.to_sym
+      inverse = (base.model_name == "Setting" ? base.model_name.to_s : base.model_name.plural).downcase.to_sym
       belongs_to(:mission, :inverse_of => inverse)
 
       # scope to find objects with the given mission
@@ -24,7 +24,7 @@ module MissionBased
 
       # when a mission is deleted, pre-remove all records related to a mission
       def self.mission_pre_delete(mission)
-        mission_related = self.where(mission_id:mission)
+        mission_related = self.where(mission_id: mission)
 
         if self.respond_to?(:terminate_sub_relationships)
           self.terminate_sub_relationships(mission_related.pluck(:id))

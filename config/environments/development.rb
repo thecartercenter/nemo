@@ -6,12 +6,16 @@ ELMO::Application.configure do
   # since you don't have to restart the webserver when you make code changes.
   config.cache_classes = false
 
-  # Log error messages when you accidentally call methods on nil.
-  config.whiny_nils = true
+  # Do not eager load code on boot.
+  config.eager_load = false
 
-  # Show full error reports and enable caching
+  # Show full error reports
   config.consider_all_requests_local       = true
-  config.action_controller.perform_caching = true
+
+  # Caching may need to be turned on when testing caching itself. If so, please use
+  # config/initializers/local_config.rb to override this value,
+  # or change it here but please don't commit the change!
+  config.action_controller.perform_caching = false
 
   # care if the mailer can't send
   config.action_mailer.raise_delivery_errors = true
@@ -24,12 +28,8 @@ ELMO::Application.configure do
   # Only use best-standards-support built into browsers
   config.action_dispatch.best_standards_support = :builtin
 
-  # Raise exception on mass assignment protection for Active Record models
-  config.active_record.mass_assignment_sanitizer = :strict
-
-  # Log the query plan for queries taking more than this (works
-  # with SQLite, MySQL, and PostgreSQL)
-  config.active_record.auto_explain_threshold_in_seconds = 0.5
+  # Raise an error on page load if there are pending migrations
+  config.active_record.migration_error = :page_load
 
   # Do not compress assets
   config.assets.compress = false
@@ -38,6 +38,10 @@ ELMO::Application.configure do
   config.assets.debug = false
 
   config.cache_store = :dalli_store, nil, { value_max_bytes: 2.megabytes }
+
+  # Raises error for missing translations
+  config.action_view.raise_on_missing_translations = true
+  config.i18n.fallbacks = false
 
   # bullet gem for query optimization
   # config.after_initialize do

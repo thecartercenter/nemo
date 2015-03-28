@@ -3,22 +3,23 @@ es:
   common:
     accept: "Aceptar"
     active: "Activo"
-    add: "añadir "
+    add: "Añadir "
     and: "y"
-    back: "Regresar"
+    back: "Atrás"
     blank: "En blanco"
     by: "Por"
     cancel: "Cancelar"
     choose: "Escoger"
+    clear: "Claro"
     clone: "Clonar"
     close: "Cerrar"
     contact: "Contacto"
     create: "Crear"
     created: "Creado"
     copy: "Copiar"
-    data: "Datos"
+    data: "Estadísticas"
     delete: "Eliminar"
-    design: "diseñar"
+    design: "Diseñar"
     edit: "Editar"
     error:
       zero: "Errores"
@@ -28,12 +29,17 @@ es:
       zero: "Ejemplos"
       one: "Ejemplo"
       other: "Ejemplos"
+    example_abbr: "por ejemplo"
+    found: "Encontrado"
+    generate: "Generar"
     inactive: "Inactivo"
+    incoming: "Entrante"
     language: "Idioma"
     login: "Iniciar Sesión"
     logout: "Finalizar la Sesión"
-    manage: "Manejar"
+    manage: "Gestionar"
     near: "Cerca"
+    next: "Siguiente"
     _no: "No"
     none: "Ninguno"
     ok: "OK"
@@ -43,23 +49,46 @@ es:
     previous: "Anterior"
     print: "Imprimir"
     regenerate: "Regenerar"
-    report: "Reportar"
-    reset: "Reinicializar"
+    remove: "Quitar"
+    report: "Informe"
+    reset: "Reiniciar"
     result:
       zero: "Resultados"
       one: "Resultado"
       other: "Resultados"
+    review: "Revisar"
+    run: "Ejecutar"
     save: "Guardar"
     search: "Buscar"
     send: "Mandar"
+    showing: "Mostrando"
     step: "Paso"
-    thanks_excl: "Gracias!"
+    suggest: "Sugerir"
+    submit: "Entregar"
+    success:
+      one: "éxito"
+      other: "Éxitos"
+    successfully: "Con éxito"
+    thanks_excl: "¡Gracias!"
+    this: "Este"
     total: "Total"
+    try_again: "Inténtelo de Nuevo"
     updated: "Actualizado"
+    view: "Ver"
     _yes: "Sí"
   attributes:
+    access_level: "Nivel de seguridad API"
     name: "Nombre"
+    code: "Código"
+    copy_count: "Copias"
+    created_at: "Hora de creación"
+    email: "Correo Electrónico"
+    hint: "Pista"
     password: "Contraseña"
+    published: "¿Publicado?"
+    questions: "Preguntas"
+    title: "Título"
+    type: "Tipo"
     value: "Valor"
   access_levels:
     public: "Público"
@@ -67,14 +96,41 @@ es:
     protected: "Protegido"
     inherit: "Heredar"
   errors:
+    format: "%{attribute}: %{message}"
     messages:
       deleted_successfully: "eliminado con éxito"
+      generic_delete_error: "Error durante la eliminación."
   helpers:
     submit:
       create: "Guardar"
       update: "Guardar"
+  flash_message_types:
+    success: "Éxito"
+    error: "Error"
+    alert: "Alerta"
+    notice: "Aviso"
   activerecord:
     models:
+      answer:
+        zero: "Respuestas"
+        one: "Respuesta"
+        other: "Respuestas"
+      assignment:
+        zero: "Tareas"
+        one: "Tarea"
+        other: "Tareas"
+      broadcast:
+        zero: "Transmisiones"
+        one: "Transmisón"
+        other: "Transmisiones"
+      choice:
+        zero: "Opciones"
+        one: "Opción"
+        other: "Opciones"
+      condition:
+        zero: "Condiciones"
+        one: "Condición"
+        other: "Condiciones"
       form:
         zero: "Formularios"
         one: "Formulario"
@@ -87,6 +143,10 @@ es:
         zero: "Opciones"
         one: "Opción"
         other: "Opciones"
+      option_set:
+        zero: "Conjuntos de opciones "
+        one: "Conjunto de opciones "
+        other: "Conjuntos de opciones "
       password_reset:
         zero: "Restablecimiento de Contraseña"
         one: "Restablecimiento de Contraseña"
@@ -104,20 +164,1180 @@ es:
         one: "Cálculo"
         other: "Cálculos"
       report/report:
-        zero: "Reportes"
-        one: "Reporte"
-        other: "Reportes"
-    attributes:
+        zero: "Informes"
+        one: "Informe"
+        other: "Informes"
+      report/tally_report:
+        zero: "Informes de Cómputo"
+        one: "Informe de Cómputo"
+        other: "Informes de Cómputo"
+      report/answer_tally_report:
+        zero: "Informes de Cómputo de Respuesta"
+        one: "Informe de Cómputo de Respuesta"
+        other: "Informes de Cómputo de Respuesta"
+      report/response_tally_report:
+        zero: "Informes de Cómputo de Respuesta"
+        one: "Respuesta informe recuento"
+        other: "Actas de escrutinio respuesta"
+      report/list_report:
+        zero: "Informes de Listas"
+        one: "Informe de Listas"
+        other: "Informes de Listas"
+      report/standard_form_report:
+        zero: "Informes de Formulario Estándar"
+        one: "Informe de Formulario Estándar"
+        other: "Informes de Formulario Estándar"
+      response:
+        zero: "Respuestas"
+        one: "Respuesta"
+        other: "Respuestas"
+      search/search:
+        zero: "Búsquedas"
+        one: "Búsqueda"
+        other: "Búsquedas"
+      setting:
+        zero: "Ajustes"
+        one: "Ajustes"
+        other: "Ajustes"
+      sms/message:
+        zero: "SMSes"
+        one: "SMS"
+        other: "SMSes"
       user:
+        zero: "Usuarios "
+        one: "Usuario"
+        other: "Usuarios"
+      tag:
+        zero: "Etiquetas"
+        one: "Etiqueta"
+        other: "Etiquetas"
+    attributes:
+      broadcast:
+        balance: "Equilibrio SMS"
+        body: "Mensaje"
+        created_at: "Hora de envío"
+        errors: "¿Errores?"
+        medium: "Medio"
+        send_errors: "Errores de Envío"
+        subject: "Asunto "
+        to: "Para"
+        which_phone: "Qué Teléfono(s)"
+      form:
+        allow_incomplete: "¿Permitir de Forma Incompleta?"
+        copy_responses_count: "Copiar Respuestas "
+        downloads: "Descargas "
+        responses: "Respuestas "
+        smsable: "¿Se puede enviar por SMS?"
+        updated_at: "Última Modificación"
+        version: "Versión"
+      mission:
+        compact_name: "Nombre Compacto"
+        locked: "¿Bloqueado?"
+      option_set:
+        answers: "Respuestas"
+        geographic: "¿Es Geográfico?"
+        multi_level: "¿Es Multinivel?"
+        options: "Opciones "
+        option_levels: "Niveles"
+      question:
+        code: "Código"
+        answer_count: "Respuestas"
+        form_count: "Formularios"
+        published: "¿Publicado?"
+        key: "¿Es una Pregunta Clave?"
+        minimum: "Mínimo"
+        maximum: "Máximo"
+        casted_minimum: "Mínimo"
+        casted_maximum: "Máximo"
+        name: "Título"
+        option_set_id: "Conjunto de Opciones"
+        qtype_name: "Tipo"
+        tag_ids: "Etiquetas"
+      questioning:
+        name: "Título"
+        condition: "¿Condición?"
+        hidden: "¿Oculto?"
+        rank: "Rango"
+        required: "¿Obligatorio?"
+      response:
+        age: "Edad "
+        answers: "Respuestas"
+        id: "Identificación de la Respuesta"
+        created_at: "Hora de Envío"
+        form_id: "Formulario"
+        reviewed: "¿Revisado?"
+        source: "Fuente"
+        user_id: "Usuario/Equipo"
+        incomplete: "¿Faltan respuestas obligatorias?"
+      report/report:
+        aggregation: "Operación"
+        aggregation_id: "Operación"
+        bar_style: "Estilo de Barra de tareas"
+        display_type: "Tipo de Apariencia"
+        fields: "Atribuciónes/Preguntas"
+        name: "Título"
+        percent_type: "Tipo de Porcentaje"
+        pri_grouping: "Agrupamiento 1"
+        sec_grouping: "Agrupamiento 2"
+        submit_edit: "Guardar cambios "
+        submit_new: "Generar Informes"
+        unique_rows: "Ocultar las filas duplicadas"
+        unreviewed: "Permitir Respuestas sin Revisar"
+        view_count: "Vistas"
+        viewed_at: "Última Vista"
+      setting:
+        allow_unauthenticated_submissions: "¿Permitir entregas no autentificadas?"
+        incoming_sms_number: "Número entrante"
+        intellisms_password1: "Contraseña "
+        intellisms_password2: "Confirmación de la contraseña"
+        intellisms_username: "Nombre de usuario "
+        preferred_locales_str: "Idiomas Preferidos"
+        outgoing_sms_adapter: "Proveedor Saliente"
+        override_code: "Código de Control Manual"
+        external_sql: "SQL Externo"
+        timezone: "Zona Horaria"
+      sms/message:
+        adapter_name: "Adaptador"
+        body: "Cuerpo"
+        from: "De"
+        sent_at: "Hora de Envío"
+        to: "Para"
+        received_at: "Hora de Recibo"
+      sms/test:
+        from: "De"
+        body: "Cuerpo"
+      user:
+        admin: "¿Es el Administrador?"
+        assignments: "Tareas"
+        latest_mission: "Última Misión"
+        login: "Nombre de usuario "
+        name: "Nombre Completo"
+        notes: "Notas"
+        password_confirmation: "Vuelva a escribir la Contraseña"
+        phone: "Principal Número de Teléfono"
+        phone2: "Número de Teléfono Alternativo"
         pref_lang: "Idioma Preferido"
+        role: "Papel"
+        api_key: "Clave API"
+      user_batch:
+        batch: "Atributos de usuario"
+    table_headers:
+      response:
+        incomplete: "¿Incompleto?"
+      user:
+        admin: "¿Administrador?"
+    placeholders:
+      question:
+        code: "Mi Pregunta"
+    action_links:
+      broadcast:
+        index: "Lista de Emisiones"
+      form:
+        new: "Crear Nuevo Formulario"
+        index: "Listado de Formularios"
+        show: "Ver Formulario"
+        edit: "Editar Formulario"
+        destroy: "Eliminar Formulario"
+        publish: "Publicar Formulario"
+        unpublish: "Deshacer Publicación del Formulario"
+        print: "Imprimir Formulario"
+      mission:
+        new: "Crear una Nueva Misión"
+        index: "Enumerar las Misiones"
+        show: "Ver Misiones"
+        edit: "Editar Misiones"
+        destroy: "Eliminar Misión"
+      option_set:
+        new: "Crear un Nuevo Conjunto de Opciones"
+        index: "Enumerar el Conjunto de Opciones"
+        show: "Ver el Conjunto de Opciones"
+        edit: "Editar el Conjunto de Opciones "
+        destroy: "Borrar el Conjunto de Opciones "
+      question:
+        new: "Crear Nueva Pregunta "
+        index: "Enumerar Preguntas"
+        show: "Ver Pregunta "
+        edit: "Editar Pregunta "
+        destroy: "Eliminar Pregunta "
+      report/report:
+        new: "Crear un Nuevo Informe "
+        index: "Enumerar los Informes"
+        show: "Ver Informe"
+        edit: "Editar Informe"
+        destroy: "Eliminar Informe"
+      response:
+        index: "Enumerar Respuestas"
+        show: "Ver Respuesta"
+        edit: "Editar Respuesta"
+        destroy: "Eliminar Respuesta"
+      user:
+        new: "Crear Nuevo Usuario "
+        index: "Enumerar Usuarios"
+        show: "Ver Usuario"
+        edit: "Editar Usuario"
+        destroy: "Eliminar el Usuario "
+    hints:
+      form:
+        name: "Un nombre descriptivo para el formulario"
+        smsable: "Si el formulario acepta envíos SMS. Esto puede afectar cuando el número de versión sea incrementado."
+        allow_incomplete: "Si se permite que las presentaciones incompletas atenuantes en casos cuando toda la información no está disponible. Tenga en cuenta que la cuestión \"necesaria\" debería ser el preferido destacado aquí."
+        version: "El número de la versión actual y letra."
+        access_level: "Público: Cualquier ELMO usuario puede acceder a los datos a través de la API. Protegido: sólo usuarios específicos pueden tener acceso a los datos a través de API. Privada: nadie puede acceder a los datos a través de la API."
+      mission:
+        name: "Un nombre para esta Misión. Un máximo de 32 caracteres. Debe ser único. Creo que respecto a la inclusión del año, en caso de que será el futuro de misiones con el mismo nombre."
+        locked: "Si una misión se bloquea, las respuestas y las formas no se puede crear o editar y los usuarios no se pueden agregar o eliminar."
+      option:
+        name: "La descripción textual de esta opción que los usuarios verán."
+      option_set:
+        geographic: "Si esta opción establece representa información geográfica, por ejemplo, un conjunto de provincias o regiones."
+        name: "Un nombre que resume este conjunto de opciones. Los usuarios normales no verán este nombre."
+        multi_level: "Si el conjunto de opciones tiene varios niveles de opciones, como país -> estado -> ciudad."
+        options:
+          editable: "Añadir las opciones existentes, escribiendo y haciendo click en \"Agregar\".  Si no puede ver una opción en la lista desplegable, puede agregar una nueva haciendo clic en \"Crear Nueva Opción\"."
+          read_only: "Las opciones que aparecerán en las preguntas en las que se utiliza esta opción."
+        option_levels: "Los nombres de cada nivel de opciones, por ejemplo 'País', 'Estado', 'Ciudad'.  Tenga en cuenta que estas son diferentes de las propias opciones (p.ej. 'Estados Unidos', 'Illinois', 'Chicago' ), que se definen a continuación."
+      question:
+        code: "Un nombre de codigo corto (entre 2-20 caracteres).  Debe contener sólo letras y números, p. ej. BallotBoxSealed, DepartTime."
+        hint: "Instrucciones adicionales, p. ej., 'Enter un recuento aproximado de las personas que esperaban para votar\"."
+        key: "Respuestas a las preguntas clave para resumir las respuestas y aparecen en la respuesta. Preguntas clave comunes son la localización y la evaluación general."
+        minimum: "El valor mínimo para la respuesta. Active la casilla si el mínimo sí no es válido."
+        maximum: "El valor máximo de la respuesta. Active la casilla si el propio máximo no es válido."
+        name: "El principal texto de la pregunta, por ejemplo: \" ¿cuántas personas están en línea? \"."
+        option_set_id: "El conjunto de opciones entre el usuario podrá elegir."
+        qtype_name: "El tipo de información que el usuario estará entrando."
+        access_level: "Heredar: el mismo nivel de acceso al formulario principal. Sector privado: No se puede acceder a los datos a través de la API, independientemente del formulario principal nivel de acceso."
+      questioning:
+        hidden: "Si esta pregunta se mostrará en este formulario. Utilice esta opción para desactivar una pregunta si no se puede eliminar. Este valor se anulará el estado y parámetros necesarios a continuación."
+        condition: "Una condición que debe cumplirse con el fin de esta cuestión se muestran al usuario."
+        required: "Si esta pregunta debe ser completada en este formulario o es opcional. Sólo aplica si no se oculta el estado especificado anteriormente."
+      report/report:
+        name: "Un título descriptivo para este informe."
+        aggregation_id: "La operación que se desea realizar en las estadísticas combinadas."
+        kind: "El tipo de estadísticas con las que desea trabajar."
+        display_type: "La forma en la que desea presentar los resultados."
+        unreviewed: "Si las respuestas revisadas se deben incluir en el informe o no."
+        unique_rows: "Si las filas duplicadas se deben omitir en el informe o no."
+        pri_grouping: "Un atributo o pregunta por que la respuesta debe ser agrupados (por ejemplo, clasificación general)."
+        percent_type: "Si y cómo los porcentajes deben calcularse para el informe."
+        bar_style: "Si las barras deben apilarse o side-by-side."
+      response:
+        incomplete: "Marque esta casilla si hay preguntas necesarias para que no se le puede dar respuestas. A continuación, podrá guardar esta respuesta sin responder a estas preguntas y la respuesta será marcado como \"incompleta\"."
+      setting:
+        allow_unauthenticated_submissions: "Si esta casilla está marcada, A nadie se le permitirá el envío de datos a la misión sin introducir una contraseña. Usar con precaución."
+        preferred_locales_str: |-
+          Entre el <a href='http://www.loc.gov/standards/iso639-2/php/code_list.php' target='_blank'>código de dos letras</a>, separado por comas, para el idioma de la misión, en orden de preferencia.
+
+          Esta configuración determina:
+          * El idioma standard de preferencia para nuevos usuarios
+          * El idioma standard para las respuestas por SMS
+          * El idioma para las Preguntas y las Opciones
+        override_code: |-
+          Debe enviar este código a los observadores si es necesario que puedan enviar respuestas incompletas. ODK no permitirá que se entreguen respuestas incompletas sin este código.
+
+          Si crea un código nuevo, por favor guarde el código viejo si aún existen formularios anteriores. El nuevo código sólo funcionara con los formularios que hayan sido descargados después de que el nuevo código haya sido creado.
+        incoming_sms_number: "Introduzca el número de teléfono al que las prepagas para SMS deberá enviarse. Este se mostrará en el SMS guía. Sólo es necesario si utiliza SMS presentación."
+        outgoing_sms_adapter: "El adaptador que se utiliza para enviar prepagas saliente. Tenga en cuenta que las respuestas SMS pueden ser enviados a través de un adaptador diferente, dependiendo del adaptador por que llegaron."
+        intellisms_username: "El nombre de usuario de la cuenta IntelliSMS."
+        intellisms_password1: "Escriba y vuelva a escribir una contraseña para cambiar la contraseña de la cuenta IntelliSMS."
+        external_sql: "El código SQL utilizado para extraer los datos para su uso en aplicaciones externas. Haga click en \"Seleccionar todo\" y, a continuación, presione Ctrl-C para copiar."
+        timezone: "La zona horaria que aparece en todo el sitio web."
+      sms/test:
+        from: "Ponga el número de teléfono del cual proviene este SMS. Este número debe incluir el código del país (por ejemplo +1 404 555 1212. +23476543212). "
+        body: "Escriba el cuerpo del mensaje."
+      user:
+        name: "El nombre completo del usuario. Ejemplo: \" John Doe \" o \" Equipo 1.1 '"
+        login: "El nombre de usuario se utilizará para iniciar sesión. Haga click en el botón de sugerir para sugerir un nombre de inicio de sesión."
+        phone: "Número de teléfono deberá incluir el código del país. Ejemplo: +25680344523"
+        phone2: "Número de teléfono deberá incluir el código del país. Ejemplo: +25680344523"
+        admin: "Si el usuario es un administrador de todo el sistema. Se puede controlar por misión los permisos utilizando los campos que se muestran a continuación."
+        assignments: "Las misiones a las que este usuario ha sido asignado."
+        password: "Introduzca una nueva contraseña aquí si desea cambiar su contraseña actual."
+        password_confirmation: "Introduzca la nueva contraseña otra vez."
+        pref_lang: "El idioma en el que desea utilizar el sistema."
+        role: "El papel del usuario en la misión actual, y si están actualmente activos o no. Los usuarios inactivos no pueden acceder a la misión en absoluto."
+        api_key: "Utilice esta tecla para conectar con otras aplicaciones de Elmo."
+      user_batch:
+        batch: |-
+          Entre los nombres, direcciones de correo electrónico y números de teléfono (CON el código del país), uno por línea, separados por comas o justificaciones. Por ejemplo:
+
+          Alice Merrywinkle, alice@winkle.org, +20112313411
+          Chung Li, cli@gmail.com
+          Forgo Niambot, +203300303, +2083748374
+          Stewbuilder Dennis, chow@yahoo.co.uk, +20923187493
+    errors:
+      messages:
+        taken: "Introduzca un valor único."
+        is_invalid: "Introduzca un valor válido."
+        blank: "Esta información es obligatoria."
+        empty: "Este campo no puede estar vacío."
+        not_a_number: "Por favor introduzca un número válido."
+        not_an_integer: "Por favor, introduzca un número entero válido."
+        did_not_match: "Las contraseñas no coinciden."
+        too_long:
+          one: "Por favor ponga al menos un carácter."
+          other: "Por favor, ponga al menos %{count} carácteres."
+        too_short:
+          one: "Por favor ponga al menos un carácter."
+          other: "Por favor ponga al menos %{count} carácteres."
+        wrong_length:
+          one: "Por favor ponga exactamente un carácter."
+          other: "Por favor ponga exactamente %{count} carácteres."
+      models:
+        answer:
+          required: "Por favor, introduzca un valor."
+        assignment:
+          blank: "es requerido"
+        broadcast:
+          no_recipients: "Ninguno de estos destinatarios recibiría esta emisión . Por favor, ajuste el medio y vuelva a intentarlo."
+        condition:
+          all_required: "Todos los campos de con condición son obligatorios."
+        form:
+          cant_delete_if_has_responses: "No se puede eliminar este formulario porque tiene respuestas asociadas."
+          cant_delete_published: "Un Formulario publicado no se puede eliminar."
+          cant_edit_published: "Un Formulario publicado no se puede editar."
+          ranks_break_conditions: "Las nuevas clasificaciones invalidan una o más condiciones."
+          general: "Formulario no es válido (vea a continuación)."
+        mission:
+          cant_delete_if_assoc: "No se puede eliminar esta Misión porque tiene Formularios asociados, Respuestas asociadas u otros objetos."
+          let_num_spc_only: "Por favor, utilice sólo letras, números y espacios."
+          not_unique: "El nombre es muy similar a la misión ya existente '%{existing}'"
+          general: "Misión es inválida (vea a continuación)."
+        option:
+          cant_delete_if_has_response: "No se puede eliminar esta Opción, ya que está incluida en al menos una respuesta."
+          cant_change_if_published: "No se puede cambiar esta Opción, ya que aparece en al menos un Formulario publicado."
+          cant_delete_if_published: "No se puede eliminar esta Opción, ya que aparece en al menos un Formulario publicado."
+          names_cant_be_all_blank: "Al menos una traducción de nombres se debe dar para cada opción."
+          names_too_long: "Los nombres deben tener como máximo de 30 carácteres."
+        option_set:
+          at_least_one: "Debe elegir al menos una opción."
+          cant_delete_if_has_questions: "No se puede eliminar este Conjunto de Opciones porque una o más Preguntas están relacionadas."
+          cant_delete_if_has_answers: "No se puede eliminar este Conjunto de Opciones, ya que se incluye en al menos una Respuesta ."
+          general: "Hubo un problema al guardar el conjunto de opciones."
+          wrong_depth: "Tiene %{levels} niveles de opción pero su árbol de opciones sólo tiene %{depth}  opciones. "
+        question:
+          at_least_one_name: "Debe introducir un título en al menos un idioma. "
+          attributes:
+            code:
+              invalid: "Debe comenzar con una letra, utilice sólo letras y números, y un máximo de 20 carácteres."
+          cant_change_if_conditions: "No se puede cambiar el Tipo o Conjunto de Opciones porque hay Condiciones que se refieran a esta Pregunta."
+          cant_change_if_responses: "No se puede cambiar el Tipo o Conjunto de Opciones porque ya hay Respuestas para esta Pregunta ."
+          cant_delete_if_has_answers: "No se puede eliminar esta Pregunta, ya que se hace referencia a ella en al menos una Respuesta ."
+          cant_delete_if_published: "No se puede eliminar esta Pregunta, ya que aparece en al menos un Formulario publicado."
+          general: "Pregunta no es válida (vea a continuación)."
+        questioning:
+          attributes:
+            code:
+              invalid: "Debe comenzar con una letra, utilice sólo letras y números, y un máximo de 20 carácteres."
+          cant_delete_if_has_answers: "No se puede eliminar esta Pregunta, ya que tiene una o más respuestas para este Formulario ."
+          invalid_condition: "Condición no es válida (vea a continuación)."
+          question: "Pregunta "
+        report/report:
+          attributes:
+            fields:
+              blank: "Debe elegir al menos una pregunta o atributo."
+            form_id:
+              blank: "Debe elegir un Formulario sobre el cual informar."
+            name:
+              blank: "Debe establecer un título para el informe."
+            question_order:
+              blank: "Usted debe elegir un orden para las preguntas."
+            questions:
+              blank: "Debe elegir al menos una pregunta o un conjunto de opciones."
+            tally_type:
+              blank: "Usted debe elegir un tipo de recuento."
+            text_responses:
+              blank: "Usted debe elegir cómo mostrar las respuestas de texto."
+            type:
+              blank: "Debe seleccionar un tipo de informe."
+        response:
+          general: "La Respuesta no es válida (vea a continuación)."
+          missing_answers: "No todas las preguntas tienen respuestas."
+          invalid_answers: "Hay respuestas inválidas."
+          checked_out: "Esta respuesta ha sido revisada por:"
+        setting:
+          attributes:
+            preferred_locales_str:
+              invalid_code: "El código del idioma '%{code}' es inválido. "
+              one_must_have_translations: "Por favor elija al menos un idioma que tenga traducciones (%{locales})."
+          general: "Los parámetros no son válidos (vea a continuación)."
+        user:
+          at_least_digits: "Por favor ponga al menos %{num} dígitos."
+          cant_delete_if_responses: "No se puede eliminar este usuario porque tiene respuestas asociadas."
+          duplicate_assignments: "Hay tareas duplicadas."
+          no_missions: "Usted no esta asignado a ninguna misión."
+          phone_assigned_to_other: "Este número ya ha sido asignada a otro usuario."
+          general: "Usuario no es válido (vea a continuación)."
+          attributes:
+            assignments:
+              cant_be_empty_if_not_admin: "Se requiere al menos una tarea si el usuario no es un administrador."
+            login:
+              invalid: "Por favor, use sólo letras , números o puntos."
+            reset_password_method:
+              cant_passwd_email: "No puede %{verb} la contraseña por correo electrónico porque no ha especificado una dirección de correo electrónico."
+  layout:
+    about: "A cerca de ELMO"
+    actions: "Acciones"
+    are_you_sure: "Está seguro/a?"
+    change_language: "Cambiar Idioma"
+    created_by: "Creado por"
+    delete_warning: "¿Está seguro de que desea eliminar de forma permanente el %{obj_description}?"
+    deselect_all: "Anular todas las selecciones."
+    loading: "Cargando..."
+    locale_change_get_only: "Cambar el idiomas de esta página podría provocar la pérdida de datos. Por favor, complete o cancele el formulario y vuelva a intentarlo."
+    logged_in_as: "Ha iniciado sesión como"
+    mission_change_get_only: "Cambar misiones desde esta página podría provocar la pérdida de datos. Por favor, complete o cancele el formulario y vuelva a intentarlo."
+    must_be: "Tiene que ser"
+    no_selection: "No ha seleccionado nada."
+    reqd_sym_definition: "Campos obligatorios están marcados con un %{reqd_sym}."
+    select_all: "Seleccionar Todo"
+    server_contact_error: "Error al contactar con el servidor"
+    system_error: "Error del sistema. El Administrador ha sido notificado."
+    system_version: "Versión del Sistema"
+    time_ago: "Hace %{time}"
+    time_zone: "Zona Horaria"
+    updated_at: "Actualizado a las"
+    no_published_forms: "No hay formularios publicados"
+  will_paginate:
+    broadcast:
+      page_entries_info:
+        single_page_html:
+          zero: "No se pueden encontrar Emisiones"
+          one: "Mostrando <b>1</b> Emisión"
+          other: "Mostrando <b>todas %{count}</b> Emisiones"
+        multi_page_html: "Mostrando Emisiones  <b>%{from} - %{to}</b> de <b>%{count}</b> totales"
+    form:
+      page_entries_info:
+        single_page_html:
+          zero: "No se ha encontrado ningún formulario"
+          one: "Mostrando <b>1</b> Formulario"
+          other: "Mostrando <b>todos %{count}</b> Formularios"
+    mission:
+      page_entries_info:
+        single_page_html:
+          zero: "No se han encontrado Misiones"
+          one: "Mostrando <b>1</b> Misión"
+          other: "Mostrando <b>todas %{count}</b> Misiones"
+    option:
+      page_entries_info:
+        single_page_html:
+          zero: "No se han encontrado Opciones"
+          one: "Mostrando <b>1</b> Opción"
+          other: "Mostrando <b> todas %{count}</b> Opciones"
+    option_set:
+      page_entries_info:
+        single_page_html:
+          zero: "No se han encontrado Conjuntos de Opciones"
+          one: "Mostrando <b>1</b> Conjunto de Opciones"
+          other: "Mostrando <b>todos %{count}</b> Conjunto de Opciones"
+    question:
+      page_entries_info:
+        single_page_html:
+          zero: "No se han encontrado Preguntas"
+          one: "Mostrando <b>1</b> Pregunta"
+          other: "Mostrando <b>todas %{count}</b> Preguntas"
+          multi_page_html: "Mostrnado Preguntas <b>%{from} - %{to}</b> de <b>%{count}</b> en total"
+    questioning:
+      page_entries_info:
+        single_page_html:
+          zero: "No se han encontrado Preguntas"
+          one: "Mostrando <b>1</b> Pregunta"
+          other: "Mostrando <b>todas %{count}</b> Preguntas"
+          multi_page_html: "Mostrando Preguntas <b>%{from} - %{to}</b> de <b>%{count}</b> en total"
+    report/report:
+      page_entries_info:
+        single_page_html:
+          zero: "No se han encontrado Informes"
+          one: "Mostrando <b>1</b> Informe"
+          other: "Mostrando <b>todos %{count}</b> Informes"
+    response:
+      page_entries_info:
+        single_page_html:
+          zero: "No se han encontrado Respuestas"
+          one: "Mostrando <b>1</b> Respuesta"
+          other: "Mostrando <b>todas %{count}</b> Respuestas"
+        multi_page_html: "Mostrando Respuestas <b>%{from} - %{to}</b> de <b>%{count}</b> en total"
+    sms/message:
+      page_entries_info:
+        single_page_html:
+          zero: "No se han encontrado SMSes"
+          one: "Mostrando <b>1</b> SMS"
+          other: "Mostrando <b>todos %{count}</b> SMSes"
+        multi_page_html: "Mostrando SMSes <b>%{from} - %{to}</b> de <b>%{count}</b> en total"
+    user:
+      page_entries_info:
+        single_page_html:
+          zero: "No se han encontrado Usuarios"
+          one: "Mostrando <b>1</b> Usuario"
+          other: "Mostrando <b>todos %{count}</b> Usuarios"
+        multi_page_html: "Mostrando Usuarios <b>%{from} - %{to}</b> de <b>%{count}</b> en total"
+  authlogic:
+    error_messages:
+      consecutive_failed_logins_limit_exceeded: "Se ha excedido el límite de intentos de inicio de sesión erróneos. Su cuenta ha sido inutilizada."
+      email_invalid: "debe parecerse a una dirección de correo electrónico."
+      general_credentials_error: "La combinació de usuario/contraseña que ha introducido no es válida."
+      login_blank: "Introduzca un nombre de usuario."
+      login_invalid: "Sólo debe usar letras, números, espacios y . -_@"
+      login_not_found: "Invalido."
+      no_authentication_details: "No ha proporcionado ninguna información para la autentificación."
+      not_active: "Su cuenta no está activa."
+      not_approved: "Su cuenta no ha sido aprobada."
+      not_confirmed: "Su cuenta no ha sido confirmada."
+      password_blank: "Por favor introduzca una contraseña."
+      password_invalid: "No es válido."
+    models:
+      user_session: "Sesión de Usuario"
+    attributes:
+      user_session:
+        login: "Nombre de usuario"
+        password: "Contraseña"
+        remember_me: "Recuérdame"
+  search_qualifiers:
+    text: "texto"
+    email: "correo electrónico"
+    form: "formulario"
+    login: "iniciar sesión"
+    name: "nombre"
+    option_set: "conjunto de opciones "
+    phone: "teléfono"
+    question: "pregunta"
+    question_type: "Tipo de Pregunta"
+    reviewed: "revisado"
+    source: "fuente"
+    submit_date: "fecha de entrega"
+    submitter: "remitente"
+    code: "código"
+    title: "título"
+    type: "tipo"
+    tag: "etiqueta"
+    date: "fecha"
+    datetime: "fecha y hora"
+    username: "nombre de usuario"
+    content: "contenido"
+    number: "número"
+  page_titles:
+    broadcasts:
+      index: "Emisiones"
+      new: "Enviar Emisión"
+      new_with_users: "Enviar Emisión"
+      show: "Emisión"
+    forms:
+      choose_questions: "Añadir preguntas al Formulario: %{name}"
+      edit: "Editar Formulario: %{name}"
+      index: "Formularios"
+      new: "Nuevo Formulario"
+      show: "Formulario: %{name}"
+    missions:
+      edit: "Editar Misión: %{name}"
+      index: "Misiones"
+      new: "Nueva Misión"
+      show: "Misión: %{name}"
+    option_sets:
+      edit: "Editar Conjunto de Opciones: %{name}"
+      index: "Conjunto de Opciones"
+      new: "Nuevo Conjunto de Opciones"
+      show: "Conjunto de Opciones: %{name}"
+    options:
+      edit: "Editar Opción: %{name}"
+      index: "Opciones"
+      new: "Nueva Opción"
+      show: "Opción: %{name}"
+    password_resets:
+      all: "Reestablecer la contraseña"
+    questions:
+      edit: "Editar Pregunta: %{code}"
+      index: "Preguntas"
+      new: "Nueva Pregunta"
+      show: "Pregunta: %{code}"
+    questionings:
+      edit: "Editar Pregunta: %{code}"
+      index: "Preguntas"
+      new: "Nueva Pregunta "
+      show: "Pregunta: %{code}"
+    responses:
+      edit: "Editar Respuesta: #%{id}"
+      index: "Respuestas"
+      new: "Nueva Respuesta "
+      show: "Respuesta: #%{id}"
+    reports:
+      index: "Informes"
+      new: "Nuevo Informe"
+      edit: "Editar Informe"
+    settings:
+      all: "Ajustes"
+    sms:
+      index: "Registro de SMS"
+    sms_tests:
+      all: "Consola de texto SMS"
+    user_batches:
+      all: "Crear Varios Usuarios"
+    user_sessions:
+      new: "Iniciar sesión"
+      logged_out: "Cerrar Sesión"
+    users:
+      edit: "Editar Usuario: %{name}"
+      edit_profile: "Editar Perfil"
+      show_profile: "Perfil: %{name}"
+      index: "Usuarios"
+      login_instructions: "Instrucciones de inicio de sesión"
+      new: "Nuevo Usuario "
+      show: "Usuario: %{name}"
+    welcome:
+      index: "Página principal"
+      unauthorized: "No autorizado"
+  admin_mode:
+    admin_mode: "Modo de administración"
+    exit_admin_mode: "Salir del modo de administración"
+    goto_admin_mode: "Modo de administración"
+  answer:
+    no_name: "Sin Nombre"
+    this_answer: "Esta Respuesta"
+  attrib_fields:
+    form: "Formulario"
+    submitter: "Remitente"
+    source: "Fuente"
+    time_submitted: "Hora de Entrega"
+    date_submitted: "Fecha de Entrega"
+    response_id: "Identificación de la Respuesta"
+    reviewed: "Revisado"
   broadcast:
-    send_broadcast: "Enviar Difusión"
-    sms_error: "Error SMS"
+    balance_check_failed: "Error en la comprobación del saldo SMS."
+    balance_notice: "Tiene %{balance} de crédito SMS es su %{account_type} cuenta."
+    chars:
+      remaining: "carácteres restantes"
+      too_many: "demasiados carácteres"
+    email_intro: "Este es un mensaje de difusión de"
+    email_error: "Error con correo electrónico"
+    instructions: "Para enviar un mensaje de difusión, en primer lugar, seleccione los destinatarios y, a continuación, haga clic en 'Enviar Mensaje de Difusión'."
+    may_not_be_enough: "Puede que esto no sea suficiente."
+    mediums:
+      names:
+        sms: "SMS"
+        email: "Correo Electrónico"
+        sms_only: "Sólo SMS"
+        email_only: "Sólo Correo electrónico"
+        both: "Ambos SMS y Correo Electrónico"
+      options:
+        sms: "SMS preferido (uso de correo electrónico si el receptor no tiene teléfono)"
+        email: "Correo electrónico preferido (uso de SMS si un destinatario no tiene correo electrónico)"
+        sms_only: "SMS sólo (no enviar ningún mensaje de correo electrónico)"
+        email_only: "Sólo Correo Electrónico (no enviar ningún SMSes)"
+        both: "Ambos SMS y Correo Electrónico"
+    no_possible_recipients: "Ninguno de los usuarios que ha seleccionado tiene una dirección de correo electrónico o número de teléfono. Por favor, vuelva a intentarlo."
+    send_broadcast: "Enviar Emisión"
+    send_success: "Emisión enviada con éxito."
+    send_error: "Error al enviar la emisión (vea a continuación)."
+    sms_error: "Error en SMS"
     which_phone_options:
-      main_only: "único teléfono principal"
+      main_only: "Sólo teléfono principal"
+      alternate_only: "Sólo teléfono alternativo"
+      both: "Ambos teléfonos"
+  condition:
+    operators:
+      eq: "es igual a"
+      lt: "es menos que"
+      gt: "es mayor que"
+      leq: "es menos que o igual a"
+      geq: "es mayor que o igual a"
+      neq: "no es igual a"
+      inc: "incluye"
+      ninc: "no incluye"
+    no_refable_qings: "No hay preguntas en este formulario a las que una condición sea referida."
+    op: "Comparación"
+    value: "Valor"
   dashboard:
+    close_dashboard: "Cerrar Panel de Comando"
+    enter_full_screen: "Entrar Pantalla Completa"
+    exit_full_screen: "Salir Pantalla Completa"
+    low_activity: "Poca Actividad"
+    my_responses: "Mis Respuestas"
+    no_reports: "Aún no se han creado Informes para esta misión."
+    recent_responses: "Últimas Respuestas"
+    response_locations: "Localizaciones de la Respuesta"
     summary: "Resumen"
+    top_forms: "Informes Populares"
+  data_integrity:
+    appears_elsewhere_warnings:
+      by_type:
+        question: "Esta Pregunta aparece en los siguientes Formularios:  *%{related}*. Cualquier cambio se reflejará en estos Formularios."
+        option_set: "Este Conjunto de Opciones aparece en las siguientes Preguntas: *%{related}*. Cualquier cambio se reflejará en estas Preguntas. "
+    has_answers_warnings:
+      by_type:
+        question: "Esta pregunta tiene respuestas existentes. Por lo tanto algunos campos no se pueden editar."
+    option_in_use_name_change_warning: "Esta opción se utiliza en otros formularios publicados o se hace referencia en las respuestas existentes. Usted debe tener cuidado de no cambiar el significado de la Opción."
+    option_standard_copy_name_change_warning: "Esta opción es una copia de una opción estándar. Usted debe asegurarse de mantener el significado original de la Opción de modo que corresponda con el formato estándar."
+    published_warnings:
+      form: "Este formulario está publicado, lo que significa que ya puede estar en las manos de los observadores. Algunos campos, por lo tanto, no se pueden editar. Por favor proceda con precaución al hacer los cambios."
+      questioning: "El Formulario relacionado con los siguientes campos ya ha sido publicado, por lo tanto estos campos no se pueden editar."
+      question: "Esta Pregunta aparece en al menos un Formulario publicado, lo cual quiere decir que es posible que ya esté en las manos de los observadores. Por lo tanto, algunos campos no se pueden editar. Por favor, aseguresé de no cambiar el significado de la pregunta."
+      option_set: "Este Conjunto de Opciones aparece en al menos un Formulario publicado, lo que significa que ya puede estar en manos de los observadores, por lo tanto las Opciones no se pueden añadir, eliminar o reordenar. Por favor proceda con precaución si va a editar las Opciones."
+      sms: "Tales cambios harán que los usuarios de los formularios SMS reciban un mensaje de error si ententan entregar la versión actual del Formulario."
+      odk: "Estos cambios no desactivaran las Respuestas de ODK, pero pueden causar alguna pérdida de datos y/o Respuestas que no son válidas (por ejemplo, faltan respuestas necesarias)."
+  form:
+    select_api_users: "Seleccionar todos los usuarios que pueden obtener acceso a los datos del Formulario a través de la API:"
+    add_questions: "Añadir Preguntas"
+    add_selected: "Añadir Preguntas Seleccionadas al Formulario"
+    back_to_questions: "Volver a la Lista de Preguntas"
+    choose_form: "Elija una Formulario..."
+    clone_confirm: "¿Está seguro de que desea realizar una copia del formulario '%{form_name}'?"
+    clone_error: "Hubo un problema clonando el formulario (%{msg})."
+    clone_success: "Formulario '%{form_name}' clonado con éxito."
+    no_mission: "Ninguna Misión"
+    print_form: "Imprimir Formulario"
+    print_format_tips:
+      title: "Imprimir Consejos de Formato"
+      body: "Para asegurarse de que el formulario se imprime correctamente, por favor active la impresión de los colores de fondo e imágenes en la ventana de opciones de impresión de su sistema. Esta ventana debe aparecer tras seleccionar 'OK' abajo."
+    publish: "Publicar"
+    publish_error: "Hubo un problema publicando el formulario (%{msg})."
+    publish_success: "Formulario publicado con éxito."
+    publish_form: "Publicar Formulario"
+    question_remove_error: "Hubo un problema eliminando las preguntas (%{msg})."
+    question_remove_answer_error: "Al menos una de las preguntas seleccionadas tienen respuestas y no se pueden eliminar."
+    questions_add_error: "Hubo un problema añadiendo las preguntas (%{msg})."
+    questions_add_success: "Preguntas añadidas con éxito."
+    questions_remove_success: "Preguntas eliminadas con éxito."
+    remove_selected: "Eliminar elementos Seleccionados"
+    remove_question_confirm: "¿Está seguro de que desea eliminar estas ### pregunta(s) del formulario?"
+    reqd_sym_definition: "Preguntas obligatorias están marcadas con un"
+    save_and_publish: "Guardar y Publicar"
+    unpublish_error: "Hubo un problema deshaciendo la publicación del formulario (%{msg})."
+    unpublish_success: "Se ha deshecho con éxito la publicación del Formulario."
+    unpublish: "Deshacer publicación"
+    unpublish_form: "Deshacer publicación del Formulario"
+    unsaved_rank_notice: "Usted aún no ha guardado los cambios realizados en el orden de las preguntas. Usted debe hacer click en el botón \"Guardar \" si desea guardar estos cambios."
+    view_sms_guide: "Ver Guía SMS"
+  incomplete_response:
+    missing_answers:
+      label: "¿Le faltan algunas respuestas requeridas a este formulario?"
+      hint: "Este formulario permite la entrega de respuestas incompletas en situaciones especiales. Si no está seguro de si falta alguna de las preguntas requeridas, selecciones 'Creo que no' y guárdelas."
+      foo: "barra de tareas"
+      options:
+        'no': "No lo creo"
+        'yes': "Sí"
+    code_label: "Introduzca el código incompleto de anulación"
+  location_picker:
+    choose_location: "Elegir Ubicación"
+    current_location: "Ubicación Actual"
+    enter_query: "Escriba una consulta en la casilla de arriba para buscar una ubicación en la base de datos geográfica de Google."
+    search_locations: "Búsque ubicaciones..."
+  notifier:
+    if_link_doesnt_work: "Si el enlace de arriba no funciona intenta copiar y pegar el enlace en su navegador."
+    if_you_made_it: "Si usted hizo esta petición, sólo haga click en el enlace que aparece a continuación:"
+    login_name: "Su nombre de usuario es %{login}."
+    to_choose: "Para elegir una contraseña, por favor haga click aquí:"
+    must_choose: "Usted DEBE elegir una contraseña antes poder utilizar cualquier sistema de monitorización electoral, incluyendo sistemas basados en el teléfono móvil."
+    password_reset_instructions: "Instrucciones de reestablecimiento de contraseña"
+    request_made: "Una solicitud para cambiar su %{site} contraseña ha sido creada. Si usted no hizo esta solicitud, ignore este correo electrónico."
+    welcome: "¡Bienvenido a %{site}!"
+  option_set:
+    add_level: "Añadir Nivel"
+    and_n_more: "... y %{count} más opciones."
+    clone_confirm: "Seguro de que quiere hacer una copia del Conjunto de Opciones '%{name}'?"
+    clone_error: "Hubo un problema clonando el Conjunto de Opciones (%{msg})."
+    clone_success: "Conjunto de Opciones '%{name}' ha sido clonado con éxito."
+    create_new: "[Crear una Nueva Opción]"
+    edit_option: "Editar la Opción "
+    edit_option_level: "Editar este Nivel de Opción"
+    huge_notice: "Este Conjunto de Opciones es muy largo (%{count} Options) y por lo tanto sólo una pequeña muestra de las Opciones están expuestas debajo. Puede editar el nombre y otras propiedades aquí pero por favor use las caracteríisticas de importación/exportación para editar las Opciones en si."
+    leave_page_warning: "Al salir de esta página abandonará los cambios hechos en este Conjunto de Opciones."
+    multi_level_forbidden_notice: "Este Conjunto de Opciones está siendo usado actualmente por al menos una selección de varias preguntas y por lo tanto, no puede ser convertida a un set multi-nivel."
+    new_option_level: "Nuevo Nivel de Opción "
+    none_found: "No se han encontrado opciones correspondientes"
+    searching: "Buscando..."
+    type_to_add_new: "Escriba un nombre para la opción"
+  tag:
+    none_found: "No se han encontrado etiquetas correspondientes"
+    searching: "Buscando..."
+    type_to_add_new: "Escriba un nombre para la etiqueta"
+    new_tag: "Nueva etiqueta"
+    click_to_filter: "Haga click para filtrar con esta etiqueta"
+  password_reset:
+    check_email: "Instrucciones para restablecer la contraseña han sido enviadas por correo electrónico. Por favor revise su correo electrónico."
+    enter_new_pass: "%{name}, por favor entre una nueva contraseña para su cuenta."
+    fill_out_form: "Rellene el siguiente formulario y las instrucciones para restablecer su contraseña le será enviada por correo electrónico. Si no hay una dirección de correo electrónico asociada con su cuenta de la contraseña tendrá que reiniciar por un administrador."
+    success: "Contraseña actualizada con éxito."
+    token_not_found: |-
+      Lo sentimos, pero no hemos podido localizar su cuenta. Si está teniendo problemas intente copiar y pegar el URL
+      desde su correo a su buscador or intente reiniciar el proceso de creación de una nueva contraseña.
+    user_not_found: "Ningún usuario fue encontrado con esa dirección de correo electrónico."
+  permission_error:
+    need_mission: "No se puede ver sin seleccionar una misión"
+    need_login: "Debe iniciar sesión para ver la página."
+    no_permission: "No tiene permiso para ver esa página."
+    processing_error: "Error al procesar permiso."
+    observers_cant_change_submitter: "Los observadores no pueden cambiar el remitente de las respuestas."
+    must_be_admin: "Debe ser un administrador para ver la página."
+    must_be_logged_out: "Debe cerrar sesión para ver la página."
+  question:
+    answer_only_caps: "RESPONDER SÓLO SI"
+    maxmin:
+      gt: "mayor que"
+      lt: "menor que"
+      or_eq: "o igual a"
+      strictly_lt: "Estrictamente menor que"
+      strictly_gt: "Estrictamente mayor que"
+    other_forms_published: "Por lo menos una de esas formas está publicada, de manera que no todos los campos se pueden editar."
+  question_type:
+    text: "Texto"
+    long_text: "Texto Largo"
+    integer: "Número entero"
+    decimal: "Decimal"
+    location: "Ubicación"
+    select_one: "Seleccione uno"
+    select_multiple: "Seleccione múltiples"
+    datetime: "Fecha/Hora"
+    date: "Fecha"
+    time: "Hora"
+  report/report:
+    add_column: "Añadir Columna"
+    answered_only_if: "Respuesto sólo si"
+    attribute:
+      zero: "Atributos"
+      one: "Atributo"
+      other: "Atributos"
+    back_to_list: "Volver a Lista de Informes"
+    blank: "En blanco"
+    choose_attrib_question: "Elija un atributo o pregunta"
+    choose_disagg_qing: "Elija una Pregunta..."
+    choose_form: "Elija un Formulario..."
+    choose_report: "Elija un Informe..."
+    columns: "Columnas"
+    display_options: "Opciones"
+    edit_report: "Editar Informe"
+    enter_name: "¿Cuál es el título del informe?"
+    export_to_csv: "Exportación de estadísticas al formato CSV"
+    fields: "Campos"
+    form: "Formulario"
+    form_selection: "Seleccionar Formularios"
+    generated_at: "Generado a las"
+    group_by_tag: "¿Agrupar las preguntas por etiqueta?"
+    grouping: "Agrupar por"
+    groupings: "Agrupaciones"
+    how_to_disaggregate: "Informe dividido por un pregunta especial?"
+    how_to_display_questions: "¿Cómo se deben mostrar las preguntas?"
+    how_to_display_results: "¿Cómo le gustaría mostrar los resultados?"
+    how_to_order_questions: "¿Cómo deben organizarse las preguntas?"
+    loading_report: "Cargando Informe..."
+    questions_with_option_sets: "Preguntas con estos conjuntos de opciones"
+    missing_observers: "Observadores que no presentan Informes"
+    mission: "Misión"
+    no_match: "No se encontraron estadísticas coincidentes."
+    question_selection: "Seleccione Preguntas"
+    report_type: "Tipo de Informe"
+    response_count: "Entregas Totales"
+    see_dependent_questions:
+      one: "Ver pregunta dependiente"
+      other: "Ver preguntas dependientes"
+    show_examples: "Mostrar Ejemplos"
+    show_text_responses: "¿Mostrar respuestas con texto?"
+    submitted_by_at: "De %{user} a %{datetime}"
+    subset_intro: "Estadísticas para las respuestas donde la respuesta a la '%{question}' pregunta ha sido '%{disagg_value}'"
+    tally: "Recuento"
+    tally_type: "¿Qué le gustaría recontar?"
+    these_questions: "Estas preguntas específicas"
+    total_rows: "Filas Totales"
+    view_response: "Repuesta #%{id}"
+    what_attrib_col_headers: "¿Qué atributo o pregunta le gustaría para los encabezados de la columna (opcional)?"
+    what_attrib_row_headers: "¿Qué atributo o pregunta le gustaría para los encabezados de la fila?"
+    what_bar_style: "¿Qué estilo de barra de tareas desea?"
+    what_percent_style: "¿Qué estilo de porcentaje le gustaría?"
+    what_columns_in_list: "¿Qué columnas le gustaría ver en la lista?"
+    what_form: "¿Sobre qué formulario le gustaría crear un informe?"
+    what_type: "¿Qué tipo de informe desea?"
+    which_calculation: "¿Cual cálculo (si los hay) desea aplicar?"
+    which_forms: "¿Qué formularios le interesan?"
+    which_questions: "¿Qué pregunta(s) le gustaría incluir?"
+    bar_styles:
+      side_by_side: "Junto a"
+      stacked: "Apilados"
+    calculation_descriptions:
+      identity: "Ningún"
+      zero_nonzero: "Si la respuesta es 0 o mayor que 0"
+    display_types:
+      table: "Gráfico"
+      bar_chart: "Gráfico de Barras"
+    descriptions:
+      tally_report: "Cálculos agregados de las respuestas, agrupadas por atributos de interés."
+      list_report: "Un listado inicial de respuestas y los atributos para un conjunto de respuestas."
+      standard_form_report: "Un resumen de las respuestas pregunta por pregunta de un formulario específico."
+    examples:
+      tally_report:
+      - Número de Muy Buena, Buena, etc. respuestas a la Pregunta General
+      - Porcentaje de Sí y No para todas las preguntas de tipo Sí-No
+      - Número de respuestas por formulario por cada equipo
+      - Porcentaje de Cero y No-Cero respuestas por Estado para la pregunta sobre ObservadoresDomesticos
+      list_report:
+      - Lista de respuestas a las Quejas y OtherIrreg preguntas junto con el número del centro de votación
+      - Lista de todos los números de centros de votación, sin duplicados
+      - Lista de nombre del remitente, la fecha, y la respuesta a la pregunta NeedSecurityContact
+      standard_form_report:
+      - Resúmenes (porcentaje, promedios, medianas, etc. ) de todas las preguntas de una formulario
+      - Pueden ser agrupados por tipo de pregunta o etiqueta de pregunta
+      - 'Puede ser dividida por respuesta a una pregunta específica (p. ej., región o rural/urbano) '
+    percent_types:
+      none: "Ningún Porcentaje"
+      overall: "Porcentaje General"
+      by_row: "Porcentaje Por Fila"
+      by_col: "Porcentaje por Columna"
+    question_labels:
+      code: "Sólo los Códigos (ahorra espacio)"
+      title: "Títulos Completos (más fácil de leer)"
+    question_orders:
+      number: "Por Numero"
+      type: "Por Tipo"
+    standard_form_report:
+      overall_headers:
+        dates: "Fechas"
+        responses: "Respuestas"
+      stat_headers:
+        mean: "Promedio"
+        median: "Media"
+        min: "Mínimo"
+        max: "Máximo"
+      type_sets:
+        categorical: "Estadísticas Categóricas"
+        numbers: "Datos Estadísticos"
+        dates: "Fechas"
+        times: "Horas"
+        short_text: "Respuestas de Texto Corto"
+        long_text: "Respuestas de Texto Largo"
+    tally_types:
+      answer: "Respuestas por Pregunta"
+      response: "Respuestas por Respuesta/Atributo"
+    tally_type_examples:
+      answer: "Recuento de Sí's y No's para todas las preguntas de tipo Sí/No"
+      response: "Recuento de las respuestas por formulario para cada equipo"
+    text_response_options:
+      all: "Mostrar Todos"
+      short_only: "No mostrar Preguntas de Texto Largo"
+      none: "No Mostrar Nada"
+  response:
+    edit_this_response: "Editar esta Respuesta"
+    export_to_csv: "Exportación a formato CSV"
+    loading: "Cargando Respuesta..."
+    observation_time: "Hora de Observación"
+    save_and_mark_reviewed: "Guardar y Marcar como Revisado"
+    view_response: "Ver Respuesta"
+    checked_out: "Esta respuesta ha sido revisada por:"
+  role:
+    role: "Papel"
+    observer: "Observador "
+    staffer: "Empleado"
+    coordinator: "Coordinador"
+    admin: "Administrador"
+  search:
+    blank: "en blanco"
+    examples:
+      responses:
+      - '"some phrase"'
+      - submitter:"john smith"
+      - form:polling
+      - reviewed:1
+      - submit-date < 2013-10-15
+      - '{QuestionCode}:(disruption security)'
+      users:
+      - john smith
+      - telefono:+443726458364
+      - login:jsmith
+      - email:jsmith@example.com
+      questions:
+      - poll workers
+      - code:BallotBoxes
+      - type:select-one
+      sms:
+      - poll workers
+      - 1.b
+      - '+1234567890'
+      - john smith
+      - jsmith
+      - type:reply
+      - date >= 2015-01-29
+      - datetime < "2015-01-12 14:00"
+    expected: "Esperado"
+    help_link: "Buscar Ayuda"
+    help_title: "Buscar Ayuda"
+    invalid_op: "El operador '%{op}' no es valido para el calificador '%{qualifier}'."
+    multiple_terms_not_allowed: "No se permiten múltiples términos para '%{qualifier}' búsquedasa no ser que O sea usado."
+    must_use_qualifier: "Usted debe usar un calificador para todos los términos de búsqueda"
+    or_not_allowed_between: "O no está permitido entre las expresiones."
+    invalid_qualifier: "'%{chunk}' no es un calificador de búsqueda válido."
+    search_error: "Error de Búsqueda"
+    unexpected: "Su consulta no se puede entender debido a un texto inesperado cerca de '%{str}'."
+    unexpected_end: "No se pudo entender su búsqueda debido a un texto inesperado al final."
+  setting:
+    change_sms_password: "Cambiar Contraseña"
+    override_code_warning: "Tenga en cuenta que el nuevo código de anulación no funcionará en los formularios ya descargados. Se debe anotar el código existente si esto es un problema. ¿Está seguro de que desea generar el código?"
+    headings:
+      general: "Configuración General"
+      sms: "Ajustes del SMS"
+  sms:
+    no_valid_adapter: "No hay ningún adaptador SMS saliente válido. Compruebe los ajustes."
+    outgoing_provider: "Proveedor SMS Saliente"
+  sms_console:
+    back_to_forms: "Volver a los Formularios"
+    no_reply: "No hubo respuesta."
+    submit_error: "Hubo un error al enviar la prueba."
   sms_form:
+    decoding:
+      answer_error_intro: "Disculpe, su respuesta '%{value}' a la pregunta %{rank} en el formulario '%{form_code}'"
+      answer_not_date: "no es una fecha válida"
+      answer_not_datetime: "no era una hora del día válida"
+      answer_not_decimal: "no era un número válido"
+      answer_not_integer: "no era un número entero válido"
+      answer_not_time: "no era una hora válida"
+      answer_not_valid_option: "no era una opción válida"
+      answer_not_valid_long_option_multi: "contiene multiples opciones inválidas"
+      answer_not_valid_option_multi: "contiene la opción inválida '%{invalid_options}'"
+      answer_not_valid_options_multi: "contiene opciones inválidas '%{invalid_options}'"
+      congrats: "Su respuesta al formulario '%{form_code}' ha sido recibida. ¡Gracias!"
+      duplicate_submission: "Lo sentimos, su respuesta es un duplicado de una respuesta presentada recientemente."
+      form_not_found: "Lo sentimos, no hay un formulario con el código '%{form_code}'."
+      form_not_permitted: "Lo sentimos, no está autorizado para entregar en el formulario '%{form_code}'."
+      form_not_published: "Lo sentimos, el formulario '%{form_code}' no está disponible actualmente para entregas."
+      form_not_smsable: "Lo sentimos, el formulario '% {form_code}' no está actualmente disponible para envíos de SMS."
+      form_version_outdated: "Lo sentimos, pero el código del formulario '% {form_code}' se refiere a una versión antigua. Por favor, obtenga una guía de presentación actualizada."
+      invalid_form_code: "Lo sentimos, '%{form_code}' no es un código válido para formularios."
+      question_doesnt_exist: "Lo sentimos, la pregunta %{rank} no existe en el formulario '%{form_code}'."
+      user_not_found: "Lo sentimos, no pudimos encontrarle en el sistema"
     guide:
+      all_required: "Por favor conteste todas las preguntas"
+      header: "Guía de Composición de SMS para ELMO"
+      not_all_required: "Las preguntas marcadas con un asterisco (*) son obligatorias."
       pointers:
-        long_text: "Escribe tu respuesta aquí . Abreviar si es necesario."
+        text: "Escriba su respuesta aquí. Abrevie si es necesario."
+        long_text: "Escriba su respuesta aquí . Abrevie si es necesario."
+        integer: "Escriba su respuesta aquí."
+        decimal: "Escriba su respuesta aquí."
+        select_one: "Escriba la letra de su elección aquí.. Escriba sólo una letra."
+        select_multiple: "Escriba la letra para cada elección aquí sin espacios."
+        datetime: "Escriba su respuesta aquí con el formato AAAAMMDD HHMM"
+        date: "Escriba su respuesta aquí, con el formato AAAAMMDD."
+        time: "Escriba su respuesta aquí con el formato HHMM."
+      step1: "Responda todas las preguntas a continuación y siga las instrucciones al final del formulario para enviar sus datos. Puede usar minúsculas o mayúsculas."
+      step2: "Ahora, por favor, haga lo siguiente para enviar sus datos:"
+      step2_substeps:
+      - Con su teléfono, empiece un SMS para %{submit_number}.
+      - Entre el contenido de cada línea en el lado derecho de cada página, empezando de arriba hacia abajo.
+      - Asegúrese de entrar cada línea exactamente igual. Cada línea es importante
+      - Note que cada respuesta está separada por un 'SPC'. Entre un espacio cada vez que vea 'SPC'. No añada ningún espacio adicional.
+      - Cuando haya acabado de poner la información, compruebe su mensaje para asegurarse de que corresponde al formulario.
+      - Envíe el mensaje y espere una respuesta con instrucciones adicionales.
+      - Si no recibe una respuesta tras 5 minutos, por favor vuelva a enviar el mensaje.
+      unique_code: "Este es el único código para el formulario"
+      unknown_number: "Número Desconocido"
+    validation:
+      invalid_answer: "Lo sentimos, la respuesta a la pregunta %{rank} %{error}."
+      missing_answer: "Lo sentimos, la respuesta a la pregunta requerida %{ranks} no aparece en su respueta al formulario '%{form_code}'."
+      missing_answers: "Lo sentimos, las respuestas a las preguntas requeridas %{ranks} no aparecen en sus respuesta al formulario '%{form_code}'."
+  standard:
+    import: "Importar"
+    import_choose_one:
+      forms: "Por favor, seleccione por lo menos un formulario para importar."
+      option_sets: "Seleccione al menos un Conjunto de Opciones para importar."
+      questions: "Por favor, seleccione al menos una Pregunta para importar."
+    import_errors: "Se han producido errores."
+    import_instructions:
+      forms: "Marque las casillas junto a los Formularios que desea importar. A continuación, haga clic en el botón 'importar'."
+      option_sets: "Marque las casillas junto a los Conjuntos de Opciones que desea importar. A continuación, haga clic en el botón 'importar'."
+      questions: "Active las casillas situadas junto a las Preguntas que desea importar. A continuación, haga click en el botón 'importar'."
+    import_standard:
+      forms: "Importar Formularios Estándar"
+      option_sets: "Importar Conjuntos de Opciones Estándar"
+      questions: "Importar Preguntas Estándar"
+    import_success:
+      forms:
+        zero: "Ha importado con éxito %{count} Formularios."
+        one: "Ha importado con éxito %{count} Formulario."
+        other: "Ha importado con éxito %{count} Formularios."
+      option_sets:
+        zero: "Ha importado con éxito %{count} Conjuntos de Opciones."
+        one: "Ha importado con éxito %{count} Conjunto de Opciones."
+        other: "Ha importado con éxito %{count} Conjuntos de Opciones."
+      questions:
+        zero: "Ha importado con éxito %{count} Preguntas."
+        one: "Ha importado con éxito %{count} Pregunta."
+        other: "Ha importado con éxito %{count} Preguntas."
+    no_importable:
+      forms: "No hay nada disponible para importar. O bien no hay formularios estándar, o todos han sido importados ya."
+      option_sets: "No hay nada disponible para importar. O bien no hay Conjuntos de Opciones estándar, o todos han sido importados ya."
+      questions: "No hay nada disponible para importar. O bien no hay preguntas estándar, o todas han sido importadas."
+    standard: "Estándar"
+    standard_forms: "Formularios Estándar"
+    there_were_errors:
+      zero: "Hubieron %{count} errores."
+      one: "Hubo %{count} error."
+      other: "Hubieron %{count} errores."
+  unauthorized:
+    default: "No está autorizado a acceder esa página o funcionamiento."
+    must_login: "Debe iniciar sesión para acceder a esa página."
+  user_batch:
+    bad_tokens: "No se pueden entender estas piezas: %{tokens}"
+    instructions: |-
+      En el espacio disponible abajo, ponga los nombres, direcciones de correo electrónico y números de teléfono (con el código del país), uno por línea, separados por comas o justificación. Por ejemplo:
+      Alice Merrywinkle, alice@winkle.org, +20112313411
+      Chung Li, cli@gmail.com
+      Forgo Niambot, +203300303, +2083748374
+      Stewbuilder Dennis, chow@yahoo.co.uk, +20923187493
+    error: "Se produjo un error al crear los usuarios. Vea a continuación."
+    success: "Los usuarios fueron creados con éxito."
+  user:
+    add_assignment: "Añadir Tarea."
+    api_key:
+      regenerate: "Regenerar"
+    back_to_index: "Volver a Lista de Usuarios"
+    create_multiple: "Crear Varios Usuarios"
+    edit_profile: "Editar Perfil "
+    export_vcard: "Exportar como vCard"
+    forgot_password: "¿Ha olvidado su contraseña?"
+    leave_password_alone: "Dejar contraseña"
+    login_instructions:
+      closing:
+      - Por favor note la 's' en 'https' en la página URL.
+      - Si quiere elegir una contraseña más fácil de recordar, puede cambiar su contraseña usando la página web.
+      - 'Estas credenciales también funcionan en su Android. Para poner sus credenciales,
+
+        start la aplicación de ''ODK Collect'', entre en el ''Menu'', luego ''Preferencias'',
+
+        and y después selecciones ''Usuario'' y ''Contraseña''.'
+      preamble_singular: |-
+        Las instrucciones de acceso se encuentran aquí debajo. Por favor, imprima esta página ahora y asegúrese de que el usuario indicado las recibe.
+        Ya que la contraseña del usuario esta guardara en un formato codificado, no podrá ser accedida una vez abandone esta página.
+      preamble_plural: |-
+        Las instrucciones de acceso se encuentran aquí debajo. Por favor, imprima esta página ahora y asegúrese de que el usuario indicado las recibe.
+        Ya que la contraseña del usuario esta guardara en un formato codificado, no podrá ser accedida una vez abandone esta página.
+      site_url: "Página URL"
+      title: "Instrucciones de inicio de sesión"
+      welcome: "Bienvenido a %{site}. Sus credenciales son las siguientes:"
+    logout_success: "Ha cerrado la sesión con éxito."
+    profile_updated: "Perfil actualizado con éxito."
+    reset_password_and: "Restablecer contraseña y"
+    reset_password_hint_choose: "Elegir cómo el usuario debe obtener su contraseña."
+    reset_password_hint_ending: "El sistema puede enviarles un correo electrónico con las instrucciones explicando cómo %{verb} la contraseña en línea, o bien puede crear una hoja de instrucciones imprimible que incluye una contraseña generada de forma aleatoria."
+    reset_password_hint_reset: "Elegir si pueden y cómo pueden volver a restablecer la contraseña de usuario."
+    reset_password_label_choose: "Creación de Contraseña"
+    reset_password_label_reset: "¿Restablecer la contraseña?"
+    send_email_instructions: "Enviar correo electrónico con instrucciones"
+    set_admin_password: "Establecer la contraseña de administrador y la información de perfil"
+    show_printable_instructions: "Mostrar instrucciones imprimibles"
+  welcome:
+    awaiting_review: "**%{count}** Esperando Revisión"
+    by_you: "**%{count}** Entregas hechas por ti"
+    form_count: "**%{count}** Formularios"
+    in_the_past_day: "**%{count}** en el Último Día"
+    in_the_past_hour: "**%{count}** en la Última Hora"
+    in_the_past_month: "**%{count}** en el Último Mes"
+    in_the_past_week: "**%{count}** en la Última Semana"
+    in_the_past_year: "**%{count}** en el Última Año"
+    no_mission_selected:
+      title: "Misión No Seleccionada"
+      choose: "Por favor, seleccione una misión de la lista desplegable en la parte superior derecha de la pantalla."
+      choose_or_create: "Por favor, seleccione una misión de la lista desplegable en la parte superior derecha de la pantalla, o puede"
+      create_link: "crear una nueva misión"
+      need_to_create: "En la actualidad no hay misiones. Por favor"
+      no_missions: "En la actualidad no hay misiones en el sistema. Póngase en contacto con el administrador."
+    no_recent: "**0** Respuestas Recientes"
+    published_form_count: "**%{count}** Formularios Publicados"
+    select_a_form: "Seleccione un Formulario para presentar"
+    select_a_report: "Seleccione el Informe que desee ver"
+    total_responses: "**%{count}** Respuestas Totales"
+    total_users: "**%{count}** Usuarios Totales"
+    unpublished_form_count: "**%{count}** Forumlarios No Publicados"

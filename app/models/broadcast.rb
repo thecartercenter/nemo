@@ -12,7 +12,7 @@ class Broadcast < ActiveRecord::Base
   validates(:body, :length => {:maximum => 140}, :if => Proc.new{|b| b.sms_possible?})
   validate(:check_eligible_recipients)
 
-  default_scope(includes(:recipients).order("created_at DESC"))
+  default_scope { includes(:recipients).order("broadcasts.created_at DESC") }
 
   # this method isn't used except for attaching errors
   attr_accessor :to
@@ -49,7 +49,7 @@ class Broadcast < ActiveRecord::Base
     # send emails
     begin
       if email_possible? && recipient_emails.present?
-        BroadcastMailer.broadcast(recipient_emails, subject, body).deliver
+        BroadcastMailer.broadcast(recipient_emails, subject, body).deliver_now
       end
     rescue
       add_send_error(I18n.t("broadcast.email_error") + ": #{$!}")

@@ -1,0 +1,58 @@
+<%# This partial represents a question in the form form item list. %>
+<li class="form-item form-item-question" data-id="<%= qing.id %>">
+
+  <div class="inner">
+
+    <%# Standard question? %>
+    <% if qing.standardized? %>
+      <i class="standardized fa fa-certificate"></i>
+    <% else %>
+      <%# Spacing placeholder for styling purposes %>
+      <div class="standardized"></div>
+    <% end %>
+
+    <%# Question type icon %>
+    <div class="type"><%= form_item_icon(qing.qtype_name) %></div>
+
+    <%# Filled in by CSS %>
+    <div class="rank"></div>
+
+    <div class="base-info">
+      <div class="wrapper"><%# Need this so we can handle wrapping nicely %>
+        <div>
+          [<%= qing.code %>] <%= qing.name %>
+
+          <%# Required question? %>
+          <%= content_tag(:span, '*', class: 'required-sym') if qing.required %>
+
+          <%# Tags %>
+          <% if qing.tags.length != 0 %>
+            <% qing.tags.each do |tag| %>
+              <span class="token-input-token-elmo"><%= tag.name %></span>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div> <%# End of question base info %>
+
+    <div class="actions">
+
+      <%# Condition %>
+      <% if qing.has_condition? %>
+        <div class="condition" data-ref-id="<%= qing.condition_ref_qing_id %>">
+          <i class="fa fa-link"></i> #<span><%= qing.condition_ref_qing_full_rank %></span>
+        </div>
+      <% end %>
+
+      <% unless read_only %>
+        <%= link_to content_tag(:i, '', class: 'fa fa-pencil'), edit_questioning_path(qing),
+          class: 'action_link edit' %>
+
+        <%= link_to content_tag(:i, '', class: 'fa fa-trash-o'), '#', class: 'action_link delete',
+          data: {message: I18n.t('activerecord.attributes.questioning.delete', code: qing.code)} %>
+      <% end %>
+
+    </div>
+
+  </div><%# End of question content %>
+</li>

@@ -105,24 +105,24 @@ describe Question do
       q = FactoryGirl.create(:question, :qtype_name => 'integer', :key => true)
       q2 = q.replicate(:mode => :clone)
 
-      assert_not_equal(q, q2)
-      assert_not_equal(q.key, q2.key)
+      expect(q).not_to eq q2
+      expect(q.key).not_to eq q2.key
     end
 
     it "replicating a select question within a mission should not replicate the option set" do
       q = FactoryGirl.create(:question, :qtype_name => 'select_one')
       q2 = q.replicate(:mode => :clone)
-      assert_not_equal(q, q2)
-      assert_equal(q.option_set, q2.option_set)
+      expect(q).not_to eq q2
     end
 
     it "replicating a standard select question should replicate the option set" do
       q = FactoryGirl.create(:question, :qtype_name => 'select_one', :is_standard => true)
       q2 = q.replicate(:mode => :to_mission, :dest_mission => get_mission)
-      assert_not_equal(q, q2)
-      assert_not_equal(q.option_set, q2.option_set)
-      assert_not_equal(q.option_set.options.first, q2.option_set.options.first)
-      assert_not_nil(q2.option_set.mission)
+
+      expect(q).not_to eq q2
+      expect(q.option_set).not_to eq q2.option_set
+      expect(q.option_set.options.first).not_to eq q2.option_set.options.first
+      expect(q2.option_set.mission).not_to eq nil
     end
 
     it "replicating question with short code that ends in zero should work" do

@@ -246,6 +246,7 @@ en:
         smsable: "SMSable?"
         updated_at: "Last Modified"
         version: "Version"
+        item_list_heading: "Questions"
       mission:
         compact_name: "Compact Name"
         locked: "Locked?"
@@ -257,6 +258,11 @@ en:
         multi_level: "Is Multilevel?"
         options: "Options"
         option_levels: "Levels"
+      qing_group:
+        group_name: "Name"
+        add: "Add Group"
+        edit: "Edit Group"
+        delete: "Are you sure you want to delete the group '%{name}'?"
       question:
         base: "" # this is a sort of hack to get error msg to display properly
         code: "Code"
@@ -278,6 +284,7 @@ en:
         hidden: "Hidden?"
         rank: "Rank"
         required: "Required?"
+        delete: "Are you sure you want to remove the question '%{code}' from this form?"
       response:
         age: "Age"
         answers: "Answers"
@@ -509,6 +516,7 @@ en:
         wrong_length:
           one: "Please enter at exactly one character."
           other: "Please enter exactly %{count} characters."
+        must_be_group: "Parent must be a group."
 
       models:
         answer:
@@ -933,7 +941,7 @@ en:
     option_in_use_name_change_warning: "This Option is in use in other published Forms or is referenced in existing Responses. You should be careful not to change the meaning of the Option in your edits."
     option_standard_copy_name_change_warning: "This Option is a copy of a standard Option. You should be sure to preserve the original meaning of the Option so that it agrees with the standard."
     published_warnings:
-      form: "This Form is published, meaning it may already be in the hands of observers. Some fields are thus not-editable. Please proceed with caution when making any changes."
+      form: "This Form is published, meaning it may already be in the hands of observers. Some fields are thus not-editable, and questions cannot be added, removed, or re-ordered. Please proceed with caution when making any changes."
       questioning: "The Form to which the below fields apply is published and thus they cannot be edited."
       question: "This Question appears on at least one published Form, meaning it may already be in the hands of observers. Some fields are thus not-editable. Please be sure to not change the meaning of the question."
       option_set: "This Option Set appears on at least one published Form, meaning it may already be in the hands of observers, thus Options cannot be added, removed, or reordered. Please proceed with caution if editing Options."
@@ -942,6 +950,7 @@ en:
 
   form:
     select_api_users: "Select all users who can access form data via the API:"
+    add_group: "Add Group"
     add_questions: "Add Questions"
     add_selected: "Add Selected Questions to Form"
     back_to_questions: "Back to Questions List"
@@ -950,6 +959,11 @@ en:
     clone_error: "There was a problem cloning the form (%{msg})."
     clone_success: "Form '%{form_name}' cloned successfully."
     no_mission: "No Misison"
+    no_questions_yet: "No questions yet."
+    invalid_drop_location:
+      parent_must_be_group: "The parent must be a group."
+      max_depth: "Groups can't be children of other groups."
+      invalid_condition: "This position would invalidate a condition."
     print_form: "Print Form"
     print_format_tips:
       title: "Print Format Tips"
@@ -967,6 +981,7 @@ en:
     remove_question_confirm: "Are you sure you want to remove these ### question(s) from the form?"
     reqd_sym_definition: "Required questions are marked with a"
     save_and_publish: "Save and Publish"
+    saving_order: "Saving order..."
     unpublish_error: "There was a problem unpublishing the form (%{msg})."
     unpublish_success: "Form unpublished successfully."
     unpublish: "Unpublish"

@@ -20,7 +20,7 @@ class SettingsController < ApplicationController
       if params[:regenerate]
         @setting.generate_override_code!
       else
-        @setting.update_attributes!(params[:setting])
+        @setting.update_attributes!(setting_params)
       end
 
       set_success_and_redirect(@setting)
@@ -43,5 +43,9 @@ class SettingsController < ApplicationController
 
       # render the template
       render(:index)
+    end
+
+    def setting_params
+      params.require(:setting).permit(:mission_id, :timezone, :preferred_locales_str, :allow_unauthenticated_submissions, :incoming_sms_number, :outgoing_sms_adapter, :intellisms_username, :intellisms_password1, :intellisms_password2)
     end
 end

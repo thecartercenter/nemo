@@ -20,7 +20,7 @@ class BroadcastsController < ApplicationController
   # Displays a new broadcast form with the given recipients.
   # @param [Hash] selected A Hash user ids as keys, referring to recipients of the broadcast.
   def new_with_users
-    users = User.accessible_by(current_ability).where(:id => params[:selected].keys).all
+    users = User.accessible_by(current_ability).where(:id => params[:selected].keys).to_a
     raise "no users given" if users.empty? # This should be impossible
 
     @broadcast = Broadcast.accessible_by(current_ability).new(:recipients => users)
@@ -70,5 +70,9 @@ class BroadcastsController < ApplicationController
 
     def set_medium_options
       @medium_options = configatron.to_h[:outgoing_sms_adapter] ? Broadcast::MEDIUM_OPTIONS : Broadcast::MEDIUM_OPTIONS_WITHOUT_SMS
+    end
+
+    def broadcast_params
+      params.require(:broadcast).permit(:subject, :body, :medium, :send_errors, :which_phone, :mission_id, recipient_ids: [])
     end
 end

@@ -2,7 +2,7 @@ class Sms::Incoming < Sms::Message
   # Lookup the sender.
   before_create do
     self.user ||= User.by_phone(from)
-    return true
+    true
   end
 
   def sender

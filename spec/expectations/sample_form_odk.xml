@@ -104,11 +104,11 @@
         <value>on18</value>
       </item>
     </select1>
-    <input query="instance('os4')/root/item[parent_id=/data/q2_1]" ref="/data/q2_2">
+    <input ref="/data/q2_2" query="instance('os4')/root/item[parent_id=/data/q2_1]">
       <label ref="jr:itext('q2_2:label')"/>
       <hint ref="jr:itext('q2_2:hint')"/>
     </input>
-    <input query="instance('os4')/root/item[parent_id=/data/q2_2]" ref="/data/q2_3">
+    <input ref="/data/q2_3" query="instance('os4')/root/item[parent_id=/data/q2_2]">
       <label ref="jr:itext('q2_3:label')"/>
       <hint ref="jr:itext('q2_3:hint')"/>
     </input>

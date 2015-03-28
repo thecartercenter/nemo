@@ -4,7 +4,6 @@ class Tag < ActiveRecord::Base
   belongs_to :mission
   has_many :taggings, dependent: :destroy
   has_many :questions, through: :taggings
-  attr_accessible :name, :mission_id
 
   before_save { |tag| tag.name.downcase! }
 

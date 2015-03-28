@@ -58,10 +58,19 @@ class UsersController < ApplicationController
   end
 
   def update
-    # make sure changing assignment role is permitted if attempting
-    authorize!(:change_assignments, @user) if params[:user]['assignments_attributes']
+    permitted_params = user_params
 
-    @user.assign_attributes(params[:user])
+    # don't care about assignment role if updated user is an admin
+    if current_user.admin? && params[:id].to_s == current_user.id.to_s &&
+      !permitted_params[:assignments_attributes].blank? &&
+      !permitted_params[:assignments_attributes][:role].blank?
+      permitted_params.delete :assignments_attributes
+    end
+
+    # make sure changing assignment role is permitted if attempting
+    authorize!(:change_assignments, @user) if permitted_params[:assignments_attributes]
+
+    @user.assign_attributes(permitted_params)
     pref_lang_changed = @user.pref_lang_changed?
 
     if @user.save
@@ -146,9 +155,17 @@ class UsersController < ApplicationController
 
     # builds a user with an appropriate mission assignment if the current_user doesn't have permission to edit a blank user
     def build_user_with_proper_mission
-      @user = User.new(params[:user])
+      @user = User.new(user_params)
       if cannot?(:create, @user) && @user.assignments.empty?
         @user.assignments.build(:mission => current_mission)
       end
+    end
+
+    def user_params
+      return if params[:user].nil?
+
+      params.require(:user).permit(:name, :login, :email, :phone, :admin,
+        :phone2, :pref_lang, :notes, :password, :password_confirmation, :reset_password_method,
+        assignments_attributes: [:role, :mission_id, :_destroy, :id])
     end
 end

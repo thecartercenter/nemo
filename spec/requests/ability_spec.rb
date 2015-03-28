@@ -1,9 +1,9 @@
-require 'test_helper'
+require 'spec_helper'
 
-class GroupAbilityTest < ActionDispatch::IntegrationTest
+describe 'abilities' do
 
   # user tests
-  test 'coordinators should be able to create users for their current mission' do
+  it 'coordinators should be able to create users for their current mission' do
     create_user_and_ability(:role => 'coordinator')
 
     u = User.new
@@ -12,7 +12,7 @@ class GroupAbilityTest < ActionDispatch::IntegrationTest
     assert(@ability.can?(:create, u))
   end
 
-  test 'staffers should not be able to create users' do
+  it 'staffers should not be able to create users' do
     create_user_and_ability(:role => 'staffer')
 
     u = User.new
@@ -21,7 +21,7 @@ class GroupAbilityTest < ActionDispatch::IntegrationTest
   end
 
   # user and group tests
-  test 'coordinators should be able to create groups for their current mission' do
+  it 'coordinators should be able to create groups for their current mission' do
     create_user_and_ability(:role => 'coordinator')
 
     g = Group.new
@@ -30,7 +30,7 @@ class GroupAbilityTest < ActionDispatch::IntegrationTest
     assert(@ability.can?(:create, g))
   end
 
-  test 'staffers should not be able to create groups' do
+  it 'staffers should not be able to create groups' do
     create_user_and_ability(:role => 'staffer')
 
     g = Group.new(:mission => get_mission)
@@ -38,7 +38,7 @@ class GroupAbilityTest < ActionDispatch::IntegrationTest
   end
 
   # add user to groups tests
-  test 'coordinators should not be able to add users to a group' do
+  it 'coordinators should not be able to add users to a group' do
     create_user_and_ability(:role => 'coordinator')
 
     g = Group.new
@@ -49,7 +49,7 @@ class GroupAbilityTest < ActionDispatch::IntegrationTest
     assert(@ability.can?(:create, UserGroup))
   end
 
-  test 'staffers should not be able to add users to a group' do
+  it 'staffers should not be able to add users to a group' do
     create_user_and_ability(:role => 'staffer')
 
     g = Group.new
@@ -58,10 +58,8 @@ class GroupAbilityTest < ActionDispatch::IntegrationTest
     assert(@ability.cannot?(:create, UserGroup))
   end
 
-  private
-
-    def create_user_and_ability(options)
-      @user = FactoryGirl.create(:user, :role_name => options[:role])
-      @ability = Ability.new(:user => @user, :mission => get_mission)
-    end
+  def create_user_and_ability(options)
+    @user = FactoryGirl.create(:user, :role_name => options[:role])
+    @ability = Ability.new(:user => @user, :mission => get_mission)
+  end
 end

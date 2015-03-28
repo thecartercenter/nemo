@@ -65,7 +65,7 @@ class ReportsController < ApplicationController
   # this method only reached through ajax
   def update
     # update the attribs
-    @report.assign_attributes(params[:report])
+    @report.assign_attributes(report_params)
 
     # if report is not valid, can't run it
     if @report.valid?
@@ -90,7 +90,7 @@ class ReportsController < ApplicationController
   private
     # custom load method because CanCan won't work with STI hack in report.rb
     def custom_load
-      @report = Report::Report.create(params[:report].merge(:mission_id => current_mission.id))
+      @report = Report::Report.create(report_params.merge(:mission_id => current_mission.id))
     end
 
     # prepares and renders the show template, which is used for new and show actions
@@ -100,5 +100,12 @@ class ReportsController < ApplicationController
       build_report_data(:edit_mode => flash[:edit_mode])
 
       render(:show)
+    end
+
+    def report_params
+      params.require(:report).permit(:type, :name, :form_id, :option_set_id, :display_type, :bar_style, :unreviewed, :filter,
+        :question_labels, :show_question_labels, :question_order, :text_responses, :percent_type, :unique_rows,
+        :calculations, :option_set, :mission_id, :mission, :disagg_question_id, :group_by_tag, :option_set_choices_attributes,
+        calculations_attributes: [:type, :report_report_id, :attrib1_name, :question1_id, :arg1, :attrib1, :question1, :rank])
     end
 end

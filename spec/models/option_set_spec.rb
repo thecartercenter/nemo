@@ -37,7 +37,7 @@ describe OptionSet do
   it 'should be destructible' do
     os = create(:option_set)
     os.destroy
-    expect(OptionSet.exists?(os)).to be false
+    expect(OptionSet.exists?(os.id)).to be false
     expect(OptionNode.where(option_set_id: os.id).count).to eq 0
   end
 

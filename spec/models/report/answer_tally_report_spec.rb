@@ -41,7 +41,7 @@ describe Report::AnswerTallyReport do
       end
 
       it 'should not be destroyed but should no longer reference the destroyed set' do
-        expect(Report::Report.exists?(@report)).to be true
+        expect(Report::Report.exists?(@report.id)).to be true
         expect(@report.reload.option_sets).to eq [@option_set2]
       end
     end
@@ -53,7 +53,7 @@ describe Report::AnswerTallyReport do
       end
 
       it 'should destroy self' do
-        expect(Report::Report.exists?(@report)).to be false
+        expect(Report::Report.exists?(@report.id)).to be false
       end
     end
   end

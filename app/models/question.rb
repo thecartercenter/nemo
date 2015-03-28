@@ -23,21 +23,21 @@ class Question < ActiveRecord::Base
   before_destroy { calculations.each(&:question_destroyed) }
 
   validates(:code, :presence => true)
-  validates(:code, :format => {:with => /^#{CODE_FORMAT}$/}, :if => Proc.new{|q| !q.code.blank?})
+  validates(:code, :format => {:with => /\A#{CODE_FORMAT}\z/}, :if => Proc.new{|q| !q.code.blank?})
   validates(:qtype_name, :presence => true)
   validates(:option_set, :presence => true, :if => Proc.new{|q| q.qtype && q.has_options?})
   validate(:code_unique_per_mission)
   validate(:at_least_one_name)
 
-  scope(:by_code, order('questions.code'))
-  scope(:default_order, by_code)
-  scope(:select_types, where(:qtype_name => %w(select_one select_multiple)))
-  scope(:with_forms, includes(:forms))
+  scope(:by_code, -> { order('questions.code') })
+  scope(:default_order, -> { by_code })
+  scope(:select_types, -> { where(:qtype_name => %w(select_one select_multiple)) })
+  scope(:with_forms, -> { includes(:forms) })
 
   # fetches association counts along with the questions
   # accounts for copies with standard questions
   # - form_published returns 1 if any associated forms are published, 0 or nil otherwise
-  scope(:with_assoc_counts, select(%{
+  scope(:with_assoc_counts, -> { select(%{
       questions.*,
       COUNT(DISTINCT answers.id) AS answer_count_col,
       COUNT(DISTINCT forms.id) AS form_count_col,
@@ -51,7 +51,7 @@ class Question < ActiveRecord::Base
       LEFT OUTER JOIN form_items copy_questionings ON copy_questionings.question_id = copies.id AND copy_questionings.type = 'Questioning'
       LEFT OUTER JOIN forms copy_forms ON copy_forms.id = copy_questionings.form_id
       LEFT OUTER JOIN answers copy_answers ON copy_answers.questioning_id = copy_questionings.id
-    }).group('questions.id'))
+    }).group('questions.id') })
 
   translates :name, :hint
 
@@ -82,7 +82,7 @@ class Question < ActiveRecord::Base
 
   # returns questions that do NOT already appear in the given form
   def self.not_in_form(form)
-    scoped.where("(questions.id not in (select question_id from form_items where type='Questioning' and form_id='#{form.id}'))")
+    all.where("(questions.id not in (select question_id from form_items where type='Questioning' and form_id='#{form.id}'))")
   end
 
   # returns N questions marked as key questions, sorted by the number of forms they appear in

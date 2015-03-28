@@ -88,7 +88,8 @@ module ApplicationHelper
     javascript_tag("$(document).ready(function(){#{content}});")
   end
 
-  # Converts given object to json and runs through html_safe.
+  # Converts given object/value to json and runs through html_safe.
+  # In Rails 4, this is necessary and sufficient to guard against XSS in JSON.
   def json(obj)
     obj.to_json.html_safe
   end
@@ -116,8 +117,8 @@ module ApplicationHelper
       objs
     end
 
-    # ensure .all gets called so that a bunch of extra queries don't get triggered
-    objs = objs.all if objs.respond_to?(:all)
+    # ensure .to_a gets called so that a bunch of extra queries don't get triggered
+    objs = objs.to_a if objs.respond_to?(:to_a)
 
     objs
   end

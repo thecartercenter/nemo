@@ -5,8 +5,6 @@ class Questioning < FormItem
   accepts_nested_attributes_for(:condition)
 
   before_validation(:destroy_condition_if_ref_qing_blank)
-  before_create(:set_rank)
-  after_destroy(:fix_ranks)
 
   delegate :name,
            :code,
@@ -39,9 +37,9 @@ class Questioning < FormItem
 
   delegate :published?, to: :form
   delegate :smsable?, to: :form, prefix: true
-  delegate :verify_ordering, to: :condition, prefix: true, allow_nil: true
+  delegate :verify_ordering, :ref_qing_full_rank, :ref_qing_id, to: :condition, prefix: true, allow_nil: true
 
-  scope(:visible, where(:hidden => false))
+  scope(:visible, -> { where(:hidden => false) })
 
   replicable child_assocs: [:question, :condition], backward_assocs: :form, dont_copy: [:hidden, :form_id, :question_id]
 
@@ -54,6 +52,11 @@ class Questioning < FormItem
 
   def has_condition?
     !condition.nil?
+  end
+
+  # Gets string containing fully qualified rank, e.g. 2.3.1.
+  def full_rank
+    path.to_a[1..-1].map(&:rank).join('.')
   end
 
   # checks if this form has any answers
@@ -112,14 +115,4 @@ class Questioning < FormItem
       destroy_condition if condition && condition.ref_qing.blank?
     end
 
-    # sets rank if not already set
-    def set_rank
-      self.rank ||= (form.try(:max_rank) || 0) + 1
-      return true
-    end
-
-    # repair the ranks of the remaining questions on the form
-    def fix_ranks
-      form.fix_ranks
-    end
 end

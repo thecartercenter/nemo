@@ -148,6 +148,17 @@ describe Form do
     end
   end
 
+  context 'destroy' do
+    before do
+      @form = create(:form, mission: @mission, question_types: ['integer', ['text', 'text'], 'text'])
+    end
+
+    it 'should work' do
+      @form.destroy
+      expect([Form.count, FormItem.count]).to eq [0,0]
+    end
+  end
+
   def publish_and_reset_pub_changed_at(options = {})
     f = options[:form] || @form
     f.publish!

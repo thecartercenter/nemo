@@ -23,13 +23,13 @@ describe ResponsesController, type: :request do
             relevant: '1',
             value: '42',
           },
-          '1_0' => {
+          '1' => {
             questioning_id: @form.questionings[1].id,
             relevant: '1',
             option_id: @plant.id,
             rank: 1
           },
-          '1_1' => {
+          '2' => {
             questioning_id: @form.questionings[1].id,
             relevant: '1',
             option_id: @oak.id,
@@ -60,13 +60,13 @@ describe ResponsesController, type: :request do
             relevant: '1',
             value: '42',
           },
-          '1_0' => {
+          '1' => {
             questioning_id: @form.questionings[1].id,
             relevant: '1',
             option_id: @plant.id,
             rank: 1
           },
-          '1_1' => {
+          '2' => {
             questioning_id: @form.questionings[1].id,
             relevant: '1',
             option_id: @oak.id,
@@ -86,13 +86,13 @@ describe ResponsesController, type: :request do
             relevant: '1',
             value: '45',
           },
-          '1_0' => {
+          '1' => {
             id: @obj.answers[1].id,
             relevant: '1',
             option_id: @plant.id,
             rank: 1
           },
-          '1_1' => {
+          '2' => {
             id: @obj.answers[2].id,
             relevant: '1',
             option_id: @tulip.id,
@@ -104,7 +104,7 @@ describe ResponsesController, type: :request do
       expect(Response.count).to eq 1
       @obj = Response.first
       expect(@obj.answers.size).to eq 3
-      expect(@obj.answers[2].option.name).to eq 'Tulip'
+      expect(@obj.answers.last.option.name).to eq 'Tulip'
     end
   end
 
@@ -120,7 +120,7 @@ describe ResponsesController, type: :request do
         /attachment; filename="elmo-#{get_mission.compact_name}-responses-\d{4}-\d\d-\d\d-\d{4}.csv"/)
       result = CSV.parse(response.body)
       expect(result.size).to eq 5 # 4 answer rows, 1 header row
-      expect(result[0].size).to eq 15
+      expect(result[0].size).to eq 16
     end
   end
 end

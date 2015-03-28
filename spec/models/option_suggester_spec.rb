@@ -24,7 +24,7 @@ describe OptionSuggester do
     end
   end
 
-  describe 'standard vs non-standard' do
+  describe 'mission scoping' do
     shared_examples 'return matches' do
       it 'should return two matches' do
         expect(@suggestions.size).to eq 2
@@ -33,16 +33,26 @@ describe OptionSuggester do
       end
     end
 
+    context 'when multiple missions' do
+      before do
+        @missions = create_list(:mission, 2)
+        @missions.each{ |m| create(:option, name: 'Foo', mission: m) }
+        @suggestions = OptionSuggester.new.suggest(@missions[0], 'f')
+      end
+
+      it_should_behave_like 'return matches'
+    end
+
     context 'for nil mission' do
       before do
-        create(:option, name: 'Foo')
+        create(:option, name: 'Foo', mission: nil)
         @suggestions = OptionSuggester.new.suggest(nil, 'f')
       end
 
       it_should_behave_like 'return matches'
     end
 
-    context 'for non-nil mission' do
+    context 'for regular mission' do
       before do
         create(:option, name: 'Foo')
         @suggestions = OptionSuggester.new.suggest(get_mission, 'f')

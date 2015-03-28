@@ -1,7 +1,6 @@
 class Report::Calculation < ActiveRecord::Base
   TYPES = %w(identity zero_nonzero)
 
-  attr_accessible :type, :report_report_id, :attrib1_name, :question1_id, :arg1, :attrib1, :question1, :rank
   attr_writer :table_prefix
 
   belongs_to(:report, :class_name => "Report::Report", :foreign_key => "report_report_id", :inverse_of => :calculations)

@@ -1,0 +1,11 @@
+<li class="form-item form-item-group" data-id="<%= qing_group.id %>">
+  <%= render('qing_groups/group_inner', qing_group: qing_group) %>
+
+  <ol class="item-list">
+    <% if qing_group.has_children? %>
+      <% qing_group.children.order(:rank).each do |item| %>
+        <%= render('forms/form_item', item: item) %>
+      <% end %>
+    <% end %>
+  </ol>
+</li>

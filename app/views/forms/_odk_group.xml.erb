@@ -1,0 +1,13 @@
+<group appearance="field-list">
+  <label><%= qing.first.parent.group_name %></label>
+  <% grid_mode = qing.first.parent.grid_mode?(qing) %>
+
+  <% if grid_mode %>
+    <%# In grid mode, we need to render a special label row that prints the available options at the top of the grid. %>
+    <%= render('odk_questioning', qing: qing.first, grid_mode: true, label_row: true) %>
+  <% end %>
+
+  <% qing.each do |q| %>
+    <%= render('odk_questioning', qing: q, grid_mode: grid_mode) unless q.hidden %>
+  <% end %>
+</group>

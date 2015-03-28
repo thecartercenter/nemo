@@ -1,6 +1,7 @@
 class QuestioningsController < ApplicationController
   # this Concern includes routines for building question/ing forms
   include QuestionFormable
+  include Parameters
 
   # init the questioning object in a special way before load_resource
   before_filter :init_qing_with_form_id, :only => [:create]
@@ -19,8 +20,10 @@ class QuestioningsController < ApplicationController
   def create
     @questioning.question.is_standard = true if current_mode == 'admin'
 
+    permitted_params = questioning_params
+
     # Convert tag string from TokenInput to array
-    @questioning.question.tag_ids = params[:questioning][:question_attributes][:tag_ids].split(',')
+    @questioning.question.tag_ids = permitted_params[:question_attributes][:tag_ids].split(',')
 
     if @questioning.save
       set_success_and_redirect(@questioning.question, :to => edit_form_path(@questioning.form))
@@ -31,15 +34,16 @@ class QuestioningsController < ApplicationController
   end
 
   def update
-    strip_condition_params_if_empty
+    permitted_params = questioning_params
+    strip_condition_params_if_empty(permitted_params)
 
     # Convert tag string from TokenInput to array
-    if (tag_ids = params[:questioning][:question_attributes].try(:[], :tag_ids))
-      params[:questioning][:question_attributes][:tag_ids] = tag_ids.split(',')
+    if (tag_ids = permitted_params[:question_attributes].try(:[], :tag_ids))
+      permitted_params[:question_attributes][:tag_ids] = tag_ids.split(',')
     end
 
     # assign attribs and validate now so that normalization runs before authorizing and saving
-    @questioning.assign_attributes(params[:questioning])
+    @questioning.assign_attributes(permitted_params)
     @questioning.valid?
 
     # authorize special abilities
@@ -55,9 +59,10 @@ class QuestioningsController < ApplicationController
     end
   end
 
+  # Only called via AJAX
   def destroy
-    destroy_and_handle_errors(@questioning)
-    redirect_to(edit_form_url(@questioning.form))
+    @questioning.destroy
+    render nothing: true, status: 204
   end
 
   # Re-renders the fields in the condition form when requested by ajax.
@@ -79,19 +84,31 @@ class QuestioningsController < ApplicationController
 
     # inits the questioning using the proper method in QuestionFormable
     def init_qing_with_form_id
+      permitted_params = questioning_params
       authorize! :create, Questioning
-      strip_condition_params_if_empty
-      init_qing(params[:questioning])
+      strip_condition_params_if_empty(permitted_params)
+      init_qing(permitted_params)
     end
 
     # strips out condition fields if they're blank and questioning has no existing condition
     # this prevents an empty condition from getting initialized and then deleted again
     # this is not set as a filter due to timing issues
-    def strip_condition_params_if_empty
-      if params[:questioning] && params[:questioning][:condition_attributes] &&
-        params[:questioning][:condition_attributes][:ref_qing_id].blank? &&
+    def strip_condition_params_if_empty(permitted_params)
+      if permitted_params[:condition_attributes] &&
+        permitted_params[:condition_attributes][:ref_qing_id].blank? &&
         (!@questioning || !@questioning.condition)
-        params[:questioning].delete(:condition_attributes)
+        permitted_params.delete(:condition_attributes)
       end
+    end
+
+    def questioning_params
+      required = params.require(:questioning)
+      translation_params = permit_translations(required[:question_attributes], :name, :hint)
+
+      whitelisted = [:form_id, :allow_incomplete, :access_level, :hidden, :required,
+        condition_attributes: [:ref_qing_id, :op, :value, :option_ids],
+        question_attributes: translation_params + [:id, :code, :tag_ids, :key, :access_level]]
+
+      required.permit(whitelisted)
     end
 end

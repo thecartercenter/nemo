@@ -10,10 +10,14 @@ class Form < ActiveRecord::Base
 
   # while a form has many versions, this is a reference to the most up-to-date one
   belongs_to(:current_version, :class_name => "FormVersion")
-  belongs_to :root_group, autosave: true, class_name: "QingGroup", dependent: :destroy, foreign_key: :root_id
+
+  # For some reason dependent: :destroy doesn't work with this assoc.
+  belongs_to :root_group, autosave: true, class_name: "QingGroup", foreign_key: :root_id
 
   before_validation(:normalize_fields)
   before_save(:update_pub_changed_at)
+
+  # For some reason this works but dependent: :destroy doesn't.
   before_destroy { root_group.destroy }
 
   validates(:name, :presence => true, :length => {:maximum => 32})
@@ -21,12 +25,12 @@ class Form < ActiveRecord::Base
 
   before_create(:init_downloads)
 
-  scope(:published, where(:published => true))
+  scope(:published, -> { where(:published => true) })
 
   # this scope adds a count of the questionings on this form and
   # the number of copies of this form, and of those that are published
   # if the form is not a standard, these will just be zero
-  scope(:with_questioning_and_copy_counts, select(%{
+  scope(:with_questioning_and_copy_counts, -> { select(%{
       forms.*,
       COUNT(DISTINCT form_items.id) AS questionings_count_col,
       COUNT(DISTINCT copies.id) AS copy_count_col,
@@ -37,10 +41,10 @@ class Form < ActiveRecord::Base
       LEFT OUTER JOIN form_items ON forms.id = form_items.form_id AND form_items.type = 'Questioning'
       LEFT OUTER JOIN forms copies ON forms.id = copies.original_id AND copies.standard_copy = 1
     })
-    .group("forms.id"))
+    .group("forms.id") })
 
-  scope(:by_name, order('forms.name'))
-  scope(:default_order, by_name)
+  scope(:by_name, -> { order('forms.name') })
+  scope(:default_order, -> { by_name })
 
   delegate :children,
            :c,
@@ -62,7 +66,7 @@ class Form < ActiveRecord::Base
   def self.odk_index_cache_key(options)
     # Note that since we're using maximum method, dates don't seem to be TZ adjusted on load, which is fine as long as it's consistent.
     max_pub_changed_at = if for_mission(options[:mission]).published.any?
-      for_mission(options[:mission]).maximum(:pub_changed_at).to_s(:cache_datetime)
+      for_mission(options[:mission]).maximum(:pub_changed_at).utc.to_s(:cache_datetime)
     else
       'no-pubd-forms'
     end
@@ -74,14 +78,20 @@ class Form < ActiveRecord::Base
     root_group.sorted_leaves.flatten
   end
 
+  # Returns array of questionings, sorted in traversal order.
+  # Questionings which belong to groups are returned in sub arrays
+  # e.g [q1, [q2, q3], q4]
+  def grouped_questionings
+    root_group.sorted_leaves
+  end
+
   def questions(reload = false)
     questionings(reload).map(&:question)
   end
 
   def add_questions_to_top_level(questions)
-    max = max_rank
     questions.each_with_index do |q, i|
-      Questioning.create!(mission: mission, form: self, question: q, parent: root_group, rank: max + i + 1)
+      Questioning.create!(mission: mission, form: self, question: q, parent: root_group)
     end
   end
 
@@ -186,8 +196,9 @@ class Form < ActiveRecord::Base
     OptionSet.first_level_option_nodes_for_sets(questions.map(&:option_set_id).compact)
   end
 
-  def max_rank
-    root_group.children.order(:rank).last.try(:rank) || 0
+  # Gets the last Questioning on the form, ignoring the group structure.
+  def last_qing
+    children.where(type: 'Questioning').order(:rank).last
   end
 
   # Whether this form needs an accompanying manifest for odk.
@@ -215,8 +226,8 @@ class Form < ActiveRecord::Base
   def destroy_questionings(qings)
     qings = Array.wrap(qings)
     transaction do
-      # delete the qings
-      qings.each do |qing|
+      # delete the qings, last first, to avoid version bump if possible.
+      qings.sort_by(&:rank).reverse.each do |qing|
 
         # if this qing has a non-zero answer count, raise an error
         # this is necessary due to bulk deletion operations
@@ -224,9 +235,6 @@ class Form < ActiveRecord::Base
 
         qing.destroy
       end
-
-      # fix the ranks
-      fix_ranks(:reload => true, :save => true)
 
       save
     end
@@ -309,14 +317,6 @@ class Form < ActiveRecord::Base
 
     # get the desired count
     @answer_counts[qing.id].try(:answer_count) || 0
-  end
-
-  # ensures question ranks are sequential]
-  def fix_ranks(options = {})
-    options[:reload] = true if options[:reload].nil?
-    options[:save] = true if options[:save].nil?
-    root_questionings(options[:reload]).sort_by(&:rank).each_with_index{|qing, idx| qing.update_attribute(:rank, idx + 1)}
-    save(:validate => false) if options[:save]
   end
 
   def has_white_listed_user?(user_id)

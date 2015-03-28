@@ -1,0 +1,34 @@
+<div class="form-items">
+
+  <% unless @form.new_record? %>
+    <h2><%= I18n.t('activerecord.attributes.form.item_list_heading') %></h2>
+  <% end %>
+
+  <%# Links for adding questions/groups. %>
+  <% if form_mode == :edit && can?(:add_questions, @form) %>
+    <div id="form-items-header">
+      <div id="saving-message"><%= t('form.saving_order') %></div>
+      <a href="<%= choose_questions_form_path(@form) %>">
+        <i class="fa fa-plus"></i>
+        <%= t("form.add_questions") %>
+      </a>
+      <a href="#" class="add-group">
+        <i class="fa fa-folder-open-o"></i>
+        <%= t("form.add_group") %>
+      </a>
+    </div>
+  <% end %>
+
+  <% unless @form.new_record? %>
+    <div class="draggable-list-wrapper">
+      <ol class="form-items-list item-list">
+        <% @form.children.order(:rank).each do |item| %>
+          <%= render('form_item', item: item) %>
+        <% end %>
+      </ol>
+    </div>
+    <% if @form.children.empty? %>
+      <p class="no-questions-notice"><%= t('form.no_questions_yet') %></p>
+    <% end %>
+  <% end %>
+</div>

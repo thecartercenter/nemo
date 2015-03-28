@@ -7,9 +7,6 @@ class OptionNode < ActiveRecord::Base
   # Number of nodes to return as JSON if node is 'huge'.
   TO_SERIALIZE_IF_HUGE = 10
 
-  attr_accessible :ancestry, :option_id, :option_set, :option_set_id, :rank, :option, :option_attribs,
-    :children_attribs, :mission_id, :mission, :parent
-
   belongs_to :option_set
   belongs_to :option, autosave: true
   has_ancestry cache_depth: true
@@ -36,7 +33,7 @@ class OptionNode < ActiveRecord::Base
   # Given a set of nodes, preloads child_options for all in constant number of queries.
   def self.preload_child_options(roots)
     ancestries = roots.map{ |r| "'#{r.id}'" }.join(',')
-    nodes_by_root_id = OptionNode.includes(:option).where("ancestry IN (#{ancestries})").group_by{ |n| n.ancestry.to_i }
+    nodes_by_root_id = OptionNode.includes(:option).where("ancestry IN (#{ancestries})").order('rank').group_by{ |n| n.ancestry.to_i }
     roots.each{ |r| r.child_options = nodes_by_root_id[r.id].map(&:option) }
   end
 

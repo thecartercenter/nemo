@@ -49,6 +49,7 @@ RSpec.configure do |config|
   config.include AssertDifference
   config.include RequestSpecHelpers, type: :request
   config.include FeatureSpecHelpers, type: :feature
+  config.include AssertSelectRoot, :type => :request
 
   # Locale should be reset to :en after each test if it is changed.
   config.after(:each) do

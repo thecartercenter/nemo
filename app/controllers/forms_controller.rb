@@ -109,13 +109,12 @@ class FormsController < ApplicationController
   # Format is always :csv
   def odk_itemsets
     authorize!(:download, @form)
-
   end
 
   def create
     @form.is_standard = true if current_mode == 'admin'
     if @form.save
-      @form.create_root_group!(mission: @form.mission, form: @form, rank: 1)
+      @form.create_root_group!(mission: @form.mission, form: @form)
       @form.save!
       set_success_and_redirect(@form, :to => edit_form_path(@form))
     else
@@ -129,14 +128,10 @@ class FormsController < ApplicationController
       Form.transaction do
         update_api_users
         # save basic attribs
-        @form.assign_attributes(params[:form])
+        @form.assign_attributes(form_params)
 
         # check special permissions
         authorize!(:rename, @form) if @form.name_changed?
-
-        # update ranks if provided (possibly raising condition ordering error)
-        # We convert IDs and ranks to integer before passing.
-        @form.update_ranks(Hash[*params[:rank].to_a.flatten.map(&:to_i)]) if params[:rank] && can?(:reorder_questions, @form)
 
         # save everything
         @form.save!
@@ -190,7 +185,6 @@ class FormsController < ApplicationController
     init_qing(:form_id => @form.id, :ancestry => @form.root_id, :question_attributes => {})
     setup_qing_form_support_objs
   end
-
 
   # adds questions selected in the big list to the form
   def add_questions
@@ -267,5 +261,9 @@ class FormsController < ApplicationController
 
     def load_form
       @form = Form.find(params[:id])
+    end
+
+    def form_params
+      params.require(:form).permit(:name, :smsable, :allow_incomplete, :access_level)
     end
 end

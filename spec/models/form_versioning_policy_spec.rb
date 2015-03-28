@@ -5,7 +5,7 @@ describe FormVersioningPolicy do
 
   before do
     # create three forms
-    @forms = (0...3).map{ root_group = QingGroup.create; FactoryGirl.create(:form, :published => false, root_id: root_group.id) }
+    @forms = create_list(:form, 3)
 
     # publish and then unpublish the forms so they get versions
     @forms.each{|f| f.publish!; f.unpublish!}
@@ -63,10 +63,11 @@ describe FormVersioningPolicy do
     end
     publish_and_check_versions(:should_change => false)
 
-    # now delete the first question -- this should cause a bump because the ranks will change
+    # now delete the first question -- this should cause a bump
     @forms[0...2].each do |f|
       f.destroy_questionings([f.root_questionings.first])
     end
+
     publish_and_check_versions(:should_change => true)
   end
 

@@ -16,7 +16,7 @@ module Report::Gridable
     @query = prep_query(build_query)
 
     # execute it the relation, returning rows, and create dbresult obj
-    @db_result = Report::DbResult.new(@query.all)
+    @db_result = Report::DbResult.new(@query.to_a)
 
     # extract headers
     @header_set = Report::HeaderSet.new(:row => get_row_header, :col => get_col_header)

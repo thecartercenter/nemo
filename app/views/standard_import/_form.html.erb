@@ -41,8 +41,8 @@
 
 
   <%= javascript_doc_ready do %>
-    new ELMO.Views.StandardImportForm({
-      importable_count: <%= @importable.count.to_json.html_safe %>
-    });
+    new ELMO.Views.StandardImportForm(<%=json(
+      importable_count: @importable.count
+    )%>);
   <% end %>
 <% end %>

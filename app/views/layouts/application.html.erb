@@ -22,18 +22,18 @@
   <%= javascript_doc_ready do %>
     // handles general client side stuff that appears in the template (e.g. language chooser form)
     // appears at top of file because it needs to be loaded first
-    ELMO.app = new ELMO.App({
-      mode: <%= current_mode.to_json.html_safe %>,
-      rails_env: <%= Rails.env.to_json.html_safe %>,
-      mission_name: <%= current_mission.try(:compact_name).to_json.html_safe %>,
-      locale: <%=j I18n.locale.to_json.html_safe %>,
-      default_locale: <%=j I18n.default_locale.to_json.html_safe %>,
-      mission_locales: <%=j configatron.preferred_locales.to_json.html_safe %>,
-      logged_in: <%=j (!current_user.nil?).to_json.html_safe %>,
-      site_name: <%=j configatron.site_name.to_json.html_safe %>,
-      session_timeout: <%=j User::SESSION_TIMEOUT %>,
-      login_path: <%=j login_path.to_json.html_safe %>
-    });
+    ELMO.app = new ELMO.App(<%=json(
+      mode: current_mode,
+      rails_env: Rails.env,
+      mission_name: current_mission.try(:compact_name),
+      locale: I18n.locale,
+      default_locale: I18n.default_locale,
+      mission_locales: configatron.preferred_locales,
+      logged_in: !current_user.nil?,
+      site_name: configatron.site_name,
+      session_timeout: User::SESSION_TIMEOUT,
+      login_path: login_path
+    )%>);
 
     new ELMO.Views.MissionChangeDropdown({el: '#change_mission select'});
   <% end %>

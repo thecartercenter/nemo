@@ -10,7 +10,7 @@ class User < ActiveRecord::Base
   has_many :responses, :inverse_of => :user
   has_many :broadcast_addressings, :inverse_of => :user, :dependent => :destroy
   has_many :assignments, :autosave => true, :dependent => :destroy, :validate => true, :inverse_of => :user
-  has_many :missions, :through => :assignments, :order => "missions.created_at DESC"
+  has_many :missions, -> { order "missions.created_at DESC" }, through: :assignments
   has_many :user_groups, :dependent => :destroy
   has_many :groups, :through => :user_groups
   belongs_to :last_mission, class_name: 'Mission'
@@ -18,6 +18,9 @@ class User < ActiveRecord::Base
   accepts_nested_attributes_for(:assignments, :allow_destroy => true)
 
   acts_as_authentic do |c|
+    c.transition_from_crypto_providers = [Authlogic::CryptoProviders::Sha512]
+    c.crypto_provider = Authlogic::CryptoProviders::SCrypt
+
     c.disable_perishable_token_maintenance = true
     c.perishable_token_valid_for = 1.week
     c.logged_in_timeout(SESSION_TIMEOUT)
@@ -44,12 +47,12 @@ class User < ActiveRecord::Base
   validate(:must_have_assignments_if_not_admin)
   validate(:phone_should_be_unique)
 
-  scope(:by_name, order("users.name"))
-  scope(:assigned_to, lambda{|m| where("users.id IN (SELECT user_id FROM assignments WHERE mission_id = ?)", m.id)})
-  scope(:with_assoc, includes(:missions, {:assignments => :mission}))
+  scope(:by_name, -> { order("users.name") })
+  scope(:assigned_to, ->(m) { where("users.id IN (SELECT user_id FROM assignments WHERE mission_id = ?)", m.id) })
+  scope(:with_assoc, -> { includes(:missions, {:assignments => :mission}) })
 
   # returns users who are assigned to the given mission OR admins
-  scope(:assigned_to_or_admin, ->(m){ where("users.id IN (SELECT user_id FROM assignments WHERE mission_id = ?) OR users.admin = ?", m.try(:id), true) })
+  scope(:assigned_to_or_admin, ->(m) { where("users.id IN (SELECT user_id FROM assignments WHERE mission_id = ?) OR users.admin = ?", m.try(:id), true) })
 
   # we want all of these on one page for now
   self.per_page = 1000000
@@ -146,13 +149,13 @@ class User < ActiveRecord::Base
 
   def deliver_intro!
     reset_perishable_token!
-    Notifier.intro(self).deliver
+    Notifier.intro(self).deliver_now
   end
 
   # sends password reset instructions to the user's email
   def deliver_password_reset_instructions!
     reset_perishable_token!
-    Notifier.password_reset_instructions(self).deliver
+    Notifier.password_reset_instructions(self).deliver_now
   end
 
   def full_name

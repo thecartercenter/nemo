@@ -20,7 +20,7 @@ class Mission < ActiveRecord::Base
   before_create(:ensure_setting)
 
   validates(:name, :presence => true)
-  validates(:name, :format => {:with => /^[a-z][a-z0-9 ]*$/i, :message => :let_num_spc_only},
+  validates(:name, :format => {:with => /\A[a-z][a-z0-9 ]*\z/i, :message => :let_num_spc_only},
                    :length => {:minimum => 3, :maximum => 32},
                    :if => Proc.new{|m| !m.name.blank?})
   validate(:compact_name_unique)
@@ -28,9 +28,9 @@ class Mission < ActiveRecord::Base
   # This gets used in Ability
   FOR_USER_MISSION_SQL = "missions.id IN (SELECT mission_id FROM assignments WHERE user_id = ?)"
 
-  scope(:sorted_by_name, order("name"))
-  scope(:sorted_recent_first, order("created_at DESC"))
-  scope(:for_user, lambda{|u| where(FOR_USER_MISSION_SQL, u.id)})
+  scope(:sorted_by_name, -> { order("name") })
+  scope(:sorted_recent_first, -> { order("missions.created_at DESC") })
+  scope(:for_user, ->(u) { where(FOR_USER_MISSION_SQL, u.id) })
 
   delegate(:override_code, :allow_unauthenticated_submissions?, :to => :setting)
 
@@ -85,7 +85,7 @@ class Mission < ActiveRecord::Base
     end
 
     def compact_name_unique
-      if !name.blank? && matching = (self.class.where(:compact_name => compact_name).all - [self]).first
+      if !name.blank? && matching = (self.class.where(:compact_name => compact_name).to_a - [self]).first
         errors.add(:name, :not_unique, :existing => matching.name)
       end
     end

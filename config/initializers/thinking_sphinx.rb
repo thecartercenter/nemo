@@ -1,0 +1,1 @@
+ThinkingSphinx::SphinxQL.functions!

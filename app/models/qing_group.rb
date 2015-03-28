@@ -7,4 +7,8 @@ class QingGroup < FormItem
 
   alias_method :c, :children
 
+  # tests if all questions in the group have the same type and option set
+  def grid_mode?(qings)
+    qings.all?{ |q| q.qtype.name == 'select_one' && q.option_set == qings[0].option_set }
+  end
 end

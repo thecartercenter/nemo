@@ -5,17 +5,17 @@ module FormVersionable
   included do
     after_create do
       FormVersioningPolicy.new.notify(self, :create) if versionable?
-      return true
+      true
     end
 
     after_save do
       FormVersioningPolicy.new.notify(self, :update) if versionable?
-      return true
+      true
     end
 
     after_destroy do
       FormVersioningPolicy.new.notify(self, :destroy) if versionable?
-      return true
+      true
     end
   end
 

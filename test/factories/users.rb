@@ -9,7 +9,7 @@ end
 
 FactoryGirl.define do
   factory :user do
-    ignore do
+    transient do
       role_name :coordinator
       mission { get_mission }
     end
@@ -22,6 +22,7 @@ FactoryGirl.define do
     password_confirmation "password"
     phone { Random.phone }
     pref_lang "en"
+    login_count 1
 
     persistence_token { Authlogic::Random.hex_token }
     single_access_token { Authlogic::Random.friendly_token }
