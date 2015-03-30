@@ -13,6 +13,9 @@ ELMO::Application.configure do
   config.consider_all_requests_local       = true
   config.action_controller.perform_caching = true
 
+  # This is here only in case the above value is overridden as described.
+  config.cache_store = :dalli_store, nil, { value_max_bytes: 2.megabytes }
+
   # care if the mailer can't send
   config.action_mailer.raise_delivery_errors = true
 
@@ -36,8 +39,6 @@ ELMO::Application.configure do
 
   # Expands the lines which load the assets
   config.assets.debug = false
-
-  config.cache_store = :dalli_store, nil, { value_max_bytes: 2.megabytes }
 
   # bullet gem for query optimization
   # config.after_initialize do
