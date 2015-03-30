@@ -38,8 +38,7 @@ Note to install the software below we recommend the following package managers:
 
 1. **Memcached 1.4+**
   - Ensure memcached is running before starting server, even for development, since caching is enabled in development and production environments.
-  - For production environments, ensure memcached is running on port 11219
-  - For development environments, be sure to increase the default slab page size to 2 MB. This is done by passing `-I 2m` to the `memcached` command.
+  - For development environments, caching is only needed if you are developing a feature that uses caching and want to test it. In this case, be sure to increase the default slab page size to 2 MB. This is done by passing `-I 2m` to the `memcached` command.
 
 1. **MySQL 5.0+**
   - Create an empty database and accompanying user for use by the app (E.g. development database *elmo_d* with username *elmo*)

@@ -17,6 +17,9 @@ ELMO::Application.configure do
   # or change it here but please don't commit the change!
   config.action_controller.perform_caching = false
 
+  # This is here only in case the above value is overridden as described.
+  config.cache_store = :dalli_store, nil, { value_max_bytes: 2.megabytes }
+
   # care if the mailer can't send
   config.action_mailer.raise_delivery_errors = true
 
@@ -36,8 +39,6 @@ ELMO::Application.configure do
 
   # Expands the lines which load the assets
   config.assets.debug = false
-
-  config.cache_store = :dalli_store, nil, { value_max_bytes: 2.megabytes }
 
   # Raises error for missing translations
   config.action_view.raise_on_missing_translations = true
