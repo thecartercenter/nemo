@@ -85,6 +85,11 @@ class Form < ActiveRecord::Base
     root_group.sorted_leaves
   end
 
+  # Returns form items in arrange format
+  def arrange
+    FormItem.where('form_id = ? and ancestry_depth != ?', self.id, 0).arrange(order: :rank)
+  end
+
   def questions(reload = false)
     questionings(reload).map(&:question)
   end
