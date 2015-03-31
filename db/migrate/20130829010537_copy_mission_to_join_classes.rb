@@ -1,15 +1,8 @@
-class FormItem < ActiveRecord::Base;
-  belongs_to(:question)
-  has_one(:condition, foreign_key: :questioning_id)
-end
-
 class CopyMissionToJoinClasses < ActiveRecord::Migration
   def up
-
-    # copy mission to newly added columns
-    Questioning.all.each{|q| q.mission_id = q.question.mission_id; q.save(:validate => false)}
-    Condition.all.each{|c| c.mission_id = c.questioning.mission_id; c.save(:validate => false)}
-    Optioning.all.each{|o| o.mission_id = o.option_set.mission_id; o.save(:validate => false)} if defined?(Optioning)
+    execute("UPDATE questionings qing SET qing.mission_id = (SELECT mission_id FROM questions q WHERE qing.question_id = q.id)")
+    execute("UPDATE conditions c SET c.mission_id = (SELECT mission_id FROM questionings qing WHERE c.questioning_id = qing.id)")
+    execute("UPDATE optionings o SET o.mission_id = (SELECT mission_id FROM option_sets os WHERE o.option_set_id = os.id)")
   end
 
   def down
