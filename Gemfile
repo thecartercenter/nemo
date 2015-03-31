@@ -90,8 +90,6 @@ group :development, :test do
   gem 'factory_girl_rails', '~> 4.0'
   gem 'jasmine-rails', '~> 0.10.7'   # test framework
   gem 'rspec-rails', '~> 3.0'        # test framework
-  gem 'rspec-its'
-  gem 'rspec-activemodel-mocks'
   gem 'mocha'                        # mocking/stubbing
   gem 'capybara'                     # acceptance tests
   gem 'selenium-webdriver'

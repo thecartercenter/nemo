@@ -247,18 +247,11 @@ GEM
       nokogiri
       rubyzip
       spreadsheet (> 0.6.4)
-    rspec-activemodel-mocks (1.0.1)
-      activemodel (>= 3.0)
-      activesupport (>= 3.0)
-      rspec-mocks (>= 2.99, < 4.0)
     rspec-core (3.2.2)
       rspec-support (~> 3.2.0)
     rspec-expectations (3.2.0)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.2.0)
-    rspec-its (1.2.0)
-      rspec-core (>= 3.0.0)
-      rspec-expectations (>= 3.0.0)
     rspec-mocks (3.2.1)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.2.0)
@@ -393,8 +386,6 @@ DEPENDENCIES
   rdiscount
   responders (~> 2.0)
   roo
-  rspec-activemodel-mocks
-  rspec-its
   rspec-rails (~> 3.0)
   sass-rails (~> 4.0.2)
   scrypt (= 1.2)
