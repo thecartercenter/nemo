@@ -1,0 +1,12 @@
+<% items.each_with_index do |(item, subitems), index|  %>
+  <% if item.is_a? QingGroup %>
+    <div class="form_field response_form_id">
+      <div class="label_and_control">
+        <label class="main"><%= item.group_name %></label>
+      </div>
+    </div>
+    <%= render 'answer_sets', items: subitems, answer_sets: answer_sets, level: level + 1 %>
+  <% else %>
+    <%= render 'answer_set', answer_set: answer_sets[item], index: index, level: level %>
+  <% end %>
+<% end %>

@@ -271,7 +271,7 @@ class Response < ActiveRecord::Base
   # Groups answers by questioning.
   # Makes sure there are associated answer objects for each questioning in the form.
   def answer_sets
-    @answer_sets ||= visible_questionings.map{ |qing| answer_set_for_questioning(qing) }
+    @answer_sets ||= Hash[visible_questionings.map{ |qing| [qing, answer_set_for_questioning(qing)] }]
   end
 
   def answer_for_question(question)

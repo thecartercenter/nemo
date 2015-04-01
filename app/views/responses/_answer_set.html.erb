@@ -1,12 +1,12 @@
-<div class="form_field answer_field qtype_<%= answer_set.qtype.name %> <%= read_only ? 'read_only' : '' %>"
-  data-qtype-name="<%= answer_set.qtype.name %>" id="qing_<%= answer_set.questioning.id %>" data-index="<%= answer_set_counter %>">
+<div style="padding-left: <%= level * 30 %>px" class="form_field answer_field qtype_<%= answer_set.qtype.name %> <%= read_only ? 'read_only' : '' %>"
+  data-qtype-name="<%= answer_set.qtype.name %>" id="qing_<%= answer_set.questioning.id %>" data-index="<%= index %>">
 
   <label class="main"><%= reqd_sym if answer_set.required? %> <%= answer_set.question_name || "[#{t('answer.no_name')}]" %>
-  </label><div class="control">
+  </label><div class="control" style="padding-right: <%= level * 30 %>px">
     <% if answer_set.multi_level? %>
-      <%= render(read_only ? 'answer_set_read_only' : 'answer_set_editable', answer_set: answer_set, index: answer_set_counter) %>
+      <%= render(read_only ? 'answer_set_read_only' : 'answer_set_editable', answer_set: answer_set, index: index) %>
     <% else %>
-      <%= render(read_only ? 'answer_read_only' : 'answer_editable', answer: answer_set.answers.first, index: answer_set_counter) %>
+      <%= render(read_only ? 'answer_read_only' : 'answer_editable', answer: answer_set.answers.first, index: index) %>
     <% end %>
   </div>
 
