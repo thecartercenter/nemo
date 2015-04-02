@@ -67,8 +67,7 @@ class FormItem < ActiveRecord::Base
   end
 
   def ancestry_rank=(rank)
-    rank = rank.blank? ? self.rank : "#{rank}.#{self.rank}"
-    @ancestry_rank = rank
+    @ancestry_rank = rank.blank? ? self.rank : "#{rank}.#{self.rank}"
   end
 
   # Moves item to new rank and parent.
