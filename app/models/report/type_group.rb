@@ -84,6 +84,10 @@ class Report::TypeGroup
   end
 
   def as_json(options = {})
-    super(:only => [:type_set, :clusters, :max_header_count])
+    {
+      type_set: type_set,
+      clusters: clusters,
+      max_header_count: max_header_count
+    }
   end
 end

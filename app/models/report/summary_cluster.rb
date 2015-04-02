@@ -37,6 +37,11 @@ class Report::SummaryCluster
   end
 
   def as_json(options = {})
-    super(:only => [:summaries, :headers, :display_type, :overall_header])
+    {
+      summaries: summaries,
+      headers: headers,
+      display_type: display_type,
+      overall_header: overall_header
+    }
   end
 end
