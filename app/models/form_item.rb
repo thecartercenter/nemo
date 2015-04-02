@@ -1,6 +1,8 @@
 class FormItem < ActiveRecord::Base
   include MissionBased, FormVersionable, Replication::Replicable
 
+  attr_reader :ancestry_rank
+
   acts_as_list column: :rank, scope: [:ancestry]
 
   belongs_to(:form)
@@ -64,6 +66,11 @@ class FormItem < ActiveRecord::Base
     end
   end
 
+  def ancestry_rank=(rank)
+    rank = rank.blank? ? self.rank : "#{rank}.#{self.rank}"
+    @ancestry_rank = rank
+  end
+
   # Moves item to new rank and parent.
   def move(new_parent_id, new_rank)
     transaction do
@@ -78,6 +85,12 @@ class FormItem < ActiveRecord::Base
         raise ActiveRecord::Rollback
       end
     end
+  end
+
+  def as_json(options = {})
+    options[:methods] ||= []
+    options[:methods] << :ancestry_rank
+    result = super
   end
 
   private
