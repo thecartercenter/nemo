@@ -89,7 +89,7 @@ class FormItem < ActiveRecord::Base
   def as_json(options = {})
     options[:methods] ||= []
     options[:methods] << :ancestry_rank
-    result = super
+    result = super(options)
   end
 
   private
