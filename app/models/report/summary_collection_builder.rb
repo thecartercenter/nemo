@@ -289,11 +289,12 @@ class Report::SummaryCollectionBuilder
           #{current_user_join_clause}
           WHERE q.qtype_name = 'select_multiple'
             AND qings.type = 'Questioning'
-            AND qings.id IN (#{qing_ids})
+            AND qings.id IN (?)
             AND c.id IS NOT NULL
           GROUP BY #{disagg_group_by_expr} qings.id
       eos
-      res = ActiveRecord::Base.connection.execute(query)
+
+      res = ActiveRecord::Base.connection.execute(send(:sanitize_sql_array, [query, qing_ids]))
 
       # read non-null answer counts into hash
       tallies = {}
@@ -368,12 +369,13 @@ class Report::SummaryCollectionBuilder
           #{disagg_join_clause}
           #{current_user_join_clause}
           WHERE q.qtype_name = 'date'
-            AND qings.id IN (#{qing_ids})
+            AND qings.id IN (?)
             AND qings.type = 'Questioning'
           GROUP BY #{disagg_group_by_expr} qings.id, a.date_value
           ORDER BY disagg_value, qing_id, date
       eos
-      res = ActiveRecord::Base.connection.execute(query)
+
+      res = ActiveRecord::Base.connection.execute(send(:sanitize_sql_array, [query, qing_ids]))
 
       # read into tallies, preserving sorted date order
       tallies = {}
@@ -467,10 +469,11 @@ class Report::SummaryCollectionBuilder
         FROM answers a
           #{disagg_join_clause}
           #{current_user_join_clause}
-          WHERE a.questioning_id IN (#{qing_ids})
+          WHERE a.questioning_id IN (?)
           ORDER BY disagg_value, a.created_at
       eos
-      ActiveRecord::Base.connection.execute(query)
+
+      ActiveRecord::Base.connection.execute(send(:sanitize_sql_array, [query, qing_ids]))
     end
 
     # gets a hash of answer_id to submitter names for each long_text answer to questionings in the given array
@@ -488,9 +491,11 @@ class Report::SummaryCollectionBuilder
           FROM answers a
             INNER JOIN responses r ON a.response_id = r.id
             INNER JOIN users u ON r.user_id = u.id
-          WHERE a.questioning_id IN (#{long_qing_ids.join(',')})
+          WHERE a.questioning_id IN (?)
         eos
-        res = ActiveRecord::Base.connection.execute(query)
+
+        res = ActiveRecord::Base.connection.execute(send(:sanitize_sql_array, [query, long_qing_ids]))
+
         Hash[*res.each(:as => :hash).map{|row| [row['answer_id'], row['submitter_name']]}.flatten]
       end
     end
