@@ -148,14 +148,15 @@ class Report::SummaryCollectionBuilder
             WHEN 'time' THEN MAX(a.time_value)
             WHEN 'datetime' THEN MAX(a.datetime_value)
           END AS max
-        FROM answers a INNER JOIN form_items qing ON qing.type='Questioning' AND a.questioning_id = qing.id AND qing.id IN (#{qing_ids})
+        FROM answers a INNER JOIN form_items qing ON qing.type='Questioning' AND a.questioning_id = qing.id AND qing.id IN (?)
           INNER JOIN questions q ON q.id = qing.question_id
           #{disagg_join_clause}
           #{current_user_join_clause}
         WHERE q.qtype_name in ('integer', 'decimal', 'time', 'datetime')
         GROUP BY #{disagg_group_by_expr} qing.id, q.qtype_name
       eos
-      res = ActiveRecord::Base.connection.execute(query)
+
+      res = ActiveRecord::Base.connection.execute(send(:sanitize_sql_array, [query, qing_ids]))
 
       # build hash
       hash = ActiveSupport::OrderedHash[]
