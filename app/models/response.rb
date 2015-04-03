@@ -148,7 +148,7 @@ class Response < ActiveRecord::Base
         "0"
       else
         # get all response IDs and join into string
-        Answer.connection.execute("SELECT DISTINCT response_id FROM answers WHERE answers.id IN (#{answer_ids.join(',')})").to_a.flatten.join(',')
+        Answer.select('id').distinct.where('id IN (?)', answer_ids).map {|a| a.id }.join(',')
       end
     end
 
