@@ -37,7 +37,7 @@
 
   <% end %>
 
-  <%= render 'answer_sets', items: @response.form.arrange, answer_sets: @response.answer_sets, level: 0 %>
+  <%= render 'answer_sets', items: @response.form.arrange, answer_sets: @response.answer_sets, level: 0, index: 0 %>
 
   <%# incomplete checkbox %>
   <%= f.field(:incomplete, :type => :check_box) if can?(:submit_incomplete, @response) %>
