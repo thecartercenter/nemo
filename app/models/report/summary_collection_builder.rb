@@ -235,11 +235,12 @@ class Report::SummaryCollectionBuilder
           #{current_user_join_clause}
           WHERE q.qtype_name = 'select_one'
             AND qings.type = 'Questioning'
-            AND qings.id IN (#{qing_ids})
+            AND qings.id IN (?)
             AND (a.rank IS NULL OR a.rank = 1)
           GROUP BY #{disagg_group_by_expr} qings.id, a.option_id
       eos
-      sel_one_res = ActiveRecord::Base.connection.execute(query)
+
+      sel_one_res = ActiveRecord::Base.connection.execute(send(:sanitize_sql_array, [query, qing_ids]))
 
       query = <<-eos
         SELECT #{disagg_select_expr} qings.id AS qing_id, c.option_id AS option_id, COUNT(c.id) AS choice_count
@@ -251,10 +252,11 @@ class Report::SummaryCollectionBuilder
           #{current_user_join_clause}
           WHERE q.qtype_name = 'select_multiple'
             AND qings.type = 'Questioning'
-            AND qings.id IN (#{qing_ids})
+            AND qings.id IN (?)
           GROUP BY #{disagg_group_by_expr} qings.id, c.option_id
       eos
-      sel_mult_res = ActiveRecord::Base.connection.execute(query)
+
+      sel_mult_res = ActiveRecord::Base.connection.execute(send(:sanitize_sql_array, [query, qing_ids]))
 
       # read tallies into hashes
       tallies = {}
