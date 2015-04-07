@@ -92,4 +92,9 @@ module OdkHelper
   def odk_option_translations(form, lang)
     form.all_first_level_option_nodes.map{ |on| %Q{<text id="on#{on.id}"><value>#{on.option.name(lang, strict: false)}</value></text>} }.join.html_safe
   end
+
+  # Tests if all items in the group are Questionings with the same type and option set.
+  def grid_mode?(items)
+    items.all?{ |i| i.is_a?(Questioning) && i.qtype.name == 'select_one' && i.option_set == items[0].option_set }
+  end
 end

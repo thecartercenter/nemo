@@ -1,3 +1,5 @@
+<%# An answer set is a set of answers to a single question. May be multiple answers if multilevel option set. %>
+<%# This view renders partials depending on if there are multiple answers and if we are in read only or editable mode. %>
 <% @index = @index.blank? ? 0 : @index + 1 %>
 <div style="padding-left: <%= level * 30 %>px" class="form_field answer_field qtype_<%= answer_set.qtype.name %> <%= read_only ? 'read_only' : '' %>"
   data-qtype-name="<%= answer_set.qtype.name %>" id="qing_<%= answer_set.questioning.id %>" data-index="<%= @index %>">

@@ -46,7 +46,8 @@ class Form < ActiveRecord::Base
   scope(:by_name, -> { order('forms.name') })
   scope(:default_order, -> { by_name })
 
-  delegate :children,
+  delegate :arrange_descendants,
+           :children,
            :c,
            :descendants,
            to: :root_group
@@ -75,23 +76,11 @@ class Form < ActiveRecord::Base
 
   # Returns all descendant questionings in one flat array, sorted in traversal order.
   def questionings(reload = false)
-    root_group.sorted_leaves.flatten
-  end
-
-  # Returns array of questionings, sorted in traversal order.
-  # Questionings which belong to groups are returned in sub arrays
-  # e.g [q1, [q2, q3], q4]
-  def grouped_questionings
-    root_group.sorted_leaves
-  end
-
-  # Returns form items in arrange format
-  def arrange
-    FormItem.where('form_id = ? and ancestry_depth != ?', self.id, 0).arrange(order: :rank)
+    root_group.descendant_questionings.flatten
   end
 
   def questions(reload = false)
-    questionings(reload).map(&:question)
+    questionings.map(&:question)
   end
 
   def add_questions_to_top_level(questions)

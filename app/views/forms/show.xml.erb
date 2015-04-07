@@ -102,11 +102,11 @@
     </h:head>
     <h:body>
       <%# Regular question form controls. %>
-      <% @form.grouped_questionings.each do |qing| %>
-        <% if qing.is_a?(Array) %>
-          <%= render('odk_group', qing: qing) %>
+      <% @form.arrange_descendants.each do |item, subtree| %>
+        <% if item.is_a?(QingGroup) %>
+          <%= render('odk_group', group: item, subtree: subtree) %>
         <% else %>
-          <%= render('odk_questioning', qing: qing) unless qing.hidden %>
+          <%= render('odk_questioning', qing: item) unless item.hidden %>
         <% end %>
       <% end %>
 
