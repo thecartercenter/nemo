@@ -5,6 +5,7 @@ describe Response do
     before do
       @form = create(:form, question_types: %w(select_one multi_level_select_one select_multiple integer multi_level_select_one))
       @qs = @form.questions
+      @qings = @form.questionings
       @cat = @qs[0].option_set.c[0]
       @plant = @qs[1].option_set.c[1]
       @oak = @qs[1].option_set.c[1].c[1]
@@ -25,24 +26,24 @@ describe Response do
         "q#{@qs[4].id}_2" => 'none',
         })
 
-      expect(resp.answer_sets[0].answers[0].option).to eq @cat.option
-      expect(resp.answer_sets[0].answers[0].rank).to be_nil
+      expect(resp.answer_set_for_questioning(@qings[0]).answers[0].option).to eq @cat.option
+      expect(resp.answer_set_for_questioning(@qings[0]).answers[0].rank).to be_nil
 
-      expect(resp.answer_sets[1].answers[0].option).to eq @plant.option
-      expect(resp.answer_sets[1].answers[0].rank).to eq 1
-      expect(resp.answer_sets[1].answers[1].option).to eq @oak.option
-      expect(resp.answer_sets[1].answers[1].rank).to eq 2
+      expect(resp.answer_set_for_questioning(@qings[1]).answers[0].option).to eq @plant.option
+      expect(resp.answer_set_for_questioning(@qings[1]).answers[0].rank).to eq 1
+      expect(resp.answer_set_for_questioning(@qings[1]).answers[1].option).to eq @oak.option
+      expect(resp.answer_set_for_questioning(@qings[1]).answers[1].rank).to eq 2
 
-      expect(resp.answer_sets[2].answers[0].choices.map(&:option)).to eq [@cat2.option, @dog2.option]
-      expect(resp.answer_sets[2].answers[0].rank).to be_nil
+      expect(resp.answer_set_for_questioning(@qings[2]).answers[0].choices.map(&:option)).to eq [@cat2.option, @dog2.option]
+      expect(resp.answer_set_for_questioning(@qings[2]).answers[0].rank).to be_nil
 
-      expect(resp.answer_sets[3].answers[0].value).to eq '123'
-      expect(resp.answer_sets[3].answers[0].rank).to be_nil
+      expect(resp.answer_set_for_questioning(@qings[3]).answers[0].value).to eq '123'
+      expect(resp.answer_set_for_questioning(@qings[3]).answers[0].rank).to be_nil
 
-      expect(resp.answer_sets[4].answers[0].option).to eq @animal.option
-      expect(resp.answer_sets[4].answers[0].rank).to eq 1
-      expect(resp.answer_sets[4].answers[1].option).to be_nil
-      expect(resp.answer_sets[4].answers[1].rank).to eq 2
+      expect(resp.answer_set_for_questioning(@qings[4]).answers[0].option).to eq @animal.option
+      expect(resp.answer_set_for_questioning(@qings[4]).answers[0].rank).to eq 1
+      expect(resp.answer_set_for_questioning(@qings[4]).answers[1].option).to be_nil
+      expect(resp.answer_set_for_questioning(@qings[4]).answers[1].rank).to eq 2
     end
   end
 end

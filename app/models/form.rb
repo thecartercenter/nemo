@@ -74,15 +74,6 @@ class Form < ActiveRecord::Base
     "odk-form-list/mission-#{options[:mission].id}/#{max_pub_changed_at}"
   end
 
-  # Returns all descendant questionings in one flat array, sorted in traversal order.
-  def questionings(reload = false)
-    root_group.descendant_questionings.flatten
-  end
-
-  def questions(reload = false)
-    questionings.map(&:question)
-  end
-
   def add_questions_to_top_level(questions)
     questions.each_with_index do |q, i|
       Questioning.create!(mission: mission, form: self, question: q, parent: root_group)
@@ -167,13 +158,22 @@ class Form < ActiveRecord::Base
     questionings.map(&:question).map(&:option_set).compact.uniq
   end
 
+  # Returns all descendant questionings in one flat array, sorted in traversal order.
+  def questionings(reload = false)
+    root_group.descendant_questionings.flatten
+  end
+
+  def questions(reload = false)
+    questionings.map(&:question)
+  end
+
   def visible_questionings
-    questionings.reject{|q| q.hidden}
+    questionings.reject{|q| q.hidden?}
   end
 
   # returns questionings that work with sms forms and are not hidden
   def smsable_questionings
-    questionings.reject{|q| q.hidden || !q.question.qtype.smsable?}
+    questionings.reject{|q| q.hidden? || !q.question.qtype.smsable?}
   end
 
   def questioning_with_code(c)
