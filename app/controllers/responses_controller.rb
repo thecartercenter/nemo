@@ -220,8 +220,20 @@ class ResponsesController < ApplicationController
 
     def response_params
       if params[:response]
-        params.require(:response).permit(:form_id, :user_id, :incomplete, :reviewed,
-          answers_attributes: [:id, :value, :option_id, :questioning_id, :relevant, :rank])
+        params.require(:response).permit(:form_id, :user_id, :incomplete, :reviewed).tap do |whitelisted|
+          whitelisted[:answers_attributes] = {}
+
+          # The answers_attributes hash might look like {'2746' => { ... }, '2731' => { ... }, ... }
+          # The keys are irrelevant so we permit all of them, but we only want to permit certain attribs
+          # on the answers.
+          permitted_answer_attribs = %w(id value option_id questioning_id relevant rank
+            time_value(1i) time_value(2i) time_value(3i) time_value(4i) time_value(5i)
+            datetime_value(1i) datetime_value(2i) datetime_value(3i) datetime_value(4i) datetime_value(5i)
+            date_value(1i) date_value(2i) date_value(3i))
+          params[:response][:answers_attributes].each do |idx, attribs|
+            whitelisted[:answers_attributes][idx] = attribs.permit(*permitted_answer_attribs)
+          end
+        end
       end
     end
 end
