@@ -4,6 +4,8 @@ class ResponsesController < ApplicationController
   # need to load with associations for show and edit
   before_filter :load_with_associations, :only => [:show, :edit]
 
+  before_filter :fix_nil_time_values, :only => [:update, :create]
+
   # authorization via CanCan
   load_and_authorize_resource
 
@@ -233,6 +235,17 @@ class ResponsesController < ApplicationController
           params[:response][:answers_attributes].each do |idx, attribs|
             whitelisted[:answers_attributes][idx] = attribs.permit(*permitted_answer_attribs)
           end
+        end
+      end
+    end
+
+    # Rails seems to have a bug wherein if a time_select field is left blank, the value that gets stored is not nil, but 00:00:00.
+    # This seems to be because the date is passed in as 0001-01-01 so it doesn't look like a nil.
+    # So here we correct it by setting the incoming parameters in such a situation to all blanks.
+    def fix_nil_time_values
+      params[:response][:answers_attributes].each do |key, attribs|
+        if attribs['time_value(4i)'].blank? && attribs['time_value(5i)'].blank?
+          %w(1 2 3).each{ |i| params[:response][:answers_attributes][key]["time_value(#{i}i)"] = '' }
         end
       end
     end
