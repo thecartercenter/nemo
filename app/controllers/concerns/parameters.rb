@@ -2,18 +2,22 @@ module Parameters
   extend ActiveSupport::Concern
 
   # return dynamic translations parameters
-  def permit_translations(params, *args)
-    return [] if params.blank?
-    args.reduce([]) do |memo, arg|
-      regex = /#{arg.to_s + '_' + '[a-z]+'}/
-      keys = params.select { |key| regex.match(key.to_s) }.keys
-      memo << keys.first.to_sym if keys.size > 0
-      memo
+  def permit_translations(params, *prefixes)
+    return [] if prefixes.empty?
+    regex = /\A(#{prefixes.join('|')})_[a-z]{2}\z/
+    whitelisted = []
+    params.each do |key, value|
+      if key =~ regex && value.is_a?(String)
+        whitelisted << key
+      elsif value.is_a?(Hash) # Recurse
+        whitelisted << { key => permit_translations(value, *prefixes) }
+      end
     end
+    whitelisted
   end
 
   # build permitted array of attributes
-  # for give recursive parameter and permitted structure
+  # for given recursive parameter and permitted structure
   def permit_children(params, rec_param, permitted)
     result = []
     _permit_children(params, rec_param, permitted, result)
