@@ -234,6 +234,14 @@ class ResponsesController < ApplicationController
             date_value(1i) date_value(2i) date_value(3i))
           params[:response][:answers_attributes].each do |idx, attribs|
             whitelisted[:answers_attributes][idx] = attribs.permit(*permitted_answer_attribs)
+
+            # Handle choices, which are nested under answers.
+            if attribs[:choices_attributes]
+              whitelisted[:answers_attributes][idx][:choices_attributes] = {}
+              attribs[:choices_attributes].each do |idx2, attribs2|
+                whitelisted[:answers_attributes][idx][:choices_attributes][idx2] = attribs2.permit(:id, :option_id, :checked)
+              end
+            end
           end
         end
       end
