@@ -722,7 +722,6 @@ en:
     error_messages:
       consecutive_failed_logins_limit_exceeded: "You have exceeded the consecutive failed login limit. Your account has been disabled."
       email_invalid: "should look like an email address"
-      general_credentials_error: "The Login/Password combination you entered is not valid."
       login_blank: "Please enter a username."
       login_invalid: "Should use only letters, numbers, spaces, and .-_@"
       login_not_found: "Not valid."
@@ -731,7 +730,7 @@ en:
       not_approved: "Your account is not approved."
       not_confirmed: "Your account is not confirmed."
       password_blank: "Please enter a password."
-      password_invalid: "Not valid."
+      password_invalid: "Not valid. Password security standards were recently upgraded. If your password no longer works, please use the reset password feature to choose a new one."
     models:
       user_session: "User Session"
     attributes:

@@ -70,7 +70,7 @@ class User < ActiveRecord::Base
 
   def self.random(chars, n)
     return "" if n <= 0
-    (chars * (n / chars.size + 1)).shuffle[0..n-1]
+    (chars * (n / chars.size + 1)).shuffle[0..n - 1]
   end
 
   def self.find_by_credentials(login, password)

@@ -676,7 +676,6 @@ fr:
     error_messages:
       consecutive_failed_logins_limit_exceeded: "Vous avez dépassé la limite d'échec de connexion consécutive. Votre compte a été désactivé."
       email_invalid: "Devrait ressembler à une adresse e-mail."
-      general_credentials_error: "Le combinaison d'identifiant/de mot de passe que vous avez inscrit n'est pas valable."
       login_blank: "Entrez un identifiant."
       login_invalid: "Utilisez seulement des lettres, des chiffres, et .-_@"
       login_not_found: "n'est pas valide"
@@ -685,7 +684,7 @@ fr:
       not_approved: "Votre compte n'est pas approuvé."
       not_confirmed: "Votre compte n'est pas confirmée."
       password_blank: "Entrez un mot de passe."
-      password_invalid: "n'est pas valide"
+      password_invalid: "Pas valide. Normes de sécurité par mot de passe ont été récemment mis à jour. Si votre mot de passe ne fonctionne plus, se il vous plaît utiliser la fonction de réinitialisation de mot de choisir un nouveau."
     models:
       user_session: "Session de l'utilisateur"
     attributes:
