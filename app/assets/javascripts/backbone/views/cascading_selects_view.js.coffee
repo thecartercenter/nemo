@@ -1,7 +1,8 @@
 class ELMO.Views.CascadingSelectsView extends Backbone.View
 
   initialize: (options) ->
-    this.option_set_id = options.option_set_id
+    @option_set_id = options.option_set_id
+    @cur_val = this.val()
 
   events:
     'change select': 'select_changed'
@@ -9,7 +10,7 @@ class ELMO.Views.CascadingSelectsView extends Backbone.View
   # private --------
 
   select_changed: (event) ->
-    if next = this.next_select($(event.target))
+    if this.value_changed() && next = this.next_select($(event.target))
       this.clear_selects_after_and_including(next)
       this.reload_options_for(next)
 
@@ -28,7 +29,7 @@ class ELMO.Views.CascadingSelectsView extends Backbone.View
   reload_options_for: (select) ->
     ELMO.app.loading(true)
     vals = this.selected_values_before(select)
-    url = ELMO.app.url_builder.build('option-sets', this.option_set_id, 'options-for-node')
+    url = ELMO.app.url_builder.build('option-sets', @option_set_id, 'options-for-node')
     select.load(url, $.param({ids: vals}), -> ELMO.app.loading(false))
 
   # Gets the values of the selects before the given one.
@@ -38,3 +39,17 @@ class ELMO.Views.CascadingSelectsView extends Backbone.View
   # Gets all the select tags before the given one.
   selects_before: (select) ->
     select.parent().prevAll().find('select')
+
+  # Gets an array of values of all the selects.
+  val: ->
+    (@$('select').map -> $(this).val()).get()
+
+  # Checks if the value changed since last inspection. If so, saves new value
+  value_changed: ->
+    new_val = this.val()
+    if @cur_val.join('__') != new_val.join('__')
+      @cur_val = new_val
+      true
+    else
+      false
+

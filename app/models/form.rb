@@ -46,7 +46,8 @@ class Form < ActiveRecord::Base
   scope(:by_name, -> { order('forms.name') })
   scope(:default_order, -> { by_name })
 
-  delegate :children,
+  delegate :arrange_descendants,
+           :children,
            :c,
            :descendants,
            to: :root_group
@@ -71,22 +72,6 @@ class Form < ActiveRecord::Base
       'no-pubd-forms'
     end
     "odk-form-list/mission-#{options[:mission].id}/#{max_pub_changed_at}"
-  end
-
-  # Returns all descendant questionings in one flat array, sorted in traversal order.
-  def questionings(reload = false)
-    root_group.sorted_leaves.flatten
-  end
-
-  # Returns array of questionings, sorted in traversal order.
-  # Questionings which belong to groups are returned in sub arrays
-  # e.g [q1, [q2, q3], q4]
-  def grouped_questionings
-    root_group.sorted_leaves
-  end
-
-  def questions(reload = false)
-    questionings(reload).map(&:question)
   end
 
   def add_questions_to_top_level(questions)
@@ -173,13 +158,22 @@ class Form < ActiveRecord::Base
     questionings.map(&:question).map(&:option_set).compact.uniq
   end
 
+  # Returns all descendant questionings in one flat array, sorted in traversal order.
+  def questionings(reload = false)
+    root_group.descendant_questionings.flatten
+  end
+
+  def questions(reload = false)
+    questionings.map(&:question)
+  end
+
   def visible_questionings
-    questionings.reject{|q| q.hidden}
+    questionings.reject{|q| q.hidden?}
   end
 
   # returns questionings that work with sms forms and are not hidden
   def smsable_questionings
-    questionings.reject{|q| q.hidden || !q.question.qtype.smsable?}
+    questionings.reject{|q| q.hidden? || !q.question.qtype.smsable?}
   end
 
   def questioning_with_code(c)

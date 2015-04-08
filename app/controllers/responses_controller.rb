@@ -4,6 +4,8 @@ class ResponsesController < ApplicationController
   # need to load with associations for show and edit
   before_filter :load_with_associations, :only => [:show, :edit]
 
+  before_filter :fix_nil_time_values, :only => [:update, :create]
+
   # authorization via CanCan
   load_and_authorize_resource
 
@@ -220,8 +222,41 @@ class ResponsesController < ApplicationController
 
     def response_params
       if params[:response]
-        params.require(:response).permit(:form_id, :user_id, :incomplete, :reviewed,
-          answers_attributes: [:id, :value, :option_id, :questioning_id, :relevant, :rank])
+        params.require(:response).permit(:form_id, :user_id, :incomplete, :reviewed).tap do |whitelisted|
+          whitelisted[:answers_attributes] = {}
+
+          # The answers_attributes hash might look like {'2746' => { ... }, '2731' => { ... }, ... }
+          # The keys are irrelevant so we permit all of them, but we only want to permit certain attribs
+          # on the answers.
+          permitted_answer_attribs = %w(id value option_id questioning_id relevant rank
+            time_value(1i) time_value(2i) time_value(3i) time_value(4i) time_value(5i)
+            datetime_value(1i) datetime_value(2i) datetime_value(3i) datetime_value(4i) datetime_value(5i)
+            date_value(1i) date_value(2i) date_value(3i))
+          params[:response][:answers_attributes].each do |idx, attribs|
+            whitelisted[:answers_attributes][idx] = attribs.permit(*permitted_answer_attribs)
+
+            # Handle choices, which are nested under answers.
+            if attribs[:choices_attributes]
+              whitelisted[:answers_attributes][idx][:choices_attributes] = {}
+              attribs[:choices_attributes].each do |idx2, attribs2|
+                whitelisted[:answers_attributes][idx][:choices_attributes][idx2] = attribs2.permit(:id, :option_id, :checked)
+              end
+            end
+          end
+        end
+      end
+    end
+
+    # Rails seems to have a bug wherein if a time_select field is left blank, the value that gets stored is not nil, but 00:00:00.
+    # This seems to be because the date is passed in as 0001-01-01 so it doesn't look like a nil.
+    # So here we correct it by setting the incoming parameters in such a situation to all blanks.
+    def fix_nil_time_values
+      if params[:response] && params[:response][:answers_attributes]
+        params[:response][:answers_attributes].each do |key, attribs|
+          if attribs['time_value(4i)'].blank? && attribs['time_value(5i)'].blank?
+            %w(1 2 3).each{ |i| params[:response][:answers_attributes][key]["time_value(#{i}i)"] = '' }
+          end
+        end
       end
     end
 end

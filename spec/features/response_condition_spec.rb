@@ -31,41 +31,41 @@ feature 'conditions in responses', js: true, driver: :selenium do
   end
 
   scenario 'should work' do
-    fill_answer_and_expect_visible(0, 'fo', [0,3])
-    fill_answer_and_expect_visible(0, 'foo', 0..3)
-    fill_answer_and_expect_visible(1, 'bar', [0,1,3])
-    fill_answer_and_expect_visible(1, 'barz', 0..3)
-    fill_answer_and_expect_visible(2, '10', 0..3)
-    fill_answer_and_expect_visible(2, '11', 0..4)
-    fill_answer_and_expect_visible(4, '21.7', 0..4)
-    fill_answer_and_expect_visible(4, '21.72', 0..5)
-    fill_answer_and_expect_visible(5, 'Cat', 0..5)
-    fill_answer_and_expect_visible(5, 'Dog', 0..6)
-    fill_answer_and_expect_visible(6, ['Plant'], 0..6)
-    fill_answer_and_expect_visible(6, ['Plant', 'Oak'], 0..6)
-    fill_answer_and_expect_visible(6, ['Plant', 'Tulip'], 0..7)
-    fill_answer_and_expect_visible(7, ['Plant'], 0..7)
-    fill_answer_and_expect_visible(7, ['Animal'], 0..8)
-    fill_answer_and_expect_visible(7, ['Animal', 'Dog'], 0..8)
-    fill_answer_and_expect_visible(8, ['Dog'], 0..8)
-    fill_answer_and_expect_visible(8, ['Dog', 'Cat'], 0..9)
-    fill_answer_and_expect_visible(9, "#{@year}-01-01 5:00", 0..9)
-    fill_answer_and_expect_visible(9, "#{@year}-01-01 4:59", 0..10)
-    fill_answer_and_expect_visible(10, "#{@year}-03-21", 0..10)
-    fill_answer_and_expect_visible(10, "#{@year}-03-22", 0..11)
-    fill_answer_and_expect_visible(11, "6:00", 0..11)
-    fill_answer_and_expect_visible(11, "15:00", 0..12)
+    fill_answer_and_expect_visible(@qings[0], 'fo', [0,3])
+    fill_answer_and_expect_visible(@qings[0], 'foo', 0..3)
+    fill_answer_and_expect_visible(@qings[1], 'bar', [0,1,3])
+    fill_answer_and_expect_visible(@qings[1], 'barz', 0..3)
+    fill_answer_and_expect_visible(@qings[2], '10', 0..3)
+    fill_answer_and_expect_visible(@qings[2], '11', 0..4)
+    fill_answer_and_expect_visible(@qings[4], '21.7', 0..4)
+    fill_answer_and_expect_visible(@qings[4], '21.72', 0..5)
+    fill_answer_and_expect_visible(@qings[5], 'Cat', 0..5)
+    fill_answer_and_expect_visible(@qings[5], 'Dog', 0..6)
+    fill_answer_and_expect_visible(@qings[6], ['Plant'], 0..6)
+    fill_answer_and_expect_visible(@qings[6], ['Plant', 'Oak'], 0..6)
+    fill_answer_and_expect_visible(@qings[6], ['Plant', 'Tulip'], 0..7)
+    fill_answer_and_expect_visible(@qings[7], ['Plant'], 0..7)
+    fill_answer_and_expect_visible(@qings[7], ['Animal'], 0..8)
+    fill_answer_and_expect_visible(@qings[7], ['Animal', 'Dog'], 0..8)
+    fill_answer_and_expect_visible(@qings[8], ['Dog'], 0..8)
+    fill_answer_and_expect_visible(@qings[8], ['Dog', 'Cat'], 0..9)
+    fill_answer_and_expect_visible(@qings[9], "#{@year}-01-01 5:00", 0..9)
+    fill_answer_and_expect_visible(@qings[9], "#{@year}-01-01 4:59", 0..10)
+    fill_answer_and_expect_visible(@qings[10], "#{@year}-03-21", 0..10)
+    fill_answer_and_expect_visible(@qings[10], "#{@year}-03-22", 0..11)
+    fill_answer_and_expect_visible(@qings[11], "6:00", 0..11)
+    fill_answer_and_expect_visible(@qings[11], "15:00", 0..12)
   end
 
-  def fill_answer_and_expect_visible(idx, value, expect)
-    fill_answer(idx, value)
+  def fill_answer_and_expect_visible(qing, value, expect)
+    fill_answer(qing, value)
     expect_visible(expect)
   end
 
-  def fill_answer(idx, value)
+  def fill_answer(qing, value)
+    idx = qing.id
     id = "response_answers_attributes_#{idx}_value"
-    qtype_name = @qings[idx].qtype_name
-    case qtype_name
+    case qing.qtype_name
     when 'long_text'
       fill_in_ckeditor(id, with: value)
     when 'select_one'
@@ -79,19 +79,19 @@ feature 'conditions in responses', js: true, driver: :selenium do
         select(value, from: "response_answers_attributes_#{idx}_option_id")
       end
     when 'select_multiple'
-      @qings[idx].options.each_with_index do |o,i|
+      qing.options.each_with_index do |o,i|
         id = "response_answers_attributes_#{idx}_choices_attributes_#{i}_checked"
         value.include?(o.name) ? check(id) : uncheck(id)
       end
     when 'datetime', 'date', 'time'
       t = Time.parse(value)
-      prefix = "response_answers_attributes_#{idx}_#{qtype_name}_value"
-      unless qtype_name == 'time'
+      prefix = "response_answers_attributes_#{idx}_#{qing.qtype_name}_value"
+      unless qing.qtype_name == 'time'
         select(t.strftime('%Y'), from: "#{prefix}_1i")
         select(t.strftime('%B'), from: "#{prefix}_2i")
         select(t.day.to_s, from: "#{prefix}_3i")
       end
-      unless qtype_name == 'date'
+      unless qing.qtype_name == 'date'
         select(t.strftime('%H'), from: "#{prefix}_4i")
         select(t.strftime('%M'), from: "#{prefix}_5i")
       end
@@ -102,11 +102,11 @@ feature 'conditions in responses', js: true, driver: :selenium do
 
   def expect_visible(visible)
     visible = visible.to_a if visible.is_a?(Range)
-    @qings.each_with_index do |q,i|
+    @qings.each_with_index do |qing,i|
       cur_vis = visible.include?(i)
 
       # We do it this way (find, then assert) for timing issues.
-      expect(find("div.answer_field[data-index=\"#{i}\"]", visible: cur_vis)).send(cur_vis ? :to : :not_to, be_visible)
+      expect(find("div.answer_field[data-index=\"#{qing.id}\"]", visible: cur_vis)).send(cur_vis ? :to : :not_to, be_visible)
     end
   end
 end
