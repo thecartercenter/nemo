@@ -61,7 +61,12 @@ class QingGroupsController < ApplicationController
 
     def qing_group_params
       required = params.require(:qing_group)
-      whitelisted = [:form_id] + permit_translations(required, :group_name)
+      whitelisted = [:form_id]
+
+      if required[:group_name_translations]
+        whitelisted << [group_name_translations: required[:group_name_translations].keys]
+      end
+
       required.permit(whitelisted)
     end
 end
