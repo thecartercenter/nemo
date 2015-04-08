@@ -22,8 +22,7 @@ module Concerns::ApplicationController::LoginLogistics
     @user_session.user.reset_perishable_token!
 
     # Set the locale based on the user's pref_lang (if it's supported)
-    pref_lang = @user_session.user.pref_lang.to_sym
-    I18n.locale = configatron.full_locales.include?(pref_lang) ? pref_lang : I18n.default_locale
+    set_locale_or_default(@user_session.user.pref_lang)
 
     return if options[:dont_redirect]
 
