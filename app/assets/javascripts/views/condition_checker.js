@@ -40,15 +40,19 @@
 
   // evals the condition and shows/hides accordingly
   klass.prototype.refresh = function() {
-    // evaluate
-    this.eval_result = this.eval();
+    var new_result = this.eval();
 
-    // show/hide it and set relevance
-    this.row[this.eval_result ? "show" : "hide"]();
-    this.row.find("input.relevant").val(this.eval_result ? "true" : "false");
+    // If the eval_result changed
+    if (new_result != this.eval_result) {
+      this.eval_result = new_result;
 
-    // simulate a change event on the control in the tr
-    this.row.find("div.control").find("input, select, textarea").first().trigger("change");
+      // show/hide it and set relevance
+      this.row[this.eval_result ? "show" : "hide"]();
+      this.row.find("input.relevant").val(this.eval_result ? "true" : "false");
+
+      // Simulate a change event on the control so that later conditions will be re-evaluated.
+      this.row.find("div.control").find("input, select, textarea").first().trigger("change");
+    }
   }
 
   // evaluates the referred question and shows/hides the question
