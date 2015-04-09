@@ -67,12 +67,11 @@ class Report::TypeGroup
   # sorts summaries in this group depending on the group's type set
   def sort_summaries
     if type_set == 'categorical'
-      # the categorical group should be sorted by option set name, then rank
-      @summaries.sort_by!{|s| [s.questioning.option_set.name, s.questioning.rank]}
-
+      # The categorical group should be sorted by option set name, then rank.
+      # This is so the option columns headers can be shared.
+      @summaries.sort_by!{|s| [s.questioning.option_set.name, s.questioning.full_rank]}
     else
-      # else just sort by rank
-      @summaries.sort_by!{|s| s.questioning.rank}
+      @summaries.sort_by!{|s| s.questioning.full_rank}
     end
   end
 
