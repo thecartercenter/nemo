@@ -122,7 +122,7 @@ class Condition < ActiveRecord::Base
     else
       bits = []
       bits << Question.model_name.human
-      bits << "##{ref_qing.rank}"
+      bits << "##{ref_qing.full_dotted_rank}"
       bits << ref_qing.code if prefs[:include_code]
 
       if ref_qing.qtype_name == 'select_one'

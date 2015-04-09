@@ -71,9 +71,9 @@ class Questioning < FormItem
     condition.try(:changed?)
   end
 
-  # gets ranks of all referring conditions' questionings (should use eager loading)
+  # Gets full dotted ranks of all referring conditions' questionings.
   def referring_condition_ranks
-    referring_conditions.map{|c| c.questioning.rank}
+    referring_conditions.map{|c| c.questioning.full_dotted_rank}
   end
 
   # returns any questionings appearing before this one on the form
