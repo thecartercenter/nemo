@@ -78,7 +78,7 @@ class Questioning < FormItem
 
   # returns any questionings appearing before this one on the form
   def previous
-    form.questionings.reject{|q| !rank.nil? && (q == self || q.rank > rank)}
+    form.questionings.reject{ |q| q == self || (q.full_rank <=> full_rank) == 1 }
   end
 
   # REFACTOR: should use translation delegation, from abandoned std_objs branch
