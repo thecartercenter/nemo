@@ -1,7 +1,7 @@
 class FormItem < ActiveRecord::Base
   include MissionBased, FormVersionable, Replication::Replicable
 
-  acts_as_list column: :rank, scope: [:ancestry]
+  acts_as_list column: :rank, scope: [:form_id, :ancestry]
 
   belongs_to(:form)
 
@@ -82,11 +82,9 @@ class FormItem < ActiveRecord::Base
 
       # Extra safeguards to make sure ranks are correct. acts_as_list should prevent these.
       if self.class.rank_gaps?
-        errors.add(:base, 'That update would have caused gaps in ranks.')
-        raise ActiveRecord::Rollback
+        raise "Moving Qing #{id} to parent #{new_parent_id}, rank #{new_rank} would have caused gaps in ranks."
       elsif self.class.duplicate_ranks?
-        errors.add(:base, 'That update would have caused duplicate ranks.')
-        raise ActiveRecord::Rollback
+        raise "Moving Qing #{id} to parent #{new_parent_id}, rank #{new_rank} would have caused duplicate ranks."
       end
     end
   end
