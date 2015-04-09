@@ -72,7 +72,7 @@
               <% if (cluster.display_type == 'full_width') { %>
 
                 <tr class="summary full_width_subhead">
-                  <td class="num">#<%= summary.questioning.ancestry_rank %></td>
+                  <td class="num">#<%= summary.questioning.full_dotted_rank %></td>
                   <td colspan="<%= result_cols + 2 %>">
                     <%= helper.partial('question_label', {questioning: summary.questioning}) %>
                   </td>
@@ -103,7 +103,7 @@
               <% } else { %>
 
                 <tr class="summary">
-                  <td class="num">#<%= summary.questioning.ancestry_rank %></td>
+                  <td class="num">#<%= summary.questioning.full_dotted_rank %></td>
                   <td class="qname">
                     <%= helper.partial('question_label', {questioning: summary.questioning}) %>
                   </td>

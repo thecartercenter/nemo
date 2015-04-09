@@ -14,7 +14,7 @@ class Condition < ActiveRecord::Base
   validate(:all_fields_required)
   validates(:questioning, presence: true)
 
-  delegate :has_options?, :full_rank, to: :ref_qing, prefix: true
+  delegate :has_options?, :full_dotted_rank, to: :ref_qing, prefix: true
   delegate :form, :form_id, to: :questioning
 
   serialize :option_ids, JSON

@@ -37,7 +37,7 @@ class Questioning < FormItem
 
   delegate :published?, to: :form
   delegate :smsable?, to: :form, prefix: true
-  delegate :verify_ordering, :ref_qing_full_rank, :ref_qing_id, to: :condition, prefix: true, allow_nil: true
+  delegate :verify_ordering, :ref_qing_full_dotted_rank, :ref_qing_id, to: :condition, prefix: true, allow_nil: true
 
   scope(:visible, -> { where(:hidden => false) })
 
@@ -52,11 +52,6 @@ class Questioning < FormItem
 
   def has_condition?
     !condition.nil?
-  end
-
-  # Gets string containing fully qualified rank, e.g. 2.3.1.
-  def full_rank
-    path.to_a[1..-1].map(&:rank).join('.')
   end
 
   # checks if this form has any answers

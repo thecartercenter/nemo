@@ -1,8 +1,6 @@
 class FormItem < ActiveRecord::Base
   include MissionBased, FormVersionable, Replication::Replicable
 
-  attr_reader :ancestry_rank
-
   acts_as_list column: :rank, scope: [:ancestry]
 
   belongs_to(:form)
@@ -66,8 +64,15 @@ class FormItem < ActiveRecord::Base
     end
   end
 
-  def ancestry_rank=(rank)
-    @ancestry_rank = rank.blank? ? self.rank : "#{rank}.#{self.rank}"
+  # Returns an array of ranks of all parents plus self, e.g. [1,2,1].
+  # Uses the cached value setup by descendant_questionings if available.
+  def full_rank
+    @full_rank ||= path.map(&:rank)[1..-1]
+  end
+
+  # Returns the full rank joined with a period separator, e.g. 1.2.1.
+  def full_dotted_rank
+    @full_dotted_rank ||= full_rank.join('.')
   end
 
   # Moves item to new rank and parent.
@@ -88,7 +93,7 @@ class FormItem < ActiveRecord::Base
 
   def as_json(options = {})
     options[:methods] ||= []
-    options[:methods] << :ancestry_rank
+    options[:methods] << :full_dotted_rank
     result = super(options)
   end
 
