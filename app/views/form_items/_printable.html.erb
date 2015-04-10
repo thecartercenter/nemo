@@ -1,8 +1,10 @@
 <% items.each do |item, subitems| %>
-  <% if item.is_a? QingGroup %>
-    <%= render 'qing_groups/printable', qing_group: item, level: level, rank: item_rank(item, rank) %>
-    <%= render 'form_items/printable', items: subitems, level: level + 1, rank: item_rank(item, rank) %>
+  <% if item.is_a?(QingGroup) %>
+    <% if !subitems.empty? %>
+      <%= render 'qing_groups/printable', qing_group: item %>
+      <%= render 'form_items/printable', items: subitems %>
+    <% end %>
   <% else %>
-    <%= render 'questionings/printable', qing: item, level: level, rank: item_rank(item, rank) %>
+    <%= render 'questionings/printable', qing: item %>
   <% end %>
 <% end %>
