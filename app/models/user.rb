@@ -162,6 +162,10 @@ class User < ActiveRecord::Base
     name
   end
 
+  def active?
+    self.active
+  end
+
   def reset_password_method
     @reset_password_method.nil? ? "dont" : @reset_password_method
   end
