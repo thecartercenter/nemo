@@ -44,7 +44,10 @@ module Concerns::ApplicationController::Authentication
           # Use eager loading.
           User.includes(:assignments).find_by_credentials(login, password)
         end
+
         return request_http_basic_authentication if !@current_user
+
+        return render text: 'USER_INACTIVE', status: :unauthorized if !@current_user.active?
       end
 
     else
