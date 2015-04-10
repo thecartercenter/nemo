@@ -60,7 +60,7 @@
     // show the modal and the appropriate pane, disable esc for new modal
     $("#report-edit-modal").modal({show: true, keyboard: false});
 
-    this.show_pane(idx, report);
+    this.show_pane(idx);
 
     // hookup esc key
     if (this.report.has_run()) {
@@ -69,7 +69,9 @@
     }
   }
 
-  klass.prototype.show_pane = function(idx, report) {
+  klass.prototype.show_pane = function(idx) {
+    var report = this.report;
+
     // hide current pane
     this.panes[this.current_pane_idx].hide();
 

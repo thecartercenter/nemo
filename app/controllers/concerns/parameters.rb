@@ -3,7 +3,7 @@ module Parameters
 
   # return dynamic translations parameters
   def permit_translations(params, *prefixes)
-    return [] if prefixes.empty?
+    return [] if prefixes.empty? || params.blank?
     regex = /\A(#{prefixes.join('|')})_[a-z]{2}\z/
     whitelisted = []
     params.each do |key, value|

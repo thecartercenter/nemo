@@ -1,7 +1,7 @@
 class FormItem < ActiveRecord::Base
   include MissionBased, FormVersionable, Replication::Replicable
 
-  acts_as_list column: :rank, scope: [:ancestry]
+  acts_as_list column: :rank, scope: [:form_id, :ancestry]
 
   belongs_to(:form)
 
@@ -64,6 +64,17 @@ class FormItem < ActiveRecord::Base
     end
   end
 
+  # Returns an array of ranks of all parents plus self, e.g. [1,2,1].
+  # Uses the cached value setup by descendant_questionings if available.
+  def full_rank
+    @full_rank ||= path.map(&:rank)[1..-1]
+  end
+
+  # Returns the full rank joined with a period separator, e.g. 1.2.1.
+  def full_dotted_rank
+    @full_dotted_rank ||= full_rank.join('.')
+  end
+
   # Moves item to new rank and parent.
   def move(new_parent_id, new_rank)
     transaction do
@@ -71,13 +82,17 @@ class FormItem < ActiveRecord::Base
 
       # Extra safeguards to make sure ranks are correct. acts_as_list should prevent these.
       if self.class.rank_gaps?
-        errors.add(:base, 'That update would have caused gaps in ranks.')
-        raise ActiveRecord::Rollback
+        raise "Moving Qing #{id} to parent #{new_parent_id}, rank #{new_rank} would have caused gaps in ranks."
       elsif self.class.duplicate_ranks?
-        errors.add(:base, 'That update would have caused duplicate ranks.')
-        raise ActiveRecord::Rollback
+        raise "Moving Qing #{id} to parent #{new_parent_id}, rank #{new_rank} would have caused duplicate ranks."
       end
     end
+  end
+
+  def as_json(options = {})
+    options[:methods] ||= []
+    options[:methods] << :full_dotted_rank
+    result = super(options)
   end
 
   private

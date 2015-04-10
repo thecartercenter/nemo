@@ -14,7 +14,7 @@ class Condition < ActiveRecord::Base
   validate(:all_fields_required)
   validates(:questioning, presence: true)
 
-  delegate :has_options?, :full_rank, to: :ref_qing, prefix: true
+  delegate :has_options?, :full_dotted_rank, to: :ref_qing, prefix: true
   delegate :form, :form_id, to: :questioning
 
   serialize :option_ids, JSON
@@ -122,7 +122,7 @@ class Condition < ActiveRecord::Base
     else
       bits = []
       bits << Question.model_name.human
-      bits << "##{ref_qing.rank}"
+      bits << "##{ref_qing.full_dotted_rank}"
       bits << ref_qing.code if prefs[:include_code]
 
       if ref_qing.qtype_name == 'select_one'

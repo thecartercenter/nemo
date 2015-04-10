@@ -37,7 +37,7 @@ class Questioning < FormItem
 
   delegate :published?, to: :form
   delegate :smsable?, to: :form, prefix: true
-  delegate :verify_ordering, :ref_qing_full_rank, :ref_qing_id, to: :condition, prefix: true, allow_nil: true
+  delegate :verify_ordering, :ref_qing_full_dotted_rank, :ref_qing_id, to: :condition, prefix: true, allow_nil: true
 
   scope(:visible, -> { where(:hidden => false) })
 
@@ -52,11 +52,6 @@ class Questioning < FormItem
 
   def has_condition?
     !condition.nil?
-  end
-
-  # Gets string containing fully qualified rank, e.g. 2.3.1.
-  def full_rank
-    path.to_a[1..-1].map(&:rank).join('.')
   end
 
   # checks if this form has any answers
@@ -76,14 +71,14 @@ class Questioning < FormItem
     condition.try(:changed?)
   end
 
-  # gets ranks of all referring conditions' questionings (should use eager loading)
+  # Gets full dotted ranks of all referring conditions' questionings.
   def referring_condition_ranks
-    referring_conditions.map{|c| c.questioning.rank}
+    referring_conditions.map{|c| c.questioning.full_dotted_rank}
   end
 
   # returns any questionings appearing before this one on the form
   def previous
-    form.questionings.reject{|q| !rank.nil? && (q == self || q.rank > rank)}
+    form.questionings.reject{ |q| q == self || (q.full_rank <=> full_rank) == 1 }
   end
 
   # REFACTOR: should use translation delegation, from abandoned std_objs branch
