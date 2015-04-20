@@ -16,6 +16,12 @@ RSpec.configure do |config|
     FactoryGirl.reload
   end
 
+  # Sphinx indexing doesn't work with transaction since it can't see from separate connection.
+  config.before(:each, sphinx: true) do
+    DatabaseCleaner.strategy = :truncation
+    DatabaseCleaner.clean
+  end
+
   config.before(:each, js: true) do
     DatabaseCleaner.strategy = :truncation
   end
