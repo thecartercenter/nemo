@@ -207,9 +207,8 @@ class ResponsesController < ApplicationController
     # prepares objects for and renders the form template
     def prepare_and_render_form
       # get the users to which this response can be assigned
-      # which is the users in this mission plus admins
-      # (we need to include admins because they can submit forms to any mission)
-      @possible_submitters = User.assigned_to_or_admin(current_mission).by_name
+      # which is the users in this mission plus the submitter of this response
+      @possible_submitters = User.assigned_to_or_submitter(current_mission, @response).by_name
 
       # render the form
       render(:form)

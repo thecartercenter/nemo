@@ -255,7 +255,7 @@ class FormsController < ApplicationController
     # prepares objects and renders the form template
     def prepare_and_render_form
       # render the form template
-      @users = User.assigned_to_or_admin(current_mission).by_name
+      @users = User.assigned_to(current_mission).by_name
       render(:form)
     end
 
