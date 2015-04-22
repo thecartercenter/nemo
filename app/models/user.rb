@@ -54,6 +54,9 @@ class User < ActiveRecord::Base
   # returns users who are assigned to the given mission OR admins
   scope(:assigned_to_or_admin, ->(m) { where("users.id IN (SELECT user_id FROM assignments WHERE mission_id = ?) OR users.admin = ?", m.try(:id), true) })
 
+  # returns users who are assigned to the given mission OR who submitted the given response
+  scope(:assigned_to_or_submitter, ->(m, r) { where("users.id IN (SELECT user_id FROM assignments WHERE mission_id = ?) OR EXISTS (SELECT 1 FROM responses WHERE id = ? AND user_id = users.id)", m.try(:id), r.try(:id)) })
+
   # we want all of these on one page for now
   self.per_page = 1000000
 
