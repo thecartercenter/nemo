@@ -5,6 +5,7 @@ This guide assumes:
 * You have an Ubuntu server up and running (version 14.04 recommended)
 * You have a domain name (e.g. yoursite.example.com) pointing to the server's IP address.
 * Port 443 on the server is open to the world.
+* You have a valid SSL certificate for your domain. ELMO requires SSL for general security and to comply with ODK Collect's requirement for same. Free SSL certificates are widely available nowadays. Try [here](https://google.com/search?q=free+ssl+certificate).
 * You have ssh'ed to the server as a user with sudo privileges.
 
 For security reasons, it is not recommended to install ELMO as the `root` user.
@@ -47,6 +48,20 @@ For security reasons, it is not recommended to install ELMO as the `root` user.
     # Install nginx and passenger
     sudo apt-get -y install nginx-full passenger
 
+### Upload SSL certificate
+
+Obtain or locate your SSL certificate's `.crt` and `.key` files.
+
+    sudo mkdir /etc/nginx/ssl
+    sudo chmod 400 /etc/nginx/ssl
+    sudo nano /etc/nginx/ssl/ssl.crt
+
+Paste contents of your `.crt` file, save, and exit.
+
+    sudo nano /etc/nginx/ssl/ssl.key
+
+Paste contents of your `.key` file, save, and exit. Be careful not to share the contents of your `.key` file with anyone.
+
 ### Configure Nginx
 
     sudo rm /etc/nginx/nginx.conf && sudo nano /etc/nginx/nginx.conf
@@ -65,7 +80,7 @@ Choose and save separate passwords for the `root` and `elmo` MySQL users you're 
     grant all privileges on elmo_production.* to elmo@localhost identified by 'xxx';
     exit
 
-### Enter ELMO configuration
+### Configure ELMO
 
     cp config/database.yml.example config/database.yml
     nano config/database.yml
@@ -75,23 +90,7 @@ Enter the database password for the `elmo` user under the 'production' section. 
     cp config/initializers/local_config.rb.example config/initializers/local_config.rb
     nano config/initializers/local_config.rb
 
-Enter sensible values for the settings in the file. Entering a functioning email server is important as ELMO relies on email to send broadcasts, and registration info, and password reset requests. Once you have ELMO running, you can test your email setup by requesting a password reset for your user. Save and exit when you're done.
-
-### Upload SSL certificate
-
-ELMO requires a valid SSL certificate for general security and to comply with ODK Collect's requirement for same. Free SSL certificates are widely available nowadays. Try [here](https://google.com/search?q=free+ssl+certificate).
-
-Once you have obtained a certificated and downloaded its `.crt` and `.key` files:
-
-    sudo mkdir /etc/nginx/ssl
-    sudo chmod 400 /etc/nginx/ssl
-    sudo nano /etc/nginx/ssl/ssl.crt
-
-Paste contents of your `.crt` file, save, and exit.
-
-    sudo nano /etc/nginx/ssl/ssl.key
-
-Paste contents of your `.key` file, save, and exit. Be careful not to share the contents of your `.key` file with anyone.
+Enter sensible values for the settings in the file. Entering a functioning email server is important as ELMO relies on email to send broadcasts, and registration info, and password reset requests. Once you have ELMO running, you can test your email setup by creating a new user for yourself and delivering the login instructions via email or by using the password reset feature.
 
 ### Final config
 
