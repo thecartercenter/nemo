@@ -131,6 +131,11 @@ ELMO::Application.routes.draw do
     get '/sms/submit' => 'sms#create'
 
     # ODK routes. They are down here so that forms_path doesn't return the ODK variant.
+    #
+    # NOTE: Brute-force login protection happens in the rack-attack middleware,
+    # which executes before routing. Be sure that all paths marked with
+    # :direct_auth => true are also matched by the direct_auth? method in
+    # config/initializers/rack-attack.rb
     get '/formList' => 'forms#index', as: :odk_form_list, defaults: {format: 'xml', direct_auth: true}
     get '/forms/:id' => 'forms#show', as: :odk_form, defaults: {format: 'xml', direct_auth: true}
     get '/forms/:id/manifest' => 'forms#odk_manifest', as: :odk_form_manifest, defaults: {format: 'xml', direct_auth: true}
