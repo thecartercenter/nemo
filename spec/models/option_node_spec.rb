@@ -15,18 +15,6 @@ describe OptionNode do
     end
   end
 
-  describe 'updating without hash' do
-    before do
-      @node = create(:option_node_with_grandchildren)
-      @other_option = create(:option)
-      @node.c[0].update_attributes!(option: @other_option)
-    end
-
-    it 'should not destroy children' do
-      expect(@node.c[0].children.size).to eq 2
-    end
-  end
-
   describe 'option_level' do
     before do
       @node = create(:option_node_with_grandchildren)
@@ -127,7 +115,7 @@ describe OptionNode do
     end
   end
 
-  describe 'updating from hash with changes' do
+  describe 'updating from hash with full set of changes' do
     before do
       @node = create(:option_node_with_grandchildren)
       @node.update_attributes!(standard_changeset(@node))
@@ -146,6 +134,31 @@ describe OptionNode do
     end
 
     it 'should cause options_removed? to be true' do
+      expect(@node.options_removed?).to eq true
+    end
+  end
+
+  describe 'updating from hash, moving two options to a different node' do
+    before do
+      @node = create(:option_node_with_grandchildren)
+      @node.update_attributes!(move_node_changeset(@node))
+    end
+
+    it 'should be correct' do
+      expect_node(['Animal', ['Plant', ['Tulip', 'Oak', 'Cat', 'Dog']]])
+    end
+
+    it 'should cause ranks_changed? to be false' do
+      expect(@node.ranks_changed?).to eq false
+    end
+
+    it 'should cause options_added? to be true' do
+      # Because moving an option is really adding and removing.
+      expect(@node.options_added?).to eq true
+    end
+
+    it 'should cause options_removed? to be true' do
+      # Because moving an option is really adding and removing.
       expect(@node.options_removed?).to eq true
     end
   end

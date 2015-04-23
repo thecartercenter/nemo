@@ -251,7 +251,9 @@ class OptionNode < ActiveRecord::Base
     # Special method for creating/updating a tree of nodes via the children_attribs hash.
     # Sets ranks_changed? flag if the ranks of any of the descendants' children change.
     def update_children
-      return if children_attribs.nil?
+      # It's important to run through this method even if children_attribs is nil, since otherwise if
+      # all children get moved out of a node, it won't update!
+      self.children_attribs ||= []
 
       reload # Ancestry doesn't seem to work properly without this.
 
