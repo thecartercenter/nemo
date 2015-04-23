@@ -95,10 +95,17 @@ Paste contents of your `.key` file, save, and exit. Be careful not to share the 
 
 ### Final config
 
+    # Set Rails environment.
+    echo 'export RAILS_ENV=production' >> ~/.bashrc
+    exec $SHELL
     # Install gems
     bundle install --without development test --deployment
     # Setup cron jobs
     bundle exec whenever -i elmo
+    # Migrate database
+    bundle exec rake db:migrate
+    # Precompile assets
+    bundle exec rake assets:precompile
     # Build search indices
     bundle exec rake ts:rebuild
     # Create admin user
@@ -111,6 +118,20 @@ Paste contents of your `.key` file, save, and exit. Be careful not to share the 
 Visit **https://yourdomain.example.org** in your browser (replace with your real hostname). The ELMO login screen should appear. Login with username admin, password temptemp. Change the password immediately by clicking on 'admin' in the top right.
 
 See the [ELMO Documentation](http://getelmo.org/documentation/start/) for help on using your new ELMO instance!
+
+### Upgrading
+
+When new versions of ELMO are released, you will want to upgrade. To so, ssh to your server and change to the `elmo` directory, then:
+
+    git pull
+    bundle install --without development test --deployment
+    bundle exec whenever -i elmo
+    bundle exec rake db:migrate
+    bundle exec rake assets:precompile
+    bundle exec rake ts:rebuild
+    touch tmp/restart.txt
+
+Then load the site in your browser. You should see the new version number in the page footer.
 
 ### Troubleshooting
 
