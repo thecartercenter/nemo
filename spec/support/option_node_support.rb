@@ -55,6 +55,37 @@ module OptionNodeSupport
     }
   end
 
+  # Moves Cat and Dog from Animal to Plant.
+  def move_node_changeset(node)
+    {
+      'children_attribs' => [{
+        'id' => node.c[0].id,
+        'option_attribs' => { 'id' => node.c[0].option_id, 'name_translations' => {'en' => 'Animal'} }
+      }, {
+        'id' => node.c[1].id,
+        'option_attribs' => { 'id' => node.c[1].option_id, 'name_translations' => {'en' => 'Plant'} },
+        'children_attribs' => [
+          {
+            'id' => node.c[1].c[0].id,
+            'option_attribs' => { 'id' => node.c[1].c[0].option_id, 'name_translations' => {'en' => 'Tulip'} }
+          },
+          {
+            'id' => node.c[1].c[1].id,
+            'option_attribs' => { 'id' => node.c[1].c[1].option_id, 'name_translations' => {'en' => 'Oak'} }
+          },
+          {
+            'id' => node.c[0].c[0].id,
+            'option_attribs' => { 'id' => node.c[0].c[0].option_id, 'name_translations' => {'en' => 'Cat'} }
+          },
+          {
+            'id' => node.c[0].c[1].id,
+            'option_attribs' => { 'id' => node.c[0].c[1].option_id, 'name_translations' => {'en' => 'Dog'} }
+          }
+        ]
+      }]
+    }
+  end
+
   # Adds one option only to standard multilevel option node.
   def additive_changeset(node)
     {
