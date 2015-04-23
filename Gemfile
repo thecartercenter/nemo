@@ -72,6 +72,9 @@ gem 'ancestry', '~> 2.0'
 
 gem 'rails-backbone', github: 'codebrew/backbone-rails'
 
+# Middleware for handling abusive requests
+gem 'rack-attack'
+
 # XLS support
 gem 'roo'
 
