@@ -2,7 +2,7 @@
 
 This guide assumes:
 
-* You have an Ubuntu server up and running (version 14.04 recommended)
+* You have an Ubuntu server up and running (version 14.04 recommended).
 * You have a domain name (e.g. yoursite.example.com) pointing to the server's IP address.
 * Port 443 on the server is open to the world.
 * You have a valid SSL certificate for your domain. ELMO requires SSL for general security and to comply with ODK Collect's requirement for same. Free SSL certificates are widely available nowadays. Try [here](https://google.com/search?q=free+ssl+certificate).
@@ -56,17 +56,17 @@ Obtain or locate your SSL certificate's `.crt` and `.key` files.
     sudo chmod 400 /etc/nginx/ssl
     sudo nano /etc/nginx/ssl/ssl.crt
 
-Paste contents of your `.crt` file, save, and exit.
+Paste the contents of your `.crt` file, save, and exit.
 
     sudo nano /etc/nginx/ssl/ssl.key
 
-Paste contents of your `.key` file, save, and exit. Be careful not to share the contents of your `.key` file with anyone.
+Paste the contents of your `.key` file, save, and exit. Be careful not to share the contents of your `.key` file with anyone.
 
 ### Configure Nginx
 
     sudo rm /etc/nginx/nginx.conf && sudo nano /etc/nginx/nginx.conf
 
-Copy in the contents of [this config file](nginx.conf). Update the `server_name` setting to match your domain. If your username is not `ubuntu`, also update the `root` and `passenger_ruby` settings to match your username. Save and exit.
+Paste the contents of [this config file](nginx.conf). Update the `server_name` setting to match your domain. If your username is not `ubuntu`, also update the `root` and `passenger_ruby` settings to match your username. Save and exit.
 
 ### Install MySQL and create database
 
@@ -114,13 +114,15 @@ Enter sensible values for the settings in the file. Entering a functioning email
 
 ### Login and enjoy!
 
-Visit **https://yourdomain.example.org** in your browser (replace with your real hostname). The ELMO login screen should appear. Login with username admin, password temptemp. Change the password immediately by clicking on 'admin' in the top right.
+Visit https://yourdomain.example.org in your browser (replace with your real domain name). The ELMO login screen should appear. Login with username **admin**, password **temptemp**.
+
+**IMPORTANT**: Change the admin user's password immediately by clicking on 'admin' in the top right.
 
 See the [ELMO Documentation](http://getelmo.org/documentation/start/) for help on using your new ELMO instance!
 
 ### Upgrading
 
-When new versions of ELMO are released, you will want to upgrade. To so, ssh to your server and change to the `elmo` directory, then:
+When new versions of ELMO are released, you will want to upgrade. To do so, ssh to your server and change to the `elmo` directory, then:
 
     git pull
     bundle install --without development test --deployment
