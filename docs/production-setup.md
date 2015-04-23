@@ -62,6 +62,8 @@ Paste the contents of your `.crt` file, save, and exit.
 
 Paste the contents of your `.key` file, save, and exit. Be careful not to share the contents of your `.key` file with anyone.
 
+Note that if your `.key` file has a passphrase, you will need to enter it every time you restart Nginx. Stripping the passphrase from the key is not terribly dangerous. You can find out how to do it [here](https://mnx.io/blog/removing-a-passphrase-from-an-ssl-key/).
+
 ### Configure Nginx
 
     sudo rm /etc/nginx/nginx.conf && sudo nano /etc/nginx/nginx.conf
