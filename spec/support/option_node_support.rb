@@ -35,7 +35,8 @@ module OptionNodeSupport
         'children_attribs' => [
           {
             'id' => node.c[0].c[1].id,
-            'option_attribs' => { 'id' => node.c[0].c[1].option_id, 'name_translations' => {'en' => 'Doge'} }
+            'option_attribs' => { 'id' => node.c[0].c[1].option_id, 'name_translations' => {'en' => 'Doge'} },
+            'children_attribs' => 'NONE'
           }
         ]
       }, {
@@ -44,11 +45,13 @@ module OptionNodeSupport
         'children_attribs' => [
           {
             'id' => node.c[0].c[0].id,
-            'option_attribs' => { 'id' => node.c[0].c[0].option_id, 'name_translations' => {'en' => 'Cat'} }
+            'option_attribs' => { 'id' => node.c[0].c[0].option_id, 'name_translations' => {'en' => 'Cat'} },
+            'children_attribs' => 'NONE'
           },
           {
             'id' => node.c[1].c[0].id,
-            'option_attribs' => { 'id' => node.c[1].c[0].option_id, 'name_translations' => {'en' => 'Tulipe'} }
+            'option_attribs' => { 'id' => node.c[1].c[0].option_id, 'name_translations' => {'en' => 'Tulipe'} },
+            'children_attribs' => 'NONE'
           },
         ]
       }]
@@ -60,26 +63,31 @@ module OptionNodeSupport
     {
       'children_attribs' => [{
         'id' => node.c[0].id,
-        'option_attribs' => { 'id' => node.c[0].option_id, 'name_translations' => {'en' => 'Animal'} }
+        'option_attribs' => { 'id' => node.c[0].option_id, 'name_translations' => {'en' => 'Animal'} },
+        'children_attribs' => 'NONE'
       }, {
         'id' => node.c[1].id,
         'option_attribs' => { 'id' => node.c[1].option_id, 'name_translations' => {'en' => 'Plant'} },
         'children_attribs' => [
           {
             'id' => node.c[1].c[0].id,
-            'option_attribs' => { 'id' => node.c[1].c[0].option_id, 'name_translations' => {'en' => 'Tulip'} }
+            'option_attribs' => { 'id' => node.c[1].c[0].option_id, 'name_translations' => {'en' => 'Tulip'} },
+            'children_attribs' => 'NONE'
           },
           {
             'id' => node.c[1].c[1].id,
-            'option_attribs' => { 'id' => node.c[1].c[1].option_id, 'name_translations' => {'en' => 'Oak'} }
+            'option_attribs' => { 'id' => node.c[1].c[1].option_id, 'name_translations' => {'en' => 'Oak'} },
+            'children_attribs' => 'NONE'
           },
           {
             'id' => node.c[0].c[0].id,
-            'option_attribs' => { 'id' => node.c[0].c[0].option_id, 'name_translations' => {'en' => 'Cat'} }
+            'option_attribs' => { 'id' => node.c[0].c[0].option_id, 'name_translations' => {'en' => 'Cat'} },
+            'children_attribs' => 'NONE'
           },
           {
             'id' => node.c[0].c[1].id,
-            'option_attribs' => { 'id' => node.c[0].c[1].option_id, 'name_translations' => {'en' => 'Dog'} }
+            'option_attribs' => { 'id' => node.c[0].c[1].option_id, 'name_translations' => {'en' => 'Dog'} },
+            'children_attribs' => 'NONE'
           }
         ]
       }]
@@ -95,14 +103,17 @@ module OptionNodeSupport
         'children_attribs' => [
           {
             'id' => node.c[0].c[0].id,
-            'option_attribs' => { 'id' => node.c[0].c[0].option_id, 'name_translations' => {'en' => 'Cat'} }
+            'option_attribs' => { 'id' => node.c[0].c[0].option_id, 'name_translations' => {'en' => 'Cat'} },
+            'children_attribs' => 'NONE'
           },
           {
             'id' => node.c[0].c[1].id,
-            'option_attribs' => { 'id' => node.c[0].c[1].option_id, 'name_translations' => {'en' => 'Dog'} }
+            'option_attribs' => { 'id' => node.c[0].c[1].option_id, 'name_translations' => {'en' => 'Dog'} },
+            'children_attribs' => 'NONE'
           },
           {
-            'option_attribs' => { 'name_translations' => {'en' => 'Ocelot'} }
+            'option_attribs' => { 'name_translations' => {'en' => 'Ocelot'} },
+            'children_attribs' => 'NONE'
           }
         ]
       }, {
@@ -111,11 +122,13 @@ module OptionNodeSupport
         'children_attribs' => [
           {
             'id' => node.c[1].c[0].id,
-            'option_attribs' => { 'id' => node.c[1].c[0].option_id, 'name_translations' => {'en' => 'Tulip'} }
+            'option_attribs' => { 'id' => node.c[1].c[0].option_id, 'name_translations' => {'en' => 'Tulip'} },
+            'children_attribs' => 'NONE'
           },
           {
             'id' => node.c[1].c[1].id,
-            'option_attribs' => { 'id' => node.c[1].c[1].option_id, 'name_translations' => {'en' => 'Oak'} }
+            'option_attribs' => { 'id' => node.c[1].c[1].option_id, 'name_translations' => {'en' => 'Oak'} },
+            'children_attribs' => 'NONE'
           }
         ]
       }]
@@ -131,11 +144,13 @@ module OptionNodeSupport
         'children_attribs' => [
           {
             'id' => node.c[0].c[1].id,
-            'option_attribs' => { 'id' => node.c[0].c[1].option_id, 'name_translations' => {'en' => 'Dog'} }
+            'option_attribs' => { 'id' => node.c[0].c[1].option_id, 'name_translations' => {'en' => 'Dog'} },
+            'children_attribs' => 'NONE'
           },
           {
             'id' => node.c[0].c[0].id,
-            'option_attribs' => { 'id' => node.c[0].c[0].option_id, 'name_translations' => {'en' => 'Cat'} }
+            'option_attribs' => { 'id' => node.c[0].c[0].option_id, 'name_translations' => {'en' => 'Cat'} },
+            'children_attribs' => 'NONE'
           }
         ]
       }, {
@@ -144,11 +159,13 @@ module OptionNodeSupport
         'children_attribs' => [
           {
             'id' => node.c[1].c[0].id,
-            'option_attribs' => { 'id' => node.c[1].c[0].option_id, 'name_translations' => {'en' => 'Tulip'} }
+            'option_attribs' => { 'id' => node.c[1].c[0].option_id, 'name_translations' => {'en' => 'Tulip'} },
+            'children_attribs' => 'NONE'
           },
           {
             'id' => node.c[1].c[1].id,
-            'option_attribs' => { 'id' => node.c[1].c[1].option_id, 'name_translations' => {'en' => 'Oak'} }
+            'option_attribs' => { 'id' => node.c[1].c[1].option_id, 'name_translations' => {'en' => 'Oak'} },
+            'children_attribs' => 'NONE'
           }
         ]
       }]
@@ -164,7 +181,8 @@ module OptionNodeSupport
         'children_attribs' => [
           {
             'id' => node.c[0].c[1].id,
-            'option_attribs' => { 'id' => node.c[0].c[1].option_id, 'name_translations' => {'en' => 'Dog'} }
+            'option_attribs' => { 'id' => node.c[0].c[1].option_id, 'name_translations' => {'en' => 'Dog'} },
+            'children_attribs' => 'NONE'
           }
         ]
       }, {
@@ -173,11 +191,13 @@ module OptionNodeSupport
         'children_attribs' => [
           {
             'id' => node.c[1].c[0].id,
-            'option_attribs' => { 'id' => node.c[1].c[0].option_id, 'name_translations' => {'en' => 'Tulip'} }
+            'option_attribs' => { 'id' => node.c[1].c[0].option_id, 'name_translations' => {'en' => 'Tulip'} },
+            'children_attribs' => 'NONE'
           },
           {
             'id' => node.c[1].c[1].id,
-            'option_attribs' => { 'id' => node.c[1].c[1].option_id, 'name_translations' => {'en' => 'Oak'} }
+            'option_attribs' => { 'id' => node.c[1].c[1].option_id, 'name_translations' => {'en' => 'Oak'} },
+            'children_attribs' => 'NONE'
           }
         ]
       }]
@@ -193,11 +213,13 @@ module OptionNodeSupport
         'children_attribs' => [
           {
             'id' => node.c[0].c[0].id,
-            'option_attribs' => { 'id' => node.c[0].c[0].option_id, 'name_translations' => {'en' => 'Cat'} }
+            'option_attribs' => { 'id' => node.c[0].c[0].option_id, 'name_translations' => {'en' => 'Cat'} },
+            'children_attribs' => 'NONE'
           },
           {
             'id' => node.c[0].c[1].id,
-            'option_attribs' => { 'id' => node.c[0].c[1].option_id, 'name_translations' => {'en' => 'Dog'} }
+            'option_attribs' => { 'id' => node.c[0].c[1].option_id, 'name_translations' => {'en' => 'Dog'} },
+            'children_attribs' => 'NONE'
           }
         ]
       }, {
@@ -206,11 +228,13 @@ module OptionNodeSupport
         'children_attribs' => [
           {
             'id' => node.c[1].c[0].id,
-            'option_attribs' => { 'id' => node.c[1].c[0].option_id, 'name_translations' => {'en' => 'Tulip'} }
+            'option_attribs' => { 'id' => node.c[1].c[0].option_id, 'name_translations' => {'en' => 'Tulip'} },
+            'children_attribs' => 'NONE'
           },
           {
             'id' => node.c[1].c[1].id,
-            'option_attribs' => { 'id' => node.c[1].c[1].option_id, 'name_translations' => {'en' => 'Oak'} }
+            'option_attribs' => { 'id' => node.c[1].c[1].option_id, 'name_translations' => {'en' => 'Oak'} },
+            'children_attribs' => 'NONE'
           }
         ]
       }]
@@ -220,14 +244,14 @@ module OptionNodeSupport
   WITH_GRANDCHILDREN_ATTRIBS = [{
     'option_attribs' => { 'name_translations' => {'en' => 'Animal'} },
     'children_attribs' => [
-      { 'option_attribs' => { 'name_translations' => {'en' => 'Cat'} } },
-      { 'option_attribs' => { 'name_translations' => {'en' => 'Dog'} } }
+      { 'option_attribs' => { 'name_translations' => {'en' => 'Cat'} }, 'children_attribs' => 'NONE' },
+      { 'option_attribs' => { 'name_translations' => {'en' => 'Dog'} }, 'children_attribs' => 'NONE' }
     ]
   }, {
     'option_attribs' => { 'name_translations' => {'en' => 'Plant'} },
     'children_attribs' => [
-      { 'option_attribs' => { 'name_translations' => {'en' => 'Tulip'} } },
-      { 'option_attribs' => { 'name_translations' => {'en' => 'Oak'} } }
+      { 'option_attribs' => { 'name_translations' => {'en' => 'Tulip'} }, 'children_attribs' => 'NONE' },
+      { 'option_attribs' => { 'name_translations' => {'en' => 'Oak'} }, 'children_attribs' => 'NONE' }
     ]
   }]
 
@@ -237,15 +261,15 @@ module OptionNodeSupport
       {
         'option_attribs' => { 'name_translations' => {'en' => 'Vertebrate'} },
         'children_attribs' => [
-          { 'option_attribs' => { 'name_translations' => {'en' => 'Cat'} } },
-          { 'option_attribs' => { 'name_translations' => {'en' => 'Dog'} } }
+          { 'option_attribs' => { 'name_translations' => {'en' => 'Cat'} }, 'children_attribs' => 'NONE' },
+          { 'option_attribs' => { 'name_translations' => {'en' => 'Dog'} }, 'children_attribs' => 'NONE' }
         ]
       },
       {
         'option_attribs' => { 'name_translations' => {'en' => 'Invertebrate'} },
         'children_attribs' => [
-          { 'option_attribs' => { 'name_translations' => {'en' => 'Lobster'} } },
-          { 'option_attribs' => { 'name_translations' => {'en' => 'Jellyfish'} } }
+          { 'option_attribs' => { 'name_translations' => {'en' => 'Lobster'} }, 'children_attribs' => 'NONE' },
+          { 'option_attribs' => { 'name_translations' => {'en' => 'Jellyfish'} }, 'children_attribs' => 'NONE' }
         ]
       }
     ]
@@ -255,15 +279,15 @@ module OptionNodeSupport
       {
         'option_attribs' => { 'name_translations' => {'en' => 'Tree'} },
         'children_attribs' => [
-          { 'option_attribs' => { 'name_translations' => {'en' => 'Oak'} } },
-          { 'option_attribs' => { 'name_translations' => {'en' => 'Pine'} } }
+          { 'option_attribs' => { 'name_translations' => {'en' => 'Oak'} }, 'children_attribs' => 'NONE' },
+          { 'option_attribs' => { 'name_translations' => {'en' => 'Pine'} }, 'children_attribs' => 'NONE' }
         ]
       },
       {
         'option_attribs' => { 'name_translations' => {'en' => 'Flower'} },
         'children_attribs' => [
-          { 'option_attribs' => { 'name_translations' => {'en' => 'Tulip'} } },
-          { 'option_attribs' => { 'name_translations' => {'en' => 'Daisy'} } }
+          { 'option_attribs' => { 'name_translations' => {'en' => 'Tulip'} }, 'children_attribs' => 'NONE' },
+          { 'option_attribs' => { 'name_translations' => {'en' => 'Daisy'} }, 'children_attribs' => 'NONE' }
         ]
       }
     ]
