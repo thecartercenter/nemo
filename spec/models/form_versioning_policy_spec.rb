@@ -5,7 +5,7 @@ describe FormVersioningPolicy do
 
   before do
     # create three forms
-    @forms = (0...3).map{ root_group = QingGroup.create; FactoryGirl.create(:form, :published => false, root_id: root_group.id) }
+    @forms = (0...3).map{ FactoryGirl.create(:form, :published => false) }
 
     # publish and then unpublish the forms so they get versions
     @forms.each{|f| f.publish!; f.unpublish!}
