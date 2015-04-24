@@ -37,7 +37,7 @@ class OptionNode < ActiveRecord::Base
   def self.preload_child_options(roots)
     ancestries = roots.map{ |r| "'#{r.id}'" }.join(',')
     nodes_by_root_id = OptionNode.includes(:option).where("ancestry IN (#{ancestries})").group_by{ |n| n.ancestry.to_i }
-    roots.each{ |r| r.child_options = nodes_by_root_id[r.id].map(&:option) }
+    roots.each{ |r| r.child_options = (nodes_by_root_id[r.id] || []).map(&:option) }
   end
 
   # Efficiently gets an option id from an option node id. id may be a string or integer.
@@ -251,9 +251,11 @@ class OptionNode < ActiveRecord::Base
     # Special method for creating/updating a tree of nodes via the children_attribs hash.
     # Sets ranks_changed? flag if the ranks of any of the descendants' children change.
     def update_children
-      # It's important to run through this method even if children_attribs is nil, since otherwise if
-      # all children get moved out of a node, it won't update!
-      self.children_attribs ||= []
+      # It's important not to run through this method if children_attribs is nil, since otherwise
+      # children will get deleted on a partial update.
+      return if children_attribs.nil?
+
+      self.children_attribs = [] if children_attribs == 'NONE'
 
       reload # Ancestry doesn't seem to work properly without this.
 
