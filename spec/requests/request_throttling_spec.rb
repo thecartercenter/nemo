@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'throttling for xml requests' do
 
-  let(:limit) { 30 }
+  let(:limit) { configatron.direct_auth_request_limit }
 
   before(:each) do
     Rack::Attack.cache.store = ActiveSupport::Cache::MemoryStore.new
