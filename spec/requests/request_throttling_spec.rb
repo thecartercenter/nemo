@@ -11,14 +11,14 @@ describe 'throttling for xml requests' do
   context 'with the same ip address' do
     it 'should not apply to requests below the limit' do
       limit.times do
-        get "/m/#{get_mission.compact_name}/formList.xml"
+        get "/m/#{get_mission.compact_name}/formList"
         assert_response :unauthorized
       end
     end
 
     it 'should apply to requests above the limit with response code 429' do
       (limit + 1).times do |i|
-        get "/m/#{get_mission.compact_name}/formList.xml"
+        get "/m/#{get_mission.compact_name}/formList"
         if i < limit
           assert_response :unauthorized
         else
@@ -33,7 +33,7 @@ describe 'throttling for xml requests' do
 
     it 'should not apply' do
       (limit * 2).times do |i|
-        get "/m/#{get_mission.compact_name}/formList.xml", nil, { REMOTE_ADDR: remote_addrs[i] }
+        get "/m/#{get_mission.compact_name}/formList", nil, { REMOTE_ADDR: remote_addrs[i] }
         assert_response :unauthorized
       end
     end
