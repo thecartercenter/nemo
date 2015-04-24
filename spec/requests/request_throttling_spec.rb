@@ -4,6 +4,10 @@ describe 'throttling for xml requests' do
 
   let(:limit) { configatron.direct_auth_request_limit }
 
+  before do
+    configatron.allow_unauthenticated_submissions = true
+  end
+
   before(:each) do
     Rack::Attack.cache.store = ActiveSupport::Cache::MemoryStore.new
   end
@@ -19,6 +23,17 @@ describe 'throttling for xml requests' do
     it 'should apply to requests above the limit with response code 429' do
       (limit + 1).times do |i|
         get "/m/#{get_mission.compact_name}/formList"
+        if i < limit
+          assert_response :unauthorized
+        else
+          assert_response :too_many_requests
+        end
+      end
+    end
+
+    it 'should apply to /m/mission_name/noauth/submission requests above the limit with response code 429' do
+      (limit + 1).times do |i|
+        post "/m/#{get_mission.compact_name}/noauth/submission"
         if i < limit
           assert_response :unauthorized
         else
