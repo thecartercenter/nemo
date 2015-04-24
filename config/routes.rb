@@ -137,7 +137,7 @@ ELMO::Application.routes.draw do
   # which executes before routing. Be sure that all paths marked with
   # :direct_auth => true are also matched by the direct_auth? method in
   # config/initializers/rack-attack.rb
-  scope '/m/:mission_name', mission_name: /[a-z][a-z0-9]*/, defaults: { mode: 'm', direct_auth: true } do
+  scope '/m/:mission_name', mission_name: /[a-z][a-z0-9]*/, defaults: { mode: 'm', direct_auth: 'basic' } do
     get '/formList' => 'forms#index', as: :odk_form_list, defaults: {format: 'xml'}
     get '/forms/:id' => 'forms#show', as: :odk_form, defaults: {format: 'xml'}
     get '/forms/:id/manifest' => 'forms#odk_manifest', as: :odk_form_manifest, defaults: {format: 'xml'}
@@ -145,7 +145,7 @@ ELMO::Application.routes.draw do
     match '/submission' => 'responses#create', via: [:get, :head, :post], defaults: {format: 'xml'}
 
     # Unauthenticated submissions
-    match '/noauth/submission' => 'responses#create', via: [:get, :head, :post], defaults: {format: :xml, no_auth: true}
+    match '/noauth/submission' => 'responses#create', via: [:get, :head, :post], defaults: {format: :xml, direct_auth: 'none'}
   end
 
   # API routes.
