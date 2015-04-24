@@ -57,7 +57,7 @@ gem 'descriptive_statistics', :require => 'descriptive_statistics/safe'
 gem 'ejs'
 
 # search
-gem 'thinking-sphinx', '~> 3.0.2'
+gem 'thinking-sphinx', '~> 3.0'
 
 # cron management
 gem 'whenever', :require => false
