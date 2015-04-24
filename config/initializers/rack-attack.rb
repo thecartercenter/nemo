@@ -1,13 +1,8 @@
 class Rack::Attack::Request
   def direct_auth?
+    # Match paths starting with "/m/mission_name", but exclude "/m/mission_name/sms" paths
     if path =~ %r{^/m/[a-z][a-z0-9]*/(.*)$}
-      subpath = $1
-
-      return true if subpath == 'formList.xml'
-      return true if subpath =~ %r{^forms/([^/]+)\.xml$}
-      return true if subpath =~ %r{^forms/([^/]+)/manifest\.xml$}
-      return true if subpath =~ %r{^forms/([^/]+)/itemsets\.csv$}
-      return true if subpath == 'submission.xml'
+      return $1 !~ /^sms/
     end
   end
 end
