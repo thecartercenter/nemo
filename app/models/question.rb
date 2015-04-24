@@ -2,7 +2,10 @@
 class Question < ActiveRecord::Base
   include MissionBased, Replication::Standardizable, Replication::Replicable, FormVersionable, Translatable
 
-  CODE_FORMAT = "[a-zA-Z][a-zA-Z0-9]{1,19}"
+  # Note that the maximum allowable length is 22 chars (1 letter plus 21 letters/numbers)
+  # The user is told that the max is 20.
+  # This is because we need to leave room for additional digits at the end during replication to maintain uniqueness.
+  CODE_FORMAT = "[a-zA-Z][a-zA-Z0-9]{1,21}"
   API_ACCESS_LEVELS = %w(inherit private)
 
   belongs_to(:option_set, :inverse_of => :questions, :autosave => true)
