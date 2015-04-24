@@ -1,3 +1,5 @@
+$response-form-label-width: 300px;
+
 /* response index */
 .responses_index {
   form#form_chooser {
@@ -71,6 +73,10 @@ form.response_form {
   width: 760px;
 
   label.main {
-    width: 300px;
+    width: $response-form-label-width;
+  }
+
+  div.control {
+    margin-left: $response-form-label-width;
   }
 }

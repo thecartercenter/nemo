@@ -1,5 +1,6 @@
 $orange: #F77D48;
 $elmo-form-width: 660px;
+$label-width: 200px;
 
 /* base errors may appear outside the form. */
 div.form-errors {
@@ -66,15 +67,25 @@ div.form_field {
   }
 
   label.main {
-    display: inline-block;
+    // We float this instead of using inline-block because the latter doesn't
+    // print properly in FFox if the text spans longer than a page.
+    float: left;
+
+    // If this width is overridden for specific forms,
+    // the div.control margin needs to be changed too.
+    width: $label-width;
+
+    display: block;
     vertical-align: top;
-    width: 200px;
     padding-right: 10px;
     text-align: right;
   }
 
   div.control {
-    display: inline-block;
+    // Need this margin to match the width of the label. See above for why we
+    // do it this way.
+    margin-left: $label-width;
+
     vertical-align: middle;
     width: 425px;
     min-height: 26px;
@@ -126,10 +137,6 @@ div.form_field {
     padding: 0;
     width: auto;
   }
-}
-
-div.hint {
-  display: inline-block;
 }
 
 form input[type="submit"].btn-primary {
