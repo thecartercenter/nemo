@@ -4,24 +4,25 @@
   data-qtype-name="<%= answer_set.qtype.name %>" id="qing_<%= answer_set.questioning_id %>"
   data-index="<%= answer_set.questioning_id %>">
 
-  <label class="main"><%= reqd_sym if answer_set.required? %> <%= answer_set.question_name || "[#{t('answer.no_name')}]" %>
-  </label><div class="control">
-    <% if answer_set.multi_level? %>
-      <%# index just needs to be a unique integer, so we use the questioning ID. %>
-      <%= render(read_only ? 'answer_set_read_only' : 'answer_set_editable',
-        answer_set: answer_set, index: answer_set.questioning_id) %>
-    <% else %>
-      <%= render(read_only ? 'answer_read_only' : 'answer_editable',
-        answer: answer_set.answers.first, index: answer_set.questioning_id) %>
-    <% end %>
+  <div class="label_and_control">
+
+    <label class="main"><%= reqd_sym if answer_set.required? %> <%= answer_set.question_name || "[#{t('answer.no_name')}]" %>
+    </label><div class="control">
+      <% if answer_set.multi_level? %>
+        <%# index just needs to be a unique integer, so we use the questioning ID. %>
+        <%= render(read_only ? 'answer_set_read_only' : 'answer_set_editable',
+          answer_set: answer_set, index: answer_set.questioning_id) %>
+      <% else %>
+        <%= render(read_only ? 'answer_read_only' : 'answer_editable',
+          answer: answer_set.answers.first, index: answer_set.questioning_id) %>
+      <% end %>
+    </div>
+
   </div>
 
-  <div class="hint">
-    <% if form_mode && answer_set.question_hint.present? %>
-      <a href="#" rel="popover" class="hint" data-content="<%= answer_set.question_hint %>"><i class="hint fa fa-2x fa-info-circle"></i></a>
-    <% end %>
-  </div>
-
+  <% if form_mode && answer_set.question_hint.present? %>
+    <a href="#" rel="popover" class="hint" data-content="<%= answer_set.question_hint %>"><i class="hint fa fa-2x fa-info-circle"></i></a>
+  <% end %>
 </div>
 
 <%# Setup condition js object if a condition exists. %>
