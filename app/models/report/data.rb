@@ -18,7 +18,7 @@ class Report::Data
     value = Report::Formatter.translate(value)
 
     if !@rows[row][col].blank? && options[:append]
-      @rows[row][col] << ", #{value}"
+      @rows[row][col] = "#{@rows[row][col]}, #{value}"
     else
       @rows[row][col] = value
     end
