@@ -15,6 +15,10 @@ describe Form do
         @copy.reload
       end
 
+      it 'should not produce blank ancestry (only nil)' do
+        expect(@copy.root_group.ancestry).to be_nil
+      end
+
       it 'should produce distinct child objects' do
         expect(@std).not_to eq @copy
         expect(@std.root_group).not_to eq @copy.root_group

@@ -81,7 +81,7 @@ class Replication::ObjProxy
 
     if klass.has_ancestry?
       new_ancestry = get_copy_ancestry(context)
-      mappings << ['ancestry', "'#{new_ancestry}'"]
+      mappings << ['ancestry', new_ancestry.nil? ? nil : "'#{new_ancestry}'"]
     else
       new_ancestry = nil
     end
