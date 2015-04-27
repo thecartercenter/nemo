@@ -1,6 +1,7 @@
 <%= elmo_form_for(@user_session, :url => user_session_path, :style => :minimal) do |f| %>
   <%= f.field(:login) %>
   <%= f.field(:password, :type => :password) %>
+  <%= f.field(:captcha, :content => recaptcha_tags) if captcha_enabled? %>
   <div class="submit-buttons">
     <%= f.submit(:login, :class => "btn btn-primary") %><br/><br/>
     <%= link_to(t("user.forgot_password"), new_password_reset_path) %>
