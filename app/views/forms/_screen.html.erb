@@ -25,6 +25,8 @@
     <%# We wrap the top part of the form in this block b/c the whole form is 100% width due to index table below %>
     <div class="elmo_form">
 
+      <%= f.base_errors %>
+
       <%= f.field(:name, :required => true, :read_only => cannot?(:rename, @form)) %>
 
       <% unless admin_mode? %>
