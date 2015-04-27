@@ -9,7 +9,7 @@ end
 
 class Rack::Attack
   # Limit ODK Collect requests by IP address to N requests per minute
-  throttle('req/ip', limit: proc { configatron.direct_auth_request_limit }, period: 1.minute) do |req|
+  throttle('direct-auth-req/ip', limit: proc { configatron.direct_auth_request_limit }, period: 1.minute) do |req|
     req.ip if req.direct_auth?
   end
 end
