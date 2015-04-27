@@ -27,11 +27,8 @@ class Sms::Adapters::IntelliSmsAdapter < Sms::Adapters::Adapter
     uri = build_uri(:deliver, params)
     Rails.logger.info("Sending IntelliSMS request: #{uri}")
 
-    # don't send in test mode
-    unless Rails.env == "test"
-      response = send_request(uri)
-      parse_and_raise_any_errors
-    end
+    response = send_request(uri)
+    parse_and_raise_any_errors(response)
 
     # if we get to this point, it worked
     return true
@@ -53,7 +50,7 @@ class Sms::Adapters::IntelliSmsAdapter < Sms::Adapters::Adapter
   # Check_balance returns the balance string. Raises error if balance check failed.
   def check_balance
     response = send_request(build_uri(:balance))
-    response.match(/^BALANCE:(\d+)\s*$/) ? $1.to_i : parse_and_raise_any_errors
+    response.match(/^BALANCE:(\d+)\s*$/) ? $1.to_i : parse_and_raise_any_errors(response)
   end
 
   # How replies should be sent.
@@ -83,7 +80,7 @@ class Sms::Adapters::IntelliSmsAdapter < Sms::Adapters::Adapter
       return uri
     end
 
-    def parse_and_raise_any_errors
+    def parse_and_raise_any_errors(response)
       # get any errors that the service returned
       errors = response.split("\n").reject{|l| !l.match(/ERR:/)}.join("\n")
       raise Sms::Error.new("IntelliSMS Server Error: #{errors}") unless errors.blank?
