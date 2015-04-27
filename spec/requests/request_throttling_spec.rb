@@ -54,4 +54,13 @@ describe 'throttling for xml requests' do
     end
   end
 
+  context 'for sms requests under /m/mission_name' do
+    it 'should not apply' do
+      (limit + 1).times do |i|
+        post "/m/#{get_mission.compact_name}/sms?from=14045551212&text=test&msgid=123&sent=2015-04-27T10:53:00-700"
+        assert_response :ok
+      end
+    end
+  end
+
 end
