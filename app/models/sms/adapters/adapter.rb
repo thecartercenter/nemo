@@ -77,6 +77,9 @@ class Sms::Adapters::Adapter
       # create request
       request = Net::HTTP::Get.new(uri.request_uri)
 
+      # Don't want to actually send HTTP request in test mode.
+      return "" if Rails.env.test?
+
       # send request and catch errors
       begin
         response = http.request(request)
