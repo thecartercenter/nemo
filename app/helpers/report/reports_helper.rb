@@ -36,7 +36,7 @@ module Report::ReportsHelper
         row_header = report.header_set[:row] ? [report.header_set[:row].cells[idx].name || "NULL"] : []
 
         # add the data
-        csv << row_header + row.map{ |c| c.present? ? strip_tags(c) : c }
+        csv << row_header + row.map{ |c| c.present? ? strip_tags(c.to_s) : c }
       end
     end
   end
