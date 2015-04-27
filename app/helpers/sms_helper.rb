@@ -10,7 +10,7 @@ module SmsHelper
     when "type" then sms.type.split('::')[1]
     when "time" then
       if sms.sent_at <= sms.created_at - 1.minute
-        time_diff = distance_of_time_in_words(sms.sent_at, sms.created_at, true, last_word_connector: ', ')
+        time_diff = time_diff(sms.sent_at, sms.created_at)
         "#{l(sms.created_at)} <br> (sent #{time_diff} earlier)"
       else
         l(sms.created_at)
@@ -36,6 +36,20 @@ module SmsHelper
     else
       phone
     end
+  end
+
+  def time_diff(start_time, end_time)
+    seconds_diff = (start_time - end_time).to_i.abs
+
+    hours = seconds_diff / 3600
+    seconds_diff -= hours * 3600
+
+    minutes = seconds_diff / 60
+
+    str = ""
+    str << "#{hours}h" if hours > 0
+    str << "#{minutes}m"
+    str
   end
 
 end
