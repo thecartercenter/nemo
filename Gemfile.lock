@@ -127,9 +127,6 @@ GEM
     database_cleaner (1.4.1)
     descriptive_statistics (2.5.1)
     diff-lcs (1.2.5)
-    dotiw (2.0)
-      actionpack (>= 3)
-      i18n
     ejs (1.1.1)
     erubis (2.7.0)
     eventmachine (1.0.7)
@@ -363,7 +360,6 @@ DEPENDENCIES
   dalli
   database_cleaner
   descriptive_statistics
-  dotiw
   ejs
   factory_girl_rails (~> 4.0)
   i18n-js!
