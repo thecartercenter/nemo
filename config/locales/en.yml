@@ -1532,8 +1532,10 @@ en:
       sms: "SMS Settings"
 
   sms:
+    extra_recipients: "<br/>... and %{count} more"
     no_valid_adapter: "There is no valid outgoing SMS adapter. Please check the settings."
     outgoing_provider: "Outgoing SMS Provider"
+    timestamp_with_diff: "%{time}<br/>(sent %{time_diff} earlier)"
 
   sms_console:
     back_to_forms: "Back to Forms"
