@@ -130,7 +130,7 @@ class User < ActiveRecord::Base
       WHERE assignments.role = 'observer'
       GROUP BY users.id, users.name
       ORDER BY response_count
-      LIMIT ?", mission.id, mission.id, limit])
+      LIMIT ?", mission.id, mission.id, limit]).reverse
   end
 
   # generates a cache key for the set of all users for the given mission.
