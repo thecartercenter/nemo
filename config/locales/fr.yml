@@ -260,7 +260,7 @@ fr:
         id: "Numero de la réponse"
         created_at: "Date de remise"
         form_id: "Formulaire"
-        reviewed: "Revue?"
+        reviewed: "Revu?"
         source: "Origine"
         user_id: "Émetteur/Nom de l'équipe"
         incomplete: "Y-a-t'il a des résultats obligatoire manquants?"
@@ -703,13 +703,13 @@ fr:
     form: "formulaire"
     login: "identifiant"
     name: "nom"
-    option_set: "ensemble d'option"
+    option_set: "ensemble-d'options"
     phone: "téléphone"
     question: "question"
-    question_type: "type-de-question"
+    question_type: "type"
     reviewed: "revu"
     source: "source"
-    submit_date: "date de la remise"
+    submit_date: "date"
     submitter: "émetteur"
     code: "code"
     title: "titre"
@@ -791,7 +791,7 @@ fr:
     source: "Source"
     time_submitted: "Temps de Soumission"
     date_submitted: "Date de Soumission"
-    reviewed: "Revue?"
+    reviewed: "Revu?"
     response_id: "Numero de la réponse"
   admin_mode:
     admin_mode: "Mode d'Administration"
@@ -1118,24 +1118,24 @@ fr:
     blank: "vide"
     examples:
       responses:
-      - '"quelques phrase"'
+      - '"quelques phrases"'
       - 'émetteur:"john smith"'
       - 'formulaire:vote'
-      - 'revue:1'
-      - date de réponses < 2013-10-15
+      - 'revu:1'
+      - date < 2013-10-15
       - '{QuestionCode}:(perturbation sécurité)'
       users:
       - john smith
-      - 'phone:+443726458364'
-      - 'login:jsmith'
+      - 'téléphone:+443726458364'
+      - 'identifiant:jsmith'
       - 'email:jsmith@example.com'
       questions:
       - Travailleurs des bureaux de vote
       - 'code:Urnes'
-      - 'type:sélectionnez-un'
+      - 'type-de-question:sélectionnez-un'
     expected: "Attendu"
     help_link: "Aide"
-    help_title: "Aide "
+    help_title: "Aide"
     help_text:
       responses: |-
         ## Qualificatifs
@@ -1161,7 +1161,7 @@ fr:
         * __formulaire__ Le formulaire de la réponse
         * __émetteur__ Le nom de l'utilisateur qui a complété la réponse (résultats partiels sont permis).
         * __date__ La date à laquelle la réponse a été complété (p. ex 1985-03-22)
-        * __revue__ Si la réponse a été marquée "revue" (1 = oui ou 0 = non)
+        * __revu__ Si la réponse a été marquée "revu" (1 = oui ou 0 = non)
         * __source__ Le moyen par lequel la réponse a été envoyé ('web', 'odk', or 'sms')
         * __texte__ Recherche les résultats aux questions textuelles.
 
@@ -1195,11 +1195,11 @@ fr:
 
         Vous pouvez nier une recherche qualifié en utilisant l'opérateur de négation:
 
-        * __formulaires != Widgets__
+        * __formulaire != Widgets__
 
         correspondra réponses pour toute formulaire sauf le formulaire 'Widgets'.
 
-        Pour les recherches textuelles,  For text searches, négation fonctionne différemment:
+        Pour les recherches textuelles, négation fonctionne différemment:
 
         * __électorale -urne__
 
@@ -1207,22 +1207,22 @@ fr:
 
         Les comparaisons de "supérieur à" et "moins que" sont permis aussi pour qualificatifs certains (p. ex __soumettre-date__):
 
-        * __soumettre-date > 2000-01-01__
+        * __date > 2000-01-01__
 
         Plusieurs de ces termes peuvent être combinés pour préciser la recherche à une gamme:
 
-        * __soumettre-date >= 2000-01-01 répondre-date < 2000-02-01__
+        * __date >= 2000-01-01 date < 2000-02-01__
 
         correspondra réponses qui étaient soumis en Janvier 2000.
       users: "## Qualificatifs\n\nUne simple recherche telle que:\n\n __romeo juliet__\n\ncorrespond aux noms d'utilisateur, Identifiant et emails. Recherche basée sur des attributs spécifics, utilisez un qualificatif , ex.\n\n __email: @exemple.com__\n\nCherchera les utilisateur en fonction des emails correspondant,  '@exemple.com'.\n\nCombine les deux ci-dessus pour délimiter la recherche:\n\n __Susan email: @exemple.com__\n\n\
-        Cherchera les utilisateurs qui s'appellent Susan avec un exemple.com  address email.\n\nL'ensemble des qualificatifs qui peuvent être utilisés sont les suivants:\n\n__nom__ Le nom complet de l'utilisateur,\n __Signer__ L'identifiant de l'utilisateur\n __email__ l'adresse email de l'utilisateur\n __téléphone__ Le numéro de téléphone de l'utilisateur (sans tirait ou autre ponctuation)\n\nCorrespondances partielles autorisées\
+        Cherchera les utilisateurs qui s'appellent Susan avec un exemple.com  address email.\n\nL'ensemble des qualificatifs qui peuvent être utilisés sont les suivants:\n\n__nom__ Le nom complet de l'utilisateur,\n* __identifiant__ L'identifiant de l'utilisateur\n* __email__ l'adresse email de l'utilisateur\n* __téléphone__ Le numéro de téléphone de l'utilisateur (sans tirait ou autre ponctuation)\n\nCorrespondances partielles autorisées\
         \ pour tous les qualificatifs.\n\n phrases exactes \n\nExactes phrases peuvent être liées en incluant la phrase dans en double citations:\n\n __\"john smith\"__\n\nTous les termes vs. N'importe quel terme\n\nPar défaut, tous les termes dans la recherche doivent correspondre. par exemple,\n\n __john smith__\n\ncorrespond seulement aux utilisateurs nommes 'john' et 'smith' les deux apparaissant dans leur nom. Utilisez\
         \ la barre verticale, la lettre (I) pour lier plusieurs noms:\n __abdul | juanita | clarice__\n\nLa lettre  '|' peut aussi être utilisée avec des qualificatifs:\n __email: ( john@exemple.com,  patty@foo.com )__\n\nlie les utilisateurs avec n'importe laquelle des adresses emails ci-dessus.\n\n Rejet\n\nVous pouvez rejeter une recherche qualifiée en utilisant l’opérateur de rejet.\n\n __nom != Oluwaseun__\n\nLiera les\
         \ utilisateurs non nommés 'Oluwaseun'. "
-      questions: "## Qualificatifs \n\nUne simple recherche telle que:\n\n* __Romeo Juliette__\nChercher seulement les titres des questions. Pour rechercher sur la base des attributs des question, utiliser un qualificatif, e.g.:\n\n* __code: Urne__\n\nAffichera les questions avec 'Urne' dans leur code.\n\nCombinez les deux ci-dessus pour limiter votre recherche:\n\n* __Romeo et Juliette code: Urne__\n\nAffichera les réponses dans\
-        \ les'Widgets' formulaires contenant les mots 'Romeo et Juliette'.\n\nL'ensemble des qualificatifs que vous pouvez utilisez est le suivant:\n\n* __titre__ la question titre (lien partiel autorise)\n* __code__ La question code (lien partiel autorise)\n* __type__ La question type (%{question_types})\n __onglet__ Recherches d'onglet appliquées a la question\n\n Phrases exactes \n\nLes phrase exactes peuvent être liées en\
-        \ incluant la phrase dans une double  citation:\n\n __\"La pluie en Espagne\"__\n\nDouble citations peuvent être combinées avec des termes non-cites:\n\n _pommes oranges \"fruit de passion\"__\n\n Tous les termes vs. n importe quel terme\n\nPar défaut, tous les termes de la recherche doivent être lies. Par exemple,\n\n __alpha lima peru__\n\nLie questions avec seulement trois de ces caractères. Utilisez la barre verticale\
-        \ ('I') pour lier plusieurs mots/phrases:\n\n __pommes | oranges | \"fruit de passion\"__\n\nLe caractère '|' peut aussi être utiliser avec des qualificatifs:\n\n __code: ( Lions | \"Ours et Requins\" | Tigres )__\n\nLie les questions avec n'importe lequel de ces codes ci-dessus.\n\n Négation\n\nVous pouvez rejeter une recherche qualifiée en utilisant l’opérateur de rejet:\n\n__code != Widgets_\n\nlieront les questions\
+      questions: "## Qualificatifs \n\nUne simple recherche telle que:\n\n* __Romeo Juliette__\nChercher seulement les titres des questions. Pour rechercher sur la base des attributs des question, utiliser un qualificatif, e.g.:\n\n* __code:Urne__\n\nAffichera les questions avec 'Urne' dans leur code.\n\nCombinez les deux ci-dessus pour limiter votre recherche:\n\n* __Romeo et Juliette code:Urne__\n\nAffichera les réponses dans\
+        \ les'Widgets' formulaires contenant les mots 'Romeo et Juliette'.\n\nL'ensemble des qualificatifs que vous pouvez utilisez est le suivant:\n\n* __titre__ la question titre (lien partiel autorise)\n* __code__ La question code (lien partiel autorise)\n* __type__ La question type (%{question_types})\n* __onglet__ Recherches d'onglet appliquées a la question\n\n Phrases exactes \n\nLes phrase exactes peuvent être liées en\
+        \ incluant la phrase dans une double citation:\n\n __\"La pluie en Espagne\"__\n\nDouble citations peuvent être combinées avec des termes non-cites:\n\n __pommes oranges \"fruit de passion\"__\n\n Tous les termes vs. n importe quel terme\n\nPar défaut, tous les termes de la recherche doivent être lies. Par exemple,\n\n __alpha lima peru__\n\nLie questions avec seulement trois de ces caractères. Utilisez la barre verticale\
+        \ ('I') pour lier plusieurs mots/phrases:\n\n __pommes | oranges | \"fruit de passion\"__\n\nLe caractère '|' peut aussi être utiliser avec des qualificatifs:\n\n __code: ( Lions | \"Ours et Requins\" | Tigres )__\n\nLie les questions avec n'importe lequel de ces codes ci-dessus.\n\n Négation\n\nVous pouvez rejeter une recherche qualifiée en utilisant l’opérateur de rejet:\n\n__code != Widgets__\n\nlieront les questions\
         \ avec n'importe code ne comportant pas de 'Widgets'."
     invalid_op: "L'opérateur '%{op}' n'est pas valide pour le qualificatif '%{qualifier}'."
     multiple_terms_not_allowed: "Plusieurs termes ne sont pas permis pour '%{qualifier}' recherches sauf le case où 'OU' est utilisé."
