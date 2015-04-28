@@ -19,9 +19,6 @@ class ApplicationController < ActionController::Base
   rescue_from Exception, :with => :notify_error
   rescue_from CanCan::AccessDenied, :with => :handle_access_denied
 
-  # CSRF projection (Rails method)
-  protect_from_forgery
-
   before_filter(:check_route)
   before_filter(:remove_missionchange_flag)
   before_filter(:set_locale)

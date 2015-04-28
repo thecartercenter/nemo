@@ -20,7 +20,6 @@ module Concerns::ApplicationController::Authentication
 
   # Determines the user and saves in the @current_user var.
   def get_user
-
     # If user already logged in via Authlogic, we are done.
     if (user_session = UserSession.find) && user_session.user
 

@@ -18,16 +18,16 @@
               <div>
                 <%= t("standard.import_instructions.#{controller_name}") %>
               </div>
-              <form method="post" action="<%= send("import_standard_#{controller_name}_path") %>">
+              <%= form_tag(send("import_standard_#{controller_name}_path")) do %>
                 <% @importable.each do |o| %>
                   <div>
                     <input type="checkbox" name="objs_to_import[]" id="importable-<%= o.id %>" value="<%= o.id %>">
                     <label for="importable-<%= o.id %>">
-                      <%= render("#{controller_name}/list_item", :obj => o) %>
+                      <%= render("#{controller_name}/list_item", obj: o) %>
                     </label>
                   </div>
                 <% end %>
-              </form>
+              <% end %>
             <% end %>
           </div>
         </div>
