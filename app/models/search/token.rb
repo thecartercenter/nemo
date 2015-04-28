@@ -54,7 +54,7 @@ class Search::Token
       # then lookup the qualifier
       if qual.is_a?(Search::LexToken)
         expr.qualifier_text = qual.content
-        qual = lookup_qualifier(qual.content)
+        qual = Search::Qualifier.find_in_set(@search.qualifiers, qual.content)
       end
 
       qual_name = expr.qualifier_text || I18n.t("search_qualifiers.#{qual.name}")
@@ -147,48 +147,6 @@ class Search::Token
       @search.qualifiers.select(&:default?).tap do |dq|
         raise Search::ParseError.new(I18n.t("search.must_use_qualifier")) if dq.empty?
       end
-    end
-
-    # looks up the qualifier for the given chunk, or raises an error
-    def lookup_qualifier(chunk)
-      qualifier = nil
-
-      # get the qualifier translations for current locale and reverse them
-      trans = I18n.t("search_qualifiers").invert
-
-      # also add the qualifier translations for english if the current locale is not english
-      trans.merge!(I18n.t("search_qualifiers", :locale => :en).invert) unless I18n.locale == :en
-
-      # add a bunch of entries with accents removed
-      normalized = {}
-      trans.each do |k,v|
-        k_normalized = ActiveSupport::Inflector.transliterate(k)
-        normalized[k_normalized] = v if k != k_normalized
-      end
-      trans.merge!(normalized)
-
-      # try looking up the chunk. this should now work even the user didn't put in the accents
-      qualifier_name = trans[chunk].to_s
-
-      # if qualifier_name is not nil, try to find the qualifier object
-      unless qualifier_name.nil?
-        qualifier = @search.qualifiers.detect{|q| q.name == qualifier_name}
-      end
-
-      # if we haven't found a matching qualifier yet, look for any regexp style ones
-      if qualifier.nil?
-        @search.qualifiers.find_all{|q| q.regexp?}.each do |q|
-          # check against the regular expression and then against the validator (if defined)
-          if q.matches(chunk)
-            qualifier = q
-            break
-          end
-        end
-      end
-
-      raise Search::ParseError.new(I18n.t("search.invalid_qualifier", :chunk => chunk)) if qualifier.nil?
-
-      qualifier
     end
 
     def is?(kind)
