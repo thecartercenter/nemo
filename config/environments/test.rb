@@ -42,5 +42,11 @@ ELMO::Application.configure do
 
   # Sorted order for test cases which are executed.
   config.active_support.test_order = :sorted
+
+  # Use a lower ODK Collect request limit for tests
+  configatron.direct_auth_request_limit = 5
+
+  # Enable rack-attack middleware for protecting against brute-force login attempts
+  config.middleware.use Rack::Attack
 end
 

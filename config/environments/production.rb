@@ -72,4 +72,7 @@ ELMO::Application.configure do
 
   # Raises error for missing translations
   config.action_view.raise_on_missing_translations = false
+
+  # Enable rack-attack middleware for protecting against brute-force login attempts
+  config.middleware.use Rack::Attack
 end

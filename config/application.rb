@@ -70,5 +70,8 @@ module ELMO
 
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
+
+    # requests-per-minute limit for ODK Collect endpoints
+    configatron.direct_auth_request_limit = 30
   end
 end
