@@ -738,6 +738,7 @@ en:
         login: "Username"
         password: "Password"
         remember_me: "Remember Me"
+        verify: "Verify"
 
   # time/date formats (see http://www.ruby-doc.org/core-2.0/Time.html#method-i-strftime for code meanings)
   date:
