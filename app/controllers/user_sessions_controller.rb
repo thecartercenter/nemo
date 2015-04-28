@@ -50,7 +50,7 @@ class UserSessionsController < ApplicationController
 
     def allow_login
       if captcha_required?
-        verify_recaptcha(model: @user_session, attribute: :verify_login)
+        verify_recaptcha(model: @user_session)
       else
         true
       end
