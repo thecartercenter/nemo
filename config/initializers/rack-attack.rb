@@ -22,7 +22,8 @@ end
 
 if Recaptcha.configuration.public_key.present?
   # Track rate of attempted logins by IP address per minute to allow reCAPTCHA display
-  Rack::Attack.track('login-attempts/ip', limit: proc { configatron.login_captcha_threshold }, period: 1.minute) do |req|
+  # We use double the amount specified by login_captcha_threshold to account for the GET/POST cycle of a failed login attempt 
+  Rack::Attack.track('login-attempts/ip', limit: proc { 2 * configatron.login_captcha_threshold }, period: 1.minute) do |req|
     req.ip if req.login_related?
   end
 
