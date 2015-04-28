@@ -1082,6 +1082,11 @@ en:
     date: "Date"
     time: "Time"
 
+  recaptcha:
+    errors:
+      verification_failed: "Verification response is incorrect, please try again."
+      recaptcha_unreachable: "Oops, we failed to validate your verification response. Please try again."
+
   report/report:
     add_column: "Add Column"
     answered_only_if: "Answered only if"
