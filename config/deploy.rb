@@ -38,6 +38,10 @@ end
 
 #after 'deploy:update_code', 'deploy:migrate'
 
+# Always rebuild the search indices to make sure they're fresh and working.
+# This also restarts the sphinx daemon.
+after "deploy", "thinking_sphinx:rebuild"
+
 after "deploy", "deploy:cleanup" # keep only the last 5 releases
 
 namespace :deploy do
