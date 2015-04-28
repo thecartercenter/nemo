@@ -14,7 +14,7 @@ describe Question do
     # but dont raise this error if not present (let the presence validator handle that)
     q = build(:question, code: '')
     q.save
-    assert_not_match(/Code: Should start with a letter/, q.errors.full_messages.join)
+    expect(q.errors.full_messages.join).not_to match(/Code: Should start with a letter/)
   end
 
   # this also tests .qtype and .has_options (delegated)
