@@ -6,118 +6,118 @@ describe 'incoming sms' do
 
   before :all do
     @user = get_user
-    setup_form(:questions => %w(integer integer), :required => true)
+    setup_form(questions: %w(integer integer), required: true)
   end
 
   it "can accept text answers" do
-    setup_form(:questions => %w(text), :required => true)
-    assert_sms_response(:incoming => "#{form_code} 1.this is a text answer", :outgoing => /#{form_code}.+thank you/i)
+    setup_form(questions: %w(text), required: true)
+    assert_sms_response(incoming: "#{form_code} 1.this is a text answer", outgoing: /#{form_code}.+thank you/i)
   end
 
   it "can accept long_text answers" do
-    setup_form(:questions => %w(long_text), :required => true)
-    assert_sms_response(:incoming => "#{form_code} 1.this is a text answer that is very very long", :outgoing => /#{form_code}.+thank you/i)
+    setup_form(questions: %w(long_text), required: true)
+    assert_sms_response(incoming: "#{form_code} 1.this is a text answer that is very very long", outgoing: /#{form_code}.+thank you/i)
   end
 
   it "long decimal answers have value truncated" do
-    setup_form(:questions => %w(decimal), :required => true)
-    assert_sms_response(:incoming => "#{form_code} 1.sfsdfsdfsdfsdf",
-      :outgoing => /Sorry.+answer 'sfsdfsdfsd...'.+question 1.+form '#{form_code}'.+not a valid/)
+    setup_form(questions: %w(decimal), required: true)
+    assert_sms_response(incoming: "#{form_code} 1.sfsdfsdfsdfsdf",
+      outgoing: /Sorry.+answer 'sfsdfsdfsd...'.+question 1.+form '#{form_code}'.+not a valid/)
   end
 
   it "long integer answers have value truncated" do
-    setup_form(:questions => %w(integer), :required => true)
-    assert_sms_response(:incoming => "#{form_code} 1.sfsdfsdfsdfsdf",
-      :outgoing => /Sorry.+answer 'sfsdfsdfsd...'.+question 1.+form '#{form_code}'.+not a valid/)
+    setup_form(questions: %w(integer), required: true)
+    assert_sms_response(incoming: "#{form_code} 1.sfsdfsdfsdfsdf",
+      outgoing: /Sorry.+answer 'sfsdfsdfsd...'.+question 1.+form '#{form_code}'.+not a valid/)
   end
 
   it "long select_one should have value truncated" do
-    setup_form(:questions => %w(select_one), :required => true)
-    assert_sms_response(:incoming => "#{form_code} 1.sfsdfsdfsdfsdf",
-      :outgoing => /Sorry.+answer 'sfsdfsdfsd...'.+question 1.+form '#{form_code}'.+not a valid option/)
+    setup_form(questions: %w(select_one), required: true)
+    assert_sms_response(incoming: "#{form_code} 1.sfsdfsdfsdfsdf",
+      outgoing: /Sorry.+answer 'sfsdfsdfsd...'.+question 1.+form '#{form_code}'.+not a valid option/)
   end
 
   it "long select_multiple should have value truncated" do
-    setup_form(:questions => %w(select_multiple), :required => true)
-    assert_sms_response(:incoming => "#{form_code} 1.sfsdfsdfsdfsdf",
-      :outgoing => /Sorry.+answer 'sfsdfsdfsd...'.+question 1.+form '#{form_code}'.+contained multiple invalid options/)
+    setup_form(questions: %w(select_multiple), required: true)
+    assert_sms_response(incoming: "#{form_code} 1.sfsdfsdfsdfsdf",
+      outgoing: /Sorry.+answer 'sfsdfsdfsd...'.+question 1.+form '#{form_code}'.+contained multiple invalid options/)
   end
 
   it "correct message should get congrats" do
     # response should include the form code
-    assert_sms_response(:incoming => "#{form_code} 1.15 2.20", :outgoing => /#{form_code}.+thank you/i)
+    assert_sms_response(incoming: "#{form_code} 1.15 2.20", outgoing: /#{form_code}.+thank you/i)
   end
 
   it "GET submissions should be possible via different endpoint" do
-    assert_sms_response(:url => "/m/#{get_mission.compact_name}/sms/submit", :method => :get,
-      :incoming => "#{form_code} 1.15 2.20", :outgoing => /#{form_code}.+thank you/i)
+    assert_sms_response(url: "/m/#{get_mission.compact_name}/sms/submit", method: :get,
+      incoming: "#{form_code} 1.15 2.20", outgoing: /#{form_code}.+thank you/i)
   end
 
   it "message from automated sender should get no response" do
-    assert_sms_response(:from => "VODAFONE", :incoming => "blah blah junk", :outgoing => nil)
+    assert_sms_response(from: "VODAFONE", incoming: "blah blah junk", outgoing: nil)
   end
 
   it "message from unrecognized normal number should get error" do
-    assert_sms_response(:from => "+737377373773", :incoming => "#{form_code} 1.x 2.x", :outgoing => /couldn't find you/)
+    assert_sms_response(from: "+737377373773", incoming: "#{form_code} 1.x 2.x", outgoing: /couldn't find you/)
   end
 
   it "message with invalid answer should get error" do
     # this tests invalid answers that are caught by the decoder
-    assert_sms_response(:incoming => "#{form_code} 1.xx 2.20", :outgoing => /Sorry.+answer 'xx'.+question 1.+form '#{form_code}'.+not a valid/)
+    assert_sms_response(incoming: "#{form_code} 1.xx 2.20", outgoing: /Sorry.+answer 'xx'.+question 1.+form '#{form_code}'.+not a valid/)
   end
 
   it "message with invalid options should get error" do
     # override the default form
-    setup_form(:questions => %w(select_multiple))
-    assert_sms_response(:incoming => "#{form_code} 1.abhk", :outgoing => /Sorry.+answer 'abhk'.+contained invalid options 'h, k'/)
-    assert_sms_response(:incoming => "#{form_code} 1.abh", :outgoing => /Sorry.+answer 'abh'.+contained the invalid option 'h'/)
+    setup_form(questions: %w(select_multiple))
+    assert_sms_response(incoming: "#{form_code} 1.abhk", outgoing: /Sorry.+answer 'abhk'.+contained invalid options 'h, k'/)
+    assert_sms_response(incoming: "#{form_code} 1.abh", outgoing: /Sorry.+answer 'abh'.+contained the invalid option 'h'/)
   end
 
   it "bad encoding should get error" do
     # for instance, try to submit with bad form code
     # we don't have to try all the encoding errors b/c that's covered in the decoder test
-    assert_sms_response(:incoming => "123", :outgoing => /not a valid form code/i)
+    assert_sms_response(incoming: "123", outgoing: /not a valid form code/i)
   end
 
   it "missing answer should get error" do
-    assert_sms_response(:incoming => "#{form_code} 2.20", :outgoing => /answer.+required question 1 was.+#{form_code}/)
-    assert_sms_response(:incoming => "#{form_code}", :outgoing => /answers.+required questions 1,2 were.+#{form_code}/)
+    assert_sms_response(incoming: "#{form_code} 2.20", outgoing: /answer.+required question 1 was.+#{form_code}/)
+    assert_sms_response(incoming: "#{form_code}", outgoing: /answers.+required questions 1,2 were.+#{form_code}/)
   end
 
   it "too high numeric answer should get error" do
     # add a maximum constraint to the first question
     @form.unpublish!
-    @form.questions.first.update_attributes!(:maximum => 20)
+    @form.questions.first.update_attributes!(maximum: 20)
     @form.publish!
 
     # check that it works
-    assert_sms_response(:incoming => "#{form_code} 1.21 2.21", :outgoing => /Must be less than or equal to 20/)
+    assert_sms_response(incoming: "#{form_code} 1.21 2.21", outgoing: /Must be less than or equal to 20/)
   end
 
   it "duplicate should result error message" do
-    assert_sms_response(:incoming => "#{form_code} 1.15 2.20", :outgoing => /#{form_code}.+thank you/i)
+    assert_sms_response(incoming: "#{form_code} 1.15 2.20", outgoing: /#{form_code}.+thank you/i)
     Timecop.travel(10.minutes) do
-      assert_sms_response(:incoming => "#{form_code} 1.15 2.20", :outgoing => /duplicate/)
+      assert_sms_response(incoming: "#{form_code} 1.15 2.20", outgoing: /duplicate/)
     end
   end
 
   it "reply should be in correct language" do
     # set user lang pref to french
     @user.pref_lang = "fr"
-    @user.save(:validate => false)
+    @user.save(validate: false)
 
     # now try to send to the new form (won't work b/c no permission)
-    assert_sms_response(:incoming => "#{form_code} 1.15 2.b", :outgoing => /votre.+#{form_code}/i)
+    assert_sms_response(incoming: "#{form_code} 1.15 2.b", outgoing: /votre.+#{form_code}/i)
   end
 
   it "for reply-via-adapter style incoming adapter, reply should be sent via mission's outgoing adapter" do
-    do_incoming_request(:from => '+1234567890', :incoming => {:body => 'foo', :adapter => REPLY_VIA_ADAPTER_STYLE_ADAPTER})
+    do_incoming_request(from: '+1234567890', incoming: {body: 'foo', adapter: REPLY_VIA_ADAPTER_STYLE_ADAPTER})
     assert_equal(1, assigns(:outgoing_adapter).deliveries.size)
     assert_equal('REPLY_SENT', @response.body)
   end
 
   it "for reply-via-response style adapter, reply body should be response body" do
-    do_incoming_request(:from => '+1234567890', :incoming => {:body => 'foo', :adapter => REPLY_VIA_RESPONSE_STYLE_ADAPTER})
+    do_incoming_request(from: '+1234567890', incoming: {body: 'foo', adapter: REPLY_VIA_RESPONSE_STYLE_ADAPTER})
 
     # Make sure no messages developed via adatper.
     assert_equal(0, assigns(:outgoing_adapter).deliveries.size)
@@ -128,7 +128,7 @@ describe 'incoming sms' do
 
   it "for reply-via-response style adapter, message with no reply should result in empty response" do
     # Non-numeric from number results in no reply.
-    do_incoming_request(:from => 'foo', :incoming => {:body => 'foo', :adapter => REPLY_VIA_RESPONSE_STYLE_ADAPTER})
+    do_incoming_request(from: 'foo', incoming: {body: 'foo', adapter: REPLY_VIA_RESPONSE_STYLE_ADAPTER})
     assert_equal('', @response.body)
     assert_equal(204, @response.status)
   end
@@ -137,7 +137,7 @@ describe 'incoming sms' do
 
     # helper that sets up a new form with the given parameters
     def setup_form(options)
-      @form = create(:form, :smsable => true, :question_types => options[:questions])
+      @form = create(:form, smsable: true, question_types: options[:questions])
       @form.questionings.each{ |q| q.update_attribute(:required, true) } if options[:required]
       @form.publish!
       @form.reload
@@ -154,8 +154,8 @@ describe 'incoming sms' do
       params[:sent_at] ||= Time.now
 
       # hashify incoming/outgoing if they're not hashes
-      params[:incoming] = {:body => params[:incoming]} unless params[:incoming].is_a?(Hash)
-      params[:outgoing] = {:body => params[:outgoing]} unless params[:outgoing].is_a?(Hash)
+      params[:incoming] = {body: params[:incoming]} unless params[:incoming].is_a?(Hash)
+      params[:outgoing] = {body: params[:outgoing]} unless params[:outgoing].is_a?(Hash)
 
       # default mission to get_mission unless specified
       params[:mission] ||= get_mission
