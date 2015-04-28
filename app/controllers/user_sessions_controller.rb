@@ -18,7 +18,7 @@ class UserSessionsController < ApplicationController
     @user_session = UserSession.new(params[:user_session])
 
     # if the save is successful, the user is logged in automatically
-    if check_captcha && @user_session.save
+    if allow_login && @user_session.save
       post_login_housekeeping
     else
       flash[:error] = @user_session.errors.full_messages.join(",")
@@ -48,11 +48,15 @@ class UserSessionsController < ApplicationController
 
   private
 
-    def check_captcha
-      captcha_required? && verify_recaptcha(model: @user_session, attribute: :verify_login)
+    def allow_login
+      if captcha_required?
+        verify_recaptcha(model: @user_session, attribute: :verify_login)
+      else
+        true
+      end
     end
 
     def captcha_required?
-      Recaptcha.configuration.public_key.present?
+      !!request.env['elmo.captcha_required']
     end
 end
