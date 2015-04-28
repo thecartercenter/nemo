@@ -29,7 +29,7 @@ end
 # Set 'elmo.captcha_required=true' in the Rack env if the rate is exceeded
 ActiveSupport::Notifications.subscribe('rack.attack') do |_,_,_,_,req|
   if req.login_attempts_exceeded?
-    Rails.logger.info "Login attempts per minute exceeded; enabling reCAPTCHA"
+    Rails.logger.info "Login attempts per minute exceeded; enabling reCAPTCHA for #{req.ip}"
     req.env['elmo.captcha_required'] = true
   end
 end
