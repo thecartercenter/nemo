@@ -20,18 +20,16 @@ Rack::Attack.throttle('direct-auth-req/ip', limit: proc { configatron.direct_aut
   req.ip if req.direct_auth?
 end
 
-if Recaptcha.configuration.public_key.present?
-  # Track rate of attempted logins by IP address per minute to allow reCAPTCHA display
-  # We use double the amount specified by login_captcha_threshold to account for the GET/POST cycle of a failed login attempt 
-  Rack::Attack.track('login-attempts/ip', limit: proc { 2 * configatron.login_captcha_threshold }, period: 1.minute) do |req|
-    req.ip if req.login_related?
-  end
+# Track rate of attempted logins by IP address per minute to allow reCAPTCHA display
+# We use double the amount specified by login_captcha_threshold to account for the GET/POST cycle of a failed login attempt
+Rack::Attack.track('login-attempts/ip', limit: proc { 2 * configatron.login_captcha_threshold }, period: 1.minute) do |req|
+  req.ip if req.login_related?
+end
 
-  # Set 'elmo.captcha_required=true' in the Rack env if the rate is exceeded
-  ActiveSupport::Notifications.subscribe('rack.attack') do |_,_,_,_,req|
-    if req.login_attempts_exceeded?
-      Rails.logger.info "Login attempts per minute exceeded; enabling reCAPTCHA"
-      req.env['elmo.captcha_required'] = true
-    end
+# Set 'elmo.captcha_required=true' in the Rack env if the rate is exceeded
+ActiveSupport::Notifications.subscribe('rack.attack') do |_,_,_,_,req|
+  if req.login_attempts_exceeded?
+    Rails.logger.info "Login attempts per minute exceeded; enabling reCAPTCHA"
+    req.env['elmo.captcha_required'] = true
   end
 end
