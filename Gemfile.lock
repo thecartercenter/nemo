@@ -241,6 +241,8 @@ GEM
     request_store (1.1.0)
     responders (2.1.0)
       railties (>= 4.2.0, < 5)
+    reverse_markdown (0.8.1)
+      nokogiri
     riddle (1.5.11)
     roo (1.13.2)
       nokogiri
@@ -383,7 +385,11 @@ DEPENDENCIES
   rake
   random_data
   rdiscount
+<<<<<<< HEAD
   responders (~> 2.0)
+=======
+  reverse_markdown
+>>>>>>> 453764e... 2235: Fixed CSV long text formatting.
   roo
   rspec-rails (~> 3.0)
   sass-rails (~> 4.0.2)
