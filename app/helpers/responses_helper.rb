@@ -77,7 +77,8 @@ module ResponsesHelper
     if responses.empty?
       ""
     else
-      CSV.generate do |csv|
+      # We use \r\n because Excel seems to prefer it.
+      CSV.generate(row_sep: "\r\n") do |csv|
         # add header row
         csv << responses.first.attributes.keys
 
@@ -85,8 +86,11 @@ module ResponsesHelper
         responses.each do |r|
           attribs = r.attributes.dup
 
-          # Strip HTML from answer_value if it exists.
-          attribs['answer_value'] = strip_tags(attribs['answer_value']) if attribs['answer_value']
+          # Format any paragraph style text.
+          attribs['question_name'] = format_csv_para_text(attribs['question_name'])
+          if attribs['question_type'] == 'long_text'
+            attribs['answer_value'] = format_csv_para_text(attribs['answer_value'])
+          end
 
           csv << attribs.values
         end

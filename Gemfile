@@ -75,6 +75,9 @@ gem 'rails-backbone', github: 'codebrew/backbone-rails'
 # XLS support
 gem 'roo'
 
+# Converting HTML to markdown for CSV export
+gem 'reverse_markdown'
+
 group :development do
   gem 'rails-erd'                     # generat with:  DIAGRAM=true rake db:migrate
   gem 'capistrano', '~> 2.15.4'       # deployment
