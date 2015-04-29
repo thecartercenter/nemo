@@ -39,7 +39,7 @@
       <tr>
         <td class="rank"><%= qing.rank %>.</td>
         <td class="question">
-          <%= qing.question.send("name_#{@lang}") if qing.question.respond_to?("name_#{@lang}")  %>
+          <%= qing.question.name %>
           <%= reqd_sym if qing.required? %>
         </td>
         <td class="answers">
@@ -53,7 +53,7 @@
           <td class="rank"></td>
           <td class="options">
             <% qing.question.options.each_with_index do |opt, idx| %>
-              <span><%= index_to_letter(idx + 1) %>) <%= opt.send("name_#{@lang}") if opt.respond_to?("name_#{@lang}") %></span>
+              <span><%= index_to_letter(idx + 1) %>) <%= opt.name %></span>
             <% end %>
           </td>
           <td class="answers"></td>
