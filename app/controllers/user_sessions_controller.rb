@@ -50,6 +50,7 @@ class UserSessionsController < ApplicationController
 
     def allow_login
       if captcha_required?
+        Rails.logger.info "Verifying reCAPTCHA submission for #{request.remote_ip}"
         verify_recaptcha(model: @user_session)
       else
         true
