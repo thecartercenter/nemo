@@ -14,7 +14,11 @@
     </div>
   </div>
 
-  <div class="report_main">
-    <%= render('reports/main') %>
-  </div>
+  <%# We only cache this portion since it's the most intensive to compute and we want to keep the
+      report list above fresh, and don't want to have to make separate cache key for that. %>
+  <% cache(@cache_key + '/report_pane') do %>
+    <div class="report_main">
+      <%= render('reports/main') %>
+    </div>
+  <% end %>
 <% end %>
