@@ -1,8 +1,9 @@
 class ResetUserPassword < ActiveRecord::Migration
   def change
+    # Standards have increased so we need to reset everyone's password.
     User.all.each do |user|
-      user.password = User.random_password
-      user.save
+      user.password = user.password_confirmation = User.random_password
+      user.save(validate: false)
     end
   end
 end
