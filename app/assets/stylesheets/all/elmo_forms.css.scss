@@ -99,6 +99,10 @@ div.form_field {
       display: inline-block;
       vertical-align: top;
 
+      label {
+        margin-bottom: 0;
+      }
+
       input[type=text], input.text, input[type=password], select {
         height: 35px;
       }
