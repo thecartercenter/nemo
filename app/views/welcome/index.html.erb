@@ -116,12 +116,9 @@
 
     </div>
 
-    <% cache(@cache_key + '/report_pane') do %>
-      <div class="report_pane">
-        <%= render('welcome/report_pane') %>
-      </div>
-    <% end %>
-
+    <div class="report_pane">
+      <%= render('welcome/report_pane') %>
+    </div>
   </div>
 
   <% #Hides/displays appropriate full screen elements if necessary %>
