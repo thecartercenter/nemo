@@ -23,6 +23,8 @@
 
     <%= elmo_fields_for("user[assignments_attributes][0]", @current_assignment) do |af| %>
       <%= af.hidden_field(:id) %>
+
+      <%# Ok to have this here because we know the user has change_assignments privileges. %>
       <%= af.hidden_field(:mission_id) %>
 
       <%# special error output %>
