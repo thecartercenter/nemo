@@ -107,14 +107,16 @@ Enter sensible values for the settings in the file. Entering a functioning email
     bundle exec rake assets:precompile
     # Build search indices
     bundle exec rake ts:rebuild
-    # Create admin user
-    bundle exec rake db:create_admin
     # Restart server
     sudo service nginx restart
 
-### Login and enjoy!
+### Generate admin user, login and enjoy!
 
-Visit https://yourdomain.example.org in your browser (replace with your real domain name). The ELMO login screen should appear. Login with username **admin**, password **temptemp**.
+Generate an admin user and note the password that is output to the console.
+
+    bundle exec rake db:create_admin
+
+Visit https://yourdomain.example.org in your browser (replace with your real domain name). The ELMO login screen should appear. Login with username **admin** and the password created in the previous step.
 
 **IMPORTANT**: Change the admin user's password immediately by clicking on 'admin' in the top right.
 
