@@ -237,6 +237,7 @@ GEM
     rake (10.4.2)
     random_data (1.6.0)
     rdiscount (2.1.8)
+    recaptcha (0.4.0)
     ref (1.0.5)
     request_store (1.1.0)
     responders (2.1.0)
@@ -385,11 +386,9 @@ DEPENDENCIES
   rake
   random_data
   rdiscount
-<<<<<<< HEAD
+  recaptcha
   responders (~> 2.0)
-=======
   reverse_markdown
->>>>>>> 453764e... 2235: Fixed CSV long text formatting.
   roo
   rspec-rails (~> 3.0)
   sass-rails (~> 4.0.2)

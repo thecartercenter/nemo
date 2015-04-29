@@ -1,5 +1,7 @@
 class UserSessionsController < ApplicationController
 
+  helper_method :captcha_required?
+
   # don't need to authorize here (except for destroy action) because anyone can see log in page
   skip_authorization_check
 
@@ -16,7 +18,7 @@ class UserSessionsController < ApplicationController
     @user_session = UserSession.new(params[:user_session])
 
     # if the save is successful, the user is logged in automatically
-    if @user_session.save
+    if allow_login && @user_session.save
       post_login_housekeeping
     else
       flash[:error] = @user_session.errors.full_messages.join(",")
@@ -43,4 +45,19 @@ class UserSessionsController < ApplicationController
     # We redirect to user profile instead of dashboard because dashboard is slower to load and is not needed.
     redirect_to user_path(@user, locale: 'en', mode: 'm', mission_name: @user.best_mission.compact_name)
   end
+
+  private
+
+    def allow_login
+      if captcha_required?
+        Rails.logger.info "Verifying reCAPTCHA submission for #{request.remote_ip}"
+        verify_recaptcha(model: @user_session)
+      else
+        true
+      end
+    end
+
+    def captcha_required?
+      !!request.env['elmo.captcha_required']
+    end
 end

@@ -77,6 +77,9 @@ gem 'rails-backbone', github: 'codebrew/backbone-rails'
 # Middleware for handling abusive requests
 gem 'rack-attack'
 
+# reCAPTCHA support
+gem "recaptcha", :require => "recaptcha/rails"
+
 # XLS support
 gem 'roo'
 

@@ -73,5 +73,8 @@ module ELMO
 
     # requests-per-minute limit for ODK Collect endpoints
     configatron.direct_auth_request_limit = 30
+
+    # logins-per-minute threshold for showing a captcha
+    configatron.login_captcha_threshold = 30
   end
 end

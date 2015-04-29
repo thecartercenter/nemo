@@ -738,6 +738,7 @@ en:
         login: "Username"
         password: "Password"
         remember_me: "Remember Me"
+        verify: "Verify"
 
   # time/date formats (see http://www.ruby-doc.org/core-2.0/Time.html#method-i-strftime for code meanings)
   date:
@@ -1080,6 +1081,11 @@ en:
     datetime: "Date/Time"
     date: "Date"
     time: "Time"
+
+  recaptcha:
+    errors:
+      verification_failed: "Verification response is incorrect, please try again."
+      recaptcha_unreachable: "Oops, we failed to validate your verification response. Please try again."
 
   report/report:
     add_column: "Add Column"
