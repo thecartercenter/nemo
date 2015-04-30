@@ -156,7 +156,7 @@ class Report::SummaryCollectionBuilder
         GROUP BY #{disagg_group_by_expr} qing.id, q.qtype_name
       eos
 
-      res = ActiveRecord::Base.connection.execute(send(:sanitize_sql_array, [query, qing_ids]))
+      res = do_query(query, qing_ids)
 
       # build hash
       hash = ActiveSupport::OrderedHash[]
@@ -240,7 +240,7 @@ class Report::SummaryCollectionBuilder
           GROUP BY #{disagg_group_by_expr} qings.id, a.option_id
       eos
 
-      sel_one_res = ActiveRecord::Base.connection.execute(send(:sanitize_sql_array, [query, qing_ids]))
+      sel_one_res = do_query(query, qing_ids)
 
       query = <<-eos
         SELECT #{disagg_select_expr} qings.id AS qing_id, c.option_id AS option_id, COUNT(c.id) AS choice_count
@@ -256,7 +256,7 @@ class Report::SummaryCollectionBuilder
           GROUP BY #{disagg_group_by_expr} qings.id, c.option_id
       eos
 
-      sel_mult_res = ActiveRecord::Base.connection.execute(send(:sanitize_sql_array, [query, qing_ids]))
+      sel_mult_res = do_query(query, qing_ids)
 
       # read tallies into hashes
       tallies = {}
@@ -294,7 +294,7 @@ class Report::SummaryCollectionBuilder
           GROUP BY #{disagg_group_by_expr} qings.id
       eos
 
-      res = ActiveRecord::Base.connection.execute(send(:sanitize_sql_array, [query, qing_ids]))
+      res = do_query(query, qing_ids)
 
       # read non-null answer counts into hash
       tallies = {}
@@ -375,7 +375,7 @@ class Report::SummaryCollectionBuilder
           ORDER BY disagg_value, qing_id, date
       eos
 
-      res = ActiveRecord::Base.connection.execute(send(:sanitize_sql_array, [query, qing_ids]))
+      res = do_query(query, qing_ids)
 
       # read into tallies, preserving sorted date order
       tallies = {}
@@ -473,7 +473,7 @@ class Report::SummaryCollectionBuilder
           ORDER BY disagg_value, a.created_at
       eos
 
-      ActiveRecord::Base.connection.execute(send(:sanitize_sql_array, [query, qing_ids]))
+      do_query(query, qing_ids)
     end
 
     # gets a hash of answer_id to submitter names for each long_text answer to questionings in the given array
@@ -494,7 +494,7 @@ class Report::SummaryCollectionBuilder
           WHERE a.questioning_id IN (?)
         eos
 
-        res = ActiveRecord::Base.connection.execute(send(:sanitize_sql_array, [query, long_qing_ids]))
+        res = do_query(query, long_qing_ids)
 
         Hash[*res.each(:as => :hash).map{|row| [row['answer_id'], row['submitter_name']]}.flatten]
       end
@@ -557,5 +557,9 @@ class Report::SummaryCollectionBuilder
     def disagg_group_by_expr
       return '' if disagg_qing.nil?
       "#{disagg_column},"
+    end
+
+    def do_query(*args)
+      ActiveRecord::Base.connection.execute(ActiveRecord::Base.send(:sanitize_sql_array, args))
     end
 end
