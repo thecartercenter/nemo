@@ -15,6 +15,13 @@ class Rack::Attack::Request
   end
 end
 
+# Always allow requests from localhost
+# (blacklist & throttles are skipped)
+Rack::Attack.whitelist('allow from localhost') do |req|
+  # Requests are allowed if the return value is truthy
+  '127.0.0.1' == req.ip
+end
+
 # Limit ODK Collect requests by IP address to N requests per minute
 Rack::Attack.throttle('direct-auth-req/ip', limit: proc { configatron.direct_auth_request_limit }, period: 1.minute) do |req|
   req.ip if req.direct_auth?

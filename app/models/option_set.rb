@@ -80,7 +80,7 @@ class OptionSet < ActiveRecord::Base
   def self.terminate_sub_relationships(option_set_ids)
     # Must nullify these first to avoid fk error
     OptionSet.where(id: option_set_ids).update_all(root_node_id: nil)
-    OptionNode.where("option_set_id IN (#{option_set_ids.join(',')})").delete_all unless option_set_ids.empty?
+    OptionNode.where("option_set_id IN (?)", option_set_ids).delete_all unless option_set_ids.empty?
   end
 
   # Avoids N+1 queries for top level options for a set of option sets.

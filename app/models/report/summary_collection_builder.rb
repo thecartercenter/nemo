@@ -148,14 +148,15 @@ class Report::SummaryCollectionBuilder
             WHEN 'time' THEN MAX(a.time_value)
             WHEN 'datetime' THEN MAX(a.datetime_value)
           END AS max
-        FROM answers a INNER JOIN form_items qing ON qing.type='Questioning' AND a.questioning_id = qing.id AND qing.id IN (#{qing_ids})
+        FROM answers a INNER JOIN form_items qing ON qing.type='Questioning' AND a.questioning_id = qing.id AND qing.id IN (?)
           INNER JOIN questions q ON q.id = qing.question_id
           #{disagg_join_clause}
           #{current_user_join_clause}
         WHERE q.qtype_name in ('integer', 'decimal', 'time', 'datetime')
         GROUP BY #{disagg_group_by_expr} qing.id, q.qtype_name
       eos
-      res = ActiveRecord::Base.connection.execute(query)
+
+      res = do_query(query, qing_ids)
 
       # build hash
       hash = ActiveSupport::OrderedHash[]
@@ -234,11 +235,12 @@ class Report::SummaryCollectionBuilder
           #{current_user_join_clause}
           WHERE q.qtype_name = 'select_one'
             AND qings.type = 'Questioning'
-            AND qings.id IN (#{qing_ids})
+            AND qings.id IN (?)
             AND (a.rank IS NULL OR a.rank = 1)
           GROUP BY #{disagg_group_by_expr} qings.id, a.option_id
       eos
-      sel_one_res = ActiveRecord::Base.connection.execute(query)
+
+      sel_one_res = do_query(query, qing_ids)
 
       query = <<-eos
         SELECT #{disagg_select_expr} qings.id AS qing_id, c.option_id AS option_id, COUNT(c.id) AS choice_count
@@ -250,10 +252,11 @@ class Report::SummaryCollectionBuilder
           #{current_user_join_clause}
           WHERE q.qtype_name = 'select_multiple'
             AND qings.type = 'Questioning'
-            AND qings.id IN (#{qing_ids})
+            AND qings.id IN (?)
           GROUP BY #{disagg_group_by_expr} qings.id, c.option_id
       eos
-      sel_mult_res = ActiveRecord::Base.connection.execute(query)
+
+      sel_mult_res = do_query(query, qing_ids)
 
       # read tallies into hashes
       tallies = {}
@@ -286,11 +289,12 @@ class Report::SummaryCollectionBuilder
           #{current_user_join_clause}
           WHERE q.qtype_name = 'select_multiple'
             AND qings.type = 'Questioning'
-            AND qings.id IN (#{qing_ids})
+            AND qings.id IN (?)
             AND c.id IS NOT NULL
           GROUP BY #{disagg_group_by_expr} qings.id
       eos
-      res = ActiveRecord::Base.connection.execute(query)
+
+      res = do_query(query, qing_ids)
 
       # read non-null answer counts into hash
       tallies = {}
@@ -365,12 +369,13 @@ class Report::SummaryCollectionBuilder
           #{disagg_join_clause}
           #{current_user_join_clause}
           WHERE q.qtype_name = 'date'
-            AND qings.id IN (#{qing_ids})
+            AND qings.id IN (?)
             AND qings.type = 'Questioning'
           GROUP BY #{disagg_group_by_expr} qings.id, a.date_value
           ORDER BY disagg_value, qing_id, date
       eos
-      res = ActiveRecord::Base.connection.execute(query)
+
+      res = do_query(query, qing_ids)
 
       # read into tallies, preserving sorted date order
       tallies = {}
@@ -464,10 +469,11 @@ class Report::SummaryCollectionBuilder
         FROM answers a
           #{disagg_join_clause}
           #{current_user_join_clause}
-          WHERE a.questioning_id IN (#{qing_ids})
+          WHERE a.questioning_id IN (?)
           ORDER BY disagg_value, a.created_at
       eos
-      ActiveRecord::Base.connection.execute(query)
+
+      do_query(query, qing_ids)
     end
 
     # gets a hash of answer_id to submitter names for each long_text answer to questionings in the given array
@@ -485,9 +491,11 @@ class Report::SummaryCollectionBuilder
           FROM answers a
             INNER JOIN responses r ON a.response_id = r.id
             INNER JOIN users u ON r.user_id = u.id
-          WHERE a.questioning_id IN (#{long_qing_ids.join(',')})
+          WHERE a.questioning_id IN (?)
         eos
-        res = ActiveRecord::Base.connection.execute(query)
+
+        res = do_query(query, long_qing_ids)
+
         Hash[*res.each(:as => :hash).map{|row| [row['answer_id'], row['submitter_name']]}.flatten]
       end
     end
@@ -549,5 +557,9 @@ class Report::SummaryCollectionBuilder
     def disagg_group_by_expr
       return '' if disagg_qing.nil?
       "#{disagg_column},"
+    end
+
+    def do_query(*args)
+      ActiveRecord::Base.connection.execute(ActiveRecord::Base.send(:sanitize_sql_array, args))
     end
 end
