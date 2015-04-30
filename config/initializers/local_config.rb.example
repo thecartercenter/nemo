@@ -13,7 +13,7 @@ configatron.site_email = "\"#{configatron.site_name}\" <someone@someplace.com>"
 configatron.mailer_url_protocol = 'https'
 
 # Mailer settings
-ELMO::Application.config.action_mailer.smtp_settings = {
+ActionMailer::Base.smtp_settings = {
   :address        => 'smtp.example.com',
   :port           => 587,
   :domain         => "example.com",
