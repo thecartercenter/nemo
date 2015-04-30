@@ -177,6 +177,10 @@ class User < ActiveRecord::Base
     self.active
   end
 
+  def activate!(bool)
+    update_attribute(:active, bool)
+  end
+
   def reset_password_method
     @reset_password_method.nil? ? "dont" : @reset_password_method
   end
