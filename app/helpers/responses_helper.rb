@@ -55,12 +55,9 @@ module ResponsesHelper
     if response.excerpts
       # loop over each
       response.excerpts.map do |e|
-        # force the string to be escaped before adding more tags
         html = excerpt_to_html(e[:text])
-
-        # add the code
-        "<p><b>[#{e[:code]}]:</b> #{html}</p>"
-      end.join('').html_safe
+        content_tag(:p, content_tag(:b, "[#{e[:code]}]:") << " " << html)
+      end.reduce(:<<)
     end
   end
 

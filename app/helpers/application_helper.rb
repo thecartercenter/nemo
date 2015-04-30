@@ -136,8 +136,6 @@ module ApplicationHelper
     return @title unless @title.nil?
 
     @title_args ||= {}
-    p options
-    p @title_args
 
     # if action specified outright, use that
     action = if @title_action
@@ -151,26 +149,22 @@ module ApplicationHelper
       end
     end
 
-    ttl = ''
-    model_name = controller_name.classify.downcase
+    "".html_safe.tap do |ttl|
+      model_name = controller_name.classify.downcase
 
-    # Add standard icon if appropriate
-    ttl += std_icon(@title_args[:standardized]) unless options[:text_only]
+      # Add standard icon if appropriate
+      ttl << std_icon(@title_args[:standardized]) unless options[:text_only]
 
-    # Add object type icon where appropriate
-    ttl += icon_tag(model_name) unless options[:text_only]
+      # Add object type icon where appropriate
+      ttl << icon_tag(model_name) unless options[:text_only]
 
-    ttl = ttl.html_safe
-
-    # add text
-    if options[:name_only]
-      ttl += @title_args[:name]
-    else
-      ttl += t(action, {:scope => "page_titles.#{controller_name}", :default => [:all, ""]}.merge(@title_args || {}))
-
+      # add text
+      if options[:name_only]
+        ttl << @title_args[:name]
+      else
+        ttl << t(action, {:scope => "page_titles.#{controller_name}", :default => [:all, ""]}.merge(@title_args || {}))
+      end
     end
-
-    ttl
   end
 
   def h1_title
@@ -184,14 +178,20 @@ module ApplicationHelper
     t("activerecord.models.#{klass.model_name.i18n_key}", :count => options[:count] || 2)
   end
 
-  # translates and interprets markdown markup
-  def tmd(*args)
-    html = BlueCloth.new(t(*args)).to_html
+  # Translates and interprets markdown style translations.
+  # Escapes HTML in any arguments.
+  def tmd(key, options = {})
+    options.keys.each{ |k| options[k] = html_escape(options[k]).to_s unless %w(default scope).include?(k.to_s) }
 
+    html = BlueCloth.new(t(key, options)).to_html
+
+    # Remove surrounding <p> tags if present.
     if html[0,3] == '<p>' && html[-4,4] == '</p>'
       html = html[3..-5]
     end
 
+    # We can safely do this because we control what's in the translation file
+    # and we've escaped the options.
     html.html_safe
   end
 
@@ -221,16 +221,16 @@ module ApplicationHelper
 
   # makes a set of <li> wrapped links to the index actions of the given classes
   def nav_links(*klasses)
-    l = []
+    links = []
     klasses.each do |k|
       if can?(:index, k)
         path = dynamic_path(k, action: :index)
         active = current_page?(path)
-        l << content_tag(:li, :class => active ? 'active' : '') do
+        links << content_tag(:li, :class => active ? 'active' : '') do
           link_to(icon_tag(k.model_name.param_key) + pluralize_model(k), path)
         end
       end
     end
-    l.reduce(:<<)
+    links.reduce(:<<)
   end
 end

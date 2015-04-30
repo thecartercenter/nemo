@@ -9,13 +9,11 @@ module TagsHelper
       title = ''
     end
     if tags.present?
-      html = %{<ul class="tags #{options[:class]}">}
-      tags.each do |tag|
-        html << %{<li class="token-input-token-elmo" title="#{title}">}
-        html << tag.name
-        html << '</li>'
+      content_tag(:ul, class: "tags #{options[:class]}") do
+        tags.map do |tag|
+          content_tag(:li, tag.name, class: "token-input-token-elmo", title: title)
+        end.reduce(:<<)
       end
-      raw html << '</ul>'
     else
       ''
     end

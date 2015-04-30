@@ -40,12 +40,12 @@ module OptionSetsHelper
   def multi_level_forbidden_notice
     text = tmd('option_set.multi_level_forbidden_notice')
     icon = content_tag(:i, '', class: 'fa fa-exclamation-triangle')
-    content_tag(:div, (icon + content_tag(:div, text)).html_safe, class: "form-warning alert alert-info")
+    content_tag(:div, (icon << content_tag(:div, text)), class: "form-warning alert alert-info")
   end
 
   def huge_notice
     text = tmd('option_set.huge_notice', count: number_with_delimiter(@option_set.total_options))
     icon = content_tag(:i, '', class: 'fa fa-exclamation-triangle')
-    content_tag(:div, (icon + content_tag(:div, text)).html_safe, class: "form-warning alert alert-info")
+    content_tag(:div, (icon << content_tag(:div, text)), class: "form-warning alert alert-info")
   end
 end

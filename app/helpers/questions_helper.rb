@@ -56,6 +56,6 @@ module QuestionsHelper
   def option_set_select_option_tags(sets, selected_id)
     sets.map do |s|
       content_tag(:option, s.name, value: s.id, selected: s.id == selected_id ? 'selected' : nil, :'data-multilevel' => s.multi_level?)
-    end.join.html_safe
+    end.reduce(:<<)
   end
 end
