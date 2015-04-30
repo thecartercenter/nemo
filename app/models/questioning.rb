@@ -100,7 +100,7 @@ class Questioning < FormItem
   end
 
   def is_question_method?(symbol)
-    symbol.match(/^((name|hint)_([a-z]{2})(=?))(_before_type_cast)?$/)
+    symbol.match(/\A((name|hint)_([a-z]{2})(=?))(_before_type_cast)?\z/)
   end
   # /REFACTOR
 

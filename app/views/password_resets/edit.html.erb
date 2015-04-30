@@ -1,5 +1,6 @@
 <%= elmo_form_for(@user, :url => password_reset_path, :method => :put, :style => :minimal) do |f| %>
   <p class="instructions">
+    <%# Ok to use .html_safe here because content_tag will escape @user.name %>
     <%= t("password_reset.enter_new_pass", :name => content_tag(:strong, @user.name)).html_safe %>
   </p>
   <%= f.field(:password, :type => :password, :hint => false) %>

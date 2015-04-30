@@ -65,12 +65,12 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
       # else if read only content was explicitly given and form is read only, use that
       elsif options[:read_only] && options[:read_only_content]
 
-        options[:read_only_content].html_safe
+        options[:read_only_content]
 
       # else if content was explicitly given, just use that
       elsif options[:content]
 
-        options[:content].html_safe
+        options[:content]
 
       # otherwise generate field based on type
       else
@@ -116,7 +116,7 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
 
             when :radio_buttons
               # build set of radio buttons based on options
-              options[:options].map{|o| radio_button(field_name, o, :class => 'radio') + o}.join('&nbsp;&nbsp;').html_safe
+              safe_join(options[:options].map{|o| radio_button(field_name, o, :class => 'radio') + o}, '&nbsp;&nbsp;')
 
             when :textarea
               text_area(field_name, {:class => 'form-control', :placeholder => placeholder})
@@ -142,8 +142,8 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
     # generates html for a field label
     def elmo_field_label(field_name, options)
       label_str = options[:label] || @object.class.human_attribute_name(field_name)
-      label_html = (options[:required] ? "#{@template.reqd_sym} " : "") + label_str + ":"
-      label(field_name, label_html.html_safe, :class => "main")
+      label_html = "".html_safe << (options[:required] ? @template.reqd_sym << " " : "") << label_str << ":"
+      label(field_name, label_html, class: "main")
     end
 
     # generates html for a field hint block

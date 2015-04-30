@@ -31,6 +31,6 @@ module DataIntegrityHelper
   def data_integrity_warning(type, text = nil)
     icon = content_tag(:i, '', :class => 'fa fa-exclamation-triangle')
     text ||= tmd("data_integrity.#{type}")
-    content_tag(:div, (icon + content_tag(:div, text)).html_safe, :class => "form-warning alert alert-info #{type}", :id => type)
+    content_tag(:div, icon << content_tag(:div, text), :class => "form-warning alert alert-info #{type}", :id => type)
   end
 end

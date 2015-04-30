@@ -41,10 +41,10 @@ class UserBatch
         parsed = {:phones => [], :emails => [], :names => []}
         tokens.each do |t|
           # if it looks like a phone number
-          if t =~ /^\+?[\d\-\.]+$/
+          if t =~ /\A\+?[\d\-\.]+\z/
             parsed[:phones] << t
           # if it looks like an email
-          elsif t =~ /^([0-9a-zA-Z]([-\.\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,9})$/
+          elsif t =~ /\A([0-9a-zA-Z]([-\.\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,9})\z/
             parsed[:emails] << t
           # else we assume it's a name
           else

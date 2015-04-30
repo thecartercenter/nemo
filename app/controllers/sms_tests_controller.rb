@@ -20,7 +20,7 @@ class SmsTestsController < ApplicationController
     end
 
     # render the body of the reply
-    render :text => reply ? reply.body : "<em>#{t('sms_console.no_reply')}</em>".html_safe
+    render :text => reply ? reply.body : content_tag(:em, t('sms_console.no_reply'))
   end
 
   protected

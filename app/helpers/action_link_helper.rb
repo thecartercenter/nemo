@@ -15,6 +15,7 @@ module ActionLinkHelper
 
   # Builds links for the action links at the top of a new/edit/show page.
   # If a block is given, appends return value from block to end of div.
+  # Block should returns an html_safe string.
   def top_action_links(obj, options = {}, &block)
     options[:except] = Array.wrap(options[:except] || [])
     options[:only] = Array.wrap(options[:only]) unless options[:only].nil?
@@ -36,8 +37,8 @@ module ActionLinkHelper
             data: {confirm: (action == :destroy) ? delete_warning(obj) : nil},
             class: "#{action}-link")
         end
-      end.compact.join(' ').html_safe
-      (main_links + (block_given? ? capture(&block) : '')).html_safe
+      end.compact.reduce(:<<)
+      main_links << (block_given? ? capture(&block) : '')
     end
   end
 
@@ -71,7 +72,7 @@ module ActionLinkHelper
         action_link(action, dynamic_path(obj), :method => :delete, data: {confirm: warning}, :title => t("common.delete"))
       end
 
-    end.join('').html_safe
+    end.reduce(:<<)
   end
 
   def delete_warning(obj, options = {})

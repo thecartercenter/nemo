@@ -41,7 +41,7 @@ class Replication::UniqueFieldGenerator
 
       # check if the current existing object's name matches the name we're looking for
       number_re = style == :sep_words ? /\s*( (\d+))?/ : /((\d+))?/
-      m = val.match(/^#{Regexp.escape(prefix)}#{number_re}\s*$/i)
+      m = val.match(/\A#{Regexp.escape(prefix)}#{number_re}\s*\z/i)
 
       # if there was no match, return nil (this will be compacted out of the array at the end)
       if m.nil?

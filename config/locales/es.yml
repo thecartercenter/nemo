@@ -328,6 +328,9 @@ es:
         api_key: "Clave API"
       user_batch:
         batch: "Atributos de usuario"
+    errors:
+      messages:
+        invalid_password: "La contraseña debe incluir por lo menos un número, una letra minúscula y una letra mayúscula."
     table_headers:
       response:
         incomplete: "¿Incompleto?"
