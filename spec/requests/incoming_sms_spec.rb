@@ -61,6 +61,11 @@ describe 'incoming sms' do
     assert_sms_response(from: "+737377373773", incoming: "#{form_code} 1.x 2.x", outgoing: /couldn't find you/)
   end
 
+  it "message inactive user should get error" do
+    @user.activate!(false)
+    assert_sms_response(incoming: "#{form_code} 1.x 2.x", outgoing: /couldn't find you/)
+  end
+
   it "message with invalid answer should get error" do
     # this tests invalid answers that are caught by the decoder
     assert_sms_response(incoming: "#{form_code} 1.xx 2.20", outgoing: /Sorry.+answer 'xx'.+question 1.+form '#{form_code}'.+not a valid/)
