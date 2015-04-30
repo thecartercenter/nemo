@@ -25,6 +25,10 @@ class SmsController < ApplicationController
   end
 
   def create
+    if params[:token] != current_mission.setting.incoming_sms_token
+      raise Sms::Error.new("Could not verify incoming SMS token")
+    end
+
     @incoming_adapter = Sms::Adapters::Factory.new.create_for_request(params)
     raise Sms::Error.new("No adapters recognized this receive request") if @incoming_adapter.nil?
 
