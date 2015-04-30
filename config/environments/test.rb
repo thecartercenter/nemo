@@ -46,7 +46,9 @@ ELMO::Application.configure do
   # Use a lower ODK Collect request limit for tests
   configatron.direct_auth_request_limit = 5
 
-  # Enable rack-attack middleware for protecting against brute-force login attempts
+  # Enable rack-attack middleware for protecting against brute-force login attempts,
+  # but disable it until needed.
   config.middleware.use Rack::Attack
+  Rack::Attack.disable!
 end
 

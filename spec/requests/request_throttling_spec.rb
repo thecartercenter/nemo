@@ -6,6 +6,12 @@ describe 'throttling for xml requests' do
 
   before do
     configatron.allow_unauthenticated_submissions = true
+    Rack::Attack.enable!
+  end
+
+  after(:all) do
+    configatron.allow_unauthenticated_submissions = false
+    Rack::Attack.disable!
   end
 
   before(:each) do

@@ -75,7 +75,7 @@ gem 'ancestry', '~> 2.0'
 gem 'rails-backbone', github: 'codebrew/backbone-rails'
 
 # Middleware for handling abusive requests
-gem 'rack-attack'
+gem 'rack-attack', github: 'sassafrastech/rack-attack'
 
 # reCAPTCHA support
 gem "recaptcha", :require => "recaptcha/rails"

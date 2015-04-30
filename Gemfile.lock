@@ -9,6 +9,13 @@ GIT
       railties
 
 GIT
+  remote: git://github.com/sassafrastech/rack-attack.git
+  revision: 97e37abd881ba290034cbb15e92aabedd264ad6b
+  specs:
+    rack-attack (4.3.0)
+      rack
+
+GIT
   remote: https://github.com/fnando/i18n-js.git
   revision: ae7bc897eddce79427a81f02063209c56fc84d01
   branch: master
@@ -195,8 +202,6 @@ GEM
       multi_json (~> 1.0)
       websocket-driver (>= 0.2.0)
     rack (1.6.0)
-    rack-attack (4.2.0)
-      rack
     rack-test (0.6.3)
       rack (>= 1.0)
     rails (4.2.1)
@@ -377,7 +382,7 @@ DEPENDENCIES
   mocha
   mysql2 (>= 0.3.15)
   poltergeist (~> 1.6)
-  rack-attack
+  rack-attack!
   rails (= 4.2.1)
   rails-backbone!
   rails-dev-tweaks (~> 1.1)
