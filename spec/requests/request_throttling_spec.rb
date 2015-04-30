@@ -4,7 +4,7 @@ describe 'throttling for xml requests' do
 
   let(:limit) { configatron.direct_auth_request_limit }
 
-  before do
+  before(:all) do
     configatron.allow_unauthenticated_submissions = true
     Rack::Attack.enable!
   end
@@ -12,6 +12,10 @@ describe 'throttling for xml requests' do
   after(:all) do
     configatron.allow_unauthenticated_submissions = false
     Rack::Attack.disable!
+  end
+
+  after(:all) do
+    configatron.allow_unauthenticated_submissions = false
   end
 
   before(:each) do
