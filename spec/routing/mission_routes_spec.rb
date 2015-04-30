@@ -50,19 +50,19 @@ describe 'router' do
 
   it 'routes ODK form list' do
     expect(:get => '/m/mission123/formList').to route_to(
-      :controller => 'forms', :action => 'index', :mode => 'm', :mission_name => 'mission123', :format => 'xml', :direct_auth => true)
+      :controller => 'forms', :action => 'index', :mode => 'm', :mission_name => 'mission123', :format => 'xml', :direct_auth => 'basic')
   end
 
   it 'routes ODK form download' do
     expect(:get => '/m/mission123/forms/99').to route_to(
       :controller => 'forms', :action => 'show', :mode => 'm', :mission_name => 'mission123',
-        :id => '99', :format => 'xml', :direct_auth => true)
+        :id => '99', :format => 'xml', :direct_auth => 'basic')
   end
 
   it 'routes ODK submission' do
     expect(:post => '/m/mission123/submission').to route_to(
       :controller => 'responses', :action => 'create', :mode => 'm', :mission_name => 'mission123',
-        :format => 'xml', :direct_auth => true)
+        :format => 'xml', :direct_auth => 'basic')
   end
 
   it 'rejects ODK submission without mission' do
