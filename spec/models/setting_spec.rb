@@ -5,7 +5,7 @@ describe Setting do
     shared_examples_for 'load_for_mission' do
       context 'when there are no existing settings' do
         before do
-          get_mission.setting.destroy
+          Setting.load_for_mission(mission).destroy
         end
 
         it 'should create one with default values' do
