@@ -77,7 +77,7 @@ def submit_j2me_response(params)
   params[:data]['xmlns'] = "http://openrosa.org/formdesigner/#{@form.current_version.sequence}"
 
   # If we are doing a normally authenticated submission, add credentials.
-  headers = params[:auth] ? {'HTTP_AUTHORIZATION' => encode_credentials(@user.login, 'password')} : {}
+  headers = params[:auth] ? {'HTTP_AUTHORIZATION' => encode_credentials(@user.login, TEST_PASSWORD)} : {}
 
   post(@submission_url, params.slice(:data), headers)
 end

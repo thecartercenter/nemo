@@ -85,7 +85,7 @@ class ActiveSupport::TestCase
   # logs in the given user
   # we assume that the password is 'password'
   def login(user)
-    post(user_session_path(:locale => 'en'), :user_session => {:login => user.login, :password => "password"})
+    post(user_session_path(:locale => 'en'), :user_session => {:login => user.login, :password => TEST_PASSWORD})
     follow_redirect!
     assert_response(:success)
     user.reload # Some stuff may have changed in database during login process

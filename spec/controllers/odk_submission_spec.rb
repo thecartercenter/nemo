@@ -15,11 +15,11 @@ describe 'odk submissions', type: :request do
 
     describe 'get and head requests' do
       it 'should return 204 and no content' do
-        head(submission_path, {:format => 'xml'}, 'HTTP_AUTHORIZATION' => encode_credentials(@user.login, 'password'))
+        head(submission_path, {:format => 'xml'}, 'HTTP_AUTHORIZATION' => encode_credentials(@user.login, TEST_PASSWORD))
         expect(response.response_code).to eq 204
         expect(response.body).to be_empty
 
-        get(submission_path, {:format => 'xml'}, 'HTTP_AUTHORIZATION' => encode_credentials(@user.login, 'password'))
+        get(submission_path, {:format => 'xml'}, 'HTTP_AUTHORIZATION' => encode_credentials(@user.login, TEST_PASSWORD))
         expect(response.response_code).to eq 204
         expect(response.body).to be_empty
       end
@@ -142,7 +142,7 @@ describe 'odk submissions', type: :request do
 
     # Upload and do request.
     uploaded = fixture_file_upload(fixture_file, 'text/xml')
-    post(path, {:xml_submission_file => uploaded, :format => 'xml'}, 'HTTP_AUTHORIZATION' => encode_credentials(@user.login, 'password'))
+    post(path, {:xml_submission_file => uploaded, :format => 'xml'}, 'HTTP_AUTHORIZATION' => encode_credentials(@user.login, TEST_PASSWORD))
     assigns(:response)
   end
 

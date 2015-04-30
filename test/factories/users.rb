@@ -1,3 +1,5 @@
+TEST_PASSWORD = "Password1"
+
 def get_user
   u = FactoryGirl.create(:user)
 
@@ -18,8 +20,8 @@ FactoryGirl.define do
     name { Random.full_name }
     email { Random.letters(8) + '@example.com' }
     reset_password_method "print"
-    password "password"
-    password_confirmation "password"
+    password TEST_PASSWORD
+    password_confirmation TEST_PASSWORD
     phone { Random.phone }
     pref_lang "en"
     login_count 1
