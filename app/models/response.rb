@@ -147,8 +147,8 @@ class Response < ActiveRecord::Base
       if answer_ids.empty?
         "0"
       else
-        # get all response IDs and join into string
-        Answer.select('response_id').distinct.where('id IN (?)', answer_ids).map(&:id).join(',')
+        # Get all response IDs and join into string
+        Answer.select('response_id').distinct.where('id IN (?)', answer_ids).map(&:response_id).join(',')
       end
     end
 
