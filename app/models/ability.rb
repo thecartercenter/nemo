@@ -158,7 +158,7 @@ class Ability
 
             # can manage users in current mission
             # special change_assignments permission is given so that users cannot update their own assignments via edit profile
-            can [:create, :update, :login_instructions, :change_assignments], User, :assignments => {:mission_id => mission.id}
+            can [:create, :update, :login_instructions, :change_assignments, :activate], User, :assignments => {:mission_id => mission.id}
 
             # can create user batches
             can :manage, UserBatch
@@ -202,10 +202,11 @@ class Ability
 
       # Can't change own assignments unless admin
       unless user.admin?
-        cannot :change_assignments, User, ["id = ?", user.id] do |other_user|
-          user.id == other_user.id
-        end
+        cannot :change_assignments, User, id: user.id
       end
+
+      # Nobody can activate/deactivate themselves.
+      cannot :activate, User, id: user.try(:id)
     end
 
     ###############
