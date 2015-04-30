@@ -1,5 +1,5 @@
 <%# special title if user is editing self %>
-<% @title_args = {:name => @user.name} %>
+<% @title_args = {name: @user.name + (@user.active? ? "" : " (#{t('common.inactive')})")} %>
 <% @title = t("page_titles.users.#{form_mode}_profile", :name => @user.name) if @user == current_user %>
 
 <%= elmo_form_for(@user) do |f| %>

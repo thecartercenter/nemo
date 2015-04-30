@@ -17,7 +17,7 @@ module UsersHelper
 
   def format_users_field(user, field)
     case field
-    when "name" then link_to(user.name, user_path(user))
+    when "name" then link_to(user.name + (user.active? ? "" : " (#{t('common.inactive')})"), user_path(user))
     when "email" then mail_to(user.email)
     when "latest_mission" then (lm = user.latest_mission) ? lm.name : "[#{t('common.none')}]"
     when "role" then t(user.roles[current_mission], :scope => :role)
@@ -25,6 +25,10 @@ module UsersHelper
     when "actions" then table_action_links(user)
     else user.send(field)
     end
+  end
+
+  def users_index_row_class(obj)
+    obj.active? ? nil : 'inactive'
   end
 
   def assignment_errors

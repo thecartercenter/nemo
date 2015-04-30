@@ -44,7 +44,7 @@
           <%= content_tag(:tr,
                 :id => "#{o.class.name.underscore}_#{o.id}",
                 :'data-href' => path,
-                :class => path ? 'clickable' : nil) do %>
+                :class => index_row_class(o, clickable: path.present?)) do %>
 
             <% if batch_ops %>
               <td class="cb_col">

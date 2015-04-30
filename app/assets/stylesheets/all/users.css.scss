@@ -2,6 +2,14 @@
 #login_instructions td.name { width: 100px; }
 #login_instructions td.value { font-weight: bold; width: 300px; }
 
+.users_index {
+  tr.inactive {
+    td, a {
+      color: #ccc;
+    }
+  }
+}
+
 /* user edit */
 form.user_form {
 
