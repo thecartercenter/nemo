@@ -50,7 +50,14 @@ class ELMO.Views.SettingsView extends Backbone.View
     target = $(event.currentTarget)
     displayEl = $('#' + target.data('display-id'))
     handler = target.data('handler')
+    loading_indicator = target.closest('.regenerate-container').find('div.loading_indicator img')
+    success_indicator = target.closest('.regenerate-container').find('.fa-check-circle')
+    error_indicator = target.closest('.regenerate-container').find('.fa-minus-circle')
+
     target.attr('disabled', 'disabled')
+    success_indicator.hide()
+    error_indicator.hide()
+    loading_indicator.show()
 
     $.ajax
       method: 'post'
@@ -58,5 +65,10 @@ class ELMO.Views.SettingsView extends Backbone.View
       success: (data) ->
         if (displayEl.length > 0)
           $(displayEl[0]).html(data.token)
+        loading_indicator.hide()
+        success_indicator.show()
+      error: ->
+        loading_indicator.hide()
+        error_indicator.show()
       complete: ->
         target.removeAttr('disabled')
