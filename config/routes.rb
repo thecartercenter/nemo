@@ -127,7 +127,7 @@ ELMO::Application.routes.draw do
 
   # Special SMS routes. No locale.
   scope '/m/:mission_name', mission_name: /[a-z][a-z0-9]*/, defaults: { mode: 'm'} do
-    match '/sms/submit/:token' => 'sms#create', token: /[0-9a-f]{32}/, via: [:get, :post]
+    match '/sms/submit/:token' => 'sms#create', token: /[0-9a-f]{32}/, via: [:get, :post], as: :mission_sms_submission
   end
 
   # Special ODK routes. No locale. They are down here so that forms_path doesn't return the ODK variant.

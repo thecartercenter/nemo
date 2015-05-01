@@ -470,6 +470,11 @@ en:
         incoming_sms_number: "Enter the phone number to which incoming SMSes for SMS forms should be sent. This will be displayed on the SMS guide. Only needed if using SMS submission."
         incoming_sms_token: |-
           This token is included in the URL used by the incoming SMS provider to prevent the submission of unauthorized messages.
+        using_incoming_sms_token_title: Using the Incoming SMS Token
+        using_incoming_sms_token_body: |-
+          Please register the following incoming SMS URL with your gateway provider:
+
+          %{url}
         outgoing_sms_adapter: "The adapter used to send outgoing SMSes. Note that SMS replies may be sent out on via a different adapter, depending the adapter by which they arrived."
         intellisms_username: "The username for the IntelliSMS account."
         intellisms_password1: "Enter and re-enter a password to change the password for the IntelliSMS account."
