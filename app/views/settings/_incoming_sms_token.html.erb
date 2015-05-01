@@ -1,0 +1,7 @@
+<div>
+<span id="display-incoming_sms_token"><%= form.object.incoming_sms_token %></span> &nbsp;&nbsp;&nbsp;&nbsp;
+<% unless form_mode == :show %>
+  <input class="regenerate btn btn-default btn-xs" data-display-id="display-incoming_sms_token"
+    type="button" value="<%= t('common.regenerate') %>">
+<% end %>
+</div>

@@ -18,6 +18,8 @@
 
     <%= f.field(:incoming_sms_number) %>
 
+    <%= f.field(:incoming_sms_token, :partial => 'incoming_sms_token', :append => link_to(t('setting.using_incoming_sms_token'), '#', :class => 'using-incoming_sms_token')) %>
+
     <%= f.field(:outgoing_sms_adapter, :type => :select, :options => @adapter_options, :prompt => t("common.none")) %>
 
     <div class="adapter_settings" data-adapter="IntelliSms">
