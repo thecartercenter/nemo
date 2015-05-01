@@ -91,7 +91,12 @@ ELMO::Application.routes.draw do
     end
 
     resources :qing_groups, path: 'qing-groups', except: :index
-    resources :settings
+    resources :settings do
+      collection do
+        get 'using_incoming_sms_token_message'
+        post 'regenerate_incoming_sms_token'
+      end
+    end
     resources :user_batches, path: 'user-batches'
     resources :groups
     resources :form_items, path: 'form-items', only: [:update]

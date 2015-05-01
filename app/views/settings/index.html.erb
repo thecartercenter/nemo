@@ -51,9 +51,7 @@
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h4 class="modal-title"><%= t('activerecord.hints.setting.using_incoming_sms_token_title') %></h4>
       </div>
-      <div class="modal-body pane_body">
-        <%= t('activerecord.hints.setting.using_incoming_sms_token_body', url: "#{mission_sms_submission_url(current_mission.setting.incoming_sms_token, locale: nil)}") %>
-      </div>
+      <div class="modal-body pane_body"></div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal"><%= I18n.t("common.close") %></button>
       </div>

@@ -30,6 +30,25 @@ class SettingsController < ApplicationController
     end
   end
 
+  def regenerate_incoming_sms_token
+    # do auth check so cancan doesn't complain
+    authorize!(:update, @setting)
+
+    @setting.regenerate_incoming_sms_token!
+
+    render json: { token: @setting.incoming_sms_token }
+  end
+
+  def using_incoming_sms_token_message
+    # do auth check so cancan doesn't complain
+    authorize!(:update, @setting)
+
+    url = mission_sms_submission_url(@setting.incoming_sms_token, locale: nil)
+    message = t('activerecord.hints.setting.using_incoming_sms_token_body', url: url)
+
+    render json: { message: message }
+  end
+
   private
     # prepares objects and renders the form template (which in this case is really the index template)
     def prepare_and_render_form
