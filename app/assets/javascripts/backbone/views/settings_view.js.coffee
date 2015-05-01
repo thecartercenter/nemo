@@ -48,14 +48,15 @@ class ELMO.Views.SettingsView extends Backbone.View
 
   regenerate_field: (event) ->
     target = $(event.currentTarget)
-    id = target.data('display-id')
+    displayEl = $('#' + target.data('display-id'))
     handler = target.data('handler')
-    that = this
+    target.attr('disabled', 'disabled')
 
     $.ajax
       method: 'post'
       url: ELMO.app.url_builder.build('settings', handler)
       success: (data) ->
-        displayEl = that.$('#' + id)
         if (displayEl.length > 0)
           $(displayEl[0]).html(data.token)
+      complete: ->
+        target.removeAttr('disabled')
