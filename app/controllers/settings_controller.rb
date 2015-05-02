@@ -17,11 +17,7 @@ class SettingsController < ApplicationController
       # do auth check so cancan doesn't complain
       authorize!(:update, @setting)
 
-      if params[:regenerate]
-        @setting.generate_override_code!
-      else
-        @setting.update_attributes!(setting_params)
-      end
+      @setting.update_attributes!(setting_params)
 
       set_success_and_redirect(@setting)
     rescue ActiveRecord::RecordInvalid
@@ -30,13 +26,22 @@ class SettingsController < ApplicationController
     end
   end
 
+  def regenerate_override_code
+    # do auth check so cancan doesn't complain
+    authorize!(:update, @setting)
+
+    @setting.generate_override_code!
+
+    render json: { value: @setting.override_code }
+  end
+
   def regenerate_incoming_sms_token
     # do auth check so cancan doesn't complain
     authorize!(:update, @setting)
 
     @setting.regenerate_incoming_sms_token!
 
-    render json: { token: @setting.incoming_sms_token }
+    render json: { value: @setting.incoming_sms_token }
   end
 
   def using_incoming_sms_token_message

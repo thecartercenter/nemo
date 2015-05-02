@@ -1,5 +1,11 @@
-<%= form.object.override_code %> &nbsp;&nbsp;&nbsp;&nbsp;
+<div class="regenerate-container">
+<span id="display-override_code"><%= form.object.override_code %></span> &nbsp;&nbsp;&nbsp;&nbsp;
 <% unless form_mode == :show %>
-  <input class="submit btn btn-default btn-sm" name="regenerate"
-    data-confirm="<%= t('setting.override_code_warning') %>" type="submit" value="<%= t('common.regenerate') %>">
+  <input class="regenerate btn btn-default btn-xs"
+    data-confirm="<%= t('setting.override_code_warning') %>"
+    data-display-id="display-override_code"
+    data-handler="regenerate_override_code"
+    type="button" value="<%= t('common.regenerate') %>">
+  <%= loading_indicator after: '<i class="fa fa-check-circle" style="display: none"></i><i class="fa fa-minus-circle" style="display: none"></i>' %>
 <% end %>
+</div>

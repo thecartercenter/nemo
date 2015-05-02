@@ -94,6 +94,7 @@ ELMO::Application.routes.draw do
     resources :settings do
       collection do
         get 'using_incoming_sms_token_message'
+        post 'regenerate_override_code'
         post 'regenerate_incoming_sms_token'
       end
     end

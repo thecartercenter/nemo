@@ -48,11 +48,16 @@ class ELMO.Views.SettingsView extends Backbone.View
 
   regenerate_field: (event) ->
     target = $(event.currentTarget)
+    container = target.closest('.regenerate-container')
     displayEl = $('#' + target.data('display-id'))
     handler = target.data('handler')
-    loading_indicator = target.closest('.regenerate-container').find('div.loading_indicator img')
-    success_indicator = target.closest('.regenerate-container').find('.fa-check-circle')
-    error_indicator = target.closest('.regenerate-container').find('.fa-minus-circle')
+    confirm = target.data('confirm')
+    loading_indicator = container.find('div.loading_indicator img')
+    success_indicator = container.find('.fa-check-circle')
+    error_indicator = container.find('.fa-minus-circle')
+
+    if (confirm && !window.confirm(confirm))
+      return
 
     target.attr('disabled', 'disabled')
     success_indicator.hide()
@@ -64,7 +69,7 @@ class ELMO.Views.SettingsView extends Backbone.View
       url: ELMO.app.url_builder.build('settings', handler)
       success: (data) ->
         if (displayEl.length > 0)
-          $(displayEl[0]).html(data.token)
+          $(displayEl[0]).text(data.value)
         loading_indicator.hide()
         success_indicator.show()
       error: ->
