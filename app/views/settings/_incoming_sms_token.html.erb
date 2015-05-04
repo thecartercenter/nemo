@@ -5,6 +5,6 @@
     data-display-id="display-incoming_sms_token"
     data-handler="regenerate_incoming_sms_token"
     type="button" value="<%= t('common.regenerate') %>">
-  <%= loading_indicator after: '<i class="fa fa-check-circle" style="display: none"></i><i class="fa fa-minus-circle" style="display: none"></i>' %>
+  <%= loading_indicator success_failure: true %>
 <% end %>
 </div>

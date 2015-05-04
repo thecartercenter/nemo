@@ -112,6 +112,15 @@ table.index_table i.fa-certificate {
   font-size: 1.5em;
 }
 
+div.loading_indicator {
+  .success {
+    color: green;
+  }
+  .failure {
+    color: red;
+  }
+}
+
 i.fa-certificate {
   color: $gold;
 }

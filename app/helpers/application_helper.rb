@@ -60,7 +60,10 @@ module ApplicationHelper
       body = image_tag("load-ind-small#{options[:header] ? '-header' : ''}.gif", :style => "display: none",
           :id => "loading_indicator" + (options[:id] ? "_#{options[:id]}" : ""))
 
-      body += options[:after].html_safe if options[:after]
+      if options[:success_failure]
+        body += content_tag('i', '', :class => 'success fa fa-fw fa-check-circle', :style => 'display: none')
+        body += content_tag('i', '', :class => 'failure fa fa-fw fa-minus-circle', :style => 'display: none')
+      end
 
       body
     end

@@ -53,8 +53,8 @@ class ELMO.Views.SettingsView extends Backbone.View
     handler = target.data('handler')
     confirm = target.data('confirm')
     loading_indicator = container.find('div.loading_indicator img')
-    success_indicator = container.find('.fa-check-circle')
-    error_indicator = container.find('.fa-minus-circle')
+    success_indicator = container.find('.success')
+    error_indicator = container.find('.failure')
 
     if (confirm && !window.confirm(confirm))
       return
