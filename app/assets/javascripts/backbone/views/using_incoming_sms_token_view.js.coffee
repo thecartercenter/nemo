@@ -4,7 +4,7 @@ class ELMO.Views.UsingIncomingSmsTokenModalView extends Backbone.View
 
   initialize: (options)->
     this.$('.modal-body').html(options.html)
-    
+
     this.show()
 
   show: ->

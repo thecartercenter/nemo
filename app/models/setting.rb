@@ -72,7 +72,7 @@ class Setting < ActiveRecord::Base
     self.save!
   end
 
-  def generate_incoming_sms_token replace=false
+  def generate_incoming_sms_token(replace=false)
     # Don't replace token unless replace==true
     unless self.incoming_sms_token.nil? or replace
       return
