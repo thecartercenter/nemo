@@ -6,7 +6,6 @@ class ELMO.Views.SettingsView extends Backbone.View
     'click #external_sql .control a': 'select_external_sql'
     'click .adapter_settings a': 'show_change_password_fields'
     'click .using-incoming_sms_token': 'show_using_incoming_sms_token_modal'
-    'click .regenerate': 'regenerate_field'
     'change select#setting_outgoing_sms_adapter': 'show_adapter_settings'
 
   initialize: ->
@@ -45,35 +44,3 @@ class ELMO.Views.SettingsView extends Backbone.View
     # then show the appropriate one (if any)
     if (adapter)
       this.$(".adapter_settings[data-adapter=" + adapter + "]").show()
-
-  regenerate_field: (event) ->
-    target = $(event.currentTarget)
-    container = target.closest('.regenerate-container')
-    displayEl = $('#' + target.data('display-id'))
-    handler = target.data('handler')
-    confirm = target.data('confirm')
-    loading_indicator = container.find('div.loading_indicator img')
-    success_indicator = container.find('.success')
-    error_indicator = container.find('.failure')
-
-    if (confirm && !window.confirm(confirm))
-      return
-
-    target.attr('disabled', 'disabled')
-    success_indicator.hide()
-    error_indicator.hide()
-    loading_indicator.show()
-
-    $.ajax
-      method: 'post'
-      url: ELMO.app.url_builder.build('settings', handler)
-      success: (data) ->
-        if (displayEl.length > 0)
-          $(displayEl[0]).text(data.value)
-        loading_indicator.hide()
-        success_indicator.show()
-      error: ->
-        loading_indicator.hide()
-        error_indicator.show()
-      complete: ->
-        target.removeAttr('disabled')

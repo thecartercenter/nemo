@@ -92,10 +92,12 @@ ELMO::Application.routes.draw do
 
     resources :qing_groups, path: 'qing-groups', except: :index
     resources :settings do
-      collection do
-        get 'using_incoming_sms_token_message'
+      member do
         post 'regenerate_override_code'
         post 'regenerate_incoming_sms_token'
+      end
+      collection do
+        get 'using_incoming_sms_token_message'
       end
     end
     resources :user_batches, path: 'user-batches'

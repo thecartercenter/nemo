@@ -10,7 +10,7 @@
 
   <%# None of the rest of this is relevant in admin mode. %>
   <% unless admin_mode? %>
-    <%= f.field(:override_code, :partial => 'override_code') %>
+    <%= f.regenerable_field(:override_code, :confirm => t('setting.override_code_warning')) %>
 
     <%= f.field(:allow_unauthenticated_submissions, :type => :check_box) if configatron.allow_unauthenticated_submissions? %>
 
@@ -18,7 +18,7 @@
 
     <%= f.field(:incoming_sms_number) %>
 
-    <%= f.field(:incoming_sms_token, :partial => 'incoming_sms_token', :append => link_to(t('setting.using_incoming_sms_token'), '#', :class => 'using-incoming_sms_token')) %>
+    <%= f.regenerable_field(:incoming_sms_token, :append => link_to(t('setting.using_incoming_sms_token'), '#', :class => 'using-incoming_sms_token')) %>
 
     <%= f.field(:outgoing_sms_adapter, :type => :select, :options => @adapter_options, :prompt => t("common.none")) %>
 
