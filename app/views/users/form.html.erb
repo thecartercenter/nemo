@@ -40,7 +40,7 @@
 
     <% end %>
   <% end %>
-  <%= f.field(:api_key, :partial => 'api_key') if !@user.new_record? && can?(:regenerate_key, @user) %>
+  <%= f.regenerable_field(:api_key) if !@user.new_record? && can?(:regenerate_api_key, @user) %>
   <div class="submit-buttons">
     <%= f.submit(:class => "btn btn-primary") %>
   </div>

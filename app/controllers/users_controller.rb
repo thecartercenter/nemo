@@ -114,10 +114,10 @@ class UsersController < ApplicationController
     end
   end
 
-  def regenerate_key
-    @user = User.find(params[:id])
+  def regenerate_api_key
+    authorize!(:regenerate_api_key, @user)
     @user.regenerate_api_key
-    redirect_to(:action => :edit)
+    render json: { value: @user.api_key }
   end
 
   private

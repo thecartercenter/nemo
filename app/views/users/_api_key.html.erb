@@ -1,4 +1,0 @@
-<%= content_tag(:div, @user.api_key) unless @user.api_key.nil? %>
-<% if form_mode == :edit %>
-  <%= link_to("(#{I18n.t('user.api_key.regenerate')})", regenerate_key_user_path(@user), :method => :put) %>
-<% end %>

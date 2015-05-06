@@ -190,8 +190,8 @@ class Ability
         end
 
         # Users can view/modify only their own API keys
-        cannot :regenerate_key, User
-        can :regenerate_key, User do |u|
+        cannot :regenerate_api_key, User
+        can :regenerate_api_key, User do |u|
           u == user
         end
 

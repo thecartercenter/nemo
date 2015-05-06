@@ -127,7 +127,7 @@ ELMO::Application.routes.draw do
     resources :users do
       member do
         get 'login_instructions', path: 'login-instructions'
-        put 'regenerate_key'
+        post 'regenerate_api_key'
       end
       post 'export', on: :collection
     end

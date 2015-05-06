@@ -19,8 +19,8 @@ describe 'api key form field', database_cleaner: :all do
       assert_select('div.user_api_key', true)
     end
 
-    it 'should not have regenerate link' do
-      assert_select('div.user_api_key a', :text => /Regenerate/, :count => 0)
+    it 'should not have regenerate button' do
+      assert_select('div.user_api_key button', :text => /Regenerate/, :count => 0)
     end
   end
 
@@ -38,14 +38,17 @@ describe 'api key form field', database_cleaner: :all do
       end
     end
 
-    it 'should have regenerate link' do
-      assert_select('div.user_api_key a', :text => /Regenerate/, :count => 1)
+    it 'should have regenerate button' do
+      assert_select('div.user_api_key button', :text => /Regenerate/, :count => 1)
     end
 
     context 'on regenerate' do
-      it 'should redirect back to user path' do
-        response = put(regenerate_key_user_path(@user))
-        expect(response).to redirect_to "/en/m/#{get_mission.compact_name}/users/#{@user.id}/edit"
+      it 'should return the new api_key value as json' do
+        post(regenerate_api_key_user_path(@user))
+        expect(response).to be_success
+
+        @user.reload
+        expect(response.body).to eq({ value: @user.api_key }.to_json)
       end
 
       it 'should have a new key' do
