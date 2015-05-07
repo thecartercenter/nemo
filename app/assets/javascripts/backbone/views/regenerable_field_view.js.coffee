@@ -1,7 +1,5 @@
 class ELMO.Views.RegenerableFieldView extends Backbone.View
 
-  el: 'div.regenerable-field'
-
   events:
     'click .regenerate': 'regenerate_field'
 

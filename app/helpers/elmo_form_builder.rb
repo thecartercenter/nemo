@@ -47,8 +47,10 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
   end
 
   def regenerable_field(field_name, options = {})
+    field_id = "regenerable-fields-#{SecureRandom.hex}"
+
     options[:read_only] = true
-    options[:read_only_content] = @template.content_tag(:div, :class => 'regenerable-field') do
+    options[:read_only_content] = @template.content_tag(:div, :id => field_id, :class => 'regenerable-field') do
       current = @object.send(field_name)
 
       # Current value display
@@ -65,6 +67,9 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
 
         # Loading indicator
         body += @template.loading_indicator(:success_failure => true)
+
+        # Backbone view
+        body += @template.content_tag(:script, "new ELMO.Views.RegenerableFieldView({ el: $('##{field_id}') })".html_safe);
       end
 
       body
