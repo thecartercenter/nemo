@@ -149,8 +149,7 @@ describe 'odk submissions', type: :request do
 
     # write xml to file
     require 'fileutils'
-    FileUtils.mkpath('test/fixtures')
-    fixture_file = Rails.root.join('test/fixtures/', ODK_XML_FILE)
+    fixture_file = Rails.root.join(Rails.root, 'tmp', ODK_XML_FILE)
     File.open(fixture_file.to_s, 'w') { |f| f.write(xml) }
 
     # Upload and do request.
