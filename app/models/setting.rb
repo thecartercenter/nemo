@@ -74,14 +74,14 @@ class Setting < ActiveRecord::Base
 
   def generate_incoming_sms_token(replace=false)
     # Don't replace token unless replace==true
-    unless self.incoming_sms_token.nil? or replace
+    unless incoming_sms_token.nil? or replace
       return
     end
 
     # Ensure that the new token is actually different
     begin
       new_token = SecureRandom.hex
-    end while new_token == self.incoming_sms_token
+    end while new_token == incoming_sms_token
 
     self.incoming_sms_token = new_token
   end
