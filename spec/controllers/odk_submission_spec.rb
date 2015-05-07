@@ -126,6 +126,19 @@ describe 'odk submissions', type: :request do
     end
   end
 
+  context 'inactive user' do
+    before do
+      @user = create(:user, :role_name => 'observer', active: false)
+      @mission1 = get_mission
+      @mission2 = create(:mission)
+    end
+
+    it 'should fail' do
+      do_submission(submission_path)
+      expect(response.response_code).to eq 401
+    end
+  end
+
   # Builds a form (unless xml provided) and sends a submission to the given path.
   def do_submission(path, xml = nil)
     if xml.nil?

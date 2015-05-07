@@ -409,6 +409,7 @@ ActiveRecord::Schema.define(version: 20150429173627) do
     t.string   "pref_lang",           limit: 255,                   null: false
     t.string   "api_key",             limit: 255
     t.integer  "last_mission_id",     limit: 4
+    t.boolean  "active",              limit: 1,     default: true,  null: false
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree

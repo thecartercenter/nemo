@@ -19,6 +19,7 @@ shared_examples_for 'admin or coordinator shared abilities' do
       it 'should disallow other actions' do
         expect(@ability).not_to be_able_to(:adminify, @user)
         expect(@ability).not_to be_able_to(:change_assignments, @user)
+        expect(@ability).not_to be_able_to(:activate, @user)
       end
     end
 
@@ -29,6 +30,7 @@ shared_examples_for 'admin or coordinator shared abilities' do
         expect(@ability).not_to be_able_to(:show, @user2)
         expect(@ability).not_to be_able_to(:update, @user2)
         expect(@ability).not_to be_able_to(:change_assignments, @user2)
+        expect(@ability).not_to be_able_to(:activate, @user2)
       end
     end
   end
@@ -51,13 +53,15 @@ shared_examples_for 'admin or coordinator shared abilities' do
 
       it 'should disallow other actions' do
         expect(@ability).not_to be_able_to(:adminify, @user)
+        expect(@ability).not_to be_able_to(:activate, @user)
       end
     end
 
     context 'for other user' do
-      it 'should allow show, edit, and chg assign' do
+      it 'should allow show, edit, activate, and chg assign' do
         expect(@ability).to be_able_to(:show, @user2)
         expect(@ability).to be_able_to(:update, @user2)
+        expect(@ability).to be_able_to(:activate, @user2)
 
         # The form restricts this to the current mission's role only.
         expect(@ability).to be_able_to(:change_assignments, @user2)

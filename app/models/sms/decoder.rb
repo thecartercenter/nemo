@@ -99,7 +99,7 @@ class Sms::Decoder
     # raises an error if not found
     def find_user
       @user = User.by_phone(@msg.from)
-      raise_decoding_error("user_not_found") unless @user
+      raise_decoding_error("user_not_found") unless @user && @user.active?
       @msg.update_attributes user: @user
     end
 
