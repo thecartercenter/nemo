@@ -172,7 +172,7 @@ class Setting < ActiveRecord::Base
     def save_sms_passwords
       unless outgoing_sms_adapter.blank?
         adapter = outgoing_sms_adapter.downcase
-        input = send("#{adapter}_password1")
+        input = send("#{adapter}_password1") rescue nil
         send("#{adapter}_password=", input) unless input.blank?
       end
       return true
