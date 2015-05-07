@@ -91,7 +91,15 @@ ELMO::Application.routes.draw do
     end
 
     resources :qing_groups, path: 'qing-groups', except: :index
-    resources :settings
+    resources :settings do
+      member do
+        post 'regenerate_override_code'
+        post 'regenerate_incoming_sms_token'
+      end
+      collection do
+        get 'using_incoming_sms_token_message'
+      end
+    end
     resources :user_batches, path: 'user-batches'
     resources :groups
     resources :form_items, path: 'form-items', only: [:update]
@@ -119,7 +127,7 @@ ELMO::Application.routes.draw do
     resources :users do
       member do
         get 'login_instructions', path: 'login-instructions'
-        put 'regenerate_key'
+        post 'regenerate_api_key'
       end
       post 'export', on: :collection
     end
@@ -127,8 +135,7 @@ ELMO::Application.routes.draw do
 
   # Special SMS routes. No locale.
   scope '/m/:mission_name', mission_name: /[a-z][a-z0-9]*/, defaults: { mode: 'm'} do
-    resources :sms, only: [:create]
-    get '/sms/submit' => 'sms#create'
+    match '/sms/submit/:token' => 'sms#create', token: /[0-9a-f]{32}/, via: [:get, :post], as: :mission_sms_submission
   end
 
   # Special ODK routes. No locale. They are down here so that forms_path doesn't return the ODK variant.

@@ -5,7 +5,7 @@ describe Setting do
     shared_examples_for 'load_for_mission' do
       context 'when there are no existing settings' do
         before do
-          get_mission.setting.destroy
+          Setting.load_for_mission(mission).destroy
         end
 
         it 'should create one with default values' do
@@ -33,11 +33,39 @@ describe Setting do
     context 'for null mission' do
       let(:mission) { nil }
       it_should_behave_like 'load_for_mission'
+
+      it 'should not have an incoming_sms_token' do
+        setting = Setting.load_for_mission mission
+        expect(setting.incoming_sms_token).to be_nil
+      end
     end
 
     context 'for mission' do
       let(:mission) { get_mission }
       it_should_behave_like 'load_for_mission'
+
+      it 'should have an incoming_sms_token' do
+        setting = Setting.load_for_mission mission
+        expect(setting.incoming_sms_token).to match(/\A[0-9a-f]{32}\z/)
+      end
+
+      it 'should have the same incoming_sms_token after reloading' do
+        setting = Setting.load_for_mission mission
+        token = setting.incoming_sms_token
+
+        setting.reload
+
+        expect(setting.incoming_sms_token).to eq(token)
+      end
+
+      it 'should have a different incoming_sms_token after calling regenerate_incoming_sms_token!' do
+        setting = Setting.load_for_mission mission
+        token = setting.incoming_sms_token
+
+        setting.regenerate_incoming_sms_token!
+
+        expect(setting.incoming_sms_token).not_to eq(token)
+      end
     end
   end
 end

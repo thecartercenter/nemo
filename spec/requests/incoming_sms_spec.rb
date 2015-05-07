@@ -48,8 +48,8 @@ describe 'incoming sms' do
     assert_sms_response(incoming: "#{form_code} 1.15 2.20", outgoing: /#{form_code}.+thank you/i)
   end
 
-  it "GET submissions should be possible via different endpoint" do
-    assert_sms_response(url: "/m/#{get_mission.compact_name}/sms/submit", method: :get,
+  it "GET submissions should be possible" do
+    assert_sms_response(method: :get,
       incoming: "#{form_code} 1.15 2.20", outgoing: /#{form_code}.+thank you/i)
   end
 
@@ -133,6 +133,16 @@ describe 'incoming sms' do
     assert_equal(204, @response.status)
   end
 
+  it "fails when the incoming SMS token is incorrect" do
+    begin
+      token = SecureRandom.hex
+    end while token == get_mission.setting.incoming_sms_token
+
+    do_incoming_request(url: "/m/#{get_mission.compact_name}/sms/submit/#{token}",
+      incoming: {body: "#{form_code} 1.15 2.20", adapter: REPLY_VIA_RESPONSE_STYLE_ADAPTER})
+    assert_equal(500, @response.status)
+  end
+
   private
 
     # helper that sets up a new form with the given parameters
@@ -189,7 +199,7 @@ describe 'incoming sms' do
       params[:sent_at] ||= Time.now
       params[:mission] ||= get_mission
       params[:incoming][:adapter] ||= 'IntelliSms'
-      params[:url] ||= "/m/#{params[:mission].compact_name}/sms"
+      params[:url] ||= "/m/#{params[:mission].compact_name}/sms/submit/#{params[:mission].setting.incoming_sms_token}"
       params[:method] ||= :post
 
       case params[:incoming][:adapter]

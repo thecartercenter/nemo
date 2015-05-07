@@ -57,6 +57,8 @@ class Setting < ActiveRecord::Base
     # bug in rails 4.2?
     setting.preferred_locales = [:en]
 
+    setting.generate_incoming_sms_token if mission.present?
+
     # copy default_settings from configatron
     configatron.default_settings.configatron_keys.each do |k|
       setting.send("#{k}=", configatron.default_settings.send(k)) if setting.respond_to?("#{k}=")
@@ -68,6 +70,25 @@ class Setting < ActiveRecord::Base
   def generate_override_code!(size = 6)
     self.override_code = Random.alphanum_no_zero(size)
     self.save!
+  end
+
+  def generate_incoming_sms_token(replace=false)
+    # Don't replace token unless replace==true
+    unless incoming_sms_token.nil? or replace
+      return
+    end
+
+    # Ensure that the new token is actually different
+    begin
+      new_token = SecureRandom.hex
+    end while new_token == incoming_sms_token
+
+    self.incoming_sms_token = new_token
+  end
+
+  def regenerate_incoming_sms_token!
+    generate_incoming_sms_token(true)
+    save!
   end
 
   # copies this setting to configatron

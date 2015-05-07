@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150408182742) do
+ActiveRecord::Schema.define(version: 20150429173627) do
 
   create_table "answers", force: :cascade do |t|
     t.integer  "response_id",    limit: 4
@@ -89,7 +89,6 @@ ActiveRecord::Schema.define(version: 20150408182742) do
   add_index "conditions", ["mission_id"], name: "index_conditions_on_mission_id", using: :btree
   add_index "conditions", ["questioning_id"], name: "conditions_questioning_id_fk", using: :btree
   add_index "conditions", ["ref_qing_id"], name: "conditions_ref_qing_id_fk", using: :btree
-
 
   create_table "form_items", force: :cascade do |t|
     t.integer  "question_id",             limit: 4
@@ -330,6 +329,7 @@ ActiveRecord::Schema.define(version: 20150408182742) do
     t.string   "preferred_locales",                 limit: 255
     t.string   "override_code",                     limit: 255
     t.boolean  "allow_unauthenticated_submissions", limit: 1,   default: false
+    t.string   "incoming_sms_token",                limit: 255
   end
 
   add_index "settings", ["mission_id"], name: "settings_mission_id_fk", using: :btree

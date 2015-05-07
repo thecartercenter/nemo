@@ -14,7 +14,8 @@ FactoryGirl.define do
         preferred_locales_str: "en",
         outgoing_sms_adapter: "IntelliSms",
         intellisms_username: "user",
-        intellisms_password: "pass"
+        intellisms_password: "pass",
+        incoming_sms_token: SecureRandom.hex
       )
     }
   end

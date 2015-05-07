@@ -46,6 +46,38 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
     super(label, options)
   end
 
+  def regenerable_field(field_name, options = {})
+    field_id = "regenerable-fields-#{SecureRandom.hex}"
+
+    options[:read_only] = true
+    options[:read_only_content] = @template.content_tag(:div, :id => field_id, :class => 'regenerable-field') do
+      current = @object.send(field_name)
+
+      # Current value display
+      body = @template.content_tag(:span, current || "[#{@template.t('common.none')}]", :data => { :value => current || "" })
+
+      unless @template.read_only
+        # Generate/Regenerate button
+        data = {
+          'handler' => options.delete(:handler) || "#{@template.url_for(@object)}/regenerate_#{field_name}"
+        }
+        data['confirm'] = options.delete(:confirm) if options[:confirm]
+
+        body += @template.button_tag(@template.t("common.#{current ? 'regenerate' : 'generate'}"), :class => 'regenerate btn btn-default btn-xs', :data => data)
+
+        # Loading indicator
+        body += @template.loading_indicator(:success_failure => true)
+
+        # Backbone view
+        body += @template.content_tag(:script, "new ELMO.Views.RegenerableFieldView({ el: $('##{field_id}') })".html_safe);
+      end
+
+      body
+    end
+
+    field(field_name, options)
+  end
+
   def base_errors
     @template.content_tag(:div, @object.errors[:base].join(' '), :class => 'form-errors')
   end
