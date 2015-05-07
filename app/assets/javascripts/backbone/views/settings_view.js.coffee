@@ -27,7 +27,7 @@ class ELMO.Views.SettingsView extends Backbone.View
     $.ajax
       url: ELMO.app.url_builder.build('settings', 'using_incoming_sms_token_message')
       success: (data) ->
-        new ELMO.Views.UsingIncomingSmsTokenModalView({ html: data.message })
+        new ELMO.Views.UsingIncomingSmsTokenModalView({ html: data.message.replace(/\n/g, "<br/>") })
       complete: ->
         ELMO.app.loading(false)
 
