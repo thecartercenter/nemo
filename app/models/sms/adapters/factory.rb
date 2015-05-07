@@ -1,5 +1,5 @@
 class Sms::Adapters::Factory
-  VALID_ADAPTERS = %w(IntelliSms FrontlineSms)
+  VALID_ADAPTERS = %w(FrontlineSms IntelliSms Twilio)
 
   def self.name_is_valid?(name)
     VALID_ADAPTERS.include?(name)
