@@ -7,7 +7,7 @@ describe ResponsesHelper do
     self.stubs(:tbool).returns('abba')
 
     expect(reviewed_status(resp)).to eq('abba')
-    assert_not_equal(I18n.t("common.pending"), reviewed_status(resp))
+    expect(reviewed_status(resp)).not_to eq(I18n.t("common.pending"))
   end
 
   it "reviewed_status is 'pending' if response has been checked out in the last 10 minutes" do
@@ -15,7 +15,7 @@ describe ResponsesHelper do
     resp.checked_out_at = 9.minutes.ago
     self.stubs(:tbool).returns('abba')
 
-    assert_not_equal('abba', reviewed_status(resp))
+    expect(reviewed_status(resp)).not_to eq('abba')
     expect(reviewed_status(resp)).to eq(I18n.t("common.pending"))
   end
 
@@ -25,6 +25,6 @@ describe ResponsesHelper do
     self.stubs(:tbool).returns('abba')
 
     expect(reviewed_status(resp)).to eq('abba')
-    assert_not_equal(I18n.t("common.pending"), reviewed_status(resp))
+    expect(reviewed_status(resp)).not_to eq(I18n.t("common.pending"))
   end
 end

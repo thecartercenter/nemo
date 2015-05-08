@@ -14,19 +14,19 @@ describe Response do
     # create
     r2 = create(:response, :user => @user, :form => @form, :answer_values => [1])
     key2 = Response.per_mission_cache_key(get_mission)
-    assert_not_equal(key1, key2)
+    expect(key2).not_to eq(key1)
 
     # edit
     Timecop.travel(10.seconds) do
       r2.answers.first.update_attributes(:value => 2)
       key3 = Response.per_mission_cache_key(get_mission)
-      assert_not_equal(key2, key3)
+      expect(key3).not_to eq(key2)
     end
 
     # destroy
     r2.destroy
     key4 = Response.per_mission_cache_key(get_mission)
-    assert_not_equal(key2, key4)
+    expect(key4).not_to eq(key2)
   end
 
   it "incomplete response will not save if it is not marked as incomplete" do

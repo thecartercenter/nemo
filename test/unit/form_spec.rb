@@ -78,7 +78,7 @@ describe Form do
     f.flag_for_upgrade!
     f.publish!
     f.reload
-    assert_not_equal(old, f.current_version.code)
+    expect(f.current_version.code).not_to eq(old)
 
     # unpublish and publish (shouldn't change)
     old = f.current_version.code
