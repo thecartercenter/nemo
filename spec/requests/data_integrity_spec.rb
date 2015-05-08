@@ -72,7 +72,7 @@ describe 'DataIntegrity' do
       assert_successful_action(obj)
 
       # ensure object was deleted
-      expect(!obj.class.exists?(obj)).to be true
+      expect(obj.class.exists?(obj.id)).to be false
     end
 
     def assert_field_changeable(obj, field)
