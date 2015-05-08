@@ -48,7 +48,7 @@ describe Sms::Adapters::FrontlineSmsAdapter do
     expect(msg.mission).to be_nil # This gets set in controller.
   end
 
-  it 'should correctly parse a frontline-style request even if incoming_sms_number isnt present' do
+  it 'should correctly parse a frontline-style request even if incoming_sms_number is not present' do
     configatron.incoming_sms_number = ''
     request = {'frontline' => '1', 'text' => 'foo', 'from' => '+2348036801489'}
     msg = @adapter.receive(request)

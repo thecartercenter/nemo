@@ -46,7 +46,7 @@ describe Sms::Adapters::IntelliSmsAdapter do
   end
 
 
-  it 'should correctly parse a frontline-style request even if incoming_sms_number isnt present' do
+  it 'should correctly parse a frontline-style request even if incoming_sms_number is not present' do
     configatron.incoming_sms_number = ''
     request = {'text' => 'foo', 'sent' => '2013-07-03T09:53:00+01:00', 'from' => '2348036801489', 'msgid' => '1234'}
     msg = @adapter.receive(request)
