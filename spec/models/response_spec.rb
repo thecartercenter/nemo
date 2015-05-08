@@ -1,24 +1,23 @@
 require 'spec_helper'
 
 describe Response do
-
   it "cache key" do
-    @user = create(:user)
-    @form = create(:form, :question_types => ['integer'])
-    @form.publish!
+    user = create(:user)
+    form = create(:form, question_types: %w(integer))
+    form.publish!
 
     # ensure key changes on edits, creates, and deletes
-    r1 = create(:response, :user => @user, :form => @form, :answer_values => [1])
+    r1 = create(:response, user: user, form: form, answer_values: [1])
     key1 = Response.per_mission_cache_key(get_mission)
 
     # create
-    r2 = create(:response, :user => @user, :form => @form, :answer_values => [1])
+    r2 = create(:response, user: user, form: form, answer_values: [1])
     key2 = Response.per_mission_cache_key(get_mission)
     expect(key2).not_to eq(key1)
 
     # edit
     Timecop.travel(10.seconds) do
-      r2.answers.first.update_attributes(:value => 2)
+      r2.answers.first.update_attributes(value: 2)
       key3 = Response.per_mission_cache_key(get_mission)
       expect(key3).not_to eq(key2)
     end
@@ -30,35 +29,30 @@ describe Response do
   end
 
   it "incomplete response will not save if it is not marked as incomplete" do
-    @user = create(:user)
-
-    form = create(:form, :question_types => %w(integer))
+    user = create(:user)
+    form = create(:form, question_types: %w(integer))
     form.root_questionings.first.update_attribute(:required, true)
     form.publish!
     form.reload
 
     # Submit answer with first (and only) answer empty
     # This should show up as a missing response.
-    invalid_response = build(:response, user: @user, form: form, answer_values: [''])
+    invalid_response = build(:response, user: user, form: form, answer_values: [''])
     expect(invalid_response.valid?).to eq(false)
-    assert_raise(ActiveRecord::RecordInvalid) do
-      invalid_response.save!
-    end
+    expect{ invalid_response.save! }.to raise_error(ActiveRecord::RecordInvalid)
   end
 
   it "incomplete response will save if it is marked as incomplete" do
-    @user = create(:user)
-
-    form = create(:form, :question_types => %w(integer))
+    user = create(:user)
+    form = create(:form, question_types: %w(integer))
     form.root_questionings.first.required = true
     form.publish!
     form.reload
-
-    r1 = create(:response, :user => @user, :form => form, :incomplete => true)
+    expect{ create(:response, user: user, form: form, incomplete: true) }.not_to raise_error
   end
 
   it "export sql should work" do
-    create(:response, :form => create(:form, :question_types => %w(integer)), :answer_values => [1])
+    create(:response, form: create(:form, question_types: %w(integer)), answer_values: [1])
     res = ActiveRecord::Base.connection.execute(Response.export_sql(Response.unscoped))
 
     # result set should have one row since one Answer in db
@@ -66,20 +60,19 @@ describe Response do
   end
 
   it "incomplete responses should not disable constraints" do
-    form = create(:form, :question_types => %w(integer))
+    form = create(:form, question_types: %w(integer))
     form.root_questionings.first.required = true
     form.root_questionings.first.question.update_attribute(:minimum, 10)
     form.publish!
     form.reload
 
-    r1 = build(:response, :form => form, :incomplete => true, :answer_values => %w(9))
+    r1 = build(:response, form: form, incomplete: true, answer_values: %w(9))
     expect(r1.valid?).to eq(false)
     assert_match(/greater than/, r1.answers.first.errors.full_messages.join)
   end
 
   it "a user can checkout a response" do
     user = create(:user)
-
     response = build(:response)
 
     expect(response.checked_out_at).to be_nil
@@ -87,7 +80,6 @@ describe Response do
 
     Timecop.freeze(Date.today) do
       response.check_out!(user)
-
       expect(Time.now).to eq(response.checked_out_at)
       expect(response.checked_out_by).to eq(user)
     end
@@ -97,8 +89,8 @@ describe Response do
     user = create(:user)
 
     Timecop.freeze(Date.today) do
-      r_previous = create(:response, :checked_out_at => Time.now, :checked_out_by => user)
-      r_new      = build(:response)
+      r_previous = create(:response, checked_out_at: Time.now, checked_out_by: user)
+      r_new = build(:response)
 
       expect(r_new.checked_out_at).to be_nil
       expect(r_new.checked_out_by_id).to be_nil
@@ -112,7 +104,5 @@ describe Response do
       expect(r_previous.checked_out_at).to be_nil
       expect(r_previous.checked_out_by_id).to be_nil
     end
-
   end
-
 end
