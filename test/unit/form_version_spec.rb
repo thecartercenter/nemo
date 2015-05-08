@@ -10,7 +10,7 @@ describe FormVersion do
     # create two fv's and check their codes are different
     fv1 = FormVersion.new
     fv2 = FormVersion.new
-    assert_not_equal(fv1.code, fv2.code)
+    expect(fv2.code).not_to eq(fv1.code)
 
     # set one code = to other (this could happen by a fluke if second is init'd before first is saved)
     fv1.code = fv2.code
@@ -19,7 +19,7 @@ describe FormVersion do
     # save one, then save the other. ensure the second one notices the duplication and adjusts
     expect(fv1.save).to be true
     expect(fv2.save).to be true
-    assert_not_equal(fv1.code, fv2.code)
+    expect(fv2.code).not_to eq(fv1.code)
   end
 
   it "upgrade" do
@@ -37,7 +37,7 @@ describe FormVersion do
     # make sure values are updated properly
     expect(fv2.sequence).to eq(2)
     expect(fv2.form_id).to eq(f.id)
-    assert_not_equal(fv1.code, fv2.code)
+    expect(fv2.code).not_to eq(fv1.code)
 
     # make sure old v1 code didnt change
     expect(fv1.code).to eq(old_v1_code)
