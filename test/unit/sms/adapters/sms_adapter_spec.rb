@@ -7,19 +7,19 @@ describe Sms::Adapters::SmsAdapter do
     @mission.setting.load
   end
 
-  test 'delivering a message with one recipient should work' do
+  it "delivering a message with one recipient should work" do
     each_adapter(:can_deliver? => true) do |adapter|
       expect(:body => "foo"))).to eq(true, adapter.deliver(Sms::Reply.new(:to => "+15556667777")
     end
   end
 
-  test 'delivering a message with no recipients should raise an error' do
+  it "delivering a message with no recipients should raise an error" do
     each_adapter(:can_deliver? => true) do |adapter|
       assert_raise(Sms::Error){adapter.deliver(Sms::Reply.new(:to => nil, :body => "foo"))}
     end
   end
 
-  test 'deliering a message with no body should raise an error' do
+  it "deliering a message with no body should raise an error" do
     each_adapter(:can_deliver? => true) do |adapter|
       assert_raise(Sms::Error){adapter.deliver(Sms::Reply.new(:to => "+15556667777", :body => ""))}
     end

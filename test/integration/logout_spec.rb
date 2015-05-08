@@ -6,19 +6,19 @@ describe 'Logout' do
     @user = create(:user, :admin => true)
   end
 
-  test 'redirect after logout from basic mode should be correct' do
+  it "redirect after logout from basic mode should be correct" do
     login(@user)
     check_logout_link_and_redirect
   end
 
-  test 'redirect after logout from mission mode should be correct' do
+  it "redirect after logout from mission mode should be correct" do
     login(@user)
     get("/en/m/#{get_mission.compact_name}")
     expect(response).to be_success
     check_logout_link_and_redirect
   end
 
-  test 'redirect after logout from admin mode should be correct' do
+  it "redirect after logout from admin mode should be correct" do
     login(@user)
     get('/en/admin')
     expect(response).to be_success
