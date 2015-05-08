@@ -117,25 +117,25 @@ describe 'incoming sms' do
 
   it "for reply-via-adapter style incoming adapter, reply should be sent via mission's outgoing adapter" do
     do_incoming_request(from: '+1234567890', incoming: {body: 'foo', adapter: REPLY_VIA_ADAPTER_STYLE_ADAPTER})
-    assert_equal(1, assigns(:outgoing_adapter).deliveries.size)
-    assert_equal('REPLY_SENT', @response.body)
+    expect(assigns(:outgoing_adapter).deliveries.size).to eq(1)
+    expect(@response.body).to eq('REPLY_SENT')
   end
 
   it "for reply-via-response style adapter, reply body should be response body" do
     do_incoming_request(from: '+1234567890', incoming: {body: 'foo', adapter: REPLY_VIA_RESPONSE_STYLE_ADAPTER})
 
     # Make sure no messages developed via adatper.
-    assert_equal(0, assigns(:outgoing_adapter).deliveries.size)
+    expect(assigns(:outgoing_adapter).deliveries.size).to eq(0)
 
     # We do an exact equality test since it's key there is no extra junk in response body.
-    assert_equal("Sorry, we couldn't find you in the system.", @response.body)
+    expect(@response.body).to eq("Sorry, we couldn't find you in the system.")
   end
 
   it "for reply-via-response style adapter, message with no reply should result in empty response" do
     # Non-numeric from number results in no reply.
     do_incoming_request(from: 'foo', incoming: {body: 'foo', adapter: REPLY_VIA_RESPONSE_STYLE_ADAPTER})
-    assert_equal('', @response.body)
-    assert_equal(204, @response.status)
+    expect(@response.body).to eq('')
+    expect(@response.status).to eq(204)
   end
 
   it "fails when the incoming SMS token is incorrect" do
@@ -145,7 +145,7 @@ describe 'incoming sms' do
 
     do_incoming_request(url: "/m/#{get_mission.compact_name}/sms/submit/#{token}",
       incoming: {body: "#{form_code} 1.15 2.20", adapter: REPLY_VIA_RESPONSE_STYLE_ADAPTER})
-    assert_equal(500, @response.status)
+    expect(@response.status).to eq(500)
   end
 
   private
@@ -184,15 +184,15 @@ describe 'incoming sms' do
 
       # if there was no reply, check that this was expected
       if sms.nil?
-        assert_nil(params[:outgoing][:body])
+        expect(params[:outgoing][:body]).to be_nil
       else
         assert_instance_of(Sms::Reply, sms)
         # Ensure attribs are appropriate
-        assert_equal(params[:from], sms.to)
+        expect(sms.to).to eq(params[:from])
         assert_match(params[:outgoing][:body], sms.body)
-        assert_equal(params[:mission], sms.mission)
+        expect(sms.mission).to eq(params[:mission])
         expect(sms.body).not_to match(/%\{|translation missing/)
-        assert_equal(params[:outgoing][:adapter], sms.adapter_name) if params[:outgoing][:adapter]
+        expect(sms.adapter_name).to eq(params[:outgoing][:adapter]) if params[:outgoing][:adapter]
       end
     end
 

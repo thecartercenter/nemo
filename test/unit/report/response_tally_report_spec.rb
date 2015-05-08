@@ -1,15 +1,15 @@
 # There are more report tests in spec/models/report.
-require 'test_helper'
+require 'spec_helper'
 require 'unit/report/report_test_helper'
 
-class Report::ResponseTallyReportTest < ActiveSupport::TestCase
-  setup do
+describe Report::ResponseTallyReport do
+  before do
     prep_objects
   end
 
-  test "counts of yes, no per day for a given question" do
+  it "counts of yes, no per day for a given question" do
     # create several yes/no questions and responses for them
-    @yes_no = FactoryGirl.create(:option_set, :option_names => %w(Yes No))
+    @yes_no = create(:option_set, :option_names => %w(Yes No))
     create_question(:code => "yn", :type => "select_one", :option_set => @yes_no)
     1.times{create_response(:created_at => Time.zone.parse("2012-01-01 1:00:00"), :answers => {:yn => "Yes"})}
     2.times{create_response(:created_at => Time.zone.parse("2012-01-05 1:00:00"), :answers => {:yn => "Yes"})}
@@ -28,7 +28,7 @@ class Report::ResponseTallyReportTest < ActiveSupport::TestCase
                           %w( TTL               3  6   9 ))
   end
 
-  test "total number of responses per form per source" do
+  it "total number of responses per form per source" do
     create_form(:name => "f0")
     create_form(:name => "f1")
     2.times{create_response(:form => @forms[:f0], :source => "odk")}
@@ -53,8 +53,8 @@ class Report::ResponseTallyReportTest < ActiveSupport::TestCase
                           %w( TTL  10   8  18 ))
   end
 
-  test "total number of responses per source per answer" do
-    @yes_no = FactoryGirl.create(:option_set, :option_names => %w(Yes No))
+  it "total number of responses per source per answer" do
+    @yes_no = create(:option_set, :option_names => %w(Yes No))
     create_question(:code => "yn", :type => "select_one", :option_set => @yes_no)
     2.times{create_response(:source => "odk", :answers => {:yn => "Yes"})}
     5.times{create_response(:source => "web", :answers => {:yn => "Yes"})}
@@ -71,7 +71,7 @@ class Report::ResponseTallyReportTest < ActiveSupport::TestCase
                           %w( TTL   7  11  18 ))
   end
 
-  test "total number of responses per source per zero-nonzero answer" do
+  it "total number of responses per source per zero-nonzero answer" do
     create_question(:code => "int", :type => "integer")
     2.times{create_response(:source => "odk", :answers => {:int => 4})}
     5.times{create_response(:source => "web", :answers => {:int => 9})}
@@ -89,9 +89,9 @@ class Report::ResponseTallyReportTest < ActiveSupport::TestCase
                           %w( TTL   11                7         18 ))
   end
 
-  test "total number of responses per two different answers" do
-    @yes_no = FactoryGirl.create(:option_set, :option_names => %w(Yes No))
-    @high_low = FactoryGirl.create(:option_set, :option_names => %w(High Low))
+  it "total number of responses per two different answers" do
+    @yes_no = create(:option_set, :option_names => %w(Yes No))
+    @high_low = create(:option_set, :option_names => %w(High Low))
     forms = [create_form(:name => "form0"), create_form(:name => "form1")]
     create_question(:code => "yn", :type => "select_one", :option_set => @yes_no, :forms => forms)
     create_question(:code => "hl", :type => "select_one", :option_set => @high_low, :forms => forms)

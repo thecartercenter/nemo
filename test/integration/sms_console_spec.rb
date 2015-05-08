@@ -1,8 +1,8 @@
-require 'test_helper'
+require 'spec_helper'
 
-class SmsConsoleTest < ActionDispatch::IntegrationTest
+describe 'SmsConsole' do
 
-  test "going to the page to create a new sms should succeed" do
+  it "going to the page to create a new sms should succeed" do
     user = get_user
     login(user)
 

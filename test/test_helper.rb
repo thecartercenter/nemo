@@ -23,7 +23,7 @@ class ActiveSupport::TestCase
 
   self.use_transactional_fixtures = false
 
-  setup do
+  before do
     DatabaseCleaner.strategy = :transaction
     DatabaseCleaner.start
   end
@@ -87,7 +87,7 @@ class ActiveSupport::TestCase
   def login(user)
     post(user_session_path(:locale => 'en'), :user_session => {:login => user.login, :password => TEST_PASSWORD})
     follow_redirect!
-    assert_response(:success)
+    expect(response).to be_success
     user.reload # Some stuff may have changed in database during login process
   end
 
@@ -95,7 +95,7 @@ class ActiveSupport::TestCase
   def logout
     delete(user_session_path(:locale => 'en'))
     follow_redirect!
-    assert_response(:success)
+    expect(response).to be_success
   end
 
   # encodes credentials for basic auth
@@ -105,7 +105,7 @@ class ActiveSupport::TestCase
 
   def get_success(*params)
     get(*params)
-    assert_response(:success)
+    expect(response).to be_success
   end
 
   def assert_access_denied
@@ -119,7 +119,7 @@ class ActiveSupport::TestCase
     expected = [expected] unless expected.empty? || expected[0].is_a?(Array)
     actual = user.roles
     expected.each do |r|
-      assert_equal(r[1].to_s, actual[r[0]])
+      expect(actual[r[0]]).to eq(r[1].to_s)
     end
   end
 end

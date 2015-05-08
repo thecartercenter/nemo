@@ -1,37 +1,37 @@
-require 'test_helper'
+require 'spec_helper'
 
-class UserTest < ActiveSupport::TestCase
+describe User do
 
-  setup do
+  before do
     @mission = get_mission
     @mission.setting.load
   end
 
-  test "creating a user with minimal info should produce good defaults" do
+  it "creating a user with minimal info should produce good defaults" do
     user = User.create!(:name => 'Alpha Tester', :reset_password_method => 'print',
       :assignments => [Assignment.new(:mission => @mission, :role => User::ROLES.first)])
-    assert_equal('en', user.pref_lang)
-    assert_equal('atester', user.login)
+    expect(user.pref_lang).to eq('en')
+    expect(user.login).to eq('atester')
   end
 
-  test "phone numbers should be unique" do
+  it "phone numbers should be unique" do
     # create a user with two phone numbers
-    first = FactoryGirl.create(:user, :phone => "+19998887777", :phone2 => "+17776665537")
+    first = create(:user, :phone => "+19998887777", :phone2 => "+17776665537")
 
     # try to create a user with phone = first.phone; should fail
-    assert_phone_uniqueness_error(FactoryGirl.build(:user, :login => "foo", :phone => "+19998887777"))
+    assert_phone_uniqueness_error(build(:user, :login => "foo", :phone => "+19998887777"))
 
     # try to create a user with phone = first.phone2; should fail
-    assert_phone_uniqueness_error(FactoryGirl.build(:user, :login => "foo", :phone2 => "+19998887777"))
+    assert_phone_uniqueness_error(build(:user, :login => "foo", :phone2 => "+19998887777"))
 
     # try to create a user with phone2 = first.phone; should fail
-    assert_phone_uniqueness_error(FactoryGirl.build(:user, :login => "foo", :phone => "+17776665537"))
+    assert_phone_uniqueness_error(build(:user, :login => "foo", :phone => "+17776665537"))
 
     # try to create a user with phone2 = first.phone2; should fail
-    assert_phone_uniqueness_error(FactoryGirl.build(:user, :login => "foo", :phone2 => "+17776665537"))
+    assert_phone_uniqueness_error(build(:user, :login => "foo", :phone2 => "+17776665537"))
 
     # try to create a user with no phone numbers; shouldn't fail
-    second = FactoryGirl.build(:user, :login => "foo")
+    second = build(:user, :login => "foo")
     second.save!
 
     # try to edit this new user to conflicting phone number, should fail
@@ -39,7 +39,7 @@ class UserTest < ActiveSupport::TestCase
     assert_phone_uniqueness_error(second)
 
     # create a user with different phone numbers and make sure no error
-    third = FactoryGirl.build(:user, :login => "bar", :phone => "+19998887770", :phone2 => "+17776665530")
+    third = build(:user, :login => "bar", :phone => "+19998887770", :phone2 => "+17776665530")
     third.save!
   end
 

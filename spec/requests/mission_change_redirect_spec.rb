@@ -52,22 +52,22 @@ describe 'redirect on mission change' do
   describe 'missionchange flag' do
     it 'should be removed cleanly if its the only query string arg' do
       get('/en?missionchange=1')
-      assert_redirected_to('/en')
+      expect(response).to redirect_to('/en')
     end
 
     it 'should be removed cleanly if its the first of several args' do
       get('/en?missionchange=1&foo=bar')
-      assert_redirected_to('/en?foo=bar')
+      expect(response).to redirect_to('/en?foo=bar')
     end
 
     it 'should be removed cleanly if its the last of several args' do
       get('/en?foo=bar&missionchange=1')
-      assert_redirected_to('/en?foo=bar')
+      expect(response).to redirect_to('/en?foo=bar')
     end
 
     it 'should be removed cleanly if its in the middle several args' do
       get('/en?foo=bar&missionchange=1&bar=foo')
-      assert_redirected_to('/en?foo=bar&bar=foo')
+      expect(response).to redirect_to('/en?foo=bar&bar=foo')
     end
   end
 
@@ -80,7 +80,7 @@ describe 'redirect on mission change' do
     # and make sure the redirect afterward is correct.
     get(params[:from].gsub('mission1', 'mission2'), missionchange: 1)
 
-    assert_nil(flash[:error], 'Should be no error message for mission change redirects')
+    expect(flash[:error], 'Should be no error message for mission change redirects').to be_nil
 
     # We should expect a redirect to remove the missionchange param
     expect(response).to be_redirect

@@ -1,7 +1,7 @@
-require 'test_helper'
+require 'spec_helper'
 
-class Sms::Adapters::SmsAdapterTest < ActiveSupport::TestCase
-  setup do
+describe Sms::Adapters::SmsAdapter do
+  before do
     # copy settings
     @mission = get_mission
     @mission.setting.load
@@ -9,7 +9,7 @@ class Sms::Adapters::SmsAdapterTest < ActiveSupport::TestCase
 
   test 'delivering a message with one recipient should work' do
     each_adapter(:can_deliver? => true) do |adapter|
-      assert_equal(true, adapter.deliver(Sms::Reply.new(:to => "+15556667777", :body => "foo")))
+      expect(:body => "foo"))).to eq(true, adapter.deliver(Sms::Reply.new(:to => "+15556667777")
     end
   end
 

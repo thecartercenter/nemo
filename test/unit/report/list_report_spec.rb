@@ -1,13 +1,13 @@
 # There are more report tests in spec/models/report.
-require 'test_helper'
+require 'spec_helper'
 require 'unit/report/report_test_helper'
 
-class Report::ListReportTest < ActiveSupport::TestCase
-  setup do
+describe Report::ListReport do
+  before do
     prep_objects
   end
 
-  test "basic list" do
+  it "basic list" do
 
     create_question(:code => "Inty", :type => "integer")
     create_question(:code => "State", :type => "text")
@@ -28,8 +28,8 @@ class Report::ListReportTest < ActiveSupport::TestCase
                           %w( Test       5     al      web    ))
   end
 
-  test "list with select one" do
-    @yes_no = FactoryGirl.create(:option_set, :option_names => %w(Yes No))
+  it "list with select one" do
+    @yes_no = create(:option_set, :option_names => %w(Yes No))
     create_question(:code => "Inty", :type => "integer")
     create_question(:code => "State", :type => "text")
     create_question(:code => "Happy", :type => "select_one", :option_set => @yes_no)
@@ -51,7 +51,7 @@ class Report::ListReportTest < ActiveSupport::TestCase
                           %w( Test       5     al      web     No    ))
   end
 
-  test "response and list reports using same attrib" do
+  it "response and list reports using same attrib" do
 
     create_question(:code => "Inty", :type => "integer")
     create_response(:answers => {:Inty => 10})

@@ -71,7 +71,7 @@ describe 'AdminMode' do
       {form: {name: 'Foo', smsable: false}})
     f = assigns(:form)
     expect(f.mission).to be_nil
-    assert(f.is_standard?, 'new form should be standard')
+    expect(f.is_standard?).to be_truthy, 'new form should be standard'
   end
 
   it "creating a question in admin mode should create a standard question" do
@@ -80,7 +80,7 @@ describe 'AdminMode' do
       {question: {code: 'Foo', qtype_name: 'integer', name_en: 'Stuff'}})
     q = Question.order('created_at').last
     expect(q.mission).to be_nil
-    assert(q.is_standard?, 'new question should be standard')
+    expect(q.is_standard?).to be_truthy, 'new question should be standard'
   end
 
   it "valid delete of mission" do

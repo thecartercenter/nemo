@@ -1,12 +1,12 @@
-require 'test_helper'
+require 'spec_helper'
 
-class FormVersionTest < ActiveSupport::TestCase
-  test "form version code generated on initialize" do
+describe FormVersion do
+  it "form version code generated on initialize" do
     fv = FormVersion.new
     assert_match(/[a-z]{#{FormVersion::CODE_LENGTH}}/, fv.code)
   end
 
-  test "version codes are unique" do
+  it "version codes are unique" do
     # create two fv's and check their codes are different
     fv1 = FormVersion.new
     fv2 = FormVersion.new
@@ -14,16 +14,16 @@ class FormVersionTest < ActiveSupport::TestCase
 
     # set one code = to other (this could happen by a fluke if second is init'd before first is saved)
     fv1.code = fv2.code
-    assert_equal(fv1.code, fv2.code)
+    expect(fv2.code).to eq(fv1.code)
 
     # save one, then save the other. ensure the second one notices the duplication and adjusts
-    assert(fv1.save)
-    assert(fv2.save)
+    expect(fv1.save).to be true
+    expect(fv2.save).to be true
     assert_not_equal(fv1.code, fv2.code)
   end
 
-  test "upgrade" do
-    f = FactoryGirl.create(:form)
+  it "upgrade" do
+    f = create(:form)
     f.publish!
     fv1 = f.current_version
     assert_not_nil(fv1)
@@ -35,15 +35,15 @@ class FormVersionTest < ActiveSupport::TestCase
     fv2.save!; fv2.reload
 
     # make sure values are updated properly
-    assert_equal(2, fv2.sequence)
-    assert_equal(f.id, fv2.form_id)
+    expect(fv2.sequence).to eq(2)
+    expect(fv2.form_id).to eq(f.id)
     assert_not_equal(fv1.code, fv2.code)
 
     # make sure old v1 code didnt change
-    assert_equal(old_v1_code, fv1.code)
+    expect(fv1.code).to eq(old_v1_code)
 
     # make sure current flags are set properly
-    assert(!fv1.is_current)
-    assert(fv2.is_current)
+    expect(fv1.is_current).to be false
+    expect(fv2.is_current).to be true
   end
 end

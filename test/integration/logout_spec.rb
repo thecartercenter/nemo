@@ -1,9 +1,9 @@
-require 'test_helper'
+require 'spec_helper'
 
-class LogoutTest < ActionDispatch::IntegrationTest
+describe 'Logout' do
 
-  setup do
-    @user = FactoryGirl.create(:user, :admin => true)
+  before do
+    @user = create(:user, :admin => true)
   end
 
   test 'redirect after logout from basic mode should be correct' do
@@ -14,14 +14,14 @@ class LogoutTest < ActionDispatch::IntegrationTest
   test 'redirect after logout from mission mode should be correct' do
     login(@user)
     get("/en/m/#{get_mission.compact_name}")
-    assert_response(:success)
+    expect(response).to be_success
     check_logout_link_and_redirect
   end
 
   test 'redirect after logout from admin mode should be correct' do
     login(@user)
     get('/en/admin')
-    assert_response(:success)
+    expect(response).to be_success
     check_logout_link_and_redirect
   end
 

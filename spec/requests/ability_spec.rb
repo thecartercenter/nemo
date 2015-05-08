@@ -7,9 +7,9 @@ describe 'abilities' do
     create_user_and_ability(:role => 'coordinator')
 
     u = User.new
-    assert(@ability.cannot?(:create, u))
+    expect(@ability.cannot?(:create, u)).to be true
     u.assignments.build(:mission => get_mission)
-    assert(@ability.can?(:create, u))
+    expect(@ability.can?(:create, u)).to be true
   end
 
   it 'staffers should not be able to create users' do
@@ -17,7 +17,7 @@ describe 'abilities' do
 
     u = User.new
     u.assignments.build(:mission => get_mission)
-    assert(@ability.cannot?(:create, u))
+    expect(@ability.cannot?(:create, u)).to be true
   end
 
   # user and group tests
@@ -25,16 +25,16 @@ describe 'abilities' do
     create_user_and_ability(:role => 'coordinator')
 
     g = Group.new
-    assert(@ability.cannot?(:create, g))
+    expect(@ability.cannot?(:create, g)).to be true
     g.mission = get_mission
-    assert(@ability.can?(:create, g))
+    expect(@ability.can?(:create, g)).to be true
   end
 
   it 'staffers should not be able to create groups' do
     create_user_and_ability(:role => 'staffer')
 
     g = Group.new(:mission => get_mission)
-    assert(@ability.cannot?(:create, g))
+    expect(@ability.cannot?(:create, g)).to be true
   end
 
   # add user to groups tests
@@ -43,10 +43,10 @@ describe 'abilities' do
 
     g = Group.new
     g.mission = get_mission
-    assert(@ability.can?(:create, g))
+    expect(@ability.can?(:create, g)).to be true
 
     u = FactoryGirl.create(:user, :name => "Ada Nu User")
-    assert(@ability.can?(:create, UserGroup))
+    expect(@ability.can?(:create, UserGroup)).to be true
   end
 
   it 'staffers should not be able to add users to a group' do
@@ -55,7 +55,7 @@ describe 'abilities' do
     g = Group.new
     g.mission = get_mission
     u = FactoryGirl.create(:user, :name => "Ada Nu User")
-    assert(@ability.cannot?(:create, UserGroup))
+    expect(@ability.cannot?(:create, UserGroup)).to be true
   end
 
   def create_user_and_ability(options)

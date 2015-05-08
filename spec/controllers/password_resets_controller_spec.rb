@@ -22,7 +22,7 @@ describe PasswordResetsController, type: :request do
 
       expect(old_tok).not_to eq @user.reload.perishable_token
 
-      assert_redirected_to(login_url)
+      expect(response).to redirect_to(login_url)
       follow_redirect!
     end
   end
@@ -59,7 +59,7 @@ describe PasswordResetsController, type: :request do
             "assignments_attributes" => {"1"=>{"id"=>"", "_destroy"=>"false", "mission_id"=>get_mission.id, "role"=>"observer"}},
             "reset_password_method" => "email"
           }
-          assert_redirected_to users_path(:mode => 'admin')
+          expect(response).to redirect_to users_path(:mode => 'admin')
           follow_redirect!
           assert_response(:success)
         end

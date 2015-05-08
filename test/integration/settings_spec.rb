@@ -1,22 +1,22 @@
-require 'test_helper'
+require 'spec_helper'
 
 # tests maintenance of settings across key actions
 # timezone is used as a key test vector
-class SettingsTest < ActionDispatch::IntegrationTest
-  setup do
-    @admin = FactoryGirl.create(:user, :admin => true)
+describe 'Settings' do
+  before do
+    @admin = create(:user, :admin => true)
   end
 
-  test "settings should be default on first load" do
+  it "settings should be default on first load" do
     get('/en')
     follow_redirect!
-    assert_response(:success)
+    expect(response).to be_success
 
     # ensure default timezone got loaded
-    assert_equal(Setting::DEFAULTS[:timezone], Time.zone.name)
+    expect(Time.zone.name).to eq(Setting::DEFAULTS[:timezone])
   end
 
-  test "settings should be copied properly on update" do
+  it "settings should be copied properly on update" do
     # login as admin
     login(@admin)
 
@@ -27,27 +27,27 @@ class SettingsTest < ActionDispatch::IntegrationTest
     update_timezone_for_setting(get_mission.setting, 'Brisbane')
 
     # ensure timezone is now brisbane
-    assert_equal("Brisbane", Time.zone.name)
+    expect(Time.zone.name).to eq("Brisbane")
   end
 
-  test "settings get created and saved for new mission" do
+  it "settings get created and saved for new mission" do
     # login admin, and set the timezone to something weird
     login(@admin)
     update_timezone_for_setting(get_mission.setting, 'Brisbane')
-    assert_equal('Brisbane', Time.zone.name)
+    expect(Time.zone.name).to eq('Brisbane')
 
     # create a new mission and ensure that a new setting object was created with the default timezone
     post(missions_path, :mission => {:name => 'Foo'})
     follow_redirect!
-    assert_response(:success)
-    assert_equal(Setting::DEFAULTS[:timezone], Mission.find_by_name('Foo').setting.timezone)
+    expect(response).to be_success
+    expect(Mission.find_by_name('Foo').setting.timezone).to eq(Setting::DEFAULTS[:timezone])
 
     # change to that mission and see that timezone changed
     get('/en/m/foo')
-    assert_equal(Setting::DEFAULTS[:timezone], Time.zone.name)
+    expect(Time.zone.name).to eq(Setting::DEFAULTS[:timezone])
   end
 
-  test "settings revert to defaults on logout" do
+  it "settings revert to defaults on logout" do
     login(@admin)
 
     # Switch to a mission with known funny timezone and make sure timezone not UTC.
@@ -56,20 +56,20 @@ class SettingsTest < ActionDispatch::IntegrationTest
 
     # logout and ensure timezone reverts to UTC
     logout
-    assert_equal(Setting::DEFAULTS[:timezone], Time.zone.name)
+    expect(Time.zone.name).to eq(Setting::DEFAULTS[:timezone])
   end
 
-  test "locales should get copied properly" do
+  it "locales should get copied properly" do
     get_mission.setting.update_attributes!(:preferred_locales_str => "fr,ar")
     login(@admin)
     get(mission_root_path(:mission_name => get_mission.compact_name))
-    assert_equal([:fr, :ar], configatron.preferred_locales)
+    expect(configatron.preferred_locales).to eq([:fr, :ar])
   end
 
   private
     def update_timezone_for_setting(setting, timezone)
       put(setting_path(setting, :mode => 'm', :mission_name => setting.mission.compact_name), :setting => {:timezone => timezone})
       follow_redirect!
-      assert_response(:success)
+      expect(response).to be_success
     end
 end

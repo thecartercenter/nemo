@@ -62,13 +62,13 @@ describe Condition do
 
   describe 'to_odk' do
     # q, c = build_condition
-    # assert_equal("/data/q#{q.previous[0].question.id} = #{c.value}", c.to_odk)
+    # expect(c.to_odk).to eq("/data/q#{q.previous[0].question.id} = #{c.value}")
     # q, c = build_condition(:question_types => %w(select_one integer))
-    # assert_equal("selected(/data/q#{q.previous[0].question.id}, '#{c.option_id}')", c.to_odk)
+    # expect(c.to_odk).to eq("selected(/data/q#{q.previous[0].question.id}, '#{c.option_id}')")
     # q, c = build_condition(:question_types => %w(select_one integer), :op => 'neq')
-    # assert_equal("not(selected(/data/q#{q.previous[0].question.id}, '#{c.option_id}'))", c.to_odk)
+    # expect(c.to_odk).to eq("not(selected(/data/q#{q.previous[0].question.id}, '#{c.option_id}'))")
     # q, c = build_condition(:question_types => %w(datetime integer), :op => 'neq', :value => '2013-04-30 2:14pm')
-    # assert_equal("format-date(/data/q#{q.previous[0].question.id}, '%Y%m%d%H%M') != '201304301414'", c.to_odk)
+    # expect(c.to_odk).to eq("format-date(/data/q#{q.previous[0].question.id}, '%Y%m%d%H%M') != '201304301414'")
 
     context 'for single level select one question' do
       before do
