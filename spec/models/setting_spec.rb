@@ -1,6 +1,27 @@
 require 'spec_helper'
 
 describe Setting do
+
+  let(:setting) { get_mission.setting }
+
+  it "serialized locales are always symbols" do
+    expect(setting.preferred_locales.first.class).to eq(Symbol)
+    setting.update_attributes!(preferred_locales_str: "fr,ar")
+    expect(setting.preferred_locales.first.class).to eq(Symbol)
+  end
+
+  it "locales with spaces should still be accepted" do
+    setting.update_attributes!(preferred_locales_str: "fr , ar1")
+    expect(setting.preferred_locales).to eq([:fr, :ar])
+  end
+
+  it "generate override code will generate a new six character code" do
+    previous_code = setting.override_code
+    setting.generate_override_code!
+    expect(previous_code).not_to eq(setting.override_code)
+    expect(setting.override_code.size).to eq(6)
+  end
+
   describe 'load_for_mission' do
     shared_examples_for 'load_for_mission' do
       context 'when there are no existing settings' do
