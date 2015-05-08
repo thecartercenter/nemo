@@ -52,6 +52,8 @@ class Form < ActiveRecord::Base
            :descendants,
            to: :root_group
 
+  delegate :code, to: :current_version
+
   replicable child_assocs: :root_group, uniqueness: {field: :name, style: :sep_words},
     dont_copy: [:published, :pub_changed_at, :downloads, :responses_count, :upgrade_needed,
       :smsable, :current_version_id, :allow_incomplete, :access_level, :root_id]
