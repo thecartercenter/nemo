@@ -41,7 +41,7 @@ describe Response do
     # This should show up as a missing response.
     invalid_response = build(:response, user: @user, form: form, answer_values: [''])
     expect(invalid_response.valid?).to eq(false)
-    assert_raise ActiveRecord::RecordInvalid do
+    assert_raise(ActiveRecord::RecordInvalid) do
       invalid_response.save!
     end
   end
