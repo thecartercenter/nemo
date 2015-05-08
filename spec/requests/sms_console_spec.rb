@@ -1,14 +1,9 @@
 require 'spec_helper'
 
-describe 'SmsConsole' do
-
+describe "sms console" do
   it "going to the page to create a new sms should succeed" do
     user = get_user
     login(user)
-
-    get new_sms_test_path(:mission_name => get_mission.compact_name)
-
-    assert_response :success
+    get_s(new_sms_test_path(mission_name: get_mission.compact_name))
   end
-
 end
