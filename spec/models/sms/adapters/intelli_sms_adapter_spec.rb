@@ -21,18 +21,18 @@ describe Sms::Adapters::IntelliSmsAdapter do
   end
 
   it 'should recognize an incoming request with the proper params' do
-    request = {'from' => '1', 'text' => '1', 'sent' => '1', 'msgid' => '1'}
+    request = double(params: {'from' => '1', 'text' => '1', 'sent' => '1', 'msgid' => '1'})
     expect(@adapter.class.recognize_receive_request?(request)).to be_truthy
   end
 
   it 'should not recognize an incoming request without all the proper params' do
-    request = {'from' => '1', 'text' => '1', 'sent' => '1'}
+    request = double(params: {'from' => '1', 'text' => '1', 'sent' => '1'})
     expect(@adapter.class.recognize_receive_request?(request)).to be_falsey
   end
 
   it 'should correctly parse an intellisms-style request' do
     Time.zone = ActiveSupport::TimeZone['Saskatchewan']
-    request = {'text' => 'foo', 'sent' => '2013-07-03T09:53:00+01:00', 'from' => '2348036801489', 'msgid' => '1234'}
+    request = double(params: {'text' => 'foo', 'sent' => '2013-07-03T09:53:00+01:00', 'from' => '2348036801489', 'msgid' => '1234'})
     configatron.incoming_sms_number = '123456789'
 
     msg = @adapter.receive(request)
@@ -48,7 +48,7 @@ describe Sms::Adapters::IntelliSmsAdapter do
 
   it 'should correctly parse a frontline-style request even if incoming_sms_number is not present' do
     configatron.incoming_sms_number = ''
-    request = {'text' => 'foo', 'sent' => '2013-07-03T09:53:00+01:00', 'from' => '2348036801489', 'msgid' => '1234'}
+    request = double(params: {'text' => 'foo', 'sent' => '2013-07-03T09:53:00+01:00', 'from' => '2348036801489', 'msgid' => '1234'})
     msg = @adapter.receive(request)
     expect(msg.body).to eq 'foo'
     expect(msg.to).to be_nil

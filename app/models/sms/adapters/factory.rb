@@ -21,8 +21,8 @@ class Sms::Adapters::Factory
 
   # Creates and returns an adapter that knows how to handle the given HTTP request params.
   # Returns nil if no adapter classes recognized the request.
-  def create_for_request(params)
-    klass = self.class.products.detect{|a| a.recognize_receive_request?(params)}
+  def create_for_request(request)
+    klass = self.class.products.detect{|a| a.recognize_receive_request?(request)}
     return nil if klass.nil?
     klass.new
   end

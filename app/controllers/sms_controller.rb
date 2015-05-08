@@ -29,10 +29,10 @@ class SmsController < ApplicationController
       raise Sms::Error.new("Could not verify incoming SMS token")
     end
 
-    @incoming_adapter = Sms::Adapters::Factory.new.create_for_request(params)
+    @incoming_adapter = Sms::Adapters::Factory.new.create_for_request(request)
     raise Sms::Error.new("No adapters recognized this receive request") if @incoming_adapter.nil?
 
-    @incoming = @incoming_adapter.receive(params)
+    @incoming = @incoming_adapter.receive(request)
 
     @incoming.update_attributes(:mission => current_mission)
 
