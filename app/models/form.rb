@@ -203,22 +203,6 @@ class Form < ActiveRecord::Base
     @needs_odk_manifest ||= option_sets.any?(&:multi_level?)
   end
 
-  # Takes a hash of the form {questioning_id => new_rank, ...}
-  # Assumes all questionings are listed in the hash.
-  def update_ranks(new_ranks)
-    # Sort and ensure sequential.
-    sorted = new_ranks.to_a.sort_by{ |id,rank| rank }.each_with_index.map{|pair, idx| [pair[0], idx+1]}
-    new_ranks = Hash[*sorted.flatten]
-
-    # Validate the condition orderings (raises an error if they're invalid).
-    root_questionings.each{|qing| qing.condition_verify_ordering(new_ranks)}
-
-    # Assign.
-    new_ranks.each do |id, rank|
-      Questioning.find(id).update_attribute(:rank, rank)
-    end
-  end
-
   def destroy_questionings(qings)
     qings = Array.wrap(qings)
     transaction do

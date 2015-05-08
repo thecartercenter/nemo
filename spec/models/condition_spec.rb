@@ -288,21 +288,4 @@ describe Condition do
       expect(@cond.applicable_operator_names).to eq %w(eq neq)
     end
   end
-
-  describe 'verify ordering' do
-    before do
-      @form = create(:form, question_types: %w(integer integer))
-      @qings = @form.questionings
-    end
-
-    it 'should raise error when qing comes before ref_qing' do
-      @cond = create(:condition, questioning: @form.questionings[1], ref_qing: @form.questionings[0])
-      expect{@cond.verify_ordering(@qings[0].id => 2, @qings[1].id => 1)}.to raise_error(ConditionOrderingError)
-    end
-
-    it 'should not raise error if ordering is correct' do
-      @cond = create(:condition, questioning: @form.questionings[1], ref_qing: @form.questionings[0])
-      expect{@cond.verify_ordering(@qings[0].id => 1, @qings[1].id => 2)}.not_to raise_error
-    end
-  end
 end
