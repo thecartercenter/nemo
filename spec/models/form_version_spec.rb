@@ -26,7 +26,7 @@ describe FormVersion do
     f = create(:form)
     f.publish!
     fv1 = f.current_version
-    assert_not_nil(fv1)
+    expect(fv1).not_to be_nil
     old_v1_code = fv1.code
 
     # do the upgrade and save both forms
@@ -45,5 +45,45 @@ describe FormVersion do
     # make sure current flags are set properly
     expect(fv1.is_current).to be false
     expect(fv2.is_current).to be true
+  end
+
+  it "form should create new version for itself when published" do
+    f = create(:form)
+    expect(f.current_version).to be_nil
+
+    # publish and check again
+    f.publish!
+    f.reload
+    expect(f.current_version.sequence).to eq(1)
+
+    # ensure form_id is set properly on version object
+    expect(f.current_version.form_id).to eq(f.id)
+
+    # unpublish (shouldn't change)
+    old = f.current_version.code
+    f.unpublish!
+    f.reload
+    expect(f.current_version.code).to eq(old)
+
+    # publish again (shouldn't change)
+    old = f.current_version.code
+    f.publish!
+    f.reload
+    expect(f.current_version.code).to eq(old)
+
+    # unpublish, set upgrade flag, and publish (should change)
+    old = f.current_version.code
+    f.unpublish!
+    f.flag_for_upgrade!
+    f.publish!
+    f.reload
+    expect(f.current_version.code).not_to eq(old)
+
+    # unpublish and publish (shouldn't change)
+    old = f.current_version.code
+    f.unpublish!
+    f.publish!
+    f.reload
+    expect(f.current_version.code).to eq(old)
   end
 end
