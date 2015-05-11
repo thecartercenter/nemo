@@ -4,6 +4,7 @@ set :user, 'cceom'
 set :home_dir, '/home/cceom'
 set :use_sudo, false
 set(:deploy_to) {"#{home_dir}/webapps/rails2/#{application}_#{stage}"}
+set :bundle_dir, "$HOME/webapps/rails2/gems"
 set :default_environment, {
   "PATH" => "$PATH:$HOME/bin:$HOME/webapps/rails2/bin",
   "GEM_HOME" => "$HOME/webapps/rails2/gems"
