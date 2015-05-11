@@ -1,6 +1,9 @@
 <% prefix = "response[answers_attributes][#{index}][choices_attributes][#{choice_counter}]" %>
 <%= hidden_field_tag("#{prefix}[id]", choice.id) unless choice.new_record? %>
-<%= hidden_field_tag("#{prefix}[option_id]", choice.option_id) if choice.new_record? %>
+
+<%# Always include this so Condition JS can find it. %>
+<%= hidden_field_tag("#{prefix}[option_id]", choice.option_id) %>
+
 <%= hidden_field_tag("#{prefix}[checked]", 0) %><%# Ensures 0 gets passed if box not checked %>
 <%= check_box_tag("#{prefix}[checked]", 1, choice.checked?) %>
 <%= label_tag("#{prefix}[checked]", choice.option_name) %><br/>
