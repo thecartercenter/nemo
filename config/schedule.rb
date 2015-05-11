@@ -6,10 +6,8 @@
 # Example:
 #
 set :output, "log/cron.log"
-set :environment, ENV['RAILS_ENV']
-
-# define a job type to run the per-server railsenv script
-job_type :rake_with_env, "cd :path && source config/railsenv && RAILS_ENV=:environment bundle exec rake :task --silent :output"
+env :PATH, ENV['PATH']
+env :GEM_HOME, ENV['GEM_HOME']
 
 every 1.hour do
   # redo the indexes
