@@ -90,7 +90,7 @@ describe Condition do
 
     context 'for multilevel select one question' do
       before do
-        @form = create(:form, question_types: %w(select_one), use_multilevel_option_set: true)
+        @form = create(:form, question_types: %w(multi_level_select_one))
         @qing = @form.questionings[0]
         @oset = @qing.option_set
       end
@@ -217,7 +217,7 @@ describe Condition do
 
     context 'for multi level select ref question' do
       before do
-        @form = create(:form, question_types: %w(select_one), use_multilevel_option_set: true)
+        @form = create(:form, question_types: %w(multi_level_select_one))
         @sel_q = @form.questionings.first
       end
 

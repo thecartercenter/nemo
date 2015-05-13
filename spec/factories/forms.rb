@@ -1,26 +1,16 @@
-def create_question(qtype_name, mission, option_names, multi_option_set, parent=nil, form)
-  qtype = QuestionType[qtype_name == 'multi_level_select_one' ? 'select_one' : qtype_name]
-  question_attribs = {
-    qtype_name: qtype.name,
-    mission: mission,
-    use_multilevel_option_set: multi_option_set || qtype_name == 'multi_level_select_one',
-    is_standard: mission.nil?
-  }
-
-  # assign the options to the question if appropriate
-  if qtype.has_options? && !option_names.nil?
-    question_attribs[:option_names] = option_names
-  end
-
-  qing = FactoryGirl.create(:questioning,
-    :mission => mission,
-    :parent => parent,
-    :form => form,
-    :question => FactoryGirl.build(:question, question_attribs))
-
-  # Keep legacy association intact.
-  form.questionings << qing
-  qing
+def create_questioning(type, form, parent, evaluator)
+  form.questionings << create(:questioning,
+    mission: form.mission,
+    parent: parent,
+    form: form,
+    question: build(:question,
+      qtype_name: type == 'multi_level_select_one' ? 'select_one' : type,
+      mission: form.mission,
+      use_multilevel_option_set: type == 'multi_level_select_one',
+      is_standard: form.is_standard?,
+      _option_set: evaluator.option_set,
+      option_names: evaluator.option_names
+  ))
 end
 
 # Only works with create
@@ -28,34 +18,29 @@ FactoryGirl.define do
   factory :form do
     transient do
       question_types []
-      questions []
-      use_multilevel_option_set false
 
-      # optionally specifies the options for the option set of the first select type question on the form
+      # Args to forward to question factory.
+      option_set nil
       option_names nil
-    end
-
-    after(:create) do |form, evaluator|
-      form.create_root_group!(form: form)
-      form.save! # Save the reference to the root group.
-      evaluator.question_types.each_with_index do |qts, index|
-        if qts.kind_of?(Array)
-          group = QingGroup.create!(parent: form.root_group, form: form, group_name_en: 'Group Name')
-          qts.each_with_index { |qt, i| create_question(qt, form.mission, evaluator.option_names, evaluator.use_multilevel_option_set, group, form) }
-        else
-          create_question(qts, form.mission, evaluator.option_names, evaluator.use_multilevel_option_set, form.root_group, form)
-        end
-      end
-
-      evaluator.questions.each do |qt|
-        create_question(qt, form.mission, evaluator.option_names, evaluator.use_multilevel_option_set, form.root_group, form)
-      end
     end
 
     mission { is_standard ? nil : get_mission }
     sequence(:name) { |n| "Sample Form #{n}" }
 
+    after(:create) do |form, evaluator|
+      form.create_root_group!(form: form)
+      form.save!
 
+      # Build questions.
+      evaluator.question_types.each do |qtype|
+        if qtype.is_a?(Array)
+          group = QingGroup.create!(parent: form.root_group, form: form, group_name_en: 'Group Name')
+          qtype.each { |t| create_questioning(t, form, group, evaluator) }
+        else
+          create_questioning(qtype, form, form.root_group, evaluator)
+        end
+      end
+    end
 
     # A form with different question types.
     # We hardcode names to make expectations easier, since we assume no more than one sample form per test.

@@ -1,9 +1,14 @@
 FactoryGirl.define do
   factory :question do
     transient do
-      option_names nil
       use_multilevel_option_set false
       add_to_form false
+
+      # Optionally specifies the option set for the qquestion. Overrides option_names.
+      _option_set nil
+
+      # Optionally specifies the options for the option set.
+      option_names nil
     end
 
     sequence(:code) { |n| "Question#{n}" }
@@ -14,9 +19,13 @@ FactoryGirl.define do
 
     option_set do
       if QuestionType[qtype_name].has_options?
-        os_attrs = {mission: mission, multi_level: use_multilevel_option_set, is_standard: is_standard}
-        os_attrs[:option_names] = option_names unless option_names.nil?
-        FactoryGirl.build(:option_set, os_attrs)
+        if _option_set.present?
+          _option_set
+        else
+          os_attrs = {mission: mission, multi_level: use_multilevel_option_set, is_standard: is_standard}
+          os_attrs[:option_names] = option_names unless option_names.nil?
+          build(:option_set, os_attrs)
+        end
       else
         nil
       end
