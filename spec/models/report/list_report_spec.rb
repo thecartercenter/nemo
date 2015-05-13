@@ -41,4 +41,79 @@ describe Report::ListReport do
       I18n.locale = :en
     end
   end
+
+  describe "results", no_sphinx: true do
+    it "basic list" do
+      user = create(:user, name: "Foo")
+      questions = []
+      questions << create(:question, code: "Inty", qtype_name: "integer")
+      questions << create(:question, code: "State", qtype_name: "text")
+      form = create(:form, questions: questions)
+      create(:response, form: form, user: user, source: "odk", answer_values: %w(10 ga))
+      create(:response, form: form, user: user, source: "web", answer_values: %w(3 ga))
+      create(:response, form: form, user: user, source: "web", answer_values: %w(5 al))
+
+      report = create_report("List", calculations_attributes: [
+        {rank: 1, type: "Report::IdentityCalculation", attrib1_name: "submitter"},
+        {rank: 2, type: "Report::IdentityCalculation", question1_id: questions[0].id},
+        {rank: 3, type: "Report::IdentityCalculation", question1_id: questions[1].id},
+        {rank: 4, type: "Report::IdentityCalculation", attrib1_name: "source"}
+      ])
+
+      expect(report).to have_data_grid(%w( Submitter  Inty  State   Source ),
+                                       %w( Foo        10    ga      odk    ),
+                                       %w( Foo        3     ga      web    ),
+                                       %w( Foo        5     al      web    ))
+    end
+
+    it "list with select one" do
+      user = create(:user, name: "Foo")
+      yes_no = create(:option_set, option_names: %w(Yes No))
+      questions = []
+      questions << create(:question, code: "Inty", qtype_name: "integer")
+      questions << create(:question, code: "State", qtype_name: "text")
+      questions << create(:question, code: "Happy", qtype_name: "select_one", option_set: yes_no)
+      form = create(:form, questions: questions)
+      create(:response, form: form, user: user, source: "odk", answer_values: %w(10 ga Yes))
+      create(:response, form: form, user: user, source: "web", answer_values: %w(3 ga No))
+      create(:response, form: form, user: user, source: "web", answer_values: %w(5 al No))
+
+      report = create_report("List", calculations_attributes: [
+        {rank: 1, type: "Report::IdentityCalculation", attrib1_name: "submitter"},
+        {rank: 2, type: "Report::IdentityCalculation", question1_id: questions[0].id},
+        {rank: 3, type: "Report::IdentityCalculation", question1_id: questions[1].id},
+        {rank: 4, type: "Report::IdentityCalculation", attrib1_name: "source"},
+        {rank: 5, type: "Report::IdentityCalculation", question1_id: questions[2].id}
+      ])
+
+      expect(report).to have_data_grid(%w( Submitter  Inty  State   Source  Happy ),
+                                       %w( Foo        10    ga      odk     Yes   ),
+                                       %w( Foo        3     ga      web     No    ),
+                                       %w( Foo        5     al      web     No    ))
+    end
+
+    it "response and list reports using same attrib" do
+      user = create(:user, name: "Foo")
+      question = create(:question, code: "Inty", qtype_name: "integer")
+      form = create(:form, questions: [question])
+      create(:response, form: form, user: user, answer_values: %w(10))
+      create(:response, form: form, user: user, answer_values: %w(3))
+
+      report = create_report("List", calculations_attributes: [
+        {rank: 1, type: "Report::IdentityCalculation", attrib1_name: "submitter"},
+      ])
+
+      expect(report).to have_data_grid(%w( Submitter ),
+                                       %w( Foo       ),
+                                       %w( Foo       ))
+
+      report = create_report("ResponseTally", calculations_attributes: [
+        {rank: 1, type: "Report::IdentityCalculation", attrib1_name: "submitter"}
+      ])
+
+      expect(report).to have_data_grid(%w(      Tally TTL ),
+                                       %w( Foo      2   2 ),
+                                       %w( TTL      2   2 ))
+    end
+  end
 end
