@@ -8,7 +8,7 @@ module RequestSpecHelpers
   end
 
   def login_without_redirect(user)
-    post('/en/user-session', :user_session => {:login => user.login, :password => TEST_PASSWORD})
+    post('/en/user-session', :user_session => {:login => user.login, :password => test_password})
   end
 
   def logout

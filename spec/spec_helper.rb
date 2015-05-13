@@ -47,10 +47,11 @@ RSpec.configure do |config|
   config.infer_spec_type_from_file_location!
 
   config.include AssertDifference
+  config.include GeneralSpecHelpers
   config.include ModelSpecHelpers, type: :model
   config.include RequestSpecHelpers, type: :request
   config.include FeatureSpecHelpers, type: :feature
-  config.include AssertSelectRoot, :type => :request
+  config.include AssertSelectRoot, type: :request
 
   # Locale should be reset to :en after each test if it is changed.
   config.after(:each) do
@@ -78,7 +79,7 @@ def submit_j2me_response(params)
   params[:data]['xmlns'] = "http://openrosa.org/formdesigner/#{@form.current_version.sequence}"
 
   # If we are doing a normally authenticated submission, add credentials.
-  headers = params[:auth] ? {'HTTP_AUTHORIZATION' => encode_credentials(@user.login, TEST_PASSWORD)} : {}
+  headers = params[:auth] ? {'HTTP_AUTHORIZATION' => encode_credentials(@user.login, test_password)} : {}
 
   post(@submission_url, params.slice(:data), headers)
 end
