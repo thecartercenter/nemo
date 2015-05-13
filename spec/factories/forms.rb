@@ -1,22 +1,37 @@
-def create_questioning(type, form, parent, evaluator)
+def create_questioning(qtype_name_or_question, form, parent, evaluator)
+  question = if qtype_name_or_question.is_a?(Question)
+    qtype_name_or_question
+  else
+    qtype_name = qtype_name_or_question
+    q_attribs = {
+      qtype_name: qtype_name == 'multi_level_select_one' ? 'select_one' : qtype_name,
+      mission: form.mission,
+      use_multilevel_option_set: qtype_name == 'multi_level_select_one',
+      is_standard: form.is_standard?
+    }
+
+    if evaluator.option_set
+      q_attribs[:option_set] = evaluator.option_set
+    elsif evaluator.option_names
+      q_attribs[:option_names] = evaluator.option_names
+    end
+
+    build(:question, q_attribs)
+  end
+
   form.questionings << create(:questioning,
     mission: form.mission,
     parent: parent,
     form: form,
-    question: build(:question,
-      qtype_name: type == 'multi_level_select_one' ? 'select_one' : type,
-      mission: form.mission,
-      use_multilevel_option_set: type == 'multi_level_select_one',
-      is_standard: form.is_standard?,
-      _option_set: evaluator.option_set,
-      option_names: evaluator.option_names
-  ))
+    question: question)
 end
 
 # Only works with create
 FactoryGirl.define do
   factory :form do
     transient do
+      # Can specify questions or question_types. questions takes precedence.
+      questions []
       question_types []
 
       # Args to forward to question factory.
@@ -31,13 +46,14 @@ FactoryGirl.define do
       form.create_root_group!(form: form)
       form.save!
 
+      items = evaluator.questions.present? ? evaluator.questions : evaluator.question_types
       # Build questions.
-      evaluator.question_types.each do |qtype|
-        if qtype.is_a?(Array)
+      items.each do |item|
+        if item.is_a?(Array)
           group = QingGroup.create!(parent: form.root_group, form: form, group_name_en: 'Group Name')
-          qtype.each { |t| create_questioning(t, form, group, evaluator) }
+          item.each { |q| create_questioning(q, form, group, evaluator) }
         else
-          create_questioning(qtype, form, form.root_group, evaluator)
+          create_questioning(item, form, form.root_group, evaluator)
         end
       end
     end
