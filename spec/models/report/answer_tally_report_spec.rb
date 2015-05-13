@@ -77,10 +77,10 @@ describe Report::AnswerTallyReport do
     end
   end
 
-  describe 'results', clean_with_truncation: true, no_sphinx: true do
+  describe 'results', no_sphinx: true do
     it "counts of yes and no for all yes no questions" do
       yes_no = create(:option_set, option_names: %w(Yes No))
-      questions = create_list(:question, 3, qtype_name: 'select_one', option_set: yes_no)
+      questions = (1..3).to_a.map{ |i| create(:question, qtype_name: 'select_one', option_set: yes_no, name: "Q#{i}", code: "q#{i}") }
       forms = create_list(:form, 2, questions: questions, option_set: yes_no)
 
       create_list(:response, 1, form: forms[0], answer_values: %w(Yes Yes Yes))
@@ -90,28 +90,28 @@ describe Report::AnswerTallyReport do
       create_list(:response, 9, form: forms[1], answer_values: %w(No Yes))
 
       report = create_report("AnswerTally", option_set: yes_no)
-      expect(report).to have_data_grid(%w(           Yes No TTL ),
-                                       %w( Question1   6 13  19 ),
-                                       %w( Question2  16  3  19 ),
-                                       %w( Question3   8  2  10 ),
-                                       %w( TTL        30 18  48 ))
+      expect(report).to have_data_grid(%w(    Yes No TTL ),
+                                       %w( q1   6 13  19 ),
+                                       %w( q2  16  3  19 ),
+                                       %w( q3   8  2  10 ),
+                                       %w( TTL 30 18  48 ))
 
       # Try question_labels == 'title'
       report = create_report("AnswerTally", option_set: yes_no, question_labels: "title")
 
-      expect(report).to have_data_grid(%w(                  Yes No TTL ),
-                                       %w( Question_Title_1   6 13  19 ),
-                                       %w( Question_Title_2  16  3  19 ),
-                                       %w( Question_Title_3   8  2  10 ),
-                                                     %w(TTL  30 18  48 ))
+      expect(report).to have_data_grid(%w(    Yes No TTL ),
+                                       %w( Q1   6 13  19 ),
+                                       %w( Q2  16  3  19 ),
+                                       %w( Q3   8  2  10 ),
+                                       %w(TTL  30 18  48 ))
 
       # Try with joined-attrib filter
       report = create_report("AnswerTally", option_set: yes_no, filter: %Q{form: "#{forms[0].name}"})
-      expect(report).to have_data_grid(%w(           Yes No TTL ),
-                                       %w( Question1   6  4  10 ),
-                                       %w( Question2   7  3  10 ),
-                                       %w( Question3   8  2  10 ),
-                                       %w( TTL        21  9  30 ))
+      expect(report).to have_data_grid(%w(    Yes No TTL ),
+                                       %w( q1   6  4  10 ),
+                                       %w( q2   7  3  10 ),
+                                       %w( q3   8  2  10 ),
+                                       %w( TTL 21  9  30 ))
     end
 
     it "counts of options for specific questions across two option sets" do
