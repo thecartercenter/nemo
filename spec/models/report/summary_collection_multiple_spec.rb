@@ -17,16 +17,16 @@ describe "summary collection with multiple subsets" do
     prepare_form_and_collection('integer', 'select_one', {'a' => [1,2,4,6], 'b' => [8,9]})
     expect(header_names_for_disagg_value('a')).to eq(%w(Average Minimum Maximum))
     expect(header_names_for_disagg_value('b')).to eq(%w(Average Minimum Maximum))
-    expect(:stat)).to eq([3.25, 1, 6], items_for_disagg_value('a')
-    expect(:stat)).to eq([8.5, 8, 9], items_for_disagg_value('b')
+    expect(items_for_disagg_value('a', :stat)).to eq([3.25, 1, 6])
+    expect(items_for_disagg_value('b', :stat)).to eq([8.5, 8, 9])
   end
 
  it "collections with select_one questions should have correct summaries" do
     prepare_form_and_collection('select_one', 'select_one', {'a' => ['red', 'red', 'blue'], 'b' => ['blue', 'red', 'blue', 'blue']})
     expect(header_names_for_disagg_value('a')).to eq(%w(red blue green))
     expect(header_names_for_disagg_value('b')).to eq(%w(red blue green))
-    expect(:count)).to eq([2, 1, 0], items_for_disagg_value('a')
-    expect(:count)).to eq([1, 3, 0], items_for_disagg_value('b')
+    expect(items_for_disagg_value('a', :count)).to eq([2, 1, 0])
+    expect(items_for_disagg_value('b', :count)).to eq([1, 3, 0])
   end
 
  it "collections with select_multiple questions should have correct summaries" do
@@ -35,8 +35,8 @@ describe "summary collection with multiple subsets" do
 
     expect(header_names_for_disagg_value('a')).to eq(%w(red blue green))
     expect(header_names_for_disagg_value('b')).to eq(%w(red blue green))
-    expect(:count)).to eq([2, 0, 1], items_for_disagg_value('a')
-    expect(:count)).to eq([1, 2, 1], items_for_disagg_value('b')
+    expect(items_for_disagg_value('a', :count)).to eq([2, 0, 1])
+    expect(items_for_disagg_value('b', :count)).to eq([1, 2, 1])
   end
 
  it "collections with date questions should have correct summaries" do
@@ -48,8 +48,8 @@ describe "summary collection with multiple subsets" do
     expect(header_names_for_disagg_value('b')).to eq(['Sep 22 2012', 'Jul 22 2013'])
 
     # check that tallies are correct
-    expect(:count)).to eq([1, 2], items_for_disagg_value('a')
-    expect(:count)).to eq([1, 3], items_for_disagg_value('b')
+    expect(items_for_disagg_value('a', :count)).to eq([1, 2])
+    expect(items_for_disagg_value('b', :count)).to eq([1, 3])
   end
 
  it "collections with text questions should have correct summaries" do
@@ -57,8 +57,8 @@ describe "summary collection with multiple subsets" do
       {'a' => %w(foo bar baz), 'b' => %w(bing bop) + [nil]}, :dont_shuffle => true)
 
     # check that items are correct
-    expect(:text)).to eq(%w(foo bar baz), items_for_disagg_value('a')
-    expect(:text)).to eq(%w(bing bop), items_for_disagg_value('b')
+    expect(items_for_disagg_value('a', :text)).to eq(%w(foo bar baz))
+    expect(items_for_disagg_value('b', :text)).to eq(%w(bing bop))
     expect(null_count_for_disagg_value('a')).to eq(0)
     expect(null_count_for_disagg_value('b')).to eq(1)
   end
@@ -94,9 +94,9 @@ describe "summary collection with multiple subsets" do
     expect(header_names_for_disagg_value('a')).to eq(%w(Average Minimum Maximum))
     expect(header_names_for_disagg_value('b')).to eq(%w(Average Minimum Maximum))
     expect(header_names_for_disagg_value(nil)).to eq(%w(Average Minimum Maximum))
-    expect(:stat)).to eq([3.25, 1, 6], items_for_disagg_value('a')
-    expect(:stat)).to eq([8.5, 8, 9], items_for_disagg_value('b')
-    expect(:stat)).to eq([3.5, 2, 5], items_for_disagg_value(nil)
+    expect(items_for_disagg_value('a', :stat)).to eq([3.25, 1, 6])
+    expect(items_for_disagg_value('b', :stat)).to eq([8.5, 8, 9])
+    expect(items_for_disagg_value(nil, :stat)).to eq([3.5, 2, 5])
   end
 
   def prepare_form_and_collection(*args)

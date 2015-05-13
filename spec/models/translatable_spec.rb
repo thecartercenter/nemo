@@ -22,8 +22,8 @@ describe 'Translatable' do
     expect(a.name).to eq("foo")
     expect(a.name_en).to eq("foo")
     expect(a.name(:fr)).to eq(nil)
-    expect(:strict => false)).to eq("foo", a.name(:fr)
-    expect(:strict => false)).to eq("foo", a.name("fr")
+    expect(a.name(:fr, :strict => false)).to eq("foo")
+    expect(a.name("fr", :strict => false)).to eq("foo")
     expect(a.name_fr(:strict => false)).to eq("foo")
 
     a.name = "bar"

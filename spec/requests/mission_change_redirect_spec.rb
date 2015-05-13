@@ -80,7 +80,7 @@ describe 'redirect on mission change' do
     # and make sure the redirect afterward is correct.
     get(params[:from].gsub('mission1', 'mission2'), missionchange: 1)
 
-    expect(flash[:error], 'Should be no error message for mission change redirects').to be_nil
+    expect(flash[:error]).to be_nil, 'Should be no error message for mission change redirects'
 
     # We should expect a redirect to remove the missionchange param
     expect(response).to be_redirect

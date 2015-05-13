@@ -18,26 +18,23 @@ describe "summary collection with single subset" do
 
     @collection = Report::SummaryCollectionBuilder.new(@form.questionings, nil, :restrict_to_user => observer).build
 
-    expect(:stat)).to eq({:mean => 5.0, :max => 10, :min => 1}, headers_and_items(:stat)
+    expect(headers_and_items(:stat, :stat)).to eq({:mean => 5.0, :max => 10, :min => 1})
   end
 
   it "integer summary should be correct" do
     prepare_form_and_collection('integer', [10, 7, 6, 1, 1])
-    # expect(:stat)).to eq({:mean => 5.0, :median => 6.0, :max => 10, :min => 1}, headers_and_items(:stat)
-    expect(:stat)).to eq({:mean => 5.0, :max => 10, :min => 1}, headers_and_items(:stat)
+    expect(headers_and_items(:stat, :stat)).to eq({:mean => 5.0, :max => 10, :min => 1})
   end
 
   it "integer summary should not include nil or blank values" do
     prepare_form_and_collection('integer', [5, nil, '', 2])
-    # expect(:stat)).to eq({:mean => 3.5, :median => 3.5, :max => 5, :min => 2}, headers_and_items(:stat)
-    expect(:stat)).to eq({:mean => 3.5, :max => 5, :min => 2}, headers_and_items(:stat)
+    expect(headers_and_items(:stat, :stat)).to eq({:mean => 3.5, :max => 5, :min => 2})
   end
 
   it "integer summary values should be correct type" do
     prepare_form_and_collection('integer', [1])
     items = first_summary.items
     expect(items[0].stat.class).to eq(Float) # mean
-    # expect(items[1].stat.class).to eq(Float) # median
     expect(items[1].stat.class).to eq(Fixnum) # max
     expect(items[2].stat.class).to eq(Fixnum) # min
   end
@@ -59,8 +56,7 @@ describe "summary collection with single subset" do
 
   it "decimal summary should be correct in normal case" do
     prepare_form_and_collection('decimal', [10.0, 7.2, 6.7, 1.1, 11.5])
-    # expect(:stat)).to eq({:mean => 7.3, :median => 7.2, :max => 11.5, :min => 1.1}, headers_and_items(:stat)
-    expect(:stat)).to eq({:mean => 7.3, :max => 11.5, :min => 1.1}, headers_and_items(:stat)
+    expect(headers_and_items(:stat, :stat)).to eq({:mean => 7.3, :max => 11.5, :min => 1.1})
   end
 
   it "decimal summary should be correct with no non-blank values" do
@@ -72,7 +68,6 @@ describe "summary collection with single subset" do
     prepare_form_and_collection('decimal', [1])
     items = first_summary.items
     expect(items[0].stat.class).to eq(Float) # mean
-    #expect(items[1].stat.class).to eq(Float) # median
     expect(items[1].stat.class).to eq(Float) # max
     expect(items[2].stat.class).to eq(Float) # min
   end
@@ -80,15 +75,15 @@ describe "summary collection with single subset" do
   it "select_one summary should be correct in normal case" do
     prepare_form_and_collection('select_one', %w(Yes No No No))
     options = @form.questions[0].option_set.options
-    expect(:count)).to eq({options[0] => 1, options[1] => 3}, headers_and_items(:option)
-    expect(:pct)).to eq({options[0] => 25.0, options[1] => 75.0}, headers_and_items(:option)
+    expect(headers_and_items(:option, :count)).to eq({options[0] => 1, options[1] => 3})
+    expect(headers_and_items(:option, :pct)).to eq({options[0] => 25.0, options[1] => 75.0})
   end
 
   it "select_one summary should be correct with multilevel option set" do
     prepare_form_and_collection('multi_level_select_one', [%w(Animal Dog), %w(Animal), %w(Animal Cat), %w(Plant Tulip)])
     animal, plant = @form.questions[0].option_set.options # Top level options
-    expect(:count)).to eq({animal => 3, plant => 1}, headers_and_items(:option)
-    expect(:pct)).to eq({animal => 75.0, plant => 25.0}, headers_and_items(:option)
+    expect(headers_and_items(:option, :count)).to eq({animal => 3, plant => 1})
+    expect(headers_and_items(:option, :pct)).to eq({animal => 75.0, plant => 25.0})
   end
 
   it "null_count should be correct for select_one" do
@@ -99,15 +94,15 @@ describe "summary collection with single subset" do
   it "select_one summary should still have items if no values" do
     prepare_form_and_collection('select_one', [nil, nil])
     options = @form.questions[0].option_set.options
-    expect(:count)).to eq({options[0] => 0, options[1] => 0}, headers_and_items(:option)
-    expect(:pct)).to eq({options[0] => 0, options[1] => 0}, headers_and_items(:option)
+    expect(headers_and_items(:option, :count)).to eq({options[0] => 0, options[1] => 0})
+    expect(headers_and_items(:option, :pct)).to eq({options[0] => 0, options[1] => 0})
   end
 
   it "select_multiple summary should be correct in normal case" do
     prepare_form_and_collection('select_multiple', [%w(A), %w(B C), %w(A C), %w(C)], :option_names => %w(A B C))
     options = @form.questions[0].option_set.options
-    expect(:count)).to eq({options[0] => 2, options[1] => 1, options[2] => 3}, headers_and_items(:option)
-    expect(:pct)).to eq({options[0] => 50.0, options[1] => 25.0, options[2] => 75.0}, headers_and_items(:option)
+    expect(headers_and_items(:option, :count)).to eq({options[0] => 2, options[1] => 1, options[2] => 3})
+    expect(headers_and_items(:option, :pct)).to eq({options[0] => 50.0, options[1] => 25.0, options[2] => 75.0})
   end
 
   it "null_count should always be zero for select_multiple" do
@@ -117,8 +112,8 @@ describe "summary collection with single subset" do
 
   it "date question summary should be correct in normal case" do
     prepare_form_and_collection('date', %w(20131026 20131027 20131027 20131028))
-    expect(:count)).to eq({Date.parse('20131026') => 1, Date.parse('20131027') => 2, Date.parse('20131028') => 1}, headers_and_items(:date)
-    expect(:pct)).to eq({Date.parse('20131026') => 25.0, Date.parse('20131027') => 50.0, Date.parse('20131028') => 25.0}, headers_and_items(:date)
+    expect(headers_and_items(:date, :count)).to eq({Date.parse('20131026') => 1, Date.parse('20131027') => 2, Date.parse('20131028') => 1})
+    expect(headers_and_items(:date, :pct)).to eq({Date.parse('20131026') => 25.0, Date.parse('20131027') => 50.0, Date.parse('20131028') => 25.0})
   end
 
   it "date question summary headers should be sorted properly" do
@@ -128,12 +123,12 @@ describe "summary collection with single subset" do
 
   it "date question summary should work with null values" do
     prepare_form_and_collection('date', ['20131027', nil])
-    expect(:count)).to eq({Date.parse('20131027') => 1}, headers_and_items(:date)
+    expect(headers_and_items(:date, :count)).to eq({Date.parse('20131027') => 1})
   end
 
   it "date question summary should work with no responses" do
     prepare_form_and_collection('date', [])
-    expect(:count)).to eq({}, headers_and_items(:date)
+    expect(headers_and_items(:date, :count)).to eq({})
   end
 
   it "null_count should be correct for date question summary" do
@@ -143,10 +138,7 @@ describe "summary collection with single subset" do
 
   it "time question summary should be correct in normal case" do
     prepare_form_and_collection('time', %w(9:30 10:15 22:15))
-
-    # check stats
-    # expect(:stat)).to eq({:mean => tp('14:00'), :median => tp('10:15'), :min => tp('9:30'), :max => tp('22:15')}, headers_and_items(:stat)
-    expect(:stat)).to eq({:mean => '14:00', :min => '09:30', :max => '22:15'}, headers_and_items(:stat)
+    expect(headers_and_items(:stat, :stat)).to eq({:mean => '14:00', :min => '09:30', :max => '22:15'})
   end
 
   it "null_count should be correct for time" do
@@ -161,13 +153,8 @@ describe "summary collection with single subset" do
 
   it "datetime summary should be correct in normal case" do
     prepare_form_and_collection('datetime', ['2013-10-26 18:45', '2013-10-26 10:15', '2013-10-27 19:00'])
-
-    # check stats
-    # expect(#   :min => dtp('2013-10-26 10:15'), :max => dtp('2013-10-27 19:00').to eq({:mean => dtp('2013-10-27 00:00'), :median => dtp('2013-10-26 18:45'))},
-    #   headers_and_items(:stat, :stat))
-    assert_equal({:mean => 'Oct 27 2013 00:00',
-      :min => 'Oct 26 2013 10:15', :max => 'Oct 27 2013 19:00'},
-      headers_and_items(:stat, :stat))
+    expect(headers_and_items(:stat, :stat)).to eq({:mean => 'Oct 27 2013 00:00',
+      :min => 'Oct 26 2013 10:15', :max => 'Oct 27 2013 19:00'})
   end
 
   it "null_count should be correct for datetime" do

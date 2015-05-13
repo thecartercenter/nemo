@@ -60,7 +60,7 @@ describe Report::AnswerTallyReport do
 
   context 'with multilevel option set' do
     before do
-      @form = create(:form, question_types: %w(select_one), use_multilevel_option_set: true)
+      @form = create(:form, question_types: %w(multi_level_select_one))
       create(:response, form: @form, answer_values: [['Animal', 'Cat']])
       create(:response, form: @form, answer_values: [['Animal', 'Dog']])
       create(:response, form: @form, answer_values: [['Animal']])
