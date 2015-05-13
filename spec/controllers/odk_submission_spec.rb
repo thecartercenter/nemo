@@ -15,11 +15,11 @@ describe 'odk submissions', type: :request do
 
     describe 'get and head requests' do
       it 'should return 204 and no content' do
-        head(submission_path, {:format => 'xml'}, 'HTTP_AUTHORIZATION' => encode_credentials(@user.login, TEST_PASSWORD))
+        head(submission_path, {:format => 'xml'}, 'HTTP_AUTHORIZATION' => encode_credentials(@user.login, test_password))
         expect(response.response_code).to eq 204
         expect(response.body).to be_empty
 
-        get(submission_path, {:format => 'xml'}, 'HTTP_AUTHORIZATION' => encode_credentials(@user.login, TEST_PASSWORD))
+        get(submission_path, {:format => 'xml'}, 'HTTP_AUTHORIZATION' => encode_credentials(@user.login, test_password))
         expect(response.response_code).to eq 204
         expect(response.body).to be_empty
       end
@@ -149,13 +149,12 @@ describe 'odk submissions', type: :request do
 
     # write xml to file
     require 'fileutils'
-    FileUtils.mkpath('test/fixtures')
-    fixture_file = Rails.root.join('test/fixtures/', ODK_XML_FILE)
+    fixture_file = Rails.root.join(Rails.root, 'tmp', ODK_XML_FILE)
     File.open(fixture_file.to_s, 'w') { |f| f.write(xml) }
 
     # Upload and do request.
     uploaded = fixture_file_upload(fixture_file, 'text/xml')
-    post(path, {:xml_submission_file => uploaded, :format => 'xml'}, 'HTTP_AUTHORIZATION' => encode_credentials(@user.login, TEST_PASSWORD))
+    post(path, {:xml_submission_file => uploaded, :format => 'xml'}, 'HTTP_AUTHORIZATION' => encode_credentials(@user.login, test_password))
     assigns(:response)
   end
 

@@ -52,6 +52,8 @@ class Form < ActiveRecord::Base
            :descendants,
            to: :root_group
 
+  delegate :code, to: :current_version
+
   replicable child_assocs: :root_group, uniqueness: {field: :name, style: :sep_words},
     dont_copy: [:published, :pub_changed_at, :downloads, :responses_count, :upgrade_needed,
       :smsable, :current_version_id, :allow_incomplete, :access_level, :root_id]
@@ -199,22 +201,6 @@ class Form < ActiveRecord::Base
   def needs_odk_manifest?
     # For now this is IFF there are any multilevel option sets
     @needs_odk_manifest ||= option_sets.any?(&:multi_level?)
-  end
-
-  # Takes a hash of the form {questioning_id => new_rank, ...}
-  # Assumes all questionings are listed in the hash.
-  def update_ranks(new_ranks)
-    # Sort and ensure sequential.
-    sorted = new_ranks.to_a.sort_by{ |id,rank| rank }.each_with_index.map{|pair, idx| [pair[0], idx+1]}
-    new_ranks = Hash[*sorted.flatten]
-
-    # Validate the condition orderings (raises an error if they're invalid).
-    root_questionings.each{|qing| qing.condition_verify_ordering(new_ranks)}
-
-    # Assign.
-    new_ranks.each do |id, rank|
-      Questioning.find(id).update_attribute(:rank, rank)
-    end
   end
 
   def destroy_questionings(qings)

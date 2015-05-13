@@ -3,7 +3,7 @@ require 'spec_helper'
 # Using request spec b/c Authlogic won't work with controller spec
 describe ResponsesController, type: :request do
   before do
-    @form = create(:form, question_types: %w(integer select_one), use_multilevel_option_set: true)
+    @form = create(:form, question_types: %w(integer multi_level_select_one))
     @option_set = OptionSet.first
     @plant = @option_set.root_node.c[1].option
     @tulip = @option_set.root_node.c[1].c[0].option

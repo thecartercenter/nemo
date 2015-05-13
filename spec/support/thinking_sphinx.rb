@@ -9,6 +9,12 @@ RSpec.configure do |config|
       example.run
     end
   end
+
+  config.around(:each, no_sphinx: true) do |example|
+    ThinkingSphinx::Deltas.suspend(:answers) do
+      example.run
+    end
+  end
 end
 
 module SphinxSupport

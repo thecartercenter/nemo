@@ -9,34 +9,34 @@ describe "summary collection with multiple subsets" do
     # build a form with two questions: the one we want to analyze and the one we want to disaggregate by
     prepare_form_and_collection('integer', 'select_one', {'a' => [1,2,4], 'b' => [8,9]})
     options = @form.questionings[1].options
-    assert_equal(options[0], @collection.subsets[0].disagg_value)
-    assert_equal(options[1], @collection.subsets[1].disagg_value)
+    expect(@collection.subsets[0].disagg_value).to eq(options[0])
+    expect(@collection.subsets[1].disagg_value).to eq(options[1])
   end
 
  it "collections with integer questions should have correct summaries" do
     prepare_form_and_collection('integer', 'select_one', {'a' => [1,2,4,6], 'b' => [8,9]})
-    assert_equal(%w(Average Minimum Maximum), header_names_for_disagg_value('a'))
-    assert_equal(%w(Average Minimum Maximum), header_names_for_disagg_value('b'))
-    assert_equal([3.25, 1, 6], items_for_disagg_value('a', :stat))
-    assert_equal([8.5, 8, 9], items_for_disagg_value('b', :stat))
+    expect(header_names_for_disagg_value('a')).to eq(%w(Average Minimum Maximum))
+    expect(header_names_for_disagg_value('b')).to eq(%w(Average Minimum Maximum))
+    expect(items_for_disagg_value('a', :stat)).to eq([3.25, 1, 6])
+    expect(items_for_disagg_value('b', :stat)).to eq([8.5, 8, 9])
   end
 
  it "collections with select_one questions should have correct summaries" do
     prepare_form_and_collection('select_one', 'select_one', {'a' => ['red', 'red', 'blue'], 'b' => ['blue', 'red', 'blue', 'blue']})
-    assert_equal(%w(red blue green), header_names_for_disagg_value('a'))
-    assert_equal(%w(red blue green), header_names_for_disagg_value('b'))
-    assert_equal([2, 1, 0], items_for_disagg_value('a', :count))
-    assert_equal([1, 3, 0], items_for_disagg_value('b', :count))
+    expect(header_names_for_disagg_value('a')).to eq(%w(red blue green))
+    expect(header_names_for_disagg_value('b')).to eq(%w(red blue green))
+    expect(items_for_disagg_value('a', :count)).to eq([2, 1, 0])
+    expect(items_for_disagg_value('b', :count)).to eq([1, 3, 0])
   end
 
  it "collections with select_multiple questions should have correct summaries" do
     prepare_form_and_collection('select_multiple', 'select_one',
       {'a' => [['red'], ['red', 'green'], []], 'b' => [['blue', 'red'], ['blue', 'green']]})
 
-    assert_equal(%w(red blue green), header_names_for_disagg_value('a'))
-    assert_equal(%w(red blue green), header_names_for_disagg_value('b'))
-    assert_equal([2, 0, 1], items_for_disagg_value('a', :count))
-    assert_equal([1, 2, 1], items_for_disagg_value('b', :count))
+    expect(header_names_for_disagg_value('a')).to eq(%w(red blue green))
+    expect(header_names_for_disagg_value('b')).to eq(%w(red blue green))
+    expect(items_for_disagg_value('a', :count)).to eq([2, 0, 1])
+    expect(items_for_disagg_value('b', :count)).to eq([1, 2, 1])
   end
 
  it "collections with date questions should have correct summaries" do
@@ -44,12 +44,12 @@ describe "summary collection with multiple subsets" do
       {'a' => %w(2012-10-26 2011-07-22 2012-10-26), 'b' => %w(2013-07-22 2012-9-22 2013-07-22 2013-07-22)})
 
     # check that headers are correct and in correct order
-    assert_equal(['Jul 22 2011', 'Oct 26 2012'], header_names_for_disagg_value('a'))
-    assert_equal(['Sep 22 2012', 'Jul 22 2013'], header_names_for_disagg_value('b'))
+    expect(header_names_for_disagg_value('a')).to eq(['Jul 22 2011', 'Oct 26 2012'])
+    expect(header_names_for_disagg_value('b')).to eq(['Sep 22 2012', 'Jul 22 2013'])
 
     # check that tallies are correct
-    assert_equal([1, 2], items_for_disagg_value('a', :count))
-    assert_equal([1, 3], items_for_disagg_value('b', :count))
+    expect(items_for_disagg_value('a', :count)).to eq([1, 2])
+    expect(items_for_disagg_value('b', :count)).to eq([1, 3])
   end
 
  it "collections with text questions should have correct summaries" do
@@ -57,10 +57,10 @@ describe "summary collection with multiple subsets" do
       {'a' => %w(foo bar baz), 'b' => %w(bing bop) + [nil]}, :dont_shuffle => true)
 
     # check that items are correct
-    assert_equal(%w(foo bar baz), items_for_disagg_value('a', :text))
-    assert_equal(%w(bing bop), items_for_disagg_value('b', :text))
-    assert_equal(0, null_count_for_disagg_value('a'))
-    assert_equal(1, null_count_for_disagg_value('b'))
+    expect(items_for_disagg_value('a', :text)).to eq(%w(foo bar baz))
+    expect(items_for_disagg_value('b', :text)).to eq(%w(bing bop))
+    expect(null_count_for_disagg_value('a')).to eq(0)
+    expect(null_count_for_disagg_value('b')).to eq(1)
   end
 
  it "collection subsets should be correct if no answers for one of the options" do
@@ -68,17 +68,17 @@ describe "summary collection with multiple subsets" do
     options = @form.questionings[1].options
 
     # subset should still be created
-    assert_equal(options[2], @collection.subsets[2].disagg_value)
+    expect(@collection.subsets[2].disagg_value).to eq(options[2])
 
     # but should be marked no_data
-    assert_equal(true, @collection.subsets[2].no_data?)
+    expect(@collection.subsets[2].no_data?).to eq(true)
   end
 
  it "collection should work if there are no answers at all" do
     prepare_form_and_collection('integer', 'select_one', {'a' => [], 'b' => []})
 
     # collection should be marked no_data
-    assert_equal(true, @collection.no_data?)
+    expect(@collection.no_data?).to eq(true)
   end
 
  it "the disaggregation question should not be included in the report output" do
@@ -86,17 +86,17 @@ describe "summary collection with multiple subsets" do
     prepare_form_and_collection('integer', 'select_one', {'a' => [1,2,4,6], 'b' => [8,9], 'c' => []})
 
     # there should only be one summary (integer type) in each subset. the select_one question should not be included.
-    assert_equal(%w(integer), @collection.subsets[0].summaries.map{|s| s.qtype.name})
+    expect(@collection.subsets[0].summaries.map{|s| s.qtype.name}).to eq(%w(integer))
   end
 
  it "a nil disaggregation value should still have a subset" do
     prepare_form_and_collection('integer', 'select_one', {'a' => [1,2,4,6], 'b' => [8,9], nil => [2,5]})
-    assert_equal(%w(Average Minimum Maximum), header_names_for_disagg_value('a'))
-    assert_equal(%w(Average Minimum Maximum), header_names_for_disagg_value('b'))
-    assert_equal(%w(Average Minimum Maximum), header_names_for_disagg_value(nil))
-    assert_equal([3.25, 1, 6], items_for_disagg_value('a', :stat))
-    assert_equal([8.5, 8, 9], items_for_disagg_value('b', :stat))
-    assert_equal([3.5, 2, 5], items_for_disagg_value(nil, :stat))
+    expect(header_names_for_disagg_value('a')).to eq(%w(Average Minimum Maximum))
+    expect(header_names_for_disagg_value('b')).to eq(%w(Average Minimum Maximum))
+    expect(header_names_for_disagg_value(nil)).to eq(%w(Average Minimum Maximum))
+    expect(items_for_disagg_value('a', :stat)).to eq([3.25, 1, 6])
+    expect(items_for_disagg_value('b', :stat)).to eq([8.5, 8, 9])
+    expect(items_for_disagg_value(nil, :stat)).to eq([3.5, 2, 5])
   end
 
   def prepare_form_and_collection(*args)

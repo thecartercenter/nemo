@@ -62,13 +62,13 @@ describe Condition do
 
   describe 'to_odk' do
     # q, c = build_condition
-    # assert_equal("/data/q#{q.previous[0].question.id} = #{c.value}", c.to_odk)
+    # expect(c.to_odk).to eq("/data/q#{q.previous[0].question.id} = #{c.value}")
     # q, c = build_condition(:question_types => %w(select_one integer))
-    # assert_equal("selected(/data/q#{q.previous[0].question.id}, '#{c.option_id}')", c.to_odk)
+    # expect(c.to_odk).to eq("selected(/data/q#{q.previous[0].question.id}, '#{c.option_id}')")
     # q, c = build_condition(:question_types => %w(select_one integer), :op => 'neq')
-    # assert_equal("not(selected(/data/q#{q.previous[0].question.id}, '#{c.option_id}'))", c.to_odk)
+    # expect(c.to_odk).to eq("not(selected(/data/q#{q.previous[0].question.id}, '#{c.option_id}'))")
     # q, c = build_condition(:question_types => %w(datetime integer), :op => 'neq', :value => '2013-04-30 2:14pm')
-    # assert_equal("format-date(/data/q#{q.previous[0].question.id}, '%Y%m%d%H%M') != '201304301414'", c.to_odk)
+    # expect(c.to_odk).to eq("format-date(/data/q#{q.previous[0].question.id}, '%Y%m%d%H%M') != '201304301414'")
 
     context 'for single level select one question' do
       before do
@@ -90,7 +90,7 @@ describe Condition do
 
     context 'for multilevel select one question' do
       before do
-        @form = create(:form, question_types: %w(select_one), use_multilevel_option_set: true)
+        @form = create(:form, question_types: %w(multi_level_select_one))
         @qing = @form.questionings[0]
         @oset = @qing.option_set
       end
@@ -217,7 +217,7 @@ describe Condition do
 
     context 'for multi level select ref question' do
       before do
-        @form = create(:form, question_types: %w(select_one), use_multilevel_option_set: true)
+        @form = create(:form, question_types: %w(multi_level_select_one))
         @sel_q = @form.questionings.first
       end
 
@@ -286,23 +286,6 @@ describe Condition do
 
     it 'should be correct' do
       expect(@cond.applicable_operator_names).to eq %w(eq neq)
-    end
-  end
-
-  describe 'verify ordering' do
-    before do
-      @form = create(:form, question_types: %w(integer integer))
-      @qings = @form.questionings
-    end
-
-    it 'should raise error when qing comes before ref_qing' do
-      @cond = create(:condition, questioning: @form.questionings[1], ref_qing: @form.questionings[0])
-      expect{@cond.verify_ordering(@qings[0].id => 2, @qings[1].id => 1)}.to raise_error(ConditionOrderingError)
-    end
-
-    it 'should not raise error if ordering is correct' do
-      @cond = create(:condition, questioning: @form.questionings[1], ref_qing: @form.questionings[0])
-      expect{@cond.verify_ordering(@qings[0].id => 1, @qings[1].id => 2)}.not_to raise_error
     end
   end
 end

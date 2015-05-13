@@ -103,15 +103,15 @@ describe Response do
           fail("No error was raised.")
         end
       else
-        assert_equal(objs_or_error, run_search(query))
+        expect(run_search(query)).to eq(objs_or_error)
       end
     end
 
     # runs a search with the given query and checks the returned excerpts
     def assert_excerpts(query, excerpts)
       responses = run_search(query, include_excerpts: true)
-      assert_equal(excerpts.size, responses.size)
-      responses.each_with_index{|r,i| assert_equal(excerpts[i], r.excerpts)}
+      expect(responses.size).to eq(excerpts.size)
+      responses.each_with_index{|r,i| expect(r.excerpts).to eq(excerpts[i])}
     end
 
     def run_search(query, options = {})

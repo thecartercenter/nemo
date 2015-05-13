@@ -28,41 +28,41 @@ describe Question do
   it "not in form" do
     f = create(:form, question_types: %w(integer integer))
     q = create(:question)
-    assert_equal([q], Question.not_in_form(f).all)
+    expect(Question.not_in_form(f).all).to eq([q])
   end
 
   it "min max error message" do
     q = build(:question, qtype_name: 'integer', minimum: 10, maximum: 20, minstrictly: false, maxstrictly: true)
-    assert_equal('Must be greater than or equal to 10 and less than 20', q.min_max_error_msg)
+    expect(q.min_max_error_msg).to eq('Must be greater than or equal to 10 and less than 20')
   end
 
   it "options" do
     q = create(:question, qtype_name: 'select_one')
     q.reload
-    assert_equal(%w(Cat Dog), q.options.map(&:name))
+    expect(q.options.map(&:name)).to eq(%w(Cat Dog))
     q = create(:question, qtype_name: 'integer', code: 'intq')
-    assert_nil(q.options)
+    expect(q.options).to be_nil
   end
 
   it "integer question should have non-null minstrictly value if minimum is set" do
     q = create(:question, qtype_name: 'integer', minimum: 4, minstrictly: nil)
-    assert_equal(false, q.minstrictly)
+    expect(q.minstrictly).to eq(false)
     q = create(:question, qtype_name: 'integer', minimum: 4, minstrictly: false)
-    assert_equal(false, q.minstrictly)
+    expect(q.minstrictly).to eq(false)
     q = create(:question, qtype_name: 'integer', minimum: 4, minstrictly: true)
-    assert_equal(true, q.minstrictly)
+    expect(q.minstrictly).to eq(true)
   end
 
   it "integer question should have null minstrictly value if minimum is null" do
     q = create(:question, qtype_name: 'integer', minimum: nil, minstrictly: true)
-    assert_nil(q.minstrictly)
+    expect(q.minstrictly).to be_nil
     q = create(:question, qtype_name: 'integer', minimum: nil, minstrictly: false)
-    assert_nil(q.minstrictly)
+    expect(q.minstrictly).to be_nil
   end
 
   it "non numeric questions should have null constraint values" do
     q = create(:question, qtype_name: 'text', minimum: 5, minstrictly: true)
-    assert_nil(q.minimum)
-    assert_nil(q.minstrictly)
+    expect(q.minimum).to be_nil
+    expect(q.minstrictly).to be_nil
   end
 end

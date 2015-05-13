@@ -8,15 +8,15 @@ describe Report::StandardFormReport do
     end
 
     it "form_id should default to nil" do
-      assert_nil(@new_report.form_id)
+      expect(@new_report.form_id).to be_nil
     end
 
     it "question_order should default to number" do
-      assert_equal('number', @new_report.question_order)
+      expect(@new_report.question_order).to eq('number')
     end
 
     it "text_responses should default to all" do
-      assert_equal('all', @new_report.text_responses)
+      expect(@new_report.text_responses).to eq('all')
     end
 
     it "form foreign key should work" do
@@ -28,7 +28,7 @@ describe Report::StandardFormReport do
       build_form_and_responses
       Rails.logger.debug('----------------------------------------------------------------------------------------------')
       build_and_run_report
-      assert_equal(5, @report.response_count)
+      expect(@report.response_count).to eq(5)
     end
 
     it "should return correct response count for a coordinator" do
@@ -40,7 +40,7 @@ describe Report::StandardFormReport do
       @report = create(:standard_form_report, :form => @form)
       @report.run(ability)
 
-      assert_equal(5, @report.response_count)
+      expect(@report.response_count).to eq(5)
     end
 
     it "should return correct response count for an observer" do
@@ -52,7 +52,7 @@ describe Report::StandardFormReport do
       @report = create(:standard_form_report, :form => @form)
       @report.run(ability)
 
-      assert_equal(0, @report.response_count)
+      expect(@report.response_count).to eq(0)
     end
 
     it "should not contain invisible questionings" do
@@ -63,16 +63,16 @@ describe Report::StandardFormReport do
 
       build_and_run_report
 
-      assert(!@report.subsets[0].summaries.map(&:questioning).include?(@form.questionings[1]), "summaries should not contain hidden question")
+      expect(@report.subsets[0].summaries.map(&:questioning).include?(@form.questionings[1])).to be_falsey, "summaries should not contain hidden question"
     end
 
     it "should return summaries matching questions" do
       build_form_and_responses
       build_and_run_report
-      assert_equal('decimal', @report.subsets[0].summaries[2].qtype.name)
+      expect(@report.subsets[0].summaries[2].qtype.name).to eq('decimal')
 
       # We leave out the last questioning on the form since location questions should not be included.
-      assert_equal(@form.questionings[0..3], @report.subsets[0].summaries.map(&:questioning))
+      expect(@report.subsets[0].summaries.map(&:questioning)).to eq(@form.questionings[0..3])
     end
 
     it "should return non-submitting observers" do
@@ -89,32 +89,32 @@ describe Report::StandardFormReport do
 
       # run report and check missing observers
       build_and_run_report
-      assert_equal(%w(cass sal), @report.users_without_responses(:role => :observer).map(&:login).sort)
+      expect(@report.users_without_responses(:role => :observer).map(&:login).sort).to eq(%w(cass sal))
     end
 
     it "empty? should be false if responses" do
       build_form_and_responses
       build_and_run_report
-      assert(!@report.empty?, "report should not be empty")
+      expect(@report.empty?).to be_falsey, "report should not be empty"
     end
 
     it "empty? should be true if no responses" do
       build_form_and_responses(:response_count => 0)
       build_and_run_report
-      assert(@report.empty?, "report should be empty")
+      expect(@report.empty?).to be_truthy, "report should be empty"
     end
 
     it "empty? should be true if no questions" do
       @form = create(:form)
       build_and_run_report
-      assert(@report.empty?, "report should be empty")
+      expect(@report.empty?).to be_truthy, "report should be empty"
     end
 
     it "with numeric question order should have single summary group" do
       build_form_and_responses
       build_and_run_report # defaults to numeric order
-      assert_equal(1, @report.subsets[0].tag_groups[0].type_groups.size)
-      assert_equal('all', @report.subsets[0].tag_groups[0].type_groups[0].type_set)
+      expect(@report.subsets[0].tag_groups[0].type_groups.size).to eq(1)
+      expect(@report.subsets[0].tag_groups[0].type_groups[0].type_set).to eq('all')
     end
 
   end

@@ -13,7 +13,7 @@ describe UsersController, type: :request do
     end
 
     it 'should redirect back to profile but in french' do
-      assert_redirected_to(edit_user_path(@user, :locale => 'fr'))
+      expect(response).to redirect_to(edit_user_path(@user, :locale => 'fr'))
     end
 
     after do
@@ -27,7 +27,7 @@ describe UsersController, type: :request do
     end
 
     it 'should not change the locale on redirect' do
-      assert_redirected_to(edit_user_path(@user, :locale => 'fr'))
+      expect(response).to redirect_to(edit_user_path(@user, :locale => 'fr'))
     end
   end
 end

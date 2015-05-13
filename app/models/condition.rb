@@ -73,15 +73,6 @@ class Condition < ActiveRecord::Base
     ref_qing ? OPERATORS.select{|o| o[:types].include?(ref_qing.qtype_name)}.map{|o| o[:name]} : []
   end
 
-  # Raises a ConditionOrderingError if the questioning ranks given in the ranks hash would cause
-  # this condition to refer to a question later than its main question.
-  # ranks - A hash of qing IDs to ranks.
-  def verify_ordering(ranks)
-    if questioning_id.present? && ref_qing_id.present? && ranks[questioning_id] <= ranks[ref_qing_id]
-      raise ConditionOrderingError.new
-    end
-  end
-
   # Gets the definition of self's operator (self.op).
   def operator
     @operator ||= OPERATORS.detect{|o| o[:name] == op}
