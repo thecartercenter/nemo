@@ -25,6 +25,11 @@ RSpec::Matchers.define :have_data_grid do |*expected|
     # if nil is expected, compute the right expected value
     expected = report.data.totals ? [["TTL"], ["TTL", "0"]] : [] if expected.first.nil?
 
+    # Convert _ to ' '
+    expected.each do |row|
+      row.map!{ |c| c.is_a?(String) ? c.gsub(/_(?=.)/, " ") : c }
+    end
+
     expected == to_grid(report)
   end
 
