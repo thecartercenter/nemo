@@ -107,13 +107,10 @@ class QuestioningsController < ApplicationController
     end
 
     def questioning_params
-      required = params.require(:questioning)
-      translation_params = permit_translations(required[:question_attributes], :name, :hint)
-
-      whitelisted = [:form_id, :allow_incomplete, :access_level, :hidden, :required,
-        condition_attributes: [:ref_qing_id, :op, :value, :option_ids],
-        question_attributes: translation_params + [:id, :code, :tag_ids, :key, :access_level]]
-
-      required.permit(whitelisted)
+      params.require(:questioning).permit(:form_id, :allow_incomplete, :access_level, :hidden, :required,
+        { condition_attributes: [:id, :ref_qing_id, :op, :value, :option_ids,
+          # We need to whitelist each level of the option path. 5 levels should be plenty.
+          option_path_attribs: [%w(0 1 2 3 4)]] },
+        { question_attributes: whitelisted_question_params(params[:questioning][:question_attributes]) })
     end
 end
