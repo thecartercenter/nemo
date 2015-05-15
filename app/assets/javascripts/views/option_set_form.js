@@ -222,7 +222,7 @@
         prepared.option_attribs.id = node.item.option.id;
 
       // recurse
-      prepared.children_attribs = node.children ? self.prepare_option_tree(node.children) : 'NONE';
+      prepared.children_attribs = node.children && node.children.length ? self.prepare_option_tree(node.children) : 'NONE';
 
       return prepared;
     });

@@ -243,7 +243,7 @@ class OptionNode < ActiveRecord::Base
       "\n" + sorted_children.map{ |c| c.to_s_indented(:space => options[:space] + 2) }.join
   end
 
-  private
+  protected
 
     # Special method for creating/updating a tree of nodes via the children_attribs hash.
     # Sets ranks_changed? flag if the ranks of any of the descendants' children change.
@@ -275,6 +275,10 @@ class OptionNode < ActiveRecord::Base
         attribs[:id] = attribs[:id].to_i if attribs.key?(:id)
         if attribs[:id] && matching = children_by_id[attribs[:id]]
           self.ranks_changed = true if matching.rank != i + 1
+
+          # Not sure why this is needed, temporary hack.
+          attribs[:children_attribs] = 'NONE' if attribs[:children_attribs].nil?
+
           matching.update_attributes!(attribs.merge(rank: i + 1))
           copy_flags_from_subnode(matching)
 
@@ -296,6 +300,8 @@ class OptionNode < ActiveRecord::Base
       # Don't need this anymore. Nullify to prevent duplication on future saves.
       self.children_attribs = nil
     end
+
+  private
 
     def copy_flags_from_subnode(node)
       self.ranks_changed = true if node.ranks_changed?

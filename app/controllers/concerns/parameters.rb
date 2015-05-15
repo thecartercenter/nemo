@@ -16,21 +16,16 @@ module Parameters
     whitelisted
   end
 
-  # build permitted array of attributes
-  # for given recursive parameter and permitted structure
-  def permit_children(params, rec_param, permitted)
-    result = []
-    _permit_children(params, rec_param, permitted, result)
-    result
-  end
-
-  private
-    def _permit_children(params, key, permitted, result)
-      result.push(*permitted)
-      params = params[0]
-      return result if params.blank? || params[key].blank?
-
-      result << Hash[key, []]
-      _permit_children(params[key], key, permitted, result.last[key])
+  # Returns an array of permitted param keys that tracks the structure of the given params.
+  def permit_children(params, options)
+    key = options[:key]
+    permitted = options[:permitted]
+    params[key].map do |child|
+      if child[key].present? && child[key] != 'NONE'
+        permitted + [{ key => permit_children(child, options) }]
+      else
+        permitted + [key]
+      end
     end
+  end
 end
