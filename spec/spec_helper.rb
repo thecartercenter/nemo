@@ -13,6 +13,11 @@ Capybara.register_driver :poltergeist do |app|
     extensions: [File.expand_path("../support/phantomjs_ext/geolocation.js", __FILE__)])
 end
 
+Capybara.register_driver :poltergeist_debug do |app|
+  Capybara::Poltergeist::Driver.new(app, inspector: true,
+    extensions: [File.expand_path("../support/phantomjs_ext/geolocation.js", __FILE__)])
+end
+
 Capybara.javascript_driver = :poltergeist
 
 # Requires supporting ruby files with custom matchers and macros, etc,
@@ -57,8 +62,5 @@ RSpec.configure do |config|
   config.after(:each) do
     puts "WARNING: I18n locale was left as #{I18n.locale}" unless I18n.locale = :en
   end
-
-  # Temporarily disabling feature specs because they're broken.
-  config.filter_run_excluding type: :feature
 end
 
