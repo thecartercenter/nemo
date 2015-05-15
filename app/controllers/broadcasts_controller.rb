@@ -73,6 +73,13 @@ class BroadcastsController < ApplicationController
     end
 
     def broadcast_params
+      # Ensure that recipient ids are separated into separate values
+      if params.has_key?(:broadcast) && params[:broadcast].has_key?(:recipient_ids)
+        params[:broadcast][:recipient_ids].tap do |ids|
+          ids.map! { |v| v.split(/\s*,\s*/) }.flatten!
+        end
+      end
+
       params.require(:broadcast).permit(:subject, :body, :medium, :send_errors, :which_phone, :mission_id, recipient_ids: [])
     end
 end
