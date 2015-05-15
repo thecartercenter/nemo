@@ -19,8 +19,9 @@ module SmsHelper
       recips = sms.recipient_hashes(max: MAX_RECIPS_TO_SHOW).map { |r| user_with_phone(r[:user], r[:phone]) }.join('<br/>')
       extra_recipients = sms.recipient_count - MAX_RECIPS_TO_SHOW
       recips << (extra_recipients > 0 ? t('sms.extra_recipients', count: extra_recipients) : '')
+      recips.html_safe
     when "from" then
-      user_with_phone sms.sender, sms.from
+      user_with_phone(sms.sender, sms.from).html_safe
     else sms.send(field)
     end
   end
@@ -31,7 +32,7 @@ module SmsHelper
 
   def user_with_phone(user, phone = nil)
     if user == User::ELMO
-      user.name + (phone.present? ? " <small>(#{phone})</small>" : "")
+      (user.name + (phone.present? ? " <small>(#{phone})</small>" : ""))
     elsif user
       "#{link_to user.name, user_path(user)} <small>(#{phone})</small>"
     else
