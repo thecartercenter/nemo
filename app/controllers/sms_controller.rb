@@ -57,10 +57,10 @@ class SmsController < ApplicationController
 
       if @incoming_adapter.reply_style == :via_adapter
         @outgoing_adapter.deliver(reply)
-        render :text => 'REPLY_SENT'
+        render :plain => 'REPLY_SENT'
       else # reply via response
         @incoming_adapter.prepare_message_for_delivery(reply)
-        render :text => reply.body
+        render :plain => reply.body
       end
     end
 end
