@@ -34,7 +34,8 @@ class Broadcast < ActiveRecord::Base
   end
 
   def recipient_ids=(ids)
-    self.recipients = ids.split(",").collect{|id| User.find_by_id(id)}.compact
+    ids = Array.wrap(ids).flat_map { |e| e.split(",") }
+    self.recipients = ids.collect{|id| User.find_by_id(id)}.compact
   end
 
   def sms_possible?
