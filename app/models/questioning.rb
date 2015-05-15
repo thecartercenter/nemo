@@ -76,8 +76,11 @@ class Questioning < FormItem
     referring_conditions.map{|c| c.questioning.full_dotted_rank}
   end
 
-  # returns any questionings appearing before this one on the form
+  # Returns any questionings appearing before this one on the form.
+  # For an unsaved questioning, returns all questions on form.
+  # If an unsaved question does not have a form defined, this will result in an error.
   def previous
+    return form.questionings if new_record?
     form.questionings.reject{ |q| q == self || (q.full_rank <=> full_rank) == 1 }
   end
 
