@@ -1,7 +1,7 @@
 class Sms::Adapters::TwilioAdapter < Sms::Adapters::Adapter
   # checks if this adapter recognizes an incoming http receive request
   def self.recognize_receive_request?(request)
-    request.headers.has_key?('X-Twilio-Signature')
+    request.headers.include?('X-Twilio-Signature')
   end
 
   def self.can_deliver?
