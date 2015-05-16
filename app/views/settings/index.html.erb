@@ -26,7 +26,7 @@
 
       <%= f.field(:intellisms_username, :append => link_to(t("setting.change_sms_password"), "#")) %>
 
-      <div class="password_fields">
+      <div class="credential_fields">
         <%= f.field(:intellisms_password1, :type => :password) %>
         <%= f.field(:intellisms_password2, :type => :password) %>
       </div>
@@ -66,5 +66,9 @@
 
 <%= javascript_doc_ready do %>
   // instantiate the frontend view object to handle the interactive stuff
-  new ELMO.Views.SettingsView();
+  new ELMO.Views.SettingsView(<%=json(
+    need_credentials: {
+      IntelliSms: @setting.intellisms_password.blank?
+    }
+  )%>);
 <% end %>

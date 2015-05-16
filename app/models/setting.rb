@@ -19,7 +19,7 @@ class Setting < ActiveRecord::Base
   validate(:one_locale_must_have_translations)
   validate(:sms_adapter_is_valid)
   validate(:sms_credentials_are_valid)
-  before_save(:save_sms_passwords)
+  before_save(:save_sms_credentials)
 
   serialize :preferred_locales, JSON
 
@@ -168,12 +168,12 @@ class Setting < ActiveRecord::Base
       end
     end
 
-    # if the sms password temp fields are set (and they match, which is checked above), copy the value to the real field
-    def save_sms_passwords
-      unless outgoing_sms_adapter.blank?
-        adapter = outgoing_sms_adapter.downcase
-        input = send("#{adapter}_password1") rescue nil
-        send("#{adapter}_password=", input) unless input.blank?
+    # if the sms credentials temp fields are set (and they match, which is checked above), copy the value to the real field
+    def save_sms_credentials
+      puts "Adapter: #{outgoing_sms_adapter}"
+      case outgoing_sms_adapter
+      when "IntelliSms"
+        self.intellisms_password = intellisms_password1 unless intellisms_password1.blank?
       end
       return true
     end
