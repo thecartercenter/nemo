@@ -11,7 +11,25 @@ class Sms::Adapters::TwilioAdapter < Sms::Adapters::Adapter
   end
 
   def deliver(message)
-    raise NotImplementedError
+    prepare_message_for_delivery(message)
+
+    client = Twilio::REST::Client.new configatron.twilio_account_sid, configatron.twilio_auth_token
+
+    params = { from: message.from, to: message.to, body: message.body }
+    Rails.logger.info("Sending Twilio message: #{params}")
+
+    return true if Rails.env.test?
+
+    begin
+      client.messages.create(
+        from: configatron.incoming_sms_number,
+        to: message.recipient_numbers.join(','),
+        body: message.body)
+    rescue Twilio::REST::RequestError => e
+      raise Sms::Error.new(e)
+    end
+
+    return true
   end
 
   def receive(request)
