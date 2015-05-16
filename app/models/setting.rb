@@ -173,7 +173,6 @@ class Setting < ActiveRecord::Base
 
     # if the sms credentials temp fields are set (and they match, which is checked above), copy the value to the real field
     def save_sms_credentials
-      puts "Adapter: #{outgoing_sms_adapter}"
       case outgoing_sms_adapter
       when "IntelliSms"
         self.intellisms_password = intellisms_password1 unless intellisms_password1.blank?
