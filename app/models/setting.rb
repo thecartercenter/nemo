@@ -24,7 +24,7 @@ class Setting < ActiveRecord::Base
   serialize :preferred_locales, JSON
 
   # accessors for password/password confirm fields
-  attr_accessor :intellisms_password1, :intellisms_password2
+  attr_accessor :intellisms_password1, :intellisms_password2, :twilio_auth_token1, :twilio_auth_token2
 
   # loads the settings for the given mission (or nil mission/admin mode) into the configatron store
   # if the settings can't be found, a default setting is created and saved before being loaded
@@ -163,6 +163,9 @@ class Setting < ActiveRecord::Base
       when "IntelliSms"
         errors.add(:intellisms_username, :blank) if intellisms_username.blank?
         errors.add(:intellisms_password1, :did_not_match) unless intellisms_password1 == intellisms_password2
+      when "Twilio"
+        errors.add(:twilio_account_sid, :blank) if twilio_account_sid.blank?
+        errors.add(:twilio_auth_token1, :did_not_match) unless twilio_auth_token1 == twilio_auth_token2
       else
         # if there is no adapter then don't need to check anything
       end
@@ -174,6 +177,8 @@ class Setting < ActiveRecord::Base
       case outgoing_sms_adapter
       when "IntelliSms"
         self.intellisms_password = intellisms_password1 unless intellisms_password1.blank?
+      when "Twilio"
+        self.twilio_auth_token = twilio_auth_token1 unless twilio_auth_token1.blank?
       end
       return true
     end

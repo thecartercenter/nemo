@@ -33,8 +33,12 @@
     </div>
 
     <div class="adapter_settings" data-adapter="Twilio">
-      <%= f.field(:twilio_account_sid) %>
-      <%= f.field(:twilio_auth_token) %>
+      <%= f.field(:twilio_account_sid, :append => link_to(t("setting.change_twilio_auth_token"), "#")) %>
+
+      <div class="credential_fields">
+        <%= f.field(:twilio_auth_token1, :type => :password) %>
+        <%= f.field(:twilio_auth_token2, :type => :password) %>
+      </div>
     </div>
 
     <h2><%= t('activerecord.attributes.setting.external_sql') %></h2>
@@ -68,7 +72,8 @@
   // instantiate the frontend view object to handle the interactive stuff
   new ELMO.Views.SettingsView(<%=json(
     need_credentials: {
-      IntelliSms: @setting.intellisms_password.blank?
+      IntelliSms: @setting.intellisms_password.blank?,
+      Twilio: @setting.twilio_auth_token.blank?
     }
   )%>);
 <% end %>
