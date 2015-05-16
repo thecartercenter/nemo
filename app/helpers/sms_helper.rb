@@ -32,7 +32,7 @@ module SmsHelper
 
   def user_with_phone(user, phone = nil)
     if user == User::ELMO
-      (user.name + (phone.present? ? " <small>(#{phone})</small>" : ""))
+      user.name + (phone.present? ? " <small>(#{phone})</small>" : "")
     elsif user
       "#{link_to user.name, user_path(user)} <small>(#{phone})</small>"
     else
