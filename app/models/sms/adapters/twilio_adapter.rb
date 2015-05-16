@@ -42,11 +42,11 @@ class Sms::Adapters::TwilioAdapter < Sms::Adapters::Adapter
 
     # create and return the message
     Sms::Incoming.create(
-      :from => params[:From],
-      :to => params[:To],
-      :body => params[:Body],
-      :sent_at => Time.zone.now, # Twilio doesn't supply this
-      :adapter_name => service_name)
+      from: params[:From],
+      to: params[:To],
+      body: params[:Body],
+      sent_at: Time.zone.now, # Twilio doesn't supply this
+      adapter_name: service_name)
   end
 
   # Check_balance returns the balance string. Raises error if balance check failed.
