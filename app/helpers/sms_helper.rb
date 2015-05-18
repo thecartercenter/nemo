@@ -35,17 +35,17 @@ module SmsHelper
     output = ''.html_safe
 
     if user == User::ELMO
-      output += user.name
+      output << user.name
       if phone.present?
-        output += " "
-        output += content_tag(:small, "(#{phone})")
+        output << " "
+        output << content_tag(:small, "(#{phone})")
       end
     elsif user
-      output += link_to(user.name, user_path(user))
-      output += " "
-      output += content_tag(:small, "(#{phone})")
+      output << link_to(user.name, user_path(user))
+      output << " "
+      output << content_tag(:small, "(#{phone})")
     else
-      output += phone
+      output << phone
     end
 
     output
