@@ -325,6 +325,7 @@ en:
         timezone: "Time Zone"
         twilio_account_sid: "Account SID"
         twilio_auth_token1: "Auth Token"
+        twilio_phone_number: "Outgoing Number"
       sms/message:
         adapter_name: "Adapter"
         body: "Body"
@@ -480,6 +481,7 @@ en:
         outgoing_sms_adapter: "The adapter used to send outgoing SMSes. Note that SMS replies may be sent out on via a different adapter, depending the adapter by which they arrived."
         intellisms_username: "The username for the IntelliSMS account."
         intellisms_password1: "Enter and re-enter a password to change the password for the IntelliSMS account."
+        twilio_phone_number: "The phone number registered with Twilio. Outgoing SMS broadcasts won't work unless this number is owned by your Twilio account."
         twilio_account_sid: "The Account SID for the Twilio account."
         twilio_auth_token1: "The Auth Token for the Twilio account."
         external_sql: "The SQL code used to extract data for use in external applications. Click 'Select All' and then press Ctrl-C to copy."

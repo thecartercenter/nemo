@@ -33,6 +33,8 @@
     </div>
 
     <div class="adapter_settings" data-adapter="Twilio">
+      <%= f.field(:twilio_phone_number) %>
+
       <%= f.field(:twilio_account_sid, :append => link_to(t("setting.change_twilio_auth_token"), "#", :class => 'show_credential_fields')) %>
 
       <div class="credential_fields">
