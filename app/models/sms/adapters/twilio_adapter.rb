@@ -13,7 +13,7 @@ class Sms::Adapters::TwilioAdapter < Sms::Adapters::Adapter
   def deliver(message)
     prepare_message_for_delivery(message)
 
-    client = Twilio::REST::Client.new configatron.twilio_account_sid, configatron.twilio_auth_token
+    client = Twilio::REST::Client.new(configatron.twilio_account_sid, configatron.twilio_auth_token)
 
     params = { from: message.from, to: message.to, body: message.body }
     Rails.logger.info("Sending Twilio message: #{params}")
@@ -29,7 +29,7 @@ class Sms::Adapters::TwilioAdapter < Sms::Adapters::Adapter
       raise Sms::Error.new(e)
     end
 
-    return true
+    true
   end
 
   def receive(request)
