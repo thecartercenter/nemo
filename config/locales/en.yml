@@ -480,8 +480,8 @@ en:
         outgoing_sms_adapter: "The adapter used to send outgoing SMSes. Note that SMS replies may be sent out on via a different adapter, depending the adapter by which they arrived."
         intellisms_username: "The username for the IntelliSMS account."
         intellisms_password1: "Enter and re-enter a password to change the password for the IntelliSMS account."
-        twilio_account_sid: "The Account SID for the Twilio application. Subaccount SIDs may also be used."
-        twilio_auth_token: "The Auth Token for the Twilio application."
+        twilio_account_sid: "The Account SID for the Twilio account. Subaccount SIDs may also be used."
+        twilio_auth_token: "The Auth Token for the Twilio account."
         external_sql: "The SQL code used to extract data for use in external applications. Click 'Select All' and then press Ctrl-C to copy."
         timezone: "The time zone in which times are displayed throughout the site."
       sms/test:
