@@ -3,7 +3,6 @@ class Broadcast < ActiveRecord::Base
 
   has_many(:broadcast_addressings, :inverse_of => :broadcast, :dependent => :destroy)
   has_many(:recipients, :through => :broadcast_addressings, :source => :user)
-  has_many(:sms_messages, :dependent => :destroy, :class_name => 'Sms::Message')
 
   validates(:recipients, :presence => true)
   validates(:medium, :presence => true)
