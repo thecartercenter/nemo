@@ -22,7 +22,7 @@ class Sms::Adapters::TwilioAdapter < Sms::Adapters::Adapter
 
     begin
       client.messages.create(
-        from: configatron.incoming_sms_number,
+        from: configatron.twilio_phone_number,
         to: message.recipient_numbers.join(','),
         body: message.body)
     rescue Twilio::REST::RequestError => e
