@@ -313,7 +313,7 @@ en:
         viewed_at: "Last Viewed"
       setting:
         allow_unauthenticated_submissions: "Allow Unauthenticated Submissions?"
-        incoming_sms_number: "Incoming Number"
+        incoming_sms_number: "Incoming Number(s)"
         incoming_sms_token: "Incoming SMS Token"
         intellisms_password1: "Password"
         intellisms_password2: "Password Confirmation"
@@ -469,7 +469,7 @@ en:
           This code should be given to observers if the ability to send incomplete responses is needed. ODK will not allow submission of incomplete responses without this code.
 
           If generating a new code, please record the old code if there are previous live forms. The new code will only work for forms downloaded after the code is regenerated.
-        incoming_sms_number: "Enter the phone number to which incoming SMSes for SMS forms should be sent. This will be displayed on the SMS guide. Only needed if using SMS submission."
+        incoming_sms_number: "Enter the phone number(s) to which incoming SMSes for SMS forms should be sent. This field will be displayed, verbatim, on the SMS guide. Only needed if using SMS submissions."
         incoming_sms_token: |-
           This token is included in the URL used by the incoming SMS provider to prevent the submission of unauthorized messages.
         using_incoming_sms_token_title: Using the Incoming SMS Token
