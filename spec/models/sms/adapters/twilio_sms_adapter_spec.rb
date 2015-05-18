@@ -16,22 +16,22 @@ describe Sms::Adapters::TwilioAdapter do
   end
 
   it 'should return true on deliver' do
-    msg = Sms::Reply.new(:to => '+123', :body => 'foo')
+    msg = Sms::Reply.new(to: '+123', body: 'foo')
     expect(@adapter.deliver(msg)).to be_truthy
   end
 
   it 'should recognize an incoming request with the proper params' do
-    request = twilio_request(params: {'From' => '1', 'Body' => '1'})
+    request = twilio_request(params: {From: '1', Body: '1'})
     expect(@adapter.class.recognize_receive_request?(request)).to be_truthy
   end
 
   it 'should not recognize an incoming request without all the proper params' do
-    request = double(headers: {}, params: {'From' => '1', 'Body' => '1'})
+    request = double(headers: {}, params: {From: '1', Body: '1'})
     expect(@adapter.class.recognize_receive_request?(request)).to be_falsey
   end
 
   it 'should correctly parse an twilio-style request' do
-    request = twilio_request(params: {'Body' => 'foo', 'From' => '2348036801489', 'To' => '+123456789'})
+    request = twilio_request(params: {Body: 'foo', From: '2348036801489', To: '+123456789'})
 
     sent_at = Time.utc(2013, 7, 3, 8, 53, 00)
     Timecop.freeze(sent_at) do
@@ -46,10 +46,9 @@ describe Sms::Adapters::TwilioAdapter do
     end
   end
 
-
   it 'should correctly parse a twilio-style request even if incoming_sms_number is not present' do
     configatron.incoming_sms_number = ''
-    request = twilio_request(params: {'Body' => 'foo', 'From' => '2348036801489'})
+    request = twilio_request(params: {Body: 'foo', From: '2348036801489'})
     msg = @adapter.receive(request)
     expect(msg.body).to eq 'foo'
     expect(msg.to).to be_nil
