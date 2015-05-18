@@ -324,7 +324,7 @@ en:
         external_sql: "External SQL"
         timezone: "Time Zone"
         twilio_account_sid: "Account SID"
-        twilio_auth_token: "Auth Token"
+        twilio_auth_token1: "Auth Token"
       sms/message:
         adapter_name: "Adapter"
         body: "Body"
@@ -480,8 +480,8 @@ en:
         outgoing_sms_adapter: "The adapter used to send outgoing SMSes. Note that SMS replies may be sent out on via a different adapter, depending the adapter by which they arrived."
         intellisms_username: "The username for the IntelliSMS account."
         intellisms_password1: "Enter and re-enter a password to change the password for the IntelliSMS account."
-        twilio_account_sid: "The Account SID for the Twilio account. Subaccount SIDs may also be used."
-        twilio_auth_token: "The Auth Token for the Twilio account."
+        twilio_account_sid: "The Account SID for the Twilio account."
+        twilio_auth_token1: "The Auth Token for the Twilio account."
         external_sql: "The SQL code used to extract data for use in external applications. Click 'Select All' and then press Ctrl-C to copy."
         timezone: "The time zone in which times are displayed throughout the site."
       sms/test:
@@ -1544,6 +1544,7 @@ en:
 
   setting:
     change_sms_password: "Change Password"
+    change_twilio_auth_token: "Change Auth Token"
     override_code_warning: "Note that the new override code will not work with forms that have already been downloaded. You should record the existing code if this is a problem. Are you sure you want to regenerate the code?"
     using_incoming_sms_token: "How do I use this?"
     headings:
