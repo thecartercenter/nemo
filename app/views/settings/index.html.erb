@@ -24,7 +24,7 @@
 
     <div class="adapter_settings" data-adapter="IntelliSms">
 
-      <%= f.field(:intellisms_username, :append => link_to(t("setting.change_sms_password"), "#")) %>
+      <%= f.field(:intellisms_username, :append => link_to(t("setting.change_sms_password"), "#", :class => 'show_credential_fields')) %>
 
       <div class="credential_fields">
         <%= f.field(:intellisms_password1, :type => :password) %>
@@ -33,7 +33,7 @@
     </div>
 
     <div class="adapter_settings" data-adapter="Twilio">
-      <%= f.field(:twilio_account_sid, :append => link_to(t("setting.change_twilio_auth_token"), "#")) %>
+      <%= f.field(:twilio_account_sid, :append => link_to(t("setting.change_twilio_auth_token"), "#", :class => 'show_credential_fields')) %>
 
       <div class="credential_fields">
         <%= f.field(:twilio_auth_token1, :type => :password) %>

@@ -47,7 +47,7 @@ class ELMO.Views.SettingsView extends Backbone.View
       adapter_settings = this.$(".adapter_settings[data-adapter=" + adapter + "]")
 
       if (this.need_credentials[adapter])
-        adapter_settings.find("a").hide()
+        adapter_settings.find("a.show_credential_fields").hide()
         adapter_settings.find(".credential_fields").show()
 
       adapter_settings.show()
