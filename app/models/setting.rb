@@ -163,6 +163,9 @@ class Setting < ActiveRecord::Base
       when "IntelliSms"
         errors.add(:intellisms_username, :blank) if intellisms_username.blank?
         errors.add(:intellisms_password1, :did_not_match) unless intellisms_password1 == intellisms_password2
+      when "Twilio"
+        errors.add(:twilio_account_sid, :blank) if twilio_account_sid.blank?
+        errors.add(:twilio_auth_token, :blank) if twilio_auth_token.blank?
       else
         # if there is no adapter then don't need to check anything
       end
