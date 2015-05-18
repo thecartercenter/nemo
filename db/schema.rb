@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150507210547) do
+ActiveRecord::Schema.define(version: 20150518221437) do
 
   create_table "answers", force: :cascade do |t|
     t.integer  "response_id",    limit: 4
@@ -332,6 +332,7 @@ ActiveRecord::Schema.define(version: 20150507210547) do
     t.string   "incoming_sms_token",                limit: 255
     t.string   "twilio_account_sid",                limit: 255
     t.string   "twilio_auth_token",                 limit: 255
+    t.string   "twilio_phone_number",               limit: 255
   end
 
   add_index "settings", ["mission_id"], name: "settings_mission_id_fk", using: :btree
