@@ -15,6 +15,7 @@ class Setting < ActiveRecord::Base
 
   before_validation(:cleanup_locales)
   before_validation(:nullify_fields_if_these_are_admin_mode_settings)
+  before_validation(:normalize_twilio_phone_number)
   validate(:locales_are_valid)
   validate(:one_locale_must_have_translations)
   validate(:sms_adapter_is_valid)
@@ -189,5 +190,9 @@ class Setting < ActiveRecord::Base
       if mission_id.nil?
         (attributes.keys - ADMIN_MODE_KEYS - %w(id created_at updated_at mission_id)).each{|a| self.send("#{a}=", nil)}
       end
+    end
+
+    def normalize_twilio_phone_number
+      self.twilio_phone_number = PhoneNormalizer.normalize(twilio_phone_number)
     end
 end
