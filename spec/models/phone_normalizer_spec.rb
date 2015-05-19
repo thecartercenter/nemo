@@ -26,4 +26,23 @@ describe PhoneNormalizer do
       end
     end
   end
+
+  describe '#normalize' do
+    it 'returns nil for blank inputs' do
+      [nil, '', ' ', "\t"].each do |phone|
+        expect(PhoneNormalizer.normalize(phone)).to be_nil
+      end
+    end
+
+    it 'returns the value itself for short codes' do
+      ['54321'].each do |phone|
+        expect(PhoneNormalizer.normalize(phone)).to be(phone)
+      end
+    end
+
+    it 'returns the normalized value for full numbers' do
+      expect(PhoneNormalizer.normalize('1-800-555-1212')).to eq('+18005551212')
+      expect(PhoneNormalizer.normalize('+49-89-636-48018')).to eq('+498963648018')
+    end
+  end
 end
