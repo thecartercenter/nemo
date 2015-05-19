@@ -88,6 +88,9 @@ gem 'therubyracer', platforms: :ruby
 # Converting HTML to markdown for CSV export
 gem 'reverse_markdown'
 
+# Twilio SMS integration
+gem 'twilio-ruby', ' ~> 4.1'
+
 group :development do
   gem 'rails-erd'                     # generat with:  DIAGRAM=true rake db:migrate
   gem 'capistrano', '~> 2.15.4'       # deployment

@@ -24,9 +24,9 @@ ActionMailer::Base.smtp_settings = {
 
 # Default settings for outgoing sms adapter when new mission is created.
 # If you don't have an SMS gateway service, you don't need to edit these.
-configatron.default_settings.outgoing_sms_adapter = "IntelliSms"
-configatron.default_settings.intellisms_username = "username"
-configatron.default_settings.intellisms_password = "password"
+configatron.default_settings.outgoing_sms_adapter = "Twilio"
+configatron.default_settings.twilio_account_sid = "xxx"
+configatron.default_settings.twilio_auth_token = "xxx"
 
 # Allows submissions without password via the /noauth/submission route.
 # This setting overrides the per-mission setting.

@@ -10,7 +10,7 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
   # options[:prompt] - The text for the prompt/nil option to be provided in a select control.
   # options[:maxlength] - The maxlength attribute of a text field
   def field(field_name, options = {})
-    return hidden_field(field_name) if options[:type] == :hidden
+    return hidden_field(field_name, options) if options[:type] == :hidden
 
     # options[:read_only] must be true if form_mode is show
     # it may optionally be true if specified by the user

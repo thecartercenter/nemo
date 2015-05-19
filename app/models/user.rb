@@ -289,9 +289,9 @@ class User < ActiveRecord::Base
     def normalize_fields
       %w(phone phone2 login name email).each{|f| self.send("#{f}").try(:strip!)}
       self.email = nil if email.blank?
-      self.phone = phone.blank? ? nil : "+" + phone.gsub(/[^0-9]/, "")
-      self.phone2 = phone2.blank? ? nil : "+" + phone2.gsub(/[^0-9]/, "")
-      self.login = login.nil? ? nil : login.try(:downcase)
+      self.phone = PhoneNormalizer.normalize(phone)
+      self.phone2 = PhoneNormalizer.normalize(phone2)
+      self.login = login.try(:downcase)
       return true
     end
 
