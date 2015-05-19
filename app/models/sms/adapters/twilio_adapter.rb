@@ -13,14 +13,14 @@ class Sms::Adapters::TwilioAdapter < Sms::Adapters::Adapter
   def deliver(message)
     prepare_message_for_delivery(message)
 
-    client = Twilio::REST::Client.new(configatron.twilio_account_sid, configatron.twilio_auth_token)
-
     params = { from: message.from, to: message.to, body: message.body }
     Rails.logger.info("Sending Twilio message: #{params}")
 
     return true if Rails.env.test?
 
     begin
+      client = Twilio::REST::Client.new(configatron.twilio_account_sid, configatron.twilio_auth_token)
+
       client.messages.create(
         from: configatron.twilio_phone_number,
         to: message.recipient_numbers.join(','),
