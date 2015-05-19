@@ -19,7 +19,8 @@ module FeatureSpecHelpers
   # @param id [String] id of the original text input that has been replaced by the tokenInput
   # @option with [String] *required
   # @option pick [Symbol, String, Integer] result to pick, defaults to first result
-  #
+  # @option dont_pick [Boolean] If true, doesn't pick anything, just fills in the box and leaves the resulting
+  #   suggestions open for inspection.
   def fill_in_token_input(id, options)
     # Generate selectors for key elements
     # The tokenInput-generated visible text field
@@ -42,22 +43,25 @@ module FeatureSpecHelpers
     page.has_css? result_list_selector
 
     # Pick the result
-    if options[:pick]
-      textual_numbers = [:first, :second, :third, :fourth, :fifth]
-      if index = textual_numbers.index(options[:pick])
-        selector = ":nth-child(#{index+1})"
-      elsif options[:pick].class == String
-        selector = ":contains(\"#{options[:pick]}\")"
-      elsif options[:pick].class == Integer
-        selector = ":nth-child(#{options[:pick]})"
+    unless options[:dont_pick]
+      if options[:pick]
+        textual_numbers = [:first, :second, :third, :fourth, :fifth]
+        if index = textual_numbers.index(options[:pick])
+          selector = ":nth-child(#{index+1})"
+        elsif options[:pick].class == String
+          selector = ":contains(\"#{options[:pick]}\")"
+        elsif options[:pick].class == Integer
+          selector = ":nth-child(#{options[:pick]})"
+        end
+      else
+        selector = ':first-child'
       end
-    else
-      selector = ':first-child'
-    end
 
-    page.driver.execute_script("$('#{result_list_selector}#{selector}').trigger('mousedown');")
-    # A missing result_list_selector signifies that the selection has been made
-    page.has_css?(result_list_selector)
+      page.driver.execute_script("$('#{result_list_selector}#{selector}').trigger('mousedown');")
+
+      # A missing result_list_selector signifies that the selection has been made
+      page.has_css?(result_list_selector)
+    end
   end
 
   # Focus on a tokenInput

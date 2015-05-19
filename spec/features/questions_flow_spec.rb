@@ -50,26 +50,26 @@ feature "questions flow" do
     click_button("Search")
   end
 
-  scenario 'question tag add/remove', js: true, driver: :selenium do
+  scenario 'question tag add/remove', js: true do
     tag_add_remove_test(
       qtype: 'question',
       edit_path: edit_question_path(@question1, mode: 'm', mission_name: @mission.compact_name, locale: 'en'),
       show_path: question_path(@question1, mode: 'm', mission_name: @mission.compact_name, locale: 'en'),
       admin_edit_path: edit_question_path(@question3, mode: 'admin', mission_name: nil, locale: 'en'),
       admin_show_path: question_path(@question3, mode: 'admin', mission_name: nil, locale: 'en'),
-      input_id: "token-input-question_tag_ids",
+      input_id: "question_tag_ids",
       table_row_id: %{tr[id="question_#{@question1.id}"]},
     )
   end
 
-  scenario 'questioning tag add/remove', js: true, driver: :selenium do
+  scenario 'questioning tag add/remove', js: true do
     tag_add_remove_test(
       qtype: 'questioning',
       edit_path: edit_questioning_path(@questioning1, mode: 'm', mission_name: @mission.compact_name, locale: 'en'),
       show_path: questioning_path(@questioning1, mode: 'm', mission_name: @mission.compact_name, locale: 'en'),
       admin_edit_path: edit_questioning_path(@questioning3, mode: 'admin', mission_name: nil, locale: 'en'),
       admin_show_path: questioning_path(@questioning3, mode: 'admin', mission_name: nil, locale: 'en'),
-      input_id: "token-input-questioning_question_attributes_tag_ids",
+      input_id: "questioning_question_attributes_tag_ids",
       table_row_id: %{li.form-item[data-id="#{@questioning1.id}"]},
     )
   end
@@ -79,30 +79,31 @@ feature "questions flow" do
     expect(page).to have_content "Tags:"
 
     # Mission tags
-    fill_in options[:input_id], with: "t"
+    fill_in_token_input options[:input_id], with: "t", dont_pick: true
     expect(page).to have_content "thriftshop"
     expect(page).to have_content "twenty dollaz"
 
-    fill_in options[:input_id], with: "th"
+    fill_in_token_input options[:input_id], with: "th", dont_pick: true
     expect(page).to have_content "thriftshop"
     expect(page).not_to have_content "twenty dollaz"
     expect(page).to have_content "th [New tag]"
 
     # Apply tag
-    find('li', text: "thriftshop").click
+    find('.token-input-dropdown-elmo li', text: "thriftshop").click
 
     # Admin-mode tags should not appear here.
-    fill_in options[:input_id], with: "a"
+    fill_in_token_input options[:input_id], with: "a", dont_pick: true
     expect(page).not_to have_content "awesome"
 
     # Create a new tag
-    fill_in options[:input_id], with: "in my pocket"
-    find('li', text: "in my pocket").click
+    fill_in_token_input options[:input_id], with: "in my pocket", dont_pick: true
+    find('.token-input-dropdown-elmo li', text: "in my pocket").click
 
     # Add and then cancel a new tag
-    fill_in options[:input_id], with: "pop some tags"
-    find('li', text: "pop some tags").click
-    within find('div#tag_ids li', text: "pop some tags") do
+    fill_in_token_input options[:input_id], with: "pop some tags", dont_pick: true
+    find('.token-input-dropdown-elmo li', text: "pop some tags").click
+
+    within find('div#tag_ids li.token-input-token-elmo', text: "pop some tags") do
       find('span.token-input-delete-token-elmo').click # "x" close button
     end
     expect(page).not_to have_content "pop some tags"
@@ -141,14 +142,14 @@ feature "questions flow" do
     # Admin mode
     visit options[:admin_edit_path]
 
-    fill_in options[:input_id], with: "o"
+    fill_in_token_input options[:input_id], with: "o", dont_pick: true
     expect(page).to have_content "awesome"
     expect(page).not_to have_content "in my pocket" # Non-standard tag
-    find('li', text: "awesome").click
+    find('.token-input-dropdown-elmo li', text: "awesome").click
 
     # Create a new tag
-    fill_in options[:input_id], with: "come-up"
-    find('li', text: /come-up/).click
+    fill_in_token_input options[:input_id], with: "come-up", dont_pick: true
+    find('.token-input-dropdown-elmo li', text: /come-up/).click
 
     click_button "Save"
 
