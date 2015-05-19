@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-feature 'forms flow', js: true, driver: :selenium do
+feature 'forms flow', js: true do
   before do
     @user = create(:user)
     @form = create(:sample_form)
@@ -14,11 +14,10 @@ feature 'forms flow', js: true, driver: :selenium do
     find('a.print-link').click
     expect(page).to have_selector('h4', text: 'Print Format Tips')
     click_button('OK')
-    page.driver.browser.switch_to.alert.accept
 
     # Second time printing should not show tips.
     find('a.print-link').click
-    page.driver.browser.switch_to.alert.accept
+    expect{ find('h4', text: 'Print Format Tips') }.to raise_error
 
     # Should still be on same page.
     expect(current_url).to end_with('forms')
