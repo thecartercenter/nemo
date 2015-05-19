@@ -291,7 +291,7 @@ class User < ActiveRecord::Base
       self.email = nil if email.blank?
       self.phone = PhoneNormalizer.normalize(phone)
       self.phone2 = PhoneNormalizer.normalize(phone2)
-      self.login = login.nil? ? nil : login.try(:downcase)
+      self.login = login.try(:downcase)
       return true
     end
 
