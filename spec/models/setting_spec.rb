@@ -56,7 +56,7 @@ describe Setting do
       it_should_behave_like 'load_for_mission'
 
       it 'should not have an incoming_sms_token' do
-        setting = Setting.load_for_mission mission
+        setting = Setting.load_for_mission(mission)
         expect(setting.incoming_sms_token).to be_nil
       end
     end
@@ -66,12 +66,12 @@ describe Setting do
       it_should_behave_like 'load_for_mission'
 
       it 'should have an incoming_sms_token' do
-        setting = Setting.load_for_mission mission
+        setting = Setting.load_for_mission(mission)
         expect(setting.incoming_sms_token).to match(/\A[0-9a-f]{32}\z/)
       end
 
       it 'should have the same incoming_sms_token after reloading' do
-        setting = Setting.load_for_mission mission
+        setting = Setting.load_for_mission(mission)
         token = setting.incoming_sms_token
 
         setting.reload
@@ -80,12 +80,19 @@ describe Setting do
       end
 
       it 'should have a different incoming_sms_token after calling regenerate_incoming_sms_token!' do
-        setting = Setting.load_for_mission mission
+        setting = Setting.load_for_mission(mission)
         token = setting.incoming_sms_token
 
         setting.regenerate_incoming_sms_token!
 
         expect(setting.incoming_sms_token).not_to eq(token)
+      end
+
+      it 'should normalize the twilio_phone_number on save' do
+        setting = Setting.load_for_mission(mission)
+        setting.twilio_phone_number = "+1 770 555 1212"
+        setting.save!
+        expect(setting.twilio_phone_number).to eq("+17705551212")
       end
     end
   end

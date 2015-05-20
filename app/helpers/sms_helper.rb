@@ -16,12 +16,14 @@ module SmsHelper
         l(sms.created_at)
       end
     when "to" then
-      recips = sms.recipient_hashes(max: MAX_RECIPS_TO_SHOW).map { |r| user_with_phone(r[:user], r[:phone]) }.join('<br/>')
+      recips = safe_join(sms.recipient_hashes(max: MAX_RECIPS_TO_SHOW).map { |r| user_with_phone(r[:user], r[:phone]) }, '<br/>'.html_safe)
       extra_recipients = sms.recipient_count - MAX_RECIPS_TO_SHOW
-      recips << (extra_recipients > 0 ? t('sms.extra_recipients', count: extra_recipients) : '')
+      recips << (extra_recipients > 0 ? t('sms.extra_recipients', count: extra_recipients).html_safe : '')
+      recips
     when "from" then
-      user_with_phone sms.sender, sms.from
-    else sms.send(field)
+      user_with_phone(sms.sender, sms.from)
+    else
+      sms.send(field)
     end
   end
 
@@ -30,13 +32,23 @@ module SmsHelper
   end
 
   def user_with_phone(user, phone = nil)
+    output = ''.html_safe
+
     if user == User::ELMO
-      user.name + (phone.present? ? " <small>(#{phone})</small>" : "")
+      output << user.name
+      if phone.present?
+        output << " "
+        output << content_tag(:small, "(#{phone})")
+      end
     elsif user
-      "#{link_to user.name, user_path(user)} <small>(#{phone})</small>"
+      output << link_to(user.name, user_path(user))
+      output << " "
+      output << content_tag(:small, "(#{phone})")
     else
-      phone
+      output << phone
     end
+
+    output
   end
 
   def time_diff(start_time, end_time)

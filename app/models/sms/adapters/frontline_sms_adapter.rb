@@ -1,7 +1,7 @@
 class Sms::Adapters::FrontlineSmsAdapter < Sms::Adapters::Adapter
 
-  def self.recognize_receive_request?(params)
-    %w(from text frontline) - params.keys == []
+  def self.recognize_receive_request?(request)
+    %w(from text frontline) - request.params.keys == []
   end
 
   def self.can_deliver?
@@ -16,7 +16,8 @@ class Sms::Adapters::FrontlineSmsAdapter < Sms::Adapters::Adapter
     raise NotImplementedError
   end
 
-  def receive(params)
+  def receive(request)
+    params = request.params
     Sms::Incoming.create(
       :from => params['from'],
       :to => configatron.incoming_sms_number, # Assume it's this since IntelliSms doesn't provide it.

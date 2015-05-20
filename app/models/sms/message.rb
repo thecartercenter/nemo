@@ -21,16 +21,8 @@ class Sms::Message < ActiveRecord::Base
   # order by id after created_at to make sure they are in creation order
   scope(:latest_first, ->{ order('created_at DESC, id DESC') })
 
-  def self.is_shortcode?(phone)
-    phone =~ /[a-z]/i || phone.size <= 6
-  end
-
   # Remove all non-digit chars and add a plus at the front.
   # (unless the number looks like a shortcode, in which case we leave it alone)
-  def self.normalize_phone(phone)
-    phone.blank? ? nil : (is_shortcode?(phone) ? phone : ("+" + phone.gsub(/[^\d]/, "")))
-  end
-
   def self.search_qualifiers
     # We pass explicit SQL here or else we end up with an INNER JOIN which excludes any message
     # with no associated user.
@@ -65,7 +57,7 @@ class Sms::Message < ActiveRecord::Base
   end
 
   def from_shortcode?
-    self.class.is_shortcode?(from)
+    PhoneNormalizer.is_shortcode?(from)
   end
 
   def sender
@@ -93,7 +85,7 @@ class Sms::Message < ActiveRecord::Base
 
     # normalizes all phone numbers to ITU format
     def normalize_numbers
-      self.from = self.class.normalize_phone(from)
-      self.to = self.class.normalize_phone(to) unless to.nil?
+      self.from = PhoneNormalizer.normalize(from)
+      self.to = PhoneNormalizer.normalize(to)
     end
 end
