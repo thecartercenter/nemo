@@ -9,6 +9,9 @@ module FeatureSpecHelpers
     page.execute_script <<-SCRIPT
       CKEDITOR.instances['#{locator}'].setData(#{content});
       $('textarea##{locator}').text(#{content});
+
+      // Need to fire this manually for poltergeist for some reason.
+      CKEDITOR.instances['#{locator}'].fire('change');
     SCRIPT
   end
 

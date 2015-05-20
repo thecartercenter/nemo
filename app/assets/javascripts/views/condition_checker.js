@@ -100,9 +100,11 @@
       switch (this.rq_type) {
         case "long_text":
           // Use ckeditor if available, else use textarea value (usually just on startup).
-          var textarea = this.rq_row.find("div.control textarea");
           var ckeditor = this.get_ckeditor();
-          return ckeditor ? ckeditor.getData() : '<p>' + textarea.val() + '</p>';
+          var content = ckeditor ? ckeditor.getData() : this.rq_row.find("div.control textarea").val();
+
+          // Strip wrapping <p> tag for comparison.
+          return content.replace(/(^<p>|<\/p>$)/ig, "")
 
         case "integer":
         case "decimal":
@@ -143,8 +145,7 @@
         return this.condition.value;
 
       case "long_text":
-        // CKeditor wraps stuff with <p>
-        return '<p>' + this.condition.value + '</p>';
+        return this.condition.value;
 
       case "integer": case "decimal":
         return parseFloat(this.condition.value);

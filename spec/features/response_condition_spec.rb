@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-feature 'conditions in responses', js: true, driver: :selenium do
+feature 'conditions in responses', js: true do
   before do
     @user = create(:user)
     @form = create(:form, name: 'Foo',
