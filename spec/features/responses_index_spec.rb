@@ -6,8 +6,7 @@ feature 'responses index' do
     @form = create(:form, name: 'TheForm')
   end
 
-  # Need to use selenium here or we don't get the issue with missing AJAX-loaded response.
-  scenario 'returning to index after response loaded via ajax', js: true, driver: :selenium do
+  scenario 'returning to index after response loaded via ajax', js: true, sphinx: true do
     login(@user)
     click_link('Responses')
     expect(page).not_to have_content('TheForm')
