@@ -211,7 +211,7 @@
       form_selection: report.attribs.type != "Report::StandardFormReport",
       question_selection: report.attribs.type == "Report::TallyReport" && report.attribs.tally_type == "Answer",
       grouping: report.attribs.type == "Report::TallyReport" && report.attribs.tally_type == "Response",
-      fields: report.attribs.type == "Report::ListReport",
+      fields: report.attribs.type == "Report::ListReport"
     }
   }
 }(ELMO.Report));
