@@ -1,6 +1,7 @@
 require 'spec_helper'
 
-feature 'responses form', js: true do
+# Should change this to no_sphinx for performance reasons when TS bug #914 is fixed.
+feature 'responses form', js: true, sphinx: true do
   before do
     @user = create(:user)
   end
@@ -14,7 +15,7 @@ feature 'responses form', js: true do
       login(@user)
     end
 
-    scenario 'should work', sphinx: true do
+    scenario 'should work' do
       visit_submit_page_and_select_user
 
       # Fill in answers
