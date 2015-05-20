@@ -73,6 +73,6 @@ class BroadcastsController < ApplicationController
     end
 
     def broadcast_params
-      params.require(:broadcast).permit(:subject, :body, :medium, :send_errors, :which_phone, :mission_id, recipient_ids: [])
+      params.require(:broadcast).permit(:subject, :body, :medium, :send_errors, :which_phone, :mission_id, :recipient_ids)
     end
 end
