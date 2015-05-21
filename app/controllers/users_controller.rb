@@ -116,7 +116,6 @@ class UsersController < ApplicationController
   end
 
   def regenerate_api_key
-    authorize!(:regenerate_api_key, @user)
     @user.regenerate_api_key
     render json: { value: @user.api_key }
   end
