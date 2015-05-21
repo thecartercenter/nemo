@@ -252,6 +252,14 @@ class User < ActiveRecord::Base
     SESSION_TIMEOUT - (Time.now - last_request_at)
   end
 
+  def current_login_age
+    Time.now - current_login_at if current_login_at.present?
+  end
+
+  def current_login_recent?(limit=60.minutes)
+    current_login_age < limit if current_login_at.present?
+  end
+
   def as_json(options = {})
     {:name => name}
   end
