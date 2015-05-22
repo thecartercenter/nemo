@@ -44,8 +44,8 @@ module Concerns::ApplicationController::Authorization
     end
   end
 
-  def require_recent_login
-    unless current_user && current_user.current_login_recent?
+  def require_recent_login(options={})
+    unless current_user && current_user.current_login_recent?(options[:max_age])
       raise RecentLoginRequiredError
     end
   end
