@@ -82,5 +82,8 @@ module ELMO
 
     # logins-per-minute threshold for showing a captcha
     configatron.login_captcha_threshold = 30
+
+    # default timeout for sensitive areas requiring a password reprompt
+    configatron.recent_login_max_age = 60.minutes
   end
 end
