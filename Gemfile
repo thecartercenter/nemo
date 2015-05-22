@@ -59,6 +59,7 @@ gem 'ejs'
 
 # search
 gem 'thinking-sphinx', '~> 3.1.3'
+gem 'ts-delayed-delta', '~> 2.0.2'
 
 # cron management
 gem 'whenever', :require => false
