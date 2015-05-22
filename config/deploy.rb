@@ -50,6 +50,11 @@ after "deploy", "thinking_sphinx:rebuild"
 
 after "deploy", "deploy:cleanup" # keep only the last 5 releases
 
+# Tie delayed_job lifecycle to the main lifecycle
+after "deploy:stop",    "delayed_job:stop"
+after "deploy:start",   "delayed_job:start"
+after "deploy:restart", "delayed_job:restart"
+
 namespace :deploy do
 
   task :setup_config, roles: :app do
