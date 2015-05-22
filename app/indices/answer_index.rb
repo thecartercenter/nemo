@@ -1,4 +1,4 @@
-ThinkingSphinx::Index.define :answer, :with => :active_record, :delta => true do
+ThinkingSphinx::Index.define :answer, :with => :active_record, :delta => ThinkingSphinx::Deltas::DelayedDelta do
   # fields
   indexes value
 
