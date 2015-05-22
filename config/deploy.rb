@@ -19,8 +19,8 @@ set(:whenever_identifier) {"elmo_#{stage}"}
 require "whenever/capistrano"
 
 # delayed_jobs settings
-# NOTE: :delayed_job_role must match :thinking_sphinx_roles, which defaults to :db
-set :delayed_job_role, :db
+# NOTE: :delayed_job_server_role must match :thinking_sphinx_roles, which defaults to :db
+set :delayed_job_server_role, :db
 set :delayed_job_command, 'bundle exec bin/delayed_job'
 require 'delayed/recipes'
 
