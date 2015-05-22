@@ -134,6 +134,9 @@ GEM
     database_cleaner (1.4.1)
     delayed_job (4.0.6)
       activesupport (>= 3.0, < 5.0)
+    delayed_job_active_record (4.0.3)
+      activerecord (>= 3.0, < 5.0)
+      delayed_job (>= 3.0, < 4.1)
     descriptive_statistics (2.5.1)
     diff-lcs (1.2.5)
     ejs (1.1.1)
@@ -379,6 +382,7 @@ DEPENDENCIES
   configatron (~> 4.2)
   dalli
   database_cleaner
+  delayed_job_active_record
   descriptive_statistics
   ejs
   factory_girl_rails (~> 4.0)
