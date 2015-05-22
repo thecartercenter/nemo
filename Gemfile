@@ -61,6 +61,7 @@ gem 'ejs'
 gem 'thinking-sphinx', '~> 3.1.3'
 
 # search: delayed deltas
+gem 'daemons'
 gem 'delayed_job_active_record'
 gem 'ts-delayed-delta', '~> 2.0.2'
 

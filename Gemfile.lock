@@ -380,6 +380,7 @@ DEPENDENCIES
   capistrano (~> 2.15.4)
   capybara
   configatron (~> 4.2)
+  daemons
   dalli
   database_cleaner
   delayed_job_active_record
