@@ -1,5 +1,5 @@
 set :branch, 'staging'
-set :ping_url, "https://secure1.cceom.org"
+set :ping_url, "https://staging.getelmo.org"
 set :user, 'cceom'
 set :home_dir, '/home/cceom'
 set :use_sudo, false
