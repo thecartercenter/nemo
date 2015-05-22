@@ -43,4 +43,15 @@ module Concerns::ApplicationController::Authorization
       redirect_to(unauthorized_path)
     end
   end
+
+  def require_recent_login
+    unless current_user && current_user.current_login_recent?
+      raise RecentLoginRequiredError
+    end
+  end
+
+  def handle_recent_login_required(exception)
+    store_location
+    redirect_to(new_login_confirmation_url)
+  end
 end

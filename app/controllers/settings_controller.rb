@@ -55,6 +55,11 @@ class SettingsController < ApplicationController
   end
 
   private
+    def authorize!(*args)
+      super
+      require_recent_login
+    end
+
     # prepares objects and renders the form template (which in this case is really the index template)
     def prepare_and_render_form
       # load options for sms adapter dropdown

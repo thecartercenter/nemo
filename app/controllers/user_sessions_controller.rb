@@ -22,7 +22,7 @@ class UserSessionsController < ApplicationController
       post_login_housekeeping
     else
       flash[:error] = @user_session.errors.full_messages.join(",")
-      redirect_to(:action => :new)
+      redirect_to(:action => new)
     end
   end
 
@@ -33,6 +33,28 @@ class UserSessionsController < ApplicationController
 
   # shows a simple 'you are logged out' page
   def logged_out
+  end
+
+  def login_confirmation
+    authorize!(:confirm_login, UserSession)
+
+    @user_session = UserSession.new
+  end
+
+  def process_login_confirmation
+    authorize!(:confirm_login, UserSession)
+
+    params[:user_session][:login] = current_user.login
+
+    @user_session = UserSession.new(params[:user_session])
+
+    # if the save is successful, the user is logged in automatically
+    if allow_login && @user_session.save
+      post_login_housekeeping
+    else
+      flash[:error] = @user_session.errors.full_messages.join(",")
+      redirect_to(login_confirmation_url)
+    end
   end
 
   # Special route, test only, used by feature specs to simulate user login.
