@@ -18,6 +18,12 @@ set :whenever_command, "bundle exec whenever"
 set(:whenever_identifier) {"elmo_#{stage}"}
 require "whenever/capistrano"
 
+# delayed_jobs settings
+# NOTE: :delayed_job_server_role must match :thinking_sphinx_roles, which defaults to :db
+set :delayed_job_server_role, :db
+set :delayed_job_command, 'bundle exec bin/delayed_job'
+require 'delayed/recipes'
+
 set :application, "elmo"
 set :repository, "https://github.com/thecartercenter/elmo.git"
 set :deploy_via, :remote_cache
@@ -43,6 +49,11 @@ end
 after "deploy", "thinking_sphinx:rebuild"
 
 after "deploy", "deploy:cleanup" # keep only the last 5 releases
+
+# Tie delayed_job lifecycle to the main lifecycle
+after "deploy:stop",    "delayed_job:stop"
+after "deploy:start",   "delayed_job:start"
+after "deploy:restart", "delayed_job:restart"
 
 namespace :deploy do
 

@@ -47,6 +47,9 @@ module ELMO
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
 
+    # Use Delayed::Job as the ActiveJob queue adapter
+    config.active_job.queue_adapter = :delayed_job
+
     config.generators do |g|
       g.test_framework :rspec
       g.integration_framework :rspec
