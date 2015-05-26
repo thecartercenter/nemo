@@ -107,6 +107,8 @@ Enter sensible values for the settings in the file. Entering a functioning email
     bundle exec rake assets:precompile
     # Build search indices
     bundle exec rake ts:rebuild
+    # Start background job processor
+    bundle exec bin/delayed_job start
     # Restart server
     sudo service nginx restart
 
@@ -132,6 +134,7 @@ When new versions of ELMO are released, you will want to upgrade. To do so, ssh 
     bundle exec rake db:migrate
     bundle exec rake assets:precompile
     bundle exec rake ts:rebuild
+    bundle exec bin/delayed_job restart
     touch tmp/restart.txt
 
 Then load the site in your browser. You should see the new version number in the page footer.
