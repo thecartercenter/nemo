@@ -285,8 +285,9 @@ body.reports {
     overflow-y: scroll;
     height: 150px;
     width: 420px;
-    .checkbox-row {
-      margin-bottom: 7px;
+
+    label {
+      display: block;
     }
   }
 }
