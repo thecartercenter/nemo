@@ -1,11 +1,10 @@
+---
 bundler_args: --without development
 language: ruby
+cache: bundler
 rvm:
   - 2.2.0
-# TODO: Change this to use addons.apt once sphinxsearch is whitelisted
-before_install:
-  - sudo apt-get update
-  - sudo apt-get install -y sphinxsearch
+sudo: false
 before_script:
   - mysql -e 'create database elmo_test;'
   - "for f in $(find -name '*.example'); do cp \"$f\" \"${f%.example}\"; done"
