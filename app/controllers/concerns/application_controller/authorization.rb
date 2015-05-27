@@ -51,7 +51,12 @@ module Concerns::ApplicationController::Authorization
   end
 
   def handle_recent_login_required(exception)
-    store_location
-    redirect_to(new_login_confirmation_url)
+    if request.xhr?
+      flash[:error] = nil
+      render(:plain => "RECENT_LOGIN_REQUIRED", :status => 401)
+    else
+      store_location
+      redirect_to(new_login_confirmation_url)
+    end
   end
 end
