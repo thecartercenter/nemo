@@ -1,11 +1,11 @@
 class SettingsController < ApplicationController
-  # no authorization up here because we do it manually because Setting is atypical
+  # using a customize before_action to authorize resource here because Setting is atypical
+  before_action :authorize_settings
+
+  before_action :require_recent_login
 
   def index
     # setting is already loaded by application controller
-
-    # do authorization check
-    authorize!(:update, @setting)
 
     prepare_and_render_form
   end
@@ -13,9 +13,6 @@ class SettingsController < ApplicationController
   def update
     begin
       # setting is already loaded by application controller
-
-      # do auth check so cancan doesn't complain
-      authorize!(:update, @setting)
 
       @setting.update_attributes!(setting_params)
 
@@ -27,27 +24,18 @@ class SettingsController < ApplicationController
   end
 
   def regenerate_override_code
-    # do auth check so cancan doesn't complain
-    authorize!(:update, @setting)
-
     @setting.generate_override_code!
 
     render json: { value: @setting.override_code }
   end
 
   def regenerate_incoming_sms_token
-    # do auth check so cancan doesn't complain
-    authorize!(:update, @setting)
-
     @setting.regenerate_incoming_sms_token!
 
     render json: { value: @setting.incoming_sms_token }
   end
 
   def using_incoming_sms_token_message
-    # do auth check so cancan doesn't complain
-    authorize!(:update, @setting)
-
     url = mission_sms_submission_url(@setting.incoming_sms_token, locale: nil)
     message = t('activerecord.hints.setting.using_incoming_sms_token_body', url: url)
 
@@ -55,9 +43,15 @@ class SettingsController < ApplicationController
   end
 
   private
-    def authorize!(*args)
-      super
-      require_recent_login
+    # We use a custom before_action here instead of CanCanCan's load_resource
+    # in order to specify the :update action instead of the controller action
+    # (e.g.  :regenerate_override_code).
+    #
+    # We could call #alias_action in UserAbility, but we'd have to be careful
+    # that there are no action name conflicts across controllers. Attempting to
+    # alias :index to :update would also break other controllers.
+    def authorize_settings
+      authorize!(:update, @setting)
     end
 
     # prepares objects and renders the form template (which in this case is really the index template)
