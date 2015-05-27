@@ -97,7 +97,7 @@ gem 'reverse_markdown'
 gem 'twilio-ruby', ' ~> 4.1'
 
 group :development do
-  gem 'rails-erd'                     # generat with:  DIAGRAM=true rake db:migrate
+  gem 'rails-erd'                     # generate with rake db:migrate
   gem 'capistrano', '~> 2.15.4'       # deployment
   gem 'bullet'                        # query optimization
   gem 'thin'                          # development web server
