@@ -9,6 +9,7 @@ before_script:
   - mysql -e 'create database elmo_test;'
   - "for f in $(find -name '*.example'); do cp \"$f\" \"${f%.example}\"; done"
   - "sed -ri 's/user: elmo/user: travis/; /password:/d' config/database.yml"
+  - "sed -ri '/config\.(public|private)_key = nil/d' config/initializers/local_config.rb"
   - bundle exec rake ts:index ts:start db:setup
 script: bundle exec rake
 env:
