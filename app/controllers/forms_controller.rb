@@ -249,8 +249,9 @@ class FormsController < ApplicationController
 
     # prepares objects and renders the form template
     def prepare_and_render_form
-      # render the form template
-      @users = User.assigned_to(current_mission).by_name
+      # We need this array only when in mission mode since it's for the API permissions which are not
+      # shown in admin mode.
+      @users = User.assigned_to(current_mission).by_name unless admin_mode?
       render(:form)
     end
 
