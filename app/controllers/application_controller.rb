@@ -18,6 +18,7 @@ class ApplicationController < ActionController::Base
 
   rescue_from Exception, :with => :notify_error
   rescue_from CanCan::AccessDenied, :with => :handle_access_denied
+  rescue_from RecentLoginRequiredError, :with => :handle_recent_login_required
 
   before_filter(:check_route)
   before_filter(:remove_missionchange_flag)

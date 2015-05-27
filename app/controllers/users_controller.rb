@@ -7,6 +7,9 @@ class UsersController < ApplicationController
   # authorization via CanCan
   load_and_authorize_resource
 
+  # ensure a recent login for most actions
+  before_action :require_recent_login, :except => [:index, :login_instructions]
+
   def index
     # sort and eager load
     @users = @users.by_name
@@ -116,7 +119,6 @@ class UsersController < ApplicationController
   end
 
   def regenerate_api_key
-    authorize!(:regenerate_api_key, @user)
     @user.regenerate_api_key
     render json: { value: @user.api_key }
   end

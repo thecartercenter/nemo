@@ -39,6 +39,7 @@ en:
     incoming: "Incoming"
     language: "Language"
     login: "Login"
+    confirm_login: "Confirm Login"
     logout: "Logout"
     manage: "Manage"
     near: "Near"
@@ -852,6 +853,7 @@ en:
       all: "Create Multiple Users"
     user_sessions:
       new: "Login"
+      login_confirmation: "Confirm Login"
       logged_out: "Logged Out"
     users:
       edit: "Edit User: %{name}"

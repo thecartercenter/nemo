@@ -23,6 +23,9 @@ ELMO::Application.routes.draw do
     get '/route-tests' => 'route_tests#basic_mode' if Rails.env.development? || Rails.env.test?
     get '/unauthorized' => 'welcome#unauthorized', as: :unauthorized
 
+    get '/confirm-login' => 'user_sessions#login_confirmation', defaults: { confirm: true }, as: :new_login_confirmation
+    post '/confirm-login' => 'user_sessions#process_login_confirmation', defaults: { confirm: true }, as: :login_confirmation
+
     # Routes with user or no user.
     root to: 'welcome#index', as: :basic_root
   end

@@ -5,6 +5,13 @@ class UserSession < Authlogic::Session::Base
   allow_http_basic_auth(false) # We handle our own basic auth
   httponly(true)
 
+  # override find() to eager load User.assignments
+  def self.find(*args)
+    with_scope(find_options: User.includes(:assignments)) do
+      super
+    end
+  end
+
   def to_key
     new_record? ? nil : [ self.send(self.class.primary_key) ]
   end

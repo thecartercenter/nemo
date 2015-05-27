@@ -40,6 +40,9 @@ class Ability
       # anybody can generate map markers
       can :read, Marker
 
+      # anybody can confirm their login
+      can :confirm_login, UserSession
+
       # admin abilities that don't depend on a mission being set
       if user.admin?
         can :view, :admin_mode
