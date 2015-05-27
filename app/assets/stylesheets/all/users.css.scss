@@ -1,6 +1,17 @@
-/* user login instructions */
-#login_instructions td.name { width: 100px; }
-#login_instructions td.value { font-weight: bold; width: 300px; }
+#login_instructions {
+  table {
+    margin-bottom: 10px;
+  }
+
+  td.name {
+    width: 100px;
+  }
+
+  td.value {
+    font-weight: bold;
+    width: 300px;
+  }
+}
 
 .users_index {
   tr.inactive {
