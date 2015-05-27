@@ -15,7 +15,7 @@ class UserSessionsController < ApplicationController
     # reset the session for security purposes
     reset_session_preserving_return_to
 
-    @user_session = UserSession.new(params[:user_session])
+    @user_session = UserSession.new(user_session_params)
 
     # if the save is successful, the user is logged in automatically
     if allow_login && @user_session.save
@@ -46,7 +46,7 @@ class UserSessionsController < ApplicationController
 
     params[:user_session][:login] = current_user.login
 
-    @user_session = UserSession.new(params[:user_session])
+    @user_session = UserSession.new(user_session_params)
 
     # if the save is successful, the user is logged in automatically
     if allow_login && @user_session.save
@@ -69,6 +69,10 @@ class UserSessionsController < ApplicationController
   end
 
   private
+
+    def user_session_params
+      params.require(:user_session).permit(:login, :password)
+    end
 
     def allow_login
       if captcha_required?
