@@ -23,6 +23,9 @@ class UsersController < ApplicationController
         @search_error = true
       end
     end
+
+    # Apply pagination
+    @users = @users.paginate(:page => params[:page], :per_page => 50)
   end
 
   def new
