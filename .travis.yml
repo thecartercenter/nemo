@@ -8,8 +8,8 @@ before_install:
   - sudo apt-get install -y sphinxsearch
 before_script:
   - mysql -e 'create database elmo_test;'
-  - for f in $(find -name '*.example'); do cp "$f" "${f%.example}"; done
-  - sed -ri 's/user: elmo/user: travis/; /password:/d' config/database.yml
+  - "for f in $(find -name '*.example'); do cp \"$f\" \"${f%.example}\"; done"
+  - "sed -ri 's/user: elmo/user: travis/; /password:/d' config/database.yml"
   - bundle exec rake ts:conf ts:start db:setup
 script: bundle exec rake
 env:
