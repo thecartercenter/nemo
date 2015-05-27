@@ -47,7 +47,7 @@ class SettingsController < ApplicationController
     # in order to specify the :update action instead of the controller action
     # (e.g.  :regenerate_override_code).
     #
-    # We could call #alias_action in UserAbility, but we'd have to be careful
+    # We could call #alias_action in Ability, but we'd have to be careful
     # that there are no action name conflicts across controllers. Attempting to
     # alias :index to :update would also break other controllers.
     def authorize_settings
