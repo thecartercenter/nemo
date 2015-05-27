@@ -6,7 +6,9 @@
       <select name="user[assignments_attributes][<%= idx %>][mission_id]">
         <option>[<%= I18n.t('activerecord.models.mission.one') %>]</option>
         <% params.assignable_missions.forEach(function(mission) { %>
-          <option value="<%= mission.id %>"><%= mission.name %></option>
+          <option value="<%= mission.id %>" <%= mission.id == assignment.mission_id ? 'selected="selected"' : '' %>>
+            <%= mission.name %>
+          </option>
         <% }); %>
       </select>
 
@@ -29,7 +31,7 @@
         <% } %>
 
         <% params.assignable_roles.forEach(function(role) { %>
-          <option value="<%= role %>" <%= !new_record && role == assignment.role ? 'selected="selected"' : '' %>><%= I18n.t("role." + role) %></option>
+          <option value="<%= role %>" <%= role == assignment.role ? 'selected="selected"' : '' %>><%= I18n.t("role." + role) %></option>
         <% }); %>
 
       </select>
