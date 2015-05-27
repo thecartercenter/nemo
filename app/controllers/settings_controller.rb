@@ -43,7 +43,7 @@ class SettingsController < ApplicationController
   end
 
   private
-    # We use a custom before_action here instead of CanCanCan's load_resource
+    # We use a custom before_action here instead of CanCanCan's authorize_resource
     # in order to specify the :update action instead of the controller action
     # (e.g.  :regenerate_override_code).
     #
