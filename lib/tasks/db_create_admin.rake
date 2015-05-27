@@ -6,7 +6,7 @@ namespace :db do
       raise 'Webmaster email must be configured in config/initializers/local_settings.rb before admin can be generated.'
     end
 
-    u = User.new(login: "admin", name: "Admin", login: "admin", email: configatron.webmaster_emails.first, admin: true)
+    u = User.new(login: "admin", name: "Admin", email: configatron.webmaster_emails.first, admin: true)
     u.password = u.password_confirmation = User.random_password
 
     # need to turn off validation because there are no assignments and no password reset method
