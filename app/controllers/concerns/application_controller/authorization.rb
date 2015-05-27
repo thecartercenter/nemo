@@ -44,6 +44,11 @@ module Concerns::ApplicationController::Authorization
     end
   end
 
+  # This method is intended to be called as a before_action from controllers
+  # that require a recent login in addition to their normal authentication and
+  # authorization. If a recent login is not found, a RecentLoginRequireError
+  # will be thrown. The default handling for this error in
+  # ApplicationController is to call handle_recent_login_required.
   def require_recent_login(options={})
     unless current_user && current_user.current_login_recent?(options[:max_age])
       raise RecentLoginRequiredError
