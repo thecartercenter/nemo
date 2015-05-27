@@ -22,7 +22,7 @@ class UserSessionsController < ApplicationController
       post_login_housekeeping
     else
       flash[:error] = @user_session.errors.full_messages.join(",")
-      redirect_to(:action => new)
+      redirect_to(:action => :new)
     end
   end
 
