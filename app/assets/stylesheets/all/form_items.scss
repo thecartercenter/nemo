@@ -28,6 +28,34 @@
 
   .form-item {
 
+    position: relative;
+
+    .hidden-curtain {
+      display: none;
+    }
+
+    &.form-item-hidden {
+      .hidden-curtain {
+        display: block;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+        background-color: white;
+        opacity: 0.7;
+        z-index: 2;
+      }
+
+      // When being dragged.
+      &.ui-sortable-helper {
+        .hidden-curtain {
+          // Not sure why this is needed but it is, on chrome at least
+          top: 5px;
+          bottom: -5px;
+        }
+      }
+    }
+
     .type, .actions {
       color: #879CAA;
     }
@@ -36,6 +64,7 @@
       display: table;
       width: 100%;
       padding: 2px 5px 5px 2px;
+      position: relative; // Needed so we can make action icons pop up over curtain.
 
       > * {
         display: table-cell;
@@ -65,6 +94,12 @@
     .actions {
       text-align: right;
       white-space: nowrap;
+
+      // We need this to be in front of than the hidden curtain else not clickable.
+      position: absolute;
+      z-index: 3;
+      top: 7px;
+      right: 5px;
 
       .condition {
         display: inline-block;
