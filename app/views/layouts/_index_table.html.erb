@@ -89,7 +89,8 @@
         class_name: objects.first.class.name.underscore,
         modified_obj_id: flash[:modified_obj_id],
         no_whole_row_link: options[:no_whole_row_link],
-        batch_ops: batch_ops
+        batch_ops: batch_ops,
+        is_search: params[:search].present?
       )%>);
     <% end %>
 

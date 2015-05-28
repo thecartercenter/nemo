@@ -12,6 +12,7 @@ class ELMO.Views.IndexTableView extends Backbone.View
     'mouseout table.index_table tbody tr': 'unhighlight_partner_row'
 
   initialize: (params) ->
+    @is_search = params.is_search
     @no_whole_row_link = params.no_whole_row_link
     @form = this.$el.find('form').first() || this.$el.closest('form')
     @select_all_field = this.$el.find('input[name=select_all]')
@@ -82,12 +83,13 @@ class ELMO.Views.IndexTableView extends Backbone.View
 
   # updates the select all link to reflect the select_all field
   update_select_all_elements: () ->
-    label = I18n.t("layout." + (if @select_all_field.val() then "deselect_all" else "select_all"))
-    $('#select_all_link').html(label)
+    label = if @select_all_field.val() then "deselect_all" else "select_all"
+    $('#select_all_link').html(I18n.t("layout.#{label}"))
 
     if @select_all_field.val()
-      msg = 'index_table.messages.all_rows_selected'
-      @alert.addClass('alert-info').html(I18n.t(msg, { count: @count })).show()
+      msg = if @is_search then 'searched_rows_selected' else 'all_rows_selected'
+      @alert.html(I18n.t("index_table.messages.#{msg}", { count: @count }))
+      @alert.addClass('alert-info').show()
     else
       @alert.hide().removeClass('alert-info')
 
