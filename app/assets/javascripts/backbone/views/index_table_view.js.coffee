@@ -7,12 +7,13 @@ class ELMO.Views.IndexTableView extends Backbone.View
     'click table.index_table tbody tr': 'row_clicked'
     'click #select_all_link': 'select_all_clicked'
     'click a.batch_op_link': 'submit_batch'
-    'change form input[type=checkbox].batch_op': 'checkbox_changed'
+    'change input[type=checkbox].batch_op': 'checkbox_changed'
     'mouseover table.index_table tbody tr': 'highlight_partner_row'
     'mouseout table.index_table tbody tr': 'unhighlight_partner_row'
 
   initialize: (params) ->
     @no_whole_row_link = params.no_whole_row_link
+    @form = this.$el.find('form') || this.$el.closest('form')
 
     # flash the modified obj if given
     if params.modified_obj_id
@@ -81,7 +82,7 @@ class ELMO.Views.IndexTableView extends Backbone.View
 
   # gets all checkboxes in batch_form
   get_batch_checkboxes: ->
-    this.$el.find('form input[type=checkbox].batch_op')
+    @form.find('input[type=checkbox].batch_op')
 
   # event handler for when a checkbox is clicked
   checkbox_changed: (event) ->
@@ -107,7 +108,7 @@ class ELMO.Views.IndexTableView extends Backbone.View
 
       # copy the checked checkboxes to it
       # (we do it this way in case the main form has other stuff in it that we don't want to submit)
-      form.append(this.$el.find('input.batch_op:checked').clone())
+      form.append(@form.find('input.batch_op:checked').clone())
 
       token = $('meta[name="csrf-token"]').attr('content');
       $('<input>').attr({type: 'hidden', name: 'authenticity_token', value: token}).appendTo(form)
