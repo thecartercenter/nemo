@@ -13,7 +13,7 @@ class ELMO.Views.IndexTableView extends Backbone.View
 
   initialize: (params) ->
     @no_whole_row_link = params.no_whole_row_link
-    @form = this.$el.find('form') || this.$el.closest('form')
+    @form = this.$el.find('form').first() || this.$el.closest('form')
 
     # flash the modified obj if given
     if params.modified_obj_id
