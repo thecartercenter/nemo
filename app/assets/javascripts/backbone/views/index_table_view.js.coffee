@@ -14,6 +14,7 @@ class ELMO.Views.IndexTableView extends Backbone.View
   initialize: (params) ->
     @no_whole_row_link = params.no_whole_row_link
     @form = this.$el.find('form').first() || this.$el.closest('form')
+    @select_all_field = this.$el.find('input[name=select_all]')
 
     # flash the modified obj if given
     if params.modified_obj_id
@@ -66,6 +67,9 @@ class ELMO.Views.IndexTableView extends Backbone.View
     # check/uncheck boxes
     cb.checked = !all_checked for cb in cbs
 
+    # Set the value of the select_all field
+    @select_all_field.val(if !all_checked then '1' else '')
+
     # update link
     this.update_select_all_link(all_checked)
 
@@ -106,9 +110,10 @@ class ELMO.Views.IndexTableView extends Backbone.View
       # construct a temporary form
       form = $('<form>').attr('action', options.path).attr('method', 'post').attr('style', 'display: none')
 
-      # copy the checked checkboxes to it
+      # copy the checked checkboxes to it, along with the select_all field
       # (we do it this way in case the main form has other stuff in it that we don't want to submit)
       form.append(@form.find('input.batch_op:checked').clone())
+      form.append(@form.find('input[name=select_all]').clone())
 
       token = $('meta[name="csrf-token"]').attr('content');
       $('<input>').attr({type: 'hidden', name: 'authenticity_token', value: token}).appendTo(form)
