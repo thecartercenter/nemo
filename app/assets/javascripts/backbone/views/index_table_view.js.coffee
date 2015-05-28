@@ -101,9 +101,11 @@ class ELMO.Views.IndexTableView extends Backbone.View
 
     options = $(event.target).data()
 
+    count = this.$el.data('total-entries')
+
     # ensure there is at least one box checked, and error if not
-    count = _.size(_.filter(this.get_batch_checkboxes(), (cb) -> cb.checked))
-    if count == 0
+    checked = _.size(_.filter(this.get_batch_checkboxes(), (cb) -> cb.checked))
+    if checked == 0
       alert(I18n.t("layout.no_selection"))
 
     # else, show confirm dialog (if requested), and proceed if 'yes' clicked
