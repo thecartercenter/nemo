@@ -6,6 +6,7 @@ class ELMO.Views.IndexTableView extends Backbone.View
   events:
     'click table.index_table tbody tr': 'row_clicked'
     'click #select_all_link': 'select_all_clicked'
+    'click a.batch_op_link': 'submit_batch'
     'change form input[type=checkbox].batch_op': 'checkbox_changed'
     'mouseover table.index_table tbody tr': 'highlight_partner_row'
     'mouseout table.index_table tbody tr': 'unhighlight_partner_row'
@@ -86,3 +87,33 @@ class ELMO.Views.IndexTableView extends Backbone.View
   checkbox_changed: (event) ->
     # change text of link if all checked
     this.update_select_all_link()
+
+  # submits the batch form to the given path
+  submit_batch: (event) ->
+    event.preventDefault()
+
+    options = $(event.target).data()
+
+    # ensure there is at least one box checked, and error if not
+    count = _.size(_.filter(this.get_batch_checkboxes(), (cb) -> cb.checked))
+    if count == 0
+      alert(I18n.t("layout.no_selection"))
+
+    # else, show confirm dialog (if requested), and proceed if 'yes' clicked
+    else if not options.confirm or confirm(options.confirm.replace(/###/, count))
+
+      # construct a temporary form
+      form = $('<form>').attr('action', options.path).attr('method', 'post').attr('style', 'display: none')
+
+      # copy the checked checkboxes to it
+      # (we do it this way in case the main form has other stuff in it that we don't want to submit)
+      form.append(this.$el.find('input.batch_op:checked').clone())
+
+      token = $('meta[name="csrf-token"]').attr('content');
+      $('<input>').attr({type: 'hidden', name: 'authenticity_token', value: token}).appendTo(form)
+
+      # need to append form to body before submitting
+      form.appendTo($('body'))
+
+      # submit the form
+      form.submit()
