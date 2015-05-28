@@ -8,7 +8,7 @@ class UsersController < ApplicationController
   load_and_authorize_resource
 
   # ensure a recent login for most actions
-  before_action :require_recent_login, :except => [:index, :login_instructions]
+  before_action :require_recent_login, :except => [:export, :index, :login_instructions]
 
   def index
     # sort and eager load
