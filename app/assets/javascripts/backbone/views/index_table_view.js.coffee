@@ -5,6 +5,8 @@ class ELMO.Views.IndexTableView extends Backbone.View
 
   events:
     'click table.index_table tbody tr': 'row_clicked'
+    'click #select_all_link': 'select_all_clicked'
+    'change form input[type=checkbox].batch_op': 'checkbox_changed'
     'mouseover table.index_table tbody tr': 'highlight_partner_row'
     'mouseout table.index_table tbody tr': 'unhighlight_partner_row'
 
@@ -15,6 +17,11 @@ class ELMO.Views.IndexTableView extends Backbone.View
     if params.modified_obj_id
       $('#' + params.class_name + '_' + params.modified_obj_id).effect("highlight", {}, 1000)
 
+    # sync state of select all link
+    if params.batch_ops
+      this.update_select_all_link()
+
+  # hook up whole row link unless told not to
   row_clicked: (event) ->
     return if @no_whole_row_link
 
@@ -45,3 +52,37 @@ class ELMO.Views.IndexTableView extends Backbone.View
   # remove 'hovered' class on mouseout
   unhighlight_partner_row: (event) ->
     $(event.target).closest('tbody').find('tr.hovered').removeClass('hovered')
+
+  # selects/deselects all boxes
+  select_all_clicked: (event) ->
+    event.preventDefault() if event
+
+    cbs = this.get_batch_checkboxes()
+
+    all_checked = this.all_checked(cbs)
+
+    # check/uncheck boxes
+    cb.checked = !all_checked for cb in cbs
+
+    # update link
+    this.update_select_all_link(all_checked)
+
+    return false
+
+  # tests if all boxes are checked
+  all_checked: (cbs = this.get_batch_checkboxes()) ->
+    _.all(cbs, (cb) -> cb.checked)
+
+  # updates the select all link to reflect current state of boxes
+  update_select_all_link: (yn = !this.all_checked()) ->
+    label = I18n.t("layout." + (if yn then "select_all" else "deselect_all"))
+    $('#select_all_link').html(label)
+
+  # gets all checkboxes in batch_form
+  get_batch_checkboxes: ->
+    this.$el.find('form input[type=checkbox].batch_op')
+
+  # event handler for when a checkbox is clicked
+  checkbox_changed: (event) ->
+    # change text of link if all checked
+    this.update_select_all_link()

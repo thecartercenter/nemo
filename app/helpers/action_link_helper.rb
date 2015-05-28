@@ -97,6 +97,6 @@ module ActionLinkHelper
 
   # creates a link to select all the checkboxes in an index table
   def select_all_link
-    link_to(t("layout.select_all"), '#', :onclick => "batch_select_all(); return false", :id => 'select_all_link')
+    link_to(t("layout.select_all"), '#', :id => 'select_all_link')
   end
 end

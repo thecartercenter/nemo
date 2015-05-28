@@ -48,7 +48,7 @@
 
             <% if batch_ops %>
               <td class="cb_col">
-                <%= check_box_tag("selected[#{o.id}]", 1, false, :onchange => 'batch_cb_changed(this);', :class => 'batch_op') %>
+                <%= check_box_tag("selected[#{o.id}]", 1, false, :class => 'batch_op') %>
               </td>
             <% end %>
             <% fields.each do |f| %>
@@ -85,12 +85,9 @@
       new ELMO.Views.IndexTableView(<%=json(
         class_name: objects.first.class.name.underscore,
         modified_obj_id: flash[:modified_obj_id],
-        no_whole_row_link: options[:no_whole_row_link]
+        no_whole_row_link: options[:no_whole_row_link],
+        batch_ops: batch_ops
       )%>);
-
-      <% if batch_ops %>
-        batch_update_select_all_link();
-      <% end %>
     <% end %>
 
   <% end %>
