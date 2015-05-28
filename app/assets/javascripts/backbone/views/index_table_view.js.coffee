@@ -62,16 +62,15 @@ class ELMO.Views.IndexTableView extends Backbone.View
 
     cbs = this.get_batch_checkboxes()
 
-    all_checked = this.all_checked(cbs)
+    # Toggle the value of the select_all field
+    value = if @select_all_field.val() then '' else '1'
+    @select_all_field.val(value)
 
     # check/uncheck boxes
-    cb.checked = !all_checked for cb in cbs
-
-    # Set the value of the select_all field
-    @select_all_field.val(if !all_checked then '1' else '')
+    cb.checked = value for cb in cbs
 
     # update link
-    this.update_select_all_link(all_checked)
+    this.update_select_all_link()
 
     return false
 
@@ -79,9 +78,9 @@ class ELMO.Views.IndexTableView extends Backbone.View
   all_checked: (cbs = this.get_batch_checkboxes()) ->
     _.all(cbs, (cb) -> cb.checked)
 
-  # updates the select all link to reflect current state of boxes
-  update_select_all_link: (yn = !this.all_checked()) ->
-    label = I18n.t("layout." + (if yn then "select_all" else "deselect_all"))
+  # updates the select all link to reflect the select_all field
+  update_select_all_link: () ->
+    label = I18n.t("layout." + (if @select_all_field.val() then "deselect_all" else "select_all"))
     $('#select_all_link').html(label)
 
   # gets all checkboxes in batch_form
@@ -90,6 +89,9 @@ class ELMO.Views.IndexTableView extends Backbone.View
 
   # event handler for when a checkbox is clicked
   checkbox_changed: (event) ->
+    # unset the select all field if a checkbox is changed in any way
+    @select_all_field.val('')
+
     # change text of link if all checked
     this.update_select_all_link()
 
