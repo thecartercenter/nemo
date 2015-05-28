@@ -81,17 +81,21 @@ class ELMO.Views.IndexTableView extends Backbone.View
   all_checked: (cbs = this.get_batch_checkboxes()) ->
     _.all(cbs, (cb) -> cb.checked)
 
+  # reset the alert element
+  reset_alert: ->
+    @alert.stop().hide().removeClass('alert-danger alert-info alert-warning alert-success').removeAttr('opacity')
+
   # updates the select all link to reflect the select_all field
   update_select_all_elements: () ->
     label = if @select_all_field.val() then "deselect_all" else "select_all"
     $('#select_all_link').html(I18n.t("layout.#{label}"))
 
+    this.reset_alert()
+
     if @select_all_field.val()
       msg = if @is_search then 'searched_rows_selected' else 'all_rows_selected'
       @alert.html(I18n.t("index_table.messages.#{msg}", { count: @count }))
       @alert.addClass('alert-info').show()
-    else
-      @alert.hide().removeClass('alert-info')
 
   # gets all checkboxes in batch_form
   get_batch_checkboxes: ->
@@ -115,11 +119,7 @@ class ELMO.Views.IndexTableView extends Backbone.View
     checked = _.size(_.filter(this.get_batch_checkboxes(), (cb) -> cb.checked))
     if checked == 0
       @alert.html(I18n.t("layout.no_selection")).addClass('alert-danger').show()
-      afterFade = ->
-        $(this).removeClass('alert-danger')
-        # fadeOut leaves the opacity at 0, so a simple show() later will not work
-        setTimeout(0, -> $(this).removeAttr('opacity'))
-      @alert.delay(2500).fadeOut('slow', afterFade)
+      @alert.delay(2500).fadeOut('slow', this.reset_alert.bind(this))
 
     # else, show confirm dialog (if requested), and proceed if 'yes' clicked
     else if not options.confirm or confirm(options.confirm.replace(/###/, @count))
