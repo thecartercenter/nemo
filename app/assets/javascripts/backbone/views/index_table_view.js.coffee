@@ -15,6 +15,7 @@ class ELMO.Views.IndexTableView extends Backbone.View
     @no_whole_row_link = params.no_whole_row_link
     @form = this.$el.find('form').first() || this.$el.closest('form')
     @select_all_field = this.$el.find('input[name=select_all]')
+    @alert = this.$el.find('div.alert')
 
     # flash the modified obj if given
     if params.modified_obj_id
@@ -106,7 +107,7 @@ class ELMO.Views.IndexTableView extends Backbone.View
     # ensure there is at least one box checked, and error if not
     checked = _.size(_.filter(this.get_batch_checkboxes(), (cb) -> cb.checked))
     if checked == 0
-      alert(I18n.t("layout.no_selection"))
+      @alert.html(I18n.t("layout.no_selection")).addClass('alert-danger').show().delay(2500).fadeOut('slow')
 
     # else, show confirm dialog (if requested), and proceed if 'yes' clicked
     else if not options.confirm or confirm(options.confirm.replace(/###/, count))
