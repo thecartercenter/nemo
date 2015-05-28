@@ -16,6 +16,7 @@ class ELMO.Views.IndexTableView extends Backbone.View
     @form = this.$el.find('form').first() || this.$el.closest('form')
     @select_all_field = this.$el.find('input[name=select_all]')
     @alert = this.$el.find('div.alert')
+    @count = this.$el.data('total-entries')
 
     # flash the modified obj if given
     if params.modified_obj_id
@@ -23,7 +24,7 @@ class ELMO.Views.IndexTableView extends Backbone.View
 
     # sync state of select all link
     if params.batch_ops
-      this.update_select_all_link()
+      this.update_select_all_elements()
 
   # hook up whole row link unless told not to
   row_clicked: (event) ->
@@ -70,8 +71,8 @@ class ELMO.Views.IndexTableView extends Backbone.View
     # check/uncheck boxes
     cb.checked = value for cb in cbs
 
-    # update link
-    this.update_select_all_link()
+    # update select all view elements
+    this.update_select_all_elements()
 
     return false
 
@@ -80,9 +81,15 @@ class ELMO.Views.IndexTableView extends Backbone.View
     _.all(cbs, (cb) -> cb.checked)
 
   # updates the select all link to reflect the select_all field
-  update_select_all_link: () ->
+  update_select_all_elements: () ->
     label = I18n.t("layout." + (if @select_all_field.val() then "deselect_all" else "select_all"))
     $('#select_all_link').html(label)
+
+    if @select_all_field.val()
+      msg = 'index_table.messages.all_rows_selected'
+      @alert.addClass('alert-info').html(I18n.t(msg, { count: @count })).show()
+    else
+      @alert.hide().removeClass('alert-info')
 
   # gets all checkboxes in batch_form
   get_batch_checkboxes: ->
@@ -94,7 +101,7 @@ class ELMO.Views.IndexTableView extends Backbone.View
     @select_all_field.val('')
 
     # change text of link if all checked
-    this.update_select_all_link()
+    this.update_select_all_elements()
 
   # submits the batch form to the given path
   submit_batch: (event) ->
@@ -102,15 +109,18 @@ class ELMO.Views.IndexTableView extends Backbone.View
 
     options = $(event.target).data()
 
-    count = this.$el.data('total-entries')
-
     # ensure there is at least one box checked, and error if not
     checked = _.size(_.filter(this.get_batch_checkboxes(), (cb) -> cb.checked))
     if checked == 0
-      @alert.html(I18n.t("layout.no_selection")).addClass('alert-danger').show().delay(2500).fadeOut('slow')
+      @alert.html(I18n.t("layout.no_selection")).addClass('alert-danger').show()
+      afterFade = ->
+        $(this).removeClass('alert-danger')
+        # fadeOut leaves the opacity at 0, so a simple show() later will not work
+        setTimeout(0, -> $(this).removeAttr('opacity'))
+      @alert.delay(2500).fadeOut('slow', afterFade)
 
     # else, show confirm dialog (if requested), and proceed if 'yes' clicked
-    else if not options.confirm or confirm(options.confirm.replace(/###/, count))
+    else if not options.confirm or confirm(options.confirm.replace(/###/, @count))
 
       # construct a temporary form
       form = $('<form>').attr('action', options.path).attr('method', 'post').attr('style', 'display: none')
