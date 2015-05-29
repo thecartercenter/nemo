@@ -17,7 +17,8 @@ class ELMO.Views.IndexTableView extends Backbone.View
     @form = this.$el.find('form').first() || this.$el.closest('form')
     @select_all_field = this.$el.find('input[name=select_all]')
     @alert = this.$el.find('div.alert')
-    @count = this.$el.data('total-entries')
+    @pages = this.$el.data('pages')
+    @count = this.$el.data('entries')
 
     # flash the modified obj if given
     if params.modified_obj_id
@@ -92,7 +93,7 @@ class ELMO.Views.IndexTableView extends Backbone.View
 
     this.reset_alert()
 
-    if @select_all_field.val()
+    if @pages > 1 and @select_all_field.val()
       msg = if @is_search then 'searched_rows_selected' else 'all_rows_selected'
       @alert.html(I18n.t("index_table.messages.#{msg}", { count: @count }))
       @alert.addClass('alert-info').show()

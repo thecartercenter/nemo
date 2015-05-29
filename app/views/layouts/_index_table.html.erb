@@ -1,6 +1,6 @@
 <%# ensures objects collection is paginated and .all is called %>
 <% objects = prepare_for_index(objects) %>
-<div id="index_table" data-total-entries="<%= objects.total_entries rescue nil %>">
+<div id="index_table" data-entries="<%= objects.total_entries rescue objects.count %>" data-pages="<%= objects.total_pages rescue 1 %>">
 
   <%# header links %>
   <% unless options[:table_only] %>
