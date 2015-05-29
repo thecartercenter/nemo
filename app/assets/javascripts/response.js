@@ -11,6 +11,9 @@
 
     // initialize conditions
     $.each(klass.conditions, function(i, cond){ cond.init(); });
+
+    // enable select2 for user selector
+    $('#response_user_id').select2();
   }
 
   // shows the map and location search box
