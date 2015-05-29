@@ -1,6 +1,6 @@
 <%# ensures objects collection is paginated and .all is called %>
 <% objects = prepare_for_index(objects) %>
-<div id="index_table">
+<div id="index_table" data-entries="<%= objects.total_entries rescue objects.count %>" data-pages="<%= objects.total_pages rescue 1 %>">
 
   <%# header links %>
   <% unless options[:table_only] %>
@@ -11,6 +11,7 @@
       <% end %>
       <%= links %>
     </div>
+    <div class="alert alert-compact" role="alert" style="display: none"></div>
   <% end %>
 
   <% unless objects.empty? %>
@@ -19,6 +20,8 @@
     <% unless options[:within_form] %>
       <%= form_tag %>
     <% end %>
+
+    <input type="hidden" name="select_all">
 
     <table class="index_table">
       <thead>
@@ -48,7 +51,7 @@
 
             <% if batch_ops %>
               <td class="cb_col">
-                <%= check_box_tag("selected[#{o.id}]", 1, false, :onchange => 'batch_cb_changed(this);', :class => 'batch_op') %>
+                <%= check_box_tag("selected[#{o.id}]", 1, false, :class => 'batch_op') %>
               </td>
             <% end %>
             <% fields.each do |f| %>
@@ -82,15 +85,13 @@
 
     <%# create js view model for index table, only necessary if there are some objects %>
     <%= javascript_doc_ready do %>
-      new ELMO.Views.IndexTable(<%=json(
+      new ELMO.Views.IndexTableView(<%=json(
         class_name: objects.first.class.name.underscore,
         modified_obj_id: flash[:modified_obj_id],
-        no_whole_row_link: options[:no_whole_row_link]
+        no_whole_row_link: options[:no_whole_row_link],
+        batch_ops: batch_ops,
+        is_search: params[:search].present?
       )%>);
-
-      <% if batch_ops %>
-        batch_update_select_all_link();
-      <% end %>
     <% end %>
 
   <% end %>

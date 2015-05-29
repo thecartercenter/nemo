@@ -28,6 +28,7 @@ translations:
       "*.dashboard.*",
       "*.form.invalid_drop_location.*",
       "*.form.unsaved_rank_notice",
+      "*.index_table.*",
       "*.location_picker.*",
       "*.layout.*",
       "*.option_set.*",

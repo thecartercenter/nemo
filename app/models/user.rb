@@ -56,9 +56,6 @@ class User < ActiveRecord::Base
   # returns users who are assigned to the given mission OR who submitted the given response
   scope(:assigned_to_or_submitter, ->(m, r) { where("users.id IN (SELECT user_id FROM assignments WHERE mission_id = ?) OR users.id = ?", m.try(:id), r.try(:user_id)) })
 
-  # we want all of these on one page for now
-  self.per_page = 1000000
-
   def self.random_password(size = 8)
     size = 8 if size < 8
     num_size = size.even? ? 2 : 3

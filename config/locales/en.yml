@@ -1017,6 +1017,11 @@ en:
         "yes": "Yes"
     code_label: "Enter the incomplete override code"
 
+  index_table:
+    messages:
+      all_rows_selected: "Note that <strong>all</strong> %{count} rows are now selected"
+      searched_rows_selected: "Note that <strong>all</strong> %{count} rows matching the current search are now selected"
+
   location_picker:
     choose_location: "Choose Location"
     current_location: "Current Location"
