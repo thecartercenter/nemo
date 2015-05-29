@@ -102,10 +102,12 @@ class UsersController < ApplicationController
   end
 
   def bulk_destroy
-    @users = load_selected_objects(User).reject { |u| u.id == current_user.id }
+    @users = load_selected_objects(User)
+    skipped_current = !!@users.reject! { |u| u.id == current_user.id }
     begin
       destroyed_users = User.where(:id => @users.map(&:id)).destroy_all
-      flash[:success] =  t("user.bulk_destroy_success", :count => destroyed_users.count)
+      flash[:success] =  t("user.bulk_destroy_success", :count => destroyed_users.count) if destroyed_users.count > 0
+      flash[:error] =  t("user.bulk_destroy_skipped_current") if skipped_current
     rescue
       flash[:error] =  t("user.#{$!}")
     end
