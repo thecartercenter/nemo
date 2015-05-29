@@ -1684,6 +1684,9 @@ en:
     api_key:
       regenerate: "Regenerate"
     back_to_index: "Back to Users List"
+    bulk_destroy: "Delete Multiple Users"
+    bulk_destroy_confirm: "Are you sure you want to delete these ### user(s)?"
+    bulk_destroy_success: "%{count} user(s) removed successfully."
     create_multiple: "Create Multiple Users"
     edit_profile: "Edit Profile"
     export_vcard: "Export as vCard"

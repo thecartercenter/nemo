@@ -101,6 +101,17 @@ class UsersController < ApplicationController
     redirect_to(index_url_with_page_num)
   end
 
+  def bulk_destroy
+    @users = load_selected_objects(User).reject { |u| u.id == current_user.id }
+    begin
+      destroyed_users = User.where(:id => @users.map(&:id)).destroy_all
+      flash[:success] =  t("user.bulk_destroy_success", :count => destroyed_users.count)
+    rescue
+      flash[:error] =  t("user.#{$!}")
+    end
+    redirect_to(index_url_with_page_num)
+  end
+
   # shows printable login instructions for the user
   def login_instructions
   end
