@@ -50,7 +50,7 @@ module ActionLinkHelper
     options[:exclude] += [:edit, :destroy] if canonical_action == :show
 
     # build links
-    %w(edit destroy).map do |action|
+    links = %w(edit destroy).map do |action|
 
       # skip to next action if action is excluded
       next if options[:exclude].include?(action.to_sym)
@@ -72,7 +72,9 @@ module ActionLinkHelper
         action_link(action, dynamic_path(obj), :method => :delete, data: {confirm: warning}, :title => t("common.delete"))
       end
 
-    end.reduce(:<<)
+    end.compact.reduce(:<<)
+
+    links || ''.html_safe
   end
 
   def delete_warning(obj, options = {})
