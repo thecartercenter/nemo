@@ -1,6 +1,9 @@
 # Actions for QingGroups
 # All requests in this controller are AJAX based.
 class QingGroupsController < ApplicationController
+
+  include Parameters
+
   # authorization via cancan
   load_and_authorize_resource
 
@@ -57,9 +60,7 @@ class QingGroupsController < ApplicationController
     end
 
     def qing_group_params
-      params.require(:qing_group).permit(:form_id).tap do |whitelisted|
-        # handle dynamic hash keys for translations
-        whitelisted[:group_name_translations] = params[:qing_group][:group_name_translations]
-      end
+      translation_keys = permit_translations(params[:qing_group], :group_name)
+      params.require(:qing_group).permit([:form_id] + translation_keys)
     end
 end

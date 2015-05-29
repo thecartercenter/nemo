@@ -1,5 +1,5 @@
 <%# special title if user is editing self %>
-<% @title_args = {:name => @user.name} %>
+<% @title_args = {name: @user.name + (@user.active? ? "" : " (#{t('common.inactive')})")} %>
 <% @title = t("page_titles.users.#{form_mode}_profile", :name => @user.name) if @user == current_user %>
 
 <%= elmo_form_for(@user) do |f| %>
@@ -12,6 +12,7 @@
   <%= f.field(:phone) %>
   <%= f.field(:phone2) %>
   <%= f.field(:admin, :type => :check_box) if can?(:adminify, @user) && admin_mode? %>
+  <%= f.field(:active, :type => :check_box) if can?(:activate, @user) %>
 
   <% if can?(:change_assignments, @user) %>
     <%# field name depends on whether we're in admin mode or not. under the hood it's all the same though %>
@@ -40,7 +41,7 @@
 
     <% end %>
   <% end %>
-  <%= f.field(:api_key, :partial => 'api_key') if !@user.new_record? && can?(:regenerate_key, @user) %>
+  <%= f.regenerable_field(:api_key) if !@user.new_record? && can?(:regenerate_api_key, @user) %>
   <div class="submit-buttons">
     <%= f.submit(:class => "btn btn-primary") %>
   </div>

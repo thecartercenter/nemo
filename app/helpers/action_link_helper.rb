@@ -15,6 +15,7 @@ module ActionLinkHelper
 
   # Builds links for the action links at the top of a new/edit/show page.
   # If a block is given, appends return value from block to end of div.
+  # Block should returns an html_safe string.
   def top_action_links(obj, options = {}, &block)
     options[:except] = Array.wrap(options[:except] || [])
     options[:only] = Array.wrap(options[:only]) unless options[:only].nil?
@@ -36,8 +37,8 @@ module ActionLinkHelper
             data: {confirm: (action == :destroy) ? delete_warning(obj) : nil},
             class: "#{action}-link")
         end
-      end.compact.join(' ').html_safe
-      (main_links + (block_given? ? capture(&block) : '')).html_safe
+      end.compact.reduce(:<<)
+      main_links << (block_given? ? capture(&block) : '')
     end
   end
 
@@ -49,7 +50,7 @@ module ActionLinkHelper
     options[:exclude] += [:edit, :destroy] if canonical_action == :show
 
     # build links
-    %w(edit destroy).map do |action|
+    links = %w(edit destroy).map do |action|
 
       # skip to next action if action is excluded
       next if options[:exclude].include?(action.to_sym)
@@ -71,7 +72,9 @@ module ActionLinkHelper
         action_link(action, dynamic_path(obj), :method => :delete, data: {confirm: warning}, :title => t("common.delete"))
       end
 
-    end.join('').html_safe
+    end.compact.reduce(:<<)
+
+    links || ''.html_safe
   end
 
   def delete_warning(obj, options = {})
@@ -89,13 +92,11 @@ module ActionLinkHelper
 
   # creates a link to a batch operation
   def batch_op_link(options)
-    link_to(options[:name], "#",
-      :onclick => "batch_submit({path: '#{options[:path]}', confirm: '#{options[:confirm]}'}); return false;",
-      :class => "batch_op_link")
+    link_to(options[:name], "#", :data => options.slice(:path, :confirm), :class => "batch_op_link")
   end
 
   # creates a link to select all the checkboxes in an index table
   def select_all_link
-    link_to(t("layout.select_all"), '#', :onclick => "batch_select_all(); return false", :id => 'select_all_link')
+    link_to(t("layout.select_all"), '#', :id => 'select_all_link')
   end
 end

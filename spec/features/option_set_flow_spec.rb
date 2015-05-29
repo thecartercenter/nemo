@@ -6,7 +6,7 @@ feature 'option suggestion dropdown' do
     login(@user)
   end
 
-  scenario 'creating, showing, and editing', js: true, driver: :selenium do
+  scenario 'creating, showing, and editing', js: true do
     click_link('Option Sets')
 
     # Fill in basic values
@@ -85,8 +85,7 @@ feature 'option suggestion dropdown' do
 
   def add_options(names)
     names.each do |name|
-      fill_in('token-input-', with: name)
-      find('div.token-input-dropdown-elmo li', text: "#{name} [Create New Option]").click
+      fill_in_token_input("", with: name)
     end
     click_button('Add')
   end

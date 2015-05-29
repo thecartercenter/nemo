@@ -13,6 +13,11 @@ Capybara.register_driver :poltergeist do |app|
     extensions: [File.expand_path("../support/phantomjs_ext/geolocation.js", __FILE__)])
 end
 
+Capybara.register_driver :poltergeist_debug do |app|
+  Capybara::Poltergeist::Driver.new(app, inspector: true,
+    extensions: [File.expand_path("../support/phantomjs_ext/geolocation.js", __FILE__)])
+end
+
 Capybara.javascript_driver = :poltergeist
 
 # Requires supporting ruby files with custom matchers and macros, etc,
@@ -47,9 +52,11 @@ RSpec.configure do |config|
   config.infer_spec_type_from_file_location!
 
   config.include AssertDifference
+  config.include GeneralSpecHelpers
+  config.include ModelSpecHelpers, type: :model
   config.include RequestSpecHelpers, type: :request
   config.include FeatureSpecHelpers, type: :feature
-  config.include AssertSelectRoot, :type => :request
+  config.include AssertSelectRoot, type: :request
 
   # Locale should be reset to :en after each test if it is changed.
   config.after(:each) do
@@ -57,29 +64,3 @@ RSpec.configure do |config|
   end
 end
 
-# Encodes credentials for basic auth
-def encode_credentials(username, password)
-  "Basic #{Base64.encode64("#{username}:#{password}")}"
-end
-
-def submit_j2me_response(params)
-  raise 'form must have version' unless @form.current_version
-
-  # Add all the extra stuff that J2ME adds to the data hash
-  params[:data]['id'] = @form.id.to_s
-  params[:data]['uiVersion'] = '1'
-  params[:data]['version'] = @form.current_version.sequence
-  params[:data]['name'] = @form.name
-  params[:data]['xmlns:jrm'] = 'http://dev.commcarehq.org/jr/xforms'
-  params[:data]['xmlns'] = "http://openrosa.org/formdesigner/#{@form.current_version.sequence}"
-
-  # If we are doing a normally authenticated submission, add credentials.
-  headers = params[:auth] ? {'HTTP_AUTHORIZATION' => encode_credentials(@user.login, 'password')} : {}
-
-  post(@submission_url, params.slice(:data), headers)
-end
-
-# helper method to parse json and make keys symbols
-def parse_json(body)
-  JSON.parse(body, symbolize_names: true)
-end

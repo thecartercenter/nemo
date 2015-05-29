@@ -37,36 +37,33 @@ module FormsHelper
     when "allow_incomplete" then tbool(form.allow_incomplete?)
     when "actions"
       # get standard action links
-      links = table_action_links(form)
+      table_action_links(form).tap do |links|
 
-      # get the appropriate publish icon and add link, if auth'd
-      if can?(:publish, form)
-        verb = form.published? ? "unpublish" : "publish"
-        links += action_link(verb, publish_form_path(form), :title => t("form.#{verb}"), :'data-method' => 'put')
+        # get the appropriate publish icon and add link, if auth'd
+        if can?(:publish, form)
+          verb = form.published? ? "unpublish" : "publish"
+          links << action_link(verb, publish_form_path(form), :title => t("form.#{verb}"), :'data-method' => 'put')
+        end
+
+        # add a clone link if auth'd
+        if can?(:clone, form)
+          links << action_link("clone", clone_form_path(form), :'data-method' => 'put',
+            :title => t("common.clone"), data: {confim: t("form.clone_confirm")}, :form_name => form.name)
+        end
+
+        # add a print link if auth'd
+        if can?(:print, form)
+          links << action_link("print", "#", title: t("common.print"), class: 'print-link', :'data-form-id' => form.id)
+        end
+
+        # add an sms template link if appropriate
+        if form.smsable? && form.published? && !admin_mode?
+          links << action_link("sms", form_path(form, :sms_guide => 1), :title => "Sms Guide")
+        end
+
+        # add a loading indicator
+        links << loading_indicator(:id => form.id, :floating => true)
       end
-
-      # add a clone link if auth'd
-      if can?(:clone, form)
-        links += action_link("clone", clone_form_path(form), :'data-method' => 'put',
-          :title => t("common.clone"), data: {confim: t("form.clone_confirm")}, :form_name => form.name)
-      end
-
-      # add a print link if auth'd
-      if can?(:print, form)
-        links += action_link("print", "#", title: t("common.print"), class: 'print-link', :'data-form-id' => form.id)
-      end
-
-      # add an sms template link if appropriate
-      if form.smsable? && form.published? && !admin_mode?
-        links += action_link("sms", form_path(form, :sms_guide => 1), :title => "Sms Guide")
-      end
-
-      # add a loading indicator
-      links += loading_indicator(:id => form.id, :floating => true)
-
-      # return the links
-      links.html_safe
-
     else form.send(field)
     end
   end
@@ -84,7 +81,7 @@ module FormsHelper
         else char
         end
       end
-    end.join.html_safe
+    end.reduce(:<<)
   end
 
   # returns a SPC glyph type thing for use in the sms guide
@@ -105,7 +102,7 @@ module FormsHelper
     letter
   end
 
-  # returns an example answer based on the question type, to be used in the sms guide
+  # Returns an example answer based on the question type, to be used in the sms guide
   def sms_example_for_question(qing)
     content = case qing.question.qtype.name
     when "integer" then "3"
@@ -118,7 +115,11 @@ module FormsHelper
     else nil
     end
 
-    (content ? t("common.example_abbr") + " " + content_tag(:span, content, :class => "sms_example") : "").html_safe
+    if content
+      t("common.example_abbr").html_safe << " " << content_tag(:span, content, class: "sms_example")
+    else
+      ""
+    end
   end
 
   # returns a set of answer spaces for the given question type

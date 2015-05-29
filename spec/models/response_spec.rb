@@ -1,51 +1,108 @@
 require 'spec_helper'
 
 describe Response do
-  describe 'answer_sets' do
-    before do
-      @response = Response.new
-      @q1, @q2 = double(level_count: 1), double(level_count: 3)
-      @answers = [
-        double(questioning: @q1, option_id: 10),
-        double(questioning: @q2, rank: 1, option_id: 11),
-        double(questioning: @q2, rank: 2, option_id: 12),
-        double(questioning: @q2, rank: 3, option_id: 13)
-      ]
-      allow(@response).to receive(:answers).and_return(@answers)
-      allow(@response).to receive(:visible_questionings).and_return([@q1, @q2])
+  it "cache key" do
+    user = create(:user)
+    form = create(:form, question_types: %w(integer))
+    form.publish!
+
+    # ensure key changes on edits, creates, and deletes
+    r1 = create(:response, user: user, form: form, answer_values: [1])
+    key1 = Response.per_mission_cache_key(get_mission)
+
+    # create
+    r2 = create(:response, user: user, form: form, answer_values: [1])
+    key2 = Response.per_mission_cache_key(get_mission)
+    expect(key2).not_to eq(key1)
+
+    # edit
+    Timecop.travel(10.seconds) do
+      r2.answers.first.update_attributes(value: 2)
+      key3 = Response.per_mission_cache_key(get_mission)
+      expect(key3).not_to eq(key2)
     end
 
-    context 'with no missing answers' do
-      it 'should return answers grouped by questioning_id and sorted by rank' do
-        expect(@response.answer_sets.map{|s| s.answers.map(&:option_id)}).to eq [[10], [11, 12, 13]]
-      end
+    # destroy
+    r2.destroy
+    key4 = Response.per_mission_cache_key(get_mission)
+    expect(key4).not_to eq(key2)
+  end
+
+  it "incomplete response will not save if it is not marked as incomplete" do
+    user = create(:user)
+    form = create(:form, question_types: %w(integer))
+    form.root_questionings.first.update_attribute(:required, true)
+    form.publish!
+    form.reload
+
+    # Submit answer with first (and only) answer empty
+    # This should show up as a missing response.
+    invalid_response = build(:response, user: user, form: form, answer_values: [''])
+    expect(invalid_response.valid?).to eq(false)
+    expect{ invalid_response.save! }.to raise_error(ActiveRecord::RecordInvalid)
+  end
+
+  it "incomplete response will save if it is marked as incomplete" do
+    user = create(:user)
+    form = create(:form, question_types: %w(integer))
+    form.root_questionings.first.required = true
+    form.publish!
+    form.reload
+    expect{ create(:response, user: user, form: form, incomplete: true) }.not_to raise_error
+  end
+
+  it "export sql should work" do
+    create(:response, form: create(:form, question_types: %w(integer)), answer_values: [1])
+    res = ActiveRecord::Base.connection.execute(Response.export_sql(Response.unscoped))
+
+    # result set should have one row since one Answer in db
+    expect(res.count).to eq(1)
+  end
+
+  it "incomplete responses should not disable constraints" do
+    form = create(:form, question_types: %w(integer))
+    form.root_questionings.first.required = true
+    form.root_questionings.first.question.update_attribute(:minimum, 10)
+    form.publish!
+    form.reload
+
+    r1 = build(:response, form: form, incomplete: true, answer_values: %w(9))
+    expect(r1.valid?).to eq(false)
+    assert_match(/greater than/, r1.answers.first.errors.full_messages.join)
+  end
+
+  it "a user can checkout a response" do
+    user = create(:user)
+    response = build(:response)
+
+    expect(response.checked_out_at).to be_nil
+    expect(response.checked_out_by_id).to be_nil
+
+    Timecop.freeze(Date.today) do
+      response.check_out!(user)
+      expect(Time.now).to eq(response.checked_out_at)
+      expect(response.checked_out_by).to eq(user)
     end
+  end
 
-    context 'with missing answer for multilevel question' do
-      before do
-        @answers.slice!(1,3)
-      end
+  it "a users previous checkout will be removed if they have more than one checkout" do
+    user = create(:user)
 
-      it 'should build new answers' do
-        expect(Answer).to receive(:new){ |attr| double(attr) }.exactly(3).times
-        expect(@response.answer_sets[0].questioning).to eq @q1
-        expect(@response.answer_sets[1].questioning).to eq @q2
-        expect(@response.answer_sets[1].answers.map(&:rank)).to eq [1, 2, 3]
-      end
-    end
+    Timecop.freeze(Date.today) do
+      r_previous = create(:response, checked_out_at: Time.now, checked_out_by: user)
+      r_new = build(:response)
 
-    context 'with partially answered multilevel question' do
-      # new levels can be added after an answer is created. A new answer object should be created for these
-      # levels even if the other levels are already answered.
-      before do
-        # Make q2 act like a 4 level question.
-        allow(@q2).to receive(:level_count).and_return(4)
-      end
+      expect(r_new.checked_out_at).to be_nil
+      expect(r_new.checked_out_by_id).to be_nil
 
-      it 'should build proper answers' do
-        expect(Answer).to receive(:new){ |attr| double(attr) }.exactly(1).times
-        expect(@response.answer_sets[1].answers.map(&:rank)).to eq [1, 2, 3, 4]
-      end
+      r_new.check_out!(user)
+      r_previous.reload
+
+      expect(Time.zone.parse(DateTime.now.to_s)).to eq(r_new.checked_out_at)
+      expect(r_new.checked_out_by).to eq(user)
+
+      expect(r_previous.checked_out_at).to be_nil
+      expect(r_previous.checked_out_by_id).to be_nil
     end
   end
 end

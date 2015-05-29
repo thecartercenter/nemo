@@ -87,7 +87,7 @@ class Response < ActiveRecord::Base
       Search::Qualifier.new(:name => "text", :col => "responses.id", :type => :indexed, :default => true),
 
       # support {foobar}:stuff style searches, where foobar is a question code
-      Search::Qualifier.new(:name => "text_by_code", :pattern => /^\{(#{Question::CODE_FORMAT})\}$/, :col => "responses.id",
+      Search::Qualifier.new(:name => "text_by_code", :pattern => /\A\{(#{Question::CODE_FORMAT})\}\z/, :col => "responses.id",
         :type => :indexed, :validator => ->(md){ Question.exists?(:mission_id => scope[:mission].id, :code => md[1]) })
     ]
   end
@@ -147,8 +147,8 @@ class Response < ActiveRecord::Base
       if answer_ids.empty?
         "0"
       else
-        # get all response IDs and join into string
-        Answer.connection.execute("SELECT DISTINCT response_id FROM answers WHERE answers.id IN (#{answer_ids.join(',')})").to_a.flatten.join(',')
+        # Get all response IDs and join into string
+        Answer.select('response_id').distinct.where('id IN (?)', answer_ids).map(&:response_id).join(',')
       end
     end
 
@@ -268,10 +268,18 @@ class Response < ActiveRecord::Base
     populate_from_hash(data)
   end
 
-  # Groups answers by questioning.
-  # Makes sure there are associated answer objects for each questioning in the form.
-  def answer_sets
-    @answer_sets ||= visible_questionings.map{ |qing| answer_set_for_questioning(qing) }
+  def answer_set_for_questioning(questioning)
+    # Build a hash of answer sets on the first call.
+    @answer_sets_by_questioning ||= {}.tap do |hash|
+      answers.group_by(&:questioning).each{ |q, a| hash[q] = AnswerSet.new(questioning: q, answers: a) }
+    end
+
+    # If answer set already exists, it will be in the answer_sets_by_questioning hash, else create a new one.
+    unless @answer_sets_by_questioning[questioning]
+      @answer_sets_by_questioning[questioning] = AnswerSet.new(questioning: questioning)
+    end
+
+    @answer_sets_by_questioning[questioning]
   end
 
   def answer_for_question(question)
@@ -392,18 +400,6 @@ class Response < ActiveRecord::Base
           self.answers << answer
           self.incomplete = true if answer.required_but_empty?
         end
-      end
-    end
-
-    def answer_set_for_questioning(questioning)
-      # If answer set already exists, it will be in the answer_sets_by_questioning hash, else create a new one.
-      answer_sets_by_questioning[questioning] || AnswerSet.new(questioning: questioning)
-    end
-
-    # Builds a hash of questionings to answer sets.
-    def answer_sets_by_questioning
-      @answer_sets_by_questioning ||= {}.tap do |hash|
-        answers.group_by(&:questioning).each{ |q, a| hash[q] = AnswerSet.new(questioning: q, answers: a) }
       end
     end
 end

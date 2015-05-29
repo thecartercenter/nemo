@@ -7,15 +7,12 @@ class UsersController < ApplicationController
   # authorization via CanCan
   load_and_authorize_resource
 
+  # ensure a recent login for most actions
+  before_action :require_recent_login, :except => [:export, :index, :login_instructions]
+
   def index
     # sort and eager load
     @users = @users.by_name
-
-    # if there is a search with the '.' character in it, we can't eager load due to a bug in Rails
-    # this should be fixed in Rails 4
-    unless params[:search].present? && params[:search].match(/\./)
-      @users = @users.with_assoc
-    end
 
     # do search if applicable
     if params[:search].present?
@@ -26,6 +23,9 @@ class UsersController < ApplicationController
         @search_error = true
       end
     end
+
+    # Apply pagination
+    @users = @users.paginate(:page => params[:page], :per_page => 50)
   end
 
   def new
@@ -69,6 +69,7 @@ class UsersController < ApplicationController
 
     # make sure changing assignment role is permitted if attempting
     authorize!(:change_assignments, @user) if permitted_params[:assignments_attributes]
+    authorize!(:activate, @user) if permitted_params[:active]
 
     @user.assign_attributes(permitted_params)
     pref_lang_changed = @user.pref_lang_changed?
@@ -108,16 +109,15 @@ class UsersController < ApplicationController
   def export
     respond_to do |format|
       format.vcf do
-        @users = params[:selected] ? load_selected_objects(User) : []
+        @users = load_selected_objects(User)
         render(:text => @users.collect{|u| u.to_vcf}.join("\n"))
       end
     end
   end
 
-  def regenerate_key
-    @user = User.find(params[:id])
+  def regenerate_api_key
     @user.regenerate_api_key
-    redirect_to(:action => :edit)
+    render json: { value: @user.api_key }
   end
 
   private
@@ -164,7 +164,7 @@ class UsersController < ApplicationController
     def user_params
       return if params[:user].nil?
 
-      params.require(:user).permit(:name, :login, :email, :phone, :admin,
+      params.require(:user).permit(:name, :login, :email, :phone, :admin, :active,
         :phone2, :pref_lang, :notes, :password, :password_confirmation, :reset_password_method,
         assignments_attributes: [:role, :mission_id, :_destroy, :id])
     end

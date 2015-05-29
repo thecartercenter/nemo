@@ -156,7 +156,7 @@ module Translatable
     return nil if self.class.translated_fields.nil?
 
     fields = self.class.translated_fields.join("|")
-    if symbol.to_s.match(/^(#{fields})(_([a-z]{2}))?(_before_type_cast)?(=?)$/)
+    if symbol.to_s.match(/\A(#{fields})(_([a-z]{2}))?(_before_type_cast)?(=?)\z/)
 
       # get bits
       action = :translate
@@ -191,7 +191,7 @@ module Translatable
       # if we get this far, return the bits (locale should always be a string)
       [action, field, locale.to_s, is_setter, options]
 
-    elsif symbol.to_s.match(/^(#{fields})_all_blank\?$/)
+    elsif symbol.to_s.match(/\A(#{fields})_all_blank\?\z/)
       action = :all_blank?
       field = $1
 

@@ -10,7 +10,7 @@
       <%= t("common.language") %>:
       <select name="lang" onchange="this.form.submit();">
         <%= configatron.full_locales.collect{|l| content_tag(:option, language_name(l),
-            {:value => l}.merge(@lang.to_s == l.to_s ? {:selected => "selected"} : {}))}.join.html_safe %>
+          {:value => l}.merge(@lang.to_s == l.to_s ? {:selected => "selected"} : {}))}.reduce(:<<) %>
       </select>
     </form>
 
@@ -39,7 +39,7 @@
       <tr>
         <td class="rank"><%= qing.rank %>.</td>
         <td class="question">
-          <%= qing.question.send("name_#{@lang}") %>
+          <%= qing.question.name %>
           <%= reqd_sym if qing.required? %>
         </td>
         <td class="answers">
@@ -53,7 +53,7 @@
           <td class="rank"></td>
           <td class="options">
             <% qing.question.options.each_with_index do |opt, idx| %>
-              <span><%= index_to_letter(idx + 1) %>) <%= opt.send("name_#{@lang}") %></span>
+              <span><%= index_to_letter(idx + 1) %>) <%= opt.name %></span>
             <% end %>
           </td>
           <td class="answers"></td>
@@ -81,7 +81,8 @@
         <strong><%= t("common.step") %> 2:</strong> <%= t("sms_form.guide.step2") %>
         <ol>
           <% t("sms_form.guide.step2_substeps").each do |ss| %>
-            <li><%= ss.gsub("%{submit_number}", submit_number).html_safe %></li>
+            <%# OK to use html_safe here because we control the substep text and we're manually escaping the number. %>
+            <li><%= ss.gsub("%{submit_number}", html_escape(submit_number)).html_safe %></li>
           <% end %>
         </ol>
         <%= t("common.thanks_excl") %>

@@ -23,8 +23,10 @@ gem 'jquery-rails'
 gem 'random_data'
 gem 'versionist'                 # versioning the api
 gem 'active_model_serializers'   # for making it easy to customize output for api
-gem 'dotiw'
+
+# Auto rank maintenance for sorted lists.
 gem 'acts_as_list', :git => 'https://github.com/swanandp/acts_as_list', branch: 'master'
+
 gem 'iso-639'
 gem 'responders', '~> 2.0'
 
@@ -58,6 +60,11 @@ gem 'ejs'
 # search
 gem 'thinking-sphinx', '~> 3.1.3'
 
+# search: delayed deltas
+gem 'daemons'
+gem 'delayed_job_active_record'
+gem 'ts-delayed-delta', '~> 2.0.2'
+
 # cron management
 gem 'whenever', :require => false
 
@@ -72,10 +79,22 @@ gem 'ancestry', '~> 2.0'
 
 gem 'rails-backbone', github: 'codebrew/backbone-rails'
 
+# Middleware for handling abusive requests
+gem 'rack-attack', github: 'sassafrastech/rack-attack'
+
+# reCAPTCHA support
+gem "recaptcha", :require => "recaptcha/rails"
+
 # XLS support
 gem 'roo'
 
 gem 'therubyracer', platforms: :ruby
+
+# Converting HTML to markdown for CSV export
+gem 'reverse_markdown'
+
+# Twilio SMS integration
+gem 'twilio-ruby', ' ~> 4.1'
 
 group :development do
   gem 'rails-erd'                     # generat with:  DIAGRAM=true rake db:migrate
@@ -90,8 +109,6 @@ group :development, :test do
   gem 'factory_girl_rails', '~> 4.0'
   gem 'jasmine-rails', '~> 0.10.7'   # test framework
   gem 'rspec-rails', '~> 3.0'        # test framework
-  gem 'rspec-its'
-  gem 'rspec-activemodel-mocks'
   gem 'mocha'                        # mocking/stubbing
   gem 'capybara'                     # acceptance tests
   gem 'selenium-webdriver'

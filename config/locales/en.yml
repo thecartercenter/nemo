@@ -39,6 +39,7 @@ en:
     incoming: "Incoming"
     language: "Language"
     login: "Login"
+    confirm_login: "Confirm Login"
     logout: "Logout"
     manage: "Manage"
     near: "Near"
@@ -313,7 +314,8 @@ en:
         viewed_at: "Last Viewed"
       setting:
         allow_unauthenticated_submissions: "Allow Unauthenticated Submissions?"
-        incoming_sms_number: "Incoming Number"
+        incoming_sms_number: "Incoming Number(s)"
+        incoming_sms_token: "Incoming SMS Token"
         intellisms_password1: "Password"
         intellisms_password2: "Password Confirmation"
         intellisms_username: "Username"
@@ -322,6 +324,9 @@ en:
         override_code: "Override Code"
         external_sql: "External SQL"
         timezone: "Time Zone"
+        twilio_account_sid: "Account SID"
+        twilio_auth_token1: "Auth Token"
+        twilio_phone_number: "Outgoing Number"
       sms/message:
         adapter_name: "Adapter"
         body: "Body"
@@ -466,10 +471,20 @@ en:
           This code should be given to observers if the ability to send incomplete responses is needed. ODK will not allow submission of incomplete responses without this code.
 
           If generating a new code, please record the old code if there are previous live forms. The new code will only work for forms downloaded after the code is regenerated.
-        incoming_sms_number: "Enter the phone number to which incoming SMSes for SMS forms should be sent. This will be displayed on the SMS guide. Only needed if using SMS submission."
+        incoming_sms_number: "Enter the phone number(s) to which incoming SMSes for SMS forms should be sent. This field will be displayed, verbatim, on the SMS guide. Only needed if using SMS submissions."
+        incoming_sms_token: |-
+          This token is included in the URL used by the incoming SMS provider to prevent the submission of unauthorized messages.
+        using_incoming_sms_token_title: Using the Incoming SMS Token
+        using_incoming_sms_token_body: |-
+          Please register the following incoming SMS URL with your gateway provider:
+
+          %{url}
         outgoing_sms_adapter: "The adapter used to send outgoing SMSes. Note that SMS replies may be sent out on via a different adapter, depending the adapter by which they arrived."
         intellisms_username: "The username for the IntelliSMS account."
         intellisms_password1: "Enter and re-enter a password to change the password for the IntelliSMS account."
+        twilio_phone_number: "The phone number registered with Twilio. Outgoing SMS broadcasts won't work unless this number is owned by your Twilio account. This number must include the country code. Example: +25680344523"
+        twilio_account_sid: "The Account SID for the Twilio account."
+        twilio_auth_token1: "The Auth Token for the Twilio account."
         external_sql: "The SQL code used to extract data for use in external applications. Click 'Select All' and then press Ctrl-C to copy."
         timezone: "The time zone in which times are displayed throughout the site."
       sms/test:
@@ -478,8 +493,8 @@ en:
       user:
         name: "The user's full name. Example: 'John Doe' or 'Team 1.1'"
         login: "The username will be used to log in. Click the suggest button to suggest a login name."
-        phone: "Phone number should include the country code. Example: +25680344523"
-        phone2: "Phone number should include the country code. Example: +25680344523"
+        phone: "Phone number must include the country code. Example: +25680344523"
+        phone2: "Phone number must include the country code. Example: +25680344523"
         admin: "Whether this user is a system-wide administrator. You can control per-mission permissions using the fields below."
         assignments: "The missions this user is assigned to."
         password: "Enter a new password here if you'd like to change your existing password."
@@ -517,6 +532,7 @@ en:
           one: "Please enter at exactly one character."
           other: "Please enter exactly %{count} characters."
         must_be_group: "Parent must be a group."
+        invalid_password: "Password must include at least one number, one lowercase letter, and one capital letter."
 
       models:
         answer:
@@ -721,7 +737,6 @@ en:
     error_messages:
       consecutive_failed_logins_limit_exceeded: "You have exceeded the consecutive failed login limit. Your account has been disabled."
       email_invalid: "should look like an email address"
-      general_credentials_error: "The Login/Password combination you entered is not valid."
       login_blank: "Please enter a username."
       login_invalid: "Should use only letters, numbers, spaces, and .-_@"
       login_not_found: "Not valid."
@@ -730,7 +745,7 @@ en:
       not_approved: "Your account is not approved."
       not_confirmed: "Your account is not confirmed."
       password_blank: "Please enter a password."
-      password_invalid: "Not valid."
+      password_invalid: "Not valid. Password security standards were recently upgraded. If your password no longer works, please use the reset password feature to choose a new one."
     models:
       user_session: "User Session"
     attributes:
@@ -738,6 +753,7 @@ en:
         login: "Username"
         password: "Password"
         remember_me: "Remember Me"
+        verify: "Verify"
 
   # time/date formats (see http://www.ruby-doc.org/core-2.0/Time.html#method-i-strftime for code meanings)
   date:
@@ -837,6 +853,7 @@ en:
       all: "Create Multiple Users"
     user_sessions:
       new: "Login"
+      login_confirmation: "Confirm Login"
       logged_out: "Logged Out"
     users:
       edit: "Edit User: %{name}"
@@ -1000,6 +1017,11 @@ en:
         "yes": "Yes"
     code_label: "Enter the incomplete override code"
 
+  index_table:
+    messages:
+      all_rows_selected: "Note that <strong>all</strong> %{count} rows are now selected"
+      searched_rows_selected: "Note that <strong>all</strong> %{count} rows matching the current search are now selected"
+
   location_picker:
     choose_location: "Choose Location"
     current_location: "Current Location"
@@ -1080,6 +1102,11 @@ en:
     datetime: "Date/Time"
     date: "Date"
     time: "Time"
+
+  recaptcha:
+    errors:
+      verification_failed: "Verification response is incorrect, please try again."
+      recaptcha_unreachable: "Oops, we failed to validate your verification response. Please try again."
 
   report/report:
     add_column: "Add Column"
@@ -1526,14 +1553,18 @@ en:
 
   setting:
     change_sms_password: "Change Password"
+    change_twilio_auth_token: "Change Auth Token"
     override_code_warning: "Note that the new override code will not work with forms that have already been downloaded. You should record the existing code if this is a problem. Are you sure you want to regenerate the code?"
+    using_incoming_sms_token: "How do I use this?"
     headings:
       general: "General Settings"
       sms: "SMS Settings"
 
   sms:
+    extra_recipients: "<br/>... and %{count} more"
     no_valid_adapter: "There is no valid outgoing SMS adapter. Please check the settings."
     outgoing_provider: "Outgoing SMS Provider"
+    timestamp_with_diff: "%{time}<br/>(sent %{time_diff} earlier)"
 
   sms_console:
     back_to_forms: "Back to Forms"

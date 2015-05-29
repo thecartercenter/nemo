@@ -37,8 +37,11 @@
 
   <% end %>
 
-  <%# render all the answers %>
-  <%= render(partial: 'answer_set', collection: @response.answer_sets) %>
+  <%# Answer sets %>
+  <% @response.form.arrange_descendants.each do |item, subtree| %>
+    <%= render('form_item', item: item, subtree: subtree) %>
+  <% end %>
+
 
   <%# incomplete checkbox %>
   <%= f.field(:incomplete, :type => :check_box) if can?(:submit_incomplete, @response) %>

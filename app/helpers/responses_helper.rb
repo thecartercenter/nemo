@@ -55,12 +55,9 @@ module ResponsesHelper
     if response.excerpts
       # loop over each
       response.excerpts.map do |e|
-        # force the string to be escaped before adding more tags
         html = excerpt_to_html(e[:text])
-
-        # add the code
-        "<p><b>[#{e[:code]}]:</b> #{html}</p>"
-      end.join('').html_safe
+        content_tag(:p, content_tag(:b, "[#{e[:code]}]:") << " " << html)
+      end.reduce(:<<)
     end
   end
 
@@ -77,7 +74,8 @@ module ResponsesHelper
     if responses.empty?
       ""
     else
-      CSV.generate do |csv|
+      # We use \r\n because Excel seems to prefer it.
+      CSV.generate(row_sep: "\r\n") do |csv|
         # add header row
         csv << responses.first.attributes.keys
 
@@ -85,8 +83,11 @@ module ResponsesHelper
         responses.each do |r|
           attribs = r.attributes.dup
 
-          # Strip HTML from answer_value if it exists.
-          attribs['answer_value'] = strip_tags(attribs['answer_value']) if attribs['answer_value']
+          # Format any paragraph style text.
+          attribs['question_name'] = format_csv_para_text(attribs['question_name'])
+          if attribs['question_type'] == 'long_text'
+            attribs['answer_value'] = format_csv_para_text(attribs['answer_value'])
+          end
 
           csv << attribs.values
         end

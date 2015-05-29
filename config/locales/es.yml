@@ -1,5 +1,6 @@
 es:
   locale_name: "Español"
+
   common:
     accept: "Aceptar"
     active: "Activo"
@@ -230,6 +231,7 @@ es:
         smsable: "¿Se puede enviar por SMS?"
         updated_at: "Última Modificación"
         version: "Versión"
+        item_list_heading: "Preguntas"
       mission:
         compact_name: "Nombre Compacto"
         locked: "¿Bloqueado?"
@@ -239,6 +241,11 @@ es:
         multi_level: "¿Es Multinivel?"
         options: "Opciones "
         option_levels: "Niveles"
+      qing_group:
+        group_name: "Nombre"
+        add: "Añadir Grupo"
+        edit: "Editar Grupo"
+        delete: "¿Está seguro de que desea eliminar el grupo '%{name}'?"
       question:
         code: "Código"
         answer_count: "Respuestas"
@@ -259,6 +266,7 @@ es:
         hidden: "¿Oculto?"
         rank: "Rango"
         required: "¿Obligatorio?"
+        delete: "¿Está seguro de que desea eliminar la pregunta '%{code}' de este formulario?"
       response:
         age: "Edad "
         answers: "Respuestas"
@@ -321,6 +329,9 @@ es:
         api_key: "Clave API"
       user_batch:
         batch: "Atributos de usuario"
+    errors:
+      messages:
+        invalid_password: "La contraseña debe incluir por lo menos un número, una letra minúscula y una letra mayúscula."
     table_headers:
       response:
         incomplete: "¿Incompleto?"
@@ -380,36 +391,36 @@ es:
       form:
         name: "Un nombre descriptivo para el formulario"
         smsable: "Si el formulario acepta envíos SMS. Esto puede afectar cuando el número de versión sea incrementado."
-        allow_incomplete: "Si se permite que las presentaciones incompletas atenuantes en casos cuando toda la información no está disponible. Tenga en cuenta que la cuestión \"necesaria\" debería ser el preferido destacado aquí."
-        version: "El número de la versión actual y letra."
-        access_level: "Público: Cualquier ELMO usuario puede acceder a los datos a través de la API. Protegido: sólo usuarios específicos pueden tener acceso a los datos a través de API. Privada: nadie puede acceder a los datos a través de la API."
+        allow_incomplete: "Si se permiten o no envíos incompletos en circunstancias atenuantes cuando información completa no está disponible. Tenga en cuenta que la pregunta \"obligatoria\" debería ser seleccionada como preferida aquí."
+        version: "El número de la versión actual y código de letras."
+        access_level: "Público: Cualquier usuario ELMO puede acceder a los datos a través de la API. Protegido: sólo usuarios específicos pueden tener acceso a los datos a través de API. Privada: nadie puede acceder a los datos a través de la API."
       mission:
-        name: "Un nombre para esta Misión. Un máximo de 32 caracteres. Debe ser único. Creo que respecto a la inclusión del año, en caso de que será el futuro de misiones con el mismo nombre."
-        locked: "Si una misión se bloquea, las respuestas y las formas no se puede crear o editar y los usuarios no se pueden agregar o eliminar."
+        name: "Un nombre para esta Misión. Un máximo de 32 caracteres. Debe ser único. Recuerde incluir del año, en caso de que sea una misión en el futuro con el mismo nombre."
+        locked: "Si una misión está bloqueadas, las Respuestas y los Formularios no se puede crear o editar y los Usuarios no se pueden agregar o eliminar."
       option:
         name: "La descripción textual de esta opción que los usuarios verán."
       option_set:
-        geographic: "Si esta opción establece representa información geográfica, por ejemplo, un conjunto de provincias o regiones."
+        geographic: "Si este Conjunto de Opciones representa información geográfica, por ejemplo, un conjunto de provincias o regiones."
         name: "Un nombre que resume este conjunto de opciones. Los usuarios normales no verán este nombre."
         multi_level: "Si el conjunto de opciones tiene varios niveles de opciones, como país -> estado -> ciudad."
         options:
-          editable: "Añadir las opciones existentes, escribiendo y haciendo click en \"Agregar\".  Si no puede ver una opción en la lista desplegable, puede agregar una nueva haciendo clic en \"Crear Nueva Opción\"."
+          editable: "Añadir las opciones existentes, escribiendo y haciendo click en \"Agregar\".  Si no puede ver una opción en la lista desplegable, puede agregar una nueva haciendo click en \"Crear Nueva Opción\"."
           read_only: "Las opciones que aparecerán en las preguntas en las que se utiliza esta opción."
-        option_levels: "Los nombres de cada nivel de opciones, por ejemplo 'País', 'Estado', 'Ciudad'.  Tenga en cuenta que estas son diferentes de las propias opciones (p.ej. 'Estados Unidos', 'Illinois', 'Chicago' ), que se definen a continuación."
+        option_levels: "Los nombres de cada nivel de opciones, por ejemplo 'País', 'Estado', 'Ciudad'.  Tenga en cuenta que estas son diferentes de opciones en si (por ejemplo 'Estados Unidos', 'Illinois', 'Chicago' ), que se definen a continuación."
       question:
-        code: "Un nombre de codigo corto (entre 2-20 caracteres).  Debe contener sólo letras y números, p. ej. BallotBoxSealed, DepartTime."
-        hint: "Instrucciones adicionales, p. ej., 'Enter un recuento aproximado de las personas que esperaban para votar\"."
-        key: "Respuestas a las preguntas clave para resumir las respuestas y aparecen en la respuesta. Preguntas clave comunes son la localización y la evaluación general."
-        minimum: "El valor mínimo para la respuesta. Active la casilla si el mínimo sí no es válido."
-        maximum: "El valor máximo de la respuesta. Active la casilla si el propio máximo no es válido."
-        name: "El principal texto de la pregunta, por ejemplo: \" ¿cuántas personas están en línea? \"."
-        option_set_id: "El conjunto de opciones entre el usuario podrá elegir."
-        qtype_name: "El tipo de información que el usuario estará entrando."
-        access_level: "Heredar: el mismo nivel de acceso al formulario principal. Sector privado: No se puede acceder a los datos a través de la API, independientemente del formulario principal nivel de acceso."
+        code: "Un nombre de código corto (2-20 caracteres).  Debe contener sólo letras y números, por ejemplo BallotBoxSealed, DepartTime."
+        hint: "Instrucciones adicionales, por ejemplo, 'Entre un recuento aproximado de las personas que esperaban para votar\"."
+        key: "Respuestas a las preguntas clave resumen las respuestas y aparecen en la lista de respuesta. Preguntas clave comunes son preguntas relacionadas con la localización y la evaluación general."
+        minimum: "El valor mínimo para la respuesta. Active la casilla si el mínimo no es válido."
+        maximum: "El valor máximo de la respuesta. Active la casilla si el máximo no es válido."
+        name: "El texto principal de la pregunta, por ejemplo: \" ¿cuántas personas están en línea? \"."
+        option_set_id: "El conjunto de opciones de las cuales el usuario podrá elegir."
+        qtype_name: "El tipo de información que el usuario proveerá."
+        access_level: "Heredar: El mismo nivel de acceso que la clase padre del formulario. Sector privado: No se puede acceder a los datos a través de la API, independientemente del nivel de acceso a la clase padre del formulario."
       questioning:
-        hidden: "Si esta pregunta se mostrará en este formulario. Utilice esta opción para desactivar una pregunta si no se puede eliminar. Este valor se anulará el estado y parámetros necesarios a continuación."
-        condition: "Una condición que debe cumplirse con el fin de esta cuestión se muestran al usuario."
-        required: "Si esta pregunta debe ser completada en este formulario o es opcional. Sólo aplica si no se oculta el estado especificado anteriormente."
+        hidden: "Si esta pregunta se mostrará o no en este formulario. Utilice esta opción para desactivar una pregunta si no la puede eliminar. Este valor se anulará el estado y parámetros necesarios indicados a continuación."
+        condition: "Una condición que debe cumplirse para que esta pregunta aparezca para el usuario."
+        required: "Si esta pregunta debe ser completada o no en este formulario o es opcional. Sólo se ejecutará si la pregunta no oculta la condición especificada anteriormente."
       report/report:
         name: "Un título descriptivo para este informe."
         aggregation_id: "La operación que se desea realizar en las estadísticas combinadas."
@@ -417,13 +428,13 @@ es:
         display_type: "La forma en la que desea presentar los resultados."
         unreviewed: "Si las respuestas revisadas se deben incluir en el informe o no."
         unique_rows: "Si las filas duplicadas se deben omitir en el informe o no."
-        pri_grouping: "Un atributo o pregunta por que la respuesta debe ser agrupados (por ejemplo, clasificación general)."
+        pri_grouping: "Un atributo o pregunta por el cual el cómputo de respuestas debe ser agrupado (por ejemplo, clasificación general)."
         percent_type: "Si y cómo los porcentajes deben calcularse para el informe."
-        bar_style: "Si las barras deben apilarse o side-by-side."
+        bar_style: "Si las barras deben apilarse o ponerse unas al lado de las otras."
       response:
-        incomplete: "Marque esta casilla si hay preguntas necesarias para que no se le puede dar respuestas. A continuación, podrá guardar esta respuesta sin responder a estas preguntas y la respuesta será marcado como \"incompleta\"."
+        incomplete: "Marque esta casilla si hay preguntas necesarias a las que no puede responder. A continuación, podrá guardar esta respuesta sin responder a estas preguntas y la respuesta será marcada como \"incompleta\"."
       setting:
-        allow_unauthenticated_submissions: "Si esta casilla está marcada, A nadie se le permitirá el envío de datos a la misión sin introducir una contraseña. Usar con precaución."
+        allow_unauthenticated_submissions: "Si esta casilla está marcada, NADIE podrá envar datos a la misión sin introducir una contraseña. Use con precaución."
         preferred_locales_str: |-
           Entre el <a href='http://www.loc.gov/standards/iso639-2/php/code_list.php' target='_blank'>código de dos letras</a>, separado por comas, para el idioma de la misión, en orden de preferencia.
 
@@ -435,8 +446,8 @@ es:
           Debe enviar este código a los observadores si es necesario que puedan enviar respuestas incompletas. ODK no permitirá que se entreguen respuestas incompletas sin este código.
 
           Si crea un código nuevo, por favor guarde el código viejo si aún existen formularios anteriores. El nuevo código sólo funcionara con los formularios que hayan sido descargados después de que el nuevo código haya sido creado.
-        incoming_sms_number: "Introduzca el número de teléfono al que las prepagas para SMS deberá enviarse. Este se mostrará en el SMS guía. Sólo es necesario si utiliza SMS presentación."
-        outgoing_sms_adapter: "El adaptador que se utiliza para enviar prepagas saliente. Tenga en cuenta que las respuestas SMS pueden ser enviados a través de un adaptador diferente, dependiendo del adaptador por que llegaron."
+        incoming_sms_number: "Introduzca el número de teléfono al que se deberán enviar los SMSes con los formularios SMS. Esto aparecerá en la guía SMS. Sólo es necesario si está enviando a travé de SMS presentación."
+        outgoing_sms_adapter: "El adaptador que se utiliza para enviar SMSes salientes. Tenga en cuenta que las respuestas SMS pueden ser enviadas a través de un adaptador diferente, dependiendo del adaptador del que provienen."
         intellisms_username: "El nombre de usuario de la cuenta IntelliSMS."
         intellisms_password1: "Escriba y vuelva a escribir una contraseña para cambiar la contraseña de la cuenta IntelliSMS."
         external_sql: "El código SQL utilizado para extraer los datos para su uso en aplicaciones externas. Haga click en \"Seleccionar todo\" y, a continuación, presione Ctrl-C para copiar."
@@ -449,7 +460,7 @@ es:
         login: "El nombre de usuario se utilizará para iniciar sesión. Haga click en el botón de sugerir para sugerir un nombre de inicio de sesión."
         phone: "Número de teléfono deberá incluir el código del país. Ejemplo: +25680344523"
         phone2: "Número de teléfono deberá incluir el código del país. Ejemplo: +25680344523"
-        admin: "Si el usuario es un administrador de todo el sistema. Se puede controlar por misión los permisos utilizando los campos que se muestran a continuación."
+        admin: "Si el usuario es un administrador de todo el sistema o no. Se puede controlar por los permisos para cada misión utilizando los campos que se aparecen a continuación."
         assignments: "Las misiones a las que este usuario ha sido asignado."
         password: "Introduzca una nueva contraseña aquí si desea cambiar su contraseña actual."
         password_confirmation: "Introduzca la nueva contraseña otra vez."
@@ -482,6 +493,7 @@ es:
         wrong_length:
           one: "Por favor ponga exactamente un carácter."
           other: "Por favor ponga exactamente %{count} carácteres."
+        must_be_group: "La clase padre debe ser un grupo."
       models:
         answer:
           required: "Por favor, introduzca un valor."
@@ -511,7 +523,7 @@ es:
         option_set:
           at_least_one: "Debe elegir al menos una opción."
           cant_delete_if_has_questions: "No se puede eliminar este Conjunto de Opciones porque una o más Preguntas están relacionadas."
-          cant_delete_if_has_answers: "No se puede eliminar este Conjunto de Opciones, ya que se incluye en al menos una Respuesta ."
+          cant_delete_if_has_answers: "No se puede eliminar este Conjunto de Opciones, ya que está incluido en al menos una Respuesta ."
           general: "Hubo un problema al guardar el conjunto de opciones."
           wrong_depth: "Tiene %{levels} niveles de opción pero su árbol de opciones sólo tiene %{depth}  opciones. "
         question:
@@ -693,25 +705,25 @@ es:
         remember_me: "Recuérdame"
   search_qualifiers:
     text: "texto"
-    email: "correo electrónico"
+    email: "correo-electrónico"
     form: "formulario"
-    login: "iniciar sesión"
+    login: "iniciar-sesión"
     name: "nombre"
-    option_set: "conjunto de opciones "
+    option_set: "conjunto-de-opciones"
     phone: "teléfono"
     question: "pregunta"
-    question_type: "Tipo de Pregunta"
+    question_type: "tipo-de-pregunta"
     reviewed: "revisado"
     source: "fuente"
-    submit_date: "fecha de entrega"
+    submit_date: "fecha-de-entrega"
     submitter: "remitente"
     code: "código"
     title: "título"
     type: "tipo"
     tag: "etiqueta"
     date: "fecha"
-    datetime: "fecha y hora"
-    username: "nombre de usuario"
+    datetime: "fecha-y-hora"
+    username: "nombre-de-usuario"
     content: "contenido"
     number: "número"
   page_titles:
@@ -866,7 +878,7 @@ es:
     option_in_use_name_change_warning: "Esta opción se utiliza en otros formularios publicados o se hace referencia en las respuestas existentes. Usted debe tener cuidado de no cambiar el significado de la Opción."
     option_standard_copy_name_change_warning: "Esta opción es una copia de una opción estándar. Usted debe asegurarse de mantener el significado original de la Opción de modo que corresponda con el formato estándar."
     published_warnings:
-      form: "Este formulario está publicado, lo que significa que ya puede estar en las manos de los observadores. Algunos campos, por lo tanto, no se pueden editar. Por favor proceda con precaución al hacer los cambios."
+      form: "Este Formulario ha sido publicado, lo que significa que ya puede estar en las manos de los observadores. Algunos campos, por lo tanto , no se pueden editar y no se pueden añadir, eliminar o reordenar preguntas. Por favor proceda con cuidado si hace algún cambio."
       questioning: "El Formulario relacionado con los siguientes campos ya ha sido publicado, por lo tanto estos campos no se pueden editar."
       question: "Esta Pregunta aparece en al menos un Formulario publicado, lo cual quiere decir que es posible que ya esté en las manos de los observadores. Por lo tanto, algunos campos no se pueden editar. Por favor, aseguresé de no cambiar el significado de la pregunta."
       option_set: "Este Conjunto de Opciones aparece en al menos un Formulario publicado, lo que significa que ya puede estar en manos de los observadores, por lo tanto las Opciones no se pueden añadir, eliminar o reordenar. Por favor proceda con precaución si va a editar las Opciones."
@@ -874,6 +886,7 @@ es:
       odk: "Estos cambios no desactivaran las Respuestas de ODK, pero pueden causar alguna pérdida de datos y/o Respuestas que no son válidas (por ejemplo, faltan respuestas necesarias)."
   form:
     select_api_users: "Seleccionar todos los usuarios que pueden obtener acceso a los datos del Formulario a través de la API:"
+    add_group: "Añadir Grupo"
     add_questions: "Añadir Preguntas"
     add_selected: "Añadir Preguntas Seleccionadas al Formulario"
     back_to_questions: "Volver a la Lista de Preguntas"
@@ -882,6 +895,11 @@ es:
     clone_error: "Hubo un problema clonando el formulario (%{msg})."
     clone_success: "Formulario '%{form_name}' clonado con éxito."
     no_mission: "Ninguna Misión"
+    no_questions_yet: "Aún no hay preguntas."
+    invalid_drop_location:
+      parent_must_be_group: "La clase padre ha de ser un grupo."
+      max_depth: "Los grupos no pueden ser clase hijas de otros grupos."
+      invalid_condition: "Esta posición invalidaría una posición."
     print_form: "Imprimir Formulario"
     print_format_tips:
       title: "Imprimir Consejos de Formato"
@@ -899,6 +917,7 @@ es:
     remove_question_confirm: "¿Está seguro de que desea eliminar estas ### pregunta(s) del formulario?"
     reqd_sym_definition: "Preguntas obligatorias están marcadas con un"
     save_and_publish: "Guardar y Publicar"
+    saving_order: "Guardando la comanda..."
     unpublish_error: "Hubo un problema deshaciendo la publicación del formulario (%{msg})."
     unpublish_success: "Se ha deshecho con éxito la publicación del Formulario."
     unpublish: "Deshacer publicación"
@@ -951,9 +970,9 @@ es:
     new_tag: "Nueva etiqueta"
     click_to_filter: "Haga click para filtrar con esta etiqueta"
   password_reset:
-    check_email: "Instrucciones para restablecer la contraseña han sido enviadas por correo electrónico. Por favor revise su correo electrónico."
+    check_email: "Instrucciones para restablecer la contraseña han sido enviadas por correo electrónico. Por favor mire su correo electrónico."
     enter_new_pass: "%{name}, por favor entre una nueva contraseña para su cuenta."
-    fill_out_form: "Rellene el siguiente formulario y las instrucciones para restablecer su contraseña le será enviada por correo electrónico. Si no hay una dirección de correo electrónico asociada con su cuenta de la contraseña tendrá que reiniciar por un administrador."
+    fill_out_form: "Rellene el siguiente formulario y las instrucciones para reestablecer su contraseña le serán enviadas por correo electrónico. Si no hay una dirección de correo electrónico asociada con su cuenta, su contraseña tendrá que ser cambiada por un administrador."
     success: "Contraseña actualizada con éxito."
     token_not_found: |-
       Lo sentimos, pero no hemos podido localizar su cuenta. Si está teniendo problemas intente copiar y pegar el URL

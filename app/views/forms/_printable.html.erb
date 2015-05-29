@@ -11,8 +11,7 @@
       <td class="name"><%= t("response.observation_time") %></td>
       <td class="answer text_answer"><div class="answer_box"></div></td>
     </tr>
-    <% form.visible_questionings.select(&:printable?).each do |qing| %>
-      <%= render("questionings/printable", :qing => qing) %>
-    <% end %>
+
+    <%= render 'form_items/printable', items: form.arrange_descendants %>
   </table>
 </div>

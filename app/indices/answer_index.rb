@@ -1,4 +1,6 @@
-ThinkingSphinx::Index.define :answer, :with => :active_record, :delta => true do
+delta = Rails.env.production? ? ThinkingSphinx::Deltas::DelayedDelta : true
+
+ThinkingSphinx::Index.define :answer, :with => :active_record, :delta => delta do
   # fields
   indexes value
 

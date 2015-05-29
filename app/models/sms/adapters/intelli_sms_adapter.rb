@@ -3,9 +3,9 @@ require 'uri'
 class Sms::Adapters::IntelliSmsAdapter < Sms::Adapters::Adapter
 
   # checks if this adapter recognizes an incoming http receive request
-  def self.recognize_receive_request?(params)
+  def self.recognize_receive_request?(request)
     # if the params from, text, msgid, and sent are all in the request params, its ours!
-    %w(from text msgid sent) - params.keys == []
+    %w(from text msgid sent) - request.params.keys == []
   end
 
   def self.can_deliver?
@@ -27,17 +27,16 @@ class Sms::Adapters::IntelliSmsAdapter < Sms::Adapters::Adapter
     uri = build_uri(:deliver, params)
     Rails.logger.info("Sending IntelliSMS request: #{uri}")
 
-    # don't send in test mode
-    unless Rails.env == "test"
-      response = send_request(uri)
-      parse_and_raise_any_errors
-    end
+    response = send_request(uri)
+    parse_and_raise_any_errors(response)
 
     # if we get to this point, it worked
     return true
   end
 
-  def receive(params)
+  def receive(request)
+    params = request.params
+
     # strip leading zeroes from the from number (intellisms pads the country code with 0s)
     params['from'].gsub!(/^0+/, "")
 
@@ -53,7 +52,7 @@ class Sms::Adapters::IntelliSmsAdapter < Sms::Adapters::Adapter
   # Check_balance returns the balance string. Raises error if balance check failed.
   def check_balance
     response = send_request(build_uri(:balance))
-    response.match(/^BALANCE:(\d+)\s*$/) ? $1.to_i : parse_and_raise_any_errors
+    response.match(/\ABALANCE:(\d+)\s*\z/) ? $1.to_i : parse_and_raise_any_errors(response)
   end
 
   # How replies should be sent.
@@ -83,7 +82,7 @@ class Sms::Adapters::IntelliSmsAdapter < Sms::Adapters::Adapter
       return uri
     end
 
-    def parse_and_raise_any_errors
+    def parse_and_raise_any_errors(response)
       # get any errors that the service returned
       errors = response.split("\n").reject{|l| !l.match(/ERR:/)}.join("\n")
       raise Sms::Error.new("IntelliSMS Server Error: #{errors}") unless errors.blank?

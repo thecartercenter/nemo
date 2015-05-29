@@ -5,13 +5,12 @@
 
   <h2><%= t("setting.headings.general") %></h2>
 
-  <%= f.field(:mission_id, :type => :hidden) %>
   <%= f.field(:timezone, :type => :timezone, :required => true) %>
   <%= f.field(:preferred_locales_str, :required => true) %>
 
   <%# None of the rest of this is relevant in admin mode. %>
   <% unless admin_mode? %>
-    <%= f.field(:override_code, :partial => 'override_code') %>
+    <%= f.regenerable_field(:override_code, :confirm => t('setting.override_code_warning')) %>
 
     <%= f.field(:allow_unauthenticated_submissions, :type => :check_box) if configatron.allow_unauthenticated_submissions? %>
 
@@ -19,15 +18,27 @@
 
     <%= f.field(:incoming_sms_number) %>
 
+    <%= f.regenerable_field(:incoming_sms_token, :append => link_to(t('setting.using_incoming_sms_token'), '#', :class => 'using-incoming_sms_token')) %>
+
     <%= f.field(:outgoing_sms_adapter, :type => :select, :options => @adapter_options, :prompt => t("common.none")) %>
 
     <div class="adapter_settings" data-adapter="IntelliSms">
 
-      <%= f.field(:intellisms_username, :append => link_to(t("setting.change_sms_password"), "#")) %>
+      <%= f.field(:intellisms_username, :append => link_to(t("setting.change_sms_password"), "#", :class => 'show_credential_fields')) %>
 
-      <div class="password_fields">
+      <div class="credential_fields">
         <%= f.field(:intellisms_password1, :type => :password) %>
         <%= f.field(:intellisms_password2, :type => :password) %>
+      </div>
+    </div>
+
+    <div class="adapter_settings" data-adapter="Twilio">
+      <%= f.field(:twilio_phone_number) %>
+
+      <%= f.field(:twilio_account_sid, :append => link_to(t("setting.change_twilio_auth_token"), "#", :class => 'show_credential_fields')) %>
+
+      <div class="credential_fields">
+        <%= f.field(:twilio_auth_token1, :type => :password) %>
       </div>
     </div>
 
@@ -42,7 +53,28 @@
 
 <% end %>
 
+<%# using incoming_sms_token modal %>
+<div class="modal fade" id="using-incoming_sms_token-modal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title"><%= t('activerecord.hints.setting.using_incoming_sms_token_title') %></h4>
+      </div>
+      <div class="modal-body pane_body"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal"><%= I18n.t("common.close") %></button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
 <%= javascript_doc_ready do %>
   // instantiate the frontend view object to handle the interactive stuff
-  new ELMO.Settings();
+  new ELMO.Views.SettingsView(<%=json(
+    need_credentials: {
+      IntelliSms: @setting.intellisms_password.blank?,
+      Twilio: @setting.twilio_auth_token.blank?
+    }
+  )%>);
 <% end %>

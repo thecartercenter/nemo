@@ -53,6 +53,8 @@ describe 'abilities for users' do
       end
     end
 
+    # None of these are covered in admin/coord shared abilities since only admins
+    # can be in admin mode.
     context 'in admin mode' do
       before(:all) do
         @ability = Ability.new(user: @user, mode: 'admin')
@@ -72,6 +74,7 @@ describe 'abilities for users' do
 
         it 'should disallow other actions' do
           expect(@ability).not_to be_able_to(:adminify, @user)
+          expect(@ability).not_to be_able_to(:activate, @user)
         end
       end
 
@@ -81,6 +84,7 @@ describe 'abilities for users' do
           expect(@ability).to be_able_to(:update, @user2)
           expect(@ability).to be_able_to(:change_assignments, @user2)
           expect(@ability).to be_able_to(:adminify, @user2)
+          expect(@ability).to be_able_to(:activate, @user2)
         end
       end
     end

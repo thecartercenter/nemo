@@ -7,6 +7,11 @@
   ns.QuestionFormTagField = klass = function(params) { var self = this;
     self.params = params;
 
+    // Add hidden inputs for any unsaved tags.
+    params.question_tags.forEach(function(t){
+      if (!t.id) self.add_tag(t, params.mission_id);
+    });
+
     // Using an ends with selector because the id is different on question and questioning forms
     $("input[id$='_tag_ids']").tokenInput(params.suggest_tags_path + '.json', {
       theme: 'elmo',

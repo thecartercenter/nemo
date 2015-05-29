@@ -1,0 +1,12 @@
+<%= elmo_form_for(@user_session, :url => login_confirmation_path, :style => :minimal) do |f| %>
+  <%= f.field(:password, :type => :password) %>
+  <%= f.field(:verify, :content => recaptcha_tags) if captcha_required? %>
+  <div class="submit-buttons">
+    <%= f.submit(:confirm_login, :class => "btn btn-primary") %>
+  </div>
+<% end %>
+
+<%= javascript_doc_ready do %>
+  $("input#user_session_password").focus();
+<% end %>
+

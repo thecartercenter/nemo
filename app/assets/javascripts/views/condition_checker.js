@@ -40,15 +40,19 @@
 
   // evals the condition and shows/hides accordingly
   klass.prototype.refresh = function() {
-    // evaluate
-    this.eval_result = this.eval();
+    var new_result = this.eval();
 
-    // show/hide it and set relevance
-    this.row[this.eval_result ? "show" : "hide"]();
-    this.row.find("input.relevant").val(this.eval_result ? "true" : "false");
+    // If the eval_result changed
+    if (new_result != this.eval_result) {
+      this.eval_result = new_result;
 
-    // simulate a change event on the control in the tr
-    this.row.find("div.control").find("input, select, textarea").first().trigger("change");
+      // show/hide it and set relevance
+      this.row[this.eval_result ? "show" : "hide"]();
+      this.row.find("input.relevant").val(this.eval_result ? "true" : "false");
+
+      // Simulate a change event on the control so that later conditions will be re-evaluated.
+      this.row.find("div.control").find("input, select, textarea").first().trigger("change");
+    }
   }
 
   // evaluates the referred question and shows/hides the question
@@ -96,9 +100,11 @@
       switch (this.rq_type) {
         case "long_text":
           // Use ckeditor if available, else use textarea value (usually just on startup).
-          var textarea = this.rq_row.find("div.control textarea");
           var ckeditor = this.get_ckeditor();
-          return ckeditor ? ckeditor.getData() : '<p>' + textarea.val() + '</p>';
+          var content = ckeditor ? ckeditor.getData() : this.rq_row.find("div.control textarea").val();
+
+          // Strip wrapping <p> tag for comparison.
+          return content.replace(/(^<p>|<\/p>$)/ig, "")
 
         case "integer":
         case "decimal":
@@ -139,8 +145,7 @@
         return this.condition.value;
 
       case "long_text":
-        // CKeditor wraps stuff with <p>
-        return '<p>' + this.condition.value + '</p>';
+        return this.condition.value;
 
       case "integer": case "decimal":
         return parseFloat(this.condition.value);

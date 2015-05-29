@@ -20,20 +20,18 @@ module Concerns::ApplicationController::Authentication
 
   # Determines the user and saves in the @current_user var.
   def get_user
-
     # If user already logged in via Authlogic, we are done.
     if (user_session = UserSession.find) && user_session.user
 
-      # Look up the current user from the user session
-      # We use a find call to the User class so that we can do eager loading
-      @current_user = User.includes(:assignments).find(user_session.user.id)
+      @current_user = user_session.user
 
-    # If the direct_auth or no_auth params are set (usually set in the routes file),
-    # we expect the request to provide its own authentication using e.g. basic auth, or no auth.
-    elsif params[:direct_auth] || params[:no_auth]
+    # If the direct_auth parameter is set (usually set in the routes file), we
+    # expect the request to provide its own authentication using e.g. basic
+    # auth, or no auth.
+    elsif params[:direct_auth]
 
       # Special unauthenticated request.
-      if params[:no_auth]
+      if params[:direct_auth] == 'none'
 
         process_noauth
 
@@ -44,7 +42,10 @@ module Concerns::ApplicationController::Authentication
           # Use eager loading.
           User.includes(:assignments).find_by_credentials(login, password)
         end
-        return request_http_basic_authentication if !@current_user
+
+        return request_http_basic_authentication unless @current_user
+
+        return render text: 'USER_INACTIVE', status: :unauthorized unless @current_user.active?
       end
 
     else

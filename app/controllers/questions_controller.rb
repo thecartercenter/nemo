@@ -92,11 +92,6 @@ class QuestionsController < ApplicationController
     end
 
     def question_params
-      required = params.require(:question)
-      whitelisted = permit_translations(required, :name, :hint) + [
-        :code, :qtype_name, :option_set_id, :casted_minimum,
-        :minstrictly, :casted_maximum, :maxstrictly, :tag_ids, :key,
-        :access_level, tags_attributes: [:name, :mission_id]]
-      required.permit(whitelisted)
+      params.require(:question).permit(whitelisted_question_params(params[:question]))
     end
 end

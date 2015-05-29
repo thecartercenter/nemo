@@ -4,7 +4,7 @@
 
   <div class="field">
     <%= f.label(:ref_qing_id, translate_model(Question)) %>
-    <%= f.select(:ref_qing_id, @condition.refable_qings.map{|q| ["#{q.full_rank}. #{q.question.code}", q.id]},
+    <%= f.select(:ref_qing_id, @condition.refable_qings.map{|q| ["#{q.full_dotted_rank}. #{q.question.code}", q.id]},
       {include_blank: true}, class: 'form-control') %>
   </div>
 
@@ -23,4 +23,4 @@
       <%= f.text_field(:value, class: 'text form-control') %>
     <% end %>
   </div>
-<% end # elmo_fields_for %>
+<% end %>

@@ -34,7 +34,7 @@ class OptionNode < ActiveRecord::Base
   def self.preload_child_options(roots)
     ancestries = roots.map{ |r| "'#{r.id}'" }.join(',')
     nodes_by_root_id = OptionNode.includes(:option).where("ancestry IN (#{ancestries})").order('rank').group_by{ |n| n.ancestry.to_i }
-    roots.each{ |r| r.child_options = nodes_by_root_id[r.id].map(&:option) }
+    roots.each{ |r| r.child_options = (nodes_by_root_id[r.id] || []).map(&:option) }
   end
 
   # Efficiently gets an option id from an option node id. id may be a string or integer.
@@ -243,12 +243,16 @@ class OptionNode < ActiveRecord::Base
       "\n" + sorted_children.map{ |c| c.to_s_indented(:space => options[:space] + 2) }.join
   end
 
-  private
+  protected
 
     # Special method for creating/updating a tree of nodes via the children_attribs hash.
     # Sets ranks_changed? flag if the ranks of any of the descendants' children change.
     def update_children
+      # It's important not to run through this method if children_attribs is nil, since otherwise
+      # children will get deleted on a partial update.
       return if children_attribs.nil?
+
+      self.children_attribs = [] if children_attribs == 'NONE'
 
       reload # Ancestry doesn't seem to work properly without this.
 
@@ -271,6 +275,10 @@ class OptionNode < ActiveRecord::Base
         attribs[:id] = attribs[:id].to_i if attribs.key?(:id)
         if attribs[:id] && matching = children_by_id[attribs[:id]]
           self.ranks_changed = true if matching.rank != i + 1
+
+          # Not sure why this is needed, temporary hack.
+          attribs[:children_attribs] = 'NONE' if attribs[:children_attribs].nil?
+
           matching.update_attributes!(attribs.merge(rank: i + 1))
           copy_flags_from_subnode(matching)
 
@@ -292,6 +300,8 @@ class OptionNode < ActiveRecord::Base
       # Don't need this anymore. Nullify to prevent duplication on future saves.
       self.children_attribs = nil
     end
+
+  private
 
     def copy_flags_from_subnode(node)
       self.ranks_changed = true if node.ranks_changed?

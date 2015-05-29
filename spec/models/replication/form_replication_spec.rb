@@ -15,6 +15,10 @@ describe Form do
         @copy.reload
       end
 
+      it 'should not produce blank ancestry (only nil)' do
+        expect(@copy.root_group.ancestry).to be_nil
+      end
+
       it 'should produce distinct child objects' do
         expect(@std).not_to eq @copy
         expect(@std.root_group).not_to eq @copy.root_group
@@ -47,7 +51,7 @@ describe Form do
     context 'with a condition referencing an option' do
       context 'from a multilevel set' do
         before do
-          @std = create(:form, question_types: %w(select_one integer), is_standard: true, use_multilevel_option_set: true)
+          @std = create(:form, question_types: %w(multi_level_select_one integer), is_standard: true)
 
           # Create condition on 2nd questioning.
           @std.c[1].condition = build(:condition,

@@ -25,10 +25,14 @@ class SmsController < ApplicationController
   end
 
   def create
-    @incoming_adapter = Sms::Adapters::Factory.new.create_for_request(params)
+    if params[:token] != current_mission.setting.incoming_sms_token
+      raise Sms::Error.new("Could not verify incoming SMS token")
+    end
+
+    @incoming_adapter = Sms::Adapters::Factory.new.create_for_request(request)
     raise Sms::Error.new("No adapters recognized this receive request") if @incoming_adapter.nil?
 
-    @incoming = @incoming_adapter.receive(params)
+    @incoming = @incoming_adapter.receive(request)
 
     @incoming.update_attributes(:mission => current_mission)
 
@@ -53,10 +57,10 @@ class SmsController < ApplicationController
 
       if @incoming_adapter.reply_style == :via_adapter
         @outgoing_adapter.deliver(reply)
-        render :text => 'REPLY_SENT'
+        render :plain => 'REPLY_SENT'
       else # reply via response
         @incoming_adapter.prepare_message_for_delivery(reply)
-        render :text => reply.body
+        render :plain => reply.body
       end
     end
 end

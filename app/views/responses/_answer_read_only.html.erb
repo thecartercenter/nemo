@@ -7,7 +7,7 @@
 
 <% when 'select_multiple' %>
 
-  <%= content_tag(:div, answer.choices.map{|c| c.option.name}.join('<br/>').html_safe, class: 'ro-val', :'data-val' => answer.choices.map(&:option_id).to_json) %>
+  <%= content_tag(:div, safe_join(answer.choices.map{|c| c.option.name}, tag(:br)), class: 'ro-val', :'data-val' => answer.choices.map(&:option_id).to_json) %>
 
 <% when 'datetime', 'date', 'time' %>
 
@@ -32,4 +32,4 @@
   <%# no need to output data-val here since same as human readable %>
   <%= content_tag(:div, answer.value, class: 'ro-val') %>
 
-<% end # case %>
+<% end %>

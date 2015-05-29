@@ -2,7 +2,7 @@ class Setting < ActiveRecord::Base
   include MissionBased
 
   # attribs to copy to configatron
-  KEYS_TO_COPY = %w(timezone preferred_locales intellisms_username intellisms_password incoming_sms_number)
+  KEYS_TO_COPY = %w(timezone preferred_locales intellisms_username intellisms_password incoming_sms_number twilio_phone_number twilio_account_sid twilio_auth_token)
 
   # these are the keys that make sense in admin mode
   ADMIN_MODE_KEYS = %w(timezone preferred_locales)
@@ -15,16 +15,17 @@ class Setting < ActiveRecord::Base
 
   before_validation(:cleanup_locales)
   before_validation(:nullify_fields_if_these_are_admin_mode_settings)
+  before_validation(:normalize_twilio_phone_number)
   validate(:locales_are_valid)
   validate(:one_locale_must_have_translations)
   validate(:sms_adapter_is_valid)
   validate(:sms_credentials_are_valid)
-  before_save(:save_sms_passwords)
+  before_save(:save_sms_credentials)
 
   serialize :preferred_locales, JSON
 
   # accessors for password/password confirm fields
-  attr_accessor :intellisms_password1, :intellisms_password2
+  attr_accessor :intellisms_password1, :intellisms_password2, :twilio_auth_token1
 
   # loads the settings for the given mission (or nil mission/admin mode) into the configatron store
   # if the settings can't be found, a default setting is created and saved before being loaded
@@ -57,6 +58,8 @@ class Setting < ActiveRecord::Base
     # bug in rails 4.2?
     setting.preferred_locales = [:en]
 
+    setting.generate_incoming_sms_token if mission.present?
+
     # copy default_settings from configatron
     configatron.default_settings.configatron_keys.each do |k|
       setting.send("#{k}=", configatron.default_settings.send(k)) if setting.respond_to?("#{k}=")
@@ -68,6 +71,25 @@ class Setting < ActiveRecord::Base
   def generate_override_code!(size = 6)
     self.override_code = Random.alphanum_no_zero(size)
     self.save!
+  end
+
+  def generate_incoming_sms_token(replace=false)
+    # Don't replace token unless replace==true
+    unless incoming_sms_token.nil? or replace
+      return
+    end
+
+    # Ensure that the new token is actually different
+    begin
+      new_token = SecureRandom.hex
+    end while new_token == incoming_sms_token
+
+    self.incoming_sms_token = new_token
+  end
+
+  def regenerate_incoming_sms_token!
+    generate_incoming_sms_token(true)
+    save!
   end
 
   # copies this setting to configatron
@@ -142,17 +164,21 @@ class Setting < ActiveRecord::Base
       when "IntelliSms"
         errors.add(:intellisms_username, :blank) if intellisms_username.blank?
         errors.add(:intellisms_password1, :did_not_match) unless intellisms_password1 == intellisms_password2
+      when "Twilio"
+        errors.add(:twilio_account_sid, :blank) if twilio_account_sid.blank?
+        errors.add(:twilio_auth_token1, :blank) if twilio_auth_token.blank? && twilio_auth_token1.blank?
       else
         # if there is no adapter then don't need to check anything
       end
     end
 
-    # if the sms password temp fields are set (and they match, which is checked above), copy the value to the real field
-    def save_sms_passwords
-      unless outgoing_sms_adapter.blank?
-        adapter = outgoing_sms_adapter.downcase
-        input = send("#{adapter}_password1")
-        send("#{adapter}_password=", input) unless input.blank?
+    # if the sms credentials temp fields are set (and they match, which is checked above), copy the value to the real field
+    def save_sms_credentials
+      case outgoing_sms_adapter
+      when "IntelliSms"
+        self.intellisms_password = intellisms_password1 unless intellisms_password1.blank?
+      when "Twilio"
+        self.twilio_auth_token = twilio_auth_token1 unless twilio_auth_token1.blank?
       end
       return true
     end
@@ -164,5 +190,9 @@ class Setting < ActiveRecord::Base
       if mission_id.nil?
         (attributes.keys - ADMIN_MODE_KEYS - %w(id created_at updated_at mission_id)).each{|a| self.send("#{a}=", nil)}
       end
+    end
+
+    def normalize_twilio_phone_number
+      self.twilio_phone_number = PhoneNormalizer.normalize(twilio_phone_number)
     end
 end

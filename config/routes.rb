@@ -23,6 +23,9 @@ ELMO::Application.routes.draw do
     get '/route-tests' => 'route_tests#basic_mode' if Rails.env.development? || Rails.env.test?
     get '/unauthorized' => 'welcome#unauthorized', as: :unauthorized
 
+    get '/confirm-login' => 'user_sessions#login_confirmation', defaults: { confirm: true }, as: :new_login_confirmation
+    post '/confirm-login' => 'user_sessions#process_login_confirmation', defaults: { confirm: true }, as: :login_confirmation
+
     # Routes with user or no user.
     root to: 'welcome#index', as: :basic_root
   end
@@ -91,7 +94,15 @@ ELMO::Application.routes.draw do
     end
 
     resources :qing_groups, path: 'qing-groups', except: :index
-    resources :settings
+    resources :settings do
+      member do
+        post 'regenerate_override_code'
+        post 'regenerate_incoming_sms_token'
+      end
+      collection do
+        get 'using_incoming_sms_token_message'
+      end
+    end
     resources :user_batches, path: 'user-batches'
     resources :groups
     resources :form_items, path: 'form-items', only: [:update]
@@ -119,26 +130,32 @@ ELMO::Application.routes.draw do
     resources :users do
       member do
         get 'login_instructions', path: 'login-instructions'
-        put 'regenerate_key'
+        post 'regenerate_api_key'
       end
       post 'export', on: :collection
     end
   end
 
-  # Special SMS and ODK routes. No locale.
+  # Special SMS routes. No locale.
   scope '/m/:mission_name', mission_name: /[a-z][a-z0-9]*/, defaults: { mode: 'm'} do
-    resources :sms, only: [:create]
-    get '/sms/submit' => 'sms#create'
+    match '/sms/submit/:token' => 'sms#create', token: /[0-9a-f]{32}/, via: [:get, :post], as: :mission_sms_submission
+  end
 
-    # ODK routes. They are down here so that forms_path doesn't return the ODK variant.
-    get '/formList' => 'forms#index', as: :odk_form_list, defaults: {format: 'xml', direct_auth: true}
-    get '/forms/:id' => 'forms#show', as: :odk_form, defaults: {format: 'xml', direct_auth: true}
-    get '/forms/:id/manifest' => 'forms#odk_manifest', as: :odk_form_manifest, defaults: {format: 'xml', direct_auth: true}
-    get '/forms/:id/itemsets' => 'forms#odk_itemsets', as: :odk_form_itemsets, defaults: {format: 'csv', direct_auth: true}
-    match '/submission' => 'responses#create', via: [:get, :head, :post], defaults: {format: 'xml', direct_auth: true}
+  # Special ODK routes. No locale. They are down here so that forms_path doesn't return the ODK variant.
+  #
+  # NOTE: Brute-force login protection happens in the rack-attack middleware,
+  # which executes before routing. Be sure that all paths marked with
+  # :direct_auth => true are also matched by the direct_auth? method in
+  # config/initializers/rack-attack.rb
+  scope '/m/:mission_name', mission_name: /[a-z][a-z0-9]*/, defaults: { mode: 'm', direct_auth: 'basic' } do
+    get '/formList' => 'forms#index', as: :odk_form_list, defaults: {format: 'xml'}
+    get '/forms/:id' => 'forms#show', as: :odk_form, defaults: {format: 'xml'}
+    get '/forms/:id/manifest' => 'forms#odk_manifest', as: :odk_form_manifest, defaults: {format: 'xml'}
+    get '/forms/:id/itemsets' => 'forms#odk_itemsets', as: :odk_form_itemsets, defaults: {format: 'csv'}
+    match '/submission' => 'responses#create', via: [:get, :head, :post], defaults: {format: 'xml'}
 
     # Unauthenticated submissions
-    match '/noauth/submission' => 'responses#create', via: [:get, :head, :post], defaults: {format: :xml, no_auth: true}
+    match '/noauth/submission' => 'responses#create', via: [:get, :head, :post], defaults: {format: :xml, direct_auth: 'none'}
   end
 
   # API routes.

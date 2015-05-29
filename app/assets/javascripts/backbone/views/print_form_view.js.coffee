@@ -46,10 +46,7 @@ class ELMO.Views.PrintFormView extends Backbone.View
 
   # Shows the print dialog, or just a dummy modal if in test mode.
   do_print: ->
-    if ELMO.app.params.rails_env == 'test'
-      alert('THIS IS A PRINT DIALOG')
-    else
-      window.print()
+    window.print()
 
   datestamp: ->
     d = new Date()

@@ -11,6 +11,6 @@ class Report::SummaryItem
   end
 
   def as_json(options = {})
-    super(:only => [:qtype_name, :stat, :text, :count, :pct, :response_id, :created_at, :submitter_name])
+    %w(qtype_name stat text count pct response_id created_at submitter_name).map_hash{ |f| send(f) }
   end
 end

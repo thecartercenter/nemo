@@ -28,6 +28,7 @@ feature 'switching between missions and modes', js: true do
     # Changing mission from unauthorized page should work.
     visit('/en/unauthorized')
     select(@mission1.name, from: 'change_mission')
+    sleep 2 # Test fails without this, even though have_selector is supposed to wait.
     expect(page).to have_selector('#title h2', text: /#{@mission1.name}/i)
   end
 end

@@ -265,7 +265,7 @@ fr:
         id: "Numero de la réponse"
         created_at: "Date de remise"
         form_id: "Formulaire"
-        reviewed: "Revue?"
+        reviewed: "Revu?"
         source: "Origine"
         user_id: "Émetteur/Nom de l'équipe"
         incomplete: "Y-a-t'il a des résultats obligatoire manquants?"
@@ -480,6 +480,7 @@ fr:
         wrong_length:
           one: "Il faut entrer exactement un caractère."
           other: "Il faut entrer exactement % {count} caractères."
+        invalid_password: "Mot de passe doit comporter au moins un chiffre, une lettre minuscule et une lettre majuscule."
       models:
         answer:
           required: "Entrez un valeur."
@@ -675,7 +676,6 @@ fr:
     error_messages:
       consecutive_failed_logins_limit_exceeded: "Vous avez dépassé la limite d'échec de connexion consécutive. Votre compte a été désactivé."
       email_invalid: "Devrait ressembler à une adresse e-mail."
-      general_credentials_error: "Le combinaison d'identifiant/de mot de passe que vous avez inscrit n'est pas valable."
       login_blank: "Entrez un identifiant."
       login_invalid: "Utilisez seulement des lettres, des chiffres, et .-_@"
       login_not_found: "n'est pas valide"
@@ -684,7 +684,7 @@ fr:
       not_approved: "Votre compte n'est pas approuvé."
       not_confirmed: "Votre compte n'est pas confirmée."
       password_blank: "Entrez un mot de passe."
-      password_invalid: "n'est pas valide"
+      password_invalid: "Pas valide. Normes de sécurité par mot de passe ont été récemment mis à jour. Si votre mot de passe ne fonctionne plus, se il vous plaît utiliser la fonction de réinitialisation de mot de choisir un nouveau."
     models:
       user_session: "Session de l'utilisateur"
     attributes:
@@ -709,23 +709,23 @@ fr:
     form: "formulaire"
     login: "identifiant"
     name: "nom"
-    option_set: "ensemble d'option"
+    option_set: "ensemble-d'options"
     phone: "téléphone"
     question: "question"
     question_type: "type-de-question"
     reviewed: "revu"
     source: "source"
-    submit_date: "date de la remise"
+    submit_date: "date"
     submitter: "émetteur"
     code: "code"
     title: "titre"
     type: "type"
     tag: "onglet"
     date: "date"
-    datetime: " date"
-    username: "Nom d'utilisateur "
-    content: "Contenu"
-    number: "Numéro"
+    datetime: "date-heure"
+    username: "identifiant"
+    content: "contenu"
+    number: "numéro"
   page_titles:
     broadcasts:
       index: "Émissions"
@@ -810,7 +810,7 @@ fr:
     time_submitted: "Temps de Soumission"
     date_submitted: "Date de Soumission"
     response_id: "Numero de la réponse"
-    reviewed: "Revue?"
+    reviewed: "Revu?"
   broadcast:
     balance_check_failed: "Consultation de crédit échoué"
     balance_notice: "Vous avez %{balance} crédits de SMS dans votre %{account_type} compte."
@@ -878,7 +878,6 @@ fr:
     option_in_use_name_change_warning: "Une autre formulaire publiée utilise cet option ou il y a une référence à cet option dans réponses existantes.  Ne changez pas le sens de l'option avec un modification."
     option_standard_copy_name_change_warning: "Cet option est une copie d'une option standardisé.  Preservez le sens original de l'option."
     published_warnings:
-      form: "Ce formulaire est publié. Ce qui signifie qu'il est déjà aux mains des observateurs. Certains champs ne sont donc pas modifiables. Procédez avec caution pendant tout changement."
       questioning: "Le formulaire dont les champs sont ci-dessous ne peut pas être modifié parce qu'il est connecté à un formulaire déjà publié."
       question: "Cette question apparaît sur au moins un formulaire publié et donc donc déjà accessible par les observateurs. Certains champs ne sont pas modifiables. Rassurer de ne pas changer le sens de la question. "
       option_set: "Cet ensemble d'options apparaît sur au moins un formulaire publié et serait deja aux mains des observateurs. Aucune option ne peut donc être ajoutée, enlevée, ou réorganisée."
@@ -1142,27 +1141,27 @@ fr:
       - '"quelques phrase"'
       - émetteur:"john smith"
       - formulaire:vote
-      - revue:1
-      - date de réponses < 2013-10-15
+      - revu:1
+      - date < 2013-10-15
       - '{QuestionCode}:(perturbation sécurité)'
       users:
       - john smith
-      - phone:+443726458364
-      - login:jsmith
+      - téléphone:+443726458364
+      - identifiant:jsmith
       - email:jsmith@example.com
       questions:
       - Travailleurs des bureaux de vote
       - code:Urnes
-      - type:sélectionnez-un
+      - type:select-one
       sms:
       - Travailleurs des bureaux de votes
       - 1.b
       - '+1234567890'
       - john smith
       - jsmith
-      - type:reponse
+      - type:reply
       - date >= 2015-01-29
-      - date et heure < "2015-01-12 14:00"
+      - date-heure < "2015-01-12 14:00"
     expected: "Attendu"
     help_link: "Aide"
     help_title: "Aide "
@@ -1191,7 +1190,7 @@ fr:
         * __formulaire__ Le formulaire de la réponse
         * __émetteur__ Le nom de l'utilisateur qui a complété la réponse (résultats partiels sont permis).
         * __date__ La date à laquelle la réponse a été complété (p. ex 1985-03-22)
-        * __revue__ Si la réponse a été marquée "revue" (1 = oui ou 0 = non)
+        * __revu__ Si la réponse a été marquée "revu" (1 = oui ou 0 = non)
         * __source__ Le moyen par lequel la réponse a été envoyé ('web', 'odk', ou 'sms')
         * __texte__ Recherche les résultats aux questions textuelles.
 
@@ -1205,7 +1204,7 @@ fr:
 
         * __pommes oranges "fruits de la passion"__
 
-        ## Tous les termes Vs. terme quelconque
+        ## Tous les termes vs. terme quelconque
 
         Par défaut, tous les termes de la recherche doivent correspondre. Par exemple,
 
@@ -1231,25 +1230,32 @@ fr:
 
         Pour les recherches textuelles, le rejet fonctionne différemment:
 
-        * __urne- électorale __
+        * __urne -électorale__
 
         correspondra a n'importe qu'elle réponse avec contenant le mot 'électorale' mais pas le mot 'urne'. Il y doit avoir au moins un terme non rejeté dans cette recherche.
 
-        Les comparaisons de "supérieur à" et "moins que" sont permises aussi pour certains qualifiants certains (p. ex __soumettre-date__):
+        Les comparaisons de "supérieur à" et "moins que" sont permises aussi pour certains qualifiants certains (p. ex __date__):
 
-        * __soumettre-date > 2000-01-01__
+        * __date > 2000-01-01__
 
         Plusieurs de ces termes peuvent être combinés pour préciser la recherche à un niveau.
 
-        * __soumettre-date >= 2000-01-01 répondre-date < 2000-02-01__
+        * __date >= 2000-01-01 date < 2000-02-01__
 
         correspondra aux réponses qui étaient soumises en Janvier 2000.
-      users: |-
-        ## Qualificatifs Une simple recherche telle que: __Romeo Juliette__ correspond au nom d'utilisateur, Identifiant et emails dans chaque mot. Pour mener une recherche basée sur des attributs spécifics, utilisez un qualificatif , ex. __email: @example.com__ Cherchera les utilisateur en fonction des emails correspondant, '@example.com'. Combinez les deux ci-dessus pour délimiter la recherche: __Susan email: @example.com__ Cherchera les utilisateurs qui s'appellent Susan avec un example.com addresse email. L'ensemble des qualificatifs qui peuvent être utilisés sont les suivants: __nom__ Le nom complet de l'utilisateur, __Signer__ L'identifiant de l'utilisateur __email__ l'adresse email de l'utilisateur __téléphone__ Le numéro de téléphone de l'utilisateur (sans tirait ou autre ponctuation) Correspondances partielles autorisées pour tous les qualificatifs. ## Phrases exactes. Les phrases exactes peuvent être liées en incluant la phrase dans en double citations: __"john smith"__ ## Tous les termes vs. N'importe quel terme Par défaut, tous les termes dans la recherche doivent correspondre. par exemple, __john smith__ correspond seulement aux utilisateurs nommés 'john' et 'smith' les deux apparaissant dans leur nom. Utilisez la barre verticale, la lettre (I) pour lier plusieurs noms: __abdul | juanita | clarice__ La lettre '|' peut aussi être utilisée avec des qualificatifs: __email: ( john@example.com, patty@foo.com )__ lie les utilisateurs avec n'importe laquelle des adresses emails ci-dessus. ## Rejet Vous pouvez rejeter une recherche qualifiée en utilisant l’opérateur de rejet. __nom != Oluwaseun__ Liera les utilisateurs non nommés 'Oluwaseun'.
-      questions: |-
-        ## Qualificatifs Une simple recherche telle que: * __Roméo Juliette__ Recherche seulement les titres de chaque questions. Pour rechercher sur la base des attributs des question, utilisez un qualificatif, e.g.: * __code: Urne__ Affichera les questions avec 'Urne' dans leur code. Combinez les deux ci-dessus pour limiter votre recherche: * __Romeo et Juliette code: Urne__ Affichera les réponses dans les'Widgets' formulaires contenant les mots 'Roméo et Juliette'. L'ensemble des qualificatifs que vous pouvez utiliser est le suivant: * __titre__ la question titre (lien partiel autorise) * __code__ La question code (lien partiel autorise) * __type__ La question type (%{question_types}) __onglet__ Recherches d'onglet appliquées a la question ## Phrases exactes Les phrase exactes peuvent être liées en incluant la phrase dans une double citation: __"La pluie en Espagne"__ Double citations peuvent être combinées avec des termes non-cites: _pommes oranges "fruit de passion"__ ## Tous les termes vs. n importe quel terme Par défaut, tous les termes de la recherche doivent être liés. Par exemple, __alpha lima Pérou__ correspond seulement aux 3 mots. Utilisez la barre verticale ('I') pour lier plusieurs mots/phrases: __pommes | oranges | "fruit de passion"__ Le caractère '|' peut aussi être utilisé avec des qualificatifs: __code: ( Lions | "Ours et Requins" | Tigres )__ Lie les questions avec n'importe lequel de ces codes ci-dessus. ## Rejet Vous pouvez rejeter une recherche qualifiée en utilisant l’opérateur de rejet: __code != Widgets_ lieront les questions avec n'importe code ne comportant pas de 'Widgets'.
+      users: "## Qualificatifs\n\nUne simple recherche telle que:\n\n __romeo juliet__\n\ncorrespond aux noms d'utilisateur, Identifiant et emails. Recherche basée sur des attributs spécifics, utilisez un qualificatif, ex.\n\n __email: @exemple.com__\n\nCherchera les utilisateur en fonction des emails correspondant,  '@exemple.com'.\n\nCombine les deux ci-dessus pour délimiter la recherche:\n\n __Susan email: @exemple.com__\n\
+        \nherchera les utilisateurs qui s'appellent Susan avec un exemple.com  address email.\n\nL'ensemble des qualificatifs qui peuvent être utilisés sont les suivants:\n\n* __nom__ Le nom complet de l'utilisateur,\n* __identifiant__ L'identifiant de l'utilisateur\n* __email__ l'adresse email de l'utilisateur\n* __téléphone__ Le numéro de téléphone de l'utilisateur (sans tirait ou autre ponctuation)\n\nCorrespondances partielles\
+        \ autorisées pour tous les qualificatifs.\n\n## Phrases exactes \n\nExactes phrases peuvent être liées en incluant la phrase dans en double citations:\n\n __\\\"john smith\\\"__\n\n## Tous les termes vs. N'importe quel terme\n\nPar défaut, tous les termes dans la recherche doivent correspondre. par exemple,\n\n __john smith__\n\ncorrespond seulement aux utilisateurs nommes 'john' et 'smith' les deux apparaissant dans\
+        \ leur nom. Utilisez la barre verticale, la lettre (I) pour lier plusieurs noms:\n __abdul | juanita | clarice__\n\nLa lettre  '|' peut aussi être utilisée avec des qualificatifs:\n __email: ( john@exemple.com,  patty@foo.com )__\n\nlie les utilisateurs avec n'importe laquelle des adresses emails ci-dessus.\n\n## Rejet\n\nVous pouvez rejeter une recherche qualifiée en utilisant l’opérateur de rejet.\n\n __nom != Oluwaseun__\n\
+        \nLiera les utilisateurs non nommés 'Oluwaseun'."
+      questions: "## Qualificatifs \n\nUne simple recherche telle que:\n\n* __Romeo Juliette__\nChercher seulement les titres des questions. Pour rechercher sur la base des attributs des question, utiliser un qualificatif, e.g.:\n\n* __code:Urne__\n\nAffichera les questions avec 'Urne' dans leur code.\n\nCombinez les deux ci-dessus pour limiter votre recherche:\n\n* __Romeo et Juliette code:Urne__\n\nAffichera les réponses dans\
+        \ les' Widgets' formulaires contenant les mots 'Romeo et Juliette'.\n\nL'ensemble des qualificatifs que vous pouvez utilisez est le suivant:\n\n* __titre__ la question titre (lien partiel autorise)\n* __code__ La question code (lien partiel autorise)\n* __type__ La question type (%{question_types})\n* __onglet__ Recherches d'onglet appliquées a la question\n\n## Phrases exactes \n\nLes phrase exactes peuvent être liées\
+        \ en incluant la phrase dans une double citation:\n\n __\\\"La pluie en Espagne\\\"__\n\nDouble citations peuvent être combinées avec des termes non-cites:\n\n __pommes oranges \\\"fruit de passion\\\"__\n\n## Tous les termes vs. n importe quel terme\n\nPar défaut, tous les termes de la recherche doivent être lies. Par exemple,\n\n __alpha lima peru__\n\nLie questions avec seulement trois de ces caractères. Utilisez\
+        \ la barre verticale ('I') pour lier plusieurs mots/phrases:\n\n __pommes | oranges | \\\"fruit de passion\\\"__\n\nLe caractère '|' peut aussi être utiliser avec des qualificatifs:\n\n __code: ( Lions | \\\"Ours et Requins\\\" | Tigres )__\n\nLie les questions avec n'importe lequel de ces codes ci-dessus.\n\n## Négation\n\nVous pouvez rejeter une recherche qualifiée en utilisant l’opérateur de rejet:\n\n__code != Widgets__\n\
+        \nlieront les questions avec n'importe code ne comportant pas de 'Widgets'."
       sms: |-
         ## Qualificatifs ##
+
         Une simple recherche telle que:
 
         * __Romeo Juliette__
@@ -1270,12 +1276,12 @@ fr:
         L'ensemble des qualificatifs pouvant être utilisé est le suivant:
 
         * __contenu__ le contenu du message  (correspondance partielle autorisée)
-        * __tapez__ le type de message (entrant, réponse, ou diffusé) (correspondance partielle autorisée)
-        * __nom d'utilisateur__ Le nom d'utilisateur de l’expéditeur ou du récipiendaire (correspondance partielle autorisée)
+        * __type__ le type de message (incoming, reply, ou broadcast) (correspondance partielle autorisée)
+        * __identifiant__ Le nom d'utilisateur de l’expéditeur ou du récipiendaire (correspondance partielle autorisée)
         * __nom__ Le nom entier de l’expéditeur ou du récipiendaire (correspondance autorisée
         * __numéro__ Le numéro de téléphone de l’expéditeur ou du récipiendaire (correspondance partielle autorisée)
         * __date__ La date d’expédition ou de réception du message (ex. 2015-01-29)
-        * __heure et date__ La date et l'heure d’expédition ou d'envoi du message (utilisez les guillemets et 24-hr heure: ex. "2015-01-29 14:00")
+        * __date-heure__ La date et l'heure d’expédition ou d'envoi du message (utilisez les guillemets et 24-hr heure: ex. "2015-01-29 14:00")
 
         ## Les exactes phrases ##
 
@@ -1307,10 +1313,9 @@ fr:
 
         Vous pouvez rejeter une recherche qualifiée a l'aide de l’opérateur de rejet:
 
-        * __Tapez != diffuser__
+        * __type != broadcast__
 
-
-        Liera les messages ne contenant pas "diffuser".
+        Liera les messages 'incoming' et 'reply' seulement.
     invalid_op: "L'opérateur '%{op}' n'est pas valide pour le qualificatif '%{qualifier}'."
     multiple_terms_not_allowed: "Plusieurs termes ne sont pas permis pour '%{qualifier}' recherches sauf le case où 'OU' est utilisé."
     must_use_qualifier: "Vous devez utiliser un qualificatif pour tous les termes de recherche."

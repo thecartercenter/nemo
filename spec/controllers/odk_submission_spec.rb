@@ -15,11 +15,11 @@ describe 'odk submissions', type: :request do
 
     describe 'get and head requests' do
       it 'should return 204 and no content' do
-        head(submission_path, {:format => 'xml'}, 'HTTP_AUTHORIZATION' => encode_credentials(@user.login, 'password'))
+        head(submission_path, {:format => 'xml'}, 'HTTP_AUTHORIZATION' => encode_credentials(@user.login, test_password))
         expect(response.response_code).to eq 204
         expect(response.body).to be_empty
 
-        get(submission_path, {:format => 'xml'}, 'HTTP_AUTHORIZATION' => encode_credentials(@user.login, 'password'))
+        get(submission_path, {:format => 'xml'}, 'HTTP_AUTHORIZATION' => encode_credentials(@user.login, test_password))
         expect(response.response_code).to eq 204
         expect(response.body).to be_empty
       end
@@ -126,6 +126,19 @@ describe 'odk submissions', type: :request do
     end
   end
 
+  context 'inactive user' do
+    before do
+      @user = create(:user, :role_name => 'observer', active: false)
+      @mission1 = get_mission
+      @mission2 = create(:mission)
+    end
+
+    it 'should fail' do
+      do_submission(submission_path)
+      expect(response.response_code).to eq 401
+    end
+  end
+
   # Builds a form (unless xml provided) and sends a submission to the given path.
   def do_submission(path, xml = nil)
     if xml.nil?
@@ -136,13 +149,12 @@ describe 'odk submissions', type: :request do
 
     # write xml to file
     require 'fileutils'
-    FileUtils.mkpath('test/fixtures')
-    fixture_file = Rails.root.join('test/fixtures/', ODK_XML_FILE)
+    fixture_file = Rails.root.join(Rails.root, 'tmp', ODK_XML_FILE)
     File.open(fixture_file.to_s, 'w') { |f| f.write(xml) }
 
     # Upload and do request.
     uploaded = fixture_file_upload(fixture_file, 'text/xml')
-    post(path, {:xml_submission_file => uploaded, :format => 'xml'}, 'HTTP_AUTHORIZATION' => encode_credentials(@user.login, 'password'))
+    post(path, {:xml_submission_file => uploaded, :format => 'xml'}, 'HTTP_AUTHORIZATION' => encode_credentials(@user.login, test_password))
     assigns(:response)
   end
 

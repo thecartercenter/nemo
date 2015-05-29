@@ -40,6 +40,9 @@ class Ability
       # anybody can generate map markers
       can :read, Marker
 
+      # anybody can confirm their login
+      can :confirm_login, UserSession
+
       # admin abilities that don't depend on a mission being set
       if user.admin?
         can :view, :admin_mode
@@ -158,7 +161,7 @@ class Ability
 
             # can manage users in current mission
             # special change_assignments permission is given so that users cannot update their own assignments via edit profile
-            can [:create, :update, :login_instructions, :change_assignments], User, :assignments => {:mission_id => mission.id}
+            can [:create, :update, :login_instructions, :change_assignments, :activate], User, :assignments => {:mission_id => mission.id}
 
             # can create user batches
             can :manage, UserBatch
@@ -190,8 +193,8 @@ class Ability
         end
 
         # Users can view/modify only their own API keys
-        cannot :regenerate_key, User
-        can :regenerate_key, User do |u|
+        cannot :regenerate_api_key, User
+        can :regenerate_api_key, User do |u|
           u == user
         end
 
@@ -202,10 +205,11 @@ class Ability
 
       # Can't change own assignments unless admin
       unless user.admin?
-        cannot :change_assignments, User, ["id = ?", user.id] do |other_user|
-          user.id == other_user.id
-        end
+        cannot :change_assignments, User, id: user.id
       end
+
+      # Nobody can activate/deactivate themselves.
+      cannot :activate, User, id: user.try(:id)
     end
 
     ###############

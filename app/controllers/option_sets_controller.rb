@@ -144,14 +144,10 @@ class OptionSetsController < ApplicationController
   end
 
   def option_set_params
-    required = params.require(:option_set)
-
-    name_translations = required[:children_attribs][0][:option_attribs][:name_translations].keys
-    level_names = required[:level_names][0].keys if required[:level_names].present?
-    children_params = [:id, option_attribs: [:id, name_translations: name_translations] ]
-
-    permitted_children = permit_children(required[:children_attribs], :children_attribs, children_params)
-    whitelisted = [:name, :geographic, :multi_level, level_names: level_names, children_attribs: permitted_children ]
-    required.permit(whitelisted)
+    params.require(:option_set).permit(:name, :geographic, :multi_level,
+      level_names: configatron.preferred_locales,
+      children_attribs: permit_children(params[:option_set], key: :children_attribs, permitted: [
+        :id, { option_attribs: [:id, { name_translations: configatron.preferred_locales }] }])
+    )
   end
 end

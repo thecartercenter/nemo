@@ -1,7 +1,7 @@
 class FormItem < ActiveRecord::Base
   include MissionBased, FormVersionable, Replication::Replicable
 
-  acts_as_list column: :rank, scope: [:ancestry]
+  acts_as_list column: :rank, scope: [:form_id, :ancestry]
 
   belongs_to(:form)
 
@@ -30,15 +30,49 @@ class FormItem < ActiveRecord::Base
       AND ancestry != '' GROUP BY ancestry, rank HAVING COUNT(id) > 1;").empty?
   end
 
-  # Gets all leaves of the subtree headed by this FormItem, sorted.
-  # These should all be Questionings.
-  def sorted_leaves
-    _sorted_leaves(arrange_and_sort().values[0])
+  # Gets an OrderedHash of the following form for the descendants of this FormItem.
+  # Uses only a constant number of database queries to do so.
+  # {
+  #   Qing => {},
+  #   Qing => {},
+  #   QingGroup => {
+  #     Qing => {},
+  #     Qing => {}
+  #   },
+  #   Qing => {},
+  #   QingGroup => {},
+  #   Qing => {},
+  #   Qing => {},
+  #   ...
+  # }
+  # Some facts about the hash:
+  # * This item itself is not included in the hash.
+  # * If an item points to an empty hash, it is a leaf node.
+  # * The hash should be iterated by doing
+  def arrange_descendants
+    with_self = self.class.arrange_nodes(subtree.order('(case when ancestry is null then 0 else 1 end), ancestry, rank').to_a)
+    with_self.values[0]
   end
 
-  def arrange_and_sort
-    # This is the only way (apparently) to do eager loading with arrange.
-    self.class.arrange_nodes(subtree.order('(case when ancestry is null then 0 else 1 end), ancestry, rank').to_a)
+  # Gets a nested array of all Questionings in the subtree headed by this item. For example,
+  # (corresponding to the above example for arrange_descendants):
+  # [Qing, Qing, [Qing, Qing], Qing, Qing, Qing, ...]
+  def descendant_questionings(nodes = nil)
+    nodes ||= arrange_descendants
+    nodes.map do |form_item, children|
+      form_item.is_a?(Questioning) ? form_item : descendant_questionings(children)
+    end
+  end
+
+  # Returns an array of ranks of all parents plus self, e.g. [1,2,1].
+  # Uses the cached value setup by descendant_questionings if available.
+  def full_rank
+    @full_rank ||= path.map(&:rank)[1..-1]
+  end
+
+  # Returns the full rank joined with a period separator, e.g. 1.2.1.
+  def full_dotted_rank
+    @full_dotted_rank ||= full_rank.join('.')
   end
 
   # Moves item to new rank and parent.
@@ -48,13 +82,17 @@ class FormItem < ActiveRecord::Base
 
       # Extra safeguards to make sure ranks are correct. acts_as_list should prevent these.
       if self.class.rank_gaps?
-        errors.add(:base, 'That update would have caused gaps in ranks.')
-        raise ActiveRecord::Rollback
+        raise "Moving Qing #{id} to parent #{new_parent_id}, rank #{new_rank} would have caused gaps in ranks."
       elsif self.class.duplicate_ranks?
-        errors.add(:base, 'That update would have caused duplicate ranks.')
-        raise ActiveRecord::Rollback
+        raise "Moving Qing #{id} to parent #{new_parent_id}, rank #{new_rank} would have caused duplicate ranks."
       end
     end
+  end
+
+  def as_json(options = {})
+    options[:methods] ||= []
+    options[:methods] << :full_dotted_rank
+    result = super(options)
   end
 
   private
@@ -63,18 +101,7 @@ class FormItem < ActiveRecord::Base
       self.mission = form.try(:mission)
     end
 
-    def _sorted_leaves(nodes)
-      nodes.map do |form_item, children|
-        if form_item.is_a?(Questioning)
-          form_item
-        else
-          _sorted_leaves(children).flatten
-        end
-      end
-    end
-
     def parent_must_be_group
       errors.add(:parent, :must_be_group) unless parent.nil? || parent.is_a?(QingGroup)
     end
-
 end

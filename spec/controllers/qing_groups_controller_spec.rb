@@ -33,7 +33,7 @@ describe QingGroupsController, type: :request do
   describe 'update' do
     before(:each) do
       put(qing_group_path(@qing_group, mode: 'm', mission_name: get_mission.compact_name),
-        'qing_group' => { 'group_name_translations' => {'en' => 'New Group Name'} })
+        'qing_group' => { 'group_name_en' => 'New Group Name', 'group_name_fr' => 'New Groupe Name' })
     end
 
     it 'should be successful' do
@@ -42,6 +42,7 @@ describe QingGroupsController, type: :request do
 
     it 'should change qing_group name' do
       expect(@qing_group.reload.group_name_en).to eq('New Group Name')
+      expect(@qing_group.group_name_fr).to eq('New Groupe Name')
     end
   end
 

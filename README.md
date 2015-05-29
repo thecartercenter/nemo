@@ -14,106 +14,11 @@ Consider ELMO if you need:
 To learn more about the history and goals of the project, [visit the ELMO project site](http://getelmo.org).
 You can also learn more about The Carter Center's Election Standards [here](http://cartercenter.org).
 
-## How Do I Install ELMO?
+## Installation
 
-In the future, we plan to offer managed instances of ELMO.
+For production scenarios, [Sassafras Tech Collective](http://sassafras.coop) offers managed production instances. Contact them for details. Or you can follow [this guide](docs/production-setup.md) to setup an instance on an Ubuntu server.
 
-For an easy production setup, PaaS providers like [Heroku](http://heroku.com) or [Engine Yard](http://engineyard.com) would work well for ELMO.
-
-Or to setup an instance manually for development or production use, you can follow the instructions below.
-
-Note that manually setting up a Rails application for production use can be a complicated process, and the best practices for doing so change regularly. Your best bet is a web search for something like 'deploying rails app to ubuntu'.
-
-### Package Managers
-
-Note to install the software below we recommend the following package managers:
-
-- Mac OS X: Homebrew
-- Linux/Unix: bundled package manager (e.g. apt-get, yum)
-- Windows: Npackd
-
-### Required Software
-
-1. **Ruby 1.9.3+**
-
-1. **Memcached 1.4+**
-  - Ensure memcached is running before starting server, even for development, since caching is enabled in development and production environments.
-  - For production environments, ensure memcached is running on port 11219
-  - For development environments, be sure to increase the default slab page size to 2 MB. This is done by passing `-I 2m` to the `memcached` command.
-
-1. **MySQL 5.0+**
-  - Create an empty database and accompanying user for use by the app (E.g. development database *elmo_d* with username *elmo*)
-  - Set up mysql for timezone support: See [doc here](http://dev.mysql.com/doc/refman/5.5/en/time-zone-support.html)
-
-1. **Web Server**
-  - If your instance is for development only, you can use Rails' built-in web server by running `rails s`, as discussed below.
-  - If your instance is for production use, you will need a production-grade web server, such as nginx or Apache, and app server, such as Passenger, Unicorn, Thin, etc.
-
-1. **Sphinx 2.0.6+**
-  - Sphinx is an open source search engine.
-  - It should be available through any of the package managers listed above. If not it can be built from source.
-  - It is important that Sphinx be installed **with MySQL bindings**. This is not turned on by default in some cases.
-  - The Rails Gem that talks to Sphinx is called Thinking Sphinx.
-  - The [Thinking Sphinx site](http://pat.github.io/thinking-sphinx/) is a good place to go for troubleshooting and documentation.
-
-1. **PhantomJS 2.0+** (Development only)
-  - PhantomJS is a headless browser that allows testing JavaScript.
-  - It should be available through any of the package managers listed above. If not it can be built from source.
-  - The Rails Gem that talks to PhantomJS is called Poltergeist.
-
-1. **Firefox** (Development only)
-  - Firefox is used for automated browser testing.
-
-1. **GraphViz 2.36+** (Development only)
-  - [GraphViz](http://graphviz.org/) is used to visualize the relationships between data in the database.
-
-1. **Qt 4.8+** (Development only)
-  - Qt is a cross-platform development kit that is needed by the `capybara-webkit` gem.
-  - See [here](https://github.com/thoughtbot/capybara-webkit/wiki/Installing-Qt-and-compiling-capybara-webkit) for some installation instructions.
-
-### Running the App
-
-1. **Retrieve project files using Git**
-
-  ```
-  git clone https://github.com/thecartercenter/elmo.git
-  cd elmo
-  ```
-
-  If developing, it's best to work off the development branch:
-
-  ```
-  git checkout develop
-  ```
-
-1. **Bundle, configure, and migrate**
-  - Install the required gems by running `bundle install` in the project directory.
-  - Copy `config/database.yml.example` to `config/database.yml` and edit `database.yml` to point to your database.
-  - Copy `config/thinking_sphinx.yml.example` to `thinking_sphinx.yml` and adjust any settings (usually not necessary).
-  - Copy `config/initializers/local_config.rb.example` to `config/initializers/local_config.rb` and adjust any settings.
-  - Run database migrations: `rake db:migrate`. If the diagramming step hangs, run `NO_DIAGRAM=true rake db:migrate`.
-  - Create an admin account: `rake db:create_admin`.
-
-1. **Build the Sphinx index**
-  - Run `rake ts:rebuild`
-  - This should also start the Sphinx daemon (searchd). If at any time it needs to be restarted, you can also run `rake ts:start`
-
-1. **Run Whenever to setup cron jobs**
-  - Run `whenever -i elmo`
-  - Run `crontab -l` and verify that jobs have been added.
-
-1. **Start the server**
-  - For a development setup, just run `rails s`.
-  - For a production setup, this will depend on your choice of servers, process monitors, etc., and goes beyond the scope of this document.
-
-1. **Login**
-  - Navigate to the app's URL (http://localhost:3000 by default in a development setup).
-  - Login using username **admin** and password **temptemp** (make sure to change the password).
-  - Create a new Mission and get started making forms!
-
-### Running the tests
-
-ELMO currently uses a mixture of legacy Test::Unit tests and RSpec specs. Both should be run. Use `rake test && rspec`.
+To setup a development environment, follow [this guide](docs/development-setup.md).
 
 ## How Do I Contribute to ELMO?
 

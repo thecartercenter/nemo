@@ -25,6 +25,7 @@ class User < ActiveRecord::Base
     c.perishable_token_valid_for = 1.week
     c.logged_in_timeout(SESSION_TIMEOUT)
     c.validates_format_of_login_field_options = {:with => /[\a-zA-Z0-9\.]+/}
+    c.merge_validates_length_of_password_field_options minimum: 8
 
     # email is not mandatory, but must be valid if given
     c.merge_validates_format_of_email_field_options(:allow_blank => true)
@@ -46,20 +47,27 @@ class User < ActiveRecord::Base
   validate(:no_duplicate_assignments)
   validate(:must_have_assignments_if_not_admin)
   validate(:phone_should_be_unique)
+  validates :password, format: { with: /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])/, if: :require_password?, message: :invalid_password }
 
   scope(:by_name, -> { order("users.name") })
   scope(:assigned_to, ->(m) { where("users.id IN (SELECT user_id FROM assignments WHERE mission_id = ?)", m.id) })
   scope(:with_assoc, -> { includes(:missions, {:assignments => :mission}) })
 
-  # returns users who are assigned to the given mission OR admins
-  scope(:assigned_to_or_admin, ->(m) { where("users.id IN (SELECT user_id FROM assignments WHERE mission_id = ?) OR users.admin = ?", m.try(:id), true) })
+  # returns users who are assigned to the given mission OR who submitted the given response
+  scope(:assigned_to_or_submitter, ->(m, r) { where("users.id IN (SELECT user_id FROM assignments WHERE mission_id = ?) OR users.id = ?", m.try(:id), r.try(:user_id)) })
 
-  # we want all of these on one page for now
-  self.per_page = 1000000
+  def self.random_password(size = 8)
+    size = 8 if size < 8
+    num_size = size.even? ? 2 : 3
+    alpha_size = (size - num_size) / 2
+    num = %w{2 3 4 6 7 9}
+    alpha = %w{a c d e f g h j k m n p q r t v w x y z}
+    (random(num, num_size) + random(alpha, alpha_size) + random(alpha.map(&:upcase), alpha_size)).shuffle.join
+  end
 
-  def self.random_password(size = 6)
-    charset = %w{2 3 4 6 7 9 a c d e f g h j k m n p q r t v w x y z}
-    (0...size).map{charset.to_a[rand(charset.size)]}.join
+  def self.random(chars, n)
+    return "" if n <= 0
+    (chars * (n / chars.size + 1)).shuffle[0..n - 1]
   end
 
   def self.find_by_credentials(login, password)
@@ -69,7 +77,7 @@ class User < ActiveRecord::Base
 
   def self.suggest_login(name)
     # if it looks like a person's name, suggest f. initial + l. name
-    if m = name.match(/^([a-z][a-z']+) ([a-z'\- ]+)$/i)
+    if m = name.match(/\A([a-z][a-z']+) ([a-z'\- ]+)\z/i)
       l = $1[0,1] + $2.gsub(/[^a-z]/i, "")
     # otherwise just use the whole thing and strip out weird chars
     else
@@ -130,7 +138,7 @@ class User < ActiveRecord::Base
       WHERE assignments.role = 'observer'
       GROUP BY users.id, users.name
       ORDER BY response_count
-      LIMIT ?", mission.id, mission.id, limit])
+      LIMIT ?", mission.id, mission.id, limit]).reverse
   end
 
   # generates a cache key for the set of all users for the given mission.
@@ -160,6 +168,14 @@ class User < ActiveRecord::Base
 
   def full_name
     name
+  end
+
+  def active?
+    self.active
+  end
+
+  def activate!(bool)
+    update_attribute(:active, bool)
   end
 
   def reset_password_method
@@ -233,6 +249,16 @@ class User < ActiveRecord::Base
     SESSION_TIMEOUT - (Time.now - last_request_at)
   end
 
+  def current_login_age
+    Time.now - current_login_at if current_login_at.present?
+  end
+
+  def current_login_recent?(max_age=nil)
+    max_age ||= configatron.recent_login_max_age
+
+    current_login_age < max_age if current_login_at.present?
+  end
+
   def as_json(options = {})
     {:name => name}
   end
@@ -270,9 +296,9 @@ class User < ActiveRecord::Base
     def normalize_fields
       %w(phone phone2 login name email).each{|f| self.send("#{f}").try(:strip!)}
       self.email = nil if email.blank?
-      self.phone = phone.blank? ? nil : "+" + phone.gsub(/[^0-9]/, "")
-      self.phone2 = phone2.blank? ? nil : "+" + phone2.gsub(/[^0-9]/, "")
-      self.login = login.nil? ? nil : login.try(:downcase)
+      self.phone = PhoneNormalizer.normalize(phone)
+      self.phone2 = PhoneNormalizer.normalize(phone2)
+      self.login = login.try(:downcase)
       return true
     end
 

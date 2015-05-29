@@ -30,8 +30,7 @@ ELMO::Application.configure do
   # Use a different logger for distributed setups
   # config.logger = SyslogLogger.new
 
-  # we use a non-standard port on the prod server to avoid conflicts
-  config.cache_store = :dalli_store, 'localhost:11219'
+  config.cache_store = :dalli_store
 
   # Disable Rails's static asset server
   # In production, Apache or nginx will already do this
@@ -73,4 +72,7 @@ ELMO::Application.configure do
 
   # Raises error for missing translations
   config.action_view.raise_on_missing_translations = false
+
+  # Enable rack-attack middleware for protecting against brute-force login attempts
+  config.middleware.use Rack::Attack
 end

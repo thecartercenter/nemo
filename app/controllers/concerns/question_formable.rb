@@ -33,4 +33,12 @@ module QuestionFormable
     @question_types = QuestionType.all
     @option_sets = OptionSet.accessible_by(current_ability).default_order
   end
+
+  def whitelisted_question_params(submitted)
+    # We include :id because it's needed when question attribs are nested.
+    permit_translations(submitted, :name, :hint) + [
+      :id, :code, :qtype_name, :option_set_id, :casted_minimum,
+      :minstrictly, :casted_maximum, :maxstrictly, :tag_ids, :key,
+      :access_level, { tags_attributes: [:name, :mission_id] }]
+  end
 end

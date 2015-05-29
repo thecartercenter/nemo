@@ -144,11 +144,6 @@ class FormsController < ApplicationController
           set_success_and_redirect(@form, :to => edit_form_path(@form))
         end
       end
-    # handle problem with conditions
-    rescue ConditionOrderingError
-      flash.now[:error] = I18n.t('activerecord.errors.models.form.ranks_break_conditions')
-      prepare_and_render_form
-
     # handle other validation errors
     rescue ActiveRecord::RecordInvalid
       prepare_and_render_form
@@ -199,7 +194,7 @@ class FormsController < ApplicationController
     if @form.save
       flash[:success] = t("form.questions_add_success")
     else
-      flash[:error] = t("form.questions_add_error", :msg => @form.errors.messages.values.join(';'))
+      flash[:error] = t("form.questions_add_error", :msg => @form.errors.full_messages.join(';'))
     end
 
     # redirect to form edit
@@ -255,7 +250,7 @@ class FormsController < ApplicationController
     # prepares objects and renders the form template
     def prepare_and_render_form
       # render the form template
-      @users = User.assigned_to_or_admin(current_mission).by_name
+      @users = User.assigned_to(current_mission).by_name
       render(:form)
     end
 

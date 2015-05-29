@@ -8,7 +8,7 @@ module RequestSpecHelpers
   end
 
   def login_without_redirect(user)
-    post('/en/user-session', :user_session => {:login => user.login, :password => 'password'})
+    post('/en/user-session', :user_session => {:login => user.login, :password => test_password})
   end
 
   def logout
@@ -35,5 +35,22 @@ module RequestSpecHelpers
   def post_s(*args)
     post *args
     assert_response(:success)
+  end
+
+  def submit_j2me_response(params)
+    raise 'form must have version' unless @form.current_version
+
+    # Add all the extra stuff that J2ME adds to the data hash
+    params[:data]['id'] = @form.id.to_s
+    params[:data]['uiVersion'] = '1'
+    params[:data]['version'] = @form.current_version.sequence
+    params[:data]['name'] = @form.name
+    params[:data]['xmlns:jrm'] = 'http://dev.commcarehq.org/jr/xforms'
+    params[:data]['xmlns'] = "http://openrosa.org/formdesigner/#{@form.current_version.sequence}"
+
+    # If we are doing a normally authenticated submission, add credentials.
+    headers = params[:auth] ? {'HTTP_AUTHORIZATION' => encode_credentials(@user.login, test_password)} : {}
+
+    post(@submission_url, params.slice(:data), headers)
   end
 end

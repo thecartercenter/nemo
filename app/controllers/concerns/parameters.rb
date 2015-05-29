@@ -2,31 +2,30 @@ module Parameters
   extend ActiveSupport::Concern
 
   # return dynamic translations parameters
-  def permit_translations(params, *args)
-    return [] if params.blank?
-    args.reduce([]) do |memo, arg|
-      regex = /#{arg.to_s + '_' + '[a-z]+'}/
-      keys = params.select { |key| regex.match(key.to_s) }.keys
-      memo << keys.first.to_sym if keys.size > 0
-      memo
+  def permit_translations(params, *prefixes)
+    return [] if prefixes.empty? || params.blank?
+    regex = /\A(#{prefixes.join('|')})_[a-z]{2}\z/
+    whitelisted = []
+    params.each do |key, value|
+      if key =~ regex && value.is_a?(String)
+        whitelisted << key
+      elsif value.is_a?(Hash) # Recurse
+        whitelisted << { key => permit_translations(value, *prefixes) }
+      end
     end
+    whitelisted
   end
 
-  # build permitted array of attributes
-  # for give recursive parameter and permitted structure
-  def permit_children(params, rec_param, permitted)
-    result = []
-    _permit_children(params, rec_param, permitted, result)
-    result
-  end
-
-  private
-    def _permit_children(params, key, permitted, result)
-      result.push(*permitted)
-      params = params[0]
-      return result if params.blank? || params[key].blank?
-
-      result << Hash[key, []]
-      _permit_children(params[key], key, permitted, result.last[key])
+  # Returns an array of permitted param keys that tracks the structure of the given params.
+  def permit_children(params, options)
+    key = options[:key]
+    permitted = options[:permitted]
+    params[key].map do |child|
+      if child[key].present? && child[key] != 'NONE'
+        permitted + [{ key => permit_children(child, options) }]
+      else
+        permitted + [key]
+      end
     end
+  end
 end

@@ -37,6 +37,9 @@ class Report::TagGroup
   end
 
   def as_json(options = {})
-    super(only: [:tag, :type_groups])
+    {
+      tag: tag,
+      type_groups: type_groups
+    }
   end
 end

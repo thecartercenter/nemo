@@ -1,11 +1,11 @@
 module SearchesHelper
   def search_examples
-    examples = I18n.t("search.examples.#{controller_name}", :default => "")
-    examples = examples.join("&nbsp;&nbsp;&nbsp;") if examples.is_a?(Array)
+    examples = I18n.t("search.examples.#{controller_name}", default: "")
+    examples = safe_join(examples, "&nbsp;&nbsp;&nbsp;".html_safe) if examples.is_a?(Array)
 
     unless examples.blank?
-      content_tag("div", :id => "search_examples") do
-        ("#{t("common.example", :count => 2)}:&nbsp;&nbsp;&nbsp;#{examples}").html_safe
+      content_tag(:div, id: "search_examples") do
+        t("common.example", count: examples.size).html_safe << "&nbsp;&nbsp;&nbsp;".html_safe << examples
       end
     end
   end

@@ -85,20 +85,20 @@ describe Question do
     it "replicating a question within a mission should change the code" do
       q = FactoryGirl.create(:question, :qtype_name => 'integer', :code => 'Foo')
       q2 = q.replicate(:mode => :clone)
-      assert_equal('Foo2', q2.code)
+      expect(q2.code).to eq('Foo2')
       q3 = q2.replicate(:mode => :clone)
-      assert_equal('Foo3', q3.code)
+      expect(q3.code).to eq('Foo3')
       q4 = q3.replicate(:mode => :clone)
-      assert_equal('Foo4', q4.code)
+      expect(q4.code).to eq('Foo4')
     end
 
     it "replicating a standard question should not change the code" do
       q = FactoryGirl.create(:question, :qtype_name => 'integer', :code => 'Foo', :is_standard => true)
       q2 = q.replicate(:mode => :to_mission, :dest_mission => get_mission)
-      assert_equal(q.code, q2.code)
+      expect(q2.code).to eq(q.code)
       q = FactoryGirl.create(:question, :qtype_name => 'integer', :code => 'Foo1', :is_standard => true)
       q2 = q.replicate(:mode => :to_mission, :dest_mission => get_mission)
-      assert_equal(q.code, q2.code)
+      expect(q2.code).to eq(q.code)
     end
 
     it "replicating a question should not replicate the key field" do
@@ -128,14 +128,14 @@ describe Question do
     it "replicating question with short code that ends in zero should work" do
       q = FactoryGirl.create(:question, :qtype_name => 'integer', :code => 'q0')
       q2 = q.replicate(:mode => :clone)
-      assert_equal('q1', q2.code)
+      expect(q2.code).to eq('q1')
     end
 
     it "name should be replicated on create" do
       q = FactoryGirl.create(:question, :is_standard => true, :name => 'Foo')
       q2 = q.replicate(:mode => :to_mission, :dest_mission => get_mission)
-      assert_equal('Foo', q2.name)
-      assert_equal('Foo', q2.canonical_name)
+      expect(q2.name).to eq('Foo')
+      expect(q2.canonical_name).to eq('Foo')
     end
   end
 end

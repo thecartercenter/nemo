@@ -2,6 +2,9 @@ class UserBatchesController < ApplicationController
   # authorization via cancan
   load_and_authorize_resource
 
+  # ensure a recent login for all actions
+  before_action :require_recent_login
+
   def new
   end
 

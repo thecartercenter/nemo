@@ -48,7 +48,12 @@ describe 'questionings form' do
     end
   end
 
-  def expect_editable(field, yn)
-    expect(page).send(yn ? :to : :not_to, have_selector("div.form_field.questioning_#{field} .widget input"))
+  def expect_editable(field, should_be_editable)
+    sel = "div.form_field.questioning_#{field} .widget input"
+    if should_be_editable
+      expect(first(sel)).not_to be_nil
+    else
+      expect{ find(sel) }.to raise_error
+    end
   end
 end

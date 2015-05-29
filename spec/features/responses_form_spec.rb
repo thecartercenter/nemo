@@ -1,13 +1,15 @@
 require 'spec_helper'
 
-feature 'responses form', js: true do
+# Should change this to no_sphinx for performance reasons when TS bug #914 is fixed.
+feature 'responses form', js: true, sphinx: true do
   before do
     @user = create(:user)
   end
 
   describe 'general' do # This should be refactored to split into different scenarios.
     before do
-      @form = create(:form, question_types: %w(select_one multi_level_select_one select_multiple integer decimal location text long_text datetime date time))
+      @form = create(:form, question_types: %w(select_one multi_level_select_one select_multiple integer decimal
+        location text long_text datetime date time))
       @qings = @form.questionings
       @form.publish!
       login(@user)
@@ -17,31 +19,31 @@ feature 'responses form', js: true do
       visit_submit_page_and_select_user
 
       # Fill in answers
-      select('Dog', from: 'response_answers_attributes_0_option_id')
+      select('Dog', from: control_id(@qings[0], '_option_id'))
 
-      select('Plant', from: 'response_answers_attributes_1_0_option_id')
-      find("#response_answers_attributes_1_1_option_id option", text: 'Oak')
-      select('Oak', from: 'response_answers_attributes_1_1_option_id')
+      select('Plant', from: control_id(@qings[1], '_0_option_id'))
+      find('#' + control_id(@qings[1], '_1_option_id') + ' option', text: 'Oak')
+      select('Oak', from: control_id(@qings[1], '_1_option_id'))
 
-      check('response_answers_attributes_2_choices_attributes_0_checked') # Cat
-      fill_in('response_answers_attributes_3_value', with: '10')
-      fill_in('response_answers_attributes_4_value', with: '10.2')
-      fill_in('response_answers_attributes_5_value', with: '42.277976 -83.817573')
-      fill_in('response_answers_attributes_6_value', with: 'Foo')
-      fill_in_ckeditor('response_answers_attributes_7_value', with: "Foo Bar\nBaz")
+      check(control_id(@qings[2], '_choices_attributes_0_checked')) # Cat
+      fill_in(control_id(@qings[3], '_value'), with: '10')
+      fill_in(control_id(@qings[4], '_value'), with: '10.2')
+      fill_in(control_id(@qings[5], '_value'), with: '42.277976 -83.817573')
+      fill_in(control_id(@qings[6], '_value'), with: 'Foo')
+      fill_in_ckeditor(control_id(@qings[7], '_value'), with: "Foo Bar\nBaz")
 
-      select(Time.now.year, from: 'response_answers_attributes_8_datetime_value_1i')
-      select('March', from: 'response_answers_attributes_8_datetime_value_2i')
-      select('12', from: 'response_answers_attributes_8_datetime_value_3i')
-      select('18', from: 'response_answers_attributes_8_datetime_value_4i')
-      select('32', from: 'response_answers_attributes_8_datetime_value_5i')
+      select(Time.now.year, from: control_id(@qings[8], '_datetime_value_1i'))
+      select('March', from: control_id(@qings[8], '_datetime_value_2i'))
+      select('12', from: control_id(@qings[8], '_datetime_value_3i'))
+      select('18', from: control_id(@qings[8], '_datetime_value_4i'))
+      select('32', from: control_id(@qings[8], '_datetime_value_5i'))
 
-      select(Time.now.year, from: 'response_answers_attributes_9_date_value_1i')
-      select('October', from: 'response_answers_attributes_9_date_value_2i')
-      select('26', from: 'response_answers_attributes_9_date_value_3i')
+      select(Time.now.year, from: control_id(@qings[9], '_date_value_1i'))
+      select('October', from: control_id(@qings[9], '_date_value_2i'))
+      select('26', from: control_id(@qings[9], '_date_value_3i'))
 
-      select('03', from: 'response_answers_attributes_10_time_value_4i')
-      select('08', from: 'response_answers_attributes_10_time_value_5i')
+      select('03', from: control_id(@qings[10], '_time_value_4i'))
+      select('08', from: control_id(@qings[10], '_time_value_5i'))
 
       # Save and check it worked.
       click_button('Save')
@@ -54,11 +56,11 @@ feature 'responses form', js: true do
 
       # Check edit mode.
       click_link('Edit Response')
-      select('Animal', from: 'response_answers_attributes_1_0_option_id')
-      find("#response_answers_attributes_1_1_option_id option", text: 'Cat')
-      select('Cat', from: 'response_answers_attributes_1_1_option_id')
-      uncheck('response_answers_attributes_2_choices_attributes_0_checked') # Cat
-      check('response_answers_attributes_2_choices_attributes_1_checked') # Dog
+      select('Animal', from: control_id(@qings[1], '_0_option_id'))
+      find('#' + control_id(@qings[1], '_1_option_id') + ' option', text: 'Cat')
+      select('Cat', from: control_id(@qings[1], '_1_option_id'))
+      uncheck(control_id(@qings[2], '_choices_attributes_0_checked')) # Cat
+      check(control_id(@qings[2], '_choices_attributes_1_checked')) # Dog
       click_button('Save')
 
       # Check that change occurred.
@@ -85,7 +87,7 @@ feature 'responses form', js: true do
       visit_submit_page_and_select_user
 
       expect(page).not_to have_selector("div.form_field#qing_#{@qing1.id}")
-      fill_in('response_answers_attributes_0_value', with: 'Foo')
+      fill_in(control_id(@qing0, '_value'), with: 'Foo')
       click_button('Save')
 
       # Ensure response saved properly.
@@ -99,27 +101,32 @@ feature 'responses form', js: true do
     before do
       @form = create(:form, question_types: %w(integer))
       @form.questions[0].update_attributes!(minimum: 10)
+      @qings = @form.questionings
       login(@user)
     end
 
     scenario 'should be enforced if appropriate' do
       # Should raise error if value filled in.
       visit_submit_page_and_select_user
-      fill_in('response_answers_attributes_0_value', with: '9')
+      fill_in(control_id(@qings[0], '_value'), with: '9')
       click_button('Save')
       expect(page).to have_content('greater than or equal to 10')
 
       # Should not raise error if value is valid.
-      fill_in('response_answers_attributes_0_value', with: '11')
+      fill_in(control_id(@qings[0], '_value'), with: '11')
       click_button('Save')
       expect(page).to have_content('Response created successfully')
 
       # Should not raise error if left blank.
       visit_submit_page_and_select_user
-      fill_in('response_answers_attributes_0_value', with: '')
+      fill_in(control_id(@qings[0], '_value'), with: '')
       click_button('Save')
       expect(page).to have_content('Response created successfully')
     end
+  end
+
+  def control_id(qing, suffix)
+    "response_answers_attributes_#{qing.id}#{suffix}"
   end
 
   def visit_submit_page_and_select_user

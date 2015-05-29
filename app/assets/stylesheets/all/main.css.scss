@@ -112,6 +112,15 @@ table.index_table i.fa-certificate {
   font-size: 1.5em;
 }
 
+div.loading_indicator {
+  .success {
+    color: green;
+  }
+  .failure {
+    color: red;
+  }
+}
+
 i.fa-certificate {
   color: $gold;
 }
@@ -217,12 +226,27 @@ div.location_picker form.location_search { float: right; width: 275px; }
 div.location_picker form.location_search input.query { width: 250px; margin-bottom: 10px; color: #888; font-style: italic; }
 div.location_picker form.location_search div.results a { display: block; margin-bottom: 8px; }
 
+/* regenerable fields */
+div.regenerable-field {
+  span[data-value] {
+    font-family: monospace;
+  }
+
+  button.regenerate {
+    margin-left: 2em;
+  }
+
+  div.loading_indicator {
+    margin-left: 0.5em;
+  }
+}
+
 /* missions */
 .missions_index .name_col { width: 225px; }
 
 /* settings */
 form.setting_form .adapter_settings { display: none; }
-form.setting_form .adapter_settings .password_fields { display: none; }
+form.setting_form .adapter_settings .credential_fields { display: none; }
 form.setting_form #external_sql .control pre { width: 415px; height: 100px; overflow: auto; border: 1px solid #ccc; margin: 0 0 3px 0; font-size: 8pt; }
 form.setting_form #external_sql .control a { font-size: 9pt; }
 

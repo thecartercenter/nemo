@@ -69,7 +69,8 @@
 
   new ELMO.Views.QuestionFormTagField(<%=json(
     suggest_tags_path: suggest_tags_path,
-    question_tags: @question.tags.order(:name),
+    # Using sort_by instead of order because order nukes non-saved records.
+    question_tags: @question.tags.sort_by(&:name),
     mission_id: @current_mission.try(:id) || '',
   )%>);
 <% end %>

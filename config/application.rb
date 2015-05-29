@@ -39,13 +39,16 @@ module ELMO
     config.encoding = "utf-8"
 
     # Configure sensitive parameters which will be filtered from the log file.
-    config.filter_parameters += [:password, :password_confirmation]
+    config.filter_parameters += [:password, :password_confirmation, :twilio_account_sid, :twilio_auth_token]
 
     # Enable the asset pipeline
     config.assets.enabled = true
 
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
+
+    # Use Delayed::Job as the ActiveJob queue adapter
+    config.active_job.queue_adapter = :delayed_job
 
     config.generators do |g|
       g.test_framework :rspec
@@ -68,7 +71,19 @@ module ELMO
     # locales with full translations (I18n.available_locales returns a whole bunch more defined by i18n-js)
     configatron.full_locales = [:en, :fr, :es]
 
+    # For security.
+    config.action_dispatch.default_headers = { 'X-Frame-Options' => 'DENY' }
+
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
+
+    # requests-per-minute limit for ODK Collect endpoints
+    configatron.direct_auth_request_limit = 30
+
+    # logins-per-minute threshold for showing a captcha
+    configatron.login_captcha_threshold = 30
+
+    # default timeout for sensitive areas requiring a password reprompt
+    configatron.recent_login_max_age = 60.minutes
   end
 end

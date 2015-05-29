@@ -10,7 +10,7 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
   # options[:prompt] - The text for the prompt/nil option to be provided in a select control.
   # options[:maxlength] - The maxlength attribute of a text field
   def field(field_name, options = {})
-    return hidden_field(field_name) if options[:type] == :hidden
+    return hidden_field(field_name, options) if options[:type] == :hidden
 
     # options[:read_only] must be true if form_mode is show
     # it may optionally be true if specified by the user
@@ -46,6 +46,38 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
     super(label, options)
   end
 
+  def regenerable_field(field_name, options = {})
+    field_id = "regenerable-fields-#{SecureRandom.hex}"
+
+    options[:read_only] = true
+    options[:read_only_content] = @template.content_tag(:div, :id => field_id, :class => 'regenerable-field') do
+      current = @object.send(field_name)
+
+      # Current value display
+      body = @template.content_tag(:span, current || "[#{@template.t('common.none')}]", :data => { :value => current || "" })
+
+      unless @template.read_only
+        # Generate/Regenerate button
+        data = {
+          'handler' => options.delete(:handler) || "#{@template.url_for(@object)}/regenerate_#{field_name}"
+        }
+        data['confirm'] = options.delete(:confirm) if options[:confirm]
+
+        body += @template.button_tag(@template.t("common.#{current ? 'regenerate' : 'generate'}"), :class => 'regenerate btn btn-default btn-xs', :data => data)
+
+        # Loading indicator
+        body += @template.loading_indicator(:success_failure => true)
+
+        # Backbone view
+        body += @template.content_tag(:script, "new ELMO.Views.RegenerableFieldView({ el: $('##{field_id}') })".html_safe);
+      end
+
+      body
+    end
+
+    field(field_name, options)
+  end
+
   def base_errors
     @template.content_tag(:div, @object.errors[:base].join(' '), :class => 'form-errors')
   end
@@ -65,12 +97,12 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
       # else if read only content was explicitly given and form is read only, use that
       elsif options[:read_only] && options[:read_only_content]
 
-        options[:read_only_content].html_safe
+        options[:read_only_content]
 
       # else if content was explicitly given, just use that
       elsif options[:content]
 
-        options[:content].html_safe
+        options[:content]
 
       # otherwise generate field based on type
       else
@@ -116,7 +148,7 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
 
             when :radio_buttons
               # build set of radio buttons based on options
-              options[:options].map{|o| radio_button(field_name, o, :class => 'radio') + o}.join('&nbsp;&nbsp;').html_safe
+              safe_join(options[:options].map{|o| radio_button(field_name, o, :class => 'radio') + o}, '&nbsp;&nbsp;')
 
             when :textarea
               text_area(field_name, {:class => 'form-control', :placeholder => placeholder})
@@ -142,8 +174,8 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
     # generates html for a field label
     def elmo_field_label(field_name, options)
       label_str = options[:label] || @object.class.human_attribute_name(field_name)
-      label_html = (options[:required] ? "#{@template.reqd_sym} " : "") + label_str + ":"
-      label(field_name, label_html.html_safe, :class => "main")
+      label_html = "".html_safe << (options[:required] ? @template.reqd_sym << " " : "") << label_str << ":"
+      label(field_name, label_html, class: "main")
     end
 
     # generates html for a field hint block

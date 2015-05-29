@@ -1,6 +1,6 @@
 require "spec_helper"
 
-feature "send broadcast", js: true, driver: :selenium do
+feature "send broadcast", js: true do
   before do
     @user = create(:user, role_name: 'coordinator', phone: "+1234567890", email: "testemail@example.com")
     @user2 = create(:user, role_name: 'staffer', phone: "+6789012345", email: "testemail2@example.com")

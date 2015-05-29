@@ -18,7 +18,7 @@ module ApplicationHelper
 
   # pairs flash errors with bootstrap styling
   def bootstrap_flash_class(level)
-    case level
+    case level.to_sym
       when :notice then "alert alert-info"
       when :success then "alert alert-success"
       when :error then "alert alert-danger"
@@ -27,38 +27,18 @@ module ApplicationHelper
     end
   end
 
-  # renders an index table for the given class and list of objects
-  # options[:within_form] - Whether the table is contained within a form tag. Affects whether a form tag is generated
-  #   to contain the batch op checkboxes.
-  def index_table(klass, objects, options = {})
-    links = []
-
-    unless options[:table_only]
-      # get links from class' helper
-      links = send("#{klass.model_name.route_key}_index_links", objects).compact
-
-      # if there are any batch links, insert the 'select all' link
-      batch_ops = !links.reject{|l| !l.match(/class="batch_op_link"/)}.empty?
-      links.insert(0, select_all_link) if batch_ops
-    end
-
-    # render, getting fields and checking if there are no objects at all
-    render("layouts/index_table",
-      :klass => klass,
-      :objects => objects,
-      :options => options,
-      :paginated => objects.respond_to?(:total_entries),
-      :links => links.flatten.join.html_safe,
-      :fields => send("#{klass.model_name.route_key}_index_fields"),
-      :batch_ops => batch_ops
-    )
-  end
-
   # renders a loading indicator image wrapped in a wrapper
   def loading_indicator(options = {})
     content_tag("div", :class => "loading_indicator loading_indicator#{options[:floating] ? '_floating' : '_inline'}", :id => options[:id]) do
-      image_tag("load-ind-small#{options[:header] ? '-header' : ''}.gif", :style => "display: none", :id => "loading_indicator" +
-        (options[:id] ? "_#{options[:id]}" : ""))
+      body = image_tag("load-ind-small#{options[:header] ? '-header' : ''}.gif", :style => "display: none",
+          :id => "loading_indicator" + (options[:id] ? "_#{options[:id]}" : ""))
+
+      if options[:success_failure]
+        body += content_tag('i', '', :class => 'success fa fa-fw fa-check-circle', :style => 'display: none')
+        body += content_tag('i', '', :class => 'failure fa fa-fw fa-minus-circle', :style => 'display: none')
+      end
+
+      body
     end
   end
 
@@ -149,23 +129,22 @@ module ApplicationHelper
       end
     end
 
-    ttl = ''
-    model_name = controller_name.classify.downcase
+    "".html_safe.tap do |ttl|
+      model_name = controller_name.classify.downcase
 
-    # Add standard icon if appropriate
-    ttl += std_icon(@title_args[:standardized]) unless options[:text_only]
+      # Add standard icon if appropriate
+      ttl << std_icon(@title_args[:standardized]) unless options[:text_only]
 
-    # Add object type icon where appropriate
-    ttl += icon_tag(model_name) unless options[:text_only]
+      # Add object type icon where appropriate
+      ttl << icon_tag(model_name) unless options[:text_only]
 
-    # add text
-    if options[:name_only]
-      ttl += @title_args[:name]
-    else
-      ttl += t(action, {:scope => "page_titles.#{controller_name}", :default => [:all, ""]}.merge(@title_args || {}))
+      # add text
+      if options[:name_only]
+        ttl << @title_args[:name]
+      else
+        ttl << t(action, {:scope => "page_titles.#{controller_name}", :default => [:all, ""]}.merge(@title_args || {}))
+      end
     end
-
-    ttl.html_safe
   end
 
   def h1_title
@@ -179,14 +158,20 @@ module ApplicationHelper
     t("activerecord.models.#{klass.model_name.i18n_key}", :count => options[:count] || 2)
   end
 
-  # translates and interprets markdown markup
-  def tmd(*args)
-    html = BlueCloth.new(t(*args)).to_html
+  # Translates and interprets markdown style translations.
+  # Escapes HTML in any arguments.
+  def tmd(key, options = {})
+    options.keys.each{ |k| options[k] = html_escape(options[k]).to_s unless %w(default scope).include?(k.to_s) }
 
+    html = BlueCloth.new(t(key, options)).to_html
+
+    # Remove surrounding <p> tags if present.
     if html[0,3] == '<p>' && html[-4,4] == '</p>'
       html = html[3..-5]
     end
 
+    # We can safely do this because we control what's in the translation file
+    # and we've escaped the options.
     html.html_safe
   end
 
@@ -216,16 +201,16 @@ module ApplicationHelper
 
   # makes a set of <li> wrapped links to the index actions of the given classes
   def nav_links(*klasses)
-    l = []
+    links = []
     klasses.each do |k|
       if can?(:index, k)
         path = dynamic_path(k, action: :index)
         active = current_page?(path)
-        l << content_tag(:li, :class => active ? 'active' : '') do
+        links << content_tag(:li, :class => active ? 'active' : '') do
           link_to(icon_tag(k.model_name.param_key) + pluralize_model(k), path)
         end
       end
     end
-    l.join.html_safe
+    links.reduce(:<<)
   end
 end

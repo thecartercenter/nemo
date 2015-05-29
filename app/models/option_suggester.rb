@@ -20,7 +20,7 @@ class OptionSuggester
     exact_match = false
     matches.sort_by! do |match|
       # If an exact match, set a flag and put it at the top
-      if match.name =~ /^#{Regexp.escape(query)}$/i
+      if match.name =~ /\A#{Regexp.escape(query)}\z/i
         exact_match = true
         [0,match.name]
       else
