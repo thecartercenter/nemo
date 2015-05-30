@@ -32,8 +32,7 @@
           };
         },
         cache: true
-      },
-      minimumInputLength: 1
+      }
     });
   }
 
