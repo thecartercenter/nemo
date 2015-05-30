@@ -20,7 +20,7 @@
   <%= f.field(:form_id, :content => link_to(@response.form.name, @response.form)) %>
 
   <%# if the user can't manage the response, then don't show the submitter box as a dropdown %>
-  <%= f.field(:user_id, :type => :select, :required => true, :options => sel_opts_from_objs(@possible_submitters),
+  <%= f.field(:user_id, :type => :select, :required => true, :options => sel_opts_from_objs(@response.user),
     :read_only => cannot?(:manage, @response),
 
     # some users are not linkable currently if they're not assigned to the mission
@@ -57,5 +57,7 @@
 
 <%= javascript_doc_ready do %>
   $('textarea').each(function(){ CKEDITOR.replace(this.id); });
-  ELMO.Response.init();
+  ELMO.Response.init(<%=json({
+    url: possible_submitters_responses_path(id: @response.id)
+  })%>);
 <% end %>
