@@ -187,7 +187,10 @@ class ResponsesController < ApplicationController
 
     @possible_submitters = @possible_submitters.paginate(:page => params[:page], :per_page => 20)
 
-    render json: @possible_submitters.to_json(:include_id => true)
+    render :json => {
+      :possible_submitters => @possible_submitters.as_json(:only => %i(id name)),
+      :more => @possible_submitters.next_page.present?
+    }
   end
 
   private

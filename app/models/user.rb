@@ -260,9 +260,9 @@ class User < ActiveRecord::Base
   end
 
   def as_json(options = {})
-    json = {:name => name}
-    json[:id] = id if options[:include_id]
-    json
+    options[:only] ||= [:name]
+
+    super
   end
 
   # returns hash of missions to roles

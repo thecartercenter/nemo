@@ -25,8 +25,11 @@
           };
         },
         processResults: function (data, page) {
-          var results = _.map(data, function (i) { i.text = i.name; return i; });
-          return { results: results };
+          var results = _.map(data.possible_submitters, function (i) { i.text = i.name; return i; });
+          return {
+            results: results,
+            pagination: { more: data.more }
+          };
         },
         cache: true
       },
