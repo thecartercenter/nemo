@@ -15,7 +15,7 @@ feature 'responses form', js: true, sphinx: true do
       login(@user)
     end
 
-    scenario 'should work' do
+    xscenario 'should work' do
       visit_submit_page_and_select_user
 
       # Fill in answers
@@ -83,7 +83,7 @@ feature 'responses form', js: true, sphinx: true do
       login(@user)
     end
 
-    scenario 'should be properly ignored' do
+    xscenario 'should be properly ignored' do
       visit_submit_page_and_select_user
 
       expect(page).not_to have_selector("div.form_field#qing_#{@qing1.id}")
@@ -105,7 +105,7 @@ feature 'responses form', js: true, sphinx: true do
       login(@user)
     end
 
-    scenario 'should be enforced if appropriate' do
+    xscenario 'should be enforced if appropriate' do
       # Should raise error if value filled in.
       visit_submit_page_and_select_user
       fill_in(control_id(@qings[0], '_value'), with: '9')
