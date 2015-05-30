@@ -50,8 +50,8 @@ ELMO::Application.routes.draw do
       end
     end
     resources :responses do
-      collection do
-        get 'possible_submitters', path: 'possible-submitters'
+      %i(new member).each do |type|
+        get 'possible_submitters', path: 'possible-submitters', on: type
       end
     end
     resources :sms, only: [:index]
