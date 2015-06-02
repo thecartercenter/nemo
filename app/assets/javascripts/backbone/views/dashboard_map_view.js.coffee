@@ -45,7 +45,7 @@ class ELMO.Views.DashboardMapView extends Backbone.View
       bounds.extend(p)
 
       # setup event listener to show info window
-      google.maps.event.addListener(m, 'click', => this.show_info_window(this))
+      google.maps.event.addListener(m, 'click', => this.show_info_window(m))
     )
 
     # if there are stored bounds, use those to center map
