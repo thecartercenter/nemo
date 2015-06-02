@@ -16,7 +16,9 @@ class ELMO.Views.DashboardMapView extends Backbone.View
     })
 
     # create the marker clusterer
-    mc = new MarkerClusterer(@map)
+    mc = new MarkerClusterer(@map, [], {
+      imagePath: 'https://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/images/m'
+    })
 
     # add the markers and keep expanding the bounding rectangle
     bounds = new google.maps.LatLngBounds()
