@@ -15,6 +15,9 @@ class ELMO.Views.DashboardMapView extends Backbone.View
       draggableCursor: 'pointer'
     })
 
+    # create the marker clusterer
+    mc = new MarkerClusterer(@map)
+
     # add the markers and keep expanding the bounding rectangle
     bounds = new google.maps.LatLngBounds()
     @markers = []
@@ -24,14 +27,16 @@ class ELMO.Views.DashboardMapView extends Backbone.View
       lat = parseFloat(split[0])
       lng = parseFloat(split[1])
 
-      # create marker and add to map
+      # create marker
       p = new google.maps.LatLng(lat, lng)
       m = new google.maps.Marker({
-        map: @map,
         position: p,
         title: I18n.t('activerecord.models.response.one') + ' #' + l.r_id,
         r_id: l.r_id
       })
+
+      # add to marker clusterer
+      mc.addMarker(m)
 
       # expand the bounding rectangle
       bounds.extend(p)
