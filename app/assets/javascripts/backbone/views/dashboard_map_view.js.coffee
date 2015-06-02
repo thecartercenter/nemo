@@ -34,6 +34,7 @@ class ELMO.Views.DashboardMapView extends Backbone.View
       m = new google.maps.Marker({
         position: p,
         title: I18n.t('activerecord.models.response.one') + ' #' + l.r_id,
+        icon: 'https://storage.googleapis.com/support-kms-prod/SNP_2752125_en_v0',
         r_id: l.r_id
       })
 
