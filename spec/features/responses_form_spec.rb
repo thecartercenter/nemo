@@ -15,7 +15,7 @@ feature 'responses form', js: true, sphinx: true do
       login(@user)
     end
 
-    xscenario 'should work' do
+    scenario 'should work' do
       visit_submit_page_and_select_user
 
       # Fill in answers
@@ -83,7 +83,7 @@ feature 'responses form', js: true, sphinx: true do
       login(@user)
     end
 
-    xscenario 'should be properly ignored' do
+    scenario 'should be properly ignored' do
       visit_submit_page_and_select_user
 
       expect(page).not_to have_selector("div.form_field#qing_#{@qing1.id}")
@@ -105,7 +105,7 @@ feature 'responses form', js: true, sphinx: true do
       login(@user)
     end
 
-    xscenario 'should be enforced if appropriate' do
+    scenario 'should be enforced if appropriate' do
       # Should raise error if value filled in.
       visit_submit_page_and_select_user
       fill_in(control_id(@qings[0], '_value'), with: '9')
@@ -131,7 +131,7 @@ feature 'responses form', js: true, sphinx: true do
 
   def visit_submit_page_and_select_user
     visit(new_response_path(locale: 'en', mode: 'm', mission_name: get_mission.compact_name, form_id: @form.id))
-    select(@user.name, from: 'response_user_id')
+    select2(@user.name, from: 'response_user_id')
   end
 
   def check_response_show_form(*values)
