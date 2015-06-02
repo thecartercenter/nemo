@@ -49,7 +49,11 @@ ELMO::Application.routes.draw do
         post 'new_with_users', path: 'new-with-users'
       end
     end
-    resources :responses
+    resources :responses do
+      %i(new member).each do |type|
+        get 'possible_submitters', path: 'possible-submitters', on: type
+      end
+    end
     resources :sms, only: [:index]
     resources :sms_tests, path: 'sms-tests'
 

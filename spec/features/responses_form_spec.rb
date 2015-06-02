@@ -131,7 +131,7 @@ feature 'responses form', js: true, sphinx: true do
 
   def visit_submit_page_and_select_user
     visit(new_response_path(locale: 'en', mode: 'm', mission_name: get_mission.compact_name, form_id: @form.id))
-    select(@user.name, from: 'response_user_id')
+    select2(@user.name, from: 'response_user_id')
   end
 
   def check_response_show_form(*values)
