@@ -105,7 +105,19 @@ class UsersController < ApplicationController
     @users = load_selected_objects(User)
     skipped_current = !!@users.reject! { |u| u.id == current_user.id }
     begin
-      destroyed_users = User.where(:id => @users.map(&:id)).destroy_all
+      destroyed_users = []
+      deactivated_users = []
+      User.transaction do
+        @users.each do |u|
+          begin
+            u.destroy
+            destroyed_users << u
+          rescue DeletionError => e
+            u.activate!(false)
+            deactivated_users << u
+          end
+        end
+      end
       flash[:success] =  t("user.bulk_destroy_success", :count => destroyed_users.count) if destroyed_users.count > 0
       flash[:error] =  t("user.bulk_destroy_skipped_current") if skipped_current
     rescue
