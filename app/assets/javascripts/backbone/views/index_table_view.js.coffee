@@ -129,7 +129,7 @@ class ELMO.Views.IndexTableView extends Backbone.View
       @alert.delay(2500).fadeOut('slow', this.reset_alert.bind(this))
 
     # else, show confirm dialog (if requested), and proceed if 'yes' clicked
-    else if not options.confirm or confirm(options.confirm.replace(/###/, selected))
+    else if not options.confirm or confirm(I18n.t(options.confirm, { count: selected }))
 
       # construct a temporary form
       form = $('<form>').attr('action', options.path).attr('method', 'post').attr('style', 'display: none')

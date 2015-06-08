@@ -1685,8 +1685,14 @@ en:
       regenerate: "Regenerate"
     back_to_index: "Back to Users List"
     bulk_destroy: "Delete Multiple Users"
-    bulk_destroy_confirm: "Are you sure you want to delete these ### user(s)?"
-    bulk_destroy_success: "%{count} user(s) deleted successfully."
+    bulk_destroy_confirm:
+      zero: "Are you sure you want to delete zero users?"
+      one: "Are you sure you want to delete this user?"
+      other: "Are you sure you want to delete these %{count} users?"
+    bulk_destroy_success:
+      zero: "No users deleted successfully."
+      one: "%{count} user deleted successfully."
+      other: "%{count} users deleted successfully."
     bulk_destroy_skipped_current: "Not deleting the current user."
     create_multiple: "Create Multiple Users"
     edit_profile: "Edit Profile"

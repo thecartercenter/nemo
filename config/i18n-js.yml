@@ -37,5 +37,6 @@ translations:
       "*.response.*",
       "*.role.*",
       "*.standard.*",
-      "*.tag.*"
+      "*.tag.*",
+      "*.user.bulk_destroy_confirm.*"
     ]
