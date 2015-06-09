@@ -46,6 +46,9 @@ class OptionSetsController < ApplicationController
     render(:form)
   end
 
+  def export
+  end
+
   # always via AJAX
   def create
     @option_set.is_standard = true if current_mode == 'admin'

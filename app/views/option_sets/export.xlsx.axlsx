@@ -1,0 +1,7 @@
+xlsx_package.workbook.tap do |wb|
+  wb.use_shared_strings = true
+
+  wb.add_worksheet(name: @option_set.name) do |sheet|
+  end
+end
+# vi:set syntax=ruby:
