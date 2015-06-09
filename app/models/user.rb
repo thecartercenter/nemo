@@ -313,6 +313,9 @@ class User < ActiveRecord::Base
     def check_assoc
       # can't delete users with related responses.
       raise DeletionError.new(:cant_delete_if_responses) unless responses.empty?
+
+      # can't delete users with related sms messages.
+      raise DeletionError.new(:cant_delete_if_sms_messages) unless Sms::Message.where(user_id: id).empty?
     end
 
     def must_have_password_reset_on_create
