@@ -68,7 +68,6 @@ class OptionNode < ActiveRecord::Base
   # Returns the child options of the node defined by path of option ids.
   # If node at end of path is leaf node, returns [].
   def options_for_node(path)
-    x = find_descendant_by_option_path(path)
     find_descendant_by_option_path(path).try(:child_options) || []
   end
 
