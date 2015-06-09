@@ -50,7 +50,7 @@ class User < ActiveRecord::Base
   validates :password, format: { with: /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])/, if: :require_password?, message: :invalid_password }
 
   scope(:by_name, -> { order("users.name") })
-  scope(:assigned_to, ->(m) { where("users.id IN (SELECT user_id FROM assignments WHERE mission_id = ?)", m.id) })
+  scope(:assigned_to, ->(m) { where("users.id IN (SELECT user_id FROM assignments WHERE mission_id = ?)", m.try(:id)) })
   scope(:with_assoc, -> { includes(:missions, {:assignments => :mission}) })
 
   # returns users who are assigned to the given mission OR who submitted the given response
