@@ -106,6 +106,8 @@ class UsersController < ApplicationController
     skipped_current = !!@users.reject! { |u| u.id == current_user.id }
     begin
       skipped_users = []
+      skipped_users << current_user if skipped_current
+
       destroyed_users = []
       deactivated_users = []
       User.transaction do
@@ -125,7 +127,13 @@ class UsersController < ApplicationController
           end
         end
       end
-      flash[:success] =  t("user.bulk_destroy_success", :count => destroyed_users.count) if destroyed_users.count > 0
+
+      success = []
+      success <<  t("user.bulk_destroy_deleted", :count => destroyed_users.count) unless destroyed_users.empty?
+      success <<  t("user.bulk_destroy_deactivated", :count => deactivated_users.count) unless deactivated_users.empty?
+      success <<  t("user.bulk_destroy_skipped", :count => skipped_users.count) unless skipped_users.empty?
+      flash[:success] = success.join unless success.empty?
+
       flash[:error] =  t("user.bulk_destroy_skipped_current") if skipped_current
     rescue
       flash[:error] =  t("user.#{$!}")
