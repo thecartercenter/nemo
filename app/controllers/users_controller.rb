@@ -111,16 +111,17 @@ class UsersController < ApplicationController
       User.transaction do
         @users.each do |u|
           begin
-            if can?(:destroy, u)
-              u.destroy
-              destroyed_users << u
-            else
+            raise DeletionError unless can?(:destroy, u)
+
+            u.destroy
+            destroyed_users << u
+          rescue DeletionError => e
+            if u.active?
               u.activate!(false)
+              deactivated_users << u
+            else
               skipped_users << u
             end
-          rescue DeletionError => e
-            u.activate!(false)
-            deactivated_users << u
           end
         end
       end
