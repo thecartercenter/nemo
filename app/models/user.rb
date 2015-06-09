@@ -7,6 +7,10 @@ class User < ActiveRecord::Base
 
   attr_writer(:reset_password_method)
 
+  # call before_destroy before :dependent => :destroy associations
+  # cf. https://github.com/rails/rails/issues/3458
+  before_destroy(:check_assoc)
+
   has_many :responses, :inverse_of => :user
   has_many :broadcast_addressings, :inverse_of => :user, :dependent => :destroy
   has_many :assignments, :autosave => true, :dependent => :destroy, :validate => true, :inverse_of => :user
@@ -35,7 +39,6 @@ class User < ActiveRecord::Base
   after_initialize(:set_default_pref_lang)
   after_initialize(:set_default_login)
   before_validation(:normalize_fields)
-  before_destroy(:check_assoc)
   before_validation(:generate_password_if_none)
   after_create(:regenerate_api_key)
 
