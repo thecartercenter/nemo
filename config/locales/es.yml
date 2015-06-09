@@ -914,7 +914,10 @@ es:
     questions_add_success: "Preguntas añadidas con éxito."
     questions_remove_success: "Preguntas eliminadas con éxito."
     remove_selected: "Eliminar elementos Seleccionados"
-    remove_question_confirm: "¿Está seguro de que desea eliminar estas ### pregunta(s) del formulario?"
+    remove_question_confirm:
+      zero: "¿Está seguro de que desea eliminar ningunas preguntas del formulario?"
+      one: "¿Está seguro de que desea eliminar esta pregunta del formulario?"
+      other: "¿Está seguro de que desea eliminar estas %{count} preguntas del formulario?"
     reqd_sym_definition: "Preguntas obligatorias están marcadas con un"
     save_and_publish: "Guardar y Publicar"
     saving_order: "Guardando la comanda..."
