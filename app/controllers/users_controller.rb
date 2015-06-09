@@ -105,13 +105,19 @@ class UsersController < ApplicationController
     @users = load_selected_objects(User)
     skipped_current = !!@users.reject! { |u| u.id == current_user.id }
     begin
+      skipped_users = []
       destroyed_users = []
       deactivated_users = []
       User.transaction do
         @users.each do |u|
           begin
-            u.destroy
-            destroyed_users << u
+            if can?(:destroy, u)
+              u.destroy
+              destroyed_users << u
+            else
+              u.activate!(false)
+              skipped_users << u
+            end
           rescue DeletionError => e
             u.activate!(false)
             deactivated_users << u
