@@ -3,7 +3,7 @@
   <%# need to print this here if in ajax mode %>
   <%= render("layouts/flash", :flash => flash) if request.xhr? %>
 
-  <%= top_action_links(@option_set, :only => [:index, :new, :show, :edit, :destroy, :export]) unless request.xhr? %>
+  <%= top_action_links(@option_set) unless request.xhr? %>
 
   <% if form_mode == :edit %>
     <%= published_warning(@option_set) if @option_set.published? %>
