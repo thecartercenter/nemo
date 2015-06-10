@@ -47,6 +47,10 @@ class OptionSetsController < ApplicationController
   end
 
   def export
+    @headers = [@option_set.class.human_attribute_name(:id)]
+    @headers.concat(@option_set.levels.map(&:name))
+
+    @rows = []
   end
 
   # always via AJAX
