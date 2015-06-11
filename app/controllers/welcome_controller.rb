@@ -61,6 +61,10 @@ class WelcomeController < ApplicationController
         # get location answers
         # TODO refactor user argument
         @location_answers = Answer.location_answers_for_mission(current_mission, current_user.role(current_mission) == 'observer' ? current_user : nil)
+
+        # only show the most recent 1000 responses
+        @location_answers_count = @location_answers.size
+        @location_answers = @location_answers.take(1000)
       end
 
       unless fragment_exist?(@cache_key + '/stat_blocks')

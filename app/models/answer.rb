@@ -42,7 +42,8 @@ class Answer < ActiveRecord::Base
         INNER JOIN responses r ON a.response_id = r.id
         INNER JOIN form_items qing ON a.questioning_id = qing.id
         INNER JOIN questions q ON qing.question_id = q.id
-      WHERE q.qtype_name = 'location' AND a.value IS NOT NULL AND r.mission_id = ? #{user_clause}",
+      WHERE q.qtype_name = 'location' AND a.value IS NOT NULL AND r.mission_id = ? #{user_clause}
+      ORDER BY r.updated_at DESC",
       mission.id
     ])
   end

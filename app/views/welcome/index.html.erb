@@ -62,6 +62,11 @@
     <%# no need to cache this bit either because there's nothing here (done by JS) %>
     <h2 class="interior"><%= t('dashboard.response_locations') %></h2>
     <div class="response_locations"></div>
+    <% if @location_answers_count > @location_answers.size %>
+      <div class="response_locations_truncated">
+        <%= t('dashboard.response_locations_truncated', :shown => @location_answers.size, :total => @location_answers_count) %>
+      </div>
+    <% end %>
 
   </div>
 
