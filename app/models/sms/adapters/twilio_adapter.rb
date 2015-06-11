@@ -10,14 +10,6 @@ class Sms::Adapters::TwilioAdapter < Sms::Adapters::Adapter
     true
   end
 
-  def self.settings
-    [
-      { field: :twilio_phone_number },
-      { field: :twilio_account_sid },
-      { field: :twilio_auth_token1, type: :password }
-    ]
-  end
-
   def deliver(message)
     prepare_message_for_delivery(message)
 

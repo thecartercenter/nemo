@@ -20,10 +20,6 @@ class Sms::Adapters::Adapter
     name.split('::').last.gsub(/Adapter$/, '')
   end
 
-  def self.settings
-    []
-  end
-
   def service_name
     self.class.service_name
   end

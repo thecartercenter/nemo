@@ -323,7 +323,6 @@ en:
         outgoing_sms_adapter: "Outgoing Provider"
         override_code: "Override Code"
         external_sql: "External SQL"
-        sms_gateways: "SMS Gateways"
         timezone: "Time Zone"
         twilio_account_sid: "Account SID"
         twilio_auth_token1: "Auth Token"

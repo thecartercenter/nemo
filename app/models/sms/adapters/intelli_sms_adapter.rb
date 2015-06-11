@@ -12,14 +12,6 @@ class Sms::Adapters::IntelliSmsAdapter < Sms::Adapters::Adapter
     true
   end
 
-  def self.settings
-    [
-      { field: :intellisms_username },
-      { field: :intellisms_password1, type: :password },
-      { field: :intellisms_password2, type: :password }
-    ]
-  end
-
   def deliver(message)
     prepare_message_for_delivery(message)
 
