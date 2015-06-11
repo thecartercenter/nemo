@@ -1,0 +1,45 @@
+<table class="table table-striped">
+  <tr>
+    <th>Provider</th>
+    <th>Settings</th>
+    <th>Incoming</th>
+    <th>Outgoing</th>
+    <th>Default</th>
+  </tr>
+  <tr>
+    <td>FrontlineSms</td>
+    <td>[<%= t('common.none') %>]</td>
+    <td>Yes</td>
+    <td>No</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>IntelliSms</td>
+    <td>
+      <%= form.field(:intellisms_username, :append => link_to(t("setting.change_sms_password"), "#", :class => 'show_credential_fields')) %>
+
+      <div class="credential_fields">
+        <%= form.field(:intellisms_password1, :type => :password) %>
+        <%= form.field(:intellisms_password2, :type => :password) %>
+      </div>
+    </td>
+    <td>Yes</td>
+    <td>Yes</td>
+    <td><%= radio_button_tag('', '') %></td>
+  </tr>
+  <tr>
+    <td>Twilio</td>
+    <td>
+      <%= form.field(:twilio_phone_number) %>
+
+      <%= form.field(:twilio_account_sid, :append => link_to(t("setting.change_twilio_auth_token"), "#", :class => 'show_credential_fields')) %>
+
+      <div class="credential_fields">
+        <%= form.field(:twilio_auth_token1, :type => :password) %>
+      </div>
+    </td>
+    <td>Yes</td>
+    <td>Yes</td>
+    <td><%= radio_button_tag('', '') %></td>
+  </tr>
+</table>
