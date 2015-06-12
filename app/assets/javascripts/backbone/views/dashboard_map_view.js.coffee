@@ -24,8 +24,10 @@ class ELMO.Views.DashboardMapView extends Backbone.View
     bounds = new google.maps.LatLngBounds()
     @markers = []
     @params.locations.forEach((l) =>
+      [response_id, loc] = l
+
       # get float values from string
-      split = l.loc.split(' ')
+      split = loc.split(' ')
       lat = parseFloat(split[0])
       lng = parseFloat(split[1])
 
@@ -33,9 +35,9 @@ class ELMO.Views.DashboardMapView extends Backbone.View
       p = new google.maps.LatLng(lat, lng)
       m = new google.maps.Marker({
         position: p,
-        title: I18n.t('activerecord.models.response.one') + ' #' + l.r_id,
+        title: I18n.t('activerecord.models.response.one') + ' #' + response_id,
         icon: 'https://storage.googleapis.com/support-kms-prod/SNP_2752125_en_v0',
-        r_id: l.r_id
+        r_id: response_id
       })
 
       # add to marker clusterer

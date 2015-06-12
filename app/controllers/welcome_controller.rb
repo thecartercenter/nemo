@@ -59,12 +59,10 @@ class WelcomeController < ApplicationController
       # do the non-lazy loads inside these blocks so they don't run if we get a cache hit
       unless fragment_exist?(@cache_key + '/js_init')
         # get location answers
-        # TODO refactor user argument
-        @location_answers = Answer.location_answers_for_mission(current_mission, current_user.role(current_mission) == 'observer' ? current_user : nil)
+        location_answers = Answer.location_answers_for_mission(current_mission, current_user)
 
-        # only show the most recent 1000 responses
-        @location_answers_count = @location_answers.size
-        @location_answers = @location_answers.take(1000)
+        @location_answers_count = location_answers.total_entries
+        @location_answers = location_answers.pluck(:response_id, :value)
       end
 
       unless fragment_exist?(@cache_key + '/stat_blocks')
