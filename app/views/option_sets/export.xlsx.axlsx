@@ -1,8 +1,10 @@
 xlsx_package.workbook.tap do |wb|
   wb.use_shared_strings = true
 
+  header_style = wb.styles.add_style(locked: true, b: true)
+
   wb.add_worksheet(name: @option_set.name) do |sheet|
-    header_row = sheet.add_row(@headers)
+    header_row = sheet.add_row(@headers, style: header_style)
 
     @rows.each do |row|
       sheet.add_row(row)
