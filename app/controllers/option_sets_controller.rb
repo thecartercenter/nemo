@@ -50,7 +50,7 @@ class OptionSetsController < ApplicationController
     @headers = [@option_set.class.human_attribute_name(:id)]
     @headers.concat(@option_set.levels.map(&:name))
 
-    @rows = []
+    @rows = @option_set.arrange_as_rows
   end
 
   # always via AJAX
