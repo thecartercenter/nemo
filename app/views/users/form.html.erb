@@ -5,7 +5,7 @@
 
 <%= elmo_form_for(@user) do |f| %>
 
-  <%= top_action_links(@user) %>
+  <%= top_action_links(@user, :except => [:export]) %>
 
   <%= f.field(:name, :required => true) %>
   <%= f.field(:login, :required => true, :partial => "login_name_field") %>
