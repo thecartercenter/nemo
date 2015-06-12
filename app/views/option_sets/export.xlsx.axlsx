@@ -8,7 +8,10 @@ xlsx_package.workbook.tap do |wb|
     sheet.add_row(@headers, style: header_style)
 
     @rows.each do |row|
-      sheet.add_row(row, style: row_style)
+      types = [:integer]
+      types.concat([:string] * (row.size - 1))
+
+      sheet.add_row(row, style: row_style, types: types)
     end
 
     # protect the sheet to allow the header to be locked
