@@ -51,6 +51,8 @@ class OptionSetsController < ApplicationController
     @headers.concat(@option_set.levels.map(&:name))
 
     @rows = @option_set.arrange_as_rows
+
+    render :xlsx => 'export', :filename => "#{@option_set.name}.xlsx"
   end
 
   # always via AJAX
