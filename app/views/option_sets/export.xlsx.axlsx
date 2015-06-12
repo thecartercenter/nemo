@@ -9,6 +9,9 @@ xlsx_package.workbook.tap do |wb|
     @rows.each do |row|
       sheet.add_row(row)
     end
+
+    # hide the "Id" column
+    sheet.column_info.first.hidden = true
   end
 end
 # vi:set syntax=ruby:
