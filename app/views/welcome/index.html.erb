@@ -29,7 +29,8 @@
         map: {
           locations: @location_answers,
           info_window_url: dashboard_info_window_url,
-          marker_clusterer_image_url: asset_url('markerclusterer/')
+          marker_clusterer_image_url: asset_url('markerclusterer/'),
+          small_marker_url: image_url('markers/small.png')
         },
         report: {
           id: @report.try(:id)
