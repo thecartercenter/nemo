@@ -24,4 +24,3 @@ xlsx_package.workbook.tap do |wb|
     end
   end
 end
-# vi:set syntax=ruby:
