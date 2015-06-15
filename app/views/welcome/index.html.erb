@@ -28,7 +28,8 @@
         mission_id: current_mission.id,
         map: {
           locations: @location_answers,
-          info_window_url: dashboard_info_window_url
+          info_window_url: dashboard_info_window_url,
+          marker_clusterer_image_url: asset_url('markerclusterer/')
         },
         report: {
           id: @report.try(:id)
