@@ -88,7 +88,7 @@ class WelcomeController < ApplicationController
    # map info window
   def info_window
     @response = Response.with_basic_assoc.find(params[:response_id])
-    authorize!(:view, @response)
+    authorize!(:read, @response)
     render(:layout => false)
   end
 
@@ -108,7 +108,7 @@ class WelcomeController < ApplicationController
   private
     def prepare_report
       unless @report.nil?
-        authorize!(:view, @report)
+        authorize!(:read, @report)
         run_and_handle_errors
         build_report_data(:read_only => true, :dont_set_title => true)
       end
