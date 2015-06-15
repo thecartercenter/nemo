@@ -86,6 +86,8 @@ gem 'rack-attack', github: 'sassafrastech/rack-attack'
 gem "recaptcha", :require => "recaptcha/rails"
 
 # XLS support
+gem 'axlsx', '~> 2.1.0.pre'
+gem 'axlsx_rails'
 gem 'roo'
 
 gem 'therubyracer', platforms: :ruby

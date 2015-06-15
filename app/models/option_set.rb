@@ -68,6 +68,7 @@ class OptionSet < ActiveRecord::Base
            :options_for_node,
            :max_depth,
            :options_not_serialized,
+           :arrange_as_rows,
            :arrange_with_options,
            :option_path_to_rank_path,
            :rank_path_to_option_path,

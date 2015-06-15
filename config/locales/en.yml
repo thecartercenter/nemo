@@ -388,6 +388,7 @@ en:
         show: "View Option Set"
         edit: "Edit Option Set"
         destroy: "Delete Option Set"
+        export: "Export Option Set"
       question:
         new: "Create New Question"
         index: "List Questions"
