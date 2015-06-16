@@ -16,9 +16,17 @@ class ELMO.Views.DashboardMapView extends Backbone.View
     })
 
     # create the marker clusterer
-    mc = new MarkerClusterer(@map, [], {
-      imagePath: params.marker_clusterer_image_url
-    })
+    mc = new MarkerClusterer(@map)
+
+    # update the style images to point to local versions
+    #
+    # note: the imagePath configuration option for the MarkerClusterer
+    # constructor is not used because getting the Rails asset_url() for a
+    # directory is error-prone. using individual image urls gets around this
+    # restriction.
+    if params.marker_clusterer_image_urls
+      for style, n in mc.getStyles()
+        style.url = params.marker_clusterer_image_urls[n]
 
     # add the markers and keep expanding the bounding rectangle
     bounds = new google.maps.LatLngBounds()
