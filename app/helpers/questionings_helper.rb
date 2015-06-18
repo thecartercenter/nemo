@@ -7,7 +7,7 @@ module QuestioningsHelper
         if qings.any?
           # add remove questions link
           links << batch_op_link(:name => t("form.remove_selected"), :path => remove_questions_form_path(@form),
-            data: {confirm: t("form.remove_question_confirm")}) if can?(:remove_questions, @form)
+            :confirm => "form.remove_question_confirm") if can?(:remove_questions, @form)
         end
       end
     end

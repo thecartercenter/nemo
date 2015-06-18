@@ -137,7 +137,10 @@ ELMO::Application.routes.draw do
         get 'login_instructions', path: 'login-instructions'
         post 'regenerate_api_key'
       end
-      post 'export', on: :collection
+      collection do
+        post 'export'
+        post 'bulk_destroy', path: 'bulk-destroy'
+      end
     end
   end
 

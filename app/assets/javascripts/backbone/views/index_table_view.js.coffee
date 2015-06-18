@@ -18,7 +18,7 @@ class ELMO.Views.IndexTableView extends Backbone.View
     @select_all_field = this.$el.find('input[name=select_all]')
     @alert = this.$el.find('div.alert')
     @pages = this.$el.data('pages')
-    @count = this.$el.data('entries')
+    @entries = this.$el.data('entries')
 
     # flash the modified obj if given
     if params.modified_obj_id
@@ -95,12 +95,18 @@ class ELMO.Views.IndexTableView extends Backbone.View
 
     if @pages > 1 and @select_all_field.val()
       msg = if @is_search then 'searched_rows_selected' else 'all_rows_selected'
-      @alert.html(I18n.t("index_table.messages.#{msg}", { count: @count }))
+      @alert.html(I18n.t("index_table.messages.#{msg}", { count: @entries }))
       @alert.addClass('alert-info').show()
 
   # gets all checkboxes in batch_form
   get_batch_checkboxes: ->
     @form.find('input[type=checkbox].batch_op')
+
+  get_selected_count: ->
+    if @select_all_field.val()
+      @entries
+    else
+      _.size(_.filter(this.get_batch_checkboxes(), (cb) -> cb.checked))
 
   # event handler for when a checkbox is clicked
   checkbox_changed: (event) ->
@@ -116,14 +122,14 @@ class ELMO.Views.IndexTableView extends Backbone.View
 
     options = $(event.target).data()
 
-    # ensure there is at least one box checked, and error if not
-    checked = _.size(_.filter(this.get_batch_checkboxes(), (cb) -> cb.checked))
-    if checked == 0
+    # ensure there is at least one item selected, and error if not
+    selected = this.get_selected_count()
+    if selected == 0
       @alert.html(I18n.t("layout.no_selection")).addClass('alert-danger').show()
       @alert.delay(2500).fadeOut('slow', this.reset_alert.bind(this))
 
     # else, show confirm dialog (if requested), and proceed if 'yes' clicked
-    else if not options.confirm or confirm(options.confirm.replace(/###/, @count))
+    else if not options.confirm or confirm(I18n.t(options.confirm, { count: selected }))
 
       # construct a temporary form
       form = $('<form>').attr('action', options.path).attr('method', 'post').attr('style', 'display: none')
@@ -141,3 +147,5 @@ class ELMO.Views.IndexTableView extends Backbone.View
 
       # submit the form
       form.submit()
+
+    return false

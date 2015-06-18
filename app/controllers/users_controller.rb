@@ -101,6 +101,46 @@ class UsersController < ApplicationController
     redirect_to(index_url_with_page_num)
   end
 
+  def bulk_destroy
+    @users = load_selected_objects(User)
+    skipped_current = !!@users.reject! { |u| u.id == current_user.id }
+    begin
+      skipped_users = []
+      skipped_users << current_user if skipped_current
+
+      destroyed_users = []
+      deactivated_users = []
+      User.transaction do
+        @users.each do |u|
+          begin
+            raise DeletionError unless can?(:destroy, u)
+
+            u.destroy
+            destroyed_users << u
+          rescue DeletionError => e
+            if u.active?
+              u.activate!(false)
+              deactivated_users << u
+            else
+              skipped_users << u
+            end
+          end
+        end
+      end
+
+      success = []
+      success <<  t("user.bulk_destroy_deleted", :count => destroyed_users.count) unless destroyed_users.empty?
+      success <<  t("user.bulk_destroy_deactivated", :count => deactivated_users.count) unless deactivated_users.empty?
+      success <<  t("user.bulk_destroy_skipped", :count => skipped_users.count) unless skipped_users.empty?
+      flash[:success] = success.join unless success.empty?
+
+      flash[:error] =  t("user.bulk_destroy_skipped_current") if skipped_current
+    rescue
+      flash[:error] =  t("user.#{$!}")
+    end
+    redirect_to(index_url_with_page_num)
+  end
+
   # shows printable login instructions for the user
   def login_instructions
   end

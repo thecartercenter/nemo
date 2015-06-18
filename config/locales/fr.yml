@@ -907,7 +907,10 @@ fr:
     questions_add_success: "Questions ajouté avec succès."
     questions_remove_success: "Questions retiré avec succès."
     remove_selected: "Enlevez sélectionné"
-    remove_question_confirm: "Vous-êtes sur vouz voulez enlever ces ### question(s) du formulaire?"
+    remove_question_confirm:
+      zero: "Vous-êtes sur vouz voulez enlever ces %{count} question(s) du formulaire?"
+      one: "Vous-êtes sur vouz voulez enlever ces %{count} question(s) du formulaire?"
+      other: "Vous-êtes sur vouz voulez enlever ces %{count} question(s) du formulaire?"
     reqd_sym_definition: "Questions obligatoire sont marquer avec un"
     save_and_publish: "Enregistrer et Publier"
     unpublish_error: "Il y avait un problème avec le formulaire inédit (%{msg})."
