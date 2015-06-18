@@ -19,6 +19,36 @@ class WelcomeController < ApplicationController
     @dont_print_title = true
 
     if current_mission
+      dashboard_index
+    elsif admin_mode?
+      render :admin
+    else
+      render :no_mission
+    end
+  end
+
+   # map info window
+  def info_window
+    @response = Response.with_basic_assoc.find(params[:response_id])
+    authorize!(:read, @response)
+    render(:layout => false)
+  end
+
+  # loads the specified report when chosen from the dropdown menu
+  def report_update
+    @report = Report::Report.find(params[:id])
+    prepare_report
+    render(:json => {
+      :title => render_to_string(:partial => 'report_pane_title'),
+      :main => render_to_string(:partial => 'reports/main')
+    })
+  end
+
+  def unauthorized
+  end
+
+  private
+    def dashboard_index
       # we need to load the report outside the cache block b/c it's included in the cache key
       # if report id given, load that
       if !params[:report_id].blank?
@@ -79,33 +109,11 @@ class WelcomeController < ApplicationController
       unless fragment_exist?(@cache_key + '/report_pane')
         prepare_report
       end
+
+      # render without layout if ajax request
+      render(:dashboard, :layout => !request.xhr?)
     end
 
-    # render without layout if ajax request
-    render(:layout => !request.xhr?)
-  end
-
-   # map info window
-  def info_window
-    @response = Response.with_basic_assoc.find(params[:response_id])
-    authorize!(:read, @response)
-    render(:layout => false)
-  end
-
-  # loads the specified report when chosen from the dropdown menu
-  def report_update
-    @report = Report::Report.find(params[:id])
-    prepare_report
-    render(:json => {
-      :title => render_to_string(:partial => 'report_pane_title'),
-      :main => render_to_string(:partial => 'reports/main')
-    })
-  end
-
-  def unauthorized
-  end
-
-  private
     def prepare_report
       unless @report.nil?
         authorize!(:read, @report)
