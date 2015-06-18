@@ -13,6 +13,10 @@
       self.current_report_id = self.params.id;
 
     // hookup the form change event
+    self.hookup_report_chooser();
+  };
+
+  klass.prototype.hookup_report_chooser = function () { var self = this;
     $('.report_pane').on('change', 'form.report_chooser', function(e){
       var report_id = $(e.target).val();
       if (report_id) self.load_report(report_id);

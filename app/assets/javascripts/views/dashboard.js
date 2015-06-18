@@ -110,6 +110,7 @@
         $('.report_stats').replaceWith(data.report_stats);
         self.map_view.update_map(data.response_locations);
         $('.report_pane').replaceWith(data.report_pane);
+        self.report_view.hookup_report_chooser();
 
         self.adjust_pane_sizes();
 
