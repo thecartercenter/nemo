@@ -112,6 +112,8 @@
         $('.report_pane').replaceWith(data.report_pane);
 
         self.adjust_pane_sizes();
+
+        self.reload_timer = setTimeout(function(){ self.reload_ajax(); }, AJAX_RELOAD_INTERVAL * 1000);
       },
       error: function() {
         $('#content').html(I18n.t('layout.server_contact_error'));
