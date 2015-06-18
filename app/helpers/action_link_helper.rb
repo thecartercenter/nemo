@@ -23,16 +23,17 @@ module ActionLinkHelper
     options[:controller] ||= obj.class.model_name.plural
     i18nk = obj.class.model_name.i18n_key
 
-    actions_to_show = options[:only] || [:index, :new, :show, :edit, :destroy]
-    actions_to_show -= [:new, :show, :edit, :destroy] if canonical_action == :new
+    actions_to_show = options[:only] || [:index, :new, :show, :edit, :destroy, :export]
+    actions_to_show -= [:new, :show, :edit, :destroy, :export] if canonical_action == :new
     actions_to_show -= options[:except]
     actions_to_show.delete(canonical_action)
 
     content_tag(:div, :class => 'top-action-links') do
       main_links = actions_to_show.map do |action|
-        if can?(action, %w(index new).include?(action) ? obj.class : obj)
-          link_to(icon_tag(action) + translate_action(obj, action),
-            url_for(controller: options[:controller], action: action),
+        url = url_for(controller: options[:controller], action: action) rescue nil
+
+        if url && can?(action, %w(index new).include?(action) ? obj.class : obj)
+          link_to(icon_tag(action) + translate_action(obj, action), url,
             method: action == :destroy ? :delete : nil,
             data: {confirm: (action == :destroy) ? delete_warning(obj) : nil},
             class: "#{action}-link")
@@ -50,7 +51,7 @@ module ActionLinkHelper
     options[:exclude] += [:edit, :destroy] if canonical_action == :show
 
     # build links
-    %w(edit destroy).map do |action|
+    links = %w(edit destroy).map do |action|
 
       # skip to next action if action is excluded
       next if options[:exclude].include?(action.to_sym)
@@ -72,7 +73,9 @@ module ActionLinkHelper
         action_link(action, dynamic_path(obj), :method => :delete, data: {confirm: warning}, :title => t("common.delete"))
       end
 
-    end.reduce(:<<)
+    end.compact.reduce(:<<)
+
+    links || ''.html_safe
   end
 
   def delete_warning(obj, options = {})
@@ -90,13 +93,11 @@ module ActionLinkHelper
 
   # creates a link to a batch operation
   def batch_op_link(options)
-    link_to(options[:name], "#",
-      :onclick => "batch_submit({path: '#{options[:path]}', confirm: '#{options[:confirm]}'}); return false;",
-      :class => "batch_op_link")
+    link_to(options[:name], "#", :data => options.slice(:path, :confirm), :class => "batch_op_link")
   end
 
   # creates a link to select all the checkboxes in an index table
   def select_all_link
-    link_to(t("layout.select_all"), '#', :onclick => "batch_select_all(); return false", :id => 'select_all_link')
+    link_to(t("layout.select_all"), '#', :id => 'select_all_link')
   end
 end

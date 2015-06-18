@@ -7,7 +7,7 @@ class Rack::Attack::Request
   end
 
   def login_related?
-    path =~ %r{/user-session\b} or path =~ %r{/login\b}
+    path =~ %r{/user-session\b} or path =~ %r{/login\b} or path =~ %r{/confirm-login\b}
   end
 
   def login_attempts_exceeded?

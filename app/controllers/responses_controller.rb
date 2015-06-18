@@ -170,6 +170,29 @@ class ResponsesController < ApplicationController
     redirect_to(index_url_with_page_num)
   end
 
+  def possible_submitters
+    # get the users to which this response can be assigned
+    # which is the users in this mission plus the submitter of this response
+    @possible_submitters = User.assigned_to_or_submitter(current_mission, @response).by_name
+
+    # do search if applicable
+    if params[:search].present?
+      begin
+        @possible_submitters = User.do_search(@possible_submitters, params[:search])
+      rescue Search::ParseError
+        flash.now[:error] = $!.to_s
+        @search_error = true
+      end
+    end
+
+    @possible_submitters = @possible_submitters.paginate(:page => params[:page], :per_page => 20)
+
+    render :json => {
+      :possible_submitters => @possible_submitters.as_json(:only => %i(id name)),
+      :more => @possible_submitters.next_page.present?
+    }
+  end
+
   private
     # loads the response with its associations
     def load_with_associations
@@ -206,10 +229,6 @@ class ResponsesController < ApplicationController
 
     # prepares objects for and renders the form template
     def prepare_and_render_form
-      # get the users to which this response can be assigned
-      # which is the users in this mission plus the submitter of this response
-      @possible_submitters = User.assigned_to_or_submitter(current_mission, @response).by_name
-
       # render the form
       render(:form)
     end

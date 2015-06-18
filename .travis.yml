@@ -1,0 +1,20 @@
+---
+bundler_args: --without development
+language: ruby
+cache: bundler
+rvm:
+  - 2.2.0
+sudo: false
+before_script:
+  - mysql -e 'create database elmo_test;'
+  - mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -u root mysql
+  - "for f in $(find -name '*.example'); do cp \"$f\" \"${f%.example}\"; done"
+  - "sed -ri 's/(username:).*/username: travis/; /password:/d' config/database.yml"
+  - "sed -ri '/config\\.(public|private)_key = nil/d' config/initializers/local_config.rb"
+  - bundle exec rake db:setup ts:index ts:start
+script: bundle exec rake
+env:
+  global:
+    # Set reCAPTCHA keys to dummy values
+    - RECAPTCHA_PUBLIC_KEY=6Lc6BAAAAAAAAChqRbQZcn_yyyyyyyyyyyyyyyyy
+    - RECAPTCHA_PRIVATE_KEY=6Lc6BAAAAAAAAKN3DRm6VA_xxxxxxxxxxxxxxxxx

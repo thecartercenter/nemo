@@ -1,0 +1,1 @@
+class RecentLoginRequiredError < StandardError; end

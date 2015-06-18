@@ -39,6 +39,7 @@ en:
     incoming: "Incoming"
     language: "Language"
     login: "Login"
+    confirm_login: "Confirm Login"
     logout: "Logout"
     manage: "Manage"
     near: "Near"
@@ -387,6 +388,7 @@ en:
         show: "View Option Set"
         edit: "Edit Option Set"
         destroy: "Delete Option Set"
+        export: "Export Option Set"
       question:
         new: "Create New Question"
         index: "List Questions"
@@ -852,6 +854,7 @@ en:
       all: "Create Multiple Users"
     user_sessions:
       new: "Login"
+      login_confirmation: "Confirm Login"
       logged_out: "Logged Out"
     users:
       edit: "Edit User: %{name}"
@@ -1014,6 +1017,11 @@ en:
         "no": "I don't think so"
         "yes": "Yes"
     code_label: "Enter the incomplete override code"
+
+  index_table:
+    messages:
+      all_rows_selected: "Note that <strong>all</strong> %{count} rows are now selected"
+      searched_rows_selected: "Note that <strong>all</strong> %{count} rows matching the current search are now selected"
 
   location_picker:
     choose_location: "Choose Location"

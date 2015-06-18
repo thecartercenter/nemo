@@ -43,4 +43,25 @@ module Concerns::ApplicationController::Authorization
       redirect_to(unauthorized_path)
     end
   end
+
+  # This method is intended to be called as a before_action from controllers
+  # that require a recent login in addition to their normal authentication and
+  # authorization. If a recent login is not found, a RecentLoginRequireError
+  # will be thrown. The default handling for this error in
+  # ApplicationController is to call handle_recent_login_required.
+  def require_recent_login(options={})
+    unless current_user && current_user.current_login_recent?(options[:max_age])
+      raise RecentLoginRequiredError
+    end
+  end
+
+  def handle_recent_login_required(exception)
+    if request.xhr?
+      flash[:error] = nil
+      render(:plain => "RECENT_LOGIN_REQUIRED", :status => 401)
+    else
+      store_location
+      redirect_to(new_login_confirmation_url)
+    end
+  end
 end

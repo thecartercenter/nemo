@@ -23,6 +23,9 @@ ELMO::Application.routes.draw do
     get '/route-tests' => 'route_tests#basic_mode' if Rails.env.development? || Rails.env.test?
     get '/unauthorized' => 'welcome#unauthorized', as: :unauthorized
 
+    get '/confirm-login' => 'user_sessions#login_confirmation', defaults: { confirm: true }, as: :new_login_confirmation
+    post '/confirm-login' => 'user_sessions#process_login_confirmation', defaults: { confirm: true }, as: :login_confirmation
+
     # Routes with user or no user.
     root to: 'welcome#index', as: :basic_root
   end
@@ -46,7 +49,11 @@ ELMO::Application.routes.draw do
         post 'new_with_users', path: 'new-with-users'
       end
     end
-    resources :responses
+    resources :responses do
+      %i(new member).each do |type|
+        get 'possible_submitters', path: 'possible-submitters', on: type
+      end
+    end
     resources :sms, only: [:index]
     resources :sms_tests, path: 'sms-tests'
 
@@ -108,6 +115,7 @@ ELMO::Application.routes.draw do
       member do
         get 'options_for_node', path: 'options-for-node'
         put 'clone'
+        get 'export', defaults: { format: 'xlsx' }
       end
     end
 

@@ -15,7 +15,7 @@ class UserSessionsController < ApplicationController
     # reset the session for security purposes
     reset_session_preserving_return_to
 
-    @user_session = UserSession.new(params[:user_session])
+    @user_session = UserSession.new(user_session_params)
 
     # if the save is successful, the user is logged in automatically
     if allow_login && @user_session.save
@@ -35,6 +35,28 @@ class UserSessionsController < ApplicationController
   def logged_out
   end
 
+  def login_confirmation
+    authorize!(:confirm_login, UserSession)
+
+    @user_session = UserSession.new
+  end
+
+  def process_login_confirmation
+    authorize!(:confirm_login, UserSession)
+
+    params[:user_session][:login] = current_user.login
+
+    @user_session = UserSession.new(user_session_params)
+
+    # if the save is successful, the user is logged in automatically
+    if allow_login && @user_session.save
+      post_login_housekeeping
+    else
+      flash[:error] = @user_session.errors.full_messages.join(",")
+      redirect_to(login_confirmation_url)
+    end
+  end
+
   # Special route, test only, used by feature specs to simulate user login.
   def test_login
     return render text: 'TEST MODE ONLY', status: 403 unless Rails.env.test?
@@ -47,6 +69,10 @@ class UserSessionsController < ApplicationController
   end
 
   private
+
+    def user_session_params
+      params.require(:user_session).permit(:login, :password)
+    end
 
     def allow_login
       if captcha_required?

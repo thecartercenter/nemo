@@ -46,6 +46,8 @@ module ApplicationHelper
   # defaults to using .name and .id, but other methods can be specified, including Procs
   # if :tags is set, returns the <option> tags instead of just the array
   def sel_opts_from_objs(objs, options = {})
+    objs = Array.wrap(objs)
+
     # set default method names
     id_m = options[:id_method] ||= "id"
     name_m = options[:name_method] ||= "name"

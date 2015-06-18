@@ -20,9 +20,6 @@ ELMO::Application.configure do
   # This is here only in case the above value is overridden as described.
   config.cache_store = :dalli_store, nil, { value_max_bytes: 2.megabytes }
 
-  # This is here only in case the above value is overridden as described.
-  config.cache_store = :dalli_store, nil, { value_max_bytes: 2.megabytes }
-
   # care if the mailer can't send
   config.action_mailer.raise_delivery_errors = true
 

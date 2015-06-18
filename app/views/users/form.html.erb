@@ -1,10 +1,11 @@
 <%# special title if user is editing self %>
-<% @title_args = {name: @user.name + (@user.active? ? "" : " (#{t('common.inactive')})")} %>
+<% @title_args = {name: @user.name || ''} %>
+<% @title_args[:name] += " (#{t('common.inactive')})" if !@user.active? %>
 <% @title = t("page_titles.users.#{form_mode}_profile", :name => @user.name) if @user == current_user %>
 
 <%= elmo_form_for(@user) do |f| %>
 
-  <%= top_action_links(@user) %>
+  <%= top_action_links(@user, :except => [:export]) %>
 
   <%= f.field(:name, :required => true) %>
   <%= f.field(:login, :required => true, :partial => "login_name_field") %>

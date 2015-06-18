@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rails', '4.2.1'
+gem 'rails', '4.2.2'
 
 gem 'sass-rails', '~> 4.0.2'
 gem 'uglifier', '>= 1.3.0'
@@ -86,6 +86,8 @@ gem 'rack-attack', github: 'sassafrastech/rack-attack'
 gem "recaptcha", :require => "recaptcha/rails"
 
 # XLS support
+gem 'axlsx', '~> 2.1.0.pre'
+gem 'axlsx_rails'
 gem 'roo'
 
 gem 'therubyracer', platforms: :ruby

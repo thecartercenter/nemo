@@ -50,14 +50,11 @@ class User < ActiveRecord::Base
   validates :password, format: { with: /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])/, if: :require_password?, message: :invalid_password }
 
   scope(:by_name, -> { order("users.name") })
-  scope(:assigned_to, ->(m) { where("users.id IN (SELECT user_id FROM assignments WHERE mission_id = ?)", m.id) })
+  scope(:assigned_to, ->(m) { where("users.id IN (SELECT user_id FROM assignments WHERE mission_id = ?)", m.try(:id)) })
   scope(:with_assoc, -> { includes(:missions, {:assignments => :mission}) })
 
   # returns users who are assigned to the given mission OR who submitted the given response
   scope(:assigned_to_or_submitter, ->(m, r) { where("users.id IN (SELECT user_id FROM assignments WHERE mission_id = ?) OR users.id = ?", m.try(:id), r.try(:user_id)) })
-
-  # we want all of these on one page for now
-  self.per_page = 1000000
 
   def self.random_password(size = 8)
     size = 8 if size < 8
@@ -252,8 +249,20 @@ class User < ActiveRecord::Base
     SESSION_TIMEOUT - (Time.now - last_request_at)
   end
 
+  def current_login_age
+    Time.now - current_login_at if current_login_at.present?
+  end
+
+  def current_login_recent?(max_age=nil)
+    max_age ||= configatron.recent_login_max_age
+
+    current_login_age < max_age if current_login_at.present?
+  end
+
   def as_json(options = {})
-    {:name => name}
+    options[:only] ||= [:name]
+
+    super
   end
 
   # returns hash of missions to roles

@@ -1,0 +1,26 @@
+xlsx_package.workbook.tap do |wb|
+  wb.use_shared_strings = true
+
+  header_style = wb.styles.add_style(b: true, alignment: { horizontal: :center })
+  row_style = wb.styles.add_style(locked: false)
+
+  locale = @option_set.mission.setting.preferred_locales.first || :en
+  I18n.with_locale(locale) do
+    wb.add_worksheet(name: @option_set.name) do |sheet|
+      sheet.add_row(@headers, style: header_style)
+
+      @rows.each do |row|
+        types = [:integer]
+        types.concat([:string] * (row.size - 1))
+
+        sheet.add_row(row, style: row_style, types: types)
+      end
+
+      # protect the sheet to allow the header to be locked
+      sheet.sheet_protection.password = 'ELMO'
+
+      # hide the "Id" column
+      sheet.column_info.first.hidden = true
+    end
+  end
+end
