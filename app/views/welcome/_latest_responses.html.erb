@@ -1,0 +1,14 @@
+<h2>
+  <%= current_user.role(current_mission) == 'observer' ? t('dashboard.my_responses') : t('dashboard.recent_responses') %>
+</h2>
+
+<%# cache the recent responses and use the explicit submit date instead of the age %>
+<% cache(@cache_key + '/recent_responses') do %>
+  <div class="recent_responses">
+    <% if @responses.empty? %>
+      <%= t('will_paginate.response.page_entries_info.single_page_html.zero') %>
+    <% else %>
+      <%= index_table(Response, @responses, :table_only => true) %>
+    <% end %>
+  </div>
+<% end %>
