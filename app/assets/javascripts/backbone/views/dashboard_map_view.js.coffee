@@ -15,8 +15,11 @@ class ELMO.Views.DashboardMapView extends Backbone.View
       draggableCursor: 'pointer'
     })
 
+    # keep track of which response ids we've rendered
+    @response_ids = {}
+
     # create the marker clusterer
-    mc = new MarkerClusterer(@map)
+    @mc = new MarkerClusterer(@map)
 
     # update the style images to point to local versions
     #
@@ -25,38 +28,11 @@ class ELMO.Views.DashboardMapView extends Backbone.View
     # directory is error-prone. using individual image urls gets around this
     # restriction.
     if params.marker_clusterer_image_urls
-      for style, n in mc.getStyles()
+      for style, n in @mc.getStyles()
         style.url = params.marker_clusterer_image_urls[n]
 
-    # add the markers and keep expanding the bounding rectangle
-    bounds = new google.maps.LatLngBounds()
-    @markers = []
-    @params.locations.forEach((l) =>
-      [response_id, loc] = l
-
-      # get float values from string
-      split = loc.split(' ')
-      lat = parseFloat(split[0])
-      lng = parseFloat(split[1])
-
-      # create marker
-      p = new google.maps.LatLng(lat, lng)
-      m = new google.maps.Marker({
-        position: p,
-        title: I18n.t('activerecord.models.response.one') + ' #' + response_id,
-        icon: params.small_marker_url,
-        r_id: response_id
-      })
-
-      # add to marker clusterer
-      mc.addMarker(m)
-
-      # expand the bounding rectangle
-      bounds.extend(p)
-
-      # setup event listener to show info window
-      google.maps.event.addListener(m, 'click', => this.show_info_window(m))
-    )
+    # add the markers
+    this.add_answer(l) for l in @params.locations
 
     # if there are stored bounds, use those to center map
     if this.load_bounds(@params.serialization_key)
@@ -73,6 +49,35 @@ class ELMO.Views.DashboardMapView extends Backbone.View
 
     # save map bounds each time they change
     google.maps.event.addListener(@map, 'bounds_changed', => this.save_bounds(@params.serialization_key))
+
+  add_answer: (answer) ->
+    [response_id, loc] = answer
+
+    # only add each response once
+    return if @response_ids[response_id]
+
+    # get float values from string
+    split = loc.split(' ')
+    lat = parseFloat(split[0])
+    lng = parseFloat(split[1])
+
+    # create marker
+    p = new google.maps.LatLng(lat, lng)
+    m = new google.maps.Marker({
+      position: p,
+      title: I18n.t('activerecord.models.response.one') + ' #' + response_id,
+      icon: @params.small_marker_url,
+      r_id: response_id
+    })
+
+    # add to marker clusterer
+    @mc.addMarker(m)
+
+    # setup event listener to show info window
+    google.maps.event.addListener(m, 'click', => this.show_info_window(m))
+
+    # keep track of the response id
+    @response_ids[response_id] = true
 
   show_info_window: (marker) ->
     # close any existing window
@@ -123,3 +128,7 @@ class ELMO.Views.DashboardMapView extends Backbone.View
       return true
 
     return false
+
+  update_map: (data) ->
+    this.add_answer(answer) for answer in data.answers
+    # TODO: Deal with data.count

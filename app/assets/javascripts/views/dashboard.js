@@ -108,6 +108,7 @@
       success: function(data) {
         $('.recent_responses').replaceWith(data.recent_responses);
         $('.report_stats').replaceWith(data.report_stats);
+        self.map_view.update_map(data.response_locations);
         $('.report_pane').replaceWith(data.report_pane);
 
         self.adjust_pane_sizes();
