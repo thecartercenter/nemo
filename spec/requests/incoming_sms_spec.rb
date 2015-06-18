@@ -145,7 +145,7 @@ describe 'incoming sms' do
 
     do_incoming_request(url: "/m/#{get_mission.compact_name}/sms/submit/#{token}",
       incoming: {body: "#{form_code} 1.15 2.20", adapter: REPLY_VIA_RESPONSE_STYLE_ADAPTER})
-    expect(@response.status).to eq(500)
+    expect(@response.status).to eq(401)
   end
 
   private

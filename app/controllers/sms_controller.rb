@@ -1,5 +1,9 @@
 # handles incoming sms messages from various providers
 class SmsController < ApplicationController
+  rescue_from Sms::UnverifiedTokenError do |exception|
+    render plain: 'Unauthorized', status: :unauthorized
+  end
+
   # load resource for index
   load_and_authorize_resource :class => "Sms::Message", :only => :index
 
@@ -26,7 +30,7 @@ class SmsController < ApplicationController
 
   def create
     if params[:token] != current_mission.setting.incoming_sms_token
-      raise Sms::Error.new("Could not verify incoming SMS token")
+      raise Sms::UnverifiedTokenError
     end
 
     @incoming_adapter = Sms::Adapters::Factory.new.create_for_request(request)
