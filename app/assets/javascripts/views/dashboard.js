@@ -106,7 +106,11 @@
         auto: full_screen
       },
       success: function(data) {
-        $('#content').html(data);
+        $('.recent_responses').replaceWith(data.recent_responses);
+        $('.report_stats').replaceWith(data.report_stats);
+        $('.report_pane').replaceWith(data.report_pane);
+
+        self.adjust_pane_sizes();
       },
       error: function() {
         $('#content').html(I18n.t('layout.server_contact_error'));

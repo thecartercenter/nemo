@@ -110,8 +110,21 @@ class WelcomeController < ApplicationController
         prepare_report
       end
 
-      # render without layout if ajax request
-      render(:dashboard, :layout => !request.xhr?)
+      # render JSON if ajax request
+      if request.xhr?
+        data = {
+          recent_responses: render_to_string(partial: 'recent_responses'),
+          response_locations: {
+            answers: @location_answers,
+            count: @location_answers_count
+          },
+          report_stats: render_to_string(partial: 'report_stats'),
+          report_pane: render_to_string(partial: 'report_pane')
+        }
+        render json: data
+      else
+        render(:dashboard)
+      end
     end
 
     def prepare_report
