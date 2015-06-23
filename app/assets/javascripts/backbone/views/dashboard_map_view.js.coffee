@@ -18,21 +18,11 @@ class ELMO.Views.DashboardMapView extends Backbone.View
     # keep track of which response ids we've rendered
     @response_ids = {}
 
-    # create the marker clusterer
-    @mc = new MarkerClusterer(@map)
-
-    # update the style images to point to local versions
-    #
-    # note: the imagePath configuration option for the MarkerClusterer
-    # constructor is not used because getting the Rails asset_url() for a
-    # directory is error-prone. using individual image urls gets around this
-    # restriction.
-    if params.marker_clusterer_image_urls
-      for style, n in @mc.getStyles()
-        style.url = params.marker_clusterer_image_urls[n]
-
-    # add the markers
-    this.add_answer(l) for l in @params.locations
+    # add the markers and keep expanding the bounding rectangle
+    bounds = new google.maps.LatLngBounds()
+    for l in @params.locations
+      m = this.add_answer(l)
+      bounds.extend(m.position)
 
     # if there are stored bounds, use those to center map
     if this.load_bounds(@params.serialization_key)
@@ -64,20 +54,20 @@ class ELMO.Views.DashboardMapView extends Backbone.View
     # create marker
     p = new google.maps.LatLng(lat, lng)
     m = new google.maps.Marker({
+      map: @map,
       position: p,
       title: I18n.t('activerecord.models.response.one') + ' #' + response_id,
       icon: @params.small_marker_url,
       r_id: response_id
     })
 
-    # add to marker clusterer
-    @mc.addMarker(m)
-
     # setup event listener to show info window
     google.maps.event.addListener(m, 'click', => this.show_info_window(m))
 
     # keep track of the response id
     @response_ids[response_id] = true
+
+    return m
 
   show_info_window: (marker) ->
     # close any existing window

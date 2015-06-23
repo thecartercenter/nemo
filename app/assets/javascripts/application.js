@@ -32,7 +32,6 @@
 //= require bootstrap
 //= require bootstrap-modal
 //= require bootstrap-modalmanager
-//= require markerclusterer
 
 // some report superclasses need to come first due to inheritance
 //= require views/control/control
