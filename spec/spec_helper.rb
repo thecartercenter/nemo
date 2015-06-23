@@ -10,11 +10,13 @@ require 'capybara/poltergeist'
 
 Capybara.register_driver :poltergeist do |app|
   Capybara::Poltergeist::Driver.new(app,
+    phantomjs_options: ['--ignore-ssl-errors=yes'],
     extensions: [File.expand_path("../support/phantomjs_ext/geolocation.js", __FILE__)])
 end
 
 Capybara.register_driver :poltergeist_debug do |app|
   Capybara::Poltergeist::Driver.new(app, inspector: true,
+    phantomjs_options: ['--ignore-ssl-errors=yes'],
     extensions: [File.expand_path("../support/phantomjs_ext/geolocation.js", __FILE__)])
 end
 

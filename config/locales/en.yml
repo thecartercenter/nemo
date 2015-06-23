@@ -945,6 +945,7 @@ en:
     no_reports: "No Reports have been created for this mission yet."
     recent_responses: "Latest Responses"
     response_locations: "Response Locations"
+    response_locations_truncated: "Showing the most recent %{shown} of %{total} responses"
     summary: "Summary"
     top_forms: "Top Forms"
 

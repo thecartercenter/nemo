@@ -34,17 +34,22 @@ class Answer < ActiveRecord::Base
 
   # gets all location answers for the given mission
   # returns only the response ID and the answer value
-  def self.location_answers_for_mission(mission, user = nil)
-    user_clause = user ? "AND r.user_id = #{user.id}" : ''
-    find_by_sql([
-      "SELECT r.id AS r_id, a.value AS loc
-      FROM answers a
-        INNER JOIN responses r ON a.response_id = r.id
-        INNER JOIN form_items qing ON a.questioning_id = qing.id
-        INNER JOIN questions q ON qing.question_id = q.id
-      WHERE q.qtype_name = 'location' AND a.value IS NOT NULL AND r.mission_id = ? #{user_clause}",
-      mission.id
-    ])
+  def self.location_answers_for_mission(mission, user = nil, options = {})
+    response_conditions = { :mission_id => mission.try(:id) }
+
+    # if the user is not a staffer or higher privilege, only show their own responses
+    if user.present? && !user.role?(:staffer, mission)
+      response_conditions[:user_id] = user.id
+    end
+
+    # return an AR relation
+    where.not(:value => nil)
+      .joins(:questioning => :question)
+      .where(:questions => { :qtype_name => 'location' })
+      .joins(:response)
+      .where(:responses => response_conditions)
+      .order('responses.updated_at DESC')
+      .paginate(:page => 1, :per_page => 1000)
   end
 
   # Tests if there exists at least one answer referencing the option and questionings with the given IDs.
