@@ -7,7 +7,7 @@
 
 require 'bundler/capistrano'
 
-set :stages, %w(master staging staging-old demo nigeria api cejp-drc)
+set :stages, %w(master staging staging-old demo nigeria api cejp-rdc)
 set :default_stage, "staging"
 require "capistrano/ext/multistage"
 
@@ -77,7 +77,7 @@ namespace :deploy do
 
   desc "Make sure local git is in sync with remote."
   task :check_revision, roles: :web do
-    unless `git rev-parse HEAD` == `git rev-parse origin/#{branch}`
+    unless `git rev-parse #{branch}` == `git rev-parse origin/#{branch}`
       puts "WARNING: HEAD is not the same as origin"
       puts "Run `git push` to sync changes."
       exit
