@@ -73,18 +73,19 @@ describe Condition do
     context 'for single level select one question' do
       before do
         @form = create(:form, question_types: %w(select_one))
-        @qing = @form.questionings[0]
-        @options = @qing.options
+        @qing = @form.questionings.first
+        @option = @qing.options.first
+        @option_node = @option.option_nodes.where(option_set_id: @qing.option_set).first
       end
 
       it 'should work with eq operator' do
-        c = Condition.new(ref_qing: @qing, op: 'eq', option_ids: [@options[0].id])
-        expect(c.to_odk).to eq "selected(/data/#{@qing.odk_code}, '#{@options[0].id}')"
+        c = Condition.new(ref_qing: @qing, op: 'eq', option_ids: [@option.id])
+        expect(c.to_odk).to eq "selected(/data/#{@qing.odk_code}, 'on#{@option_node.id}')"
       end
 
       it 'should work with neq operator' do
-        c = Condition.new(ref_qing: @qing, op: 'neq', option_ids: [@options[0].id])
-        expect(c.to_odk).to eq "not(selected(/data/#{@qing.odk_code}, '#{@options[0].id}'))"
+        c = Condition.new(ref_qing: @qing, op: 'neq', option_ids: [@option.id])
+        expect(c.to_odk).to eq "not(selected(/data/#{@qing.odk_code}, 'on#{@option_node.id}'))"
       end
     end
 
@@ -96,13 +97,13 @@ describe Condition do
       end
 
       it 'should work for first level' do
-        c = Condition.new(ref_qing: @qing, op: 'eq', option_ids: [@oset.c[0].id])
-        expect(c.to_odk).to eq "selected(/data/#{@qing.subquestions[0].odk_code}, '#{@oset.c[0].id}')"
+        c = Condition.new(ref_qing: @qing, op: 'eq', option_ids: [@oset.c[0].option_id])
+        expect(c.to_odk).to eq "selected(/data/#{@qing.subquestions[0].odk_code}, 'on#{@oset.c[0].id}')"
       end
 
       it 'should work for second level' do
-        c = Condition.new(ref_qing: @qing, op: 'eq', option_ids: [@oset.c[0].id, @oset.c[0].c[1].id])
-        expect(c.to_odk).to eq "selected(/data/#{@qing.subquestions[1].odk_code}, '#{@oset.c[0].c[1].id}')"
+        c = Condition.new(ref_qing: @qing, op: 'eq', option_ids: [@oset.c[0].option_id, @oset.c[0].c[1].option_id])
+        expect(c.to_odk).to eq "selected(/data/#{@qing.subquestions[1].odk_code}, 'on#{@oset.c[0].c[1].id}')"
       end
     end
 
@@ -111,16 +112,19 @@ describe Condition do
         @form = create(:form, question_types: %w(select_multiple))
         @qing = @form.questionings[0]
         @options = @qing.options
+        @option_nodes = OptionNode.where(option_id: @options.map(&:id), option_set_id: @qing.option_set).sort_by do |on|
+          @options.index { |o| o.id == on.option_id }
+        end
       end
 
       it 'should work with inc operator' do
         c = Condition.new(ref_qing: @qing, op: 'inc', option_ids: [@options[0].id])
-        expect(c.to_odk).to eq "selected(/data/#{@qing.odk_code}, '#{@options[0].id}')"
+        expect(c.to_odk).to eq "selected(/data/#{@qing.odk_code}, 'on#{@option_nodes[0].id}')"
       end
 
       it 'should work with ninc operator' do
         c = Condition.new(ref_qing: @qing, op: 'ninc', option_ids: [@options[1].id])
-        expect(c.to_odk).to eq "not(selected(/data/#{@qing.odk_code}, '#{@options[1].id}'))"
+        expect(c.to_odk).to eq "not(selected(/data/#{@qing.odk_code}, 'on#{@option_nodes[1].id}'))"
       end
     end
 
