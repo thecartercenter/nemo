@@ -398,8 +398,8 @@ class Response < ActiveRecord::Base
           answer = Answer.new(questioning: qing, rank: subq.rank)
           answer.populate_from_string(hash[subq.odk_code])
           self.answers << answer
-          self.incomplete = true if answer.required_but_empty?
         end
       end
+      self.incomplete = (hash[OdkHelper::IR_QUESTION] == 'yes')
     end
 end
