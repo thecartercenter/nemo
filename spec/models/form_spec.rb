@@ -134,6 +134,12 @@ describe Form do
       @form.destroy
       expect([Form.count, FormItem.count]).to eq [0,0]
     end
+
+    it "should work with an smsable form" do
+      @form.update_attributes(smsable: true)
+      @form.destroy
+      expect([Form.count, FormItem.count]).to eq [0,0]
+    end
   end
 
   describe "destroy_questionings" do
