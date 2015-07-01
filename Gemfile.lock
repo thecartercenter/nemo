@@ -268,6 +268,8 @@ GEM
       nokogiri
       rubyzip
       spreadsheet (> 0.6.4)
+    rspec-collection_matchers (1.1.2)
+      rspec-expectations (>= 2.99.0.beta1)
     rspec-core (3.2.2)
       rspec-support (~> 3.2.0)
     rspec-expectations (3.2.0)
@@ -420,6 +422,7 @@ DEPENDENCIES
   responders (~> 2.0)
   reverse_markdown
   roo
+  rspec-collection_matchers
   rspec-rails (~> 3.0)
   sass-rails (~> 4.0.2)
   scrypt (= 1.2)

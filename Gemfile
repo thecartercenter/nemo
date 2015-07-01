@@ -111,6 +111,7 @@ group :development, :test do
   gem 'factory_girl_rails', '~> 4.0'
   gem 'jasmine-rails', '~> 0.10.7'   # test framework
   gem 'rspec-rails', '~> 3.0'        # test framework
+  gem 'rspec-collection_matchers'
   gem 'mocha'                        # mocking/stubbing
   gem 'capybara'                     # acceptance tests
   gem 'selenium-webdriver'

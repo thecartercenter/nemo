@@ -2,6 +2,7 @@
 ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
+require 'rspec/collection_matchers'
 
 # Add this to load Capybara integration:
 require 'capybara/rspec'
