@@ -100,7 +100,7 @@ describe 'odk submissions', type: :request do
     end
 
     it 'should be marked incomplete iff there is an incomplete response to a required question' do
-      form = create(:form, question_types: %w(integer))
+      form = create(:form, question_types: %w(integer), allow_incomplete: true)
       form.c[0].update_attributes!(required: true)
       form.reload.publish!
 
@@ -168,7 +168,11 @@ describe 'odk submissions', type: :request do
     ''.tap do |xml|
       xml << "<?xml version='1.0' ?><data id=\"#{form_id}\" version=\"#{form.current_version.sequence}\">"
 
-      unless options[:no_answers]
+      if options[:no_answers]
+        if form.allow_incomplete?
+          xml << "<#{OdkHelper::IR_QUESTION}>yes</#{OdkHelper::IR_QUESTION}>"
+        end
+      else
         form.questionings.each_with_index do |qing, i|
           xml << "<#{qing.question.odk_code}>#{(i+1)*5}</#{qing.question.odk_code}>"
         end
