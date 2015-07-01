@@ -87,7 +87,7 @@ class Condition < ActiveRecord::Base
 
     if ref_qing.has_options?
 
-      selected = "selected(#{lhs}, 'on#{option_nodes.last.id}')"
+      selected = "selected(#{lhs}, '#{option_nodes.last.odk_code}')"
 
       # Apply negation if appropriate.
       %w(neq ninc).include?(operator[:name]) ? "not(#{selected})" : selected
