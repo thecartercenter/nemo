@@ -118,7 +118,7 @@ class Report::SummaryCollectionBuilder
     # builds and executes a query for summary info for stat questions
     # returns a hash of the form {[disagg_value, qing_id] => {'mean' => x.x, 'min' => x, 'max' => x}, ...}
     def run_stat_query(stat_qs)
-      qing_ids = stat_qs.map(&:id).join(',')
+      qing_ids = stat_qs.map(&:id)
 
       query = <<-eos
         SELECT #{disagg_select_expr} qing.id AS qing_id, q.qtype_name AS qtype_name,
@@ -173,7 +173,7 @@ class Report::SummaryCollectionBuilder
     ####################################################################
 
     def collection_for_select_questionings(select_qs)
-      qing_ids = select_qs.map(&:id).join(',')
+      qing_ids = select_qs.map(&:id)
 
       # get tallies of answers
       tallies = get_select_question_tallies(qing_ids)
@@ -358,7 +358,7 @@ class Report::SummaryCollectionBuilder
 
     # gets tallies of dates and answers for each of the given questionings
     def get_date_question_tallies(date_qs)
-      qing_ids = date_qs.map(&:id).join(',')
+      qing_ids = date_qs.map(&:id)
 
       # build and run query
       query = <<-eos
@@ -460,7 +460,7 @@ class Report::SummaryCollectionBuilder
     # runs a query to get each answer for the given qings
     # returns a mysql result
     def run_raw_answer_query(raw_qs)
-      qing_ids = raw_qs.map(&:id).join(',')
+      qing_ids = raw_qs.map(&:id)
 
       # build and run query
       query = <<-eos
