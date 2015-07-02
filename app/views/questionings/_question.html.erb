@@ -1,6 +1,5 @@
 <%# This partial represents a question in the form form item list. %>
-<li class="form-item form-item-question" data-id="<%= qing.id %>">
-
+<li class="form-item form-item-question<%= qing.hidden? ? " form-item-hidden" : "" %>" data-id="<%= qing.id %>">
   <div class="inner">
 
     <%# Standard question? %>
@@ -55,4 +54,5 @@
     </div>
 
   </div><%# End of question content %>
+  <div class="hidden-curtain"></div><%# Used to washout the row if it's hidden. %>
 </li>

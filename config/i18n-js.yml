@@ -27,6 +27,7 @@ translations:
       "*.condition.*",
       "*.dashboard.*",
       "*.form.invalid_drop_location.*",
+      "*.form.remove_question_confirm.*",
       "*.form.unsaved_rank_notice",
       "*.index_table.*",
       "*.location_picker.*",
@@ -37,5 +38,6 @@ translations:
       "*.response.*",
       "*.role.*",
       "*.standard.*",
-      "*.tag.*"
+      "*.tag.*",
+      "*.user.bulk_destroy_confirm.*"
     ]

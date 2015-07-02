@@ -193,6 +193,9 @@ class Setting < ActiveRecord::Base
     end
 
     def normalize_twilio_phone_number
+      # Allow for the use of a database that hasn't had the migration run
+      return unless respond_to?(:twilio_phone_number)
+
       self.twilio_phone_number = PhoneNormalizer.normalize(twilio_phone_number)
     end
 end

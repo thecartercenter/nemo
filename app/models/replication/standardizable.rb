@@ -8,6 +8,7 @@ module Replication::Standardizable
     belongs_to(:original, :class_name => name, :inverse_of => :copies)
     has_many(:copies, :class_name => name, :foreign_key => 'original_id', :inverse_of => :original)
 
+    before_destroy(:unlink_copies)
     before_save(:scrub_original_link_if_becoming_incompatible)
 
     # returns a scope for all standard objects of the current class that are importable to the given mission
@@ -60,4 +61,10 @@ module Replication::Standardizable
     end
     return true
   end
+
+  private
+
+    def unlink_copies
+      copies.update_all(original_id: nil, standard_copy: false)
+    end
 end

@@ -68,6 +68,7 @@
 
     $('.form_field[data-field-name=assignments] .assignments').append(template({
       params: self.params,
+      assignment: {},
       can_update: true,
       new_record: true,
       idx: $('.form_field[data-field-name=assignments] .assignments .assignment').length

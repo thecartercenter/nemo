@@ -2,6 +2,7 @@
 ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
+require 'rspec/collection_matchers'
 
 # Add this to load Capybara integration:
 require 'capybara/rspec'
@@ -10,11 +11,13 @@ require 'capybara/poltergeist'
 
 Capybara.register_driver :poltergeist do |app|
   Capybara::Poltergeist::Driver.new(app,
+    phantomjs_options: ['--ignore-ssl-errors=yes'],
     extensions: [File.expand_path("../support/phantomjs_ext/geolocation.js", __FILE__)])
 end
 
 Capybara.register_driver :poltergeist_debug do |app|
   Capybara::Poltergeist::Driver.new(app, inspector: true,
+    phantomjs_options: ['--ignore-ssl-errors=yes'],
     extensions: [File.expand_path("../support/phantomjs_ext/geolocation.js", __FILE__)])
 end
 

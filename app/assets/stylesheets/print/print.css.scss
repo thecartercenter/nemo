@@ -4,8 +4,16 @@
 
 /* login instructions */
 .user_batches_show h1.title { display: none; }
-#login_instructions #preamble { display: none; }
-#login_instructions #instructions { page-break-after: always; }
+
+#login_instructions {
+  #preamble {
+    display: none;
+  }
+
+  #instructions {
+    page-break-after: always;
+  }
+}
 
 /* hide screen-only things */
 .screen { display: none; }

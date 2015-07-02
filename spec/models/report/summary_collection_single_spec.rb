@@ -35,8 +35,8 @@ describe "summary collection with single subset" do
     prepare_form_and_collection('integer', [1])
     items = first_summary.items
     expect(items[0].stat.class).to eq(Float) # mean
-    expect(items[1].stat.class).to eq(Fixnum) # max
-    expect(items[2].stat.class).to eq(Fixnum) # min
+    expect(items[1].stat.class).to eq(Fixnum) # min
+    expect(items[2].stat.class).to eq(Fixnum) # max
   end
 
   it "null_count should be correct for integer" do
@@ -68,8 +68,8 @@ describe "summary collection with single subset" do
     prepare_form_and_collection('decimal', [1])
     items = first_summary.items
     expect(items[0].stat.class).to eq(Float) # mean
-    expect(items[1].stat.class).to eq(Float) # max
-    expect(items[2].stat.class).to eq(Float) # min
+    expect(items[1].stat.class).to eq(Float) # min
+    expect(items[2].stat.class).to eq(Float) # max
   end
 
   it "select_one summary should be correct in normal case" do

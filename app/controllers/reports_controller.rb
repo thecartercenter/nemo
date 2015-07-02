@@ -105,7 +105,8 @@ class ReportsController < ApplicationController
     def report_params
       params.require(:report).permit(:type, :name, :form_id, :option_set_id, :display_type, :bar_style, :unreviewed, :filter,
         :question_labels, :show_question_labels, :question_order, :text_responses, :percent_type, :unique_rows,
-        :calculations, :option_set, :mission_id, :mission, :disagg_question_id, :group_by_tag, :option_set_choices_attributes,
-        calculations_attributes: [:type, :report_report_id, :attrib1_name, :question1_id, :arg1, :attrib1, :question1, :rank])
+        :calculations, :option_set, :mission_id, :mission, :disagg_question_id, :group_by_tag,
+        option_set_choices_attributes: [:option_set_id],
+        calculations_attributes: [:id, :_destroy, :type, :report_report_id, :attrib1_name, :question1_id, :arg1, :attrib1, :question1, :rank])
     end
 end

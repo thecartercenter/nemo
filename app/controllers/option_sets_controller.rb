@@ -46,6 +46,15 @@ class OptionSetsController < ApplicationController
     render(:form)
   end
 
+  def export
+    @headers = [@option_set.class.human_attribute_name(:id)]
+    @headers.concat(@option_set.levels.map(&:name))
+
+    @rows = @option_set.arrange_as_rows
+
+    render :xlsx => 'export', :filename => "#{@option_set.name}.xlsx"
+  end
+
   # always via AJAX
   def create
     @option_set.is_standard = true if current_mode == 'admin'
