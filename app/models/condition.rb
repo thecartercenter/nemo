@@ -39,6 +39,10 @@ class Condition < ActiveRecord::Base
     option_ids.nil? ? nil : Option.find(option_ids).sort_by{ |o| option_ids.index(o.id) }
   end
 
+  def option_nodes
+    option_ids.nil? ? nil : OptionNode.where(option_id: option_ids, option_set_id: ref_qing.option_set).sort_by { |on| option_ids.index(on.option_id) }
+  end
+
   def option
     options.try(:first)
   end
@@ -83,7 +87,7 @@ class Condition < ActiveRecord::Base
 
     if ref_qing.has_options?
 
-      selected = "selected(#{lhs}, '#{option_ids.last}')"
+      selected = "selected(#{lhs}, '#{option_nodes.last.odk_code}')"
 
       # Apply negation if appropriate.
       %w(neq ninc).include?(operator[:name]) ? "not(#{selected})" : selected
