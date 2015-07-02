@@ -4,9 +4,8 @@
 class FormVersioningPolicy
   # Sets the upgrade_neccessary flag on forms where necessary.
   def notify(obj, action)
-    forms_needing_upgrade(obj, action).each do |f|
+    forms_needing_upgrade(obj, action).reject{ |f| f.is_standard? }.each do |f|
       f.reload
-      raise "standard forms should not be subject to version policy" if f.standardizable? && f.is_standard?
       f.flag_for_upgrade!
     end
   end
@@ -56,7 +55,7 @@ class FormVersioningPolicy
         return [obj.form] if obj.required_changed? || obj.rank_changed? && obj.form.smsable? || obj.hidden_changed? && !obj.hidden?
       when :destroy
         # If form smsable and the questioning was NOT the last one on the form, it's a trigger.
-        return [obj.form] if obj.form.smsable? && obj.rank <= obj.form.last_qing.rank
+        return [obj.form] if obj.form.smsable? && obj.form.last_qing.present? && obj.rank <= obj.form.last_qing.rank
       end
 
     when "Condition"

@@ -144,12 +144,13 @@ class Response < ActiveRecord::Base
       answer_ids = Answer.search_for_ids(*sphinx_params)
 
       # turn into an sql fragment
-      if answer_ids.empty?
-        "0"
-      else
+      fragment = if answer_ids.present?
         # Get all response IDs and join into string
         Answer.select('response_id').distinct.where('id IN (?)', answer_ids).map(&:response_id).join(',')
       end
+
+      # fall back to '0' if we get an empty fragment
+      fragment.presence || '0'
     end
 
     # apply the conditions
@@ -398,8 +399,8 @@ class Response < ActiveRecord::Base
           answer = Answer.new(questioning: qing, rank: subq.rank)
           answer.populate_from_string(hash[subq.odk_code])
           self.answers << answer
-          self.incomplete = true if answer.required_but_empty?
         end
       end
+      self.incomplete = (hash[OdkHelper::IR_QUESTION] == 'yes')
     end
 end

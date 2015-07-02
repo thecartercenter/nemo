@@ -253,11 +253,18 @@ nav {
 div.dialog_bg { background-color: black; opacity: 0.6; filter: alpha(opacity=60); left: 0; top: 0; position: absolute; }
 div.dialog_bg * { opacity: 1; filter: alpha(opacity=100); }
 
-/* login instructions */
-#login_instructions #preamble { width: 600px; margin-bottom: 20px; }
-#login_instructions #instructions { width: 600px; border: 1px solid #888; padding: 10px; }
-#login_instructions #instructions p { margin-top: 0; }
+#login_instructions {
+  #preamble {
+    width: 600px;
+    margin-bottom: 20px;
+  }
 
+  #instructions {
+    width: 600px;
+    border: 1px solid #888;
+    padding: 10px;
+  }
+}
 /* hide printable things */
 .printable { display: none; }
 
@@ -284,8 +291,9 @@ body.reports {
     overflow-y: scroll;
     height: 150px;
     width: 420px;
-    .checkbox-row {
-      margin-bottom: 7px;
+
+    label {
+      display: block;
     }
   }
 }

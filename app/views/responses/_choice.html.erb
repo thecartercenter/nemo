@@ -4,6 +4,9 @@
 <%# Always include this so Condition JS can find it. %>
 <%= hidden_field_tag("#{prefix}[option_id]", choice.option_id) %>
 
-<%= hidden_field_tag("#{prefix}[checked]", 0) %><%# Ensures 0 gets passed if box not checked %>
+<%# Ensures 0 gets passed if box not checked %>
+<%# Need to set id: nil or there would be a duplicate ID %>
+<%= hidden_field_tag("#{prefix}[checked]", 0, id: nil) %>
+
 <%= check_box_tag("#{prefix}[checked]", 1, choice.checked?) %>
 <%= label_tag("#{prefix}[checked]", choice.option_name) %><br/>

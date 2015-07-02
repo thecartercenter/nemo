@@ -4,25 +4,18 @@ module FormVersionable
 
   included do
     after_create do
-      FormVersioningPolicy.new.notify(self, :create) if versionable?
+      FormVersioningPolicy.new.notify(self, :create)
       true
     end
 
     after_save do
-      FormVersioningPolicy.new.notify(self, :update) if versionable?
+      FormVersioningPolicy.new.notify(self, :update)
       true
     end
 
     after_destroy do
-      FormVersioningPolicy.new.notify(self, :destroy) if versionable?
+      FormVersioningPolicy.new.notify(self, :destroy)
       true
     end
-  end
-
-  # returns whether a specific object is subject to the versioning policy
-  # if this mixin is included, we know the overall class is subject to it
-  # this is currently true iff the object is not standard
-  def versionable?
-    !respond_to?(:is_standard?) || !is_standard?
   end
 end

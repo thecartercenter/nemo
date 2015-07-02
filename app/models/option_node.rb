@@ -68,7 +68,6 @@ class OptionNode < ActiveRecord::Base
   # Returns the child options of the node defined by path of option ids.
   # If node at end of path is leaf node, returns [].
   def options_for_node(path)
-    x = find_descendant_by_option_path(path)
     find_descendant_by_option_path(path).try(:child_options) || []
   end
 
@@ -162,6 +161,15 @@ class OptionNode < ActiveRecord::Base
     end
   end
 
+  # an odk-friendly unique code
+  def odk_code
+    "on#{id}"
+  end
+
+  # an odk-friendly unique code for this node's parent
+  def parent_odk_code
+    "on#{parent_id}"
+  end
 
   # Serializes all descendants. Meant to be called on root.
   def as_json(options = {})
@@ -204,6 +212,26 @@ class OptionNode < ActiveRecord::Base
 
         # Recursive step.
         branch[:children] = arrange_as_json(children) unless children.empty?
+      end
+    end
+  end
+
+  # arranges option descendant nodes into rows for export.
+  # rows are created for leaf nodes only and contain the node id and the
+  # localized option names in the current locale.
+  def arrange_as_rows(hash = nil, parent_path = [])
+    hash = arrange_with_options(eager_load_option_assocs: false) if hash.nil?
+
+    hash.each_with_object([]) do |(node,children),rows|
+      path = parent_path + [node.option]
+
+      # output a row if we've hit a leaf node, using the option path to
+      # construct the list of cell values
+      if children.empty?
+        rows << [node.id, *path.map(&:name)]
+      # otherwise recursively collect rows for the children
+      else
+        rows.concat(arrange_as_rows(children, path))
       end
     end
   end

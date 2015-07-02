@@ -19,6 +19,36 @@ class WelcomeController < ApplicationController
     @dont_print_title = true
 
     if current_mission
+      dashboard_index
+    elsif admin_mode?
+      render :admin
+    else
+      render :no_mission
+    end
+  end
+
+   # map info window
+  def info_window
+    @response = Response.with_basic_assoc.find(params[:response_id])
+    authorize!(:read, @response)
+    render(:layout => false)
+  end
+
+  # loads the specified report when chosen from the dropdown menu
+  def report_update
+    @report = Report::Report.find(params[:id])
+    prepare_report
+    render(:json => {
+      :title => render_to_string(:partial => 'report_pane_title'),
+      :main => render_to_string(:partial => 'reports/main')
+    })
+  end
+
+  def unauthorized
+  end
+
+  private
+    def dashboard_index
       # we need to load the report outside the cache block b/c it's included in the cache key
       # if report id given, load that
       if !params[:report_id].blank?
@@ -59,8 +89,10 @@ class WelcomeController < ApplicationController
       # do the non-lazy loads inside these blocks so they don't run if we get a cache hit
       unless fragment_exist?(@cache_key + '/js_init')
         # get location answers
-        # TODO refactor user argument
-        @location_answers = Answer.location_answers_for_mission(current_mission, current_user.role(current_mission) == 'observer' ? current_user : nil)
+        location_answers = Answer.location_answers_for_mission(current_mission, current_user)
+
+        @location_answers_count = location_answers.total_entries
+        @location_answers = location_answers.pluck(:response_id, :value)
       end
 
       unless fragment_exist?(@cache_key + '/stat_blocks')
@@ -77,36 +109,27 @@ class WelcomeController < ApplicationController
       unless fragment_exist?(@cache_key + '/report_pane')
         prepare_report
       end
+
+      # render JSON if ajax request
+      if request.xhr?
+        data = {
+          recent_responses: render_to_string(partial: 'recent_responses'),
+          response_locations: {
+            answers: @location_answers,
+            count: @location_answers_count
+          },
+          report_stats: render_to_string(partial: 'report_stats'),
+          report_pane: render_to_string(partial: 'report_pane')
+        }
+        render json: data
+      else
+        render(:dashboard)
+      end
     end
 
-    # render without layout if ajax request
-    render(:layout => !request.xhr?)
-  end
-
-   # map info window
-  def info_window
-    @response = Response.with_basic_assoc.find(params[:response_id])
-    authorize!(:view, @response)
-    render(:layout => false)
-  end
-
-  # loads the specified report when chosen from the dropdown menu
-  def report_update
-    @report = Report::Report.find(params[:id])
-    prepare_report
-    render(:json => {
-      :title => render_to_string(:partial => 'report_pane_title'),
-      :main => render_to_string(:partial => 'reports/main')
-    })
-  end
-
-  def unauthorized
-  end
-
-  private
     def prepare_report
       unless @report.nil?
-        authorize!(:view, @report)
+        authorize!(:read, @report)
         run_and_handle_errors
         build_report_data(:read_only => true, :dont_set_title => true)
       end

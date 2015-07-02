@@ -47,7 +47,7 @@
 
     // create classes for screen components
     self.list_view = new ELMO.Views.DashboardResponseList();
-    self.map_view = new ELMO.Views.DashboardMap(self.params.map);
+    self.map_view = new ELMO.Views.DashboardMapView(self.params.map);
     self.report_view = new ELMO.Views.DashboardReport(self, self.params.report);
 
     self.list_view.adjust_columns();
@@ -106,7 +106,15 @@
         auto: full_screen
       },
       success: function(data) {
-        $('#content').html(data);
+        $('.recent_responses').replaceWith(data.recent_responses);
+        $('.report_stats').replaceWith(data.report_stats);
+        self.map_view.update_map(data.response_locations);
+        $('.report_pane').replaceWith(data.report_pane);
+        self.report_view.hookup_report_chooser();
+
+        self.adjust_pane_sizes();
+
+        self.reload_timer = setTimeout(function(){ self.reload_ajax(); }, AJAX_RELOAD_INTERVAL * 1000);
       },
       error: function() {
         $('#content').html(I18n.t('layout.server_contact_error'));

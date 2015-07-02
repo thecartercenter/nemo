@@ -10,10 +10,10 @@
     <p><%= t("form.select_api_users") %></p>
     <div id="api-users-scrollbox">
       <% @users.each do |user| %>
-        <div class="checkbox-row">
+        <label>
           <%= check_box_tag "whitelist_users[]", user.id, @form.has_white_listed_user?(user.id) %>
           <%= user.name %>
-        </div>
+        </label>
       <% end %>
     </div>
   </div>

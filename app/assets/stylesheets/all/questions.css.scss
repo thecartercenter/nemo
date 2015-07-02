@@ -2,6 +2,23 @@ form.question_form {
   margin-bottom: 50px;
 }
 
+.questions_index, .forms_choose_questions, .forms_edit {
+  #index_table {
+    .code_col {
+      min-width: 100px;
+    }
+
+    .name_col {
+      min-width: 400px;
+    }
+
+    .type_col {
+      min-width: 100px;
+      white-space: nowrap;
+    }
+  }
+}
+
 div.question_fields {
 
   .names_hints div.form_field div.control textarea[id*=_name_] {
