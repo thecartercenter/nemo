@@ -10,6 +10,7 @@ class ChangeStandardIdToOriginalIdAndAddStandardCopy < ActiveRecord::Migration
       # If there is already an original_id column, we need to nuke it, but copy values first.
       if klass.column_names.include?('original_id')
         execute("UPDATE #{table} SET standard_id = original_id WHERE original_id IS NOT NULL")
+        remove_foreign_key table, :original
         remove_column table, :original_id
       end
 
