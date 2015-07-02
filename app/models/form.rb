@@ -121,13 +121,9 @@ class Form < ActiveRecord::Base
     mission.override_code
   end
 
-  # returns whether this form or (if standard) any of its copies have responses, using an eager loaded col if available
+  # returns whether this form has responses; standard forms never have responses
   def has_responses?
-    if is_standard?
-      respond_to?(:copy_responses_count_col) ? (copy_responses_count_col || 0) > 0 : copies.any?(&:has_responses?)
-    else
-      responses_count > 0
-    end
+    is_standard? ? false : responses_count > 0
   end
 
   # returns the number of responses for all copy forms. uses eager loaded col if available
