@@ -186,4 +186,20 @@ describe Form do
       end
     end
   end
+
+  describe 'destroy' do
+    context 'with copies' do
+      it 'should be possible' do
+        @std = create(:form, is_standard: true)
+        @copy = @std.replicate(mode: :to_mission, dest_mission: get_mission)
+        create(:response, form: @copy)
+
+        expect { @std.destroy }.not_to raise_error
+        expect { @copy.reload }.not_to raise_error
+
+        expect(@copy.original).to be_nil
+        expect(@copy.standard_copy?).to be_falsy
+      end
+    end
+  end
 end
