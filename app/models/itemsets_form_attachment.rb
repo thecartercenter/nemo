@@ -89,9 +89,9 @@ class ItemsetsFormAttachment
 
     # Generates a CSV row for a normal node.
     def option_row(node)
-      row = ["os#{node.option_set_id}", "on#{node.id}"]
+      row = ["os#{node.option_set_id}", node.odk_code]
       row += configatron.preferred_locales.map{ |l| node.option.name(l) } # Names
-      row << (node.depth > 1 ? "on#{node.parent_id}" : nil) # Node ID and parent node ID (unless parent is root)
+      row << (node.depth > 1 ? node.parent_odk_code : nil) # Node ID and parent node ID (unless parent is root)
       row
     end
 
@@ -100,7 +100,7 @@ class ItemsetsFormAttachment
     def none_row(node, options)
       row = ["os#{node.option_set_id}", 'none']
       row += configatron.preferred_locales.map{ |l| "[#{I18n.t('common.blank', locale: l)}]" }
-      row << (options[:type] == :child ? "on#{node.id}" : 'none')
+      row << (options[:type] == :child ? node.odk_code : 'none')
       row
     end
   end

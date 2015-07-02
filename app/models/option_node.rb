@@ -165,6 +165,15 @@ class OptionNode < ActiveRecord::Base
     end
   end
 
+  # an odk-friendly unique code
+  def odk_code
+    "on#{id}"
+  end
+
+  # an odk-friendly unique code for this node's parent
+  def parent_odk_code
+    "on#{parent_id}"
+  end
 
   # Serializes all descendants. Meant to be called on root.
   def as_json(options = {})
