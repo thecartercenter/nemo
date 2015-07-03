@@ -158,11 +158,12 @@ class Setting < ActiveRecord::Base
       errors.add(:default_outgoing_sms_adapter, :is_invalid) unless default_outgoing_sms_adapter.blank? || Sms::Adapters::Factory.name_is_valid?(default_outgoing_sms_adapter)
     end
 
+    # check if settings for a particular adapter should be validated
     def should_validate?(adapter)
       # settings for the default outgoing adapter should always be validated
       return true if default_outgoing_sms_adapter == adapter
 
-      # other settings be validated if any settings for that adapter are present
+      # settings for an adapter should be validated if any settings for that adapter are present
       case adapter
       when "IntelliSms"
         intellisms_username.present? || intellisms_password1.present? || intellisms_password2.present?
