@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150522175056) do
+ActiveRecord::Schema.define(version: 20150703210133) do
 
   create_table "answers", force: :cascade do |t|
     t.integer  "response_id",    limit: 4
@@ -338,7 +338,7 @@ ActiveRecord::Schema.define(version: 20150522175056) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "mission_id",                        limit: 4
-    t.string   "outgoing_sms_adapter",              limit: 255
+    t.string   "default_outgoing_sms_adapter",      limit: 255
     t.string   "intellisms_username",               limit: 255
     t.string   "intellisms_password",               limit: 255
     t.string   "incoming_sms_number",               limit: 255

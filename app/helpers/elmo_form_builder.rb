@@ -134,6 +134,9 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
               val
           end
 
+          # fall back to "[None]" if we have no value to show
+          human_val = "[#{@template.t('common.none')}]" if human_val.blank?
+
           # render a div with the human val, and embed the real val in a data attrib if it differs
           @template.content_tag(:div, human_val, :class => 'ro-val', :'data-val' => val != human_val ? val : nil)
 
