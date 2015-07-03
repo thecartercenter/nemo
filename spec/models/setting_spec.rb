@@ -91,6 +91,8 @@ describe Setting do
       it 'should normalize the twilio_phone_number on save' do
         setting = Setting.load_for_mission(mission)
         setting.twilio_phone_number = "+1 770 555 1212"
+        setting.twilio_account_sid = "AC0000000"
+        setting.twilio_auth_token = "ABCDefgh1234"
         setting.save!
         expect(setting.twilio_phone_number).to eq("+17705551212")
       end
