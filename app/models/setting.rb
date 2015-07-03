@@ -158,17 +158,29 @@ class Setting < ActiveRecord::Base
       errors.add(:default_outgoing_sms_adapter, :is_invalid) unless default_outgoing_sms_adapter.blank? || Sms::Adapters::Factory.name_is_valid?(default_outgoing_sms_adapter)
     end
 
+    def should_validate?(adapter)
+      # settings for the default outgoing adapter should always be validated
+      return true if default_outgoing_sms_adapter == adapter
+
+      # other settings be validated if any settings for that adapter are present
+      case adapter
+      when "IntelliSms"
+        intellisms_username.present? || intellisms_password1.present? || intellisms_password2.present?
+      when "Twilio"
+        twilio_phone_number.present? || twilio_account_sid.present? || twilio_auth_token.present?
+      end
+    end
+
     # checks that the provided credentials are valid
     def sms_credentials_are_valid
-      case default_outgoing_sms_adapter
-      when "IntelliSms"
+      if should_validate?("IntelliSms")
         errors.add(:intellisms_username, :blank) if intellisms_username.blank?
         errors.add(:intellisms_password1, :did_not_match) unless intellisms_password1 == intellisms_password2
-      when "Twilio"
+      end
+
+      if should_validate?("Twilio")
         errors.add(:twilio_account_sid, :blank) if twilio_account_sid.blank?
         errors.add(:twilio_auth_token1, :blank) if twilio_auth_token.blank? && twilio_auth_token1.blank?
-      else
-        # if there is no adapter then don't need to check anything
       end
     end
 
