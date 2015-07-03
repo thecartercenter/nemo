@@ -12,7 +12,7 @@ FactoryGirl.define do
       Setting.new(
         timezone: "Saskatchewan",
         preferred_locales_str: "en",
-        outgoing_sms_adapter: "IntelliSms",
+        default_outgoing_sms_adapter: "IntelliSms",
         intellisms_username: "user",
         intellisms_password: "pass",
         incoming_sms_token: SecureRandom.hex

@@ -20,7 +20,7 @@
 
     <%= f.regenerable_field(:incoming_sms_token, :append => link_to(t('setting.using_incoming_sms_token'), '#', :class => 'using-incoming_sms_token')) %>
 
-    <%= f.field(:outgoing_sms_adapter, :type => :select, :options => @adapter_options, :prompt => t("common.none")) %>
+    <%= f.field(:default_outgoing_sms_adapter, :type => :select, :options => @adapter_options, :prompt => t("common.none")) %>
 
     <h2><%= t("setting.headings.intellisms") %></h2>
     <div class="adapter_settings" data-adapter="IntelliSms">

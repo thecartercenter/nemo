@@ -70,7 +70,7 @@ class SettingsController < ApplicationController
 
     def setting_params
       params.require(:setting).permit(:timezone, :preferred_locales_str, :allow_unauthenticated_submissions,
-        :incoming_sms_number, :outgoing_sms_adapter, :intellisms_username, :intellisms_password1, :intellisms_password2,
+        :incoming_sms_number, :default_outgoing_sms_adapter, :intellisms_username, :intellisms_password1, :intellisms_password2,
         :twilio_phone_number, :twilio_account_sid, :twilio_auth_token1)
     end
 end

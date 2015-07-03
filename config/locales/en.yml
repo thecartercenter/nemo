@@ -320,7 +320,7 @@ en:
         intellisms_password2: "Password Confirmation"
         intellisms_username: "Username"
         preferred_locales_str: "Preferred Languages"
-        outgoing_sms_adapter: "Default Outgoing Provider"
+        default_outgoing_sms_adapter: "Default Outgoing Provider"
         override_code: "Override Code"
         external_sql: "External SQL"
         timezone: "Time Zone"
@@ -480,7 +480,7 @@ en:
           Please register the following incoming SMS URL with your gateway provider:
 
           %{url}
-        outgoing_sms_adapter: "The adapter used to send outgoing SMSes. Note that SMS replies may be sent out on via a different adapter, depending the adapter by which they arrived."
+        default_outgoing_sms_adapter: "The adapter used to send outgoing SMSes. Note that SMS replies may be sent out on via a different adapter, depending the adapter by which they arrived."
         intellisms_username: "The username for the IntelliSMS account."
         intellisms_password1: "Enter and re-enter a password to change the password for the IntelliSMS account."
         twilio_phone_number: "The phone number registered with Twilio. Outgoing SMS broadcasts won't work unless this number is owned by your Twilio account. This number must include the country code. Example: +25680344523"

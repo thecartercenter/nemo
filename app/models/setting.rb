@@ -99,7 +99,7 @@ class Setting < ActiveRecord::Base
 
     # get class based on sms adapter setting; default to nil if setting is invalid
     hsh[:outgoing_sms_adapter] = begin
-      Sms::Adapters::Factory.new.create(outgoing_sms_adapter)
+      Sms::Adapters::Factory.new.create(default_outgoing_sms_adapter)
     rescue ArgumentError
       nil
     end
@@ -155,12 +155,12 @@ class Setting < ActiveRecord::Base
 
     # sms adapter can be blank or must be valid according to the Factory
     def sms_adapter_is_valid
-      errors.add(:outgoing_sms_adapter, :is_invalid) unless outgoing_sms_adapter.blank? || Sms::Adapters::Factory.name_is_valid?(outgoing_sms_adapter)
+      errors.add(:default_outgoing_sms_adapter, :is_invalid) unless default_outgoing_sms_adapter.blank? || Sms::Adapters::Factory.name_is_valid?(default_outgoing_sms_adapter)
     end
 
     # checks that the provided credentials are valid
     def sms_credentials_are_valid
-      case outgoing_sms_adapter
+      case default_outgoing_sms_adapter
       when "IntelliSms"
         errors.add(:intellisms_username, :blank) if intellisms_username.blank?
         errors.add(:intellisms_password1, :did_not_match) unless intellisms_password1 == intellisms_password2
@@ -174,7 +174,7 @@ class Setting < ActiveRecord::Base
 
     # if the sms credentials temp fields are set (and they match, which is checked above), copy the value to the real field
     def save_sms_credentials
-      case outgoing_sms_adapter
+      case default_outgoing_sms_adapter
       when "IntelliSms"
         self.intellisms_password = intellisms_password1 unless intellisms_password1.blank?
       when "Twilio"

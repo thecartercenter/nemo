@@ -300,7 +300,7 @@ es:
         intellisms_password2: "Confirmación de la contraseña"
         intellisms_username: "Nombre de usuario "
         preferred_locales_str: "Idiomas Preferidos"
-        outgoing_sms_adapter: "Proveedor Saliente"
+        default_outgoing_sms_adapter: "Proveedor Saliente"
         override_code: "Código de Control Manual"
         external_sql: "SQL Externo"
         timezone: "Zona Horaria"
@@ -447,7 +447,7 @@ es:
 
           Si crea un código nuevo, por favor guarde el código viejo si aún existen formularios anteriores. El nuevo código sólo funcionara con los formularios que hayan sido descargados después de que el nuevo código haya sido creado.
         incoming_sms_number: "Introduzca el número de teléfono al que se deberán enviar los SMSes con los formularios SMS. Esto aparecerá en la guía SMS. Sólo es necesario si está enviando a travé de SMS presentación."
-        outgoing_sms_adapter: "El adaptador que se utiliza para enviar SMSes salientes. Tenga en cuenta que las respuestas SMS pueden ser enviadas a través de un adaptador diferente, dependiendo del adaptador del que provienen."
+        default_outgoing_sms_adapter: "El adaptador que se utiliza para enviar SMSes salientes. Tenga en cuenta que las respuestas SMS pueden ser enviadas a través de un adaptador diferente, dependiendo del adaptador del que provienen."
         intellisms_username: "El nombre de usuario de la cuenta IntelliSMS."
         intellisms_password1: "Escriba y vuelva a escribir una contraseña para cambiar la contraseña de la cuenta IntelliSMS."
         external_sql: "El código SQL utilizado para extraer los datos para su uso en aplicaciones externas. Haga click en \"Seleccionar todo\" y, a continuación, presione Ctrl-C para copiar."

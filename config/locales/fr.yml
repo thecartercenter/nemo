@@ -292,7 +292,7 @@ fr:
         intellisms_password2: "Confirmation du mot de passe"
         intellisms_username: "Identifiant"
         preferred_locales_str: "Langues Préférées"
-        outgoing_sms_adapter: "Fournisseur"
+        default_outgoing_sms_adapter: "Fournisseur"
         override_code: "Code de Contournement"
         external_sql: "SQL External"
         timezone: "Fuseau Horaire"
@@ -434,7 +434,7 @@ fr:
         override_code: |-
           S'il est necessaire d'avoir la capacité de soumettre des réponses incomplètes, ce code devra être fournis aux observateurs. ODK ne permettra pas les réponses incomplètes sans ce code. Il sera possible de générer un nouveau code en tout temps et tout formulaires subséquent requirons ce code-ci. Cependant, tout les formulaires créé avant la generation du nouveau code utliseront l'ancien code.
         incoming_sms_number: "Entrez le numéro de téléphone où les SMS entrants pour les formes SMS doivent être envoyés. Il sera affiché sur le guide du SMS."
-        outgoing_sms_adapter: "L'adaptateur utilisé pour envoyer les SMSs. Notez que les réponses par SMS peuvent être envoyées a partir de différent adaptateurs, selon l'adaptateur par lequel ils arrivent."
+        default_outgoing_sms_adapter: "L'adaptateur utilisé pour envoyer les SMSs. Notez que les réponses par SMS peuvent être envoyées a partir de différent adaptateurs, selon l'adaptateur par lequel ils arrivent."
         intellisms_username: "l'Identifiant pour le compte IntelliSMS."
         intellisms_password1: "Entrez et rentrez un mot de passe pour changer le mot de passe du compte IntelliSMS."
         external_sql: "Le code SQL--langage de requêtes structuré--utilisé d'extraire les données pour l'utilisation dans Tableau. Cliquez sur 'sélectionnez tous' et cliquez Ctrl-C pour copier."

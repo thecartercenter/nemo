@@ -8,7 +8,7 @@ describe 'footer' do
 
     context 'with no adapter set' do
       before do
-        get_mission.setting.update_attributes!(outgoing_sms_adapter: nil)
+        get_mission.setting.update_attributes!(default_outgoing_sms_adapter: nil)
       end
 
       it 'should say none' do
