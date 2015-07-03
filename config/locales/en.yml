@@ -320,7 +320,7 @@ en:
         intellisms_password2: "Password Confirmation"
         intellisms_username: "Username"
         preferred_locales_str: "Preferred Languages"
-        outgoing_sms_adapter: "Outgoing Provider"
+        outgoing_sms_adapter: "Default Outgoing Provider"
         override_code: "Override Code"
         external_sql: "External SQL"
         timezone: "Time Zone"
@@ -1563,7 +1563,9 @@ en:
     using_incoming_sms_token: "How do I use this?"
     headings:
       general: "General Settings"
-      sms: "SMS Settings"
+      sms: "Shared SMS Settings"
+      intellisms: "IntelliSMS Settings"
+      twilio: "Twilio Settings"
 
   sms:
     extra_recipients: "<br/>... and %{count} more"
