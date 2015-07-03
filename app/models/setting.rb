@@ -175,6 +175,7 @@ class Setting < ActiveRecord::Base
     def sms_credentials_are_valid
       if should_validate?("IntelliSms")
         errors.add(:intellisms_username, :blank) if intellisms_username.blank?
+        errors.add(:intellisms_password1, :blank) if intellisms_password.blank? && intellisms_password1.blank? && intellisms_password2.blank?
         errors.add(:intellisms_password1, :did_not_match) unless intellisms_password1 == intellisms_password2
       end
 
