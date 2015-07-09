@@ -43,6 +43,9 @@ class Ability
       # anybody can confirm their login
       can :confirm_login, UserSession
 
+      # anybody can manage their own operations
+      can :manage, Operation, :creator_id => user.id
+
       # admin abilities that don't depend on a mission being set
       if user.admin?
         can :view, :admin_mode
@@ -74,6 +77,9 @@ class Ability
         can :adminify, User, ["id != ?", user.id] do |other_user|
           user.id != other_user.id
         end
+
+        # admin can manage any user's operations
+        can :manage, Operation
       end
 
       # anybody can access missions to which assigned (but don't need this permission if admin)
@@ -208,8 +214,8 @@ class Ability
         cannot :change_assignments, User, id: user.id
       end
 
-      # Nobody can activate/deactivate themselves.
-      cannot :activate, User, id: user.try(:id)
+      # Nobody can activate/deactivate or destroy themselves.
+      cannot [:activate, :destroy], User, id: user.id
     end
 
     ###############
@@ -274,6 +280,14 @@ class Ability
 
     cannot :destroy, OptionSet do |o|
       o.has_answers? || o.has_questions? || o.published?
+    end
+
+    # nobody can update an operation
+    cannot :update, Operation
+
+    # operation's can't be destroyed while their underlying job is in progress
+    cannot :destroy, Operation do |op|
+      op.provider_job_id.present? && Delayed::Job.exists?(op.provider_job_id)
     end
 
     # nobody can assign anybody to a locked mission

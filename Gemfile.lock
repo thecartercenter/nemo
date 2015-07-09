@@ -9,6 +9,15 @@ GIT
       railties
 
 GIT
+  remote: git://github.com/roo-rb/roo.git
+  revision: c796bfc7992f910751054e537feb8f2247f197d7
+  ref: c796bfc7992f910751054e537feb8f2247f197d7
+  specs:
+    roo (2.0.1)
+      nokogiri (~> 1)
+      rubyzip (~> 1.1, < 2.0.0)
+
+GIT
   remote: git://github.com/sassafrastech/rack-attack.git
   revision: 97e37abd881ba290034cbb15e92aabedd264ad6b
   specs:
@@ -177,6 +186,10 @@ GEM
       sprockets-rails
     joiner (0.3.4)
       activerecord (>= 4.1.0)
+    jquery-fileupload-rails (0.4.5)
+      actionpack (>= 3.1)
+      railties (>= 3.1)
+      sass (>= 3.2)
     jquery-rails (4.0.4)
       rails-dom-testing (~> 1.0)
       railties (>= 4.2.0)
@@ -264,10 +277,6 @@ GEM
     reverse_markdown (0.8.1)
       nokogiri
     riddle (1.5.11)
-    roo (1.13.2)
-      nokogiri
-      rubyzip
-      spreadsheet (> 0.6.4)
     rspec-collection_matchers (1.1.2)
       rspec-expectations (>= 2.99.0.beta1)
     rspec-core (3.2.2)
@@ -288,7 +297,6 @@ GEM
       rspec-support (~> 3.2.0)
     rspec-support (3.2.2)
     ruby-graphviz (1.2.2)
-    ruby-ole (1.2.11.8)
     rubyzip (1.1.7)
     sass (3.2.19)
     sass-rails (4.0.5)
@@ -306,8 +314,6 @@ GEM
       websocket (~> 1.0)
     spinjs-rails (1.3)
       rails (>= 3.1)
-    spreadsheet (1.0.3)
-      ruby-ole (>= 1.0)
     spring (1.3.3)
     sprockets (2.12.3)
       hike (~> 1.2)
@@ -403,6 +409,7 @@ DEPENDENCIES
   immigrant
   iso-639
   jasmine-rails (~> 0.10.7)
+  jquery-fileupload-rails
   jquery-rails
   launchy
   libxml-ruby
@@ -421,7 +428,7 @@ DEPENDENCIES
   recaptcha
   responders (~> 2.0)
   reverse_markdown
-  roo
+  roo!
   rspec-collection_matchers
   rspec-rails (~> 3.0)
   sass-rails (~> 4.0.2)

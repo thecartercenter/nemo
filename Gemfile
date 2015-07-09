@@ -20,6 +20,7 @@ gem 'configatron', '~> 4.2'
 gem 'libxml-ruby'
 gem 'rdiscount'
 gem 'jquery-rails'
+gem 'jquery-fileupload-rails'
 gem 'random_data'
 gem 'versionist'                 # versioning the api
 gem 'active_model_serializers'   # for making it easy to customize output for api
@@ -57,12 +58,12 @@ gem 'descriptive_statistics', :require => 'descriptive_statistics/safe'
 # underscore templates
 gem 'ejs'
 
-# search
-gem 'thinking-sphinx', '~> 3.1.3'
-
-# search: delayed deltas
+# background job support
 gem 'daemons'
 gem 'delayed_job_active_record'
+
+# search
+gem 'thinking-sphinx', '~> 3.1.3'
 gem 'ts-delayed-delta', '~> 2.0.2'
 
 # cron management
@@ -88,7 +89,7 @@ gem "recaptcha", :require => "recaptcha/rails"
 # XLS support
 gem 'axlsx', '~> 2.1.0.pre'
 gem 'axlsx_rails'
-gem 'roo'
+gem 'roo', github: 'roo-rb/roo', ref: 'c796bfc7992f910751054e537feb8f2247f197d7'
 
 gem 'therubyracer', platforms: :ruby
 

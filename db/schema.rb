@@ -181,6 +181,24 @@ ActiveRecord::Schema.define(version: 20150703210133) do
 
   add_index "missions", ["compact_name"], name: "index_missions_on_compact_name", using: :btree
 
+  create_table "operations", force: :cascade do |t|
+    t.integer  "creator_id",       limit: 4,     null: false
+    t.string   "job_class",        limit: 255,   null: false
+    t.string   "description",      limit: 255,   null: false
+    t.datetime "job_started_at"
+    t.datetime "job_failed_at"
+    t.datetime "job_completed_at"
+    t.string   "job_id",           limit: 255
+    t.string   "provider_job_id",  limit: 255
+    t.string   "job_outcome_url",  limit: 255
+    t.text     "job_error_report", limit: 65535
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+  end
+
+  add_index "operations", ["created_at"], name: "index_operations_on_created_at", using: :btree
+  add_index "operations", ["creator_id", "created_at"], name: "index_operations_on_creator_id_and_created_at", using: :btree
+
   create_table "option_nodes", force: :cascade do |t|
     t.string   "ancestry",       limit: 255
     t.integer  "option_set_id",  limit: 4
@@ -461,6 +479,7 @@ ActiveRecord::Schema.define(version: 20150703210133) do
   add_foreign_key "forms", "forms", column: "original_id", name: "forms_standard_id_fk"
   add_foreign_key "forms", "missions", name: "forms_mission_id_fk"
   add_foreign_key "groups", "missions", name: "groups_mission_id_fk"
+  add_foreign_key "operations", "users", column: "creator_id"
   add_foreign_key "option_nodes", "missions", name: "option_nodes_mission_id_fk"
   add_foreign_key "option_nodes", "option_sets", name: "option_nodes_option_set_id_fk"
   add_foreign_key "option_nodes", "options", name: "option_nodes_option_id_fk"

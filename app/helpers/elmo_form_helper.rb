@@ -4,8 +4,21 @@ module ElmoFormHelper
   # renders a form using the ElmoFormBuilder
   def elmo_form_for(obj, *args, &block)
     options = args.extract_options!
-    form_for(obj, *(args << options.merge(:builder => ElmoFormBuilder,
-      :html => {:class => "#{obj.class.model_name.singular}_form elmo_form #{options[:style]}"})), &block)
+
+    args << options.deep_merge(
+      builder: ElmoFormBuilder,
+      html: {
+        class: "#{obj.class.model_name.singular}_form elmo_form"
+      }
+    ) do |key,oldval,newval|
+      if key == :class
+        "#{oldval} #{newval}"
+      else
+        newval
+      end
+    end
+
+    form_for(obj, *args, &block)
   end
 
   # renders a set of form fields using the ElmoFormBuilder

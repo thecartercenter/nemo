@@ -1,0 +1,20 @@
+<% @title_args = { name: @operation.name } %>
+<%= elmo_form_for(@operation) do |f| %>
+  <%= top_action_links(@operation) %>
+  <%= f.field :id %>
+  <%= f.field :description %>
+  <%= f.field :status, read_only_content: t("operation.status.#{@operation.status}") %>
+  <%= f.field :creator, read_only_content: link_to(@operation.creator.try(:name), @operation.creator) %>
+  <%= f.field :job_started_at %>
+  <% if @operation.failed? %>
+    <%= f.field :job_failed_at %>
+  <% elsif @operation.completed? %>
+    <%= f.field :job_completed_at %>
+  <% end %>
+  <% if @operation.job_outcome_url.present? %>
+    <%= f.field :job_outcome_url, read_only_content: link_to(t('operation.outcome_link_text'), @operation.job_outcome_url) %>
+  <% end %>
+  <% if @operation.job_error_report.present? %>
+    <%= f.field :job_error_report, read_only_content: BlueCloth.new(@operation.job_error_report).to_html.html_safe %>
+  <% end %>
+<% end %>

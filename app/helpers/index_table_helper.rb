@@ -3,12 +3,20 @@ module IndexTableHelper
   # renders an index table for the given class and list of objects
   # options[:within_form] - Whether the table is contained within a form tag. Affects whether a form tag is generated
   #   to contain the batch op checkboxes.
-  def index_table(klass, objects, options = {})
+  def index_table(*args)
+    options = args.extract_options!
+
+    klass = args.first || controller.model_class
+    objects = args.second || instance_variable_get("@#{klass.name.demodulize.pluralize.underscore}")
+
     links = []
 
     unless options[:table_only]
       # get links from class' helper
-      links = send("#{klass.model_name.route_key}_index_links", objects).compact
+      links_helper = "#{klass.model_name.route_key}_index_links"
+      if respond_to?(links_helper)
+        links.concat(send(links_helper, objects).compact)
+      end
 
       # if there are any batch links, insert the 'select all' link
       batch_ops = !links.reject{|l| !l.match(/class="batch_op_link"/)}.empty?

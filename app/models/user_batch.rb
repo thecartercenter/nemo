@@ -3,10 +3,13 @@ class UserBatch
   include ActiveModel::Conversion
   extend ActiveModel::Naming
 
-  attr_reader :created_users
-  attr_accessor :batch, :lines
+  attr_accessor :file
+  attr_reader :users
+
+  validates :file, presence: true
 
   def initialize(attribs = {})
+    @users = []
     attribs.each{|k,v| instance_variable_set("@#{k}", v)}
   end
 
@@ -23,59 +26,77 @@ class UserBatch
     # assume no errors to start with
     @validation_error = false
 
-    # if batch was given, convert to lines
-    if !batch.blank?
-      self.lines = batch.split("\n").reject{|t| t.strip.blank?}.map{|t| {:text => t}}
+    # run UserBatch validations
+    if invalid?
+      @validation_error = true
+      return succeeded?
+    end
+
+    # parse the input file as a spreadsheet
+    data = Roo::Spreadsheet.open(file)
+
+    # assume the first row is the header row
+    headers = data.row(data.first_row)
+
+    expected_headers = Hash[*%i{name phone phone2 email notes}.map do |field|
+      [User.human_attribute_name(field), field]
+    end.flatten]
+
+    fields = Hash[*headers.map.with_index do |header,index|
+      [index, expected_headers[header]]
+    end.flatten]
+
+    # validate headers
+    if fields.values.any?(&:nil?)
+      @validation_error = true
+      errors.add(:file, :invalid_headers)
+      return succeeded?
     end
 
     # create the users in a transaction in case of validation error
     User.transaction do
 
-      # iterate over each line, creating users as we go
-      lines.each do |line|
+      # iterate over each row, creating users as we go
+      data.each_row_streaming(offset: data.first_row).with_index do |row,row_index|
 
-        # split the line's text by delimiter, strip whitespace, and remove blanks
-        tokens = line[:text].split(/,|\t/).map{|t| t.strip}.reject{|t| t.blank?}
+        # skip blank rows
+        next if row.all?(&:blank?)
 
-        # iterate over tokens, trying to identify each one
-        parsed = {:phones => [], :emails => [], :names => []}
-        tokens.each do |t|
-          # if it looks like a phone number
-          if t =~ /\A\+?[\d\-\.]+\z/
-            parsed[:phones] << t
-          # if it looks like an email
-          elsif t =~ /\A([0-9a-zA-Z]([-\.\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,9})\z/
-            parsed[:emails] << t
-          # else we assume it's a name
-          else
-            parsed[:names] << t
+        # turn the row into an attribute hash
+        attributes = Hash[*row.map do |cell|
+          field = fields[cell.coordinate.column - 1]
+          [field, cell.value.presence]
+        end.flatten]
+
+        # attempt to create the user with the parsed params
+        user = User.create(attributes.merge(
+          reset_password_method: "print",
+          assignments: [Assignment.new(mission_id: mission.id, role: User::ROLES.first)]))
+
+        # if the user has errors, add them to the batch's errors
+        if !user.valid?
+          user.errors.keys.each do |attribute|
+            user.errors.full_messages_for(attribute).each do |error|
+              row_error = I18n.t('user_batch.row_error', row: data.first_row + row_index + 1, error: error)
+              errors.add("users[#{row_index}].#{attribute}", row_error)
+            end
           end
-        end
-
-        # if there are too many of any token type, that's an error, so add them to the bad token list
-        line[:bad_tokens] = []
-        line[:bad_tokens] += (parsed[:names][1..-1] || [])
-        line[:bad_tokens] += (parsed[:emails][1..-1] || [])
-        line[:bad_tokens] += (parsed[:phones][2..-1] || [])
-
-        if line[:bad_tokens].empty?
-          # attempt to create the user with the parsed params, and save it with the line
-          line[:user] = User.create(:name => parsed[:names][0], :email => parsed[:emails][0],
-            :phone => parsed[:phones][0], :phone2 => parsed[:phones][1], :reset_password_method => "print",
-            :assignments => [Assignment.new(:mission_id => mission.id, :role => User::ROLES.first)])
-
-          # if the user has errors, set the flag
-          @validation_error = true if !line[:user].valid?
-        else
           @validation_error = true
         end
 
-      end # iteration over lines
+        users << user
+
+        # TODO: stop processing rows after a certain number of bad rows
+
+      end # iteration over rows
 
       # now if there was a validation error with any user, rollback the transaction
       raise ActiveRecord::Rollback if @validation_error
 
     end # transaction
 
+    # TODO: remove the uploaded file
+
+    return succeeded?
   end
 end

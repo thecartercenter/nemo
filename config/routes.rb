@@ -26,6 +26,12 @@ ELMO::Application.routes.draw do
     get '/confirm-login' => 'user_sessions#login_confirmation', defaults: { confirm: true }, as: :new_login_confirmation
     post '/confirm-login' => 'user_sessions#process_login_confirmation', defaults: { confirm: true }, as: :login_confirmation
 
+    resources :operations, only: %i(index show destroy) do
+      collection do
+        post 'clear'
+      end
+    end
+
     # Routes with user or no user.
     root to: 'welcome#index', as: :basic_root
   end
@@ -107,7 +113,11 @@ ELMO::Application.routes.draw do
         get 'using_incoming_sms_token_message'
       end
     end
-    resources :user_batches, path: 'user-batches'
+    resources :user_batches, path: 'user-batches' do
+      collection do
+        get 'example_spreadsheet', path: 'example-user-batch', defaults: { format: 'xslx' }
+      end
+    end
     resources :groups
     resources :form_items, path: 'form-items', only: [:update]
 
