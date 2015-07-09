@@ -199,16 +199,17 @@ ActiveRecord::Schema.define(version: 20150710150907) do
   add_index "option_nodes", ["rank"], name: "index_option_nodes_on_rank", using: :btree
 
   create_table "option_sets", force: :cascade do |t|
-    t.string   "name",          limit: 255
+    t.string   "name",              limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "mission_id",    limit: 4
-    t.boolean  "is_standard",   limit: 1,     default: false
-    t.integer  "original_id",   limit: 4
-    t.boolean  "geographic",    limit: 1,     default: false, null: false
-    t.integer  "root_node_id",  limit: 4
-    t.text     "level_names",   limit: 65535
-    t.boolean  "standard_copy", limit: 1,     default: false, null: false
+    t.integer  "mission_id",        limit: 4
+    t.boolean  "is_standard",       limit: 1,     default: false
+    t.integer  "original_id",       limit: 4
+    t.boolean  "geographic",        limit: 1,     default: false, null: false
+    t.integer  "root_node_id",      limit: 4
+    t.text     "level_names",       limit: 65535
+    t.boolean  "standard_copy",     limit: 1,     default: false, null: false
+    t.boolean  "allow_coordinates", limit: 1,     default: false, null: false
   end
 
   add_index "option_sets", ["geographic"], name: "index_option_sets_on_geographic", using: :btree
