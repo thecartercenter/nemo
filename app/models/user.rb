@@ -15,6 +15,7 @@ class User < ActiveRecord::Base
   has_many :broadcast_addressings, :inverse_of => :user, :dependent => :destroy
   has_many :assignments, :autosave => true, :dependent => :destroy, :validate => true, :inverse_of => :user
   has_many :missions, -> { order "missions.created_at DESC" }, through: :assignments
+  has_many :operations, :inverse_of => :creator, :foreign_key => :creator_id, :dependent => :destroy
   has_many :user_groups, :dependent => :destroy
   has_many :groups, :through => :user_groups
   belongs_to :last_mission, class_name: 'Mission'

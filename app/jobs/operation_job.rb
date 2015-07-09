@@ -11,19 +11,28 @@ class OperationJob < ApplicationJob
 
     def operation
       arguments.first.tap do |operation|
-        raise ArgumentError unless operation.is_a?(Operation)
+        if operation.nil?
+          Rails.logger.warn "Unable to update failed operation for job: #{self.inspect}"
+          break
+        end
+
+        unless operation.is_a?(Operation)
+          raise ArgumentError, "unexpected type for operation: #{operation.inspect}"
+        end
       end
     end
 
     def operation_started
-      operation.update_attribute(:job_started_at, Time.now)
+      operation.present? && operation.update_attribute(:job_started_at, Time.now)
     end
 
     def operation_succeeded(outcome_url=nil)
-      operation.update_attribute(:job_outcome_url, outcome_url) if outcome_url.present?
+      operation.present? && operation.update_attribute(:job_outcome_url, outcome_url) if outcome_url.present?
     end
 
     def operation_failed(exception_or_report=nil)
+      return unless operation.present?
+
       error_report =
         case exception_or_report
         when StandardError
@@ -43,6 +52,6 @@ class OperationJob < ApplicationJob
     end
 
     def operation_completed
-      operation.update_attribute(:job_completed_at, Time.now)
+      operation.present? && operation.update_attribute(:job_completed_at, Time.now)
     end
 end
