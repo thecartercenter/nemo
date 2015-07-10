@@ -1,11 +1,16 @@
 class FormItem < ActiveRecord::Base; end
 class QingGroup < FormItem; end
 class Questioning < FormItem
-  belongs_to(:form, :inverse_of => :questionings)
+  belongs_to(:form, inverse_of: :questionings)
 end
 
 class Form < ActiveRecord::Base
-  has_many(:questionings, -> { order(:rank) }, :autosave => true, :dependent => :destroy, :inverse_of => :form)
+  if Rails::VERSION::MAJOR >= 4
+    has_many(:questionings, -> { order(:rank) }, autosave: true, dependent: :destroy, inverse_of: :form)
+  else
+    has_many(:questionings, order: "rank", autosave: true, dependent: :destroy, inverse_of: :form)
+  end
+  belongs_to(:mission)
 end
 
 class MoveFormQuestioningsToRootGroup < ActiveRecord::Migration
