@@ -5,17 +5,17 @@ module ElmoFormHelper
   def elmo_form_for(obj, *args, &block)
     options = args.extract_options!
 
-    args << options.deep_merge(
+    defaults = {
       builder: ElmoFormBuilder,
       html: {
         class: "#{obj.class.model_name.singular}_form elmo_form"
       }
-    ) do |key,oldval,newval|
-      if key == :class
-        "#{oldval} #{newval}"
-      else
-        newval
-      end
+    }
+
+    # deep merge the user-provided options with the defaults;
+    args << options.deep_merge(defaults) do |key,oldval,newval|
+      # if the key is :class, merge the old and new values into a space-separated list
+      key == :class ?  "#{oldval} #{newval}" : newval
     end
 
     form_for(obj, *args, &block)
