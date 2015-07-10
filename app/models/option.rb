@@ -1,15 +1,15 @@
 class Option < ActiveRecord::Base
   include MissionBased, FormVersionable, Translatable, Replication::Replicable
 
-  has_many(:option_sets, :through => :option_nodes)
-  has_many(:option_nodes, :inverse_of => :option, :dependent => :destroy, :autosave => true)
-  has_many(:answers, :inverse_of => :option)
-  has_many(:choices, :inverse_of => :option)
+  has_many(:option_sets, through: :option_nodes)
+  has_many(:option_nodes, inverse_of: :option, dependent: :destroy, autosave: true)
+  has_many(:answers, inverse_of: :option)
+  has_many(:choices, inverse_of: :option)
 
   after_save(:invalidate_cache)
   after_destroy(:invalidate_cache)
 
-  scope(:with_questions_and_forms, -> { includes(:option_sets => [:questionings, {:questions => {:questionings => :form}}]) })
+  scope(:with_questions_and_forms, -> { includes(option_sets: [:questionings, {questions: {questionings: :form}}]) })
 
   translates :name
 
@@ -54,7 +54,7 @@ class Option < ActiveRecord::Base
 
   def as_json(options = {})
     if options[:for_option_set_form]
-      super(:only => [:id, :name_translations], :methods => [:name, :set_names, :in_use?])
+      super(only: [:id, :name_translations], methods: [:name, :set_names, :in_use?])
     else
       super(options)
     end
