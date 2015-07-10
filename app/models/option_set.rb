@@ -273,6 +273,7 @@ class OptionSet < ActiveRecord::Base
 
     def normalize_fields
       self.name = name.strip
+      self.allow_coordinates = false unless self.geographic?
       return true
     end
 

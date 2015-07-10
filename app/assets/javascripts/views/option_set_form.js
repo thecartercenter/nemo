@@ -34,6 +34,9 @@
       remove_link: self.params.remove_link
     });
 
+    // find the allow_coordinates field
+    self.allow_coordinates_field = $('.form_field[data-field-name=allow_coordinates]');
+
     // add option button click event
     $('div.add_options input[type=button]').on('click', function() { self.add_options(); });
 
@@ -42,6 +45,10 @@
       self.option_levels_field.add();
       e.preventDefault();
     });
+
+    // watch for changes to geographic property
+    $('#option_set_geographic').on('change', function() { self.geographic_changed(); });
+    self.geographic_changed();
 
     // watch for changes to multilevel property
     $('#option_set_multi_level').on('change', function() { self.multilevel_changed(); });
@@ -91,6 +98,24 @@
   klass.prototype.enable_multilevel_checkbox = function() { var self = this;
     $('#option_set_multi_level').prop('disabled',
       !(self.option_levels_field.list.count() == 0 && self.options_field.list.max_depth() <= 1));
+  };
+
+  // reacts to changes to geographic checkbox
+  klass.prototype.geographic_changed = function() { var self = this;
+    var checked;
+    // Check if geographic checkbox is read only
+    if ($('#geographic div.ro-val').length > 0)
+      checked = $('#geographic div.ro-val').data('val');
+    else
+      checked = $('#option_set_geographic').is(':checked');
+
+    // show/hide the allow coordinates field
+    if (checked) {
+      self.allow_coordinates_field.show();
+    } else {
+      self.allow_coordinates_field.hide();
+      self.allow_coordinates_field.find('input[type=checkbox]').attr('checked', false);
+    }
   };
 
   // reacts to changes to multilevel checkbox
