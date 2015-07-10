@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150703210133) do
+ActiveRecord::Schema.define(version: 20150710150907) do
 
   create_table "answers", force: :cascade do |t|
     t.integer  "response_id",    limit: 4
@@ -232,8 +232,8 @@ ActiveRecord::Schema.define(version: 20150703210133) do
     t.integer  "option_set_id",     limit: 4
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.decimal  "minimum",                         precision: 15, scale: 10
-    t.decimal  "maximum",                         precision: 15, scale: 10
+    t.decimal  "minimum",                         precision: 15, scale: 8
+    t.decimal  "maximum",                         precision: 15, scale: 8
     t.boolean  "maxstrictly",       limit: 1
     t.boolean  "minstrictly",       limit: 1
     t.integer  "mission_id",        limit: 4
@@ -241,11 +241,11 @@ ActiveRecord::Schema.define(version: 20150703210133) do
     t.text     "canonical_name",    limit: 65535
     t.text     "name_translations", limit: 65535
     t.text     "hint_translations", limit: 65535
-    t.boolean  "key",               limit: 1,                               default: false
-    t.boolean  "is_standard",       limit: 1,                               default: false
+    t.boolean  "key",               limit: 1,                              default: false
+    t.boolean  "is_standard",       limit: 1,                              default: false
     t.integer  "original_id",       limit: 4
-    t.string   "access_level",      limit: 255,                             default: "inherit", null: false
-    t.boolean  "standard_copy",     limit: 1,                               default: false,     null: false
+    t.string   "access_level",      limit: 255,                            default: "inherit", null: false
+    t.boolean  "standard_copy",     limit: 1,                              default: false,     null: false
   end
 
   add_index "questions", ["mission_id", "code"], name: "index_questions_on_mission_id_and_code", unique: true, using: :btree
