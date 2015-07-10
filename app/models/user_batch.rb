@@ -108,8 +108,6 @@ class UserBatch
 
     end # transaction
 
-    # TODO: remove the uploaded file
-
     return succeeded?
   end
 end
