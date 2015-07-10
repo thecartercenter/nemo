@@ -223,6 +223,8 @@ ActiveRecord::Schema.define(version: 20150710150907) do
     t.integer  "mission_id",        limit: 4
     t.string   "canonical_name",    limit: 255
     t.text     "name_translations", limit: 65535
+    t.decimal  "latitude",                        precision: 8, scale: 6
+    t.decimal  "longitude",                       precision: 9, scale: 6
   end
 
   add_index "options", ["canonical_name", "mission_id"], name: "index_options_on_canonical_name_and_mission_id", using: :btree
