@@ -209,7 +209,7 @@
       data.option_set.children_attribs = self.prepare_options();
     }
 
-    // Upate some params OptionSet model, as this may be used by modal
+    // Update some params OptionSet model, as this may be used by modal
     self.params.option_set.name = data['option_set[name]'];
     self.params.option_set.multi_level = data['option_set[multi_level]'] == '1';
 
