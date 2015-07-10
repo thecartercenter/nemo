@@ -5,6 +5,7 @@ class Questioning < FormItem
 end
 class Form < ActiveRecord::Base
   has_many(:questionings, :order => "rank", :autosave => true, :dependent => :destroy, :inverse_of => :form)
+  belongs_to(:mission)
 end
 
 class MoveFormQuestioningsToRootGroup < ActiveRecord::Migration
