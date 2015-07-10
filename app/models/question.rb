@@ -29,6 +29,9 @@ class Question < ActiveRecord::Base
   validates(:code, :format => {:with => /\A#{CODE_FORMAT}\z/}, :if => Proc.new{|q| !q.code.blank?})
   validates(:qtype_name, :presence => true)
   validates(:option_set, :presence => true, :if => Proc.new{|q| q.qtype && q.has_options?})
+  %w(minimum maximum).each do |field|
+    validates(:"casted_#{field}", :numericality => { :allow_blank => true, :greater_than => -10_000_000, :less_than => 10_000_000 })
+  end
   validate(:code_unique_per_mission)
   validate(:at_least_one_name)
 
