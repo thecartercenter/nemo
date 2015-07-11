@@ -246,8 +246,15 @@
     });
 
     // populate coordinates
-    self.modal.find('.coordinate input[id=option_latitude]').val(self.active_item.latitude);
-    self.modal.find('.coordinate input[id=option_longitude]').val(self.active_item.longitude);
+    if (self.allow_coordinates) {
+      self.modal.find('.coordinate').show();
+      self.modal.find('.coordinate input').attr('disabled', false);
+      self.modal.find('.coordinate input[id=option_latitude]').val(self.active_item.latitude);
+      self.modal.find('.coordinate input[id=option_longitude]').val(self.active_item.longitude);
+    } else {
+      self.modal.find('.coordinate').hide();
+      self.modal.find('.coordinate input').attr('disabled', true);
+    }
 
     // show the modal
     self.modal.modal('show');

@@ -50,6 +50,10 @@
     $('#option_set_geographic').on('change', function() { self.geographic_changed(); });
     self.geographic_changed();
 
+    // watch for changes to allow_coordinates property
+    $('#option_set_allow_coordinates').on('change', function() { self.allow_coordinates_changed(); });
+    self.allow_coordinates_changed();
+
     // watch for changes to multilevel property
     $('#option_set_multi_level').on('change', function() { self.multilevel_changed(); });
     self.multilevel_changed();
@@ -116,6 +120,19 @@
       self.allow_coordinates_field.hide();
       self.allow_coordinates_field.find('input[type=checkbox]').attr('checked', false);
     }
+  };
+
+  // reacts to changes to allow_coordinates checkbox
+  klass.prototype.allow_coordinates_changed = function() { var self = this;
+    var checked;
+    // Check if allow_coordinates checkbox is read only
+    if ($('#allow_coordinates div.ro-val').length > 0)
+      checked = $('#allow_coordinates div.ro-val').data('val');
+    else
+      checked = $('#option_set_allow_coordinates').is(':checked');
+
+    // Update whether coordinates can be edited in the options_field
+    self.options_field.list.allow_coordinates = checked;
   };
 
   // reacts to changes to multilevel checkbox
