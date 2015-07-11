@@ -61,7 +61,7 @@ class Option < ActiveRecord::Base
 
   def as_json(options = {})
     if options[:for_option_set_form]
-      super(only: [:id, :name_translations], methods: [:name, :set_names, :in_use?])
+      super(only: [:id, :latitude, :longitude, :name_translations], methods: [:name, :set_names, :in_use?])
     else
       super(options)
     end

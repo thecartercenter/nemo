@@ -237,7 +237,7 @@
   klass.prototype.prepare_option_tree = function(nodes) { var self = this;
     return nodes.map(function(node){
       // in this case, the item will be an Optioning, which is also a NamedItem
-      var prepared = {option_attribs: {name_translations: node.item.name_translations}};
+      var prepared = {option_attribs: {name_translations: node.item.name_translations, latitude: node.item.latitude, longitude: node.item.longitude}};
 
       // include IDs if available
       if (node.item.id)

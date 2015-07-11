@@ -47,15 +47,18 @@ form.option_set_form {
 }
 
 div.modal#edit-option, div.modal#edit-option-level {
-  .translation {
+  .translation, .coordinate {
     margin-bottom: 10px;
+
     label {
       width: 40%;
     }
 
-    input[type=text] {
-      display: inline-block;
-      width: 50%;
+    input {
+      &[type=text], &[type=number] {
+        display: inline-block;
+        width: 50%;
+      }
     }
   }
 }

@@ -235,7 +235,7 @@
     self.modal.find('.modal-title').text(self.modal_titles[options.mode]);
 
     // clear the text boxes
-    self.modal.find('.translation input').val("");
+    self.modal.find('input[type=text], input[type=number]').val("");
 
     // hide the in_use warning
     self.modal.find('div[id$=in_use_name_change_warning]').hide();
@@ -244,6 +244,10 @@
     self.active_item.locales().forEach(function(l){
       self.modal.find('.translation input[id$=name_' + l + ']').val(self.active_item.translation(l));
     });
+
+    // populate coordinates
+    self.modal.find('.coordinate input[id=option_latitude]').val(self.active_item.latitude);
+    self.modal.find('.coordinate input[id=option_longitude]').val(self.active_item.longitude);
 
     // show the modal
     self.modal.modal('show');
@@ -278,6 +282,10 @@
   klass.prototype.save_item = function() { var self = this;
     self.modal.find('.translation input').each(function(){
       self.active_item.update_translation({field: 'name', locale: $(this).data('locale'), value: $(this).val()});
+    });
+
+    self.modal.find('.coordinate input').each(function(){
+      self.active_item.update_coordinate({field: $(this).data('field'), value: $(this).val()});
     });
 
     self.wrapper.show();
