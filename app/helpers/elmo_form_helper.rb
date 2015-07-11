@@ -13,7 +13,7 @@ module ElmoFormHelper
     }
 
     # deep merge the user-provided options with the defaults;
-    args << options.deep_merge(defaults) do |key,oldval,newval|
+    args << defaults.deep_merge(options) do |key,oldval,newval|
       # if the key is :class, merge the old and new values into a space-separated list
       key == :class ?  "#{oldval} #{newval}" : newval
     end
