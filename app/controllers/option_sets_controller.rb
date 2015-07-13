@@ -153,7 +153,7 @@ class OptionSetsController < ApplicationController
   end
 
   def option_set_params
-    params.require(:option_set).permit(:name, :geographic, :multi_level,
+    params.require(:option_set).permit(:name, :geographic, :allow_coordinates, :multi_level,
       level_names: configatron.preferred_locales,
       children_attribs: permit_children(params[:option_set], key: :children_attribs, permitted: [
         :id, { option_attribs: [:id, :latitude, :longitude, { name_translations: configatron.preferred_locales }] }])
