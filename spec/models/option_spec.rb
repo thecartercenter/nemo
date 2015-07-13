@@ -33,4 +33,21 @@ describe Option do
       end
     end
   end
+
+  context 'has_coordinates?' do
+    it 'should return true if there are full coordinates' do
+      option = build(:option, latitude: 0, longitude: 0)
+      expect(option.has_coordinates?).to be_truthy
+    end
+
+    it 'should return true if there are partial coordinates' do
+      option = build(:option, latitude: 0)
+      expect(option.has_coordinates?).to be_truthy
+    end
+
+    it 'should return false if there are no coordinates' do
+      option = build(:option)
+      expect(option.has_coordinates?).to be_falsy
+    end
+  end
 end

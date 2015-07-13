@@ -184,7 +184,7 @@ class Answer < ActiveRecord::Base
       option.has_coordinates?
     else
       # select_multiple
-      choices.any? { |choice| choice.option.has_coordinates? }
+      choices.any?(&:has_coordinates?)
     end
   end
 
