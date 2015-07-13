@@ -1,35 +1,17 @@
-<div id="map_<%= answer.id %>" class="answer-map" style="width: 160px; height: 80px; float: right; margin-bottom: 10px"></div>
+<%
+    options = if answer.option.present?
+      # select_one
+      [answer.option]
+    else
+      # select_multiple
+      answer.choices.select(&:has_coordinates?).map(&:option)
+    end
+%>
+<div id="map_<%= answer.id %>" class="answer-map"></div>
 <script>
-  var bounds = new google.maps.LatLngBounds();
-  var map = new google.maps.Map($('#map_<%= answer.id %>')[0], {
-    mapTypeId: google.maps.MapTypeId.ROADMAP,
-    zoom: 10,
-    disableDefaultUI: true,
-    zoomControl: true,
-    zoomControlOptions: {
-      position: google.maps.ControlPosition.TOP_RIGHT,
-      style: google.maps.ZoomControlStyle.SMALL
-    }
-  });
-  <% if answer.option.present? %>
-    var p = new google.maps.LatLng(<%= answer.option.latitude %>, <%= answer.option.longitude %>);
-    var m = new google.maps.Marker({
-      map: map,
-      position: p,
-      icon: "<%= image_url('markers/small.png') %>"
-    });
-    bounds.extend(p);
-  <% else %>
-    <% answer.choices.select(&:has_coordinates?).each do |choice| %>
-      var p = new google.maps.LatLng(<%= choice.option.latitude %>, <%= choice.option.longitude %>);
-      var m = new google.maps.Marker({
-        map: map,
-        position: p,
-        icon: "<%= image_url('markers/small.png') %>"
-      });
-      bounds.extend(p);
-    <% end %>
-  <% end %>
-
-  map.fitBounds(bounds);
+  new ELMO.Views.AnswerMapView(<%=json({
+    el: "#map_#{answer.id}",
+    options: options,
+    small_marker_url: image_url('markers/small.png')
+  })%>);
 </script>
