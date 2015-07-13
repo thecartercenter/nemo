@@ -254,7 +254,7 @@
   klass.prototype.prepare_option_tree = function(nodes) { var self = this;
     return nodes.map(function(node){
       // in this case, the item will be an Optioning, which is also a NamedItem
-      var prepared = {option_attribs: {name_translations: node.item.name_translations, latitude: node.item.latitude, longitude: node.item.longitude}};
+      var prepared = {option_attribs: {name_translations: node.item.name_translations}};
 
       // include IDs if available
       if (node.item.id)
@@ -262,6 +262,12 @@
 
       if (node.item.option.id)
         prepared.option_attribs.id = node.item.option.id;
+
+      // include latitude and longitude if allow_coordinates is set
+      if ($('#option_set_allow_coordinates').is(':checked')) {
+        prepared.option_attribs.latitude = node.item.latitude;
+        prepared.option_attribs.longitude = node.item.longitude;
+      }
 
       // recurse
       prepared.children_attribs = node.children && node.children.length ? self.prepare_option_tree(node.children) : 'NONE';
