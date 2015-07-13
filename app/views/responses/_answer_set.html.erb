@@ -6,7 +6,7 @@
 
   <div class="label_and_control">
 
-    <label class="main"><%= reqd_sym if answer_set.required? %> <%= answer_set.question_name || "[#{t('answer.no_name')}]" %>
+    <label class="main"><%= reqd_sym if answer_set.required? %> <%= answer_set.question_name || "[#{t('answer.no_name')}]" %>:
     </label><div class="control">
       <% if answer_set.multi_level? %>
         <%# index just needs to be a unique integer, so we use the questioning ID. %>
