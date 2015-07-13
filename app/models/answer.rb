@@ -175,6 +175,19 @@ class Answer < ActiveRecord::Base
     end
   end
 
+  # check whether this answer has coordinates
+  def has_coordinates?
+    return false unless qtype.has_options?
+
+    if option.present?
+      # select_one
+      option.has_coordinates?
+    else
+      # select_multiple
+      choices.any? { |choice| choice.option.has_coordinates? }
+    end
+  end
+
   private
 
     def required
