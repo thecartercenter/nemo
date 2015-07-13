@@ -3,28 +3,13 @@
 <% case type = answer.qtype.name
    when 'select_one' %>
 
-  <% if answer.option.has_coordinates? %>
-  <div id="map_<%= answer.id %>" style="width: 160px; height: 80px; float: right; margin-bottom: 10px"></div>
-  <script>
-    var coords = new google.maps.LatLng(<%= answer.option.latitude %>, <%= answer.option.longitude %>);
-    var map = new google.maps.Map($('#map_<%= answer.id %>')[0], {
-      mapTypeId: google.maps.MapTypeId.ROADMAP,
-      center: coords,
-      zoom: 10,
-      disableDefaultUI: true,
-      zoomControl: true,
-      zoomControlOptions: {
-        position: google.maps.ControlPosition.TOP_RIGHT,
-        style: google.maps.ZoomControlStyle.SMALL
-      }
-    });
-    new google.maps.Marker({ map: map, position: coords, icon: "<%= image_url('markers/small.png') %>" });
-  </script>
-  <% end %>
+  <%= render('answer_map', answer: answer) if answer.has_coordinates? %>
 
   <%= content_tag(:div, answer.option.try(:name), class: 'ro-val', :'data-val' => answer.option_id) %>
 
 <% when 'select_multiple' %>
+
+  <%= render('answer_map', answer: answer) if answer.has_coordinates? %>
 
   <%= content_tag(:div, safe_join(answer.choices.map{|c| c.option.name}, tag(:br)), class: 'ro-val', :'data-val' => answer.choices.map(&:option_id).to_json) %>
 
