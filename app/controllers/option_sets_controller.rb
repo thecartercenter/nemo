@@ -47,15 +47,7 @@ class OptionSetsController < ApplicationController
   end
 
   def export
-    @headers = [@option_set.class.human_attribute_name(:id)]
-    if @option_set.multi_level?
-      # use the level names as column headings for a multi-level option set
-      @headers.concat(@option_set.levels.map(&:name))
-    else
-      # the human-readable name for the Option.name attribute otherwise (e.g. "Name")
-      @headers << Option.human_attribute_name(:name)
-    end
-
+    @headers = @option_set.headers_for_export
     @rows = @option_set.arrange_as_rows
 
     render :xlsx => 'export', :filename => "#{@option_set.name}.xlsx"

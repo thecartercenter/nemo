@@ -271,6 +271,7 @@ en:
         status: "Status"
       option:
         base: "" # this is a sort of hack to get error msg to display properly
+        coordinates: "Coordinates"
       option_set:
         allow_coordinates: "With Coordinates?"
         answers: "Answers"
