@@ -43,12 +43,23 @@ class Answer < ActiveRecord::Base
     end
 
     # return an AR relation
-    where.not(:value => nil)
-      .joins(:questioning => :question)
-      .where(:questions => { :qtype_name => 'location' })
-      .joins(:response)
+    joins(:response, questioning: :question)
+      .joins(%{LEFT JOIN `option_sets` ON `questions`.`option_set_id` = `option_sets`.`id`})
+      .joins(%{LEFT JOIN `options` ON `option_sets`.`allow_coordinates` = 1 AND `questions`.`qtype_name` = 'select_one' AND `answers`.`option_id` = `options`.`id`})
+      .joins(%{LEFT JOIN `choices` ON `option_sets`.`allow_coordinates` = 1 AND `questions`.`qtype_name` = 'select_multiple' AND `answers`.`id` = `choices`.`answer_id`})
+      .joins(%{LEFT JOIN `options` AS `choice_options` ON `choices`.`option_id` = `choice_options`.`id`})
       .where(:responses => response_conditions)
-      .order('responses.updated_at DESC')
+      .where(%{
+        (`questions`.`qtype_name` = 'location' AND `answers`.`value` IS NOT NULL)
+        OR (`options`.`latitude` IS NOT NULL AND `options`.`longitude` IS NOT NULL)
+        OR (`choice_options`.`latitude` IS NOT NULL AND `choice_options`.`longitude` IS NOT NULL)
+      })
+      .select(:response_id,
+        %{COALESCE(`answers`.`value`,
+                   CONCAT(`options`.`latitude`, ' ', `options`.`longitude`),
+                   CONCAT(`choice_options`.`latitude`, ' ', `choice_options`.`longitude`)) AS `value`})
+      .distinct
+      .order('`answers`.`response_id` DESC')
       .paginate(:page => 1, :per_page => 1000)
   end
 
