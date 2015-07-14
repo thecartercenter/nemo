@@ -47,9 +47,7 @@ class OptionSetsController < ApplicationController
   end
 
   def export
-    @headers = [@option_set.class.human_attribute_name(:id)]
-    @headers.concat(@option_set.levels.map(&:name))
-
+    @headers = @option_set.headers_for_export
     @rows = @option_set.arrange_as_rows
 
     render :xlsx => 'export', :filename => "#{@option_set.name}.xlsx"

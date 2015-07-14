@@ -237,6 +237,25 @@ class OptionSet < ActiveRecord::Base
     name_changed?
   end
 
+  # returns the localized headers to be used for export
+  def headers_for_export
+    [].tap do |headers|
+      headers << self.class.human_attribute_name(:id)
+
+      if multi_level?
+        # use the level names as column headings for a multi-level option set
+        headers.concat(levels.map(&:name))
+      else
+        # the human-readable name for the Option.name attribute otherwise (e.g. "Name")
+        headers << Option.human_attribute_name(:name)
+      end
+
+      if allow_coordinates?
+        headers << Option.human_attribute_name(:coordinates)
+      end
+    end
+  end
+
   def to_hash
     root_node.subtree.arrange_serializable(order: 'rank')
   end

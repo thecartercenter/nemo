@@ -59,6 +59,10 @@ class Option < ActiveRecord::Base
     self.class.where(canonical_name: canonical_name, mission_id: other_mission.try(:id)).first
   end
 
+  def coordinates
+    has_coordinates? && "#{latitude} #{longitude}"
+  end
+
   def as_json(options = {})
     if options[:for_option_set_form]
       super(only: [:id, :latitude, :longitude, :name_translations], methods: [:name, :set_names, :in_use?])
