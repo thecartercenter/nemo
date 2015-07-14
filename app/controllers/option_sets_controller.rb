@@ -48,7 +48,13 @@ class OptionSetsController < ApplicationController
 
   def export
     @headers = [@option_set.class.human_attribute_name(:id)]
-    @headers.concat(@option_set.levels.map(&:name))
+    if @option_set.multi_level?
+      # use the level names as column headings for a multi-level option set
+      @headers.concat(@option_set.levels.map(&:name))
+    else
+      # the human-readable name for the Option.name attribute otherwise (e.g. "Name")
+      @headers << Option.human_attribute_name(:name)
+    end
 
     @rows = @option_set.arrange_as_rows
 
