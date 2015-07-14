@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150710212020) do
+ActiveRecord::Schema.define(version: 20150714205221) do
 
   create_table "answers", force: :cascade do |t|
     t.integer  "response_id",    limit: 4
@@ -328,12 +328,13 @@ ActiveRecord::Schema.define(version: 20150710212020) do
     t.integer  "user_id",           limit: 4
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "reviewed",          limit: 1,   default: false
+    t.boolean  "reviewed",          limit: 1,     default: false
     t.string   "source",            limit: 255
     t.integer  "mission_id",        limit: 4
-    t.boolean  "incomplete",        limit: 1,   default: false, null: false
+    t.boolean  "incomplete",        limit: 1,     default: false, null: false
     t.datetime "checked_out_at"
     t.integer  "checked_out_by_id", limit: 4
+    t.text     "reviewer_notes",    limit: 65535
   end
 
   add_index "responses", ["checked_out_at"], name: "index_responses_on_checked_out_at", using: :btree
