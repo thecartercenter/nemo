@@ -225,19 +225,19 @@ class OptionNode < ActiveRecord::Base
     hash.each_with_object([]) do |(node,children),rows|
       path = parent_path + [node.option]
 
-      if children.empty?
-        # output a row if we've hit a leaf node, using the option path to
-        # construct the list of cell values
+      # output a row if we've hit a leaf node or a parent node with coordinates
+      if children.empty? || (option_set.allow_coordinates? && node.option.has_coordinates?)
+        # use the option path to construct the list of cell values
         row = [node.id, *path.map(&:name)]
 
         # add the coordinates if the option set allows coordinates
         row << node.option.coordinates if option_set.allow_coordinates?
 
         rows << row
-      else
-        # otherwise recursively collect rows for the children
-        rows.concat(arrange_as_rows(children, path))
       end
+
+      # recursively collect rows for the children
+      rows.concat(arrange_as_rows(children, path)) if children.present?
     end
   end
 
