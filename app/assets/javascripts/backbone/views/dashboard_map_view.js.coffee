@@ -22,7 +22,7 @@ class ELMO.Views.DashboardMapView extends Backbone.View
     bounds = new google.maps.LatLngBounds()
     for l in @params.locations
       m = this.add_answer(l)
-      bounds.extend(m.position)
+      bounds.extend(m.position) if m
 
     # if there are stored bounds, use those to center map
     if this.load_bounds(@params.serialization_key)
