@@ -16,7 +16,7 @@ class ELMO.Views.DashboardMapView extends Backbone.View
     })
 
     # keep track of which response ids we've rendered
-    @response_ids = {}
+    @distinct_answers = {}
 
     # add the markers and keep expanding the bounding rectangle
     bounds = new google.maps.LatLngBounds()
@@ -43,8 +43,8 @@ class ELMO.Views.DashboardMapView extends Backbone.View
   add_answer: (answer) ->
     [response_id, loc] = answer
 
-    # only add each response once
-    return if @response_ids[response_id]
+    # only add each response_id/lat/long once
+    return if @distinct_answers[answer]
 
     # get float values from string
     split = loc.split(' ')
@@ -64,8 +64,8 @@ class ELMO.Views.DashboardMapView extends Backbone.View
     # setup event listener to show info window
     google.maps.event.addListener(m, 'click', => this.show_info_window(m))
 
-    # keep track of the response id
-    @response_ids[response_id] = true
+    # keep track of the response_id/lat/long
+    @distinct_answers[answer] = true
 
     return m
 
