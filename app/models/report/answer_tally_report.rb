@@ -65,7 +65,7 @@ class Report::AnswerTallyReport < Report::TallyReport
 
         # add the selects and groups
         rel = rel.select("#{name_expr_sql} AS sec_name, #{value_expr_sql} AS sec_value, #{sort_expr_sql} AS sec_sort_value, 'text' AS sec_type")
-        rel = rel.group(name_expr_sql).group(value_expr_sql).group(sort_expr_sql)
+        rel = rel.group('option_sets.name').group(name_expr_sql).group(value_expr_sql).group(sort_expr_sql)
 
         # add the unified wheres
         rel = rel.where("(" + where_exprs.collect{|e| e.sql}.join(" OR ") + ")")

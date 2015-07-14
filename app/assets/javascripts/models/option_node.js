@@ -8,10 +8,14 @@
     // copy attribs
     for (var key in attribs) self[key] = attribs[key];
 
-    // also translations from option. these are the ones we'll actually use.
     if (self.option) {
+      // also translations from option. these are the ones we'll actually use.
       self.name = self.option.name;
       self.name_translations = self.option.name_translations;
+
+      // copy coordinates
+      self.latitude = self.option.latitude;
+      self.longitude = self.option.longitude;
     }
 
     // names are editable if the node is not a new record
@@ -31,5 +35,10 @@
   klass.prototype = new ns.NamedItem();
   klass.prototype.constructor = klass;
   klass.prototype.parent = ns.NamedItem.prototype;
+
+  // update the latitude/longitude value
+  klass.prototype.update_coordinate = function (params) { var self = this;
+    self[params.field] = params.value;
+  };
 
 })(ELMO.Models);

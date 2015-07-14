@@ -3,6 +3,7 @@ class Choice < ActiveRecord::Base
   belongs_to(:option, :inverse_of => :choices)
 
   delegate :name, :to => :option, :prefix => true
+  delegate :has_coordinates?, :to => :option
 
   def checked
     # Only explicitly false should return false.

@@ -34,6 +34,9 @@
       remove_link: self.params.remove_link
     });
 
+    // find the allow_coordinates field
+    self.allow_coordinates_field = $('.form_field[data-field-name=allow_coordinates]');
+
     // add option button click event
     $('div.add_options input[type=button]').on('click', function() { self.add_options(); });
 
@@ -42,6 +45,14 @@
       self.option_levels_field.add();
       e.preventDefault();
     });
+
+    // watch for changes to geographic property
+    $('#option_set_geographic').on('change', function() { self.geographic_changed(); });
+    self.geographic_changed();
+
+    // watch for changes to allow_coordinates property
+    $('#option_set_allow_coordinates').on('change', function() { self.allow_coordinates_changed(); });
+    self.allow_coordinates_changed();
 
     // watch for changes to multilevel property
     $('#option_set_multi_level').on('change', function() { self.multilevel_changed(); });
@@ -91,6 +102,37 @@
   klass.prototype.enable_multilevel_checkbox = function() { var self = this;
     $('#option_set_multi_level').prop('disabled',
       !(self.option_levels_field.list.count() == 0 && self.options_field.list.max_depth() <= 1));
+  };
+
+  // reacts to changes to geographic checkbox
+  klass.prototype.geographic_changed = function() { var self = this;
+    var checked;
+    // Check if geographic checkbox is read only
+    if ($('#geographic div.ro-val').length > 0)
+      checked = $('#geographic div.ro-val').data('val');
+    else
+      checked = $('#option_set_geographic').is(':checked');
+
+    // show/hide the allow coordinates field
+    if (checked) {
+      self.allow_coordinates_field.show();
+    } else {
+      self.allow_coordinates_field.hide();
+      self.allow_coordinates_field.find('input[type=checkbox]').attr('checked', false);
+    }
+  };
+
+  // reacts to changes to allow_coordinates checkbox
+  klass.prototype.allow_coordinates_changed = function() { var self = this;
+    var checked;
+    // Check if allow_coordinates checkbox is read only
+    if ($('#allow_coordinates div.ro-val').length > 0)
+      checked = $('#allow_coordinates div.ro-val').data('val');
+    else
+      checked = $('#option_set_allow_coordinates').is(':checked');
+
+    // Update whether coordinates can be edited in the options_field
+    self.options_field.list.allow_coordinates = checked;
   };
 
   // reacts to changes to multilevel checkbox
@@ -184,7 +226,7 @@
       data.option_set.children_attribs = self.prepare_options();
     }
 
-    // Upate some params OptionSet model, as this may be used by modal
+    // Update some params OptionSet model, as this may be used by modal
     self.params.option_set.name = data['option_set[name]'];
     self.params.option_set.multi_level = data['option_set[multi_level]'] == '1';
 
@@ -220,6 +262,12 @@
 
       if (node.item.option.id)
         prepared.option_attribs.id = node.item.option.id;
+
+      // include latitude and longitude if allow_coordinates is set
+      if ($('#option_set_allow_coordinates').is(':checked')) {
+        prepared.option_attribs.latitude = node.item.latitude;
+        prepared.option_attribs.longitude = node.item.longitude;
+      }
 
       // recurse
       prepared.children_attribs = node.children && node.children.length ? self.prepare_option_tree(node.children) : 'NONE';

@@ -1,17 +1,22 @@
 class Option < ActiveRecord::Base
   include MissionBased, FormVersionable, Translatable, Replication::Replicable
 
-  has_many(:option_sets, :through => :option_nodes)
-  has_many(:option_nodes, :inverse_of => :option, :dependent => :destroy, :autosave => true)
-  has_many(:answers, :inverse_of => :option)
-  has_many(:choices, :inverse_of => :option)
+  has_many(:option_sets, through: :option_nodes)
+  has_many(:option_nodes, inverse_of: :option, dependent: :destroy, autosave: true)
+  has_many(:answers, inverse_of: :option)
+  has_many(:choices, inverse_of: :option)
 
   after_save(:invalidate_cache)
   after_destroy(:invalidate_cache)
 
-  scope(:with_questions_and_forms, -> { includes(:option_sets => [:questionings, {:questions => {:questionings => :form}}]) })
+  scope(:with_questions_and_forms, -> { includes(option_sets: [:questionings, {questions: {questionings: :form}}]) })
 
   translates :name
+
+  with_options if: :has_coordinates? do |geographic|
+    geographic.validates :latitude, numericality: { greater_than_or_equal_to: -90, less_than_or_equal_to: 90 }
+    geographic.validates :longitude, numericality: { greater_than_or_equal_to: -180, less_than_or_equal_to: 180 }
+  end
 
   # We re-use options on replicate if they have the same canonical_name as the option being imported.
   # Options are not standardizable so we don't track the original_id (that would be overkill).
@@ -30,6 +35,8 @@ class Option < ActiveRecord::Base
   def has_choices?
     !choices.empty?
   end
+
+  def has_coordinates?; latitude.present? || longitude.present?; end
 
   # returns all forms on which this option appears
   def forms
@@ -54,7 +61,7 @@ class Option < ActiveRecord::Base
 
   def as_json(options = {})
     if options[:for_option_set_form]
-      super(:only => [:id, :name_translations], :methods => [:name, :set_names, :in_use?])
+      super(only: [:id, :latitude, :longitude, :name_translations], methods: [:name, :set_names, :in_use?])
     else
       super(options)
     end

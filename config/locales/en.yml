@@ -272,6 +272,7 @@ en:
       option:
         base: "" # this is a sort of hack to get error msg to display properly
       option_set:
+        allow_coordinates: "With Coordinates?"
         answers: "Answers"
         geographic: "Is Geographic?"
         multi_level: "Is Multilevel?"
@@ -448,6 +449,7 @@ en:
       option:
         name: "The textual description of this option that users will see."
       option_set:
+        allow_coordinates: "Whether this option set allows options with geographic coordinates."
         geographic: "Whether this option set represents geographic information, e.g. a set of provinces or regions."
         name: "A name that summarizes this set of options. Normal users will not see this name."
         multi_level: "Whether the option set has multiple levels of options, such as country -> state -> city."

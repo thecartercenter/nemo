@@ -36,7 +36,7 @@
     self.modal.find('button.btn-default').on('click', function(){ self.cancel_edit(); });
 
     // show/hide save button when translations change
-    $('body').on('keyup change', '.edit-named-item div.translation input', function(){ self.toggle_save_button_on_empty(); });
+    $('body').on('keyup change', '.edit-named-item div.translation input, .edit-named-item div.coordinate input', function(){ self.toggle_save_button(); });
 
     // Catch modal form submission.
     self.modal.on('keypress', function(e) {
@@ -47,15 +47,51 @@
     })
   };
 
-  klass.prototype.toggle_save_button_on_empty = function() { var self = this;
-    // if all translation boxes in this modal are blank, hide the 'save' button
-    var show = false;
-    self.modal.find('div.translation input').each(function(){
-      if ($(this).val().trim() != '') {
-        show = true;
-        return false;
-      }
+  klass.prototype.validate_modal = function () { var self = this;
+    var valid = true;
+
+    // if all translation boxes in this modal are blank, then the item is invalid
+    valid &= _.some(self.modal.find('div.translation input'), function(item){
+      return $(item).val().trim() != '';
     });
+
+    if (self.allow_coordinates) {
+      var latitude = self.modal.find('div.coordinate input[data-field=latitude]').val().trim();
+      var longitude = self.modal.find('div.coordinate input[data-field=longitude]').val().trim();
+
+      if (latitude !== '' || longitude !== '') {
+        if (latitude === '' || longitude === '') {
+          valid = false;
+        }
+
+        if (latitude !== '') {
+          if ($.isNumeric(latitude)) {
+            if (latitude > 90 || latitude < -90) {
+              valid = false;
+            }
+          } else {
+            valid = false;
+          }
+        }
+
+        if (longitude !== '') {
+          if ($.isNumeric(longitude)) {
+            if (longitude > 180 || longitude < -180) {
+              valid = false;
+            }
+          } else {
+            valid = false;
+          }
+        }
+      }
+    }
+
+    return valid;
+  };
+
+  klass.prototype.toggle_save_button = function() { var self = this;
+    // if all translation boxes in this modal are blank, hide the 'save' button
+    var show = self.validate_modal() == true;
     self.modal.find('.btn-primary')[show ? 'show' : 'hide']();
   };
 
@@ -235,7 +271,7 @@
     self.modal.find('.modal-title').text(self.modal_titles[options.mode]);
 
     // clear the text boxes
-    self.modal.find('.translation input').val("");
+    self.modal.find('input[type=text], input[type=number]').val("");
 
     // hide the in_use warning
     self.modal.find('div[id$=in_use_name_change_warning]').hide();
@@ -244,6 +280,17 @@
     self.active_item.locales().forEach(function(l){
       self.modal.find('.translation input[id$=name_' + l + ']').val(self.active_item.translation(l));
     });
+
+    // populate coordinates
+    if (self.allow_coordinates) {
+      self.modal.find('.coordinate').show();
+      self.modal.find('.coordinate input').attr('disabled', false);
+      self.modal.find('.coordinate input[id=option_latitude]').val(self.active_item.latitude);
+      self.modal.find('.coordinate input[id=option_longitude]').val(self.active_item.longitude);
+    } else {
+      self.modal.find('.coordinate').hide();
+      self.modal.find('.coordinate input').attr('disabled', true);
+    }
 
     // show the modal
     self.modal.modal('show');
@@ -255,7 +302,7 @@
       self.modal.find('input[type=text]')[0].focus();
     });
 
-    self.toggle_save_button_on_empty();
+    self.toggle_save_button();
   };
 
   // removes an item from the view
@@ -278,6 +325,10 @@
   klass.prototype.save_item = function() { var self = this;
     self.modal.find('.translation input').each(function(){
       self.active_item.update_translation({field: 'name', locale: $(this).data('locale'), value: $(this).val()});
+    });
+
+    self.modal.find('.coordinate input').each(function(){
+      self.active_item.update_coordinate({field: $(this).data('field'), value: $(this).val()});
     });
 
     self.wrapper.show();

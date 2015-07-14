@@ -37,6 +37,16 @@
             </div>
           <% end %>
 
+          <div class="coordinate">
+            <label for"option_latitude">Latitude</label>
+            <input type="number" step="any" class="form-control" id="option_latitude" data-field="latitude">
+          </div>
+
+          <div class="coordinate">
+            <label for"option_latitude">Longitude</label>
+            <input type="number" step="any" class="form-control" id="option_longitude" data-field="longitude">
+          </div>
+
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal"><%= I18n.t("common.cancel") %></button>

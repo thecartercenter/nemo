@@ -1,0 +1,17 @@
+<%
+    options = if answer.option.present?
+      # select_one
+      [answer.option]
+    else
+      # select_multiple
+      answer.choices.select(&:has_coordinates?).map(&:option)
+    end
+%>
+<div id="map_<%= answer.id %>" class="answer-map"></div>
+<script>
+  new ELMO.Views.AnswerMapView(<%=json({
+    el: "#map_#{answer.id}",
+    options: options,
+    small_marker_url: image_url('markers/small.png')
+  })%>);
+</script>
