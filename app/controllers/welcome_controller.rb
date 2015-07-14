@@ -92,7 +92,7 @@ class WelcomeController < ApplicationController
         location_answers = Answer.location_answers_for_mission(current_mission, current_user)
 
         @location_answers_count = location_answers.total_entries
-        @location_answers = location_answers.pluck(:response_id, :value)
+        @location_answers = location_answers.map { |answer| [answer.response_id, answer.value] }
       end
 
       unless fragment_exist?(@cache_key + '/stat_blocks')
