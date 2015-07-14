@@ -36,7 +36,7 @@
     self.modal.find('button.btn-default').on('click', function(){ self.cancel_edit(); });
 
     // show/hide save button when translations change
-    $('body').on('keyup change', '.edit-named-item div.translation input', function(){ self.toggle_save_button_on_empty(); });
+    $('body').on('keyup change', '.edit-named-item div.translation input, .edit-named-item div.coordinate input', function(){ self.toggle_save_button(); });
 
     // Catch modal form submission.
     self.modal.on('keypress', function(e) {
@@ -47,15 +47,51 @@
     })
   };
 
-  klass.prototype.toggle_save_button_on_empty = function() { var self = this;
-    // if all translation boxes in this modal are blank, hide the 'save' button
-    var show = false;
-    self.modal.find('div.translation input').each(function(){
-      if ($(this).val().trim() != '') {
-        show = true;
-        return false;
-      }
+  klass.prototype.validate_modal = function () { var self = this;
+    var valid = true;
+
+    // if all translation boxes in this modal are blank, then the item is invalid
+    valid &= _.some(self.modal.find('div.translation input'), function(item){
+      return $(item).val().trim() != '';
     });
+
+    if (self.allow_coordinates) {
+      var latitude = self.modal.find('div.coordinate input[data-field=latitude]').val().trim();
+      var longitude = self.modal.find('div.coordinate input[data-field=longitude]').val().trim();
+
+      if (latitude !== '' || longitude !== '') {
+        if (latitude === '' || longitude === '') {
+          valid = false;
+        }
+
+        if (latitude !== '') {
+          if ($.isNumeric(latitude)) {
+            if (latitude > 90 || latitude < -90) {
+              valid = false;
+            }
+          } else {
+            valid = false;
+          }
+        }
+
+        if (longitude !== '') {
+          if ($.isNumeric(longitude)) {
+            if (longitude > 180 || longitude < -180) {
+              valid = false;
+            }
+          } else {
+            valid = false;
+          }
+        }
+      }
+    }
+
+    return valid;
+  };
+
+  klass.prototype.toggle_save_button = function() { var self = this;
+    // if all translation boxes in this modal are blank, hide the 'save' button
+    var show = self.validate_modal() == true;
     self.modal.find('.btn-primary')[show ? 'show' : 'hide']();
   };
 
@@ -266,7 +302,7 @@
       self.modal.find('input[type=text]')[0].focus();
     });
 
-    self.toggle_save_button_on_empty();
+    self.toggle_save_button();
   };
 
   // removes an item from the view
