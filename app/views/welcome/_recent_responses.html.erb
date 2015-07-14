@@ -4,7 +4,7 @@
     <% if @responses.empty? %>
       <%= t('will_paginate.response.page_entries_info.single_page_html.zero') %>
     <% else %>
-      <%= index_table(Response, @responses, :table_only => true) %>
+      <%= index_table(Response, :table_only => true) %>
     <% end %>
   <% end %>
 

@@ -1,4 +1,4 @@
-<%= elmo_form_for(@user_session, :url => login_confirmation_path, :style => :minimal) do |f| %>
+<%= elmo_form_for(@user_session, :url => login_confirmation_path, :html => { :class => :minimal }) do |f| %>
   <%= f.field(:password, :type => :password) %>
   <%= f.field(:verify, :content => recaptcha_tags) if captcha_required? %>
   <div class="submit-buttons">

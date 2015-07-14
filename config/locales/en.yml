@@ -13,6 +13,9 @@ en:
     by: "By"
     cancel: "Cancel"
     choose: "Choose"
+    choose_file:
+      one: "Choose File..."
+      other: "Choose Files..."
     clear: "Clear"
     clone: "Clone"
     close: "Close"
@@ -36,6 +39,7 @@ en:
     found: "Found"
     generate: "Generate"
     inactive: "Inactive"
+    import: "Import"
     incoming: "Incoming"
     language: "Language"
     login: "Login"
@@ -155,6 +159,10 @@ en:
         zero: "Missions"
         one: "Mission"
         other: "Missions"
+      operation:
+        zero: "Operations"
+        one: "Operation"
+        other: "Operations"
       option:
         zero: "Options"
         one: "Option"
@@ -251,6 +259,16 @@ en:
       mission:
         compact_name: "Compact Name"
         locked: "Locked?"
+      operation:
+        created_at: "Time Started"
+        creator: "Started By"
+        description: "Description"
+        job_started_at: "Started At"
+        job_failed_at: "Failed At"
+        job_completed_at: "Completed At"
+        job_outcome_url: "Outcome URL"
+        job_error_report: "Error Report"
+        status: "Status"
       option:
         base: "" # this is a sort of hack to get error msg to display properly
       option_set:
@@ -351,7 +369,7 @@ en:
         role: "Role"
         api_key: "API Key"
       user_batch:
-        batch: "User Attributes"
+        file: "File"
 
     # these strings override the attribute strings above in table headers only
     table_headers:
@@ -382,6 +400,10 @@ en:
         show: "View Mission"
         edit: "Edit Mission"
         destroy: "Delete Mission"
+      operation:
+        clear: "Clear All Operations"
+        destroy: "Clear Operation"
+        index: "List Operations"
       option_set:
         new: "Create New Option Set"
         index: "List Option Sets"
@@ -503,14 +525,6 @@ en:
         pref_lang: "The language in which you would like to use the system."
         role: "The role of the user in the current mission, and whether or not they are presently active. Inactive users cannot access the mission at all."
         api_key: "Use this key to connect to other Elmo applications."
-      user_batch:
-        batch: |-
-          Enter names, email addresses, and phone numbers (WITH country codes), one per line, separated by commas or tabs. For example:
-
-          Alice Merrywinkle, alice@winkle.org, +20112313411
-          Chung Li, cli@gmail.com
-          Forgo Niambot, +203300303, +2083748374
-          Stewbuilder Dennis, chow@yahoo.co.uk, +20923187493
 
     # all error messages should be full sentences with a period, for consistency.
     errors:
@@ -627,6 +641,10 @@ en:
               invalid: "Please use only letters, numbers, or periods."
             reset_password_method:
               cant_passwd_email: "You can't %{verb} password by email because you didn't specify an email address."
+        user_batch:
+          general: "User batch is invalid (see below)."
+          invalid_headers: "The uploaded spreadsheet has invalid headers."
+          too_many_errors: "The uploaded spreadsheet has too many errors. Processing stopped at row %{row}."
 
   # application-wide strings
   layout:
@@ -813,6 +831,9 @@ en:
       index: "Missions"
       new: "New Mission"
       show: "Mission: %{name}"
+    operations:
+      index: "Operations"
+      show: "Operation: %{name}"
     option_sets:
       edit: "Edit Option Set: %{name}"
       index: "Option Sets"
@@ -1059,6 +1080,28 @@ en:
     none_found: "No matching options found"
     searching: "Searching..."
     type_to_add_new: "Type an option name"
+
+  operation:
+    clear_confirm: "Are you sure you want to clear all operations?"
+    description:
+      user_import_operation_job: User import for %{mission_name} from %{file}
+    outcome_link_text: "link"
+    status:
+      completed: "Success"
+      failed: "Failed"
+      pending: "Pending"
+      running: "Running"
+    summary:
+      all_in_progress:
+        one: "1 operation in progress"
+        other: "%{count} operations in progress"
+      some_completed: "%{completed}/%{total} operations complete"
+      all_completed:
+        one: "1 operation complete"
+        other: "%{count} operations complete"
+      with_errors:
+        one: "%{message} (1 error)"
+        other: "%{message} (%{count} errors)"
 
   tag:
     none_found: "No matching tags found"
@@ -1675,16 +1718,11 @@ en:
     must_login: "You must login to access that page."
 
   user_batch:
-    bad_tokens: "Could not understand these pieces: %{tokens}"
-    instructions: |-
-      In the box below, enter names, email addresses, and phone numbers (WITH country codes), one per line, separated by commas or tabs. For example:
-
-      Alice Merrywinkle, alice@winkle.org, +20112313411
-      Chung Li, cli@gmail.com
-      Forgo Niambot, +203300303, +2083748374
-      Stewbuilder Dennis, chow@yahoo.co.uk, +20923187493
-    error: "There was an error creating the users. See below."
-    success: "Users created successfully."
+    instructions_html: |-
+      Upload a spreadsheet with your users. An <a href="%{url}">example spreadsheet</a> is available as a starting point.
+    import_queued_html: |-
+      User batch import queued. Check the <a href="%{url}">operations panel</a> for info.
+    row_error: "Row %{row}: %{error}"
 
   user:
     add_assignment: "Add Assignment"

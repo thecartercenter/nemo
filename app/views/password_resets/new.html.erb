@@ -1,4 +1,4 @@
-<%= elmo_form_for(@password_reset, :style => :minimal) do |f| %>
+<%= elmo_form_for(@password_reset, :html => { :class => :minimal }) do |f| %>
   <p class="instructions"><%= t("password_reset.fill_out_form") %></p>
   <%= f.field(:email) %>
   <div class="submit-buttons">

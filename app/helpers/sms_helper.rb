@@ -27,10 +27,6 @@ module SmsHelper
     end
   end
 
-  def sms_messages_index_links(smses)
-    []
-  end
-
   def user_with_phone(user, phone = nil)
     output = ''.html_safe
 

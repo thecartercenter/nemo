@@ -15,6 +15,7 @@ class User < ActiveRecord::Base
   has_many :broadcast_addressings, :inverse_of => :user, :dependent => :destroy
   has_many :assignments, :autosave => true, :dependent => :destroy, :validate => true, :inverse_of => :user
   has_many :missions, -> { order "missions.created_at DESC" }, through: :assignments
+  has_many :operations, :inverse_of => :creator, :foreign_key => :creator_id, :dependent => :destroy
   has_many :user_groups, :dependent => :destroy
   has_many :groups, :through => :user_groups
   belongs_to :last_mission, class_name: 'Mission'
@@ -80,8 +81,8 @@ class User < ActiveRecord::Base
 
   def self.suggest_login(name)
     # if it looks like a person's name, suggest f. initial + l. name
-    if m = name.match(/\A([a-z][a-z']+) ([a-z'\- ]+)\z/i)
-      l = $1[0,1] + $2.gsub(/[^a-z]/i, "")
+    if m = name.match(/\A([a-z][a-z'’]+) ([a-z'’\- ]+)\z/i)
+      l = $1[0,1] + $2.gsub(/[^a-z]+/i, "")
     # otherwise just use the whole thing and strip out weird chars
     else
       l = name.gsub(/[^a-z0-9\.]/i, "")

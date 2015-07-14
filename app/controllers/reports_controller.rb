@@ -81,11 +81,10 @@ class ReportsController < ApplicationController
     render(:json => @report_data.to_json)
   end
 
-  protected
-    # specify the class the this controller controls, since it's not easily guessed
-    def model_class
-      Report::Report
-    end
+  # specify the class the this controller controls, since it's not easily guessed
+  def model_class
+    Report::Report
+  end
 
   private
     # custom load method because CanCan won't work with STI hack in report.rb

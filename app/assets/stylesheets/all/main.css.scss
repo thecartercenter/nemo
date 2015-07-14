@@ -80,37 +80,69 @@ div.popover {
 /* index tables */
 table.index_table {
   width: 100%;
+
+  &.index-table-narrow {
+    width: auto;
+    min-width: 66%;
+  }
+
   tr:first-child td {
     border-top: none;
   }
 
+  tr:last-child td {
+    border-bottom: 1px solid #ddd;
+  }
+
   td {
     vertical-align: middle;
+
+    border-top: 1px solid #ddd;
+    padding: 6px 10px 6px 3px;
+
+    /* many of the cells are links, and they are harder to read if they are orange, so revert to blue */
+    a {
+      color: $elmo-darker-blue;
+      padding: 5px 0;
+    }
+  }
+
+  td.actions_col { white-space: nowrap; }
+
+  td.actions_col img {
+    margin-right: 5px;
+  }
+
+  tbody tr.clickable {
+    cursor: pointer;
+  }
+
+  tbody tr:hover, tbody tr.hovered {
+    background-color: #ECF1F5;
+  }
+
+  i.fa-certificate {
+    margin-bottom: -5px;
+    font-size: 1.5em;
+  }
+
+  .tags {
+    display: inline;
+    line-height: 2.1;
+    margin-left: 3px;
+    vertical-align: text-top;
+    li {
+      float: none;
+      display: inline;
+    }
+    i.fa-certificate { font-size: 1em; }
   }
 }
+
 table.index_table th, table.form th { text-align: left; color: #444; background-color: $super-light-gray;
     font-size: 90%; padding: 3px 10px 3px 3px; }
-table.index_table td {
-  border-top: 1px solid #ddd;
-  padding: 6px 10px 6px 3px;
-
-  /* many of the cells are links, and they are harder to read if they are orange, so revert to blue */
-  a {
-    color: $elmo-darker-blue;
-    padding: 5px 0;
-  }
-}
-table.index_table tr:last-child td { border-bottom: 1px solid #ddd; }
-table.index_table td.actions_col img { margin-right: 5px; }
-table.index_table tbody tr.clickable { cursor: pointer; }
-table.index_table tbody tr:hover, table.index_table tbody tr.hovered { background-color: #ECF1F5; }
-td.actions_col { white-space: nowrap; }
 div.loading_indicator_inline { width: 16px; display: inline-block; vertical-align: top; }
 div.loading_indicator_floating { width: 16px; float: left; }
-table.index_table i.fa-certificate {
-  margin-bottom: -5px;
-  font-size: 1.5em;
-}
 
 div.loading_indicator {
   .success {
@@ -123,18 +155,6 @@ div.loading_indicator {
 
 i.fa-certificate {
   color: $gold;
-}
-
-table.index_table .tags {
-  display: inline;
-  line-height: 2.1;
-  margin-left: 3px;
-  vertical-align: text-top;
-  li {
-    float: none;
-    display: inline;
-  }
-  i.fa-certificate { font-size: 1em; }
 }
 
 /* set of links */
