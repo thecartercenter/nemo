@@ -60,10 +60,10 @@ class Answer < ActiveRecord::Base
 
     if qtype.name == "select_one"
       # 'none' will be returned for a blank choice for a multilevel set.
-      self.option_id = OptionNode.id_to_option_id(str[2..-1]) unless str == 'none'
+      self.option_id = option_id_for_submission(str) unless str == 'none'
 
     elsif qtype.name == "select_multiple"
-      str.split(' ').each{ |oid| choices.build(option_id: OptionNode.id_to_option_id(oid[2..-1])) }
+      str.split(' ').each{ |oid| choices.build(option_id: option_id_for_submission(oid)) }
 
     elsif qtype.temporal?
       # Strip timezone info for datetime and time.
@@ -204,6 +204,17 @@ class Answer < ActiveRecord::Base
         else
           self.value = ""
         end
+      end
+    end
+
+    # finds the appropriate Option instance for an ODK submission
+    def option_id_for_submission(id_or_str)
+      if id_or_str =~ /\Aon(\d+)\z/
+        # look up inputs of the form "on####" as option node ids
+        OptionNode.id_to_option_id($1)
+      else
+        # look up other inputs as option ids
+        Option.where(id: id_or_str).pluck(:id)
       end
     end
 end
