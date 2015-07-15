@@ -46,6 +46,9 @@ class OptionSetsController < ApplicationController
     render(:form)
   end
 
+  def import
+  end
+
   def export
     @headers = @option_set.headers_for_export
     @rows = @option_set.arrange_as_rows

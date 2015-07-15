@@ -3,13 +3,10 @@
   <%# need to print this here if in ajax mode %>
   <%= render("layouts/flash", :flash => flash) if request.xhr? %>
 
-  <%= top_action_links(@option_set, :append => [:import, :export]) unless request.xhr? %>
+  <%= render('top_action_links') %>
 
   <% if form_mode == :edit %>
-    <%= published_warning(@option_set) if @option_set.published? %>
-    <%= appears_elsewhere_warning(@option_set) if @option_set.has_questions? %>
-    <%= multi_level_forbidden_notice if @option_set.has_select_multiple_questions? %>
-    <%= huge_notice if @option_set.huge? %>
+    <%= render('warnings') %>
   <% end %>
 
   <%= elmo_form_for(@option_set) do |f| %>
