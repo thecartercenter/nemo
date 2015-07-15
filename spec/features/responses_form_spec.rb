@@ -125,6 +125,34 @@ feature 'responses form', js: true, sphinx: true do
     end
   end
 
+  describe 'reviewer notes' do
+
+    before do
+      @observer = create(:user, role_name: :observer)
+      @form = create(:form, question_types: %w(integer))
+      @notes = "Zero? (##{SecureRandom.hex})"
+      @response = create(:response, form: @form, answer_values: [0], reviewer_notes: @notes, user: @observer)
+    end
+
+    scenario 'should not be visible to normal users' do
+      login(@observer)
+      visit(response_path(@response, locale: 'en', mode: 'm', mission_name: get_mission.compact_name))
+      expect(page).not_to have_content(@notes)
+    end
+
+    scenario 'should be visible to admin' do
+      login(create(:user, admin: true))
+      visit(response_path(@response, locale: 'en', mode: 'm', mission_name: get_mission.compact_name))
+      expect(page).to have_content(@notes)
+    end
+
+    scenario 'should be visible to staffer' do
+      login(create(:user, role_name: :staffer))
+      visit(response_path(@response, locale: 'en', mode: 'm', mission_name: get_mission.compact_name))
+      expect(page).to have_content(@notes)
+    end
+  end
+
   def control_id(qing, suffix)
     "response_answers_attributes_#{qing.id}#{suffix}"
   end

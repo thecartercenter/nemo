@@ -240,7 +240,8 @@ class ResponsesController < ApplicationController
 
     def response_params
       if params[:response]
-        params.require(:response).permit(:form_id, :user_id, :incomplete, :reviewed).tap do |whitelisted|
+        reviewer_only = [:reviewed, :reviewer_notes] if @response.present? && can?(:review, @response)
+        params.require(:response).permit(:form_id, :user_id, :incomplete, *reviewer_only).tap do |whitelisted|
           whitelisted[:answers_attributes] = {}
 
           # The answers_attributes hash might look like {'2746' => { ... }, '2731' => { ... }, ... }
