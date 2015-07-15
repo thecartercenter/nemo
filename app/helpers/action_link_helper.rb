@@ -16,21 +16,27 @@ module ActionLinkHelper
   # Builds links for the action links at the top of a new/edit/show page.
   # If a block is given, appends return value from block to end of div.
   # Block should returns an html_safe string.
-  def top_action_links(obj, options = {}, &block)
-    options[:except] = Array.wrap(options[:except] || [])
+  def top_action_links(*args, &block)
+    options = args.extract_options!
+    options[:except] = Array.wrap(options[:except])
     options[:only] = Array.wrap(options[:only]) unless options[:only].nil?
+    options[:append] = Array.wrap(options[:append])
 
-    options[:controller] ||= obj.class.model_name.plural
+    obj = args.first
+    raise ArgumentError, 'Missing target object' unless obj.present?
+
+    controller ||= obj.class.model_name.plural
     i18nk = obj.class.model_name.i18n_key
 
-    actions_to_show = options[:only] || [:index, :new, :show, :edit, :destroy, :export]
-    actions_to_show -= [:new, :show, :edit, :destroy, :export] if canonical_action == :new
+    actions_to_show = options[:only] || [:index, :new, :show, :edit, :destroy]
+    actions_to_show -= [:new, :show, :edit, :destroy] if canonical_action == :new
     actions_to_show -= options[:except]
+    actions_to_show += options[:append]
     actions_to_show.delete(canonical_action)
 
     content_tag(:div, :class => 'top-action-links') do
       main_links = actions_to_show.map do |action|
-        url = url_for(controller: options[:controller], action: action) rescue nil
+        url = url_for(controller: controller, action: action) rescue nil
 
         if url && can?(action, %w(index new).include?(action) ? obj.class : obj)
           link_to(icon_tag(action) + translate_action(obj, action), url,
