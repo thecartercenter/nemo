@@ -27,6 +27,15 @@
     <tr>
       <td class="rank"></td>
       <td class="pointer">
+        <em><%= Response.human_attribute_name(:user_id) %> </em>
+      </td>
+      <td class="answers">
+        <%= answer_space(" " * 7, :show_spc_glyph => false) %>
+      </td>
+    </tr>
+    <tr>
+      <td class="rank"></td>
+      <td class="pointer">
         <em><%= t("sms_form.guide.unique_code") %> </em>
       </td>
       <td class="answers">
