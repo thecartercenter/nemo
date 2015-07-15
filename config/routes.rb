@@ -126,6 +126,7 @@ ELMO::Application.routes.draw do
         get 'options_for_node', path: 'options-for-node'
         put 'clone'
         get 'export', defaults: { format: 'xlsx' }
+        get 'import'
       end
     end
 

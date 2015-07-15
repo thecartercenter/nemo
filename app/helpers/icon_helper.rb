@@ -6,6 +6,7 @@ module IconHelper
     destroy: "trash-o",
     edit: "pencil",
     export: "download",
+    import: "upload",
     index: "list",
     form: "file-text-o",
     map: "globe",
