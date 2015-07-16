@@ -5,7 +5,7 @@ class OptionSetImport
 
   attr_accessor :mission_id, :name, :file
 
-  validates(:mission_id, presence: true)
+  validates(:mission, presence: true)
   validates(:name, presence: true)
   validates(:file, presence: true)
 
@@ -24,5 +24,9 @@ class OptionSetImport
   def mission=(mission)
     self.mission_id = mission.try(:id)
     @mission = mission
+  end
+
+  def create_option_set
+    return false if invalid?
   end
 end

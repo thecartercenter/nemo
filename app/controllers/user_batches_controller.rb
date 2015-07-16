@@ -22,7 +22,7 @@ class UserBatchesController < ApplicationController
           description: t('operation.description.user_import_operation_job', file: @user_batch.file.original_filename, mission_name: current_mission.name))
         operation.begin!(current_mission, stored_path)
 
-        flash[:notice] = t('user_batch.import_queued_html', url: operations_path).html_safe
+        flash[:notice] = t('import.queued_html', type: UserBatch.model_name.human, url: operations_path).html_safe
         redirect_to(users_url)
       rescue => e
         Rails.logger.error(e)
