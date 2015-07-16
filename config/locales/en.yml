@@ -414,7 +414,7 @@ en:
         edit: "Edit Option Set"
         destroy: "Delete Option Set"
         export: "Export Option Set"
-        import: "Import Option Set"
+        import: "Import New Option Set"
       question:
         new: "Create New Question"
         index: "List Questions"
