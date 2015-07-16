@@ -214,7 +214,7 @@ class Answer < ActiveRecord::Base
         OptionNode.id_to_option_id($1)
       else
         # look up other inputs as option ids
-        Option.where(id: id_or_str).pluck(:id)
+        Option.where(id: id_or_str).pluck(:id).first
       end
     end
 end
