@@ -5,7 +5,7 @@ class OptionSetsController < ApplicationController
   before_filter :arrayify_attribs, :only => [:create, :update]
 
   # authorization via cancan
-  load_and_authorize_resource
+  load_and_authorize_resource :new => [:import]
   skip_authorization_check :only => :options_for_node
 
   def index
@@ -46,9 +46,6 @@ class OptionSetsController < ApplicationController
     render(:form)
   end
 
-  def import
-  end
-
   def export
     @headers = @option_set.headers_for_export
     @rows = @option_set.arrange_as_rows
@@ -82,6 +79,10 @@ class OptionSetsController < ApplicationController
 
       create_or_update
     end
+  end
+
+  def import
+    render(:form)
   end
 
   def destroy

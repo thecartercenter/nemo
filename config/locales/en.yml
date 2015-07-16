@@ -841,7 +841,7 @@ en:
       show: "Operation: %{name}"
     option_sets:
       edit: "Edit Option Set: %{name}"
-      import: "Import Option Set: %{name}"
+      import: "Import Option Set"
       index: "Option Sets"
       new: "New Option Set"
       show: "Option Set: %{name}"
