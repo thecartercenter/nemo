@@ -122,15 +122,16 @@ ELMO::Application.routes.draw do
     resources :form_items, path: 'form-items', only: [:update]
 
     resources :option_sets, path: 'option-sets' do
-      collection do
-        get 'import'
-        post 'import' => 'option_sets#process_import'
-      end
-
       member do
         get 'options_for_node', path: 'options-for-node'
         put 'clone'
         get 'export', defaults: { format: 'xlsx' }
+      end
+    end
+
+    resource :option_set_imports, path: 'option-set-imports', only: [:new, :create] do
+      collection do
+        get 'example_spreadsheet', path: 'example-option-set', defaults: { format: 'xlsx' }
       end
     end
 

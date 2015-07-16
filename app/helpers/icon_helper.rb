@@ -15,6 +15,8 @@ module IconHelper
     operation: 'gears',
     optionset: 'list-ul',
     option_set: "list-ul",
+    optionsetimport: "list-ul",
+    option_set_import: "list-ul",
     print: "print",
     publish: "arrow-up",
     question: "question-circle",

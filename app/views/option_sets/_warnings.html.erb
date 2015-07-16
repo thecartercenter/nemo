@@ -1,4 +1,0 @@
-<%= published_warning(@option_set) if @option_set.published? %>
-<%= appears_elsewhere_warning(@option_set) if @option_set.has_questions? %>
-<%= multi_level_forbidden_notice if @option_set.has_select_multiple_questions? %>
-<%= huge_notice if @option_set.huge? %>

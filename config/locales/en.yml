@@ -414,7 +414,8 @@ en:
         edit: "Edit Option Set"
         destroy: "Delete Option Set"
         export: "Export Option Set"
-        import: "Import New Option Set"
+      option_set_import:
+        new: "Import New Option Set"
       question:
         new: "Create New Question"
         index: "List Questions"
@@ -586,6 +587,8 @@ en:
           cant_delete_if_has_answers: "You can't delete this Option Set because it is included in at least one Answer."
           general: "There was a problem saving the option set."
           wrong_depth: "You have %{levels} option levels but your option tree is %{depth} options deep."
+        option_set_import:
+          general: "Option Set import is invalid (see below)."
         question:
           at_least_one_name: "You must enter a title in at least one language."
           attributes:
@@ -841,10 +844,11 @@ en:
       show: "Operation: %{name}"
     option_sets:
       edit: "Edit Option Set: %{name}"
-      import: "Import Option Set"
       index: "Option Sets"
       new: "New Option Set"
       show: "Option Set: %{name}"
+    option_set_imports:
+      new: "Import New Option Set"
     options:
       edit: "Edit Option: %{name}"
       index: "Options"
@@ -1086,6 +1090,10 @@ en:
     none_found: "No matching options found"
     searching: "Searching..."
     type_to_add_new: "Type an option name"
+
+  option_set_import:
+    instructions_html: |-
+      Upload a spreadsheet with your option set. An <a href="%{url}">example spreadsheet</a> is available as a starting point.
 
   operation:
     clear_confirm: "Are you sure you want to clear all operations?"
