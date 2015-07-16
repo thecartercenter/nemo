@@ -1,40 +1,37 @@
 class UserBatchesController < ApplicationController
+  include UploadProcessable
+
   # authorization via cancan
   load_and_authorize_resource
+  skip_authorize_resource only: [:example_spreadsheet]
 
   # ensure a recent login for all actions
   before_action :require_recent_login
 
   def new
-    prepare_and_render_form
+    render('form')
   end
 
   def create
     if @user_batch.valid?
       begin
-        uploaded = user_batch_params[:file]
-        stored = private_upload_path(uploaded)
-        FileUtils.mkdir_p(File.dirname(stored), mode: 0755)
-        File.open(stored, 'wb') do |file|
-          file.write(uploaded.read)
-        end
+        stored_path = store_uploaded_file(@user_batch.file)
 
-        operation = Operation.new(
+        operation = current_user.operations.build(
           job_class: UserImportOperationJob,
-          description: t('operation.description.user_import_operation_job', file: uploaded.original_filename, mission_name: current_mission.name),
-          creator: current_user)
-        operation.begin!(current_mission, stored)
+          description: t('operation.description.user_import_operation_job', file: @user_batch.file.original_filename, mission_name: current_mission.name))
+        operation.begin!(current_mission, stored_path)
 
         flash[:notice] = t('user_batch.import_queued_html', url: operations_path).html_safe
         redirect_to(users_url)
       rescue => e
         Rails.logger.error(e)
-        flash.now[:error] = I18n.t('activerecord.errors.models.user_batch.general')
-        prepare_and_render_form
+        flash.now[:error] = I18n.t('activerecord.errors.models.user_batch.internal')
+        render('form')
       end
     else
       flash.now[:error] = I18n.t('activerecord.errors.models.user_batch.general')
-      prepare_and_render_form
+      render('form')
     end
   end
 
@@ -48,16 +45,6 @@ class UserBatchesController < ApplicationController
   end
 
   private
-
-    # prepares objects for and renders the form template
-    def prepare_and_render_form
-      render :form
-    end
-
-    def private_upload_path(file)
-      file_name = "user_batch-#{SecureRandom.uuid}-#{file.original_filename}"
-      Rails.root.join('tmp', 'uploads', file_name).to_s
-    end
 
     def user_batch_params
       if params[:user_batch]
