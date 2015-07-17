@@ -375,36 +375,38 @@ describe Sms::Decoder do
     expect(response.form_id).to eq(@form.id)
 
     # ensure the answers match the expected ones
-    response.answers.each do |ans|
+    @form.root_questionings.each do |qing|
       # ensure an expected answer was given for this question
-      expect(options[:answers].size >= ans.questioning.rank).to be_truthy, "No expected answer was given for question #{ans.questioning.rank}"
+      expect(options[:answers].size >= qing.rank).to be_truthy, "No expected answer was given for question #{qing.rank}"
 
       # copy the expected value
-      expected = options[:answers][ans.questioning.rank - 1]
+      expected = options[:answers][qing.rank - 1]
 
       # replace the array index with nil so that we know this one has been looked at
-      options[:answers][ans.questioning.rank - 1] = nil
+      options[:answers][qing.rank - 1] = nil
+
+      ansset = response.answer_set_for_questioning(qing)
 
       # ensure answer matches
-      case ans.questioning.question.qtype.name
+      case qing.qtype_name
       when "integer"
-        expect(ans.value.to_i).to eq(expected)
+        expect(ansset.value.to_i).to eq(expected)
       when "decimal"
-        expect(ans.value.to_f).to eq(expected)
+        expect(ansset.value.to_f).to eq(expected)
       when "select_one"
         # for select one, the expected value is the english translation of the desired option
-        expect(ans.option.name_en).to eq(expected)
+        expect(ansset.first.option.name_en).to eq(expected)
       when "select_multiple"
         # for select multiple, the expected value is an array of the english translations of the desired options
-        expect(ans.choices.collect{|c| c.option.name_en}).to eq(expected)
+        expect(ansset.choices.collect{|c| c.option.name_en}).to eq(expected)
       when "text", "long_text"
-        expect(ans.value).to eq(expected)
+        expect(ansset.value).to eq(expected)
       when "date"
-        expect(ans.date_value).to eq(expected)
+        expect(ansset.date_value).to eq(expected)
       when "time"
-        expect(ans.time_value).to eq(expected)
+        expect(ansset.time_value).to eq(expected)
       when "datetime"
-        expect(ans.datetime_value).to eq(expected)
+        expect(ansset.datetime_value).to eq(expected)
       else
         raise "Unexpected type"
       end
