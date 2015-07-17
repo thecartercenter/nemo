@@ -49,7 +49,7 @@ class OptionSetImport
         allow_coordinates: allow_coordinates,
         root_node: OptionNode.new)
 
-      # State variables.
+      # State variables. cur_ranks has a default value of 0 to simplify the code below.
       cur_nodes, cur_ranks = Array.new(headers.size), Array.new(headers.size, 0)
       rows.each_with_index do |row, r|
         leaf_attribs = row.extract_options!
@@ -64,9 +64,10 @@ class OptionSetImport
 
               # Create the node.
               parent = c == 0 ? option_set.root_node : cur_nodes[c-1]
+              cur_ranks[c] += 1
               cur_nodes[c] = parent.children.create!(
                 mission: mission,
-                rank: ++cur_ranks[c],
+                rank: cur_ranks[c],
                 option_set: option_set,
                 option: option)
             end
