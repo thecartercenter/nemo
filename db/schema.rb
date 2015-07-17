@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150714205221) do
+ActiveRecord::Schema.define(version: 20150717142454) do
 
   create_table "answers", force: :cascade do |t|
     t.integer  "response_id",    limit: 4
@@ -267,6 +267,7 @@ ActiveRecord::Schema.define(version: 20150714205221) do
     t.integer  "original_id",       limit: 4
     t.string   "access_level",      limit: 255,                            default: "inherit", null: false
     t.boolean  "standard_copy",     limit: 1,                              default: false,     null: false
+    t.boolean  "text_type_for_sms", limit: 1,                              default: false,     null: false
   end
 
   add_index "questions", ["mission_id", "code"], name: "index_questions_on_mission_id_and_code", unique: true, using: :btree
@@ -479,7 +480,7 @@ ActiveRecord::Schema.define(version: 20150714205221) do
   add_foreign_key "form_items", "missions", name: "questionings_mission_id_fk"
   add_foreign_key "form_items", "questions", name: "questionings_question_id_fk"
   add_foreign_key "form_versions", "forms", name: "form_versions_form_id_fk"
-  add_foreign_key "forms", "form_versions", column: "current_version_id", name: "forms_current_version_id_fk"
+  add_foreign_key "forms", "form_versions", column: "current_version_id", name: "forms_current_version_id_fk", on_delete: :nullify
   add_foreign_key "forms", "forms", column: "original_id", name: "forms_standard_id_fk"
   add_foreign_key "forms", "missions", name: "forms_mission_id_fk"
   add_foreign_key "groups", "missions", name: "groups_mission_id_fk"
