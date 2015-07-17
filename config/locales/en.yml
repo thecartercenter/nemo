@@ -1678,6 +1678,7 @@ en:
         integer: "Write your answer here."
         decimal: "Write your answer here."
         select_one: "Write the letter for your choice here. Write only one letter."
+        select_one_as_text: "Write your answer here. Be sure to write the exact option name."
         select_multiple: "Write the letter for each choice here with no spaces."
         datetime: "Write your answer here in YYYYMMDD HHMM format."
         date: "Write your answer here in YYYYMMDD format."

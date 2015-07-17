@@ -107,7 +107,7 @@ module FormsHelper
     content = case qing.question.qtype.name
     when "integer" then "3"
     when "decimal" then "12.5"
-    when "select_one" then "b"
+    when "select_one" then qing.text_type_for_sms? ? qing.first_leaf_option.name : "b"
     when "select_multiple" then "ac"
     when "datetime" then "20120228 1430"
     when "date" then "20121118"
@@ -126,7 +126,8 @@ module FormsHelper
   def answer_space_for_question(qing)
     # determine the number of spaces
     size = case qing.question.qtype.name
-    when "integer", "select_one" then 1
+    when "integer" then 1
+    when "select_one" then qing.text_type_for_sms? ? 8 : 1
     when "decimal" then 2
     when "time", "select_multiple" then 4
     when "date" then 6

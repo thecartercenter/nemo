@@ -72,6 +72,7 @@ class OptionSet < ActiveRecord::Base
            :arrange_with_options,
            :option_path_to_rank_path,
            :rank_path_to_option_path,
+           :first_leaf_option,
            to: :root_node
 
   # These methods are for the form.

@@ -72,6 +72,7 @@ class Question < ActiveRecord::Base
 
   delegate :options,
            :all_options,
+           :first_leaf_option,
            :first_level_options,
            :geographic?,
            :option_path_to_rank_path,

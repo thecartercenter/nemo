@@ -23,6 +23,7 @@ class Questioning < FormItem
            :has_options?,
            :options,
            :all_options,
+           :first_leaf_option,
            :option_path_to_rank_path,
            :rank_path_to_option_path,
            :select_options,

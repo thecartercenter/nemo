@@ -57,7 +57,7 @@
       </tr>
 
       <%# options area, for select_* questions %>
-      <% if qing.question.qtype.has_options? %>
+      <% if qing.question.qtype.has_options? && !qing.text_type_for_sms? %>
         <tr>
           <td class="rank"></td>
           <td class="options">
@@ -74,7 +74,8 @@
         <td class="rank"></td>
         <td class="pointer">
           <em>
-            <%= t("sms_form.guide.pointers.#{qing.question.qtype.name}") %>
+            <% qtype_name = qing.text_type_for_sms? ? 'select_one_as_text' : qing.qtype_name %>
+            <%= t("sms_form.guide.pointers.#{qtype_name}") %>
             <%= sms_example_for_question(qing) %>
           </em>
         </td>
