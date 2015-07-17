@@ -19,7 +19,7 @@ module ElmoFormHelper
   # renders a set of form fields using the ElmoFormBuilder
   def elmo_fields_for(field_name, obj, *args, &block)
     defaults = {
-      builder: ElmoForBuilder
+      builder: ElmoFormBuilder
     }
 
     # deep merge the user-provided options with the defaults;
