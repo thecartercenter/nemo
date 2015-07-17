@@ -129,9 +129,9 @@ class OptionSetImport
       # Quit if there are no rows.
       raise "No rows to import." if rows.empty?
 
-      # Sort array ensuring stability.
+      # Sort array ensuring stability. Use JSON representation to flatten attribs hash.
       n = 0
-      rows.sort_by!{ |r| n += 1; r + [n] }
+      rows.sort_by!{ |r| n += 1; (r + [n]).to_json }
 
       # Remove any duplicates (efficiently, now that we're sorted).
       last = -1
