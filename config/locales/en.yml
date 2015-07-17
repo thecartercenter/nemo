@@ -299,6 +299,7 @@ en:
         option_set_id: "Option Set"
         qtype_name: "Type"
         tag_ids: "Tags"
+        text_type_for_sms: "Free Response on SMS Forms?"
       questioning:
         name: "Title"
         condition: "Condition?"
@@ -471,6 +472,7 @@ en:
         option_set_id: "The set of options the user will be able to choose from."
         qtype_name: "The kind of information the user will be entering."
         access_level: "Inherit: Same access level as parent form. Private: No one can access the data via the API, regardless of parent form access level."
+        text_type_for_sms: "If checked, this question will appear on the SMS Guide as a free response text question. Useful for questions with large option sets. Ignore if SMS use is not planned for this form."
       questioning:
         hidden: "Whether this question will be shown on this form. Use this to disable a question if you can't delete it. This value will override the condition and required settings below."
         condition: "An optional condition which must be met in order for this question to be shown to the user."

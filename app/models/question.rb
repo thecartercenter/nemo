@@ -255,6 +255,9 @@ class Question < ActiveRecord::Base
 
       normalize_constraint_values
 
+      # Only allowed for select_one questions.
+      self.text_type_for_sms = false unless qtype_name == 'select_one'
+
       return true
     end
 
