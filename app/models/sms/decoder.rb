@@ -138,21 +138,17 @@ class Sms::Decoder
         build_answer(:value => @value)
 
       when "select_one"
-        # case insensitive
-        @value.downcase!
-
         if @qing.text_type_for_sms?
-          option = @qing.option_set.all_options.where(canonical_name: @value).first
-
+          option = @qing.option_set.all_options.where(canonical_name: @value.downcase).first
+          raise_answer_error("answer_not_valid_option") unless option
           build_answer(:option => option)
-
 
         else
           # make sure the value is a letter(s)
-          raise_answer_error("answer_not_valid_option") unless @value =~ /\A[a-z]+\z/
+          raise_answer_error("answer_not_valid_option") unless @value =~ /\A[a-z]+\z/i
 
           # convert to number (1-based)
-          idx = letters_to_index(@value)
+          idx = letters_to_index(@value.downcase)
 
           # make sure it makes sense for the option set
           raise_answer_error("answer_not_valid_option") if idx > @qing.question.options.size

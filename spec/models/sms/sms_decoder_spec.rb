@@ -144,10 +144,20 @@ describe Sms::Decoder do
     assert_decoding(body: "#{@form.code} 1.15 2.banana", answers: [15, "Banana"])
   end
 
-  # it "select_one question treated as text should not work with normal encoding" do
-  #   create_form(questions: %w(integer select_one_as_text_for_sms))
-  #   assert_decoding_fail(body: "#{@form.code} 1.15 2.b", error: "answer_not_valid_option", rank: 2, value: "b")
-  # end
+  it "select_one question treated as text should work if option name has spaces" do
+    create_form(questions: %w(integer select_one_as_text_for_sms integer))
+    assert_decoding(body: "#{@form.code} 1.15 2.Elder Berry 3.99", answers: [15, "Elder Berry", 99])
+  end
+
+  it "select_one question treated as text should not work with normal encoding" do
+    create_form(questions: %w(integer select_one_as_text_for_sms))
+    assert_decoding_fail(body: "#{@form.code} 1.15 2.b", error: "answer_not_valid_option", rank: 2, value: "b")
+  end
+
+  it "select_one question treated as text should not work if no match" do
+    create_form(questions: %w(integer select_one_as_text_for_sms))
+    assert_decoding_fail(body: "#{@form.code} 1.15 2.Peach", error: "answer_not_valid_option", rank: 2, value: "Peach")
+  end
 
   # should work with option names with spaces
   # should work for multilevel
@@ -342,7 +352,8 @@ describe Sms::Decoder do
   private
 
   def create_form(options)
-    @form = create(:form, smsable: true, question_types: options[:questions], option_names: %w(Apple Banana Cherry Durian Elderberry))
+    @form = create(:form, smsable: true, question_types: options[:questions],
+      option_names: %w(Apple Banana Cherry Durian) + ["Elder Berry"])
     @form.publish!
     @form.reload
   end
