@@ -159,11 +159,15 @@ describe Sms::Decoder do
     assert_decoding_fail(body: "#{@form.code} 1.15 2.Peach", error: "answer_not_valid_option", rank: 2, value: "Peach")
   end
 
-  # should work with option names with spaces
-  # should work for multilevel
-  # should be case insensitive
-  # should error if no match
-  # should not work for non-canonical language
+  it "select_one question treated as text should work for multilevel option set" do
+    create_form(questions: %w(integer multi_level_select_one_as_text_for_sms), default_option_names: true)
+    assert_decoding(body: "#{@form.code} 1.15 2.Tulip", answers: [15, ["Plant", "Tulip"]])
+  end
+
+  it "select_one question treated as text should work for multilevel option set for non-leaf option" do
+    create_form(questions: %w(integer multi_level_select_one_as_text_for_sms), default_option_names: true)
+    assert_decoding(body: "#{@form.code} 1.15 2.Plant", answers: [15, ["Plant", "NIL"]])
+  end
 
   it "option codes should be case insensitive" do
     create_form(questions: %w(integer select_one))
@@ -352,8 +356,8 @@ describe Sms::Decoder do
   private
 
   def create_form(options)
-    @form = create(:form, smsable: true, question_types: options[:questions],
-      option_names: %w(Apple Banana Cherry Durian) + ["Elder Berry"])
+    option_names = options[:default_option_names] ? nil : %w(Apple Banana Cherry Durian) + ["Elder Berry"]
+    @form = create(:form, smsable: true, question_types: options[:questions], option_names: option_names)
     @form.publish!
     @form.reload
   end
@@ -395,8 +399,14 @@ describe Sms::Decoder do
       when "decimal"
         expect(ansset.value.to_f).to eq(expected)
       when "select_one"
-        # for select one, the expected value is the english translation of the desired option
-        expect(ansset.first.option.name_en).to eq(expected)
+        # for select one, the expected value is the english translation(s) of the desired option(s)
+        expect(ansset.answers.map{ |a| a.option.try(:name_en) || "NIL" }).to eq(Array.wrap(expected))
+        # Check answer ranks.
+        if qing.multi_level?
+          expect(ansset.answers.map(&:rank)).to eq((1..expected.size).to_a), "Invalid answer ranks"
+        else
+          expect(ansset.first.rank).to be_nil, "Answer rank should be nil"
+        end
       when "select_multiple"
         # for select multiple, the expected value is an array of the english translations of the desired options
         expect(ansset.choices.collect{|c| c.option.name_en}).to eq(expected)

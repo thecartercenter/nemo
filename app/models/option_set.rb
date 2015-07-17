@@ -110,6 +110,16 @@ class OptionSet < ActiveRecord::Base
     root_node.children_attribs = attribs
   end
 
+  # Given an Option, returns the path down the tree of Options in this set to that Option.
+  # Returns nil if option not found in set.
+  def path_to_option(option)
+    node = OptionNode.where(option_set: self, option: option).first
+    return nil if node.nil?
+
+    # Trim the root node and map to options.
+    node.ancestors[1..-1].map(&:option) + [option]
+  end
+
   # Gets the OptionLevel for the given depth (1-based)
   def level(depth)
     levels.try(:[], depth - 1)
