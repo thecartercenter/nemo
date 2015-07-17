@@ -126,7 +126,7 @@ describe Sms::Decoder do
 
   it "select_one question should work" do
     create_form(questions: %w(integer select_one))
-    assert_decoding(body: "#{@form.code} 1.15 2.b", answers: [15, "B"])
+    assert_decoding(body: "#{@form.code} 1.15 2.b", answers: [15, "Banana"])
   end
 
   it "select_one question with numeric option should error" do
@@ -141,12 +141,12 @@ describe Sms::Decoder do
 
   it "option codes should be case insensitive" do
     create_form(questions: %w(integer select_one))
-    assert_decoding(body: "#{@form.code} 1.15 2.B", answers: [15, "B"])
+    assert_decoding(body: "#{@form.code} 1.15 2.B", answers: [15, "Banana"])
   end
 
   it "select_multiple question should work" do
     create_form(questions: %w(integer select_multiple))
-    assert_decoding(body: "#{@form.code} 1.15 2.bd", answers: [15, %w(B D)])
+    assert_decoding(body: "#{@form.code} 1.15 2.bd", answers: [15, %w(Banana Durian)])
   end
 
   it "select_multiple question with one numeric option should error" do
@@ -194,27 +194,27 @@ describe Sms::Decoder do
 
   it "text question in middle of message should work" do
     create_form(questions: %w(select_one text integer))
-    assert_decoding(body: "#{@form.code} 1.a 2.foo bar 3.15", answers: ["A", "foo bar", 15])
+    assert_decoding(body: "#{@form.code} 1.a 2.foo bar 3.15", answers: ["Apple", "foo bar", 15])
   end
 
   it "long_text question in middle of message should work" do
     create_form(questions: %w(select_one long_text integer))
-    assert_decoding(body: "#{@form.code} 1.a 2.foo bar that is very long 3.15", answers: ["A", "foo bar that is very long", 15])
+    assert_decoding(body: "#{@form.code} 1.a 2.foo bar that is very long 3.15", answers: ["Apple", "foo bar that is very long", 15])
   end
 
   it "text question at end of message should work" do
     create_form(questions: %w(select_one integer text))
-    assert_decoding(body: "#{@form.code} 1.a 2.15 3.foo bar", answers: ["A", 15, "foo bar"])
+    assert_decoding(body: "#{@form.code} 1.a 2.15 3.foo bar", answers: ["Apple", 15, "foo bar"])
   end
 
   it "long_text question at end of message should work" do
     create_form(questions: %w(select_one integer long_text))
-    assert_decoding(body: "#{@form.code} 1.a 2.15 3.foo bar that is very long", answers: ["A", 15, "foo bar that is very long"])
+    assert_decoding(body: "#{@form.code} 1.a 2.15 3.foo bar that is very long", answers: ["Apple", 15, "foo bar that is very long"])
   end
 
   it "text question with space after decimal should work" do
     create_form(questions: %w(select_one text integer))
-    assert_decoding(body: "#{@form.code} 1.a 2. foo bar 3.15", answers: ["A", "foo bar", 15])
+    assert_decoding(body: "#{@form.code} 1.a 2. foo bar 3.15", answers: ["Apple", "foo bar", 15])
   end
 
   it "weird chunk should error" do
@@ -326,7 +326,7 @@ describe Sms::Decoder do
   private
 
   def create_form(options)
-    @form = create(:form, smsable: true, question_types: options[:questions], option_names: %w(A B C D E))
+    @form = create(:form, smsable: true, question_types: options[:questions], option_names: %w(Apple Banana Cherry Durian Elderberry))
     @form.publish!
     @form.reload
   end
