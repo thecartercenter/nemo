@@ -61,6 +61,15 @@ describe OptionSetImport do
       have_attributes(canonical_name: 'Aketi', latitude: 2.739529, longitude: 23.780851))
   end
 
+  it 'should correctly report errors for invalid coordinate values' do
+    name = "Invalid Geographic"
+
+    import = OptionSetImport.new(mission_id: mission.id, name: name, file: fixture("invalid_geographic.xlsx"))
+
+    succeeded = import.create_option_set
+    expect(succeeded).to be_falsy
+  end
+
   private
 
     def fixture(name)

@@ -92,7 +92,7 @@ class UserBatch
         if !user.valid?
           user.errors.keys.each do |attribute|
             user.errors.full_messages_for(attribute).each do |error|
-              row_error = I18n.t('user_batch.row_error', row: row_number, error: error)
+              row_error = I18n.t('import.row_error', row: row_number, error: error)
               errors.add("users[#{row_index}].#{attribute}", row_error)
             end
           end
