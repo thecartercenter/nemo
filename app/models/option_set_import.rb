@@ -61,9 +61,8 @@ class OptionSetImport
       # State variables. cur_ranks has a default value of 0 to simplify the code below.
       cur_nodes, cur_ranks = Array.new(headers.size), Array.new(headers.size, 0)
       rows.each_with_index do |row, r|
-        row_number = r + 2
-
         leaf_attribs = row.extract_options!
+        row_number = leaf_attribs.delete(:_row_number)
 
         # drop the :id attribute when re-importing exported spreadsheets
         leaf_attribs.delete(:id)
@@ -150,8 +149,10 @@ class OptionSetImport
       (2..sheet.last_row).each do |r|
         row = sheet.row(r)[0...headers.size]
 
-        # go through the special column indexes and extract those cells into an attribs hash
-        attribs = Hash[*special_columns.keys.reverse.map { |i| [special_columns[i], row.delete_at(i)] }.flatten]
+        attribs = { _row_number: r }
+
+        # go through the special column indexes and extract those cells into the attribs hash
+        attribs.merge!(Hash[*special_columns.keys.reverse.map { |i| [special_columns[i], row.delete_at(i)] }.flatten])
 
         next if row.all?(&:blank?)
         row.map!{ |c| c.blank? ? nil : c.to_s.strip[0...MAX_OPTION_LENGTH] }
@@ -163,8 +164,8 @@ class OptionSetImport
           next
         end
 
-        # add the attribs hash back as the last element in the row if it is present
-        row << attribs if attribs.present?
+        # add the attribs hash back as the last element in the row
+        row << attribs
 
         rows << row
       end
@@ -176,14 +177,15 @@ class OptionSetImport
         return
       end
 
+      # TODO: figure out how to sort and dedupe while still passing along the original row numbers
       # Sort array ensuring stability. Use JSON representation to flatten attribs hash.
-      n = 0
-      rows.sort_by!{ |r| n += 1; (r + [n]).to_json }
+      #n = 0
+      #rows.sort_by!{ |r| n += 1; (r + [n]).to_json }
 
-      # Remove any duplicates (efficiently, now that we're sorted).
-      last = -1
       # TODO: should this add an error?
-      rows.reject!{ |r| last != -1 && rows[last] == r ? true : (last += 1) && false }
+      # Remove any duplicates (efficiently, now that we're sorted).
+      #last = -1
+      #rows.reject!{ |r| last != -1 && rows[last] == r ? true : (last += 1) && false }
 
       special_columns.keys.reverse.each { |i| headers.delete_at(i) }
 
