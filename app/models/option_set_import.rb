@@ -34,7 +34,9 @@ class OptionSetImport
     # check validity before processing spreadsheet
     return false if invalid?
 
-    headers, rows = load_and_clean_data
+    headers, special_columns, rows = load_and_clean_data
+
+    allow_coordinates = special_columns.include?(:coordinates)
 
     OptionSet.transaction do
 
@@ -43,22 +45,30 @@ class OptionSetImport
         mission: mission,
         name: name,
         levels: headers.map{ |h| OptionLevel.new(name: h) },
+        geographic: allow_coordinates,
+        allow_coordinates: allow_coordinates,
         root_node: OptionNode.new)
 
       # State variables.
       cur_nodes, cur_ranks = Array.new(headers.size), Array.new(headers.size, 0)
       rows.each_with_index do |row, r|
+        leaf_attribs = row.extract_options!
+
         row.each_with_index do |cell, c|
           if cur_nodes[c].nil? || cell != cur_nodes[c].option.name
             if cell.present?
+              # Create the option.
+              attribs = { mission: mission, name: cell }
+              attribs.merge!(leaf_attribs) if row[c+1...headers.size].all?(&:blank?)
+              option = Option.create!(attribs)
+
               # Create the node.
               parent = c == 0 ? option_set.root_node : cur_nodes[c-1]
-              cur_ranks[c] = cur_ranks[c] + 1
               cur_nodes[c] = parent.children.create!(
                 mission: mission,
-                rank: cur_ranks[c],
+                rank: ++cur_ranks[c],
                 option_set: option_set,
-                option: Option.create!(mission: mission, name: cell))
+                option: option)
             end
 
             # Reset the all state var arrays to the right of current position.
@@ -79,9 +89,19 @@ class OptionSetImport
     def load_and_clean_data
       sheet = Roo::Excelx.new(file).sheet(0)
 
-      # Get headers from first row, strip nils, and chop long names.
+      # Get headers from first row and strip nils
       headers = sheet.row(1)
       headers = headers[0...headers.index(nil)] if headers.any?(&:nil?)
+
+      # Find any special columns
+      special_columns = {}
+      headers.each_with_index do |h,i|
+        if ["Id", "Coordinates"].include?(h)
+          special_columns[i] = h.downcase.to_sym
+        end
+      end
+
+      # Enforce maximum length limitation on headers
       headers.map!{ |h| h[0...MAX_LEVEL_LENGTH] }
 
       # Load and clean full set as array of arrays.
@@ -89,11 +109,15 @@ class OptionSetImport
       (2..sheet.last_row).each do |r|
         row = sheet.row(r)[0...headers.size]
 
+        attribs = Hash[*special_columns.keys.reverse.map { |i| [special_columns[i], row.delete_at(i)] }.flatten]
+
         next if row.all?(&:blank?)
         row.map!{ |c| c.blank? ? nil : c.to_s.strip[0...MAX_OPTION_LENGTH] }
 
         # Can't be any blank interior cells.
         raise "Error on row #{r}: blank interior cell." if blank_interior_cell?(row)
+
+        row << attribs if attribs.present?
 
         rows << row
       end
@@ -109,7 +133,9 @@ class OptionSetImport
       last = -1
       rows.reject!{ |r| last != -1 && rows[last] == r ? true : (last += 1) && false }
 
-      [headers, rows]
+      special_columns.keys.reverse.each { |i| headers.delete_at(i) }
+
+      [headers, special_columns.values, rows]
     end
 
     def blank_interior_cell?(row)

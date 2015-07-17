@@ -24,6 +24,43 @@ describe OptionSetImport do
     expect(option_set.all_options).to include(have_attributes(canonical_name: "Kinshasa"))
   end
 
+  it 'should be able to import a multi-level geographic option set' do
+    name = "Multilevel Geographic"
+
+    import = OptionSetImport.new(mission_id: mission.id, name: name, file: fixture("multilevel_geographic.xlsx"))
+
+    succeeded = import.create_option_set
+    expect(succeeded).to be_truthy
+
+    option_set = import.option_set
+
+    expect(option_set).to have_attributes(
+      name: name,
+      level_count: 3,
+      geographic?: true,
+      allow_coordinates?: true)
+
+    expect(option_set.level_names).to start_with(
+      {'en' => 'Province'},
+      {'en' => 'City/District'},
+      {'en' => 'Commune/Territory'})
+
+    # check the total and top-level option counts
+    expect(option_set.total_options).to eq(321)
+    expect(option_set.options).to have(26).items
+
+    # make sure that the non-leaf options have no coordinates
+    option_set.descendants.each do |node|
+      if node.child_options.present?
+        expect(node).to have_attributes(option: have_attributes(has_coordinates?: false))
+      end
+    end
+
+    # verify the latitude and longitude of one of the options
+    expect(option_set.all_options).to include(
+      have_attributes(canonical_name: 'Aketi', latitude: 2.739529, longitude: 23.780851))
+  end
+
   private
 
     def fixture(name)

@@ -60,7 +60,19 @@ class Option < ActiveRecord::Base
   end
 
   def coordinates
-    has_coordinates? && "#{latitude} #{longitude}"
+    "#{latitude} #{longitude}" if has_coordinates?
+  end
+
+  def coordinates=(value)
+    if value.blank?
+      self.latitude = nil
+      self.longitude = nil
+    elsif value.match(configatron.lat_lng_regexp)
+      self.latitude = $1.to_d.truncate(6)
+      self.longitude = $3.to_d.truncate(6)
+    else
+      raise ArgumentError
+    end
   end
 
   def as_json(options = {})
