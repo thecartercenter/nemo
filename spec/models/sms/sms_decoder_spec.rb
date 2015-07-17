@@ -275,22 +275,22 @@ describe Sms::Decoder do
 
   it "time question should work" do
     create_form(questions: %w(integer time))
-    response = assert_decoding(body: "#{@form.code} 1.4 2.1230", answers: [4, Time.parse("12:30 UTC")])
+    response = assert_decoding(body: "#{@form.code} 1.4 2.1230", answers: [4, Time.parse("2000-01-01 12:30 UTC")])
 
     # make sure time gets saved properly and zone doesn't mess up
     response.reload
     expect(response.answers.last.time_value.hour).to eq(12)
 
     # check other formats
-    assert_decoding(body: "#{@form.code} 1.4 2.12:30", answers: [4, Time.parse("12:30 UTC")])
-    assert_decoding(body: "#{@form.code} 1.4 2.12:30pm", answers: [4, Time.parse("12:30 UTC")])
-    assert_decoding(body: "#{@form.code} 1.4 2.12:45PM", answers: [4, Time.parse("12:45 UTC")])
-    assert_decoding(body: "#{@form.code} 1.4 2.12.30pm", answers: [4, Time.parse("12:30 UTC")])
-    assert_decoding(body: "#{@form.code} 1.4 2.130", answers: [4, Time.parse("1:30 UTC")])
-    assert_decoding(body: "#{@form.code} 1.4 2.0130", answers: [4, Time.parse("1:30 UTC")])
-    assert_decoding(body: "#{@form.code} 1.4 2.1:30", answers: [4, Time.parse("1:30 UTC")])
-    assert_decoding(body: "#{@form.code} 1.4 2.1:30am", answers: [4, Time.parse("1:30 UTC")])
-    assert_decoding(body: "#{@form.code} 1.4 2.1:30pm", answers: [4, Time.parse("13:30 UTC")])
+    assert_decoding(body: "#{@form.code} 1.4 2.12:30", answers: [4, Time.parse("2000-01-01 12:30 UTC")])
+    assert_decoding(body: "#{@form.code} 1.4 2.12:30pm", answers: [4, Time.parse("2000-01-01 12:30 UTC")])
+    assert_decoding(body: "#{@form.code} 1.4 2.12:45PM", answers: [4, Time.parse("2000-01-01 12:45 UTC")])
+    assert_decoding(body: "#{@form.code} 1.4 2.12.30pm", answers: [4, Time.parse("2000-01-01 12:30 UTC")])
+    assert_decoding(body: "#{@form.code} 1.4 2.130", answers: [4, Time.parse("2000-01-01 1:30 UTC")])
+    assert_decoding(body: "#{@form.code} 1.4 2.0130", answers: [4, Time.parse("2000-01-01 1:30 UTC")])
+    assert_decoding(body: "#{@form.code} 1.4 2.1:30", answers: [4, Time.parse("2000-01-01 1:30 UTC")])
+    assert_decoding(body: "#{@form.code} 1.4 2.1:30am", answers: [4, Time.parse("2000-01-01 1:30 UTC")])
+    assert_decoding(body: "#{@form.code} 1.4 2.1:30pm", answers: [4, Time.parse("2000-01-01 13:30 UTC")])
   end
 
   it "invalid times should error" do
@@ -365,8 +365,9 @@ describe Sms::Decoder do
     # create the Sms object
     msg = Sms::Incoming.create(from: options[:from] || options[:user].phone, body: options[:body], mission: get_mission)
 
-    # perform the deocding
+    # perform the decoding
     response = Sms::Decoder.new(msg).decode
+    response.save!
 
     # if we get this far and were expecting a failure, we didn't get one, so just return
     return if options[:expecting_fail]
@@ -416,9 +417,6 @@ describe Sms::Decoder do
     options[:answers].each_with_index do |a, i|
       expect(a).to be_nil, "No answer was given for question #{i+1}"
     end
-
-    # ensure that saving the response works
-    response.save!
 
     return response
   end
