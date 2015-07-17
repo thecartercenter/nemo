@@ -139,6 +139,22 @@ describe Sms::Decoder do
     assert_decoding_fail(body: "#{@form.code} 1.15 2.h", error: "answer_not_valid_option", rank: 2, value: "h")
   end
 
+  it "select_one question treated as text should work" do
+    create_form(questions: %w(integer select_one_as_text_for_sms))
+    assert_decoding(body: "#{@form.code} 1.15 2.banana", answers: [15, "Banana"])
+  end
+
+  # it "select_one question treated as text should not work with normal encoding" do
+  #   create_form(questions: %w(integer select_one_as_text_for_sms))
+  #   assert_decoding_fail(body: "#{@form.code} 1.15 2.b", error: "answer_not_valid_option", rank: 2, value: "b")
+  # end
+
+  # should work with option names with spaces
+  # should work for multilevel
+  # should be case insensitive
+  # should error if no match
+  # should not work for non-canonical language
+
   it "option codes should be case insensitive" do
     create_form(questions: %w(integer select_one))
     assert_decoding(body: "#{@form.code} 1.15 2.B", answers: [15, "Banana"])

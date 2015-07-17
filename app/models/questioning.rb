@@ -33,6 +33,7 @@ class Questioning < FormItem
            :temporal?,
            :numeric?,
            :tags,
+           :text_type_for_sms?,
            to: :question
 
   delegate :published?, to: :form

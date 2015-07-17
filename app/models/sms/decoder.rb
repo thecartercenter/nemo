@@ -141,17 +141,25 @@ class Sms::Decoder
         # case insensitive
         @value.downcase!
 
-        # make sure the value is a letter(s)
-        raise_answer_error("answer_not_valid_option") unless @value =~ /\A[a-z]+\z/
+        if @qing.text_type_for_sms?
+          option = @qing.option_set.all_options.where(canonical_name: @value).first
 
-        # convert to number (1-based)
-        idx = letters_to_index(@value)
+          build_answer(:option => option)
 
-        # make sure it makes sense for the option set
-        raise_answer_error("answer_not_valid_option") if idx > @qing.question.options.size
 
-        # if we get to here, we're good, so add
-        build_answer(:option => @qing.question.options[idx-1])
+        else
+          # make sure the value is a letter(s)
+          raise_answer_error("answer_not_valid_option") unless @value =~ /\A[a-z]+\z/
+
+          # convert to number (1-based)
+          idx = letters_to_index(@value)
+
+          # make sure it makes sense for the option set
+          raise_answer_error("answer_not_valid_option") if idx > @qing.question.options.size
+
+          # if we get to here, we're good, so add
+          build_answer(:option => @qing.question.options[idx-1])
+        end
 
       when "select_multiple"
         # case insensitive

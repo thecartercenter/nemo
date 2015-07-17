@@ -2,11 +2,20 @@ def create_questioning(qtype_name_or_question, form, parent, evaluator)
   question = if qtype_name_or_question.is_a?(Question)
     qtype_name_or_question
   else
-    qtype_name = qtype_name_or_question
+    psuedo_qtype_name = qtype_name_or_question
+
+    qtype_name = case psuedo_qtype_name
+    when 'multi_level_select_one', 'select_one_as_text_for_sms'
+      'select_one'
+    else
+      psuedo_qtype_name
+    end
+
     q_attribs = {
-      qtype_name: qtype_name == 'multi_level_select_one' ? 'select_one' : qtype_name,
+      qtype_name: qtype_name,
       mission: form.mission,
-      use_multilevel_option_set: qtype_name == 'multi_level_select_one',
+      use_multilevel_option_set: psuedo_qtype_name == 'multi_level_select_one',
+      text_type_for_sms: psuedo_qtype_name == 'select_one_as_text_for_sms',
       is_standard: form.is_standard?
     }
 
