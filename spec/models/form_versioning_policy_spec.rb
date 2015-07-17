@@ -171,6 +171,32 @@ describe FormVersioningPolicy do
     publish_and_check_versions(:should_change => true)
   end
 
+  it "changing question text_type_for_sms should cause bump" do
+    # add non-required question to first two forms
+    @forms[0...2].each do |f|
+      q = FactoryGirl.create(:question, :qtype_name => 'select_one')
+      Questioning.create(:form_id => f.id, :question_id => q.id, :parent => f.root_group)
+    end
+
+    save_old_version_codes
+
+    # now change field
+    @forms[0...2].each do |f|
+      f.questions.first.update_attributes(:text_type_for_sms => true)
+    end
+
+    publish_and_check_versions(:should_change => true)
+
+    save_old_version_codes
+
+    # now change questioning type back to not required
+    @forms[0...2].each do |f|
+      f.questions.first.update_attributes(:text_type_for_sms => false)
+    end
+
+    publish_and_check_versions(:should_change => true)
+  end
+
   it "deleting question should cause upgrade if question appeared not at end of an smsable form" do
     # add questions to first two forms
     q1 = FactoryGirl.create(:question)

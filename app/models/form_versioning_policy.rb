@@ -74,8 +74,9 @@ class FormVersioningPolicy
     when "Question"
       case action
       when :update
-        # changing question type, option set, or constraints is a trigger
-        return obj.forms if obj.qtype_name_changed? || obj.option_set_id_changed? || obj.constraint_changed?
+        # changing question type, option set, constraints, or text_type_for_sms is a trigger
+        return obj.forms if obj.qtype_name_changed? || obj.option_set_id_changed? ||
+          obj.constraint_changed? || obj.text_type_for_sms_changed?
       end
     end
 
