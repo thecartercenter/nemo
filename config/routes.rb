@@ -129,6 +129,12 @@ ELMO::Application.routes.draw do
       end
     end
 
+    resource :option_set_imports, path: 'option-set-imports', only: [:new, :create] do
+      collection do
+        get 'example_spreadsheet', path: 'example-option-set', defaults: { format: 'xlsx' }
+      end
+    end
+
     # import routes for standardizeable objects
     %w(forms questions option_sets).each do |k|
       post "/#{k.gsub('_', '-')}/import-standard" => "#{k}#import_standard", as: "import_standard_#{k}"

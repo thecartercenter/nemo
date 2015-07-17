@@ -13,6 +13,7 @@ class Option < ActiveRecord::Base
 
   translates :name
 
+  validate :check_invalid_coordinates_flag
   with_options if: :has_coordinates? do |geographic|
     geographic.validates :latitude, numericality: { greater_than_or_equal_to: -90, less_than_or_equal_to: 90 }
     geographic.validates :longitude, numericality: { greater_than_or_equal_to: -180, less_than_or_equal_to: 180 }
@@ -60,7 +61,21 @@ class Option < ActiveRecord::Base
   end
 
   def coordinates
-    has_coordinates? && "#{latitude} #{longitude}"
+    "#{latitude} #{longitude}" if has_coordinates?
+  end
+
+  def coordinates=(value)
+    @_invalid_coordinates_flag = false
+
+    if value.blank?
+      self.latitude = nil
+      self.longitude = nil
+    elsif value.match(configatron.lat_lng_regexp)
+      self.latitude = $1.to_d.truncate(6)
+      self.longitude = $3.to_d.truncate(6)
+    else
+      @_invalid_coordinates_flag = true
+    end
   end
 
   def as_json(options = {})
@@ -76,5 +91,9 @@ class Option < ActiveRecord::Base
     # invalidate the mission option cache after save, destroy
     def invalidate_cache
       Rails.cache.delete("mission_options/#{mission_id}")
+    end
+
+    def check_invalid_coordinates_flag
+      errors.add(:coordinates, :invalid_coordinates) if @_invalid_coordinates_flag
     end
 end

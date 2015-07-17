@@ -25,4 +25,10 @@ module PathHelper
     args = [:new, :index].include?(action) ? [options] : [obj, options]
     send("#{key}_path", *args)
   end
+
+  # XXX: it's unclear why Rails is generating a plural helper for
+  # :option_set_imports with action :new, but this fixes things...
+  def new_option_set_import_path(*args)
+    new_option_set_imports_path(*args)
+  end
 end

@@ -178,7 +178,7 @@ class Ability
             end
 
             # coord can manage these classes for the current mission
-            [Form, OptionSet, Question, Questioning, QingGroup, Option, Tag, Tagging].each do |klass|
+            [Form, OptionSet, OptionSetImport, Question, Questioning, QingGroup, Option, Tag, Tagging].each do |klass|
               can :manage, klass, :mission_id => mission.id
             end
 

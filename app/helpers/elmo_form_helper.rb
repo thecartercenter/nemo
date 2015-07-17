@@ -3,8 +3,6 @@ module ElmoFormHelper
 
   # renders a form using the ElmoFormBuilder
   def elmo_form_for(obj, *args, &block)
-    options = args.extract_options!
-
     defaults = {
       builder: ElmoFormBuilder,
       html: {
@@ -13,18 +11,21 @@ module ElmoFormHelper
     }
 
     # deep merge the user-provided options with the defaults;
-    args << defaults.deep_merge(options) do |key,oldval,newval|
-      # if the key is :class, merge the old and new values into a space-separated list
-      key == :class ?  "#{oldval} #{newval}" : newval
-    end
+    args << merge_options(defaults, args.extract_options!)
 
     form_for(obj, *args, &block)
   end
 
   # renders a set of form fields using the ElmoFormBuilder
   def elmo_fields_for(field_name, obj, *args, &block)
-    options = args.extract_options!
-    fields_for(field_name, obj, *(args << options.merge(:builder => ElmoFormBuilder)), &block)
+    defaults = {
+      builder: ElmoFormBuilder
+    }
+
+    # deep merge the user-provided options with the defaults;
+    args << merge_options(defaults, args.extract_options!)
+
+    fields_for(field_name, obj, *args, &block)
   end
 
   # gets the mode a form should be displayed in: one of new, edit, or show
@@ -42,4 +43,13 @@ module ElmoFormHelper
   def reqd_sym
     content_tag(:div, '*', :class => 'reqd_sym')
   end
+
+  private
+
+    def merge_options(defaults, options)
+      defaults.deep_merge(options) do |key,oldval,newval|
+        # if the key is :class, merge the old and new values into a space-separated list
+        key == :class ?  "#{oldval} #{newval}" : newval
+      end
+    end
 end
