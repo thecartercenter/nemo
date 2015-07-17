@@ -54,6 +54,9 @@ class OptionSetImport
       rows.each_with_index do |row, r|
         leaf_attribs = row.extract_options!
 
+        # drop the :id attribute when re-importing exported spreadsheets
+        leaf_attribs.delete(:id)
+
         row.each_with_index do |cell, c|
           if cur_nodes[c].nil? || cell != cur_nodes[c].option.name
             if cell.present?
