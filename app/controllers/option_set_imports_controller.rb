@@ -30,6 +30,11 @@ class OptionSetImportsController < ApplicationController
     end
   end
 
+  def example_spreadsheet
+    # TODO: example spreadsheet
+    NotImplementedError
+  end
+
   protected
 
     def option_set_import_params
