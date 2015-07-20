@@ -61,7 +61,7 @@ class Option < ActiveRecord::Base
   end
 
   def coordinates
-    "#{latitude} #{longitude}" if has_coordinates?
+    "#{latitude}, #{longitude}" if has_coordinates?
   end
 
   def coordinates=(value)
