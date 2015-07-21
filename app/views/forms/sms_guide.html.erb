@@ -18,20 +18,16 @@
   </div>
   <table>
     <tr>
+      <td colspan="2" class="user-field">
+        <%= Response.human_attribute_name(:user_id) %>: _________________________________________
+      </td>
+    </tr>
+    <tr>
       <td colspan="2" class="step1">
         <strong><%= t("common.step") %> 1:</strong> <%= t("sms_form.guide.step1") %>
         <%= t(@form.all_required? ? "sms_form.guide.all_required" : "sms_form.guide.not_all_required") %>
       </td>
       <td class="answers"></td>
-    </tr>
-    <tr>
-      <td class="rank"></td>
-      <td class="pointer">
-        <em><%= Response.human_attribute_name(:user_id) %> </em>
-      </td>
-      <td class="answers">
-        <%= answer_space(" " * 7, :show_spc_glyph => false) %>
-      </td>
     </tr>
     <tr>
       <td class="rank"></td>
