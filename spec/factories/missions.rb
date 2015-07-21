@@ -28,14 +28,15 @@ FactoryGirl.define do
       os = create(:option_set, multi_level: true, mission: mission)
 
       # creates questionings and questions
-      form = create(:form, mission: mission, question_types: ['integer', 'text', ['integer', 'integer'], 'text'])
-      
+      form = create(:form, mission: mission,
+        question_types: ['integer', 'select_one', ['integer', 'integer'], 'select_multiple'])
+
       create(:question, qtype_name: 'select_one', option_set: os, mission: mission)
 
       create(:report, mission: mission)
 
       # creates answers and choices
-      create(:response, mission: mission, form: form)
+      create(:response, mission: mission, form: form, answer_values: [3, 'Cat', [5, 6], %w(Cat Dog)])
     end
   end
 end
