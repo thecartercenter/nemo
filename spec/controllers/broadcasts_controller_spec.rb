@@ -15,7 +15,7 @@ describe BroadcastsController, type: :request do
 
   context 'with previous broadcasts' do
     before do
-      3.times{ create(:broadcast) }
+      3.times{ create(:broadcast, recipients: [@user1]) }
     end
 
     it 'index should work' do
