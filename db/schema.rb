@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150723150858) do
+ActiveRecord::Schema.define(version: 20150723153642) do
 
   create_table "answers", force: :cascade do |t|
     t.integer  "response_id",    limit: 4
@@ -475,6 +475,7 @@ ActiveRecord::Schema.define(version: 20150723150858) do
   add_foreign_key "broadcast_addressings", "broadcasts", name: "broadcast_addressings_broadcast_id_fk"
   add_foreign_key "broadcast_addressings", "users", name: "broadcast_addressings_user_id_fk"
   add_foreign_key "broadcasts", "missions", name: "broadcasts_mission_id_fk"
+  add_foreign_key "choices", "answers"
   add_foreign_key "choices", "options", name: "choices_option_id_fk"
   add_foreign_key "conditions", "form_items", column: "questioning_id", name: "conditions_questioning_id_fk"
   add_foreign_key "conditions", "form_items", column: "ref_qing_id", name: "conditions_ref_qing_id_fk"
