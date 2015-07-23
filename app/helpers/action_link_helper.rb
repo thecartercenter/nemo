@@ -23,7 +23,7 @@ module ActionLinkHelper
     options[:append] = Array.wrap(options[:append])
 
     obj = args.first
-    raise ArgumentError, 'Missing target object' unless obj.present?
+    raise ArgumentError, 'Missing target object' if obj.nil?
 
     controller ||= obj.class.model_name.plural
     i18nk = obj.class.model_name.i18n_key
@@ -35,7 +35,8 @@ module ActionLinkHelper
     actions_to_show.delete(canonical_action)
 
     content_tag(:div, :class => 'top-action-links') do
-      main_links = actions_to_show.map do |action|
+      main_links = "".html_safe
+      main_links << actions_to_show.map do |action|
         url = url_for(controller: controller, action: action) rescue nil
 
         if url && can?(action, %w(index new).include?(action) ? obj.class : obj)
