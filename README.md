@@ -22,7 +22,7 @@ To setup a development environment, follow [this guide](docs/development-setup.m
 
 ## How Do I Contribute to ELMO?
 
-ELMO is 100% open-source. We would like you to be part of the ELMO community! We accept and encourage contributions from the public. You can start by filing an bug report or feature request using the 'Issues' feature on Github. Or contact [Tom Smyth](https://github.com/hooverlunch) for more info.
+ELMO is 100% open-source. We would like you to be part of the ELMO community! We accept and encourage contributions from the public. You can start by filing a bug report or feature request using the 'Issues' feature on Github. Or contact [Tom Smyth](https://github.com/hooverlunch) for more info.
 
 ### ELMO Data Model
 
