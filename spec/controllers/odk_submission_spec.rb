@@ -5,6 +5,14 @@ describe 'odk submissions', type: :request do
 
   ODK_XML_FILE = 'odk_xml_file.xml'
 
+  before do
+    allow_forgery_protection true
+  end
+
+  after do
+    allow_forgery_protection false
+  end
+
   context 'to regular mission' do
 
     before do
@@ -185,5 +193,9 @@ describe 'odk submissions', type: :request do
   def submission_path(mission = nil)
     mission ||= get_mission
     "/m/#{mission.compact_name}/submission"
+  end
+
+  def allow_forgery_protection(allow)
+    ActionController::Base.allow_forgery_protection = allow
   end
 end
