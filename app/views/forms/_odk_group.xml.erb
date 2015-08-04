@@ -1,21 +1,24 @@
-<% children = subtree.keys %>
-<% grid_mode = grid_mode?(children) %>
+<% unless empty_qing_group?(subtree) %>
 
-<group appearance="field-list">
-  <label><%= group.group_name %></label>
+  <% children = subtree.keys %>
+  <% grid_mode = grid_mode?(children) %>
 
-  <%# In grid mode, we need to render a special label row that prints the available options at the top of the grid. %>
-  <% if grid_mode %>
-    <%= render('odk_questioning', qing: children.first, grid_mode: true, label_row: true) %>
-  <% end %>
+  <group appearance="field-list">
+    <label><%= group.group_name %></label>
 
-  <%# Render children. %>
-  <% subtree.each do |item, subsubtree| %>
-    <% if item.is_a?(QingGroup) %>
-      <%= render('odk_group', group: item, subtree: subsubtree) %>
-    <% else %>
-      <%# Tell any children questionings whether we are in grid_mode. %>
-      <%= render('odk_questioning', qing: item, grid_mode: grid_mode) unless item.hidden %>
+    <%# In grid mode, we need to render a special label row that prints the available options at the top of the grid. %>
+    <% if grid_mode %>
+      <%= render('odk_questioning', qing: children.first, grid_mode: true, label_row: true) %>
     <% end %>
-  <% end %>
-</group>
+
+    <%# Render children. %>
+    <% subtree.each do |item, subsubtree| %>
+      <% if item.is_a?(QingGroup) %>
+        <%= render('odk_group', group: item, subtree: subsubtree) %>
+      <% else %>
+        <%# Tell any children questionings whether we are in grid_mode. %>
+        <%= render('odk_questioning', qing: item, grid_mode: grid_mode) unless item.hidden %>
+      <% end %>
+    <% end %>
+  </group>
+<% end %>
