@@ -9,7 +9,7 @@ class OptionSuggester
     # Trim query to maximum length.
     query = query[0...Option::MAX_NAME_LENGTH]
 
-    name_clause = sanitize("name_translations RLIKE ?", "%%%1#{query}%%%2").tap do |sql|
+    name_clause = sanitize("name_translations RLIKE ?", "%%%1#{Regexp.escape(query)}%%%2").tap do |sql|
       sql.gsub!('%%%1', %{"#{I18n.locale}":"})
       sql.gsub!('%%%2', %{([^"\\]|\\\\\\\\.)*"})
     end
