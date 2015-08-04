@@ -1321,6 +1321,7 @@ en:
     staffer: "Staffer"
     coordinator: "Coordinator"
     admin: "Admin"
+    blank: "None"
 
   search:
     blank: "blank"
