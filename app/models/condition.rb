@@ -95,6 +95,8 @@ class Condition < ActiveRecord::Base
     lhs = "/data/#{ref_subquestion.odk_code}"
 
     if ref_qing.has_options?
+      # Added just to get a better error message when bugs like #2705 occurs.
+      raise "Condition for select question has no option_ids (#{self.inspect})" unless option_nodes
 
       selected = "selected(#{lhs}, '#{option_nodes.last.odk_code}')"
 
