@@ -10,11 +10,6 @@ module QuestionFormable
     @questioning = Questioning.accessible_by(current_ability).new(params)
     @questioning.build_question if @questioning.question.nil?
 
-    # override the associated question attributes with those mandated by the authorization system
-    Question.accessible_by(current_ability).new.attributes.each_pair do |k,v|
-      @questioning.question.send("#{k}=", v) unless v.nil?
-    end
-
     # set the mission of the question and questioning to the current mission
     # to ensure proper permission handling
     @questioning.mission = @questioning.question.mission = current_mission
