@@ -97,4 +97,8 @@ module OdkHelper
   def grid_mode?(items)
     items.all?{ |i| i.is_a?(Questioning) && i.qtype.name == 'select_one' && i.option_set == items[0].option_set }
   end
+
+  def empty_qing_group?(subtree)
+    subtree.keys.empty?
+  end
 end
