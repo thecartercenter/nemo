@@ -5,7 +5,7 @@ class Form < ActiveRecord::Base
 
   has_many(:responses, :inverse_of => :form)
   has_many(:versions, :class_name => "FormVersion", :inverse_of => :form, :dependent => :destroy)
-  has_many(:whitelist_users, :as => :whitelistable, class_name: "Whitelist")
+  has_many(:whitelist_users, :as => :whitelistable, class_name: "Whitelist", dependent: :destroy)
   has_many(:standard_form_reports, class_name: 'Report::StandardFormReport', dependent: :destroy)
 
   # while a form has many versions, this is a reference to the most up-to-date one
