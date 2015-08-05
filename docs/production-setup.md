@@ -101,8 +101,8 @@ Enter sensible values for the settings in the file. Entering a functioning email
     bundle install --without development test --deployment
     # Setup cron jobs
     bundle exec whenever -i elmo
-    # Migrate database
-    bundle exec rake db:migrate
+    # Load database schema
+    bundle exec rake db:schema:load
     # Precompile assets
     bundle exec rake assets:precompile
     # Build search indices
