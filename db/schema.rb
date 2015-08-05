@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150803165102) do
+ActiveRecord::Schema.define(version: 20150803173655) do
 
   create_table "answers", force: :cascade do |t|
     t.integer  "response_id",    limit: 4
@@ -66,8 +66,8 @@ ActiveRecord::Schema.define(version: 20150803165102) do
   add_index "broadcasts", ["mission_id"], name: "broadcasts_mission_id_fk", using: :btree
 
   create_table "choices", force: :cascade do |t|
-    t.integer  "answer_id",  limit: 4
-    t.integer  "option_id",  limit: 4
+    t.integer  "answer_id",  limit: 4, null: false
+    t.integer  "option_id",  limit: 4, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
