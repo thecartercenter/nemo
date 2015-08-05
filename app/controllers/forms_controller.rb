@@ -112,7 +112,9 @@ class FormsController < ApplicationController
   end
 
   def create
+    set_api_users
     @form.is_standard = true if current_mode == 'admin'
+
     if @form.save
       @form.create_root_group!(mission: @form.mission, form: @form)
       @form.save!
@@ -126,7 +128,7 @@ class FormsController < ApplicationController
   def update
     begin
       Form.transaction do
-        update_api_users
+        set_api_users
         # save basic attribs
         @form.assign_attributes(form_params)
 
@@ -233,11 +235,13 @@ class FormsController < ApplicationController
 
   private
 
-    def update_api_users
+    def set_api_users
       return unless params[:form][:access_level] == 'protected'
-      @form.whitelist_users.destroy
+
+      @form.whitelist_users.destroy_all if action_name == 'update'
+
       (params[:whitelist_users] || []).each do |api_user|
-        @form.whitelist_users.create(user_id: api_user)
+        @form.whitelist_users.new(user_id: api_user)
       end
     end
 
