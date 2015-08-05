@@ -4,7 +4,7 @@ describe OptionSuggester do
 
   context 'general case' do
     before do
-      ['Bar', "Foo's Bar", 'Foo'].each{ |n| create(:option, name: n) }
+      ['Bar', "Foo's Bar", 'Foo', '(with parenthesis)'].each{ |n| create(:option, name: n) }
     end
 
     it 'should return exact match at top with no placeholder' do
@@ -21,6 +21,11 @@ describe OptionSuggester do
       # Should not match since we match only from start of string.
       result = OptionSuggester.new.suggest(get_mission, 'oo')
       expect(result.map(&:name)).to eq ['oo']
+    end
+
+    it 'works with a parenthesis on the query string' do
+      result = OptionSuggester.new.suggest(get_mission, '(with')
+      expect(result.map(&:name)).to eq ['(with parenthesis)', '(with']
     end
   end
 
