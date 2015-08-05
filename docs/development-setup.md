@@ -61,7 +61,7 @@ Note to install the software below we recommend the following package managers:
   - Copy `config/thinking_sphinx.yml.example` to `thinking_sphinx.yml` and adjust any settings (usually not necessary).
   - Copy `config/initializers/local_config.rb.example` to `config/initializers/local_config.rb` and adjust any settings.
   - Run database migrations: `rake db:migrate`. If the diagramming step hangs, run `NO_DIAGRAM=true rake db:migrate`.
-  - Create an admin account: `rake db:create_admin`.
+  - Create an admin account: `rake db:create_admin`. You should receive a message like this: "Admin user created with username admin, password hTyWc9Q6" (The password is random, copy it to be used on your first login).
 
 1. **Run the tests**
   - Run `rspec`.
@@ -76,5 +76,5 @@ Note to install the software below we recommend the following package managers:
 
 1. **Login**
   - Navigate to http://localhost:3000
-  - Login using username **admin** and password **temptemp** (make sure to change the password).
+  - Login with username **admin** and use the random password that was generated when you ran `rake db:create_admin` (make sure to change the password after login).
   - Create a new Mission and get started making forms!
