@@ -29,22 +29,30 @@
           <%# this warning will get hidden/shown by the js %>
           <%= data_integrity_warning(:option_in_use_name_change_warning) %>
 
-          <% configatron.preferred_locales.each do |locale| %>
-            <div class="translation">
-              <label for="option_name_<%= locale %>"><%= language_name(locale) %></label>
-              <input type="text" class="form-control" id="option_name_<%= locale %>"
-                data-locale="<%= locale %>" maxlength="<%= Option::MAX_NAME_LENGTH %>">
+          <div class="form-horizontal">
+            <% configatron.preferred_locales.each do |locale| %>
+              <div class="translation form-group">
+                <label for="option_name_<%= locale %>" class="col-sm-3 control-label"><%= language_name(locale) %></label>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control" id="option_name_<%= locale %>"
+                    data-locale="<%= locale %>" maxlength="<%= Option::MAX_NAME_LENGTH %>">
+                </div>
+              </div>
+            <% end %>
+
+            <div class="coordinate form-group">
+              <label for"option_latitude" class="col-sm-3 control-label">Latitude</label>
+              <div class="col-sm-9">
+                <input type="number" step="any" class="form-control" id="option_latitude" data-field="latitude">
+              </div>
             </div>
-          <% end %>
 
-          <div class="coordinate">
-            <label for"option_latitude">Latitude</label>
-            <input type="number" step="any" class="form-control" id="option_latitude" data-field="latitude">
-          </div>
-
-          <div class="coordinate">
-            <label for"option_latitude">Longitude</label>
-            <input type="number" step="any" class="form-control" id="option_longitude" data-field="longitude">
+            <div class="coordinate form-group">
+              <label for"option_latitude" class="col-sm-3 control-label">Longitude</label>
+              <div class="col-sm-9">
+                <input type="number" step="any" class="form-control" id="option_longitude" data-field="longitude">
+              </div>
+            </div>
           </div>
 
         </div>

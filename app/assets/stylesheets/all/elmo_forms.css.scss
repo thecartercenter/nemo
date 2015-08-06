@@ -233,20 +233,10 @@ div.cascading-selects {
       border: none;
     }
 
-    div.label_and_control {
-      width: 100%;
-    }
-
-    label.main {
-      width: 30%;
-    }
-
-    div.control {
+   div.control {
       width: 60%;
 
       div.widget {
-        width: 100%;
-
         // These can't be as wide as normally.
         input[type=text], input.text, input[type=password], select, textarea {
           width: 100%;
