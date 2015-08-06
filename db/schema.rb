@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150803173655) do
+ActiveRecord::Schema.define(version: 20150806165057) do
 
   create_table "answers", force: :cascade do |t|
     t.integer  "response_id",    limit: 4
@@ -239,7 +239,7 @@ ActiveRecord::Schema.define(version: 20150803173655) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "mission_id",        limit: 4
-    t.string   "canonical_name",    limit: 255
+    t.string   "canonical_name",    limit: 255,                           null: false
     t.text     "name_translations", limit: 65535
     t.decimal  "latitude",                        precision: 8, scale: 6
     t.decimal  "longitude",                       precision: 9, scale: 6
@@ -259,7 +259,7 @@ ActiveRecord::Schema.define(version: 20150803173655) do
     t.boolean  "minstrictly",       limit: 1
     t.integer  "mission_id",        limit: 4
     t.string   "qtype_name",        limit: 255
-    t.text     "canonical_name",    limit: 65535
+    t.text     "canonical_name",    limit: 65535,                                              null: false
     t.text     "name_translations", limit: 65535
     t.text     "hint_translations", limit: 65535
     t.boolean  "key",               limit: 1,                              default: false
