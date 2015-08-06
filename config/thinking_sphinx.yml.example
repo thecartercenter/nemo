@@ -3,9 +3,12 @@
 development:
   mysql41: 9306
   max_matches: 1000000
+  html_strip: true
 test:
   mysql41: 9307 # should be on different port than development
   max_matches: 1000000
+  html_strip: true
 production:
   mysql41: 9306
   max_matches: 1000000
+  html_strip: true
