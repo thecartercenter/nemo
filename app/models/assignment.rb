@@ -7,7 +7,7 @@ class Assignment < ActiveRecord::Base
   before_validation(:normalize_role)
 
   validates(:mission, :presence => true)
-  validates(:role, :presence => true)
+  validates(:role, presence: true, unless: lambda { |a| a.user.admin? })
 
   default_scope { includes(:mission) }
   scope(:sorted_recent_first, -> { order("created_at DESC") })
