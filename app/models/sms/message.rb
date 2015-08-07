@@ -35,7 +35,7 @@ class Sms::Message < ActiveRecord::Base
       Search::Qualifier.new(name: "datetime", col: "sms_messages.created_at", type: :scale),
       Search::Qualifier.new(name: "username", col: "users.login", type: :text, assoc: user_assoc, default: true),
       Search::Qualifier.new(name: "name", col: "users.name", type: :text, assoc: user_assoc, default: true),
-      Search::Qualifier.new(name: "number", col: "sms_messages.to", type: :text, default: true)
+      Search::Qualifier.new(name: "number", col: ["sms_messages.to", "sms_messages.from"], type: :text, default: true)
     ]
   end
 
