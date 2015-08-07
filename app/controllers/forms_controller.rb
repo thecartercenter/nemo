@@ -68,12 +68,9 @@ class FormsController < ApplicationController
         elsif params[:sms_guide]
           # determine the most appropriate language to show the form in
           # if params[:lang] is set, use that
-          @lang = if params[:lang]
-            params[:lang]
-          # otherwise try to use the user's lang pref or the default
-          else
-            current_user.pref_lang.to_sym || I18n.default_locale
-          end
+          # otherwise try to use the current locale set
+          @lang = params[:lang] || I18n.locale
+
           render("sms_guide")
 
         # otherwise just normal!
