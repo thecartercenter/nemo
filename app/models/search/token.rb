@@ -84,8 +84,12 @@ class Search::Token
             end
           end
 
-          # insert the comparison itself
-          sql += comparison_fragment(qual, op, lex_tok)
+          if qual.has_more_than_one_column?
+            sql += comparisons_for_all_columns(qual, op, lex_tok)
+          else
+            sql += comparison_fragment(qual, qual.col, op, lex_tok)
+          end
+
           expr.values += lex_tok.is?(:string) ? "\"#{lex_tok.content}\"" : lex_tok.content
 
         # else, if this is an 'OR', insert that
@@ -106,36 +110,40 @@ class Search::Token
       end
     end
 
-    # generates an sql where clause fragment for a comparison with the given qualifier, operator, and value token
-    def comparison_fragment(qual, op, value_token)
+    def comparisons_for_all_columns(qualifier, op, lex_tok)
+      qualifier.col.map{ |c| comparison_fragment(qualifier, c, op, lex_tok) }.join(' OR ')
+    end
+
+    # generates an sql where clause fragment for a comparison with the 
+    # given qualifier, operator, and value token
+    def comparison_fragment(qualifier, column, op, value_token)
       # get the sql representations
       value_sql = value_token.to_sql
       op_sql = op.to_sql
 
       # Transform the value if qualifier has transformer.
-      value_sql = qual.preprocessor.call(value_sql) if qual.preprocessor
+      value_sql = qualifier.preprocessor.call(value_sql) if qualifier.preprocessor
 
       # if rhs is [blank], act accordingly
       inner = if [I18n.locale, :en].map{|l| '[' + I18n.t('search.blank', :locale => l) + ']'}.include?(value_sql)
         op_sql = (op_sql == "=" ? "IS" : "IS NOT")
-        "#{qual.col} #{op_sql} NULL"
+        "#{column} #{op_sql} NULL"
 
       # if translated qualifier, use special expression
-      elsif qual.type == :translated
+      elsif qualifier.type == :translated
         op_sql = op_sql == "=" ? "RLIKE" : "NOT RLIKE"
         # Sanitize first with special markers, then add the enclosing syntax for matching the RLIKE.
-        sanitize("#{qual.col} #{op_sql} ?", "%%%1#{value_sql}%%%2").tap do |sql|
+        sanitize("#{column} #{op_sql} ?", "%%%1#{value_sql}%%%2").tap do |sql|
           sql.gsub!('%%%1', %{"#{I18n.locale}":"([^"\\]|\\\\\\\\.)*})
           sql.gsub!('%%%2', %{([^"\\]|\\\\\\\\.)*"})
         end
 
       # if partial matches are allowed, change to LIKE
-      elsif qual.type == :text
+      elsif qualifier.type == :text
         op_sql = op_sql == "=" ? "LIKE" : "NOT LIKE"
-        sanitize("#{qual.col} #{op_sql} ?", "%#{value_sql}%")
-
+        sanitize("#{column} #{op_sql} ?", "%#{value_sql}%")
       else
-        sanitize("#{qual.col} #{op_sql} ?", value_sql)
+        sanitize("#{column} #{op_sql} ?", value_sql)
       end
 
       "(#{inner})"

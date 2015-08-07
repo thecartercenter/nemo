@@ -94,4 +94,8 @@ class Search::Qualifier
   def regexp?
     pattern.present?
   end
+
+  def has_more_than_one_column?
+    col.is_a? Array
+  end
 end
