@@ -10,6 +10,7 @@ class User < ActiveRecord::Base
   # call before_destroy before :dependent => :destroy associations
   # cf. https://github.com/rails/rails/issues/3458
   before_destroy(:check_assoc)
+  before_save(:clear_assignments_without_roles)
 
   has_many :responses, :inverse_of => :user
   has_many :broadcast_addressings, :inverse_of => :user, :dependent => :destroy
@@ -342,6 +343,10 @@ class User < ActiveRecord::Base
       if !admin? && assignments.reject{|a| a.marked_for_destruction?}.empty?
         errors.add(:assignments, :cant_be_empty_if_not_admin)
       end
+    end
+
+    def clear_assignments_without_roles
+      assignments.delete(assignments.select(&:no_role?))
     end
 
     # ensures phone and phone2 are unique
