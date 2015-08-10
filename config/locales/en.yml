@@ -628,6 +628,7 @@ en:
               blank: "You must choose how to display text responses."
             type:
               blank: "You must choose a report type."
+          no_calc_or_opt_set: "The report '%{name}' has no questions or option sets selected. Please edit the report to correct this."
         response:
           general: "Response is invalid (see below)."
           missing_answers: "Not all questions have answers."

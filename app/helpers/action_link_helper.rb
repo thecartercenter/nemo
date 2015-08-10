@@ -25,7 +25,7 @@ module ActionLinkHelper
     obj = args.first
     raise ArgumentError, 'Missing target object' if obj.nil?
 
-    controller ||= obj.class.model_name.plural
+    controller = options[:controller] || obj.class.model_name.plural
     i18nk = obj.class.model_name.i18n_key
 
     actions_to_show = options[:only] || [:index, :new, :show, :edit, :destroy]

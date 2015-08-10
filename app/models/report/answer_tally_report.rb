@@ -16,6 +16,11 @@ class Report::AnswerTallyReport < Report::TallyReport
   protected
 
     def prep_query(rel)
+      # Reports must have calculations or option set choices.
+      if calculations.empty? && option_sets.empty?
+        raise Report::ReportError.new(I18n.t("activerecord.errors.models.report/report.no_calc_or_opt_set", name: name))
+      end
+
       joins = []
 
       # add tally to select
@@ -47,10 +52,7 @@ class Report::AnswerTallyReport < Report::TallyReport
         # we order first by question name/code and then by option rank, which is the same as sec_value
         rel = rel.order("pri_value, sec_value")
 
-      # we don't have an option set, so expect calculation objects
       else
-        raise Report::ReportError.new("no calculations") if calculations.empty?
-
         # get expression fragments
         # this could be optimized by grouping name/value/sort for each calculation type, but i don't think it will impact performance much
         name_exprs = calculations.collect{|c| c.name_expr}
