@@ -72,7 +72,7 @@ class OptionSetImport
 
           if cell.present?
             # Create the option.
-            attribs = { mission: mission, name: cell }
+            attribs = { mission: mission, name_locale_key => cell }
             # TODO: nicer check for leaf nodes
             attribs.merge!(leaf_attribs) if row[c+1...headers.size].all?(&:blank?)
             option = Option.create(attribs)
@@ -202,4 +202,7 @@ class OptionSetImport
       !row[row.index(nil)..-1].all?(&:nil?)
     end
 
+    def name_locale_key
+      :"name_#{configatron.preferred_locale}"
+    end
 end

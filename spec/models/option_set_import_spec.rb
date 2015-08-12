@@ -3,6 +3,10 @@ require 'spec_helper'
 describe OptionSetImport do
   let(:mission) { get_mission }
 
+  before do
+    configatron.preferred_locale = :en
+  end
+
   it 'should be able to import a simple option set' do
     name = "Simple"
 
