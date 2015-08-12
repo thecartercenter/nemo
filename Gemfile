@@ -99,6 +99,8 @@ gem 'reverse_markdown'
 # Twilio SMS integration
 gem 'twilio-ruby', ' ~> 4.1'
 
+gem 'fix-db-schema-conflicts'
+
 group :development do
   gem 'rails-erd'                     # generate with rake db:migrate
   gem 'capistrano', '~> 2.15.4'       # deployment
