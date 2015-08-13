@@ -20,7 +20,7 @@
   }
 
   klass.prototype.broadcast_change = function(attrib) {
-    this.extract();
+    this.extract(true);
     this.parent_view.broadcast_change(attrib);
   }
 
