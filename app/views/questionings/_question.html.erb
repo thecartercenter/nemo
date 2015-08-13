@@ -44,11 +44,15 @@
       <% end %>
 
       <% unless read_only %>
-        <%= link_to content_tag(:i, '', class: 'fa fa-pencil'), edit_questioning_path(qing),
-          class: 'action_link edit' %>
+        <% if can?(:update, qing) %>
+          <%= link_to content_tag(:i, '', class: 'fa fa-pencil'), edit_questioning_path(qing),
+            class: 'action_link edit' %>
+        <% end %>
 
-        <%= link_to content_tag(:i, '', class: 'fa fa-trash-o'), '#', class: 'action_link delete',
-          data: {message: I18n.t('activerecord.attributes.questioning.delete', code: qing.code)} %>
+        <% if can?(:destroy, qing) %>
+          <%= link_to content_tag(:i, '', class: 'fa fa-trash-o'), '#', class: 'action_link delete',
+            data: {message: I18n.t('activerecord.attributes.questioning.delete', code: qing.code)} %>
+        <% end %>
       <% end %>
 
     </div>
