@@ -13,12 +13,7 @@
 
     <%# Render children. %>
     <% subtree.each do |item, subsubtree| %>
-      <% if item.is_a?(QingGroup) %>
-        <%= render('odk_group', group: item, subtree: subsubtree) %>
-      <% else %>
-        <%# Tell any children questionings whether we are in grid_mode. %>
-        <%= render('odk_questioning', qing: item, grid_mode: grid_mode) unless item.hidden %>
-      <% end %>
+      <%= render('odk_questioning', qing: item, grid_mode: grid_mode) unless item.hidden %>
     <% end %>
   </group>
 <% end %>
