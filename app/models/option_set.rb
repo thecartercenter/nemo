@@ -76,6 +76,9 @@ class OptionSet < ActiveRecord::Base
   # These methods are for the form.
   attr_writer :multi_level
 
+  # Indicates that this OptionSet is being created to be added to a question of the given type
+  attr_accessor :adding_to_question_type
+
   # Efficiently deletes option nodes for all option sets with given IDs.
   def self.terminate_sub_relationships(option_set_ids)
     # Must nullify these first to avoid fk error
@@ -133,6 +136,14 @@ class OptionSet < ActiveRecord::Base
 
   def huge?
     root_node.present? ? root_node.huge? : false
+  end
+
+  def can_be_multi_level?
+    !(has_select_multiple_questions? || huge? || !question_type_supports_multi_level?)
+  end
+
+  def question_type_supports_multi_level?
+    adding_to_question_type != "select_multiple"
   end
 
   def first_level_options
