@@ -31,6 +31,8 @@ class OptionSetsController < ApplicationController
   def new
     # we only need the partial if it's an ajax request
     if request.xhr?
+      @option_set.adding_to_question_type = params[:adding_to_question_type]
+
       params[:modal_mode] = true
       render(:partial => 'form')
     else
