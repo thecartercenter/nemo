@@ -46,6 +46,17 @@ describe Form do
         expect(@copy1.c[0].question).to eq @copy2.c[0].question
         expect(@copy1.c[0].question.option_set).to eq @copy2.c[0].question.option_set
       end
+
+      context 'when using eager loaded values from form items query' do
+        it 'keeps the questioning count consistent' do
+          std_qing_count = form_items_qing_count(@std)
+          copy1_qing_count = form_items_qing_count(@copy1)
+          copy2_qing_count = form_items_qing_count(@copy2)
+
+          expect(std_qing_count).to eq copy1_qing_count
+          expect(std_qing_count).to eq copy2_qing_count
+        end
+      end
     end
 
     context 'with a condition referencing an option' do
@@ -201,5 +212,9 @@ describe Form do
         expect(@copy.standard_copy?).to be_falsy
       end
     end
+  end
+
+  def form_items_qing_count(form_id)
+    FormItem.where(form_id: form_id, type: 'Questioning').count
   end
 end
