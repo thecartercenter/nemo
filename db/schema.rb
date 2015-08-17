@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150806165057) do
+ActiveRecord::Schema.define(version: 20150817204307) do
   create_table "answers", force: :cascade do |t|
     t.datetime "created_at"
     t.date "date_value"
@@ -484,7 +484,7 @@ ActiveRecord::Schema.define(version: 20150806165057) do
   add_foreign_key "form_items", "questions", name: "questionings_question_id_fk"
   add_foreign_key "form_versions", "forms", name: "form_versions_form_id_fk"
   add_foreign_key "forms", "form_versions", column: "current_version_id", name: "forms_current_version_id_fk", on_delete: :nullify
-  add_foreign_key "forms", "forms", column: "original_id", name: "forms_standard_id_fk"
+  add_foreign_key "forms", "forms", column: "original_id", name: "forms_standard_id_fk", on_delete: :nullify
   add_foreign_key "forms", "missions", name: "forms_mission_id_fk"
   add_foreign_key "groups", "missions", name: "groups_mission_id_fk"
   add_foreign_key "operations", "users", column: "creator_id"
@@ -493,11 +493,11 @@ ActiveRecord::Schema.define(version: 20150806165057) do
   add_foreign_key "option_nodes", "options", name: "option_nodes_option_id_fk"
   add_foreign_key "option_sets", "missions", name: "option_sets_mission_id_fk"
   add_foreign_key "option_sets", "option_nodes", column: "root_node_id", name: "option_sets_root_node_id_fk"
-  add_foreign_key "option_sets", "option_sets", column: "original_id", name: "option_sets_standard_id_fk"
+  add_foreign_key "option_sets", "option_sets", column: "original_id", name: "option_sets_standard_id_fk", on_delete: :nullify
   add_foreign_key "options", "missions", name: "options_mission_id_fk"
   add_foreign_key "questions", "missions", name: "questions_mission_id_fk"
   add_foreign_key "questions", "option_sets", name: "questions_option_set_id_fk"
-  add_foreign_key "questions", "questions", column: "original_id", name: "questions_standard_id_fk"
+  add_foreign_key "questions", "questions", column: "original_id", name: "questions_standard_id_fk", on_delete: :nullify
   add_foreign_key "report_calculations", "questions", column: "question1_id", name: "report_calculations_question1_id_fk"
   add_foreign_key "report_calculations", "report_reports", name: "report_calculations_report_report_id_fk"
   add_foreign_key "report_option_set_choices", "option_sets", name: "report_option_set_choices_option_set_id_fk"
