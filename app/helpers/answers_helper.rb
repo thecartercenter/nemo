@@ -28,8 +28,10 @@ module AnswersHelper
   end
 
   # assuming excerpts are enclosed with {{{ ... }}}, safely converts to <em> tags and returns html_safe string
+  # This is safe since we are escaping str before inserting the <em> tags, and also Sphinx should be
+  # stripping html from the excerpts.
   def excerpt_to_html(str)
-    h(str).gsub('{{{', '<em class="match">').gsub('}}}', '</em>').html_safe
+    html_escape(str).gsub('{{{', '<em class="match">').gsub('}}}', '</em>').html_safe
   end
 
   # checks for an excerpt for the given answer in the given response object and shows it if found
