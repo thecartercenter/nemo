@@ -39,7 +39,11 @@ describe Search::Search do
 
   INDEXED = [
     Search::Qualifier.new(name: "text", col: "tbl.id", type: :indexed),
-    Search::Qualifier.new(name: "source", col: "t.source")
+    Search::Qualifier.new(name: "source", col: "t.source"),
+
+    # Qualifiers with multiple columns
+    Search::Qualifier.new(name: "number", col: ["msg.to", "msg.from"], type: :text),
+    Search::Qualifier.new(name: "date", col: ["msg.created_at", "msg.updated_at"], type: :scale)
   ]
 
   it "no defaults" do
@@ -283,6 +287,11 @@ describe Search::Search do
 
   it "search with multiple default qualifiers should work" do
     assert_search(str: 'test', sql: "((t1.f2 = 'test') OR (t1.f3 = 'test'))", qualifiers: MULTIPLE_DEFAULTS)
+  end
+
+  it "supports multiple columns to generate a sql" do
+    assert_search(str: 'number:987', sql: "((msg.to LIKE '%987%') OR (msg.from LIKE '%987%'))", qualifiers: INDEXED)
+    assert_search(str: 'date:date', sql: "((msg.created_at = 'date') OR (msg.updated_at = 'date'))", qualifiers: INDEXED)
   end
 
   private
