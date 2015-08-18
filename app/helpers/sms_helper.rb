@@ -11,14 +11,14 @@ module SmsHelper
     when "time" then
       if sms.sent_at <= sms.created_at - 1.minute
         time_diff = time_diff(sms.sent_at, sms.created_at)
-        t('sms.timestamp_with_diff', time: l(sms.created_at), time_diff: time_diff)
+        t('sms.timestamp_with_diff_html', time: l(sms.created_at), time_diff: time_diff)
       else
         l(sms.created_at)
       end
     when "to" then
       recips = safe_join(sms.recipient_hashes(max: MAX_RECIPS_TO_SHOW).map { |r| user_with_phone(r[:user], r[:phone]) }, '<br/>'.html_safe)
       extra_recipients = sms.recipient_count - MAX_RECIPS_TO_SHOW
-      recips << (extra_recipients > 0 ? t('sms.extra_recipients', count: extra_recipients).html_safe : '')
+      recips << (extra_recipients > 0 ? t('sms.extra_recipients_html', count: extra_recipients) : '')
       recips
     when "from" then
       user_with_phone(sms.sender, sms.from)
