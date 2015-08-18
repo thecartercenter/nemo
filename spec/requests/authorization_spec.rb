@@ -69,7 +69,7 @@ describe 'authorization' do
     # Get attributes for request to change observer role to staffer.
     assignments_attributes = obs.assignments.first.attributes.slice(*%w(id mission_id)).merge('role' => 'staffer')
 
-    put("/en/m/#{get_mission.compact_name}/users/#{obs.id}", user: {assignments_attributes: [assignments_attributes]})
+    put(user_path(obs), user: {assignments_attributes: [assignments_attributes]})
     expect(assigns(:access_denied)).to be_nil
     expect(obs.reload.assignments.first.role).to eq('staffer')
   end
