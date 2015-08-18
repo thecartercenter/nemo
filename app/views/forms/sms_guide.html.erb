@@ -42,7 +42,7 @@
     <%# loop over each question %>
     <% @form.smsable_questionings.each do |qing| %>
       <tr>
-        <td class="rank"><%= qing.rank %>.</td>
+        <td class="rank"><%= qing.full_dotted_rank %>.</td>
         <td class="question">
           <%= qing.question.name %>
           <%= reqd_sym if qing.required? %>
