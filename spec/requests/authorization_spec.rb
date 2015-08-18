@@ -69,7 +69,7 @@ describe 'authorization' do
     # Get attributes for request to change observer role to staffer.
     assignments_attributes = obs.assignments.first.attributes.slice(*%w(id mission_id)).merge('role' => 'staffer')
 
-    put("/en/m/#{get_mission.compact_name}/users/#{obs.id}", user: {assignments_attributes: [assignments_attributes]})
+    put(user_path(obs), user: {assignments_attributes: [assignments_attributes]})
     expect(assigns(:access_denied)).to be_nil
     expect(obs.reload.assignments.first.role).to eq('staffer')
   end
@@ -84,6 +84,23 @@ describe 'authorization' do
     it 'should be able to edit self in basic mode' do
       get(edit_user_path(admin, mode: nil, mission_name: nil))
       assert_response :success
+    end
+
+    context 'with an assignment with empty role' do
+      before do
+        admin.assignments.delete_all
+      end
+
+      let(:assignment_without_role) { build(:assignment, user: admin, role: '') }
+      let(:empty_assignment_attributes) { assignment_without_role.attributes.slice(*%w(id mission_id role)) }
+      let(:admin_new_name) { 'New name' }
+
+      it 'still can update self' do
+        put(user_path(admin), user: {name: admin_new_name, assignments_attributes: [empty_assignment_attributes]})
+
+        assert_response(302) # redirected
+        expect(admin.reload.name).to eq admin_new_name
+      end
     end
   end
 

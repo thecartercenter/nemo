@@ -60,13 +60,6 @@ class UsersController < ApplicationController
   def update
     permitted_params = user_params
 
-    # don't care about assignment role if updated user is an admin
-    if current_user.admin? && params[:id].to_s == current_user.id.to_s &&
-      !permitted_params[:assignments_attributes].blank? &&
-      !permitted_params[:assignments_attributes][:role].blank?
-      permitted_params.delete :assignments_attributes
-    end
-
     # make sure changing assignment role is permitted if attempting
     authorize!(:change_assignments, @user) if permitted_params[:assignments_attributes]
     authorize!(:activate, @user) if permitted_params[:active]

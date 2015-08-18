@@ -7,7 +7,7 @@ class Assignment < ActiveRecord::Base
   before_validation(:normalize_role)
 
   validates(:mission, :presence => true)
-  validates(:role, :presence => true)
+  validates(:role, presence: true, unless: lambda { |a| a.user.admin? })
 
   default_scope { includes(:mission) }
   scope(:sorted_recent_first, -> { order("created_at DESC") })
@@ -27,6 +27,10 @@ class Assignment < ActiveRecord::Base
   # the key will change if the number of assignments changes, or if an assignment is updated.
   def self.per_mission_cache_key(mission)
     count_and_date_cache_key(:rel => unscoped.where(:mission_id => mission.id), :prefix => "mission-#{mission.id}")
+  end
+
+  def no_role?
+    role.blank?
   end
 
   # human readable
