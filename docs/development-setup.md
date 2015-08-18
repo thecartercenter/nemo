@@ -60,7 +60,7 @@ Note to install the software below we recommend the following package managers:
   - Copy `config/database.yml.example` to `config/database.yml` and edit `database.yml` to point to your database.
   - Copy `config/thinking_sphinx.yml.example` to `thinking_sphinx.yml` and adjust any settings (usually not necessary).
   - Copy `config/initializers/local_config.rb.example` to `config/initializers/local_config.rb` and adjust any settings.
-  - Run database migrations: `rake db:migrate`. If the diagramming step hangs, run `NO_DIAGRAM=true rake db:migrate`.
+  - Load the database schema: `rake db:schema:load`.
   - Create an admin account: `rake db:create_admin`. You should receive a message like this: "Admin user created with username admin, password hTyWc9Q6" (The password is random, copy it to be used on your first login).
 
 1. **Run the tests**
