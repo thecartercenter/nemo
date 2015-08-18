@@ -41,7 +41,7 @@ module ElmoFormHelper
 
   # renders the standard 'required' symbol, which is an asterisk
   def reqd_sym
-    content_tag(:div, '*', :class => 'reqd_sym')
+    content_tag(:div, '*', :class => 'reqd-sym')
   end
 
   private

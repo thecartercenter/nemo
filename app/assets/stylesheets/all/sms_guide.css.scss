@@ -38,7 +38,8 @@ div.sms_guide {
     font-weight: bold;
   }
 
-  td.question .reqd_sym {
+  td.question .reqd-sym {
+    display: inline-block;
     color: black;
     font-size: 18px;
   }
