@@ -85,6 +85,23 @@ describe 'authorization' do
       get(edit_user_path(admin, mode: nil, mission_name: nil))
       assert_response :success
     end
+
+    context 'with an assignment with empty role' do
+      before do
+        admin.assignments.delete_all
+      end
+
+      let(:assignment_without_role) { build(:assignment, user: admin, role: '') }
+      let(:empty_assignment_attributes) { assignment_without_role.attributes.slice(*%w(id mission_id role)) }
+      let(:admin_new_name) { 'New name' }
+
+      it 'still can update self' do
+        put(user_path(admin), user: {name: admin_new_name, assignments_attributes: [empty_assignment_attributes]})
+
+        assert_response(302) # redirected
+        expect(admin.reload.name).to eq admin_new_name
+      end
+    end
   end
 
   private
