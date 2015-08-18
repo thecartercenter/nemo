@@ -12,19 +12,18 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema.define(version: 20150806165057) do
-
   create_table "answers", force: :cascade do |t|
-    t.integer  "response_id",    limit: 4
-    t.integer  "option_id",      limit: 4
-    t.text     "value",          limit: 65535
     t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "questioning_id", limit: 4
-    t.time     "time_value"
-    t.date     "date_value"
+    t.date "date_value"
     t.datetime "datetime_value"
-    t.boolean  "delta",          limit: 1,     default: true, null: false
-    t.integer  "rank",           limit: 4
+    t.boolean "delta", limit: 1, default: true, null: false
+    t.integer "option_id", limit: 4
+    t.integer "questioning_id", limit: 4
+    t.integer "rank", limit: 4
+    t.integer "response_id", limit: 4
+    t.time "time_value"
+    t.datetime "updated_at"
+    t.text "value", limit: 65535
   end
 
   add_index "answers", ["option_id"], name: "answers_option_id_fk", using: :btree
@@ -32,43 +31,43 @@ ActiveRecord::Schema.define(version: 20150806165057) do
   add_index "answers", ["response_id"], name: "answers_response_id_fk", using: :btree
 
   create_table "assignments", force: :cascade do |t|
-    t.integer  "mission_id", limit: 4
-    t.integer  "user_id",    limit: 4
     t.datetime "created_at"
+    t.integer "mission_id", limit: 4
+    t.string "role", limit: 255
     t.datetime "updated_at"
-    t.string   "role",       limit: 255
+    t.integer "user_id", limit: 4
   end
 
   add_index "assignments", ["mission_id"], name: "assignments_mission_id_fk", using: :btree
   add_index "assignments", ["user_id"], name: "assignments_user_id_fk", using: :btree
 
   create_table "broadcast_addressings", force: :cascade do |t|
-    t.integer  "broadcast_id", limit: 4
-    t.integer  "user_id",      limit: 4
+    t.integer "broadcast_id", limit: 4
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer "user_id", limit: 4
   end
 
   add_index "broadcast_addressings", ["broadcast_id"], name: "broadcast_addressings_broadcast_id_fk", using: :btree
   add_index "broadcast_addressings", ["user_id"], name: "broadcast_addressings_user_id_fk", using: :btree
 
   create_table "broadcasts", force: :cascade do |t|
-    t.string   "subject",     limit: 255
-    t.text     "body",        limit: 65535
-    t.string   "medium",      limit: 255
-    t.text     "send_errors", limit: 65535
+    t.text "body", limit: 65535
     t.datetime "created_at"
+    t.string "medium", limit: 255
+    t.integer "mission_id", limit: 4
+    t.text "send_errors", limit: 65535
+    t.string "subject", limit: 255
     t.datetime "updated_at"
-    t.string   "which_phone", limit: 255
-    t.integer  "mission_id",  limit: 4
+    t.string "which_phone", limit: 255
   end
 
   add_index "broadcasts", ["mission_id"], name: "broadcasts_mission_id_fk", using: :btree
 
   create_table "choices", force: :cascade do |t|
-    t.integer  "answer_id",  limit: 4, null: false
-    t.integer  "option_id",  limit: 4, null: false
+    t.integer "answer_id", limit: 4, null: false
     t.datetime "created_at"
+    t.integer "option_id", limit: 4, null: false
     t.datetime "updated_at"
   end
 
@@ -76,14 +75,14 @@ ActiveRecord::Schema.define(version: 20150806165057) do
   add_index "choices", ["option_id"], name: "choices_option_id_fk", using: :btree
 
   create_table "conditions", force: :cascade do |t|
-    t.integer  "questioning_id", limit: 4
-    t.integer  "ref_qing_id",    limit: 4
-    t.string   "op",             limit: 255
-    t.string   "value",          limit: 255
     t.datetime "created_at"
+    t.integer "mission_id", limit: 4
+    t.string "op", limit: 255
+    t.string "option_ids", limit: 255
+    t.integer "questioning_id", limit: 4
+    t.integer "ref_qing_id", limit: 4
     t.datetime "updated_at"
-    t.integer  "mission_id",     limit: 4
-    t.string   "option_ids",     limit: 255
+    t.string "value", limit: 255
   end
 
   add_index "conditions", ["mission_id"], name: "index_conditions_on_mission_id", using: :btree
@@ -91,34 +90,34 @@ ActiveRecord::Schema.define(version: 20150806165057) do
   add_index "conditions", ["ref_qing_id"], name: "conditions_ref_qing_id_fk", using: :btree
 
   create_table "delayed_jobs", force: :cascade do |t|
-    t.integer  "priority",   limit: 4,     default: 0, null: false
-    t.integer  "attempts",   limit: 4,     default: 0, null: false
-    t.text     "handler",    limit: 65535,             null: false
-    t.text     "last_error", limit: 65535
-    t.datetime "run_at"
-    t.datetime "locked_at"
-    t.datetime "failed_at"
-    t.string   "locked_by",  limit: 255
-    t.string   "queue",      limit: 255
+    t.integer "attempts", limit: 4, default: 0, null: false
     t.datetime "created_at"
+    t.datetime "failed_at"
+    t.text "handler", limit: 65535, null: false
+    t.text "last_error", limit: 65535
+    t.datetime "locked_at"
+    t.string "locked_by", limit: 255
+    t.integer "priority", limit: 4, default: 0, null: false
+    t.string "queue", limit: 255
+    t.datetime "run_at"
     t.datetime "updated_at"
   end
 
   add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
 
   create_table "form_items", force: :cascade do |t|
-    t.integer  "question_id",             limit: 4
-    t.integer  "form_id",                 limit: 4,                   null: false
-    t.integer  "rank",                    limit: 4,                   null: false
-    t.boolean  "required",                limit: 1,   default: false, null: false
-    t.boolean  "hidden",                  limit: 1,   default: false, null: false
+    t.string "ancestry", limit: 255
+    t.integer "ancestry_depth", limit: 4, null: false
     t.datetime "created_at"
+    t.integer "form_id", limit: 4, null: false
+    t.string "group_name_translations", limit: 255
+    t.boolean "hidden", limit: 1, default: false, null: false
+    t.integer "mission_id", limit: 4
+    t.integer "question_id", limit: 4
+    t.integer "rank", limit: 4, null: false
+    t.boolean "required", limit: 1, default: false, null: false
+    t.string "type", limit: 255, null: false
     t.datetime "updated_at"
-    t.integer  "mission_id",              limit: 4
-    t.string   "type",                    limit: 255,                 null: false
-    t.string   "ancestry",                limit: 255
-    t.integer  "ancestry_depth",          limit: 4,                   null: false
-    t.string   "group_name_translations", limit: 255
   end
 
   add_index "form_items", ["ancestry"], name: "index_form_items_on_ancestry", using: :btree
@@ -127,35 +126,35 @@ ActiveRecord::Schema.define(version: 20150806165057) do
   add_index "form_items", ["question_id"], name: "questionings_question_id_fk", using: :btree
 
   create_table "form_versions", force: :cascade do |t|
-    t.integer  "form_id",    limit: 4
-    t.integer  "sequence",   limit: 4,   default: 1
-    t.string   "code",       limit: 255
-    t.boolean  "is_current", limit: 1,   default: true
-    t.datetime "created_at",                            null: false
-    t.datetime "updated_at",                            null: false
+    t.string "code", limit: 255
+    t.datetime "created_at", null: false
+    t.integer "form_id", limit: 4
+    t.boolean "is_current", limit: 1, default: true
+    t.integer "sequence", limit: 4, default: 1
+    t.datetime "updated_at", null: false
   end
 
   add_index "form_versions", ["code"], name: "index_form_versions_on_code", unique: true, using: :btree
   add_index "form_versions", ["form_id"], name: "form_versions_form_id_fk", using: :btree
 
   create_table "forms", force: :cascade do |t|
-    t.string   "name",               limit: 255
+    t.string "access_level", limit: 255, default: "private", null: false
+    t.boolean "allow_incomplete", limit: 1, default: false, null: false
     t.datetime "created_at"
-    t.datetime "updated_at"
-    t.boolean  "published",          limit: 1,   default: false
-    t.integer  "downloads",          limit: 4
-    t.integer  "responses_count",    limit: 4,   default: 0
-    t.integer  "mission_id",         limit: 4
-    t.integer  "current_version_id", limit: 4
-    t.boolean  "upgrade_needed",     limit: 1,   default: false
-    t.boolean  "smsable",            limit: 1,   default: false
-    t.boolean  "is_standard",        limit: 1,   default: false
-    t.integer  "original_id",        limit: 4
-    t.boolean  "allow_incomplete",   limit: 1,   default: false,     null: false
-    t.string   "access_level",       limit: 255, default: "private", null: false
+    t.integer "current_version_id", limit: 4
+    t.integer "downloads", limit: 4
+    t.boolean "is_standard", limit: 1, default: false
+    t.integer "mission_id", limit: 4
+    t.string "name", limit: 255
+    t.integer "original_id", limit: 4
     t.datetime "pub_changed_at"
-    t.integer  "root_id",            limit: 4
-    t.boolean  "standard_copy",      limit: 1,   default: false,     null: false
+    t.boolean "published", limit: 1, default: false
+    t.integer "responses_count", limit: 4, default: 0
+    t.integer "root_id", limit: 4
+    t.boolean "smsable", limit: 1, default: false
+    t.boolean "standard_copy", limit: 1, default: false, null: false
+    t.datetime "updated_at"
+    t.boolean "upgrade_needed", limit: 1, default: false
   end
 
   add_index "forms", ["current_version_id"], name: "forms_current_version_id_fk", using: :btree
@@ -163,51 +162,51 @@ ActiveRecord::Schema.define(version: 20150806165057) do
   add_index "forms", ["original_id"], name: "index_forms_on_standard_id", using: :btree
 
   create_table "groups", force: :cascade do |t|
-    t.string   "name",       limit: 255, null: false
-    t.integer  "mission_id", limit: 4,   null: false
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.datetime "created_at", null: false
+    t.integer "mission_id", limit: 4, null: false
+    t.string "name", limit: 255, null: false
+    t.datetime "updated_at", null: false
   end
 
   add_index "groups", ["mission_id"], name: "groups_mission_id_fk", using: :btree
 
   create_table "missions", force: :cascade do |t|
-    t.string   "name",         limit: 255
-    t.string   "compact_name", limit: 255
+    t.string "compact_name", limit: 255
     t.datetime "created_at"
+    t.boolean "locked", limit: 1, default: false, null: false
+    t.string "name", limit: 255
     t.datetime "updated_at"
-    t.boolean  "locked",       limit: 1,   default: false, null: false
   end
 
   add_index "missions", ["compact_name"], name: "index_missions_on_compact_name", using: :btree
 
   create_table "operations", force: :cascade do |t|
-    t.integer  "creator_id",       limit: 4,     null: false
-    t.string   "job_class",        limit: 255,   null: false
-    t.string   "description",      limit: 255,   null: false
-    t.datetime "job_started_at"
-    t.datetime "job_failed_at"
+    t.datetime "created_at", null: false
+    t.integer "creator_id", limit: 4, null: false
+    t.string "description", limit: 255, null: false
+    t.string "job_class", limit: 255, null: false
     t.datetime "job_completed_at"
-    t.string   "job_id",           limit: 255
-    t.string   "provider_job_id",  limit: 255
-    t.string   "job_outcome_url",  limit: 255
-    t.text     "job_error_report", limit: 65535
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
+    t.text "job_error_report", limit: 65535
+    t.datetime "job_failed_at"
+    t.string "job_id", limit: 255
+    t.string "job_outcome_url", limit: 255
+    t.datetime "job_started_at"
+    t.string "provider_job_id", limit: 255
+    t.datetime "updated_at", null: false
   end
 
   add_index "operations", ["created_at"], name: "index_operations_on_created_at", using: :btree
   add_index "operations", ["creator_id", "created_at"], name: "index_operations_on_creator_id_and_created_at", using: :btree
 
   create_table "option_nodes", force: :cascade do |t|
-    t.string   "ancestry",       limit: 255
-    t.integer  "option_set_id",  limit: 4
-    t.integer  "option_id",      limit: 4
-    t.integer  "rank",           limit: 4,   default: 1, null: false
-    t.datetime "created_at",                             null: false
-    t.datetime "updated_at",                             null: false
-    t.integer  "mission_id",     limit: 4
-    t.integer  "ancestry_depth", limit: 4,   default: 0
+    t.string "ancestry", limit: 255
+    t.integer "ancestry_depth", limit: 4, default: 0
+    t.datetime "created_at", null: false
+    t.integer "mission_id", limit: 4
+    t.integer "option_id", limit: 4
+    t.integer "option_set_id", limit: 4
+    t.integer "rank", limit: 4, default: 1, null: false
+    t.datetime "updated_at", null: false
   end
 
   add_index "option_nodes", ["ancestry"], name: "index_option_nodes_on_ancestry", using: :btree
@@ -217,17 +216,17 @@ ActiveRecord::Schema.define(version: 20150806165057) do
   add_index "option_nodes", ["rank"], name: "index_option_nodes_on_rank", using: :btree
 
   create_table "option_sets", force: :cascade do |t|
-    t.string   "name",              limit: 255
+    t.boolean "allow_coordinates", limit: 1, default: false, null: false
     t.datetime "created_at"
+    t.boolean "geographic", limit: 1, default: false, null: false
+    t.boolean "is_standard", limit: 1, default: false
+    t.text "level_names", limit: 65535
+    t.integer "mission_id", limit: 4
+    t.string "name", limit: 255
+    t.integer "original_id", limit: 4
+    t.integer "root_node_id", limit: 4
+    t.boolean "standard_copy", limit: 1, default: false, null: false
     t.datetime "updated_at"
-    t.integer  "mission_id",        limit: 4
-    t.boolean  "is_standard",       limit: 1,     default: false
-    t.integer  "original_id",       limit: 4
-    t.boolean  "geographic",        limit: 1,     default: false, null: false
-    t.integer  "root_node_id",      limit: 4
-    t.text     "level_names",       limit: 65535
-    t.boolean  "standard_copy",     limit: 1,     default: false, null: false
-    t.boolean  "allow_coordinates", limit: 1,     default: false, null: false
   end
 
   add_index "option_sets", ["geographic"], name: "index_option_sets_on_geographic", using: :btree
@@ -236,38 +235,38 @@ ActiveRecord::Schema.define(version: 20150806165057) do
   add_index "option_sets", ["root_node_id"], name: "option_sets_root_node_id_fk", using: :btree
 
   create_table "options", force: :cascade do |t|
+    t.string "canonical_name", limit: 255, null: false
     t.datetime "created_at"
+    t.decimal "latitude", precision: 8, scale: 6
+    t.decimal "longitude", precision: 9, scale: 6
+    t.integer "mission_id", limit: 4
+    t.text "name_translations", limit: 65535
     t.datetime "updated_at"
-    t.integer  "mission_id",        limit: 4
-    t.string   "canonical_name",    limit: 255,                           null: false
-    t.text     "name_translations", limit: 65535
-    t.decimal  "latitude",                        precision: 8, scale: 6
-    t.decimal  "longitude",                       precision: 9, scale: 6
   end
 
   add_index "options", ["canonical_name", "mission_id"], name: "index_options_on_canonical_name_and_mission_id", using: :btree
   add_index "options", ["mission_id"], name: "index_options_on_mission_id", using: :btree
 
   create_table "questions", force: :cascade do |t|
-    t.string   "code",              limit: 255
-    t.integer  "option_set_id",     limit: 4
+    t.string "access_level", limit: 255, default: "inherit", null: false
+    t.text "canonical_name", limit: 65535, null: false
+    t.string "code", limit: 255
     t.datetime "created_at"
+    t.text "hint_translations", limit: 65535
+    t.boolean "is_standard", limit: 1, default: false
+    t.boolean "key", limit: 1, default: false
+    t.decimal "maximum", precision: 15, scale: 8
+    t.boolean "maxstrictly", limit: 1
+    t.decimal "minimum", precision: 15, scale: 8
+    t.boolean "minstrictly", limit: 1
+    t.integer "mission_id", limit: 4
+    t.text "name_translations", limit: 65535
+    t.integer "option_set_id", limit: 4
+    t.integer "original_id", limit: 4
+    t.string "qtype_name", limit: 255
+    t.boolean "standard_copy", limit: 1, default: false, null: false
+    t.boolean "text_type_for_sms", limit: 1, default: false, null: false
     t.datetime "updated_at"
-    t.decimal  "minimum",                         precision: 15, scale: 8
-    t.decimal  "maximum",                         precision: 15, scale: 8
-    t.boolean  "maxstrictly",       limit: 1
-    t.boolean  "minstrictly",       limit: 1
-    t.integer  "mission_id",        limit: 4
-    t.string   "qtype_name",        limit: 255
-    t.text     "canonical_name",    limit: 65535,                                              null: false
-    t.text     "name_translations", limit: 65535
-    t.text     "hint_translations", limit: 65535
-    t.boolean  "key",               limit: 1,                              default: false
-    t.boolean  "is_standard",       limit: 1,                              default: false
-    t.integer  "original_id",       limit: 4
-    t.string   "access_level",      limit: 255,                            default: "inherit", null: false
-    t.boolean  "standard_copy",     limit: 1,                              default: false,     null: false
-    t.boolean  "text_type_for_sms", limit: 1,                              default: false,     null: false
   end
 
   add_index "questions", ["mission_id", "code"], name: "index_questions_on_mission_id_and_code", unique: true, using: :btree
@@ -276,47 +275,47 @@ ActiveRecord::Schema.define(version: 20150806165057) do
   add_index "questions", ["qtype_name"], name: "index_questions_on_qtype_name", using: :btree
 
   create_table "report_calculations", force: :cascade do |t|
-    t.string   "type",             limit: 255
-    t.integer  "report_report_id", limit: 4
-    t.integer  "question1_id",     limit: 4
-    t.string   "attrib1_name",     limit: 255
+    t.string "attrib1_name", limit: 255
     t.datetime "created_at"
+    t.integer "question1_id", limit: 4
+    t.integer "rank", limit: 4
+    t.integer "report_report_id", limit: 4
+    t.string "type", limit: 255
     t.datetime "updated_at"
-    t.integer  "rank",             limit: 4
   end
 
   add_index "report_calculations", ["question1_id"], name: "report_calculations_question1_id_fk", using: :btree
   add_index "report_calculations", ["report_report_id"], name: "report_calculations_report_report_id_fk", using: :btree
 
   create_table "report_option_set_choices", force: :cascade do |t|
+    t.integer "option_set_id", limit: 4
     t.integer "report_report_id", limit: 4
-    t.integer "option_set_id",    limit: 4
   end
 
   add_index "report_option_set_choices", ["option_set_id"], name: "report_option_set_choices_option_set_id_fk", using: :btree
   add_index "report_option_set_choices", ["report_report_id"], name: "report_option_set_choices_report_report_id_fk", using: :btree
 
   create_table "report_reports", force: :cascade do |t|
-    t.integer  "mission_id",       limit: 4
-    t.string   "type",             limit: 255
-    t.string   "name",             limit: 255
+    t.string "aggregation_name", limit: 255
+    t.string "bar_style", limit: 255, default: "side_by_side"
     t.datetime "created_at"
+    t.integer "disagg_qing_id", limit: 4
+    t.string "display_type", limit: 255, default: "table"
+    t.string "filter", limit: 255
+    t.integer "form_id", limit: 4
+    t.boolean "group_by_tag", limit: 1, default: false, null: false
+    t.integer "mission_id", limit: 4
+    t.string "name", limit: 255
+    t.string "percent_type", limit: 255, default: "none"
+    t.string "question_labels", limit: 255, default: "title"
+    t.string "question_order", limit: 255, default: "number", null: false
+    t.string "text_responses", limit: 255, default: "all"
+    t.string "type", limit: 255
+    t.boolean "unique_rows", limit: 1, default: false
+    t.boolean "unreviewed", limit: 1, default: false
     t.datetime "updated_at"
+    t.integer "view_count", limit: 4, default: 0
     t.datetime "viewed_at"
-    t.integer  "view_count",       limit: 4,   default: 0
-    t.string   "display_type",     limit: 255, default: "table"
-    t.string   "bar_style",        limit: 255, default: "side_by_side"
-    t.boolean  "unreviewed",       limit: 1,   default: false
-    t.string   "question_labels",  limit: 255, default: "title"
-    t.string   "percent_type",     limit: 255, default: "none"
-    t.boolean  "unique_rows",      limit: 1,   default: false
-    t.string   "aggregation_name", limit: 255
-    t.integer  "form_id",          limit: 4
-    t.string   "question_order",   limit: 255, default: "number",       null: false
-    t.string   "text_responses",   limit: 255, default: "all"
-    t.integer  "disagg_qing_id",   limit: 4
-    t.string   "filter",           limit: 255
-    t.boolean  "group_by_tag",     limit: 1,   default: false,          null: false
   end
 
   add_index "report_reports", ["disagg_qing_id"], name: "report_reports_disagg_qing_id_fk", using: :btree
@@ -325,17 +324,17 @@ ActiveRecord::Schema.define(version: 20150806165057) do
   add_index "report_reports", ["view_count"], name: "index_report_reports_on_view_count", using: :btree
 
   create_table "responses", force: :cascade do |t|
-    t.integer  "form_id",           limit: 4
-    t.integer  "user_id",           limit: 4
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.boolean  "reviewed",          limit: 1,     default: false
-    t.string   "source",            limit: 255
-    t.integer  "mission_id",        limit: 4
-    t.boolean  "incomplete",        limit: 1,     default: false, null: false
     t.datetime "checked_out_at"
-    t.integer  "checked_out_by_id", limit: 4
-    t.text     "reviewer_notes",    limit: 65535
+    t.integer "checked_out_by_id", limit: 4
+    t.datetime "created_at"
+    t.integer "form_id", limit: 4
+    t.boolean "incomplete", limit: 1, default: false, null: false
+    t.integer "mission_id", limit: 4
+    t.boolean "reviewed", limit: 1, default: false
+    t.text "reviewer_notes", limit: 65535
+    t.string "source", limit: 255
+    t.datetime "updated_at"
+    t.integer "user_id", limit: 4
   end
 
   add_index "responses", ["checked_out_at"], name: "index_responses_on_checked_out_at", using: :btree
@@ -348,50 +347,50 @@ ActiveRecord::Schema.define(version: 20150806165057) do
   add_index "responses", ["user_id"], name: "responses_user_id_fk", using: :btree
 
   create_table "sessions", force: :cascade do |t|
-    t.string   "session_id", limit: 255,   null: false
-    t.text     "data",       limit: 65535
     t.datetime "created_at"
+    t.text "data", limit: 65535
+    t.string "session_id", limit: 255, null: false
     t.datetime "updated_at"
   end
 
   add_index "sessions", ["updated_at"], name: "index_sessions_on_updated_at", using: :btree
 
   create_table "settings", force: :cascade do |t|
-    t.string   "timezone",                          limit: 255
+    t.boolean "allow_unauthenticated_submissions", limit: 1, default: false
     t.datetime "created_at"
+    t.string "default_outgoing_sms_adapter", limit: 255
+    t.string "incoming_sms_number", limit: 255
+    t.string "incoming_sms_token", limit: 255
+    t.string "intellisms_password", limit: 255
+    t.string "intellisms_username", limit: 255
+    t.integer "mission_id", limit: 4
+    t.string "override_code", limit: 255
+    t.string "preferred_locales", limit: 255
+    t.string "timezone", limit: 255
+    t.string "twilio_account_sid", limit: 255
+    t.string "twilio_auth_token", limit: 255
+    t.string "twilio_phone_number", limit: 255
     t.datetime "updated_at"
-    t.integer  "mission_id",                        limit: 4
-    t.string   "default_outgoing_sms_adapter",      limit: 255
-    t.string   "intellisms_username",               limit: 255
-    t.string   "intellisms_password",               limit: 255
-    t.string   "incoming_sms_number",               limit: 255
-    t.string   "preferred_locales",                 limit: 255
-    t.string   "override_code",                     limit: 255
-    t.boolean  "allow_unauthenticated_submissions", limit: 1,   default: false
-    t.string   "incoming_sms_token",                limit: 255
-    t.string   "twilio_account_sid",                limit: 255
-    t.string   "twilio_auth_token",                 limit: 255
-    t.string   "twilio_phone_number",               limit: 255
   end
 
   add_index "settings", ["mission_id"], name: "settings_mission_id_fk", using: :btree
 
   create_table "sms_messages", force: :cascade do |t|
-    t.string   "to",           limit: 255
-    t.string   "from",         limit: 255
-    t.text     "body",         limit: 65535
+    t.string "adapter_name", limit: 255
+    t.text "body", limit: 65535
+    t.integer "broadcast_id", limit: 4
+    t.datetime "created_at", null: false
+    t.string "from", limit: 255
+    t.integer "mission_id", limit: 4
+    t.integer "reply_to_id", limit: 4
     t.datetime "sent_at"
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
-    t.integer  "mission_id",   limit: 4
-    t.string   "adapter_name", limit: 255
-    t.string   "type",         limit: 255,   null: false
-    t.integer  "user_id",      limit: 4
-    t.integer  "broadcast_id", limit: 4
-    t.integer  "reply_to_id",  limit: 4
+    t.string "to", limit: 255
+    t.string "type", limit: 255, null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", limit: 4
   end
 
-  add_index "sms_messages", ["body"], name: "index_sms_messages_on_body", length: {"body"=>160}, using: :btree
+  add_index "sms_messages", ["body"], name: "index_sms_messages_on_body", length: { "body" => 160 }, using: :btree
   add_index "sms_messages", ["broadcast_id"], name: "sms_messages_broadcast_id_fk", using: :btree
   add_index "sms_messages", ["created_at"], name: "index_sms_messages_on_created_at", using: :btree
   add_index "sms_messages", ["from"], name: "index_sms_messages_on_from", using: :btree
@@ -402,57 +401,57 @@ ActiveRecord::Schema.define(version: 20150806165057) do
   add_index "sms_messages", ["user_id"], name: "sms_messages_user_id_fk", using: :btree
 
   create_table "taggings", force: :cascade do |t|
-    t.integer  "question_id", limit: 4, null: false
-    t.integer  "tag_id",      limit: 4, null: false
-    t.datetime "created_at",            null: false
-    t.datetime "updated_at",            null: false
+    t.datetime "created_at", null: false
+    t.integer "question_id", limit: 4, null: false
+    t.integer "tag_id", limit: 4, null: false
+    t.datetime "updated_at", null: false
   end
 
   add_index "taggings", ["question_id"], name: "index_taggings_on_question_id", using: :btree
   add_index "taggings", ["tag_id"], name: "index_taggings_on_tag_id", using: :btree
 
   create_table "tags", force: :cascade do |t|
-    t.string   "name",       limit: 64, null: false
-    t.integer  "mission_id", limit: 4
-    t.datetime "created_at",            null: false
-    t.datetime "updated_at",            null: false
+    t.datetime "created_at", null: false
+    t.integer "mission_id", limit: 4
+    t.string "name", limit: 64, null: false
+    t.datetime "updated_at", null: false
   end
 
   add_index "tags", ["mission_id"], name: "index_tags_on_mission_id", using: :btree
   add_index "tags", ["name", "mission_id"], name: "index_tags_on_name_and_mission_id", using: :btree
 
   create_table "user_groups", force: :cascade do |t|
-    t.integer  "user_id",    limit: 4, null: false
-    t.integer  "group_id",   limit: 4, null: false
-    t.datetime "created_at",           null: false
-    t.datetime "updated_at",           null: false
+    t.datetime "created_at", null: false
+    t.integer "group_id", limit: 4, null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", limit: 4, null: false
   end
 
   add_index "user_groups", ["group_id"], name: "user_groups_group_id_fk", using: :btree
   add_index "user_groups", ["user_id"], name: "user_groups_user_id_fk", using: :btree
 
   create_table "users", force: :cascade do |t|
-    t.string   "login",               limit: 255,                   null: false
-    t.string   "email",               limit: 255
-    t.string   "phone",               limit: 255
-    t.string   "password_salt",       limit: 255
-    t.string   "crypted_password",    limit: 255
-    t.string   "single_access_token", limit: 255
-    t.string   "perishable_token",    limit: 255
-    t.string   "persistence_token",   limit: 255
-    t.datetime "created_at",                                        null: false
-    t.datetime "updated_at",                                        null: false
-    t.integer  "login_count",         limit: 4,     default: 0
-    t.text     "notes",               limit: 65535
-    t.datetime "last_request_at"
-    t.string   "name",                limit: 255,                   null: false
-    t.string   "phone2",              limit: 255
-    t.boolean  "admin",               limit: 1,     default: false, null: false
-    t.string   "pref_lang",           limit: 255,                   null: false
-    t.string   "api_key",             limit: 255
-    t.integer  "last_mission_id",     limit: 4
-    t.boolean  "active",              limit: 1,     default: true,  null: false
+    t.boolean "active", limit: 1, default: true, null: false
+    t.boolean "admin", limit: 1, default: false, null: false
+    t.string "api_key", limit: 255
+    t.datetime "created_at", null: false
+    t.string "crypted_password", limit: 255
     t.datetime "current_login_at"
+    t.string "email", limit: 255
+    t.integer "last_mission_id", limit: 4
+    t.datetime "last_request_at"
+    t.string "login", limit: 255, null: false
+    t.integer "login_count", limit: 4, default: 0
+    t.string "name", limit: 255, null: false
+    t.text "notes", limit: 65535
+    t.string "password_salt", limit: 255
+    t.string "perishable_token", limit: 255
+    t.string "persistence_token", limit: 255
+    t.string "phone", limit: 255
+    t.string "phone2", limit: 255
+    t.string "pref_lang", limit: 255, null: false
+    t.string "single_access_token", limit: 255
+    t.datetime "updated_at", null: false
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
@@ -460,11 +459,11 @@ ActiveRecord::Schema.define(version: 20150806165057) do
   add_index "users", ["name"], name: "index_users_on_name", using: :btree
 
   create_table "whitelists", force: :cascade do |t|
-    t.integer  "user_id",            limit: 4
-    t.integer  "whitelistable_id",   limit: 4
-    t.string   "whitelistable_type", limit: 255
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", limit: 4
+    t.integer "whitelistable_id", limit: 4
+    t.string "whitelistable_type", limit: 255
   end
 
   add_foreign_key "answers", "form_items", column: "questioning_id"
