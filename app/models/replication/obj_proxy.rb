@@ -192,7 +192,8 @@ class Replication::ObjProxy
 
     def get_copy_id(target_class, orig_id)
       if target_class.standardizable?
-        target_class.where(mission_id: replicator.target_mission_id, original_id: orig_id).pluck(:id).first
+        # Find the appropriate copy in the replicator history
+        replicator.history.get_copy(target_class, orig_id).try(:id)
       elsif reuse_col = target_class.replicable_opts[:reuse_if_match]
         orig_reuse_val = target_class.where(id: orig_id).pluck(reuse_col).first
         target_class.where(mission_id: replicator.target_mission_id, reuse_col => orig_reuse_val).pluck(:id).first
