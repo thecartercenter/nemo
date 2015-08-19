@@ -95,10 +95,22 @@ module OdkHelper
 
   # Tests if all items in the group are Questionings with the same type and option set.
   def grid_mode?(items)
-    items.all?{ |i| i.is_a?(Questioning) && i.qtype.name == 'select_one' && i.option_set == items[0].option_set }
+    # more than one question is needed for grid mode
+    false unless items.size > 1
+
+    items.all? do |i|
+      i.is_a?(Questioning) &&
+      i.qtype_name == 'select_one' &&
+      i.option_set == items[0].option_set &&
+      !i.multi_level?
+    end
   end
 
   def empty_qing_group?(subtree)
     subtree.keys.empty?
+  end
+
+  def organize_qing_groups(descendants)
+    QingGroupOdkPartitioner.new(descendants).fragment();
   end
 end
