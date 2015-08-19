@@ -222,7 +222,7 @@ class OptionNode < ActiveRecord::Base
 
   # arranges option descendant nodes into rows for export.
   # rows are created for leaf nodes only and contain the node id and the
-  # localized option names in the current locale.
+  # localized option names in the mission preferred locale.
   def arrange_as_rows(hash = nil, parent_path = [])
     hash = arrange_with_options(eager_load_option_assocs: false) if hash.nil?
 
@@ -232,7 +232,7 @@ class OptionNode < ActiveRecord::Base
       # output a row if we've hit a leaf node or a parent node with coordinates
       if children.empty? || (option_set.allow_coordinates? && node.option.has_coordinates?)
         # use the option path to construct the list of cell values
-        row = [node.id, *path.map(&:name)]
+        row = [node.id, *preferred_name_translations(path)]
 
         # add the coordinates if the option set allows coordinates
         row << node.option.coordinates if option_set.allow_coordinates?
@@ -243,6 +243,10 @@ class OptionNode < ActiveRecord::Base
       # recursively collect rows for the children
       rows.concat(arrange_as_rows(children, path)) if children.present?
     end
+  end
+
+  def preferred_name_translations(path)
+    path.map{ |p| p.name(configatron.preferred_locale.to_s) }
   end
 
   # Returns the total number of options omitted from the JSON serialization.

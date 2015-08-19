@@ -104,6 +104,9 @@ class Setting < ActiveRecord::Base
       nil
     end
 
+    #set the preferred locale for the mission
+    hsh[:preferred_locale] = preferred_locales.first
+
     # set system timezone
     Time.zone = timezone
 

@@ -72,7 +72,7 @@ class OptionSetImport
 
           if cell.present?
             # Create the option.
-            attribs = { mission: mission, name: cell }
+            attribs = { mission: mission, name_locale_key => cell }
             # TODO: nicer check for leaf nodes
             attribs.merge!(leaf_attribs) if row[c+1...headers.size].all?(&:blank?)
             option = Option.create(attribs)
@@ -132,11 +132,14 @@ class OptionSetImport
       headers = sheet.row(1)
       headers = headers[0...headers.index(nil)] if headers.any?(&:nil?)
 
+      # Get special columns i18n values
+      id_header = "Id"
+      coordinates_header = I18n.t('activerecord.attributes.option.coordinates')
+
       # Find any special columns
       special_columns = {}
       headers.each_with_index do |h,i|
-        # TODO: i18n
-        if ["Id", "Coordinates"].include?(h)
+        if [id_header, coordinates_header].include?(h)
           special_columns[i] = h.downcase.to_sym
         end
       end
@@ -199,4 +202,7 @@ class OptionSetImport
       !row[row.index(nil)..-1].all?(&:nil?)
     end
 
+    def name_locale_key
+      :"name_#{configatron.preferred_locale}"
+    end
 end
