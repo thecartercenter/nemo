@@ -49,8 +49,8 @@
     var selected_type = self.field_value('qtype_name');
 
     // Show/hide option set field and hint
-    options = options || {}
-    options.multilevel = selected_type == 'select_one'
+    options = options || {};
+    options.multilevel = selected_type == 'select_one';
     self.show_option_set_select(selected_type == 'select_one' || selected_type == 'select_multiple', options);
 
     // show/hide max/min
@@ -89,8 +89,11 @@
     // show the loading indicator
     $('div.question_fields #option_set_id .loading_indicator').show();
 
+    var question_type_param = '?adding_to_question_type=' + self.field_value('qtype_name'),
+        loadUrl = self.params.new_option_set_path + question_type_param;
+
     // populate and show the modal
-    $("#create-option-set .modal-body.option-set").load(self.params.new_option_set_path, function(){
+    $("#create-option-set .modal-body.option-set").load(loadUrl, function(){
       $("#create-option-set").modal('show');
     });
   }
