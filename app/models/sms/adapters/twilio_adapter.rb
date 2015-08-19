@@ -21,10 +21,7 @@ class Sms::Adapters::TwilioAdapter < Sms::Adapters::Adapter
     begin
       client = Twilio::REST::Client.new(configatron.twilio_account_sid, configatron.twilio_auth_token)
 
-      client.messages.create(
-        from: configatron.twilio_phone_number,
-        to: message.recipient_numbers.join(','),
-        body: message.body)
+      send_message_for_each_recipient(message, client)
     rescue Twilio::REST::RequestError => e
       raise Sms::Error.new(e)
     end
@@ -57,5 +54,16 @@ class Sms::Adapters::TwilioAdapter < Sms::Adapters::Adapter
   # How replies should be sent.
   def reply_style
     :via_response
+  end
+
+  private
+
+  def send_message_for_each_recipient(message, client)
+    message.recipient_numbers.each do |number|
+      client.messages.create(
+        from: configatron.twilio_phone_number,
+        to: number,
+        body: message.body)
+    end
   end
 end
