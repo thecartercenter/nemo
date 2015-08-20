@@ -43,7 +43,7 @@ module FeatureSpecHelpers
     # Triggering keydown initiates the ajax request within tokenInput
     page.driver.execute_script("$('#{text_input_selector}').trigger('keydown');")
     # The result_list_selector will show when the AJAX request is complete
-    page.has_css? result_list_selector
+    expect(page).to have_selector(result_list_selector, visible: true)
 
     # Pick the result
     unless options[:dont_pick]
@@ -88,5 +88,13 @@ module FeatureSpecHelpers
   def clear_token_input(id, options={})
     page.driver.execute_script("$('##{id}').tokenInput('clear', #{options.to_json})")
     sleep(0.1)
+  end
+
+  def wait_modal_to_be_visible(modal_selector='.modal-dialog')
+    expect(page).to have_selector(modal_selector, visible: true)
+  end
+
+  def wait_modal_to_hide(modal_selector='.modal-dialog')
+    expect(page).to have_selector(modal_selector, visible: false)
   end
 end
