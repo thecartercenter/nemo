@@ -117,6 +117,7 @@ group :development, :test do
   gem 'rspec-collection_matchers'
   gem 'mocha'                        # mocking/stubbing
   gem 'capybara'                     # acceptance tests
+  gem 'capybara-screenshot'          # automatic screenshots on failure
   gem 'selenium-webdriver'
   gem 'poltergeist', '~> 1.6'
   gem 'database_cleaner'             # cleans database for testing
