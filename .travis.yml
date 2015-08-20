@@ -18,3 +18,7 @@ env:
     # Set reCAPTCHA keys to dummy values
     - RECAPTCHA_PUBLIC_KEY=6Lc6BAAAAAAAAChqRbQZcn_yyyyyyyyyyyyyyyyy
     - RECAPTCHA_PRIVATE_KEY=6Lc6BAAAAAAAAKN3DRm6VA_xxxxxxxxxxxxxxxxx
+addons:
+  artifacts:
+    paths:
+    - $(ls /home/travis/build/thecartercenter/elmo/tmp/capybara/*.png | tr "\n" ":")
