@@ -18,7 +18,7 @@ feature 'responses index' do
 
     # Click response and then go back. Should still be there!
     click_link(Response.first.id.to_s)
-    page.execute_script('window.history.back()')
+    click_link('Responses')
     expect(page).to have_content('TheForm')
   end
 end
