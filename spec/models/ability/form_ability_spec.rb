@@ -14,8 +14,8 @@ describe 'abilities for forms' do
       end
 
       it 'should have limited abilities' do
-        %w(show update add_questions remove_questions reorder_questions destroy).each{ |op| expect(@ability).to be_able_to(op, @form) }
-        %w(publish clone).each{ |op| expect(@ability).not_to be_able_to(op, @form) }
+        %w(show clone update add_questions remove_questions reorder_questions destroy).each{ |op| expect(@ability).to be_able_to(op, @form) }
+        %w(publish).each{ |op| expect(@ability).not_to be_able_to(op, @form) }
       end
     end
   end
