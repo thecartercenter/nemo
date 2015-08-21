@@ -226,9 +226,6 @@ class Ability
       f.published? || f.has_responses?
     end
 
-    # standard forms can't be cloned (hard to implement and not currently needed)
-    cannot :clone, Form, :is_standard => true
-
     # only published forms can be downloaded
     cannot :download, Form, :published => false
 
