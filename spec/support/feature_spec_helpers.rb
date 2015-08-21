@@ -5,6 +5,8 @@ module FeatureSpecHelpers
   end
 
   def fill_in_ckeditor(locator, opts)
+    wait_for_ckeditor(locator)
+
     content = opts.fetch(:with).to_json
     page.execute_script <<-SCRIPT
       CKEDITOR.instances['#{locator}'].setData(#{content});
@@ -96,5 +98,17 @@ module FeatureSpecHelpers
 
   def wait_modal_to_hide(modal_selector='.modal-dialog')
     expect(page).to have_selector(modal_selector, visible: false)
+  end
+
+  private
+
+  def wait_for_ckeditor(locator)
+    Timeout.timeout(Capybara.default_wait_time) do
+      loop until ckeditor_ready? locator
+    end
+  end
+
+  def ckeditor_ready?(locator)
+    page.evaluate_script "CKEDITOR.instances['#{locator}'].instanceReady;"
   end
 end
