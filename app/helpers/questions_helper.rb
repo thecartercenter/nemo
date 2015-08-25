@@ -59,4 +59,8 @@ module QuestionsHelper
       content_tag(:option, s.name, value: s.id, selected: s.id == selected_id ? 'selected' : nil, :'data-multilevel' => s.multi_level?)
     end.reduce(:<<) || ""
   end
+
+  def maxmin_strictly_label(method)
+    t("question.maxmin.strictly_" + (method == :casted_minimum ? "gt" : "lt"))
+  end
 end

@@ -2,7 +2,7 @@
 
   <%= form.object.send(method) %>
   <% if form.object.send(:"#{method.to_s[7,3]}strictly") %>
-    &nbsp;(<%= t("question.maxmin.strictly_" + (method == :minimum ? "gt" : "lt")) %>)
+    &nbsp;(<%= maxmin_strictly_label(method) %>)
   <% end %>
 
 <% else %>
@@ -10,6 +10,6 @@
   <%= form.text_field(method, :class => 'text form-control') %>
   &nbsp; &nbsp; &nbsp;
   <%= form.check_box(:"#{method.to_s[7,3]}strictly") %>
-  <%= form.label(:"#{method.to_s[7,3]}strictly", t("question.maxmin.strictly_" + (method == :casted_minimum ? "gt" : "lt"))) %>
+  <%= form.label(:"#{method.to_s[7,3]}strictly", maxmin_strictly_label(method)) %>
 
 <% end %>
