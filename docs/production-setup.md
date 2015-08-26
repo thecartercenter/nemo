@@ -79,6 +79,8 @@ Choose and save separate passwords for the `root` and `elmo` MySQL users you're 
     # NOTE: Replace xxx with your elmo user password.
     grant all privileges on elmo_production.* to elmo@localhost identified by 'xxx';
     exit
+    # Add timezone tables (enter password again).
+    mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -u root -p mysql
 
 ### Configure ELMO
 

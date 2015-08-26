@@ -6,8 +6,10 @@ namespace :db do
     if zone_test.entries.first && zone_test.entries.first.first.class == Time
       puts "Timezones OK"
     else
-      puts "WARNING: MySQL timezone tables have not been populated. Some date functionality will not work without these. " +
-        "See the MySQL manual for instructions on populating them."
+      fail "***********************************************************************************
+WARNING: MySQL timezone tables have not been populated. Some date functionality will not work without these.
+See the MySQL manual for instructions on populating them.
+***********************************************************************************"
     end
   end
 end

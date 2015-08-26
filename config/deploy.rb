@@ -48,6 +48,8 @@ end
 # This also restarts the sphinx daemon.
 after "deploy", "thinking_sphinx:rebuild"
 
+after "deploy", "deploy:check_timezones"
+
 after "deploy", "deploy:cleanup" # keep only the last 5 releases
 
 # Tie delayed_job lifecycle to the main lifecycle
@@ -88,6 +90,12 @@ namespace :deploy do
   desc "Create an admin user with temporary password."
   task :create_admin, roles: :web do
     run "cd #{current_path} && RAILS_ENV=#{rails_env} rake db:create_admin"
+  end
+
+  desc "Check MySQL timezones."
+  task :check_timezones, roles: :web do
+    # Runs rake task if 'ok' flag file is not present
+    run "cd #{current_path} && [ ! -f tmp/tzok.txt ] && RAILS_ENV=#{rails_env} rake db:timezone_test && touch tmp/tzok.txt || echo"
   end
 
   desc "ping the server so that it connects to db"
