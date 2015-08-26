@@ -10,15 +10,17 @@ feature 'conditions flow', js: true do
   end
 
   scenario 'add and update condition to existing question' do
+    question_code = @form.questions[0].code
+
     all('a.action_link.edit')[1].click
-    select("1. #{@form.questions[0].code}", from: 'Question')
+    select_question_and_wait_to_populate_other_selects(1, question_code)
     select('is equal to', from: 'Comparison')
     select('Animal', from: 'Kingdom')
     click_button('Save')
 
     # View the questioning and ensure the condition is shown correctly.
     visit("/en/m/#{@form.mission.compact_name}/questionings/#{@form.questionings[1].id}")
-    expect(page).to have_content("Question #1 #{@form.questions[0].code}
+    expect(page).to have_content("Question #1 #{question_code}
       Kingdom is equal to \"Animal\"")
 
     # Update the condition to have a full option path.
@@ -29,16 +31,18 @@ feature 'conditions flow', js: true do
 
     # View and test again.
     visit("/en/m/#{@form.mission.compact_name}/questionings/#{@form.questionings[1].id}")
-    expect(page).to have_content("Question #1 #{@form.questions[0].code}
+    expect(page).to have_content("Question #1 #{question_code}
       Species is equal to \"Dog\"")
   end
 
   scenario 'add a new question with a condition' do
+    question_code = @form.questions[0].code
+
     click_link('Add Questions')
     fill_in('Code', with: 'NewQ')
     select('Text', from: 'Type')
     fill_in('Title (English)', with: 'New Question')
-    select("1. #{@form.questions[0].code}", from: 'Question')
+    select_question_and_wait_to_populate_other_selects(1, question_code)
     select('is equal to', from: 'Comparison')
     select('Plant', from: 'Kingdom')
     select('Oak', from: 'Species')
@@ -46,19 +50,30 @@ feature 'conditions flow', js: true do
 
     # Check the new condition
     visit("/en/m/#{@form.mission.compact_name}/questionings/#{@form.reload.questionings[3].id}")
-    expect(page).to have_content("Question #1 #{@form.questions[0].code}
+    expect(page).to have_content("Question #1 #{question_code}
       Species is equal to \"Oak\"")
   end
 
   scenario 'add a condition referring to an integer question' do
+    question_code = @form.questions[1].code
+
     all('a.action_link.edit')[2].click
-    select("2. #{@form.questions[1].code}", from: 'Question')
+    select_question_and_wait_to_populate_other_selects(2, question_code)
     select('is less than', from: 'Comparison')
     fill_in('Value', with: '5')
     click_button('Save')
 
     # View the questioning and ensure the condition is shown correctly.
     visit("/en/m/#{@form.mission.compact_name}/questionings/#{@form.questionings[2].id}")
-    expect(page).to have_content("Question #2 #{@form.questions[1].code} is less than 5")
+    expect(page).to have_content("Question #2 #{question_code} is less than 5")
+  end
+
+  def select_question_and_wait_to_populate_other_selects(counter, question_code)
+    select(question_label(counter, question_code), from: 'Question')
+    wait_for_ajax
+  end
+
+  def question_label(counter, question_code)
+    "#{counter}. #{question_code}"
   end
 end
