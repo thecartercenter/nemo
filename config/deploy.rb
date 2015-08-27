@@ -70,12 +70,22 @@ namespace :deploy do
   after "deploy:setup", "deploy:setup_config"
 
   task :symlink_config, roles: :app do
+    # Directories
+    run "mkdir -p #{shared_path}/tmp"
+    run "mkdir -p #{shared_path}/log"
+    run "mkdir -p #{shared_path}/db/sphinx/#{rails_env}"
+    run "mkdir -p #{release_path}/db/sphinx"
+    run "ln -nfs #{shared_path}/tmp #{release_path}/tmp"
+    run "ln -nfs #{shared_path}/log #{release_path}/log"
+    run "ln -nfs #{shared_path}/db/sphinx/#{rails_env} #{release_path}/db/sphinx/#{rails_env}"
+
+    # Files
     run "ln -nfs #{shared_path}/config/database.yml #{release_path}/config/database.yml"
     run "ln -nfs #{shared_path}/config/thinking_sphinx.yml #{release_path}/config/thinking_sphinx.yml"
     run "ln -nfs #{shared_path}/config/local_config.rb #{release_path}/config/initializers/local_config.rb"
     run "ln -nfs #{shared_path}/config/railsenv #{release_path}/config/railsenv"
   end
-  after "deploy:finalize_update", "deploy:symlink_config"
+  before "deploy:finalize_update", "deploy:symlink_config"
 
   desc "Make sure local git is in sync with remote."
   task :check_revision, roles: :web do
