@@ -6,11 +6,8 @@ class User < ActiveRecord::Base
   ELMO = new name: "ELMO" # Dummy user for use in SMS log
 
   attr_writer(:reset_password_method)
-
-  # call before_destroy before :dependent => :destroy associations
-  # cf. https://github.com/rails/rails/issues/3458
-  before_destroy(:check_assoc)
-  before_save(:clear_assignments_without_roles)
+  attr_accessor(:batch_creation)
+  alias :batch_creation? :batch_creation
 
   has_many :responses, :inverse_of => :user
   has_many :broadcast_addressings, :inverse_of => :user, :dependent => :destroy
@@ -30,19 +27,28 @@ class User < ActiveRecord::Base
     c.disable_perishable_token_maintenance = true
     c.perishable_token_valid_for = 1.week
     c.logged_in_timeout(SESSION_TIMEOUT)
+
     c.validates_format_of_login_field_options = {:with => /[\a-zA-Z0-9\.]+/}
-    c.merge_validates_length_of_password_field_options minimum: 8
+    c.merge_validates_uniqueness_of_login_field_options(:unless => Proc.new{|u| u.batch_creation?})
+
+    c.merge_validates_length_of_password_field_options(minimum: 8,
+                                                       :unless => Proc.new{|u| u.batch_creation?})
 
     # email is not mandatory, but must be valid if given
     c.merge_validates_format_of_email_field_options(:allow_blank => true)
-    c.merge_validates_uniqueness_of_email_field_options(:unless => Proc.new{|u| u.email.blank?})
+    c.merge_validates_uniqueness_of_email_field_options(:unless => Proc.new{|u| u.batch_creation? ||
+                                                                                u.email.blank?})
   end
 
   after_initialize(:set_default_pref_lang)
   after_initialize(:set_default_login)
   before_validation(:normalize_fields)
-  before_validation(:generate_password_if_none)
-  after_create(:regenerate_api_key)
+  before_validation(:generate_password_if_none, unless: :batch_creation?)
+  after_create(:regenerate_api_key, unless: :batch_creation?)
+  # call before_destroy before :dependent => :destroy associations
+  # cf. https://github.com/rails/rails/issues/3458
+  before_destroy(:check_assoc)
+  before_save(:clear_assignments_without_roles)
 
   validates(:name, :presence => true)
   validates(:pref_lang, :presence => true)
@@ -51,8 +57,11 @@ class User < ActiveRecord::Base
   validate(:password_reset_cant_be_email_if_no_email)
   validate(:no_duplicate_assignments)
   validate(:must_have_assignments_if_not_admin)
-  validate(:phone_should_be_unique)
-  validates :password, format: { with: /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])/, if: :require_password?, message: :invalid_password }
+  validate(:phone_should_be_unique, unless: :batch_creation?)
+  validates :password, format: { with: /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])/,
+                                 if: :require_password?,
+                                 unless: :batch_creation?,
+                                 message: :invalid_password }
 
   scope(:by_name, -> { order("users.name") })
   scope(:assigned_to, ->(m) { where("users.id IN (SELECT user_id FROM assignments WHERE mission_id = ?)", m.try(:id)) })
@@ -80,7 +89,7 @@ class User < ActiveRecord::Base
     (user && user.valid_password?(password)) ? user : nil
   end
 
-  def self.suggest_login(name)
+  def self.suggest_login(name, skip_uniqueness_check)
     # if it looks like a person's name, suggest f. initial + l. name
     if m = name.match(/\A([a-z][a-z'’]+) ([a-z'’\- ]+)\z/i)
       l = $1[0,1] + $2.gsub(/[^a-z]+/i, "")
@@ -93,7 +102,7 @@ class User < ActiveRecord::Base
     suggestion = l[0,10].downcase
 
     # if this login is taken, add a number to the end
-    if find_by_login(suggestion)
+    if !skip_uniqueness_check && find_by_login(suggestion)
 
       # get suffixes of all logins with same prefix
       suffixes = where("login LIKE '#{suggestion}%'").all.collect{|u| u.login[suggestion.length..-1].to_i}
@@ -299,6 +308,15 @@ class User < ActiveRecord::Base
     save validate: false
   end
 
+  # OVERRIDE AUTHLOGIC METHOD.
+  # This is to avoid unnecessary queries to the database if we want to skip
+  # certain validations.
+  #
+  # Resets the persistence_token field to a random hex value.
+  def reset_persistence_token
+    super unless batch_creation?
+  end
+
   private
     def normalize_fields
       %w(phone phone2 login name email).each{|f| self.send("#{f}").try(:strip!)}
@@ -382,7 +400,7 @@ class User < ActiveRecord::Base
     # sets the user's default login name
     def set_default_login
       begin
-        self.login ||= self.class.suggest_login(name) unless name.blank?
+        self.login ||= self.class.suggest_login(name, batch_creation?) unless name.blank?
       rescue ActiveModel::MissingAttributeError
         # we rescue this error in case find_by_sql is being used
       end
