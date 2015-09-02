@@ -450,7 +450,6 @@ ActiveRecord::Schema.define(version: 20150904133758) do
     t.string "phone", limit: 255
     t.string "phone2", limit: 255
     t.string "pref_lang", limit: 255, null: false
-    t.string "single_access_token", limit: 255
     t.datetime "updated_at", null: false
   end
 

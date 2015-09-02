@@ -29,7 +29,6 @@ FactoryGirl.define do
     login_count 1
 
     persistence_token { Authlogic::Random.hex_token }
-    single_access_token { Authlogic::Random.friendly_token }
     perishable_token { Authlogic::Random.friendly_token }
 
     after(:build) do |user, evaluator|
