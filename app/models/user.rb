@@ -99,7 +99,7 @@ class User < ActiveRecord::Base
     end
 
     # convert to lowercase
-    suggestion = l[0,10].downcase
+    suggestion = l[0,20].downcase
 
     # if this login is taken, add a number to the end
     if !skip_uniqueness_check && find_by_login(suggestion)
