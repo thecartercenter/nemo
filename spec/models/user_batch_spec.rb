@@ -31,8 +31,13 @@ describe User do
 
   private
   def assert_user_attribs(user, attribs)
-    # make sure user is successfully created
-    expect(user.valid? && !user.new_record?).to be true
+    # make sure user is valid
+    user.valid?
+
+    # Only persistence token should appear as an error.
+    # It will not be set on batch import.
+    expect(user.errors.messages.length).to be 1
+    expect(user.errors.messages.keys).to match_array [:persistence_token]
 
     # check attribs
     expect(user).to have_attributes(attribs)
