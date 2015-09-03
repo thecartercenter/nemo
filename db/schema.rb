@@ -438,6 +438,7 @@ ActiveRecord::Schema.define(version: 20150904133758) do
     t.string "crypted_password", limit: 255
     t.datetime "current_login_at"
     t.string "email", limit: 255
+    t.integer "import_num", limit: 4
     t.integer "last_mission_id", limit: 4
     t.datetime "last_request_at"
     t.string "login", limit: 255, null: false
