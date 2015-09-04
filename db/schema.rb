@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150817204307) do
+ActiveRecord::Schema.define(version: 20150904133758) do
   create_table "answers", force: :cascade do |t|
     t.datetime "created_at"
     t.date "date_value"
@@ -301,7 +301,7 @@ ActiveRecord::Schema.define(version: 20150817204307) do
     t.datetime "created_at"
     t.integer "disagg_qing_id", limit: 4
     t.string "display_type", limit: 255, default: "table"
-    t.string "filter", limit: 255
+    t.text "filter", limit: 65535
     t.integer "form_id", limit: 4
     t.boolean "group_by_tag", limit: 1, default: false, null: false
     t.integer "mission_id", limit: 4
