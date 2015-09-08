@@ -1,9 +1,13 @@
 require 'twilio-ruby'
 
 class Sms::Adapters::TwilioAdapter < Sms::Adapters::Adapter
+  def self.header_signature_name
+    'X-Twilio-Signature'
+  end
+
   # checks if this adapter recognizes an incoming http receive request
   def self.recognize_receive_request?(request)
-    request.headers.include?('X-Twilio-Signature')
+    request.headers.include?(header_signature_name)
   end
 
   def self.can_deliver?
