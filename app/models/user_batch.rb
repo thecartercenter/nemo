@@ -13,6 +13,7 @@ class UserBatch
 
   def initialize(attribs = {})
     @users = []
+    @direct_db_conn = DirectDBConn.new('users')
     attribs.each{|k,v| instance_variable_set("@#{k}", v)}
   end
 
@@ -63,16 +64,16 @@ class UserBatch
           check_uniqueness_on_objects(users_batch, 'phone')
           check_uniqueness_on_objects(users_batch, 'phone2')
 
-          check_uniqueness_on_db(users_batch, 'users', 'email', row_start)
-          check_uniqueness_on_db(users_batch, 'users', 'login', row_start)
-          check_uniqueness_on_db(users_batch, 'users', 'phone', row_start, ['phone','phone2'])
-          check_uniqueness_on_db(users_batch, 'users', 'phone2', row_start, ['phone2','phone'])
+          check_uniqueness_on_db(users_batch, 'email', row_start)
+          check_uniqueness_on_db(users_batch, 'login', row_start)
+          check_uniqueness_on_db(users_batch, 'phone', row_start, ['phone','phone2'])
+          check_uniqueness_on_db(users_batch, 'phone2', row_start, ['phone2','phone'])
 
           check_validation_errors(users_batch, row_start)
 
           break if errors_reached_limit
 
-          DirectDBConn.insert(users_batch, 'users')
+          @direct_db_conn.insert(users_batch)
           insert_assignments(users_batch)
 
           users.concat users_batch
@@ -237,12 +238,11 @@ class UserBatch
     end
   end
 
-  def check_uniqueness_on_db(objects, table, field, row_start, columns=[])
-    results = DirectDBConn.check_uniqueness_on_db(objects, table, field, row_start, columns)
+  def check_uniqueness_on_db(objects, field, row_start, columns=[])
+    results = @direct_db_conn.check_uniqueness(objects, field, row_start, columns)
 
     results.each do |result|
       @fields_hash_table[field][result.first].each do |index|
-        p "UNIQ FAIL DB: #{field} : #{result.first}"
         object = objects.at(index)
         object.errors.add(field, :taken)
       end
@@ -253,27 +253,12 @@ class UserBatch
     field.include?('phone') ? 'phone' : field
   end
 
-  def insert_assignments(objects)
-    assignments = objects.map{ |u| u.assignments.first }
-
-    string_params = DirectDBConn.generate_string_params_template(assignments.length)
-    column_names = assignments.first.attributes.keys.join(', ')
-    users_id = objects.map{|o| "(SELECT id FROM users WHERE import_num=#{o.import_num})" }
-
-    object_values = assignments.map.with_index do |assignment, index|
-      values_in_string = DirectDBConn.convert_values_to_insert_syntax(assignment)
-      values_as_array = values_in_string.split(',')
-
-      #Add Select query on user_id position
-      user_id_index = column_names.split(', ').index('user_id')
-      values_as_array[user_id_index] = users_id[index]
-
-      "(#{values_as_array.join(',')})"
-    end
-
-    sql_query_array = ["INSERT INTO assignments (#{column_names}) VALUES #{object_values.join(', ')}"]
-
-    DirectDBConn.execute_sql_query_array(sql_query_array)
+  def insert_assignments(users_batch)
+    DirectDBConn.new('assignments').insert_select(users_batch,
+                                                  'assignments',
+                                                  'user_id',
+                                                  'users',
+                                                  'import_num')
   end
 
   def last_import_num_on_users
