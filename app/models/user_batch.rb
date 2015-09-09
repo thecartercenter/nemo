@@ -59,15 +59,13 @@ class UserBatch
 
           validate_users_batch(users_batch)
 
-          check_uniqueness_on_objects(users_batch, 'email')
-          check_uniqueness_on_objects(users_batch, 'login')
-          check_uniqueness_on_objects(users_batch, 'phone')
-          check_uniqueness_on_objects(users_batch, 'phone2')
+          check_uniqueness_on_objects(users_batch, ['email'])
+          check_uniqueness_on_objects(users_batch, ['login'])
+          check_uniqueness_on_objects(users_batch, ['phone', 'phone2'])
 
-          check_uniqueness_on_db(users_batch, 'email', row_start)
-          check_uniqueness_on_db(users_batch, 'login', row_start)
-          check_uniqueness_on_db(users_batch, 'phone', row_start, ['phone','phone2'])
-          check_uniqueness_on_db(users_batch, 'phone2', row_start, ['phone2','phone'])
+          check_uniqueness_on_db(users_batch, ['email'])
+          check_uniqueness_on_db(users_batch, ['login'])
+          check_uniqueness_on_db(users_batch, ['phone', 'phone2'])
 
           check_validation_errors(users_batch, row_start)
 
@@ -154,16 +152,21 @@ class UserBatch
       'phone' => {}
     }
 
-    columns = ['email', 'login', 'phone', 'phone2']
+    # Group fields by array if they need to be checked together (in this case, phone and phone2)
+    fields_to_check = [['email'], ['login'], ['phone', 'phone2']]
 
-    columns.each{ |field| populate_hash_with_field_and_occurrences(field, objects) }
+    fields_to_check.each{ |field| populate_hash_with_field_and_occurrences(field, objects) }
   end
 
   def populate_hash_with_field_and_occurrences(field, objects)
     key = correct_field_key(field)
 
-    objects.map{ |o| o.send(field) }.each_with_index do |value, index|
-      (@fields_hash_table[key][value] ||= []) << index unless value.nil?
+    objects.each do |object|
+      field.each do |f|
+        field_value = object.send(f)
+        # Need to accept nil for email otherwise the db insert will complain of two emails as nil (not unique)
+        (@fields_hash_table[key][field_value] ||= []) << object unless (field_value.nil? && key == 'phone')
+      end
     end
   end
 
@@ -193,16 +196,17 @@ class UserBatch
   end
 
   def add_validation_error_messages(user, row_number)
+    # Remove persistence token error because it's not important on batch import
+    user.errors.delete(:persistence_token)
+
     # if the user has errors, add them to the batch's errors
     unless user.errors.empty?
       user.errors.keys.each do |attribute|
-        if attribute != :persistence_token
-          user.errors.full_messages_for(attribute).each do |error|
-            add_error(error, attribute, row_number)
-          end
+        user.errors.full_messages_for(attribute).each do |error|
+          add_error(error, attribute, row_number)
         end
       end
-      @validation_error = true unless error_is_on_persistence_token? user
+      @validation_error = true
     end
   end
 
@@ -230,27 +234,45 @@ class UserBatch
     index + row_start + 1
   end
 
-  def check_uniqueness_on_objects(objects, field)
-    key = correct_field_key(field)
+  def check_uniqueness_on_objects(objects, fields)
+    key = correct_field_key(fields)
+
     # Add errors on fields that aren't unique
     @fields_hash_table[key].each do |k,v|
-      v.each{ |i| objects.at(i).errors.add(field, :taken) } if v.length != 1
+      add_uniqueness_error(k, v, fields) if v.length !=1
     end
   end
 
-  def check_uniqueness_on_db(objects, field, row_start, columns=[])
-    results = @direct_db_conn.check_uniqueness(objects, field, row_start, columns)
+  def add_uniqueness_error(key, value, fields)
+    value.each do |object|
+      fields.each{ |f| add_uniqueness_error_checking_field_value(object, f, key) }
+    end
+  end
 
-    results.each do |result|
-      @fields_hash_table[field][result.first].each do |index|
-        object = objects.at(index)
-        object.errors.add(field, :taken)
+  def add_uniqueness_error_checking_field_value(object, field, value)
+    object.errors.add(field, :taken) if object.send(field) == value
+  end
+
+  def check_uniqueness_on_db(objects, fields)
+    results = @direct_db_conn.check_uniqueness(objects, fields)
+
+    add_results_errors_on_objects(results, objects, fields) unless results.nil?
+  end
+
+  def add_results_errors_on_objects(results, objects, fields)
+    key = correct_field_key(fields)
+
+    results.reject(&:nil?).each do |result|
+      @fields_hash_table[key][result].each do |object|
+        fields.each{ |f| add_uniqueness_error_checking_field_value(object, f, result) }
       end
     end
   end
 
+  # If the field passed has more than one value, it means that the first value
+  # is being used as the key on the hash table (they are being checked at the same time)
   def correct_field_key(field)
-    field.include?('phone') ? 'phone' : field
+    field.first
   end
 
   def insert_assignments(users_batch)

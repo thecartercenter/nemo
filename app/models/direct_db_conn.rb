@@ -44,25 +44,25 @@ class DirectDBConn
     execute_sql_query_array(sql_query_array) rescue ActiveRecord::RecordNotUnique
   end
 
-  def check_uniqueness(objects, field, row_start, columns=[])
-    # Columns is used if you want to test the field against more than the columns with same name.
-    # If none passed, we just use the field as the column
-    columns << field if columns.empty?
-    results = []
+  def check_uniqueness(objects, fields)
+    sql = "SELECT #{fields.join(', ')} FROM #{@table} WHERE "
+    field_values = fields.map{ |f| objects.map{ |u| u.send(f) } }.flatten
+    string_params = generate_string_params_template_with_quotes(field_values.length)
 
-    columns.each do |column|
-      string_params = generate_string_params_template_with_quotes(objects.length)
-      field_values = objects.map{ |u| u.send(field.to_sym) }
+    conditions = []
 
-      #Avoid executing queries if fields aren't present
+    fields.each do |field|
+      #Avoid building query if fields aren't present
       unless field_values.all?(&:nil?)
-        sql_query_array = ["SELECT #{field} FROM #{@table} WHERE #{column} IN (#{string_params})", field_values].flatten
-
-        results = execute_sql_query_array(sql_query_array).entries
+        field_in_values_sql = ["#{field} IN (#{string_params})", field_values].flatten
+        sanitized_query = sanitize_sql_query_array(field_in_values_sql)
+        conditions << sanitized_query
       end
     end
 
-    results
+    sql += conditions.join(' OR ')
+
+    execute_sanitized_query(sql).entries.flatten if sql_have_where_in_clause(sql)
   end
 
   private
@@ -107,8 +107,16 @@ class DirectDBConn
     end.join(',')
   end
 
+  def sql_have_where_in_clause(sql)
+    sql.include? ' IN ('
+  end
+
   def execute_sql_query_array(sql_query_array)
     sanitized_query = sanitize_sql_query_array(sql_query_array)
+    execute_sanitized_query(sanitized_query)
+  end
+
+  def execute_sanitized_query(sanitized_query)
     ActiveRecord::Base.connection.execute(sanitized_query)
   end
 
