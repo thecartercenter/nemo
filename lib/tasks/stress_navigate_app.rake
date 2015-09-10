@@ -1,19 +1,17 @@
 namespace :stress do
-  desc "Load/Stress test the app"
-  task :test, [:count,
-               :loops,
-               :sms_incoming_token,
-               :mission_name,
-               :login,
-               :password,
-               :domain,
-               :port] do |t, args|
+  desc "Load/Stress test the app via simple user navigation"
+  task :navigate_app, [:count,
+                       :loops,
+                       :mission_name,
+                       :login,
+                       :password,
+                       :domain,
+                       :port] do |t, args|
 
     require 'ruby-jmeter'
 
     args.with_defaults(count: 1,
                        loops: 1,
-                       sms_incoming_token: '',
                        mission_name: '',
                        login: '',
                        password: '',
@@ -21,12 +19,12 @@ namespace :stress do
                        port: 443)
 
     p args
-    start_stress_test(*args.to_hash.values)
+    navigate(*args.to_hash.values)
   end
 end
 
-def start_stress_test(count, loops, sms_incoming_token, mission_name, login, password, domain, port)
-  jmeter_path = '/usr/local/apache-jmeter-2.13/bin/'
+def navigate(count, loops, mission_name, login, password, domain, port)
+  jmeter_path = '../apache-jmeter-2.13/bin/'
 
   test do
     defaults domain: domain, port: port.to_i, protocol: 'https'
@@ -36,19 +34,8 @@ def start_stress_test(count, loops, sms_incoming_token, mission_name, login, pas
     extract name: 'authenticity_token',
             regex: 'input type="hidden" name="authenticity_token" value="(.+?)"'
 
-    csv_data_set_config filename: 'messages_signature.csv',
-       variableNames: 'message,phone_number,twilio_signature'
-
     threads count: count.to_i, loops: loops.to_i do
-      think_time 1000, 1000
-
-      transaction 'Send SMS messages' do
-        header({name: 'X-Twilio-Stub-Signature', value: "${twilio_signature}"})
-
-        submit name: 'sms-submit', url: "/m/#{mission_name}/sms/submit/#{sms_incoming_token}",
-          always_encode: true,
-          fill_in: {"From"=>"${phone_number}", "Body"=>"${message}"}
-      end
+      think_time 500, 100
 
       transaction 'Log in and navigate app' do
 
@@ -83,7 +70,5 @@ def start_stress_test(count, loops, sms_incoming_token, mission_name, login, pas
     summary_report
 
   end.run(path: jmeter_path,
-          properties: "#{jmeter_path}jmeter.properties",
-          gui: true)
-
+          properties: "#{jmeter_path}jmeter.properties")
 end

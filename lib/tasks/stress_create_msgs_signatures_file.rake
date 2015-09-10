@@ -35,9 +35,22 @@ def signature_for_params(url, params, auth_token)
 end
 
 # This is for "Stress Test Form" on loadtest1
+# Some letter ranges are more than the ones accepted for
+# an answer to simulate some invalid messages
+#
+# 1 - (a..f)
+# 2 - text
+# 3 - (a..e)
+# 4 - (1..1000000)
+# 5 - text
+# 6 - (a..h)
+# 7 - (a..g)
+# 8 - (1..1000000)
+# 9 - (a..t)
+# 10 -text
 def build_message_for_form(form_code)
   responses = []
-  responses << "1.#{random_letter('a','f')}"
+  responses << "1.#{random_letter('c','h')}"
   responses << "2.#{random_text}"
   responses << "3.#{random_letter('a','e')}"
   responses << "4.#{rand(1000000)}"
