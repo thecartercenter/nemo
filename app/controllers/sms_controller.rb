@@ -61,10 +61,10 @@ class SmsController < ApplicationController
 
       if @incoming_adapter.reply_style == :via_adapter
         @outgoing_adapter.deliver(reply)
-        render :plain => 'REPLY_SENT'
       else # reply via response
         @incoming_adapter.prepare_message_for_delivery(reply)
-        render :plain => reply.body
       end
+
+      render partial: "#{@incoming_adapter.service_name.downcase}_response", formats: [:html, :text]
     end
 end
