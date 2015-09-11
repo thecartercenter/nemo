@@ -34,7 +34,7 @@ def navigate(count, loops, mission_name, login, password, domain, port)
     extract name: 'authenticity_token',
             regex: 'input type="hidden" name="authenticity_token" value="(.+?)"'
 
-    threads count: count.to_i, loops: loops.to_i do
+    threads count: count.to_i, loops: loops.to_i, scheduler: false do
       think_time 500, 100
 
       transaction 'Log in and navigate app' do
@@ -63,11 +63,6 @@ def navigate(count, loops, mission_name, login, password, domain, port)
         visit name: 'sms', url: "/en/m/#{mission_name}/sms"
       end
     end
-
-    view_results_tree
-    graph_results
-    aggregate_graph
-    summary_report
 
   end.run(path: jmeter_path,
           properties: "#{jmeter_path}jmeter.properties")

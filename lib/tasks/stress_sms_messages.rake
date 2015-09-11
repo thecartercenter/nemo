@@ -32,8 +32,8 @@ def send_sms(count, loops, sms_incoming_token, mission_name, domain, port)
     csv_data_set_config filename: 'messages_signature.csv',
        variableNames: 'message,phone_number,twilio_signature'
 
-    threads count: count.to_i, loops: loops.to_i do
-      think_time 600, 100
+    threads count: count.to_i, loops: loops.to_i, scheduler: false do
+      think_time 100, 50
 
       transaction 'Send SMS messages' do
         header({name: 'X-Twilio-Stub-Signature', value: "${twilio_signature}"})
@@ -43,11 +43,6 @@ def send_sms(count, loops, sms_incoming_token, mission_name, domain, port)
           fill_in: {"From"=>"${phone_number}", "Body"=>"${message}"}
       end
     end
-
-    view_results_tree
-    graph_results
-    aggregate_graph
-    summary_report
 
   end.run(path: jmeter_path,
           properties: "#{jmeter_path}jmeter.properties")
