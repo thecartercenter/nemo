@@ -48,6 +48,9 @@ class Report::StandardFormReport < Report::Report
 
   TEXT_RESPONSE_OPTIONS = %w(all short_only none)
 
+  # How many non reporting observers it will show on the report before summarizing the rest
+  MISSING_OBSERVERS_SIZE_LIMIT = 100
+
   def as_json(options = {})
     # add the required methods to the methods option
     h = super(options)
@@ -88,17 +91,34 @@ class Report::StandardFormReport < Report::Report
     @summary_collection
   end
 
-  # returns all non-admin users in the form's mission with the given role that have not submitted any responses to the form
-  # options[:role] - (symbol) the role to check for
+  # Returns all non-admin users in the form's mission with the given role that have
+  # not submitted any responses to the form
+  #
+  # options[:role] the role to check for
+  # options[:limit] how many users we want to fetch from the db
   def users_without_responses(options)
-    # eager load responses with users
-    all_observers = form.mission.assignments.includes(:user).find_all{|a| a.role.to_sym == options[:role] && !a.user.admin?}.map(&:user)
-    submitters = form.responses.includes(:user).map(&:user).uniq
-    @users_without_responses = all_observers - submitters
+    User.without_responses_for_form(form, options)
   end
 
   def observers_without_responses
-    users_without_responses(:role => :observer)
+    users_response = users_without_responses({role: :observer, limit: MISSING_OBSERVERS_SIZE_LIMIT})
+    users = users_response[:users]
+
+    if users.empty?
+      I18n.t('report/report.zero_missing_observers')
+    else
+      format_observers_names(users, users_response[:count])
+    end
+  end
+
+  def format_observers_names(users, users_total_count)
+    users_list = users.map(&:name).join(', ')
+
+    total_count_label = I18n.t('report/report.missing_observers_total_count',
+      user_count: users_total_count)
+    users_list = "#{users_list}, ... (#{total_count_label})" if users_total_count > MISSING_OBSERVERS_SIZE_LIMIT
+
+    users_list
   end
 
   # returns the list of questionings to include in this report
