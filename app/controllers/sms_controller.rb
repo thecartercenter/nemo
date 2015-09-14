@@ -36,9 +36,10 @@ class SmsController < ApplicationController
     @incoming_adapter = Sms::Adapters::Factory.new.create_for_request(request)
     raise Sms::Error.new("No adapters recognized this receive request") if @incoming_adapter.nil?
 
+    # Create and save the message
     @incoming = @incoming_adapter.receive(request)
-
-    @incoming.update_attributes(:mission => current_mission)
+    @incoming.mission = current_mission
+    @incoming.save
 
     # Store the reply in an instance variable so the functional test can access them
     @reply = Sms::Handler.new.handle(@incoming)

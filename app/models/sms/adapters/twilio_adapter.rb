@@ -42,8 +42,8 @@ class Sms::Adapters::TwilioAdapter < Sms::Adapters::Adapter
       end
     end
 
-    # create and return the message
-    Sms::Incoming.create(
+    # return the message
+    Sms::Incoming.new(
       from: params[:From],
       to: params[:To],
       body: params[:Body],
