@@ -7,7 +7,7 @@
 
 require 'bundler/capistrano'
 
-set :stages, %w(master staging staging-old demo nigeria api cejp-rdc)
+set :stages, %w(production staging staging-old demo nigeria api cejp-rdc)
 set :default_stage, "staging"
 require "capistrano/ext/multistage"
 
