@@ -5,7 +5,7 @@ class DirectDBConn
   end
 
   def insert(objects)
-    column_names = objects.first.attributes.keys.join(', ')
+    column_names = escape_column_names(objects)
     object_values = objects.map{ |o| convert_values_to_insert_syntax(o) }
     string_params = generate_string_params_template_from_attributes(objects.first.attributes)
 
@@ -23,13 +23,13 @@ class DirectDBConn
     # Get the objects that are going to be inserted on the db
     objects_to_insert = objects.map{ |u| u.send(object_to_insert).first }
 
-    column_names = objects_to_insert.first.attributes.keys.join(', ')
+    column_names = escape_column_names(objects_to_insert)
     object_values = objects_to_insert.map{ |o| convert_values_to_insert_syntax(o) }
     string_params = generate_string_params_template_from_attributes(objects_to_insert.first.attributes)
 
-    object_values = sanitize_object_values(object_values, string_params)
     # Change the value of the field with the name we want to SELECT on our INSERT..SELECT query
     object_values = change_field_value_with_field_name(object_values, column_names, field_to_select)
+    object_values = sanitize_object_values(object_values, string_params)
 
     # Build the select queries for each object using the params
     selects_queries = objects.map.with_index do |o, i|
@@ -76,12 +76,11 @@ class DirectDBConn
   end
 
   def change_field_value_with_field_name(object_values, column_names, field_name)
-    id_field_index = column_names.split(', ').index(field_name)
+    id_field_index = column_names.split(', ').index("`#{field_name}`")
 
-    object_values.map do |values|
-      values_as_array = values.split(',')
-      values_as_array[id_field_index] = 'id'
-      values_as_array.join(',')
+    object_values.map do |values_array|
+      values_array[id_field_index] = 'id'
+      values_array
     end
   end
 
@@ -90,7 +89,7 @@ class DirectDBConn
   end
 
   def sanitize_object_values(object_values, string_params)
-    object_values.map{ |o| sanitize_sql_query_array([string_params, o.split(',')].flatten) }
+    object_values.map{ |o| sanitize_sql_query_array([string_params, o].flatten) }
   end
 
   def add_parenthesis_on_each_value(object_values)
@@ -104,7 +103,7 @@ class DirectDBConn
       else
         (v.nil? ? 'NULL' : v)
       end
-    end.join(',')
+    end
   end
 
   def sql_have_where_in_clause(sql)
@@ -114,6 +113,10 @@ class DirectDBConn
   def execute_sql_query_array(sql_query_array)
     sanitized_query = sanitize_sql_query_array(sql_query_array)
     execute_sanitized_query(sanitized_query)
+  end
+
+  def escape_column_names(objects)
+    objects.first.attributes.keys.map{|k| "`#{k}`"}.join(', ')
   end
 
   def execute_sanitized_query(sanitized_query)
