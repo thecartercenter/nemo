@@ -21,6 +21,8 @@ namespace :stress do
       options_from_set[option_set_id] = get_options_ids_for_option_set(option_set_id)
     end
 
+    disable_db_checks
+
     (1..args[:quantity].to_i).each do |i|
       message_body = 'iad StressTesting-Responses were inserted directly on the db without sms decode.'
 
@@ -52,6 +54,7 @@ namespace :stress do
       ActiveRecord::Base.connection.insert "INSERT INTO `sms_messages` (`type`, `to`, `body`, `mission_id`, `user_id`, `adapter_name`, `created_at`, `updated_at`, `sent_at`) VALUES ('Sms::Reply', '+553588567281', 'Your response to form \\'iad\\' was received. Thank you!', #{args[:mission_id]}, #{user_id}, 'TwilioTestStub', NOW(), NOW(), NOW())"
     end
 
+    enable_db_checks
   end
 end
 
@@ -60,4 +63,25 @@ def get_options_ids_for_option_set(option_sets_id)
     WHERE `option_nodes`.`ancestry` =
     (SELECT `option_sets`.root_node_id FROM `option_sets` WHERE `option_sets`.`id` = #{option_sets_id} LIMIT 1)
     ORDER BY rank").entries.flatten
+end
+
+def disable_db_checks
+  ActiveRecord::Base.connection.execute "ALTER TABLE `sms_messages` DISABLE KEYS;"
+  ActiveRecord::Base.connection.execute "ALTER TABLE `answers` DISABLE KEYS;"
+  ActiveRecord::Base.connection.execute "ALTER TABLE `choices` DISABLE KEYS;"
+
+  ActiveRecord::Base.connection.execute "SET FOREIGN_KEY_CHECKS = 0;"
+  ActiveRecord::Base.connection.execute "SET UNIQUE_CHECKS = 0;"
+  ActiveRecord::Base.connection.execute "SET AUTOCOMMIT = 0;"
+
+end
+
+def enable_db_checks
+  ActiveRecord::Base.connection.execute "ALTER TABLE `sms_messages` ENABLE KEYS;"
+  ActiveRecord::Base.connection.execute "ALTER TABLE `answers` ENABLE KEYS;"
+  ActiveRecord::Base.connection.execute "ALTER TABLE `choices` ENABLE KEYS;"
+
+  ActiveRecord::Base.connection.execute "SET UNIQUE_CHECKS = 1;"
+  ActiveRecord::Base.connection.execute "SET FOREIGN_KEY_CHECKS = 1;"
+  ActiveRecord::Base.connection.execute "COMMIT;"
 end
