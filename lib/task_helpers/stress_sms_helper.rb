@@ -67,7 +67,7 @@ class StressSmsHelper
   end
 
   def self.random_text
-    if self.random_words.empty?
+    if self.random_words.nil?
       "#{random_letter('a','z')}text#{random_letter('a','z')}"
     else
       text = []
