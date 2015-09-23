@@ -496,7 +496,7 @@ class Report::SummaryCollectionBuilder
 
         res = do_query(query, long_qing_ids)
 
-        Hash[*res.each(:as => :hash).map{|row| [row['answer_id'], row['submitter_name']]}.flatten]
+        res.each(:as => :hash).map{|row| [row['answer_id'], row['submitter_name']]}.to_h
       end
     end
 
