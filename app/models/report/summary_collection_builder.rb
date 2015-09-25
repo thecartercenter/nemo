@@ -14,6 +14,9 @@ class Report::SummaryCollectionBuilder
     'long_text' => 'raw'
   }
 
+  # Quantity of raw answers that should be shown on report
+  RAW_ANSWERS_LIMIT = 100
+
   # builds a summary collection with the given questionings and disaggregation qing
   # if disagg_qing is nil, no disaggregation will be done
   # options[:restrict_to_user] - (optional) If specified, only Responses for the given user will be included in the results.
@@ -471,6 +474,7 @@ class Report::SummaryCollectionBuilder
           #{current_user_join_clause}
           WHERE a.questioning_id IN (?)
           ORDER BY disagg_value, a.created_at
+          LIMIT #{RAW_ANSWERS_LIMIT}
       eos
 
       do_query(query, qing_ids)
