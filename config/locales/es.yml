@@ -1056,7 +1056,7 @@ es:
     tally: "Recuento"
     tally_type: "¿Qué le gustaría recontar?"
     these_questions: "Estas preguntas específicas"
-    total_rows: "Filas Totales"
+    total_rows: "Filas Totales: %{count}"
     view_response: "Repuesta #%{id}"
     what_attrib_col_headers: "¿Qué atributo o pregunta le gustaría para los encabezados de la columna (opcional)?"
     what_attrib_row_headers: "¿Qué atributo o pregunta le gustaría para los encabezados de la fila?"
