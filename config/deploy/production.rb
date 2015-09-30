@@ -1,24 +1,22 @@
-set :branch, "production"
-set :ping_url, "https://cceom.org"
+set :branch, 'production'
+set :ping_url, "https://secure1.cceom.org"
 set :user, 'cceom'
 set :home_dir, '/home/cceom'
 set :use_sudo, false
-set(:deploy_to) {"#{home_dir}/webapps/rails2/#{application}_master"}
-set :bundle_dir, "$HOME/webapps/rails2/gems"
+set(:deploy_to) {"#{home_dir}/webapps/elmo_rails/#{stage}"}
+set(:bundle_dir) {"#{home_dir}/webapps/elmo_rails/gems"}
 set :default_environment, {
-  "PATH" => "$PATH:$HOME/bin:$HOME/webapps/rails2/bin",
-  "GEM_HOME" => "$HOME/webapps/rails2/gems"
+  "PATH" => "$HOME/bin:$HOME/webapps/elmo_rails/bin:$PATH",
+  "GEM_HOME" => "$HOME/webapps/elmo_rails/gems"
 }
-set(:whenever_identifier) {"elmo_master"}
 
-
-server 'cceom.org', :app, :web, :db, :primary => true
+server 'secure1.cceom.org', :app, :web, :db, :primary => true
 
 namespace :deploy do
   %w[start stop restart].each do |command|
     desc "#{command} server"
     task command, roles: :app, except: {no_release: true} do
-      run "#{home_dir}/webapps/rails2/bin/#{command}"
+      run "#{home_dir}/webapps/elmo_rails/bin/#{command}"
     end
   end
 end
