@@ -142,17 +142,36 @@ class User < ActiveRecord::Base
   end
 
 
-  # Returns an array of hashes of format {:name => "Some User", :count => 2}
+  # Returns an array of hashes of format {:name => "Some User", :response_count => 2}
   # of observer response counts for the given mission
   def self.sorted_observer_response_counts(mission, limit)
-    find_by_sql(["SELECT users.name AS name, COUNT(DISTINCT responses.id) AS response_count
-      FROM users
-        INNER JOIN assignments ON users.id = assignments.user_id AND assignments.mission_id = ?
-        LEFT JOIN responses ON responses.user_id = users.id AND responses.mission_id = ?
-      WHERE assignments.role = 'observer'
-      GROUP BY users.id, users.name
-      ORDER BY response_count
-      LIMIT ?", mission.id, mission.id, limit]).reverse
+    #First it tries to get user observers that don't have any response
+    result = self.observers_without_responses(mission, limit)
+    return result unless result.length < limit
+
+    # If the first query didn't get the necessary users quantity,
+    # we then get the ones with lowest activy
+    find_by_sql(["SELECT users.name, rc.response_count FROM users
+      JOIN (
+        SELECT assignments.user_id, COUNT(DISTINCT responses.id) AS response_count
+        FROM assignments
+          LEFT JOIN responses ON responses.user_id = assignments.user_id AND responses.mission_id = ?
+        WHERE assignments.role = 'observer' AND assignments.mission_id = ?
+        GROUP BY assignments.user_id        ORDER BY response_count        LIMIT ?
+      ) as rc ON users.id = rc.user_id;", mission.id, mission.id, limit]).reverse
+  end
+
+  # Returns an array of hashes of format {:name => "Some User", :response_count => 0}
+  # of observers that doesn't have responses on the mission
+  def self.observers_without_responses(mission, limit)
+    find_by_sql(["SELECT users.name, 0 as response_count FROM users
+      JOIN (
+        SELECT a.user_id FROM assignments a
+        WHERE NOT EXISTS (
+          SELECT 1 FROM responses r
+          WHERE r.user_id = a.user_id AND r.mission_id=?
+        ) AND a.role='observer' LIMIT ?
+      ) as rc ON users.id = rc.user_id;", mission.id, limit])
   end
 
   # Returns all non-admin users in the form's mission with the given role that have
