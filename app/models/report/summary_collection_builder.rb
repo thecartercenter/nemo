@@ -157,6 +157,7 @@ class Report::SummaryCollectionBuilder
           #{current_user_join_clause}
         WHERE q.qtype_name in ('integer', 'decimal', 'time', 'datetime')
         GROUP BY #{disagg_group_by_expr} qing.id, q.qtype_name
+        ORDER BY NULL
       eos
 
       res = do_query(query, qing_ids)
