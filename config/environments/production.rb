@@ -30,7 +30,11 @@ ELMO::Application.configure do
   # Use a different logger for distributed setups
   # config.logger = SyslogLogger.new
 
-  config.cache_store = :dalli_store
+  # We use the Capistrano REVISION as cache key so that
+  # 1) we can share one memcache server on a machine with multiple instances
+  # 2) cache gets expired on deploy
+  config.cache_store = :dalli_store, (File.read("config/memcached_server").strip rescue nil),
+    { :namespace => "elmo" << (File.read("REVISION")[0...16] rescue "") }
 
   # Disable Rails's static asset server
   # In production, Apache or nginx will already do this

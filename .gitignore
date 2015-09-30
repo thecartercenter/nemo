@@ -9,6 +9,7 @@ config/railsenv
 config/initializers/local_config.rb
 config/database.yml
 config/thinking_sphinx.yml
+config/memcached_server
 TODO
 .sass-cache/
 NOTES
@@ -25,3 +26,4 @@ config/*.sphinx.conf
 # manually generated files for quick searching
 rake_tasks.txt
 routes.txt
+
