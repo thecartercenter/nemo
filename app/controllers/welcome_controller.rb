@@ -106,12 +106,11 @@ class WelcomeController < ApplicationController
       # get list of all reports for the mission, for the dropdown
       @reports = Report::Report.accessible_by(current_ability).by_name
 
-      unless fragment_exist?(@cache_key + '/report_pane')
-        prepare_report
-      end
-
       # render JSON if ajax request
       if request.xhr?
+        # Load report asynchronously
+        prepare_report
+
         data = {
           recent_responses: render_to_string(partial: 'recent_responses'),
           response_locations: {

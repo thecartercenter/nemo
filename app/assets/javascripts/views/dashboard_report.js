@@ -14,6 +14,11 @@
 
     // hookup the form change event
     self.hookup_report_chooser();
+
+    // Load report via Ajax on the first time page is displayed.
+    if (self.current_report_id) {
+      self.load_report(self.current_report_id);
+    }
   };
 
   klass.prototype.hookup_report_chooser = function () { var self = this;
