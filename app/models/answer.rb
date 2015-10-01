@@ -7,6 +7,7 @@ class Answer < ActiveRecord::Base
   has_many(:choices, :dependent => :destroy, :inverse_of => :answer, :autosave => true)
 
   before_validation(:clean_locations)
+  before_save(:replicate_location_values)
   before_save(:round_ints)
   before_save(:blanks_to_nulls)
 
@@ -114,7 +115,7 @@ class Answer < ActiveRecord::Base
   # if this answer is for a location question and the value is not blank, returns a two element array representing the
   # lat long. else returns nil
   def location
-    if questioning.question.qtype_name == 'location' && !value.blank?
+    if simple_location_answer?
       value.split(' ')
     else
       nil
@@ -186,6 +187,10 @@ class Answer < ActiveRecord::Base
     end
   end
 
+  def simple_location_answer?
+    qtype.name == 'location' && value.present?
+  end
+
   # check whether this answer has coordinates
   def has_coordinates?
     return false unless qtype.has_options?
@@ -224,7 +229,7 @@ class Answer < ActiveRecord::Base
     end
 
     def clean_locations
-      if qtype.name == "location" && !value.blank?
+      if simple_location_answer?
         if value.match(configatron.lat_lng_regexp)
           lat = number_with_precision($1.to_f, :precision => 6)
           lng = number_with_precision($3.to_f, :precision => 6)
@@ -232,6 +237,17 @@ class Answer < ActiveRecord::Base
         else
           self.value = ""
         end
+      end
+    end
+
+    def replicate_location_values
+      if simple_location_answer?
+        lat, long = self.value.split(' ')
+        self.latitude = BigDecimal.new(lat)
+        self.longitude = BigDecimal.new(long)
+      elsif option.present? && option.has_coordinates?
+        self.latitude = option.latitude
+        self.longitude = option.longitude
       end
     end
 
