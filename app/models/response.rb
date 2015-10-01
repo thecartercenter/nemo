@@ -10,7 +10,7 @@ class Response < ActiveRecord::Base
   has_many(:answers, -> { order('form_items.rank, answers.rank').includes(:questioning) }, autosave: true, dependent: :destroy, inverse_of: :response)
   belongs_to(:user, :inverse_of => :responses)
 
-  has_many(:location_answers, -> { where("questions.qtype_name = 'location'").order.('form_items.rank').includes(questioning: :question) }, class_name: 'Answer')
+  has_many(:location_answers, -> { where("questions.qtype_name = 'location'").order('form_items.rank').includes(questioning: :question) }, class_name: 'Answer')
 
   attr_accessor(:modifier, :excerpts)
 
