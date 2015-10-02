@@ -1214,6 +1214,7 @@ en:
     loading_report: "Loading Report..."
     questions_with_option_sets: "Questions with these option sets"
     missing_observers: "Non-reporting Observers"
+    missing_observers_total_count: "%{user_count} in total"
     mission: "Mission"
     no_match: "No matching data were found."
     question_selection: "Select Questions"
@@ -1242,6 +1243,7 @@ en:
     which_calculation: "Which calculation (if any) would you like to apply?"
     which_forms: "Which forms are you interested in?"
     which_questions: "Which question(s) would you like to include?"
+    zero_missing_observers: "None"
     bar_styles:
       side_by_side: "Side By Side"
       stacked: "Stacked"

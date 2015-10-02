@@ -155,6 +155,32 @@ class User < ActiveRecord::Base
       LIMIT ?", mission.id, mission.id, limit]).reverse
   end
 
+  # Returns all non-admin users in the form's mission with the given role that have
+  # not submitted any responses to the form
+  #
+  # options[:role] the role to check for
+  # options[:limit] how many users we want to fetch from the db
+  #
+  # Returns a hash with users instances and the count from the select without the LIMIT
+  def self.without_responses_for_form(form, options)
+    users = find_by_sql(["SELECT SQL_CALC_FOUND_ROWS * FROM users
+      INNER JOIN assignments ON assignments.user_id = users.id WHERE
+      assignments.mission_id = ? AND
+      assignments.role = ? AND
+      users.admin = FALSE AND
+      NOT EXISTS (
+        SELECT 1 FROM responses WHERE
+        responses.user_id=users.id AND
+        responses.form_id = ?
+      ) LIMIT ?;", form.mission.id, options[:role].to_s, form.id, options[:limit]])
+
+    # This returns the count of the previous users select without the limit clause.
+    # Format: [[count]]
+    users_count = ActiveRecord::Base.connection.execute('SELECT FOUND_ROWS();').entries[0].first
+
+    { users: users, count: users_count }
+  end
+
   # generates a cache key for the set of all users for the given mission.
   # the key will change if the number of users changes, or if a user is updated.
   def self.per_mission_cache_key(mission)

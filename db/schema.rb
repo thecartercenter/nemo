@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150904133758) do
+ActiveRecord::Schema.define(version: 20150924200325) do
   create_table "answers", force: :cascade do |t|
     t.datetime "created_at"
     t.date "date_value"
@@ -344,6 +344,7 @@ ActiveRecord::Schema.define(version: 20150904133758) do
   add_index "responses", ["mission_id"], name: "responses_mission_id_fk", using: :btree
   add_index "responses", ["reviewed"], name: "index_responses_on_reviewed", using: :btree
   add_index "responses", ["updated_at"], name: "index_responses_on_updated_at", using: :btree
+  add_index "responses", ["user_id", "form_id"], name: "index_responses_on_user_id_and_form_id", using: :btree
   add_index "responses", ["user_id"], name: "responses_user_id_fk", using: :btree
 
   create_table "sessions", force: :cascade do |t|
