@@ -78,10 +78,11 @@ class Report::Report < ActiveRecord::Base
   end
 
   # records a viewing of the form, keeping the view_count up to date
+  # It's using the update_column to avoid it updating the updated_at
+  # value (which would invalidate the cache). It also skips validations.
   def record_viewing
-    self.viewed_at = Time.now
-    self.view_count += 1
-    save(:validate => false)
+    update_column(:viewed_at, Time.now)
+    update_column(:view_count, self.view_count += 1)
   end
 
   def as_json(options = {})

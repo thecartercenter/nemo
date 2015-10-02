@@ -130,7 +130,7 @@ class WelcomeController < ApplicationController
     def prepare_report
       unless @report.nil?
         authorize!(:read, @report)
-        run_and_handle_errors
+        run_or_fetch_and_handle_errors
         build_report_data(:read_only => true, :dont_set_title => true)
       end
     end
