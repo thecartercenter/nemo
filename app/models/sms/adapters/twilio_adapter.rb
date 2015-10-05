@@ -33,7 +33,7 @@ class Sms::Adapters::TwilioAdapter < Sms::Adapters::Adapter
     params = request.request_parameters.merge(request.query_parameters)
     validator = Twilio::Util::RequestValidator.new(configatron.twilio_auth_token)
     unless Rails.env.test?
-      if validator.validate(request.original_url, params, request.headers['X-Twilio-Signature'])
+      unless validator.validate(request.original_url, params, request.headers['X-Twilio-Signature'])
         raise Sms::Error.new("Could not validate incoming Twilio message from #{params[:From]}")
       end
     end
