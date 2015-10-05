@@ -28,15 +28,30 @@ module ReportEmbeddable
     @report_data[:report][:generated_at] = I18n.l(Time.zone.now)
   end
 
-  # runs the report and handles any errors, adding them to the flash
+  # Looks for a cached, populated report object matching @report.
+  # If one is found, stores it in @report. If not found,
+  # calls run on the existing @report
+  #
   # returns true if no errors, false otherwise
-  def run_and_handle_errors
+  def run_or_fetch_and_handle_errors
     begin
-      @report.run(current_ability)
+      @report = Rails.cache.fetch(self.cache_key_with_responses) do
+        @report.run(current_ability)
+        @report
+      end
+
       return true
     rescue Report::ReportError, Search::ParseError
       flash.now[:error] = $!.to_s
       return false
     end
+  end
+
+  def cache_key_with_responses
+    [
+      I18n.locale.to_s,
+      Response.per_mission_cache_key(current_mission),
+      @report.cache_key
+    ].join('-')
   end
 end

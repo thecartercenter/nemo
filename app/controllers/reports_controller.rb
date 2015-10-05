@@ -27,7 +27,7 @@ class ReportsController < ApplicationController
 
   def show
     # run the report
-    run_and_handle_errors
+    run_or_fetch_and_handle_errors
 
     # handle different formats
     respond_to do |format|
@@ -73,7 +73,7 @@ class ReportsController < ApplicationController
       @report.reload # Without this, if you add a calculation and remove another on the same edit, the new one doesn't show.
 
       # re-run the report, handling errors
-      run_and_handle_errors
+      run_or_fetch_and_handle_errors
     end
 
     # return data in json format
