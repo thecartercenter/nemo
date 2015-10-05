@@ -175,7 +175,8 @@
     }
 
     // add a row count
-    $('.report_info').append($("<div>").attr("id", "row_count").text(I18n.t("report/report.total_rows") + ": " + data.rows.length));
+    $('.report_info').append($("<div>").attr("id", "row_count")
+      .text(this.i18n_total_rows_label(data)));
 
     // add the table
     $('.report_body').empty().append(tbl);
@@ -209,6 +210,15 @@
 
     // set widths
     this.tbl.find("th.col").width(optimal);
+  }
+
+  klass.prototype.i18n_total_rows_label = function(data){
+    if (this.report.attribs.type.match(/ListReport/)) {
+      return I18n.t("report/report.total_rows_showing",
+        {count: data.rows.length,total_count: data.total_row_count})
+    } else {
+      return I18n.t("report/report.total_rows", {count: data.rows.length})
+    }
   }
 
 }(ELMO.Report));

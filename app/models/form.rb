@@ -1,7 +1,7 @@
 class Form < ActiveRecord::Base
   include MissionBased, FormVersionable, Replication::Standardizable, Replication::Replicable
 
-  API_ACCESS_LEVELS = %w(private protected public)
+  API_ACCESS_LEVELS = %w(private public)
 
   has_many(:responses, :inverse_of => :form)
   has_many(:versions, :class_name => "FormVersion", :inverse_of => :form, :dependent => :destroy)

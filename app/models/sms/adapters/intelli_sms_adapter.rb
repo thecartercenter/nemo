@@ -40,8 +40,8 @@ class Sms::Adapters::IntelliSmsAdapter < Sms::Adapters::Adapter
     # strip leading zeroes from the from number (intellisms pads the country code with 0s)
     params['from'].gsub!(/^0+/, "")
 
-    # create and return the message
-    Sms::Incoming.create(
+    # return the message
+    Sms::Incoming.new(
       :from => "+#{params['from']}",
       :to => configatron.incoming_sms_number, # Assume it's this since IntelliSms doesn't provide it.
       :body => params['text'],

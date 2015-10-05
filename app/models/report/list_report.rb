@@ -1,6 +1,8 @@
 class Report::ListReport < Report::Report
   include Report::Gridable
 
+  RESPONSES_QUANTITY_LIMIT = 1000
+
   def as_json(options = {})
     h = super(options)
     h[:calculations_attributes] = calculations
@@ -16,7 +18,7 @@ class Report::ListReport < Report::Report
       joins = []
       questions = []
 
-      rel = rel.select("responses.id AS response_id").order("response_id")
+      rel = rel.select("SQL_CALC_FOUND_ROWS responses.id AS response_id").order("response_id")
 
       # add each calculation
       calculations.each_with_index do |c, idx|
@@ -44,6 +46,8 @@ class Report::ListReport < Report::Report
         # Add order by answer rank to accommodate multilevel answers.
         rel = rel.order("answers.rank")
       end
+
+      rel = rel.limit(RESPONSES_QUANTITY_LIMIT)
 
       # apply filter
       rel = apply_filter(rel)

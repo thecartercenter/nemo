@@ -1047,7 +1047,7 @@ fr:
     tally: "Compte"
     tally_type: "vous voudriez compter quels résultats? "
     these_questions: "Ces questions spécifique"
-    total_rows: "Total de rangées"
+    total_rows: "Total de rangées: %{count}"
     view_response: "Réponse #%{id}"
     what_attrib_col_headers: "Quel attribut ou question voudriez-vous utiliser pour les titre des colonnes (optional)?"
     what_attrib_row_headers: "Quel attribut ou question voudriez-vous utiliser pour les titres des rangées?"
