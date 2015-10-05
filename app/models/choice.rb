@@ -5,6 +5,8 @@ class Choice < ActiveRecord::Base
   delegate :name, :to => :option, :prefix => true
   delegate :has_coordinates?, :to => :option
 
+  before_save :replicate_location_values
+
   def checked
     # Only explicitly false should return false.
     # This is so that the default value is true.
@@ -14,5 +16,14 @@ class Choice < ActiveRecord::Base
 
   def checked=(value)
     @checked = (value == true || value == '1')
+  end
+
+  private
+
+  def replicate_location_values
+    if has_coordinates?
+      self.latitude = option.latitude
+      self.longitude = option.longitude
+    end
   end
 end

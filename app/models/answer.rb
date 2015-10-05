@@ -7,6 +7,7 @@ class Answer < ActiveRecord::Base
   has_many(:choices, :dependent => :destroy, :inverse_of => :answer, :autosave => true)
 
   before_validation(:clean_locations)
+  before_save(:replicate_location_values)
   before_save(:round_ints)
   before_save(:blanks_to_nulls)
 
@@ -43,22 +44,16 @@ class Answer < ActiveRecord::Base
     end
 
     # return an AR relation
-    joins(:response, questioning: :question)
-      .joins(%{LEFT JOIN `option_sets` ON `questions`.`option_set_id` = `option_sets`.`id`})
-      .joins(%{LEFT JOIN `options` ON `option_sets`.`allow_coordinates` = 1 AND `questions`.`qtype_name` = 'select_one' AND `answers`.`option_id` = `options`.`id`})
-      .joins(%{LEFT JOIN `choices` ON `option_sets`.`allow_coordinates` = 1 AND `questions`.`qtype_name` = 'select_multiple' AND `answers`.`id` = `choices`.`answer_id`})
-      .joins(%{LEFT JOIN `options` AS `choice_options` ON `choices`.`option_id` = `choice_options`.`id`})
+    joins(:response)
+      .joins(%{LEFT JOIN `choices` ON `choices`.`answer_id` = `answers`.`id`})
       .where(:responses => response_conditions)
       .where(%{
-        (`questions`.`qtype_name` = 'location' AND `answers`.`value` IS NOT NULL)
-        OR (`options`.`latitude` IS NOT NULL AND `options`.`longitude` IS NOT NULL)
-        OR (`choice_options`.`latitude` IS NOT NULL AND `choice_options`.`longitude` IS NOT NULL)
+        (`answers`.`latitude` IS NOT NULL AND `answers`.`longitude` IS NOT NULL)
+        OR (`choices`.`latitude` IS NOT NULL AND `choices`.`longitude` IS NOT NULL)
       })
       .select(:response_id,
-        %{COALESCE(`answers`.`value`,
-                   CONCAT(`options`.`latitude`, ' ', `options`.`longitude`),
-                   CONCAT(`choice_options`.`latitude`, ' ', `choice_options`.`longitude`)) AS `value`})
-      .distinct
+        %{COALESCE(`answers`.`latitude`, `choices`.`latitude`) AS `latitude`,
+          COALESCE(`answers`.`longitude`, `choices`.`longitude`) AS `longitude`})
       .order('`answers`.`response_id` DESC')
       .paginate(:page => 1, :per_page => 1000)
   end
@@ -114,7 +109,7 @@ class Answer < ActiveRecord::Base
   # if this answer is for a location question and the value is not blank, returns a two element array representing the
   # lat long. else returns nil
   def location
-    if questioning.question.qtype_name == 'location' && !value.blank?
+    if simple_location_answer?
       value.split(' ')
     else
       nil
@@ -186,6 +181,10 @@ class Answer < ActiveRecord::Base
     end
   end
 
+  def simple_location_answer?
+    qtype.name == 'location' && value.present?
+  end
+
   # check whether this answer has coordinates
   def has_coordinates?
     return false unless qtype.has_options?
@@ -224,7 +223,7 @@ class Answer < ActiveRecord::Base
     end
 
     def clean_locations
-      if qtype.name == "location" && !value.blank?
+      if simple_location_answer?
         if value.match(configatron.lat_lng_regexp)
           lat = number_with_precision($1.to_f, :precision => 6)
           lng = number_with_precision($3.to_f, :precision => 6)
@@ -232,6 +231,17 @@ class Answer < ActiveRecord::Base
         else
           self.value = ""
         end
+      end
+    end
+
+    def replicate_location_values
+      if simple_location_answer?
+        lat, long = self.value.split(' ')
+        self.latitude = BigDecimal.new(lat)
+        self.longitude = BigDecimal.new(long)
+      elsif option.present? && option.has_coordinates?
+        self.latitude = option.latitude
+        self.longitude = option.longitude
       end
     end
 

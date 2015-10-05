@@ -11,12 +11,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150924200325) do
+ActiveRecord::Schema.define(version: 20150930214725) do
   create_table "answers", force: :cascade do |t|
     t.datetime "created_at"
     t.date "date_value"
     t.datetime "datetime_value"
     t.boolean "delta", limit: 1, default: true, null: false
+    t.decimal "latitude", precision: 8, scale: 6
+    t.decimal "longitude", precision: 9, scale: 6
     t.integer "option_id", limit: 4
     t.integer "questioning_id", limit: 4
     t.integer "rank", limit: 4
@@ -67,6 +69,8 @@ ActiveRecord::Schema.define(version: 20150924200325) do
   create_table "choices", force: :cascade do |t|
     t.integer "answer_id", limit: 4, null: false
     t.datetime "created_at"
+    t.decimal "latitude", precision: 8, scale: 6
+    t.decimal "longitude", precision: 9, scale: 6
     t.integer "option_id", limit: 4, null: false
     t.datetime "updated_at"
   end
