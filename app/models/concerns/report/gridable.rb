@@ -27,8 +27,8 @@ module Report::Gridable
     # how many we are showing
     if self.is_a? Report::ListReport
       #Get the total row count from SQL_CALC_FOUND_ROWS on ListReport prep_query
-      total_rows_count = ActiveRecord::Base.connection.execute('SELECT FOUND_ROWS();').entries[0].first
-      @data.total_rows_count = total_rows_count
+      total_row_count = ActiveRecord::Base.connection.execute('SELECT FOUND_ROWS();').entries[0].first
+      @data.total_row_count = total_row_count
     end
 
     # extract data

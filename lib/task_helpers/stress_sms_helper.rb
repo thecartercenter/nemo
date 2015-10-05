@@ -5,12 +5,12 @@ class StressSmsHelper
 
   def self.create_incoming_sms(params)
     Sms::Incoming.create(
-        from: params[:from],
-        to: params[:to],
-        body: params[:body],
-        mission: params[:mission],
-        sent_at: Time.zone.now, # Twilio doesn't supply this
-        adapter_name: Sms::Adapters::TwilioTestStubAdapter.service_name)
+      from: params[:from],
+      to: params[:to],
+      body: params[:body],
+      mission: params[:mission],
+      sent_at: Time.zone.now, # Twilio doesn't supply this
+      adapter_name: Sms::Adapters::TwilioTestStubAdapter.service_name)
   end
 
   def self.create_reply_sms(reply)

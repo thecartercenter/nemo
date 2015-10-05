@@ -158,7 +158,7 @@ class User < ActiveRecord::Base
           LEFT JOIN responses ON responses.user_id = assignments.user_id AND responses.mission_id = ?
         WHERE assignments.role = 'observer' AND assignments.mission_id = ?
         GROUP BY assignments.user_id        ORDER BY response_count        LIMIT ?
-      ) as rc ON users.id = rc.user_id;", mission.id, mission.id, limit]).reverse
+      ) as rc ON users.id = rc.user_id", mission.id, mission.id, limit]).reverse
   end
 
   # Returns an array of hashes of format {:name => "Some User", :response_count => 0}
@@ -169,9 +169,9 @@ class User < ActiveRecord::Base
         SELECT a.user_id FROM assignments a
         WHERE NOT EXISTS (
           SELECT 1 FROM responses r
-          WHERE r.user_id = a.user_id AND r.mission_id=?
+          WHERE r.user_id = a.user_id AND r.mission_id = ?
         ) AND a.role='observer' LIMIT ?
-      ) as rc ON users.id = rc.user_id;", mission.id, limit])
+      ) as rc ON users.id = rc.user_id", mission.id, limit])
   end
 
   # Returns all non-admin users in the form's mission with the given role that have
@@ -191,11 +191,11 @@ class User < ActiveRecord::Base
         SELECT 1 FROM responses WHERE
         responses.user_id=users.id AND
         responses.form_id = ?
-      ) LIMIT ?;", form.mission.id, options[:role].to_s, form.id, options[:limit]])
+      ) LIMIT ?", form.mission.id, options[:role].to_s, form.id, options[:limit]])
 
     # This returns the count of the previous users select without the limit clause.
     # Format: [[count]]
-    users_count = ActiveRecord::Base.connection.execute('SELECT FOUND_ROWS();').entries[0].first
+    users_count = ActiveRecord::Base.connection.execute('SELECT FOUND_ROWS()').entries[0].first
 
     { users: users, count: users_count }
   end

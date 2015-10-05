@@ -1,20 +1,12 @@
 namespace :stress do
   desc "Stress test SMSes reception"
-  task :sms_messages, [:count,
-                       :loops,
-                       :sms_incoming_token,
-                       :mission_name,
-                       :domain,
-                       :port] do |t, args|
+  task :sms_messages, [:count, :loops, :sms_incoming_token, :mission_name,
+    :domain, :port] do |t, args|
 
     require 'ruby-jmeter'
 
-    args.with_defaults(count: 1,
-                       loops: 1,
-                       sms_incoming_token: '',
-                       mission_name: '',
-                       domain: 'loadtest1.getelmo.org',
-                       port: 443)
+    args.with_defaults(count: 1, loops: 1, sms_incoming_token: '',
+      mission_name: '', domain: 'loadtest1.getelmo.org', port: 443)
 
     p args
     send_sms(*args.to_hash.values)

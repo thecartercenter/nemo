@@ -1,22 +1,12 @@
 namespace :stress do
   desc "Load/Stress test the app via simple user navigation"
-  task :navigate_app, [:count,
-                       :loops,
-                       :mission_name,
-                       :login,
-                       :password,
-                       :domain,
-                       :port] do |t, args|
+  task :navigate_app, [:count, :loops, :mission_name, :login, :password,
+    :domain, :port] do |t, args|
 
     require 'ruby-jmeter'
 
-    args.with_defaults(count: 1,
-                       loops: 1,
-                       mission_name: '',
-                       login: '',
-                       password: '',
-                       domain: 'loadtest1.getelmo.org',
-                       port: 443)
+    args.with_defaults(count: 1, loops: 1, mission_name: '', login: '',
+      password: '', domain: 'loadtest1.getelmo.org', port: 443)
 
     p args
     navigate(*args.to_hash.values)

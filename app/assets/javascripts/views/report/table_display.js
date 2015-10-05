@@ -215,7 +215,7 @@
   klass.prototype.i18n_total_rows_label = function(data){
     if (this.report.attribs.type.match(/ListReport/)) {
       return I18n.t("report/report.total_rows_showing",
-        {count: data.rows.length,total_count: data.total_rows_count})
+        {count: data.rows.length,total_count: data.total_row_count})
     } else {
       return I18n.t("report/report.total_rows", {count: data.rows.length})
     }
