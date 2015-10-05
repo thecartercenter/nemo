@@ -13,6 +13,9 @@
 <div class="report_view">
   <div class="report_main">
     <%= render('main') %>
+    <%= javascript_doc_ready do %>
+      ELMO.app.report_controller = new ELMO.Report.ReportController(<%=json @report_data %>);
+    <% end %>
   </div>
 </div>
 

@@ -1,4 +1,7 @@
-<h2 class="interior"><%= translate_model(Report::Report) %>: <%= @report.name %></h2>
-<% if can?(:update, @report) %>
-  &nbsp;&nbsp;<%= action_link('edit', edit_report_path(@report), :title => I18n.t('report/report.edit_report')) %>
-<% end %>
+<h2 class="interior">
+  <span><%= translate_model(Report::Report) %>: </span>
+  <span class="report_title_text"></span>
+</h2>
+<span class="report_edit_link_container">
+  &nbsp;&nbsp;<a class="action_link action_link_edit" href=""><i class="fa fa-pencil icon-edit"></i></a>
+</span>

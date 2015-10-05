@@ -81,6 +81,16 @@ class ReportsController < ApplicationController
     render(:json => @report_data.to_json)
   end
 
+  # Executed via ajax. It just runs the report and returns the report_data json.
+  def data
+    if params[:id].present?
+      @report = Report::Report.find(params[:id])
+      prepare_report
+
+      render(:json => @report_data.to_json)
+    end
+  end
+
   # specify the class the this controller controls, since it's not easily guessed
   def model_class
     Report::Report
@@ -99,6 +109,14 @@ class ReportsController < ApplicationController
       build_report_data(:edit_mode => flash[:edit_mode])
 
       render(:show)
+    end
+
+    def prepare_report
+      unless @report.nil?
+        authorize!(:read, @report)
+        run_or_fetch_and_handle_errors
+        build_report_data(read_only: true, dont_set_title: true, user_can_edit: can?(:update, @report))
+      end
     end
 
     def report_params

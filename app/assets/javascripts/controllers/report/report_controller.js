@@ -3,46 +3,49 @@
 
   // constructor
   ns.ReportController = klass = function(init_data) {
-    // Don't do anything if data wasn't provided.
-    if(init_data){
-      this.dont_set_title = init_data.dont_set_title;
+    this.dont_set_title = init_data.dont_set_title;
 
-      // create supporting models unless in read only mode
-      if (!init_data.read_only) {
-        this.options = init_data.options;
-        this.menus = {
-          attrib: new ns.AttribMenu(this.options.attribs),
-          form: new ns.FormMenu(this.options.forms),
-          calc_type: new ns.CalcTypeMenu(this.options.calculation_types),
-          question: new ns.QuestionMenu(this.options.questions),
-          option_set: new ns.OptionSetMenu(this.options.option_sets)
-        }
-      }
-
-      this.report_in_db = new ns.Report(init_data.report, this.menus);
-      if (!init_data.read_only) this.report_in_db.prepare();
-
-      // create copy of report to be referenced each run
-      this.report_last_run = this.report_in_db.clone();
-
-      // create report view
-      this.report_view = new ns.ReportView(this, this.report_in_db);
-
-      // create edit view if applicable
-      if (!init_data.read_only)
-        this.edit_view = new ns.EditView(this.menus, this.options, this);
-
-      // if is new record, show dialog first page
-      if (!this.report_in_db.has_run())
-        this.show_edit_view(0);
-      // otherwise, the report must have already run, so update the view
-      else
-        this.display_report(this.report_last_run);
-
-      // if in edit mode, show edit dialog second page, since report type is not editable
-      if (init_data.edit_mode)
-        this.show_edit_view(1);
+    // This means the report is being show on the dashboard page
+    if (this.dont_set_title) {
+      this.reset_title_pane_text(init_data.report.name)
+      this.set_edit_link(init_data)
     }
+
+    // create supporting models unless in read only mode
+    if (!init_data.read_only) {
+      this.options = init_data.options;
+      this.menus = {
+        attrib: new ns.AttribMenu(this.options.attribs),
+        form: new ns.FormMenu(this.options.forms),
+        calc_type: new ns.CalcTypeMenu(this.options.calculation_types),
+        question: new ns.QuestionMenu(this.options.questions),
+        option_set: new ns.OptionSetMenu(this.options.option_sets)
+      }
+    }
+
+    this.report_in_db = new ns.Report(init_data.report, this.menus);
+    if (!init_data.read_only) this.report_in_db.prepare();
+
+    // create copy of report to be referenced each run
+    this.report_last_run = this.report_in_db.clone();
+
+    // create report view
+    this.report_view = new ns.ReportView(this, this.report_in_db);
+
+    // create edit view if applicable
+    if (!init_data.read_only)
+      this.edit_view = new ns.EditView(this.menus, this.options, this);
+
+    // if is new record, show dialog first page
+    if (!this.report_in_db.has_run())
+      this.show_edit_view(0);
+    // otherwise, the report must have already run, so update the view
+    else
+      this.display_report(this.report_last_run);
+
+    // if in edit mode, show edit dialog second page, since report type is not editable
+    if (init_data.edit_mode)
+      this.show_edit_view(1);
   }
 
   klass.prototype.show_edit_view = function(idx) {
@@ -129,6 +132,22 @@
   // refreshes the report view
   klass.prototype.refresh_view = function() {
     this.display_report(this.report_last_run);
+  }
+
+  klass.prototype.reset_title_pane_text = function(title) {
+    $('.report_title_text').text(title)
+  }
+
+  klass.prototype.set_edit_link = function(data) {
+    if (data.user_can_edit) {
+      report_url = ELMO.app.url_builder.build('reports', data.report.id) + '/edit';
+
+      $('.report_edit_link_container').show();
+      $('.report_edit_link_container a').attr('href', report_url)
+    } else {
+      $('.report_edit_link_container').hide();
+      $('.report_edit_link_container a').attr('href', '')
+    }
   }
 
 }(ELMO.Report));

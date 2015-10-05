@@ -1029,7 +1029,7 @@ fr:
     how_to_display_questions: "Comment montreriez des questions?"
     how_to_display_results: "Comment montreriez des résultats?"
     how_to_order_questions: "Comment devraient être ordonnés les questions?"
-    loading_report: "Chargement Le Rapport..."
+    loading_report: "Chargement..."
     questions_with_option_sets: "Questions avec ces ensembles d'options"
     missing_observers: "Observateurs qui ne rapportent pas"
     mission: "Mission"

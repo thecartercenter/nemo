@@ -97,31 +97,36 @@
     // the dashboard in full screen mode is meant to be a long-running page so doesn't make
     // sense to let the session expire
 
-    $.ajax({
+    dashboard_load = $.ajax({
       url: ELMO.app.url_builder.build('/'),
       method: 'GET',
       data: {
-        report_id: self.report_view.current_report_id,
         latest_response_id: self.list_view.latest_response_id(),
         auto: full_screen
-      },
-      success: function(data) {
-        $('.recent_responses').replaceWith(data.recent_responses);
-        $('.report_stats').replaceWith(data.report_stats);
-        self.map_view.update_map(data.response_locations);
-        $('.report_pane').replaceWith(data.report_pane);
-        self.report_view.hookup_report_chooser();
-
-        self.adjust_pane_sizes();
-
-        self.reload_timer = setTimeout(function(){ self.reload_ajax(); }, AJAX_RELOAD_INTERVAL * 1000);
-      },
-      error: function() {
-        $('#content').html(I18n.t('layout.server_contact_error'));
       }
     });
 
+    report_load = self.report_view.load_report(self.report_view.current_report_id);
+
+    $.when(dashboard_load, report_load).then(self.reload_success.bind(self), self.reload_error.bind(self));
   };
+
+  klass.prototype.reload_success = function(data) { var self = this
+    // Gets the data returned from the dashboard request
+    data = data[0]
+
+    $('.recent_responses').replaceWith(data.recent_responses);
+    $('.report_stats').replaceWith(data.report_stats);
+    self.map_view.update_map(data.response_locations);
+
+    self.adjust_pane_sizes();
+
+    self.reload_timer = setTimeout(function(){ self.reload_ajax(); }, AJAX_RELOAD_INTERVAL * 1000);
+  },
+
+  klass.prototype.reload_error = function() { var self = this
+    $('#content').html(I18n.t('layout.server_contact_error'));
+  },
 
   // Reloads the page via full refresh to avoid memory issues.
   klass.prototype.reload_page = function() { var self = this;
