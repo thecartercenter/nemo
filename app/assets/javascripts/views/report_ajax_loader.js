@@ -1,23 +1,26 @@
-// ELMO.Views.DashboardReport
+// ELMO.Views.ReportAjaxLoader
 //
-// View model for the dashboard report
+// View model to load the report via ajax. Used on dashboard and report show.
 (function(ns, klass) {
 
   // constructor
-  ns.DashboardReport = klass = function(dashboard, params) { var self = this;
+  ns.ReportAjaxLoader = klass = function(params, dashboard) { var self = this;
     self.dashboard = dashboard;
     self.params = params;
 
     // save the report id
-    if (params)
+    if (params) {
       self.current_report_id = self.params.id;
+    }
 
-    // hookup the form change event
-    self.hookup_report_chooser();
+    if (dashboard) {
+      // hookup the form change event
+      self.hookup_report_chooser();
+      self.show_loading_message();
+    }
 
     // Load report via Ajax on the first time page is displayed.
     if (self.current_report_id) {
-      self.show_loading_message();
       self.load_report(self.current_report_id);
     }
   };
@@ -45,6 +48,8 @@
     // save the ID
     self.current_report_id = id;
 
+    $('.report_loading_icon').show();
+
     // send ajax request and replace div contents
     return $.get(ELMO.app.url_builder.build('report-update', id))
       .done(function(data){
@@ -52,6 +57,8 @@
 
         // clear the dropdown for the next choice
         $('.report_chooser select').val("");
+
+        $('.report_loading_icon').hide();
       });
   };
 

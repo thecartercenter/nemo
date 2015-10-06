@@ -48,7 +48,7 @@
     // create classes for screen components
     self.list_view = new ELMO.Views.DashboardResponseList();
     self.map_view = new ELMO.Views.DashboardMapView(self.params.map);
-    self.report_view = new ELMO.Views.DashboardReport(self, self.params.report);
+    self.report_view = new ELMO.Views.ReportAjaxLoader(self.params.report, self);
 
     self.list_view.adjust_columns();
   };

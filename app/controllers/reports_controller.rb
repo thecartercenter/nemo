@@ -15,7 +15,12 @@ class ReportsController < ApplicationController
   def new
     # make a default name in case the user wants to be lazy
     @report.generate_default_name
-    render_show
+
+    # setup data to be used on client side
+    # set edit mode if it was passed in the flash
+    build_report_data(:edit_mode => flash[:edit_mode])
+
+    render(:show)
   end
 
   def edit
@@ -26,9 +31,6 @@ class ReportsController < ApplicationController
   end
 
   def show
-    # run the report
-    run_or_fetch_and_handle_errors
-
     # handle different formats
     respond_to do |format|
       # for html, use the render_show function below
@@ -36,11 +38,14 @@ class ReportsController < ApplicationController
         # record viewing of report
         @report.record_viewing
 
-        render_show
+        # The data will be loaded via ajax
+        render(:show)
       end
 
       # for csv, just render the csv template
       format.csv do
+        # run the report
+        run_or_fetch_and_handle_errors
         raise "reports of this type are not exportable" unless @report.exportable?
         render_csv(@report.name.downcase)
       end
@@ -100,15 +105,6 @@ class ReportsController < ApplicationController
     # custom load method because CanCan won't work with STI hack in report.rb
     def custom_load
       @report = Report::Report.create(report_params.merge(:mission_id => current_mission.id))
-    end
-
-    # prepares and renders the show template, which is used for new and show actions
-    def render_show
-      # setup data to be used on client side
-      # set edit mode if it was passed in the flash
-      build_report_data(:edit_mode => flash[:edit_mode])
-
-      render(:show)
     end
 
     def prepare_report
