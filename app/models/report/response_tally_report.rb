@@ -12,13 +12,15 @@ class Report::ResponseTallyReport < Report::TallyReport
       joins = []
 
       # add tally to select
-      rel = rel.select("COUNT(responses.id) AS tally")
+      rel = rel.select("SQL_CALC_FOUND_ROWS COUNT(responses.id) AS tally")
 
       # add filter
       rel = apply_filter(rel)
 
       # add groupings
       rel = apply_groupings(rel)
+
+      rel = rel.limit(RESPONSES_QUANTITY_LIMIT)
     end
 
     # applys both groupings
