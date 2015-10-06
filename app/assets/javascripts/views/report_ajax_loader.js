@@ -51,24 +51,30 @@
 
     $('.report_loading_icon').show();
 
-    // send ajax request and replace div contents
-    return $.ajax({
-      url: ELMO.app.url_builder.build('report-update', id),
-      method: 'GET',
-      data: {
-        id: id,
-        edit_mode: edit_mode,
-        dashboard: (dashboard ? 'true' : 'false')
-      },
-      success: function(data){
-        ELMO.app.report_controller = new ELMO.Report.ReportController(data);
+    if (self.current_report_id) {
+      // send ajax request and replace div contents
+      return $.ajax({
+        url: ELMO.app.url_builder.build('report-update', id),
+        method: 'GET',
+        data: {
+          id: id,
+          edit_mode: edit_mode,
+          dashboard: (dashboard ? 'true' : 'false')
+        },
+        success: function(data){
+          ELMO.app.report_controller = new ELMO.Report.ReportController(data);
 
-        // clear the dropdown for the next choice
-        $('.report_chooser select').val("");
+          // clear the dropdown for the next choice
+          $('.report_chooser select').val("");
 
-        $('.report_loading_icon').hide();
-      }
-    });
+          $('.report_loading_icon').hide();
+        }
+      });
+    } else {
+      // Return a resolved promise to keep function return consistency
+      // (because this is what the ajax call returns)
+      return $.Deferred().resolve().promise();
+    }
   };
 
 }(ELMO.Views));
