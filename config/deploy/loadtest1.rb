@@ -1,4 +1,4 @@
-set :branch, 'load_testing'
+set :branch, 'develop'
 set :ping_url, 'https://loadtest1.getelmo.org'
 set :user, 'elmo'
 set :home_dir, '/home/elmo'
