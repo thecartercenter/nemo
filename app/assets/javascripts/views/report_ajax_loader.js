@@ -14,42 +14,21 @@
       self.edit_mode = self.params.edit_mode;
     }
 
-    if (dashboard) {
-      // hookup the form change event
-      self.hookup_report_chooser();
-      self.show_loading_message();
-    }
-
     // Load report via Ajax on the first time page is displayed.
     if (self.current_report_id) {
       self.load_report(self.current_report_id, self.edit_mode, self.dashboard);
     }
   };
 
-  klass.prototype.hookup_report_chooser = function () { var self = this;
-    $('.report_pane').on('change', 'form.report_chooser', function(e){
-      var report_id = $(e.target).val();
-
-      self.clear_report_data();
-      self.show_loading_message();
-
-      if (report_id) self.load_report(report_id, self.edit_mode, self.dashboard);
-    });
-  };
-
-  klass.prototype.clear_report_data = function() { var self = this;
-    $('.report_body').empty();
-    $('.report_info').empty();
-  }
-  klass.prototype.show_loading_message = function() { var self = this;
-    $('.report_pane h2 .report_title_text').html(I18n.t('report/report.loading_report'));
-  }
-
-  klass.prototype.load_report = function(id, edit_mode, dashboard) { var self = this;
+  klass.prototype.load_report = function(id, edit_mode, dashboard, dont_show_loading) { var self = this;
     // save the ID
     self.current_report_id = id;
 
-    $('.report_loading_icon').show();
+    // This is an optional parameter that is used when called
+    // from dashboard reload action
+    if (!dont_show_loading){
+      $('.report_loading_icon').show();
+    }
 
     if (self.current_report_id) {
       // send ajax request and replace div contents
@@ -63,10 +42,6 @@
         },
         success: function(data){
           ELMO.app.report_controller = new ELMO.Report.ReportController(data);
-
-          // clear the dropdown for the next choice
-          $('.report_chooser select').val("");
-
           $('.report_loading_icon').hide();
         }
       });
