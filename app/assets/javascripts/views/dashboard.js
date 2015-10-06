@@ -106,7 +106,7 @@
       }
     });
 
-    report_load = self.report_view.load_report(self.report_view.current_report_id);
+    report_load = self.report_view.load_report(self.report_view.current_report_id, false, self);
 
     $.when(dashboard_load, report_load).then(self.reload_success.bind(self), self.reload_error.bind(self));
   };

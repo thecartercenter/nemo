@@ -27,7 +27,7 @@ class ReportsController < ApplicationController
     # set flash and redirect to show
     # we do it this way because staying in the edit action produces a somewhat inaccurate url
     flash[:edit_mode] = true
-    redirect_to(:action => :show)
+    show_report
   end
 
   def show
@@ -35,11 +35,8 @@ class ReportsController < ApplicationController
     respond_to do |format|
       # for html, use the render_show function below
       format.html do
-        # record viewing of report
-        @report.record_viewing
-
-        # The data will be loaded via ajax
-        render(:show)
+        flash[:edit_mode] = false
+        show_report
       end
 
       # for csv, just render the csv template
@@ -90,7 +87,7 @@ class ReportsController < ApplicationController
   def data
     if params[:id].present?
       @report = Report::Report.find(params[:id])
-      prepare_report
+      prepare_report(params[:edit_mode], params[:dashboard])
 
       render(:json => @report_data.to_json)
     end
@@ -107,12 +104,24 @@ class ReportsController < ApplicationController
       @report = Report::Report.create(report_params.merge(:mission_id => current_mission.id))
     end
 
-    def prepare_report
+    def prepare_report(edit_mode, dashboard)
       unless @report.nil?
         authorize!(:read, @report)
         run_or_fetch_and_handle_errors
-        build_report_data(read_only: true, dont_set_title: true, user_can_edit: can?(:update, @report))
+        if (dashboard == 'true')
+          build_report_data(read_only: true, dont_set_title: true, user_can_edit: can?(:update, @report))
+        else
+          build_report_data(edit_mode: (edit_mode == 'true' ? true : false))
+        end
       end
+    end
+
+    def show_report
+      # record viewing of report
+      @report.record_viewing
+
+      # The data will be loaded via ajax
+      render(:show)
     end
 
     def report_params
