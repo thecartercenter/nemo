@@ -1,8 +1,6 @@
 class Report::ListReport < Report::Report
   include Report::Gridable
 
-  RESPONSES_QUANTITY_LIMIT = 1000
-
   def as_json(options = {})
     h = super(options)
     h[:calculations_attributes] = calculations

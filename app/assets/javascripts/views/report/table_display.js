@@ -213,12 +213,18 @@
   }
 
   klass.prototype.i18n_total_rows_label = function(data){
-    if (this.report.attribs.type.match(/ListReport/)) {
+    if (this.report.attribs.type.match(/ListReport/) ||
+        this.is_response_tally_report(this.report)) {
       return I18n.t("report/report.total_rows_showing",
         {count: data.rows.length,total_count: data.total_row_count})
     } else {
       return I18n.t("report/report.total_rows", {count: data.rows.length})
     }
+  }
+
+  klass.prototype.is_response_tally_report = function(report){
+    return (report.attribs.type.match(/Report::TallyReport/) &&
+      report.attribs.tally_type.match(/Response/))
   }
 
 }(ELMO.Report));
