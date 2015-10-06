@@ -139,6 +139,11 @@ body.welcome {
       white-space: nowrap;
     }
 
+    /* Don't show report edit link at the beginning.*/
+    .report_edit_link_container {
+      display: none;
+    }
+
     a.action_link_edit {
       vertical-align: top;
       margin-top: 18px;

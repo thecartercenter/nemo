@@ -5,6 +5,12 @@
   ns.ReportController = klass = function(init_data) {
     this.dont_set_title = init_data.dont_set_title;
 
+    // This means the report is being show on the dashboard page
+    if (this.dont_set_title) {
+      this.reset_title_pane_text(init_data.report.name)
+      this.set_edit_link(init_data)
+    }
+
     // create supporting models unless in read only mode
     if (!init_data.read_only) {
       this.options = init_data.options;
@@ -126,6 +132,22 @@
   // refreshes the report view
   klass.prototype.refresh_view = function() {
     this.display_report(this.report_last_run);
+  }
+
+  klass.prototype.reset_title_pane_text = function(title) {
+    $('.report_title_text').text(title)
+  }
+
+  klass.prototype.set_edit_link = function(data) {
+    if (data.user_can_edit) {
+      report_url = ELMO.app.url_builder.build('reports', data.report.id) + '/edit';
+
+      $('.report_edit_link_container').show();
+      $('.report_edit_link_container a').attr('href', report_url)
+    } else {
+      $('.report_edit_link_container').hide();
+      $('.report_edit_link_container a').attr('href', '')
+    }
   }
 
 }(ELMO.Report));

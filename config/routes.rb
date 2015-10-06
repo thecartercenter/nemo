@@ -73,7 +73,7 @@ ELMO::Application.routes.draw do
 
     # special dashboard routes
     get '/info-window' => 'welcome#info_window', as: :dashboard_info_window
-    get '/report-update/:id' => 'welcome#report_update'
+    get '/report-update/:id' => 'reports#data', as: :report_data
 
     get '/route-tests' => 'route_tests#mission_mode' if Rails.env.development? || Rails.env.test?
 

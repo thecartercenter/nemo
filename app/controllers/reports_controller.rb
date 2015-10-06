@@ -15,32 +15,34 @@ class ReportsController < ApplicationController
   def new
     # make a default name in case the user wants to be lazy
     @report.generate_default_name
-    render_show
+
+    # setup data to be used on client side
+    # set edit mode if it was passed in the flash
+    build_report_data(:edit_mode => flash[:edit_mode])
+
+    render(:show)
   end
 
   def edit
     # set flash and redirect to show
     # we do it this way because staying in the edit action produces a somewhat inaccurate url
     flash[:edit_mode] = true
-    redirect_to(:action => :show)
+    show_report
   end
 
   def show
-    # run the report
-    run_or_fetch_and_handle_errors
-
     # handle different formats
     respond_to do |format|
       # for html, use the render_show function below
       format.html do
-        # record viewing of report
-        @report.record_viewing
-
-        render_show
+        flash[:edit_mode] = false
+        show_report
       end
 
       # for csv, just render the csv template
       format.csv do
+        # run the report
+        run_or_fetch_and_handle_errors
         raise "reports of this type are not exportable" unless @report.exportable?
         render_csv(@report.name.downcase)
       end
@@ -81,6 +83,16 @@ class ReportsController < ApplicationController
     render(:json => @report_data.to_json)
   end
 
+  # Executed via ajax. It just runs the report and returns the report_data json.
+  def data
+    if params[:id].present?
+      @report = Report::Report.find(params[:id])
+      prepare_report(params[:edit_mode], params[:dashboard])
+
+      render(:json => @report_data.to_json)
+    end
+  end
+
   # specify the class the this controller controls, since it's not easily guessed
   def model_class
     Report::Report
@@ -92,12 +104,23 @@ class ReportsController < ApplicationController
       @report = Report::Report.create(report_params.merge(:mission_id => current_mission.id))
     end
 
-    # prepares and renders the show template, which is used for new and show actions
-    def render_show
-      # setup data to be used on client side
-      # set edit mode if it was passed in the flash
-      build_report_data(:edit_mode => flash[:edit_mode])
+    def prepare_report(edit_mode, dashboard)
+      unless @report.nil?
+        authorize!(:read, @report)
+        run_or_fetch_and_handle_errors
+        if (dashboard == 'true')
+          build_report_data(read_only: true, dont_set_title: true, user_can_edit: can?(:update, @report))
+        else
+          build_report_data(edit_mode: (edit_mode == 'true' ? true : false))
+        end
+      end
+    end
 
+    def show_report
+      # record viewing of report
+      @report.record_viewing
+
+      # The data will be loaded via ajax
       render(:show)
     end
 

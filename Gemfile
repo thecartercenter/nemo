@@ -101,6 +101,9 @@ gem 'twilio-ruby', ' ~> 4.1'
 
 gem 'fix-db-schema-conflicts'
 
+# Polyfill for the bind function. Some older browsers don't have it.
+gem 'phantomjs_polyfill-rails'
+
 group :development do
   gem 'rails-erd'                     # generate with rake db:migrate
   gem 'capistrano', '~> 2.15.4'       # deployment

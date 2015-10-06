@@ -13,6 +13,12 @@
 <div class="report_view">
   <div class="report_main">
     <%= render('main') %>
+    <%= javascript_doc_ready do %>
+      new ELMO.Views.ReportAjaxLoader(<%=json(
+        id: @report.id,
+        edit_mode: flash[:edit_mode]
+      )%>);
+    <% end %>
   </div>
 </div>
 
