@@ -30,7 +30,7 @@ class ReportsController < ApplicationController
     # set flash and redirect to show
     # we do it this way because staying in the edit action produces a somewhat inaccurate url
     flash[:edit_mode] = true
-    show_report
+    redirect_to(report_path(@report))
   end
 
   def show
@@ -40,7 +40,7 @@ class ReportsController < ApplicationController
       format.html do
         # If ajax, we run report now, since no point in doing another ajax request
         run_or_fetch_and_handle_errors if request.xhr?
-        build_report_data(edit_mode: false, read_only: !!request.xhr?, embedded_mode: !!request.xhr?)
+        build_report_data(edit_mode: !!flash[:edit_mode], read_only: !!request.xhr?, embedded_mode: !!request.xhr?)
 
         if request.xhr?
           render(partial: "reports/main")

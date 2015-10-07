@@ -107,7 +107,7 @@
     } else {
       this.restore_view();
       this.report_last_run = new ns.Report(data.report, this.menus);
-      if (!this.init_data.read_only) report_last_run.prepare();
+      if (!this.init_data.read_only) this.report_last_run.prepare();
       this.display_report(this.report_last_run);
     }
   }
