@@ -35,7 +35,7 @@ module ReportEmbeddable
   # returns true if no errors, false otherwise
   def run_or_fetch_and_handle_errors
     begin
-      @report = Rails.cache.fetch(self.cache_key_with_responses) do
+      @report = Rails.cache.fetch(cache_key_with_responses) do
         @report.run(current_ability)
         @report
       end
@@ -50,8 +50,12 @@ module ReportEmbeddable
   def cache_key_with_responses
     [
       I18n.locale.to_s,
+
+      # Need to include this because observers see only own data
+      current_user.role(current_mission) == "observer" ? "observer-#{current_user.id}" : nil,
+
       Response.per_mission_cache_key(current_mission),
       @report.cache_key
-    ].join('-')
+    ].compact.join('-')
   end
 end
