@@ -3,13 +3,8 @@
 
   // constructor
   ns.ReportController = klass = function(init_data) {
-    this.dont_set_title = init_data.dont_set_title;
-
-    // This means the report is being show on the dashboard page
-    if (this.dont_set_title) {
-      this.reset_title_pane_text(init_data.report.name)
-      this.set_edit_link(init_data)
-    }
+    this.embedded_mode = init_data.embedded_mode;
+    this.init_data = init_data;
 
     // create supporting models unless in read only mode
     if (!init_data.read_only) {
@@ -24,6 +19,7 @@
     }
 
     this.report_in_db = new ns.Report(init_data.report, this.menus);
+
     if (!init_data.read_only) this.report_in_db.prepare();
 
     // create copy of report to be referenced each run
@@ -39,14 +35,13 @@
     // if is new record, show dialog first page
     if (this.report_in_db.new_record)
       this.show_edit_view(0);
-    // otherwise, if the report is not yet populated, we need to populate it
-    else if (!this.report_in_db.populated)
-      //this.display_report(this.report_last_run);
-      this.run_report(this.report_in_db);
 
     // if in edit mode, show edit dialog second page, since report type is not editable
     if (init_data.edit_mode)
       this.show_edit_view(1);
+
+    if (this.report_last_run.populated)
+      this.display_report(this.report_last_run);
   }
 
   klass.prototype.show_edit_view = function(idx) {
@@ -54,8 +49,31 @@
     this.edit_view.show(this.report_last_run.clone(), idx);
   }
 
-  // sends an ajax request to server
-  klass.prototype.run_report = function(report) {
+  // Does not update, just runs.
+  klass.prototype.run_report = function() {
+    if (!this.embedded_mode)
+      ELMO.app.loading(true);
+
+    var promise = $.Deferred();
+
+    var url = ELMO.app.url_builder.build("reports", this.report_in_db.attribs.id, "data");
+    (function(_this) {
+      $.ajax({
+        type: 'GET',
+        url: url,
+        success: function(d, s, j) {
+          promise.resolve(_this.report_in_db);
+          _this.run_success(d, s, j);
+        },
+        error: function(j, s, e) { _this.run_error(j, s, e); }
+      })
+    })(this);
+
+    return promise;
+  }
+
+  // Updates the report and runs it.
+  klass.prototype.update_and_run_report = function(report) {
     ELMO.app.loading(true);
 
     // get hash from report
@@ -80,7 +98,6 @@
   }
 
   klass.prototype.run_success = function(data, status, jqxhr) {
-
     // if the 'just created' flag is set, redirect to the show action so that links, etc., will work
     if (data.report.just_created) {
       ELMO.app.loading(true);
@@ -90,7 +107,7 @@
     } else {
       this.restore_view();
       this.report_last_run = new ns.Report(data.report, this.menus);
-      this.report_last_run.prepare();
+      if (!this.init_data.read_only) report_last_run.prepare();
       this.display_report(this.report_last_run);
     }
   }
@@ -124,7 +141,8 @@
     // hide load ind
     ELMO.app.loading(false);
 
-    this.edit_view.hide();
+    if (this.edit_view)
+      this.edit_view.hide();
 
     // show links and body
     $(".report_links, .report_main").show();
@@ -133,22 +151,6 @@
   // refreshes the report view
   klass.prototype.refresh_view = function() {
     this.display_report(this.report_last_run);
-  }
-
-  klass.prototype.reset_title_pane_text = function(title) {
-    $('.report_title_text').text(title)
-  }
-
-  klass.prototype.set_edit_link = function(data) {
-    if (data.user_can_edit) {
-      report_url = ELMO.app.url_builder.build('reports', data.report.id) + '/edit';
-
-      $('.report_edit_link_container').show();
-      $('.report_edit_link_container a').attr('href', report_url)
-    } else {
-      $('.report_edit_link_container').hide();
-      $('.report_edit_link_container a').attr('href', '')
-    }
   }
 
 }(ELMO.Report));

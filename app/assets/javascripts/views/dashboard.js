@@ -45,17 +45,16 @@
     // save mission_id as map serialization key
     self.params.map.serialization_key = self.params.mission_id;
 
-    if (self.params.report) {
-      self.show_report_loading_message();
-    }
-
     // create classes for screen components
     self.list_view = new ELMO.Views.DashboardResponseList();
     self.map_view = new ELMO.Views.DashboardMapView(self.params.map);
-    self.report_view = new ELMO.Views.ReportAjaxLoader(self.params.report, self);
+    self.report_view = new ELMO.Views.DashboardReport(self, self.params.report);
 
-    self.hookup_report_chooser();
     self.list_view.adjust_columns();
+  };
+
+  klass.prototype.run_report = function() {
+    this.report_view.refresh();
   };
 
   klass.prototype.adjust_pane_sizes = function() { var self = this;
@@ -102,33 +101,28 @@
     // the dashboard in full screen mode is meant to be a long-running page so doesn't make
     // sense to let the session expire
 
-    dashboard_load = $.ajax({
+    $.ajax({
       url: ELMO.app.url_builder.build('/'),
       method: 'GET',
       data: {
+        report_id: self.report_view.current_report_id,
         latest_response_id: self.list_view.latest_response_id(),
         auto: full_screen
       },
-      success: self.reload_success.bind(self),
-      error: self.reload_error.bind(self)
+      success: function(data) {
+        $('.recent_responses').replaceWith(data.recent_responses);
+        $('.report_stats').replaceWith(data.report_stats);
+        self.map_view.update_map(data.response_locations);
+        self.report_view.refresh();
+        self.adjust_pane_sizes();
+
+        self.reload_timer = setTimeout(function(){ self.reload_ajax(); }, AJAX_RELOAD_INTERVAL * 1000);
+      },
+      error: function() {
+        $('#content').html(I18n.t('layout.server_contact_error'));
+      }
     });
-
-    self.report_view.load_report(self.report_view.current_report_id, false, self, true);
   };
-
-  klass.prototype.reload_success = function(data) { var self = this
-    $('.recent_responses').replaceWith(data.recent_responses);
-    $('.report_stats').replaceWith(data.report_stats);
-    self.map_view.update_map(data.response_locations);
-
-    self.adjust_pane_sizes();
-
-    self.reload_timer = setTimeout(function(){ self.reload_ajax(); }, AJAX_RELOAD_INTERVAL * 1000);
-  },
-
-  klass.prototype.reload_error = function() { var self = this
-    $('#content').html(I18n.t('layout.server_contact_error'));
-  },
 
   // Reloads the page via full refresh to avoid memory issues.
   klass.prototype.reload_page = function() { var self = this;
@@ -170,33 +164,6 @@
 
     // Set link text
     $('a.full-screen span').text(I18n.t('dashboard.' + (fs ? 'exit' : 'enter') + '_full_screen'));
-  }
-
-  klass.prototype.hookup_report_chooser = function () { var self = this;
-    $('.report_pane').on('change', 'form.report_chooser', function(e){
-      var report_id = $(e.target).val();
-
-      self.clear_report_data();
-      self.show_report_loading_message();
-
-      if (report_id) {
-        self.report_view.load_report(report_id,  false, self).done(
-          function(){
-            // clear the dropdown for the next choice
-            $('.report_chooser select').val("");
-          }
-        );
-      }
-    });
-  };
-
-  klass.prototype.clear_report_data = function() { var self = this;
-    $('.report_body').empty();
-    $('.report_info').empty();
-  }
-
-  klass.prototype.show_report_loading_message = function() { var self = this;
-    $('.report_pane h2 .report_title_text').html(I18n.t('report/report.loading_report'));
   }
 
 }(ELMO.Views));

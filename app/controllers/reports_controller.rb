@@ -38,8 +38,15 @@ class ReportsController < ApplicationController
     respond_to do |format|
       # for html, use the render_show function below
       format.html do
-        build_report_data(:edit_mode => false)
-        show_report
+        # If ajax, we run report now, since no point in doing another ajax request
+        run_or_fetch_and_handle_errors if request.xhr?
+        build_report_data(edit_mode: false, read_only: !!request.xhr?, embedded_mode: !!request.xhr?)
+
+        if request.xhr?
+          render(partial: "reports/main")
+        else
+          show_report
+        end
       end
 
       # for csv, just render the csv template
@@ -89,13 +96,10 @@ class ReportsController < ApplicationController
   # Executed via ajax. It just runs the report and returns the report_data json.
   def data
     authorize!(:read, @report)
-
-    if params[:id].present?
-      @report = Report::Report.find(params[:id])
-      prepare_report(params[:edit_mode], params[:dashboard])
-
-      render(:json => @report_data.to_json)
-    end
+    @report = Report::Report.find(params[:id])
+    run_or_fetch_and_handle_errors
+    build_report_data(user_can_edit: can?(:update, @report), read_only: true)
+    render(:json => @report_data.to_json)
   end
 
   # specify the class the this controller controls, since it's not easily guessed
@@ -110,18 +114,6 @@ class ReportsController < ApplicationController
         :mission_id => current_mission.id,
         :creator_id => current_user.id
       ))
-    end
-
-    def prepare_report(edit_mode, dashboard)
-      unless @report.nil?
-        authorize!(:read, @report)
-        run_or_fetch_and_handle_errors
-        if (dashboard == 'true')
-          build_report_data(read_only: true, dont_set_title: true, user_can_edit: can?(:update, @report))
-        else
-          build_report_data(edit_mode: (edit_mode == 'true' ? true : false))
-        end
-      end
     end
 
     def show_report

@@ -52,14 +52,6 @@ class WelcomeController < ApplicationController
         Assignment.per_mission_cache_key(current_mission)
       ].join('-')
 
-      # Set report id to be used on javascript report loader.
-      if params[:report_id].present?
-        @report_id = params[:report_id]
-      else
-        # else load the most popular report
-        @report_id = Report::Report.accessible_by(current_ability).by_popularity.pluck(:id).first
-      end
-
       # get a relation for accessible responses
       accessible_responses = Response.accessible_by(current_ability)
 
@@ -92,6 +84,8 @@ class WelcomeController < ApplicationController
       # get list of all reports for the mission, for the dropdown
       @reports = Report::Report.accessible_by(current_ability).by_name
 
+      prepare_report
+
       # render JSON if ajax request
       if request.xhr?
         data = {
@@ -105,6 +99,23 @@ class WelcomeController < ApplicationController
         render json: data
       else
         render(:dashboard)
+      end
+    end
+
+    def prepare_report
+      # if report id given, load that else use most popular
+      if !params[:report_id].blank?
+        @report = Report::Report.find(params[:report_id])
+      else
+        @report = Report::Report.accessible_by(current_ability).by_popularity.first
+      end
+
+      if @report.present?
+        # Make sure no funny business!
+        authorize!(:read, @report)
+
+        # We don't run the report, that will happen on an ajax call.
+        build_report_data(read_only: true, embedded_mode: true)
       end
     end
 end

@@ -1211,7 +1211,7 @@ en:
     how_to_display_questions: "How should questions be displayed?"
     how_to_display_results: "How would you like to display the results?"
     how_to_order_questions: "How should questions be ordered?"
-    loading_report: "Loading..."
+    loading_report: "Loading Report..."
     questions_with_option_sets: "Questions with these option sets"
     missing_observers: "Non-reporting Observers"
     missing_observers_total_count: "%{user_count} in total"
