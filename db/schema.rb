@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150930214725) do
+ActiveRecord::Schema.define(version: 20151007014204) do
   create_table "answers", force: :cascade do |t|
     t.datetime "created_at"
     t.date "date_value"
@@ -303,6 +303,7 @@ ActiveRecord::Schema.define(version: 20150930214725) do
     t.string "aggregation_name", limit: 255
     t.string "bar_style", limit: 255, default: "side_by_side"
     t.datetime "created_at"
+    t.integer "creator_id", limit: 4
     t.integer "disagg_qing_id", limit: 4
     t.string "display_type", limit: 255, default: "table"
     t.text "filter", limit: 65535
@@ -322,6 +323,7 @@ ActiveRecord::Schema.define(version: 20150930214725) do
     t.datetime "viewed_at"
   end
 
+  add_index "report_reports", ["creator_id"], name: "fk_rails_1df9873194", using: :btree
   add_index "report_reports", ["disagg_qing_id"], name: "report_reports_disagg_qing_id_fk", using: :btree
   add_index "report_reports", ["form_id"], name: "report_reports_form_id_fk", using: :btree
   add_index "report_reports", ["mission_id"], name: "report_reports_mission_id_fk", using: :btree
@@ -510,6 +512,7 @@ ActiveRecord::Schema.define(version: 20150930214725) do
   add_foreign_key "report_reports", "form_items", column: "disagg_qing_id", name: "report_reports_disagg_qing_id_fk"
   add_foreign_key "report_reports", "forms", name: "report_reports_form_id_fk"
   add_foreign_key "report_reports", "missions", name: "report_reports_mission_id_fk"
+  add_foreign_key "report_reports", "users", column: "creator_id"
   add_foreign_key "responses", "forms", name: "responses_form_id_fk"
   add_foreign_key "responses", "missions", name: "responses_mission_id_fk"
   add_foreign_key "responses", "users", column: "checked_out_by_id", name: "responses_checked_out_by_id_fk"

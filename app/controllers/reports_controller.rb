@@ -8,6 +8,9 @@ class ReportsController < ApplicationController
   # authorization via cancan
   load_and_authorize_resource :class => 'Report::Report'
 
+  # Will do this explicitly below.
+  skip_authorize_resource only: :data
+
   def index
     @reports = @reports.by_popularity
   end
@@ -56,6 +59,8 @@ class ReportsController < ApplicationController
 
   # this method only reached through ajax
   def create
+    @report.creator = current_user
+
     # if report is valid, save it and set flag (no need to run it b/c it will be redirected)
     @report.just_created = true if @report.errors.empty?
 
@@ -85,6 +90,8 @@ class ReportsController < ApplicationController
 
   # Executed via ajax. It just runs the report and returns the report_data json.
   def data
+    authorize!(:read, @report)
+
     if params[:id].present?
       @report = Report::Report.find(params[:id])
       prepare_report(params[:edit_mode], params[:dashboard])

@@ -7,6 +7,7 @@ class Report::Report < ActiveRecord::Base
   has_many(:option_sets, :through => :option_set_choices)
   has_many(:calculations, -> { order("rank") }, :class_name => "Report::Calculation", :foreign_key => "report_report_id", :inverse_of => :report,
      :dependent => :destroy, :autosave => true)
+  belongs_to(:creator, class_name: "User")
 
   accepts_nested_attributes_for(:calculations, :allow_destroy => true)
   accepts_nested_attributes_for(:option_set_choices, :allow_destroy => true)
