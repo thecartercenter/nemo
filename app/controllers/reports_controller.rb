@@ -98,7 +98,7 @@ class ReportsController < ApplicationController
     authorize!(:read, @report)
     @report = Report::Report.find(params[:id])
     run_or_fetch_and_handle_errors
-    build_report_data(user_can_edit: can?(:update, @report), read_only: true)
+    build_report_data(read_only: true)
     render(:json => @report_data.to_json)
   end
 

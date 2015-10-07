@@ -26,6 +26,7 @@ module ReportEmbeddable
     end
 
     @report_data[:report][:generated_at] = I18n.l(Time.zone.now)
+    @report_data[:report][:user_can_edit] = can?(:update, @report)
   end
 
   # Looks for a cached, populated report object matching @report.

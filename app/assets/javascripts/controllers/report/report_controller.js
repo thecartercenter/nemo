@@ -62,7 +62,7 @@
         type: 'GET',
         url: url,
         success: function(d, s, j) {
-          promise.resolve(_this.report_in_db);
+          promise.resolve();
           _this.run_success(d, s, j);
         },
         error: function(j, s, e) { _this.run_error(j, s, e); }
