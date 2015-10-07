@@ -1226,7 +1226,7 @@ en:
       other: "See dependent questions"
     show_examples: "Show Examples"
     show_text_responses: "Show text responses?"
-    showing_limited_answers: "Showing %{count} first answers"
+    showing_limited_answers: "Showing only the first %{count} answers"
     submitted_by_at: "By %{user} at %{datetime}"
     subset_intro: "Data for responses in which the answer to the '%{question}' question was '%{disagg_value}'"
     tally: "Tally"

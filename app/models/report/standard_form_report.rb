@@ -62,6 +62,7 @@ class Report::StandardFormReport < Report::Report
     h[:disagg_question_id] = disagg_question_id
     h[:disagg_qing] = disagg_qing.as_json(:only => :id, :include => {:question => {:only => :code}})
     h[:no_data] = no_data?
+    h[:raw_answer_limit] = Report::SummaryCollectionBuilder::RAW_ANSWER_LIMIT
 
     self.populated = true
 
