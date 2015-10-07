@@ -125,8 +125,14 @@
       ELMO.app.loading(true);
       window.location.href = ELMO.app.url_builder.build('reports');
     // else restore the view
-    } else
-      this.restore_view();
+    } else {
+      if (!this.report_last_run.populated) {
+        var self = this;
+        if (this.edit_view) this.edit_view.hide();
+        this.run_report().then(function(){ self.restore_view(); });
+      } else
+        this.restore_view();
+    }
   }
 
   klass.prototype.display_report = function(report) {
