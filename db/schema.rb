@@ -11,7 +11,8 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150817204307) do
+ActiveRecord::Schema.define(:version => 20151007014204) do
+
   create_table "answers", :force => true do |t|
     t.integer  "response_id"
     t.integer  "option_id"
@@ -82,10 +83,12 @@ ActiveRecord::Schema.define(version: 20150817204307) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "mission_id"
+    t.integer  "original_id"
     t.string   "option_ids"
   end
 
   add_index "conditions", ["mission_id"], :name => "index_conditions_on_mission_id"
+  add_index "conditions", ["original_id"], :name => "index_conditions_on_original_id"
   add_index "conditions", ["questioning_id"], :name => "conditions_questioning_id_fk"
   add_index "conditions", ["ref_qing_id"], :name => "conditions_ref_qing_id_fk"
 
@@ -98,6 +101,7 @@ ActiveRecord::Schema.define(version: 20150817204307) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "mission_id"
+    t.integer  "original_id"
     t.string   "type"
     t.string   "ancestry"
     t.integer  "ancestry_depth"
@@ -107,6 +111,7 @@ ActiveRecord::Schema.define(version: 20150817204307) do
   add_index "form_items", ["ancestry"], :name => "index_form_items_on_ancestry"
   add_index "form_items", ["form_id"], :name => "questionings_form_id_fk"
   add_index "form_items", ["mission_id"], :name => "index_questionings_on_mission_id"
+  add_index "form_items", ["original_id"], :name => "index_questionings_on_original_id"
   add_index "form_items", ["question_id"], :name => "questionings_question_id_fk"
 
   create_table "form_versions", :force => true do |t|
@@ -173,12 +178,14 @@ ActiveRecord::Schema.define(version: 20150817204307) do
     t.datetime "updated_at",                    :null => false
     t.integer  "mission_id"
     t.integer  "ancestry_depth", :default => 0
+    t.integer  "original_id"
   end
 
   add_index "option_nodes", ["ancestry"], :name => "index_option_nodes_on_ancestry"
   add_index "option_nodes", ["mission_id"], :name => "option_nodes_mission_id_fk"
   add_index "option_nodes", ["option_id"], :name => "option_nodes_option_id_fk"
   add_index "option_nodes", ["option_set_id"], :name => "option_nodes_option_set_id_fk"
+  add_index "option_nodes", ["original_id"], :name => "index_option_nodes_on_original_id"
   add_index "option_nodes", ["rank"], :name => "index_option_nodes_on_rank"
 
   create_table "option_sets", :force => true do |t|
@@ -205,10 +212,12 @@ ActiveRecord::Schema.define(version: 20150817204307) do
     t.integer  "mission_id"
     t.string   "canonical_name"
     t.text     "name_translations"
+    t.integer  "original_id"
   end
 
   add_index "options", ["canonical_name", "mission_id"], :name => "index_options_on_canonical_name_and_mission_id"
   add_index "options", ["mission_id"], :name => "index_options_on_mission_id"
+  add_index "options", ["original_id"], :name => "index_options_on_original_id"
 
   create_table "questions", :force => true do |t|
     t.string   "code"
@@ -278,8 +287,10 @@ ActiveRecord::Schema.define(version: 20150817204307) do
     t.integer  "disagg_qing_id"
     t.string   "filter"
     t.boolean  "group_by_tag",     :default => false,          :null => false
+    t.integer  "creator_id"
   end
 
+  add_index "report_reports", ["creator_id"], :name => "report_reports_creator_id_fk"
   add_index "report_reports", ["disagg_qing_id"], :name => "report_reports_disagg_qing_id_fk"
   add_index "report_reports", ["form_id"], :name => "report_reports_form_id_fk"
   add_index "report_reports", ["mission_id"], :name => "report_reports_mission_id_fk"
@@ -362,20 +373,24 @@ ActiveRecord::Schema.define(version: 20150817204307) do
     t.integer  "tag_id",      :null => false
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
+    t.integer  "original_id"
   end
 
+  add_index "taggings", ["original_id"], :name => "index_taggings_on_original_id"
   add_index "taggings", ["question_id"], :name => "index_taggings_on_question_id"
   add_index "taggings", ["tag_id"], :name => "index_taggings_on_tag_id"
 
   create_table "tags", :force => true do |t|
-    t.string   "name",       :limit => 64, :null => false
+    t.string   "name",        :limit => 64, :null => false
     t.integer  "mission_id"
-    t.datetime "created_at",               :null => false
-    t.datetime "updated_at",               :null => false
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
+    t.integer  "original_id"
   end
 
   add_index "tags", ["mission_id"], :name => "index_tags_on_mission_id"
   add_index "tags", ["name", "mission_id"], :name => "index_tags_on_name_and_mission_id"
+  add_index "tags", ["original_id"], :name => "index_tags_on_original_id"
 
   create_table "user_groups", :force => true do |t|
     t.integer  "user_id",    :null => false
@@ -431,10 +446,12 @@ ActiveRecord::Schema.define(version: 20150817204307) do
 
   add_foreign_key "choices", "options", name: "choices_option_id_fk"
 
+  add_foreign_key "conditions", "conditions", name: "conditions_original_id_fk", column: "original_id"
   add_foreign_key "conditions", "form_items", name: "conditions_questioning_id_fk", column: "questioning_id"
   add_foreign_key "conditions", "form_items", name: "conditions_ref_qing_id_fk", column: "ref_qing_id"
   add_foreign_key "conditions", "missions", name: "conditions_mission_id_fk"
 
+  add_foreign_key "form_items", "form_items", name: "questionings_original_id_fk", column: "original_id"
   add_foreign_key "form_items", "forms", name: "questionings_form_id_fk"
   add_foreign_key "form_items", "missions", name: "questionings_mission_id_fk"
   add_foreign_key "form_items", "questions", name: "questionings_question_id_fk"
@@ -442,24 +459,29 @@ ActiveRecord::Schema.define(version: 20150817204307) do
   add_foreign_key "form_versions", "forms", name: "form_versions_form_id_fk"
 
   add_foreign_key "forms", "form_versions", name: "forms_current_version_id_fk", column: "current_version_id", dependent: :nullify
-  add_foreign_key "forms", "forms", column: "original_id", name: "forms_standard_id_fk", on_delete: :nullify
+  add_foreign_key "forms", "forms", name: "forms_original_id_fk", column: "original_id"
+  add_foreign_key "forms", "forms", name: "forms_standard_id_fk", column: "original_id"
   add_foreign_key "forms", "missions", name: "forms_mission_id_fk"
 
   add_foreign_key "groups", "missions", name: "groups_mission_id_fk"
 
   add_foreign_key "option_nodes", "missions", name: "option_nodes_mission_id_fk"
+  add_foreign_key "option_nodes", "option_nodes", name: "option_nodes_original_id_fk", column: "original_id"
   add_foreign_key "option_nodes", "option_sets", name: "option_nodes_option_set_id_fk"
   add_foreign_key "option_nodes", "options", name: "option_nodes_option_id_fk"
 
   add_foreign_key "option_sets", "missions", name: "option_sets_mission_id_fk"
   add_foreign_key "option_sets", "option_nodes", name: "option_sets_root_node_id_fk", column: "root_node_id"
-  add_foreign_key "option_sets", "option_sets", column: "original_id", name: "option_sets_standard_id_fk", on_delete: :nullify
+  add_foreign_key "option_sets", "option_sets", name: "option_sets_original_id_fk", column: "original_id"
+  add_foreign_key "option_sets", "option_sets", name: "option_sets_standard_id_fk", column: "original_id"
 
   add_foreign_key "options", "missions", name: "options_mission_id_fk"
+  add_foreign_key "options", "options", name: "options_original_id_fk", column: "original_id"
 
   add_foreign_key "questions", "missions", name: "questions_mission_id_fk"
   add_foreign_key "questions", "option_sets", name: "questions_option_set_id_fk"
-  add_foreign_key "questions", "questions", column: "original_id", name: "questions_standard_id_fk", on_delete: :nullify
+  add_foreign_key "questions", "questions", name: "questions_original_id_fk", column: "original_id"
+  add_foreign_key "questions", "questions", name: "questions_standard_id_fk", column: "original_id"
 
   add_foreign_key "report_calculations", "questions", name: "report_calculations_question1_id_fk", column: "question1_id"
   add_foreign_key "report_calculations", "report_reports", name: "report_calculations_report_report_id_fk"
@@ -470,6 +492,7 @@ ActiveRecord::Schema.define(version: 20150817204307) do
   add_foreign_key "report_reports", "form_items", name: "report_reports_disagg_qing_id_fk", column: "disagg_qing_id"
   add_foreign_key "report_reports", "forms", name: "report_reports_form_id_fk"
   add_foreign_key "report_reports", "missions", name: "report_reports_mission_id_fk"
+  add_foreign_key "report_reports", "users", name: "report_reports_creator_id_fk", column: "creator_id", dependent: :nullify
 
   add_foreign_key "responses", "forms", name: "responses_form_id_fk"
   add_foreign_key "responses", "missions", name: "responses_mission_id_fk"
@@ -482,6 +505,10 @@ ActiveRecord::Schema.define(version: 20150817204307) do
   add_foreign_key "sms_messages", "missions", name: "sms_messages_mission_id_fk"
   add_foreign_key "sms_messages", "sms_messages", name: "sms_messages_reply_to_id_fk", column: "reply_to_id"
   add_foreign_key "sms_messages", "users", name: "sms_messages_user_id_fk"
+
+  add_foreign_key "taggings", "taggings", name: "taggings_original_id_fk", column: "original_id"
+
+  add_foreign_key "tags", "tags", name: "tags_original_id_fk", column: "original_id"
 
   add_foreign_key "user_groups", "groups", name: "user_groups_group_id_fk"
   add_foreign_key "user_groups", "users", name: "user_groups_user_id_fk"

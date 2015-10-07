@@ -8,6 +8,9 @@ class ReportsController < ApplicationController
   # authorization via cancan
   load_and_authorize_resource :class => 'Report::Report'
 
+  # Will do this explicitly below.
+  skip_authorize_resource only: :data
+
   def index
     @reports = @reports.by_popularity
   end
@@ -90,7 +93,10 @@ class ReportsController < ApplicationController
   private
     # custom load method because CanCan won't work with STI hack in report.rb
     def custom_load
-      @report = Report::Report.create(params[:report].merge(:mission_id => current_mission.id))
+      @report = Report::Report.create(params[:report].merge(
+        :mission_id => current_mission.id,
+        :creator_id => current_user.id
+      ))
     end
 
     # prepares and renders the show template, which is used for new and show actions

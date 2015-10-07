@@ -93,8 +93,7 @@ class Ability
           # can view and export users in same mission
           can [:index, :read, :show, :export], User, :assignments => {:mission_id => mission.id}
 
-          # can do reports for the current mission
-          can :manage, Report::Report, :mission_id => mission.id
+          can_read_all_reports_but_only_update_destroy_own
 
           # only need these abilities if not also a staffer
           unless role_in_mission?(:staffer)
@@ -126,8 +125,7 @@ class Ability
           # can send broadcasts for the current mission
           can :manage, Broadcast, :mission_id => mission.id
 
-          # can do reports for the current mission
-          can :manage, Report::Report, :mission_id => mission.id
+          can_read_all_reports_but_only_update_destroy_own
 
           if mission.locked?
             # can index, read, export responses for a locked mission
@@ -146,6 +144,8 @@ class Ability
 
         # coordinator abilities
         if role_in_mission?(:coordinator)
+
+          can :manage, Report::Report, mission_id: mission.id
 
           # permissions for locked missions only
           if mission.locked?
@@ -284,5 +284,10 @@ class Ability
 
     def role_in_mission?(role_name)
       user.role?(role_name, mission)
+    end
+
+    def can_read_all_reports_but_only_update_destroy_own
+      can [:read, :create], Report::Report, mission_id: mission.id
+      can [:update, :destroy], Report::Report, mission_id: mission.id, creator_id: user.id
     end
 end

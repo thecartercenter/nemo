@@ -4,7 +4,8 @@ class Report::Report < ActiveRecord::Base
 
   attr_accessible :type, :name, :form_id, :option_set_id, :display_type, :bar_style, :unreviewed, :filter,
     :question_labels, :show_question_labels, :question_order, :text_responses, :percent_type, :unique_rows,
-    :calculations_attributes, :calculations, :option_set, :mission_id, :mission, :disagg_question_id, :group_by_tag
+    :calculations_attributes, :calculations, :option_set, :mission_id, :mission, :disagg_question_id,
+    :group_by_tag, :creator_id
 
   attr_accessible(:option_set_choices_attributes)
 
@@ -13,6 +14,7 @@ class Report::Report < ActiveRecord::Base
   has_many(:option_sets, :through => :option_set_choices)
   has_many(:calculations, :class_name => "Report::Calculation", :foreign_key => "report_report_id", :inverse_of => :report,
     :order => "rank", :dependent => :destroy, :autosave => true)
+  belongs_to(:creator, class_name: "User")
 
   accepts_nested_attributes_for(:calculations, :allow_destroy => true)
   accepts_nested_attributes_for(:option_set_choices, :allow_destroy => true)
