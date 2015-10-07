@@ -59,8 +59,6 @@ class ReportsController < ApplicationController
 
   # this method only reached through ajax
   def create
-    @report.creator = current_user
-
     # if report is valid, save it and set flag (no need to run it b/c it will be redirected)
     @report.just_created = true if @report.errors.empty?
 
@@ -108,7 +106,10 @@ class ReportsController < ApplicationController
   private
     # custom load method because CanCan won't work with STI hack in report.rb
     def custom_load
-      @report = Report::Report.create(report_params.merge(:mission_id => current_mission.id))
+      @report = Report::Report.create(report_params.merge(
+        :mission_id => current_mission.id,
+        :creator_id => current_user.id
+      ))
     end
 
     def prepare_report(edit_mode, dashboard)
