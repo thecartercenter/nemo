@@ -28,6 +28,7 @@
     ELMO.app.report_controller.run_report().then(function(){
       $('.report_pane h2').html(self.report().attribs.name);
       self.set_edit_link();
+      $(".report_chooser").show();
     });
   };
 
@@ -44,13 +45,15 @@
       function(){
         $('.report_pane h2').html(self.report().attribs.name);
         self.set_edit_link();
+        $(".report_chooser").show();
       });
 
     // clear the dropdown for the next choice
     $('.report_chooser select').val("");
 
-    // Hide edit link until reload is finished
+    // Hide edit link and chooser until reload is finished
     $('.report_edit_link_container').hide();
+    $(".report_chooser").hide();
   };
 
   klass.prototype.reset_title_pane_text = function(title) {
