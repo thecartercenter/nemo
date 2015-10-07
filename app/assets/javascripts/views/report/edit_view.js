@@ -63,7 +63,7 @@
     this.show_pane(idx);
 
     // hookup esc key
-    if (this.report.has_run()) {
+    if (!this.report.new_record) {
       this.esc_handler = function(e){ if (e.keyCode === 27) _this.cancel(); };
       $(document).bind("keyup", this.esc_handler);
     }
@@ -83,7 +83,7 @@
     this.update_buttons();
 
     // create title based on if new report or editing report
-    var title = report.has_run() ? I18n.t("page_titles.reports.edit") : I18n.t("page_titles.reports.new");
+    var title = report.new_record ? I18n.t("page_titles.reports.new") : I18n.t("page_titles.reports.edit");
 
     // update title of modal
     $(".modal-title").html(title + ": " + I18n.t("report/report." + this.panes[idx].id));
@@ -144,7 +144,6 @@
   }
 
   klass.prototype.cancel = function() {
-
     // unregister keyup event
     $(document).unbind("keyup", this.esc_handler);
 
@@ -170,7 +169,7 @@
     this.enable_button("next", this.next_pane(1) != null);
 
     // run button should appear if report has already run or if this is the last pane
-    this.enable_button("run", this.report.has_run() || this.next_pane(1) == null);
+    this.enable_button("run", !this.report.new_record || this.next_pane(1) == null);
   }
 
   klass.prototype.enable_button = function(name, which) {

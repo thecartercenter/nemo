@@ -5,6 +5,8 @@
   ns.Report = klass = function(attribs, menus) {
     this.attribs = attribs;
     this.menus = menus;
+    this.new_record = attribs.new_record;
+    this.populated = attribs.populated;
   }
 
   // called when data first received
@@ -26,10 +28,6 @@
   klass.prototype.clone = function() {
     var new_attribs = $.extend(true, {}, this.attribs);
     return new klass(new_attribs, this.menus);
-  }
-
-  klass.prototype.has_run = function() {
-    return !this.attribs.new_record;
   }
 
   // checks if the report has errors or not

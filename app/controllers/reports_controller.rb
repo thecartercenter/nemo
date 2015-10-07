@@ -38,7 +38,7 @@ class ReportsController < ApplicationController
     respond_to do |format|
       # for html, use the render_show function below
       format.html do
-        flash[:edit_mode] = false
+        build_report_data(:edit_mode => false)
         show_report
       end
 

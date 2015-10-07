@@ -37,11 +37,12 @@
       this.edit_view = new ns.EditView(this.menus, this.options, this);
 
     // if is new record, show dialog first page
-    if (!this.report_in_db.has_run())
+    if (this.report_in_db.new_record)
       this.show_edit_view(0);
-    // otherwise, the report must have already run, so update the view
-    else
-      this.display_report(this.report_last_run);
+    // otherwise, if the report is not yet populated, we need to populate it
+    else if (!this.report_in_db.populated)
+      //this.display_report(this.report_last_run);
+      this.run_report(this.report_in_db);
 
     // if in edit mode, show edit dialog second page, since report type is not editable
     if (init_data.edit_mode)
@@ -103,7 +104,7 @@
 
   klass.prototype.edit_cancelled = function() {
     // if report is new, go back to report index
-    if (!this.report_in_db.has_run()) {
+    if (this.report_in_db.new_record) {
       ELMO.app.loading(true);
       window.location.href = ELMO.app.url_builder.build('reports');
     // else restore the view

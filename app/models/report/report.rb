@@ -22,6 +22,9 @@ class Report::Report < ActiveRecord::Base
 
   attr_accessor :just_created
 
+  attr_accessor :populated
+  alias_method :populated?, :populated
+
   # this is overridden by StandardFormReport, and ignored elsewhere
   attr_accessor :disagg_question_id
 
@@ -93,6 +96,7 @@ class Report::Report < ActiveRecord::Base
     h[:type] = type
     h[:filter] = filter
     h[:empty] = empty?
+    h[:populated] = populated?
     h
   end
 

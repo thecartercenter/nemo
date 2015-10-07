@@ -43,6 +43,8 @@ module Report::Gridable
 
     # compute totals if appropriate
     @data.compute_totals if can_total?
+
+    self.populated = true
   end
 
   # Gridable reports can all be exported to csv

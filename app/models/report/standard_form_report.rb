@@ -62,6 +62,9 @@ class Report::StandardFormReport < Report::Report
     h[:disagg_question_id] = disagg_question_id
     h[:disagg_qing] = disagg_qing.as_json(:only => :id, :include => {:question => {:only => :code}})
     h[:no_data] = no_data?
+
+    self.populated = true
+
     h
   end
 
