@@ -56,6 +56,14 @@ class Report::Report < ActiveRecord::Base
     Report::OptionSetChoice.where(report_report_id: report_ids).delete_all
   end
 
+  def cache_key
+    chunks = [super]
+    chunks << option_set_choices.map(&:option_set_id)
+    chunks << ("calcs-" << (calculations.order(updated_at: :desc).first.try(:cache_key) || "none"))
+    puts chunks.join("/")
+    chunks.join("/")
+  end
+
   # generates a default name that won't collide with any existing names
   def generate_default_name
     prefix = "New Report"
