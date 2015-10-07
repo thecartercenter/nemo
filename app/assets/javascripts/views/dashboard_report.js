@@ -24,6 +24,8 @@
   };
 
   klass.prototype.refresh = function() {
+    if (!ELMO.app.report_controller) return;
+
     var self = this;
     ELMO.app.report_controller.run_report().then(function(){
       $('.report_pane h2').html(self.report().attribs.name);
