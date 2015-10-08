@@ -60,7 +60,6 @@ class Report::Report < ActiveRecord::Base
     chunks = [super]
     chunks << option_set_choices.map(&:option_set_id)
     chunks << ("calcs-" << (calculations.order(updated_at: :desc).first.try(:cache_key) || "none"))
-    puts chunks.join("/")
     chunks.join("/")
   end
 
