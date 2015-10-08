@@ -110,7 +110,7 @@ class WelcomeController < ApplicationController
         @report = Report::Report.accessible_by(current_ability).by_popularity.first
       end
 
-      if @report.present?
+      if @report
         # Make sure no funny business!
         authorize!(:read, @report)
 
