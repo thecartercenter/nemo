@@ -293,6 +293,23 @@ class OptionSet < ActiveRecord::Base
     end
   end
 
+  def worksheet_name
+    name = self.name
+    name = name.truncate(31) if self.name.size > 31
+    name = name.gsub(
+      /[\[\]\*\\?\:\/]/, {
+        '[' => '(',
+        ']' => ')',
+        '*' => '∗',
+        '?' => '',
+        ':' => '-',
+        '\\' => '-',
+        '/' => '-'
+      }
+    )
+    name
+  end
+
   # Returns a string representation, including options, for the default locale.
   def to_s
     "Name: #{name}\nOptions:\n#{root_node.to_s_indented}"

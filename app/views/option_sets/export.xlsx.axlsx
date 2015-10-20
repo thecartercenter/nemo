@@ -6,7 +6,7 @@ xlsx_package.workbook.tap do |wb|
 
   locale = @option_set.mission.setting.preferred_locales.first || :en
   I18n.with_locale(locale) do
-    wb.add_worksheet(name: @option_set.name) do |sheet|
+    wb.add_worksheet(name: @option_set.worksheet_name) do |sheet|
       sheet.add_row(@headers, style: header_style)
 
       @rows.each do |row|
