@@ -170,8 +170,8 @@ class User < ActiveRecord::Base
         WHERE NOT EXISTS (
           SELECT 1 FROM responses r
           WHERE r.user_id = a.user_id AND r.mission_id = ?
-        ) AND a.role='observer' LIMIT ?
-      ) as rc ON users.id = rc.user_id", mission.id, limit])
+        ) AND a.role='observer' AND a.mission_id = ? LIMIT ?
+      ) as rc ON users.id = rc.user_id", mission.id, mission.id, limit])
   end
 
   # Returns all non-admin users in the form's mission with the given role that have
