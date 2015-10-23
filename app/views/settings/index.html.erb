@@ -30,6 +30,7 @@
       <div class="credential_fields">
         <%= f.field(:intellisms_password1, :type => :password) %>
         <%= f.field(:intellisms_password2, :type => :password) %>
+        <%= f.field(:clear_intellisms, type: :check_box, label: t('common.clear')) %>
       </div>
     </div>
 
@@ -41,6 +42,7 @@
 
       <div class="credential_fields">
         <%= f.field(:twilio_auth_token1, :type => :password) %>
+        <%= f.field(:clear_twilio, type: :check_box, label: t('common.clear')) %>
       </div>
     </div>
 
