@@ -75,4 +75,17 @@ describe OptionSet do
       expect(set.levels[1].name).to eq 'Species'
     end
   end
+
+  describe 'worksheet_name' do
+    it 'should return the original name if valid' do
+      set = create(:option_set)
+      expect(set.worksheet_name).to eq set.name
+    end
+
+    it 'should return a replaced name if invalid' do
+      set = create(:option_set, name: 'My Options?: ~*[Yes/No:No\Yes]*~')
+      expect(set.worksheet_name.size).to be <= 31
+      expect(set.worksheet_name).to eq 'My Options- ~∗(Yes-No-No-Ye...'
+    end
+  end
 end
