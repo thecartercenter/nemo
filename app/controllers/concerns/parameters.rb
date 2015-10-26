@@ -20,11 +20,13 @@ module Parameters
   def permit_children(params, options)
     key = options[:key]
     permitted = options[:permitted]
-    params[key].map do |child|
-      if child[key].present? && child[key] != 'NONE'
-        permitted + [{ key => permit_children(child, options) }]
-      else
-        permitted + [key]
+    if params[key].present?
+      params[key].map do |child|
+        if child[key].present? && child[key] != 'NONE'
+          permitted + [{ key => permit_children(child, options) }]
+        else
+          permitted + [key]
+        end
       end
     end
   end
