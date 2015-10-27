@@ -10,12 +10,13 @@
 class QingGroupFragment
   include Translatable
 
-  translates :group_name
+  translates :group_name, :group_hint
 
   attr_accessor :hidden, :children
 
   def initialize(qing_group)
     @group_name_translations = qing_group.group_name_translations
+    @group_hint_translations = qing_group.group_hint_translations
     @hidden = qing_group.hidden
     @children = ActiveSupport::OrderedHash.new
   end

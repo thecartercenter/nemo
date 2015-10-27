@@ -59,7 +59,7 @@ FactoryGirl.define do
       # Build questions.
       items.each do |item|
         if item.is_a?(Array)
-          group = QingGroup.create!(parent: form.root_group, form: form, group_name_en: 'Group Name')
+          group = QingGroup.create!(parent: form.root_group, form: form, group_name_en: 'Group Name', group_hint_en: 'Group Hint')
           item.each { |q| create_questioning(q, form, group, evaluator) }
         else
           create_questioning(item, form, form.root_group, evaluator)

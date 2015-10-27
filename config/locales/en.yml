@@ -281,6 +281,7 @@ en:
         option_levels: "Levels"
       qing_group:
         group_name: "Name"
+        group_hint: "Hint"
         add: "Add Group"
         edit: "Edit Group"
         delete: "Are you sure you want to delete the group '%{name}'?"
