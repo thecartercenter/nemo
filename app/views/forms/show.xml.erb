@@ -13,6 +13,12 @@
             <data id="<%= @form.id %>" version="<%= @form.current_version.sequence %>">
           <% end %>
 
+          <%# any group notes %>
+          <% groups = QingGroup.child_groups(@form.root_group.children) %>
+          <% groups.each do |group| %>
+            <%= tag("note#{group.id}") %>
+          <% end %>
+
             <%# regular question nodes %>
             <% @form.visible_questionings.each do |q| %>
               <% q.subquestions.each do |subq| %>
@@ -81,12 +87,18 @@
           <% end %>
         </itext>
 
+        <%# group hint bindings %>
+          <% groups.each do |group| %>
+            <%= note_binding(group) %>
+          <% end %>
+
         <%# regular question bindings %>
         <% @form.visible_questionings.each do |qing| %>
           <% qing.subquestions.each do |subq| %>
             <%= question_binding(@form, qing, subq) %>
           <% end %>
         <% end %>
+
 
         <%# incomplete response question bindings %>
         <% if allow_incomplete? %>

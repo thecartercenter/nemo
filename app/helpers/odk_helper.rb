@@ -47,6 +47,14 @@ module OdkHelper
      }.reject{|k,v| v.nil?}).gsub(/_required=/, 'required=').html_safe
   end
 
+  def note_binding(group)
+    tag(:bind, {
+      'nodeset' => "/data/note#{group.id}",
+      'readonly' => "true()",
+      'type' => "string"
+    })
+  end
+
   def binding_type_attrib(subq)
     # ODK wants non-first-level selects to have type 'string'
     subq.first_rank? ? subq.odk_name : 'string'

@@ -5,6 +5,7 @@
     <model>
       <instance>
         <data id="1" version="1">
+          <note2/>
           <q1/>
           <q2/>
         </data>
@@ -31,6 +32,7 @@
           </text>
         </translation>
       </itext>
+      <bind nodeset="/data/note2" readonly="readonly" type="string"/>
       <bind nodeset="/data/q1" type="select1"/>
       <bind nodeset="/data/q2" type="select1"/>
     </model>
@@ -38,6 +40,9 @@
   <h:body>
     <group appearance="field-list">
       <label>Group Name</label>
+      <input ref="/data/note2">
+        <label>Group Hint</label>
+      </input>
       <select1 appearance="label" ref="/data/q1">
         <label/>
         <item>

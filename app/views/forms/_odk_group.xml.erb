@@ -6,6 +6,10 @@
   <group appearance="field-list">
     <label><%= group.group_name %></label>
 
+    <input ref="<%= "/data/note#{group.id}"%>">
+        <label><%= group.group_hint %></label>
+    </input>
+
     <%# In grid mode, we need to render a special label row that prints the available options at the top of the grid. %>
     <% if grid_mode %>
       <%= render('odk_questioning', qing: children.first, grid_mode: true, label_row: true) %>
