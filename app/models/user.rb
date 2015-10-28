@@ -14,6 +14,7 @@ class User < ActiveRecord::Base
   has_many :assignments, :autosave => true, :dependent => :destroy, :validate => true, :inverse_of => :user
   has_many :missions, -> { order "missions.created_at DESC" }, through: :assignments
   has_many :operations, :inverse_of => :creator, :foreign_key => :creator_id, :dependent => :destroy
+  has_many :reports, :inverse_of => :creator, :foreign_key => :creator_id, :dependent => :nullify, class_name: 'Report::Report'
   has_many :user_groups, :dependent => :destroy
   has_many :groups, :through => :user_groups
   belongs_to :last_mission, class_name: 'Mission'
@@ -170,8 +171,8 @@ class User < ActiveRecord::Base
         WHERE NOT EXISTS (
           SELECT 1 FROM responses r
           WHERE r.user_id = a.user_id AND r.mission_id = ?
-        ) AND a.role='observer' LIMIT ?
-      ) as rc ON users.id = rc.user_id", mission.id, limit])
+        ) AND a.role='observer' AND a.mission_id = ? LIMIT ?
+      ) as rc ON users.id = rc.user_id", mission.id, mission.id, limit])
   end
 
   # Returns all non-admin users in the form's mission with the given role that have
