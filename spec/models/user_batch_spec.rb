@@ -73,7 +73,7 @@ describe UserBatch do
 
   context "when checking uniqueness on db" do
     before do
-      create(:user, login: 'abob', name: 'A Bob', phone: '+2279182137', phone2: nil, email: 'a@bc.com')
+      create(:user, login: 'a.bob', name: 'A Bob', phone: '+2279182137', phone2: nil, email: 'a@bc.com')
       create(:user, phone: '+9837494434', phone2: '+983755482')
     end
 
