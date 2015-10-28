@@ -9,15 +9,6 @@ GIT
       railties
 
 GIT
-  remote: git://github.com/roo-rb/roo.git
-  revision: c796bfc7992f910751054e537feb8f2247f197d7
-  ref: c796bfc7992f910751054e537feb8f2247f197d7
-  specs:
-    roo (2.0.1)
-      nokogiri (~> 1)
-      rubyzip (~> 1.1, < 2.0.0)
-
-GIT
   remote: git://github.com/sassafrastech/rack-attack.git
   revision: 97e37abd881ba290034cbb15e92aabedd264ad6b
   specs:
@@ -299,6 +290,9 @@ GEM
     reverse_markdown (0.8.1)
       nokogiri
     riddle (1.5.11)
+    roo (2.1.1)
+      nokogiri (~> 1)
+      rubyzip (~> 1.1, < 2.0.0)
     rspec-collection_matchers (1.1.2)
       rspec-expectations (>= 2.99.0.beta1)
     rspec-core (3.2.2)
@@ -466,7 +460,7 @@ DEPENDENCIES
   recaptcha
   responders (~> 2.0)
   reverse_markdown
-  roo!
+  roo (~> 2.1.1)
   rspec-collection_matchers
   rspec-rails (~> 3.0)
   ruby-jmeter (~> 2.13.4)
@@ -487,3 +481,6 @@ DEPENDENCIES
   whenever
   will_paginate
   will_paginate-bootstrap
+
+BUNDLED WITH
+   1.10.6
