@@ -5,7 +5,8 @@
     <model>
       <instance>
         <data id="1" version="1">
-          <note2/>
+          <name2/>
+          <hint2/>
           <q1/>
           <q2/>
           <q3/>
@@ -13,6 +14,12 @@
       </instance>
       <itext>
         <translation lang="English">
+          <text id="name2:label">
+            <value>Group Name</value>
+          </text>
+          <text id="hint2:hint">
+            <value>Group Hint</value>
+          </text>
           <text id="q1:label">
             <value>Question Title 1</value>
           </text>
@@ -33,7 +40,8 @@
           </text>
         </translation>
       </itext>
-      <bind nodeset="/data/note2" readonly="readonly" type="string"/>
+      <bind nodeset="/data/name2" readonly="true()" type="string"/>
+      <bind nodeset="/data/hint2" readonly="true()" type="string"/>
       <bind nodeset="/data/q1" type="string"/>
       <bind nodeset="/data/q2" type="string"/>
       <bind nodeset="/data/q3" type="string"/>
@@ -41,9 +49,9 @@
   </h:head>
   <h:body>
     <group appearance="field-list">
-      <label>Group Name</label>
-      <input ref="/data/note2">
-        <label>Group Hint</label>
+      <label ref="jr:itext('name2:label')"/>
+      <input ref="/data/hint2">
+        <hint ref="jr:itext('hint2:hint')"/>
       </input>
       <input ref="/data/q1">
         <label ref="jr:itext('q1:label')"/>

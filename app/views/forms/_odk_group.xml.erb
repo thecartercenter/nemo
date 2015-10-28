@@ -4,10 +4,10 @@
   <% grid_mode = grid_mode?(children) %>
 
   <group appearance="field-list">
-    <label><%= group.group_name %></label>
+    <label ref="jr:itext('name<%= group.id %>:label')"/>
 
-    <input ref="<%= "/data/note#{group.id}"%>">
-        <label><%= group.group_hint %></label>
+    <input ref="<%= "/data/hint#{group.id}"%>">
+        <hint ref="jr:itext('hint<%= group.id %>:hint')"/>
     </input>
 
     <%# In grid mode, we need to render a special label row that prints the available options at the top of the grid. %>

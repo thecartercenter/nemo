@@ -13,10 +13,11 @@
             <data id="<%= @form.id %>" version="<%= @form.current_version.sequence %>">
           <% end %>
 
-          <%# any group notes %>
+          <%# group name and notes %>
           <% groups = QingGroup.child_groups(@form.root_group.children) %>
           <% groups.each do |group| %>
-            <%= tag("note#{group.id}") %>
+            <%= tag("name#{group.id}") %>
+            <%= tag("hint#{group.id}") %>
           <% end %>
 
             <%# regular question nodes %>
@@ -45,6 +46,16 @@
         <itext>
           <% configatron.preferred_locales.each do |lang| %>
             <translation lang="<%= @style == 'commcare' ? lang : language_name(lang) %>">
+
+              <%# group hint translations %>
+              <% groups.each do |group| %>
+                <text id="name<%= group.id %>:label">
+                  <value><%= group.group_name(lang, string: false) %></value>
+                </text>
+                <text id="hint<%= group.id %>:hint">
+                  <value><%= group.group_hint(lang, string: false) %></value>
+                </text>
+              <% end %>
 
               <%# Regular question translations %>
               <% @form.visible_questionings.each do |q| %>
@@ -87,9 +98,10 @@
           <% end %>
         </itext>
 
-        <%# group hint bindings %>
+        <%# group name and hint bindings %>
           <% groups.each do |group| %>
-            <%= note_binding(group) %>
+            <%= note_binding(group, "name") %>
+            <%= note_binding(group, "hint") %>
           <% end %>
 
         <%# regular question bindings %>
