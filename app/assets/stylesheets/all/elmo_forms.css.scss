@@ -245,3 +245,10 @@ div.cascading-selects {
     }
   }
 }
+
+// Override for qing group modal
+.modal form.qing_group_form {
+  .control, .widget {
+    width: 100% !important;
+  }
+}

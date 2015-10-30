@@ -59,7 +59,7 @@ FactoryGirl.define do
       # Build questions.
       items.each do |item|
         if item.is_a?(Array)
-          group = QingGroup.create!(parent: form.root_group, form: form, group_name_en: 'Group Name')
+          group = QingGroup.create!(parent: form.root_group, form: form, group_name_en: 'Group Name', group_hint_en: 'Group Hint')
           item.each { |q| create_questioning(q, form, group, evaluator) }
         else
           create_questioning(item, form, form.root_group, evaluator)
@@ -67,6 +67,7 @@ FactoryGirl.define do
       end
     end
 
+    # DO NOT USE, USE FORM ABOVE
     # A form with different question types.
     # We hardcode names to make expectations easier, since we assume no more than one sample form per test.
     # Used in the feature specs

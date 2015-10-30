@@ -60,7 +60,7 @@ class QingGroupsController < ApplicationController
     end
 
     def qing_group_params
-      translation_keys = permit_translations(params[:qing_group], :group_name)
+      translation_keys = permit_translations(params[:qing_group], :group_name, :group_hint)
       params.require(:qing_group).permit([:form_id] + translation_keys)
     end
 end

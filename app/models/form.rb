@@ -50,6 +50,7 @@ class Form < ActiveRecord::Base
            :children,
            :c,
            :descendants,
+           :child_groups,
            to: :root_group
 
   delegate :code, to: :current_version

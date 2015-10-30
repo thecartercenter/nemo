@@ -13,6 +13,11 @@
             <data id="<%= @form.id %>" version="<%= @form.current_version.sequence %>">
           <% end %>
 
+          <%# group name and notes %>
+          <% @form.child_groups.each do |group| %>
+            <%= tag("grp-header#{group.id}") %>
+          <% end %>
+
             <%# regular question nodes %>
             <% @form.visible_questionings.each do |q| %>
               <% q.subquestions.each do |subq| %>
@@ -39,6 +44,16 @@
         <itext>
           <% configatron.preferred_locales.each do |lang| %>
             <translation lang="<%= @style == 'commcare' ? lang : language_name(lang) %>">
+
+              <%# group hint translations %>
+              <% @form.child_groups.each do |group| %>
+                <text id="grp-header<%= group.id %>:label">
+                  <value><%= group.group_name(lang, strict: false) %></value>
+                </text>
+                <text id="grp-header<%= group.id %>:hint">
+                  <value><%= group.group_hint(lang, strict: false) %></value>
+                </text>
+              <% end %>
 
               <%# Regular question translations %>
               <% @form.visible_questionings.each do |q| %>
@@ -81,12 +96,18 @@
           <% end %>
         </itext>
 
+        <%# group name and hint bindings %>
+          <% @form.child_groups.each do |group| %>
+            <%= note_binding(group) %>
+          <% end %>
+
         <%# regular question bindings %>
         <% @form.visible_questionings.each do |qing| %>
           <% qing.subquestions.each do |subq| %>
             <%= question_binding(@form, qing, subq) %>
           <% end %>
         <% end %>
+
 
         <%# incomplete response question bindings %>
         <% if allow_incomplete? %>

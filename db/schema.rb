@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151007014204) do
+ActiveRecord::Schema.define(version: 20151027144753) do
   create_table "answers", force: :cascade do |t|
     t.datetime "created_at"
     t.date "date_value"
@@ -114,6 +114,7 @@ ActiveRecord::Schema.define(version: 20151007014204) do
     t.integer "ancestry_depth", limit: 4, null: false
     t.datetime "created_at"
     t.integer "form_id", limit: 4, null: false
+    t.string "group_hint_translations", limit: 255
     t.string "group_name_translations", limit: 255
     t.boolean "hidden", limit: 1, default: false, null: false
     t.integer "mission_id", limit: 4
