@@ -78,3 +78,25 @@ Note to install the software below we recommend the following package managers:
   - Navigate to http://localhost:3000
   - Login with username **admin** and use the random password that was generated when you ran `rake db:create_admin` (make sure to change the password after login).
   - Create a new Mission and get started making forms!
+
+### Testing with ODK
+
+1. **Download the ODK application onto your android phone or tablet**
+  - https://opendatakit.org/
+
+1. **Configure your rails development server so ODK can find it**
+  - Run `rails s -p 8443 -b 0.0.0.0`
+
+1. **Create a user and password**
+
+1. **Publish your form in ELMO**
+
+1. **Point the ODK app to your development server**
+  - In ODK, go to `General Settings > Platform Settings > URL`
+  - For the URL put: `http://YOURIP:8443/m/yourmission`
+  - Also put in your username and password
+
+1. **Retrieve Form**
+  - In ODK, you should now be able to go to `Get Blank Form` to download the forms from ELMO
+
+
