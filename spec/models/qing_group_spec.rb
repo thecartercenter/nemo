@@ -7,5 +7,4 @@ describe QingGroup do
     group = create(:qing_group, form: form, ancestry: form.root_group.id)
     expect(form.child_groups.count).to eq(2)
   end
-
 end
