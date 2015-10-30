@@ -48,9 +48,9 @@ module OdkHelper
   end
 
   # note: _readonly is used to get around the 'readonly' html attribute
-  def note_binding(group, type)
+  def note_binding(group)
     tag(:bind, {
-      'nodeset' => "/data/#{type}#{group.id}",
+      'nodeset' => "/data/grp-header#{group.id}",
       '_readonly' => "true()",
       'type' => "string"
     }.reject{|k,v| v.nil?}).gsub(/_readonly=/, 'readonly=').html_safe

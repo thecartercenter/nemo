@@ -7,6 +7,8 @@ class QingGroup < FormItem
 
   alias_method :c, :children
 
-  scope(:child_groups, ->(children) { children.where(type: "QingGroup").all })
+  def child_groups
+    children.where(type: "QingGroup")
+  end
 
 end

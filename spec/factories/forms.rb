@@ -67,6 +67,7 @@ FactoryGirl.define do
       end
     end
 
+    # DO NOT USE, USE FORM ABOVE
     # A form with different question types.
     # We hardcode names to make expectations easier, since we assume no more than one sample form per test.
     # Used in the feature specs
