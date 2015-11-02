@@ -111,6 +111,7 @@ group :development do
   gem 'thin'                          # development web server
   gem 'rails-dev-tweaks', '~> 1.1'    # speed up development mode
   gem 'spring'
+  gem 'apiary'
 end
 
 group :development, :test do
