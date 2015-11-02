@@ -24,15 +24,17 @@ class Response < ActiveRecord::Base
   scope(:by, ->(user) { where(:user_id => user.id) })
 
   # loads all the associations required for show, edit, etc.
-  scope(:with_associations, -> { includes(
-    :form, {
-      :answers => [
-        {:choices => :option},
+  scope :with_associations, -> { includes(
+    :form,
+    {
+      answers: [
+        {choices: :option},
         :option,
-        {:questioning => [:condition, {:question => :option_set}]}
+        { questioning: [:condition, { question: :option_set } ] }
       ]
-    }
-  ) })
+    },
+    :user
+  ) }
 
   # loads basic belongs_to associations
   scope(:with_basic_assoc, -> { includes(:form, :user) })
@@ -58,7 +60,7 @@ class Response < ActiveRecord::Base
   # takes a Relation, adds a bunch of selects and joins, and uses find_by_sql to do the actual finding
   # this technique is due to limitations (at the time of dev) in the Relation system
   def self.for_export(rel)
-    find_by_sql(export_sql(rel))
+    rel.with_associations
   end
 
   # gets the list of fields to be searched for this class
@@ -344,34 +346,6 @@ class Response < ActiveRecord::Base
   end
 
   private
-    def self.export_sql(rel)
-      # add all the selects
-      # assumes the language desired is English. currently does not respect the locale
-      rel = rel.select("responses.id AS response_id")
-      rel = rel.select("responses.created_at AS submission_time")
-      rel = rel.select("responses.reviewed AS is_reviewed")
-      rel = rel.select("forms.name AS form_name")
-
-      rel = rel.select("questions.code AS question_code")
-      rel = rel.select("questions.canonical_name AS question_name")
-      rel = rel.select("questions.qtype_name AS question_type")
-
-      rel = rel.select("users.name AS submitter_name")
-      rel = rel.select("answers.id AS answer_id")
-      rel = rel.select("answers.value AS answer_value")
-      rel = rel.select("answers.datetime_value AS answer_datetime_value")
-      rel = rel.select("answers.date_value AS answer_date_value")
-      rel = rel.select("answers.time_value AS answer_time_value")
-      rel = rel.select("IFNULL(ao.canonical_name, co.canonical_name) AS choice_name")
-      rel = rel.select("option_sets.name AS option_set")
-
-      # add all the joins
-      rel = rel.joins(Report::Join.list_to_sql([:users, :forms,
-        :answers, :questionings, :questions, :option_sets, :options, :choices]))
-
-      rel.to_sql
-    end
-
     def no_missing_answers
       errors.add(:base, :missing_answers) unless missing_answers.empty? || incomplete?
     end

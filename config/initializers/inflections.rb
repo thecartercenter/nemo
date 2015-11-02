@@ -7,6 +7,7 @@ ActiveSupport::Inflector.inflections do |inflect|
   inflect.plural /^(sms)$/i, '\1es'
   inflect.singular /^(sms)es$/i, '\1'
   inflect.acronym 'API'
+  inflect.acronym 'CSV'
 
 #   inflect.singular /^(ox)en/i, '\1'
 #   inflect.irregular 'person', 'people'
