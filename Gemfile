@@ -89,7 +89,7 @@ gem "recaptcha", :require => "recaptcha/rails"
 # XLS support
 gem 'axlsx', '~> 2.1.0.pre'
 gem 'axlsx_rails'
-gem 'roo', github: 'roo-rb/roo', ref: 'c796bfc7992f910751054e537feb8f2247f197d7'
+gem 'roo', '~> 2.1.1'
 
 gem 'therubyracer', platforms: :ruby
 
