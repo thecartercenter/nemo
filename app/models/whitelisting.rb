@@ -1,4 +1,4 @@
-class Whitelist < ActiveRecord::Base
+class Whitelisting < ActiveRecord::Base
   belongs_to :whitelistable, :polymorphic => true
   belongs_to :user
 end

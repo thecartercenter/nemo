@@ -29,9 +29,11 @@ class Answer < ActiveRecord::Base
   delegate :name, :hint, :to => :question, :prefix => true
   delegate :name, to: :level, prefix: true, allow_nil: true
 
-  scope :public_access, -> { includes(:questioning => :question).
-                        where("questions.access_level = 'inherit'") }
-
+  scope :public_access, -> { joins(:questioning => :question).
+    where("questions.access_level = 'inherit'") }
+  scope :created_after, ->(date) { includes(:response).where("responses.created_at >= ?", date) }
+  scope :created_before, ->(date) { includes(:response).where("responses.created_at <= ?", date) }
+  scope :newest_first, -> { includes(:response).order("responses.created_at DESC") }
 
   # gets all location answers for the given mission
   # returns only the response ID and the answer value

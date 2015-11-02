@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151027144753) do
+ActiveRecord::Schema.define(version: 20151102173430) do
   create_table "answers", force: :cascade do |t|
     t.datetime "created_at"
     t.date "date_value"
@@ -466,7 +466,7 @@ ActiveRecord::Schema.define(version: 20151027144753) do
   add_index "users", ["login"], name: "index_users_on_login", unique: true, using: :btree
   add_index "users", ["name"], name: "index_users_on_name", using: :btree
 
-  create_table "whitelists", force: :cascade do |t|
+  create_table "whitelistings", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "user_id", limit: 4

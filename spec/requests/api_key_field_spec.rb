@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'support/shared_context'
 
 describe 'api key form field', database_cleaner: :all do
 

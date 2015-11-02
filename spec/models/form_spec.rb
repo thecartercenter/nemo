@@ -7,7 +7,7 @@ describe Form do
       @api_user = FactoryGirl.create(:user)
       @mission = FactoryGirl.create(:mission, name: "test mission")
       @form = FactoryGirl.create(:form, mission: @mission, name: "something", access_level: 'protected')
-      @form.whitelist_users.create(user_id: @api_user.id)
+      @form.whitelistings.create(user_id: @api_user.id)
     end
 
     it "should return true for user in whitelist" do

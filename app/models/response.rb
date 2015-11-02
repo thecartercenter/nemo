@@ -22,6 +22,8 @@ class Response < ActiveRecord::Base
   default_scope( -> { includes(:form, :user).order("responses.created_at DESC") })
   scope(:unreviewed, -> { where(:reviewed => false) })
   scope(:by, ->(user) { where(:user_id => user.id) })
+  scope :created_after, ->(date) { where("responses.created_at >= ?", date) }
+  scope :created_before, ->(date) { where("responses.created_at <= ?", date) }
 
   # loads all the associations required for show, edit, etc.
   scope(:with_associations, -> { includes(
