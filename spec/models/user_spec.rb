@@ -75,7 +75,7 @@ describe User do
       ["foo bar", "foo✓bar", "foébar", "foo'bar"].each do |login|
         user = build(:user, login: login)
         expect(user).not_to be_valid
-        expect(user.errors[:login].join).to match /letters, numbers, and periods/
+        expect(user.errors[:login].join).to match /letters, numbers, periods/
       end
     end
 
