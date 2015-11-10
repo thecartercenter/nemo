@@ -91,17 +91,7 @@ class User < ActiveRecord::Base
   end
 
   def self.suggest_login(name, skip_uniqueness_check)
-    l = name.split(' ') # split into parts on space character
-
-    # if it looks like an english first and last name and is not a batch import
-    if !skip_uniqueness_check && l.size == 2 && name.ascii_only?
-      l = l.first[0, 1] + l.last # suggest first initial + last name
-    else # suggest each part separated by periods
-      l = l.join('.')
-    end
-
-    # convert to lowercase
-    suggestion = l.downcase
+    suggestion = name.split(' ').join('.').downcase
 
     # if this login is taken, add a number to the end
     if !skip_uniqueness_check && find_by_login(suggestion)

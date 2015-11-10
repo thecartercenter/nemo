@@ -64,43 +64,35 @@ describe User do
   end
 
   describe "username suggestion" do
-    context "for batch imports" do
-      let(:user) { User.new(name: 'Test User', batch_creation: true) }
+    context "with single name" do
+      let(:user) { User.new(name: 'Name') }
 
-      it "should join name parts with a period" do
-        expect(user.login).to eq 'test.user'
+      it "should use the name" do
+        expect(user.login).to eq 'name'
       end
     end
 
-    context "for non-batch imports" do
+    context "with first and last name" do
+      let(:user) { User.new(name: 'First Last') }
+
+      it "should replace spaces with periods" do
+        expect(user.login).to eq 'first.last'
+      end
+    end
+
+    context "with three names" do
       let(:user) { User.new(name: 'Another Test User') }
 
       it "should replace spaces with periods" do
         expect(user.login).to eq 'another.test.user'
       end
+    end
 
-      context "with single name" do
-        let(:user) { User.new(name: 'Name') }
+    context "with unicode names" do
+      let(:user) { User.new(name: '宮本 茂') }
 
-        it "should use the name" do
-          expect(user.login).to eq 'name'
-        end
-      end
-
-      context "with first and last name" do
-        let(:user) { User.new(name: 'First Last') }
-
-        it "should suggest first initial with last name" do
-          expect(user.login).to eq 'flast'
-        end
-      end
-
-      context "with unicode names" do
-        let(:user) { User.new(name: '宮本 茂') }
-
-        it "should allow unicode charters in the login" do
-          expect(user.login).to eq '宮本.茂'
-        end
+      it "should allow unicode charters in the login" do
+        expect(user.login).to eq '宮本.茂'
       end
     end
   end
@@ -109,7 +101,7 @@ describe User do
     user = User.create!(name: 'Alpha Tester', reset_password_method: 'print',
       assignments: [Assignment.new(mission: mission, role: User::ROLES.first)])
     expect(user.pref_lang).to eq('en')
-    expect(user.login).to eq('atester')
+    expect(user.login).to eq('alpha.tester')
   end
 
   it "phone numbers should be unique" do
