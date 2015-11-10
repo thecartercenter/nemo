@@ -42,7 +42,6 @@ class User < ActiveRecord::Base
   end
 
   after_initialize(:set_default_pref_lang)
-  after_initialize(:set_default_login)
   before_validation(:normalize_fields)
   before_validation(:generate_password_if_none, unless: :batch_creation?)
   after_create(:regenerate_api_key, unless: :batch_creation?)
@@ -90,26 +89,6 @@ class User < ActiveRecord::Base
   def self.find_by_credentials(login, password)
     user = find_by_login(login)
     (user && user.valid_password?(password)) ? user : nil
-  end
-
-  def self.suggest_login(name, skip_uniqueness_check)
-    suggestion = name.split(' ').join('.').downcase
-
-    # if this login is taken, add a number to the end
-    if !skip_uniqueness_check && find_by_login(suggestion)
-
-      # get suffixes of all logins with same prefix
-      suffixes = where("login LIKE '#{suggestion}%'").all.collect{|u| u.login[suggestion.length..-1].to_i}
-
-      # get max suffix (skip 1 if necessary)
-      suffix = suffixes.max + 1
-      suffix = 2 if suffix <= 1
-
-      # apply suffix
-      suggestion += suffix.to_s
-    end
-
-    suggestion
   end
 
   def self.search_qualifiers
@@ -430,15 +409,6 @@ class User < ActiveRecord::Base
     def set_default_pref_lang
       begin
         self.pref_lang ||= configatron.has_key?(:preferred_locales) ? configatron.preferred_locales.first.to_s : 'en'
-      rescue ActiveModel::MissingAttributeError
-        # we rescue this error in case find_by_sql is being used
-      end
-    end
-
-    # sets the user's default login name
-    def set_default_login
-      begin
-        self.login ||= self.class.suggest_login(name, batch_creation?) unless name.blank?
       rescue ActiveModel::MissingAttributeError
         # we rescue this error in case find_by_sql is being used
       end

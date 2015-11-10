@@ -86,40 +86,6 @@ describe User do
     end
   end
 
-  describe "username suggestion" do
-    context "with single name" do
-      let(:user) { User.new(name: 'Name') }
-
-      it "should use the name" do
-        expect(user.login).to eq 'name'
-      end
-    end
-
-    context "with first and last name" do
-      let(:user) { User.new(name: 'First Last') }
-
-      it "should replace spaces with periods" do
-        expect(user.login).to eq 'first.last'
-      end
-    end
-
-    context "with three names" do
-      let(:user) { User.new(name: 'Another Test User') }
-
-      it "should replace spaces with periods" do
-        expect(user.login).to eq 'another.test.user'
-      end
-    end
-
-    context "with unicode names" do
-      let(:user) { User.new(name: '宮本 茂') }
-
-      it "should allow unicode charters in the login" do
-        expect(user.login).to eq '宮本.茂'
-      end
-    end
-  end
-
   it "creating a user with minimal info should produce good defaults" do
     user = User.create!(name: 'Alpha Tester', reset_password_method: 'print',
       assignments: [Assignment.new(mission: mission, role: User::ROLES.first)])
