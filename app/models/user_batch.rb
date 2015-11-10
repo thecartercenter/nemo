@@ -95,7 +95,7 @@ class UserBatch
     # assume the first row is the header row
     headers = @data.row(@data.first_row)
 
-    expected_headers = Hash[*%i{name phone phone2 email notes}.map do |field|
+    expected_headers = Hash[*%i{login name phone phone2 email notes}.map do |field|
       [User.human_attribute_name(field), field]
     end.flatten]
 
