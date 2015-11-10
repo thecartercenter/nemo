@@ -65,7 +65,7 @@ describe User do
 
   describe "username validation" do
     it "should allow letters numbers and periods" do
-      ["foobar", "foo.bar9", "1234", "..123"].each do |login|
+      ["foobar", "foo.bar9", "1234", "..1_23"].each do |login|
         user = build(:user, login: login)
         expect(user).to be_valid
       end
@@ -87,10 +87,10 @@ describe User do
   end
 
   it "creating a user with minimal info should produce good defaults" do
-    user = User.create!(name: 'Alpha Tester', reset_password_method: 'print',
+    user = User.create!(name: 'Alpha Tester', login: 'alpha', reset_password_method: 'print',
       assignments: [Assignment.new(mission: mission, role: User::ROLES.first)])
     expect(user.pref_lang).to eq('en')
-    expect(user.login).to eq('alpha.tester')
+    expect(user.login).to eq('alpha')
   end
 
   it "phone numbers should be unique" do

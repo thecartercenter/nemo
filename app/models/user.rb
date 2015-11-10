@@ -29,7 +29,7 @@ class User < ActiveRecord::Base
     c.perishable_token_valid_for = 1.week
     c.logged_in_timeout(SESSION_TIMEOUT)
 
-    c.validates_format_of_login_field_options = {:with => /\A[a-zA-Z0-9\.]+\z/}
+    c.validates_format_of_login_field_options = {:with => /\A[a-zA-Z0-9\._]+\z/}
     c.merge_validates_uniqueness_of_login_field_options(:unless => Proc.new{|u| u.batch_creation?})
 
     c.merge_validates_length_of_password_field_options(minimum: 8,
