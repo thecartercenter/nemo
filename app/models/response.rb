@@ -185,7 +185,7 @@ class Response < ActiveRecord::Base
           answers.each do |a|
             r = responses_by_id[a.response_id]
             r.excerpts ||= []
-            r.excerpts << {:questioning_id => a.questioning_id, :code => a.questioning.code, :text => excerpter.excerpt!(a.value)}
+            r.excerpts << {:questioning_id => a.questioning_id, :code => a.questioning.code, :text => excerpter.excerpt!(a.value || a.option_name || a.option_names)}
           end
         end
       end

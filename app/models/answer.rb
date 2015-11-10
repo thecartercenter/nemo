@@ -200,6 +200,14 @@ class Answer < ActiveRecord::Base
     end
   end
 
+  def option_name
+    option.canonical_name if option
+  end
+
+  def option_names
+    choices.map(&:option).map(&:canonical_name).join(', ') if choices
+  end
+
   private
 
     def required
