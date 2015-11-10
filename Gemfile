@@ -100,6 +100,7 @@ gem 'reverse_markdown'
 gem 'twilio-ruby', ' ~> 4.1'
 
 gem 'fix-db-schema-conflicts'
+gem 'attribute_normalizer'
 
 # Polyfill for the bind function. Some older browsers don't have it.
 gem 'phantomjs_polyfill-rails'

@@ -29,7 +29,7 @@ class User < ActiveRecord::Base
     c.perishable_token_valid_for = 1.week
     c.logged_in_timeout(SESSION_TIMEOUT)
 
-    c.validates_format_of_login_field_options = {:with => /[\a-zA-Z0-9\.]+/}
+    c.validates_format_of_login_field_options = {:with => /\A[a-zA-Z0-9\.]+\z/}
     c.merge_validates_uniqueness_of_login_field_options(:unless => Proc.new{|u| u.batch_creation?})
 
     c.merge_validates_length_of_password_field_options(minimum: 8,
@@ -50,6 +50,8 @@ class User < ActiveRecord::Base
   # cf. https://github.com/rails/rails/issues/3458
   before_destroy(:check_assoc)
   before_save(:clear_assignments_without_roles)
+
+  normalize_attribute :login, with: [:strip, :downcase]
 
   validates(:name, :presence => true)
   validates(:pref_lang, :presence => true)
@@ -356,11 +358,10 @@ class User < ActiveRecord::Base
 
   private
     def normalize_fields
-      %w(phone phone2 login name email).each{|f| self.send("#{f}").try(:strip!)}
+      %w(phone phone2 name email).each{|f| self.send("#{f}").try(:strip!)}
       self.email = nil if email.blank?
       self.phone = PhoneNormalizer.normalize(phone)
       self.phone2 = PhoneNormalizer.normalize(phone2)
-      self.login = login.try(:downcase)
       return true
     end
 

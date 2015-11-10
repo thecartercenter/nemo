@@ -63,6 +63,29 @@ describe User do
     end
   end
 
+  describe "username validation" do
+    it "should allow letters numbers and periods" do
+      ["foobar", "foo.bar9", "1234", "..123"].each do |login|
+        user = build(:user, login: login)
+        expect(user).to be_valid
+      end
+    end
+
+    it "should not allow invalid chars" do
+      ["foo bar", "foo✓bar", "foébar", "foo'bar"].each do |login|
+        user = build(:user, login: login)
+        expect(user).not_to be_valid
+        expect(user.errors[:login].join).to match /letters, numbers, and periods/
+      end
+    end
+
+    it "should trim spaces and convert to lowercase" do
+      user = build(:user, login: "FOOBAR  \n ")
+      expect(user).to be_valid
+      expect(user.login).to eq "foobar"
+    end
+  end
+
   describe "username suggestion" do
     context "with single name" do
       let(:user) { User.new(name: 'Name') }
