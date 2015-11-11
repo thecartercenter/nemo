@@ -212,6 +212,10 @@ class Answer < ActiveRecord::Base
     end
   end
 
+  def from_group?
+    return questioning && questioning.parent && questioning.parent.type == 'QingGroup'
+  end
+
   def option_name
     option.canonical_name if option
   end
