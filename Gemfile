@@ -17,7 +17,6 @@ gem 'will_paginate'
 gem 'will_paginate-bootstrap'
 gem 'api-pagination'
 gem 'configatron', '~> 4.2'
-gem 'libxml-ruby'
 gem 'rdiscount'
 gem 'jquery-rails'
 gem 'jquery-fileupload-rails'
@@ -131,4 +130,5 @@ group :development, :test do
   gem 'assert_difference'            # test assertion
   gem 'launchy'                      # auto-open capybara html file
   gem 'ruby-jmeter', '~> 2.13.4'     # builds JMeter test plans
+  gem 'libxml-ruby'                  # used for certain ODK specs, TODO: replace with nokogiri
 end
