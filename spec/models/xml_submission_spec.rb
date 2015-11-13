@@ -12,12 +12,12 @@ describe XMLSubmission do
 
   describe '.new' do
     it 'creates a submission and parses it to populate response' do
-      submission = XMLSubmission.new(response: @response, data: @data)
+      submission = XMLSubmission.new(response: @response, data: @data, source: 'odk')
       response = submission.response
       response.answers.each_with_index do |answer|
         expect(answer.group_number).to eq nil unless answer.from_group?
-        expect(response.answers.where('group_number > ?', 1).count).to eq 2
       end
+      expect(response.answers.where('group_number > ?', 1).count).to eq 2
       expect(response).to be_valid
     end
   end
