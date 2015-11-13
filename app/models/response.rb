@@ -1,4 +1,3 @@
-require 'xml'
 class Response < ActiveRecord::Base
   include MissionBased
   include Cacheable

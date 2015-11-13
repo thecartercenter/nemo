@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'xml'
 
 # We need to clean with truncation here b/c we use hard coded id's in expectation.
 describe 'form rendering for odk', clean_with_truncation: true do
@@ -28,7 +27,7 @@ describe 'form rendering for odk', clean_with_truncation: true do
       expect(response).to be_success
 
       # Parse the XML and tidy.
-      doc = XML::Parser.string(response.body, options: XML::Parser::Options::NOBLANKS).parse
+      doc = Nokogiri::XML(response.body) { |config| config.noblanks }
       expect(doc.to_s).to eq File.read(File.expand_path('../../expectations/sample_form_odk.xml', __FILE__))
     end
   end
@@ -56,7 +55,7 @@ describe 'form rendering for odk', clean_with_truncation: true do
       expect(response).to be_success
 
       # Parse the XML and tidy.
-      doc = XML::Parser.string(response.body, options: XML::Parser::Options::NOBLANKS).parse
+      doc = Nokogiri::XML(response.body) { |config| config.noblanks }
       expect(doc.to_s).to eq File.read(File.expand_path('../../expectations/repeat_group_form_odk.xml', __FILE__))
     end
   end
@@ -70,7 +69,7 @@ describe 'form rendering for odk', clean_with_truncation: true do
 
     it 'should render items in the group' do
       expect(response).to be_success
-      doc = XML::Parser.string(response.body, options: XML::Parser::Options::NOBLANKS).parse
+      doc = Nokogiri::XML(response.body) { |config| config.noblanks }
       expect(doc.to_s).to eq File.read(File.expand_path('../../expectations/group_form_odk.xml', __FILE__))
     end
   end
@@ -85,7 +84,7 @@ describe 'form rendering for odk', clean_with_truncation: true do
 
     it 'should render items in the grid' do
       expect(response).to be_success
-      doc = XML::Parser.string(response.body, options: XML::Parser::Options::NOBLANKS).parse
+      doc = Nokogiri::XML(response.body) { |config| config.noblanks }
       expect(doc.to_s).to eq File.read(File.expand_path('../../expectations/grid_form_odk.xml', __FILE__))
     end
   end
