@@ -1,11 +1,16 @@
 class XMLSubmission
   attr_accessor :response, :data
 
-  def initialize(response: nil, data: nil)
+  def initialize(response: nil, data: nil, source: nil)
     @response = response
     @data = data
-    populate_from_odk(@data) if @data.is_a? String
-    populate_from_j2me(@data) if @data.is_a? Hash
+    @response.source = source
+    case source
+    when 'odk'
+      populate_from_odk(@data)
+    when 'j2me'
+      populate_from_j2me(@data)
+    end
   end
 
   private
@@ -27,11 +32,6 @@ class XMLSubmission
   end
 
   def populate_from_odk(xml)
-    # Response mission should already be set
-    raise "Submissions must have a mission" if @response.mission.nil?
-
-    @response.source = 'odk'
-
     data = Nokogiri::XML(xml).root
 
     lookup_and_check_form(:id => data['id'], :version => data['version'])
@@ -54,11 +54,6 @@ class XMLSubmission
   end
 
   def populate_from_j2me(data)
-    # Response mission should already be set
-    raise "Submissions must have a mission" if @response.mission.nil?
-
-    @response.source = 'j2me'
-
     lookup_and_check_form(:id => data.delete('id'), :version => data.delete('version'))
 
     # Get rid of other unneeded keys.

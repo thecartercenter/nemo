@@ -213,7 +213,7 @@ class Answer < ActiveRecord::Base
   end
 
   def from_group?
-    return questioning && questioning.parent && questioning.parent.type == 'QingGroup'
+    questioning && questioning.parent && questioning.parent.type == 'QingGroup'
   end
 
   def option_name

@@ -15,7 +15,7 @@ describe Response do
     end
 
     it 'should work' do
-      resp = Response.new(form: @form)
+      resp = Response.new(form: @form, mission: @form.mission)
       resp.send(:populate_from_hash, {
         "q#{@qs[0].id}" => "on#{@cat.id}",
         "q#{@qs[1].id}_1" => "on#{@plant.id}",

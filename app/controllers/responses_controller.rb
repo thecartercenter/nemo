@@ -117,7 +117,7 @@ class ResponsesController < ApplicationController
           @response.user_id = current_user.id
           # If it looks like a J2ME submission, process accordingly
           if params[:data] && params[:data][:'xmlns:jrm'] == 'http://dev.commcarehq.org/jr/xforms'
-            XMLSubmission.new response: @response, data: params[:data]
+            XMLSubmission.new response: @response, data: params[:data], source: 'j2me'
           else # Otherwise treat it like an ODK submission
             upfile = params[:xml_submission_file]
 
@@ -128,7 +128,7 @@ class ResponsesController < ApplicationController
 
             xml = upfile.read
             Rails.logger.info("----------\nXML submission:\n#{xml}\n----------")
-            XMLSubmission.new response: @response, data: xml
+            XMLSubmission.new response: @response, data: xml, source: 'odk'
           end
 
           # ensure response's user can submit to the form

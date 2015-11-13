@@ -314,6 +314,9 @@ class Response < ActiveRecord::Base
 
   # Populates response given a hash of odk-style question codes (e.g. q5, q7_1) to string values.
   def populate_from_hash(hash)
+    # Response mission should already be set
+    raise "Submissions must have a mission" if mission.nil?
+
     form.visible_questionings.each do |qing|
       qing.subquestions.each do |subq|
         value = hash[subq.odk_code]
