@@ -5,9 +5,11 @@
     <model>
       <instance>
         <data id="1" version="1">
-          <grp-header2/>
-          <q1/>
-          <q2/>
+          <grp-2>
+            <grp-header2/>
+            <q1/>
+            <q2/>
+          </grp-2>
         </data>
       </instance>
       <itext>
@@ -38,18 +40,18 @@
           </text>
         </translation>
       </itext>
-      <bind nodeset="/data/grp-header2" readonly="true()" type="string"/>
-      <bind nodeset="/data/q1" type="select1"/>
-      <bind nodeset="/data/q2" type="select1"/>
+      <bind nodeset="/data/grp-2"/>
+      <bind nodeset="/data/grp-2/grp-header2" readonly="true()" type="string"/>
+      <bind nodeset="/data/grp-2/q1" type="select1"/>
+      <bind nodeset="/data/grp-2/q2" type="select1"/>
     </model>
   </h:head>
   <h:body>
     <group appearance="field-list">
-      <input ref="/data/grp-header2">
-        <label ref="jr:itext('grp-header2:label')"/>
+      <input ref="/data/grp-2/grp-header2">
         <hint ref="jr:itext('grp-header2:hint')"/>
       </input>
-      <select1 appearance="label" ref="/data/q1">
+      <select1 appearance="label" ref="/data/grp-2/q1">
         <label/>
         <item>
           <label ref="jr:itext('on2')"/>
@@ -60,7 +62,7 @@
           <value>on3</value>
         </item>
       </select1>
-      <select1 appearance="list-nolabel" ref="/data/q1">
+      <select1 appearance="list-nolabel" ref="/data/grp-2/q1">
         <label ref="jr:itext('q1:label')"/>
         <item>
           <label ref="jr:itext('on2')"/>
@@ -71,7 +73,7 @@
           <value>on3</value>
         </item>
       </select1>
-      <select1 appearance="list-nolabel" ref="/data/q2">
+      <select1 appearance="list-nolabel" ref="/data/grp-2/q2">
         <label ref="jr:itext('q2:label')"/>
         <item>
           <label ref="jr:itext('on2')"/>

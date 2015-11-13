@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151110215207) do
+ActiveRecord::Schema.define(version: 20151111154051) do
   create_table "answers", force: :cascade do |t|
     t.datetime "created_at"
     t.date "date_value"
@@ -121,6 +121,7 @@ ActiveRecord::Schema.define(version: 20151110215207) do
     t.integer "mission_id", limit: 4
     t.integer "question_id", limit: 4
     t.integer "rank", limit: 4, null: false
+    t.boolean "repeats", limit: 1
     t.boolean "required", limit: 1, default: false, null: false
     t.string "type", limit: 255, null: false
     t.datetime "updated_at"
