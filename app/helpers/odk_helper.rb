@@ -23,6 +23,32 @@ module OdkHelper
     end
   end
 
+  def data_tag(form, style, &block)
+    if style == 'commcare'
+      content_tag(
+        "data",
+        {
+          'xmlns:jrm' => "http://dev.commcarehq.org/jr/xforms",
+          'xmlns' => "http://openrosa.org/formdesigner/#{form.id}",
+          'id' => "#{form.id}",
+          'uiVersion' => "1",
+          'version' => "#{form.current_version.sequence}",
+          'name' => "#{form.full_name}"
+        },
+        &block
+      )
+    else
+      content_tag(
+        "data",
+        {
+          'id' => "#{form.id}",
+          'version' => "#{form.current_version.sequence}"
+        },
+        &block
+      )
+    end
+  end
+
   # if a question is required, then determine the appropriate value based off of if the form allows incomplete responses
   def required_value(form)
     # if form allows incompletes, question is required only if the answer to 'are there missing answers' is 'no'

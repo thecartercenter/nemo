@@ -9,6 +9,7 @@
             <grp-header2/>
             <q1/>
             <q2/>
+            <q3/>
           </grp-2>
         </data>
       </instance>
@@ -32,58 +33,41 @@
           <text id="q2:hint">
             <value>Question Hint 2</value>
           </text>
-          <text id="on2">
-            <value>Cat</value>
+          <text id="q3:label">
+            <value>Question Title 3</value>
           </text>
-          <text id="on3">
-            <value>Dog</value>
+          <text id="q3:hint">
+            <value>Question Hint 3</value>
           </text>
         </translation>
       </itext>
       <bind nodeset="/data/grp-2"/>
       <bind nodeset="/data/grp-2/grp-header2" readonly="true()" type="string"/>
-      <bind nodeset="/data/grp-2/q1" type="select1"/>
-      <bind nodeset="/data/grp-2/q2" type="select1"/>
+      <bind nodeset="/data/grp-2/q1" type="string"/>
+      <bind nodeset="/data/grp-2/q2" type="string"/>
+      <bind nodeset="/data/grp-2/q3" type="string"/>
     </model>
   </h:head>
   <h:body>
-    <group appearance="field-list">
-      <input ref="/data/grp-2/grp-header2">
-        <hint ref="jr:itext('grp-header2:hint')"/>
-      </input>
-      <select1 appearance="label" ref="/data/grp-2/q1">
-        <label/>
-        <item>
-          <label ref="jr:itext('on2')"/>
-          <value>on2</value>
-        </item>
-        <item>
-          <label ref="jr:itext('on3')"/>
-          <value>on3</value>
-        </item>
-      </select1>
-      <select1 appearance="list-nolabel" ref="/data/grp-2/q1">
-        <label ref="jr:itext('q1:label')"/>
-        <item>
-          <label ref="jr:itext('on2')"/>
-          <value>on2</value>
-        </item>
-        <item>
-          <label ref="jr:itext('on3')"/>
-          <value>on3</value>
-        </item>
-      </select1>
-      <select1 appearance="list-nolabel" ref="/data/grp-2/q2">
-        <label ref="jr:itext('q2:label')"/>
-        <item>
-          <label ref="jr:itext('on2')"/>
-          <value>on2</value>
-        </item>
-        <item>
-          <label ref="jr:itext('on3')"/>
-          <value>on3</value>
-        </item>
-      </select1>
+    <group>
+      <label>Group Name</label>
+      <group appearance="field-list">
+        <input ref="/data/grp-2/grp-header2">
+          <hint ref="jr:itext('grp-header2:hint')"/>
+        </input>
+        <input ref="/data/grp-2/q1">
+          <label ref="jr:itext('q1:label')"/>
+          <hint ref="jr:itext('q1:hint')"/>
+        </input>
+        <input ref="/data/grp-2/q2">
+          <label ref="jr:itext('q2:label')"/>
+          <hint ref="jr:itext('q2:hint')"/>
+        </input>
+        <input ref="/data/grp-2/q3">
+          <label ref="jr:itext('q3:label')"/>
+          <hint ref="jr:itext('q3:hint')"/>
+        </input>
+      </group>
     </group>
   </h:body>
 </h:html>

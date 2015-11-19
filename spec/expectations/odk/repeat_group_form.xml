@@ -5,7 +5,7 @@
     <model>
       <instance>
         <data id="1" version="1">
-          <grp-2>
+          <grp-2 jr:template="">
             <grp-header2/>
             <q1/>
             <q2/>
@@ -49,22 +49,27 @@
     </model>
   </h:head>
   <h:body>
-    <group appearance="field-list">
-      <input ref="/data/grp-2/grp-header2">
-        <hint ref="jr:itext('grp-header2:hint')"/>
-      </input>
-      <input ref="/data/grp-2/q1">
-        <label ref="jr:itext('q1:label')"/>
-        <hint ref="jr:itext('q1:hint')"/>
-      </input>
-      <input ref="/data/grp-2/q2">
-        <label ref="jr:itext('q2:label')"/>
-        <hint ref="jr:itext('q2:hint')"/>
-      </input>
-      <input ref="/data/grp-2/q3">
-        <label ref="jr:itext('q3:label')"/>
-        <hint ref="jr:itext('q3:hint')"/>
-      </input>
+    <group>
+      <label>Group Name</label>
+      <repeat nodeset="/data/grp-2">
+        <group appearance="field-list">
+          <input ref="/data/grp-2/grp-header2">
+            <hint ref="jr:itext('grp-header2:hint')"/>
+          </input>
+          <input ref="/data/grp-2/q1">
+            <label ref="jr:itext('q1:label')"/>
+            <hint ref="jr:itext('q1:hint')"/>
+          </input>
+          <input ref="/data/grp-2/q2">
+            <label ref="jr:itext('q2:label')"/>
+            <hint ref="jr:itext('q2:hint')"/>
+          </input>
+          <input ref="/data/grp-2/q3">
+            <label ref="jr:itext('q3:label')"/>
+            <hint ref="jr:itext('q3:hint')"/>
+          </input>
+        </group>
+      </repeat>
     </group>
   </h:body>
 </h:html>

@@ -1,6 +1,6 @@
 # Class responsible to reorganize the questions
 # It's main concern is to separate a qing group that contains multilevel
-# questionings into several groups. The idea here is to just remove the 
+# questionings into several groups. The idea here is to just remove the
 # multilevel questioning from the group, since ODK doesn't show it correctly
 # if it's a child of a group.
 #
@@ -20,13 +20,17 @@
 # {
 #   Qing => {},
 #   QingGroup => {
-#     Qing(1) => {},
-#     Qing(2) => {},
-#   },
-#   Qing(3-multilevel) => {},
-#   QingGroup => {
-#     Qing(4) => {}
-#   },
+#     QingGroupFragment => {
+#       Qing(1) => {},
+#       Qing(2) => {},
+#     }
+#     QingGroupFragment => {
+#       Qing(3-multilevel) => {},
+#     },
+#     QingGroupFragment => {
+#       Qing(4) => {}
+#     },
+#   }
 #   Qing => {},
 # }
 class QingGroupOdkPartitioner
@@ -45,7 +49,6 @@ class QingGroupOdkPartitioner
         store_regular_qing(key)
       end
     end
-
     @organized_descendants
   end
 
@@ -58,23 +61,27 @@ class QingGroupOdkPartitioner
       qing_object = qing[0]
 
       if (qing_object.multi_level?)
-        store_qing_group(qing_group_divided)
-        store_multilevel_qing_outside_a_group(qing_object)
+        store_qing_group(group, qing_group_divided)
 
         # Start another group to separate these questionings from the old ones
+        qing_group_divided = QingGroupFragment.new(group)
+        add_qing_to_hash(qing_group_divided.children, qing_object)
+
+        # store multilevel qing and start new group
+        store_qing_group(group, qing_group_divided)
         qing_group_divided = QingGroupFragment.new(group)
       else
         add_qing_to_hash(qing_group_divided.children, qing_object)
       end
-
     end
 
-    store_qing_group(qing_group_divided)
+    store_qing_group(group, qing_group_divided)
   end
 
-  def store_qing_group(new_qing_group)
+  def store_qing_group(group, new_qing_group)
+    @organized_descendants[group] ||= {}
     unless new_qing_group.children.empty?
-      @organized_descendants[new_qing_group] = new_qing_group.children
+      @organized_descendants[group][new_qing_group] = new_qing_group.children
     end
   end
 

@@ -1,175 +1,23 @@
-<% cache("#{@form.odk_download_cache_key}/#{@style}") do %><?xml version="1.0" encoding="UTF-8"?><h:html xmlns="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:jr="http://openrosa.org/javarosa" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<% cache("#{@form.odk_download_cache_key}/#{@style}") do %><?xml version="1.0" encoding="UTF-8"?>
+  <h:html xmlns="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:jr="http://openrosa.org/javarosa" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
     <h:head>
       <h:title><%= @form.full_name %></h:title>
       <model>
-        <instance>
-          <%# include both form ID and form version sequence number in ODK form ID %>
-          <% if @style == 'commcare' %>
-            <data xmlns:jrm="http://dev.commcarehq.org/jr/xforms"
-              xmlns="http://openrosa.org/formdesigner/<%= @form.id %>"
-              id="<%= @form.id %>"
-              uiVersion="1" version="<%= @form.current_version.sequence %>" name="<%= @form.full_name %>">
-          <% else %>
-            <data id="<%= @form.id %>" version="<%= @form.current_version.sequence %>">
-          <% end %>
-
-          <% @form.arrange_descendants.each do |item, subtree| %>
-            <% if item.is_a?(QingGroup) %>
-              <% @attrs = {"jr:template" => ""} if item.repeats %>
-              <%= content_tag("grp-#{item.id}", @attrs) do %>
-                <%= tag("grp-header#{item.id}") %>
-                <% subtree.keys.each do |qing| %>
-                  <% qing.subquestions.each do |subq| %>
-                    <%= tag(subq.odk_code) %>
-                  <% end %>
-                <% end %>
-              <% end %>
-            <% else %>
-              <% unless item.hidden %>
-                <% item.subquestions.each do |subq| %>
-                  <%= tag(subq.odk_code) %>
-                <% end %>
-              <% end %>
-            <% end %>
-          <% end %>
-
-            <%# incomplete response question nodes %>
-            <% if allow_incomplete? %>
-              <%= tag(OdkHelper::IR_QUESTION) %>
-              <%= tag(OdkHelper::IR_CODE) %>
-            <% end %>
-
-            <% if @style == 'commcare' %>
-              <username/>
-            <% end %>
-          </data>
-        </instance>
-
-        <% if @style == 'commcare' %>
-          <instance id="commcaresession" src="jr://instance/session"/>
-        <% end %>
-
+        <%= render('forms/odk/instance') %>
         <itext>
           <% configatron.preferred_locales.each do |lang| %>
-            <translation lang="<%= @style == 'commcare' ? lang : language_name(lang) %>">
-
-              <%# group hint translations %>
-              <% @form.child_groups.each do |group| %>
-                <text id="grp-header<%= group.id %>:label">
-                  <value><%= group.group_name(lang, strict: false) %></value>
-                </text>
-                <text id="grp-header<%= group.id %>:hint">
-                  <value><%= group.group_hint(lang, strict: false) %></value>
-                </text>
-              <% end %>
-
-              <%# Regular question translations %>
-              <% @form.visible_questionings.each do |q| %>
-                <% q.subquestions.each do |subq| %>
-                  <text id="<%= subq.odk_code %>:label">
-                    <value><%= subq.name(lang, :strict => false) %></value>
-                  </text>
-                  <% unless @style == 'commcare' %>
-                    <text id="<%= subq.odk_code %>:hint">
-                      <value><%= subq.hint(lang, :strict => false) %></value>
-                    </text>
-                  <% end %>
-                <% end %>
-              <% end %>
-
-              <%= odk_option_translations(@form, lang) %>
-
-              <%# incomplete response question translations %>
-              <% if allow_incomplete? %>
-                <text id="<%= OdkHelper::IR_QUESTION %>:label">
-                  <value><%= t('incomplete_response.missing_answers.label') %></value>
-                </text>
-                <text id="<%= OdkHelper::IR_QUESTION %>:hint">
-                  <value><%= t('incomplete_response.missing_answers.hint') %></value>
-                </text>
-                <% [:no, :yes].each do |o| %>
-                  <text id="<%= OdkHelper::IR_QUESTION %>:options:<%= o %>">
-                    <value><%= t("incomplete_response.missing_answers.options.#{o}") %></value>
-                  </text>
-                <% end %>
-                <text id="<%= OdkHelper::IR_CODE %>:label">
-                  <value><%= t('incomplete_response.code_label') %></value>
-                </text>
-                <text id="<%= OdkHelper::IR_CODE %>:hint">
-                  <%# no hint for this question currently %>
-                  <value></value>
-                </text>
-              <% end %>
-            </translation>
+            <%= render('forms/odk/translation', lang: lang) %>
           <% end %>
         </itext>
-
-        <% @form.arrange_descendants.each do |item, subtree| %>
-          <% if item.is_a?(QingGroup) %>
-            <%= tag("bind", nodeset: "/data/grp-#{item.id}") %>
-            <%= note_binding(item) %>
-            <% subtree.keys.each do |qing| %>
-              <% unless qing.hidden %>
-                <% qing.subquestions.each do |subq| %>
-                  <%= question_binding(@form, qing, subq, group: "grp-#{item.id}") %>
-                <% end %>
-              <% end %>
-            <% end %>
-          <% else %>
-            <% unless item.hidden %>
-              <% item.subquestions.each do |subq| %>
-                <%= question_binding(@form, item, subq) %>
-              <% end %>
-            <% end %>
-          <% end %>
-        <% end %>
-
-        <%# incomplete response question bindings %>
-        <% if allow_incomplete? %>
-          <%= ir_question_binding(@form) %>
-          <%= ir_code_binding(@form) %>
-        <% end %>
-
-        <%# Special username field for commcare. %>
-        <% if @style == 'commcare' %>
-          <bind nodeset="/data/username" calculate="instance('commcaresession')/session/context/username"/>
-        <% end %>
+        <%= render('forms/odk/bindings') %>
       </model>
     </h:head>
     <h:body>
       <%# Regular question form controls. %>
-      <% @form.arrange_descendants.each do |item, subtree| %>
-        <% if item.is_a?(QingGroup) %>
-          <% if item.repeats %>
-            <%= content_tag("group") do %>
-              <%= content_tag("label", item.group_name) %>
-              <%= content_tag("repeat", nodeset: "/data/grp-#{item.id}") do %>
-                <%= render('odk_group', group: item, subtree: subtree) %>
-              <% end %>
-            <% end %>
-          <% else %>
-            <%= render('odk_group', group: item, subtree: subtree) %>
-          <% end %>
-        <% else %>
-          <%= render('odk_questioning', qing: item) unless item.hidden %>
-        <% end %>
-      <% end %>
-
+      <%= render('forms/odk/form_controls') %>
       <%# Incomplete response question form controls. %>
       <% if allow_incomplete? %>
-        <select1 ref="/data/<%= OdkHelper::IR_QUESTION %>">
-          <label ref="jr:itext('<%= OdkHelper::IR_QUESTION %>:label')"/>
-          <% [:no, :yes].each do |o| %>
-            <item>
-              <label ref="jr:itext('<%= OdkHelper::IR_QUESTION %>:options:<%= o %>')"/>
-              <value><%= o %></value>
-            </item>
-          <% end %>
-        </select1>
-        <input ref="/data/<%= OdkHelper::IR_CODE %>">
-          <label ref="jr:itext('<%= OdkHelper::IR_CODE %>:label')"/>
-          <hint ref="jr:itext('<%= OdkHelper::IR_CODE %>:hint')"/>
-        </input>
+        <%= render('forms/odk/incomplete_question') %>
       <% end %>
     </h:body>
   </h:html>

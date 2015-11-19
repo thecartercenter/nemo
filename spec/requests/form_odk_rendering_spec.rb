@@ -9,16 +9,7 @@ describe 'form rendering for odk', clean_with_truncation: true do
 
   context 'sample form' do
     before do
-      @form = create(:form, question_types: %w(select_one select_one integer select_multiple integer))
-
-      # Make the second question use the grandchildren option set, but make that option set uneven.
-      @large_opt_set = create(:option_set, super_multi_level: true)
-      @large_opt_set.root_node.c[0].c[0].children.each{ |c| c.destroy }
-      @form.questions[1].update_attributes!(option_set: @large_opt_set)
-
-      # Hidden question should not be included, even if required.
-      @form.questionings[4].update_attributes!(hidden: true, required: true)
-
+      @form = create(:form, question_types: %w(text long_text integer decimal location select_one multi_level_select_one select_multiple datetime date time))
       @form.publish!
       get(form_path(@form, format: :xml))
     end
@@ -28,64 +19,93 @@ describe 'form rendering for odk', clean_with_truncation: true do
 
       # Parse the XML and tidy.
       doc = Nokogiri::XML(response.body) { |config| config.noblanks }
-      expect(doc.to_s).to eq File.read(File.expand_path('../../expectations/sample_form_odk.xml', __FILE__))
-    end
-  end
-
-  context 'repeat group form' do
-    before do
-      @form = create(:form, question_types: ["select_one", ["select_one", "integer", "select_multiple"], "integer"])
-
-      # Make the second question use the grandchildren option set, but make that option set uneven.
-      @large_opt_set = create(:option_set, super_multi_level: true)
-      @large_opt_set.root_node.c[0].c[0].children.each{ |c| c.destroy }
-      @form.questions[1].update_attributes!(option_set: @large_opt_set)
-
-      # Hidden question should not be included, even if required.
-      @form.questionings[4].update_attributes!(hidden: true, required: true)
-
-      # Make the group a repeat group
-      @form.child_groups.first.update_attributes!(repeats: true)
-
-      @form.publish!
-      get(form_path(@form, format: :xml))
-    end
-
-    it 'should render proper xml' do
-      expect(response).to be_success
-
-      # Parse the XML and tidy.
-      doc = Nokogiri::XML(response.body) { |config| config.noblanks }
-      expect(doc.to_s).to eq File.read(File.expand_path('../../expectations/repeat_group_form_odk.xml', __FILE__))
-    end
-  end
-
-  context 'group form' do
-    before do
-      @form = create(:form, question_types: [['text', 'text', 'text']])
-      @form.publish!
-      get(form_path(@form, format: :xml))
-    end
-
-    it 'should render items in the group' do
-      expect(response).to be_success
-      doc = Nokogiri::XML(response.body) { |config| config.noblanks }
-      expect(doc.to_s).to eq File.read(File.expand_path('../../expectations/group_form_odk.xml', __FILE__))
+      expect(doc.to_s).to eq File.read(File.expand_path('../../expectations/odk/sample_form.xml', __FILE__))
     end
   end
 
   context 'grid form' do
     before do
-      @form = create(:form, question_types: [['select_one', 'select_one']])
-      @form.c[0].c[1].update_attributes(option_set: @form.c[0].c[0].option_set)
+      first_question = create(:question, qtype_name: 'select_one')
+      second_question = create(:question, qtype_name: 'select_one', option_set: first_question.option_set)
+
+      @form = create(:form, questions: [[first_question, second_question]])
       @form.publish!
       get(form_path(@form, format: :xml))
     end
 
-    it 'should render items in the grid' do
+    it 'should render proper xml' do
       expect(response).to be_success
+
       doc = Nokogiri::XML(response.body) { |config| config.noblanks }
-      expect(doc.to_s).to eq File.read(File.expand_path('../../expectations/grid_form_odk.xml', __FILE__))
+      expect(doc.to_s).to eq File.read(File.expand_path('../../expectations/odk/grid_form.xml', __FILE__))
     end
   end
+
+  context 'group form' do
+    before do
+      @form = create(:form, question_types: [['text', 'text', 'text', 'text']])
+      @form.questionings.last.update_attributes!(hidden: true, required: true)
+      @form.publish!
+
+      get(form_path(@form, format: :xml))
+    end
+
+    it 'should render proper xml' do
+      expect(response).to be_success
+
+      doc = Nokogiri::XML(response.body) { |config| config.noblanks }
+      expect(doc.to_s).to eq File.read(File.expand_path('../../expectations/odk/group_form.xml', __FILE__))
+    end
+  end
+
+  context 'repeat group form' do
+    before do
+      @form = create(:form, question_types: [['text', 'text', 'text', 'text']])
+      @form.questionings.last.update_attributes!(hidden: true, required: true)
+      @form.child_groups.first.update_attributes!(repeats: true)
+      @form.publish!
+
+      get(form_path(@form, format: :xml))
+    end
+
+    it 'should render proper xml' do
+      expect(response).to be_success
+
+      doc = Nokogiri::XML(response.body) { |config| config.noblanks }
+      expect(doc.to_s).to eq File.read(File.expand_path('../../expectations/odk/repeat_group_form.xml', __FILE__))
+    end
+  end
+
+  context 'group form with multilevel select' do
+    before do
+      @form = create(:form, question_types: [['text', 'date', 'multi_level_select_one', 'integer']])
+      @form.publish!
+
+      get(form_path(@form, format: :xml))
+    end
+
+    it 'should render proper xml' do
+      expect(response).to be_success
+
+      doc = Nokogiri::XML(response.body) { |config| config.noblanks }
+      expect(doc.to_s).to eq File.read(File.expand_path('../../expectations/odk/group_form_with_multilevel.xml', __FILE__))
+    end
+  end
+
+    context 'repeat group form with multilevel select' do
+      before do
+        @form = create(:form, question_types: [['text', 'date', 'multi_level_select_one', 'integer']])
+        @form.child_groups.first.update_attributes!(repeats: true)
+        @form.publish!
+
+        get(form_path(@form, format: :xml))
+      end
+
+      it 'should render proper xml' do
+        expect(response).to be_success
+
+        doc = Nokogiri::XML(response.body) { |config| config.noblanks }
+        expect(doc.to_s).to eq File.read(File.expand_path('../../expectations/odk/repeat_group_form_with_multilevel.xml', __FILE__))
+      end
+    end
 end
