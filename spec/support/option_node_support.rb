@@ -255,6 +255,30 @@ module OptionNodeSupport
     ]
   }]
 
+  GEO_WITH_GRANDCHILDREN_ATTRIBS = [{
+    'option_attribs' => { 'name_translations' => {'en' => 'Canada'} },
+    'children_attribs' => [
+      {
+        'option_attribs' => { 'name_translations' => {'en' => 'Calgary'}, latitude: 51.045, longitude: -114.057222 },
+        'children_attribs' => 'NONE'
+      },{
+        'option_attribs' => { 'name_translations' => {'en' => 'Ottawa'}, latitude: 45.429299, longitude: -75.629883 },
+        'children_attribs' => 'NONE'
+      }
+    ]
+  }, {
+    'option_attribs' => { 'name_translations' => {'en' => 'Ghana'} },
+    'children_attribs' => [
+      {
+        'option_attribs' => { 'name_translations' => {'en' => 'Accra'}, latitude: 5.5500, longitude: 0.2 },
+        'children_attribs' => 'NONE'
+      },{
+        'option_attribs' => { 'name_translations' => {'en' => 'Tamale'}, latitude: 9.4075, longitude: 0.8533 },
+        'children_attribs' => 'NONE'
+      }
+    ]
+  }]
+
   WITH_GREAT_GRANDCHILDREN_ATTRIBS = [{
     'option_attribs' => { 'name_translations' => {'en' => 'Animal'} },
     'children_attribs' => [
