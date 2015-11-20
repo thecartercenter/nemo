@@ -78,7 +78,7 @@ class Form < ActiveRecord::Base
   end
 
   def add_questions_to_top_level(questions)
-    questions.each_with_index do |q, i|
+    Array.wrap(questions).each_with_index do |q, i|
       Questioning.create!(mission: mission, form: self, question: q, parent: root_group)
     end
   end

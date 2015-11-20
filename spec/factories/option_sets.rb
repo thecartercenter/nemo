@@ -20,6 +20,8 @@ FactoryGirl.define do
         end
       elsif super_multi_level
         OptionNodeSupport::WITH_GREAT_GRANDCHILDREN_ATTRIBS
+      elsif geographic
+        OptionNodeSupport::GEO_SINGLE_LEVEL_ATTRIBS
       else
         option_names.map{ |n| { 'option_attribs' => { 'name_translations' => {'en' => n} } } }
       end

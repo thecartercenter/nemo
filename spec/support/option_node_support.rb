@@ -241,6 +241,14 @@ module OptionNodeSupport
     }
   end
 
+  GEO_SINGLE_LEVEL_ATTRIBS = [{
+    'option_attribs' => { 'name_translations' => {'en' => 'Funton'}, latitude: -12.9, longitude: 22.7 },
+    'children_attribs' => 'NONE'
+  }, {
+    'option_attribs' => { 'name_translations' => {'en' => 'Sadton'}, latitude: 45.9, longitude: -15.91 },
+    'children_attribs' => 'NONE'
+  }]
+
   WITH_GRANDCHILDREN_ATTRIBS = [{
     'option_attribs' => { 'name_translations' => {'en' => 'Animal'} },
     'children_attribs' => [
@@ -267,7 +275,7 @@ module OptionNodeSupport
       }
     ]
   }, {
-    'option_attribs' => { 'name_translations' => {'en' => 'Ghana'} },
+    'option_attribs' => { 'name_translations' => {'en' => 'Ghana'}, latitude: 7.1, longitude: 0.4 },
     'children_attribs' => [
       {
         'option_attribs' => { 'name_translations' => {'en' => 'Accra'}, latitude: 5.5500, longitude: 0.2 },

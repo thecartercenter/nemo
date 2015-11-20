@@ -5,7 +5,7 @@ def create_questioning(qtype_name_or_question, form, parent, evaluator)
     psuedo_qtype_name = qtype_name_or_question
 
     qtype_name = case psuedo_qtype_name
-    when 'multi_level_select_one', 'geo_multi_level_select_one',
+    when 'multi_level_select_one', 'geo_select_one', 'geo_multi_level_select_one',
       'select_one_as_text_for_sms', 'multi_level_select_one_as_text_for_sms'
       'select_one'
     else

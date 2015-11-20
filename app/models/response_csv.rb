@@ -28,7 +28,7 @@ class ResponseCSV
       create_column code: "ResponseID"
 
       @responses.each do |response|
-        process_form(response.form) unless @processed_forms.include?(response.form_id)
+        process_form(response.form)
         row = [response.form.name, response.user.name, response.created_at, response.id]
         questions = response.answers.group_by(&:question)
         questions.each do |question, answers|
@@ -49,35 +49,48 @@ class ResponseCSV
   end
 
   def process_form(form)
-    form.questions.each do |question|
-      create_column question: question
-    end
+    return if @processed_forms.include?(form.id)
+    form.questions.each{ |q| create_column(question: q) }
     @processed_forms << form.id
   end
 
   def create_column(code: nil, question: nil)
     code ||= question.code
+
+    return if column_exists_with_code?(code)
+
     @columns_by_question[code] = []
-    if question && (question.multi_level? || question.geographic?)
+
+    if question
       if question.multi_level?
         question.levels.each_with_index do |level, i|
           column = ResponseCSV::Column.new(code: code, name: [code, level.name], question: question, position: @columns.size)
-          @columns << column unless @columns.include?(column)
+          @columns << column
+          @columns_by_question[code] << column
+        end
+      else
+        unless question.qtype_name == 'location'
+          column = ResponseCSV::Column.new(code: code, name: code.to_s, question: question, position: @columns.size)
+          @columns << column
           @columns_by_question[code] << column
         end
       end
       if question.geographic?
         lat = ResponseCSV::Column.new(code: code, name: [code, 'Latitude'], question: question, position: @columns.size)
-        @columns << lat unless @columns.include?(lat)
+        @columns << lat
         lng = ResponseCSV::Column.new(code: code, name: [code, 'Longitude'], question: question, position: @columns.size)
-        @columns << lng unless @columns.include?(lng)
+        @columns << lng
         @columns_by_question[code] << lat << lng
       end
     else
       column = ResponseCSV::Column.new(code: code, name: code.to_s, question: question, position: @columns.size)
-      @columns << column unless @columns.include?(column)
+      @columns << column
       @columns_by_question[code] << column
     end
+  end
+
+  def column_exists_with_code?(code)
+    !@columns_by_question[code].nil?
   end
 end
 

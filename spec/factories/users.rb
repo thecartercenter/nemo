@@ -19,7 +19,7 @@ FactoryGirl.define do
     end
 
     login { Random.letters(8) }
-    name { Random.full_name }
+    sequence(:name) { |n| "A User #{n}" }
     email { Random.letters(8) + '@example.com' }
     reset_password_method "print"
     password { test_password }
