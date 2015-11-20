@@ -27,6 +27,7 @@ class Answer < ActiveRecord::Base
 
   delegate :question, :qtype, :required?, :hidden?, :option_set, :options, :condition, :to => :questioning
   delegate :name, :hint, :to => :question, :prefix => true
+  delegate :name, to: :option, prefix: true, allow_nil: true
   delegate :name, to: :level, prefix: true, allow_nil: true
 
   scope :public_access, -> { includes(:questioning => :question).
@@ -124,9 +125,21 @@ class Answer < ActiveRecord::Base
     when 'datetime' then datetime_value
     when 'integer' then value.try(:to_i)
     when 'decimal' then value.try(:to_f)
-    when 'select_one' then option.try(:name)
+    when 'select_one' then option_name
     when 'select_multiple' then choices.empty? ? nil : choices.map(&:option_name).join(';')
     else value.blank? ? nil : value
+    end
+  end
+
+  # Returns a formatted string based on casted_value, or nil if casted_value is nil.
+  def formatted_value
+    cv = casted_value
+    return nil if cv.nil?
+    case qtype.name
+    when 'datetime', 'date', 'time'
+      cv.to_s(:"std_#{qtype.name}")
+    else
+      casted_value
     end
   end
 
@@ -196,6 +209,10 @@ class Answer < ActiveRecord::Base
       # select_multiple
       choices.any?(&:has_coordinates?)
     end
+  end
+
+  def lat_lng
+    latitude.present? && longitude.present? ? [latitude, longitude] : nil
   end
 
   private
