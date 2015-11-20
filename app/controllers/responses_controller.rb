@@ -12,6 +12,9 @@ class ResponsesController < ApplicationController
   before_filter :mark_response_as_checked_out, :only => [:edit]
 
   def index
+    # Deprecating the default_scope on Response
+    @responses = Response.unscoped.accessible_by(current_ability)
+
     # Disable cache, including back button
     response.headers['Cache-Control'] = 'no-cache, max-age=0, must-revalidate, no-store'
 
@@ -21,6 +24,8 @@ class ResponsesController < ApplicationController
       format.html do
         # apply search and pagination
         params[:page] ||= 1
+
+        @responses = @responses.order(created_at: :desc)
 
         # paginate
         @responses = @responses.paginate(:page => params[:page], :per_page => 20)
@@ -60,7 +65,7 @@ class ResponsesController < ApplicationController
         end
 
         # get the response, for export, but not paginated
-        @responses = Response.for_export(@responses)
+        @responses = @responses.with_associations.order(:created_at)
 
         # render the csv
         render_csv("elmo-#{current_mission.compact_name}-responses-#{Time.zone.now.to_s(:filename_datetime)}")

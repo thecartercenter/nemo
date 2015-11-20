@@ -19,6 +19,7 @@ class Response < ActiveRecord::Base
   validates(:user, :presence => true)
   validate(:no_missing_answers)
 
+  # This scope is DEPRECATED. Do not rely on it. Instead, call Response.unscoped and apply your own.
   default_scope( -> { includes(:form, :user).order("responses.created_at DESC") })
   scope(:unreviewed, -> { where(:reviewed => false) })
   scope(:by, ->(user) { where(:user_id => user.id) })
@@ -55,12 +56,6 @@ class Response < ActiveRecord::Base
     raise ArguementError, "A user is required" unless user
 
     Response.where(:checked_out_by_id => user).update_all(:checked_out_at => nil, :checked_out_by_id => nil)
-  end
-
-  # takes a Relation, adds a bunch of selects and joins, and uses find_by_sql to do the actual finding
-  # this technique is due to limitations (at the time of dev) in the Relation system
-  def self.for_export(rel)
-    rel.with_associations
   end
 
   # gets the list of fields to be searched for this class
