@@ -51,14 +51,6 @@ describe Response do
     expect{ create(:response, user: user, form: form, incomplete: true) }.not_to raise_error
   end
 
-  it "export sql should work" do
-    create(:response, form: create(:form, question_types: %w(integer)), answer_values: [1])
-    res = ActiveRecord::Base.connection.execute(Response.export_sql(Response.unscoped))
-
-    # result set should have one row since one Answer in db
-    expect(res.count).to eq(1)
-  end
-
   it "incomplete responses should not disable constraints" do
     form = create(:form, question_types: %w(integer))
     form.root_questionings.first.required = true
