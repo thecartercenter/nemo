@@ -41,7 +41,7 @@ class ResponseCSV
         process_form(response.form)
 
         # Start the row
-        row = [response.form.name, response.user.name, response.created_at, response.id]
+        row = [response.form.name, response.user.name, response.created_at.to_s(:std_datetime), response.id]
 
         # Assign cell values for each column set
         response.answers.group_by(&:question).each do |question, answers|

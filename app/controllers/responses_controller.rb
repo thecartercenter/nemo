@@ -67,7 +67,7 @@ class ResponsesController < ApplicationController
         # get the response, for export, but not paginated
         @responses = @responses.with_associations.order(:created_at)
 
-        @csv = ResponseCSV.new(responses)
+        @csv = ResponseCSV.new(@responses)
         render_csv("elmo-#{current_mission.compact_name}-responses-#{Time.zone.now.to_s(:filename_datetime)}")
       end
     end
