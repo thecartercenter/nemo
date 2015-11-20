@@ -85,15 +85,4 @@ module ResponsesHelper
     end
     status
   end
-
-  # converts the given responses to csv
-  def responses_to_csv(responses)
-    if responses.empty?
-      ""
-    else
-      csv = ResponseCSV.new(responses)
-    end
-  end
-
-
 end

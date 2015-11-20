@@ -1,96 +1,100 @@
 class ResponseCSV
-  include CSVHelper
-  attr_accessor :csv, :responses
-
-  def initialize(responses, row_sep: "\r\n", locale: 'en')
+  # We default to \r\n for row separator because Excel seems to prefer it.
+  def initialize(responses, row_sep: "\r\n")
     @responses = responses
     @row_sep = row_sep
     @columns = []
     @columns_by_question = {}
-    @csv = generate_csv
+    @processed_forms = []
   end
 
   def to_s
-    @csv
+    @str ||= responses.empty? ? "" : generate
   end
 
   private
 
-  def generate_csv
-    # We use \r\n because Excel seems to prefer it.
-    CSV.generate(row_sep: @row_sep) do |csv|
-      @processed_forms = []
-      @rows = []
+  attr_accessor :responses, :row_sep, :columns, :columns_by_question, :processed_forms
 
-      create_column code: "Form"
-      create_column code: "Submitter"
-      create_column code: "DateSubmitted"
-      create_column code: "ResponseID"
+  def generate
+    # We have to build the body first so that the headers are correct.
+    b = body
+    headers << b
+  end
 
-      @responses.each do |response|
+  def headers
+    CSV.generate(row_sep: row_sep) do |csv|
+      csv << columns
+    end
+  end
+
+  def body
+    CSV.generate(row_sep: row_sep) do |csv|
+      # Initial columns
+      find_or_create_column(code: "Form")
+      find_or_create_column(code: "Submitter")
+      find_or_create_column(code: "DateSubmitted")
+      find_or_create_column(code: "ResponseID")
+
+      responses.each do |response|
+        # Ensure we have all this response's columns in our table.
         process_form(response.form)
-        row = [response.form.name, response.user.name, response.created_at, response.id]
-        questions = response.answers.group_by(&:question)
-        questions.each do |question, answers|
-          columns = @columns_by_question[question.code]
-          qa = ResponseCSV::QA.new(question, answers)
-          columns.each_with_index do |c, i|
-            row[c.position] = qa.cells[i]
-          end
-        end
-        @rows << row
-      end
 
-      csv << @columns
-      @rows.each do |row|
+        # Start the row
+        row = [response.form.name, response.user.name, response.created_at, response.id]
+
+        # Assign cell values for each column set
+        response.answers.group_by(&:question).each do |question, answers|
+          columns = columns_by_question[question.code]
+          qa = ResponseCSV::QA.new(question, answers)
+          columns.each_with_index{ |c, i| row[c.position] = qa.cells[i] }
+        end
         csv << row
       end
     end
   end
 
   def process_form(form)
-    return if @processed_forms.include?(form.id)
-    form.questions.each{ |q| create_column(question: q) }
-    @processed_forms << form.id
+    return if processed_forms.include?(form.id)
+    form.questions.each{ |q| find_or_create_column(question: q) }
+    processed_forms << form.id
   end
 
-  def create_column(code: nil, question: nil)
+  def find_or_create_column(code: nil, question: nil)
     code ||= question.code
 
     return if column_exists_with_code?(code)
 
-    @columns_by_question[code] = []
-
     if question
       if question.multi_level?
         question.levels.each_with_index do |level, i|
-          column = ResponseCSV::Column.new(code: code, name: [code, level.name], question: question, position: @columns.size)
-          @columns << column
-          @columns_by_question[code] << column
+          create_column(code: code, name: [code, level.name])
         end
       else
+        # Location questions only have lng/lat cols which are added below.
         unless question.qtype_name == 'location'
-          column = ResponseCSV::Column.new(code: code, name: code.to_s, question: question, position: @columns.size)
-          @columns << column
-          @columns_by_question[code] << column
+          create_column(code: code)
         end
       end
       if question.geographic?
-        lat = ResponseCSV::Column.new(code: code, name: [code, 'Latitude'], question: question, position: @columns.size)
-        @columns << lat
-        lng = ResponseCSV::Column.new(code: code, name: [code, 'Longitude'], question: question, position: @columns.size)
-        @columns << lng
-        @columns_by_question[code] << lat << lng
+        create_column(code: code, name: [code, 'Latitude'])
+        create_column(code: code, name: [code, 'Longitude'])
       end
     else
-      column = ResponseCSV::Column.new(code: code, name: code.to_s, question: question, position: @columns.size)
-      @columns << column
-      @columns_by_question[code] << column
+      create_column(code: code)
     end
   end
 
+  def create_column(code: nil, name: nil)
+    name ||= code
+    column = ResponseCSV::Column.new(code: code, name: name, position: columns.size)
+    columns << column
+    columns_by_question[code] ||= []
+    columns_by_question[code] << column
+  end
+
   def column_exists_with_code?(code)
-    !@columns_by_question[code].nil?
+    !columns_by_question[code].nil?
   end
 end
 
@@ -98,10 +102,9 @@ class ResponseCSV::Column
   include CSVHelper, Comparable
   attr_accessor :code, :name, :position
 
-  def initialize(code: nil, name: nil, question: nil, position: nil)
-    @code = code || question.code
+  def initialize(code: nil, name: nil, position: nil)
+    @code = code
     @name = Array.wrap(name).join(":").gsub(/[^a-z0-9:]/i, '')
-    @question = question
     @position = position
   end
 
@@ -112,14 +115,11 @@ class ResponseCSV::Column
   def inspect
     "#{@position}: #{@code} - #{@name}"
   end
-
-  def <=>(other)
-    self.name <=> other.name
-  end
 end
 
 class ResponseCSV::QA
   include CSVHelper
+
   def initialize(question, answers)
     @question = question
     @answers = answers
@@ -128,24 +128,26 @@ class ResponseCSV::QA
   end
 
   def cells
-    arr = case @question_type
+    arr = case question_type
     when 'select_one'
-      arr = @answers.map{ |a| format_csv_para_text(a.option_name) }
-      if @question.multi_level?
-        arr += ([nil] * (@question.level_count - arr.size))
+      arr = answers.map{ |a| format_csv_para_text(a.option_name) }
+      if question.multi_level?
+        arr += ([nil] * (question.level_count - arr.size))
       end
-      if @question.geographic?
-        arr += lat_lng(@answers.last)
+      if question.geographic?
+        arr += lat_lng(answers.last)
       end
       arr
     when 'location'
-      lat_lng(@answer)
+      lat_lng(answer)
     else
-      [format_csv_para_text(@answer.formatted_value)]
+      [format_csv_para_text(answer.formatted_value)]
     end
   end
 
   private
+
+  attr_accessor :question, :answers, :answer, :question_type
 
   def lat_lng(ans)
     ans.lat_lng || [nil, nil]

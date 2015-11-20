@@ -2,8 +2,8 @@ require 'spec_helper'
 
 describe ResponseCSV do
   context "with no data" do
-    it "should generate trivial string" do
-      expect(ResponseCSV.new([]).to_s).to eq "Form,Submitter,DateSubmitted,ResponseID\r\n"
+    it "should generate empy string" do
+      expect(ResponseCSV.new([]).to_s).to eq ""
     end
   end
 
