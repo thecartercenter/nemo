@@ -22,6 +22,7 @@
             <%= f.field(:"group_hint_#{locale}",
                 label: QingGroup.human_attribute_name("group_hint") + lang_suffix) %>
           <% end %>
+          <%= f.field(:repeats, type: :check_box) %>
         <% end %>
       </div>
 

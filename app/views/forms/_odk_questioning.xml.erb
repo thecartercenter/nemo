@@ -1,8 +1,14 @@
-<% label_row = !!local_assigns[:label_row]; grid_mode = !!local_assigns[:grid_mode] # Default values %>
-
+<% label_row = !!local_assigns[:label_row]; grid_mode = !!local_assigns[:grid_mode]; # Default values %>
+<% group ||= nil %>
 <%# Note that subquestions here refers to multiple levels of a cascading select question, not question grouping. %>
 <% qing.subquestions.each do |subq| %>
-  <%= odk_input_tag(qing, subq, appearance: appearance(grid_mode, label_row)) do %>
+  <% if group && group.repeats %>
+    <group appearance="field-list">
+      <input ref="<%= "/data/grp-#{group.try(:id)}/grp-header#{group.try(:id)}"%>">
+        <hint ref="jr:itext('grp-header<%= group.try(:id) %>:hint')"/>
+      </input>
+  <% end %>
+  <%= odk_input_tag(qing, subq, {appearance: appearance(grid_mode, label_row)}, group.try(:id)) do %>
     <% if label_row %>
       <label></label>
     <% else %>
@@ -23,5 +29,8 @@
         </item>
       <% end %>
     <% end  %>
+  <% end %>
+  <% if group.try(:id) && group.repeats %>
+    </group>
   <% end %>
 <% end %>

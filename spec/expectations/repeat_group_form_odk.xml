@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:jr="http://openrosa.org/javarosa" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <h:head>
+    <h:title>Sample Form 1</h:title>
+    <model>
+      <instance>
+        <data id="1" version="1">
+          <q1/>
+          <grp-3 jr:template="">
+            <grp-header3/>
+            <q2_1/>
+            <q2_2/>
+            <q2_3/>
+            <q3/>
+            <q4/>
+          </grp-3>
+        </data>
+      </instance>
+      <itext>
+        <translation lang="English">
+          <text id="grp-header3:label">
+            <value>Group Name</value>
+          </text>
+          <text id="grp-header3:hint">
+            <value>Group Hint</value>
+          </text>
+          <text id="q1:label">
+            <value>Question Title 1</value>
+          </text>
+          <text id="q1:hint">
+            <value>Question Hint 1</value>
+          </text>
+          <text id="q2_1:label">
+            <value>Question Title 2 - Kingdom</value>
+          </text>
+          <text id="q2_1:hint">
+            <value>Question Hint 2</value>
+          </text>
+          <text id="q2_2:label">
+            <value>Question Title 2 - Family</value>
+          </text>
+          <text id="q2_2:hint">
+            <value>Question Hint 2</value>
+          </text>
+          <text id="q2_3:label">
+            <value>Question Title 2 - Species</value>
+          </text>
+          <text id="q2_3:hint">
+            <value>Question Hint 2</value>
+          </text>
+          <text id="q3:label">
+            <value>Question Title 3</value>
+          </text>
+          <text id="q3:hint">
+            <value>Question Hint 3</value>
+          </text>
+          <text id="q4:label">
+            <value>Question Title 4</value>
+          </text>
+          <text id="q4:hint">
+            <value>Question Hint 4</value>
+          </text>
+          <text id="on2">
+            <value>Cat</value>
+          </text>
+          <text id="on3">
+            <value>Dog</value>
+          </text>
+          <text id="on8">
+            <value>Cat</value>
+          </text>
+          <text id="on9">
+            <value>Dog</value>
+          </text>
+          <text id="on11">
+            <value>Animal</value>
+          </text>
+          <text id="on18">
+            <value>Plant</value>
+          </text>
+        </translation>
+      </itext>
+      <bind nodeset="/data/q1" type="select1"/>
+      <bind nodeset="/data/grp-3"/>
+      <bind nodeset="/data/grp-3/grp-header3" readonly="true()" type="string"/>
+      <bind nodeset="/data/grp-3/q2_1" type="select1"/>
+      <bind nodeset="/data/grp-3/q2_2" type="string"/>
+      <bind nodeset="/data/grp-3/q2_3" type="string"/>
+      <bind nodeset="/data/grp-3/q3" type="int"/>
+      <bind nodeset="/data/grp-3/q4" type="select"/>
+    </model>
+  </h:head>
+  <h:body>
+    <select1 ref="/data/q1">
+      <label ref="jr:itext('q1:label')"/>
+      <hint ref="jr:itext('q1:hint')"/>
+      <item>
+        <label ref="jr:itext('on2')"/>
+        <value>on2</value>
+      </item>
+      <item>
+        <label ref="jr:itext('on3')"/>
+        <value>on3</value>
+      </item>
+    </select1>
+    <group>
+      <label>Group Name</label>
+      <repeat nodeset="/data/grp-3">
+        <group appearance="field-list">
+          <input ref="/data/grp-3/grp-header3">
+            <hint ref="jr:itext('grp-header3:hint')"/>
+          </input>
+          <select1 ref="/data/grp-3/q2_1">
+            <label ref="jr:itext('q2_1:label')"/>
+            <hint ref="jr:itext('q2_1:hint')"/>
+            <item>
+              <label ref="jr:itext('on11')"/>
+              <value>on11</value>
+            </item>
+            <item>
+              <label ref="jr:itext('on18')"/>
+              <value>on18</value>
+            </item>
+          </select1>
+        </group>
+        <group appearance="field-list">
+          <input ref="/data/grp-3/grp-header3">
+            <hint ref="jr:itext('grp-header3:hint')"/>
+          </input>
+          <input ref="/data/grp-3/q2_2" query="instance('os4')/root/item[parent_id=/data/grp-3/q2_1]">
+            <label ref="jr:itext('q2_2:label')"/>
+            <hint ref="jr:itext('q2_2:hint')"/>
+          </input>
+        </group>
+        <group appearance="field-list">
+          <input ref="/data/grp-3/grp-header3">
+            <hint ref="jr:itext('grp-header3:hint')"/>
+          </input>
+          <input ref="/data/grp-3/q2_3" query="instance('os4')/root/item[parent_id=/data/grp-3/q2_2]">
+            <label ref="jr:itext('q2_3:label')"/>
+            <hint ref="jr:itext('q2_3:hint')"/>
+          </input>
+        </group>
+        <group appearance="field-list">
+          <input ref="/data/grp-3/grp-header3">
+            <hint ref="jr:itext('grp-header3:hint')"/>
+          </input>
+          <input ref="/data/grp-3/q3">
+            <label ref="jr:itext('q3:label')"/>
+            <hint ref="jr:itext('q3:hint')"/>
+          </input>
+        </group>
+        <group appearance="field-list">
+          <input ref="/data/grp-3/grp-header3">
+            <hint ref="jr:itext('grp-header3:hint')"/>
+          </input>
+          <select ref="/data/grp-3/q4">
+            <label ref="jr:itext('q4:label')"/>
+            <hint ref="jr:itext('q4:hint')"/>
+            <item>
+              <label ref="jr:itext('on8')"/>
+              <value>on8</value>
+            </item>
+            <item>
+              <label ref="jr:itext('on9')"/>
+              <value>on9</value>
+            </item>
+          </select>
+        </group>
+      </repeat>
+    </group>
+  </h:body>
+</h:html>
