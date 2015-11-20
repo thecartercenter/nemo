@@ -237,6 +237,12 @@ class Response < ActiveRecord::Base
     modifier != 'odk'
   end
 
+  def answer_groups_for_group(group)
+    my_answers = answers
+    Rails.logger.ap my_answers
+    []
+  end
+
   def answer_set_for_questioning(questioning)
     # Build a hash of answer sets on the first call.
     @answer_sets_by_questioning ||= {}.tap do |hash|

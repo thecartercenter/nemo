@@ -1,6 +1,7 @@
 <%# Renders the answer sets for a form item, be it a group or a questioning. %>
 <% if item.is_a?(QingGroup) %>
   <%# No point rendering an empty group. %>
+  <% @response.answer_groups_for_group(item) %>
   <% unless subtree.empty? %>
     <div class="qing-group">
       <h2><%= item.group_name %></h2>
