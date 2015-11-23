@@ -24,7 +24,7 @@ describe ResponseCSV do
       FactoryGirl.reload # We rely on sequence numbers in expectation file
 
       # Need to freeze the time so the times in the expectation file match.
-      Timecop.freeze("2015-11-20 12:30") do
+      Timecop.freeze(Time.zone.parse("2015-11-20 12:30")) do
         create(:response, form: form1, answer_values: ["foo✓", %w(Canada Calgary),
           %Q{<p>foo</p><p>"bar"<br/>baz</p>}, 100, -123.50,
           "15.937378 44.36453", "Cat", %w(Dog Cat), %w(Dog Cat),
