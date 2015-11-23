@@ -1,7 +1,7 @@
 class OperationJob < ApplicationJob
   queue_as :default
 
-  rescue_from StandardError, with: :operation_failed
+  rescue_from StandardError, with: :operation_raised_error
 
   before_perform { |job| job.operation_started }
 
@@ -30,28 +30,27 @@ class OperationJob < ApplicationJob
       operation.present? && operation.update_attribute(:job_outcome_url, outcome_url) if outcome_url.present?
     end
 
-    def operation_failed(exception_or_report=nil)
+    def operation_failed(report)
       return unless operation.present?
+      save_failure(report)
+    end
 
-      error_report =
-        case exception_or_report
-        when StandardError
-          exception_or_report.message
-        else
-          exception_or_report.to_s
-        end
-
-      attributes = {
-        job_failed_at: Time.now,
-        job_error_report: error_report
-      }
-
-      attributes[:job_completed_at] = Time.now unless operation.completed?
-
-      operation.update_attributes(attributes)
+    def operation_raised_error(exception)
+      return unless operation.present?
+      logger.debug("----------------------------------------- YO")
+      AdminMailer.error(exception).deliver
+      save_failure(I18n.t("operation.server_error"))
     end
 
     def operation_completed
       operation.present? && operation.update_attribute(:job_completed_at, Time.now)
+    end
+
+  private
+
+    def save_failure(msg)
+      attributes = { job_failed_at: Time.now, job_error_report: msg }
+      attributes[:job_completed_at] = Time.now unless operation.completed?
+      operation.update_attributes(attributes)
     end
 end
