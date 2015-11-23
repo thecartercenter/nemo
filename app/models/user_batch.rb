@@ -5,6 +5,7 @@ class UserBatch
 
   IMPORT_ERROR_CUTOFF = 50
   BATCH_SIZE = 1000
+  PERMITTED_ATTRIBS = %i(login name phone phone2 email notes)
 
   attr_accessor :file
   attr_reader :users
@@ -165,7 +166,7 @@ class UserBatch
       field.each do |f|
         field_value = object.send(f)
         # Need to accept nil for email otherwise the db insert will complain of two emails as nil (not unique)
-        (@fields_hash_table[key][field_value] ||= []) << object unless (field_value.nil? && key == 'phone')
+        (@fields_hash_table[key][field_value] ||= []) << object unless field_value.nil?
       end
     end
   end
@@ -187,7 +188,7 @@ class UserBatch
   end
 
   def create_new_user(attributes, mission)
-    User.new(attributes.merge(
+    User.new(attributes.slice(*PERMITTED_ATTRIBS).merge(
                reset_password_method: "print",
                admin: false,
                assignments: [Assignment.new(mission: mission, role: User::ROLES.first)],

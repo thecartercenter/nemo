@@ -36,9 +36,9 @@ describe UserBatch do
     expect(2).to eq(ub.users.size)
   end
 
-  it "fails when creating users without emails" do
+  it "succeeds when creating users without emails" do
     ub = create_user_batch("empty_emails.xlsx")
-    expect(ub).not_to be_succeeded
+    expect(ub).to be_succeeded
   end
 
   context "when checking validation errors on spreadsheet" do
