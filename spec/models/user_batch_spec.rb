@@ -12,7 +12,7 @@ describe UserBatch do
     assert_user_attribs(ub.users[1], login: "bcod", name: 'Bo Cod',
       phone: nil, phone2: nil, email: 'b@co.com')
     assert_user_attribs(ub.users[2], login: "flim.flo", name: 'Flim Flo',
-      phone: '+2236366363', phone2: nil, email: 'f@fl.com')
+      phone: '+123456789', phone2: nil, email: 'f@fl.com')
     assert_user_attribs(ub.users[3], login: "shobo", name: 'Sho Bo',
       phone: nil, phone2: nil, email: 'd@ef.stu')
     assert_user_attribs(ub.users[4], login: "clo", name: 'Cha Lo',

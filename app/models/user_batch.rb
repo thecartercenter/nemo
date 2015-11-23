@@ -129,6 +129,15 @@ class UserBatch
 
       attributes = turn_row_into_attribute_hash(row)
 
+      # Convert phone numbers to strings (they may come in as floats)
+      %i(phone phone2).each do |k|
+        if attributes[k].is_a?(Numeric)
+          # Convert first to int, in case number is a float.
+          # If we go straight to string, we may get ".0" at the end.
+          attributes[k] = attributes[k].to_i.to_s
+        end
+      end
+
       user_batch_attributes << attributes
     end
 
