@@ -1667,6 +1667,7 @@ en:
       answer_not_valid_option_multi: "contained the invalid option '%{invalid_options}'"
       answer_not_valid_options_multi: "contained invalid options '%{invalid_options}'"
       congrats: "Your response to form '%{form_code}' was received. Thank you!"
+      duplicate_answer: "Sorry, your submission contained duplicate answers for question %{rank}."
       duplicate_submission: "Sorry, your response is a duplicate of one submitted recently."
       form_not_found: "Sorry, there is no form with code '%{form_code}'."
       form_not_permitted: "Sorry, you don't have permission to submit to form '%{form_code}'."

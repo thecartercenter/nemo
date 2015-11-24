@@ -7,6 +7,7 @@ class Sms::Decoder
   # sms - an Sms::Message object
   def initialize(msg)
     @msg = msg
+    @qings_seen = {}
   end
 
   # main method called to do the decoding
@@ -106,10 +107,12 @@ class Sms::Decoder
     end
 
     # finds the Questioning object specified by the current value of @rank
-    # raises an error if no such question exists
+    # raises an error if no such question exists, or if qing has already been encountered
     def find_qing
       @qing = @questionings[@rank]
       raise_decoding_error("question_doesnt_exist", :rank => @rank) unless @qing
+      raise_decoding_error("duplicate_answers", :rank => @rank) if @qings_seen[@qing.id]
+      @qings_seen[@qing.id] = 1
     end
 
     # adds the answer contained in @value to the @response for the questioning in @qing

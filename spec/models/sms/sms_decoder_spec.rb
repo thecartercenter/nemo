@@ -119,6 +119,11 @@ describe Sms::Decoder do
     assert_decoding_fail(body: "#{@form.code} 1.15 2.8", error: "question_doesnt_exist", rank: 2)
   end
 
+  it "form with duplicate answers for the same question should error" do
+    create_form(questions: %w(integer integer))
+    assert_decoding_fail(body: "#{@form.code} 1.15 2.8 2.9", error: "duplicate_answers", rank: 2)
+  end
+
   it "spaces after decimal points should not cause error" do
     create_form(questions: %w(integer integer))
     assert_decoding(body: "#{@form.code} 1. 15 2. 8", answers: [15, 8])
