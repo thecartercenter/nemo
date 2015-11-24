@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151102173430) do
+ActiveRecord::Schema.define(version: 20151123223907) do
   create_table "answers", force: :cascade do |t|
     t.datetime "created_at"
     t.date "date_value"
@@ -30,6 +30,7 @@ ActiveRecord::Schema.define(version: 20151102173430) do
 
   add_index "answers", ["option_id"], name: "answers_option_id_fk", using: :btree
   add_index "answers", ["questioning_id"], name: "answers_questioning_id_fk", using: :btree
+  add_index "answers", ["response_id", "questioning_id", "rank"], name: "index_answers_on_response_id_and_questioning_id_and_rank", using: :btree
   add_index "answers", ["response_id"], name: "answers_response_id_fk", using: :btree
 
   create_table "assignments", force: :cascade do |t|
@@ -77,6 +78,16 @@ ActiveRecord::Schema.define(version: 20151102173430) do
 
   add_index "choices", ["answer_id"], name: "choices_answer_id_fk", using: :btree
   add_index "choices", ["option_id"], name: "choices_option_id_fk", using: :btree
+
+  create_table "condition_option_nodes", force: :cascade do |t|
+    t.integer "condition_id", limit: 4, null: false
+    t.integer "option_node_id", limit: 4, null: false
+    t.integer "rank", limit: 4, null: false
+  end
+
+  add_index "condition_option_nodes", ["condition_id"], name: "index_condition_option_nodes_on_condition_id", using: :btree
+  add_index "condition_option_nodes", ["option_node_id"], name: "index_condition_option_nodes_on_option_node_id", using: :btree
+  add_index "condition_option_nodes", ["rank"], name: "index_condition_option_nodes_on_rank", using: :btree
 
   create_table "conditions", force: :cascade do |t|
     t.datetime "created_at"
@@ -484,6 +495,8 @@ ActiveRecord::Schema.define(version: 20151102173430) do
   add_foreign_key "broadcasts", "missions", name: "broadcasts_mission_id_fk"
   add_foreign_key "choices", "answers"
   add_foreign_key "choices", "options", name: "choices_option_id_fk"
+  add_foreign_key "condition_option_nodes", "conditions"
+  add_foreign_key "condition_option_nodes", "option_nodes"
   add_foreign_key "conditions", "form_items", column: "questioning_id", name: "conditions_questioning_id_fk"
   add_foreign_key "conditions", "form_items", column: "ref_qing_id", name: "conditions_ref_qing_id_fk"
   add_foreign_key "conditions", "missions", name: "conditions_mission_id_fk"
