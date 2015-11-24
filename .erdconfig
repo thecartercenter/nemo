@@ -10,11 +10,9 @@ filetype: pdf
 indirect: true
 inheritance: false
 markup: true
-notation: bachman
-orientation: horizontal
-polymorphism: false
+notation: simple
+orientation: vertical
+polymorphism: true
 sort: true
 warn: true
-title: "RealRisks Data Model"
 prepend_primary: false
-
