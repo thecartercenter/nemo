@@ -108,6 +108,9 @@ class Questioning < FormItem
     symbol.match(/\A((name|hint)_([a-z]{2})(=?))(_before_type_cast)?\z/)
   end
   # /REFACTOR
+  def inspect
+    id
+  end
 
   private
 

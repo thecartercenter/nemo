@@ -237,10 +237,8 @@ class Response < ActiveRecord::Base
     modifier != 'odk'
   end
 
-  def answer_groups_for_group(group)
-    my_answers = answers
-    Rails.logger.ap my_answers
-    []
+  def answer_groups
+    @answer_groups = AnswerGroup.new(self)
   end
 
   def answer_set_for_questioning(questioning)

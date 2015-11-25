@@ -1,0 +1,8 @@
+<div class="qing-group">
+  <h2><%= item.group_name %></h2>
+
+  <%# Render children. %>
+  <% subtree.each do |subitem, subsubtree| %>
+    <%= render 'answer_set', answer_set: subsubtree %>
+  <% end %>
+</div>

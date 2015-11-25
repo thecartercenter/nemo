@@ -83,6 +83,7 @@ class ResponsesController < ApplicationController
       # if we get a match, then we use that object instead, since it contains excerpts
       @response = matches.first if matches.first
     end
+
     prepare_and_render_form
   end
 
