@@ -42,7 +42,7 @@
 
   <%# Answer sets %>
   <% @response.form.arrange_descendants.each do |item, subtree| %>
-    <%= render('form_item', item: item, subtree: subtree) %>
+    <%= render('responses/answers/form_item', item: item, subtree: subtree) %>
   <% end %>
 
 

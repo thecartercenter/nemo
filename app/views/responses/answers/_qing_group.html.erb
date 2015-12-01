@@ -3,6 +3,6 @@
 
   <%# Render children. %>
   <% subtree.each do |subitem, subsubtree| %>
-    <%= render 'answer_set', answer_set: subsubtree %>
+    <%= render 'responses/answers/answer_set', answer_set: subsubtree %>
   <% end %>
 </div>

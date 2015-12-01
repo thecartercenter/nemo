@@ -9,22 +9,28 @@ class AnswerGroup
 
   def create_groups
     @group_hash = {}
-
-    @answers.each do |answer|
-      questioning = answer.questioning
-      group = questioning.parent
-      group_id = group.id
-
-      if group.repeats
-        group_number = answer.group_number
+    if @answers.present?
+      @answers.each do |answer|
+        questioning = answer.questioning
+        group = questioning.parent
+        group_id = group.id
+        group_number = answer.group_number || 0
         @group_hash[group_id] ||= {}
         @group_hash[group_id][group_number] ||= {}
         @group_hash[group_id][group_number][questioning] = answer_set_for_questioning(questioning, group_number)
-      else
-        @group_hash[group.id] = answer_set_for_questioning(questioning)
+      end
+    else
+      form = @response.form
+      form.arrange_descendants.each do |item, subtree|
+        next unless item.is_a? QingGroup
+        group = item
+        subtree.each do |questioning, subtree|
+          @group_hash[group.id] ||= {}
+          @group_hash[group.id][0] ||= {}
+          @group_hash[group.id][0][questioning] = answer_set_for_questioning(questioning)
+        end
       end
     end
-
     @group_hash
   end
 
@@ -37,7 +43,7 @@ class AnswerGroup
     # Build a hash of answer sets on the first call.
     answer_sets_by_questioning ||= {}.tap do |hash|
       @answers.group_by(&:questioning).each do |qing, answers|
-        answers = answers.select{|a| a.group_number == group_number } if group_number.present?
+        answers = answers.select{|a| a.group_number == group_number } if group_number.present? && group_number > 0
         hash[qing] = AnswerSet.new(questioning: qing, answers: answers)
       end
     end

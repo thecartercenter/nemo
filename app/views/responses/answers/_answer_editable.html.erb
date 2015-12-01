@@ -14,7 +14,7 @@
 
   <%# render a checkbox for each possible choice %>
   <div class="widget">
-    <%= render(partial: "choice", locals: {prefix: field_name_prefix},
+    <%= render(partial: "responses/answers/choice", locals: {prefix: field_name_prefix},
       collection: answer.all_choices, class: "form-control") %>
   </div>
 
@@ -34,4 +34,4 @@
 
 <% end %>
 
-<%= render('answer_hidden_fields', answer: answer, index: index) %>
+<%= render('responses/answers/answer_hidden_fields', answer: answer, index: index) %>
