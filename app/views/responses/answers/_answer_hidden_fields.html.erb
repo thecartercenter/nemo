@@ -1,3 +1,4 @@
 <%= hidden_field_tag("response[answers_attributes][#{index}][id]", answer.id) unless answer.new_record? %>
 <%= hidden_field_tag("response[answers_attributes][#{index}][questioning_id]", answer.questioning_id) if answer.new_record? %>
 <%= hidden_field_tag("response[answers_attributes][#{index}][relevant]", answer.relevant, class: "relevant") %>
+<%= hidden_field_tag("response[answers_attributes][#{index}][group_number]", group_number ) %>
