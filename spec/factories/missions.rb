@@ -7,17 +7,7 @@ FactoryGirl.define do
 
   factory :mission do
     name
-    setting {
-      # use Saskatchewan timezone b/c no DST
-      Setting.new(
-        timezone: "Saskatchewan",
-        preferred_locales_str: "en",
-        default_outgoing_sms_adapter: "IntelliSms",
-        intellisms_username: "user",
-        intellisms_password: "pass",
-        incoming_sms_token: SecureRandom.hex
-      )
-    }
+    setting { build(:setting) }
   end
 
   factory :mission_with_full_heirarchy, parent: :mission do

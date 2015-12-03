@@ -190,27 +190,27 @@ class Setting < ActiveRecord::Base
       end
     end
 
-    # if the sms credentials temp fields are set (and they match, which is checked above), copy the value to the real field
-    def save_sms_credentials
-      self.intellisms_password = intellisms_password1 unless intellisms_password1.blank?
-      self.twilio_auth_token = twilio_auth_token1 unless twilio_auth_token1.blank?
-      return true
-    end
-
     # clear SMS fields if requested
     def clear_sms_fields_if_requested
-      if clear_intellisms.present?
+      if clear_intellisms == "1"
         self.intellisms_username = nil
         self.intellisms_password = nil
         self.intellisms_password1 = nil
         self.intellisms_password2 = nil
       end
-      if clear_twilio.present?
+      if clear_twilio == "1"
         self.twilio_phone_number = nil
         self.twilio_account_sid = nil
         self.twilio_auth_token = nil
         self.twilio_auth_token1 = nil
       end
+    end
+
+    # if the sms credentials temp fields are set (and they match, which is checked above), copy the value to the real field
+    def save_sms_credentials
+      self.intellisms_password = intellisms_password1 unless intellisms_password1.blank?
+      self.twilio_auth_token = twilio_auth_token1 unless twilio_auth_token1.blank?
+      return true
     end
 
     # if we are in admin mode, then a bunch of fields don't make sense and should be null

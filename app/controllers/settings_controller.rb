@@ -6,7 +6,6 @@ class SettingsController < ApplicationController
 
   def index
     # setting is already loaded by application controller
-
     prepare_and_render_form
   end
 
