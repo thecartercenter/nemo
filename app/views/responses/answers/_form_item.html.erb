@@ -8,5 +8,5 @@
     <% end %>
   <% end %>
 <% else %>
-  <%= render 'responses/answers/answer_set', answer_set: @response.answer_groups.answer_set_for_questioning(item) unless item.hidden? %>
+  <%= render 'responses/answers/answer_set', answer_set: @response.answer_groups.answer_set_for_questioning(item), group_number: 0 unless item.hidden? %>
 <% end %>

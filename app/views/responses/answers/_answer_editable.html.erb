@@ -1,4 +1,4 @@
-<% field_name_prefix = "response[answers_attributes][#{index}]" %>
+<% field_name_prefix = "response[answers_attributes][#{index}_#{group_number}]" %>
 
 <%# show the error messages without keys %>
 <%= content_tag(:div, answer.errors.to_hash.values.join(', '), class: 'form-errors') unless answer.errors.empty? %>
