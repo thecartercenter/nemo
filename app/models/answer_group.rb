@@ -1,15 +1,16 @@
 class AnswerGroup
   attr_accessor :response
 
-  def initialize(response)
+  def initialize(response, empty_answers: false)
     @response = response
-    @answers = response.answers
+    @answers = response.answers.order(:group_number)
+    @empty_answers = empty_answers
     create_groups
   end
 
   def create_groups
     @group_hash = {}
-    if @answers.present?
+    if @answers.present? && !@empty_answers
       @answers.each do |answer|
         questioning = answer.questioning
         group = questioning.parent
@@ -35,6 +36,7 @@ class AnswerGroup
   end
 
   def for_group(group)
+    Rails.logger.ap @group_hash[group.id]
     @group_hash[group.id]
   end
 
@@ -43,13 +45,13 @@ class AnswerGroup
     # Build a hash of answer sets on the first call.
     answer_sets_by_questioning ||= {}.tap do |hash|
       @answers.group_by(&:questioning).each do |qing, answers|
-        answers = answers.select{|a| a.group_number == group_number } if group_number.present? && group_number > 0
+        answers = answers.select{ |a| a.group_number == group_number } if group_number.present? && group_number > 0
         hash[qing] = AnswerSet.new(questioning: qing, answers: answers)
       end
     end
 
     # If answer set already exists, it will be in the answer_sets_by_questioning hash, else create a new one.
-    unless answer_sets_by_questioning[questioning]
+    if !answer_sets_by_questioning[questioning] || @empty_answers
       answer_sets_by_questioning[questioning] = AnswerSet.new(questioning: questioning)
     end
 

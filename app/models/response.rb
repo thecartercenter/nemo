@@ -4,10 +4,10 @@ class Response < ActiveRecord::Base
 
   LOCK_OUT_TIME = 10.minutes
 
-  belongs_to(:form, :inverse_of => :responses, :counter_cache => true)
-  belongs_to(:checked_out_by, :class_name => "User")
+  belongs_to(:form, inverse_of: :responses, counter_cache: true)
+  belongs_to(:checked_out_by, class_name: 'User')
   has_many(:answers, -> { order('form_items.rank, answers.rank').includes(:questioning) }, autosave: true, dependent: :destroy, inverse_of: :response)
-  belongs_to(:user, :inverse_of => :responses)
+  belongs_to(:user, inverse_of: :responses)
 
   has_many(:location_answers, -> { where("questions.qtype_name = 'location'").order('form_items.rank').includes(questioning: :question) }, class_name: 'Answer')
 
@@ -15,15 +15,15 @@ class Response < ActiveRecord::Base
 
   # we turn off validate above and do it here so we can control the message and have only one message
   # regardless of how many answer errors there are
-  validates(:user, :presence => true)
+  validates(:user, presence: true)
   validate(:no_missing_answers)
 
   # This scope is DEPRECATED. Do not rely on it. Instead, call Response.unscoped and apply your own.
-  default_scope( -> { includes(:form, :user).order("responses.created_at DESC") })
-  scope(:unreviewed, -> { where(:reviewed => false) })
-  scope(:by, ->(user) { where(:user_id => user.id) })
-  scope :created_after, ->(date) { where("responses.created_at >= ?", date) }
-  scope :created_before, ->(date) { where("responses.created_at <= ?", date) }
+  default_scope( -> { includes(:form, :user).order('responses.created_at DESC') })
+  scope(:unreviewed, -> { where(reviewed: false) })
+  scope(:by, ->(user) { where(user_id: user.id) })
+  scope :created_after, ->(date) { where('responses.created_at >= ?', date) }
+  scope :created_before, ->(date) { where('responses.created_at <= ?', date) }
 
   # loads all the associations required for show, edit, etc.
   scope :with_associations, -> { includes(
@@ -42,21 +42,21 @@ class Response < ActiveRecord::Base
   scope(:with_basic_assoc, -> { includes(:form, :user) })
 
   # loads only some answer info
-  scope(:with_basic_answers, -> { includes(:answers => {:questioning => :question}) })
+  scope(:with_basic_answers, -> { includes(answers: {questioning: :question}) })
 
   # loads only answers with location info
   scope(:with_location_answers, -> { includes(:location_answers) })
 
-  accepts_nested_attributes_for(:answers)
+  accepts_nested_attributes_for(:answers, allow_destroy: true)
 
-  delegate :name, :to => :checked_out_by, :prefix => true
+  delegate :name, to: :checked_out_by, prefix: true
   delegate :visible_questionings, to: :form
 
   # remove previous checkouts by a user
   def self.remove_previous_checkouts_by(user = nil)
-    raise ArguementError, "A user is required" unless user
+    raise ArguementError, 'A user is required' unless user
 
-    Response.where(:checked_out_by_id => user).update_all(:checked_out_at => nil, :checked_out_by_id => nil)
+    Response.where(checked_out_by_id: user).update_all(checked_out_at: nil, checked_out_by_id: nil)
   end
 
   # gets the list of fields to be searched for this class
@@ -64,29 +64,29 @@ class Response < ActiveRecord::Base
   # and whether they are searchable by a regular expression
   def self.search_qualifiers(scope)
     [
-      Search::Qualifier.new(:name => "form", :col => "forms.name", :assoc => :forms),
-      Search::Qualifier.new(:name => "reviewed", :col => "responses.reviewed"),
-      Search::Qualifier.new(:name => "submitter", :col => "users.name", :assoc => :users, :type => :text),
-      Search::Qualifier.new(:name => "source", :col => "responses.source"),
-      Search::Qualifier.new(:name => "submit_date", :col => "DATE(CONVERT_TZ(responses.created_at, 'UTC', '#{Time.zone.mysql_name}'))", :type => :scale),
+      Search::Qualifier.new(name: 'form', col: 'forms.name', assoc: :forms),
+      Search::Qualifier.new(name: 'reviewed', col: 'responses.reviewed'),
+      Search::Qualifier.new(name: 'submitter', col: 'users.name', assoc: :users, type: :text),
+      Search::Qualifier.new(name: 'source', col: 'responses.source'),
+      Search::Qualifier.new(name: 'submit_date', col: "DATE(CONVERT_TZ(responses.created_at, 'UTC', '#{Time.zone.mysql_name}'))", type: :scale),
 
       # this qualifier matches responses that have answers to questions with the given option set
-      Search::Qualifier.new(:name => "option_set", :col => "option_sets.name", :assoc => :option_sets),
+      Search::Qualifier.new(name: 'option_set', col: 'option_sets.name', assoc: :option_sets),
 
       # this qualifier matches responses that have answers to questions with the given type
       # this and other qualifiers use the 'questions' table because the join code below creates a table alias
       # the actual STI table name is 'questions'
-      Search::Qualifier.new(:name => "question_type", :col => "questions.qtype_name", :assoc => :questions),
+      Search::Qualifier.new(name: 'question_type', col: 'questions.qtype_name', assoc: :questions),
 
       # this qualifier matches responses that have answers to the given question
-      Search::Qualifier.new(:name => "question", :col => "questions.code", :assoc => :questions),
+      Search::Qualifier.new(name: 'question', col: 'questions.code', assoc: :questions),
 
       # this qualifier inserts a placeholder that we replace later
-      Search::Qualifier.new(:name => "text", :col => "responses.id", :type => :indexed, :default => true),
+      Search::Qualifier.new(name: 'text', col: 'responses.id', type: :indexed, default: true),
 
       # support {foobar}:stuff style searches, where foobar is a question code
-      Search::Qualifier.new(:name => "text_by_code", :pattern => /\A\{(#{Question::CODE_FORMAT})\}\z/, :col => "responses.id",
-        :type => :indexed, :validator => ->(md){ Question.exists?(:mission_id => scope[:mission].id, :code => md[1]) })
+      Search::Qualifier.new(name: 'text_by_code', pattern: /\A\{(#{Question::CODE_FORMAT})\}\z/, col: 'responses.id',
+                            type: :indexed, validator: ->(md){ Question.exists?(mission_id: scope[:mission].id, code: md[1]) })
     ]
   end
 
@@ -101,7 +101,7 @@ class Response < ActiveRecord::Base
     options[:include_excerpts] ||= false
 
     # create a search object and generate qualifiers
-    search = Search::Search.new(:str => query, :qualifiers => search_qualifiers(scope))
+    search = Search::Search.new(str: query, qualifiers: search_qualifiers(scope))
 
     # apply the needed associations
     relation = relation.joins(Report::Join.list_to_sql(search.associations))
@@ -118,14 +118,14 @@ class Response < ActiveRecord::Base
 
       # search all answers in this mission for a match
       # not escaping the query value because double quotes were getting escaped which makes exact phrase not work
-      attribs = {:mission_id => scope[:mission].id}
+      attribs = {mission_id: scope[:mission].id}
 
-      if expression.qualifier.name == "text_by_code"
+      if expression.qualifier.name == 'text_by_code'
         # get qualifier text (e.g. {form}) and strip outer braces
         question_code = expression.qualifier_text[1..-2]
 
         # get the question with the given code
-        question = Question.where(:mission_id => scope[:mission].id).where(:code => question_code).first
+        question = Question.where(mission_id: scope[:mission].id).where(code: question_code).first
 
         # raising here since this shouldn't happen due to validator
         raise "question with code '#{question_code}' not found" if question.nil?
@@ -135,7 +135,7 @@ class Response < ActiveRecord::Base
       end
 
       # save the search params as we'll need them again
-      sphinx_params = [expression.values, {:with => attribs, :max_matches => 1000000, :per_page => 1000000}]
+      sphinx_params = [expression.values, {with: attribs, max_matches: 1000000, per_page: 1000000}]
       sphinx_param_sets << sphinx_params
 
       # run the sphinx search
@@ -168,10 +168,10 @@ class Response < ActiveRecord::Base
 
           # run search again
           sphinx_params[1][:with][:response_id] = responses_by_id.keys
-          sphinx_params[1][:sql] = {:include => {:questioning => :question}}
+          sphinx_params[1][:sql] = {include: {questioning: :question}}
           answers = Answer.search(*sphinx_params)
 
-          excerpter_options = {:before_match => '{{{', :after_match => '}}}', :chunk_separator => ' ... ', :query_mode => true}
+          excerpter_options = {before_match: '{{{', after_match: '}}}', chunk_separator: ' ... ', query_mode: true}
           excerpter_options[:limit] = 1000000 if options[:dont_truncate_excerpts]
 
           # create excerpter
@@ -181,7 +181,7 @@ class Response < ActiveRecord::Base
           answers.each do |a|
             r = responses_by_id[a.response_id]
             r.excerpts ||= []
-            r.excerpts << {:questioning_id => a.questioning_id, :code => a.questioning.code, :text => excerpter.excerpt!(a.value || a.option_name || a.option_names)}
+            r.excerpts << {questioning_id: a.questioning_id, code: a.questioning.code, text: excerpter.excerpt!(a.value || a.option_name || a.option_names)}
           end
         end
       end
@@ -199,7 +199,7 @@ class Response < ActiveRecord::Base
   # nil means no recent responses
   def self.recent_count(rel)
     %w(hour day week month year).each do |p|
-      if (count = rel.where("created_at > ?", 1.send(p).ago).count) > 0
+      if (count = rel.where('created_at > ?', 1.send(p).ago).count) > 0
         return [count, p]
       end
     end
@@ -223,7 +223,7 @@ class Response < ActiveRecord::Base
   # generates a cache key for the set of all responses for the given mission.
   # the key will change if the number of responses changes, or if a response is updated.
   def self.per_mission_cache_key(mission)
-    count_and_date_cache_key(:rel => unscoped.for_mission(mission), :prefix => "mission-#{mission.id}")
+    count_and_date_cache_key(rel: unscoped.for_mission(mission), prefix: "mission-#{mission.id}")
   end
 
   # We need a name field so that this class matches the Nameable duck type.
@@ -239,6 +239,10 @@ class Response < ActiveRecord::Base
 
   def answer_groups
     @answer_groups = AnswerGroup.new(self)
+  end
+
+  def answer_groups_empty
+    @answer_groups_empty = AnswerGroup.new(self, empty_answers: true)
   end
 
   def answer_set_for_questioning(questioning)
@@ -278,7 +282,7 @@ class Response < ActiveRecord::Base
 
   # indexes excerpts by questioning_id
   def excerpts_by_questioning_id
-    @excerpts_by_questioning_id ||= (excerpts || []).index_by{|e| e[:questioning_id]}
+    @excerpts_by_questioning_id ||= (excerpts || []).index_by{ |e| e[:questioning_id] }
   end
 
   def check_out_valid?
@@ -286,13 +290,13 @@ class Response < ActiveRecord::Base
   end
 
   def checked_out_by_others?(user = nil)
-    raise ArguementError, "A user is required" unless user
+    raise ArguementError, 'A user is required' unless user
 
     !self.checked_out_by.nil? && self.checked_out_by != user && check_out_valid?
   end
 
   def check_out!(user = nil)
-    raise ArgumentError, "A user is required to checkout a response" unless user
+    raise ArgumentError, 'A user is required to checkout a response' unless user
 
     if !checked_out_by_others?(user)
       transaction do
@@ -318,7 +322,7 @@ class Response < ActiveRecord::Base
   # Populates response given a hash of odk-style question codes (e.g. q5, q7_1) to string values.
   def populate_from_hash(hash)
     # Response mission should already be set
-    raise "Submissions must have a mission" if mission.nil?
+    raise 'Submissions must have a mission' if mission.nil?
 
     form.visible_questionings.each do |qing|
       qing.subquestions.each do |subq|
