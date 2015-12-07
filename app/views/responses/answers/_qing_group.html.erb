@@ -1,9 +1,11 @@
 <div class='qing-group' id='group-<%= item.id %>' data-group-id="<%= item.id %>">
-  <% @response.answer_groups.for_group(item).each do |instance, subtree| %>
-    <%= render 'responses/answers/qing_group_instance', item: item, subtree: subtree, group_number: instance %>
-  <% end %>
+  <div class='qing-group-instances'>
+    <% @response.answer_groups.for_group(item).each do |instance, subtree| %>
+      <%= render 'responses/answers/qing_group_instance', item: item, subtree: subtree, group_number: instance %>
+    <% end %>
+  </div>
   <% unless read_only %>
-    <a href='#' class='add-instance'>Add instance</a>
+    <a href='#' class='add-instance'><%= "#{t('common.add')} #{item.group_name}" %></a>
   <% end %>
 </div>
 
