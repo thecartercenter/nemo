@@ -153,8 +153,24 @@ feature 'responses form', js: true, sphinx: true do
     end
   end
 
+  describe 'repeat groups' do
+    before do
+      @form = create(:form, question_types: ['select_one', ['integer', 'text', 'multi_level_select_one'], 'text'])
+      @group = @form.child_groups.first
+      @group.repeats = true
+      @qings = @form.questionings
+      @form.publish!
+      login(@user)
+    end
+
+    scenario 'should work' do
+      visit_submit_page_and_select_user
+    end
+  end
+
   def control_id(qing, suffix)
-    "response_answers_attributes_#{qing.id}#{suffix}"
+    group_instance = 0
+    "response_answers_attributes_#{qing.id}_#{group_instance}#{suffix}"
   end
 
   def visit_submit_page_and_select_user

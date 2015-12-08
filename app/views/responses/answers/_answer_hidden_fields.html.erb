@@ -1,4 +1,4 @@
-<%= hidden_field_tag("response[answers_attributes][#{index}_#{group_instance}][id]", answer.id) unless answer.new_record? %>
-<%= hidden_field_tag("response[answers_attributes][#{index}_#{group_instance}][questioning_id]", answer.questioning_id) if answer.new_record? %>
-<%= hidden_field_tag("response[answers_attributes][#{index}_#{group_instance}][relevant]", answer.relevant, class: "relevant") %>
-<%= hidden_field_tag("response[answers_attributes][#{index}_#{group_instance}][group_instance]", group_instance ) %>
+<%= hidden_field_tag("response[answers_attributes][#{index}][id]", answer.id) unless answer.new_record? %>
+<%= hidden_field_tag("response[answers_attributes][#{index}][questioning_id]", answer.questioning_id) if answer.new_record? %>
+<%= hidden_field_tag("response[answers_attributes][#{index}][relevant]", answer.relevant, class: "relevant") %>
+<%= hidden_field_tag("response[answers_attributes][#{index}][group_instance]", group_instance ) %>

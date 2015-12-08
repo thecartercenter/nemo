@@ -1,6 +1,7 @@
-<% field_name_prefix = "response[answers_attributes][#{index}_#{group_instance}]" %>
+<% field_name_prefix = "response[answers_attributes][#{index}]" %>
 
 <%# show the error messages without keys %>
+<% puts answer.errors.awesome_inspect %>
 <%= content_tag(:div, answer.errors.to_hash.values.join(', '), class: 'form-errors') unless answer.errors.empty? %>
 
 <% case type = answer.qtype.name
