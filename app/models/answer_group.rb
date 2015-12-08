@@ -3,7 +3,7 @@ class AnswerGroup
 
   def initialize(response, empty_answers: false)
     @response = response
-    @answers = response.answers.order(:group_number)
+    @answers = response.answers.order(:group_instance)
     @empty_answers = empty_answers
     create_groups
   end
@@ -15,10 +15,10 @@ class AnswerGroup
         questioning = answer.questioning
         group = questioning.parent
         group_id = group.id
-        group_number = answer.group_number || 0
+        group_instance = answer.group_instance || 0
         @group_hash[group_id] ||= {}
-        @group_hash[group_id][group_number] ||= {}
-        @group_hash[group_id][group_number][questioning] = answer_set_for_questioning(questioning, group_number)
+        @group_hash[group_id][group_instance] ||= {}
+        @group_hash[group_id][group_instance][questioning] = answer_set_for_questioning(questioning, group_instance)
       end
     else
       form = @response.form
@@ -41,11 +41,11 @@ class AnswerGroup
   end
 
 
-  def answer_set_for_questioning(questioning, group_number = nil)
+  def answer_set_for_questioning(questioning, group_instance = nil)
     # Build a hash of answer sets on the first call.
     answer_sets_by_questioning ||= {}.tap do |hash|
       @answers.group_by(&:questioning).each do |qing, answers|
-        answers = answers.select{ |a| a.group_number == group_number } if group_number.present? && group_number > 0
+        answers = answers.select{ |a| a.group_instance == group_instance } if group_instance.present? && group_instance > 0
         hash[qing] = AnswerSet.new(questioning: qing, answers: answers)
       end
     end

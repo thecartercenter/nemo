@@ -3,10 +3,10 @@
 
 <%# This renders the select tags. %>
 <%= render('option_sets/cascading_selects', index: index, option_path: answer_set.option_path,
-  input_name_template: "response[answers_attributes][#{index}_###_#{group_number}][option_id]") %>
+  input_name_template: "response[answers_attributes][#{index}_###_#{group_instance}][option_id]") %>
 
 <%# We also need the hidden fields for each answer. %>
 <% answer_set.answers.each_with_index do |a,i| %>
-  <%= render('responses/answers/answer_hidden_fields', answer: a, index: "#{index}_#{i}", group_number: group_number) %>
-  <%= hidden_field_tag("response[answers_attributes][#{index}_#{i}_#{group_number}][rank]", a.rank) %>
+  <%= render('responses/answers/answer_hidden_fields', answer: a, index: "#{index}_#{i}", group_instance: group_instance) %>
+  <%= hidden_field_tag("response[answers_attributes][#{index}_#{i}_#{group_instance}][rank]", a.rank) %>
 <% end %>
