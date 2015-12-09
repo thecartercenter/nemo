@@ -238,11 +238,11 @@ class Response < ActiveRecord::Base
   end
 
   def answer_groups
-    @answer_groups = AnswerGroup.new(self)
+    @answer_groups ||= AnswerGroup.new(self)
   end
 
   def answer_groups_empty
-    @answer_groups_empty = AnswerGroup.new(self, empty_answers: true)
+    @answer_groups_empty ||= AnswerGroup.new(self, empty_answers: true)
   end
 
   def answer_set_for_questioning(questioning)

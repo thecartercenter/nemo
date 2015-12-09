@@ -8,7 +8,7 @@ class ELMO.Views.RepeatGroupFormView extends Backbone.View
 
   add_instance: (event) ->
     event.preventDefault()
-    qing_group = $(event.target.closest('.qing-group'))
+    qing_group = $(event.target).closest('.qing-group')
     qing_group.find('.qing-group-instances').append(@html_string)
 
   remove_instance: (event) ->
