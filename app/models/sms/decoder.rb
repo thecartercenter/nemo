@@ -94,7 +94,7 @@ class Sms::Decoder
 
       # otherwise, we it's cool, store it in the instance, and also store an indexed list of questionings
       @form = v.form
-      @questionings = @form.questionings.index_by(&:rank)
+      @questionings = @form.smsable_questionings
     end
 
     def current_ability

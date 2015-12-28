@@ -175,9 +175,10 @@ class Form < ActiveRecord::Base
     questionings.reject{|q| q.hidden?}
   end
 
-  # returns questionings that work with sms forms and are not hidden
+  # returns hash of questionings that work with sms forms and are not hidden
   def smsable_questionings
-    questionings.reject{|q| q.hidden? || !q.question.qtype.smsable?}
+    smsable_questionings = questionings.reject{|q| q.hidden? || !q.question.qtype.smsable?}
+    smsable_questionings.index_by.with_index { |_, i| i + 1 }
   end
 
   def questioning_with_code(c)

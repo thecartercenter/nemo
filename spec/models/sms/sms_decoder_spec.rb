@@ -358,6 +358,11 @@ describe Sms::Decoder do
     end
   end
 
+  it "form with qing groups should work" do
+    create_form(questions: ['integer', %w(text date), 'date'])
+    assert_decoding(body: "#{@form.code} 1.3 2.coffee and bagels 3.20151225 4.20160101", answers: [3, "coffee and bagels", Date.new(2015, 12, 25), Date.new(2016, 01, 01)])
+  end
+
   private
 
   def create_form(options)
@@ -385,15 +390,15 @@ describe Sms::Decoder do
     expect(response.form_id).to eq(@form.id)
 
     # ensure the answers match the expected ones
-    @form.root_questionings.each do |qing|
+    @form.smsable_questionings.each do |index, qing|
       # ensure an expected answer was given for this question
       expect(options[:answers].size >= qing.rank).to be_truthy, "No expected answer was given for question #{qing.rank}"
 
       # copy the expected value
-      expected = options[:answers][qing.rank - 1]
+      expected = options[:answers][index - 1]
 
       # replace the array index with nil so that we know this one has been looked at
-      options[:answers][qing.rank - 1] = nil
+      options[:answers][index - 1] = nil
 
       ansset = response.answer_set_for_questioning(qing)
 
