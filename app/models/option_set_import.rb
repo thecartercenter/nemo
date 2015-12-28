@@ -126,7 +126,17 @@ class OptionSetImport
     end
 
     def load_and_clean_data
-      sheet = Roo::Excelx.new(file).sheet(0)
+      sheet = nil
+      begin
+        sheet = Roo::Excelx.new(file).sheet(0)
+      rescue TypeError => e
+        if e.to_s =~ /not an Excel 2007 file/
+          errors.add(:base, :wrong_type)
+          return
+        else
+          raise e
+        end
+      end
 
       # Get headers from first row and strip nils
       headers = sheet.row(1)
