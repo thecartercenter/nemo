@@ -406,7 +406,7 @@ en:
         edit: "Edit Mission"
         destroy: "Delete Mission"
       operation:
-        clear: "Clear All Operations"
+        clear: "Clear All Completed Operations"
         destroy: "Clear Operation"
         index: "List Operations"
       option_set:
@@ -1109,7 +1109,7 @@ en:
       Upload a spreadsheet with your option set. Only XLSX-type Excel spreadsheets are accepted.
 
   operation:
-    clear_confirm: "Are you sure you want to clear all operations?"
+    clear_confirm: "Are you sure you want to clear all completed operations?"
     server_error: "Server error. Please contact support."
     description:
       user_import_operation_job: User import for %{mission_name} from %{file}
