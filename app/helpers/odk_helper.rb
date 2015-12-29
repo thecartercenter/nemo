@@ -106,7 +106,7 @@ module OdkHelper
         end
       end
     end
-    odk_options.join.html_safe
+    odk_options.reduce(&:concat)
   end
 
   # Tests if all items in the group are Questionings with the same type and option set.
