@@ -178,7 +178,7 @@ class Form < ActiveRecord::Base
   # returns hash of questionings that work with sms forms and are not hidden
   def smsable_questionings
     smsable_questionings = questionings.select(&:smsable?)
-    smsable_questionings.index_by.with_index { |_, i| i + 1 }
+    smsable_questionings.map.with_index { |q, i| [i + 1, q] }.to_h
   end
 
   def questioning_with_code(c)
