@@ -86,6 +86,11 @@ class Questioning < FormItem
     form.questionings.reject{ |q| q == self || (q.full_rank <=> full_rank) == 1 }
   end
 
+  # Returns smsable forms
+  def smsable?
+    !hidden? && question.qtype.smsable?
+  end
+
   # REFACTOR: should use translation delegation, from abandoned std_objs branch
   def method_missing(*args)
     # pass appropriate methods on to question

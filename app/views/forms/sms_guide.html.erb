@@ -40,15 +40,15 @@
     </tr>
 
     <%# loop over each question %>
-    <% @form.smsable_questionings.each do |qing| %>
+    <% @form.smsable_questionings.each do |index, qing| %>
       <tr>
-        <td class="rank"><%= qing.full_dotted_rank %>.</td>
+        <td class="rank"><%= index %>.</td>
         <td class="question">
           <%= qing.question.name %>
           <%= reqd_sym if qing.required? %>
         </td>
         <td class="answers">
-          <%= answer_space(" #{qing.rank}.") %>
+          <%= answer_space(" #{index}.") %>
         </td>
       </tr>
 
