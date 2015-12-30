@@ -33,6 +33,22 @@ describe 'form rendering for odk', clean_with_truncation: true do
     end
   end
 
+  context 'form with & in option name' do
+    before do
+      @form = create(:form, question_types: %w(select_one))
+      @option_set = create(:option_set, option_names: ['Salt & Pepper', 'Peanut Butter & Jelly'])
+      @form.questions.first.update_attributes!(option_set: @option_set)
+      @form.publish!
+      get(form_path(@form, format: :xml))
+    end
+
+    it 'should not have parsing errors' do
+      expect(response).to be_success
+      doc = Nokogiri::XML(response.body) { |config| config.noblanks }
+      expect(doc.errors).to be_empty
+    end
+  end
+
   context 'group form' do
     before do
       @form = create(:form, question_types: [['text', 'text', 'text']])
