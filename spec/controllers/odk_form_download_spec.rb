@@ -25,7 +25,7 @@ describe FormsController, type: :request do
         # Only form3 should have a manifest.
         assert_select('xform', count: 3) do |elements|
           elements.each_with_index do |e,i|
-            assert_select(e, 'manifesturl', count: i == 2 ? 1 : 0)
+            assert_select(e, 'manifestUrl', count: i == 2 ? 1 : 0)
           end
         end
       end
@@ -53,7 +53,7 @@ describe FormsController, type: :request do
           @ifa = ItemsetsFormAttachment.new(form: @form3)
           assert_select('filename', text: 'itemsets.csv')
           assert_select('hash', text: @ifa.md5)
-          assert_select('downloadurl', text: "http://www.example.com/#{@ifa.path}")
+          assert_select('downloadUrl', text: "http://www.example.com/#{@ifa.path}")
         end
       end
     end
