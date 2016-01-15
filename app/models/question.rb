@@ -101,7 +101,7 @@ class Question < ActiveRecord::Base
       Search::Qualifier.new(name: "code", col: "questions.code", type: :text),
       Search::Qualifier.new(name: "title", col: "questions.name_translations", type: :translated, default: true),
       Search::Qualifier.new(name: "type", col: "questions.qtype_name", preprocessor: ->(s){ s.gsub(/[\-]/, '_') }),
-      Search::Qualifier.new(name: "tag", col: "tags.name", assoc: :tags),
+      Search::Qualifier.new(name: "tag", col: "tags.name", assoc: :tags, :type => :text),
     ]
   end
 

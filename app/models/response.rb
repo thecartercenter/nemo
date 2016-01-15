@@ -65,14 +65,14 @@ class Response < ActiveRecord::Base
   # and whether they are searchable by a regular expression
   def self.search_qualifiers(scope)
     [
-      Search::Qualifier.new(:name => "form", :col => "forms.name", :assoc => :forms),
+      Search::Qualifier.new(:name => "form", :col => "forms.name", :assoc => :forms, :type => :text),
       Search::Qualifier.new(:name => "reviewed", :col => "responses.reviewed"),
       Search::Qualifier.new(:name => "submitter", :col => "users.name", :assoc => :users, :type => :text),
       Search::Qualifier.new(:name => "source", :col => "responses.source"),
       Search::Qualifier.new(:name => "submit_date", :col => "DATE(CONVERT_TZ(responses.created_at, 'UTC', '#{Time.zone.mysql_name}'))", :type => :scale),
 
       # this qualifier matches responses that have answers to questions with the given option set
-      Search::Qualifier.new(:name => "option_set", :col => "option_sets.name", :assoc => :option_sets),
+      Search::Qualifier.new(:name => "option_set", :col => "option_sets.name", :assoc => :option_sets, :type => :text),
 
       # this qualifier matches responses that have answers to questions with the given type
       # this and other qualifiers use the 'questions' table because the join code below creates a table alias
@@ -80,7 +80,7 @@ class Response < ActiveRecord::Base
       Search::Qualifier.new(:name => "question_type", :col => "questions.qtype_name", :assoc => :questions),
 
       # this qualifier matches responses that have answers to the given question
-      Search::Qualifier.new(:name => "question", :col => "questions.code", :assoc => :questions),
+      Search::Qualifier.new(:name => "question", :col => "questions.code", :assoc => :questions, :type => :text),
 
       # this qualifier inserts a placeholder that we replace later
       Search::Qualifier.new(:name => "text", :col => "responses.id", :type => :indexed, :default => true),

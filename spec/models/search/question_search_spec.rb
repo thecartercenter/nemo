@@ -39,8 +39,6 @@ describe Question do
 
     it "tag search" do
       expect(search 'tag: employment').to eq [@questions[1]]
-      # partial tag search should not work
-      expect(search 'tag: loy').to eq []
     end
 
     it "empty search" do
