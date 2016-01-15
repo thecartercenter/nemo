@@ -11,6 +11,8 @@ Method: <%= @env['REQUEST_METHOD'] %>
 SSL: <%= @env['SERVER_PORT'].to_i == 443 ? "true" : "false" %>
 Agent: <%= raw @env['HTTP_USER_AGENT'] %>
 User: <%= raw @user ? "#{@user.login} <#{@user.email}>" : "None" %>
+Host: <%= @hostname %>
+Environment: <%= @rails_env %>
 Version: <%= configatron.system_version %>
 <% end %>
 
