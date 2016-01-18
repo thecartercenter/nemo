@@ -11,12 +11,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151130152925) do
+ActiveRecord::Schema.define(version: 20160118184555) do
   create_table "answers", force: :cascade do |t|
     t.datetime "created_at"
     t.date "date_value"
     t.datetime "datetime_value"
-    t.boolean "delta", limit: 1, default: true, null: false
+    t.boolean "delta", default: true, null: false
     t.decimal "latitude", precision: 8, scale: 6
     t.decimal "longitude", precision: 9, scale: 6
     t.integer "option_id", limit: 4
@@ -127,11 +127,11 @@ ActiveRecord::Schema.define(version: 20151130152925) do
     t.integer "form_id", limit: 4, null: false
     t.string "group_hint_translations", limit: 255
     t.string "group_name_translations", limit: 255
-    t.boolean "hidden", limit: 1, default: false, null: false
+    t.boolean "hidden", default: false, null: false
     t.integer "mission_id", limit: 4
     t.integer "question_id", limit: 4
     t.integer "rank", limit: 4, null: false
-    t.boolean "required", limit: 1, default: false, null: false
+    t.boolean "required", default: false, null: false
     t.string "type", limit: 255, null: false
     t.datetime "updated_at"
   end
@@ -145,7 +145,7 @@ ActiveRecord::Schema.define(version: 20151130152925) do
     t.string "code", limit: 255
     t.datetime "created_at", null: false
     t.integer "form_id", limit: 4
-    t.boolean "is_current", limit: 1, default: true
+    t.boolean "is_current", default: true
     t.integer "sequence", limit: 4, default: 1
     t.datetime "updated_at", null: false
   end
@@ -155,22 +155,22 @@ ActiveRecord::Schema.define(version: 20151130152925) do
 
   create_table "forms", force: :cascade do |t|
     t.string "access_level", limit: 255, default: "private", null: false
-    t.boolean "allow_incomplete", limit: 1, default: false, null: false
+    t.boolean "allow_incomplete", default: false, null: false
     t.datetime "created_at"
     t.integer "current_version_id", limit: 4
     t.integer "downloads", limit: 4
-    t.boolean "is_standard", limit: 1, default: false
+    t.boolean "is_standard", default: false
     t.integer "mission_id", limit: 4
     t.string "name", limit: 255
     t.integer "original_id", limit: 4
     t.datetime "pub_changed_at"
-    t.boolean "published", limit: 1, default: false
+    t.boolean "published", default: false
     t.integer "responses_count", limit: 4, default: 0
     t.integer "root_id", limit: 4
-    t.boolean "smsable", limit: 1, default: false
-    t.boolean "standard_copy", limit: 1, default: false, null: false
+    t.boolean "smsable", default: false
+    t.boolean "standard_copy", default: false, null: false
     t.datetime "updated_at"
-    t.boolean "upgrade_needed", limit: 1, default: false
+    t.boolean "upgrade_needed", default: false
   end
 
   add_index "forms", ["current_version_id"], name: "forms_current_version_id_fk", using: :btree
@@ -186,10 +186,24 @@ ActiveRecord::Schema.define(version: 20151130152925) do
 
   add_index "groups", ["mission_id"], name: "groups_mission_id_fk", using: :btree
 
+  create_table "media_objects", force: :cascade do |t|
+    t.text "annotation", limit: 65535
+    t.integer "answer_id", limit: 4
+    t.datetime "created_at", null: false
+    t.string "item_content_type", limit: 255
+    t.string "item_file_name", limit: 255
+    t.integer "item_file_size", limit: 4
+    t.datetime "item_updated_at"
+    t.string "type", limit: 255
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "media_objects", ["answer_id"], name: "index_media_objects_on_answer_id", using: :btree
+
   create_table "missions", force: :cascade do |t|
     t.string "compact_name", limit: 255
     t.datetime "created_at"
-    t.boolean "locked", limit: 1, default: false, null: false
+    t.boolean "locked", default: false, null: false
     t.string "name", limit: 255
     t.datetime "updated_at"
   end
@@ -232,16 +246,16 @@ ActiveRecord::Schema.define(version: 20151130152925) do
   add_index "option_nodes", ["rank"], name: "index_option_nodes_on_rank", using: :btree
 
   create_table "option_sets", force: :cascade do |t|
-    t.boolean "allow_coordinates", limit: 1, default: false, null: false
+    t.boolean "allow_coordinates", default: false, null: false
     t.datetime "created_at"
-    t.boolean "geographic", limit: 1, default: false, null: false
-    t.boolean "is_standard", limit: 1, default: false
+    t.boolean "geographic", default: false, null: false
+    t.boolean "is_standard", default: false
     t.text "level_names", limit: 65535
     t.integer "mission_id", limit: 4
     t.string "name", limit: 255
     t.integer "original_id", limit: 4
     t.integer "root_node_id", limit: 4
-    t.boolean "standard_copy", limit: 1, default: false, null: false
+    t.boolean "standard_copy", default: false, null: false
     t.datetime "updated_at"
   end
 
@@ -269,19 +283,19 @@ ActiveRecord::Schema.define(version: 20151130152925) do
     t.string "code", limit: 255
     t.datetime "created_at"
     t.text "hint_translations", limit: 65535
-    t.boolean "is_standard", limit: 1, default: false
-    t.boolean "key", limit: 1, default: false
+    t.boolean "is_standard", default: false
+    t.boolean "key", default: false
     t.decimal "maximum", precision: 15, scale: 8
-    t.boolean "maxstrictly", limit: 1
+    t.boolean "maxstrictly"
     t.decimal "minimum", precision: 15, scale: 8
-    t.boolean "minstrictly", limit: 1
+    t.boolean "minstrictly"
     t.integer "mission_id", limit: 4
     t.text "name_translations", limit: 65535
     t.integer "option_set_id", limit: 4
     t.integer "original_id", limit: 4
     t.string "qtype_name", limit: 255
-    t.boolean "standard_copy", limit: 1, default: false, null: false
-    t.boolean "text_type_for_sms", limit: 1, default: false, null: false
+    t.boolean "standard_copy", default: false, null: false
+    t.boolean "text_type_for_sms", default: false, null: false
     t.datetime "updated_at"
   end
 
@@ -320,7 +334,7 @@ ActiveRecord::Schema.define(version: 20151130152925) do
     t.string "display_type", limit: 255, default: "table"
     t.text "filter", limit: 65535
     t.integer "form_id", limit: 4
-    t.boolean "group_by_tag", limit: 1, default: false, null: false
+    t.boolean "group_by_tag", default: false, null: false
     t.integer "mission_id", limit: 4
     t.string "name", limit: 255
     t.string "percent_type", limit: 255, default: "none"
@@ -328,8 +342,8 @@ ActiveRecord::Schema.define(version: 20151130152925) do
     t.string "question_order", limit: 255, default: "number", null: false
     t.string "text_responses", limit: 255, default: "all"
     t.string "type", limit: 255
-    t.boolean "unique_rows", limit: 1, default: false
-    t.boolean "unreviewed", limit: 1, default: false
+    t.boolean "unique_rows", default: false
+    t.boolean "unreviewed", default: false
     t.datetime "updated_at"
     t.integer "view_count", limit: 4, default: 0
     t.datetime "viewed_at"
@@ -346,9 +360,9 @@ ActiveRecord::Schema.define(version: 20151130152925) do
     t.integer "checked_out_by_id", limit: 4
     t.datetime "created_at"
     t.integer "form_id", limit: 4
-    t.boolean "incomplete", limit: 1, default: false, null: false
+    t.boolean "incomplete", default: false, null: false
     t.integer "mission_id", limit: 4
-    t.boolean "reviewed", limit: 1, default: false
+    t.boolean "reviewed", default: false
     t.text "reviewer_notes", limit: 65535
     t.string "source", limit: 255
     t.datetime "updated_at"
@@ -375,7 +389,7 @@ ActiveRecord::Schema.define(version: 20151130152925) do
   add_index "sessions", ["updated_at"], name: "index_sessions_on_updated_at", using: :btree
 
   create_table "settings", force: :cascade do |t|
-    t.boolean "allow_unauthenticated_submissions", limit: 1, default: false
+    t.boolean "allow_unauthenticated_submissions", default: false
     t.datetime "created_at"
     t.string "default_outgoing_sms_adapter", limit: 255
     t.string "incoming_sms_number", limit: 255
@@ -450,8 +464,8 @@ ActiveRecord::Schema.define(version: 20151130152925) do
   add_index "user_groups", ["user_id"], name: "user_groups_user_id_fk", using: :btree
 
   create_table "users", force: :cascade do |t|
-    t.boolean "active", limit: 1, default: true, null: false
-    t.boolean "admin", limit: 1, default: false, null: false
+    t.boolean "active", default: true, null: false
+    t.boolean "admin", default: false, null: false
     t.string "api_key", limit: 255
     t.datetime "created_at", null: false
     t.string "crypted_password", limit: 255
@@ -508,6 +522,7 @@ ActiveRecord::Schema.define(version: 20151130152925) do
   add_foreign_key "forms", "forms", column: "original_id", name: "forms_standard_id_fk", on_delete: :nullify
   add_foreign_key "forms", "missions", name: "forms_mission_id_fk"
   add_foreign_key "groups", "missions", name: "groups_mission_id_fk"
+  add_foreign_key "media_objects", "answers"
   add_foreign_key "operations", "users", column: "creator_id"
   add_foreign_key "option_nodes", "missions", name: "option_nodes_mission_id_fk"
   add_foreign_key "option_nodes", "option_sets", name: "option_nodes_option_set_id_fk"

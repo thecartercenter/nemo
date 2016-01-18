@@ -27,3 +27,5 @@ config/*.sphinx.conf
 rake_tasks.txt
 routes.txt
 
+# file uploads
+uploads
