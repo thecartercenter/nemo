@@ -40,7 +40,7 @@ class UserBatch
     # parse the input file as a spreadsheet
     @data = Roo::Spreadsheet.open(file)
 
-    validate_headers
+    validate_headers(@data.row(@data.first_row))
 
     unless @validation_error
 
@@ -92,15 +92,14 @@ class UserBatch
 
   private
 
-  def validate_headers
-    # assume the first row is the header row
-    headers = @data.row(@data.first_row)
-
+  def validate_headers(row)
+    # building map of translated field names to symbolic field names
     expected_headers = Hash[*%i{login name phone phone2 email notes}.map do |field|
       [User.human_attribute_name(field), field]
     end.flatten]
 
-    @fields = Hash[*headers.map.with_index do |header,index|
+    # building map of column indices to field names
+    @fields = Hash[*row.map.with_index do |header,index|
       [index, expected_headers[header]]
     end.flatten]
 
