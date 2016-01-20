@@ -128,7 +128,7 @@ class OptionSetImport
     def load_and_clean_data
       sheet = nil
       begin
-        sheet = Roo::Excelx.new(file).sheet(0)
+        sheet = Roo::Spreadsheet.open(file).sheet(0)
       rescue TypeError => e
         if e.to_s =~ /not an Excel 2007 file/
           errors.add(:base, :wrong_type)
