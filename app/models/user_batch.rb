@@ -38,19 +38,18 @@ class UserBatch
     end
 
     # parse the input file as a spreadsheet
-    @data = Roo::Spreadsheet.open(file)
+    @data = Roo::Spreadsheet.open(file).parse
 
-    validate_headers(@data.row(@data.first_row))
+    validate_headers(@data.shift)
 
     unless @validation_error
 
       # create the users in a transaction in case of validation error
       User.transaction do
 
-        row_start = @data.first_row
         @import_num = last_import_num_on_users
 
-        user_batch_attributes = parse_rows(row_start)
+        user_batch_attributes = parse_rows
 
         (0..number_of_iterations).each do |i|
           current_attributes_batch = user_batch_attributes[i * BATCH_SIZE, BATCH_SIZE]
@@ -68,7 +67,7 @@ class UserBatch
           check_uniqueness_on_db(users_batch, ['login'])
           check_uniqueness_on_db(users_batch, ['phone', 'phone2'])
 
-          check_validation_errors(users_batch, row_start)
+          check_validation_errors(users_batch, i * BATCH_SIZE + 1)
 
           break if errors_reached_limit
 
@@ -113,13 +112,10 @@ class UserBatch
     ( users_rows_count / BATCH_SIZE.to_f ).ceil - 1
   end
 
-  def parse_rows(offset)
+  def parse_rows
     user_batch_attributes = []
 
-    @data.each_row_streaming(offset: offset).with_index do |row, row_index|
-      # excel row numbers are 1-indexed
-      row_number = 1 + @data.first_row + row_index
-
+    @data.each.with_index do |row, row_index|
       # skip blank rows
       next if row.all?(&:blank?)
 
@@ -141,9 +137,9 @@ class UserBatch
   end
 
   def turn_row_into_attribute_hash(row)
-    Hash[*row.map do |cell|
-      field = @fields[cell.coordinate.column - 1]
-      [field, cell.value.presence]
+    Hash[*row.map.with_index do |cell, i|
+      field = @fields[i]
+      [field, cell.presence]
     end.flatten]
   end
 
@@ -182,7 +178,7 @@ class UserBatch
 
   def check_validation_errors(users, row_start)
     users.each_with_index do |user, index|
-      row_number = actual_row_number(row_start, index)
+      row_number = row_start + index + 1
       add_validation_error_messages(user, row_number)
 
       if errors_reached_limit
@@ -234,10 +230,6 @@ class UserBatch
 
   def errors_reached_limit
     errors.count >= IMPORT_ERROR_CUTOFF
-  end
-
-  def actual_row_number(row_start, index)
-    index + row_start + 1
   end
 
   def check_uniqueness_on_objects(objects, fields)
