@@ -53,7 +53,7 @@ class UserBatch
         user_batch_attributes = parse_rows(row_start)
 
         (0..number_of_iterations).each do |i|
-          current_attributes_batch = user_batch_attributes[row_start-1, BATCH_SIZE]
+          current_attributes_batch = user_batch_attributes[i * BATCH_SIZE, BATCH_SIZE]
 
           users_batch = create_users_instances(current_attributes_batch, mission)
           create_hash_table_with_fields_and_indexes(users_batch)
@@ -76,9 +76,6 @@ class UserBatch
           insert_assignments(users_batch)
 
           users.concat users_batch
-
-          # Set row to start on the next batch
-          row_start = ( (i + 1) * BATCH_SIZE ) + 1
         end
 
         # now if there was a validation error with any user, rollback the transaction
