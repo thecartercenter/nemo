@@ -15,7 +15,7 @@ class UserBatch
   def initialize(attribs = {})
     @users = []
     @direct_db_conn = DirectDBConn.new('users')
-    attribs.each{|k,v| instance_variable_set("@#{k}", v)}
+    attribs.each{ |k,v| instance_variable_set("@#{k}", v) }
   end
 
   def persisted?
@@ -83,7 +83,7 @@ class UserBatch
       end # transaction
     end
 
-    return succeeded?
+    succeeded?
   end
 
   private
@@ -190,7 +190,7 @@ class UserBatch
 
   def create_new_user(attributes, mission)
     User.new(attributes.slice(*PERMITTED_ATTRIBS).merge(
-               reset_password_method: "print",
+               reset_password_method: 'print',
                admin: false,
                assignments: [Assignment.new(mission: mission, role: User::ROLES.first)],
                batch_creation: true,
@@ -232,7 +232,7 @@ class UserBatch
     errors.count >= IMPORT_ERROR_CUTOFF
   end
 
-  def check_uniqueness_on_objects(objects, fields)
+  def check_uniqueness_on_objects(_, fields)
     key = correct_field_key(fields)
 
     # Add errors on fields that aren't unique
@@ -257,7 +257,7 @@ class UserBatch
     add_results_errors_on_objects(results, objects, fields) unless results.nil?
   end
 
-  def add_results_errors_on_objects(results, objects, fields)
+  def add_results_errors_on_objects(results, _, fields)
     key = correct_field_key(fields)
 
     results.reject(&:nil?).each do |result|
@@ -274,15 +274,16 @@ class UserBatch
   end
 
   def insert_assignments(users_batch)
-    DirectDBConn.new('assignments').insert_select(users_batch,
-                                                  'assignments',
-                                                  'user_id',
-                                                  'users',
-                                                  'import_num')
+    DirectDBConn.new('assignments').insert_select(
+      users_batch,
+      'assignments',
+      'user_id',
+      'users',
+      'import_num')
   end
 
   def last_import_num_on_users
-    import_num = User.order("import_num DESC").first.try(:import_num)
+    import_num = User.order('import_num DESC').first.try(:import_num)
     import_num.nil? ? 0 : import_num
   end
 end

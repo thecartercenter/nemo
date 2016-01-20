@@ -54,9 +54,8 @@ class OptionSetImport
         allow_coordinates: allow_coordinates,
         root_node: OptionNode.new)
 
-      unless @option_set.valid?
-        add_errors_for_row(1, @option_set.errors)
-      end
+
+      add_errors_for_row(1, @option_set.errors) unless @option_set.valid?
 
       # State variables. cur_ranks has a default value of 0 to simplify the code below.
       cur_nodes, cur_ranks = Array.new(headers.size), Array.new(headers.size, 0)
@@ -110,7 +109,7 @@ class OptionSetImport
 
     end
 
-    return errors.blank?
+    errors.blank?
   end
 
   protected
@@ -143,15 +142,13 @@ class OptionSetImport
       headers = headers[0...headers.index(nil)] if headers.any?(&:nil?)
 
       # Get special columns i18n values
-      id_header = "Id"
+      id_header = 'Id'
       coordinates_header = I18n.t('activerecord.attributes.option.coordinates')
 
       # Find any special columns
       special_columns = {}
       headers.each_with_index do |h,i|
-        if [id_header, coordinates_header].include?(h)
-          special_columns[i] = h.downcase.to_sym
-        end
+        special_columns[i] = h.downcase.to_sym if [id_header, coordinates_header].include?(h)
       end
 
       # Enforce maximum length limitation on headers
@@ -186,7 +183,7 @@ class OptionSetImport
       # Error out if there are no rows.
       if rows.empty?
         # TODO: i18n
-        errors.add(:option_set, "No rows to import.")
+        errors.add(:option_set, 'No rows to import.')
         return
       end
 
