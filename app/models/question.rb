@@ -66,6 +66,7 @@ class Question < ActiveRecord::Base
            :temporal?,
            :numeric?,
            :printable?,
+           :multimedia?,
            :odk_tag,
            :odk_name,
            :to => :qtype
