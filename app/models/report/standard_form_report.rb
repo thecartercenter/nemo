@@ -38,7 +38,15 @@ class Report::StandardFormReport < Report::Report
   attr_reader :summary_collection, :response_count
 
   # question types that we leave off this report (stored as a hash for better performance)
-  EXCLUDED_TYPES = {'location' => true}
+  EXCLUDED_TYPES = {
+    'location' => true,
+    'image' => true,
+    'annotated_image' => true,
+    'signature' => true,
+    'sketch' => true,
+    'video' => true,
+    'audio' => true
+  }
 
   # options for the question_order attrib
   QUESTION_ORDER_OPTIONS = %w(number type)

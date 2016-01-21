@@ -1,10 +1,10 @@
 class Answer < ActiveRecord::Base
   include ActionView::Helpers::NumberHelper
 
-  belongs_to(:questioning, :inverse_of => :answers)
-  belongs_to(:option, :inverse_of => :answers)
-  belongs_to(:response, :inverse_of => :answers, :touch => true)
-  has_many(:choices, :dependent => :destroy, :inverse_of => :answer, :autosave => true)
+  belongs_to(:questioning, inverse_of: :answers)
+  belongs_to(:option, inverse_of: :answers)
+  belongs_to(:response, inverse_of: :answers, touch: true)
+  has_many(:choices, dependent: :destroy, inverse_of: :answer, autosave: true)
 
   before_validation(:clean_locations)
   before_save(:replicate_location_values)
@@ -16,20 +16,20 @@ class Answer < ActiveRecord::Base
     choices.destroy(*choices.reject(&:checked?))
   end
 
-  validates(:value, :numericality => true, :if => ->(a){ a.should_validate?(:numericality) })
+  validates(:value, numericality: true, if: ->(a){ a.should_validate?(:numericality) })
 
   # in these custom validations, we add errors to the base, but we don't use full sentences (e.g. we use 'is required')
   # since this class really just represents one value
-  validate(:min_max, :if => ->(a){ a.should_validate?(:min_max) })
-  validate(:required, :if => ->(a){ a.should_validate?(:required) })
+  validate(:min_max, if: ->(a){ a.should_validate?(:min_max) })
+  validate(:required, if: ->(a){ a.should_validate?(:required) })
 
   accepts_nested_attributes_for(:choices)
 
-  delegate :question, :qtype, :required?, :hidden?, :option_set, :options, :condition, :to => :questioning
-  delegate :name, :hint, :to => :question, :prefix => true
+  delegate :question, :qtype, :required?, :hidden?, :multimedia?, :option_set, :options, :condition, to: :questioning
+  delegate :name, :hint, to: :question, prefix: true
   delegate :name, to: :level, prefix: true, allow_nil: true
 
-  scope :public_access, -> { joins(:questioning => :question).
+  scope :public_access, -> { joins(questioning: :question).
     where("questions.access_level = 'inherit'") }
   scope :created_after, ->(date) { includes(:response).where("responses.created_at >= ?", date) }
   scope :created_before, ->(date) { includes(:response).where("responses.created_at <= ?", date) }
@@ -38,7 +38,7 @@ class Answer < ActiveRecord::Base
   # gets all location answers for the given mission
   # returns only the response ID and the answer value
   def self.location_answers_for_mission(mission, user = nil, options = {})
-    response_conditions = { :mission_id => mission.try(:id) }
+    response_conditions = { mission_id: mission.try(:id) }
 
     # if the user is not a staffer or higher privilege, only show their own responses
     if user.present? && !user.role?(:staffer, mission)
@@ -48,7 +48,7 @@ class Answer < ActiveRecord::Base
     # return an AR relation
     joins(:response)
       .joins(%{LEFT JOIN `choices` ON `choices`.`answer_id` = `answers`.`id`})
-      .where(:responses => response_conditions)
+      .where(responses: response_conditions)
       .where(%{
         (`answers`.`latitude` IS NOT NULL AND `answers`.`longitude` IS NOT NULL)
         OR (`choices`.`latitude` IS NOT NULL AND `choices`.`longitude` IS NOT NULL)
@@ -57,7 +57,7 @@ class Answer < ActiveRecord::Base
         %{COALESCE(`answers`.`latitude`, `choices`.`latitude`) AS `latitude`,
           COALESCE(`answers`.`longitude`, `choices`.`longitude`) AS `longitude`})
       .order('`answers`.`response_id` DESC')
-      .paginate(:page => 1, :per_page => 1000)
+      .paginate(page: 1, per_page: 1000)
   end
 
   # Tests if there exists at least one answer referencing the option and questionings with the given IDs.
@@ -158,8 +158,9 @@ class Answer < ActiveRecord::Base
 
   # Checks if answer must be non-empty to be valid.
   # Non-first-rank answers are currently not required even if their questioning is required (i.e. partial answers allowed).
+  # TODO: Remove multimedia check once added to response form
   def required_and_relevant?
-    required? && !hidden? && relevant? && first_rank? && qtype.name != "select_multiple"
+    required? && !hidden? && !multimedia? && relevant? && first_rank? && qtype.name != "select_multiple"
   end
 
   # Whether this Answer is the first in its set (i.e. rank is nil or 1)
@@ -251,8 +252,8 @@ class Answer < ActiveRecord::Base
     def clean_locations
       if simple_location_answer?
         if value.match(configatron.lat_lng_regexp)
-          lat = number_with_precision($1.to_f, :precision => 6)
-          lng = number_with_precision($3.to_f, :precision => 6)
+          lat = number_with_precision($1.to_f, precision: 6)
+          lng = number_with_precision($3.to_f, precision: 6)
           self.value = "#{lat} #{lng}"
         else
           self.value = ""

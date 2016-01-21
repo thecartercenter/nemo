@@ -2,7 +2,7 @@ class Condition < ActiveRecord::Base
   include MissionBased, FormVersionable, Replication::Replicable
 
   # question types that cannot be used in conditions
-  NON_REFABLE_TYPES = %w(location)
+  NON_REFABLE_TYPES = %w(location image annotated_image signature sketch audio video)
 
   belongs_to(:questioning, inverse_of: :condition)
   belongs_to(:ref_qing, class_name: "Questioning", foreign_key: "ref_qing_id", inverse_of: :referring_conditions)
