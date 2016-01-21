@@ -181,7 +181,6 @@ ActiveRecord::Schema.define(version: 20160118184555) do
   add_index "groups", ["mission_id"], name: "groups_mission_id_fk", using: :btree
 
   create_table "media_objects", force: :cascade do |t|
-    t.text "annotation", limit: 65535
     t.integer "answer_id", limit: 4
     t.datetime "created_at", null: false
     t.string "item_content_type", limit: 255

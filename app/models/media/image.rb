@@ -4,5 +4,5 @@ class Media::Image < Media::Object
     thumb: '100x100#'
   }
   validates_attachment_content_type :item, content_type: %r{\Aimage/.*\Z}
-  validates_attachment_file_name :item, matches: /(png|jpe?g)\Z/
+  validates_attachment_file_name :item, matches: /\.(png|jpe?g)\Z/
 end
