@@ -118,6 +118,10 @@ form.response_form {
       padding-left: 5px; // Since there is now a left border.
     }
 
+    .form_field div.control {
+      width: 415px;
+    }
+
     // Second level of indentation
     div.qing-group {
       margin-left: 2px; // We need a little margin to separate inner group from outer.
