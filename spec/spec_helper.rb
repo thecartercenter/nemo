@@ -58,6 +58,7 @@ RSpec.configure do |config|
 
   config.include AssertDifference
   config.include GeneralSpecHelpers
+  config.include MediaSpecHelpers::FileHandling
   config.include ModelSpecHelpers, type: :model
   config.include RequestSpecHelpers, type: :request
   config.include FeatureSpecHelpers, type: :feature
