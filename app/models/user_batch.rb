@@ -14,8 +14,8 @@ class UserBatch
 
   def initialize(attribs = {})
     @users = []
-    @direct_db_conn = DirectDBConn.new('users')
-    attribs.each{ |k,v| instance_variable_set("@#{k}", v) }
+    @direct_db_conn = DirectDBConn.new("users")
+    attribs.each { |k,v| instance_variable_set("@#{k}", v) }
   end
 
   def persisted?
@@ -40,7 +40,7 @@ class UserBatch
     # parse the input file as a spreadsheet
     @data = Roo::Spreadsheet.open(file).parse
 
-    validate_headers(@data.shift)
+    parse_headers(@data.shift)
 
     unless @validation_error
 
@@ -59,13 +59,13 @@ class UserBatch
 
           validate_users_batch(users_batch)
 
-          check_uniqueness_on_objects(users_batch, ['email'])
-          check_uniqueness_on_objects(users_batch, ['login'])
-          check_uniqueness_on_objects(users_batch, ['phone', 'phone2'])
+          check_uniqueness_on_objects(users_batch, ["email"])
+          check_uniqueness_on_objects(users_batch, ["login"])
+          check_uniqueness_on_objects(users_batch, ["phone", "phone2"])
 
-          check_uniqueness_on_db(users_batch, ['email'])
-          check_uniqueness_on_db(users_batch, ['login'])
-          check_uniqueness_on_db(users_batch, ['phone', 'phone2'])
+          check_uniqueness_on_db(users_batch, ["email"])
+          check_uniqueness_on_db(users_batch, ["login"])
+          check_uniqueness_on_db(users_batch, ["phone", "phone2"])
 
           check_validation_errors(users_batch, i * BATCH_SIZE + 1)
 
@@ -88,7 +88,7 @@ class UserBatch
 
   private
 
-  def validate_headers(row)
+  def parse_headers(row)
     # building map of translated field names to symbolic field names
     expected_headers = Hash[*%i{login name phone phone2 email notes}.map do |field|
       [User.human_attribute_name(field), field]
@@ -144,20 +144,20 @@ class UserBatch
   end
 
   def create_users_instances(attribs, mission)
-    attribs.map{ |attrib| create_new_user(attrib, mission) }
+    attribs.map { |attrib| create_new_user(attrib, mission) }
   end
 
   def create_hash_table_with_fields_and_indexes(objects)
     @fields_hash_table = {
-      'email' => {},
-      'login' => {},
-      'phone' => {}
+      "email" => {},
+      "login" => {},
+      "phone" => {}
     }
 
     # Group fields by array if they need to be checked together (in this case, phone and phone2)
-    fields_to_check = [['email'], ['login'], ['phone', 'phone2']]
+    fields_to_check = [["email"], ["login"], ["phone", "phone2"]]
 
-    fields_to_check.each{ |field| populate_hash_with_field_and_occurrences(field, objects) }
+    fields_to_check.each { |field| populate_hash_with_field_and_occurrences(field, objects) }
   end
 
   def populate_hash_with_field_and_occurrences(field, objects)
@@ -173,7 +173,7 @@ class UserBatch
   end
 
   def validate_users_batch(users_batch)
-    users_batch.each{ |u| u.valid? }
+    users_batch.each { |u| u.valid? }
   end
 
   def check_validation_errors(users, row_start)
@@ -190,7 +190,7 @@ class UserBatch
 
   def create_new_user(attributes, mission)
     User.new(attributes.slice(*PERMITTED_ATTRIBS).merge(
-               reset_password_method: 'print',
+               reset_password_method: "print",
                admin: false,
                assignments: [Assignment.new(mission: mission, role: User::ROLES.first)],
                batch_creation: true,
@@ -217,7 +217,7 @@ class UserBatch
   end
 
   def add_error(error, attribute, row_number)
-    row_error = I18n.t('import.row_error', row: row_number, error: error)
+    row_error = I18n.t("import.row_error", row: row_number, error: error)
     errors.add("users[#{row_number}].#{attribute}", row_error)
   end
 
@@ -243,7 +243,7 @@ class UserBatch
 
   def add_uniqueness_error(key, value, fields)
     value.each do |object|
-      fields.each{ |f| add_uniqueness_error_checking_field_value(object, f, key) }
+      fields.each { |f| add_uniqueness_error_checking_field_value(object, f, key) }
     end
   end
 
@@ -254,15 +254,15 @@ class UserBatch
   def check_uniqueness_on_db(objects, fields)
     results = @direct_db_conn.check_uniqueness(objects, fields)
 
-    add_results_errors_on_objects(results, objects, fields) unless results.nil?
+    add_results_errors_on_objects(results, fields) unless results.nil?
   end
 
-  def add_results_errors_on_objects(results, _, fields)
+  def add_results_errors_on_objects(results, fields)
     key = correct_field_key(fields)
 
     results.reject(&:nil?).each do |result|
       @fields_hash_table[key][result].each do |object|
-        fields.each{ |f| add_uniqueness_error_checking_field_value(object, f, result) }
+        fields.each { |f| add_uniqueness_error_checking_field_value(object, f, result) }
       end
     end
   end
@@ -274,16 +274,12 @@ class UserBatch
   end
 
   def insert_assignments(users_batch)
-    DirectDBConn.new('assignments').insert_select(
-      users_batch,
-      'assignments',
-      'user_id',
-      'users',
-      'import_num')
+    DirectDBConn.new("assignments").insert_select(
+      users_batch, "assignments", "user_id", "users", "import_num")
   end
 
   def last_import_num_on_users
-    import_num = User.order('import_num DESC').first.try(:import_num)
+    import_num = User.order("import_num DESC").first.try(:import_num)
     import_num.nil? ? 0 : import_num
   end
 end
