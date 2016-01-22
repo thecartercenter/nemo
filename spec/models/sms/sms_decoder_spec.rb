@@ -121,7 +121,7 @@ describe Sms::Decoder do
 
   it "form with duplicate answers for the same question should error" do
     create_form(questions: %w(integer integer))
-    assert_decoding_fail(body: "#{@form.code} 1.15 2.8 2.9", error: "duplicate_answers", rank: 2)
+    assert_decoding_fail(body: "#{@form.code} 1.15 2.8 2.9", error: "duplicate_answer", rank: 2)
   end
 
   it "spaces after decimal points should not cause error" do
