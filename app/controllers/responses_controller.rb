@@ -8,6 +8,7 @@ class ResponsesController < ApplicationController
 
   # authorization via CanCan
   load_and_authorize_resource
+  before_action :assign_form, only: [:new]
 
   before_action :mark_response_as_checked_out, only: [:edit]
 
@@ -88,13 +89,6 @@ class ResponsesController < ApplicationController
   end
 
   def new
-    # get the form specified in the params and error if it's not there
-    begin
-      @response.form = Form.find(params[:form_id])
-    rescue ActiveRecord::RecordNotFound
-      return redirect_to(index_url_with_page_num)
-    end
-
     # render the form template
     prepare_and_render_form
   end
@@ -212,6 +206,8 @@ class ResponsesController < ApplicationController
 
   # handles creating/updating for the web form
   def web_create_or_update
+    check_form_exists_in_mission
+
     # set source/modifier to web
     @response.source = "web" if params[:action] == "create"
     @response.modifier = "web"
@@ -241,6 +237,14 @@ class ResponsesController < ApplicationController
     render(nothing: true, status: code)
   end
 
+  # get the form specified in the params and error if it's not there
+  def assign_form
+    @response.form = Form.find(params[:form_id])
+    check_form_exists_in_mission
+  rescue ActiveRecord::RecordNotFound
+    return redirect_to(index_url_with_page_num)
+  end
+
   def response_params
     if params[:response]
       reviewer_only = [:reviewed, :reviewer_notes] if @response.present? && can?(:review, @response)
@@ -266,6 +270,13 @@ class ResponsesController < ApplicationController
           end
         end
       end
+    end
+  end
+
+  def check_form_exists_in_mission
+    if @response.form.mission_id != current_mission.id
+      @error = CanCan::AccessDenied.new("Form does not exist in this mission.", :create, :response)
+      raise @error
     end
   end
 

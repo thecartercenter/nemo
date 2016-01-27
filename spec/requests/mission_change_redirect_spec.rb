@@ -40,6 +40,18 @@ describe "redirect on mission change" do
       to: "/en/m/mission2")
   end
 
+  it "user should be redirected to home screen if viewing new response but form not available in new mission" do
+    @form = create(:form, mission: @mission1)
+
+    # add this user to the other mission so the form index will be accessible
+    @user.assignments.create!(mission: @mission2, role: "coordinator")
+
+    assert_redirect_after_mission_change_from(
+      from: "/en/m/mission1/responses/new?form_id=#{@form.id}",
+      to: "/en/m/mission2"
+    )
+  end
+
   it "user should be redirected to home screen if current screen not permitted under new mission" do
     # add the user to the other mission as an observer so that the option_sets listing won't be allowed
     @user.assignments.create!(mission: @mission2, role: "observer")
