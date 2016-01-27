@@ -111,7 +111,7 @@ class Sms::Decoder
     def find_qing
       @qing = @questionings[@rank]
       raise_decoding_error("question_doesnt_exist", :rank => @rank) unless @qing
-      raise_decoding_error("duplicate_answers", :rank => @rank) if @qings_seen[@qing.id]
+      raise_decoding_error("duplicate_answer", :rank => @rank) if @qings_seen[@qing.id]
       @qings_seen[@qing.id] = 1
     end
 
