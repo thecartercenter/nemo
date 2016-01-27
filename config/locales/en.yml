@@ -1106,7 +1106,7 @@ en:
 
   option_set_import:
     instructions_html: |-
-      Upload a spreadsheet with your option set. Only XLSX-type Excel spreadsheets are accepted.
+      Upload a spreadsheet with your option set. Only XLSX-type Excel spreadsheets and CSV files are accepted.
 
   operation:
     clear_confirm: "Are you sure you want to clear all completed operations?"
@@ -1761,8 +1761,9 @@ en:
 
   user_batch:
     instructions_html: |-
-      Upload a spreadsheet with your users. Only XLSX-type Excel spreadsheets are accepted. A <a href="%{url}">spreadsheet template</a> is available as a starting point.
+      Upload a spreadsheet with your users. Only XLSX-type Excel spreadsheets and CSV files are accepted.
 
+      A spreadsheet template is available in <a href="%{xlsx_url}">XLSX</a> and <a href="%{csv_url}">CSV</a> formats as a starting point.
   user:
     add_assignment: "Add Assignment"
     api_key:

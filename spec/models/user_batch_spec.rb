@@ -30,6 +30,14 @@ describe UserBatch do
     expect(Assignment.count).to eq 2499
   end
 
+  it "creates users from csv" do
+    ub = create_user_batch("user_batch_2500.csv")
+    expect(ub).to be_succeeded
+
+    expect(User.count).to eq 2499
+    expect(Assignment.count).to eq 2499
+  end
+
   it "ignores blank lines" do
     ub = create_user_batch("blank_lines.xlsx")
     expect(ub).to be_succeeded
