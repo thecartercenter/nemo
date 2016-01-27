@@ -19,5 +19,7 @@
     </div>
   <% end %>
 <% else %>
-  <%= render 'answer_set', answer_set: @response.answer_set_for_questioning(item) unless item.hidden? %>
+  <% unless item.hidden? || item.multimedia? %>
+    <%= render 'answer_set', answer_set: @response.answer_set_for_questioning(item) %>
+  <% end %>
 <% end %>

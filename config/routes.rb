@@ -195,5 +195,11 @@ ELMO::Application.routes.draw do
     end
   end
 
+  scope :uploads do
+    namespace :media do
+      get ':type/:id(/:style)' => 'objects#show', defaults: { style: 'original' }
+    end
+  end
+
   root to: redirect("/#{I18n.default_locale}")
 end

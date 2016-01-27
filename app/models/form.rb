@@ -3,13 +3,13 @@ class Form < ActiveRecord::Base
 
   API_ACCESS_LEVELS = %w(private public)
 
-  has_many(:responses, :inverse_of => :form)
-  has_many(:versions, :class_name => "FormVersion", :inverse_of => :form, :dependent => :destroy)
-  has_many(:whitelistings, :as => :whitelistable, class_name: "Whitelisting", dependent: :destroy)
-  has_many(:standard_form_reports, class_name: 'Report::StandardFormReport', dependent: :destroy)
+  has_many(:responses, inverse_of: :form)
+  has_many(:versions, class_name: "FormVersion", inverse_of: :form, dependent: :destroy)
+  has_many(:whitelistings, as: :whitelistable, class_name: "Whitelisting", dependent: :destroy)
+  has_many(:standard_form_reports, class_name: "Report::StandardFormReport", dependent: :destroy)
 
   # while a form has many versions, this is a reference to the most up-to-date one
-  belongs_to(:current_version, :class_name => "FormVersion")
+  belongs_to(:current_version, class_name: "FormVersion")
 
   # For some reason dependent: :destroy doesn't work with this assoc.
   belongs_to :root_group, autosave: true, class_name: "QingGroup", foreign_key: :root_id
@@ -20,12 +20,12 @@ class Form < ActiveRecord::Base
   # For some reason this works but dependent: :destroy doesn't.
   before_destroy { root_group.destroy }
 
-  validates(:name, :presence => true, :length => {:maximum => 32})
+  validates(:name, presence: true, length: {maximum: 32})
   validate(:name_unique_per_mission)
 
   before_create(:init_downloads)
 
-  scope(:published, -> { where(:published => true) })
+  scope(:published, -> { where(published: true) })
 
   # this scope adds a count of the questionings on this form and
   # the number of copies of this form, and of those that are published
@@ -43,15 +43,15 @@ class Form < ActiveRecord::Base
     })
     .group("forms.id") })
 
-  scope(:by_name, -> { order('forms.name') })
+  scope(:by_name, -> { order("forms.name") })
   scope(:default_order, -> { by_name })
 
   delegate :arrange_descendants,
-           :children,
-           :c,
-           :descendants,
-           :child_groups,
-           to: :root_group
+    :children,
+    :c,
+    :descendants,
+    :child_groups,
+    to: :root_group
 
   delegate :code, to: :current_version
 
@@ -172,7 +172,7 @@ class Form < ActiveRecord::Base
   end
 
   def visible_questionings
-    questionings.reject{|q| q.hidden?}
+    questionings.reject { |q| q.hidden? || q.multimedia? }
   end
 
   # returns hash of questionings that work with sms forms and are not hidden
@@ -232,14 +232,14 @@ class Form < ActiveRecord::Base
     if upgrade_needed? || current_version.nil?
       upgrade_version!
     else
-      save(:validate => false)
+      save(validate: false)
     end
   end
 
   # unpublishes this form
   def unpublish!
     self.published = false
-    save(:validate => false)
+    save(validate: false)
   end
 
   def verb
@@ -249,7 +249,7 @@ class Form < ActiveRecord::Base
   # increments the download counter
   def add_download
     self.downloads += 1
-    save(:validate => false)
+    save(validate: false)
   end
 
   # upgrades the version of the form and saves it
@@ -260,7 +260,7 @@ class Form < ActiveRecord::Base
     if current_version
       self.current_version = current_version.upgrade
     else
-      self.build_current_version(:form_id => id)
+      self.build_current_version(form_id: id)
     end
 
     # since we've upgraded, we can lower the upgrade flag
@@ -269,7 +269,7 @@ class Form < ActiveRecord::Base
     # reset downloads since we are only interested in downloads of present version
     self.downloads = 0
 
-    save(:validate => false)
+    save(validate: false)
   end
 
   # sets the upgrade flag so that the form will be upgraded when next published
@@ -277,7 +277,7 @@ class Form < ActiveRecord::Base
     raise "standard forms should not be versioned" if is_standard?
 
     self.upgrade_needed = true
-    save(:validate => false)
+    save(validate: false)
   end
 
   # checks if this form doesn't have any non-required questions

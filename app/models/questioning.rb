@@ -7,41 +7,42 @@ class Questioning < FormItem
   before_validation(:destroy_condition_if_ref_qing_blank)
 
   delegate :name,
-           :code,
-           :code=,
-           :level_count,
-           :level,
-           :multi_level?,
-           :option_set,
-           :option_set=,
-           :option_set_id,
-           :option_set_id=,
-           :printable?,
-           :qtype_name,
-           :qtype_name=,
-           :qtype,
-           :has_options?,
-           :options,
-           :all_options,
-           :first_leaf_option,
-           :option_path_to_rank_path,
-           :rank_path_to_option_path,
-           :select_options,
-           :odk_code,
-           :odk_constraint,
-           :subquestions,
-           :standardized?,
-           :temporal?,
-           :numeric?,
-           :tags,
-           :text_type_for_sms?,
-           to: :question
+    :code,
+    :code=,
+    :level_count,
+    :level,
+    :multi_level?,
+    :option_set,
+    :option_set=,
+    :option_set_id,
+    :option_set_id=,
+    :printable?,
+    :qtype_name,
+    :qtype_name=,
+    :qtype,
+    :has_options?,
+    :options,
+    :all_options,
+    :first_leaf_option,
+    :option_path_to_rank_path,
+    :rank_path_to_option_path,
+    :select_options,
+    :odk_code,
+    :odk_constraint,
+    :subquestions,
+    :standardized?,
+    :temporal?,
+    :multimedia?,
+    :numeric?,
+    :tags,
+    :text_type_for_sms?,
+    to: :question
 
   delegate :published?, to: :form
   delegate :smsable?, to: :form, prefix: true
   delegate :ref_qing_full_dotted_rank, :ref_qing_id, to: :condition, prefix: true, allow_nil: true
 
-  scope(:visible, -> { where(:hidden => false) })
+  scope(:visible, -> { where(hidden: false) })
 
   replicable child_assocs: [:question, :condition], backward_assocs: :form, dont_copy: [:hidden, :form_id, :question_id]
 
@@ -75,7 +76,7 @@ class Questioning < FormItem
 
   # Gets full dotted ranks of all referring conditions' questionings.
   def referring_condition_ranks
-    referring_conditions.map{|c| c.questioning.full_dotted_rank}
+    referring_conditions.map{ |c| c.questioning.full_dotted_rank }
   end
 
   # Returns any questionings appearing before this one on the form.
@@ -116,8 +117,8 @@ class Questioning < FormItem
 
   private
 
-    def destroy_condition_if_ref_qing_blank
-      destroy_condition if condition && condition.ref_qing.blank?
-    end
+  def destroy_condition_if_ref_qing_blank
+    destroy_condition if condition && condition.ref_qing.blank?
+  end
 
 end

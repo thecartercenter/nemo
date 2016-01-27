@@ -17,6 +17,10 @@ class API::V1::AnswersController < API::V1::BaseController
         return render json: { errors: ["access_denied"] }, status: 403
       end
 
+      if question.multimedia?
+        return render json: { errors: ["question_type_not_api_accessible"] }, status: 422
+      end
+
       answers = Answer.includes(:response, :questioning).where(responses: { form_id: params[:form_id] }).
         where(form_items: { question_id: params[:question_id] }).newest_first
 

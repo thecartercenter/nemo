@@ -66,6 +66,7 @@ class ResponseCSV
     return if column_exists_with_code?(code)
 
     if question
+      return if question.multimedia?
       if question.multi_level?
         question.levels.each_with_index do |level, i|
           create_column(code: code, name: [code, level.name])

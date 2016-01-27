@@ -142,7 +142,11 @@ GEM
       ffi (~> 1.0, >= 1.0.11)
     choice (0.2.0)
     chronic (0.10.2)
+    climate_control (0.0.3)
+      activesupport (>= 3.0)
     cliver (0.3.2)
+    cocaine (0.5.8)
+      climate_control (>= 0.0.3, < 1.0)
     coffee-rails (4.1.0)
       coffee-script (>= 2.2.0)
       railties (>= 4.0.0, < 5.0)
@@ -222,6 +226,7 @@ GEM
     metaclass (0.0.4)
     middleware (0.1.0)
     mime-types (2.99)
+    mimemagic (0.3.0)
     mini_portile2 (2.0.0)
     minitest (5.8.3)
     mocha (1.1.0)
@@ -238,6 +243,12 @@ GEM
     netrc (0.10.3)
     nokogiri (1.6.7.1)
       mini_portile2 (~> 2.0.0.rc2)
+    paperclip (4.3.2)
+      activemodel (>= 3.2.0)
+      activesupport (>= 3.2.0)
+      cocaine (~> 0.5.5)
+      mime-types
+      mimemagic (= 0.3.0)
     parameters_extra (0.2.0)
       ruby2ruby (~> 1.2.4)
       ruby_parser (~> 2.0)
@@ -474,6 +485,7 @@ DEPENDENCIES
   libxml-ruby
   mocha
   mysql2 (>= 0.3.15)
+  paperclip
   phantomjs_polyfill-rails
   poltergeist (~> 1.6)
   rack-attack!
@@ -509,3 +521,6 @@ DEPENDENCIES
   whenever
   will_paginate
   will_paginate-bootstrap
+
+BUNDLED WITH
+   1.10.6
