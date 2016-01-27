@@ -106,11 +106,20 @@ form.response_form {
       margin: 0 0 5px 0;
       padding: 5px 0 10px 2px;
       background-color: $gray-blue;
+
+      a.hint {
+        font-size: 9pt;
+        float: right;
+      }
     }
 
     .form_field label {
       width: 290px; // Normal width is 300px
       padding-left: 5px; // Since there is now a left border.
+    }
+
+    .form_field div.control {
+      width: 415px;
     }
 
     // Second level of indentation

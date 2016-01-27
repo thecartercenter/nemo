@@ -28,6 +28,10 @@ div.form_field {
     white-space: normal;
   }
 
+  a.hint {
+    white-space: nowrap;
+  }
+
   div.form-errors {
     /* cancel the left margin for form errors inside a form_field */
     margin-left: 0;

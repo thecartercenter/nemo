@@ -7,6 +7,7 @@ $gray-blue: #D4DCE1;
 $gray: #3F3E3E;
 $light-gray: #BDB9B9;
 $elmo-blue: #879CAA;
+$elmo-darker-blue: #02648A;
 $sans-serif: 'Open Sans', Helvetica, sans-serif;
 
 body {
@@ -233,6 +234,7 @@ nav {
   min-height: 400px;
   background-color: white;
   a i { color: $elmo-blue; }
+  .qing-group h2 a i.hint { color: $elmo-darker-blue }
   .index_table a i.fa:hover { color: darken($elmo-blue, 20%) }
 }
 
