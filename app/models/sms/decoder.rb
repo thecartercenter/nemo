@@ -35,10 +35,10 @@ class Sms::Decoder
     check_permission
 
     # create a blank response
-    @response = Response.new(:user => @user, :form => @form, :source => "sms", :mission => @form.mission)
+    @response = Response.new(user: @user, form: @form, source: "sms", mission: @form.mission)
 
     # decode each token after the first
-    @tokens[1..-1].each do |tok|
+    @tokens[1..-1].each_with_index do |tok, index|
       # if this looks like the start of an answer, treat it as such
       if tok =~ /\A(\d+)\.(.*)\z/
         # save the rank and values to temporary variables for a moment
@@ -53,9 +53,9 @@ class Sms::Decoder
 
         # look up the questioning object for the specified rank and store it in the @qing instance variable
         find_qing
-
-      # otherwise, we add the token to the value variable and proceed
-      else
+      elsif index == 0 # if this is the first answer token, raise error
+        raise_decoding_error("first_answer_invalid", token: tok)
+      else # otherwise, we add the token to the value variable and proceed
         @value = @value.blank? ? tok : @value + " #{tok}"
       end
     end
@@ -64,7 +64,7 @@ class Sms::Decoder
     add_answer if @qing
 
     # if we get to this point everything went nicely, so we can return the response
-    return @response
+    @response
   end
 
   private
@@ -74,23 +74,23 @@ class Sms::Decoder
       code = @tokens[0] ? @tokens[0].downcase : ""
 
       # check that the form code looks right
-      raise_decoding_error("invalid_form_code", :form_code => code) unless code.match(/\A[a-z]{#{FormVersion::CODE_LENGTH}}\z/)
+      raise_decoding_error("invalid_form_code", form_code: code) unless code.match(/\A[a-z]{#{FormVersion::CODE_LENGTH}}\z/)
 
       # attempt to find form version by the given code
       v = FormVersion.find_by_code(code)
 
       # if version not found, raise error
-      raise_decoding_error("form_not_found", :form_code => code) unless v
+      raise_decoding_error("form_not_found", form_code: code) unless v
 
       # if version outdated, raise error
       # here we must specify the form AND form_code since they are different
-      raise_decoding_error("form_version_outdated", :form => v.form, :form_code => code) unless v.is_current?
+      raise_decoding_error("form_version_outdated", form: v.form, form_code: code) unless v.is_current?
 
       # check that form is published
-      raise_decoding_error("form_not_published", :form => v.form) unless v.form.published?
+      raise_decoding_error("form_not_published", form: v.form) unless v.form.published?
 
       # check that form is smsable
-      raise_decoding_error("form_not_smsable", :form => v.form) unless v.form.smsable?
+      raise_decoding_error("form_not_smsable", form: v.form) unless v.form.smsable?
 
       # otherwise, we it's cool, store it in the instance, and also store an indexed list of questionings
       @form = v.form
@@ -98,7 +98,7 @@ class Sms::Decoder
     end
 
     def current_ability
-      @current_ability ||= Ability.new(:user => @user, :mission => @msg.mission)
+      @current_ability ||= Ability.new(user: @user, mission: @msg.mission)
     end
 
     # checks if the current @user has permission to submit to form @form and the form mission matches the msg mission, raises an error if not
@@ -124,20 +124,20 @@ class Sms::Decoder
         raise_answer_error("answer_not_integer") unless @value =~ /\A\d+\z/
 
         # add to response
-        build_answer(:value => @value)
+        build_answer(value: @value)
 
       when "decimal"
         # for integer question, make sure the value looks like a number
         raise_answer_error("answer_not_decimal") unless @value =~ /\A[\d]+([\.,][\d]+)?\z/
 
         # add to response
-        build_answer(:value => @value)
+        build_answer(value: @value)
 
       when "select_one"
         if @qing.text_type_for_sms?
           option = @qing.option_set.all_options.where(canonical_name: @value.downcase).first
           raise_answer_error("answer_not_valid_option") unless option
-          build_answer(@qing.option_set.path_to_option(option).map{ |o| {:option => o} }, multi_level: @qing.multi_level?)
+          build_answer(@qing.option_set.path_to_option(option).map{ |o| {option: o} }, multi_level: @qing.multi_level?)
 
         else
           # make sure the value is a letter(s)
@@ -150,7 +150,7 @@ class Sms::Decoder
           raise_answer_error("answer_not_valid_option") if idx > @qing.question.options.size
 
           # if we get to here, we're good, so add
-          build_answer(:option => @qing.question.options[idx-1])
+          build_answer(option: @qing.question.options[idx-1])
         end
 
       when "select_multiple"
@@ -185,35 +185,35 @@ class Sms::Decoder
 
         # raise appropriate error if we found invalid answer(s)
         if invalid.size > 1
-          raise_answer_error("answer_not_valid_options_multi", :value => @value, :invalid_options => invalid.join(", "))
+          raise_answer_error("answer_not_valid_options_multi", value: @value, invalid_options: invalid.join(", "))
         elsif invalid.size == 1
-          raise_answer_error("answer_not_valid_option_multi", :value => @value, :invalid_options => invalid.first)
+          raise_answer_error("answer_not_valid_option_multi", value: @value, invalid_options: invalid.first)
         end
 
         # if we get to here, we're good, so add
-        build_answer(:choices => idxs.map{|idx| Choice.new(:option => @qing.question.options[idx-1])})
+        build_answer(choices: idxs.map{|idx| Choice.new(option: @qing.question.options[idx-1])})
 
       when "text", "long_text"
-        build_answer(:value => @value)
+        build_answer(value: @value)
 
       when "date"
         # error if too short (must be at least 8 chars)
-        raise_answer_error("answer_not_date", :value => @value) if @value.size < 8
+        raise_answer_error("answer_not_date", value: @value) if @value.size < 8
 
         # try to parse date
         begin
           @value = Date.parse(@value)
         rescue ArgumentError
-          raise_answer_error("answer_not_date", :value => @value)
+          raise_answer_error("answer_not_date", value: @value)
         end
 
         # if we get to here, we're good, so add
-        build_answer(:date_value => @value)
+        build_answer(date_value: @value)
 
       when "time"
         # error if too long or too short (must be 3 or 4 digits)
         digits = @value.gsub(/[^\d]/, "")
-        raise_answer_error("answer_not_time", :value => @value) if digits.size < 3 || digits.size > 4
+        raise_answer_error("answer_not_time", value: @value) if digits.size < 3 || digits.size > 4
 
         # try to parse time
         begin
@@ -221,16 +221,16 @@ class Sms::Decoder
           with_colon = @value.gsub(/(\d{1,2})[\.,]?(\d{2})/){"#{$1}:#{$2}"}
           @value = Time.parse(with_colon + " UTC")
         rescue ArgumentError
-          raise_answer_error("answer_not_time", :value => @value)
+          raise_answer_error("answer_not_time", value: @value)
         end
 
         # if we get to here, we're good, so add
-        build_answer(:time_value => @value)
+        build_answer(time_value: @value)
 
       when "datetime"
         # error if too long or too short (must be between 9 and 12 digits)
         digits = @value.gsub(/[^\d]/, "")
-        raise_answer_error("answer_not_datetime", :value => @value) if digits.size < 9 || digits.size > 12
+        raise_answer_error("answer_not_datetime", value: @value) if digits.size < 9 || digits.size > 12
 
         # try to parse datetime
         begin
@@ -244,11 +244,11 @@ class Sms::Decoder
           end
           @value = Time.zone.parse(to_parse)
         rescue ArgumentError
-          raise_answer_error("answer_not_datetime", :value => @value)
+          raise_answer_error("answer_not_datetime", value: @value)
         end
 
         # if we get to here, we're good, so add
-        build_answer(:datetime_value => @value)
+        build_answer(datetime_value: @value)
 
       end
 
@@ -259,8 +259,8 @@ class Sms::Decoder
     # builds an answer object within the response
     def build_answer(attribs_set, options = {})
       Array.wrap(attribs_set).each_with_index do |attribs, idx|
-        @response.answers.build(attribs.merge(:questioning_id => @qing.id,
-          :rank => options[:multi_level] ? idx + 1 : nil))
+        @response.answers.build(attribs.merge(questioning_id: @qing.id,
+          rank: options[:multi_level] ? idx + 1 : nil))
       end
     end
 
@@ -283,7 +283,7 @@ class Sms::Decoder
     # raises an sms decoding error with the given type and includes the current rank and value
     def raise_answer_error(type, options = {})
       truncated_value = ActionController::Base.helpers.truncate(@value, length: 13)
-      raise_decoding_error(type, {:rank => @rank, :value => truncated_value}.merge(options))
+      raise_decoding_error(type, {rank: @rank, value: truncated_value}.merge(options))
     end
 
     # converts a series of letters to the corresponding index, e.g. a => 1, b => 2, z => 26, aa => 27, etc.
@@ -298,7 +298,7 @@ class Sms::Decoder
     # looks for identical messages within window. raises error if found
     def check_for_duplicate
       # build relation
-      rel = Sms::Message.where(:from => @msg.from).where(:body => @msg.body)
+      rel = Sms::Message.where(from: @msg.from).where(body: @msg.body)
 
       # if @msg is saved, don't match it!
       rel = rel.where("id != ?", @msg.id) unless @msg.new_record?
