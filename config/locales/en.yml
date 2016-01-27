@@ -1676,6 +1676,7 @@ en:
       congrats: "Your response to form '%{form_code}' was received. Thank you!"
       duplicate_answer: "Sorry, your submission contained duplicate answers for question %{rank}."
       duplicate_submission: "Sorry, your response is a duplicate of one submitted recently."
+      first_answer_invalid: "Sorry, but %{token} is not a valid answer. Be sure to include a period after the question number."
       form_not_found: "Sorry, there is no form with code '%{form_code}'."
       form_not_permitted: "Sorry, you don't have permission to submit to form '%{form_code}'."
       form_not_published: "Sorry, form '%{form_code}' is not currently available for submissions."

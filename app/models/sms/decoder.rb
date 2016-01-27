@@ -53,8 +53,8 @@ class Sms::Decoder
 
         # look up the questioning object for the specified rank and store it in the @qing instance variable
         find_qing
-      elsif index == 0 # if this is the first token, raise error
-        raise_decoding_error("question_doesnt_exist", rank: tok)
+      elsif index == 0 # if this is the first answer token, raise error
+        raise_decoding_error("first_answer_invalid", token: tok)
       else # otherwise, we add the token to the value variable and proceed
         @value = @value.blank? ? tok : @value + " #{tok}"
       end
