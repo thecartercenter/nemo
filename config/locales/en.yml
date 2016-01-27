@@ -1757,7 +1757,7 @@ en:
     instructions_html: |-
       Upload a spreadsheet with your users. Only XLSX-type Excel spreadsheets and CSV files are accepted.
 
-      A spreadsheet template is available in <a href="%{xlsx_url}">XLSX</a> and <a href="%{csv_url}">CSV</a> as a starting point.
+      A spreadsheet template is available in <a href="%{xlsx_url}">XLSX</a> and <a href="%{csv_url}">CSV</a> formats as a starting point.
   user:
     add_assignment: "Add Assignment"
     api_key:
