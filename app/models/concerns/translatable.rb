@@ -24,7 +24,7 @@ module Translatable
       translated_fields.each do |field|
         class_eval %Q{
           def #{field}_translations=(val)
-            translatable_external_set_hash('#{field}', val)
+            translatable_set_hash('#{field}', val)
           end
         }
       end
@@ -74,17 +74,24 @@ module Translatable
     !self.class.translated_fields.nil? && translatable_parse_method(symbol) || super
   end
 
-  # Called when someone directly assigns field_translations.
-  def translatable_external_set_hash(field, value)
-    translatable_internal_set_hash(field, value)
-    translatable_set_canonical(field)
-  end
-
   # Sets field_translations value internally.
-  def translatable_internal_set_hash(field, value)
+  def translatable_set_hash(field, value)
+    unless value.nil?
+      # Remove any blank values and stringify.
+      value = value.reject{ |_, v| v.blank? }.stringify_keys
+
+      # Set back to nil if empty
+      value = nil if value.empty?
+    end
+
     # Use write_attribute if available.
-    value = value.try(:stringify_keys)
-    respond_to?(:write_attribute, true) ? write_attribute(:"#{field}_translations", value) : instance_variable_set("@#{field}_translations", value)
+    if respond_to?(:write_attribute, true)
+      write_attribute(:"#{field}_translations", value)
+    else
+      instance_variable_set("@#{field}_translations", value)
+    end
+
+    translatable_set_canonical(field)
   end
 
   # Assigns the canonical_xxx attrib if applicable
@@ -100,20 +107,11 @@ module Translatable
 
     # if we're setting the value
     if is_setter
-      # init the empty hash if it's nil
-      translatable_internal_set_hash(field, {}) if send("#{field}_translations").nil?
+      cur_hash = send("#{field}_translations") || {}
 
       # set the value in the appropriate translation hash
       # we use the merge method because otherwise the _changed? method doesn't work right
-      translatable_internal_set_hash(field, send("#{field}_translations").merge(locale => args[1]))
-
-      # Remove any blank values.
-      translatable_internal_set_hash(field, send("#{field}_translations").reject{ |k,v| v.blank? })
-
-      # Set back to nil if empty
-      translatable_internal_set_hash(field, nil) if send("#{field}_translations").blank?
-
-      translatable_set_canonical(field)
+      translatable_set_hash(field, cur_hash.merge(locale => args[1]))
 
     # otherwise just return what we have
     else

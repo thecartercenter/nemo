@@ -6,11 +6,11 @@ class AClass
   attr_accessor :canonical_name, :canonical_hint
 end
 
-describe 'Translatable' do
+describe "Translatable" do
 
-  it 'basic' do
-    a = AClass.new
+  let(:a) { AClass.new }
 
+  it "basic assignment and reading" do
     I18n.locale = :en
 
     expect(a.name).to eq(nil)
@@ -59,8 +59,18 @@ describe 'Translatable' do
     expect(a.name).to eq("bar")
   end
 
-  it 'available locales' do
-    a = AClass.new
+  it "blanks" do
+    a.name_en = ""
+    expect(a.name_en).to be_nil
+    expect(a.name_translations).to be_nil
+
+    a.name_fr = "foo"
+    a.name_en = ""
+    expect(a.name_en).to be_nil
+    expect(a.name_fr).to eq "foo"
+  end
+
+  it "available locales" do
     I18n.locale = :en
 
     expect(a.available_locales).to eq([])
@@ -71,20 +81,7 @@ describe 'Translatable' do
     expect(a.available_locales(:except_current => true)).to eq([:fr])
   end
 
-  it 'blanks' do
-    a = AClass.new
-    a.name_en = ''
-    expect(a.name_en).to be_nil
-    expect(a.name_translations).to be_nil
-
-    a.name_fr = 'foo'
-    a.name_en = ''
-    expect(a.name_en).to be_nil
-    expect(a.name_fr).to eq 'foo'
-  end
-
-  it 'all blank' do
-    a = AClass.new
+  it "all_blank" do
     a.name_translations = nil
     expect(a.name_all_blank?).to eq(true)
     a.name_en = ""
@@ -102,13 +99,21 @@ describe 'Translatable' do
 
   describe 'canonical name' do
     it 'should be default locale if available' do
-      a = AClass.new
       a.name_en = 'Foo'
       expect(a.canonical_name).to eq 'Foo'
     end
 
-    it 'should be first-entered locale if default not available' do
-      a = AClass.new
+    it 'should be first-entered locale if default is blank' do
+      a.name_en = ''
+      a.name_fr = 'Bar'
+      p a.name_en
+      expect(a.canonical_name).to eq 'Bar'
+
+      a.name_en = 'Foo'
+      expect(a.canonical_name).to eq 'Foo'
+    end
+
+    it 'should be first-entered locale if default is nil' do
       a.name_fr = 'Bar'
       expect(a.canonical_name).to eq 'Bar'
 
@@ -117,7 +122,6 @@ describe 'Translatable' do
     end
 
     it 'should be nil if no translations' do
-      a = AClass.new
       expect(a.canonical_name).to be_nil
       a.name_en = 'Foo'
       expect(a.canonical_name).not_to be_nil
@@ -137,9 +141,20 @@ describe 'Translatable' do
     end
 
     it 'should be updated if name_translations gets updated directly' do
-      a = AClass.new
       a.name_translations = {en: 'Foo'}
       expect(a.canonical_name).to eq 'Foo'
+    end
+  end
+
+  describe "direct assignment of foo_translations" do
+    it "should remove blank values" do
+      a.name_translations = { en: "Foo", fr: "" }
+      expect(a.name_translations).to eq({ "en" => "Foo" })
+    end
+
+    it "should reset to nil if no non-blank translations" do
+      a.name_translations = { en: "" }
+      expect(a.name_translations).to be_nil
     end
   end
 
